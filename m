@@ -2,43 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F30E34F
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2019 15:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2A9AEBA0
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2019 22:29:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfD2NKy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Apr 2019 09:10:54 -0400
-Received: from mail-eopbgr770092.outbound.protection.outlook.com ([40.107.77.92]:14043
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NKx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:10:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tfEaHFheB5QOwDGBzFRVE1pGKTxbnLHJu9PJQB/Fsr4=;
- b=KEajPN63P+tywG1zIW+am8mdV080kHk/8Rh7n77udTzNbMny1G9kIZk1Ucxd9c3ayD+iLx0YeEsVeNelmt1K5LAIeLUkPUX5LzjShf/YgRjs3N07uxmCe30JOwu3+otBvURnPVMCEgRWMGA7VDnpsk5wykNpkNz92fDpjsF4Rx0=
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com (52.135.95.148) by
- SN6PR13MB2240.namprd13.prod.outlook.com (52.135.93.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.7; Mon, 29 Apr 2019 13:10:48 +0000
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::396d:aed6:eeb4:2511]) by SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::396d:aed6:eeb4:2511%7]) with mapi id 15.20.1856.008; Mon, 29 Apr 2019
- 13:10:48 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "amir73il@gmail.com" <amir73il@gmail.com>
-CC:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        id S1729283AbfD2U3K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Apr 2019 16:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729212AbfD2U3K (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 29 Apr 2019 16:29:10 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA9FE215EA;
+        Mon, 29 Apr 2019 20:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556569748;
+        bh=Jk+Ut6VnEM2gDEMrqDpr5RWbDS4Oxf8tr7ly8mz+Jik=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qCufzh7q8tN36SxukFrsp771vQ611pxhTQV1P0vzf3gAuRTRrD9hr38va1dBsF9iV
+         jGoK7cvRLa5j0Ilrreb7Dq/NAkpWTnsg+ORDgKrDzriDCCGQnh6GU7XeGBIteJ4DRw
+         x7h051K/s14BS7ecF4wcQtz86AbUbkEdUniHAPoQ=
+Message-ID: <bc2f04c55ba9290fc48d5f2b909262171ca6a19f.camel@kernel.org>
+Subject: Re: Better interop for NFS/SMB file share mode/reservation
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "amir73il@gmail.com" <amir73il@gmail.com>
+Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
         "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
         "Volker.Lendecke@sernet.de" <Volker.Lendecke@sernet.de>,
-        "pshilov@microsoft.com" <pshilov@microsoft.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: Better interop for NFS/SMB file share mode/reservation
-Thread-Topic: Better interop for NFS/SMB file share mode/reservation
-Thread-Index: AQHUv6BUED9wy3m1tE24F/mnamgiLqXV4DAAgAAaggCAABW6AIB63KrUgAEKN4CAABrTAIAAFnQAgABzxACAAAJMgIAABwQAgAAoLQCAALQ6gIAAGJoA
-Date:   Mon, 29 Apr 2019 13:10:48 +0000
-Message-ID: <1730f1d6e6a3370f681b9eacac4d28022bdf319c.camel@hammerspace.com>
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "pshilov@microsoft.com" <pshilov@microsoft.com>
+Date:   Mon, 29 Apr 2019 16:29:06 -0400
+In-Reply-To: <b4ee6b6f5544114c3974790a784c3e784e617ccf.camel@hammerspace.com>
 References: <CAOQ4uxjQdLrZXkpP30Pq_=Cckcb=mADrEwQUXmsG92r-gn2y5w@mail.gmail.com>
          <379106947f859bdf5db4c6f9c4ab8c44f7423c08.camel@kernel.org>
          <CAOQ4uxgewN=j3ju5MSowEvwhK1HqKG3n1hBRUQTi1W5asaO1dQ@mail.gmail.com>
@@ -56,206 +53,200 @@ References: <CAOQ4uxjQdLrZXkpP30Pq_=Cckcb=mADrEwQUXmsG92r-gn2y5w@mail.gmail.com>
          <95bc6ace0f46a1b1a38de9b536ce74faaa460182.camel@hammerspace.com>
          <CAOQ4uxhQOLZ_Hyrnvu56iERPZ7CwfKti2U+OgyaXjM9acCN2LQ@mail.gmail.com>
          <b4ee6b6f5544114c3974790a784c3e784e617ccf.camel@hammerspace.com>
-         <CAOQ4uxhkXt-71=CDwWEz0axqKi_TsEj3S_dgDhXkwNmG57T61Q@mail.gmail.com>
-In-Reply-To: <CAOQ4uxhkXt-71=CDwWEz0axqKi_TsEj3S_dgDhXkwNmG57T61Q@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [65.199.232.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1915781-904b-4a57-c864-08d6cca418f3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN6PR13MB2240;
-x-ms-traffictypediagnostic: SN6PR13MB2240:
-x-microsoft-antispam-prvs: <SN6PR13MB224071B989503E96BB3E8F45B8390@SN6PR13MB2240.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(136003)(189003)(199004)(6246003)(102836004)(2501003)(561944003)(118296001)(25786009)(26005)(97736004)(5660300002)(99286004)(256004)(486006)(14444005)(68736007)(6506007)(229853002)(76176011)(54906003)(5640700003)(1411001)(6486002)(6512007)(6436002)(1361003)(6916009)(76116006)(66446008)(476003)(2616005)(64756008)(2351001)(53546011)(446003)(8676002)(91956017)(73956011)(66946007)(186003)(66556008)(66476007)(53936002)(11346002)(4326008)(71190400001)(71200400001)(508600001)(3846002)(14454004)(36756003)(7736002)(8936002)(6116002)(66066001)(305945005)(81166006)(81156014)(86362001)(2906002)(93886005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR13MB2240;H:SN6PR13MB2494.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pOPPGlnWsRh9Gjpz7/ZHCkS6fg+IkathTWWcWdyCpXsR61SXa5aAfHArDREyoVQwugzxkU087YzoQ+KPwLongBg385B/sGTQ5xQaRnwE+lJjbAmNAVXV0yiTuImzjxhAfgf55crfnxIo4N0WWZSlWj3ITz8HFzSSaPQUxCcum+BqmO0S9Uq6D4doEISM74jLOeqMnLewvVLuNHyGe3WiXndd84/bp6/WT8G2SJMyfkU1xlpsEoW5ksmlNCkV3WRPfxwB/8IMOSkxyUU1HRCmw8CUdooivKbxIiTOFp98CxxDe51Aiw+Y7AnnKxqYD48ZUE2ZV6Vo/xjQFDmepA2+v/zr4Mlt72NhWm4NpylWVrFqTaFgZtCegzQNp8HF1nOaxTuuosnvQWRthnnQa9v6Vdon6QXyi8OshuprcCSfQ9s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <591C553A2511E2498F589E7E893B2932@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1915781-904b-4a57-c864-08d6cca418f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 13:10:48.3257
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR13MB2240
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA0LTI5IGF0IDA3OjQyIC0wNDAwLCBBbWlyIEdvbGRzdGVpbiB3cm90ZToN
-Cj4gT24gU3VuLCBBcHIgMjgsIDIwMTkgYXQgODo1NyBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0KPiB0
-cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gU3VuLCAyMDE5LTA0LTI4IGF0
-IDE4OjMzIC0wNDAwLCBBbWlyIEdvbGRzdGVpbiB3cm90ZToNCj4gPiA+IE9uIFN1biwgQXByIDI4
-LCAyMDE5IGF0IDY6MDggUE0gVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+IHRyb25kbXlAaGFtbWVy
-c3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gT24gU3VuLCAyMDE5LTA0LTI4IGF0IDE4OjAwIC0w
-NDAwLCBBbWlyIEdvbGRzdGVpbiB3cm90ZToNCj4gPiA+ID4gPiBPbiBTdW4sIEFwciAyOCwgMjAx
-OSBhdCAxMTowNiBBTSBUcm9uZCBNeWtsZWJ1c3QNCj4gPiA+ID4gPiA8dHJvbmRteUBoYW1tZXJz
-cGFjZS5jb20+IHdyb3RlOg0KPiA+ID4gPiA+ID4gT24gU3VuLCAyMDE5LTA0LTI4IGF0IDA5OjQ1
-IC0wNDAwLCBBbWlyIEdvbGRzdGVpbiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gT24gU3VuLCBBcHIg
-MjgsIDIwMTkgYXQgODowOSBBTSBKZWZmIExheXRvbiA8DQo+ID4gPiA+ID4gPiA+IGpsYXl0b25A
-a2VybmVsLm9yZz4NCj4gPiA+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gT24gU2F0
-LCAyMDE5LTA0LTI3IGF0IDE2OjE2IC0wNDAwLCBBbWlyIEdvbGRzdGVpbg0KPiA+ID4gPiA+ID4g
-PiA+IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+ID4gW2FkZGluZyBiYWNrIHNhbWJhL25mcyBhbmQg
-ZnNkZXZlbF0NCj4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gPiA+IGNjJ2luZyBQYXZlbCB0b28gLS0gaGUgZGlkIGEgYnVuY2ggb2Ygd29yayBpbiB0aGlz
-IGFyZWENCj4gPiA+ID4gPiA+ID4gPiBhDQo+ID4gPiA+ID4gPiA+ID4gZmV3DQo+ID4gPiA+ID4g
-PiA+ID4geWVhcnMNCj4gPiA+ID4gPiA+ID4gPiBhZ28uDQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4g
-PiA+ID4gPiA+ID4gPiBPbiBGcmksIEFwciAyNiwgMjAxOSBhdCA2OjIyIFBNIEplZmYgTGF5dG9u
-IDwNCj4gPiA+ID4gPiA+ID4gPiA+IGpsYXl0b25Aa2VybmVsLm9yZz4NCj4gPiA+ID4gPiA+ID4g
-PiA+IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+ID4gPiBPbiBGcmksIDIwMTktMDQtMjYgYXQgMTA6
-NTAgLTA0MDAsIEouIEJydWNlIEZpZWxkcw0KPiA+ID4gPiA+ID4gPiA+ID4gPiB3cm90ZToNCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiBPbiBGcmksIEFwciAyNiwgMjAxOSBhdCAwNDoxMTowMFBNICsw
-MjAwLCBBbWlyDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gR29sZHN0ZWluDQo+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBPbiBGcmksIEFwciAyNiwg
-MjAxOSwgNDowMCBQTSBKLiBCcnVjZSBGaWVsZHMgPA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-YmZpZWxkc0BmaWVsZHNlcy5vcmc+IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gPiA+ID4gPiA+IFRoYXQgc2FpZCwgd2UgY291bGQgYWxzbyBsb29rIGF0IGEgdmZz
-LWxldmVsIG1vdW50DQo+ID4gPiA+ID4gPiA+ID4gPiA+IG9wdGlvbg0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiB0aGF0DQo+ID4gPiA+ID4gPiA+ID4gPiA+IHdvdWxkDQo+ID4gPiA+ID4gPiA+ID4gPiA+
-IG1ha2UgdGhlIGtlcm5lbCBlbmZvcmNlIHRoZXNlIGZvciBhbnkgb3BlbmVyLiBUaGF0DQo+ID4g
-PiA+ID4gPiA+ID4gPiA+IGNvdWxkDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGFsc28NCj4gPiA+ID4g
-PiA+ID4gPiA+ID4gYmUgdXNlZnVsLA0KPiA+ID4gPiA+ID4gPiA+ID4gPiBhbmQgc2hvdWxkbid0
-IGJlIHRvbyBoYXJkIHRvIGltcGxlbWVudC4gTWF5YmUgZXZlbg0KPiA+ID4gPiA+ID4gPiA+ID4g
-PiBtYWtlDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGl0DQo+ID4gPiA+ID4gPiA+ID4gPiA+IGENCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gdmZzbW91bnQtDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGxldmVsIG9w
-dGlvbiAobGlrZSAtbyBybyBpcykuDQo+ID4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gPiBZZWgsIEkgYW0gaHVtYmx5IGdvaW5nIHRvIGxlYXZl
-IHRoaXMgc3RydWdnbGUgdG8NCj4gPiA+ID4gPiA+ID4gPiA+IHNvbWVvbmUNCj4gPiA+ID4gPiA+
-ID4gPiA+IGVsc2UuDQo+ID4gPiA+ID4gPiA+ID4gPiBOb3QgaW1wb3J0YW50IGVub3VnaCBJTU8g
-YW5kIGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQNCj4gPiA+ID4gPiA+ID4gPiA+IGVmZm9ydCB0bw0K
-PiA+ID4gPiA+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiA+ID4gPiBhZHZpc29yeSBhdG9taWMg
-b3BlbiZsb2NrIEFQSS4NCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiBIYXZpbmcg
-dGhlIGtlcm5lbCBhbGxvdyBzZXR0aW5nIGRlbnkgbW9kZXMgb24gYW55IG9wZW4NCj4gPiA+ID4g
-PiA+ID4gPiBjYWxsDQo+ID4gPiA+ID4gPiA+ID4gaXMNCj4gPiA+ID4gPiA+ID4gPiBhDQo+ID4g
-PiA+ID4gPiA+ID4gbm9uLQ0KPiA+ID4gPiA+ID4gPiA+IHN0YXJ0ZXIsIGZvciB0aGUgcmVhc29u
-cyBCcnVjZSBvdXRsaW5lZCBlYXJsaWVyLiBUaGlzDQo+ID4gPiA+ID4gPiA+ID4gX211c3RfIGJl
-DQo+ID4gPiA+ID4gPiA+ID4gcmVzdHJpY3RlZCBpbiBzb21lIGZhc2hpb24gb3Igd2UnbGwgYmUg
-b3BlbmluZyB1cCBhDQo+ID4gPiA+ID4gPiA+ID4gZ2lub3Jtb3VzDQo+ID4gPiA+ID4gPiA+ID4g
-RG9TDQo+ID4gPiA+ID4gPiA+ID4gbWVjaGFuaXNtLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ID4gPiA+IE15IHByb3Bvc2FsIHdhcyB0byBtYWtlIHRoaXMgb25seSBiZSBlbmZvcmNlZCBi
-eQ0KPiA+ID4gPiA+ID4gPiA+IGFwcGxpY2F0aW9ucw0KPiA+ID4gPiA+ID4gPiA+IHRoYXQNCj4g
-PiA+ID4gPiA+ID4gPiBleHBsaWNpdGx5IG9wdC1pbiBieSBzZXR0aW5nIE9fU0gqL09fRVgqIGZs
-YWdzLiBJdA0KPiA+ID4gPiA+ID4gPiA+IHdvdWxkbid0DQo+ID4gPiA+ID4gPiA+ID4gYmUNCj4g
-PiA+ID4gPiA+ID4gPiB0b28NCj4gPiA+ID4gPiA+ID4gPiBkaWZmaWN1bHQgdG8gYWxzbyBhbGxv
-dyB0aGVtIHRvIGJlIGVuZm9yY2VkIG9uIGEgcGVyLWZzDQo+ID4gPiA+ID4gPiA+ID4gYmFzaXMN
-Cj4gPiA+ID4gPiA+ID4gPiB2aWENCj4gPiA+ID4gPiA+ID4gPiBtb3VudA0KPiA+ID4gPiA+ID4g
-PiA+IG9wdGlvbiBvciBzb21ldGhpbmcuIE1heWJlIHdlIGNvdWxkIGV4cGFuZCB0aGUgbWVhbmlu
-Zw0KPiA+ID4gPiA+ID4gPiA+IG9mDQo+ID4gPiA+ID4gPiA+ID4gJy1vDQo+ID4gPiA+ID4gPiA+
-ID4gbWFuZCcNCj4gPiA+ID4gPiA+ID4gPiA/DQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-PiA+ID4gSG93IHdvdWxkIHlvdSBwcm9wb3NlIHRoYXQgd2UgcmVzdHJpY3QgdGhpcz8NCj4gPiA+
-ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IE91ciBjb21tdW5pY2F0
-aW9uIGNoYW5uZWwgaXMgYnJva2VuLg0KPiA+ID4gPiA+ID4gPiBJIGRpZCBub3QgaW50ZW5kIHRv
-IHByb3Bvc2UgYW55IGltcGxpY2l0IGxvY2tpbmcuDQo+ID4gPiA+ID4gPiA+IElmIHNhbWJhIGFu
-ZCBuZnNkIGNhbiBvcHQtaW4gd2l0aCBPX1NIQVJFIGZsYWdzLCBJIGRvIG5vdA0KPiA+ID4gPiA+
-ID4gPiB1bmRlcnN0YW5kIHdoeSBhIG1vdW50IG9wdGlvbiBpcyBoZWxwZnVsIGZvciB0aGUgY2F1
-c2Ugb2YNCj4gPiA+ID4gPiA+ID4gc2FtYmEvbmZzZCBpbnRlcm9wLg0KPiA+ID4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA+ID4gSWYgc29tZW9uZSBlbHNlIGlzIGludGVyZXN0ZWQgaW4gc2FtYmEvbG9j
-YWwgaW50ZXJvcCB0aGFuDQo+ID4gPiA+ID4gPiA+IHllcywgYSBtb3VudCBvcHRpb24gbGlrZSBz
-dWdnZXN0ZWQgYnkgUGF2ZWwgY291bGQgYmUgYQ0KPiA+ID4gPiA+ID4gPiBnb29kDQo+ID4gPiA+
-ID4gPiA+IG9wdGlvbiwNCj4gPiA+ID4gPiA+ID4gYnV0IGl0IGlzIGFuIG9ydGhvZ29uYWwgZWZm
-b3J0IElNTy4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gSWYgYW4gTkZTIGNsaWVudCAnb3B0
-cyBpbicgdG8gc2V0IHNoYXJlIGRlbnksIHRoZW4gdGhhdA0KPiA+ID4gPiA+ID4gc3RpbGwNCj4g
-PiA+ID4gPiA+IG1ha2VzDQo+ID4gPiA+ID4gPiBpdA0KPiA+ID4gPiA+ID4gYSBub24tb3B0aW9u
-YWwgbG9jayBmb3IgdGhlIG90aGVyIE5GUyBjbGllbnRzLCBiZWNhdXNlIGFsbA0KPiA+ID4gPiA+
-ID4gb3JkaW5hcnkNCj4gPiA+ID4gPiA+IG9wZW4oKSBjYWxscyB3aWxsIGJlIGdhdGVkIGJ5IHRo
-ZSBzZXJ2ZXIgd2hldGhlciBvciBub3QNCj4gPiA+ID4gPiA+IHRoZWlyDQo+ID4gPiA+ID4gPiBh
-cHBsaWNhdGlvbiBzcGVjaWZpZXMgdGhlIE9fU0hBUkUgZmxhZy4gVGhlcmUgaXMgbm8gZmxhZyBp
-bg0KPiA+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiBORlMNCj4gPiA+ID4gPiA+IHByb3RvY29s
-IHRoYXQgY291bGQgdGVsbCB0aGUgc2VydmVyIHRvIGlnbm9yZSBkZW55IG1vZGVzLg0KPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiBJT1c6IGl0IHdvdWxkIHN1ZmZpY2UgZm9yIDEgY2xpZW50IHRv
-IHVzZSBPX1NIQVJFfE9fREVOWSoNCj4gPiA+ID4gPiA+IHRvDQo+ID4gPiA+ID4gPiBvcHQNCj4g
-PiA+ID4gPiA+IGFsbA0KPiA+ID4gPiA+ID4gdGhlIG90aGVyIGNsaWVudHMgaW4uDQo+ID4gPiA+
-ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTb3JyeSBmb3IgYmVpbmcgdGhpY2ssIEkgZG9u
-J3QgdW5kZXJzdGFuZCBpZiB3ZSBhcmUgaW4NCj4gPiA+ID4gPiBhZ3JlZW1lbnQNCj4gPiA+ID4g
-PiBvcg0KPiA+ID4gPiA+IG5vdC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBNeSB1bmRlcnN0YW5k
-aW5nIGlzIHRoYXQgdGhlIG5ldHdvcmsgZmlsZSBzZXJ2ZXINCj4gPiA+ID4gPiBpbXBsZW1lbnRh
-dGlvbnMNCj4gPiA+ID4gPiAoaS5lLiBzYW1iYSwga25mZHMsIEdhbmVzaGEpIHdpbGwgYWx3YXlz
-IHVzZSBzaGFyZS9kZW55DQo+ID4gPiA+ID4gbW9kZXMuDQo+ID4gPiA+ID4gU28gZm9yIGV4YW1w
-bGUgbmZzIHYzIG9wZW5zIHdpbGwgYWx3YXlzIHVzZSBPX0RFTllfTk9ORQ0KPiA+ID4gPiA+IGlu
-IG9yZGVyIHRvIGhhdmUgY29ycmVjdCBpbnRlcm9wIHdpdGggc2FtYmEgYW5kIG5mcyB2NC4NCj4g
-PiA+ID4gPiANCj4gPiA+ID4gPiBJZiBJIGFtIG1pc3VuZGVyc3RhbmRpbmcgc29tZXRoaW5nLCBw
-bGVhc2UgZW5saWdodGVuIG1lLg0KPiA+ID4gPiA+IElmIHRoZXJlIGlzIGEgcmVhc29uIHdoeSBt
-b3VudCBvcHRpb24gaXMgbmVlZGVkIGZvciB0aGUgc29sZQ0KPiA+ID4gPiA+IHB1cnBvc2UNCj4g
-PiA+ID4gPiBvZiBpbnRlcm9wIGJldHdlZW4gbmV0d29yayBmaWxlc3lzdGVtIHNlcnZlcnMsIHBs
-ZWFzZQ0KPiA+ID4gPiA+IGVubGlnaHRlbg0KPiA+ID4gPiA+IG1lLg0KPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gU2FtZSBkaWZmZXJlbmNlLiBBcyBsb25nIGFzIG5m
-c2QgYW5kL29yIEdhbmVzaGEgYXJlIHRyYW5zbGF0aW5nDQo+ID4gPiA+IE9QRU40X1NIQVJFX0FD
-Q0VTU19SRUFEIGFuZCBPUEVONF9TSEFSRV9BQ0NFU1NfV1JJVEUgaW50byBzaGFyZQ0KPiA+ID4g
-PiBhY2Nlc3MNCj4gPiA+ID4gbG9ja3MsIHRoZW4gdGhvc2Ugd2lsbCBjb25mbGljdCB3aXRoIGFu
-eSBkZW55IGxvY2tzIHNldCBieQ0KPiA+ID4gPiB3aGF0ZXZlcg0KPiA+ID4gPiBhcHBsaWNhdGlv
-biB0aGF0IHVzZXMgdGhlbS4NCj4gPiA+ID4gDQo+ID4gPiA+IElPVzogYW55IG9wZW4oT19SRE9O
-TFkpIGFuZCBvcGVuKE9fUkRXUikgd2lsbCBjb25mbGljdCB3aXRoIGFuDQo+ID4gPiA+IE9fREVO
-WV9SRUFEIHRoYXQgaXMgc2V0IG9uIHRoZSBzZXJ2ZXIsIGFuZCBhbnkgb3BlbihPX1dST05MWSkN
-Cj4gPiA+ID4gYW5kDQo+ID4gPiA+IG9wZW4oT19SRFdSKSB3aWxsIGNvbmZsaWN0IHdpdGggYW4g
-T19ERU5ZX1dSSVRFIHRoYXQgaXMgc2V0IG9uDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBzZXJ2ZXIu
-IFRoZXJlIGlzIG5vIG9wdC1vdXQgZm9yIE5GUyBjbGllbnRzIG9uIHRoaXMgaXNzdWUsDQo+ID4g
-PiA+IGJlY2F1c2UNCj4gPiA+ID4gc3RhdGVmdWwgTkZTdjQgb3BlbnMgTVVTVCBzZXQgb25lIG9y
-IG1vcmUgb2YNCj4gPiA+ID4gT1BFTjRfU0hBUkVfQUNDRVNTX1JFQUQNCj4gPiA+ID4gYW5kIE9Q
-RU40X1NIQVJFX0FDQ0VTU19XUklURS4NCj4gPiA+ID4gDQo+ID4gPiANCj4gPiA+IFVyZ2ghIEkg
-KnRoaW5rKiBJIHVuZGVyc3RhbmQgdGhlIGNvbmZ1c2lvbi4NCj4gPiA+IA0KPiA+ID4gSSBiZWxp
-ZXZlIEplZmYgd2FzIHRhbGtpbmcgYWJvdXQgaW1wbGVtZW50aW5nIGEgbW91bnQgb3B0aW9uDQo+
-ID4gPiBzaW1pbGFyIHRvIC1vIG1hbmQgZm9yIGxvY2FsIGZzIG9uIHRoZSBzZXJ2ZXIuDQo+ID4g
-PiBXaXRoIHRoYXQgbW91bnQgb3B0aW9uLCAqYW55KiBvcGVuKCkgYnkgYW55IGFwcCBvZiBmaWxl
-IGZyb20NCj4gPiA+IHRoYXQgbW91bnQgd2lsbCB1c2UgT19ERU5ZX05PTkUgdG8gaW50ZXJvcCBj
-b3JyZWN0bHkgd2l0aA0KPiA+ID4gbmV0d29yayBzZXJ2ZXJzIHRoYXQgZXhwbGljaXRseSBvcHQt
-aW4gZm9yIGludGVyb3Agb24gc2hhcmUNCj4gPiA+IG1vZGVzLg0KPiA+ID4gSSBhZ3JlZSBpdHMg
-YSBuaWNlIGZlYXR1cmUgdGhhdCBpcyBlYXN5IHRvIGltcGxlbWVudCAtIG5vdA0KPiA+ID4gaW1w
-b3J0YW50DQo+ID4gPiBmb3IgZmlyc3QgdmVyc2lvbiBJTU8uDQo+ID4gPiANCj4gPiA+IEkgKnRo
-aW5rKiB5b3UgYXJlIHRhbGtpbmcgb24gbmZzIGNsaWVudCBtb3VudCBvcHRpb24gZm9yDQo+ID4g
-PiBvcHQtaW4vb3V0IG9mIHNoYXJlIG1vZGVzPyB0aGVyZSB3YXMgbm8gc3VjaCBpbnRlbnRpb24u
-DQo+ID4gPiANCj4gPiANCj4gPiBOby4gSSdtIHNheWluZyB0aGF0IHdoZXRoZXIgeW91IGludGVu
-ZGVkIHRvIG9yIG5vdCwgeW91IF9hcmVfDQo+ID4gaW1wbGVtZW50aW5nIGEgbWFuZGF0b3J5IGxv
-Y2sgb3ZlciBORlMuIE5vIHRhbGsgYWJvdXQgT19TSEFSRSBmbGFncw0KPiA+IGFuZA0KPiA+IGl0
-IGJlaW5nIGFuIG9wdC1pbiBwcm9jZXNzIGZvciBsb2NhbCBhcHBsaWNhdGlvbnMgY2hhbmdlcyB0
-aGUgZmFjdA0KPiA+IHRoYXQNCj4gPiBub24tbG9jYWwgYXBwbGljYXRpb25zIChpLmUuIHRoZSBv
-bmVzIHRoYXQgY291bnQgKSBhcmUgYmVpbmcNCj4gPiBzdWJqZWN0ZWQNCj4gPiB0byBhIG1hbmRh
-dG9yeSBsb2NrIHdpdGggYWxsIHRoZSBwb3RlbnRpYWwgZm9yIGRlbmlhbCBvZiBzZXJ2aWNlDQo+
-ID4gdGhhdA0KPiA+IGltcGxpZXMuDQo+ID4gU28gd2UgbmVlZCBhIG1lY2hhbmlzbSBiZXlvbmQg
-T19TSEFSRSBpbiBvcmRlciB0byBlbnN1cmUgdGhpcw0KPiA+IHN5c3RlbQ0KPiA+IGNhbm5vdCBi
-ZSB1c2VkIG9uIHNlbnNpdGl2ZSBmaWxlcyB0aGF0IG5lZWQgdG8gYmUgYWNjZXNzaWJsZSB0bw0K
-PiA+IGFsbC4gSXQNCj4gPiBjb3VsZCBiZSBhbiBleHBvcnQgb3B0aW9uLCBvciBhIG1vdW50IG9w
-dGlvbiwgb3IgaXQgY291bGQgYmUgYSBtb3JlDQo+ID4gc3BlY2lmaWMgbWVjaGFuaXNtIChlLmcu
-IHRoZSBzZXRnaWQgd2l0aCBubyBleGVjdXRlIG1vZGUgYml0IGFzDQo+ID4gdXNpbmcNCj4gPiBp
-biBQT1NJWCBtYW5kYXRvcnkgbG9ja3MpLg0KPiA+IA0KPiANCj4gSSBzZWUuIFRoYW5rcyBmb3Ig
-bWFraW5nIHRoYXQgY29uY2VybiBjbGVhci4NCj4gDQo+IElmIHNlcnZlciBvd25lciB3aXNoZXMg
-dG8gaGF2ZSBzYW1iYS9uZnMgaW50ZXJvcCBvYnZpb3VzbHkNCj4gc2VydmVyIG93bmVyIHNob3Vs
-ZCBjb25maWd1cmUgYm90aCBzYW1iYSBhbmQgbmZzIGZvciBpbnRlcm9wLg0KPiBuZnMgc2hvdWxk
-IHRodXMgaGF2ZSBpdCBjb25maWd1cmFibGUgdmlhIGV4cG9ydCBvcHRpb25zIElNTw0KPiBhbmQg
-bm90IHZpYSBtb3VudCBvcHRpb24gKHNlcnZlcidzIHJlc3BvbnNpYmlsaXR5KS4NCj4gDQo+IFBy
-ZXZlbnRpbmcgT19ERU5ZX1ggb24gYSBjZXJ0YWluIGZpbGUuLi4gaG1tDQo+IFdlIGNhbiBkbyB0
-aGF0IGJ1dCwgaWYgbmZzIHByb3RvY29sIGhhcyBPX0RFTlkgd2hhdCdzIHRoZQ0KPiBsb2dpYyB0
-aGF0IHdlIHdvdWxkIHdhbnQgdG8gb3ZlcnJpZGUgaXQ/DQoNCkl0IHdhcyBhZGRlZCBpbiBvcmRl
-ciB0byBzdXBwb3J0IFdpbmRvd3MgY2xpZW50cy4gVGhlcmUgaXMgYWxzbw0Kb3B0aW9uYWwgc3Vw
-cG9ydCBmb3IgbWFuZGF0b3J5IGJ5dGUgcmFuZ2UgbG9ja3MuDQoNCkhvd2V2ZXIgdGhlIGZhY3Qg
-dGhhdCB0aGUgcHJvdG9jb2wgc3VwcG9ydHMgaXQgZG9lc24ndCBhdXRvbWF0aWNhbGx5DQptYWtl
-IGl0IGEgZ29vZCBpZGVhLiBEZXNpZ24gYnkgY29tbWl0dGVlLi4uDQoNCj4gV2hhdCB3ZSBuZWVk
-IGlzIGEgd2F5IHRvIHRyYWNrLCBibGFtZSB0aGUgcmVzb3VyY2UgaG9sZGVyIGFuZA0KPiByZWxl
-YXNlIHRoZSByZXNvdXJjZSBhZG1pbmlzdHJhdGl2ZWx5Lg0KPiANCj4gRm9yIHRoYXQgbWF0dGVy
-LCBhc3N1bWluZyB0aGUgbmZzZCBhbmQgc21iZCAoZXRjKSBjYW4gY29udGFpbg0KPiB0aGVpciBv
-d24gZmRzIHdpdGhvdXQgbGVha2luZyB0aGVtIHRvIG90aGVyIG1vZHVsZXMgKG1pbnVzIGJ1Z3Mp
-DQo+IHRoZW4gcHJvdmlkZWQgd2l0aCBzdWZmaWNpZW50IHN5c2ZzL3Byb2NmcyBpbmZvIChpLmUu
-IEJydWNlJ3MgbmV3DQo+IG9wZW4NCj4gZmlsZXMgdHJhY2tpbmcpLCBhZG1pbiBzaG91bGQgYmUg
-YWJsZSB0byBraWxsIHRoZSBvZmZlbmRpbmcgbmZzL3NtYg0KPiBjbGllbnQNCj4gdG8gcmVsZWFz
-ZSB0aGUgaG9nZ2VkIGZpbGUuDQo+IA0KPiBJIGJlbGlldmUgdGhhdCBpcyB0aGUgV2luZG93cyBz
-ZXJ2ZXIgc29sdXRpb24gdG8gdGhlIERvUyB0aGF0IGlzDQo+IGltcGxpZWQNCj4gZnJvbSBPX0RF
-TlkuDQo+IA0KDQpSZWx5aW5nIG9uIGJlaW5nIGFibGUgdG8gYWNjZXNzIHRoZSBjbGllbnRzIGlz
-IG5vdCBnb29kIGVub3VnaC4gSW4NCmdlbmVyYWwsIHNlcnZlciBhZG1pbnMgdGVuZCBub3QgdG8g
-aGF2ZSBhY2Nlc3MgdG8gdGhlIGNsaWVudHMuDQoNCkhvd2V2ZXIgaXQgc2hvdWxkIGluZGVlZCBi
-ZSBwb3NzaWJsZSB0byBjcmVhdGUgYSB0b29sIG9uIHRoZSBzZXJ2ZXIgdG8NCnJldm9rZSBsb2Nr
-cyBhbmQgb3BlbiBzdGF0ZS4gTW9zdCBjb21tZXJjaWFsIHNlcnZlcnMgaGF2ZSB0aGF0IGtpbmQg
-b2YNCmZ1bmN0aW9uYWxpdHksIGFuZCBJIHdvdWxkIGFncmVlIHRoYXQgbWFrZXMgc2Vuc2UgZm9y
-IGRlYWxpbmcgd2l0aA0Kcm9ndWUgcHJvY2Vzc2VzLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0K
-TGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0
-QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Mon, 2019-04-29 at 00:57 +0000, Trond Myklebust wrote:
+> On Sun, 2019-04-28 at 18:33 -0400, Amir Goldstein wrote:
+> > On Sun, Apr 28, 2019 at 6:08 PM Trond Myklebust <
+> > trondmy@hammerspace.com> wrote:
+> > > On Sun, 2019-04-28 at 18:00 -0400, Amir Goldstein wrote:
+> > > > On Sun, Apr 28, 2019 at 11:06 AM Trond Myklebust
+> > > > <trondmy@hammerspace.com> wrote:
+> > > > > On Sun, 2019-04-28 at 09:45 -0400, Amir Goldstein wrote:
+> > > > > > On Sun, Apr 28, 2019 at 8:09 AM Jeff Layton <
+> > > > > > jlayton@kernel.org>
+> > > > > > wrote:
+> > > > > > > On Sat, 2019-04-27 at 16:16 -0400, Amir Goldstein wrote:
+> > > > > > > > [adding back samba/nfs and fsdevel]
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > cc'ing Pavel too -- he did a bunch of work in this area a
+> > > > > > > few
+> > > > > > > years
+> > > > > > > ago.
+> > > > > > > 
+> > > > > > > > On Fri, Apr 26, 2019 at 6:22 PM Jeff Layton <
+> > > > > > > > jlayton@kernel.org>
+> > > > > > > > wrote:
+> > > > > > > > > On Fri, 2019-04-26 at 10:50 -0400, J. Bruce Fields
+> > > > > > > > > wrote:
+> > > > > > > > > > On Fri, Apr 26, 2019 at 04:11:00PM +0200, Amir
+> > > > > > > > > > Goldstein
+> > > > > > > > > > wrote:
+> > > > > > > > > > > On Fri, Apr 26, 2019, 4:00 PM J. Bruce Fields <
+> > > > > > > > > > > bfields@fieldses.org> wrote:
+> > > > > > > > > > > 
+> > > > > > > > > That said, we could also look at a vfs-level mount
+> > > > > > > > > option
+> > > > > > > > > that
+> > > > > > > > > would
+> > > > > > > > > make the kernel enforce these for any opener. That
+> > > > > > > > > could
+> > > > > > > > > also
+> > > > > > > > > be useful,
+> > > > > > > > > and shouldn't be too hard to implement. Maybe even make
+> > > > > > > > > it
+> > > > > > > > > a
+> > > > > > > > > vfsmount-
+> > > > > > > > > level option (like -o ro is).
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Yeh, I am humbly going to leave this struggle to someone
+> > > > > > > > else.
+> > > > > > > > Not important enough IMO and completely independent
+> > > > > > > > effort to
+> > > > > > > > the
+> > > > > > > > advisory atomic open&lock API.
+> > > > > > > 
+> > > > > > > Having the kernel allow setting deny modes on any open call
+> > > > > > > is
+> > > > > > > a
+> > > > > > > non-
+> > > > > > > starter, for the reasons Bruce outlined earlier. This
+> > > > > > > _must_ be
+> > > > > > > restricted in some fashion or we'll be opening up a
+> > > > > > > ginormous
+> > > > > > > DoS
+> > > > > > > mechanism.
+> > > > > > > 
+> > > > > > > My proposal was to make this only be enforced by
+> > > > > > > applications
+> > > > > > > that
+> > > > > > > explicitly opt-in by setting O_SH*/O_EX* flags. It wouldn't
+> > > > > > > be
+> > > > > > > too
+> > > > > > > difficult to also allow them to be enforced on a per-fs
+> > > > > > > basis
+> > > > > > > via
+> > > > > > > mount
+> > > > > > > option or something. Maybe we could expand the meaning of
+> > > > > > > '-o
+> > > > > > > mand'
+> > > > > > > ?
+> > > > > > > 
+> > > > > > > How would you propose that we restrict this?
+> > > > > > > 
+> > > > > > 
+> > > > > > Our communication channel is broken.
+> > > > > > I did not intend to propose any implicit locking.
+> > > > > > If samba and nfsd can opt-in with O_SHARE flags, I do not
+> > > > > > understand why a mount option is helpful for the cause of
+> > > > > > samba/nfsd interop.
+> > > > > > 
+> > > > > > If someone else is interested in samba/local interop than
+> > > > > > yes, a mount option like suggested by Pavel could be a good
+> > > > > > option,
+> > > > > > but it is an orthogonal effort IMO.
+> > > > > 
+> > > > > If an NFS client 'opts in' to set share deny, then that still
+> > > > > makes
+> > > > > it
+> > > > > a non-optional lock for the other NFS clients, because all
+> > > > > ordinary
+> > > > > open() calls will be gated by the server whether or not their
+> > > > > application specifies the O_SHARE flag. There is no flag in the
+> > > > > NFS
+> > > > > protocol that could tell the server to ignore deny modes.
+> > > > > 
+> > > > > IOW: it would suffice for 1 client to use O_SHARE|O_DENY* to
+> > > > > opt
+> > > > > all
+> > > > > the other clients in.
+> > > > > 
+> > > > 
+> > > > Sorry for being thick, I don't understand if we are in agreement
+> > > > or
+> > > > not.
+> > > > 
+> > > > My understanding is that the network file server implementations
+> > > > (i.e. samba, knfds, Ganesha) will always use share/deny modes.
+> > > > So for example nfs v3 opens will always use O_DENY_NONE
+> > > > in order to have correct interop with samba and nfs v4.
+> > > > 
+> > > > If I am misunderstanding something, please enlighten me.
+> > > > If there is a reason why mount option is needed for the sole
+> > > > purpose
+> > > > of interop between network filesystem servers, please enlighten
+> > > > me.
+> > > > 
+> > > > 
+> > > 
+> > > Same difference. As long as nfsd and/or Ganesha are translating
+> > > OPEN4_SHARE_ACCESS_READ and OPEN4_SHARE_ACCESS_WRITE into share
+> > > access
+> > > locks, then those will conflict with any deny locks set by whatever
+> > > application that uses them.
+> > > 
+> > > IOW: any open(O_RDONLY) and open(O_RDWR) will conflict with an
+> > > O_DENY_READ that is set on the server, and any open(O_WRONLY) and
+> > > open(O_RDWR) will conflict with an O_DENY_WRITE that is set on the
+> > > server. There is no opt-out for NFS clients on this issue, because
+> > > stateful NFSv4 opens MUST set one or more of
+> > > OPEN4_SHARE_ACCESS_READ
+> > > and OPEN4_SHARE_ACCESS_WRITE.
+> > > 
+> > 
+> > Urgh! I *think* I understand the confusion.
+> > 
+> > I believe Jeff was talking about implementing a mount option
+> > similar to -o mand for local fs on the server.
+> > With that mount option, *any* open() by any app of file from
+> > that mount will use O_DENY_NONE to interop correctly with
+> > network servers that explicitly opt-in for interop on share modes.
+> > I agree its a nice feature that is easy to implement - not important
+> > for first version IMO.
+> > 
+> > I *think* you are talking on nfs client mount option for
+> > opt-in/out of share modes? there was no such intention.
+> > 
+> 
+> No. I'm saying that whether you intended to or not, you _are_
+> implementing a mandatory lock over NFS. No talk about O_SHARE flags and
+> it being an opt-in process for local applications changes the fact that
+> non-local applications (i.e. the ones that count ☺) are being subjected
+> to a mandatory lock with all the potential for denial of service that
+> implies.
+> So we need a mechanism beyond O_SHARE in order to ensure this system
+> cannot be used on sensitive files that need to be accessible to all. It
+> could be an export option, or a mount option, or it could be a more
+> specific mechanism (e.g. the setgid with no execute mode bit as using
+> in POSIX mandatory locks).
+> 
+
+That's a great point.
+
+I was focused on the local fs piece in order to support NFS/SMB serving,
+but we also have to consider that people using nfs or cifs filesystems
+would want to use this interface to have their clients set deny bits as
+well.
+
+So, I think you're right that we can't really do this without involving
+non-cooperating processes in some way.
+
+A mount option sounds like the simplest way to do this. We have
+SB_MANDLOCK now, so we'd just need a SB_DENYLOCK or something that would
+enable the use of O_DENY_READ/WRITE on a file. Maybe '-o denymode' or
+something.
+
+You might still get back EBUSY on a nfs or cifs filesystem even without
+that option, but there's not much we can do about that.
+-- 
+Jeff Layton <jlayton@kernel.org>
+
