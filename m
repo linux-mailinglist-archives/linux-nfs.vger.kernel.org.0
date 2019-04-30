@@ -2,52 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE01EDE2
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 02:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44F1DF1D7
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 10:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfD3Abu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Apr 2019 20:31:50 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:37678 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbfD3Abu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Apr 2019 20:31:50 -0400
-Received: by mail-yw1-f65.google.com with SMTP id a62so4674114ywa.4;
-        Mon, 29 Apr 2019 17:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/yRQPse6qS5n8TwGMMfaxf78MZP/YYbhh3nzkAxoqD0=;
-        b=nUbFDxlX7P+MGSwjh2h1pJhMarECOfxLV/jnEspOYDRCpnOkHyhWg8kK1htkE1vp+c
-         mvh6nES0Aux9txy9fIfcm+IcfAsdttXfETuHHned0k1ON/qCcbFPtQozYs2XeAENR5bZ
-         SmYTm0BTZ5XWhpt8ffkcMXFhC2QaHD3ke3MrktOOxWsbcgcTymow3xGTqlvHecVNp0yW
-         qZ43W8vL03MefSYGoKprDYMz8CcdGAG5fT/An+I1aISNbSRvsUo+yGHeneNBfT8eINdW
-         pkyo5AsklDKDgmbKFTVbIJC35qZTtjOykVJah3CwAI9SyBS2QfArs79EhEHxmwlJ2pMU
-         0v3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/yRQPse6qS5n8TwGMMfaxf78MZP/YYbhh3nzkAxoqD0=;
-        b=ELZ8Xw8j+LcHuiKR4yvr07NJ9Rvc06GlKjfRJ1vZw+DpcXXzi5I+cg58NNWCuUq5ml
-         /N16dAU5jgbcoFGbDBzkX60iRfSGZAD5G6r32P064dz09/SJcXgaIJlV3D+sqh9DIBMG
-         qkyO+3op9Aj8HYiCeAGx5h9qFeQMM5lA6tstubQzWaI5FAOtInn3Uy7N+M80USX+9X3v
-         322rPZ7zpOKLQHpkQXgMaTceOeok23xu/S8bhahlaj0c9k+ACoTut7ABwhp5Nxu60sbF
-         02G8GR5z1Z85NoxWwdf2A2wr0PfoqgYEG9Q6F3wyfCOwQYQEQeK/WdbU8BT1spk7P8k7
-         roKQ==
-X-Gm-Message-State: APjAAAWKcq4z6oN7cZ53vCNfGXzeXK2yww+3oQ6NeP7h8/yTxh2jBOpy
-        9PyatWVw2QfZeeueHRNvq5uKI+3ViWc2uzMwPsI=
-X-Google-Smtp-Source: APXvYqwh/Z2UbVbzyDzAdkPy9xtx2lRcxal05Gt8kW2UH5wGV+f2t3juLWLJvnsQVtVKmhTgH3dsoTD542H9YKOZopg=
-X-Received: by 2002:a5b:543:: with SMTP id r3mr53951012ybp.462.1556584308728;
- Mon, 29 Apr 2019 17:31:48 -0700 (PDT)
-MIME-Version: 1.0
+        id S1726202AbfD3IMi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Apr 2019 04:12:38 -0400
+Received: from hr2.samba.org ([144.76.82.148]:31680 "EHLO hr2.samba.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfD3IMi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+         s=42627210; h=Date:Message-ID:From:Cc:To;
+        bh=T88YzDCfdRRpRnlKh43Qlc+b4mJ+OnfqC7S9nbpXuZ4=; b=vRiWb9BVLTIgVJWYF6dRmg4j1O
+        OuaXFf1xgG0vm7zCykhRGQq+Wnk3wqEGX3Z6jKjOkxlxf/slageYACYHNUztf2tPU0RN0nUx11etp
+        xn/V34kkhZQYMz70PCshtVFwhHyfoTADViapzv2xUWTpOQG+MJ8NgxEbMSa289jy+b+E=;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_RSA_CHACHA20_POLY1305:256)
+        (Exim)
+        id 1hLNsR-00080O-Bz; Tue, 30 Apr 2019 08:12:35 +0000
+Subject: Re: Better interop for NFS/SMB file share mode/reservation
+To:     Amir Goldstein <amir73il@gmail.com>,
+        Pavel Shilovskiy <pshilov@microsoft.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Volker.Lendecke@sernet.de" <Volker.Lendecke@sernet.de>,
+        Jeff Layton <jlayton@kernel.org>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 References: <CAOQ4uxjQdLrZXkpP30Pq_=Cckcb=mADrEwQUXmsG92r-gn2y5w@mail.gmail.com>
- <379106947f859bdf5db4c6f9c4ab8c44f7423c08.camel@kernel.org>
- <CAOQ4uxgewN=j3ju5MSowEvwhK1HqKG3n1hBRUQTi1W5asaO1dQ@mail.gmail.com>
- <930108f76b89c93b2f1847003d9e060f09ba1a17.camel@kernel.org>
- <CAOQ4uxgQsRaEOxz1aYzP1_1fzRpQbOm2-wuzG=ABAphPB=7Mxg@mail.gmail.com>
- <20190426140023.GB25827@fieldses.org> <CAOQ4uxhuxoEsoBbvenJ8eLGstPc4AH-msrxDC-tBFRhvDxRSNg@mail.gmail.com>
- <20190426145006.GD25827@fieldses.org> <e69d149c80187b84833fec369ad8a51247871f26.camel@kernel.org>
+ <CAOQ4uxhuxoEsoBbvenJ8eLGstPc4AH-msrxDC-tBFRhvDxRSNg@mail.gmail.com>
+ <20190426145006.GD25827@fieldses.org>
+ <e69d149c80187b84833fec369ad8a51247871f26.camel@kernel.org>
  <CAOQ4uxjt+MkufaJWoqWSYZbejWa1nJEe8YYRroEBSb1jHjzkwQ@mail.gmail.com>
  <8504a05f2b0462986b3a323aec83a5b97aae0a03.camel@kernel.org>
  <CAOQ4uxi6fQdp_RQKHp-i6Q-m-G1+384_DafF3QzYcUq4guLd6w@mail.gmail.com>
@@ -56,78 +41,71 @@ References: <CAOQ4uxjQdLrZXkpP30Pq_=Cckcb=mADrEwQUXmsG92r-gn2y5w@mail.gmail.com>
  <95bc6ace0f46a1b1a38de9b536ce74faaa460182.camel@hammerspace.com>
  <CAOQ4uxhQOLZ_Hyrnvu56iERPZ7CwfKti2U+OgyaXjM9acCN2LQ@mail.gmail.com>
  <b4ee6b6f5544114c3974790a784c3e784e617ccf.camel@hammerspace.com>
- <bc2f04c55ba9290fc48d5f2b909262171ca6a19f.camel@kernel.org> <BYAPR21MB1303596634461C7D46B0A773B6390@BYAPR21MB1303.namprd21.prod.outlook.com>
-In-Reply-To: <BYAPR21MB1303596634461C7D46B0A773B6390@BYAPR21MB1303.namprd21.prod.outlook.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 29 Apr 2019 20:31:37 -0400
-Message-ID: <CAOQ4uxirAW91yUe1nQUPPmarmMSxr_pco8NqKWB4srwyvgnRRA@mail.gmail.com>
-Subject: Re: Better interop for NFS/SMB file share mode/reservation
-To:     Pavel Shilovskiy <pshilov@microsoft.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Volker.Lendecke@sernet.de" <Volker.Lendecke@sernet.de>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Pavel Shilovsky <piastryyy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <bc2f04c55ba9290fc48d5f2b909262171ca6a19f.camel@kernel.org>
+ <BYAPR21MB1303596634461C7D46B0A773B6390@BYAPR21MB1303.namprd21.prod.outlook.com>
+ <CAOQ4uxirAW91yUe1nQUPPmarmMSxr_pco8NqKWB4srwyvgnRRA@mail.gmail.com>
+From:   Uri Simchoni <uri@samba.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=uri@samba.org; prefer-encrypt=mutual; keydata=
+ xsBNBFby8yABCAC5Yy67UKYFYlEH1qV/Wby+XhjMSYIwM7kAR7cyATzWzy+LHrYEV9HfcdbE
+ 8uIXsZJYHVrwzbK5GMV6Y+q4IEVYCkyQOTk+hDc10UqDHm6lvbKIeg7PlNtypA024bgGSzur
+ BUenprtt3MxyBgreiPPa+UPbn5g+A2VC8Ud2wYv0x2IkMMCHa0tLkSDoQpuIFSP7q4YEvdn9
+ E9dF6rtQYhTO3e9cQe8Faao4ujdaf8ymnIJXuVthubK1Ibg1rllnnlnCMT7/OVvaRACXSZeF
+ 9/7WTIswAQ0LooWY+Lhz4tLCYrxz5UclzphQAu/mDMZkIwfoyR2Btvnj35vpHgXyRl9HABEB
+ AAHNHFVyaSBTaW1jaG9uaSA8dXJpQHNhbWJhLm9yZz7CwJUEEwECAD8CGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEhnx9/eK+MtZ4dAL4Fx15pugHO7kFAlxOrQQFCQc87VoACgkQ
+ Fx15pugHO7nX+wf/RenBK3LNFfLJ/pEk37p4SLWEJcfBjy5xGIQ4brwFAkvozfSh1qtVmz0g
+ mmT/APAvwcpwRChxtUoK8O5208D7MzPCPUK8j7re/+U1y7dPSgtx17p8az72m6PKp9tTGjk1
+ yDP1/wftJbhxCTu2ZARnMkbHliOi7eaaEsS3IMRS1Weuy5/7A64c93nV9GlRTu0ixmzqm2hj
+ hyfjnSizx+TxIr1CODZLIxevgwomPmvgI2UGgx/L8o8ZFJrk4oV9vKTwf5a9zoPxoBysozuR
+ XarEu8GecMkk92aYfLGZYREgVbWGxDQXGxHl1U65QPQWntGhn9MOR4ZzJxjesnX6OSCYMs7A
+ TQRW8vMgAQgAqVFS+RiFSdQbXqZ9UryAGscHY+lgBV2Xb1af9F83MzppXVltQ9r7ajYyuUNJ
+ G0O+4+xV50+4yMkKjFRspBg34syuUDWhQLWd6ypM75s1NKAv1ETY9WWKC3qn6CLhNXn3Sk1N
+ JK2HvBub4TOXueFi3F9ePAx9+XFUPvbFhlJTzUHo8EqTRD64f6PQKafelzIPzFVRixHt5OfP
+ Uv9au+98vFaV4Ne51ENxlQR2pjee/essHj4M5W7EcAcC3frjboUUvSqptYnayrVViuZ3dquU
+ T9Nsm/D8lVj9Gk8RGu4+KXC8vkDULdXN4QRayagb2Yw0JhE9DH+XQy1oInH6FgdNJwARAQAB
+ wsB8BBgBAgAmAhsMFiEEhnx9/eK+MtZ4dAL4Fx15pugHO7kFAlxOrS8FCQc87YEACgkQFx15
+ pugHO7mkEAf/cr/X7vJwKgbMVVeY3zxfD1IEUoWqwm0PF0jop+yi9BMgn71OLiVJbiFtoTE3
+ XF+TDcVsij36ahkSOKTF/OcO3wlHLmK2PrftfH07O+zq30qYWHsH6QkFN/vwZ9C7O0K56c1Z
+ cvhd8ZB/u8iy3QzCxGgvjZl2XctUGgRVdyX2OyEupWMjuO6d/k5X91GXJyFZghOjjADGORZg
+ WwPAVztL1sBp4ERaIWxEXrPxg8eQm7QH4sI2pwKRQxsRGY6U1dDzdkyLBqvC4Tks4s/pZjBC
+ SIMU2TPqEyeztkZaVBSWHFNNCsBKIJ+35T5uJnhXjcgKeXlxjk7WbMHZWm8RaYFqIA==
+Message-ID: <677e86ee-59b9-0826-481f-955074d164ed@samba.org>
+Date:   Tue, 30 Apr 2019 11:12:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAOQ4uxirAW91yUe1nQUPPmarmMSxr_pco8NqKWB4srwyvgnRRA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-...
-> > > No. I'm saying that whether you intended to or not, you _are_
-> > > implementing a mandatory lock over NFS. No talk about O_SHARE flags a=
-nd
-> > > it being an opt-in process for local applications changes the fact th=
-at
-> > > non-local applications (i.e. the ones that count ) are being subjecte=
-d
-> > > to a mandatory lock with all the potential for denial of service that
-> > > implies.
-> > > So we need a mechanism beyond O_SHARE in order to ensure this system
-> > > cannot be used on sensitive files that need to be accessible to all. =
-It
-> > > could be an export option, or a mount option, or it could be a more
-> > > specific mechanism (e.g. the setgid with no execute mode bit as using
-> > > in POSIX mandatory locks).
-> > >
-> >
-> > That's a great point.
-> >
-> > I was focused on the local fs piece in order to support NFS/SMB serving=
-,
-> > but we also have to consider that people using nfs or cifs filesystems
-> > would want to use this interface to have their clients set deny bits as
-> > well.
-> >
-> > So, I think you're right that we can't really do this without involving
-> > non-cooperating processes in some way.
->
-> It's been 5+ years since I touched that code but I still like the idea of=
- having a separate mount option for mountpoints used by Samba and NFS serve=
-rs and clients to avoid security attacks on the sensitive files. For some s=
-ensitive files on such mountpoints a more selective mechanism may be used t=
-o prevent deny flags to be set (like mentioned above). Or we may think abou=
-t adding another flag e.g. O_DENYFORCE available to root only that tells th=
-e kernel to not take into account deny flags already set on a file - might =
-be useful for recovery tools.
->
-> About O_DENYDELETE: I don't understand how we may reach a good interop st=
-ory without a proper implementation of this flag. Windows apps may set it a=
-nd Samba needs to respect it. If an NFS client removes such an opened file,=
- what will Samba tell the Windows client?
->
+On 4/30/19 3:31 AM, Amir Goldstein via samba-technical wrote:
+>>
+>> About O_DENYDELETE: I don't understand how we may reach a good interop story without a proper implementation of this flag. Windows apps may set it and Samba needs to respect it. If an NFS client removes such an opened file, what will Samba tell the Windows client?
+>>
+> 
+> Samba will tell the Windows client:
+> "Sorry, my administrator has decided to trade off interop with nfs on
+> share modes,
+> with DENY_DELETE functionality, so I cannot grant you DENY_DELETE that you
+> requested."
+> Not sure if that is workable. Samba developers need to chime in.
+> 
+> Thanks,
+> Amir.
+> 
 
-Samba will tell the Windows client:
-"Sorry, my administrator has decided to trade off interop with nfs on
-share modes,
-with DENY_DELETE functionality, so I cannot grant you DENY_DELETE that you
-requested."
-Not sure if that is workable. Samba developers need to chime in.
+On Windows you don't ask for DENY_DELETE, you get it by default unless
+you ask to *allow* deletion. If you fopen() a file, even for
+reading-only, the MSVC standard C library would open it with delete
+denied because it does not explicitly request to allow it. My guess is
+that runtimes of other high-level languages behave that way too on
+Windows. That means pretty much everything would stop working.
 
 Thanks,
-Amir.
+Uri.
