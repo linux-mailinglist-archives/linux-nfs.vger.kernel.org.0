@@ -2,130 +2,163 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F86F2B1
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 11:22:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD57FC2F
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 17:06:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfD3JWm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Apr 2019 05:22:42 -0400
-Received: from mail-yw1-f49.google.com ([209.85.161.49]:44273 "EHLO
-        mail-yw1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3JWl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Apr 2019 05:22:41 -0400
-Received: by mail-yw1-f49.google.com with SMTP id j4so5349066ywk.11;
-        Tue, 30 Apr 2019 02:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O71BR93nfVKV7X+BaaevcM23d4NroedovEN8YpLCNFc=;
-        b=JcInW5rB9D8GUPZ8eanzEAStA6lvRQhboAjNfLzzLdXysYXomWALWwxj8+wTzvVYpa
-         jLBy7vcbQaJD7mn8T5Sntys7faEG9YVKoEsGk7SwAh6x6cEYHNgmj8A2haTuJ+kyho0w
-         ZloKwHb4U+H7rrb30t5RK0fyGo//KfIGrV7iYEYDfmnKtk/4nU3zTb2cnI0ux3hc2VF5
-         MFyzzzTCYOA3bKMbJEnpkbcJGTbyxNno8ZMlD/MqkP3wKpg4r67bP3mhDMRpFThrIpcB
-         tP9+3s8Xdq/IhNwAbwJJBEstIfHnp22w7/Kbmxgi5D9Ezmvu6/T0JG1EBV0Vwc/j2rrY
-         X9Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O71BR93nfVKV7X+BaaevcM23d4NroedovEN8YpLCNFc=;
-        b=n/P08XTB0SjWLtHzLHFsDXCv6G+n4JNLH3uKGZdzQTUs5R6WRmenWTHoE3h9xbZBmd
-         ACuAMCgOPEiNN3hWSKvy8hTIP9qW8T5n3fJi+Bu1t2BuOSS35e31RgMo4+GBPE5ZlXET
-         RYmKqkxCLsmr1/1xi7VMsRxJyNDRCWN2Ws80IJLA0oY4bDKxHnTxc3b9cQUIOG2ZVCbw
-         wPHBX064ddezedF+ZekUSVQfgmR2wnL5HTqrNcmBtKzhkVVq/eXuQqvUL8in9X1zetZW
-         99VPNanzg/ByOCqQ669/c9OeNb6L62vxb+1223H6wckvynffpsLOeFpdU4uSV7S0DtXL
-         Mktg==
-X-Gm-Message-State: APjAAAU1hUQJlxQ1CeCB1145ig/fgGM6+Nux1Ie9WXQVeOq0cHB+37xi
-        O7xeBWTSIO0m0BIF6QM45dQGlkzBS+QncnRYKXI=
-X-Google-Smtp-Source: APXvYqyJZqlIcP4RcRxCE9J+CCDpDAOQezVG4wmzGr92TpdSb96QB+9P1jtwCzw83+ORzm1Cz6J4GtL1iisDo0MaJVw=
-X-Received: by 2002:a81:1150:: with SMTP id 77mr54593542ywr.241.1556616160900;
- Tue, 30 Apr 2019 02:22:40 -0700 (PDT)
+        id S1726267AbfD3PGj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Apr 2019 11:06:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43850 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfD3PGi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:06:38 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 550DE83F3B;
+        Tue, 30 Apr 2019 15:06:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F006B600C2;
+        Tue, 30 Apr 2019 15:06:32 +0000 (UTC)
+Subject: [PATCH 00/11] keys: Namespacing [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     ebiederm@xmission.com
+Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        Jann Horn <jannh@google.com>, keyrings@vger.kernel.org,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwalsh@redhat.com, vgoyal@redhat.com
+Date:   Tue, 30 Apr 2019 16:06:31 +0100
+Message-ID: <155663679069.31331.3777091898004242996.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <CAOQ4uxjQdLrZXkpP30Pq_=Cckcb=mADrEwQUXmsG92r-gn2y5w@mail.gmail.com>
- <CAOQ4uxhuxoEsoBbvenJ8eLGstPc4AH-msrxDC-tBFRhvDxRSNg@mail.gmail.com>
- <20190426145006.GD25827@fieldses.org> <e69d149c80187b84833fec369ad8a51247871f26.camel@kernel.org>
- <CAOQ4uxjt+MkufaJWoqWSYZbejWa1nJEe8YYRroEBSb1jHjzkwQ@mail.gmail.com>
- <8504a05f2b0462986b3a323aec83a5b97aae0a03.camel@kernel.org>
- <CAOQ4uxi6fQdp_RQKHp-i6Q-m-G1+384_DafF3QzYcUq4guLd6w@mail.gmail.com>
- <1d5265510116ece75d6eb7af6314e6709e551c6e.camel@hammerspace.com>
- <CAOQ4uxjUBRt99efZMY8EV6SAH+9eyf6t82uQuKWHQ56yjpjqMw@mail.gmail.com>
- <95bc6ace0f46a1b1a38de9b536ce74faaa460182.camel@hammerspace.com>
- <CAOQ4uxhQOLZ_Hyrnvu56iERPZ7CwfKti2U+OgyaXjM9acCN2LQ@mail.gmail.com>
- <b4ee6b6f5544114c3974790a784c3e784e617ccf.camel@hammerspace.com>
- <bc2f04c55ba9290fc48d5f2b909262171ca6a19f.camel@kernel.org>
- <BYAPR21MB1303596634461C7D46B0A773B6390@BYAPR21MB1303.namprd21.prod.outlook.com>
- <CAOQ4uxirAW91yUe1nQUPPmarmMSxr_pco8NqKWB4srwyvgnRRA@mail.gmail.com> <677e86ee-59b9-0826-481f-955074d164ed@samba.org>
-In-Reply-To: <677e86ee-59b9-0826-481f-955074d164ed@samba.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 30 Apr 2019 05:22:29 -0400
-Message-ID: <CAOQ4uxiwDPDyQPrPkUzZCO8jkySRiSK+AZu1dxppXvVA4q6XnA@mail.gmail.com>
-Subject: Re: Better interop for NFS/SMB file share mode/reservation
-To:     Uri Simchoni <uri@samba.org>
-Cc:     Pavel Shilovskiy <pshilov@microsoft.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Volker.Lendecke@sernet.de" <Volker.Lendecke@sernet.de>,
-        Jeff Layton <jlayton@kernel.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 30 Apr 2019 15:06:38 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 4:12 AM Uri Simchoni <uri@samba.org> wrote:
->
-> On 4/30/19 3:31 AM, Amir Goldstein via samba-technical wrote:
-> >>
-> >> About O_DENYDELETE: I don't understand how we may reach a good interop=
- story without a proper implementation of this flag. Windows apps may set i=
-t and Samba needs to respect it. If an NFS client removes such an opened fi=
-le, what will Samba tell the Windows client?
-> >>
-> >
-> > Samba will tell the Windows client:
-> > "Sorry, my administrator has decided to trade off interop with nfs on
-> > share modes,
-> > with DENY_DELETE functionality, so I cannot grant you DENY_DELETE that =
-you
-> > requested."
-> > Not sure if that is workable. Samba developers need to chime in.
-> >
-> > Thanks,
-> > Amir.
-> >
->
-> On Windows you don't ask for DENY_DELETE, you get it by default unless
-> you ask to *allow* deletion. If you fopen() a file, even for
-> reading-only, the MSVC standard C library would open it with delete
-> denied because it does not explicitly request to allow it. My guess is
-> that runtimes of other high-level languages behave that way too on
-> Windows. That means pretty much everything would stop working.
->
 
-I see. I was wondering about something else.
-Windows deletes a file by opening it for DELETE_ON_CLOSE
-and then "The file is to be deleted immediately after all of its handles ar=
-e
-closed, which includes the specified handle and any other open or
-duplicated handles.".
-What about hardlinks?
-Are open handles associate with a specific path? not a specific inode?
+Here are some patches to make keys and keyrings more namespace aware.  Note
+that the branch is dependent on security/next-general.
 
-I should note that Linux NFS client does something similar called silly
-rename. To unlink a file, rename it to temp name, then unlink temp name
-on last handle close to that file from that client.
+Firstly some miscellaneous patches to make the process easier:
 
-If, and its a very big if, samba could guess what the silly rename temp nam=
-e
-would be, DENY_DELETE could have been implement as creating a link
-to file with silly rename name.
+ (1) Invalidate rather than revoke request_key() authentication keys to
+     recycle them more quickly.
 
-Of course we cannot rely on the NFS client to enforce the samba interop,
-but nfsd v4 server and samba could both use a similar technique to
-coordinate unlink/rename and DENY_DELETE.
+ (2) Remove request_key_async*() as they aren't used and would have to be
+     namespaced.
 
-Thanks,
-Amir.
+ (3) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
+
+ (4) Cache the hash value so that we don't have to calculate on every key
+     we examine during a search (it involves a bunch of multiplications).
+
+ (5) Allow keying_search() to search non-recursively.
+
+Then the main patches:
+
+ (6) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
+
+ (7) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (8) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+ (9) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+(10) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+(11) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good; CIFS and Ceph are not.  Other cache
+     keyrings, such as idmapper keyrings, also need to set the domain tag.
+
+
+Changes:
+
+V2 fixes:
+ - Missing initialisation of net key_domain usage count.
+ - Missing barriering on the keyring register pointer.
+ - Use snprintf() rather than sprintf().
+ - Incorrect error handling in search_my_process_keyrings().
+ - Incorrect error handling in call_sbin_request_key().
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-namespace
+
+David
+---
+David Howells (11):
+      keys: Invalidate used request_key authentication keys
+      keys: Kill off request_key_async{,_with_auxdata}
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
+
+
+ Documentation/security/keys/core.rst     |   10 +
+ certs/blacklist.c                        |    2 
+ crypto/asymmetric_keys/asymmetric_type.c |    2 
+ fs/afs/addr_list.c                       |    4 
+ fs/afs/dynroot.c                         |    7 -
+ fs/cifs/dns_resolve.c                    |    3 
+ fs/nfs/dns_resolve.c                     |    2 
+ include/linux/dns_resolver.h             |    3 
+ include/linux/key-type.h                 |    3 
+ include/linux/key.h                      |   50 ++++--
+ include/linux/sched/user.h               |   14 --
+ include/linux/user_namespace.h           |   12 +
+ include/net/net_namespace.h              |    4 
+ kernel/user.c                            |   10 -
+ kernel/user_namespace.c                  |    9 -
+ lib/digsig.c                             |    2 
+ net/ceph/messenger.c                     |    3 
+ net/core/net_namespace.c                 |   19 ++
+ net/dns_resolver/dns_key.c               |    1 
+ net/dns_resolver/dns_query.c             |    6 -
+ net/rxrpc/key.c                          |    6 -
+ net/rxrpc/security.c                     |    2 
+ security/integrity/digsig_asymmetric.c   |    4 
+ security/keys/gc.c                       |    2 
+ security/keys/internal.h                 |   10 +
+ security/keys/key.c                      |    9 +
+ security/keys/keyctl.c                   |    4 
+ security/keys/keyring.c                  |  263 +++++++++++++++++-------------
+ security/keys/persistent.c               |   10 +
+ security/keys/proc.c                     |    3 
+ security/keys/process_keys.c             |  252 ++++++++++++++++++-----------
+ security/keys/request_key.c              |  113 +++++++------
+ security/keys/request_key_auth.c         |    3 
+ 33 files changed, 508 insertions(+), 339 deletions(-)
+
