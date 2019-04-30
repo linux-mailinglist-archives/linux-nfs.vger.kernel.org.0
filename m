@@ -2,212 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 737A7FFFC
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 20:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C7A4FFFD
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Apr 2019 20:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbfD3S4d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Apr 2019 14:56:33 -0400
-Received: from mail-eopbgr750108.outbound.protection.outlook.com ([40.107.75.108]:13294
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726006AbfD3S4d (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:56:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZC8H6ZIzUteAhwwZfV1tZVU/in6q+ZwdY8dBE+ABPdI=;
- b=dDOjVG8Ei2jfdu7g40eSQwshgIAJm6cJFovVrN5fvI2nubezxBe3LBdMyyPUqtipXCL5Z596zFF/905ywYHuEojpLZWFN+RxixeAZkwARsjmFNK0Hj7DHq+oyrnZYAmWB5FCRFAefuHq8/1KrIomFqtj99W0qR/ymt3VMXz4DcM=
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com (52.135.95.148) by
- SN6PR13MB2335.namprd13.prod.outlook.com (52.135.94.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.7; Tue, 30 Apr 2019 18:56:24 +0000
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::396d:aed6:eeb4:2511]) by SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::396d:aed6:eeb4:2511%7]) with mapi id 15.20.1856.008; Tue, 30 Apr 2019
- 18:56:24 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "smayhew@redhat.com" <smayhew@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Question about open(CLAIM_FH)
-Thread-Topic: Question about open(CLAIM_FH)
-Thread-Index: AQHU9evf84hrBN7rMkSy4LhuOmeSbqZB/O+AgABmGwCAAA0/gIASrUkAgAADZAA=
-Date:   Tue, 30 Apr 2019 18:56:24 +0000
-Message-ID: <20aeeb5c8467fecf9c8fa5265dbe604623a0650b.camel@hammerspace.com>
-References: <20190418133728.GS3773@coeurl.usersys.redhat.com>
-         <213d4ead8a7ae890dadc7785d59117e798f94748.camel@hammerspace.com>
-         <20190418204356.GA15226@coeurl.usersys.redhat.com>
-         <4751d341a626cf26e60e0b8c3564171c115c1335.camel@hammerspace.com>
-         <20190430184414.GE15226@coeurl.usersys.redhat.com>
-In-Reply-To: <20190430184414.GE15226@coeurl.usersys.redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [173.228.226.134]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1df844d1-0df7-4a47-cfa5-08d6cd9d8ae4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN6PR13MB2335;
-x-ms-traffictypediagnostic: SN6PR13MB2335:
-x-microsoft-antispam-prvs: <SN6PR13MB2335751426AE4B79F291D71AB83A0@SN6PR13MB2335.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(39830400003)(136003)(199004)(189003)(71190400001)(71200400001)(446003)(316002)(6246003)(66946007)(64756008)(8936002)(2351001)(66476007)(66556008)(102836004)(118296001)(6436002)(6506007)(66446008)(5640700003)(305945005)(36756003)(2616005)(7736002)(86362001)(53936002)(76176011)(4326008)(486006)(73956011)(76116006)(6512007)(3846002)(6116002)(91956017)(99286004)(6486002)(25786009)(68736007)(478600001)(2906002)(2501003)(26005)(8676002)(81156014)(1730700003)(5660300002)(81166006)(11346002)(476003)(93886005)(66066001)(6916009)(14454004)(97736004)(186003)(256004)(229853002)(14444005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR13MB2335;H:SN6PR13MB2494.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VIXIe7JlvxxvKfNLKwssn6JzwLeOMtCn4Bjan9m2p9rmjQxq4HeY0Afupo6uGa2t8yAK2idKRlWWRWDWHxuXxg+8zDOfbgolUKxYRfFd0ZowSCONrL9fJZkrlJVgY5C5ASc3gu1mXzg6znDlBkJ4fwbvYCkHzc+HPzAXMcAfqF61P8j6vDIInlOCvc6iyuqtUNE3bao8qUXsmn+xRoZlKywIZ/TAlvQWKWWbn79LFpVUiLWRcNRLr4KJeyaIIkvxWQt7O1WZbrCa57SN4LvcHU52AQ69XgqxIFvn1GrmHLcy30bAVYej2DONc9rRBSAEIsXeyFsE64VTGPJ4ba+iGcgFgDB/7NP01oxSuAL/HSChABn+RXE9YYjxT+liDNFe1jp7q99fc8S7TVvkSrI/1fD1TzXgfEnwIbCiSk3IhLI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4DA4497C795FD945B5503367E0243020@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726155AbfD3S6x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Apr 2019 14:58:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfD3S6x (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:58:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9F1213084266;
+        Tue, 30 Apr 2019 18:58:52 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-122-85.rdu2.redhat.com [10.10.122.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68B466248E;
+        Tue, 30 Apr 2019 18:58:52 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id CC74721BE8; Tue, 30 Apr 2019 14:58:45 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 14:58:45 -0400
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     jlayton@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: CB_RECALL can race with FREE_STATEID
+Message-ID: <20190430185845.GG15226@coeurl.usersys.redhat.com>
+References: <20190418132400.24161-1-smayhew@redhat.com>
+ <20190418151312.GB29274@fieldses.org>
+ <20190418205024.GB15226@coeurl.usersys.redhat.com>
+ <20190418213730.GA1891@fieldses.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1df844d1-0df7-4a47-cfa5-08d6cd9d8ae4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 18:56:24.1975
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR13MB2335
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418213730.GA1891@fieldses.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 30 Apr 2019 18:58:52 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA0LTMwIGF0IDE0OjQ0IC0wNDAwLCBTY290dCBNYXloZXcgd3JvdGU6DQo+
-IE9uIFRodSwgMTggQXByIDIwMTksIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gDQo+ID4gT24g
-VGh1LCAyMDE5LTA0LTE4IGF0IDE2OjQzIC0wNDAwLCBTY290dCBNYXloZXcgd3JvdGU6DQo+ID4g
-PiBPbiBUaHUsIDE4IEFwciAyMDE5LCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiANCj4g
-PiA+ID4gSGkgU2NvdHQsDQo+ID4gPiA+IA0KPiA+ID4gPiBPbiBUaHUsIDIwMTktMDQtMTggYXQg
-MDk6MzcgLTA0MDAsIFNjb3R0IE1heWhldyB3cm90ZToNCj4gPiA+ID4gPiBXaGVuIHRoZSBjbGll
-bnQgZG9lcyBhbiBvcGVuKENMQUlNX0ZIKSBhbmQgdGhlIHNlcnZlciBhbHJlYWR5DQo+ID4gPiA+
-ID4gaGFzDQo+ID4gPiA+ID4gb3Blbg0KPiA+ID4gPiA+IHN0YXRlIGZvciB0aGF0IG9wZW4gb3du
-ZXIgYW5kIGZpbGUsIHdoYXQncyBzdXBwb3NlZCB0bw0KPiA+ID4gPiA+IGhhcHBlbj8NCj4gPiA+
-ID4gPiBDdXJyZW50bHkgdGhlIHNlcnZlciByZXR1cm5zIHRoZSBleGlzdGluZyBzdGF0ZWlkIHdp
-dGggdGhlDQo+ID4gPiA+ID4gc2VxaWQNCj4gPiA+ID4gPiBidW1wZWQsDQo+ID4gPiA+ID4gYnV0
-IGl0IGxvb2tzIGxpa2UgdGhlIGNsaWVudCBpcyBleHBlY3RpbmcgYSBuZXcgc3RhdGVpZCAoSSdt
-DQo+ID4gPiA+ID4gc2VlaW5nDQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gc3RhdGUgbWFuYWdl
-ciBzcGVuZGluZyBhIGxvdCBvZiB0aW1lIHdhaXRpbmcgaW4NCj4gPiA+ID4gPiBuZnNfc2V0X29w
-ZW5fc3RhdGVpZF9sb2NrZWQoKSBkdWUgdG8gTkZTX1NUQVRFX0NIQU5HRV9XQUlUDQo+ID4gPiA+
-ID4gYmVpbmcNCj4gPiA+ID4gPiBzZXQNCj4gPiA+ID4gPiBpbg0KPiA+ID4gPiA+IHRoZSBzdGF0
-ZSBmbGFncyBieSBuZnNfbmVlZF91cGRhdGVfb3Blbl9zdGF0ZWlkKCkpLg0KPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+IExvb2tpbmcgYXQgcmZjNTY2MSBzZWN0aW9uIDE4LjE2LjMsIEkgc2VlOg0KPiA+
-ID4gPiA+IA0KPiA+ID4gPiA+ICAgIHwgQ0xBSU1fTlVMTCwgQ0xBSU1fRkggfCBGb3IgdGhlIGNs
-aWVudCwgdGhpcyBpcyBhIG5ldw0KPiA+ID4gPiA+IE9QRU4NCj4gPiA+ID4gPiByZXF1ZXN0IHwN
-Cj4gPiA+ID4gPiAgICB8ICAgICAgICAgICAgICAgICAgICAgIHwgYW5kIHRoZXJlIGlzIG5vIHBy
-ZXZpb3VzIHN0YXRlDQo+ID4gPiA+ID4gYXNzb2NpYXRlZCAgfA0KPiA+ID4gPiA+ICAgIHwgICAg
-ICAgICAgICAgICAgICAgICAgfCB3aXRoIHRoZSBmaWxlIGZvciB0aGUNCj4gPiA+ID4gPiBjbGll
-bnQuICBXaXRoICAgICAgICB8DQo+ID4gPiA+ID4gICAgfCAgICAgICAgICAgICAgICAgICAgICB8
-IENMQUlNX05VTEwsIHRoZSBmaWxlIGlzDQo+ID4gPiA+ID4gaWRlbnRpZmllZCBieQ0KPiA+ID4g
-PiA+IHRoZSAgfA0KPiA+ID4gPiA+ICAgIHwgICAgICAgICAgICAgICAgICAgICAgfCBjdXJyZW50
-IGZpbGVoYW5kbGUgYW5kIHRoZQ0KPiA+ID4gPiA+IHNwZWNpZmllZCAgICAgICB8DQo+ID4gPiA+
-ID4gICAgfCAgICAgICAgICAgICAgICAgICAgICB8IGNvbXBvbmVudCBuYW1lLiAgV2l0aCBDTEFJ
-TV9GSA0KPiA+ID4gPiA+IChuZXcNCj4gPiA+ID4gPiB0byAgICAgfA0KPiA+ID4gPiA+ICAgIHwg
-ICAgICAgICAgICAgICAgICAgICAgfCBORlN2NC4xKSwgdGhlIGZpbGUgaXMgaWRlbnRpZmllZA0K
-PiA+ID4gPiA+IGJ5DQo+ID4gPiA+ID4ganVzdCAgIHwNCj4gPiA+ID4gPiAgICB8ICAgICAgICAg
-ICAgICAgICAgICAgIHwgdGhlIGN1cnJlbnQgZmlsZWhhbmRsZS4gIA0KPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+IFNvIGl0IHNlZW1zIGxpa2UgbWF5YmUgdGhlIHNlcnZlciBzaG91bGQgYmUgdG9zc2lu
-ZyB0aGUgb2xkDQo+ID4gPiA+ID4gc3RhdGUNCj4gPiA+ID4gPiBhbmQNCj4gPiA+ID4gPiByZXR1
-cm5pbmcgYSBuZXcgc3RhdGVpZD8NCj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IE5vLiBB
-cyBmYXIgYXMgdGhlIHByb3RvY29sIGlzIGNvbmNlcm5lZCwgdGhlIG9ubHkgZGlmZmVyZW5jZQ0K
-PiA+ID4gPiBiZXR3ZWVuDQo+ID4gPiA+IENMQUlNX05VTEwgYW5kIENMQUlNX0ZIIGlzIHRocm91
-Z2ggaG93IHRoZSBjbGllbnQgaWRlbnRpZmllcw0KPiA+ID4gPiB0aGUNCj4gPiA+ID4gZmlsZQ0K
-PiA+ID4gPiAoaW4gdGhlIGZpcnN0IGNhc2UsIHRocm91Z2ggYW4gaW1wbGljaXQgbG9va3VwLCBh
-bmQgaW4gdGhlDQo+ID4gPiA+IHNlY29uZA0KPiA+ID4gPiBjYXNlDQo+ID4gPiA+IHRocm91Z2gg
-YSBmaWxlIGhhbmRsZSkuIFRoZSBjbGllbnQgc2hvdWxkIGJlIGZyZWUgdG8gaW50ZXJtaXgNCj4g
-PiA+ID4gdGhlDQo+ID4gPiA+IHR3bw0KPiA+ID4gPiB0eXBlcyBvZiBPUEVOLCBhbmQgaXQgc2hv
-dWxkIGV4cGVjdCB0aGUgcmVzdWx0aW5nIHN0YXRlaWRzIHRvDQo+ID4gPiA+IGRlcGVuZA0KPiA+
-ID4gPiBvbmx5IG9uIHdoZXRoZXIgb3Igbm90IHRoZSBvcGVuX293bmVyIG1hdGNoZXMuIElmIHRo
-ZQ0KPiA+ID4gPiBvcGVuX293bmVyDQo+ID4gPiA+IG1hdGNoZXMgYW4gZXhpc3Rpbmcgc3RhdGVp
-ZCwgdGhlbiB0aGF0IHN0YXRlaWQgaXMgYnVtcGVkIGFuZA0KPiA+ID4gPiByZXR1cm5lZC4NCj4g
-PiA+ID4gDQo+ID4gPiA+IEknbSBub3QgYXdhcmUgb2YgYW55IGV4cGVjdGF0aW9uIGluIHRoZSBj
-bGllbnQgdGhhdCB0aGlzIHNob3VsZA0KPiA+ID4gPiBub3QNCj4gPiA+ID4gYmUNCj4gPiA+ID4g
-dGhlIGNhc2UsIHNvIGlmIHlvdSBhcmUgc2VlaW5nIGRpZmZlcmVudCBiZWhhdmlvdXIsIHRoZW4N
-Cj4gPiA+ID4gc29tZXRoaW5nDQo+ID4gPiA+IGVsc2UNCj4gPiA+ID4gbXVzdCBiZSBhdCB3b3Jr
-IGhlcmUuIElzIHRoZSBjbGllbnQgcGVyaGFwcyBtb3VudGluZyB0aGUgc2FtZQ0KPiA+ID4gPiBm
-aWxlc3lzdGVtIGluIHR3byBkaWZmZXJlbnQgcGxhY2VzIGluIHN1Y2ggYSB3YXkgdGhhdCB0aGUg
-c3VwZXINCj4gPiA+ID4gYmxvY2sNCj4gPiA+ID4gaXMgbm90IGJlaW5nIHNoYXJlZD8NCj4gPiA+
-IA0KPiA+ID4gTm8sIGl0J3MganVzdCBhIHNpbmdsZSA0LjEgbW91bnQgdy8gdGhlIGRlZmF1bHQg
-bW91bnQgb3B0aW9ucy4NCj4gPiA+IA0KPiA+ID4gRm9yIGEgYml0IG9mIGJhY2tncm91bmQsIEkn
-dmUgYmVlbiB0cnlpbmcgdG8gdHJhY2sgZG93biBhIHByb2JsZW0NCj4gPiA+IGluDQo+ID4gPiBS
-SEVMIHdoZXJlIHRoZSBTRVE0X1NUQVRVU19SRUNBTExBQkxFX1NUQVRFX1JFVk9LRUQgZmxhZ3Mg
-aXMNCj4gPiA+IGdldHRpbmcNCj4gPiA+IHBlcm1hbmVudGx5IHNldCBiZWNhdXNlIHRoZSBuZnM0
-X2NsaWVudC0+Y2xfcmV2b2tlZCBsaXN0IG9uIHRoZQ0KPiA+ID4gc2VydmVyDQo+ID4gPiBpcyBu
-b24tZW1wdHkuLi4geWV0IHRoZXJlJ3Mgbm8gbG9uZ2VyIG9wZW4gc3RhdGUgb24gdGhlIGNsaWVu
-dC4gDQo+ID4gPiANCj4gPiA+IEkgY2FuIHJlcHJvZHVjZSBpdCBwcmV0dHkgZWFzaWx5IGluIFJI
-RUwgdXNpbmcgMiBWTXMsIGVhY2ggd2l0aA0KPiA+ID4gMi00DQo+ID4gPiBDUFVzDQo+ID4gPiBh
-bmQgNC04RyBvZiBtZW1vcnkuICBUaGUgc2VydmVyIGhhcyA2NCBuZnNkIHRocmVhZHMgYW5kIGEg
-MTUNCj4gPiA+IHNlY29uZA0KPiA+ID4gbGVhc2UgdGltZS4NCj4gPiA+IA0KPiA+ID4gT24gdGhl
-IGNsaWVudCBJJ20gcnVubmluZyB0aGUgZm9sbG93aW5nIHRvIGFkZCBhIDEwbXMgZGVsYXkgdG8N
-Cj4gPiA+IENCX1JFQ0FMTA0KPiA+ID4gcmVwbGllczoNCj4gPiA+ICMgc3RhcCAtZ3ZlICdnbG9i
-YWwgY291bnQgPSAwOyBwcm9iZQ0KPiA+ID4gbW9kdWxlKCJuZnN2NCIpLmZ1bmN0aW9uKCJuZnM0
-X2NhbGxiYWNrX3JlY2FsbCIpIHsgcHJpbnRmKCIlczoNCj4gPiA+ICVkXG4iLA0KPiA+ID4gcHBm
-dW5jKCksICsrY291bnQpOyBtZGVsYXkoMTApOyB9Jw0KPiA+ID4gDQo+ID4gPiB0aGVuIGluIGFu
-b3RoZXIgd2luZG93IEkgb3BlbiBhIGJ1bmNoIG9mIGZpbGVzOg0KPiA+ID4gIyBmb3IgaSBpbiBg
-c2VxIC13IDEgNTAwMGA7IGRvIHNsZWVwIDJtIDwvbW50L3QvZGlyMS9maWxlLiRpICYNCj4gPiA+
-IGRvbmUNCj4gPiA+IA0KPiA+ID4gKE5vdGU6IEkgYWxyZWFkeSBjcmVhdGVkIHRoZSBmaWxlcyBh
-aGVhZCBvZiB0aW1lKQ0KPiA+ID4gDQo+ID4gPiBBcyBzb29uIGFzIHRoZSBiYXNoIHByb21wdCBy
-ZXR1cm5zIG9uIHRoZSBjbGllbnQsIEkgcnVuIHRoZQ0KPiA+ID4gZm9sbG93aW5nDQo+ID4gPiBv
-bg0KPiA+ID4gdGhlIHNlcnZlcjoNCj4gPiA+ICMgZm9yIGkgaW4gYHNlcSAtdyAxIDUwMDBgOyBk
-byBkYXRlID4vZXhwb3J0L2RpcjEvZmlsZS4kaSAmIGRvbmUNCj4gPiA+IA0KPiA+ID4gQXQgdGhh
-dCBwb2ludCwgYW55IGZ1cnRoZXIgU0VRVUVOQ0Ugb3BzIHdpbGwgaGF2ZSB0aGUgcmVjYWxsYWJs
-ZQ0KPiA+ID4gc3RhdGUNCj4gPiA+IHJldm9rZWQgZmxhZyBzZXQgb24gdGhlIGNsaWVudCB1bnRp
-bCB0aGUgZnMgaXMgdW5tb3VudGVkLg0KPiA+ID4gDQo+ID4gPiBJZiBJIHJ1biB0aGUgc2FtZSBz
-dGVwcyBvbiBGZWRvcmEgY2xpZW50cyB3aXRoIHJlY2VudCBrZXJuZWxzLCBJDQo+ID4gPiBkb24n
-dA0KPiA+ID4gaGF2ZSB0aGUgcHJvYmxlbSB3aXRoIHRoZSByZWNhbGxhYmxlIHN0YXRlIHJldm9r
-ZWQgZmxhZywgYnV0IEknbQ0KPiA+ID4gZ2V0dGluZw0KPiA+ID4gc29tZSBvdGhlciBzdHJhbmdl
-bmVzcy4gIEV2ZXJ5dGhpbmcgc3RhcnRzIG91dCBmaW5lIHdpdGgNCj4gPiA+IG5mc19yZWFwX2V4
-cGlyZWRfZGVsZWdhdGlvbnMoKSBkb2luZyBURVNUX1NUQVRFSUQgYW5kDQo+ID4gPiBGUkVFX1NU
-QVRFSUQsDQo+ID4gPiBidXQNCj4gPiA+IG9uY2UgdGhlIHN0YXRlIG1hbmFnZXIgc3RhcnRzIGNh
-bGxpbmdzIG5mczQxX29wZW5fZXhwaXJlZCgpLA0KPiA+ID4gdGhpbmdzDQo+ID4gPiBzb3J0DQo+
-ID4gPiBvZiBncmluZCB0byBhIGhhbHQgYW5kIEkgc2VlIDEgT1BFTiBhbmQgMSBvciAyIFRFU1Rf
-U1RBVEVJRCBvcHMNCj4gPiA+IGV2ZXJ5DQo+ID4gPiA1DQo+ID4gPiBzZWNvbmRzIGluIHdpcmVz
-aGFyay4gIEl0IHN0YXlzIHRoYXQgd2F5IHVudGlsIHRoZSBmaWxlcyBhcmUNCj4gPiA+IGNsb3Nl
-ZA0KPiA+ID4gb24NCj4gPiA+IHRoZSBjbGllbnQsIHdoZW4gSSBzZWUgYSBzbGV3IG9mIERFTEVH
-UkVUVVJOcyBhbmQNCj4gPiA+IEZSRUVfU1RBVEVJRHMuLi4NCj4gPiA+IGJ1dA0KPiA+ID4gSSdt
-IG9ubHkgc2VlaW5nIDMgb3IgNCBDTE9TRSBvcHMuICBJZiBJIHBva2UgYXJvdW5kIGluIGNyYXNo
-IG9uDQo+ID4gPiB0aGUNCj4gPiA+IHNlcnZlciwgSSBzZWUgYSB0b24gb2Ygb3BlbiBzdGF0ZWlk
-czoNCj4gPiA+IA0KPiA+ID4gY3Jhc2g+IGVweXRob24gZnMvbmZzZC9wcmludC1jbGllbnQtc3Rh
-dGUtaW5mby5weQ0KPiA+ID4gbmZzZF9uZXQgPSAweGZmZmY5M2U0NzM1MTEwMDANCj4gPiA+ICAg
-ICAgICAgbmZzNF9jbGllbnQgPSAweGZmZmY5M2UzZjc5NTQ5ODANCj4gPiA+ICAgICAgICAgICAg
-ICAgICBuZnM0X3N0YXRlb3duZXIgPSAweGZmZmY5M2U0MDU4Y2MzNjAgbnVtX3N0YXRlaWRzDQo+
-ID4gPiA9DQo+ID4gPiA0OTk3IDwtLS0tIG9ubHkgMyBDTE9TRSBvcHMgd2VyZSByZWNlaXZlZA0K
-PiA+ID4gICAgICAgICAgICAgICAgIG51bV9vcGVub3duZXJzID0gMQ0KPiA+ID4gICAgICAgICAg
-ICAgICAgIG51bV9sYXlvdXRzID0gMA0KPiA+ID4gICAgICAgICAgICAgICAgIG51bV9kZWxlZ2F0
-aW9ucyA9IDANCj4gPiA+ICAgICAgICAgICAgICAgICBudW1fc2Vzc2lvbnMgPSAxDQo+ID4gPiAg
-ICAgICAgICAgICAgICAgbnVtX2NvcGllcyA9IDANCj4gPiA+ICAgICAgICAgICAgICAgICBudW1f
-cmV2b2tlZCA9IDANCj4gPiA+ICAgICAgICAgICAgICAgICBjbF9jYl93YWl0cV9xbGVuID0gMA0K
-PiA+ID4gDQo+ID4gPiBUaG9zZSBzdGF0ZWlkcyBzdGljayBhcm91bmQgdW50aWwgdGhlIGZzIGlz
-IHVubW91bnRlZCAoYW5kIHRoZQ0KPiA+ID4gREVTVFJPWV9TVEFURUlEIG9wcyByZXR1cm4gTkZT
-NEVSUl9DTElFTlRJRF9CVVNZIHdoaWxlIGRvaW5nIHNvKS4NCj4gPiA+IA0KPiA+ID4gQm90aCBW
-TXMgYXJlIHJ1bm5pbmcgNS4wLjYtMjAwLmZjMjkueDg2XzY0LCBidXQgdGhlIHNlcnZlciBhbHNv
-DQo+ID4gPiBoYXMNCj4gPiA+IHRoZQ0KPiA+ID4gIm5mc2Q6IERvbid0IHJlbGVhc2UgdGhlIGNh
-bGxiYWNrIHNsb3QgdW5sZXNzIGl0IHdhcyBhY3R1YWxseQ0KPiA+ID4gaGVsZCINCj4gPiA+IHBh
-dGNoIHlvdSBzZW50IGEgZmV3IHdlZWtzIGFnbyBhcyB3ZWxsIGFzIHRoZSAibmZzZDogQ0JfUkVD
-QUxMDQo+ID4gPiBjYW4NCj4gPiA+IHJhY2UNCj4gPiA+IHdpdGggRlJFRV9TVEFURUlEIiBwYXRj
-aCBJIHNlbnQgdG9kYXkuDQo+ID4gDQo+ID4gQXJlIHRoZSBjYWxscyB0byBuZnM0MV9vcGVuX2V4
-cGlyZWQoKSBzdWNjZWVkaW5nPyBJdCBzb3VuZHMgbGlrZQ0KPiA+IHRoZXkNCj4gPiBtaWdodCBu
-b3QgYmUuDQo+IA0KPiBUaGV5J3JlIHN1Y2NlZWRpbmcsIHRoZXkncmUganVzdCB0YWtpbmcgNSBz
-ZWNvbmRzIGVhY2guIA0KPiANCj4gVG8gbWFrZSBtYXR0ZXJzIHdvcnNlLCBkdWUgdG8gdGhlIGFn
-Z3Jlc3NpdmUgbGVhc2UgdGltZSBvbiB0aGUNCj4gc2VydmVyLA0KPiB0aGUgY2xpZW50IHdhcyBk
-b2luZyBhIFNFUVVFTkNFIG9wIHBlcmlvZGljYWxseSB3aGlsZSB0aGUgT1BFTnMgd2VyZQ0KPiBv
-Y2N1cnJpbmcuICBUaGUgU0VRVUVOQ0UgcmVwbGllcyBhbHNvIGhhZCB0aGUNCj4gUkVDQUxMQUJM
-RV9TVEFURV9SRVZPS0VEDQo+IGZsYWcgc2V0LCBhbmQgc2luY2UgdGhleSB3ZXJlbid0IGNvbWlu
-ZyBmcm9tIHRoZSBzdGF0ZSBtYW5hZ2VyIHRoZQ0KPiBuZnM0X3Nsb3QtPnByaXZpbGVnZWQgZmll
-bGQgd2FzIHVuc2V0LCBzbyB3ZSdkIHdpbmQgdXAgY2FsbGluZw0KPiBuZnM0MV9oYW5kbGVfcmVj
-YWxsYWJsZV9zdGF0ZV9yZXZva2VkKCkgYWdhaW4sIHVuZG9pbmcgd2hhdCBsaXR0bGUNCj4gcHJv
-Z3Jlc3Mgd2FzIG1hZGUuICBCdW1waW5nIHRoZSBsZWFzZSB0aW1lIHRvIDIwIHNlY29uZHMgbWFk
-ZSB0aGF0IGdvDQo+IGF3YXksIGJ1dCB0aGUgb3ZlcmFsbCBwcm9ibGVtIGlzIHN0aWxsIHRoZXJl
-Lg0KPiANCj4gSXMgaXQgcmVhbGx5IG5lY2Vzc2FyeSBmb3IgbmZzNDFfaGFuZGxlX3JlY2FsbGFi
-bGVfc3RhdGVfcmV2b2tlZCgpIHRvDQo+IG1hcmsgYWxsIG9wZW4gc3RhdGUgYXMgbmVlZGluZyBy
-ZWNvdmVyeT8gIEFmdGVyIGFsbCwgdGhlIG9ubHkgc3RhdGUNCj4gdGhhdA0KPiBjYW4gYmUgcmV2
-b2tlZCBhcmUgbGF5b3V0cyBhbmQgZGVsZWdhdGlvbnMuICBJZiBJIGNoYW5nZQ0KPiBuZnM0MV9o
-YW5kbGVfcmVjYWxsYWJsZV9zdGF0ZV9yZXZva2VkKCksIHNvIHRoYXQgaW5zdGVhZCBvZiBjYWxs
-aW5nDQo+IG5mczQxX2hhbmRsZV9zb21lX3N0YXRlX3Jldm9rZWQoKSB3ZSBpbnN0ZWFkIGNhbGwN
-Cj4gbmZzX21hcmtfdGVzdF9leHBpcmVkX2FsbF9kZWxlZ2F0aW9ucygpIGFuZA0KPiBuZnM0X3Nj
-aGVkdWxlX3N0YXRlX21hbmFnZXIoKSwgdGhlbiB0aGUgcHJvYmxlbSBzZWVtcyB0byBnbyBhd2F5
-Lg0KDQpUaGF0IHdvdWxkIGJlIE9LIHdpdGggbWUuIFRoYXQgY29kZSBwcm9iYWJseSBwcmUtZGF0
-ZXMgdGhlIGV4aXN0ZW5jZSBvZg0KbmZzX21hcmtfdGVzdF9leHBpcmVkX2FsbF9kZWxlZ2F0aW9u
-cygpLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVy
-LCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Thu, 18 Apr 2019, J. Bruce Fields wrote:
+
+> On Thu, Apr 18, 2019 at 04:50:24PM -0400, Scott Mayhew wrote:
+> > On Thu, 18 Apr 2019, J. Bruce Fields wrote:
+> > 
+> > > On Thu, Apr 18, 2019 at 09:24:00AM -0400, Scott Mayhew wrote:
+> > > > While trying to track down some issues involving large numbers of
+> > > > delegations being recalled/revoked, I caught the server setting
+> > > > SEQ4_STATUS_CB_PATH_DOWN while the client was actively responding to
+> > > > CB_RECALLs.  It turns out that the client had already done a
+> > > > TEST_STATEID and FREE_STATEID for a delegation being recalled by the
+> > > > time it received the CB_RECALL.
+> > > 
+> > > That's interesting, thanks!
+> > > 
+> > > This exception seems awfully narrow, though.
+> > > 
+> > > If we get back any NFS-level error at all, then I think the callback
+> > > channel is working (am I wrong?)
+> > 
+> > Correct, if the client replies with either NFS4ERR_DELAY or
+> > NFS4ERR_BAD_STATEID, the server will retry 1 time (see dl_retries).
+> > After that, we fall thru and nfsd4_cb_recall_done() returns -1 which
+> > causes the SEQ4_STATUS_CB_PATH_DOWN flag to be set.
+> > 
+> > > and telling the client to set up a new
+> > > one is probably not going to help.  The best we can do is probably just
+> > > give up
+> > 
+> > That's what the patch is essentially doing.  Or are you saying don't
+> > even bother with the checks but still return 1 so we don't set the
+> > SEQ4_STATUS_CB_PATH_DOWN flag?
+> 
+> Right, I don't see any point returning -1 (which ends up setting
+> CB_PATH_DOWN) in any case where we get an nfs-level error.  If the
+> client got so far as returning an error, then the callback path is
+> working.
+> 
+> I'm not sure exactly what errors *should* result in CB_PATH_DOWN,
+> though.  ETIMEDOUT, ENOTCONN, EIO?
+
+I'm not sure either.  Looking at
+call_status/call_timeout/rpc_check_timeout, it looks to me like ENOTCONN
+will be translated to ETIMEDOUT because nfsd4_run_cb_work sets the 
+RPC_TASK_SOFTCONN flag in the call to rpc_call_async.
+
+It looks like call_status can return EHOSTDOWN, ENETDOWN, EHOSTUNREACH,
+ENETUNREACH, and EPERM... should those be handled as well?
+
+-Scott
+
+> And maybe we should be checking for
+> those in nfsd4_cb_done, and do away with the convention that -1 means
+> CB_PATH_DOWN.  I don't think there's a reason individual callback ops
+> would need different rules for when to mark the callback channel down.
+> 
+> --b.
+> 
+> > 
+> > > and let the client deal with the ensuing
+> > > RECALLABLE_STATE_REVOKED flag.
+> > 
+> > The client's already dealing with the RECALLABLE_STATE_REVOKED flag,
+> > that's why it sent a TEST_STATEID and FREE_STATEID before it got this
+> > particular CB_RECALL.  The idea behind the patch is to not give the
+> > state manager on the client additional work by setting CB_PATH_DOWN when
+> > the callback channel is clearly working...
+> > 
+> > -Scott
+> > > 
+> > > --b.
+> > > 
+> > > > 
+> > > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > > > ---
+> > > >  fs/nfsd/nfs4state.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > index 6a45fb00c5fc..e88e429133a8 100644
+> > > > --- a/fs/nfsd/nfs4state.c
+> > > > +++ b/fs/nfsd/nfs4state.c
+> > > > @@ -3958,6 +3958,14 @@ static int nfsd4_cb_recall_done(struct nfsd4_callback *cb,
+> > > >  			rpc_delay(task, 2 * HZ);
+> > > >  			return 0;
+> > > >  		}
+> > > > +		/*
+> > > > +		 * Race: client may have done a FREE_STATEID before
+> > > > +		 * receiving the CB_RECALL.
+> > > > +		 */
+> > > > +		if (dp->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID &&
+> > > > +				refcount_read(&dp->dl_stid.sc_count) == 1 &&
+> > > > +				list_empty(&dp->dl_recall_lru))
+> > > > +			return 1;
+> > > >  		/*FALLTHRU*/
+> > > >  	default:
+> > > >  		return -1;
+> > > > -- 
+> > > > 2.17.2
