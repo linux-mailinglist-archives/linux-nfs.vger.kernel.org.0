@@ -2,58 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC49610BE6
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2019 19:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB94D10C0B
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2019 19:35:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfEARSc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 1 May 2019 13:18:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46302 "EHLO mx1.redhat.com"
+        id S1726069AbfEARfB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 May 2019 13:35:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:54116 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfEARSc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 1 May 2019 13:18:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 53D0A3082B4B;
-        Wed,  1 May 2019 17:18:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C199271A0;
-        Wed,  1 May 2019 17:18:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <alpine.LRH.2.21.1905020306290.14696@namei.org>
-References: <alpine.LRH.2.21.1905020306290.14696@namei.org> <561.1556663960@warthog.procyon.org.uk>
-To:     James Morris <jmorris@namei.org>
-Cc:     dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [GIT PULL] keys: Namespacing
+        id S1726019AbfEARfB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 1 May 2019 13:35:01 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 5364068AFE; Wed,  1 May 2019 19:34:43 +0200 (CEST)
+Date:   Wed, 1 May 2019 19:34:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/4] 9p: pass the correct prototype to read_cache_page
+Message-ID: <20190501173443.GA19969@lst.de>
+References: <20190501160636.30841-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <22942.1556731109.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 01 May 2019 18:18:29 +0100
-Message-ID: <22943.1556731109@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 01 May 2019 17:18:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501160636.30841-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-James Morris <jmorris@namei.org> wrote:
+Fix the callback 9p passes to read_cache_page to actually have the
+proper type expected.  Casting around function pointers can easily
+hide typing bugs, and defeats control flow protection.
 
-> > Can you pull this set of patches into the security tree and pass them along
-> > to Linus in the next merge window?  The primary thrust is to add
-> > namespacing to keyrings.
-> 
-> Not for this merge window, it's too close. Something like this would need 
-> to be in -rc2 or so.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/9p/vfs_addr.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Okay.
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index 0bcbcc20f769..02e0fc51401e 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -50,8 +50,9 @@
+  * @page: structure to page
+  *
+  */
+-static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
++static int v9fs_fid_readpage(void *data, struct page *page)
+ {
++	struct p9_fid *fid = data;
+ 	struct inode *inode = page->mapping->host;
+ 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
+ 	struct iov_iter to;
+@@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
+ 	if (ret == 0)
+ 		return ret;
+ 
+-	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
++	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
++			filp->private_data);
+ 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
+ 	return ret;
+ }
+-- 
+2.20.1
 
-David
