@@ -2,104 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBFC10AA1
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2019 18:07:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 827FC10BA6
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2019 19:00:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfEAQHY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 May 2019 12:07:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35878 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfEAQHY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 May 2019 12:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UYhsUC45x3BaFz65BgDHiQpOpAjMvMtZBCkBOB8hL5Q=; b=N9hkv1/KxvUiY8l8aDh5EzrKDf
-        aX39LFBLR0uVkQvhJLeEuPzxrJ0HtEIeY1e9ikhySWDweBLiPvDrdzTlg6Wi0QSSQyaH9yXwYdcov
-        pBzp0wGVJgNK7NXNtPiDAUZ9JEhgdVCOcXx35OAT/umKz11Mt42tyvCSvcGByPL85Lm1hqWDO1jDB
-        3eWTieiEchWRQ2uYH/Y5x99PF4advsXL+oOmTaa4AVdjheR/oqOCWxx1j8RQR+gadGYSv+v5Gdcjt
-        uilpaJBDPY/A3oCNijbOhKOerYmle8m2zgrUn4qQy2u/DTcJ71W+0FaQ0X2cTtzC+j/lhgvo5htPv
-        w1zfZX8A==;
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLrlQ-0008P9-2K; Wed, 01 May 2019 16:07:20 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        id S1726473AbfEARAX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 May 2019 13:00:23 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:37355 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfEARAX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 May 2019 13:00:23 -0400
+Received: by mail-vs1-f54.google.com with SMTP id w13so10205151vsc.4
+        for <linux-nfs@vger.kernel.org>; Wed, 01 May 2019 10:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fKeHm+YnMFQhnE5COYYd2wTHTYE5yGwHo3lDdnebjM4=;
+        b=c9cRJ1QZQtCO0/mYbd0/5i4CUar4BNukWTS+G7jpwqDiNzZNV1I2edB+dOMbqXzfQN
+         mhW68V4DfHLuHMdUGgFuw3BtCW6wAMRLTGARVl9g24jKKOObBPLzumTeE6Ku3J/zC/Rs
+         3kKoRtXLz+OH40U9zaDIKNjnYtAm3sAsF9MfgJr3YB/1AReKlm/skRORZDQ9HVlkxL+f
+         zJz1f4+jYMAYy/PU6bHdIuWRtCw1kB8ks9BemTUwcrrGzu34XCiyKAqYhPCuMUja77PS
+         L1YKR17HUUy1neMNs0cNdR37rpUDpDaPudaVB9kgFJZXXZ1cWQBxdLvqV5CVr3BdlKhF
+         liLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fKeHm+YnMFQhnE5COYYd2wTHTYE5yGwHo3lDdnebjM4=;
+        b=N/f3Y6Wh0XupAQ6BSaburuSVQMML84+VA5hTE5SSWaNl+QneRcuUMbiZkM7mWWacsv
+         zPqjY/JhcKaDhWn1IzYUceDqckJynMHu7H5NjSKJnJYnNGlsVG+7tK4Tm82GX+9AZreD
+         rZAcXqm0lg+tCZNe4LQ/NUgyZ5ncdBajuBgBVz0gcb2N6GqWvVL6fgd1zc+aZTzlsQIn
+         IocaGFybnLg6yhFQLWXzrI0Z3HbJUwfTSbEtv1oZ/fKPohrIl8IZUIRBCgHjuIITmx1B
+         l57MZ+Clzkk9LU0OfJZ4T8LYespLH7agkxk6WW2GQqaKI5Fa5zb5/ihuGJE1wfi09tWV
+         B+Bg==
+X-Gm-Message-State: APjAAAUQsIr0K8cCLLt1g+3jbj8XZhYIscC9xHZoiN+AhQPZAxerBRh0
+        0w8TziOTmGgwray9hsz5Cbcbhm1C+w/M7kHWfnfB9w==
+X-Google-Smtp-Source: APXvYqyUqlL9jpVL90DkvvlHC4IlULAcsEjfbXtupVrOhb+mGnoHYGwhZSQ0zSjaCUnEraTNpHXEENzrDsXLSmJMKA0=
+X-Received: by 2002:a67:7444:: with SMTP id p65mr38135332vsc.104.1556730021507;
+ Wed, 01 May 2019 10:00:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190501160636.30841-1-hch@lst.de>
+In-Reply-To: <20190501160636.30841-1-hch@lst.de>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 1 May 2019 10:00:10 -0700
+Message-ID: <CABCJKudfkFB4QGp4J6E5r2Td+Wqw0dTYfMZkxVh9DgR7N=JwyA@mail.gmail.com>
+Subject: Re: fix filler_t callback type mismatches
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] jffs2: pass the correct prototype to read_cache_page
-Date:   Wed,  1 May 2019 12:06:36 -0400
-Message-Id: <20190501160636.30841-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190501160636.30841-1-hch@lst.de>
-References: <20190501160636.30841-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix the callback jffs2 passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+On Wed, May 1, 2019 at 9:07 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Casting mapping->a_ops->readpage to filler_t causes an indirect call
+> type mismatch with Control-Flow Integrity checking. This change fixes
+> the mismatch in read_cache_page_gfp and read_mapping_page by adding
+> using a NULL filler argument as an indication to call ->readpage
+> directly, and by passing the right parameter callbacks in nfs and jffs2.
+>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/jffs2/file.c     | 4 ++--
- fs/jffs2/fs.c       | 2 +-
- fs/jffs2/os-linux.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Thanks, Christoph! This looks much cleaner.
 
-diff --git a/fs/jffs2/file.c b/fs/jffs2/file.c
-index 7d8654a1472e..f8fb89b10227 100644
---- a/fs/jffs2/file.c
-+++ b/fs/jffs2/file.c
-@@ -109,9 +109,9 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
- 	return ret;
- }
- 
--int jffs2_do_readpage_unlock(struct inode *inode, struct page *pg)
-+int jffs2_do_readpage_unlock(void *data, struct page *pg)
- {
--	int ret = jffs2_do_readpage_nolock(inode, pg);
-+	int ret = jffs2_do_readpage_nolock(data, pg);
- 	unlock_page(pg);
- 	return ret;
- }
-diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
-index eab04eca95a3..7fbe8a7843b9 100644
---- a/fs/jffs2/fs.c
-+++ b/fs/jffs2/fs.c
-@@ -686,7 +686,7 @@ unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
- 	struct page *pg;
- 
- 	pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
--			     (void *)jffs2_do_readpage_unlock, inode);
-+			     jffs2_do_readpage_unlock, inode);
- 	if (IS_ERR(pg))
- 		return (void *)pg;
- 
-diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
-index a2dbbb3f4c74..bd3d5f0ddc34 100644
---- a/fs/jffs2/os-linux.h
-+++ b/fs/jffs2/os-linux.h
-@@ -155,7 +155,7 @@ extern const struct file_operations jffs2_file_operations;
- extern const struct inode_operations jffs2_file_inode_operations;
- extern const struct address_space_operations jffs2_file_address_operations;
- int jffs2_fsync(struct file *, loff_t, loff_t, int);
--int jffs2_do_readpage_unlock (struct inode *inode, struct page *pg);
-+int jffs2_do_readpage_unlock(void *data, struct page *pg);
- 
- /* ioctl.c */
- long jffs2_ioctl(struct file *, unsigned int, unsigned long);
--- 
-2.20.1
+I tested the patches on a kernel compiled with clang's -fsanitize=cfi
+and the fixes look good to me. However, you missed one more type
+mismatch in v9fs_vfs_readpages (fs/9p/vfs_addr.c). Could you please
+add that one to the series too?
 
+Sami
