@@ -2,150 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AD6A11279
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 07:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E8D11320
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 08:08:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725763AbfEBFI1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 May 2019 01:08:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50718 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfEBFI1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 May 2019 01:08:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Fudg6aBxe0TkPNIqYA88Y89agb4T2MW29SCxmEQ3FDg=; b=QtiQDJhMITB8z86q7y2rFHLizw
-        A0n7Ay+W13jFlrAu5jmXGN4yKvKjZQkip/Al1Dj2gLr1dMSxDf6ckHScQ3SFxcYdmxVmCUu0yywtu
-        C6oru7DSuxU41Q6vaaEvQKdWQ4Z5WI4LiMKKeU/N/4Xqdguq1hvSNjl7pXg6QTqq/NIW4zIkxKjWJ
-        xdDrHL1MdmTrauH/fAxyax92MpcYlnZrjmYaEXrV0PVn39KohTnHNl3c0IHSDVBJkwX43bqMYdi1Q
-        WiyyznShpO4/IGLm/RXiUaspQ7bwkO35wthrNfb+Cr4qtlg9+PNy18wDkkC8Xm+SgjRUqx9BNqm3h
-        M5pbJwzg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hM3xG-0004oT-En; Thu, 02 May 2019 05:08:22 +0000
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-To:     NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org>
- <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org>
- <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
- <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org>
- <87bm0l4nra.fsf@notabene.neil.brown.name>
- <8736lx4goa.fsf@notabene.neil.brown.name>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9ada42cb-8783-49bb-fd0d-31e7fb7dacf4@infradead.org>
-Date:   Wed, 1 May 2019 22:08:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726255AbfEBGIq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 May 2019 02:08:46 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43410 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfEBGIp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 May 2019 02:08:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4264cwP036575;
+        Thu, 2 May 2019 06:08:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=8E/Xlfqhfo0vf1+GOu+GJdon4fjnIK8RWeWcR7c5CxQ=;
+ b=nR8WtxOm+plPvZHMSK561p3KEYr+W5P6dt5wv8Wdyq6G6c4sXKsJ27dNGyglUgYLlvQw
+ TiwiQ/8ArXmSJ9Q7w4ZZqnOHmUKWrMN27w4kkS53VuPtYwVISOfzQg8cxC83uMEFA0AY
+ ptwm+dRcbI2QNQ2sKnrVBJjEfy5X3NGrEgla0ZjGVVtT7DkKeko/waa8V/JrixHuQk56
+ atmQcJgoSXiGDQebmXLhT1JEYypI7ONEyIAva38jMv4vOxLlwbvrWeL2xYOzmBI9We+P
+ Y5PyHQUo4Q4VPRHo3QiEAr7J7oq9mMKN/9QfJgBAmoTHtmy586V2N2g2r6kmRLxrYyyd Xg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2s6xhyecfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 May 2019 06:08:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4266meq072708;
+        Thu, 2 May 2019 06:08:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2s6xhgmfew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 May 2019 06:08:31 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4268UcT005438;
+        Thu, 2 May 2019 06:08:30 GMT
+Received: from [192.168.0.100] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 May 2019 23:08:30 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 5/4] 9p: pass the correct prototype to read_cache_page
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190501173443.GA19969@lst.de>
+Date:   Thu, 2 May 2019 00:08:29 -0600
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AEBFD2FC-F94A-4E5B-8E1C-76380DDEB46E@oracle.com>
+References: <20190501160636.30841-1-hch@lst.de>
+ <20190501173443.GA19969@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9244 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905020048
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9244 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905020048
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil,
+1) You need to pass "filp" rather than "filp->private_data" to =
+read_cache_pages()
+in v9fs_fid_readpage().
 
-On 5/1/19 9:35 PM, NeilBrown wrote:
-> 
-> If the upper and lower layers use incompatible ACL formats, it is not
-> possible to copy the ACL xttr from one to the other, so overlayfs
+The patched code passes "filp->private_data" as the "data" parameter to
+read_cache_pages(), which would generate a call to:
 
-                           attr (?)
+    filler(data, page)
 
-> cannot work with them.
-> This happens particularly with NFSv4 which uses system.nfs4_acl, and
-> ext4 which uses system.posix_acl_access.
-> 
-> If all ACLs actually make to Unix permissions, then there is no need
+which would become a call to:
 
-                       map (?)
+static int v9fs_vfs_readpage(struct file *filp, struct page *page)
+{=09
+        return v9fs_fid_readpage(filp->private_data, page);
+}
 
-> to copy up the ACLs, but overlayfs cannot determine this.
-> 
-> So allow the sysadmin it assert that ACLs are not needed with a mount
-> option
->   honoracl=off
-> This causes the ACLs to not be copied, so filesystems with different
-> ACL formats can be overlaid together.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.com>
+which would then effectively become:
+
+    v9fs_fid_readpage(filp->private_data->private_data, page)
+
+Which isn't correct; because data is a void *, no error is thrown when
+v9fs_vfs_readpages treats filp->private_data as if it is filp.
+
+
+2) I'd also like to see an explicit comment in do_read_cache_page() =
+along
+the lines of:
+
+/*
+ * If a custom page filler was passed in use it, otherwise use the
+ * standard readpage() routine defined for the address_space.
+ *
+ */
+
+3) Patch 5/4?
+
+Otherwise it looks good.
+
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+
+> On May 1, 2019, at 11:34 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> Fix the callback 9p passes to read_cache_page to actually have the
+> proper type expected.  Casting around function pointers can easily
+> hide typing bugs, and defeats control flow protection.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  Documentation/filesystems/overlayfs.txt | 24 ++++++++++++++++++++++++
->  fs/overlayfs/copy_up.c                  |  9 +++++++--
->  fs/overlayfs/dir.c                      |  2 +-
->  fs/overlayfs/overlayfs.h                |  2 +-
->  fs/overlayfs/ovl_entry.h                |  1 +
->  fs/overlayfs/super.c                    | 15 +++++++++++++++
->  6 files changed, 49 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
-> index eef7d9d259e8..7ad675940c93 100644
-> --- a/Documentation/filesystems/overlayfs.txt
-> +++ b/Documentation/filesystems/overlayfs.txt
-> @@ -245,6 +245,30 @@ filesystem - future operations on the file are barely noticed by the
->  overlay filesystem (though an operation on the name of the file such as
->  rename or unlink will of course be noticed and handled).
->  
-> +ACL copy-up
-> +-----------
-> +
-> +When a file that only exists on the lower layer is modified it needs
-> +to be copied up to the upper layer.  This means copying the metadata
-> +and (usually) the data (though see "Metadata only copy up" below).
-> +One part of the metadata can be problematic: the ACLs.
-> +
-> +Now all filesystems support ACLs, and when they do they don't all use
+> fs/9p/vfs_addr.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+> index 0bcbcc20f769..02e0fc51401e 100644
+> --- a/fs/9p/vfs_addr.c
+> +++ b/fs/9p/vfs_addr.c
+> @@ -50,8 +50,9 @@
+>  * @page: structure to page
+>  *
+>  */
+> -static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
+> +static int v9fs_fid_readpage(void *data, struct page *page)
+> {
+> +	struct p9_fid *fid =3D data;
+> 	struct inode *inode =3D page->mapping->host;
+> 	struct bio_vec bvec =3D {.bv_page =3D page, .bv_len =3D =
+PAGE_SIZE};
+> 	struct iov_iter to;
+> @@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, =
+struct address_space *mapping,
+> 	if (ret =3D=3D 0)
+> 		return ret;
+>=20
+> -	ret =3D read_cache_pages(mapping, pages, (void =
+*)v9fs_vfs_readpage, filp);
+> +	ret =3D read_cache_pages(mapping, pages, v9fs_fid_readpage,
+> +			filp->private_data);
+> 	p9_debug(P9_DEBUG_VFS, "  =3D %d\n", ret);
+> 	return ret;
+> }
 
-   Not
-
-> +the same format.  A significant conflict appears between POSIX acls
-
-                                                                  ACLs
-
-> +used on many local filesystems, and NFSv4 ACLs used with NFSv4.  There
-
-                                                                    These (or the)
-
-> +two formats are, in general, not inter-convertible.
-> +
-> +If a site only uses regular Unix permissions (Read, Write, eXecute by
-> +User, Group and Other), then as these permissions are compatible with
-> +all ACLs, there is no need to copy ACLs.  overlayfs cannot determine
-> +if this is the case itself.
-> +
-> +For this reason, overlayfs supports a mount option "honoracl=off"
-> +which causes ACLs, any "system." extended attribute, on the lower
-> +layer to be ignored and, particularly, not copied to the upper later.
-> +This allows NFSv4 to be overlaid with a local filesystem, but should
-> +only be used if the only access controls used on the filesystem are
-> +Unix permission bits.
->  
->  Multiple lower layers
->  ---------------------
-
-
-
--- 
-~Randy
