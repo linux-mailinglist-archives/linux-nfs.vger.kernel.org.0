@@ -2,94 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA56D11A98
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 15:56:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CABD11AAA
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 16:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfEBN4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 May 2019 09:56:46 -0400
-Received: from mfb02-md.ns.itscom.net ([175.177.155.110]:50377 "EHLO
-        mfb02-md.ns.itscom.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfEBN4p (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 May 2019 09:56:45 -0400
-Received: from mail03-md.ns.itscom.net (mail03-md.ns.itscom.net [175.177.155.113])
-        by mfb02-md.ns.itscom.net (Postfix) with ESMTP id D155F1748295
-        for <linux-nfs@vger.kernel.org>; Thu,  2 May 2019 22:47:10 +0900 (JST)
-Received: from cmsa01-mds.s.noc.itscom.net (cmsa01-md.ns.itscom.net [175.177.0.91])
-        by mail03-md-outgoing.ns.itscom.net (Postfix) with ESMTP id 4F3C4FF0530;
-        Thu,  2 May 2019 22:47:09 +0900 (JST)
-Received: from jromail.nowhere ([219.110.243.48])
-        by cmsa-md with ESMTP
-        id MC3JhjzYCz4K5MC3JhE3t5; Thu, 02 May 2019 22:47:09 +0900
-Received: from jro by jrobl id 1hMC3J-0000ZV-0P ; Thu, 02 May 2019 22:47:09 +0900
-From:   "J. R. Okajima" <hooanon05g@gmail.com>
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-To:     NeilBrown <neilb@suse.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <8736lx4goa.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2199.1556804828.1@jrobl>
-Date:   Thu, 02 May 2019 22:47:08 +0900
-Message-ID: <2200.1556804828@jrobl>
+        id S1726370AbfEBOCH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 May 2019 10:02:07 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:37728 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOCH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 May 2019 10:02:07 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x42Drld9044213;
+        Thu, 2 May 2019 14:01:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=0nSq0kzqdxwXiYYsldtvVwitvvszvDIgIGmFM1J8Go4=;
+ b=TaNNMa2B3szcnIGTjpzw1y1uhWHK5FEUEBlcSR2DulIaKvT96+earpB9CbzqWvqGVbOx
+ AdEX4IKYdgxldbmlRba25NlSm4YTPHKwg3QyMNbAXI31CTjrJuMEd5gksl8sgz1Gxxvd
+ d9Dy2vxr6LzweCNieFFFperDLIsKtfJ+LKcILhN4tVEvcMemNhql38e9L1/W0vY7fOrO
+ htOyxx8D5TrxxlvoFakCqeFcy3DisS8ryorQfhsul2q8lhxVNo3lvzkvNTWaPWxX5oCT
+ 82JOZShN0I331KWTO+RLcmYwTg9v4okJIjt6DLI0HjeugL3zVQ3wxAcrG91DIRcP7gqp 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2s6xhygtmp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 May 2019 14:01:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x42E0kBR104040;
+        Thu, 2 May 2019 14:01:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2s7rtbr047-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 May 2019 14:01:51 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x42E1l7Y006859;
+        Thu, 2 May 2019 14:01:48 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 May 2019 07:01:47 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 5/4] 9p: pass the correct prototype to read_cache_page
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190502130405.GA2679@lst.de>
+Date:   Thu, 2 May 2019 08:01:43 -0600
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <1CFA4656-2E3E-40D2-A0B2-A49F174F2420@oracle.com>
+References: <20190501160636.30841-1-hch@lst.de>
+ <20190501173443.GA19969@lst.de>
+ <AEBFD2FC-F94A-4E5B-8E1C-76380DDEB46E@oracle.com>
+ <20190502130405.GA2679@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9244 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=780
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905020095
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9244 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=826 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905020095
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-NeilBrown:
-> If the upper and lower layers use incompatible ACL formats, it is not
-> possible to copy the ACL xttr from one to the other, so overlayfs
-> cannot work with them.
-> This happens particularly with NFSv4 which uses system.nfs4_acl, and
-> ext4 which uses system.posix_acl_access.
-
-FYI,
-Aufs had met the same problem many years ago, and I introduced some
-options called ICEX (Ignore Copyup Error on Xattr).
-
-(from the design doc in aufs)
-----------------------------------------
-For example, the src branch supports ACL but the dst branch doesn't
-because the dst branch may natively un-support it or temporary
-un-support it due to "noacl" mount option. Of course, the dst branch fs
-may NOT return an error even if the XATTR is not supported. It is
-totally up to the branch fs.
-
-Anyway when the aufs internal copy-up gets an error from the dst branch
-fs, then aufs tries removing the just copied entry and returns the error
-to the userspace. The worst case of this situation will be all copy-up
-will fail.
-
-For the copy-up operation, there two basic approaches.
-- copy the specified XATTR only (by category above), and return the
-  error unconditionally if it happens.
-- copy all XATTR, and ignore the error on the specified category only.
-
-In order to support XATTR and to implement the correct behaviour, aufs
-chooses the latter approach and introduces some new branch attributes,
-"icexsec", "icexsys", "icextr", "icexusr", and "icexoth".
-They correspond to the XATTR namespaces (see above). Additionally, to be
-convenient, "icex" is also provided which means all "icex*" attributes
-are set (here the word "icex" stands for "ignore copy-error on XATTR").
-
-The meaning of these attributes is to ignore the error from setting
-XATTR on that branch.
-Note that aufs tries copying all XATTR unconditionally, and ignores the
-error from the dst branch according to the specified attributes.
-----------------------------------------
-
-But recent nfs4 got changed its behaviour around ACL, and it didn't pass
-my local tests.  I had posted about that, but got no reply.
 
 
-J. R. Okajima
+> On May 2, 2019, at 7:04 AM, Christoph Hellwig <hch@lst.de> wrote:
+> 
+> Except that we don't pass v9fs_vfs_readpage as the filler any more,
+> we now pass v9fs_fid_readpage.
+
+True, so never mind. :-)
+
+
