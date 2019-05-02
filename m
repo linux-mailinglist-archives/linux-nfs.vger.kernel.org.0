@@ -2,126 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF3C811838
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 13:35:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 816BC11853
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2019 13:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfEBLfC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 May 2019 07:35:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56860 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfEBLfC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 2 May 2019 07:35:02 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D1A993078A1F;
-        Thu,  2 May 2019 11:35:01 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-85.rdu2.redhat.com [10.10.122.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 795245DA34;
-        Thu,  2 May 2019 11:35:01 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id CC5E9211FD; Thu,  2 May 2019 07:35:00 -0400 (EDT)
-Date:   Thu, 2 May 2019 07:35:00 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>
-Subject: Re: [PATCH] nfsd: CB_RECALL can race with FREE_STATEID
-Message-ID: <20190502113500.GH15226@coeurl.usersys.redhat.com>
-References: <20190418132400.24161-1-smayhew@redhat.com>
- <20190418151312.GB29274@fieldses.org>
- <20190418205024.GB15226@coeurl.usersys.redhat.com>
- <20190418213730.GA1891@fieldses.org>
- <20190430185845.GG15226@coeurl.usersys.redhat.com>
- <5ef90bd5ac79236458ffa04b7eb1d7812431859f.camel@hammerspace.com>
+        id S1726295AbfEBLqh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 May 2019 07:46:37 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:34594 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfEBLqh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 May 2019 07:46:37 -0400
+Received: by mail-yw1-f67.google.com with SMTP id u14so1319038ywe.1;
+        Thu, 02 May 2019 04:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jcBWOdKL4HM/5gs4c1naDvVj+y0UvTNyJvldP+RZuLU=;
+        b=YPwIGZG6R8/FHkEfbb10H6h7MXPFJKKCpFppbkLgu5/NkiWY8lGn+CxuKnRkBVGi1u
+         1xIDiL+Gx5Umn1JV92T06sf774OfUTapy6s1B/pUZDqChAJ5AaaTCDJBo6KNoyD00E4e
+         lA/XkmZPvx1bqInfL5AxUx4VXqLk+IuDV/CGWNoobAxf/3uz7IhF9JaGWpBc3Ds+dcWI
+         BvRvm4YUgspx+ry95hkF+743T1RIf4ICA5bJwMHE9QUUCtct60lMX+Tbic9Q3y0e8csu
+         /Fu9f2dcGM6+DXDB+SH9kXRJ2cW5e46Hv3UfXBOM0SAQfqm1kHoi76eHC6jiW5bL8LRq
+         XVUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jcBWOdKL4HM/5gs4c1naDvVj+y0UvTNyJvldP+RZuLU=;
+        b=iKXy23aqfNYSukgBM3xWBi99+Rc+GQJFyGJq1b00+Xiawb+PBtT9Fc55EKiUBYtbnS
+         kzvoRixI8R4eEuS8mRlyzhaLxklxqXcbup3GDsotU1gJ1SjaSppbvhrLvv/CjbQRiEcg
+         mXY/un6zfEzX2xwy8y3n99jNBXZF5ORMDYyyihZQKbL3zNta+I+DEVHYvGvqHV6cvpQ2
+         Z+GV0Dy1gwEgXYTIav8aFQU5IpQwMF2dNA1dj0QOOD2Boh5b1trdgK2c2r+V+AfHEKul
+         7IyFAlOe9j9ab9E9JkZhwYtGYyNyp0sYl1e1hcT/at5JafM2Xy9kq0b1rrYp76ZXh5An
+         Boeg==
+X-Gm-Message-State: APjAAAWADWHgmEr6LgMlgEGbCBNqE0PSO6V1MxuS58dA/eA9Zj5Xtq7+
+        F0Vkqg+Al146kguvKtCU6x5ZXKyWcQNG89DImsU=
+X-Google-Smtp-Source: APXvYqxOfXWXJ7hpacnqd3cjaM2qO/7GdpaVENgE1LUX5ufb85Rr1U9YIHTn6PAb1kXavD+KmYtxpL26e+lE3X6MhyY=
+X-Received: by 2002:a25:b883:: with SMTP id w3mr2641606ybj.337.1556797595677;
+ Thu, 02 May 2019 04:46:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ef90bd5ac79236458ffa04b7eb1d7812431859f.camel@hammerspace.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 02 May 2019 11:35:01 +0000 (UTC)
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <8736lx4goa.fsf@notabene.neil.brown.name>
+In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 2 May 2019 07:46:24 -0400
+Message-ID: <CAOQ4uxgREaBznnr-jNy-g1oX2gH6dXx9zj8wrs5JBJuVMv_9Pw@mail.gmail.com>
+Subject: Re: [PATCH] OVL: add honoracl=off mount option.
+To:     NeilBrown <neilb@suse.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 30 Apr 2019, Trond Myklebust wrote:
+On Thu, May 2, 2019 at 12:35 AM NeilBrown <neilb@suse.com> wrote:
+>
+>
+> If the upper and lower layers use incompatible ACL formats, it is not
+> possible to copy the ACL xttr from one to the other, so overlayfs
+> cannot work with them.
+> This happens particularly with NFSv4 which uses system.nfs4_acl, and
+> ext4 which uses system.posix_acl_access.
+>
+> If all ACLs actually make to Unix permissions, then there is no need
+> to copy up the ACLs, but overlayfs cannot determine this.
+>
+> So allow the sysadmin it assert that ACLs are not needed with a mount
+> option
+>   honoracl=off
+> This causes the ACLs to not be copied, so filesystems with different
+> ACL formats can be overlaid together.
+>
+> Signed-off-by: NeilBrown <neilb@suse.com>
+> ---
+>  Documentation/filesystems/overlayfs.txt | 24 ++++++++++++++++++++++++
+>  fs/overlayfs/copy_up.c                  |  9 +++++++--
+>  fs/overlayfs/dir.c                      |  2 +-
+>  fs/overlayfs/overlayfs.h                |  2 +-
+>  fs/overlayfs/ovl_entry.h                |  1 +
+>  fs/overlayfs/super.c                    | 15 +++++++++++++++
+>  6 files changed, 49 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
+> index eef7d9d259e8..7ad675940c93 100644
+> --- a/Documentation/filesystems/overlayfs.txt
+> +++ b/Documentation/filesystems/overlayfs.txt
+> @@ -245,6 +245,30 @@ filesystem - future operations on the file are barely noticed by the
+>  overlay filesystem (though an operation on the name of the file such as
+>  rename or unlink will of course be noticed and handled).
+>
+> +ACL copy-up
+> +-----------
+> +
+> +When a file that only exists on the lower layer is modified it needs
+> +to be copied up to the upper layer.  This means copying the metadata
+> +and (usually) the data (though see "Metadata only copy up" below).
+> +One part of the metadata can be problematic: the ACLs.
+> +
+> +Now all filesystems support ACLs, and when they do they don't all use
+> +the same format.  A significant conflict appears between POSIX acls
+> +used on many local filesystems, and NFSv4 ACLs used with NFSv4.  There
+> +two formats are, in general, not inter-convertible.
+> +
+> +If a site only uses regular Unix permissions (Read, Write, eXecute by
+> +User, Group and Other), then as these permissions are compatible with
+> +all ACLs, there is no need to copy ACLs.  overlayfs cannot determine
+> +if this is the case itself.
+> +
+> +For this reason, overlayfs supports a mount option "honoracl=off"
+> +which causes ACLs, any "system." extended attribute, on the lower
+> +layer to be ignored and, particularly, not copied to the upper later.
+> +This allows NFSv4 to be overlaid with a local filesystem, but should
+> +only be used if the only access controls used on the filesystem are
+> +Unix permission bits.
+>
 
-> On Tue, 2019-04-30 at 14:58 -0400, Scott Mayhew wrote:
-> > On Thu, 18 Apr 2019, J. Bruce Fields wrote:
-> > 
-> > > On Thu, Apr 18, 2019 at 04:50:24PM -0400, Scott Mayhew wrote:
-> > > > On Thu, 18 Apr 2019, J. Bruce Fields wrote:
-> > > > 
-> > > > > On Thu, Apr 18, 2019 at 09:24:00AM -0400, Scott Mayhew wrote:
-> > > > > > While trying to track down some issues involving large
-> > > > > > numbers of
-> > > > > > delegations being recalled/revoked, I caught the server
-> > > > > > setting
-> > > > > > SEQ4_STATUS_CB_PATH_DOWN while the client was actively
-> > > > > > responding to
-> > > > > > CB_RECALLs.  It turns out that the client had already done a
-> > > > > > TEST_STATEID and FREE_STATEID for a delegation being recalled
-> > > > > > by the
-> > > > > > time it received the CB_RECALL.
-> > > > > 
-> > > > > That's interesting, thanks!
-> > > > > 
-> > > > > This exception seems awfully narrow, though.
-> > > > > 
-> > > > > If we get back any NFS-level error at all, then I think the
-> > > > > callback
-> > > > > channel is working (am I wrong?)
-> > > > 
-> > > > Correct, if the client replies with either NFS4ERR_DELAY or
-> > > > NFS4ERR_BAD_STATEID, the server will retry 1 time (see
-> > > > dl_retries).
-> > > > After that, we fall thru and nfsd4_cb_recall_done() returns -1
-> > > > which
-> > > > causes the SEQ4_STATUS_CB_PATH_DOWN flag to be set.
-> > > > 
-> > > > > and telling the client to set up a new
-> > > > > one is probably not going to help.  The best we can do is
-> > > > > probably just
-> > > > > give up
-> > > > 
-> > > > That's what the patch is essentially doing.  Or are you saying
-> > > > don't
-> > > > even bother with the checks but still return 1 so we don't set
-> > > > the
-> > > > SEQ4_STATUS_CB_PATH_DOWN flag?
-> > > 
-> > > Right, I don't see any point returning -1 (which ends up setting
-> > > CB_PATH_DOWN) in any case where we get an nfs-level error.  If the
-> > > client got so far as returning an error, then the callback path is
-> > > working.
-> > > 
-> > > I'm not sure exactly what errors *should* result in CB_PATH_DOWN,
-> > > though.  ETIMEDOUT, ENOTCONN, EIO?
-> > 
-> > I'm not sure either.  Looking at
-> > call_status/call_timeout/rpc_check_timeout, it looks to me like
-> > ENOTCONN
-> > will be translated to ETIMEDOUT because nfsd4_run_cb_work sets the 
-> > RPC_TASK_SOFTCONN flag in the call to rpc_call_async.
-> > 
-> > It looks like call_status can return EHOSTDOWN, ENETDOWN,
-> > EHOSTUNREACH,
-> > ENETUNREACH, and EPERM... should those be handled as well?
-> 
-> Those errors should never be passed back to applications.
+I don't know. On the one hand "system." is not only ACLs.
+On the other hand, "honoracl=off" is not the same as -o noacl,
+but it sure sounds the same.
 
-I'm confused.  If call_status passes any of those errors to rpc_exit,
-then I'll see them in rpc_call_done/nfsd4_cb_done, won't I?
+I'd be a lot more comfortable with "ignore_xattrs=system.nfs4_acl"
+argument takes a comma separated list of xattr prefixes to ignore.
 
--Scott
+ovl_is_private_xattr() can be generalized to ovl_is_ignored_xattr(),
+going over a blacklist of N>=1 which will also be called from
+ovl_can_list(), because there is no point in listing the ACLs that
+are ignored. right?
 
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+Thanks,
+Amir.
