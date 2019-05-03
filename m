@@ -2,144 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EB051312C
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 17:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD03C1314C
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 17:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfECPas (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 May 2019 11:30:48 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41026 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfECPas (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 May 2019 11:30:48 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g190so218311qkf.8
-        for <linux-nfs@vger.kernel.org>; Fri, 03 May 2019 08:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=fWAzmRq1kAPqx4gKbf9hzlwHx9jMxWbxjoZzcU7wboY=;
-        b=OdZRcLunh5bK6zm4tKuCSVSEC2d/99AuA68asO6A5MymXnK13tk6+pMQV4Fp367xS4
-         R4JZu580LssqD8LKWTgLfOQBHcFhB7GhuLtzY+VbHyuYmVVJpbQ3exUCFlT/e1MiFWlm
-         xxdOjfFP8q4kiG12CBOXSBlk2I51rts0AzQ7jMOeVIzsNzeAf1XyDCt52JWmzTPREZA6
-         Z//A2cv94KdBnK3vR1i+YTaglxSZFU18BkOmh2AyU3fOtUxZSgrHZRKpJ0OGZzP+8xtt
-         BGcB873tZuT+WSx9NxkBTHcvNupRYbmfNkR2irg0mBsQIC0rafOT1V3LfOKxyFt4jLZ+
-         J/rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fWAzmRq1kAPqx4gKbf9hzlwHx9jMxWbxjoZzcU7wboY=;
-        b=aIMOz4J1U/Xe9XGPoUVmtWFy+VjlN89Tbj+ff3Qt6cK1yI1MwmQ2ombl/HRlLiRrBT
-         BO3+eS/Pe0Y/4oexY4lBkPbKnYv7rsArMZrMaViRIxtijuRrzEfH619dS8QgdI5vM1UW
-         yqu6fiXyzMju80c20WXmUHelhw7yQjjGMHfG3EznHQVBXMuVrgMKjYBmmnqGiOyQuufp
-         xSCJEuTV3O3jPolBiy1+El+s0fUKipG9VzBMTJ2Sf8Uy/4nU3PTdh/E58djjZxqFX7/a
-         9L+emELrjnem05ykZXgzst7cM7LE5HQIw/lPVQvTtO8OQ7Fwg2ZXJa3I1S3Wxkdvd2a2
-         zuAg==
-X-Gm-Message-State: APjAAAXuBTNk++c+ww5ZHDowp6nSd56dxXuOYqoI+gf61mzTEJNJGSh4
-        sLQotkLf/eIDr6J1pfyUp694Qxyhuw==
-X-Google-Smtp-Source: APXvYqxnggaIiJ6lt6eWP+qDbF7jLQS0NoOyJYFyerADvhYd1EtpW7C0RIQJ6Ymc27VUbvk+uQrCoQ==
-X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr8362223qkm.279.1556897447283;
-        Fri, 03 May 2019 08:30:47 -0700 (PDT)
-Received: from leira ([12.41.144.226])
-        by smtp.gmail.com with ESMTPSA id a3sm1540244qti.47.2019.05.03.08.30.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 08:30:46 -0700 (PDT)
-Message-ID: <0fb44ee09e95964ab04c0b25470d871d43bf91b6.camel@gmail.com>
-Subject: Re: [RFC PATCH 3/5] SUNRPC: Remove the bh-safe lock requirement on
- xprt->transport_lock
-From:   Trond Myklebust <trondmy@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Fri, 03 May 2019 11:28:54 -0400
-In-Reply-To: <EBFAF849-B5F1-4CFD-8DB4-7D66815353C8@oracle.com>
-References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-2-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-3-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-4-trond.myklebust@hammerspace.com>
-         <EBFAF849-B5F1-4CFD-8DB4-7D66815353C8@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
+        id S1728278AbfECPfc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 May 2019 11:35:32 -0400
+Received: from fieldses.org ([173.255.197.46]:54398 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726724AbfECPfc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 3 May 2019 11:35:32 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 82E561C26; Fri,  3 May 2019 11:35:31 -0400 (EDT)
+Date:   Fri, 3 May 2019 11:35:31 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Message-ID: <20190503153531.GJ12608@fieldses.org>
+References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org>
+ <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
+ <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87bm0l4nra.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2019-05-03 at 10:21 -0400, Chuck Lever wrote:
-> > On May 3, 2019, at 7:18 AM, Trond Myklebust <trondmy@gmail.com>
-> > wrote:
-> > 
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > ---
-> > net/sunrpc/xprt.c                          | 61 ++++++++++---------
-> > ---
-> > net/sunrpc/xprtrdma/rpc_rdma.c             |  4 +-
-> > net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  4 +-
-> > net/sunrpc/xprtrdma/svc_rdma_transport.c   |  8 +--
-> > net/sunrpc/xprtsock.c                      | 23 ++++----
-> > 5 files changed, 47 insertions(+), 53 deletions(-)
+On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
+> On Tue, Dec 06 2016, J. Bruce Fields wrote:
 > 
-> For rpc_rdma.c and svc_rdma_backchannel.c:
+> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
+> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Grünbacher
+> >> > <andreas.gruenbacher@gmail.com> wrote:
+> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Grünbacher <andreas.gruenbacher@gmail.com>:
+> >> >
+> >> >>> It's not hard to come up with a heuristic that determines if a
+> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore the
+> >> >>> attribute in that case. (The file mode is transmitted in its own
+> >> >>> attribute already, so actually converting .) That way, overlayfs could
+> >> >>> still fail copying up files that have an actual ACL. It's still an
+> >> >>> ugly hack ...
+> >> >>
+> >> >> Actually, that kind of heuristic would make sense in the NFS client
+> >> >> which could then hide the "system.nfs4_acl" attribute.
+> >> >
+> >> > Even simpler would be if knfsd didn't send the attribute if not
+> >> > necessary.  Looks like there's code actively creating the nfs4_acl on
+> >> > the wire even if the filesystem had none:
+> >> >
+> >> >     pacl = get_acl(inode, ACL_TYPE_ACCESS);
+> >> >     if (!pacl)
+> >> >         pacl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+> >> >
+> >> > What's the point?
+> >> 
+> >> That's how the protocol is specified.
+> >
+> > Yep, even if we could make that change to nfsd it wouldn't help the
+> > client with the large number of other servers that are out there
+> > (including older knfsd's).
+> >
+> > --b.
+> >
+> >> (I'm not saying that that's very helpful.)
+> >> 
+> >> Andreas
 > 
->    Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> Hi everyone.....
+>  I have a customer facing this problem, and so stumbled onto the email
+>  thread.
+>  Unfortunately it didn't resolve anything.  Maybe I can help kick things
+>  along???
 > 
-> For svc_rdma_transport.c:
+>  The core problem here is that NFSv4 and ext4 use different and largely
+>  incompatible ACL implementations.  There is no way to accurately
+>  translate from one to the other in general (common specific examples
+>  can be converted).
 > 
-> These locks are server-side only. AFAICS it's not safe
-> to leave BH's enabled here. Can you drop these hunks?
+>  This means that either:
+>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
+>       versa) or
+>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
+>       that is OK.
+> 
+>  Silently not copying the ACLs is probably not a good idea as it might
+>  result in inappropriate permissions being given away.  So if the
+>  sysadmin wants this (and some clearly do), they need a way to
+>  explicitly say "I accept the risk".
 
-Oops... Yes, I don't know why I mistook that for the xprt-
->transport_lock...
+So, I feel like silently copying ACLs up *also* carries a risk, if that
+means switching from server-enforcement to client-enforcement of those
+permissions.
 
-You mean these 3 hunks, right?
+Sorry, I know we had another thread recently about permissions in this
+situation, and I've forgotten the conclusion.
 
-> > diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> > b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> > index 027a3b07d329..18ffc6190ea9 100644
-> > --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> > +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> > @@ -221,9 +221,9 @@ static void handle_connect_req(struct
-> > rdma_cm_id *new_cma_id,
-> > 	 * Enqueue the new transport on the accept queue of the
-> > listening
-> > 	 * transport
-> > 	 */
-> > -	spin_lock_bh(&listen_xprt->sc_lock);
-> > +	spin_lock(&listen_xprt->sc_lock);
-> > 	list_add_tail(&newxprt->sc_accept_q, &listen_xprt-
-> > >sc_accept_q);
-> > -	spin_unlock_bh(&listen_xprt->sc_lock);
-> > +	spin_unlock(&listen_xprt->sc_lock);
-> > 
-> > 	set_bit(XPT_CONN, &listen_xprt->sc_xprt.xpt_flags);
-> > 	svc_xprt_enqueue(&listen_xprt->sc_xprt);
-> > @@ -396,7 +396,7 @@ static struct svc_xprt *svc_rdma_accept(struct
-> > svc_xprt *xprt)
-> > 	listen_rdma = container_of(xprt, struct svcxprt_rdma, sc_xprt);
-> > 	clear_bit(XPT_CONN, &xprt->xpt_flags);
-> > 	/* Get the next entry off the accept list */
-> > -	spin_lock_bh(&listen_rdma->sc_lock);
-> > +	spin_lock(&listen_rdma->sc_lock);
-> > 	if (!list_empty(&listen_rdma->sc_accept_q)) {
-> > 		newxprt = list_entry(listen_rdma->sc_accept_q.next,
-> > 				     struct svcxprt_rdma, sc_accept_q);
-> > @@ -404,7 +404,7 @@ static struct svc_xprt *svc_rdma_accept(struct
-> > svc_xprt *xprt)
-> > 	}
-> > 	if (!list_empty(&listen_rdma->sc_accept_q))
-> > 		set_bit(XPT_CONN, &listen_rdma->sc_xprt.xpt_flags);
-> > -	spin_unlock_bh(&listen_rdma->sc_lock);
-> > +	spin_unlock(&listen_rdma->sc_lock);
-> > 	if (!newxprt)
-> > 		return NULL;
-> > 
-> > 
+Out of curiosity, what's done with selinux labels?
 
--- 
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
+--b.
 
+> If only standard Unix permissions
+>  are used, there is no risk, so this seems reasonable.
+> 
+>  So I would like to propose a new option for overlayfs
+>     nocopyupacl:   when overlayfs is copying a file (or directory etc)
+>         from the lower filesystem to the upper filesystem, it does not
+>         copy extended attributes with the "system." prefix.  These are
+>         used for storing ACL information and this is sometimes not
+>         compatible between different filesystem types (e.g. ext4 and
+>         NFSv4).  Standard Unix ownership permission flags (rwx) *are*
+>         copied so this option does not risk giving away inappropriate
+>         permissions unless the lowerfs uses unusual ACLs.
+> 
+> 
+>  Miklos: would you find that acceptable?
+> 
+> Thanks,
+> NeilBrown
+> 
+>    
 
 
