@@ -2,89 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB2C12C41
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 13:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2032712D96
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 14:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfECLWt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 May 2019 07:22:49 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51280 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfECLWt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 May 2019 07:22:49 -0400
-Received: by mail-it1-f195.google.com with SMTP id s3so8513775itk.1
-        for <linux-nfs@vger.kernel.org>; Fri, 03 May 2019 04:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DHLknTlY+PguemNFgNc/OzCfTW9tQ+mNfJOlb0yy1So=;
-        b=bC/EQjywTVz26giGyowq5ZPoejLHxrA/2iC1tB68SW9KrdbtdFa0xX6kjAn5X5csGX
-         D4WdXZdMdyrv1b25+6l5uTvA6+Ke4ffzVkoryEOlCEXwQglxi7UI8/iKXQlR8k8JTdUV
-         qa7DqNcNmkxv5wOIEYekXncbGsKhl+p+QVRvCqd1N/vNY5myz9PC32UY1tDAjOsfiP+v
-         yqEY/hjo6N75abAp7Huw6kpkPKENQYwrvWo4LN98/CGQWvhS1mAVx4BKael0WwHTRvDf
-         YXCI1fxISoT1SaFFQZlgE6xjxyfUt8f6MHtwXKIoia64igh0wafaTOeLU/za2VW3VxBS
-         76QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DHLknTlY+PguemNFgNc/OzCfTW9tQ+mNfJOlb0yy1So=;
-        b=dLeODTz+OyhXmVLX/s5vgwur3FHWRJSf422htDRREWYD+iYl81jnEj/u5s1fWrejzE
-         RwpcdRxvR7piAIXfKgEirlbT0tWIhVxKZ3roO7pRYD5kKL8zi0NEgfI93A/8AzH3iTzD
-         dO5Lx9tkeENLFT5BHfuPiMP58c040SCKa9IWgOUbrm2De80d7oODWHTBdyeWY4RYUXZB
-         o6XwHeSdl4z3ui1zLq5Zbffmd94s5qUpp0zbFQ4jEXXpooL3TuF0rnMtRh5Q+hF2mCdV
-         IqpceBvqbAwUuBrqdj1+R3ycAol6Fl+WxTtYYBQioFw0/Mp5Hvcw3sEPyfe+1Lc9ZpYs
-         +KUg==
-X-Gm-Message-State: APjAAAUEAI+erF3en0z/7GHwsdjEv7SrKwFGCjQeh5ddJYjUhAD8Ohoj
-        OMRHiAGG3E7zUhcqvVdxVTXqotCpuw==
-X-Google-Smtp-Source: APXvYqwBr3bySW/UdFp4iROXeLDrru9uTqwtvQeeO0bXZEEStFSq8jq35sX9FYxDeX7Th0O2CiI61w==
-X-Received: by 2002:a02:8243:: with SMTP id q3mr5806606jag.37.1556882568391;
-        Fri, 03 May 2019 04:22:48 -0700 (PDT)
-Received: from localhost.localdomain ([8.46.76.65])
-        by smtp.gmail.com with ESMTPSA id d193sm737325iog.34.2019.05.03.04.22.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 04:22:47 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
-Date:   Fri,  3 May 2019 06:18:41 -0500
-Message-Id: <20190503111841.4391-6-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190503111841.4391-5-trond.myklebust@hammerspace.com>
-References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
- <20190503111841.4391-2-trond.myklebust@hammerspace.com>
- <20190503111841.4391-3-trond.myklebust@hammerspace.com>
- <20190503111841.4391-4-trond.myklebust@hammerspace.com>
- <20190503111841.4391-5-trond.myklebust@hammerspace.com>
+        id S1727558AbfECMbF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 May 2019 08:31:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37716 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfECMbE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 May 2019 08:31:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43CSpRt090514;
+        Fri, 3 May 2019 12:30:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=LQOfycm9DiItzcIHSSXlEQsv0C/7q1jkf8LiDf+KKSw=;
+ b=szdAWCo40rllidfOje6KZzgt9aqLLmaewED2KmA5ClWNGtY67BSOJHRypmwsE1+fSREO
+ +VwI6/P6jjsr6HFRtwICfXnCHvWLPhnFbsdyIwHWIN+HDCrSI5ZF4SfHKpfGGIgOW+jC
+ b1xLwb04Pe3/8tiA0gZM8WtfTYbtm/rD2GCRucc+BDIZdrIVAYKkGvOl3qUH5yN2OPp2
+ 1cJ2cwiCzAnveqIjU063nYjW9Ra+Xipia/D4/vodaODDoZyJTapKAoEKaj3I6KSGDwzw
+ ZYSMqMztRGFTf4qOSdemWnTBEAj+20cEOcO4GoZI6fi1crtSRa1RaloqCesBYPYikyKQ Xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2s6xhypda8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 12:30:31 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43CSo3o058207;
+        Fri, 3 May 2019 12:30:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2s7rtc8qyf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 12:30:30 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43CUMbG009824;
+        Fri, 3 May 2019 12:30:22 GMT
+Received: from mwanda (/196.104.111.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 May 2019 05:30:21 -0700
+Date:   Fri, 3 May 2019 15:30:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        NeilBrown <neilb@suse.com>, linux-nfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] SUNRPC: Fix an error code in gss_alloc_msg()
+Message-ID: <20190503123009.GC29695@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030078
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030079
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Allow more time for softirqd
+If kstrdup_const() then this function returns zero (success) but it
+should return -ENOMEM.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: ac83228a7101 ("SUNRPC: Use namespace of listening daemon in the client AUTH_GSS upcall")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- net/sunrpc/sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/auth_gss/auth_gss.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index c7e81336620c..6b37c9a4b48f 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -1253,7 +1253,7 @@ static int rpciod_start(void)
- 		goto out_failed;
- 	rpciod_workqueue = wq;
- 	/* Note: highpri because network receive is latency sensitive */
--	wq = alloc_workqueue("xprtiod", WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_HIGHPRI, 0);
-+	wq = alloc_workqueue("xprtiod", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
- 	if (!wq)
- 		goto free_rpciod;
- 	xprtiod_workqueue = wq;
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index b2cbc83d39c7..06fe17c2aea1 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -553,8 +553,10 @@ gss_alloc_msg(struct gss_auth *gss_auth,
+ 	gss_msg->auth = gss_auth;
+ 	if (service_name) {
+ 		gss_msg->service_name = kstrdup_const(service_name, GFP_NOFS);
+-		if (!gss_msg->service_name)
++		if (!gss_msg->service_name) {
++			err = -ENOMEM;
+ 			goto err_put_pipe_version;
++		}
+ 	}
+ 	return gss_msg;
+ err_put_pipe_version:
 -- 
-2.21.0
+2.18.0
 
