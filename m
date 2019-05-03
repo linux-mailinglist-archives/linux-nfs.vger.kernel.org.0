@@ -2,255 +2,410 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C3C11281C
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 08:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98F0A12BE5
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2019 12:57:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfECGyo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 May 2019 02:54:44 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:39176 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfECGyo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 May 2019 02:54:44 -0400
-Received: by mail-it1-f196.google.com with SMTP id t200so7556269itf.4;
-        Thu, 02 May 2019 23:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Cao24xl2yFe5SltfHFGz5MGgv/+P5yaYkgmhi7HPkuw=;
-        b=T+4FHa1ZFg52Rhfb9DwMcWtznsj4zO24ZSTq2Vts3OlehNxuq61BmJMtR27KVdXmju
-         qUJ9cmhkY5ec8O6lQolH68Qd4VJdCiss+uzRzGgyJwjsgHe/ypyDa9T+7fYVlIsjRS0V
-         UVvbXr7f3hBksf32I7KZ1xsZQu7v0DrlsUKq1h/OV0Ve1StP5pTnlwT88tILZGwMn/HX
-         KBBdnBy4ufJnx3bO0rBCZ3i9CZawF//dBphNuLKo7GXSixAsJE+s08mTt0ZEFw/z2l1I
-         lqsMj+0EBvZKfR08Ecrjky/QmcHnAoXZlJJRlRfp01d38c7aWGkjynbPxXVae8fO8l98
-         oYMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Cao24xl2yFe5SltfHFGz5MGgv/+P5yaYkgmhi7HPkuw=;
-        b=nc4HVyBzbtfwcRs5JyyxhUDeiTQJ8Gatogiy6AY6t4fFqMxGmppOXff7g1lHaDAtw9
-         qBpvnh5A1Vc6vD8CTKyzLD5LIdqTSk27l5apjecPYuMC7REmP+YMDdwMDtrrm1VyfrJ3
-         hNKPFzL0UQSpTqPYT3s78ddi8WjsIR/bMdg4yAFPDAcX1Z8MpKABwNA/q4SqBjabvRrZ
-         4xafofPoi9sJ98WjgNKBlNyC1dfSe/rOc4RD60m9Y0Zyy1CJlBpMfl4OCwfE25fQ/HKo
-         b1foOOaw0qWvcPNzakkMRi/J+kLvfQ1cO9JdEatda3eDYQlT+9tCx0+IXHWFj02a8AEN
-         c5Gg==
-X-Gm-Message-State: APjAAAWHSCFBQw5eyfZlpTKPSTPac6EVPS4jx+ylNriPboUlrzEj3R7Y
-        n1oEc+9/B6ODG6n/L9Gff/rikDsVNYm+cik+4vQ=
-X-Google-Smtp-Source: APXvYqzT+Ml+UmjOoz7khUbNFR0HYm5hMWwKjMpu/gsDPkIgvlRFfi+kdGWZSLEGNSsHTJ6OnBL+KoPcKSJKR4YCj9c=
-X-Received: by 2002:a02:c99a:: with SMTP id b26mr5989485jap.32.1556866483274;
- Thu, 02 May 2019 23:54:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
- <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
- <87r29g30e8.fsf@notabene.neil.brown.name>
-In-Reply-To: <87r29g30e8.fsf@notabene.neil.brown.name>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Fri, 3 May 2019 08:54:31 +0200
-Message-ID: <CAHpGcMJ34zcm2+MES=yn6a7s6LOwcQorOVHEgQYUHWQbYxavmA@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     NeilBrown <neilb@suse.com>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1726476AbfECK5E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 May 2019 06:57:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47806 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfECK5E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 3 May 2019 06:57:04 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D07CAC058CB4
+        for <linux-nfs@vger.kernel.org>; Fri,  3 May 2019 10:57:03 +0000 (UTC)
+Received: from jumitche.remote.csb (unknown [10.33.36.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F9535D9C4;
+        Fri,  3 May 2019 10:57:03 +0000 (UTC)
+Message-ID: <1556881021.20707.9.camel@redhat.com>
+Subject: [PATCH] nfs-utils: Enable adding of comments and date modified to
+ nfs.conf files
+From:   Alice J Mitchell <ajmitchell@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Steve Dickson <steved@redhat.com>
+Date:   Fri, 03 May 2019 11:57:01 +0100
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 03 May 2019 10:57:03 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Am Fr., 3. Mai 2019 um 01:24 Uhr schrieb NeilBrown <neilb@suse.com>:
-> On Thu, May 02 2019, Andreas Gruenbacher wrote:
-> > On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
-> >> On Wed, May 01 2019, Amir Goldstein wrote:
-> >> > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
-> >> >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> >> >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wro=
-te:
-> >> >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.=
-hu> wrote:
-> >> >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
-> >> >> >> > <andreas.gruenbacher@gmail.com> wrote:
-> >> >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gr=
-uenbacher@gmail.com>:
-> >> >> >> >
-> >> >> >> >>> It's not hard to come up with a heuristic that determines if=
- a
-> >> >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to i=
-gnore the
-> >> >> >> >>> attribute in that case. (The file mode is transmitted in its=
- own
-> >> >> >> >>> attribute already, so actually converting .) That way, overl=
-ayfs could
-> >> >> >> >>> still fail copying up files that have an actual ACL. It's st=
-ill an
-> >> >> >> >>> ugly hack ...
-> >> >> >> >>
-> >> >> >> >> Actually, that kind of heuristic would make sense in the NFS =
-client
-> >> >> >> >> which could then hide the "system.nfs4_acl" attribute.
-> >
-> > I still think the nfs client could make this problem mostly go away by
-> > not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
-> > the file mode.
->
-> Maybe ... but this feels a bit like "sweeping it under the carpet".
-> What happens if some file on the lower layer does have a more complex
-> ACL?
-> Do we just fail any attempt to modify that object?  Doesn't that violate
-> the law of least surprise?
+Extend the nfs.conf editing code to support the inserting of comment
+lines, as well as file modified information so that automated setting
+adjustments and imports can be appropriately flagged.
 
-It would at least expose that there is a problem only if there is an
-actual problem.
+Signed-off-by: Alice J Mitchell <ajmitchell@redhat.com>
+---
+ support/include/conffile.h |   2 +
+ support/nfs/conffile.c     | 195 ++++++++++++++++++++++++++++++++++++++++++++-
+ tools/nfsconf/nfsconf.man  |   7 +-
+ tools/nfsconf/nfsconfcli.c |  12 ++-
+ 4 files changed, 211 insertions(+), 5 deletions(-)
 
-> Maybe if the lower-layer has an i_op->permission method, then overlayfs
-> should *always* call that for permission checking - unless a
-> chmod/chown/etc has happened on the file.  That way, we wouldn't need to
-> copy-up the ACL, but would still get correct ACL testing.
+diff --git a/support/include/conffile.h b/support/include/conffile.h
+index a3340f9..7d974fe 100644
+--- a/support/include/conffile.h
++++ b/support/include/conffile.h
+@@ -69,6 +69,8 @@ extern int      conf_remove_section(int, const char *);
+ extern void     conf_report(FILE *);
+ extern int      conf_write(const char *, const char *, const char *, const char *, const char *);
+ 
++extern const char *modified_by;
++
+ /*
+  * Convert letter from upper case to lower case
+  */
+diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+index d8f2e8e..66d4215 100644
+--- a/support/nfs/conffile.c
++++ b/support/nfs/conffile.c
+@@ -51,6 +51,7 @@
+ #include <syslog.h>
+ #include <libgen.h>
+ #include <sys/file.h>
++#include <time.h>
+ 
+ #include "conffile.h"
+ #include "xlog.h"
+@@ -113,6 +114,8 @@ struct conf_binding {
+ 
+ LIST_HEAD (conf_bindings, conf_binding) conf_bindings[256];
+ 
++const char *modified_by = NULL;
++
+ static __inline__ uint8_t
+ conf_hash(const char *s)
+ {
+@@ -1397,6 +1400,52 @@ make_section(const char *section, const char *arg)
+ 	return line;
+ }
+ 
++/* compose a comment line (with or without tag) */
++static char *
++make_comment(const char *tag, const char *comment)
++{
++	char *line;
++	int ret;
++
++	if (tag == NULL || *tag == '\0') {
++		ret = asprintf(&line, "# %s\n", comment);
++	} else {
++		ret = asprintf(&line, "# %s: %s\n", tag, comment);
++	}
++
++	if (ret == -1) {
++		xlog(L_ERROR, "malloc error composing header");
++		return NULL;
++	}
++
++	return line;
++}
++		
++/* compose a 'file modified' comment */
++static char *
++make_timestamp(const char *tag, time_t when)
++{
++	struct tm *tstamp;
++	char datestr[80];
++	char *result = NULL;
++
++	tstamp = localtime(&when);
++	if (strftime(datestr, sizeof(datestr), "%b %d %Y %H:%M:%S", tstamp) == 0) {
++		xlog(L_ERROR, "error composing date");
++		datestr[0] = '\0';
++	}
++
++	if (modified_by) {
++		char *tmpstr = NULL;
++		asprintf(&tmpstr, "%s on %s", modified_by, datestr);
++		result = make_comment(tag, tmpstr);
++		free(tmpstr);
++	} else {
++		result = make_comment(tag, datestr);
++	}
++	return result;
++}
++
+ /* does the supplied line contain the named section header */
+ static bool
+ is_section(const char *line, const char *section, const char *arg)
+@@ -1406,6 +1455,10 @@ is_section(const char *line, const char *section, const char *arg)
+ 	char *sub;
+ 	bool found = false;
+ 
++	/* Not a valid section name  */
++	if (strcmp(section, "#") == 0)
++		return false;
++
+ 	/* skip leading white space */
+ 	while (*line == '[' || isspace(*line))
+ 		line++;
+@@ -1569,6 +1622,54 @@ is_comment(const char *line)
+ 	return false;
+ }
+ 
++/* check that line contains the specified comment header */
++static bool
++is_taggedcomment(const char *line, const char *field)
++{
++	char *end;
++	char *name;
++	bool found = false;
++
++	if (line == NULL)
++		return false;
++
++	while (isblank(*line))
++		line++;
++
++	if (*line != '#')
++		return false;
++
++	line++;
++
++	/* quick check, is this even a likely formatted line */
++	end = strchr(line, ':');
++	if (end == NULL)
++		return false;
++
++	/* skip leading white space before field name */
++	while (isblank(*line))
++		line++;
++
++	name = strdup(line);
++	if (name == NULL) {
++		xlog_warn("conf_write: malloc failed");
++		return false;
++	}
++
++	/* strip trailing spaces from the name */
++	end = strchr(name, ':');
++	if (end) *(end--) = 0;
++	while (end && end > name && isblank(*end))
++		*(end--)=0;
++
++	if (strcasecmp(name, field)==0) 
++		found = true;
++
++	free(name);
++	return found;
++}
++
++
+ /* delete a buffer queue whilst optionally outputting to file */
+ static int
+ flush_outqueue(struct tailhead *queue, FILE *fout)
+@@ -1772,6 +1873,7 @@ conf_write(const char *filename, const char *section, const char *arg,
+ 	struct tailhead inqueue;
+ 	char * buff = NULL;
+ 	int buffsize = 0;
++	time_t now = time(NULL);
+ 
+ 	TAILQ_INIT(&inqueue);
+ 	TAILQ_INIT(&outqueue);
+@@ -1804,12 +1906,81 @@ conf_write(const char *filename, const char *section, const char *arg,
+ 		if (lock_file(infile))
+ 			goto cleanup;
+ 
+-		if (append_line(&inqueue, NULL, make_section(section, arg)))
++		if (strcmp(section, "#") == 0) {
++			if (append_line(&inqueue, NULL, make_comment(tag, value)))
++				goto cleanup;
++		} else {
++			if (append_line(&inqueue, NULL, make_section(section, arg)))
++				goto cleanup;
++
++			if (append_line(&inqueue, NULL, make_tagline(tag, value)))
++				goto cleanup;
++		}
++
++		append_queue(&inqueue, &outqueue);
++	} else 
++	if (strcmp(section, "#") == 0) {
++		/* Adding a comment line */
++		struct outbuffer *where = NULL;
++		struct outbuffer *next = NULL;
++		bool found = false;
++		int err = 0;
++
++		if (lock_file(infile))
+ 			goto cleanup;
+ 
+-		if (append_line(&inqueue, NULL, make_tagline(tag, value)))
++		buffsize = 4096;
++		buff = calloc(1, buffsize);
++		if (buff == NULL) {
++			xlog(L_ERROR, "malloc error for read buffer");
+ 			goto cleanup;
++		}
++		buff[0] = '\0';
+ 
++		/* read in the file */
++		do {
++			if (*buff != '\0' 
++			&& !is_taggedcomment(buff, "Modified")) {
++				if (append_line(&inqueue, NULL, strdup(buff)))
++					goto cleanup;
++			}
++
++			err = read_line(&buff, &buffsize, infile);
++		} while (err == 0);
++
++		/* if a tagged comment, look for an existing instance */
++		if (tag && *tag != '\0') {
++			where = TAILQ_FIRST(&inqueue);
++			while (where != NULL) {
++				next = TAILQ_NEXT(where, link);
++				struct outbuffer *prev = TAILQ_PREV(where, tailhead, link);
++				if (is_taggedcomment(where->text, tag)) {
++					TAILQ_REMOVE(&inqueue, where, link);
++					free(where->text);
++					free(where);
++					found = true;
++					if (append_line(&inqueue, prev, make_comment(tag, value)))
++						goto cleanup;
++				}
++				where = next;
++			}
++		}
++		/* it wasn't tagged or we didn't find it */
++		if (!found) {
++			/* does the file end in a blank line or a comment */
++			if (!TAILQ_EMPTY(&inqueue)) {
++				struct outbuffer *tail = TAILQ_LAST(&inqueue, tailhead);
++				if (tail && !is_empty(tail->text) && !is_comment(tail->text)) {
++					/* no, so add one for clarity */
++					if (append_line(&inqueue, NULL, strdup("\n")))
++						goto cleanup;
++				}
++			}
++			/* add the new comment line */
++			if (append_line(&inqueue, NULL, make_comment(tag, value)))
++				goto cleanup;
++		}
++		/* move everything over to the outqueue for writing */
+ 		append_queue(&inqueue, &outqueue);
+ 	} else {
+ 		bool found = false;
+@@ -1831,7 +2002,8 @@ conf_write(const char *filename, const char *section, const char *arg,
+ 
+ 			/* read in one section worth of lines */
+ 			do {
+-				if (*buff != '\0') {
++				if (*buff != '\0' 
++				&& !is_taggedcomment(buff, "Modified")) {
+ 					if (append_line(&inqueue, NULL, strdup(buff)))
+ 						goto cleanup;
+ 				}
+@@ -1950,6 +2122,23 @@ conf_write(const char *filename, const char *section, const char *arg,
+ 		} while(err == 0);
+ 	}
+ 
++	if (modified_by) {
++		/* check for and update the Modified header */
++		/* does the file end in a blank line or a comment */
++		if (!TAILQ_EMPTY(&outqueue)) {
++			struct outbuffer *tail = TAILQ_LAST(&outqueue, tailhead);
++			if (tail && !is_empty(tail->text) && !is_comment(tail->text)) {
++				/* no, so add one for clarity */
++				if (append_line(&outqueue, NULL, strdup("\n")))
++					goto cleanup;
++			}
++		}
++
++		/* now append the modified date comment */
++		if (append_line(&outqueue, NULL, make_timestamp("Modified", now)))
++			goto cleanup;
++	}
++
+ 	/* now rewind and overwrite the file with the updated data */
+ 	rewind(infile);
+ 
+diff --git a/tools/nfsconf/nfsconf.man b/tools/nfsconf/nfsconf.man
+index 1ae8543..3079198 100644
+--- a/tools/nfsconf/nfsconf.man
++++ b/tools/nfsconf/nfsconf.man
+@@ -31,6 +31,8 @@ nfsconf \- Query various NFS configuration settings
+ .P
+ .B nfsconf \-\-set
+ .RB [ \-v | \-\-verbose ]
++.RB [ \-m | \-\-modified
++.IR "Modified by text" ]
+ .RB [ \-f | \-\-file
+ .IR infile.conf ]
+ .RB [ \-a | \-\-arg
+@@ -61,7 +63,7 @@ Test if a specific tag has a value set.
+ .IP "\fB\-g, \-\-get\fP"
+ Output the current value of the specified tag.
+ .IP "\fB\-s, \-\-set\fP"
+-Update or Add a tag and value to the config file, creating the file if necessary.
++Update or Add a tag and value to the config file in a specified section, creating the tag, section, and file if necessary. If the section is defined as '#' then a comment is appended to the file. If a comment is set with a tag name then any exiting tagged comment with a matching name is replaced.
+ .IP "\fB\-u, \-\-unset\fP"
+ Remove the specified tag and its value from the config file.
+ .SH OPTIONS
+@@ -77,6 +79,9 @@ Select a different config file to operate upon, default is
+ .TP
+ .B \-a, \-\-arg \fIsubsection\fR
+ Select a specific sub-section
++.SS Options only valid in \fB\-\-set\fR mode.
++.B \-m, \-\-modified \fI"Modified by nfsconf"\fR
++Set the text on the Modified date comment in the file. Set to empty to remove.
+ .SH EXIT STATUS
+ .SS \fB\-\-isset\fR mode
+ In this mode the command will return success (0) if the selected tag has a value, any other exit code indicates the value is not set, or some other error has occurred.
+diff --git a/tools/nfsconf/nfsconfcli.c b/tools/nfsconf/nfsconfcli.c
+index f98d0d1..361d386 100644
+--- a/tools/nfsconf/nfsconfcli.c
++++ b/tools/nfsconf/nfsconfcli.c
+@@ -24,6 +24,7 @@ static void usage(const char *name)
+ 	fprintf(stderr, " -v			Increase Verbosity\n");
+ 	fprintf(stderr, " --file filename.conf	Load this config file\n");
+ 	fprintf(stderr, "     (Default config file: " NFS_CONFFILE "\n");
++	fprintf(stderr, " --modified \"info\"	Use \"info\" in file modified header\n");
+ 	fprintf(stderr, "Modes:\n");
+ 	fprintf(stderr, "  --dump [outputfile]\n");
+ 	fprintf(stderr, "      Outputs the configuration to the named file\n");
+@@ -47,6 +48,8 @@ int main(int argc, char **argv)
+ 
+ 	confmode_t mode = MODE_NONE;
+ 
++	modified_by = "Modified by nfsconf";
++
+ 	while (1) {
+ 		int c;
+ 		int index = 0;
+@@ -59,10 +62,11 @@ int main(int argc, char **argv)
+ 			{"dump",  optional_argument, 0, 'd' },
+ 			{"file",  required_argument, 0, 'f' },
+ 			{"verbose",	no_argument, 0, 'v' },
++			{"modified", required_argument, 0, 'm' },
+ 			{NULL,			  0, 0, 0 }
+ 		};
+ 
+-		c = getopt_long(argc, argv, "gsua:id::f:v", long_options, &index);
++		c = getopt_long(argc, argv, "gsua:id::f:vm:", long_options, &index);
+ 		if (c == -1) break;
+ 
+ 		switch (c) {
+@@ -99,6 +103,12 @@ int main(int argc, char **argv)
+ 				mode = MODE_DUMP;
+ 				dumpfile = optarg;
+ 				break;
++			case 'm':
++				if (optarg == NULL || *optarg == 0)
++					modified_by = NULL;
++				else
++					modified_by = optarg;
++				break;
+ 			default:
+ 				usage(argv[0]);
+ 				return 1;
+-- 
+1.8.3.1
 
-No, the permissions need to stick with the object. Otherwise, what
-would you do on rename or when the lower layer changes?
-
-Andreas
-
-> Thanks,
-> NeilBrown
->
->
-> > The richacl patches contain a workable abgorithm for
-> > that. The problem would remain for files that have an actual NFS4 ACL,
-> > which just cannot be mapped to a file mode or to POSIX ACLs in the
-> > general case, as well as for files that have a POSIX ACL. Mapping NFS4
-> > ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
-> > in many cases as well, but the code would be quite messy. A better way
-> > seems to be to using a filesystem that doesn't support POSIX ACLs in
-> > the first place. Unfortunately, xfs doesn't allow turning off POSIX
-> > ACLs, for example.
-> >
-> > Andreas
-> >
-> >> >> >> > Even simpler would be if knfsd didn't send the attribute if no=
-t
-> >> >> >> > necessary.  Looks like there's code actively creating the nfs4=
-_acl on
-> >> >> >> > the wire even if the filesystem had none:
-> >> >> >> >
-> >> >> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
-> >> >> >> >     if (!pacl)
-> >> >> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL=
-);
-> >> >> >> >
-> >> >> >> > What's the point?
-> >> >> >>
-> >> >> >> That's how the protocol is specified.
-> >> >> >
-> >> >> > Yep, even if we could make that change to nfsd it wouldn't help t=
-he
-> >> >> > client with the large number of other servers that are out there
-> >> >> > (including older knfsd's).
-> >> >> >
-> >> >> > --b.
-> >> >> >
-> >> >> >> (I'm not saying that that's very helpful.)
-> >> >> >>
-> >> >> >> Andreas
-> >> >>
-> >> >> Hi everyone.....
-> >> >>  I have a customer facing this problem, and so stumbled onto the em=
-ail
-> >> >>  thread.
-> >> >>  Unfortunately it didn't resolve anything.  Maybe I can help kick t=
-hings
-> >> >>  along???
-> >> >>
-> >> >>  The core problem here is that NFSv4 and ext4 use different and lar=
-gely
-> >> >>  incompatible ACL implementations.  There is no way to accurately
-> >> >>  translate from one to the other in general (common specific exampl=
-es
-> >> >>  can be converted).
-> >> >>
-> >> >>  This means that either:
-> >> >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vic=
-e
-> >> >>       versa) or
-> >> >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, =
-and
-> >> >>       that is OK.
-> >> >>
-> >> >>  Silently not copying the ACLs is probably not a good idea as it mi=
-ght
-> >> >>  result in inappropriate permissions being given away.
-> >> >
-> >> > For example? permissions given away to do what?
-> >> > Note that ovl_permission() only check permissions of *mounter*
-> >> > to read the lower NFS file and ovl_open()/ovl_read_iter() access
-> >> > the lower file with *mounter* credentials.
-> >> >
-> >> > I might be wrong, but seems to me that once admin mounted
-> >> > overlayfs with lower NFS, NFS ACLs are not being enforced at all
-> >> > even before copy up.
-> >>
-> >> I guess it is just as well that copy-up fails then - if the lower-leve=
-l
-> >> permission check is being ignored.
-> >>
-> >> >
-> >> >> So if the
-> >> >>  sysadmin wants this (and some clearly do), they need a way to
-> >> >>  explicitly say "I accept the risk".  If only standard Unix permiss=
-ions
-> >> >>  are used, there is no risk, so this seems reasonable.
-> >> >>
-> >> >>  So I would like to propose a new option for overlayfs
-> >> >>     nocopyupacl:   when overlayfs is copying a file (or directory e=
-tc)
-> >> >>         from the lower filesystem to the upper filesystem, it does =
-not
-> >> >>         copy extended attributes with the "system." prefix.  These =
-are
-> >> >>         used for storing ACL information and this is sometimes not
-> >> >>         compatible between different filesystem types (e.g. ext4 an=
-d
-> >> >>         NFSv4).  Standard Unix ownership permission flags (rwx) *ar=
-e*
-> >> >>         copied so this option does not risk giving away inappropria=
-te
-> >> >>         permissions unless the lowerfs uses unusual ACLs.
-> >> >>
-> >> >>
-> >> >
-> >> > I am wondering if it would make more sense for nfs to register a
-> >> > security_inode_copy_up_xattr() hook.
-> >> > That is the mechanism that prevents copying up other security.*
-> >> > xattrs?
-> >>
-> >> No, I don't think that would make sense.
-> >> Support some day support for nfs4 acls were added to ext4 (not a total=
-ly
-> >> ridiculous suggestion).  We would then want NFS to allow it's ACLs to =
-be
-> >> copied up.
-> >>
-> >> Thanks,
-> >> NeilBrown
-> >>
-> >>
-> >> >
-> >> > Thanks,
-> >> > Amir.
