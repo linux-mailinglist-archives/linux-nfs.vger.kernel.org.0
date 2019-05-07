@@ -2,94 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB02015ECF
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 May 2019 10:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B8531696A
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 May 2019 19:41:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfEGIHe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 May 2019 04:07:34 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41179 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfEGIHd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 May 2019 04:07:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id a17so5342434iot.8
-        for <linux-nfs@vger.kernel.org>; Tue, 07 May 2019 01:07:33 -0700 (PDT)
+        id S1726843AbfEGRlw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 May 2019 13:41:52 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44969 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfEGRlw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 May 2019 13:41:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id v9so11056404ion.11
+        for <linux-nfs@vger.kernel.org>; Tue, 07 May 2019 10:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PEZVy9C+Z3ICJpvsn26xeqhO1e763sY5Q6qDpaKXZYs=;
-        b=JciVvm+L8utAHEyD6sXVzJvXBWDDmLzUDru6e2Z6O7UUhE2uYt6t01+U9KuovpPXFK
-         SVoBnOMRpR/M0jYtVyra7OBS30QfLjlk+10q3bu8kYLImeYysyY5BCIcTiaH8mJwq+lF
-         dWqGpCsk3fQOh11X0sH7ux9nl+jIhQyw49PY4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7bf3s3leGDHjiifLJizlP+oCBo30ihKdOWJcXKN83HE=;
+        b=eNcIbyzup9mm8biT9IqmO6OVLQ2oScgg/Eo9JGKNCASetlDwzL8DhkVpIxtOIaEE5j
+         yY65XrWFRSa+Knut9Hew+H2HdzHwCnOL7bhShMGu1fLPuk7h4WDAu4EDHGePNjqqkftW
+         XFX9PpqLBWkun4nszCuZr6QFe90KOVuMigyBNBCG2faNjcIKrbmoYApQZTbGPzeEDJyY
+         sR3eUgF39BkroUzrHQZmlJnJp7f4Mp4356yIaNckp4KBPwxFiT+af86b5D0S4NrZQFnO
+         MLazqx2CcRLkVF9UXEcQR5gEOA2z6lP4jHEwfH5EaiP9VM6yv2ucEKNKzDyQ5LyLOTL0
+         luCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PEZVy9C+Z3ICJpvsn26xeqhO1e763sY5Q6qDpaKXZYs=;
-        b=KtBfinHmLe33GZwOcqGcwqrNisJ82+bmCw5HtSdBV5yck01GZEvQAaRvF6odwx5Vxq
-         ddolx27Qw8sjHv2+1J2DTh7PBPvnBF4FAMa6GEd/fsjihpcNZjZxVJUxkv6lzzy2e9c4
-         5rFWOtCXFmapI3MxBorWXvMYR12X2SKr9PMzKr2nPXG2BfElgYwFDGcyvf8dVTgXM+Pf
-         4qid4jA2r6J6WghW8a/Z6a8Rxv9esBT9fAO5rTswIndvlGwpv8qDbaqIw3TWHx6sWpla
-         MuWhZqHDkh/ViF57dQPBrkDw9yAbgPaT2iKkIOk/P1dEd9BhbaizhJPMsYmxn1F7YBCf
-         IQbw==
-X-Gm-Message-State: APjAAAVDXqscwTbnS4YdZ28pSK7NkQ3lg2TVEjsBG6ZvQ0p7T7n7QE/A
-        /UE5Vv3+WedPjtCzLzXmATw93kJAQ/sMB7IXfU2sBw==
-X-Google-Smtp-Source: APXvYqwG7Qhlz0ih1MCulvyvogd0VnUgA/VyGWATqTE+j80uOQBpCOYbueOcG/IyjFlZNjhBSEPaLFPbgVREQTdhdl0=
-X-Received: by 2002:a6b:ee04:: with SMTP id i4mr1817315ioh.246.1557216453174;
- Tue, 07 May 2019 01:07:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
-In-Reply-To: <20190503153531.GJ12608@fieldses.org>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 7 May 2019 04:07:21 -0400
-Message-ID: <CAJfpegv-0mUs=XRgerxR_Zz_MvYuDvb95v0QZeBUcHNnenusnw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7bf3s3leGDHjiifLJizlP+oCBo30ihKdOWJcXKN83HE=;
+        b=PO9g4roCjj5VRA6Py9Exh4PidZsv8mAieIKWbDjNBBTpQPfDBnhhm1PN7HrUYO+9KP
+         1n8307iiYPFV4IP+pucxaCzIfNRU0FKtCmBVstrNXnuxBG2gnE23O5SpVHFHEZRqYq1P
+         NDuwOyHMEVcsJG+vDyyfMPLnw47Ope9mF8bpYRSI8HpAVj72FJgdJiYsU9FLmEkxjFUG
+         Kz4lWg+FsMKqSVay/pVWECXrZ+EPcQopsVinbGf79+Ldo34VycEHwc2DxkCRwWELuxMN
+         zOCTqYDajl4bSvr0/QP+Kobhb7N2sV1elCJSfumIn5kBZngrd5JDugkKP0z/Rn7IISWY
+         FS8w==
+X-Gm-Message-State: APjAAAUqoLcfTbjvuIrdR+XMlamHJou3l802leuGbIiIMNz1dN4cSP4K
+        DjKG5P/ZB0k2TF/ymJP5XSXHYv2c
+X-Google-Smtp-Source: APXvYqxYkeYbyag/WpUtGc2GcMpQ0cxv2WhA4qGRv/ccV87neMfqL0krkdoSvQYFgpbo+aV58gMBDg==
+X-Received: by 2002:a5d:9292:: with SMTP id s18mr12853158iom.87.1557250911883;
+        Tue, 07 May 2019 10:41:51 -0700 (PDT)
+Received: from Olgas-MBP-195.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id v204sm4616946itb.32.2019.05.07.10.41.51
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Tue, 07 May 2019 10:41:51 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] PNFS fallback to MDS if no deviceid found
+Date:   Tue,  7 May 2019 13:41:49 -0400
+Message-Id: <20190507174149.4089-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 3, 2019 at 11:35 AM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
+From: Olga Kornievskaia <kolga@netapp.com>
 
-> >  Silently not copying the ACLs is probably not a good idea as it might
-> >  result in inappropriate permissions being given away.  So if the
-> >  sysadmin wants this (and some clearly do), they need a way to
-> >  explicitly say "I accept the risk".
->
-> So, I feel like silently copying ACLs up *also* carries a risk, if that
-> means switching from server-enforcement to client-enforcement of those
-> permissions.
+If we fail to find a good deviceid while trying to pnfs instead of
+propogating an error back fallback to doing IO to the MDS. Currently,
+code with fals the IO with EINVAL.
 
-That's not correct: permissions are checked on the overlay layer,
-regardless of where the actual file resides.  For filesystems using a
-server enforced permission model that means possibly different
-permissions for accesses through overlayfs than for accesses without
-overlayfs.  Apparently this is missing from the documentation and
-definitely needs to be added.
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Fixes: 8d40b0f14846f ("NFS filelayout:call GETDEVICEINFO after pnfs_layout_process completes"
+---
+ fs/nfs/filelayout/filelayout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So I think it's perfectly fine to allow copying up ACLs, as long as
-the ACL is representable on the upper fs.  If that cannot be ensured,
-then the only sane thing to do is to disable ACL checking across the
-overlay ("noacl" option).
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 61f46facb39c..b3e8ba3bd654 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -904,7 +904,7 @@ fl_pnfs_update_layout(struct inode *ino,
+ 	status = filelayout_check_deviceid(lo, fl, gfp_flags);
+ 	if (status) {
+ 		pnfs_put_lseg(lseg);
+-		lseg = ERR_PTR(status);
++		lseg = NULL;
+ 	}
+ out:
+ 	return lseg;
+-- 
+2.18.1
 
-Thanks,
-Miklos
