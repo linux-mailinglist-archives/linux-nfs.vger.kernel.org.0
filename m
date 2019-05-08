@@ -2,82 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DA2116DF2
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2019 01:51:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CF1B174B9
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2019 11:11:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfEGXvQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 May 2019 19:51:16 -0400
-Received: from fieldses.org ([173.255.197.46]:59706 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfEGXvQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 7 May 2019 19:51:16 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 583C51DCB; Tue,  7 May 2019 19:51:15 -0400 (EDT)
-Date:   Tue, 7 May 2019 19:51:15 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-Message-ID: <20190507235115.GB16853@fieldses.org>
-References: <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
- <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org>
- <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
- <CAJfpegv-0mUs=XRgerxR_Zz_MvYuDvb95v0QZeBUcHNnenusnw@mail.gmail.com>
+        id S1726476AbfEHJLj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 May 2019 05:11:39 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51651 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725863AbfEHJLi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 May 2019 05:11:38 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TRAwvL6_1557306689;
+Received: from ali-186590dcce93-2.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TRAwvL6_1557306689)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 08 May 2019 17:11:30 +0800
+To:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        caspar@linux.alibaba.com
+From:   Yihao Wu <wuyihao@linux.alibaba.com>
+Subject: [PATCH 0/2] Fix two bugs CB_NOTIFY_LOCK failing to wake a water
+Message-ID: <d0b6fc01-0a73-e4f7-b393-3ecc9aacffb0@linux.alibaba.com>
+Date:   Wed, 8 May 2019 17:11:32 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegv-0mUs=XRgerxR_Zz_MvYuDvb95v0QZeBUcHNnenusnw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 07, 2019 at 04:07:21AM -0400, Miklos Szeredi wrote:
-> On Fri, May 3, 2019 at 11:35 AM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
-> 
-> > >  Silently not copying the ACLs is probably not a good idea as it might
-> > >  result in inappropriate permissions being given away.  So if the
-> > >  sysadmin wants this (and some clearly do), they need a way to
-> > >  explicitly say "I accept the risk".
-> >
-> > So, I feel like silently copying ACLs up *also* carries a risk, if that
-> > means switching from server-enforcement to client-enforcement of those
-> > permissions.
-> 
-> That's not correct: permissions are checked on the overlay layer,
-> regardless of where the actual file resides.  For filesystems using a
-> server enforced permission model that means possibly different
-> permissions for accesses through overlayfs than for accesses without
-> overlayfs.  Apparently this is missing from the documentation and
-> definitely needs to be added.
+This patch set fix bugs related to CB_NOTIFY_LOCK. And it should also fix
+the failure when running xfstests generic/089 on a NFSv4.1 filesystem.
 
-Well, we did have a thread on this pretty recently, I think, and I'm
-just not remembering the conclusion.  Yes, it'd be nice to have this
-documented.
+Yihao Wu (2):
+  NFSv4.1: Again fix a race where CB_NOTIFY_LOCK fails to wake a waiter
+  NFSv4.1: Fix bug only the first CB_NOTIFY_LOCK is handled
 
-In the case of NFSv4 ACLs, we not only lack storage for them, we don't
-even have code to evaluate them.
+ fs/nfs/nfs4proc.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
---b.
-
-> So I think it's perfectly fine to allow copying up ACLs, as long as
-> the ACL is representable on the upper fs.  If that cannot be ensured,
-> then the only sane thing to do is to disable ACL checking across the
-> overlay ("noacl" option).
+-- 
+1.8.3.1
