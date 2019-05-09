@@ -2,105 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 424C318EEE
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2019 19:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A38C2193D5
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2019 22:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfEIRZV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 May 2019 13:25:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56676 "EHLO mx1.redhat.com"
+        id S1726777AbfEIUwT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 May 2019 16:52:19 -0400
+Received: from fieldses.org ([173.255.197.46]:33884 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfEIRZV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 9 May 2019 13:25:21 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECF863086203;
-        Thu,  9 May 2019 17:25:20 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-117-18.phx2.redhat.com [10.3.117.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E9345B680;
-        Thu,  9 May 2019 17:25:20 +0000 (UTC)
-Subject: Re: [PATCH] nfs-utils: Change /var/run -> /run in systemd service
- files
-To:     Orion Poplawski <orion@nwra.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <6a9ffa7d-f711-026f-d9f7-a680a86c553a@nwra.com>
- <29ea93aa-9f20-9d09-c135-99f5976704db@RedHat.com>
- <c32f477e-4389-6c97-573d-1faa45c2bcff@nwra.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <f53b3ed0-0489-2b94-9f8d-d0120db0c0da@RedHat.com>
-Date:   Thu, 9 May 2019 13:25:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726682AbfEIUwT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 May 2019 16:52:19 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 96DCC1E19; Thu,  9 May 2019 16:52:18 -0400 (EDT)
+Date:   Thu, 9 May 2019 16:52:18 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 0/3] auth_gss: netns refcount leaks when use-gss-proxy==1
+Message-ID: <20190509205218.GA23548@fieldses.org>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
 MIME-Version: 1.0
-In-Reply-To: <c32f477e-4389-6c97-573d-1faa45c2bcff@nwra.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 09 May 2019 17:25:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Thanks for figuring this out!
 
+I guess I'll take these patches (with the one fix in your response to
+Al) through the nfsd tree, unless someone tells me otherwise.  (The
+original bug was introduced through nfsd.)
 
-On 5/8/19 12:02 PM, Orion Poplawski wrote:
-> On 5/8/19 9:54 AM, Steve Dickson wrote:
->>
->>
->> On 5/8/19 10:58 AM, Orion Poplawski wrote:
->>> This fixes:
->>>
->>> /usr/lib/systemd/system/nfs-blkmap.service:10: PIDFile= references path below
->>> legacy directory /var/run/, updating /var/run/blkmapd.pid → /run/blkmapd.pid;
->>> please update the unit file accordingly.
->> Shouldn't the apps also be updated? I know there is a symbolic 
->> link... but just for completeness the pid files in both apps 
->> should be updated as well. 
->>
->> steved.
-> 
-> I thought about that - but was concerned about legacy systems that still use
-> /var/run.
-Any idea how long the symlink will be around? But I do see your point.
+How serious are the consequences of the leak?  I'm wondering if it's
+worth a stable cc or not.
 
-steved.
+--b.
 
+On Wed, May 01, 2019 at 02:42:22PM +0800, Wenbin Zeng wrote:
+> This patch series fixes an auth_gss bug that results in netns refcount leaks when use-gss-proxy is set to 1.
 > 
->>>
->>> Signed-off-by: Orion Poplawski <orion@nwra.com>
->>> ---
->>>  systemd/nfs-blkmap.service | 2 +-
->>>  systemd/rpc-statd.service  | 2 +-
->>>  2 files changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/systemd/nfs-blkmap.service b/systemd/nfs-blkmap.service
->>> index 2bbcee6..6aa45ba 100644
->>> --- a/systemd/nfs-blkmap.service
->>> +++ b/systemd/nfs-blkmap.service
->>> @@ -9,7 +9,7 @@ PartOf=nfs-utils.service
->>>
->>>  [Service]
->>>  Type=forking
->>> -PIDFile=/var/run/blkmapd.pid
->>> +PIDFile=/run/blkmapd.pid
->>>  ExecStart=/usr/sbin/blkmapd
->>>
->>>  [Install]
->>> diff --git a/systemd/rpc-statd.service b/systemd/rpc-statd.service
->>> index 3e92cf7..095629f 100644
->>> --- a/systemd/rpc-statd.service
->>> +++ b/systemd/rpc-statd.service
->>> @@ -13,5 +13,5 @@ IgnoreOnIsolate=yes
->>>  [Service]
->>>  Environment=RPC_STATD_NO_NOTIFY=1
->>>  Type=forking
->>> -PIDFile=/var/run/rpc.statd.pid
->>> +PIDFile=/run/rpc.statd.pid
->>>  ExecStart=/usr/sbin/rpc.statd
->>> --
->>> 1.8.3.1
->>>
+> The problem was found in privileged docker containers with gssproxy service enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding struct net->count ends up at 2 after container gets killed, the consequence is that the struct net cannot be freed.
 > 
+> It turns out that write_gssp() called gssp_rpc_create() to create a rpc client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed to decrease net->count but it never gets called because its call-path is:
+> 	net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
+> Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this is a deadlock situation.
 > 
+> To fix the problem, we must break the deadlock, rpcsec_gss_exit_net() should move out of the put() path and find another chance to get called, I think nsfs_evict() is a good place to go, when netns inode gets evicted we call rpcsec_gss_exit_net() to free the rpc client, this requires a new callback i.e. evict to be added in struct proc_ns_operations, and add netns_evict() as one of netns_operations as well.
+> 
+> Wenbin Zeng (3):
+>   nsfs: add evict callback into struct proc_ns_operations
+>   netns: add netns_evict into netns_operations
+>   auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
+>     use-gss-proxy==1
+> 
+>  fs/nsfs.c                      |  2 ++
+>  include/linux/proc_ns.h        |  1 +
+>  include/net/net_namespace.h    |  1 +
+>  net/core/net_namespace.c       | 12 ++++++++++++
+>  net/sunrpc/auth_gss/auth_gss.c |  9 ++++++---
+>  5 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 1.8.3.1
