@@ -2,438 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4081181D7
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2019 23:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87259182D6
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2019 02:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfEHV45 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 May 2019 17:56:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42932 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEHV45 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 May 2019 17:56:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48LcaCX019551;
-        Wed, 8 May 2019 21:56:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=EeeGdOENooqQ/nbXnhYM8mtQxEaYea5jRyw/lSfp7Yc=;
- b=JlT/BMqXcbgRL+BZ8EQF/Ij0CyH2DsJLx2gc3FvBsxRcINiuvdvkLnGDHlHjBMUIPV/B
- mkEuMIObV4AQMFRu/pfhrfBQF80O6G7hB7G69yMJATybqh+6uqA9xAbIdrEl6GVgW07/
- rMtURcdhmgg3eSncNcp8D2NKINRJgUu89eDHpL8ppg+xikFiVmiWdvXxXvSW+ztSP5SU
- v2q1gA9l7PezcVwHkU/U258u52hEJl+i41HQ80M90fzqXZjQ6tNfvOCfz5QuSVQ96rAB
- rM7GF9MbX59NbAYKrvOJilh0TsB2C43XWo/B2M3fGzcscJFHiAS+l8JbRceFYAPKSs9Z Sg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2s94b0y4df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 21:56:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48Lt5L5177209;
-        Wed, 8 May 2019 21:56:51 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2s94badvd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 21:56:51 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x48LunMl001412;
-        Wed, 8 May 2019 21:56:50 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 May 2019 14:56:49 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: Anna's linux-next (pulled 5/8) seems unstable
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <2d581bd8c96e70b14d4e657b34fe1afb1584eac8.camel@gmail.com>
-Date:   Wed, 8 May 2019 17:56:48 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <83238109-CEC8-4365-AFA5-8D6172E9873D@oracle.com>
-References: <ACF23F78-1162-420D-92F9-3856EA44A323@oracle.com>
- <5daaa8ec5c835866313094603b71db330fa28ab2.camel@gmail.com>
- <EFEA06E8-2534-40DF-91BD-ED4C58BF5E1D@oracle.com>
- <2d581bd8c96e70b14d4e657b34fe1afb1584eac8.camel@gmail.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905080131
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905080131
+        id S1726902AbfEIARH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 May 2019 20:17:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55579 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfEIARH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 May 2019 20:17:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id v11so439359ion.22
+        for <linux-nfs@vger.kernel.org>; Wed, 08 May 2019 17:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=e87X274QzI+nGsJX1NYlS+xDvqLPNZh6bmnfqFL/Rcs=;
+        b=p0lG1EtP5MdVqESzZnVQtbYDV4F5JTDdUalcoaIOfTva6aNkcPZT48Z6G03N482/dH
+         Vv/f83OM41hQeWJ3MIwvehkmcJ6RmTqd7mpqUFnzgU5Ui4durIc1zDqKUDMqXqLLLTJZ
+         pRZ1/A5BuC52nWUehph9MLwR/j0h6KRpt4TUZkmvlZNFuLcCpaBR+Pgx7U+GVkPA8Z46
+         Y1+ubTOrE7BfQmuZ8kA5mntxzX0I7rkODJa6bDzJVcHLcq1dvDGqSIGu133WYtILtCGd
+         x3bJRJKEREQfwWO7D+GNbtCUgJ4nik93GFkw8fZmo/lsyaf2Tf+uS6BeDlEYDVhCsfos
+         GISw==
+X-Gm-Message-State: APjAAAW4bCpI6X88udJW9u+R+kbqpKBskp6j9G/Ih9SYHrgRwBFJYkDK
+        xesyl92KEnsMvkuwx7z1awUjZSrZTYV5un5QNmOlYGkG6Whx
+X-Google-Smtp-Source: APXvYqwwvCXOA9r67ZLdGaDwNv8X5U/qdtVWHggK/l3JkUrEAEQ2MJhIVOyxH2fDWM2+OY384WZHJC1kCyxtgXO6gmJR7hYhl/51
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:2286:: with SMTP id d6mr586903iod.257.1557361026392;
+ Wed, 08 May 2019 17:17:06 -0700 (PDT)
+Date:   Wed, 08 May 2019 17:17:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c3e9dc0588695e22@google.com>
+Subject: WARNING: locking bug in nfs_get_client
+From:   syzbot <syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com>
+To:     anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        trond.myklebust@hammerspace.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    31ccad9b Add linux-next specific files for 20190508
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1082d2aca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=228a82b263b5da91883d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140fdce8a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134dce02a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(depth <= 0)
+WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052 __lock_release  
+kernel/locking/lockdep.c:4052 [inline]
+WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052  
+lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7948 Comm: syz-executor561 Not tainted 5.1.0-next-20190508 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x75a kernel/panic.c:218
+  __warn.cold+0x20/0x47 kernel/panic.c:575
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
+RIP: 0010:__lock_release kernel/locking/lockdep.c:4052 [inline]
+RIP: 0010:lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
+Code: 0f 85 a0 03 00 00 8b 35 a7 02 09 08 85 f6 75 23 48 c7 c6 e0 57 6b 87  
+48 c7 c7 80 27 6b 87 4c 89 85 70 ff ff ff e8 37 7c eb ff <0f> 0b 4c 8b 85  
+70 ff ff ff 4c 89 ea 4c 89 e6 4c 89 c7 e8 52 63 ff
+RSP: 0018:ffff888095867730 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 1ffff11012b0ceec RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b20c6 RDI: ffffed1012b0ced8
+RBP: ffff8880958677e8 R08: ffff88809a5b83c0 R09: fffffbfff1133071
+R10: fffffbfff1133070 R11: ffffffff88998383 R12: ffff888219eeb700
+R13: ffffffff821668ab R14: ffffffff8a45bd40 R15: ffff8880958677c0
+  __raw_spin_unlock include/linux/spinlock_api_smp.h:150 [inline]
+  _raw_spin_unlock+0x1b/0x50 kernel/locking/spinlock.c:183
+  spin_unlock include/linux/spinlock.h:378 [inline]
+  nfs_get_client+0xc1b/0x1300 fs/nfs/client.c:412
+  nfs_init_server+0x26f/0xea0 fs/nfs/client.c:675
+  nfs_create_server+0x12b/0x6d0 fs/nfs/client.c:962
+  nfs_try_mount+0x15a/0x910 fs/nfs/super.c:1882
+  nfs_fs_mount+0x184a/0x2690 fs/nfs/super.c:2718
+  legacy_get_tree+0x10a/0x220 fs/fs_context.c:665
+  vfs_get_tree+0x93/0x3a0 fs/super.c:1476
+  do_new_mount fs/namespace.c:2790 [inline]
+  do_mount+0x138c/0x1c00 fs/namespace.c:3110
+  ksys_mount+0xdb/0x150 fs/namespace.c:3319
+  __do_sys_mount fs/namespace.c:3333 [inline]
+  __se_sys_mount fs/namespace.c:3330 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3330
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4467d9
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f54c53e0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004467d9
+RDX: 0000000020fb5ffc RSI: 0000000020343ff8 RDI: 0000000000000000
+RBP: 00000000006dbc30 R08: 000000002000a000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00007ffe22037e2f R14: 00007f54c53e19c0 R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> On May 8, 2019, at 3:10 PM, Anna Schumaker <schumaker.anna@gmail.com> =
-wrote:
->=20
-> On Wed, 2019-05-08 at 14:57 -0400, Chuck Lever wrote:
->>> On May 8, 2019, at 2:37 PM, Anna Schumaker =
-<schumaker.anna@gmail.com> wrote:
->>>=20
->>> Hi Chuck,
->>>=20
->>> What NFS version are you using for testing? And does it happen =
-consistently
->>> on
->>> the same xfstest?
->>=20
->> NFSv3 with SCRATCH_DEV mounted with default (NFSv4.1). I have a =
-Kerberos
->> keytab so even though both mounts are sec=3Dsys, the NFSv4.1 mount =
-uses
->> krb5i for lease management.
->=20
-> I usually use the same version for tests and scratch, so that might be =
-why I
-> haven't seen this yet. I'll try your setup and see if I can hit =
-anything.
->=20
->>=20
->> The gss_auth BUG pops usually during unmount, but for the last few
->> times it was popping after every test finished.
->>=20
->> The __alloc_pages_nodemask warning happens once per boot, right when
->> the tests start. I think it's a WARN_ON_ONCE ?
->>=20
->> The BUGs at the bottom of this e-mail happened when I tried to umount
->> and clean up (I ^C'd at generic/052).
->>=20
->> I'm trying a bisect over linux-next right now, for grins.
->=20
-> Let me know what you find!
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-ac83228a7101e655ba5a7fa61ae10b058ada15db is the first bad commit
-commit ac83228a7101e655ba5a7fa61ae10b058ada15db
-Author: Trond Myklebust <trondmy@gmail.com>
-Date:   Wed Apr 24 17:46:45 2019 -0400
-
-    SUNRPC: Use namespace of listening daemon in the client AUTH_GSS =
-upcall
-   =20
-    When the client needs to talk to rpc.gssd, we should ensure that the
-    uid argument is encoded to match the user namespace of the daemon.
-   =20
-    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-
-:040000 040000 b7690384eb71926eca4a471986228ce9262fe702 =
-b31440d1a4e6ad51d4f41db84a45b5c4f62e7495 M	net
-
-
-I haven't looked closely at this commit... time for dinner.
-
-
-> Anna
->=20
->>=20
->>=20
->>> Thanks,
->>> Anna
->>>=20
->>> On Wed, 2019-05-08 at 14:30 -0400, Chuck Lever wrote:
->>>> Hit a few oddities, so I enabled memory debugging.
->>>>=20
->>>> This happens over and over during xfstests:
->>>>=20
->>>> May  8 11:19:42 manet kernel:
->>>> =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>> =3D=3D=3D
->>>> May  8 11:19:42 manet kernel: BUG kmalloc-128 (Tainted:
->>>> G    B            ):
->>>> Poison overwritten
->>>> May  8 11:19:42 manet kernel: =
---------------------------------------------
->>>> ----
->>>> -----------------------------
->>>> May  8 11:19:42 manet kernel: INFO: =
-0x000000004ca7d9fd-0x000000003fa83627.
->>>> First byte 0x6a instead of 0x6b
->>>> May  8 11:19:42 manet kernel: INFO: Allocated in =
-gss_create+0x8b/0x32f
->>>> [auth_rpcgss] age=3D9633 cpu=3D11 pid=3D21120
->>>>=20
->>>> This is the first field in struct gss_auth, which is a kref object.
->>>>=20
->>>> I also see this:
->>>>=20
->>>> May  8 14:21:16 manet kernel: WARNING: CPU: 10 PID: 45 at
->>>> /home/cel/src/linux/anna/mm/page_alloc.c:4584
->>>> __alloc_pages_nodemask+0x3f/0x2c2
->>>> May  8 14:21:16 manet kernel: Modules linked in: cts =
-rpcsec_gss_krb5
->>>> ib_umad
->>>> ib_ipoib mlx4_ib dm_mirror dm_region_hash dm_log dm_mod dax sb_edac
->>>> x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm =
-iTCO_wdt
->>>> iTCO_vendor_support irqbypass crct10dif_pclmul crc32_pclmul
->>>> ghash_clmulni_intel rpcrdma aesni_intel rdma_ucm crypto_simd cryptd
->>>> ib_iser
->>>> glue_helper rdma_cm iw_cm pcspkr ib_cm libiscsi =
-scsi_transport_iscsi
->>>> lpc_ich
->>>> i2c_i801 mfd_core mei_me sg mei ioatdma wmi ipmi_si ipmi_devintf
->>>> ipmi_msghandler acpi_power_meter acpi_pad pcc_cpufreq auth_rpcgss
->>>> ip_tables
->>>> xfs libcrc32c mlx4_en sr_mod cdrom qedr sd_mod ast drm_kms_helper
->>>> syscopyarea
->>>> sysfillrect sysimgblt fb_sys_fops ttm drm mlx4_core crc32c_intel =
-qede igb
->>>> ahci
->>>> libahci qed libata dca i2c_algo_bit i2c_core crc8 ib_uverbs ib_core =
-nfsv4
->>>> dns_resolver nfsv3 nfs_acl nfs lockd grace sunrpc fscache
->>>> May  8 14:21:16 manet kernel: CPU: 10 PID: 45 Comm: kworker/u26:0 =
-Not
->>>> tainted
->>>> 5.1.0-rc6-00066-g3be130e #286
->>>> May  8 14:21:16 manet kernel: Hardware name: Supermicro SYS-6028R-
->>>> T/X10DRi,
->>>> BIOS 1.1a 10/16/2015
->>>> May  8 14:21:16 manet kernel: Workqueue: rpciod rpc_async_schedule
->>>> [sunrpc]
->>>> May  8 14:21:16 manet kernel: RIP: =
-0010:__alloc_pages_nodemask+0x3f/0x2c2
->>>> May  8 14:21:16 manet kernel: Code: f4 55 53 89 fb 48 83 ec 30 65 =
-48 8b 04
->>>> 25
->>>> 28 00 00 00 48 89 44 24 28 31 c0 48 89 e7 83 fe 0a f3 ab 76 10 80 =
-e7 20 74
->>>> 02
->>>> eb 02 <0f> 0b 31 c0 e9 38 02 00 00 23 1d e5 9b 0d 01 b8 22 01 32 01 =
-48 63
->>>> May  8 14:21:16 manet kernel: RSP: 0018:ffffc9000332fc98 EFLAGS: =
-00010246
->>>> May  8 14:21:16 manet kernel: RAX: 0000000000000000 RBX: =
-0000000000040040
->>>> RCX:
->>>> 0000000000000000
->>>> May  8 14:21:16 manet kernel: RDX: 0000000000000001 RSI: =
-0000000000000017
->>>> RDI:
->>>> ffffc9000332fcc0
->>>> May  8 14:21:16 manet kernel: RBP: 0000000000000c40 R08: =
-0000000000000001
->>>> R09:
->>>> 0000000000000000
->>>> May  8 14:21:16 manet kernel: R10: 8080808080808080 R11: =
-fefefefefefefeff
->>>> R12:
->>>> 0000000000000017
->>>> May  8 14:21:16 manet kernel: R13: 000000050909093c R14: =
-0000000000000000
->>>> R15:
->>>> 0000000000004291
->>>> May  8 14:21:16 manet kernel: FS:  0000000000000000(0000)
->>>> GS:ffff88886fb00000(0000) knlGS:0000000000000000
->>>> May  8 14:21:16 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
->>>> 0000000080050033
->>>> May  8 14:21:16 manet kernel: CR2: 00007fe2167d1e94 CR3: =
-0000000002013001
->>>> CR4:
->>>> 00000000001606e0
->>>> May  8 14:21:16 manet kernel: Call Trace:
->>>> May  8 14:21:16 manet kernel: kmalloc_order+0x1d/0x62
->>>> May  8 14:21:16 manet kernel: kmalloc_order_trace+0x21/0x10d
->>>> May  8 14:21:16 manet kernel: __kmalloc+0x42/0x14a
->>>> May  8 14:21:16 manet kernel: ? xprt_do_reserve+0x6f/0x173 [sunrpc]
->>>> May  8 14:21:16 manet kernel: rpc_malloc+0x61/0xba [sunrpc]
->>>> May  8 14:21:16 manet kernel: call_allocate+0xdd/0x1af [sunrpc]
->>>> May  8 14:21:16 manet kernel: ? rpc_clnt_add_xprt+0x153/0x153 =
-[sunrpc]
->>>> May  8 14:21:16 manet kernel: __rpc_execute+0x135/0x42c [sunrpc]
->>>> May  8 14:21:16 manet kernel: rpc_async_schedule+0x29/0x39 [sunrpc]
->>>> May  8 14:21:16 manet kernel: process_one_work+0x285/0x4be
->>>> May  8 14:21:16 manet kernel: worker_thread+0x1b0/0x26f
->>>> May  8 14:21:16 manet kernel: ? cancel_delayed_work_sync+0xf/0xf
->>>> May  8 14:21:16 manet kernel: kthread+0xf6/0xfb
->>>> May  8 14:21:16 manet kernel: ? kthread_flush_work+0xc6/0xc6
->>>> May  8 14:21:16 manet kernel: ret_from_fork+0x24/0x30
->>>>=20
->>>> And just now, the xfstests got stock and this appeared in v/l/m:
->>>>=20
->>>> May  8 14:22:52 manet kernel: BUG: unable to handle kernel paging =
-request
->>>> at
->>>> ffffffffc0000000
->>>> May  8 14:22:52 manet kernel: #PF error: [INSTR]
->>>> May  8 14:22:52 manet kernel: PGD 2016067 P4D 2016067 PUD 2018067 =
-PMD 0=20
->>>> May  8 14:22:52 manet kernel: Oops: 0010 [#1] SMP
->>>> May  8 14:22:52 manet kernel: CPU: 4 PID: 14848 Comm: rpc.gssd =
-Tainted:
->>>> G    B   W         5.1.0-rc6-00066-g3be130e #286
->>>> May  8 14:22:52 manet kernel: Hardware name: Supermicro SYS-6028R-
->>>> T/X10DRi,
->>>> BIOS 1.1a 10/16/2015
->>>> May  8 14:22:52 manet kernel: RIP: 0010:0xffffffffc0000000
->>>> May  8 14:22:52 manet kernel: Code: Bad RIP value.
->>>> May  8 14:22:52 manet kernel: RSP: 0018:ffffc9000cc57cd8 EFLAGS: =
-00010287
->>>> May  8 14:22:52 manet kernel: RAX: ffff8884618641d8 RBX: =
-ffffc9000cc57da0
->>>> RCX:
->>>> ffff88886b9f0050
->>>> May  8 14:22:52 manet kernel: RDX: 0000000000000020 RSI: =
-ffff88846847b550
->>>> RDI:
->>>> ffff8884618641d8
->>>> May  8 14:22:52 manet kernel: RBP: ffffffffa04b22a0 R08: =
-0000000000000dc0
->>>> R09:
->>>> 0000000000180011
->>>> May  8 14:22:52 manet kernel: R10: ffffc9000cc57b30 R11: =
-0000000000000002
->>>> R12:
->>>> ffff8884618641d8
->>>> May  8 14:22:52 manet kernel: R13: 0000000000000c40 R14: =
-0000000000000010
->>>> R15:
->>>> ffffc9000cc57d90
->>>> May  8 14:22:52 manet kernel: FS:  00007febec152700(0000)
->>>> GS:ffff88846fb00000(0000) knlGS:0000000000000000
->>>> May  8 14:22:52 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
->>>> 0000000080050033
->>>> May  8 14:22:52 manet kernel: CR2: ffffffffbfffffd6 CR3: =
-0000000469fea003
->>>> CR4:
->>>> 00000000001606e0
->>>> May  8 14:22:52 manet kernel: Call Trace:
->>>> May  8 14:22:52 manet kernel: ? krb5_derive_key+0x83/0x365
->>>> [rpcsec_gss_krb5]
->>>> May  8 14:22:52 manet kernel: ? crypto_cts_setkey+0x2c/0x3b [cts]
->>>> May  8 14:22:52 manet kernel: ?
->>>> gss_import_sec_context_kerberos+0x823/0xa6d
->>>> [rpcsec_gss_krb5]
->>>> May  8 14:22:52 manet kernel: ? kmem_cache_alloc_trace+0xe4/0x10b
->>>> May  8 14:22:52 manet kernel: ? gss_import_sec_context+0x6c/0xa9
->>>> [auth_rpcgss]
->>>> May  8 14:22:52 manet kernel: ? gss_pipe_downcall+0x2cc/0x5b4
->>>> [auth_rpcgss]
->>>> May  8 14:22:52 manet kernel: ? rpc_pipe_write+0x56/0x6d [sunrpc]
->>>> May  8 14:22:52 manet kernel: ? vfs_write+0xa3/0xfa
->>>> May  8 14:22:52 manet kernel: ? ksys_write+0x60/0xb3
->>>> May  8 14:22:52 manet kernel: ? do_syscall_64+0x5a/0x68
->>>> May  8 14:22:52 manet kernel: ? =
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>> May  8 14:22:52 manet kernel: Modules linked in: cts =
-rpcsec_gss_krb5
->>>> ib_umad
->>>> ib_ipoib mlx4_ib dm_mirror dm_region_hash dm_log dm_mod dax sb_edac
->>>> x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm =
-iTCO_wdt
->>>> iTCO_vendor_support irqbypass crct10dif_pclmul crc32_pclmul
->>>> ghash_clmulni_intel rpcrdma aesni_intel rdma_ucm crypto_simd cryptd
->>>> ib_iser
->>>> glue_helper rdma_cm iw_cm pcspkr ib_cm libiscsi =
-scsi_transport_iscsi
->>>> lpc_ich
->>>> i2c_i801 mfd_core mei_me sg mei ioatdma wmi ipmi_si ipmi_devintf
->>>> ipmi_msghandler acpi_power_meter acpi_pad pcc_cpufreq auth_rpcgss
->>>> ip_tables
->>>> xfs libcrc32c mlx4_en sr_mod cdrom qedr sd_mod ast drm_kms_helper
->>>> syscopyarea
->>>> sysfillrect sysimgblt fb_sys_fops ttm drm mlx4_core crc32c_intel =
-qede igb
->>>> ahci
->>>> libahci qed libata dca i2c_algo_bit i2c_core crc8 ib_uverbs ib_core =
-nfsv4
->>>> dns_resolver nfsv3 nfs_acl nfs lockd grace sunrpc fscache
->>>> May  8 14:22:52 manet kernel: CR2: ffffffffc0000000
->>>> May  8 14:22:52 manet kernel: ---[ end trace 3c526e4155ae084b ]---
->>>> May  8 14:22:52 manet kernel: RIP: 0010:0xffffffffc0000000
->>>> May  8 14:22:52 manet kernel: Code: Bad RIP value.
->>>> May  8 14:22:52 manet kernel: RSP: 0018:ffffc9000cc57cd8 EFLAGS: =
-00010287
->>>> May  8 14:22:52 manet kernel: RAX: ffff8884618641d8 RBX: =
-ffffc9000cc57da0
->>>> RCX:
->>>> ffff88886b9f0050
->>>> May  8 14:22:52 manet kernel: RDX: 0000000000000020 RSI: =
-ffff88846847b550
->>>> RDI:
->>>> ffff8884618641d8
->>>> May  8 14:22:52 manet kernel: RBP: ffffffffa04b22a0 R08: =
-0000000000000dc0
->>>> R09:
->>>> 0000000000180011
->>>> May  8 14:22:52 manet kernel: R10: ffffc9000cc57b30 R11: =
-0000000000000002
->>>> R12:
->>>> ffff8884618641d8
->>>> May  8 14:22:52 manet kernel: R13: 0000000000000c40 R14: =
-0000000000000010
->>>> R15:
->>>> ffffc9000cc57d90
->>>> May  8 14:22:52 manet kernel: FS:  00007febec152700(0000)
->>>> GS:ffff88846fb00000(0000) knlGS:0000000000000000
->>>> May  8 14:22:52 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
->>>> 0000000080050033
->>>> May  8 14:22:52 manet kernel: CR2: ffffffffbfffffd6 CR3: =
-0000000469fea003
->>>> CR4:
->>>> 00000000001606e0
->>>> May  8 14:22:52 manet kernel: BUG: sleeping function called from =
-invalid
->>>> context at /home/cel/src/linux/anna/include/linux/percpu-rwsem.h:34
->>>> May  8 14:22:52 manet kernel: in_atomic(): 0, irqs_disabled(): 1, =
-pid:
->>>> 14848,
->>>> name: rpc.gssd
->>>> May  8 14:22:52 manet kernel: INFO: lockdep is turned off.
->>>> May  8 14:22:52 manet kernel: irq event stamp: 0
->>>> May  8 14:22:52 manet kernel: hardirqs last  enabled at (0):
->>>> [<0000000000000000>]           (null)
->>>> May  8 14:22:52 manet kernel: hardirqs last disabled at (0):
->>>> [<ffffffff8106e944>] copy_process+0x774/0x1e24
->>>> May  8 14:22:52 manet kernel: softirqs last  enabled at (0):
->>>> [<ffffffff8106e944>] copy_process+0x774/0x1e24
->>>> May  8 14:22:52 manet kernel: softirqs last disabled at (0):
->>>> [<0000000000000000>]           (null)
->>>> May  8 14:22:52 manet kernel: CPU: 4 PID: 14848 Comm: rpc.gssd =
-Tainted:
->>>> G    B
->>>> D W         5.1.0-rc6-00066-g3be130e #286
->>>> May  8 14:22:52 manet kernel: Hardware name: Supermicro SYS-6028R-
->>>> T/X10DRi,
->>>> BIOS 1.1a 10/16/2015
->>>> May  8 14:22:52 manet kernel: Call Trace:
->>>> May  8 14:22:52 manet kernel: dump_stack+0x78/0xa9
->>>> May  8 14:22:52 manet kernel: ___might_sleep+0x1b8/0x1cd
->>>> May  8 14:22:52 manet kernel: exit_signals+0x35/0x195
->>>> May  8 14:22:52 manet kernel: do_exit+0x122/0xa61
->>>> May  8 14:22:52 manet kernel: ? ksys_write+0x60/0xb3
->>>> May  8 14:22:52 manet kernel: rewind_stack_do_exit+0x17/0x20
->>>>=20
->>>>=20
->>>> --
->>>> Chuck Lever
->>>>=20
->>>>=20
->>>>=20
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
->=20
-
---
-Chuck Lever
-
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
