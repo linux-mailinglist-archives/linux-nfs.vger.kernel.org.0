@@ -2,112 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5A21987C
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 08:37:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0008119FD1
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 17:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfEJGhN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 May 2019 02:37:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44810 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfEJGhN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 May 2019 02:37:13 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g9so2662609pfo.11;
-        Thu, 09 May 2019 23:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tZpDbbxPQIQaiTEJ/QF3eG59ACeQtX21Wr99/jZNM7o=;
-        b=r59rDHqtOd7p+7W9lwVnV5p8DCUR6qGWm1fA+Se52beD9X8hdi5gXvUCA/jU5nhPDl
-         WF3brRF3Y+iKrRQCfzoL7srTYKFWGrF4/+JKPn2GZDDQMP4Y32QZVWgJ8fpzz4JHDC/j
-         UxJliP3I3+QfBu346rmvtNAiw8aEa1KrCRxRBDErVdos5adye4rfGww0oten6Smdy2Cj
-         oRf6DSnhVd+Y6RzhNRsT2Nb/KrQ6xDm+2pd9qCCNTDMNtvZgf8j7kRKGEcMUqsJRXHGV
-         /FycWZVKTUm+USwcg0lSigbRGpnzCfKUYsrXV5HD2U4o1IWUz3kIm9Cr1Z6V51X6yv0X
-         4HPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tZpDbbxPQIQaiTEJ/QF3eG59ACeQtX21Wr99/jZNM7o=;
-        b=o8qNj3xgEwnmTliR1dgcmSsIgabDiB48PR/bKu3qYkeqqrP3S7DqY4ekTsZWbtwDaU
-         3SHTjplOcRo4lp2nOLaMnxafxuMREZRcHfTrvQMK84xJc+rHCyyker/ONZfnuvZEOzOs
-         JgcwslPXGLoWPdGzmlokmrLOKfGVMRrmMnPn/EgOl9ICTaGBJQBSvCkZyVvG89+UHK0w
-         GBoYkgQ+rrJwsulm2tDwuPV5WMeeTwtJSRUHScX+F0RHVaTBgBWqRy9ypCCeeFtFQnu7
-         xGR1j7qPmPoK87kcH9oZ+xKijpFDya2bDuw/k4m3igXSAcPtkPBkzrTPjU/tDi/pUh+l
-         4+lw==
-X-Gm-Message-State: APjAAAVbfGLXmDEeaWxM1ERhu366o6KIDMqeqGS8NpctOzZKVLPH/4qQ
-        cZl0aS7tsDnvthd8m7YpMs8=
-X-Google-Smtp-Source: APXvYqyTPtOYvxSUX3bbrvCZ4KxRbJM8QDJZj2fhpRLkLZL3C4WBC0szcESYnw8qQPdTbioxaatmIw==
-X-Received: by 2002:a63:2124:: with SMTP id h36mr11608289pgh.186.1557470232308;
-        Thu, 09 May 2019 23:37:12 -0700 (PDT)
-Received: from bridge.localdomain ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id v6sm4469263pgi.88.2019.05.09.23.37.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 23:37:11 -0700 (PDT)
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
-To:     bfields@fieldses.org, viro@zeniv.linux.org.uk, davem@davemloft.net
-Cc:     jlayton@kernel.org, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, wenbinzeng@tencent.com,
-        dsahern@gmail.com, nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/3] auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when use-gss-proxy==1
-Date:   Fri, 10 May 2019 14:36:03 +0800
-Message-Id: <1557470163-30071-4-git-send-email-wenbinzeng@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+        id S1727453AbfEJPHV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 May 2019 11:07:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35424 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727346AbfEJPHU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 10 May 2019 11:07:20 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E52C307D852;
+        Fri, 10 May 2019 15:07:20 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3021461983;
+        Fri, 10 May 2019 15:07:20 +0000 (UTC)
+Subject: Re: [PATCH] nfs-utils: Change /var/run -> /run in systemd service
+ files
+From:   Steve Dickson <SteveD@RedHat.com>
+To:     Orion Poplawski <orion@nwra.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <6a9ffa7d-f711-026f-d9f7-a680a86c553a@nwra.com>
+ <29ea93aa-9f20-9d09-c135-99f5976704db@RedHat.com>
+ <c32f477e-4389-6c97-573d-1faa45c2bcff@nwra.com>
+ <f53b3ed0-0489-2b94-9f8d-d0120db0c0da@RedHat.com>
+Message-ID: <6e64dc54-b230-b513-c3cd-06ec8710d5d5@RedHat.com>
+Date:   Fri, 10 May 2019 11:07:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <f53b3ed0-0489-2b94-9f8d-d0120db0c0da@RedHat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 10 May 2019 15:07:20 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When use-gss-proxy is set to 1, write_gssp() creates a rpc client in
-gssp_rpc_create(), this increases netns refcount by 2, these refcounts are
-supposed to be released in rpcsec_gss_exit_net(), but it will never happen
-because rpcsec_gss_exit_net() is triggered only when netns refcount gets
-to 0, specifically:
-    refcount=0 -> cleanup_net() -> ops_exit_list -> rpcsec_gss_exit_net
-It is a deadlock situation here, refcount will never get to 0 unless
-rpcsec_gss_exit_net() is called.
 
-This fix introduced a new callback i.e. evict in struct proc_ns_operations,
-which is called in nsfs_evict. Moving rpcsec_gss_exit_net to evict path
-gives it a chance to get called and avoids the above deadlock situation.
 
-Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
----
- net/sunrpc/auth_gss/auth_gss.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+On 5/9/19 1:25 PM, Steve Dickson wrote:
+> 
+> 
+> On 5/8/19 12:02 PM, Orion Poplawski wrote:
+>> On 5/8/19 9:54 AM, Steve Dickson wrote:
+>>>
+>>>
+>>> On 5/8/19 10:58 AM, Orion Poplawski wrote:
+>>>> This fixes:
+>>>>
+>>>> /usr/lib/systemd/system/nfs-blkmap.service:10: PIDFile= references path below
+>>>> legacy directory /var/run/, updating /var/run/blkmapd.pid → /run/blkmapd.pid;
+>>>> please update the unit file accordingly.
+>>> Shouldn't the apps also be updated? I know there is a symbolic 
+>>> link... but just for completeness the pid files in both apps 
+>>> should be updated as well. 
+>>>
+>>> steved.
+>>
+>> I thought about that - but was concerned about legacy systems that still use
+>> /var/run.
+> Any idea how long the symlink will be around? But I do see your point.
+> 
+> steved.
+> 
+>>
+>>>>
+>>>> Signed-off-by: Orion Poplawski <orion@nwra.com>
+>>>> ---
+>>>>  systemd/nfs-blkmap.service | 2 +-
+>>>>  systemd/rpc-statd.service  | 2 +-
+>>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+Committed.... 
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 3fd56c0..3e6bd59 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -2136,14 +2136,17 @@ static __net_init int rpcsec_gss_init_net(struct net *net)
- 	return gss_svc_init_net(net);
- }
- 
--static __net_exit void rpcsec_gss_exit_net(struct net *net)
-+static void rpcsec_gss_evict_net(struct net *net)
- {
--	gss_svc_shutdown_net(net);
-+	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
-+
-+	if (sn->gssp_clnt)
-+		gss_svc_shutdown_net(net);
- }
- 
- static struct pernet_operations rpcsec_gss_net_ops = {
- 	.init = rpcsec_gss_init_net,
--	.exit = rpcsec_gss_exit_net,
-+	.evict = rpcsec_gss_evict_net,
- };
- 
- /*
--- 
-1.8.3.1
+steved.
 
+>>>>
+>>>> diff --git a/systemd/nfs-blkmap.service b/systemd/nfs-blkmap.service
+>>>> index 2bbcee6..6aa45ba 100644
+>>>> --- a/systemd/nfs-blkmap.service
+>>>> +++ b/systemd/nfs-blkmap.service
+>>>> @@ -9,7 +9,7 @@ PartOf=nfs-utils.service
+>>>>
+>>>>  [Service]
+>>>>  Type=forking
+>>>> -PIDFile=/var/run/blkmapd.pid
+>>>> +PIDFile=/run/blkmapd.pid
+>>>>  ExecStart=/usr/sbin/blkmapd
+>>>>
+>>>>  [Install]
+>>>> diff --git a/systemd/rpc-statd.service b/systemd/rpc-statd.service
+>>>> index 3e92cf7..095629f 100644
+>>>> --- a/systemd/rpc-statd.service
+>>>> +++ b/systemd/rpc-statd.service
+>>>> @@ -13,5 +13,5 @@ IgnoreOnIsolate=yes
+>>>>  [Service]
+>>>>  Environment=RPC_STATD_NO_NOTIFY=1
+>>>>  Type=forking
+>>>> -PIDFile=/var/run/rpc.statd.pid
+>>>> +PIDFile=/run/rpc.statd.pid
+>>>>  ExecStart=/usr/sbin/rpc.statd
+>>>> --
+>>>> 1.8.3.1
+>>>>
+>>
+>>
