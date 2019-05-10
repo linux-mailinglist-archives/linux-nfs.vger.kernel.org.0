@@ -2,69 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC731A4F9
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 23:54:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2141A516
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 May 2019 00:13:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfEJVys (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 May 2019 17:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfEJVys (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 10 May 2019 17:54:48 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEDE217D6;
-        Fri, 10 May 2019 21:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557525287;
-        bh=OlL2+v8U1rTwUryIIhYhCqJpysGNxtNHY09Fq/O9t74=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eYUM6pqOPCLapV1ItJQzqJ8LffhgN/N4pizwCd4w7L2S+lSGBXP6iJKprYgMaE15R
-         OUlfjdPfcYDT6dFIeKU1+AEYrmVWOGgHZ7uZf2EUmbn/C6eEs4SwD3EQbofkFczfs0
-         9wRCnyFzUU7KdSHgLQ4k1yJ9Vj/Qo68jV9bMnei0=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org, jfajerski@suse.com
-Subject: [PATCH] manpage: explain why showmount doesn't really work against a v4-only server
-Date:   Fri, 10 May 2019 17:54:45 -0400
-Message-Id: <20190510215445.1823-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1728035AbfEJWNf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 May 2019 18:13:35 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58690 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbfEJWNf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 May 2019 18:13:35 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C53DB133E9747;
+        Fri, 10 May 2019 15:13:33 -0700 (PDT)
+Date:   Fri, 10 May 2019 15:13:33 -0700 (PDT)
+Message-Id: <20190510.151333.266788690200661708.davem@davemloft.net>
+To:     wenbin.zeng@gmail.com
+Cc:     bfields@fieldses.org, viro@zeniv.linux.org.uk, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] netns: add netns_evict into netns_operations
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1557470163-30071-3-git-send-email-wenbinzeng@tencent.com>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+        <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+        <1557470163-30071-3-git-send-email-wenbinzeng@tencent.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 10 May 2019 15:13:34 -0700 (PDT)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Jeff Layton <jlayton@redhat.com>
+From: Wenbin Zeng <wenbin.zeng@gmail.com>
+Date: Fri, 10 May 2019 14:36:02 +0800
 
-I occasionally see people that expect valid info when running showmount
-against a server that may export some or all filesystems via NFSv4.
-Let's make it clear that it only works by talking to the remote MNT
-service, and that that may not be available from a v4-only server.
+> The newly added netns_evict() shall be called when the netns inode being
+> evicted. It provides another path to release netns refcounts, previously
+> netns_put() is the only choice, but it is not able to release all netns
+> refcount, for example, a rpc client holds two netns refcounts, these
+> refcounts are supposed to be released when the rpc client is freed, but
+> the code to free rpc client is normally triggered by put() callback only
+> when netns refcount gets to 0, specifically:
+>     refcount=0 -> cleanup_net() -> ops_exit_list -> free rpc client
+> But netns refcount will never get to 0 before rpc client gets freed, to
+> break the deadlock, the code to free rpc client can be put into the newly
+> added netns_evict.
+> 
+> Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
 
-Cc: Jan Fajerski <jfajerski@suse.com>
-Signed-off-by: Jeff Layton <jlayton@redhat.com>
----
- utils/showmount/showmount.man | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/utils/showmount/showmount.man b/utils/showmount/showmount.man
-index a2f510fb5617..35818e1b61c5 100644
---- a/utils/showmount/showmount.man
-+++ b/utils/showmount/showmount.man
-@@ -56,5 +56,10 @@ Because
- .B showmount
- sorts and uniqs the output, it is impossible to determine from
- the output whether a client is mounting the same directory more than once.
-+.P
-+.B showmount
-+works by contacting the server's MNT service directly. NFSv4-only servers have
-+no need to advertise their exported root filehandles via this method, and may
-+not expose their MNT service to clients.
- .SH AUTHOR
- Rick Sladkey <jrs@world.std.com>
--- 
-2.21.0
-
+Acked-by: David S. Miller <davem@davemloft.net>
