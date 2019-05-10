@@ -2,81 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 718E01A324
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 20:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 716CD1A3B4
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 22:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfEJStS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 May 2019 14:49:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40398 "EHLO mx1.redhat.com"
+        id S1727670AbfEJUJm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 May 2019 16:09:42 -0400
+Received: from fieldses.org ([173.255.197.46]:55510 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727622AbfEJStS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 10 May 2019 14:49:18 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2049A307D852;
-        Fri, 10 May 2019 18:49:18 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-27.phx2.redhat.com [10.3.116.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA1AF1000320;
-        Fri, 10 May 2019 18:49:17 +0000 (UTC)
-Subject: Re: [PATCH] nfs-utils: nfsidmap fail to build if no --with-pluginpath
- specified
-To:     Yongcheng Yang <yongcheng.yang@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-References: <20190402091651.17186-1-yongcheng.yang@gmail.com>
- <95e49187-6d99-4168-1bb1-4a3f6f2500ee@RedHat.com>
- <20190417092246.GA5865@yoyang-pc.usersys.redhat.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <6c2d66ec-a098-72d6-42ab-15c3baa06f30@RedHat.com>
-Date:   Fri, 10 May 2019 14:49:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727657AbfEJUJm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 10 May 2019 16:09:42 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 19F5C63E; Fri, 10 May 2019 16:09:41 -0400 (EDT)
+Date:   Fri, 10 May 2019 16:09:41 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Message-ID: <20190510200941.GB5349@fieldses.org>
+References: <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
+ <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <20190503153531.GJ12608@fieldses.org>
+ <87woj3157p.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <20190417092246.GA5865@yoyang-pc.usersys.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 10 May 2019 18:49:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woj3157p.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, May 07, 2019 at 10:24:58AM +1000, NeilBrown wrote:
+> Interesting perspective .... though doesn't NFSv4 explicitly allow
+> client-side ACL enforcement in the case of delegations?
+
+Not really.  What you're probably thinking of is the single ACE that the
+server can return on granting a delegation, that tells the client it can
+skip the ACCESS check for users matching that ACE.  It's unclear how
+useful that is.  It's currently unused by the Linux client and server.
+
+> Not sure how relevant that is....
+> 
+> It seems to me we have two options:
+>  1/ declare the NFSv4 doesn't work as a lower layer for overlayfs and
+>     recommend people use NFSv3, or
+>  2/ Modify overlayfs to work with NFSv4 by ignoring nfsv4 ACLs either
+>  2a/ always - and ignore all other acls and probably all system. xattrs,
+>  or
+>  2b/ based on a mount option that might be
+>       2bi/ general "noacl" or might be
+>       2bii/ explicit "noxattr=system.nfs4acl"
+>  
+> I think that continuing to discuss the miniature of the options isn't
+> going to help.  No solution is perfect - we just need to clearly
+> document the implications of whatever we come up with.
+> 
+> I lean towards 2a, but I be happy with with any '2' and '1' won't kill
+> me.
+
+I guess I'd also lean towards 2a.
+
+I don't think it applies to posix acls, as overlayfs is capable of
+copying those up and evaluating them on its own.
+
+--b.
+
+> 
+> Do we have a vote?  Or does someone make an executive decision??
+> 
+> NeilBrown
 
 
-On 4/17/19 5:22 AM, Yongcheng Yang wrote:
-> Hi SteveD,
-> 
-> On Tue, Apr 16, 2019 at 10:34:51AM -0400, Steve Dickson wrote:
->> The only way I see a failure is when ./configure --with-pluginpath= 
->> without a path which is wrong... 
->>
->> ./configure --with-pluginpath=/usr/lib/libnfsidmap seems to work
->> just fine
->>
->> I thinking it is better to error out when a path is not given
->> then to gloss over but used a default.
->>
->> steved.
->>
-> 
-> From what you comments, there should be a plugin path assigned by
-> default if the user is not aware of it, correct?
-> 
-> Surely "./configure --with-pluginpath=/usr/lib/libnfsidmap" can work.
-> But I didn't know the specific exact path before.
-> 
-> I was just using "./configure" without any options and find out that
-> it's empty. (Please find my previous full logs)
-> 
-> Agree with you we should "use a default" one when path is not given.
-Change of mind.... I think the patch is good... 
-
-Committed! thanks!!
-
-steved.
-> 
-> Thanks,
-> Yongcheng
-> 
