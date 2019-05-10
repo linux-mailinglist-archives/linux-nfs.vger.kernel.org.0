@@ -2,121 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F451A406
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 22:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D65F1A46B
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2019 23:20:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfEJUkA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 May 2019 16:40:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727676AbfEJUkA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 10 May 2019 16:40:00 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9851C81DE6
-        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2019 20:39:59 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-112-5.rdu2.redhat.com [10.10.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E069817AC6
-        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2019 20:39:58 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: __fput and with silly delegation current_umask()
-Date:   Fri, 10 May 2019 16:39:57 -0400
-Message-ID: <EF8D5E82-6BDA-45CE-B115-D904422D956A@redhat.com>
+        id S1727677AbfEJVUX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 May 2019 17:20:23 -0400
+Received: from mail-eopbgr780125.outbound.protection.outlook.com ([40.107.78.125]:29536
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727767AbfEJVUX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 10 May 2019 17:20:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7WQagt9yn1LV1Bkp6dg4BeOEdd2dwmIHjDIkJReEVC0=;
+ b=kpaDHttKJh9fQUZYkSzH5UB0SVbIAVeB6nnMU32S2cSmcMv66nT2Fc4KO2nw1f2yPebfcuPyKethipgeo35WN0jWI0iykcmheRhin25+50sa9BgB/KNXCxR4PM+2vTEF3wNeED09zS5UnGNm2bWh2Trsvq2YJ4WAR9VWf+wTzvI=
+Received: from CY4PR13MB1847.namprd13.prod.outlook.com (10.171.165.14) by
+ CY4PR13MB1031.namprd13.prod.outlook.com (10.168.164.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.7; Fri, 10 May 2019 21:20:17 +0000
+Received: from CY4PR13MB1847.namprd13.prod.outlook.com
+ ([fe80::68a2:b795:b08e:447f]) by CY4PR13MB1847.namprd13.prod.outlook.com
+ ([fe80::68a2:b795:b08e:447f%5]) with mapi id 15.20.1878.019; Fri, 10 May 2019
+ 21:20:17 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bcodding@redhat.com" <bcodding@redhat.com>
+Subject: Re: __fput and with silly delegation current_umask()
+Thread-Topic: __fput and with silly delegation current_umask()
+Thread-Index: AQHVB3CLcMX63JHKLEGmKsjwgYG256Zk3W6A
+Date:   Fri, 10 May 2019 21:20:17 +0000
+Message-ID: <b7735187578fc328b04acc7cedbf0d0938970a43.camel@hammerspace.com>
+References: <EF8D5E82-6BDA-45CE-B115-D904422D956A@redhat.com>
+In-Reply-To: <EF8D5E82-6BDA-45CE-B115-D904422D956A@redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.36.167.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 22e3af6f-efd5-423f-b87b-08d6d58d4ce0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR13MB1031;
+x-ms-traffictypediagnostic: CY4PR13MB1031:
+x-microsoft-antispam-prvs: <CY4PR13MB1031EAD06EC316D9C7495BB2B80C0@CY4PR13MB1031.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0033AAD26D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(376002)(396003)(346002)(366004)(199004)(189003)(14454004)(8676002)(66066001)(5660300002)(14444005)(256004)(476003)(110136005)(36756003)(76176011)(71200400001)(6506007)(102836004)(305945005)(99286004)(71190400001)(2906002)(26005)(6246003)(186003)(53936002)(68736007)(446003)(6512007)(11346002)(2616005)(486006)(8936002)(3846002)(6116002)(118296001)(7736002)(2501003)(66556008)(64756008)(66446008)(66476007)(478600001)(316002)(229853002)(25786009)(6436002)(6486002)(91956017)(73956011)(66946007)(76116006)(81166006)(86362001)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR13MB1031;H:CY4PR13MB1847.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S4xg+T5fujGL1mf2t41+333O/soiPeVmkM/wYu+IKbUNKgvJxp3Yn6QwXBkZm/gaD6LoZ+UdBRvuKJ78UmLTVyL+IrT0iFYmszvq6GdG//KVeNJGcugabehd000X34Nt3Wck5PVOkpSoBSZ1VLFTcAGT+8e8G0DFnYc1zpBGRkwxnt0yJ4XL8S5DN7XGEwJhMyqNoht2UVNUtvGSu+ioqE030gmAiGggatues6phUnarCO5cFw14gsgQCg24c8j8OyqiSuBPJ4IZYQUYV2wTPaxPwi/4P44/y48UyZKBawOCcTUsi7AXLpHqr83z9bFS1f54+f+i4XvVp+shdWRVQiJPe5+dsZeDGE4qti6iYuhJCjGW5CX0cT6l/DJ43cInOIlIp12+d+7FfkZpBy3MHKD1uPwun8ZtQzlLD0XJfvg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BB80ADADF46ED443A38A6BE28BD393D8@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 10 May 2019 20:39:59 +0000 (UTC)
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22e3af6f-efd5-423f-b87b-08d6d58d4ce0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 21:20:17.3612
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR13MB1031
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A shiney new version is out, and I just had a report of a crash:
-
-[ 2853.916121] BUG: unable to handle kernel NULL pointer dereference at 
-000000000000000c
-[ 2853.917625] PGD 0 P4D 0
-[ 2853.918106] Oops: 0000 [#1] SMP PTI
-[ 2853.918761] CPU: 0 PID: 25711 Comm: file_exec.sh Kdump: loaded Not 
-tainted 4.18.0-83.el8.x86_64 #1
-[ 2853.920406] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[ 2853.921469] RIP: 0010:current_umask+0x15/0x20
-[ 2853.922274] Code: 76 48 e9 3e 54 fe ff 90 90 90 90 90 90 90 90 90 90 
-90 90 90 90 0f 1f 44 00 00 65 48 8b 04 25 80 5c 01 00 48 8b 80 18 0b 00 
-00 <8b> 40 0c c3 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 55
-[ 2853.925675] RSP: 0018:ffffa446014d3ba8 EFLAGS: 00010246
-[ 2853.926644] RAX: 0000000000000000 RBX: ffff93ccc402e000 RCX: 
-0000000500000000
-[ 2853.927939] RDX: 0000000000000000 RSI: 0000000500000000 RDI: 
-ffff93cd494fa6d8
-[ 2853.929200] RBP: ffff93cd494fa680 R08: ffff93cd7ba28160 R09: 
-ffff93cd47c02380
-[ 2853.930489] R10: ffffe964443aa6c0 R11: ffffffffc0967080 R12: 
-0000000000000000
-[ 2853.931957] R13: 0000000000000000 R14: ffff93cd54d3e800 R15: 
-ffff93ccc4076400
-[ 2853.933420] FS:  00007f31147b8740(0000) GS:ffff93cd7ba00000(0000) 
-knlGS:0000000000000000
-[ 2853.935071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2853.936262] CR2: 000000000000000c CR3: 000000000aa0a004 CR4: 
-00000000007606f0
-[ 2853.937730] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-0000000000000000
-[ 2853.939186] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
-0000000000000400
-[ 2853.940657] PKRU: 55555554
-[ 2853.941226] Call Trace:
-[ 2853.941729]  nfs4_opendata_alloc+0x135/0x460 [nfsv4]
-[ 2853.942655]  nfs4_open_recoverdata_alloc.isra.59+0x21/0x40 [nfsv4]
-[ 2853.943854]  nfs4_open_delegation_recall+0x40/0x140 [nfsv4]
-[ 2853.945000]  ? __filemap_fdatawrite_range+0xc8/0xf0
-[ 2853.946020]  nfs_end_delegation_return+0x15d/0x390 [nfsv4]
-[ 2853.947162]  nfs_complete_unlink+0x15e/0x220 [nfs]
-[ 2853.948160]  nfs_dentry_iput+0x37/0x50 [nfs]
-[ 2853.949046]  __dentry_kill+0xd5/0x170
-[ 2853.949807]  dentry_kill+0x4d/0x190
-[ 2853.950537]  dput.part.32+0xcb/0x110
-[ 2853.951285]  __fput+0x108/0x220
-[ 2853.951942]  task_work_run+0x8a/0xb0
-[ 2853.952665]  do_exit+0x2db/0xad0
-[ 2853.953266]  ? syscall_trace_enter+0x1d3/0x2c0
-[ 2853.954152]  do_group_exit+0x3a/0xa0
-[ 2853.954902]  __x64_sys_exit_group+0x14/0x20
-[ 2853.955742]  do_syscall_64+0x5b/0x1b0
-[ 2853.956422]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-[ 2853.957366] RIP: 0033:0x7f3113e76a86
-[ 2853.958031] Code: Bad RIP value.
-[ 2853.958637] RSP: 002b:00007fff7ab7de18 EFLAGS: 00000246 ORIG_RAX: 
-00000000000000e7
-[ 2853.960023] RAX: ffffffffffffffda RBX: 00007f3114167740 RCX: 
-00007f3113e76a86
-[ 2853.961328] RDX: 000000000000007e RSI: 000000000000003c RDI: 
-000000000000007e
-[ 2853.962636] RBP: 000000000000007e R08: 00000000000000e7 R09: 
-ffffffffffffff80
-[ 2853.963941] R10: 00007fff7ab7dccc R11: 0000000000000246 R12: 
-00007f3114167740
-[ 2853.965240] R13: 0000000000000001 R14: 00007f3114170448 R15: 
-0000000000000000
-
-The problem seems to be that current->fs = NULL at this point, so
-current_umask() in nfs4_opendata_alloc() shouldn't be used in this path. 
-  We
-do exit_fs before task_work_run starts us cleaning up the inode, so this
-isn't /delayed/ __fput, but it does have things happening in the wrong 
-order
-if we want to use current->fs.
-
-Should we check for this specific case and use a static umask, or maybe 
-fix
-current_umask() for all delayed fput() paths?  A umask doesn't really 
-make
-any sense if we're doing doing OPEN with CLAIM_DELEG_CUR_FH..
-
-I'm feeling unhappy with any options that spring to mind.
-
-Any other suggestions?  Maybe the fix will be obvious after a nap...
-
-Ben
+SGkgQmVuLA0KDQpPbiBGcmksIDIwMTktMDUtMTAgYXQgMTY6MzkgLTA0MDAsIEJlbmphbWluIENv
+ZGRpbmd0b24gd3JvdGU6DQo+IEEgc2hpbmV5IG5ldyB2ZXJzaW9uIGlzIG91dCwgYW5kIEkganVz
+dCBoYWQgYSByZXBvcnQgb2YgYSBjcmFzaDoNCj4gDQo+IFsgMjg1My45MTYxMjFdIEJVRzogdW5h
+YmxlIHRvIGhhbmRsZSBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlDQo+IGF0IA0KPiAw
+MDAwMDAwMDAwMDAwMDBjDQo+IFsgMjg1My45MTc2MjVdIFBHRCAwIFA0RCAwDQo+IFsgMjg1My45
+MTgxMDZdIE9vcHM6IDAwMDAgWyMxXSBTTVAgUFRJDQo+IFsgMjg1My45MTg3NjFdIENQVTogMCBQ
+SUQ6IDI1NzExIENvbW06IGZpbGVfZXhlYy5zaCBLZHVtcDogbG9hZGVkDQo+IE5vdCANCj4gdGFp
+bnRlZCA0LjE4LjAtODMuZWw4Lng4Nl82NCAjMQ0KPiBbIDI4NTMuOTIwNDA2XSBIYXJkd2FyZSBu
+YW1lOiBSZWQgSGF0IEtWTSwgQklPUyAwLjUuMSAwMS8wMS8yMDExDQo+IFsgMjg1My45MjE0Njld
+IFJJUDogMDAxMDpjdXJyZW50X3VtYXNrKzB4MTUvMHgyMA0KPiBbIDI4NTMuOTIyMjc0XSBDb2Rl
+OiA3NiA0OCBlOSAzZSA1NCBmZSBmZiA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MA0KPiA5MCAN
+Cj4gOTAgOTAgOTAgOTAgMGYgMWYgNDQgMDAgMDAgNjUgNDggOGIgMDQgMjUgODAgNWMgMDEgMDAg
+NDggOGIgODAgMTggMGINCj4gMDAgDQo+IDAwIDw4Yj4gNDAgMGMgYzMgMGYgMWYgODAgMDAgMDAg
+MDAgMDAgMGYgMWYgNDQgMDAgMDAgNTUgNDggODkgZTUgNDENCj4gNTUNCj4gWyAyODUzLjkyNTY3
+NV0gUlNQOiAwMDE4OmZmZmZhNDQ2MDE0ZDNiYTggRUZMQUdTOiAwMDAxMDI0Ng0KPiBbIDI4NTMu
+OTI2NjQ0XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmOTNjY2M0MDJlMDAwIFJDWDog
+DQo+IDAwMDAwMDA1MDAwMDAwMDANCj4gWyAyODUzLjkyNzkzOV0gUkRYOiAwMDAwMDAwMDAwMDAw
+MDAwIFJTSTogMDAwMDAwMDUwMDAwMDAwMCBSREk6IA0KPiBmZmZmOTNjZDQ5NGZhNmQ4DQo+IFsg
+Mjg1My45MjkyMDBdIFJCUDogZmZmZjkzY2Q0OTRmYTY4MCBSMDg6IGZmZmY5M2NkN2JhMjgxNjAg
+UjA5OiANCj4gZmZmZjkzY2Q0N2MwMjM4MA0KPiBbIDI4NTMuOTMwNDg5XSBSMTA6IGZmZmZlOTY0
+NDQzYWE2YzAgUjExOiBmZmZmZmZmZmMwOTY3MDgwIFIxMjogDQo+IDAwMDAwMDAwMDAwMDAwMDAN
+Cj4gWyAyODUzLjkzMTk1N10gUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogZmZmZjkzY2Q1NGQz
+ZTgwMCBSMTU6IA0KPiBmZmZmOTNjY2M0MDc2NDAwDQo+IFsgMjg1My45MzM0MjBdIEZTOiAgMDAw
+MDdmMzExNDdiODc0MCgwMDAwKSBHUzpmZmZmOTNjZDdiYTAwMDAwKDAwMDApIA0KPiBrbmxHUzow
+MDAwMDAwMDAwMDAwMDAwDQo+IFsgMjg1My45MzUwNzFdIENTOiAgMDAxMCBEUzogMDAwMCBFUzog
+MDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCj4gWyAyODUzLjkzNjI2Ml0gQ1IyOiAwMDAwMDAw
+MDAwMDAwMDBjIENSMzogMDAwMDAwMDAwYWEwYTAwNCBDUjQ6IA0KPiAwMDAwMDAwMDAwNzYwNmYw
+DQo+IFsgMjg1My45Mzc3MzBdIERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAw
+MDAwMDAgRFIyOiANCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiBbIDI4NTMuOTM5MTg2XSBEUjM6IDAw
+MDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogDQo+IDAwMDAwMDAwMDAw
+MDA0MDANCj4gWyAyODUzLjk0MDY1N10gUEtSVTogNTU1NTU1NTQNCj4gWyAyODUzLjk0MTIyNl0g
+Q2FsbCBUcmFjZToNCj4gWyAyODUzLjk0MTcyOV0gIG5mczRfb3BlbmRhdGFfYWxsb2MrMHgxMzUv
+MHg0NjAgW25mc3Y0XQ0KPiBbIDI4NTMuOTQyNjU1XSAgbmZzNF9vcGVuX3JlY292ZXJkYXRhX2Fs
+bG9jLmlzcmEuNTkrMHgyMS8weDQwIFtuZnN2NF0NCj4gWyAyODUzLjk0Mzg1NF0gIG5mczRfb3Bl
+bl9kZWxlZ2F0aW9uX3JlY2FsbCsweDQwLzB4MTQwIFtuZnN2NF0NCj4gWyAyODUzLjk0NTAwMF0g
+ID8gX19maWxlbWFwX2ZkYXRhd3JpdGVfcmFuZ2UrMHhjOC8weGYwDQo+IFsgMjg1My45NDYwMjBd
+ICBuZnNfZW5kX2RlbGVnYXRpb25fcmV0dXJuKzB4MTVkLzB4MzkwIFtuZnN2NF0NCj4gWyAyODUz
+Ljk0NzE2Ml0gIG5mc19jb21wbGV0ZV91bmxpbmsrMHgxNWUvMHgyMjAgW25mc10NCj4gWyAyODUz
+Ljk0ODE2MF0gIG5mc19kZW50cnlfaXB1dCsweDM3LzB4NTAgW25mc10NCj4gWyAyODUzLjk0OTA0
+Nl0gIF9fZGVudHJ5X2tpbGwrMHhkNS8weDE3MA0KPiBbIDI4NTMuOTQ5ODA3XSAgZGVudHJ5X2tp
+bGwrMHg0ZC8weDE5MA0KPiBbIDI4NTMuOTUwNTM3XSAgZHB1dC5wYXJ0LjMyKzB4Y2IvMHgxMTAN
+Cj4gWyAyODUzLjk1MTI4NV0gIF9fZnB1dCsweDEwOC8weDIyMA0KPiBbIDI4NTMuOTUxOTQyXSAg
+dGFza193b3JrX3J1bisweDhhLzB4YjANCj4gWyAyODUzLjk1MjY2NV0gIGRvX2V4aXQrMHgyZGIv
+MHhhZDANCj4gWyAyODUzLjk1MzI2Nl0gID8gc3lzY2FsbF90cmFjZV9lbnRlcisweDFkMy8weDJj
+MA0KPiBbIDI4NTMuOTU0MTUyXSAgZG9fZ3JvdXBfZXhpdCsweDNhLzB4YTANCj4gWyAyODUzLjk1
+NDkwMl0gIF9feDY0X3N5c19leGl0X2dyb3VwKzB4MTQvMHgyMA0KPiBbIDI4NTMuOTU1NzQyXSAg
+ZG9fc3lzY2FsbF82NCsweDViLzB4MWIwDQo+IFsgMjg1My45NTY0MjJdICBlbnRyeV9TWVNDQUxM
+XzY0X2FmdGVyX2h3ZnJhbWUrMHg2NS8weGNhDQo+IFsgMjg1My45NTczNjZdIFJJUDogMDAzMzow
+eDdmMzExM2U3NmE4Ng0KPiBbIDI4NTMuOTU4MDMxXSBDb2RlOiBCYWQgUklQIHZhbHVlLg0KPiBb
+IDI4NTMuOTU4NjM3XSBSU1A6IDAwMmI6MDAwMDdmZmY3YWI3ZGUxOCBFRkxBR1M6IDAwMDAwMjQ2
+IE9SSUdfUkFYOiANCj4gMDAwMDAwMDAwMDAwMDBlNw0KPiBbIDI4NTMuOTYwMDIzXSBSQVg6IGZm
+ZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwN2YzMTE0MTY3NzQwIFJDWDogDQo+IDAwMDA3ZjMxMTNl
+NzZhODYNCj4gWyAyODUzLjk2MTMyOF0gUkRYOiAwMDAwMDAwMDAwMDAwMDdlIFJTSTogMDAwMDAw
+MDAwMDAwMDAzYyBSREk6IA0KPiAwMDAwMDAwMDAwMDAwMDdlDQo+IFsgMjg1My45NjI2MzZdIFJC
+UDogMDAwMDAwMDAwMDAwMDA3ZSBSMDg6IDAwMDAwMDAwMDAwMDAwZTcgUjA5OiANCj4gZmZmZmZm
+ZmZmZmZmZmY4MA0KPiBbIDI4NTMuOTYzOTQxXSBSMTA6IDAwMDA3ZmZmN2FiN2RjY2MgUjExOiAw
+MDAwMDAwMDAwMDAwMjQ2IFIxMjogDQo+IDAwMDA3ZjMxMTQxNjc3NDANCj4gWyAyODUzLjk2NTI0
+MF0gUjEzOiAwMDAwMDAwMDAwMDAwMDAxIFIxNDogMDAwMDdmMzExNDE3MDQ0OCBSMTU6IA0KPiAw
+MDAwMDAwMDAwMDAwMDAwDQo+IA0KPiBUaGUgcHJvYmxlbSBzZWVtcyB0byBiZSB0aGF0IGN1cnJl
+bnQtPmZzID0gTlVMTCBhdCB0aGlzIHBvaW50LCBzbw0KPiBjdXJyZW50X3VtYXNrKCkgaW4gbmZz
+NF9vcGVuZGF0YV9hbGxvYygpIHNob3VsZG4ndCBiZSB1c2VkIGluIHRoaXMNCj4gcGF0aC4gDQo+
+ICAgV2UNCj4gZG8gZXhpdF9mcyBiZWZvcmUgdGFza193b3JrX3J1biBzdGFydHMgdXMgY2xlYW5p
+bmcgdXAgdGhlIGlub2RlLCBzbw0KPiB0aGlzDQo+IGlzbid0IC9kZWxheWVkLyBfX2ZwdXQsIGJ1
+dCBpdCBkb2VzIGhhdmUgdGhpbmdzIGhhcHBlbmluZyBpbiB0aGUNCj4gd3JvbmcgDQo+IG9yZGVy
+DQo+IGlmIHdlIHdhbnQgdG8gdXNlIGN1cnJlbnQtPmZzLg0KPiANCj4gU2hvdWxkIHdlIGNoZWNr
+IGZvciB0aGlzIHNwZWNpZmljIGNhc2UgYW5kIHVzZSBhIHN0YXRpYyB1bWFzaywgb3INCj4gbWF5
+YmUgDQo+IGZpeA0KPiBjdXJyZW50X3VtYXNrKCkgZm9yIGFsbCBkZWxheWVkIGZwdXQoKSBwYXRo
+cz8gIEEgdW1hc2sgZG9lc24ndA0KPiByZWFsbHkgDQo+IG1ha2UNCj4gYW55IHNlbnNlIGlmIHdl
+J3JlIGRvaW5nIGRvaW5nIE9QRU4gd2l0aCBDTEFJTV9ERUxFR19DVVJfRkguLg0KPiANCj4gSSdt
+IGZlZWxpbmcgdW5oYXBweSB3aXRoIGFueSBvcHRpb25zIHRoYXQgc3ByaW5nIHRvIG1pbmQuDQo+
+IA0KPiBBbnkgb3RoZXIgc3VnZ2VzdGlvbnM/ICBNYXliZSB0aGUgZml4IHdpbGwgYmUgb2J2aW91
+cyBhZnRlciBhIG5hcC4uLg0KPiANClRoZSBjdXJyZW50LT5tYXNrKCkgc2hvdWxkIG9ubHkgYmUg
+bmVlZGVkIGlmIHdlJ3JlIGNyZWF0aW5nIGEgbmV3IGZpbGUsDQpzbyBpdCBzaG91bGQgbm90IGJl
+IG5lY2Vzc2FyeSBoZXJlLiBTbyBwZXJoYXBzIHlvdSBjb3VsZCBhZGQgYSB0ZXN0IGZvcg0KT19D
+UkVBVCB0byBuZnM0X29wZW5kYXRhX2FsbG9jKCk/DQoNCk90aGVyIHRoaW5ncyB0aGF0IHNob3Vs
+ZCBub3QgYmUgbmVlZGVkIHdoZW4gd2UgZG9uJ3Qgc2V0IE9fQ1JFQVQNCmluY2x1ZGUgcC0+b19h
+cmcudS5hdHRycywgcC0+b19hcmcubGFiZWwgYW5kIHAtPm9fYXJnLnUudmVyaWZpZXIuDQoNCkNo
+ZWVycw0KICBUcm9uZA0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFp
+bnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0K
+DQo=
