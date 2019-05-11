@@ -2,67 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D7921A7C9
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 May 2019 14:30:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2251A809
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 May 2019 15:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfEKM3x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 11 May 2019 08:29:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56496 "EHLO mx1.redhat.com"
+        id S1726259AbfEKNyn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 11 May 2019 09:54:43 -0400
+Received: from fieldses.org ([173.255.197.46]:56178 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbfEKM3w (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 11 May 2019 08:29:52 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B792C3082E5F;
-        Sat, 11 May 2019 12:29:52 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-27.phx2.redhat.com [10.3.116.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FDB75D705;
-        Sat, 11 May 2019 12:29:52 +0000 (UTC)
-From:   Steve Dickson <SteveD@RedHat.com>
-Subject: ANNOUNCE: nfs-utils-2.3.4 released.
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Message-ID: <5ac3b3b1-82a4-9438-9d4f-9239ce210c69@RedHat.com>
-Date:   Sat, 11 May 2019 08:29:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726240AbfEKNyn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 11 May 2019 09:54:43 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 83CA61DCB; Sat, 11 May 2019 09:54:42 -0400 (EDT)
+Date:   Sat, 11 May 2019 09:54:42 -0400
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     steved@redhat.com, linux-nfs@vger.kernel.org, jfajerski@suse.com
+Subject: Re: [PATCH] manpage: explain why showmount doesn't really work
+ against a v4-only server
+Message-ID: <20190511135442.GA15721@fieldses.org>
+References: <20190510215445.1823-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sat, 11 May 2019 12:29:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510215445.1823-1-jlayton@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Fri, May 10, 2019 at 05:54:45PM -0400, Jeff Layton wrote:
+> From: Jeff Layton <jlayton@redhat.com>
+> 
+> I occasionally see people that expect valid info when running showmount
+> against a server that may export some or all filesystems via NFSv4.
+> Let's make it clear that it only works by talking to the remote MNT
+> service, and that that may not be available from a v4-only server.
 
-nfs-utils-2.3.4 has just been released.
+Looks fine.
 
-Some of the highlights:
+I wonder if it'd also be helpful for showmount to detect this case and
+say something.  E.g. the following (not even compileable, but you get
+the idea).
 
-* Tighten up some memory leaks
-* Added back nfsdcld, the v4 client tracking daemon
-* Major work on the nfs.conf configuration code. 
-* Finished the junction support
-* A boat load of bug fixes and tweaks. 
+We've also talked about trying to cobble together an export list by
+scanning the root filesystem over NFSv4, but that's likely to be
+complicated and wouldn't give all the same results without further
+protocol extensions anyway, so I think that idea's dead.
 
-The tarballs can be found in
-  https://www.kernel.org/pub/linux/utils/nfs-utils/2.3.4/
-or
-  http://sourceforge.net/projects/nfs/files/nfs-utils/2.3.4
+--b.
 
-The change log is in
-   https://www.kernel.org/pub/linux/utils/nfs-utils/2.3.4/2.3.4-Changelog
-or
-   http://sourceforge.net/projects/nfs/files/nfs-utils/2.3.4/
-
-The git tree is at:
-   git://linux-nfs.org/~steved/nfs-utils
-
-Please send comments/bugs to linux-nfs@vger.kernel.org
-
-steved.
+diff --git a/utils/showmount/showmount.c b/utils/showmount/showmount.c
+index 394f5284a219..de9a6d38783a 100644
+--- a/utils/showmount/showmount.c
++++ b/utils/showmount/showmount.c
+@@ -115,6 +115,22 @@ static CLIENT *nfs_get_mount_client(const char *hostname, rpcvers_t vers)
+ 	exit(1);
+ }
+ 
++void warn_if_v4_only(char *hostname)
++{
++	struct sockaddr_in server_addr, client_addr;
++
++	if (fill_ipv4_sockaddr(hostname, &serveraddr))
++		return;
++	server_addr.sin_port = htnos(NFS_PORT);
++	client_addr.sin_family = 0;
++	client_addr.sin_addr.s_addr = 0;
++	clnt_ping(&server_addr, NFS_PROGRAM, 4, "tcp", &client_addr);
++
++	if (rpc.createerr == RPC_SUCCESS)
++		printf("Server responding to NFSv4 but not MNT; try mounting "
++			"%s:/ instead of showmount", hostname);
++}
++
+ int main(int argc, char **argv)
+ {
+ 	char hostname_buf[MAXHOSTLEN];
+@@ -199,6 +215,7 @@ int main(int argc, char **argv)
+ 		fprintf(stderr, "%s: unable to create RPC auth handle.\n",
+ 				program_name);
+ 		clnt_destroy(mclient);
++		warn_if_v4_only(hostname);
+ 		exit(1);
+ 	}
+ 	total_timeout.tv_sec = TOTAL_TIMEOUT;
