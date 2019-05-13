@@ -2,113 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 432051B0CB
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2019 09:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 814E71B1B6
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2019 10:12:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfEMHHG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 May 2019 03:07:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39435 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfEMHHF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 May 2019 03:07:05 -0400
-Received: by mail-io1-f70.google.com with SMTP id l19so9222514iob.6
-        for <linux-nfs@vger.kernel.org>; Mon, 13 May 2019 00:07:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HS7eXqtSjToahbF+8YGfUVULm5QmPVdr7jt+lugTFD0=;
-        b=IhqZtlK0Bw/WRTMabEO/FS7G7EdVhCJk83hWMxX5AA5gGGOj9WtK1DSkz51N7RZP/7
-         oM9tC5GaFnAe0zGUJ7pAsFEqH0XzOGaMnt078hTY4kQRr9/u5pwQ8JYw4rp0rFme39Ky
-         77R8MivPLbn66hwZOAlv2TH2HXebG86NBoY6CJj6X/+ODl8/zjfWHu5qAfHRrCG89UBy
-         VRkFsa5Wy3XvJr3CSRD3UhjkZHt2uAt9blkJ28AdPN6rdrbAgJ7hwZ4zR3kfbD1OIKgT
-         HrZ6CVJysOPjdXQq73HPnqYB3bVh6z1xWjB6cv1rE6+s1b38Ho1oxJNv6+UPchS3SC8g
-         5kDQ==
-X-Gm-Message-State: APjAAAUjSmvlI3TcZLvaTGzV8d2hS+F7pZkaJHzi/+dmKuvJ9fuEoCMq
-        XWQo6mR/BjNjvtWx0lB9rOTDoijg8k7bP/wZvvEAdF42i9cs
-X-Google-Smtp-Source: APXvYqxaG5duQ7HGiFc3gBEuHKSxI56NFqET64FcR9HPXB9WBzlCxAVv84TLU/32UsUNJ0ZOe+9LaDT6i+7In6KbmbgvVFdOkeY2
+        id S1728046AbfEMIMo convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 13 May 2019 04:12:44 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:53577 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfEMIMo (ORCPT
+        <rfc822;groupwise-linux-nfs@vger.kernel.org:0:0>);
+        Mon, 13 May 2019 04:12:44 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 13 May 2019 10:12:42 +0200
+Received: from localhost (nwb-a10-snat.microfocus.com [10.120.13.202])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Mon, 13 May 2019 09:12:26 +0100
+Date:   Mon, 13 May 2019 10:12:24 +0200
+From:   Jan Fajerski <jfajerski@suse.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Jeff Layton <jlayton@kernel.org>, steved@redhat.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] manpage: explain why showmount doesn't really work
+ against a v4-only server
+Message-ID: <20190513081224.4giacxxvler3xvnt@jfsuselaptop>
+References: <20190510215445.1823-1-jlayton@kernel.org>
+ <20190511135442.GA15721@fieldses.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:8585:: with SMTP id d5mr18222190jai.69.1557731225226;
- Mon, 13 May 2019 00:07:05 -0700 (PDT)
-Date:   Mon, 13 May 2019 00:07:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000055d6590588bf90bf@google.com>
-Subject: linux-next test error: WARNING in remove_proc_entry
-From:   syzbot <syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, bfields@fieldses.org,
-        davem@davemloft.net, jlayton@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190511135442.GA15721@fieldses.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Sat, May 11, 2019 at 09:54:42AM -0400, J. Bruce Fields wrote:
+>On Fri, May 10, 2019 at 05:54:45PM -0400, Jeff Layton wrote:
+>> From: Jeff Layton <jlayton@redhat.com>
+>>
+>> I occasionally see people that expect valid info when running showmount
+>> against a server that may export some or all filesystems via NFSv4.
+>> Let's make it clear that it only works by talking to the remote MNT
+>> service, and that that may not be available from a v4-only server.
+Looks good...thanks Jeff!
+>
+>Looks fine.
+>
+>I wonder if it'd also be helpful for showmount to detect this case and
+>say something.  E.g. the following (not even compileable, but you get
+>the idea).
+This would be ideal of course.
+>
+>We've also talked about trying to cobble together an export list by
+>scanning the root filesystem over NFSv4, but that's likely to be
+>complicated and wouldn't give all the same results without further
+>protocol extensions anyway, so I think that idea's dead.
+>
+>--b.
+>
+>diff --git a/utils/showmount/showmount.c b/utils/showmount/showmount.c
+>index 394f5284a219..de9a6d38783a 100644
+>--- a/utils/showmount/showmount.c
+>+++ b/utils/showmount/showmount.c
+>@@ -115,6 +115,22 @@ static CLIENT *nfs_get_mount_client(const char *hostname, rpcvers_t vers)
+> 	exit(1);
+> }
+>
+>+void warn_if_v4_only(char *hostname)
+>+{
+>+	struct sockaddr_in server_addr, client_addr;
+>+
+>+	if (fill_ipv4_sockaddr(hostname, &serveraddr))
+>+		return;
+>+	server_addr.sin_port = htnos(NFS_PORT);
+>+	client_addr.sin_family = 0;
+>+	client_addr.sin_addr.s_addr = 0;
+>+	clnt_ping(&server_addr, NFS_PROGRAM, 4, "tcp", &client_addr);
+>+
+>+	if (rpc.createerr == RPC_SUCCESS)
+>+		printf("Server responding to NFSv4 but not MNT; try mounting "
+>+			"%s:/ instead of showmount", hostname);
+>+}
+>+
+> int main(int argc, char **argv)
+> {
+> 	char hostname_buf[MAXHOSTLEN];
+>@@ -199,6 +215,7 @@ int main(int argc, char **argv)
+> 		fprintf(stderr, "%s: unable to create RPC auth handle.\n",
+> 				program_name);
+> 		clnt_destroy(mclient);
+>+		warn_if_v4_only(hostname);
+> 		exit(1);
+> 	}
+> 	total_timeout.tv_sec = TOTAL_TIMEOUT;
+>
 
-syzbot found the following crash on:
-
-HEAD commit:    04c4b677 Add linux-next specific files for 20190513
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a413c8a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8e08a763b62ad3a
-dashboard link: https://syzkaller.appspot.com/bug?extid=4887e9dd9042fae2a9c2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-remove_proc_entry: removing non-empty directory 'net/rpc', leaking at  
-least 'use-gss-proxy'
-WARNING: CPU: 0 PID: 26 at fs/proc/generic.c:681  
-remove_proc_entry+0x367/0x410 fs/proc/generic.c:681
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 26 Comm: kworker/u4:2 Not tainted 5.1.0-next-20190513 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x75a kernel/panic.c:218
-  __warn.cold+0x20/0x47 kernel/panic.c:575
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:remove_proc_entry+0x367/0x410 fs/proc/generic.c:681
-Code: 00 00 00 48 89 fa 48 c1 ea 03 80 3c 02 00 75 4c 49 8b 95 d0 00 00 00  
-48 c7 c6 80 85 97 87 48 c7 c7 00 85 97 87 e8 c7 b1 6d ff <0f> 0b e9 4b fe  
-ff ff e8 6d 54 d4 ff e9 b5 fd ff ff e8 23 55 d4 ff
-RSP: 0018:ffff8880a9a8fb10 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 1ffff11015351f64 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815b20a6 RDI: ffffed1015351f54
-RBP: ffff8880a9a8fbc0 R08: ffff8880a9a7c6c0 R09: ffff8880a9a7cfb0
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888099b87280
-R13: ffff8880a55c77c0 R14: ffff888099b87330 R15: dffffc0000000000
-  rpc_proc_exit+0x3e/0x50 net/sunrpc/stats.c:335
-  sunrpc_exit_net+0x187/0x2d0 net/sunrpc/sunrpc_syms.c:73
-  ops_exit_list.isra.0+0xb0/0x160 net/core/net_namespace.c:153
-  cleanup_net+0x3fb/0x960 net/core/net_namespace.c:552
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2268
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2414
-  kthread+0x357/0x430 kernel/kthread.c:254
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Jan Fajerski
+Engineer Enterprise Storage
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
