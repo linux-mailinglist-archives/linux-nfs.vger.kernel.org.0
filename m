@@ -2,83 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 924D21D048
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 032A41D0CC
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:45:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfENUET (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 May 2019 16:04:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56988 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfENUET (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 14 May 2019 16:04:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC80A5D5E6
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 20:04:19 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com.redhat.com (ovpn-116-241.phx2.redhat.com [10.3.116.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52DAD5D6A6
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 20:04:19 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] mount: Report correct error in the fall_back cases.
-Date:   Tue, 14 May 2019 16:04:18 -0400
-Message-Id: <20190514200418.19902-1-steved@redhat.com>
+        id S1726195AbfENUpX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 May 2019 16:45:23 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34888 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfENUpW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 May 2019 16:45:22 -0400
+Received: by mail-it1-f195.google.com with SMTP id u186so1051385ith.0
+        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 13:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ufsLM6u7rIENRihY2pJS2ohWHx5EjKSvPGEo5obMww=;
+        b=nOxf6WhNbLoccNi1gNRHPfIW1ihPfOAMy0cTLoGEebO6eipQzISZfZBxL99eaT/qaq
+         4xjvAbuE/NlfCXjlFtl0TfZi3Yn8FXJ+mM+d2oK5JGW9mjQaZtkjVCpAqbgn5F9MlaMC
+         Gbcxr1x85AX3EMy8shDTGcSrdJoXQQBCBnvibgOw+BXeBDzIaTFmyTqYsaPvl8aR4jBB
+         yqtA/fw0E5ErhnuTPUpE4Nc2yORq+FwXYMaxbzwUjUFa1DFY1B5lzdIQbs7K6TxwboVk
+         uZSNMTDsS+M9uMjzIsLZVzm8Gw/lZuheG7+clWw64icCfV4nE5CNMiuJ9xSjKLtHZeND
+         qVLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ufsLM6u7rIENRihY2pJS2ohWHx5EjKSvPGEo5obMww=;
+        b=Ze/2EdLdhi77E0BQqz9WoFqCF3qCIRzorpOWLuzE7IaDB/NzUdQwspgShyoe08Me9J
+         5K5I7O0cUt9/qMytdKTlqXwVoBsZaPvQceM6wEZdeROt2mAOSNGkdhN3h8h79Y4o6k1w
+         mIBCoCVMJMudaL5VHh3M31Q+nU6TP1QbKOl7seOYtQXGcxoCgsNAWo9EEnHD2mfcykxE
+         CqNaniDan7Tvpw+0hUcV2on7191j9vPUklI34xTD86eRnQxFtvSmL/kiiVhVrFiciOzu
+         tO97SluXCxZj7vOImO9+ilK1eVpUxlIAjrTnOiOGC/dNuHvdwQy0rNtvZhghJAd+DDum
+         78zg==
+X-Gm-Message-State: APjAAAWr6LwCn/srBEG7SQOPWRa7SNgMIEvOU688v+uT5lZcJIN/iJES
+        UiSoy6nxdWtzfUcAx/yHosgJ06s=
+X-Google-Smtp-Source: APXvYqyA7dzRRTyoB39WbNg6fPnlr4vfcDLB3BY97qvZ7BxUKEba8qn8NKEk49shsJygXeqoK3ccXw==
+X-Received: by 2002:a05:660c:444:: with SMTP id d4mr5668154itl.158.1557866721682;
+        Tue, 14 May 2019 13:45:21 -0700 (PDT)
+Received: from localhost.localdomain ([172.56.10.94])
+        by smtp.gmail.com with ESMTPSA id r139sm64943ita.22.2019.05.14.13.45.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 13:45:20 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [RFC PATCH 0/5] Add a chroot option to nfs.conf
+Date:   Tue, 14 May 2019 16:41:48 -0400
+Message-Id: <20190514204153.79603-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 14 May 2019 20:04:19 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In mount auto negotiation, a v3 mount is tried
-when the v4 fails with error that could mean
-v4 is not supported.
+The following patchset aims to allow the configuration of a 'chroot
+jail' to rpc.nfsd, and allowing us to export a filesystem /foo (and
+possibly subtrees) as '/'.
 
-When the v3 mount fails, the original v4 failure
-should be used to set the errno, not the v3 failure.
+Trond Myklebust (5):
+  mountd: Ensure we don't share cache file descriptors among processes.
+  Add a simple workqueue mechanism
+  Add a helper to write to a file through the chrooted thread
+  Add support for chrooted exports
+  Add support for chroot in exportfs
 
-Fixes:https://bugzilla.redhat.com/show_bug.cgi?id=1709961
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- utils/mount/stropts.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ aclocal/libpthread.m4      |  13 +-
+ configure.ac               |   6 +-
+ nfs.conf                   |   1 +
+ support/include/misc.h     |  11 ++
+ support/misc/Makefile.am   |   2 +-
+ support/misc/workqueue.c   | 267 +++++++++++++++++++++++++++++++++++++
+ systemd/nfs.conf.man       |   3 +-
+ utils/exportfs/Makefile.am |   2 +-
+ utils/exportfs/exportfs.c  |  31 ++++-
+ utils/mountd/Makefile.am   |   3 +-
+ utils/mountd/cache.c       |  39 +++++-
+ utils/mountd/mountd.c      |   5 +-
+ utils/nfsd/nfsd.man        |   4 +
+ 13 files changed, 369 insertions(+), 18 deletions(-)
+ create mode 100644 support/misc/workqueue.c
 
-diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-index 1bb7a73..901f995 100644
---- a/utils/mount/stropts.c
-+++ b/utils/mount/stropts.c
-@@ -889,7 +889,7 @@ out:
-  */
- static int nfs_autonegotiate(struct nfsmount_info *mi)
- {
--	int result;
-+	int result, olderrno;
- 
- 	result = nfs_try_mount_v4(mi);
- check_result:
-@@ -949,7 +949,18 @@ fall_back:
- 	if (mi->version.v_mode == V_GENERAL)
- 		/* v2,3 fallback not allowed */
- 		return result;
--	return nfs_try_mount_v3v2(mi, FALSE);
-+
-+	/*
-+	 * Save the original errno in case the v3 
-+	 * mount fails from one of the fall_back cases. 
-+	 * Report the first failure not the v3 mount failure
-+	 */
-+	olderrno = errno;
-+	if ((result = nfs_try_mount_v3v2(mi, FALSE)))
-+		return result;
-+
-+	errno = olderrno;
-+	return result;
- }
- 
- /*
 -- 
-2.20.1
+2.21.0
 
