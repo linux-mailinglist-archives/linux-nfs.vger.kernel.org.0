@@ -2,60 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE331D0CF
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5860A1D0D0
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:45:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfENUp1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 May 2019 16:45:27 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54152 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfENUp0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 May 2019 16:45:26 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so1140216ita.3
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 13:45:26 -0700 (PDT)
+        id S1726338AbfENUp2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 May 2019 16:45:28 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41605 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfENUp2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 May 2019 16:45:28 -0400
+Received: by mail-io1-f67.google.com with SMTP id a17so382967iot.8
+        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 13:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KJ2oJu2m41mvtp0KSs8FygA0nY0SUxW3tOHlG6cKRUs=;
-        b=usjUnB4FJraPl2tebMK1JCpObS7OGu0j98kCNt1KfSnNltXGq5aY0u0vuhI7j3CvAq
-         nJ3EcMb25qC2fn4WCb2KvZjnr5uWbEBVdSFmuEL7uFGmm5TCStTq7jOUEU4YbnwVwHs6
-         sre5/rfM4RhMQUjGS3OtjZReJ55ODK8cG7mb2C5rWxVABv5d/0cEj7ET79AI2V4nCjU+
-         cEsC04wjD6mTX4q+9r2W72Zl3x0uLcmCgYEXnyJx3G0NEFqFUGCID2h+JAF9PwijZlsu
-         GYYEqAcNudkuP1+4J0bk3TTFzawspH3icpuFdQ5rFviMMB2t7rpXYC0PVmUUR0YInguV
-         FgKg==
+        bh=Og7oWbWWeKOcvPck2OBvAqHBM3lVUuH8Q7w6/EYUAu0=;
+        b=ElDUkdj0RBtZZADV71OYu2VWFoQ5tHYZO93i8LS0g3iLt/fsdH5Vt3VPs9vXzDF0z1
+         6gG9/KGMOfDOHT8BUalpGzVMPcCwoIS/KSya3MtY7dzKUjl0lVWnPo+fxuW+p6nt9RE8
+         FEolWppluyFvw7gzdX66agADwcd34EAjfFprbc8lM6diFpGo9v6MD1lpdauTdz72FSKb
+         jHLvLh5/rR1EsCL59rqx38gjBI97jsUrm2FQzCf1JLlbTmWjiZYWyMCzL0TKx6hqKW/G
+         8N6Js8tk1lIqGAjgzabwLRiVytXga/XtRPJG5CtpYnjX/s606bR6QVLTkV+w8Kg+zTnd
+         cDuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KJ2oJu2m41mvtp0KSs8FygA0nY0SUxW3tOHlG6cKRUs=;
-        b=t8ev+Am3WwJk1E1oYZvbxCqCYlzsHLlOvWk+LAuqQFOCE19JGliWOp120V9EZQnUMK
-         XPRemq99xvom1ad7t7dnloOzSL/DDtH+PMUgh/AHwL/tTDaw55MHlZvfITTZzN2FevcT
-         krG35o2rRjKwsaVF1v3LxFbMp7fLSmCzgA0mY2ZsOJRolHUGxjKXig9YvqNO4rentcqu
-         oxO6uwcsVXvYGK/+UzvuCzpt3Bv2v9BbX0rFJoeF/+ZIs54xWDZqJPToQc1o3zdgiQCk
-         aSVwwWF+1atwDAQzb/IKGOG+QFBnWzgQ2PWM120A858k1ALesS9CtcJ4poteINKwsPiw
-         KU7w==
-X-Gm-Message-State: APjAAAUKdkFCxOFXMRaDs8bpziZqTZ3E0msNxhe9AbLkE50afhP8b1gs
-        w+G9Z5srNbkcV2Jr84R+zQ==
-X-Google-Smtp-Source: APXvYqz9FSjiwriqOGlwwy+RHmnq0NEDA+oFYrSG0mT07ayaSCdKqpunIBVJxKoBYqCnAL6/ErtATg==
-X-Received: by 2002:a24:4585:: with SMTP id c5mr5490016itd.79.1557866725482;
-        Tue, 14 May 2019 13:45:25 -0700 (PDT)
+        bh=Og7oWbWWeKOcvPck2OBvAqHBM3lVUuH8Q7w6/EYUAu0=;
+        b=IrAKO5r3TVbDY6mjuu+rb/kMa08fryQBybdO9rQSn/QU22XXIo+SZAz4D2srrPDaHA
+         fz/X8HEhJWZb9dk61dRGMQ93mg5lW5p2UAf3N54B8a67YR30sWcbhkzctzryv80DzDQW
+         /IXaqIY8lWh5eWf9F1kdFIVXNef09SFrT5QA/biYNcpzhPPkZORYLGeOoUAoKo6PGRza
+         v7Z1kfBHEp3bV9OxcTXBNUl7as0h9pSKjlYNOIsbrEwR9pPzCvszbk49P2G2RXvG1/Cb
+         MFxSm08joRx0MkMRTZWrBaiyXF7kBUAYxEYJMrg7A8rHPXQNuxi31uYrsU7SPX6Ot04V
+         /XjA==
+X-Gm-Message-State: APjAAAWRJVqNcC9SFEZ0YIYg+Pe6Hzfhh/zMD7FXvyobkhGtwfdYTDXj
+        L2nqkUnsBLPFNz3yiI8gQkXcDyA=
+X-Google-Smtp-Source: APXvYqxF6V+94qVXd5Fv3tqDFTlhk6EqsSvKk9gUtNiVWOsCaGu+CZyfegnUW67vKXWhb7yvX6e0Bg==
+X-Received: by 2002:a5d:8055:: with SMTP id b21mr16760744ior.241.1557866726568;
+        Tue, 14 May 2019 13:45:26 -0700 (PDT)
 Received: from localhost.localdomain ([172.56.10.94])
-        by smtp.gmail.com with ESMTPSA id r139sm64943ita.22.2019.05.14.13.45.24
+        by smtp.gmail.com with ESMTPSA id r139sm64943ita.22.2019.05.14.13.45.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 13:45:24 -0700 (PDT)
+        Tue, 14 May 2019 13:45:26 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     steved@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 3/5] Add a helper to write to a file through the chrooted thread
-Date:   Tue, 14 May 2019 16:41:51 -0400
-Message-Id: <20190514204153.79603-4-trond.myklebust@hammerspace.com>
+Subject: [RFC PATCH 4/5] Add support for chrooted exports
+Date:   Tue, 14 May 2019 16:41:52 -0400
+Message-Id: <20190514204153.79603-5-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190514204153.79603-3-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190514204153.79603-4-trond.myklebust@hammerspace.com>
 References: <20190514204153.79603-1-trond.myklebust@hammerspace.com>
  <20190514204153.79603-2-trond.myklebust@hammerspace.com>
  <20190514204153.79603-3-trond.myklebust@hammerspace.com>
+ <20190514204153.79603-4-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -65,82 +66,150 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- support/include/misc.h   |  2 ++
- support/misc/workqueue.c | 39 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+ nfs.conf             |  1 +
+ systemd/nfs.conf.man |  3 ++-
+ utils/mountd/cache.c | 39 +++++++++++++++++++++++++++++++++++----
+ utils/nfsd/nfsd.man  |  4 ++++
+ 4 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/support/include/misc.h b/support/include/misc.h
-index 40fb9a37621a..0632df101bbb 100644
---- a/support/include/misc.h
-+++ b/support/include/misc.h
-@@ -28,6 +28,8 @@ void xthread_work_run_sync(struct xthread_workqueue *wq,
- 		void (*fn)(void *), void *data);
- void xthread_workqueue_chroot(struct xthread_workqueue *wq,
- 		const char *path);
-+ssize_t xthread_write(struct xthread_workqueue *wq,
-+		int fd, const char *buf, size_t len);
+diff --git a/nfs.conf b/nfs.conf
+index 27e962c8a2a9..aad73035a466 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -60,6 +60,7 @@
+ # vers4.1=y
+ # vers4.2=y
+ # rdma=n
++# chroot=/export
+ #
+ [statd]
+ # debug=0
+diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+index e3654a3c2c2b..bd83e57dd6da 100644
+--- a/systemd/nfs.conf.man
++++ b/systemd/nfs.conf.man
+@@ -136,7 +136,8 @@ Recognized values:
+ .BR vers4.0 ,
+ .BR vers4.1 ,
+ .BR vers4.2 ,
+-.BR rdma .
++.BR rdma ,
++.BR chroot .
  
- /* size of the file pointer buffers for rpc procfs files */
- #define RPC_CHAN_BUF_SIZE 32768
-diff --git a/support/misc/workqueue.c b/support/misc/workqueue.c
-index 16e95e1f6c86..7af76a84e8dd 100644
---- a/support/misc/workqueue.c
-+++ b/support/misc/workqueue.c
-@@ -1,3 +1,4 @@
-+#include <errno.h>
- #include <stdlib.h>
- #include <unistd.h>
+ Version and protocol values are Boolean values as described above,
+ and are also used by
+diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+index bdbd1904eb76..25b0fb84f753 100644
+--- a/utils/mountd/cache.c
++++ b/utils/mountd/cache.c
+@@ -33,11 +33,14 @@
+ #include "fsloc.h"
+ #include "pseudoflavors.h"
+ #include "xcommon.h"
++#include "conffile.h"
  
-@@ -197,6 +198,39 @@ void xthread_workqueue_chroot(struct xthread_workqueue *wq,
- 	xthread_work_run_sync(wq, xthread_workqueue_do_chroot, (void *)path);
- }
+ #ifdef USE_BLKID
+ #include "blkid/blkid.h"
+ #endif
  
-+struct xthread_io_data {
-+	int fd;
-+	const char *buf;
-+	size_t len;
-+	ssize_t ret;
-+	int err;
-+};
++static struct xthread_workqueue *cache_workqueue;
 +
-+static void xthread_writefunc(void *data)
+ /*
+  * Invoked by RPC service loop
+  */
+@@ -55,6 +58,32 @@ enum nfsd_fsid {
+ 	FSID_UUID16_INUM,
+ };
+ 
++static ssize_t cache_write(int fd, const char *buf, size_t len)
 +{
-+	struct xthread_io_data *d = data;
-+
-+	d->ret = write(d->fd, d->buf, d->len);
-+	if (d->ret < 0)
-+		d->err = errno;
-+}
-+
-+ssize_t xthread_write(struct xthread_workqueue *wq,
-+		int fd, const char *buf, size_t len)
-+{
-+	struct xthread_io_data data = {
-+		fd,
-+		buf,
-+		len,
-+		0,
-+		0
-+	};
-+	xthread_work_run_sync(wq, xthread_writefunc, &data);
-+	if (data.ret < 0)
-+		errno = data.err;
-+	return data.ret;
-+}
-+
- #else
- 
- struct xthread_workqueue {
-@@ -225,4 +259,9 @@ void xthread_workqueue_chroot(struct xthread_workqueue *wq,
- 	xlog(L_FATAL, "Unable to run as chroot");
- }
- 
-+ssize_t xthread_write(struct xthread_workqueue *wq,
-+		int fd, const char *buf, size_t len)
-+{
++	if (cache_workqueue)
++		return xthread_write(cache_workqueue, fd, buf, len);
 +	return write(fd, buf, len);
 +}
- #endif /* defined(HAVE_SCHED_H) && defined(HAVE_LIBPTHREAD) && defined(HAVE_UNSHARE) */
++
++static void
++cache_setup_workqueue(void)
++{
++	const char *chroot;
++
++	chroot = conf_get_str("nfsd", "chroot");
++	if (!chroot || *chroot == '\0')
++		return;
++	/* Strip leading '/' */
++	while (chroot[0] == '/' && chroot[1] == '/')
++		chroot++;
++	if (chroot[0] == '/' && chroot[1] == '\0')
++		return;
++	cache_workqueue = xthread_workqueue_alloc();
++	if (!cache_workqueue)
++		return;
++	xthread_workqueue_chroot(cache_workqueue, chroot);
++}
++
+ /*
+  * Support routines for text-based upcalls.
+  * Fields are separated by spaces.
+@@ -829,7 +858,7 @@ static void nfsd_fh(int f)
+ 	if (found)
+ 		qword_add(&bp, &blen, found_path);
+ 	qword_addeol(&bp, &blen);
+-	if (blen <= 0 || write(f, buf, bp - buf) != bp - buf)
++	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
+ 		xlog(L_ERROR, "nfsd_fh: error writing reply");
+ out:
+ 	if (found_path)
+@@ -921,7 +950,7 @@ static int dump_to_cache(int f, char *buf, int buflen, char *domain,
+ 		qword_adduint(&bp, &blen, now + ttl);
+ 	qword_addeol(&bp, &blen);
+ 	if (blen <= 0) return -1;
+-	if (write(f, buf, bp - buf) != bp - buf) return -1;
++	if (cache_write(f, buf, bp - buf) != bp - buf) return -1;
+ 	return 0;
+ }
+ 
+@@ -1381,6 +1410,8 @@ extern int manage_gids;
+ void cache_open(void) 
+ {
+ 	int i;
++
++	cache_setup_workqueue();
+ 	for (i=0; cachelist[i].cache_name; i++ ) {
+ 		char path[100];
+ 		if (!manage_gids && cachelist[i].cache_handle == auth_unix_gid)
+@@ -1508,7 +1539,7 @@ int cache_export(nfs_export *exp, char *path)
+ 	qword_adduint(&bp, &blen, time(0) + exp->m_export.e_ttl);
+ 	qword_add(&bp, &blen, exp->m_client->m_hostname);
+ 	qword_addeol(&bp, &blen);
+-	if (blen <= 0 || write(f, buf, bp - buf) != bp - buf) blen = -1;
++	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf) blen = -1;
+ 	close(f);
+ 	if (blen < 0) return -1;
+ 
+@@ -1546,7 +1577,7 @@ cache_get_filehandle(nfs_export *exp, int len, char *p)
+ 	qword_add(&bp, &blen, p);
+ 	qword_addint(&bp, &blen, len);
+ 	qword_addeol(&bp, &blen);
+-	if (blen <= 0 || write(f, buf, bp - buf) != bp - buf) {
++	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf) {
+ 		close(f);
+ 		return NULL;
+ 	}
+diff --git a/utils/nfsd/nfsd.man b/utils/nfsd/nfsd.man
+index d83ef869d26e..8fb23721daf6 100644
+--- a/utils/nfsd/nfsd.man
++++ b/utils/nfsd/nfsd.man
+@@ -167,6 +167,10 @@ Setting these to "off" or similar will disable the selected minor
+ versions.  Setting to "on" will enable them.  The default values
+ are determined by the kernel, and usually minor versions default to
+ being enabled once the implementation is sufficiently complete.
++.B chroot
++Setting this to a valid path causes the nfs server to act as if the
++supplied path is being prefixed to all the exported entries.
++
+ 
+ .SH NOTES
+ If the program is built with TI-RPC support, it will enable any protocol and
 -- 
 2.21.0
 
