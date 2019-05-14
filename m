@@ -2,145 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 603F31CB72
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 17:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 924D21D048
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfENPKS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 May 2019 11:10:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35137 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfENPKS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 May 2019 11:10:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id p2so13321711iol.2
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 08:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=b7DbgnAqLiZQ72H1GhxMqmJx3QbZ1pmldj5GBluYBM8=;
-        b=HsAzFMKhp2uh/nC40KPCTBcgWm5ABdBvEMsmZYl51mN6RHyo5tSjSy/AJZWhtHhV/r
-         O6qCjt4pUXs65BDkDuVREg4baEVe4/aV4R8Upvx9x/w5cjytFGbzUyDZFFL/77U1xh8x
-         QDR2E2m4jaJkpgD7nk+Gws34oNebNm5VGRWB8vwstCPi2hoLkjajm6iU8qQcsdexGq9t
-         fEpOTDk5W0tUbP190CBS/BmjIF4N64OIp68JcsrF0Lgohgs3ALiQE96xRsTbWjCMP+p6
-         4JNKPA1VCpR28CCtZ6eHPnj5JGFejyCrwcH+axaLtbYhh0j65BhoGFuL2NpLygFm/V0x
-         fhlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=b7DbgnAqLiZQ72H1GhxMqmJx3QbZ1pmldj5GBluYBM8=;
-        b=QZk8meHOV94uoJWUBX0xuDWhqAT8eqlh0IrLEQcts9JsfdpbjEvrjAv3XIpk/Bb7UC
-         6MmK2vlIRTTxxGbOUUz/fCR/GvRzXY4D1wJlngNhFATylpGxbFWtRHjk/Sm7YQQysJmB
-         mN7Wwl4puEct/RsCIgKv1BsjQuL9wTV6yTtHDUFSM9iEbaQY0+x3rrZKkUeTGpML4zm+
-         JgdZO9LJ90fokuYM6v74ApAmoOV8uOCX9rW3HghEQeEba1pucsFaUoCDCY/31c4m54xP
-         vUEo0MIFsr7Wh7Shc1JZMLxHQheSuH0nw8Man5E0BKjAqqEbHW7eBT47zsD7i37MQou4
-         uHGA==
-X-Gm-Message-State: APjAAAWchxWKkDi84qGUnFgYlO/WfQAsPicBPcsv5i4d1sXZZZ0Ru84T
-        2Ivb7hRvabICiMm/deI26LkvONo0
-X-Google-Smtp-Source: APXvYqwKwmj9F2jac/mggKrKrpz9xJOq5jamIDNihhtu4SbESkqzoXaS/nXcjfhSi8n6RtI2Y64Piw==
-X-Received: by 2002:a5d:8ccf:: with SMTP id k15mr20052663iot.154.1557846617645;
-        Tue, 14 May 2019 08:10:17 -0700 (PDT)
-Received: from oracle-102.nfsv4bat.org ([172.56.10.94])
-        by smtp.gmail.com with ESMTPSA id p20sm5798815ioj.63.2019.05.14.08.10.16
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 08:10:17 -0700 (PDT)
-Subject: [PATCH v2] Fix mountd segfault
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Tue, 14 May 2019 11:10:15 -0400
-Message-ID: <20190514150755.12543.64896.stgit@oracle-102.nfsv4bat.org>
-User-Agent: StGit/0.17.1-dirty
+        id S1726089AbfENUET (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 May 2019 16:04:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56988 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfENUET (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 14 May 2019 16:04:19 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC80A5D5E6
+        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 20:04:19 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com.redhat.com (ovpn-116-241.phx2.redhat.com [10.3.116.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52DAD5D6A6
+        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 20:04:19 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] mount: Report correct error in the fall_back cases.
+Date:   Tue, 14 May 2019 16:04:18 -0400
+Message-Id: <20190514200418.19902-1-steved@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 14 May 2019 20:04:19 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-After commit 8f459a072f93 ("Remove abuse of ai_canonname") the
-ai_canonname field in addrinfo structs returned from
-host_reliable_addrinfo() is always NULL. This results in mountd
-segfaults when there are netgroups or hostname wildcards in
-/etc/exports.
+In mount auto negotiation, a v3 mount is tried
+when the v4 fails with error that could mean
+v4 is not supported.
 
-Add an extra DNS query in check_wildcard() and check_netgroup() to
-obtain the client's canonical hostname instead of dereferencing
-the NULL pointer.
+When the v3 mount fails, the original v4 failure
+should be used to set the errno, not the v3 failure.
 
-Reported-by: Mark Wagner <mark@lanfear.net>
-Fixes: 8f459a072f93 ("Remove abuse of ai_canonname")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes:https://bugzilla.redhat.com/show_bug.cgi?id=1709961
+Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
+ utils/mount/stropts.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Changes since v1:
-- Added similar fix for check_netgroup
-- Restructured exit/error paths in check_wildcard
-
- support/export/client.c |   32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
-
-diff --git a/support/export/client.c b/support/export/client.c
-index a1fba01..ea4f89d 100644
---- a/support/export/client.c
-+++ b/support/export/client.c
-@@ -608,24 +608,36 @@ check_subnetwork(const nfs_client *clp, const struct addrinfo *ai)
- static int
- check_wildcard(const nfs_client *clp, const struct addrinfo *ai)
+diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+index 1bb7a73..901f995 100644
+--- a/utils/mount/stropts.c
++++ b/utils/mount/stropts.c
+@@ -889,7 +889,7 @@ out:
+  */
+ static int nfs_autonegotiate(struct nfsmount_info *mi)
  {
--	char *cname = clp->m_hostname;
--	char *hname = ai->ai_canonname;
-+	char *hname, *cname = clp->m_hostname;
- 	struct hostent *hp;
- 	char **ap;
-+	int match;
+-	int result;
++	int result, olderrno;
  
--	if (wildmat(hname, cname))
--		return 1;
-+	match = 0;
+ 	result = nfs_try_mount_v4(mi);
+ check_result:
+@@ -949,7 +949,18 @@ fall_back:
+ 	if (mi->version.v_mode == V_GENERAL)
+ 		/* v2,3 fallback not allowed */
+ 		return result;
+-	return nfs_try_mount_v3v2(mi, FALSE);
 +
-+	hname = host_canonname(ai->ai_addr);
-+	if (hname == NULL)
-+		goto out;
++	/*
++	 * Save the original errno in case the v3 
++	 * mount fails from one of the fall_back cases. 
++	 * Report the first failure not the v3 mount failure
++	 */
++	olderrno = errno;
++	if ((result = nfs_try_mount_v3v2(mi, FALSE)))
++		return result;
 +
-+	if (wildmat(hname, cname)) {
-+		match = 1;
-+		goto out;
-+	}
- 
- 	/* See if hname aliases listed in /etc/hosts or nis[+]
- 	 * match the requested wildcard */
- 	hp = gethostbyname(hname);
- 	if (hp != NULL) {
- 		for (ap = hp->h_aliases; *ap; ap++)
--			if (wildmat(*ap, cname))
--				return 1;
-+			if (wildmat(*ap, cname)) {
-+				match = 1;
-+				goto out;
-+			}
- 	}
- 
--	return 0;
-+out:
-+	free(hname);
-+	return match;
++	errno = olderrno;
++	return result;
  }
  
  /*
-@@ -645,11 +657,9 @@ check_netgroup(const nfs_client *clp, const struct addrinfo *ai)
- 
- 	match = 0;
- 
--	hname = strdup(ai->ai_canonname);
--	if (hname == NULL) {
--		xlog(D_GENERAL, "%s: no memory for strdup", __func__);
-+	hname = host_canonname(ai->ai_addr);
-+	if (hname == NULL)
- 		goto out;
--	}
- 
- 	/* First, try to match the hostname without
- 	 * splitting off the domain */
+-- 
+2.20.1
 
