@@ -2,176 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A91FB1FA50
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 21:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A23AD1FAFB
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 21:34:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbfEOTIG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 May 2019 15:08:06 -0400
-Received: from fieldses.org ([173.255.197.46]:32830 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfEOTIG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 May 2019 15:08:06 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A3D851D39; Wed, 15 May 2019 15:08:05 -0400 (EDT)
-Date:   Wed, 15 May 2019 15:08:05 -0400
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] rpc: replace rpc_filelist by tree_descr
-Message-ID: <20190515190805.GC11614@fieldses.org>
+        id S1726296AbfEOTe4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 May 2019 15:34:56 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:36074 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfEOTez (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 May 2019 15:34:55 -0400
+Received: by mail-vs1-f54.google.com with SMTP id l20so719694vsp.3
+        for <linux-nfs@vger.kernel.org>; Wed, 15 May 2019 12:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=aJWKiEvo9ZP1e3hi7MW4Lwv8Irr04YxhTFdP1jCSSX4=;
+        b=rtONiShdkX5jnG3OA4N4pc0QnmLhtIE5zzWocF/Jys6iF/GiGa9Ai6EXRyRptd26ud
+         LB0tfvKOsUpR1RRJMKzGTJowCxyVOP0M0i6PXmESdqzkNkTfu6jTPzCTNBAI5sijOhIT
+         y1qF5kdXB+4lo1gf12YzQEfDKeaUSXlpNSa2gilobfksCVXCn03trTRRSWAbOi0HC9mZ
+         JcX4fhL9zmDdpwAXNnb27LNRIFEZsmPS3e9yCw04c7qq030FozQ38P379Odb/rbAiWPR
+         UTpxglsFdLf8bzHlpjdhqFQNrQ6tJT1D5sm9/ptzwqdaEx8rTppzY7OLyd6+uyy6fmPk
+         ahYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=aJWKiEvo9ZP1e3hi7MW4Lwv8Irr04YxhTFdP1jCSSX4=;
+        b=qkIC2Nh3iqf7Gu7vKRSHlS1REPCGHqB3pM23rqYkb4PxXdw/m5/GMw+YnMiB99gVZo
+         Ot9QXz2HWJXiqzzZZNq1/EOn7E5cFil26ddSzsW7Zi/B8YezqukR7Uvtc2CIUwMvW7wb
+         4TwlQBv3SAfuMv1+ieY1CtQq/Y9EZhGex6PL0+ifhdnCTX9lONmR/faHSKbONvclqc25
+         pE619SLUftNKqp46Okuwf16ORD43avPyzSd5w1TJW9ngYMUmC0iwRZapJL9nfbkxCSSA
+         QgvIGe6rMRDvatiD91DrHt5tzXCRcQq8dyaE0ewY36KLYFEaZlzuSY7dFmIJKzMwF8uc
+         lPHQ==
+X-Gm-Message-State: APjAAAWF9UK79IfAxcglXyqFYSaHSsX2/uxgDRB0NLTjMFfecUagYf7h
+        GVkOcPrs0qx6cGBxfgl0utKmszxZLFBvnV2W73+tdirg
+X-Google-Smtp-Source: APXvYqzbuVpr40okRy5pVE9BN4BLBoB5j9o28cpZjA6qLPX4zgI3W1tn4H8P2kdxYPTs7l1cEC/UFRbnqcW1kD47xiI=
+X-Received: by 2002:a67:fc4:: with SMTP id 187mr239976vsp.215.1557948894353;
+ Wed, 15 May 2019 12:34:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 15 May 2019 15:34:43 -0400
+Message-ID: <CAN-5tyFGd+OGOkBL_9R3xHv9Np_DQWmUau8=up6wRmx8p7qkWA@mail.gmail.com>
+Subject: 5.1 sunrpc kernel oops
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+Sounds like we can't do:
+        const struct rpc_timeout *to = req->rq_task->tk_client->cl_timeout;
 
-Use a common structure instead of defining our own here.
+Perhaps:
+const struct rpc_timeout *to;
+and check that if (!req->rq_task || !req->rq_task->tk_client) return 0;
 
-The only difference is using an int instead of umode_t for the mode
-field; I haven't tried to figure out why tree_descr uses int.
+Just a guess. Thoughts?
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- net/sunrpc/rpc_pipe.c | 37 ++++++++++++++-----------------------
- 1 file changed, 14 insertions(+), 23 deletions(-)
-
-Seems like trivial but reasonable cleanup.  I'm curious whether there
-might be more chances to share code between rpc_pipe and libfs, but
-haven't investigated any further yet.
-
---b.
-
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 69663681bf9d..9af9f4c8fa1e 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -460,15 +460,6 @@ static const struct file_operations rpc_info_operations = {
- };
- 
- 
--/*
-- * Description of fs contents.
-- */
--struct rpc_filelist {
--	const char *name;
--	const struct file_operations *i_fop;
--	umode_t mode;
--};
--
- static struct inode *
- rpc_get_inode(struct super_block *sb, umode_t mode)
- {
-@@ -648,7 +639,7 @@ static struct dentry *__rpc_lookup_create_exclusive(struct dentry *parent,
-  * FIXME: This probably has races.
-  */
- static void __rpc_depopulate(struct dentry *parent,
--			     const struct rpc_filelist *files,
-+			     const struct tree_descr *files,
- 			     int start, int eof)
- {
- 	struct inode *dir = d_inode(parent);
-@@ -680,7 +671,7 @@ static void __rpc_depopulate(struct dentry *parent,
- }
- 
- static void rpc_depopulate(struct dentry *parent,
--			   const struct rpc_filelist *files,
-+			   const struct tree_descr *files,
- 			   int start, int eof)
- {
- 	struct inode *dir = d_inode(parent);
-@@ -691,7 +682,7 @@ static void rpc_depopulate(struct dentry *parent,
- }
- 
- static int rpc_populate(struct dentry *parent,
--			const struct rpc_filelist *files,
-+			const struct tree_descr *files,
- 			int start, int eof,
- 			void *private)
- {
-@@ -711,7 +702,7 @@ static int rpc_populate(struct dentry *parent,
- 			case S_IFREG:
- 				err = __rpc_create(dir, dentry,
- 						files[i].mode,
--						files[i].i_fop,
-+						files[i].ops,
- 						private);
- 				break;
- 			case S_IFDIR:
-@@ -1015,10 +1006,10 @@ enum {
- 	RPCAUTH_EOF
- };
- 
--static const struct rpc_filelist authfiles[] = {
-+static const struct tree_descr authfiles[] = {
- 	[RPCAUTH_info] = {
- 		.name = "info",
--		.i_fop = &rpc_info_operations,
-+		.ops = &rpc_info_operations,
- 		.mode = S_IFREG | 0400,
- 	},
- };
-@@ -1076,20 +1067,20 @@ int rpc_remove_client_dir(struct rpc_clnt *rpc_client)
- 	return rpc_rmdir_depopulate(dentry, rpc_clntdir_depopulate);
- }
- 
--static const struct rpc_filelist cache_pipefs_files[3] = {
-+static const struct tree_descr cache_pipefs_files[3] = {
- 	[0] = {
- 		.name = "channel",
--		.i_fop = &cache_file_operations_pipefs,
-+		.ops = &cache_file_operations_pipefs,
- 		.mode = S_IFREG | 0600,
- 	},
- 	[1] = {
- 		.name = "content",
--		.i_fop = &content_file_operations_pipefs,
-+		.ops = &content_file_operations_pipefs,
- 		.mode = S_IFREG | 0400,
- 	},
- 	[2] = {
- 		.name = "flush",
--		.i_fop = &cache_flush_operations_pipefs,
-+		.ops = &cache_flush_operations_pipefs,
- 		.mode = S_IFREG | 0600,
- 	},
- };
-@@ -1145,7 +1136,7 @@ enum {
- 	RPCAUTH_RootEOF
- };
- 
--static const struct rpc_filelist files[] = {
-+static const struct tree_descr files[] = {
- 	[RPCAUTH_lockd] = {
- 		.name = "lockd",
- 		.mode = S_IFDIR | 0555,
-@@ -1242,7 +1233,7 @@ void rpc_put_sb_net(const struct net *net)
- }
- EXPORT_SYMBOL_GPL(rpc_put_sb_net);
- 
--static const struct rpc_filelist gssd_dummy_clnt_dir[] = {
-+static const struct tree_descr gssd_dummy_clnt_dir[] = {
- 	[0] = {
- 		.name = "clntXX",
- 		.mode = S_IFDIR | 0555,
-@@ -1277,10 +1268,10 @@ rpc_dummy_info_show(struct seq_file *m, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(rpc_dummy_info);
- 
--static const struct rpc_filelist gssd_dummy_info_file[] = {
-+static const struct tree_descr gssd_dummy_info_file[] = {
- 	[0] = {
- 		.name = "info",
--		.i_fop = &rpc_dummy_info_fops,
-+		.ops = &rpc_dummy_info_fops,
- 		.mode = S_IFREG | 0400,
- 	},
- };
--- 
-2.21.0
-
+[37247.291617] BUG: unable to handle kernel NULL pointer dereference
+at 0000000000000098
+[37247.296200] #PF error: [normal kernel read fault]
+[37247.298110] PGD 0 P4D 0
+[37247.299264] Oops: 0000 [#1] SMP PTI
+[37247.300729] CPU: 1 PID: 23870 Comm: kworker/u256:1 Not tainted 5.1.0+ #172
+[37247.303547] Hardware name: VMware, Inc. VMware Virtual
+Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[37247.311770] Workqueue: rpciod rpc_async_schedule [sunrpc]
+[37247.313958] RIP: 0010:xprt_adjust_timeout+0x9/0x110 [sunrpc]
+[37247.316220] Code: c7 c7 20 0d 50 c0 31 c0 e8 68 00 e2 fc 41 c7 45
+04 f4 ff ff ff eb c9 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
+54 55 53 <48> 8b 87 98 00 00 00 48 89 fb 4c 8b 27 48 8b 80 a8 00 00 00
+48 8b
+[37247.323625] RSP: 0018:ffffb0ab84f5fd68 EFLAGS: 00010207
+[37247.325676] RAX: 00000000fffffff5 RBX: ffff9e0ff1042800 RCX: 0000000000000003
+[37247.328433] RDX: ffff9e0ff11baac0 RSI: 00000000fffffe01 RDI: 0000000000000000
+[37247.331206] RBP: ffff9e0fe20cb200 R08: ffff9e0ff11baac0 R09: ffff9e0ff11baac0
+[37247.334038] R10: ffff9e0ff11baab8 R11: 0000000000000003 R12: ffff9e1039b55050
+[37247.337098] R13: ffff9e0ff1042830 R14: 0000000000000000 R15: 0000000000000001
+[37247.339966] FS:  0000000000000000(0000) GS:ffff9e103bc40000(0000)
+knlGS:0000000000000000
+[37247.343261] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[37247.345669] CR2: 0000000000000098 CR3: 000000007603a002 CR4: 00000000001606e0
+[37247.348564] Call Trace:
+[37247.351034]  rpc_check_timeout+0x1d/0x140 [sunrpc]
+[37247.353005]  call_decode+0x13e/0x1f0 [sunrpc]
+[37247.354893]  ? rpc_check_timeout+0x140/0x140 [sunrpc]
+[37247.357143]  __rpc_execute+0x7e/0x3d0 [sunrpc]
+[37247.359104]  rpc_async_schedule+0x29/0x40 [sunrpc]
+[37247.362565]  process_one_work+0x16b/0x370
+[37247.365598]  worker_thread+0x49/0x3f0
+[37247.367164]  kthread+0xf5/0x130
+[37247.368453]  ? max_active_store+0x80/0x80
+[37247.370087]  ? kthread_bind+0x10/0x10
+[37247.372505]  ret_from_fork+0x1f/0x30
+[37247.374695] Modules linked in: nfsv3 cts rpcsec_gss_krb5 nfsv4
+dns_resolver nfs rfcomm fuse ip6t_rpfilter ipt_REJECT nf_reject_ipv4
+ip6t_REJECT nf_reject_ipv6 xt_conntrack nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 ebtable_nat ebtable_broute bridge stp llc
+ip6table_mangle ip6table_security ip6table_raw iptable_mangle
+iptable_security iptable_raw ebtable_filter ebtables ip6table_filter
+ip6_tables iptable_filter bnep snd_seq_midi snd_seq_midi_event
+crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel
+crypto_simd cryptd glue_helper vmw_balloon snd_ens1371 snd_ac97_codec
+uvcvideo ac97_bus snd_seq pcspkr btusb btrtl btbcm videobuf2_vmalloc
+snd_pcm videobuf2_memops btintel videobuf2_v4l2 videodev bluetooth
+snd_timer snd_rawmidi vmw_vmci snd_seq_device rfkill videobuf2_common
+snd ecdh_generic i2c_piix4 soundcore nfsd nfs_acl lockd auth_rpcgss
+grace sunrpc ip_tables xfs libcrc32c sr_mod cdrom sd_mod ata_generic
+pata_acpi vmwgfx drm_kms_helper syscopyarea sysfillrect sysimgblt
+fb_sys_fops
+[37247.389774]  ttm crc32c_intel drm serio_raw ahci ata_piix libahci
+libata mptspi scsi_transport_spi e1000 mptscsih mptbase i2c_core
+dm_mirror dm_region_hash dm_log dm_mod
+[37247.437859] CR2: 0000000000000098
+[37247.462263] ---[ end trace 0d9a85f0df2cef9e ]---
