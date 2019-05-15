@@ -2,143 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AABC1D0D1
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2019 22:45:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 394E81E67B
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 03:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfENUp3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 May 2019 16:45:29 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:34431 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfENUp3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 May 2019 16:45:29 -0400
-Received: by mail-it1-f194.google.com with SMTP id p18so3688556itm.1
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2019 13:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YLFiZF5mHp7zkvqSK8XIsompacTeyXE20QIyu2YrAIo=;
-        b=DoOfqF786GUL1ijS9+7zrTwjHp9xY3dINqjdU8aSyD/kmaWytoSjaFm1OWSO9zBD+i
-         5w2ELBz96B5NtmLXH+GQMyDMEO8EejqScqOU7fxfjEGYSvlV63VfEtJB44ipSe/ldk/F
-         ZMrER8J58JmV/dR6+GtfQQbOpm0kP1eMCbGe+yNs5A4avWtAT6Rmu4rmxbUgzdz4TVIn
-         JPETN1sV+cB2dGJMv9/oZC8iMzNWfq0m1H7qMLU3Ic6fOa0Yz9Eh9VBe3zzGtVZDhaXC
-         tgfzK4x7TYj5ZvcBQ9U1mo+UYAfTH14GV4a0vWbi48tTCx1+78gqx7h+8LXgc+4I0wne
-         wDGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YLFiZF5mHp7zkvqSK8XIsompacTeyXE20QIyu2YrAIo=;
-        b=YBYzQQzTNHaBesyfLQVECze6LUCgYrV5Fn6p+IbUe+61WZ1/SHbyDwyWVEAeGS/tG6
-         JwsFGeh+Rf6IUAF6apvwyAY1GjUTrSeN3UUW/R7BlpLLEbZpxFgrGYlkAfl89nduLVqp
-         LdGx8Y2eU+alnfXo97e43JvL9JbjbmxBF/uFF6URRahYQLNBD1eCARpX/B5ZveIRhCSX
-         UcJac3u/NA3RzsiaXp+6DJnmqNCpNjgreeXOIskkQpntYrTK83lzXjtRq4qS1PPARtBD
-         8Hfe1NKF2lkMSpMYNd7FBQ8OPeBzF/6Ulb3ljqyH7GvBU1Esv5K6xCqePgZZEpOgsZJ9
-         PauQ==
-X-Gm-Message-State: APjAAAUbbNfoiLACDeRTjGRaD1on5OZeZjhUplc3cl/mpshaLVRB2R7m
-        +bS6x+8vRFyUYVM8urKlBtSGzfM=
-X-Google-Smtp-Source: APXvYqx880Srtnit6H8SSPSCRxKY4XXObZnD3gaMPi+oAGhakE52NOJBRoj0dkss2a11phyeBEDVDA==
-X-Received: by 2002:a24:fa42:: with SMTP id v63mr5055243ith.20.1557866727981;
-        Tue, 14 May 2019 13:45:27 -0700 (PDT)
-Received: from localhost.localdomain ([172.56.10.94])
-        by smtp.gmail.com with ESMTPSA id r139sm64943ita.22.2019.05.14.13.45.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 13:45:27 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 5/5] Add support for chroot in exportfs
-Date:   Tue, 14 May 2019 16:41:53 -0400
-Message-Id: <20190514204153.79603-6-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190514204153.79603-5-trond.myklebust@hammerspace.com>
-References: <20190514204153.79603-1-trond.myklebust@hammerspace.com>
- <20190514204153.79603-2-trond.myklebust@hammerspace.com>
- <20190514204153.79603-3-trond.myklebust@hammerspace.com>
- <20190514204153.79603-4-trond.myklebust@hammerspace.com>
- <20190514204153.79603-5-trond.myklebust@hammerspace.com>
+        id S1726529AbfEOBDc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 May 2019 21:03:32 -0400
+Received: from fieldses.org ([173.255.197.46]:60190 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfEOBDc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 14 May 2019 21:03:32 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id AB39C1D39; Tue, 14 May 2019 21:03:31 -0400 (EDT)
+Date:   Tue, 14 May 2019 21:03:31 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
+ use-gss-proxy==1
+Message-ID: <20190515010331.GA3232@fieldses.org>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+ <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- utils/exportfs/Makefile.am |  2 +-
- utils/exportfs/exportfs.c  | 31 ++++++++++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 2 deletions(-)
+Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
+mounts, and the following the server's logs.  Dropping the three patches
+for now.
 
-diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
-index 4b291610d19b..96524c729359 100644
---- a/utils/exportfs/Makefile.am
-+++ b/utils/exportfs/Makefile.am
-@@ -10,6 +10,6 @@ exportfs_SOURCES = exportfs.c
- exportfs_LDADD = ../../support/export/libexport.a \
- 	       	 ../../support/nfs/libnfs.la \
- 		 ../../support/misc/libmisc.a \
--		 $(LIBWRAP) $(LIBNSL)
-+		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
- 
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 333eadcd0228..bc87d7fe4ee1 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -52,6 +52,33 @@ static const char *lockfile = EXP_LOCKFILE;
- static int _lockfd = -1;
- 
- struct state_paths etab;
-+static struct xthread_workqueue *exportfs_wq;
-+
-+static ssize_t exportfs_write(int fd, const char *buf, size_t len)
-+{
-+	if (exportfs_wq)
-+		return xthread_write(exportfs_wq, fd, buf, len);
-+	return write(fd, buf, len);
-+}
-+
-+static void
-+exportfs_setup_workqueue(void)
-+{
-+	const char *chroot;
-+
-+	chroot = conf_get_str("nfsd", "chroot");
-+	if (!chroot || *chroot == '\0')
-+		return;
-+	/* Strip leading '/' */
-+	while (chroot[0] == '/' && chroot[1] == '/')
-+		chroot++;
-+	if (chroot[0] == '/' && chroot[1] == '\0')
-+		return;
-+	exportfs_wq = xthread_workqueue_alloc();
-+	if (!exportfs_wq)
-+		return;
-+	xthread_workqueue_chroot(exportfs_wq, chroot);
-+}
- 
- /*
-  * If we aren't careful, changes made by exportfs can be lost
-@@ -181,6 +208,8 @@ main(int argc, char **argv)
- 		}
- 	}
- 
-+	exportfs_setup_workqueue();
-+
- 	/*
- 	 * Serialize things as best we can
- 	 */
-@@ -505,7 +534,7 @@ static int test_export(nfs_export *exp, int with_fsid)
- 	fd = open("/proc/net/rpc/nfsd.export/channel", O_WRONLY);
- 	if (fd < 0)
- 		return 0;
--	n = write(fd, buf, strlen(buf));
-+	n = exportfs_write(fd, buf, strlen(buf));
- 	close(fd);
- 	if (n < 0)
- 		return 0;
--- 
-2.21.0
+--b.
+
+[   40.894408] remove_proc_entry: removing non-empty directory 'net/rpc', leaking at least 'use-gss-proxy'
+[   40.897352] WARNING: CPU: 2 PID: 31 at fs/proc/generic.c:683 remove_proc_entry+0x17d/0x190
+[   40.899373] Modules linked in: nfsd nfs_acl lockd grace auth_rpcgss sunrpc
+[   40.901335] CPU: 2 PID: 31 Comm: kworker/u8:1 Not tainted 5.1.0-10733-g4f10d1cb695e #2220
+[   40.903759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+[   40.906972] Workqueue: netns cleanup_net
+[   40.907828] RIP: 0010:remove_proc_entry+0x17d/0x190
+[   40.908904] Code: 52 82 48 85 c0 48 8d 90 48 ff ff ff 48 0f 45 c2 48 8b 93 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 a7 24 dc ff <0f> 0b e9 52 ff ff ff e8 a7 21 dc ff 0f 1f 80 00 00 00 00 0f 1f 44
+[   40.912689] RSP: 0018:ffffc90000123d80 EFLAGS: 00010282
+[   40.913495] RAX: 0000000000000000 RBX: ffff888079f96e40 RCX: 0000000000000000
+[   40.914747] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
+[   40.916107] RBP: ffff888079f96ef0 R08: 0000000000000000 R09: 0000000000000000
+[   40.917253] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88807cd76d68
+[   40.918508] R13: ffffffffa0057000 R14: ffff8880683db200 R15: ffffffff82970240
+[   40.919642] FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+[   40.920956] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   40.921867] CR2: 00007f9d70010cb8 CR3: 000000007cc5c006 CR4: 00000000001606e0
+[   40.923044] Call Trace:
+[   40.923364]  sunrpc_exit_net+0xcc/0x190 [sunrpc]
+[   40.924069]  ops_exit_list.isra.0+0x36/0x70
+[   40.924713]  cleanup_net+0x1cb/0x2c0
+[   40.925182]  process_one_work+0x219/0x620
+[   40.925780]  worker_thread+0x3c/0x390
+[   40.926312]  ? process_one_work+0x620/0x620
+[   40.927015]  kthread+0x11d/0x140
+[   40.927430]  ? kthread_park+0x80/0x80
+[   40.927822]  ret_from_fork+0x3a/0x50
+[   40.928281] irq event stamp: 11688
+[   40.928780] hardirqs last  enabled at (11687): [<ffffffff811225fe>] console_unlock+0x41e/0x590
+[   40.930319] hardirqs last disabled at (11688): [<ffffffff81001b2c>] trace_hardirqs_off_thunk+0x1a/0x1c
+[   40.932123] softirqs last  enabled at (11684): [<ffffffff820002c5>] __do_softirq+0x2c5/0x4c5
+[   40.933657] softirqs last disabled at (11673): [<ffffffff810bf970>] irq_exit+0x80/0x90
 
