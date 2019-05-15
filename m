@@ -2,79 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 394E81E67B
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 03:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 646451F624
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 16:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfEOBDc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 May 2019 21:03:32 -0400
-Received: from fieldses.org ([173.255.197.46]:60190 "EHLO fieldses.org"
+        id S1727219AbfEOOBN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 May 2019 10:01:13 -0400
+Received: from fieldses.org ([173.255.197.46]:60740 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbfEOBDc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 14 May 2019 21:03:32 -0400
+        id S1726834AbfEOOBN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 May 2019 10:01:13 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id AB39C1D39; Tue, 14 May 2019 21:03:31 -0400 (EDT)
-Date:   Tue, 14 May 2019 21:03:31 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Wenbin Zeng <wenbin.zeng@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        wenbinzeng@tencent.com, dsahern@gmail.com,
-        nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-Message-ID: <20190515010331.GA3232@fieldses.org>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+        id 453B71CEA; Wed, 15 May 2019 10:01:12 -0400 (EDT)
+Date:   Wed, 15 May 2019 10:01:12 -0400
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     steved@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [RFC PATCH 0/5] Add a chroot option to nfs.conf
+Message-ID: <20190515140112.GA9291@fieldses.org>
+References: <20190514204153.79603-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+In-Reply-To: <20190514204153.79603-1-trond.myklebust@hammerspace.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
-mounts, and the following the server's logs.  Dropping the three patches
-for now.
+On Tue, May 14, 2019 at 04:41:48PM -0400, Trond Myklebust wrote:
+> The following patchset aims to allow the configuration of a 'chroot
+> jail' to rpc.nfsd, and allowing us to export a filesystem /foo (and
+> possibly subtrees) as '/'.
+
+This is great, thanks!  Years ago I did an incomplete version that
+worked by just string manipulations on paths.  Running part of mountd in
+a chrooted thread is a neat way to do it.
+
+If I understand right, the only part that's being run in a chroot is the
+writes to /proc/net/sunrpc/*/channel files.  So that means that the path
+included in writes to /proc/net/sunrpc/nfsd_fh/channel will be resolved
+with respect to the chroot by the kernel code handling the write.
+
+That's not the only place in mountd that uses export paths, though.
+What about:
+
+	- next_mnt(), which compares paths from the export file to paths
+	  in /etc/mtab.
+	- is_mountpoint, which stats export paths.
+	- match_fsid, which stats export paths.
+
+Etc.  Doesn't that stuff also need to be done with respect to the
+chroot?  Am I missing something?
 
 --b.
 
-[   40.894408] remove_proc_entry: removing non-empty directory 'net/rpc', leaking at least 'use-gss-proxy'
-[   40.897352] WARNING: CPU: 2 PID: 31 at fs/proc/generic.c:683 remove_proc_entry+0x17d/0x190
-[   40.899373] Modules linked in: nfsd nfs_acl lockd grace auth_rpcgss sunrpc
-[   40.901335] CPU: 2 PID: 31 Comm: kworker/u8:1 Not tainted 5.1.0-10733-g4f10d1cb695e #2220
-[   40.903759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[   40.906972] Workqueue: netns cleanup_net
-[   40.907828] RIP: 0010:remove_proc_entry+0x17d/0x190
-[   40.908904] Code: 52 82 48 85 c0 48 8d 90 48 ff ff ff 48 0f 45 c2 48 8b 93 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 a7 24 dc ff <0f> 0b e9 52 ff ff ff e8 a7 21 dc ff 0f 1f 80 00 00 00 00 0f 1f 44
-[   40.912689] RSP: 0018:ffffc90000123d80 EFLAGS: 00010282
-[   40.913495] RAX: 0000000000000000 RBX: ffff888079f96e40 RCX: 0000000000000000
-[   40.914747] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
-[   40.916107] RBP: ffff888079f96ef0 R08: 0000000000000000 R09: 0000000000000000
-[   40.917253] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88807cd76d68
-[   40.918508] R13: ffffffffa0057000 R14: ffff8880683db200 R15: ffffffff82970240
-[   40.919642] FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
-[   40.920956] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   40.921867] CR2: 00007f9d70010cb8 CR3: 000000007cc5c006 CR4: 00000000001606e0
-[   40.923044] Call Trace:
-[   40.923364]  sunrpc_exit_net+0xcc/0x190 [sunrpc]
-[   40.924069]  ops_exit_list.isra.0+0x36/0x70
-[   40.924713]  cleanup_net+0x1cb/0x2c0
-[   40.925182]  process_one_work+0x219/0x620
-[   40.925780]  worker_thread+0x3c/0x390
-[   40.926312]  ? process_one_work+0x620/0x620
-[   40.927015]  kthread+0x11d/0x140
-[   40.927430]  ? kthread_park+0x80/0x80
-[   40.927822]  ret_from_fork+0x3a/0x50
-[   40.928281] irq event stamp: 11688
-[   40.928780] hardirqs last  enabled at (11687): [<ffffffff811225fe>] console_unlock+0x41e/0x590
-[   40.930319] hardirqs last disabled at (11688): [<ffffffff81001b2c>] trace_hardirqs_off_thunk+0x1a/0x1c
-[   40.932123] softirqs last  enabled at (11684): [<ffffffff820002c5>] __do_softirq+0x2c5/0x4c5
-[   40.933657] softirqs last disabled at (11673): [<ffffffff810bf970>] irq_exit+0x80/0x90
-
+> 
+> Trond Myklebust (5):
+>   mountd: Ensure we don't share cache file descriptors among processes.
+>   Add a simple workqueue mechanism
+>   Add a helper to write to a file through the chrooted thread
+>   Add support for chrooted exports
+>   Add support for chroot in exportfs
+> 
+>  aclocal/libpthread.m4      |  13 +-
+>  configure.ac               |   6 +-
+>  nfs.conf                   |   1 +
+>  support/include/misc.h     |  11 ++
+>  support/misc/Makefile.am   |   2 +-
+>  support/misc/workqueue.c   | 267 +++++++++++++++++++++++++++++++++++++
+>  systemd/nfs.conf.man       |   3 +-
+>  utils/exportfs/Makefile.am |   2 +-
+>  utils/exportfs/exportfs.c  |  31 ++++-
+>  utils/mountd/Makefile.am   |   3 +-
+>  utils/mountd/cache.c       |  39 +++++-
+>  utils/mountd/mountd.c      |   5 +-
+>  utils/nfsd/nfsd.man        |   4 +
+>  13 files changed, 369 insertions(+), 18 deletions(-)
+>  create mode 100644 support/misc/workqueue.c
+> 
+> -- 
+> 2.21.0
