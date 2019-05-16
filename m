@@ -2,82 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90FAC2062C
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 13:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E4720D1A
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 18:34:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfEPLrw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 May 2019 07:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfEPLrn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 May 2019 07:47:43 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01C2720833;
-        Thu, 16 May 2019 11:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558007262;
-        bh=VW00qVMkH0BrcwLaK5rd5q5/U8a46jUS1Ogh6nAn2LI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lBJ39AJK4xaO3H8xzpewZJqPYTA9PuYs/bCgj2RR2HmectLkkKl5sZ2QrfuPC4FUy
-         kzqpycVM3v4Arp/UzuUFepwfya/sms2l+iPmf8TA+CPx3L9EUk+6nKwT7DrmhSnvib
-         b8o4ELb2lVUnwNmq6bmRzBu7b+8YFDPsOMilUrxA=
-Message-ID: <ac596623e5e68063e8866d9bf7cfd07eafcaf695.camel@kernel.org>
-Subject: Re: [PATCH v2 0/2] Fix two bugs CB_NOTIFY_LOCK failing to wake a
- water
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yihao Wu <wuyihao@linux.alibaba.com>, linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, caspar@linux.alibaba.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Thu, 16 May 2019 07:47:40 -0400
-In-Reply-To: <1a3d5e35-50bc-d757-5d30-15b1c8cff9ad@linux.alibaba.com>
-References: <346806ac-2018-b780-4939-87f29648017c@linux.alibaba.com>
-         <0d422bbcce15e44a4608cced0a569585c75ccd9a.camel@kernel.org>
-         <1a3d5e35-50bc-d757-5d30-15b1c8cff9ad@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        id S1726738AbfEPQem (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 May 2019 12:34:42 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:45970 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfEPQel (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 May 2019 12:34:41 -0400
+Received: by mail-vk1-f193.google.com with SMTP id r23so1191106vkd.12
+        for <linux-nfs@vger.kernel.org>; Thu, 16 May 2019 09:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ks4pXKLdLL1OUCbcEKP+ryoRPAkAgIVJqOawVUxxEFM=;
+        b=QQDf4ksFBmzjYUIpoyZJa+4Evo8uq9C5zH30mm3xGlKp//pS5ahgyD90bIIez3YkPn
+         nfnkPBzMX+8l0PrKFpljNcgfOzURqBiT5svFiRXeTNxNkpFRiWCoEUhP8yS8WpKH+1zK
+         MTmnPYxWxYKPXTf/wAZoWByYENlaXKloE+D9C5TanNG8mizf/EHjxpdn9Qert1dxVEnh
+         SY/i9NetQHXmnXtBTZiZbYUl2PJ6jlO2BLlM9fo+2eiBoOX//Dkx777GL3nV6TIxEPJM
+         mdm48qwPmxpUWUvczRpj/NyeOzsNSZlVq2C4h3XwwM8mHqqYfj/KhY83rpr2+9mNSGNi
+         yPEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ks4pXKLdLL1OUCbcEKP+ryoRPAkAgIVJqOawVUxxEFM=;
+        b=p7cNoM2jLA8n+MkB5UYsyUyOJC5zNukDBZzG3mR3C4wplLlK7NjjTFLZ1K9rSs4Lyg
+         4d9qUdMl9b+FWXg3JFVhWiuO+2rhgrHbEv8r3cJY7uNM30Ri+CppY1j0TP/3JTLyXTQT
+         NyMe2aj0bg71wU8AM9xnKa3nWXvVyk6qlf65wQQEcETxkqrmkcBF1qJi7sFvaqzIEMJ7
+         Phqtp0aR60uvnl0QFk63/FrJQp4Wej5HWfDvx7pd9zZVW90LeX2dq7ar0Axmri9qpwRk
+         pOFJkwLiLpdm6UhbKwSYihLRzKdOnA6EQRu9s7H8jfGO67LcRY6E5QzrtuvL1EQt050i
+         nImw==
+X-Gm-Message-State: APjAAAXoLMU5dI2yfFvn/46FhBWiwoVfp2gKQQLXNXLEeqTUCRt84JkM
+        EyBqZo6/PU9BGhF2rQYQBSLRkc0g4+OtJMgd99+9yg==
+X-Google-Smtp-Source: APXvYqxvl8J3RnemtY7k+Xh+HYpr92x14Ox8FZqdWwGEIemY6bB0eAU/2kywIBgEINZKzQolvWaxR/x7+lJGD4Cawdc=
+X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr18764293vkd.31.1558024480577;
+ Thu, 16 May 2019 09:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAN-5tyFGd+OGOkBL_9R3xHv9Np_DQWmUau8=up6wRmx8p7qkWA@mail.gmail.com>
+ <4d163d6c991c407c91a8838dde5f11f8840257cd.camel@hammerspace.com>
+In-Reply-To: <4d163d6c991c407c91a8838dde5f11f8840257cd.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 16 May 2019 12:34:12 -0400
+Message-ID: <CAN-5tyEvYDwEchfLXg1gJA-Wcf5c_O++mUWmQLPbcWJVfVAj4g@mail.gmail.com>
+Subject: Re: 5.1 sunrpc kernel oops
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2019-05-16 at 16:01 +0800, Yihao Wu wrote:
-> On 2019/5/13 9:36 PM, Jeff Layton wrote:
-> > On Mon, 2019-05-13 at 14:49 +0800, Yihao Wu wrote:
-> > > This patch set fix bugs related to CB_NOTIFY_LOCK. These bugs cause
-> > > poor performance in locking operation. And this patchset should also fix
-> > > the failure when running xfstests generic/089 on a NFSv4.1 filesystem.
-> > > 
-> > > Yihao Wu (2):
-> > >   NFSv4.1: Again fix a race where CB_NOTIFY_LOCK fails to wake a waiter
-> > >   NFSv4.1: Fix bug only first CB_NOTIFY_LOCK is handled
-> > > 
-> > >  fs/nfs/nfs4proc.c | 31 ++++++++++++-------------------
-> > >  1 file changed, 12 insertions(+), 19 deletions(-)
-> > > 
-> > 
-> > Looks good to me. Nice catch, btw!
-> > 
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > 
-> 
-> Thank you for your reviewing, Jeff!
-> 
-> And it seems I forgot to CC maintainers of fs/nfs. So I added you to the CC
-> list, Trond and Anna. Does this patchset need further reviewing?
-> 
-> Sorry to bother you.
-> 
+This seems to fix it. Decoder can't decode it and is trying to retry
+but cl_auth is null and clnt structure went away too.
 
-This should probably go through Anna's tree, and I assume she'll pick it
-up once she and/or Trond have had a chance to review it.
+If this patch is OK, I'll send it later tonight.
 
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 8ff11dc..ed4a88f 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2487,7 +2487,7 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
 
+ out_garbage:
+        clnt->cl_stats->rpcgarbage++;
+-       if (task->tk_garb_retry) {
++       if (task->tk_garb_retry && clnt->cl_auth) {
+                task->tk_garb_retry--;
+                task->tk_action = call_encode;
+                return -EAGAIN;
+
+--
+
+
+
+On Wed, May 15, 2019 at 4:16 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2019-05-15 at 15:34 -0400, Olga Kornievskaia wrote:
+> > Sounds like we can't do:
+> >         const struct rpc_timeout *to = req->rq_task->tk_client-
+> > >cl_timeout;
+> >
+> > Perhaps:
+> > const struct rpc_timeout *to;
+> > and check that if (!req->rq_task || !req->rq_task->tk_client) return
+> > 0;
+> >
+> > Just a guess. Thoughts?
+>
+> All callers of call_decode() must have req->rq_task set, because there
+> request must have sent an RPC call (so a slot must be allocated) and so
+> we must have a task as the argument.
+>
+> I'm not sure about task->tk_client. I feel that should always be set
+> here (again, since this is a reply) but it is possible there might be
+> some code path where we're not setting that. I'd like to understand
+> how, though: it certainly isn't the usual backchannel request.
+>
+> >
+> > [37247.291617] BUG: unable to handle kernel NULL pointer dereference
+> > at 0000000000000098
+> > [37247.296200] #PF error: [normal kernel read fault]
+> > [37247.298110] PGD 0 P4D 0
+> > [37247.299264] Oops: 0000 [#1] SMP PTI
+> > [37247.300729] CPU: 1 PID: 23870 Comm: kworker/u256:1 Not tainted
+> > 5.1.0+ #172
+> > [37247.303547] Hardware name: VMware, Inc. VMware Virtual
+> > Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> > [37247.311770] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> > [37247.313958] RIP: 0010:xprt_adjust_timeout+0x9/0x110 [sunrpc]
+> > [37247.316220] Code: c7 c7 20 0d 50 c0 31 c0 e8 68 00 e2 fc 41 c7 45
+> > 04 f4 ff ff ff eb c9 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
+> > 54 55 53 <48> 8b 87 98 00 00 00 48 89 fb 4c 8b 27 48 8b 80 a8 00 00
+> > 00
+> > 48 8b
+> > [37247.323625] RSP: 0018:ffffb0ab84f5fd68 EFLAGS: 00010207
+> > [37247.325676] RAX: 00000000fffffff5 RBX: ffff9e0ff1042800 RCX:
+> > 0000000000000003
+> > [37247.328433] RDX: ffff9e0ff11baac0 RSI: 00000000fffffe01 RDI:
+> > 0000000000000000
+> > [37247.331206] RBP: ffff9e0fe20cb200 R08: ffff9e0ff11baac0 R09:
+> > ffff9e0ff11baac0
+> > [37247.334038] R10: ffff9e0ff11baab8 R11: 0000000000000003 R12:
+> > ffff9e1039b55050
+> > [37247.337098] R13: ffff9e0ff1042830 R14: 0000000000000000 R15:
+> > 0000000000000001
+> > [37247.339966] FS:  0000000000000000(0000) GS:ffff9e103bc40000(0000)
+> > knlGS:0000000000000000
+> > [37247.343261] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [37247.345669] CR2: 0000000000000098 CR3: 000000007603a002 CR4:
+> > 00000000001606e0
+> > [37247.348564] Call Trace:
+> > [37247.351034]  rpc_check_timeout+0x1d/0x140 [sunrpc]
+> > [37247.353005]  call_decode+0x13e/0x1f0 [sunrpc]
+> > [37247.354893]  ? rpc_check_timeout+0x140/0x140 [sunrpc]
+> > [37247.357143]  __rpc_execute+0x7e/0x3d0 [sunrpc]
+> > [37247.359104]  rpc_async_schedule+0x29/0x40 [sunrpc]
+> > [37247.362565]  process_one_work+0x16b/0x370
+> > [37247.365598]  worker_thread+0x49/0x3f0
+> > [37247.367164]  kthread+0xf5/0x130
+> > [37247.368453]  ? max_active_store+0x80/0x80
+> > [37247.370087]  ? kthread_bind+0x10/0x10
+> > [37247.372505]  ret_from_fork+0x1f/0x30
+> > [37247.374695] Modules linked in: nfsv3 cts rpcsec_gss_krb5 nfsv4
+> > dns_resolver nfs rfcomm fuse ip6t_rpfilter ipt_REJECT nf_reject_ipv4
+> > ip6t_REJECT nf_reject_ipv6 xt_conntrack nf_conntrack nf_defrag_ipv6
+> > nf_defrag_ipv4 ebtable_nat ebtable_broute bridge stp llc
+> > ip6table_mangle ip6table_security ip6table_raw iptable_mangle
+> > iptable_security iptable_raw ebtable_filter ebtables ip6table_filter
+> > ip6_tables iptable_filter bnep snd_seq_midi snd_seq_midi_event
+> > crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel
+> > crypto_simd cryptd glue_helper vmw_balloon snd_ens1371 snd_ac97_codec
+> > uvcvideo ac97_bus snd_seq pcspkr btusb btrtl btbcm videobuf2_vmalloc
+> > snd_pcm videobuf2_memops btintel videobuf2_v4l2 videodev bluetooth
+> > snd_timer snd_rawmidi vmw_vmci snd_seq_device rfkill videobuf2_common
+> > snd ecdh_generic i2c_piix4 soundcore nfsd nfs_acl lockd auth_rpcgss
+> > grace sunrpc ip_tables xfs libcrc32c sr_mod cdrom sd_mod ata_generic
+> > pata_acpi vmwgfx drm_kms_helper syscopyarea sysfillrect sysimgblt
+> > fb_sys_fops
+> > [37247.389774]  ttm crc32c_intel drm serio_raw ahci ata_piix libahci
+> > libata mptspi scsi_transport_spi e1000 mptscsih mptbase i2c_core
+> > dm_mirror dm_region_hash dm_log dm_mod
+> > [37247.437859] CR2: 0000000000000098
+> > [37247.462263] ---[ end trace 0d9a85f0df2cef9e ]---
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
