@@ -2,149 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8891FB68
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2019 22:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 581331FD3E
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 03:48:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfEOUQr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 May 2019 16:16:47 -0400
-Received: from mail-eopbgr690095.outbound.protection.outlook.com ([40.107.69.95]:7143
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726302AbfEOUQr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 May 2019 16:16:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S7yX8eznsfdRmjUhpXp5DQ+K8bEftUKTCHTldGE4Hr4=;
- b=YzE394abWd0Pl9KAZLOOkwHM141M4IxJsXUReNsjQVoC60Fol8of8OxQpJkhzY3nd53+GSHoPL5tOp2Q18QaaVURKRJZOzKSVziKBsC1/YgT2BJD0dTnW4i1XpqAqeFK9mqnEKPKFLCwl3dt75BLfKLSYJqnkMoGXyoJe8JeNCk=
-Received: from BN6PR13MB1844.namprd13.prod.outlook.com (10.171.180.8) by
- BN6PR13MB3219.namprd13.prod.outlook.com (10.255.130.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.6; Wed, 15 May 2019 20:16:40 +0000
-Received: from BN6PR13MB1844.namprd13.prod.outlook.com
- ([fe80::281c:9b1c:5cdd:bad7]) by BN6PR13MB1844.namprd13.prod.outlook.com
- ([fe80::281c:9b1c:5cdd:bad7%10]) with mapi id 15.20.1900.010; Wed, 15 May
- 2019 20:16:40 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "aglo@umich.edu" <aglo@umich.edu>
-Subject: Re: 5.1 sunrpc kernel oops
-Thread-Topic: 5.1 sunrpc kernel oops
-Thread-Index: AQHVC1VHbU1atck7/kyF6QohJJqrNKZsn4kA
-Date:   Wed, 15 May 2019 20:16:40 +0000
-Message-ID: <4d163d6c991c407c91a8838dde5f11f8840257cd.camel@hammerspace.com>
-References: <CAN-5tyFGd+OGOkBL_9R3xHv9Np_DQWmUau8=up6wRmx8p7qkWA@mail.gmail.com>
-In-Reply-To: <CAN-5tyFGd+OGOkBL_9R3xHv9Np_DQWmUau8=up6wRmx8p7qkWA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [209.17.40.36]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 68f2e938-ebf8-4455-2af2-08d6d9723de4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN6PR13MB3219;
-x-ms-traffictypediagnostic: BN6PR13MB3219:
-x-microsoft-antispam-prvs: <BN6PR13MB32190B93BD19EAF24FA4FDB8B8090@BN6PR13MB3219.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(396003)(39830400003)(136003)(189003)(199004)(51234002)(99286004)(2171002)(81166006)(81156014)(66066001)(6246003)(305945005)(7736002)(14444005)(256004)(5660300002)(110136005)(68736007)(8676002)(6486002)(53936002)(118296001)(229853002)(6436002)(6116002)(3846002)(36756003)(14454004)(26005)(446003)(25786009)(102836004)(6506007)(2906002)(316002)(7116003)(6512007)(66946007)(73956011)(8936002)(76116006)(71200400001)(71190400001)(486006)(2501003)(91956017)(186003)(66476007)(45080400002)(66556008)(66446008)(64756008)(2616005)(76176011)(86362001)(476003)(11346002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR13MB3219;H:BN6PR13MB1844.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LWkQKc/aQ4iPre9Q+b/ls+10Eew5CR0WI1lXI9Lv91pi4c9Cgus1HoXgwy2D4MNuVgNqaG+4+6QbW1Bz0s2SXOIlW0dtg9BkD5BW33eH+JjJwE+SMp3DT3rtGDwt9dh9gjb9a/ndz+K/fX8AQsWQMErrU0ZUJxGf9NS7wLdbZy0ufN/UWusA+umeqKEpmkZfxuY6bNj7gkqWjbkkC/PWmLO9KKjvPPB8uUB+xap9o23ZdWx0YVLAKvtJy7OVowzqDS479UyIzmdLl0lDYJK5PCVgXUG8WrZ/CGm7yg+yMcbnXKunl7N9c3x0WxoRF6A1c8Emc6Kk8LbSON3Xvv/CjmoFClmzriImTwS4bZj1tHyinYjbzvT9L4ECulEhs7yuzJ47e7Mw8Rrq7jj/utPJLxgWEoHdztwselFsZIa9bwE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23EC49153682E2468ED13E1F554FFFEF@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727526AbfEPBqf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 May 2019 21:46:35 -0400
+Received: from fieldses.org ([173.255.197.46]:33026 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbfEPAke (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 May 2019 20:40:34 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CC88DBCE; Wed, 15 May 2019 20:40:32 -0400 (EDT)
+Date:   Wed, 15 May 2019 20:40:32 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, abe@purdue.edu,
+        lsof-l@lists.purdue.edu, util-linux@vger.kernel.org
+Subject: Re: [PATCH 08/10] nfsd4: add file to display list of client's opens
+Message-ID: <20190516004032.GA16284@fieldses.org>
+References: <1556201060-7947-1-git-send-email-bfields@redhat.com>
+ <1556201060-7947-9-git-send-email-bfields@redhat.com>
+ <d26e7611f4e610bff81a16abbb88ca1c5ed70c91.camel@redhat.com>
+ <20190425201413.GB9889@fieldses.org>
+ <7F460FEA-BD69-4559-926C-5C1B0CF90E3C@dilger.ca>
+ <20190426011804.GA12457@fieldses.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68f2e938-ebf8-4455-2af2-08d6d9723de4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 20:16:40.5484
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB3219
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190426011804.GA12457@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTE1IGF0IDE1OjM0IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gU291bmRzIGxpa2Ugd2UgY2FuJ3QgZG86DQo+ICAgICAgICAgY29uc3Qgc3RydWN0IHJw
-Y190aW1lb3V0ICp0byA9IHJlcS0+cnFfdGFzay0+dGtfY2xpZW50LQ0KPiA+Y2xfdGltZW91dDsN
-Cj4gDQo+IFBlcmhhcHM6DQo+IGNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdG87DQo+IGFuZCBj
-aGVjayB0aGF0IGlmICghcmVxLT5ycV90YXNrIHx8ICFyZXEtPnJxX3Rhc2stPnRrX2NsaWVudCkg
-cmV0dXJuDQo+IDA7DQo+IA0KPiBKdXN0IGEgZ3Vlc3MuIFRob3VnaHRzPw0KDQpBbGwgY2FsbGVy
-cyBvZiBjYWxsX2RlY29kZSgpIG11c3QgaGF2ZSByZXEtPnJxX3Rhc2sgc2V0LCBiZWNhdXNlIHRo
-ZXJlDQpyZXF1ZXN0IG11c3QgaGF2ZSBzZW50IGFuIFJQQyBjYWxsIChzbyBhIHNsb3QgbXVzdCBi
-ZSBhbGxvY2F0ZWQpIGFuZCBzbw0Kd2UgbXVzdCBoYXZlIGEgdGFzayBhcyB0aGUgYXJndW1lbnQu
-DQoNCkknbSBub3Qgc3VyZSBhYm91dCB0YXNrLT50a19jbGllbnQuIEkgZmVlbCB0aGF0IHNob3Vs
-ZCBhbHdheXMgYmUgc2V0DQpoZXJlIChhZ2Fpbiwgc2luY2UgdGhpcyBpcyBhIHJlcGx5KSBidXQg
-aXQgaXMgcG9zc2libGUgdGhlcmUgbWlnaHQgYmUNCnNvbWUgY29kZSBwYXRoIHdoZXJlIHdlJ3Jl
-IG5vdCBzZXR0aW5nIHRoYXQuIEknZCBsaWtlIHRvIHVuZGVyc3RhbmQNCmhvdywgdGhvdWdoOiBp
-dCBjZXJ0YWlubHkgaXNuJ3QgdGhlIHVzdWFsIGJhY2tjaGFubmVsIHJlcXVlc3QuDQoNCj4gDQo+
-IFszNzI0Ny4yOTE2MTddIEJVRzogdW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgTlVMTCBwb2ludGVy
-IGRlcmVmZXJlbmNlDQo+IGF0IDAwMDAwMDAwMDAwMDAwOTgNCj4gWzM3MjQ3LjI5NjIwMF0gI1BG
-IGVycm9yOiBbbm9ybWFsIGtlcm5lbCByZWFkIGZhdWx0XQ0KPiBbMzcyNDcuMjk4MTEwXSBQR0Qg
-MCBQNEQgMA0KPiBbMzcyNDcuMjk5MjY0XSBPb3BzOiAwMDAwIFsjMV0gU01QIFBUSQ0KPiBbMzcy
-NDcuMzAwNzI5XSBDUFU6IDEgUElEOiAyMzg3MCBDb21tOiBrd29ya2VyL3UyNTY6MSBOb3QgdGFp
-bnRlZA0KPiA1LjEuMCsgIzE3Mg0KPiBbMzcyNDcuMzAzNTQ3XSBIYXJkd2FyZSBuYW1lOiBWTXdh
-cmUsIEluYy4gVk13YXJlIFZpcnR1YWwNCj4gUGxhdGZvcm0vNDQwQlggRGVza3RvcCBSZWZlcmVu
-Y2UgUGxhdGZvcm0sIEJJT1MgNi4wMCAwNC8xMy8yMDE4DQo+IFszNzI0Ny4zMTE3NzBdIFdvcmtx
-dWV1ZTogcnBjaW9kIHJwY19hc3luY19zY2hlZHVsZSBbc3VucnBjXQ0KPiBbMzcyNDcuMzEzOTU4
-XSBSSVA6IDAwMTA6eHBydF9hZGp1c3RfdGltZW91dCsweDkvMHgxMTAgW3N1bnJwY10NCj4gWzM3
-MjQ3LjMxNjIyMF0gQ29kZTogYzcgYzcgMjAgMGQgNTAgYzAgMzEgYzAgZTggNjggMDAgZTIgZmMg
-NDEgYzcgNDUNCj4gMDQgZjQgZmYgZmYgZmYgZWIgYzkgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAg
-MDAgMDAgMGYgMWYgNDQgMDAgMDAgNDENCj4gNTQgNTUgNTMgPDQ4PiA4YiA4NyA5OCAwMCAwMCAw
-MCA0OCA4OSBmYiA0YyA4YiAyNyA0OCA4YiA4MCBhOCAwMCAwMA0KPiAwMA0KPiA0OCA4Yg0KPiBb
-MzcyNDcuMzIzNjI1XSBSU1A6IDAwMTg6ZmZmZmIwYWI4NGY1ZmQ2OCBFRkxBR1M6IDAwMDEwMjA3
-DQo+IFszNzI0Ny4zMjU2NzZdIFJBWDogMDAwMDAwMDBmZmZmZmZmNSBSQlg6IGZmZmY5ZTBmZjEw
-NDI4MDAgUkNYOg0KPiAwMDAwMDAwMDAwMDAwMDAzDQo+IFszNzI0Ny4zMjg0MzNdIFJEWDogZmZm
-ZjllMGZmMTFiYWFjMCBSU0k6IDAwMDAwMDAwZmZmZmZlMDEgUkRJOg0KPiAwMDAwMDAwMDAwMDAw
-MDAwDQo+IFszNzI0Ny4zMzEyMDZdIFJCUDogZmZmZjllMGZlMjBjYjIwMCBSMDg6IGZmZmY5ZTBm
-ZjExYmFhYzAgUjA5Og0KPiBmZmZmOWUwZmYxMWJhYWMwDQo+IFszNzI0Ny4zMzQwMzhdIFIxMDog
-ZmZmZjllMGZmMTFiYWFiOCBSMTE6IDAwMDAwMDAwMDAwMDAwMDMgUjEyOg0KPiBmZmZmOWUxMDM5
-YjU1MDUwDQo+IFszNzI0Ny4zMzcwOThdIFIxMzogZmZmZjllMGZmMTA0MjgzMCBSMTQ6IDAwMDAw
-MDAwMDAwMDAwMDAgUjE1Og0KPiAwMDAwMDAwMDAwMDAwMDAxDQo+IFszNzI0Ny4zMzk5NjZdIEZT
-OiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOWUxMDNiYzQwMDAwKDAwMDApDQo+IGtu
-bEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gWzM3MjQ3LjM0MzI2MV0gQ1M6ICAwMDEwIERTOiAwMDAw
-IEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPiBbMzcyNDcuMzQ1NjY5XSBDUjI6IDAw
-MDAwMDAwMDAwMDAwOTggQ1IzOiAwMDAwMDAwMDc2MDNhMDAyIENSNDoNCj4gMDAwMDAwMDAwMDE2
-MDZlMA0KPiBbMzcyNDcuMzQ4NTY0XSBDYWxsIFRyYWNlOg0KPiBbMzcyNDcuMzUxMDM0XSAgcnBj
-X2NoZWNrX3RpbWVvdXQrMHgxZC8weDE0MCBbc3VucnBjXQ0KPiBbMzcyNDcuMzUzMDA1XSAgY2Fs
-bF9kZWNvZGUrMHgxM2UvMHgxZjAgW3N1bnJwY10NCj4gWzM3MjQ3LjM1NDg5M10gID8gcnBjX2No
-ZWNrX3RpbWVvdXQrMHgxNDAvMHgxNDAgW3N1bnJwY10NCj4gWzM3MjQ3LjM1NzE0M10gIF9fcnBj
-X2V4ZWN1dGUrMHg3ZS8weDNkMCBbc3VucnBjXQ0KPiBbMzcyNDcuMzU5MTA0XSAgcnBjX2FzeW5j
-X3NjaGVkdWxlKzB4MjkvMHg0MCBbc3VucnBjXQ0KPiBbMzcyNDcuMzYyNTY1XSAgcHJvY2Vzc19v
-bmVfd29yaysweDE2Yi8weDM3MA0KPiBbMzcyNDcuMzY1NTk4XSAgd29ya2VyX3RocmVhZCsweDQ5
-LzB4M2YwDQo+IFszNzI0Ny4zNjcxNjRdICBrdGhyZWFkKzB4ZjUvMHgxMzANCj4gWzM3MjQ3LjM2
-ODQ1M10gID8gbWF4X2FjdGl2ZV9zdG9yZSsweDgwLzB4ODANCj4gWzM3MjQ3LjM3MDA4N10gID8g
-a3RocmVhZF9iaW5kKzB4MTAvMHgxMA0KPiBbMzcyNDcuMzcyNTA1XSAgcmV0X2Zyb21fZm9yaysw
-eDFmLzB4MzANCj4gWzM3MjQ3LjM3NDY5NV0gTW9kdWxlcyBsaW5rZWQgaW46IG5mc3YzIGN0cyBy
-cGNzZWNfZ3NzX2tyYjUgbmZzdjQNCj4gZG5zX3Jlc29sdmVyIG5mcyByZmNvbW0gZnVzZSBpcDZ0
-X3JwZmlsdGVyIGlwdF9SRUpFQ1QgbmZfcmVqZWN0X2lwdjQNCj4gaXA2dF9SRUpFQ1QgbmZfcmVq
-ZWN0X2lwdjYgeHRfY29ubnRyYWNrIG5mX2Nvbm50cmFjayBuZl9kZWZyYWdfaXB2Ng0KPiBuZl9k
-ZWZyYWdfaXB2NCBlYnRhYmxlX25hdCBlYnRhYmxlX2Jyb3V0ZSBicmlkZ2Ugc3RwIGxsYw0KPiBp
-cDZ0YWJsZV9tYW5nbGUgaXA2dGFibGVfc2VjdXJpdHkgaXA2dGFibGVfcmF3IGlwdGFibGVfbWFu
-Z2xlDQo+IGlwdGFibGVfc2VjdXJpdHkgaXB0YWJsZV9yYXcgZWJ0YWJsZV9maWx0ZXIgZWJ0YWJs
-ZXMgaXA2dGFibGVfZmlsdGVyDQo+IGlwNl90YWJsZXMgaXB0YWJsZV9maWx0ZXIgYm5lcCBzbmRf
-c2VxX21pZGkgc25kX3NlcV9taWRpX2V2ZW50DQo+IGNyY3QxMGRpZl9wY2xtdWwgY3JjMzJfcGNs
-bXVsIGdoYXNoX2NsbXVsbmlfaW50ZWwgYWVzbmlfaW50ZWwNCj4gY3J5cHRvX3NpbWQgY3J5cHRk
-IGdsdWVfaGVscGVyIHZtd19iYWxsb29uIHNuZF9lbnMxMzcxIHNuZF9hYzk3X2NvZGVjDQo+IHV2
-Y3ZpZGVvIGFjOTdfYnVzIHNuZF9zZXEgcGNzcGtyIGJ0dXNiIGJ0cnRsIGJ0YmNtIHZpZGVvYnVm
-Ml92bWFsbG9jDQo+IHNuZF9wY20gdmlkZW9idWYyX21lbW9wcyBidGludGVsIHZpZGVvYnVmMl92
-NGwyIHZpZGVvZGV2IGJsdWV0b290aA0KPiBzbmRfdGltZXIgc25kX3Jhd21pZGkgdm13X3ZtY2kg
-c25kX3NlcV9kZXZpY2UgcmZraWxsIHZpZGVvYnVmMl9jb21tb24NCj4gc25kIGVjZGhfZ2VuZXJp
-YyBpMmNfcGlpeDQgc291bmRjb3JlIG5mc2QgbmZzX2FjbCBsb2NrZCBhdXRoX3JwY2dzcw0KPiBn
-cmFjZSBzdW5ycGMgaXBfdGFibGVzIHhmcyBsaWJjcmMzMmMgc3JfbW9kIGNkcm9tIHNkX21vZCBh
-dGFfZ2VuZXJpYw0KPiBwYXRhX2FjcGkgdm13Z2Z4IGRybV9rbXNfaGVscGVyIHN5c2NvcHlhcmVh
-IHN5c2ZpbGxyZWN0IHN5c2ltZ2JsdA0KPiBmYl9zeXNfZm9wcw0KPiBbMzcyNDcuMzg5Nzc0XSAg
-dHRtIGNyYzMyY19pbnRlbCBkcm0gc2VyaW9fcmF3IGFoY2kgYXRhX3BpaXggbGliYWhjaQ0KPiBs
-aWJhdGEgbXB0c3BpIHNjc2lfdHJhbnNwb3J0X3NwaSBlMTAwMCBtcHRzY3NpaCBtcHRiYXNlIGky
-Y19jb3JlDQo+IGRtX21pcnJvciBkbV9yZWdpb25faGFzaCBkbV9sb2cgZG1fbW9kDQo+IFszNzI0
-Ny40Mzc4NTldIENSMjogMDAwMDAwMDAwMDAwMDA5OA0KPiBbMzcyNDcuNDYyMjYzXSAtLS1bIGVu
-ZCB0cmFjZSAwZDlhODVmMGRmMmNlZjllIF0tLS0NCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51
-eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFt
-bWVyc3BhY2UuY29tDQoNCg0K
+On Thu, Apr 25, 2019 at 09:18:04PM -0400, J. Bruce Fields wrote:
+> On Thu, Apr 25, 2019 at 11:14:23PM +0200, Andreas Dilger wrote:
+> > On Apr 25, 2019, at 10:14 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > > 
+> > > On Thu, Apr 25, 2019 at 02:04:59PM -0400, Jeff Layton wrote:
+> > >> More bikeshedding: should we have a "states" file instead of an "opens"
+> > >> file and print a different set of output for each stateid type?
+> > > 
+> > > Sure.  The format of the file could be something like
+> > > 
+> > > 	<stateid> open rw -- <openowner>...
+> > > 	<stateid> lock r 0-EOF <lockowner>...
+> > > 	<stateid> deleg r
+> > > 
+> > > I wonder if we could put owners on separate lines and do some
+> > > heirarchical thing to show owner-stateid relationships?  Hm.  That's
+> > > kind of appealing but more work.
+> > 
+> > My suggestion here would be to use YAML-formatted output rather than
+> > space/tab separated positional fields.  That can still be made human
+> > readable, but also machine parseable and extensible if formatted properly.
+> 
+> Well, anything we do will be machine-parseable.  But I can believe YAML
+> would make future extension easier.  It doesn't look like it would be
+> more complicated to generate.  It uses C-style escaping (like \x32) so
+> there'd be no change to how we format binary blobs.
+> 
+> The field names make it a tad more verbose but I guess it's not too bad.
+
+OK, I tried changing "opens" to "states" and using YAML.  Example output:
+
+- 0x020000006a5fdc5c4ad09d9e01000000: { type: open, access: rw, deny: --, superblock: "fd:10:13649", owner: "open id:\x00\x00\x00&\x00\x00\x00\x00\x00\x0046��QH " }
+- 0x010000006a5fdc5c4ad09d9e03000000: { type: open, access: r-, deny: --, superblock: "fd:10:13650", owner: "open id:\x00\x00\x00&\x00\x00\x00\x00\x00\x0046��QH" }
+- 0x010000006a5fdc5c4ad09d9e04000000: { type: deleg, access: r, superblock: "fd:10:13650" }
+- 0x010000006a5fdc5c4ad09d9e06000000: { type: lock, superblock: "fd:10:13649", owner: "lock id:\x00\x00\x00&\x00\x00\x00\x00\x00\x00\x00\x00" }
+
+The parser Andreas suggested (https://yaml-online-parser.appspot.com/)
+accepts these.  It also thinks strings are always in a unicode encoding
+of some kind, which they aren't.  The owners are arbitrary series of
+bytes but I'd like at least any ascii parts to be human readable, and
+I'm a little stuck on how to do that.
+
+--b.
