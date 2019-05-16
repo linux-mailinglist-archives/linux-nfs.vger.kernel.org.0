@@ -2,115 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A25AC1FDD1
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 04:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEC05200E3
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 10:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfEPCzn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 May 2019 22:55:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39440 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfEPCzn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 May 2019 22:55:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 23DBE2BF85;
-        Thu, 16 May 2019 02:55:43 +0000 (UTC)
-Received: from [10.72.12.160] (ovpn-12-160.pek2.redhat.com [10.72.12.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B1A3101E660;
-        Thu, 16 May 2019 02:55:41 +0000 (UTC)
-Subject: Re: [PATCH] svc_run: make sure only one svc_run loop runs in one
- process
-To:     libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org
-References: <20190409113713.30595-1-xiubli@redhat.com>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <6a152a89-6de6-f5f2-9c16-5e32fef8cc64@redhat.com>
-Date:   Thu, 16 May 2019 10:55:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726537AbfEPIB3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 May 2019 04:01:29 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35061 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726742AbfEPIBW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 May 2019 04:01:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TRtdOfe_1557993679;
+Received: from ali-186590dcce93-2.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TRtdOfe_1557993679)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 May 2019 16:01:19 +0800
+Subject: Re: [PATCH v2 0/2] Fix two bugs CB_NOTIFY_LOCK failing to wake a
+ water
+To:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, caspar@linux.alibaba.com,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+References: <346806ac-2018-b780-4939-87f29648017c@linux.alibaba.com>
+ <0d422bbcce15e44a4608cced0a569585c75ccd9a.camel@kernel.org>
+From:   Yihao Wu <wuyihao@linux.alibaba.com>
+Message-ID: <1a3d5e35-50bc-d757-5d30-15b1c8cff9ad@linux.alibaba.com>
+Date:   Thu, 16 May 2019 16:01:23 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190409113713.30595-1-xiubli@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0d422bbcce15e44a4608cced0a569585c75ccd9a.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 16 May 2019 02:55:43 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey ping.
+On 2019/5/13 9:36 PM, Jeff Layton wrote:
+> On Mon, 2019-05-13 at 14:49 +0800, Yihao Wu wrote:
+>> This patch set fix bugs related to CB_NOTIFY_LOCK. These bugs cause
+>> poor performance in locking operation. And this patchset should also fix
+>> the failure when running xfstests generic/089 on a NFSv4.1 filesystem.
+>>
+>> Yihao Wu (2):
+>>   NFSv4.1: Again fix a race where CB_NOTIFY_LOCK fails to wake a waiter
+>>   NFSv4.1: Fix bug only first CB_NOTIFY_LOCK is handled
+>>
+>>  fs/nfs/nfs4proc.c | 31 ++++++++++++-------------------
+>>  1 file changed, 12 insertions(+), 19 deletions(-)
+>>
+> 
+> Looks good to me. Nice catch, btw!
+> 
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> 
 
-What's the state of this patch and will it make sense here?
+Thank you for your reviewing, Jeff!
 
-Thanks
-BRs
+And it seems I forgot to CC maintainers of fs/nfs. So I added you to the CC
+list, Trond and Anna. Does this patchset need further reviewing?
 
-On 2019/4/9 19:37, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
->
-> In gluster-block project and there are 2 separate threads, both
-> of which will run the svc_run loop, this could work well in glibc
-> version, but in libtirpc we are hitting the random crash and stuck
-> issues.
->
-> More detail please see:
-> https://github.com/gluster/gluster-block/pull/182
->
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> ---
->   src/svc_run.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
-> diff --git a/src/svc_run.c b/src/svc_run.c
-> index f40314b..b295755 100644
-> --- a/src/svc_run.c
-> +++ b/src/svc_run.c
-> @@ -38,12 +38,17 @@
->   #include <string.h>
->   #include <unistd.h>
->   #include <sys/poll.h>
-> +#include <syslog.h>
-> +#include <stdbool.h>
->   
->   
->   #include <rpc/rpc.h>
->   #include "rpc_com.h"
->   #include <sys/select.h>
->   
-> +static bool svc_loop_running = false;
-> +static pthread_mutex_t svc_run_lock = PTHREAD_MUTEX_INITIALIZER;
-> +
->   void
->   svc_run()
->   {
-> @@ -51,6 +56,16 @@ svc_run()
->     struct pollfd *my_pollfd = NULL;
->     int last_max_pollfd = 0;
->   
-> +  pthread_mutex_lock(&svc_run_lock);
-> +  if (svc_loop_running) {
-> +    pthread_mutex_unlock(&svc_run_lock);
-> +    syslog (LOG_ERR, "svc_run: svc loop is already running in current process %d", getpid());
-> +    return;
-> +  }
-> +
-> +  svc_loop_running = true;
-> +  pthread_mutex_unlock(&svc_run_lock);
-> +
->     for (;;) {
->       int max_pollfd = svc_max_pollfd;
->       if (max_pollfd == 0 && svc_pollfd == NULL)
-> @@ -111,4 +126,8 @@ svc_exit()
->   	svc_pollfd = NULL;
->   	svc_max_pollfd = 0;
->   	rwlock_unlock(&svc_fd_lock);
-> +
-> +    pthread_mutex_lock(&svc_run_lock);
-> +    svc_loop_running = false;
-> +    pthread_mutex_unlock(&svc_run_lock);
->   }
+Sorry to bother you.
 
-
+Thanks,
+Yihao Wu
