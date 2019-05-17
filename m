@@ -2,175 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E4720D1A
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2019 18:34:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 409972162C
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 May 2019 11:22:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfEPQem (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 May 2019 12:34:42 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:45970 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfEPQel (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 May 2019 12:34:41 -0400
-Received: by mail-vk1-f193.google.com with SMTP id r23so1191106vkd.12
-        for <linux-nfs@vger.kernel.org>; Thu, 16 May 2019 09:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ks4pXKLdLL1OUCbcEKP+ryoRPAkAgIVJqOawVUxxEFM=;
-        b=QQDf4ksFBmzjYUIpoyZJa+4Evo8uq9C5zH30mm3xGlKp//pS5ahgyD90bIIez3YkPn
-         nfnkPBzMX+8l0PrKFpljNcgfOzURqBiT5svFiRXeTNxNkpFRiWCoEUhP8yS8WpKH+1zK
-         MTmnPYxWxYKPXTf/wAZoWByYENlaXKloE+D9C5TanNG8mizf/EHjxpdn9Qert1dxVEnh
-         SY/i9NetQHXmnXtBTZiZbYUl2PJ6jlO2BLlM9fo+2eiBoOX//Dkx777GL3nV6TIxEPJM
-         mdm48qwPmxpUWUvczRpj/NyeOzsNSZlVq2C4h3XwwM8mHqqYfj/KhY83rpr2+9mNSGNi
-         yPEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ks4pXKLdLL1OUCbcEKP+ryoRPAkAgIVJqOawVUxxEFM=;
-        b=p7cNoM2jLA8n+MkB5UYsyUyOJC5zNukDBZzG3mR3C4wplLlK7NjjTFLZ1K9rSs4Lyg
-         4d9qUdMl9b+FWXg3JFVhWiuO+2rhgrHbEv8r3cJY7uNM30Ri+CppY1j0TP/3JTLyXTQT
-         NyMe2aj0bg71wU8AM9xnKa3nWXvVyk6qlf65wQQEcETxkqrmkcBF1qJi7sFvaqzIEMJ7
-         Phqtp0aR60uvnl0QFk63/FrJQp4Wej5HWfDvx7pd9zZVW90LeX2dq7ar0Axmri9qpwRk
-         pOFJkwLiLpdm6UhbKwSYihLRzKdOnA6EQRu9s7H8jfGO67LcRY6E5QzrtuvL1EQt050i
-         nImw==
-X-Gm-Message-State: APjAAAXoLMU5dI2yfFvn/46FhBWiwoVfp2gKQQLXNXLEeqTUCRt84JkM
-        EyBqZo6/PU9BGhF2rQYQBSLRkc0g4+OtJMgd99+9yg==
-X-Google-Smtp-Source: APXvYqxvl8J3RnemtY7k+Xh+HYpr92x14Ox8FZqdWwGEIemY6bB0eAU/2kywIBgEINZKzQolvWaxR/x7+lJGD4Cawdc=
-X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr18764293vkd.31.1558024480577;
- Thu, 16 May 2019 09:34:40 -0700 (PDT)
+        id S1728169AbfEQJWa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 May 2019 05:22:30 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:45108 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727309AbfEQJW3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 May 2019 05:22:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TS-6ekf_1558084946;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TS-6ekf_1558084946)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 17 May 2019 17:22:26 +0800
+Subject: Re: [PATCH v2 1/2] NFSv4.1: Again fix a race where CB_NOTIFY_LOCK
+ fails to wake a waiter
+To:     Yihao Wu <wuyihao@linux.alibaba.com>, linux-nfs@vger.kernel.org,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     caspar@linux.alibaba.com
+References: <346806ac-2018-b780-4939-87f29648017c@linux.alibaba.com>
+ <48a9d50b-f7b9-407d-06db-5c9079dfbf24@linux.alibaba.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <07216eb5-7a15-d7b1-e553-58baa0e07282@linux.alibaba.com>
+Date:   Fri, 17 May 2019 17:22:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAN-5tyFGd+OGOkBL_9R3xHv9Np_DQWmUau8=up6wRmx8p7qkWA@mail.gmail.com>
- <4d163d6c991c407c91a8838dde5f11f8840257cd.camel@hammerspace.com>
-In-Reply-To: <4d163d6c991c407c91a8838dde5f11f8840257cd.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 16 May 2019 12:34:12 -0400
-Message-ID: <CAN-5tyEvYDwEchfLXg1gJA-Wcf5c_O++mUWmQLPbcWJVfVAj4g@mail.gmail.com>
-Subject: Re: 5.1 sunrpc kernel oops
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <48a9d50b-f7b9-407d-06db-5c9079dfbf24@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This seems to fix it. Decoder can't decode it and is trying to retry
-but cl_auth is null and clnt structure went away too.
+Hi Yihao,
 
-If this patch is OK, I'll send it later tonight.
+On 19/5/13 14:57, Yihao Wu wrote:
+> Commit b7dbcc0e433f "NFSv4.1: Fix a race where CB_NOTIFY_LOCK fails to wake a waiter"
+> found this bug. However it didn't fix it.
+> 
+> This commit replaces schedule_timeout() with wait_woken() and
+> default_wake_function() with woken_wake_function() in function
+> nfs4_retry_setlk() and nfs4_wake_lock_waiter(). wait_woken() uses
+> memory barriers in its implementation to avoid potential race condition
+> when putting a process into sleeping state and then waking it up.
+> 
+> Fixes: a1d617d8f134 ("nfs: allow blocking locks to be awoken by lock callbacks")
+> Cc: stable@vger.kernel.org #4.9+
+> Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+> ---
+>  fs/nfs/nfs4proc.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index c29cbef..f9ed6b5 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -6932,7 +6932,6 @@ struct nfs4_lock_waiter {
+>  	struct task_struct	*task;
+>  	struct inode		*inode;
+>  	struct nfs_lowner	*owner;
+> -	bool			notified;
+>  };
+>  
+>  static int
+> @@ -6954,13 +6953,13 @@ struct nfs4_lock_waiter {
+>  		/* Make sure it's for the right inode */
+>  		if (nfs_compare_fh(NFS_FH(waiter->inode), &cbnl->cbnl_fh))
+>  			return 0;
+> -
+> -		waiter->notified = true;
+>  	}
+>  
+>  	/* override "private" so we can use default_wake_function */
+>  	wait->private = waiter->task;
+> -	ret = autoremove_wake_function(wait, mode, flags, key);
+> +	ret = woken_wake_function(wait, mode, flags, key);
+> +	if (ret)
+> +		list_del_init(&wait->entry);
+>  	wait->private = waiter;
+>  	return ret;
+>  }
+> @@ -6979,8 +6978,7 @@ struct nfs4_lock_waiter {
+>  				    .s_dev = server->s_dev };
+>  	struct nfs4_lock_waiter waiter = { .task  = current,
+>  					   .inode = state->inode,
+> -					   .owner = &owner,
+> -					   .notified = false };
+> +					   .owner = &owner};
+>  	wait_queue_entry_t wait;
+>  
+>  	/* Don't bother with waitqueue if we don't expect a callback */
+> @@ -6993,21 +6991,14 @@ struct nfs4_lock_waiter {
+>  	add_wait_queue(q, &wait);
+>  
+>  	while(!signalled()) {
+> -		waiter.notified = false;
+>  		status = nfs4_proc_setlk(state, cmd, request);
+>  		if ((status != -EAGAIN) || IS_SETLK(cmd))
+>  			break;
+>  
+>  		status = -ERESTARTSYS;
+> -		spin_lock_irqsave(&q->lock, flags);
+> -		if (waiter.notified) {
+> -			spin_unlock_irqrestore(&q->lock, flags);
+> -			continue;
+> -		}
+> -		set_current_state(TASK_INTERRUPTIBLE);
+> -		spin_unlock_irqrestore(&q->lock, flags);
+> -
+> -		freezable_schedule_timeout(NFS4_LOCK_MAXTIMEOUT);
+> +		freezer_do_not_count();
+> +		wait_woken(&wait, TASK_INTERRUPTIBLE, NFS4_LOCK_MAXTIMEOUT);
+> +		freezer_count();
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 8ff11dc..ed4a88f 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2487,7 +2487,7 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
+Since now variable 'flags' is not used anymore, we have to delete it as well.
+Otherwise there is a compile warning “unused variable ‘flags’”.
 
- out_garbage:
-        clnt->cl_stats->rpcgarbage++;
--       if (task->tk_garb_retry) {
-+       if (task->tk_garb_retry && clnt->cl_auth) {
-                task->tk_garb_retry--;
-                task->tk_action = call_encode;
-                return -EAGAIN;
+Thanks,
+Joseph
 
---
-
-
-
-On Wed, May 15, 2019 at 4:16 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Wed, 2019-05-15 at 15:34 -0400, Olga Kornievskaia wrote:
-> > Sounds like we can't do:
-> >         const struct rpc_timeout *to = req->rq_task->tk_client-
-> > >cl_timeout;
-> >
-> > Perhaps:
-> > const struct rpc_timeout *to;
-> > and check that if (!req->rq_task || !req->rq_task->tk_client) return
-> > 0;
-> >
-> > Just a guess. Thoughts?
->
-> All callers of call_decode() must have req->rq_task set, because there
-> request must have sent an RPC call (so a slot must be allocated) and so
-> we must have a task as the argument.
->
-> I'm not sure about task->tk_client. I feel that should always be set
-> here (again, since this is a reply) but it is possible there might be
-> some code path where we're not setting that. I'd like to understand
-> how, though: it certainly isn't the usual backchannel request.
->
-> >
-> > [37247.291617] BUG: unable to handle kernel NULL pointer dereference
-> > at 0000000000000098
-> > [37247.296200] #PF error: [normal kernel read fault]
-> > [37247.298110] PGD 0 P4D 0
-> > [37247.299264] Oops: 0000 [#1] SMP PTI
-> > [37247.300729] CPU: 1 PID: 23870 Comm: kworker/u256:1 Not tainted
-> > 5.1.0+ #172
-> > [37247.303547] Hardware name: VMware, Inc. VMware Virtual
-> > Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
-> > [37247.311770] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> > [37247.313958] RIP: 0010:xprt_adjust_timeout+0x9/0x110 [sunrpc]
-> > [37247.316220] Code: c7 c7 20 0d 50 c0 31 c0 e8 68 00 e2 fc 41 c7 45
-> > 04 f4 ff ff ff eb c9 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
-> > 54 55 53 <48> 8b 87 98 00 00 00 48 89 fb 4c 8b 27 48 8b 80 a8 00 00
-> > 00
-> > 48 8b
-> > [37247.323625] RSP: 0018:ffffb0ab84f5fd68 EFLAGS: 00010207
-> > [37247.325676] RAX: 00000000fffffff5 RBX: ffff9e0ff1042800 RCX:
-> > 0000000000000003
-> > [37247.328433] RDX: ffff9e0ff11baac0 RSI: 00000000fffffe01 RDI:
-> > 0000000000000000
-> > [37247.331206] RBP: ffff9e0fe20cb200 R08: ffff9e0ff11baac0 R09:
-> > ffff9e0ff11baac0
-> > [37247.334038] R10: ffff9e0ff11baab8 R11: 0000000000000003 R12:
-> > ffff9e1039b55050
-> > [37247.337098] R13: ffff9e0ff1042830 R14: 0000000000000000 R15:
-> > 0000000000000001
-> > [37247.339966] FS:  0000000000000000(0000) GS:ffff9e103bc40000(0000)
-> > knlGS:0000000000000000
-> > [37247.343261] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [37247.345669] CR2: 0000000000000098 CR3: 000000007603a002 CR4:
-> > 00000000001606e0
-> > [37247.348564] Call Trace:
-> > [37247.351034]  rpc_check_timeout+0x1d/0x140 [sunrpc]
-> > [37247.353005]  call_decode+0x13e/0x1f0 [sunrpc]
-> > [37247.354893]  ? rpc_check_timeout+0x140/0x140 [sunrpc]
-> > [37247.357143]  __rpc_execute+0x7e/0x3d0 [sunrpc]
-> > [37247.359104]  rpc_async_schedule+0x29/0x40 [sunrpc]
-> > [37247.362565]  process_one_work+0x16b/0x370
-> > [37247.365598]  worker_thread+0x49/0x3f0
-> > [37247.367164]  kthread+0xf5/0x130
-> > [37247.368453]  ? max_active_store+0x80/0x80
-> > [37247.370087]  ? kthread_bind+0x10/0x10
-> > [37247.372505]  ret_from_fork+0x1f/0x30
-> > [37247.374695] Modules linked in: nfsv3 cts rpcsec_gss_krb5 nfsv4
-> > dns_resolver nfs rfcomm fuse ip6t_rpfilter ipt_REJECT nf_reject_ipv4
-> > ip6t_REJECT nf_reject_ipv6 xt_conntrack nf_conntrack nf_defrag_ipv6
-> > nf_defrag_ipv4 ebtable_nat ebtable_broute bridge stp llc
-> > ip6table_mangle ip6table_security ip6table_raw iptable_mangle
-> > iptable_security iptable_raw ebtable_filter ebtables ip6table_filter
-> > ip6_tables iptable_filter bnep snd_seq_midi snd_seq_midi_event
-> > crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel
-> > crypto_simd cryptd glue_helper vmw_balloon snd_ens1371 snd_ac97_codec
-> > uvcvideo ac97_bus snd_seq pcspkr btusb btrtl btbcm videobuf2_vmalloc
-> > snd_pcm videobuf2_memops btintel videobuf2_v4l2 videodev bluetooth
-> > snd_timer snd_rawmidi vmw_vmci snd_seq_device rfkill videobuf2_common
-> > snd ecdh_generic i2c_piix4 soundcore nfsd nfs_acl lockd auth_rpcgss
-> > grace sunrpc ip_tables xfs libcrc32c sr_mod cdrom sd_mod ata_generic
-> > pata_acpi vmwgfx drm_kms_helper syscopyarea sysfillrect sysimgblt
-> > fb_sys_fops
-> > [37247.389774]  ttm crc32c_intel drm serio_raw ahci ata_piix libahci
-> > libata mptspi scsi_transport_spi e1000 mptscsih mptbase i2c_core
-> > dm_mirror dm_region_hash dm_log dm_mod
-> > [37247.437859] CR2: 0000000000000098
-> > [37247.462263] ---[ end trace 0d9a85f0df2cef9e ]---
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+>  	}
+>  
+>  	finish_wait(q, &wait);
+> 
