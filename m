@@ -2,58 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC9922375
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 May 2019 14:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF47224BC
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 May 2019 22:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfERMJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 May 2019 08:09:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54606 "EHLO mx1.redhat.com"
+        id S1727620AbfERUEL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 May 2019 16:04:11 -0400
+Received: from fieldses.org ([173.255.197.46]:55060 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbfERMJn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 18 May 2019 08:09:43 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 701623082E4D;
-        Sat, 18 May 2019 12:09:43 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 98B252D1C6;
-        Sat, 18 May 2019 12:09:41 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Xuewei Zhang" <xueweiz@google.com>
-Cc:     bfields@fieldses.org, "Grigor Avagyan" <grigora@google.com>,
-        "Trevor Bourget" <bourget@google.com>,
-        "Nauman Rafique" <nauman@google.com>,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        jlayton@kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] lockd: Show pid of lockd for remote locks
-Date:   Sat, 18 May 2019 08:09:42 -0400
-Message-ID: <3A924C3F-A161-4EE2-A74E-2EE1B6D2CA14@redhat.com>
-In-Reply-To: <CAPtwhKrJw54DmfVdP4ADd3w5QPv0cRP+kr1Atn58QOFL5xBGbA@mail.gmail.com>
-References: <CAPtwhKrJw54DmfVdP4ADd3w5QPv0cRP+kr1Atn58QOFL5xBGbA@mail.gmail.com>
+        id S1725950AbfERUEL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 18 May 2019 16:04:11 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 535441C81; Sat, 18 May 2019 16:04:11 -0400 (EDT)
+Date:   Sat, 18 May 2019 16:04:11 -0400
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: allow fh_want_write to be called twice
+Message-ID: <20190518200411.GB32684@fieldses.org>
+References: <1557969619-17157-1-git-send-email-bfields@redhat.com>
+ <1557969619-17157-2-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sat, 18 May 2019 12:09:43 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557969619-17157-2-git-send-email-bfields@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 17 May 2019, at 17:45, Xuewei Zhang wrote:
-> Seems this patch introduced a bug in how lock protocol handles
-> GRANTED_MSG in nfs.
+Ugh, sorry, ignore the two old patches that got sent with the new
+series.
 
-Yes, you're right: it's broken, and broken badly because we find conflicting
-locks based on lockd's fl_pid and lockd's fl_owner, which is current->files.
-That means that clients are not differentiated, and that means that v3 locks
-are broken.
+--b.
 
-I'd really like to see the fl_pid value make sense on the server when we
-show it to userspace, so I think that we should stuff the svid in fl_owner.
-
-Clearly I need to be more careful making changes here, so I am going to take
-my time fixing this, and I won't get to it until Monday. A revert would get
-us back to safe behavior.
-
-Ben
+On Wed, May 15, 2019 at 09:20:06PM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
+> 
+> A fuzzer recently triggered lockdep warnings about potential sb_writers
+> deadlocks caused by fh_want_write().
+> 
+> Looks like we aren't careful to pair each fh_want_write() with an
+> fh_drop_write().
+> 
+> It's not normally a problem since fh_put() will call fh_drop_write() for
+> us.  And was OK for NFSv3 where we'd do one operation that might call
+> fh_want_write(), and then put the filehandle.
+> 
+> But an NFSv4 protocol fuzzer can do weird things like call unlink twice
+> in a compound, and then we get into trouble.
+> 
+> I'm a little worried about this approach of just leaving everything to
+> fh_put().  But I think there are probably a lot of
+> fh_want_write()/fh_drop_write() imbalances so for now I think we need it
+> to be more forgiving.
+> 
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  fs/nfsd/vfs.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index a7e107309f76..db351247892d 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -120,8 +120,11 @@ void		nfsd_put_raparams(struct file *file, struct raparms *ra);
+>  
+>  static inline int fh_want_write(struct svc_fh *fh)
+>  {
+> -	int ret = mnt_want_write(fh->fh_export->ex_path.mnt);
+> +	int ret;
+>  
+> +	if (fh->fh_want_write)
+> +		return 0;
+> +	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
+>  	if (!ret)
+>  		fh->fh_want_write = true;
+>  	return ret;
+> -- 
+> 2.21.0
