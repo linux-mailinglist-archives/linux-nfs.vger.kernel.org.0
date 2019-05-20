@@ -2,195 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B09BC23A16
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 May 2019 16:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0718023A17
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 May 2019 16:33:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbfETOdG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 May 2019 10:33:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60678 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbfETOdG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 May 2019 10:33:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KESpn9096223;
-        Mon, 20 May 2019 14:32:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=1kF8nXi1bb2JDfE2pWDUAwzQSWIRZ2NytOwtgxfIozA=;
- b=JxDLSQ6vmnOrDPZQHsoC4bRExbJm72irHUZYUPLyvcHwEmFM9Jleb9HCK0I4A1VpLWdr
- Q1SArJ0qtHNmmi7lGATVC+2yfaLXWIA/IqxBj/82g9CN4x1b/DJ+OFOLksZyMqJxUZIL
- /1WflYVsU5OZ/BTaccPwTlKuwy2G0yNQDPBOxMOWKpB/oRtCCuvW/vChttf7RjYaEGEa
- JLlpk6g6RYtPO+molacq/3zLnI+ffr9nZQ1lWZQTQ9GuG2tKT+hB6MHVqd1jYghB+697
- Ikw91EHczEKgNDabxZM2Gh2QTmJCpF7NYrubIEV4MBI0g2wx1KKowPBwcx58oiJNFLMY lA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sj9ft7cqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 14:32:33 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KEVTgh035522;
-        Mon, 20 May 2019 14:32:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2sks1xmkcw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 14:32:32 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KEWVZi030580;
-        Mon, 20 May 2019 14:32:31 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 14:32:31 +0000
-Date:   Mon, 20 May 2019 07:32:46 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Murphy Zhou <xzhou@redhat.com>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] tests/generic/54{0..3}: redirect FILEFRAG error output
- to .full too
-Message-ID: <20190520143246.GI5352@magnolia>
-References: <20190520062818.12421-1-xzhou@redhat.com>
+        id S1730540AbfETOdg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 May 2019 10:33:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33082 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727618AbfETOdg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 May 2019 10:33:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D63B75D5FF;
+        Mon, 20 May 2019 14:33:30 +0000 (UTC)
+Received: from bcodding.csb (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9ECDF5D9CA;
+        Mon, 20 May 2019 14:33:30 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 73D30109C3CB; Mon, 20 May 2019 10:33:07 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     "J . Bruce Fields" <bfields@fieldses.org>
+Cc:     Xuewei Zhang <xueweiz@google.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH] Revert "lockd: Show pid of lockd for remote locks"
+Date:   Mon, 20 May 2019 10:33:07 -0400
+Message-Id: <952928a350da64fd8de3e1a79deb8cc23552972f.1558362681.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520062818.12421-1-xzhou@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905200096
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200096
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 20 May 2019 14:33:35 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 20, 2019 at 02:28:18PM +0800, Murphy Zhou wrote:
-> NFSv4.2 supports reflink but does not support FIBMAP. These 4 tests
-> about file content can pass on NFSv4.2, but FILEFRAG complaint :
-> +/mnt/testarea/scratch/test-542/file2: FIBMAP unsupported
-> is breaking golden output.
-> 
-> Signed-off-by: Murphy Zhou <xzhou@redhat.com>
+This reverts most of commit b8eee0e90f97 ("lockd: Show pid of lockd for
+remote locks"), which caused remote locks to not be differentiated between
+remote processes for NLM.
 
-Looks ok to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+We retain the fixup for setting the client's fl_pid to a negative value.
 
---D
+Fixes: b8eee0e90f97 ("lockd: Show pid of lockd for remote locks")
+Cc: stable@vger.kernel.org
 
-> ---
->  tests/generic/540 | 8 ++++----
->  tests/generic/541 | 8 ++++----
->  tests/generic/542 | 8 ++++----
->  tests/generic/543 | 8 ++++----
->  4 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/tests/generic/540 b/tests/generic/540
-> index 65a71f22..dc4d9485 100755
-> --- a/tests/generic/540
-> +++ b/tests/generic/540
-> @@ -72,16 +72,16 @@ _weave_reflink_rainbow_delalloc $blksz $nr $testdir/file3 >> $seqres.full
->  
->  # now reflink into the rainbow
->  echo "before reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  $XFS_IO_PROG -f -c "reflink $testdir/file2 $roff $roff $rsz" $testdir/file3 >> $seqres.full
->  _pwrite_byte 0x64 $roff $rsz $testdir/file3.chk >> $seqres.full
->  _scratch_cycle_mount
->  
->  echo "Compare files"
->  echo "after reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  md5sum $testdir/file1 | _filter_scratch
->  md5sum $testdir/file2 | _filter_scratch
->  md5sum $testdir/file3 | _filter_scratch
-> diff --git a/tests/generic/541 b/tests/generic/541
-> index e7e19be4..fcb5d567 100755
-> --- a/tests/generic/541
-> +++ b/tests/generic/541
-> @@ -74,8 +74,8 @@ _weave_reflink_rainbow_delalloc $blksz $nr $testdir/file3 >> $seqres.full
->  
->  # now reflink the rainbow
->  echo "before reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  $XFS_IO_PROG -f -c "reflink $testdir/file3 $roff $roff $rsz" $testdir/file2 >> $seqres.full
->  cp $testdir/file3.chk $testdir/file2.chk
->  _pwrite_byte 0x64 0 $roff $testdir/file2.chk >> $seqres.full
-> @@ -84,8 +84,8 @@ _scratch_cycle_mount
->  
->  echo "Compare files"
->  echo "after reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  md5sum $testdir/file1 | _filter_scratch
->  md5sum $testdir/file2 | _filter_scratch
->  md5sum $testdir/file2.chk | _filter_scratch
-> diff --git a/tests/generic/542 b/tests/generic/542
-> index c416ab69..62b32cb5 100755
-> --- a/tests/generic/542
-> +++ b/tests/generic/542
-> @@ -73,16 +73,16 @@ _weave_reflink_rainbow_delalloc $blksz $nr $testdir/file3 >> $seqres.full
->  
->  # now reflink into the rainbow
->  echo "before reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  $XFS_IO_PROG -f -c "reflink $testdir/file2 $soff $doff $rsz" $testdir/file3 >> $seqres.full
->  _pwrite_byte 0x64 $doff $rsz $testdir/file3.chk >> $seqres.full
->  _scratch_cycle_mount
->  
->  echo "Compare files"
->  echo "after reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  md5sum $testdir/file1 | _filter_scratch
->  md5sum $testdir/file2 | _filter_scratch
->  md5sum $testdir/file3 | _filter_scratch
-> diff --git a/tests/generic/543 b/tests/generic/543
-> index 50a51f89..cc7ee532 100755
-> --- a/tests/generic/543
-> +++ b/tests/generic/543
-> @@ -75,8 +75,8 @@ _weave_reflink_rainbow_delalloc $blksz $nr $testdir/file3 >> $seqres.full
->  
->  # now reflink the rainbow
->  echo "before reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  $XFS_IO_PROG -f -c "reflink $testdir/file3 $soff $doff $rsz" $testdir/file2 >> $seqres.full
->  $XFS_IO_PROG -c "truncate $doff" $testdir/file2.chk
->  dd if=$testdir/file3.chk skip=$((soff / blksz)) count=$((rsz / blksz)) bs=$blksz >> $testdir/file2.chk 2> /dev/null
-> @@ -84,8 +84,8 @@ _scratch_cycle_mount
->  
->  echo "Compare files"
->  echo "after reflink" >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full
-> -$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full
-> +$FILEFRAG_PROG -v $testdir/file2 >> $seqres.full 2>&1
-> +$FILEFRAG_PROG -v $testdir/file3 >> $seqres.full 2>&1
->  md5sum $testdir/file1 | _filter_scratch
->  md5sum $testdir/file2 | _filter_scratch
->  md5sum $testdir/file2.chk | _filter_scratch
-> -- 
-> 2.21.0
-> 
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/lockd/xdr.c  | 4 ++--
+ fs/lockd/xdr4.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/lockd/xdr.c b/fs/lockd/xdr.c
+index 9846f7e95282..7147e4aebecc 100644
+--- a/fs/lockd/xdr.c
++++ b/fs/lockd/xdr.c
+@@ -127,7 +127,7 @@ nlm_decode_lock(__be32 *p, struct nlm_lock *lock)
+ 
+ 	locks_init_lock(fl);
+ 	fl->fl_owner = current->files;
+-	fl->fl_pid   = current->tgid;
++	fl->fl_pid   = (pid_t)lock->svid;
+ 	fl->fl_flags = FL_POSIX;
+ 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
+ 	start = ntohl(*p++);
+@@ -269,7 +269,7 @@ nlmsvc_decode_shareargs(struct svc_rqst *rqstp, __be32 *p)
+ 	memset(lock, 0, sizeof(*lock));
+ 	locks_init_lock(&lock->fl);
+ 	lock->svid = ~(u32) 0;
+-	lock->fl.fl_pid = current->tgid;
++	lock->fl.fl_pid = (pid_t)lock->svid;
+ 
+ 	if (!(p = nlm_decode_cookie(p, &argp->cookie))
+ 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
+diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
+index 70154f376695..7ed9edf9aed4 100644
+--- a/fs/lockd/xdr4.c
++++ b/fs/lockd/xdr4.c
+@@ -119,7 +119,7 @@ nlm4_decode_lock(__be32 *p, struct nlm_lock *lock)
+ 
+ 	locks_init_lock(fl);
+ 	fl->fl_owner = current->files;
+-	fl->fl_pid   = current->tgid;
++	fl->fl_pid   = (pid_t)lock->svid;
+ 	fl->fl_flags = FL_POSIX;
+ 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
+ 	p = xdr_decode_hyper(p, &start);
+@@ -266,7 +266,7 @@ nlm4svc_decode_shareargs(struct svc_rqst *rqstp, __be32 *p)
+ 	memset(lock, 0, sizeof(*lock));
+ 	locks_init_lock(&lock->fl);
+ 	lock->svid = ~(u32) 0;
+-	lock->fl.fl_pid = current->tgid;
++	lock->fl.fl_pid = (pid_t)lock->svid;
+ 
+ 	if (!(p = nlm4_decode_cookie(p, &argp->cookie))
+ 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
+-- 
+2.20.1
+
