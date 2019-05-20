@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CBC422B8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 May 2019 07:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 034F822B8E
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 May 2019 07:58:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbfETF6g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 May 2019 01:58:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38412 "EHLO
+        id S1730526AbfETF6k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 May 2019 01:58:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38932 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730511AbfETF6g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 May 2019 01:58:36 -0400
+        with ESMTP id S1730511AbfETF6j (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 May 2019 01:58:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rcaOtmTyxwSnzPPNQ/axvrfybs4dWe6fVXdJWykZd68=; b=TKZaPqvgbKWe2FRLJA63Rp5Va4
-        EtvOO4vybw2xssgKukZXhNdAQkCvd0y1IE51VR6M7TTOcm6DLHU2qbgUwi6nPchdxoG4tGd5VhFj7
-        9yybQfAzQmIjw22SU7R09kbrt8RnT/FngobcNa5wKjOlKMJ3XzkXclUBNGYSdK+al7cntGX2uvwNL
-        eRifDrk6y+rx14GKPJO3SZblI7ry/8uTGUm2VZ3m6UDmQq12v2Y/7CyJiQUeU8OHnGXUxmfYvyuvG
-        l1BG/wqrcj3QlYZP4pV6fuYRhD8W8fO60c9YZw65wHlm783Vt9UblIP7bahz++F6NgG2/U8i5iEi6
-        YTclvUgQ==;
+        bh=s0uOtVt2IyE4cfR/Y0SEBdScE54aOmbj3l250cgaAfI=; b=TjdrOaCygaa/v3jG/wHnMz3jBW
+        n24bEiQWWQaZjA+YPHfrxSijLYaBE8PmAGLyk+L0ae7WI+QX+gWOG+vRGMllV8nU/BakVdpXQuN3f
+        d7vkmkFg1o0zgdfvGXmGVHk9PdY9RyTPk1qJ4jKCNShwL1s1SbM+ojVnVPyNQ7CxDJuDeXaGrA3IE
+        2BqmX/79Rxk8tY/OI3mMEIH5wfsc81P6NnVKbBCmNBswsu9SZ/6Jd7XjzZ9dvpaAZigb54nKDwvmF
+        QmUm+6sft6TWtT6DiMAJysavX4ZHQxyQrp7AB38L4VAl85fWA3casXlj+6TBedfIqOCXX7QmriJhj
+        Nrz0y9Zg==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSbJe-0006FV-Qn; Mon, 20 May 2019 05:58:31 +0000
+        id 1hSbJh-0006Js-Q9; Mon, 20 May 2019 05:58:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Sami Tolvanen <samitolvanen@google.com>,
@@ -33,9 +33,9 @@ Cc:     Sami Tolvanen <samitolvanen@google.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] mm: don't cast ->readpage to filler_t for do_read_cache_page
-Date:   Mon, 20 May 2019 07:57:29 +0200
-Message-Id: <20190520055731.24538-3-hch@lst.de>
+Subject: [PATCH 3/4] jffs2: pass the correct prototype to read_cache_page
+Date:   Mon, 20 May 2019 07:57:30 +0200
+Message-Id: <20190520055731.24538-4-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520055731.24538-1-hch@lst.de>
 References: <20190520055731.24538-1-hch@lst.de>
@@ -47,58 +47,60 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We can just pass a NULL filler and do the right thing inside of
-do_read_cache_page based on the NULL parameter.
+Fix the callback jffs2 passes to read_cache_page to actually have the
+proper type expected.  Casting around function pointers can easily
+hide typing bugs, and defeats control flow protection.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/pagemap.h |  3 +--
- mm/filemap.c            | 10 ++++++----
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ fs/jffs2/file.c     | 4 ++--
+ fs/jffs2/fs.c       | 2 +-
+ fs/jffs2/os-linux.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 9ec3544baee2..6dd7ec95c778 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -396,8 +396,7 @@ extern int read_cache_pages(struct address_space *mapping,
- static inline struct page *read_mapping_page(struct address_space *mapping,
- 				pgoff_t index, void *data)
- {
--	filler_t *filler = (filler_t *)mapping->a_ops->readpage;
--	return read_cache_page(mapping, index, filler, data);
-+	return read_cache_page(mapping, index, NULL, data);
+diff --git a/fs/jffs2/file.c b/fs/jffs2/file.c
+index 7d8654a1472e..f8fb89b10227 100644
+--- a/fs/jffs2/file.c
++++ b/fs/jffs2/file.c
+@@ -109,9 +109,9 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
+ 	return ret;
  }
  
- /*
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 6a8048477bc6..3bec6e18b763 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2772,7 +2772,11 @@ static struct page *do_read_cache_page(struct address_space *mapping,
- 		}
- 
- filler:
--		err = filler(data, page);
-+		if (filler)
-+			err = filler(data, page);
-+		else
-+			err = mapping->a_ops->readpage(data, page);
-+
- 		if (err < 0) {
- 			put_page(page);
- 			return ERR_PTR(err);
-@@ -2884,9 +2888,7 @@ struct page *read_cache_page_gfp(struct address_space *mapping,
- 				pgoff_t index,
- 				gfp_t gfp)
+-int jffs2_do_readpage_unlock(struct inode *inode, struct page *pg)
++int jffs2_do_readpage_unlock(void *data, struct page *pg)
  {
--	filler_t *filler = (filler_t *)mapping->a_ops->readpage;
--
--	return do_read_cache_page(mapping, index, filler, NULL, gfp);
-+	return do_read_cache_page(mapping, index, NULL, NULL, gfp);
+-	int ret = jffs2_do_readpage_nolock(inode, pg);
++	int ret = jffs2_do_readpage_nolock(data, pg);
+ 	unlock_page(pg);
+ 	return ret;
  }
- EXPORT_SYMBOL(read_cache_page_gfp);
+diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
+index 112d85849db1..8a20ddd25f2d 100644
+--- a/fs/jffs2/fs.c
++++ b/fs/jffs2/fs.c
+@@ -687,7 +687,7 @@ unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
+ 	struct page *pg;
  
+ 	pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
+-			     (void *)jffs2_do_readpage_unlock, inode);
++			     jffs2_do_readpage_unlock, inode);
+ 	if (IS_ERR(pg))
+ 		return (void *)pg;
+ 
+diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
+index a2dbbb3f4c74..bd3d5f0ddc34 100644
+--- a/fs/jffs2/os-linux.h
++++ b/fs/jffs2/os-linux.h
+@@ -155,7 +155,7 @@ extern const struct file_operations jffs2_file_operations;
+ extern const struct inode_operations jffs2_file_inode_operations;
+ extern const struct address_space_operations jffs2_file_address_operations;
+ int jffs2_fsync(struct file *, loff_t, loff_t, int);
+-int jffs2_do_readpage_unlock (struct inode *inode, struct page *pg);
++int jffs2_do_readpage_unlock(void *data, struct page *pg);
+ 
+ /* ioctl.c */
+ long jffs2_ioctl(struct file *, unsigned int, unsigned long);
 -- 
 2.20.1
 
