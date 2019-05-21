@@ -2,113 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CC8E257E5
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 20:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 416C0257FC
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 21:06:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfEUS7J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 May 2019 14:59:09 -0400
-Received: from mail-eopbgr680113.outbound.protection.outlook.com ([40.107.68.113]:18368
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728283AbfEUS7J (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 21 May 2019 14:59:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9SF/BiSPn2q6syvsB3o4vxS7PXFhBKZe+1+d/JMfV4k=;
- b=PEu7Cx/GUXL2GWfvj3RknmIi2wzhr/FBRkw20RKTi8c3sizwBiGoD/qFAZt4Z9xdiIJzUO4eMwFhXR/K2QfpzCajAHekQM1KsQpiobfmQHYMaiYJE/mY95wuZwt0gjFhwMI+rh8BwAa59BJz4hcR2/nPkGWwBvHrVSL+3xWrrn4=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1644.namprd13.prod.outlook.com (10.171.156.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.7; Tue, 21 May 2019 18:59:05 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633%7]) with mapi id 15.20.1922.013; Tue, 21 May 2019
- 18:59:04 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chucklever@gmail.com" <chucklever@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "SteveD@redhat.com" <SteveD@redhat.com>
+        id S1728768AbfEUTGN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 May 2019 15:06:13 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54975 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727990AbfEUTGN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 15:06:13 -0400
+Received: by mail-it1-f196.google.com with SMTP id h20so4389683itk.4
+        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2019 12:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PpBjOXliPDGKe+n8t3K2GuISil74QwsDit9UFKxUzcI=;
+        b=EzaU0sHSV7Zmp+h98JyYb75ABCJIh60ZAAz8wIK6EhmsEA6yY3NNxxTjc69ySxjE9k
+         QYS/KHva6TVpu9eqnvklzE7I/2UoNpbwJ9jvYGIoRLB67dQw6OXVeSeujKBovsHJuALl
+         qouDj0WJHEwKK2ExCNL7vHngB7Rg+A2rECwT3f8BF8pqcEdhgB0UFXjtyfKzXFV+2ZrT
+         WBFQJJaFo9Q2K5YRNXCADTF0NBzUEuB1jpMm2mqK64Ft0NTsj4sIIg2T7r1JlKF1K6HY
+         dkTxAuVTGkXQ9vR649kxqMrAhLnLnIoshAp35X3yaDihtTEbYdYFm4VE8qV+ZBbdSdjN
+         PdEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PpBjOXliPDGKe+n8t3K2GuISil74QwsDit9UFKxUzcI=;
+        b=DuWkTsDZ+U+5AFsoS5L9xTULwFREK6A4xoX+1i1cLlZQvQ0nKnY6Hvb0xlvGBgVaR0
+         AvB4yinDNMskuh/vNqFZcbbApP+PKFjMyEjSQIDor0alN04DlKlelKRjv8BSA3K6HX43
+         1SQyPe8XDTgQJOixmSyqYknbKdYXqk31DYKEY6sTk3k19HFrrPJHLUtwBRuzJq66RwzH
+         bcDcWWFFQ1/szsdSXe20YH68O1enkn5/pXRLx5sJchWrcsxCG7kikV6zgrbgisVIRczF
+         rY2p1zttQouqk2pKOTyelHJkq+dmJHZFyfnG4zPM/5U/hZFKWeEd1/LfyTZYUrulIRBr
+         JEVw==
+X-Gm-Message-State: APjAAAV6aLGvMIJ6dczR4ASTzVcTHZbEkv8sxqA1vsQtzYkWJPr2+3qq
+        Gp3sSPLIBmQa41qH47W5ocA=
+X-Google-Smtp-Source: APXvYqxt79jc8F+zNBYnI9CO+j8xPJUjGRzhGNoXX75USVF0bi6BJ1aT3gCxX82lozrukQvaYToUuA==
+X-Received: by 2002:a24:6e90:: with SMTP id w138mr5256692itc.150.1558465572305;
+        Tue, 21 May 2019 12:06:12 -0700 (PDT)
+Received: from anon-dhcp-171.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id p78sm1738563itp.35.2019.05.21.12.06.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 12:06:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
-Thread-Topic: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
-Thread-Index: AQHVD9OY0U3UwvcYW0a/WB0ITGDVLKZ12MoAgAAKagCAAAuogA==
-Date:   Tue, 21 May 2019 18:59:04 +0000
-Message-ID: <8ed1dd2918cdc95c629c5a8376173d7f02979734.camel@hammerspace.com>
-References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
-         <708D03B6-AEE1-42D6-ABDF-FB1AA5FC9A94@gmail.com>
-         <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
+From:   Chuck Lever <chucklever@gmail.com>
 In-Reply-To: <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7820786f-ce7d-4e05-f805-08d6de1e654f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR13MB1644;
-x-ms-traffictypediagnostic: DM5PR13MB1644:
-x-microsoft-antispam-prvs: <DM5PR13MB164477C935ED55B3795FAF34B8070@DM5PR13MB1644.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(396003)(366004)(136003)(346002)(199004)(189003)(66066001)(305945005)(7736002)(6512007)(478600001)(14454004)(229853002)(6116002)(64756008)(66556008)(66476007)(476003)(486006)(3846002)(66446008)(6916009)(26005)(86362001)(102836004)(186003)(6436002)(25786009)(5640700003)(53546011)(6506007)(6486002)(53936002)(99286004)(76176011)(4326008)(2501003)(6246003)(118296001)(54906003)(2906002)(8936002)(8676002)(81156014)(81166006)(1730700003)(2351001)(71200400001)(1411001)(71190400001)(36756003)(66946007)(2616005)(73956011)(5660300002)(76116006)(316002)(11346002)(68736007)(14444005)(256004)(446003)(1361003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1644;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3C+2pxZVXdUZmQCGkIVBapcTItKF19Y+/ghzsqqeQEVDj5AZkFgMCHIqWbT5xOr7ZrpANDXt6US89R9y90JQa+DgvWSojNEBQYqXwXdmiMYvDrN6gFcbhsXTAR0SdNiv/hJ8MWXnRj5NVPPAa3Lm3w2AnSKdAODuv0WjBC+K7VRAn5l5jMT8sIkwC613He6bM+SRFfHyrKzOdJteJAaBhCHh+Zr4KHOnoA1WJiLz/wFhE9/ibeu4g7yFOrn5QmLTF21zGm0gcUwIjJnM7cw0F+IFFuHNF7IEoK5cElO/Y48IJm64MEB62DaDP4ZRD50fTSElwleNZ+3lE2K/Yr0i1KYa6Ouxb/lrHtDCgg5O1+eDfNLUknByyaqRytY7ErtIyUUOQfT9tTYu45QVpirb8LTY4wCfPURv7i+UOIVAFng=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C12B8A2EFE83F84B81D1614D459F5FB6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7820786f-ce7d-4e05-f805-08d6de1e654f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 18:59:04.8707
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1644
+Date:   Tue, 21 May 2019 15:06:08 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Steve Dickson <SteveD@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1BB55244-E893-47A2-B4CB-36CA991A84B0@gmail.com>
+References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
+ <708D03B6-AEE1-42D6-ABDF-FB1AA5FC9A94@gmail.com>
+ <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA1LTIxIGF0IDE4OjE3ICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
-DQo+IE9uIFR1ZSwgMjAxOS0wNS0yMSBhdCAxMzo0MCAtMDQwMCwgQ2h1Y2sgTGV2ZXIgd3JvdGU6
-DQo+ID4gSGkgVHJvbmQgLQ0KPiA+IA0KPiA+ID4gT24gTWF5IDIxLCAyMDE5LCBhdCA4OjQ2IEFN
-LCBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kbXlAZ21haWwuY29tPg0KPiA+ID4gd3JvdGU6DQo+ID4g
-PiANCj4gPiA+IFRoZSBmb2xsb3dpbmcgcGF0Y2hzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgJ3Jv
-b3RfZGlyJw0KPiA+ID4gY29uZmlndXJhdGlvbg0KPiA+ID4gb3B0aW9uIGZvciBuZnNkIGluIG5m
-cy5jb25mLiBJZiBhIHVzZXIgc2V0cyB0aGlzIG9wdGlvbiB0byBhDQo+ID4gPiB2YWxpZA0KPiA+
-ID4gZGlyZWN0b3J5IHBhdGgsIHRoZW4gbmZzZCB3aWxsIGFjdCBhcyBpZiBpdCBpcyBjb25maW5l
-ZCB0byBhDQo+ID4gPiBjaHJvb3QNCj4gPiA+IGphaWwgYmFzZWQgb24gdGhhdCBkaXJlY3Rvcnku
-IEFsbCBwYXRocyBpbiAvZXRjL2V4cG9yZnMgYW5kIGZyb20NCj4gPiA+IGV4cG9ydGZzIGFyZSB0
-aGVuIHJlc29sdmVkIHJlbGF0aXZlIHRvIHRoYXQgZGlyZWN0b3J5Lg0KPiA+IA0KPiA+IFdoYXQg
-YWJvdXQgZmlsZXMgdW5kZXIgL3Byb2MgdGhhdCBtb3VudGQgbWlnaHQgYWNjZXNzPyBJIGFzc3Vt
-ZQ0KPiA+IHRoZXNlDQo+ID4gcGF0aG5hbWVzIGFyZSBub3QgYWZmZWN0ZWQuDQo+ID4gDQo+IFRo
-YXQncyB3aHkgd2UgaGF2ZSAyIHRocmVhZHMuIE9uZSB0aHJlYWQgaXMgcm9vdCBqYWlsZWQgdXNp
-bmcgY2hyb290LA0KPiBhbmQgaXMgdXNlZCB0byB0YWxrIHRvIGtuZnNkLiBUaGUgb3RoZXIgdGhy
-ZWFkIGlzIG5vdCByb290IGphaWxlZCAob3INCj4gYXQgbGVhc3Qgbm90IGJ5IHJvb3RfZGlyKSBh
-bmQgc28gaGFzIGZ1bGwgYWNjZXNzIHRvIC9ldGMsIC9wcm9jLA0KPiAvdmFyLA0KPiAuLi4NCg0K
-SSBzaG91bGQgcGVyaGFwcyBub3RlIHRoYXQgdGhlIHJlYXNvbiB3aHkgSSB1c2VkIGEgc2Vjb25k
-IHRocmVhZCwNCnJhdGhlciB0aGFuIHVzaW5nIGZvcmsoKWVkIHByb2Nlc3NlcyBsaWtlIHRoZSBy
-ZXN0IG9mIHRoZSBtb3VudGQgY29kZQ0KaXMgdG8gYWxsb3cgdGhlIHNoYXJpbmcgb2YgZmlsZSBk
-ZXNjcmlwdG9ycywgc28gdGhhdCB0aGUgdW5jb25maW5lZA0KdGhyZWFkIGNhbiBvcGVuIGZpbGVz
-IHRoYXQgY2FuIHRoZW4gYmUgZWFzaWx5IHVzZWQgYnkgdGhlIHJvb3QgamFpbGVkDQp0aHJlYWQu
-DQoNClRoaXMgbWVhbnMgdGhhdCBpZiB5b3UgaGF2ZSBhbiBvbGQgZ2xpYmMgdGhhdCBkb2VzIG5v
-dCBzdXBwb3J0IFBPU0lYDQp0aHJlYWRzLCB0aGVuIHRoZSAncm9vdF9kaXInIGZ1bmN0aW9uYWxp
-dHkgaXMgZGlzYWJsZWQuIERpdHRvIGlmIHlvdQ0KaGF2ZSBhIGtlcm5lbCB0aGF0IGRvZXMgbm90
-IHN1cHBvcnQgdGhlIHVuc2hhcmUoKSBzeXN0ZW0gY2FsbCBvciBpZiBpdA0KZG9lcyBub3Qgc3Vw
-cG9ydCBvcGVuYXQoKStmc3RhdGF0KCkuDQoNCj4gPiBBcmVuJ3QgdGhlcmUgYWxzbyBvbmUgb3Ig
-dHdvIG90aGVyIGZpbGVzIHRoYXQgbWFpbnRhaW4gZXhwb3J0IHN0YXRlDQo+ID4gbGlrZSAvdmFy
-L2xpYi9uZnMvcm10YWI/IEFyZSB0aG9zZSBhZmZlY3RlZD8NCj4gDQo+IFNlZSBhYm92ZS4gVGhl
-eSBhcmUgbm90IGFmZmVjdGVkLg0KPiANCj4gPiBJTUhPIGl0IGNvdWxkIGJlIGxlc3MgY29uZnVz
-aW5nIHRvIGFkbWluaXN0cmF0b3JzIHRvIG1ha2Ugcm9vdF9kaXINCj4gPiBhbg0KPiA+IFtleHBv
-cnRmc10gb3B0aW9uIGluc3RlYWQgb2YgYSBbbW91bnRkXSBvcHRpb24sIGlmIHRoaXMgaXMgbm90
-IGENCj4gPiB0cnVlDQo+ID4gY2hyb290IG9mIG1vdW50ZC4NCj4gDQo+IEl0IGlzIG5laXRoZXIu
-IEkgbWFkZSBpbiBhIFtuZnNkXSBvcHRpb24sIHNpbmNlIGl0IGdvdmVybnMgdGhlIHdheQ0KPiB0
-aGF0DQo+IGJvdGggZXhwb3J0ZnMgYW5kIG1vdW50ZCB0YWxrIHRvIG5mc2QuDQo+IA0KDQotLSAN
-ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
-ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+
+
+> On May 21, 2019, at 2:17 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Tue, 2019-05-21 at 13:40 -0400, Chuck Lever wrote:
+>> Hi Trond -
+>>=20
+>>> On May 21, 2019, at 8:46 AM, Trond Myklebust <trondmy@gmail.com>
+>>> wrote:
+>>>=20
+>>> The following patchset adds support for the 'root_dir'
+>>> configuration
+>>> option for nfsd in nfs.conf. If a user sets this option to a valid
+>>> directory path, then nfsd will act as if it is confined to a chroot
+>>> jail based on that directory. All paths in /etc/exporfs and from
+>>> exportfs are then resolved relative to that directory.
+>>=20
+>> What about files under /proc that mountd might access? I assume these
+>> pathnames are not affected.
+>>=20
+> That's why we have 2 threads. One thread is root jailed using chroot,
+> and is used to talk to knfsd. The other thread is not root jailed (or
+> at least not by root_dir) and so has full access to /etc, /proc, /var,
+> ...
+>=20
+>> Aren't there also one or two other files that maintain export state
+>> like /var/lib/nfs/rmtab? Are those affected?
+>=20
+> See above. They are not affected.
+>=20
+>> IMHO it could be less confusing to administrators to make root_dir an
+>> [exportfs] option instead of a [mountd] option, if this is not a true
+>> chroot of mountd.
+>=20
+> It is neither. I made in a [nfsd] option, since it governs the way =
+that
+> both exportfs and mountd talk to nfsd.
+
+My point is not about implementation, it's about how this functionality
+is presented to administrators.
+
+In nfs.conf, [nfsd] looks like it controls what options are passed via
+rpc.nfsd. That still seems like a confusing admin interface.
+
+IMO admins won't care about who is talking to whom. They will care about
+how the export pathnames are interpreted. That seems like it belongs
+squarely with the exportfs interface.
+
+
+--
+Chuck Lever
+chucklever@gmail.com
+
+
+
