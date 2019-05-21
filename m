@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3936124F2E
+	by mail.lfdr.de (Postfix) with ESMTP id C5BE824F2F
 	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 14:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfEUMtR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1727251AbfEUMtR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 21 May 2019 08:49:17 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:33173 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfEUMtQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 08:49:16 -0400
-Received: by mail-it1-f195.google.com with SMTP id j17so2675175itk.0
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40470 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbfEUMtR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 08:49:17 -0400
+Received: by mail-io1-f66.google.com with SMTP id s20so13805603ioj.7
         for <linux-nfs@vger.kernel.org>; Tue, 21 May 2019 05:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oFdtiwK4kHqOG8CPwc58PSZjv/X3NKqeTWbmyNkVOvg=;
-        b=E8bEfT/VlZVu4ergefhWlPxKpDpusHPsR3jOKPbubB1uUQuQNQ8/tVHueRrn+sBkke
-         P2mAvJbIeAunE7mQm8Eb3VgDv1giro0qd4w/IzPdokcLKnAPAES1xUzPUYoF0/Nr0DWo
-         3duFdZYJpOnF0rzy0NkNQ7VmJEVAT+KLhQbsvdPhqeoBduCkfbd7FDge43gFDn5ikdOS
-         8FE4wXhyHFm2CY/VttRfC6dciUrtqtJMr7oIwQSTq8oyXedt+9mUMGglf+0yZemwWap0
-         bjaLiAIQ4J/OsiKSVt/hdctlg5X9P/Im2ykzKzxdELX7CpG0yRzk/rwNmSPTT7xgSWl1
-         qILg==
+        bh=Yvd08hZwHj0WOPQBOc8y50kIfDMDBLgAaLTQJ0rzgHI=;
+        b=GXaPovFIJim8v98IAUpOcLr0FYjbv6i8loTCe6jrTYL2Olw0ZWhqboVf/5Os2eBfEW
+         cCTvIqe+8/7CITaPLn/5SyuftFHNtWKru47AzcIHIIJmAc3TeSBAFge59sHEL5eMdDzf
+         /m0e/+Z7HAfV3k+RnISUi1wTVMO/pq3V1TsRRKkixaz89ZJSaQqSByKb5yZWx+gjYHqZ
+         eTU7rkMZlhdsrrSvEtAnl9o6/6feqI/7ygPVr6k/5LqP6TC9LdEpRpvEhpdos/lY/6fd
+         CVvLLJmhiIYXMuGuURoPQobWh6qIiqvgUTyvDYWgXgGweVklRIhtSXBYSh8NkRlDxVzI
+         twtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oFdtiwK4kHqOG8CPwc58PSZjv/X3NKqeTWbmyNkVOvg=;
-        b=tuIsAwVhTx+TcuvTmzotNE3gWXOHN+fGtO65+ZDw4uRMuU6zRLAKsYNFkiG7Btsd0v
-         SCZ7dPUHEopFO01/XvKAF+sieT2dLtX9A1amPiOhgkPH39KXRDX3MYAoLNwjfM/+/pCt
-         BEBpAwfYjiMmPcD+bnlv0uDt49ssCQsMBOPlqNpzmmO7a2zm7PczD+1GEXFMpDpVxpuf
-         KZPiuy3Ahpeap1x9flImftLg+r7MO6cVnE/NOMKlHb0wYuJgKEmp/AWr092AOPNuwxli
-         YiThzN0Iz3IJazuz4cVojPaNHv94KrvaTDs20UIhyL+HjjEQtlHmFXVZQixFzmO6qOzH
-         4+CA==
-X-Gm-Message-State: APjAAAW6v+mBCs98e9CyZl9q1sGtvivWh+tG4UqMxwKGEMWztHVSay3x
-        lK4RHYslIdpafzuy2VPgDA==
-X-Google-Smtp-Source: APXvYqyqYlrhO27EW+o64Cw058gPdJT5wz2Wzr7HvqO9NGsD1TAV2g/z9JjAzUUigR5EXPuxoXgWNg==
-X-Received: by 2002:a24:5c90:: with SMTP id q138mr3216925itb.96.1558442955425;
-        Tue, 21 May 2019 05:49:15 -0700 (PDT)
+        bh=Yvd08hZwHj0WOPQBOc8y50kIfDMDBLgAaLTQJ0rzgHI=;
+        b=LpBh03RKniWSLcR89J8epV+TSUo72HqMGvnAIV1r6LmQlrEoybrGZUNKSl5p6VCs9t
+         b5vtagEEn6uNp3a3Ev0B8GTg2KLApsUr4Fca4xExu0y8vOMEKLQrPJzQ51VKx5e6DNPm
+         yE2IvPgQ4TfYw48BzK89523MP74wCYuG2xwc0G7LIhVcP80UiYoQVriEflxkDZ2SDBwD
+         Yuw4atYMso3Mi4egDp51RCGqS/YGME0QIf817wib5d65I/NIZm8rzTyREAgYDu4niYL+
+         bFErXLyBj7SoFrTFleqGLe/BIKx4rXUtPXuJp4inl/Xkc+xWJRork6o/sh65T2CeXeD6
+         HBFQ==
+X-Gm-Message-State: APjAAAVkcciUBM3tdqrrrFIVGvr53Tgnz4jkr3SKlx1rzNv7/ajSKIWn
+        B+N64QRc2pjeDCPqw3koZg==
+X-Google-Smtp-Source: APXvYqw0e0iKuYjH4hlRYJQpg9Gfd2hS/ZddNLAu19uON94c59fr/UxK+eZ4iaEyGxYWvK3hB8s1Iw==
+X-Received: by 2002:a6b:e90e:: with SMTP id u14mr12705470iof.121.1558442956123;
+        Tue, 21 May 2019 05:49:16 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id v139sm1693180itb.25.2019.05.21.05.49.14
+        by smtp.gmail.com with ESMTPSA id v139sm1693180itb.25.2019.05.21.05.49.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 05:49:14 -0700 (PDT)
+        Tue, 21 May 2019 05:49:15 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v2 4/7] Add a helper to return the real path given an export entry
-Date:   Tue, 21 May 2019 08:46:58 -0400
-Message-Id: <20190521124701.61849-5-trond.myklebust@hammerspace.com>
+Subject: [RFC PATCH v2 5/7] Add helpers to read/write to a file through the chrooted thread
+Date:   Tue, 21 May 2019 08:46:59 -0400
+Message-Id: <20190521124701.61849-6-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190521124701.61849-4-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190521124701.61849-5-trond.myklebust@hammerspace.com>
 References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
  <20190521124701.61849-2-trond.myklebust@hammerspace.com>
  <20190521124701.61849-3-trond.myklebust@hammerspace.com>
  <20190521124701.61849-4-trond.myklebust@hammerspace.com>
+ <20190521124701.61849-5-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -64,136 +65,127 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a helper that can prepend the nfsd root directory path in order
-to allow mountd to perform its comparisons with mtab etc.
+Add helper functions to do synchronous I/O to a file from inside the
+chrooted environment. This ensures that calls to kern_path() in the
+kernel resolves to paths that are relative to the nfsd root directory.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- support/export/export.c    | 24 ++++++++++++++++++++++++
- support/include/exportfs.h |  1 +
- support/include/nfslib.h   |  1 +
- support/misc/nfsd_path.c   |  4 +++-
- support/nfs/exports.c      |  4 ++++
- 5 files changed, 33 insertions(+), 1 deletion(-)
+ support/include/workqueue.h |  4 ++
+ support/misc/workqueue.c    | 78 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
 
-diff --git a/support/export/export.c b/support/export/export.c
-index fbe68e84e5b3..229b02eb2dd4 100644
---- a/support/export/export.c
-+++ b/support/export/export.c
-@@ -20,6 +20,7 @@
- #include "xmalloc.h"
- #include "nfslib.h"
- #include "exportfs.h"
-+#include "nfsd_path.h"
+diff --git a/support/include/workqueue.h b/support/include/workqueue.h
+index 518be82f1b34..21b1ee6bc873 100644
+--- a/support/include/workqueue.h
++++ b/support/include/workqueue.h
+@@ -15,4 +15,8 @@ void xthread_work_run_sync(struct xthread_workqueue *wq,
+ void xthread_workqueue_chroot(struct xthread_workqueue *wq,
+ 		const char *path);
  
- exp_hash_table exportlist[MCL_MAXTYPES] = {{NULL, {{NULL,NULL}, }}, }; 
- static int export_hash(char *);
-@@ -30,6 +31,28 @@ static void	export_add(nfs_export *exp);
- static int	export_check(const nfs_export *exp, const struct addrinfo *ai,
- 				const char *path);
++ssize_t xthread_read(struct xthread_workqueue *wq,
++		int fd, char *buf, size_t len);
++ssize_t xthread_write(struct xthread_workqueue *wq,
++		int fd, const char *buf, size_t len);
+ #endif
+diff --git a/support/misc/workqueue.c b/support/misc/workqueue.c
+index b8d03446f2c7..9d967cef6547 100644
+--- a/support/misc/workqueue.c
++++ b/support/misc/workqueue.c
+@@ -1,3 +1,4 @@
++#include <errno.h>
+ #include <stdlib.h>
+ #include <unistd.h>
  
-+/* Return a real path for the export. */
-+static void
-+exportent_mkrealpath(struct exportent *eep)
-+{
-+	char *chroot = nfsd_path_nfsd_rootdir();
-+	char *ret = NULL;
+@@ -197,6 +198,72 @@ void xthread_workqueue_chroot(struct xthread_workqueue *wq,
+ 	xthread_work_run_sync(wq, xthread_workqueue_do_chroot, (void *)path);
+ }
+ 
++struct xthread_read_data {
++	int fd;
++	char *buf;
++	size_t len;
++	ssize_t ret;
++	int err;
++};
 +
-+	if (chroot)
-+		ret = nfsd_path_prepend_dir(chroot, eep->e_path);
-+	if (!ret)
-+		ret = xstrdup(eep->e_path);
-+	eep->e_realpath = ret;
++static void xthread_readfunc(void *data)
++{
++	struct xthread_read_data *d = data;
++
++	d->ret = read(d->fd, d->buf, d->len);
++	if (d->ret < 0)
++		d->err = errno;
 +}
 +
-+char *
-+exportent_realpath(struct exportent *eep)
++ssize_t xthread_read(struct xthread_workqueue *wq,
++		int fd, char *buf, size_t len)
 +{
-+	if (!eep->e_realpath)
-+		exportent_mkrealpath(eep);
-+	return eep->e_realpath;
++	struct xthread_read_data data = {
++		fd,
++		buf,
++		len,
++		0,
++		0
++	};
++	xthread_work_run_sync(wq, xthread_readfunc, &data);
++	if (data.ret < 0)
++		errno = data.err;
++	return data.ret;
 +}
 +
- void
- exportent_release(struct exportent *eep)
- {
-@@ -39,6 +62,7 @@ exportent_release(struct exportent *eep)
- 	free(eep->e_fslocdata);
- 	free(eep->e_uuid);
- 	xfree(eep->e_hostname);
-+	xfree(eep->e_realpath);
++struct xthread_write_data {
++	int fd;
++	const char *buf;
++	size_t len;
++	ssize_t ret;
++	int err;
++};
++
++static void xthread_writefunc(void *data)
++{
++	struct xthread_write_data *d = data;
++
++	d->ret = write(d->fd, d->buf, d->len);
++	if (d->ret < 0)
++		d->err = errno;
++}
++
++ssize_t xthread_write(struct xthread_workqueue *wq,
++		int fd, const char *buf, size_t len)
++{
++	struct xthread_write_data data = {
++		fd,
++		buf,
++		len,
++		0,
++		0
++	};
++	xthread_work_run_sync(wq, xthread_writefunc, &data);
++	if (data.ret < 0)
++		errno = data.err;
++	return data.ret;
++}
++
+ #else
+ 
+ struct xthread_workqueue {
+@@ -225,4 +292,15 @@ void xthread_workqueue_chroot(struct xthread_workqueue *wq,
+ 	xlog_err("Unable to run as chroot");
  }
  
- static void
-diff --git a/support/include/exportfs.h b/support/include/exportfs.h
-index 4e0d9d132b4c..daa7e2a06d82 100644
---- a/support/include/exportfs.h
-+++ b/support/include/exportfs.h
-@@ -171,5 +171,6 @@ struct export_features {
- 
- struct export_features *get_export_features(void);
- void fix_pseudoflavor_flags(struct exportent *ep);
-+char *exportent_realpath(struct exportent *eep);
- 
- #endif /* EXPORTFS_H */
-diff --git a/support/include/nfslib.h b/support/include/nfslib.h
-index b09fce42e677..84d8270b330f 100644
---- a/support/include/nfslib.h
-+++ b/support/include/nfslib.h
-@@ -84,6 +84,7 @@ struct exportent {
- 	char *		e_uuid;
- 	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
- 	unsigned int	e_ttl;
-+	char *		e_realpath;
- };
- 
- struct rmtabent {
-diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-index 481ba49a38fd..386b171f26df 100644
---- a/support/misc/nfsd_path.c
-+++ b/support/misc/nfsd_path.c
-@@ -77,9 +77,11 @@ nfsd_path_prepend_dir(const char *dir, const char *pathname)
- 		dirlen--;
- 	if (!dirlen)
- 		return NULL;
-+	while (pathname[0] == '/')
-+		pathname++;
- 	len = dirlen + strlen(pathname) + 1;
- 	ret = xmalloc(len + 1);
--	snprintf(ret, len, "%.*s/%s", (int)dirlen, dir, pathname);
-+	snprintf(ret, len+1, "%.*s/%s", (int)dirlen, dir, pathname);
- 	return ret;
- }
- 
-diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-index 5f4cb9568814..3ecfde797e3b 100644
---- a/support/nfs/exports.c
-+++ b/support/nfs/exports.c
-@@ -155,6 +155,7 @@ getexportent(int fromkernel, int fromexports)
- 	}
- 
- 	xfree(ee.e_hostname);
-+	xfree(ee.e_realpath);
- 	ee = def_ee;
- 
- 	/* Check for default client */
-@@ -358,6 +359,7 @@ dupexportent(struct exportent *dst, struct exportent *src)
- 	if (src->e_uuid)
- 		dst->e_uuid = strdup(src->e_uuid);
- 	dst->e_hostname = NULL;
-+	dst->e_realpath = NULL;
- }
- 
- struct exportent *
-@@ -369,6 +371,8 @@ mkexportent(char *hname, char *path, char *options)
- 
- 	xfree(ee.e_hostname);
- 	ee.e_hostname = xstrdup(hname);
-+	xfree(ee.e_realpath);
-+	ee.e_realpath = NULL;
- 
- 	if (strlen(path) >= sizeof(ee.e_path)) {
- 		xlog(L_ERROR, "path name %s too long", path);
++ssize_t xthread_read(struct xthread_workqueue *wq,
++		int fd, char *buf, size_t len)
++{
++	return read(fd, buf, len);
++}
++
++ssize_t xthread_write(struct xthread_workqueue *wq,
++		int fd, const char *buf, size_t len)
++{
++	return write(fd, buf, len);
++}
+ #endif /* defined(HAVE_SCHED_H) && defined(HAVE_LIBPTHREAD) && defined(HAVE_UNSHARE) */
 -- 
 2.21.0
 
