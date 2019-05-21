@@ -2,56 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA4624F29
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 14:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D70924F2B
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 14:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfEUMtM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 May 2019 08:49:12 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35579 "EHLO
+        id S1726344AbfEUMtO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 May 2019 08:49:14 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52574 "EHLO
         mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfEUMtM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 08:49:12 -0400
-Received: by mail-it1-f195.google.com with SMTP id u186so4487195ith.0
-        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2019 05:49:11 -0700 (PDT)
+        with ESMTP id S1727251AbfEUMtN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 08:49:13 -0400
+Received: by mail-it1-f195.google.com with SMTP id t184so4724034itf.2
+        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2019 05:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BtZiIQdBQfgpi96pM0WvJOfoCF5rXUgQzvNDYsUbXSY=;
-        b=eS2oYJUDiEKbyjdWXhF0cXAB6nNy0ItxqCDvTRkvWXQgHeKGgdflYZZuqoxcnWXanc
-         BfWhdurma5kGYevUkAgoodL0POMW6l1T2i/kMFzBMnKz5HcPUzB1KpCvAZXakH38GqtX
-         ZtS/keYt1bdJr9TRSc0XY1vQPbZjwyufGhLhnFQ2OC/0yQsWFjPqJM/jhNGg/inm1rhB
-         tEQ4ZE0WM+d645tH56gETBVTuQeaowp5FakB4ilfC2sLOwGrRDcGe0OIbDfSbNAP2AO+
-         o5ZXS7tghs1OKwwK2Ru5i03pViz+sJamRnF7Vt8/h77pcJlt+U+8fota8l9gm3ZNR/Vt
-         Hs1A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0106F+OIYuqVEg46cY8S9oFV/iyDhlYutv2OgfNUAlo=;
+        b=Qiz7dc11EDTEqdsK5oApuPDxvOXOKwXD/jxZ+aigDpohi7I8p5j86ZUyBTusTi6bjx
+         /0+RtPm+ZCfSqrKriBAILDDAM35BGuNzwMn5YkW/9uOOAMFju0OCzo5MlTuk1QrMRu+e
+         +KMPoTfY1T4ZJ2ZdwHe4SEOVh+EyQ5svDseQU9apdO2zPYzLkU4SS2UqKP0tRzWfDt3y
+         Sb9nQ5aKXSnqtHwCRpPHmHaKH1dI9PleROWhECRE20jSgUiM0EFUoKyvYHj9wS+3gYlQ
+         dZ3v5ZmgnOfmtbIyrOUpEDiGGCX6yXvOI6F0DL+YtvkxvL0YzA2qfXh1XVe3XvQAV2gv
+         T4CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BtZiIQdBQfgpi96pM0WvJOfoCF5rXUgQzvNDYsUbXSY=;
-        b=CNd88rDwIcyVXe1XXuqKJAsWfhbYd8eVovw7cB4nUjYXgVgUvbeIZ/cPL4Umo3jZv7
-         ps0aAXFd3frFFKvFQfHYVl8zpeFVj6usT8+PgrSeg/IJWTC/h4FbrnIqkmw6sCgo3+fK
-         S3/H7MlaalX4/ZfURjhQiVeRNvpL6N+rt7BeNr2n4XYPohg/GWib6oOhzxe61ULoQy3V
-         kHjS2uc6RDDHqZ/YIWD98Y6+nyVs5bRcwOK0QbifxJRG7JPnSGaiiBhxmrHYbEoOdO0J
-         gBGetvY70RHVfOoGwSiuRFFHdNNOZLK6rj2pdFqwoIBwJmg4nPk3bjCdBS/YHNU++VPw
-         BscA==
-X-Gm-Message-State: APjAAAXoQ4kt17CFNKlUFYBavBzMIJRERVmLuW5PwAD4dEbAda94c+Qt
-        9oVM381YGNrlaKnPYRAh9inuvmk=
-X-Google-Smtp-Source: APXvYqyX96mRmPuOQyDbC1DGfCgbiGXZDMoVz0pGs3Ja0kayfxua3MGmU6VzebyWPXw9jj5lEMViJg==
-X-Received: by 2002:a05:660c:4c2:: with SMTP id v2mr3753175itk.71.1558442951234;
-        Tue, 21 May 2019 05:49:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0106F+OIYuqVEg46cY8S9oFV/iyDhlYutv2OgfNUAlo=;
+        b=N+E5EJ7/TEhfvB/mEpmk8oRP+k3mo0heUdYm7OJMtCnbnwiipM3mXSVBBZ1lKqJ+sl
+         taNjR9s3y8N3aZ7Qa6brRRI/SO4f4pDrkpKmxOkx8EBV99wZCyNtavXuPzJW6iZchs9B
+         4PQWEAyJLs0NA/HtOpB8GLOFVX257pODDfcWDRVaDDAss1uyIujSClXg9UsO8H0GmX+Q
+         yB4sWnO0dyRj1ywEM40Htt8kHj1vosQoBrxdTc25/7eWjCC2BRYVGU898MLIS1Gtqjoa
+         FBczh/d/gYG6NbGcvlqqV4DKKUtqs3q9iFerqMQzR1TEtTzyJfFSyeEn1WZbXfTSrwIF
+         z3BA==
+X-Gm-Message-State: APjAAAWWifz4LGi+rbS4hFZdpKM1vdCq9byhmTNqsVOQE83hNhVGPuu+
+        F0FW/wcsyOWu/3hKilTABw==
+X-Google-Smtp-Source: APXvYqwAUPLJa1Bm1ipJhelXn+OmKiEgUte0IAiTWVGMY2BiM80Ro7TdUld55hhJXjbVL7KhHDrPrA==
+X-Received: by 2002:a02:b38e:: with SMTP id p14mr6114963jan.43.1558442952699;
+        Tue, 21 May 2019 05:49:12 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id v139sm1693180itb.25.2019.05.21.05.49.08
+        by smtp.gmail.com with ESMTPSA id v139sm1693180itb.25.2019.05.21.05.49.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 05:49:09 -0700 (PDT)
+        Tue, 21 May 2019 05:49:11 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
-Date:   Tue, 21 May 2019 08:46:54 -0400
-Message-Id: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
+Subject: [RFC PATCH v2 1/7] mountd: Ensure we don't share cache file descriptors among processes.
+Date:   Tue, 21 May 2019 08:46:55 -0400
+Message-Id: <20190521124701.61849-2-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
+References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -59,49 +61,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The following patchset adds support for the 'root_dir' configuration
-option for nfsd in nfs.conf. If a user sets this option to a valid
-directory path, then nfsd will act as if it is confined to a chroot
-jail based on that directory. All paths in /etc/exporfs and from
-exportfs are then resolved relative to that directory.
+Sharing cache descriptors without using locking can be very bad.
 
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ utils/mountd/mountd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Trond Myklebust (7):
-  mountd: Ensure we don't share cache file descriptors among processes.
-  Add a simple workqueue mechanism
-  Add utilities for resolving nfsd paths and stat()ing them
-  Add a helper to return the real path given an export entry
-  Add helpers to read/write to a file through the chrooted thread
-  Add support for the nfsd rootdir configuration option to rpc.mountd
-  Add support for the nfsd root directory to exportfs
-
- aclocal/libpthread.m4       |  13 +-
- configure.ac                |   6 +-
- nfs.conf                    |   1 +
- support/export/export.c     |  24 +++
- support/include/Makefile.am |   2 +
- support/include/exportfs.h  |   1 +
- support/include/nfsd_path.h |  17 ++
- support/include/nfslib.h    |   1 +
- support/include/workqueue.h |  22 +++
- support/misc/Makefile.am    |   3 +-
- support/misc/mountpoint.c   |   5 +-
- support/misc/nfsd_path.c    | 175 +++++++++++++++++++++
- support/misc/workqueue.c    | 306 ++++++++++++++++++++++++++++++++++++
- support/nfs/exports.c       |   4 +
- systemd/nfs.conf.man        |   3 +-
- utils/exportfs/Makefile.am  |   2 +-
- utils/exportfs/exportfs.c   |  32 +++-
- utils/mountd/Makefile.am    |   3 +-
- utils/mountd/cache.c        |  79 +++++++---
- utils/mountd/mountd.c       |  13 +-
- utils/nfsd/nfsd.man         |   6 +
- 21 files changed, 676 insertions(+), 42 deletions(-)
- create mode 100644 support/include/nfsd_path.h
- create mode 100644 support/include/workqueue.h
- create mode 100644 support/misc/nfsd_path.c
- create mode 100644 support/misc/workqueue.c
-
+diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+index fb7bba4cd390..88a207b3a85a 100644
+--- a/utils/mountd/mountd.c
++++ b/utils/mountd/mountd.c
+@@ -836,8 +836,6 @@ main(int argc, char **argv)
+ 	if (!foreground)
+ 		closeall(3);
+ 
+-	cache_open();
+-
+ 	unregister_services();
+ 	if (version2()) {
+ 		listeners += nfs_svc_create("mountd", MOUNTPROG,
+@@ -888,6 +886,9 @@ main(int argc, char **argv)
+ 	if (num_threads > 1)
+ 		fork_workers();
+ 
++	/* Open files now to avoid sharing descriptors among forked processes */
++	cache_open();
++
+ 	xlog(L_NOTICE, "Version " VERSION " starting");
+ 	my_svc_run();
+ 
 -- 
 2.21.0
 
