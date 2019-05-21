@@ -2,65 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7B824DCA
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 13:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBA4624F29
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2019 14:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfEULTF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 May 2019 07:19:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57602 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfEULTF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 21 May 2019 07:19:05 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 31A013082E6B;
-        Tue, 21 May 2019 11:19:00 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3773665F4;
-        Tue, 21 May 2019 11:18:57 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "Xuewei Zhang" <xueweiz@google.com>, jlayton@kernel.org,
-        "Grigor Avagyan" <grigora@google.com>,
-        "Trevor Bourget" <bourget@google.com>,
-        "Nauman Rafique" <nauman@google.com>,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] lockd: Show pid of lockd for remote locks
-Date:   Tue, 21 May 2019 07:18:57 -0400
-Message-ID: <C3DA91E7-B905-4A74-94A0-2BF4AFE1FD05@redhat.com>
-In-Reply-To: <20190520205106.GA29025@fieldses.org>
-References: <CAPtwhKrJw54DmfVdP4ADd3w5QPv0cRP+kr1Atn58QOFL5xBGbA@mail.gmail.com>
- <3A924C3F-A161-4EE2-A74E-2EE1B6D2CA14@redhat.com>
- <CAPtwhKoF0XTuFa5msGB_eiiwRcJA0kK7eu6Rw6-b-5+8Qy0DDw@mail.gmail.com>
- <C5CB1B1E-59BD-4DB6-82D8-CE8E641CAC5A@redhat.com>
- <FF6B465E-DA4C-430D-ABEE-6053EF1E9A44@redhat.com>
- <20190520205106.GA29025@fieldses.org>
+        id S1727208AbfEUMtM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 May 2019 08:49:12 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35579 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUMtM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 May 2019 08:49:12 -0400
+Received: by mail-it1-f195.google.com with SMTP id u186so4487195ith.0
+        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2019 05:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BtZiIQdBQfgpi96pM0WvJOfoCF5rXUgQzvNDYsUbXSY=;
+        b=eS2oYJUDiEKbyjdWXhF0cXAB6nNy0ItxqCDvTRkvWXQgHeKGgdflYZZuqoxcnWXanc
+         BfWhdurma5kGYevUkAgoodL0POMW6l1T2i/kMFzBMnKz5HcPUzB1KpCvAZXakH38GqtX
+         ZtS/keYt1bdJr9TRSc0XY1vQPbZjwyufGhLhnFQ2OC/0yQsWFjPqJM/jhNGg/inm1rhB
+         tEQ4ZE0WM+d645tH56gETBVTuQeaowp5FakB4ilfC2sLOwGrRDcGe0OIbDfSbNAP2AO+
+         o5ZXS7tghs1OKwwK2Ru5i03pViz+sJamRnF7Vt8/h77pcJlt+U+8fota8l9gm3ZNR/Vt
+         Hs1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BtZiIQdBQfgpi96pM0WvJOfoCF5rXUgQzvNDYsUbXSY=;
+        b=CNd88rDwIcyVXe1XXuqKJAsWfhbYd8eVovw7cB4nUjYXgVgUvbeIZ/cPL4Umo3jZv7
+         ps0aAXFd3frFFKvFQfHYVl8zpeFVj6usT8+PgrSeg/IJWTC/h4FbrnIqkmw6sCgo3+fK
+         S3/H7MlaalX4/ZfURjhQiVeRNvpL6N+rt7BeNr2n4XYPohg/GWib6oOhzxe61ULoQy3V
+         kHjS2uc6RDDHqZ/YIWD98Y6+nyVs5bRcwOK0QbifxJRG7JPnSGaiiBhxmrHYbEoOdO0J
+         gBGetvY70RHVfOoGwSiuRFFHdNNOZLK6rj2pdFqwoIBwJmg4nPk3bjCdBS/YHNU++VPw
+         BscA==
+X-Gm-Message-State: APjAAAXoQ4kt17CFNKlUFYBavBzMIJRERVmLuW5PwAD4dEbAda94c+Qt
+        9oVM381YGNrlaKnPYRAh9inuvmk=
+X-Google-Smtp-Source: APXvYqyX96mRmPuOQyDbC1DGfCgbiGXZDMoVz0pGs3Ja0kayfxua3MGmU6VzebyWPXw9jj5lEMViJg==
+X-Received: by 2002:a05:660c:4c2:: with SMTP id v2mr3753175itk.71.1558442951234;
+        Tue, 21 May 2019 05:49:11 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id v139sm1693180itb.25.2019.05.21.05.49.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 05:49:09 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     SteveD@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
+Date:   Tue, 21 May 2019 08:46:54 -0400
+Message-Id: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 21 May 2019 11:19:05 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 20 May 2019, at 16:51, J. Bruce Fields wrote:
+The following patchset adds support for the 'root_dir' configuration
+option for nfsd in nfs.conf. If a user sets this option to a valid
+directory path, then nfsd will act as if it is confined to a chroot
+jail based on that directory. All paths in /etc/exporfs and from
+exportfs are then resolved relative to that directory.
 
-> On Mon, May 20, 2019 at 10:22:00AM -0400, Benjamin Coddington wrote:
->> Ok, I just noticed that we set fl_owner to the nlm_host in
->> nlm4svc_retrieve_args, so things are not as dire as I thought.  What
->> would be nice is a sane set of tests for NLM..
->
-> What would we have needed to catch this?  Sounds like it turns
-> multi-client testing wouldn't have been required?  (Not that that 
-> would
-> be a bad idea.)
 
-Two NLM clients would be ideal to exercise the full range of expected 
-lock behavior.  I suspect that's something I can do with what's in pynfs 
-today, but I haven't looked yet.  I suppose if there's a test for NLM I 
-should make one for v4 too..
+Trond Myklebust (7):
+  mountd: Ensure we don't share cache file descriptors among processes.
+  Add a simple workqueue mechanism
+  Add utilities for resolving nfsd paths and stat()ing them
+  Add a helper to return the real path given an export entry
+  Add helpers to read/write to a file through the chrooted thread
+  Add support for the nfsd rootdir configuration option to rpc.mountd
+  Add support for the nfsd root directory to exportfs
 
-Ben
+ aclocal/libpthread.m4       |  13 +-
+ configure.ac                |   6 +-
+ nfs.conf                    |   1 +
+ support/export/export.c     |  24 +++
+ support/include/Makefile.am |   2 +
+ support/include/exportfs.h  |   1 +
+ support/include/nfsd_path.h |  17 ++
+ support/include/nfslib.h    |   1 +
+ support/include/workqueue.h |  22 +++
+ support/misc/Makefile.am    |   3 +-
+ support/misc/mountpoint.c   |   5 +-
+ support/misc/nfsd_path.c    | 175 +++++++++++++++++++++
+ support/misc/workqueue.c    | 306 ++++++++++++++++++++++++++++++++++++
+ support/nfs/exports.c       |   4 +
+ systemd/nfs.conf.man        |   3 +-
+ utils/exportfs/Makefile.am  |   2 +-
+ utils/exportfs/exportfs.c   |  32 +++-
+ utils/mountd/Makefile.am    |   3 +-
+ utils/mountd/cache.c        |  79 +++++++---
+ utils/mountd/mountd.c       |  13 +-
+ utils/nfsd/nfsd.man         |   6 +
+ 21 files changed, 676 insertions(+), 42 deletions(-)
+ create mode 100644 support/include/nfsd_path.h
+ create mode 100644 support/include/workqueue.h
+ create mode 100644 support/misc/nfsd_path.c
+ create mode 100644 support/misc/workqueue.c
+
+-- 
+2.21.0
+
