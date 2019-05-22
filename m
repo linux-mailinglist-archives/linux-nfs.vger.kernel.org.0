@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E68626B4B
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2019 21:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C43226E8A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2019 21:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbfEVTZp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 May 2019 15:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        id S1732223AbfEVTuc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 May 2019 15:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731719AbfEVTZo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:44 -0400
+        id S1732018AbfEVT0e (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 002D3217D9;
-        Wed, 22 May 2019 19:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B03217F9;
+        Wed, 22 May 2019 19:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553143;
-        bh=aU4CXQ1D+LlLoIV1mmGR+NNarxByWPbHFnIBHyz5C9o=;
+        s=default; t=1558553194;
+        bh=lrtK3RdajsN6tX9e2swMgqkaRZIoycmTMyYl7uCGNYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enJDO+kb2GKPbQbcZI3C4IEVISQaE2+mPHYbhG8lVDiiRw25WasNNxX8uxvcgsv87
-         TyqF5RlnNB1UbY7GgrPxcOz41fgEIjM3aiDomxB9UY6JZ8mGc3FMMjkxyS13Ak0257
-         2jCP32KXALZ8aXP9uLCkrP9DHY+NSSioY6R8HrTY=
+        b=VUOYJJVM752Vm6X/oHrqa0mBcLEJkZVk9h6EtkOD52WOXdOqLvxjZqzLPWLZlurAF
+         YOEti47821RLZUC182UIWKOvjlZ0Weml2g51HveHj4bDgMINTJtCR4CQk/3UFEeDk0
+         5DlltgTBZ+j6D4hJKC2/iCY/89nhN/vD25fGxB9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaoli Feng <fengxiaoli0714@gmail.com>,
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 073/317] Fix nfs4.2 return -EINVAL when do dedupe operation
-Date:   Wed, 22 May 2019 15:19:34 -0400
-Message-Id: <20190522192338.23715-73-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 003/244] NFS: make nfs_match_client killable
+Date:   Wed, 22 May 2019 15:22:29 -0400
+Message-Id: <20190522192630.24917-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
-References: <20190522192338.23715-1-sashal@kernel.org>
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,42 +44,59 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Xiaoli Feng <fengxiaoli0714@gmail.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-[ Upstream commit ce96e888fe48ecfa868c9a39adc03292c78a80ff ]
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-dedupe_file_range operations is combiled into remap_file_range.
-But in nfs42_remap_file_range, it's skiped for dedupe operations.
-Before this patch:
-  # dd if=/dev/zero of=nfs/file bs=1M count=1
-  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
-  XFS_IOC_FILE_EXTENT_SAME: Invalid argument
-After this patch:
-  # dd if=/dev/zero of=nfs/file bs=1M count=1
-  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
-  deduped 4096/4096 bytes at offset 65536
-  4 KiB, 1 ops; 0.0046 sec (865.988 KiB/sec and 216.4971 ops/sec)
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-Signed-off-by: Xiaoli Feng <fengxiaoli0714@gmail.com>
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 00d17198ee12a..f10b660805fc4 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -187,7 +187,7 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
- 	bool same_inode = false;
- 	int ret;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 751ca65da8a35..846d45cb1a3c8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -290,6 +290,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
  
--	if (remap_flags & ~REMAP_FILE_ADVISORY)
-+	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
- 		return -EINVAL;
- 
- 	/* check alignment w.r.t. clone_blksize */
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -302,8 +303,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -413,6 +416,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
