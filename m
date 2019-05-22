@@ -2,152 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E382269BD
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2019 20:19:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44B7826AC1
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2019 21:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbfEVSTk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 May 2019 14:19:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32984 "EHLO mx1.redhat.com"
+        id S1729737AbfEVTVV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 May 2019 15:21:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfEVSTk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 22 May 2019 14:19:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729832AbfEVTVV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4DB959463
-        for <linux-nfs@vger.kernel.org>; Wed, 22 May 2019 18:19:39 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A136A4E6D7
-        for <linux-nfs@vger.kernel.org>; Wed, 22 May 2019 18:19:39 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] sqlite.c: Use PRIx64 macro to print 64-bit integers
-Date:   Wed, 22 May 2019 14:19:36 -0400
-Message-Id: <20190522181936.6017-1-steved@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DA164217D4;
+        Wed, 22 May 2019 19:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552880;
+        bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ab8scxmO8ryaZxhvUHdQfWJkBPO3uN8ayAHOIIVMp5ibg2cAJAgqIon3HgDCEa5UC
+         mMPwP8iUc83h4irvT1UYM7EV81F35sW02kJtZWvjgGhm2k+mYdvhintI/FOQpksqW1
+         UOyxzuIn1UUGCGRzE/voBOqj/ezb+v8+Bsa23U1M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
+Date:   Wed, 22 May 2019 15:15:04 -0400
+Message-Id: <20190522192115.22666-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 22 May 2019 18:19:39 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 32 bit machines, using "%016lx" format throws out
-an format error due to the -Werror=format=2
-compiler option. On 64 bit machines using that
-format is correct.
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-So use the PRIx64 macro to have the correct
-format defined on the different machines.
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
+
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- utils/nfsdcld/sqlite.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
-index faa62f9..cd658ef 100644
---- a/utils/nfsdcld/sqlite.c
-+++ b/utils/nfsdcld/sqlite.c
-@@ -59,6 +59,7 @@
- #include <limits.h>
- #include <sqlite3.h>
- #include <linux/limits.h>
-+#include <inttypes.h>
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 90d71fda65cec..350cfa561e0e8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
  
- #include "xlog.h"
- #include "sqlite.h"
-@@ -535,7 +536,7 @@ sqlite_copy_cltrack_records(int *num_rec)
- 		xlog(L_ERROR, "Unable to begin transaction: %s", err);
- 		goto rollback;
- 	}
--	ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%016lx\";",
-+	ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%" PRIx64 "\";",
- 			current_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -550,7 +551,7 @@ sqlite_copy_cltrack_records(int *num_rec)
- 		xlog(L_ERROR, "Unable to clear records from current epoch: %s", err);
- 		goto rollback;
- 	}
--	ret = snprintf(buf, sizeof(buf), "INSERT INTO \"rec-%016lx\" "
-+	ret = snprintf(buf, sizeof(buf), "INSERT INTO \"rec-%" PRIx64 "\" "
- 				"SELECT id FROM attached.clients;",
- 				current_epoch);
- 	if (ret < 0) {
-@@ -703,7 +704,7 @@ sqlite_insert_client(const unsigned char *clname, const size_t namelen)
- 	int ret;
- 	sqlite3_stmt *stmt = NULL;
- 
--	ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%016lx\" "
-+	ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%" PRIx64 "\" "
- 				"VALUES (?);", current_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -748,7 +749,7 @@ sqlite_remove_client(const unsigned char *clname, const size_t namelen)
- 	int ret;
- 	sqlite3_stmt *stmt = NULL;
- 
--	ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%016lx\" "
-+	ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%" PRIx64 "\" "
- 				"WHERE id==?;", current_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -798,7 +799,7 @@ sqlite_check_client(const unsigned char *clname, const size_t namelen)
- 	int ret;
- 	sqlite3_stmt *stmt = NULL;
- 
--	ret = snprintf(buf, sizeof(buf), "SELECT count(*) FROM  \"rec-%016lx\" "
-+	ret = snprintf(buf, sizeof(buf), "SELECT count(*) FROM  \"rec-%" PRIx64 "\" "
- 				"WHERE id==?;", recovery_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -873,7 +874,7 @@ sqlite_grace_start(void)
- 		tcur++;
- 
- 		ret = snprintf(buf, sizeof(buf), "UPDATE grace "
--				"SET current = %ld, recovery = %ld;",
-+				"SET current = %" PRId64 ", recovery = %" PRId64 ";",
- 				(int64_t)tcur, (int64_t)trec);
- 		if (ret < 0) {
- 			xlog(L_ERROR, "sprintf failed!");
-@@ -891,7 +892,7 @@ sqlite_grace_start(void)
- 			goto rollback;
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
  		}
- 
--		ret = snprintf(buf, sizeof(buf), "CREATE TABLE \"rec-%016lx\" "
-+		ret = snprintf(buf, sizeof(buf), "CREATE TABLE \"rec-%" PRIx64 "\" "
- 				"(id BLOB PRIMARY KEY);",
- 				tcur);
- 		if (ret < 0) {
-@@ -915,7 +916,7 @@ sqlite_grace_start(void)
- 		 * values in the grace table, just clear out the records for
- 		 * the current reboot epoch.
- 		 */
--		ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%016lx\";",
-+		ret = snprintf(buf, sizeof(buf), "DELETE FROM \"rec-%" PRIx64 "\";",
- 				tcur);
- 		if (ret < 0) {
- 			xlog(L_ERROR, "sprintf failed!");
-@@ -976,7 +977,7 @@ sqlite_grace_done(void)
- 		goto rollback;
- 	}
- 
--	ret = snprintf(buf, sizeof(buf), "DROP TABLE \"rec-%016lx\";",
-+	ret = snprintf(buf, sizeof(buf), "DROP TABLE \"rec-%" PRIx64 "\";",
- 		recovery_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -1027,7 +1028,7 @@ sqlite_iterate_recovery(int (*cb)(struct cld_client *clnt), struct cld_client *c
- 		return -EINVAL;
- 	}
- 
--	ret = snprintf(buf, sizeof(buf), "SELECT * FROM \"rec-%016lx\";",
-+	ret = snprintf(buf, sizeof(buf), "SELECT * FROM \"rec-%" PRIx64 "\";",
- 		recovery_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
+@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
