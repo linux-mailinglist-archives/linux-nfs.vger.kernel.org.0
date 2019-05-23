@@ -2,474 +2,229 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40BA6282B4
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 18:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3B632852A
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 19:43:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbfEWQTB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 May 2019 12:19:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40222 "EHLO mx1.redhat.com"
+        id S1731243AbfEWRnB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 May 2019 13:43:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46048 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731273AbfEWQTA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 23 May 2019 12:19:00 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1731217AbfEWRnA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 23 May 2019 13:43:00 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4300F307C945;
-        Thu, 23 May 2019 16:19:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-142.rdu2.redhat.com [10.10.121.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82C89BA57;
-        Thu, 23 May 2019 16:18:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 22/23] NFS: Do some tidying of the parsing code
-From:   David Howells <dhowells@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, dhowells@redhat.com,
-        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 23 May 2019 17:18:57 +0100
-Message-ID: <155862833769.26654.15400933665829349780.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155862813755.26654.563679411147031501.stgit@warthog.procyon.org.uk>
-References: <155862813755.26654.563679411147031501.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mx1.redhat.com (Postfix) with ESMTPS id 85D1D300602A;
+        Thu, 23 May 2019 17:43:00 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-47.phx2.redhat.com [10.3.116.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2502768363;
+        Thu, 23 May 2019 17:43:00 +0000 (UTC)
+Subject: Re: [nfs-utils:nfsidmap PATCH v2] Add LDAP_tls_reqcert tunable to
+ idmapd.conf.
+To:     Srikrishan Malik <srikrishanmalik@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <0a9cbe6a-3c24-08d5-7383-f32bd8be4e09@RedHat.com>
+ <20190523161014.60182-1-srikrishanmalik@gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <5d801096-fcc0-5da9-eae1-1134802bf084@RedHat.com>
+Date:   Thu, 23 May 2019 13:42:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190523161014.60182-1-srikrishanmalik@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 23 May 2019 16:19:00 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 23 May 2019 17:43:00 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Do some tidying of the parsing code, including:
 
- (*) Returning 0/error rather than true/false.
 
- (*) Putting the nfs_fs_context pointer first in some arg lists.
+On 5/23/19 12:10 PM, Srikrishan Malik wrote:
+> This tunable will control the checks on server certs for a TLS session
+> similar to ldap.conf(5).
+> LDAP_ca_cert can be skipped if LDAP_tls_reqcert is set to "never"
+> 
+> Signed-off-by: Srikrishan Malik <srikrishanmalik@gmail.com>
+> ---
+>  support/nfsidmap/idmapd.conf   |  8 ++++-
+>  support/nfsidmap/idmapd.conf.5 | 11 ++++++-
+>  support/nfsidmap/umich_ldap.c  | 57 ++++++++++++++++++++++++++++------
+>  3 files changed, 64 insertions(+), 12 deletions(-)
+Thank you for the updates... Committed!!
 
- (*) Unwrap some lines that will now fit on one line.
-
- (*) Provide unioned sockaddr/sockaddr_storage fields to avoid casts.
-
- (*) nfs_parse_devname() can paste its return values directly into the
-     nfs_fs_context struct as that's where the caller puts them.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-
- fs/nfs/fs_context.c |  128 ++++++++++++++++++++++-----------------------------
- fs/nfs/internal.h   |   16 ++++--
- fs/nfs/super.c      |    2 -
- 3 files changed, 67 insertions(+), 79 deletions(-)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 5ba534127c0b..3afacdee37c8 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -342,8 +342,9 @@ static void nfs_set_mount_transport_protocol(struct nfs_fs_context *ctx)
-  * Add 'flavor' to 'auth_info' if not already present.
-  * Returns true if 'flavor' ends up in the list, false otherwise
-  */
--static bool nfs_auth_info_add(struct nfs_auth_info *auth_info,
--			      rpc_authflavor_t flavor)
-+static int nfs_auth_info_add(struct nfs_fs_context *ctx,
-+			     struct nfs_auth_info *auth_info,
-+			     rpc_authflavor_t flavor)
- {
- 	unsigned int i;
- 	unsigned int max_flavor_len = ARRAY_SIZE(auth_info->flavors);
-@@ -351,26 +352,27 @@ static bool nfs_auth_info_add(struct nfs_auth_info *auth_info,
- 	/* make sure this flavor isn't already in the list */
- 	for (i = 0; i < auth_info->flavor_len; i++) {
- 		if (flavor == auth_info->flavors[i])
--			return true;
-+			return 0;
- 	}
- 
- 	if (auth_info->flavor_len + 1 >= max_flavor_len) {
- 		dfprintk(MOUNT, "NFS: too many sec= flavors\n");
--		return false;
-+		return -EINVAL;
- 	}
- 
- 	auth_info->flavors[auth_info->flavor_len++] = flavor;
--	return true;
-+	return 0;
- }
- 
- /*
-  * Parse the value of the 'sec=' option.
-  */
--static int nfs_parse_security_flavors(char *value, struct nfs_fs_context *ctx)
-+static int nfs_parse_security_flavors(struct nfs_fs_context *ctx, char *value)
- {
- 	substring_t args[MAX_OPT_ARGS];
- 	rpc_authflavor_t pseudoflavor;
- 	char *p;
-+	int ret;
- 
- 	dfprintk(MOUNT, "NFS: parsing sec=%s option\n", value);
- 
-@@ -412,19 +414,20 @@ static int nfs_parse_security_flavors(char *value, struct nfs_fs_context *ctx)
- 		default:
- 			dfprintk(MOUNT,
- 				 "NFS: sec= option '%s' not recognized\n", p);
--			return 0;
-+			return -EINVAL;
- 		}
- 
--		if (!nfs_auth_info_add(&ctx->auth_info, pseudoflavor))
--			return 0;
-+		ret = nfs_auth_info_add(ctx, &ctx->auth_info, pseudoflavor);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
--	return 1;
-+	return 0;
- }
- 
--static int nfs_parse_version_string(char *string,
--		struct nfs_fs_context *ctx,
--		substring_t *args)
-+static int nfs_parse_version_string(struct nfs_fs_context *ctx,
-+				    char *string,
-+				    substring_t *args)
- {
- 	ctx->flags &= ~NFS_MOUNT_VER3;
- 	switch (match_token(string, nfs_vers_tokens, args)) {
-@@ -455,9 +458,10 @@ static int nfs_parse_version_string(char *string,
- 		ctx->minorversion = 2;
- 		break;
- 	default:
--		return 0;
-+		dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
-+		return -EINVAL;
- 	}
--	return 1;
-+	return 0;
- }
- 
- static int nfs_get_option_str(substring_t args[], char **option)
-@@ -496,7 +500,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- {
- 	substring_t args[MAX_OPT_ARGS];
- 	char *string;
--	int token, rc;
-+	int token, ret;
- 
- 	dfprintk(MOUNT, "NFS:   parsing nfs mount option '%s'\n", p);
- 
-@@ -536,13 +540,11 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		break;
- 	case Opt_lock:
- 		ctx->flags &= ~NFS_MOUNT_NONLM;
--		ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK |
--				NFS_MOUNT_LOCAL_FCNTL);
-+		ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		break;
- 	case Opt_nolock:
- 		ctx->flags |= NFS_MOUNT_NONLM;
--		ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK |
--			       NFS_MOUNT_LOCAL_FCNTL);
-+		ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		break;
- 	case Opt_udp:
- 		ctx->flags &= ~NFS_MOUNT_TCP;
-@@ -675,29 +677,25 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		rc = nfs_parse_version_string(string, ctx, args);
-+		ret = nfs_parse_version_string(ctx, string, args);
- 		kfree(string);
--		if (!rc)
--			goto out_invalid_value;
-+		if (ret < 0)
-+			return ret;
- 		break;
- 	case Opt_sec:
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		rc = nfs_parse_security_flavors(string, ctx);
-+		ret = nfs_parse_security_flavors(ctx, string);
- 		kfree(string);
--		if (!rc) {
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "security flavor\n");
--			return -EINVAL;
--		}
-+		if (ret < 0)
-+			return ret;
- 		break;
- 	case Opt_proto:
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_xprt_protocol_tokens, args);
-+		token = match_token(string, nfs_xprt_protocol_tokens, args);
- 
- 		ctx->protofamily = AF_INET;
- 		switch (token) {
-@@ -725,9 +723,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			xprt_load_transport(string);
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "transport protocol\n");
- 			kfree(string);
-+			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
- 			return -EINVAL;
- 		}
- 		kfree(string);
-@@ -736,8 +733,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_xprt_protocol_tokens, args);
-+		token = match_token(string, nfs_xprt_protocol_tokens, args);
- 		kfree(string);
- 
- 		ctx->mountfamily = AF_INET;
-@@ -756,8 +752,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			break;
- 		case Opt_xprt_rdma: /* not used for side protocols */
- 		default:
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "transport protocol\n");
-+			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
- 			return -EINVAL;
- 		}
- 		break;
-@@ -767,9 +762,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		ctx->nfs_server.addrlen =
- 			rpc_pton(ctx->net, string, strlen(string),
--				 (struct sockaddr *)
- 				 &ctx->nfs_server.address,
--				 sizeof(ctx->nfs_server.address));
-+				 sizeof(ctx->nfs_server._address));
- 		kfree(string);
- 		if (ctx->nfs_server.addrlen == 0)
- 			goto out_invalid_address;
-@@ -779,8 +773,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		break;
- 	case Opt_mounthost:
--		if (nfs_get_option_str(args,
--				       &ctx->mount_server.hostname))
-+		if (nfs_get_option_str(args, &ctx->mount_server.hostname))
- 			goto out_nomem;
- 		break;
- 	case Opt_mountaddr:
-@@ -789,9 +782,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		ctx->mount_server.addrlen =
- 			rpc_pton(ctx->net, string, strlen(string),
--				 (struct sockaddr *)
- 				 &ctx->mount_server.address,
--				 sizeof(ctx->mount_server.address));
-+				 sizeof(ctx->mount_server._address));
- 		kfree(string);
- 		if (ctx->mount_server.addrlen == 0)
- 			goto out_invalid_address;
-@@ -800,8 +792,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_lookupcache_tokens, args);
-+		token = match_token(string, nfs_lookupcache_tokens, args);
- 		kfree(string);
- 		switch (token) {
- 		case Opt_lookupcache_all:
-@@ -815,10 +806,9 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			ctx->flags |= NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE;
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:   invalid "
--				 "lookupcache argument\n");
-+			dfprintk(MOUNT, "NFS:   invalid lookupcache argument\n");
- 			return -EINVAL;
--		};
-+		}
- 		break;
- 	case Opt_fscache_uniq:
- 		if (nfs_get_option_str(args, &ctx->fscache_uniq))
-@@ -829,8 +819,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string, nfs_local_lock_tokens,
--				    args);
-+		token = match_token(string, nfs_local_lock_tokens, args);
- 		kfree(string);
- 		switch (token) {
- 		case Opt_local_lock_all:
-@@ -848,8 +837,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 					NFS_MOUNT_LOCAL_FCNTL);
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:	invalid	"
--				 "local_lock argument\n");
-+			dfprintk(MOUNT, "NFS:	invalid	local_lock argument\n");
- 			return -EINVAL;
- 		};
- 		break;
-@@ -863,13 +851,11 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		break;
- 	case Opt_userspace:
- 	case Opt_deprecated:
--		dfprintk(MOUNT, "NFS:   ignoring mount option "
--			 "'%s'\n", p);
-+		dfprintk(MOUNT, "NFS:   ignoring mount option '%s'\n", p);
- 		break;
- 
- 	default:
--		dfprintk(MOUNT, "NFS:   unrecognized mount option "
--			 "'%s'\n", p);
-+		dfprintk(MOUNT, "NFS:   unrecognized mount option '%s'\n", p);
- 		return -EINVAL;
- 	}
- 
-@@ -929,15 +915,15 @@ int nfs_parse_mount_options(char *raw, struct nfs_fs_context *ctx)
- 	 * families in the addr=/mountaddr= options.
- 	 */
- 	if (ctx->protofamily != AF_UNSPEC &&
--	    ctx->protofamily != ctx->nfs_server.address.ss_family)
-+	    ctx->protofamily != ctx->nfs_server.address.sa_family)
- 		goto out_proto_mismatch;
- 
- 	if (ctx->mountfamily != AF_UNSPEC) {
- 		if (ctx->mount_server.addrlen) {
--			if (ctx->mountfamily != ctx->mount_server.address.ss_family)
-+			if (ctx->mountfamily != ctx->mount_server.address.sa_family)
- 				goto out_mountproto_mismatch;
- 		} else {
--			if (ctx->mountfamily != ctx->nfs_server.address.ss_family)
-+			if (ctx->mountfamily != ctx->nfs_server.address.sa_family)
- 				goto out_mountproto_mismatch;
- 		}
- 	}
-@@ -973,9 +959,9 @@ int nfs_parse_mount_options(char *raw, struct nfs_fs_context *ctx)
-  *
-  * Note: caller frees hostname and export path, even on error.
-  */
--static int nfs_parse_devname(const char *dev_name,
--			     char **hostname, size_t maxnamlen,
--			     char **export_path, size_t maxpathlen)
-+static int nfs_parse_devname(struct nfs_fs_context *ctx,
-+			     const char *dev_name,
-+			     size_t maxnamlen, size_t maxpathlen)
- {
- 	size_t len;
- 	char *end;
-@@ -1011,17 +997,17 @@ static int nfs_parse_devname(const char *dev_name,
- 		goto out_hostname;
- 
- 	/* N.B. caller will free nfs_server.hostname in all cases */
--	*hostname = kstrndup(dev_name, len, GFP_KERNEL);
--	if (*hostname == NULL)
-+	ctx->nfs_server.hostname = kmemdup_nul(dev_name, len, GFP_KERNEL);
-+	if (!ctx->nfs_server.hostname)
- 		goto out_nomem;
- 	len = strlen(++end);
- 	if (len > maxpathlen)
- 		goto out_path;
--	*export_path = kstrndup(end, len, GFP_KERNEL);
--	if (!*export_path)
-+	ctx->nfs_server.export_path = kmemdup_nul(end, len, GFP_KERNEL);
-+	if (!ctx->nfs_server.export_path)
- 		goto out_nomem;
- 
--	dfprintk(MOUNT, "NFS: MNTPATH: '%s'\n", *export_path);
-+	dfprintk(MOUNT, "NFS: MNTPATH: '%s'\n", ctx->nfs_server.export_path);
- 	return 0;
- 
- out_bad_devname:
-@@ -1042,7 +1028,7 @@ static int nfs_parse_devname(const char *dev_name,
- }
- 
- /*
-- * Validate the NFS2/NFS3 mount data
-+ * Parse monolithic NFS2/NFS3 mount data
-  * - fills in the mount root filehandle
-  *
-  * For option strings, user space handles the following behaviors:
-@@ -1371,11 +1357,7 @@ int nfs_validate_text_mount_data(void *options,
-  
- 	nfs_set_port(sap, &ctx->nfs_server.port, port);
- 
--	return nfs_parse_devname(dev_name,
--				   &ctx->nfs_server.hostname,
--				   max_namelen,
--				   &ctx->nfs_server.export_path,
--				   max_pathlen);
-+	return nfs_parse_devname(ctx, dev_name, max_namelen, max_pathlen);
- 
- #if !IS_ENABLED(CONFIG_NFS_V4)
- out_v4_not_compiled:
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 6efdbedeeee8..481f370ab053 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -90,11 +90,11 @@ struct nfs_client_initdata {
-  * In-kernel mount arguments
-  */
- struct nfs_fs_context {
--	int			flags;
-+	unsigned int		flags;		/* NFS{,4}_MOUNT_* flags */
- 	unsigned int		rsize, wsize;
- 	unsigned int		timeo, retrans;
--	unsigned int		acregmin, acregmax,
--				acdirmin, acdirmax;
-+	unsigned int		acregmin, acregmax;
-+	unsigned int		acdirmin, acdirmax;
- 	unsigned int		namlen;
- 	unsigned int		options;
- 	unsigned int		bsize;
-@@ -110,7 +110,10 @@ struct nfs_fs_context {
- 	bool			sloppy;
- 
- 	struct {
--		struct sockaddr_storage	address;
-+		union {
-+			struct sockaddr	address;
-+			struct sockaddr_storage	_address;
-+		};
- 		size_t			addrlen;
- 		char			*hostname;
- 		u32			version;
-@@ -119,7 +122,10 @@ struct nfs_fs_context {
- 	} mount_server;
- 
- 	struct {
--		struct sockaddr_storage	address;
-+		union {
-+			struct sockaddr	address;
-+			struct sockaddr_storage	_address;
-+		};
- 		size_t			addrlen;
- 		char			*hostname;
- 		char			*export_path;
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index d7f99526ee73..5c8cf0e35141 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -804,7 +804,7 @@ static int nfs_request_mount(struct nfs_fs_context *cfg,
- 	/*
- 	 * Construct the mount server's address.
- 	 */
--	if (cfg->mount_server.address.ss_family == AF_UNSPEC) {
-+	if (cfg->mount_server.address.sa_family == AF_UNSPEC) {
- 		memcpy(request.sap, &cfg->nfs_server.address,
- 		       cfg->nfs_server.addrlen);
- 		cfg->mount_server.addrlen = cfg->nfs_server.addrlen;
-
+steved.
+> 
+> diff --git a/support/nfsidmap/idmapd.conf b/support/nfsidmap/idmapd.conf
+> index f07286c3..b673c7d7 100644
+> --- a/support/nfsidmap/idmapd.conf
+> +++ b/support/nfsidmap/idmapd.conf
+> @@ -101,7 +101,13 @@ LDAP_base = dc=local,dc=domain,dc=edu
+>  # Set to true to enable SSL - anything else is not enabled
+>  #LDAP_use_ssl = false
+>  
+> -# You must specify a CA certificate location if you enable SSL
+> +# Controls the LDAP server certificate validation behavior
+> +# It can take the same values as ldap.conf(5)'s TLS_REQCERT
+> +# tunable
+> +#LDAP_tls_reqcert = "hard"
+> +
+> +# Location of CA certificate, mandatory if LDAP_tls_reqcert
+> +# is not set to "never"
+>  #LDAP_ca_cert = /etc/ldapca.cert
+>  
+>  # Objectclass mapping information
+> diff --git a/support/nfsidmap/idmapd.conf.5 b/support/nfsidmap/idmapd.conf.5
+> index 9a6457e2..61fbb613 100644
+> --- a/support/nfsidmap/idmapd.conf.5
+> +++ b/support/nfsidmap/idmapd.conf.5
+> @@ -195,7 +195,16 @@ Set to "true" to enable SSL communication with the LDAP server.
+>  Location of a trusted CA certificate used when SSL is enabled
+>  (Required if
+>  .B LDAP_use_ssl
+> -is true)
+> +is true and
+> +.B LDAP_tls_reqcert
+> +is not set to never)
+> +.TP
+> +.B LDAP_tls_reqcert
+> +Controls the LDAP server certificate validation behavior.
+> +It can take the same values as ldap.conf(5)'s
+> +.B TLS_REQCERT
+> +tunable.
+> +(Default: "hard")
+>  .TP
+>  .B NFSv4_person_objectclass
+>  The object class name for people accounts in your local LDAP schema
+> diff --git a/support/nfsidmap/umich_ldap.c b/support/nfsidmap/umich_ldap.c
+> index 10d1d979..b7445c37 100644
+> --- a/support/nfsidmap/umich_ldap.c
+> +++ b/support/nfsidmap/umich_ldap.c
+> @@ -100,6 +100,7 @@ struct umich_ldap_info {
+>  	char *passwd;		/* Password to use when binding to directory */
+>  	int use_ssl;		/* SSL flag */
+>  	char *ca_cert;		/* File location of the ca_cert */
+> +	int tls_reqcert;	/* req and validate server cert */
+>  	int memberof_for_groups;/* Use 'memberof' attribute when
+>  				   looking up user groups */
+>  	int ldap_timeout;	/* Timeout in seconds for searches
+> @@ -118,6 +119,7 @@ static struct umich_ldap_info ldap_info = {
+>  	.passwd = NULL,
+>  	.use_ssl = 0,
+>  	.ca_cert = NULL,
+> +	.tls_reqcert = LDAP_OPT_X_TLS_HARD,
+>  	.memberof_for_groups = 0,
+>  	.ldap_timeout = DEFAULT_UMICH_SEARCH_TIMEOUT,
+>  };
+> @@ -153,7 +155,7 @@ ldap_init_and_bind(LDAP **pld,
+>  	LDAPAPIInfo apiinfo = {.ldapai_info_version = LDAP_API_INFO_VERSION};
+>  
+>  	snprintf(server_url, sizeof(server_url), "%s://%s:%d",
+> -		 (linfo->use_ssl && linfo->ca_cert) ? "ldaps" : "ldap",
+> +		 (linfo->use_ssl) ? "ldaps" : "ldap",
+>  		 linfo->server, linfo->port);
+>  
+>  	/*
+> @@ -208,9 +210,8 @@ ldap_init_and_bind(LDAP **pld,
+>  	}
+>  
+>  	/* Set option to to use SSL/TLS if requested */
+> -	if (linfo->use_ssl && linfo->ca_cert) {
+> +	if (linfo->use_ssl) {
+>  		int tls_type = LDAP_OPT_X_TLS_HARD;
+> -
+>  		lerr = ldap_set_option(ld, LDAP_OPT_X_TLS, &tls_type);
+>  		if (lerr != LDAP_SUCCESS) {
+>  			IDMAP_LOG(2, ("ldap_init_and_bind: setting SSL "
+> @@ -218,11 +219,23 @@ ldap_init_and_bind(LDAP **pld,
+>  				  ldap_err2string(lerr), lerr));
+>  			goto out;
+>  		}
+> -		lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE,
+> -				       linfo->ca_cert);
+> +
+> +		if (linfo->ca_cert != NULL) {
+> +			lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE,
+> +					       linfo->ca_cert);
+> +			if (lerr != LDAP_SUCCESS) {
+> +				IDMAP_LOG(2, ("ldap_init_and_bind: setting CA "
+> +					  "certificate file failed : %s (%d)",
+> +					  ldap_err2string(lerr), lerr));
+> +				goto out;
+> +			}
+> +		}
+> +
+> +		lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_REQUIRE_CERT,
+> +				       &linfo->tls_reqcert);
+>  		if (lerr != LDAP_SUCCESS) {
+> -			IDMAP_LOG(2, ("ldap_init_and_bind: setting CA "
+> -				  "certificate file failed : %s (%d)",
+> +			IDMAP_LOG(2, ("ldap_init_and_bind: setting "
+> +				      "req CA cert failed : %s(%d)",
+>  				  ldap_err2string(lerr), lerr));
+>  			goto out;
+>  		}
+> @@ -1098,7 +1111,7 @@ out_err:
+>  static int
+>  umichldap_init(void)
+>  {
+> -	char *tssl, *canonicalize, *memberof;
+> +	char *tssl, *canonicalize, *memberof, *cert_req;
+>  	char missing_msg[128] = "";
+>  	char *server_in, *canon_name;
+>  
+> @@ -1119,6 +1132,24 @@ umichldap_init(void)
+>  	else
+>  		ldap_info.use_ssl = 0;
+>  	ldap_info.ca_cert = conf_get_str(LDAP_SECTION, "LDAP_CA_CERT");
+> +	cert_req = conf_get_str(LDAP_SECTION, "LDAP_tls_reqcert");
+> +	if (cert_req != NULL) {
+> +		if (strcasecmp(cert_req, "hard") == 0)
+> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_HARD;
+> +		else if (strcasecmp(cert_req, "demand") == 0)
+> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_DEMAND;
+> +		else if (strcasecmp(cert_req, "try") == 0)
+> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_TRY;
+> +		else if (strcasecmp(cert_req, "allow") == 0)
+> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_ALLOW;
+> +		else if (strcasecmp(cert_req, "never") == 0)
+> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_NEVER;
+> +		else {
+> +			IDMAP_LOG(0, ("umichldap_init: Invalid value(%s) for "
+> +				      "LDAP_tls_reqcert."));
+> +			goto fail;
+> +		}
+> +	}
+>  	/* vary the default port depending on whether they use SSL or not */
+>  	ldap_info.port = conf_get_num(LDAP_SECTION, "LDAP_port",
+>  				      (ldap_info.use_ssl) ?
+> @@ -1230,9 +1261,12 @@ umichldap_init(void)
+>  	if (ldap_info.group_tree == NULL || strlen(ldap_info.group_tree) == 0)
+>  		ldap_info.group_tree = ldap_info.base;
+>  
+> -	if (ldap_info.use_ssl && ldap_info.ca_cert == NULL) {
+> +	if (ldap_info.use_ssl &&
+> +	    ldap_info.tls_reqcert != LDAP_OPT_X_TLS_NEVER &&
+> +	    ldap_info.ca_cert == NULL) {
+>  		IDMAP_LOG(0, ("umichldap_init: You must specify LDAP_ca_cert "
+> -			  "with LDAP_use_ssl=yes"));
+> +			  "with LDAP_use_ssl=yes and "
+> +			  "LDAP_tls_reqcert not set to \"never\""));
+>  		goto fail;
+>  	}
+>  
+> @@ -1257,6 +1291,9 @@ umichldap_init(void)
+>  		  ldap_info.use_ssl ? "yes" : "no"));
+>  	IDMAP_LOG(1, ("umichldap_init: ca_cert : %s",
+>  		  ldap_info.ca_cert ? ldap_info.ca_cert : "<not-supplied>"));
+> +	IDMAP_LOG(1, ("umichldap_init: tls_reqcert : %s(%d)",
+> +		  cert_req ? cert_req : "<not-supplied>",
+> +		  ldap_info.tls_reqcert));
+>  	IDMAP_LOG(1, ("umichldap_init: use_memberof_for_groups : %s",
+>  		  ldap_info.memberof_for_groups ? "yes" : "no"));
+>  
+> 
