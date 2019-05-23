@@ -2,229 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3B632852A
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 19:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 678F028B5A
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 22:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfEWRnB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 May 2019 13:43:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46048 "EHLO mx1.redhat.com"
+        id S1731551AbfEWUOH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 May 2019 16:14:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42240 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731217AbfEWRnA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 23 May 2019 13:43:00 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726451AbfEWUOH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 23 May 2019 16:14:07 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 85D1D300602A;
-        Thu, 23 May 2019 17:43:00 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-47.phx2.redhat.com [10.3.116.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2502768363;
-        Thu, 23 May 2019 17:43:00 +0000 (UTC)
-Subject: Re: [nfs-utils:nfsidmap PATCH v2] Add LDAP_tls_reqcert tunable to
- idmapd.conf.
-To:     Srikrishan Malik <srikrishanmalik@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-References: <0a9cbe6a-3c24-08d5-7383-f32bd8be4e09@RedHat.com>
- <20190523161014.60182-1-srikrishanmalik@gmail.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <5d801096-fcc0-5da9-eae1-1134802bf084@RedHat.com>
-Date:   Thu, 23 May 2019 13:42:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mx1.redhat.com (Postfix) with ESMTPS id E07EADF26
+        for <linux-nfs@vger.kernel.org>; Thu, 23 May 2019 20:14:06 +0000 (UTC)
+Received: from f29-node1.dwysocha.net (dhcp145-42.rdu.redhat.com [10.13.145.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B52C26012C
+        for <linux-nfs@vger.kernel.org>; Thu, 23 May 2019 20:14:06 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/3] SUNRPC: Move call to rpc_count_iostats before rpc_call_done
+Date:   Thu, 23 May 2019 16:13:48 -0400
+Message-Id: <20190523201351.12232-1-dwysocha@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523161014.60182-1-srikrishanmalik@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 23 May 2019 17:43:00 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 23 May 2019 20:14:06 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+For diagnostic purposes, it would be useful to have an rpc_iostats
+metric of RPCs completing with tk_status < 0.  Unfortunately,
+tk_status is reset inside the rpc_call_done functions for each
+operation, and the call to tally the per-op metrics comes after
+rpc_call_done.  Refactor the call to rpc_count_iostat earlier in
+rpc_exit_task so we can count these RPCs completing in error.
 
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+---
+ net/sunrpc/sched.c | 5 +++++
+ net/sunrpc/xprt.c  | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-On 5/23/19 12:10 PM, Srikrishan Malik wrote:
-> This tunable will control the checks on server certs for a TLS session
-> similar to ldap.conf(5).
-> LDAP_ca_cert can be skipped if LDAP_tls_reqcert is set to "never"
-> 
-> Signed-off-by: Srikrishan Malik <srikrishanmalik@gmail.com>
-> ---
->  support/nfsidmap/idmapd.conf   |  8 ++++-
->  support/nfsidmap/idmapd.conf.5 | 11 ++++++-
->  support/nfsidmap/umich_ldap.c  | 57 ++++++++++++++++++++++++++++------
->  3 files changed, 64 insertions(+), 12 deletions(-)
-Thank you for the updates... Committed!!
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 28956c70100a..543caef296e4 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -22,6 +22,7 @@
+ #include <linux/sched/mm.h>
+ 
+ #include <linux/sunrpc/clnt.h>
++#include <linux/sunrpc/metrics.h>
+ 
+ #include "sunrpc.h"
+ 
+@@ -770,6 +771,10 @@ rpc_reset_task_statistics(struct rpc_task *task)
+ void rpc_exit_task(struct rpc_task *task)
+ {
+ 	task->tk_action = NULL;
++	if (task->tk_ops->rpc_count_stats)
++		task->tk_ops->rpc_count_stats(task, task->tk_calldata);
++	else if (task->tk_client)
++		rpc_count_iostats(task, task->tk_client->cl_metrics);
+ 	if (task->tk_ops->rpc_call_done != NULL) {
+ 		task->tk_ops->rpc_call_done(task, task->tk_calldata);
+ 		if (task->tk_action != NULL) {
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index d7117d241460..d4477b227a96 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1716,10 +1716,6 @@ void xprt_release(struct rpc_task *task)
+ 	}
+ 
+ 	xprt = req->rq_xprt;
+-	if (task->tk_ops->rpc_count_stats != NULL)
+-		task->tk_ops->rpc_count_stats(task, task->tk_calldata);
+-	else if (task->tk_client)
+-		rpc_count_iostats(task, task->tk_client->cl_metrics);
+ 	xprt_request_dequeue_all(task, req);
+ 	spin_lock_bh(&xprt->transport_lock);
+ 	xprt->ops->release_xprt(xprt, task);
+-- 
+2.20.1
 
-steved.
-> 
-> diff --git a/support/nfsidmap/idmapd.conf b/support/nfsidmap/idmapd.conf
-> index f07286c3..b673c7d7 100644
-> --- a/support/nfsidmap/idmapd.conf
-> +++ b/support/nfsidmap/idmapd.conf
-> @@ -101,7 +101,13 @@ LDAP_base = dc=local,dc=domain,dc=edu
->  # Set to true to enable SSL - anything else is not enabled
->  #LDAP_use_ssl = false
->  
-> -# You must specify a CA certificate location if you enable SSL
-> +# Controls the LDAP server certificate validation behavior
-> +# It can take the same values as ldap.conf(5)'s TLS_REQCERT
-> +# tunable
-> +#LDAP_tls_reqcert = "hard"
-> +
-> +# Location of CA certificate, mandatory if LDAP_tls_reqcert
-> +# is not set to "never"
->  #LDAP_ca_cert = /etc/ldapca.cert
->  
->  # Objectclass mapping information
-> diff --git a/support/nfsidmap/idmapd.conf.5 b/support/nfsidmap/idmapd.conf.5
-> index 9a6457e2..61fbb613 100644
-> --- a/support/nfsidmap/idmapd.conf.5
-> +++ b/support/nfsidmap/idmapd.conf.5
-> @@ -195,7 +195,16 @@ Set to "true" to enable SSL communication with the LDAP server.
->  Location of a trusted CA certificate used when SSL is enabled
->  (Required if
->  .B LDAP_use_ssl
-> -is true)
-> +is true and
-> +.B LDAP_tls_reqcert
-> +is not set to never)
-> +.TP
-> +.B LDAP_tls_reqcert
-> +Controls the LDAP server certificate validation behavior.
-> +It can take the same values as ldap.conf(5)'s
-> +.B TLS_REQCERT
-> +tunable.
-> +(Default: "hard")
->  .TP
->  .B NFSv4_person_objectclass
->  The object class name for people accounts in your local LDAP schema
-> diff --git a/support/nfsidmap/umich_ldap.c b/support/nfsidmap/umich_ldap.c
-> index 10d1d979..b7445c37 100644
-> --- a/support/nfsidmap/umich_ldap.c
-> +++ b/support/nfsidmap/umich_ldap.c
-> @@ -100,6 +100,7 @@ struct umich_ldap_info {
->  	char *passwd;		/* Password to use when binding to directory */
->  	int use_ssl;		/* SSL flag */
->  	char *ca_cert;		/* File location of the ca_cert */
-> +	int tls_reqcert;	/* req and validate server cert */
->  	int memberof_for_groups;/* Use 'memberof' attribute when
->  				   looking up user groups */
->  	int ldap_timeout;	/* Timeout in seconds for searches
-> @@ -118,6 +119,7 @@ static struct umich_ldap_info ldap_info = {
->  	.passwd = NULL,
->  	.use_ssl = 0,
->  	.ca_cert = NULL,
-> +	.tls_reqcert = LDAP_OPT_X_TLS_HARD,
->  	.memberof_for_groups = 0,
->  	.ldap_timeout = DEFAULT_UMICH_SEARCH_TIMEOUT,
->  };
-> @@ -153,7 +155,7 @@ ldap_init_and_bind(LDAP **pld,
->  	LDAPAPIInfo apiinfo = {.ldapai_info_version = LDAP_API_INFO_VERSION};
->  
->  	snprintf(server_url, sizeof(server_url), "%s://%s:%d",
-> -		 (linfo->use_ssl && linfo->ca_cert) ? "ldaps" : "ldap",
-> +		 (linfo->use_ssl) ? "ldaps" : "ldap",
->  		 linfo->server, linfo->port);
->  
->  	/*
-> @@ -208,9 +210,8 @@ ldap_init_and_bind(LDAP **pld,
->  	}
->  
->  	/* Set option to to use SSL/TLS if requested */
-> -	if (linfo->use_ssl && linfo->ca_cert) {
-> +	if (linfo->use_ssl) {
->  		int tls_type = LDAP_OPT_X_TLS_HARD;
-> -
->  		lerr = ldap_set_option(ld, LDAP_OPT_X_TLS, &tls_type);
->  		if (lerr != LDAP_SUCCESS) {
->  			IDMAP_LOG(2, ("ldap_init_and_bind: setting SSL "
-> @@ -218,11 +219,23 @@ ldap_init_and_bind(LDAP **pld,
->  				  ldap_err2string(lerr), lerr));
->  			goto out;
->  		}
-> -		lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE,
-> -				       linfo->ca_cert);
-> +
-> +		if (linfo->ca_cert != NULL) {
-> +			lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE,
-> +					       linfo->ca_cert);
-> +			if (lerr != LDAP_SUCCESS) {
-> +				IDMAP_LOG(2, ("ldap_init_and_bind: setting CA "
-> +					  "certificate file failed : %s (%d)",
-> +					  ldap_err2string(lerr), lerr));
-> +				goto out;
-> +			}
-> +		}
-> +
-> +		lerr = ldap_set_option(NULL, LDAP_OPT_X_TLS_REQUIRE_CERT,
-> +				       &linfo->tls_reqcert);
->  		if (lerr != LDAP_SUCCESS) {
-> -			IDMAP_LOG(2, ("ldap_init_and_bind: setting CA "
-> -				  "certificate file failed : %s (%d)",
-> +			IDMAP_LOG(2, ("ldap_init_and_bind: setting "
-> +				      "req CA cert failed : %s(%d)",
->  				  ldap_err2string(lerr), lerr));
->  			goto out;
->  		}
-> @@ -1098,7 +1111,7 @@ out_err:
->  static int
->  umichldap_init(void)
->  {
-> -	char *tssl, *canonicalize, *memberof;
-> +	char *tssl, *canonicalize, *memberof, *cert_req;
->  	char missing_msg[128] = "";
->  	char *server_in, *canon_name;
->  
-> @@ -1119,6 +1132,24 @@ umichldap_init(void)
->  	else
->  		ldap_info.use_ssl = 0;
->  	ldap_info.ca_cert = conf_get_str(LDAP_SECTION, "LDAP_CA_CERT");
-> +	cert_req = conf_get_str(LDAP_SECTION, "LDAP_tls_reqcert");
-> +	if (cert_req != NULL) {
-> +		if (strcasecmp(cert_req, "hard") == 0)
-> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_HARD;
-> +		else if (strcasecmp(cert_req, "demand") == 0)
-> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_DEMAND;
-> +		else if (strcasecmp(cert_req, "try") == 0)
-> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_TRY;
-> +		else if (strcasecmp(cert_req, "allow") == 0)
-> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_ALLOW;
-> +		else if (strcasecmp(cert_req, "never") == 0)
-> +			ldap_info.tls_reqcert = LDAP_OPT_X_TLS_NEVER;
-> +		else {
-> +			IDMAP_LOG(0, ("umichldap_init: Invalid value(%s) for "
-> +				      "LDAP_tls_reqcert."));
-> +			goto fail;
-> +		}
-> +	}
->  	/* vary the default port depending on whether they use SSL or not */
->  	ldap_info.port = conf_get_num(LDAP_SECTION, "LDAP_port",
->  				      (ldap_info.use_ssl) ?
-> @@ -1230,9 +1261,12 @@ umichldap_init(void)
->  	if (ldap_info.group_tree == NULL || strlen(ldap_info.group_tree) == 0)
->  		ldap_info.group_tree = ldap_info.base;
->  
-> -	if (ldap_info.use_ssl && ldap_info.ca_cert == NULL) {
-> +	if (ldap_info.use_ssl &&
-> +	    ldap_info.tls_reqcert != LDAP_OPT_X_TLS_NEVER &&
-> +	    ldap_info.ca_cert == NULL) {
->  		IDMAP_LOG(0, ("umichldap_init: You must specify LDAP_ca_cert "
-> -			  "with LDAP_use_ssl=yes"));
-> +			  "with LDAP_use_ssl=yes and "
-> +			  "LDAP_tls_reqcert not set to \"never\""));
->  		goto fail;
->  	}
->  
-> @@ -1257,6 +1291,9 @@ umichldap_init(void)
->  		  ldap_info.use_ssl ? "yes" : "no"));
->  	IDMAP_LOG(1, ("umichldap_init: ca_cert : %s",
->  		  ldap_info.ca_cert ? ldap_info.ca_cert : "<not-supplied>"));
-> +	IDMAP_LOG(1, ("umichldap_init: tls_reqcert : %s(%d)",
-> +		  cert_req ? cert_req : "<not-supplied>",
-> +		  ldap_info.tls_reqcert));
->  	IDMAP_LOG(1, ("umichldap_init: use_memberof_for_groups : %s",
->  		  ldap_info.memberof_for_groups ? "yes" : "no"));
->  
-> 
