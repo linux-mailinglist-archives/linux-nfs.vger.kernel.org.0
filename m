@@ -2,125 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF0B028026
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 16:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E842328073
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 17:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfEWOqf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 May 2019 10:46:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60182 "EHLO mx1.redhat.com"
+        id S1730757AbfEWPCs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 May 2019 11:02:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:28248 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730757AbfEWOqf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 23 May 2019 10:46:35 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1730708AbfEWPCs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 23 May 2019 11:02:48 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 13B8686671;
-        Thu, 23 May 2019 14:46:35 +0000 (UTC)
-Received: from bcodding.csb (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCBEC6402B;
-        Thu, 23 May 2019 14:46:34 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id E5442108CFFE; Thu, 23 May 2019 10:45:48 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     "J . Bruce Fields" <bfields@redhat.com>, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 5/5] locks: Cleanup lm_compare_owner and lm_owner_key
-Date:   Thu, 23 May 2019 10:45:48 -0400
-Message-Id: <3df28964bd778c0f786457ccbcbb899229cb6bfa.1558622651.git.bcodding@redhat.com>
-In-Reply-To: <cover.1558622651.git.bcodding@redhat.com>
-References: <cover.1558622651.git.bcodding@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id B7638317917D;
+        Thu, 23 May 2019 15:02:42 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D54187D59D;
+        Thu, 23 May 2019 15:02:40 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Sasha Levin" <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Roberto Bergantinos Corpas" <rbergant@redhat.com>,
+        "Anna Schumaker" <Anna.Schumaker@Netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
+Date:   Thu, 23 May 2019 11:02:39 -0400
+Message-ID: <E7EBFAFD-D312-4EBA-970B-54F07EDD1F9D@redhat.com>
+In-Reply-To: <20190522192115.22666-4-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
+ <20190522192115.22666-4-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 23 May 2019 14:46:35 +0000 (UTC)
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 23 May 2019 15:02:47 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-After the update to use nlm_lockowners for the NLM server, there are no
-more users of lm_compare_owner and lm_owner_key.
+Hi Sasha,  if you take this one, you'll need the fix for it:
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- Documentation/filesystems/Locking | 14 --------------
- fs/locks.c                        |  5 -----
- include/linux/fs.h                |  2 --
- 3 files changed, 21 deletions(-)
+c260121a97a3 ("NFS: Fix a double unlock from nfs_match,get_client")
 
-diff --git a/Documentation/filesystems/Locking b/Documentation/filesystems/Locking
-index dac435575384..204dd3ea36bb 100644
---- a/Documentation/filesystems/Locking
-+++ b/Documentation/filesystems/Locking
-@@ -361,8 +361,6 @@ so fl_release_private called on a lease should not block.
- 
- ----------------------- lock_manager_operations ---------------------------
- prototypes:
--	int (*lm_compare_owner)(struct file_lock *, struct file_lock *);
--	unsigned long (*lm_owner_key)(struct file_lock *);
- 	void (*lm_notify)(struct file_lock *);  /* unblock callback */
- 	int (*lm_grant)(struct file_lock *, struct file_lock *, int);
- 	void (*lm_break)(struct file_lock *); /* break_lease callback */
-@@ -371,23 +369,11 @@ prototypes:
- locking rules:
- 
- 			inode->i_lock	blocked_lock_lock	may block
--lm_compare_owner:	yes[1]		maybe			no
--lm_owner_key		yes[1]		yes			no
- lm_notify:		yes		yes			no
- lm_grant:		no		no			no
- lm_break:		yes		no			no
- lm_change		yes		no			no
- 
--[1]:	->lm_compare_owner and ->lm_owner_key are generally called with
--*an* inode->i_lock held. It may not be the i_lock of the inode
--associated with either file_lock argument! This is the case with deadlock
--detection, since the code has to chase down the owners of locks that may
--be entirely unrelated to the one on which the lock is being acquired.
--For deadlock detection however, the blocked_lock_lock is also held. The
--fact that these locks are held ensures that the file_locks do not
--disappear out from under you while doing the comparison or generating an
--owner key.
--
- --------------------------- buffer_head -----------------------------------
- prototypes:
- 	void (*b_end_io)(struct buffer_head *bh, int uptodate);
-diff --git a/fs/locks.c b/fs/locks.c
-index 8af49f89ac2f..a647182496ee 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -657,9 +657,6 @@ static inline int locks_overlap(struct file_lock *fl1, struct file_lock *fl2)
-  */
- static int posix_same_owner(struct file_lock *fl1, struct file_lock *fl2)
- {
--	if (fl1->fl_lmops && fl1->fl_lmops->lm_compare_owner)
--		return fl2->fl_lmops == fl1->fl_lmops &&
--			fl1->fl_lmops->lm_compare_owner(fl1, fl2);
- 	return fl1->fl_owner == fl2->fl_owner;
- }
- 
-@@ -700,8 +697,6 @@ static void locks_delete_global_locks(struct file_lock *fl)
- static unsigned long
- posix_owner_key(struct file_lock *fl)
- {
--	if (fl->fl_lmops && fl->fl_lmops->lm_owner_key)
--		return fl->fl_lmops->lm_owner_key(fl);
- 	return (unsigned long)fl->fl_owner;
- }
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f7fdfe93e25d..0fa010bb7b6a 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1019,8 +1019,6 @@ struct file_lock_operations {
- };
- 
- struct lock_manager_operations {
--	int (*lm_compare_owner)(struct file_lock *, struct file_lock *);
--	unsigned long (*lm_owner_key)(struct file_lock *);
- 	fl_owner_t (*lm_get_owner)(fl_owner_t);
- 	void (*lm_put_owner)(fl_owner_t);
- 	void (*lm_notify)(struct file_lock *);	/* unblock callback */
--- 
-2.20.1
+I didn't see this fix go through my inbox for your stable tree, so 
+apologies if maybe I missed it.
 
+Looks like you are also applying this one to 4.19 and 4.14, -- I'll just 
+reply once here.
+
+Ben
+
+On 22 May 2019, at 15:15, Sasha Levin wrote:
+
+> From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+>
+> [ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
+>
+>     Actually we don't do anything with return value from
+>     nfs_wait_client_init_complete in nfs_match_client, as a
+>     consequence if we get a fatal signal and client is not
+>     fully initialised, we'll loop to "again" label
+>
+>     This has been proven to cause soft lockups on some scenarios
+>     (no-carrier but configured network interfaces)
+>
+> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/nfs/client.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 90d71fda65cec..350cfa561e0e8 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const 
+> struct nfs_client_initdata *dat
+>  	struct nfs_client *clp;
+>  	const struct sockaddr *sap = data->addr;
+>  	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
+> +	int error;
+>
+>  again:
+>  	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+> @@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const 
+> struct nfs_client_initdata *dat
+>  		if (clp->cl_cons_state > NFS_CS_READY) {
+>  			refcount_inc(&clp->cl_count);
+>  			spin_unlock(&nn->nfs_client_lock);
+> -			nfs_wait_client_init_complete(clp);
+> +			error = nfs_wait_client_init_complete(clp);
+>  			nfs_put_client(clp);
+> +			if (error < 0)
+> +				return ERR_PTR(error);
+>  			spin_lock(&nn->nfs_client_lock);
+>  			goto again;
+>  		}
+> @@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct 
+> nfs_client_initdata *cl_init)
+>  		clp = nfs_match_client(cl_init);
+>  		if (clp) {
+>  			spin_unlock(&nn->nfs_client_lock);
+> +			if (IS_ERR(clp))
+> +				return clp;
+>  			if (new)
+>  				new->rpc_ops->free_client(new);
+>  			return nfs_found_client(cl_init, clp);
+> -- 
+> 2.20.1
