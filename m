@@ -2,62 +2,187 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D5F528B92
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2019 22:33:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6105E28D8A
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2019 01:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbfEWUdq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 May 2019 16:33:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52768 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387544AbfEWUdq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 23 May 2019 16:33:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 40DC47FDFD
-        for <linux-nfs@vger.kernel.org>; Thu, 23 May 2019 20:33:46 +0000 (UTC)
-Received: from f29-node1.dwysocha.net (dhcp145-42.rdu.redhat.com [10.13.145.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E0EE5B686
-        for <linux-nfs@vger.kernel.org>; Thu, 23 May 2019 20:33:45 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2] mountstats: add per-op error counts for mountstats command
-Date:   Thu, 23 May 2019 16:33:44 -0400
-Message-Id: <20190523203344.12487-1-dwysocha@redhat.com>
-In-Reply-To: <20190523201351.12232-4-dwysocha@redhat.com>
-References: <20190523201351.12232-4-dwysocha@redhat.com>
+        id S2387786AbfEWXAs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 May 2019 19:00:48 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.104]:26123 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387693AbfEWXAs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 May 2019 19:00:48 -0400
+X-Greylist: delayed 1482 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 May 2019 19:00:47 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 5A51C1E1
+        for <linux-nfs@vger.kernel.org>; Thu, 23 May 2019 17:36:04 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id TwJghGfnK90onTwJghKoOw; Thu, 23 May 2019 17:36:04 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=37812 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hTwJf-001NXA-BB; Thu, 23 May 2019 17:36:03 -0500
+Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190131004622.GA30261@embeddedor>
+ <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
+ <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
+Date:   Thu, 23 May 2019 17:36:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 23 May 2019 20:33:46 +0000 (UTC)
+In-Reply-To: <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hTwJf-001NXA-BB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:37812
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Display the count of ops completing with error status (status < 0)
-on kernels that support it.
+Hi Dave,
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- tools/mountstats/mountstats.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I wonder if you can take this patch.
 
-diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
-index c7fb8bb1..2f525f4b 100755
---- a/tools/mountstats/mountstats.py
-+++ b/tools/mountstats/mountstats.py
-@@ -475,7 +475,9 @@ class DeviceData:
-                 retrans = stats[2] - count
-                 if retrans != 0:
-                     print('\t%d retrans (%d%%)' % (retrans, ((retrans * 100) / count)), end=' ')
--                    print('\t%d major timeouts' % stats[3])
-+                    print('\t%d major timeouts' % stats[3], end='')
-+                if len(stats) >= 10 and stats[9] != 0:
-+                    print('\t%d errors (%d%%)' % (stats[9], ((stats[9] * 100) / count)))
-                 else:
-                     print('')
-                 print('\tavg bytes sent per op: %d\tavg bytes received per op: %d' % \
--- 
-2.20.1
+Thanks
+--
+Gustavo
 
+On 3/28/19 3:41 PM, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping:
+> 
+> Who can take this?
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On 1/31/19 8:11 AM, Chuck Lever wrote:
+>>
+>>
+>>> On Jan 30, 2019, at 7:46 PM, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
+>>>
+>>> One of the more common cases of allocation size calculations is finding
+>>> the size of a structure that has a zero-sized array at the end, along
+>>> with memory for some number of elements for that array. For example:
+>>>
+>>> struct foo {
+>>>    int stuff;
+>>>    struct boo entry[];
+>>> };
+>>>
+>>> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+>>>
+>>> Instead of leaving these open-coded and prone to type mistakes, we can
+>>> now use the new struct_size() helper:
+>>>
+>>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+>>>
+>>> This code was detected with the help of Coccinelle.
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+>>
+>>
+>>> ---
+>>> net/sunrpc/xprtrdma/verbs.c | 3 +--
+>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+>>> index 4994e75945b8..9e8cf7456840 100644
+>>> --- a/net/sunrpc/xprtrdma/verbs.c
+>>> +++ b/net/sunrpc/xprtrdma/verbs.c
+>>> @@ -811,8 +811,7 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ia *ia)
+>>> {
+>>> 	struct rpcrdma_sendctx *sc;
+>>>
+>>> -	sc = kzalloc(sizeof(*sc) +
+>>> -		     ia->ri_max_send_sges * sizeof(struct ib_sge),
+>>> +	sc = kzalloc(struct_size(sc, sc_sges, ia->ri_max_send_sges),
+>>> 		     GFP_KERNEL);
+>>> 	if (!sc)
+>>> 		return NULL;
+>>> -- 
+>>> 2.20.1
+>>>
+>>
+>> --
+>> Chuck Lever
+>>
+>>
+>>
