@@ -2,40 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A55962BB80
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2019 22:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 765AE2B4E8
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2019 14:23:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfE0UrK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 May 2019 16:47:10 -0400
-Received: from dolcegabbana.com ([198.23.132.36]:33851 "EHLO petraband.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727090AbfE0UrK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 27 May 2019 16:47:10 -0400
-To:     linux-nfs@vger.kernel.org
-Subject: Need traffic for your website?
-Message-ID: <b2e074072b911df880e8f735779799b0@walkeralextra.tech>
-Date:   Mon, 27 May 2019 11:38:29 +0200
-From:   "Alex Walker" <schutz@walkeralextra.tech>
-Reply-To: fanfenqi@sina.com
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+        id S1726451AbfE0MVk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 May 2019 08:21:40 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:39758 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfE0MVj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 May 2019 08:21:39 -0400
+Received: from ramsan ([84.194.111.163])
+        by andre.telenet-ops.be with bizsmtp
+        id HQMe2000R3XaVaC01QMe3y; Mon, 27 May 2019 14:21:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hVEdG-0001Tc-H0; Mon, 27 May 2019 14:21:38 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hVEdG-0001TP-Fr; Mon, 27 May 2019 14:21:38 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] [trivial] nfsd: Spelling s/EACCESS/EACCES/
+Date:   Mon, 27 May 2019 14:21:32 +0200
+Message-Id: <20190527122132.5617-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi
+The correct spelling is EACCES:
 
-Do you need traffic for your website, or ecommerce store?
-We can bring 1-2 thousands of visitors to your website daily.
+include/uapi/asm-generic/errno-base.h:#define EACCES 13 /* Permission denied */
 
-No matter what you are selling, products or service. Getting more traffic
-is the key to your business.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ fs/nfsd/vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please reply if interested, we will go options for you.
-
-Thanks,
-Alex Walker
-Whatsapp: +8617199402387
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index fc24ee47eab51ad4..c85783e536d595de 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -404,7 +404,7 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
+ 	/*
+ 	 * If utimes(2) and friends are called with times not NULL, we should
+ 	 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
+-	 * will return EACCESS, when the caller's effective UID does not match
++	 * will return EACCES, when the caller's effective UID does not match
+ 	 * the owner of the file, and the caller is not privileged. In this
+ 	 * situation, we should return EPERM(notify_change will return this).
+ 	 */
+-- 
+2.17.1
 
