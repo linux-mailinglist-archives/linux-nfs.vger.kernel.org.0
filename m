@@ -2,48 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED8462CF8C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 21:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705842CFCC
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 21:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfE1Td7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 15:33:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39772 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfE1Td7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 May 2019 15:33:59 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 505D4317915E;
-        Tue, 28 May 2019 19:33:58 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-47.phx2.redhat.com [10.3.116.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C04905C8A3;
-        Tue, 28 May 2019 19:33:57 +0000 (UTC)
-Subject: Re: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "chucklever@gmail.com" <chucklever@gmail.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
- <708D03B6-AEE1-42D6-ABDF-FB1AA5FC9A94@gmail.com>
- <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
- <1BB55244-E893-47A2-B4CB-36CA991A84B0@gmail.com>
- <501262c68530acbce21f39e0015e76805dedfe48.camel@hammerspace.com>
- <3503ff03-2895-ae1f-7fed-f30d08b0abfb@RedHat.com>
- <c7a5f97693c56ee0a7dd5a9c0848ee97ab3d2a9e.camel@hammerspace.com>
- <0b65f710-f06a-cfd3-a30e-577db8267d5b@RedHat.com>
- <af4e638f44baa4344c5a3b826cc1cbd28253bf1e.camel@hammerspace.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <46dbdb00-ff89-cd6e-24c7-f66ca81cb0c9@RedHat.com>
-Date:   Tue, 28 May 2019 15:33:57 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <af4e638f44baa4344c5a3b826cc1cbd28253bf1e.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 28 May 2019 19:33:58 +0000 (UTC)
+        id S1726841AbfE1TxG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 15:53:06 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:57310 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfE1TxG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 15:53:06 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SJiQjU155814;
+        Tue, 28 May 2019 19:53:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=xLTixY+TIXs+n+RACM48MRPmMnJPEf9Jov1BT+bmY8M=;
+ b=CJ0ou2jfE8xdP6aqnQQPJ2JpcOEREkw5+ChTAk11Cu8poIyBf8vLHoSMzd3K6cQaSTP7
+ rlL1tbEhSfSmGAf41iY4wGOuqqoebjlBzd8rwquB2qSvku6H/8Q+Yq1zDQ/mgXMzq0H6
+ 5Yr/cdM1PJA1HZ4eXnnn1HaqztRMcrIJCnbkrT18lkW4onWRqO8ByhHybv7QGssqJOFA
+ Bfv8HIQZQwRoNXy08mXPnkdO2/1OsX6QaAJ4FCjeyVyT1ri9lki8a7Fh3h2Oqs/Y95xJ
+ UEajnXG5X+BnPgnGEEr8rSfZ6LjcFi4Naa/2cKedoF32WaX2ZGdDyLBng4pAVVW5BpAO gg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2spu7ddrgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 19:53:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SJqwcL017525;
+        Tue, 28 May 2019 19:53:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2ss1fn2k6u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 19:53:00 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4SJqxFF023616;
+        Tue, 28 May 2019 19:53:00 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 May 2019 12:52:59 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <2fd3177890a8c8fba9b40468df213bafa30b5481.camel@hammerspace.com>
+Date:   Tue, 28 May 2019 15:52:58 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B9863294-2962-42CC-9D58-DC24F9A55938@oracle.com>
+References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-2-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-3-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-4-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-5-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-6-trond.myklebust@hammerspace.com>
+ <65D12050-BF24-4922-A287-3A4D981BD635@oracle.com>
+ <12C94CD2-5E07-4C12-B7F6-78B433327361@oracle.com>
+ <2fd3177890a8c8fba9b40468df213bafa30b5481.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905280124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280123
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -51,187 +79,85 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 5/28/19 2:19 PM, Trond Myklebust wrote:
-> On Tue, 2019-05-28 at 13:40 -0400, Steve Dickson wrote:
->>
->> On 5/28/19 12:44 PM, Trond Myklebust wrote:
->>> On Tue, 2019-05-28 at 11:25 -0400, Steve Dickson wrote:
->>>> On 5/21/19 3:58 PM, Trond Myklebust wrote:
->>>>> On Tue, 2019-05-21 at 15:06 -0400, Chuck Lever wrote:
->>>>>>> On May 21, 2019, at 2:17 PM, Trond Myklebust <
->>>>>>> trondmy@hammerspace.com> wrote:
->>>>>>>
->>>>>>> On Tue, 2019-05-21 at 13:40 -0400, Chuck Lever wrote:
->>>>>>>> Hi Trond -
->>>>>>>>
->>>>>>>>> On May 21, 2019, at 8:46 AM, Trond Myklebust <
->>>>>>>>> trondmy@gmail.com
->>>>>>>>> wrote:
->>>>>>>>>
->>>>>>>>> The following patchset adds support for the 'root_dir'
->>>>>>>>> configuration
->>>>>>>>> option for nfsd in nfs.conf. If a user sets this option
->>>>>>>>> to
->>>>>>>>> a
->>>>>>>>> valid
->>>>>>>>> directory path, then nfsd will act as if it is confined
->>>>>>>>> to
->>>>>>>>> a
->>>>>>>>> chroot
->>>>>>>>> jail based on that directory. All paths in /etc/exporfs
->>>>>>>>> and
->>>>>>>>> from
->>>>>>>>> exportfs are then resolved relative to that directory.
->>>>>>>>
->>>>>>>> What about files under /proc that mountd might access? I
->>>>>>>> assume
->>>>>>>> these
->>>>>>>> pathnames are not affected.
->>>>>>>>
->>>>>>> That's why we have 2 threads. One thread is root jailed
->>>>>>> using
->>>>>>> chroot,
->>>>>>> and is used to talk to knfsd. The other thread is not root
->>>>>>> jailed
->>>>>>> (or
->>>>>>> at least not by root_dir) and so has full access to /etc,
->>>>>>> /proc,
->>>>>>> /var,
->>>>>>> ...
->>>>>>>
->>>>>>>> Aren't there also one or two other files that maintain
->>>>>>>> export
->>>>>>>> state
->>>>>>>> like /var/lib/nfs/rmtab? Are those affected?
->>>>>>>
->>>>>>> See above. They are not affected.
->>>>>>>
->>>>>>>> IMHO it could be less confusing to administrators to make
->>>>>>>> root_dir an
->>>>>>>> [exportfs] option instead of a [mountd] option, if this
->>>>>>>> is
->>>>>>>> not a
->>>>>>>> true
->>>>>>>> chroot of mountd.
->>>>>>>
->>>>>>> It is neither. I made in a [nfsd] option, since it governs
->>>>>>> the
->>>>>>> way
->>>>>>> that
->>>>>>> both exportfs and mountd talk to nfsd.
->>>>>>
->>>>>> My point is not about implementation, it's about how this
->>>>>> functionality
->>>>>> is presented to administrators.
->>>>>>
->>>>>> In nfs.conf, [nfsd] looks like it controls what options are
->>>>>> passed
->>>>>> via
->>>>>> rpc.nfsd. That still seems like a confusing admin interface.
->>>>>>
->>>>>> IMO admins won't care about who is talking to whom. They will
->>>>>> care
->>>>>> about
->>>>>> how the export pathnames are interpreted. That seems like it
->>>>>> belongs
->>>>>> squarely with the exportfs interface.
->>>>>>
->>>>>
->>>>> With the exportfs interface, yes. However it is not specific to
->>>>> the
->>>>> exportfs utility, so to me [exportfs] is more confusing than
->>>>> what
->>>>> exists now.
->>>>>
->>>>> OK, so what if we put it in [general] instead, and perhaps
->>>>> rename
->>>>> it
->>>>> "export_rootdir"?
->>>>>
->>>> I'm just catching up... my apologies tartness...
->>>>
->>>> So setting root_dir effects *all* exports in /etc/exports? 
->>>> If that is the case, that one variable can change hundreds
->>>> of export... is that what we really want?
->>>>
->>>> Wouldn't be better to have a little more granularity? 
->>>
->>> Can you explain what you mean? The intention here is that if you
->>> have
->>> all your exported filesystems set up in a subtree under
->>> /mnt/my/exports, then you can remove that unnecessary prefix.
->>>
->>> So, for instance, if I'm trying to export /mnt/my/exports/foo and
->>> /mnt/my/exports/bar, then I can make those two filesystems appear
->>> as
->>> /foo, and /bar to the remote clients.
->> By granularity I meant have different roots for different exports.
->> Meaning /mnt/foo/exports/foo and /mnt/bar/exports/bar
->> would still appear as /foo and /bar
-> 
-> No. That should be done using bind mounts. Otherwise we end up with
-> /etc/nfs.conf and /etc/exports depending on being mutually consistent.
-> That would be awkward.
-Fine... 
+> On May 28, 2019, at 3:33 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Tue, 2019-05-28 at 15:03 -0400, Chuck Lever wrote:
+>> Following up on this. Now with even more data!
+>>=20
+>>> On May 6, 2019, at 4:41 PM, Chuck Lever <chuck.lever@oracle.com>
+>>> wrote:
+>>>=20
+>>>=20
+>>>> On May 3, 2019, at 7:18 AM, Trond Myklebust <trondmy@gmail.com>
+>>>> wrote:
+>>>>=20
+>>>> Allow more time for softirqd
+>>>=20
+>>> Have you thought about performance tests for this one?
+>>=20
+>> I tested this series on my 12-core two-socket client using a variety
+>> of tests including iozone, fio, and fstests. The network under test
+>> is 56Gb InfiniBand (TCP uses IPoIB). I tested both TCP and RDMA.
+>>=20
+>> With lock debugging and memory leak testing enabled, I did not see
+>> any functional regressions or new leaks or crashes. Thus IMO this
+>> series is "safe to apply."
+>>=20
+>> With TCP, I saw no change in performance between a "stock" kernel
+>> and one with all five patches in this series applied, as, IIRC,
+>> you predicted.
+>>=20
+>> The following discussion is based on testing with NFS/RDMA.
+>>=20
+>> With RDMA, I saw an improvement of 5-10% in IOPS rate between the
+>> "stock" kernel and a kernel with the first four patches applied. When
+>> the fifth patch is applied, I saw IOPS throughput significantly worse
+>> than "stock" -- like 20% worse.
+>>=20
+>> I also studied average RPC execution time (the "execute" metric) with
+>> the "stock" kernel, the one with four patches applied, and with the
+>> one where all five are applied. The workload is 100% 4KB READs with
+>> an iodepth of 1024 in order to saturate the transmit queue.
+>>=20
+>> With four patches, the execute time is about 2.5 msec faster (average
+>> execution time is around 75 msec due to the large backlog this test
+>> generates). With five patches, it's slower than "stock" by 12 msec.
+>>=20
+>> I also saw a 30 usec improvement in the average latency of
+>> xprt_complete_rqst with the four patch series.
+>>=20
+>> As far as I can tell, the benefit of this series comes mostly from
+>> the third patch, which changes spin_lock_bh(&xprt->transport_lock) to
+>> spin_lock(&xprt->transport_lock). When the xprtiod work queue is
+>> lowered in priority in 5/5, that benefit vanishes.
+>>=20
+>> I am still confused about why 5/5 is needed. I did not see any soft
+>> lockups without this patch applied when using RDMA. Is the issue
+>> with xprtsock's use of xprtiod for handling incoming TCP receives?
+>>=20
+>> I still have some things I'd like to look at. One thing I haven't
+>> yet tried is looking at lock_stat, which would confirm or refute
+>> my theory that this is all about the transport_lock, for instance.
+>>=20
+>=20
+> OK. I can drop 5/5.
+>=20
+> The issue there was not about soft lockups. However since we were
+> previously running most soft irqs as part of spin_unlock_bh(), the
+> question was whether or not we would see more of them needing to move
+> to softirqd. As far as I can see, your answer to that question is 'no'
+> (at least for your system).
 
-> 
->> As you explain later in this thread, there is going to be a nfs.conf
->> and exports for each container so maybe this is not necessary?? 
->>
->> Maybe I'm misunderstanding how this feature should/will be used.
-> 
-> As I've already said, it can be used to do what you are proposing, but
-> only in conjunction with bind mounts.
-> 
->>
->>> If an admin wants to rearrange all the paths in /etc/exports, and
->>> make
->>> a custom namespace, then that is possible using bind mounts: just
->>> create a directory /my_exports, and use mount --bind to attach the
->>> necessary mountpoints into the right spots in /my_exports, then use
->>> export_rootdir to remove the /my_exports prefix.
->>>
->>>> As for where root_dir should go, I think it makes senses
->>>> to create a new [exportfs] section and have mountd read it
->>>> from there. I think that would be more straightforward if
->>>> we continue with the big hammer approach where any and all
->>>> exports are effected. 
->>>>
->>>
->>> Fair enough, I can add the [exports] section if you all agree that
->>> is
->>> an appropriate place.
->>>
->> I think a new exports sections with a rootdir variable makes sense.
->> It is changing the root of the exports... 
->>
->> But I could also live with a export_rootdir in the general section.
->>
->> Question:
->> How is this different than pseudo root? 
->>
->> Isn't this basically a way to set the pseudo for v3? 
-> 
-> Sort of, yes.
-> 
->> What is going to override whom? Meaning if both 
->> fsid=/mnt/foo and rootdir=/mnt/bar which one will be used?
->>
->>
-> Both. However the entry in /etc/exports will be relative to /mnt/bar.
-> In other words, the NFSv4 root would be fsid=/mnt/foo, which translates
-> as /mnt/bar/mnt/foo in the 'init' namespace.
-> 
-Ok... 
+The top contended lock now is the work queue lock. I believe that's a
+full irqsave lock. Someone should try testing on a single core system.
 
-So what do you want to do... 
+I also plan to try this series on my mlx5_en system. The mlx5 Ethernet
+driver does a lot more work in soft IRQ than mlx4/IB does.
 
-[exports]
- rootdir=/mnt/foo
 
-or 
+--
+Chuck Lever
 
-[general]
-   export_rootdir=/mnt/bar
 
-steved.
+
