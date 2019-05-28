@@ -2,63 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 737F52D071
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA862D072
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfE1Udh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 16:33:37 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54344 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfE1Udh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:37 -0400
-Received: by mail-it1-f196.google.com with SMTP id h20so6577822itk.4
-        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:36 -0700 (PDT)
+        id S1727327AbfE1Udi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 16:33:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32919 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfE1Udi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:38 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so8233114iop.0
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jUmzQXFgosC7ztxN2DEYWeUIGWU2k+scoj1vllYXDW0=;
-        b=O72yHaKNaySnpTiwioQ0RduqpXEgBZH2IZpKKwN3zBY4mLGNO5T5qvzLbajLe7RWe1
-         esLrI8GhX++oSS77f1AK76k3ig9+zkRlRH49pSUE3o7rEJe7AcQovk/LmpgQSXNorRhr
-         vXGGch7FChamqx2t7U/NUM+finmGbqS7ost8h46y81XaMIJLJcr6qKchDuosb6p27zGT
-         jMsRZPD7DOw5rkpopBPyFEJ1TAHXpyx3k0Nk3V7WsBO1jJLbc82efhxZo5A03tU3/K1o
-         he8Da9jm8fmkfWv/NzZt6jpOVHB0P5RH8jmouBOh/PNPtvK4Qo5dIYAKl7IjF+AwkZte
-         BCng==
+        bh=Dr8LTDNKO45rO36gvIhPaB8D1XPrwcjls5cN6OG5laE=;
+        b=fddSIUaKkpHK5usq50YhQOG0cKr07mx93O0D6bGhfHraewvpsVk+Db1rM/o7q+BI37
+         dSRtOjZ1RSMcddmV7Ebc/liNEFzEjx5488ArYF0C2fDQinsfTyYFe8QuwR5i2/TpIUD3
+         CSTHeUwcBSDf5/BNt/+1NLnlViMEAYkW4fbXDgsJuxgpROCMhpMrA1P1N1ziiHBPxAmb
+         b5r9eoy/w4m74PlOM+J+/CJwwRlbtlO4PbpzoUqMDuqQ5OTV/Eu/tKcLWzlylNxju1Gm
+         z706THHpBXXtR3oMvlLMDHyBP4d3roCzk+JBqR/bHg0D6B5HZdoG5WViwNOVDGEj0Ifv
+         DN2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jUmzQXFgosC7ztxN2DEYWeUIGWU2k+scoj1vllYXDW0=;
-        b=M0m60wkgSDLYQ1JNZHXTXCq1lDPZeYRGoqnfXi4Sc3ILCQVw4sJiC8nk2mOaDak6Tk
-         Bu3mgvSgUkNi39scxGY2pDP0R3rLXjIigvIm8wFtwqD5Tu75pks1Sv2GRMzo2APQkAGK
-         S72atbkcgeipaD+0FEmo8CkjFMeKxgZF5ZtFJP0rmTvuYPHIJRgV50G68QKT4eK6ydTw
-         BiewPT2J8YTyeEAfZSOnnb1JvwCsY3pVlleU1BCHRwzmEomoJtkkaUTsm3y/mY22CuUR
-         +uyfNqPjUO+PgZxh3vdslwA9CfN3rIO+/KDLD2wMEb1ntMomusd+dN6FORLAH/YSwmVB
-         VR2Q==
-X-Gm-Message-State: APjAAAVKnoaZo9QO7Pft9KLFn6EviHLg1Ykx9fCg5BtsWxrpc82p9wv4
-        Bqth9tiXBxVhTQQrfinH9UcRvn0=
-X-Google-Smtp-Source: APXvYqxdRXNnfFqbOwKmGlVo6yIMZmv7FVYDSHDf09v5UmN42cB0isA0h13uHs2ZqXyu2eRTHGxLUA==
-X-Received: by 2002:a24:2547:: with SMTP id g68mr4534763itg.109.1559075616273;
-        Tue, 28 May 2019 13:33:36 -0700 (PDT)
+        bh=Dr8LTDNKO45rO36gvIhPaB8D1XPrwcjls5cN6OG5laE=;
+        b=BeagZJZ9QWyXYen1W1U2fI5p+yUfSTOE2BcomqM9Q3eZNAkeNjo5bPrBR4Zk56ZoUq
+         8aRO8hCBDAl6dQ1HEDYZAE2fvef6tMYwYspKNQm+hhEuivL33SiGMzBVBSiqAAsTi0dU
+         ES99FaX6aBljaaEt9lIl+Scxlsbd+c1vFWvHC4k5WNwaOGWo/DcEmnNmWBEEIbBN7Lyw
+         Xjc23B3mC7jUSJfK3Q5BGjbNP3J1e7Sk4nqKIWHisfrVYsrHB3CpinkAzbX+uSK/KlSD
+         TTc9Ad/V0QGzvAgle4t3pOI8zDGJgMBDoo13ZGRhLPW/09bOtWr8uP896scwl6ffYEjV
+         HKsw==
+X-Gm-Message-State: APjAAAWtp34UVKs27giB2JwsTaxc+SlbmaDzM0uDul2coJyStExTF1vZ
+        Ll6MWYmh8uHdVgYKPL9fAQ==
+X-Google-Smtp-Source: APXvYqyW97lSgHOP+axYT7ks4XMVNq/N52Pa2VDEsIxbQ5DcaVwQbOXgY3uvuvZnhgiM2m0SW66veQ==
+X-Received: by 2002:a5d:80d1:: with SMTP id h17mr22428882ior.58.1559075617002;
+        Tue, 28 May 2019 13:33:37 -0700 (PDT)
 Received: from localhost.localdomain (50-124-247-140.alma.mi.frontiernet.net. [50.124.247.140])
-        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.35
+        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:33:35 -0700 (PDT)
+        Tue, 28 May 2019 13:33:36 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 06/11] Add helpers to read/write to a file through the chrooted thread
-Date:   Tue, 28 May 2019 16:31:17 -0400
-Message-Id: <20190528203122.11401-7-trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 07/11] Add a helper to return the real path given an export entry
+Date:   Tue, 28 May 2019 16:31:18 -0400
+Message-Id: <20190528203122.11401-8-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190528203122.11401-7-trond.myklebust@hammerspace.com>
 References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-2-trond.myklebust@hammerspace.com>
  <20190528203122.11401-3-trond.myklebust@hammerspace.com>
  <20190528203122.11401-4-trond.myklebust@hammerspace.com>
  <20190528203122.11401-5-trond.myklebust@hammerspace.com>
  <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-7-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -66,120 +67,136 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add helper functions to do synchronous I/O to a nfsd filesystem pseudofile
-from inside the chrooted environment. This ensures that calls to kern_path()
-in knfsd resolves to paths that are relative to the nfsd root directory.
+Add a helper that can prepend the nfsd root directory path in order
+to allow mountd to perform its comparisons with mtab etc.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- support/include/nfsd_path.h |  3 ++
- support/misc/nfsd_path.c    | 84 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+ support/export/export.c    | 24 ++++++++++++++++++++++++
+ support/include/exportfs.h |  1 +
+ support/include/nfslib.h   |  1 +
+ support/misc/nfsd_path.c   |  4 +++-
+ support/nfs/exports.c      |  4 ++++
+ 5 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
-index db9b41a179ad..f4a7f0a4337f 100644
---- a/support/include/nfsd_path.h
-+++ b/support/include/nfsd_path.h
-@@ -13,4 +13,7 @@ char *		nfsd_path_prepend_dir(const char *dir, const char *pathname);
- int 		nfsd_path_stat(const char *pathname, struct stat *statbuf);
- int 		nfsd_path_lstat(const char *pathname, struct stat *statbuf);
+diff --git a/support/export/export.c b/support/export/export.c
+index fbe68e84e5b3..82bbb54c5e9e 100644
+--- a/support/export/export.c
++++ b/support/export/export.c
+@@ -20,6 +20,7 @@
+ #include "xmalloc.h"
+ #include "nfslib.h"
+ #include "exportfs.h"
++#include "nfsd_path.h"
  
-+ssize_t		nfsd_path_read(int fd, char *buf, size_t len);
-+ssize_t		nfsd_path_write(int fd, const char *buf, size_t len);
+ exp_hash_table exportlist[MCL_MAXTYPES] = {{NULL, {{NULL,NULL}, }}, }; 
+ static int export_hash(char *);
+@@ -30,6 +31,28 @@ static void	export_add(nfs_export *exp);
+ static int	export_check(const nfs_export *exp, const struct addrinfo *ai,
+ 				const char *path);
+ 
++/* Return a real path for the export. */
++static void
++exportent_mkrealpath(struct exportent *eep)
++{
++	const char *chroot = nfsd_path_nfsd_rootdir();
++	char *ret = NULL;
 +
- #endif
++	if (chroot)
++		ret = nfsd_path_prepend_dir(chroot, eep->e_path);
++	if (!ret)
++		ret = xstrdup(eep->e_path);
++	eep->e_realpath = ret;
++}
++
++char *
++exportent_realpath(struct exportent *eep)
++{
++	if (!eep->e_realpath)
++		exportent_mkrealpath(eep);
++	return eep->e_realpath;
++}
++
+ void
+ exportent_release(struct exportent *eep)
+ {
+@@ -39,6 +62,7 @@ exportent_release(struct exportent *eep)
+ 	free(eep->e_fslocdata);
+ 	free(eep->e_uuid);
+ 	xfree(eep->e_hostname);
++	xfree(eep->e_realpath);
+ }
+ 
+ static void
+diff --git a/support/include/exportfs.h b/support/include/exportfs.h
+index 4e0d9d132b4c..daa7e2a06d82 100644
+--- a/support/include/exportfs.h
++++ b/support/include/exportfs.h
+@@ -171,5 +171,6 @@ struct export_features {
+ 
+ struct export_features *get_export_features(void);
+ void fix_pseudoflavor_flags(struct exportent *ep);
++char *exportent_realpath(struct exportent *eep);
+ 
+ #endif /* EXPORTFS_H */
+diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+index b09fce42e677..84d8270b330f 100644
+--- a/support/include/nfslib.h
++++ b/support/include/nfslib.h
+@@ -84,6 +84,7 @@ struct exportent {
+ 	char *		e_uuid;
+ 	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
+ 	unsigned int	e_ttl;
++	char *		e_realpath;
+ };
+ 
+ struct rmtabent {
 diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-index fe2c011b1521..55bca9bdf4bd 100644
+index 55bca9bdf4bd..8ddafd65ab76 100644
 --- a/support/misc/nfsd_path.c
 +++ b/support/misc/nfsd_path.c
-@@ -166,3 +166,87 @@ nfsd_path_lstat(const char *pathname, struct stat *statbuf)
- 		return xlstat(pathname, statbuf);
- 	return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
+@@ -81,9 +81,11 @@ nfsd_path_prepend_dir(const char *dir, const char *pathname)
+ 		dirlen--;
+ 	if (!dirlen)
+ 		return NULL;
++	while (pathname[0] == '/')
++		pathname++;
+ 	len = dirlen + strlen(pathname) + 1;
+ 	ret = xmalloc(len + 1);
+-	snprintf(ret, len, "%.*s/%s", (int)dirlen, dir, pathname);
++	snprintf(ret, len+1, "%.*s/%s", (int)dirlen, dir, pathname);
+ 	return ret;
  }
-+
-+struct nfsd_read_data {
-+	int fd;
-+	char *buf;
-+	size_t len;
-+	ssize_t ret;
-+	int err;
-+};
-+
-+static void
-+nfsd_readfunc(void *data)
-+{
-+	struct nfsd_read_data *d = data;
-+
-+	d->ret = read(d->fd, d->buf, d->len);
-+	if (d->ret < 0)
-+		d->err = errno;
-+}
-+
-+static ssize_t
-+nfsd_run_read(struct xthread_workqueue *wq, int fd, char *buf, size_t len)
-+{
-+	struct nfsd_read_data data = {
-+		fd,
-+		buf,
-+		len,
-+		0,
-+		0
-+	};
-+	xthread_work_run_sync(wq, nfsd_readfunc, &data);
-+	if (data.ret < 0)
-+		errno = data.err;
-+	return data.ret;
-+}
-+
-+ssize_t
-+nfsd_path_read(int fd, char *buf, size_t len)
-+{
-+	if (!nfsd_wq)
-+		return read(fd, buf, len);
-+	return nfsd_run_read(nfsd_wq, fd, buf, len);
-+}
-+
-+struct nfsd_write_data {
-+	int fd;
-+	const char *buf;
-+	size_t len;
-+	ssize_t ret;
-+	int err;
-+};
-+
-+static void
-+nfsd_writefunc(void *data)
-+{
-+	struct nfsd_write_data *d = data;
-+
-+	d->ret = write(d->fd, d->buf, d->len);
-+	if (d->ret < 0)
-+		d->err = errno;
-+}
-+
-+static ssize_t
-+nfsd_run_write(struct xthread_workqueue *wq, int fd, const char *buf, size_t len)
-+{
-+	struct nfsd_write_data data = {
-+		fd,
-+		buf,
-+		len,
-+		0,
-+		0
-+	};
-+	xthread_work_run_sync(wq, nfsd_writefunc, &data);
-+	if (data.ret < 0)
-+		errno = data.err;
-+	return data.ret;
-+}
-+
-+ssize_t
-+nfsd_path_write(int fd, const char *buf, size_t len)
-+{
-+	if (!nfsd_wq)
-+		return write(fd, buf, len);
-+	return nfsd_run_write(nfsd_wq, fd, buf, len);
-+}
+ 
+diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+index 5f4cb9568814..3ecfde797e3b 100644
+--- a/support/nfs/exports.c
++++ b/support/nfs/exports.c
+@@ -155,6 +155,7 @@ getexportent(int fromkernel, int fromexports)
+ 	}
+ 
+ 	xfree(ee.e_hostname);
++	xfree(ee.e_realpath);
+ 	ee = def_ee;
+ 
+ 	/* Check for default client */
+@@ -358,6 +359,7 @@ dupexportent(struct exportent *dst, struct exportent *src)
+ 	if (src->e_uuid)
+ 		dst->e_uuid = strdup(src->e_uuid);
+ 	dst->e_hostname = NULL;
++	dst->e_realpath = NULL;
+ }
+ 
+ struct exportent *
+@@ -369,6 +371,8 @@ mkexportent(char *hname, char *path, char *options)
+ 
+ 	xfree(ee.e_hostname);
+ 	ee.e_hostname = xstrdup(hname);
++	xfree(ee.e_realpath);
++	ee.e_realpath = NULL;
+ 
+ 	if (strlen(path) >= sizeof(ee.e_path)) {
+ 		xlog(L_ERROR, "path name %s too long", path);
 -- 
 2.21.0
 
