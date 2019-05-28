@@ -2,50 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73DA32C8D9
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 16:33:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272FB2C8E9
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 16:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfE1OdK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 10:33:10 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44602 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfE1OdK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 10:33:10 -0400
-Received: by mail-vs1-f66.google.com with SMTP id w124so206486vsb.11
-        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 07:33:09 -0700 (PDT)
+        id S1726418AbfE1OhJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 10:37:09 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:36518 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfE1OhJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 10:37:09 -0400
+Received: by mail-vk1-f196.google.com with SMTP id l199so4718621vke.3
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 07:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6nAJAY9skPtfFsQOAJjAYZneeijGRKQ5urC+Qjm2bbQ=;
-        b=qEj93FQr4CVYOvnsyBvn238yeG6iq+ytNeX+YqCExoQP8NcuUgR+b6fv6yxIgtDh8H
-         COHfFuiuHuuB0MCdsV3ANB+07e0rAjQoIYr8LfhiFUq/27gG3MXRibRzIDziWS5Q58lo
-         34TokHx0opEJnrauaos1BVW7REqKtM+4xebM87vhE4xwC/FSwek7D9zR2X7T+pf+eHdm
-         lphkMg/ua0lqcPJ6V/wq5PVTNsmbb0k40pj1mIM3gcB95WbizY/HEq/Qjb+W3QS1sSEg
-         KWOWNUlG45RUF7upUweIYf1PwIdSIrTN9jxAELokZkZQ24GS30xexMhYLuzKmIWAeD02
-         WsfA==
+        bh=kaiPw8lxlTeTnjGZzRkgaAZnfQ+PbgZY6y4on9C0qWc=;
+        b=Fe+Tnz+SzOTYsh181BGxiI1aWphvQYwBOSXzcJ+tYhWtfcnNsLIi1nlDTF6xy9NhR/
+         s0FDEp9tTCwy3cEKR+SoIjpeL/YmxeLkks7XKGgbcH2P08pQEIaLJtYNr6popbwwgFzw
+         Rjfk6um/asdc3r2YAc4kHt67ZT2xZc3W4c68CIBSAlvLWH8TVMMKVey2mc8J3XXViXmm
+         a3dHRVD/JALk2DWT/of6a6u3rBvv/ce2uHOh5sz6LW/kGclBhefpWAP980eqUW46S0fg
+         L1Sy9sZP4fhDM5Uxp6v3U74a92wJ30zyzJUmYS/AsKhela2dQdwE2SrbpEeqFdHUo2uq
+         YwcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6nAJAY9skPtfFsQOAJjAYZneeijGRKQ5urC+Qjm2bbQ=;
-        b=WxPBv+FO4VVbFUu8B2HlHE5sehEPUddScARXXDTvz1YLDNk6bhESFfC4KuAaz1z1Pn
-         ZapgD6ZFPZfMF3HrtC3d0WP5XDxs+8FJxWi4Slb7CDt8Hka/Ctgggri6lJga4/GdJxXh
-         RKEMIF/TiG/bIP20LBJcGKv2b4a1TZmwLvvkpuBOyaJsLOXahKl/P6L5hCp6xKa/8kvj
-         BnhCMbQLTD/s+kiqVItC4YfjrHq0fdHdMrNCzttKXtoYHtOqSl9U21MBfXPDQv86Vyek
-         k/mh0bDi9y/DXkEW0add0tS3ZlTYwvuUB7IqPZ+0gPn35DE8rTJp55OEmm4FoKIATD0t
-         rCIw==
-X-Gm-Message-State: APjAAAVzJBv9WEr4zRu7sPpatbZ/76/T3R8FHY63fBl4O4rnnJYkcpeA
-        GiqnuGSuOTypPiVPufmkyp0j7193SuP3Xfb/RxY=
-X-Google-Smtp-Source: APXvYqxoY9eVNkljMOJVoLmvfuHHBGJ/YjomM+cxPSghCbxHCkx9lr9q6sSZng0VjlwpVbkTXC4mRZQ5n0uVT4BeLJo=
-X-Received: by 2002:a67:f610:: with SMTP id k16mr66712205vso.85.1559053988687;
- Tue, 28 May 2019 07:33:08 -0700 (PDT)
+        bh=kaiPw8lxlTeTnjGZzRkgaAZnfQ+PbgZY6y4on9C0qWc=;
+        b=Bi/F6hY8sfHDrWw7Kd3Alvd7l0WPbYTDAtNNio9PMPkDsj0+Z8xVkE01VaPzq7Hh1s
+         IRmGsVlmKWX0iHpZdsChU8oGhDq84VMzVzcuQs9qOFQ090l7gm+F30dt48P5kgowNwyv
+         tFKsWTDZn9ZaF8cY4H95pcwnjn8fvO+7SfCF4b42uZdGUarW6HFWfyJjDKI59CNaeYNo
+         tP4UuCVCT2jWpTirzYxpLpQ4U3Ypo68shL9Iib6Q8gk8P5XDtVPFphMxaZ1ZgkWyDUP1
+         AkAJUcC2tECyiah2AcsSSwG+0PMUqcygRMP2wXNkHw9+VD355iVfUShp7kSSqDwV16H2
+         P2fg==
+X-Gm-Message-State: APjAAAUKGNJOSpZoIKMxz0PGXR4fWrBaEJhoKRJyZB137yp5IbsaC0PO
+        PD5/SW0WADt9h3wVucGKAr74qkYooadFF1poaK0=
+X-Google-Smtp-Source: APXvYqzx44d1QPcPAPZbgR4yJxjrJJ6G9ugd2o9QYJmLSqYobvncj+42SFh4OZzSWApGVy1FiMEUFyfMBt6nLRn+Fco=
+X-Received: by 2002:a1f:ac05:: with SMTP id v5mr25540269vke.34.1559054227905;
+ Tue, 28 May 2019 07:37:07 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190524192238.20719-1-olga.kornievskaia@gmail.com> <ef3dcdc241d4b729c5b4aea51ff85cc62e319cb6.camel@hammerspace.com>
 In-Reply-To: <ef3dcdc241d4b729c5b4aea51ff85cc62e319cb6.camel@hammerspace.com>
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 28 May 2019 10:32:57 -0400
-Message-ID: <CAN-5tyFPT_+7D4Y+4tmHGd=UQbZOegoXtoSCKyB536kYNWXM2Q@mail.gmail.com>
+Date:   Tue, 28 May 2019 10:36:55 -0400
+Message-ID: <CAN-5tyGVw8=P+2ED1LCoZbkTagYHjv0KYKkOWWEWL0SXJJuLWg@mail.gmail.com>
 Subject: Re: [PATCH 1/1] SUNRPC: don't retry a gss destroy rpc if task was killed
 To:     Trond Myklebust <trondmy@hammerspace.com>
 Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
@@ -172,6 +172,9 @@ On Sat, May 25, 2019 at 11:40 AM Trond Myklebust
 > itself (see the check of RPC_SIGNALLED()). I'd therefore be very
 > interested to see if the bug is still reproducible with the newest 5.2-
 > rcX.
+
+With 5.2-rcX, the umount hangs (but on the plus side it doesn't oops).
+
 >
 > --
 > Trond Myklebust
