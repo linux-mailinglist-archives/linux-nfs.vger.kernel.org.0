@@ -2,62 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D95512D070
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 737F52D071
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfE1Udg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 16:33:36 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54342 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbfE1Udg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:36 -0400
-Received: by mail-it1-f195.google.com with SMTP id h20so6577788itk.4
+        id S1727075AbfE1Udh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 16:33:37 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54344 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfE1Udh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:37 -0400
+Received: by mail-it1-f196.google.com with SMTP id h20so6577822itk.4
         for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D3/TxchU2n2gzIYFsg7JMYu+zzAMXglufU3zmYXuRPo=;
-        b=W6Rif6RO7xt43y6PWH7P/ll2Lp2yUXIRb2NfC3F9gc656KzDaCGYJoYnZo3gE6yhPS
-         UzLAQpG+PJmNLTOc6J19QJSJDIJoHSA0vatEG2ORML9xswcPrxasmdcJhrTGnQGaioUU
-         ygCpybsoNc1EjlRlqvyum9dlM0YyPuvThN9Gpop+yGQffSHO43x/t/oVunTc4O2qIHCf
-         kGmTJtlIZi2QFm1bUKUt1nmZugvmUUVbZ40uOO1qdqlV+kaTRHTF+eH3v5ds58XqciEX
-         SBygKHzzndGQq/nKVNwP27Wc/6kimpZiLQ7pJhH/eu1aGT3MI9R9lTtAWJll48pT7Kja
-         yxoQ==
+        bh=jUmzQXFgosC7ztxN2DEYWeUIGWU2k+scoj1vllYXDW0=;
+        b=O72yHaKNaySnpTiwioQ0RduqpXEgBZH2IZpKKwN3zBY4mLGNO5T5qvzLbajLe7RWe1
+         esLrI8GhX++oSS77f1AK76k3ig9+zkRlRH49pSUE3o7rEJe7AcQovk/LmpgQSXNorRhr
+         vXGGch7FChamqx2t7U/NUM+finmGbqS7ost8h46y81XaMIJLJcr6qKchDuosb6p27zGT
+         jMsRZPD7DOw5rkpopBPyFEJ1TAHXpyx3k0Nk3V7WsBO1jJLbc82efhxZo5A03tU3/K1o
+         he8Da9jm8fmkfWv/NzZt6jpOVHB0P5RH8jmouBOh/PNPtvK4Qo5dIYAKl7IjF+AwkZte
+         BCng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D3/TxchU2n2gzIYFsg7JMYu+zzAMXglufU3zmYXuRPo=;
-        b=oGyqAV23nR139CYwKjkFM78/VZieDAY4TybQRryrXLUeVLUmNC1rYVefiNJHg1eBoe
-         6AB6kJJpD4+hZqWKxVb8igUQQDO7ZJ4bpfH48cY5nnCsk4aX800M1VBNFIAwctZLv0qC
-         Tbu8xkdMAMYEVj40B8L81teR/gDBBPSQwFvuS/dyGglxwdXNBj0JeCaHMTA1plgB5QgY
-         w+G/x9Aw0UUS0yUrGD8gMC5SZHJQsuSUNKWp+6i4ZT8KJH2ZrviPY5OxdbrcFNhHz/EM
-         yNmWjElEmPsbvLhmOfATWgvF62QjeDE0TEBTrZUMoFd+wpgha/aCQ7zW30xcLVKKIuuW
-         eIEQ==
-X-Gm-Message-State: APjAAAWon41Ng4unnVMD7SKV3wqw2Jw11rqxDGe02+mxNSnKp962axzm
-        RkRA7YWHQKLIz5CtHNNlQF2kX+Y=
-X-Google-Smtp-Source: APXvYqw3ZphSZBY82lzccLETPo+16wo1huFJ2UjRTE6Y+Mq8C5+aTslHBODOfVSZWG8hRNACFUYM+A==
-X-Received: by 2002:a05:660c:8a:: with SMTP id t10mr4611146itj.152.1559075615505;
-        Tue, 28 May 2019 13:33:35 -0700 (PDT)
+        bh=jUmzQXFgosC7ztxN2DEYWeUIGWU2k+scoj1vllYXDW0=;
+        b=M0m60wkgSDLYQ1JNZHXTXCq1lDPZeYRGoqnfXi4Sc3ILCQVw4sJiC8nk2mOaDak6Tk
+         Bu3mgvSgUkNi39scxGY2pDP0R3rLXjIigvIm8wFtwqD5Tu75pks1Sv2GRMzo2APQkAGK
+         S72atbkcgeipaD+0FEmo8CkjFMeKxgZF5ZtFJP0rmTvuYPHIJRgV50G68QKT4eK6ydTw
+         BiewPT2J8YTyeEAfZSOnnb1JvwCsY3pVlleU1BCHRwzmEomoJtkkaUTsm3y/mY22CuUR
+         +uyfNqPjUO+PgZxh3vdslwA9CfN3rIO+/KDLD2wMEb1ntMomusd+dN6FORLAH/YSwmVB
+         VR2Q==
+X-Gm-Message-State: APjAAAVKnoaZo9QO7Pft9KLFn6EviHLg1Ykx9fCg5BtsWxrpc82p9wv4
+        Bqth9tiXBxVhTQQrfinH9UcRvn0=
+X-Google-Smtp-Source: APXvYqxdRXNnfFqbOwKmGlVo6yIMZmv7FVYDSHDf09v5UmN42cB0isA0h13uHs2ZqXyu2eRTHGxLUA==
+X-Received: by 2002:a24:2547:: with SMTP id g68mr4534763itg.109.1559075616273;
+        Tue, 28 May 2019 13:33:36 -0700 (PDT)
 Received: from localhost.localdomain (50-124-247-140.alma.mi.frontiernet.net. [50.124.247.140])
-        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.34
+        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:33:34 -0700 (PDT)
+        Tue, 28 May 2019 13:33:35 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 05/11] Use xstat() with no synchronisation if available
-Date:   Tue, 28 May 2019 16:31:16 -0400
-Message-Id: <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 06/11] Add helpers to read/write to a file through the chrooted thread
+Date:   Tue, 28 May 2019 16:31:17 -0400
+Message-Id: <20190528203122.11401-7-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190528203122.11401-5-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190528203122.11401-6-trond.myklebust@hammerspace.com>
 References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-2-trond.myklebust@hammerspace.com>
  <20190528203122.11401-3-trond.myklebust@hammerspace.com>
  <20190528203122.11401-4-trond.myklebust@hammerspace.com>
  <20190528203122.11401-5-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-6-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -65,126 +66,120 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We normally expect the exported system to be stable, so don't
-revalidate attributes.
+Add helper functions to do synchronous I/O to a nfsd filesystem pseudofile
+from inside the chrooted environment. This ensures that calls to kern_path()
+in knfsd resolves to paths that are relative to the nfsd root directory.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- configure.ac         |  2 +-
- support/misc/xstat.c | 72 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+), 1 deletion(-)
+ support/include/nfsd_path.h |  3 ++
+ support/misc/nfsd_path.c    | 84 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
 
-diff --git a/configure.ac b/configure.ac
-index e870862a8abb..50002b4a5677 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -321,7 +321,7 @@ AC_CHECK_FUNC([getservbyname], ,
- AC_CHECK_LIB([crypt], [crypt], [LIBCRYPT="-lcrypt"])
+diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
+index db9b41a179ad..f4a7f0a4337f 100644
+--- a/support/include/nfsd_path.h
++++ b/support/include/nfsd_path.h
+@@ -13,4 +13,7 @@ char *		nfsd_path_prepend_dir(const char *dir, const char *pathname);
+ int 		nfsd_path_stat(const char *pathname, struct stat *statbuf);
+ int 		nfsd_path_lstat(const char *pathname, struct stat *statbuf);
  
- AC_CHECK_HEADERS([sched.h], [], [])
--AC_CHECK_FUNCS([unshare fstatat], [] , [])
-+AC_CHECK_FUNCS([unshare fstatat statx], [] , [])
- AC_LIBPTHREAD([])
- 
- if test "$enable_nfsv4" = yes; then
-diff --git a/support/misc/xstat.c b/support/misc/xstat.c
-index d092f73dfd65..fa047880cfd0 100644
---- a/support/misc/xstat.c
-+++ b/support/misc/xstat.c
-@@ -1,21 +1,93 @@
-+#include <errno.h>
- #include <sys/types.h>
- #include <fcntl.h>
- #include <sys/stat.h>
-+#include <sys/sysmacros.h>
- #include <unistd.h>
- 
- #include "config.h"
- #include "xstat.h"
- 
- #ifdef HAVE_FSTATAT
-+#ifdef HAVE_STATX
++ssize_t		nfsd_path_read(int fd, char *buf, size_t len);
++ssize_t		nfsd_path_write(int fd, const char *buf, size_t len);
++
+ #endif
+diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
+index fe2c011b1521..55bca9bdf4bd 100644
+--- a/support/misc/nfsd_path.c
++++ b/support/misc/nfsd_path.c
+@@ -166,3 +166,87 @@ nfsd_path_lstat(const char *pathname, struct stat *statbuf)
+ 		return xlstat(pathname, statbuf);
+ 	return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
+ }
++
++struct nfsd_read_data {
++	int fd;
++	char *buf;
++	size_t len;
++	ssize_t ret;
++	int err;
++};
 +
 +static void
-+statx_copy(struct stat *stbuf, const struct statx *stxbuf)
++nfsd_readfunc(void *data)
 +{
-+	stbuf->st_dev = makedev(stxbuf->stx_dev_major, stxbuf->stx_dev_minor);
-+	stbuf->st_ino = stxbuf->stx_ino;
-+	stbuf->st_mode = stxbuf->stx_mode;
-+	stbuf->st_nlink = stxbuf->stx_nlink;
-+	stbuf->st_uid = stxbuf->stx_uid;
-+	stbuf->st_gid = stxbuf->stx_gid;
-+	stbuf->st_rdev = makedev(stxbuf->stx_rdev_major, stxbuf->stx_rdev_minor);
-+	stbuf->st_size = stxbuf->stx_size;
-+	stbuf->st_blksize = stxbuf->stx_blksize;
-+	stbuf->st_blocks = stxbuf->stx_blocks;
-+	stbuf->st_atim.tv_sec = stxbuf->stx_atime.tv_sec;
-+	stbuf->st_atim.tv_nsec = stxbuf->stx_atime.tv_nsec;
-+	stbuf->st_mtim.tv_sec = stxbuf->stx_mtime.tv_sec;
-+	stbuf->st_mtim.tv_nsec = stxbuf->stx_mtime.tv_nsec;
-+	stbuf->st_ctim.tv_sec = stxbuf->stx_ctime.tv_sec;
-+	stbuf->st_ctim.tv_nsec = stxbuf->stx_ctime.tv_nsec;
++	struct nfsd_read_data *d = data;
++
++	d->ret = read(d->fd, d->buf, d->len);
++	if (d->ret < 0)
++		d->err = errno;
 +}
 +
-+static int
-+statx_do_stat(int fd, const char *pathname, struct stat *statbuf, int flags)
++static ssize_t
++nfsd_run_read(struct xthread_workqueue *wq, int fd, char *buf, size_t len)
 +{
-+	static int statx_supported = 1;
-+	struct statx stxbuf;
-+	int ret;
-+
-+	if (statx_supported) {
-+		ret = statx(fd, pathname, flags,
-+				STATX_BASIC_STATS,
-+				&stxbuf);
-+		if (ret == 0) {
-+			statx_copy(statbuf, &stxbuf);
-+			return 0;
-+		}
-+		if (errno == ENOSYS)
-+			statx_supported = 0;
-+	} else
-+		errno = ENOSYS;
-+	return -1;
++	struct nfsd_read_data data = {
++		fd,
++		buf,
++		len,
++		0,
++		0
++	};
++	xthread_work_run_sync(wq, nfsd_readfunc, &data);
++	if (data.ret < 0)
++		errno = data.err;
++	return data.ret;
 +}
 +
-+static int
-+statx_stat_nosync(int fd, const char *pathname, struct stat *statbuf, int flags)
++ssize_t
++nfsd_path_read(int fd, char *buf, size_t len)
 +{
-+	return statx_do_stat(fd, pathname, statbuf, flags | AT_STATX_DONT_SYNC);
++	if (!nfsd_wq)
++		return read(fd, buf, len);
++	return nfsd_run_read(nfsd_wq, fd, buf, len);
 +}
 +
-+#else
++struct nfsd_write_data {
++	int fd;
++	const char *buf;
++	size_t len;
++	ssize_t ret;
++	int err;
++};
 +
-+static int
-+statx_stat_nosync(int fd, const char *pathname, struct stat *statbuf, int flags)
++static void
++nfsd_writefunc(void *data)
 +{
-+	errno = ENOSYS;
-+	return -1;
++	struct nfsd_write_data *d = data;
++
++	d->ret = write(d->fd, d->buf, d->len);
++	if (d->ret < 0)
++		d->err = errno;
 +}
 +
-+#endif /* HAVE_STATX */
- 
- int xlstat(const char *pathname, struct stat *statbuf)
- {
-+	if (statx_stat_nosync(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT|
-+				AT_SYMLINK_NOFOLLOW) == 0)
-+		return 0;
-+	else if (errno != ENOSYS)
-+		return -1;
- 	return fstatat(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT |
- 			AT_SYMLINK_NOFOLLOW);
- }
- 
- int xstat(const char *pathname, struct stat *statbuf)
- {
-+	if (statx_stat_nosync(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT) == 0)
-+		return 0;
-+	else if (errno != ENOSYS)
-+		return -1;
- 	return fstatat(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT);
- }
- 
++static ssize_t
++nfsd_run_write(struct xthread_workqueue *wq, int fd, const char *buf, size_t len)
++{
++	struct nfsd_write_data data = {
++		fd,
++		buf,
++		len,
++		0,
++		0
++	};
++	xthread_work_run_sync(wq, nfsd_writefunc, &data);
++	if (data.ret < 0)
++		errno = data.err;
++	return data.ret;
++}
++
++ssize_t
++nfsd_path_write(int fd, const char *buf, size_t len)
++{
++	if (!nfsd_wq)
++		return write(fd, buf, len);
++	return nfsd_run_write(nfsd_wq, fd, buf, len);
++}
 -- 
 2.21.0
 
