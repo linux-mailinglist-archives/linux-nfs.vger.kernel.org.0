@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90CA92D073
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A83F2D076
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfE1Udk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 16:33:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35818 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfE1Udk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id p2so16942890iol.2
+        id S1727326AbfE1Udl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 16:33:41 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38942 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbfE1Udl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:41 -0400
+Received: by mail-it1-f195.google.com with SMTP id 9so6136667itf.4
         for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xBJi060n7RhVnSN6xyn5hT8UN0dOckFbLFyVF4AWmVI=;
-        b=OFb+fG9ZVNketjNbWCXfMiTe0vlRtnHMVw0Fp4GpSxAPKqwzcW1ACe38I4qk9uJF4Y
-         HnVIoE+iG03OJBbGR/PQtWKUC7hb3HIw3GXNx5J14jHerfbMC18+i5vUyz+iHiqxLSRE
-         R8AM+AXDzEfCepzkWrcM0R234odckrM4L0PplVoRp+N5Z2k44hwCuZw788Mf7DEqrQd+
-         QafSffyIv9a4KQsd03QcxRFUkRkf69c+JukUl2g8lpwo9qqVPYxV5o5cx04LrylPXbFy
-         JV2UPiuDmVlUxPTKYPHEoicyimZgDIMJSJRzCmbXfuKpXWBcvzyWlaLYvwKASWDeoWTQ
-         03Gw==
+        bh=643A/JXkc2fq/8damgxL6JCgtP0wyB1q+dhVeiGdlgE=;
+        b=WwrrXhpHWqnxdeAFcjg7vGnP89MgU8IsU7sQJG2xDzEZtpc8v/FojypESYP+Oeu+W/
+         4jAOAyNXDymL/WkkwjBMMrU5o4S5d+JUbFRe+QWz8/vXQiCUOddkrzh2nTXzP8/EpLyO
+         5bzexbhfmG1++svvXJXebARMmEI17VcRlYgw1S1yUSLt35cFT5d5Hw9ptjFLkMQj3EN2
+         n5WNdEymN0Vk+qNr2WCohubBh5tnvcRlT2FtoPxPfL4ah4Y9PjIk34bicDC36H1+yUwH
+         SfKFma14iQmQIEMp0px5fnKVa+mirjnuAWtJpFScAUo5A58qu57J31DlL6yb2CaMgx7n
+         +zug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xBJi060n7RhVnSN6xyn5hT8UN0dOckFbLFyVF4AWmVI=;
-        b=rO6+lLnc9Vmj5mqz7d9ghQqPDEUxS6fsw8cV0ehEM6xTjqzsNogBPj712JJE+c1nyr
-         0XJSRKSHD9zJTxd4JI2CrCpqhG6yVayBv6AeNn7CBjpnUpmjlqoyQVSvCKgYMthzUce7
-         MyyKGIoTRVe3x/ykaTeMuC2C+5lngM68iVWvQfMQHDTtXobBUmNYCEL8a9Z08QakdttE
-         PBoCsQMTdP06BiRILyax27TYTDopzs6TmBBb7wpk4+zNYE1sItdFzwH5yS+hKO+FGmpp
-         b2+2OPOU9Iusf7m3Epyy72fhFKilOsNOkLMat8+Wr2qlSy1qObd6uhYuisOcW0opRu+O
-         b2Xw==
-X-Gm-Message-State: APjAAAXSCQQwU4bhW+ybivcpnGxB4RodDz94opW/n8cGy2cFJDo8QOPO
-        fFKsl7778VwicKdmNM3lHg==
-X-Google-Smtp-Source: APXvYqz2boZ6yRYqFHtGQC2H1n5wmnqDKsFN/f/giY90ILNYg/23CvvQypqGi1Tlj8nyicoaW8MRqw==
-X-Received: by 2002:a5d:8783:: with SMTP id f3mr52298990ion.235.1559075619337;
-        Tue, 28 May 2019 13:33:39 -0700 (PDT)
+        bh=643A/JXkc2fq/8damgxL6JCgtP0wyB1q+dhVeiGdlgE=;
+        b=KIEAY5aJ0TCVaHJ65vUsm/PRlSb3WBFZKXIuAgcVmDK/nX4S0Bkvp5VmaHDnX0SDX5
+         pjS2y4rslTy3FJmi0lFhQvwfDGw5rtA2Eiik/sIHVmpz77r/aK08op6U1ICZryxcxZqC
+         dvZaXTHTnkfeNYqfmLK+aaFMeE2bligYHKKMCZhkgkWO/1ln4QVOKHuOCGi43sNZp7y+
+         MfbBXOiWvTgdZt10/Ntz8hPoLkxMZgPGc8tW4snDO/HkZ2mSjuR+pGlnp3JMBOVHxfj2
+         wHGDkM7qn8UmbYpmzb5kciP8/A8CV9NKF4m4idP2We4P1giKVNnIb1EReDTjELeJ02gL
+         YJ2g==
+X-Gm-Message-State: APjAAAUYVOj20+9zUXaDWYMXXFanV1NB1v+YTRn8+Po3P04nLhBL605a
+        gJBujNeCCVnKHg6f5gFGB4/MXec=
+X-Google-Smtp-Source: APXvYqxwtR2z0OP7qO0aTCWT3Z32GQXLlvUDzAR2tuo2kWTAVtSDfM6bxFhTcvbHNRDOu0v5E3iOng==
+X-Received: by 2002:a05:660c:6c1:: with SMTP id z1mr5057526itk.126.1559075620105;
+        Tue, 28 May 2019 13:33:40 -0700 (PDT)
 Received: from localhost.localdomain (50-124-247-140.alma.mi.frontiernet.net. [50.124.247.140])
-        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.38
+        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.39
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:33:38 -0700 (PDT)
+        Tue, 28 May 2019 13:33:39 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 09/11] Add support for the "[exports] rootdir" nfs.conf option to exportfs
-Date:   Tue, 28 May 2019 16:31:20 -0400
-Message-Id: <20190528203122.11401-10-trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 10/11] Add a helper for resolving symlinked nfsd paths via realpath()
+Date:   Tue, 28 May 2019 16:31:21 -0400
+Message-Id: <20190528203122.11401-11-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190528203122.11401-9-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190528203122.11401-10-trond.myklebust@hammerspace.com>
 References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-2-trond.myklebust@hammerspace.com>
  <20190528203122.11401-3-trond.myklebust@hammerspace.com>
@@ -62,6 +62,7 @@ References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-7-trond.myklebust@hammerspace.com>
  <20190528203122.11401-8-trond.myklebust@hammerspace.com>
  <20190528203122.11401-9-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-10-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -69,77 +70,81 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ensure that exportfs also resolves paths relative to the nfsd root
-directory
+Add a helper to resolve symlinked nfsd paths when the user has set the
+"[exports] rootdir" nfs.conf option.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- utils/exportfs/Makefile.am |  2 +-
- utils/exportfs/exportfs.c  | 11 +++++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ support/include/nfsd_path.h |  2 ++
+ support/misc/nfsd_path.c    | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
-index 4b291610d19b..96524c729359 100644
---- a/utils/exportfs/Makefile.am
-+++ b/utils/exportfs/Makefile.am
-@@ -10,6 +10,6 @@ exportfs_SOURCES = exportfs.c
- exportfs_LDADD = ../../support/export/libexport.a \
- 	       	 ../../support/nfs/libnfs.la \
- 		 ../../support/misc/libmisc.a \
--		 $(LIBWRAP) $(LIBNSL)
-+		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
+diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
+index f4a7f0a4337f..ca2570a92e68 100644
+--- a/support/include/nfsd_path.h
++++ b/support/include/nfsd_path.h
+@@ -13,6 +13,8 @@ char *		nfsd_path_prepend_dir(const char *dir, const char *pathname);
+ int 		nfsd_path_stat(const char *pathname, struct stat *statbuf);
+ int 		nfsd_path_lstat(const char *pathname, struct stat *statbuf);
  
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 333eadcd0228..5cca4175e73a 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -33,6 +33,7 @@
++char *		nfsd_realpath(const char *path, char *resolved_path);
++
+ ssize_t		nfsd_path_read(int fd, char *buf, size_t len);
+ ssize_t		nfsd_path_write(int fd, const char *buf, size_t len);
  
- #include "sockaddr.h"
- #include "misc.h"
-+#include "nfsd_path.h"
- #include "nfslib.h"
- #include "exportfs.h"
- #include "xlog.h"
-@@ -53,6 +54,11 @@ static int _lockfd = -1;
+diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
+index 8ddafd65ab76..2f41a793c534 100644
+--- a/support/misc/nfsd_path.c
++++ b/support/misc/nfsd_path.c
+@@ -1,6 +1,7 @@
+ #include <errno.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <stdlib.h>
+ #include <unistd.h>
  
- struct state_paths etab;
+ #include "config.h"
+@@ -169,6 +170,40 @@ nfsd_path_lstat(const char *pathname, struct stat *statbuf)
+ 	return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
+ }
  
-+static ssize_t exportfs_write(int fd, const char *buf, size_t len)
++struct nfsd_realpath_data {
++	const char *pathname;
++	char *resolved;
++	int err;
++};
++
++static void
++nfsd_realpathfunc(void *data)
 +{
-+	return nfsd_path_write(fd, buf, len);
++	struct nfsd_realpath_data *d = data;
++
++	d->resolved = realpath(d->pathname, d->resolved);
++	if (!d->resolved)
++		d->err = errno;
 +}
 +
- /*
-  * If we aren't careful, changes made by exportfs can be lost
-  * when multiple exports process run at once:
-@@ -109,6 +115,7 @@ main(int argc, char **argv)
- 
- 	conf_init_file(NFS_CONFFILE);
- 	xlog_from_conffile("exportfs");
-+	nfsd_path_init();
- 
- 	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
- 	s = conf_get_str("mountd", "state-directory-path");
-@@ -505,7 +512,7 @@ static int test_export(nfs_export *exp, int with_fsid)
- 	fd = open("/proc/net/rpc/nfsd.export/channel", O_WRONLY);
- 	if (fd < 0)
- 		return 0;
--	n = write(fd, buf, strlen(buf));
-+	n = exportfs_write(fd, buf, strlen(buf));
- 	close(fd);
- 	if (n < 0)
- 		return 0;
-@@ -521,7 +528,7 @@ validate_export(nfs_export *exp)
- 	 * otherwise trial-export to '-test-client-' and check for failure.
- 	 */
- 	struct stat stb;
--	char *path = exp->m_export.e_path;
-+	char *path = exportent_realpath(&exp->m_export);
- 	struct statfs64 stf;
- 	int fs_has_fsid = 0;
- 
++char *
++nfsd_realpath(const char *path, char *resolved_path)
++{
++	struct nfsd_realpath_data data = {
++		path,
++		resolved_path,
++		0
++	};
++
++	if (!nfsd_wq)
++		return realpath(path, resolved_path);
++
++	xthread_work_run_sync(nfsd_wq, nfsd_realpathfunc, &data);
++	if (!data.resolved)
++		errno = data.err;
++	return data.resolved;
++}
++
+ struct nfsd_read_data {
+ 	int fd;
+ 	char *buf;
 -- 
 2.21.0
 
