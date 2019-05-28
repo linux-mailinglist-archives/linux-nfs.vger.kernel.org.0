@@ -2,104 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC7E2C1B6
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 10:53:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE842C2AB
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 11:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfE1IxY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 04:53:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42388 "EHLO mx1.suse.de"
+        id S1727527AbfE1JHL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 05:07:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17595 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726649AbfE1IxY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 May 2019 04:53:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3CFCCAF1C;
-        Tue, 28 May 2019 08:53:22 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-api@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v2 6/8] vfs: copy_file_range should update file timestamps
-References: <20190526061100.21761-1-amir73il@gmail.com>
-        <20190526061100.21761-7-amir73il@gmail.com>
-        <20190527143539.GA14980@hermes.olymp>
-        <20190527220513.GB29573@dread.disaster.area>
-Date:   Tue, 28 May 2019 09:53:20 +0100
-In-Reply-To: <20190527220513.GB29573@dread.disaster.area> (Dave Chinner's
-        message of "Tue, 28 May 2019 08:05:13 +1000")
-Message-ID: <875zpvrmdb.fsf@suse.com>
+        id S1727322AbfE1JHL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 May 2019 05:07:11 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 86761B8F878AA4309DF5;
+        Tue, 28 May 2019 17:07:08 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 17:07:01 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bfields@fieldses.org>, <jlayton@kernel.org>,
+        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] lockd: Make two symbols static
+Date:   Tue, 28 May 2019 17:06:52 +0800
+Message-ID: <20190528090652.13288-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dave Chinner <david@fromorbit.com> writes:
+Fix sparse warnings:
 
-> On Mon, May 27, 2019 at 03:35:39PM +0100, Luis Henriques wrote:
->> On Sun, May 26, 2019 at 09:10:57AM +0300, Amir Goldstein wrote:
->> > From: Dave Chinner <dchinner@redhat.com>
->> > 
->> > Timestamps are not updated right now, so programs looking for
->> > timestamp updates for file modifications (like rsync) will not
->> > detect that files have changed. We are also accessing the source
->> > data when doing a copy (but not when cloning) so we need to update
->> > atime on the source file as well.
->> > 
->> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
->> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
->> > ---
->> >  fs/read_write.c | 10 ++++++++++
->> >  1 file changed, 10 insertions(+)
->> > 
->> > diff --git a/fs/read_write.c b/fs/read_write.c
->> > index e16bcafc0da2..4b23a86aacd9 100644
->> > --- a/fs/read_write.c
->> > +++ b/fs/read_write.c
->> > @@ -1576,6 +1576,16 @@ int generic_copy_file_range_prep(struct file *file_in, struct file *file_out)
->> >  
->> >  	WARN_ON_ONCE(!inode_is_locked(file_inode(file_out)));
->> >  
->> > +	/* Update source timestamps, because we are accessing file data */
->> > +	file_accessed(file_in);
->> > +
->> > +	/* Update destination timestamps, since we can alter file contents. */
->> > +	if (!(file_out->f_mode & FMODE_NOCMTIME)) {
->> > +		ret = file_update_time(file_out);
->> > +		if (ret)
->> > +			return ret;
->> > +	}
->> > +
->> 
->> Is this the right place for updating the timestamps?  I see that in same
->> cases we may be updating the timestamp even if there was an error and no
->> copy was performed.  For example, if file_remove_privs fails.
->
-> It's the same place we do it for read - file_accessed() is called
-> before we do the IO - and the same place for write -
-> file_update_time() is called before we copy data into the pagecache
-> or do direct IO. As such, it really doesn't matter if it is before
-> or after file_remove_privs() - the IO can still fail for many
-> reasons after we've updated the timestamps and in some of the
-> failure cases (e.g. we failed the sync at the end of an O_DSYNC
-> buffered write) we still want the timestamps to be modified because
-> the data and/or user visible metadata /may/ have been changed.
->
-> cfr operates under the same constraints as read() and write(), so we
-> need to update the timestamps up front regardless of whether the
-> copy ends up succeeding or not....
+fs/lockd/clntproc.c:57:6: warning: symbol 'nlmclnt_put_lockowner' was not declared. Should it be static?
+fs/lockd/svclock.c:409:35: warning: symbol 'nlmsvc_lock_ops' was not declared. Should it be static?
 
-Great, thanks for explaining it.  It now makes sense, even for
-consistency, to have this operation here.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/lockd/clntproc.c | 2 +-
+ fs/lockd/svclock.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
+diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
+index 0ff8ad4..b11f2af 100644
+--- a/fs/lockd/clntproc.c
++++ b/fs/lockd/clntproc.c
+@@ -54,7 +54,7 @@ nlmclnt_get_lockowner(struct nlm_lockowner *lockowner)
+ 	return lockowner;
+ }
+ 
+-void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
++static void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
+ {
+ 	if (!refcount_dec_and_lock(&lockowner->count, &lockowner->host->h_lock))
+ 		return;
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index 5f9f19b..61d3cc2 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -406,7 +406,7 @@ static void nlmsvc_locks_release_private(struct file_lock *fl)
+ 	nlmsvc_put_lockowner((struct nlm_lockowner *)fl->fl_owner);
+ }
+ 
+-const struct file_lock_operations nlmsvc_lock_ops = {
++static const struct file_lock_operations nlmsvc_lock_ops = {
+ 	.fl_copy_lock = nlmsvc_locks_copy_lock,
+ 	.fl_release_private = nlmsvc_locks_release_private,
+ };
 -- 
-Luis
+2.7.4
+
+
