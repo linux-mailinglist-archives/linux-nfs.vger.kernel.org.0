@@ -2,97 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E28392C82D
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 15:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DA32C8D9
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 16:33:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfE1N4T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 09:56:19 -0400
-Received: from mail-eopbgr690074.outbound.protection.outlook.com ([40.107.69.74]:52558
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfE1N4T (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 May 2019 09:56:19 -0400
+        id S1726481AbfE1OdK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 10:33:10 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44602 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfE1OdK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 10:33:10 -0400
+Received: by mail-vs1-f66.google.com with SMTP id w124so206486vsb.11
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 07:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0W8T4BpWAtdMtyfpkle4UMS9AzTyvJN7M+sMAirythY=;
- b=T873an8ha2UvsdBQ5JoXPu1D1dH6Tl9RuZymq+/0Jcbhbb4yef0wYNHArVdFeMFHw2VLJaWWRE22YHjXZeARN22Sf8xMTmNPDiR8rdu+8RDbjIspO94ElV/5qRh9VwZ3HwhorgcAqeCr7CxSpMaumRr/gTeTsy0TPaCZ9bSrvug=
-Received: from BN8PR06MB6228.namprd06.prod.outlook.com (20.178.217.156) by
- BN8PR06MB5858.namprd06.prod.outlook.com (20.179.138.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.20; Tue, 28 May 2019 13:56:15 +0000
-Received: from BN8PR06MB6228.namprd06.prod.outlook.com
- ([fe80::bc27:e0e1:e3e2:7b52]) by BN8PR06MB6228.namprd06.prod.outlook.com
- ([fe80::bc27:e0e1:e3e2:7b52%6]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 13:56:15 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>
-CC:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-Thread-Topic: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-Thread-Index: AQHUuP5mCuK2SP21dES5S/AwZU1LhKXJa7UAgFhvo4CAWCJ1AIAAD8iAgAADGQCABzePAA==
-Date:   Tue, 28 May 2019 13:56:15 +0000
-Message-ID: <5e8c92372afae86af71564a357691b3e4283640a.camel@netapp.com>
-References: <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
-         <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
-         <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
-         <20190523.163229.1499181553844972278.davem@davemloft.net>
-         <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
-In-Reply-To: <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [23.28.75.121]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c5baf4eb-56cc-41ed-9928-08d6e3744032
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR06MB5858;
-x-ms-traffictypediagnostic: BN8PR06MB5858:
-x-microsoft-antispam-prvs: <BN8PR06MB5858DAAAC8C0A17337163EB5F81E0@BN8PR06MB5858.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(366004)(189003)(54094003)(199004)(81156014)(81166006)(305945005)(86362001)(8676002)(99286004)(256004)(7736002)(316002)(118296001)(6436002)(478600001)(71200400001)(6116002)(486006)(58126008)(71190400001)(25786009)(14454004)(102836004)(3846002)(4744005)(229853002)(6512007)(6486002)(72206003)(91956017)(76116006)(66066001)(66476007)(66556008)(66946007)(73956011)(66446008)(64756008)(2501003)(76176011)(110136005)(36756003)(6246003)(68736007)(53936002)(4326008)(8936002)(53546011)(6506007)(11346002)(2906002)(186003)(446003)(476003)(2616005)(26005)(54906003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR06MB5858;H:BN8PR06MB6228.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: D6SlFqNg8slk/PtaTgl+xN8XNoLweBUb4/DXWbwwGCDVT/CkMUJtK2V0ZkU+a2XgxhgXQi46cFuP6NMt/3IBrUamUGRNMVEMVI8FEu9etEcdQj+ESEfhwSJ9P7pNMYmQvEVSs67OY4IFucseIxrTgiMDP5TKkFa4IghQEWfiDIocxe7yj1Tl8h0WzvYxWxsQ1gQxC7I4aaN/9uRu/ZRtglqJJ7Du53SAvlFwsIaUNdh3uwl9f1b5MLzPALjznfCUdeQdWlnZZpKmKbPlY+65MGpjvEPhIWk782o4LAfq2AVmXHicT5ptt6hAlGNjI9dejzE5q2plAHhjWyoLm9GyNRwGx9eLBk9QVSaAKkvdt9Ugz0f0063gM7FF/kmeobhNK7pFJpWD1vU6fLBk+e3bn4Q4F8SgnXujyjNUDwLhP08=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A8CF9004DFB06941858E82FF4FAF7539@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6nAJAY9skPtfFsQOAJjAYZneeijGRKQ5urC+Qjm2bbQ=;
+        b=qEj93FQr4CVYOvnsyBvn238yeG6iq+ytNeX+YqCExoQP8NcuUgR+b6fv6yxIgtDh8H
+         COHfFuiuHuuB0MCdsV3ANB+07e0rAjQoIYr8LfhiFUq/27gG3MXRibRzIDziWS5Q58lo
+         34TokHx0opEJnrauaos1BVW7REqKtM+4xebM87vhE4xwC/FSwek7D9zR2X7T+pf+eHdm
+         lphkMg/ua0lqcPJ6V/wq5PVTNsmbb0k40pj1mIM3gcB95WbizY/HEq/Qjb+W3QS1sSEg
+         KWOWNUlG45RUF7upUweIYf1PwIdSIrTN9jxAELokZkZQ24GS30xexMhYLuzKmIWAeD02
+         WsfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6nAJAY9skPtfFsQOAJjAYZneeijGRKQ5urC+Qjm2bbQ=;
+        b=WxPBv+FO4VVbFUu8B2HlHE5sehEPUddScARXXDTvz1YLDNk6bhESFfC4KuAaz1z1Pn
+         ZapgD6ZFPZfMF3HrtC3d0WP5XDxs+8FJxWi4Slb7CDt8Hka/Ctgggri6lJga4/GdJxXh
+         RKEMIF/TiG/bIP20LBJcGKv2b4a1TZmwLvvkpuBOyaJsLOXahKl/P6L5hCp6xKa/8kvj
+         BnhCMbQLTD/s+kiqVItC4YfjrHq0fdHdMrNCzttKXtoYHtOqSl9U21MBfXPDQv86Vyek
+         k/mh0bDi9y/DXkEW0add0tS3ZlTYwvuUB7IqPZ+0gPn35DE8rTJp55OEmm4FoKIATD0t
+         rCIw==
+X-Gm-Message-State: APjAAAVzJBv9WEr4zRu7sPpatbZ/76/T3R8FHY63fBl4O4rnnJYkcpeA
+        GiqnuGSuOTypPiVPufmkyp0j7193SuP3Xfb/RxY=
+X-Google-Smtp-Source: APXvYqxoY9eVNkljMOJVoLmvfuHHBGJ/YjomM+cxPSghCbxHCkx9lr9q6sSZng0VjlwpVbkTXC4mRZQ5n0uVT4BeLJo=
+X-Received: by 2002:a67:f610:: with SMTP id k16mr66712205vso.85.1559053988687;
+ Tue, 28 May 2019 07:33:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5baf4eb-56cc-41ed-9928-08d6e3744032
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 13:56:15.1133
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bjschuma@netapp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR06MB5858
+References: <20190524192238.20719-1-olga.kornievskaia@gmail.com> <ef3dcdc241d4b729c5b4aea51ff85cc62e319cb6.camel@hammerspace.com>
+In-Reply-To: <ef3dcdc241d4b729c5b4aea51ff85cc62e319cb6.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 28 May 2019 10:32:57 -0400
+Message-ID: <CAN-5tyFPT_+7D4Y+4tmHGd=UQbZOegoXtoSCKyB536kYNWXM2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] SUNRPC: don't retry a gss destroy rpc if task was killed
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQpPbiBUaHUsIDIwMTktMDUtMjMgYXQgMTg6NDMgLTA1MDAsIEd1c3Rhdm8gQS4gUi4gU2lsdmEg
-d3JvdGU6DQo+IA0KPiBPbiA1LzIzLzE5IDY6MzIgUE0sIERhdmlkIE1pbGxlciB3cm90ZToNCj4g
-PiBGcm9tOiAiR3VzdGF2byBBLiBSLiBTaWx2YSIgPGd1c3Rhdm9AZW1iZWRkZWRvci5jb20+DQo+
-ID4gRGF0ZTogVGh1LCAyMyBNYXkgMjAxOSAxNzozNjowMCAtMDUwMA0KPiA+IA0KPiA+ID4gSGkg
-RGF2ZSwNCj4gPiA+IA0KPiA+ID4gSSB3b25kZXIgaWYgeW91IGNhbiB0YWtlIHRoaXMgcGF0Y2gu
-DQo+ID4gDQo+ID4gVGhlIHN1bnJwYy9uZnMgbWFpbnRhaW5lciBzaG91bGQgdGFrZSB0aGlzLiAg
-SSBuZXZlciB0YWtlIHBhdGNoZXMgaW4gdGhhdA0KPiA+IGFyZWEuDQo+ID4gDQo+IA0KPiBZZXAu
-IENodWNrIGp1c3QgbGV0IG1lIGtub3cgdGhhdCBBbm5hIGlzIHdobyB0YWtlIHRoZXNlIHBhdGNo
-ZXMuDQo+IA0KPiBIb3BlZnVsbHksIHNoZSB3aWxsIHRha2UgdGhpcyBvbmUgc29vbi4NCg0KSSd2
-ZSBhcHBsaWVkIHRoaXMgdG8gcHVzaCBvdXQgbGF0ZXIgaW4gdGhlIHdlZWsuIFRoYW5rcyBmb3Ig
-cG9pbnRpbmcgaXQgb3V0IHRvDQptZSENCg0KQW5uYQ0KDQo+IA0KPiBUaGFua3MNCj4gLS0NCj4g
-R3VzdGF2bw0K
+On Sat, May 25, 2019 at 11:40 AM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Fri, 2019-05-24 at 15:22 -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > It's possible that on an umount we send a NULL call to destroy
+> > a gss context and a failure occurs on the reply. Since it's possible
+> > that in that case the rpc client and auth structure are going away
+> > don't retry. Otherwise, the kernel hits the following oops.
+> >
+> > [37247.291617] BUG: unable to handle kernel NULL pointer dereference
+> > at 0000000000000098
+> > [37247.296200] #PF error: [normal kernel read fault]
+> > [37247.298110] PGD 0 P4D 0
+> > [37247.299264] Oops: 0000 [#1] SMP PTI
+> > [37247.300729] CPU: 1 PID: 23870 Comm: kworker/u256:1 Not tainted
+> > 5.1.0+ #172
+> > [37247.303547] Hardware name: VMware, Inc. VMware Virtual
+> > Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> > [37247.311770] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> > [37247.313958] RIP: 0010:xprt_adjust_timeout+0x9/0x110 [sunrpc]
+> > [37247.316220] Code: c7 c7 20 0d 50 c0 31 c0 e8 68 00 e2 fc 41 c7 45
+> > 04 f4 ff ff ff eb c9 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
+> > 54 55 53 <48> 8b 87 98 00 00 00 48 89 fb 4c 8b 27 48 8b 80 a8 00 00
+> > 00
+> > 48 8b
+> > [37247.323625] RSP: 0018:ffffb0ab84f5fd68 EFLAGS: 00010207
+> > [37247.325676] RAX: 00000000fffffff5 RBX: ffff9e0ff1042800 RCX:
+> > 0000000000000003
+> > [37247.328433] RDX: ffff9e0ff11baac0 RSI: 00000000fffffe01 RDI:
+> > 0000000000000000
+> > [37247.331206] RBP: ffff9e0fe20cb200 R08: ffff9e0ff11baac0 R09:
+> > ffff9e0ff11baac0
+> > [37247.334038] R10: ffff9e0ff11baab8 R11: 0000000000000003 R12:
+> > ffff9e1039b55050
+> > [37247.337098] R13: ffff9e0ff1042830 R14: 0000000000000000 R15:
+> > 0000000000000001
+> > [37247.339966] FS:  0000000000000000(0000) GS:ffff9e103bc40000(0000)
+> > knlGS:0000000000000000
+> > [37247.343261] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [37247.345669] CR2: 0000000000000098 CR3: 000000007603a002 CR4:
+> > 00000000001606e0
+> > [37247.348564] Call Trace:
+> > [37247.351034]  rpc_check_timeout+0x1d/0x140 [sunrpc]
+> > [37247.353005]  call_decode+0x13e/0x1f0 [sunrpc]
+> > [37247.354893]  ? rpc_check_timeout+0x140/0x140 [sunrpc]
+> > [37247.357143]  __rpc_execute+0x7e/0x3d0 [sunrpc]
+> > [37247.359104]  rpc_async_schedule+0x29/0x40 [sunrpc]
+> > [37247.362565]  process_one_work+0x16b/0x370
+> > [37247.365598]  worker_thread+0x49/0x3f0
+> > [37247.367164]  kthread+0xf5/0x130
+> > [37247.368453]  ? max_active_store+0x80/0x80
+> > [37247.370087]  ? kthread_bind+0x10/0x10
+> > [37247.372505]  ret_from_fork+0x1f/0x30
+> > [37247.374695] Modules linked in: nfsv3 cts rpcsec_gss_krb5 nfsv4
+> > dns_resolver nfs rfcomm fuse ip6t_rpfilter ipt_REJECT nf_reject_ipv4
+> > ip6t_REJECT nf_reject_ipv6 xt_conntrack nf_conntrack nf_defrag_ipv6
+> > nf_defrag_ipv4 ebtable_nat ebtable_broute bridge stp llc
+> > ip6table_mangle ip6table_security ip6table_raw iptable_mangle
+> > iptable_security iptable_raw ebtable_filter ebtables ip6table_filter
+> > ip6_tables iptable_filter bnep snd_seq_midi snd_seq_midi_event
+> > crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel
+> > crypto_simd cryptd glue_helper vmw_balloon snd_ens1371 snd_ac97_codec
+> > uvcvideo ac97_bus snd_seq pcspkr btusb btrtl btbcm videobuf2_vmalloc
+> > snd_pcm videobuf2_memops btintel videobuf2_v4l2 videodev bluetooth
+> > snd_timer snd_rawmidi vmw_vmci snd_seq_device rfkill videobuf2_common
+> > snd ecdh_generic i2c_piix4 soundcore nfsd nfs_acl lockd auth_rpcgss
+> > grace sunrpc ip_tables xfs libcrc32c sr_mod cdrom sd_mod ata_generic
+> > pata_acpi vmwgfx drm_kms_helper syscopyarea sysfillrect sysimgblt
+> > fb_sys_fops
+> > [37247.389774]  ttm crc32c_intel drm serio_raw ahci ata_piix libahci
+> > libata mptspi scsi_transport_spi e1000 mptscsih mptbase i2c_core
+> > dm_mirror dm_region_hash dm_log dm_mod
+> > [37247.437859] CR2: 0000000000000098
+> > [37247.462263] ---[ end trace 0d9a85f0df2cef9e ]---
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  net/sunrpc/clnt.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> > index 8ff11dc..8928f93 100644
+> > --- a/net/sunrpc/clnt.c
+> > +++ b/net/sunrpc/clnt.c
+> > @@ -2487,7 +2487,7 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
+> >
+> >  out_garbage:
+> >       clnt->cl_stats->rpcgarbage++;
+> > -     if (task->tk_garb_retry) {
+> > +     if (task->tk_garb_retry && !(task->tk_flags & RPC_TASK_KILLED))
+> > {
+> >               task->tk_garb_retry--;
+> >               task->tk_action = call_encode;
+> >               return -EAGAIN;
+> > @@ -2541,7 +2541,7 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
+> >       case rpc_autherr_badcred:
+> >       case rpc_autherr_badverf:
+> >               /* possibly garbled cred/verf? */
+> > -             if (!task->tk_garb_retry)
+> > +             if (!task->tk_garb_retry || task->tk_flags &
+> > RPC_TASK_KILLED)
+> >                       break;
+> >               task->tk_garb_retry--;
+> >               trace_rpc__bad_creds(task);
+>
+>
+> Hmm... The RPC_TASK_KILLED flag was changed in 5.2-rc1 in order to try
+> to fix a few atomicity issues with it, so the above patch will not
+> apply to the current codebase.
+>
+> The new behaviour will actually check the new flag in __rpc_execute()
+> itself (see the check of RPC_SIGNALLED()). I'd therefore be very
+> interested to see if the bug is still reproducible with the newest 5.2-
+> rcX.
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
