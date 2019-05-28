@@ -2,134 +2,236 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 579F42CF8A
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 21:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED8462CF8C
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 21:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfE1Td1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 15:33:27 -0400
-Received: from mail-eopbgr710115.outbound.protection.outlook.com ([40.107.71.115]:53408
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727250AbfE1Td1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 May 2019 15:33:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rxQozrgAu0KHX0sWSvb4E3vNZ6497pCE0GfTnB1xBC4=;
- b=Xq7wN1ZMipgAVpD3Kf+0QHlM8ucHPWY8mTAn6W7qaqlKUWWcoFheueSScMKm170rS/mOIjjneE9ZEPvZ3XmxO1Xr/2YpvUhfFe3EpAnKfiSrjLOyVdpdffCXfIhWvN0uDVjhlG7ByPwwC8OkD8/3i0WyUmXmjsBBPbXkeWc+dfs=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1771.namprd13.prod.outlook.com (10.171.157.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.8; Tue, 28 May 2019 19:33:24 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633%7]) with mapi id 15.20.1943.016; Tue, 28 May 2019
- 19:33:24 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
-Thread-Topic: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
-Thread-Index: AQHVAaKLteyD+epX90KQZ+FxPa7AuqZelNIAgCJ4GwCAAAg4gA==
-Date:   Tue, 28 May 2019 19:33:23 +0000
-Message-ID: <2fd3177890a8c8fba9b40468df213bafa30b5481.camel@hammerspace.com>
-References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-2-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-3-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-4-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-5-trond.myklebust@hammerspace.com>
-         <20190503111841.4391-6-trond.myklebust@hammerspace.com>
-         <65D12050-BF24-4922-A287-3A4D981BD635@oracle.com>
-         <12C94CD2-5E07-4C12-B7F6-78B433327361@oracle.com>
-In-Reply-To: <12C94CD2-5E07-4C12-B7F6-78B433327361@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.124.247.140]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd6d3064-f17e-4929-4347-08d6e3a3599b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1771;
-x-ms-traffictypediagnostic: DM5PR13MB1771:
-x-microsoft-antispam-prvs: <DM5PR13MB1771829072D058978C860E6EB81E0@DM5PR13MB1771.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(39830400003)(366004)(199004)(189003)(53936002)(6512007)(478600001)(118296001)(66946007)(5640700003)(6436002)(66476007)(76116006)(64756008)(66556008)(66446008)(76176011)(229853002)(73956011)(6486002)(6246003)(4326008)(68736007)(14454004)(5660300002)(2906002)(8936002)(81166006)(81156014)(102836004)(446003)(2616005)(11346002)(26005)(486006)(6116002)(2501003)(25786009)(2351001)(3846002)(476003)(99286004)(186003)(7736002)(6506007)(14444005)(256004)(71190400001)(305945005)(66066001)(86362001)(36756003)(71200400001)(6916009)(316002)(53546011)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1771;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wAQheAGPKViMy8cpn89ejg2HfVgTkez3yRxeU9CosWTeHdV6qEgQoUQ9oAwHuPEiqQgjvL9epcZxlbUIZAIyHlJH6YRKbyeHt3oA2RpmRp48SU1Pimeg1c7NbegIZ/5dsfyi1PHQxF2yTlRxLg72770NmoUggE3nfh0Mc2oBsNef/WH15vB7W7YuJYi9FGb7hAQxd88S0BIN9YEaOekysF9Rx68Q75GV3LbfZSpJgzoV1w/Jl4pLqwxth37gshu250xvGYkn2ll1aqUvnPrBqm3szOiD/rCHfhfRwUDty804SOtqQSeoqht27wQCHlkIq3jmdxOoPSebVmX9CnFo23l5lzehj9LBpy70ZCqaMKwEZa/6kKPjkNimFBjelW2xHYoM/ylblIbEiFmETFUAqYMKzxjJ84cVt3LLFRrgfp0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4B4CEF7D238C394294F71E6506395E30@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727273AbfE1Td7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 15:33:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39772 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbfE1Td7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 May 2019 15:33:59 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 505D4317915E;
+        Tue, 28 May 2019 19:33:58 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-47.phx2.redhat.com [10.3.116.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C04905C8A3;
+        Tue, 28 May 2019 19:33:57 +0000 (UTC)
+Subject: Re: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "chucklever@gmail.com" <chucklever@gmail.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
+ <708D03B6-AEE1-42D6-ABDF-FB1AA5FC9A94@gmail.com>
+ <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
+ <1BB55244-E893-47A2-B4CB-36CA991A84B0@gmail.com>
+ <501262c68530acbce21f39e0015e76805dedfe48.camel@hammerspace.com>
+ <3503ff03-2895-ae1f-7fed-f30d08b0abfb@RedHat.com>
+ <c7a5f97693c56ee0a7dd5a9c0848ee97ab3d2a9e.camel@hammerspace.com>
+ <0b65f710-f06a-cfd3-a30e-577db8267d5b@RedHat.com>
+ <af4e638f44baa4344c5a3b826cc1cbd28253bf1e.camel@hammerspace.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <46dbdb00-ff89-cd6e-24c7-f66ca81cb0c9@RedHat.com>
+Date:   Tue, 28 May 2019 15:33:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd6d3064-f17e-4929-4347-08d6e3a3599b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 19:33:23.9934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1771
+In-Reply-To: <af4e638f44baa4344c5a3b826cc1cbd28253bf1e.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 28 May 2019 19:33:58 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA1LTI4IGF0IDE1OjAzIC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-Rm9sbG93aW5nIHVwIG9uIHRoaXMuIE5vdyB3aXRoIGV2ZW4gbW9yZSBkYXRhIQ0KPiANCj4gPiBP
-biBNYXkgNiwgMjAxOSwgYXQgNDo0MSBQTSwgQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNs
-ZS5jb20+DQo+ID4gd3JvdGU6DQo+ID4gDQo+ID4gDQo+ID4gPiBPbiBNYXkgMywgMjAxOSwgYXQg
-NzoxOCBBTSwgVHJvbmQgTXlrbGVidXN0IDx0cm9uZG15QGdtYWlsLmNvbT4NCj4gPiA+IHdyb3Rl
-Og0KPiA+ID4gDQo+ID4gPiBBbGxvdyBtb3JlIHRpbWUgZm9yIHNvZnRpcnFkDQo+ID4gDQo+ID4g
-SGF2ZSB5b3UgdGhvdWdodCBhYm91dCBwZXJmb3JtYW5jZSB0ZXN0cyBmb3IgdGhpcyBvbmU/DQo+
-IA0KPiBJIHRlc3RlZCB0aGlzIHNlcmllcyBvbiBteSAxMi1jb3JlIHR3by1zb2NrZXQgY2xpZW50
-IHVzaW5nIGEgdmFyaWV0eQ0KPiBvZiB0ZXN0cyBpbmNsdWRpbmcgaW96b25lLCBmaW8sIGFuZCBm
-c3Rlc3RzLiBUaGUgbmV0d29yayB1bmRlciB0ZXN0DQo+IGlzIDU2R2IgSW5maW5pQmFuZCAoVENQ
-IHVzZXMgSVBvSUIpLiBJIHRlc3RlZCBib3RoIFRDUCBhbmQgUkRNQS4NCj4gDQo+IFdpdGggbG9j
-ayBkZWJ1Z2dpbmcgYW5kIG1lbW9yeSBsZWFrIHRlc3RpbmcgZW5hYmxlZCwgSSBkaWQgbm90IHNl
-ZQ0KPiBhbnkgZnVuY3Rpb25hbCByZWdyZXNzaW9ucyBvciBuZXcgbGVha3Mgb3IgY3Jhc2hlcy4g
-VGh1cyBJTU8gdGhpcw0KPiBzZXJpZXMgaXMgInNhZmUgdG8gYXBwbHkuIg0KPiANCj4gV2l0aCBU
-Q1AsIEkgc2F3IG5vIGNoYW5nZSBpbiBwZXJmb3JtYW5jZSBiZXR3ZWVuIGEgInN0b2NrIiBrZXJu
-ZWwNCj4gYW5kIG9uZSB3aXRoIGFsbCBmaXZlIHBhdGNoZXMgaW4gdGhpcyBzZXJpZXMgYXBwbGll
-ZCwgYXMsIElJUkMsDQo+IHlvdSBwcmVkaWN0ZWQuDQo+IA0KPiBUaGUgZm9sbG93aW5nIGRpc2N1
-c3Npb24gaXMgYmFzZWQgb24gdGVzdGluZyB3aXRoIE5GUy9SRE1BLg0KPiANCj4gV2l0aCBSRE1B
-LCBJIHNhdyBhbiBpbXByb3ZlbWVudCBvZiA1LTEwJSBpbiBJT1BTIHJhdGUgYmV0d2VlbiB0aGUN
-Cj4gInN0b2NrIiBrZXJuZWwgYW5kIGEga2VybmVsIHdpdGggdGhlIGZpcnN0IGZvdXIgcGF0Y2hl
-cyBhcHBsaWVkLiBXaGVuDQo+IHRoZSBmaWZ0aCBwYXRjaCBpcyBhcHBsaWVkLCBJIHNhdyBJT1BT
-IHRocm91Z2hwdXQgc2lnbmlmaWNhbnRseSB3b3JzZQ0KPiB0aGFuICJzdG9jayIgLS0gbGlrZSAy
-MCUgd29yc2UuDQo+IA0KPiBJIGFsc28gc3R1ZGllZCBhdmVyYWdlIFJQQyBleGVjdXRpb24gdGlt
-ZSAodGhlICJleGVjdXRlIiBtZXRyaWMpIHdpdGgNCj4gdGhlICJzdG9jayIga2VybmVsLCB0aGUg
-b25lIHdpdGggZm91ciBwYXRjaGVzIGFwcGxpZWQsIGFuZCB3aXRoIHRoZQ0KPiBvbmUgd2hlcmUg
-YWxsIGZpdmUgYXJlIGFwcGxpZWQuIFRoZSB3b3JrbG9hZCBpcyAxMDAlIDRLQiBSRUFEcyB3aXRo
-DQo+IGFuIGlvZGVwdGggb2YgMTAyNCBpbiBvcmRlciB0byBzYXR1cmF0ZSB0aGUgdHJhbnNtaXQg
-cXVldWUuDQo+IA0KPiBXaXRoIGZvdXIgcGF0Y2hlcywgdGhlIGV4ZWN1dGUgdGltZSBpcyBhYm91
-dCAyLjUgbXNlYyBmYXN0ZXIgKGF2ZXJhZ2UNCj4gZXhlY3V0aW9uIHRpbWUgaXMgYXJvdW5kIDc1
-IG1zZWMgZHVlIHRvIHRoZSBsYXJnZSBiYWNrbG9nIHRoaXMgdGVzdA0KPiBnZW5lcmF0ZXMpLiBX
-aXRoIGZpdmUgcGF0Y2hlcywgaXQncyBzbG93ZXIgdGhhbiAic3RvY2siIGJ5IDEyIG1zZWMuDQo+
-IA0KPiBJIGFsc28gc2F3IGEgMzAgdXNlYyBpbXByb3ZlbWVudCBpbiB0aGUgYXZlcmFnZSBsYXRl
-bmN5IG9mDQo+IHhwcnRfY29tcGxldGVfcnFzdCB3aXRoIHRoZSBmb3VyIHBhdGNoIHNlcmllcy4N
-Cj4gDQo+IEFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGUgYmVuZWZpdCBvZiB0aGlzIHNlcmllcyBj
-b21lcyBtb3N0bHkgZnJvbQ0KPiB0aGUgdGhpcmQgcGF0Y2gsIHdoaWNoIGNoYW5nZXMgc3Bpbl9s
-b2NrX2JoKCZ4cHJ0LT50cmFuc3BvcnRfbG9jaykgdG8NCj4gc3Bpbl9sb2NrKCZ4cHJ0LT50cmFu
-c3BvcnRfbG9jaykuIFdoZW4gdGhlIHhwcnRpb2Qgd29yayBxdWV1ZSBpcw0KPiBsb3dlcmVkIGlu
-IHByaW9yaXR5IGluIDUvNSwgdGhhdCBiZW5lZml0IHZhbmlzaGVzLg0KPiANCj4gSSBhbSBzdGls
-bCBjb25mdXNlZCBhYm91dCB3aHkgNS81IGlzIG5lZWRlZC4gSSBkaWQgbm90IHNlZSBhbnkgc29m
-dA0KPiBsb2NrdXBzIHdpdGhvdXQgdGhpcyBwYXRjaCBhcHBsaWVkIHdoZW4gdXNpbmcgUkRNQS4g
-SXMgdGhlIGlzc3VlDQo+IHdpdGggeHBydHNvY2sncyB1c2Ugb2YgeHBydGlvZCBmb3IgaGFuZGxp
-bmcgaW5jb21pbmcgVENQIHJlY2VpdmVzPw0KPiANCj4gSSBzdGlsbCBoYXZlIHNvbWUgdGhpbmdz
-IEknZCBsaWtlIHRvIGxvb2sgYXQuIE9uZSB0aGluZyBJIGhhdmVuJ3QNCj4geWV0IHRyaWVkIGlz
-IGxvb2tpbmcgYXQgbG9ja19zdGF0LCB3aGljaCB3b3VsZCBjb25maXJtIG9yIHJlZnV0ZQ0KPiBt
-eSB0aGVvcnkgdGhhdCB0aGlzIGlzIGFsbCBhYm91dCB0aGUgdHJhbnNwb3J0X2xvY2ssIGZvciBp
-bnN0YW5jZS4NCj4gDQoNCk9LLiBJIGNhbiBkcm9wIDUvNS4NCg0KVGhlIGlzc3VlIHRoZXJlIHdh
-cyBub3QgYWJvdXQgc29mdCBsb2NrdXBzLiBIb3dldmVyIHNpbmNlIHdlIHdlcmUNCnByZXZpb3Vz
-bHkgcnVubmluZyBtb3N0IHNvZnQgaXJxcyBhcyBwYXJ0IG9mIHNwaW5fdW5sb2NrX2JoKCksIHRo
-ZQ0KcXVlc3Rpb24gd2FzIHdoZXRoZXIgb3Igbm90IHdlIHdvdWxkIHNlZSBtb3JlIG9mIHRoZW0g
-bmVlZGluZyB0byBtb3ZlDQp0byBzb2Z0aXJxZC4gQXMgZmFyIGFzIEkgY2FuIHNlZSwgeW91ciBh
-bnN3ZXIgdG8gdGhhdCBxdWVzdGlvbiBpcyAnbm8nDQooYXQgbGVhc3QgZm9yIHlvdXIgc3lzdGVt
-KS4NCg0KQ2hlZXJzDQogIFRyb25kDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNs
-aWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNl
-LmNvbQ0KDQoNCg==
+
+
+On 5/28/19 2:19 PM, Trond Myklebust wrote:
+> On Tue, 2019-05-28 at 13:40 -0400, Steve Dickson wrote:
+>>
+>> On 5/28/19 12:44 PM, Trond Myklebust wrote:
+>>> On Tue, 2019-05-28 at 11:25 -0400, Steve Dickson wrote:
+>>>> On 5/21/19 3:58 PM, Trond Myklebust wrote:
+>>>>> On Tue, 2019-05-21 at 15:06 -0400, Chuck Lever wrote:
+>>>>>>> On May 21, 2019, at 2:17 PM, Trond Myklebust <
+>>>>>>> trondmy@hammerspace.com> wrote:
+>>>>>>>
+>>>>>>> On Tue, 2019-05-21 at 13:40 -0400, Chuck Lever wrote:
+>>>>>>>> Hi Trond -
+>>>>>>>>
+>>>>>>>>> On May 21, 2019, at 8:46 AM, Trond Myklebust <
+>>>>>>>>> trondmy@gmail.com
+>>>>>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>> The following patchset adds support for the 'root_dir'
+>>>>>>>>> configuration
+>>>>>>>>> option for nfsd in nfs.conf. If a user sets this option
+>>>>>>>>> to
+>>>>>>>>> a
+>>>>>>>>> valid
+>>>>>>>>> directory path, then nfsd will act as if it is confined
+>>>>>>>>> to
+>>>>>>>>> a
+>>>>>>>>> chroot
+>>>>>>>>> jail based on that directory. All paths in /etc/exporfs
+>>>>>>>>> and
+>>>>>>>>> from
+>>>>>>>>> exportfs are then resolved relative to that directory.
+>>>>>>>>
+>>>>>>>> What about files under /proc that mountd might access? I
+>>>>>>>> assume
+>>>>>>>> these
+>>>>>>>> pathnames are not affected.
+>>>>>>>>
+>>>>>>> That's why we have 2 threads. One thread is root jailed
+>>>>>>> using
+>>>>>>> chroot,
+>>>>>>> and is used to talk to knfsd. The other thread is not root
+>>>>>>> jailed
+>>>>>>> (or
+>>>>>>> at least not by root_dir) and so has full access to /etc,
+>>>>>>> /proc,
+>>>>>>> /var,
+>>>>>>> ...
+>>>>>>>
+>>>>>>>> Aren't there also one or two other files that maintain
+>>>>>>>> export
+>>>>>>>> state
+>>>>>>>> like /var/lib/nfs/rmtab? Are those affected?
+>>>>>>>
+>>>>>>> See above. They are not affected.
+>>>>>>>
+>>>>>>>> IMHO it could be less confusing to administrators to make
+>>>>>>>> root_dir an
+>>>>>>>> [exportfs] option instead of a [mountd] option, if this
+>>>>>>>> is
+>>>>>>>> not a
+>>>>>>>> true
+>>>>>>>> chroot of mountd.
+>>>>>>>
+>>>>>>> It is neither. I made in a [nfsd] option, since it governs
+>>>>>>> the
+>>>>>>> way
+>>>>>>> that
+>>>>>>> both exportfs and mountd talk to nfsd.
+>>>>>>
+>>>>>> My point is not about implementation, it's about how this
+>>>>>> functionality
+>>>>>> is presented to administrators.
+>>>>>>
+>>>>>> In nfs.conf, [nfsd] looks like it controls what options are
+>>>>>> passed
+>>>>>> via
+>>>>>> rpc.nfsd. That still seems like a confusing admin interface.
+>>>>>>
+>>>>>> IMO admins won't care about who is talking to whom. They will
+>>>>>> care
+>>>>>> about
+>>>>>> how the export pathnames are interpreted. That seems like it
+>>>>>> belongs
+>>>>>> squarely with the exportfs interface.
+>>>>>>
+>>>>>
+>>>>> With the exportfs interface, yes. However it is not specific to
+>>>>> the
+>>>>> exportfs utility, so to me [exportfs] is more confusing than
+>>>>> what
+>>>>> exists now.
+>>>>>
+>>>>> OK, so what if we put it in [general] instead, and perhaps
+>>>>> rename
+>>>>> it
+>>>>> "export_rootdir"?
+>>>>>
+>>>> I'm just catching up... my apologies tartness...
+>>>>
+>>>> So setting root_dir effects *all* exports in /etc/exports? 
+>>>> If that is the case, that one variable can change hundreds
+>>>> of export... is that what we really want?
+>>>>
+>>>> Wouldn't be better to have a little more granularity? 
+>>>
+>>> Can you explain what you mean? The intention here is that if you
+>>> have
+>>> all your exported filesystems set up in a subtree under
+>>> /mnt/my/exports, then you can remove that unnecessary prefix.
+>>>
+>>> So, for instance, if I'm trying to export /mnt/my/exports/foo and
+>>> /mnt/my/exports/bar, then I can make those two filesystems appear
+>>> as
+>>> /foo, and /bar to the remote clients.
+>> By granularity I meant have different roots for different exports.
+>> Meaning /mnt/foo/exports/foo and /mnt/bar/exports/bar
+>> would still appear as /foo and /bar
+> 
+> No. That should be done using bind mounts. Otherwise we end up with
+> /etc/nfs.conf and /etc/exports depending on being mutually consistent.
+> That would be awkward.
+Fine... 
+
+> 
+>> As you explain later in this thread, there is going to be a nfs.conf
+>> and exports for each container so maybe this is not necessary?? 
+>>
+>> Maybe I'm misunderstanding how this feature should/will be used.
+> 
+> As I've already said, it can be used to do what you are proposing, but
+> only in conjunction with bind mounts.
+> 
+>>
+>>> If an admin wants to rearrange all the paths in /etc/exports, and
+>>> make
+>>> a custom namespace, then that is possible using bind mounts: just
+>>> create a directory /my_exports, and use mount --bind to attach the
+>>> necessary mountpoints into the right spots in /my_exports, then use
+>>> export_rootdir to remove the /my_exports prefix.
+>>>
+>>>> As for where root_dir should go, I think it makes senses
+>>>> to create a new [exportfs] section and have mountd read it
+>>>> from there. I think that would be more straightforward if
+>>>> we continue with the big hammer approach where any and all
+>>>> exports are effected. 
+>>>>
+>>>
+>>> Fair enough, I can add the [exports] section if you all agree that
+>>> is
+>>> an appropriate place.
+>>>
+>> I think a new exports sections with a rootdir variable makes sense.
+>> It is changing the root of the exports... 
+>>
+>> But I could also live with a export_rootdir in the general section.
+>>
+>> Question:
+>> How is this different than pseudo root? 
+>>
+>> Isn't this basically a way to set the pseudo for v3? 
+> 
+> Sort of, yes.
+> 
+>> What is going to override whom? Meaning if both 
+>> fsid=/mnt/foo and rootdir=/mnt/bar which one will be used?
+>>
+>>
+> Both. However the entry in /etc/exports will be relative to /mnt/bar.
+> In other words, the NFSv4 root would be fsid=/mnt/foo, which translates
+> as /mnt/bar/mnt/foo in the 'init' namespace.
+> 
+Ok... 
+
+So what do you want to do... 
+
+[exports]
+ rootdir=/mnt/foo
+
+or 
+
+[general]
+   export_rootdir=/mnt/bar
+
+steved.
