@@ -2,208 +2,303 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37CE92CC7C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 18:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95D9A2CC92
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 18:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfE1Qrs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 12:47:48 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40157 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfE1Qrs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 12:47:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so10164621ioc.7
-        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 09:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=y+cJGxrPWQXJyIDKrTn87Z3M+bbydnObzOQaz91mURI=;
-        b=fFumxnxrWbeTqJVTexVM5nmGFfd8uQQSuAmLf4zIzGVA4+vrOi81u6hTofAfK+uVwp
-         qhib288dkNGsCR2nVXgfLg1IuqKgBqfb03r2EWel/WeASXBYvBglrROWtuE3Sms6+b4U
-         qXWBCySRJPR1hxzcE3RdVXn7HpWeNvYRSdZGwQKUlNQp4PI3tthQcfaLbFbW7c9pDg/8
-         MCz+v4MTw180qfb/izf+xgG7Q+RLijqQn6a9eFYM98IfmN5lEKxFdf4866bjrQQhDdNk
-         EN941X06W5XDgh4BPFI71KNhTDBp4+fF5YNrdJMnIieMb1+QyMmxGuDsDHTV9fOPODK3
-         dbgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=y+cJGxrPWQXJyIDKrTn87Z3M+bbydnObzOQaz91mURI=;
-        b=BgFRhBuCG40DXh8wPfg9YKFz41WptnzQtnjrAQ5tl6wvt9+2dEWDmHlD/50O9LdScm
-         uK7m+GPHfntkh0pzQ50yhzOdIajP692hvHjwCDEXEMSejO5I+tolRBK47Hn9eroJaym2
-         w06pC2XMM3NeE8spl51FWpvZKfMSA1QO1Y6b1UkJmxPhQFKbyMFQ325m41NjkxXP4k+m
-         /nfOKk/N0QcqCsifJCyWpXfyyHnIin7jLRubGej//KpeHgIrqUiOmJN8vjWZvTNCk9in
-         EHu4F3aFvsq8LAt2JAmKa/nflvtj+AUO7RazdaESE/jcIIWTjq0vOCsoooaoILTd/h5Y
-         TEQw==
-X-Gm-Message-State: APjAAAVQha2gPUbThYRSXxkdg1pPeGqsciY6CutoGEA7hNAmeYkcgQ9g
-        TFzXrJP4ASk9pNrjkAnhpWX2kRG3
-X-Google-Smtp-Source: APXvYqxsHSLtyCL+5vFwCmeusg2gooWyjNE1tSgpeFiacNdUjWcEJcdgLnL6g9JYWx/Ks6Lis0PG9g==
-X-Received: by 2002:a6b:e711:: with SMTP id b17mr10061199ioh.3.1559062067054;
-        Tue, 28 May 2019 09:47:47 -0700 (PDT)
-Received: from anon-dhcp-171.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id j125sm1448330itb.27.2019.05.28.09.47.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 09:47:46 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RFC PATCH v2 0/7] Add a root_dir option to nfs.conf
-From:   Chuck Lever <chucklever@gmail.com>
-In-Reply-To: <c7a5f97693c56ee0a7dd5a9c0848ee97ab3d2a9e.camel@hammerspace.com>
-Date:   Tue, 28 May 2019 12:47:45 -0400
-Cc:     Steve Dickson <SteveD@RedHat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F2801C3F-558A-4176-A0B0-ECD737D4332D@gmail.com>
-References: <20190521124701.61849-1-trond.myklebust@hammerspace.com>
- <708D03B6-AEE1-42D6-ABDF-FB1AA5FC9A94@gmail.com>
- <25ce1d3aa852ecd09ff300233aea60b71e6e69df.camel@hammerspace.com>
- <1BB55244-E893-47A2-B4CB-36CA991A84B0@gmail.com>
- <501262c68530acbce21f39e0015e76805dedfe48.camel@hammerspace.com>
- <3503ff03-2895-ae1f-7fed-f30d08b0abfb@RedHat.com>
- <c7a5f97693c56ee0a7dd5a9c0848ee97ab3d2a9e.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        id S1726792AbfE1QtU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 12:49:20 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59336 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1QtT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 12:49:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SGYHcM171535;
+        Tue, 28 May 2019 16:48:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=g4VMDHaVzIXfUD9TtJzd+T5I/JvgEaOHGIOgnX9Fmu0=;
+ b=GAFTOwcWopfNekUkc0Bw4cTBT9M1rV+KgJ/fPx2JxTmuz/zEIRnfMR6oZP7JOfdQjjYv
+ PR0KNCiNF6dSZ0im2y6M1Qly8ETuyrIz3WGL0MdGwaVeZvBomsWqow6m3/EgTq5NtOgi
+ GRMr0M/a3YuCDiLCEq93JqrouXgHF71Wd8sSvbC9h7QIo9D9rgg69AcPPhUs+LhtJqmg
+ Azb5QVKYVANdY/hNSMuJCGSW68QrTjFKcOUUfBXGb/DvqWsxqRKbkmxd1B/w7DPJSRxU
+ nKli/lSOb1+Vs1Bh7gUu8c0pFJ4m+LnMj0FO1le/4+MIIYLCRBUCq41Mp2+PYFH7GAyv Iw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2spw4tcj5a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 16:48:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SGlnT3182373;
+        Tue, 28 May 2019 16:48:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2srbdwwcuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 16:48:47 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4SGmkG3021980;
+        Tue, 28 May 2019 16:48:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 May 2019 09:48:46 -0700
+Date:   Tue, 28 May 2019 09:48:44 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-api@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH v2 9/8] man-pages: copy_file_range updates
+Message-ID: <20190528164844.GJ5221@magnolia>
+References: <20190526061100.21761-1-amir73il@gmail.com>
+ <20190526061100.21761-10-amir73il@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190526061100.21761-10-amir73il@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905280106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280106
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sun, May 26, 2019 at 09:11:00AM +0300, Amir Goldstein wrote:
+> Update with all the missing errors the syscall can return, the
+> behaviour the syscall should have w.r.t. to copies within single
+> files, etc.
+> 
+> [Amir] Copying beyond EOF returns zero.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+>  man2/copy_file_range.2 | 93 ++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 77 insertions(+), 16 deletions(-)
+> 
+> diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
+> index 2438b63c8..fab11f977 100644
+> --- a/man2/copy_file_range.2
+> +++ b/man2/copy_file_range.2
+> @@ -42,9 +42,9 @@ without the additional cost of transferring data from the kernel to user space
+>  and then back into the kernel.
+>  It copies up to
+>  .I len
+> -bytes of data from file descriptor
+> +bytes of data from the source file descriptor
+>  .I fd_in
+> -to file descriptor
+> +to target file descriptor
 
+"to the target file descriptor"
 
-> On May 28, 2019, at 12:44 PM, Trond Myklebust =
-<trondmy@hammerspace.com> wrote:
->=20
-> On Tue, 2019-05-28 at 11:25 -0400, Steve Dickson wrote:
->>=20
->> On 5/21/19 3:58 PM, Trond Myklebust wrote:
->>> On Tue, 2019-05-21 at 15:06 -0400, Chuck Lever wrote:
->>>>> On May 21, 2019, at 2:17 PM, Trond Myklebust <
->>>>> trondmy@hammerspace.com> wrote:
->>>>>=20
->>>>> On Tue, 2019-05-21 at 13:40 -0400, Chuck Lever wrote:
->>>>>> Hi Trond -
->>>>>>=20
->>>>>>> On May 21, 2019, at 8:46 AM, Trond Myklebust <
->>>>>>> trondmy@gmail.com
->>>>>>> wrote:
->>>>>>>=20
->>>>>>> The following patchset adds support for the 'root_dir'
->>>>>>> configuration
->>>>>>> option for nfsd in nfs.conf. If a user sets this option to
->>>>>>> a
->>>>>>> valid
->>>>>>> directory path, then nfsd will act as if it is confined to
->>>>>>> a
->>>>>>> chroot
->>>>>>> jail based on that directory. All paths in /etc/exporfs and
->>>>>>> from
->>>>>>> exportfs are then resolved relative to that directory.
->>>>>>=20
->>>>>> What about files under /proc that mountd might access? I
->>>>>> assume
->>>>>> these
->>>>>> pathnames are not affected.
->>>>>>=20
->>>>> That's why we have 2 threads. One thread is root jailed using
->>>>> chroot,
->>>>> and is used to talk to knfsd. The other thread is not root
->>>>> jailed
->>>>> (or
->>>>> at least not by root_dir) and so has full access to /etc,
->>>>> /proc,
->>>>> /var,
->>>>> ...
->>>>>=20
->>>>>> Aren't there also one or two other files that maintain export
->>>>>> state
->>>>>> like /var/lib/nfs/rmtab? Are those affected?
->>>>>=20
->>>>> See above. They are not affected.
->>>>>=20
->>>>>> IMHO it could be less confusing to administrators to make
->>>>>> root_dir an
->>>>>> [exportfs] option instead of a [mountd] option, if this is
->>>>>> not a
->>>>>> true
->>>>>> chroot of mountd.
->>>>>=20
->>>>> It is neither. I made in a [nfsd] option, since it governs the
->>>>> way
->>>>> that
->>>>> both exportfs and mountd talk to nfsd.
->>>>=20
->>>> My point is not about implementation, it's about how this
->>>> functionality
->>>> is presented to administrators.
->>>>=20
->>>> In nfs.conf, [nfsd] looks like it controls what options are
->>>> passed
->>>> via
->>>> rpc.nfsd. That still seems like a confusing admin interface.
->>>>=20
->>>> IMO admins won't care about who is talking to whom. They will
->>>> care
->>>> about
->>>> how the export pathnames are interpreted. That seems like it
->>>> belongs
->>>> squarely with the exportfs interface.
->>>>=20
->>>=20
->>> With the exportfs interface, yes. However it is not specific to the
->>> exportfs utility, so to me [exportfs] is more confusing than what
->>> exists now.
->>>=20
->>> OK, so what if we put it in [general] instead, and perhaps rename
->>> it
->>> "export_rootdir"?
->>>=20
->> I'm just catching up... my apologies tartness...
->>=20
->> So setting root_dir effects *all* exports in /etc/exports?=20
->> If that is the case, that one variable can change hundreds
->> of export... is that what we really want?
->>=20
->> Wouldn't be better to have a little more granularity?=20
->=20
-> Can you explain what you mean? The intention here is that if you have
-> all your exported filesystems set up in a subtree under
-> /mnt/my/exports, then you can remove that unnecessary prefix.
->=20
-> So, for instance, if I'm trying to export /mnt/my/exports/foo and
-> /mnt/my/exports/bar, then I can make those two filesystems appear as
-> /foo, and /bar to the remote clients.
->=20
-> If an admin wants to rearrange all the paths in /etc/exports, and make
-> a custom namespace, then that is possible using bind mounts: just
-> create a directory /my_exports, and use mount --bind to attach the
-> necessary mountpoints into the right spots in /my_exports, then use
-> export_rootdir to remove the /my_exports prefix.
+>  .IR fd_out ,
+>  overwriting any data that exists within the requested range of the target file.
+>  .PP
+> @@ -74,6 +74,11 @@ is not changed, but
+>  .I off_in
+>  is adjusted appropriately.
+>  .PP
+> +.I fd_in
+> +and
+> +.I fd_out
+> +can refer to the same file. If they refer to the same file, then the source and
+> +target ranges are not allowed to overlap.
 
-Just to be clear, do you expect that each mount namespace on a
-Linux NFS server would have its own /etc/exports and /etc/nfs.conf ?
+Please start each sentence on a new line, per mkerrisk rules.
 
-Maybe you stated that before, and I missed it.
+>  .PP
+>  The
+>  .I flags
+> @@ -84,6 +89,11 @@ Upon successful completion,
+>  .BR copy_file_range ()
+>  will return the number of bytes copied between files.
+>  This could be less than the length originally requested.
+> +If the file offset of
+> +.I fd_in
+> +is at or past the end of file, no bytes are copied, and
+> +.BR copy_file_range ()
+> +returns zero.
+>  .PP
+>  On error,
+>  .BR copy_file_range ()
+> @@ -93,12 +103,16 @@ is set to indicate the error.
+>  .SH ERRORS
+>  .TP
+>  .B EBADF
+> -One or more file descriptors are not valid; or
+> +One or more file descriptors are not valid.
+> +.TP
+> +.B EBADF
+>  .I fd_in
+>  is not open for reading; or
+>  .I fd_out
+> -is not open for writing; or
+> -the
+> +is not open for writing.
+> +.TP
+> +.B EBADF
+> +The
+>  .B O_APPEND
+>  flag is set for the open file description (see
+>  .BR open (2))
+> @@ -106,17 +120,36 @@ referred to by the file descriptor
+>  .IR fd_out .
+>  .TP
+>  .B EFBIG
+> -An attempt was made to write a file that exceeds the implementation-defined
+> -maximum file size or the process's file size limit,
+> -or to write at a position past the maximum allowed offset.
+> +An attempt was made to write at a position past the maximum file offset the
+> +kernel supports.
+> +.TP
+> +.B EFBIG
+> +An attempt was made to write a range that exceeds the allowed maximum file size.
+> +The maximum file size differs between filesystem implemenations and can be
 
+"implementations"
 
->> As for where root_dir should go, I think it makes senses
->> to create a new [exportfs] section and have mountd read it
->> from there. I think that would be more straightforward if
->> we continue with the big hammer approach where any and all
->> exports are effected.=20
->>=20
->=20
-> Fair enough, I can add the [exports] section if you all agree that is
-> an appropriate place.
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+> +different to the maximum allowed file offset.
 
---
-Chuck Lever
-chucklever@gmail.com
+"...different from the maximum..."
 
+> +.TP
+> +.B EFBIG
+> +An attempt was made to write beyond the process's file size resource
+> +limit. This may also result in the process receiving a
+> +.I SIGXFSZ
+> +signal.
 
+Start new sentences on a new line, please.
 
+>  .TP
+>  .B EINVAL
+> -Requested range extends beyond the end of the source file; or the
+> +The
+>  .I flags
+>  argument is not 0.
+>  .TP
+> -.B EIO
+> -A low-level I/O error occurred while copying.
+> +.B EINVAL
+> +.I fd_in
+> +and
+> +.I fd_out
+> +refer to the same file and the source and target ranges overlap.
+> +.TP
+> +.B EINVAL
+> +.I fd_in
+> +or
+> +.I fd_out
+> +is not a regular file.
+
+Adding the word "either" at the beginning of the sentence (e.g.  "Either
+fd_in or fd_out is not a regular file.") would help this flow better.
+
+>  .TP
+>  .B EISDIR
+>  .I fd_in
+> @@ -124,22 +157,50 @@ or
+>  .I fd_out
+>  refers to a directory.
+>  .TP
+> +.B EOVERFLOW
+> +The requested source or destination range is too large to represent in the
+> +specified data types.
+> +.TP
+> +.B EIO
+> +A low-level I/O error occurred while copying.
+> +.TP
+>  .B ENOMEM
+>  Out of memory.
+>  .TP
+> -.B ENOSPC
+> -There is not enough space on the target filesystem to complete the copy.
+> -.TP
+>  .B EXDEV
+>  The files referred to by
+>  .IR file_in " and " file_out
+> -are not on the same mounted filesystem.
+> +are not on the same mounted filesystem (pre Linux 5.3).
+> +.TP
+> +.B ENOSPC
+> +There is not enough space on the target filesystem to complete the copy.
+
+Why move this?
+
+> +.TP
+> +.B TXTBSY
+> +.I fd_in
+> +or
+> +.I fd_out
+> +refers to an active swap file.
+
+"Either fd_in or fd_out refers to..."
+
+> +.TP
+> +.B EPERM
+> +.I fd_out
+> +refers to an immutable file.
+> +.TP
+> +.B EACCES
+> +The user does not have write permissions for the destination file.
+>  .SH VERSIONS
+>  The
+>  .BR copy_file_range ()
+>  system call first appeared in Linux 4.5, but glibc 2.27 provides a user-space
+>  emulation when it is not available.
+>  .\" https://sourceware.org/git/?p=glibc.git;a=commit;f=posix/unistd.h;h=bad7a0c81f501fbbcc79af9eaa4b8254441c4a1f
+> +.PP
+> +A major rework of the kernel implementation occurred in 5.3. Areas of the API
+> +that weren't clearly defined were clarified and the API bounds are much more
+> +strictly checked than on earlier kernels. Applications should target the
+> +behaviour and requirements of 5.3 kernels.
+
+Are there any weird cases where a program targetting 5.3 behavior would
+fail or get stuck in an infinite loop on a 5.2 kernel?
+
+Particularly since glibc spat out a copy_file_range fallback for 2.29
+that tries to emulate the kernel behavior 100%.  It even refuses
+cross-filesystem copies (because hey, we documented that :() even though
+that's perfectly fine for a userspace implementation.
+
+TBH I suspect that we ought to get the glibc developers to remove the
+"no cross device copies" code from their implementation and then update
+the manpage to say that cross device copies are supposed to be
+supported all the time, at least as of glibc 2.(futureversion).
+
+Anyways, thanks for taking on the c_f_r cleanup! :)
+
+--D
+
+> +.PP
+> +First support for cross-filesystem copies was introduced in Linux 5.3. Older
+> +kernels will return -EXDEV when cross-filesystem copies are attempted.
+>  .SH CONFORMING TO
+>  The
+>  .BR copy_file_range ()
+> @@ -224,7 +285,7 @@ main(int argc, char **argv)
+>          }
+>  
+>          len \-= ret;
+> -    } while (len > 0);
+> +    } while (len > 0 && ret > 0);
+>  
+>      close(fd_in);
+>      close(fd_out);
+> -- 
+> 2.17.1
+> 
