@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A83F2D076
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A97A22D075
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfE1Udl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 16:33:41 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38942 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727529AbfE1Udl (ORCPT
+        id S1727529AbfE1Udm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 16:33:42 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54348 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfE1Udl (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:41 -0400
-Received: by mail-it1-f195.google.com with SMTP id 9so6136667itf.4
-        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:40 -0700 (PDT)
+Received: by mail-it1-f194.google.com with SMTP id h20so6578105itk.4
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=643A/JXkc2fq/8damgxL6JCgtP0wyB1q+dhVeiGdlgE=;
-        b=WwrrXhpHWqnxdeAFcjg7vGnP89MgU8IsU7sQJG2xDzEZtpc8v/FojypESYP+Oeu+W/
-         4jAOAyNXDymL/WkkwjBMMrU5o4S5d+JUbFRe+QWz8/vXQiCUOddkrzh2nTXzP8/EpLyO
-         5bzexbhfmG1++svvXJXebARMmEI17VcRlYgw1S1yUSLt35cFT5d5Hw9ptjFLkMQj3EN2
-         n5WNdEymN0Vk+qNr2WCohubBh5tnvcRlT2FtoPxPfL4ah4Y9PjIk34bicDC36H1+yUwH
-         SfKFma14iQmQIEMp0px5fnKVa+mirjnuAWtJpFScAUo5A58qu57J31DlL6yb2CaMgx7n
-         +zug==
+        bh=Y/jOtEZptS2HutHiuHWWaXrtl1adLnn5zu2gxhvRHbc=;
+        b=UP92vuAsjrwP1Ze2QJ/WWRRGV54b13RYUXblvLcm44HeIIRj4ffegqnnn98Toaveae
+         07H88pyV87xlp6GOGZrlDEdbug7/1bNPQ2OJhT6KaEkQvUQjWfeXaYTg66Su4YFASCiU
+         1fzh80+5XyHsCi3/NL1SROpytUEZ3Cj2Bw8ydn27vsQ2kWBOFJHHXNhXfzed9jbJZfsn
+         hw4Vjh1QqE6kLZsIxivXZXp8+3RvERT+AQP6k8vsKszHtqMkZ6ISVaf4B6b9ubHFbxRB
+         E1qLvZpjOpzuyIGYkderzuORR/lvyf5eW902z4+MQ602Y/wNJys+cKf59yM6lg/6v0cq
+         hrzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=643A/JXkc2fq/8damgxL6JCgtP0wyB1q+dhVeiGdlgE=;
-        b=KIEAY5aJ0TCVaHJ65vUsm/PRlSb3WBFZKXIuAgcVmDK/nX4S0Bkvp5VmaHDnX0SDX5
-         pjS2y4rslTy3FJmi0lFhQvwfDGw5rtA2Eiik/sIHVmpz77r/aK08op6U1ICZryxcxZqC
-         dvZaXTHTnkfeNYqfmLK+aaFMeE2bligYHKKMCZhkgkWO/1ln4QVOKHuOCGi43sNZp7y+
-         MfbBXOiWvTgdZt10/Ntz8hPoLkxMZgPGc8tW4snDO/HkZ2mSjuR+pGlnp3JMBOVHxfj2
-         wHGDkM7qn8UmbYpmzb5kciP8/A8CV9NKF4m4idP2We4P1giKVNnIb1EReDTjELeJ02gL
-         YJ2g==
-X-Gm-Message-State: APjAAAUYVOj20+9zUXaDWYMXXFanV1NB1v+YTRn8+Po3P04nLhBL605a
-        gJBujNeCCVnKHg6f5gFGB4/MXec=
-X-Google-Smtp-Source: APXvYqxwtR2z0OP7qO0aTCWT3Z32GQXLlvUDzAR2tuo2kWTAVtSDfM6bxFhTcvbHNRDOu0v5E3iOng==
-X-Received: by 2002:a05:660c:6c1:: with SMTP id z1mr5057526itk.126.1559075620105;
+        bh=Y/jOtEZptS2HutHiuHWWaXrtl1adLnn5zu2gxhvRHbc=;
+        b=Ao2P+74SvUoUXH7rdWhwR5IVwIVOpXqzI94x5mdFW5j+xVTIkmBk5HBW9RZHFinZ+G
+         /BBiO3Guse45Sm9G/m6vqmUa7azqv7K0W/VMbddsUIbOYCnw2OUReyfh/rxqj6NO4a4b
+         4CgHv1ovScyhpw+/B+6lnxRJ/hLG2pORn7bHAlZzvw2TpCioAKDrqc8jCwTF55AlNhK3
+         Hf9xftEc0qhbQA34AUgypOuWljVEcjT03gODdJuyf1K2KItK609sKCeR9fGwQNgeKPd+
+         B6oYl5WuxRZ/C3Os7bB772eVO5cZ7ug4P33eOgptMwheLExQXDswu9f7M87RJBpNIsFd
+         AjWQ==
+X-Gm-Message-State: APjAAAX6qeLoZVcw3s18TjQwh5I8rbGL0AZqJlDaEwQb+wXz5AjycwWE
+        eo9Jw21p8P2TXzATjAHSe15v5j4=
+X-Google-Smtp-Source: APXvYqxpPnn6D1aFZRpIGdr8jQTLgFBwrKlZb8Ojj5Xcsd46tsttpo7rt9jO8Fck0WAF6veDjuoFVg==
+X-Received: by 2002:a02:9143:: with SMTP id b3mr2002667jag.12.1559075620732;
         Tue, 28 May 2019 13:33:40 -0700 (PDT)
 Received: from localhost.localdomain (50-124-247-140.alma.mi.frontiernet.net. [50.124.247.140])
-        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.39
+        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:33:39 -0700 (PDT)
+        Tue, 28 May 2019 13:33:40 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 10/11] Add a helper for resolving symlinked nfsd paths via realpath()
-Date:   Tue, 28 May 2019 16:31:21 -0400
-Message-Id: <20190528203122.11401-11-trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 11/11] Fix up symlinked mount path resolution when "[exports] rootdir" is set
+Date:   Tue, 28 May 2019 16:31:22 -0400
+Message-Id: <20190528203122.11401-12-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190528203122.11401-10-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190528203122.11401-11-trond.myklebust@hammerspace.com>
 References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-2-trond.myklebust@hammerspace.com>
  <20190528203122.11401-3-trond.myklebust@hammerspace.com>
@@ -63,6 +63,7 @@ References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
  <20190528203122.11401-8-trond.myklebust@hammerspace.com>
  <20190528203122.11401-9-trond.myklebust@hammerspace.com>
  <20190528203122.11401-10-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-11-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -70,81 +71,42 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a helper to resolve symlinked nfsd paths when the user has set the
-"[exports] rootdir" nfs.conf option.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- support/include/nfsd_path.h |  2 ++
- support/misc/nfsd_path.c    | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+ utils/mountd/mountd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
-index f4a7f0a4337f..ca2570a92e68 100644
---- a/support/include/nfsd_path.h
-+++ b/support/include/nfsd_path.h
-@@ -13,6 +13,8 @@ char *		nfsd_path_prepend_dir(const char *dir, const char *pathname);
- int 		nfsd_path_stat(const char *pathname, struct stat *statbuf);
- int 		nfsd_path_lstat(const char *pathname, struct stat *statbuf);
+diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+index f062cac28be4..33571ecbd401 100644
+--- a/utils/mountd/mountd.c
++++ b/utils/mountd/mountd.c
+@@ -272,7 +272,7 @@ mount_umnt_1_svc(struct svc_req *rqstp, dirpath *argp, void *UNUSED(resp))
+ 	if (*p == '\0')
+ 		p = "/";
  
-+char *		nfsd_realpath(const char *path, char *resolved_path);
-+
- ssize_t		nfsd_path_read(int fd, char *buf, size_t len);
- ssize_t		nfsd_path_write(int fd, const char *buf, size_t len);
+-	if (realpath(p, rpath) != NULL) {
++	if (nfsd_realpath(p, rpath) != NULL) {
+ 		rpath[sizeof (rpath) - 1] = '\0';
+ 		p = rpath;
+ 	}
+@@ -363,7 +363,7 @@ mount_pathconf_2_svc(struct svc_req *rqstp, dirpath *path, ppathcnf *res)
+ 	auth_reload();
  
-diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-index 8ddafd65ab76..2f41a793c534 100644
---- a/support/misc/nfsd_path.c
-+++ b/support/misc/nfsd_path.c
-@@ -1,6 +1,7 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#include <stdlib.h>
- #include <unistd.h>
+ 	/* Resolve symlinks */
+-	if (realpath(p, rpath) != NULL) {
++	if (nfsd_realpath(p, rpath) != NULL) {
+ 		rpath[sizeof (rpath) - 1] = '\0';
+ 		p = rpath;
+ 	}
+@@ -473,7 +473,7 @@ get_rootfh(struct svc_req *rqstp, dirpath *path, nfs_export **expret,
+ 	auth_reload();
  
- #include "config.h"
-@@ -169,6 +170,40 @@ nfsd_path_lstat(const char *pathname, struct stat *statbuf)
- 	return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
- }
- 
-+struct nfsd_realpath_data {
-+	const char *pathname;
-+	char *resolved;
-+	int err;
-+};
-+
-+static void
-+nfsd_realpathfunc(void *data)
-+{
-+	struct nfsd_realpath_data *d = data;
-+
-+	d->resolved = realpath(d->pathname, d->resolved);
-+	if (!d->resolved)
-+		d->err = errno;
-+}
-+
-+char *
-+nfsd_realpath(const char *path, char *resolved_path)
-+{
-+	struct nfsd_realpath_data data = {
-+		path,
-+		resolved_path,
-+		0
-+	};
-+
-+	if (!nfsd_wq)
-+		return realpath(path, resolved_path);
-+
-+	xthread_work_run_sync(nfsd_wq, nfsd_realpathfunc, &data);
-+	if (!data.resolved)
-+		errno = data.err;
-+	return data.resolved;
-+}
-+
- struct nfsd_read_data {
- 	int fd;
- 	char *buf;
+ 	/* Resolve symlinks */
+-	if (realpath(p, rpath) != NULL) {
++	if (nfsd_realpath(p, rpath) != NULL) {
+ 		rpath[sizeof (rpath) - 1] = '\0';
+ 		p = rpath;
+ 	}
 -- 
 2.21.0
 
