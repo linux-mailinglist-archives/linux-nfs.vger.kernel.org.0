@@ -2,56 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61F9B2CE6B
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 20:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A83F62CE6E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 20:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbfE1SUw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 14:20:52 -0400
-Received: from mail-it1-f175.google.com ([209.85.166.175]:33857 "EHLO
-        mail-it1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbfE1SUw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 14:20:52 -0400
-Received: by mail-it1-f175.google.com with SMTP id g23so3325329iti.1;
-        Tue, 28 May 2019 11:20:52 -0700 (PDT)
+        id S1728028AbfE1SU6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 14:20:58 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:40909 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727752AbfE1SU5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 14:20:57 -0400
+Received: by mail-it1-f196.google.com with SMTP id h11so5487791itf.5;
+        Tue, 28 May 2019 11:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=N0c2rFnSmWzudniOXAgq6FAlJXTSYfwB+Tp97fGmO8Q=;
-        b=WwHlIWsf3S1iXVYmqEqvK+xcDQY/1xmbADXyb/DrYqUZcW3HXWQUGCGTtGWQ/jQn1T
-         4ctAMGO4KQ7C/Fp9tMGh1NdoUVE1KBoqrBEouuqm+TFWTJyM9A78EGhy/dzXH8XztLur
-         kXygXOA9kog+4lcfvtA3a0TQxAy9+ATL54fdcSlJsGFNPlDFoaxy7nW8I7KoMUdaW8R2
-         KuPSNMix/MbBfXgNpZ0wckNRkhMgJybjE2kFIkRQe2PCyWw7DbLRYuyS0tdIDZsBQtZR
-         /tFw02fm0DF7Fd2hUsK1Q/i3cHlfrwm2yAFLDhKw/OVqAy6wyq99Xf2QyDReo3HQo4nB
-         Gh4w==
+        h=sender:subject:from:to:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=q4ANcePUORAcvpLHm6FS75fc8hbBquDvs08Hlz+shUc=;
+        b=XESmdCYmTp/dY9FmD0w4v39ONKaXE/6wArAyHu3etrGaUUFzlMJuQ3Rc2GEe3Fdcan
+         0LHplpUmF3BC1xrT6TO9ItTZVRxEcxbKtozBDcIPEd9Xpf3ZXLXXKb1CzJ63fZiV7BBa
+         3pB53q3ZWWFEkTQkhV5oQvOfsF+hutizCw3QDkyGufdKkEK0S10j+5H+s/w1UnEuQV0Y
+         J5w/YpBppDxhX6JUxLzVfajfA8DHRidOAL85X6Zy1uV4ecOxjt5pl9eQmuRiOU8qeJ1d
+         f37XfvrB2og0aJResyG7CPQmAB9Y9fjTmAI9t47o0r48h0aqlh786uVw0bohYadEpXOn
+         hOTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=N0c2rFnSmWzudniOXAgq6FAlJXTSYfwB+Tp97fGmO8Q=;
-        b=o1C+7AG9Cm+Cq/5TWV5T88FxhBidyJk+bFPlCXbNo3cCiGiMLixErJBtr8GHyXt7rQ
-         VVvo4Tg7dpoj1xZwrRgC4Q9nsy9cnai9dXqXIIgKSd3w9DCM3E7kfMVHIS/H69rZOwh8
-         fqJIgmv3R3m57LJMZ4v0DfwTz73S8v1X0UvK/ZHQ3+Cqu5pwM35zZeS8BlnOgF8kFZhL
-         vzcBO3+Vw+Y57y6kGY76JfIwU/D42OkrBjT9dsQSZoSsEr5nhEh3V7OyXCN23TWLHdbV
-         r/ON5hPtor7toItpP/3CezAtIRg8OJO0QZkq4Qx0LtgzKtR/QdxY0xq1c3XMiq3XriFl
-         Vr2A==
-X-Gm-Message-State: APjAAAWxIJBTk67sRNu6UMt/BRnSN/2ka1i3GPJ86aTSTW6kQ8Z8rp7C
-        4O0khEWLJN3aSKfAAGe7NBa9xflx
-X-Google-Smtp-Source: APXvYqzYWPLUse5oluk/7h5DncU8sPSSuOVqaapmqqKGuK93Bux6QS78oWartr6a4lm35XB9ZPAzVw==
-X-Received: by 2002:a02:9986:: with SMTP id a6mr15351888jal.51.1559067651496;
-        Tue, 28 May 2019 11:20:51 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=q4ANcePUORAcvpLHm6FS75fc8hbBquDvs08Hlz+shUc=;
+        b=pvtt1lQz5DuLVIDnPeNZ9FXFhAPcMWyYWNrxUTV+wsv8D7Kv/kdOOY0KuuEQlbGde9
+         AM9aMhl4IVNT/UCEhe+SmqagT7pzD63m1SQL5fQyLkHrEITpJ69JXDZbOUBdBkSR8enz
+         9f878/i4QwFfWAIJUmhITj1lF7QJ4yppmc9OtQCvLPEjawmF+OwngQDbepSjH7SMcwve
+         ZErhv3HB3MTU0zYhLUGWRU6oUsRuGCq46jLIK5vL9PCCV6gGSGg4QuVmCJblDs3gNtCe
+         PwDS5d44t4hBMVLi2+lcoPYBXZE03OEa/ltv/NZ9lPNbOUJMnV8RQZ81rlPCmvdAvU6W
+         CZ5g==
+X-Gm-Message-State: APjAAAW3PNBG880ydosLV5wDld1H6qkTSat103bf+mnZsjhA4x207lqR
+        xnz1TAdfgBbmf5w5DaKPW8iNVV9K
+X-Google-Smtp-Source: APXvYqww4W0RM1tXa00sxi9KrAimw2Bnv+VX2qZAmOWdvUrC9+l+CWSE2WXtotTzo6CsJ7+3s2dQ1A==
+X-Received: by 2002:a02:3506:: with SMTP id k6mr3850184jaa.41.1559067656622;
+        Tue, 28 May 2019 11:20:56 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id f1sm4727331iop.53.2019.05.28.11.20.50
+        by smtp.gmail.com with ESMTPSA id u187sm861455iod.37.2019.05.28.11.20.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 11:20:51 -0700 (PDT)
+        Tue, 28 May 2019 11:20:56 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x4SIKoKd014513;
-        Tue, 28 May 2019 18:20:50 GMT
-Subject: [PATCH RFC 00/12] for-5.3 NFS/RDMA patches for review
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x4SIKt17014516;
+        Tue, 28 May 2019 18:20:55 GMT
+Subject: [PATCH RFC 01/12] xprtrdma: Fix use-after-free in rpcrdma_post_recvs
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Tue, 28 May 2019 14:20:50 -0400
-Message-ID: <20190528181018.19012.61210.stgit@manet.1015granger.net>
+Date:   Tue, 28 May 2019 14:20:55 -0400
+Message-ID: <20190528182055.19012.95728.stgit@manet.1015granger.net>
+In-Reply-To: <20190528181018.19012.61210.stgit@manet.1015granger.net>
+References: <20190528181018.19012.61210.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -61,52 +64,32 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a series of fixes and architectural changes that should
-improve robustness and result in better scalability of NFS/RDMA.
-I'm sure one or two of these could be broken down a little more,
-comments welcome.
+Dereference wr->next /before/ the memory backing wr has been
+released. This issue was found by code inspection. It is not
+expected to be a significant problem because it is in an error
+path that is almost never executed.
 
-The fundamental observation is that the RPC work queues are BOUND,
-thus rescheduling work in the Receive completion handler to one of
-these work queues just forces it to run later on the same CPU. So
-try to do more work right in the Receive completion handler to
-reduce context switch overhead.
-
-A secondary concern is that the average amount of wall-clock time
-it takes to handle a single Receive completion caps the IOPS rate
-(both per-xprt and per-NIC). In this patch series I've taken a few
-steps to reduce that latency, and I'm looking into a few others.
-
-This series can be fetched from:
-
-  git://git.linux-nfs.org/projects/cel/cel-2.6.git
-
-in topic branch "nfs-for-5.3".
-
+Fixes: 7c8d9e7c8863 ("xprtrdma: Move Receive posting to ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/xprtrdma/verbs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Chuck Lever (12):
-      xprtrdma: Fix use-after-free in rpcrdma_post_recvs
-      xprtrdma: Replace use of xdr_stream_pos in rpcrdma_marshal_req
-      xprtrdma: Fix occasional transport deadlock
-      xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag
-      xprtrdma: Remove fr_state
-      xprtrdma: Add mechanism to place MRs back on the free list
-      xprtrdma: Reduce context switching due to Local Invalidation
-      xprtrdma: Wake RPCs directly in rpcrdma_wc_send path
-      xprtrdma: Simplify rpcrdma_rep_create
-      xprtrdma: Streamline rpcrdma_post_recvs
-      xprtrdma: Refactor chunk encoding
-      xprtrdma: Remove rpcrdma_req::rl_buffer
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index bef5eac..a803e94 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1554,10 +1554,11 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
+ 			  (const struct ib_recv_wr **)&bad_wr);
+ 	if (rc) {
+-		for (wr = bad_wr; wr; wr = wr->next) {
++		for (wr = bad_wr; wr;) {
+ 			struct rpcrdma_rep *rep;
+ 
+ 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
++			wr = wr->next;
+ 			rpcrdma_recv_buffer_put(rep);
+ 			--count;
+ 		}
 
-
- include/trace/events/rpcrdma.h  |   47 ++++--
- net/sunrpc/xprtrdma/frwr_ops.c  |  330 ++++++++++++++++++++++++++-------------
- net/sunrpc/xprtrdma/rpc_rdma.c  |  146 +++++++----------
- net/sunrpc/xprtrdma/transport.c |   16 +-
- net/sunrpc/xprtrdma/verbs.c     |  115 ++++++--------
- net/sunrpc/xprtrdma/xprt_rdma.h |   43 +----
- 6 files changed, 384 insertions(+), 313 deletions(-)
-
---
-Chuck Lever
