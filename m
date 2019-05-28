@@ -2,58 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01DB72CE7D
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 20:21:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D81F22CE7F
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 20:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfE1SVg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 14:21:36 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:56007 "EHLO
+        id S1727947AbfE1SVk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 14:21:40 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39986 "EHLO
         mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbfE1SVg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 14:21:36 -0400
-Received: by mail-it1-f193.google.com with SMTP id g24so5950881iti.5;
-        Tue, 28 May 2019 11:21:35 -0700 (PDT)
+        with ESMTP id S1727752AbfE1SVk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 14:21:40 -0400
+Received: by mail-it1-f193.google.com with SMTP id h11so5491434itf.5;
+        Tue, 28 May 2019 11:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=aL7FW6mmLTyhjWDMwg6TWQ+5TITczlqjWNyicyO6aZY=;
-        b=E+nMtPUQdGvT1SqiAO098Vb+8EbjIUpXaiULZ7fFbeHGOxqVDGNShzJfBY+Ik1CZqN
-         lh5Rrjxw8qH+CSor4TnvMAhWQ/QlbuMiS2PraAghp2lqkRbZXSnrUbBMC53rJV+g/UIb
-         MHqLwr2jQVSMBOdvg0PGxu43TNnNo1+qGezUdvKaKEQGTSyxh28LoOCnIhc7eGQsRtZE
-         x/vwdk3TXMx2dQwn2SxxRYCf6zBUpUguWN3dUfcwLyld7GXXmLFjDO1SbqoEhas/k+mt
-         KgbQvh2R8Y+P4oWbG5XPwoKSx6RrHBXpLQ4+6T+TgKSzNQq4NGLD8uLxS+55s2FzS17d
-         HLmw==
+        bh=AYDAlu3lshTWu+thI1Eb0xhXztpFpS+AwLcO72xeFgg=;
+        b=QjI4AlsJ+3d6BBMyO5ijZjnwzVuiuJkkoJKp3MjThLosRE1sE1bMq185QiZ2SpUqm/
+         zq4aDAWNFb0LdkWhB4l/26qF4iAUHuEB+Ltwau2sNe2TREr+q6+949NFeiSsjE8JTx/y
+         KXG50iNxmRgALuTxWWWGsHS5jo/eHQ00MIxT8U2L/vEbQblaW8qDtAVwEKzKTjoiuxby
+         fXJWLSCnz6Dtcd9QYsgCxCOiX9AbfJudEb6VENi0lGYis91jyytmeNsILTFVeN8w4SN3
+         7YiKBjz9cy94RT7FRJQcDbCjWM/iJ5e8h/I0vS86mbHP/9G+QyhnqS0qH/vpGvJDbxUw
+         /jqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=aL7FW6mmLTyhjWDMwg6TWQ+5TITczlqjWNyicyO6aZY=;
-        b=H1b0Fc51UnVTe5nxk2bIL6TzKuEuJf6J/2ByQuR2QIHMtF0GMG1M7sFYwdeKMFxiof
-         YGTg8frhsz7rSr1pXmupSn2f9XYLEq9bsoeNZ1RQATbRuf+TQ6CVNr6N0dB0ncsaoqFk
-         Q8tj+tRBV58VCmJf4G9N++w7kuPXXUg+YEqhBqogQHkNm3odQEeeLJg6GUqij9DffwFp
-         J9BJ2G1W3sABZYDAANxrg7yz5gXVBXiia5+51YRVo8/TwR1yH8RKwvq0faJS+dIMcrXx
-         QffCYAd9Q9jQkagz46fR96f9A6IQH71TuwJ/WjdLQP60WhiM9QtHNplXao4lFRx2qelZ
-         VT+Q==
-X-Gm-Message-State: APjAAAW5ib0Yx0dJycybYOSr3Xx4t6+DhjlPWjiuV2UioZtN1tWw363h
-        hLEPDiAa/fx7/Moh+5XY6Dlqny3M
-X-Google-Smtp-Source: APXvYqy7DgF9ttdF91EXLiOFLCogCwpQsyGdIP7d6m+UuL2sMhOEXeLSuY2ndeY4i7VuQeQ8MDfzQQ==
-X-Received: by 2002:a02:228f:: with SMTP id o137mr82822449jao.39.1559067695009;
-        Tue, 28 May 2019 11:21:35 -0700 (PDT)
+        bh=AYDAlu3lshTWu+thI1Eb0xhXztpFpS+AwLcO72xeFgg=;
+        b=LvLqcPE0wZ0zjIRxJOdswNX+BppSyvwLSFH4GRcUp9nFdm+IulPLNDBbDLcO+MsU5Y
+         M/tmz8x0bOqDB/2kis45yrMy+9CpxxjnhOlz/eHWM+q3AYGWtERT4+u7A/s6Y2jnXJmX
+         J3joJWI1GNhtfcVLVUWuHaXw3A/hE4nbUMDebQyghZlqVqKQ2v8IdUqrxsyvDNT3qzgn
+         Jlgewd9/P5IGBG7Rt2FG+UK6sRzItSVklMD0H2PRUBGOCqZKdbqOjKRqLKZrR7kUG31+
+         NoH4rjGuDe4KT3f9NW0dmZUArICphVdGhud9BMUpZKPcxLkvQSR9RidatwxrpZlbeL4n
+         zg4g==
+X-Gm-Message-State: APjAAAUJrd9aDG5llToz98DAt1eRa2GWQRl+hdZHMNRQ128hsUWFmYFw
+        Be2lrjoibhYNE34SvKqD+2jhywnj
+X-Google-Smtp-Source: APXvYqx7HzZlbX1kjkkdv7IUs4Qlg/KfOU6cXJmL3KUpGQBEBLPSpjSFVaunHCNOVVcBUGOil1iaaA==
+X-Received: by 2002:a24:3988:: with SMTP id l130mr4048009ita.13.1559067699616;
+        Tue, 28 May 2019 11:21:39 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id e2sm1446810ith.39.2019.05.28.11.21.33
+        by smtp.gmail.com with ESMTPSA id n26sm3366771ioc.74.2019.05.28.11.21.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 11:21:33 -0700 (PDT)
+        Tue, 28 May 2019 11:21:39 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x4SILWcc014537;
-        Tue, 28 May 2019 18:21:32 GMT
-Subject: [PATCH RFC 08/12] xprtrdma: Wake RPCs directly in rpcrdma_wc_send
- path
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x4SILcgX014540;
+        Tue, 28 May 2019 18:21:38 GMT
+Subject: [PATCH RFC 09/12] xprtrdma: Simplify rpcrdma_rep_create
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Tue, 28 May 2019 14:21:32 -0400
-Message-ID: <20190528182132.19012.55642.stgit@manet.1015granger.net>
+Date:   Tue, 28 May 2019 14:21:38 -0400
+Message-ID: <20190528182138.19012.62904.stgit@manet.1015granger.net>
 In-Reply-To: <20190528181018.19012.61210.stgit@manet.1015granger.net>
 References: <20190528181018.19012.61210.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -65,210 +64,94 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Eliminate a context switch in the path that handles RPC wake-ups
-when a Receive completion has to wait for a Send completion.
+Clean up.
+
+Commit 7c8d9e7c8863 ("xprtrdma: Move Receive posting to Receive
+handler") reduced the number of rpcrdma_rep_create call sites to
+one. After that commit, the backchannel code no longer invokes it.
+
+Therefore the free list logic added by commit d698c4a02ee0
+("xprtrdma: Fix backchannel allocation of extra rpcrdma_reps") is
+no longer necessary, and in fact adds some extra overhead that we
+can do without.
+
+Simply post any newly created reps. They will get added back to
+the rb_recv_bufs list when they subsequently complete.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c  |   61 +++++++++++++++------------------------
- net/sunrpc/xprtrdma/transport.c |    9 +++++-
- net/sunrpc/xprtrdma/verbs.c     |    3 +-
- net/sunrpc/xprtrdma/xprt_rdma.h |   12 ++------
- 4 files changed, 35 insertions(+), 50 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c |   22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index ea39f74..6de90d4 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -511,6 +511,16 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 	return 0;
- }
- 
-+static void rpcrdma_sendctx_done(struct kref *kref)
-+{
-+	struct rpcrdma_req *req =
-+		container_of(kref, struct rpcrdma_req, rl_kref);
-+	struct rpcrdma_rep *rep = req->rl_reply;
-+
-+	rpcrdma_complete_rqst(rep);
-+	rep->rr_rxprt->rx_stats.reply_waits_for_send++;
-+}
-+
- /**
-  * rpcrdma_sendctx_unmap - DMA-unmap Send buffer
-  * @sc: sendctx containing SGEs to unmap
-@@ -520,6 +530,9 @@ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
- {
- 	struct ib_sge *sge;
- 
-+	if (!sc->sc_unmap_count)
-+		return;
-+
- 	/* The first two SGEs contain the transport header and
- 	 * the inline buffer. These are always left mapped so
- 	 * they can be cheaply re-used.
-@@ -529,9 +542,7 @@ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
- 		ib_dma_unmap_page(sc->sc_device, sge->addr, sge->length,
- 				  DMA_TO_DEVICE);
- 
--	if (test_and_clear_bit(RPCRDMA_REQ_F_TX_RESOURCES,
--			       &sc->sc_req->rl_flags))
--		wake_up_bit(&sc->sc_req->rl_flags, RPCRDMA_REQ_F_TX_RESOURCES);
-+	kref_put(&sc->sc_req->rl_kref, rpcrdma_sendctx_done);
- }
- 
- /* Prepare an SGE for the RPC-over-RDMA transport header.
-@@ -666,7 +677,7 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
- out:
- 	sc->sc_wr.num_sge += sge_no;
- 	if (sc->sc_unmap_count)
--		__set_bit(RPCRDMA_REQ_F_TX_RESOURCES, &req->rl_flags);
-+		kref_get(&req->rl_kref);
- 	return true;
- 
- out_regbuf:
-@@ -708,7 +719,7 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
- 	req->rl_sendctx->sc_wr.num_sge = 0;
- 	req->rl_sendctx->sc_unmap_count = 0;
- 	req->rl_sendctx->sc_req = req;
--	__clear_bit(RPCRDMA_REQ_F_TX_RESOURCES, &req->rl_flags);
-+	kref_init(&req->rl_kref);
- 
- 	ret = -EIO;
- 	if (!rpcrdma_prepare_hdr_sge(r_xprt, req, hdrlen))
-@@ -1268,36 +1279,12 @@ void rpcrdma_complete_rqst(struct rpcrdma_rep *rep)
- 	goto out;
- }
- 
--/* Ensure that any DMA mapped pages associated with
-- * the Send of the RPC Call have been unmapped before
-- * allowing the RPC to complete. This protects argument
-- * memory not controlled by the RPC client from being
-- * re-used before we're done with it.
-- */
--static void rpcrdma_release_tx(struct rpcrdma_xprt *r_xprt,
--			       struct rpcrdma_req *req)
-+static void rpcrdma_reply_done(struct kref *kref)
- {
--	if (test_bit(RPCRDMA_REQ_F_TX_RESOURCES, &req->rl_flags)) {
--		r_xprt->rx_stats.reply_waits_for_send++;
--		out_of_line_wait_on_bit(&req->rl_flags,
--					RPCRDMA_REQ_F_TX_RESOURCES,
--					bit_wait,
--					TASK_UNINTERRUPTIBLE);
--	}
--}
-+	struct rpcrdma_req *req =
-+		container_of(kref, struct rpcrdma_req, rl_kref);
- 
--/**
-- * rpcrdma_release_rqst - Release hardware resources
-- * @r_xprt: controlling transport instance
-- * @req: request with resources to release
-- *
-- */
--void rpcrdma_release_rqst(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
--{
--	if (!list_empty(&req->rl_registered))
--		frwr_unmap_sync(r_xprt, req);
--
--	rpcrdma_release_tx(r_xprt, req);
-+	rpcrdma_complete_rqst(req->rl_reply);
- }
- 
- /**
-@@ -1367,13 +1354,11 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
- 
- 	if (rep->rr_wc_flags & IB_WC_WITH_INVALIDATE)
- 		frwr_reminv(rep, &req->rl_registered);
--	if (!list_empty(&req->rl_registered)) {
-+	if (!list_empty(&req->rl_registered))
- 		frwr_unmap_async(r_xprt, req);
- 		/* LocalInv completion will complete the RPC */
--	} else {
--		rpcrdma_release_tx(r_xprt, req);
--		rpcrdma_complete_rqst(rep);
--	}
-+	else
-+		kref_put(&req->rl_kref, rpcrdma_reply_done);
- 	return;
- 
- out_badversion:
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index f84375d..5b1d5d7 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -618,8 +618,15 @@ static bool rpcrdma_check_regbuf(struct rpcrdma_xprt *r_xprt,
- 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(rqst->rq_xprt);
- 	struct rpcrdma_req *req = rpcr_to_rdmar(rqst);
- 
--	rpcrdma_release_rqst(r_xprt, req);
- 	trace_xprtrdma_op_free(task, req);
-+
-+	if (!list_empty(&req->rl_registered))
-+		frwr_unmap_sync(r_xprt, req);
-+
-+	/* XXX: We should wait for the Send completion here,
-+	 * although it's very likely it's already fired in
-+	 * this case.
-+	 */
- }
- 
- /**
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 0be455b..729266e 100644
+index 729266e..390c3bc 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1463,8 +1463,7 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
- 	struct ib_send_wr *send_wr = &req->rl_sendctx->sc_wr;
- 	int rc;
+@@ -1037,9 +1037,9 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+ 	return NULL;
+ }
  
--	if (!ep->rep_send_count ||
--	    test_bit(RPCRDMA_REQ_F_TX_RESOURCES, &req->rl_flags)) {
-+	if (!ep->rep_send_count || kref_read(&req->rl_kref) > 1) {
- 		send_wr->send_flags |= IB_SEND_SIGNALED;
- 		ep->rep_send_count = ep->rep_send_batch;
- 	} else {
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index e465221..5475f0d 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -44,7 +44,8 @@
+-static bool rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt, bool temp)
++static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
++					      bool temp)
+ {
+-	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 	struct rpcrdma_rep *rep;
  
- #include <linux/wait.h> 		/* wait_queue_head_t, etc */
- #include <linux/spinlock.h> 		/* spinlock_t, etc */
--#include <linux/atomic.h>			/* atomic_t, etc */
-+#include <linux/atomic.h>		/* atomic_t, etc */
-+#include <linux/kref.h>			/* struct kref */
- #include <linux/workqueue.h>		/* struct work_struct */
- 
- #include <rdma/rdma_cm.h>		/* RDMA connection api */
-@@ -329,17 +330,12 @@ struct rpcrdma_req {
- 	struct rpcrdma_regbuf	*rl_recvbuf;	/* rq_rcv_buf */
- 
- 	struct list_head	rl_all;
--	unsigned long		rl_flags;
-+	struct kref		rl_kref;
- 
- 	struct list_head	rl_registered;	/* registered segments */
- 	struct rpcrdma_mr_seg	rl_segments[RPCRDMA_MAX_SEGS];
- };
- 
--/* rl_flags */
--enum {
--	RPCRDMA_REQ_F_TX_RESOURCES,
--};
+ 	rep = kzalloc(sizeof(*rep), GFP_KERNEL);
+@@ -1050,9 +1050,9 @@ static bool rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt, bool temp)
+ 					       DMA_FROM_DEVICE, GFP_KERNEL);
+ 	if (!rep->rr_rdmabuf)
+ 		goto out_free;
++
+ 	xdr_buf_init(&rep->rr_hdrbuf, rdmab_data(rep->rr_rdmabuf),
+ 		     rdmab_length(rep->rr_rdmabuf));
 -
- static inline struct rpcrdma_req *
- rpcr_to_rdmar(const struct rpc_rqst *rqst)
- {
-@@ -584,8 +580,6 @@ int rpcrdma_prepare_send_sges(struct rpcrdma_xprt *r_xprt,
- void rpcrdma_set_max_header_sizes(struct rpcrdma_xprt *);
- void rpcrdma_complete_rqst(struct rpcrdma_rep *rep);
- void rpcrdma_reply_handler(struct rpcrdma_rep *rep);
--void rpcrdma_release_rqst(struct rpcrdma_xprt *r_xprt,
--			  struct rpcrdma_req *req);
+ 	rep->rr_cqe.done = rpcrdma_wc_receive;
+ 	rep->rr_rxprt = r_xprt;
+ 	rep->rr_recv_wr.next = NULL;
+@@ -1060,16 +1060,12 @@ static bool rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt, bool temp)
+ 	rep->rr_recv_wr.sg_list = &rep->rr_rdmabuf->rg_iov;
+ 	rep->rr_recv_wr.num_sge = 1;
+ 	rep->rr_temp = temp;
+-
+-	spin_lock(&buf->rb_lock);
+-	list_add(&rep->rr_list, &buf->rb_recv_bufs);
+-	spin_unlock(&buf->rb_lock);
+-	return true;
++	return rep;
  
- static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
- {
+ out_free:
+ 	kfree(rep);
+ out:
+-	return false;
++	return NULL;
+ }
+ 
+ /**
+@@ -1498,7 +1494,6 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 	count = 0;
+ 	wr = NULL;
+ 	while (needed) {
+-		struct rpcrdma_regbuf *rb;
+ 		struct rpcrdma_rep *rep;
+ 
+ 		spin_lock(&buf->rb_lock);
+@@ -1508,13 +1503,12 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 			list_del(&rep->rr_list);
+ 		spin_unlock(&buf->rb_lock);
+ 		if (!rep) {
+-			if (!rpcrdma_rep_create(r_xprt, temp))
++			rep = rpcrdma_rep_create(r_xprt, temp);
++			if (!rep)
+ 				break;
+-			continue;
+ 		}
+ 
+-		rb = rep->rr_rdmabuf;
+-		if (!rpcrdma_regbuf_dma_map(r_xprt, rb)) {
++		if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
+ 			rpcrdma_recv_buffer_put(rep);
+ 			break;
+ 		}
 
