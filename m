@@ -2,94 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 305432C4C7
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 12:49:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E28392C82D
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 15:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfE1KtU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 06:49:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52738 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfE1KtU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 May 2019 06:49:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B3B7F3086224;
-        Tue, 28 May 2019 10:49:17 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96D8E5D6A9;
-        Tue, 28 May 2019 10:49:15 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>, bfields@fieldses.org
-Cc:     jlayton@kernel.org, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH -next] lockd: Make two symbols static
-Date:   Tue, 28 May 2019 06:49:13 -0400
-Message-ID: <97D052EC-1F07-4210-81CC-7E0085C095BD@redhat.com>
-In-Reply-To: <20190528090652.13288-1-yuehaibing@huawei.com>
-References: <20190528090652.13288-1-yuehaibing@huawei.com>
+        id S1727331AbfE1N4T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 May 2019 09:56:19 -0400
+Received: from mail-eopbgr690074.outbound.protection.outlook.com ([40.107.69.74]:52558
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfE1N4T (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 May 2019 09:56:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0W8T4BpWAtdMtyfpkle4UMS9AzTyvJN7M+sMAirythY=;
+ b=T873an8ha2UvsdBQ5JoXPu1D1dH6Tl9RuZymq+/0Jcbhbb4yef0wYNHArVdFeMFHw2VLJaWWRE22YHjXZeARN22Sf8xMTmNPDiR8rdu+8RDbjIspO94ElV/5qRh9VwZ3HwhorgcAqeCr7CxSpMaumRr/gTeTsy0TPaCZ9bSrvug=
+Received: from BN8PR06MB6228.namprd06.prod.outlook.com (20.178.217.156) by
+ BN8PR06MB5858.namprd06.prod.outlook.com (20.179.138.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.20; Tue, 28 May 2019 13:56:15 +0000
+Received: from BN8PR06MB6228.namprd06.prod.outlook.com
+ ([fe80::bc27:e0e1:e3e2:7b52]) by BN8PR06MB6228.namprd06.prod.outlook.com
+ ([fe80::bc27:e0e1:e3e2:7b52%6]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 13:56:15 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>
+CC:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
+Thread-Topic: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
+Thread-Index: AQHUuP5mCuK2SP21dES5S/AwZU1LhKXJa7UAgFhvo4CAWCJ1AIAAD8iAgAADGQCABzePAA==
+Date:   Tue, 28 May 2019 13:56:15 +0000
+Message-ID: <5e8c92372afae86af71564a357691b3e4283640a.camel@netapp.com>
+References: <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
+         <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+         <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
+         <20190523.163229.1499181553844972278.davem@davemloft.net>
+         <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
+In-Reply-To: <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [23.28.75.121]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c5baf4eb-56cc-41ed-9928-08d6e3744032
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR06MB5858;
+x-ms-traffictypediagnostic: BN8PR06MB5858:
+x-microsoft-antispam-prvs: <BN8PR06MB5858DAAAC8C0A17337163EB5F81E0@BN8PR06MB5858.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(366004)(189003)(54094003)(199004)(81156014)(81166006)(305945005)(86362001)(8676002)(99286004)(256004)(7736002)(316002)(118296001)(6436002)(478600001)(71200400001)(6116002)(486006)(58126008)(71190400001)(25786009)(14454004)(102836004)(3846002)(4744005)(229853002)(6512007)(6486002)(72206003)(91956017)(76116006)(66066001)(66476007)(66556008)(66946007)(73956011)(66446008)(64756008)(2501003)(76176011)(110136005)(36756003)(6246003)(68736007)(53936002)(4326008)(8936002)(53546011)(6506007)(11346002)(2906002)(186003)(446003)(476003)(2616005)(26005)(54906003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR06MB5858;H:BN8PR06MB6228.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: D6SlFqNg8slk/PtaTgl+xN8XNoLweBUb4/DXWbwwGCDVT/CkMUJtK2V0ZkU+a2XgxhgXQi46cFuP6NMt/3IBrUamUGRNMVEMVI8FEu9etEcdQj+ESEfhwSJ9P7pNMYmQvEVSs67OY4IFucseIxrTgiMDP5TKkFa4IghQEWfiDIocxe7yj1Tl8h0WzvYxWxsQ1gQxC7I4aaN/9uRu/ZRtglqJJ7Du53SAvlFwsIaUNdh3uwl9f1b5MLzPALjznfCUdeQdWlnZZpKmKbPlY+65MGpjvEPhIWk782o4LAfq2AVmXHicT5ptt6hAlGNjI9dejzE5q2plAHhjWyoLm9GyNRwGx9eLBk9QVSaAKkvdt9Ugz0f0063gM7FF/kmeobhNK7pFJpWD1vU6fLBk+e3bn4Q4F8SgnXujyjNUDwLhP08=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A8CF9004DFB06941858E82FF4FAF7539@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 28 May 2019 10:49:20 +0000 (UTC)
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5baf4eb-56cc-41ed-9928-08d6e3744032
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 13:56:15.1133
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bjschuma@netapp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR06MB5858
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Maintainers, what's the best thing to do here: fold these into another 
-patch version and post it (add attribution)?  Add it as another patch at 
-the end of the series?
-
-I have learned my lesson: add sparse to my workflow.
-
-Ben
-
-On 28 May 2019, at 5:06, YueHaibing wrote:
-
-> Fix sparse warnings:
->
-> fs/lockd/clntproc.c:57:6: warning: symbol 'nlmclnt_put_lockowner' was 
-> not declared. Should it be static?
-> fs/lockd/svclock.c:409:35: warning: symbol 'nlmsvc_lock_ops' was not 
-> declared. Should it be static?
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/lockd/clntproc.c | 2 +-
->  fs/lockd/svclock.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
-> index 0ff8ad4..b11f2af 100644
-> --- a/fs/lockd/clntproc.c
-> +++ b/fs/lockd/clntproc.c
-> @@ -54,7 +54,7 @@ nlmclnt_get_lockowner(struct nlm_lockowner 
-> *lockowner)
->  	return lockowner;
->  }
->
-> -void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
-> +static void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
->  {
->  	if (!refcount_dec_and_lock(&lockowner->count, 
-> &lockowner->host->h_lock))
->  		return;
-> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> index 5f9f19b..61d3cc2 100644
-> --- a/fs/lockd/svclock.c
-> +++ b/fs/lockd/svclock.c
-> @@ -406,7 +406,7 @@ static void nlmsvc_locks_release_private(struct 
-> file_lock *fl)
->  	nlmsvc_put_lockowner((struct nlm_lockowner *)fl->fl_owner);
->  }
->
-> -const struct file_lock_operations nlmsvc_lock_ops = {
-> +static const struct file_lock_operations nlmsvc_lock_ops = {
->  	.fl_copy_lock = nlmsvc_locks_copy_lock,
->  	.fl_release_private = nlmsvc_locks_release_private,
->  };
-> -- 
-> 2.7.4
+DQpPbiBUaHUsIDIwMTktMDUtMjMgYXQgMTg6NDMgLTA1MDAsIEd1c3Rhdm8gQS4gUi4gU2lsdmEg
+d3JvdGU6DQo+IA0KPiBPbiA1LzIzLzE5IDY6MzIgUE0sIERhdmlkIE1pbGxlciB3cm90ZToNCj4g
+PiBGcm9tOiAiR3VzdGF2byBBLiBSLiBTaWx2YSIgPGd1c3Rhdm9AZW1iZWRkZWRvci5jb20+DQo+
+ID4gRGF0ZTogVGh1LCAyMyBNYXkgMjAxOSAxNzozNjowMCAtMDUwMA0KPiA+IA0KPiA+ID4gSGkg
+RGF2ZSwNCj4gPiA+IA0KPiA+ID4gSSB3b25kZXIgaWYgeW91IGNhbiB0YWtlIHRoaXMgcGF0Y2gu
+DQo+ID4gDQo+ID4gVGhlIHN1bnJwYy9uZnMgbWFpbnRhaW5lciBzaG91bGQgdGFrZSB0aGlzLiAg
+SSBuZXZlciB0YWtlIHBhdGNoZXMgaW4gdGhhdA0KPiA+IGFyZWEuDQo+ID4gDQo+IA0KPiBZZXAu
+IENodWNrIGp1c3QgbGV0IG1lIGtub3cgdGhhdCBBbm5hIGlzIHdobyB0YWtlIHRoZXNlIHBhdGNo
+ZXMuDQo+IA0KPiBIb3BlZnVsbHksIHNoZSB3aWxsIHRha2UgdGhpcyBvbmUgc29vbi4NCg0KSSd2
+ZSBhcHBsaWVkIHRoaXMgdG8gcHVzaCBvdXQgbGF0ZXIgaW4gdGhlIHdlZWsuIFRoYW5rcyBmb3Ig
+cG9pbnRpbmcgaXQgb3V0IHRvDQptZSENCg0KQW5uYQ0KDQo+IA0KPiBUaGFua3MNCj4gLS0NCj4g
+R3VzdGF2bw0K
