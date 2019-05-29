@@ -2,133 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14A0D2E30B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 19:19:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2232E376
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 19:43:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfE2RTu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 13:19:50 -0400
-Received: from mail-eopbgr810092.outbound.protection.outlook.com ([40.107.81.92]:45781
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfE2RTt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 May 2019 13:19:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IpzdTQcuu2T8JKtyPXxQdPKNQGR0s8sINnNsNFavDEk=;
- b=FHn+Gw/ofUC4+7rE/jaQgibJQc5qiUfssjUKStBhoNksmYbRjvKBPs94IrTekkG29KewDMPekoyWrUOP6Wg2+KWVDx8nap8amuJbpKIyR6vqsSS81DFyzSNEqfg+VzWhiomeJvM9FagkOuC8QkYkzKauNayLEnAFZSBDv/8BUEc=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1017.namprd13.prod.outlook.com (10.168.240.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.10; Wed, 29 May 2019 17:19:45 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::502c:c076:fdd4:9633%7]) with mapi id 15.20.1943.016; Wed, 29 May 2019
- 17:19:45 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: client lookup_revalidate bug
-Thread-Topic: client lookup_revalidate bug
-Thread-Index: AQHVFjBscHUNWpoRAkCoQc0DC6hmgKaCSOAAgAAE14CAAAtQAA==
-Date:   Wed, 29 May 2019 17:19:45 +0000
-Message-ID: <b8e9ef022cb5ec1fef01e34890c3119463b0bd4b.camel@hammerspace.com>
-References: <D4DAB8F2-CAA7-4BC3-B0A0-4EAF5E9DE261@redhat.com>
-         <458733948202ed0fddf37cbb79730b5ebdabd551.camel@hammerspace.com>
-         <66FFF553-5DEE-4B49-A207-7B0D63FBAECB@redhat.com>
-In-Reply-To: <66FFF553-5DEE-4B49-A207-7B0D63FBAECB@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.124.247.140]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9aafaa15-55a2-4a4f-8e89-08d6e459d86a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1017;
-x-ms-traffictypediagnostic: DM5PR13MB1017:
-x-microsoft-antispam-prvs: <DM5PR13MB1017F2E062A95A00F7AD256BB81F0@DM5PR13MB1017.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0052308DC6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39830400003)(346002)(376002)(136003)(396003)(189003)(199004)(6512007)(25786009)(66476007)(66946007)(68736007)(316002)(229853002)(6486002)(118296001)(99286004)(71200400001)(66556008)(14454004)(76116006)(478600001)(73956011)(66446008)(64756008)(36756003)(486006)(76176011)(71190400001)(5640700003)(476003)(1730700003)(81156014)(6436002)(81166006)(6916009)(11346002)(186003)(66066001)(53546011)(8676002)(26005)(7116003)(6506007)(6246003)(53936002)(6116002)(14444005)(256004)(7736002)(4326008)(305945005)(5660300002)(446003)(2351001)(86362001)(3846002)(2616005)(2501003)(2906002)(102836004)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1017;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5qJdxgcGdRP5gy4YYHd0dbmT58puaQ0Y49XlriGwHFoKrj7OyNb4LCslDXrYyypFGqHhkjkQ56PEdgMJMsx1oTqCxUt5Zd/UrEzQMPYN+Qx8PRyTunhbPQfNgflArx4bs1M1rlyZjdbP+3IaWBH7PLX6wqC9ZZB2KLtwrLSrSb6h4qePpMeal6rGjGZAWwqqJGjtlQP3DUorvL7z1LkqXsYq0UjHF3JpTPU9+Pb2V99YRejr9WsDNzB5S1/D2JAkvyKaTdtazGmnnSKXdCAHqiwKer+oTG9iu83J+v5DKHyQH+1RBzo67heIKYXiNilNDmyfLDtVhh2Sa2eR0xKIYow2W0OAJd1iGO6yJMlcApojj+onLR08JiiExeTKhtLtPQp6bACZs0aJiF72wrPR+iGvvLjQ5x5NJzoVSM9HCsU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB6F60CB69EF864FB7384788636AB3CB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aafaa15-55a2-4a4f-8e89-08d6e459d86a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 17:19:45.2126
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1017
+        id S1726054AbfE2Rna (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 13:43:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38020 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2Rna (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 13:43:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so2396174wrs.5;
+        Wed, 29 May 2019 10:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SUYnB2bg4AR5y4HlcGNuWGzeCbLRgpuJBmh6fn5CpA4=;
+        b=f17Sh1HPDc9bYMG1afQL0SErA2OLPo6bzs0M+RgImWRrvuYAE6X+IRRxhBfn2W8n0E
+         GHV5S3VSKLum2UZG2m5jEEwK8YJoCH6NU8hq8TTgEr1vT6rIGaAS1my/czWl8uffAP0/
+         Cu2fC0uC3HP8OIJi+W6ZBzEcsH05bCQsoWY2DcsxobER2+mSj7/5QtCDqY7JLuPOvPdz
+         9YN5j/7+voP6EZ0q9aJ/GFALf7QeTIaoY8iWAKvRTcYOr6KnA96A+TZwu1T/A/V1q5GD
+         hxkR7JeYoG95+ckNoW0Loz5RBtdwNSSwHXQUyeOgzTHAdWjwQpffAZZeHtflgtnYlu0v
+         QDZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SUYnB2bg4AR5y4HlcGNuWGzeCbLRgpuJBmh6fn5CpA4=;
+        b=qxQcZ7L8a0kPUxyDe7dxpZBc6DpickgHPFEu1mzucgzgLCq37HfZr5CvRlUshF8h2g
+         ArBrim/vZtlJ7EbFWJ7qgW3ifAwy3xq4DcXGJoIWpj1ByO/d2w7yfUJV7GnK7IcvOGNI
+         6r/sRgYTlSLYMVV//F/fYPVYOuAZe+QxrifOBlUtaW+1bGDBBQadImUxGWIyp7XHllfM
+         7mfOVddkfap5Ehg4+h8uWc3x/YmI8bUSSiHaBrrQ3S8LYKm7IQsuvHg2Puu04OUoWHpf
+         nRJxEMjWA0UEJBmTcMNglYKm6hCGtThuv6adeq8GxXIBk6UKS/gXAGd0nGAJKCy3ZWdA
+         iUjg==
+X-Gm-Message-State: APjAAAVzkUH9n5/ITQUGy3IP6XQloCOZM2w5Jmky3/E8PwLLH5uuWRjO
+        X6ULJpAM2qCOovs9dntWIcs=
+X-Google-Smtp-Source: APXvYqwXQ8E44dxbKym/mvJKG8Qiroxs57QOiLNMp3g+8QBMB71+VtDnIZNwSmjflXVUKuCFoplM6g==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr22768077wrw.309.1559151807660;
+        Wed, 29 May 2019 10:43:27 -0700 (PDT)
+Received: from localhost.localdomain ([5.102.238.208])
+        by smtp.gmail.com with ESMTPSA id k125sm31702wmb.34.2019.05.29.10.43.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 10:43:26 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs@vger.kernel.org,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org
+Subject: [PATCH v3 00/13] Fixes for major copy_file_range() issues
+Date:   Wed, 29 May 2019 20:43:04 +0300
+Message-Id: <20190529174318.22424-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTI5IGF0IDEyOjM5IC0wNDAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAyOSBNYXkgMjAxOSwgYXQgMTI6MjEsIFRyb25kIE15a2xlYnVzdCB3cm90ZToN
-Cj4gDQo+ID4gT24gV2VkLCAyMDE5LTA1LTI5IGF0IDExOjA4IC0wNDAwLCBCZW5qYW1pbiBDb2Rk
-aW5ndG9uIHdyb3RlOg0KPiA+ID4gSGV5LCBoZXJlJ3MgYW4gaW50ZXJlc3Rpbmcgb25lLCB0aGlz
-IHNlZW1zIHdyb25nOg0KPiA+ID4gDQo+ID4gPiBbcm9vdEBmZWRvcmEyN19jMl92NSB+XSMgbWtk
-aXIgL21udC9vbmUNCj4gPiA+IFtyb290QGZlZG9yYTI3X2MyX3Y1IH5dIyBta2RpciAvbW50L3R3
-bw0KPiA+ID4gW3Jvb3RAZmVkb3JhMjdfYzJfdjUgfl0jIG1vdW50IC10IG5mcw0KPiA+ID4gLW92
-NCxub2FjLHNlYz1zeXMsbm9zaGFyZWNhY2hlDQo+ID4gPiAxOTIuMTY4LjEyMi41MDovZXhwb3J0
-cyAvbW50L29uZQ0KPiA+ID4gW3Jvb3RAZmVkb3JhMjdfYzJfdjUgfl0jIG1vdW50IC10IG5mcw0K
-PiA+ID4gLW92NCxub2FjLHNlYz1zeXMsbm9zaGFyZWNhY2hlDQo+ID4gPiAxOTIuMTY4LjEyMi41
-MDovZXhwb3J0cyAvbW50L3R3bw0KPiA+ID4gW3Jvb3RAZmVkb3JhMjdfYzJfdjUgfl0jIG1rZGly
-IC9tbnQvb25lL0ENCj4gPiA+IFtyb290QGZlZG9yYTI3X2MyX3Y1IH5dIyBta2RpciAvbW50L29u
-ZS9CDQo+ID4gPiBbcm9vdEBmZWRvcmEyN19jMl92NSB+XSMgdG91Y2ggL21udC9vbmUvQS9mb28N
-Cj4gPiA+IFtyb290QGZlZG9yYTI3X2MyX3Y1IH5dIyBjYXQgL21udC90d28vQS9mb28NCj4gPiA+
-IFtyb290QGZlZG9yYTI3X2MyX3Y1IH5dIyBtdiAvbW50L3R3by9BL2ZvbyAvbW50L3R3by9CL2Zv
-bw0KPiA+ID4gW3Jvb3RAZmVkb3JhMjdfYzJfdjUgfl0jIG12IC9tbnQvb25lL0IvZm9vIC9tbnQv
-b25lL0EvZm9vDQo+ID4gPiBbcm9vdEBmZWRvcmEyN19jMl92NSB+XSMgY2F0IC9tbnQvdHdvL0Ev
-Zm9vDQo+ID4gPiBbcm9vdEBmZWRvcmEyN19jMl92NSB+XSMgc3RhdCAvbW50L3R3by9CL2Zvbw0K
-PiA+ID4gICAgRmlsZTogL21udC90d28vQi9mb28NCj4gPiA+ICAgIFNpemU6IDAgICAgICAgICAJ
-QmxvY2tzOiAwICAgICAgICAgIElPIEJsb2NrOiAyNjIxNDQNCj4gPiA+IHJlZ3VsYXINCj4gPiA+
-IGVtcHR5DQo+ID4gPiBmaWxlDQo+ID4gPiBEZXZpY2U6IDJmaC80N2QJSW5vZGU6IDQzOTYwMyAg
-ICAgIExpbmtzOiAxDQo+ID4gPiBBY2Nlc3M6ICgwNjQ0Ly1ydy1yLS1yLS0pICBVaWQ6ICggICAg
-MC8gICAgcm9vdCkgICBHaWQ6DQo+ID4gPiAoICAgIDAvICAgIHJvb3QpDQo+ID4gPiBDb250ZXh0
-OiBzeXN0ZW1fdTpvYmplY3RfcjpuZnNfdDpzMA0KPiA+ID4gQWNjZXNzOiAyMDE5LTA1LTI4IDE0
-OjAwOjE4LjkyOTY2MzcwNSAtMDQwMA0KPiA+ID4gTW9kaWZ5OiAyMDE5LTA1LTI4IDE0OjAwOjE4
-LjkyOTY2MzcwNSAtMDQwMA0KPiA+ID4gQ2hhbmdlOiAyMDE5LTA1LTI4IDE0OjAwOjU4Ljk5MDEy
-NDU3MyAtMDQwMA0KPiA+ID4gICBCaXJ0aDogLQ0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IF5eIHRo
-YXQgbHN0YXQgc2hvdWxkIHJldHVybiAtRU5PRU5ULg0KPiA+ID4gDQo+ID4gPiBJIHRoaW5rIHdl
-IGRldGVjdCBhIHN0YWxlIGRpcmVjdG9yeSBieSBjb21wYXJpbmcgdGhlIGRpcmVjdG9yeSdzDQo+
-ID4gPiBjaGFuZ2VfYXR0ciB3aXRoIHRoZSBkZW50cnkncyBkX3RpbWUuICBCdXQsIGhlcmUncyBh
-IGNhc2Ugd2hlcmUNCj4gPiA+IHRoZXkNCj4gPiA+IGFyZQ0KPiA+ID4gdGhlIHNhbWUhDQo+ID4g
-PiANCj4gPiA+IEFtIEkgd3JvbmcgYWJvdXQgdGhpcywgb3IgYW55IGNsZXZlciBpZGVhcyB0byBj
-YXRjaCB0aGlzIGNhc2U/DQo+ID4gPiANCj4gPiANCj4gPiBXaGVuIHlvdSBhcmUgbW91bnRpbmcg
-dXNpbmcgJ25vc2hhcmVjYWNoZScgdGhlbiB5b3UgYXJlIG1ha2luZw0KPiA+IC9tbnQvb25lDQo+
-ID4gYW5kIC9tbnQvdHdvIGFjdCBhcyBpZiB0aGV5IGFyZSBkaWZmZXJlbnQgZmlsZXN5c3RlbXMu
-IFRoZSBmYWN0DQo+ID4gdGhhdA0KPiA+IHRoZXkgYXJlIHRoZSBzYW1lIG9uIHRoZSBzZXJ2ZXIs
-IG1lYW5zIHlvdSBhcmUgc2V0dGluZyB1cCBhDQo+ID4gdGVzdGNhc2UNCj4gPiB3aGVyZSB0aGUg
-ZmlsZXMrZGlyZWN0b3JpZXMgYXJlIGFjdGluZyBsaWtlIHRoZSAiY2hhbmdpbmcgb24gdGhlDQo+
-ID4gc2VydmVyIiBjYXNlIGFzIGZhciBhcyB0aGUgY2xpZW50IGlzIGNvbmNlcm5lZC4NCj4gPiAN
-Cj4gPiBJZiB5b3Ugd2FudCB0aGUgYWJvdmUgdG8gd29yayBpbiBhIHNhbmUgZmFzaGlvbiwgdGhl
-biBqdXN0IGRvbid0DQo+ID4gdXNlDQo+ID4gJ25vc2hhcmVjYWNoZScuDQo+IA0KPiBUaGF0IHdh
-cyBkZWxpYmVyYXRlIHRvIGF2b2lkIGhhdmluZyB0byBzaG93IHR3byBjbGllbnRzIGluIHRoZQ0K
-PiBleGFtcGxlLi4NCj4gc29ycnksIEkgc2hvdWxkIGhhdmUgYmVlbiBtb3JlIGV4cGxpY2l0Lg0K
-PiANCj4gSSB0aGluayB0aGUgY2xpZW50IHNob3VsZCBiZSBhYmxlIHRvIGRldGVjdCB0aGlzIGNh
-c2UsIHNpbmNlIGl0IGNhbg0KPiBzZWUgYW4NCj4gdXBkYXRlZCBjaGFuZ2VfYXR0ciBmb3IgdGhh
-dCBwYXJ0aWN1bGFyIGRpcmVjdG9yeSAtLSB0aGF0IGlzDQo+ICIvbW50L3R3by9CL2ZvbyIsIGJ1
-dCBtYXliZSBpdCBuZWVkcyB0byBjb21wYXJlIHRoZSBjaGFuZ2VfYXR0ciB0bw0KPiBpdHMNCj4g
-cHJldmlvdXMgdmFsdWUgaW5zdGVhZCBvZiBjb21wYXJpbmcgaXQgdG8gdGhlIGNoaWxkJ3MgZF90
-aW1lPw0KPiANCj4gVGhlIHBlcnNvbiB3aG8gcmVwb3J0ZWQgaXQgaGFzIHNvbWUgd29ya2xvYWQg
-dGhhdCBmbGlwcyBmaWxlcyBiZXR3ZWVuDQo+IGRpcmVjdG9yaWVzIG9uIHNlcGFyYXRlIGNsaWVu
-dHMsIGFuZCBkb2Vzbid0IGxpa2UgaXQgd2hlbiBgbXZgDQo+IHJlcG9ydHMNCj4gInNvdXJjZSBh
-bmQgZGVzdGluYXRpb24gYXJlIHRoZSBzYW1lIGZpbGUiLg0KDQpTb3JyeSwgYnV0IHRoYXQncyBu
-b3QgdGhlIGNhc2UsIGJlY2F1c2Ugb2YgdGhlIGFidXNlIG9mIHRoZQ0Kbm9zaGFyZWNhY2hlIGZs
-YWcuIFlvdSBhcmUgbWFuaXB1bGF0aW5nIHRoZSBmaWxlIG9uIHRoZSBzZXJ2ZXIgYW5kDQpleHBl
-Y3RpbmcgYW4gaW1tZWRpYXRlIGNhY2hlIGludmFsaWRhdGlvbi4gVGhhdCB3b3VsZCByZXF1aXJl
-DQppbmZvcm1hdGlvbiB0aGF0IHRoZSBjbGllbnQgZG9lcyBub3QgaGF2ZS4NCg0KLS0gDQpUcm9u
-ZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRy
-b25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Hi Darrick,
+
+Following is a re-work of Dave Chinner's copy_file_range() patches.
+This v3 patch set is based on your feedback to v2 [1].
+
+NOTE that this work changes user visible behavior of copy_file_range(2)!
+It introduces new errors for cases that were not checked before and it
+allows cross-device copy by default. After this work, cifs copy offload
+should be possible between two shares on the same server, but I did not
+check this functionality.
+
+Patches 1-3 have your Reviewed-by.
+Patches 4-5 have been slightly amended to address your comments.
+Patch 6 adds the new helper you requested dubbed file_modified().
+Patch 7 uses the helper in xfs - unrelated to copy_file_range().
+Patches 8-12 use the helper for various fs's ->copy_file_range().
+Patch 13 (unmodified) has your Reviewed-by, because the bits that
+you approved are those that matter to most filesystems (i.e. the
+fallback logic).
+
+The man page update patch (again, mostly Dave's work) is appended
+to the series with fixes to your review comments.
+
+Thanks,
+Amir.
+
+[1] https://lore.kernel.org/linux-fsdevel/20190526061100.21761-1-amir73il@gmail.com/
+
+Changes since v2:
+- Re-order generic_remap_checks() fix patch before
+  forking generic_copy_file_checks()
+- Document @req_count helper argument (Darrick)
+- Fold generic_access_check_limits() (Darrick)
+- Added file_modified() helper (Darrick)
+- Added xfs patch to use file_modified() helper
+- Drop generic_copy_file_range_prep() helper
+- Per filesystem patch for file_modified()/file_accessed()
+- Post copy file_remove_privs() for ceph/generic (Darrick)
+
+Changes since v1:
+- Short read instead of EINVAL (Christoph)
+- generic_file_rw_checks() helper (Darrick)
+- generic_copy_file_range_prep() helper (Christoph)
+- Not calling ->remap_file_range() with different sb
+- Not calling ->copy_file_range() with different fs type
+- Remove changes to overlayfs
+- Extra fix to clone/dedupe checks
+
+Amir Goldstein (11):
+  vfs: introduce generic_file_rw_checks()
+  vfs: remove redundant checks from generic_remap_checks()
+  vfs: add missing checks to copy_file_range
+  vfs: introduce file_modified() helper
+  xfs: use file_modified() helper
+  vfs: copy_file_range needs to strip setuid bits and update timestamps
+  ceph: copy_file_range needs to strip setuid bits and update timestamps
+  cifs: copy_file_range needs to strip setuid bits and update timestamps
+  fuse: copy_file_range needs to strip setuid bits and update timestamps
+  nfs: copy_file_range needs to strip setuid bits and update timestamps
+  vfs: allow copy_file_range to copy across devices
+
+Dave Chinner (2):
+  vfs: introduce generic_copy_file_range()
+  vfs: no fallback for ->copy_file_range
+
+ fs/ceph/file.c     |  40 ++++++++++++-
+ fs/cifs/cifsfs.c   |  15 ++++-
+ fs/fuse/file.c     |  29 ++++++++-
+ fs/inode.c         |  20 +++++++
+ fs/nfs/nfs42proc.c |   9 ++-
+ fs/nfs/nfs4file.c  |  23 ++++++-
+ fs/read_write.c    | 145 ++++++++++++++++++++++++++++-----------------
+ fs/xfs/xfs_file.c  |  15 +----
+ include/linux/fs.h |   9 +++
+ mm/filemap.c       | 110 +++++++++++++++++++++++++++-------
+ 10 files changed, 309 insertions(+), 106 deletions(-)
+
+-- 
+2.17.1
+
