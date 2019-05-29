@@ -2,97 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E9512E498
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2715F2E4AB
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfE2Sik (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 14:38:40 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41485 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2Sik (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:38:40 -0400
-Received: by mail-ua1-f66.google.com with SMTP id n2so1414633uad.8
-        for <linux-nfs@vger.kernel.org>; Wed, 29 May 2019 11:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FNcpLdR1gB2FKoJvwQEraWVU2LiqRZ3fWLfIQutIUng=;
-        b=LpRQwP+4bD8Okvj/R3TGpPhei7ShznJD0gMGE2qMGs1g9Xzaejcf2coKhYY4CokKxc
-         bNwcD4yQsFoMtgqPWRvsSdcl8M1nQQU0FJ0PWRb7/g96VvgEEIH/86uLvdC+t/C7Z2vp
-         ypdnNJ6YpOZHx/5PaWf6s4IljyDEhEygU3XSgrGl5CevNE0MyBg+MGQLqnZ0/uBG2XVD
-         Yta07to/B6Xpw9OM4+3o4NGclo1hgCIVtNiL8GMTB95cV4HqJjnYXsptlQ7CpDo8prh+
-         CCmBc78EpBOhK8H4CHZ96wEUvCrul/9tolf1eEoKD8Iw27NCREyoGtRmbgfB4ItswBor
-         JxDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FNcpLdR1gB2FKoJvwQEraWVU2LiqRZ3fWLfIQutIUng=;
-        b=e0PmtRru1wbig6gOmM5P+xYxdkiPPYdzzbIsZR25fBSYE2rM6h+lCgj3FDX4fi61KA
-         wGSajOXUZbUFoBOLxPnoXzfk0FrzVtfMZFz9O5+D35INiyEunZ6ZLMePVDTQFumZivbJ
-         FYC38m1OSaG3ig/+02YO4Pj9/Pb3n2jKWf9enymPmnBV1AjkstYBxuczLIlcJ1T4nnNz
-         Pg7zRmRfsMPLazmAg2kAa0k63GhqO6FvMx19SVwjhXEkzuqV+/aRjkrWUs0m9//5Pr+K
-         W7L4fmU1MpCnjfPh68Y4IJfA82/WXBSN1U06L8ztO12M+qZzxP9WMC2WoV6zWNwRdXlm
-         YDhA==
-X-Gm-Message-State: APjAAAUekIg5UCpvq679u2blsC8dH1mTtaC8psGVtLw/VYmCukJf6CVo
-        rbP3vWUVoaSGGHMLaQETwMgoctEG/dgnPavDg88=
-X-Google-Smtp-Source: APXvYqw7genUfo7Rs/2N1xBWppRxzE+meRwJrjTiIShOougnvp/UiBnm+o0Vc6ZjZBqwjK5+ecaVsSFBS/eZuC8LLb4=
-X-Received: by 2002:a9f:3381:: with SMTP id p1mr9185477uab.40.1559155119023;
- Wed, 29 May 2019 11:38:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
- <20190503111841.4391-2-trond.myklebust@hammerspace.com> <20190503111841.4391-3-trond.myklebust@hammerspace.com>
- <20190503111841.4391-4-trond.myklebust@hammerspace.com> <20190503111841.4391-5-trond.myklebust@hammerspace.com>
- <20190503111841.4391-6-trond.myklebust@hammerspace.com> <CAN-5tyGDV1O=kfay2iu0g6cFkDRfFQrBTn-wfQowyGrAMY5fBw@mail.gmail.com>
-In-Reply-To: <CAN-5tyGDV1O=kfay2iu0g6cFkDRfFQrBTn-wfQowyGrAMY5fBw@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 29 May 2019 14:38:28 -0400
-Message-ID: <CAN-5tyFPxiJ8G581ENZ+T+6y3WLx_5aVcrWDaFZRERTzHu_iZw@mail.gmail.com>
+        id S1726038AbfE2SpQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 14:45:16 -0400
+Received: from mail-eopbgr690127.outbound.protection.outlook.com ([40.107.69.127]:47318
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726029AbfE2SpP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 14:45:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xU90DMXNGF3jJ0oEiIGbLNSzzNKq8tSwp0GNNze43Co=;
+ b=LmIhcZC2vhewvbl85f1Q5fkH+6f13Ian7Obi8j8wiXQSIsV/i2EUTGrrEWayk9lO62aXNxV0phiJDMrG3yrv1fgs5YTzUwOxxXJ5csRB/lMTJ8YEPGHWeKNH4vMNla/uiw34sRQMM6heU/xAppOyURzhJlyGZNHhAH7N7rRCFcQ=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1452.namprd13.prod.outlook.com (10.175.108.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.8; Wed, 29 May 2019 18:45:12 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::502c:c076:fdd4:9633]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::502c:c076:fdd4:9633%7]) with mapi id 15.20.1943.016; Wed, 29 May 2019
+ 18:45:12 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
 Subject: Re: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
+Thread-Index: AQHVAaKLteyD+epX90KQZ+FxPa7AuqaBH6AAgAF4hACAAAHegA==
+Date:   Wed, 29 May 2019 18:45:12 +0000
+Message-ID: <7e6041b400b08d4dc42a9b5fe0f665917f12f65c.camel@hammerspace.com>
+References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
+         <20190503111841.4391-2-trond.myklebust@hammerspace.com>
+         <20190503111841.4391-3-trond.myklebust@hammerspace.com>
+         <20190503111841.4391-4-trond.myklebust@hammerspace.com>
+         <20190503111841.4391-5-trond.myklebust@hammerspace.com>
+         <20190503111841.4391-6-trond.myklebust@hammerspace.com>
+         <CAN-5tyGDV1O=kfay2iu0g6cFkDRfFQrBTn-wfQowyGrAMY5fBw@mail.gmail.com>
+         <CAN-5tyFPxiJ8G581ENZ+T+6y3WLx_5aVcrWDaFZRERTzHu_iZw@mail.gmail.com>
+In-Reply-To: <CAN-5tyFPxiJ8G581ENZ+T+6y3WLx_5aVcrWDaFZRERTzHu_iZw@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.124.247.140]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53970682-4d86-4855-b3cc-08d6e465c872
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1452;
+x-ms-traffictypediagnostic: DM5PR13MB1452:
+x-microsoft-antispam-prvs: <DM5PR13MB1452BFDF26850BBCC3775467B81F0@DM5PR13MB1452.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(396003)(366004)(346002)(376002)(189003)(199004)(71190400001)(6506007)(118296001)(102836004)(71200400001)(25786009)(54906003)(305945005)(76176011)(2171002)(76116006)(64756008)(256004)(14444005)(53936002)(4326008)(66446008)(66556008)(66476007)(73956011)(5660300002)(6246003)(66946007)(66066001)(6916009)(2351001)(53546011)(7736002)(316002)(229853002)(6116002)(3846002)(2906002)(2501003)(6486002)(478600001)(14454004)(26005)(6512007)(186003)(2616005)(6436002)(68736007)(36756003)(11346002)(81166006)(476003)(446003)(8936002)(81156014)(1730700003)(486006)(99286004)(5640700003)(8676002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1452;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: O3Ez/ANmLhE3HjGUqQ9wJaElbwJf/8ttkNbMH0Qov+GIh8lcDfvrdymwsxO8kVfNU/m8wVLeuLBbfrndTtuSGoEYQ1Z0lzpuXQ6Hai/THkbsl0tLwVnjtA6wFdpNXdpQ99RGHHV73PXwweBPi5R1fcBaOE3LnBb2MqxkkqhLPGISMLIlmC43O7snefUVQb48a+iWaNY0+KmQQFzMLC1RQGthTrE5w2ahrGi+vst5zZOA6FGPcIoqF5WlAeritdlS5LEUHIa3eYk6NEaz9AR22BpA0vUAbzcKcZoj5macr/dNjFAGfpfH4p5tqQKpOfHieG+h8XBKZqd/hpUtskC/w/utgkinb2ge9jNabLgyEk5d1LDryacxux6zDxC6ffOFH6e0+O16efP1ddcgGizE0sf9JxGe/3WPbeel155SC8Q=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <623205A99727E94B8BAD213A672967A7@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53970682-4d86-4855-b3cc-08d6e465c872
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 18:45:12.4313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1452
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 28, 2019 at 4:10 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->
-> On Fri, May 3, 2019 at 7:24 AM Trond Myklebust <trondmy@gmail.com> wrote:
-> >
-> > Allow more time for softirqd
-> >
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > ---
-> >  net/sunrpc/sched.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > index c7e81336620c..6b37c9a4b48f 100644
-> > --- a/net/sunrpc/sched.c
-> > +++ b/net/sunrpc/sched.c
-> > @@ -1253,7 +1253,7 @@ static int rpciod_start(void)
-> >                 goto out_failed;
-> >         rpciod_workqueue = wq;
-> >         /* Note: highpri because network receive is latency sensitive */
-> > -       wq = alloc_workqueue("xprtiod", WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_HIGHPRI, 0);
->
-> I thought we needed UNBOUND otherwise there was performance
-> degradation for read IO.
-
-I remove my objection as this is for the xprtiod queue and not the
-rpciod queue. The latter is the one when removing WQ_UNBOUND would
-only use a single rpciod thread for doing all the crypto and thus
-impact performance.
-
->
-> > +       wq = alloc_workqueue("xprtiod", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
-> >         if (!wq)
-> >                 goto free_rpciod;
-> >         xprtiod_workqueue = wq;
-> > --
-> > 2.21.0
-> >
+T24gV2VkLCAyMDE5LTA1LTI5IGF0IDE0OjM4IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVHVlLCBNYXkgMjgsIDIwMTkgYXQgNDoxMCBQTSBPbGdhIEtvcm5pZXZza2FpYSA8
+YWdsb0B1bWljaC5lZHU+DQo+IHdyb3RlOg0KPiA+IE9uIEZyaSwgTWF5IDMsIDIwMTkgYXQgNzoy
+NCBBTSBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kbXlAZ21haWwuY29tPg0KPiA+IHdyb3RlOg0KPiA+
+ID4gQWxsb3cgbW9yZSB0aW1lIGZvciBzb2Z0aXJxZA0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2Zm
+LWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+
+ID4gPiAtLS0NCj4gPiA+ICBuZXQvc3VucnBjL3NjaGVkLmMgfCAyICstDQo+ID4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPiANCj4gPiA+IGRp
+ZmYgLS1naXQgYS9uZXQvc3VucnBjL3NjaGVkLmMgYi9uZXQvc3VucnBjL3NjaGVkLmMNCj4gPiA+
+IGluZGV4IGM3ZTgxMzM2NjIwYy4uNmIzN2M5YTRiNDhmIDEwMDY0NA0KPiA+ID4gLS0tIGEvbmV0
+L3N1bnJwYy9zY2hlZC5jDQo+ID4gPiArKysgYi9uZXQvc3VucnBjL3NjaGVkLmMNCj4gPiA+IEBA
+IC0xMjUzLDcgKzEyNTMsNyBAQCBzdGF0aWMgaW50IHJwY2lvZF9zdGFydCh2b2lkKQ0KPiA+ID4g
+ICAgICAgICAgICAgICAgIGdvdG8gb3V0X2ZhaWxlZDsNCj4gPiA+ICAgICAgICAgcnBjaW9kX3dv
+cmtxdWV1ZSA9IHdxOw0KPiA+ID4gICAgICAgICAvKiBOb3RlOiBoaWdocHJpIGJlY2F1c2UgbmV0
+d29yayByZWNlaXZlIGlzIGxhdGVuY3kNCj4gPiA+IHNlbnNpdGl2ZSAqLw0KPiA+ID4gLSAgICAg
+ICB3cSA9IGFsbG9jX3dvcmtxdWV1ZSgieHBydGlvZCIsDQo+ID4gPiBXUV9VTkJPVU5EfFdRX01F
+TV9SRUNMQUlNfFdRX0hJR0hQUkksIDApOw0KPiA+IA0KPiA+IEkgdGhvdWdodCB3ZSBuZWVkZWQg
+VU5CT1VORCBvdGhlcndpc2UgdGhlcmUgd2FzIHBlcmZvcm1hbmNlDQo+ID4gZGVncmFkYXRpb24g
+Zm9yIHJlYWQgSU8uDQo+IA0KPiBJIHJlbW92ZSBteSBvYmplY3Rpb24gYXMgdGhpcyBpcyBmb3Ig
+dGhlIHhwcnRpb2QgcXVldWUgYW5kIG5vdCB0aGUNCj4gcnBjaW9kIHF1ZXVlLiBUaGUgbGF0dGVy
+IGlzIHRoZSBvbmUgd2hlbiByZW1vdmluZyBXUV9VTkJPVU5EIHdvdWxkDQo+IG9ubHkgdXNlIGEg
+c2luZ2xlIHJwY2lvZCB0aHJlYWQgZm9yIGRvaW5nIGFsbCB0aGUgY3J5cHRvIGFuZCB0aHVzDQo+
+IGltcGFjdCBwZXJmb3JtYW5jZS4NCj4gDQo+ID4gPiArICAgICAgIHdxID0gYWxsb2Nfd29ya3F1
+ZXVlKCJ4cHJ0aW9kIiwgV1FfTUVNX1JFQ0xBSU0gfA0KPiA+ID4gV1FfVU5CT1VORCwgMCk7DQo+
+ID4gPiAgICAgICAgIGlmICghd3EpDQo+ID4gPiAgICAgICAgICAgICAgICAgZ290byBmcmVlX3Jw
+Y2lvZDsNCj4gPiA+ICAgICAgICAgeHBydGlvZF93b3JrcXVldWUgPSB3cTsNCj4gPiA+IC0tDQo+
+ID4gPiAyLjIxLjANCj4gPiA+IA0KDQpJdCB3YXMgb25seSByZW1vdmluZyB0aGUgV1FfSElHSFBS
+SSBmbGFnLCBub3QgdGhlIFdRX1VOQk9VTkQuIEhvd2V2ZXINCnRoZSBwb2ludCBpdCBtb290LCBh
+cyBJJ20gZHJvcHBpbmcgdGhlIHBhdGNoLg0KDQpDaGVlcnMNCiBUcm9uZA0KDQotLSANClRyb25k
+IE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJv
+bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
