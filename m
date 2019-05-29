@@ -2,134 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C8C52E48A
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:33:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E9512E498
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:38:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfE2Sdt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 14:33:49 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:51394 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2Sdt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:33:49 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIXQbG069667;
-        Wed, 29 May 2019 18:33:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=R/+z/tc0/SAWa0SjP7BukZGNCOg4xR/nOoG03j4CVHg=;
- b=AY8+x7YT5IsFJdGZ5yEg28P8Pb5Qq/PkwNyzpit66iScBYI8KWtUggNJkRFYLyVuhQLF
- pCbL/mCVeHwD20P3DIaRf3HKGDJ89gAaxQZY7xTv2JLGBeBH800nXwE2bNDcj2r2nW3G
- bdntXgcbue4dGK0ymRGzSLMrsIXn2RlQE121bBtu7KXY5EqvR7oFCEeWyA2IYg4oVkOR
- JJRFvWk21dLb8a26pK01BG1F7Dn9YKKobLZ0SOyjFutNg45Piw+Pn8g3lTpg1gnAN89Z
- fhuhNxN/94S2WapfAhE/q+Eb07dctpUtHjtCoqb5yhQ+ChZfjgnYTHuerWyLq5YxWrQ7 dQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2spu7dm0uy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:33:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIX2rG031915;
-        Wed, 29 May 2019 18:33:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sr31ve6aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:33:36 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TIXZWE000659;
-        Wed, 29 May 2019 18:33:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 11:33:35 -0700
-Date:   Wed, 29 May 2019 11:33:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
-        linux-xfs@vger.kernel.org,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org
-Subject: Re: [PATCH v3 08/13] vfs: copy_file_range needs to strip setuid bits
- and update timestamps
-Message-ID: <20190529183333.GH5231@magnolia>
-References: <20190529174318.22424-1-amir73il@gmail.com>
- <20190529174318.22424-9-amir73il@gmail.com>
+        id S1726489AbfE2Sik (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 14:38:40 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41485 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2Sik (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:38:40 -0400
+Received: by mail-ua1-f66.google.com with SMTP id n2so1414633uad.8
+        for <linux-nfs@vger.kernel.org>; Wed, 29 May 2019 11:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FNcpLdR1gB2FKoJvwQEraWVU2LiqRZ3fWLfIQutIUng=;
+        b=LpRQwP+4bD8Okvj/R3TGpPhei7ShznJD0gMGE2qMGs1g9Xzaejcf2coKhYY4CokKxc
+         bNwcD4yQsFoMtgqPWRvsSdcl8M1nQQU0FJ0PWRb7/g96VvgEEIH/86uLvdC+t/C7Z2vp
+         ypdnNJ6YpOZHx/5PaWf6s4IljyDEhEygU3XSgrGl5CevNE0MyBg+MGQLqnZ0/uBG2XVD
+         Yta07to/B6Xpw9OM4+3o4NGclo1hgCIVtNiL8GMTB95cV4HqJjnYXsptlQ7CpDo8prh+
+         CCmBc78EpBOhK8H4CHZ96wEUvCrul/9tolf1eEoKD8Iw27NCREyoGtRmbgfB4ItswBor
+         JxDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FNcpLdR1gB2FKoJvwQEraWVU2LiqRZ3fWLfIQutIUng=;
+        b=e0PmtRru1wbig6gOmM5P+xYxdkiPPYdzzbIsZR25fBSYE2rM6h+lCgj3FDX4fi61KA
+         wGSajOXUZbUFoBOLxPnoXzfk0FrzVtfMZFz9O5+D35INiyEunZ6ZLMePVDTQFumZivbJ
+         FYC38m1OSaG3ig/+02YO4Pj9/Pb3n2jKWf9enymPmnBV1AjkstYBxuczLIlcJ1T4nnNz
+         Pg7zRmRfsMPLazmAg2kAa0k63GhqO6FvMx19SVwjhXEkzuqV+/aRjkrWUs0m9//5Pr+K
+         W7L4fmU1MpCnjfPh68Y4IJfA82/WXBSN1U06L8ztO12M+qZzxP9WMC2WoV6zWNwRdXlm
+         YDhA==
+X-Gm-Message-State: APjAAAUekIg5UCpvq679u2blsC8dH1mTtaC8psGVtLw/VYmCukJf6CVo
+        rbP3vWUVoaSGGHMLaQETwMgoctEG/dgnPavDg88=
+X-Google-Smtp-Source: APXvYqw7genUfo7Rs/2N1xBWppRxzE+meRwJrjTiIShOougnvp/UiBnm+o0Vc6ZjZBqwjK5+ecaVsSFBS/eZuC8LLb4=
+X-Received: by 2002:a9f:3381:: with SMTP id p1mr9185477uab.40.1559155119023;
+ Wed, 29 May 2019 11:38:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529174318.22424-9-amir73il@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290120
+References: <20190503111841.4391-1-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-2-trond.myklebust@hammerspace.com> <20190503111841.4391-3-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-4-trond.myklebust@hammerspace.com> <20190503111841.4391-5-trond.myklebust@hammerspace.com>
+ <20190503111841.4391-6-trond.myklebust@hammerspace.com> <CAN-5tyGDV1O=kfay2iu0g6cFkDRfFQrBTn-wfQowyGrAMY5fBw@mail.gmail.com>
+In-Reply-To: <CAN-5tyGDV1O=kfay2iu0g6cFkDRfFQrBTn-wfQowyGrAMY5fBw@mail.gmail.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 29 May 2019 14:38:28 -0400
+Message-ID: <CAN-5tyFPxiJ8G581ENZ+T+6y3WLx_5aVcrWDaFZRERTzHu_iZw@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/5] SUNRPC: Reduce the priority of the xprtiod queue
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:43:12PM +0300, Amir Goldstein wrote:
-> Because generic_copy_file_range doesn't hold the destination inode lock
-> throughout the copy, strip setuid bits before and after copy.
-> 
-> The destination inode mtime is updated before and after the copy and the
-> source inode atime is updated after the copy, similar to
-> generic_file_read_iter().
-> 
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+On Tue, May 28, 2019 at 4:10 PM Olga Kornievskaia <aglo@umich.edu> wrote:
+>
+> On Fri, May 3, 2019 at 7:24 AM Trond Myklebust <trondmy@gmail.com> wrote:
+> >
+> > Allow more time for softirqd
+> >
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> >  net/sunrpc/sched.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+> > index c7e81336620c..6b37c9a4b48f 100644
+> > --- a/net/sunrpc/sched.c
+> > +++ b/net/sunrpc/sched.c
+> > @@ -1253,7 +1253,7 @@ static int rpciod_start(void)
+> >                 goto out_failed;
+> >         rpciod_workqueue = wq;
+> >         /* Note: highpri because network receive is latency sensitive */
+> > -       wq = alloc_workqueue("xprtiod", WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_HIGHPRI, 0);
+>
+> I thought we needed UNBOUND otherwise there was performance
+> degradation for read IO.
 
-Looks reasonable,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I remove my objection as this is for the xprtiod queue and not the
+rpciod queue. The latter is the one when removing WQ_UNBOUND would
+only use a single rpciod thread for doing all the crypto and thus
+impact performance.
 
---D
-
-> ---
->  fs/read_write.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index cec7e7b1f693..706ea5f276a7 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1590,8 +1590,27 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
->  				struct file *file_out, loff_t pos_out,
->  				size_t len, unsigned int flags)
->  {
-> -	return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
-> -				len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
-> +	struct inode *inode_out = file_inode(file_out);
-> +	int ret, err;
-> +
-> +	/* Should inode_out lock be held throughout the copy operation? */
-> +	inode_lock(inode_out);
-> +	err = file_modified(file_out);
-> +	inode_unlock(inode_out);
-> +	if (err)
-> +		return err;
-> +
-> +	ret = do_splice_direct(file_in, &pos_in, file_out, &pos_out,
-> +			       len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
-> +
-> +	file_accessed(file_in);
-> +
-> +	/* To be on the safe side, remove privs also after copy */
-> +	inode_lock(inode_out);
-> +	err = file_modified(file_out);
-> +	inode_unlock(inode_out);
-> +
-> +	return err ?: ret;
->  }
->  EXPORT_SYMBOL(generic_copy_file_range);
->  
-> -- 
-> 2.17.1
-> 
+>
+> > +       wq = alloc_workqueue("xprtiod", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
+> >         if (!wq)
+> >                 goto free_rpciod;
+> >         xprtiod_workqueue = wq;
+> > --
+> > 2.21.0
+> >
