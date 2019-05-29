@@ -2,111 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A97A22D075
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2019 22:33:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6DCE2D59D
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 08:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfE1Udm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 May 2019 16:33:42 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54348 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfE1Udl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 May 2019 16:33:41 -0400
-Received: by mail-it1-f194.google.com with SMTP id h20so6578105itk.4
-        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2019 13:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y/jOtEZptS2HutHiuHWWaXrtl1adLnn5zu2gxhvRHbc=;
-        b=UP92vuAsjrwP1Ze2QJ/WWRRGV54b13RYUXblvLcm44HeIIRj4ffegqnnn98Toaveae
-         07H88pyV87xlp6GOGZrlDEdbug7/1bNPQ2OJhT6KaEkQvUQjWfeXaYTg66Su4YFASCiU
-         1fzh80+5XyHsCi3/NL1SROpytUEZ3Cj2Bw8ydn27vsQ2kWBOFJHHXNhXfzed9jbJZfsn
-         hw4Vjh1QqE6kLZsIxivXZXp8+3RvERT+AQP6k8vsKszHtqMkZ6ISVaf4B6b9ubHFbxRB
-         E1qLvZpjOpzuyIGYkderzuORR/lvyf5eW902z4+MQ602Y/wNJys+cKf59yM6lg/6v0cq
-         hrzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y/jOtEZptS2HutHiuHWWaXrtl1adLnn5zu2gxhvRHbc=;
-        b=Ao2P+74SvUoUXH7rdWhwR5IVwIVOpXqzI94x5mdFW5j+xVTIkmBk5HBW9RZHFinZ+G
-         /BBiO3Guse45Sm9G/m6vqmUa7azqv7K0W/VMbddsUIbOYCnw2OUReyfh/rxqj6NO4a4b
-         4CgHv1ovScyhpw+/B+6lnxRJ/hLG2pORn7bHAlZzvw2TpCioAKDrqc8jCwTF55AlNhK3
-         Hf9xftEc0qhbQA34AUgypOuWljVEcjT03gODdJuyf1K2KItK609sKCeR9fGwQNgeKPd+
-         B6oYl5WuxRZ/C3Os7bB772eVO5cZ7ug4P33eOgptMwheLExQXDswu9f7M87RJBpNIsFd
-         AjWQ==
-X-Gm-Message-State: APjAAAX6qeLoZVcw3s18TjQwh5I8rbGL0AZqJlDaEwQb+wXz5AjycwWE
-        eo9Jw21p8P2TXzATjAHSe15v5j4=
-X-Google-Smtp-Source: APXvYqxpPnn6D1aFZRpIGdr8jQTLgFBwrKlZb8Ojj5Xcsd46tsttpo7rt9jO8Fck0WAF6veDjuoFVg==
-X-Received: by 2002:a02:9143:: with SMTP id b3mr2002667jag.12.1559075620732;
-        Tue, 28 May 2019 13:33:40 -0700 (PDT)
-Received: from localhost.localdomain (50-124-247-140.alma.mi.frontiernet.net. [50.124.247.140])
-        by smtp.gmail.com with ESMTPSA id i141sm53089ite.20.2019.05.28.13.33.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:33:40 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     SteveD@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 11/11] Fix up symlinked mount path resolution when "[exports] rootdir" is set
-Date:   Tue, 28 May 2019 16:31:22 -0400
-Message-Id: <20190528203122.11401-12-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190528203122.11401-11-trond.myklebust@hammerspace.com>
-References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
- <20190528203122.11401-2-trond.myklebust@hammerspace.com>
- <20190528203122.11401-3-trond.myklebust@hammerspace.com>
- <20190528203122.11401-4-trond.myklebust@hammerspace.com>
- <20190528203122.11401-5-trond.myklebust@hammerspace.com>
- <20190528203122.11401-6-trond.myklebust@hammerspace.com>
- <20190528203122.11401-7-trond.myklebust@hammerspace.com>
- <20190528203122.11401-8-trond.myklebust@hammerspace.com>
- <20190528203122.11401-9-trond.myklebust@hammerspace.com>
- <20190528203122.11401-10-trond.myklebust@hammerspace.com>
- <20190528203122.11401-11-trond.myklebust@hammerspace.com>
+        id S1725894AbfE2Gk4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 02:40:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfE2Gk4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 02:40:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=q8I3wEiJkDHORPoj1XM3CzoUhFotzPx7/2KxT0Xa20s=; b=B/i85hh+8AbNSg+0/l4EmxUV0
+        sYNPihwnxx3zPoqLvK2N4IIgBRtt/XWolgP7vJoe8Ifxocx/wlRWhxQHUkYpH+fVPP2K8mxpigLKl
+        T1SrDL7lKV1AMR17KjWVri+sIAUVslggyMP+LrIY1djH7+hz8aErWPfqbGYWafxpE/KwRnvZ6yk2M
+        gkHyLVZHEFpNoPY4D7xxrQjXWNQZN75dqLvRVkP69hc9hJoqndPryoRYDvCbFxdQRLcaXRve0zbQw
+        3JDU3MdencZ7PbmPANyo4uXlghN8/gvgZ+3r04Q7wQLppuAnD45PR4yyS8/1KMg7PrPiPdXyq/6jD
+        Osox+UNUw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVsGd-0007H3-JK; Wed, 29 May 2019 06:40:55 +0000
+Date:   Tue, 28 May 2019 23:40:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 00/12] for-5.3 NFS/RDMA patches for review
+Message-ID: <20190529064055.GA10492@infradead.org>
+References: <20190528181018.19012.61210.stgit@manet.1015granger.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528181018.19012.61210.stgit@manet.1015granger.net>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- utils/mountd/mountd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Tue, May 28, 2019 at 02:20:50PM -0400, Chuck Lever wrote:
+> This is a series of fixes and architectural changes that should
+> improve robustness and result in better scalability of NFS/RDMA.
+> I'm sure one or two of these could be broken down a little more,
+> comments welcome.
 
-diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index f062cac28be4..33571ecbd401 100644
---- a/utils/mountd/mountd.c
-+++ b/utils/mountd/mountd.c
-@@ -272,7 +272,7 @@ mount_umnt_1_svc(struct svc_req *rqstp, dirpath *argp, void *UNUSED(resp))
- 	if (*p == '\0')
- 		p = "/";
- 
--	if (realpath(p, rpath) != NULL) {
-+	if (nfsd_realpath(p, rpath) != NULL) {
- 		rpath[sizeof (rpath) - 1] = '\0';
- 		p = rpath;
- 	}
-@@ -363,7 +363,7 @@ mount_pathconf_2_svc(struct svc_req *rqstp, dirpath *path, ppathcnf *res)
- 	auth_reload();
- 
- 	/* Resolve symlinks */
--	if (realpath(p, rpath) != NULL) {
-+	if (nfsd_realpath(p, rpath) != NULL) {
- 		rpath[sizeof (rpath) - 1] = '\0';
- 		p = rpath;
- 	}
-@@ -473,7 +473,7 @@ get_rootfh(struct svc_req *rqstp, dirpath *path, nfs_export **expret,
- 	auth_reload();
- 
- 	/* Resolve symlinks */
--	if (realpath(p, rpath) != NULL) {
-+	if (nfsd_realpath(p, rpath) != NULL) {
- 		rpath[sizeof (rpath) - 1] = '\0';
- 		p = rpath;
- 	}
--- 
-2.21.0
-
+Just curious, do you have any performance numbers.
