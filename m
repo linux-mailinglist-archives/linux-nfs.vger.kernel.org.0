@@ -2,228 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B6A02E1D4
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 18:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E50F82E21A
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 18:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfE2QDP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 12:03:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51412 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfE2QDP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 May 2019 12:03:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A3CDFC07EFDD;
-        Wed, 29 May 2019 16:03:14 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A71B5D756;
-        Wed, 29 May 2019 16:03:13 +0000 (UTC)
+        id S1726411AbfE2QMv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 12:12:51 -0400
+Received: from mail-eopbgr720095.outbound.protection.outlook.com ([40.107.72.95]:8224
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727211AbfE2QMv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 12:12:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=87AuA8vhODzHGL7eefG4QeTQ1Ae37Zl2acZEkDiuqEw=;
+ b=bgkCbYqVsBc2q/m6MWqXgudBE/6vJp+0l+VjMLHXXCii0lLvBem2ITEih/JIQ4gLqnHyqKukyMbOjx3VY6sEhSeqhuSVZDNieKz7DBFlisCfmPEpwMzt1nQIDY2iDpuc89kuTYBid8D0kS+uNMW4xG9y1pS7AXGJDfFSoyyjdvU=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB0876.namprd13.prod.outlook.com (10.169.159.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.10; Wed, 29 May 2019 16:12:44 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::502c:c076:fdd4:9633]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::502c:c076:fdd4:9633%7]) with mapi id 15.20.1943.016; Wed, 29 May 2019
+ 16:12:44 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "SteveD@RedHat.com" <SteveD@RedHat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH v3 07/11] Add a helper to return the real path given an
  export entry
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Thread-Topic: [PATCH v3 07/11] Add a helper to return the real path given an
+ export entry
+Thread-Index: AQHVFZSjTcgKpwX6qUipeJy0WrIdjKaCLVeAgAAErYCAABLaAIAAAqgA
+Date:   Wed, 29 May 2019 16:12:44 +0000
+Message-ID: <68cc85df3db91024b97eb7564646630e7fee64f9.camel@hammerspace.com>
 References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
- <20190528203122.11401-2-trond.myklebust@hammerspace.com>
- <20190528203122.11401-3-trond.myklebust@hammerspace.com>
- <20190528203122.11401-4-trond.myklebust@hammerspace.com>
- <20190528203122.11401-5-trond.myklebust@hammerspace.com>
- <20190528203122.11401-6-trond.myklebust@hammerspace.com>
- <20190528203122.11401-7-trond.myklebust@hammerspace.com>
- <20190528203122.11401-8-trond.myklebust@hammerspace.com>
- <341a5328-ae6e-755d-6351-8e764d429e61@RedHat.com>
- <af2a0606934feb5313ef5e5bfe53a8e3e3c137dc.camel@hammerspace.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <b207607b-2af0-c703-25d4-c85269b9db8a@RedHat.com>
-Date:   Wed, 29 May 2019 12:03:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <af2a0606934feb5313ef5e5bfe53a8e3e3c137dc.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8
+         <20190528203122.11401-2-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-3-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-4-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-5-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-7-trond.myklebust@hammerspace.com>
+         <20190528203122.11401-8-trond.myklebust@hammerspace.com>
+         <341a5328-ae6e-755d-6351-8e764d429e61@RedHat.com>
+         <af2a0606934feb5313ef5e5bfe53a8e3e3c137dc.camel@hammerspace.com>
+         <b207607b-2af0-c703-25d4-c85269b9db8a@RedHat.com>
+In-Reply-To: <b207607b-2af0-c703-25d4-c85269b9db8a@RedHat.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 29 May 2019 16:03:14 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.124.247.140]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 268573f1-4e06-4035-7853-08d6e4507bfe
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB0876;
+x-ms-traffictypediagnostic: DM5PR13MB0876:
+x-microsoft-antispam-prvs: <DM5PR13MB0876B04CBE9DC3A847D9BDBEB81F0@DM5PR13MB0876.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(366004)(376002)(136003)(346002)(199004)(189003)(6436002)(86362001)(5640700003)(6916009)(53936002)(478600001)(305945005)(6486002)(2501003)(486006)(66476007)(76176011)(6116002)(71190400001)(71200400001)(81166006)(3846002)(68736007)(66946007)(73956011)(76116006)(66446008)(66556008)(11346002)(446003)(81156014)(2351001)(36756003)(229853002)(2616005)(476003)(186003)(8676002)(118296001)(8936002)(26005)(6512007)(64756008)(256004)(7736002)(53546011)(6506007)(102836004)(14444005)(2906002)(99286004)(14454004)(316002)(66066001)(6246003)(4326008)(5660300002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB0876;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nINWJx1iq4grKB+LMS5Ig1Uhu67v9ADQEtoOdTfBDmFlR0tWpa6LOURzaUiPFJygXijfnZ3V5Wp1YCt0wzqhahpZ9QC8xPaOfxCM9SZ5ZUchLC8EWxIyhd2aqmcoXDiX7HGqq5aG/cG3H3yJWHeBXqeDvpaDxspnToy/X5V7ahVVyCF6JQ2oDHECxpQsEWiPMwwi6ekxTjRIBw5EF9plqk94Pe76Jg2D5e+hMBDPX/zVcTTjXEr1kNwNa3xbFBJ2dO9TjL7TNEH3SORhgJWfamaROTTEElzn0q4bkH9K8ho6hDZq036jFEAdFp0x27ZomItjWMtMzoI3jKcJMFrszBSLZxeNFLw0Zx/L29QjmIUuSgdTxYrLg1BjwODNiQ6bgFG807jfcgfbRYZ6V7HNHt7IrAWfOoAPEn2Jc5wgFls=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD5423E0A84E8B43BACF9B6D62B3FA31@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 268573f1-4e06-4035-7853-08d6e4507bfe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 16:12:44.6973
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB0876
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 5/29/19 10:55 AM, Trond Myklebust wrote:
-> On Wed, 2019-05-29 at 10:38 -0400, Steve Dickson wrote:
->> Hey Trond,
->>
->> On 5/28/19 4:31 PM, Trond Myklebust wrote:
->>> Add a helper that can prepend the nfsd root directory path in order
->>> to allow mountd to perform its comparisons with mtab etc.
->>>
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>> ---
->>>  support/export/export.c    | 24 ++++++++++++++++++++++++
->>>  support/include/exportfs.h |  1 +
->>>  support/include/nfslib.h   |  1 +
->>>  support/misc/nfsd_path.c   |  4 +++-
->>>  support/nfs/exports.c      |  4 ++++
->>>  5 files changed, 33 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/support/export/export.c b/support/export/export.c
->>> index fbe68e84e5b3..82bbb54c5e9e 100644
->>> --- a/support/export/export.c
->>> +++ b/support/export/export.c
->>> @@ -20,6 +20,7 @@
->>>  #include "xmalloc.h"
->>>  #include "nfslib.h"
->>>  #include "exportfs.h"
->>> +#include "nfsd_path.h"
->>>  
->>>  exp_hash_table exportlist[MCL_MAXTYPES] = {{NULL, {{NULL,NULL},
->>> }}, }; 
->>>  static int export_hash(char *);
->>> @@ -30,6 +31,28 @@ static void	export_add(nfs_export *exp);
->>>  static int	export_check(const nfs_export *exp, const struct
->>> addrinfo *ai,
->>>  				const char *path);
->>>  
->>> +/* Return a real path for the export. */
->>> +static void
->>> +exportent_mkrealpath(struct exportent *eep)
->>> +{
->>> +	const char *chroot = nfsd_path_nfsd_rootdir();
->>> +	char *ret = NULL;
->>> +
->>> +	if (chroot)
->>> +		ret = nfsd_path_prepend_dir(chroot, eep->e_path);
->>> +	if (!ret)
->>> +		ret = xstrdup(eep->e_path);
->>> +	eep->e_realpath = ret;
->>> +}
->>> +
->>> +char *
->>> +exportent_realpath(struct exportent *eep)
->>> +{
->>> +	if (!eep->e_realpath)
->>> +		exportent_mkrealpath(eep);
->>> +	return eep->e_realpath;
->>> +}
->>> +
->>>  void
->>>  exportent_release(struct exportent *eep)
->>>  {
->>> @@ -39,6 +62,7 @@ exportent_release(struct exportent *eep)
->>>  	free(eep->e_fslocdata);
->>>  	free(eep->e_uuid);
->>>  	xfree(eep->e_hostname);
->>> +	xfree(eep->e_realpath);
->>>  }
->>>  
->>>  static void
->>> diff --git a/support/include/exportfs.h
->>> b/support/include/exportfs.h
->>> index 4e0d9d132b4c..daa7e2a06d82 100644
->>> --- a/support/include/exportfs.h
->>> +++ b/support/include/exportfs.h
->>> @@ -171,5 +171,6 @@ struct export_features {
->>>  
->>>  struct export_features *get_export_features(void);
->>>  void fix_pseudoflavor_flags(struct exportent *ep);
->>> +char *exportent_realpath(struct exportent *eep);
->>>  
->>>  #endif /* EXPORTFS_H */
->>> diff --git a/support/include/nfslib.h b/support/include/nfslib.h
->>> index b09fce42e677..84d8270b330f 100644
->>> --- a/support/include/nfslib.h
->>> +++ b/support/include/nfslib.h
->>> @@ -84,6 +84,7 @@ struct exportent {
->>>  	char *		e_uuid;
->>>  	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
->>>  	unsigned int	e_ttl;
->>> +	char *		e_realpath;
->>>  };
->>>  
->>>  struct rmtabent {
->>> diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
->>> index 55bca9bdf4bd..8ddafd65ab76 100644
->>> --- a/support/misc/nfsd_path.c
->>> +++ b/support/misc/nfsd_path.c
->>> @@ -81,9 +81,11 @@ nfsd_path_prepend_dir(const char *dir, const
->>> char *pathname)
->>>  		dirlen--;
->>>  	if (!dirlen)
->>>  		return NULL;
->>> +	while (pathname[0] == '/')
->>> +		pathname++;
->>>  	len = dirlen + strlen(pathname) + 1;
->>>  	ret = xmalloc(len + 1);
->>> -	snprintf(ret, len, "%.*s/%s", (int)dirlen, dir, pathname);
->>> +	snprintf(ret, len+1, "%.*s/%s", (int)dirlen, dir, pathname);
->>>  	return ret;
->>>  }
->>>  
->>> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
->>> index 5f4cb9568814..3ecfde797e3b 100644
->>> --- a/support/nfs/exports.c
->>> +++ b/support/nfs/exports.c
->>> @@ -155,6 +155,7 @@ getexportent(int fromkernel, int fromexports)
->>>  	}
->>>  
->>>  	xfree(ee.e_hostname);
->>> +	xfree(ee.e_realpath);
->>>  	ee = def_ee;
->>>  
->>>  	/* Check for default client */
->>> @@ -358,6 +359,7 @@ dupexportent(struct exportent *dst, struct
->>> exportent *src)
->>>  	if (src->e_uuid)
->>>  		dst->e_uuid = strdup(src->e_uuid);
->>>  	dst->e_hostname = NULL;
->>> +	dst->e_realpath = NULL;
->>>  }
->>>  
->>>  struct exportent *
->>> @@ -369,6 +371,8 @@ mkexportent(char *hname, char *path, char
->>> *options)
->>>  
->>>  	xfree(ee.e_hostname);
->>>  	ee.e_hostname = xstrdup(hname);
->>> +	xfree(ee.e_realpath);
->>> +	ee.e_realpath = NULL;
->>>  
->>>  	if (strlen(path) >= sizeof(ee.e_path)) {
->>>  		xlog(L_ERROR, "path name %s too long", path);
->>>
->> I'm not really sure why this is happening on this patch and how
->> I missed this in the first version.. but I'm getting the following
->> linking error after applying this patch
->>
->> /usr/bin/ld: ../../support/misc/libmisc.a(workqueue.o): in function
->> `xthread_workqueue_worker':
->> /home/src/up/nfs-utils/support/misc/workqueue.c:133: undefined
->> reference to `__pthread_register_cancel'
->> /usr/bin/ld: /home/src/up/nfs-utils/support/misc/workqueue.c:135:
->> undefined reference to `__pthread_unregister_cancel'
->> /usr/bin/ld: ../../support/misc/libmisc.a(workqueue.o): in function
->> `xthread_workqueue_alloc':
->> /home/src/up/nfs-utils/support/misc/workqueue.c:149: undefined
->> reference to `pthread_create'
->> collect2: error: ld returned 1 exit status
->>
->> To get things to link I need this patch
->>
-> 
-> Huh, that's weird... I've been compiling this over and over and have
-> yet to see that compile error.
-I do a "make clean distclean" then use a RHEL8 configuration.... 
-Maybe that has something to do with it.
- 
-> 
-> Do you want me to integrate your fix and resend, or do you prefer just
-> to apply your fix to the existing series as a separate commit
-> immediately before this patch?
-No... I'll just apply the patch to this patch and move on... 
-
-I was just curious if you were seeing this as well... 
-
-steved.
+T24gV2VkLCAyMDE5LTA1LTI5IGF0IDEyOjAzIC0wNDAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0K
+PiANCj4gT24gNS8yOS8xOSAxMDo1NSBBTSwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0KPiA+IE9u
+IFdlZCwgMjAxOS0wNS0yOSBhdCAxMDozOCAtMDQwMCwgU3RldmUgRGlja3NvbiB3cm90ZToNCj4g
+PiA+IEhleSBUcm9uZCwNCj4gPiA+IA0KPiA+ID4gT24gNS8yOC8xOSA0OjMxIFBNLCBUcm9uZCBN
+eWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiA+IEFkZCBhIGhlbHBlciB0aGF0IGNhbiBwcmVwZW5kIHRo
+ZSBuZnNkIHJvb3QgZGlyZWN0b3J5IHBhdGggaW4NCj4gPiA+ID4gb3JkZXINCj4gPiA+ID4gdG8g
+YWxsb3cgbW91bnRkIHRvIHBlcmZvcm0gaXRzIGNvbXBhcmlzb25zIHdpdGggbXRhYiBldGMuDQo+
+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15
+a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCj4gPiA+ID4gPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4g
+IHN1cHBvcnQvZXhwb3J0L2V4cG9ydC5jICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+ID4gPiA+ICBzdXBwb3J0L2luY2x1ZGUvZXhwb3J0ZnMuaCB8ICAxICsNCj4gPiA+ID4gIHN1
+cHBvcnQvaW5jbHVkZS9uZnNsaWIuaCAgIHwgIDEgKw0KPiA+ID4gPiAgc3VwcG9ydC9taXNjL25m
+c2RfcGF0aC5jICAgfCAgNCArKystDQo+ID4gPiA+ICBzdXBwb3J0L25mcy9leHBvcnRzLmMgICAg
+ICB8ICA0ICsrKysNCj4gPiA+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQ0KPiA+ID4gPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL3N1cHBvcnQvZXhw
+b3J0L2V4cG9ydC5jIGIvc3VwcG9ydC9leHBvcnQvZXhwb3J0LmMNCj4gPiA+ID4gaW5kZXggZmJl
+NjhlODRlNWIzLi44MmJiYjU0YzVlOWUgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL3N1cHBvcnQvZXhw
+b3J0L2V4cG9ydC5jDQo+ID4gPiA+ICsrKyBiL3N1cHBvcnQvZXhwb3J0L2V4cG9ydC5jDQo+ID4g
+PiA+IEBAIC0yMCw2ICsyMCw3IEBADQo+ID4gPiA+ICAjaW5jbHVkZSAieG1hbGxvYy5oIg0KPiA+
+ID4gPiAgI2luY2x1ZGUgIm5mc2xpYi5oIg0KPiA+ID4gPiAgI2luY2x1ZGUgImV4cG9ydGZzLmgi
+DQo+ID4gPiA+ICsjaW5jbHVkZSAibmZzZF9wYXRoLmgiDQo+ID4gPiA+ICANCj4gPiA+ID4gIGV4
+cF9oYXNoX3RhYmxlIGV4cG9ydGxpc3RbTUNMX01BWFRZUEVTXSA9IHt7TlVMTCwNCj4gPiA+ID4g
+e3tOVUxMLE5VTEx9LA0KPiA+ID4gPiB9fSwgfTsgDQo+ID4gPiA+ICBzdGF0aWMgaW50IGV4cG9y
+dF9oYXNoKGNoYXIgKik7DQo+ID4gPiA+IEBAIC0zMCw2ICszMSwyOCBAQCBzdGF0aWMgdm9pZAll
+eHBvcnRfYWRkKG5mc19leHBvcnQgKmV4cCk7DQo+ID4gPiA+ICBzdGF0aWMgaW50CWV4cG9ydF9j
+aGVjayhjb25zdCBuZnNfZXhwb3J0ICpleHAsIGNvbnN0DQo+ID4gPiA+IHN0cnVjdA0KPiA+ID4g
+PiBhZGRyaW5mbyAqYWksDQo+ID4gPiA+ICAJCQkJY29uc3QgY2hhciAqcGF0aCk7DQo+ID4gPiA+
+ICANCj4gPiA+ID4gKy8qIFJldHVybiBhIHJlYWwgcGF0aCBmb3IgdGhlIGV4cG9ydC4gKi8NCj4g
+PiA+ID4gK3N0YXRpYyB2b2lkDQo+ID4gPiA+ICtleHBvcnRlbnRfbWtyZWFscGF0aChzdHJ1Y3Qg
+ZXhwb3J0ZW50ICplZXApDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsJY29uc3QgY2hhciAqY2hyb290
+ID0gbmZzZF9wYXRoX25mc2Rfcm9vdGRpcigpOw0KPiA+ID4gPiArCWNoYXIgKnJldCA9IE5VTEw7
+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlpZiAoY2hyb290KQ0KPiA+ID4gPiArCQlyZXQgPSBuZnNk
+X3BhdGhfcHJlcGVuZF9kaXIoY2hyb290LCBlZXAtDQo+ID4gPiA+ID5lX3BhdGgpOw0KPiA+ID4g
+PiArCWlmICghcmV0KQ0KPiA+ID4gPiArCQlyZXQgPSB4c3RyZHVwKGVlcC0+ZV9wYXRoKTsNCj4g
+PiA+ID4gKwllZXAtPmVfcmVhbHBhdGggPSByZXQ7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4g
+PiA+ID4gK2NoYXIgKg0KPiA+ID4gPiArZXhwb3J0ZW50X3JlYWxwYXRoKHN0cnVjdCBleHBvcnRl
+bnQgKmVlcCkNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKwlpZiAoIWVlcC0+ZV9yZWFscGF0aCkNCj4g
+PiA+ID4gKwkJZXhwb3J0ZW50X21rcmVhbHBhdGgoZWVwKTsNCj4gPiA+ID4gKwlyZXR1cm4gZWVw
+LT5lX3JlYWxwYXRoOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICB2b2lkDQo+ID4g
+PiA+ICBleHBvcnRlbnRfcmVsZWFzZShzdHJ1Y3QgZXhwb3J0ZW50ICplZXApDQo+ID4gPiA+ICB7
+DQo+ID4gPiA+IEBAIC0zOSw2ICs2Miw3IEBAIGV4cG9ydGVudF9yZWxlYXNlKHN0cnVjdCBleHBv
+cnRlbnQgKmVlcCkNCj4gPiA+ID4gIAlmcmVlKGVlcC0+ZV9mc2xvY2RhdGEpOw0KPiA+ID4gPiAg
+CWZyZWUoZWVwLT5lX3V1aWQpOw0KPiA+ID4gPiAgCXhmcmVlKGVlcC0+ZV9ob3N0bmFtZSk7DQo+
+ID4gPiA+ICsJeGZyZWUoZWVwLT5lX3JlYWxwYXRoKTsNCj4gPiA+ID4gIH0NCj4gPiA+ID4gIA0K
+PiA+ID4gPiAgc3RhdGljIHZvaWQNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL3N1cHBvcnQvaW5jbHVk
+ZS9leHBvcnRmcy5oDQo+ID4gPiA+IGIvc3VwcG9ydC9pbmNsdWRlL2V4cG9ydGZzLmgNCj4gPiA+
+ID4gaW5kZXggNGUwZDlkMTMyYjRjLi5kYWE3ZTJhMDZkODIgMTAwNjQ0DQo+ID4gPiA+IC0tLSBh
+L3N1cHBvcnQvaW5jbHVkZS9leHBvcnRmcy5oDQo+ID4gPiA+ICsrKyBiL3N1cHBvcnQvaW5jbHVk
+ZS9leHBvcnRmcy5oDQo+ID4gPiA+IEBAIC0xNzEsNSArMTcxLDYgQEAgc3RydWN0IGV4cG9ydF9m
+ZWF0dXJlcyB7DQo+ID4gPiA+ICANCj4gPiA+ID4gIHN0cnVjdCBleHBvcnRfZmVhdHVyZXMgKmdl
+dF9leHBvcnRfZmVhdHVyZXModm9pZCk7DQo+ID4gPiA+ICB2b2lkIGZpeF9wc2V1ZG9mbGF2b3Jf
+ZmxhZ3Moc3RydWN0IGV4cG9ydGVudCAqZXApOw0KPiA+ID4gPiArY2hhciAqZXhwb3J0ZW50X3Jl
+YWxwYXRoKHN0cnVjdCBleHBvcnRlbnQgKmVlcCk7DQo+ID4gPiA+ICANCj4gPiA+ID4gICNlbmRp
+ZiAvKiBFWFBPUlRGU19IICovDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9zdXBwb3J0L2luY2x1ZGUv
+bmZzbGliLmgNCj4gPiA+ID4gYi9zdXBwb3J0L2luY2x1ZGUvbmZzbGliLmgNCj4gPiA+ID4gaW5k
+ZXggYjA5ZmNlNDJlNjc3Li44NGQ4MjcwYjMzMGYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL3N1cHBv
+cnQvaW5jbHVkZS9uZnNsaWIuaA0KPiA+ID4gPiArKysgYi9zdXBwb3J0L2luY2x1ZGUvbmZzbGli
+LmgNCj4gPiA+ID4gQEAgLTg0LDYgKzg0LDcgQEAgc3RydWN0IGV4cG9ydGVudCB7DQo+ID4gPiA+
+ICAJY2hhciAqCQllX3V1aWQ7DQo+ID4gPiA+ICAJc3RydWN0IHNlY19lbnRyeSBlX3NlY2luZm9b
+U0VDRkxBVk9SX0NPVU5UKzFdOw0KPiA+ID4gPiAgCXVuc2lnbmVkIGludAllX3R0bDsNCj4gPiA+
+ID4gKwljaGFyICoJCWVfcmVhbHBhdGg7DQo+ID4gPiA+ICB9Ow0KPiA+ID4gPiAgDQo+ID4gPiA+
+ICBzdHJ1Y3Qgcm10YWJlbnQgew0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvc3VwcG9ydC9taXNjL25m
+c2RfcGF0aC5jDQo+ID4gPiA+IGIvc3VwcG9ydC9taXNjL25mc2RfcGF0aC5jDQo+ID4gPiA+IGlu
+ZGV4IDU1YmNhOWJkZjRiZC4uOGRkYWZkNjVhYjc2IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9zdXBw
+b3J0L21pc2MvbmZzZF9wYXRoLmMNCj4gPiA+ID4gKysrIGIvc3VwcG9ydC9taXNjL25mc2RfcGF0
+aC5jDQo+ID4gPiA+IEBAIC04MSw5ICs4MSwxMSBAQCBuZnNkX3BhdGhfcHJlcGVuZF9kaXIoY29u
+c3QgY2hhciAqZGlyLCBjb25zdA0KPiA+ID4gPiBjaGFyICpwYXRobmFtZSkNCj4gPiA+ID4gIAkJ
+ZGlybGVuLS07DQo+ID4gPiA+ICAJaWYgKCFkaXJsZW4pDQo+ID4gPiA+ICAJCXJldHVybiBOVUxM
+Ow0KPiA+ID4gPiArCXdoaWxlIChwYXRobmFtZVswXSA9PSAnLycpDQo+ID4gPiA+ICsJCXBhdGhu
+YW1lKys7DQo+ID4gPiA+ICAJbGVuID0gZGlybGVuICsgc3RybGVuKHBhdGhuYW1lKSArIDE7DQo+
+ID4gPiA+ICAJcmV0ID0geG1hbGxvYyhsZW4gKyAxKTsNCj4gPiA+ID4gLQlzbnByaW50ZihyZXQs
+IGxlbiwgIiUuKnMvJXMiLCAoaW50KWRpcmxlbiwgZGlyLA0KPiA+ID4gPiBwYXRobmFtZSk7DQo+
+ID4gPiA+ICsJc25wcmludGYocmV0LCBsZW4rMSwgIiUuKnMvJXMiLCAoaW50KWRpcmxlbiwgZGly
+LA0KPiA+ID4gPiBwYXRobmFtZSk7DQo+ID4gPiA+ICAJcmV0dXJuIHJldDsNCj4gPiA+ID4gIH0N
+Cj4gPiA+ID4gIA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvc3VwcG9ydC9uZnMvZXhwb3J0cy5jIGIv
+c3VwcG9ydC9uZnMvZXhwb3J0cy5jDQo+ID4gPiA+IGluZGV4IDVmNGNiOTU2ODgxNC4uM2VjZmRl
+Nzk3ZTNiIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9zdXBwb3J0L25mcy9leHBvcnRzLmMNCj4gPiA+
+ID4gKysrIGIvc3VwcG9ydC9uZnMvZXhwb3J0cy5jDQo+ID4gPiA+IEBAIC0xNTUsNiArMTU1LDcg
+QEAgZ2V0ZXhwb3J0ZW50KGludCBmcm9ta2VybmVsLCBpbnQNCj4gPiA+ID4gZnJvbWV4cG9ydHMp
+DQo+ID4gPiA+ICAJfQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJeGZyZWUoZWUuZV9ob3N0bmFtZSk7
+DQo+ID4gPiA+ICsJeGZyZWUoZWUuZV9yZWFscGF0aCk7DQo+ID4gPiA+ICAJZWUgPSBkZWZfZWU7
+DQo+ID4gPiA+ICANCj4gPiA+ID4gIAkvKiBDaGVjayBmb3IgZGVmYXVsdCBjbGllbnQgKi8NCj4g
+PiA+ID4gQEAgLTM1OCw2ICszNTksNyBAQCBkdXBleHBvcnRlbnQoc3RydWN0IGV4cG9ydGVudCAq
+ZHN0LCBzdHJ1Y3QNCj4gPiA+ID4gZXhwb3J0ZW50ICpzcmMpDQo+ID4gPiA+ICAJaWYgKHNyYy0+
+ZV91dWlkKQ0KPiA+ID4gPiAgCQlkc3QtPmVfdXVpZCA9IHN0cmR1cChzcmMtPmVfdXVpZCk7DQo+
+ID4gPiA+ICAJZHN0LT5lX2hvc3RuYW1lID0gTlVMTDsNCj4gPiA+ID4gKwlkc3QtPmVfcmVhbHBh
+dGggPSBOVUxMOw0KPiA+ID4gPiAgfQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICBzdHJ1Y3QgZXhwb3J0
+ZW50ICoNCj4gPiA+ID4gQEAgLTM2OSw2ICszNzEsOCBAQCBta2V4cG9ydGVudChjaGFyICpobmFt
+ZSwgY2hhciAqcGF0aCwgY2hhcg0KPiA+ID4gPiAqb3B0aW9ucykNCj4gPiA+ID4gIA0KPiA+ID4g
+PiAgCXhmcmVlKGVlLmVfaG9zdG5hbWUpOw0KPiA+ID4gPiAgCWVlLmVfaG9zdG5hbWUgPSB4c3Ry
+ZHVwKGhuYW1lKTsNCj4gPiA+ID4gKwl4ZnJlZShlZS5lX3JlYWxwYXRoKTsNCj4gPiA+ID4gKwll
+ZS5lX3JlYWxwYXRoID0gTlVMTDsNCj4gPiA+ID4gIA0KPiA+ID4gPiAgCWlmIChzdHJsZW4ocGF0
+aCkgPj0gc2l6ZW9mKGVlLmVfcGF0aCkpIHsNCj4gPiA+ID4gIAkJeGxvZyhMX0VSUk9SLCAicGF0
+aCBuYW1lICVzIHRvbyBsb25nIiwgcGF0aCk7DQo+ID4gPiA+IA0KPiA+ID4gSSdtIG5vdCByZWFs
+bHkgc3VyZSB3aHkgdGhpcyBpcyBoYXBwZW5pbmcgb24gdGhpcyBwYXRjaCBhbmQgaG93DQo+ID4g
+PiBJIG1pc3NlZCB0aGlzIGluIHRoZSBmaXJzdCB2ZXJzaW9uLi4gYnV0IEknbSBnZXR0aW5nIHRo
+ZQ0KPiA+ID4gZm9sbG93aW5nDQo+ID4gPiBsaW5raW5nIGVycm9yIGFmdGVyIGFwcGx5aW5nIHRo
+aXMgcGF0Y2gNCj4gPiA+IA0KPiA+ID4gL3Vzci9iaW4vbGQ6IC4uLy4uL3N1cHBvcnQvbWlzYy9s
+aWJtaXNjLmEod29ya3F1ZXVlLm8pOiBpbg0KPiA+ID4gZnVuY3Rpb24NCj4gPiA+IGB4dGhyZWFk
+X3dvcmtxdWV1ZV93b3JrZXInOg0KPiA+ID4gL2hvbWUvc3JjL3VwL25mcy11dGlscy9zdXBwb3J0
+L21pc2Mvd29ya3F1ZXVlLmM6MTMzOiB1bmRlZmluZWQNCj4gPiA+IHJlZmVyZW5jZSB0byBgX19w
+dGhyZWFkX3JlZ2lzdGVyX2NhbmNlbCcNCj4gPiA+IC91c3IvYmluL2xkOiAvaG9tZS9zcmMvdXAv
+bmZzLXV0aWxzL3N1cHBvcnQvbWlzYy93b3JrcXVldWUuYzoxMzU6DQo+ID4gPiB1bmRlZmluZWQg
+cmVmZXJlbmNlIHRvIGBfX3B0aHJlYWRfdW5yZWdpc3Rlcl9jYW5jZWwnDQo+ID4gPiAvdXNyL2Jp
+bi9sZDogLi4vLi4vc3VwcG9ydC9taXNjL2xpYm1pc2MuYSh3b3JrcXVldWUubyk6IGluDQo+ID4g
+PiBmdW5jdGlvbg0KPiA+ID4gYHh0aHJlYWRfd29ya3F1ZXVlX2FsbG9jJzoNCj4gPiA+IC9ob21l
+L3NyYy91cC9uZnMtdXRpbHMvc3VwcG9ydC9taXNjL3dvcmtxdWV1ZS5jOjE0OTogdW5kZWZpbmVk
+DQo+ID4gPiByZWZlcmVuY2UgdG8gYHB0aHJlYWRfY3JlYXRlJw0KPiA+ID4gY29sbGVjdDI6IGVy
+cm9yOiBsZCByZXR1cm5lZCAxIGV4aXQgc3RhdHVzDQo+ID4gPiANCj4gPiA+IFRvIGdldCB0aGlu
+Z3MgdG8gbGluayBJIG5lZWQgdGhpcyBwYXRjaA0KPiA+ID4gDQo+ID4gDQo+ID4gSHVoLCB0aGF0
+J3Mgd2VpcmQuLi4gSSd2ZSBiZWVuIGNvbXBpbGluZyB0aGlzIG92ZXIgYW5kIG92ZXIgYW5kDQo+
+ID4gaGF2ZQ0KPiA+IHlldCB0byBzZWUgdGhhdCBjb21waWxlIGVycm9yLg0KPiBJIGRvIGEgIm1h
+a2UgY2xlYW4gZGlzdGNsZWFuIiB0aGVuIHVzZSBhIFJIRUw4IGNvbmZpZ3VyYXRpb24uLi4uIA0K
+PiBNYXliZSB0aGF0IGhhcyBzb21ldGhpbmcgdG8gZG8gd2l0aCBpdC4NCg0KWWVzLCBJJ20gdXNp
+bmcgRmVkb3JhIDMwLCBzbyB0aGlzIGlzIGxpa2VseSBkdWUgdG8gdGhlIGRpZmZlcmVuY2UgaW4N
+CmJpbnV0aWxzIHBhY2thZ2VzIChhbmQgaGVuY2Ugd2hpY2ggJ2xkJyBsaW5rZXIgdmVyc2lvbnMp
+IHRoYXQgd2UncmUNCmNvbXBpbGluZyB3aXRoLg0KDQo+ID4gRG8geW91IHdhbnQgbWUgdG8gaW50
+ZWdyYXRlIHlvdXIgZml4IGFuZCByZXNlbmQsIG9yIGRvIHlvdSBwcmVmZXINCj4gPiBqdXN0DQo+
+ID4gdG8gYXBwbHkgeW91ciBmaXggdG8gdGhlIGV4aXN0aW5nIHNlcmllcyBhcyBhIHNlcGFyYXRl
+IGNvbW1pdA0KPiA+IGltbWVkaWF0ZWx5IGJlZm9yZSB0aGlzIHBhdGNoPw0KPiBOby4uLiBJJ2xs
+IGp1c3QgYXBwbHkgdGhlIHBhdGNoIHRvIHRoaXMgcGF0Y2ggYW5kIG1vdmUgb24uLi4gDQo+IA0K
+PiBJIHdhcyBqdXN0IGN1cmlvdXMgaWYgeW91IHdlcmUgc2VlaW5nIHRoaXMgYXMgd2VsbC4uLiAN
+Cj4gDQoNCkNvb2wuIFRoYW5rcyENCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBj
+bGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFj
+ZS5jb20NCg0KDQo=
