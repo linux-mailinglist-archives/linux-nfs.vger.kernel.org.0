@@ -2,45 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7732E46A
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84B92E477
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfE2SZe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 14:25:34 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:43174 "EHLO
+        id S1727367AbfE2S21 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 14:28:27 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46080 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2SZd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:25:33 -0400
+        with ESMTP id S1725917AbfE2S20 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:28:26 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIO1m6061503;
-        Wed, 29 May 2019 18:24:52 GMT
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIO8Yd061601;
+        Wed, 29 May 2019 18:27:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=Id2h4/LUEmkIwtGMeQrsxQRh2WfTng2MUmJNlVZJqjg=;
- b=YsWW5FsGZfyCAeeNvk4lGeT4g8EFkAkUsErDxtHwVvVsehawm51m3KSBg+UixAoC49L8
- aqY747FUfjIIwEP62j9fYZEOcRBV9AiXwzJFaxjzZvK3pXWvbfUIEJV4QP3DoxVhoF8w
- lelTGQpLOhUXR/l6ZjgzgAulm6mIOHLX6GM4yEcLth5IiXW2YTnkBx+ja86o4vv5+kVY
- RQNDf4ouHWIFSNPt5nlvqAlvszJv4xg2Thv07pZ+7hEmWS4uARAkqNW9FdXTYb1nIvlu
- OJHmxF/BFXTynmbK/rr4mF5a1Fbk2CSyLulqfR8ZacSbjlN7RFp+4yF1wr6rWyLpb28t Dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2spu7dky8u-1
+ bh=RfT9gW7Er1J9xZP6JAugF9XglalP0IO7010HA6GYdY8=;
+ b=oCB+8Q7L13xCHMnHr4S1raaHq9+IKuJMcJ6ycuAbjU6hJiaj3YtzZyCS5lDLIRf7CLDB
+ vvg0yBNVNPRzOsz/AAZMFjljmjXWYG6jAGiB3cTTmYxBiJ0vbZPWjDen1Dp7NvgQJqdw
+ j6Qa1NcIROw1c3GD3h5VXN9++s2HHZrUrCvhIE7UJYdBvXv0fOCek9WqdR7qcljTJH6Y
+ rRC+wsyM6P6dUiD/uRSG1V5vVfSHQnvsJKoLAEUPK0ICIANDr2xgx8Y1kWLC1RqTri4v
+ l9+IQWa+Bxe/+aTBCt587MUnLOGowN+ZyGszsAN3kvAXtgyiksJcd/gUbw01Ub3HxCDj Pw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2spu7dkytd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:24:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIO13V007852;
-        Wed, 29 May 2019 18:24:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2sr31ve1p7-1
+        Wed, 29 May 2019 18:27:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIRZbl026260;
+        Wed, 29 May 2019 18:27:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2sqh73veh4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:24:51 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TIOnkH011817;
-        Wed, 29 May 2019 18:24:49 GMT
+        Wed, 29 May 2019 18:27:52 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TIRoFn005377;
+        Wed, 29 May 2019 18:27:50 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 11:24:48 -0700
-Date:   Wed, 29 May 2019 11:24:47 -0700
+        with ESMTP ; Wed, 29 May 2019 11:27:50 -0700
+Date:   Wed, 29 May 2019 11:27:48 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Amir Goldstein <amir73il@gmail.com>
 Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
@@ -50,21 +50,21 @@ Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
         Al Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
         ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v3 05/13] vfs: add missing checks to copy_file_range
-Message-ID: <20190529182447.GE5231@magnolia>
+        linux-cifs@vger.kernel.org
+Subject: Re: [PATCH v3 06/13] vfs: introduce file_modified() helper
+Message-ID: <20190529182748.GF5231@magnolia>
 References: <20190529174318.22424-1-amir73il@gmail.com>
- <20190529174318.22424-6-amir73il@gmail.com>
+ <20190529174318.22424-7-amir73il@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529174318.22424-6-amir73il@gmail.com>
+In-Reply-To: <20190529174318.22424-7-amir73il@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290118
+ engine=8.0.1-1810050000 definitions=main-1905290119
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
@@ -76,123 +76,109 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:43:09PM +0300, Amir Goldstein wrote:
-> Like the clone and dedupe interfaces we've recently fixed, the
-> copy_file_range() implementation is missing basic sanity, limits and
-> boundary condition tests on the parameters that are passed to it
-> from userspace. Create a new "generic_copy_file_checks()" function
-> modelled on the generic_remap_checks() function to provide this
-> missing functionality.
+On Wed, May 29, 2019 at 08:43:10PM +0300, Amir Goldstein wrote:
+> The combination of file_remove_privs() and file_update_mtime() is
+> quite common in filesystem ->write_iter() methods.
 > 
-> [Amir] Shorten copy length instead of checking pos_in limits
-> because input file size already abides by the limits.
+> Modelled after the helper file_accessed(), introduce file_modified()
+> and use it from generic_remap_file_range_prep().
 > 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Note that the order of calling file_remove_privs() before
+> file_update_mtime() in the helper was matched to the more common order by
+> filesystems and not the current order in generic_remap_file_range_prep().
+> 
 > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+>  fs/inode.c         | 20 ++++++++++++++++++++
+>  fs/read_write.c    | 21 +++------------------
+>  include/linux/fs.h |  2 ++
+>  3 files changed, 25 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index df6542ec3b88..2885f2f2c7a5 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1899,6 +1899,26 @@ int file_update_time(struct file *file)
+>  }
+>  EXPORT_SYMBOL(file_update_time);
+>  
+> +/* Caller must hold the file's inode lock */
+> +int file_modified(struct file *file)
+> +{
+> +	int err;
+> +
+> +	/*
+> +	 * Clear the security bits if the process is not being run by root.
+> +	 * This keeps people from modifying setuid and setgid binaries.
+> +	 */
+> +	err = file_remove_privs(file);
+> +	if (err)
+> +		return err;
+> +
+> +	if (likely(file->f_mode & FMODE_NOCMTIME))
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I would not have thought NOCMTIME is likely?
+
+Maybe it is for io requests coming from overlayfs, but for regular uses
+I don't think that's true.
 
 --D
 
-> ---
->  fs/read_write.c    |  3 ++-
->  include/linux/fs.h |  3 +++
->  mm/filemap.c       | 53 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 58 insertions(+), 1 deletion(-)
-> 
+> +		return 0;
+> +
+> +	return file_update_time(file);
+> +}
+> +EXPORT_SYMBOL(file_modified);
+> +
+>  int inode_needs_sync(struct inode *inode)
+>  {
+>  	if (IS_SYNC(inode))
 > diff --git a/fs/read_write.c b/fs/read_write.c
-> index f1900bdb3127..b0fb1176b628 100644
+> index b0fb1176b628..cec7e7b1f693 100644
 > --- a/fs/read_write.c
 > +++ b/fs/read_write.c
-> @@ -1626,7 +1626,8 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->  	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
->  		return -EXDEV;
->  
-> -	ret = generic_file_rw_checks(file_in, file_out);
-> +	ret = generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &len,
-> +				       flags);
->  	if (unlikely(ret))
+> @@ -1980,25 +1980,10 @@ int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
 >  		return ret;
 >  
+>  	/* If can't alter the file contents, we're done. */
+> -	if (!(remap_flags & REMAP_FILE_DEDUP)) {
+> -		/* Update the timestamps, since we can alter file contents. */
+> -		if (!(file_out->f_mode & FMODE_NOCMTIME)) {
+> -			ret = file_update_time(file_out);
+> -			if (ret)
+> -				return ret;
+> -		}
+> +	if (!(remap_flags & REMAP_FILE_DEDUP))
+> +		ret = file_modified(file_out);
+>  
+> -		/*
+> -		 * Clear the security bits if the process is not being run by
+> -		 * root.  This keeps people from modifying setuid and setgid
+> -		 * binaries.
+> -		 */
+> -		ret = file_remove_privs(file_out);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	return 0;
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(generic_remap_file_range_prep);
+>  
 > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 89b9b73eb581..e4d382c4342a 100644
+> index e4d382c4342a..79ffa2958bd8 100644
 > --- a/include/linux/fs.h
 > +++ b/include/linux/fs.h
-> @@ -3050,6 +3050,9 @@ extern int generic_remap_checks(struct file *file_in, loff_t pos_in,
->  				struct file *file_out, loff_t pos_out,
->  				loff_t *count, unsigned int remap_flags);
->  extern int generic_file_rw_checks(struct file *file_in, struct file *file_out);
-> +extern int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
-> +				    struct file *file_out, loff_t pos_out,
-> +				    size_t *count, unsigned int flags);
->  extern ssize_t generic_file_read_iter(struct kiocb *, struct iov_iter *);
->  extern ssize_t __generic_file_write_iter(struct kiocb *, struct iov_iter *);
->  extern ssize_t generic_file_write_iter(struct kiocb *, struct iov_iter *);
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 44361928bbb0..aac71aef4c61 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3056,6 +3056,59 @@ int generic_file_rw_checks(struct file *file_in, struct file *file_out)
->  	return 0;
+> @@ -2177,6 +2177,8 @@ static inline void file_accessed(struct file *file)
+>  		touch_atime(&file->f_path);
 >  }
 >  
-> +/*
-> + * Performs necessary checks before doing a file copy
-> + *
-> + * Can adjust amount of bytes to copy via @req_count argument.
-> + * Returns appropriate error code that caller should return or
-> + * zero in case the copy should be allowed.
-> + */
-> +int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
-> +			     struct file *file_out, loff_t pos_out,
-> +			     size_t *req_count, unsigned int flags)
-> +{
-> +	struct inode *inode_in = file_inode(file_in);
-> +	struct inode *inode_out = file_inode(file_out);
-> +	uint64_t count = *req_count;
-> +	loff_t size_in;
-> +	int ret;
+> +extern int file_modified(struct file *file);
 > +
-> +	ret = generic_file_rw_checks(file_in, file_out);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Don't touch certain kinds of inodes */
-> +	if (IS_IMMUTABLE(inode_out))
-> +		return -EPERM;
-> +
-> +	if (IS_SWAPFILE(inode_in) || IS_SWAPFILE(inode_out))
-> +		return -ETXTBSY;
-> +
-> +	/* Ensure offsets don't wrap. */
-> +	if (pos_in + count < pos_in || pos_out + count < pos_out)
-> +		return -EOVERFLOW;
-> +
-> +	/* Shorten the copy to EOF */
-> +	size_in = i_size_read(inode_in);
-> +	if (pos_in >= size_in)
-> +		count = 0;
-> +	else
-> +		count = min(count, size_in - (uint64_t)pos_in);
-> +
-> +	ret = generic_write_check_limits(file_out, pos_out, &count);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Don't allow overlapped copying within the same file. */
-> +	if (inode_in == inode_out &&
-> +	    pos_out + count > pos_in &&
-> +	    pos_out < pos_in + count)
-> +		return -EINVAL;
-> +
-> +	*req_count = count;
-> +	return 0;
-> +}
-> +
->  int pagecache_write_begin(struct file *file, struct address_space *mapping,
->  				loff_t pos, unsigned len, unsigned flags,
->  				struct page **pagep, void **fsdata)
+>  int sync_inode(struct inode *inode, struct writeback_control *wbc);
+>  int sync_inode_metadata(struct inode *inode, int wait);
+>  
 > -- 
 > 2.17.1
 > 
