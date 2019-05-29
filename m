@@ -2,167 +2,228 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C623A2DFE1
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 16:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962FC2DFEF
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 16:39:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfE2Ofa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 10:35:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:48772 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfE2Of2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 10:35:28 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TEXWNg040740;
-        Wed, 29 May 2019 14:35:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=t1SM7WRbXklRjxAdeqo6r3kJKmE3Wo2Su2FLQegU6OA=;
- b=nQsH3JSYAhSjyQiwTVWAqeUhKA27D57UfXHCTcoNkRM29ICDUEcsEMWqOV47IPbgAlaf
- T1U1KCH2Ga+UXNw4FlVkXRUX8c+IUL+T5OLuTdwYHJNv1eaS+qfK1cGA0dbH5Tf28367
- n53e2JQ+mQ2Ie4IN3ugddSSQDFkfcU+I099bG0gTpb1tx0z2mi3RU5O9z2GW8gKk0XTV
- cjy0qW8OlxYY4HhGJC7oEJCYXMKQZU/WigwjELG1sxQzRRYI+v8XB1L2O7P2Veou0MX6
- xWNlSWabLBQ6jvUWORiHlXd9FG+GrdTtFZo4niWW41ylgsRnV2MHkqPxaWDIVurBbqnp Iw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2spu7djdh3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 14:35:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TEXpLr138142;
-        Wed, 29 May 2019 14:35:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2srbdxe6rr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 14:35:14 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TEZBOr024141;
-        Wed, 29 May 2019 14:35:11 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 07:35:11 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH RFC 00/12] for-5.3 NFS/RDMA patches for review
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20190529064055.GA10492@infradead.org>
-Date:   Wed, 29 May 2019 10:35:09 -0400
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9557E3ED-6C62-4C7D-8854-2DFC39ED690E@oracle.com>
-References: <20190528181018.19012.61210.stgit@manet.1015granger.net>
- <20190529064055.GA10492@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290096
+        id S1726068AbfE2OjB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 10:39:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36442 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfE2OjA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 10:39:00 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1356180467;
+        Wed, 29 May 2019 14:39:00 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-117-143.phx2.redhat.com [10.3.117.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A7AB05D9E1;
+        Wed, 29 May 2019 14:38:59 +0000 (UTC)
+Subject: Re: [PATCH v3 07/11] Add a helper to return the real path given an
+ export entry
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-2-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-3-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-4-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-5-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-7-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-8-trond.myklebust@hammerspace.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <341a5328-ae6e-755d-6351-8e764d429e61@RedHat.com>
+Date:   Wed, 29 May 2019 10:38:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190528203122.11401-8-trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 29 May 2019 14:39:00 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hey Trond,
 
+On 5/28/19 4:31 PM, Trond Myklebust wrote:
+> Add a helper that can prepend the nfsd root directory path in order
+> to allow mountd to perform its comparisons with mtab etc.
+> 
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  support/export/export.c    | 24 ++++++++++++++++++++++++
+>  support/include/exportfs.h |  1 +
+>  support/include/nfslib.h   |  1 +
+>  support/misc/nfsd_path.c   |  4 +++-
+>  support/nfs/exports.c      |  4 ++++
+>  5 files changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/support/export/export.c b/support/export/export.c
+> index fbe68e84e5b3..82bbb54c5e9e 100644
+> --- a/support/export/export.c
+> +++ b/support/export/export.c
+> @@ -20,6 +20,7 @@
+>  #include "xmalloc.h"
+>  #include "nfslib.h"
+>  #include "exportfs.h"
+> +#include "nfsd_path.h"
+>  
+>  exp_hash_table exportlist[MCL_MAXTYPES] = {{NULL, {{NULL,NULL}, }}, }; 
+>  static int export_hash(char *);
+> @@ -30,6 +31,28 @@ static void	export_add(nfs_export *exp);
+>  static int	export_check(const nfs_export *exp, const struct addrinfo *ai,
+>  				const char *path);
+>  
+> +/* Return a real path for the export. */
+> +static void
+> +exportent_mkrealpath(struct exportent *eep)
+> +{
+> +	const char *chroot = nfsd_path_nfsd_rootdir();
+> +	char *ret = NULL;
+> +
+> +	if (chroot)
+> +		ret = nfsd_path_prepend_dir(chroot, eep->e_path);
+> +	if (!ret)
+> +		ret = xstrdup(eep->e_path);
+> +	eep->e_realpath = ret;
+> +}
+> +
+> +char *
+> +exportent_realpath(struct exportent *eep)
+> +{
+> +	if (!eep->e_realpath)
+> +		exportent_mkrealpath(eep);
+> +	return eep->e_realpath;
+> +}
+> +
+>  void
+>  exportent_release(struct exportent *eep)
+>  {
+> @@ -39,6 +62,7 @@ exportent_release(struct exportent *eep)
+>  	free(eep->e_fslocdata);
+>  	free(eep->e_uuid);
+>  	xfree(eep->e_hostname);
+> +	xfree(eep->e_realpath);
+>  }
+>  
+>  static void
+> diff --git a/support/include/exportfs.h b/support/include/exportfs.h
+> index 4e0d9d132b4c..daa7e2a06d82 100644
+> --- a/support/include/exportfs.h
+> +++ b/support/include/exportfs.h
+> @@ -171,5 +171,6 @@ struct export_features {
+>  
+>  struct export_features *get_export_features(void);
+>  void fix_pseudoflavor_flags(struct exportent *ep);
+> +char *exportent_realpath(struct exportent *eep);
+>  
+>  #endif /* EXPORTFS_H */
+> diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+> index b09fce42e677..84d8270b330f 100644
+> --- a/support/include/nfslib.h
+> +++ b/support/include/nfslib.h
+> @@ -84,6 +84,7 @@ struct exportent {
+>  	char *		e_uuid;
+>  	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
+>  	unsigned int	e_ttl;
+> +	char *		e_realpath;
+>  };
+>  
+>  struct rmtabent {
+> diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
+> index 55bca9bdf4bd..8ddafd65ab76 100644
+> --- a/support/misc/nfsd_path.c
+> +++ b/support/misc/nfsd_path.c
+> @@ -81,9 +81,11 @@ nfsd_path_prepend_dir(const char *dir, const char *pathname)
+>  		dirlen--;
+>  	if (!dirlen)
+>  		return NULL;
+> +	while (pathname[0] == '/')
+> +		pathname++;
+>  	len = dirlen + strlen(pathname) + 1;
+>  	ret = xmalloc(len + 1);
+> -	snprintf(ret, len, "%.*s/%s", (int)dirlen, dir, pathname);
+> +	snprintf(ret, len+1, "%.*s/%s", (int)dirlen, dir, pathname);
+>  	return ret;
+>  }
+>  
+> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> index 5f4cb9568814..3ecfde797e3b 100644
+> --- a/support/nfs/exports.c
+> +++ b/support/nfs/exports.c
+> @@ -155,6 +155,7 @@ getexportent(int fromkernel, int fromexports)
+>  	}
+>  
+>  	xfree(ee.e_hostname);
+> +	xfree(ee.e_realpath);
+>  	ee = def_ee;
+>  
+>  	/* Check for default client */
+> @@ -358,6 +359,7 @@ dupexportent(struct exportent *dst, struct exportent *src)
+>  	if (src->e_uuid)
+>  		dst->e_uuid = strdup(src->e_uuid);
+>  	dst->e_hostname = NULL;
+> +	dst->e_realpath = NULL;
+>  }
+>  
+>  struct exportent *
+> @@ -369,6 +371,8 @@ mkexportent(char *hname, char *path, char *options)
+>  
+>  	xfree(ee.e_hostname);
+>  	ee.e_hostname = xstrdup(hname);
+> +	xfree(ee.e_realpath);
+> +	ee.e_realpath = NULL;
+>  
+>  	if (strlen(path) >= sizeof(ee.e_path)) {
+>  		xlog(L_ERROR, "path name %s too long", path);
+> 
+I'm not really sure why this is happening on this patch and how
+I missed this in the first version.. but I'm getting the following
+linking error after applying this patch
 
-> On May 29, 2019, at 2:40 AM, Christoph Hellwig <hch@infradead.org> =
-wrote:
->=20
-> On Tue, May 28, 2019 at 02:20:50PM -0400, Chuck Lever wrote:
->> This is a series of fixes and architectural changes that should
->> improve robustness and result in better scalability of NFS/RDMA.
->> I'm sure one or two of these could be broken down a little more,
->> comments welcome.
->=20
-> Just curious, do you have any performance numbers.
+/usr/bin/ld: ../../support/misc/libmisc.a(workqueue.o): in function `xthread_workqueue_worker':
+/home/src/up/nfs-utils/support/misc/workqueue.c:133: undefined reference to `__pthread_register_cancel'
+/usr/bin/ld: /home/src/up/nfs-utils/support/misc/workqueue.c:135: undefined reference to `__pthread_unregister_cancel'
+/usr/bin/ld: ../../support/misc/libmisc.a(workqueue.o): in function `xthread_workqueue_alloc':
+/home/src/up/nfs-utils/support/misc/workqueue.c:149: undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
 
-To watch for performance regressions and improvements, I regularly run =
-several
-variations of iozone, fio 70/30 mix, and multi-threaded software builds. =
-I did
-not note any change in throughput after applying these patches.
+To get things to link I need this patch
 
-I'm unsure how to measure context switch rate precisely during these =
-tests.
+diff --git a/systemd/Makefile.am b/systemd/Makefile.am
+index d54518b..590258a 100644
+--- a/systemd/Makefile.am
++++ b/systemd/Makefile.am
+@@ -54,7 +54,8 @@ rpc_pipefs_generator_SOURCES = $(COMMON_SRCS) rpc-pipefs-generator.c
+ 
+ nfs_server_generator_LDADD = ../support/export/libexport.a \
+ 			     ../support/nfs/libnfs.la \
+-			     ../support/misc/libmisc.a
++			     ../support/misc/libmisc.a \
++			     $(LIBPTHREAD)
+ 
+ rpc_pipefs_generator_LDADD = ../support/nfs/libnfs.la
+ 
+diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
+index 4b29161..96524c7 100644
+--- a/utils/exportfs/Makefile.am
++++ b/utils/exportfs/Makefile.am
+@@ -10,6 +10,6 @@ exportfs_SOURCES = exportfs.c
+ exportfs_LDADD = ../../support/export/libexport.a \
+ 	       	 ../../support/nfs/libnfs.la \
+ 		 ../../support/misc/libmisc.a \
+-		 $(LIBWRAP) $(LIBNSL)
++		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
 
-This is typical for fio 8KB random 70/30 mix on FDR Infiniband on a NUMA =
-client.
-Not impressive compared to NVMe, I know, but much better than NFS/TCP. =
-On a
-single socket client, the IOPS numbers more than double.
+I would think I should have seen this early when threads
+was added to libmisc.a via the [Add a simple workqueue mechanism] 
+patch but I didn't...
 
-Jobs: 12 (f=3D12): [m(12)][100.0%][r=3D897MiB/s,w=3D386MiB/s][r=3D115k,w=3D=
-49.5k IOPS][eta 00m:00s]
-8k7030test: (groupid=3D0, jobs=3D12): err=3D 0: pid=3D2107: Fri May 24 =
-15:22:38 2019
-   read: IOPS=3D115k, BW=3D897MiB/s (941MB/s)(8603MiB/9588msec)
-    slat (usec): min=3D2, max=3D6203, avg=3D 7.02, stdev=3D27.49
-    clat (usec): min=3D33, max=3D13553, avg=3D1131.12, stdev=3D536.34
-     lat (usec): min=3D47, max=3D13557, avg=3D1138.37, stdev=3D537.11
-    clat percentiles (usec):
-     |  1.00th=3D[  338],  5.00th=3D[  515], 10.00th=3D[  619], =
-20.00th=3D[  750],
-     | 30.00th=3D[  857], 40.00th=3D[  955], 50.00th=3D[ 1057], =
-60.00th=3D[ 1156],
-     | 70.00th=3D[ 1270], 80.00th=3D[ 1434], 90.00th=3D[ 1696], =
-95.00th=3D[ 1926],
-     | 99.00th=3D[ 2966], 99.50th=3D[ 3785], 99.90th=3D[ 5866], =
-99.95th=3D[ 6652],
-     | 99.99th=3D[ 8586]
-   bw (  KiB/s): min=3D64624, max=3D82800, per=3D8.34%, avg=3D76631.87, =
-stdev=3D2877.97, samples=3D227
-   iops        : min=3D 8078, max=3D10350, avg=3D9578.91, stdev=3D359.76, =
-samples=3D227
-  write: IOPS=3D49.2k, BW=3D384MiB/s (403MB/s)(3685MiB/9588msec)
-    slat (usec): min=3D3, max=3D7226, avg=3D 7.54, stdev=3D29.53
-    clat (usec): min=3D64, max=3D14828, avg=3D1210.36, stdev=3D584.82
-     lat (usec): min=3D78, max=3D14834, avg=3D1218.11, stdev=3D585.77
-    clat percentiles (usec):
-     |  1.00th=3D[  359],  5.00th=3D[  545], 10.00th=3D[  652], =
-20.00th=3D[  791],
-     | 30.00th=3D[  906], 40.00th=3D[ 1004], 50.00th=3D[ 1106], =
-60.00th=3D[ 1221],
-     | 70.00th=3D[ 1369], 80.00th=3D[ 1549], 90.00th=3D[ 1844], =
-95.00th=3D[ 2147],
-     | 99.00th=3D[ 3163], 99.50th=3D[ 4015], 99.90th=3D[ 6194], =
-99.95th=3D[ 7308],
-     | 99.99th=3D[ 9372]
-   bw (  KiB/s): min=3D27520, max=3D36128, per=3D8.34%, avg=3D32816.45, =
-stdev=3D1323.08, samples=3D227
-   iops        : min=3D 3440, max=3D 4516, avg=3D4101.97, stdev=3D165.38, =
-samples=3D227
-  lat (usec)   : 50=3D0.01%, 100=3D0.01%, 250=3D0.31%, 500=3D3.91%, =
-750=3D14.66%
-  lat (usec)   : 1000=3D24.41%
-  lat (msec)   : 2=3D51.69%, 4=3D4.57%, 10=3D0.44%, 20=3D0.01%
-  cpu          : usr=3D3.24%, sys=3D8.11%, ctx=3D786935, majf=3D0, =
-minf=3D117
-  IO depths    : 1=3D0.1%, 2=3D0.1%, 4=3D0.1%, 8=3D0.1%, 16=3D100.0%, =
-32=3D0.0%, >=3D64=3D0.0%
-     submit    : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.0%, 32=3D0.0%, =
-64=3D0.0%, >=3D64=3D0.0%
-     complete  : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.1%, 32=3D0.0%, =
-64=3D0.0%, >=3D64=3D0.0%
-     issued rwt: total=3D1101195,471669,0, short=3D0,0,0, dropped=3D0,0,0
-     latency   : target=3D0, window=3D0, percentile=3D100.00%, depth=3D16
-
-Run status group 0 (all jobs):
-   READ: bw=3D897MiB/s (941MB/s), 897MiB/s-897MiB/s (941MB/s-941MB/s), =
-io=3D8603MiB (9021MB), run=3D9588-9588msec
-  WRITE: bw=3D384MiB/s (403MB/s), 384MiB/s-384MiB/s (403MB/s-403MB/s), =
-io=3D3685MiB (3864MB), run=3D9588-9588msec
-
-
---
-Chuck Lever
-
-
-
+steved. 
