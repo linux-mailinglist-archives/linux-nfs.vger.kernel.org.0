@@ -2,62 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC36C2E4AE
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF0F22E4D2
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 20:54:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfE2Sqs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 14:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2Sqs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 May 2019 14:46:48 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FFAA23F61;
-        Wed, 29 May 2019 18:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559155607;
-        bh=2jSTGQIika5Ts5Fwsc/mV5ujETLoG2b0gt4BMPBg8u8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uojj0cfYOr92tRLuLsTaQg9coil+CH6wx0vHXyGcCx0HDsV0ob8dZjcqEDl3amTsN
-         93pcpQEcL0mkyBk6MS9pe0sJTPzRs7Tmh85mydKtvGhJOQb9H5E28qzaQO3LolD9Wb
-         3c1EaOvTpaNQ8oD7RwmyNzoiXGD07SXhsBLQBxw4=
-Date:   Wed, 29 May 2019 14:46:46 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
-Message-ID: <20190529184646.GE12898@sasha-vm>
-References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-4-sashal@kernel.org>
- <E7EBFAFD-D312-4EBA-970B-54F07EDD1F9D@redhat.com>
+        id S1726008AbfE2Sy3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 14:54:29 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46982 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfE2Sy3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 14:54:29 -0400
+Received: by mail-vs1-f68.google.com with SMTP id l125so2618200vsl.13;
+        Wed, 29 May 2019 11:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WCvRfjMaoe8atosMw9vpL+AtU6nrgPQCPjhnaZzCbsM=;
+        b=cqFqy9eCxa8h1FX1mKoort4lffCfK4CG9Y5YoL6yBFhj42AIuHaGLifCq2qqybuccK
+         bYiD17z+z9hHq6GfuISDiPNqa6fPd4N/9SpVQMuXKdf5GCzpptWEPr4GSlDlPB04snbt
+         sUrogDzeTnr4zOgdqoIucUlU/9wk5fQF+HF3cwTCOgVD+lyuFdGQUKXxs69XcB0dCNju
+         ia/Xdlgo2TAYtwZlUQ3pPL2tlv9ImA7tBWOK7YEMAt2MYnAw26XjNc+vd4iTwtYctuyi
+         AeUUUJUeemgC1aoAMksRvZvvFXbHobcNoXlcbRJQJwGXFT9naPvzi/o9kLyEcu7iMjzQ
+         zkYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WCvRfjMaoe8atosMw9vpL+AtU6nrgPQCPjhnaZzCbsM=;
+        b=ljK+9tPIuSSJcpP/m7H8PAxPuXGl4ThWdTn2no7a7gUiK/ItbWVNAd7/PzGLtZQzcB
+         Iyhp7v1DcKu2OCJNi1seYxt4cdoWFqbmXT353MhWbxrzeHpf2ky3Y+jV3Ya0LqXVlXRA
+         hnQbDvywcmFXkxx8egwSSKhdWcxR35/bMLZ+i3535tOToB+ANSfu8yS1ZcxfBekbyOOP
+         yYV4vN+/WJKQY+RFalUw3dDlvBo69kuQqD5PkZldNuJ1UwSpQSKfw8xe2n8BbVsTY7jn
+         o0U8xnTiItj7b+yvJCjvTf0n6tsl8tzlULY7ydAuIFfJa8SgIrwKJz1a9hVrc2AVoSo+
+         JO9w==
+X-Gm-Message-State: APjAAAWHlcUbNNB/uUobPTjqho2LuluUeo9LjDH/A3O38WrgseSJP30o
+        Z17/2XNiOVi7tInz/H5Y/y34XrZxlWZSJIn03BA=
+X-Google-Smtp-Source: APXvYqziLHhX9A6iAge8aPXbfuG8rZVv36yFfLC/qNQR8rQn8NiS7O4UxAwF5EPDRQOYx9qg6L+kNbIkswgeivhZ5vk=
+X-Received: by 2002:a67:de99:: with SMTP id r25mr47937874vsk.215.1559156067660;
+ Wed, 29 May 2019 11:54:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <E7EBFAFD-D312-4EBA-970B-54F07EDD1F9D@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190529151003.hzmesyoiopnbcgkb@aura.draconx.ca> <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
+In-Reply-To: <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 29 May 2019 14:54:16 -0400
+Message-ID: <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com>
+Subject: Re: PROBLEM: oops spew with Linux 5.1.5 (NFS regression?)
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "nbowler@draconx.ca" <nbowler@draconx.ca>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Olga.Kornievskaia@netapp.com" <Olga.Kornievskaia@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:02:39AM -0400, Benjamin Coddington wrote:
->Hi Sasha,  if you take this one, you'll need the fix for it:
+On Wed, May 29, 2019 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
 >
->c260121a97a3 ("NFS: Fix a double unlock from nfs_match,get_client")
+> On Wed, 2019-05-29 at 11:10 -0400, Nick Bowler wrote:
+> > Hi,
+> >
+> > I upgraded to Linux 5.1.5 on one machine yesterday, and this morning
+> > I
+> > happened noticed a large amount of backtraces in the log.  It appears
+> > that the system oopsed 62 times over a period of about 5 minutes,
+> > producing about half a megabyte of log messages, after which the
+> > messages stopped.  No idea what action (if any) triggered these.
+> >
+> > However, other than the noise in the logs there is nothing obviously
+> > broken, but I thought I should report the spews anyway.  I was
+> > running
+> > 5.0.9 previously and have not seen any similar errors.  The first
+> > couple
+> > spews are appended.  All 64 faults look very similar to these ones,
+> > with
+> > the same faulting address and the same rpc_check_timeout function at
+> > the
+> > top of the backtrace.
 >
->I didn't see this fix go through my inbox for your stable tree, so 
->apologies if maybe I missed it.
->
->Looks like you are also applying this one to 4.19 and 4.14, -- I'll 
->just reply once here.
+> OK, I think this is the same problem that Olga was seeing (Cced), and
+> it looks like I missed the use-after-free issue when the server returns
+> a credential error when she asked.
 
-Queued c260121a97a3 up for 5.1-4.14, thank you!
+I think this is actually different than what I encountered for the
+umount case but the trigger is the same -- failing validation.
 
---
-Thanks,
-Sasha
+I tried to reproduce Nick's oops on 5.2-rc but haven't been able to
+(but I'm not confident I produced the right trigger conditions. will
+try 5.1).
+
+
+>
+> I believe that the following patch should fix it:
+>
+> 8<------------------------------------------------------------------
+> From 33905f5a7d1d200db8eeb3f4ea8670c9da4cb64d Mon Sep 17 00:00:00 2001
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Wed, 29 May 2019 12:49:52 -0400
+> Subject: [PATCH] SUNRPC: Fix a use after free when a server rejects the
+>  RPCSEC_GSS credential
+>
+> The addition of rpc_check_timeout() to call_decode causes an Oops
+> when the RPCSEC_GSS credential is rejected.
+> The reason is that rpc_decode_header() will call xprt_release() in
+> order to free task->tk_rqstp, which is needed by rpc_check_timeout()
+> to check whether or not we should exit due to a soft timeout.
+>
+> The fix is to move the call to xprt_release() into call_decode() so
+> we can perform it after rpc_check_timeout().
+>
+> Reported-by: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+> Reported-by: Nick Bowler <nbowler@draconx.ca>
+> Fixes: cea57789e408 ("SUNRPC: Clean up")
+> Cc: stable@vger.kernel.org # v5.1+
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  net/sunrpc/clnt.c | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index d6e57da56c94..4c02c37fa774 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -2426,17 +2426,21 @@ call_decode(struct rpc_task *task)
+>                 return;
+>         case -EAGAIN:
+>                 task->tk_status = 0;
+> -               /* Note: rpc_decode_header() may have freed the RPC slot */
+> -               if (task->tk_rqstp == req) {
+> -                       xdr_free_bvec(&req->rq_rcv_buf);
+> -                       req->rq_reply_bytes_recvd = 0;
+> -                       req->rq_rcv_buf.len = 0;
+> -                       if (task->tk_client->cl_discrtry)
+> -                               xprt_conditional_disconnect(req->rq_xprt,
+> -                                                           req->rq_connect_cookie);
+> -               }
+> +               xdr_free_bvec(&req->rq_rcv_buf);
+> +               req->rq_reply_bytes_recvd = 0;
+> +               req->rq_rcv_buf.len = 0;
+> +               if (task->tk_client->cl_discrtry)
+> +                       xprt_conditional_disconnect(req->rq_xprt,
+> +                                                   req->rq_connect_cookie);
+>                 task->tk_action = call_encode;
+>                 rpc_check_timeout(task);
+> +               break;
+> +       case -EKEYREJECTED:
+> +               task->tk_action = call_reserve;
+> +               rpc_check_timeout(task);
+> +               rpcauth_invalcred(task);
+> +               /* Ensure we obtain a new XID if we retry! */
+> +               xprt_release(task);
+>         }
+>  }
+>
+> @@ -2572,11 +2576,7 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
+>                         break;
+>                 task->tk_cred_retry--;
+>                 trace_rpc__stale_creds(task);
+> -               rpcauth_invalcred(task);
+> -               /* Ensure we obtain a new XID! */
+> -               xprt_release(task);
+> -               task->tk_action = call_reserve;
+> -               return -EAGAIN;
+> +               return -EKEYREJECTED;
+>         case rpc_autherr_badcred:
+>         case rpc_autherr_badverf:
+>                 /* possibly garbled cred/verf? */
+> --
+> 2.21.0
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
