@@ -2,138 +2,219 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACEEB2E6EC
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 23:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 149A92E701
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 23:03:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfE2VBC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 17:01:02 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:42040 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfE2VBB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 17:01:01 -0400
-Received: by mail-yw1-f66.google.com with SMTP id s5so1663890ywd.9;
-        Wed, 29 May 2019 14:01:01 -0700 (PDT)
+        id S1726676AbfE2VDj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 17:03:39 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38091 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfE2VDj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 17:03:39 -0400
+Received: by mail-yw1-f65.google.com with SMTP id b74so1681017ywe.5;
+        Wed, 29 May 2019 14:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2bUX9HHLDimGpHftlxiZFbL0LRNK02ZuHhjX+WUCqPs=;
-        b=mokTnnsRdjT1v9zXbMeJ8tMVuwGBi9oZieTmqfLND4TQvuv+6jYtzMpalLNeGnT8OE
-         qLACIUrBtyV6h9Tc5JogpdaL7A/jqf9qpUVZOetoZ3/JtYd9XV8Bk/PLRr0mV4lilWCy
-         Zzues0JQGQuvgVDBXvscVDBj/gKJ65K7d8ECbfQxgoYZJ1VJ9VvScP5eu60wCuUsEXB6
-         R+omRXtO+AJBLqI3vpt2gZ5zvIzPhSXOmq5TZQbV/GlnbeXEn9p/eEgq2t+9GTijHWXA
-         rERh2cPUv88AjcLOg1qw2fDegTzoESZ766o7y3cxugW8mnSeP5s1Il/FQfKZc3LBYIt5
-         7/mw==
+        bh=WFYgZ3xTZljDOPRhtfmN40cBxYCoBeqo14r6/1bn7UQ=;
+        b=gFJvIacEhQDeFxNvbgcMUWsf4Kwj0EKvun0oJ/cNuKA2Vtx7nrp1e+AXwSt/gyVM/6
+         IdTYHvF8RzK9kuz2BQxv4+kpX25QricTfOErHJ/D6s7sPKaDVBAP8I/4EYuhARiGAdoO
+         7lrWj6I44mlO9y+SqkAIx4c6ben/f1XYde1SXQt8vy62qWX4/rzTPFTXfOs5qOqumvqr
+         D/6kGECdyihCIHAgXIauYDxNHY9DnJtmOXrKYDFaK1QKhMTXMbjXBG6kV3R+wQiOYaFs
+         wGN701reb5FO+wFThVXRDv7XXTRegCUYNwkLgDjJD8zYdXZahzQ+29MRJD9CD7Loy+Jo
+         P9IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2bUX9HHLDimGpHftlxiZFbL0LRNK02ZuHhjX+WUCqPs=;
-        b=Y9ziizeJ6MQ0u8vDh2w8CV5SRr6GauNAQygz3jf2/kV7vNesOMJ2fhbENuHVFH/d1V
-         UMwB48QCvDEBwYERgyVMEauBNlmuTqoz2zAQekudrkKAN/eVUlg2vr3+DYEf1b+1wX/u
-         LZeDPWfwh60p614oqd0Fy6zGxC9rFxjRrM6ZNk8fSYjJoX7l5/y2baigl3SNqZQAOfe5
-         xzQ53XLqKo/dvqDeI2F0mL2W5ILezqRNBL5tnL7doYaRI0mgEvJcuVrzX6rhkfMIuz5c
-         AdZBUH1+5dbemB98YKbye3kvh/NPu6gafY797nj5wOtiarEpgQcppExPqCbfce/ajCqe
-         YGsQ==
-X-Gm-Message-State: APjAAAWjDE2DJMP88ftyiepiymr+3MwOHlfm4EXhX/twr1Vz0mYFU4oO
-        z90WzMmQqQb7y6BbMCh+zaX22IBO3s8u4qyPkUg=
-X-Google-Smtp-Source: APXvYqyrK/4V0q9KZq/DcTiqx6cmC6OvHU4vovdF+8lt7yiCN/6T6wIGMo6YYCvkngQFkF/b2jOo5E+utaFhPNJyMeg=
-X-Received: by 2002:a81:4f06:: with SMTP id d6mr48990950ywb.379.1559163660713;
- Wed, 29 May 2019 14:01:00 -0700 (PDT)
+        bh=WFYgZ3xTZljDOPRhtfmN40cBxYCoBeqo14r6/1bn7UQ=;
+        b=Ja1o6rtvk/k6Ski8vsa2Z+h2bvKEhlpnB7JpQQnBw5uyscl6K4DNkC6pWWkOTc/tqB
+         nvS0mhDUnNWP4d0JGRaRXRizy919tHL+7dHAb2aPB2KMxMtbYEPq3OhqoSOSK8/b6eSk
+         F2wmN5+R3USXRWzza8tU0IO7+X5UpDg2wE/Xxdw31jQxNDHAcHUP6j68VYYaAEAzx757
+         fauUXywzAzoMGZzZdZA7TnPnVfbuelgwIqiAXmHhSZqEACII5/jb4W8DzVpxZjAnMEKU
+         GnZ1FZ2s8vKMyDdNjPzCrDkW+FlXh0vqDu/oJwxSZNEjQJKA4V80KxaZ5ABictmEBjYX
+         5cgA==
+X-Gm-Message-State: APjAAAV53I0BTalGUPhoOeSmvI62Z1dUjPMsh/QevtZ3lPeu/M2kkgMw
+        fzz+P08uN8hngv8bqXdzZQA4GN3NNVRdnKwaSFI=
+X-Google-Smtp-Source: APXvYqyxScaKIEF7mVCGtEwtucu6Go1l0NvXGTZ8ohAT+592a9iPrsYZXeHzNqMFEpb9vDQnqj5a/1C1BkOYlDbHq+o=
+X-Received: by 2002:a81:1186:: with SMTP id 128mr3736ywr.181.1559163817960;
+ Wed, 29 May 2019 14:03:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190529174318.22424-1-amir73il@gmail.com> <20190529174318.22424-13-amir73il@gmail.com>
- <CAOQ4uxgYM_eM==uqGQuKiGb+f08qs53=E+DONMMzW=N-Ab5YZA@mail.gmail.com> <c32af433639b451419d36382a05edabfcb742294.camel@hammerspace.com>
-In-Reply-To: <c32af433639b451419d36382a05edabfcb742294.camel@hammerspace.com>
+References: <20190529174318.22424-1-amir73il@gmail.com> <20190529174318.22424-14-amir73il@gmail.com>
+ <CAN-5tyF9OnRsF_dgtx8aUGFB5tUUs=JK1wzXvRGo3za8jfpJdQ@mail.gmail.com>
+In-Reply-To: <CAN-5tyF9OnRsF_dgtx8aUGFB5tUUs=JK1wzXvRGo3za8jfpJdQ@mail.gmail.com>
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 30 May 2019 00:00:49 +0300
-Message-ID: <CAOQ4uxio_1J-v3dcXO154N0Ntq+vrM0FOQv0G6Nh1HBmtHZEfQ@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] nfs: copy_file_range needs to strip setuid bits
- and update timestamps
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "david@fromorbit.com" <david@fromorbit.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "lhenriques@suse.com" <lhenriques@suse.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>
+Date:   Thu, 30 May 2019 00:03:26 +0300
+Message-ID: <CAOQ4uxh_0RVus56Ao_tFXCHdM6dsTrk=MsSBs1p7NjX4eJZkbg@mail.gmail.com>
+Subject: Re: [PATCH v3 13/13] vfs: allow copy_file_range to copy across devices
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        ceph-devel@vger.kernel.org, linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Steve French <stfrench@microsoft.com>,
+        Dave Chinner <dchinner@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:02 PM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
+On Wed, May 29, 2019 at 11:09 PM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
 >
-> On Wed, 2019-05-29 at 22:34 +0300, Amir Goldstein wrote:
-> > Hi Olga,Anna,Trond
+> On Wed, May 29, 2019 at 1:43 PM Amir Goldstein <amir73il@gmail.com> wrote:
 > >
-> > Could we get an ACK on this patch.
-> > It is a prerequisite for merging the cross-device copy_file_range
-> > work.
+> > We want to enable cross-filesystem copy_file_range functionality
+> > where possible, so push the "same superblock only" checks down to
+> > the individual filesystem callouts so they can make their own
+> > decisions about cross-superblock copy offload and fallack to
+> > generic_copy_file_range() for cross-superblock copy.
 > >
-> > It depends on a new helper introduced here:
-> > https://lore.kernel.org/linux-fsdevel/CAOQ4uxjbcSWX1hUcuXbn8hFH3QYB+5bAC9Z1yCwJdR=T-GGtCg@mail.gmail.com/T/#m1569878c41f39fac3aadb3832a30659c323b582a
+> > [Amir] We do not call ->remap_file_range() in case the inodes are not
+> > on the same sb and do not call ->copy_file_range() in case the inodes
+> > are not on the same filesystem type.
 > >
-> > Thanks,
-> > Amir,
+> > This changes behavior of the copy_file_range(2) syscall, which will
+> > now allow cross filesystem in-kernel copy.  CIFS already supports
+> > cross-superblock copy, between two shares to the same server. This
+> > functionality will now be available via the copy_file_range(2) syscall.
 > >
-> > On Wed, May 29, 2019 at 8:43 PM Amir Goldstein <amir73il@gmail.com>
-> > wrote:
-> > > Like ->write_iter(), we update mtime and strip setuid of dst file
-> > > before
-> > > copy and like ->read_iter(), we update atime of src file after
-> > > copy.
-> > >
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > ---
-> > >  fs/nfs/nfs42proc.c | 9 ++++++---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > > index 5196bfa7894d..c37a8e5116c6 100644
-> > > --- a/fs/nfs/nfs42proc.c
-> > > +++ b/fs/nfs/nfs42proc.c
-> > > @@ -345,10 +345,13 @@ ssize_t nfs42_proc_copy(struct file *src,
-> > > loff_t pos_src,
-> > >
-> > >         do {
-> > >                 inode_lock(file_inode(dst));
-> > > -               err = _nfs42_proc_copy(src, src_lock,
-> > > -                               dst, dst_lock,
-> > > -                               &args, &res);
-> > > +               err = file_modified(dst);
-> > > +               if (!err)
-> > > +                       err = _nfs42_proc_copy(src, src_lock,
-> > > +                                              dst, dst_lock,
-> > > +                                              &args, &res);
-> > >                 inode_unlock(file_inode(dst));
-> > > +               file_accessed(src);
-> > >
-> > >                 if (err >= 0)
-> > >                         break;
-> > > --
-> > > 2.17.1
-> > >
+> > Cc: Steve French <stfrench@microsoft.com>
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  fs/ceph/file.c    |  4 +++-
+> >  fs/cifs/cifsfs.c  |  2 +-
+> >  fs/fuse/file.c    |  5 ++++-
+> >  fs/nfs/nfs4file.c |  5 ++++-
+> >  fs/read_write.c   | 20 ++++++++++++++------
+> >  5 files changed, 26 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > index 8a70708e1aca..e9614d686301 100644
+> > --- a/fs/ceph/file.c
+> > +++ b/fs/ceph/file.c
+> > @@ -1909,6 +1909,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >
+> >         if (src_inode == dst_inode)
+> >                 return -EINVAL;
+> > +       if (src_inode->i_sb != dst_inode->i_sb)
+> > +               return -EXDEV;
+> >         if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+> >                 return -EROFS;
+> >
+> > @@ -2126,7 +2128,7 @@ static ssize_t ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >         ret = __ceph_copy_file_range(src_file, src_off, dst_file, dst_off,
+> >                                      len, flags);
+> >
+> > -       if (ret == -EOPNOTSUPP)
+> > +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+> >                 ret = generic_copy_file_range(src_file, src_off, dst_file,
+> >                                               dst_off, len, flags);
+> >         return ret;
+> > diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+> > index ab6c5c24146d..83956452c108 100644
+> > --- a/fs/cifs/cifsfs.c
+> > +++ b/fs/cifs/cifsfs.c
+> > @@ -1154,7 +1154,7 @@ static ssize_t cifs_copy_file_range(struct file *src_file, loff_t off,
+> >                                         len, flags);
+> >         free_xid(xid);
+> >
+> > -       if (rc == -EOPNOTSUPP)
+> > +       if (rc == -EOPNOTSUPP || rc == -EXDEV)
+> >                 rc = generic_copy_file_range(src_file, off, dst_file,
+> >                                              destoff, len, flags);
+> >         return rc;
+> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> > index 7f33d68f66d9..eab00cd089e8 100644
+> > --- a/fs/fuse/file.c
+> > +++ b/fs/fuse/file.c
+> > @@ -3126,6 +3126,9 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+> >         if (fc->no_copy_file_range)
+> >                 return -EOPNOTSUPP;
+> >
+> > +       if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> > +               return -EXDEV;
+> > +
+> >         inode_lock(inode_out);
+> >
+> >         err = file_modified(file_out);
+> > @@ -3187,7 +3190,7 @@ static ssize_t fuse_copy_file_range(struct file *src_file, loff_t src_off,
+> >         ret = __fuse_copy_file_range(src_file, src_off, dst_file, dst_off,
+> >                                      len, flags);
+> >
+> > -       if (ret == -EOPNOTSUPP)
+> > +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+> >                 ret = generic_copy_file_range(src_file, src_off, dst_file,
+> >                                               dst_off, len, flags);
+> >         return ret;
+> > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> > index 4842f3ab3161..f4157eb1f69d 100644
+> > --- a/fs/nfs/nfs4file.c
+> > +++ b/fs/nfs/nfs4file.c
+> > @@ -133,6 +133,9 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+> >                                       struct file *file_out, loff_t pos_out,
+> >                                       size_t count, unsigned int flags)
+> >  {
+> > +       /* Only offload copy if superblock is the same */
+> > +       if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> > +               return -EXDEV;
+> >         if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
+> >                 return -EOPNOTSUPP;
+> >         if (file_inode(file_in) == file_inode(file_out))
+> > @@ -148,7 +151,7 @@ static ssize_t nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+> >
+> >         ret = __nfs4_copy_file_range(file_in, pos_in, file_out, pos_out, count,
+> >                                      flags);
+> > -       if (ret == -EOPNOTSUPP)
+> > +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+> >                 ret = generic_copy_file_range(file_in, pos_in, file_out,
+> >                                               pos_out, count, flags);
+> >         return ret;
+> > diff --git a/fs/read_write.c b/fs/read_write.c
+> > index 706ea5f276a7..d8930bb735cb 100644
+> > --- a/fs/read_write.c
+> > +++ b/fs/read_write.c
+> > @@ -1618,7 +1618,18 @@ static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+> >                                   struct file *file_out, loff_t pos_out,
+> >                                   size_t len, unsigned int flags)
+> >  {
+> > -       if (file_out->f_op->copy_file_range)
+> > +       /*
+> > +        * Although we now allow filesystems to handle cross sb copy, passing
+> > +        * an inode of the wrong filesystem type to filesystem operation can
+> > +        * often result in an attempt to dereference the wrong concrete inode
+> > +        * struct, so avoid doing that until we really have a good reason.
+> > +        * The incentive for passing inode from different sb to filesystem is
+> > +        * NFS cross server copy and for that use case, enforcing same
+> > +        * filesystem type is acceptable.
+> > +        */
+> > +       if (file_out->f_op->copy_file_range &&
+> > +           file_inode(file_in)->i_sb->s_type ==
+> > +           file_inode(file_out)->i_sb->s_type)
 >
-> Please drop this patch. In the NFS protocol, the client is not expected
-> to mess with atime or mtime other than when the user explicitly sets it
-> through a call to utimensat() or similar. The server takes care of any
-> a/mtime updates as and when the file is read/written to.
+> While I'm not sure how much I care (vs wanting at least this much of
+> cross device copy available) but in NFS there are several NFS
+> file_system_type defined which would disallow a copy between them
+> (like nfs4_remote_fs_type, nfs4_remote_referral_fs_type, and good old
+> nfs4_fs_type).
 >
-> Ditto for suid/sgid clearing.
+> One idea would be to push the check into the filesystems themselves.
 >
-> Motto: "No file_accessed() or file_remove_privs() calls, please. We're
-> NFS."
 
-OK.
+That will require more delicate patches to filesystems.
+Are you saying there is a *good* reason to do that now?
+Is nfs copy offload expected to be between different types of nfs
+file_system_type?
 
 Thanks,
 Amir.
