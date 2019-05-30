@@ -2,29 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F27B72E9C5
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 02:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 466AD2E9CA
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 02:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfE3AnR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 20:43:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46412 "EHLO mx1.suse.de"
+        id S1726720AbfE3Ant (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 20:43:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46538 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726527AbfE3AnR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 May 2019 20:43:17 -0400
+        id S1726527AbfE3Ant (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 20:43:49 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83E58ADCB;
-        Thu, 30 May 2019 00:43:15 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id C26D6AC2C;
+        Thu, 30 May 2019 00:43:47 +0000 (UTC)
 From:   NeilBrown <neilb@suse.com>
 To:     Olga Kornievskaia <aglo@umich.edu>,
         Chuck Lever <chuck.lever@oracle.com>,
         Schumaker Anna <Anna.Schumaker@netapp.com>,
         Trond Myklebust <trondmy@hammerspace.com>
 Date:   Thu, 30 May 2019 10:41:28 +1000
-Subject: [PATCH 2/9] SUNRPC: Allow creation of RPC clients with multiple
- connections
+Subject: [PATCH 7/9] NFSv4: Allow multiple connections to NFSv4.x servers
 Cc:     linux-nfs@vger.kernel.org
-Message-ID: <155917688859.3988.12349634364426174850.stgit@noble.brown>
+Message-ID: <155917688881.3988.15202717018849539621.stgit@noble.brown>
 In-Reply-To: <155917564898.3988.6096672032831115016.stgit@noble.brown>
 References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
 User-Agent: StGit/0.17.1-dirty
@@ -38,110 +37,105 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@primarydata.com>
 
-Add an argument to struct rpc_create_args that allows the specification
-of how many transport connections you want to set up to the server.
+If the user specifies the -onconnect=<number> mount option, then set up
+<number> connections to the server. The connections will all go to the
+same IP address.
 
-Multiple transports allow hardware parallelism on the network path to
-be fully exploited.  For example if there are multiple network
-connections that are bonded together into a single virtual interface,
-the bonding mechanism usually distributes flows, rather than packets,
-across the multiple connections.  A single TCP flow will then only use
-a single connection, while multiple TCP flows can use more of the
-connections.
-Similarly, when there are multiple DMA engines, multiple offload
-engines, or multiple lanes for a network connection, using multiple
-flows can allow more of the bandwidth to be utilized.
-
-As an example, Olga Kornievskaia tested NFS read traffic to a
-NetApp A700 using a 25GigE Ethernet port.
-With a single TCP connection, throughput is limited to about 800
-MB/sec
-With 4 connections, 2400MB/sec is possible.  With 8, 3000 MB/sec
-(24Gb/sec) can be achieved.
-
-Tested-by: Olga Kornievskaia <aglo@umich.edu>
 Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
 Signed-off-by: NeilBrown <neilb@suse.com>
 ---
- include/linux/sunrpc/clnt.h |    1 +
- net/sunrpc/clnt.c           |   17 ++++++++++++++++-
- net/sunrpc/xprtmultipath.c  |    3 +--
- 3 files changed, 18 insertions(+), 3 deletions(-)
+ fs/nfs/client.c     |    2 ++
+ fs/nfs/internal.h   |    1 +
+ fs/nfs/nfs4client.c |   10 ++++++++--
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 6e8073140a5d..4619098affa3 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -124,6 +124,7 @@ struct rpc_create_args {
- 	u32			prognumber;	/* overrides program->number */
- 	u32			version;
- 	rpc_authflavor_t	authflavor;
-+	u32			nconnect;
- 	unsigned long		flags;
- 	char			*client_name;
- 	struct svc_xprt		*bc_xprt;	/* NFSv4.1 backchannel */
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 371080ad698a..3619dd5e9e0e 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -528,6 +528,8 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		.bc_xprt = args->bc_xprt,
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 3d04cb0b839e..9005643b0db4 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -179,6 +179,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	clp->cl_rpcclient = ERR_PTR(-EINVAL);
+ 
+ 	clp->cl_proto = cl_init->proto;
++	clp->cl_nconnect = cl_init->nconnect;
+ 	clp->cl_net = get_net(cl_init->net);
+ 
+ 	clp->cl_principal = "*";
+@@ -497,6 +498,7 @@ int nfs_create_rpc_client(struct nfs_client *clp,
+ 	struct rpc_create_args args = {
+ 		.net		= clp->cl_net,
+ 		.protocol	= clp->cl_proto,
++		.nconnect	= clp->cl_nconnect,
+ 		.address	= (struct sockaddr *)&clp->cl_addr,
+ 		.addrsize	= clp->cl_addrlen,
+ 		.timeout	= cl_init->timeparms,
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index bba09dace5d6..4a49dc1495c5 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -82,6 +82,7 @@ struct nfs_client_initdata {
+ 	struct nfs_subversion *nfs_mod;
+ 	int proto;
+ 	u32 minorversion;
++	unsigned int nconnect;
+ 	struct net *net;
+ 	const struct rpc_timeout *timeparms;
+ 	const struct cred *cred;
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 81b9b6d7927a..401a76290e55 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -859,7 +859,8 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		const size_t addrlen,
+ 		const char *ip_addr,
+ 		int proto, const struct rpc_timeout *timeparms,
+-		u32 minorversion, struct net *net)
++		u32 minorversion, unsigned int nconnect,
++		struct net *net)
+ {
+ 	struct nfs_client_initdata cl_init = {
+ 		.hostname = hostname,
+@@ -872,6 +873,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		.net = net,
+ 		.timeparms = timeparms,
+ 		.cred = server->cred,
++		.nconnect = nconnect,
  	};
- 	char servername[48];
-+	struct rpc_clnt *clnt;
-+	int i;
+ 	struct nfs_client *clp;
  
- 	if (args->bc_xprt) {
- 		WARN_ON_ONCE(!(args->protocol & XPRT_TRANSPORT_BC));
-@@ -590,7 +592,15 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 	if (args->flags & RPC_CLNT_CREATE_NONPRIVPORT)
- 		xprt->resvport = 0;
- 
--	return rpc_create_xprt(args, xprt);
-+	clnt = rpc_create_xprt(args, xprt);
-+	if (IS_ERR(clnt) || args->nconnect <= 1)
-+		return clnt;
-+
-+	for (i = 0; i < args->nconnect - 1; i++) {
-+		if (rpc_clnt_add_xprt(clnt, &xprtargs, NULL, NULL) < 0)
-+			break;
-+	}
-+	return clnt;
- }
- EXPORT_SYMBOL_GPL(rpc_create);
- 
-@@ -2748,6 +2758,10 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 		return -ENOMEM;
- 	data->xps = xprt_switch_get(xps);
- 	data->xprt = xprt_get(xprt);
-+	if (rpc_xprt_switch_has_addr(data->xps, (struct sockaddr *)&xprt->addr)) {
-+		rpc_cb_add_xprt_release(data);
-+		goto success;
-+	}
- 
- 	task = rpc_call_null_helper(clnt, xprt, NULL,
- 			RPC_TASK_SOFT|RPC_TASK_SOFTCONN|RPC_TASK_ASYNC|RPC_TASK_NULLCREDS,
-@@ -2755,6 +2769,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 	if (IS_ERR(task))
- 		return PTR_ERR(task);
- 	rpc_put_task(task);
-+success:
- 	return 1;
- }
- EXPORT_SYMBOL_GPL(rpc_clnt_test_and_add_xprt);
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 394e427533be..9d66ce53355d 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -52,8 +52,7 @@ void rpc_xprt_switch_add_xprt(struct rpc_xprt_switch *xps,
- 	if (xprt == NULL)
- 		return;
- 	spin_lock(&xps->xps_lock);
--	if ((xps->xps_net == xprt->xprt_net || xps->xps_net == NULL) &&
--	    !rpc_xprt_switch_has_addr(xps, (struct sockaddr *)&xprt->addr))
-+	if (xps->xps_net == xprt->xprt_net || xps->xps_net == NULL)
- 		xprt_switch_add_xprt_locked(xps, xprt);
- 	spin_unlock(&xps->xps_lock);
- }
+@@ -1074,6 +1076,7 @@ static int nfs4_init_server(struct nfs_server *server,
+ 			data->nfs_server.protocol,
+ 			&timeparms,
+ 			data->minorversion,
++			data->nfs_server.nconnect,
+ 			data->net);
+ 	if (error < 0)
+ 		return error;
+@@ -1163,6 +1166,7 @@ struct nfs_server *nfs4_create_referral_server(struct nfs_clone_mount *data,
+ 				XPRT_TRANSPORT_RDMA,
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
++				parent_client->cl_nconnect,
+ 				parent_client->cl_net);
+ 	if (!error)
+ 		goto init_server;
+@@ -1176,6 +1180,7 @@ struct nfs_server *nfs4_create_referral_server(struct nfs_clone_mount *data,
+ 				XPRT_TRANSPORT_TCP,
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
++				parent_client->cl_nconnect,
+ 				parent_client->cl_net);
+ 	if (error < 0)
+ 		goto error;
+@@ -1271,7 +1276,8 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
+ 	set_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
+ 	error = nfs4_set_client(server, hostname, sap, salen, buf,
+ 				clp->cl_proto, clnt->cl_timeout,
+-				clp->cl_minorversion, net);
++				clp->cl_minorversion,
++				clp->cl_nconnect, net);
+ 	clear_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
+ 	if (error != 0) {
+ 		nfs_server_insert_lists(server);
 
 
