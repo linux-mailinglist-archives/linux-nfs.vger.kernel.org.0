@@ -2,117 +2,250 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A6152E78B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2019 23:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BAA92E9C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 02:43:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfE2Vly (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 17:41:54 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:41277 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726205AbfE2Vly (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 May 2019 17:41:54 -0400
-Received: from dread.disaster.area (pa49-180-144-61.pa.nsw.optusnet.com.au [49.180.144.61])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 282863DB93C;
-        Thu, 30 May 2019 07:41:48 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hW6KP-0007gQ-KE; Thu, 30 May 2019 07:41:45 +1000
-Date:   Thu, 30 May 2019 07:41:45 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org, ceph-devel@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>
-Subject: Re: [PATCH v3 06/13] vfs: introduce file_modified() helper
-Message-ID: <20190529214145.GC29573@dread.disaster.area>
-References: <20190529174318.22424-1-amir73il@gmail.com>
- <20190529174318.22424-7-amir73il@gmail.com>
- <20190529182748.GF5231@magnolia>
- <CAOQ4uxgsMLTPtYaQwwNHo3NrzXz9u=YGc2v6Pg8TSo7-xFrqQQ@mail.gmail.com>
+        id S1726640AbfE3AnL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 20:43:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46392 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726527AbfE3AnK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 20:43:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 26D29AC66;
+        Thu, 30 May 2019 00:43:09 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Olga Kornievskaia <aglo@umich.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Schumaker Anna <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Date:   Thu, 30 May 2019 10:41:28 +1000
+Subject: [PATCH 1/9] SUNRPC: Add basic load balancing to the transport switch
+Cc:     linux-nfs@vger.kernel.org
+Message-ID: <155917688854.3988.7703839883828652258.stgit@noble.brown>
+In-Reply-To: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgsMLTPtYaQwwNHo3NrzXz9u=YGc2v6Pg8TSo7-xFrqQQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=8RU0RCro9O0HS2ezTvitPg==:117 a=8RU0RCro9O0HS2ezTvitPg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=yPCof4ZbAAAA:8 a=pGLkceISAAAA:8 a=7-415B0cAAAA:8 a=uk_6IFGgYTW1qpM8YJcA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:08:44PM +0300, Amir Goldstein wrote:
-> On Wed, May 29, 2019 at 9:27 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> >
-> > On Wed, May 29, 2019 at 08:43:10PM +0300, Amir Goldstein wrote:
-> > > The combination of file_remove_privs() and file_update_mtime() is
-> > > quite common in filesystem ->write_iter() methods.
-> > >
-> > > Modelled after the helper file_accessed(), introduce file_modified()
-> > > and use it from generic_remap_file_range_prep().
-> > >
-> > > Note that the order of calling file_remove_privs() before
-> > > file_update_mtime() in the helper was matched to the more common order by
-> > > filesystems and not the current order in generic_remap_file_range_prep().
-> > >
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > ---
-> > >  fs/inode.c         | 20 ++++++++++++++++++++
-> > >  fs/read_write.c    | 21 +++------------------
-> > >  include/linux/fs.h |  2 ++
-> > >  3 files changed, 25 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/fs/inode.c b/fs/inode.c
-> > > index df6542ec3b88..2885f2f2c7a5 100644
-> > > --- a/fs/inode.c
-> > > +++ b/fs/inode.c
-> > > @@ -1899,6 +1899,26 @@ int file_update_time(struct file *file)
-> > >  }
-> > >  EXPORT_SYMBOL(file_update_time);
-> > >
-> > > +/* Caller must hold the file's inode lock */
-> > > +int file_modified(struct file *file)
-> > > +{
-> > > +     int err;
-> > > +
-> > > +     /*
-> > > +      * Clear the security bits if the process is not being run by root.
-> > > +      * This keeps people from modifying setuid and setgid binaries.
-> > > +      */
-> > > +     err = file_remove_privs(file);
-> > > +     if (err)
-> > > +             return err;
-> > > +
-> > > +     if (likely(file->f_mode & FMODE_NOCMTIME))
-> >
-> > I would not have thought NOCMTIME is likely?
-> >
-> > Maybe it is for io requests coming from overlayfs, but for regular uses
-> > I don't think that's true.
-> 
-> Nope that's a typo. Good spotting.
-> Overlayfs doesn't set FMODE_NOCMTIME (yet). Only xfs does from
-> XFS_IOC_OPEN_BY_HANDLE, but I think Dave said that is a deprecated
-> API. so should have been very_unlikely().
+From: Trond Myklebust <trond.myklebust@primarydata.com>
 
-It is most definitely not a deprecated API. I don't know where you
-got that idea from. It's used explicitly by the xfs utilities to
-perform invisible IO. Anyone who runs xfs_fsr or xfsdump or has an
-application that links to libhandle is using XFS_IOC_OPEN_BY_HANDLE
-and FMODE_NOCMTIME....
+For now, just count the queue length. It is less accurate than counting
+number of bytes queued, but easier to implement.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+As we now increment a queue length whenever an xprt is attached to a
+task, and decrement when it is detached, we need to ensure that
+happens for *all* tasks, whether selected automatically or passed in
+by the caller.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
+Signed-off-by: NeilBrown <neilb@suse.com>
+---
+ include/linux/sunrpc/xprt.h          |    1 +
+ include/linux/sunrpc/xprtmultipath.h |    2 +
+ net/sunrpc/clnt.c                    |   57 ++++++++++++++++++++++++++++++++--
+ net/sunrpc/sched.c                   |    3 +-
+ net/sunrpc/sunrpc.h                  |    3 ++
+ net/sunrpc/xprtmultipath.c           |   20 +++++++++++-
+ 6 files changed, 81 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index a6d9fce7f20e..15322c1d9c8c 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -238,6 +238,7 @@ struct rpc_xprt {
+ 	/*
+ 	 * Send stuff
+ 	 */
++	atomic_long_t		queuelen;
+ 	spinlock_t		transport_lock;	/* lock transport info */
+ 	spinlock_t		reserve_lock;	/* lock slot table */
+ 	spinlock_t		queue_lock;	/* send/receive queue lock */
+diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
+index af1257c030d2..c6cce3fbf29d 100644
+--- a/include/linux/sunrpc/xprtmultipath.h
++++ b/include/linux/sunrpc/xprtmultipath.h
+@@ -15,6 +15,8 @@ struct rpc_xprt_switch {
+ 	struct kref		xps_kref;
+ 
+ 	unsigned int		xps_nxprts;
++	unsigned int		xps_nactive;
++	atomic_long_t		xps_queuelen;
+ 	struct list_head	xps_xprt_list;
+ 
+ 	struct net *		xps_net;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index d6e57da56c94..371080ad698a 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -969,13 +969,64 @@ struct rpc_clnt *rpc_bind_new_program(struct rpc_clnt *old,
+ }
+ EXPORT_SYMBOL_GPL(rpc_bind_new_program);
+ 
++static struct rpc_xprt *
++rpc_task_get_xprt(struct rpc_clnt *clnt)
++{
++	struct rpc_xprt_switch *xps;
++	struct rpc_xprt *xprt= xprt_iter_get_next(&clnt->cl_xpi);
++
++	if (!xprt)
++		return NULL;
++	rcu_read_lock();
++	xps = rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
++	atomic_long_inc(&xps->xps_queuelen);
++	rcu_read_unlock();
++	atomic_long_inc(&xprt->queuelen);
++
++	return xprt;
++}
++
++struct rpc_xprt *
++xprt_get_client(struct rpc_xprt *xprt, struct rpc_clnt *clnt)
++{
++	struct rpc_xprt_switch *xps;
++
++	rcu_read_lock();
++	if (xprt) {
++		xprt_get(xprt);
++		atomic_long_inc(&xprt->queuelen);
++		xps = rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
++		atomic_long_inc(&xps->xps_queuelen);
++	}
++	rcu_read_unlock();
++
++	return xprt;
++}
++
++static void
++rpc_task_release_xprt(struct rpc_clnt *clnt, struct rpc_xprt *xprt)
++{
++	struct rpc_xprt_switch *xps;
++
++	atomic_long_dec(&xprt->queuelen);
++	rcu_read_lock();
++	xps = rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
++	atomic_long_dec(&xps->xps_queuelen);
++	rcu_read_unlock();
++
++	xprt_put(xprt);
++}
++
+ void rpc_task_release_transport(struct rpc_task *task)
+ {
+ 	struct rpc_xprt *xprt = task->tk_xprt;
+ 
+ 	if (xprt) {
+ 		task->tk_xprt = NULL;
+-		xprt_put(xprt);
++		if (task->tk_client)
++			rpc_task_release_xprt(task->tk_client, xprt);
++		else
++			xprt_put(xprt);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(rpc_task_release_transport);
+@@ -984,6 +1035,7 @@ void rpc_task_release_client(struct rpc_task *task)
+ {
+ 	struct rpc_clnt *clnt = task->tk_client;
+ 
++	rpc_task_release_transport(task);
+ 	if (clnt != NULL) {
+ 		/* Remove from client task list */
+ 		spin_lock(&clnt->cl_lock);
+@@ -993,14 +1045,13 @@ void rpc_task_release_client(struct rpc_task *task)
+ 
+ 		rpc_release_client(clnt);
+ 	}
+-	rpc_task_release_transport(task);
+ }
+ 
+ static
+ void rpc_task_set_transport(struct rpc_task *task, struct rpc_clnt *clnt)
+ {
+ 	if (!task->tk_xprt)
+-		task->tk_xprt = xprt_iter_get_next(&clnt->cl_xpi);
++		task->tk_xprt = rpc_task_get_xprt(clnt);
+ }
+ 
+ static
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index bb04ae52803a..d1391ea8c9bb 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -1078,7 +1078,8 @@ static void rpc_init_task(struct rpc_task *task, const struct rpc_task_setup *ta
+ 	/* Initialize workqueue for async tasks */
+ 	task->tk_workqueue = task_setup_data->workqueue;
+ 
+-	task->tk_xprt = xprt_get(task_setup_data->rpc_xprt);
++	task->tk_xprt = xprt_get_client(task_setup_data->rpc_xprt,
++					task_setup_data->rpc_client);
+ 
+ 	task->tk_op_cred = get_rpccred(task_setup_data->rpc_op_cred);
+ 
+diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+index c9bacb3c930f..c52605222448 100644
+--- a/net/sunrpc/sunrpc.h
++++ b/net/sunrpc/sunrpc.h
+@@ -56,4 +56,7 @@ int svc_send_common(struct socket *sock, struct xdr_buf *xdr,
+ 
+ int rpc_clients_notifier_register(void);
+ void rpc_clients_notifier_unregister(void);
++
++struct rpc_xprt *
++xprt_get_client(struct rpc_xprt *xprt, struct rpc_clnt *clnt);
+ #endif /* _NET_SUNRPC_SUNRPC_H */
+diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+index 8394124126f8..394e427533be 100644
+--- a/net/sunrpc/xprtmultipath.c
++++ b/net/sunrpc/xprtmultipath.c
+@@ -36,6 +36,7 @@ static void xprt_switch_add_xprt_locked(struct rpc_xprt_switch *xps,
+ 	if (xps->xps_nxprts == 0)
+ 		xps->xps_net = xprt->xprt_net;
+ 	xps->xps_nxprts++;
++	xps->xps_nactive++;
+ }
+ 
+ /**
+@@ -62,6 +63,7 @@ static void xprt_switch_remove_xprt_locked(struct rpc_xprt_switch *xps,
+ {
+ 	if (unlikely(xprt == NULL))
+ 		return;
++	xps->xps_nactive--;
+ 	xps->xps_nxprts--;
+ 	if (xps->xps_nxprts == 0)
+ 		xps->xps_net = NULL;
+@@ -317,8 +319,24 @@ struct rpc_xprt *xprt_switch_find_next_entry_roundrobin(struct list_head *head,
+ static
+ struct rpc_xprt *xprt_iter_next_entry_roundrobin(struct rpc_xprt_iter *xpi)
+ {
+-	return xprt_iter_next_entry_multiple(xpi,
++	struct rpc_xprt_switch *xps = rcu_dereference(xpi->xpi_xpswitch);
++	struct rpc_xprt *xprt;
++	unsigned long xprt_queuelen;
++	unsigned long xps_queuelen;
++	unsigned long xps_avglen;
++
++	do {
++		xprt = xprt_iter_next_entry_multiple(xpi,
+ 			xprt_switch_find_next_entry_roundrobin);
++		if (xprt == NULL)
++			break;
++		xprt_queuelen = atomic_long_read(&xprt->queuelen);
++		if (xprt_queuelen <= 2)
++			break;
++		xps_queuelen = atomic_long_read(&xps->xps_queuelen);
++		xps_avglen = DIV_ROUND_UP(xps_queuelen, xps->xps_nactive);
++	} while (xprt_queuelen > xps_avglen);
++	return xprt;
+ }
+ 
+ static
+
+
