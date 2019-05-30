@@ -2,116 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 550F72E9C8
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 02:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E2E62E9C2
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 02:40:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfE3Anf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 May 2019 20:43:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46454 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726527AbfE3Anf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 May 2019 20:43:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B8B06AC66;
-        Thu, 30 May 2019 00:43:34 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Olga Kornievskaia <aglo@umich.edu>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Schumaker Anna <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Date:   Thu, 30 May 2019 10:41:28 +1000
-Subject: [PATCH 5/9] SUNRPC: add links for all client xprts to debugfs
-Cc:     linux-nfs@vger.kernel.org
-Message-ID: <155917688872.3988.1542351454603489228.stgit@noble.brown>
-In-Reply-To: <155917564898.3988.6096672032831115016.stgit@noble.brown>
-References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+        id S1726617AbfE3Akn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 May 2019 20:40:43 -0400
+Received: from mail.prgmr.com ([71.19.149.6]:60060 "EHLO mail.prgmr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfE3Akn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 May 2019 20:40:43 -0400
+Received: from turtle.mx (96-92-68-116-static.hfc.comcastbusiness.net [96.92.68.116])
+        (Authenticated sender: adp)
+        by mail.prgmr.com (Postfix) with ESMTPSA id 0605628C00B
+        for <linux-nfs@vger.kernel.org>; Thu, 30 May 2019 01:38:26 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com 0605628C00B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1559194707;
+        bh=iuloNs8wIVZA7gyks+IViCH3L+wBferKpveIH3UwHw0=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=aOXJi5lJQoYYWMwyquKSIdpgSTujrLf5lJRsG59NM+GkdZZWS012mWbUj1oParj6A
+         Drx6ZzZuOuZX0U6DbkxIVbFFmSPkXp+jp/2vtmGwJC0VUI0R07Mc2x47ll0kizQmZi
+         qFXLRcSp8CCVwyriknB4UXcZs1Wm1QbPRyzHWo8w=
+Received: (qmail 18344 invoked by uid 1353); 30 May 2019 00:41:46 -0000
+Date:   Wed, 29 May 2019 18:41:46 -0600
+From:   Alan Post <adp@prgmr.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: User process NFS write hang followed by automount hang requiring
+ reboot
+Message-ID: <20190530004146.GV4158@turtle.email>
+References: <20190520223324.GL4158@turtle.email>
+ <c10084e889df77fc2b6a6c9a04b232faae3a80bc.camel@hammerspace.com>
+ <20190524173155.GQ4158@turtle.email>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524173155.GQ4158@turtle.email>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Now that a client can have multiple xprts, we need to add
-them all to debugs.
-The first one is still "xprt"
-Subsequent xprts are "xprt1", "xprt2", etc.
+On Fri, May 24, 2019 at 11:31:55AM -0600, Alan Post wrote:
+> On Tue, May 21, 2019 at 03:46:03PM +0000, Trond Myklebust wrote:
+> > Have you tried upgrading to 4.19.44? There is a fix that went in not
+> > too long ago that deals with a request leak that can cause stack traces
+> > like the above that wait forever.
+> > 
+> 
+> Following up on this.  I have set aside a rack of machines and put
+> Linux 4.19.44 on them.  They ran jobs overnight and will do the
+> same over the long weekend (Memorial day in the US).  Given the
+> error rate (both over time and over submitted jobs) we see across
+> the cluster this well be enough time to draw a conclusion as to
+> whether 4.19.44 exhibits this hang.
+> 
 
-Signed-off-by: NeilBrown <neilb@suse.com>
----
- net/sunrpc/debugfs.c |   46 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 29 insertions(+), 17 deletions(-)
+In the six days I've run Linux 4.19.44 on a single rack, I've seen
+no occurrences of this hang.  Given the incident rate for this
+issue across the cluster over the same period of time, I would have
+expected to see one on two incidents on the rack running 4.19.44.
 
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index 95ebd76b132d..228bc7e8bca0 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -118,12 +118,38 @@ static const struct file_operations tasks_fops = {
- 	.release	= tasks_release,
- };
- 
-+static int do_xprt_debugfs(struct rpc_clnt *clnt, struct rpc_xprt *xprt, void *numv)
-+{
-+	int len;
-+	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
-+	char link[9]; /* enough for 8 hex digits + NULL */
-+	int *nump = numv;
-+
-+	if (IS_ERR_OR_NULL(xprt->debugfs))
-+		return 0;
-+	len = snprintf(name, sizeof(name), "../../rpc_xprt/%s",
-+		       xprt->debugfs->d_name.name);
-+	if (len > sizeof(name))
-+		return -1;
-+	if (*nump == 0)
-+		strcpy(link, "xprt");
-+	else {
-+		len = snprintf(link, sizeof(link), "xprt%d", *nump);
-+		if (len > sizeof(link))
-+			return -1;
-+	}
-+	if (!debugfs_create_symlink(link, clnt->cl_debugfs, name))
-+		return -1;
-+	(*nump)++;
-+	return 0;
-+}
-+
- void
- rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
- {
- 	int len;
--	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
--	struct rpc_xprt *xprt;
-+	char name[9]; /* enough for 8 hex digits + NULL */
-+	int xprtnum = 0;
- 
- 	/* Already registered? */
- 	if (clnt->cl_debugfs || !rpc_clnt_dir)
-@@ -143,21 +169,7 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
- 				 clnt, &tasks_fops))
- 		goto out_err;
- 
--	rcu_read_lock();
--	xprt = rcu_dereference(clnt->cl_xprt);
--	/* no "debugfs" dentry? Don't bother with the symlink. */
--	if (IS_ERR_OR_NULL(xprt->debugfs)) {
--		rcu_read_unlock();
--		return;
--	}
--	len = snprintf(name, sizeof(name), "../../rpc_xprt/%s",
--			xprt->debugfs->d_name.name);
--	rcu_read_unlock();
--
--	if (len >= sizeof(name))
--		goto out_err;
--
--	if (!debugfs_create_symlink("xprt", clnt->cl_debugfs, name))
-+	if (rpc_clnt_iterate_for_each_xprt(clnt, do_xprt_debugfs, &xprtnum) < 0)
- 		goto out_err;
- 
- 	return;
+This is promising--I'm going to deploy 4.19.44 to another rack
+by the end of the day Friday May 31st and hope for more of the
+same.
 
+I wondered upthread whether the following commits were what you
+had in mind when you asked about 4.19.44:
 
+    63b0ee126f7e: NFS: Fix an I/O request leakage in nfs_do_recoalesce
+    be74fddc976e: NFS: Fix I/O request leakages
+
+Confirming that it is these patches and no others has become
+topical for me: my upstream is now providing a 4.19.37 build,
+and I note these two patches are included since 4.19.31 and so
+are presumably in my now-available upstream 4.19.37 build.
+
+If I could trouble you to confirm whether or not this is the
+complete set of patches you had in mind for the 4.19 branch
+after 4.19.28 when you recommended I try 4.19.44 I would
+appreciate it.
+
+Lurking on the list for the past week or two and watching
+everyone's work has been inspiring.  Thank you again.  I'll report
+back no later than next week.
+
+-A
+-- 
+Alan Post | Xen VPS hosting for the technically adept
+PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
+email: adp@prgmr.com
