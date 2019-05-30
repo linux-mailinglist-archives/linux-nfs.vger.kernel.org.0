@@ -2,145 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B961304D0
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 00:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1248F304DA
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 00:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE3WdP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 May 2019 18:33:15 -0400
-Received: from fieldses.org ([173.255.197.46]:41270 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfE3WdO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 30 May 2019 18:33:14 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 280EC2011; Thu, 30 May 2019 18:33:14 -0400 (EDT)
-Date:   Thu, 30 May 2019 18:33:14 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Dave Wysochanski <dwysocha@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 3/3] SUNRPC: Count ops completing with tk_status < 0
-Message-ID: <20190530223314.GA25368@fieldses.org>
-References: <20190523201351.12232-1-dwysocha@redhat.com>
- <20190523201351.12232-3-dwysocha@redhat.com>
- <20190530213857.GA24802@fieldses.org>
- <9B9F0C9B-C493-44F5-ABD1-6B2B4BAA2F08@oracle.com>
+        id S1726408AbfE3Wiv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 May 2019 18:38:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726045AbfE3Wiv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 30 May 2019 18:38:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5A196AF70;
+        Thu, 30 May 2019 22:38:49 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Tom Talpey <tom@talpey.com>, Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 31 May 2019 08:38:38 +1000
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Schumaker Anna <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+In-Reply-To: <9b64b9d9-b7cf-c818-28e2-58b3a821d39d@talpey.com>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown> <1df23ebc-ffe5-1a57-c40a-d5e9a45c8498@talpey.com> <CAN-5tyHUah=fAsiSLb=n__q5HxRy3qeS83evf-vB59r4cpYgsw@mail.gmail.com> <9b64b9d9-b7cf-c818-28e2-58b3a821d39d@talpey.com>
+Message-ID: <87pnnztvo1.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9B9F0C9B-C493-44F5-ABD1-6B2B4BAA2F08@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 30, 2019 at 06:19:54PM -0400, Chuck Lever wrote:
-> 
-> 
-> > On May 30, 2019, at 5:38 PM, bfields@fieldses.org wrote:
-> > 
-> > On Thu, May 23, 2019 at 04:13:50PM -0400, Dave Wysochanski wrote:
-> >> We often see various error conditions with NFS4.x that show up with
-> >> a very high operation count all completing with tk_status < 0 in a
-> >> short period of time.  Add a count to rpc_iostats to record on a
-> >> per-op basis the ops that complete in this manner, which will
-> >> enable lower overhead diagnostics.
-> > 
-> > Looks like a good idea to me.
-> > 
-> > It's too bad we can't distinguish the errors.  (E.g. ESTALE on a lookup
-> > call is a lot more interesting than ENOENT.)  But understood that
-> > maintaining (number of possible errors) * (number of possible ops)
-> > counters is probably overkill, so just counting the number of errors
-> > seems like a good start.
-> 
-> We now have trace points that can do that too.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-You mean, that can report every error (and its value)?
+On Thu, May 30 2019, Tom Talpey wrote:
 
-I assume having these statistics in mountstats is still useful, though.
+> On 5/30/2019 1:20 PM, Olga Kornievskaia wrote:
+>> On Thu, May 30, 2019 at 1:05 PM Tom Talpey <tom@talpey.com> wrote:
+>>>
+>>> On 5/29/2019 8:41 PM, NeilBrown wrote:
+>>>> I've also re-arrange the patches a bit, merged two, and remove the
+>>>> restriction to TCP and NFSV4.x,x>=3D1.  Discussions seemed to suggest
+>>>> these restrictions were not needed, I can see no need.
+>>>
+>>> I believe the need is for the correctness of retries. Because NFSv2,
+>>> NFSv3 and NFSv4.0 have no exactly-once semantics of their own, server
+>>> duplicate request caches are important (although often imperfect).
+>>> These caches use client XID's, source ports and addresses, sometimes
+>>> in addition to other methods, to detect retry. Existing clients are
+>>> careful to reconnect with the same source port, to ensure this. And
+>>> existing servers won't change.
+>>=20
+>> Retries are already bound to the same connection so there shouldn't be
+>> an issue of a retransmission coming from a different source port.
+>
+> So, there's no path redundancy? If any connection is lost and can't
+> be reestablished, the requests on that connection will time out?
 
---b.
+Path redundancy happens lower down in the stack.  Presumably a bonding
+driver will divert flows to a working path when one path fails.
+NFS doesn't see paths at all.  It just sees TCP connections - each with
+the same source and destination address.  How these are associated, from
+time to time, with different hardware is completely transparent to NFS.
 
-> 
-> 
-> > --b.
-> > 
-> >> 
-> >> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> >> ---
-> >> include/linux/sunrpc/metrics.h | 7 ++++++-
-> >> net/sunrpc/stats.c             | 8 ++++++--
-> >> 2 files changed, 12 insertions(+), 3 deletions(-)
-> >> 
-> >> diff --git a/include/linux/sunrpc/metrics.h b/include/linux/sunrpc/metrics.h
-> >> index 1b3751327575..0ee3f7052846 100644
-> >> --- a/include/linux/sunrpc/metrics.h
-> >> +++ b/include/linux/sunrpc/metrics.h
-> >> @@ -30,7 +30,7 @@
-> >> #include <linux/ktime.h>
-> >> #include <linux/spinlock.h>
-> >> 
-> >> -#define RPC_IOSTATS_VERS	"1.0"
-> >> +#define RPC_IOSTATS_VERS	"1.1"
-> >> 
-> >> struct rpc_iostats {
-> >> 	spinlock_t		om_lock;
-> >> @@ -66,6 +66,11 @@ struct rpc_iostats {
-> >> 	ktime_t			om_queue,	/* queued for xmit */
-> >> 				om_rtt,		/* RPC RTT */
-> >> 				om_execute;	/* RPC execution */
-> >> +	/*
-> >> +	 * The count of operations that complete with tk_status < 0.
-> >> +	 * These statuses usually indicate error conditions.
-> >> +	 */
-> >> +	unsigned long           om_error_status;
-> >> } ____cacheline_aligned;
-> >> 
-> >> struct rpc_task;
-> >> diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
-> >> index 8b2d3c58ffae..737414247ca7 100644
-> >> --- a/net/sunrpc/stats.c
-> >> +++ b/net/sunrpc/stats.c
-> >> @@ -176,6 +176,8 @@ void rpc_count_iostats_metrics(const struct rpc_task *task,
-> >> 
-> >> 	execute = ktime_sub(now, task->tk_start);
-> >> 	op_metrics->om_execute = ktime_add(op_metrics->om_execute, execute);
-> >> +	if (task->tk_status < 0)
-> >> +		op_metrics->om_error_status++;
-> >> 
-> >> 	spin_unlock(&op_metrics->om_lock);
-> >> 
-> >> @@ -218,13 +220,14 @@ static void _add_rpc_iostats(struct rpc_iostats *a, struct rpc_iostats *b)
-> >> 	a->om_queue = ktime_add(a->om_queue, b->om_queue);
-> >> 	a->om_rtt = ktime_add(a->om_rtt, b->om_rtt);
-> >> 	a->om_execute = ktime_add(a->om_execute, b->om_execute);
-> >> +	a->om_error_status += b->om_error_status;
-> >> }
-> >> 
-> >> static void _print_rpc_iostats(struct seq_file *seq, struct rpc_iostats *stats,
-> >> 			       int op, const struct rpc_procinfo *procs)
-> >> {
-> >> 	_print_name(seq, op, procs);
-> >> -	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu\n",
-> >> +	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu %lu\n",
-> >> 		   stats->om_ops,
-> >> 		   stats->om_ntrans,
-> >> 		   stats->om_timeouts,
-> >> @@ -232,7 +235,8 @@ static void _print_rpc_iostats(struct seq_file *seq, struct rpc_iostats *stats,
-> >> 		   stats->om_bytes_recv,
-> >> 		   ktime_to_ms(stats->om_queue),
-> >> 		   ktime_to_ms(stats->om_rtt),
-> >> -		   ktime_to_ms(stats->om_execute));
-> >> +		   ktime_to_ms(stats->om_execute),
-> >> +		   stats->om_error_status);
-> >> }
-> >> 
-> >> void rpc_clnt_show_stats(struct seq_file *seq, struct rpc_clnt *clnt)
-> >> -- 
-> >> 2.20.1
-> 
-> --
-> Chuck Lever
-> 
-> 
+>
+> I think a common configuration will be two NICs and two network paths,
+> a so-called shotgun. Admins will be quite frustrated to discover it
+> gives no additional robustness, and perhaps even less.
+>
+> Why not simply restrict this to the fully-correct, fully-functional
+> NFSv4.1+ scenario, and not try to paper over the shortcomings?
+
+Because I cannot see any shortcomings in using it for v3 or v4.0.
+
+Also, there are situations where NFSv3 is a measurably better choice
+than NFSv4.1.  Al least it seems to allow a quicker failover for HA.
+But that is really a topic for another day.
+
+NeilBrown
+
+>
+> Tom.
+>
+>>=20
+>>> Multiple connections will result in multiple source ports, and possibly
+>>> multiple source addresses, meaning retried client requests may be
+>>> accepted as new, rather than having any chance of being recognized as
+>>> retries.
+>>>
+>>> NFSv4.1+ don't have this issue, but removing the restrictions would
+>>> seem to break the downlevel mounts.
+>>>
+>>> Tom.
+>>>
+>>=20
+>>=20
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzwW24ACgkQOeye3VZi
+gbkEpBAAiBZdeevvM6gYFidvs+A+gUkalKl+22YWZYUe6cY1DVJ6d5MGxy4l1Zub
+UvBNc3COxQHjn8VlFPTr6rq3n9uyQlCD/sJI+944HLARBABcBLwXJ4sPBnK7R9If
+dfo7c1nJUlpaUv9p+mHIDRUKuncPDnjnKKMoTbMAiPjJ03lzA5BmIh5T4JlIFWVh
+DdxowSCUeA9QHn1+eEeIimvteI53HvkZaSvWmZkawUWQTkSHGJgG5Te+P2NriL1w
+oNkqt4Gb75UP3FrbdmuRnox5fczDIGNKQloEeU9HypuuW+sfKX3pQUcyASawZMua
+1BWg6997prHGGi/YqU9zbUrLDoXFh9omgmiP3lOC0dTBeWOB4DnCtKmzRTqnpUfO
+lO4fOJUIw3NB+CDKtJ8y9cqrNjRh4uHAtvH7rEgGMIOmKZRimByiGsogvZAiKAJk
++5KPP0wycTMtVCgeuhxHxy+zm1fYxPoAztrzqwqYYas/kBxIqtYfpmf3ljcnPnwm
+fxX2E0Ii2NmfEQdE5IIJQzqUID5ddpXRIUq2cwucmf9zyMKPpckn4iduoE2YsUrG
+cME7moQClyO3kfxAFi1RhnoqXRbKnn4mkVqG6GiwR9ESgpm++X4NVxPzldvAWRgr
+p5Lon3as/CD0e/oso9GZroe1VO7wVDCt0vQJFc+5cs7ywvd2RYQ=
+=WHxQ
+-----END PGP SIGNATURE-----
+--=-=-=--
