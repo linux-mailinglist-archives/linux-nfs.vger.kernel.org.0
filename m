@@ -2,510 +2,206 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A059A2FCDD
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 16:06:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 024692FFC4
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2019 17:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfE3OGE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 May 2019 10:06:04 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54577 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfE3OGE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 May 2019 10:06:04 -0400
-Received: by mail-it1-f195.google.com with SMTP id h20so10044829itk.4;
-        Thu, 30 May 2019 07:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:message-id:subject:from:to:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=W0pykHyGOJTo04+5Bxg4ATyBoDRj9XuHd9pc3Vdw+Ww=;
-        b=tMjdzaR0OoN+BcgS/TiQZePjLjgHqota9aois5MNuHPW7lafGKpJbH+UwKhnijp1Zp
-         eKuMtBJJRDhbDNDyGRedLexa2eGEfFmvMfHlOmzaLIyQw5vztb1VjCFy1dYc5cEgeT+k
-         VrB3dVVtNsY9BraCxmcEbMAdnzq0G/WBcgz1TDT24WPr3OqAn+lKJluQmTyengBM9qBI
-         cPaqhewkLwkM/3CP/Pu+Y45oZYrikpZ5ozqtVOBpSJYoFOQZDU0qFrdJJRS9+gp8TIki
-         UecbQ+KqqlySI67SP59pGfIZMFOg3nW9+oV5w95suiTCSt8vhNqiyTBrlg2cG7/fntI8
-         KG/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:message-id:subject:from:to:date
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=W0pykHyGOJTo04+5Bxg4ATyBoDRj9XuHd9pc3Vdw+Ww=;
-        b=csDDEtRfdjzzPyAnyNG06pkUy2oeMfiYjto3mfKyeQgaKrZPXKwPtJstubVTtq2pVV
-         tCyc23VV0FoeGBOplOj9CPqjxklJAcUlVnwBXDTFjsJ9xHn2Sb+ypHGrpGdZrDDpwF0D
-         t4mg5HJ87ignKnVMjOYp42psFuNADBdfKymmT66aFBEqyVpnIAVWhMMGbdMHWuA/XPb+
-         PV3NtAvazs2l+EUJb/fJfvrzkLlp3VwYFAMLb5GyyJcBsTb+8nm1bAGVEmEUzDGV8RV7
-         W7jS/biuZGOhN7S13XjwH+FojixJxW1LpmXcAXds12Jpek8HNYJP5wvHRUj09y84Y9DC
-         gx0g==
-X-Gm-Message-State: APjAAAXmaZKkckr5skXe9kl4F7/IKKx2VdA0ku474nxj7GdeMT+MNEC7
-        IIFz4G3E5EDUaqryf5zCInqk2UcpmZo=
-X-Google-Smtp-Source: APXvYqzQO/Q3QKjNNm0AWX6NOIlONL5Bt6WXQdkh8lrdgsHnEWm6wSR4AoIhtU+H43LkNBk/PKZNVg==
-X-Received: by 2002:a02:b01c:: with SMTP id p28mr2575632jah.130.1559225162424;
-        Thu, 30 May 2019 07:06:02 -0700 (PDT)
-Received: from gouda.nowheycreamery.com (d28-23-121-75.dim.wideopenwest.com. [23.28.75.121])
-        by smtp.googlemail.com with ESMTPSA id 138sm1113966itu.26.2019.05.30.07.06.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 07:06:01 -0700 (PDT)
-Message-ID: <9b9e663e68aa5d3aff8e621603186af286ce7f45.camel@gmail.com>
-Subject: Re: [PATCH RFC 05/12] xprtrdma: Remove fr_state
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 30 May 2019 10:05:59 -0400
-In-Reply-To: <20190528182116.19012.50268.stgit@manet.1015granger.net>
-References: <20190528181018.19012.61210.stgit@manet.1015granger.net>
-         <20190528182116.19012.50268.stgit@manet.1015granger.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 
+        id S1726589AbfE3P7d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 May 2019 11:59:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44710 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfE3P7c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 May 2019 11:59:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UFwRdT062994;
+        Thu, 30 May 2019 15:58:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=uc+UXzmyPv/D6QTYV3WBqRHnc34bk0BoVJelHBRrxEY=;
+ b=g4SFiEg7+6ARWlAP18PYeQaguCtnJ1oiJ1ZUQMZVzGJjc1+xIKWGNTpLdW7vd6zBR8ro
+ p4daXSHTZqiPW3zaZzWOfFVGCGcJe+UQQMMxfJ43dSDYm6EQfkDZupn8Ppoq358X+CYw
+ 93itavr5Nv69+cOmLvyEb/NxR3xVanHek3GgNcnYNKk2uZOueOL9pPzLCySE3z4Qm7AL
+ Wzd8ZtKoJsT9vrThAWtKHj+XtEMGkpJPzBUzFhhB+dCYnyQgCTYl0OPgMBlrEM7r1I7Z
+ hwHunBmKqbLJhzbRE+Mrtxcl1w/gWc544wmMRRZaxd5RUNvxMCVRaBM/NnkS7XGQWi2d 3A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2spxbqgyve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 15:58:56 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UFwFx1146681;
+        Thu, 30 May 2019 15:58:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2srbdy34a3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 15:58:56 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4UFwtrm015760;
+        Thu, 30 May 2019 15:58:55 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 May 2019 08:58:54 -0700
+Date:   Thu, 30 May 2019 08:58:51 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sfrench@samba.org, anna.schumaker@netapp.com,
+        trond.myklebust@hammerspace.com, fengxiaoli0714@gmail.com
+Cc:     fstests@vger.kernel.org, Murphy Zhou <xzhou@redhat.com>,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: NFS & CIFS support dedupe now?? Was: Re: [PATCH] generic/517: notrun
+ on NFS due to unaligned dedupe in test
+Message-ID: <20190530155851.GB5383@magnolia>
+References: <20190530094147.14512-1-xzhou@redhat.com>
+ <20190530152606.GA5383@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530152606.GA5383@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300113
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Chuck,
+Hi everyone,
 
-On Tue, 2019-05-28 at 14:21 -0400, Chuck Lever wrote:
-> Since both the Send and Receive completion queues are processed in
-> a workqueue context, it should be safe to DMA unmap and return MRs
-> to the free or recycle lists directly in the completion handlers.
+Murphy Zhou sent a patch to generic/517 in fstests to fix a dedupe
+failure he was seeing on NFS:
+
+On Thu, May 30, 2019 at 05:41:47PM +0800, Murphy Zhou wrote:
+> NFSv4.2 could pass _require_scratch_dedupe, since the test offset and
+> size are aligned, while generic/517 is performing unaligned dedupe.
+> NFS does not support unaligned dedupe now, returns EINVAL.
 > 
-> Doing this means rpcrdma_frwr no longer needs to track the state
-> of each MR... a VALID or FLUSHED MR can no longer appear on an
-> xprt's MR free list.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: Murphy Zhou <xzhou@redhat.com>
 > ---
->  include/trace/events/rpcrdma.h  |   19 ----
->  net/sunrpc/xprtrdma/frwr_ops.c  |  202 ++++++++++++++++++------------------
-> ---
->  net/sunrpc/xprtrdma/rpc_rdma.c  |    2 
->  net/sunrpc/xprtrdma/xprt_rdma.h |   11 --
->  4 files changed, 95 insertions(+), 139 deletions(-)
+>  tests/generic/517 | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-> index a4ab3a2..7fe21ba 100644
-> --- a/include/trace/events/rpcrdma.h
-> +++ b/include/trace/events/rpcrdma.h
-> @@ -181,18 +181,6 @@
->  				),					\
->  				TP_ARGS(task, mr, nsegs))
->  
-> -TRACE_DEFINE_ENUM(FRWR_IS_INVALID);
-> -TRACE_DEFINE_ENUM(FRWR_IS_VALID);
-> -TRACE_DEFINE_ENUM(FRWR_FLUSHED_FR);
-> -TRACE_DEFINE_ENUM(FRWR_FLUSHED_LI);
-> -
-> -#define xprtrdma_show_frwr_state(x)					\
-> -		__print_symbolic(x,					\
-> -				{ FRWR_IS_INVALID, "INVALID" },		\
-> -				{ FRWR_IS_VALID, "VALID" },		\
-> -				{ FRWR_FLUSHED_FR, "FLUSHED_FR" },	\
-> -				{ FRWR_FLUSHED_LI, "FLUSHED_LI" })
-> -
->  DECLARE_EVENT_CLASS(xprtrdma_frwr_done,
->  	TP_PROTO(
->  		const struct ib_wc *wc,
-> @@ -203,22 +191,19 @@
->  
->  	TP_STRUCT__entry(
->  		__field(const void *, mr)
-> -		__field(unsigned int, state)
->  		__field(unsigned int, status)
->  		__field(unsigned int, vendor_err)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->mr = container_of(frwr, struct rpcrdma_mr, frwr);
-> -		__entry->state = frwr->fr_state;
->  		__entry->status = wc->status;
->  		__entry->vendor_err = __entry->status ? wc->vendor_err : 0;
->  	),
->  
->  	TP_printk(
-> -		"mr=%p state=%s: %s (%u/0x%x)",
-> -		__entry->mr, xprtrdma_show_frwr_state(__entry->state),
-> -		rdma_show_wc_status(__entry->status),
-> +		"mr=%p: %s (%u/0x%x)",
-> +		__entry->mr, rdma_show_wc_status(__entry->status),
->  		__entry->status, __entry->vendor_err
->  	)
->  );
-> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-> index ac47314..99871fbf 100644
-> --- a/net/sunrpc/xprtrdma/frwr_ops.c
-> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-> @@ -168,7 +168,6 @@ int frwr_init_mr(struct rpcrdma_ia *ia, struct rpcrdma_mr
-> *mr)
->  		goto out_list_err;
->  
->  	mr->frwr.fr_mr = frmr;
-> -	mr->frwr.fr_state = FRWR_IS_INVALID;
->  	mr->mr_dir = DMA_NONE;
->  	INIT_LIST_HEAD(&mr->mr_list);
->  	INIT_WORK(&mr->mr_recycle, frwr_mr_recycle_worker);
-> @@ -298,65 +297,6 @@ size_t frwr_maxpages(struct rpcrdma_xprt *r_xprt)
->  }
->  
->  /**
-> - * frwr_wc_fastreg - Invoked by RDMA provider for a flushed FastReg WC
-> - * @cq:	completion queue (ignored)
-> - * @wc:	completed WR
-> - *
-> - */
-> -static void
-> -frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
-> -{
-> -	struct ib_cqe *cqe = wc->wr_cqe;
-> -	struct rpcrdma_frwr *frwr =
-> -			container_of(cqe, struct rpcrdma_frwr, fr_cqe);
-> -
-> -	/* WARNING: Only wr_cqe and status are reliable at this point */
-> -	if (wc->status != IB_WC_SUCCESS)
-> -		frwr->fr_state = FRWR_FLUSHED_FR;
-> -	trace_xprtrdma_wc_fastreg(wc, frwr);
-> -}
-> -
-> -/**
-> - * frwr_wc_localinv - Invoked by RDMA provider for a flushed LocalInv WC
-> - * @cq:	completion queue (ignored)
-> - * @wc:	completed WR
-> - *
-> - */
-> -static void
-> -frwr_wc_localinv(struct ib_cq *cq, struct ib_wc *wc)
-> -{
-> -	struct ib_cqe *cqe = wc->wr_cqe;
-> -	struct rpcrdma_frwr *frwr = container_of(cqe, struct rpcrdma_frwr,
-> -						 fr_cqe);
-> -
-> -	/* WARNING: Only wr_cqe and status are reliable at this point */
-> -	if (wc->status != IB_WC_SUCCESS)
-> -		frwr->fr_state = FRWR_FLUSHED_LI;
-> -	trace_xprtrdma_wc_li(wc, frwr);
-> -}
-> -
-> -/**
-> - * frwr_wc_localinv_wake - Invoked by RDMA provider for a signaled LocalInv
-> WC
-> - * @cq:	completion queue (ignored)
-> - * @wc:	completed WR
-> - *
-> - * Awaken anyone waiting for an MR to finish being fenced.
-> - */
-> -static void
-> -frwr_wc_localinv_wake(struct ib_cq *cq, struct ib_wc *wc)
-> -{
-> -	struct ib_cqe *cqe = wc->wr_cqe;
-> -	struct rpcrdma_frwr *frwr = container_of(cqe, struct rpcrdma_frwr,
-> -						 fr_cqe);
-> -
-> -	/* WARNING: Only wr_cqe and status are reliable at this point */
-> -	if (wc->status != IB_WC_SUCCESS)
-> -		frwr->fr_state = FRWR_FLUSHED_LI;
-> -	trace_xprtrdma_wc_li_wake(wc, frwr);
-> -	complete(&frwr->fr_linv_done);
-> -}
-> -
-> -/**
->   * frwr_map - Register a memory region
->   * @r_xprt: controlling transport
->   * @seg: memory region co-ordinates
-> @@ -378,23 +318,15 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt
-> *r_xprt,
->  {
->  	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
->  	bool holes_ok = ia->ri_mrtype == IB_MR_TYPE_SG_GAPS;
-> -	struct rpcrdma_frwr *frwr;
->  	struct rpcrdma_mr *mr;
->  	struct ib_mr *ibmr;
->  	struct ib_reg_wr *reg_wr;
->  	int i, n;
->  	u8 key;
->  
-> -	mr = NULL;
-> -	do {
-> -		if (mr)
-> -			rpcrdma_mr_recycle(mr);
-> -		mr = rpcrdma_mr_get(r_xprt);
-> -		if (!mr)
-> -			goto out_getmr_err;
-> -	} while (mr->frwr.fr_state != FRWR_IS_INVALID);
-> -	frwr = &mr->frwr;
-> -	frwr->fr_state = FRWR_IS_VALID;
-> +	mr = rpcrdma_mr_get(r_xprt);
-> +	if (!mr)
-> +		goto out_getmr_err;
->  
->  	if (nsegs > ia->ri_max_frwr_depth)
->  		nsegs = ia->ri_max_frwr_depth;
-> @@ -423,7 +355,7 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt
-> *r_xprt,
->  	if (!mr->mr_nents)
->  		goto out_dmamap_err;
->  
-> -	ibmr = frwr->fr_mr;
-> +	ibmr = mr->frwr.fr_mr;
->  	n = ib_map_mr_sg(ibmr, mr->mr_sg, mr->mr_nents, NULL, PAGE_SIZE);
->  	if (unlikely(n != mr->mr_nents))
->  		goto out_mapmr_err;
-> @@ -433,7 +365,7 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt
-> *r_xprt,
->  	key = (u8)(ibmr->rkey & 0x000000FF);
->  	ib_update_fast_reg_key(ibmr, ++key);
->  
-> -	reg_wr = &frwr->fr_regwr;
-> +	reg_wr = &mr->frwr.fr_regwr;
->  	reg_wr->mr = ibmr;
->  	reg_wr->key = ibmr->rkey;
->  	reg_wr->access = writing ?
-> @@ -465,6 +397,23 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt
-> *r_xprt,
->  }
->  
->  /**
-> + * frwr_wc_fastreg - Invoked by RDMA provider for a flushed FastReg WC
-> + * @cq:	completion queue (ignored)
-> + * @wc:	completed WR
-> + *
-> + */
-> +static void frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
-> +{
-> +	struct ib_cqe *cqe = wc->wr_cqe;
-> +	struct rpcrdma_frwr *frwr =
-> +		container_of(cqe, struct rpcrdma_frwr, fr_cqe);
-> +
-> +	/* WARNING: Only wr_cqe and status are reliable at this point */
-> +	trace_xprtrdma_wc_fastreg(wc, frwr);
-> +	/* The MR will get recycled when the associated req is retransmitted */
-> +}
-> +
-> +/**
->   * frwr_send - post Send WR containing the RPC Call message
->   * @ia: interface adapter
->   * @req: Prepared RPC Call
-> @@ -516,65 +465,104 @@ void frwr_reminv(struct rpcrdma_rep *rep, struct
-> list_head *mrs)
->  		if (mr->mr_handle == rep->rr_inv_rkey) {
->  			list_del_init(&mr->mr_list);
->  			trace_xprtrdma_mr_remoteinv(mr);
-> -			mr->frwr.fr_state = FRWR_IS_INVALID;
->  			rpcrdma_mr_unmap_and_put(mr);
->  			break;	/* only one invalidated MR per RPC */
->  		}
->  }
->  
-> +static void __frwr_release_mr(struct ib_wc *wc, struct rpcrdma_mr *mr)
-> +{
-> +	if (wc->status != IB_WC_SUCCESS)
-> +		rpcrdma_mr_recycle(mr);
-> +	else
-> +		rpcrdma_mr_unmap_and_put(mr);
-> +}
-> +
->  /**
-> - * frwr_unmap_sync - invalidate memory regions that were registered for @req
-> - * @r_xprt: controlling transport
-> - * @mrs: list of MRs to process
-> + * frwr_wc_localinv - Invoked by RDMA provider for a LOCAL_INV WC
-> + * @cq:	completion queue (ignored)
-> + * @wc:	completed WR
->   *
-> - * Sleeps until it is safe for the host CPU to access the
-> - * previously mapped memory regions.
-> + */
-> +static void frwr_wc_localinv(struct ib_cq *cq, struct ib_wc *wc)
-> +{
-> +	struct ib_cqe *cqe = wc->wr_cqe;
-> +	struct rpcrdma_frwr *frwr =
-> +		container_of(cqe, struct rpcrdma_frwr, fr_cqe);
-> +	struct rpcrdma_mr *mr = container_of(frwr, struct rpcrdma_mr, frwr);
-> +
-> +	/* WARNING: Only wr_cqe and status are reliable at this point */
-> +	__frwr_release_mr(wc, mr);
-> +	trace_xprtrdma_wc_li(wc, frwr);
-> +}
-> +
-> +/**
-> + * frwr_wc_localinv_wake - Invoked by RDMA provider for a LOCAL_INV WC
-> + * @cq:	completion queue (ignored)
-> + * @wc:	completed WR
->   *
-> - * Caller ensures that @mrs is not empty before the call. This
-> - * function empties the list.
-> + * Awaken anyone waiting for an MR to finish being fenced.
->   */
-> -void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct list_head *mrs)
-> +static void frwr_wc_localinv_wake(struct ib_cq *cq, struct ib_wc *wc)
-> +{
-> +	struct ib_cqe *cqe = wc->wr_cqe;
-> +	struct rpcrdma_frwr *frwr =
-> +		container_of(cqe, struct rpcrdma_frwr, fr_cqe);
-> +	struct rpcrdma_mr *mr = container_of(frwr, struct rpcrdma_mr, frwr);
-> +
-> +	/* WARNING: Only wr_cqe and status are reliable at this point */
-> +	__frwr_release_mr(wc, mr);
-> +	trace_xprtrdma_wc_li_wake(wc, frwr);
-> +	complete(&frwr->fr_linv_done);
-> +}
-> +
-> +/**
-> + * frwr_unmap_sync - invalidate memory regions that were registered for @req
-> + * @r_xprt: controlling transport instance
-> + * @req: rpcrdma_req with a non-empty list of MRs to process
-> + *
-> + * Sleeps until it is safe for the host CPU to access the previously mapped
-> + * memory regions.
-> + */
-> +void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
->  {
->  	struct ib_send_wr *first, **prev, *last;
->  	const struct ib_send_wr *bad_wr;
-> -	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
->  	struct rpcrdma_frwr *frwr;
->  	struct rpcrdma_mr *mr;
-> -	int count, rc;
-> +	int rc;
->  
->  	/* ORDER: Invalidate all of the MRs first
->  	 *
->  	 * Chain the LOCAL_INV Work Requests and post them with
->  	 * a single ib_post_send() call.
->  	 */
-> -	frwr = NULL;
-> -	count = 0;
->  	prev = &first;
-> -	list_for_each_entry(mr, mrs, mr_list) {
-> -		mr->frwr.fr_state = FRWR_IS_INVALID;
-> +	while (!list_empty(&req->rl_registered)) {
+> diff --git a/tests/generic/517 b/tests/generic/517
+> index 601bb24e..23665782 100755
+> --- a/tests/generic/517
+> +++ b/tests/generic/517
+> @@ -30,6 +30,7 @@ _cleanup()
+>  _supported_fs generic
+>  _supported_os Linux
+>  _require_scratch_dedupe
+> +$FSTYP == "nfs"  && _notrun "NFS can't handle unaligned deduplication"
 
-Is this list guaranteed to always start full? Because we could potentially use
-frwr uninitialized a few lines down if it's not.
+I was surprised to see a dedupe fix for NFS since (at least to my
+knowledge) neither of these two network filesystems actually support
+server-side deduplication commands, and therefore the
+_require_scratch_dedupe should have _notrun the test.
 
-net/sunrpc/xprtrdma/frwr_ops.c: In function ‘frwr_unmap_sync’:
-net/sunrpc/xprtrdma/frwr_ops.c:582:3: error: ‘frwr’ may be used uninitialized in
-this function [-Werror=maybe-uninitialized]
-   wait_for_completion(&frwr->fr_linv_done);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Then I looked at fs/nfs/nfs4file.c:
 
-Thanks,
-Anna
-> +		mr = rpcrdma_mr_pop(&req->rl_registered);
->  
-> -		frwr = &mr->frwr;
->  		trace_xprtrdma_mr_localinv(mr);
-> +		r_xprt->rx_stats.local_inv_needed++;
->  
-> +		frwr = &mr->frwr;
->  		frwr->fr_cqe.done = frwr_wc_localinv;
->  		last = &frwr->fr_invwr;
-> -		memset(last, 0, sizeof(*last));
-> +		last->next = NULL;
->  		last->wr_cqe = &frwr->fr_cqe;
-> +		last->sg_list = NULL;
-> +		last->num_sge = 0;
->  		last->opcode = IB_WR_LOCAL_INV;
-> +		last->send_flags = IB_SEND_SIGNALED;
->  		last->ex.invalidate_rkey = mr->mr_handle;
-> -		count++;
->  
->  		*prev = last;
->  		prev = &last->next;
->  	}
-> -	if (!frwr)
-> -		goto unmap;
->  
->  	/* Strong send queue ordering guarantees that when the
->  	 * last WR in the chain completes, all WRs in the chain
->  	 * are complete.
->  	 */
-> -	last->send_flags = IB_SEND_SIGNALED;
->  	frwr->fr_cqe.done = frwr_wc_localinv_wake;
->  	reinit_completion(&frwr->fr_linv_done);
->  
-> @@ -582,26 +570,18 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct
-> list_head *mrs)
->  	 * replaces the QP. The RPC reply handler won't call us
->  	 * unless ri_id->qp is a valid pointer.
->  	 */
-> -	r_xprt->rx_stats.local_inv_needed++;
->  	bad_wr = NULL;
-> -	rc = ib_post_send(ia->ri_id->qp, first, &bad_wr);
-> -	if (bad_wr != first)
-> -		wait_for_completion(&frwr->fr_linv_done);
-> -	if (rc)
-> -		goto out_release;
-> +	rc = ib_post_send(r_xprt->rx_ia.ri_id->qp, first, &bad_wr);
-> +	trace_xprtrdma_post_send(req, rc);
->  
-> -	/* ORDER: Now DMA unmap all of the MRs, and return
-> -	 * them to the free MR list.
-> +	/* The final LOCAL_INV WR in the chain is supposed to
-> +	 * do the wake. If it never gets posted, the wake will
-> +	 * not happen, so don't wait in that case.
->  	 */
-> -unmap:
-> -	while (!list_empty(mrs)) {
-> -		mr = rpcrdma_mr_pop(mrs);
-> -		rpcrdma_mr_unmap_and_put(mr);
-> -	}
-> -	return;
-> -
-> -out_release:
-> -	pr_err("rpcrdma: FRWR invalidate ib_post_send returned %i\n", rc);
-> +	if (bad_wr != first)
-> +		wait_for_completion(&frwr->fr_linv_done);
-> +	if (!rc)
-> +		return;
->  
->  	/* Unmap and release the MRs in the LOCAL_INV WRs that did not
->  	 * get posted.
-> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-> index 77fc1e4..6c049fd 100644
-> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> @@ -1277,7 +1277,7 @@ void rpcrdma_release_rqst(struct rpcrdma_xprt *r_xprt,
-> struct rpcrdma_req *req)
->  	 * RPC has relinquished all its Send Queue entries.
->  	 */
->  	if (!list_empty(&req->rl_registered))
-> -		frwr_unmap_sync(r_xprt, &req->rl_registered);
-> +		frwr_unmap_sync(r_xprt, req);
->  
->  	/* Ensure that any DMA mapped pages associated with
->  	 * the Send of the RPC Call have been unmapped before
-> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-> index 3c39aa3..a9de116 100644
-> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
-> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-> @@ -240,17 +240,9 @@ struct rpcrdma_sendctx {
->   * An external memory region is any buffer or page that is registered
->   * on the fly (ie, not pre-registered).
->   */
-> -enum rpcrdma_frwr_state {
-> -	FRWR_IS_INVALID,	/* ready to be used */
-> -	FRWR_IS_VALID,		/* in use */
-> -	FRWR_FLUSHED_FR,	/* flushed FASTREG WR */
-> -	FRWR_FLUSHED_LI,	/* flushed LOCALINV WR */
-> -};
-> -
->  struct rpcrdma_frwr {
->  	struct ib_mr			*fr_mr;
->  	struct ib_cqe			fr_cqe;
-> -	enum rpcrdma_frwr_state		fr_state;
->  	struct completion		fr_linv_done;
->  	union {
->  		struct ib_reg_wr	fr_regwr;
-> @@ -567,8 +559,7 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt
-> *r_xprt,
->  				struct rpcrdma_mr **mr);
->  int frwr_send(struct rpcrdma_ia *ia, struct rpcrdma_req *req);
->  void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
-> -void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt,
-> -		     struct list_head *mrs);
-> +void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
->  
->  /*
->   * RPC/RDMA protocol calls - xprtrdma/rpc_rdma.c
-> 
+static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+		struct file *dst_file, loff_t dst_off, loff_t count,
+		unsigned int remap_flags)
+{
+	<local variable declarations>
 
+	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
+		return -EINVAL;
+
+	<check alignment, lock inodes, flush pending writes>
+
+	ret = nfs42_proc_clone(src_file, dst_file, src_off, dst_off, count);
+
+The NFS client code will accept REMAP_FILE_DEDUP through remap_flags,
+which is how dedupe requests are sent to filesystems nowadays.  The nfs
+client code does not itself compare the file contents, but it does issue
+a CLONE command to the NFS server.  The end result, AFAICT, is that a
+user program can write 'A's to file1, 'B's to file2, issue a dedup
+ioctl to the kernel, and have a block of 'B's mapped into file1.  That's
+broken behavior, according to the dedup ioctl manpage.
+
+Notice how remap_flags is checked but is not included in the
+nfs42_proc_clone call?  That's how I conclude that the NFS client cannot
+possibly be sending the dedup request to the server.
+
+The same goes for fs/cifs/cifsfs.c:
+
+static loff_t cifs_remap_file_range(struct file *src_file, loff_t off,
+		struct file *dst_file, loff_t destoff, loff_t len,
+		unsigned int remap_flags)
+{
+	<local variable declarations>
+
+	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
+		return -EINVAL;
+
+	<check files, lock inodes, flush pages>
+
+	if (target_tcon->ses->server->ops->duplicate_extents)
+		rc = target_tcon->ses->server->ops->duplicate_extents(xid,
+			smb_file_src, smb_file_target, off, len, destoff);
+	else
+		rc = -EOPNOTSUPP;
+
+Again, remap_flags is checked here but it has no influence over the
+->duplicate_extents call.
+
+Next I got to thinking that when I reworked the clone/dedupe code last
+year, I didn't include REMAP_FILE_DEDUP support for cifs or nfs, because
+as far as I knew, neither protocol supports a verb for deduplication.
+The remap_flags checks were modified to allow REMAP_FILE_DEDUP in
+commits ce96e888fe48e (NFS) and b073a08016a10 (CIFS) with this
+justification (the cifs commit has a similar message):
+
+"Subject: Fix nfs4.2 return -EINVAL when do dedupe operation
+
+"dedupe_file_range operations is combiled into remap_file_range.
+"    But in nfs42_remap_file_range, it's skiped for dedupe operations.
+"    Before this patch:
+"      # dd if=/dev/zero of=nfs/file bs=1M count=1
+"      # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
+"      XFS_IOC_FILE_EXTENT_SAME: Invalid argument
+"    After this patch:
+"      # dd if=/dev/zero of=nfs/file bs=1M count=1
+"      # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
+"      deduped 4096/4096 bytes at offset 65536
+"      4 KiB, 1 ops; 0.0046 sec (865.988 KiB/sec and 216.4971 ops/sec)"
+
+This sort of looks like monkeypatching to make an error message go away.
+One could argue that this ought to return EOPNOSUPP instead of EINVAL,
+and maybe that's what should've happened.
+
+So, uh, do NFS and CIFS both support server-side dedupe now, or are
+these patches just plain wrong?
+
+No, they're just wrong, because I can corrupt files like so on NFS:
+
+$ rm -rf urk moo
+$ xfs_io -f -c "pwrite -S 0x58 0 31048" urk
+wrote 31048/31048 bytes at offset 0
+30 KiB, 8 ops; 0.0000 sec (569.417 MiB/sec and 153846.1538 ops/sec)
+$ xfs_io -f -c "pwrite -S 0x59 0 31048" moo
+wrote 31048/31048 bytes at offset 0
+30 KiB, 8 ops; 0.0001 sec (177.303 MiB/sec and 47904.1916 ops/sec)
+$ md5sum urk moo
+37d3713e5f9c4fe0f8a1f813b27cb284  urk
+a5b6f953f27aa17e42450ff4674fa2df  moo
+$ xfs_io -c "dedupe urk 0 0 4096" moo
+deduped 4096/4096 bytes at offset 0
+4 KiB, 1 ops; 0.0012 sec (3.054 MiB/sec and 781.8608 ops/sec)
+$ md5sum urk moo
+37d3713e5f9c4fe0f8a1f813b27cb284  urk
+2c992d70131c489da954f1d96d8c456e  moo
+
+(Not sure about cifs, since I don't have a Windows Server handy)
+
+I'm not an expert in CIFS or NFS, so I'm asking: do either support
+dedupe or is this a kernel bug?
+
+--D
