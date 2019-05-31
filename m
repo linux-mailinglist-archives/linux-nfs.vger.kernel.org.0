@@ -2,131 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BD6E30E35
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 14:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 917BD30ECC
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 15:25:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfEaMmI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 31 May 2019 08:42:08 -0400
-Received: from p3plsmtpa12-09.prod.phx3.secureserver.net ([68.178.252.238]:41579
-        "EHLO p3plsmtpa12-09.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbfEaMmI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 May 2019 08:42:08 -0400
-X-Greylist: delayed 309 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 08:42:08 EDT
-Received: from [192.168.0.56] ([24.218.182.144])
-        by :SMTPAUTH: with ESMTPSA
-        id Wgp6hEKUtP4EqWgp6hef4J; Fri, 31 May 2019 05:39:53 -0700
-Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
-To:     NeilBrown <neilb@suse.com>, Olga Kornievskaia <aglo@umich.edu>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Schumaker Anna <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
- <1df23ebc-ffe5-1a57-c40a-d5e9a45c8498@talpey.com>
- <CAN-5tyHUah=fAsiSLb=n__q5HxRy3qeS83evf-vB59r4cpYgsw@mail.gmail.com>
- <9b64b9d9-b7cf-c818-28e2-58b3a821d39d@talpey.com>
- <87pnnztvo1.fsf@notabene.neil.brown.name>
- <f44dd718-6e4c-d068-f24a-9949cda5c2e8@talpey.com>
- <87ef4fxsm1.fsf@notabene.neil.brown.name>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <b4795a49-4941-2b71-8219-626e49bd40da@talpey.com>
-Date:   Fri, 31 May 2019 08:39:51 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <87ef4fxsm1.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBbeEY/qsg59fQP+U4sNvThsEdE0g2pslBA9vhP5eMeP3EHweah2KKO/D6QSVJhfkuNBnR7M76NorHLLN6aWSWeWHEsQ30QU5xeU8edL8c8t26+awbqZ
- +ruzeoDj24ngaaAgOkGk338os+t++MXCI0GMkSCqiDTKk0EqiC/L0WDk+rtw6Kj1gT6o7XHBDMT0h2GZmVwDBYN5i8IRSpddsaxa/e4O4r/K1WAE7kBJYEFB
- YkAnvYnv4I4CiGaHN0oNlQRWHGju9wj/Ab39OSJh+CB/9OSUJ5xbGaYnZUYSwSbdPi9rdmgllWCva6FccVN7qbSTyWN3iQFArVzs7UN/rV8=
+        id S1726512AbfEaNZx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 31 May 2019 09:25:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48742 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEaNZx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 May 2019 09:25:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VDNIA0041124;
+        Fri, 31 May 2019 13:25:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=UdQQq8ASrjTgUSxtshe8VsnndBb0QfrtynyMYUL+kFk=;
+ b=oHhXuA5Yh7LlqyJfgDZ+ynvBNaS0Ejq8zEUCNsXBVd4ADmF15a6Ia9G02FotG0Zl5/CE
+ HAQPBybn47FLxrDw6aHvyil41C1IVLZjrqSbwe7qSvfYpPP1maAMmZXLIYg08H5mR/RK
+ J/lMl4RPpQaRggKpa2ng5PAKzmsEMsbI/qkELGAt9aY8Yh2Wllh6129G+foFvIRdeq2S
+ TKDF2bahAZo2IB20Xj0xG26Ei2LG8aXiC9ZsDfNlLIVnHtopOPsO1vW6/0lmxvIe6GzY
+ 2lkqlrCyO7FxsxeM+Cdep3DnZjA8qIXLiDtsBaArA6jDfvqKACUlR6pYzhsEybrK052B yg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2spw4tx7cn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 13:25:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VDO3r3087358;
+        Fri, 31 May 2019 13:25:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2su3y494eu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 May 2019 13:25:17 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4VDPCN0013944;
+        Fri, 31 May 2019 13:25:12 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 May 2019 06:25:12 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 3/3] SUNRPC: Count ops completing with tk_status < 0
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20190530223314.GA25368@fieldses.org>
+Date:   Fri, 31 May 2019 09:25:11 -0400
+Cc:     Dave Wysochanski <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CD3B0503-ABA0-4670-9A76-0B9DF0AE5B5C@oracle.com>
+References: <20190523201351.12232-1-dwysocha@redhat.com>
+ <20190523201351.12232-3-dwysocha@redhat.com>
+ <20190530213857.GA24802@fieldses.org>
+ <9B9F0C9B-C493-44F5-ABD1-6B2B4BAA2F08@oracle.com>
+ <20190530223314.GA25368@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905310086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905310086
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5/30/2019 10:31 PM, NeilBrown wrote:
-> On Thu, May 30 2019, Tom Talpey wrote:
-> 
->> On 5/30/2019 6:38 PM, NeilBrown wrote:
->>> On Thu, May 30 2019, Tom Talpey wrote:
->>>
->>>> On 5/30/2019 1:20 PM, Olga Kornievskaia wrote:
->>>>> On Thu, May 30, 2019 at 1:05 PM Tom Talpey <tom@talpey.com> wrote:
->>>>>>
->>>>>> On 5/29/2019 8:41 PM, NeilBrown wrote:
->>>>>>> I've also re-arrange the patches a bit, merged two, and remove the
->>>>>>> restriction to TCP and NFSV4.x,x>=1.  Discussions seemed to suggest
->>>>>>> these restrictions were not needed, I can see no need.
->>>>>>
->>>>>> I believe the need is for the correctness of retries. Because NFSv2,
->>>>>> NFSv3 and NFSv4.0 have no exactly-once semantics of their own, server
->>>>>> duplicate request caches are important (although often imperfect).
->>>>>> These caches use client XID's, source ports and addresses, sometimes
->>>>>> in addition to other methods, to detect retry. Existing clients are
->>>>>> careful to reconnect with the same source port, to ensure this. And
->>>>>> existing servers won't change.
->>>>>
->>>>> Retries are already bound to the same connection so there shouldn't be
->>>>> an issue of a retransmission coming from a different source port.
->>>>
->>>> So, there's no path redundancy? If any connection is lost and can't
->>>> be reestablished, the requests on that connection will time out?
->>>
->>> Path redundancy happens lower down in the stack.  Presumably a bonding
->>> driver will divert flows to a working path when one path fails.
->>> NFS doesn't see paths at all.  It just sees TCP connections - each with
->>> the same source and destination address.  How these are associated, from
->>> time to time, with different hardware is completely transparent to NFS.
->>
->> But, you don't propose to constrain this to bonded connections. So
->> NFS will create connections on whatever collection of NICs which are
->> locally, and if these aren't bonded, well, the issues become visible.
-> 
-> If a client had multiple network interfaces with different addresses,
-> and several of them had routes to the selected server IP, then this
-> might result in the multiple connections to the server having different
-> local addresses (as well as different local ports) - I don't know the
-> network layer well enough to be sure if this is possible, but it seems
-> credible.
-> 
-> If one of these interfaces then went down, and there was no automatic
-> routing reconfiguration in place to restore connectivity through a
-> different interface, then the TCP connection would timeout and break.
-> The xprt would then try to reconnect using the same source port and
-> destination address - it doesn't provide an explicit source address, but
-> lets the network layer provide one.
-> This would presumably result in a connection with a different source
-> address.  So requests would continue to flow on the xprt, but they might
-> miss the DRC as the source address would be different.
-> 
-> If you have a configuration like this (multi-homed client with
-> multiple interfaces that can reach the server with equal weight), then
-> you already have a possible problem of missing the DRC if one interface
-> goes down a new connection is established from another one.  nconnect
-> doesn't change that.
-> 
-> So I still don't see any problem.
-> 
-> If I've misunderstood you, please provide a detailed description of the
-> sort of configuration where you think a problem might arise.
-
-You nailed it. But, I disagree that there won't be a problem. NFSv4.1
-and up will be fine, but NFS versions which rely on a heuristic, space
-limited DRC, will not.
-
-Tom.
 
 
-> 
->>
->> BTW, RDMA NICs are never bonded.
-> 
-> I've come across the concept of "Multi-Rail", but I cannot say that I
-> fully understand it yet.  I suspect you would need more than nconnect to
-> make proper use of multi-rail RDMA
-> 
-> Thanks,
-> NeilBrown
-> 
+> On May 30, 2019, at 6:33 PM, Bruce Fields <bfields@fieldses.org> =
+wrote:
+>=20
+> On Thu, May 30, 2019 at 06:19:54PM -0400, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On May 30, 2019, at 5:38 PM, bfields@fieldses.org wrote:
+>>>=20
+>>> On Thu, May 23, 2019 at 04:13:50PM -0400, Dave Wysochanski wrote:
+>>>> We often see various error conditions with NFS4.x that show up with
+>>>> a very high operation count all completing with tk_status < 0 in a
+>>>> short period of time.  Add a count to rpc_iostats to record on a
+>>>> per-op basis the ops that complete in this manner, which will
+>>>> enable lower overhead diagnostics.
+>>>=20
+>>> Looks like a good idea to me.
+>>>=20
+>>> It's too bad we can't distinguish the errors.  (E.g. ESTALE on a =
+lookup
+>>> call is a lot more interesting than ENOENT.)  But understood that
+>>> maintaining (number of possible errors) * (number of possible ops)
+>>> counters is probably overkill, so just counting the number of errors
+>>> seems like a good start.
+>>=20
+>> We now have trace points that can do that too.
+>=20
+> You mean, that can report every error (and its value)?
+
+Yes, the nfs_xdr_status trace point reports the error by value and =
+symbolic name.
+
+
+> I assume having these statistics in mountstats is still useful, =
+though.
+>=20
+> --b.
+>=20
+>>=20
+>>=20
+>>> --b.
+>>>=20
+>>>>=20
+>>>> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+>>>> ---
+>>>> include/linux/sunrpc/metrics.h | 7 ++++++-
+>>>> net/sunrpc/stats.c             | 8 ++++++--
+>>>> 2 files changed, 12 insertions(+), 3 deletions(-)
+>>>>=20
+>>>> diff --git a/include/linux/sunrpc/metrics.h =
+b/include/linux/sunrpc/metrics.h
+>>>> index 1b3751327575..0ee3f7052846 100644
+>>>> --- a/include/linux/sunrpc/metrics.h
+>>>> +++ b/include/linux/sunrpc/metrics.h
+>>>> @@ -30,7 +30,7 @@
+>>>> #include <linux/ktime.h>
+>>>> #include <linux/spinlock.h>
+>>>>=20
+>>>> -#define RPC_IOSTATS_VERS	"1.0"
+>>>> +#define RPC_IOSTATS_VERS	"1.1"
+>>>>=20
+>>>> struct rpc_iostats {
+>>>> 	spinlock_t		om_lock;
+>>>> @@ -66,6 +66,11 @@ struct rpc_iostats {
+>>>> 	ktime_t			om_queue,	/* queued for xmit */
+>>>> 				om_rtt,		/* RPC RTT */
+>>>> 				om_execute;	/* RPC execution */
+>>>> +	/*
+>>>> +	 * The count of operations that complete with tk_status < 0.
+>>>> +	 * These statuses usually indicate error conditions.
+>>>> +	 */
+>>>> +	unsigned long           om_error_status;
+>>>> } ____cacheline_aligned;
+>>>>=20
+>>>> struct rpc_task;
+>>>> diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
+>>>> index 8b2d3c58ffae..737414247ca7 100644
+>>>> --- a/net/sunrpc/stats.c
+>>>> +++ b/net/sunrpc/stats.c
+>>>> @@ -176,6 +176,8 @@ void rpc_count_iostats_metrics(const struct =
+rpc_task *task,
+>>>>=20
+>>>> 	execute =3D ktime_sub(now, task->tk_start);
+>>>> 	op_metrics->om_execute =3D ktime_add(op_metrics->om_execute, =
+execute);
+>>>> +	if (task->tk_status < 0)
+>>>> +		op_metrics->om_error_status++;
+>>>>=20
+>>>> 	spin_unlock(&op_metrics->om_lock);
+>>>>=20
+>>>> @@ -218,13 +220,14 @@ static void _add_rpc_iostats(struct =
+rpc_iostats *a, struct rpc_iostats *b)
+>>>> 	a->om_queue =3D ktime_add(a->om_queue, b->om_queue);
+>>>> 	a->om_rtt =3D ktime_add(a->om_rtt, b->om_rtt);
+>>>> 	a->om_execute =3D ktime_add(a->om_execute, b->om_execute);
+>>>> +	a->om_error_status +=3D b->om_error_status;
+>>>> }
+>>>>=20
+>>>> static void _print_rpc_iostats(struct seq_file *seq, struct =
+rpc_iostats *stats,
+>>>> 			       int op, const struct rpc_procinfo *procs)
+>>>> {
+>>>> 	_print_name(seq, op, procs);
+>>>> -	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu\n",
+>>>> +	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu %lu\n",
+>>>> 		   stats->om_ops,
+>>>> 		   stats->om_ntrans,
+>>>> 		   stats->om_timeouts,
+>>>> @@ -232,7 +235,8 @@ static void _print_rpc_iostats(struct seq_file =
+*seq, struct rpc_iostats *stats,
+>>>> 		   stats->om_bytes_recv,
+>>>> 		   ktime_to_ms(stats->om_queue),
+>>>> 		   ktime_to_ms(stats->om_rtt),
+>>>> -		   ktime_to_ms(stats->om_execute));
+>>>> +		   ktime_to_ms(stats->om_execute),
+>>>> +		   stats->om_error_status);
+>>>> }
+>>>>=20
+>>>> void rpc_clnt_show_stats(struct seq_file *seq, struct rpc_clnt =
+*clnt)
+>>>> --=20
+>>>> 2.20.1
+>>=20
+>> --
+>> Chuck Lever
+
+--
+Chuck Lever
+
+
+
