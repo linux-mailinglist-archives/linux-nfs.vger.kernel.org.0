@@ -2,149 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D977E30608
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 03:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB32F30649
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 03:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfEaBBt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 May 2019 21:01:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59486 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726131AbfEaBBt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 30 May 2019 21:01:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 821A4ACE5;
-        Fri, 31 May 2019 01:01:47 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Rick Macklem <rmacklem@uoguelph.ca>,
-        Olga Kornievskaia <aglo@umich.edu>, Tom Talpey <tom@talpey.com>
-Date:   Fri, 31 May 2019 11:01:37 +1000
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        id S1726666AbfEaBp1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 May 2019 21:45:27 -0400
+Received: from p3plsmtpa06-08.prod.phx3.secureserver.net ([173.201.192.109]:49760
+        "EHLO p3plsmtpa06-08.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726658AbfEaBp1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 May 2019 21:45:27 -0400
+Received: from [192.168.0.56] ([24.218.182.144])
+        by :SMTPAUTH: with ESMTPSA
+        id WWbmhT95vmARFWWbmhBzxG; Thu, 30 May 2019 18:45:27 -0700
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     NeilBrown <neilb@suse.com>, Chuck Lever <chuck.lever@oracle.com>,
         Schumaker Anna <Anna.Schumaker@netapp.com>,
         Trond Myklebust <trondmy@hammerspace.com>,
         linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
-In-Reply-To: <QB1PR01MB2643963C3A7EDE1D92C57221DD180@QB1PR01MB2643.CANPRD01.PROD.OUTLOOK.COM>
-References: <155917564898.3988.6096672032831115016.stgit@noble.brown> <1df23ebc-ffe5-1a57-c40a-d5e9a45c8498@talpey.com> <CAN-5tyHUah=fAsiSLb=n__q5HxRy3qeS83evf-vB59r4cpYgsw@mail.gmail.com> <QB1PR01MB2643963C3A7EDE1D92C57221DD180@QB1PR01MB2643.CANPRD01.PROD.OUTLOOK.COM>
-Message-ID: <87h89bxwr2.fsf@notabene.neil.brown.name>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+ <1df23ebc-ffe5-1a57-c40a-d5e9a45c8498@talpey.com>
+ <CAN-5tyHUah=fAsiSLb=n__q5HxRy3qeS83evf-vB59r4cpYgsw@mail.gmail.com>
+ <9b64b9d9-b7cf-c818-28e2-58b3a821d39d@talpey.com>
+ <CAN-5tyEBb3_TLvuN49FBB6qz2kXSZLPxHYZfQQX0jU4qFt4Z4A@mail.gmail.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <b4adc48a-5e96-c86d-78ed-27c268df0424@talpey.com>
+Date:   Thu, 30 May 2019 21:45:25 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <CAN-5tyEBb3_TLvuN49FBB6qz2kXSZLPxHYZfQQX0jU4qFt4Z4A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBnZF4shmGHRRBnnAli2vFBY/pJ4I4ey89dPW3PAdvC/Bfe+kweVcJsjHJSuLvnJnDRTPmAp57RyCC47jSKJvFycj9Gjtn4c+7WuvqKEZQsaKi7lIMrV
+ P2YB8/K4VTV3gMvCaNDxjvP8DSqRZooicXjCMZHSu9HmthLs42ugPSY+Nx2lQkff+tdvcEeUICAiUODgdCyBB5lc2G/CzZuNQ24M8XawTSf0CzN+s9YLBuCK
+ 7NPODG5otMQMVLtt8kq6JA0A6ogyFsmp7TUJTXzqUdV+AoQrBKA9/zDwE71Kc5XN+TCfJM4NSnxd5fxXue9Zyj0zn7/ZTyhzoFFWecuu46I=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-On Thu, May 30 2019, Rick Macklem wrote:
-
-> Olga Kornievskaia wrote:
->>On Thu, May 30, 2019 at 1:05 PM Tom Talpey <tom@talpey.com> wrote:
+On 5/30/2019 2:41 PM, Olga Kornievskaia wrote:
+> On Thu, May 30, 2019 at 1:41 PM Tom Talpey <tom@talpey.com> wrote:
+>>
+>> On 5/30/2019 1:20 PM, Olga Kornievskaia wrote:
+>>> On Thu, May 30, 2019 at 1:05 PM Tom Talpey <tom@talpey.com> wrote:
+>>>>
+>>>> On 5/29/2019 8:41 PM, NeilBrown wrote:
+>>>>> I've also re-arrange the patches a bit, merged two, and remove the
+>>>>> restriction to TCP and NFSV4.x,x>=1.  Discussions seemed to suggest
+>>>>> these restrictions were not needed, I can see no need.
+>>>>
+>>>> I believe the need is for the correctness of retries. Because NFSv2,
+>>>> NFSv3 and NFSv4.0 have no exactly-once semantics of their own, server
+>>>> duplicate request caches are important (although often imperfect).
+>>>> These caches use client XID's, source ports and addresses, sometimes
+>>>> in addition to other methods, to detect retry. Existing clients are
+>>>> careful to reconnect with the same source port, to ensure this. And
+>>>> existing servers won't change.
 >>>
->>> On 5/29/2019 8:41 PM, NeilBrown wrote:
->>> > I've also re-arrange the patches a bit, merged two, and remove the
->>> > restriction to TCP and NFSV4.x,x>=1.  Discussions seemed to suggest
->>> > these restrictions were not needed, I can see no need.
+>>> Retries are already bound to the same connection so there shouldn't be
+>>> an issue of a retransmission coming from a different source port.
+>>
+>> So, there's no path redundancy? If any connection is lost and can't
+>> be reestablished, the requests on that connection will time out?
+> 
+> For v3 and v4.0 in the current code base with a single connection,
+> when it goes down, you are out of luck. When we have multiple
+> connections and would like the benefit of using them but not
+> sacrifices replay cache correctness, it's a small price to restrict
+> the re-transmissions and suffer the consequence of not being able to
+> do an operation during network issues.
+
+I agree that the corruption resulting from a blown cache lookup would
+be bad. But I'm also saying that users will be frustrated when random
+operations time out, even when new ones work. Also, I think it may
+lead to application issues.
+
+>> I think a common configuration will be two NICs and two network paths,
+> 
+> Are you talking about session trunking here?
+
+No, not necessarily. Certianly not when doing what you propose
+over NFSv3.
+
+> Why do you think two NICs would be a common configuration. I have
+> performance numbers that demonstrate performance improvement for a
+> single NIC case. I would say a single NIC with a high speed networks
+> (25/40G) would be a common configuration.
+
+They're both common! And sure, it's good for a single NIC because of
+RSS (receive side scaling). The multiple connections spread interrupts
+over several cores. The same as would happen with multiple NICs.
+
+> 
+>> a so-called shotgun. Admins will be quite frustrated to discover it
+>> gives no additional robustness, and perhaps even less.
+>>
+>> Why not simply restrict this to the fully-correct, fully-functional
+>> NFSv4.1+ scenario, and not try to paper over the shortcomings?
+> 
+> I think mainly because customers are still using v3 but want to
+> improve performance. I'd love for everybody to switch to 4.1 but
+> that's not happening.
+
+Yeah, you and me both. But trying to "fix" NFSv3 with this is not
+going to move the world forward, and I predict will cost many woeful
+days ahead when it fails to work transparently.
+
+Tom.
+
+
+>>>> Multiple connections will result in multiple source ports, and possibly
+>>>> multiple source addresses, meaning retried client requests may be
+>>>> accepted as new, rather than having any chance of being recognized as
+>>>> retries.
+>>>>
+>>>> NFSv4.1+ don't have this issue, but removing the restrictions would
+>>>> seem to break the downlevel mounts.
+>>>>
+>>>> Tom.
+>>>>
 >>>
->>> I believe the need is for the correctness of retries. Because NFSv2,
->>> NFSv3 and NFSv4.0 have no exactly-once semantics of their own, server
->>> duplicate request caches are important (although often imperfect).
->>> These caches use client XID's, source ports and addresses, sometimes
->>> in addition to other methods, to detect retry. Existing clients are
->>> careful to reconnect with the same source port, to ensure this. And
->>> existing servers won't change.
->>
->>Retries are already bound to the same connection so there shouldn't be
->>an issue of a retransmission coming from a different source port.
-> I don't think the above is correct for NFSv4.0 (it may very well be true for NFSv3).
-
-It is correct for the Linux implementation of NFS, though the term
-"xprt" is more accurate than "connection".
-
-A "task" is bound it a specific "xprt" which, in the case of tcp, has a
-fixed source port.  If the TCP connection breaks, a new one is created
-with the same addresses and ports, and this new connection serves the
-same xprt.
-
-> Here's what RFC7530 Sec. 3.1.1 says:
-> 3.1.1.  Client Retransmission Behavior
->
->    When processing an NFSv4 request received over a reliable transport
->    such as TCP, the NFSv4 server MUST NOT silently drop the request,
->    except if the established transport connection has been broken.
->    Given such a contract between NFSv4 clients and servers, clients MUST
->    NOT retry a request unless one or both of the following are true:
->
->    o  The transport connection has been broken
->
->    o  The procedure being retried is the NULL procedure
->
-> If the transport connection is broken, the retry needs to be done on a new TCP
-> connection, does it not? (I'm assuming you are referring to a retry of an RPC here.)
-> (My interpretation of "broken" is "can't be fixed, so the client must use a different
->  TCP connection.)
-
-Yes, a new connection.  But the Linux client makes sure to use the same
-source port.
-
->
-> Also, NFSv4.0 cannot use Sun RPC over UDP, whereas some DRCs only
-> work for UDP traffic. (The FreeBSD server does have DRC support for TCP, but
-> the algorithm is very different than what is used for UDP, due to the long delay
-> before a retried RPC request is received. This can result in significant server
-> overheads, so some sites choose to disable the DRC for TCP traffic or tune it
-> in such a way as it becomes almost useless.)
-> The FreeBSD DRC code for NFS over TCP expects the retry to be from a different
-> port# (due to a new connection re: the above) for NFSv4.0. For NFSv3, my best
-> recollection is that it doesn't care what the source port# is. (It basically uses a
-> hash on the RPC request excluding TCP/IP header to recognize possible
-> duplicates.)
-
-Interesting .... hopefully the hash is sufficiently strong.
-I think it is best to assume same source port, but there is no formal
-standard.
-
-Thanks,
-NeilBrown
-
-
->
-> I don't know what other NFS servers choose to do w.r.t. the DRC for NFS over TCP,
-> however for some reason I thought that the Linux knfsd only used a DRC for UDP?
-> (Someone please clarify this.)
->
-> rick
->
->> Multiple connections will result in multiple source ports, and possibly
->> multiple source addresses, meaning retried client requests may be
->> accepted as new, rather than having any chance of being recognized as
->> retries.
->>
->> NFSv4.1+ don't have this issue, but removing the restrictions would
->> seem to break the downlevel mounts.
->>
->> Tom.
->>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzwfPIACgkQOeye3VZi
-gbnbwA/7B6R4We9etJpmwBJmeWZ5EopKTrHoAZPEEzytefyH5ZoYDYR9JkGVzZIv
-xQcDxjEcyAv+8mKiPmPpk+eaSB5ZaRAtq4Ozm0fbijBrctB0hSEAbMhPrPrdZs4j
-xDK+bMUaqtQ/mBJy0u1upkBJ9YSU8chDnMj8Kk6xRWR9SvNTsKFMifbMU/CVveO/
-xODIj5FEc7sI4qqt3tXE+AGe4VSxoyshjvsfAp/8JFQz/Y4bsALotHK68xWKkDxO
-Zr2lfqAQ1C6lwoJ57R8ShJezprRGFP/qwl8KehN5an1RVAmPUMD/qsQl+9zlzESY
-0okwURNH7ib2Eg3sOdFnr4/5tKAxXULKimFdeaJlXDslGa/e2iXojWU+twttnnQH
-ZpunLDTF/gFH8kS4v1dw93BefNFksf+9n1BS9rKO4dUNjyNmN7W/1Oo+ogbUcHSY
-1jcXO9ZEDDgL5d7LIzLBjn4imp/MW7F0P72slLphWnl9bGkaHocd0BPfiyl8uihm
-zdR0qgvfdj1B8m1uvqSqTIN3SRNUoWtb0MCqHHCpFNiNvULa4R5mu0LrUD5arP5k
-Dikt3C21J8Gk8Zqt09voBZXBWyO3EhXZRpm0MNCCTgbgxRxAll9AEeuWdS6jRjng
-KAd8z3I2c93+tKDLkd4/GJGnya3WJmLPXwKSWK5QTFgvVd4tY94=
-=ZXep
------END PGP SIGNATURE-----
---=-=-=--
+>>>
+> 
+> 
