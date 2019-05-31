@@ -2,161 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02EFF305B5
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 02:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9201B305B7
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 02:21:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfEaARl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 May 2019 20:17:41 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46930 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfEaARl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 May 2019 20:17:41 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z19so9270732qtz.13
-        for <linux-nfs@vger.kernel.org>; Thu, 30 May 2019 17:17:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G7Oh9IsKtFM5/C+q9jEZm7clejiE8TcaQezx9CsJEi0=;
-        b=GllCbKegiEdUjlD+Pb33JPmRboy8DX+OZ1yZrKfUZSsWRMVvGaEQZ2TiLV4oQ8KgRe
-         Yq9M8Btrld8/w49kM7UGenyyxnDB+jV6+DkKc51gTlWugsQCqh8cSvTatytcxCliQ3J/
-         acRNXzfmgxNuzzLF/fQ4EzvUNxMbdq5kGFoZXYvrqclAbyKzoJZXuIzPK4W27yByCRWC
-         CDfZXT86h1hmc5bLMdzGCeEXdmleKBqooy2NAeVQ6TF44tzC/rBDXMda3EgzHNHKMXTE
-         1L0HQaQtpQ2TBr7CLc9/voIZTtsVE0HWlnzGDSH3iWuBTypMQkwb/nFkvKE0QMKNrNd9
-         qNmA==
-X-Gm-Message-State: APjAAAVxQ5APWtUJEYqx0NkQ71jsqCUmtV+emnpOsCwzRxH8ervOKb5M
-        n0iYIpn23Nl7YoKiIdrHgHeVmGAnFCPuPMcOxchHQA==
-X-Google-Smtp-Source: APXvYqw+/gOcQcduVJSeip9H+WsBzmfKFrvNJb9XX7Zq/gmS1onGy4i/zGbYsdJwTRrvja/TJRwpwOOumwiBPV+Scd4=
-X-Received: by 2002:aed:3b0c:: with SMTP id p12mr6332157qte.283.1559261860092;
- Thu, 30 May 2019 17:17:40 -0700 (PDT)
+        id S1726430AbfEaAVD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 May 2019 20:21:03 -0400
+Received: from mail.prgmr.com ([71.19.149.6]:38410 "EHLO mail.prgmr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfEaAVD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 30 May 2019 20:21:03 -0400
+Received: from turtle.mx (96-92-68-116-static.hfc.comcastbusiness.net [96.92.68.116])
+        (Authenticated sender: adp)
+        by mail.prgmr.com (Postfix) with ESMTPSA id 2C39C28C001
+        for <linux-nfs@vger.kernel.org>; Fri, 31 May 2019 01:18:46 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com 2C39C28C001
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1559279926;
+        bh=AdWDgeBb+FD8PnnjXoCPCj2zU/TS3BueQnRiVtgHldQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mOuhLnNj/AoocfXCkZaIohX38tc6KUwjQVS0WMhxIhLC/jCOq4h6USUrt4jcELPS2
+         Skn+caRYRmRJE9kVuMxhKvlaVtPuyQf4Xpq1WkfekWn1WUWPufpNsd9BiAVz2kgnql
+         VPh4VsmBF9eZTXh+8v1lp+daORMmG95Jp0CY17lk=
+Received: (qmail 2953 invoked by uid 1353); 31 May 2019 00:22:03 -0000
+Date:   Thu, 30 May 2019 18:22:03 -0600
+From:   Alan Post <adp@prgmr.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>
+Subject: Re: User process NFS write hang followed by automount hang requiring
+ reboot
+Message-ID: <20190531002203.GW4158@turtle.email>
+References: <20190520223324.GL4158@turtle.email>
+ <c10084e889df77fc2b6a6c9a04b232faae3a80bc.camel@hammerspace.com>
+ <20190521192254.GN4158@turtle.email>
+ <20190530183958.GA23001@fieldses.org>
 MIME-Version: 1.0
-References: <20190523201351.12232-1-dwysocha@redhat.com> <20190523201351.12232-3-dwysocha@redhat.com>
- <20190530213857.GA24802@fieldses.org>
-In-Reply-To: <20190530213857.GA24802@fieldses.org>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Thu, 30 May 2019 20:17:03 -0400
-Message-ID: <CALF+zOk7Hmc3kZRwqtDsmA4kov65Afm8JvqCs7DU7_YSLXfCRg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] SUNRPC: Count ops completing with tk_status < 0
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530183958.GA23001@fieldses.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 30, 2019 at 5:39 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Thu, May 23, 2019 at 04:13:50PM -0400, Dave Wysochanski wrote:
-> > We often see various error conditions with NFS4.x that show up with
-> > a very high operation count all completing with tk_status < 0 in a
-> > short period of time.  Add a count to rpc_iostats to record on a
-> > per-op basis the ops that complete in this manner, which will
-> > enable lower overhead diagnostics.
->
-> Looks like a good idea to me.
->
-> It's too bad we can't distinguish the errors.  (E.g. ESTALE on a lookup
-> call is a lot more interesting than ENOENT.)  But understood that
-> maintaining (number of possible errors) * (number of possible ops)
-> counters is probably overkill, so just counting the number of errors
-> seems like a good start.
->
-> --b.
->
+On Thu, May 30, 2019 at 02:39:58PM -0400, J. Bruce Fields wrote:
+> > > By the way, the above stack trace with "nfs_lock_and_join_requests"
+> > > usually means that you are using a very small rsize or wsize (less than
+> > > 4k). Is that the case? If so, you might want to look into just
+> > > increasing the I/O size.
+> > > 
+> > 
+> > These exports have rsize and wsize set to 1048576.
+> 
+> Are you getting that from the mount commandline?  It could be negotiated
+> down during mount.  I think you can get the negotiated values form the
+> rsize= and wsize= values on the opts: line in /proc/self/mountstats.
+> See also /proc/fs/nfsd/max_block_size.
+> 
 
-I did consider a more elaborate approach, where each code would be
-counted.  Most likely that would need to go into debugfs.  I didn't
-pursue that but may look into it in the future along with other work.
+Great catch.  I was reporting configuration from the mount command-line.
+I've spot checked /proc/self/mountstats and they report the same value,
+rsize and wsize of 1048576.  I do have different values for here for
+NFS servers that are administratively outside of this cluster, where
+it is 65536, but in those cases we're not setting that option on the
+mount command-line and I am not experiencing the hang I report here
+to those servers.
 
-I do think the < 0 status counts have value even if we do not know the
-specific code, they are very low overhead, and always there if added
-to mountstats.  I was envisioning using this along with something like
-a periodic capture of mountstats possibly using PCP and then using
-some statistics as a "NFS health" measure for a specific mount point.
-There are already some "NFS health" metrics that may be calculated
-with existing mountstats (for example if you're clever you can spot
-certain NFS4 protocol loops), but the error counts would make it much
-easier and reliable.
-
-
-> >
-> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > ---
-> >  include/linux/sunrpc/metrics.h | 7 ++++++-
-> >  net/sunrpc/stats.c             | 8 ++++++--
-> >  2 files changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/sunrpc/metrics.h b/include/linux/sunrpc/metrics.h
-> > index 1b3751327575..0ee3f7052846 100644
-> > --- a/include/linux/sunrpc/metrics.h
-> > +++ b/include/linux/sunrpc/metrics.h
-> > @@ -30,7 +30,7 @@
-> >  #include <linux/ktime.h>
-> >  #include <linux/spinlock.h>
-> >
-> > -#define RPC_IOSTATS_VERS     "1.0"
-> > +#define RPC_IOSTATS_VERS     "1.1"
-> >
-> >  struct rpc_iostats {
-> >       spinlock_t              om_lock;
-> > @@ -66,6 +66,11 @@ struct rpc_iostats {
-> >       ktime_t                 om_queue,       /* queued for xmit */
-> >                               om_rtt,         /* RPC RTT */
-> >                               om_execute;     /* RPC execution */
-> > +     /*
-> > +      * The count of operations that complete with tk_status < 0.
-> > +      * These statuses usually indicate error conditions.
-> > +      */
-> > +     unsigned long           om_error_status;
-> >  } ____cacheline_aligned;
-> >
-> >  struct rpc_task;
-> > diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
-> > index 8b2d3c58ffae..737414247ca7 100644
-> > --- a/net/sunrpc/stats.c
-> > +++ b/net/sunrpc/stats.c
-> > @@ -176,6 +176,8 @@ void rpc_count_iostats_metrics(const struct rpc_task *task,
-> >
-> >       execute = ktime_sub(now, task->tk_start);
-> >       op_metrics->om_execute = ktime_add(op_metrics->om_execute, execute);
-> > +     if (task->tk_status < 0)
-> > +             op_metrics->om_error_status++;
-> >
-> >       spin_unlock(&op_metrics->om_lock);
-> >
-> > @@ -218,13 +220,14 @@ static void _add_rpc_iostats(struct rpc_iostats *a, struct rpc_iostats *b)
-> >       a->om_queue = ktime_add(a->om_queue, b->om_queue);
-> >       a->om_rtt = ktime_add(a->om_rtt, b->om_rtt);
-> >       a->om_execute = ktime_add(a->om_execute, b->om_execute);
-> > +     a->om_error_status += b->om_error_status;
-> >  }
-> >
-> >  static void _print_rpc_iostats(struct seq_file *seq, struct rpc_iostats *stats,
-> >                              int op, const struct rpc_procinfo *procs)
-> >  {
-> >       _print_name(seq, op, procs);
-> > -     seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu\n",
-> > +     seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu %lu\n",
-> >                  stats->om_ops,
-> >                  stats->om_ntrans,
-> >                  stats->om_timeouts,
-> > @@ -232,7 +235,8 @@ static void _print_rpc_iostats(struct seq_file *seq, struct rpc_iostats *stats,
-> >                  stats->om_bytes_recv,
-> >                  ktime_to_ms(stats->om_queue),
-> >                  ktime_to_ms(stats->om_rtt),
-> > -                ktime_to_ms(stats->om_execute));
-> > +                ktime_to_ms(stats->om_execute),
-> > +                stats->om_error_status);
-> >  }
-> >
-> >  void rpc_clnt_show_stats(struct seq_file *seq, struct rpc_clnt *clnt)
-> > --
-> > 2.20.1
-
-
-
+-A
 -- 
-Dave Wysochanski
-Principal Software Maintenance Engineer
-T: 919-754-4024
+Alan Post | Xen VPS hosting for the technically adept
+PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
+email: adp@prgmr.com
