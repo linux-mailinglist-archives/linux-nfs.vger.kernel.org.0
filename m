@@ -2,96 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 729CE31664
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2019 23:06:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F0F31F3C
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jun 2019 15:43:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfEaVGw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 31 May 2019 17:06:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41574 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfEaVGw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 May 2019 17:06:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VL3bqp051634;
-        Fri, 31 May 2019 21:06:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=xeSRW3D8U1fPvu73DjNMkhW51M5eX50iQzGLjyvUe8I=;
- b=Hp2/1r6K52gYO3LO7Vuk6P5VaR2wsMxJ8Kjq20/yiaiyHKCdKFR1RU4Em8IP4fqcW17d
- N5G/UfIBAtAkETwxqWvK3TP9Y/8DwLgBEU9SkV/b4pi0/BByowO4JQjX9vQung4f+Q6D
- L0iqnd2mPMjyIKsQeNlO0S7HFOzTF74hg8DR7uOZNuXXmzD3sfkHIsPVF1G5C55dM3rU
- xopWoQJyHRFEjQW1W9vZ3LanTKgsrfrLywEmbhElhvKSCY7ey6Jhu7ZPZ3awXhKWdbZu
- 2esgw2euVJPfHE8xqv1A3+kRk3IjTOKKAI4gn7pNlPFFN8/W4Veui135n33pQ9MQIqLE ug== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2spxbqrnc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 21:06:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4VL5SWY109080;
-        Fri, 31 May 2019 21:06:13 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2ss1fpvgs1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 May 2019 21:06:12 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4VL66Q4030638;
-        Fri, 31 May 2019 21:06:07 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 May 2019 14:06:06 -0700
-Date:   Fri, 31 May 2019 14:06:05 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     fstests@vger.kernel.org, Murphy Zhou <xzhou@redhat.com>,
-        linux-nfs@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        fengxiaoli0714@gmail.com
-Subject: [PATCH] nfs: disable client side deduplication
-Message-ID: <20190531210605.GA5381@magnolia>
+        id S1727846AbfFANSh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 1 Jun 2019 09:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727836AbfFANSf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:18:35 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A72C27278;
+        Sat,  1 Jun 2019 13:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559395115;
+        bh=PIo8SjCgagns8c0TxIuWYMdhiT5v1mEvZvV10R2Q5bA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JBgQBZlholP9OQSyZH8SQdHplrWHuYo4XPhbfOkkjAkTnDT9vofNNMLTEOCBF9HrJ
+         lDtjklpNHJyccqWrVk9E7DgYzpUq6QE8HttG/HkZ7htWPwtJzX4L3SqDcUZdj7Yqe7
+         EdfSe9zZ6NqFaWxBSJQR7tBjwohFjwUMG8kvBWWc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 039/186] NFS4: Fix v4.0 client state corruption when mount
+Date:   Sat,  1 Jun 2019 09:14:15 -0400
+Message-Id: <20190601131653.24205-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190601131653.24205-1-sashal@kernel.org>
+References: <20190601131653.24205-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9274 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=778
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905310128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9274 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905310128
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-The NFS protocol doesn't support deduplication, so turn it off again.
+[ Upstream commit f02f3755dbd14fb935d24b14650fff9ba92243b8 ]
 
-Fixes: ce96e888fe48e ("Fix nfs4.2 return -EINVAL when do dedupe operation")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+stat command with soft mount never return after server is stopped.
+
+When alloc a new client, the state of the client will be set to
+NFS4CLNT_LEASE_EXPIRED.
+
+When the server is stopped, the state manager will work, and accord
+the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
+will drain the slot table and lead other task to wait queue, until
+the client recovered. Then the stat command is hung.
+
+When discover server trunking, the client will renew the lease,
+but check the client state, it lead the client state corruption.
+
+So, we need to call state manager to recover it when detect server
+ip trunking.
+
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4state.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index cf42a8b939e3..1915f24bba85 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -187,7 +187,11 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
- 	bool same_inode = false;
- 	int ret;
- 
--	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
-+	/* NFS does not support deduplication. */
-+	if (remap_flags & REMAP_FILE_DEDUP)
-+		return -EOPNOTSUPP;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 3de36479ed7a1..f502f1c054cf7 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -159,6 +159,10 @@ int nfs40_discover_server_trunking(struct nfs_client *clp,
+ 		/* Sustain the lease, even if it's empty.  If the clientid4
+ 		 * goes stale it's of no use for trunking discovery. */
+ 		nfs4_schedule_state_renewal(*result);
 +
-+	if (remap_flags & ~REMAP_FILE_ADVISORY)
- 		return -EINVAL;
- 
- 	/* check alignment w.r.t. clone_blksize */
++		/* If the client state need to recover, do it. */
++		if (clp->cl_state)
++			nfs4_schedule_state_manager(clp);
+ 	}
+ out:
+ 	return status;
+-- 
+2.20.1
+
