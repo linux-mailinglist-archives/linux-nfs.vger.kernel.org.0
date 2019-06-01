@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91B1731DC2
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jun 2019 15:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DE8531D96
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jun 2019 15:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfFANZp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 1 Jun 2019 09:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
+        id S1729706AbfFAN01 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 1 Jun 2019 09:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbfFANZn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:25:43 -0400
+        id S1729702AbfFAN01 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:26:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D117273AC;
-        Sat,  1 Jun 2019 13:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1696273C0;
+        Sat,  1 Jun 2019 13:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395542;
-        bh=ZOtcpfX7mdM0MUHUL/3hoFsE7Y0Mb6qtswUwZjOU6rE=;
+        s=default; t=1559395586;
+        bh=2u4dtYYCfBMkyXk9hND4YOWvxFui6Ydq4Lq2VEZEErk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4SGxIR4dp8ubvFMaWlrTGj18OfNkUAQ6GqXD4fDW79D2Jml951SfSzf+L8zh5mX4
-         UldVJbl2Sixbh8coY/WfBp+IZ4OEKC7calEqP0m65YjTuzlD3/uyckrsxG2soyb46A
-         +XQqcsLtiR9jO6btUrTjPVWpJGg8TCA95nWPtVLI=
+        b=U2d0omDgKlJnm8wyQVSwWclDKiAMimIrweaFkGxbhdmgeZoW6R8K7Di4xW202JrSd
+         P+jU/WKeyM6d05gTK8DWkKwGpnnWIxEX2Umk4SNG4WL+0U2E3SehYR6EwiGqWxlYEn
+         7IKzXwgjU80ZPzsMWb2JoKQwClkMLYPuV+0+TukA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/74] NFS4: Fix v4.0 client state corruption when mount
-Date:   Sat,  1 Jun 2019 09:24:06 -0400
-Message-Id: <20190601132501.27021-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 12/56] NFS4: Fix v4.0 client state corruption when mount
+Date:   Sat,  1 Jun 2019 09:25:16 -0400
+Message-Id: <20190601132600.27427-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132501.27021-1-sashal@kernel.org>
-References: <20190601132501.27021-1-sashal@kernel.org>
+In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,10 +72,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 857af951831f4..6f474b0670323 100644
+index 44f5cea496994..5be61affeefd8 100644
 --- a/fs/nfs/nfs4state.c
 +++ b/fs/nfs/nfs4state.c
-@@ -143,6 +143,10 @@ int nfs40_discover_server_trunking(struct nfs_client *clp,
+@@ -140,6 +140,10 @@ int nfs40_discover_server_trunking(struct nfs_client *clp,
  		/* Sustain the lease, even if it's empty.  If the clientid4
  		 * goes stale it's of no use for trunking discovery. */
  		nfs4_schedule_state_renewal(*result);
