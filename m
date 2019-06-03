@@ -2,108 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1E363350A
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2019 18:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 869443364B
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2019 19:15:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfFCQeq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jun 2019 12:34:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35555 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfFCQeq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jun 2019 12:34:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a25so14133107lfg.2
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Jun 2019 09:34:44 -0700 (PDT)
+        id S1728994AbfFCRP4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jun 2019 13:15:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40022 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbfFCRP4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jun 2019 13:15:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id n5so14946964ioc.7
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Jun 2019 10:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=20IQdLWV7LoswGVHvSCpf8ERmeNkVp/K1G2Z5GkZ+1U=;
-        b=u8ZfzoD3hHurL5QG+Z+mWq3CZdM3MIEEVB3w0hJMMnl2vWx4nC/soIoZSNR6nCkvWJ
-         0/ExaNuiYQOoutuvMtBd3tfrU5EyoYPGDpSnNkc2CvJ+mTaaGVYFdjDNCtBCqUgK8OCv
-         vhW/eaG+/FeVpMQRKDJDwwDR7Kj/YhYETdxP59uFUyrsvHkCxH/T9igDZ9rxeNOPXuw+
-         ssvJ9RnlKlOFlf1agAcQLraZHRWa4g5L6rnm8umQU+TvnvFZBrnN2EGHS7UmaHhaN4cW
-         D546v2z54ieNiynWg4TkVZZFpS2s1Qu49FrkN/3oPyqnyIOrq+O2a6V1xoLaLaO2/G7g
-         hhxg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcZ5yl1HJczSvlUQPeLHZE4rdRSX1XxQJSe9mqKqWLE=;
+        b=aR/0LNtqCUwyef/wukHEFC2gbPU6GLzFWnMlum6TLCndbP1egR3oB9NCyCShLCvU98
+         n9rnYiUPv/O6TJJRpJohD6KtBrC4aWJR3mrqMB6IeWLd/1+jsDq6g+L9A8KaAPXyBd+F
+         YDjqcDjUHDG0JHot4Pv8xoAgt64isFjjpfN5Q8F3LU2AxrNH1+gmZmPFtSrY6eAMLwyl
+         5lHCMcaoE2VoJDoKUD0e0Ddzy00tbiRKBUfgJGKZaFpFNOBvjd1am77qRLzQY+C0Vjal
+         hggGeVP9aE+K/pZp1U3OucN30sxBGL1nHRVVzittaIw6cuXiVy/Xs7Y0nyxrsLo9tuN2
+         ddnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=20IQdLWV7LoswGVHvSCpf8ERmeNkVp/K1G2Z5GkZ+1U=;
-        b=aW81V1Qr/2FGPyGliozflYlIizoVIz+jwlvFRawcir1bkLLrXLq+BjEW2G7JnUHSrk
-         ZnWpFnk0bhvmpbVMpDO7EzljtY4+ukWMWEX+W2ZHQGG+kUSRijtvhen6+n/+S40KhysY
-         hc9JOBMjKFwDvp+t4qj46ahcqk1dwG4+X0fbQ7KHNHw7jU4GMYITRGNOfALSqbONSHLu
-         TCZjvL2mbG53J/kjNawS55s1V0QRX0FEsb7qaZ7SiTErtfKAUgdOaK7QydVRzfJQM222
-         MN/9oaVLNOWYkuS5N/JBP4iOBjATinNWfOGmCiA4WIj8ACV/YYSmKoccE5yFfbwAZwPK
-         34kw==
-X-Gm-Message-State: APjAAAUwyE2s7rZ1rd16j+hsWvydK0PsEUKIHYik1irSWM+lIyGajDuF
-        4ygJ3wSyJ+ldMm6Y8kvzpZnQ9E9aBrpcHlo/XSc4Iw==
-X-Google-Smtp-Source: APXvYqz+KdFqPyEMENFndOR9VE/dXUxVoGpFujxYLLjTpgVpbz0x3OjumZjOp3+WmstyFCo9OomSPnUxROYGc9swfcQ=
-X-Received: by 2002:a19:5046:: with SMTP id z6mr14316936lfj.185.1559579683831;
- Mon, 03 Jun 2019 09:34:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcZ5yl1HJczSvlUQPeLHZE4rdRSX1XxQJSe9mqKqWLE=;
+        b=oplfUbJ7hU//uc98yKx46xPxrgKhb1HECUv9MGf5ZG7rV3DCvEQDAoJD0JdAANCwhE
+         CeAb9lXq3MejDqWAXOgO6CNSC/SUMRNRPiQwk3qIobo/TXQnz5DxSkpgDjOR/VstfWDX
+         /vAajok9UM0eUg8oflNVLY7ACLHUnkP5CXfzqn0YHlsfazfs0ZmxfLuSP5zlUANjUW5r
+         VJDAFk4ia+Ax297av6phR+gRX/xS4RTp7C3kyxortxJ6nrrsyA0jw+4imIis7XW2yJM5
+         YZDvB9GPS5eFwErt0WE73c+BXvI8PIpU2G9QbksdJpwJI3kojlwksmNQg6JeJW5+K6YJ
+         VvnQ==
+X-Gm-Message-State: APjAAAVgKsLhuJIHDJYKOM2b1ZsanJXcA5xdsYeHziRMTFGjEEULKGjy
+        QhCpwCk92bQgSjNuQ0v6WQ==
+X-Google-Smtp-Source: APXvYqwmvryVoQFolCHH1y73CfNfOjZVo519uxnsmPcop18MJhspkkZy+Uh8TfA39x+qVmHnEfhRog==
+X-Received: by 2002:a6b:3e57:: with SMTP id l84mr18420077ioa.164.1559582154794;
+        Mon, 03 Jun 2019 10:15:54 -0700 (PDT)
+Received: from localhost.localdomain (50-36-175-138.alma.mi.frontiernet.net. [50.36.175.138])
+        by smtp.gmail.com with ESMTPSA id b8sm1971375ioj.16.2019.06.03.10.15.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2019 10:15:54 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Steve Dickson <SteveD@redhat.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] Incremental against [exports] rootdir patchset
+Date:   Mon,  3 Jun 2019 13:12:24 -0400
+Message-Id: <20190603171227.29148-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Received: by 2002:a2e:9d89:0:0:0:0:0 with HTTP; Mon, 3 Jun 2019 09:34:43 -0700 (PDT)
-X-Originating-IP: [162.243.96.244]
-In-Reply-To: <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com>
-References: <20190529151003.hzmesyoiopnbcgkb@aura.draconx.ca>
- <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com> <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com>
-From:   Nick Bowler <nbowler@draconx.ca>
-Date:   Mon, 3 Jun 2019 12:34:43 -0400
-Message-ID: <CADyTPEyJRC+Yi1yJb_Vqb+7zsDKvk-5egBVDvFsTLG=kOrffMA@mail.gmail.com>
-Subject: Re: PROBLEM: oops spew with Linux 5.1.5 (NFS regression?)
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Olga.Kornievskaia@netapp.com" <Olga.Kornievskaia@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2019-05-29, Olga Kornievskaia <aglo@umich.edu> wrote:
-> On Wed, May 29, 2019 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com>
-> wrote:
->>
->> On Wed, 2019-05-29 at 11:10 -0400, Nick Bowler wrote:
->> > Hi,
->> >
->> > I upgraded to Linux 5.1.5 on one machine yesterday, and this morning
->> > I happened noticed a large amount of backtraces in the log.  It appears
->> > that the system oopsed 62 times over a period of about 5 minutes,
->> > producing about half a megabyte of log messages, after which the
->> > messages stopped.  No idea what action (if any) triggered these.
->> >
->> > However, other than the noise in the logs there is nothing obviously
->> > broken, but I thought I should report the spews anyway.  I was
->> > running 5.0.9 previously and have not seen any similar errors.  The
->> > first couple spews are appended.  All 64 faults look very similar
->> > to these ones, with the same faulting address and the same
->> > rpc_check_timeout function at the top of the backtrace.
->>
->> OK, I think this is the same problem that Olga was seeing (Cced), and
->> it looks like I missed the use-after-free issue when the server returns
->> a credential error when she asked.
->
-> I think this is actually different than what I encountered for the
-> umount case but the trigger is the same -- failing validation.
->
-> I tried to reproduce Nick's oops on 5.2-rc but haven't been able to
-> (but I'm not confident I produced the right trigger conditions. will
-> try 5.1).
+These patches fix up a couple of bugs and issues against the [exports]
+rootdir patchset for nfs-utils.
 
-OK, I think I found something that triggers this fault.  This happens
-when certain local users try to stat a file or directory on an nfs
-mount.  Presumably these UIDs do not have appropriate permissions on
-the server but I'm not sure exactly (I do not control the server).
+Trond Myklebust (3):
+  mountd: Fix up incorrect comparison in next_mnt()
+  mountd: Ensure nfsd_path_strip_root() uses the canonicalised path
+  mountd: Canonicalise the rootdir in exportent_mkrealpath()
 
-I can reproduce the oops with a command like this:
+ support/export/export.c  | 12 ++++++++++--
+ support/misc/nfsd_path.c | 17 +++++++++++++----
+ utils/mountd/cache.c     |  2 +-
+ 3 files changed, 24 insertions(+), 7 deletions(-)
 
-  # su -s/bin/sh -c 'stat /path/to/nfs/file' problematic_user
+-- 
+2.21.0
 
-which oopes every time (and SIGKILLs the stat command).   (I have not yet
-rebooted since the original report or tried with Trond's patch applied.
-I will do that next, and also try 5.1.6).
-
-Cheers,
-  Nick
