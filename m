@@ -2,96 +2,213 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E730A3378C
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2019 20:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D8B3389B
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2019 20:53:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfFCSJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jun 2019 14:09:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41010 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFCSJn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jun 2019 14:09:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 136so2802558lfa.8
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Jun 2019 11:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=2MwbLnfgH8HLFZ7YZiwwnwA2Cf4KCn8Tc6YtdsgHXPA=;
-        b=qKZGGQt+lNAAZIuXDYax/S2sBVt0az6QjzM/EiDq+8Qe3QVehyXxTWrSyF3/mWwK0m
-         yuY8Pk0HjXkGLLKrOZL5Iqz9w9MVBwoXIcT2NXQb7jDPnX0uOa8/Z82rnFNCc55B8l0R
-         marr2RegBOgKTNSSHE/KOG+4rhNiFJO+kMeZ9zdOTJHcz1vN0zW1G+XczdJNQhxzrWbX
-         JOvuk6VoBrpZ23mM24J/Us2I/eTkydIPNYyepROkz092O2EyBz9uYhr5O9vVQzFEqNLs
-         g2i0m/ChfmKIya4xs/Lfcki67BSbhu+3HmAm7DRIM7zToKqBeKG/KTmsYiCvgQihNrlw
-         42WA==
+        id S1726112AbfFCSx5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jun 2019 14:53:57 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46058 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfFCSx5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jun 2019 14:53:57 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s22so1119419qkj.12
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Jun 2019 11:53:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=2MwbLnfgH8HLFZ7YZiwwnwA2Cf4KCn8Tc6YtdsgHXPA=;
-        b=S6p337EJWIphFfwc+jyR0ewFGmsYvvzTvTqdPxdY+6R78yjDvKDUyB5KHlspzXi3JG
-         +iCdbPHLkna2K4+ENiU1upDoqqFWlMoXaa0WevzRcdhoGM7Pz8iNBe/T6KzIhsd7sWWO
-         DecdHMz2JOX9xibqorjcQo3Z0n5pXtjRhwnWmKHBUVbjzpmzpX+dHpyFK5njJO91/T4K
-         JFn6zePBE0SiY5LOBx7MPDejLFvd7UkBf0oP3lnwfw5GoHwwqeXgcSi/XrbHW505OaX3
-         qvzKIzga77IpCUmFVvsAwvFsQ6/TxDCJkWyEvWfhHrj0yDjvoyGszLqxYlqk73tAeRPw
-         WgTQ==
-X-Gm-Message-State: APjAAAV9wJoF03q8RD9Ggaois4RQRGk1gMOvioRjrJbwiKHp/QbJ2BxD
-        7JYgFE1m3yPrdNpUSIMIQTuD2ZdBnAIDuOYD1nVuEA==
-X-Google-Smtp-Source: APXvYqyPr7/4TQemd244Vw4exuLTEj/1EHObaw55iDbMdmKPtpj+/w7tBGXzQijJ06AMqMENV8O09NxkkL+81raKtiU=
-X-Received: by 2002:ac2:44b1:: with SMTP id c17mr14379583lfm.87.1559585381637;
- Mon, 03 Jun 2019 11:09:41 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a2e:9d89:0:0:0:0:0 with HTTP; Mon, 3 Jun 2019 11:09:41 -0700 (PDT)
-X-Originating-IP: [162.243.96.244]
-In-Reply-To: <CADyTPEyJRC+Yi1yJb_Vqb+7zsDKvk-5egBVDvFsTLG=kOrffMA@mail.gmail.com>
-References: <20190529151003.hzmesyoiopnbcgkb@aura.draconx.ca>
- <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
- <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com> <CADyTPEyJRC+Yi1yJb_Vqb+7zsDKvk-5egBVDvFsTLG=kOrffMA@mail.gmail.com>
-From:   Nick Bowler <nbowler@draconx.ca>
-Date:   Mon, 3 Jun 2019 14:09:41 -0400
-Message-ID: <CADyTPEyzKMjFi4Tvp9Tq6JBD9wK6iQKezLb0CYG4Wt_6wKaeCQ@mail.gmail.com>
-Subject: Re: PROBLEM: oops spew with Linux 5.1.5 (NFS regression?)
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Olga.Kornievskaia@netapp.com" <Olga.Kornievskaia@netapp.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VaEotB+Qqa8kg/VAEVw3vNQR5IbgQfvY3B1vBa4AR48=;
+        b=Bx+AKJVMMfPRuDBhSCKOMVNqdITamba49yXLxC4jzDVr4a8T7yNzDbIejAjsHGWv8/
+         fp1XOTGdLmRdUeJESZbPJZa2JC0QrC1s2hFfq7l7DFhz79zsvqP5Hdg/ciXEY9airq7q
+         XHkQP6XGnBK4Am9Kv5EW0mivWw71kIWS96TbNnTJCrNVuLJ5BIwXWz8mpF0P9Buh6/5t
+         ZoRVfE+WiClVt4pr3GUaJuDdAmM5MAHAUQbvtRSDijCzK1batwTxoTsEhoW8IFwhbbLk
+         BWUrXTPfxjGsDLO9bb1LMo5AGmsOOczLLYeNBKIJpJQcv6w5qW9g1TGnyTwUhKRM4iED
+         0bEA==
+X-Gm-Message-State: APjAAAUzWHlznDPn78OtibzgRdaYRRoQC03OHOtUUz06Tpum843NAxLp
+        GMm0GIDB//C9BasalR3oZwt6hpRboss=
+X-Google-Smtp-Source: APXvYqy9rSyQ5lks4vb7lik1sk8v0j1bkbAaBnW4pUQ8XrpzjC1N3ncQDdKrRKlsWQNmepXX2ZBpDQ==
+X-Received: by 2002:a37:ef14:: with SMTP id j20mr23337636qkk.162.1559588036087;
+        Mon, 03 Jun 2019 11:53:56 -0700 (PDT)
+Received: from dhcp-12-212-173.gsslab.rdu.redhat.com (nat-pool-rdu-t.redhat.com. [66.187.233.202])
+        by smtp.gmail.com with ESMTPSA id p40sm11233495qte.93.2019.06.03.11.53.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Jun 2019 11:53:55 -0700 (PDT)
+Message-ID: <f7976bde9979e8b763c0009b523331ab5ce6b6ed.camel@redhat.com>
+Subject: Re: [PATCH 3/3] SUNRPC: Count ops completing with tk_status < 0
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Bruce Fields <bfields@fieldses.org>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Mon, 03 Jun 2019 14:53:54 -0400
+In-Reply-To: <CD3B0503-ABA0-4670-9A76-0B9DF0AE5B5C@oracle.com>
+References: <20190523201351.12232-1-dwysocha@redhat.com>
+         <20190523201351.12232-3-dwysocha@redhat.com>
+         <20190530213857.GA24802@fieldses.org>
+         <9B9F0C9B-C493-44F5-ABD1-6B2B4BAA2F08@oracle.com>
+         <20190530223314.GA25368@fieldses.org>
+         <CD3B0503-ABA0-4670-9A76-0B9DF0AE5B5C@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2019-06-03, Nick Bowler <nbowler@draconx.ca> wrote:
-> On 2019-05-29, Olga Kornievskaia <aglo@umich.edu> wrote:
->> On Wed, May 29, 2019 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com>
->>> OK, I think this is the same problem that Olga was seeing (Cced), and
->>> it looks like I missed the use-after-free issue when the server returns
->>> a credential error when she asked.
->>
->> I think this is actually different than what I encountered for the
->> umount case but the trigger is the same -- failing validation.
->>
->> I tried to reproduce Nick's oops on 5.2-rc but haven't been able to
->> (but I'm not confident I produced the right trigger conditions. will
->> try 5.1).
->
-> OK, I think I found something that triggers this fault.  This happens
-> when certain local users try to stat a file or directory on an nfs
-> mount.  Presumably these UIDs do not have appropriate permissions on
-> the server but I'm not sure exactly (I do not control the server).
->
-> I can reproduce the oops with a command like this:
->
->   # su -s/bin/sh -c 'stat /path/to/nfs/file' problematic_user
->
-> which oopes every time (and SIGKILLs the stat command).   (I have not yet
-> rebooted since the original report or tried with Trond's patch applied.
-> I will do that next, and also try 5.1.6).
+On Fri, 2019-05-31 at 09:25 -0400, Chuck Lever wrote:
+> > On May 30, 2019, at 6:33 PM, Bruce Fields <bfields@fieldses.org>
+> > wrote:
+> > 
+> > On Thu, May 30, 2019 at 06:19:54PM -0400, Chuck Lever wrote:
+> > > 
+> > > 
+> > > > On May 30, 2019, at 5:38 PM, bfields@fieldses.org wrote:
+> > > > 
+> > > > On Thu, May 23, 2019 at 04:13:50PM -0400, Dave Wysochanski
+> > > > wrote:
+> > > > > We often see various error conditions with NFS4.x that show
+> > > > > up with
+> > > > > a very high operation count all completing with tk_status < 0
+> > > > > in a
+> > > > > short period of time.  Add a count to rpc_iostats to record
+> > > > > on a
+> > > > > per-op basis the ops that complete in this manner, which will
+> > > > > enable lower overhead diagnostics.
+> > > > 
+> > > > Looks like a good idea to me.
+> > > > 
+> > > > It's too bad we can't distinguish the errors.  (E.g. ESTALE on
+> > > > a lookup
+> > > > call is a lot more interesting than ENOENT.)  But understood
+> > > > that
+> > > > maintaining (number of possible errors) * (number of possible
+> > > > ops)
+> > > > counters is probably overkill, so just counting the number of
+> > > > errors
+> > > > seems like a good start.
+> > > 
+> > > We now have trace points that can do that too.
+> > 
+> > You mean, that can report every error (and its value)?
+> 
+> Yes, the nfs_xdr_status trace point reports the error by value and
+> symbolic name.
+> 
 
-OK, armed with this reproducer I can confirm that the issue is still
-present in 5.1.6, and that applying Trond's patch on top of 5.1.6
-appears to fix the problem.
+The tracepoint is very useful I agree.  I don't think it will show:
+a) the mount
+b) the opcode
 
-Thanks,
-  Nick
+Or am I mistaken and there's a way to get those with a filter or
+another tracepoint?
+
+
+> 
+> > I assume having these statistics in mountstats is still useful,
+> > though.
+> > 
+> > --b.
+> > 
+> > > 
+> > > 
+> > > > --b.
+> > > > 
+> > > > > 
+> > > > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > > > > ---
+> > > > > include/linux/sunrpc/metrics.h | 7 ++++++-
+> > > > > net/sunrpc/stats.c             | 8 ++++++--
+> > > > > 2 files changed, 12 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/include/linux/sunrpc/metrics.h
+> > > > > b/include/linux/sunrpc/metrics.h
+> > > > > index 1b3751327575..0ee3f7052846 100644
+> > > > > --- a/include/linux/sunrpc/metrics.h
+> > > > > +++ b/include/linux/sunrpc/metrics.h
+> > > > > @@ -30,7 +30,7 @@
+> > > > > #include <linux/ktime.h>
+> > > > > #include <linux/spinlock.h>
+> > > > > 
+> > > > > -#define RPC_IOSTATS_VERS	"1.0"
+> > > > > +#define RPC_IOSTATS_VERS	"1.1"
+> > > > > 
+> > > > > struct rpc_iostats {
+> > > > > 	spinlock_t		om_lock;
+> > > > > @@ -66,6 +66,11 @@ struct rpc_iostats {
+> > > > > 	ktime_t			om_queue,	/* queued for
+> > > > > xmit */
+> > > > > 				om_rtt,		/* RPC RTT */
+> > > > > 				om_execute;	/* RPC
+> > > > > execution */
+> > > > > +	/*
+> > > > > +	 * The count of operations that complete with tk_status
+> > > > > < 0.
+> > > > > +	 * These statuses usually indicate error conditions.
+> > > > > +	 */
+> > > > > +	unsigned long           om_error_status;
+> > > > > } ____cacheline_aligned;
+> > > > > 
+> > > > > struct rpc_task;
+> > > > > diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
+> > > > > index 8b2d3c58ffae..737414247ca7 100644
+> > > > > --- a/net/sunrpc/stats.c
+> > > > > +++ b/net/sunrpc/stats.c
+> > > > > @@ -176,6 +176,8 @@ void rpc_count_iostats_metrics(const
+> > > > > struct rpc_task *task,
+> > > > > 
+> > > > > 	execute = ktime_sub(now, task->tk_start);
+> > > > > 	op_metrics->om_execute = ktime_add(op_metrics-
+> > > > > >om_execute, execute);
+> > > > > +	if (task->tk_status < 0)
+> > > > > +		op_metrics->om_error_status++;
+> > > > > 
+> > > > > 	spin_unlock(&op_metrics->om_lock);
+> > > > > 
+> > > > > @@ -218,13 +220,14 @@ static void _add_rpc_iostats(struct
+> > > > > rpc_iostats *a, struct rpc_iostats *b)
+> > > > > 	a->om_queue = ktime_add(a->om_queue, b->om_queue);
+> > > > > 	a->om_rtt = ktime_add(a->om_rtt, b->om_rtt);
+> > > > > 	a->om_execute = ktime_add(a->om_execute, b-
+> > > > > >om_execute);
+> > > > > +	a->om_error_status += b->om_error_status;
+> > > > > }
+> > > > > 
+> > > > > static void _print_rpc_iostats(struct seq_file *seq, struct
+> > > > > rpc_iostats *stats,
+> > > > > 			       int op, const struct
+> > > > > rpc_procinfo *procs)
+> > > > > {
+> > > > > 	_print_name(seq, op, procs);
+> > > > > -	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu
+> > > > > %llu\n",
+> > > > > +	seq_printf(seq, "%lu %lu %lu %llu %llu %llu %llu %llu
+> > > > > %lu\n",
+> > > > > 		   stats->om_ops,
+> > > > > 		   stats->om_ntrans,
+> > > > > 		   stats->om_timeouts,
+> > > > > @@ -232,7 +235,8 @@ static void _print_rpc_iostats(struct
+> > > > > seq_file *seq, struct rpc_iostats *stats,
+> > > > > 		   stats->om_bytes_recv,
+> > > > > 		   ktime_to_ms(stats->om_queue),
+> > > > > 		   ktime_to_ms(stats->om_rtt),
+> > > > > -		   ktime_to_ms(stats->om_execute));
+> > > > > +		   ktime_to_ms(stats->om_execute),
+> > > > > +		   stats->om_error_status);
+> > > > > }
+> > > > > 
+> > > > > void rpc_clnt_show_stats(struct seq_file *seq, struct
+> > > > > rpc_clnt *clnt)
+> > > > > -- 
+> > > > > 2.20.1
+> > > 
+> > > --
+> > > Chuck Lever
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
+
