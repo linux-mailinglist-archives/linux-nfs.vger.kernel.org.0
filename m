@@ -2,91 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F278D31D8C
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jun 2019 15:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5F29331E9
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2019 16:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfFAN3n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 1 Jun 2019 09:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
+        id S1729005AbfFCOTB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jun 2019 10:19:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51660 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbfFAN0s (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:26:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728122AbfFCOTB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 3 Jun 2019 10:19:01 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 052FC273A3;
-        Sat,  1 Jun 2019 13:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395607;
-        bh=CcNoyl25ugdYGqhwEHjvBlDa8GmSANSblKB56TyjuJs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLjIaJ100eAiBF+vRlMLj6JOwKpFj/oIYSwwrcpRdLlI9vkRBbb5YFD6guxVEUj4C
-         yMGkcConOnWuR3lgCV3O1a/rnaxowLYCOWHNfRJYNfLu4C2wNTqyXwwA5WJU3XihF/
-         YnWQHMnJbXtIhGxMyowv0buU3jXme/Uoc9Y5EA70=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 26/56] nfsd: allow fh_want_write to be called twice
-Date:   Sat,  1 Jun 2019 09:25:30 -0400
-Message-Id: <20190601132600.27427-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
-References: <20190601132600.27427-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 397FA3DDBE;
+        Mon,  3 Jun 2019 14:18:56 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-46.phx2.redhat.com [10.3.116.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8276E605CA;
+        Mon,  3 Jun 2019 14:18:54 +0000 (UTC)
+Subject: Re: [PATCH v3 08/11] Add support for the "[exports] rootdir" nfs.conf
+ option to rpc.mountd
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Trond Myklebust <trondmy@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-2-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-3-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-4-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-5-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-6-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-7-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-8-trond.myklebust@hammerspace.com>
+ <20190528203122.11401-9-trond.myklebust@hammerspace.com>
+ <20190531160224.GD1251@fieldses.org>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <3b9913c5-6ec7-aea8-fa03-bcabdac2f59c@RedHat.com>
+Date:   Mon, 3 Jun 2019 10:18:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531160224.GD1251@fieldses.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 03 Jun 2019 14:19:01 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 0b8f62625dc309651d0efcb6a6247c933acd8b45 ]
 
-A fuzzer recently triggered lockdep warnings about potential sb_writers
-deadlocks caused by fh_want_write().
+On 5/31/19 12:02 PM, J. Bruce Fields wrote:
+> On Tue, May 28, 2019 at 04:31:19PM -0400, Trond Myklebust wrote:
+>> @@ -373,21 +390,22 @@ static char *next_mnt(void **v, char *p)
+>>  	FILE *f;
+>>  	struct mntent *me;
+>>  	size_t l = strlen(p);
+>> +	char *mnt_dir = NULL;
+>> +
+>>  	if (*v == NULL) {
+>>  		f = setmntent("/etc/mtab", "r");
+>>  		*v = f;
+>>  	} else
+>>  		f = *v;
+>> -	while ((me = getmntent(f)) != NULL && l > 1 &&
+>> -	       (strncmp(me->mnt_dir, p, l) != 0 ||
+>> -		me->mnt_dir[l] != '/'))
+>> -		;
+>> -	if (me == NULL) {
+>> -		endmntent(f);
+>> -		*v = NULL;
+>> -		return NULL;
+>> +	while ((me = getmntent(f)) != NULL && l > 1) {
+>> +		mnt_dir = nfsd_path_strip_root(me->mnt_dir);
+>> +
+>> +		if (strncmp(mnt_dir, p, l) == 0 && mnt_dir[l] != '/')
+>> +			return mnt_dir;
+> 
+> That should be "mnt_dir[l] == '/'", right?
+Comment says
+/* Iterate through /etc/mtab, finding mountpoints
+ * at or below a given path
+ */
 
-Looks like we aren't careful to pair each fh_want_write() with an
-fh_drop_write().
+So I don't think the actual '/' should returned, Trond?
 
-It's not normally a problem since fh_put() will call fh_drop_write() for
-us.  And was OK for NFSv3 where we'd do one operation that might call
-fh_want_write(), and then put the filehandle.
-
-But an NFSv4 protocol fuzzer can do weird things like call unlink twice
-in a compound, and then we get into trouble.
-
-I'm a little worried about this approach of just leaving everything to
-fh_put().  But I think there are probably a lot of
-fh_want_write()/fh_drop_write() imbalances so for now I think we need it
-to be more forgiving.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfsd/vfs.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index fcfc48cbe1360..128d6e216fd77 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -109,8 +109,11 @@ void		nfsd_put_raparams(struct file *file, struct raparms *ra);
- 
- static inline int fh_want_write(struct svc_fh *fh)
- {
--	int ret = mnt_want_write(fh->fh_export->ex_path.mnt);
-+	int ret;
- 
-+	if (fh->fh_want_write)
-+		return 0;
-+	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
- 	if (!ret)
- 		fh->fh_want_write = true;
- 	return ret;
--- 
-2.20.1
-
+steved.
+> 
+> --b.
+> 
+>>  	}
+>> -	return me->mnt_dir;
+>> +	endmntent(f);
+>> +	*v = NULL;
+>> +	return NULL;
+>>  }
+>>  
+>>  /* same_path() check is two paths refer to the same directory.
