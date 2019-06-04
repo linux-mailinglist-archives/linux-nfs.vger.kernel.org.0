@@ -2,147 +2,241 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2295835015
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2019 21:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C643D3513D
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2019 22:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfFDTAD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Jun 2019 15:00:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfFDTAD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 4 Jun 2019 15:00:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 23664307D86F;
-        Tue,  4 Jun 2019 19:00:03 +0000 (UTC)
-Received: from [10.10.66.66] (ovpn-66-66.rdu2.redhat.com [10.10.66.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 778675DD6D;
-        Tue,  4 Jun 2019 19:00:02 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org, anna.schumaker@netapp.com
-Subject: Re: client skips revalidation if holding a delegation
-Date:   Tue, 04 Jun 2019 15:00:01 -0400
-Message-ID: <7289561F-686E-4425-B0CE-F3E5800C033D@redhat.com>
-In-Reply-To: <a595b6962b2e083fef8ad2d3534e1d0964995560.camel@hammerspace.com>
-References: <6C2EF3B8-568A-41F0-B134-52996457DD7D@redhat.com>
- <c133a2ed862bf5714210aa5a44190ddaecfa188f.camel@hammerspace.com>
- <CFD3CE5E-5081-4A4D-B67E-41D9E7A3D5C5@redhat.com>
- <a595b6962b2e083fef8ad2d3534e1d0964995560.camel@hammerspace.com>
+        id S1726605AbfFDUmi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Jun 2019 16:42:38 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37007 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfFDUme (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jun 2019 16:42:34 -0400
+Received: by mail-vs1-f66.google.com with SMTP id o5so14418468vsq.4;
+        Tue, 04 Jun 2019 13:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fbtjRdv0GJ+2D+weFM4f6etIKOiIzXQVJtgOJZJ5iLg=;
+        b=IZKM7gmxCS7o0Zw1kPZ9savketj1qxdMv6m2qkPsCnHmxaOhUgwjRROoPnc2GI6ssY
+         wb8UoK+08uh93uFYsYPvwNWrmfQLHFH5ltkd3UrygfpzgmTUWUYE1P/a8LIHiiYa9XOE
+         U2dEceQyyO6FSMbBUz4cvlVb/WT3l9gfaQP+MS27qwCD/jmN3iEQXuhN8eVsZTYR882T
+         N8u5HtljyAZ+SZVqDwwM8gBQ8MY2yGf08zLT4v66ExoUQ/j9K4qFukoqvS7zIxDh2hi3
+         HoTe63ghYikb6Ev3xir5GJjCBlVfMY6VS6ElHguZxax0qcAZNosKRNKcTCSIKE91a63L
+         xPwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fbtjRdv0GJ+2D+weFM4f6etIKOiIzXQVJtgOJZJ5iLg=;
+        b=Rt9TyW/ku9Pf6CdWkgu77XC7ug/rU+Fo/mFszqYJzD60p+tDptJTam/7KQdkiRrA4Z
+         VCN9gyk38HcThnnup13AkHq9CGVbfGIUgPOM0CBpd/JF64xUgQWkx7jbQwVeACtIt1CL
+         Ijs2XnDk+/AWLHawOcc5xQSRBzENyDaxnz3EeGcqkh19S6TXq+GTuA+MdMVXKZxeLe3G
+         AyfTquiQTY5H4V7EFm2mqqGuH0sLT+eFkSHxlPMAOIxJvvMspd5hmyGi8P9fLbUNTjc8
+         YyKVL7525hnkEDx3NlhU7aiT4ko5Lqn8522/JNxeNMn8a9hZM6vjseHoAwlgxzpouZK+
+         8vkg==
+X-Gm-Message-State: APjAAAWwNpRq/XwTpX+um4QWfYzReB+sBUCh6Q6pMbOpE/LcKSXS/Fpu
+        5ajfUORfa/kuDoAPFKTq7IG+D4Xoduo8UbScZ74=
+X-Google-Smtp-Source: APXvYqx4Z19++9NwRG53ORZiPgGjyDXMAlT0avIaCwBDxjULpGGDW+Ev7+Q+LkLPMq1cPypN2Q6W6eLqUqLVKynvx+8=
+X-Received: by 2002:a05:6102:195:: with SMTP id r21mr3136390vsq.194.1559680952957;
+ Tue, 04 Jun 2019 13:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 04 Jun 2019 19:00:03 +0000 (UTC)
+References: <20190604135632.1487-1-amir73il@gmail.com>
+In-Reply-To: <20190604135632.1487-1-amir73il@gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 4 Jun 2019 16:42:21 -0400
+Message-ID: <CAN-5tyFBd4mJ84C2J9dwG_iYeEDN0tX86DjW4oaV7yscj4VR7g@mail.gmail.com>
+Subject: Re: [PATCH v5 8/9] vfs: allow copy_file_range to copy across devices
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        ceph-devel@vger.kernel.org, linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Steve French <stfrench@microsoft.com>,
+        Dave Chinner <dchinner@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4 Jun 2019, at 10:53, Trond Myklebust wrote:
-
-> On Tue, 2019-06-04 at 10:10 -0400, Benjamin Coddington wrote:
->> On 4 Jun 2019, at 8:56, Trond Myklebust wrote:
->>
->>> On Tue, 2019-06-04 at 08:41 -0400, Benjamin Coddington wrote:
->>>> Hey linux-nfs, and especially maintainers,
->>>>
->>>> I'm still interested in working on a problem raised a couple
->>>> weeks
->>>> ago, but
->>>> confusion muddled that discussion and it died:
->>>>
->>>> If the client holds a read delegation, it will skip revalidation
->>>> of a
->>>> dentry
->>>> in lookup.  If the file was moved on the server, the client can
->>>> end
->>>> up with
->>>> two positive dentries in cache for the same inode, and the dentry
->>>> that
->>>> doesn't exist on the server will never time out of the cache.
->>>>
->>>> The client can detect this happening because the directory of the
->>>> dentry
->>>> that should be revalidated updates it's change
->>>> attribute.  Skipping
->>>> revalidation is an optimization in the case we hold a delegation,
->>>> but
->>>> this
->>>> optimization should only be used when the delegation was obtained
->>>> via
->>>> a
->>>> lookup of the dentry we are currently revalidating.
->>>>
->>>> Keeping the optimization might be done by tying the delegation to
->>>> the
->>>> dentry.  Lacking some (easy?) way to do that currently, it seems
->>>> simpler to
->>>> remove the optimization altogether, and I will send a patch to
->>>> remove
->>>> it.
->>>
->>> A delegation normally applies to the entire inode. It covers _all_
->>> dentries that point to that inode too because create, rename and
->>> unlink
->>> are always atomically accompanied by an inode change attribute.
->>
->> It should cover all dentries that point to that inode at the time the
->> delegation was handed out.  Shouldn't dentries cached _before_ the
->> delegation be invalidated?  The client doesn't currently care about
->> the
->> order of dentries cached with respect to delegations.
->>
->>> IOW: The proposed restriction is both unnecessary and incorrect.
->>
->> But then I think: need to store that change attribute on the dentry
->> instead
->> of what we currently use - a client-only monotonic counter.  Then, we
->> could
->> compare the delegation's change attr to the dentry's.
->>
->> But that assumes they are both globally related -- that a directory's
->> change_attr on lookup relates to an inode's change attribute.  I
->> don't see
->> that anywhere (I'm looking in 7530)..
->>
+On Tue, Jun 4, 2019 at 9:56 AM Amir Goldstein <amir73il@gmail.com> wrote:
 >
-> OK. Now I think I see what you are saying. This would the case that is
-> of interest:
+> We want to enable cross-filesystem copy_file_range functionality
+> where possible, so push the "same superblock only" checks down to
+> the individual filesystem callouts so they can make their own
+> decisions about cross-superblock copy offload and fallack to
+> generic_copy_file_range() for cross-superblock copy.
 >
-> * A directory contains a file "foo", which has a hardlink "bar". Our
-> client has both link names cached due to a previous set of lookups.
-> * Some other client changes the name of "bar" to "barbar" on the
-> server.
-> * Our client then opens "foo" and gets a delegation.
-> * Our client is then asked to open "bar", and succeeds, failing to
-> recognise that it has been renamed to "barbar".
+> [Amir] We do not call ->remap_file_range() in case the files are not
+> on the same sb and do not call ->copy_file_range() in case the files
+> do not belong to the same filesystem driver.
 >
-> Is that what you mean? That looks like it might happen with the current
-> code, and would indeed be a bug.
+> This changes behavior of the copy_file_range(2) syscall, which will
+> now allow cross filesystem in-kernel copy.  CIFS already supports
+> cross-superblock copy, between two shares to the same server. This
+> functionality will now be available via the copy_file_range(2) syscall.
+>
+> Cc: Steve French <stfrench@microsoft.com>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+>
+> Darrick,
+>
+> Per feedback from Olga, I am sending a modified version of this patch
+> to address cross file_system_type copy issue in nfs.
+>
 
-Yes, that's the problem.  The practical case that was reported to be hitting
-it is when `mv` stats source and destination and finds they are the same
-file.
+Thanks Amir, this works for NFS with referrals.
 
-> Actually, in the NFSv4.1 open-by-filehandle case, we might even see a
-> bug when "foo" is renamed on the server too.
-
-Ok, some relief that you agree this is a bug.
-
-Some ideas for fixing it:
-
-- change d_time to hold the directory's change_attr
-from the server, stash that in the (unused?) struct delegation.change_attr
-
-- git rid of the optimization.
-
-- investigate (maybe heuristically discover) whether a directory's
-  change_attr is a global counter related to the inode's change_attr.
-
-</hand waving>
-
-At least now I can spend some time on it and not feel aimless, thanks for
-the closer look.
-
-Ben
+> For the sake of global warming I am not re-posting the entire patch set.
+> I removed your RVB because of the change.
+>
+> Thanks,
+> Amir.
+>
+> Changes since v4:
+> - Check "same filesystem driver" by comapring ->copy_file_range()
+>   function pointer
+>
+>  fs/ceph/file.c    |  4 +++-
+>  fs/cifs/cifsfs.c  |  2 +-
+>  fs/fuse/file.c    |  5 ++++-
+>  fs/nfs/nfs4file.c |  5 ++++-
+>  fs/read_write.c   | 18 ++++++++++++------
+>  5 files changed, 24 insertions(+), 10 deletions(-)
+>
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index e87f7b2023af..4cd41ed5cc53 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1909,6 +1909,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>
+>         if (src_inode == dst_inode)
+>                 return -EINVAL;
+> +       if (src_inode->i_sb != dst_inode->i_sb)
+> +               return -EXDEV;
+>         if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+>                 return -EROFS;
+>
+> @@ -2109,7 +2111,7 @@ static ssize_t ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>         ret = __ceph_copy_file_range(src_file, src_off, dst_file, dst_off,
+>                                      len, flags);
+>
+> -       if (ret == -EOPNOTSUPP)
+> +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+>                 ret = generic_copy_file_range(src_file, src_off, dst_file,
+>                                               dst_off, len, flags);
+>         return ret;
+> diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+> index c65823270313..f11eea6125c1 100644
+> --- a/fs/cifs/cifsfs.c
+> +++ b/fs/cifs/cifsfs.c
+> @@ -1149,7 +1149,7 @@ static ssize_t cifs_copy_file_range(struct file *src_file, loff_t off,
+>                                         len, flags);
+>         free_xid(xid);
+>
+> -       if (rc == -EOPNOTSUPP)
+> +       if (rc == -EOPNOTSUPP || rc == -EXDEV)
+>                 rc = generic_copy_file_range(src_file, off, dst_file,
+>                                              destoff, len, flags);
+>         return rc;
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index e03901ae729b..569baf286835 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -3126,6 +3126,9 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+>         if (fc->no_copy_file_range)
+>                 return -EOPNOTSUPP;
+>
+> +       if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> +               return -EXDEV;
+> +
+>         inode_lock(inode_out);
+>
+>         if (fc->writeback_cache) {
+> @@ -3182,7 +3185,7 @@ static ssize_t fuse_copy_file_range(struct file *src_file, loff_t src_off,
+>         ret = __fuse_copy_file_range(src_file, src_off, dst_file, dst_off,
+>                                      len, flags);
+>
+> -       if (ret == -EOPNOTSUPP)
+> +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+>                 ret = generic_copy_file_range(src_file, src_off, dst_file,
+>                                               dst_off, len, flags);
+>         return ret;
+> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> index 4842f3ab3161..f4157eb1f69d 100644
+> --- a/fs/nfs/nfs4file.c
+> +++ b/fs/nfs/nfs4file.c
+> @@ -133,6 +133,9 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+>                                       struct file *file_out, loff_t pos_out,
+>                                       size_t count, unsigned int flags)
+>  {
+> +       /* Only offload copy if superblock is the same */
+> +       if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> +               return -EXDEV;
+>         if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
+>                 return -EOPNOTSUPP;
+>         if (file_inode(file_in) == file_inode(file_out))
+> @@ -148,7 +151,7 @@ static ssize_t nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+>
+>         ret = __nfs4_copy_file_range(file_in, pos_in, file_out, pos_out, count,
+>                                      flags);
+> -       if (ret == -EOPNOTSUPP)
+> +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+>                 ret = generic_copy_file_range(file_in, pos_in, file_out,
+>                                               pos_out, count, flags);
+>         return ret;
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index cec7e7b1f693..bb594c8f4404 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1599,7 +1599,16 @@ static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+>                                   struct file *file_out, loff_t pos_out,
+>                                   size_t len, unsigned int flags)
+>  {
+> -       if (file_out->f_op->copy_file_range)
+> +       /*
+> +        * Although we now allow filesystems to handle cross sb copy, passing
+> +        * a file of the wrong filesystem type to filesystem driver can result
+> +        * in an attempt to dereference the wrong type of ->private_data, so
+> +        * avoid doing that until we really have a good reason.
+> +        * NFS has several different file_system_type's, but they all end up
+> +        * using the same ->copy_file_range() function pointer.
+> +        */
+> +       if (file_out->f_op->copy_file_range &&
+> +           file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
+>                 return file_out->f_op->copy_file_range(file_in, pos_in,
+>                                                        file_out, pos_out,
+>                                                        len, flags);
+> @@ -1622,10 +1631,6 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+>         if (flags != 0)
+>                 return -EINVAL;
+>
+> -       /* this could be relaxed once a method supports cross-fs copies */
+> -       if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> -               return -EXDEV;
+> -
+>         ret = generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &len,
+>                                        flags);
+>         if (unlikely(ret))
+> @@ -1648,7 +1653,8 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+>          * Try cloning first, this is supported by more file systems, and
+>          * more efficient if both clone and copy are supported (e.g. NFS).
+>          */
+> -       if (file_in->f_op->remap_file_range) {
+> +       if (file_in->f_op->remap_file_range &&
+> +           file_inode(file_in)->i_sb == file_inode(file_out)->i_sb) {
+>                 loff_t cloned;
+>
+>                 cloned = file_in->f_op->remap_file_range(file_in, pos_in,
+> --
+> 2.17.1
+>
