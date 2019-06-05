@@ -2,195 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DD236373
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2019 20:42:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E1136726
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Jun 2019 00:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFESmJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Jun 2019 14:42:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49665 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfFESmI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Jun 2019 14:42:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id z15so12358455ioz.16
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Jun 2019 11:42:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5KA20MEac/BauzP5Z3rFMyap7DfHakSuH0HNa8THrMI=;
-        b=lTmo0PfTFQb+0Vj5RJusXqyOd1jD1imd8PBI2MDsljcYs4nscHb0AE0NrICIXYC6cz
-         xW0RrWnZpmz5mJ9zprTxZgVA2WyzY/dFLL/KIbLHPROr+CxFK7wKKBHl9i+KXyk4Ul0X
-         HZd/slR03tCFqWmAOo1IFJsI+iCH+30uBmxkXIUF2k4iu6oZGcvRy/zxZUbuXkoVBn78
-         h4b/bS/5Zn8IJE6+6Za/4XhEM40rcs/nMQ2aeu3e7fmLaOWyONlS6+/5bjkdeFTfT5sz
-         B17v3jOb0Ae+sGMXNWpDlcEsDU7NG4bXwpkqCbyo+OK4NXco6fSk8Xih8kcKzVIyaNUh
-         z/sw==
-X-Gm-Message-State: APjAAAUDUIGG872HwVIDDfF2O0mThDWr5Qdy3OmkyfAjLUJpvoy/FUs8
-        HpruE8BmU4cu90frtInAt+rGay+xFVBZgXQFkE+HZt77D4se
-X-Google-Smtp-Source: APXvYqyQSToVWrtyBHNgFhFwGOm5JXoKFHnoYyxvEB9G9+8LsxYuPtrQVn8OefRIrXAsQWOuxHoYjg0+w1iLcvYseLENP3looVku
+        id S1726532AbfFEWBb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Jun 2019 18:01:31 -0400
+Received: from mail-eopbgr720121.outbound.protection.outlook.com ([40.107.72.121]:7424
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfFEWBb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 5 Jun 2019 18:01:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qxsh0mFd9DxICKRVd10vj+pn6CgljJOhdl8qycp6ymY=;
+ b=XadPnF3lSKno0Nb/uiLxRdorooSjwypCkfSvQVREqD03BWxXEjsI6hrZIit+Rxg1QqpqVBi994YFBCqr5FwELtINmipnkHyQ//RdDU1f6mXgBcYlXwpyCIuyUffBkaoFNFb7VQ1vKtrHsBnHmjQiLzdknrdeReWVQjDbnE/JCDw=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1515.namprd13.prod.outlook.com (10.175.111.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.10; Wed, 5 Jun 2019 22:01:28 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee%7]) with mapi id 15.20.1965.007; Wed, 5 Jun 2019
+ 22:01:28 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
+ TIMER_DEFERRABLE (431235818bc3)
+Thread-Topic: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
+ TIMER_DEFERRABLE (431235818bc3)
+Thread-Index: AQHVG3ptgDGJmWeu5EadxrXgYxKzpKaNnXkA
+Date:   Wed, 5 Jun 2019 22:01:27 +0000
+Message-ID: <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
+References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
+In-Reply-To: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.36.175.138]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2643ce45-7c49-467d-c65b-08d6ea015c4b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1515;
+x-ms-traffictypediagnostic: DM5PR13MB1515:
+x-microsoft-antispam-prvs: <DM5PR13MB1515CF2C78BE57DACBA96FAEB8160@DM5PR13MB1515.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(396003)(376002)(136003)(366004)(478694002)(189003)(199004)(8676002)(4326008)(81156014)(81166006)(6246003)(486006)(25786009)(186003)(53936002)(476003)(6506007)(305945005)(110136005)(76176011)(54906003)(76116006)(102836004)(7736002)(256004)(8936002)(6116002)(99286004)(86362001)(6512007)(3846002)(26005)(14444005)(11346002)(446003)(229853002)(2616005)(2906002)(6486002)(66476007)(2501003)(316002)(6436002)(14454004)(5660300002)(66946007)(73956011)(71200400001)(66556008)(66446008)(71190400001)(64756008)(66066001)(68736007)(118296001)(36756003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1515;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NuqycRp/AABO9gJ7el6DKPdi0Oi7wcT+xASfE9Ad8EL6jjf7WQ+UNYgP8lH79iBIIFkfbqAreoTj5aoMPwLcDRss7z5Ir8Drmjlva0FbivB0ShiwYziZPNsEXboijf7rAq59/pQ02Dh1pqR51xqGU8oT7qoFB8/iyNmcBbct6vHH7LDQawAhzA9GRiudCBfaNYbKzMtzM/3kMp+s0nZJnUCy//KIoSdd4OaSnzyjzBHgK4Zdp7akE6KLQbzoNdmbx1/itIGy35Zj3CGakedXG1Bz0aREIKTOkUKFWyST0+Y+RnYPto7t3Q/urxS9r5p1bnKcFNfVgWta2SdiWkRBx0usmclqijI5Hz8+Sf9ZC98oQmNNxyaqUW7m6jUBbDZnwKc1qmKdlVyORQM34QllOHebFp8IVTzIFtbkK3FyoeQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <15B0F964811F204BAC1EDC62C81B84E6@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a5d:958d:: with SMTP id a13mr17604654ioo.288.1559760127802;
- Wed, 05 Jun 2019 11:42:07 -0700 (PDT)
-Date:   Wed, 05 Jun 2019 11:42:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005a4b99058a97f42e@google.com>
-Subject: KASAN: use-after-free Read in unregister_shrinker
-From:   syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bfields@fieldses.org,
-        bfields@redhat.com, chris@chrisdown.name,
-        daniel.m.jordan@oracle.com, guro@fb.com, hannes@cmpxchg.org,
-        jlayton@kernel.org, ktkhai@virtuozzo.com, laoar.shao@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
-        mhocko@suse.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2643ce45-7c49-467d-c65b-08d6ea015c4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 22:01:28.2269
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1515
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    b2924447 Add linux-next specific files for 20190605
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e867eea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
-dashboard link: https://syzkaller.appspot.com/bug?extid=83a43746cebef3508b49
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122965aa00000
-
-The bug was bisected to:
-
-commit db17b61765c2c63b9552d316551550557ff0fcfd
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Fri May 17 13:03:38 2019 +0000
-
-     nfsd4: drc containerization
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110cd22ea00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=130cd22ea00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=150cd22ea00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com
-Fixes: db17b61765c2 ("nfsd4: drc containerization")
-
-==================================================================
-BUG: KASAN: use-after-free in __list_del_entry_valid+0xe6/0xf5  
-lib/list_debug.c:51
-Read of size 8 at addr ffff88808a5bd128 by task syz-executor.2/12471
-
-CPU: 0 PID: 12471 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190605  
-#9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
-  __list_del_entry include/linux/list.h:117 [inline]
-  list_del include/linux/list.h:125 [inline]
-  unregister_shrinker+0xb2/0x2e0 mm/vmscan.c:443
-  nfsd_reply_cache_shutdown+0x26/0x360 fs/nfsd/nfscache.c:194
-  nfsd_exit_net+0x170/0x4b0 fs/nfsd/nfsctl.c:1272
-  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
-  setup_net+0x400/0x740 net/core/net_namespace.c:333
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459279
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7ae73e1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459279
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
-RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7ae73e26d4
-R13: 00000000004c84ef R14: 00000000004decb0 R15: 00000000ffffffff
-
-Allocated by task 12460:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
-  __do_kmalloc mm/slab.c:3654 [inline]
-  __kmalloc+0x15c/0x740 mm/slab.c:3663
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  ops_init+0xff/0x410 net/core/net_namespace.c:120
-  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 12460:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x106/0x2a0 mm/slab.c:3753
-  ops_init+0xd1/0x410 net/core/net_namespace.c:135
-  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
-  ksys_unshare+0x444/0x980 kernel/fork.c:2718
-  __do_sys_unshare kernel/fork.c:2786 [inline]
-  __se_sys_unshare kernel/fork.c:2784 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88808a5bcdc0
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 872 bytes inside of
-  1024-byte region [ffff88808a5bcdc0, ffff88808a5bd1c0)
-The buggy address belongs to the page:
-page:ffffea0002296f00 refcount:1 mapcount:0 mapping:ffff8880aa400ac0  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000249ea08 ffffea000235a588 ffff8880aa400ac0
-raw: 0000000000000000 ffff88808a5bc040 0000000100000007 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808a5bd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808a5bd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808a5bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                   ^
-  ffff88808a5bd180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff88808a5bd200: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+T24gV2VkLCAyMDE5LTA2LTA1IGF0IDA5OjQwICswMTAwLCBKb24gSHVudGVyIHdyb3RlOg0KPiBI
+aSBUcm9uZCwNCj4gDQo+IEkgaGF2ZSBiZWVuIG5vdGljaW5nIGludGVybWl0dGVudCBmYWlsdXJl
+cyB3aXRoIGEgc3lzdGVtIHN1c3BlbmQgdGVzdA0KPiBvbg0KPiBzb21lIG9mIG91ciBtYWNoaW5l
+cyB0aGF0IGhhdmUgYSBORlMgbW91bnRlZCByb290IGZpbGUtc3lzdGVtLg0KPiBCaXNlY3RpbmcN
+Cj4gdGhpcyBpc3N1ZSBwb2ludHMgdG8geW91ciBjb21taXQgNDMxMjM1ODE4YmMzICgiU1VOUlBD
+OiBEZWNsYXJlIFJQQw0KPiB0aW1lcnMgYXMgVElNRVJfREVGRVJSQUJMRSIpIGFuZCByZXZlcnRp
+bmcgdGhpcyBvbiB0b3Agb2YgdjUuMi1yYzMNCj4gZG9lcw0KPiBhcHBlYXIgdG8gcmVzb2x2ZSB0
+aGUgcHJvYmxlbS4NCj4gDQo+IFRoZSBjYXVzZSBvZiB0aGUgc3VzcGVuZCBmYWlsdXJlIGFwcGVh
+cnMgdG8gYmUgYSBsb25nIGRlbGF5IG9ic2VydmVkDQo+IHNvbWV0aW1lcyB3aGVuIHJlc3VtaW5n
+IGZyb20gc3VzcGVuZCwgYW5kIHRoaXMgaXMgY2F1c2luZyBvdXIgdGVzdCB0bw0KPiB0aW1lb3V0
+LiBGb3IgZXhhbXBsZSwgaW4gYSBmYWlsaW5nIGNhc2UgSSBzZWUgc29tZXRoaW5nIGxpa2UgdGhl
+DQo+IGZvbGxvd2luZyAuLi4NCj4gDQo+IFsgICA2OS42NjczODVdIFBNOiBzdXNwZW5kIGVudHJ5
+IChkZWVwKQ0KPiANCj4gWyAgIDY5LjY3NTY0Ml0gRmlsZXN5c3RlbXMgc3luYzogMC4wMDAgc2Vj
+b25kcw0KPiANCj4gWyAgIDY5LjY4NDk4M10gRnJlZXppbmcgdXNlciBzcGFjZSBwcm9jZXNzZXMg
+Li4uIChlbGFwc2VkIDAuMDAxDQo+IHNlY29uZHMpIGRvbmUuDQo+IA0KPiBbICAgNjkuNjk3ODgw
+XSBPT00ga2lsbGVyIGRpc2FibGVkLg0KPiANCj4gWyAgIDY5LjcwNTY3MF0gRnJlZXppbmcgcmVt
+YWluaW5nIGZyZWV6YWJsZSB0YXNrcyAuLi4gKGVsYXBzZWQgMC4wMDENCj4gc2Vjb25kcykgZG9u
+ZS4NCj4gDQo+IFsgICA2OS43MTkwNDNdIHByaW50azogU3VzcGVuZGluZyBjb25zb2xlKHMpICh1
+c2Ugbm9fY29uc29sZV9zdXNwZW5kDQo+IHRvIGRlYnVnKQ0KPiANCj4gWyAgIDY5Ljc1ODkxMV0g
+RGlzYWJsaW5nIG5vbi1ib290IENQVXMgLi4uDQo+IA0KPiBbICAgNjkuNzYxODc1XSBJUlEgMTc6
+IG5vIGxvbmdlciBhZmZpbmUgdG8gQ1BVMw0KPiANCj4gWyAgIDY5Ljc2MjYwOV0gRW50ZXJpbmcg
+c3VzcGVuZCBzdGF0ZSBMUDENCj4gDQo+IFsgICA2OS43NjI2MzZdIEVuYWJsaW5nIG5vbi1ib290
+IENQVXMgLi4uDQo+IA0KPiBbICAgNjkuNzYzNjAwXSBDUFUxIGlzIHVwDQo+IA0KPiBbICAgNjku
+NzY0NTE3XSBDUFUyIGlzIHVwDQo+IA0KPiBbICAgNjkuNzY1NTMyXSBDUFUzIGlzIHVwDQo+IA0K
+PiBbICAgNjkuODQ1ODMyXSBtbWMxOiBxdWV1aW5nIHVua25vd24gQ0lTIHR1cGxlIDB4ODAgKDUw
+IGJ5dGVzKQ0KPiANCj4gWyAgIDY5Ljg1NDIyM10gbW1jMTogcXVldWluZyB1bmtub3duIENJUyB0
+dXBsZSAweDgwICg3IGJ5dGVzKQ0KPiANCj4gWyAgIDY5Ljg1NzIzOF0gbW1jMTogcXVldWluZyB1
+bmtub3duIENJUyB0dXBsZSAweDgwICg3IGJ5dGVzKQ0KPiANCj4gWyAgIDY5Ljg5MjcwMF0gbW1j
+MTogcXVldWluZyB1bmtub3duIENJUyB0dXBsZSAweDAyICgxIGJ5dGVzKQ0KPiANCj4gWyAgIDcw
+LjQwNzI4Nl0gT09NIGtpbGxlciBlbmFibGVkLg0KPiANCj4gWyAgIDcwLjQxNDY3NF0gUmVzdGFy
+dGluZyB0YXNrcyAuLi4gZG9uZS4NCj4gDQo+IFsgICA3MC40MjMyMzJdIFBNOiBzdXNwZW5kIGV4
+aXQNCj4gDQo+IFsgICA3My41MzMyNTJdIGFzaXggMS0xOjEuMCBldGgwOiBsaW5rIHVwLCAxMDBN
+YnBzLCBmdWxsLWR1cGxleCwgbHBhDQo+IDB4Q0RFMQ0KPiANCj4gWyAgMTA1LjQ2MTg1Ml0gbmZz
+OiBzZXJ2ZXIgMTkyLjE2OC45OS4xIG5vdCByZXNwb25kaW5nLCBzdGlsbCB0cnlpbmcNCj4gDQo+
+IFsgIDEwNS40NjIzNDddIG5mczogc2VydmVyIDE5Mi4xNjguOTkuMSBub3QgcmVzcG9uZGluZywg
+c3RpbGwgdHJ5aW5nDQo+IA0KPiBbICAxMDUuNDg0ODA5XSBuZnM6IHNlcnZlciAxOTIuMTY4Ljk5
+LjEgT0sNCj4gDQo+IFsgIDEwNS40ODY0NTRdIG5mczogc2VydmVyIDE5Mi4xNjguOTkuMSBPSw0K
+PiANCj4gDQo+IFNvIGl0IHdvdWxkIGFwcGVhciB0aGF0IG1ha2luZyB0aGVzZSB0aW1lcnMgZGVm
+ZXJyYWJsZSBpcyBoYXZpbmcgYW4NCj4gaW1wYWN0DQo+IHdoZW4gcmVzdW1pbmcgZnJvbSBzdXNw
+ZW5kLiBEbyB5b3UgaGF2ZSBhbnkgdGhvdWdodHMgb24gdGhpcz8NCj4gDQoNCkknZCBiZSBPSyB3
+aXRoIGp1c3QgcmV2ZXJ0aW5nIHRoaXMgcGF0Y2ggaWYgaXQgaXMgY2F1c2luZyBhIHBlcmZvcm1h
+bmNlDQppc3N1ZS4NCg0KQW5uYT8NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBj
+bGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFj
+ZS5jb20NCg0KDQo=
