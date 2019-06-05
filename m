@@ -2,148 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6140D36284
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2019 19:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DD236373
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2019 20:42:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFER2R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Jun 2019 13:28:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42378 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfFER2Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Jun 2019 13:28:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55HOOBE139957;
-        Wed, 5 Jun 2019 17:28:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=0h7hcCehA5izF5y4GviJcvdTgeD80ZQfkmfVRYdAg78=;
- b=WQvA97ASRPqMegfn4rbKkuX4jXjfd9dN/6wIY0uP67E/P9V0BANR/zfE6ty0o9QbjPyt
- fEAroII7i2fj0kMJnaxo3on6lPbLu1LraED2VQdSuQLeJU9hId8jOrOX/IuxnNuFXraL
- j9hwoLgDC73GElw6R0U0028aNPjhe4EDu5edgXeBQ+E/YjJaRFRDb25+3rFZmYvwfD1W
- jMxY4lWElWANUK+SBVbSsL6o9jRbYqPMD/mC5/YVGdTuaqQe8yo9wpDFqVfpfQ8AbCcx
- eZvVglTxTtv4GFwiOI7Q3ITScqyIvXGE7nzY9Dvpv0Sfrck1xmbgVCsIqutsavlrofGd aA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sugstm44r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 17:28:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x55HRr5e068712;
-        Wed, 5 Jun 2019 17:28:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2swngj0pp6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Jun 2019 17:28:10 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x55HS90A028373;
-        Wed, 5 Jun 2019 17:28:09 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Jun 2019 10:28:08 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH RFC] svcrdma: Ignore source port when computing DRC hash
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyH5r_cq9qYF3E2BaNK1Xr0RLsxQFCOGQqXhGb8Rk2xMXw@mail.gmail.com>
-Date:   Wed, 5 Jun 2019 13:28:07 -0400
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DD7B8184-4124-4307-BD7F-98F6231361DF@oracle.com>
-References: <20190605121518.2150.26479.stgit@klimt.1015granger.net>
- <CAN-5tyH5r_cq9qYF3E2BaNK1Xr0RLsxQFCOGQqXhGb8Rk2xMXw@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906050109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906050109
+        id S1726464AbfFESmJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Jun 2019 14:42:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:49665 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfFESmI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Jun 2019 14:42:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id z15so12358455ioz.16
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Jun 2019 11:42:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5KA20MEac/BauzP5Z3rFMyap7DfHakSuH0HNa8THrMI=;
+        b=lTmo0PfTFQb+0Vj5RJusXqyOd1jD1imd8PBI2MDsljcYs4nscHb0AE0NrICIXYC6cz
+         xW0RrWnZpmz5mJ9zprTxZgVA2WyzY/dFLL/KIbLHPROr+CxFK7wKKBHl9i+KXyk4Ul0X
+         HZd/slR03tCFqWmAOo1IFJsI+iCH+30uBmxkXIUF2k4iu6oZGcvRy/zxZUbuXkoVBn78
+         h4b/bS/5Zn8IJE6+6Za/4XhEM40rcs/nMQ2aeu3e7fmLaOWyONlS6+/5bjkdeFTfT5sz
+         B17v3jOb0Ae+sGMXNWpDlcEsDU7NG4bXwpkqCbyo+OK4NXco6fSk8Xih8kcKzVIyaNUh
+         z/sw==
+X-Gm-Message-State: APjAAAUDUIGG872HwVIDDfF2O0mThDWr5Qdy3OmkyfAjLUJpvoy/FUs8
+        HpruE8BmU4cu90frtInAt+rGay+xFVBZgXQFkE+HZt77D4se
+X-Google-Smtp-Source: APXvYqyQSToVWrtyBHNgFhFwGOm5JXoKFHnoYyxvEB9G9+8LsxYuPtrQVn8OefRIrXAsQWOuxHoYjg0+w1iLcvYseLENP3looVku
+MIME-Version: 1.0
+X-Received: by 2002:a5d:958d:: with SMTP id a13mr17604654ioo.288.1559760127802;
+ Wed, 05 Jun 2019 11:42:07 -0700 (PDT)
+Date:   Wed, 05 Jun 2019 11:42:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005a4b99058a97f42e@google.com>
+Subject: KASAN: use-after-free Read in unregister_shrinker
+From:   syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bfields@fieldses.org,
+        bfields@redhat.com, chris@chrisdown.name,
+        daniel.m.jordan@oracle.com, guro@fb.com, hannes@cmpxchg.org,
+        jlayton@kernel.org, ktkhai@virtuozzo.com, laoar.shao@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
+        mhocko@suse.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    b2924447 Add linux-next specific files for 20190605
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e867eea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+dashboard link: https://syzkaller.appspot.com/bug?extid=83a43746cebef3508b49
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122965aa00000
+
+The bug was bisected to:
+
+commit db17b61765c2c63b9552d316551550557ff0fcfd
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Fri May 17 13:03:38 2019 +0000
+
+     nfsd4: drc containerization
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110cd22ea00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=130cd22ea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=150cd22ea00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com
+Fixes: db17b61765c2 ("nfsd4: drc containerization")
+
+==================================================================
+BUG: KASAN: use-after-free in __list_del_entry_valid+0xe6/0xf5  
+lib/list_debug.c:51
+Read of size 8 at addr ffff88808a5bd128 by task syz-executor.2/12471
+
+CPU: 0 PID: 12471 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190605  
+#9
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
+  __list_del_entry include/linux/list.h:117 [inline]
+  list_del include/linux/list.h:125 [inline]
+  unregister_shrinker+0xb2/0x2e0 mm/vmscan.c:443
+  nfsd_reply_cache_shutdown+0x26/0x360 fs/nfsd/nfscache.c:194
+  nfsd_exit_net+0x170/0x4b0 fs/nfsd/nfsctl.c:1272
+  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
+  setup_net+0x400/0x740 net/core/net_namespace.c:333
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7ae73e1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459279
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
+RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7ae73e26d4
+R13: 00000000004c84ef R14: 00000000004decb0 R15: 00000000ffffffff
+
+Allocated by task 12460:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  __do_kmalloc mm/slab.c:3654 [inline]
+  __kmalloc+0x15c/0x740 mm/slab.c:3663
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  ops_init+0xff/0x410 net/core/net_namespace.c:120
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 12460:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x106/0x2a0 mm/slab.c:3753
+  ops_init+0xd1/0x410 net/core/net_namespace.c:135
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+  __do_sys_unshare kernel/fork.c:2786 [inline]
+  __se_sys_unshare kernel/fork.c:2784 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88808a5bcdc0
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 872 bytes inside of
+  1024-byte region [ffff88808a5bcdc0, ffff88808a5bd1c0)
+The buggy address belongs to the page:
+page:ffffea0002296f00 refcount:1 mapcount:0 mapping:ffff8880aa400ac0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000249ea08 ffffea000235a588 ffff8880aa400ac0
+raw: 0000000000000000 ffff88808a5bc040 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808a5bd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808a5bd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808a5bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                   ^
+  ffff88808a5bd180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff88808a5bd200: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+==================================================================
 
 
-> On Jun 5, 2019, at 11:57 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Wed, Jun 5, 2019 at 8:15 AM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->> The DRC is not working at all after an RPC/RDMA transport reconnect.
->> The problem is that the new connection uses a different source port,
->> which defeats DRC hash.
->>=20
->> An NFS/RDMA client's source port is meaningless for RDMA transports.
->> The transport layer typically sets the source port value on the
->> connection to a random ephemeral port. The server already ignores it
->> for the "secure port" check. See commit 16e4d93f6de7 ("NFSD: Ignore
->> client's source port on RDMA transports").
->>=20
->> I'm not sure why I never noticed this before.
->=20
-> Hi Chuck,
->=20
-> I have a question: is the reason for choosing this fix as oppose to
-> fixing the client because it's server's responsibility to design a DRC
-> differently for the NFSoRDMA?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The server DRC implementation is not specified in any standard.
-The server implementation can use whatever works the best. The
-current Linux DRC implementation is useless for NFS/RDMA, because
-the clients have to disconnect before they send retransmissions.
-
-If someone knows a way that a client side RDMA consumer can specify
-the source port that is presented to a server, then we can make
-that change too.
-
-
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> Cc: stable@vger.kernel.org
->> ---
->> net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
->> 1 file changed, 6 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c =
-b/net/sunrpc/xprtrdma/svc_rdma_transport.c
->> index 027a3b0..1b3700b 100644
->> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
->> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
->> @@ -211,9 +211,14 @@ static void handle_connect_req(struct rdma_cm_id =
-*new_cma_id,
->>        /* Save client advertised inbound read limit for use later in =
-accept. */
->>        newxprt->sc_ord =3D param->initiator_depth;
->>=20
->> -       /* Set the local and remote addresses in the transport */
->>        sa =3D (struct sockaddr =
-*)&newxprt->sc_cm_id->route.addr.dst_addr;
->>        svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
->> +       /* The remote port is arbitrary and not under the control of =
-the
->> +        * ULP. Set it to a fixed value so that the DRC continues to =
-work
->> +        * after a reconnect.
->> +        */
->> +       rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, =
-0);
->> +
->>        sa =3D (struct sockaddr =
-*)&newxprt->sc_cm_id->route.addr.src_addr;
->>        svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
->>=20
->>=20
-
---
-Chuck Lever
-
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
