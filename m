@@ -2,122 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C5E37585
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Jun 2019 15:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4AA5376F9
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Jun 2019 16:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfFFNoD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Jun 2019 09:44:03 -0400
-Received: from relay.sw.ru ([185.231.240.75]:33160 "EHLO relay.sw.ru"
+        id S1728508AbfFFOkG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Jun 2019 10:40:06 -0400
+Received: from fieldses.org ([173.255.197.46]:36502 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfFFNoD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:44:03 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hYsgC-0008Uh-Hh; Thu, 06 Jun 2019 16:43:44 +0300
-Subject: Re: KASAN: use-after-free Read in unregister_shrinker
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, bfields@redhat.com,
-        chris@chrisdown.name, daniel.m.jordan@oracle.com, guro@fb.com,
-        hannes@cmpxchg.org, jlayton@kernel.org, laoar.shao@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
-        mhocko@suse.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
-References: <0000000000005a4b99058a97f42e@google.com>
- <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
- <20190606131334.GA24822@fieldses.org>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
-Date:   Thu, 6 Jun 2019 16:43:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190606131334.GA24822@fieldses.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728011AbfFFOkG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:40:06 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C8DD11C95; Thu,  6 Jun 2019 10:40:05 -0400 (EDT)
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 1/2] nfsd: use 64-bit seconds fields in nfsd v4 code
+Date:   Thu,  6 Jun 2019 10:40:03 -0400
+Message-Id: <1559832004-26631-1-git-send-email-bfields@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 06.06.2019 16:13, J. Bruce Fields wrote:
-> On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
->> This may be connected with that shrinker unregistering is forgotten on error path.
-> 
-> I was wondering about that too.  Seems like it would be hard to hit
-> reproduceably though: one of the later allocations would have to fail,
-> then later you'd have to create another namespace and this time have a
-> later module's init fail.
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-Yes, it's had to bump into this in real life.
+After commit 95582b008388 "vfs: change inode times to use struct
+timespec64" there are spots in the NFSv4 decoding where we decode the
+protocol into a struct timeval and then convert that into a timeval64.
 
-AFAIU, syzbot triggers such the problem by using fault-injections
-on allocation places should_failslab()->should_fail(). It's possible
-to configure a specific slab, so the allocations will fail with
-requested probability.
+That's unnecesary in the NFSv4 case since the on-the-wire protocol also
+uses 64-bit values.  So just fix up our code to use timeval64 everywhere.
+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ fs/nfsd/blocklayout.c |  8 +++-----
+ fs/nfsd/nfs4xdr.c     | 13 ++++---------
+ fs/nfsd/xdr4.h        |  2 +-
+ 3 files changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 4fb1f72a25fb..66d4c55eb48e 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -121,15 +121,13 @@ nfsd4_block_commit_blocks(struct inode *inode, struct nfsd4_layoutcommit *lcp,
+ {
+ 	loff_t new_size = lcp->lc_last_wr + 1;
+ 	struct iattr iattr = { .ia_valid = 0 };
+-	struct timespec ts;
+ 	int error;
  
-> This is the patch I have, which also fixes a (probably less important)
-> failure to free the slab cache.
-> 
-> --b.
-> 
-> commit 17c869b35dc9
-> Author: J. Bruce Fields <bfields@redhat.com>
-> Date:   Wed Jun 5 18:03:52 2019 -0400
-> 
->     nfsd: fix cleanup of nfsd_reply_cache_init on failure
->     
->     Make sure everything is cleaned up on failure.
->     
->     Especially important for the shrinker, which will otherwise eventually
->     be freed while still referred to by global data structures.
->     
->     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> 
-> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> index ea39497205f0..3dcac164e010 100644
-> --- a/fs/nfsd/nfscache.c
-> +++ b/fs/nfsd/nfscache.c
-> @@ -157,12 +157,12 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
->  	nn->nfsd_reply_cache_shrinker.seeks = 1;
->  	status = register_shrinker(&nn->nfsd_reply_cache_shrinker);
->  	if (status)
-> -		return status;
-> +		goto out_nomem;
->  
->  	nn->drc_slab = kmem_cache_create("nfsd_drc",
->  				sizeof(struct svc_cacherep), 0, 0, NULL);
->  	if (!nn->drc_slab)
-> -		goto out_nomem;
-> +		goto out_shrinker;
->  
->  	nn->drc_hashtbl = kcalloc(hashsize,
->  				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
-> @@ -170,7 +170,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
->  		nn->drc_hashtbl = vzalloc(array_size(hashsize,
->  						 sizeof(*nn->drc_hashtbl)));
->  		if (!nn->drc_hashtbl)
-> -			goto out_nomem;
-> +			goto out_slab;
->  	}
->  
->  	for (i = 0; i < hashsize; i++) {
-> @@ -180,6 +180,10 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
->  	nn->drc_hashsize = hashsize;
->  
->  	return 0;
-> +out_slab:
-> +	kmem_cache_destroy(nn->drc_slab);
-> +out_shrinker:
-> +	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
->  out_nomem:
->  	printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
->  	return -ENOMEM;
-
-Looks OK for me. Feel free to add my reviewed-by if you want.
-
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+-	ts = timespec64_to_timespec(inode->i_mtime);
+ 	if (lcp->lc_mtime.tv_nsec == UTIME_NOW ||
+-	    timespec_compare(&lcp->lc_mtime, &ts) < 0)
+-		lcp->lc_mtime = timespec64_to_timespec(current_time(inode));
++	    timespec64_compare(&lcp->lc_mtime, &inode->i_mtime) < 0)
++		lcp->lc_mtime = current_time(inode);
+ 	iattr.ia_valid |= ATTR_ATIME | ATTR_CTIME | ATTR_MTIME;
+-	iattr.ia_atime = iattr.ia_ctime = iattr.ia_mtime = timespec_to_timespec64(lcp->lc_mtime);
++	iattr.ia_atime = iattr.ia_ctime = iattr.ia_mtime = lcp->lc_mtime;
+ 
+ 	if (new_size > i_size_read(inode)) {
+ 		iattr.ia_valid |= ATTR_SIZE;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 52c4f6daa649..73e6753fb213 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -274,14 +274,12 @@ static char *savemem(struct nfsd4_compoundargs *argp, __be32 *p, int nbytes)
+  * we ignore all 32 bits of 'nseconds'.
+  */
+ static __be32
+-nfsd4_decode_time(struct nfsd4_compoundargs *argp, struct timespec *tv)
++nfsd4_decode_time(struct nfsd4_compoundargs *argp, struct timespec64 *tv)
+ {
+ 	DECODE_HEAD;
+-	u64 sec;
+ 
+ 	READ_BUF(12);
+-	p = xdr_decode_hyper(p, &sec);
+-	tv->tv_sec = sec;
++	p = xdr_decode_hyper(p, &tv->tv_sec);
+ 	tv->tv_nsec = be32_to_cpup(p++);
+ 	if (tv->tv_nsec >= (u32)1000000000)
+ 		return nfserr_inval;
+@@ -320,7 +318,6 @@ nfsd4_decode_fattr(struct nfsd4_compoundargs *argp, u32 *bmval,
+ 		   struct iattr *iattr, struct nfs4_acl **acl,
+ 		   struct xdr_netobj *label, int *umask)
+ {
+-	struct timespec ts;
+ 	int expected_len, len = 0;
+ 	u32 dummy32;
+ 	char *buf;
+@@ -422,8 +419,7 @@ nfsd4_decode_fattr(struct nfsd4_compoundargs *argp, u32 *bmval,
+ 		switch (dummy32) {
+ 		case NFS4_SET_TO_CLIENT_TIME:
+ 			len += 12;
+-			status = nfsd4_decode_time(argp, &ts);
+-			iattr->ia_atime = timespec_to_timespec64(ts);
++			status = nfsd4_decode_time(argp, &iattr->ia_atime);
+ 			if (status)
+ 				return status;
+ 			iattr->ia_valid |= (ATTR_ATIME | ATTR_ATIME_SET);
+@@ -442,8 +438,7 @@ nfsd4_decode_fattr(struct nfsd4_compoundargs *argp, u32 *bmval,
+ 		switch (dummy32) {
+ 		case NFS4_SET_TO_CLIENT_TIME:
+ 			len += 12;
+-			status = nfsd4_decode_time(argp, &ts);
+-			iattr->ia_mtime = timespec_to_timespec64(ts);
++			status = nfsd4_decode_time(argp, &iattr->ia_mtime);
+ 			if (status)
+ 				return status;
+ 			iattr->ia_valid |= (ATTR_MTIME | ATTR_MTIME_SET);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index feeb6d4bdffd..c2b631eefc6d 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -472,7 +472,7 @@ struct nfsd4_layoutcommit {
+ 	u32			lc_reclaim;	/* request */
+ 	u32			lc_newoffset;	/* request */
+ 	u64			lc_last_wr;	/* request */
+-	struct timespec		lc_mtime;	/* request */
++	struct timespec64	lc_mtime;	/* request */
+ 	u32			lc_layout_type;	/* request */
+ 	u32			lc_up_len;	/* layout length */
+ 	void			*lc_up_layout;	/* decoded by callback */
+-- 
+2.21.0
 
