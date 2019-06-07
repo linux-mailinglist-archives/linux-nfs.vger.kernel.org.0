@@ -2,102 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0CEA3880C
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2019 12:37:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE28038CF5
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2019 16:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfFGKhy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jun 2019 06:37:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53276 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfFGKhy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:37:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 280A23D37;
-        Fri,  7 Jun 2019 10:37:54 +0000 (UTC)
-Received: from bcodding.csb (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A7A4482268;
-        Fri,  7 Jun 2019 10:37:53 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 5F490109C550; Fri,  7 Jun 2019 06:37:30 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS4: Only set creation opendata if O_CREAT
-Date:   Fri,  7 Jun 2019 06:37:30 -0400
-Message-Id: <f30e28659d74b2d1ad06fc806174a5364748b51a.1559903672.git.bcodding@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 07 Jun 2019 10:37:54 +0000 (UTC)
+        id S1728627AbfFGO10 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Jun 2019 10:27:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37708 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728311AbfFGO1Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jun 2019 10:27:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y57so2463895qtk.4
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2019 07:27:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tpbp2TmAO7Oppvr/Cdw67uDnOqiqK/Suj6crpUYdvMU=;
+        b=p4YvZ5vsqcwHGRs2nI0sT7LkrILGNm2xEoEsYcHyjHf7MIu6l6b9Q56mmtQ03Tl3MU
+         xCf+6XcamPI38w6C5NsEUSFBXHB2woOQCB5CntY+n4HRAeIxVJOrIodFCInZyI8KWs78
+         U+ZDed//Qy4tX7AKCJwZ97QEyoibJggLWvteNJAH4yqvHQteO95FUSvy/uGnsxem2A10
+         MuBHWOsB2oTGfuXEyzPAfDPxyuugOFTh+Prg12LJe3J8+fTkRBpHuzcqkaBQvtLQ8dpU
+         d8Xb4CP247Bo8evjMwGk6s+djY67xFduRyBRjzqOqUc3sNHKcpPqO98yYvFIghn/Ve4O
+         c98A==
+X-Gm-Message-State: APjAAAWn0NMR0b/Vg39IHMAl4gvvLBhJbIBPcN8EZfjlTKT3pvVaEhnN
+        jLWvu1iM7EM2yU/gRjXb0ru2dQ==
+X-Google-Smtp-Source: APXvYqz6pQE/B++soQFmjd3kLp7wONHTsiCFTWp9E89/Jkml2eFwiSMajeq2/tGsO/ILWNk2rIStpw==
+X-Received: by 2002:a0c:a066:: with SMTP id b93mr43103121qva.140.1559917645035;
+        Fri, 07 Jun 2019 07:27:25 -0700 (PDT)
+Received: from dhcp-12-212-173.gsslab.rdu.redhat.com (nat-pool-rdu-t.redhat.com. [66.187.233.202])
+        by smtp.gmail.com with ESMTPSA id n124sm1146886qkf.31.2019.06.07.07.27.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 07:27:24 -0700 (PDT)
+Message-ID: <8e5ab8dce77901ea7f34e5424a7d1c75ac7689ae.camel@redhat.com>
+Subject: Re: [PATCH 3/3] SUNRPC: Count ops completing with tk_status < 0
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Fri, 07 Jun 2019 10:27:22 -0400
+In-Reply-To: <20190604144535.GA19422@fieldses.org>
+References: <20190523201351.12232-1-dwysocha@redhat.com>
+         <20190523201351.12232-3-dwysocha@redhat.com>
+         <20190530213857.GA24802@fieldses.org>
+         <9B9F0C9B-C493-44F5-ABD1-6B2B4BAA2F08@oracle.com>
+         <20190530223314.GA25368@fieldses.org>
+         <CD3B0503-ABA0-4670-9A76-0B9DF0AE5B5C@oracle.com>
+         <f7976bde9979e8b763c0009b523331ab5ce6b6ed.camel@redhat.com>
+         <5CE8A68E-F5C2-4321-8F57-451F5E5AF789@oracle.com>
+         <20190604144535.GA19422@fieldses.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We can end up in nfs4_opendata_alloc during task exit, in which case
-current->fs has already been cleaned up.  This leads to a crash in
-current_umask().
+On Tue, 2019-06-04 at 10:45 -0400, Bruce Fields wrote:
+> On Mon, Jun 03, 2019 at 02:56:29PM -0400, Chuck Lever wrote:
+> > > On Jun 3, 2019, at 2:53 PM, Dave Wysochanski <dwysocha@redhat.com
+> > > > wrote:
+> > > On Fri, 2019-05-31 at 09:25 -0400, Chuck Lever wrote:
+> > > > > On May 30, 2019, at 6:33 PM, Bruce Fields <
+> > > > > bfields@fieldses.org>
+> > > > > wrote:
+> > > > > On Thu, May 30, 2019 at 06:19:54PM -0400, Chuck Lever wrote:
+> > > > > > We now have trace points that can do that too.
+> > > > > 
+> > > > > You mean, that can report every error (and its value)?
+> > > > 
+> > > > Yes, the nfs_xdr_status trace point reports the error by value
+> > > > and
+> > > > symbolic name.
+> > > 
+> > > The tracepoint is very useful I agree.  I don't think it will
+> > > show:
+> > > a) the mount
+> > > b) the opcode
+> > > 
+> > > Or am I mistaken and there's a way to get those with a filter or
+> > > another tracepoint?
+> > 
+> > The opcode can be exposed by another trace point, but the link
+> > between
+> > the two trace points is tenuous and could be improved.
+> > 
+> > I don't believe any of the NFS trace points expose the mount. My
+> > testing
+> > is largely on a single mount so my imagination stopped there.
+> 
+> Dumb question: is it possible to add more fields to tracepoints
+> without
+> breaking some kind of backwards compatibility?
+> 
+> I wonder if adding, say, an xid and an xprt pointer to tracepoints
+> when
+> available would help with this kind of thing.
+> 
+> In any case, I think Dave's stats will still be handy if only because
+> they're on all the time.
+> 
+> --b.
 
-Fix this by only setting creation opendata if we are actually doing an open
-with O_CREAT.  We can drop the check for NULL nfs4_open_createattrs, since
-O_CREAT will never be set for the recovery path.
+Trond or Anna, will you take this series for mountstats or are you
+opposed to it?
 
-Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- fs/nfs/nfs4proc.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+I think it is useful in conjuction with the tracepoints because it is
+always on and easy to know which mount is involved (we often start with
+a customer saying mount XYZ has some issue or is hanging).  If you see
+problems or want other testing please let me know.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index c29cbef6b53f..a07b5477d059 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1256,10 +1256,20 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	atomic_inc(&sp->so_count);
- 	p->o_arg.open_flags = flags;
- 	p->o_arg.fmode = fmode & (FMODE_READ|FMODE_WRITE);
--	p->o_arg.umask = current_umask();
- 	p->o_arg.claim = nfs4_map_atomic_open_claim(server, claim);
- 	p->o_arg.share_access = nfs4_map_atomic_open_share(server,
- 			fmode, flags);
-+	if (flags & O_CREAT) {
-+		p->o_arg.umask = current_umask();
-+		p->o_arg.label = nfs4_label_copy(p->a_label, label);
-+		if (c->sattr != NULL && c->sattr->ia_valid != 0) {
-+			p->o_arg.u.attrs = &p->attrs;
-+			memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
-+
-+			memcpy(p->o_arg.u.verifier.data, c->verf,
-+					sizeof(p->o_arg.u.verifier.data));
-+		}
-+	}
- 	/* don't put an ACCESS op in OPEN compound if O_EXCL, because ACCESS
- 	 * will return permission denied for all bits until close */
- 	if (!(flags & O_EXCL)) {
-@@ -1283,7 +1293,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	p->o_arg.server = server;
- 	p->o_arg.bitmask = nfs4_bitmask(server, label);
- 	p->o_arg.open_bitmap = &nfs4_fattr_bitmap[0];
--	p->o_arg.label = nfs4_label_copy(p->a_label, label);
- 	switch (p->o_arg.claim) {
- 	case NFS4_OPEN_CLAIM_NULL:
- 	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
-@@ -1296,13 +1305,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
- 		p->o_arg.fh = NFS_FH(d_inode(dentry));
- 	}
--	if (c != NULL && c->sattr != NULL && c->sattr->ia_valid != 0) {
--		p->o_arg.u.attrs = &p->attrs;
--		memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
--
--		memcpy(p->o_arg.u.verifier.data, c->verf,
--				sizeof(p->o_arg.u.verifier.data));
--	}
- 	p->c_arg.fh = &p->o_res.fh;
- 	p->c_arg.stateid = &p->o_res.stateid;
- 	p->c_arg.seqid = p->o_arg.seqid;
--- 
-2.20.1
+Thanks!
 
