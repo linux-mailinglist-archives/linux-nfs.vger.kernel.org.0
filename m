@@ -2,69 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 622CF3ACE0
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jun 2019 04:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48FFA3B67E
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jun 2019 15:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfFJCRM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jun 2019 22:17:12 -0400
-Received: from m12-15.163.com ([220.181.12.15]:42115 "EHLO m12-15.163.com"
+        id S2390324AbfFJNxD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jun 2019 09:53:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43524 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbfFJCRM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 9 Jun 2019 22:17:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=VtNxh
-        qgNuhAXI6wf7or1jR1mdLlxPT12xbJh+4Ao0m8=; b=a+fz0lgy0D+3fhqCxAbLQ
-        dTwhQzJHxeGPmLzoh2JJJWZ4pmSDEgoH9YHe4HZcVPmOukEZ/WGSHe9Anl+QcnPk
-        jYOTMfDa9F+cNVmy7ycrMdAwwo7BGb1xmCupMVp3+VDiDoCgqhtP4QUihwcVC5gK
-        4SpYljXk/FjeDjNj3hhO84=
-Received: from tero-machine (unknown [124.16.85.90])
-        by smtp11 (Coremail) with SMTP id D8CowABnZ2WYvf1catboAg--.21215S3;
-        Mon, 10 Jun 2019 10:16:56 +0800 (CST)
-Date:   Mon, 10 Jun 2019 10:16:56 +0800
-From:   Lin Yi <teroincn@163.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, liujian6@iie.ac.cn, csong@cs.ucr.edu,
-        zhiyunq@cs.ucr.edu, yiqiuping@gmail.com, teroincn@163.com
-Subject: [PATCH] net :sunrpc :clnt :Fix xps refcount imbalance on the error
- path
-Message-ID: <20190610021655.GA14779@163.com>
+        id S2390306AbfFJNxD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 10 Jun 2019 09:53:03 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B0994308622E;
+        Mon, 10 Jun 2019 13:53:02 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-83.phx2.redhat.com [10.3.116.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5990B600CD;
+        Mon, 10 Jun 2019 13:53:02 +0000 (UTC)
+Subject: Re: [PATCH v3 00/11] Add the "[exports] rootdir" option to nfs.conf
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <7fbb9de3-8da4-5475-d425-ecc68c9ef709@RedHat.com>
+Date:   Mon, 10 Jun 2019 09:53:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CM-TRANSID: D8CowABnZ2WYvf1catboAg--.21215S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrAFykuw13uw1rJry7Ww17Jrb_yoWxGwc_Xw
-        1xXrWxXw4DGanrtFZrAws5CrW7tr40kry8WrnFyrZrXw1UZ3Wjvr93W3Z3Gay7GrWxuasx
-        Ar98G345Cw15tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1RpBDUUUUU==
-X-Originating-IP: [124.16.85.90]
-X-CM-SenderInfo: 5whu0xxqfqqiywtou0bp/1tbiLxLPElUMNRFJRwAAsT
+In-Reply-To: <20190528203122.11401-1-trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 10 Jun 2019 13:53:02 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-rpc_clnt_add_xprt take a reference to struct rpc_xprt_switch, but forget
-to release it before return, may lead to a memory leak.
-
-Signed-off-by: Lin Yi <teroincn@163.com>
----
- net/sunrpc/clnt.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 627a87a..2b35347 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2805,6 +2805,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
- 	xprt = xprt_iter_xprt(&clnt->cl_xpi);
- 	if (xps == NULL || xprt == NULL) {
- 		rcu_read_unlock();
-+		xprt_switch_put(xps);
- 		return -EAGAIN;
- 	}
- 	resvport = xprt->resvport;
--- 
-1.9.1
 
 
+On 5/28/19 4:31 PM, Trond Myklebust wrote:
+> The following patchset adds support for the "rootdir" configuration
+> option for nfsd in the "[exports]" section in /etc/nfs.conf.
+> 
+> If a user sets this option to a valid directory path, then nfsd will
+> act as if it is confined to a chroot jail based on that directory.
+> All paths in /etc/exports and the exportfs utility are then resolved
+> relative to that directory.
+> 
+> Trond Myklebust (11):
+>   mountd: Ensure we don't share cache file descriptors among processes.
+>   Add a simple workqueue mechanism
+>   Allow callers to check mountpoint status using a custom lstat function
+>   Add utilities for resolving nfsd paths and stat()ing them
+>   Use xstat() with no synchronisation if available
+>   Add helpers to read/write to a file through the chrooted thread
+>   Add a helper to return the real path given an export entry
+>   Add support for the "[exports] rootdir" nfs.conf option to rpc.mountd
+>   Add support for the "[exports] rootdir" nfs.conf option to exportfs
+>   Add a helper for resolving symlinked nfsd paths via realpath()
+>   Fix up symlinked mount path resolution when "[exports] rootdir" is set
+> 
+>  aclocal/libpthread.m4       |  13 +-
+>  configure.ac                |   6 +-
+>  nfs.conf                    |   3 +
+>  support/export/export.c     |  24 +++
+>  support/include/Makefile.am |   3 +
+>  support/include/exportfs.h  |   1 +
+>  support/include/misc.h      |   7 +-
+>  support/include/nfsd_path.h |  21 +++
+>  support/include/nfslib.h    |   1 +
+>  support/include/workqueue.h |  18 +++
+>  support/include/xstat.h     |  11 ++
+>  support/misc/Makefile.am    |   3 +-
+>  support/misc/mountpoint.c   |   8 +-
+>  support/misc/nfsd_path.c    | 289 ++++++++++++++++++++++++++++++++++++
+>  support/misc/workqueue.c    | 228 ++++++++++++++++++++++++++++
+>  support/misc/xstat.c        | 105 +++++++++++++
+>  support/nfs/exports.c       |   4 +
+>  systemd/nfs.conf.man        |  20 ++-
+>  utils/exportfs/Makefile.am  |   2 +-
+>  utils/exportfs/exportfs.c   |  11 +-
+>  utils/mountd/Makefile.am    |   3 +-
+>  utils/mountd/cache.c        |  63 +++++---
+>  utils/mountd/mountd.c       |  24 +--
+>  23 files changed, 819 insertions(+), 49 deletions(-)
+>  create mode 100644 support/include/nfsd_path.h
+>  create mode 100644 support/include/workqueue.h
+>  create mode 100644 support/include/xstat.h
+>  create mode 100644 support/misc/nfsd_path.c
+>  create mode 100644 support/misc/workqueue.c
+>  create mode 100644 support/misc/xstat.c
+> 
+Committed!
+
+steved.
