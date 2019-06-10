@@ -2,175 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7A33B7BC
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jun 2019 16:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6663B9C8
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jun 2019 18:44:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390224AbfFJOuk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jun 2019 10:50:40 -0400
-Received: from p3plsmtpa08-02.prod.phx3.secureserver.net ([173.201.193.103]:58548
-        "EHLO p3plsmtpa08-02.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390122AbfFJOuj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jun 2019 10:50:39 -0400
-Received: from [192.168.0.67] ([24.218.182.144])
-        by :SMTPAUTH: with ESMTPSA
-        id aLd8hbTzLd9U0aLd8hA472; Mon, 10 Jun 2019 07:50:38 -0700
-Subject: Re: [PATCH RFC] svcrdma: Ignore source port when computing DRC hash
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20190605121518.2150.26479.stgit@klimt.1015granger.net>
- <9E0019E1-1C1B-465C-B2BF-76372029ABD8@talpey.com>
- <955993A4-0626-4819-BC6F-306A50E2E048@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <4b05cdf7-2c2d-366f-3a29-1034bfec2941@talpey.com>
-Date:   Mon, 10 Jun 2019 10:50:36 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <955993A4-0626-4819-BC6F-306A50E2E048@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1727588AbfFJQn7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jun 2019 12:43:59 -0400
+Received: from mail-eopbgr730129.outbound.protection.outlook.com ([40.107.73.129]:10056
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726781AbfFJQn7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:43:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VO3873XzD3w/gO4hGlUK3g3bLK88GCViIKyr/QZUnVQ=;
+ b=fRcVA3c6umdqfM2jyuYb72V2erFH0QoVV1YBpACqyk+Wo+lh3sqn6oyw4n6oiZyvDxoXja8Z/2fjISbA3C2G+YFBKA2CtWu5YQydUrF1hv/1Tw5aYO8WjDPdlgWbkf9RGI6OUnZ3UEfztSSAOB7e3exYfcmTDAzs662SgYjHP5s=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1659.namprd13.prod.outlook.com (10.171.155.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.7; Mon, 10 Jun 2019 16:43:53 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee%7]) with mapi id 15.20.1987.010; Mon, 10 Jun 2019
+ 16:43:53 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bcodding@redhat.com" <bcodding@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Subject: Re: client skips revalidation if holding a delegation
+Thread-Topic: client skips revalidation if holding a delegation
+Thread-Index: AQHVGtLKBUNk28aCck+RoJHGu9wZpaaLdE6AgAAUoACAAAwCgIAARNaAgAkeSgCAACmogA==
+Date:   Mon, 10 Jun 2019 16:43:53 +0000
+Message-ID: <2cc7cbfda42601d2e52ee63bed2dbb4140401adc.camel@hammerspace.com>
+References: <6C2EF3B8-568A-41F0-B134-52996457DD7D@redhat.com>
+         <c133a2ed862bf5714210aa5a44190ddaecfa188f.camel@hammerspace.com>
+         <CFD3CE5E-5081-4A4D-B67E-41D9E7A3D5C5@redhat.com>
+         <a595b6962b2e083fef8ad2d3534e1d0964995560.camel@hammerspace.com>
+         <7289561F-686E-4425-B0CE-F3E5800C033D@redhat.com>
+         <243407AC-A416-4FF2-A09B-B1362C6206D9@redhat.com>
+In-Reply-To: <243407AC-A416-4FF2-A09B-B1362C6206D9@redhat.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIo8/2pz+e9fabIO+IuUP3I1YHCK/5+0EX6gw6vq52ousb+NvHacvP8GTldpDzdlWA0bl71jUts1IfC3x+EZsboddBCD0WbROwVEqbaJzPjs7y4OPyjX
- Vh94xpo2BFs0kcSvxdhcXCFvh8HHnz1fJgDtYajNis2l5wFYJ1CXLv+PSZOhA9zYB6TFHPgzepCetI3JhJglkqQT7pxpQNP4uicTQe1JHdJGnuWDXgBIvy/w
- q3ehekPTCjrL9zSiW6j/Fw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 422f964c-02fc-4a5f-963c-08d6edc2d292
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1659;
+x-ms-traffictypediagnostic: DM5PR13MB1659:
+x-microsoft-antispam-prvs: <DM5PR13MB1659C05E8BB9522062AA1790B8130@DM5PR13MB1659.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(396003)(366004)(39830400003)(189003)(199004)(316002)(2616005)(486006)(6486002)(476003)(102836004)(6506007)(5660300002)(86362001)(53546011)(11346002)(4744005)(6246003)(118296001)(229853002)(2906002)(71190400001)(71200400001)(68736007)(5640700003)(14444005)(14454004)(256004)(6512007)(54906003)(76176011)(6436002)(446003)(66446008)(8936002)(53936002)(186003)(66066001)(26005)(8676002)(478600001)(6916009)(2351001)(7736002)(25786009)(305945005)(2501003)(99286004)(36756003)(4326008)(76116006)(81156014)(66476007)(66556008)(64756008)(73956011)(66946007)(6116002)(3846002)(81166006)(1730700003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1659;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mNgc/5AtPJ9M32/yL1DuzO9gtTuS7sBKKYdH6hrNKAIvueveUZxdDkT34tIhHGzhVZQr55jZG8SUucIPXTLoE+YdLxbliS89OXYWoYMxgniiPQd6Mz6u4B6f4FaZw9IwzxB/fSiWlYjdneovB2gWMa5l5lBQUmt66Fhom4JJItfNS3MfeBgjAXFC5nRHZ0WfpM++lB7LYCy2Z6oWTmKWSQT/LwXAP4VRvi9ve9BwwNxvGvSblAcqW62HPLxQTNTl/VUIG/tllgIFqDHDoY+8lY/ysLipgizdwc6LFufLVuDKP8cdQT026R3zgCwU00P4LVcOPcciZQceiu/Z4ZIL7EbwLAw+G7V6hJsE1e2pCsFfjxcn99/5fnpHhxGaQVJ04ocyeisIECzc8/BOQPIE3qZGIxbOIxFjNuqytlhEfX8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2298EE08B17D74CB5CD90E1A0F96F38@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 422f964c-02fc-4a5f-963c-08d6edc2d292
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 16:43:53.0303
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1659
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 6/5/2019 1:25 PM, Chuck Lever wrote:
-> Hi Tom-
-> 
->> On Jun 5, 2019, at 12:43 PM, Tom Talpey <tom@talpey.com> wrote:
->>
->> On 6/5/2019 8:15 AM, Chuck Lever wrote:
->>> The DRC is not working at all after an RPC/RDMA transport reconnect.
->>> The problem is that the new connection uses a different source port,
->>> which defeats DRC hash.
->>>
->>> An NFS/RDMA client's source port is meaningless for RDMA transports.
->>> The transport layer typically sets the source port value on the
->>> connection to a random ephemeral port. The server already ignores it
->>> for the "secure port" check. See commit 16e4d93f6de7 ("NFSD: Ignore
->>> client's source port on RDMA transports").
->>
->> Where does the entropy come from, then, for the server to not
->> match other requests from other mount points on this same client?
-> 
-> The first ~200 bytes of each RPC Call message.
-> 
-> [ Note that this has some fun ramifications for calls with small
-> RPC headers that use Read chunks. ]
-
-Ok, good to know. I forgot that the Linux server implemented this.
-I have some concerns abot it, honestly, and it's important to remember
-that it's not the same on all servers. But for the problem you're
-fixing, it's ok I guess and certainly better than today. Still, the
-errors are goingto be completely silent, and can lead to data being
-corrupted. Well, welcome to the world of NFSv3.
-
->> Any time an XID happens to match on a second mount, it will trigger
->> incorrect server processing, won't it?
-> 
-> Not a risk for clients that use only a single transport per
-> client-server pair.
-
-I just want to interject here that this is completely irrelevant.
-The server can't know what these clients are doing, or expecting.
-One case that might work is not any kind of evidence, and is not
-a workaround.
-
->> And since RDMA is capable of
->> such high IOPS, the likelihood seems rather high.
-> 
-> Only when the server's durable storage is slow enough to cause
-> some RPC requests to have extremely high latency.
-> 
-> And, most clients use an atomic counter for their XIDs, so they
-> are also likely to wrap that counter over some long-pending RPC
-> request.
-> 
-> The only real answer here is NFSv4 sessions.
-> 
-> 
->> Missing the cache
->> might actually be safer than hitting, in this case.
-> 
-> Remember that _any_ retransmit on RPC/RDMA requires a fresh
-> connection, that includes NFSv3, to reset credit accounting
-> due to the lost half of the RPC Call/Reply pair.
-> 
-> I can very quickly reproduce bad (non-deterministic) behavior
-> by running a software build on an NFSv3 on RDMA mount point
-> with disconnect injection. If the DRC issue is addressed, the
-> software build runs to completion.
-
-Ok, good. But I have a better test.
-
-In the Connectathon suite, there's a "Special" test called "nfsidem".
-I wrote this test in, like, 1989 so I remember it :-)
-
-This test performs all the non-idempotent NFv3 operations in a loop,
-and each loop element depends on the previous one, so if there's
-any failure, the test imemdiately bombs.
-
-Nobody seems to understand it, usually when it gets run people will
-run it without injecting errors, and it "passes" so they decide
-everything is ok.
-
-So my suggestion is to run your flakeway packet-drop harness while
-running nfsidem in a huge loop (nfsidem 10000). The test is slow,
-owing to the expensive operations it performs, so you'll need to
-run it for a long time.
-
-You'll almost definitely get a failure or two, since the NFSv3
-protocol is flawed by design. But you can compare the behaviors,
-and even compute a likelihood. I'd love to see some actual numbers.
-
-> IMO we can't leave things the way they are.
-
-Agreed!
-
-Tom.
-
-
->>> I'm not sure why I never noticed this before.
->>>
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> Cc: stable@vger.kernel.org
->>> ---
->>>   net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
->>>   1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
->>> index 027a3b0..1b3700b 100644
->>> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
->>> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
->>> @@ -211,9 +211,14 @@ static void handle_connect_req(struct rdma_cm_id *new_cma_id,
->>>   	/* Save client advertised inbound read limit for use later in accept. */
->>>   	newxprt->sc_ord = param->initiator_depth;
->>>
->>> -	/* Set the local and remote addresses in the transport */
->>>   	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
->>>   	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
->>> +	/* The remote port is arbitrary and not under the control of the
->>> +	 * ULP. Set it to a fixed value so that the DRC continues to work
->>> +	 * after a reconnect.
->>> +	 */
->>> +	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
->>> +
->>>   	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
->>>   	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
->>>
->>>
->>>
->>>
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-> 
-> 
+T24gTW9uLCAyMDE5LTA2LTEwIGF0IDEwOjE0IC0wNDAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
+b3RlOg0KPiBPbiA0IEp1biAyMDE5LCBhdCAxNTowMCwgQmVuamFtaW4gQ29kZGluZ3RvbiB3cm90
+ZToNCj4gDQo+ID4gQXQgbGVhc3Qgbm93IEkgY2FuIHNwZW5kIHNvbWUgdGltZSBvbiBpdCBhbmQg
+bm90IGZlZWwgYWltbGVzcywNCj4gPiB0aGFua3MgZm9yDQo+ID4gdGhlIGNsb3NlciBsb29rLg0K
+PiANCj4gSSBhbSBub3QgZmluZGluZyBhIHJlbGlhYmxlIHdheSB0byBmaXggdGhpcyBhbmQgcmV0
+YWluIHRoZQ0KPiBvcHRpbWl6YXRpb24uICBJDQo+IHdpbGwgc2VuZCBhIHBhdGNoIHRvIHJlbW92
+ZSBpdC4NCg0KDQpIb3cgYWJvdXQganVzdCBtb3ZpbmcgdGhlIG9wdGltaXNhdGlvbiBpbnRvIHRo
+ZSBpZg0KKG5mc19jaGVja192ZXJpZmllcigpKSB7IH0gY2FzZT8gVGhlcmUgc2hvdWxkIGJlIG5v
+IG5lZWQgdG8gZG8gdGhlDQpuZnNfbG9va3VwX3ZlcmlmeV9pbm9kZSgpIGRhbmNlIGlmIHdlIGhv
+bGQgYSBkZWxlZ2F0aW9uLiBzaG91bGQgdGhlcmU/DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpM
+aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RA
+aGFtbWVyc3BhY2UuY29tDQoNCg0K
