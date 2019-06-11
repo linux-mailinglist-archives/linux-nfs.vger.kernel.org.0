@@ -2,167 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE9403C0C8
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 03:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 211643C0D1
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 03:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfFKBJN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jun 2019 21:09:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58950 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388845AbfFKBJN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:09:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 565E7ADF7;
-        Tue, 11 Jun 2019 01:09:11 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Tue, 11 Jun 2019 11:09:04 +1000
-Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        id S2390367AbfFKBLp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jun 2019 21:11:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34454 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389723AbfFKBLo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jun 2019 21:11:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B19VIQ022049;
+        Tue, 11 Jun 2019 01:11:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=lzmnRyVJuFqwl45UFunpqytAMq9T3uRA+URKP40OMIY=;
+ b=33ZGoC/l5chmmKWpEWXTsFlnijGzGTpGhno0cpjPSW9yUvatjP9YGxG5wxTi+FYzkioC
+ Kfth1XWU8vE9/qVqdgOX0+AJgpv1vLPKw41OqbKIkq5rhFiBgC2i+zvl6ilaDFaAVaKp
+ 2V3dFv9jarLwu6lrYeDhvMJNkCSrSlXoFfvDD9CIxZJQ9K0TtIwPj6Pr3TsUJHgZ0VTl
+ rvvE4/Vr5i3PuTN2wKwmu0s/C+f3Rr/C6dtIw3TIH8TLMfscwtqTyBoGfMlfIrV4jsFT
+ cVUCIUzQQxCdjzsW+0pytPuGLOOS+HtKz8BB49qD2sgMyniXkYt4Yf2YyhlTX9VkT3a1 eg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t05nqhxqf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 01:11:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B1ApE7109506;
+        Tue, 11 Jun 2019 01:11:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t04hy2unr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 01:11:35 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5B1BYjU005890;
+        Tue, 11 Jun 2019 01:11:34 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Jun 2019 18:11:34 -0700
+Date:   Mon, 10 Jun 2019 18:11:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
         Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
-In-Reply-To: <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
-References: <155917564898.3988.6096672032831115016.stgit@noble.brown> <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com> <87muj3tuuk.fsf@notabene.neil.brown.name> <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
-Message-ID: <87lfy9vsgf.fsf@notabene.neil.brown.name>
+        Steve French <smfrench@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org
+Subject: Re: [ANNOUNCE] xfs-linux: copy-file-range-fixes updated to
+ fe0da9c09b2d
+Message-ID: <20190611011132.GP1871505@magnolia>
+References: <20190610160624.GG1871505@magnolia>
+ <CAOQ4uxhkE_TsN7XMBgzxVhEYDw+gZEOOCiZzn9otVwQtB-XHeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhkE_TsN7XMBgzxVhEYDw+gZEOOCiZzn9otVwQtB-XHeA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906110004
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906110004
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 10, 2019 at 08:14:08PM +0300, Amir Goldstein wrote:
+> +CC affected maintainers
+> 
+> On Mon, Jun 10, 2019 at 7:06 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> >
+> > Hi folks,
+> >
+> > The copy-file-range-fixes branch of the xfs-linux repository at:
+> >
+> >         git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+> >
+> > has just been updated.  This is a common branch from which everyone else
+> > can create their own copy-file-range fix branches for 5.3.  When you
+> > send your pull request to Linus please let him know that the fixes
+> > stream out from here like some kind of hydra. :)
+> 
+> Thanks Darrick!
+> Should we also request to include this branch in linux-next?
 
-On Fri, May 31 2019, Chuck Lever wrote:
+Yeah, I was going to do that after 24h (i.e. it'll be in Wednesday's
+-next) to see if anyone had any last minute "ZOMG this patch has to be
+changed" screaming.
 
->> On May 30, 2019, at 6:56 PM, NeilBrown <neilb@suse.com> wrote:
->>=20
->> On Thu, May 30 2019, Chuck Lever wrote:
->>=20
->>> Hi Neil-
->>>=20
->>> Thanks for chasing this a little further.
->>>=20
->>>=20
->>>> On May 29, 2019, at 8:41 PM, NeilBrown <neilb@suse.com> wrote:
->>>>=20
->>>> This patch set is based on the patches in the multipath_tcp branch of
->>>> git://git.linux-nfs.org/projects/trondmy/nfs-2.6.git
->>>>=20
->>>> I'd like to add my voice to those supporting this work and wanting to
->>>> see it land.
->>>> We have had customers/partners wanting this sort of functionality for
->>>> years.  In SLES releases prior to SLE15, we've provide a
->>>> "nosharetransport" mount option, so that several filesystem could be
->>>> mounted from the same server and each would get its own TCP
->>>> connection.
->>>=20
->>> Is it well understood why splitting up the TCP connections result
->>> in better performance?
->>>=20
->>>=20
->>>> In SLE15 we are using this 'nconnect' feature, which is much nicer.
->>>>=20
->>>> Partners have assured us that it improves total throughput,
->>>> particularly with bonded networks, but we haven't had any concrete
->>>> data until Olga Kornievskaia provided some concrete test data - thanks
->>>> Olga!
->>>>=20
->>>> My understanding, as I explain in one of the patches, is that parallel
->>>> hardware is normally utilized by distributing flows, rather than
->>>> packets.  This avoid out-of-order deliver of packets in a flow.
->>>> So multiple flows are needed to utilizes parallel hardware.
->>>=20
->>> Indeed.
->>>=20
->>> However I think one of the problems is what happens in simpler scenario=
-s.
->>> We had reports that using nconnect > 1 on virtual clients made things
->>> go slower. It's not always wise to establish multiple connections
->>> between the same two IP addresses. It depends on the hardware on each
->>> end, and the network conditions.
->>=20
->> This is a good argument for leaving the default at '1'.  When
->> documentation is added to nfs(5), we can make it clear that the optimal
->> number is dependant on hardware.
->
-> Is there any visibility into the NIC hardware that can guide this setting?
->
+> Attention nfs/cifs/fuse/ceph maintainers!
+> This branch includes changes to your filesystems.
+> At lease nfs/cifs/ceph have been tested with these changes and the
+> new xfstests.
+> 
+> I think it would be preferred if you merge Darrick's branch into your
+> 5.3 branch as soon as you have one ready to reduce chances of
+> conflicts down the road.
+> 
+> I will be sending out 2 more patches to cifs/ceph, which depend on
+> this branch directly to maintainers.
 
-I doubt it, partly because there is more than just the NIC hardware at
-issue.
-There is also the server-side hardware and possibly hardware in the
-middle.
+Noted.
 
+--D
 
->
->>> What about situations where the network capabilities between server and
->>> client change? Problem is that neither endpoint can detect that; TCP
->>> usually just deals with it.
->>=20
->> Being able to manually change (-o remount) the number of connections
->> might be useful...
->
-> Ugh. I have problems with the administrative interface for this feature,
-> and this is one of them.
->
-> Another is what prevents your client from using a different nconnect=3D
-> setting on concurrent mounts of the same server? It's another case of a
-> per-mount setting being used to control a resource that is shared across
-> mounts.
-
-I think that horse has well and truly bolted.
-It would be nice to have a "server" abstraction visible to user-space
-where we could adjust settings that make sense server-wide, and then a way
-to mount individual filesystems from that "server" - but we don't.
-
-Probably the best we can do is to document (in nfs(5)) which options are
-per-server and which are per-mount.
-
->
-> Adding user tunables has never been known to increase the aggregate
-> amount of happiness in the universe. I really hope we can come up with
-> a better administrative interface... ideally, none would be best.
-
-I agree that none would be best.  It isn't clear to me that that is
-possible.
-At present, we really don't have enough experience with this
-functionality to be able to say what the trade-offs are.
-If we delay the functionality until we have the perfect interface,
-we may never get that experience.
-
-We can document "nconnect=3D" as a hint, and possibly add that
-"nconnect=3D1" is a firm guarantee that more will not be used.
-Then further down the track, we might change the actual number of
-connections automatically if a way can be found to do that without cost.
-
-Do you have any objections apart from the nconnect=3D mount option?
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlz+/zAACgkQOeye3VZi
-gblp1A/+J4rOOdFelHHlQ8pgaPpSagQHha0jWX39cpscHi4MpEyM3uLL43mg7IRQ
-2F6K/4aELuvJ2FVT8SsdPyVtgg09kLV8X+JGGRQqKo2gBmTtIxPRHSxNthYWMiWB
-ww32kfXU1Dhyp8YNH33CiCEW7eg+/a1JFLIx5RaluCwGaN8/qC97tGX/rHFvkcrH
-fNf2J8QCVNSfw4eCatXo0kPM+6zqrJHhMTDbp3hvqmtr2u5O3qu8Rmh3ZasDVtbB
-NB1aSpmkEZ8H6PKSRLCNibX8O+tSGIEjO/RMeAl/TNtyZGTNiUWzQc/ymwdrfi9k
-AKXWgoApNfrrhSSChdLSBXSbjfEGdLMuNv2cpnp7DIEdZIym0kebQqB2h8FQ6/mP
-3ck6pKvRjGCRVfZpsKKAsU8ysrdNUqmeMZC8arhyk95EM+2ZN5UvbCv9b0l4P7Gt
-AIHiOZZTDeF4DbXtF/YWXEs2mDs9XqEPSvPOiUdmeX5zs64UHQb3G0xSNThaxTxZ
-cY5asCimharEq/Cf0c8tUIiNOLR+eBT4Bw1VQAVjuYsZPf/79GnhAOngjQKux0ip
-ENqu3VSzVaOmlixB18ToBBLBV/+FMX9ZxYGCRHwOyvwvyA+0UxZPWASz0tbHM5Sb
-i3S8znOf4ph2AzoJAks7XgzPKktKgsPcMVYnKGPn/d57dZ/yOow=
-=Btrm
------END PGP SIGNATURE-----
---=-=-=--
+> Thanks,
+> Amir.
