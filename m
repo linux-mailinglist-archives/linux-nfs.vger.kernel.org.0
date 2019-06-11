@@ -2,108 +2,250 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B5993D01A
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 17:02:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5763D034
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 17:05:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390815AbfFKPBT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jun 2019 11:01:19 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51537 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390957AbfFKPBT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 11:01:19 -0400
-Received: by mail-it1-f195.google.com with SMTP id m3so5464997itl.1;
-        Tue, 11 Jun 2019 08:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=b4a9DkrCCwe6w246gNCpjHh4zXaKH+i/tvnha2k8DNU=;
-        b=m5T1aSrKiMohZ0hSRKEKCRublrH+/Gyx7hSrFrskpQ1IFDYh0yVghEy9+Q0yTFKrHE
-         JU/ffa3FyI2+bOqs6S8//eVcgHBy9YvUQUX1CUBuHIDrymXYnOt8zsRQfGU1G6jQvngO
-         7Y4E0MUcVfzQDgGUEyOddnx0iwFwBVkYKjTkYPtymYbW6i0sc9BKm76syczKpKAOArgc
-         WWFuO8vagEZSByllaVuu7CXKWQ5LgNu+jMbcrpFAoQg7IQ5edevNkcK3OEeaBVxokp37
-         xy4NiCdAIF7Cxn5eojki7IYE7vX585SKX5xjAVht+ezeykzOsNb+vMaUs72Q5nu+8pPo
-         J5dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=b4a9DkrCCwe6w246gNCpjHh4zXaKH+i/tvnha2k8DNU=;
-        b=R50oHyAjICp8RGa0n3oQOg89RlbS5XGg0ABUxnXxdFxDawIwJWYBgzfTkKk4yMiQeN
-         NT3n1qNio7kL964Mt4gwvlVV/Cfne1eMvaQ6Yh92GWwgYn/DtC27yrqIU1A3ceyO17e7
-         fn445doHmahYmSGnuqjL/E9ouANqDhgX+iv7+eFm4MS88czdedincuLjpIcNsM6YXrLo
-         pIwy0ceYqhiRC2bHXPTYDAakDezYeVqgr5gQGR6/nHLDbt45uQJlxyQecMmwQdxgwyKy
-         XDiicythxq+JE9IxMvxAlFnX1vtESQ/TTF+0jvFT+2/Y4tbZwGPy0U+DuxprS+4j00xI
-         mK+A==
-X-Gm-Message-State: APjAAAX8bcVItQTflO6xG0hpNY5PxVYXqkJc5/GwCC+0hE7G8W7cx9eu
-        7T9cshzFrMbV1BAEfAeQ5a0yb6gj
-X-Google-Smtp-Source: APXvYqwjLIPjBgeKBC3vBYq6YnRwuRXRZxjRYsF/FZu1h4oB7sLsVDbtWquBP3Wr3AQoqKvAw8rw/w==
-X-Received: by 2002:a02:380c:: with SMTP id b12mr29958240jaa.85.1560265278302;
-        Tue, 11 Jun 2019 08:01:18 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id m129sm1326052itd.6.2019.06.11.08.01.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 08:01:17 -0700 (PDT)
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5BF1GrR021712;
-        Tue, 11 Jun 2019 15:01:16 GMT
-Subject: [PATCH v2] svcrdma: Ignore source port when computing DRC hash
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     bfields@fieldses.org
-Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Tue, 11 Jun 2019 11:01:16 -0400
-Message-ID: <20190611150116.4209.63309.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        id S2391528AbfFKPFi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jun 2019 11:05:38 -0400
+Received: from p3plsmtpa06-01.prod.phx3.secureserver.net ([173.201.192.102]:45149
+        "EHLO p3plsmtpa06-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391376AbfFKPFh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 11:05:37 -0400
+Received: from [192.168.0.67] ([24.218.182.144])
+        by :SMTPAUTH: with ESMTPSA
+        id aiL9hTYdNAgxcaiL9hEUZu; Tue, 11 Jun 2019 08:05:36 -0700
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+To:     Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.com>
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+ <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
+ <87muj3tuuk.fsf@notabene.neil.brown.name>
+ <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
+ <87lfy9vsgf.fsf@notabene.neil.brown.name>
+ <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <d1c0dd53-bf4d-46e9-110f-0c4cecf41991@talpey.com>
+Date:   Tue, 11 Jun 2019 11:05:35 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfI6ZLf/uiIDLgXWqBhzbwqciZ+HXMJXJEbsJLM33yVrLtChR6tvfpNCX8EgPVxc9xop9y7PO5RTe8co0zkb+nD1sGsPywVSEOIp7obRNM9cI9QWJB6Xu
+ boSkkk0Vu/enMqGj3vCq4/q3jAmoQCGU5PoZkBxo/P97xSSDNYjyEs+Bg5cWZ8QNAGHepPqzWtVTfRh9HXlwr3utt6dwS/mjIb40e7oqNwUFMYgJCPAm+BBt
+ MD/Fa3jsK0BANG8c5elucC+GuxKF5bGomZZ/9E0cHi0z2tzRHhzbwplpQPoWgMqF6NM7P9IdSf4IaxRMIfps5oYIRqYMN3ffaKWwLPaC7/U=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The DRC appears to be effectively empty after an RPC/RDMA transport
-reconnect. The problem is that each connection uses a different
-source port, which defeats the DRC hash.
+On 6/11/2019 10:51 AM, Chuck Lever wrote:
+> Hi Neil-
+> 
+> 
+>> On Jun 10, 2019, at 9:09 PM, NeilBrown <neilb@suse.com> wrote:
+>>
+>> On Fri, May 31 2019, Chuck Lever wrote:
+>>
+>>>> On May 30, 2019, at 6:56 PM, NeilBrown <neilb@suse.com> wrote:
+>>>>
+>>>> On Thu, May 30 2019, Chuck Lever wrote:
+>>>>
+>>>>> Hi Neil-
+>>>>>
+>>>>> Thanks for chasing this a little further.
+>>>>>
+>>>>>
+>>>>>> On May 29, 2019, at 8:41 PM, NeilBrown <neilb@suse.com> wrote:
+>>>>>>
+>>>>>> This patch set is based on the patches in the multipath_tcp branch of
+>>>>>> git://git.linux-nfs.org/projects/trondmy/nfs-2.6.git
+>>>>>>
+>>>>>> I'd like to add my voice to those supporting this work and wanting to
+>>>>>> see it land.
+>>>>>> We have had customers/partners wanting this sort of functionality for
+>>>>>> years.  In SLES releases prior to SLE15, we've provide a
+>>>>>> "nosharetransport" mount option, so that several filesystem could be
+>>>>>> mounted from the same server and each would get its own TCP
+>>>>>> connection.
+>>>>>
+>>>>> Is it well understood why splitting up the TCP connections result
+>>>>> in better performance?
+>>>>>
+>>>>>
+>>>>>> In SLE15 we are using this 'nconnect' feature, which is much nicer.
+>>>>>>
+>>>>>> Partners have assured us that it improves total throughput,
+>>>>>> particularly with bonded networks, but we haven't had any concrete
+>>>>>> data until Olga Kornievskaia provided some concrete test data - thanks
+>>>>>> Olga!
+>>>>>>
+>>>>>> My understanding, as I explain in one of the patches, is that parallel
+>>>>>> hardware is normally utilized by distributing flows, rather than
+>>>>>> packets.  This avoid out-of-order deliver of packets in a flow.
+>>>>>> So multiple flows are needed to utilizes parallel hardware.
+>>>>>
+>>>>> Indeed.
+>>>>>
+>>>>> However I think one of the problems is what happens in simpler scenarios.
+>>>>> We had reports that using nconnect > 1 on virtual clients made things
+>>>>> go slower. It's not always wise to establish multiple connections
+>>>>> between the same two IP addresses. It depends on the hardware on each
+>>>>> end, and the network conditions.
+>>>>
+>>>> This is a good argument for leaving the default at '1'.  When
+>>>> documentation is added to nfs(5), we can make it clear that the optimal
+>>>> number is dependant on hardware.
+>>>
+>>> Is there any visibility into the NIC hardware that can guide this setting?
+>>>
+>>
+>> I doubt it, partly because there is more than just the NIC hardware at issue.
+>> There is also the server-side hardware and possibly hardware in the middle.
+> 
+> So the best guidance is YMMV. :-)
+> 
+> 
+>>>>> What about situations where the network capabilities between server and
+>>>>> client change? Problem is that neither endpoint can detect that; TCP
+>>>>> usually just deals with it.
+>>>>
+>>>> Being able to manually change (-o remount) the number of connections
+>>>> might be useful...
+>>>
+>>> Ugh. I have problems with the administrative interface for this feature,
+>>> and this is one of them.
+>>>
+>>> Another is what prevents your client from using a different nconnect=
+>>> setting on concurrent mounts of the same server? It's another case of a
+>>> per-mount setting being used to control a resource that is shared across
+>>> mounts.
+>>
+>> I think that horse has well and truly bolted.
+>> It would be nice to have a "server" abstraction visible to user-space
+>> where we could adjust settings that make sense server-wide, and then a way
+>> to mount individual filesystems from that "server" - but we don't.
+> 
+> Even worse, there will be some resource sharing between containers that
+> might be undesirable. The host should have ultimate control over those
+> resources.
+> 
+> But that is neither here nor there.
+> 
+> 
+>> Probably the best we can do is to document (in nfs(5)) which options are
+>> per-server and which are per-mount.
+> 
+> Alternately, the behavior of this option could be documented this way:
+> 
+> The default value is one. To resolve conflicts between nconnect settings on
+> different mount points to the same server, the value set on the first mount
+> applies until there are no more mounts of that server, unless nosharecache
+> is specified. When following a referral to another server, the nconnect
+> setting is inherited, but the effective value is determined by other mounts
+> of that server that are already in place.
+> 
+> I hate to say it, but the way to make this work deterministically is to
+> ask administrators to ensure that the setting is the same on all mounts
+> of the same server. Again I'd rather this take care of itself, but it
+> appears that is not going to be possible.
+> 
+> 
+>>> Adding user tunables has never been known to increase the aggregate
+>>> amount of happiness in the universe. I really hope we can come up with
+>>> a better administrative interface... ideally, none would be best.
+>>
+>> I agree that none would be best.  It isn't clear to me that that is
+>> possible.
+>> At present, we really don't have enough experience with this
+>> functionality to be able to say what the trade-offs are.
+>> If we delay the functionality until we have the perfect interface,
+>> we may never get that experience.
+>>
+>> We can document "nconnect=" as a hint, and possibly add that
+>> "nconnect=1" is a firm guarantee that more will not be used.
+> 
+> Agree that 1 should be the default. If we make this setting a
+> hint, then perhaps it should be renamed; nconnect makes it sound
+> like the client will always open N connections. How about "maxconn" ?
+> 
+> Then, to better define the behavior:
+> 
+> The range of valid maxconn values is 1 to 3? to 8? to NCPUS? to the
+> count of the client’s NUMA nodes? I’d be in favor of a small number
+> to start with. Solaris' experience with multiple connections is that
+> there is very little benefit past 8.
 
-Clients always have to disconnect before they send retransmissions
-to reset the connection's credit accounting, thus every retransmit
-on NFS/RDMA will miss the DRC.
+If it's of any help, the Windows SMB3 multichannel client limits itself
+to 4. The benefit rises slowly at that point, and the unpredictability
+heads for the roof, especially when multiple NICs and network paths
+are in play. The setting can be increased, but we discourage it for
+anything but testing.
 
-An NFS/RDMA client's IP source port is meaningless for RDMA
-transports. The transport layer typically sets the source port value
-on the connection to a random ephemeral port. The server already
-ignores it for the "secure port" check. See commit 16e4d93f6de7
-("NFSD: Ignore client's source port on RDMA transports").
+Tom.
 
-The Linux NFS server's DRC resolves XID collisions from the same
-source IP address by using the checksum of the first 200 bytes of
-the RPC call header.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org # v4.14+
----
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 027a3b0..0004535 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -211,9 +211,14 @@ static void handle_connect_req(struct rdma_cm_id *new_cma_id,
- 	/* Save client advertised inbound read limit for use later in accept. */
- 	newxprt->sc_ord = param->initiator_depth;
- 
--	/* Set the local and remote addresses in the transport */
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
- 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
-+	/* The remote port is arbitrary and not under the control of the
-+	 * client ULP. Set it to a fixed value so that the DRC continues
-+	 * to be effective after a reconnect.
-+	 */
-+	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
-+
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
- 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
- 
-
+> If maxconn is specified with a datagram transport, does the mount
+> operation fail, or is the setting is ignored?
+> 
+> If maxconn is a hint, when does the client open additional
+> connections?
+> 
+> IMO documentation should be clear that this setting is not for the
+> purpose of multipathing/trunking (using multiple NICs on the client
+> or server). The client has to do trunking detection/discovery in that
+> case, and nconnect doesn't add that logic. This is strictly for
+> enabling multiple connections between one client-server IP address
+> pair.
+> 
+> Do we need to state explicitly that all transport connections for a
+> mount (or client-server pair) are the same connection type (i.e., all
+> TCP or all RDMA, never a mix)?
+> 
+> 
+>> Then further down the track, we might change the actual number of
+>> connections automatically if a way can be found to do that without cost.
+> 
+> Fair enough.
+> 
+> 
+>> Do you have any objections apart from the nconnect= mount option?
+> 
+> Well I realize my last e-mail sounded a little negative, but I'm
+> actually in favor of adding the ability to open multiple connections
+> per client-server pair. I just want to be careful about making this
+> a feature that has as few downsides as possible right from the start.
+> I'll try to be more helpful in my responses.
+> 
+> Remaining implementation issues that IMO need to be sorted:
+> 
+> • We want to take care that the client can recover network resources
+> that have gone idle. Can we reuse the auto-close logic to close extra
+> connections?
+> • How will the client schedule requests on multiple connections?
+> Should we enable the use of different schedulers?
+> • How will retransmits be handled?
+> • How will the client recover from broken connections? Today's clients
+> use disconnect to determine when to retransmit, thus there might be
+> some unwanted interactions here that result in mount hangs.
+> • Assume NFSv4.1 session ID rather than client ID trunking: is Linux
+> client support in place for this already?
+> • Are there any concerns about how the Linux server DRC will behave in
+> multi-connection scenarios?
+> 
+> None of these seem like a deal breaker. And possibly several of these
+> are already decided, but just need to be published/documented.
+> 
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+> 
+> 
