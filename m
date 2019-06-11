@@ -2,166 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 796E73D43F
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 19:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5AA03D473
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 19:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406101AbfFKRca (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jun 2019 13:32:30 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39662 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406112AbfFKRca (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 13:32:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BHT0UM043985;
-        Tue, 11 Jun 2019 17:32:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=dW5fZfI45vSw1xkPo8c1ZC+r0Hr8gXYGTHhIA0JMhwA=;
- b=fBbHR2oxkPLMdScB9uG2KTphXkgkdbA3ioAmIHJgiVtRagVTCV2r1+HsVbSXxZWiRMwW
- kRCcCTa2f61Jbx99uTT+a7GOL4nePdmFkKjBS0D4xShazZF/Y82rl+TORormrgx6wLPv
- DplAyDYNhitak66H+Hf+4tvVVAi0ObZBfyYHHz0FZMcDW66CbR5bCk5cn5WHqgjZtKLE
- Pg2xdlbxUpMIw0DvJUia/cmM2GOjzVA4rgRHHvFLPoRTPn0ELrkVk3GDckkac6EUBNEB
- IF/4yX5BdqbDgJVUC1u0/yOl8XaQzZbzKy1nEvfwd3oJIH+5ciK8d92NbKo2q0JHrmxB Xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t05nqpkwx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 17:32:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BHW90J035992;
-        Tue, 11 Jun 2019 17:32:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t0p9re0tw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 17:32:18 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BHWECI001956;
-        Tue, 11 Jun 2019 17:32:16 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 10:32:14 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <266475174966dd473670d9fc9f6a6d6af3d87d44.camel@hammerspace.com>
-Date:   Tue, 11 Jun 2019 13:32:09 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        id S2405582AbfFKRor (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jun 2019 13:44:47 -0400
+Received: from mail-eopbgr750115.outbound.protection.outlook.com ([40.107.75.115]:36703
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404857AbfFKRoq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:44:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LV+JlLV6Jflm+mRDAa+AM8+YYJG87sKFmhSKbqpN3O4=;
+ b=FLe431dtpMerk0yEzO546zQ0jjI3Aw5vDkUxm4L4QX2CZ5J09rz7Ty2eNluYAruAQEcV7FDJgZhM1X58pG0wVhRUaDzGWyCCHRwUDroLSzrikjUBH5d18gzUeU9St/S9drx6/6PYYRkTTAbZzVQHI9N3ikdagnDPcYLubGjU/Do=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1674.namprd13.prod.outlook.com (10.171.155.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.5; Tue, 11 Jun 2019 17:44:41 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::8c58:2c23:dcba:94ee%7]) with mapi id 15.20.1987.010; Tue, 11 Jun 2019
+ 17:44:41 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "aglo@umich.edu" <aglo@umich.edu>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
         "neilb@suse.com" <neilb@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <217DDDDE-AA6D-47C8-AFC8-99548F29E1C2@oracle.com>
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+Thread-Topic: [PATCH 0/9] Multiple network connections for a single NFS mount.
+Thread-Index: AQHVFoClDLUWSno6kkqu5+tdKdASRKaD9P4AgABTyoCAAPi5AIAQdgMAgADl1oCAAAgVgIAABEUAgAASQICAAA47gIAAA36A
+Date:   Tue, 11 Jun 2019 17:44:41 +0000
+Message-ID: <6a4ace315ee7f9c72e4866384fcb800707a4cbe4.camel@hammerspace.com>
 References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
- <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
- <87muj3tuuk.fsf@notabene.neil.brown.name>
- <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
- <87lfy9vsgf.fsf@notabene.neil.brown.name>
- <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
- <6693beb0989c83580235526e3d1b54fad0920d82.camel@hammerspace.com>
- <35A94418-7DE0-4656-90B4-5A0183BA371C@oracle.com>
- <266475174966dd473670d9fc9f6a6d6af3d87d44.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110112
+         <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
+         <87muj3tuuk.fsf@notabene.neil.brown.name>
+         <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
+         <87lfy9vsgf.fsf@notabene.neil.brown.name>
+         <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+         <6693beb0989c83580235526e3d1b54fad0920d82.camel@hammerspace.com>
+         <35A94418-7DE0-4656-90B4-5A0183BA371C@oracle.com>
+         <266475174966dd473670d9fc9f6a6d6af3d87d44.camel@hammerspace.com>
+         <217DDDDE-AA6D-47C8-AFC8-99548F29E1C2@oracle.com>
+In-Reply-To: <217DDDDE-AA6D-47C8-AFC8-99548F29E1C2@oracle.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 52c4c884-041a-4d16-bc95-08d6ee947bcb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1674;
+x-ms-traffictypediagnostic: DM5PR13MB1674:
+x-microsoft-antispam-prvs: <DM5PR13MB16741937699695F0C4B002A6B8ED0@DM5PR13MB1674.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(6116002)(6246003)(2501003)(305945005)(3846002)(68736007)(6512007)(8936002)(7736002)(5660300002)(36756003)(4326008)(81156014)(53936002)(86362001)(478600001)(81166006)(25786009)(6916009)(316002)(66066001)(8676002)(229853002)(6506007)(6486002)(14444005)(476003)(66476007)(446003)(6436002)(76176011)(53546011)(256004)(66946007)(71190400001)(118296001)(2616005)(73956011)(5640700003)(71200400001)(64756008)(2906002)(54906003)(102836004)(66556008)(66446008)(486006)(11346002)(14454004)(26005)(186003)(76116006)(99286004)(2351001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1674;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: feCQgbFaTzJjNuK8c42aHz6isQrKdCYJeNml4P+VJWuSg1iD4IVnkeB0VplSuxnCq2XI+KwCNBxJfAA1i231wr98VJ2kOWBwTt6CwpNWaPLWLq6o47yiU+IhLJdofQ9yHR+OvUHZuz82xY4M4udLsB/+u6pGdKTU6NPu2N95QbdMg/pNytzzMhk+TjB6RYvhKXZDX3ZwtRVOZKeWGCEE4xiNyINQ2u4KyU/DMq6EEoTnSMXp3ndbkD5uZyn5IgrXiFHfyPnzcXnr4uzwRRFiaQo4Y0ijiFRwE1FAdGLSS2I22rLiv2X6Tqcp5nGjjCTYmWXOW264pTaVRx1issBojZRS9XQ6IskUrY8KVShOPEmNGzn7wmW6QZl7OwDu1GnM1D5BkfD/5kMX9KqMZRFaZu0NTXdGrfX0V3touH0BPNU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CC3B7D39D84DB44A82F074B3FCAC36E3@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52c4c884-041a-4d16-bc95-08d6ee947bcb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 17:44:41.8343
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1674
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Jun 11, 2019, at 12:41 PM, Trond Myklebust =
-<trondmy@hammerspace.com> wrote:
->=20
-> On Tue, 2019-06-11 at 11:35 -0400, Chuck Lever wrote:
->>> On Jun 11, 2019, at 11:20 AM, Trond Myklebust <
->>> trondmy@hammerspace.com> wrote:
->>>=20
->>> On Tue, 2019-06-11 at 10:51 -0400, Chuck Lever wrote:
->>>=20
->>>> If maxconn is a hint, when does the client open additional
->>>> connections?
->>>=20
->>> As I've already stated, that functionality is not yet available.
->>> When
->>> it is, it will be under the control of a userspace daemon that can
->>> decide on a policy in accordance with a set of user specified
->>> requirements.
->>=20
->> Then why do we need a mount option at all?
->>=20
->=20
-> For one thing, it allows people to play with this until we have a =
-fully
-> automated solution. The fact that people are actually pulling down
-> these patches, forward porting them and trying them out would indicate
-> that there is interest in doing so.
-
-Agreed that it demonstrates that folks are interested in having
-multiple connections. I count myself among them.
-
-
-> Secondly, if your policy is 'I just want n connections' because that
-> fits your workload requirements (e.g. because said workload is both
-> latency sensitive and bursty), then a daemon solution would be
-> unnecessary, and may be error prone.
-
-Why wouldn't that be the default out-of-the-shrinkwrap configuration
-that is installed by nfs-utils?
-
-
-> A mount option is helpful in this case, because you can perform the
-> setup through the normal fstab or autofs config file configuration
-> route. It also make sense if you have a nfsroot setup.
-
-NFSROOT is the only usage scenario where I see a mount option being
-a superior administrative interface. However I don't feel that
-NFSROOT is going to host workloads that would need multiple
-connections. KIS
-
-
-> Finally, even if you do want to have a daemon manage your transport,
-> configuration, you do want a mechanism to help it reach an equilibrium
-> state quickly. Connections take time to bring up and tear down because
-> performance measurements take time to build up sufficient statistical
-> precision. Furthermore, doing so comes with a number of hidden costs,
-> e.g.: chewing up privileged port numbers by putting them in a =
-TIME_WAIT
-> state. If you know that a given server is always subject to heavy
-> traffic, then initialising the number of connections appropriately has
-> value.
-
-Again, I don't see how this is not something a config file can do.
-
-The stated intent of "nconnect" way back when was for experimentation.
-It works great for that!
-
-I don't see it as a desirable long-term administrative interface,
-though. I'd rather not nail in a new mount option that we actually
-plan to obsolete in favor of an automated mechanism. I'd rather see
-us design the administrative interface with automation from the
-start. That will have a lower long-term maintenance cost.
-
-Again, I'm not objecting to support for multiple connections. It's
-just that adding a mount option doesn't feel like a friendly or
-finished interface for actual users. A config file (or re-using
-nfs.conf) seems to me like a better approach.
-
-
---
-Chuck Lever
-
-
-
+T24gVHVlLCAyMDE5LTA2LTExIGF0IDEzOjMyIC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
+PiBPbiBKdW4gMTEsIDIwMTksIGF0IDEyOjQxIFBNLCBUcm9uZCBNeWtsZWJ1c3QgPA0KPiA+IHRy
+b25kbXlAaGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiANCj4gPiBPbiBUdWUsIDIwMTktMDYt
+MTEgYXQgMTE6MzUgLTA0MDAsIENodWNrIExldmVyIHdyb3RlOg0KPiA+ID4gPiBPbiBKdW4gMTEs
+IDIwMTksIGF0IDExOjIwIEFNLCBUcm9uZCBNeWtsZWJ1c3QgPA0KPiA+ID4gPiB0cm9uZG15QGhh
+bW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBPbiBUdWUsIDIwMTktMDYt
+MTEgYXQgMTA6NTEgLTA0MDAsIENodWNrIExldmVyIHdyb3RlOg0KPiA+ID4gPiANCj4gPiA+ID4g
+PiBJZiBtYXhjb25uIGlzIGEgaGludCwgd2hlbiBkb2VzIHRoZSBjbGllbnQgb3BlbiBhZGRpdGlv
+bmFsDQo+ID4gPiA+ID4gY29ubmVjdGlvbnM/DQo+ID4gPiA+IA0KPiA+ID4gPiBBcyBJJ3ZlIGFs
+cmVhZHkgc3RhdGVkLCB0aGF0IGZ1bmN0aW9uYWxpdHkgaXMgbm90IHlldA0KPiA+ID4gPiBhdmFp
+bGFibGUuDQo+ID4gPiA+IFdoZW4NCj4gPiA+ID4gaXQgaXMsIGl0IHdpbGwgYmUgdW5kZXIgdGhl
+IGNvbnRyb2wgb2YgYSB1c2Vyc3BhY2UgZGFlbW9uIHRoYXQNCj4gPiA+ID4gY2FuDQo+ID4gPiA+
+IGRlY2lkZSBvbiBhIHBvbGljeSBpbiBhY2NvcmRhbmNlIHdpdGggYSBzZXQgb2YgdXNlciBzcGVj
+aWZpZWQNCj4gPiA+ID4gcmVxdWlyZW1lbnRzLg0KPiA+ID4gDQo+ID4gPiBUaGVuIHdoeSBkbyB3
+ZSBuZWVkIGEgbW91bnQgb3B0aW9uIGF0IGFsbD8NCj4gPiA+IA0KPiA+IA0KPiA+IEZvciBvbmUg
+dGhpbmcsIGl0IGFsbG93cyBwZW9wbGUgdG8gcGxheSB3aXRoIHRoaXMgdW50aWwgd2UgaGF2ZSBh
+DQo+ID4gZnVsbHkNCj4gPiBhdXRvbWF0ZWQgc29sdXRpb24uIFRoZSBmYWN0IHRoYXQgcGVvcGxl
+IGFyZSBhY3R1YWxseSBwdWxsaW5nIGRvd24NCj4gPiB0aGVzZSBwYXRjaGVzLCBmb3J3YXJkIHBv
+cnRpbmcgdGhlbSBhbmQgdHJ5aW5nIHRoZW0gb3V0IHdvdWxkDQo+ID4gaW5kaWNhdGUNCj4gPiB0
+aGF0IHRoZXJlIGlzIGludGVyZXN0IGluIGRvaW5nIHNvLg0KPiANCj4gQWdyZWVkIHRoYXQgaXQg
+ZGVtb25zdHJhdGVzIHRoYXQgZm9sa3MgYXJlIGludGVyZXN0ZWQgaW4gaGF2aW5nDQo+IG11bHRp
+cGxlIGNvbm5lY3Rpb25zLiBJIGNvdW50IG15c2VsZiBhbW9uZyB0aGVtLg0KPiANCj4gDQo+ID4g
+U2Vjb25kbHksIGlmIHlvdXIgcG9saWN5IGlzICdJIGp1c3Qgd2FudCBuIGNvbm5lY3Rpb25zJyBi
+ZWNhdXNlDQo+ID4gdGhhdA0KPiA+IGZpdHMgeW91ciB3b3JrbG9hZCByZXF1aXJlbWVudHMgKGUu
+Zy4gYmVjYXVzZSBzYWlkIHdvcmtsb2FkIGlzIGJvdGgNCj4gPiBsYXRlbmN5IHNlbnNpdGl2ZSBh
+bmQgYnVyc3R5KSwgdGhlbiBhIGRhZW1vbiBzb2x1dGlvbiB3b3VsZCBiZQ0KPiA+IHVubmVjZXNz
+YXJ5LCBhbmQgbWF5IGJlIGVycm9yIHByb25lLg0KPiANCj4gV2h5IHdvdWxkbid0IHRoYXQgYmUg
+dGhlIGRlZmF1bHQgb3V0LW9mLXRoZS1zaHJpbmt3cmFwIGNvbmZpZ3VyYXRpb24NCj4gdGhhdCBp
+cyBpbnN0YWxsZWQgYnkgbmZzLXV0aWxzPw0KDQpXaGF0IGlzIHRoZSBwb2ludCBvZiBmb3JjaW5n
+IHBlb3BsZSB0byBydW4gYSBkYWVtb24gaWYgYWxsIHRoZXkgd2FudCB0bw0KZG8gaXMgc2V0IHVw
+IGEgZml4ZWQgbnVtYmVyIG9mIGNvbm5lY3Rpb25zPw0KDQo+IA0KPiA+IEEgbW91bnQgb3B0aW9u
+IGlzIGhlbHBmdWwgaW4gdGhpcyBjYXNlLCBiZWNhdXNlIHlvdSBjYW4gcGVyZm9ybSB0aGUNCj4g
+PiBzZXR1cCB0aHJvdWdoIHRoZSBub3JtYWwgZnN0YWIgb3IgYXV0b2ZzIGNvbmZpZyBmaWxlIGNv
+bmZpZ3VyYXRpb24NCj4gPiByb3V0ZS4gSXQgYWxzbyBtYWtlIHNlbnNlIGlmIHlvdSBoYXZlIGEg
+bmZzcm9vdCBzZXR1cC4NCj4gDQo+IE5GU1JPT1QgaXMgdGhlIG9ubHkgdXNhZ2Ugc2NlbmFyaW8g
+d2hlcmUgSSBzZWUgYSBtb3VudCBvcHRpb24gYmVpbmcNCj4gYSBzdXBlcmlvciBhZG1pbmlzdHJh
+dGl2ZSBpbnRlcmZhY2UuIEhvd2V2ZXIgSSBkb24ndCBmZWVsIHRoYXQNCj4gTkZTUk9PVCBpcyBn
+b2luZyB0byBob3N0IHdvcmtsb2FkcyB0aGF0IHdvdWxkIG5lZWQgbXVsdGlwbGUNCj4gY29ubmVj
+dGlvbnMuIEtJUw0KPiANCj4gDQo+ID4gRmluYWxseSwgZXZlbiBpZiB5b3UgZG8gd2FudCB0byBo
+YXZlIGEgZGFlbW9uIG1hbmFnZSB5b3VyDQo+ID4gdHJhbnNwb3J0LA0KPiA+IGNvbmZpZ3VyYXRp
+b24sIHlvdSBkbyB3YW50IGEgbWVjaGFuaXNtIHRvIGhlbHAgaXQgcmVhY2ggYW4NCj4gPiBlcXVp
+bGlicml1bQ0KPiA+IHN0YXRlIHF1aWNrbHkuIENvbm5lY3Rpb25zIHRha2UgdGltZSB0byBicmlu
+ZyB1cCBhbmQgdGVhciBkb3duDQo+ID4gYmVjYXVzZQ0KPiA+IHBlcmZvcm1hbmNlIG1lYXN1cmVt
+ZW50cyB0YWtlIHRpbWUgdG8gYnVpbGQgdXAgc3VmZmljaWVudA0KPiA+IHN0YXRpc3RpY2FsDQo+
+ID4gcHJlY2lzaW9uLiBGdXJ0aGVybW9yZSwgZG9pbmcgc28gY29tZXMgd2l0aCBhIG51bWJlciBv
+ZiBoaWRkZW4NCj4gPiBjb3N0cywNCj4gPiBlLmcuOiBjaGV3aW5nIHVwIHByaXZpbGVnZWQgcG9y
+dCBudW1iZXJzIGJ5IHB1dHRpbmcgdGhlbSBpbiBhDQo+ID4gVElNRV9XQUlUDQo+ID4gc3RhdGUu
+IElmIHlvdSBrbm93IHRoYXQgYSBnaXZlbiBzZXJ2ZXIgaXMgYWx3YXlzIHN1YmplY3QgdG8gaGVh
+dnkNCj4gPiB0cmFmZmljLCB0aGVuIGluaXRpYWxpc2luZyB0aGUgbnVtYmVyIG9mIGNvbm5lY3Rp
+b25zIGFwcHJvcHJpYXRlbHkNCj4gPiBoYXMNCj4gPiB2YWx1ZS4NCj4gDQo+IEFnYWluLCBJIGRv
+bid0IHNlZSBob3cgdGhpcyBpcyBub3Qgc29tZXRoaW5nIGEgY29uZmlnIGZpbGUgY2FuIGRvLg0K
+DQpZb3UgY2FuLCBidXQgdGhhdCBtZWFucyB5b3UgaGF2ZSB0byBrZWVwIHNhaWQgY29uZmlnIGZp
+bGUgdXAgdG8gZGF0ZQ0Kd2l0aCB0aGUgY29udGVudHMgb2YgL2V0Yy9mc3RhYiBldGMuIFB1bHZl
+cmlzaW5nIGNvbmZpZ3VyYXRpb24gaW50bw0KbGl0dGxlIGJpdHMgYW5kIHBpZWNlcyB0aGF0IGFy
+ZSBzY2F0dGVyZWQgYXJvdW5kIGluIGRpZmZlcmVudCBmaWxlcyBpcw0Kbm90IGEgdXNlciBmcmll
+bmRseSBpbnRlcmZhY2UgZWl0aGVyLg0KDQo+IFRoZSBzdGF0ZWQgaW50ZW50IG9mICJuY29ubmVj
+dCIgd2F5IGJhY2sgd2hlbiB3YXMgZm9yDQo+IGV4cGVyaW1lbnRhdGlvbi4NCj4gSXQgd29ya3Mg
+Z3JlYXQgZm9yIHRoYXQhDQo+IA0KPiBJIGRvbid0IHNlZSBpdCBhcyBhIGRlc2lyYWJsZSBsb25n
+LXRlcm0gYWRtaW5pc3RyYXRpdmUgaW50ZXJmYWNlLA0KPiB0aG91Z2guIEknZCByYXRoZXIgbm90
+IG5haWwgaW4gYSBuZXcgbW91bnQgb3B0aW9uIHRoYXQgd2UgYWN0dWFsbHkNCj4gcGxhbiB0byBv
+YnNvbGV0ZSBpbiBmYXZvciBvZiBhbiBhdXRvbWF0ZWQgbWVjaGFuaXNtLiBJJ2QgcmF0aGVyIHNl
+ZQ0KPiB1cyBkZXNpZ24gdGhlIGFkbWluaXN0cmF0aXZlIGludGVyZmFjZSB3aXRoIGF1dG9tYXRp
+b24gZnJvbSB0aGUNCj4gc3RhcnQuIFRoYXQgd2lsbCBoYXZlIGEgbG93ZXIgbG9uZy10ZXJtIG1h
+aW50ZW5hbmNlIGNvc3QuDQo+IA0KPiBBZ2FpbiwgSSdtIG5vdCBvYmplY3RpbmcgdG8gc3VwcG9y
+dCBmb3IgbXVsdGlwbGUgY29ubmVjdGlvbnMuIEl0J3MNCj4ganVzdCB0aGF0IGFkZGluZyBhIG1v
+dW50IG9wdGlvbiBkb2Vzbid0IGZlZWwgbGlrZSBhIGZyaWVuZGx5IG9yDQo+IGZpbmlzaGVkIGlu
+dGVyZmFjZSBmb3IgYWN0dWFsIHVzZXJzLiBBIGNvbmZpZyBmaWxlIChvciByZS11c2luZw0KPiBu
+ZnMuY29uZikgc2VlbXMgdG8gbWUgbGlrZSBhIGJldHRlciBhcHByb2FjaC4NCg0KbmZzLmNvbmYg
+aXMgZ3JlYXQgZm9yIGRlZmluaW5nIGdsb2JhbCBkZWZhdWx0cy4NCg0KSXQgY2FuIGRvIHNlcnZl
+ciBzcGVjaWZpYyBjb25maWd1cmF0aW9uLCBidXQgaXMgbm90IGEgcG9wdWxhciBzb2x1dGlvbg0K
+Zm9yIHRoYXQuIE1vc3QgcGVvcGxlIGFyZSBzdGlsbCBwdXR0aW5nIHRoYXQgaW5mb3JtYXRpb24g
+aW4gL2V0Yy9mc3RhYg0Kc28gdGhhdCBpdCBhcHBlYXJzIGluIG9uZSBzcG90Lg0KDQotLSANClRy
+b25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0K
+dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
