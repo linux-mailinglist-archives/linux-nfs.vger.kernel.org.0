@@ -2,614 +2,378 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7500F3D75C
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 22:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 094273D76D
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 22:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406013AbfFKUA2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jun 2019 16:00:28 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:44554 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405168AbfFKUA2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 16:00:28 -0400
-Received: by mail-vk1-f194.google.com with SMTP id x129so2761734vkc.11;
-        Tue, 11 Jun 2019 13:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aYJZFpjNbJ0X77+jjPplVCyD9rqVt7UHJYGdl0VXVGM=;
-        b=kFkJlfd+Th5bSHbTt8jV+Usr+fADIyW6aKRqPc/ipjJDPqHKixM6k2xmKwHGKEaBVT
-         goTcTRgV6mTX32o6tYldQabvUu779mX5hrJBPs+rcstHcpmEp5ySTht4pyE/KUrC00dd
-         ELbnlTWYr6af3h40/2ku4d4GzFbXK5jCtCK/BhORhfWpfdVZONNgWizvx1zFrYT45bLe
-         S7+tcg7pIG1O5T8oxj1Csc0H/AJGMTlsmurgWlGQyL4Hm0O8adtZTFsiinh6YJ/V6tex
-         f9I9hdvIIConrIkYGQgrdpO7f7mWDP3UXUJDmqKedJQQWCoxr+ZlHFci4pbGWPfWE/1n
-         Qqpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aYJZFpjNbJ0X77+jjPplVCyD9rqVt7UHJYGdl0VXVGM=;
-        b=QHSos4jxqjClV1jPqSK87gSY6eEHY0tgnCPynwmkLMFYTlDzk2pBB4Y0bKIOcS1BjG
-         6xBixPtxvdWc/IQbKS0aXgj8GOcuNs22BJtg2Pnp8T6/Kk9IwmcgUHLT+wCHiuk+r00w
-         2U7sfhfyTw0wIbu9T1umxSPZvl7+TcYZCv3n8YDHDnQdWT4b5xDbJH4nbf4GuzuVytRj
-         bTBAZHh6iDke2Ernqly3Y/BdjTX9uv5vdlOsGYjSJF80YT3NvG267f2LScb6BXwKb1PM
-         tZrYAfQekX2VAFqQgpDe82/qqYc2fHbHfVLuxM9WJRPeDq1lpGyWq4A6Rrrs1s8uZNsd
-         /qNA==
-X-Gm-Message-State: APjAAAWwNH8GLa9R0MHz1AYu8u1CUJNAftRWuFuSmXUPqZAwcnPxZjn9
-        UIjckgTPlwbG7mrhPYGQx97B6qnAaTcI2Dab5RQ0twKn
-X-Google-Smtp-Source: APXvYqyeScaa/Ogt2AktuTIH4ScLkNDPCXwuiwNWuFV6hbel7oEZVsbWcSyuMFH/TZ8RSevfvOpzk5KRrE9c6fX+zUM=
-X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr14620525vkd.31.1560283224593;
- Tue, 11 Jun 2019 13:00:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190611150445.2877.8656.stgit@manet.1015granger.net>
- <20190611150923.2877.6862.stgit@manet.1015granger.net> <CAN-5tyHx-r6c6RgHk2ocv2CxTgw_8Ebie_fUUSxzaVKotmX1zw@mail.gmail.com>
- <C5542119-E526-4A69-9D15-B0EDEFF1E5A9@oracle.com>
-In-Reply-To: <C5542119-E526-4A69-9D15-B0EDEFF1E5A9@oracle.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 11 Jun 2019 16:00:13 -0400
-Message-ID: <CAN-5tyHW4L8_djraOPfoLx=NorqgHOijjaApWNNESVRO2X9Upg@mail.gmail.com>
-Subject: Re: [PATCH v2 16/19] NFS: Fix show_nfs_errors macros again
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        id S2406443AbfFKUCn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jun 2019 16:02:43 -0400
+Received: from p3plsmtpa09-04.prod.phx3.secureserver.net ([173.201.193.233]:58583
+        "EHLO p3plsmtpa09-04.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405168AbfFKUCn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 16:02:43 -0400
+Received: from [192.168.0.56] ([24.218.182.144])
+        by :SMTPAUTH: with ESMTPSA
+        id amyfhUa5vz2MIamyfhy6V1; Tue, 11 Jun 2019 13:02:42 -0700
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+To:     Olga Kornievskaia <aglo@umich.edu>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+ <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
+ <87muj3tuuk.fsf@notabene.neil.brown.name>
+ <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
+ <87lfy9vsgf.fsf@notabene.neil.brown.name>
+ <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+ <CAN-5tyEdu7poNWrKtOyic6GgQcjAPZhB5BJeQ7JMSfmgMx8b+g@mail.gmail.com>
+ <16D30334-67BE-4BD2-BE69-1453F738B259@oracle.com>
+ <CAN-5tyHQz4kyGqAea3hTW0GKRBtkkB5UeE6THz-7uMmadJygyg@mail.gmail.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <ac631f3c-af1a-6877-08b6-21ddf71edff2@talpey.com>
+Date:   Tue, 11 Jun 2019 16:02:40 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAN-5tyHQz4kyGqAea3hTW0GKRBtkkB5UeE6THz-7uMmadJygyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfP6ESxu6VB9oIagEzMR5CZbwCefYW/hJAPAP9mMqL664vQ8EZ9ZKIkKdWDE1aqydDvH/pWeQRlU0zvZG8wr4uIcBK2jWNBQv3faX3Ro6db3eFQC2W5GE
+ fornnJOX58FJT/uLxvLCzOg4Xm7KM1osM5hEpQ4Dx1Du8Nnak8RjKHUk0+8agrHlFGc7zqbCBnkB3sgRBRCsGGqWLzylMGQyJw1pHMlHb/rgemOtAz387p9w
+ erwkYNPfwnE3edrawxZ1n1vvIlMRQoX39KeuDFQ5YVUdw6nrI9wpw8R0qJqLLabehejQZcmRMQI8LU5ztKME93Uw5R0UBn4zVL/FZer6Tuw=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 3:37 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Jun 11, 2019, at 3:33 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >
-> > On Tue, Jun 11, 2019 at 11:09 AM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>
-> >> I noticed that NFS status values stopped working again.
-> >>
-> >> trace_print_symbols_seq() takes an unsigned long. Passing a negative
-> >> errno or negative NFSERR value just confuses it, and since we're
-> >> using C macros here and not static inline functions, all bets are
-> >> off due to implicit type casting.
-> >>
-> >> Straight-line the calling conventions so that error codes are stored
-> >> in the trace record as positive values in an unsigned long field.
-> >>
-> >> It's often the case that an error value that is positive is a byte
-> >> count but when it's negative, it's an error (e.g. nfs4_write). Fix
-> >> those cases so that the value that is eventually stored in the
-> >> error field is a positive NFS status or errno, or zero.
-> >>
-> >
-> > Hi Chuck,
-> >
-> > To clarify, so on error case, we no longer going be seeing a negative
-> > value so error=-5 (EIO) would be error=5 (EIO)? I have always relied
-> > on searching for "error=-" thru the trace_pipe log for errors. Do we
-> > really need to change that?
->
-> error= will be zero or a positive errno/status code. If the trace point
-> has a count= or task->tk_status= you can see the byte count when
-> error=0.
->
-> So now the search will be for anything that has "error=" but is not
-> "error=0".
+On 6/11/2019 3:13 PM, Olga Kornievskaia wrote:
+> On Tue, Jun 11, 2019 at 1:47 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>
+>>
+>>
+>>> On Jun 11, 2019, at 11:34 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
+>>>
+>>> On Tue, Jun 11, 2019 at 10:52 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> Hi Neil-
+>>>>
+>>>>
+>>>>> On Jun 10, 2019, at 9:09 PM, NeilBrown <neilb@suse.com> wrote:
+>>>>>
+>>>>> On Fri, May 31 2019, Chuck Lever wrote:
+>>>>>
+>>>>>>> On May 30, 2019, at 6:56 PM, NeilBrown <neilb@suse.com> wrote:
+>>>>>>>
+>>>>>>> On Thu, May 30 2019, Chuck Lever wrote:
+>>>>>>>
+>>>>>>>> Hi Neil-
+>>>>>>>>
+>>>>>>>> Thanks for chasing this a little further.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>> On May 29, 2019, at 8:41 PM, NeilBrown <neilb@suse.com> wrote:
+>>>>>>>>>
+>>>>>>>>> This patch set is based on the patches in the multipath_tcp branch of
+>>>>>>>>> git://git.linux-nfs.org/projects/trondmy/nfs-2.6.git
+>>>>>>>>>
+>>>>>>>>> I'd like to add my voice to those supporting this work and wanting to
+>>>>>>>>> see it land.
+>>>>>>>>> We have had customers/partners wanting this sort of functionality for
+>>>>>>>>> years.  In SLES releases prior to SLE15, we've provide a
+>>>>>>>>> "nosharetransport" mount option, so that several filesystem could be
+>>>>>>>>> mounted from the same server and each would get its own TCP
+>>>>>>>>> connection.
+>>>>>>>>
+>>>>>>>> Is it well understood why splitting up the TCP connections result
+>>>>>>>> in better performance?
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>> In SLE15 we are using this 'nconnect' feature, which is much nicer.
+>>>>>>>>>
+>>>>>>>>> Partners have assured us that it improves total throughput,
+>>>>>>>>> particularly with bonded networks, but we haven't had any concrete
+>>>>>>>>> data until Olga Kornievskaia provided some concrete test data - thanks
+>>>>>>>>> Olga!
+>>>>>>>>>
+>>>>>>>>> My understanding, as I explain in one of the patches, is that parallel
+>>>>>>>>> hardware is normally utilized by distributing flows, rather than
+>>>>>>>>> packets.  This avoid out-of-order deliver of packets in a flow.
+>>>>>>>>> So multiple flows are needed to utilizes parallel hardware.
+>>>>>>>>
+>>>>>>>> Indeed.
+>>>>>>>>
+>>>>>>>> However I think one of the problems is what happens in simpler scenarios.
+>>>>>>>> We had reports that using nconnect > 1 on virtual clients made things
+>>>>>>>> go slower. It's not always wise to establish multiple connections
+>>>>>>>> between the same two IP addresses. It depends on the hardware on each
+>>>>>>>> end, and the network conditions.
+>>>>>>>
+>>>>>>> This is a good argument for leaving the default at '1'.  When
+>>>>>>> documentation is added to nfs(5), we can make it clear that the optimal
+>>>>>>> number is dependant on hardware.
+>>>>>>
+>>>>>> Is there any visibility into the NIC hardware that can guide this setting?
+>>>>>>
+>>>>>
+>>>>> I doubt it, partly because there is more than just the NIC hardware at issue.
+>>>>> There is also the server-side hardware and possibly hardware in the middle.
+>>>>
+>>>> So the best guidance is YMMV. :-)
+>>>>
+>>>>
+>>>>>>>> What about situations where the network capabilities between server and
+>>>>>>>> client change? Problem is that neither endpoint can detect that; TCP
+>>>>>>>> usually just deals with it.
+>>>>>>>
+>>>>>>> Being able to manually change (-o remount) the number of connections
+>>>>>>> might be useful...
+>>>>>>
+>>>>>> Ugh. I have problems with the administrative interface for this feature,
+>>>>>> and this is one of them.
+>>>>>>
+>>>>>> Another is what prevents your client from using a different nconnect=
+>>>>>> setting on concurrent mounts of the same server? It's another case of a
+>>>>>> per-mount setting being used to control a resource that is shared across
+>>>>>> mounts.
+>>>>>
+>>>>> I think that horse has well and truly bolted.
+>>>>> It would be nice to have a "server" abstraction visible to user-space
+>>>>> where we could adjust settings that make sense server-wide, and then a way
+>>>>> to mount individual filesystems from that "server" - but we don't.
+>>>>
+>>>> Even worse, there will be some resource sharing between containers that
+>>>> might be undesirable. The host should have ultimate control over those
+>>>> resources.
+>>>>
+>>>> But that is neither here nor there.
+>>>>
+>>>>
+>>>>> Probably the best we can do is to document (in nfs(5)) which options are
+>>>>> per-server and which are per-mount.
+>>>>
+>>>> Alternately, the behavior of this option could be documented this way:
+>>>>
+>>>> The default value is one. To resolve conflicts between nconnect settings on
+>>>> different mount points to the same server, the value set on the first mount
+>>>> applies until there are no more mounts of that server, unless nosharecache
+>>>> is specified. When following a referral to another server, the nconnect
+>>>> setting is inherited, but the effective value is determined by other mounts
+>>>> of that server that are already in place.
+>>>>
+>>>> I hate to say it, but the way to make this work deterministically is to
+>>>> ask administrators to ensure that the setting is the same on all mounts
+>>>> of the same server. Again I'd rather this take care of itself, but it
+>>>> appears that is not going to be possible.
+>>>>
+>>>>
+>>>>>> Adding user tunables has never been known to increase the aggregate
+>>>>>> amount of happiness in the universe. I really hope we can come up with
+>>>>>> a better administrative interface... ideally, none would be best.
+>>>>>
+>>>>> I agree that none would be best.  It isn't clear to me that that is
+>>>>> possible.
+>>>>> At present, we really don't have enough experience with this
+>>>>> functionality to be able to say what the trade-offs are.
+>>>>> If we delay the functionality until we have the perfect interface,
+>>>>> we may never get that experience.
+>>>>>
+>>>>> We can document "nconnect=" as a hint, and possibly add that
+>>>>> "nconnect=1" is a firm guarantee that more will not be used.
+>>>>
+>>>> Agree that 1 should be the default. If we make this setting a
+>>>> hint, then perhaps it should be renamed; nconnect makes it sound
+>>>> like the client will always open N connections. How about "maxconn" ?
+>>>
+>>> "maxconn" sounds to me like it's possible that the code would choose a
+>>> number that's less than that which I think would be misleading given
+>>> that the implementation (as is now) will open the specified number of
+>>> connection (bounded by the hard coded default we currently have set at
+>>> some value X which I'm in favor is increasing from 16 to 32).
+>>
+>> Earlier in this thread, Neil proposed to make nconnect a hint. Sounds
+>> like the long term plan is to allow "up to N" connections with some
+>> mechanism to create new connections on-demand." maxconn fits that idea
+>> better, though I'd prefer no new mount options... the point being that
+>> eventually, this setting is likely to be an upper bound rather than a
+>> fixed value.
+> 
+> Fair enough. If the dynamic connection management is in the cards,
+> then "maxconn" would be an appropriate name but I also agree with you
+> that if we are doing dynamic management then we shouldn't need a mount
+> option at all. I, for one, am skeptical that we'll gain benefits from
+> dynamic connection management given that cost of tearing and starting
+> the new connection.
+> 
+> I would argue that since now no dynamic management is implemented then
+> we stay with the "nconnect" mount option and if and when such feature
+> is found desirable then we get rid of the mount option all together.
+> 
+>>>> Then, to better define the behavior:
+>>>>
+>>>> The range of valid maxconn values is 1 to 3? to 8? to NCPUS? to the
+>>>> count of the client’s NUMA nodes? I’d be in favor of a small number
+>>>> to start with. Solaris' experience with multiple connections is that
+>>>> there is very little benefit past 8.
+>>>
+>>> My linux to linux experience has been that there is benefit of having
+>>> more than 8 connections. I have previously posted results that went
+>>> upto 10 connection (it's on my list of thing to test uptown 16). With
+>>> the Netapp performance lab they have maxed out 25G connection setup
+>>> they were using with so they didn't experiment with nconnect=8 but no
+>>> evidence that with a larger network pipe performance would stop
+>>> improving.
+>>>
+>>> Given the existing performance studies, I would like to argue that
+>>> having such low values are not warranted.
+>>
+>> They are warranted until we have a better handle on the risks of a
+>> performance regression occurring with large nconnect settings. The
+>> maximum number can always be raised once we are confident the
+>> behaviors are well understood.
+>>
+>> Also, I'd like to see some careful studies that demonstrate why
+>> you don't see excellent results with just two or three connections.
+>> Nearly full link bandwidth has been achieved with MP-TCP and two or
+>> three subflows on one NIC. Why is it not possible with NFS/TCP ?
+> 
+> Performance tests that do simple buffer to buffer measurements are one
+> thing but doing a complicated system that involves a filesystem is
+> another thing. The closest we can get to this network performance
+> tests is NFSoRDMA which saves various copies and as you know with that
+> we can get close to network link capacity.
 
-Unfortunately, "error=" but not "error=0" isn't easily translated into
-the vi search... ("error=-" was more convenient).
+I really hope nconnect is not just a workaround for some undiscovered
+performance issue. All that does is kick the can down the road.
 
-Can we keep the value of the error= negative but change it to the
-positive value for the show_nfsv4_errors()?
+But a word of experience from SMB3 multichannel - more connections also
+bring more issues for customers. Inevitably, with many connections
+active under load, one or more will experience disconnects or slowdowns.
+When this happens, some very unpredictable and hard to diagnose
+behaviors start to occur. For example, all that careful load balancing
+immediately goes out the window, and retries start to take over the
+latencies. Some IOs sail through (the ones on the good connections) and
+others delay for many seconds (while the connection is reestablished).
+I don't recommend starting this effort with such a lofty goal as 8, 10
+or 16 connections, especially with a protocol such as NFSv3.
 
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >> fs/nfs/nfs4trace.h |  120 ++++++++++++++++++++++++++--------------------------
-> >> 1 file changed, 60 insertions(+), 60 deletions(-)
-> >>
-> >> diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-> >> index 6beb1f2..9a01731 100644
-> >> --- a/fs/nfs/nfs4trace.h
-> >> +++ b/fs/nfs/nfs4trace.h
-> >> @@ -156,7 +156,7 @@
-> >> TRACE_DEFINE_ENUM(NFS4ERR_XDEV);
-> >>
-> >> #define show_nfsv4_errors(error) \
-> >> -       __print_symbolic(-(error), \
-> >> +       __print_symbolic(error, \
-> >>                { NFS4_OK, "OK" }, \
-> >>                /* Mapped by nfs4_stat_to_errno() */ \
-> >>                { EPERM, "EPERM" }, \
-> >> @@ -348,7 +348,7 @@
-> >>
-> >>                TP_STRUCT__entry(
-> >>                        __string(dstaddr, clp->cl_hostname)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -357,7 +357,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) dstaddr=%s",
-> >> +                       "error=%lu (%s) dstaddr=%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >>                        __get_str(dstaddr)
-> >> @@ -420,7 +420,7 @@
-> >>                        __field(unsigned int, highest_slotid)
-> >>                        __field(unsigned int, target_highest_slotid)
-> >>                        __field(unsigned int, status_flags)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -435,7 +435,7 @@
-> >>                        __entry->error = res->sr_status;
-> >>                ),
-> >>                TP_printk(
-> >> -                       "error=%d (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >> +                       "error=%lu (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >>                        "highest_slotid=%u target_highest_slotid=%u "
-> >>                        "status_flags=%u (%s)",
-> >>                        __entry->error,
-> >> @@ -467,7 +467,7 @@
-> >>                        __field(unsigned int, seq_nr)
-> >>                        __field(unsigned int, highest_slotid)
-> >>                        __field(unsigned int, cachethis)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -476,11 +476,11 @@
-> >>                        __entry->seq_nr = args->csa_sequenceid;
-> >>                        __entry->highest_slotid = args->csa_highestslotid;
-> >>                        __entry->cachethis = args->csa_cachethis;
-> >> -                       __entry->error = -be32_to_cpu(status);
-> >> +                       __entry->error = be32_to_cpu(status);
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >> +                       "error=%lu (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >>                        "highest_slotid=%u",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -504,7 +504,7 @@
-> >>                        __field(unsigned int, seq_nr)
-> >>                        __field(unsigned int, highest_slotid)
-> >>                        __field(unsigned int, cachethis)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -513,11 +513,11 @@
-> >>                        __entry->seq_nr = args->csa_sequenceid;
-> >>                        __entry->highest_slotid = args->csa_highestslotid;
-> >>                        __entry->cachethis = args->csa_cachethis;
-> >> -                       __entry->error = -be32_to_cpu(status);
-> >> +                       __entry->error = be32_to_cpu(status);
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >> +                       "error=%lu (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-> >>                        "highest_slotid=%u",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -572,18 +572,18 @@
-> >>
-> >>                TP_STRUCT__entry(
-> >>                        __field(u32, op)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >>                        __entry->op = op;
-> >> -                       __entry->error = -error;
-> >> +                       __entry->error = error;
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "operation %d: nfs status %d (%s)",
-> >> -                       __entry->op,
-> >> -                       __entry->error, show_nfsv4_errors(__entry->error)
-> >> +                       "error=%lu (%s) operation %d:",
-> >> +                       __entry->error, show_nfsv4_errors(__entry->error),
-> >> +                       __entry->op
-> >>                )
-> >> );
-> >>
-> >> @@ -597,7 +597,7 @@
-> >>                TP_ARGS(ctx, flags, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(unsigned int, flags)
-> >>                        __field(unsigned int, fmode)
-> >>                        __field(dev_t, dev)
-> >> @@ -615,7 +615,7 @@
-> >>                        const struct nfs4_state *state = ctx->state;
-> >>                        const struct inode *inode = NULL;
-> >>
-> >> -                       __entry->error = error;
-> >> +                       __entry->error = -error;
-> >>                        __entry->flags = flags;
-> >>                        __entry->fmode = (__force unsigned int)ctx->mode;
-> >>                        __entry->dev = ctx->dentry->d_sb->s_dev;
-> >> @@ -647,7 +647,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) flags=%d (%s) fmode=%s "
-> >> +                       "error=%lu (%s) flags=%d (%s) fmode=%s "
-> >>                        "fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "name=%02x:%02x:%llu/%s stateid=%d:0x%08x "
-> >>                        "openstateid=%d:0x%08x",
-> >> @@ -733,7 +733,7 @@
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >>                        __field(unsigned int, fmode)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                ),
-> >> @@ -753,7 +753,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fmode=%s fileid=%02x:%02x:%llu "
-> >> +                       "error=%lu (%s) fmode=%s fileid=%02x:%02x:%llu "
-> >>                        "fhandle=0x%08x openstateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -795,7 +795,7 @@
-> >>                TP_ARGS(request, state, cmd, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, cmd)
-> >>                        __field(char, type)
-> >>                        __field(loff_t, start)
-> >> @@ -825,7 +825,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) cmd=%s:%s range=%lld:%lld "
-> >> +                       "error=%lu (%s) cmd=%s:%s range=%lld:%lld "
-> >>                        "fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >> @@ -865,7 +865,7 @@
-> >>                TP_ARGS(request, state, lockstateid, cmd, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, cmd)
-> >>                        __field(char, type)
-> >>                        __field(loff_t, start)
-> >> @@ -901,7 +901,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) cmd=%s:%s range=%lld:%lld "
-> >> +                       "error=%lu (%s) cmd=%s:%s range=%lld:%lld "
-> >>                        "fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x lockstateid=%d:0x%08x",
-> >>                        __entry->error,
-> >> @@ -970,7 +970,7 @@
-> >>                TP_STRUCT__entry(
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                ),
-> >> @@ -986,7 +986,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) dev=%02x:%02x fhandle=0x%08x "
-> >> +                       "error=%lu (%s) dev=%02x:%02x fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1007,7 +1007,7 @@
-> >>                TP_ARGS(state, lsp, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >> @@ -1029,7 +1029,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1064,7 +1064,7 @@
-> >>
-> >>                TP_STRUCT__entry(
-> >>                        __field(dev_t, dev)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(u64, dir)
-> >>                        __string(name, name->name)
-> >>                ),
-> >> @@ -1072,12 +1072,12 @@
-> >>                TP_fast_assign(
-> >>                        __entry->dev = dir->i_sb->s_dev;
-> >>                        __entry->dir = NFS_FILEID(dir);
-> >> -                       __entry->error = error;
-> >> +                       __entry->error = -error;
-> >>                        __assign_str(name, name->name);
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) name=%02x:%02x:%llu/%s",
-> >> +                       "error=%lu (%s) name=%02x:%02x:%llu/%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >>                        MAJOR(__entry->dev), MINOR(__entry->dev),
-> >> @@ -1114,7 +1114,7 @@
-> >>                TP_STRUCT__entry(
-> >>                        __field(dev_t, dev)
-> >>                        __field(u64, ino)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -1124,7 +1124,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) inode=%02x:%02x:%llu",
-> >> +                       "error=%lu (%s) inode=%02x:%02x:%llu",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >>                        MAJOR(__entry->dev), MINOR(__entry->dev),
-> >> @@ -1145,7 +1145,7 @@
-> >>
-> >>                TP_STRUCT__entry(
-> >>                        __field(dev_t, dev)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(u64, olddir)
-> >>                        __string(oldname, oldname->name)
-> >>                        __field(u64, newdir)
-> >> @@ -1162,7 +1162,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) oldname=%02x:%02x:%llu/%s "
-> >> +                       "error=%lu (%s) oldname=%02x:%02x:%llu/%s "
-> >>                        "newname=%02x:%02x:%llu/%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1187,18 +1187,18 @@
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >>                        __entry->dev = inode->i_sb->s_dev;
-> >>                        __entry->fileid = NFS_FILEID(inode);
-> >>                        __entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-> >> -                       __entry->error = error;
-> >> +                       __entry->error = error < 0 ? -error : 0;
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x",
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >>                        MAJOR(__entry->dev), MINOR(__entry->dev),
-> >> @@ -1238,7 +1238,7 @@
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                ),
-> >> @@ -1255,7 +1255,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1295,7 +1295,7 @@
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >>                        __field(unsigned int, valid)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -1307,7 +1307,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "valid=%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1342,7 +1342,7 @@
-> >>                TP_ARGS(clp, fhandle, inode, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >> @@ -1363,7 +1363,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "dstaddr=%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1397,7 +1397,7 @@
-> >>                TP_ARGS(clp, fhandle, inode, stateid, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(dev_t, dev)
-> >>                        __field(u32, fhandle)
-> >>                        __field(u64, fileid)
-> >> @@ -1424,7 +1424,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "stateid=%d:0x%08x dstaddr=%s",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1460,7 +1460,7 @@
-> >>                TP_ARGS(name, len, id, error),
-> >>
-> >>                TP_STRUCT__entry(
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(u32, id)
-> >>                        __dynamic_array(char, name, len > 0 ? len + 1 : 1)
-> >>                ),
-> >> @@ -1475,8 +1475,8 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d id=%u name=%s",
-> >> -                       __entry->error,
-> >> +                       "error=%lu (%s) id=%u name=%s",
-> >> +                       __entry->error, show_nfsv4_errors(__entry->error),
-> >>                        __entry->id,
-> >>                        __get_str(name)
-> >>                )
-> >> @@ -1509,7 +1509,7 @@
-> >>                        __field(u64, fileid)
-> >>                        __field(loff_t, offset)
-> >>                        __field(size_t, count)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                ),
-> >> @@ -1523,7 +1523,7 @@
-> >>                        __entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-> >>                        __entry->offset = hdr->args.offset;
-> >>                        __entry->count = hdr->args.count;
-> >> -                       __entry->error = error;
-> >> +                       __entry->error = error < 0 ? -error : 0;
-> >>                        __entry->stateid_seq =
-> >>                                be32_to_cpu(state->stateid.seqid);
-> >>                        __entry->stateid_hash =
-> >> @@ -1531,7 +1531,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "offset=%lld count=%zu stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1569,7 +1569,7 @@
-> >>                        __field(u64, fileid)
-> >>                        __field(loff_t, offset)
-> >>                        __field(size_t, count)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                ),
-> >> @@ -1583,7 +1583,7 @@
-> >>                        __entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-> >>                        __entry->offset = hdr->args.offset;
-> >>                        __entry->count = hdr->args.count;
-> >> -                       __entry->error = error;
-> >> +                       __entry->error = error < 0 ? -error : 0;
-> >>                        __entry->stateid_seq =
-> >>                                be32_to_cpu(state->stateid.seqid);
-> >>                        __entry->stateid_hash =
-> >> @@ -1591,7 +1591,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "offset=%lld count=%zu stateid=%d:0x%08x",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1630,7 +1630,7 @@
-> >>                        __field(u64, fileid)
-> >>                        __field(loff_t, offset)
-> >>                        __field(size_t, count)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                ),
-> >>
-> >>                TP_fast_assign(
-> >> @@ -1644,7 +1644,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "offset=%lld count=%zu",
-> >>                        __entry->error,
-> >>                        show_nfsv4_errors(__entry->error),
-> >> @@ -1694,7 +1694,7 @@
-> >>                        __field(u32, iomode)
-> >>                        __field(u64, offset)
-> >>                        __field(u64, count)
-> >> -                       __field(int, error)
-> >> +                       __field(unsigned long, error)
-> >>                        __field(int, stateid_seq)
-> >>                        __field(u32, stateid_hash)
-> >>                        __field(int, layoutstateid_seq)
-> >> @@ -1727,7 +1727,7 @@
-> >>                ),
-> >>
-> >>                TP_printk(
-> >> -                       "error=%d (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >> +                       "error=%lu (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-> >>                        "iomode=%s offset=%llu count=%llu stateid=%d:0x%08x "
-> >>                        "layoutstateid=%d:0x%08x",
-> >>                        __entry->error,
->
-> --
-> Chuck Lever
->
->
->
+JMHO.
+
+Tom.
+
+
+>>>> If maxconn is specified with a datagram transport, does the mount
+>>>> operation fail, or is the setting is ignored?
+>>>
+>>> Perhaps we can add a warning on the mount command saying that option
+>>> is ignored but succeed the mount.
+>>>
+>>>> If maxconn is a hint, when does the client open additional
+>>>> connections?
+>>>>
+>>>> IMO documentation should be clear that this setting is not for the
+>>>> purpose of multipathing/trunking (using multiple NICs on the client
+>>>> or server). The client has to do trunking detection/discovery in that
+>>>> case, and nconnect doesn't add that logic. This is strictly for
+>>>> enabling multiple connections between one client-server IP address
+>>>> pair.
+>>>
+>>> I agree this should be as that last statement says multiple connection
+>>> to the same IP and in my option this shouldn't be a hint.
+>>>
+>>>> Do we need to state explicitly that all transport connections for a
+>>>> mount (or client-server pair) are the same connection type (i.e., all
+>>>> TCP or all RDMA, never a mix)?
+>>>
+>>> That might be an interesting future option but I think for now, we can
+>>> clearly say it's a TCP only option in documentation which can always
+>>> be changed if extension to that functionality will be implemented.
+>>
+>> Is there a reason you feel RDMA shouldn't be included? I've tried
+>> nconnect with my RDMA rig, and didn't see any problem with it.
+> 
+> No reason, I should have said "a single type of a connection only
+> option" not a mix. Of course with RDMA even with a single connection
+> we can achieve almost max bandwidth so having using nconnect seems
+> unnecessary.
+> 
+>>>>> Then further down the track, we might change the actual number of
+>>>>> connections automatically if a way can be found to do that without cost.
+>>>>
+>>>> Fair enough.
+>>>>
+>>>>
+>>>>> Do you have any objections apart from the nconnect= mount option?
+>>>>
+>>>> Well I realize my last e-mail sounded a little negative, but I'm
+>>>> actually in favor of adding the ability to open multiple connections
+>>>> per client-server pair. I just want to be careful about making this
+>>>> a feature that has as few downsides as possible right from the start.
+>>>> I'll try to be more helpful in my responses.
+>>>>
+>>>> Remaining implementation issues that IMO need to be sorted:
+>>>
+>>> I'm curious are you saying all this need to be resolved before we
+>>> consider including this functionality? These are excellent questions
+>>> but I think they imply some complex enhancements (like ability to do
+>>> different schedulers and not only round robin) that are "enhancement"
+>>> and not requirements.
+>>>
+>>>> • We want to take care that the client can recover network resources
+>>>> that have gone idle. Can we reuse the auto-close logic to close extra
+>>>> connections?
+>>> Since we are using round-robin scheduler then can we consider any
+>>> resources going idle?
+>>
+>> Again, I was thinking of nconnect as a hint here, not as a fixed
+>> number of connections.
+>>
+>>
+>>> It's hard to know the future, we might set a
+>>> timer after which we can say that a connection has been idle for long
+>>> enough time and we close it and as soon as that happens the traffic is
+>>> going to be generated again and we'll have to pay the penalty of
+>>> establishing a new connection before sending traffic.
+>>>
+>>>> • How will the client schedule requests on multiple connections?
+>>>> Should we enable the use of different schedulers?
+>>> That's an interesting idea but I don't think it shouldn't stop the
+>>> round robin solution from going thru.
+>>>
+>>>> • How will retransmits be handled?
+>>>> • How will the client recover from broken connections? Today's clients
+>>>> use disconnect to determine when to retransmit, thus there might be
+>>>> some unwanted interactions here that result in mount hangs.
+>>>> • Assume NFSv4.1 session ID rather than client ID trunking: is Linux
+>>>> client support in place for this already?
+>>>> • Are there any concerns about how the Linux server DRC will behave in
+>>>> multi-connection scenarios?
+>>>
+>>> I think we've talked about retransmission question. Retransmission are
+>>> handled by existing logic and are done by the same transport (ie
+>>> connection).
+>>
+>> Given the proposition that nconnect will be a hint (eventually) in
+>> the form of a dynamically managed set of connections, I think we need
+>> to answer some of these questions again. The answers could be "not
+>> yet implemented" or "no way jose".
+>>
+>> It would be helpful if the answers were all in one place (eg a design
+>> document or FAQ).
+>>
+>>
+>>>> None of these seem like a deal breaker. And possibly several of these
+>>>> are already decided, but just need to be published/documented.
+>>>>
+>>>>
+>>>> --
+>>>> Chuck Lever
+>>
+>> --
+>> Chuck Lever
+>>
+>>
+>>
+> 
+> 
