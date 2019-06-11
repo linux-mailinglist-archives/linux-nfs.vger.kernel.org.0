@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 686663D054
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 17:09:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 846713D056
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2019 17:09:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389112AbfFKPI7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jun 2019 11:08:59 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:40602 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388333AbfFKPI7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 11:08:59 -0400
-Received: by mail-it1-f196.google.com with SMTP id q14so5289863itc.5;
-        Tue, 11 Jun 2019 08:08:58 -0700 (PDT)
+        id S2388445AbfFKPJF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jun 2019 11:09:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43335 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388333AbfFKPJE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jun 2019 11:09:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id k20so10161116ios.10;
+        Tue, 11 Jun 2019 08:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=koG2EsMmlf+xVAb4ZuLOBGkCW9y4MVd3Be2orz7yqDg=;
-        b=jRjw/KshT/mMmW/dSmzRCycBgiCzTHmUVEkS9XmLD3uMzG2fHp0Kh8cXineXkZbHES
-         pxj/4Fv8rFPQfvFuSldubomgxXuQB0Ug5Ls1g1UWqJqNSb2gq2kKGgDeBScfBqvH8gt5
-         7b+GTo/kmyHAqPxndxAQZNhYK1dFAHVRYfWURezgVWXXUG45rDCKrCPGC2QVCj5mLC3t
-         mEzTwSDKJXR6ymQDxsXylx4FgZa6piI3hsihxRK68cPo5lpVPBgMupIrqP3Kq6pJ6fgx
-         wg53aXnzc/L/VvTBYgG2KYKwEx86yvwipvizo/1UJJKiMc2v94fPo3TASVMcE5p8iXr1
-         jqgA==
+        bh=Y5KfP+82Q2G+FSMMy0+NWol6P6fdC5jPKgFtk+jfHFo=;
+        b=BK23Pn6fabLgy7yI8usgdi24GmJUMayjC0c4pXmNkcxqB2Sh2VOMbPKKIhio7gyhHz
+         OGOhzKmuUI57skkq/JxdhUwlrvUJSizlSMt1AwqPsJPPrshVAx2lfLJxs5lTFUmckCuW
+         mpC91Z4XNMVm+07GYkjYvaNJxR2a5aAtg+/+HA8IJF53MPXFyZjsPEb5w3a9tfeDm2h0
+         pjlEhm/ooqMsMen4t/Qsze0oC3e31SiZe5ljpQ5wBOUvsPsiwX/x1H4LHzYoafFxi33P
+         3ckq3TUND2xcuGTcclQwbc/40Sj90dWsqyEDfk4+lQyx020I1vNmrYUya2u1sinHiczL
+         aG3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=koG2EsMmlf+xVAb4ZuLOBGkCW9y4MVd3Be2orz7yqDg=;
-        b=qFviDTU6QGlqmITZdJPBASmfwAgsHjOhW0Sc3Aqvawwe4VIBiU9er8musIsaPd4hdD
-         b8h4CnT/ckMj+FTyX/a+qJ/FDU5j7jMKsfMLl1+jNEwKDaRGQMkqbKJBaHu0aBsxhzN+
-         DX7UJmmDbe4zjK5sfwrT5MU9ypF7I/zaS7xenGTt+u0F9vrnj+K6jrxqpbfMhQ1s6o0j
-         CMvhiP8/SzfD0ZSjvGBINz+1XHP94Uu7TEVUoqib7Pb4I3bmZZf9FVxoze5PN+aQaVik
-         1CGj6SNIkzoAOwJLEiUpqNA+IsPr6u+47zr1Hd8mXPV2QNr0XIOhDDF70SU/WFDdn+lU
-         CGew==
-X-Gm-Message-State: APjAAAVZFXgS9jBIVcqOZ5rVe7Z6HblSefaNf/lhF0n98FqJMU3LNUC8
-        o9XyohnAvbdzQ6dGi66KEWgCRzFZ
-X-Google-Smtp-Source: APXvYqxS03St7MvVYRSY0KJH62n+BOi60LgrNHWiqrzXzj2N7UXwyA4x/cXl+pL5QHes5UUX4/dZEA==
-X-Received: by 2002:a24:11d6:: with SMTP id 205mr8278652itf.132.1560265738157;
-        Tue, 11 Jun 2019 08:08:58 -0700 (PDT)
+        bh=Y5KfP+82Q2G+FSMMy0+NWol6P6fdC5jPKgFtk+jfHFo=;
+        b=hY6zcllujwoSvDjGV6Ut57/OM3oHgOydl/YQbsqlCZJ4yF2TfOCW1wdwDAw1/nGYj0
+         4ni+sGBru/8N14jFRkBIKqYuI7RuXgc1RcyfK7yw9yR9E6K0nN/96mUYyohKfmyZRmHe
+         8CDZvzSowCSAPTKK1P/phPJXZHJDMduoYoX3qSyNHlEYQ36nYP0lZTwGh3J1dAe2gho8
+         C/nWJb0blldJ5UMm58al8aLIVNxpYuVDD7S5z6QdEhHQALIFJ+PbVqoa37pcndiNhkqD
+         KjZV9WSK7RYXyPj+DbyBsD9y2NCO7lpm+4bWzXh+xi5YD5e8QE4X4bOQ1YEng8uUCip3
+         DYMg==
+X-Gm-Message-State: APjAAAU7k6TwlEYoKBWgwxLURAQUHiio6RahAV6+lmNZDbZFLoDPCZTS
+        Lz5Uu4oHJJlMV05x8zhVElPmtPIG
+X-Google-Smtp-Source: APXvYqxZvED4kGA0EZzO6krPFDuuIZPJ8L0/7HZrgPF7jcbU30LTNBDRcB48I9DT7Cc18bG30fFf6A==
+X-Received: by 2002:a6b:5812:: with SMTP id m18mr7947426iob.13.1560265743631;
+        Tue, 11 Jun 2019 08:09:03 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 203sm1419446ite.4.2019.06.11.08.08.57
+        by smtp.gmail.com with ESMTPSA id z202sm1705460itb.2.2019.06.11.08.09.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 08:08:57 -0700 (PDT)
+        Tue, 11 Jun 2019 08:09:03 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5BF8u8U021758;
-        Tue, 11 Jun 2019 15:08:56 GMT
-Subject: [PATCH v2 11/19] xprtrdma: Streamline rpcrdma_post_recvs
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5BF92oq021761;
+        Tue, 11 Jun 2019 15:09:02 GMT
+Subject: [PATCH v2 12/19] xprtrdma: Refactor chunk encoding
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Tue, 11 Jun 2019 11:08:56 -0400
-Message-ID: <20190611150856.2877.50484.stgit@manet.1015granger.net>
+Date:   Tue, 11 Jun 2019 11:09:02 -0400
+Message-ID: <20190611150902.2877.63929.stgit@manet.1015granger.net>
 In-Reply-To: <20190611150445.2877.8656.stgit@manet.1015granger.net>
 References: <20190611150445.2877.8656.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -64,119 +64,104 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-rb_lock is contended between rpcrdma_buffer_create,
-rpcrdma_buffer_put, and rpcrdma_post_recvs.
+Clean up.
 
-Commit e340c2d6ef2a ("xprtrdma: Reduce the doorbell rate (Receive)")
-causes rpcrdma_post_recvs to take the rb_lock repeatedly when it
-determines more Receives are needed. Streamline this code path so
-it takes the lock just once in most cases to build the Receive
-chain that is about to be posted.
+Move the "not present" case into the individual chunk encoders. This
+improves code organization and readability.
+
+The reason for the original organization was to optimize for the
+case where there there are no chunks. The optimization turned out to
+be inconsequential, so let's err on the side of code readability.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c |   59 ++++++++++++++++++++++++++++---------------
- 1 file changed, 38 insertions(+), 21 deletions(-)
+ net/sunrpc/xprtrdma/rpc_rdma.c |   36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index de6be10..3270c8a 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1478,11 +1478,13 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
- {
- 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
--	struct ib_recv_wr *wr, *bad_wr;
-+	struct ib_recv_wr *i, *wr, *bad_wr;
-+	struct rpcrdma_rep *rep;
- 	int needed, count, rc;
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index caf0b19..d3515d3 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -366,6 +366,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
+ 	unsigned int pos;
+ 	int nsegs;
  
- 	rc = 0;
- 	count = 0;
++	if (rtype == rpcrdma_noch)
++		goto done;
 +
- 	needed = buf->rb_credits + (buf->rb_bc_srv_max_requests << 1);
- 	if (ep->rep_receive_count > needed)
- 		goto out;
-@@ -1490,39 +1492,48 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
- 	if (!temp)
- 		needed += RPCRDMA_MAX_RECV_BATCH;
+ 	pos = rqst->rq_snd_buf.head[0].iov_len;
+ 	if (rtype == rpcrdma_areadch)
+ 		pos = 0;
+@@ -389,7 +392,8 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
+ 		nsegs -= mr->mr_nents;
+ 	} while (nsegs);
  
--	count = 0;
-+	/* fast path: all needed reps can be found on the free list */
- 	wr = NULL;
-+	spin_lock(&buf->rb_lock);
- 	while (needed) {
--		struct rpcrdma_rep *rep;
--
--		spin_lock(&buf->rb_lock);
- 		rep = list_first_entry_or_null(&buf->rb_recv_bufs,
- 					       struct rpcrdma_rep, rr_list);
--		if (likely(rep))
--			list_del(&rep->rr_list);
--		spin_unlock(&buf->rb_lock);
--		if (!rep) {
--			rep = rpcrdma_rep_create(r_xprt, temp);
--			if (!rep)
--				break;
--		}
-+		if (!rep)
-+			break;
- 
--		if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
--			rpcrdma_recv_buffer_put(rep);
-+		list_del(&rep->rr_list);
-+		rep->rr_recv_wr.next = wr;
-+		wr = &rep->rr_recv_wr;
-+		--needed;
-+	}
-+	spin_unlock(&buf->rb_lock);
-+
-+	while (needed) {
-+		rep = rpcrdma_rep_create(r_xprt, temp);
-+		if (!rep)
- 			break;
--		}
- 
--		trace_xprtrdma_post_recv(rep->rr_recv_wr.wr_cqe);
- 		rep->rr_recv_wr.next = wr;
- 		wr = &rep->rr_recv_wr;
--		++count;
- 		--needed;
- 	}
--	if (!count)
-+	if (!wr)
- 		goto out;
- 
-+	for (i = wr; i; i = i->next) {
-+		rep = container_of(i, struct rpcrdma_rep, rr_recv_wr);
-+
-+		if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf))
-+			goto release_wrs;
-+
-+		trace_xprtrdma_post_recv(rep->rr_recv_wr.wr_cqe);
-+		++count;
-+	}
-+
- 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
- 			  (const struct ib_recv_wr **)&bad_wr);
-+out:
-+	trace_xprtrdma_post_recvs(r_xprt, count, rc);
- 	if (rc) {
- 		for (wr = bad_wr; wr;) {
- 			struct rpcrdma_rep *rep;
-@@ -1534,6 +1545,12 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
- 		}
- 	}
- 	ep->rep_receive_count += count;
--out:
--	trace_xprtrdma_post_recvs(r_xprt, count, rc);
-+	return;
-+
-+release_wrs:
-+	for (i = wr; i;) {
-+		rep = container_of(i, struct rpcrdma_rep, rr_recv_wr);
-+		i = i->next;
-+		rpcrdma_recv_buffer_put(rep);
-+	}
+-	return 0;
++done:
++	return encode_item_not_present(xdr);
  }
+ 
+ /* Register and XDR encode the Write list. Supports encoding a list
+@@ -417,6 +421,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
+ 	int nsegs, nchunks;
+ 	__be32 *segcount;
+ 
++	if (wtype != rpcrdma_writech)
++		goto done;
++
+ 	seg = req->rl_segments;
+ 	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf,
+ 				     rqst->rq_rcv_buf.head[0].iov_len,
+@@ -451,7 +458,8 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
+ 	/* Update count of segments in this Write chunk */
+ 	*segcount = cpu_to_be32(nchunks);
+ 
+-	return 0;
++done:
++	return encode_item_not_present(xdr);
+ }
+ 
+ /* Register and XDR encode the Reply chunk. Supports encoding an array
+@@ -476,6 +484,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
+ 	int nsegs, nchunks;
+ 	__be32 *segcount;
+ 
++	if (wtype != rpcrdma_replych)
++		return encode_item_not_present(xdr);
++
+ 	seg = req->rl_segments;
+ 	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf, 0, wtype, seg);
+ 	if (nsegs < 0)
+@@ -859,28 +870,13 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
+ 	 * send a Call message with a Position Zero Read chunk and a
+ 	 * regular Read chunk at the same time.
+ 	 */
+-	if (rtype != rpcrdma_noch) {
+-		ret = rpcrdma_encode_read_list(r_xprt, req, rqst, rtype);
+-		if (ret)
+-			goto out_err;
+-	}
+-	ret = encode_item_not_present(xdr);
++	ret = rpcrdma_encode_read_list(r_xprt, req, rqst, rtype);
+ 	if (ret)
+ 		goto out_err;
+-
+-	if (wtype == rpcrdma_writech) {
+-		ret = rpcrdma_encode_write_list(r_xprt, req, rqst, wtype);
+-		if (ret)
+-			goto out_err;
+-	}
+-	ret = encode_item_not_present(xdr);
++	ret = rpcrdma_encode_write_list(r_xprt, req, rqst, wtype);
+ 	if (ret)
+ 		goto out_err;
+-
+-	if (wtype != rpcrdma_replych)
+-		ret = encode_item_not_present(xdr);
+-	else
+-		ret = rpcrdma_encode_reply_chunk(r_xprt, req, rqst, wtype);
++	ret = rpcrdma_encode_reply_chunk(r_xprt, req, rqst, wtype);
+ 	if (ret)
+ 		goto out_err;
+ 
 
