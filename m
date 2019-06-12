@@ -2,123 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFA9142F70
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 21:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B4342F9E
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 21:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfFLTCb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 15:02:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48138 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfFLTCb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:02:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C6AF300B916;
-        Wed, 12 Jun 2019 19:02:31 +0000 (UTC)
-Received: from f29-node1.dwysocha.net (dhcp145-42.rdu.redhat.com [10.13.145.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DFE70196A0;
-        Wed, 12 Jun 2019 19:02:30 +0000 (UTC)
+        id S1727188AbfFLTLl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 15:11:41 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34778 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfFLTLk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 15:11:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m29so19746685qtu.1
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2019 12:11:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zCNL4D6m3dTHA7BiGkQ5ouIyeWDrjEJa3TvbE5sI89Y=;
+        b=mP5YzLEflWiTp355ixfDwfyF5e2cLSE1K1iicIZzwqjLpSWcR3zmAplGCqZoBWhbHV
+         qgzfvufNE04iG7Ej4yuKsbPxrfAez/M9MWGVyXrJsNUJepVE/ryFrcevHZCcdt22E10e
+         +gvskkSc1auhvRyQZXewygV7iDnUpbRkAXUS6ogbAQsGe3duw0Rr3NDqtMYkTe+MQVzq
+         oxhb7C6C5NwAekVQYXRN7oguFXbFwkNlctqpVfPy9YoZfFM4woNhWc2C9GKk/4rNxxz/
+         NEZP5jZmEIeyITBcJwNPFoWoOt11SPuPu9VWtOOQ10s6Xth/eGZyNpRY+yMboerK/QBr
+         +Ijg==
+X-Gm-Message-State: APjAAAWQkQpRDRXqJZddHpcTE8Ub/tI/Odxy3m1LNnp8zDM+FdrwQd4+
+        xgOh8YjXxKRjaVjU6IgHV5Sh6bQ47r4=
+X-Google-Smtp-Source: APXvYqxhftwTjK15dy78Mm6cn3cmJt/xGoSE5HoaHYY7OUqj64G3k7Rx9BA54IW0NyigN2DQZR/Kjw==
+X-Received: by 2002:a0c:b902:: with SMTP id u2mr210866qvf.151.1560366699902;
+        Wed, 12 Jun 2019 12:11:39 -0700 (PDT)
+Received: from dhcp-12-212-173.gsslab.rdu.redhat.com (nat-pool-rdu-t.redhat.com. [66.187.233.202])
+        by smtp.gmail.com with ESMTPSA id r40sm379173qtr.57.2019.06.12.12.11.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 12:11:38 -0700 (PDT)
+Message-ID: <829626a0e3e51cd58048f5ef02a846cae4fe5b63.camel@redhat.com>
+Subject: Re: [PATCH] NFSv4: Add lease_time and lease_expired to 'nfs4:' line
+ of mountstats
 From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     chuck.lever@oracle.com, SteveD@RedHat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsiostat: Add error count to end of RPC iostats version 1.1
-Date:   Wed, 12 Jun 2019 15:02:29 -0400
-Message-Id: <20190612190229.31811-1-dwysocha@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 12 Jun 2019 19:02:31 +0000 (UTC)
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Wed, 12 Jun 2019 15:11:37 -0400
+In-Reply-To: <230AB123-B417-4F6F-A50C-053B9B3E0C19@oracle.com>
+References: <1558127201-7481-1-git-send-email-dwysocha@redhat.com>
+         <230AB123-B417-4F6F-A50C-053B9B3E0C19@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-With RPC iostats 1.1 there is a new metric which counts the RPCs
-completing with errors (tk_status < 0).  Add these to the output at
-the end of the line.  This increases the length of an output line
-to 136 columns from 120, but keeps consistent format and spacing:
+On Mon, 2019-05-20 at 11:10 -0400, Chuck Lever wrote:
+> > On May 17, 2019, at 5:06 PM, Dave Wysochanski <dwysocha@redhat.com>
+> > wrote:
+> > 
+> > On the NFS client there is no low-impact way to determine the nfs4
+> > lease time or whether the lease is expired, so add these to
+> > mountstats
+> > with times displayed in seconds.
+> > 
+> > If the lease is not expired, display lease_expired=0. Otherwise,
+> > display lease_expired=seconds_since_expired, similar to 'age:' line
+> > in mountstats.
+> > 
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> > fs/nfs/super.c | 11 +++++++++++
+> > 1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> > index c27ac96..6e52f0c 100644
+> > --- a/fs/nfs/super.c
+> > +++ b/fs/nfs/super.c
+> > @@ -730,6 +730,16 @@ int nfs_show_options(struct seq_file *m,
+> > struct dentry *root)
+> > EXPORT_SYMBOL_GPL(nfs_show_options);
+> > 
+> > #if IS_ENABLED(CONFIG_NFS_V4)
+> > +static void show_lease(struct seq_file *m, struct nfs_server
+> > *server)
+> > +{
+> > +	struct nfs_client *clp = server->nfs_client;
+> > +	unsigned long expire;
+> > +
+> > +	seq_printf(m, ",lease_time=%ld", clp->cl_lease_time / HZ);
+> > +	expire = clp->cl_last_renewal + clp->cl_lease_time;
+> > +	seq_printf(m, ",lease_expired=%ld",
+> > +		   time_after(expire, jiffies) ?  0 : (jiffies -
+> > expire) / HZ);
+> > +}
+> > #ifdef CONFIG_NFS_V4_1
+> > static void show_sessions(struct seq_file *m, struct nfs_server
+> > *server)
+> > {
+> > @@ -838,6 +848,7 @@ int nfs_show_stats(struct seq_file *m, struct
+> > dentry *root)
+> > 		seq_printf(m, ",acl=0x%x", nfss->acl_bitmask);
+> > 		show_sessions(m, nfss);
+> > 		show_pnfs(m, nfss);
+> > +		show_lease(m, nfss);
+> > 	}
+> > #endif
+> > 
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> I didn't look closely at the patch content, but IMO this is a good
+> observability enhancement.
+> 
+> 
+> 
 
-read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)  avg queue (ms)          errors
-                   0.000           0.106         512.316        0 (0.0%)          17.500          17.500           0.000        0 (0.0%)
-write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)  avg queue (ms)          errors
-                   0.001           0.476         512.398        0 (0.0%)           1.667           5.778           3.889       1 (11.1%)
+Thanks Chuck.  Trond or Anna do you have any concerns about this patch?
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- tools/nfs-iostat/nfs-iostat.py | 15 +++++++++++++--
- tools/nfs-iostat/nfsiostat.man |  8 ++++++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
- mode change 100644 => 100755 tools/nfs-iostat/nfs-iostat.py
+I didn't bump NFS_IOSTAT_VERS as I understand that only covers the
+counts not the other lines in nfs_show_stats, correct?
 
-diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
-old mode 100644
-new mode 100755
-index dec0e861..1b0c4843
---- a/tools/nfs-iostat/nfs-iostat.py
-+++ b/tools/nfs-iostat/nfs-iostat.py
-@@ -329,6 +329,8 @@ class DeviceData:
-         queued_for = float(rpc_stats[5])
-         rtt = float(rpc_stats[6])
-         exe = float(rpc_stats[7])
-+        if self.__rpc_data['statsvers'] == 1.1:
-+            errs = int(rpc_stats[8])
- 
-         # prevent floating point exceptions
-         if ops != 0:
-@@ -337,6 +339,8 @@ class DeviceData:
-             rtt_per_op = rtt / ops
-             exe_per_op = exe / ops
-             queued_for_per_op = queued_for / ops
-+            if self.__rpc_data['statsvers'] == 1.1:
-+                errs_percent = (errs * 100) / ops
-         else:
-             kb_per_op = 0.0
-             retrans_percent = 0.0
-@@ -352,7 +356,10 @@ class DeviceData:
-         print(format('retrans', '>16s'), end='')
-         print(format('avg RTT (ms)', '>16s'), end='')
-         print(format('avg exe (ms)', '>16s'), end='')
--        print(format('avg queue (ms)', '>16s'))
-+        print(format('avg queue (ms)', '>16s'), end='')
-+        if self.__rpc_data['statsvers'] == 1.1:
-+            print(format('errors', '>16s'), end='')
-+        print('')
- 
-         print(format((ops / sample_time), '>24.3f'), end='')
-         print(format((kilobytes / sample_time), '>16.3f'), end='')
-@@ -361,7 +368,11 @@ class DeviceData:
-         print(format(retransmits, '>16'), end='')
-         print(format(rtt_per_op, '>16.3f'), end='')
-         print(format(exe_per_op, '>16.3f'), end='')
--        print(format(queued_for_per_op, '>16.3f'))
-+        print(format(queued_for_per_op, '>16.3f'), end='')
-+        if self.__rpc_data['statsvers'] == 1.1:
-+            errors = '{0:>10.0f} ({1:>3.1f}%)'.format(errs, errs_percent).strip()
-+            print(format(errors, '>16'), end='')
-+        print('')
- 
-     def ops(self, sample_time):
-         sends = float(self.__rpc_data['rpcsends'])
-diff --git a/tools/nfs-iostat/nfsiostat.man b/tools/nfs-iostat/nfsiostat.man
-index 9ae94c5f..940c0431 100644
---- a/tools/nfs-iostat/nfsiostat.man
-+++ b/tools/nfs-iostat/nfsiostat.man
-@@ -97,6 +97,14 @@ This is the duration from the time the NFS client created the RPC request task t
- .RE
- .RE
- .RE
-+.RS 8
-+- \fBerrors\fR
-+.RS
-+This is the number of operations that completed with an error status (status < 0).  This count is only available on kernels with RPC iostats version 1.1 or above.
-+.RS
-+.RE
-+.RE
-+.RE
- .TP
- Note that if an interval is used as argument to \fBnfsiostat\fR, then the diffrence from previous interval will be displayed, otherwise the results will be from the time that the share was mounted.
- 
--- 
-2.20.1
+Thanks.
+
+
 
