@@ -2,87 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8783F42502
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6D142518
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:10:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406289AbfFLMHk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 08:07:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41278 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405914AbfFLMHj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:07:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98F9530872C3;
-        Wed, 12 Jun 2019 12:07:39 +0000 (UTC)
-Received: from [10.10.66.66] (ovpn-66-66.rdu2.redhat.com [10.10.66.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46F9D5D961;
-        Wed, 12 Jun 2019 12:07:39 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Jianchao Wang" <jianchao.wan9@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: Can we setup pNFS with multiple DSs ?
-Date:   Wed, 12 Jun 2019 08:07:38 -0400
-Message-ID: <28D4997E-0B02-4979-9DE3-7E87A7FD7BA1@redhat.com>
-In-Reply-To: <71d00ed4-78b8-cefb-4245-99f3e53e5d2a@gmail.com>
-References: <71d00ed4-78b8-cefb-4245-99f3e53e5d2a@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 12 Jun 2019 12:07:39 +0000 (UTC)
+        id S2406370AbfFLMKV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 08:10:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37251 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404957AbfFLMKV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 08:10:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bh12so6566022plb.4;
+        Wed, 12 Jun 2019 05:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=FzWj9Xhuon5QpbEDoeMtLzky5+/Bs1gO2JVhXGS69rU=;
+        b=hitdsLAIBJmCOqstVgzBYk7T/tw9Q9CjJnmRkfiU0fRcNOclTQA0fUJ32GxtmOIKCk
+         yahfx1aIuASn849H8h4SCbWAQxWnjHWPixtuoM0gsAZl8JIFeeGSu5iMieRnT2GLS5uc
+         vPvjrpKtytCGE2zLTjhEkUKaVgEIcCKB8f22x+Fj7msnv7TJyXbV5IGtbclNkByxKxV6
+         NUAtXtTuquSezIzdHPWM67b7UPpNY1AYOhSYwlV0KwNqIQPSQ7OkdhVD1GmTs1jlNuox
+         TfAIK/22wiKDoTF9YVspEhfFCJFFjFX9EEnJxRD8p6Uy8pzjTQCiP7BU4aVP46MJGW3r
+         w1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=FzWj9Xhuon5QpbEDoeMtLzky5+/Bs1gO2JVhXGS69rU=;
+        b=Hg0IezoKvp8ne/sFqmvHHP2p3HPiY7yi7LI1d/ctbSAoQxDMJ8vNTnqAOq0UEzLHWf
+         8TWPktbnjfvfwc6zSMNjgTWT8pAPKfi7JFJgzVdEvR1wPJELpR3VhqnMGMf5chnBUZan
+         kpURWjFc4YrCHDrxTq61FxpNwDnjMNZbwf12/QZ4Dc2NBYDI2cpcinJYiZvpc7jB/nDx
+         52YUk+xW8BMXfXvvZhhv5obPgzbb/l6VL29+2ELQu5dbQa+/ivX9kvwxfgDCw4wv1BXh
+         542p2XHR3dr5XIvaVm1RpQblSWvncir3iYRYGHagz1YVENMhWBaVQe7fWFTfaWtdiiEh
+         lk1Q==
+X-Gm-Message-State: APjAAAWD7MyL1JBZ+khBU69gpJxX28xHGhR6hOYIpqF+u4kVWnrroQjf
+        JKV6CezVB80AxHejz7nap3IXO0Lo3Ug=
+X-Google-Smtp-Source: APXvYqzoj3tzZ+XGMPpbzQlbGEDBYK866FfUXZZy3+TZnqIKBMniNjaG+z4EySHYOcpy7rRUQqCR3A==
+X-Received: by 2002:a17:902:b102:: with SMTP id q2mr71770682plr.149.1560341420193;
+        Wed, 12 Jun 2019 05:10:20 -0700 (PDT)
+Received: from bridge.tencent.com ([119.28.31.106])
+        by smtp.gmail.com with ESMTPSA id s5sm5035653pji.9.2019.06.12.05.10.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 05:10:19 -0700 (PDT)
+From:   Wenbin Zeng <wenbin.zeng@gmail.com>
+X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
+To:     bfields@fieldses.org, davem@davemloft.net, viro@zeniv.linux.org.uk
+Cc:     jlayton@kernel.org, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, wenbinzeng@tencent.com,
+        dsahern@gmail.com, nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v3 0/3] auth_gss: netns refcount leaks when use-gss-proxy==1
+Date:   Wed, 12 Jun 2019 20:09:27 +0800
+Message-Id: <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Jianchao,
+This patch series fixes an auth_gss bug that results in netns refcount
+leaks when use-gss-proxy is set to 1.
 
-On 12 Jun 2019, at 3:55, Jianchao Wang wrote:
+The problem was found in privileged docker containers with gssproxy service
+enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding
+struct net->count ends up at 2 after container gets killed, the consequence
+is that the struct net cannot be freed.
 
-> Hi
->
-> I'm trying to setup a pNFS experiment environment.
-> And this is what I have got,
-> VM-0 (DS)      running a iscsi target
-> VM-1 (MS)      initiator, mount a XFS on the device, and export it by 
-> NFS with pnfs option
-> VM-2 (Client)  initiator, but not mount, running a blkmapd
->                mount the shared directory of VM-1 by NFS
->
-> And it semes to work well as the mountstatus
->             LAYOUTGET: 14 14 0 3472 2744 1 1381 1384
-> 	GETDEVICEINFO: 1 1 0 196 148 0 5 5
-> 	 LAYOUTCOMMIT: 8 8 0 2352 1368 0 1256 1257
->
-> The kernel version I use is 4.18.19.
->
-> And would anyone please help to clarify following questions ?
-> 1. Can I involve multiple DSs here ?
+It turns out that write_gssp() called gssp_rpc_create() to create a rpc
+client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed
+to decrease net->count but it never gets called because its call-path is:
+        net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
+Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this
+is a deadlock situation.
 
-Yep, you can add a new iSCSI DS with another filesystem and keep the 
-same
-MD.  The pNFS SCSI layout has support for multi-device layouts, but I 
-don't
-think anyone has put them through the paces.
+To fix the problem, we must break the deadlock, rpcsec_gss_exit_net()
+should move out of the put() path and find another chance to get called,
+I think nsfs_evict() is a good place to go, when netns inode gets evicted
+we call rpcsec_gss_exit_net() to free the rpc client, this requires a new
+callback i.e. evict to be added in struct proc_ns_operations, and add
+netns_evict() as one of netns_operations as well.
 
-The sweet spot for pNFS SCSI is large-scale FC where the fabric allows 
-nodes
-different paths through different controllers.  I expect the 
-do-it-yourself
-with iSCSI target on linux to have a bit more limited performance 
-benefits.
+v1->v2:
+ * in nsfs_evict(), move ->evict() in front of ->put()
+v2->v3:
+ * rpcsec_gss_evict_net() directly call gss_svc_shutdown_net() regardless
+   if gssp_clnt is null, this is exactly same to what rpcsec_gss_exit_net()
+   previously did
 
-> 2. Is this stable enough to use in production ? How about earlier 
-> version, for example 4.14 ?
+Wenbin Zeng (3):
+  nsfs: add evict callback into struct proc_ns_operations
+  netns: add netns_evict into netns_operations
+  auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
+    use-gss-proxy==1
 
-Test it!  It would be great to have more users.
+ fs/nsfs.c                      |  2 ++
+ include/linux/proc_ns.h        |  1 +
+ include/net/net_namespace.h    |  1 +
+ net/core/net_namespace.c       | 12 ++++++++++++
+ net/sunrpc/auth_gss/auth_gss.c |  4 ++--
+ 5 files changed, 18 insertions(+), 2 deletions(-)
 
-It would also be great to hear about your workload and if this shows any
-improvements.
+-- 
+1.8.3.1
 
-Last note - with SCSI layouts, there's no need to run blkmapd.  The 
-kernel
-should have all the info it needs to find the correct SCSI devices.
-
-Ben
