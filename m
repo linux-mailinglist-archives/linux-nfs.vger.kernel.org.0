@@ -2,81 +2,199 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DD5429BB
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 16:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C04C42A0B
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 16:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfFLOpY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 10:45:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34112 "EHLO mx1.redhat.com"
+        id S2439852AbfFLO40 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 10:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbfFLOpT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:45:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731195AbfFLO40 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:56:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 10A19772F9;
-        Wed, 12 Jun 2019 14:45:14 +0000 (UTC)
-Received: from bcodding.csb (ovpn-66-3.rdu2.redhat.com [10.10.66.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA67E2FC43;
-        Wed, 12 Jun 2019 14:45:13 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 165F8109C550; Wed, 12 Jun 2019 10:45:13 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: Don't skip lookup when holding a delegation
-Date:   Wed, 12 Jun 2019 10:45:13 -0400
-Message-Id: <bcb2d38fe9c9bb15aeb9baa811aeb9a8697ea141.1560348835.git.bcodding@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A2B0C20866;
+        Wed, 12 Jun 2019 14:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560351385;
+        bh=Lc+ym1o50Y9d5S4BmgqkjSdn0jAcuvgYaQKRXROPbdc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ok7aBvaTHO9trU95PUfF3ebBIHM9yuZSAmSgIbpDSqP4xIAx9pOqKzHkROhsdKmiC
+         BlBuaUErd3KfUpIpin4WhRlG2OEmTdTpiXjxewr3w5h76FjEkuRWegsMJGB+ptYHoI
+         5u4v2+ax20Lxf5r85rnjZprnONYXfOJM3yZn9hpM=
+Date:   Wed, 12 Jun 2019 16:56:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] sunrpc: no need to check return value of debugfs_create
+ functions
+Message-ID: <20190612145622.GA18839@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 14:45:19 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If we skip lookup revalidation while holding a delegation, we might miss
-that the file has changed directories on the server.  The directory's
-change attribute should still be checked against the dentry's d_time to
-perform a complete revalidation.
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Cc: "J. Bruce Fields" <bfields@fieldses.org>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/dir.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ net/sunrpc/debugfs.c | 66 ++++++++------------------------------------
+ 1 file changed, 11 insertions(+), 55 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index a71d0b42d160..10cc684dc082 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1269,12 +1269,13 @@ nfs_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
- 		goto out_bad;
- 	}
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 95ebd76b132d..707d7aab1546 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -11,7 +11,6 @@
+ #include "netns.h"
  
--	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
--		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
--
- 	/* Force a full look up iff the parent directory has changed */
- 	if (!(flags & (LOOKUP_EXCL | LOOKUP_REVAL)) &&
- 	    nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU)) {
-+
-+		if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
-+			return nfs_lookup_revalidate_delegated(dir, dentry, inode);
-+
- 		error = nfs_lookup_verify_inode(inode, flags);
- 		if (error) {
- 			if (error == -ESTALE)
-@@ -1707,9 +1708,6 @@ nfs4_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
- 	if (inode == NULL)
- 		goto full_reval;
+ static struct dentry *topdir;
+-static struct dentry *rpc_fault_dir;
+ static struct dentry *rpc_clnt_dir;
+ static struct dentry *rpc_xprt_dir;
  
--	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
--		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
+@@ -125,23 +124,16 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ 	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
+ 	struct rpc_xprt *xprt;
+ 
+-	/* Already registered? */
+-	if (clnt->cl_debugfs || !rpc_clnt_dir)
+-		return;
 -
- 	/* NFS only supports OPEN on regular files */
- 	if (!S_ISREG(inode->i_mode))
- 		goto full_reval;
+ 	len = snprintf(name, sizeof(name), "%x", clnt->cl_clid);
+ 	if (len >= sizeof(name))
+ 		return;
+ 
+ 	/* make the per-client dir */
+ 	clnt->cl_debugfs = debugfs_create_dir(name, rpc_clnt_dir);
+-	if (!clnt->cl_debugfs)
+-		return;
+ 
+ 	/* make tasks file */
+-	if (!debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs,
+-				 clnt, &tasks_fops))
+-		goto out_err;
++	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
++			    &tasks_fops);
+ 
+ 	rcu_read_lock();
+ 	xprt = rcu_dereference(clnt->cl_xprt);
+@@ -157,8 +149,7 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ 	if (len >= sizeof(name))
+ 		goto out_err;
+ 
+-	if (!debugfs_create_symlink("xprt", clnt->cl_debugfs, name))
+-		goto out_err;
++	debugfs_create_symlink("xprt", clnt->cl_debugfs, name);
+ 
+ 	return;
+ out_err:
+@@ -226,9 +217,6 @@ rpc_xprt_debugfs_register(struct rpc_xprt *xprt)
+ 	static atomic_t	cur_id;
+ 	char		name[9]; /* 8 hex digits + NULL term */
+ 
+-	if (!rpc_xprt_dir)
+-		return;
+-
+ 	id = (unsigned int)atomic_inc_return(&cur_id);
+ 
+ 	len = snprintf(name, sizeof(name), "%x", id);
+@@ -237,15 +225,10 @@ rpc_xprt_debugfs_register(struct rpc_xprt *xprt)
+ 
+ 	/* make the per-client dir */
+ 	xprt->debugfs = debugfs_create_dir(name, rpc_xprt_dir);
+-	if (!xprt->debugfs)
+-		return;
+ 
+ 	/* make tasks file */
+-	if (!debugfs_create_file("info", S_IFREG | 0400, xprt->debugfs,
+-				 xprt, &xprt_info_fops)) {
+-		debugfs_remove_recursive(xprt->debugfs);
+-		xprt->debugfs = NULL;
+-	}
++	debugfs_create_file("info", S_IFREG | 0400, xprt->debugfs, xprt,
++			    &xprt_info_fops);
+ 
+ 	atomic_set(&xprt->inject_disconnect, rpc_inject_disconnect);
+ }
+@@ -308,28 +291,11 @@ static const struct file_operations fault_disconnect_fops = {
+ 	.release	= fault_release,
+ };
+ 
+-static struct dentry *
+-inject_fault_dir(struct dentry *topdir)
+-{
+-	struct dentry *faultdir;
+-
+-	faultdir = debugfs_create_dir("inject_fault", topdir);
+-	if (!faultdir)
+-		return NULL;
+-
+-	if (!debugfs_create_file("disconnect", S_IFREG | 0400, faultdir,
+-				 NULL, &fault_disconnect_fops))
+-		return NULL;
+-
+-	return faultdir;
+-}
+-
+ void __exit
+ sunrpc_debugfs_exit(void)
+ {
+ 	debugfs_remove_recursive(topdir);
+ 	topdir = NULL;
+-	rpc_fault_dir = NULL;
+ 	rpc_clnt_dir = NULL;
+ 	rpc_xprt_dir = NULL;
+ }
+@@ -337,26 +303,16 @@ sunrpc_debugfs_exit(void)
+ void __init
+ sunrpc_debugfs_init(void)
+ {
+-	topdir = debugfs_create_dir("sunrpc", NULL);
+-	if (!topdir)
+-		return;
++	struct dentry *rpc_fault_dir;
+ 
+-	rpc_fault_dir = inject_fault_dir(topdir);
+-	if (!rpc_fault_dir)
+-		goto out_remove;
++	topdir = debugfs_create_dir("sunrpc", NULL);
+ 
+ 	rpc_clnt_dir = debugfs_create_dir("rpc_clnt", topdir);
+-	if (!rpc_clnt_dir)
+-		goto out_remove;
+ 
+ 	rpc_xprt_dir = debugfs_create_dir("rpc_xprt", topdir);
+-	if (!rpc_xprt_dir)
+-		goto out_remove;
+ 
+-	return;
+-out_remove:
+-	debugfs_remove_recursive(topdir);
+-	topdir = NULL;
+-	rpc_fault_dir = NULL;
+-	rpc_clnt_dir = NULL;
++	rpc_fault_dir = debugfs_create_dir("inject_fault", topdir);
++
++	debugfs_create_file("disconnect", S_IFREG | 0400, rpc_fault_dir, NULL,
++			    &fault_disconnect_fops);
+ }
 -- 
-2.20.1
+2.22.0
 
