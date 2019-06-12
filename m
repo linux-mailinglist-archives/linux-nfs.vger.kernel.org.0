@@ -2,167 +2,214 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C087342C92
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 18:47:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3086642D63
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 19:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406304AbfFLQqg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 12:46:36 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:34850 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404956AbfFLQqf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 12:46:35 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u124so10679785vsu.2
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2019 09:46:35 -0700 (PDT)
+        id S2407187AbfFLRYT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 13:24:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40390 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407019AbfFLRYS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 13:24:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so17799039wre.7;
+        Wed, 12 Jun 2019 10:24:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f5DEfH5SQKrIP7Tmn6AUF+yksRS9DcFrxwaZxglD0AA=;
-        b=MEp6nbBDv8Z4VREA4J6yMVjL+DN/nssMiPJ9VTwz/df+d9lLCSKV8kOi8n91OoGPeq
-         guWCvIy/ZjjA63mSXhSBIaV6jM8ub6vW4+QKiBS3GHspssrghM93F9meXxJKr/nHUoIX
-         yngc3ytx48ouyMUGCIHzYqU/VOw9SvJFtOjey9gBp13WvuI47fYLhfoAOJs2BFMPw+3U
-         7P8o776m125AesOwZwE7MvOMHhXAFZXHFHyuARJbGFoKuDxBpj6gxe7pU92BYYUopFJk
-         l/PQ97YjcyzH25bWyuWYrfCiPi6YWBsr1t4Vre9JdljDOfzI1n4p8xX1ZBPUt6tkOS4H
-         ZLZQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JaDk0B2JuZF4UPbktkuAfxaGadSzIqD38JFVgmfBIWs=;
+        b=L/8aQM0zZfjRGpclojJSpYbbgU7RKIEziz0NHfsIDDLYRDOt+iAy7LlpErcteY5hbk
+         Zk8xPd24vIzJ+HhiWHf5i+cHYyroTfaPCN6cDKDlObpRb4pyOAqhEeXfMbxz2zEYK37M
+         uZ43tQodaOLP8QEgDQNgtY/bk3mtv2/hYCwHAYIQydD2iLFAJJZTvRvFwyJRR1vokBFr
+         UQbGJLErLOZIkSPuzDj91DHtrPsJR8Wmd6XlLiEx/bgS5aBrH8Pz6kOdPULmMaDjiPHB
+         0gOFBLuMleWHilRh4Cz5vJTOrjRvlbr1USqXgrhDH9kAWBcHXywc+LKzzfF8HsY2iXpv
+         9JUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f5DEfH5SQKrIP7Tmn6AUF+yksRS9DcFrxwaZxglD0AA=;
-        b=cAHBBHHcaR9iHRai7p+aUOyi9FPXxzfklrjITL70Dw76aBvqWuNaGDNcmMChbKH5J2
-         yZHRvbiflQYAAIFfCNC3qMRHEi8iJ6tEDWIr+J04EYKwTKQoIlDuVzwkY13mX8UMowSA
-         C3oNR5BvRT+lwjfimiG39wPnU+EBg9luCjEGz3sh+nxLKg0/hnMf5zjtR67to7upT1DI
-         zrpaCWVTbomkr1w0XC4+olqmCta3hiNEQkFmzMdSU1qyIF7Sg63oAVHS9MLyMs906ZSY
-         Ka2ykfpg2BhtrCnb9ltt275FKMVSSZQ4Oj0q60cqu5CpFp83p4KO0j2XGwiqkwvxkJ0C
-         oerg==
-X-Gm-Message-State: APjAAAWaBISbjo4kAAHGLAmHBiJEq2/mJB9ZkGBkMDfJIolh2T4u4WaJ
-        b0KYeaXD86oSRj/jQAE1M+BPcfCogDkwkO2/Ya8=
-X-Google-Smtp-Source: APXvYqxugNl/QyyCJrxMzSLNbRNkf9UAfJw4ZicdEarSR8+jv5+wuXUATPjDN9Liz46DJxubkCip/4F/nTsmULBtIn8=
-X-Received: by 2002:a67:dc1:: with SMTP id 184mr12759907vsn.164.1560357994474;
- Wed, 12 Jun 2019 09:46:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190409113713.30595-1-xiubli@redhat.com> <6a152a89-6de6-f5f2-9c16-5e32fef8cc64@redhat.com>
- <81ba7de8-1301-1ac9-53fb-6e011a592c96@RedHat.com> <d1a7662c-deb1-0fb4-9707-ccfb680ffcbc@redhat.com>
-In-Reply-To: <d1a7662c-deb1-0fb4-9707-ccfb680ffcbc@redhat.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 12 Jun 2019 12:46:23 -0400
-Message-ID: <CAN-5tyFTR+bu9KTBHpLVdpbXEtXsCc2yLRcaPfMe+u0NKYmHBQ@mail.gmail.com>
-Subject: Re: [PATCH] svc_run: make sure only one svc_run loop runs in one process
-To:     Xiubo Li <xiubli@redhat.com>
-Cc:     Steve Dickson <SteveD@redhat.com>,
-        libtirpc-devel@lists.sourceforge.net,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JaDk0B2JuZF4UPbktkuAfxaGadSzIqD38JFVgmfBIWs=;
+        b=RWSpmAFULhfjhDFG7/5HQT4w8K9zyIrmAjqBJn6Qrd1Mi6rI0oScPptxcOrkQ6wrBH
+         PjoM6OZjJglAJmFDWw4MdXhtuoP0mDlW4TAYC8TxRcYdBSgrZRsuoJZVwImDN8LzRvWi
+         jKACR399hoSwseoKIuE1bvzCFaX7lzT95NpgL2P26OCi6Zv9csvMjjEIPmgomUiys9Po
+         n951D6N105xVj6mUl7jv/XmCjEfep5sbFEkLUaL0xqDMTBdDVg3He8Cy2r1SZNYkwjcQ
+         Bva2Q5pTlLc7/NfaROiH8ZMqc3K4/6eDXZTW6rO2Ik7tI5PMGUXTCzXX01xuh4kTl8DW
+         /pCQ==
+X-Gm-Message-State: APjAAAXf13JyBGlJxxt+Vd4d1v5SXh55wOowFNzBdPYJU3G49XFcmY5W
+        dvpiBC4jjfmhN7MmzVYOD3U=
+X-Google-Smtp-Source: APXvYqwStm/z+FAde/SFAgWzsa5IoAKISOCAtEsvi1y9UO+FcQKU4hEaIb9WOUjr2yY/00ILxAJHyw==
+X-Received: by 2002:a5d:6b47:: with SMTP id x7mr3863898wrw.83.1560360255667;
+        Wed, 12 Jun 2019 10:24:15 -0700 (PDT)
+Received: from localhost.localdomain ([5.102.238.208])
+        by smtp.gmail.com with ESMTPSA id j17sm423482wrw.6.2019.06.12.10.24.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 10:24:14 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        "J . Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-unionfs@vger.kernel.org
+Subject: [PATCH v2] locks: eliminate false positive conflicts for write lease
+Date:   Wed, 12 Jun 2019 20:24:08 +0300
+Message-Id: <20190612172408.22671-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:45 AM Xiubo Li <xiubli@redhat.com> wrote:
->
-> On 2019/6/11 22:54, Steve Dickson wrote:
-> > Sorry for the delay....
-> >
-> > On 5/15/19 10:55 PM, Xiubo Li wrote:
-> >> Hey ping.
-> >>
-> >> What's the state of this patch and will it make sense here?
-> > I'm not sure it does make sense.... Shouldn't the mutex lock
-> > be in the call of svc_run()?
->
-> Hi Steve,
->
-> Yeah, mutex lock should be in the call of svc_run(). This is exactly
-> what I do in this change.
->
-> If the libtirpc means to allow only one svc_run() loop in each process,
-> so IMO this change is needed. Or if we will allow more than one like the
-> glibc version does, so this should be one bug in libtirpc.
+check_conflicting_open() is checking for existing fd's open for read or
+for write before allowing to take a write lease.  The check that was
+implemented using i_count and d_count is an approximation that has
+several false positives.  For example, overlayfs since v4.19, takes an
+extra reference on the dentry; An open with O_PATH takes a reference on
+the dentry although the file cannot be read nor written.
 
-Has there been effort into made into investigating what's causing the
-crashes? We perhaps should make an effort to see if svc_run() is
-thread-safe and examine which functions it uses and which might not be
-thread safe. You might be able to allow greater parallelism then 1
-thread in a svc_run() function by just making some not-thread safe
-functions wrapped in pthread locks.
+Change the implementation to use i_readcount and i_writecount to
+eliminate the false positive conflicts and allow a write lease to be
+taken on an overlayfs file.
 
->
-> Thanks.
-> BRs
-> Xiubo
->
->
-> > steved.
-> >
-> >> Thanks
-> >> BRs
-> >>
-> >> On 2019/4/9 19:37, xiubli@redhat.com wrote:
-> >>> From: Xiubo Li <xiubli@redhat.com>
-> >>>
-> >>> In gluster-block project and there are 2 separate threads, both
-> >>> of which will run the svc_run loop, this could work well in glibc
-> >>> version, but in libtirpc we are hitting the random crash and stuck
-> >>> issues.
-> >>>
-> >>> More detail please see:
-> >>> https://github.com/gluster/gluster-block/pull/182
-> >>>
-> >>> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> >>> ---
-> >>>    src/svc_run.c | 19 +++++++++++++++++++
-> >>>    1 file changed, 19 insertions(+)
-> >>>
-> >>> diff --git a/src/svc_run.c b/src/svc_run.c
-> >>> index f40314b..b295755 100644
-> >>> --- a/src/svc_run.c
-> >>> +++ b/src/svc_run.c
-> >>> @@ -38,12 +38,17 @@
-> >>>    #include <string.h>
-> >>>    #include <unistd.h>
-> >>>    #include <sys/poll.h>
-> >>> +#include <syslog.h>
-> >>> +#include <stdbool.h>
-> >>>        #include <rpc/rpc.h>
-> >>>    #include "rpc_com.h"
-> >>>    #include <sys/select.h>
-> >>>    +static bool svc_loop_running = false;
-> >>> +static pthread_mutex_t svc_run_lock = PTHREAD_MUTEX_INITIALIZER;
-> >>> +
-> >>>    void
-> >>>    svc_run()
-> >>>    {
-> >>> @@ -51,6 +56,16 @@ svc_run()
-> >>>      struct pollfd *my_pollfd = NULL;
-> >>>      int last_max_pollfd = 0;
-> >>>    +  pthread_mutex_lock(&svc_run_lock);
-> >>> +  if (svc_loop_running) {
-> >>> +    pthread_mutex_unlock(&svc_run_lock);
-> >>> +    syslog (LOG_ERR, "svc_run: svc loop is already running in current process %d", getpid());
-> >>> +    return;
-> >>> +  }
-> >>> +
-> >>> +  svc_loop_running = true;
-> >>> +  pthread_mutex_unlock(&svc_run_lock);
-> >>> +
-> >>>      for (;;) {
-> >>>        int max_pollfd = svc_max_pollfd;
-> >>>        if (max_pollfd == 0 && svc_pollfd == NULL)
-> >>> @@ -111,4 +126,8 @@ svc_exit()
-> >>>        svc_pollfd = NULL;
-> >>>        svc_max_pollfd = 0;
-> >>>        rwlock_unlock(&svc_fd_lock);
-> >>> +
-> >>> +    pthread_mutex_lock(&svc_run_lock);
-> >>> +    svc_loop_running = false;
-> >>> +    pthread_mutex_unlock(&svc_run_lock);
-> >>>    }
-> >>
-> >>
-> >>
-> >> _______________________________________________
-> >> Libtirpc-devel mailing list
-> >> Libtirpc-devel@lists.sourceforge.net
-> >> https://lists.sourceforge.net/lists/listinfo/libtirpc-devel
->
->
+The change of behavior with existing fd's open with O_PATH is symmetric
+w.r.t. current behavior of lease breakers - an open with O_PATH currently
+does not break a write lease.
+
+This increases the size of struct inode by 4 bytes on 32bit archs when
+CONFIG_FILE_LOCKING is defined and CONFIG_IMA was not already
+defined.
+
+Cc: <stable@vger.kernel.org> # v4.19
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+
+Miklos, Jeff and Bruce,
+
+This patch fixes a v4.19 overlayfs regression with taking write
+leases. It also provides correct semantics w.r.t RDONLY open counter
+that Bruce also needed for nfsd.
+
+Since this is locks code that fixes an overlayfs regression which
+is also needed for nfsd, it could go via either of your trees.
+I didn't want to pick sides, so first one to grab the patch wins ;-)
+
+I verified the changes using modified LTP F_SETLEASE tests [1],
+which I ran over xfs and overlayfs.
+
+Thanks,
+Amir.
+
+[1] https://github.com/amir73il/ltp/commits/overlayfs-devel
+
+Changes since v1:
+- Drop patch to fold i_readcount into i_count
+- Make i_readcount depend on CONFIG_FILE_LOCKING
+
+ fs/locks.c         | 33 ++++++++++++++++++++++-----------
+ include/linux/fs.h |  4 ++--
+ 2 files changed, 24 insertions(+), 13 deletions(-)
+
+diff --git a/fs/locks.c b/fs/locks.c
+index ec1e4a5df629..28528b4fc53b 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -1753,10 +1753,10 @@ int fcntl_getlease(struct file *filp)
+ }
+ 
+ /**
+- * check_conflicting_open - see if the given dentry points to a file that has
++ * check_conflicting_open - see if the given file points to an inode that has
+  *			    an existing open that would conflict with the
+  *			    desired lease.
+- * @dentry:	dentry to check
++ * @filp:	file to check
+  * @arg:	type of lease that we're trying to acquire
+  * @flags:	current lock flags
+  *
+@@ -1764,19 +1764,31 @@ int fcntl_getlease(struct file *filp)
+  * conflict with the lease we're trying to set.
+  */
+ static int
+-check_conflicting_open(const struct dentry *dentry, const long arg, int flags)
++check_conflicting_open(struct file *filp, const long arg, int flags)
+ {
+ 	int ret = 0;
+-	struct inode *inode = dentry->d_inode;
++	struct inode *inode = locks_inode(filp);
++	int wcount = atomic_read(&inode->i_writecount);
++	int self_wcount = 0, self_rcount = 0;
+ 
+ 	if (flags & FL_LAYOUT)
+ 		return 0;
+ 
+-	if ((arg == F_RDLCK) && inode_is_open_for_write(inode))
++	if (arg == F_RDLCK && wcount > 0)
+ 		return -EAGAIN;
+ 
+-	if ((arg == F_WRLCK) && ((d_count(dentry) > 1) ||
+-	    (atomic_read(&inode->i_count) > 1)))
++	/* Eliminate deny writes from actual writers count */
++	if (wcount < 0)
++		wcount = 0;
++
++	/* Make sure that only read/write count is from lease requestor */
++	if (filp->f_mode & FMODE_WRITE)
++		self_wcount = 1;
++	else if ((filp->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
++		self_rcount = 1;
++
++	if (arg == F_WRLCK && (wcount != self_wcount ||
++	    atomic_read(&inode->i_readcount) != self_rcount))
+ 		ret = -EAGAIN;
+ 
+ 	return ret;
+@@ -1786,8 +1798,7 @@ static int
+ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **priv)
+ {
+ 	struct file_lock *fl, *my_fl = NULL, *lease;
+-	struct dentry *dentry = filp->f_path.dentry;
+-	struct inode *inode = dentry->d_inode;
++	struct inode *inode = locks_inode(filp);
+ 	struct file_lock_context *ctx;
+ 	bool is_deleg = (*flp)->fl_flags & FL_DELEG;
+ 	int error;
+@@ -1822,7 +1833,7 @@ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **pr
+ 	percpu_down_read(&file_rwsem);
+ 	spin_lock(&ctx->flc_lock);
+ 	time_out_leases(inode, &dispose);
+-	error = check_conflicting_open(dentry, arg, lease->fl_flags);
++	error = check_conflicting_open(filp, arg, lease->fl_flags);
+ 	if (error)
+ 		goto out;
+ 
+@@ -1879,7 +1890,7 @@ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **pr
+ 	 * precedes these checks.
+ 	 */
+ 	smp_mb();
+-	error = check_conflicting_open(dentry, arg, lease->fl_flags);
++	error = check_conflicting_open(filp, arg, lease->fl_flags);
+ 	if (error) {
+ 		locks_unlink_lock_ctx(lease);
+ 		goto out;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 79ffa2958bd8..2d55f1b64014 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -694,7 +694,7 @@ struct inode {
+ 	atomic_t		i_count;
+ 	atomic_t		i_dio_count;
+ 	atomic_t		i_writecount;
+-#ifdef CONFIG_IMA
++#if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
+ 	atomic_t		i_readcount; /* struct files open RO */
+ #endif
+ 	union {
+@@ -2895,7 +2895,7 @@ static inline bool inode_is_open_for_write(const struct inode *inode)
+ 	return atomic_read(&inode->i_writecount) > 0;
+ }
+ 
+-#ifdef CONFIG_IMA
++#if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
+ static inline void i_readcount_dec(struct inode *inode)
+ {
+ 	BUG_ON(!atomic_read(&inode->i_readcount));
+-- 
+2.17.1
+
