@@ -2,37 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C04C42A0B
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 16:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C23B742AE5
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 17:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439852AbfFLO40 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 10:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
+        id S2408744AbfFLP0H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 11:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbfFLO40 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:56:26 -0400
+        id S2408070AbfFLP0H (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:26:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2B0C20866;
-        Wed, 12 Jun 2019 14:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A438820874;
+        Wed, 12 Jun 2019 15:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560351385;
-        bh=Lc+ym1o50Y9d5S4BmgqkjSdn0jAcuvgYaQKRXROPbdc=;
+        s=default; t=1560353166;
+        bh=TSjXxGX/iopIFXqQUxKIILrbVvon9SuUKBVCxHltuYE=;
         h=Date:From:To:Cc:Subject:From;
-        b=ok7aBvaTHO9trU95PUfF3ebBIHM9yuZSAmSgIbpDSqP4xIAx9pOqKzHkROhsdKmiC
-         BlBuaUErd3KfUpIpin4WhRlG2OEmTdTpiXjxewr3w5h76FjEkuRWegsMJGB+ptYHoI
-         5u4v2+ax20Lxf5r85rnjZprnONYXfOJM3yZn9hpM=
-Date:   Wed, 12 Jun 2019 16:56:22 +0200
+        b=s9H1kLkauLGkRRxEOp97HAjoqWV9Qe9wvfrQQ6RFtlUPE+VUUKmayW59VM+NcJ660
+         edLgCm+h1+rAxQarkhjndLV6Ffd8MMEy5xACrHZoKXWwDsZLF7I1WZle1t2K0W4taM
+         G0vMxDfvb3MJV6eBr9Ky4shdwccEhWuQNOw1IGec=
+Date:   Wed, 12 Jun 2019 17:26:03 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] sunrpc: no need to check return value of debugfs_create
+        Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: no need to check return value of debugfs_create
  functions
-Message-ID: <20190612145622.GA18839@kroah.com>
+Message-ID: <20190612152603.GB18440@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -48,153 +46,90 @@ never do something different based on this.
 
 Cc: "J. Bruce Fields" <bfields@fieldses.org>
 Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
 Cc: linux-nfs@vger.kernel.org
-Cc: netdev@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/debugfs.c | 66 ++++++++------------------------------------
- 1 file changed, 11 insertions(+), 55 deletions(-)
+ fs/nfsd/fault_inject.c | 12 ++----------
+ fs/nfsd/nfsctl.c       |  5 +----
+ fs/nfsd/state.h        |  4 ++--
+ 3 files changed, 5 insertions(+), 16 deletions(-)
 
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index 95ebd76b132d..707d7aab1546 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -11,7 +11,6 @@
- #include "netns.h"
- 
- static struct dentry *topdir;
--static struct dentry *rpc_fault_dir;
- static struct dentry *rpc_clnt_dir;
- static struct dentry *rpc_xprt_dir;
- 
-@@ -125,23 +124,16 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
- 	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
- 	struct rpc_xprt *xprt;
- 
--	/* Already registered? */
--	if (clnt->cl_debugfs || !rpc_clnt_dir)
--		return;
--
- 	len = snprintf(name, sizeof(name), "%x", clnt->cl_clid);
- 	if (len >= sizeof(name))
- 		return;
- 
- 	/* make the per-client dir */
- 	clnt->cl_debugfs = debugfs_create_dir(name, rpc_clnt_dir);
--	if (!clnt->cl_debugfs)
--		return;
- 
- 	/* make tasks file */
--	if (!debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs,
--				 clnt, &tasks_fops))
--		goto out_err;
-+	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
-+			    &tasks_fops);
- 
- 	rcu_read_lock();
- 	xprt = rcu_dereference(clnt->cl_xprt);
-@@ -157,8 +149,7 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
- 	if (len >= sizeof(name))
- 		goto out_err;
- 
--	if (!debugfs_create_symlink("xprt", clnt->cl_debugfs, name))
--		goto out_err;
-+	debugfs_create_symlink("xprt", clnt->cl_debugfs, name);
- 
- 	return;
- out_err:
-@@ -226,9 +217,6 @@ rpc_xprt_debugfs_register(struct rpc_xprt *xprt)
- 	static atomic_t	cur_id;
- 	char		name[9]; /* 8 hex digits + NULL term */
- 
--	if (!rpc_xprt_dir)
--		return;
--
- 	id = (unsigned int)atomic_inc_return(&cur_id);
- 
- 	len = snprintf(name, sizeof(name), "%x", id);
-@@ -237,15 +225,10 @@ rpc_xprt_debugfs_register(struct rpc_xprt *xprt)
- 
- 	/* make the per-client dir */
- 	xprt->debugfs = debugfs_create_dir(name, rpc_xprt_dir);
--	if (!xprt->debugfs)
--		return;
- 
- 	/* make tasks file */
--	if (!debugfs_create_file("info", S_IFREG | 0400, xprt->debugfs,
--				 xprt, &xprt_info_fops)) {
--		debugfs_remove_recursive(xprt->debugfs);
--		xprt->debugfs = NULL;
--	}
-+	debugfs_create_file("info", S_IFREG | 0400, xprt->debugfs, xprt,
-+			    &xprt_info_fops);
- 
- 	atomic_set(&xprt->inject_disconnect, rpc_inject_disconnect);
- }
-@@ -308,28 +291,11 @@ static const struct file_operations fault_disconnect_fops = {
- 	.release	= fault_release,
+diff --git a/fs/nfsd/fault_inject.c b/fs/nfsd/fault_inject.c
+index 84831253203d..76bee0a0d308 100644
+--- a/fs/nfsd/fault_inject.c
++++ b/fs/nfsd/fault_inject.c
+@@ -127,24 +127,16 @@ static struct nfsd_fault_inject_op inject_ops[] = {
+ 	},
  };
  
--static struct dentry *
--inject_fault_dir(struct dentry *topdir)
--{
--	struct dentry *faultdir;
--
--	faultdir = debugfs_create_dir("inject_fault", topdir);
--	if (!faultdir)
--		return NULL;
--
--	if (!debugfs_create_file("disconnect", S_IFREG | 0400, faultdir,
--				 NULL, &fault_disconnect_fops))
--		return NULL;
--
--	return faultdir;
--}
--
- void __exit
- sunrpc_debugfs_exit(void)
+-int nfsd_fault_inject_init(void)
++void nfsd_fault_inject_init(void)
  {
- 	debugfs_remove_recursive(topdir);
- 	topdir = NULL;
--	rpc_fault_dir = NULL;
- 	rpc_clnt_dir = NULL;
- 	rpc_xprt_dir = NULL;
+ 	unsigned int i;
+ 	struct nfsd_fault_inject_op *op;
+ 	umode_t mode = S_IFREG | S_IRUSR | S_IWUSR;
+ 
+ 	debug_dir = debugfs_create_dir("nfsd", NULL);
+-	if (!debug_dir)
+-		goto fail;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(inject_ops); i++) {
+ 		op = &inject_ops[i];
+-		if (!debugfs_create_file(op->file, mode, debug_dir, op, &fops_nfsd))
+-			goto fail;
++		debugfs_create_file(op->file, mode, debug_dir, op, &fops_nfsd);
+ 	}
+-	return 0;
+-
+-fail:
+-	nfsd_fault_inject_cleanup();
+-	return -ENOMEM;
  }
-@@ -337,26 +303,16 @@ sunrpc_debugfs_exit(void)
- void __init
- sunrpc_debugfs_init(void)
- {
--	topdir = debugfs_create_dir("sunrpc", NULL);
--	if (!topdir)
--		return;
-+	struct dentry *rpc_fault_dir;
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 62c58cfeb8d8..6a9de59d9633 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1291,9 +1291,7 @@ static int __init init_nfsd(void)
+ 	retval = nfsd4_init_pnfs();
+ 	if (retval)
+ 		goto out_free_slabs;
+-	retval = nfsd_fault_inject_init(); /* nfsd fault injection controls */
+-	if (retval)
+-		goto out_exit_pnfs;
++	nfsd_fault_inject_init(); /* nfsd fault injection controls */
+ 	nfsd_stat_init();	/* Statistics */
+ 	retval = nfsd_reply_cache_init();
+ 	if (retval)
+@@ -1315,7 +1313,6 @@ static int __init init_nfsd(void)
+ out_free_stat:
+ 	nfsd_stat_shutdown();
+ 	nfsd_fault_inject_cleanup();
+-out_exit_pnfs:
+ 	nfsd4_exit_pnfs();
+ out_free_slabs:
+ 	nfsd4_free_slabs();
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 0b74d371ed67..87f310c78e06 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -663,7 +663,7 @@ extern void nfsd4_record_grace_done(struct nfsd_net *nn);
  
--	rpc_fault_dir = inject_fault_dir(topdir);
--	if (!rpc_fault_dir)
--		goto out_remove;
-+	topdir = debugfs_create_dir("sunrpc", NULL);
+ /* nfs fault injection functions */
+ #ifdef CONFIG_NFSD_FAULT_INJECTION
+-int nfsd_fault_inject_init(void);
++void nfsd_fault_inject_init(void);
+ void nfsd_fault_inject_cleanup(void);
  
- 	rpc_clnt_dir = debugfs_create_dir("rpc_clnt", topdir);
--	if (!rpc_clnt_dir)
--		goto out_remove;
+ u64 nfsd_inject_print_clients(void);
+@@ -684,7 +684,7 @@ u64 nfsd_inject_forget_delegations(u64);
+ u64 nfsd_inject_recall_client_delegations(struct sockaddr_storage *, size_t);
+ u64 nfsd_inject_recall_delegations(u64);
+ #else /* CONFIG_NFSD_FAULT_INJECTION */
+-static inline int nfsd_fault_inject_init(void) { return 0; }
++static inline void nfsd_fault_inject_init(void) {}
+ static inline void nfsd_fault_inject_cleanup(void) {}
+ #endif /* CONFIG_NFSD_FAULT_INJECTION */
  
- 	rpc_xprt_dir = debugfs_create_dir("rpc_xprt", topdir);
--	if (!rpc_xprt_dir)
--		goto out_remove;
- 
--	return;
--out_remove:
--	debugfs_remove_recursive(topdir);
--	topdir = NULL;
--	rpc_fault_dir = NULL;
--	rpc_clnt_dir = NULL;
-+	rpc_fault_dir = debugfs_create_dir("inject_fault", topdir);
-+
-+	debugfs_create_file("disconnect", S_IFREG | 0400, rpc_fault_dir, NULL,
-+			    &fault_disconnect_fops);
- }
 -- 
 2.22.0
 
