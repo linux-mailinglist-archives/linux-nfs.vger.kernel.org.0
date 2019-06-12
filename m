@@ -2,110 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E338F42525
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:11:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E79A5425EF
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbfFLMLB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 08:11:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42160 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfFLMLA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 08:11:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go2so6548911plb.9;
-        Wed, 12 Jun 2019 05:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OcNe+Ykv8pNI9AsJnYaHIthvaQkPPzEoKbyDzZPPFUQ=;
-        b=OyAx8oEtH/7qb7ZcfOcQCkmZIY6KpFzOsj2RUbbM46j9eGpnTEV7DhfEQgRk2QwnI6
-         nhryKjE6BT1mG2qXheqyOuKXz1wg4wUmp3BKsthcyffnvQ2hHFKsFWZ5ybK9n3deGyK0
-         Lgvd5LxDOJbuU5z/FjpUlX4RnSQ+ZM4m/GOUtqjJnXA+EHnd4QdCokj96nYOhTQ8Y12C
-         As+NlACfpVgzbwLiE//O25sCnpgLWkhkfayVQkblkjAJH0btXcY0L/8hjmtLbvelL5Gd
-         d6lQQ8HfujSdQVFllW7fHCXpfoYXTGSPAplA8sljcabbHssoVmVNSF5Mhq8hH2BEd+pi
-         nyCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OcNe+Ykv8pNI9AsJnYaHIthvaQkPPzEoKbyDzZPPFUQ=;
-        b=dgBMPA5Ebvjh/uEC+1FcOIHG1JotvML7How5RJQ1j+x/sdksxHoSpp9JFDvcaMQV9C
-         +duDH3ZCGwIbntu60zf2vCo6wv75ZruJhXXwEzwKn5pgGU2OJe0YTvbmcRkNsmxKxz3z
-         7s6amFTfsoILZPjOg8keyz7qyVFCHSnh4+QUS7c9o/wKYWeVeDxj/DuJJP2MNLu+ofdr
-         X6oSqSfSQEtz/a2rKScuP00jrqscnrwD97qZWWjo1dX7jOaIw+0Nu8GhQoloD0qQQi6v
-         pxH1wszT9A7GdX8ThOuoN+N9Vz3/xGUYWtveO1YI6Apt9oDclyY4wyVjWq3b/xQi6XNu
-         sFDQ==
-X-Gm-Message-State: APjAAAUXQ9CQ83UWRhsz1FjmzUUAr0HEjGlisq+nRkBXTFjjZlsbiG7i
-        zfCOMnYtTmLBVFMfbG/HUeo=
-X-Google-Smtp-Source: APXvYqwEAEYrpAy3DKUJ4PFemUBZIB2HEUdg28z4c86rdecR/mAQ1vmRRjJTwNfNfGQH3ki7Uo4ggw==
-X-Received: by 2002:a17:902:768b:: with SMTP id m11mr9693804pll.191.1560341459773;
-        Wed, 12 Jun 2019 05:10:59 -0700 (PDT)
-Received: from bridge.tencent.com ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id s5sm5035653pji.9.2019.06.12.05.10.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 05:10:59 -0700 (PDT)
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
-To:     bfields@fieldses.org, davem@davemloft.net, viro@zeniv.linux.org.uk
-Cc:     jlayton@kernel.org, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, wenbinzeng@tencent.com,
-        dsahern@gmail.com, nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH v3 3/3] auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when use-gss-proxy==1
-Date:   Wed, 12 Jun 2019 20:09:30 +0800
-Message-Id: <1560341370-24197-4-git-send-email-wenbinzeng@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+        id S1728091AbfFLMeg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 08:34:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49815 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfFLMeg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:34:36 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D178B307D935;
+        Wed, 12 Jun 2019 12:34:33 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-232.phx2.redhat.com [10.3.116.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EA6E7BE8F;
+        Wed, 12 Jun 2019 12:34:28 +0000 (UTC)
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "aglo@umich.edu" <aglo@umich.edu>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "neilb@suse.com" <neilb@suse.com>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+ <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
+ <87muj3tuuk.fsf@notabene.neil.brown.name>
+ <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
+ <87lfy9vsgf.fsf@notabene.neil.brown.name>
+ <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+ <6693beb0989c83580235526e3d1b54fad0920d82.camel@hammerspace.com>
+ <35A94418-7DE0-4656-90B4-5A0183BA371C@oracle.com>
+ <266475174966dd473670d9fc9f6a6d6af3d87d44.camel@hammerspace.com>
+ <217DDDDE-AA6D-47C8-AFC8-99548F29E1C2@oracle.com>
+ <6a4ace315ee7f9c72e4866384fcb800707a4cbe4.camel@hammerspace.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <b3a9a877-a348-b680-6eb5-e10019ba46b7@RedHat.com>
+Date:   Wed, 12 Jun 2019 08:34:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <6a4ace315ee7f9c72e4866384fcb800707a4cbe4.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 12 Jun 2019 12:34:36 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When use-gss-proxy is set to 1, write_gssp() creates a rpc client in
-gssp_rpc_create(), this increases netns refcount by 2, these refcounts are
-supposed to be released in rpcsec_gss_exit_net(), but it will never happen
-because rpcsec_gss_exit_net() is triggered only when netns refcount gets
-to 0, specifically:
-    refcount=0 -> cleanup_net() -> ops_exit_list -> rpcsec_gss_exit_net
-It is a deadlock situation here, refcount will never get to 0 unless
-rpcsec_gss_exit_net() is called.
 
-This fix introduced a new callback i.e. evict in struct proc_ns_operations,
-which is called in nsfs_evict. Moving rpcsec_gss_exit_net to evict path
-gives it a chance to get called and avoids the above deadlock situation.
 
-Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
-Cc: J. Bruce Fields <bfields@redhat.com>
----
- net/sunrpc/auth_gss/auth_gss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 6/11/19 1:44 PM, Trond Myklebust wrote:
+> On Tue, 2019-06-11 at 13:32 -0400, Chuck Lever wrote:
+>>> On Jun 11, 2019, at 12:41 PM, Trond Myklebust <
+>>> trondmy@hammerspace.com> wrote:
+>>>
+>>> On Tue, 2019-06-11 at 11:35 -0400, Chuck Lever wrote:
+>>>>> On Jun 11, 2019, at 11:20 AM, Trond Myklebust <
+>>>>> trondmy@hammerspace.com> wrote:
+>>>>>
+>>>>> On Tue, 2019-06-11 at 10:51 -0400, Chuck Lever wrote:
+>>>>>
+>>>>>> If maxconn is a hint, when does the client open additional
+>>>>>> connections?
+>>>>>
+>>>>> As I've already stated, that functionality is not yet
+>>>>> available.
+>>>>> When
+>>>>> it is, it will be under the control of a userspace daemon that
+>>>>> can
+>>>>> decide on a policy in accordance with a set of user specified
+>>>>> requirements.
+>>>>
+>>>> Then why do we need a mount option at all?
+>>>>
+>>>
+>>> For one thing, it allows people to play with this until we have a
+>>> fully
+>>> automated solution. The fact that people are actually pulling down
+>>> these patches, forward porting them and trying them out would
+>>> indicate
+>>> that there is interest in doing so.
+>>
+>> Agreed that it demonstrates that folks are interested in having
+>> multiple connections. I count myself among them.
+>>
+>>
+>>> Secondly, if your policy is 'I just want n connections' because
+>>> that
+>>> fits your workload requirements (e.g. because said workload is both
+>>> latency sensitive and bursty), then a daemon solution would be
+>>> unnecessary, and may be error prone.
+>>
+>> Why wouldn't that be the default out-of-the-shrinkwrap configuration
+>> that is installed by nfs-utils?
+> 
+> What is the point of forcing people to run a daemon if all they want to
+> do is set up a fixed number of connections?
+> 
+>>
+>>> A mount option is helpful in this case, because you can perform the
+>>> setup through the normal fstab or autofs config file configuration
+>>> route. It also make sense if you have a nfsroot setup.
+>>
+>> NFSROOT is the only usage scenario where I see a mount option being
+>> a superior administrative interface. However I don't feel that
+>> NFSROOT is going to host workloads that would need multiple
+>> connections. KIS
+>>
+>>
+>>> Finally, even if you do want to have a daemon manage your
+>>> transport,
+>>> configuration, you do want a mechanism to help it reach an
+>>> equilibrium
+>>> state quickly. Connections take time to bring up and tear down
+>>> because
+>>> performance measurements take time to build up sufficient
+>>> statistical
+>>> precision. Furthermore, doing so comes with a number of hidden
+>>> costs,
+>>> e.g.: chewing up privileged port numbers by putting them in a
+>>> TIME_WAIT
+>>> state. If you know that a given server is always subject to heavy
+>>> traffic, then initialising the number of connections appropriately
+>>> has
+>>> value.
+>>
+>> Again, I don't see how this is not something a config file can do.
+> 
+> You can, but that means you have to keep said config file up to date
+> with the contents of /etc/fstab etc. Pulverising configuration into
+> little bits and pieces that are scattered around in different files is
+> not a user friendly interface either.
+> 
+>> The stated intent of "nconnect" way back when was for
+>> experimentation.
+>> It works great for that!
+>>
+>> I don't see it as a desirable long-term administrative interface,
+>> though. I'd rather not nail in a new mount option that we actually
+>> plan to obsolete in favor of an automated mechanism. I'd rather see
+>> us design the administrative interface with automation from the
+>> start. That will have a lower long-term maintenance cost.
+>>
+>> Again, I'm not objecting to support for multiple connections. It's
+>> just that adding a mount option doesn't feel like a friendly or
+>> finished interface for actual users. A config file (or re-using
+>> nfs.conf) seems to me like a better approach.
+> 
+> nfs.conf is great for defining global defaults.
+> 
+> It can do server specific configuration, but is not a popular solution
+> for that. Most people are still putting that information in /etc/fstab
+> so that it appears in one spot.
+> 
+What about nfsmount.conf? That seems like a more reasonable place
+to define how mounts should work... 
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 3fd56c0..3e76c8a 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -2136,14 +2136,14 @@ static __net_init int rpcsec_gss_init_net(struct net *net)
- 	return gss_svc_init_net(net);
- }
- 
--static __net_exit void rpcsec_gss_exit_net(struct net *net)
-+static void rpcsec_gss_evict_net(struct net *net)
- {
- 	gss_svc_shutdown_net(net);
- }
- 
- static struct pernet_operations rpcsec_gss_net_ops = {
- 	.init = rpcsec_gss_init_net,
--	.exit = rpcsec_gss_exit_net,
-+	.evict = rpcsec_gss_evict_net,
- };
- 
- /*
--- 
-1.8.3.1
-
+steved.
