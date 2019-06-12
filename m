@@ -2,78 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4C6B428C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 16:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16DD5429BB
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 16:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406333AbfFLOXp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 10:23:45 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14351 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfFLOXp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 10:23:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d010aed0001>; Wed, 12 Jun 2019 07:23:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 07:23:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 12 Jun 2019 07:23:44 -0700
-Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 14:23:42 +0000
-Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
- TIMER_DEFERRABLE (431235818bc3)
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
- <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
-Date:   Wed, 12 Jun 2019 15:23:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1728679AbfFLOpY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 10:45:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728707AbfFLOpT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:45:19 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10A19772F9;
+        Wed, 12 Jun 2019 14:45:14 +0000 (UTC)
+Received: from bcodding.csb (ovpn-66-3.rdu2.redhat.com [10.10.66.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA67E2FC43;
+        Wed, 12 Jun 2019 14:45:13 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 165F8109C550; Wed, 12 Jun 2019 10:45:13 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Don't skip lookup when holding a delegation
+Date:   Wed, 12 Jun 2019 10:45:13 -0400
+Message-Id: <bcb2d38fe9c9bb15aeb9baa811aeb9a8697ea141.1560348835.git.bcodding@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560349421; bh=N5MzEerQSEvD2TnbxfmlJKEEgNNcq60nOgCTwn1HUfY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jKAjTw51G219XqRyB0ZJa7GBqFnXZ9/IObybwBeg3h50DbhSjH6ZrIk4o1BaspG6L
-         i16DYLhk2AZyasU+tAEDGlAHlmBEp39qus6gMP8gii6WR7p9+6AMtzs5F2zqkSCYZm
-         qS3kmVRviJz0g2HUoJHrsSAOIpXJQ9OMtSSFX4j/PkS2Sj5bFOBcQ4VRZqt3WlLIHR
-         NRvjAOXTSa3BHWDZ22CKSB0Yd5W6YDGTD9E0GV8QTM6sLh8fYahOb4AoaSsq4N4cTc
-         s7cq32cGYC5BlkIok1SnSAbS/4+aETpMRp8+dQ05HODpeyjwJCG8YlbDn2fFw4TZqf
-         K4s34cT0zT0nw==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 14:45:19 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+If we skip lookup revalidation while holding a delegation, we might miss
+that the file has changed directories on the server.  The directory's
+change attribute should still be checked against the dentry's d_time to
+perform a complete revalidation.
 
-On 05/06/2019 23:01, Trond Myklebust wrote:
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/dir.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-...
-
-> I'd be OK with just reverting this patch if it is causing a performance
-> issue.
-> 
-> Anna?
-
-Any update on this?
-
-Thanks
-Jon
-
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index a71d0b42d160..10cc684dc082 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1269,12 +1269,13 @@ nfs_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
+ 		goto out_bad;
+ 	}
+ 
+-	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
+-		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
+-
+ 	/* Force a full look up iff the parent directory has changed */
+ 	if (!(flags & (LOOKUP_EXCL | LOOKUP_REVAL)) &&
+ 	    nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU)) {
++
++		if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
++			return nfs_lookup_revalidate_delegated(dir, dentry, inode);
++
+ 		error = nfs_lookup_verify_inode(inode, flags);
+ 		if (error) {
+ 			if (error == -ESTALE)
+@@ -1707,9 +1708,6 @@ nfs4_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
+ 	if (inode == NULL)
+ 		goto full_reval;
+ 
+-	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
+-		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
+-
+ 	/* NFS only supports OPEN on regular files */
+ 	if (!S_ISREG(inode->i_mode))
+ 		goto full_reval;
 -- 
-nvpublic
+2.20.1
+
