@@ -2,214 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3086642D63
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 19:24:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C692042D9F
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 19:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407187AbfFLRYT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 13:24:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40390 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407019AbfFLRYS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 13:24:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so17799039wre.7;
-        Wed, 12 Jun 2019 10:24:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JaDk0B2JuZF4UPbktkuAfxaGadSzIqD38JFVgmfBIWs=;
-        b=L/8aQM0zZfjRGpclojJSpYbbgU7RKIEziz0NHfsIDDLYRDOt+iAy7LlpErcteY5hbk
-         Zk8xPd24vIzJ+HhiWHf5i+cHYyroTfaPCN6cDKDlObpRb4pyOAqhEeXfMbxz2zEYK37M
-         uZ43tQodaOLP8QEgDQNgtY/bk3mtv2/hYCwHAYIQydD2iLFAJJZTvRvFwyJRR1vokBFr
-         UQbGJLErLOZIkSPuzDj91DHtrPsJR8Wmd6XlLiEx/bgS5aBrH8Pz6kOdPULmMaDjiPHB
-         0gOFBLuMleWHilRh4Cz5vJTOrjRvlbr1USqXgrhDH9kAWBcHXywc+LKzzfF8HsY2iXpv
-         9JUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JaDk0B2JuZF4UPbktkuAfxaGadSzIqD38JFVgmfBIWs=;
-        b=RWSpmAFULhfjhDFG7/5HQT4w8K9zyIrmAjqBJn6Qrd1Mi6rI0oScPptxcOrkQ6wrBH
-         PjoM6OZjJglAJmFDWw4MdXhtuoP0mDlW4TAYC8TxRcYdBSgrZRsuoJZVwImDN8LzRvWi
-         jKACR399hoSwseoKIuE1bvzCFaX7lzT95NpgL2P26OCi6Zv9csvMjjEIPmgomUiys9Po
-         n951D6N105xVj6mUl7jv/XmCjEfep5sbFEkLUaL0xqDMTBdDVg3He8Cy2r1SZNYkwjcQ
-         Bva2Q5pTlLc7/NfaROiH8ZMqc3K4/6eDXZTW6rO2Ik7tI5PMGUXTCzXX01xuh4kTl8DW
-         /pCQ==
-X-Gm-Message-State: APjAAAXf13JyBGlJxxt+Vd4d1v5SXh55wOowFNzBdPYJU3G49XFcmY5W
-        dvpiBC4jjfmhN7MmzVYOD3U=
-X-Google-Smtp-Source: APXvYqwStm/z+FAde/SFAgWzsa5IoAKISOCAtEsvi1y9UO+FcQKU4hEaIb9WOUjr2yY/00ILxAJHyw==
-X-Received: by 2002:a5d:6b47:: with SMTP id x7mr3863898wrw.83.1560360255667;
-        Wed, 12 Jun 2019 10:24:15 -0700 (PDT)
-Received: from localhost.localdomain ([5.102.238.208])
-        by smtp.gmail.com with ESMTPSA id j17sm423482wrw.6.2019.06.12.10.24.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 10:24:14 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        "J . Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
-Subject: [PATCH v2] locks: eliminate false positive conflicts for write lease
-Date:   Wed, 12 Jun 2019 20:24:08 +0300
-Message-Id: <20190612172408.22671-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726091AbfFLRjO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 13:39:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56814 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfFLRjO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 13:39:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CHYHCB035867;
+        Wed, 12 Jun 2019 17:39:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=qG486mRsynzmYZLaWOV2FUpF7/fhrlh6o5X89ilM7mY=;
+ b=D+IQSkCjFwrODW0w7ODLn52VbBK522saUstPJkSL/2j2k64RN0aLQcbtgOTgCzkrU5zi
+ Z8zToyDSn27Fs17Zj0ssUAQEsnRjB91B+jEnl0BwUWPvIYNBuSfu3192UaY3KG0M6gK2
+ 9Vk8lFQsXy6EsC8V8+EMs1FJumjw8kC8HbvFo0EezrgNWoT1mfsAyJtP2FgNUvCpA601
+ 2hFchSh+qJW4aUacWHt775g/GDiQG6RkJ4MvqToJdumawDhTPpoYTSvjn4qDEjrWxkt2
+ hKi3kD8mTzIr5JtHirqVR5qaeYWtMyw4aKsf24KC0A6wloU8GvYbOskPsKlMH8sorUu/ 5g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2t05nqvyq1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 17:39:01 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CHaCW7068557;
+        Wed, 12 Jun 2019 17:37:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2t0p9s09rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 17:37:00 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5CHauaX004789;
+        Wed, 12 Jun 2019 17:37:00 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Jun 2019 10:36:56 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <877e9rwuy5.fsf@notabene.neil.brown.name>
+Date:   Wed, 12 Jun 2019 13:36:54 -0400
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <FAC8BAC4-5219-4B04-891F-FB640A010857@oracle.com>
+References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
+ <001DED71-0E0D-46B1-BA34-84E6ACCBB79F@oracle.com>
+ <87muj3tuuk.fsf@notabene.neil.brown.name>
+ <4316E30B-1BD7-4F0E-8375-03E9F85FFD2B@oracle.com>
+ <87lfy9vsgf.fsf@notabene.neil.brown.name>
+ <3B887552-91FB-493A-8FDF-411562811B36@oracle.com>
+ <CAN-5tyEdu7poNWrKtOyic6GgQcjAPZhB5BJeQ7JMSfmgMx8b+g@mail.gmail.com>
+ <16D30334-67BE-4BD2-BE69-1453F738B259@oracle.com>
+ <877e9rwuy5.fsf@notabene.neil.brown.name>
+To:     NeilBrown <neilb@suse.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906120119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906120119
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-check_conflicting_open() is checking for existing fd's open for read or
-for write before allowing to take a write lease.  The check that was
-implemented using i_count and d_count is an approximation that has
-several false positives.  For example, overlayfs since v4.19, takes an
-extra reference on the dentry; An open with O_PATH takes a reference on
-the dentry although the file cannot be read nor written.
+Hi Neil-
 
-Change the implementation to use i_readcount and i_writecount to
-eliminate the false positive conflicts and allow a write lease to be
-taken on an overlayfs file.
+> On Jun 11, 2019, at 7:42 PM, NeilBrown <neilb@suse.com> wrote:
+> 
+> On Tue, Jun 11 2019, Chuck Lever wrote:
+> 
+>> 
+>> Earlier in this thread, Neil proposed to make nconnect a hint. Sounds
+>> like the long term plan is to allow "up to N" connections with some
+>> mechanism to create new connections on-demand." maxconn fits that idea
+>> better, though I'd prefer no new mount options... the point being that
+>> eventually, this setting is likely to be an upper bound rather than a
+>> fixed value.
+> 
+> When I suggested making at I hint, I considered and rejected the the
+> idea of making it a maximum.  Maybe I should have been explicit about
+> that.
+> 
+> I think it *is* important to be able to disable multiple connections,
+> hence my suggestion that "nconnect=1", as a special case, could be a
+> firm maximum.
+> My intent was that if nconnect was not specified, or was given a larger
+> number, then the implementation should be free to use however many
+> connections it chose from time to time.  The number given would be just
+> a hint - maybe an initial value.  Neither a maximum nor a minimum.
+> Maybe we should add "nonconnect" (or similar) to enforce a single
+> connection, rather than overloading "nconnect=1"
 
-The change of behavior with existing fd's open with O_PATH is symmetric
-w.r.t. current behavior of lease breakers - an open with O_PATH currently
-does not break a write lease.
+So then I think, for the immediate future, you want to see nconnect=
+specify the exact number of connections that will be opened. (later
+it can be something the client chooses automatically). IIRC that's
+what Trond's patches already do.
 
-This increases the size of struct inode by 4 bytes on 32bit archs when
-CONFIG_FILE_LOCKING is defined and CONFIG_IMA was not already
-defined.
+Actually I prefer that the default behavior be the current behavior,
+where the client uses one connection per client-server pair. That
+serves the majority of use cases well enough. Saying that default is
+nconnect=1 is then intuitive to understand.
 
-Cc: <stable@vger.kernel.org> # v4.19
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
+At some later point if we convince ourselves that a higher default
+is safe (ie, does not result in performance regressions in some cases)
+then raise the default to nconnect=2 or 3.
 
-Miklos, Jeff and Bruce,
+I'm not anxious to allow everyone to open an unlimited number of
+connections just yet. That has all kinds of consequences for servers,
+privileged port consumption, etc, etc. I'm not wont to hand an
+unlimited capability to admins who are not NFS-savvy in the name of
+experimentation. That will just make for more phone calls to our
+support centers and possibly some annoyed storage administrators.
+And it seems like something that can be abused pretty easily by
+certain ne'er-do-wells.
 
-This patch fixes a v4.19 overlayfs regression with taking write
-leases. It also provides correct semantics w.r.t RDONLY open counter
-that Bruce also needed for nfsd.
+Starting with a maximum of 3 or 4 is conservative yet exposes immediate
+benefits. The default connection behavior remains the same. No surprises
+when a stock Linux NFS client is upgraded to a kernel that supports
+nconnect.
 
-Since this is locks code that fixes an overlayfs regression which
-is also needed for nfsd, it could go via either of your trees.
-I didn't want to pick sides, so first one to grab the patch wins ;-)
+The maximum setting can be raised once we understand the corner cases,
+the benefits, and the pitfalls.
 
-I verified the changes using modified LTP F_SETLEASE tests [1],
-which I ran over xfs and overlayfs.
 
-Thanks,
-Amir.
+> You have said elsewhere that you would prefer configuration in a config
+> file rather than as a mount option.
+> How do you imagine that configuration information getting into the
+> kernel?
 
-[1] https://github.com/amir73il/ltp/commits/overlayfs-devel
+I'm assuming Trond's design, where the kernel RPC client upcalls to
+a user space agent (a new daemon, or request-key).
 
-Changes since v1:
-- Drop patch to fold i_readcount into i_count
-- Make i_readcount depend on CONFIG_FILE_LOCKING
 
- fs/locks.c         | 33 ++++++++++++++++++++++-----------
- include/linux/fs.h |  4 ++--
- 2 files changed, 24 insertions(+), 13 deletions(-)
+> Do we create /sys/fs/nfs/something?  or add to /proc/sys/sunrpc
+> or /proc/net/rpc .... we have so many options !!
+> There is even /sys/kernel/debug/sunrpc/rpc_clnt, but that is not
+> a good place for configuration.
+> 
+> I suspect that you don't really have an opinion, you just don't like the
+> mount option.  However I don't have that luxury.  I need to put the
+> configuration somewhere.  As it is per-server configuration the only
+> existing place that works at all is a mount option.
+> While that might not be ideal, I do think it is most realistic.
+> Mount options can be deprecated, and carrying support for a deprecated
+> mount option is not expensive.
 
-diff --git a/fs/locks.c b/fs/locks.c
-index ec1e4a5df629..28528b4fc53b 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1753,10 +1753,10 @@ int fcntl_getlease(struct file *filp)
- }
- 
- /**
-- * check_conflicting_open - see if the given dentry points to a file that has
-+ * check_conflicting_open - see if the given file points to an inode that has
-  *			    an existing open that would conflict with the
-  *			    desired lease.
-- * @dentry:	dentry to check
-+ * @filp:	file to check
-  * @arg:	type of lease that we're trying to acquire
-  * @flags:	current lock flags
-  *
-@@ -1764,19 +1764,31 @@ int fcntl_getlease(struct file *filp)
-  * conflict with the lease we're trying to set.
-  */
- static int
--check_conflicting_open(const struct dentry *dentry, const long arg, int flags)
-+check_conflicting_open(struct file *filp, const long arg, int flags)
- {
- 	int ret = 0;
--	struct inode *inode = dentry->d_inode;
-+	struct inode *inode = locks_inode(filp);
-+	int wcount = atomic_read(&inode->i_writecount);
-+	int self_wcount = 0, self_rcount = 0;
- 
- 	if (flags & FL_LAYOUT)
- 		return 0;
- 
--	if ((arg == F_RDLCK) && inode_is_open_for_write(inode))
-+	if (arg == F_RDLCK && wcount > 0)
- 		return -EAGAIN;
- 
--	if ((arg == F_WRLCK) && ((d_count(dentry) > 1) ||
--	    (atomic_read(&inode->i_count) > 1)))
-+	/* Eliminate deny writes from actual writers count */
-+	if (wcount < 0)
-+		wcount = 0;
-+
-+	/* Make sure that only read/write count is from lease requestor */
-+	if (filp->f_mode & FMODE_WRITE)
-+		self_wcount = 1;
-+	else if ((filp->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
-+		self_rcount = 1;
-+
-+	if (arg == F_WRLCK && (wcount != self_wcount ||
-+	    atomic_read(&inode->i_readcount) != self_rcount))
- 		ret = -EAGAIN;
- 
- 	return ret;
-@@ -1786,8 +1798,7 @@ static int
- generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **priv)
- {
- 	struct file_lock *fl, *my_fl = NULL, *lease;
--	struct dentry *dentry = filp->f_path.dentry;
--	struct inode *inode = dentry->d_inode;
-+	struct inode *inode = locks_inode(filp);
- 	struct file_lock_context *ctx;
- 	bool is_deleg = (*flp)->fl_flags & FL_DELEG;
- 	int error;
-@@ -1822,7 +1833,7 @@ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **pr
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
- 	time_out_leases(inode, &dispose);
--	error = check_conflicting_open(dentry, arg, lease->fl_flags);
-+	error = check_conflicting_open(filp, arg, lease->fl_flags);
- 	if (error)
- 		goto out;
- 
-@@ -1879,7 +1890,7 @@ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **pr
- 	 * precedes these checks.
- 	 */
- 	smp_mb();
--	error = check_conflicting_open(dentry, arg, lease->fl_flags);
-+	error = check_conflicting_open(filp, arg, lease->fl_flags);
- 	if (error) {
- 		locks_unlink_lock_ctx(lease);
- 		goto out;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 79ffa2958bd8..2d55f1b64014 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -694,7 +694,7 @@ struct inode {
- 	atomic_t		i_count;
- 	atomic_t		i_dio_count;
- 	atomic_t		i_writecount;
--#ifdef CONFIG_IMA
-+#if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
- 	atomic_t		i_readcount; /* struct files open RO */
- #endif
- 	union {
-@@ -2895,7 +2895,7 @@ static inline bool inode_is_open_for_write(const struct inode *inode)
- 	return atomic_read(&inode->i_writecount) > 0;
- }
- 
--#ifdef CONFIG_IMA
-+#if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
- static inline void i_readcount_dec(struct inode *inode)
- {
- 	BUG_ON(!atomic_read(&inode->i_readcount));
--- 
-2.17.1
+It's not deprecation that worries me, it's having to change the
+mount option; and the fact that we already believe it will have to
+change makes it especially worrisome that we are picking the wrong
+horse at the start.
+
+NFS mount options will appear in automounter maps for a very long
+time. They will be copied to other OSes. Deprecation is more
+expensive than you might at first think.
+
+
+> The option still can be placed in a per-server part of
+> /etc/nfsmount.conf rather than /etc/fstab, if that is what a sysadmin
+> wants to do.
+
+I don't see that having a mount option /and/ a configuration file
+addresses Trond's concern about config pulverization. It makes it
+worse, in fact. But my fundamental problem is with a per-server
+setting specified as a per-mount option. Using a config file is
+just a possible way to address that problem.
+
+For a moment, let's turn the mount option idea on its head. Another
+alternative would be to make nconnect into a real per-mount setting
+instead of a per-server setting.
+
+So now each mount gets to choose the number of connections it is
+permitted to use. Suppose we have three concurrent mounts:
+
+   mount -o nconnect=3 server1:/export /mnt/one
+   mount server2:/export /mnt/two
+   mount -o nconnect=2 server3:/export /mnt/three
+
+The client opens the maximum of the three nconnect values, which
+is 3. Then:
+
+Traffic to server2 may use only one of these connections. Traffic
+to server3 may use no more than two of those connections. Traffic
+to server1 may use all three of those connections.
+
+Does that make more sense than a per-server setting? Is it feasible
+to implement?
+
+
+--
+Chuck Lever
+
+
 
