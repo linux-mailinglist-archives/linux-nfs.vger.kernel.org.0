@@ -2,134 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C23B742AE5
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 17:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C4442B48
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 17:52:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408744AbfFLP0H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 11:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
+        id S1728841AbfFLPw0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 11:52:26 -0400
+Received: from fieldses.org ([173.255.197.46]:51348 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408070AbfFLP0H (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:26:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A438820874;
-        Wed, 12 Jun 2019 15:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560353166;
-        bh=TSjXxGX/iopIFXqQUxKIILrbVvon9SuUKBVCxHltuYE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=s9H1kLkauLGkRRxEOp97HAjoqWV9Qe9wvfrQQ6RFtlUPE+VUUKmayW59VM+NcJ660
-         edLgCm+h1+rAxQarkhjndLV6Ffd8MMEy5xACrHZoKXWwDsZLF7I1WZle1t2K0W4taM
-         G0vMxDfvb3MJV6eBr9Ky4shdwccEhWuQNOw1IGec=
-Date:   Wed, 12 Jun 2019 17:26:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: no need to check return value of debugfs_create
- functions
-Message-ID: <20190612152603.GB18440@kroah.com>
+        id S1726829AbfFLPw0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:52:26 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A606C1E3B; Wed, 12 Jun 2019 11:52:24 -0400 (EDT)
+Date:   Wed, 12 Jun 2019 11:52:24 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
+ use-gss-proxy==1
+Message-ID: <20190612155224.GF16331@fieldses.org>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+ <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+ <20190515010331.GA3232@fieldses.org>
+ <20190612083755.GA27776@bridge.tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190612083755.GA27776@bridge.tencent.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+On Wed, Jun 12, 2019 at 04:37:55PM +0800, Wenbin Zeng wrote:
+> On Tue, May 14, 2019 at 09:03:31PM -0400, J. Bruce Fields wrote:
+> > Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
+> > mounts, and the following the server's logs.  Dropping the three patches
+> > for now.
+> My bad, I should have found it earlier. Thank you for testing it, Bruce.
+> 
+> I figured it out, the problem that you saw is due to the following code:
+> the if-condition is incorrect here because sn->gssp_clnt==NULL doesn't mean
+> inexistence of 'use-gss-proxy':
 
-Cc: "J. Bruce Fields" <bfields@fieldses.org>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/nfsd/fault_inject.c | 12 ++----------
- fs/nfsd/nfsctl.c       |  5 +----
- fs/nfsd/state.h        |  4 ++--
- 3 files changed, 5 insertions(+), 16 deletions(-)
+Thanks, but with the new patches I see the following.  I haven't tried
+to investigate.
 
-diff --git a/fs/nfsd/fault_inject.c b/fs/nfsd/fault_inject.c
-index 84831253203d..76bee0a0d308 100644
---- a/fs/nfsd/fault_inject.c
-+++ b/fs/nfsd/fault_inject.c
-@@ -127,24 +127,16 @@ static struct nfsd_fault_inject_op inject_ops[] = {
- 	},
- };
- 
--int nfsd_fault_inject_init(void)
-+void nfsd_fault_inject_init(void)
- {
- 	unsigned int i;
- 	struct nfsd_fault_inject_op *op;
- 	umode_t mode = S_IFREG | S_IRUSR | S_IWUSR;
- 
- 	debug_dir = debugfs_create_dir("nfsd", NULL);
--	if (!debug_dir)
--		goto fail;
- 
- 	for (i = 0; i < ARRAY_SIZE(inject_ops); i++) {
- 		op = &inject_ops[i];
--		if (!debugfs_create_file(op->file, mode, debug_dir, op, &fops_nfsd))
--			goto fail;
-+		debugfs_create_file(op->file, mode, debug_dir, op, &fops_nfsd);
- 	}
--	return 0;
--
--fail:
--	nfsd_fault_inject_cleanup();
--	return -ENOMEM;
- }
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 62c58cfeb8d8..6a9de59d9633 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1291,9 +1291,7 @@ static int __init init_nfsd(void)
- 	retval = nfsd4_init_pnfs();
- 	if (retval)
- 		goto out_free_slabs;
--	retval = nfsd_fault_inject_init(); /* nfsd fault injection controls */
--	if (retval)
--		goto out_exit_pnfs;
-+	nfsd_fault_inject_init(); /* nfsd fault injection controls */
- 	nfsd_stat_init();	/* Statistics */
- 	retval = nfsd_reply_cache_init();
- 	if (retval)
-@@ -1315,7 +1313,6 @@ static int __init init_nfsd(void)
- out_free_stat:
- 	nfsd_stat_shutdown();
- 	nfsd_fault_inject_cleanup();
--out_exit_pnfs:
- 	nfsd4_exit_pnfs();
- out_free_slabs:
- 	nfsd4_free_slabs();
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 0b74d371ed67..87f310c78e06 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -663,7 +663,7 @@ extern void nfsd4_record_grace_done(struct nfsd_net *nn);
- 
- /* nfs fault injection functions */
- #ifdef CONFIG_NFSD_FAULT_INJECTION
--int nfsd_fault_inject_init(void);
-+void nfsd_fault_inject_init(void);
- void nfsd_fault_inject_cleanup(void);
- 
- u64 nfsd_inject_print_clients(void);
-@@ -684,7 +684,7 @@ u64 nfsd_inject_forget_delegations(u64);
- u64 nfsd_inject_recall_client_delegations(struct sockaddr_storage *, size_t);
- u64 nfsd_inject_recall_delegations(u64);
- #else /* CONFIG_NFSD_FAULT_INJECTION */
--static inline int nfsd_fault_inject_init(void) { return 0; }
-+static inline void nfsd_fault_inject_init(void) {}
- static inline void nfsd_fault_inject_cleanup(void) {}
- #endif /* CONFIG_NFSD_FAULT_INJECTION */
- 
--- 
-2.22.0
+--b.
 
+[ 2908.134813] ------------[ cut here ]------------
+[ 2908.135732] name 'use-gss-proxy'
+[ 2908.136276] WARNING: CPU: 2 PID: 15032 at fs/proc/generic.c:673 remove_proc_entry+0x124/0x190
+[ 2908.138144] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
+[ 2908.140183] CPU: 2 PID: 15032 Comm: (coredump) Not tainted 5.2.0-rc2-00441-gaef575f54640 #2257
+[ 2908.142062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[ 2908.143756] RIP: 0010:remove_proc_entry+0x124/0x190
+[ 2908.144519] Code: c3 48 c7 c7 60 24 8b 82 e8 29 16 a5 00 eb d5 48 c7 c7 60 24 8b 82 e8 1b 16 a5 00 4c 89 e6 48 c7 c7 ec 4c 52 82 e8 50 fd db ff <0f> 0b eb b6 48 8b 04 24 83 a8 90 00 00 00 01 e9 78 ff ff ff 4c 89
+[ 2908.148138] RSP: 0018:ffffc900047bbdb0 EFLAGS: 00010282
+[ 2908.148945] RAX: 0000000000000000 RBX: ffff888036060580 RCX: 0000000000000000
+[ 2908.150139] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
+[ 2908.151334] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[ 2908.152564] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa00adb1b
+[ 2908.153816] R13: 00007ffc8bda5d30 R14: 0000000000000000 R15: ffff88805e2873a8
+[ 2908.155007] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+[ 2908.156421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2908.157333] CR2: 0000562b07764c58 CR3: 000000005e8ea001 CR4: 00000000001606e0
+[ 2908.158529] Call Trace:
+[ 2908.158796]  destroy_use_gss_proxy_proc_entry+0xb7/0x150 [auth_rpcgss]
+[ 2908.159966]  gss_svc_shutdown_net+0x11/0x170 [auth_rpcgss]
+[ 2908.160830]  netns_evict+0x2f/0x40
+[ 2908.161266]  nsfs_evict+0x27/0x40
+[ 2908.161685]  evict+0xd0/0x1a0
+[ 2908.162035]  __dentry_kill+0xdf/0x180
+[ 2908.162520]  dentry_kill+0x50/0x1c0
+[ 2908.163005]  ? dput+0x1c/0x2b0
+[ 2908.163369]  dput+0x260/0x2b0
+[ 2908.163739]  path_put+0x12/0x20
+[ 2908.164155]  do_faccessat+0x17c/0x240
+[ 2908.164643]  do_syscall_64+0x50/0x1c0
+[ 2908.165170]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 2908.165959] RIP: 0033:0x7f47098e2157
+[ 2908.166445] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
+[ 2908.169994] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
+[ 2908.171315] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
+[ 2908.172563] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
+[ 2908.173753] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
+[ 2908.174943] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
+[ 2908.176163] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
+[ 2908.177395] irq event stamp: 4256
+[ 2908.177835] hardirqs last  enabled at (4255): [<ffffffff811221ee>] console_unlock+0x41e/0x590
+[ 2908.179378] hardirqs last disabled at (4256): [<ffffffff81001b2f>] trace_hardirqs_off_thunk+0x1a/0x1c
+[ 2908.181031] softirqs last  enabled at (4252): [<ffffffff820002be>] __do_softirq+0x2be/0x4aa
+[ 2908.182458] softirqs last disabled at (4233): [<ffffffff810bf8e0>] irq_exit+0x80/0x90
+[ 2908.183869] ---[ end trace d88132b63efc09d8 ]---
+[ 2908.184620] BUG: kernel NULL pointer dereference, address: 0000000000000030
+[ 2908.185829] #PF: supervisor read access in kernel mode
+[ 2908.186924] #PF: error_code(0x0000) - not-present page
+[ 2908.187887] PGD 0 P4D 0 
+[ 2908.188318] Oops: 0000 [#1] PREEMPT SMP PTI
+[ 2908.189254] CPU: 2 PID: 15032 Comm: (coredump) Tainted: G        W         5.2.0-rc2-00441-gaef575f54640 #2257
+[ 2908.192506] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[ 2908.195137] RIP: 0010:__lock_acquire+0x3d2/0x1d90
+[ 2908.196414] Code: db 48 8b 84 24 88 00 00 00 65 48 33 04 25 28 00 00 00 0f 85 be 10 00 00 48 8d 65 d8 44 89 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <48> 81 3f 60 0d 01 83 41 bb 00 00 00 00 45 0f 45 d8 83 fe 01 0f 87
+[ 2908.202720] RSP: 0018:ffffc900047bbc80 EFLAGS: 00010002
+[ 2908.204165] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+[ 2908.206125] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000030
+[ 2908.208203] RBP: ffffc900047bbd40 R08: 0000000000000001 R09: 0000000000000000
+[ 2908.210219] R10: 0000000000000001 R11: 0000000000000001 R12: ffff88807ad91500
+[ 2908.211386] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000282
+[ 2908.212532] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+[ 2908.213647] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2908.214400] CR2: 0000000000000030 CR3: 000000005e8ea001 CR4: 00000000001606e0
+[ 2908.215393] Call Trace:
+[ 2908.215589]  ? __lock_acquire+0x255/0x1d90
+[ 2908.216071]  ? clear_gssp_clnt+0x1b/0x50 [auth_rpcgss]
+[ 2908.216720]  ? __mutex_lock+0x99/0x920
+[ 2908.217114]  lock_acquire+0x95/0x1b0
+[ 2908.217484]  ? cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.218000]  _raw_spin_lock+0x2f/0x40
+[ 2908.218370]  ? cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.218882]  cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.219346]  gss_svc_shutdown_net+0xb8/0x170 [auth_rpcgss]
+[ 2908.220104]  netns_evict+0x2f/0x40
+[ 2908.220439]  nsfs_evict+0x27/0x40
+[ 2908.220786]  evict+0xd0/0x1a0
+[ 2908.221050]  __dentry_kill+0xdf/0x180
+[ 2908.221458]  dentry_kill+0x50/0x1c0
+[ 2908.221842]  ? dput+0x1c/0x2b0
+[ 2908.222126]  dput+0x260/0x2b0
+[ 2908.222384]  path_put+0x12/0x20
+[ 2908.222753]  do_faccessat+0x17c/0x240
+[ 2908.223125]  do_syscall_64+0x50/0x1c0
+[ 2908.223479]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 2908.224152] RIP: 0033:0x7f47098e2157
+[ 2908.224566] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
+[ 2908.228198] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
+[ 2908.229496] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
+[ 2908.230938] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
+[ 2908.232182] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
+[ 2908.233481] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
+[ 2908.234750] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
+[ 2908.236068] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
+[ 2908.237861] CR2: 0000000000000030
+[ 2908.238277] ---[ end trace d88132b63efc09d9 ]---
