@@ -2,143 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99F2341AB7
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 05:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4240E41E58
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 09:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392205AbfFLDcQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jun 2019 23:32:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36052 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392048AbfFLDcQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:32:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A66673084242;
-        Wed, 12 Jun 2019 03:32:15 +0000 (UTC)
-Received: from [10.72.12.182] (ovpn-12-182.pek2.redhat.com [10.72.12.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77EA92CB12;
-        Wed, 12 Jun 2019 03:32:14 +0000 (UTC)
-Subject: Re: [PATCH] svc_run: make sure only one svc_run loop runs in one
- process
-To:     Steve Dickson <SteveD@RedHat.com>,
-        libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org
-References: <20190409113713.30595-1-xiubli@redhat.com>
- <6a152a89-6de6-f5f2-9c16-5e32fef8cc64@redhat.com>
- <81ba7de8-1301-1ac9-53fb-6e011a592c96@RedHat.com>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <d1a7662c-deb1-0fb4-9707-ccfb680ffcbc@redhat.com>
-Date:   Wed, 12 Jun 2019 11:32:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2436646AbfFLHzL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 03:55:11 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:33522 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407657AbfFLHzK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 03:55:10 -0400
+Received: by mail-pl1-f178.google.com with SMTP id c14so14982plo.0
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2019 00:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=4pkbh9VHHra7RLHot+OJBI/nZ7dvpr9A9udrrVHGQNA=;
+        b=TvulknlB6D7LpUYU1L4+vjs7GoVtltEXKx0VK6DDUu8H0g4HwLFxr18kaxj3Gn2mrn
+         1gU93ghvGvtrVlCZOVskTRYjOtgKSnXqRbNcfohRT/TxeTdHmX17UisW+otUaYgZrAtw
+         CVqJT+5se2zmsiOsfN3cdoI7ElT5FUXht4YGxaaLrkGIrQPSKzqT1lVgiQ3zHDRuZ9v3
+         OI1tSscolhzLIYbWI2GamMUjOv8gGKUO+q161B8NG8plQ/oLcc40JKYLqDbGsWDvHgGA
+         KCkZ0TMMMNZgKS01AkPr3KmQFPXM8KaafCt1Q7F+k1ZtGbvk2DzhXhhEns2J9m25ZSmK
+         pZuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=4pkbh9VHHra7RLHot+OJBI/nZ7dvpr9A9udrrVHGQNA=;
+        b=f13oNCGnr4qZpIgP2cB+YAeIIoVK3ukXBcBEbc81WdXF7vJ0a4rfXzAlqYYpFDvMyr
+         bBHYPLu12yZafFaoHrqUM0xGZY1BUl+f0ZoO9QIzWEd+xgQ8G2dSVrI3tt+5TfcXbfuc
+         Y+nW/AoSzFvlthiBKdEHPhmEfQRMFj3rki/qRNu/kfx0umxNqxNva0dERVfOVI8hxkfC
+         KXFiAre2VHveB05X8C66WCNrnTwOhdnEbLHL0RCyLh7uBso82jxH5RgU3R1cSXiKTjjX
+         kl9iG8kLxZkQKjRhmMNmJ2TtmcfBBZUUqbnZH64UPvWWcR0sN9Ouj6kQvL7FKJv6Rz3e
+         hVAw==
+X-Gm-Message-State: APjAAAWWaxUAxF+NHu4jLLhFBrMLL+4O+cTMGAdIWFqrFXY8FgEnF3+h
+        yBEn8jTRg7yb/5Z1p56OL5CWQiWU
+X-Google-Smtp-Source: APXvYqzvX/MWJeq+AM+ciU8BGwy5I3jia7qyT26zCVEW6Y7hOvUjIsc5m2yeg5R1iU/ZHSLHZe7Ypw==
+X-Received: by 2002:a17:902:2f:: with SMTP id 44mr18474112pla.5.1560326109585;
+        Wed, 12 Jun 2019 00:55:09 -0700 (PDT)
+Received: from [0.0.0.0] ([47.244.216.228])
+        by smtp.gmail.com with ESMTPSA id b26sm14014367pfo.129.2019.06.12.00.55.08
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 00:55:09 -0700 (PDT)
+To:     linux-nfs@vger.kernel.org
+From:   Jianchao Wang <jianchao.wan9@gmail.com>
+Subject: Can we setup pNFS with multiple DSs ?
+Message-ID: <71d00ed4-78b8-cefb-4245-99f3e53e5d2a@gmail.com>
+Date:   Wed, 12 Jun 2019 15:55:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101
+ Thunderbird/67.0
 MIME-Version: 1.0
-In-Reply-To: <81ba7de8-1301-1ac9-53fb-6e011a592c96@RedHat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 12 Jun 2019 03:32:15 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2019/6/11 22:54, Steve Dickson wrote:
-> Sorry for the delay....
->
-> On 5/15/19 10:55 PM, Xiubo Li wrote:
->> Hey ping.
->>
->> What's the state of this patch and will it make sense here?
-> I'm not sure it does make sense.... Shouldn't the mutex lock
-> be in the call of svc_run()?
+Hi
 
-Hi Steve,
+I'm trying to setup a pNFS experiment environment.
+And this is what I have got, 
+VM-0 (DS)      running a iscsi target
+VM-1 (MS)      initiator, mount a XFS on the device, and export it by NFS with pnfs option
+VM-2 (Client)  initiator, but not mount, running a blkmapd
+               mount the shared directory of VM-1 by NFS
 
-Yeah, mutex lock should be in the call of svc_run(). This is exactly 
-what I do in this change.
+And it semes to work well as the mountstatus
+            LAYOUTGET: 14 14 0 3472 2744 1 1381 1384
+	GETDEVICEINFO: 1 1 0 196 148 0 5 5
+	 LAYOUTCOMMIT: 8 8 0 2352 1368 0 1256 1257
 
-If the libtirpc means to allow only one svc_run() loop in each process, 
-so IMO this change is needed. Or if we will allow more than one like the 
-glibc version does, so this should be one bug in libtirpc.
+The kernel version I use is 4.18.19.
 
-Thanks.
-BRs
-Xiubo
+And would anyone please help to clarify following questions ?
+1. Can I involve multiple DSs here ?
+2. Is this stable enough to use in production ? How about earlier version, for example 4.14 ?
+
+Many thanks in advance
+Jianchao
 
 
-> steved.
->
->> Thanks
->> BRs
->>
->> On 2019/4/9 19:37, xiubli@redhat.com wrote:
->>> From: Xiubo Li <xiubli@redhat.com>
->>>
->>> In gluster-block project and there are 2 separate threads, both
->>> of which will run the svc_run loop, this could work well in glibc
->>> version, but in libtirpc we are hitting the random crash and stuck
->>> issues.
->>>
->>> More detail please see:
->>> https://github.com/gluster/gluster-block/pull/182
->>>
->>> Signed-off-by: Xiubo Li <xiubli@redhat.com>
->>> ---
->>>    src/svc_run.c | 19 +++++++++++++++++++
->>>    1 file changed, 19 insertions(+)
->>>
->>> diff --git a/src/svc_run.c b/src/svc_run.c
->>> index f40314b..b295755 100644
->>> --- a/src/svc_run.c
->>> +++ b/src/svc_run.c
->>> @@ -38,12 +38,17 @@
->>>    #include <string.h>
->>>    #include <unistd.h>
->>>    #include <sys/poll.h>
->>> +#include <syslog.h>
->>> +#include <stdbool.h>
->>>        #include <rpc/rpc.h>
->>>    #include "rpc_com.h"
->>>    #include <sys/select.h>
->>>    +static bool svc_loop_running = false;
->>> +static pthread_mutex_t svc_run_lock = PTHREAD_MUTEX_INITIALIZER;
->>> +
->>>    void
->>>    svc_run()
->>>    {
->>> @@ -51,6 +56,16 @@ svc_run()
->>>      struct pollfd *my_pollfd = NULL;
->>>      int last_max_pollfd = 0;
->>>    +  pthread_mutex_lock(&svc_run_lock);
->>> +  if (svc_loop_running) {
->>> +    pthread_mutex_unlock(&svc_run_lock);
->>> +    syslog (LOG_ERR, "svc_run: svc loop is already running in current process %d", getpid());
->>> +    return;
->>> +  }
->>> +
->>> +  svc_loop_running = true;
->>> +  pthread_mutex_unlock(&svc_run_lock);
->>> +
->>>      for (;;) {
->>>        int max_pollfd = svc_max_pollfd;
->>>        if (max_pollfd == 0 && svc_pollfd == NULL)
->>> @@ -111,4 +126,8 @@ svc_exit()
->>>        svc_pollfd = NULL;
->>>        svc_max_pollfd = 0;
->>>        rwlock_unlock(&svc_fd_lock);
->>> +
->>> +    pthread_mutex_lock(&svc_run_lock);
->>> +    svc_loop_running = false;
->>> +    pthread_mutex_unlock(&svc_run_lock);
->>>    }
->>
->>
->>
->> _______________________________________________
->> Libtirpc-devel mailing list
->> Libtirpc-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/libtirpc-devel
+
+
+
 
 
