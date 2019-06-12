@@ -2,18 +2,18 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E36F426B5
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A7E426C2
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2019 14:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404836AbfFLMw5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jun 2019 08:52:57 -0400
-Received: from p3plsmtpa08-03.prod.phx3.secureserver.net ([173.201.193.104]:54653
-        "EHLO p3plsmtpa08-03.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726061AbfFLMw5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 08:52:57 -0400
+        id S2438500AbfFLMzu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jun 2019 08:55:50 -0400
+Received: from p3plsmtpa08-10.prod.phx3.secureserver.net ([173.201.193.111]:59859
+        "EHLO p3plsmtpa08-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2438421AbfFLMzt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jun 2019 08:55:49 -0400
 Received: from [192.168.0.56] ([24.218.182.144])
         by :SMTPAUTH: with ESMTPSA
-        id b2kKhM68t8NbRb2kKh6BvG; Wed, 12 Jun 2019 05:52:57 -0700
+        id b2n6hpSMctiP8b2n6h03Cq; Wed, 12 Jun 2019 05:55:49 -0700
 Subject: Re: [PATCH 0/9] Multiple network connections for a single NFS mount.
 To:     NeilBrown <neilb@suse.com>, Olga Kornievskaia <aglo@umich.edu>,
         Chuck Lever <chuck.lever@oracle.com>
@@ -30,78 +30,56 @@ References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
  <16D30334-67BE-4BD2-BE69-1453F738B259@oracle.com>
  <CAN-5tyHQz4kyGqAea3hTW0GKRBtkkB5UeE6THz-7uMmadJygyg@mail.gmail.com>
  <ac631f3c-af1a-6877-08b6-21ddf71edff2@talpey.com>
- <87a7enwvvs.fsf@notabene.neil.brown.name>
+ <A74B7E29-CAC7-428B-8B29-606F4B174D1A@oracle.com>
+ <CAN-5tyFP9qK9Tjv-FCeZJGMnhhnsZh0+VCguuRaDOG2kB9A-OQ@mail.gmail.com>
+ <e33a22ef-b335-36e1-ea7f-2d2b5b2ed390@talpey.com>
+ <87ftofwx3n.fsf@notabene.neil.brown.name>
 From:   Tom Talpey <tom@talpey.com>
-Message-ID: <5f8f4413-ca7a-7e42-4adb-618b9d4d0415@talpey.com>
-Date:   Wed, 12 Jun 2019 08:52:55 -0400
+Message-ID: <307dbdb1-3cbe-0c7c-fa16-39cd4641dd98@talpey.com>
+Date:   Wed, 12 Jun 2019 08:55:47 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <87a7enwvvs.fsf@notabene.neil.brown.name>
+In-Reply-To: <87ftofwx3n.fsf@notabene.neil.brown.name>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfB9qDcPA43lBIjRCwL4X31Kbp6p3xoIPn3Huz2JALhAcd3rgi4uzvaoTT+rZyZUorirKqx2niEwIFIuXMDsyZcR70Drq9qShtaMyVT/8VjQr79gkRQY2
- VE0VFgv92bbomOK862+aKFz8gaK0ASklKlxt/cNZSEur3wVxp3UynwEaJwQr1egAb9Z18bixEn0XK5kyhLXiTp1DVJSsTu7PocbhzfG6nSPcus41tEvFHMB7
- AqRfxl87tQTJ4gbm3qTvrty4DdwNi2RxUp73Xmrfa9sABzspDlKv8SHG1B4rtamiFs8q994ZaD63B62XAhK0HD/k/oiwZrfE9xwwFkYwAT0=
+X-CMAE-Envelope: MS4wfGA/z4zA84FaL+Z/Ee/Amkad5xPGe3FzrwiXXamvLMq4+Sav2KQiwNMfXueHzyA7t6nNwNubld2Qt5G5ChDegO/9IVCTDJB5X8CJdfOrlgWiKyT2qlPI
+ anfhp+ILgC/pR526QTg1P6uRPRrFS50W3hIttVY+Xb0mGvpn7zwCCJTVsAy1R8HG7nrBwOrZUwOf3LNoYwq69d85O0hKWLngcykw0ayDfD/bakIK3fiTilk7
+ HoEv05gI+tFXEj4D/n1U3NSTrT00x45bgIQL5q31uS+YtA5F/LHvfh5LXzE0HfYhewrC+TncKjiA08IM2sOvRxFBoBTmrOF61YWRFICM3Lw=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-On 6/11/2019 7:21 PM, NeilBrown wrote:
+On 6/11/2019 6:55 PM, NeilBrown wrote:
 > On Tue, Jun 11 2019, Tom Talpey wrote:
+> 
+>> On 6/11/2019 5:10 PM, Olga Kornievskaia wrote:
+> ...
+>>>
+>>> Solaris has it, Microsoft has it and linux has been deprived of it,
+>>> let's join the party.
 >>
->> I really hope nconnect is not just a workaround for some undiscovered
->> performance issue. All that does is kick the can down the road.
+>> Let me be clear about one thing - SMB3 has it because the protocol
+>> is designed for it. Multichannel leverages SMB2 sessions to allow
+>> retransmit on any active bound connection. NFSv4.1 (and later) have
+>> a similar capability.
+>>
+>> NFSv2 and NFSv3, however, do not, and I've already stated my concerns
+>> about pushing them too far. I agree with your sentiment, but for these
+>> protocols, please bear in mind the risks.
 > 
-> This is one of my fears too.
-> 
-> My current perspective is to ask
->    "What do hardware designers optimise for".
-> because the speeds we are looking at really require various bits of
-> hardware to be working together harmoniously.
-> 
-> In context, that question becomes "Do they optimise for single
-> connection throughput, or multiple connection throughput".
+> NFSv2 and NFSv3 were designed to work with UDP.  That works a lot like
+> one-connection-per-message.   I don't think there is any reason to think
+> NFSv2,3 would have any problems with multiple connections.
 
-I assume you mean NIC hardware designers. The answer is both of
-course, but there are distinct advantages in the multiple-connection
-case. The main feature is RSS - Receive Side Scaling - which computes
-a hash of each 5-tuple-based IP flow and spreads interrupts based on
-the value. Generally speaking, that's why multiple connections can
-speed up a single NIC, on today's high core count machines.
+Sorry, but are you saying NFS over UDP works? It does not. There
+are 10- and 20-year old reports of this.
 
-RDMA has a similar capability, by more explicitly directing its
-CQs - Completion Queues - to multiple cores. Of course, RDMA has
-further abilities to reduce CPU overhead through direct data placement.
+NFSv2 was designed in the 1980's. NFSv3 came to be in 1992. Do
+you truly want to spend your time fixing 30 year old protocols?
 
-> Given the amount of money in web-services, I think multiple connection
-> throughput is most likely to provide dollars.
-> I also think that is would be a lot easier to parallelise than single
-> connection.
-
-Yep, that's another advantage. As you observe, this kind of parallelism
-is easier to achieve on the server side. IOW, this helps both ends of
-the connection.
-
-> So if we NFS developers want to work with the strengths of the hardware,
-> I think multiple connections and increased parallelism is a sensible
-> long-term strategy.
-> 
-> So while I cannot rule out any undiscovered performance issue, I don't
-> think this is just kicking the can down the road.
-
-Agreed. But driving this to one or two dozen connections is different.
-Typical NICs have relatively small RSS limits, and even if they have
-more, the system's core count and MSI-X vectors (interrupt steering)
-rarely approach this kind of limit. If you measure the improvement
-vs connection count, you'll find it increases sharply at 2 or 4, then
-flattens out. At that point, the complexity takes over and you'll only
-see the advantage in a lab. In the real world, a very different picture
-emerges, and it can be very un-pretty.
-
-Just some advice, that's all.
+Ok, I'll be quiet now. :-)
 
 Tom.
