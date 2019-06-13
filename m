@@ -2,79 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A703443889
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2019 17:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2A24386D
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2019 17:06:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbfFMPGl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 Jun 2019 11:06:41 -0400
-Received: from fieldses.org ([173.255.197.46]:52370 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732409AbfFMOIF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:08:05 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 221021D27; Thu, 13 Jun 2019 10:08:04 -0400 (EDT)
-Date:   Thu, 13 Jun 2019 10:08:04 -0400
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>
-Subject: Re: [PATCH v2] locks: eliminate false positive conflicts for write
- lease
-Message-ID: <20190613140804.GA2145@fieldses.org>
-References: <20190612172408.22671-1-amir73il@gmail.com>
- <2851a6b983ed8b5b858b3b336e70296204349762.camel@kernel.org>
- <CAOQ4uxi-uEhAbqVeYbeqAR=TXpthZHdUKkaZJB7fy1TgdZObjQ@mail.gmail.com>
+        id S1732446AbfFMPFr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Jun 2019 11:05:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42678 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732439AbfFMON2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Jun 2019 10:13:28 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so17180552ior.9
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2019 07:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ehkJYWC1p94ZapNpY1eAcwZHNv2DdSb1jRkL6CQmSXc=;
+        b=XzV9xpChVBAa9jqtcQ66PwrzgArnW79YoNikn4QKmOORtfYCNARNhku1YV8k8pRd0+
+         TpBceZrFLMj5ZWbnm89SpTimND8ZZ/i1NpGKPvDFFV7+kY5PhvA3deJRh1t1MviBz8d6
+         2WgvYrKsRmPboQ59Dsf3w67lwDKzEGbhgPQXM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ehkJYWC1p94ZapNpY1eAcwZHNv2DdSb1jRkL6CQmSXc=;
+        b=nSUlpIEfZpVslQMLG7hOu7x0lY9vDHQG7rZm7XyDJV+nmzPZrSFGfGo2v5Ua/9d/GW
+         kp5dAI5cRzfZkFROJhy7govWrVSM9YslxtE6R6DboL5EDAJs3D4g3HVime5W3+LlJf8X
+         76C/fA0Rmsg+fMhp7jOctParrKpvONdJHAJhx1ADUPIQeOprLghf2yTOOVXKjMx0uMem
+         a7ArxdpVxv+ADd/ligpk6gPF2KT5mVXx52RcFt1Y5b2ouTE5JAEkZwAw2Y65WjfLW4Ta
+         DA+NY8uV9vyIcabzOHTpQymkVv6SnQJMcCiBn8jXwUDsyO+SEMeXx72QRHEdFQ2k4zCg
+         +Jfw==
+X-Gm-Message-State: APjAAAWx2OTaIEYjJIzVj72C5gFQX3tu4RqoCxwY2av7fOmUR/QMQsYj
+        HIic5KL99O8MSZEucb6fGGXtCLlAce9crI+y0qUMCw==
+X-Google-Smtp-Source: APXvYqy6WRYvdHLq+gy5VPmn46gTLcUDrorQB67zOqyoIHFBd6FWkOmz9cXztOtlGThbC8W7OtdrbIjOIR3xeRUcdgc=
+X-Received: by 2002:a5e:8618:: with SMTP id z24mr54385645ioj.174.1560435207415;
+ Thu, 13 Jun 2019 07:13:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi-uEhAbqVeYbeqAR=TXpthZHdUKkaZJB7fy1TgdZObjQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190612172408.22671-1-amir73il@gmail.com> <20190612183156.GA27576@fieldses.org>
+In-Reply-To: <20190612183156.GA27576@fieldses.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 13 Jun 2019 16:13:15 +0200
+Message-ID: <CAJfpegvj0NHQrPcHFd=b47M-uz2CY6Hnamk_dJvcrUtwW65xBw@mail.gmail.com>
+Subject: Re: [PATCH v2] locks: eliminate false positive conflicts for write lease
+To:     "J . Bruce Fields" <bfields@fieldses.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        linux-fsdevel@vger.kernel.org,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:28:49PM +0300, Amir Goldstein wrote:
-> On Thu, Jun 13, 2019 at 4:22 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > Looks good to me. Aside from the minor nit above:
-> >
-> >     Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >
-> > I have one file locking patch queued up for v5.3 so far, but nothing for
-> > v5.2. Miklos or Bruce, if either of you have anything to send to Linus
-> > for v5.2 would you mind taking this one too?
-> >
-> 
-> Well. I did send a fix patch to Miklos for a bug introduced in v5.2-rc4,
-> so...
+On Wed, Jun 12, 2019 at 8:31 PM J . Bruce Fields <bfields@fieldses.org> wrote:
+>
+> How do opens for execute work?  I guess they create a struct file with
+> FMODE_EXEC and FMODE_RDONLY set and they decrement i_writecount.  Do
+> they also increment i_readcount?  Reading do_open_execat and alloc_file,
+> looks like it does, so, good, they should conflict with write leases,
+> which sounds right.
 
-I could take it.  I've modified it as below.
+Right, but then why this:
 
-I'm very happy with the patch, but not so much with the idea of 5.2 and
-stable.
+> > +     /* Eliminate deny writes from actual writers count */
+> > +     if (wcount < 0)
+> > +             wcount = 0;
 
-It seems like a subtle change with some possibility of unintended side
-effects.  (E.g. I don't think this is true any more, but my memory is
-that for a long time the only thing stopping nfsd from giving out
-(probably broken) write delegations was an extra reference that it held
-during processing.) And if the overlayfs bug's been there since 4.19,
-then waiting a little longer seems OK?
+It's basically a no-op, as you say.  And it doesn't make any sense
+logically, since denying writes *should* deny write leases as well...
 
---b.
-
-diff --git a/fs/locks.c b/fs/locks.c
-index c7912b0fdeea..2056595751e8 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1779,7 +1779,7 @@ check_conflicting_open(struct file *filp, const long arg, int flags)
- 	/* Make sure that only read/write count is from lease requestor */
- 	if (filp->f_mode & FMODE_WRITE)
- 		self_wcount = 1;
--	else if ((filp->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
-+	else if (filp->f_mode & FMODE_READ)
- 		self_rcount = 1;
- 
- 	if (arg == F_WRLCK && (wcount != self_wcount ||
+Thanks,
+Miklos
