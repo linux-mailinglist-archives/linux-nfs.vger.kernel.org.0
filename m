@@ -2,91 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F07B459E9
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 12:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E75F45A66
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 12:28:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFNKGr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Jun 2019 06:06:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36606 "EHLO mx1.redhat.com"
+        id S1726767AbfFNK2z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Jun 2019 06:28:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55164 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfFNKGr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:06:47 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726083AbfFNK2z (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:28:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 630E3859FC;
-        Fri, 14 Jun 2019 10:06:46 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 35C863091782;
+        Fri, 14 Jun 2019 10:28:55 +0000 (UTC)
 Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F19CB5D9C3;
-        Fri, 14 Jun 2019 10:06:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A85860495;
+        Fri, 14 Jun 2019 10:28:53 +0000 (UTC)
 From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Goetz, Patrick G" <pgoetz@math.utexas.edu>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: Can we setup pNFS with multiple DSs ?
-Date:   Fri, 14 Jun 2019 06:06:45 -0400
-Message-ID: <30177AD3-E601-44AA-9BA7-434933ABD7B1@redhat.com>
-In-Reply-To: <5e952e34-bc60-c63d-54c2-d0ae72301a86@math.utexas.edu>
-References: <71d00ed4-78b8-cefb-4245-99f3e53e5d2a@gmail.com>
- <28D4997E-0B02-4979-9DE3-7E87A7FD7BA1@redhat.com>
- <5e952e34-bc60-c63d-54c2-d0ae72301a86@math.utexas.edu>
+To:     "Olga Kornievskaia" <aglo@umich.edu>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        trond.myklebust@hammerspace.com,
+        "Anna Schumaker" <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFS: Don't skip lookup when holding a delegation
+Date:   Fri, 14 Jun 2019 06:28:55 -0400
+Message-ID: <7A5AA6C0-CA02-49DD-8D80-066B0D83B2F2@redhat.com>
+In-Reply-To: <CAN-5tyFzGGFhuFriN=a-U8X1r-A9+q1V6V4XQM_tmbUdFPyFxg@mail.gmail.com>
+References: <bcb2d38fe9c9bb15aeb9baa811aeb9a8697ea141.1560348835.git.bcodding@redhat.com>
+ <20190613145149.GD2145@fieldses.org>
+ <CAN-5tyFzGGFhuFriN=a-U8X1r-A9+q1V6V4XQM_tmbUdFPyFxg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 14 Jun 2019 10:06:46 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 14 Jun 2019 10:28:55 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 13 Jun 2019, at 11:30, Goetz, Patrick G wrote:
+On 13 Jun 2019, at 12:02, Olga Kornievskaia wrote:
 
-> Every so often I hunt for documentation on how to set up pNFS and can
-> never find anything.  Can someone point me to something that I can use
-> to test this myself?
+> On Thu, Jun 13, 2019 at 11:00 AM J. Bruce Fields 
+> <bfields@fieldses.org> wrote:
+>>
+>> On Wed, Jun 12, 2019 at 10:45:13AM -0400, Benjamin Coddington wrote:
+>>> If we skip lookup revalidation while holding a delegation, we might 
+>>> miss
+>>> that the file has changed directories on the server.
+>>
+>> The delegation should prevent the file disappearing from this 
+>> directory,
+>> so if I've been following the discussion, the bug was due to 
+>> overlooking
+>> the case where the change happened before we got the delegation.  
+>> Given
+>> that history it seems worth calling out that case specifically?
+>>
+>> Maybe a comment along the lines of:
+>>
+>>                 /*
+>>                  * Note that the file can't move while we hold a
+>>                  * delegation.  But this dentry could have been 
+>> cached
+>>                  * before we got a delegation.  So it's only safe to
+>>                  * skip revalidation when the parent directory is
+>>                  * unchanged:
+>>                  */
+>>
+>> But maybe there's a pithier way to say that.
 
-The file Documentation/filesystems/nfs/pnfs-scsi-server.txt in the 
-kernel
-source tree is probably the best source of current documentation, if 
-very
-concise:
+I wish I had pith.  I cannot improve on this comment.. I'm OK with or
+without it.
 
-     pNFS SCSI layout server user guide
-     ==================================
+> What is preventing the file from disappearing from the directory while
+> holding the delegation: is it the server's responsibility to recall
+> the delegation when it gets a move or is it client's responsibility
+> not to rely on the cached attributes?
 
-     This document describes support for pNFS SCSI layouts in the Linux 
-NFS
-     server.  With pNFS SCSI layouts, the NFS server acts as Metadata 
-Server
-     (MDS) for pNFS, which in addition to handling all the metadata 
-access to the
-     NFS export, also hands out layouts to the clients so that they can 
-directly
-     access the underlying SCSI LUNs that are shared with the client.
+The server should recall the delegation if the file moves, since moving 
+it
+means that additional calls to OPEN that file at that location should 
+fail.
+The client shouldn't continue to independently handle those OPENs 
+(unless by
+filehandle.. but how can the server know how the client intends to 
+handle
+further delegated OPENs?)
 
-     To use pNFS SCSI layouts with with the Linux NFS server, the 
-exported file
-     system needs to support the pNFS SCSI layouts (currently just XFS), 
-and the
-     file system must sit on a SCSI LUN that is accessible to the 
-clients in
-     addition to the MDS.  As of now the file system needs to sit 
-directly on the
-     exported LUN, striping or concatenation of LUNs on the MDS and 
-clients is
-     not supported yet.
+> According to this patch it's client's responsibility, in the case, I
+> find the working " file can't move" confusing as they imply to me that
+> client can assume file isn't moved (ie, server will prevent it from
+> happening).
 
-     On a server built with CONFIG_NFSD_SCSI, the pNFS SCSI volume 
-support is
-     automatically enabled if the file system is exported using the 
-"pnfs" option
-     and the underlying SCSI device support persistent reservations.  On 
+I think that it looks like its the client's responsibility only because 
 the
-     client make sure the kernel has the CONFIG_PNFS_BLOCK option 
-enabled, and
-     the file system is mounted using the NFSv4.1 protocol version 
-(mount -o
-     vers=4.1).
-
-Should we have more than this?
+client lacks an easy way to determine what order delegations were 
+acquired
+with respect to directory modifications.  We could try to track all of 
+that,
+but the structures and memory used would be hideous.
 
 Ben
