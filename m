@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C94ED4687B
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 22:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82C194687C
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 22:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfFNUA3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1726096AbfFNUA3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Fri, 14 Jun 2019 16:00:29 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:36556 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfFNUA2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 16:00:28 -0400
-Received: by mail-io1-f53.google.com with SMTP id h6so8460336ioh.3
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2019 13:00:28 -0700 (PDT)
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36874 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfFNUA3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 16:00:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id e5so8453135iok.4
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2019 13:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9X54GV1jXZMFrgWtnN0WS4TM+cm7h1riunOPHnBoY5E=;
-        b=T8sJkBzVm5/R9xmbpFdjD1HcA0S9vTP9EbMcqUV2p6uUJU5RGIDR23MI0nJTwRGGJ2
-         XAaOImO7z1wIAnw5/0mM0ZADRTXWQbJMRzWd0LHC7kqYtfj6WEQ2glNeL8iKuLgVAiL2
-         xqKzjqkoZJpS5HEHBjLhosGxLkCkMdjvUBxtwfrdZPeq3oBW4EmxFKKRSNlNwJwjYQeg
-         BQIq0Hu3i4mRk46zS5NhCrXcOwYtO0HdzQpsWwQlSCaCRn7mueIgq/Fvf4QdkQmpqRq1
-         rhqNAgG8B+eCdr4r2LzaJRAf9hzFljRHO8JcIeQKnh55HD4QDL13zA6jlRFPq/6FkIfB
-         tNpA==
+        bh=Sn/ULeJn5Huc//PLnteYL7PRUrhxOTsvNQ2mDITzXgc=;
+        b=htFwofMi/KMkz856QBkEnA1W5XAUyFbYxsxrXUN+KwZXfJ6eRvvi52GsoAD6hPaMui
+         jxBh1Zjh0uudsOcTHL+rBh9ZpPMxaoUoBbsHaxfXta8XjmfCK1orQ3dQTwJ+f/AJRcBa
+         yR4GrfmRtXRvu4oM/bgoAiJbDzihfwuhj2E7QPxY4Nf6z1DoK8fV8/AbILZsmTJLMMny
+         tTNuwOf4wzGl3AYhNhJ88F/VoIFZfpqnp0B9vfGSpkX5hhbxPKNEl16HOCRx3iib8kvC
+         DeKzCdxmgMErsV8X8/W84li4IxIS0ERJ8sGeQA/pRztTSnhPDEnJ402FFOxt1mFUGrbp
+         iJ3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9X54GV1jXZMFrgWtnN0WS4TM+cm7h1riunOPHnBoY5E=;
-        b=q+JlBn7AR4dhq/FKKbV8PR1rhD0h/e/JUwfr+3et2aj2EUgKAVHFFO672fjgTNNPYQ
-         Ap1tovoDXLCNQdmRMfwtQMvL5rM9pw/BvQ/Kf4SjFRKg8L6fhH0zuOTbgRZQaPI756E0
-         4Olh2FQXW2V6yZvMMcg05OsfKsCckDsrfXA6NDLiVwKuygCn6+JNN0KKJQk9kqvxY9bX
-         haYtFGsILUuY9FuoMV/SWX8zrePQCGbgfCyrr2g/4TwkBqEHQNMQydmTcpnmQoJB9Pml
-         BaZ5SrKf7HU6oG1RG8IiK9hOgdVDbSjU5r7G57QR1j+KqDKJEuCDiRpiN1ds43ezTqFy
-         rQPA==
-X-Gm-Message-State: APjAAAW/IX6ad+Qe4Uq2hqwSkA9BejrLSnFbVfSjCmUTeNUUBJV3EfwZ
-        j6eLsjStjW6+LZq38YuNGps=
-X-Google-Smtp-Source: APXvYqygUtFcCPTqNJPg3eSx++yNz4vFspLGle8A8hqGPztQuPe9BcYbHTN0o0zCDyzx5intU7Oanw==
-X-Received: by 2002:a6b:7109:: with SMTP id q9mr8804623iog.30.1560542427888;
-        Fri, 14 Jun 2019 13:00:27 -0700 (PDT)
+        bh=Sn/ULeJn5Huc//PLnteYL7PRUrhxOTsvNQ2mDITzXgc=;
+        b=VjnEdpis4lGgS8sXK3Dd0MnmIq6z3wGfbt5NFyGaDNdXx3vdZKaP1lqeoDp2/MaCz6
+         NAtu5q6LkTku4vP1fT9rorcvGm8irtPmQ4fpAE41UXtTRG53VxkKs+n4eqEx5WzejXdw
+         rW5aV9AsokPhbQIFWdbSaachzZuFHohXueNSCfL6cyDrMxe2cSvEkQdGlswU+zMDt+V+
+         nAw3ySCG5BesSaK6Phs6SvnA88tbQEvlRV8oFC23YqfRW67lMh3iys3CcPfYQVRKBix9
+         vtUX6lNFkvTWVWyJwR+3wCtiw7t++cn9o8DccRnSjh+D2KECO3wfC0ZFRAQ7tkp744/a
+         Pttg==
+X-Gm-Message-State: APjAAAVS/Z49U/qD46xyix5l4WP21q2pqLaBPMzWLaoeqQSu68bUfXEA
+        WMzrqHl1H8sVlnBGp9vwMgU=
+X-Google-Smtp-Source: APXvYqxmzRcHBYFsXyd4FUc1H0TzUGFyyupl2/pzSRTsIKgRnW1XUOPbew1pEoaSkmJYt0c/21LUYw==
+X-Received: by 2002:a5d:8f99:: with SMTP id l25mr40268043iol.92.1560542428804;
+        Fri, 14 Jun 2019 13:00:28 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
         by smtp.gmail.com with ESMTPSA id p63sm4623407iof.45.2019.06.14.13.00.27
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 14 Jun 2019 13:00:27 -0700 (PDT)
+        Fri, 14 Jun 2019 13:00:28 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v9 10/11] NFS: handle source server reboot
-Date:   Fri, 14 Jun 2019 16:00:15 -0400
-Message-Id: <20190614200016.12348-11-olga.kornievskaia@gmail.com>
+Subject: [PATCH v9 11/11] NFS: replace cross device check in copy_file_range
+Date:   Fri, 14 Jun 2019 16:00:16 -0400
+Message-Id: <20190614200016.12348-12-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190614200016.12348-1-olga.kornievskaia@gmail.com>
 References: <20190614200016.12348-1-olga.kornievskaia@gmail.com>
@@ -59,281 +59,29 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-When the source server reboots after a server-to-server copy was
-issued, we need to retry the copy from COPY_NOTIFY. We need to
-detect that the source server rebooted and there is a copy waiting
-on a destination server and wake it up.
+Add a check to disallow cross file systems copy offload, both
+files are expected to be of NFS4.2+ type.
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfs/nfs42proc.c     | 68 ++++++++++++++++++++++++++++++++++----------------
- fs/nfs/nfs4_fs.h       |  1 +
- fs/nfs/nfs4file.c      |  3 +++
- fs/nfs/nfs4state.c     | 26 +++++++++++++++----
- include/linux/nfs_fs.h |  4 ++-
- 5 files changed, 75 insertions(+), 27 deletions(-)
+ fs/nfs/nfs4file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 705fe69..a21f01a 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -153,22 +153,26 @@ int nfs42_proc_deallocate(struct file *filep, loff_t offset, loff_t len)
- }
- 
- static int handle_async_copy(struct nfs42_copy_res *res,
--			     struct nfs_server *server,
-+			     struct nfs_server *dst_server,
-+			     struct nfs_server *src_server,
- 			     struct file *src,
- 			     struct file *dst,
--			     nfs4_stateid *src_stateid)
-+			     nfs4_stateid *src_stateid,
-+			     bool *restart)
- {
- 	struct nfs4_copy_state *copy, *tmp_copy;
- 	int status = NFS4_OK;
- 	bool found_pending = false;
--	struct nfs_open_context *ctx = nfs_file_open_context(dst);
-+	struct nfs_open_context *dst_ctx = nfs_file_open_context(dst);
-+	struct nfs_open_context *src_ctx = nfs_file_open_context(src);
- 
- 	copy = kzalloc(sizeof(struct nfs4_copy_state), GFP_NOFS);
- 	if (!copy)
- 		return -ENOMEM;
- 
--	spin_lock(&server->nfs_client->cl_lock);
--	list_for_each_entry(tmp_copy, &server->nfs_client->pending_cb_stateids,
-+	spin_lock(&dst_server->nfs_client->cl_lock);
-+	list_for_each_entry(tmp_copy,
-+				&dst_server->nfs_client->pending_cb_stateids,
- 				copies) {
- 		if (memcmp(&res->write_res.stateid, &tmp_copy->stateid,
- 				NFS4_STATEID_SIZE))
-@@ -178,7 +182,7 @@ static int handle_async_copy(struct nfs42_copy_res *res,
- 		break;
- 	}
- 	if (found_pending) {
--		spin_unlock(&server->nfs_client->cl_lock);
-+		spin_unlock(&dst_server->nfs_client->cl_lock);
- 		kfree(copy);
- 		copy = tmp_copy;
- 		goto out;
-@@ -186,19 +190,32 @@ static int handle_async_copy(struct nfs42_copy_res *res,
- 
- 	memcpy(&copy->stateid, &res->write_res.stateid, NFS4_STATEID_SIZE);
- 	init_completion(&copy->completion);
--	copy->parent_state = ctx->state;
-+	copy->parent_dst_state = dst_ctx->state;
-+	copy->parent_src_state = src_ctx->state;
-+
-+	list_add_tail(&copy->copies, &dst_server->ss_copies);
-+	spin_unlock(&dst_server->nfs_client->cl_lock);
- 
--	list_add_tail(&copy->copies, &server->ss_copies);
--	spin_unlock(&server->nfs_client->cl_lock);
-+	if (dst_server != src_server) {
-+		spin_lock(&src_server->nfs_client->cl_lock);
-+		list_add_tail(&copy->src_copies, &src_server->ss_copies);
-+		spin_unlock(&src_server->nfs_client->cl_lock);
-+	}
- 
- 	status = wait_for_completion_interruptible(&copy->completion);
--	spin_lock(&server->nfs_client->cl_lock);
-+	spin_lock(&dst_server->nfs_client->cl_lock);
- 	list_del_init(&copy->copies);
--	spin_unlock(&server->nfs_client->cl_lock);
-+	spin_unlock(&dst_server->nfs_client->cl_lock);
-+	if (dst_server != src_server) {
-+		spin_lock(&src_server->nfs_client->cl_lock);
-+		list_del_init(&copy->src_copies);
-+		spin_unlock(&src_server->nfs_client->cl_lock);
-+	}
- 	if (status == -ERESTARTSYS) {
- 		goto out_cancel;
--	} else if (copy->flags) {
-+	} else if (copy->flags || copy->error == NFS4ERR_PARTNER_NO_AUTH) {
- 		status = -EAGAIN;
-+		*restart = true;
- 		goto out_cancel;
- 	}
- out:
-@@ -247,7 +264,8 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 				struct nfs42_copy_args *args,
- 				struct nfs42_copy_res *res,
- 				struct nl4_server *nss,
--				nfs4_stateid *cnr_stateid)
-+				nfs4_stateid *cnr_stateid,
-+				bool *restart)
- {
- 	struct rpc_message msg = {
- 		.rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_COPY],
-@@ -255,7 +273,9 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 		.rpc_resp = res,
- 	};
- 	struct inode *dst_inode = file_inode(dst);
--	struct nfs_server *server = NFS_SERVER(dst_inode);
-+	struct inode *src_inode = file_inode(src);
-+	struct nfs_server *dst_server = NFS_SERVER(dst_inode);
-+	struct nfs_server *src_server = NFS_SERVER(src_inode);
- 	loff_t pos_src = args->src_pos;
- 	loff_t pos_dst = args->dst_pos;
- 	size_t count = args->count;
-@@ -291,13 +311,15 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 		if (!res->commit_res.verf)
- 			return -ENOMEM;
- 	}
-+	set_bit(NFS_CLNT_SRC_SSC_COPY_STATE,
-+		&src_lock->open_context->state->flags);
- 	set_bit(NFS_CLNT_DST_SSC_COPY_STATE,
- 		&dst_lock->open_context->state->flags);
- 
--	status = nfs4_call_sync(server->client, server, &msg,
-+	status = nfs4_call_sync(dst_server->client, dst_server, &msg,
- 				&args->seq_args, &res->seq_res, 0);
- 	if (status == -ENOTSUPP)
--		server->caps &= ~NFS_CAP_COPY;
-+		dst_server->caps &= ~NFS_CAP_COPY;
- 	if (status)
- 		goto out;
- 
-@@ -309,8 +331,8 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 	}
- 
- 	if (!res->synchronous) {
--		status = handle_async_copy(res, server, src, dst,
--				&args->src_stateid);
-+		status = handle_async_copy(res, dst_server, src_server, src,
-+				dst, &args->src_stateid, restart);
- 		if (status)
- 			return status;
- 	}
-@@ -358,6 +380,7 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
- 		.stateid	= &args.dst_stateid,
- 	};
- 	ssize_t err, err2;
-+	bool restart = false;
- 
- 	src_lock = nfs_get_lock_context(nfs_file_open_context(src));
- 	if (IS_ERR(src_lock))
-@@ -378,7 +401,7 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
- 		err = _nfs42_proc_copy(src, src_lock,
- 				dst, dst_lock,
- 				&args, &res,
--				nss, cnr_stateid);
-+				nss, cnr_stateid, &restart);
- 		inode_unlock(file_inode(dst));
- 
- 		if (err >= 0)
-@@ -387,8 +410,11 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
- 			err = -EOPNOTSUPP;
- 			break;
- 		} else if (err == -EAGAIN) {
--			dst_exception.retry = 1;
--			continue;
-+			if (!restart) {
-+				dst_exception.retry = 1;
-+				continue;
-+			}
-+			break;
- 		} else if (err == -NFS4ERR_OFFLOAD_NO_REQS && !args.sync) {
- 			args.sync = true;
- 			dst_exception.retry = 1;
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index d49fc19..2cb5f50 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -168,6 +168,7 @@ enum {
- 	NFS_STATE_CHANGE_WAIT,		/* A state changing operation is outstanding */
- #ifdef CONFIG_NFS_V4_2
- 	NFS_CLNT_DST_SSC_COPY_STATE,    /* dst server open state on client*/
-+	NFS_CLNT_SRC_SSC_COPY_STATE,    /* src server open state on client*/
- 	NFS_SRV_SSC_COPY_STATE,		/* ssc state on the dst server */
- #endif /* CONFIG_NFS_V4_2 */
- };
 diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 5ef3c12..3bfa041 100644
+index 3bfa041..0389fab 100644
 --- a/fs/nfs/nfs4file.c
 +++ b/fs/nfs/nfs4file.c
-@@ -146,6 +146,7 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+@@ -140,7 +140,7 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	ssize_t ret;
+ 
+ 	/* Only offload copy if superblock is the same */
+-	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
++	if (file_in->f_op != &nfs4_file_operations)
+ 		return -EXDEV;
+ 	if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
  		return -EOPNOTSUPP;
- 	if (file_inode(file_in) == file_inode(file_out))
- 		return -EOPNOTSUPP;
-+retry:
- 	if (!nfs42_files_from_same_server(file_in, file_out)) {
- 		cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
- 				GFP_NOFS);
-@@ -164,6 +165,8 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 				nss, cnrs);
- out:
- 	kfree(cn_resp);
-+	if (ret == -EAGAIN)
-+		goto retry;
- 	return ret;
- }
- 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 045af56..329e3ff 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1555,16 +1555,32 @@ static void nfs42_complete_copies(struct nfs4_state_owner *sp, struct nfs4_state
- {
- 	struct nfs4_copy_state *copy;
- 
--	if (!test_bit(NFS_CLNT_DST_SSC_COPY_STATE, &state->flags))
-+	if (!test_bit(NFS_CLNT_DST_SSC_COPY_STATE, &state->flags) &&
-+		!test_bit(NFS_CLNT_SRC_SSC_COPY_STATE, &state->flags))
- 		return;
- 
- 	spin_lock(&sp->so_server->nfs_client->cl_lock);
- 	list_for_each_entry(copy, &sp->so_server->ss_copies, copies) {
--		if (!nfs4_stateid_match_other(&state->stateid, &copy->parent_state->stateid))
--			continue;
-+		if ((test_bit(NFS_CLNT_DST_SSC_COPY_STATE, &state->flags) &&
-+				!nfs4_stateid_match_other(&state->stateid,
-+				&copy->parent_dst_state->stateid)))
-+				continue;
- 		copy->flags = 1;
--		complete(&copy->completion);
--		break;
-+		if (test_and_clear_bit(NFS_CLNT_DST_SSC_COPY_STATE,
-+				&state->flags)) {
-+			clear_bit(NFS_CLNT_SRC_SSC_COPY_STATE, &state->flags);
-+			complete(&copy->completion);
-+		}
-+	}
-+	list_for_each_entry(copy, &sp->so_server->ss_copies, src_copies) {
-+		if ((test_bit(NFS_CLNT_SRC_SSC_COPY_STATE, &state->flags) &&
-+				!nfs4_stateid_match_other(&state->stateid,
-+				&copy->parent_src_state->stateid)))
-+				continue;
-+		copy->flags = 1;
-+		if (test_and_clear_bit(NFS_CLNT_DST_SSC_COPY_STATE,
-+				&state->flags))
-+			complete(&copy->completion);
- 	}
- 	spin_unlock(&sp->so_server->nfs_client->cl_lock);
- }
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index d363d57..8df5130 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -189,13 +189,15 @@ struct nfs_inode {
- 
- struct nfs4_copy_state {
- 	struct list_head	copies;
-+	struct list_head	src_copies;
- 	nfs4_stateid		stateid;
- 	struct completion	completion;
- 	uint64_t		count;
- 	struct nfs_writeverf	verf;
- 	int			error;
- 	int			flags;
--	struct nfs4_state	*parent_state;
-+	struct nfs4_state	*parent_src_state;
-+	struct nfs4_state	*parent_dst_state;
- };
- 
- /*
 -- 
 1.8.3.1
 
