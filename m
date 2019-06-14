@@ -2,53 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF084687F
+	by mail.lfdr.de (Postfix) with ESMTP id C4C2A46880
 	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 22:00:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfFNUA5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Jun 2019 16:00:57 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40134 "EHLO
+        id S1726201AbfFNUA6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Jun 2019 16:00:58 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40140 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfFNUA4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 16:00:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so8356886ioc.7
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2019 13:00:56 -0700 (PDT)
+        with ESMTP id S1726028AbfFNUA6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 16:00:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id n5so8357019ioc.7
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2019 13:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CvhqTb70cz6lbJtSe8j4vvY2P9BTDBl9cZxsj8MT6R0=;
-        b=LB0wceN6d4tO0hN3yp4UC3zkL3msaH3Oq6j/ok61kpUdn+NFz/tE+du3tLdtnbKqlN
-         cgZdcvIRd3WMkTiwep9u+ApqrMeezfYjLoKDxIBPHapToLCn1f7l80ukmgQq6B3LZlNB
-         gNVoa5Fx1CT0tAsUTWAGVcuP2vPx2rqM3cOkEftuc4MdOX5bhZtTT/kXtMEZDQBOgTIz
-         D06QMVcI8vwc82y5FwDfkgSIElWnx8DFFVZUYAR1AJlqibu/bDlAbbY3Cg0/2mhhaPhn
-         I8Et1N7FLYqH+MuljGkDqjuwYoKzKlHjkp/VuuE6zNZrs6uALvZMEMJofM2ZNp41ptxZ
-         F5hw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4IoPYbY7faRXqYApBCuNXczxAha8aebK68IvZnRULGY=;
+        b=m3aqiGyyuuwy3l4EFSugkEQFxGx4TwbTLUmS1jyIRv6tchnZd51wdjp4b4ZZFfaMYL
+         sqIquJTkHnKrHiSkY95u0qlfGUZVtB/T/F4OogmA5u0/nVeVlXZL6JQcA2JMGGLSz2oh
+         cVWYD9GbwhCTtht1+EVXBV/s+mjParnLPgox/buebw3hLYniuMjxuEVfoQIip5l01Il7
+         7hbZBDC3sARYFiBcivRsHIthuT6NL/GsU/aMgH+ydco9YyO76CBmbeHP0SG8Wk9O07Pp
+         VsWsTXBogpi552yMtSu1MX1A5Vavkeu0I5EH4CVtw6rvyGaSLPcHquBwCTsoAulTXpPN
+         yZ/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CvhqTb70cz6lbJtSe8j4vvY2P9BTDBl9cZxsj8MT6R0=;
-        b=NLfNR+EoKw9uUKt1z4oq9GCIEXg900cPQcIuVmWCR+7K5Ek4wn7AKiF+eXA/+7mqwk
-         dzW5I+XfExTSzZKC6k/VjdpqoSUfwdG8oACxEvJx9ROcCmZ73nzOwIHjO6WOVvR6EtwE
-         QdKWBl5s3hmmwVWUpN2fmN80lQGecy/7CaZt5LoJ8CAqob8IMnpsmtS/5x3MY6WMe/63
-         iUqKB0Xm1v5miS/nw6uE4Genxy9DSwHTmfSGvg1xoDKlkAOjCaMicVj20z5w3KoolnCh
-         wMQwXCkVEmlJCAsUbi4n/kDb1CmXJ1lfMtdOpcQk/Dorl95stDyY5Sc3kJkSQBWmELEF
-         clMQ==
-X-Gm-Message-State: APjAAAVbwmO3b/WhV5IDqrcMFKxfZDEGaOJ9fZ6MsaPDYOtPBAR/Aier
-        AY51SFTCoKaXRp98vwRhmxQ=
-X-Google-Smtp-Source: APXvYqw0m6aWh6y14/QYXpHAwkgAuihJyUyC0eansaXcuyOv3CADhGhP9hkyLt4y5w0b8lBbdIX5ew==
-X-Received: by 2002:a6b:fb10:: with SMTP id h16mr483946iog.195.1560542455800;
-        Fri, 14 Jun 2019 13:00:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4IoPYbY7faRXqYApBCuNXczxAha8aebK68IvZnRULGY=;
+        b=U4ApfGoAF7D0Sdk00WbLOzcKMq+XipC/RhDvc/bI1U4OsGpmsJ/cX9kRypevWdhyh+
+         Q4bxueyXeLImPCuloKxwVm5rXFJ+pE33tsQ8kYWnFwlXL0GdzG2AI4une0x9bfMxthVw
+         N0oF69lQUUWDRonEddlxlEjK+3iYs3OJ78ZpP9duR9gZYWz00DscexvaaDKAxRkAkitW
+         GDdraFXHjRvvHHSI54osjMN2/CFRgox6ndlEL9Pu8vSeChb6SpDSJaUCz2OUBQmQvDh5
+         zsG2pN330wIr5GKRL0G2/4jHi9AgI6E5jc/sfLbj7A6P1Zf+aSMkufryAZMtNMZyBQ4H
+         0KHg==
+X-Gm-Message-State: APjAAAV4zoqUQAyZmBWKK0jIs+qiRYccYP1XG7dtO2Api+W2Kz2F+mL5
+        6Bv3HeVlvfDRB3qnIOLrZ8zkz6NbSCk=
+X-Google-Smtp-Source: APXvYqzbQ8IoculurkSD8F8ezD+dUKL7tjEvnP07j5mum/DeeESdMyN9bNzDOdEmKF17Z3hQPJzPEA==
+X-Received: by 2002:a6b:c9c1:: with SMTP id z184mr5439990iof.74.1560542457031;
+        Fri, 14 Jun 2019 13:00:57 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id p4sm6528115iod.68.2019.06.14.13.00.54
+        by smtp.gmail.com with ESMTPSA id p4sm6528115iod.68.2019.06.14.13.00.55
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 14 Jun 2019 13:00:55 -0700 (PDT)
+        Fri, 14 Jun 2019 13:00:56 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 0/8] server-side support for "inter" SSC copy
-Date:   Fri, 14 Jun 2019 16:00:46 -0400
-Message-Id: <20190614200054.12394-1-olga.kornievskaia@gmail.com>
+Subject: [PATCH v3 1/8] NFSD fill-in netloc4 structure
+Date:   Fri, 14 Jun 2019 16:00:47 -0400
+Message-Id: <20190614200054.12394-2-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+In-Reply-To: <20190614200054.12394-1-olga.kornievskaia@gmail.com>
+References: <20190614200054.12394-1-olga.kornievskaia@gmail.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -56,77 +59,67 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-This patch series adds support for NFSv4.2 copy offload feature
-allowing copy between two different NFS servers.
+nfs.4 defines nfs42_netaddr structure that represents netloc4.
 
-This functionality depends on the VFS ability to support generic
-copy_file_range() where a copy is done between an NFS file and
-a local file system. This is on top of Amir's VFS generic copy
-offload series.
+Populate needed fields from the sockaddr structure.
 
-This feature is enabled by the kernel module parameter --
-inter_copy_offload_enable -- and by default is disabled. There is
-also a kernel compile configuration of NFSD_V4_2_INTER_SSC that
-adds dependency on the NFS client side functions called from the
-server.
+This will be used by flexfiles and 4.2 inter copy
 
-These patches work on top of existing async intra copy offload
-patches. For the "inter" SSC, the implementation only supports
-asynchronous inter copy.
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-On the source server, upon receiving a COPY_NOTIFY, it generate a
-unique stateid that's kept in the global list. Upon receiving a READ
-with a stateid, the code checks the normal list of open stateid and
-now additionally, it'll check the copy state list as well before
-deciding to either fail with BAD_STATEID or find one that matches.
-The stored stateid is only valid to be used for the first time
-with a choosen lease period (90s currently). When the source server
-received an OFFLOAD_CANCEL, it will remove the stateid from the
-global list. Otherwise, the copy stateid is removed upon the removal
-of its "parent" stateid (open/lock/delegation stateid).
-
-On the destination server, upon receiving a COPY request, the server
-establishes the necessary clientid/session with the source server.
-It calls into the NFS client code to establish the necessary
-open stateid, filehandle, file description (without doing an NFS open).
-Then the server calls into the copy_file_range() to preform the copy
-where the source file will issue NFS READs and then do local file
-system writes (this depends on the VFS ability to do cross device
-copy_file_range().
-
-v3:
--- when nfsd_copy_file_range() returns EBADF and no bytes were read
-return NFS4ERR_PARTNER_NO_AUTH to signal to the client to restart the
-copy. EBADF can happen when (1st) READ wasn't successful to the source
-server due to server reboot or taking too long to make the 1st read
-after COPY_NOTIFY was sent to the source server
---- made changes as per Bruce's comment. (1) changing struct nl4_server
-not to be allocated on the stack (2) move checking for copy compound to
-allow for foreigh filehandle in the compound in a separate function.
-(3) removed might_sleep().
-
-Olga Kornievskaia (8):
-  NFSD fill-in netloc4 structure
-  NFSD add ca_source_server<> to COPY
-  NFSD return nfs4_stid in nfs4_preprocess_stateid_op
-  NFSD add COPY_NOTIFY operation
-  NFSD check stateids against copy stateids
-  NFSD generalize nfsd4_compound_state flag names
-  NFSD: allow inter server COPY to have a STALE source server fh
-  NFSD add nfs4 inter ssc to nfsd4_copy
-
- fs/nfsd/Kconfig      |  10 ++
- fs/nfsd/nfs4proc.c   | 420 ++++++++++++++++++++++++++++++++++++++++++++++-----
- fs/nfsd/nfs4state.c  | 122 +++++++++++++--
- fs/nfsd/nfs4xdr.c    | 172 ++++++++++++++++++++-
- fs/nfsd/nfsd.h       |  32 ++++
- fs/nfsd/nfsfh.h      |   5 +-
- fs/nfsd/nfssvc.c     |   6 +
- fs/nfsd/state.h      |  21 ++-
- fs/nfsd/xdr4.h       |  37 ++++-
- include/linux/nfs4.h |   1 +
- 10 files changed, 763 insertions(+), 63 deletions(-)
-
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 24187b5..8f4fc50 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -19,6 +19,7 @@
+ #include <linux/sunrpc/svc.h>
+ #include <linux/sunrpc/svc_xprt.h>
+ #include <linux/sunrpc/msg_prot.h>
++#include <linux/sunrpc/addr.h>
+ 
+ #include <uapi/linux/nfsd/debug.h>
+ 
+@@ -375,6 +376,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
+ 
+ extern const u32 nfsd_suppattrs[3][3];
+ 
++static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
++				    struct nfs42_netaddr *netaddr)
++{
++	struct sockaddr_in *sin = (struct sockaddr_in *)addr;
++	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
++	unsigned int port;
++	size_t ret_addr, ret_port;
++
++	switch (addr->sa_family) {
++	case AF_INET:
++		port = ntohs(sin->sin_port);
++		sprintf(netaddr->netid, "tcp");
++		netaddr->netid_len = 3;
++		break;
++	case AF_INET6:
++		port = ntohs(sin6->sin6_port);
++		sprintf(netaddr->netid, "tcp6");
++		netaddr->netid_len = 4;
++		break;
++	default:
++		return nfserr_inval;
++	}
++	ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
++	ret_port = snprintf(netaddr->addr + ret_addr,
++			    RPCBIND_MAXUADDRLEN + 1 - ret_addr,
++			    ".%u.%u", port >> 8, port & 0xff);
++	WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
++	netaddr->addr_len = ret_addr + ret_port;
++	return 0;
++}
++
+ static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+ {
+ 	return !((bm1[0] & ~bm2[0]) ||
 -- 
 1.8.3.1
 
