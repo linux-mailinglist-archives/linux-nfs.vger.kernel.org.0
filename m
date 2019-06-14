@@ -2,162 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E5DE4638E
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 18:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D280467DF
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2019 20:52:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbfFNQAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Jun 2019 12:00:54 -0400
-Received: from esa10.utexas.iphmx.com ([216.71.150.156]:35338 "EHLO
-        esa10.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNQAx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 12:00:53 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 12:00:53 EDT
-X-Utexas-Sender-Group: RELAYLIST-O365
-X-IronPort-MID: 151817032
-IronPort-PHdr: =?us-ascii?q?9a23=3AQo55XBzrnk/pENDXCy+N+z0EezQntrPoPwUc9p?=
- =?us-ascii?q?sgjfdUf7+++4j5YhGN/u1j2VnOW4iTq+lJjebbqejBYSQB+t7A1RJKa5lQT1?=
- =?us-ascii?q?kAgMQSkRYnBZudBkr2MOzCaiUmHIJfSFJ19mr9PERIS47z?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2ErAADFwgNdhzYuL2hmHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBUwUBAQsBgT1QbXIDBAsoCoQMYoJlA4UxiTGCV5hjgSQDGDwBCAEBAQE?=
- =?us-ascii?q?BAQEBAQcBHw4CAQECgUmCdQIXglk2Bw4BAwEBBQEBAQEEAgIQAQEBCA0JCCk?=
- =?us-ascii?q?jDIJ4TTkyAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQI?=
- =?us-ascii?q?UJDkBAQEDEhERDAEBNwEPAgEGAg4KAgImAgICMBUQAgQOJ4MAAYFqAx0BjgC?=
- =?us-ascii?q?PPz0CYgILgQQpiF4BAXCBMYJ5AQEFgkeCNBhBB4FHAwaBDCgBi20GgUE+gTi?=
- =?us-ascii?q?CPS4+gmEFgUiDIIJYjjmaNWoJAoIQhkiNAwYblzKUPI88AgQCBAUCDgEBBYF?=
- =?us-ascii?q?WB4IDchODJ4IPGoNWaolpQAExgSmOEQGBIAEB?=
-X-IPAS-Result: =?us-ascii?q?A2ErAADFwgNdhzYuL2hmHAEBAQQBAQcEAQGBUwUBAQsBg?=
- =?us-ascii?q?T1QbXIDBAsoCoQMYoJlA4UxiTGCV5hjgSQDGDwBCAEBAQEBAQEBAQcBHw4CA?=
- =?us-ascii?q?QECgUmCdQIXglk2Bw4BAwEBBQEBAQEEAgIQAQEBCA0JCCkjDIJ4TTkyAQEBA?=
- =?us-ascii?q?QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQIUJDkBAQEDEhERD?=
- =?us-ascii?q?AEBNwEPAgEGAg4KAgImAgICMBUQAgQOJ4MAAYFqAx0BjgCPPz0CYgILgQQpi?=
- =?us-ascii?q?F4BAXCBMYJ5AQEFgkeCNBhBB4FHAwaBDCgBi20GgUE+gTiCPS4+gmEFgUiDI?=
- =?us-ascii?q?IJYjjmaNWoJAoIQhkiNAwYblzKUPI88AgQCBAUCDgEBBYFWB4IDchODJ4IPG?=
- =?us-ascii?q?oNWaolpQAExgSmOEQGBIAEB?=
-X-IronPort-AV: E=Sophos;i="5.63,373,1557205200"; 
-   d="scan'208";a="151817032"
-X-Utexas-Seen-Outbound: true
-Received: from mail-bn3nam04lp2054.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.54])
-  by esa10.utexas.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jun 2019 10:53:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=utexas.onmicrosoft.com; s=selector2-utexas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bwY9SWpGSLUJsPSIHPU5dYdI6wNyYi4eE/hqI+1LXro=;
- b=NYnIY17Cu9sNqW88R858a6+zNanoo9WsF6texkvEFSEYC8nxF/pPVJ46s84YGc5HgYXV+tKKhWo1EPnNM8UObgc88CBhmVnCMX14gG8K2/mxKqkjyov9DzCHux+jpuwYuBacRxyaBF/A1t7kMIm/JaNk9+GK+u3EpOu9qKIt9cY=
-Received: from DM5PR0601MB3718.namprd06.prod.outlook.com (10.167.109.15) by
- DM5PR0601MB3736.namprd06.prod.outlook.com (10.167.109.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Fri, 14 Jun 2019 15:53:44 +0000
-Received: from DM5PR0601MB3718.namprd06.prod.outlook.com
- ([fe80::90e6:fd0b:3011:1ef8]) by DM5PR0601MB3718.namprd06.prod.outlook.com
- ([fe80::90e6:fd0b:3011:1ef8%3]) with mapi id 15.20.1987.013; Fri, 14 Jun 2019
- 15:53:44 +0000
-From:   "Goetz, Patrick G" <pgoetz@math.utexas.edu>
-To:     Benjamin Coddington <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Can we setup pNFS with multiple DSs ?
-Thread-Topic: Can we setup pNFS with multiple DSs ?
-Thread-Index: AQHVIPQs/FvYNmACVUWcCwHAi3gNsqaX7PIAgAHLGwCAATfIgIAAYPAA
-Date:   Fri, 14 Jun 2019 15:53:43 +0000
-Message-ID: <39e3e544-2f6d-4cf1-8afe-593f7f6027a7@math.utexas.edu>
-References: <71d00ed4-78b8-cefb-4245-99f3e53e5d2a@gmail.com>
- <28D4997E-0B02-4979-9DE3-7E87A7FD7BA1@redhat.com>
- <5e952e34-bc60-c63d-54c2-d0ae72301a86@math.utexas.edu>
- <30177AD3-E601-44AA-9BA7-434933ABD7B1@redhat.com>
-In-Reply-To: <30177AD3-E601-44AA-9BA7-434933ABD7B1@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DM6PR14CA0003.namprd14.prod.outlook.com
- (2603:10b6:5:a8::16) To DM5PR0601MB3718.namprd06.prod.outlook.com
- (2603:10b6:4:7d::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pgoetz@math.utexas.edu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [128.83.133.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5526b95c-a1e9-4943-5fb9-08d6f0e07a6b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR0601MB3736;
-x-ms-traffictypediagnostic: DM5PR0601MB3736:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM5PR0601MB373618D4AB4BDE761A66189583EE0@DM5PR0601MB3736.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(366004)(39860400002)(52314003)(199004)(189003)(64756008)(6512007)(11346002)(6116002)(229853002)(4326008)(26005)(6306002)(76176011)(14444005)(6486002)(305945005)(3846002)(66066001)(256004)(66556008)(66476007)(7736002)(2906002)(6246003)(66446008)(66946007)(73956011)(71200400001)(71190400001)(8936002)(486006)(86362001)(786003)(966005)(31686004)(6436002)(81156014)(53936002)(316002)(31696002)(99286004)(81166006)(186003)(88552002)(14454004)(102836004)(476003)(25786009)(75432002)(6916009)(6506007)(2616005)(386003)(68736007)(5660300002)(52116002)(478600001)(53546011)(8676002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0601MB3736;H:DM5PR0601MB3718.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: math.utexas.edu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sxyM9nPwt10ilyqK+6v3T2iAwNh2QlneJ5ztoOYf3sf7q7ro630uGzyWjQ/X5hyObF10JsoaBN4zO12jx573w2aGG94Aw/XtEfxy+wWHeskW0nzqtDgM0wev2nQqewOavHlpXEpnmmBInwtCglZCKwj3ZANlaj4HoyeHuMs+Eq+Rt1S8Wi7g1rb9YVa5JvNEwX9ifYtJupHsR6gBMyjlvnhd5Z7eEiqaODjjjcnQcsknK1jbfEZXtKd2W8IufiO5Z7ve/LeTZZYjsNwUxDqdjSuy0XPxHB1HlbhGe2jjU+SbL2K3Rqesz/mkcbekdC9XCXW6SztWpVJG4Do0N/NvH4tzeaZPwi0PKPxRPPhpvW+gQSc2s3Zn9b1FK6mGeP1BTO8yAld1IFiazzDBXV8aimXwXDZs+CbuKLeLYp476dg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <21E672582460FD4085FB31A3C1AD08D6@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725889AbfFNSwn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Jun 2019 14:52:43 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:34591 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbfFNSwm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jun 2019 14:52:42 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 92233559;
+        Fri, 14 Jun 2019 14:52:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Jun 2019 14:52:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=v4i0nh
+        zzGbing+B4QMUVxm+oBw3DVgnwQJYDd8Wn0LA=; b=lgAedjDkWNbXclk4p60e67
+        wY40HzMMzJqiVe64nFWY6OifpxFs14ICb+74WIluQkafo08wpmMT5inWdGxBQeJU
+        zzP4X25aI1Uuy6tCQjdcpEpmZUpuBdDYdtTUc6pcwBhLV+UqDULIebxTs8JRz4Qz
+        1R4CWcooDwNaF5ZKovGeuEI/WKZKxNcpJrMQMjOlJtICADT5slvFp1+P1q0dpyRu
+        ik8TPPgUNBx0azbHZPTAygLi/ZRSDFQFHUvNbdDr3xi6vs00dgk4O1vgyfiMI4tP
+        1949wiAN6q8/knGJ2wyfxxnPiMtu4XGhBwTJ2uf60SiTIQv/6ttosgG/8hpy3mcw
+        ==
+X-ME-Sender: <xms:-OwDXXjjGvQQEi-YqfjtHLEcERX-znEuKcAsy9OC58vIPKKWDfCbmw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeiuddgudefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
+    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucffohhmrg
+    hinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppeej
+    ledrudejkedrgeefrddvudeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthh
+    esihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:-OwDXVtFzW0iirZE0sPr36TrjmL91b8xjlEIhsCkkJiFnDeY7GNXzg>
+    <xmx:-OwDXaj6mAOWR9AieOVtVgHevL1XUn8bdPcnJ27a46K2EvSzKi0pEA>
+    <xmx:-OwDXUGfpBWEMzOftwZr-uQSOtv8gZd3MYZpZt3Z_sBtwJyn3ESfEA>
+    <xmx:-ewDXfhYPh3kNfRi8EsmimjLDieIu-bD3BPQ2TEAJuBJNpK7eC00BQ>
+Received: from localhost (bzq-79-178-43-218.red.bezeqint.net [79.178.43.218])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0D8F78005A;
+        Fri, 14 Jun 2019 14:52:39 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 21:52:37 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/9] SUNRPC: Cache cred of process creating the rpc_client
+Message-ID: <20190614185237.GA550@splinter>
+References: <20190424214650.4658-1-trond.myklebust@hammerspace.com>
+ <20190424214650.4658-2-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: math.utexas.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5526b95c-a1e9-4943-5fb9-08d6f0e07a6b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 15:53:43.9390
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pgoetz@math.utexas.edu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0601MB3736
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424214650.4658-2-trond.myklebust@hammerspace.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCk9uIDYvMTQvMTkgNTowNiBBTSwgQmVuamFtaW4gQ29kZGluZ3RvbiB3cm90ZToNCj4gT24g
-MTMgSnVuIDIwMTksIGF0IDExOjMwLCBHb2V0eiwgUGF0cmljayBHIHdyb3RlOg0KPiANCj4+IEV2
-ZXJ5IHNvIG9mdGVuIEkgaHVudCBmb3IgZG9jdW1lbnRhdGlvbiBvbiBob3cgdG8gc2V0IHVwIHBO
-RlMgYW5kIGNhbg0KPj4gbmV2ZXIgZmluZCBhbnl0aGluZy7CoCBDYW4gc29tZW9uZSBwb2ludCBt
-ZSB0byBzb21ldGhpbmcgdGhhdCBJIGNhbiB1c2UNCj4+IHRvIHRlc3QgdGhpcyBteXNlbGY/DQo+
-IA0KPiBUaGUgZmlsZSBEb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL25mcy9wbmZzLXNjc2ktc2Vy
-dmVyLnR4dCBpbiB0aGUga2VybmVsDQo+IHNvdXJjZSB0cmVlIGlzIHByb2JhYmx5IHRoZSBiZXN0
-IHNvdXJjZSBvZiBjdXJyZW50IGRvY3VtZW50YXRpb24sIGlmIHZlcnkNCj4gY29uY2lzZToNCj4g
-DQo+ICDCoMKgwqAgcE5GUyBTQ1NJIGxheW91dCBzZXJ2ZXIgdXNlciBndWlkZQ0KPiAgwqDCoMKg
-ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+ICDCoMKgwqAgVGhpcyBk
-b2N1bWVudCBkZXNjcmliZXMgc3VwcG9ydCBmb3IgcE5GUyBTQ1NJIGxheW91dHMgaW4gdGhlIExp
-bnV4IE5GUw0KPiAgwqDCoMKgIHNlcnZlci7CoCBXaXRoIHBORlMgU0NTSSBsYXlvdXRzLCB0aGUg
-TkZTIHNlcnZlciBhY3RzIGFzIE1ldGFkYXRhIA0KPiBTZXJ2ZXINCj4gIMKgwqDCoCAoTURTKSBm
-b3IgcE5GUywgd2hpY2ggaW4gYWRkaXRpb24gdG8gaGFuZGxpbmcgYWxsIHRoZSBtZXRhZGF0YSAN
-Cj4gYWNjZXNzIHRvIHRoZQ0KPiAgwqDCoMKgIE5GUyBleHBvcnQsIGFsc28gaGFuZHMgb3V0IGxh
-eW91dHMgdG8gdGhlIGNsaWVudHMgc28gdGhhdCB0aGV5IGNhbiANCj4gZGlyZWN0bHkNCj4gIMKg
-wqDCoCBhY2Nlc3MgdGhlIHVuZGVybHlpbmcgU0NTSSBMVU5zIHRoYXQgYXJlIHNoYXJlZCB3aXRo
-IHRoZSBjbGllbnQuDQo+IA0KPiAgwqDCoMKgIFRvIHVzZSBwTkZTIFNDU0kgbGF5b3V0cyB3aXRo
-IHdpdGggdGhlIExpbnV4IE5GUyBzZXJ2ZXIsIHRoZSANCj4gZXhwb3J0ZWQgZmlsZQ0KPiAgwqDC
-oMKgIHN5c3RlbSBuZWVkcyB0byBzdXBwb3J0IHRoZSBwTkZTIFNDU0kgbGF5b3V0cyAoY3VycmVu
-dGx5IGp1c3QgWEZTKSwgDQo+IGFuZCB0aGUNCj4gIMKgwqDCoCBmaWxlIHN5c3RlbSBtdXN0IHNp
-dCBvbiBhIFNDU0kgTFVOIHRoYXQgaXMgYWNjZXNzaWJsZSB0byB0aGUgDQo+IGNsaWVudHMgaW4N
-Cj4gIMKgwqDCoCBhZGRpdGlvbiB0byB0aGUgTURTLsKgIEFzIG9mIG5vdyB0aGUgZmlsZSBzeXN0
-ZW0gbmVlZHMgdG8gc2l0IA0KPiBkaXJlY3RseSBvbiB0aGUNCj4gIMKgwqDCoCBleHBvcnRlZCBM
-VU4sIHN0cmlwaW5nIG9yIGNvbmNhdGVuYXRpb24gb2YgTFVOcyBvbiB0aGUgTURTIGFuZCANCj4g
-Y2xpZW50cyBpcw0KPiAgwqDCoMKgIG5vdCBzdXBwb3J0ZWQgeWV0Lg0KPiANCj4gIMKgwqDCoCBP
-biBhIHNlcnZlciBidWlsdCB3aXRoIENPTkZJR19ORlNEX1NDU0ksIHRoZSBwTkZTIFNDU0kgdm9s
-dW1lIA0KPiBzdXBwb3J0IGlzDQo+ICDCoMKgwqAgYXV0b21hdGljYWxseSBlbmFibGVkIGlmIHRo
-ZSBmaWxlIHN5c3RlbSBpcyBleHBvcnRlZCB1c2luZyB0aGUgDQo+ICJwbmZzIiBvcHRpb24NCj4g
-IMKgwqDCoCBhbmQgdGhlIHVuZGVybHlpbmcgU0NTSSBkZXZpY2Ugc3VwcG9ydCBwZXJzaXN0ZW50
-IHJlc2VydmF0aW9ucy7CoCBPbiANCj4gdGhlDQo+ICDCoMKgwqAgY2xpZW50IG1ha2Ugc3VyZSB0
-aGUga2VybmVsIGhhcyB0aGUgQ09ORklHX1BORlNfQkxPQ0sgb3B0aW9uIA0KPiBlbmFibGVkLCBh
-bmQNCj4gIMKgwqDCoCB0aGUgZmlsZSBzeXN0ZW0gaXMgbW91bnRlZCB1c2luZyB0aGUgTkZTdjQu
-MSBwcm90b2NvbCB2ZXJzaW9uIA0KPiAobW91bnQgLW8NCj4gIMKgwqDCoCB2ZXJzPTQuMSkuDQo+
-IA0KPiBTaG91bGQgd2UgaGF2ZSBtb3JlIHRoYW4gdGhpcz8NCg0KSSBjYW4ndCB0ZWxsIGlmIHlv
-dSdyZSBiZWluZyBmYWNldGlvdXMsIHdoaWNoIGlzIGEgYmFkIHNpZ24uICA8OikNCg0KWWVzLCBt
-b3N0IGxpbnV4IGFkbWlucyBhcmUgcHJvYmFibHkgbm90IGdvaW5nIHRvIGluc3RhbGwgdGhlIGtl
-cm5lbCANCnNvdXJjZSB0cmVlIGxvb2tpbmcgZm9yIGRvY3VtZW50YXRpb24uICBJIHBlcnNvbmFs
-bHkgZmluZCB0aGF0IHN0ZXAgYnkgDQpzdGVwIGhvd3RvJ3MgKGV2ZW4gaWYgdGhleSBkb24ndCBt
-YXRjaCBteSBleGFjdCB1c2UgY2FzZSkgYXJlIHRoZSBiZXN0IA0Kd2F5IHRvIGdldCBhbiBvdmVy
-dmlldyBvZiBob3cgdG8gdXNlIGEgdG9vbCkuICBPZiBjb3Vyc2UgaXQncyBmcmVlIG9wZW4gDQpz
-b3VyY2Ugc29mdHdhcmUsIHNvIHRoZXJlJ3Mgbm8gaW5jZW50aXZlIHRvIHdyaXRlIGRvY3VtZW50
-YXRpb24sIGJ1dCANCkkndmUgYmVlbiBkb2luZyB0aGlzIGZvciBxdWl0ZSBzb21lIHRpbWUgYW5k
-IChwb3N0IHRoZSBzZW5kbWFpbCBlcmEpLCANCnRoZXJlIGlzIGEgcHJldHR5IGNsZWFyIGNvcnJl
-bGF0aW9uIGJldHdlZW4gdGhlIHN1Y2Nlc3Mgb2YgYW4gb3BlbiANCnNvdXJjZSBwcm9qZWN0IGFu
-ZCB0aGUgcXVhbGl0eSBvZiB0aGUgZG9jdW1lbnRhdGlvbiB0aGF0IGl0IHByb3ZpZGVzLiANCkRq
-YW5nbyAoZm9yIGV4YW1wbGUpIGlzIGEgcG9pbnRsZXNzIHdlYiBmcmFtZXdvcmssIGluIG15IG9w
-aW5pb24sIGJ1dCANCmV4dHJlbWVseSBwb3B1bGFyIGJlY2F1c2UgdGhleSB0b29rIHRoZSB0aW1l
-IHRvIHdyaXRlIGNsZWFyIGRvY3VtZW50YXRpb24uDQoNCkFueXdheSwgdGhhbmtzOyB0aGlzIGF0
-IGxlYXN0IGdpdmVzIG1lIGEgc3RhcnRpbmcgcG9pbnQgZm9yIGV4cGVyaW1lbnRhdGlvbi4NCg0K
-DQoNCj4gDQo+IEJlbg0KPj4+IFRoaXMgbWVzc2FnZSBpcyBmcm9tIGFuIGV4dGVybmFsIHNlbmRl
-ci4gTGVhcm4gbW9yZSBhYm91dCB3aHkgdGhpcyA8PA0KPj4+IG1hdHRlcnMgYXQgaHR0cHM6Ly9s
-aW5rcy51dGV4YXMuZWR1L3J0eWNsZi7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIDw8DQo+IA0K
+On Wed, Apr 24, 2019 at 05:46:42PM -0400, Trond Myklebust wrote:
+> When converting kuids to AUTH_UNIX creds, etc we will want to use the
+> same user namespace as the process that created the rpc client.
+> 
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+
+Hi,
+
+Since upgrading to v5.2-rc1 I started encountering these memory leaks
+[1]. Bisection using this reproducer [2] points to this patch. Attached
+the full bisection log [3].
+
+Please let me know if more information is required.
+
+Thanks
+
+[1]
+unreferenced object 0xffffa35dfaea3000 (size 192):
+  comm "mount", pid 428, jiffies 4294703475 (age 7.578s)
+  hex dump (first 32 bytes):
+    03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000b43bed74>] prepare_exec_creds+0x6/0x40
+    [<00000000422eb980>] __do_execve_file.isra.56+0x124/0x930
+    [<00000000aa848639>] __x64_sys_execve+0x2f/0x40
+    [<000000008d5c43e1>] do_syscall_64+0x43/0xf0
+    [<0000000068b03b0e>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000001fab781f>] 0xffffffffffffffff
+
+[2]
+#!/bin/bash
+
+umount /mnt/share155
+mount -t nfs <nfs-server>:/images/share /mnt/share155
+echo scan > /sys/kernel/debug/kmemleak
+cat /sys/kernel/debug/kmemleak
+
+[3]
+git bisect start
+# good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+# bad: [a188339ca5a396acc588e5851ed7e19f66b0ebd9] Linux 5.2-rc1
+git bisect bad a188339ca5a396acc588e5851ed7e19f66b0ebd9
+# good: [2646719a48c21ba0cae82a3f57382a9573fd8400] Merge tag 'kbuild-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
+git bisect good 2646719a48c21ba0cae82a3f57382a9573fd8400
+# bad: [b970afcfcabd63cd3832e95db096439c177c3592] Merge tag 'powerpc-5.2-1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+git bisect bad b970afcfcabd63cd3832e95db096439c177c3592
+# good: [eb85d03e01c3e9f3b0ba7282b2e3515a635decb2] Merge tag 'drm-misc-next-fixes-2019-05-08' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+git bisect good eb85d03e01c3e9f3b0ba7282b2e3515a635decb2
+# good: [dce45af5c2e9e85f22578f2f8065f225f5d11764] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+git bisect good dce45af5c2e9e85f22578f2f8065f225f5d11764
+# bad: [8e4ff713ce313dcabbb60e6ede1ffc193e67631f] Merge tag 'rtc-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
+git bisect bad 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
+# bad: [45182e4e1f8ac04708ca7508c51d9103f07d81ab] Merge branch 'i2c/for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
+git bisect bad 45182e4e1f8ac04708ca7508c51d9103f07d81ab
+# bad: [5940d1cf9f42f67e9cc3f7df9eda39f5888d6e9e] SUNRPC: Rebalance a kref in auth_gss.c
+git bisect bad 5940d1cf9f42f67e9cc3f7df9eda39f5888d6e9e
+# good: [23146500b32fbee7eaa57c5002fcd64e5d9b32ca] xprtrdma: Clean up rpcrdma_create_rep() and rpcrdma_destroy_rep()
+git bisect good 23146500b32fbee7eaa57c5002fcd64e5d9b32ca
+# good: [2cfd11f16f01c0ee8f83bb07027c9d2f43565473] xprtrdma: Remove stale comment
+git bisect good 2cfd11f16f01c0ee8f83bb07027c9d2f43565473
+# bad: [b422df915cef80333d7a1732e6ed81f41db12b79] lockd: Store the lockd client credential in struct nlm_host
+git bisect bad b422df915cef80333d7a1732e6ed81f41db12b79
+# bad: [ac83228a7101e655ba5a7fa61ae10b058ada15db] SUNRPC: Use namespace of listening daemon in the client AUTH_GSS upcall
+git bisect bad ac83228a7101e655ba5a7fa61ae10b058ada15db
+# bad: [1a58e8a0e5c1f188a80eb9e505bc77d78a31a4ec] NFS: Store the credential of the mount process in the nfs_server
+git bisect bad 1a58e8a0e5c1f188a80eb9e505bc77d78a31a4ec
+# bad: [79caa5fad47c69874f9efc4ac3128cc3f6d36f6e] SUNRPC: Cache cred of process creating the rpc_client
+git bisect bad 79caa5fad47c69874f9efc4ac3128cc3f6d36f6e
+# first bad commit: [79caa5fad47c69874f9efc4ac3128cc3f6d36f6e] SUNRPC: Cache cred of process creating the rpc_client
