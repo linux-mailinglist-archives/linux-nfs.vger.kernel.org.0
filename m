@@ -2,59 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F14D4872C
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:31:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A0F04872E
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfFQPbh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jun 2019 11:31:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42901 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQPbg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:31:36 -0400
-Received: by mail-io1-f66.google.com with SMTP id u19so22043704ior.9;
-        Mon, 17 Jun 2019 08:31:36 -0700 (PDT)
+        id S1726716AbfFQPbm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jun 2019 11:31:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42942 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfFQPbm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:31:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so22044473ior.9;
+        Mon, 17 Jun 2019 08:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=RoYWbLS5V85E/aQ+Ne39iQTtjQ1k/eY7h10EvjMrTds=;
-        b=Kg3Dm9z2UxJtjJKWi/p0ufBExWWCOVBfWhCvzhR1IPwaaO/xqQoOxI9csek0UjZaxq
-         +OLC/FFUbRB0kLchd4jnKGHhLpbBzCORaGI72VFi519G0SqQZlr2EmPjKH1Q/EFy67Hl
-         vhSrAdk3qBCOLI7DoKRqVXT4KYUaOwgJt1rYqwPSrKHg/X/f1TuDQLS3+x+UGlD2ZLRO
-         vjiM+3V6fipkGnL1OBw7V/2wRpknv7JqVTaj2YzE4VP06XeTmK0Pgcp5jpKhdqO4sTg8
-         AV6/R3TVCbQJzhF5YP3pvQaFlUu5NrAEORrmKxcUtyvAE4RmBsgJlhE5rWuAKFyp54wf
-         rQ4w==
+        bh=to3mUAty1JalteouLQzDvBtpnJX/PiznlXHIlSo5tHE=;
+        b=KCUmn+a8Mb3ukugBgrOPLRGvZrwwAl6/fmh/fiu407z/wTaGr6Hexf8wCYtg+HUo5E
+         kh1y+lF59n2auxm7SKnLc6/DNVXuhTf+N6iH3yV7f6dOM65k3zDWOX3DsVhwgUbAeGf8
+         KNib9YLjF1lvLvN6xcXrK5PvCkv3vSXDv0J63TCA8XoULHXhddB3VchozWnJOzUQJM/S
+         cBjn/pcZ31MCGPWGE9yilEVZ05TMPRv2NDqofSMuUJyVSB9N+poYmNr3R2eFV+BfPFii
+         Qy0ispiCjiG+gfjskXG/y2EO5hF8GXbeba53lkf0mo7KEYUFxntkVAmOudoU+C5XtQ74
+         lslQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=RoYWbLS5V85E/aQ+Ne39iQTtjQ1k/eY7h10EvjMrTds=;
-        b=Qpit6uEmCEGH1zk1DVCNGVyMTxlhTUTTortrzIzmBjObcP5lhPFxxNkoDj3WDB9iNJ
-         jpYFeJZ8Z0B4tyoJQGKHGCKtSp6EckKag/KMERJYsNtwcwxopYJ/0IshV5XAl7A+CgMY
-         PCBq2/l7Rqf/9KxpDFP7+okpCuRwmzRvpPYIuAuwHiZnVDXb7XWJ3pFXMdS11ug87mNk
-         xnA4W0prjrZDtFVPALOPkxXE3/IMmusr0qpEZJa1AOr3q10eAEiMPjRlI7E+0WpqoKl2
-         cHxBcNWP2+Hzfig0q35nqBiJOlfsMR5y5iXHaYfIR2rK5n8LPBBUE+96zsZ6WD2GYfgP
-         qT7A==
-X-Gm-Message-State: APjAAAXZXFEuqpmFYIIB4LLfTktwNrw/cwrIJmr52jb55vn55GRE5nXD
-        4dXnq67nWp0jEvUhFQ05V3s=
-X-Google-Smtp-Source: APXvYqxKJTYQe4VMePbMFkWX7UEgvQgf59CD4DAeZlTTz0i1JtMVct8f73DNXn+FSuchEu93Z5jtpQ==
-X-Received: by 2002:a02:b016:: with SMTP id p22mr36231186jah.121.1560785496139;
-        Mon, 17 Jun 2019 08:31:36 -0700 (PDT)
+        bh=to3mUAty1JalteouLQzDvBtpnJX/PiznlXHIlSo5tHE=;
+        b=KVm+j4x9WWzE94f5c9jZQ6kRyg5gKX0QD4v2OnKPWmXAc25JAnDwiDhjASsdgA0YGB
+         kcPI2gCjGejNt/tksXN0CcYRNDPyvjM906gjPB11KxuCKr4pxn344zNjB7VbIitiofEL
+         7YPUqI0HXGW01QXYkhVznRdrrAf0WdqFiozA4/21Wm3BljC2P5zR++ulgwbLhebcFgxS
+         O/XbN+J+9Fa7jzZYbID7ZhEHDTuTPmNJhrtCQDZ6CNlofNO4QsHi9j4fBcEdAIUxk4mR
+         9s4rf83E8ZKQw8M1ligttyn0KmOQqb/fRzP1BFzWpQzvG+uwT1oicUtbSZLzpSFcS6p3
+         TJOg==
+X-Gm-Message-State: APjAAAXWOFcBYFQLrdUiI2rsRurenPJIURSq80tGQ7nW7+ATh2unSqrh
+        saqPSCxzQ42noWe6cauF+iiPHHxt
+X-Google-Smtp-Source: APXvYqxbm+HuiXCI6+T76DNK3OHc/G2rHS6jP7d4BJZMKS5q1y4CLcp+20xco1WhgBWP+H7QdNPt2w==
+X-Received: by 2002:a6b:cd86:: with SMTP id d128mr55753916iog.234.1560785501390;
+        Mon, 17 Jun 2019 08:31:41 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x13sm9364594ioj.18.2019.06.17.08.31.35
+        by smtp.gmail.com with ESMTPSA id j23sm11524057ioo.6.2019.06.17.08.31.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:31:35 -0700 (PDT)
+        Mon, 17 Jun 2019 08:31:41 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFVYFD031188;
-        Mon, 17 Jun 2019 15:31:34 GMT
-Subject: [PATCH v3 01/19] xprtrdma: Fix a BUG when tracing is enabled with
- NFSv4.1 on RDMA
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFVeKi031191;
+        Mon, 17 Jun 2019 15:31:40 GMT
+Subject: [PATCH v3 02/19] xprtrdma: Fix use-after-free in rpcrdma_post_recvs
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 17 Jun 2019 11:31:34 -0400
-Message-ID: <20190617153134.12090.89845.stgit@manet.1015granger.net>
+Date:   Mon, 17 Jun 2019 11:31:40 -0400
+Message-ID: <20190617153140.12090.57798.stgit@manet.1015granger.net>
 In-Reply-To: <20190617152657.12090.11389.stgit@manet.1015granger.net>
 References: <20190617152657.12090.11389.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -66,26 +65,32 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A backchannel reply does not set task->tk_client.
+Dereference wr->next /before/ the memory backing wr has been
+released. This issue was found by code inspection. It is not
+expected to be a significant problem because it is in an error
+path that is almost never executed.
 
-Fixes: 0c77668ddb4e ("SUNRPC: Introduce trace points in ... ")
+Fixes: 7c8d9e7c8863 ("xprtrdma: Move Receive posting to ... ")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h |    3 ++-
+ net/sunrpc/xprtrdma/verbs.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index df9851cb..f0678e3 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -559,7 +559,8 @@
- 		const struct rpc_rqst *rqst = &req->rl_slot;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 84bb379..e71315e 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1553,10 +1553,11 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
+ 			  (const struct ib_recv_wr **)&bad_wr);
+ 	if (rc) {
+-		for (wr = bad_wr; wr; wr = wr->next) {
++		for (wr = bad_wr; wr;) {
+ 			struct rpcrdma_rep *rep;
  
- 		__entry->task_id = rqst->rq_task->tk_pid;
--		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
-+		__entry->client_id = rqst->rq_task->tk_client ?
-+				     rqst->rq_task->tk_client->cl_clid : -1;
- 		__entry->req = req;
- 		__entry->num_sge = req->rl_sendctx->sc_wr.num_sge;
- 		__entry->signaled = req->rl_sendctx->sc_wr.send_flags &
+ 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
++			wr = wr->next;
+ 			rpcrdma_recv_buffer_put(rep);
+ 			--count;
+ 		}
 
