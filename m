@@ -2,57 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8C04875C
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F14D4872C
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfFQPef (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jun 2019 11:34:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37141 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFQPef (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:34:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so22188683iok.4;
-        Mon, 17 Jun 2019 08:34:34 -0700 (PDT)
+        id S1726336AbfFQPbh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jun 2019 11:31:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42901 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfFQPbg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:31:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id u19so22043704ior.9;
+        Mon, 17 Jun 2019 08:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=/0BNvwtWNjnV2oFse4K1P6m2nPh45v3q/rowDs3iqGU=;
-        b=ik40szpy1zWwecT719gvcy4c0EOZ692olFS4kjY99Hycqpk6lR+exbXuv4j9JNNMth
-         PxYG0oPhZrqe/btT1RhT3vXaYPIaUD//xTS5fB4yoS/rpKcArNTWqsnWeFPXyI38RlfO
-         VlD/c0+07KAG7mcKPh2PnP7z3IiBwqVpdUJdqt/kHaq1lMUd0ywmntfRqIin4v7d8321
-         U9ZuCmVSXDI3+3kkDha6ZLJLcvvakiyHVTTL5JQut477ZWQNG/jwLUUV1St6QTt+y+ne
-         0wpnAtkc0zuL2SR89iRyO77Q//IeT2MTov+z9kqgFbeiEfsHdzJj5fGOT67WTDtwSae8
-         9bvg==
+        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=RoYWbLS5V85E/aQ+Ne39iQTtjQ1k/eY7h10EvjMrTds=;
+        b=Kg3Dm9z2UxJtjJKWi/p0ufBExWWCOVBfWhCvzhR1IPwaaO/xqQoOxI9csek0UjZaxq
+         +OLC/FFUbRB0kLchd4jnKGHhLpbBzCORaGI72VFi519G0SqQZlr2EmPjKH1Q/EFy67Hl
+         vhSrAdk3qBCOLI7DoKRqVXT4KYUaOwgJt1rYqwPSrKHg/X/f1TuDQLS3+x+UGlD2ZLRO
+         vjiM+3V6fipkGnL1OBw7V/2wRpknv7JqVTaj2YzE4VP06XeTmK0Pgcp5jpKhdqO4sTg8
+         AV6/R3TVCbQJzhF5YP3pvQaFlUu5NrAEORrmKxcUtyvAE4RmBsgJlhE5rWuAKFyp54wf
+         rQ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=/0BNvwtWNjnV2oFse4K1P6m2nPh45v3q/rowDs3iqGU=;
-        b=mZWO12JUWg0acd9vB+5lFqYn3I/lFtqmBuGWzUea1aXtkccYkQI7SWJiQE8hi6ZNf6
-         YsulwDuK/3/V1wc3SVuBWnS/KNztHAv60ThVOFxkgjVS4DTr2lGCAjaGK4G6PnsSSp37
-         chMnGC4+V/ZAK0kj9ULuosnU1/A+cmzNLQ54cUbIc0s3g5/goHHIq2N4uPT1MaYvetWW
-         WosM9YwPtbg4tb82HaGM8s2a5yEfOvSYIFvAYBjike9jENn0UTczUaqd1kYlzCVUbqTi
-         fuwJj1s/l5qmGHLraKN6OLcZnf5AJiD5ZeVHJqbGPCFOOsuwQi++0yW+IvAMsB9zCJqP
-         pMbA==
-X-Gm-Message-State: APjAAAWGqH6y3PNHDcZ0IFbO5PRCXGEoTLxmat8I/FVL25fLzo7KW9xp
-        cgvTePpGe+TFcgIN/lzbUYYTb7T3
-X-Google-Smtp-Source: APXvYqx4Y+naNSOTLf1NtCl6Z/qFu8eSZdFMhPu1dj1OmgixzZkOFtMXQHo1DVMOo73+gj3CO0Q1gQ==
-X-Received: by 2002:a02:84e6:: with SMTP id f93mr51208347jai.73.1560785491669;
-        Mon, 17 Jun 2019 08:31:31 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=RoYWbLS5V85E/aQ+Ne39iQTtjQ1k/eY7h10EvjMrTds=;
+        b=Qpit6uEmCEGH1zk1DVCNGVyMTxlhTUTTortrzIzmBjObcP5lhPFxxNkoDj3WDB9iNJ
+         jpYFeJZ8Z0B4tyoJQGKHGCKtSp6EckKag/KMERJYsNtwcwxopYJ/0IshV5XAl7A+CgMY
+         PCBq2/l7Rqf/9KxpDFP7+okpCuRwmzRvpPYIuAuwHiZnVDXb7XWJ3pFXMdS11ug87mNk
+         xnA4W0prjrZDtFVPALOPkxXE3/IMmusr0qpEZJa1AOr3q10eAEiMPjRlI7E+0WpqoKl2
+         cHxBcNWP2+Hzfig0q35nqBiJOlfsMR5y5iXHaYfIR2rK5n8LPBBUE+96zsZ6WD2GYfgP
+         qT7A==
+X-Gm-Message-State: APjAAAXZXFEuqpmFYIIB4LLfTktwNrw/cwrIJmr52jb55vn55GRE5nXD
+        4dXnq67nWp0jEvUhFQ05V3s=
+X-Google-Smtp-Source: APXvYqxKJTYQe4VMePbMFkWX7UEgvQgf59CD4DAeZlTTz0i1JtMVct8f73DNXn+FSuchEu93Z5jtpQ==
+X-Received: by 2002:a02:b016:: with SMTP id p22mr36231186jah.121.1560785496139;
+        Mon, 17 Jun 2019 08:31:36 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 20sm12332984iog.62.2019.06.17.08.31.30
+        by smtp.gmail.com with ESMTPSA id x13sm9364594ioj.18.2019.06.17.08.31.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:31:30 -0700 (PDT)
+        Mon, 17 Jun 2019 08:31:35 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFVTrp031184;
-        Mon, 17 Jun 2019 15:31:29 GMT
-Subject: [PATCH v3 00/19] for-5.3 patches
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFVYFD031188;
+        Mon, 17 Jun 2019 15:31:34 GMT
+Subject: [PATCH v3 01/19] xprtrdma: Fix a BUG when tracing is enabled with
+ NFSv4.1 on RDMA
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 17 Jun 2019 11:31:29 -0400
-Message-ID: <20190617152657.12090.11389.stgit@manet.1015granger.net>
+Date:   Mon, 17 Jun 2019 11:31:34 -0400
+Message-ID: <20190617153134.12090.89845.stgit@manet.1015granger.net>
+In-Reply-To: <20190617152657.12090.11389.stgit@manet.1015granger.net>
+References: <20190617152657.12090.11389.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -62,85 +66,26 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Anna-
+A backchannel reply does not set task->tk_client.
 
-I think these are ready for merge.
-
-This is a series of fixes and architectural changes that should
-improve robustness and result in better scalability of NFS/RDMA.
-
-The fundamental observation is that the RPC work queues are BOUND,
-thus rescheduling work in the Receive completion handler to one of
-these work queues just forces it to run later on the same CPU. So
-try to do more work right in the Receive completion handler to
-reduce context switch overhead.
-
-A secondary concern is that the average amount of wall-clock time
-it takes to handle a single Receive completion caps the IOPS rate
-(both per-xprt and per-NIC). In this patch series I've taken a few
-steps to reduce that latency, and I'm looking into a few others.
-
-This series can be fetched from:
-
-git://git.linux-nfs.org/projects/cel/cel-2.6.git
-
-in topic branch "nfs-for-5.3".
-
-
-Changes since v2:
-* Rebased on v5.2-rc5
-* Changed trace points to display errors as negative values
-* Used BIT() when defining trace point flag values
-* Updated NFS lookup flags as well
-
-Changes since RFC:
-* Rebased on v5.2-rc4
-* Clarified some patch descriptions and comments
-* Addressed Anna's compiler warning in frwr_unmap_[a]sync
-* Cross-ported recent xs_connect changes to xprt_rdma_connect
-* Fixed several trace-event bugs
-
+Fixes: 0c77668ddb4e ("SUNRPC: Introduce trace points in ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ include/trace/events/rpcrdma.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Chuck Lever (19):
-      xprtrdma: Fix a BUG when tracing is enabled with NFSv4.1 on RDMA
-      xprtrdma: Fix use-after-free in rpcrdma_post_recvs
-      xprtrdma: Replace use of xdr_stream_pos in rpcrdma_marshal_req
-      xprtrdma: Fix occasional transport deadlock
-      xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag
-      xprtrdma: Remove fr_state
-      xprtrdma: Add mechanism to place MRs back on the free list
-      xprtrdma: Reduce context switching due to Local Invalidation
-      xprtrdma: Wake RPCs directly in rpcrdma_wc_send path
-      xprtrdma: Simplify rpcrdma_rep_create
-      xprtrdma: Streamline rpcrdma_post_recvs
-      xprtrdma: Refactor chunk encoding
-      xprtrdma: Remove rpcrdma_req::rl_buffer
-      xprtrdma: Modernize ops->connect
-      NFS4: Add a trace event to record invalid CB sequence IDs
-      NFS: Fix show_nfs_errors macros again
-      NFS: Display symbolic status code names in trace log
-      NFS: Update symbolic flags displayed by trace events
-      NFS: Record task, client ID, and XID in xdr_status trace points
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index df9851cb..f0678e3 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -559,7 +559,8 @@
+ 		const struct rpc_rqst *rqst = &req->rl_slot;
+ 
+ 		__entry->task_id = rqst->rq_task->tk_pid;
+-		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
++		__entry->client_id = rqst->rq_task->tk_client ?
++				     rqst->rq_task->tk_client->cl_clid : -1;
+ 		__entry->req = req;
+ 		__entry->num_sge = req->rl_sendctx->sc_wr.num_sge;
+ 		__entry->signaled = req->rl_sendctx->sc_wr.send_flags &
 
-
- fs/nfs/callback_proc.c          |   28 ++-
- fs/nfs/nfs2xdr.c                |    2 
- fs/nfs/nfs3xdr.c                |    2 
- fs/nfs/nfs4trace.h              |  207 +++++++++++++++----------
- fs/nfs/nfs4xdr.c                |    2 
- fs/nfs/nfstrace.h               |  233 +++++++++++++++++++++-------
- include/linux/sunrpc/xprt.h     |    3 
- include/trace/events/rpcrdma.h  |   90 ++++++++---
- net/sunrpc/sched.c              |    1 
- net/sunrpc/xprt.c               |   32 ++++
- net/sunrpc/xprtrdma/frwr_ops.c  |  327 ++++++++++++++++++++++++++-------------
- net/sunrpc/xprtrdma/rpc_rdma.c  |  148 ++++++++----------
- net/sunrpc/xprtrdma/transport.c |   83 ++++++++--
- net/sunrpc/xprtrdma/verbs.c     |  115 ++++++--------
- net/sunrpc/xprtrdma/xprt_rdma.h |   44 +----
- net/sunrpc/xprtsock.c           |   23 ---
- 16 files changed, 837 insertions(+), 503 deletions(-)
-
---
-Chuck Lever
