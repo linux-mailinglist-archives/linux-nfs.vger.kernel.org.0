@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5099848743
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:32:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B97F748745
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2019 17:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfFQPcf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jun 2019 11:32:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46286 "EHLO
+        id S1728342AbfFQPcl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jun 2019 11:32:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33110 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQPcf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:32:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so21991663iol.13;
-        Mon, 17 Jun 2019 08:32:35 -0700 (PDT)
+        with ESMTP id S1725863AbfFQPck (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jun 2019 11:32:40 -0400
+Received: by mail-io1-f68.google.com with SMTP id u13so22222720iop.0;
+        Mon, 17 Jun 2019 08:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=Y5KfP+82Q2G+FSMMy0+NWol6P6fdC5jPKgFtk+jfHFo=;
-        b=NIEBtpWFIDirMdWnLAvvsGAcr1V78INqCjDMMrlFcR8YTUalW+NkcbY8AiVPbjrivn
-         Pc56D0JTZ+vbAqBEKCejcB+uS93U0262pfm01SJMOwIymJYbNsxwyz5uDrWDldIVC/Yw
-         IT/yooVBmd68A3BEU28kOVUaS6tTep8qzQnfEQAT8SXGTaq+2yM4EJhI9KWki+/S+52Y
-         sDwAzphxQHGRmvC5xsr8ucnYgKEkmD1sQ0bRy+d/f1IkJtTeHanScGx7a7tmp7fBlKLm
-         HVmyQKuubq39w3TxhHjIx3JZTD+u8uxKiOfhZKbA+spQukRdIb+8hPGRmMDI07Np++Gp
-         SXvw==
+        bh=YseAtOodHX0zGVoGxVns5kTOq1agdmY5wGLUtAbZOJY=;
+        b=IzYHxRsSARcipWc2l29uuedDxKV843x9REU/X2OlrqVKTM1YBGbZOMRSSsIvxzNlNF
+         XWE10EgdYIDfYQ9DQJJkxgyx5nvUQ+J+MeLZKpCbxRk8B9rSANkhaAonzfHEZUtJbBij
+         +lE92gGGhgp728X3GtghnwgykybE4Vu52sDOHOyoNiHwtQGklHs4D17Vuoz7NSgkHhDV
+         61Kr0cHj7T6HkLKlDrYXLgJapwPuBPYaqmpX4/2BBVQyluhS4x9FrC7KzRPgOlYLhn/b
+         zrsR+t3WQUoAbW0qAuEQju5tQ/6nkzOxXXTlircvUWoXSnaCzcO6amXSzaJkK3NYA6Wy
+         trlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=Y5KfP+82Q2G+FSMMy0+NWol6P6fdC5jPKgFtk+jfHFo=;
-        b=WIBeldjIUg0LbKohSc9dIW+OwLqwyhJ7Iy90/993SC/32dVCLmJgxLq0taMXLSlu3q
-         KmZvxRKGs7Fq2VEpia6G6G5aE8RycuiPZnFi0kRd3OnPum2x1tMcDiJQOMkEZXfiTF/e
-         0TR5g2sGGl6PXkGB2bkE0EXdJ0+Wk07/xzZdccTu/SjorDzrgHolk2Sp7Ux2BOlG1Kl4
-         YHQ5ampdtgWVuQqo6/eBdI3nDryNYMZ1l8amtCiK+9RENOS11K31c4ii0u8rPnahAwQp
-         FUjG3rIyNWEnH1574B55NfXZyFRmPOTyKlvsFSlE1jTZy3M78RsOOrnxzlhrFmBA9jK+
-         HGLA==
-X-Gm-Message-State: APjAAAVCFGchTcT5KmptHahs2G35FIFb0P9I2I5czPO/COKg7/RwNOgx
-        mYjgFJIe7aB8PGoRIQvEWgk=
-X-Google-Smtp-Source: APXvYqxUUb6SzdG6IMEATcJkwUV1qB9p90OMzBx+RLLDyCzW4TLc8rMrdo01NJAs+TSoioa/iUHBpQ==
-X-Received: by 2002:a6b:8b8b:: with SMTP id n133mr30791264iod.183.1560785554854;
-        Mon, 17 Jun 2019 08:32:34 -0700 (PDT)
+        bh=YseAtOodHX0zGVoGxVns5kTOq1agdmY5wGLUtAbZOJY=;
+        b=pgZchAb4UfGUIsBufgmucG/6JGlWEUdJztHtKMPC2O/2g0cOUD6oPVTqJxGJ7Qjw6X
+         0w9r+hq89w//yV4VW0ttJXBPdy1IfxO2QFvIboaM/nGMgZXzupWpxnZJLg05cyXPuOoJ
+         GQjYp+gbmWXX0hMzVEUZThMoGRvU2TV6C7hwc0hoi0WAiVWbyODrW4yhj0pqum9/HByc
+         OGhT0i6FbrRrWaB2Iwm21CKvriMTdFIn5UdFNv5GjkMCwUBu5Q8q3hptGt9jMQl6EgrE
+         88ltHi9uKrRND/F9n22pka47UqPTarBeR+jIFtx5zHsw2oJPdh6cQWKhfMNtWouL0SgL
+         MKTQ==
+X-Gm-Message-State: APjAAAWHWv3m+u0AQ+kxbyfpGtQWGqz9/oQcWUmYoEBaWhcQpgq8m0Fy
+        sAZQz3t1ZRh+ntQnGKcy1No=
+X-Google-Smtp-Source: APXvYqzzeX+CX16rIei2IaTzzNHAOnNC1GDdOqAidjp5ChQOnr0tbQIgPhQUeDPB7MfYE5UsU/rBQA==
+X-Received: by 2002:a6b:3883:: with SMTP id f125mr69765339ioa.109.1560785560032;
+        Mon, 17 Jun 2019 08:32:40 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id k8sm13127774iob.78.2019.06.17.08.32.34
+        by smtp.gmail.com with ESMTPSA id t4sm9362615ioj.26.2019.06.17.08.32.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:32:34 -0700 (PDT)
+        Mon, 17 Jun 2019 08:32:39 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFWXZ8031221;
-        Mon, 17 Jun 2019 15:32:33 GMT
-Subject: [PATCH v3 12/19] xprtrdma: Refactor chunk encoding
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5HFWdE6031224;
+        Mon, 17 Jun 2019 15:32:39 GMT
+Subject: [PATCH v3 13/19] xprtrdma: Remove rpcrdma_req::rl_buffer
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 17 Jun 2019 11:32:33 -0400
-Message-ID: <20190617153233.12090.98775.stgit@manet.1015granger.net>
+Date:   Mon, 17 Jun 2019 11:32:39 -0400
+Message-ID: <20190617153239.12090.64783.stgit@manet.1015granger.net>
 In-Reply-To: <20190617152657.12090.11389.stgit@manet.1015granger.net>
 References: <20190617152657.12090.11389.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -67,102 +67,83 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Clean up.
 
-Move the "not present" case into the individual chunk encoders. This
-improves code organization and readability.
-
-The reason for the original organization was to optimize for the
-case where there there are no chunks. The optimization turned out to
-be inconsequential, so let's err on the side of code readability.
+There is only one remaining function, rpcrdma_buffer_put(), that
+uses this field. Its caller can supply a pointer to the correct
+rpcrdma_buffer, enabling the removal of an 8-byte pointer field
+from a frequently-allocated shared data structure.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c |   36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
+ net/sunrpc/xprtrdma/transport.c |    5 ++++-
+ net/sunrpc/xprtrdma/verbs.c     |    6 ++----
+ net/sunrpc/xprtrdma/xprt_rdma.h |    4 ++--
+ 3 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index caf0b19..d3515d3 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -366,6 +366,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 	unsigned int pos;
- 	int nsegs;
- 
-+	if (rtype == rpcrdma_noch)
-+		goto done;
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 9575f1d..3688e078 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -550,8 +550,11 @@ void xprt_rdma_close(struct rpc_xprt *xprt)
+ static void
+ xprt_rdma_free_slot(struct rpc_xprt *xprt, struct rpc_rqst *rqst)
+ {
++	struct rpcrdma_xprt *r_xprt =
++		container_of(xprt, struct rpcrdma_xprt, rx_xprt);
 +
- 	pos = rqst->rq_snd_buf.head[0].iov_len;
- 	if (rtype == rpcrdma_areadch)
- 		pos = 0;
-@@ -389,7 +392,8 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 		nsegs -= mr->mr_nents;
- 	} while (nsegs);
- 
--	return 0;
-+done:
-+	return encode_item_not_present(xdr);
+ 	memset(rqst, 0, sizeof(*rqst));
+-	rpcrdma_buffer_put(rpcr_to_rdmar(rqst));
++	rpcrdma_buffer_put(&r_xprt->rx_buf, rpcr_to_rdmar(rqst));
+ 	rpc_wake_up_next(&xprt->backlog);
  }
  
- /* Register and XDR encode the Write list. Supports encoding a list
-@@ -417,6 +421,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 	int nsegs, nchunks;
- 	__be32 *segcount;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 3270c8a..805b1f35 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1019,7 +1019,6 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+ 	if (!req->rl_recvbuf)
+ 		goto out4;
  
-+	if (wtype != rpcrdma_writech)
-+		goto done;
-+
- 	seg = req->rl_segments;
- 	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf,
- 				     rqst->rq_rcv_buf.head[0].iov_len,
-@@ -451,7 +458,8 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 	/* Update count of segments in this Write chunk */
- 	*segcount = cpu_to_be32(nchunks);
+-	req->rl_buffer = buffer;
+ 	INIT_LIST_HEAD(&req->rl_registered);
+ 	spin_lock(&buffer->rb_lock);
+ 	list_add(&req->rl_all, &buffer->rb_allreqs);
+@@ -1299,13 +1298,12 @@ struct rpcrdma_req *
  
--	return 0;
-+done:
-+	return encode_item_not_present(xdr);
+ /**
+  * rpcrdma_buffer_put - Put request/reply buffers back into pool
++ * @buffers: buffer pool
+  * @req: object to return
+  *
+  */
+-void
+-rpcrdma_buffer_put(struct rpcrdma_req *req)
++void rpcrdma_buffer_put(struct rpcrdma_buffer *buffers, struct rpcrdma_req *req)
+ {
+-	struct rpcrdma_buffer *buffers = req->rl_buffer;
+ 	struct rpcrdma_rep *rep = req->rl_reply;
+ 
+ 	req->rl_reply = NULL;
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 5475f0d..117e328 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -320,7 +320,6 @@ enum {
+ struct rpcrdma_req {
+ 	struct list_head	rl_list;
+ 	struct rpc_rqst		rl_slot;
+-	struct rpcrdma_buffer	*rl_buffer;
+ 	struct rpcrdma_rep	*rl_reply;
+ 	struct xdr_stream	rl_stream;
+ 	struct xdr_buf		rl_hdrbuf;
+@@ -499,7 +498,8 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
  }
  
- /* Register and XDR encode the Reply chunk. Supports encoding an array
-@@ -476,6 +484,9 @@ static bool rpcrdma_results_inline(struct rpcrdma_xprt *r_xprt,
- 	int nsegs, nchunks;
- 	__be32 *segcount;
+ struct rpcrdma_req *rpcrdma_buffer_get(struct rpcrdma_buffer *);
+-void rpcrdma_buffer_put(struct rpcrdma_req *);
++void rpcrdma_buffer_put(struct rpcrdma_buffer *buffers,
++			struct rpcrdma_req *req);
+ void rpcrdma_recv_buffer_put(struct rpcrdma_rep *);
  
-+	if (wtype != rpcrdma_replych)
-+		return encode_item_not_present(xdr);
-+
- 	seg = req->rl_segments;
- 	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf, 0, wtype, seg);
- 	if (nsegs < 0)
-@@ -859,28 +870,13 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
- 	 * send a Call message with a Position Zero Read chunk and a
- 	 * regular Read chunk at the same time.
- 	 */
--	if (rtype != rpcrdma_noch) {
--		ret = rpcrdma_encode_read_list(r_xprt, req, rqst, rtype);
--		if (ret)
--			goto out_err;
--	}
--	ret = encode_item_not_present(xdr);
-+	ret = rpcrdma_encode_read_list(r_xprt, req, rqst, rtype);
- 	if (ret)
- 		goto out_err;
--
--	if (wtype == rpcrdma_writech) {
--		ret = rpcrdma_encode_write_list(r_xprt, req, rqst, wtype);
--		if (ret)
--			goto out_err;
--	}
--	ret = encode_item_not_present(xdr);
-+	ret = rpcrdma_encode_write_list(r_xprt, req, rqst, wtype);
- 	if (ret)
- 		goto out_err;
--
--	if (wtype != rpcrdma_replych)
--		ret = encode_item_not_present(xdr);
--	else
--		ret = rpcrdma_encode_reply_chunk(r_xprt, req, rqst, wtype);
-+	ret = rpcrdma_encode_reply_chunk(r_xprt, req, rqst, wtype);
- 	if (ret)
- 		goto out_err;
- 
+ bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size,
 
