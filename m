@@ -2,106 +2,329 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2A3B4A55B
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2019 17:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C69D14A8F2
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2019 19:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfFRP3H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jun 2019 11:29:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33138 "EHLO mx1.redhat.com"
+        id S1730164AbfFRR6s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jun 2019 13:58:48 -0400
+Received: from fieldses.org ([173.255.197.46]:58204 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfFRP3H (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:29:07 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 507AC804F2;
-        Tue, 18 Jun 2019 15:29:07 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E372C17ADC;
-        Tue, 18 Jun 2019 15:29:06 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Alan Post" <adp@prgmr.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: User process NFS write hang in wait_on_commit with kworker
-Date:   Tue, 18 Jun 2019 11:29:16 -0400
-Message-ID: <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
-In-Reply-To: <20190618000613.GR4158@turtle.email>
-References: <20190618000613.GR4158@turtle.email>
+        id S1729349AbfFRR6s (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:58:48 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id B26E22010; Tue, 18 Jun 2019 13:58:46 -0400 (EDT)
+Date:   Tue, 18 Jun 2019 13:58:46 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Armin Zentai <armin@zentai.name>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: Bug? nfs export on fuse, one more READDIR call after a finished
+ directory read
+Message-ID: <20190618175846.GA7304@fieldses.org>
+References: <70E96C7E-8DBE-4196-AE06-FA44B0EC992F@zentai.name>
+ <20190604151251.GB19422@fieldses.org>
+ <75222F09-6BA2-40C3-B8AF-CEE707E71A90@zentai.name>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 18 Jun 2019 15:29:07 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75222F09-6BA2-40C3-B8AF-CEE707E71A90@zentai.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Alan,
+On Tue, Jun 18, 2019 at 02:32:15AM +0200, Armin Zentai wrote:
+> After, I've done some tests, I confirmed, you were right.
+> 
+> I was able to reproduce the issue with a very simple example code
+> - create a few hundred folders within a folder
+> - using the example code with a smaller BUF_SIZE, like 256, http://man7.org/linux/man-pages/man2/getdents.2.html
+> - also deleting one folder in every iteration of the outer for loop
+> 
+> This clearly reproduces the issue and the fuse lib's EINVAL is a false-positive error and it should return a simple empty array with fuse.OK return code.
 
-I think that your transport or NFS server is dropping the response to an
-RPC.  The NFS client will not retransmit on an established connection.
+OK, thanks for following up.
 
-What server are you using?  Any middle boxes on the network that could be
-transparently dropping transmissions (less likely, but I have seen them)?
+--b.
 
-Ben
-
-On 17 Jun 2019, at 20:06, Alan Post wrote:
-
-> On May 20th I reported "User process NFS write hang followed
-> by automount hang requiring reboot" to this list.  There I
-> had a process that would hang on NFS write, followed by sync
-> hanging, eventually leading to my need to reboot the host.
->
-> On June 4th, after upgrading to Linux 4.19.44, I reported
-> the issue resolved.  Since that time, as I've deployed out
-> Linux 4.19.44, the issue has come back--sort of.
->
-> I have begun once again getting sync hangs following a
-> hung NFS write.  The hung write has a different stack trace
-> than any I previously reported:
->
->     [<0>] wait_on_commit+0x60/0x90 [nfs]
->     [<0>] __nfs_commit_inode+0x146/0x1a0 [nfs]
->     [<0>] nfs_file_fsync+0xa7/0x1d0 [nfs]
->     [<0>] filp_close+0x25/0x70
->     [<0>] put_files_struct+0x66/0xb0
->     [<0>] do_exit+0x2af/0xbb0
->     [<0>] do_group_exit+0x35/0xa0
->     [<0>] __x64_sys_exit_group+0xf/0x10
->     [<0>] do_syscall_64+0x45/0x100
->     [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->     [<0>] 0xffffffffffffffff
->
-> And there is attendant kworker thread:
->
->     [<0>] wait_on_commit+0x60/0x90 [nfs]
->     [<0>] __nfs_commit_inode+0x146/0x1a0 [nfs]
->     [<0>] nfs_write_inode+0x5c/0x90 [nfs]
->     [<0>] nfs4_write_inode+0xd/0x30 [nfsv4]
->     [<0>] __writeback_single_inode+0x27a/0x320
->     [<0>] writeback_sb_inodes+0x19a/0x460
->     [<0>] wb_writeback+0x102/0x2f0
->     [<0>] wb_workfn+0xa3/0x400
->     [<0>] process_one_work+0x1e3/0x3d0
->     [<0>] worker_thread+0x28/0x3c0
->     [<0>] kthread+0x10e/0x130
->     [<0>] ret_from_fork+0x35/0x40
->     [<0>] 0xffffffffffffffff
->
-> Oddly enough, I can clear the problem without rebooting the host.
-> I arrange to block all traffic between the NFS server and NFS
-> client using iptables, of sufficient time for any open TCP
-> connections to timeout.  After which the connection apparently
-> reestablishes and unblocks the hung process.
->
-> I can't explain what's keeping the connection alive but apparently
-> stalled--requiring my manual intervention.  Do any of you have
-> ideas or speculation?  I'm happy to poke around in a packet capture
-> if the information provided isn't sufficient.
->
-> -A
-> -- 
-> Alan Post | Xen VPS hosting for the technically adept
-> PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
-> email: adp@prgmr.com
+> 
+> 
+> Thanks,
+> Armin
+> 
+> > On 2019. Jun 4., at 17:12, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > On Tue, Jun 04, 2019 at 12:51:11PM +0200, Armin Zentai wrote:
+> >> Hi everyone,
+> >> 
+> >> 
+> >> I'm developing a fuse software and it should be able to run _under_ an nfsd export.
+> >> Currently I've stripped everything out from the fuse software, and only using it as a mirrorfs. It's written in go and using this lib: https://github.com/hanwen/go-fuse.
+> >> 
+> >> My issue a bit complex, but I'll try to explain it as detailed as I can. I like to get some guidance or hint how to proceed with the debugging or a solution of course. 
+> >> 
+> >> 
+> >> NFS and kernel settings:
+> >> client+server: Debian 9.0 / kernel-5.2.0 (I compiled it with debug symbols)
+> >> export options: (rw,sync,no_subtree_check,all_squash,anonuid=505,anongid=20,fsid=4193281846142082570)
+> >> client mount options: type nfs4 (rw,noatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=6,sec=sys,clientaddr=10.135.105.205,local_lock=none,addr=10.135.101.174,_netdev)
+> >> 
+> >> NFSv3 is explicitly disabled on the server:
+> >> cat /proc/fs/nfsd/versions
+> >> -2 -3 +4 +4.1 +4.2
+> >> 
+> >> 
+> >> 
+> >> The error itself is non-deterministic, but reproducible within ~10 minutes.
+> >> 
+> >> Sometimes the client is calling one more READDIR after an empty READDIR reply. The extra READDIR is called with an increased cookie value.
+> > 
+> > I don't know why the client's doing that, it does sound a little weird.
+> > I guess the higher cookie value is something cached from a previous
+> > READDIR of the directory.  (I think you said it was removing files so
+> > it's not surprising that a cached cookie might point to a position in
+> > the directory that's no longer there.)  But I don't know why it would be
+> > issuing another READDIR after the client already set the EOF bit on a
+> > previous one.
+> > 
+> > Off the top of my head that client behavior sounds weird and suboptimal,
+> > but also harmless.
+> > 
+> >> This behaviour is causing an array out-of-bound read in the fuse lib.
+> >> 
+> >> This results in an EINVAL error in the go fuse library.
+> >> https://github.com/hanwen/go-fuse/blob/master/fuse/nodefs/dir.go#L42
+> >> https://github.com/hanwen/go-fuse/blob/master/fuse/nodefs/dir.go#L72
+> >> (also there is an open issue by me, https://github.com/hanwen/go-fuse/issues/297)
+> > 
+> > I think that's incorrect.
+> > 
+> > Assuming the client is using a cookie value that was previously handed
+> > out by the server at some point in the past, the server still needs to
+> > honor that cookie.  So it should probably just be returning a succesful
+> > READDIR with zero entries.
+> > 
+> > --b.
+> > 
+> > 
+> >> 
+> >> If this behaviour is totally accepted, then this EINVAL return value can be replaced with fuse.OK in the lib, but I'm a bit curious what is causing this.
+> >> 
+> >> 
+> >> 
+> >> The easiest way to reproduce it is using an npm install (without an existing node_modules folder) and in the end it may produce the error.
+> >> I haven't debugged the npm install process or reproduced it with a simpler code, but it's happening when removing a directory structure with files.
+> >> The npm install at the end removes the fsevents folder with its files. It is downloaded, but not supported on linux (only on OSX) and it removes the module.
+> >> So probably it's connected with some npm behaviour which is trying to remove multiple files with multiple async file delete calls.
+> >> rm -rf itself can't reproduce the issue.
+> >> 
+> >> If I'm running npm install && rm -rf node_modules in a loop, I can reproduce the error in every 2nd - 10th run (approx 2 - 15 minutes).
+> >> 
+> >> 
+> >> 
+> >> I've found these things while debugging:
+> >> 
+> >> The client is always using readdirplus functions to get directory entries.
+> >> If I get a plus=false, then it indicates an error.
+> >> Although the error can happen without plus=false too (approx 50/50 chance).
+> >> 
+> >> 
+> >> I've used this bpftrace to get it.
+> >> 
+> >> ```
+> >> kprobe:nfs4_xdr_enc_readdir {
+> >>  $a = ((struct nfs4_readdir_arg *)arg2);
+> >>  if ($a->plus != 1) {
+> >>    time("%H:%M:%S\n");
+> >>    printf("nfs4_xdr_enc_readdir count=%u plus=%u cookie=%llu\n",
+> >>      $a->count, $a->plus, $a->cookie);
+> >>  }
+> >> }
+> >> ```
+> >> 
+> >> Also there is a kstack, from nfs4_xdr_enc_readdir:
+> >> 
+> >> nfs4_xdr_enc_readdir count=262144 plus=0 cookie=24
+> >> nfs4_xdr_enc_readdir kstack
+> >> 
+> >>        nfs4_xdr_enc_readdir+1
+> >>        rpcauth_wrap_req_encode+35
+> >>        call_encode+357
+> >>        __rpc_execute+137
+> >>        rpc_run_task+268
+> >>        nfs4_call_sync_sequence+100
+> >>        _nfs4_proc_readdir+277
+> >>        nfs4_proc_readdir+141
+> >>        nfs_readdir_xdr_to_array+375
+> >>        nfs_readdir+613
+> >>        iterate_dir+320
+> >>        __x64_sys_getdents+169
+> >>        do_syscall_64+85
+> >>        entry_SYSCALL_64_after_hwframe+68
+> >> 
+> >> 
+> >> Also I found out the extra READDIR call, always (mostly?) has an increased (duplicated) dircount parameter.
+> >> 
+> >> 
+> >>> From wireshark dump there is an example:
+> >> 
+> >> Packets from 1 to 4 are totally normal communication.
+> >> 5-6 are the extra ones. 
+> >> In packet 3, the dircount is 65536 and in packet 5 it is 131072.
+> >> 
+> >> 
+> >> 1. client -> server
+> >> Remote Procedure Call, Type:Call XID:0x04a37c12
+> >> Network File System, Ops(3): SEQUENCE, PUTFH, READDIR
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Tag: <EMPTY>
+> >>    minorversion: 2
+> >>    Operations (count: 3): SEQUENCE, PUTFH, READDIR
+> >>        Opcode: SEQUENCE (53)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x0001e92f
+> >>            slot id: 25
+> >>            high slot id: 25
+> >>            cache this?: No
+> >>        Opcode: PUTFH (22)
+> >>            FileHandle
+> >>        Opcode: READDIR (26)
+> >>            cookie: 0
+> >>            cookie_verf: 0
+> >>            dircount: 65514
+> >>            maxcount: 262056
+> >>            Attr mask[0]: 0x0018091a (Type, Change, Size, FSID, RDAttr_Error, Filehandle, FileId)
+> >>            Attr mask[1]: 0x00b0a23a (Mode, NumLinks, Owner, Owner_Group, RawDev, Space_Used, Time_Access, Time_Metadata, Time_Modify, Mounted_on_FileId)
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 2. server -> client
+> >> Network File System, Ops(3): SEQUENCE PUTFH READDIR
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Status: NFS4_OK (0)
+> >>    Tag: <EMPTY>
+> >>    Operations (count: 3)
+> >>        Opcode: SEQUENCE (53)
+> >>            Status: NFS4_OK (0)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x0001e92f
+> >>            slot id: 25
+> >>            high slot id: 29
+> >>            target high slot id: 29
+> >>            status flags: 0x00000000
+> >>        Opcode: PUTFH (22)
+> >>            Status: NFS4_OK (0)
+> >>        Opcode: READDIR (26)
+> >>            Status: NFS4_OK (0)
+> >>            verifier: 0x0000000000000000
+> >>            Directory Listing
+> >>                Entry: node-pre-gyp
+> >>                Entry: needle
+> >>                Entry: iconv-lite
+> >>                Entry: readable-stream
+> >>                Value Follows: No
+> >>                EOF: Yes
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 3. client -> server
+> >> Remote Procedure Call, Type:Call XID:0x16a37c12
+> >> Network File System, Ops(3): SEQUENCE, PUTFH, READDIR
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Tag: <EMPTY>
+> >>    minorversion: 2
+> >>    Operations (count: 3): SEQUENCE, PUTFH, READDIR
+> >>        Opcode: SEQUENCE (53)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x000cd063
+> >>            slot id: 15
+> >>            high slot id: 24
+> >>            cache this?: No
+> >>        Opcode: PUTFH (22)
+> >>            FileHandle
+> >>        Opcode: READDIR (26)
+> >>            cookie: 6
+> >>            cookie_verf: 0
+> >>            dircount: 65536
+> >>            maxcount: 262144
+> >>            Attr mask[0]: 0x0018091a (Type, Change, Size, FSID, RDAttr_Error, Filehandle, FileId)
+> >>            Attr mask[1]: 0x00b0a23a (Mode, NumLinks, Owner, Owner_Group, RawDev, Space_Used, Time_Access, Time_Metadata, Time_Modify, Mounted_on_FileId)
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 4. server -> client
+> >> Remote Procedure Call, Type:Reply XID:0x16a37c12
+> >> Network File System, Ops(3): SEQUENCE PUTFH READDIR
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Status: NFS4_OK (0)
+> >>    Tag: <EMPTY>
+> >>    Operations (count: 3)
+> >>        Opcode: SEQUENCE (53)
+> >>            Status: NFS4_OK (0)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x000cd063
+> >>            slot id: 15
+> >>            high slot id: 29
+> >>            target high slot id: 29
+> >>            status flags: 0x00000000
+> >>        Opcode: PUTFH (22)
+> >>            Status: NFS4_OK (0)
+> >>        Opcode: READDIR (26)
+> >>            Status: NFS4_OK (0)
+> >>            verifier: 0x0000000000000000
+> >>            Directory Listing
+> >>                Value Follows: No
+> >>                EOF: Yes
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 5. client -> server
+> >> Remote Procedure Call, Type:Call XID:0x32a37c12
+> >> Network File System, Ops(3): SEQUENCE, PUTFH, READDIR
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Tag: <EMPTY>
+> >>    minorversion: 2
+> >>    Operations (count: 3): SEQUENCE, PUTFH, READDIR
+> >>        Opcode: SEQUENCE (53)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x0001585c
+> >>            slot id: 26
+> >>            high slot id: 26
+> >>            cache this?: No
+> >>        Opcode: PUTFH (22)
+> >>            FileHandle
+> >>        Opcode: READDIR (26)
+> >>            cookie: 7
+> >>            cookie_verf: 0
+> >>            dircount: 131072
+> >>            maxcount: 262144
+> >>            Attr mask[0]: 0x00000800 (RDAttr_Error)
+> >>            Attr mask[1]: 0x00800000 (Mounted_on_FileId)
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 6. server -> client
+> >> Remote Procedure Call, Type:Reply XID:0x32a37c12
+> >> Network File System, Ops(3): SEQUENCE PUTFH READDIR(NFS4ERR_INVAL)
+> >>    [Program Version: 4]
+> >>    [V4 Procedure: COMPOUND (1)]
+> >>    Status: NFS4ERR_INVAL (22)
+> >>    Tag: <EMPTY>
+> >>    Operations (count: 3)
+> >>        Opcode: SEQUENCE (53)
+> >>            Status: NFS4_OK (0)
+> >>            sessionid: a2fdea5cc954b1470300000000000000
+> >>            seqid: 0x0001585c
+> >>            slot id: 26
+> >>            high slot id: 29
+> >>            target high slot id: 29
+> >>            status flags: 0x00000000
+> >>        Opcode: PUTFH (22)
+> >>            Status: NFS4_OK (0)
+> >>        Opcode: READDIR (26)
+> >>            Status: NFS4ERR_INVAL (22)
+> >>    [Main Opcode: READDIR (26)]
+> >> 
+> >> 
+> >> Thanks,
+> >> Armin
