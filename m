@@ -2,86 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1296549D7E
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2019 11:36:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2A3B4A55B
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2019 17:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfFRJgC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jun 2019 05:36:02 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1716 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729220AbfFRJfx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jun 2019 05:35:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08b0770000>; Tue, 18 Jun 2019 02:35:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 02:35:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 02:35:51 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 09:35:50 +0000
-Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
- TIMER_DEFERRABLE (431235818bc3)
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
- <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
- <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
-Message-ID: <313d971a-96ab-c7f0-34f5-631bb5f39e49@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:35:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729598AbfFRP3H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jun 2019 11:29:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfFRP3H (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:29:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 507AC804F2;
+        Tue, 18 Jun 2019 15:29:07 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E372C17ADC;
+        Tue, 18 Jun 2019 15:29:06 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Alan Post" <adp@prgmr.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: User process NFS write hang in wait_on_commit with kworker
+Date:   Tue, 18 Jun 2019 11:29:16 -0400
+Message-ID: <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
+In-Reply-To: <20190618000613.GR4158@turtle.email>
+References: <20190618000613.GR4158@turtle.email>
 MIME-Version: 1.0
-In-Reply-To: <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560850551; bh=gmPASSDC4uoc0HbBKNt0VSxSXOUtihxve4bKmdPsrtg=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dtpV/T+wwkjEmXbO6OK1IliRMihdjFngqZ9ia8G9SXyBcM5124mdqI35QjYIqFJ7F
-         FhWV496FEUWtAe+m3cQqKXgGIysM+S5vAw1MPh02UEuttH+lnhIEeIrmNUdi9dyShs
-         /HUo2bbWelHPAeabK1lsQZdhUfTHqcAz3Yo6LQuhyyNXoc+b8UEZSIsbJ9kZ7V72/h
-         OB7qyShRcDQgVWlfObw8llxmoCVMJbcp+zvRZFnAWFKV+A6XMlw6j8554b84HjW/FT
-         UDNPmTDiDczy8VOlwcRVBmRE2+pJW4h44ejobSFcWrP3DKzcvutxstkJaN9rs2cFZi
-         jB5WTc1e1XV0g==
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 18 Jun 2019 15:29:07 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond, Anna,
+Hi Alan,
 
-On 12/06/2019 15:23, Jon Hunter wrote:
-> 
-> On 05/06/2019 23:01, Trond Myklebust wrote:
-> 
-> ...
-> 
->> I'd be OK with just reverting this patch if it is causing a performance
->> issue.
->>
->> Anna?
-> 
-> Any update on this?
+I think that your transport or NFS server is dropping the response to an
+RPC.  The NFS client will not retransmit on an established connection.
 
-I have not seen any update on this. Do you plan to revert this?
+What server are you using?  Any middle boxes on the network that could be
+transparently dropping transmissions (less likely, but I have seen them)?
 
-We are getting ever closer to v5.2 and this problem still persists.
+Ben
 
-Thanks
-Jon
+On 17 Jun 2019, at 20:06, Alan Post wrote:
 
--- 
-nvpublic
+> On May 20th I reported "User process NFS write hang followed
+> by automount hang requiring reboot" to this list.  There I
+> had a process that would hang on NFS write, followed by sync
+> hanging, eventually leading to my need to reboot the host.
+>
+> On June 4th, after upgrading to Linux 4.19.44, I reported
+> the issue resolved.  Since that time, as I've deployed out
+> Linux 4.19.44, the issue has come back--sort of.
+>
+> I have begun once again getting sync hangs following a
+> hung NFS write.  The hung write has a different stack trace
+> than any I previously reported:
+>
+>     [<0>] wait_on_commit+0x60/0x90 [nfs]
+>     [<0>] __nfs_commit_inode+0x146/0x1a0 [nfs]
+>     [<0>] nfs_file_fsync+0xa7/0x1d0 [nfs]
+>     [<0>] filp_close+0x25/0x70
+>     [<0>] put_files_struct+0x66/0xb0
+>     [<0>] do_exit+0x2af/0xbb0
+>     [<0>] do_group_exit+0x35/0xa0
+>     [<0>] __x64_sys_exit_group+0xf/0x10
+>     [<0>] do_syscall_64+0x45/0x100
+>     [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>     [<0>] 0xffffffffffffffff
+>
+> And there is attendant kworker thread:
+>
+>     [<0>] wait_on_commit+0x60/0x90 [nfs]
+>     [<0>] __nfs_commit_inode+0x146/0x1a0 [nfs]
+>     [<0>] nfs_write_inode+0x5c/0x90 [nfs]
+>     [<0>] nfs4_write_inode+0xd/0x30 [nfsv4]
+>     [<0>] __writeback_single_inode+0x27a/0x320
+>     [<0>] writeback_sb_inodes+0x19a/0x460
+>     [<0>] wb_writeback+0x102/0x2f0
+>     [<0>] wb_workfn+0xa3/0x400
+>     [<0>] process_one_work+0x1e3/0x3d0
+>     [<0>] worker_thread+0x28/0x3c0
+>     [<0>] kthread+0x10e/0x130
+>     [<0>] ret_from_fork+0x35/0x40
+>     [<0>] 0xffffffffffffffff
+>
+> Oddly enough, I can clear the problem without rebooting the host.
+> I arrange to block all traffic between the NFS server and NFS
+> client using iptables, of sufficient time for any open TCP
+> connections to timeout.  After which the connection apparently
+> reestablishes and unblocks the hung process.
+>
+> I can't explain what's keeping the connection alive but apparently
+> stalled--requiring my manual intervention.  Do any of you have
+> ideas or speculation?  I'm happy to poke around in a packet capture
+> if the information provided isn't sufficient.
+>
+> -A
+> -- 
+> Alan Post | Xen VPS hosting for the technically adept
+> PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
+> email: adp@prgmr.com
