@@ -2,93 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 610AD4ABC8
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2019 22:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF034AEE1
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 02:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbfFRU11 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jun 2019 16:27:27 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51764 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730607AbfFRU11 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jun 2019 16:27:27 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdKhN-0003PQ-66; Tue, 18 Jun 2019 20:27:21 +0000
-Date:   Tue, 18 Jun 2019 21:27:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] jffs2: pass the correct prototype to read_cache_page
-Message-ID: <20190618202721.GD17978@ZenIV.linux.org.uk>
-References: <20190520055731.24538-1-hch@lst.de>
- <20190520055731.24538-4-hch@lst.de>
+        id S1725988AbfFSAGV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jun 2019 20:06:21 -0400
+Received: from mail.prgmr.com ([71.19.149.6]:52534 "EHLO mail.prgmr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfFSAGV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 18 Jun 2019 20:06:21 -0400
+Received: from turtle.mx (96-92-68-116-static.hfc.comcastbusiness.net [96.92.68.116])
+        (Authenticated sender: adp)
+        by mail.prgmr.com (Postfix) with ESMTPSA id 087F628C002
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2019 01:03:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com 087F628C002
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1560920619;
+        bh=Xjj9Zv4HD7Z7rMmQFxYm51gsQ2pNoJOwv55SviarFb0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZtVBNcPYYuzduIo0gbHv8N3qz2ALCVl4ASWGWULneygVZoSbnNOL5UfcDLlwz6z4O
+         UwCY6RDpAkXGoYcf5zL6B7j1Iv27r8wtCd2d0uV9h1z2ovf9p7cEv7CMJy9zV48KIi
+         3Z4Am1Rwy+6EVIunZC1A39hsEz1i0z2LWSxTvlds=
+Received: (qmail 22267 invoked by uid 1353); 19 Jun 2019 00:07:46 -0000
+Date:   Tue, 18 Jun 2019 18:07:46 -0600
+From:   Alan Post <adp@prgmr.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: User process NFS write hang in wait_on_commit with kworker
+Message-ID: <20190619000746.GT4158@turtle.email>
+References: <20190618000613.GR4158@turtle.email>
+ <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520055731.24538-4-hch@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:57:30AM +0200, Christoph Hellwig wrote:
-> Fix the callback jffs2 passes to read_cache_page to actually have the
-> proper type expected.  Casting around function pointers can easily
-> hide typing bugs, and defeats control flow protection.
+On Tue, Jun 18, 2019 at 11:29:16AM -0400, Benjamin Coddington wrote:
+> I think that your transport or NFS server is dropping the response to an
+> RPC.  The NFS client will not retransmit on an established connection.
+> 
+> What server are you using?  Any middle boxes on the network that could be
+> transparently dropping transmissions (less likely, but I have seen them)?
+> 
 
-FWIW, this
-unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
-                                   struct jffs2_inode_info *f,
-                                   unsigned long offset,
-                                   unsigned long *priv)
-{
-        struct inode *inode = OFNI_EDONI_2SFFJ(f);
-        struct page *pg;
+I've found 8 separate NFS client hangs of the sort I reported here,
+and in all cases the same NFS server was involved: an Ubuntu Trusty
+system running 4.4.0.  I've been upgrading all of these NFS servers,
+haven't done this one yet--the complicity of NFS hangs I've been
+seeing have slowed me down.
 
-        pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
-                             (void *)jffs2_do_readpage_unlock, inode);
-        if (IS_ERR(pg))
-                return (void *)pg;
+Of the 8 NFS clients with a hang to this server, about half are in
+the same computer room where packets only transit rack switches, with
+the other half also going through a computer room router.
 
-        *priv = (unsigned long)pg;
-        return kmap(pg);
-}
-looks like crap.  And so does this:
-void jffs2_gc_release_page(struct jffs2_sb_info *c,
-                           unsigned char *ptr,
-                           unsigned long *priv)
-{
-        struct page *pg = (void *)*priv;
+I see positive dropped and overrun packet counts on the NFS server
+interface, along with a similar magnitude of pause counts on the
+switch port for the NFS server.  Given the occurences of this issue
+only this rack switch and a redundant pair of top-of-rack switches in
+the rack with the NFS server are in-common between all 8 NFS clients
+with write hangs.
 
-        kunmap(pg);
-        put_page(pg);
-}
-
-	First of all, there's only one caller for each of those, and both
-are direct calls.  So passing struct page * around that way is ridiculous.
-What's more, there is no reason not to do kmap() in caller (i.e. in
-jffs2_garbage_collect_dnode()).  That way jffs2_gc_fetch_page() would
-simply be return read_cache_page(....), and in the caller we'd have
-
-        struct page *pg;
-        unsigned char *pg_ptr;
-...
-        mutex_unlock(&f->sem);
-        pg = jffs2_gc_fetch_page(c, f, start);
-        if (IS_ERR(pg)) {
-		mutex_lock(&f->sem);
-                pr_warn("read_cache_page() returned error: %ld\n", PTR_ERR(pg));
-                return PTR_ERR(pg);
-        }
-	pg_ptr = kmap(pg);
-	mutex_lock(&f->sem);
-...
-	kunmap(pg);
-	put_page(pg);
-
-and that's it, preserving the current locking and with saner types...
+-A
+-- 
+Alan Post | Xen VPS hosting for the technically adept
+PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
+email: adp@prgmr.com
