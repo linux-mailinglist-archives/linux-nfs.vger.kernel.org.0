@@ -2,203 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F37D4BBB7
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 16:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DFCE4BD84
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 18:06:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfFSOeL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jun 2019 10:34:11 -0400
-Received: from mail-io1-f52.google.com ([209.85.166.52]:42156 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSOeL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 10:34:11 -0400
-Received: by mail-io1-f52.google.com with SMTP id u19so38560542ior.9;
-        Wed, 19 Jun 2019 07:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=FVf87Ck26LWlmoyHAOegSUqYq5QkTCEpjcdBJDqE+Ds=;
-        b=Q6k88KsLDB0IkAAuFpUyOBsvFWv1TLLLRd5B/r5qiWe0X47Jx29K7YNq6wsS6wK5TD
-         9YDg79inRN/5oY7XlLUalKnjKxzon64+uqVMk4IAmURXg80OZUr0ZK4XsjhlHrRFNif2
-         SnIqZ5kDmwmKSLJu0/47xopCPb6z+lwx32LNHhHZ2fIAU/3sZ9TznPnvD+a7fyBwU4em
-         NUuX6A8I6N8cSWnP7RUr28ZgMR9WWtZr1rM4HYNqVdWH2E3EXzb+Li2coC/Ls+lJu2rJ
-         TzBFwgu4R7cc8mzABrecFCj+3pi/TlsjP/girsBv/SnzofhXGzyP8gnPZxPqcjyIGgza
-         NITw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=FVf87Ck26LWlmoyHAOegSUqYq5QkTCEpjcdBJDqE+Ds=;
-        b=F4IRUgxcThyohkDKEvWR6mQdu8bvK6XFzamz57D5h+xAV7eC4YU8EMwBGXgpkT0bfn
-         fAXGwhFPLY64W3fb2GYjnV7K2B3m+1DCcfpE5kPohIU038dqSDuN/GcSPL4bSjZQPF8P
-         YVhuM3bf/EacMdlDp/lw9o/odWKsiyfW0rOY5k6yldiXSdu4JPaKU01HO5gXdfm3hGG/
-         ECfmrPUL5haJcMay7pAcswOSzpi6tSFTXskUh2zsyoZcJd5t6SEe8ZZqZk/waxaicuIv
-         /bcD6p5pfcMOVdxYnChD73/Vc4TpjmqdkVazgngw848ie78yJvXBm5aEA/I9+5W0f0Ju
-         1ZPQ==
-X-Gm-Message-State: APjAAAVCgOJid3xQA3HQfkwi7rc+IOemUJ10/+r4Q/BGOFT5jkuEOjuv
-        P6e6xAKO9yHv1L2l3OxOXoR26EVF
-X-Google-Smtp-Source: APXvYqyelma7ZhBsaZ2nm75hjWrAM+u36Kwv7f/z6Oqn/iXsCLKZqRoTfT9DeX5L4C205OD3O92b/w==
-X-Received: by 2002:a5d:9a04:: with SMTP id s4mr33428483iol.19.1560954850463;
-        Wed, 19 Jun 2019 07:34:10 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id c23sm17613432iod.11.2019.06.19.07.34.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 07:34:10 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5JEY91o004548;
-        Wed, 19 Jun 2019 14:34:09 GMT
-Subject: [PATCH v4 19/19] NFS: Record task, client ID,
- and XID in xdr_status trace points
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Wed, 19 Jun 2019 10:34:09 -0400
-Message-ID: <20190619143409.3826.69836.stgit@manet.1015granger.net>
-In-Reply-To: <20190619143031.3826.46412.stgit@manet.1015granger.net>
-References: <20190619143031.3826.46412.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        id S1726109AbfFSQGG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jun 2019 12:06:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbfFSQGG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:06:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 171BE3087945;
+        Wed, 19 Jun 2019 16:06:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3AFE5D9E5;
+        Wed, 19 Jun 2019 16:06:01 +0000 (UTC)
+Subject: [PATCH 0/9] keys: Namespacing [ver #4]
+From:   David Howells <dhowells@redhat.com>
+To:     ebiederm@xmission.com, keyrings@vger.kernel.org
+Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 19 Jun 2019 17:06:00 +0100
+Message-ID: <156096036064.6697.2432500504898119675.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 19 Jun 2019 16:06:06 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When triggering an nfs_xdr_status trace point, record the task ID
-and XID of the failing RPC to better pinpoint the problem.
 
-This feels like a bit of a layering violation.
+Here are some patches to make keys and keyrings more namespace aware.
 
-Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Firstly some miscellaneous patches to make the process easier:
+
+ (1) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
+
+ (2) Cache the hash value in the key so that we don't have to calculate on
+     every key we examine during a search (it involves a bunch of
+     multiplications).
+
+ (3) Allow keying_search() to search non-recursively.
+
+Then the main patches:
+
+ (4) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
+
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEYRING_NAME for this.
+
+ (5) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (6) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEY_TAG for this.
+
+ (7) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+ (8) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+ (9) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good; CIFS and Ceph are not.  Other cache
+     keyrings, such as idmapper keyrings, also need to set the domain tag -
+     for which they need access to the network namespace of the superblock.
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-namespace
+
+David
 ---
- fs/nfs/nfs2xdr.c   |    2 +-
- fs/nfs/nfs3xdr.c   |    2 +-
- fs/nfs/nfs4trace.h |   15 +++++++++++++--
- fs/nfs/nfs4xdr.c   |    2 +-
- fs/nfs/nfstrace.h  |   15 +++++++++++++--
- 5 files changed, 29 insertions(+), 7 deletions(-)
+David Howells (9):
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
 
-diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
-index 572794d..cbc17a2 100644
---- a/fs/nfs/nfs2xdr.c
-+++ b/fs/nfs/nfs2xdr.c
-@@ -151,7 +151,7 @@ static int decode_stat(struct xdr_stream *xdr, enum nfs_stat *status)
- 	return 0;
- out_status:
- 	*status = be32_to_cpup(p);
--	trace_nfs_xdr_status((int)*status);
-+	trace_nfs_xdr_status(xdr, (int)*status);
- 	return 0;
- }
- 
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index abbbdde..6027678 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -343,7 +343,7 @@ static int decode_nfsstat3(struct xdr_stream *xdr, enum nfs_stat *status)
- 	return 0;
- out_status:
- 	*status = be32_to_cpup(p);
--	trace_nfs_xdr_status((int)*status);
-+	trace_nfs_xdr_status(xdr, (int)*status);
- 	return 0;
- }
- 
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 9a39fd5..d85f209 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -564,24 +564,35 @@
- 
- TRACE_EVENT(nfs4_xdr_status,
- 		TP_PROTO(
-+			const struct xdr_stream *xdr,
- 			u32 op,
- 			int error
- 		),
- 
--		TP_ARGS(op, error),
-+		TP_ARGS(xdr, op, error),
- 
- 		TP_STRUCT__entry(
-+			__field(unsigned int, task_id)
-+			__field(unsigned int, client_id)
-+			__field(u32, xid)
- 			__field(u32, op)
- 			__field(unsigned long, error)
- 		),
- 
- 		TP_fast_assign(
-+			const struct rpc_rqst *rqstp = xdr->rqst;
-+			const struct rpc_task *task = rqstp->rq_task;
-+
-+			__entry->task_id = task->tk_pid;
-+			__entry->client_id = task->tk_client->cl_clid;
-+			__entry->xid = be32_to_cpu(rqstp->rq_xid);
- 			__entry->op = op;
- 			__entry->error = error;
- 		),
- 
- 		TP_printk(
--			"error=%ld (%s) operation %d:",
-+			"task:%u@%d xid=0x%08x error=%ld (%s) operation=%u",
-+			__entry->task_id, __entry->client_id, __entry->xid,
- 			-__entry->error, show_nfsv4_errors(__entry->error),
- 			__entry->op
- 		)
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 6024461..d974ff3 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -3187,7 +3187,7 @@ static bool __decode_op_hdr(struct xdr_stream *xdr, enum nfs_opnum4 expected,
- 	return true;
- out_status:
- 	nfserr = be32_to_cpup(p);
--	trace_nfs4_xdr_status(opnum, nfserr);
-+	trace_nfs4_xdr_status(xdr, opnum, nfserr);
- 	*nfs_retval = nfs4_stat_to_errno(nfserr);
- 	return true;
- out_bad_operation:
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index cd09356..976d408 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -1139,21 +1139,32 @@
- 
- TRACE_EVENT(nfs_xdr_status,
- 		TP_PROTO(
-+			const struct xdr_stream *xdr,
- 			int error
- 		),
- 
--		TP_ARGS(error),
-+		TP_ARGS(xdr, error),
- 
- 		TP_STRUCT__entry(
-+			__field(unsigned int, task_id)
-+			__field(unsigned int, client_id)
-+			__field(u32, xid)
- 			__field(unsigned long, error)
- 		),
- 
- 		TP_fast_assign(
-+			const struct rpc_rqst *rqstp = xdr->rqst;
-+			const struct rpc_task *task = rqstp->rq_task;
-+
-+			__entry->task_id = task->tk_pid;
-+			__entry->client_id = task->tk_client->cl_clid;
-+			__entry->xid = be32_to_cpu(rqstp->rq_xid);
- 			__entry->error = error;
- 		),
- 
- 		TP_printk(
--			"error=%ld (%s)",
-+			"task:%u@%d xid=0x%08x error=%ld (%s)",
-+			__entry->task_id, __entry->client_id, __entry->xid,
- 			-__entry->error, nfs_show_status(__entry->error)
- 		)
- );
+
+ Documentation/security/keys/core.rst        |   38 +++-
+ Documentation/security/keys/request-key.rst |   29 ++-
+ certs/blacklist.c                           |    2 
+ crypto/asymmetric_keys/asymmetric_type.c    |    2 
+ fs/afs/addr_list.c                          |    4 
+ fs/afs/dynroot.c                            |    8 +
+ fs/cifs/dns_resolve.c                       |    3 
+ fs/nfs/dns_resolve.c                        |    3 
+ fs/nfs/nfs4idmap.c                          |    2 
+ include/linux/dns_resolver.h                |    3 
+ include/linux/key-type.h                    |    3 
+ include/linux/key.h                         |   81 ++++++++
+ include/linux/sched/user.h                  |   14 -
+ include/linux/user_namespace.h              |   12 +
+ include/net/net_namespace.h                 |    3 
+ include/uapi/linux/keyctl.h                 |    2 
+ kernel/user.c                               |    8 -
+ kernel/user_namespace.c                     |    9 -
+ lib/digsig.c                                |    2 
+ net/ceph/messenger.c                        |    3 
+ net/core/net_namespace.c                    |   19 ++
+ net/dns_resolver/dns_key.c                  |    1 
+ net/dns_resolver/dns_query.c                |    7 +
+ net/rxrpc/key.c                             |    6 -
+ net/rxrpc/security.c                        |    2 
+ security/integrity/digsig_asymmetric.c      |    4 
+ security/keys/gc.c                          |    2 
+ security/keys/internal.h                    |   10 +
+ security/keys/key.c                         |    5 -
+ security/keys/keyctl.c                      |    6 -
+ security/keys/keyring.c                     |  263 +++++++++++++++------------
+ security/keys/persistent.c                  |   10 +
+ security/keys/proc.c                        |    3 
+ security/keys/process_keys.c                |  262 +++++++++++++++++----------
+ security/keys/request_key.c                 |   62 ++++--
+ security/keys/request_key_auth.c            |    3 
+ 36 files changed, 587 insertions(+), 309 deletions(-)
 
