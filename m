@@ -2,211 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C8324C1B8
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 21:50:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C584C261
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 22:26:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfFSTur (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jun 2019 15:50:47 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41331 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFSTur (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 15:50:47 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d17so483307qtj.8
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2019 12:50:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9UqMkwWmLaKxEjBWC9VrXMYNUxYkyv4UzRjUoOCsCvE=;
-        b=p/eTHsjc5eh1nJfvtq7+3k8Ns39R2PvzpKt/WL7ChyV5v7IRkfWKTQt1qOpbhk7Wvd
-         7l52KyNtFDARMW4u1rSwKlZilNPqUA+ZuzDBTbz7iY6LqZZY6/GqSFD2syPXBRVc6EZO
-         iCl6hBja0iI3xtUC+8Ft0404NNzTXYPGJHv6sk5Nqy/KRauIDQnhUbcaOEd1AnEOpDZG
-         +AKMe7rGaE1pLczVDhZCT4TmfbPeum1j4gxZJj8W3aSBSF1Ulic5/2Cqca5ot6wE1D0g
-         qH7lrEEszUSP2tJvCQz6TwnKbekHe4kwIyGx1wquadFjgwGaL3maovyihrFwzQjkf8GE
-         gC4Q==
-X-Gm-Message-State: APjAAAUk8Zy7EttYVwXg5Dl89fYBXQB/daxlzJ4E7xw29o1VMHn+zqxW
-        jeVxCgaYPqIhQUGAcAxMP+lS1yl+evY=
-X-Google-Smtp-Source: APXvYqzDW1p3jw3/JQPgdZR0eXrx5OWKi197hnq5gBudBxHbvuGmFN995nr+sBv5Wa5hWnMjmb3F3g==
-X-Received: by 2002:a0c:b012:: with SMTP id k18mr35631188qvc.74.1560973845687;
-        Wed, 19 Jun 2019 12:50:45 -0700 (PDT)
-Received: from dhcp-12-212-173.gsslab.rdu.redhat.com (nat-pool-rdu-t.redhat.com. [66.187.233.202])
-        by smtp.gmail.com with ESMTPSA id l5sm1001433qte.9.2019.06.19.12.50.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 12:50:45 -0700 (PDT)
-Message-ID: <f2ac002cabdf21b61644a53969eaf0e1546384b0.camel@redhat.com>
-Subject: Re: [PATCH 3/3] mountstats: Check for RPC iostats version >= 1.1
- with error counts
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Steve Dickson <SteveD@redhat.com>,
+        id S1726321AbfFSU0L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jun 2019 16:26:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47782 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfFSU0K (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 16:26:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JKJUnC119159;
+        Wed, 19 Jun 2019 20:26:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=7HuPfR1DT4zYEKdIZnnRrDSeTf8hQPocZvrAWmpzHUg=;
+ b=yB22p9ZzNxZWo07rFE7wIFK4Rw4WhBPQ15Cva5BXIKGClpJZT6bOSnjRhBEwAs2jCsx/
+ xukBG3KelLHIGH3Ldv1J0UJ6d5gO2xiBnJJ+r8ZhIwNiD8X25GMCyWEYanv9hK8K94nY
+ jE+PiDi+JkhbkSPh4qF+gFCmtPg3FZsVNPQdQADXK+RXMQgrqwqOsAOAeFcgiJD+EsXV
+ mnSdDEtoT4DQB/WEXYVOnVUr0g567Fy7S5B8h2xfVIyPy3YSYlJt/QP8ISsZvk5gG+iU
+ R3kbhbMihpywRqCORJZpVSxl2veXNOwaRRkoqXMtvui5YlCoSlr1pJU4k51R+15vGopB NQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t7809dj8d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 20:26:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JKPFJ4046360;
+        Wed, 19 Jun 2019 20:26:03 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t7rdwudup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 20:26:03 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5JKPw36017607;
+        Wed, 19 Jun 2019 20:26:02 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Jun 2019 13:25:58 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] svcrdma: Ignore source port when computing DRC hash
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20190611150116.4209.63309.stgit@klimt.1015granger.net>
+Date:   Wed, 19 Jun 2019 16:25:57 -0400
+Cc:     linux-rdma@vger.kernel.org,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 19 Jun 2019 15:50:44 -0400
-In-Reply-To: <DB163079-2AE4-4C1E-A317-27E1F9745788@oracle.com>
-References: <20190612190229.31811-1-dwysocha@redhat.com>
-         <20190613120314.1864-1-dwysocha@redhat.com>
-         <20190613120314.1864-3-dwysocha@redhat.com>
-         <FD291454-53BB-46DB-BEBE-9AA2F8DE18DE@oracle.com>
-         <CALF+zOkFKXZQsFodJphAg1UBNxKyQq_GfO1wFqfak0TTre=dng@mail.gmail.com>
-         <7211D5DF-6923-459D-9B84-2BD264EB9F11@oracle.com>
-         <E3BDBBD8-C75C-48EA-85D5-37657DF3AE14@oracle.com>
-         <449f121418f5667436e6d42432c6404aa0fed9e9.camel@redhat.com>
-         <DB163079-2AE4-4C1E-A317-27E1F9745788@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FAF5EE39-8B5D-4F5C-9E9E-8FCA6EED8378@oracle.com>
+References: <20190611150116.4209.63309.stgit@klimt.1015granger.net>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190167
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2019-06-19 at 15:46 -0400, Chuck Lever wrote:
-> > On Jun 19, 2019, at 3:42 PM, Dave Wysochanski <dwysocha@redhat.com>
-> > wrote:
-> > 
-> > On Wed, 2019-06-19 at 13:45 -0400, Chuck Lever wrote:
-> > > > On Jun 19, 2019, at 1:42 PM, Chuck Lever <
-> > > > chuck.lever@oracle.com>
-> > > > wrote:
-> > > > 
-> > > > 
-> > > > 
-> > > > > On Jun 19, 2019, at 1:22 PM, David Wysochanski <
-> > > > > dwysocha@redhat.com> wrote:
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > On Wed, Jun 19, 2019 at 12:35 PM Chuck Lever <
-> > > > > chuck.lever@oracle.com> wrote:
-> > > > > 
-> > > > > 
-> > > > > > On Jun 13, 2019, at 8:03 AM, Dave Wysochanski <
-> > > > > > dwysocha@redhat.com> wrote:
-> > > > > > 
-> > > > > > Add explicit check for statsvers instead of array based
-> > > > > > check.
-> > > > > 
-> > > > > Hi Dave,
-> > > > > 
-> > > > > I don't understand why this change is necessary. The patch
-> > > > > description
-> > > > > should explain.
-> > > > > 
-> > > > > 
-> > > > > Steve had already taken commit 73491ef for mountstats which
-> > > > > was
-> > > > > an array based check.  This just makes this patch consistent
-> > > > > with
-> > > > > the others.  Is that what you mean - you want a statement
-> > > > > about
-> > > > > consistency and refer to the other commit?  How about:
-> > > > > 
-> > > > > Commit 73491ef added per-op error counts for mountstats
-> > > > > command
-> > > > > but used an array based check rather than checking statsver.
-> > > > > Add
-> > > > > explicit check for statsver instead of array based check for
-> > > > > consistency with other tools.
-> > > > 
-> > > > This is a better patch description (explains "why" not "what"),
-> > > > but I'm not clear why this change is necessary in either place.
-> > > 
-> > > In other words, was this change necessary to fix a bug? Or is
-> > > this a defensive change to make parsing more robust?
-> > > 
-> > 
-> > I try to state "fix" somewhere in there when it is a bug fix - so
-> > no
-> > this does not fix a bug.  In in some ways the original check was
-> > better
-> > because it makes no assumption of what 'statsver' means at any
-> > time. 
-> > I'm not sure if you're really concerned about the commit message or
-> > you
-> > would prefer the array check?
-> 
-> Both. The array check is done for all the other variables too, IIRC.
-> There doesn't seem to be a reason to check the statvers. If it's not
-> too much trouble, please resubmit so that the new checks are
-> consistent
-> with existing checks.
-> 
 
-No problem at all - will do!
+> On Jun 11, 2019, at 11:01 AM, Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>=20
+> The DRC appears to be effectively empty after an RPC/RDMA transport
+> reconnect. The problem is that each connection uses a different
+> source port, which defeats the DRC hash.
+>=20
+> Clients always have to disconnect before they send retransmissions
+> to reset the connection's credit accounting, thus every retransmit
+> on NFS/RDMA will miss the DRC.
+>=20
+> An NFS/RDMA client's IP source port is meaningless for RDMA
+> transports. The transport layer typically sets the source port value
+> on the connection to a random ephemeral port. The server already
+> ignores it for the "secure port" check. See commit 16e4d93f6de7
+> ("NFSD: Ignore client's source port on RDMA transports").
+>=20
+> The Linux NFS server's DRC resolves XID collisions from the same
+> source IP address by using the checksum of the first 200 bytes of
+> the RPC call header.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Cc: stable@vger.kernel.org # v4.14+
+> ---
+> net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
+> 1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c =
+b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> index 027a3b0..0004535 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> @@ -211,9 +211,14 @@ static void handle_connect_req(struct rdma_cm_id =
+*new_cma_id,
+> 	/* Save client advertised inbound read limit for use later in =
+accept. */
+> 	newxprt->sc_ord =3D param->initiator_depth;
+>=20
+> -	/* Set the local and remote addresses in the transport */
+> 	sa =3D (struct sockaddr =
+*)&newxprt->sc_cm_id->route.addr.dst_addr;
+> 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
+> +	/* The remote port is arbitrary and not under the control of the
+> +	 * client ULP. Set it to a fixed value so that the DRC continues
+> +	 * to be effective after a reconnect.
+> +	 */
+> +	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, =
+0);
+> +
+> 	sa =3D (struct sockaddr =
+*)&newxprt->sc_cm_id->route.addr.src_addr;
+> 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
+
+Hi Bruce, what's the disposition of this patch?
 
 
-> 
-> > I can see argument for array check and I
-> > can change the other patches and resubmit if you prefer that.
-> > 
-> > Commit 73491ef added per-op error counts for mountstats command
-> > but used an array based check rather than checking statsver.  Check
-> > statsver >= 1.1 explicitly as this documents when this new count
-> > was
-> > added to the kernel.
-> 
-> Not sure there's a need for the statvers bump here either. There
-> are some rules about when a statvers bump is necessary, but in my
-> old age I don't remember what they are. Anyway, if the statvers is
-> bumped already, no big deal.
-> 
+--
+Chuck Lever
 
-As far as I understood this version covers the rpc_iostats structure so
-yes I thought it was necessary so I changed it when I added
-"om_error_status"
-http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=patch;h=6e034f84c67d677e87e11e42d1faaca854023d16
-
-
-> 
-> > > > > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > > > > > ---
-> > > > > > tools/mountstats/mountstats.py | 2 +-
-> > > > > > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/tools/mountstats/mountstats.py
-> > > > > > b/tools/mountstats/mountstats.py
-> > > > > > index 5f13bf8e..2ebbf945 100755
-> > > > > > --- a/tools/mountstats/mountstats.py
-> > > > > > +++ b/tools/mountstats/mountstats.py
-> > > > > > @@ -476,7 +476,7 @@ class DeviceData:
-> > > > > >               if retrans != 0:
-> > > > > >                   print('\t%d retrans (%d%%)' % (retrans,
-> > > > > > ((retrans * 100) / count)), end=' ')
-> > > > > >                   print('\t%d major timeouts' % stats[3],
-> > > > > > end='')
-> > > > > > -                if len(stats) >= 10 and stats[9] != 0:
-> > > > > > +                if self.__rpc_data['statsvers'] >= 1.1 and
-> > > > > > stats[9] != 0:
-> > > > > >                   print('\t%d errors (%d%%)' % (stats[9],
-> > > > > > ((stats[9] * 100) / count)))
-> > > > > >               else:
-> > > > > >                   print('')
-> > > > > > -- 
-> > > > > > 2.20.1
-> > > > > > 
-> > > > > 
-> > > > > --
-> > > > > Chuck Lever
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > -- 
-> > > > > Dave Wysochanski
-> > > > > Principal Software Maintenance Engineer
-> > > > > T: 919-754-4024  
-> > > > 
-> > > > --
-> > > > Chuck Lever
-> > > 
-> > > --
-> > > Chuck Lever
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
 
 
