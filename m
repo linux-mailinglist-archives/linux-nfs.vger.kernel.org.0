@@ -2,97 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 580F74BA17
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 15:38:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B9014BB8D
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 16:32:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfFSNiK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jun 2019 09:38:10 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7500 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFSNiK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 09:38:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0a3ac00000>; Wed, 19 Jun 2019 06:38:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Jun 2019 06:38:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Jun 2019 06:38:09 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
- 2019 13:38:07 +0000
-Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
- TIMER_DEFERRABLE (431235818bc3)
-To:     Anna Schumaker <schumaker.anna@gmail.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
- <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
- <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
- <313d971a-96ab-c7f0-34f5-631bb5f39e49@nvidia.com>
- <7d335b53c9878865cef1de83960701c0ece4e611.camel@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2aee35b5-f0f9-aac3-8957-01ebd4930f3b@nvidia.com>
-Date:   Wed, 19 Jun 2019 14:38:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729050AbfFSOc3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jun 2019 10:32:29 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:47061 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfFSOc3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 10:32:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so38487938iol.13;
+        Wed, 19 Jun 2019 07:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=1ocFhRT15TVKyx9UOCxRa+zAnCt1RI4SJ07RigYpSUE=;
+        b=OqdeuybSLyynVo6uGP8/B/6s6zwgAR+kA0kl7rl5+xLEroZygaTL6kQ0FoT/JekWF8
+         mcthohqsRATA3yi2ZGyZTtH084XsVUixlO7L1URLJyvc6be5r8auFy5h6XgoNAhss5vT
+         PXrqYlMc1hs84jLnyyqbA9wxuCTdbg7NTs5rHsNh+ZeyV5c27P7kIrbtMog5Frkb3G0s
+         t5OPg/v+eLhXs/wdA6Rf9S8JdD6numxzqXWj48T4ceKKUZphie2moWaSZKRCMxnbZLI+
+         Jy5QZJdnmJmLi2MjdMKQ/LeTKFaIilSzPmV70N2grlIJr/nv/EAl01UXI2y1nrFt3mTT
+         6Mag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=1ocFhRT15TVKyx9UOCxRa+zAnCt1RI4SJ07RigYpSUE=;
+        b=hUnw6Hbz5barJeAKeijh+JrX1EWHL20IUTgCpn/EvWm1SIfgAt2Ry1VBeF7DqzkhIn
+         CTR4HJZrQjs9UvEJy3lSUfGUwPc1MU9aqhHmjuVCfzLTqLffuxpPj9qgunvtS+5dXJXC
+         6Pxhm6ps8g60piuaPNAkI89xFymEntxLUsQ9IxbJWXoyByc8KrzwlSmFcLih6Q1buEul
+         vymGbPg1eu8hvzth2LUKVZE8cuYC65J2bGqaONA2bs1vTQzyGZjTyjAOi6/TM6ncfG78
+         4Z4/sKRLApxG7AlyX4rpI1aXQgjs/405QTdyHGidQ+ccz0LlX5HWyZD2lBogTfLbm2yq
+         4mXA==
+X-Gm-Message-State: APjAAAVeOkeAO1vWX5vqBQqE+euTAItB8cVEVEQCWOgWBNAczGyY+8bF
+        tDSfgoBm5YHLYgUKlaodNSA=
+X-Google-Smtp-Source: APXvYqwjA5HeTXgZ5s2BEfVffMyLfnonwRIsHFabIk3MquiCgd05+pfiTgGrOociDyAWfnFT31jROw==
+X-Received: by 2002:a05:6638:281:: with SMTP id c1mr9702676jaq.43.1560954748690;
+        Wed, 19 Jun 2019 07:32:28 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id v25sm14476159ioh.25.2019.06.19.07.32.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 07:32:28 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5JEWRL8004491;
+        Wed, 19 Jun 2019 14:32:27 GMT
+Subject: [PATCH v4 00/19] for-5.3 patches
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     anna.schumaker@netapp.com
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Wed, 19 Jun 2019 10:32:26 -0400
+Message-ID: <20190619143031.3826.46412.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <7d335b53c9878865cef1de83960701c0ece4e611.camel@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560951488; bh=Zel5PYiYMkDYLwsNuzJEpvObHIvYkHUd09Lf/adG/yM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Xlz/uZM4adV3CMJ2Q2GjznojRjrjLRj7gzMBcVtIbZ2TZWbmrz+8lRamQIJNNmfev
-         z0709eHqvESiXyp2D8fPJYr2AatULJMLW4wsWDSK+pj7yNvp8ith2ew6YGQosz2QH/
-         L+CFPjkV9T9ywF38l/hAuxiU05GL8oXoavte3jdiWMAFtzMokXfI+bOcPC6y15K3Qh
-         DDjFreMGC8MhMIKpL7rwRMxOr8bDdBDnvOhOf1r1SDN6ybnyNJRKz3A/fbXV2CxySF
-         yZKO9IO59VPts0MSoQ2dVZvx3vuxeDieLLY45/Y1ylqPF8Yie/XjX/b/gNgongrOJd
-         8MfM79AK0+spQ==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Anna-
 
-On 18/06/2019 21:18, Anna Schumaker wrote:
-> 
-> On Tue, 2019-06-18 at 10:35 +0100, Jon Hunter wrote:
->> Trond, Anna,
->>
->> On 12/06/2019 15:23, Jon Hunter wrote:
->>> On 05/06/2019 23:01, Trond Myklebust wrote:
->>>
->>> ...
->>>
->>>> I'd be OK with just reverting this patch if it is causing a
->>>> performance
->>>> issue.
->>>>
->>>> Anna?
->>>
->>> Any update on this?
->>
->> I have not seen any update on this. Do you plan to revert this?
->>
->> We are getting ever closer to v5.2 and this problem still persists.
-> 
-> Hi Jon,
-> 
-> Sorry it took me so long to see this. I've applied the revert and
-> pushed it out to my linux-next branch. I'm planning to send it with
-> some other bugfixes this week.
-Thanks Anna!
+I think these are ready to merge.
 
-Jon
--- 
-nvpublic
+This is a series of fixes and architectural changes that should
+improve robustness and result in better scalability of NFS/RDMA.
+
+The fundamental observation is that the RPC work queues are BOUND,
+thus rescheduling work in the Receive completion handler to one of
+these work queues just forces it to run later on the same CPU. So
+try to do more work right in the Receive completion handler to
+reduce context switch overhead.
+
+A secondary concern is that the average amount of wall-clock time
+it takes to handle a single Receive completion caps the IOPS rate
+(both per-xprt and per-NIC). In this patch series I've taken a few
+steps to reduce that latency, and I'm looking into a few others.
+
+This series can be fetched from:
+
+git://git.linux-nfs.org/projects/cel/cel-2.6.git
+
+in topic branch "nfs-for-5.3".
+
+
+Changes since v3:
+* Fixed use-after-free bug introduced in two patches
+
+Changes since v2:
+* Rebased on v5.2-rc5
+* Changed trace points to display errors as negative values
+* Used BIT() when defining trace point flag values
+* Updated NFS lookup flags as well
+
+Changes since RFC:
+* Rebased on v5.2-rc4
+* Clarified some patch descriptions and comments
+* Addressed Anna's compiler warning in frwr_unmap_[a]sync
+* Cross-ported recent xs_connect changes to xprt_rdma_connect
+* Fixed several trace-event bugs
+
+---
+
+Chuck Lever (19):
+      xprtrdma: Fix a BUG when tracing is enabled with NFSv4.1 on RDMA
+      xprtrdma: Fix use-after-free in rpcrdma_post_recvs
+      xprtrdma: Replace use of xdr_stream_pos in rpcrdma_marshal_req
+      xprtrdma: Fix occasional transport deadlock
+      xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag
+      xprtrdma: Remove fr_state
+      xprtrdma: Add mechanism to place MRs back on the free list
+      xprtrdma: Reduce context switching due to Local Invalidation
+      xprtrdma: Wake RPCs directly in rpcrdma_wc_send path
+      xprtrdma: Simplify rpcrdma_rep_create
+      xprtrdma: Streamline rpcrdma_post_recvs
+      xprtrdma: Refactor chunk encoding
+      xprtrdma: Remove rpcrdma_req::rl_buffer
+      xprtrdma: Modernize ops->connect
+      NFS4: Add a trace event to record invalid CB sequence IDs
+      NFS: Fix show_nfs_errors macros again
+      NFS: Display symbolic status code names in trace log
+      NFS: Update symbolic flags displayed by trace events
+      NFS: Record task, client ID, and XID in xdr_status trace points
+
+
+ fs/nfs/callback_proc.c          |   28 ++-
+ fs/nfs/nfs2xdr.c                |    2 
+ fs/nfs/nfs3xdr.c                |    2 
+ fs/nfs/nfs4trace.h              |  207 +++++++++++++++----------
+ fs/nfs/nfs4xdr.c                |    2 
+ fs/nfs/nfstrace.h               |  233 +++++++++++++++++++++-------
+ include/linux/sunrpc/xprt.h     |    3 
+ include/trace/events/rpcrdma.h  |   90 ++++++++---
+ net/sunrpc/sched.c              |    1 
+ net/sunrpc/xprt.c               |   32 ++++
+ net/sunrpc/xprtrdma/frwr_ops.c  |  327 ++++++++++++++++++++++++++-------------
+ net/sunrpc/xprtrdma/rpc_rdma.c  |  148 ++++++++----------
+ net/sunrpc/xprtrdma/transport.c |   83 ++++++++--
+ net/sunrpc/xprtrdma/verbs.c     |  115 ++++++--------
+ net/sunrpc/xprtrdma/xprt_rdma.h |   44 +----
+ net/sunrpc/xprtsock.c           |   23 ---
+ 16 files changed, 837 insertions(+), 503 deletions(-)
+
+--
+Chuck Lever
