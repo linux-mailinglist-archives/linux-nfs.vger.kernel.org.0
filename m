@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E73724BBB3
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 16:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39C674BBB5
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2019 16:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfFSOeB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jun 2019 10:34:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44054 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSOeB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 10:34:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so38545070iob.11;
-        Wed, 19 Jun 2019 07:34:00 -0700 (PDT)
+        id S1726518AbfFSOeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jun 2019 10:34:06 -0400
+Received: from mail-io1-f48.google.com ([209.85.166.48]:34913 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSOeG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jun 2019 10:34:06 -0400
+Received: by mail-io1-f48.google.com with SMTP id m24so38725251ioo.2;
+        Wed, 19 Jun 2019 07:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=yVeTASj+h0wPjpVUWij4uRzDyklJFd76kzTZoHfuI3E=;
-        b=QEfuZfuITl36bWa8vekSwr86agyRL7kFjBLjtc31Un9eN2aU86KmvIrwhzRp9BLjlE
-         oe47TmSplPKqM2ToejjXbyKver3KMUy+N+aGOBws3rjTw0NBQOa1zRmj5KYlkzGpF0eb
-         LLwxrORxb6xwBu8qy2YquOM/lLsuWDtjt+BrOIIfMHxTmAwWaExCPYxa58X/tvYvNcNv
-         QQKKqJsThuRb/t1+MLYXYFu2pEl/RNyfdNG8rOcpI1GluKqAphhGhxawUKJGN31ifdoc
-         W4p4LaanVBCIlS0VkeZQ4DzPwGNEGuY6SEtCf5U0LT1O9uGU6EUwRSrhABgTrkrav1tC
-         jpBw==
+        bh=QYkOxg028hCIPhtp7+LeSW93hyCu1yxK73hJ1SLMNXg=;
+        b=QkB67w5zWlT8yC/qq+lVzr1i9HLX99zhf2uFjBkHjwEjwt9OnOhHSOZCpoEYyf/Bno
+         j0MIPUGfZamT3Is7QYuxxtiIhY3xinXhSwPi5vhEVixCbCvnks4v+ukGnXL2+hPeOmqh
+         3iOUJjwjrvbheV6t4GHTOncS1Yv2w9yNHMxjd1btGJ1rP+fl/OYQSnxM5hzwtSSs48lc
+         uHNPR+6OKtIp9jgK0w0fgI+xGzG6o77p0GnNd00nP2hDxAM3nU7dXqjWjaE3oXUnhMYQ
+         W5u7ueJ9jYGNEpRKfqO1hOqHGauoPvQq6uqjiifkR7X2cL17ULGxgoVz5i5zXKru6b4K
+         gRew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=yVeTASj+h0wPjpVUWij4uRzDyklJFd76kzTZoHfuI3E=;
-        b=qUO3AsiT7yHiexEtVXzCLNLQOZAW/QU1pruMj8tSE+SMDS6ifMebB0i6lS4woDOeV6
-         HyrlwQqe7OKpYrjIpqfvKQ02SuD2Q3dd3Vm3mb6NeeeTxAfzKmOPbZ6r1WscgHPSuPAO
-         88aUDRHD5wL4Sqtr0E18leqcpr5YNexSAQxikuTsWvzliM1utuexL3kV27UqOYpfeCPL
-         g6PeL/O6KuJFEarK9+xJUG6EV0StBcekM/EqrbfOwcTAi0X+rebZuU0WLpc/0jiL0pR5
-         jkPzi5lMAWQ4rjXAeYMEoQ0+jvn9JEKBDdpJzslPhCLjASj4Y76jIRcyxZyH0WyROnlF
-         oGvA==
-X-Gm-Message-State: APjAAAUNVbclevf/lpK5/FIT/tXF1oLqnTDx9IvQN/4XaSbfQiM+ysXQ
-        JEn9I4ACKZEX/8eqT/omGVc=
-X-Google-Smtp-Source: APXvYqzjhAooMEMuAKmvI8deJ2rcYNS3Z6TIWS1jgmS7YHk3GVIoLrR5qFM3sa5V0tO0KJctqaYZ5w==
-X-Received: by 2002:a02:aa0d:: with SMTP id r13mr10627204jam.129.1560954839610;
-        Wed, 19 Jun 2019 07:33:59 -0700 (PDT)
+        bh=QYkOxg028hCIPhtp7+LeSW93hyCu1yxK73hJ1SLMNXg=;
+        b=B90HuZx4Fc/BZVX/w/aNMlN04AKV7zG0THw4VJ1QwBDZLfVrA0Nvp0FUkzkLo1W1GG
+         5W2jRfmzntXmv5tkOiyxd+kV66xhmGKtEpedc/sKtxY54p0u0oSFbpcQ/5OvFCUWeh+E
+         qCd5aSfH/vMt7jgXVTue+FJl5yfxv1stuAZ2fbXG80XcvyB86GxZZmKe/sBUK/0wUU28
+         CFBEjjbapP4wI7SGyPmr/h6RwW0lUmtr8rlxeoOdQ1AlYEx6QVYYifS/5EJdQT9se8Sb
+         BpTsvv+790Ooy7uqnTJk20tLdPdFAEdbDj5p60yJUBNbd2GgjBo7WguGCTAsnS81oRw/
+         dESg==
+X-Gm-Message-State: APjAAAW9yAHZt0/vXBqZFU6fCzAq35AoutcGxNhJANN3a4pFOIpSmXcT
+        etbqOfB100Yfgf2HpapUpDs=
+X-Google-Smtp-Source: APXvYqxidPR4248I4TZS8xsLLyBYudHHaktMJybNxumFPjn4vEvL39O9AU3FuGKFULorYiB9N16lTA==
+X-Received: by 2002:a02:77d6:: with SMTP id g205mr65385631jac.13.1560954845081;
+        Wed, 19 Jun 2019 07:34:05 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id k5sm18400370ioj.47.2019.06.19.07.33.59
+        by smtp.gmail.com with ESMTPSA id m7sm12421402iob.69.2019.06.19.07.34.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 07:33:59 -0700 (PDT)
+        Wed, 19 Jun 2019 07:34:04 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5JEXwsN004542;
-        Wed, 19 Jun 2019 14:33:58 GMT
-Subject: [PATCH v4 17/19] NFS: Display symbolic status code names in trace
- log
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x5JEY3h6004545;
+        Wed, 19 Jun 2019 14:34:03 GMT
+Subject: [PATCH v4 18/19] NFS: Update symbolic flags displayed by trace
+ events
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Wed, 19 Jun 2019 10:33:58 -0400
-Message-ID: <20190619143358.3826.4695.stgit@manet.1015granger.net>
+Date:   Wed, 19 Jun 2019 10:34:03 -0400
+Message-ID: <20190619143403.3826.95915.stgit@manet.1015granger.net>
 In-Reply-To: <20190619143031.3826.46412.stgit@manet.1015granger.net>
 References: <20190619143031.3826.46412.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -66,298 +66,307 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-For improved readability, add nfs_show_status() call-sites in the
-generic NFS trace points so that the symbolic status code name is
-displayed.
+Add missing symbolic flag names and display flags variables in
+hexadecimal to improve observability.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfstrace.h |   76 +++++++++++++++++++++++++++++------------------------
- 1 file changed, 41 insertions(+), 35 deletions(-)
+ fs/nfs/nfstrace.h |  150 ++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 124 insertions(+), 26 deletions(-)
 
 diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index a0d6910..9dd8765 100644
+index 9dd8765..cd09356 100644
 --- a/fs/nfs/nfstrace.h
 +++ b/fs/nfs/nfstrace.h
-@@ -83,7 +83,7 @@
- 		TP_ARGS(inode, error),
+@@ -11,6 +11,16 @@
+ #include <linux/tracepoint.h>
+ #include <linux/iversion.h>
  
- 		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
- 			__field(dev_t, dev)
- 			__field(u32, fhandle)
- 			__field(unsigned char, type)
-@@ -96,7 +96,7 @@
++TRACE_DEFINE_ENUM(DT_UNKNOWN);
++TRACE_DEFINE_ENUM(DT_FIFO);
++TRACE_DEFINE_ENUM(DT_CHR);
++TRACE_DEFINE_ENUM(DT_DIR);
++TRACE_DEFINE_ENUM(DT_BLK);
++TRACE_DEFINE_ENUM(DT_REG);
++TRACE_DEFINE_ENUM(DT_LNK);
++TRACE_DEFINE_ENUM(DT_SOCK);
++TRACE_DEFINE_ENUM(DT_WHT);
++
+ #define nfs_show_file_type(ftype) \
+ 	__print_symbolic(ftype, \
+ 			{ DT_UNKNOWN, "UNKNOWN" }, \
+@@ -23,25 +33,57 @@
+ 			{ DT_SOCK, "SOCK" }, \
+ 			{ DT_WHT, "WHT" })
  
- 		TP_fast_assign(
- 			const struct nfs_inode *nfsi = NFS_I(inode);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->dev = inode->i_sb->s_dev;
- 			__entry->fileid = nfsi->fileid;
- 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
-@@ -108,10 +108,10 @@
- 		),
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_DATA);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_ATIME);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_ACCESS);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_ACL);
++TRACE_DEFINE_ENUM(NFS_INO_REVAL_PAGECACHE);
++TRACE_DEFINE_ENUM(NFS_INO_REVAL_FORCED);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_LABEL);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_CHANGE);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_CTIME);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_MTIME);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_SIZE);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_OTHER);
++
+ #define nfs_show_cache_validity(v) \
+ 	__print_flags(v, "|", \
+-			{ NFS_INO_INVALID_ATTR, "INVALID_ATTR" }, \
+ 			{ NFS_INO_INVALID_DATA, "INVALID_DATA" }, \
+ 			{ NFS_INO_INVALID_ATIME, "INVALID_ATIME" }, \
+ 			{ NFS_INO_INVALID_ACCESS, "INVALID_ACCESS" }, \
+ 			{ NFS_INO_INVALID_ACL, "INVALID_ACL" }, \
+ 			{ NFS_INO_REVAL_PAGECACHE, "REVAL_PAGECACHE" }, \
+ 			{ NFS_INO_REVAL_FORCED, "REVAL_FORCED" }, \
+-			{ NFS_INO_INVALID_LABEL, "INVALID_LABEL" })
++			{ NFS_INO_INVALID_LABEL, "INVALID_LABEL" }, \
++			{ NFS_INO_INVALID_CHANGE, "INVALID_CHANGE" }, \
++			{ NFS_INO_INVALID_CTIME, "INVALID_CTIME" }, \
++			{ NFS_INO_INVALID_MTIME, "INVALID_MTIME" }, \
++			{ NFS_INO_INVALID_SIZE, "INVALID_SIZE" }, \
++			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" })
++
++TRACE_DEFINE_ENUM(NFS_INO_ADVISE_RDPLUS);
++TRACE_DEFINE_ENUM(NFS_INO_STALE);
++TRACE_DEFINE_ENUM(NFS_INO_ACL_LRU_SET);
++TRACE_DEFINE_ENUM(NFS_INO_INVALIDATING);
++TRACE_DEFINE_ENUM(NFS_INO_FSCACHE);
++TRACE_DEFINE_ENUM(NFS_INO_FSCACHE_LOCK);
++TRACE_DEFINE_ENUM(NFS_INO_LAYOUTCOMMIT);
++TRACE_DEFINE_ENUM(NFS_INO_LAYOUTCOMMITTING);
++TRACE_DEFINE_ENUM(NFS_INO_LAYOUTSTATS);
++TRACE_DEFINE_ENUM(NFS_INO_ODIRECT);
  
+ #define nfs_show_nfsi_flags(v) \
+ 	__print_flags(v, "|", \
+-			{ 1 << NFS_INO_ADVISE_RDPLUS, "ADVISE_RDPLUS" }, \
+-			{ 1 << NFS_INO_STALE, "STALE" }, \
+-			{ 1 << NFS_INO_INVALIDATING, "INVALIDATING" }, \
+-			{ 1 << NFS_INO_FSCACHE, "FSCACHE" }, \
+-			{ 1 << NFS_INO_LAYOUTCOMMIT, "NEED_LAYOUTCOMMIT" }, \
+-			{ 1 << NFS_INO_LAYOUTCOMMITTING, "LAYOUTCOMMIT" })
++			{ BIT(NFS_INO_ADVISE_RDPLUS), "ADVISE_RDPLUS" }, \
++			{ BIT(NFS_INO_STALE), "STALE" }, \
++			{ BIT(NFS_INO_ACL_LRU_SET), "ACL_LRU_SET" }, \
++			{ BIT(NFS_INO_INVALIDATING), "INVALIDATING" }, \
++			{ BIT(NFS_INO_FSCACHE), "FSCACHE" }, \
++			{ BIT(NFS_INO_FSCACHE_LOCK), "FSCACHE_LOCK" }, \
++			{ BIT(NFS_INO_LAYOUTCOMMIT), "NEED_LAYOUTCOMMIT" }, \
++			{ BIT(NFS_INO_LAYOUTCOMMITTING), "LAYOUTCOMMIT" }, \
++			{ BIT(NFS_INO_LAYOUTSTATS), "LAYOUTSTATS" }, \
++			{ BIT(NFS_INO_ODIRECT), "ODIRECT" })
+ 
+ DECLARE_EVENT_CLASS(nfs_inode_event,
+ 		TP_PROTO(
+@@ -110,7 +152,7 @@
  		TP_printk(
--			"error=%d fileid=%02x:%02x:%llu fhandle=0x%08x "
-+			"error=%ld (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
+ 			"error=%ld (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
  			"type=%u (%s) version=%llu size=%lld "
- 			"cache_validity=%lu (%s) nfs_flags=%ld (%s)",
--			__entry->error,
-+			-__entry->error, nfs_show_status(__entry->error),
+-			"cache_validity=%lu (%s) nfs_flags=%ld (%s)",
++			"cache_validity=0x%lx (%s) nfs_flags=0x%lx (%s)",
+ 			-__entry->error, nfs_show_status(__entry->error),
  			MAJOR(__entry->dev), MINOR(__entry->dev),
  			(unsigned long long)__entry->fileid,
- 			__entry->fhandle,
-@@ -219,7 +219,7 @@
- 		TP_ARGS(dir, dentry, flags, error),
+@@ -158,13 +200,41 @@
+ DEFINE_NFS_INODE_EVENT(nfs_access_enter);
+ DEFINE_NFS_INODE_EVENT_DONE(nfs_access_exit);
+ 
++TRACE_DEFINE_ENUM(LOOKUP_FOLLOW);
++TRACE_DEFINE_ENUM(LOOKUP_DIRECTORY);
++TRACE_DEFINE_ENUM(LOOKUP_AUTOMOUNT);
++TRACE_DEFINE_ENUM(LOOKUP_PARENT);
++TRACE_DEFINE_ENUM(LOOKUP_REVAL);
++TRACE_DEFINE_ENUM(LOOKUP_RCU);
++TRACE_DEFINE_ENUM(LOOKUP_NO_REVAL);
++TRACE_DEFINE_ENUM(LOOKUP_NO_EVAL);
++TRACE_DEFINE_ENUM(LOOKUP_OPEN);
++TRACE_DEFINE_ENUM(LOOKUP_CREATE);
++TRACE_DEFINE_ENUM(LOOKUP_EXCL);
++TRACE_DEFINE_ENUM(LOOKUP_RENAME_TARGET);
++TRACE_DEFINE_ENUM(LOOKUP_JUMPED);
++TRACE_DEFINE_ENUM(LOOKUP_ROOT);
++TRACE_DEFINE_ENUM(LOOKUP_EMPTY);
++TRACE_DEFINE_ENUM(LOOKUP_DOWN);
++
+ #define show_lookup_flags(flags) \
+-	__print_flags((unsigned long)flags, "|", \
+-			{ LOOKUP_AUTOMOUNT, "AUTOMOUNT" }, \
++	__print_flags(flags, "|", \
++			{ LOOKUP_FOLLOW, "FOLLOW" }, \
+ 			{ LOOKUP_DIRECTORY, "DIRECTORY" }, \
++			{ LOOKUP_AUTOMOUNT, "AUTOMOUNT" }, \
++			{ LOOKUP_PARENT, "PARENT" }, \
++			{ LOOKUP_REVAL, "REVAL" }, \
++			{ LOOKUP_RCU, "RCU" }, \
++			{ LOOKUP_NO_REVAL, "NO_REVAL" }, \
++			{ LOOKUP_NO_EVAL, "NO_EVAL" }, \
+ 			{ LOOKUP_OPEN, "OPEN" }, \
+ 			{ LOOKUP_CREATE, "CREATE" }, \
+-			{ LOOKUP_EXCL, "EXCL" })
++			{ LOOKUP_EXCL, "EXCL" }, \
++			{ LOOKUP_RENAME_TARGET, "RENAME_TARGET" }, \
++			{ LOOKUP_JUMPED, "JUMPED" }, \
++			{ LOOKUP_ROOT, "ROOT" }, \
++			{ LOOKUP_EMPTY, "EMPTY" }, \
++			{ LOOKUP_DOWN, "DOWN" })
+ 
+ DECLARE_EVENT_CLASS(nfs_lookup_event,
+ 		TP_PROTO(
+@@ -176,7 +246,7 @@
+ 		TP_ARGS(dir, dentry, flags),
  
  		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
- 			__field(unsigned int, flags)
- 			__field(dev_t, dev)
- 			__field(u64, dir)
-@@ -229,14 +229,14 @@
- 		TP_fast_assign(
- 			__entry->dev = dir->i_sb->s_dev;
- 			__entry->dir = NFS_FILEID(dir);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->flags = flags;
- 			__assign_str(name, dentry->d_name.name);
- 		),
- 
- 		TP_printk(
--			"error=%d flags=%u (%s) name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			"error=%ld (%s) flags=%u (%s) name=%02x:%02x:%llu/%s",
-+			-__entry->error, nfs_show_status(__entry->error),
- 			__entry->flags,
- 			show_lookup_flags(__entry->flags),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -323,7 +323,7 @@
- 		TP_ARGS(dir, ctx, flags, error),
- 
- 		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
- 			__field(unsigned int, flags)
- 			__field(unsigned int, fmode)
- 			__field(dev_t, dev)
-@@ -332,7 +332,7 @@
- 		),
- 
- 		TP_fast_assign(
--			__entry->error = error;
-+			__entry->error = -error;
- 			__entry->dev = dir->i_sb->s_dev;
- 			__entry->dir = NFS_FILEID(dir);
- 			__entry->flags = flags;
-@@ -341,9 +341,9 @@
- 		),
- 
- 		TP_printk(
--			"error=%d flags=%u (%s) fmode=%s "
-+			"error=%ld (%s) flags=%u (%s) fmode=%s "
- 			"name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			-__entry->error, nfs_show_status(__entry->error),
- 			__entry->flags,
- 			show_open_flags(__entry->flags),
- 			show_fmode_flags(__entry->fmode),
-@@ -397,7 +397,7 @@
- 		TP_ARGS(dir, dentry, flags, error),
- 
- 		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
- 			__field(unsigned int, flags)
- 			__field(dev_t, dev)
- 			__field(u64, dir)
-@@ -405,7 +405,7 @@
- 		),
- 
- 		TP_fast_assign(
--			__entry->error = error;
-+			__entry->error = -error;
- 			__entry->dev = dir->i_sb->s_dev;
- 			__entry->dir = NFS_FILEID(dir);
- 			__entry->flags = flags;
-@@ -413,8 +413,8 @@
- 		),
- 
- 		TP_printk(
--			"error=%d flags=%u (%s) name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			"error=%ld (%s) flags=%u (%s) name=%02x:%02x:%llu/%s",
-+			-__entry->error, nfs_show_status(__entry->error),
- 			__entry->flags,
- 			show_open_flags(__entry->flags),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -469,7 +469,7 @@
- 		TP_ARGS(dir, dentry, error),
- 
- 		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
  			__field(dev_t, dev)
  			__field(u64, dir)
  			__string(name, dentry->d_name.name)
-@@ -478,13 +478,13 @@
- 		TP_fast_assign(
- 			__entry->dev = dir->i_sb->s_dev;
- 			__entry->dir = NFS_FILEID(dir);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__assign_str(name, dentry->d_name.name);
+@@ -190,7 +260,7 @@
  		),
  
  		TP_printk(
--			"error=%d name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			"error=%ld (%s) name=%02x:%02x:%llu/%s",
-+			-__entry->error, nfs_show_status(__entry->error),
+-			"flags=%u (%s) name=%02x:%02x:%llu/%s",
++			"flags=0x%lx (%s) name=%02x:%02x:%llu/%s",
+ 			__entry->flags,
+ 			show_lookup_flags(__entry->flags),
  			MAJOR(__entry->dev), MINOR(__entry->dev),
- 			(unsigned long long)__entry->dir,
- 			__get_str(name)
-@@ -557,7 +557,7 @@
- 		TP_ARGS(inode, dir, dentry, error),
+@@ -220,7 +290,7 @@
  
  		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
+ 			__field(unsigned long, error)
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
  			__field(dev_t, dev)
- 			__field(u64, fileid)
  			__field(u64, dir)
-@@ -568,13 +568,13 @@
- 			__entry->dev = inode->i_sb->s_dev;
- 			__entry->fileid = NFS_FILEID(inode);
- 			__entry->dir = NFS_FILEID(dir);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__assign_str(name, dentry->d_name.name);
+ 			__string(name, dentry->d_name.name)
+@@ -235,7 +305,7 @@
  		),
  
  		TP_printk(
--			"error=%d fileid=%02x:%02x:%llu name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			"error=%ld (%s) fileid=%02x:%02x:%llu name=%02x:%02x:%llu/%s",
-+			-__entry->error, nfs_show_status(__entry->error),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
- 			__entry->fileid,
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -642,7 +642,7 @@
+-			"error=%ld (%s) flags=%u (%s) name=%02x:%02x:%llu/%s",
++			"error=%ld (%s) flags=0x%lx (%s) name=%02x:%02x:%llu/%s",
+ 			-__entry->error, nfs_show_status(__entry->error),
+ 			__entry->flags,
+ 			show_lookup_flags(__entry->flags),
+@@ -260,15 +330,43 @@
+ DEFINE_NFS_LOOKUP_EVENT(nfs_lookup_revalidate_enter);
+ DEFINE_NFS_LOOKUP_EVENT_DONE(nfs_lookup_revalidate_exit);
+ 
++TRACE_DEFINE_ENUM(O_WRONLY);
++TRACE_DEFINE_ENUM(O_RDWR);
++TRACE_DEFINE_ENUM(O_CREAT);
++TRACE_DEFINE_ENUM(O_EXCL);
++TRACE_DEFINE_ENUM(O_NOCTTY);
++TRACE_DEFINE_ENUM(O_TRUNC);
++TRACE_DEFINE_ENUM(O_APPEND);
++TRACE_DEFINE_ENUM(O_NONBLOCK);
++TRACE_DEFINE_ENUM(O_DSYNC);
++TRACE_DEFINE_ENUM(O_DIRECT);
++TRACE_DEFINE_ENUM(O_LARGEFILE);
++TRACE_DEFINE_ENUM(O_DIRECTORY);
++TRACE_DEFINE_ENUM(O_NOFOLLOW);
++TRACE_DEFINE_ENUM(O_NOATIME);
++TRACE_DEFINE_ENUM(O_CLOEXEC);
++
+ #define show_open_flags(flags) \
+-	__print_flags((unsigned long)flags, "|", \
++	__print_flags(flags, "|", \
++		{ O_WRONLY, "O_WRONLY" }, \
++		{ O_RDWR, "O_RDWR" }, \
+ 		{ O_CREAT, "O_CREAT" }, \
+ 		{ O_EXCL, "O_EXCL" }, \
++		{ O_NOCTTY, "O_NOCTTY" }, \
+ 		{ O_TRUNC, "O_TRUNC" }, \
+ 		{ O_APPEND, "O_APPEND" }, \
++		{ O_NONBLOCK, "O_NONBLOCK" }, \
+ 		{ O_DSYNC, "O_DSYNC" }, \
+ 		{ O_DIRECT, "O_DIRECT" }, \
+-		{ O_DIRECTORY, "O_DIRECTORY" })
++		{ O_LARGEFILE, "O_LARGEFILE" }, \
++		{ O_DIRECTORY, "O_DIRECTORY" }, \
++		{ O_NOFOLLOW, "O_NOFOLLOW" }, \
++		{ O_NOATIME, "O_NOATIME" }, \
++		{ O_CLOEXEC, "O_CLOEXEC" })
++
++TRACE_DEFINE_ENUM(FMODE_READ);
++TRACE_DEFINE_ENUM(FMODE_WRITE);
++TRACE_DEFINE_ENUM(FMODE_EXEC);
+ 
+ #define show_fmode_flags(mode) \
+ 	__print_flags(mode, "|", \
+@@ -286,7 +384,7 @@
+ 		TP_ARGS(dir, ctx, flags),
  
  		TP_STRUCT__entry(
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
+ 			__field(unsigned int, fmode)
  			__field(dev_t, dev)
--			__field(int, error)
-+			__field(unsigned long, error)
- 			__field(u64, old_dir)
- 			__string(old_name, old_dentry->d_name.name)
- 			__field(u64, new_dir)
-@@ -651,17 +651,17 @@
- 
- 		TP_fast_assign(
- 			__entry->dev = old_dir->i_sb->s_dev;
-+			__entry->error = -error;
- 			__entry->old_dir = NFS_FILEID(old_dir);
- 			__entry->new_dir = NFS_FILEID(new_dir);
--			__entry->error = error;
- 			__assign_str(old_name, old_dentry->d_name.name);
- 			__assign_str(new_name, new_dentry->d_name.name);
- 		),
- 
- 		TP_printk(
--			"error=%d old_name=%02x:%02x:%llu/%s "
-+			"error=%ld (%s) old_name=%02x:%02x:%llu/%s "
- 			"new_name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			-__entry->error, nfs_show_status(__entry->error),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
- 			(unsigned long long)__entry->old_dir,
- 			__get_str(old_name),
-@@ -697,7 +697,7 @@
- 
- 		TP_STRUCT__entry(
- 			__field(dev_t, dev)
--			__field(int, error)
-+			__field(unsigned long, error)
  			__field(u64, dir)
- 			__dynamic_array(char, name, data->args.name.len + 1)
- 		),
-@@ -707,15 +707,15 @@
- 			size_t len = data->args.name.len;
- 			__entry->dev = dir->i_sb->s_dev;
- 			__entry->dir = NFS_FILEID(dir);
--			__entry->error = error;
-+			__entry->error = -error;
- 			memcpy(__get_str(name),
- 				data->args.name.name, len);
- 			__get_str(name)[len] = 0;
+@@ -302,7 +400,7 @@
  		),
  
  		TP_printk(
--			"error=%d name=%02x:%02x:%llu/%s",
--			__entry->error,
-+			"error=%ld (%s) name=%02x:%02x:%llu/%s",
-+			-__entry->error, nfs_show_status(__entry->error),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
- 			(unsigned long long)__entry->dir,
- 			__get_str(name)
-@@ -974,6 +974,8 @@
- TRACE_DEFINE_ENUM(NFSERR_NOENT);
- TRACE_DEFINE_ENUM(NFSERR_IO);
- TRACE_DEFINE_ENUM(NFSERR_NXIO);
-+TRACE_DEFINE_ENUM(ECHILD);
-+TRACE_DEFINE_ENUM(NFSERR_EAGAIN);
- TRACE_DEFINE_ENUM(NFSERR_ACCES);
- TRACE_DEFINE_ENUM(NFSERR_EXIST);
- TRACE_DEFINE_ENUM(NFSERR_XDEV);
-@@ -985,6 +987,7 @@
- TRACE_DEFINE_ENUM(NFSERR_NOSPC);
- TRACE_DEFINE_ENUM(NFSERR_ROFS);
- TRACE_DEFINE_ENUM(NFSERR_MLINK);
-+TRACE_DEFINE_ENUM(NFSERR_OPNOTSUPP);
- TRACE_DEFINE_ENUM(NFSERR_NAMETOOLONG);
- TRACE_DEFINE_ENUM(NFSERR_NOTEMPTY);
- TRACE_DEFINE_ENUM(NFSERR_DQUOT);
-@@ -1007,6 +1010,8 @@
- 			{ NFSERR_NOENT, "NOENT" }, \
- 			{ NFSERR_IO, "IO" }, \
- 			{ NFSERR_NXIO, "NXIO" }, \
-+			{ ECHILD, "CHILD" }, \
-+			{ NFSERR_EAGAIN, "AGAIN" }, \
- 			{ NFSERR_ACCES, "ACCES" }, \
- 			{ NFSERR_EXIST, "EXIST" }, \
- 			{ NFSERR_XDEV, "XDEV" }, \
-@@ -1018,6 +1023,7 @@
- 			{ NFSERR_NOSPC, "NOSPC" }, \
- 			{ NFSERR_ROFS, "ROFS" }, \
- 			{ NFSERR_MLINK, "MLINK" }, \
-+			{ NFSERR_OPNOTSUPP, "OPNOTSUPP" }, \
- 			{ NFSERR_NAMETOOLONG, "NAMETOOLONG" }, \
- 			{ NFSERR_NOTEMPTY, "NOTEMPTY" }, \
- 			{ NFSERR_DQUOT, "DQUOT" }, \
-@@ -1041,7 +1047,7 @@
- 		TP_ARGS(error),
+-			"flags=%u (%s) fmode=%s name=%02x:%02x:%llu/%s",
++			"flags=0x%lx (%s) fmode=%s name=%02x:%02x:%llu/%s",
+ 			__entry->flags,
+ 			show_open_flags(__entry->flags),
+ 			show_fmode_flags(__entry->fmode),
+@@ -324,7 +422,7 @@
  
  		TP_STRUCT__entry(
--			__field(int, error)
-+			__field(unsigned long, error)
- 		),
- 
- 		TP_fast_assign(
-@@ -1049,8 +1055,8 @@
+ 			__field(unsigned long, error)
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
+ 			__field(unsigned int, fmode)
+ 			__field(dev_t, dev)
+ 			__field(u64, dir)
+@@ -341,7 +439,7 @@
  		),
  
  		TP_printk(
--			"error=%d (%s)",
--			__entry->error, nfs_show_status(__entry->error)
-+			"error=%ld (%s)",
-+			-__entry->error, nfs_show_status(__entry->error)
- 		)
- );
+-			"error=%ld (%s) flags=%u (%s) fmode=%s "
++			"error=%ld (%s) flags=0x%lx (%s) fmode=%s "
+ 			"name=%02x:%02x:%llu/%s",
+ 			-__entry->error, nfs_show_status(__entry->error),
+ 			__entry->flags,
+@@ -363,7 +461,7 @@
+ 		TP_ARGS(dir, dentry, flags),
  
+ 		TP_STRUCT__entry(
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
+ 			__field(dev_t, dev)
+ 			__field(u64, dir)
+ 			__string(name, dentry->d_name.name)
+@@ -377,7 +475,7 @@
+ 		),
+ 
+ 		TP_printk(
+-			"flags=%u (%s) name=%02x:%02x:%llu/%s",
++			"flags=0x%lx (%s) name=%02x:%02x:%llu/%s",
+ 			__entry->flags,
+ 			show_open_flags(__entry->flags),
+ 			MAJOR(__entry->dev), MINOR(__entry->dev),
+@@ -398,7 +496,7 @@
+ 
+ 		TP_STRUCT__entry(
+ 			__field(unsigned long, error)
+-			__field(unsigned int, flags)
++			__field(unsigned long, flags)
+ 			__field(dev_t, dev)
+ 			__field(u64, dir)
+ 			__string(name, dentry->d_name.name)
+@@ -413,7 +511,7 @@
+ 		),
+ 
+ 		TP_printk(
+-			"error=%ld (%s) flags=%u (%s) name=%02x:%02x:%llu/%s",
++			"error=%ld (%s) flags=0x%lx (%s) name=%02x:%02x:%llu/%s",
+ 			-__entry->error, nfs_show_status(__entry->error),
+ 			__entry->flags,
+ 			show_open_flags(__entry->flags),
 
