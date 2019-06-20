@@ -2,126 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 578B24CDFA
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2019 14:49:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C08E74D0C3
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2019 16:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731876AbfFTMsz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Jun 2019 08:48:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34032 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726931AbfFTMsx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:48:53 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0CDF27CEA37C667575BA;
-        Thu, 20 Jun 2019 20:48:48 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 20 Jun 2019 20:48:39 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <bfields@fieldses.org>, <jlayton@kernel.org>,
-        <davem@davemloft.net>, <semen.protsenko@linaro.org>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <vvs@virtuozzo.com>, <tglx@linutronix.de>
-CC:     <nixiaoming@huawei.com>, <dylix.dailei@huawei.com>,
-        <alex.huangjianhui@huawei.com>, <adobriyan@gmail.com>,
-        <mingo@kernel.org>, <viresh.kumar@linaro.org>, <luto@kernel.org>,
-        <arjan@linux.intel.com>, <Nadia.Derbey@bull.net>,
-        <torvalds@linux-foundation.org>, <stern@rowland.harvard.edu>,
-        <paulmck@linux.vnet.ibm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <stable@kernel.org>
-Subject: [PATCH v2 3/3] kernel/notifier.c: remove blocking_notifier_chain_cond_register()
-Date:   Thu, 20 Jun 2019 20:48:34 +0800
-Message-ID: <1561034914-106990-3-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1561034914-106990-1-git-send-email-nixiaoming@huawei.com>
-References: <1561034914-106990-1-git-send-email-nixiaoming@huawei.com>
+        id S1726649AbfFTOtv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Jun 2019 10:49:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34105 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfFTOtv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jun 2019 10:49:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id k8so163122iot.1
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2019 07:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B6dH/sM7Wc8glPTF6o57Mt2MUGYTntayEUbhoPZsDhU=;
+        b=N4HO22bmL0GQReDjVIZ2LpSg/fufe22ecLRMbO+dGeuAveKKHIxXikR47mgmc9As7r
+         AmWsjTIRMJw2NH+GjkfxmeOEjL6GXU+ocy30dPRu/nuTfEjN48D7CX9mMGrH8l6vJEPb
+         bMepQMSirdraLEBM22t4sg4b6IrPrNUNu60qaYQo2PyqI7lfnwrND/UNTWRIN0cpUMKL
+         Ri/TP3sYKrrI9Nav8yaxXJjA8pGT+ahTLAp9bFw+NOt9Yw6+gIRnJaY7ouoO1sWXLCQh
+         AweCuzT9FxOSfaFTSppHIpyTjmxMoMgSsQz71f5RDfAO8kDgyX61B0HnbGsBNGZmBSAV
+         IbKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B6dH/sM7Wc8glPTF6o57Mt2MUGYTntayEUbhoPZsDhU=;
+        b=reBcMxsrKGd5L61wQvXSaAOqJuFh00ue3kT/VUQjmkC85arWPGEUT/ICfK8BDVG/T8
+         9eV7YZqx2WsjrXmCJE9hbxKWW9A4nYXNIT0OqPdMFn6MVlkw31174xZ8hRFTLvRlKZrL
+         kB/l0c4WlgnbLPk0k27Y8qsavhD7VlVVtXgT8KL+b0XHs47l8b2kxiSwI6UWWoSdT22I
+         w9np2lE01unmLDbghRk2hfsG3rz1SOFehQYn2HSQq5VeoI7VEwC4rk6wu5wAq5XWfHQK
+         iFjGl8vQmwxevdvK3bu40KU2YIkYHE5+wpW+LziarIvOeeT/CKw/Jn8d3+7bUGy1LTG9
+         LEiQ==
+X-Gm-Message-State: APjAAAUVrDfEc6rTFeL9xrqi018aeY48/ygQqVMcKI1A9Q+WeZQ/k4Mt
+        bExTRJAP0gOUNGuQBR0J+w==
+X-Google-Smtp-Source: APXvYqym/oQplmVkLADTKcOJaYZaKQ0azwnlpSZ1HNjC97zdTb2GFN05Amq3gV9Zghm4Q2/uooKbaA==
+X-Received: by 2002:a6b:7d49:: with SMTP id d9mr30290572ioq.50.1561042189834;
+        Thu, 20 Jun 2019 07:49:49 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id b8sm39416ioj.16.2019.06.20.07.49.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 07:49:49 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Ido Schimmel <idosch@idosch.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: Fix a credential refcount leak
+Date:   Thu, 20 Jun 2019 10:47:40 -0400
+Message-Id: <20190620144740.4169-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-blocking_notifier_chain_cond_register() does not consider
-system_booting state, which is the only difference between this
-function and blocking_notifier_cain_register(). This can be a bug
-and is a piece of duplicate code.
+All callers of __rpc_clone_client() pass in a value for args->cred,
+meaning that the credential gets assigned and referenced in
+the call to rpc_new_client().
 
-Delete blocking_notifier_chain_cond_register()
-
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+Reported-by: Ido Schimmel <idosch@idosch.org>
+Fixes: 79caa5fad47c ("SUNRPC: Cache cred of process creating the rpc_client")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- include/linux/notifier.h |  4 ----
- kernel/notifier.c        | 23 -----------------------
- net/sunrpc/rpc_pipe.c    |  2 +-
- 3 files changed, 1 insertion(+), 28 deletions(-)
+ net/sunrpc/clnt.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/notifier.h b/include/linux/notifier.h
-index 0096a05..0189476 100644
---- a/include/linux/notifier.h
-+++ b/include/linux/notifier.h
-@@ -150,10 +150,6 @@ extern int raw_notifier_chain_register(struct raw_notifier_head *nh,
- extern int srcu_notifier_chain_register(struct srcu_notifier_head *nh,
- 		struct notifier_block *nb);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 627a87a71f8b..010e59cf2ae0 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -634,7 +634,6 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
+ 	new->cl_discrtry = clnt->cl_discrtry;
+ 	new->cl_chatty = clnt->cl_chatty;
+ 	new->cl_principal = clnt->cl_principal;
+-	new->cl_cred = get_cred(clnt->cl_cred);
+ 	return new;
  
--extern int blocking_notifier_chain_cond_register(
--		struct blocking_notifier_head *nh,
--		struct notifier_block *nb);
--
- extern int atomic_notifier_chain_unregister(struct atomic_notifier_head *nh,
- 		struct notifier_block *nb);
- extern int blocking_notifier_chain_unregister(struct blocking_notifier_head *nh,
-diff --git a/kernel/notifier.c b/kernel/notifier.c
-index e3d221f..63d7501 100644
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -221,29 +221,6 @@ int blocking_notifier_chain_register(struct blocking_notifier_head *nh,
- EXPORT_SYMBOL_GPL(blocking_notifier_chain_register);
- 
- /**
-- *	blocking_notifier_chain_cond_register - Cond add notifier to a blocking notifier chain
-- *	@nh: Pointer to head of the blocking notifier chain
-- *	@n: New entry in notifier chain
-- *
-- *	Adds a notifier to a blocking notifier chain, only if not already
-- *	present in the chain.
-- *	Must be called in process context.
-- *
-- *	Currently always returns zero.
-- */
--int blocking_notifier_chain_cond_register(struct blocking_notifier_head *nh,
--		struct notifier_block *n)
--{
--	int ret;
--
--	down_write(&nh->rwsem);
--	ret = notifier_chain_register(&nh->head, n);
--	up_write(&nh->rwsem);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(blocking_notifier_chain_cond_register);
--
--/**
-  *	blocking_notifier_chain_unregister - Remove notifier from a blocking notifier chain
-  *	@nh: Pointer to head of the blocking notifier chain
-  *	@n: Entry to remove from notifier chain
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 126d314..1287f80 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -50,7 +50,7 @@
- 
- int rpc_pipefs_notifier_register(struct notifier_block *nb)
- {
--	return blocking_notifier_chain_cond_register(&rpc_pipefs_notifier_list, nb);
-+	return blocking_notifier_chain_register(&rpc_pipefs_notifier_list, nb);
- }
- EXPORT_SYMBOL_GPL(rpc_pipefs_notifier_register);
- 
+ out_err:
 -- 
-1.8.5.6
+2.21.0
 
