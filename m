@@ -2,114 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 730904F0BF
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2019 00:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE73F4F70C
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2019 18:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbfFUW0D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jun 2019 18:26:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43488 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfFUW0D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jun 2019 18:26:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so3633682plb.10
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2019 15:26:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DWIfKY3sHhlypxieTHXlR0ue9pX61XiXTJFQC3OO8/Y=;
-        b=F3oK9ItCKHZWlvyXbWlgudvY62RgLBcpeWB0uDFSBVHAlndEsOKy2T4/ZemmpzvRqZ
-         oY3KQbbuu9yaU9lrznY9Dnf+cVQ2In6REloEYX5Xo4pr9Ou4thXc69h3cdaS5PSnSkPM
-         zBpg3DUoPZ/x/EWtz1v8KcgnKa4rBKvX9hGOM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DWIfKY3sHhlypxieTHXlR0ue9pX61XiXTJFQC3OO8/Y=;
-        b=hzUnaYaAKKQra9Duywck3tmZbW0Jk3eVgU85r1De0EYIvQH6qn4s2sVaS2BTX4m1b9
-         FBTYTTuBckvbxv2H3QF4+60h72cV4Ka6u8wCwdH1zn6Q+P7SZVA3RuFAPhoqQpIDSzhy
-         CxTQP9OESTsUtRpMarOdQAEJu2YJYW6W0PAiJCAINiFwlIszCLeyfTZWClMQo6WyJpC9
-         Tx3clcX2dtLxS/0Ncjhml8ExHb+e00fKdgZkc8OwJ+0m04jkV2txWpRycfPy8ySy5+jI
-         C3YXzpbqCm2oS3UAyIN0TBBrChKlKMChVxAX0rsTppRdQvk3jo3ctN4XzaxHVIT59PDd
-         d3Fg==
-X-Gm-Message-State: APjAAAWRbokecmBOIDjn/Fudxd8e2CM1e/RPFujxB25pw/DIoCrIo5G8
-        1e5U7BuG0wJFtQqBx7Eg+cdPYA==
-X-Google-Smtp-Source: APXvYqzHKz+FN6uklKxhJ8zGwzVlc0a3NhIekAb3EpSCFfLlnPNerTelJLHoHEdZQT35C4irwOD+VA==
-X-Received: by 2002:a17:902:9041:: with SMTP id w1mr121282560plz.132.1561155962449;
-        Fri, 21 Jun 2019 15:26:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m12sm3282622pgj.80.2019.06.21.15.26.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 15:26:01 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 15:26:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <201906211431.E6552108@keescook>
-References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
- <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190621174544.GC25590@fieldses.org>
+        id S1726445AbfFVQ3Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Jun 2019 12:29:16 -0400
+Received: from sonic316-11.consmr.mail.bf2.yahoo.com ([74.6.130.121]:46297
+        "EHLO sonic316-11.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726453AbfFVQ3J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jun 2019 12:29:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220948; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=Sqmma7rQCC9csXbuiUU3W2/3JNoNH7S8264Vtax3p6vjP/GOy3xpD3wbU2PRR9kt9Hpkf+FIWW9PMCnOCaw1O79buHof/+e4XCSgtAjG8InDhCml6NU6QqPjKJ3zDc6ntgnpVqWtJnbhtjoUqIbv1W6GU8NTi8qVdCcmhrTc1IZ6aiOxpvBar7FQmN3jAwZcqruMWVYBgbk1LAoNqGvQ8jjOiTjNhCDJjpcLi94EE60gk+qIfYgu1AQDdd9wVo7X6i3XlVR9KCYw0l7ikZmlDSVkcSrrmJBlognD3+QlW4wko0RiyOGAXy+sEMAa8UXhFfxEEhf+A0WfqKBKwkVQbg==
+X-YMail-OSG: 3TA6aNEVM1mHk4tfSNROwYxIcekGBuzt5YSl8uAf.0_HHQ2LGDBhX2FGT2.Do_z
+ _0DV280q.YGRxDLoRDSJM82e2d5hsgoPZVcKxWsle6Z3oHX8Omo6hY9bu5QjJLY68zQNKFXygJQb
+ l1z62dHRy69xOFvl6tq.81EbMsOh1_cirrcCk2fMX_Jmwx0sebG__1rhE6wzzo_NDP9VbvIqZ9bR
+ 2icQk1E4jS_eT.9i5S8Sf0xsdShl9dMibpAXRU93yOYuHTQIa_P77tZTcStgCsIVxKiDvC3a0NxY
+ 8gZtRhwFdS641nFzLb368UTov.mB4xMHIDhTJv9NazaTg1j8sw18ET29s.TqlBmXHg8vLU94qBpd
+ 5PlUttniCcoNFEJpnLF3UUydECDiL8Z11cc18YJXwsIeDfFkYqHGX5XdA4jNj054mfKUIhoNEakn
+ WUKps59xvPMOhDCVBujS9v_vJClG4fXrBtjl.W_LQqwsSCutxIcdvaqHEtURhc6MkAEPdp4bTGI.
+ srA9smb.rYGHYAQmfGBYSrMpzCORaFwD3sLBOdwCdBjEVVdu.sBEOGddWsx2T8AZRYYy5nvR9Foz
+ bPsz41tE4__SqGjxrktEJ2_s2wIQAUza2deZFDGXc6T62eXwgZpA4Pp2nGTmGbFQ6h4nAMd51HJh
+ T3GzQn8s4GOn.0BKRwZDpwf7w10rv6JPk5nAgLZOaX7LfFs2yeq7fnFrg4OCOiG9MCMxrUNq6gf7
+ VomHdE0MTMCDmL3Ebk4K0YUhXaCTht27MRDaoJusaRVRGavzgn0vj3Z4n7xxu27l7AAqrNZTRmUI
+ n_b8fWLMzkIFoI7ZcmL_O5d2bYctv7x0WqIS4U6onMjRr4HtPSPFTejqwRtmzChG01EgeDt1Xu9J
+ 3fp8ciCxthupmhAtFqCrukMze7VttucN.DpeM8bKmVw1EDgn.s_L.L9fVdDwg2umGkLNazDxoP0_
+ dzbgtjASRdO1.JaxkowN5gRT6rna4oVoAmbHsjQ4rLTjBWSWz8ZqQDlV43apY.buigbJvn4Qmvf1
+ GxhsPAlHlnnGfjZ9pr3BSAVXKd_Qs83vYaBOYxWdXDlwxBl9.1.bnCTqFBLXCTND1BZASE2pli5W
+ fu842ttK3BMCdw5COU_fvmE4HTFnTUQ5tN2a6KHryWZiInkZpWdo8I9xFucw8IlPI3qY2rDSegZk
+ LLEiGCawsrUj04Yg3uv6LVIzJaVvTytAzboyOeQVTgoj.0EfkvEtgpXm3
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:29:08 +0000
+Date:   Sat, 22 Jun 2019 16:29:03 +0000 (UTC)
+From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
+Reply-To: miss.fmayusuf11@gmail.com
+Message-ID: <1743094696.311303.1561220943310@mail.yahoo.com>
+Subject: From:Miss: Fatima Yusuf.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621174544.GC25590@fieldses.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 01:45:44PM -0400, J. Bruce Fields wrote:
-> I'm not sure who to get review from for this kind of thing.
-> 
-> Kees, you seem to be one of the only people to touch string_helpers.c
-> at all recently, any ideas?
 
-Hi! Yeah, I'm happy to take a look. Notes below...
 
-> 
-> --b.
-> 
-> On Thu, Jun 20, 2019 at 10:51:07AM -0400, J. Bruce Fields wrote:
-> > From: "J. Bruce Fields" <bfields@redhat.com>
-> > 
-> > I'm exposing some information about NFS clients in pseudofiles.  I
-> > expect to eventually have simple tools to help read those pseudofiles.
-> > 
-> > But it's also helpful if the raw files are human-readable to the extent
-> > possible.  It aids debugging and makes them usable on systems that don't
-> > have the latest nfs-utils.
-> > 
-> > A minor challenge there is opaque client-generated protocol objects like
-> > state owners and client identifiers.  Some clients generate those to
-> > include handy information in plain ascii.  But they may also include
-> > arbitrary byte sequences.
-> > 
-> > I think the simplest approach is to limit to isprint(c) && isascii(c)
-> > and escape everything else.
+From:Miss: Fatima Yusuf.
 
-Can you get the same functionality out of sprintf's %pE (escaped
-string)? If not, maybe we should expand the flags available?
+For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
 
- * - 'E[achnops]' For an escaped buffer, where rules are defined by
- * combination
- *                of the following flags (see string_escape_mem() for
- *                the
- *                details):
- *                  a - ESCAPE_ANY
- *                  c - ESCAPE_SPECIAL
- *                  h - ESCAPE_HEX
- *                  n - ESCAPE_NULL
- *                  o - ESCAPE_OCTAL
- *                  p - ESCAPE_NP
- *                  s - ESCAPE_SPACE
- *                By default ESCAPE_ANY_NP is used.
+I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
 
-This doesn't cover escaping >0x7f and " and \
+Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
 
-And perhaps I should rework kstrdup_quotable() to have that flag? It's
-not currently escaping non-ascii and it probably should. Maybe
-"ESCAPE_QUOTABLE" as "q"?
+I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
 
--- 
-Kees Cook
+I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
+
+My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
+
+I am waiting to hear from you.
+Yours Sincerely,
+Miss.Fatima Yusuf.
