@@ -2,75 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 814634F826
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2019 22:23:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5A34FA9D
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Jun 2019 09:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbfFVUXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 Jun 2019 16:23:00 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34445 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfFVUW6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jun 2019 16:22:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id i2so4669224plt.1
-        for <linux-nfs@vger.kernel.org>; Sat, 22 Jun 2019 13:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1w4upBhO9u5DrCydQoLXXnUxv1WXapfYDD1jk9PIDQA=;
-        b=OOOVQJTXjb56HyWy+ezfShBHwUM1Mo4Vj0K02GtwEpgbGBm89AXs7U9eg6dsqPNjZ1
-         PMavEq93wzBvgfsZw6cViARLTasvbLlruNvNLvZhcdW4St16utw5n9h/UFVZn/WVjhGI
-         DdXdmnN/RhV1S7FgweNpZFokXOl0F1RxYo5Mo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1w4upBhO9u5DrCydQoLXXnUxv1WXapfYDD1jk9PIDQA=;
-        b=DkzDJUFVtFH+k0kCX+coqtxnfOEb4OA01dpw2LELObNdYwrtc7RSwPWAp8ePUVOb52
-         r9OuDow4BAeowFl9KXvgezkMMQpuu4zF8BIfecs/tCJKyvTVW0MbIbVoG9/HyCDLJSuN
-         3QqPl9pR5PhAVWoyrcqR9Qathakew3GPsaAZLffWGYNDLTzJHM2k95D3E53eTguZPccw
-         Gt77lzGQr8KNeWc9yuENLVEogrpL5s/ZSpu1G9wxsxLH04MeB5qz21CCEqIVpIr/SXBY
-         XvbtMgl++iCHuNEV2lahme9uhGMYaxyGw51omqL5W5xop5PFvO1Q8ZxM3MYVk2vqAvUb
-         0aQw==
-X-Gm-Message-State: APjAAAWSeI0dl/SIJyDjX7fdkznjVB4NoZkfHEApB7faOqlRT7Bz5UqM
-        fKUnE+9vfHNZost5/r9ytEt2uPCMU0I=
-X-Google-Smtp-Source: APXvYqwPSy1JJwzKBw7YFhSjIjET++vlOZO2iqmz6J9vOjD7VZoKy8n6adF2zxwhH17r5CEaW+Y5Mg==
-X-Received: by 2002:a17:902:7894:: with SMTP id q20mr127674761pll.339.1561234977830;
-        Sat, 22 Jun 2019 13:22:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m8sm5325462pjs.22.2019.06.22.13.22.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Jun 2019 13:22:57 -0700 (PDT)
-Date:   Sat, 22 Jun 2019 13:22:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <201906221320.5BFC134713@keescook>
-References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
- <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190621174544.GC25590@fieldses.org>
- <201906211431.E6552108@keescook>
- <20190622190058.GD5343@fieldses.org>
+        id S1726365AbfFWHc3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 23 Jun 2019 03:32:29 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51179 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725268AbfFWHc3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Jun 2019 03:32:29 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 31D8F21E56;
+        Sun, 23 Jun 2019 03:32:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 23 Jun 2019 03:32:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FABXvf
+        lUL4aIVjrhxX5OHfdaCppukYpxcLhDibROd+s=; b=QSQIaKGECLh76E0sHmeukN
+        EfNCb7hwHqKLhR16NzILsAtr3YNfO3HTvllo40O9/bm/KGHBxMVdMM4nMHpuQp0O
+        KGvsqVZ1iDlZ3OTiYXnTY7IeHNyKfc+X/thkwKirUtMgFiJmfkquVmyYTBnFcavU
+        pGyiPsv3rytRdB+i8hOSzNVHbsqYW0EvLakAz79gj06+JU8DHPzVCh3mrpVWYkfD
+        KYPuCFR1rPXNlEt08y0nalAe/t0svcSRwySMqTfrdaPmNjtHISCpzh54ZlCxXzqO
+        MMzAgA+h2stBioKtZDZ7GQssoL1ykriLhXtxIR/ZY6DADDUw0WaeO3fmNN8ltbSg
+        ==
+X-ME-Sender: <xms:CysPXU6y5EHyQhcd07x1xqBd4YjW3USDKZ-NDJgTPBhWTko7mE2HHg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdelgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
+    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphepudelfedrgeejrdduieehrddvhedunecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:CysPXeFRQlkg0ppP8PLKYpHIcZvHIJ_IeZAwF0bcjPgKjlo2CsPT2A>
+    <xmx:CysPXawUgi-ekGmkl9SEQBuG9SffenC1d1jmUbO-7tXrhgoL-ONbjg>
+    <xmx:CysPXW17dp8ODZMDyEJgK7McGEyhxYqk7o--49MiIo2SqpdXWilObQ>
+    <xmx:DCsPXZONxSVcLWHKjvT1McQ0gcfTcVXgLxVBFqGGoFBX0hHwBTsa4w>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4CD7C380075;
+        Sun, 23 Jun 2019 03:32:27 -0400 (EDT)
+Date:   Sun, 23 Jun 2019 10:32:25 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: memory leaks reported during xfstests
+Message-ID: <20190623073225.GA21489@splinter>
+References: <6842E17A-0209-40A2-B71B-14C8361C7166@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190622190058.GD5343@fieldses.org>
+In-Reply-To: <6842E17A-0209-40A2-B71B-14C8361C7166@oracle.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 03:00:58PM -0400, J. Bruce Fields wrote:
-> The logic around ESCAPE_NP and the "only" string is really confusing.  I
-> started assuming I could just add an ESCAPE_NONASCII flag and stick "
-> and \ into the "only" string, but it doesn't work that way.
+On Fri, Jun 21, 2019 at 05:58:48PM -0400, Chuck Lever wrote:
+> For unrelated reasons I've enabled kmemleak in my client's kernel.
+> While running xfstests, I get these reports on several of the tests.
+> I've seen them on a few recent kernels as well.
+> 
+> They do not look related to NFS. Anyone know where I should report
+> this?
 
-Yeah, if ESCAPE_NP isn't specified, the "only" characters are passed
-through. It'd be nice to have an "add" or a clearer way to do actual
-ctype subsets, etc. If there isn't an obviously clear way to refactor
-it, just skip it for now and I'm happy to ack your original patch. :)
+Most likely fixed by:
+https://patchwork.kernel.org/patch/11006849/
 
+See this report:
+https://lore.kernel.org/linux-nfs/20190614185237.GA550@splinter/#t
 
--- 
-Kees Cook
+> 
+> 
+> [cel@manet ~]$ cat src/xfstests/results/generic/013.kmemleak
+> EXPERIMENTAL kmemleak reported some memory leaks!  Due to the way kmemleak
+> works, the leak might be from an earlier test, or something totally unrelated.
+> unreferenced object 0xffff88886963c4c0 (size 168):
+>   comm "mount", pid 3471, jiffies 4296003082 (age 161.789s)
+>   hex dump (first 32 bytes):
+>     03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000fd30522a>] kmem_cache_alloc+0xc4/0x1cb
+>     [<0000000008f8eac6>] prepare_creds+0x21/0xc7
+>     [<000000006e9e3064>] prepare_exec_creds+0xb/0x3a
+>     [<000000001b408d7e>] __do_execve_file.isra.31+0x103/0x818
+>     [<000000004096f0a3>] do_execve+0x25/0x29
+>     [<0000000008a9aa1c>] __x64_sys_execve+0x26/0x2b
+>     [<00000000599d3d33>] do_syscall_64+0x5a/0x68
+>     [<00000000005d29f3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> unreferenced object 0xffff888867a4f708 (size 32):
+>   comm "mount", pid 3471, jiffies 4296003082 (age 161.789s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<000000004c53b46c>] __kmalloc+0xfc/0x14a
+>     [<000000002ff13bd8>] lsm_cred_alloc.isra.5+0x24/0x32
+>     [<000000009eb979ec>] security_prepare_creds+0x21/0x61
+>     [<0000000086789f15>] prepare_creds+0xb3/0xc7
+>     [<000000006e9e3064>] prepare_exec_creds+0xb/0x3a
+>     [<000000001b408d7e>] __do_execve_file.isra.31+0x103/0x818
+>     [<000000004096f0a3>] do_execve+0x25/0x29
+>     [<0000000008a9aa1c>] __x64_sys_execve+0x26/0x2b
+>     [<00000000599d3d33>] do_syscall_64+0x5a/0x68
+>     [<00000000005d29f3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [cel@manet ~]$
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
