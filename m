@@ -2,105 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8F358A02
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 20:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3214258B8A
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 22:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfF0Sab (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jun 2019 14:30:31 -0400
-Received: from smtp3.jd.com ([59.151.64.88]:2124 "EHLO smtp3.jd.com"
+        id S1726443AbfF0UVZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jun 2019 16:21:25 -0400
+Received: from fieldses.org ([173.255.197.46]:36506 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbfF0Sab (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:30:31 -0400
-Received: from BJMAILD1MBX38.360buyAD.local (172.31.0.38) by
- BJMAILD1MBX49.360buyAD.local (172.31.0.49) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1466.3; Fri, 28 Jun 2019 02:30:27 +0800
-Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
- BJMAILD1MBX38.360buyAD.local (172.31.0.38) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Fri, 28 Jun 2019 02:30:27 +0800
-Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
- BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
- 15.01.1415.002; Fri, 28 Jun 2019 02:30:27 +0800
-From:   =?gb2312?B?u8bA1g==?= <huangle1@jd.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Index: AQHVLRYrJwxAvKxXXkKWwBVCcQfpAw==
-Date:   Thu, 27 Jun 2019 18:30:27 +0000
-Message-ID: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.31.14.12]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726426AbfF0UVZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 27 Jun 2019 16:21:25 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 89060206B; Thu, 27 Jun 2019 16:21:24 -0400 (EDT)
+Date:   Thu, 27 Jun 2019 16:21:24 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <20190627202124.GC16388@fieldses.org>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190621174544.GC25590@fieldses.org>
+ <201906211431.E6552108@keescook>
+ <20190622190058.GD5343@fieldses.org>
+ <201906221320.5BFC134713@keescook>
+ <20190624210512.GA20331@fieldses.org>
+ <20190626162149.GB4144@fieldses.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626162149.GB4144@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-ZnJvbTogSHVhbmcgTGUgPGh1YW5nbGUxQGpkLmNvbT4NCg0KSW4gbW92ZV90b19jbG9zZV9scnUo
-KSwgd2hpY2ggb25seSBiZSBjYWxsZWQgb24gcGF0aCBvZiBuZnNkNCBDTE9TRSBvcCwNCnRoZSBj
-b2RlIGNvdWxkIHdhaXQgZm9yIGl0cyBzdGlkIHJlZiBjb3VudCBkcm9wIHRvIDIgd2hpbGUgaG9s
-ZGluZyBpdHMNCnN0YXRlIG93bmVyIHJlcGxheSBtdXRleC4gIEhvd2V2ZXIsIHRoZSBvdGhlciBz
-dGlkIHJlZiBob2xkZXIgKG5vcm1hbGx5DQphIHBhcmFsbGVsIENMT1NFIG9wKSB0aGF0IG1vdmVf
-dG9fY2xvc2VfbHJ1KCkgaXMgd2FpdGluZyBmb3IgbWlnaHQgYmUNCmFjY3F1aXJpbmcgdGhlIHNh
-bWUgcmVwbGF5IG11dGV4Lg0KDQpUaGlzIHBhdGNoIGZpeCB0aGUgaXNzdWUgYnkgY2xlYXJpbmcg
-dGhlIHJlcGxheSBvd25lciBiZWZvcmUgd2FpdGluZywgYW5kDQphc3NpZ24gaXQgYmFjayBhZnRl
-ciB0aGVuLg0KDQpTaWduZWQtb2ZmLWJ5OiBIdWFuZyBMZSA8aHVhbmdsZTFAamQuY29tPg0KLS0t
-DQoNCkkgZ3Vlc3Mgd2Ugc2hvdWxkIGNjIHRoaXMgcGF0Y2ggdG8gc3RhYmxlIHRyZWUsIHNpbmNl
-IGEgbWFsaWNpb3VzIGNsaWVudA0KY291bGQgY3JhZnQgcGFyYWxsZWwgQ0xPU0Ugb3BzIHRvIHB1
-dCBhbGwgbmZzZCB0YXNrcyBpbiBEIHN0YXRlIHNob3J0bHkuDQoNCmRpZmYgLS1naXQgYS9mcy9u
-ZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYw0KaW5kZXggNjE4ZTY2MC4uNWY2
-YTQ4ZiAxMDA2NDQNCi0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCisrKyBiL2ZzL25mc2QvbmZz
-NHN0YXRlLmMNCkBAIC0zODI5LDEyICszODI5LDEyIEBAIHN0YXRpYyB2b2lkIG5mczRfZnJlZV9v
-cGVub3duZXIoc3RydWN0IG5mczRfc3RhdGVvd25lciAqc28pDQogICogdGhlbSBiZWZvcmUgcmV0
-dXJuaW5nIGhvd2V2ZXIuDQogICovDQogc3RhdGljIHZvaWQNCi1tb3ZlX3RvX2Nsb3NlX2xydShz
-dHJ1Y3QgbmZzNF9vbF9zdGF0ZWlkICpzLCBzdHJ1Y3QgbmV0ICpuZXQpDQorbW92ZV90b19jbG9z
-ZV9scnUoc3RydWN0IG5mc2Q0X2NvbXBvdW5kX3N0YXRlICpjc3RhdGUsIHN0cnVjdCBuZnM0X29s
-X3N0YXRlaWQgKnMsDQorCQlzdHJ1Y3QgbmV0ICpuZXQpDQogew0KIAlzdHJ1Y3QgbmZzNF9vbF9z
-dGF0ZWlkICpsYXN0Ow0KIAlzdHJ1Y3QgbmZzNF9vcGVub3duZXIgKm9vID0gb3Blbm93bmVyKHMt
-PnN0X3N0YXRlb3duZXIpOw0KLQlzdHJ1Y3QgbmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMocy0+
-c3Rfc3RpZC5zY19jbGllbnQtPm5ldCwNCi0JCQkJCQluZnNkX25ldF9pZCk7DQorCXN0cnVjdCBu
-ZnNkX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsNCiANCiAJZHByaW50
-aygiTkZTRDogbW92ZV90b19jbG9zZV9scnUgbmZzNF9vcGVub3duZXIgJXBcbiIsIG9vKTsNCiAN
-CkBAIC0zODQ2LDggKzM4NDYsMTkgQEAgc3RhdGljIHZvaWQgbmZzNF9mcmVlX29wZW5vd25lcihz
-dHJ1Y3QgbmZzNF9zdGF0ZW93bmVyICpzbykNCiAJICogV2FpdCBmb3IgdGhlIHJlZmNvdW50IHRv
-IGRyb3AgdG8gMi4gU2luY2UgaXQgaGFzIGJlZW4gdW5oYXNoZWQsDQogCSAqIHRoZXJlIHNob3Vs
-ZCBiZSBubyBkYW5nZXIgb2YgdGhlIHJlZmNvdW50IGdvaW5nIGJhY2sgdXAgYWdhaW4gYXQNCiAJ
-ICogdGhpcyBwb2ludC4NCisJICoNCisJICogQmVmb3JlIHdhaXRpbmcsIHdlIGNsZWFyIGNzdGF0
-ZS0+cmVwbGF5X293bmVyIHRvIHJlbGVhc2UgaXRzDQorCSAqIHNvX3JlcGxheS5ycF9tdXRleCwg
-c2luY2Ugb3RoZXIgcmVmZXJlbmNlIGhvbGRlciBtaWdodCBiZSBhY2NxdWlyaW5nDQorCSAqIHRo
-ZSBzYW1lIG11dGV4IGJlZm9yZSB0aGV5IGNvdWxkIGRyb3AgdGhlIHJlZmVyZW5jZXMuICBUaGUg
-cmVwbGF5X293bmVyDQorCSAqIGNhbiBiZSBhc3NpZ25lZCBiYWNrIHNhZmVseSBhZnRlciB0aGV5
-IGRvbmUgdGhlaXIgam9icy4NCiAJICovDQotCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50
-X3JlYWQoJnMtPnN0X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwlpZiAocmVmY291bnRfcmVhZCgm
-cy0+c3Rfc3RpZC5zY19jb3VudCkgIT0gMikgew0KKwkJc3RydWN0IG5mczRfc3RhdGVvd25lciAq
-c28gPSBjc3RhdGUtPnJlcGxheV9vd25lcjsNCisNCisJCW5mc2Q0X2NzdGF0ZV9jbGVhcl9yZXBs
-YXkoY3N0YXRlKTsNCisJCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50X3JlYWQoJnMtPnN0
-X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwkJbmZzZDRfY3N0YXRlX2Fzc2lnbl9yZXBsYXkoY3N0
-YXRlLCBzbyk7DQorCX0NCiANCiAJcmVsZWFzZV9hbGxfYWNjZXNzKHMpOw0KIAlpZiAocy0+c3Rf
-c3RpZC5zY19maWxlKSB7DQpAQCAtNTUzMSw3ICs1NTQyLDggQEAgc3RhdGljIGlubGluZSB2b2lk
-IG5mczRfc3RhdGVpZF9kb3duZ3JhZGUoc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqc3RwLCB1MzIg
-dG9fYWMNCiAJcmV0dXJuIHN0YXR1czsNCiB9DQogDQotc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vf
-b3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnM0X29sX3N0YXRlaWQgKnMpDQorc3RhdGljIHZvaWQgbmZz
-ZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnNkNF9jb21wb3VuZF9zdGF0ZSAqY3N0YXRl
-LA0KKwkJc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqcykNCiB7DQogCXN0cnVjdCBuZnM0X2NsaWVu
-dCAqY2xwID0gcy0+c3Rfc3RpZC5zY19jbGllbnQ7DQogCWJvb2wgdW5oYXNoZWQ7DQpAQCAtNTU0
-OSw3ICs1NTYxLDcgQEAgc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVj
-dCBuZnM0X29sX3N0YXRlaWQgKnMpDQogCQlzcGluX3VubG9jaygmY2xwLT5jbF9sb2NrKTsNCiAJ
-CWZyZWVfb2xfc3RhdGVpZF9yZWFwbGlzdCgmcmVhcGxpc3QpOw0KIAkJaWYgKHVuaGFzaGVkKQ0K
-LQkJCW1vdmVfdG9fY2xvc2VfbHJ1KHMsIGNscC0+bmV0KTsNCisJCQltb3ZlX3RvX2Nsb3NlX2xy
-dShjc3RhdGUsIHMsIGNscC0+bmV0KTsNCiAJfQ0KIH0NCiANCkBAIC01NTg3LDcgKzU1OTksNyBA
-QCBzdGF0aWMgdm9pZCBuZnNkNF9jbG9zZV9vcGVuX3N0YXRlaWQoc3RydWN0IG5mczRfb2xfc3Rh
-dGVpZCAqcykNCiAJICovDQogCW5mczRfaW5jX2FuZF9jb3B5X3N0YXRlaWQoJmNsb3NlLT5jbF9z
-dGF0ZWlkLCAmc3RwLT5zdF9zdGlkKTsNCiANCi0JbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0
-cCk7DQorCW5mc2Q0X2Nsb3NlX29wZW5fc3RhdGVpZChjc3RhdGUsIHN0cCk7DQogCW11dGV4X3Vu
-bG9jaygmc3RwLT5zdF9tdXRleCk7DQogDQogCS8qIHY0LjErIHN1Z2dlc3RzIHRoYXQgd2Ugc2Vu
-ZCBhIHNwZWNpYWwgc3RhdGVpZCBpbiBoZXJlLCBzaW5jZSB0aGU=
+On Wed, Jun 26, 2019 at 12:21:49PM -0400, J. Bruce Fields wrote:
+> On Mon, Jun 24, 2019 at 05:05:12PM -0400, J. Bruce Fields wrote:
+> > On Sat, Jun 22, 2019 at 01:22:56PM -0700, Kees Cook wrote:
+> > > On Sat, Jun 22, 2019 at 03:00:58PM -0400, J. Bruce Fields wrote:
+> > > > The logic around ESCAPE_NP and the "only" string is really confusing.  I
+> > > > started assuming I could just add an ESCAPE_NONASCII flag and stick "
+> > > > and \ into the "only" string, but it doesn't work that way.
+> > > 
+> > > Yeah, if ESCAPE_NP isn't specified, the "only" characters are passed
+> > > through. It'd be nice to have an "add" or a clearer way to do actual
+> > > ctype subsets, etc. If there isn't an obviously clear way to refactor
+> > > it, just skip it for now and I'm happy to ack your original patch. :)
+> > 
+> > There may well be some simplification possible here....  There aren't
+> > really many users of "only", for example.  I'll look into it some more.
+> 
+> The printk users are kind of mysterious to me.  I did a grep for
+> 
+> 	git grep '%[0-9.*]pE'
+> 
+> which got 75 hits.  All of them for pE.  I couldn't find any of the
+> other pE[achnops] variants.  pE is equivalent to ESCAPE_ANY|ESCAPE_NP.
+> Confusingly, ESCAPE_NP doesn't mean "escape non-printable", it means
+> "don't escape printable".  So things like carriage returns aren't
+> escaped.
+
+No, I was confused: "\n" is non-printable according to isprint(), so
+ESCAPE_ANY_NP *will* escape it.  So this isn't quite so bad.  SSIDs are
+usually printed as '%*pE', so arguably we should be escaping the single
+quote character too, but at least we're not allowing line breaks
+through.  I don't know about non-ascii.
+
+> One of the hits outside wireless code was in drm_dp_cec_adap_status,
+> which was printing some device ID into a debugfs file with "ID: %*pE\n".
+> If the ID actually needs escaping, then I suspect the meant to escape \n
+> too to prevent misparsing that output.
+
+And same here, this is OK.
+
+--b.
