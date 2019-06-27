@@ -2,107 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D733F586D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 18:17:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3723158A06
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 20:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfF0QRI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jun 2019 12:17:08 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43130 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfF0QRI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jun 2019 12:17:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id k20so5972675ios.10
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jun 2019 09:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=I0D8I3xHA7c8rSHJEH5drJL5to1T2GvEuOBLpyALn3s=;
-        b=dJR2M3/d3JW5wF5ncr9wMgrjNss+0XQshFaKyKAlZnDrAya155VzEHkyyY9v34TXrs
-         LQGGNgAFFpQ8WeczS5Fd+IlRUj3LNOT3Fo1/bbomxIAzy6S+kK6Zjv1Ey54tZjHOQmyr
-         CcJ6VE7KD3U3CsHGbEO53kC0VHrNqvaOVE31N7CSpBT8NMP0Kf9c6YbCZONL96Qks6MN
-         tq1EooJLjQYnPiZVXpltzC95HMK0DABWh921ivnNb6159Fktbb+dWAOV2CloYd32/8Jz
-         CDw21fE/Qagex846ZZ9IdKYcKjJwEyCvu/kWa/i+xLRzJBkPpUw733Hk01VCuQ8kS29K
-         4YUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I0D8I3xHA7c8rSHJEH5drJL5to1T2GvEuOBLpyALn3s=;
-        b=iBWxux4NdEftmqajrXVu+Kly15uMWQhQdJtKBQM9qmn1s8uz9Jtkz1WLfmHPD0qAHJ
-         jenXXiW6JHbBWQVPzp+pfIAfcuPC9WOsVfyszkKxEtQ8pCCkM+9U9UxbORBW+m7doeWQ
-         h+vYUYyXATknZs9RoOP8LztgfoSMa73lb34wUGNB/9jGBCAAXuwS5aQ+c6xdtM+UUN67
-         lMVlaHNLOEiJ76TusP//zuDUnLmH/tqWyMTC2AKohrnaUwotJtuzML/pYImmNUt9ViIL
-         AXQ8lESFxlC31JHM1AyM+F7hOmYMiTEJCwnTTqQes2hO9SWKXRgxHDFl6qKJKH6zwi74
-         lQKg==
-X-Gm-Message-State: APjAAAUEGzULnJadjRhg4/DpdjqKgVipCMm/0cvgsKjr87IknFes7z9c
-        Prn/n8ERdFTyIIT5K3AXvces1IV/sg==
-X-Google-Smtp-Source: APXvYqwWOXDozgobJIVbsZGGgsUoEMkXxmZxhM46O8XoA19lXGMS0TeCicIAQf5X7JhV0gU4XI5UXw==
-X-Received: by 2002:a6b:7b09:: with SMTP id l9mr5711126iop.114.1561652226787;
-        Thu, 27 Jun 2019 09:17:06 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id j1sm1896886iop.14.2019.06.27.09.17.06
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 09:17:06 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFSv4: Handle the special Linux file open access mode
-Date:   Thu, 27 Jun 2019 12:14:58 -0400
-Message-Id: <20190627161458.46784-2-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190627161458.46784-1-trond.myklebust@hammerspace.com>
-References: <20190627161458.46784-1-trond.myklebust@hammerspace.com>
+        id S1726426AbfF0Sb0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jun 2019 14:31:26 -0400
+Received: from smtp3.jd.com ([59.151.64.88]:2125 "EHLO smtp3.jd.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726482AbfF0Sb0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:31:26 -0400
+Received: from BJMAILD1MBX34.360buyAD.local (172.31.0.34) by
+ BJMAILD1MBX47.360buyAD.local (172.31.0.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 28 Jun 2019 02:16:12 +0800
+Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
+ BJMAILD1MBX34.360buyAD.local (172.31.0.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 28 Jun 2019 02:16:12 +0800
+Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
+ BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
+ 15.01.1415.002; Fri, 28 Jun 2019 02:16:12 +0800
+From:   =?gb2312?B?u8bA1g==?= <huangle1@jd.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Index: AQHVLRO5+DwH6sZb20Kr9KpGEIfK+A==
+Date:   Thu, 27 Jun 2019 18:16:12 +0000
+Message-ID: <a14e4c797451401cb360e1f9d1bad63c@jd.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.31.14.12]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-According to the open() manpage, Linux reserves the access mode 3
-to mean "check for read and write permission on the file and return
-a file descriptor that can't be used for reading or writing."
-
-Currently, the NFSv4 code will ask the server to open the file,
-and will use an incorrect share access mode of 0. Since it has
-an incorrect share access mode, the client later forgets to send
-a corresponding close, meaning it can leak stateids on the server.
-
-Fixes: ce4ef7c0a8a05 ("NFS: Split out NFS v4 file operations")
-Cc: stable@vger.kernel.org # 3.6+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/inode.c    | 1 +
- fs/nfs/nfs4file.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 0b4a1a974411..53777813ca95 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -1100,6 +1100,7 @@ int nfs_open(struct inode *inode, struct file *filp)
- 	nfs_fscache_open_file(inode, filp);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(nfs_open);
- 
- /*
-  * This function is called whenever some part of NFS notices that
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index cf42a8b939e3..3a507c42c1ca 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -49,7 +49,7 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 		return err;
- 
- 	if ((openflags & O_ACCMODE) == 3)
--		openflags--;
-+		return nfs_open(inode, filp);
- 
- 	/* We can't create new files here */
- 	openflags &= ~(O_CREAT|O_EXCL);
--- 
-2.21.0
-
+ZnJvbTogSHVhbmcgTGUgPGh1YW5nbGUxQGpkLmNvbT4NCg0KSW4gbW92ZV90b19jbG9zZV9scnUo
+KSwgd2hpY2ggb25seSBiZSBjYWxsZWQgb24gcGF0aCBvZiBuZnNkNCBDTE9TRSBvcCwNCnRoZSBj
+b2RlIGNvdWxkIHdhaXQgZm9yIGl0cyBzdGlkIHJlZiBjb3VudCBkcm9wIHRvIDIgd2hpbGUgaG9s
+ZGluZyBpdHMNCnN0YXRlIG93bmVyIHJlcGxheSBtdXRleC4gIEhvd2V2ZXIsIHRoZSBvdGhlciBz
+dGlkIHJlZiBob2xkZXIgKG5vcm1hbGx5DQphIHBhcmFsbGVsIENMT1NFIG9wKSB0aGF0IG1vdmVf
+dG9fY2xvc2VfbHJ1KCkgaXMgd2FpdGluZyBmb3IgbWlnaHQgYmUNCmFjY3F1aXJpbmcgdGhlIHNh
+bWUgcmVwbGF5IG11dGV4Lg0KDQpUaGlzIHBhdGNoIGZpeCB0aGUgaXNzdWUgYnkgY2xlYXJpbmcg
+dGhlIHJlcGxheSBvd25lciBiZWZvcmUgd2FpdGluZywgYW5kDQphc3NpZ24gaXQgYmFjayBhZnRl
+ciB0aGVuLg0KDQpTaWduZWQtb2ZmLWJ5OiBIdWFuZyBMZSA8aHVhbmdsZTFAamQuY29tPg0KLS0t
+DQoNCkkgZ3Vlc3Mgd2Ugc2hvdWxkIGNjIHRoaXMgcGF0Y2ggdG8gc3RhYmxlIHRyZWUsIHNpbmNl
+IGEgbWFsaWNpb3VzIGNsaWVudA0KY291bGQgY3JhZnQgcGFyYWxsZWwgQ0xPU0Ugb3BzIHRvIHB1
+dCBhbGwgbmZzZCB0YXNrcyBpbiBEIHN0YXRlIHNob3J0bHkuDQoNCmRpZmYgLS1naXQgYS9mcy9u
+ZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYw0KaW5kZXggNjE4ZTY2MC4uNWY2
+YTQ4ZiAxMDA2NDQNCi0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCisrKyBiL2ZzL25mc2QvbmZz
+NHN0YXRlLmMNCkBAIC0zODI5LDEyICszODI5LDEyIEBAIHN0YXRpYyB2b2lkIG5mczRfZnJlZV9v
+cGVub3duZXIoc3RydWN0IG5mczRfc3RhdGVvd25lciAqc28pDQogICogdGhlbSBiZWZvcmUgcmV0
+dXJuaW5nIGhvd2V2ZXIuDQogICovDQogc3RhdGljIHZvaWQNCi1tb3ZlX3RvX2Nsb3NlX2xydShz
+dHJ1Y3QgbmZzNF9vbF9zdGF0ZWlkICpzLCBzdHJ1Y3QgbmV0ICpuZXQpDQorbW92ZV90b19jbG9z
+ZV9scnUoc3RydWN0IG5mc2Q0X2NvbXBvdW5kX3N0YXRlICpjc3RhdGUsIHN0cnVjdCBuZnM0X29s
+X3N0YXRlaWQgKnMsDQorCQlzdHJ1Y3QgbmV0ICpuZXQpDQogew0KIAlzdHJ1Y3QgbmZzNF9vbF9z
+dGF0ZWlkICpsYXN0Ow0KIAlzdHJ1Y3QgbmZzNF9vcGVub3duZXIgKm9vID0gb3Blbm93bmVyKHMt
+PnN0X3N0YXRlb3duZXIpOw0KLQlzdHJ1Y3QgbmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMocy0+
+c3Rfc3RpZC5zY19jbGllbnQtPm5ldCwNCi0JCQkJCQluZnNkX25ldF9pZCk7DQorCXN0cnVjdCBu
+ZnNkX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsNCiANCiAJZHByaW50
+aygiTkZTRDogbW92ZV90b19jbG9zZV9scnUgbmZzNF9vcGVub3duZXIgJXBcbiIsIG9vKTsNCiAN
+CkBAIC0zODQ2LDggKzM4NDYsMTkgQEAgc3RhdGljIHZvaWQgbmZzNF9mcmVlX29wZW5vd25lcihz
+dHJ1Y3QgbmZzNF9zdGF0ZW93bmVyICpzbykNCiAJICogV2FpdCBmb3IgdGhlIHJlZmNvdW50IHRv
+IGRyb3AgdG8gMi4gU2luY2UgaXQgaGFzIGJlZW4gdW5oYXNoZWQsDQogCSAqIHRoZXJlIHNob3Vs
+ZCBiZSBubyBkYW5nZXIgb2YgdGhlIHJlZmNvdW50IGdvaW5nIGJhY2sgdXAgYWdhaW4gYXQNCiAJ
+ICogdGhpcyBwb2ludC4NCisJICoNCisJICogQmVmb3JlIHdhaXRpbmcsIHdlIGNsZWFyIGNzdGF0
+ZS0+cmVwbGF5X293bmVyIHRvIHJlbGVhc2UgaXRzDQorCSAqIHNvX3JlcGxheS5ycF9tdXRleCwg
+c2luY2Ugb3RoZXIgcmVmZXJlbmNlIGhvbGRlciBtaWdodCBiZSBhY2NxdWlyaW5nDQorCSAqIHRo
+ZSBzYW1lIG11dGV4IGJlZm9yZSB0aGV5IGNvdWxkIGRyb3AgdGhlIHJlZmVyZW5jZXMuICBUaGUg
+cmVwbGF5X293bmVyDQorCSAqIGNhbiBiZSBhc3NpZ25lZCBiYWNrIHNhZmVseSBhZnRlciB0aGV5
+IGRvbmUgdGhlaXIgam9icy4NCiAJICovDQotCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50
+X3JlYWQoJnMtPnN0X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwlpZiAocmVmY291bnRfcmVhZCgm
+cy0+c3Rfc3RpZC5zY19jb3VudCkgIT0gMikgew0KKwkJc3RydWN0IG5mczRfc3RhdGVvd25lciAq
+c28gPSBjc3RhdGUtPnJlcGxheV9vd25lcjsNCisNCisJCW5mc2Q0X2NzdGF0ZV9jbGVhcl9yZXBs
+YXkoY3N0YXRlKTsNCisJCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50X3JlYWQoJnMtPnN0
+X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwkJbmZzZDRfY3N0YXRlX2Fzc2lnbl9yZXBsYXkoY3N0
+YXRlLCBzbyk7DQorCX0NCiANCiAJcmVsZWFzZV9hbGxfYWNjZXNzKHMpOw0KIAlpZiAocy0+c3Rf
+c3RpZC5zY19maWxlKSB7DQpAQCAtNTUzMSw3ICs1NTQyLDggQEAgc3RhdGljIGlubGluZSB2b2lk
+IG5mczRfc3RhdGVpZF9kb3duZ3JhZGUoc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqc3RwLCB1MzIg
+dG9fYWMNCiAJcmV0dXJuIHN0YXR1czsNCiB9DQogDQotc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vf
+b3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnM0X29sX3N0YXRlaWQgKnMpDQorc3RhdGljIHZvaWQgbmZz
+ZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnNkNF9jb21wb3VuZF9zdGF0ZSAqY3N0YXRl
+LA0KKwkJc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqcykNCiB7DQogCXN0cnVjdCBuZnM0X2NsaWVu
+dCAqY2xwID0gcy0+c3Rfc3RpZC5zY19jbGllbnQ7DQogCWJvb2wgdW5oYXNoZWQ7DQpAQCAtNTU0
+OSw3ICs1NTYxLDcgQEAgc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVj
+dCBuZnM0X29sX3N0YXRlaWQgKnMpDQogCQlzcGluX3VubG9jaygmY2xwLT5jbF9sb2NrKTsNCiAJ
+CWZyZWVfb2xfc3RhdGVpZF9yZWFwbGlzdCgmcmVhcGxpc3QpOw0KIAkJaWYgKHVuaGFzaGVkKQ0K
+LQkJCW1vdmVfdG9fY2xvc2VfbHJ1KHMsIGNscC0+bmV0KTsNCisJCQltb3ZlX3RvX2Nsb3NlX2xy
+dShjc3RhdGUsIHMsIGNscC0+bmV0KTsNCiAJfQ0KIH0NCiANCkBAIC01NTg3LDcgKzU1OTksNyBA
+QCBzdGF0aWMgdm9pZCBuZnNkNF9jbG9zZV9vcGVuX3N0YXRlaWQoc3RydWN0IG5mczRfb2xfc3Rh
+dGVpZCAqcykNCiAJICovDQogCW5mczRfaW5jX2FuZF9jb3B5X3N0YXRlaWQoJmNsb3NlLT5jbF9z
+dGF0ZWlkLCAmc3RwLT5zdF9zdGlkKTsNCiANCi0JbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0
+cCk7DQorCW5mc2Q0X2Nsb3NlX29wZW5fc3RhdGVpZChjc3RhdGUsIHN0cCk7DQogCW11dGV4X3Vu
+bG9jaygmc3RwLT5zdF9tdXRleCk7DQogDQogCS8qIHY0LjErIHN1Z2dlc3RzIHRoYXQgd2Ugc2Vu
+ZCBhIHNwZWNpYWwgc3RhdGVpZCBpbiBoZXJlLCBzaW5jZSB0aGUNCg==
