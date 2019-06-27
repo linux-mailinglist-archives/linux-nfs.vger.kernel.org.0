@@ -2,68 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB3D25729A
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2019 22:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8744957625
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 02:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfFZUab (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Jun 2019 16:30:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57818 "EHLO mx1.redhat.com"
+        id S1727791AbfF0Afb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Jun 2019 20:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZUab (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:30:31 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728257AbfF0Af2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:35:28 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A648C308794D;
-        Wed, 26 Jun 2019 20:30:26 +0000 (UTC)
-Received: from dwysocha.rdu.csb (dhcp-12-212-173.gsslab.rdu.redhat.com [10.12.212.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B37260BE5;
-        Wed, 26 Jun 2019 20:30:25 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: Fix possible autodisconnect during connect due to old last_used
-Date:   Wed, 26 Jun 2019 16:30:24 -0400
-Message-Id: <1561581024-28238-1-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <566e3eb7b501d48a2989461c316b66c03c56b129.camel@hammerspace.com>
-References: <566e3eb7b501d48a2989461c316b66c03c56b129.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 26 Jun 2019 20:30:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12ADB217F9;
+        Thu, 27 Jun 2019 00:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595728;
+        bh=W8E55/JUU/4r0GfUmrRvJfE3rh51U4A7gM70pjbkrZE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W9jSyzT0591CHVTqt9a8t2ubfyTuexxYCLA6zhtr5O5FylnK5wZZiqDaWw/OBuxja
+         258SPcClNkixF8ju22FQ43jLL5Gj8spQtDCH0RoghYg9SSosW6lLXpURksbcP8fzlo
+         eboXEfNqiaAqH6jPDpVFFSQWifB/6N4q2+fvZEoU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 94/95] NFS4: Only set creation opendata if O_CREAT
+Date:   Wed, 26 Jun 2019 20:30:19 -0400
+Message-Id: <20190627003021.19867-94-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ensure last_used is updated before calling mod_timer inside
-xprt_schedule_autodisconnect.  This avoids a possible xprt_autoclose
-firing immediately after a successful connect when xprt_unlock_connect
-calls xprt_schedule_autodisconnect with an old value of last_used.
+From: Benjamin Coddington <bcodding@redhat.com>
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+[ Upstream commit 909105199a682cb09c500acd443d34b182846c9c ]
+
+We can end up in nfs4_opendata_alloc during task exit, in which case
+current->fs has already been cleaned up.  This leads to a crash in
+current_umask().
+
+Fix this by only setting creation opendata if we are actually doing an open
+with O_CREAT.  We can drop the check for NULL nfs4_open_createattrs, since
+O_CREAT will never be set for the recovery path.
+
+Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index f6c82b1..871b904 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -750,6 +750,7 @@ void xprt_conditional_disconnect(struct rpc_xprt *xprt, unsigned int cookie)
- xprt_schedule_autodisconnect(struct rpc_xprt *xprt)
- 	__must_hold(&xprt->transport_lock)
- {
-+	xprt->last_used = jiffies;
- 	if (RB_EMPTY_ROOT(&xprt->recv_queue) && xprt_has_timer(xprt))
- 		mod_timer(&xprt->timer, xprt->last_used + xprt->idle_timeout);
- }
-@@ -1774,7 +1775,6 @@ void xprt_release(struct rpc_task *task)
- 	xprt->ops->release_xprt(xprt, task);
- 	if (xprt->ops->release_request)
- 		xprt->ops->release_request(task);
--	xprt->last_used = jiffies;
- 	xprt_schedule_autodisconnect(xprt);
- 	spin_unlock_bh(&xprt->transport_lock);
- 	if (req->rq_buffer)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index eeee100785a5..fd2c19eea647 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1234,10 +1234,20 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	atomic_inc(&sp->so_count);
+ 	p->o_arg.open_flags = flags;
+ 	p->o_arg.fmode = fmode & (FMODE_READ|FMODE_WRITE);
+-	p->o_arg.umask = current_umask();
+ 	p->o_arg.claim = nfs4_map_atomic_open_claim(server, claim);
+ 	p->o_arg.share_access = nfs4_map_atomic_open_share(server,
+ 			fmode, flags);
++	if (flags & O_CREAT) {
++		p->o_arg.umask = current_umask();
++		p->o_arg.label = nfs4_label_copy(p->a_label, label);
++		if (c->sattr != NULL && c->sattr->ia_valid != 0) {
++			p->o_arg.u.attrs = &p->attrs;
++			memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
++
++			memcpy(p->o_arg.u.verifier.data, c->verf,
++					sizeof(p->o_arg.u.verifier.data));
++		}
++	}
+ 	/* don't put an ACCESS op in OPEN compound if O_EXCL, because ACCESS
+ 	 * will return permission denied for all bits until close */
+ 	if (!(flags & O_EXCL)) {
+@@ -1261,7 +1271,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	p->o_arg.server = server;
+ 	p->o_arg.bitmask = nfs4_bitmask(server, label);
+ 	p->o_arg.open_bitmap = &nfs4_fattr_bitmap[0];
+-	p->o_arg.label = nfs4_label_copy(p->a_label, label);
+ 	switch (p->o_arg.claim) {
+ 	case NFS4_OPEN_CLAIM_NULL:
+ 	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
+@@ -1274,13 +1283,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
+ 		p->o_arg.fh = NFS_FH(d_inode(dentry));
+ 	}
+-	if (c != NULL && c->sattr != NULL && c->sattr->ia_valid != 0) {
+-		p->o_arg.u.attrs = &p->attrs;
+-		memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
+-
+-		memcpy(p->o_arg.u.verifier.data, c->verf,
+-				sizeof(p->o_arg.u.verifier.data));
+-	}
+ 	p->c_arg.fh = &p->o_res.fh;
+ 	p->c_arg.stateid = &p->o_res.stateid;
+ 	p->c_arg.seqid = p->o_arg.seqid;
 -- 
-1.8.3.1
+2.20.1
 
