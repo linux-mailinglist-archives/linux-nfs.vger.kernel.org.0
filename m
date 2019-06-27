@@ -2,56 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A2C0586D4
+	by mail.lfdr.de (Postfix) with ESMTP id D733F586D5
 	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2019 18:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfF0QRH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jun 2019 12:17:07 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42469 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfF0QRH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jun 2019 12:17:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so5958622ior.9
+        id S1726440AbfF0QRI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jun 2019 12:17:08 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43130 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfF0QRI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jun 2019 12:17:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id k20so5972675ios.10
         for <linux-nfs@vger.kernel.org>; Thu, 27 Jun 2019 09:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=cuZSacbFHwYrc+AErOsr/oGojyisv6qzPYJ5puHzY0k=;
-        b=rMwrgkhcq23+Wf0xY24i2A6PqnADaGJ2oX6HGWU+qu/MU9m+533wGX8+3v5irwPBa7
-         Uk6lsmoYgBZm1fOv+oT4T3MK/2yXptkOLiuGiEl+Jtn5gvQG0FGfx5h5JMNqDqXtgO32
-         fKuCjvcQJ7o9xpnTheesPtfJpEtVC5rEb4WcI9eXhjgFzSP9IF8iFsgbFLxR6QkgKjRb
-         rKzgzA6jiyh38/OyTw8nuLj/Baj40SVultI7GV4NMDZyhAxsVItn6Yo/znofzBGst+er
-         lWekt7F54dggjbO649QeXgabvsVi/8o1Gxz/tEtE20DFewmwzZzBIp0VfuqVVpkyAQ+Y
-         DWTQ==
+        bh=I0D8I3xHA7c8rSHJEH5drJL5to1T2GvEuOBLpyALn3s=;
+        b=dJR2M3/d3JW5wF5ncr9wMgrjNss+0XQshFaKyKAlZnDrAya155VzEHkyyY9v34TXrs
+         LQGGNgAFFpQ8WeczS5Fd+IlRUj3LNOT3Fo1/bbomxIAzy6S+kK6Zjv1Ey54tZjHOQmyr
+         CcJ6VE7KD3U3CsHGbEO53kC0VHrNqvaOVE31N7CSpBT8NMP0Kf9c6YbCZONL96Qks6MN
+         tq1EooJLjQYnPiZVXpltzC95HMK0DABWh921ivnNb6159Fktbb+dWAOV2CloYd32/8Jz
+         CDw21fE/Qagex846ZZ9IdKYcKjJwEyCvu/kWa/i+xLRzJBkPpUw733Hk01VCuQ8kS29K
+         4YUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cuZSacbFHwYrc+AErOsr/oGojyisv6qzPYJ5puHzY0k=;
-        b=PzkYcJ9rBLlWpv5cO5ergi3Fk6btyY4gTQg4xp1hLtscuT84Hp8xyEu2MGgKiSMa6y
-         TfISSmwFyADULc9ObdJCT2/4r+qzC/HmiARFPC+BWOMnr//1SpEB+aa/EiogxHbGo7R4
-         rW6zso6wxXBL5Lfi9luL84kRk4F4T+hmky5dGHRvceFXPLdD9hzConRAHfpIdSSJkItw
-         7p4RRoubJfMpOydl45lEhrhXI3bRtxtASSL4YKYIrZvcbpfIS7GUULcdVQe5n5dYmQab
-         2PCHgS4E68iYsjRATgYwT2XB5fJzqLo7bOEFdF7KnjLTHIXeEZ9umywyPVS6qKEnHVkS
-         1C+A==
-X-Gm-Message-State: APjAAAViKD7+16Zg6sLFUQZ875yErrNZKnaHMHCq4lyTey1DQzQXbXAO
-        Wj9hwB0wwxVtpA4tyZWkUeoDLGUkGw==
-X-Google-Smtp-Source: APXvYqydrA7YcV9GEK/0QimUs0QDmYQ/qyxCzkHfh//tasdizGa8J3sC0AmxzWQOHMqmFWgVLjTlaQ==
-X-Received: by 2002:a02:5a89:: with SMTP id v131mr5843633jaa.130.1561652226145;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=I0D8I3xHA7c8rSHJEH5drJL5to1T2GvEuOBLpyALn3s=;
+        b=iBWxux4NdEftmqajrXVu+Kly15uMWQhQdJtKBQM9qmn1s8uz9Jtkz1WLfmHPD0qAHJ
+         jenXXiW6JHbBWQVPzp+pfIAfcuPC9WOsVfyszkKxEtQ8pCCkM+9U9UxbORBW+m7doeWQ
+         h+vYUYyXATknZs9RoOP8LztgfoSMa73lb34wUGNB/9jGBCAAXuwS5aQ+c6xdtM+UUN67
+         lMVlaHNLOEiJ76TusP//zuDUnLmH/tqWyMTC2AKohrnaUwotJtuzML/pYImmNUt9ViIL
+         AXQ8lESFxlC31JHM1AyM+F7hOmYMiTEJCwnTTqQes2hO9SWKXRgxHDFl6qKJKH6zwi74
+         lQKg==
+X-Gm-Message-State: APjAAAUEGzULnJadjRhg4/DpdjqKgVipCMm/0cvgsKjr87IknFes7z9c
+        Prn/n8ERdFTyIIT5K3AXvces1IV/sg==
+X-Google-Smtp-Source: APXvYqwWOXDozgobJIVbsZGGgsUoEMkXxmZxhM46O8XoA19lXGMS0TeCicIAQf5X7JhV0gU4XI5UXw==
+X-Received: by 2002:a6b:7b09:: with SMTP id l9mr5711126iop.114.1561652226787;
         Thu, 27 Jun 2019 09:17:06 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id j1sm1896886iop.14.2019.06.27.09.17.05
+        by smtp.gmail.com with ESMTPSA id j1sm1896886iop.14.2019.06.27.09.17.06
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 09:17:05 -0700 (PDT)
+        Thu, 27 Jun 2019 09:17:06 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFSv4: Handle open for execute correctly
-Date:   Thu, 27 Jun 2019 12:14:57 -0400
-Message-Id: <20190627161458.46784-1-trond.myklebust@hammerspace.com>
+Subject: [PATCH 2/2] NFSv4: Handle the special Linux file open access mode
+Date:   Thu, 27 Jun 2019 12:14:58 -0400
+Message-Id: <20190627161458.46784-2-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190627161458.46784-1-trond.myklebust@hammerspace.com>
+References: <20190627161458.46784-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -59,97 +61,48 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When mapping the NFSv4 context to an open mode and access mode,
-we need to treat the FMODE_EXEC flag differently. For the open
-mode, FMODE_EXEC means we need read share access. For the access
-mode checking, we need to verify that the user actually has
-execute access.
+According to the open() manpage, Linux reserves the access mode 3
+to mean "check for read and write permission on the file and return
+a file descriptor that can't be used for reading or writing."
 
+Currently, the NFSv4 code will ask the server to open the file,
+and will use an incorrect share access mode of 0. Since it has
+an incorrect share access mode, the client later forgets to send
+a corresponding close, meaning it can leak stateids on the server.
+
+Fixes: ce4ef7c0a8a05 ("NFS: Split out NFS v4 file operations")
+Cc: stable@vger.kernel.org # 3.6+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4proc.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ fs/nfs/inode.c    | 1 +
+ fs/nfs/nfs4file.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 6418cb6c079b..26626ea1f197 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1165,6 +1165,18 @@ static bool nfs4_clear_cap_atomic_open_v1(struct nfs_server *server,
- 	return true;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 0b4a1a974411..53777813ca95 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1100,6 +1100,7 @@ int nfs_open(struct inode *inode, struct file *filp)
+ 	nfs_fscache_open_file(inode, filp);
+ 	return 0;
  }
++EXPORT_SYMBOL_GPL(nfs_open);
  
-+static fmode_t _nfs4_ctx_to_accessmode(const struct nfs_open_context *ctx)
-+{
-+	 return ctx->mode & (FMODE_READ|FMODE_WRITE|FMODE_EXEC);
-+}
-+
-+static fmode_t _nfs4_ctx_to_openmode(const struct nfs_open_context *ctx)
-+{
-+	fmode_t ret = ctx->mode & (FMODE_READ|FMODE_WRITE);
-+
-+	return (ctx->mode & FMODE_EXEC) ? FMODE_READ | ret : ret;
-+}
-+
- static u32
- nfs4_map_atomic_open_share(struct nfs_server *server,
- 		fmode_t fmode, int openflags)
-@@ -2900,14 +2912,13 @@ static unsigned nfs4_exclusive_attrset(struct nfs4_opendata *opendata,
- }
+ /*
+  * This function is called whenever some part of NFS notices that
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index cf42a8b939e3..3a507c42c1ca 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -49,7 +49,7 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 		return err;
  
- static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
--		fmode_t fmode,
--		int flags,
--		struct nfs_open_context *ctx)
-+		int flags, struct nfs_open_context *ctx)
- {
- 	struct nfs4_state_owner *sp = opendata->owner;
- 	struct nfs_server *server = sp->so_server;
- 	struct dentry *dentry;
- 	struct nfs4_state *state;
-+	fmode_t acc_mode = _nfs4_ctx_to_accessmode(ctx);
- 	unsigned int seq;
- 	int ret;
+ 	if ((openflags & O_ACCMODE) == 3)
+-		openflags--;
++		return nfs_open(inode, filp);
  
-@@ -2946,7 +2957,8 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 	/* Parse layoutget results before we check for access */
- 	pnfs_parse_lgopen(state->inode, opendata->lgp, ctx);
- 
--	ret = nfs4_opendata_access(sp->so_cred, opendata, state, fmode, flags);
-+	ret = nfs4_opendata_access(sp->so_cred, opendata, state,
-+			acc_mode, flags);
- 	if (ret != 0)
- 		goto out;
- 
-@@ -2978,7 +2990,7 @@ static int _nfs4_do_open(struct inode *dir,
- 	struct dentry *dentry = ctx->dentry;
- 	const struct cred *cred = ctx->cred;
- 	struct nfs4_threshold **ctx_th = &ctx->mdsthreshold;
--	fmode_t fmode = ctx->mode & (FMODE_READ|FMODE_WRITE|FMODE_EXEC);
-+	fmode_t fmode = _nfs4_ctx_to_openmode(ctx);
- 	enum open_claim_type4 claim = NFS4_OPEN_CLAIM_NULL;
- 	struct iattr *sattr = c->sattr;
- 	struct nfs4_label *label = c->label;
-@@ -3024,7 +3036,7 @@ static int _nfs4_do_open(struct inode *dir,
- 	if (d_really_is_positive(dentry))
- 		opendata->state = nfs4_get_open_state(d_inode(dentry), sp);
- 
--	status = _nfs4_open_and_get_state(opendata, fmode, flags, ctx);
-+	status = _nfs4_open_and_get_state(opendata, flags, ctx);
- 	if (status != 0)
- 		goto err_free_label;
- 	state = ctx->state;
-@@ -3594,9 +3606,9 @@ static void nfs4_close_context(struct nfs_open_context *ctx, int is_sync)
- 	if (ctx->state == NULL)
- 		return;
- 	if (is_sync)
--		nfs4_close_sync(ctx->state, ctx->mode);
-+		nfs4_close_sync(ctx->state, _nfs4_ctx_to_openmode(ctx));
- 	else
--		nfs4_close_state(ctx->state, ctx->mode);
-+		nfs4_close_state(ctx->state, _nfs4_ctx_to_openmode(ctx));
- }
- 
- #define FATTR4_WORD1_NFS40_MASK (2*FATTR4_WORD1_MOUNTED_ON_FILEID - 1UL)
+ 	/* We can't create new files here */
+ 	openflags &= ~(O_CREAT|O_EXCL);
 -- 
 2.21.0
 
