@@ -2,100 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 192D85B087
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2019 18:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56A425B0FB
+	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2019 19:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfF3QPG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 30 Jun 2019 12:15:06 -0400
-Received: from mail-eopbgr810134.outbound.protection.outlook.com ([40.107.81.134]:42240
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726520AbfF3QPG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 30 Jun 2019 12:15:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7NbTInb3Q1h8ETP1q6lbwWfL655Jnsis58JQpi0Iwxc=;
- b=XE9abBnKktz0wawqdchFdMjB3fhKa/eoIZJ6C59AsjTSDWzOykjMd73P22xDUIn8/PXRB6MEfdez7/eOYxyCv2KbaSeiQFeh9V46gFXNPTWabxobbQZJUaUdO4PC8+yTK6Y8yhR8oR5FkTGM1newJLE1NVrrrxdf6u/9lNXtnXY=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1148.namprd13.prod.outlook.com (10.168.120.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.12; Sun, 30 Jun 2019 16:15:00 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::3064:e318:82d9:4887]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::3064:e318:82d9:4887%12]) with mapi id 15.20.2052.010; Sun, 30 Jun
- 2019 16:15:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "willy@infradead.org" <willy@infradead.org>
-CC:     "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH 05/16] nfsd: add a new struct file caching facility to
- nfsd
-Thread-Topic: [PATCH 05/16] nfsd: add a new struct file caching facility to
- nfsd
-Thread-Index: AQHVL0tq7yqCUIxETkmrUQ1GbWPANKa0WoWAgAAE0AA=
-Date:   Sun, 30 Jun 2019 16:15:00 +0000
-Message-ID: <61f965d747b74a1eb7406bcde4591f71d56305dc.camel@hammerspace.com>
-References: <20190630135240.7490-1-trond.myklebust@hammerspace.com>
-         <20190630135240.7490-2-trond.myklebust@hammerspace.com>
-         <20190630135240.7490-3-trond.myklebust@hammerspace.com>
-         <20190630135240.7490-4-trond.myklebust@hammerspace.com>
-         <20190630135240.7490-5-trond.myklebust@hammerspace.com>
-         <20190630135240.7490-6-trond.myklebust@hammerspace.com>
-         <20190630155745.GC15900@bombadil.infradead.org>
-In-Reply-To: <20190630155745.GC15900@bombadil.infradead.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.124.245.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7bd2956e-731f-4aa8-157a-08d6fd761a38
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1148;
-x-ms-traffictypediagnostic: DM5PR13MB1148:
-x-microsoft-antispam-prvs: <DM5PR13MB114800FEAEF1D55C0A986776B8FE0@DM5PR13MB1148.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 008421A8FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39830400003)(346002)(366004)(376002)(199004)(189003)(102836004)(54906003)(186003)(53936002)(66946007)(64756008)(73956011)(2351001)(5640700003)(66476007)(66066001)(6512007)(4744005)(66556008)(2501003)(5660300002)(2906002)(229853002)(6116002)(8936002)(76116006)(25786009)(118296001)(6436002)(76176011)(6506007)(68736007)(478600001)(3846002)(86362001)(316002)(71190400001)(71200400001)(8676002)(6486002)(6246003)(1730700003)(6916009)(7736002)(36756003)(81166006)(66446008)(256004)(14454004)(486006)(446003)(305945005)(26005)(99286004)(11346002)(4326008)(2616005)(476003)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1148;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: A0IE21QJP5cKSrxusyRr4lNgNplcdQsl9uyGKxGmt4WPeU/Mlo0QptXTYyitvNhX/e/dMf2Vj56C4sXaB7Fm/kUddEUxLqJ51W65jUcRPbSAZhI75xNSXi73+IVU6hdB5nO/kZd8Qi4Js/b9qTvDYNsVS2v5IAaj+tiwgnol8oeo2c6RMC2Yex/0kpaEkn3MXxzSgYcMIq5h9hf5KhjL7Eclc98HN6ea28P7UKRjqp3I1YToujVyFf8BTtdBEDnR6aIP65euDQAXQZEtuW/3kQylZXyPkPl5WSE0Q4l5aTvzXA23hLr2R06OnZ/nVOSRyxuhYMxwUVqTY07FjbSo+Wro1XKYCTpydFS1LBkQNTKZq63UvOTryvgyYB031xAenPUV1vjFz3zudi4Unfne23akXWJJobP/7HJZigwdmxU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A21A8B6845EDCF45AE1BF9A400A9DBBB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726651AbfF3R1W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 30 Jun 2019 13:27:22 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41867 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726572AbfF3R1W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 30 Jun 2019 13:27:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TVaDXGE_1561915638;
+Received: from ali-186590dcce93-2.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TVaDXGE_1561915638)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 01 Jul 2019 01:27:19 +0800
+From:   Yihao Wu <wuyihao@linux.alibaba.com>
+Subject: [backport request][stable] SUNRPC: Clean up initialisation of the
+ struct rpc_rqst
+To:     Greg KH <greg@kroah.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        caspar@linux.alibaba.com, linux-nfs@vger.kernel.org
+Message-ID: <1b4585b9-401a-9022-6bc9-5ecbe253799d@linux.alibaba.com>
+Date:   Mon, 1 Jul 2019 01:27:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bd2956e-731f-4aa8-157a-08d6fd761a38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2019 16:15:00.6215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1148
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gU3VuLCAyMDE5LTA2LTMwIGF0IDA4OjU3IC0wNzAwLCBNYXR0aGV3IFdpbGNveCB3cm90ZToN
-Cj4gT24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMDk6NTI6MjlBTSAtMDQwMCwgVHJvbmQgTXlrbGVi
-dXN0IHdyb3RlOg0KPiA+ICsvKiBGSVhNRTogZHluYW1pY2FsbHkgc2l6ZSB0aGlzIGZvciB0aGUg
-bWFjaGluZSBzb21laG93PyAqLw0KPiA+ICsjZGVmaW5lIE5GU0RfRklMRV9IQVNIX0JJVFMgICAg
-ICAgICAgICAgICAgICAgMTINCj4gPiArI2RlZmluZSBORlNEX0ZJTEVfSEFTSF9TSVpFICAgICAg
-ICAgICAgICAgICAgKDEgPDwNCj4gPiBORlNEX0ZJTEVfSEFTSF9CSVRTKQ0KPiA+ICsjZGVmaW5l
-IE5GU0RfTEFVTkRSRVRURV9ERUxBWQkJICAgICAoMiAqIEhaKQ0KPiANCj4gSXNuJ3QgdGhpcyB3
-aGF0IHJoYXNodGFibGUgaXMgZm9yPw0KDQpNYXliZS4gSSdtIGxlc3MgY29uY2VybmVkIHRoYW4g
-SmVmZiB3YXMgb3ZlciB0aGUgc2l6ZSBvZiB0aGUgaGFzaA0KdGFibGUuDQoNCjQwOTYgYnVja2V0
-cyBzaG91bGQgc2NhbGUgcXVpdGUgd2VsbCB1cCB0byB0aGUgbWlsbGlvbnMgb2YgZW50cmllcy4N
-CldlJ3JlIGhpZ2hseSB1bmxpa2VseSB0byBoYXZlIHRoYXQgbWFueSBhY3RpdmUgZmlsZXMgYXQg
-dGhlIHNhbWUgdGltZSwNCmFuZCBwYXJ0aWN1bGFybHkgbm90IGZvciBORlN2Mywgd2hpY2ggaXMg
-dGhlIG1haW4gY3JpdGljYWwgdXNlciBvZiB0aGlzDQpsb29rdXAgdGFibGUuDQoNCi0tIA0KVHJv
-bmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0
-cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+Hi,
+
+I'm using kernel v4.19.y and find that v4.19.y panic when mounting NFSv4, which can be simply reproduced as follows:
+
+
+while :; do
+mkfs.ext4 -F /dev/vdb
+mount /dev/vdb /tmp/mymnt_server
+exportfs -o insecure,rw,sync,no_root_squash,fsid=1 127.0.0.1:/tmp/mymnt_server
+mount -t nfs4 -o minorversion=0 127.0.0.1:/tmp/mymnt_server /tmp/mymnt_client
+umount -f -l /tmp/mymnt_client
+sleep 0.5
+exportfs -r
+sleep 0.2
+umount -f -l /tmp/mymnt_server
+done
+
+
+# kernel 4.19.y
+After a while, the kernel panic.
+
+[ 6049.676833] EXT4-fs (vdb): mounted filesystem with ordered data mode. Opts: (null) 
+[ 6049.747488] EXT4-fs (vdc): mounted filesystem with ordered data mode. Opts: (null) 
+[ 6050.248646] NFSD: starting 90-second grace period (net f0000098) 
+[ 6051.348206] BUG: unable to handle kernel NULL pointer dereference at 00000000000006d8 
+[ 6051.349582] PGD 0 P4D 0  
+[ 6051.350279] Oops: 0000 [#1] SMP KASAN PTI 
+[ 6051.351102] CPU: 7 PID: 8168 Comm: kworker/u16:3 Kdump: loaded Not tainted 4.19.48-0.267.git.c08655b39.al7.x86_64.debug #1 
+[ 6051.352534] Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.7.5-0-ge51488c-20140602_164612-nilsson.home.kraxel.org 04/01/2014 
+[ 6051.354746] Workqueue: rpciod rpc_async_schedule [sunrpc] 
+[ 6051.355844] RIP: 0010:__lock_acquire+0x2f0/0x820 
+[ 6051.356892] Code: 12 05 00 00 45 31 f6 85 c9 48 8b 85 00 09 00 00 0f 85 b8 00 00 00 48 85 c0 0f 85 da 01 00 00 41 be 01 00 00 00 e9 a4 00 00 00 <49> 81 3c 24 c0 05 e1 b7 b8 00 00 00 00 44 0f 44 c0 83 fe 01 0f 87 
+[ 6051.359845] RSP: 0018:ffff8883e6a4fce0 EFLAGS: 00010002 
+[ 6051.361045] RAX: 0000000000000001 RBX: 0000000000000246 RCX: 0000000000000000 
+[ 6051.362426] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000006d8 
+[ 6051.363811] RBP: ffff8883ca280000 R08: 0000000000000001 R09: 0000000000000000 
+[ 6051.365213] R10: ffffed107dd7c0f6 R11: ffffed107dd7c0f6 R12: 00000000000006d8 
+[ 6051.366617] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000 
+[ 6051.368036] FS:  0000000000000000(0000) GS:ffff8883eea00000(0000) knlGS:0000000000000000 
+[ 6051.369609] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+[ 6051.370959] CR2: 00000000000006d8 CR3: 00000001ff216001 CR4: 00000000003606a0 
+[ 6051.372446] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000 
+[ 6051.373946] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400 
+[ 6051.375439] Call Trace: 
+[ 6051.376583]  ? kvm_sched_clock_read+0x14/0x30 
+[ 6051.377891]  lock_acquire+0xc8/0x1e0 
+[ 6051.379162]  ? xprt_release+0x5b/0x360 [sunrpc] 
+[ 6051.380531]  _raw_spin_lock+0x39/0x70 
+[ 6051.381827]  ? xprt_release+0x5b/0x360 [sunrpc] 
+[ 6051.383199]  xprt_release+0x5b/0x360 [sunrpc] 
+[ 6051.384565]  rpc_release_resources_task+0xe/0x40 [sunrpc] 
+[ 6051.386029]  __rpc_execute+0x1fe/0x520 [sunrpc] 
+[ 6051.387429]  process_one_work+0x22f/0x600 
+[ 6051.388788]  ? process_one_work+0x19a/0x600 
+[ 6051.390172]  worker_thread+0x179/0x3f0 
+[ 6051.391514]  kthread+0x114/0x150 
+[ 6051.392829]  ? process_one_work+0x600/0x600 
+[ 6051.394234]  ? kthread_park+0x80/0x80 
+[ 6051.395602]  ret_from_fork+0x3a/0x50 
+[ 6051.396968] Modules linked in: nfsv3 nfsd rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace hid_generic usbhid button sunrpc uhci_hcd ehci_pci ehci_hcd 
+
+
+# kernel 5.0.16
+Kernel doesn't panic
+
+
+rpc_task is initialized in call_reserve, but rpc_task->tk_xprt is not initialized until call_reserveresult.
+When xprt_release is called between calling call_reserve and call_reserveresult, tk_xprt is still NULL.
+So spin_lock(&xprt->recv_lock) in xprt_release causes kernel panic.
+
+I notice that v4.20 has already fixed this issue with commit 9dc6edcf676fe188430e8b119f91280bbf285163
+
+But this patch do not cc stable@vger.kernel.org (why? forgotten?). And will v4.19.y consider to backport this patch?
+
+
+Thanks,
+Yihao Wu
