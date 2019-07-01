@@ -2,113 +2,230 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADCB25C066
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2019 17:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C09A5C06E
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2019 17:40:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfGAPhs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Jul 2019 11:37:48 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45201 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbfGAPhs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jul 2019 11:37:48 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id F2A3C21CDD;
-        Mon,  1 Jul 2019 11:37:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 01 Jul 2019 11:37:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=Cu1gXpO0xWcS/oZfvCGwVEe4T6x
-        gt0tebCnzb5vWblw=; b=KomX6tHsKjMHZ7BJt6XaLeTHvnlRKa9iQN8DHrn+FVK
-        8zSIAJwRFa8UA3FtZ5qV9gX7I/5pvPS0XC8xvNRFypS75b9ukYYeVqQ2jNKl5Gmy
-        b145N4EA7NaIWXypiMcD8tEwK9jdO5W3NeSOfnfujt484x7HgYexw82q8PgvlrVa
-        arhu+S5Uxly+T8fBM0nuYYKOwKUg7/OnscJ+hUgGZvt4ozOFBw7+ZW3u2z8XRUFn
-        MJ0DviY3n2InMKTIHedEP9C20uAZYmv8YiLIlioGnT0eifihWqvPQ5e8cisk/fat
-        nbGvbPy4B0WbD4XBupJjsOlm5BGi5uvwG2P519TkgRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Cu1gXp
-        O0xWcS/oZfvCGwVEe4T6xgt0tebCnzb5vWblw=; b=uWbSXb9f0ooCPiW4rymwCA
-        Ie5aijMVzdyymbLfb9nIJOGkf1Ix8sO56eub+U3IcFEdHXsipEBfeVBouoMcZAsi
-        2aEFhhCSXYyP25wO13PfZ0wjfyWbdRrWHVOY+hg6PyMNZVfL5AmLMFq73evEiWKv
-        DZvAz0Xib7hSRV0QuqqmKxh5grEyedoLh7dzHsbsUa5+Yryln11CVzfI9uRKnDi5
-        rFnBWtsziVJmkfhKnvv0thco6NXD9rbyrHVcAgtGbRPr56StDTaT+sHVnAMYfx2q
-        c+5y7Ez8DzQMYs1g4wIeubOWf/q6eZqPh+MZavN7gRYz3h3X7S3XghWjKC51gGzQ
-        ==
-X-ME-Sender: <xms:yygaXbRKT_HL3XKCyJuG6x-aJthLYDwVpH8AmP1nqHhJPGqVlZVQeA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdeigdeludcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:yygaXVXbmE7JzfoqWFYHrDjxe77c8klKCPwvj-3x87uH6Pn2nJlX0A>
-    <xmx:yygaXX5leVEukZwK0JrD1BURHFgmYFLb6nX-IKFIz9mSCclP4OCGPw>
-    <xmx:yygaXQHI2rIZ2j9uETh0ZmpBJ0iNC4hmBNwux-_Y62z-zdgfioW0Kg>
-    <xmx:yygaXRW56Gfw4LCErKL9X9nfiH_aTRiaUuRUkj5FN9A9b3shwKE18A>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8A36A8005A;
-        Mon,  1 Jul 2019 11:37:46 -0400 (EDT)
-Date:   Mon, 1 Jul 2019 17:37:44 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Caspar Zhang <caspar@linux.alibaba.com>
-Cc:     Yihao Wu <wuyihao@linux.alibaba.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [backport request][stable] SUNRPC: Clean up initialisation of
- the struct rpc_rqst
-Message-ID: <20190701153744.GA24719@kroah.com>
-References: <1b4585b9-401a-9022-6bc9-5ecbe253799d@linux.alibaba.com>
- <20190701082547.GA89243@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701082547.GA89243@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728568AbfGAPkH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Jul 2019 11:40:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33034 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728668AbfGAPkH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jul 2019 11:40:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61Fcvma125611;
+        Mon, 1 Jul 2019 15:39:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=p0DCt1q/ZMpIlHGt/HBYzqj55kMUOfGcmwx5EwTf+6I=;
+ b=RdA4UUGMLkvgAsNSjpmWKjyxdvb8OUMQzz3EXxsiK/bjBvWRWYt2aJLee3Fngz2mHPRH
+ coV/a6fRCMdN68hNz4v+mgko6Fu/cJ4+BsM9iwThkud8DmeHlqnIPlZv5WqSXoRpJJgB
+ Ot5YcJUsyomOfD+3upfxf6MjHIKzsN5aN/0D6keudnb4prFxvvymxAXBAq8nzg1KY3Ya
+ IYFnArnjWhABrYfn61PpDCdhRdzzB2NBRi5MRZCo7FHRX97sWS/r+y6rkfH8UpPITvE3
+ +SCPbvPRA0Lyr+J+wbPW7jPre6UQUKClX4d1HVu2LHM4SkLWPQxkO4bYS8b0FcAPymZ1 TA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2te61dxdxb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:39:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FcESD007300;
+        Mon, 1 Jul 2019 15:39:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2tebktradc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:39:28 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x61FdQjX014454;
+        Mon, 1 Jul 2019 15:39:26 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 08:39:26 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 00/16] Cache open file descriptors in knfsd
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <98d5ef75d1fa2b8775f52d378ca7d8dd1a542ae1.camel@hammerspace.com>
+Date:   Mon, 1 Jul 2019 11:39:25 -0400
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2A2E890C-8AD2-482D-A51C-AB6D254B9DB0@oracle.com>
+References: <20190630135240.7490-1-trond.myklebust@hammerspace.com>
+ <F1C28446-51F0-4999-AAA6-4FEA9371E36A@oracle.com>
+ <98d5ef75d1fa2b8775f52d378ca7d8dd1a542ae1.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907010188
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010188
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 04:25:47PM +0800, Caspar Zhang wrote:
-> On Mon, Jul 01, 2019 at 01:27:26AM +0800, Yihao Wu wrote:
-> > Hi,
-> >
-> > I'm using kernel v4.19.y and find that v4.19.y panic when mounting NFSv4, which can be simply reproduced as follows:
-> >
-> >
-> > while :; do
-> > mkfs.ext4 -F /dev/vdb
-> > mount /dev/vdb /tmp/mymnt_server
-> > exportfs -o insecure,rw,sync,no_root_squash,fsid=1 127.0.0.1:/tmp/mymnt_server
-> > mount -t nfs4 -o minorversion=0 127.0.0.1:/tmp/mymnt_server /tmp/mymnt_client
-> > umount -f -l /tmp/mymnt_client
-> > sleep 0.5
-> > exportfs -r
-> > sleep 0.2
-> > umount -f -l /tmp/mymnt_server
-> > done
-> >
-> >
-> > # kernel 4.19.y
-> > After a while, the kernel panic.
-> 
-> This is a Regression, introduced by the following commit:
-> 
->     NFS4: Fix v4.0 client state corruption when mount
-> 
-> in v4.19.46[1].
-> 
-> The interesting part is, looks like commit 9dc6edcf676("SUNRPC: Clean up
-> initialisation of the struct rpc_rqst")[2] is not targeted to fix this
-> regression, but a general clean-up fix, maybe that explains somehow we
-> missed this fix in stable tree ;-)
-> 
-> Since this is a Regression in stable tree, I strongly suggest we put the
-> fix commit into 4.19. Greg, Trond, any comments?
 
-Looks good to me, now queued up, thanks!
 
-greg k-h
+> On Jul 1, 2019, at 11:17 AM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Mon, 2019-07-01 at 11:02 -0400, Chuck Lever wrote:
+>> Interesting work! Kudos to you and Jeff.
+>>=20
+>>=20
+>>> On Jun 30, 2019, at 9:52 AM, Trond Myklebust <trondmy@gmail.com>
+>>> wrote:
+>>>=20
+>>> When a NFSv3 READ or WRITE request comes in, the first thing knfsd
+>>> has
+>>> to do is open a new file descriptor. While this is often a
+>>> relatively
+>>> inexpensive thing to do for most local filesystems, it is usually
+>>> less
+>>> so for FUSE, clustered or networked filesystems that are being
+>>> exported
+>>> by knfsd.
+>>=20
+>> True, I haven't measured much effect if any of open and close on
+>> local
+>> file systems. It would be valuable if the cover letter provided a
+>> more
+>> quantified assessment of the cost for these other use cases. It
+>> sounds
+>> plausible to me that they would be more expensive, but I'm wondering
+>> if
+>> the additional complexity of an open file cache is warranted and
+>> effective. Do you have any benchmark results to share?
+>>=20
+>> Are there particular workloads where you believe open caching will be
+>> especially beneficial?
+>=20
+> I'd expect pretty much anything with a nontrivial open() method. i.e.:
+> FUSE, GFS2, OCFS2, CEPH, etc. to benefit.
+>=20
+> I've seen no slowdowns so far with traditional filesystems: i.e. ext4
+> and xfs.
+>=20
+> Note that the removal of the raparms cache does in many way compensate
+> for the new need to lookup the struct file.
+>=20
+>>> This set of patches attempts to reduce some of that cost by caching
+>>> open file descriptors so that they may be reused by other incoming
+>>> READ/WRITE requests for the same file.
+>>=20
+>> Is the open file cache a single cache per server? Wondering if there
+>> can be significant interference (eg lock contention or cache
+>> sloshing)
+>> between separate workloads on different exports, for example.
+>=20
+> The file cache is global. Cache lookups are lockless (i.e. RCU
+> protected), so there is little contention for the case where there is
+> already an entry. For the case where we have to add an entry, there is
+> a mutex that might get contended in the case of workloads with lots of
+> small file open+closes.
+
+>> Do you have any benchmark results that show that removing the raparms
+>> cache is harmless?
+>=20
+> The same information is carried in struct file. The whole raparms =
+cache
+> was just a hack in order to allow us to port the readahead information
+> across struct file instances. Now that we are caching the struct file
+> itself, the raparms hack is unnecessary.
+
+OK. I see the patch description of 11/16 mentions something about "stop
+fiddling with raparms" but IMO the patch description for 13/16 should be
+changed to make the above clear. Thanks!
+
+
+> IOW: I haven't seen any slowdowns so far, however I don't have access
+> to a bleeding edge networking setup that would push this further.
+>=20
+>>> One danger when doing this, is that knfsd may end up caching file
+>>> descriptors for files that have been unlinked. In order to deal
+>>> with
+>>> this issue, we use fsnotify to monitor the files, and have hooks to
+>>> evict those descriptors from the file cache if the i_nlink value
+>>> goes to 0.
+>>>=20
+>>> Jeff Layton (12):
+>>> sunrpc: add a new cache_detail operation for when a cache is
+>>> flushed
+>>> locks: create a new notifier chain for lease attempts
+>>> nfsd: add a new struct file caching facility to nfsd
+>>> nfsd: hook up nfsd_write to the new nfsd_file cache
+>>> nfsd: hook up nfsd_read to the nfsd_file cache
+>>> nfsd: hook nfsd_commit up to the nfsd_file cache
+>>> nfsd: convert nfs4_file->fi_fds array to use nfsd_files
+>>> nfsd: convert fi_deleg_file and ls_file fields to nfsd_file
+>>> nfsd: hook up nfs4_preprocess_stateid_op to the nfsd_file cache
+>>> nfsd: have nfsd_test_lock use the nfsd_file cache
+>>> nfsd: rip out the raparms cache
+>>> nfsd: close cached files prior to a REMOVE or RENAME that would
+>>>   replace target
+>>>=20
+>>> Trond Myklebust (4):
+>>> notify: export symbols for use by the knfsd file cache
+>>> vfs: Export flush_delayed_fput for use by knfsd.
+>>> nfsd: Fix up some unused variable warnings
+>>> nfsd: Fix the documentation for svcxdr_tmpalloc()
+>>>=20
+>>> fs/file_table.c                  |   1 +
+>>> fs/locks.c                       |  62 +++
+>>> fs/nfsd/Kconfig                  |   1 +
+>>> fs/nfsd/Makefile                 |   3 +-
+>>> fs/nfsd/blocklayout.c            |   3 +-
+>>> fs/nfsd/export.c                 |  13 +
+>>> fs/nfsd/filecache.c              | 885
+>>> +++++++++++++++++++++++++++++++
+>>> fs/nfsd/filecache.h              |  60 +++
+>>> fs/nfsd/nfs4layouts.c            |  12 +-
+>>> fs/nfsd/nfs4proc.c               |  83 +--
+>>> fs/nfsd/nfs4state.c              | 183 ++++---
+>>> fs/nfsd/nfs4xdr.c                |  31 +-
+>>> fs/nfsd/nfssvc.c                 |  16 +-
+>>> fs/nfsd/state.h                  |  10 +-
+>>> fs/nfsd/trace.h                  | 140 +++++
+>>> fs/nfsd/vfs.c                    | 295 ++++-------
+>>> fs/nfsd/vfs.h                    |   9 +-
+>>> fs/nfsd/xdr4.h                   |  19 +-
+>>> fs/notify/fsnotify.h             |   2 -
+>>> fs/notify/group.c                |   2 +
+>>> fs/notify/mark.c                 |   6 +
+>>> include/linux/fs.h               |   5 +
+>>> include/linux/fsnotify_backend.h |   2 +
+>>> include/linux/sunrpc/cache.h     |   1 +
+>>> net/sunrpc/cache.c               |   3 +
+>>> 25 files changed, 1465 insertions(+), 382 deletions(-)
+>>> create mode 100644 fs/nfsd/filecache.c
+>>> create mode 100644 fs/nfsd/filecache.h
+>>>=20
+>>> --=20
+>>> 2.21.0
+>>>=20
+>>=20
+>> --
+>> Chuck Lever
+>>=20
+>>=20
+>>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--
+Chuck Lever
+
+
+
