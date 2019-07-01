@@ -2,230 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C09A5C06E
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2019 17:40:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEA75C45C
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2019 22:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfGAPkH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Jul 2019 11:40:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33034 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728668AbfGAPkH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jul 2019 11:40:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61Fcvma125611;
-        Mon, 1 Jul 2019 15:39:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=p0DCt1q/ZMpIlHGt/HBYzqj55kMUOfGcmwx5EwTf+6I=;
- b=RdA4UUGMLkvgAsNSjpmWKjyxdvb8OUMQzz3EXxsiK/bjBvWRWYt2aJLee3Fngz2mHPRH
- coV/a6fRCMdN68hNz4v+mgko6Fu/cJ4+BsM9iwThkud8DmeHlqnIPlZv5WqSXoRpJJgB
- Ot5YcJUsyomOfD+3upfxf6MjHIKzsN5aN/0D6keudnb4prFxvvymxAXBAq8nzg1KY3Ya
- IYFnArnjWhABrYfn61PpDCdhRdzzB2NBRi5MRZCo7FHRX97sWS/r+y6rkfH8UpPITvE3
- +SCPbvPRA0Lyr+J+wbPW7jPre6UQUKClX4d1HVu2LHM4SkLWPQxkO4bYS8b0FcAPymZ1 TA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2te61dxdxb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:39:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FcESD007300;
-        Mon, 1 Jul 2019 15:39:28 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2tebktradc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:39:28 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x61FdQjX014454;
-        Mon, 1 Jul 2019 15:39:26 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 08:39:26 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 00/16] Cache open file descriptors in knfsd
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <98d5ef75d1fa2b8775f52d378ca7d8dd1a542ae1.camel@hammerspace.com>
-Date:   Mon, 1 Jul 2019 11:39:25 -0400
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>
+        id S1726664AbfGAUkV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Jul 2019 16:40:21 -0400
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:60412 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfGAUkV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jul 2019 16:40:21 -0400
+Date:   Mon, 01 Jul 2019 20:35:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ra09.com;
+        s=protonmail; t=1562013313;
+        bh=slCRutQCr+bSt8I67YTwOKevmNjUSilgLHnYmublmgY=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=hoAFWOGgFvvPNEEWRS6QPQA+VJwXxzoWQ7lNumIzqbv8IFRxbuLZUwRy1JLWNLCI2
+         HYdNzH/sP+Lk6jN5Ivh5CyaRyuAbikkTRAfzlR5mUlIH36oiLKjF3fLH5BcO57iMj0
+         pFdsNyqTF3Q9z0TFdEiN0VAj+W2CAnf4m+3VJaAk=
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+From:   Jason Alavaliant <alavaliant@ra09.com>
+Reply-To: Jason Alavaliant <alavaliant@ra09.com>
+Subject: nfs kernel panic - unable to handle kernel paging request,   cgroup_sk_free
+Message-ID: <PDiUGfHTuIRU73rC8oLx0lZVf5wdfW6MTgXPCZyRBGmYKeRwnWMH1ADev4aK-j4HGkYLMepA81dL41D_iGh-R_o956ZNaThcaQ2s-2uIAl0=@ra09.com>
+Feedback-ID: uLnN9rORzliK3k83qizp5EatIQffMP2ZYWUMA1DIYfBBsqb3fi3cNhQ5DywAeKlI5tf4eGmsF7tjFbMr-RhZiQ==:Ext:ProtonMail
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <2A2E890C-8AD2-482D-A51C-AB6D254B9DB0@oracle.com>
-References: <20190630135240.7490-1-trond.myklebust@hammerspace.com>
- <F1C28446-51F0-4999-AAA6-4FEA9371E36A@oracle.com>
- <98d5ef75d1fa2b8775f52d378ca7d8dd1a542ae1.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907010188
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907010188
+X-Spam-Status: No, score=-1.2 required=7.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF autolearn=ham
+        autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.protonmail.ch
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi,
+
+I'm hoping somebody will be kind enough to confirm if the below kernel pani=
+c is a known issue or not.
+I've been searching the list history and I see mention of several reports m=
+entioning pbf, cgroups and memory corruption but nothing with a panic that =
+seems to match the one I'm seeing exactly.
+
+What I have been able to confirm is;
+* occurs on both kernel 4.14 and 4.19 (haven't tested beyond that - I'd sus=
+pect more kernel versions are effected)
+* only if I'm sharing a volume using the nfs-kernel-server and a client is =
+accessing it   (doesn't occur with nfs-kernel-server version 1.2.8 on ubunt=
+u 16.04,  only with 1.3.4 (which I use on ubuntu 18.04) )
+* does not occur if I switch machines to the ganesha nfs server (replacing =
+nfs-kernel-server).
+
+Beyond that despite having several hundred of these kernel panics on machin=
+es at the company I'm at.  I've not been able to isolate an reproducible wa=
+y to trigger the kernel panic on demand.
+
+[38258.193887] BUG: unable to handle kernel paging request at ffff888c8be54=
+980
+[38258.193906] IP: cgroup_sk_free+0x3a/0x80
+[38258.193909] PGD 25c8067 P4D 25c8067 PUD 0
+[38258.193916] Oops: 0002 [#1] PREEMPT SMP PTI
+[38258.193920] Modules linked in: tcp_diag inet_diag iptable_filter nvidia_=
+uvm(POE) nfnetlink_queue nfnetlink_log nfnetlink bluetooth ecdh_generic nfs=
+v3 vtsspp(OE) sep4_1(OE) socperf2_0(OE) pax(OE) talpa_vfshook(OE) talpa_ped=
+connector(OE) talp
+a_pedevice(OE) talpa_vcdevice(OE) talpa_core(OE) talpa_linux(OE) talpa_sysc=
+allhook(OE) xwbios(OE) binfmt_misc snd_hda_codec_hdmi nvidia_drm(POE) nvidi=
+a_modeset(POE) coretemp kvm_intel kvm nvidia(POE) gpio_ich iTCO_wdt irqbypa=
+ss hp_wmi iTCO_ven
+dor_support wmi_bmof sparse_keymap snd_hda_codec_realtek snd_hda_codec_gene=
+ric ghash_clmulni_intel pcbc snd_hda_intel snd_hda_codec aesni_intel snd_hd=
+a_core aes_x86_64 snd_hwdep crypto_simd snd_pcm glue_helper cryptd drm_kms_=
+helper snd_seq_mid
+i snd_seq_midi_event serio_raw drm snd_rawmidi snd_seq lpc_ich ipmi_devintf=
+ snd_seq_device
+[38258.193985]  ipmi_msghandler snd_timer fb_sys_fops syscopyarea sysfillre=
+ct sysimgblt snd soundcore shpchp wmi mac_hid sch_fq_codel taniwha(OE) nfs =
+nfsd fscache nfs_acl lockd parport_pc grace ppdev auth_rpcgss lp sunrpc par=
+port ip_tables x_t
+ables autofs4 hid_generic mptsas psmouse mptscsih mptbase firewire_ohci ahc=
+i tg3 firewire_core scsi_transport_sas libahci crc_itu_t ptp pps_core flopp=
+y
+[38258.194016] CPU: 4 PID: 0 Comm: swapper/4 Tainted: P          IOE   4.14=
+.103-weta-20190225 #1
+[38258.194018] Hardware name: Hewlett-Packard HP Z800 Workstation/0AECh, BI=
+OS 786G5 v03.61 03/05/2018
+[38258.194020] task: ffff888c141d8000 task.stack: ffffc900062d4000
+[38258.194023] RIP: 0010:cgroup_sk_free+0x3a/0x80
+[38258.194025] RSP: 0018:ffff888c2f603ab0 EFLAGS: 00010246
+[38258.194027] RAX: 000000005c854980 RBX: ffff8886128ccc00 RCX: 00000000000=
+00000
+[38258.194029] RDX: 0000000000000000 RSI: 0000000000010080 RDI: 00000000000=
+00001
+[38258.194031] RBP: ffff888c2f603ab8 R08: 0000000000000001 R09: ffffffff816=
+d457f
+[38258.194033] R10: ffff888c2f603b10 R11: 0000000000000000 R12: ffff888bb25=
+8f800
+[38258.194035] R13: 0000000000000000 R14: ffff888bb2662c24 R15: ffff888bb25=
+8f800
+[38258.194038] FS:  0000000000000000(0000) GS:ffff888c2f600000(0000) knlGS:=
+0000000000000000
+[38258.194040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[38258.194042] CR2: ffff888c8be54980 CR3: 000000000220a003 CR4: 00000000000=
+206e0
+[38258.194043] Call Trace:
+[38258.194046]  <IRQ>
+[38258.194054]  __sk_destruct+0xf5/0x160
+[38258.194057]  sk_destruct+0x20/0x30
+[38258.194059]  __sk_free+0x1b/0xa0
+[38258.194061]  sk_free+0x1f/0x30
+[38258.194066]  sock_put+0x1a/0x20
+[38258.194069]  tcp_v4_rcv+0x9a5/0xa80
+[38258.194074]  ? ___bpf_prog_run+0x410/0x11f0
+[38258.194080]  ip_local_deliver_finish+0x6e/0x250
+[38258.194082]  ip_local_deliver+0xe5/0xf0
+[38258.194085]  ? ip_rcv_finish+0x430/0x430
+[38258.194088]  ip_rcv_finish+0xe7/0x430
+[38258.194091]  ip_rcv+0x28f/0x3d0
+[38258.194096]  ? packet_rcv+0x44/0x430
+[38258.194100]  __netif_receive_skb_core+0x402/0xb90
+[38258.194105]  ? tcp4_gro_receive+0x137/0x1a0
+[38258.194108]  __netif_receive_skb+0x18/0x60
+[38258.194110]  ? __netif_receive_skb+0x18/0x60
+[38258.194113]  netif_receive_skb_internal+0x31/0x110
+[38258.194115]  napi_gro_receive+0xe5/0x110
+[38258.194122]  tg3_poll_work+0x817/0xec0 [tg3]
+[38258.194127]  tg3_poll+0x6b/0x390 [tg3]
+[38258.194130]  net_rx_action+0x139/0x3a0
+[38258.194136]  __do_softirq+0xe9/0x2d7
+[38258.194142]  irq_exit+0x99/0xa0
+[38258.194144]  do_IRQ+0xa6/0x100
+[38258.194148]  common_interrupt+0x81/0x81
+[38258.194149]  </IRQ>
+[38258.194153] RIP: 0010:cpuidle_enter_state+0xa5/0x310
+[38258.194155] RSP: 0018:ffffc900062d7e88 EFLAGS: 00000202 ORIG_RAX: ffffff=
+ffffffff9c
+[38258.194158] RAX: ffff888c2f600000 RBX: 000000000001df10 RCX: 00000000000=
+0001f
+[38258.194160] RDX: 000022cbae0dded5 RSI: ffffffff82055221 RDI: ffffffff820=
+82b25
+[38258.194162] RBP: ffffc900062d7ec8 R08: 0000000000000004 R09: 00000000000=
+20c80
+[38258.194163] R10: ffffc900062d7e60 R11: 0000539304a379fa R12: ffff888c2f6=
+2a000
+[38258.194165] R13: 0000000000000004 R14: ffffffff822c3f18 R15: 00000000000=
+00000
+[38258.194169]  ? cpuidle_enter_state+0x97/0x310
+[38258.194172]  cpuidle_enter+0x17/0x20
+[38258.194176]  call_cpuidle+0x23/0x40
+[38258.194178]  do_idle+0x18f/0x1e0
+[38258.194181]  cpu_startup_entry+0x1d/0x20
+[38258.194185]  start_secondary+0x143/0x160
+[38258.194188]  secondary_startup_64+0xa5/0xb0
+[38258.194191] Code: c3 70 4c 53 82 a8 01 75 07 48 85 c0 48 0f 45 d8 f6 43 =
+6c 01 74 03 5b 5d c3 bf 01 00 00 00 e8 ee 4f f8 ff 48 8b 43 18 a8 03 75 20 =
+<65> 48 ff 08 bf 01 00 00 00 e8 48 4b f8 ff 65 8b 05 81 53 f0 7e
+[38258.194225] RIP: cgroup_sk_free+0x3a/0x80 RSP: ffff888c2f603ab0
+[38258.194226] CR2: ffff888c8be54980
 
 
-> On Jul 1, 2019, at 11:17 AM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Mon, 2019-07-01 at 11:02 -0400, Chuck Lever wrote:
->> Interesting work! Kudos to you and Jeff.
->>=20
->>=20
->>> On Jun 30, 2019, at 9:52 AM, Trond Myklebust <trondmy@gmail.com>
->>> wrote:
->>>=20
->>> When a NFSv3 READ or WRITE request comes in, the first thing knfsd
->>> has
->>> to do is open a new file descriptor. While this is often a
->>> relatively
->>> inexpensive thing to do for most local filesystems, it is usually
->>> less
->>> so for FUSE, clustered or networked filesystems that are being
->>> exported
->>> by knfsd.
->>=20
->> True, I haven't measured much effect if any of open and close on
->> local
->> file systems. It would be valuable if the cover letter provided a
->> more
->> quantified assessment of the cost for these other use cases. It
->> sounds
->> plausible to me that they would be more expensive, but I'm wondering
->> if
->> the additional complexity of an open file cache is warranted and
->> effective. Do you have any benchmark results to share?
->>=20
->> Are there particular workloads where you believe open caching will be
->> especially beneficial?
->=20
-> I'd expect pretty much anything with a nontrivial open() method. i.e.:
-> FUSE, GFS2, OCFS2, CEPH, etc. to benefit.
->=20
-> I've seen no slowdowns so far with traditional filesystems: i.e. ext4
-> and xfs.
->=20
-> Note that the removal of the raparms cache does in many way compensate
-> for the new need to lookup the struct file.
->=20
->>> This set of patches attempts to reduce some of that cost by caching
->>> open file descriptors so that they may be reused by other incoming
->>> READ/WRITE requests for the same file.
->>=20
->> Is the open file cache a single cache per server? Wondering if there
->> can be significant interference (eg lock contention or cache
->> sloshing)
->> between separate workloads on different exports, for example.
->=20
-> The file cache is global. Cache lookups are lockless (i.e. RCU
-> protected), so there is little contention for the case where there is
-> already an entry. For the case where we have to add an entry, there is
-> a mutex that might get contended in the case of workloads with lots of
-> small file open+closes.
-
->> Do you have any benchmark results that show that removing the raparms
->> cache is harmless?
->=20
-> The same information is carried in struct file. The whole raparms =
-cache
-> was just a hack in order to allow us to port the readahead information
-> across struct file instances. Now that we are caching the struct file
-> itself, the raparms hack is unnecessary.
-
-OK. I see the patch description of 11/16 mentions something about "stop
-fiddling with raparms" but IMO the patch description for 13/16 should be
-changed to make the above clear. Thanks!
-
-
-> IOW: I haven't seen any slowdowns so far, however I don't have access
-> to a bleeding edge networking setup that would push this further.
->=20
->>> One danger when doing this, is that knfsd may end up caching file
->>> descriptors for files that have been unlinked. In order to deal
->>> with
->>> this issue, we use fsnotify to monitor the files, and have hooks to
->>> evict those descriptors from the file cache if the i_nlink value
->>> goes to 0.
->>>=20
->>> Jeff Layton (12):
->>> sunrpc: add a new cache_detail operation for when a cache is
->>> flushed
->>> locks: create a new notifier chain for lease attempts
->>> nfsd: add a new struct file caching facility to nfsd
->>> nfsd: hook up nfsd_write to the new nfsd_file cache
->>> nfsd: hook up nfsd_read to the nfsd_file cache
->>> nfsd: hook nfsd_commit up to the nfsd_file cache
->>> nfsd: convert nfs4_file->fi_fds array to use nfsd_files
->>> nfsd: convert fi_deleg_file and ls_file fields to nfsd_file
->>> nfsd: hook up nfs4_preprocess_stateid_op to the nfsd_file cache
->>> nfsd: have nfsd_test_lock use the nfsd_file cache
->>> nfsd: rip out the raparms cache
->>> nfsd: close cached files prior to a REMOVE or RENAME that would
->>>   replace target
->>>=20
->>> Trond Myklebust (4):
->>> notify: export symbols for use by the knfsd file cache
->>> vfs: Export flush_delayed_fput for use by knfsd.
->>> nfsd: Fix up some unused variable warnings
->>> nfsd: Fix the documentation for svcxdr_tmpalloc()
->>>=20
->>> fs/file_table.c                  |   1 +
->>> fs/locks.c                       |  62 +++
->>> fs/nfsd/Kconfig                  |   1 +
->>> fs/nfsd/Makefile                 |   3 +-
->>> fs/nfsd/blocklayout.c            |   3 +-
->>> fs/nfsd/export.c                 |  13 +
->>> fs/nfsd/filecache.c              | 885
->>> +++++++++++++++++++++++++++++++
->>> fs/nfsd/filecache.h              |  60 +++
->>> fs/nfsd/nfs4layouts.c            |  12 +-
->>> fs/nfsd/nfs4proc.c               |  83 +--
->>> fs/nfsd/nfs4state.c              | 183 ++++---
->>> fs/nfsd/nfs4xdr.c                |  31 +-
->>> fs/nfsd/nfssvc.c                 |  16 +-
->>> fs/nfsd/state.h                  |  10 +-
->>> fs/nfsd/trace.h                  | 140 +++++
->>> fs/nfsd/vfs.c                    | 295 ++++-------
->>> fs/nfsd/vfs.h                    |   9 +-
->>> fs/nfsd/xdr4.h                   |  19 +-
->>> fs/notify/fsnotify.h             |   2 -
->>> fs/notify/group.c                |   2 +
->>> fs/notify/mark.c                 |   6 +
->>> include/linux/fs.h               |   5 +
->>> include/linux/fsnotify_backend.h |   2 +
->>> include/linux/sunrpc/cache.h     |   1 +
->>> net/sunrpc/cache.c               |   3 +
->>> 25 files changed, 1465 insertions(+), 382 deletions(-)
->>> create mode 100644 fs/nfsd/filecache.c
->>> create mode 100644 fs/nfsd/filecache.h
->>>=20
->>> --=20
->>> 2.21.0
->>>=20
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-
---
-Chuck Lever
-
-
+Thanks
+Jason
 
