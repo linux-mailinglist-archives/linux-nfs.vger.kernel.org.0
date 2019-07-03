@@ -2,66 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 553CA5E96E
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2019 18:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 471035EE88
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2019 23:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfGCQna (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Jul 2019 12:43:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48284 "EHLO mx1.redhat.com"
+        id S1727256AbfGCVaa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Jul 2019 17:30:30 -0400
+Received: from mail.prgmr.com ([71.19.149.6]:57062 "EHLO mail.prgmr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCQna (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:43:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E1B6308424C;
-        Wed,  3 Jul 2019 16:43:25 +0000 (UTC)
-Received: from parsley.fieldses.org (ovpn-123-62.rdu2.redhat.com [10.10.123.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C711517B40;
-        Wed,  3 Jul 2019 16:43:24 +0000 (UTC)
-Received: by parsley.fieldses.org (Postfix, from userid 2815)
-        id A61781803CA; Wed,  3 Jul 2019 12:43:23 -0400 (EDT)
-Date:   Wed, 3 Jul 2019 12:43:23 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Chris Tracy <ctracy@engr.scu.edu>, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, it+linux-nfs@molgen.mpg.de
-Subject: Re: [PATCH] nfsd: Fix overflow causing non-working mounts on 1 TB
- machines
-Message-ID: <20190703164323.GC23076@parsley.fieldses.org>
-References: <20190702165107.93C8A2067CFDD@mx.molgen.mpg.de>
- <8c3e0249-b17f-4bd2-4a46-afd4d35f4763@molgen.mpg.de>
- <0b5fdd56-d570-c787-cd56-7e6d0ba65225@molgen.mpg.de>
- <860b4d19-49bd-5d76-aa06-c2d9aeffb452@molgen.mpg.de>
- <17f8948d-19b9-beac-cab1-e4bc587d9612@molgen.mpg.de>
- <20190703155634.GB23076@parsley.fieldses.org>
- <267fb3de-fe3b-fb42-1cc1-3faea5d19d93@molgen.mpg.de>
+        id S1726902AbfGCVaa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:30:30 -0400
+Received: from turtle.mx (96-92-68-116-static.hfc.comcastbusiness.net [96.92.68.116])
+        (Authenticated sender: adp)
+        by mail.prgmr.com (Postfix) with ESMTPSA id 1C29872008D
+        for <linux-nfs@vger.kernel.org>; Wed,  3 Jul 2019 22:27:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com 1C29872008D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1562207249;
+        bh=xtvcBkhZQMHtrCmE/920LkbkfaUDBJvo8ELcMPK895M=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=lYJSnzK5uQOlPGXfKfDgQMN6wEP9dNZ60GS//8lz0lus9u1OtHSt1uhLJmbtBPi9i
+         McuT8vdi7HTlJ4oKTeHlPIVJHcLxxBmGNugV9RV2DRV39DK7TM4fp4v7jNITaXeuZ9
+         Vv83t58uwBehUM38zSgVdebmT8kHsALD59pLfCnI=
+Received: (qmail 22989 invoked by uid 1353); 3 Jul 2019 21:32:21 -0000
+Date:   Wed, 3 Jul 2019 15:32:21 -0600
+From:   Alan Post <adp@prgmr.com>
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: User process NFS write hang in wait_on_commit with kworker
+Message-ID: <20190703213221.GB4158@turtle.email>
+References: <20190618000613.GR4158@turtle.email>
+ <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
+ <20190619000746.GT4158@turtle.email>
+ <25608EB2-87F0-4196-BEF9-8AB8FC72270B@redhat.com>
+ <20190621204723.GU4158@turtle.email>
+ <20190628183324.GJ4158@turtle.email>
+ <35045385-2C77-4BA0-8641-2AE4E73E04A4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <267fb3de-fe3b-fb42-1cc1-3faea5d19d93@molgen.mpg.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 03 Jul 2019 16:43:30 +0000 (UTC)
+In-Reply-To: <35045385-2C77-4BA0-8641-2AE4E73E04A4@redhat.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 06:03:06PM +0200, Paul Menzel wrote:
-> Dear Bruce,
+On Tue, Jul 02, 2019 at 05:55:10AM -0400, Benjamin Coddington wrote:
+> > As far as I understand it, for a particular xid, there should be a
+> > call and a reply.  The approach I took then was to pull out these
+> > fields from my capture and ignore RPC calls where both are present
+> > in my capture.  It seems this is simplistic, as the number of RPC
+> > calls I have without an attendant reply isn't lining up with my
+> > incident window.
 > 
+> Does your capture report dropped packets?  If so, maybe you need to increase
+> the capture buffer.
 > 
-> On 7/3/19 5:56 PM, J. Bruce Fields wrote:
-> > Good catch!  And thanks for the detailed explanation.  Applying for 5.2
-> > and stable.
-> 
-> Thanks. Please note, that in the last part are some guesses, and I am not
-> well versed in the terminology. So please feel free to reword the commit
-> messages.
 
-I haven't checked all the arithmetic, but it sounds pretty plausible to
-me, and clearly that type was wrong.
+I'm not certain, but I do have a capture on both the NFS server and
+the NFS client--comparing them would show me if I was under most
+circumstances.  Good catch.
 
---b.
+> > In one example, I have a series of READ calls which cease
+> > generating RPC reply messages as the offset for the file continues
+> > to increases.  After a couple/few dozen messages, the RPC replies
+> > continue as they were.  Is there a normal or routine explanation
+> > for this?
+> >
+> > RFC 5531 and the NetworkTracing page on wiki.linux-nfs.org have
+> > been quite helpful bringing me up to speed.  If any of you have
+> > advice or guidance or can clarify my understanding of how the
+> > call/reply RPC mechanism works I appreciate it.
+> 
+> Seems like you understand it.  Do you have specific questions?
+> 
+
+Is it true that for each RPC call there is an RPC reply with the
+same xid?  Is it a-priori an error if an otherwise correct RPC
+call is not eventually paired with an RPC reply?
+
+Thank you,
+
+-A
+-- 
+Alan Post | Xen VPS hosting for the technically adept
+PO Box 61688 | Sunnyvale, CA 94088-1681 | https://prgmr.com/
+email: adp@prgmr.com
