@@ -2,27 +2,27 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 118F45E76E
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2019 17:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BC365E778
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2019 17:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfGCPJD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Jul 2019 11:09:03 -0400
-Received: from mout.web.de ([212.227.17.12]:34107 "EHLO mout.web.de"
+        id S1726574AbfGCPKG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Jul 2019 11:10:06 -0400
+Received: from mout.web.de ([212.227.17.11]:39887 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfGCPJD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:09:03 -0400
+        id S1726473AbfGCPKG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:10:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562166536;
-        bh=vSCyj17vPqCrs93GUhXfANwMFjV9zClv/Arpb5kh/vs=;
+        s=dbaedf251592; t=1562166595;
+        bh=bJo7ecYfHBZx6XyeZOCJUAM2e2OjXfAvLYhz3OVKzNI=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=hnKoBxnP/ec2XXPCtWjdjyr/b0uqmkYNu+Rp+m7FCcoMdcvIo2Wc2ifrz9YPGfUFe
-         PX+yppuAChSFPNqAxikPUf9JH8HeNFAeTA25ZC8ChGz37f6WropkDgujgVeitCRZG9
-         6hwAwZyWNZHLs2JzrsciyY6StNikKl7Jl1Fkw6J4=
+        b=iajFrtczQo47D3AeH6uo72TyaJO8kvQbWPUjPZwH3uMYNRfaTo7/uKjSqQliYd+Yj
+         um5DSHuJm7ZVWa/5kHNNR8rSlhXNLGmiahh7By8LD72xn6iYWeoqc/nVXYWi/1ASnN
+         vC4giEe3ZweOiTIoYDx6V2TGn0qM2UGpmDJpuJqw=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from [192.168.1.2] ([93.132.189.108]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LmLgE-1iIIsP4AEM-00ZzIE; Wed, 03
- Jul 2019 17:08:56 +0200
-Subject: [PATCH 1/3] NFS: Use seq_putc() in nfs_show_stats()
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lc8Xx-1iPkt40PDR-00ja8y; Wed, 03
+ Jul 2019 17:09:55 +0200
+Subject: [PATCH 2/3] NFS: Replace 16 seq_printf() calls by seq_puts()
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -74,8 +74,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <c8837b8d-34ca-a8d0-acb6-6cad599df3e7@web.de>
-Date:   Wed, 3 Jul 2019 17:08:54 +0200
+Message-ID: <ae578dc9-9b5d-45e0-d616-546eb24ee084@web.de>
+Date:   Wed, 3 Jul 2019 17:09:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
@@ -83,60 +83,159 @@ In-Reply-To: <cb79bcb1-0fd6-1b7f-c131-5883f09ad105@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:K3bK6HYYKiloBWgEBtHk2P1ec/jI3tNEQ8FrddgizmRtNGxILL3
- 1DG5WtKL4tLUwNuD3k+lSgC+N1yYCjpAGeXB+/hehfjLG2NB2OE3bxGriDiD5lNtMFqmnYU
- XGluvszyMkmf9KKoNoEVwNXTEeLLT66am5DmHnjTZXJ7H6TAHQJTrZWOs0tzrczFe0wDVsL
- 82MeAcpj79shxVwhQtVkQ==
+X-Provags-ID: V03:K1:xKJUu45GHRUmypWtRPFa6VdC0UJJ8HoG7MJXphaYcAN0ld9fyjl
+ YOlqf3YqLpIXgPLxOk3rz5Bsnsw5FVMsgX7r9h7+x35rZjMT4nB+edheFrByihoyY2udYbh
+ JCCh9qwmjBgdtqJ4igSDWWjOyj6eCdgZ9VME06GaS2eOkt/eak6vbFGfjxuWOc9LCXwU0C3
+ 97CgSe2xOgBdskw+YVZ/w==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:idEQ55D6Huw=:WmVW0j1p1ROWzTXya5RL3h
- RlTOrRpbGXM4JpUaVszYJUDSrNpEqTwS+ejY8qovMV1YK26sv2pgsI84Vypr/Qk8IeehSkmr6
- v1xM2vGhDNEPBX1Y1tezkOEp35zEkJkTDqfAFrPy3HhqYfRonG+ApLdJvYrvZAzReD3Ez396B
- BVOpGh9BjcB1xQOFd15z+qyf4rZBmXfLi46d2IQy67arqWw1+BqygQdDCav3n4OTsvLWE9clL
- nKYlKwb6BFysDdHvQ6dw5fYlXbZqqGkFjHg0Ru+vCcYUZDwlZ9foqlqIP2ojFZoad4cG1cOLq
- OVFnTsDZvMHIFJwYD5kdPwEp5zXP+9zSXkneQafCrfzSpFQGuk0hgAqFI9nVepdauXFPezK00
- eheMBEslTQV/r2zYfxoypTwMc0paaf+0+e49DLglv0qkWTn9uhuuGGj/i1CBW5sAVaeNqiUvd
- Fa9BBKwZNU8r5ESKSaecg6hS0v2rjpu3j5QfBm51fHqahe2kORJvIPtE5rQUaVZ/T5KoCrUer
- cmfKWswKM6ZxPe2vd7soCxCVIFADkTwEflVObQcAdBFIhItCe2Y9B5vm1H6l9YwXUXt+YO0XN
- Xv3uI4E1tKgqgTf7lyXEqcd31wCdS1xcGidhD2U7+yPiPk7FRIvLPRQMWHalU/gZFxpSRuepj
- Q/FhsmrXQObiRklRSPc3gY0Zls4/NeCWoHLAfQWsQbA8kgasZdkEqlZ3VP3ZnQoW4LzaPTqQ9
- K39a0bSzmg5+VWDTGU2E6b3Hkt19nNIsE+5WiWewV5EzM4FtLMIwvDeMkAo2wxoe3Yzu/Qe0S
- 74kHfva+2/fG4m8LsD+/acmR7YKEgReJNG55LhQozM2E6pXz6SPefaDCjfRIePtASqIAA0wQW
- RzHPBs26qU+OFYP5AP3rgY/81br/CS5uc/oA+to2vCpt62dguq2ijENrKFpPN+Ck74xhmE9LW
- 2mN5vSqJ10prHxb3u+FWJ+cSLfH3vln39TX4ugr2gcwUSD2zMG6a29BCsH6/r+qO/4vRtEhvH
- gvkUBj3/LcNIlcqZwcChcUHz2ypFS0OUZfOd3V/u7ij80pbdfdpkOQp1BmRCzWr3cEYJz0w6A
- TF56pJPC8bR9qFiAVzpRq7YtWtTKqTdrwHs
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mVyO1bLLTUc=:sEVGvAKTg+UBckLga1GPGu
+ jw8V/pxNbqLRaWFkZWwnaoX+Lp1kMlqGl/RemmKntUkrP0dkk3jT78/6SS11TOkqh4AxCHS8k
+ K+nHkSiJeAE77TVY6tLor1I46/yKMy2+i7D7ZhbLz7asPm+p7fOAtZm4yLSAP5wMjFde9uv8K
+ GyodIIq0sIUdAJfPz5t8hbadxrk0RLvJHQTTJ5nyBoKXsCHrV0vLJeSpn01yvkejUiOAIcxJp
+ IjptDDB+Qykk+DKlzrnTii3SaaH3HsAm5/e9QnIIGgmRu5f9SbwD3yXMuLoK9jOo++yz1GkF3
+ yhzWg7CGw3sDZ/jT6V059PZo68rtRwsrzPReA6TtkJsxq5Me9g7IMwh1RzADgn0d4soBeKAmb
+ dwIMxVcy9un7CqrrVo5ANcs2F5odSMv5DTQwsPj5+O0r7oTdQOj4REvNgaeZpf0O6b2R8xFiW
+ ghWg8bzHo+Wdn9TuqiWnghHBrRz+I8HTDuyAmutHbLdTAciGzv5WM9rpD3103Y/j2d09wi+iJ
+ G3gzCd/mHiYVc/pa6tbnj9T1SQv/fP7agj+UaDbj+g5iRcg817ml/GloKNfTjpsehoe47cKQi
+ gt34WHnXL3Khoe/m1nt3jy7HwLsiGQmgVv9aX2n1noMNqC8ChOMl7pt3+z0Zbp27rh9puDu8k
+ KXhn/N/qOr3ID58sq922uTZZawbpJcfs9apFY0YKeAo2ySUSl15tL40P3cswMwPrwA42r/UsP
+ cDPX355LHAVJ85jPQVBZzl40LPR/igyoeegHskd6wqHXLw1UMM4volDEpJhhNB4P9cD1oDb7F
+ LgzHPbICfa4rVPH/DFHGZiBY0gjH7qOcYMAwQR1xiu2QenVCOOiQ3GyLStDkvMyfYSOBo0XfB
+ 5p6GQBjwK0IXZPgWxTDrFY4PCOSCbUW5aNZ4sSiwO4nhHM5k60fHv46kdmmjRKrR/+43Vs4KT
+ EVc5GyKld/Kb9UkY6ECe2/3nvY5Z9S4WOYW/kfQECuNjtNOI+OUamkheqQ6q6KGZQ3LGhPaQN
+ c92JAjL7DKuvK7qPZByWwxKqfiCzAPxR9ObZXLZu8xZlIUmQR+ifU4kt1XUAgJRkxPVxyOGIY
+ iyV1ibGdRYV7ZBXMwZjaOG8VuzlDzZJaPvE
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 3 Jul 2019 15:33:09 +0200
+Date: Wed, 3 Jul 2019 15:50:37 +0200
 
-A single character (line break) should be put into a sequence.
-Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
+Some strings should be put into a sequence.
+Thus use the corresponding function =E2=80=9Cseq_puts=E2=80=9D.
 
 This issue was detected by using the Coccinelle software.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- fs/nfs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/super.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f88ddac2dcdf..0c229e877ba6 100644
+index 0c229e877ba6..84dcde7f560b 100644
 =2D-- a/fs/nfs/super.c
 +++ b/fs/nfs/super.c
-@@ -887,7 +887,7 @@ int nfs_show_stats(struct seq_file *m, struct dentry *=
+@@ -582,7 +582,7 @@ static void nfs_show_mountd_options(struct seq_file *m=
+, struct nfs_server *nfss,
+ 	}
+ 	default:
+ 		if (showdefaults)
+-			seq_printf(m, ",mountaddr=3Dunspecified");
++			seq_puts(m, ",mountaddr=3Dunspecified");
+ 	}
+
+ 	if (nfss->mountd_version || showdefaults)
+@@ -690,29 +690,29 @@ static void nfs_show_mount_options(struct seq_file *=
+m, struct nfs_server *nfss,
+ 		nfs_show_nfsv4_options(m, nfss, showdefaults);
+
+ 	if (nfss->options & NFS_OPTION_FSCACHE)
+-		seq_printf(m, ",fsc");
++		seq_puts(m, ",fsc");
+
+ 	if (nfss->options & NFS_OPTION_MIGRATION)
+-		seq_printf(m, ",migration");
++		seq_puts(m, ",migration");
+
+ 	if (nfss->flags & NFS_MOUNT_LOOKUP_CACHE_NONEG) {
+ 		if (nfss->flags & NFS_MOUNT_LOOKUP_CACHE_NONE)
+-			seq_printf(m, ",lookupcache=3Dnone");
++			seq_puts(m, ",lookupcache=3Dnone");
+ 		else
+-			seq_printf(m, ",lookupcache=3Dpos");
++			seq_puts(m, ",lookupcache=3Dpos");
+ 	}
+
+ 	local_flock =3D nfss->flags & NFS_MOUNT_LOCAL_FLOCK;
+ 	local_fcntl =3D nfss->flags & NFS_MOUNT_LOCAL_FCNTL;
+
+ 	if (!local_flock && !local_fcntl)
+-		seq_printf(m, ",local_lock=3Dnone");
++		seq_puts(m, ",local_lock=3Dnone");
+ 	else if (local_flock && local_fcntl)
+-		seq_printf(m, ",local_lock=3Dall");
++		seq_puts(m, ",local_lock=3Dall");
+ 	else if (local_flock)
+-		seq_printf(m, ",local_lock=3Dflock");
++		seq_puts(m, ",local_lock=3Dflock");
+ 	else
+-		seq_printf(m, ",local_lock=3Dposix");
++		seq_puts(m, ",local_lock=3Dposix");
+ }
+
+ /*
+@@ -739,7 +739,7 @@ EXPORT_SYMBOL_GPL(nfs_show_options);
+ static void show_sessions(struct seq_file *m, struct nfs_server *server)
+ {
+ 	if (nfs4_has_session(server->nfs_client))
+-		seq_printf(m, ",sessions");
++		seq_puts(m, ",sessions");
+ }
+ #else
+ static void show_sessions(struct seq_file *m, struct nfs_server *server) =
+{}
+@@ -816,7 +816,7 @@ int nfs_show_stats(struct seq_file *m, struct dentry *=
 root)
+ 	/*
+ 	 * Display all mount option settings
+ 	 */
+-	seq_printf(m, "\n\topts:\t");
++	seq_puts(m, "\n\topts:\t");
+ 	seq_puts(m, sb_rdonly(root->d_sb) ? "ro" : "rw");
+ 	seq_puts(m, root->d_sb->s_flags & SB_SYNCHRONOUS ? ",sync" : "");
+ 	seq_puts(m, root->d_sb->s_flags & SB_NOATIME ? ",noatime" : "");
+@@ -827,7 +827,7 @@ int nfs_show_stats(struct seq_file *m, struct dentry *=
+root)
+
+ 	show_implementation_id(m, nfss);
+
+-	seq_printf(m, "\n\tcaps:\t");
++	seq_puts(m, "\n\tcaps:\t");
+ 	seq_printf(m, "caps=3D0x%x", nfss->caps);
+ 	seq_printf(m, ",wtmult=3D%u", nfss->wtmult);
+ 	seq_printf(m, ",dtsize=3D%u", nfss->dtsize);
+@@ -836,7 +836,7 @@ int nfs_show_stats(struct seq_file *m, struct dentry *=
+root)
+
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	if (nfss->nfs_client->rpc_ops->version =3D=3D 4) {
+-		seq_printf(m, "\n\tnfsv4:\t");
++		seq_puts(m, "\n\tnfsv4:\t");
+ 		seq_printf(m, "bm0=3D0x%x", nfss->attr_bitmask[0]);
+ 		seq_printf(m, ",bm1=3D0x%x", nfss->attr_bitmask[1]);
+ 		seq_printf(m, ",bm2=3D0x%x", nfss->attr_bitmask[2]);
+@@ -874,15 +874,15 @@ int nfs_show_stats(struct seq_file *m, struct dentry=
+ *root)
+ 		preempt_enable();
+ 	}
+
+-	seq_printf(m, "\n\tevents:\t");
++	seq_puts(m, "\n\tevents:\t");
+ 	for (i =3D 0; i < __NFSIOS_COUNTSMAX; i++)
+ 		seq_printf(m, "%lu ", totals.events[i]);
+-	seq_printf(m, "\n\tbytes:\t");
++	seq_puts(m, "\n\tbytes:\t");
+ 	for (i =3D 0; i < __NFSIOS_BYTESMAX; i++)
+ 		seq_printf(m, "%Lu ", totals.bytes[i]);
+ #ifdef CONFIG_NFS_FSCACHE
+ 	if (nfss->options & NFS_OPTION_FSCACHE) {
+-		seq_printf(m, "\n\tfsc:\t");
++		seq_puts(m, "\n\tfsc:\t");
+ 		for (i =3D 0; i < __NFSIOS_FSCACHEMAX; i++)
  			seq_printf(m, "%Lu ", totals.fscache[i]);
  	}
- #endif
--	seq_printf(m, "\n");
-+	seq_putc(m, '\n');
-
- 	rpc_clnt_show_stats(m, nfss->client);
-
 =2D-
 2.22.0
 
