@@ -2,70 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4306D5FEEE
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2019 02:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 544485FEEF
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2019 02:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfGEAFX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Jul 2019 20:05:23 -0400
-Received: from smtprelay0050.hostedemail.com ([216.40.44.50]:40569 "EHLO
+        id S1727564AbfGEAGQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Jul 2019 20:06:16 -0400
+Received: from smtprelay0217.hostedemail.com ([216.40.44.217]:38912 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727313AbfGEAFX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Jul 2019 20:05:23 -0400
-X-Greylist: delayed 449 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jul 2019 20:05:22 EDT
+        by vger.kernel.org with ESMTP id S1727313AbfGEAGQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Jul 2019 20:06:16 -0400
 Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id D718380105C8;
-        Thu,  4 Jul 2019 23:57:54 +0000 (UTC)
+        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 4CF6C18352282
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Jul 2019 23:58:06 +0000 (UTC)
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1896C100E86C0;
-        Thu,  4 Jul 2019 23:57:53 +0000 (UTC)
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id BE6E11802A387;
+        Thu,  4 Jul 2019 23:58:04 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::,RULES_HIT:41:355:379:541:973:988:989:1260:1345:1437:1534:1540:1711:1730:1747:1777:1792:1801:2393:2559:2562:3138:3139:3140:3141:3142:3352:3865:3866:3867:3870:3871:4605:5007:6261:8603:10004:10848:11658:11914:12043:12048:12297:12679:12895:13069:13138:13161:13229:13231:13311:13357:14096:14384:14394:14581:21080:21451:21627:30054:30079,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: girl52_61bbf4fecba19
-X-Filterd-Recvd-Size: 1739
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::,RULES_HIT:41:355:379:541:800:960:973:988:989:1260:1345:1359:1437:1534:1539:1567:1711:1714:1730:1747:1777:1792:2393:2559:2562:3138:3139:3140:3141:3142:3865:4321:5007:6261:8603:10004:10848:11658:11914:12296:12297:12555:12895:12986:13069:13138:13231:13311:13357:14181:14384:14394:14721:21080:21627:30029:30054,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.8.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
+X-HE-Tag: foot67_6385f1f675e2e
+X-Filterd-Recvd-Size: 1388
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jul 2019 23:57:51 +0000 (UTC)
+        Thu,  4 Jul 2019 23:58:03 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-nfs@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 0/8] treewide: correct misuses of strscpy/strlcpy
-Date:   Thu,  4 Jul 2019 16:57:40 -0700
-Message-Id: <cover.1562283944.git.joe@perches.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 8/8] nfsd: Fix misuse of strlcpy
+Date:   Thu,  4 Jul 2019 16:57:48 -0700
+Message-Id: <b51141d12de77eb22101e81f9eb2c9cc44104d7a.1562283944.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <cover.1562283944.git.joe@perches.com>
+References: <cover.1562283944.git.joe@perches.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These are all likely copy/paste defects where the field size of the
-'copied to' array is incorrect.
+Probable cut&paste typo - use the correct field size.
 
-Each patch in this series is independent.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ fs/nfsd/nfs4idmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Joe Perches (8):
-  Input: synaptics: Fix misuse of strlcpy
-  leds: as3645a: Fix misuse of strlcpy
-  media: m2m-deinterlace: Fix misuse of strscpy
-  media: go7007: Fix misuse of strscpy
-  net: ethernet: sun4i-emac: Fix misuse of strlcpy
-  net: nixge: Fix misuse of strlcpy
-  tty: hvcs: Fix odd use of strlcpy
-  nfsd: Fix misuse of strlcpy
-
- drivers/input/mouse/synaptics.c             | 2 +-
- drivers/leds/leds-as3645a.c                 | 2 +-
- drivers/media/platform/m2m-deinterlace.c    | 2 +-
- drivers/media/usb/go7007/snd-go7007.c       | 2 +-
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- drivers/net/ethernet/ni/nixge.c             | 2 +-
- drivers/tty/hvc/hvcs.c                      | 4 ++--
- fs/nfsd/nfs4idmap.c                         | 2 +-
- 8 files changed, 10 insertions(+), 10 deletions(-)
-
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index 2961016097ac..d1f285245af8 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -83,7 +83,7 @@ ent_init(struct cache_head *cnew, struct cache_head *citm)
+ 	new->type = itm->type;
+ 
+ 	strlcpy(new->name, itm->name, sizeof(new->name));
+-	strlcpy(new->authname, itm->authname, sizeof(new->name));
++	strlcpy(new->authname, itm->authname, sizeof(new->authname));
+ }
+ 
+ static void
 -- 
 2.15.0
 
