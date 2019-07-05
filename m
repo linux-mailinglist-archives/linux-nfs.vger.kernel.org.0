@@ -2,111 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A641560E0B
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2019 00:59:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0325960E2E
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2019 01:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726001AbfGEW7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Jul 2019 18:59:16 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:38466 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGEW7Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Jul 2019 18:59:16 -0400
-Received: by mail-io1-f51.google.com with SMTP id j6so22259031ioa.5
-        for <linux-nfs@vger.kernel.org>; Fri, 05 Jul 2019 15:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=xq7BB+bsSEWd0N0pJFZrd5Ww5QbCsUBYzVS0nSKu2vE=;
-        b=fJnqdd4u+GvLvDY6tnKFc7omMg09VgM7smCVuL/5OH9wGjcgwMtNGbyoX7Svc2BIim
-         Eepl0qSYzRiSPMlCzJwlcl0FHPGIuKojvWt7kvjuMi2Mujg/j4fjm19tM9e4flEyDSXm
-         941BM73VIG67zblg5/81rE4IlYG2xfwyefONWop7PjWgAcU70uGWO8wYPoFk2fjuj4NC
-         X5M6Srzn5Hqm10my9Eoj7VZeBMiOdFHHAuX/uP1vXDFRAkpMA0UT2Ytd+x04QVUpZVjV
-         JW50I0Lcd6gSovyIxU7qU6AEdWS/b76ACwmWmV3YSQcdSFzRsqG20GredEBUe2upGCnK
-         puKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=xq7BB+bsSEWd0N0pJFZrd5Ww5QbCsUBYzVS0nSKu2vE=;
-        b=jSaWR24p8AqThSCg1Hwjj9QeAcR9wJVN7o8zl3AqIaeNriwTHoIabmx6NLgsowoTtU
-         6KeACeyniMRM/aU1+hyfukFwncSbILZiG+6YmbNaeqNPvgMIo7PmLbsU83oh9/ULvsBY
-         kkh/fWyb3R9MOIIebQuIB6XvrvpXBuuKjTr6gSwdqYYn3GgE3CVRy58YYDhtHXdUIDeC
-         2ebZDuvzHN2z6+lrawlYGJkoAP47bc2hUgb8ggK0EbEkWy+Sl0MFtsU6qurtsn7d4uX6
-         f2XnM++BgIa2epe8UG4nATrnODRD11LeCRNL5CnM54GU03YfcYUtqsRSVEYI0dXynzb2
-         Vg7w==
-X-Gm-Message-State: APjAAAU68pnqFNtgGo836/pS0SqXh/yB1s330nWLXWoDvrFN3ExoiITe
-        UwlqPvO0QwKGnFecjH+z9bTefYtwpsMYoW6UCaDjIGbllu4=
-X-Google-Smtp-Source: APXvYqxaS8KiH7d5xtSoasV9AEbhBcoMwhD00B1t4yPeQ6ncM/oXb+ix6lJVaV6qb7i4jRthOIeA0LY0NVcaQr8y/LQ=
-X-Received: by 2002:a6b:7602:: with SMTP id g2mr330402iom.82.1562367555467;
- Fri, 05 Jul 2019 15:59:15 -0700 (PDT)
+        id S1726177AbfGEXx7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Jul 2019 19:53:59 -0400
+Received: from p3plsmtpa07-07.prod.phx3.secureserver.net ([173.201.192.236]:33013
+        "EHLO p3plsmtpa07-07.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726069AbfGEXx7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Jul 2019 19:53:59 -0400
+Received: from [192.168.0.56] ([24.218.182.144])
+        by :SMTPAUTH: with ESMTPSA
+        id jY1eheS2r0qbejY1ehZXOi; Fri, 05 Jul 2019 16:53:58 -0700
+Subject: Re: User process NFS write hang in wait_on_commit with kworker
+To:     Alan Post <adp@prgmr.com>, linux-nfs <linux-nfs@vger.kernel.org>
+References: <20190618000613.GR4158@turtle.email>
+ <6DE07E49-D450-4BF7-BC61-0973A14CD81B@redhat.com>
+ <20190619000746.GT4158@turtle.email>
+ <25608EB2-87F0-4196-BEF9-8AB8FC72270B@redhat.com>
+ <20190621204723.GU4158@turtle.email> <20190628183324.GJ4158@turtle.email>
+ <35045385-2C77-4BA0-8641-2AE4E73E04A4@redhat.com>
+ <20190703213221.GB4158@turtle.email>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <a6ccb336-4ce6-b313-660e-ac4c1f033c54@talpey.com>
+Date:   Fri, 5 Jul 2019 19:53:56 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-From:   John Bartoszewski <john.bartoszewski@gmail.com>
-Date:   Fri, 5 Jul 2019 16:59:02 -0600
-Message-ID: <CAMttjSSQibhZ4ekSMVRF0jeREA9n9s6puAJcOTR2vyn=W2W5sg@mail.gmail.com>
-Subject: zfs server slow mounting ( mtab ?)
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190703213221.GB4158@turtle.email>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGSOmIS4Fj337AXW9UHdXegZsbJYmOuAywbi0qYLPTQCPh/Yd6T0zWhR9HrvshaGJwfTtpMq0lZPrxMPTcn6VZB+9V80Qb6i1dK/L8rVq7Am+WI4zxwC
+ R98WqSplIejDY4kwuM7CzTbqpWx9B+ZZqft4k4ErbCAm08WDPzXQ3xw/4JBXod37MqSFpp7wZXk252HzEYSAB3J7jZQajMyaS/o=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On 7/3/2019 5:32 PM, Alan Post wrote:
+> On Tue, Jul 02, 2019 at 05:55:10AM -0400, Benjamin Coddington wrote:
+>>> As far as I understand it, for a particular xid, there should be a
+>>> call and a reply.  The approach I took then was to pull out these
+>>> fields from my capture and ignore RPC calls where both are present
+>>> in my capture.  It seems this is simplistic, as the number of RPC
+>>> calls I have without an attendant reply isn't lining up with my
+>>> incident window.
+>>
+>> Does your capture report dropped packets?  If so, maybe you need to increase
+>> the capture buffer.
+>>
+> 
+> I'm not certain, but I do have a capture on both the NFS server and
+> the NFS client--comparing them would show me if I was under most
+> circumstances.  Good catch.
+> 
+>>> In one example, I have a series of READ calls which cease
+>>> generating RPC reply messages as the offset for the file continues
+>>> to increases.  After a couple/few dozen messages, the RPC replies
+>>> continue as they were.  Is there a normal or routine explanation
+>>> for this?
+>>>
+>>> RFC 5531 and the NetworkTracing page on wiki.linux-nfs.org have
+>>> been quite helpful bringing me up to speed.  If any of you have
+>>> advice or guidance or can clarify my understanding of how the
+>>> call/reply RPC mechanism works I appreciate it.
+>>
+>> Seems like you understand it.  Do you have specific questions?
+>>
+> 
+> Is it true that for each RPC call there is an RPC reply with the
+> same xid?  Is it a-priori an error if an otherwise correct RPC
+> call is not eventually paired with an RPC reply?
 
-I'm trying to setup a nfs server with over 3500+ zfs datasets
-being exported. Only NFSv3 is needed.
+Absolutely yes. Not replying would be like a local procedure never
+returning.
 
-The OS had a 4.4.172 kernel and nfs-utils 1.30. With these versions
-when a client tried to mount an exported dataset, rpc.mountd spiked to
-100% for several minutes, the kernel produced a bug and a trace
-output, and the client never finished.
+But remember XIDs are not globally unique. They are only unique within
+some limited span of time for the connection they were issued on. This
+is typically only a problem on very high IOPS workloads, or over long
+spans of time.
 
-I have built a 4.19.56 kernel, libevent 2.1.10, util-linux 2.34 (for
-libblkid), and nfs-utils 2.4.1. With this setup rpc.mountd does spike
-to 100%, but at least a mount finishes, but it takes about 5 minutes.
-
-nfs-utils was configured with:
-./configure --disable-tirpc  --disable-nfsv4 --disable-nfsv41
---disable-gss --disable-ipv6
-
-Stracing the new rpc.mountd it appears all the time is spent reading
-the mtab.
-
-Below is some of the output from:
-/sbin/rpc.mountd --foreground --debug all
-
-rpc.mountd: nfsd_fh: found 0x6173d50 path /
-rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.24'
-rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
-rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.254'
-rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
-rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport'
-rpc.mountd: nfsd_export: found 0x6174260 path /nfsexport
-rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 7
-\x43000a00000000001ce354a654a34fd4a09f9b59f6aebb11'
-rpc.mountd: nfsd_fh: found 0x6174270 path /nfsexport
-rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport/home'
-rpc.mountd: nfsd_export: found 0x4cf8bc0 path /nfsexport/home
-rpc.mountd: Received NULL request from 10.222.33.254
-rpc.mountd: Received NULL request from 10.222.33.254
-rpc.mountd: Received MNT3(/nfsexport/home/timmy) request from 10.222.33.254
-rpc.mountd: authenticated mount request from 10.222.33.254:694 for
-/nfsexport/home/timmy (/nfsexport/home/timmy)
-rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 6 \x947e3e1400c9c79b0000000000000000'
-rpc.mountd: nfsd_fh: found 0x4e54390 path /nfsexport/home/timmy
-
-As you can see it searches for /, then /nfsexport, then /nfsexport/home,
-and finally /nfsexport/home/timmy
-
-But when zfs populates the mtab, the top level of the datasets
-( /nfsexport ) is at the bottom of the mtab, 3500 lines down.
-The next level is also at the bottom. So getmntent has to
-read the mtab stream through several times. Actually:
-open("/etc/mtab", O_RDONLY|O_CLOEXEC)   = 10
-is called 50000 times during this one mount attempt.
-
-Are they any suggestions anyone can make to help out?
-
-More extensive output can be made available.
-
-Thanks,
-John
+Tom.
