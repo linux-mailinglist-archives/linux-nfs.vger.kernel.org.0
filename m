@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4FF62943
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 21:24:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2011262944
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 21:24:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391646AbfGHTX5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Jul 2019 15:23:57 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:42134 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729193AbfGHTX4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Jul 2019 15:23:56 -0400
-Received: by mail-io1-f46.google.com with SMTP id u19so37818080ior.9
-        for <linux-nfs@vger.kernel.org>; Mon, 08 Jul 2019 12:23:56 -0700 (PDT)
+        id S2391653AbfGHTX6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Jul 2019 15:23:58 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34440 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729193AbfGHTX6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Jul 2019 15:23:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so37940521iot.1
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Jul 2019 12:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VBSbGO+lScidIvOtah0lpAqaf38piEyOCBDn6NrMdtI=;
-        b=rKRZ4hhRE7g2R/LpfQkAiyiWEj/VO+miG9pZ1dYCE45FIgWoOvUq+YogvBU8NNy/H+
-         jn8pS34UhUNBFUP12AA8KmppKYTxOHIDBIH2s53Ogq3GiklGW5Eyh9D1TLIzWT2RMlRT
-         PVWiKLljlpNPqrQIzLfQEI7DYCshftN6Om1rx8R1mXx+iVIgnTzkdmgTF6oi86sgjhqc
-         1ygIc4JhSpCM2GbsLLLVGmA5Jw8iDLoeSJ6USkQ02tnkhwPo7wcYmt8daLePBnOeYh3X
-         egbkFLig819cG2188htHfY3cxumNFQB8gB+VRhI+2L2/5jjW3stI4uBTdOiBCLrbRpPL
-         HjeA==
+        bh=Sknz4OyGK6wIft4IFNA/PN7brpN8OWGiEywebLIHXKQ=;
+        b=Cv3P9G8dbCF50tdkmhmip7B0oGmdrDhDx2Qi2yajF1uWPN6axW26gj5Qtve9pebuSW
+         VgTT9ZrvfL4cZ3yrjtddcUrguOLNmOVac1rVCeP1fLc9ZFZ4OBH7AKn3rSTHO4b+ndg+
+         gdNq8PbqBpls5VvjVy/FAg+q1kn6Vp/EJUdAWDNM1+ik/8VbtvA5tXNHnwBeN251wQsJ
+         ugmTRGnj2o2l9d1HwA04K6Q27+hPfwWCAEFDJejXEiCcrWLALCgnN27na5CBuBaAWqxe
+         roWHYFA6uq8bnGSREsJR3gX5gyN/UXhb3Prnh5GhKuFJUWeOkaxkdslDrEhx0Jpd4uWv
+         /3XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VBSbGO+lScidIvOtah0lpAqaf38piEyOCBDn6NrMdtI=;
-        b=fxdUz/Ed7LXrYGSlJ7GF9ufsfhUQtK5Qz7asVDzClO84BLn3Mp777DqqHIuGIKk1cE
-         PieC+Vvr21soYGhrcOxah3toIGjfgI/OlTlPIuollSYDLp6AseaozK42RH2OYzkKaSoS
-         nnqJ1pqQuFUSYC4xb2f4RjFsKxmpNmbbT0ifyX4Hq9KlGEhapc+tSgMwoLg3qb6EPJXx
-         c5Mzqk1wfS823j557sAOxYfSWRKqGo6UMGDbkRc177BjrQCRbQjCejZBKhrqLhhUTtMZ
-         xJTDspzIb6XpKLXsrAxqT6Oek/F5kQmyb7EhsIhCZ9CKVWrMDJ7XqTZSupzZenM6BcFr
-         UCZg==
-X-Gm-Message-State: APjAAAWEXykuTB3MG4LUvUB0Eu4y9dn3Ozv/pWJhLkgin5QbyH8KUzu2
-        WIpdM05fbwz7XZitMdIm+pA=
-X-Google-Smtp-Source: APXvYqwuRgUMlt/5QebFu2DGdiMaefZSh/u4X/w19eoJTPPGC6BDv/7uxz8iz2neAvRj8ZACm2MSmg==
-X-Received: by 2002:a5e:8913:: with SMTP id k19mr3699980ioj.155.1562613836149;
+        bh=Sknz4OyGK6wIft4IFNA/PN7brpN8OWGiEywebLIHXKQ=;
+        b=rPJdXqFGOldyJV3wy+q65HRw4dLB+MvoIFd53NlnOiAIeWNgA891r8Bpq2KueY4viT
+         nOWCRtJTiLEPuX9l25ocoOW5U3Z4PCBlru2p6x2MKlCVRq77HBzRSz3gAQka7OBp4ge4
+         0V28mtk5EoD4LoWHEPWQGDA6Jp9Az6sHqjhp+eSTwethRHfmTnzd1z6GXtE4WMhhQ4Ze
+         rv5TGI7wo3y7WYesIFnJe5mZ0tyyKZUI8MHH8t6S6afI7F+8g4lH5sBegwmL69D90Cli
+         s8tsyNrUdAg9YIra/R8+pOP7BtDGFJLGJSwrIxLw0dSiqMfnFL3w2NsJkeUsEPm+vxuO
+         gOog==
+X-Gm-Message-State: APjAAAU/FnFFts/anX5Q1qQNx+Xr6NUb8r7GdDHmv7jaqzmngQsTEBUH
+        l6SUxmA8kbKfyfhS6CM8tXY=
+X-Google-Smtp-Source: APXvYqzvPt+bDh1ZGykOG8ttYNuPwdYzRhJCQiqnbQdMRLQsT2JJrS02L2KLtUUYCNFXzbgFXXBiTQ==
+X-Received: by 2002:a5d:88c6:: with SMTP id i6mr10308417iol.107.1562613836857;
         Mon, 08 Jul 2019 12:23:56 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id v3sm9212841iom.53.2019.07.08.12.23.55
+        by smtp.gmail.com with ESMTPSA id v3sm9212841iom.53.2019.07.08.12.23.56
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 08 Jul 2019 12:23:55 -0700 (PDT)
+        Mon, 08 Jul 2019 12:23:56 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v4 6/8] NFSD generalize nfsd4_compound_state flag names
-Date:   Mon,  8 Jul 2019 15:23:50 -0400
-Message-Id: <20190708192352.12614-7-olga.kornievskaia@gmail.com>
+Subject: [PATCH v4 7/8] NFSD: allow inter server COPY to have a STALE source server fh
+Date:   Mon,  8 Jul 2019 15:23:51 -0400
+Message-Id: <20190708192352.12614-8-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
 References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
@@ -57,93 +57,168 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+The inter server to server COPY source server filehandle
+is a foreign filehandle as the COPY is sent to the destination
+server.
 
-Allow for sid_flag field non-stateid use.
-
-Signed-off-by: Andy Adamson <andros@netapp.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfsd/nfs4proc.c  | 8 ++++----
- fs/nfsd/nfs4state.c | 7 ++++---
- fs/nfsd/xdr4.h      | 6 +++---
- 3 files changed, 11 insertions(+), 10 deletions(-)
+ fs/nfsd/Kconfig    | 10 ++++++++++
+ fs/nfsd/nfs4proc.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfsfh.h    |  5 ++++-
+ fs/nfsd/xdr4.h     |  1 +
+ 4 files changed, 64 insertions(+), 5 deletions(-)
 
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index d25f6bb..bef3a58 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -132,6 +132,16 @@ config NFSD_FLEXFILELAYOUT
+ 
+ 	  If unsure, say N.
+ 
++config NFSD_V4_2_INTER_SSC
++	bool "NFSv4.2 inter server to server COPY"
++	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
++	help
++	  This option enables support for NFSv4.2 inter server to
++	  server copy where the destination server calls the NFSv4.2
++	  client to read the data to copy from the source server.
++
++	  If unsure, say N.
++
+ config NFSD_V4_SECURITY_LABEL
+ 	bool "Provide Security Label support for NFSv4 server"
+ 	depends on NFSD_V4 && SECURITY
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index c39fa72..8c2273e 100644
+index 8c2273e..1039528 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -531,9 +531,9 @@ static __be32 nfsd4_open_omfg(struct svc_rqst *rqstp, struct nfsd4_compound_stat
- 		return nfserr_restorefh;
+@@ -504,12 +504,20 @@ static __be32 nfsd4_open_omfg(struct svc_rqst *rqstp, struct nfsd4_compound_stat
+ 	    union nfsd4_op_u *u)
+ {
+ 	struct nfsd4_putfh *putfh = &u->putfh;
++	__be32 ret;
  
- 	fh_dup2(&cstate->current_fh, &cstate->save_fh);
--	if (HAS_STATE_ID(cstate, SAVED_STATE_ID_FLAG)) {
-+	if (HAS_CSTATE_FLAG(cstate, SAVED_STATE_ID_FLAG)) {
- 		memcpy(&cstate->current_stateid, &cstate->save_stateid, sizeof(stateid_t));
--		SET_STATE_ID(cstate, CURRENT_STATE_ID_FLAG);
-+		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
- 	}
- 	return nfs_ok;
- }
-@@ -543,9 +543,9 @@ static __be32 nfsd4_open_omfg(struct svc_rqst *rqstp, struct nfsd4_compound_stat
- 	     union nfsd4_op_u *u)
- {
- 	fh_dup2(&cstate->save_fh, &cstate->current_fh);
--	if (HAS_STATE_ID(cstate, CURRENT_STATE_ID_FLAG)) {
-+	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG)) {
- 		memcpy(&cstate->save_stateid, &cstate->current_stateid, sizeof(stateid_t));
--		SET_STATE_ID(cstate, SAVED_STATE_ID_FLAG);
-+		SET_CSTATE_FLAG(cstate, SAVED_STATE_ID_FLAG);
- 	}
- 	return nfs_ok;
- }
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b786625..d7f4b96 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7466,7 +7466,8 @@ static int nfs4_state_create_net(struct net *net)
- static void
- get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
- {
--	if (HAS_STATE_ID(cstate, CURRENT_STATE_ID_FLAG) && CURRENT_STATEID(stateid))
-+	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
-+	    CURRENT_STATEID(stateid))
- 		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
+ 	fh_put(&cstate->current_fh);
+ 	cstate->current_fh.fh_handle.fh_size = putfh->pf_fhlen;
+ 	memcpy(&cstate->current_fh.fh_handle.fh_base, putfh->pf_fhval,
+ 	       putfh->pf_fhlen);
+-	return fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
++	ret = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
++#ifdef CONFIG_NFSD_V4_2_INTER_SSC
++	if (ret == nfserr_stale && putfh->no_verify) {
++		SET_FH_FLAG(&cstate->current_fh, NFSD4_FH_FOREIGN);
++		ret = 0;
++	}
++#endif
++	return ret;
  }
  
-@@ -7475,14 +7476,14 @@ static int nfs4_state_create_net(struct net *net)
- {
- 	if (cstate->minorversion) {
- 		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
--		SET_STATE_ID(cstate, CURRENT_STATE_ID_FLAG);
-+		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
- 	}
+ static __be32
+@@ -1956,6 +1964,41 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 		- rqstp->rq_auth_slack;
  }
  
- void
- clear_current_stateid(struct nfsd4_compound_state *cstate)
- {
--	CLEAR_STATE_ID(cstate, CURRENT_STATE_ID_FLAG);
-+	CLEAR_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
- }
- 
++#ifdef CONFIG_NFSD_V4_2_INTER_SSC
++static void
++check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
++{
++	struct nfsd4_op	*op, *current_op, *saved_op;
++	struct nfsd4_copy *copy;
++	struct nfsd4_putfh *putfh;
++	int i;
++
++	/* traverse all operation and if it's a COPY compound, mark the
++	 * source filehandle to skip verification
++	 */
++	for (i = 0; i < args->opcnt; i++) {
++		op = &args->ops[i];
++		if (op->opnum == OP_PUTFH)
++			current_op = op;
++		else if (op->opnum == OP_SAVEFH)
++			saved_op = current_op;
++		else if (op->opnum == OP_RESTOREFH)
++			current_op = saved_op;
++		else if (op->opnum == OP_COPY) {
++			copy = (struct nfsd4_copy *)&op->u;
++			putfh = (struct nfsd4_putfh *)&saved_op->u;
++			if (!copy->cp_intra)
++				putfh->no_verify = true;
++		}
++	}
++}
++#else
++static void
++check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
++{
++}
++#endif
++
  /*
+  * COMPOUND call.
+  */
+@@ -2004,6 +2047,7 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 		resp->opcnt = 1;
+ 		goto encode_op;
+ 	}
++	check_if_stalefh_allowed(args);
+ 
+ 	trace_nfsd_compound(rqstp, args->opcnt);
+ 	while (!status && resp->opcnt < args->opcnt) {
+@@ -2019,13 +2063,14 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 				op->status = nfsd4_open_omfg(rqstp, cstate, op);
+ 			goto encode_op;
+ 		}
+-
+-		if (!current_fh->fh_dentry) {
++		if (!current_fh->fh_dentry &&
++				!HAS_FH_FLAG(current_fh, NFSD4_FH_FOREIGN)) {
+ 			if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_FH)) {
+ 				op->status = nfserr_nofilehandle;
+ 				goto encode_op;
+ 			}
+-		} else if (current_fh->fh_export->ex_fslocs.migrated &&
++		} else if (current_fh->fh_export &&
++			   current_fh->fh_export->ex_fslocs.migrated &&
+ 			  !(op->opdesc->op_flags & ALLOWED_ON_ABSENT_FS)) {
+ 			op->status = nfserr_moved;
+ 			goto encode_op;
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 755e256..b9c7568 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -35,7 +35,7 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+ 
+ 	bool			fh_locked;	/* inode locked by us */
+ 	bool			fh_want_write;	/* remount protection taken */
+-
++	int			fh_flags;	/* FH flags */
+ #ifdef CONFIG_NFSD_V3
+ 	bool			fh_post_saved;	/* post-op attrs saved */
+ 	bool			fh_pre_saved;	/* pre-op attrs saved */
+@@ -56,6 +56,9 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+ #endif /* CONFIG_NFSD_V3 */
+ 
+ } svc_fh;
++#define NFSD4_FH_FOREIGN (1<<0)
++#define SET_FH_FLAG(c, f) ((c)->fh_flags |= (f))
++#define HAS_FH_FLAG(c, f) ((c)->fh_flags & (f))
+ 
+ enum nfsd_fsid {
+ 	FSID_DEV = 0,
 diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index bade8e5..9d7318c 100644
+index 9d7318c..fbd18d6 100644
 --- a/fs/nfsd/xdr4.h
 +++ b/fs/nfsd/xdr4.h
-@@ -46,9 +46,9 @@
- #define CURRENT_STATE_ID_FLAG (1<<0)
- #define SAVED_STATE_ID_FLAG (1<<1)
+@@ -221,6 +221,7 @@ struct nfsd4_lookup {
+ struct nfsd4_putfh {
+ 	u32		pf_fhlen;           /* request */
+ 	char		*pf_fhval;          /* request */
++	bool		no_verify;	    /* represents foreigh fh */
+ };
  
--#define SET_STATE_ID(c, f) ((c)->sid_flags |= (f))
--#define HAS_STATE_ID(c, f) ((c)->sid_flags & (f))
--#define CLEAR_STATE_ID(c, f) ((c)->sid_flags &= ~(f))
-+#define SET_CSTATE_FLAG(c, f) ((c)->sid_flags |= (f))
-+#define HAS_CSTATE_FLAG(c, f) ((c)->sid_flags & (f))
-+#define CLEAR_CSTATE_FLAG(c, f) ((c)->sid_flags &= ~(f))
- 
- struct nfsd4_compound_state {
- 	struct svc_fh		current_fh;
+ struct nfsd4_open {
 -- 
 1.8.3.1
 
