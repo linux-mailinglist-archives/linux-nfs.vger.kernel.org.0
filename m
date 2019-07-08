@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A396294D
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 21:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 605446294F
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 21:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391662AbfGHTYq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Jul 2019 15:24:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41913 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391660AbfGHTYq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Jul 2019 15:24:46 -0400
-Received: by mail-io1-f65.google.com with SMTP id j5so18498064ioj.8
-        for <linux-nfs@vger.kernel.org>; Mon, 08 Jul 2019 12:24:46 -0700 (PDT)
+        id S2391664AbfGHTYs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Jul 2019 15:24:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34643 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391660AbfGHTYs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Jul 2019 15:24:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so37945953iot.1
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Jul 2019 12:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qGIXOv5aXr0Zm8keKgGz5sHMQb8AM7DNIw/w19/udWc=;
-        b=tXMVQ0lo5RZLsrbEiQ/mas7hoN5UQsEp7Z3HZ6m3b3Br6O5mNrxf98jMMWObUf0iKo
-         rnwLUCrApwDOp10qG47ppGRBVBiwGU4K6wzSDwtyo4hipEGWfUu0S11+PYDHwzBgWRju
-         eRUIQFcGhGyq7skZE+LzXpl7ekmW6SHcmK72cbNQ8lMIL3tk05cu0Wc/7CMVbLlqopBV
-         2KU8Red5qLK22rc2Ip/pzyam9NWQhM3Bc1r+Az9Me0V9wRzwKwsDABFPlTa7UNBRSWBe
-         CkTdaZoGnpuKFqtBZUa5aOrz/pEmEukORwgw4g8cuRFrmL/YCUkSM5g65VYj7fhLm/Z3
-         IzoQ==
+        bh=5cemtBtX1hls1+MLsuRSuTCDoBbFIh1Cf7gu0TW+wAA=;
+        b=mRdUDy2YawJEIVBoBodO1HH3a/w0W9iXP/2m0aQr1BYn10FxofLNqD84Xhwu0PEInt
+         CO4WrvzCH1pHmt7765znPUdcGnWD83zcgbQB0C4SOoFtuK6j+kvdGPR/bQFGrLKZrEe3
+         OUH7CnQkQOeRL+4X1dESTuE/MfoigLsLYKjqoJ7lA9qSjo70mebhuGAPDGbD2qvBDvR1
+         MK2Zc96U+jTgdujJAZ3mVWesAB4/rn8emQ5QSmOoM4kMfTboTmbk6ks+zWoCZebYIg2B
+         pQa8/H9++eSApcNFLUYaW1Kv9EccFq3TA48ROUq6UmILokqVWeOS9i7wLCiNZf/7rtyD
+         Mcvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qGIXOv5aXr0Zm8keKgGz5sHMQb8AM7DNIw/w19/udWc=;
-        b=uJzhpEpSHzQlWrznh58Kj+yXbdL7UpalNeCghQwUTt6rp5DY3VFfAVgHPb1ChLf13v
-         MuZ4vtY0BBC65zkDYW5+r3er80ySuDpyKyVUTTZAyb5EZXxl4/DDkQzsl+IPMQELiCDn
-         v0WmNMS6toMBTWCRbCUdBnzy8MAEdUaaz6X6GHcMIPL6sZW8G/0YhQBW+51+tt5lGxng
-         9U/KabihARrWQelk2vzP8jy2Q5CHn0iptOrtMEc23oo9Ik6xH9fa+M/u1diDF3G0p8Bw
-         4tm1kImCQGvRiflT21PMT29NIgdwFFf2VF5q+0a9G7mDbKH9Bvmpg8zCVo4ZINVbal+0
-         sdAg==
-X-Gm-Message-State: APjAAAVxRci0Rr/CTfq6TGXkqP1434gWH50kfQFbBq4KdHs9UEO46EaQ
-        mMwZTTasTG+Rt4AVNqRjGxc=
-X-Google-Smtp-Source: APXvYqxP9Z5CW0kcXC3kHMU3Hyc9X7M30tX3OCPirtZC6cTtUL5IYXTUitqDjaPVbI/PpnVj7S/Ogw==
-X-Received: by 2002:a02:54c1:: with SMTP id t184mr24329488jaa.10.1562613885651;
-        Mon, 08 Jul 2019 12:24:45 -0700 (PDT)
+        bh=5cemtBtX1hls1+MLsuRSuTCDoBbFIh1Cf7gu0TW+wAA=;
+        b=mdWieFmOJi+o4o7iCGY6SaS77qSHT6aRmW7rR4XdELVBNURS+jeAJJzRvXJd6b1rrk
+         i3cog13Oy38Fu//KhPTuImlDhQvpOW82ytan1AV0ZTZBxKfyIRLDcUaTdc/Zh+t1abyq
+         S1nI0/Iywoa7Z7VKpQtNuXuwDr2jH79WbX/u2cAEWxlG7Mc4j8LCyzB9xO6tTGUkfkPX
+         Ty8Cu1FD22GnFAbEsw/LZk/wggMeYPJB4uEGyWl6l7B06+BhzEPKpcTINdFn9Z4dYNTN
+         KENG6HgIxtItAnwWaf2NGykjhiz4ITvPM1HK5H8Q89bYRlPcyEn3BdCNyig4vWh3i/kT
+         6D3w==
+X-Gm-Message-State: APjAAAXRzp5n2TVZUvMd825vcpexBgXkI6pDWr2zh6YxJ2NiH422Gfyi
+        gLr8wpI6+KaZk2c1CTT6bDo=
+X-Google-Smtp-Source: APXvYqw4sHNwsSV2XAQy1FnEUyXufAIBZB+HhUa+ebel1r6sgYKsF5ZBW5d+dvutVw4tYD+luNkPFQ==
+X-Received: by 2002:a6b:da01:: with SMTP id x1mr20531336iob.216.1562613886585;
+        Mon, 08 Jul 2019 12:24:46 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id n17sm17026554iog.63.2019.07.08.12.24.44
+        by smtp.gmail.com with ESMTPSA id n17sm17026554iog.63.2019.07.08.12.24.45
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 08 Jul 2019 12:24:45 -0700 (PDT)
+        Mon, 08 Jul 2019 12:24:46 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v10 03/12] NFS: add ca_source_server<> to COPY
-Date:   Mon,  8 Jul 2019 15:24:35 -0400
-Message-Id: <20190708192444.12664-4-olga.kornievskaia@gmail.com>
+Subject: [PATCH v10 04/12] NFS: inter ssc open
+Date:   Mon,  8 Jul 2019 15:24:36 -0400
+Message-Id: <20190708192444.12664-5-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190708192444.12664-1-olga.kornievskaia@gmail.com>
 References: <20190708192444.12664-1-olga.kornievskaia@gmail.com>
@@ -59,159 +59,182 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Support only one source server address: the same address that
-the client and source server use.
+NFSv4.2 inter server to server copy requires the destination server to
+READ the data from the source server using the provided stateid and
+file handle.
 
-Signed-off-by: Andy Adamson <andros@netapp.com>
+Given an NFSv4 stateid and filehandle from the COPY operaion, provide the
+destination server with an NFS client function to create a struct file
+suitable for the destiniation server to READ the data to be copied.
+
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Andy Adamson <andros@netapp.com>
 ---
- fs/nfs/nfs42.h          |  3 ++-
- fs/nfs/nfs42proc.c      | 26 +++++++++++++++++---------
- fs/nfs/nfs42xdr.c       | 12 ++++++++++--
- fs/nfs/nfs4file.c       |  7 ++++++-
- include/linux/nfs_xdr.h |  1 +
- 5 files changed, 36 insertions(+), 13 deletions(-)
+ fs/nfs/nfs4_fs.h  |  7 ++++
+ fs/nfs/nfs4file.c | 94 +++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs4proc.c |  5 +--
+ 3 files changed, 103 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
-index 4995731a6714..02e3810cd889 100644
---- a/fs/nfs/nfs42.h
-+++ b/fs/nfs/nfs42.h
-@@ -15,7 +15,8 @@
- /* nfs4.2proc.c */
- #ifdef CONFIG_NFS_V4_2
- int nfs42_proc_allocate(struct file *, loff_t, loff_t);
--ssize_t nfs42_proc_copy(struct file *, loff_t, struct file *, loff_t, size_t);
-+ssize_t nfs42_proc_copy(struct file *, loff_t, struct file *, loff_t, size_t,
-+			struct nl4_server *, nfs4_stateid *);
- int nfs42_proc_deallocate(struct file *, loff_t, loff_t);
- loff_t nfs42_proc_llseek(struct file *, loff_t, int);
- int nfs42_proc_layoutstats_generic(struct nfs_server *,
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 6317dd89cf43..e34ade844737 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -243,7 +243,9 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 				struct file *dst,
- 				struct nfs_lock_context *dst_lock,
- 				struct nfs42_copy_args *args,
--				struct nfs42_copy_res *res)
-+				struct nfs42_copy_res *res,
-+				struct nl4_server *nss,
-+				nfs4_stateid *cnr_stateid)
- {
- 	struct rpc_message msg = {
- 		.rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_COPY],
-@@ -257,11 +259,15 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 	size_t count = args->count;
- 	ssize_t status;
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index d75fea7ecf12..ff1cd600f07f 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -311,6 +311,13 @@ extern int nfs4_set_rw_stateid(nfs4_stateid *stateid,
+ 		const struct nfs_open_context *ctx,
+ 		const struct nfs_lock_context *l_ctx,
+ 		fmode_t fmode);
++extern int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
++			     struct nfs_fattr *fattr, struct nfs4_label *label,
++			     struct inode *inode);
++extern int update_open_stateid(struct nfs4_state *state,
++				const nfs4_stateid *open_stateid,
++				const nfs4_stateid *deleg_stateid,
++				fmode_t fmode);
  
--	status = nfs4_set_rw_stateid(&args->src_stateid, src_lock->open_context,
--				     src_lock, FMODE_READ);
--	if (status)
--		return status;
--
-+	if (nss) {
-+		args->cp_src = nss;
-+		nfs4_stateid_copy(&args->src_stateid, cnr_stateid);
-+	} else {
-+		status = nfs4_set_rw_stateid(&args->src_stateid,
-+				src_lock->open_context, src_lock, FMODE_READ);
-+		if (status)
-+			return status;
-+	}
- 	status = nfs_filemap_write_and_wait_range(file_inode(src)->i_mapping,
- 			pos_src, pos_src + (loff_t)count - 1);
- 	if (status)
-@@ -325,8 +331,9 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- }
- 
- ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
--			struct file *dst, loff_t pos_dst,
--			size_t count)
-+			struct file *dst, loff_t pos_dst, size_t count,
-+			struct nl4_server *nss,
-+			nfs4_stateid *cnr_stateid)
- {
- 	struct nfs_server *server = NFS_SERVER(file_inode(dst));
- 	struct nfs_lock_context *src_lock;
-@@ -368,7 +375,8 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
- 		inode_lock(file_inode(dst));
- 		err = _nfs42_proc_copy(src, src_lock,
- 				dst, dst_lock,
--				&args, &res);
-+				&args, &res,
-+				nss, cnr_stateid);
- 		inode_unlock(file_inode(dst));
- 
- 		if (err >= 0)
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index ccabc0cd93dd..c03f3246d6c5 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -21,7 +21,10 @@
- #define encode_copy_maxsz		(op_encode_hdr_maxsz +          \
- 					 XDR_QUADLEN(NFS4_STATEID_SIZE) + \
- 					 XDR_QUADLEN(NFS4_STATEID_SIZE) + \
--					 2 + 2 + 2 + 1 + 1 + 1)
-+					 2 + 2 + 2 + 1 + 1 + 1 +\
-+					 1 + /* One cnr_source_server */\
-+					 1 + /* nl4_type */ \
-+					 1 + XDR_QUADLEN(NFS4_OPAQUE_LIMIT))
- #define decode_copy_maxsz		(op_decode_hdr_maxsz + \
- 					 NFS42_WRITE_RES_SIZE + \
- 					 1 /* cr_consecutive */ + \
-@@ -216,7 +219,12 @@ static void encode_copy(struct xdr_stream *xdr,
- 
- 	encode_uint32(xdr, 1); /* consecutive = true */
- 	encode_uint32(xdr, args->sync);
--	encode_uint32(xdr, 0); /* src server list */
-+	if (args->cp_src == NULL) { /* intra-ssc */
-+		encode_uint32(xdr, 0); /* no src server list */
-+		return;
-+	}
-+	encode_uint32(xdr, 1); /* supporting 1 server */
-+	encode_nl4_server(xdr, args->cp_src);
- }
- 
- static void encode_offload_cancel(struct xdr_stream *xdr,
+ #if defined(CONFIG_NFS_V4_1)
+ extern int nfs41_sequence_done(struct rpc_task *, struct nfs4_sequence_res *);
 diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 4e54432feb3b..b9825d02443e 100644
+index b9825d02443e..aab4d48764a7 100644
 --- a/fs/nfs/nfs4file.c
 +++ b/fs/nfs/nfs4file.c
-@@ -134,6 +134,8 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 				      size_t count, unsigned int flags)
- {
- 	struct nfs42_copy_notify_res *cn_resp = NULL;
-+	struct nl4_server *nss = NULL;
-+	nfs4_stateid *cnrs = NULL;
- 	ssize_t ret;
- 
- 	/* Only offload copy if superblock is the same */
-@@ -154,8 +156,11 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 			ret = -EOPNOTSUPP;
- 			goto out;
- 		}
-+		nss = &cn_resp->cnr_src;
-+		cnrs = &cn_resp->cnr_stateid;
- 	}
--	ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count);
-+	ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
-+				nss, cnrs);
+@@ -8,6 +8,7 @@
+ #include <linux/file.h>
+ #include <linux/falloc.h>
+ #include <linux/nfs_fs.h>
++#include <linux/file.h>
+ #include "delegation.h"
+ #include "internal.h"
+ #include "iostat.h"
+@@ -282,6 +283,99 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
  out:
- 	kfree(cn_resp);
- 	return ret;
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 0a7af40026d7..008facac8a30 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1435,6 +1435,7 @@ struct nfs42_copy_args {
+ 	return ret < 0 ? ret : count;
+ }
++
++static int read_name_gen = 1;
++#define SSC_READ_NAME_BODY "ssc_read_%d"
++
++struct file *
++nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
++		nfs4_stateid *stateid)
++{
++	struct nfs_fattr fattr;
++	struct file *filep, *res;
++	struct nfs_server *server;
++	struct inode *r_ino = NULL;
++	struct nfs_open_context *ctx;
++	struct nfs4_state_owner *sp;
++	char *read_name;
++	int len, status = 0;
++
++	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
++
++	nfs_fattr_init(&fattr);
++
++	status = nfs4_proc_getattr(server, src_fh, &fattr, NULL, NULL);
++	if (status < 0) {
++		res = ERR_PTR(status);
++		goto out;
++	}
++
++	res = ERR_PTR(-ENOMEM);
++	len = strlen(SSC_READ_NAME_BODY) + 16;
++	read_name = kzalloc(len, GFP_NOFS);
++	if (read_name == NULL)
++		goto out;
++	snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
++
++	r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
++			NULL);
++	if (IS_ERR(r_ino)) {
++		res = ERR_CAST(r_ino);
++		goto out;
++	}
++
++	filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
++				     r_ino->i_fop);
++	if (IS_ERR(filep)) {
++		res = ERR_CAST(filep);
++		goto out;
++	}
++	filep->f_mode |= FMODE_READ;
++
++	ctx = alloc_nfs_open_context(filep->f_path.dentry, filep->f_mode,
++					filep);
++	if (IS_ERR(ctx)) {
++		res = ERR_CAST(ctx);
++		goto out_filep;
++	}
++
++	res = ERR_PTR(-EINVAL);
++	sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
++	if (sp == NULL)
++		goto out_ctx;
++
++	ctx->state = nfs4_get_open_state(r_ino, sp);
++	if (ctx->state == NULL)
++		goto out_stateowner;
++
++	set_bit(NFS_OPEN_STATE, &ctx->state->flags);
++	memcpy(&ctx->state->open_stateid.other, &stateid->other,
++	       NFS4_STATEID_OTHER_SIZE);
++	update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
++
++	nfs_file_set_open_context(filep, ctx);
++	put_nfs_open_context(ctx);
++
++	file_ra_state_init(&filep->f_ra, filep->f_mapping->host->i_mapping);
++	res = filep;
++out:
++	return res;
++out_stateowner:
++	nfs4_put_state_owner(sp);
++out_ctx:
++	put_nfs_open_context(ctx);
++out_filep:
++	fput(filep);
++	goto out;
++}
++EXPORT_SYMBOL_GPL(nfs42_ssc_open);
++void nfs42_ssc_close(struct file *filep)
++{
++	struct nfs_open_context *ctx = nfs_file_open_context(filep);
++
++	ctx->state->flags = 0;
++}
++EXPORT_SYMBOL_GPL(nfs42_ssc_close);
+ #endif /* CONFIG_NFS_V4_2 */
  
- 	u64				count;
- 	bool				sync;
-+	struct nl4_server		*cp_src;
- };
+ const struct file_operations nfs4_file_operations = {
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 9bbd9bad5412..c898ce1bccc6 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -91,7 +91,6 @@ struct nfs4_opendata;
+ static int _nfs4_recover_proc_open(struct nfs4_opendata *data);
+ static int nfs4_do_fsinfo(struct nfs_server *, struct nfs_fh *, struct nfs_fsinfo *);
+ static void nfs_fixup_referral_attributes(struct nfs_fattr *fattr);
+-static int nfs4_proc_getattr(struct nfs_server *, struct nfs_fh *, struct nfs_fattr *, struct nfs4_label *label, struct inode *inode);
+ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle, struct nfs_fattr *fattr, struct nfs4_label *label, struct inode *inode);
+ static int nfs4_do_setattr(struct inode *inode, const struct cred *cred,
+ 			    struct nfs_fattr *fattr, struct iattr *sattr,
+@@ -1674,7 +1673,7 @@ static void nfs_state_clear_delegation(struct nfs4_state *state)
+ 	write_sequnlock(&state->seqlock);
+ }
  
- struct nfs42_write_res {
+-static int update_open_stateid(struct nfs4_state *state,
++int update_open_stateid(struct nfs4_state *state,
+ 		const nfs4_stateid *open_stateid,
+ 		const nfs4_stateid *delegation,
+ 		fmode_t fmode)
+@@ -3966,7 +3965,7 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
+ 	return nfs4_call_sync(server->client, server, &msg, &args.seq_args, &res.seq_res, 0);
+ }
+ 
+-static int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
++int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
+ 				struct nfs_fattr *fattr, struct nfs4_label *label,
+ 				struct inode *inode)
+ {
 -- 
 2.18.1
 
