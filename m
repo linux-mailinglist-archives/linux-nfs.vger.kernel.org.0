@@ -2,79 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29CB8625E3
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 18:14:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C0962869
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2019 20:37:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbfGHQOg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Jul 2019 12:14:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38979 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGHQOg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Jul 2019 12:14:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so17782905wrt.6;
-        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kzl7ySO00ACxBfoVjtfqCQyIPbur8JdXCvOsOSkfwVs=;
-        b=Eh1ANWy7KSHIGVPL/JqTDcjXii2sbzTOw7liXbRyQZ6f2Oiy/EmB1AqsNVlaIhFhFz
-         d5Ysddn9EMdoOSFpYrChGWdqh8q+u5tfB6rhrk/gTVWsv5Rq3NUJ4GpEJeB4Yvgu4OBg
-         OB867U6Y7RP1BsxaeKFym0eMgU+5u+8AEwXs1bNObMDO5EXUSMBGYIeHQn6T7fjrOeN3
-         J5ZOQbRayBqKFN2kN3avmH8+AS6Qgn3bO/aOO067tHBhoYWqI3kNCKDES+pywUUwAwUt
-         jS6+tkxfcYlkE0hpPA+IciIOmAzc/bJA02fr7ABwOQs+DT/qhzGMBLnp1ChQIpAx9hGE
-         HlgQ==
-X-Gm-Message-State: APjAAAXWRX5BiO5nHJS1yy5/QL9P7bvVq6sTYIv7IYmUcZbgwOaE4PB3
-        xpeJUMcenUSPY3NxvO6/MKk=
-X-Google-Smtp-Source: APXvYqzhg2ITqrH1Y+C2tesFza97u7BSDJ0IRGUgRDYRcxahn9+uxmwgCGqNa1cn4VfEK26tzypJLA==
-X-Received: by 2002:a5d:620d:: with SMTP id y13mr20519604wru.243.1562602474041;
-        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id 15sm13468wmk.34.2019.07.08.09.14.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:14:33 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sunrpc/cache: remove the exporting of cache_seq_next
-Date:   Mon,  8 Jul 2019 19:14:23 +0300
-Message-Id: <20190708161423.31006-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        id S1727373AbfGHShy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Jul 2019 14:37:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40068 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727110AbfGHShy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 8 Jul 2019 14:37:54 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 44A5B8830A;
+        Mon,  8 Jul 2019 18:37:54 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-117-53.phx2.redhat.com [10.3.117.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 621431A918;
+        Mon,  8 Jul 2019 18:37:53 +0000 (UTC)
+From:   Steve Dickson <SteveD@RedHat.com>
+Subject: The Fall Bakeathon in Westford, Ma
+To:     NFSv4 <nfsv4@ietf.org>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
+        Gerard Thornley <gerard.thornley@hitachivantara.com>,
+        Ben Woodard <woodard@redhat.com>,
+        Karen Precourt <kprecour@redhat.com>,
+        George Birner <gbirner@redhat.com>
+Message-ID: <3004f78e-1bda-181f-376c-e0ae2b706d1a@RedHat.com>
+Date:   Mon, 8 Jul 2019 14:37:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 08 Jul 2019 18:37:54 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The function cache_seq_next is declared static and marked
-EXPORT_SYMBOL_GPL, which is at best an odd combination. Because the
-function is not used outside of the net/sunrpc/cache.c file it is
-defined in, this commit removes the EXPORT_SYMBOL_GPL() marking.
+Hello all.... Happy Summer!!!
 
-Fixes: d48cf356a130 ("SUNRPC: Remove non-RCU protected lookup")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- net/sunrpc/cache.c | 1 -
- 1 file changed, 1 deletion(-)
+Red Hat is pleased to announce the Fall NFS Bake-a-ton will be
+again hosted by Red Hat in Westford, MA office.
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 66fbb9d2fba7..6f1528f271ee 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -1375,7 +1375,6 @@ static void *cache_seq_next(struct seq_file *m, void *p, loff_t *pos)
- 				hlist_first_rcu(&cd->hash_table[hash])),
- 				struct cache_head, cache_list);
- }
--EXPORT_SYMBOL_GPL(cache_seq_next);
- 
- void *cache_seq_start_rcu(struct seq_file *m, loff_t *pos)
- 	__acquires(RCU)
--- 
-2.21.0
+I've very hopeful a couple new server vendors will be
+attending... and hopefully to do some new RoCE testing as
+well as the usual NFSoRDMA and v4.x testing.   
 
+The Date: *the 2ed full week in Oct (14th - 18th)*
+
+Details and registration info:
+    http://www.nfsv4bat.org/Events/2019/Oct/BAT/index.html
+
+I'm using the same hotels and the prices are the same
+or lower. The block reservations for the Residence Inn
+and Hampton Inn end on *Wed Sept 14th*
+
+    * Residence Inn Marriott - closest; w/ shuttle; full kitchen; free breakfast 
+    * Westford Regency Inn - w/bar ; w/shuttle 
+    * Hampton Inn - free breakfast 
+
+When registering (i.e. replying to this email) please give me
+   * Company Name
+   * How engineers are coming
+   * T-shirt sizes
+   * Hotel you will be staying in
+
+Any questions... Feel free to reach out... 
+
+I hope to see you in October!!!
+
+steved.
