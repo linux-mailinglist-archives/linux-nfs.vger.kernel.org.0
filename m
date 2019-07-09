@@ -2,97 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BF4A63018
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 07:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030726327F
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 09:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbfGIFk6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Jul 2019 01:40:58 -0400
-Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:56051 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727230AbfGIFkz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Jul 2019 01:40:55 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 1F860181D341A;
-        Tue,  9 Jul 2019 05:40:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::,RULES_HIT:41:355:379:599:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2693:2828:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3871:3872:3873:3874:4321:5007:6119:7903:8603:10004:10400:10450:10455:10848:11026:11232:11473:11658:11914:12043:12297:12555:12740:12760:12895:13019:13069:13138:13141:13161:13229:13230:13231:13311:13357:13439:14659:14721:19904:19999:21080:21433:21451:21627:21819:30012:30029:30054:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: bag59_7c29b583d1004
-X-Filterd-Recvd-Size: 2614
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  9 Jul 2019 05:40:53 +0000 (UTC)
-Message-ID: <9a5dedb0c9221743033f28974820e8dd724e388d.camel@perches.com>
-Subject: Re: [PATCH 8/8] nfsd: Fix misuse of strlcpy
-From:   Joe Perches <joe@perches.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 08 Jul 2019 22:40:50 -0700
-In-Reply-To: <20190709031404.GD14439@fieldses.org>
-References: <cover.1562283944.git.joe@perches.com>
-         <b51141d12de77eb22101e81f9eb2c9cc44104d7a.1562283944.git.joe@perches.com>
-         <20190709031404.GD14439@fieldses.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        id S1726062AbfGIH57 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Jul 2019 03:57:59 -0400
+Received: from ivanoab6.miniserver.com ([5.153.251.140]:35990 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfGIH57 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Jul 2019 03:57:59 -0400
+X-Greylist: delayed 2614 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jul 2019 03:57:59 EDT
+Received: from [192.168.17.6] (helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <anton.ivanov@kot-begemot.co.uk>)
+        id 1hkkKV-0002zG-Qo; Tue, 09 Jul 2019 07:14:24 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.89)
+        (envelope-from <anton.ivanov@kot-begemot.co.uk>)
+        id 1hkkKT-0005QY-B2; Tue, 09 Jul 2019 08:14:23 +0100
+Subject: Fwd: NFS Caching broken in 4.19.37
+References: <5022bdc4-9f3e-9756-cbca-ada37f88ecc7@cambridgegreys.com>
+To:     linux-nfs@vger.kernel.org, jlayton@kernel.org
+From:   Anton Ivanov <anton.ivanov@kot-begemot.co.uk>
+X-Forwarded-Message-Id: <5022bdc4-9f3e-9756-cbca-ada37f88ecc7@cambridgegreys.com>
+Message-ID: <ce4e1e84-50a1-c40b-a0bc-fa8ac4d7676b@kot-begemot.co.uk>
+Date:   Tue, 9 Jul 2019 08:14:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <5022bdc4-9f3e-9756-cbca-ada37f88ecc7@cambridgegreys.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0
+X-Spam-Score: -1.0
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2019-07-08 at 23:14 -0400, J. Bruce Fields wrote:
-> On Thu, Jul 04, 2019 at 04:57:48PM -0700, Joe Perches wrote:
-> > Probable cut&paste typo - use the correct field size.
-> 
-> Huh, that's been there forever, I wonder why we haven't seen crashes?
-> Oh, I see, name and authname both have the same size.
-> 
-> Anyway, makes sense, thanks.  Will apply for 5.3.
-> 
-> (Unless someone else is getting this; I didn't get copied on the rest of
-> the series.)
 
-It's generally hard to cc everyone on treewide fixes like this.
+Forwarding to maintainers (apologies, did not cc on first send).
 
-There's no good mechanism I know of.
-vger mailing lists reject emails with too many addressees.
+A.
 
-Do you have an opinion on adding the stracpy macro which
-could avoid many of these defects?
+-------- Forwarded Message --------
+Subject: NFS Caching broken in 4.19.37
+Date: Mon, 8 Jul 2019 19:19:54 +0100
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
----
- include/linux/string.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Hi list,
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4deb11f7976b..ef01bd6f19df 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
- /* Wraps calls to strscpy()/memset(), no arch specific code required */
- ssize_t strscpy_pad(char *dest, const char *src, size_t count);
- 
-+#define stracpy(to, from)					\
-+({								\
-+	size_t size = ARRAY_SIZE(to);				\
-+	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-+								\
-+	strscpy(to, from, size);				\
-+})
-+
-+#define stracpy_pad(to, from)					\
-+({								\
-+	size_t size = ARRAY_SIZE(to);				\
-+	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-+								\
-+	strscpy_pad(to, from, size);				\
-+})
-+
- #ifndef __HAVE_ARCH_STRCAT
- extern char * strcat(char *, const char *);
- #endif
+NFS caching appears broken in 4.19.37.
 
+The more cores/threads the easier to reproduce. Tested with identical 
+results on Ryzen 1600 and 1600X.
 
+1. Mount an openwrt build tree over NFS v4
+2. Run make -j `cat /proc/cpuinfo | grep vendor | wc -l` ; make clean in 
+a loop
+3. Result after 3-4 iterations:
 
+State on the client
+
+ls -laF 
+/var/autofs/local/src/openwrt/build_dir/target-mips_24kc_musl/linux-ar71xx_tiny/linux-4.14.125/arch/mips/include/generated/uapi/asm
+
+total 8
+drwxr-xr-x 2 anivanov anivanov 4096 Jul  8 11:40 ./
+drwxr-xr-x 3 anivanov anivanov 4096 Jul  8 11:40 ../
+
+State as seen on the server (mounted via nfs from localhost):
+
+ls -laF 
+/var/autofs/local/src/openwrt/build_dir/target-mips_24kc_musl/linux-ar71xx_tiny/linux-4.14.125/arch/mips/include/generated/uapi/asm
+total 12
+drwxr-xr-x 2 anivanov anivanov 4096 Jul  8 11:40 ./
+drwxr-xr-x 3 anivanov anivanov 4096 Jul  8 11:40 ../
+-rw-r--r-- 1 anivanov anivanov   32 Jul  8 11:40 ipcbuf.h
+
+Actual state on the filesystem:
+
+ls -laF 
+/exports/work/src/openwrt/build_dir/target-mips_24kc_musl/linux-ar71xx_tiny/linux-4.14.125/arch/mips/include/generated/uapi/asm
+total 12
+drwxr-xr-x 2 anivanov anivanov 4096 Jul  8 11:40 ./
+drwxr-xr-x 3 anivanov anivanov 4096 Jul  8 11:40 ../
+-rw-r--r-- 1 anivanov anivanov   32 Jul  8 11:40 ipcbuf.h
+
+So the client has quite clearly lost the plot. Telling it to drop caches 
+and re-reading the directory shows the file present.
+
+It is possible to reproduce this using a linux kernel tree too, just 
+takes much more iterations - 10+ at least.
+
+Both client and server run 4.19.37 from Debian buster. This is filed as 
+debian bug 931500. I originally thought it to be autofs related, but 
+IMHO it is actually something fundamentally broken in nfs caching 
+resulting in cache corruption.
+
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
