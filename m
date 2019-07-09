@@ -2,278 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C530F63901
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 18:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62EC063907
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 18:04:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfGIQB4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Jul 2019 12:01:56 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38028 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfGIQBz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Jul 2019 12:01:55 -0400
-Received: by mail-vs1-f68.google.com with SMTP id k9so10962665vso.5
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Jul 2019 09:01:54 -0700 (PDT)
+        id S1726211AbfGIQEu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Jul 2019 12:04:50 -0400
+Received: from mail-eopbgr690061.outbound.protection.outlook.com ([40.107.69.61]:46407
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbfGIQEu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:04:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kVIhhQqoilEe5SZStNC9obgJ61kpTA2MhrJbfEiZEis=;
-        b=BD3+jX73nKK9fyhamPnuvK3O9FVsawVqasr0hcpzpU0bhmXFtd3XZKQuvDmB3h+OEF
-         72xBkRGhrLoAEgWr5mtzI98j9uv+rUNhtHo1x/57EIO233ih9INWdNIGBXh7kw7Hqyn/
-         90nHSYReG5sFc49O/WcHCsMnab9VVT+RGKef76eipFiljAG1YdvSNBqGzd81vYVj5lwS
-         gpztymH7jkb00R4ZJF8V6mjzotWoVS4Ae+T/R3nCG1k68LRG3YJonzSLW9xinLYbjTuV
-         4uJ3m7btYGQcdH8EYdKxJvetwUKY7ahSIYhjdXi9yuZOBe8GiktrcE81v0RwGcro5Yqw
-         qaRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kVIhhQqoilEe5SZStNC9obgJ61kpTA2MhrJbfEiZEis=;
-        b=e1WZgEepquligINgiqj4GGfJpNOtbe2esSMLYcazgOCTM2zeX8f3poJN5ijyNsOvy6
-         Jz9GqTlOJrRoAinDlAGh0yVvzGE3QhevZNMkd1wEZz2rX/pXnKaOkKSEhmbu6PYfVi+r
-         p6arla3hUo93QloHecIeVDxIWbe4ryPGapRh5fskyqisy6Mbe7nEUFJa/eAqfn01RKUB
-         noqfArEfCZeWbQLjBNG/tNcSsAJdYNLnCASnT3VECeCwDVLmJI7eJ9zvUaEgl+GqtETw
-         nzSs/F8V2y7Q65IQWhF6tQVWWltpMBlE5fUkVHHUoYelSdQaF3FpQCV9E2FfhE1dV9n4
-         v8aQ==
-X-Gm-Message-State: APjAAAX2hb7/npUtupN1U0M7zvei5rGAXjrqOenSiG/K4CvSG7HG3D7M
-        P42moGNI8//s5O4TIwGKj3I6Tca2gRDGh/sYuT/mbpE+
-X-Google-Smtp-Source: APXvYqz08yQYEKykF5e/fmofsHOsCTf5+w+QgRmheryNr0sC202P0uHW0XIPRlZ8LOMhcAVA6XGKC8KTxx3AUGmjPT0=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr14740965vsd.215.1562688114375;
- Tue, 09 Jul 2019 09:01:54 -0700 (PDT)
+ d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2RGcy4XwdoSq0tCSxc+Wqxd3j0ETmDOt6HXq3UC2+XE=;
+ b=j8UJ926//iwOba9oQpB29tHbNtjk3rEpUiUY/i4lhroT2PTrQ05VpQazbU6VeRadShpfIWBVUzCkKZD8boLRMeiFzaCbP5LhUMa3+GD9J+9WL21UkkM+qWXnEXqR+/nPEm9OjtX5cZDFmpgMM0T0gIjdtwxO2IUDgi8HsUnfTz0=
+Received: from CY4PR06MB3479.namprd06.prod.outlook.com (10.175.117.23) by
+ CY4PR06MB2376.namprd06.prod.outlook.com (10.169.185.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Tue, 9 Jul 2019 16:03:08 +0000
+Received: from CY4PR06MB3479.namprd06.prod.outlook.com
+ ([fe80::80e9:7afd:2cd6:2b5e]) by CY4PR06MB3479.namprd06.prod.outlook.com
+ ([fe80::80e9:7afd:2cd6:2b5e%2]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
+ 16:03:07 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "trondmy@hammerspace.com" <trondmy@hammerspace.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFSoRDMA updates for Linux 5.3 (v2)
+Thread-Topic: [GIT PULL] Please pull NFSoRDMA updates for Linux 5.3 (v2)
+Thread-Index: AQHVNm/MQA5pVOOVkk+NmkwdFvsvJg==
+Date:   Tue, 9 Jul 2019 16:03:07 +0000
+Message-ID: <f06a1223274768b4ef4f3712382d34bfd11186f4.camel@netapp.com>
+References: <b2cabbe76eecc8db717cccd84067d78f8c3a7d0f.camel@netapp.com>
+In-Reply-To: <b2cabbe76eecc8db717cccd84067d78f8c3a7d0f.camel@netapp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.3 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [23.28.75.121]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e582b138-0a5a-49b2-e324-08d70486ef15
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR06MB2376;
+x-ms-traffictypediagnostic: CY4PR06MB2376:
+x-microsoft-antispam-prvs: <CY4PR06MB23766CB2F34D6ABC16373075F8F10@CY4PR06MB2376.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:565;
+x-forefront-prvs: 0093C80C01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(39860400002)(376002)(366004)(189003)(199004)(66556008)(2501003)(73956011)(478600001)(118296001)(66476007)(4326008)(5640700003)(6436002)(66446008)(64756008)(66066001)(15650500001)(256004)(102836004)(14444005)(6506007)(53936002)(36756003)(6512007)(5660300002)(72206003)(8936002)(99286004)(54906003)(316002)(2906002)(71190400001)(91956017)(86362001)(68736007)(6116002)(76176011)(7736002)(2351001)(305945005)(25786009)(186003)(6486002)(446003)(476003)(8676002)(81166006)(2616005)(6916009)(1730700003)(14454004)(66946007)(486006)(26005)(11346002)(58126008)(76116006)(81156014)(71200400001)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR06MB2376;H:CY4PR06MB3479.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: n2KrC1tc1KL0gSApa3QorZH04VFY/rvm7aXZ/Perr9CTVuWiE1n4RODKLVt0BlrqKZ9BUi6pL2kFvZvIFFeWkNx/zJqQirC8qTW4F8MUy67BJTJt8JByijn9V/FtSdFW07nmC534E9+41nBtOPd0dqyF8NcMLo2VepG2JWfQ8U90152dndXLgsKSTM9AMEoI8xVOJ9039fXIyPZ/7Rq3gdIZbvlr7BBdTsRQyAv686gjfnRQ8Co4bWMgy/zYexrL9CvmlM9PtDYnD2YR8Cxq9So47WHYq/VJLUt8xYcYpsPuqHMj+c3Z38wqOPasBczgJug4c/ekz2RxOnYM6heFEghhaZSGVZodXABpIAKOIsun2DZrRON8SwdLo3IitICUCbli1dEPcRtXSxZBgnDkd1iocYghF+ivmiq8lo1XfwY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B8579858C3876F4CBE064622FEE32BE2@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190708192444.12664-1-olga.kornievskaia@gmail.com>
- <20190708192444.12664-5-olga.kornievskaia@gmail.com> <564738e20abb53527a57ba8b43a0c76af3e613b8.camel@netapp.com>
-In-Reply-To: <564738e20abb53527a57ba8b43a0c76af3e613b8.camel@netapp.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 9 Jul 2019 12:01:43 -0400
-Message-ID: <CAN-5tyFUpEzTAhsMHGYuTjYjm_51y8Hy-tVyH59ezJ-o--VSpw@mail.gmail.com>
-Subject: Re: [PATCH v10 04/12] NFS: inter ssc open
-To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e582b138-0a5a-49b2-e324-08d70486ef15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 16:03:07.7910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bjschuma@netapp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR06MB2376
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:01 AM Schumaker, Anna
-<Anna.Schumaker@netapp.com> wrote:
->
-> Hi Olga,
->
-> On Mon, 2019-07-08 at 15:24 -0400, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > NFSv4.2 inter server to server copy requires the destination server
-> > to
-> > READ the data from the source server using the provided stateid and
-> > file handle.
-> >
-> > Given an NFSv4 stateid and filehandle from the COPY operaion, provide
-> > the
-> > destination server with an NFS client function to create a struct
-> > file
-> > suitable for the destiniation server to READ the data to be copied.
->
-> I'm curious if you've had a look at any of the open-by-filehandle code
-> in fs/fhandle.c? I know none of it is exported right now, but if it can
-> be reused then it would capture whatever filesystem notifications stuff
-> needs to happen at the same time.
->
-
-I'm not sure what you are suggesting here. The code there would
-trigger an open which in this case we have to avoid and thus having
-that  code to setup the data structure with the provided file handle.
-> Anna
->
-> >
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > Signed-off-by: Andy Adamson <andros@netapp.com>
-> > ---
-> >  fs/nfs/nfs4_fs.h  |  7 ++++
-> >  fs/nfs/nfs4file.c | 94
-> > +++++++++++++++++++++++++++++++++++++++++++++++
-> >  fs/nfs/nfs4proc.c |  5 +--
-> >  3 files changed, 103 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-> > index d75fea7ecf12..ff1cd600f07f 100644
-> > --- a/fs/nfs/nfs4_fs.h
-> > +++ b/fs/nfs/nfs4_fs.h
-> > @@ -311,6 +311,13 @@ extern int nfs4_set_rw_stateid(nfs4_stateid
-> > *stateid,
-> >               const struct nfs_open_context *ctx,
-> >               const struct nfs_lock_context *l_ctx,
-> >               fmode_t fmode);
-> > +extern int nfs4_proc_getattr(struct nfs_server *server, struct
-> > nfs_fh *fhandle,
-> > +                          struct nfs_fattr *fattr, struct nfs4_label
-> > *label,
-> > +                          struct inode *inode);
-> > +extern int update_open_stateid(struct nfs4_state *state,
-> > +                             const nfs4_stateid *open_stateid,
-> > +                             const nfs4_stateid *deleg_stateid,
-> > +                             fmode_t fmode);
-> >
-> >  #if defined(CONFIG_NFS_V4_1)
-> >  extern int nfs41_sequence_done(struct rpc_task *, struct
-> > nfs4_sequence_res *);
-> > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-> > index b9825d02443e..aab4d48764a7 100644
-> > --- a/fs/nfs/nfs4file.c
-> > +++ b/fs/nfs/nfs4file.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/file.h>
-> >  #include <linux/falloc.h>
-> >  #include <linux/nfs_fs.h>
-> > +#include <linux/file.h>
-> >  #include "delegation.h"
-> >  #include "internal.h"
-> >  #include "iostat.h"
-> > @@ -282,6 +283,99 @@ static loff_t nfs42_remap_file_range(struct file
-> > *src_file, loff_t src_off,
-> >  out:
-> >       return ret < 0 ? ret : count;
-> >  }
-> > +
-> > +static int read_name_gen = 1;
-> > +#define SSC_READ_NAME_BODY "ssc_read_%d"
-> > +
-> > +struct file *
-> > +nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
-> > +             nfs4_stateid *stateid)
-> > +{
-> > +     struct nfs_fattr fattr;
-> > +     struct file *filep, *res;
-> > +     struct nfs_server *server;
-> > +     struct inode *r_ino = NULL;
-> > +     struct nfs_open_context *ctx;
-> > +     struct nfs4_state_owner *sp;
-> > +     char *read_name;
-> > +     int len, status = 0;
-> > +
-> > +     server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
-> > +
-> > +     nfs_fattr_init(&fattr);
-> > +
-> > +     status = nfs4_proc_getattr(server, src_fh, &fattr, NULL, NULL);
-> > +     if (status < 0) {
-> > +             res = ERR_PTR(status);
-> > +             goto out;
-> > +     }
-> > +
-> > +     res = ERR_PTR(-ENOMEM);
-> > +     len = strlen(SSC_READ_NAME_BODY) + 16;
-> > +     read_name = kzalloc(len, GFP_NOFS);
-> > +     if (read_name == NULL)
-> > +             goto out;
-> > +     snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
-> > +
-> > +     r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh,
-> > &fattr,
-> > +                     NULL);
-> > +     if (IS_ERR(r_ino)) {
-> > +             res = ERR_CAST(r_ino);
-> > +             goto out;
-> > +     }
-> > +
-> > +     filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
-> > +                                  r_ino->i_fop);
-> > +     if (IS_ERR(filep)) {
-> > +             res = ERR_CAST(filep);
-> > +             goto out;
-> > +     }
-> > +     filep->f_mode |= FMODE_READ;
-> > +
-> > +     ctx = alloc_nfs_open_context(filep->f_path.dentry, filep-
-> > >f_mode,
-> > +                                     filep);
-> > +     if (IS_ERR(ctx)) {
-> > +             res = ERR_CAST(ctx);
-> > +             goto out_filep;
-> > +     }
-> > +
-> > +     res = ERR_PTR(-EINVAL);
-> > +     sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
-> > +     if (sp == NULL)
-> > +             goto out_ctx;
-> > +
-> > +     ctx->state = nfs4_get_open_state(r_ino, sp);
-> > +     if (ctx->state == NULL)
-> > +             goto out_stateowner;
-> > +
-> > +     set_bit(NFS_OPEN_STATE, &ctx->state->flags);
-> > +     memcpy(&ctx->state->open_stateid.other, &stateid->other,
-> > +            NFS4_STATEID_OTHER_SIZE);
-> > +     update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
-> > +
-> > +     nfs_file_set_open_context(filep, ctx);
-> > +     put_nfs_open_context(ctx);
-> > +
-> > +     file_ra_state_init(&filep->f_ra, filep->f_mapping->host-
-> > >i_mapping);
-> > +     res = filep;
-> > +out:
-> > +     return res;
-> > +out_stateowner:
-> > +     nfs4_put_state_owner(sp);
-> > +out_ctx:
-> > +     put_nfs_open_context(ctx);
-> > +out_filep:
-> > +     fput(filep);
-> > +     goto out;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nfs42_ssc_open);
-> > +void nfs42_ssc_close(struct file *filep)
-> > +{
-> > +     struct nfs_open_context *ctx = nfs_file_open_context(filep);
-> > +
-> > +     ctx->state->flags = 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nfs42_ssc_close);
-> >  #endif /* CONFIG_NFS_V4_2 */
-> >
-> >  const struct file_operations nfs4_file_operations = {
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 9bbd9bad5412..c898ce1bccc6 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -91,7 +91,6 @@ struct nfs4_opendata;
-> >  static int _nfs4_recover_proc_open(struct nfs4_opendata *data);
-> >  static int nfs4_do_fsinfo(struct nfs_server *, struct nfs_fh *,
-> > struct nfs_fsinfo *);
-> >  static void nfs_fixup_referral_attributes(struct nfs_fattr *fattr);
-> > -static int nfs4_proc_getattr(struct nfs_server *, struct nfs_fh *,
-> > struct nfs_fattr *, struct nfs4_label *label, struct inode *inode);
-> >  static int _nfs4_proc_getattr(struct nfs_server *server, struct
-> > nfs_fh *fhandle, struct nfs_fattr *fattr, struct nfs4_label *label,
-> > struct inode *inode);
-> >  static int nfs4_do_setattr(struct inode *inode, const struct cred
-> > *cred,
-> >                           struct nfs_fattr *fattr, struct iattr
-> > *sattr,
-> > @@ -1674,7 +1673,7 @@ static void nfs_state_clear_delegation(struct
-> > nfs4_state *state)
-> >       write_sequnlock(&state->seqlock);
-> >  }
-> >
-> > -static int update_open_stateid(struct nfs4_state *state,
-> > +int update_open_stateid(struct nfs4_state *state,
-> >               const nfs4_stateid *open_stateid,
-> >               const nfs4_stateid *delegation,
-> >               fmode_t fmode)
-> > @@ -3966,7 +3965,7 @@ static int _nfs4_proc_getattr(struct nfs_server
-> > *server, struct nfs_fh *fhandle,
-> >       return nfs4_call_sync(server->client, server, &msg,
-> > &args.seq_args, &res.seq_res, 0);
-> >  }
-> >
-> > -static int nfs4_proc_getattr(struct nfs_server *server, struct
-> > nfs_fh *fhandle,
-> > +int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh
-> > *fhandle,
-> >                               struct nfs_fattr *fattr, struct
-> > nfs4_label *label,
-> >                               struct inode *inode)
-> >  {
+SGkgVHJvbmQsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQNCjllMGJhYmYy
+YzA2YzczY2RhMmMwY2QzN2ExNjUzZDgyM2FkYjQwZWM6DQoNCiAgTGludXggNS4yLXJjNSAoMjAx
+OS0wNi0xNiAwODo0OTo0NSAtMTAwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9z
+aXRvcnkgYXQ6DQoNCiAgZ2l0Oi8vZ2l0LmxpbnV4LW5mcy5vcmcvcHJvamVjdHMvYW5uYS9saW51
+eC1uZnMuZ2l0IHRhZ3MvbmZzLXJkbWEtDQpmb3ItNS4zLTENCg0KZm9yIHlvdSB0byBmZXRjaCBj
+aGFuZ2VzIHVwIHRvDQo2MmE5MmJhOTdhMzFjNTQ0ODAyYmJmMTNkM2E5OThlODY3OTZkNTQ4Og0K
+DQogIE5GUzogUmVjb3JkIHRhc2ssIGNsaWVudCBJRCwgYW5kIFhJRCBpbiB4ZHJfc3RhdHVzIHRy
+YWNlIHBvaW50cw0KKDIwMTktMDctMDkgMTA6MzA6MjUgLTA0MDApDQoNCi0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCnYyOiBB
+ZGQgbWlzc2luZyBzaWduZWQtb2ZmLWJ5IGxpbmVzDQoNClRoYW5rcywNCkFubmENCg0KLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KDQpDaHVjayBMZXZlciAoMTkpOg0KICAgICAgeHBydHJkbWE6IEZpeCBhIEJVRyB3aGVuIHRy
+YWNpbmcgaXMgZW5hYmxlZCB3aXRoIE5GU3Y0LjEgb24gUkRNQQ0KICAgICAgeHBydHJkbWE6IEZp
+eCB1c2UtYWZ0ZXItZnJlZSBpbiBycGNyZG1hX3Bvc3RfcmVjdnMNCiAgICAgIHhwcnRyZG1hOiBS
+ZXBsYWNlIHVzZSBvZiB4ZHJfc3RyZWFtX3BvcyBpbiBycGNyZG1hX21hcnNoYWxfcmVxDQogICAg
+ICB4cHJ0cmRtYTogRml4IG9jY2FzaW9uYWwgdHJhbnNwb3J0IGRlYWRsb2NrDQogICAgICB4cHJ0
+cmRtYTogUmVtb3ZlIHRoZSBSUENSRE1BX1JFUV9GX1BFTkRJTkcgZmxhZw0KICAgICAgeHBydHJk
+bWE6IFJlbW92ZSBmcl9zdGF0ZQ0KICAgICAgeHBydHJkbWE6IEFkZCBtZWNoYW5pc20gdG8gcGxh
+Y2UgTVJzIGJhY2sgb24gdGhlIGZyZWUgbGlzdA0KICAgICAgeHBydHJkbWE6IFJlZHVjZSBjb250
+ZXh0IHN3aXRjaGluZyBkdWUgdG8gTG9jYWwgSW52YWxpZGF0aW9uDQogICAgICB4cHJ0cmRtYTog
+V2FrZSBSUENzIGRpcmVjdGx5IGluIHJwY3JkbWFfd2Nfc2VuZCBwYXRoDQogICAgICB4cHJ0cmRt
+YTogU2ltcGxpZnkgcnBjcmRtYV9yZXBfY3JlYXRlDQogICAgICB4cHJ0cmRtYTogU3RyZWFtbGlu
+ZSBycGNyZG1hX3Bvc3RfcmVjdnMNCiAgICAgIHhwcnRyZG1hOiBSZWZhY3RvciBjaHVuayBlbmNv
+ZGluZw0KICAgICAgeHBydHJkbWE6IFJlbW92ZSBycGNyZG1hX3JlcTo6cmxfYnVmZmVyDQogICAg
+ICB4cHJ0cmRtYTogTW9kZXJuaXplIG9wcy0+Y29ubmVjdA0KICAgICAgTkZTNDogQWRkIGEgdHJh
+Y2UgZXZlbnQgdG8gcmVjb3JkIGludmFsaWQgQ0Igc2VxdWVuY2UgSURzDQogICAgICBORlM6IEZp
+eCBzaG93X25mc19lcnJvcnMgbWFjcm9zIGFnYWluDQogICAgICBORlM6IERpc3BsYXkgc3ltYm9s
+aWMgc3RhdHVzIGNvZGUgbmFtZXMgaW4gdHJhY2UgbG9nDQogICAgICBORlM6IFVwZGF0ZSBzeW1i
+b2xpYyBmbGFncyBkaXNwbGF5ZWQgYnkgdHJhY2UgZXZlbnRzDQogICAgICBORlM6IFJlY29yZCB0
+YXNrLCBjbGllbnQgSUQsIGFuZCBYSUQgaW4geGRyX3N0YXR1cyB0cmFjZSBwb2ludHMNCg0KIGZz
+L25mcy9jYWxsYmFja19wcm9jLmMgICAgICAgICAgfCAgMjggKysrKysrKystLS0NCiBmcy9uZnMv
+bmZzMnhkci5jICAgICAgICAgICAgICAgIHwgICAyICstDQogZnMvbmZzL25mczN4ZHIuYyAgICAg
+ICAgICAgICAgICB8ICAgMiArLQ0KIGZzL25mcy9uZnM0dHJhY2UuaCAgICAgICAgICAgICAgfCAy
+MDcNCisrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tDQotLS0tDQogZnMvbmZzL25mczR4ZHIuYyAgICAgICAgICAgICAg
+ICB8ICAgMiArLQ0KIGZzL25mcy9uZnN0cmFjZS5oICAgICAgICAgICAgICAgfCAyMzMNCisrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0tDQotLS0tLS0tLS0tLS0tDQogaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oICAg
+ICB8ICAgMyArKw0KIGluY2x1ZGUvdHJhY2UvZXZlbnRzL3JwY3JkbWEuaCAgfCAgOTAgKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCi0NCiBuZXQvc3VucnBjL3NjaGVkLmMgICAgICAg
+ICAgICAgIHwgICAxICsNCiBuZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgICAgIHwgIDMyICsr
+KysrKysrKysrKw0KIG5ldC9zdW5ycGMveHBydHJkbWEvZnJ3cl9vcHMuYyAgfCAzMjcNCisrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrDQorKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KIG5ldC9zdW5ycGMveHBydHJkbWEvcnBjX3JkbWEuYyAgfCAxNDggKysrKysrKysrKysrKysr
+KysrKysrKystLS0tLS0tLS0NCi0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIG5ldC9zdW5ycGMveHBy
+dHJkbWEvdHJhbnNwb3J0LmMgfCAgODMgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tDQog
+bmV0L3N1bnJwYy94cHJ0cmRtYS92ZXJicy5jICAgICB8IDExNSArKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0tLS0tLQ0KLS0tLS0tLS0tLQ0KIG5ldC9zdW5ycGMveHBydHJkbWEveHBydF9yZG1h
+LmggfCAgNDQgKysrKystLS0tLS0tLS0tLQ0KIG5ldC9zdW5ycGMveHBydHNvY2suYyAgICAgICAg
+ICAgfCAgMjMgKy0tLS0tLS0tDQogMTYgZmlsZXMgY2hhbmdlZCwgODM3IGluc2VydGlvbnMoKyks
+IDUwMyBkZWxldGlvbnMoLSkNCg0KDQpPbiBUdWUsIDIwMTktMDctMDIgYXQgMTY6MzUgLTA0MDAs
+IEFubmEgU2NodW1ha2VyIHdyb3RlOg0KPiBIaSBUcm9uZCwNCj4gDQo+IFRoZSBmb2xsb3dpbmcg
+Y2hhbmdlcyBzaW5jZSBjb21taXQNCj4gOWUwYmFiZjJjMDZjNzNjZGEyYzBjZDM3YTE2NTNkODIz
+YWRiNDBlYzoNCj4gDQo+ICAgTGludXggNS4yLXJjNSAoMjAxOS0wNi0xNiAwODo0OTo0NSAtMTAw
+MCkNCj4gDQo+IGFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KPiANCj4g
+ICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4LW5mcy5naXQgdGFn
+cy9uZnMtcmRtYS0NCj4gZm9yLTUuMy0xDQo+IA0KPiBmb3IgeW91IHRvIGZldGNoIGNoYW5nZXMg
+dXAgdG8NCj4gMWE4ZjFlZDNlYjFhYzJmZGRjMWQyYzc1Mjk0ZGIwOGFjZTg4YzFjYjoNCj4gDQo+
+ICAgTkZTOiBSZWNvcmQgdGFzaywgY2xpZW50IElELCBhbmQgWElEIGluIHhkcl9zdGF0dXMgdHJh
+Y2UgcG9pbnRzDQo+ICgyMDE5LTA3LTAyIDE2OjI5OjIyIC0wNDAwKQ0KPiANCj4gVGhhbmtzLA0K
+PiBBbm5hDQo+IA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IENodWNrIExldmVyICgxOSk6DQo+ICAgICAgIHhwcnRy
+ZG1hOiBGaXggYSBCVUcgd2hlbiB0cmFjaW5nIGlzIGVuYWJsZWQgd2l0aCBORlN2NC4xIG9uDQo+
+IFJETUENCj4gICAgICAgeHBydHJkbWE6IEZpeCB1c2UtYWZ0ZXItZnJlZSBpbiBycGNyZG1hX3Bv
+c3RfcmVjdnMNCj4gICAgICAgeHBydHJkbWE6IFJlcGxhY2UgdXNlIG9mIHhkcl9zdHJlYW1fcG9z
+IGluIHJwY3JkbWFfbWFyc2hhbF9yZXENCj4gICAgICAgeHBydHJkbWE6IEZpeCBvY2Nhc2lvbmFs
+IHRyYW5zcG9ydCBkZWFkbG9jaw0KPiAgICAgICB4cHJ0cmRtYTogUmVtb3ZlIHRoZSBSUENSRE1B
+X1JFUV9GX1BFTkRJTkcgZmxhZw0KPiAgICAgICB4cHJ0cmRtYTogUmVtb3ZlIGZyX3N0YXRlDQo+
+ICAgICAgIHhwcnRyZG1hOiBBZGQgbWVjaGFuaXNtIHRvIHBsYWNlIE1ScyBiYWNrIG9uIHRoZSBm
+cmVlIGxpc3QNCj4gICAgICAgeHBydHJkbWE6IFJlZHVjZSBjb250ZXh0IHN3aXRjaGluZyBkdWUg
+dG8gTG9jYWwgSW52YWxpZGF0aW9uDQo+ICAgICAgIHhwcnRyZG1hOiBXYWtlIFJQQ3MgZGlyZWN0
+bHkgaW4gcnBjcmRtYV93Y19zZW5kIHBhdGgNCj4gICAgICAgeHBydHJkbWE6IFNpbXBsaWZ5IHJw
+Y3JkbWFfcmVwX2NyZWF0ZQ0KPiAgICAgICB4cHJ0cmRtYTogU3RyZWFtbGluZSBycGNyZG1hX3Bv
+c3RfcmVjdnMNCj4gICAgICAgeHBydHJkbWE6IFJlZmFjdG9yIGNodW5rIGVuY29kaW5nDQo+ICAg
+ICAgIHhwcnRyZG1hOiBSZW1vdmUgcnBjcmRtYV9yZXE6OnJsX2J1ZmZlcg0KPiAgICAgICB4cHJ0
+cmRtYTogTW9kZXJuaXplIG9wcy0+Y29ubmVjdA0KPiAgICAgICBORlM0OiBBZGQgYSB0cmFjZSBl
+dmVudCB0byByZWNvcmQgaW52YWxpZCBDQiBzZXF1ZW5jZSBJRHMNCj4gICAgICAgTkZTOiBGaXgg
+c2hvd19uZnNfZXJyb3JzIG1hY3JvcyBhZ2Fpbg0KPiAgICAgICBORlM6IERpc3BsYXkgc3ltYm9s
+aWMgc3RhdHVzIGNvZGUgbmFtZXMgaW4gdHJhY2UgbG9nDQo+ICAgICAgIE5GUzogVXBkYXRlIHN5
+bWJvbGljIGZsYWdzIGRpc3BsYXllZCBieSB0cmFjZSBldmVudHMNCj4gICAgICAgTkZTOiBSZWNv
+cmQgdGFzaywgY2xpZW50IElELCBhbmQgWElEIGluIHhkcl9zdGF0dXMgdHJhY2UgcG9pbnRzDQo+
+IA0KPiAgZnMvbmZzL2NhbGxiYWNrX3Byb2MuYyAgICAgICAgICB8ICAyOCArKysrKysrKy0tLQ0K
+PiAgZnMvbmZzL25mczJ4ZHIuYyAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgZnMvbmZzL25m
+czN4ZHIuYyAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgZnMvbmZzL25mczR0cmFjZS5oICAg
+ICAgICAgICAgICB8IDIwNw0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0NCj4gLS0tLQ0KPiAgZnMvbmZz
+L25mczR4ZHIuYyAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgZnMvbmZzL25mc3RyYWNlLmgg
+ICAgICAgICAgICAgICB8IDIzMw0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gLS0NCj4gLS0tLS0tLS0tLS0t
+LQ0KPiAgaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oICAgICB8ICAgMyArKw0KPiAgaW5jbHVk
+ZS90cmFjZS9ldmVudHMvcnBjcmRtYS5oICB8ICA5MCArKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0NCj4gLS0NCj4gLQ0KPiAgbmV0L3N1bnJwYy9zY2hlZC5jICAgICAgICAgICAgICB8ICAg
+MSArDQo+ICBuZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgICAgIHwgIDMyICsrKysrKysrKysr
+Kw0KPiAgbmV0L3N1bnJwYy94cHJ0cmRtYS9mcndyX29wcy5jICB8IDMyNw0KPiArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysNCj4gKysNCj4gKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0NCj4gIG5ldC9zdW5ycGMveHBydHJkbWEvcnBjX3JkbWEuYyAgfCAxNDggKysrKysrKysrKysr
+KysrKysrKysrKystLS0tLS0tDQo+IC0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgbmV0
+L3N1bnJwYy94cHJ0cmRtYS90cmFuc3BvcnQuYyB8ICA4MyArKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0NCj4gIG5ldC9zdW5ycGMveHBydHJkbWEvdmVyYnMuYyAgICAgfCAxMTUgKysrKysr
+KysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+IC0tDQo+IC0tLS0tLS0tLS0NCj4gIG5ldC9zdW5y
+cGMveHBydHJkbWEveHBydF9yZG1hLmggfCAgNDQgKysrKystLS0tLS0tLS0tLQ0KPiAgbmV0L3N1
+bnJwYy94cHJ0c29jay5jICAgICAgICAgICB8ICAyMyArLS0tLS0tLS0NCj4gIDE2IGZpbGVzIGNo
+YW5nZWQsIDgzNyBpbnNlcnRpb25zKCspLCA1MDMgZGVsZXRpb25zKC0pDQo=
