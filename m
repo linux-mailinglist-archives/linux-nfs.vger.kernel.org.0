@@ -2,114 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C03CF62F13
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 05:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D649F62FEE
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2019 07:28:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfGIDxJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Jul 2019 23:53:09 -0400
-Received: from fieldses.org ([173.255.197.46]:38370 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfGIDxJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:53:09 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 99FED7CB; Mon,  8 Jul 2019 23:53:08 -0400 (EDT)
-Date:   Mon, 8 Jul 2019 23:53:08 -0400
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] server-side support for "inter" SSC copy
-Message-ID: <20190709035308.GA15860@fieldses.org>
-References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
+        id S1725985AbfGIF2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Jul 2019 01:28:50 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:44803 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725951AbfGIF2u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Jul 2019 01:28:50 -0400
+X-IronPort-AV: E=Sophos;i="5.63,469,1557158400"; 
+   d="scan'208";a="71003680"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 09 Jul 2019 13:28:45 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 58AA64CDE64F;
+        Tue,  9 Jul 2019 13:28:49 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Tue, 9 Jul 2019 13:28:45 +0800
+Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
+To:     <bfields@fieldses.org>
+CC:     <linux-nfs@vger.kernel.org>, <dang@redhat.com>,
+        <ffilzlnx@mindspring.com>
+References: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
+ <f105f5a8-d38f-a58a-38d1-6b7a4df4dc9d@cn.fujitsu.com>
+ <89d5612e-9af6-8f2e-15d8-ff6af29d508a@redhat.com>
+ <016101d5359b$c71f06c0$555d1440$@mindspring.com>
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Message-ID: <4d6599c3-2280-e919-b60f-905f86452ac1@cn.fujitsu.com>
+Date:   Tue, 9 Jul 2019 13:27:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <016101d5359b$c71f06c0$555d1440$@mindspring.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 58AA64CDE64F.ABABD
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks for resending.  What's the status of Amir's series?  I guess I've
-been using that as an excuse to put off reviewing these, but I really
-should anyway....
+Hi Bruce
 
---b.
+在 2019/7/8 22:45, Frank Filz 写道:
+> Yea, sorry, I totally missed this, but it does look like it's a Kernel nfsd
+Any suggestions?
+> issue.
+>
+> Frank
+>
+>> -----Original Message-----
+>> From: Daniel Gryniewicz [mailto:dang@redhat.com]
+>> Sent: Monday, July 8, 2019 6:49 AM
+>> To: Su Yanjun <suyj.fnst@cn.fujitsu.com>; ffilzlnx@mindspring.com
+>> Cc: linux-nfs@vger.kernel.org
+>> Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in
+>> 5.2.0-rc7
+>>
+>> Is this running knfsd or Ganesha as the server?  If it's Ganesha, the
+>> question
+>> would be better asked on the Ganesha Devel list
+>> devel@lists.nfs-ganesha.org
+>>
+>> If it's knfsd, than Frank isn't the right person to ask.
+We are using the knfsd.
+>>
+>> Daniel
+>>
+>> On 7/7/19 10:20 PM, Su Yanjun wrote:
+>>> Ang ping?
+>>>
+>>> 在 2019/7/3 9:34, Su Yanjun 写道:
+>>>> Hi Frank
+>>>>
+>>>> We tested the pynfs of NFSv4.0 on the latest version of the kernel
+>>>> (5.2.0-rc7).
+>>>> I encountered a problem while testing st_lock.testOpenUpgradeLock.
+>>>> The problem is now as follows:
+>>>> **************************************************
+>>>> LOCK24 st_lock.testOpenUpgradeLock : FAILURE
+>>>>             OP_LOCK should return NFS4_OK, instead got
+>>>>             NFS4ERR_BAD_SEQID
+>>>> **************************************************
+>>>> Is this normal?
+>>>>
+>>>> The case is as follows:
+>>>> Def testOpenUpgradeLock(t, env):
+>>>>      """Try open, lock, open, downgrade, close
+>>>>
+>>>>      FLAGS: all lock
+>>>>      CODE: LOCK24
+>>>>      """
+>>>>      c= env.c1
+>>>>      C.init_connection()
+>>>>      Os = open_sequence(c, t.code, lockowner="lockowner_LOCK24")
+>>>>      Os.open(OPEN4_SHARE_ACCESS_READ)
+>>>>      Os.lock(READ_LT)
+>>>>      Os.open(OPEN4_SHARE_ACCESS_WRITE)
+>>>>      Os.unlock()
+>>>>      Os.downgrade(OPEN4_SHARE_ACCESS_WRITE)
+>>>>      Os.lock(WRITE_LT)
+>>>>      Os.close()
+>>>>
+>>>> After investigation, there was an error in unlock->lock. When
+>>>> unlocking, the lockowner of the file was not released, causing an
+>>>> error when locking again.
+>>>> Will nfs4.0 support 1) open-> 2) lock-> 3) unlock-> 4) lock this
+>>>> function?
+>>>>
+>>>>
+>>>>
+>>>
+>
+>
 
-On Mon, Jul 08, 2019 at 03:23:44PM -0400, Olga Kornievskaia wrote:
-> This patch series adds support for NFSv4.2 copy offload feature
-> allowing copy between two different NFS servers.
-> 
-> This functionality depends on the VFS ability to support generic
-> copy_file_range() where a copy is done between an NFS file and
-> a local file system. This is on top of Amir's VFS generic copy
-> offload series.
-> 
-> This feature is enabled by the kernel module parameter --
-> inter_copy_offload_enable -- and by default is disabled. There is
-> also a kernel compile configuration of NFSD_V4_2_INTER_SSC that
-> adds dependency on the NFS client side functions called from the
-> server.
-> 
-> These patches work on top of existing async intra copy offload
-> patches. For the "inter" SSC, the implementation only supports
-> asynchronous inter copy.
-> 
-> On the source server, upon receiving a COPY_NOTIFY, it generate a
-> unique stateid that's kept in the global list. Upon receiving a READ
-> with a stateid, the code checks the normal list of open stateid and
-> now additionally, it'll check the copy state list as well before
-> deciding to either fail with BAD_STATEID or find one that matches.
-> The stored stateid is only valid to be used for the first time
-> with a choosen lease period (90s currently). When the source server
-> received an OFFLOAD_CANCEL, it will remove the stateid from the
-> global list. Otherwise, the copy stateid is removed upon the removal
-> of its "parent" stateid (open/lock/delegation stateid).
-> 
-> On the destination server, upon receiving a COPY request, the server
-> establishes the necessary clientid/session with the source server.
-> It calls into the NFS client code to establish the necessary
-> open stateid, filehandle, file description (without doing an NFS open).
-> Then the server calls into the copy_file_range() to preform the copy
-> where the source file will issue NFS READs and then do local file
-> system writes (this depends on the VFS ability to do cross device
-> copy_file_range().
-> 
-> v4:
-> --- allowing for synchronous inter server-to-server copy
-> --- added missing offload_cancel on the source server
-> 
-> Already presented numbers for performance improvement for large
-> file transfer but here are times for copying linux kernel tree
-> (which is mostly small files):
-> -- regular cp 6m1s (intra)
-> -- copy offload cp 4m11s (intra)
->    -- benefit of using copy offload with small copies using sync copy
-> -- regular cp 6m9s (inter)
-> -- copy offload cp 6m3s (inter)
->    -- same performance as traditional as for most it fallback to traditional
-> copy offload
-> 
-> Olga Kornievskaia (8):
->   NFSD fill-in netloc4 structure
->   NFSD add ca_source_server<> to COPY
->   NFSD return nfs4_stid in nfs4_preprocess_stateid_op
->   NFSD add COPY_NOTIFY operation
->   NFSD check stateids against copy stateids
->   NFSD generalize nfsd4_compound_state flag names
->   NFSD: allow inter server COPY to have a STALE source server fh
->   NFSD add nfs4 inter ssc to nfsd4_copy
-> 
->  fs/nfsd/Kconfig     |  10 ++
->  fs/nfsd/nfs4proc.c  | 434 +++++++++++++++++++++++++++++++++++++++++++++++-----
->  fs/nfsd/nfs4state.c | 135 ++++++++++++++--
->  fs/nfsd/nfs4xdr.c   | 172 ++++++++++++++++++++-
->  fs/nfsd/nfsd.h      |  32 ++++
->  fs/nfsd/nfsfh.h     |   5 +-
->  fs/nfsd/nfssvc.c    |   6 +
->  fs/nfsd/state.h     |  25 ++-
->  fs/nfsd/xdr4.h      |  37 ++++-
->  9 files changed, 790 insertions(+), 66 deletions(-)
-> 
-> -- 
-> 1.8.3.1
+
