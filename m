@@ -2,62 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66A4464C57
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2019 20:43:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA76B64CED
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2019 21:46:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGJSnb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Jul 2019 14:43:31 -0400
-Received: from smtp3.jd.com ([59.151.64.88]:2126 "EHLO smtp3.jd.com"
+        id S1727770AbfGJTqZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Jul 2019 15:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfGJSnb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:43:31 -0400
-Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
- BJMAILD1MBX48.360buyAD.local (172.31.0.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
-Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
- BJMAILD1MBX36.360buyAD.local (172.31.0.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
-Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
- BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
- 15.01.1415.002; Thu, 11 Jul 2019 02:43:20 +0800
-From:   =?utf-8?B?6buE5LmQ?= <huangle1@jd.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-CC:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Index: AQHVLRYrJwxAvKxXXkKWwBVCcQfpA6bChWMAgAG9lPU=
-Date:   Wed, 10 Jul 2019 18:43:20 +0000
-Message-ID: <4dd1fe21e11344e5969bb112e954affb@jd.com>
-References: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>,<20190710000300.GD1536@fieldses.org>
-In-Reply-To: <20190710000300.GD1536@fieldses.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.31.14.12]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726080AbfGJTqZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:46:25 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D847E20645;
+        Wed, 10 Jul 2019 19:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562787984;
+        bh=8Wheg7fkojhFCTFeSxARuXmwozeoF6si9Jhn2gqN/jE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U8yQ5jzmPYkedYE9eKLlK6r/w0o6fbkuw6aQbZ32bajHQdbDyDuiA98yJfeBrTJ6G
+         9t9iwMUnGVGtKgkQyIGsGEnGkWyMLrzPLRQ7tkqlMCE404ujVuWcrSKTBrGV8qg0JS
+         ijG3JQaD52WEZZHNznlcoOP7z3WhRvagWtC/zdtE=
+Date:   Wed, 10 Jul 2019 12:46:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
+Message-ID: <20190710194620.GA83443@gmail.com>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <28477.1562362239@warthog.procyon.org.uk>
+ <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SXQncyBzYWZlIGJlY2F1c2Ugd2hlbiB3ZSByZWFjaCBtb3ZlX3RvX2Nsb3NlX2xydSgpLCB3ZSBr
-bm93IHdlIGFyZSB0aGUNCipsb2dpY2FsKiBsYXN0IGNhbGwgYW1vbmcgYWxsIHJhY2luZyBjYWxs
-cywgaXQgaXMgYWN0dWFsbHkgdGhlIHJlYXNvbiB3ZQ0KZG8gdGhlIHdhaXRpbmcgaGVyZSBhdCBm
-aXN0IHBsYWNlLiAgTm93IGp1c3QgYmVjYXVzZSBvZiByYWNpbmcsIHdlIGdhaW4NCnRoZSBycF9t
-dXRleCBmaXJzdCBhbmQgaGF2ZSBhICpsb3dlciogc2VxaWQgdmFsdWUsIHNvIGl0IGlzIHdoYXQg
-d2UgbmVlZA0KZXhhY3RseSB0byBsZXQgdGhlIHNlcWlkIGJ1bXAgd2l0aCBvdGhlciByYWNpbmcg
-Y2FsbHMgYmVmb3JlIHdlIGNvbnRpbnVlLA0KdGhhdCBlbnN1cmVzIHBvc3NpYmxlIGZ1dHVyZSBD
-TE9TRSBjYWxsIGNvdWxkIGJlIHJlcGxheWVkIGNvcnJlY3RseS4NCg0KDQpPbiBXZWQsIEp1bCAx
-MCwgMjAxOSwgYmZpZWxkc0BmaWVsZHNlcy5vcmcgd3JvdGU6DQo+IEkgZG9uJ3QgdW5kZXJzdGFu
-ZCB3aHkgdGhhdCdzIHNhZmUuwqAgTWF5YmUgaXQgaXMsIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQN
-Cj4geWV0LsKgIElmIHdlIHRha2UgdGhlIG11dGV4LCBidW1wIHRoZSBzZXFpZCwgZHJvcCB0aGUg
-bXV0ZXgsIHNvbWVvbmUgZWxzZQ0KPiBjb21lcyBpbiBhbmQgYnVtcHMgdGhlIHNlcWlkIGFnYWlu
-LCB0aGVuIHdlIHJlYWNxdWlyZSB0aGUgbXV0ZXguLi4gd2hhdA0KPiBoYXBwZW5zPw0KPiANCj4g
-LS1iLg0K
+On Wed, Jul 10, 2019 at 11:35:07AM -0700, Linus Torvalds wrote:
+> On Fri, Jul 5, 2019 at 2:30 PM David Howells <dhowells@redhat.com> wrote:
+> >
+> > Here's my fourth block of keyrings changes for the next merge window.  They
+> > change the permissions model used by keys and keyrings to be based on an
+> > internal ACL by the following means:
+> 
+> It turns out that this is broken, and I'll probably have to revert the
+> merge entirely.
+> 
+> With this merge in place, I can't boot any of the machines that have
+> an encrypted disk setup. The boot just stops at
+> 
+>   systemd[1]: Started Forward Password Requests to Plymouth Directory Watch.
+>   systemd[1]: Reached target Paths.
+> 
+> and never gets any further. I never get the prompt for a passphrase
+> for the disk encryption.
+> 
+> Apparently not a lot of developers are using encrypted volumes for
+> their development machines.
+> 
+> I'm not sure if the only requirement is an encrypted volume, or if
+> this is also particular to a F30 install in case you need to be able
+> to reproduce. But considering that you have a redhat email address,
+> I'm sure you can find a F30 install somewhere with an encrypted disk.
+> 
+> David, if you can fix this quickly, I'll hold off on the revert of it
+> all, but I can wait only so long. I've stopped merging stuff since I
+> noticed my machines don't work (this merge window has not been
+> pleasant so far - in addition to this issue I had another entirely
+> unrelated boot failure which made bisecting this one even more fun).
+> 
+> So if I don't see a quick fix, I'll just revert in order to then
+> continue to do pull requests later today. Because I do not want to do
+> further pulls with something that I can't boot as a base.
+> 
+>                  Linus
+
+This also broke 'keyctl new_session' and hence all the fscrypt tests
+(https://lkml.kernel.org/lkml/20190710011559.GA7973@sol.localdomain/), and it
+also broke loading in-kernel X.509 certificates
+(https://lore.kernel.org/lkml/27671.1562384658@turing-police/T/#u).
+
+I'm *guessing* these are all some underlying issue where keyrings aren't being
+given all the needed permissions anymore.
+
+But just FYI, David had said he's on vacation with no laptop or email access for
+2 weeks starting from Sunday (3 days ago).  So I don't think you can expect a
+quick fix from him.
+
+I was planning to look into this to fix the fscrypt tests, but it might be a few
+days before I get to it.  And while I'm *guessing* it will be a simple fix, it
+might not be.  So I can't speak for David, but personally I'm fine with the
+commits being reverted for now.
+
+I'm also unhappy that the new keyctl KEYCTL_GRANT_PERMISSION doesn't have any
+documentation or tests.  (Which seems to be a common problem with David's
+work...  None of the new mount syscalls in v5.2 have any tests, for example, and
+the man pages are still work-in-progress and last sent out for review a year
+ago, despite API changes that occurred before the syscalls were merged.)
+
+- Eric
