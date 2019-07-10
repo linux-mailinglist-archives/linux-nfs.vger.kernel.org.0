@@ -2,64 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1245640D2
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2019 07:56:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16899644F7
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2019 12:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfGJF4b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Jul 2019 01:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfGJF4b (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:56:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65F720838;
-        Wed, 10 Jul 2019 05:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562738191;
-        bh=V9iaENcRfclKrRlxtMr6FYwVEOvk/HuSF0jjt+eARO4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iUi3f2iayn9lfkE/YOYo0Yov3kvzO7+KOEyaS9Fml7JycwWRssHNDg7wVhtU5esPw
-         EoM52iaiWfmiaPubKM1oCY3H+8qeExOy+hWruR3E06hQYBobvtIjycEbSPoCRnbB/Z
-         +wlk3mSulTMRn5+41mKp91hHlSbguwHX7MgqGniE=
-Date:   Wed, 10 Jul 2019 07:56:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        anna.schumaker@netapp.com, arjan@linux.intel.com,
-        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
-        jlayton@kernel.org, luto@kernel.org, mingo@kernel.org,
-        Nadia.Derbey@bull.net, paulmck@linux.vnet.ibm.com,
-        semen.protsenko@linaro.org, stable@kernel.org,
-        stern@rowland.harvard.edu, tglx@linutronix.de,
-        torvalds@linux-foundation.org, trond.myklebust@hammerspace.com,
-        viresh.kumar@linaro.org, vvs@virtuozzo.com,
-        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-Message-ID: <20190710055628.GB5778@kroah.com>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+        id S1726920AbfGJKL7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Jul 2019 06:11:59 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:41527 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfGJKL6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Jul 2019 06:11:58 -0400
+Received: by mail-qt1-f182.google.com with SMTP id d17so1753288qtj.8
+        for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2019 03:11:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=rPC6w2yZfS5kO49QVMiE3aHv0vNI2/1t0uK8dKOd1uc=;
+        b=T9uLAnYwMAFCcupJ1KSPoZrP8uWYSrL8cZ9UUM3LTwW97lEAQ8dROZyUgwCobtmC9s
+         fBLZ03YKTQJzsMfu8tOFPy4U+6GaQskTgAPzdT15Twt/XJIU09Ts6culaxtuJ2bkm44s
+         Dk6Sd52Pw01QF1pzhTaC31Oy0onoOVIw3KcxoPcrUM41LVkwNrIG+eL/FC8dI5v9w2ev
+         4Dqzc51jjn1JXgybJf0HY2BNEnvJQmNALHha9Tr3wDgzjs53AuUX+cQKyz9odG0RyghG
+         Fej/CAbNOGzlAS1kDfMyQ/NgIAmaOtioFq6WAjFiIOiBN5DE6hOmX/NoUwWrGWQZcBRI
+         asjw==
+X-Gm-Message-State: APjAAAUFxY0mdoY4AWxkNwxXld3v2sCxJb17Mc0bFPgKlM+BerysUMqN
+        lgoJpArcUa7nlI0Ctx3IUg0NVBPW7EbHQ6pCcygkJql1468=
+X-Google-Smtp-Source: APXvYqwHc0t2Z8fV+XrMd2J+vMJZz3x/w6RctiAC5Lc5/O8YbfqwYEaiFNP0LliFzmGsA4Cbz4IU5BlNw+8QG7rfcNs=
+X-Received: by 2002:a0c:818f:: with SMTP id 15mr22674108qvd.162.1562753517867;
+ Wed, 10 Jul 2019 03:11:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+From:   John Dorminy <jdorminy@redhat.com>
+Date:   Wed, 10 Jul 2019 06:11:46 -0400
+Message-ID: <CAMeeMh9xmfwo9gY_h_9DMQeobzjXOMnC9iH=Whz=UkJeUSVq6w@mail.gmail.com>
+Subject: Request for help debugging readdirplus malfunction on NFS v3
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:09:07AM +0800, Xiaoming Ni wrote:
-> Registering the same notifier to a hook repeatedly can cause the hook
-> list to form a ring or lose other members of the list.
+Greetings;
 
-Then don't do that :)
+In the lab for the group I'm in, we have three NFS servers each
+serving different parts of our shared filesystem. However, as of
+kernel 5.1 or so on the clients, the clients have ceased working: a
+'ls' on any directory within one mountpoint (the only one hosted on
+one server) fails to show any files.
 
-Is there any in-kernel users that do do this?  If so, please just fix
-them.
+The mount is:
+nfs-02:/nbu1 on /p/not-backed-up type nfs
+(rw,noatime,vers=3,rsize=65536,wsize=65536,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.19.119.4,mountvers=3,mountport=4048,mountproto=udp,local_lock=none,addr=10.19.119.4)
 
-thanks,
+Bisection on the client side indicates
+be4c2d4723a4a637f0d1b4f7c66447141a4b3564 is the commit at which this
+mountpoint ceases to work. `rpcdebug -m nfs -s all` results in the
+following going to dmesg:
+[10146.723030] NFS call  readdirplus 162
+[10146.724908] NFS reply readdirplus: -2
+[10146.725429] NFS: readdir(/) returns -2
 
-greg k-h
+I'm somewhat out of ideas; are there other tools I should be using to
+hunt this down, short of adding print statements? and is this a known
+bug already?
+
+Thanks in advance!
+
+John Dorminy
