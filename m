@@ -2,196 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB07765DD1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 18:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337F765FDC
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 21:07:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfGKQti (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Jul 2019 12:49:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbfGKQti (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:49:38 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F2ECF86679;
-        Thu, 11 Jul 2019 16:49:37 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-198.rdu2.redhat.com [10.10.122.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7D735C220;
-        Thu, 11 Jul 2019 16:49:37 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 365EC209F9; Thu, 11 Jul 2019 12:49:37 -0400 (EDT)
-Date:   Thu, 11 Jul 2019 12:49:37 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Indivar Nair <indivar.nair@techterra.in>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: rpc.statd dies because of pacemaker monitoring
-Message-ID: <20190711164937.GA4131@coeurl.usersys.redhat.com>
-References: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
+        id S1729114AbfGKTGv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Jul 2019 15:06:51 -0400
+Received: from mail-ua1-f53.google.com ([209.85.222.53]:42254 "EHLO
+        mail-ua1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728747AbfGKTGv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Jul 2019 15:06:51 -0400
+Received: by mail-ua1-f53.google.com with SMTP id a97so2979736uaa.9
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2019 12:06:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=pV5gb7I3WIrX4qBGHfvYRSIAtPqV6eR7Y3fpt7W1/b0=;
+        b=Mf5f0H8MxDcFHFMK62RFeyPJ+SyUwShw0bBYafX+TQ3xi5JgYlvR5NEH1TB4Zjx4vN
+         UWvErs7BVKz9rEwTUgTshr1rYTAXE6BwrdK6HDdK1oFkunkPDwErYFQhnzCARY5Lk7mz
+         RO7GFNusfT5yuP9CVxEjBABo/CK+WeHU0JBsbo5WhOYSo0urZVOUkALaHvYjepasEBa4
+         WeC1EfgbSXmpW7Y+ANYiRZ+KFYjm/7deCC/id3hCuxLVC/tVucbExwmqB7UYmHnbusVy
+         Bc5F5vt90uSGHG2tbFhU3IwBmlUIozhTjvS8pAV2ybOksG2x+3oNGTnxo7za4X3G7SbK
+         ehMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=pV5gb7I3WIrX4qBGHfvYRSIAtPqV6eR7Y3fpt7W1/b0=;
+        b=C+XjOFoNC0AQlafJaardLJxFnss/UHcn1ROIFHu2DjWvKIwckNOq83ZK+ODJ5luwUq
+         JutnHr7Mxzf4GdcQvBYRCR9u2zJBDMWTRIqLdchSenVvVgtRflrkEUhq7kmr9RTkAYzy
+         bsGpEYnBMSuT/rlpRDI+s1txk5gUAo8kn7nATlTiALkm08yQamQkoe2t9Z+75/N8i+OA
+         tFMGe+0F926eWsTgGCRBg5BRdJ0d57KDBusdsH5Px2mnsNnZRS0g7gfMDGAedW2b1VGa
+         Y/VI9t176HbklbzLz6RKGp3DBYRbbzU+ju3mrt+gx8Lb0MPIGslPfYP5rN/lIxhMPLwu
+         yTVA==
+X-Gm-Message-State: APjAAAWeuRxmX0SEXSvCByn+IVYZ5rOebiOI48Y67jm907YY1pG8JUbj
+        /6uCwoO6aU4U9V1GCNQtzjZl2TyG647oJ8536PlzYxQY
+X-Google-Smtp-Source: APXvYqyQAaxI48uubKwMdWoBW1shYKhBWHhnFe+RudxQ4OpG9dAISRPpze97d5KxkeMerQN4Fho2mDa5pfLmqux2G+8=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr6309298uag.40.1562872010304;
+ Thu, 11 Jul 2019 12:06:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 11 Jul 2019 16:49:38 +0000 (UTC)
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 11 Jul 2019 15:06:39 -0400
+Message-ID: <CAN-5tyF2AL8Bx5QS3HGYzzvjw5vnkfmFxWEmqe_BWfvWCVtDFg@mail.gmail.com>
+Subject: multipath patches
+To:     trond.myklebust@hammerspace.com, NeilBrown <neilb@suse.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 11 Jul 2019, Indivar Nair wrote:
+Hi Trond,
 
-> Hi ...,
-> 
-> I have a 2 node Pacemaker cluster built using CentOS 7.6.1810
-> It serves files using NFS and Samba.
-> 
-> Every 15 - 20 minutes, the rpc.statd service fails, and the whole NFS
-> service is restarted.
-> After investigation, it was found that the service fails after a few
-> rounds of monitoring by Pacemaker.
-> The Pacemaker's script runs the following command to check whether all
-> the services are running -
-> ---------------------------------------------------------------------------------------------------------------------------------------
->     rpcinfo > /dev/null 2>&1
->     rpcinfo -t localhost 100005 > /dev/null 2>&1
->     nfs_exec status nfs-idmapd > $fn 2>&1
->     rpcinfo -t localhost 100024 > /dev/null 2>&1
+I see that you have nconnect patches in your testing branch (as well
+as your linux-next and I assume they are the same).  There is
+something wrong with that version. A mount hangs the machine.
 
-I would check to make sure your DNS setup is working properly.
-rpc.statd uses the canonical hostnames for comparison purposes whenever
-it gets an SM_MON or SM_UNMON request from lockd and when it gets an
-SM_NOTIFY from a rebooted NFS client.  That involves calls to
-getaddrinfo() and getnameinfo() which in turn could result in requests
-to a DNS server.  rpc.statd is single-threaded, so if it's blocked
-waiting for one of those requests, then it's unable to respond to the
-RPC ping (which has a timeout of 10 seconds) generated by the rpcinfo
-program.
+[  132.143379] watchdog: BUG: soft lockup - CPU#0 stuck for 23s!
+[mount.nfs:2624]
 
-I ran into a similar scenario in the past where a client was launching
-multiple instances of rpc.statd.  When the client does a v3 mount it
-does a similar RPC ping (with a more aggressive timeout) to see if
-rpc.statd is running... if not then it calls out to
-/usr/sbin/start-statd (which in the past simply called 'exec rpc.statd
---no-notify' but now has additional checks).  Likewise rpc.statd does
-it's own RPC ping to make sure there's not one already running.  It
-wound up that the user had a flakey DNS server and requests were taking
-over 30 seconds to time out, thus thwarting all those additional checks,
-and they wound up with multiple copies of rpc.statd running.
+I don't have such problems with the patch series that Neil has posted.
 
-You could be running into a similar scenario here and pacemaker could be
-deciding that rpc.statd's not running when it's actually fine.
-
--Scott
-
-> ---------------------------------------------------------------------------------------------------------------------------------------
-> The script is scheduled to check every 20 seconds.
-> 
-> This is the message we get in the logs -
-> -------------------------------------------------------------------------------------------------------------------------------------
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> 127.0.0.1 ALLOWED
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> from 127.0.0.1
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> 127.0.0.1 ALLOWED (cached)
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> from 127.0.0.1
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> 127.0.0.1 ALLOWED (cached)
-> Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> from 127.0.0.1
-> -------------------------------------------------------------------------------------------------------------------------------------
-> 
-> After 10 seconds, we get his message -
-> -------------------------------------------------------------------------------------------------------------------------------------
-> Jul 09 07:34:09 virat-nd01 nfsserver(virat-nfs-daemon)[54087]: ERROR:
-> rpc-statd is not running
-> -------------------------------------------------------------------------------------------------------------------------------------
-> Once we get this error, the NFS service is automatically restarted.
-> 
-> "ERROR: rpc-statd is not running" message is from the pacemaker's
-> monitoring script.
-> I have pasted that part of the script below.
-> 
-> I disabled monitoring and everything is working fine, since then.
-> 
-> I cant keep the cluster monitoring disabled forever.
-> 
-> Kindly help.
-> 
-> Regards,
-> 
-> 
-> Indivar Nair
-> 
-> Part of the pacemaker script that does the monitoring
-> (/usr/lib/ocf/resources.d/heartbeat/nfsserver)
-> =======================================================================
-> nfsserver_systemd_monitor()
-> {
->     local threads_num
->     local rc
->     local fn
-> 
->     ocf_log debug "Status: rpcbind"
->     rpcinfo > /dev/null 2>&1
->     rc=$?
->     if [ "$rc" -ne "0" ]; then
->         ocf_exit_reason "rpcbind is not running"
->         return $OCF_NOT_RUNNING
->     fi
-> 
->     ocf_log debug "Status: nfs-mountd"
->     rpcinfo -t localhost 100005 > /dev/null 2>&1
->     rc=$?
->     if [ "$rc" -ne "0" ]; then
->         ocf_exit_reason "nfs-mountd is not running"
->         return $OCF_NOT_RUNNING
->     fi
-> 
->     ocf_log debug "Status: nfs-idmapd"
->     fn=`mktemp`
->     nfs_exec status nfs-idmapd > $fn 2>&1
->     rc=$?
->     ocf_log debug "$(cat $fn)"
->     rm -f $fn
->     if [ "$rc" -ne "0" ]; then
->         ocf_exit_reason "nfs-idmapd is not running"
->         return $OCF_NOT_RUNNING
->     fi
-> 
->     ocf_log debug "Status: rpc-statd"
->     rpcinfo -t localhost 100024 > /dev/null 2>&1
->     rc=$?
->     if [ "$rc" -ne "0" ]; then
->         ocf_exit_reason "rpc-statd is not running"
->         return $OCF_NOT_RUNNING
->     fi
-> 
->     nfs_exec is-active nfs-server
->     rc=$?
-> 
->     # Now systemctl is-active can't detect the failure of kernel
-> process like nfsd.
->     # So, if the return value of systemctl is-active is 0, check the
-> threads number
->     # to make sure the process is running really.
->     # /proc/fs/nfsd/threads has the numbers of the nfsd threads.
->     if [ $rc -eq 0 ]; then
->         threads_num=`cat /proc/fs/nfsd/threads 2>/dev/null`
->         if [ $? -eq 0 ]; then
->             if [ $threads_num -gt 0 ]; then
->                 return $OCF_SUCCESS
->             else
->                 return 3
->             fi
->         else
->             return $OCF_ERR_GENERIC
->         fi
->     fi
-> 
->     return $rc
-> }
-> =======================================================================
+Thank you.
