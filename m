@@ -2,89 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E34CE66062
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 22:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39983660B5
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 22:34:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfGKUGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Jul 2019 16:06:20 -0400
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:37564 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbfGKUGU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Jul 2019 16:06:20 -0400
-Received: by mail-ed1-f42.google.com with SMTP id w13so7052354eds.4
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2019 13:06:19 -0700 (PDT)
+        id S1729183AbfGKUeJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Jul 2019 16:34:09 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42221 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729069AbfGKUeJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Jul 2019 16:34:09 -0400
+Received: by mail-vs1-f67.google.com with SMTP id 190so5188180vsf.9
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2019 13:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=delphix.com; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=5xa2GLNiT/wtEtQZiG+QK7tXvyS039Fn6L3dZW/DaYk=;
-        b=HXzOxswYIT1q5YGJeOTLEnNgenAsBrD7FzLFH9b5/qnTrNfMSSgC4kayFWzzAf37oD
-         Z/H8nPHVWrm0t3BK9gWr+xJfGE55rIJvsZeRXIbwtRZZhS54882dLzYc5NxKdHESATYM
-         +Xq4rCU5nUS/YAshwOi/oJuEYGeanvtjRmzHA=
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7UmpUdFDSyfV0VdNmHpQne3VVYifLrc/YIDRgRrTt6I=;
+        b=i7z3yzmbmFBafFaX08caQ4SROrIFiQTrDnItLBqvnZGZOjMpqz5Q4LhQHF3SmsLuTz
+         8+6Tq9VAAOrtYaXd5vyEfXKd7IH6wslms6s2cZd/tfdljmL4z+ib4iDbfafhbR0yhcpl
+         a+6n6YyEkIulyW8pqhuGdllKwE+ZNzi8OFYBkPFZlK+Fd0CfvR0K0tFVEkX7a04inJlL
+         mUIXShduX0sCxatEa8yMyUAW2RA9CWxmShglEgcr83baKrYZZKajoWJZuSGbiVHfe2en
+         iI0n++3fKbMvKjZD1F3z75DGTXdelF8zE7tUDILIIo77h/JrS7uufFvOBkza3D32VyW8
+         WDng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=5xa2GLNiT/wtEtQZiG+QK7tXvyS039Fn6L3dZW/DaYk=;
-        b=gJPUCaj5Enbw6pN28EIM/SkZke+PPnzaWrRlGtw+nVLi7Ho3SxGNy9n5l7P/JFxn5N
-         hfDu8KeDdYRlN3SmKvcnilIJaaS7m0dX9frT+wmF9eE0E7bQFTOhcwl5WoB+vyg70fzS
-         HzWcCF1D/c9UjlLKK8laux6Bg0jMQxq4oa0jzp0bnsbnh2hZFqL9AVKqNzj8ZExa1NUC
-         cr5IMi9QC2vRxEovEVhUz0Xjdv01vikhWdwTMj+6mCSq648Gp9w1gtiE99XaW0XQaCyQ
-         ot70lCX9uef45Q3ZwnUpCknMSzH0aLqFCz4AdJjSXyuNL5AmpqQQWe5qpu8FCOzgbl40
-         SUag==
-X-Gm-Message-State: APjAAAUikxXx4NKaWH528BIRN0wy5KN3PPnKdoQrlyq0FVWvafC6rTxT
-        EUpHx6oX7Wsal42kInrUVzkdnqCcI3xtfLc1kbyNXGaAiNY=
-X-Google-Smtp-Source: APXvYqxpHCq2uqhG4ulE8XKJFVl1LVEFlk6yEL0nA3DHbHTsDy9Aw+RQUSGHmqI8wyQ8YIsfMytDxy68qyVNCOwBygk=
-X-Received: by 2002:a17:906:2289:: with SMTP id p9mr4867795eja.249.1562875578108;
- Thu, 11 Jul 2019 13:06:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7UmpUdFDSyfV0VdNmHpQne3VVYifLrc/YIDRgRrTt6I=;
+        b=WmciY2i3kzwlqTx6aBQrrLTrKbOKbUZqSzXOykURDxnvYjkjml7i0Qz3U0VPsCZGM0
+         QyTQp7JGKWy4Tuzb0vdQe1qre/3e6zlhr8SuQpNZtU0O65aap2Zz3x2/mA2qPmISfO1n
+         Mpq8RurbgW2/McH+IHvw1tjdmJfjNkPPdF6JMRBLzEp7QNB/vPKzxM4gPoQ5GNsZtz3P
+         AiI8+2fCbP/4jOW0ot6UXkoLX6fE8O5ZIVWg0akB9F3b5dExoibF46700CZizf5ETD1z
+         4VRw6g4eLHbs7reRa3RDR5UMIW7CMHXv1oWheZg51zn72QXNantlVNoRY9YSCMHT6J3e
+         l6iw==
+X-Gm-Message-State: APjAAAUmUmJRS4oOKbBQr/0+IlnFKdAkEqwrg6bhEZV6CL3ZhaLEPb/A
+        G663h9kWURdDV/ymJ5zMfhRnl47tGa95qaFe/iGF4HR7
+X-Google-Smtp-Source: APXvYqxY1P9cgKGG01XzumzBFPbtI6BgV57qqT4R/Ngy8Yq6JnSIWUGjev4qVpAweOqboJwSxGBVk8TdRCa5hw4XzrQ=
+X-Received: by 2002:a67:79d4:: with SMTP id u203mr6286329vsc.85.1562877248465;
+ Thu, 11 Jul 2019 13:34:08 -0700 (PDT)
 MIME-Version: 1.0
-From:   Donald Brady <don.brady@delphix.com>
-Date:   Thu, 11 Jul 2019 14:06:07 -0600
-Message-ID: <CAPEr6wVVyU88Km+hWVSv8jQhm2-Z7OV1vQZBr1rtLYeoaYr_ug@mail.gmail.com>
-Subject: nfs-config.service fails to apply no-nfs-version after a reboot
-To:     linux-nfs@vger.kernel.org
+References: <CAN-5tyF2AL8Bx5QS3HGYzzvjw5vnkfmFxWEmqe_BWfvWCVtDFg@mail.gmail.com>
+ <1d019c416f69aa7f3ba7fed3bcfd4c08088fba57.camel@hammerspace.com>
+In-Reply-To: <1d019c416f69aa7f3ba7fed3bcfd4c08088fba57.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 11 Jul 2019 16:33:57 -0400
+Message-ID: <CAN-5tyG0jdyn8C11v6b8=v3d1p=WoMAhXrAw8mWGEUn-TVXJ=g@mail.gmail.com>
+Subject: Re: multipath patches
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "neilb@suse.com" <neilb@suse.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-NFSv4 bug: nfs-config.service fails to apply --no-nfs-version after a reboot
+On Thu, Jul 11, 2019 at 3:29 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Thu, 2019-07-11 at 15:06 -0400, Olga Kornievskaia wrote:
+> > Hi Trond,
+> >
+> > I see that you have nconnect patches in your testing branch (as well
+> > as your linux-next and I assume they are the same).  There is
+> > something wrong with that version. A mount hangs the machine.
+> >
+> > [  132.143379] watchdog: BUG: soft lockup - CPU#0 stuck for 23s!
+> > [mount.nfs:2624]
+> >
+> > I don't have such problems with the patch series that Neil has
+> > posted.
+> >
+> > Thank you.
+>
+> How are the patchsets different? As far as I know, all I did was apply
+> the 3 patches that Neil added to my existing branch.
 
-Server kernel version: 4.15.0-1043
-Distribution: Ubuntu 18.04.2 LTS
-nfs-utils version: 1:1.3.4-2.1ubuntu5.2
+I'm not sure. I had a problem with your "multipath" branch before and
+I recall what I did is went back and redownloaded your posted patches.
+That was when I was testing performance. So if you haven't touched
+that branch and just used it I think it's the same problem.
 
-Summary
-There are various configuration options for the nfs server that reside
-in '/etc/default/nfs-kernel-server'.  To disable NFS versions 4.1 and
-4.2, you can specify:
+In the current testing branch I don't see several patches that Neil
+has added (posted) to the mailing list. So I'm not sure what you mean
+you added 3 of his patches on top of yours. At most I can say maybe
+you added 2 of his (one that allows for v2 and v3 and another that
+does state operations on a single connection. There are no patches for
+sunrpc stats that were posted).
 
-RPCNFSDOPTS="--no-nfs-version 4.1 --no-nfs-version 4.2"
+What I know is that if I revert your branch to
+bf11fbdb20b385157b046ea7781f04d0c62554a3 before patches and apply
+Neils patches. All is fine. I really don't want to debug a non-working
+version when there is one that works.
 
-The nfs-config.service consumes the above RPCNFSDOPTS and creates
-RPCNFSDARGS that the nfs-server.service will pass to rpc.nfsd(8) for
-its ExecStart (see results below).
 
-$ cat /var/run/sysconfig/nfs-utils
-PIPEFS_MOUNTPOINT=/run/rpc_pipefs
-RPCNFSDARGS="--no-nfs-version 4.1 --no-nfs-version 4.2 64"
-RPCMOUNTDARGS=""
-STATDARGS=""
-RPCSVCGSSDARGS=""
-SVCGSSDARGS=""
 
-In turn, rpc.nfsd  parses the version info from RPCNFSDARGS and writes
-it as  "-4.1 -4.2 -2 +3 +4" to '/proc/fs/nfsd/versions'
-
-However, after a reboot, the initial state of versions is "-2 -3 -4
--4.0 -4.1 -4.2" (i.e. nothing is yet enabled) so the kernel ignores
-the '-4.1' and '-4.2' since it thinks 4 is not enabled.
-See https://elixir.bootlin.com/linux/v4.15/source/fs/nfsd/nfsctl.c#L608
-
-Note that if rpc.nfsd had written versions as "+3 +4 -4.1 -4.2 -2"
-then the attempt to remove 4.1 and 4.2 would have succeed.
-
-As a work-around you can write '+4' to `/proc/fs/nfsd/versions` after
-a reboot before the nfs-server.service runs rpc.nfsd
-
-Thanks,
-Don
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
