@@ -2,107 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 216E36505D
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 05:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D44146512A
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 06:40:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfGKDHf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Jul 2019 23:07:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35706 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbfGKDHf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Jul 2019 23:07:35 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6B37Wkm049098
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2019 23:07:34 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tnu35bcvr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2019 23:07:33 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-nfs@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 11 Jul 2019 04:07:31 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 04:07:28 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6B37F0p35652076
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 03:07:15 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5429A405B;
-        Thu, 11 Jul 2019 03:07:27 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 735A7A4054;
-        Thu, 11 Jul 2019 03:07:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.74])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jul 2019 03:07:26 +0000 (GMT)
-Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>, keyrings@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-nfs@vger.kernel.org,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Date:   Wed, 10 Jul 2019 23:07:15 -0400
-In-Reply-To: <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
-References: <28477.1562362239@warthog.procyon.org.uk>
-         <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
-         <20190710194620.GA83443@gmail.com> <20190710201552.GB83443@gmail.com>
-         <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071103-4275-0000-0000-0000034BBC6E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071103-4276-0000-0000-0000385BC1F1
-Message-Id: <1562814435.4014.11.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110035
+        id S1726510AbfGKEkC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Jul 2019 00:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbfGKEkC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 11 Jul 2019 00:40:02 -0400
+Subject: Re: [GIT PULL] nfsd changes for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562820001;
+        bh=d+0qNiXJBziVo7jDXzUp/u6MR+Wpq8yaV/+7PcMGcyk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=iR4Y1ceaP6J3epoAG+cejE6VZs06nDMaSJh9aMQQz4hJylm/i695XOoB7ie6GOb33
+         ScpCSigkMSdLprDiBh3VhI8GLF7ca5I1CzI0N23PZC4vHIGnVuzx8uxTzabWhwB5tX
+         iVRfOQxexD10fRM7s57RFmahjFlZdWvK41kxizrE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190710220236.GA11923@fieldses.org>
+References: <20190710220236.GA11923@fieldses.org>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190710220236.GA11923@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.3
+X-PR-Tracked-Commit-Id: b78fa45d4edb92fd7b882b2ec25b936cad412670
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2b6b4c832f7e3067709e8d4970b7b82b44419ac
+Message-Id: <156282000176.18259.2153303986834115313.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jul 2019 04:40:01 +0000
+To:     bfields@fieldses.org (J. Bruce Fields)
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Wed, 10 Jul 2019 18:02:36 -0400:
 
-On Wed, 2019-07-10 at 18:59 -0700, Linus Torvalds wrote:
-> Anyway, since it does seem like David is offline, I've just reverted
-> this from my tree, and will be continuing my normal merge window pull
-> requests (the other issues I have seen have fixes in their respective
-> trees).
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.3
 
-Sorry for the delay.  An exception is needed for loading builtin keys
-"KEY_ALLOC_BUILT_IN" onto a keyring that is not writable by userspace.
- The following works, but probably is not how David would handle the
-exception.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2b6b4c832f7e3067709e8d4970b7b82b44419ac
 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 519211a996e7..a99332c1e014 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -896,7 +896,7 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
-        /* if we're going to allocate a new key, we're going to have
-         * to modify the keyring */
-        ret = key_permission(keyring_ref, KEY_NEED_WRITE);
--       if (ret < 0) {
-+       if (ret < 0 && !(flags & KEY_ALLOC_BUILT_IN)) {
-                key_ref = ERR_PTR(ret);
-                goto error_link_end;
-        }
+Thank you!
 
-Mimi
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
