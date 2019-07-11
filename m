@@ -2,177 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37F14651FB
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 08:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1937E6583E
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 15:57:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfGKGt6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Jul 2019 02:49:58 -0400
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:46336 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKGt6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Jul 2019 02:49:58 -0400
-Received: by mail-ot1-f48.google.com with SMTP id z23so4736732ote.13
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2019 23:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=techterra-in.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=+ntdsTiWVThPk9Dhmu/aXX9siFIXi+NZoeZ+1O1Wb1M=;
-        b=ZwkKvpP4Tc/g8GDeKvwonkpadKcjPUZWu3kNonEm+S+YLFne5x97H+bn2RLCPeyFOY
-         UnI88ggeLU1xd2ZhlsqoWIfrSv8GHiV0rf85WqyLPkQGtCoqoS/c93GHrYGUsl+CwWRe
-         zhDc507Y818pv8lOAPbXQgdfomP/hLUsO13DYDQgUuo5jN+UKSyefsa+NHoGElqVZuIx
-         8ste+mhSKvQ8WqvwM4q6H54nQ61ABvx5u6N7YSfXfxGxK+SPl2BDGQA7ey2iuTlr0jT6
-         oV4TovGMXM0qFbBcTWlnkMKytzO8WZACjpLCzbaDEPi0g/PMLKmBPr+Mq1K74kv/Ot0P
-         VEgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=+ntdsTiWVThPk9Dhmu/aXX9siFIXi+NZoeZ+1O1Wb1M=;
-        b=RC790eesVrkKhlOMDbp8l3iacWzcflGYVP6YMYGWoxJGyreUP54zlkCFOp6hlwQb6/
-         71D/X+Fwd2K1lhtuOz0FkpIba9lZUXa6X3VecTMgog2KHd+SjDrJB15cfvGlCnUke6t9
-         OE04NqjJxMLIfHV/lC5zaCQY94F4uN1qkbGkdOe/4G2Uok3QF1a0CKL6SgU2v3YlqYe9
-         R9EmvbqWSQo7TTJZPtFvxSxn4/kNXtVc8CsFRkYiqyIjZ5WQ9l5LEqtD8CzL+0OJTb3e
-         y+xymf7gmFt7rxGtsA8nUlCjt0Dxt/prZGOp6KWWrMo/aXOhrggdr/C8LRX8tjGbjYgp
-         5sdQ==
-X-Gm-Message-State: APjAAAUvKLWEPGkBZp/kE9LDcUgf1VymRuC6s2dg36OL0A5TvnaiyfEw
-        3AmNCxR+01R9GZCxYN6XKKBPPdcKUdfRG8191ys5e06Y
-X-Google-Smtp-Source: APXvYqyXX3KlAB+w+VsySkv03lkAgek4EwqLtGg0UzdXrbIF425m8huMH/KiC/3bbNEZ0qG7kK/SSpCEFSS2dHhuFWE=
-X-Received: by 2002:a05:6830:2098:: with SMTP id y24mr1934965otq.173.1562827797029;
- Wed, 10 Jul 2019 23:49:57 -0700 (PDT)
+        id S1728363AbfGKN5w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Jul 2019 09:57:52 -0400
+Received: from relay.sw.ru ([185.231.240.75]:55748 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728274AbfGKN5v (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:57:51 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hlZZp-0001WC-QI; Thu, 11 Jul 2019 16:57:37 +0300
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Nixiaoming <nixiaoming@huawei.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc:     "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+From:   Vasily Averin <vvs@virtuozzo.com>
+Message-ID: <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+Date:   Thu, 11 Jul 2019 16:57:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-From:   Indivar Nair <indivar.nair@techterra.in>
-Date:   Thu, 11 Jul 2019 12:19:21 +0530
-Message-ID: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
-Subject: rpc.statd dies because of pacemaker monitoring
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi ...,
+On 7/11/19 4:55 AM, Nixiaoming wrote:
+> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>> list to form a ring or lose other members of the list.
+>>
+>> I think is not enough to _prevent_ 2nd register attempt,
+>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>
+> 
+> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+> 
+> Duplicate registration is checked and exited in notifier_chain_cond_register()
+> 
+> Duplicate registration was checked in notifier_chain_register() but only 
+> the alarm was triggered without exiting. added by commit 831246570d34692e 
+> ("kernel/notifier.c: double register detection")
+> 
+> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>  which triggers an alarm and exits when a duplicate registration is detected.
+> 
+>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>> and it can lead to host crash in any time: 
+>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>> on the other hand you can never call 2nd unregister at all.
+> 
+> Since the member was not added to the linked list at the time of the second registration, 
+> no linked list ring was formed. 
+> The member is released on the first unregistration and -ENOENT on the second unregistration.
+> After patching, the fault has been alleviated
 
-I have a 2 node Pacemaker cluster built using CentOS 7.6.1810
-It serves files using NFS and Samba.
+You are wrong here.
+2nd notifier's registration is a pure bug, this should never happen.
+If you know the way to reproduce this situation -- you need to fix it. 
 
-Every 15 - 20 minutes, the rpc.statd service fails, and the whole NFS
-service is restarted.
-After investigation, it was found that the service fails after a few
-rounds of monitoring by Pacemaker.
-The Pacemaker's script runs the following command to check whether all
-the services are running -
----------------------------------------------------------------------------------------------------------------------------------------
-    rpcinfo > /dev/null 2>&1
-    rpcinfo -t localhost 100005 > /dev/null 2>&1
-    nfs_exec status nfs-idmapd > $fn 2>&1
-    rpcinfo -t localhost 100024 > /dev/null 2>&1
----------------------------------------------------------------------------------------------------------------------------------------
-The script is scheduled to check every 20 seconds.
+2nd registration can happen in 2 cases:
+1) missed rollback, when someone forget to call unregister after successfull registration, 
+and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+2) some subsystem is registered twice, for example from  different namespaces.
+in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+in second namespace, it also can lead to unexpacted behaviour.
 
-This is the message we get in the logs -
--------------------------------------------------------------------------------------------------------------------------------------
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-127.0.0.1 ALLOWED
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-from 127.0.0.1
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-127.0.0.1 ALLOWED (cached)
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-from 127.0.0.1
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-127.0.0.1 ALLOWED (cached)
-Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-from 127.0.0.1
--------------------------------------------------------------------------------------------------------------------------------------
+> It may be more helpful to return an error code when someone tries to register the same
+> notification program a second time.
 
-After 10 seconds, we get his message -
--------------------------------------------------------------------------------------------------------------------------------------
-Jul 09 07:34:09 virat-nd01 nfsserver(virat-nfs-daemon)[54087]: ERROR:
-rpc-statd is not running
--------------------------------------------------------------------------------------------------------------------------------------
-Once we get this error, the NFS service is automatically restarted.
+You are wrong again here, it is senseless.
+If you have detected 2nd register -- your node is already in bad state.
 
-"ERROR: rpc-statd is not running" message is from the pacemaker's
-monitoring script.
-I have pasted that part of the script below.
-
-I disabled monitoring and everything is working fine, since then.
-
-I cant keep the cluster monitoring disabled forever.
-
-Kindly help.
-
-Regards,
-
-
-Indivar Nair
-
-Part of the pacemaker script that does the monitoring
-(/usr/lib/ocf/resources.d/heartbeat/nfsserver)
-=======================================================================
-nfsserver_systemd_monitor()
-{
-    local threads_num
-    local rc
-    local fn
-
-    ocf_log debug "Status: rpcbind"
-    rpcinfo > /dev/null 2>&1
-    rc=$?
-    if [ "$rc" -ne "0" ]; then
-        ocf_exit_reason "rpcbind is not running"
-        return $OCF_NOT_RUNNING
-    fi
-
-    ocf_log debug "Status: nfs-mountd"
-    rpcinfo -t localhost 100005 > /dev/null 2>&1
-    rc=$?
-    if [ "$rc" -ne "0" ]; then
-        ocf_exit_reason "nfs-mountd is not running"
-        return $OCF_NOT_RUNNING
-    fi
-
-    ocf_log debug "Status: nfs-idmapd"
-    fn=`mktemp`
-    nfs_exec status nfs-idmapd > $fn 2>&1
-    rc=$?
-    ocf_log debug "$(cat $fn)"
-    rm -f $fn
-    if [ "$rc" -ne "0" ]; then
-        ocf_exit_reason "nfs-idmapd is not running"
-        return $OCF_NOT_RUNNING
-    fi
-
-    ocf_log debug "Status: rpc-statd"
-    rpcinfo -t localhost 100024 > /dev/null 2>&1
-    rc=$?
-    if [ "$rc" -ne "0" ]; then
-        ocf_exit_reason "rpc-statd is not running"
-        return $OCF_NOT_RUNNING
-    fi
-
-    nfs_exec is-active nfs-server
-    rc=$?
-
-    # Now systemctl is-active can't detect the failure of kernel
-process like nfsd.
-    # So, if the return value of systemctl is-active is 0, check the
-threads number
-    # to make sure the process is running really.
-    # /proc/fs/nfsd/threads has the numbers of the nfsd threads.
-    if [ $rc -eq 0 ]; then
-        threads_num=`cat /proc/fs/nfsd/threads 2>/dev/null`
-        if [ $? -eq 0 ]; then
-            if [ $threads_num -gt 0 ]; then
-                return $OCF_SUCCESS
-            else
-                return 3
-            fi
-        else
-            return $OCF_ERR_GENERIC
-        fi
-    fi
-
-    return $rc
-}
-=======================================================================
+> But I noticed that notifier_chain_cond_register() returns 0 when duplicate registration 
+> is detected. At the same time, in all the existing export function comments of notify,
+> "Currently always returns zero"
+> 
+> I am a bit confused: which is better?
+> 
+>>
+>> Unfortunately I do not see any ways to handle such cases properly,
+>> and it seems for me your patches does not resolve this problem.
+>>
+>> Am I missed something probably?
+>>
+>>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+> 
+> Thanks
+> 
+> Xiaoming Ni
+> 
