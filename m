@@ -2,69 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E82D664E99
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 00:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70D0164FEB
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2019 03:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfGJWJc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Jul 2019 18:09:32 -0400
-Received: from fieldses.org ([173.255.197.46]:53602 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfGJWJc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 10 Jul 2019 18:09:32 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B8EC78A6; Wed, 10 Jul 2019 18:09:31 -0400 (EDT)
-Date:   Wed, 10 Jul 2019 18:09:31 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <20190710220931.GB11923@fieldses.org>
-References: <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190621174544.GC25590@fieldses.org>
- <201906211431.E6552108@keescook>
- <20190622190058.GD5343@fieldses.org>
- <201906221320.5BFC134713@keescook>
- <20190624210512.GA20331@fieldses.org>
- <20190626162149.GB4144@fieldses.org>
- <20190627202124.GC16388@fieldses.org>
- <201906272054.6954C08FA@keescook>
- <20190628163358.GA31800@fieldses.org>
+        id S1727541AbfGKBdH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 10 Jul 2019 21:33:07 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2482 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727708AbfGKBdH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 10 Jul 2019 21:33:07 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id D17612CC9601704C2F8C;
+        Thu, 11 Jul 2019 09:33:04 +0800 (CST)
+Received: from DGGEMM507-MBX.china.huawei.com ([169.254.1.169]) by
+ DGGEMM404-HUB.china.huawei.com ([10.3.20.212]) with mapi id 14.03.0439.000;
+ Thu, 11 Jul 2019 09:32:57 +0800
+From:   Nixiaoming <nixiaoming@huawei.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "vvs@virtuozzo.com" <vvs@virtuozzo.com>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+Thread-Topic: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+Thread-Index: AQHVNszeCdZobq+tm0y9Gm/hoQ9GDabC1LcAgAHObtA=
+Date:   Thu, 11 Jul 2019 01:32:57 +0000
+Message-ID: <E490CD805F7529488761C40FD9D26EF12AC9D039@dggemm507-mbx.china.huawei.com>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <20190710055628.GB5778@kroah.com>
+In-Reply-To: <20190710055628.GB5778@kroah.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.88.168]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628163358.GA31800@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 12:33:58PM -0400, J. Bruce Fields wrote:
-> But I may just give up and go with my existing patch and put
-> off that project indefinitely, especially if there's no real need to fix
-> the existing callers.
+On Wed, July 10, 2019 1:56 PM Greg KH wrote:
+>On Wed, Jul 10, 2019 at 11:09:07AM +0800, Xiaoming Ni wrote:
+>> Registering the same notifier to a hook repeatedly can cause the hook
+>> list to form a ring or lose other members of the list.
+>
+>Then don't do that :)
+>
 
-I went with the existing patch, but gave a little more thought to
-string_escape_mem.  Stuff that bugs me:
+Duplicate registration is checked and exited in notifier_chain_cond_register()
 
-	- ESCAPE_NP sounds like it means "escape nonprinting
-	  characters", but actually means "do not escape printing
-	  characters"
-	- the use of the "only" string to limit the list of escaped
-	  characters rather than supplement them is confusing and kind
-	  of unhelpful.
-	- most of the flags are actually totally unused
-    
-So what I'd like to do is:
-    
-	- eliminate unused flags
-	- use the "only" string to add to, rather than replace, the list
-	  of characters to escape
-	- separate flags into those that select which characters to
-	  escape, and those that choose the format of the escaping ("\ "
-	  vs "\x20" vs "\040".)
-    
-I've got some patches that do all that and I think it works.  I need to
-clean them up a bit and fix up the tests.
+Duplicate registration was checked in notifier_chain_register() but only 
+the alarm was triggered without exiting. added by commit 831246570d34692e 
+("kernel/notifier.c: double register detection")
 
---b.
+This patch is similar to commit 8312465 and notifier_chain_cond_register(),
+ with actual prevention for such behaviour,  which I think is necessary to 
+ avoid the formation of a linked list ring.
+
+>Is there any in-kernel users that do do this?  If so, please just fix
+>them.
+>
+Notifier_chain_register() is not a hotspot path.
+Adding a check here can make the kernel more stable.
+
+Thanks
+
+Xiaoming Ni
+
+
+>thanks,
+>
+>greg k-h
+>
