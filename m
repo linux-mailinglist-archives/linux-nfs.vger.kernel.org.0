@@ -2,259 +2,327 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D116767123
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 16:17:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86086714B
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 16:24:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGLORD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Jul 2019 10:17:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:8656 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727256AbfGLORD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:17:03 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 516353086203;
-        Fri, 12 Jul 2019 14:17:03 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-198.rdu2.redhat.com [10.10.122.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 132DE608AB;
-        Fri, 12 Jul 2019 14:17:03 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 8951820791; Fri, 12 Jul 2019 10:16:57 -0400 (EDT)
-Date:   Fri, 12 Jul 2019 10:16:57 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Indivar Nair <indivar.nair@techterra.in>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: rpc.statd dies because of pacemaker monitoring
-Message-ID: <20190712141657.GB4131@coeurl.usersys.redhat.com>
-References: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
- <20190711164937.GA4131@coeurl.usersys.redhat.com>
- <CALuPYL0+VdUsjeFx70xJkJUxc8SOdsTzALeeHcfd33fx4E_iTg@mail.gmail.com>
+        id S1726602AbfGLOYp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Jul 2019 10:24:45 -0400
+Received: from nibbler.cm4all.net ([82.165.145.151]:45776 "EHLO
+        nibbler.cm4all.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfGLOYn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jul 2019 10:24:43 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 10:24:40 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by nibbler.cm4all.net (Postfix) with ESMTP id 5D5E1C0131
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2019 16:18:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
+Received: from nibbler.cm4all.net ([127.0.0.1])
+        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id DRDIUnMrXP7J for <linux-nfs@vger.kernel.org>;
+        Fri, 12 Jul 2019 16:18:26 +0200 (CEST)
+Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
+        by nibbler.cm4all.net (Postfix) with SMTP id 36347C0106
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2019 16:18:26 +0200 (CEST)
+Received: (qmail 9351 invoked from network); 12 Jul 2019 16:50:01 +0200
+Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
+  by zero.intern.cm-ag with SMTP; 12 Jul 2019 16:50:01 +0200
+Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
+        id DEC44460C36; Fri, 12 Jul 2019 16:18:25 +0200 (CEST)
+From:   Max Kellermann <mk@cm4all.com>
+To:     zhangliguang@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Max Kellermann <mk@cm4all.com>
+Subject: [PATCH] Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
+Date:   Fri, 12 Jul 2019 16:18:06 +0200
+Message-Id: <20190712141806.3063-1-mk@cm4all.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALuPYL0+VdUsjeFx70xJkJUxc8SOdsTzALeeHcfd33fx4E_iTg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 12 Jul 2019 14:17:03 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 12 Jul 2019, Indivar Nair wrote:
+This reverts commit be4c2d4723a4a637f0d1b4f7c66447141a4b3564.
 
-> Hi Scott,
-> 
-> Thanks a lot.
-> Yes, it is a 10+ year old AD setup, which was migrated to Samba4AD
-> (samba+named) a few years ago.
-> It has lot of stale entries, and fwd - rev lookup mismatches.
-> 
-> Will start cleaning up DNS right away.
-> 
-> In the meantime, is there any way to increase the rpc ping timeout?
+That commit caused a severe memory leak in nfs_readdir_make_qstr().
 
-You could build the rpcinfo.c program from source (it's in the rpcbind
-git tree) with a longer timeout.
+When listing a directory with more than 100 files (this is how many
+struct nfs_cache_array_entry elements fit in one 4kB page), all
+allocated file name strings past those 100 leak.
 
-> OR
-> Is there any way to temporarily disable DNS lookups by lockd?
+The root of the leakage is that those string pointers are managed in
+pages which are never linked into the page cache.
 
-rpc.statd is doing the DNS lookups, and no there's not a way to disable it.
-Doing so would probably make the reboot notifications less reliable, and
-clients wouldn't know to reclaim locks, and the risk of data corruption
-goes up.
+fs/nfs/dir.c puts pages into the page cache by calling
+read_cache_page(); the callback function nfs_readdir_filler() will
+then fill the given page struct which was passed to it, which is
+already linked in the page cache (by do_read_cache_page() calling
+add_to_page_cache_lru()).
 
-You could prevent the DNS lookups from occurring by adding entries (properly
-formatted... see the hosts(5) man page) for all your clients into the
-/etc/hosts file on your NFS server nodes.  That's assuming that your nsswitch
-configuration has "files" before "dns" for host lookups.  Depending on how
-many clients you have, that might be the easiest option.
+Commit be4c2d4723a4 added another (local) array of allocated pages, to
+be filled with more data, instead of discarding excess items received
+from the NFS server.  Those additional pages can be used by the next
+nfs_readdir_filler() call (from within the same nfs_readdir() call).
 
-Another option might be to try adding a simple retry mechanism to the part
-of the nfsserver resource agent that checks rpc.statd, something like:
+The leak happens when some of those additional pages are never used
+(copied to the page cache using copy_highpage()).  The pages will be
+freed by nfs_readdir_free_pages(), but their contents will not.  The
+commit did not invoke nfs_readdir_clear_array() (and doing so would
+have been dangerous, because it did not track which of those pages
+were already copied to the page cache, risking double free bugs).
 
-diff --git a/heartbeat/nfsserver b/heartbeat/nfsserver
-index bf59da98..c9dcc74e 100755
---- a/heartbeat/nfsserver
-+++ b/heartbeat/nfsserver
-@@ -334,8 +334,13 @@ nfsserver_systemd_monitor()
-        fi
+How to reproduce the leak:
+
+- Use a kernel with CONFIG_SLUB_DEBUG_ON.
+
+- Create a directory on a NFS mount with more than 100 files with
+  names long enough to use the "kmalloc-32" slab (so we can easily
+  look up the allocation counts):
+
+  for i in `seq 110`; do touch ${i}_0123456789abcdef; done
+
+- Drop all caches:
+
+  echo 3 >/proc/sys/vm/drop_caches
+
+- Check the allocation counter:
+
+  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+  30564391 nfs_readdir_add_to_array+0x73/0xd0 age=534558/4791307/6540952 pid=370-1048386 cpus=0-47 nodes=0-1
+
+- Request a directory listing and check the allocation counters again:
+
+  ls
+  [...]
+  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+  30564511 nfs_readdir_add_to_array+0x73/0xd0 age=207/4792999/6542663 pid=370-1048386 cpus=0-47 nodes=0-1
+
+There are now 120 new allocations.
+
+- Drop all caches and check the counters again:
+
+  echo 3 >/proc/sys/vm/drop_caches
+  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+  30564401 nfs_readdir_add_to_array+0x73/0xd0 age=735/4793524/6543176 pid=370-1048386 cpus=0-47 nodes=0-1
+
+110 allocations are gone, but 10 have leaked and will never be freed.
+
+Unhelpfully, those allocations are explicitly excluded from KMEMLEAK,
+that's why my initial attempts with KMEMLEAK were not successful:
+
+	/*
+	 * Avoid a kmemleak false positive. The pointer to the name is stored
+	 * in a page cache page which kmemleak does not scan.
+	 */
+	kmemleak_not_leak(string->name);
+
+It would be possible to solve this bug without reverting the whole
+commit:
+
+- keep track of which pages were not used, and call
+  nfs_readdir_clear_array() on them, or
+- manually link those pages into the page cache
+
+But for now I have decided to just revert the commit, because the real
+fix would require complex considerations, risking more dangerous
+(crash) bugs, which may seem unsuitable for the stable branches.
+
+Signed-off-by: Max Kellermann <mk@cm4all.com>
+---
+ fs/nfs/dir.c      | 90 ++++-------------------------------------------
+ fs/nfs/internal.h |  3 +-
+ 2 files changed, 7 insertions(+), 86 deletions(-)
+
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 57b6a45576ad..9f44ddc34c7b 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -140,19 +140,12 @@ struct nfs_cache_array {
+ 	struct nfs_cache_array_entry array[0];
+ };
  
-        ocf_log debug "Status: rpc-statd"
--       rpcinfo -t localhost 100024 > /dev/null 2>&1
--       rc=$?
-+       for i in `seq 1 3`; do
-+               rpcinfo -t localhost 100024 >/dev/null 2>&1
-+               rc=$?
-+               if [ $rc -eq 0 ]; then
-+                       break
-+               fi
-+       done
-        if [ "$rc" -ne "0" ]; then
-                ocf_exit_reason "rpc-statd is not running"
-                return $OCF_NOT_RUNNING
-> 
-> Regards,
-> 
-> 
-> Indivar Nair
-> 
-> On Thu, Jul 11, 2019 at 10:19 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> >
-> > On Thu, 11 Jul 2019, Indivar Nair wrote:
-> >
-> > > Hi ...,
-> > >
-> > > I have a 2 node Pacemaker cluster built using CentOS 7.6.1810
-> > > It serves files using NFS and Samba.
-> > >
-> > > Every 15 - 20 minutes, the rpc.statd service fails, and the whole NFS
-> > > service is restarted.
-> > > After investigation, it was found that the service fails after a few
-> > > rounds of monitoring by Pacemaker.
-> > > The Pacemaker's script runs the following command to check whether all
-> > > the services are running -
-> > > ---------------------------------------------------------------------------------------------------------------------------------------
-> > >     rpcinfo > /dev/null 2>&1
-> > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
-> > >     nfs_exec status nfs-idmapd > $fn 2>&1
-> > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
-> >
-> > I would check to make sure your DNS setup is working properly.
-> > rpc.statd uses the canonical hostnames for comparison purposes whenever
-> > it gets an SM_MON or SM_UNMON request from lockd and when it gets an
-> > SM_NOTIFY from a rebooted NFS client.  That involves calls to
-> > getaddrinfo() and getnameinfo() which in turn could result in requests
-> > to a DNS server.  rpc.statd is single-threaded, so if it's blocked
-> > waiting for one of those requests, then it's unable to respond to the
-> > RPC ping (which has a timeout of 10 seconds) generated by the rpcinfo
-> > program.
-> >
-> > I ran into a similar scenario in the past where a client was launching
-> > multiple instances of rpc.statd.  When the client does a v3 mount it
-> > does a similar RPC ping (with a more aggressive timeout) to see if
-> > rpc.statd is running... if not then it calls out to
-> > /usr/sbin/start-statd (which in the past simply called 'exec rpc.statd
-> > --no-notify' but now has additional checks).  Likewise rpc.statd does
-> > it's own RPC ping to make sure there's not one already running.  It
-> > wound up that the user had a flakey DNS server and requests were taking
-> > over 30 seconds to time out, thus thwarting all those additional checks,
-> > and they wound up with multiple copies of rpc.statd running.
-> >
-> > You could be running into a similar scenario here and pacemaker could be
-> > deciding that rpc.statd's not running when it's actually fine.
-> >
-> > -Scott
-> >
-> > > ---------------------------------------------------------------------------------------------------------------------------------------
-> > > The script is scheduled to check every 20 seconds.
-> > >
-> > > This is the message we get in the logs -
-> > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > 127.0.0.1 ALLOWED
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > from 127.0.0.1
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > 127.0.0.1 ALLOWED (cached)
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > from 127.0.0.1
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > 127.0.0.1 ALLOWED (cached)
-> > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > from 127.0.0.1
-> > > -------------------------------------------------------------------------------------------------------------------------------------
-> > >
-> > > After 10 seconds, we get his message -
-> > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > Jul 09 07:34:09 virat-nd01 nfsserver(virat-nfs-daemon)[54087]: ERROR:
-> > > rpc-statd is not running
-> > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > Once we get this error, the NFS service is automatically restarted.
-> > >
-> > > "ERROR: rpc-statd is not running" message is from the pacemaker's
-> > > monitoring script.
-> > > I have pasted that part of the script below.
-> > >
-> > > I disabled monitoring and everything is working fine, since then.
-> > >
-> > > I cant keep the cluster monitoring disabled forever.
-> > >
-> > > Kindly help.
-> > >
-> > > Regards,
-> > >
-> > >
-> > > Indivar Nair
-> > >
-> > > Part of the pacemaker script that does the monitoring
-> > > (/usr/lib/ocf/resources.d/heartbeat/nfsserver)
-> > > =======================================================================
-> > > nfsserver_systemd_monitor()
-> > > {
-> > >     local threads_num
-> > >     local rc
-> > >     local fn
-> > >
-> > >     ocf_log debug "Status: rpcbind"
-> > >     rpcinfo > /dev/null 2>&1
-> > >     rc=$?
-> > >     if [ "$rc" -ne "0" ]; then
-> > >         ocf_exit_reason "rpcbind is not running"
-> > >         return $OCF_NOT_RUNNING
-> > >     fi
-> > >
-> > >     ocf_log debug "Status: nfs-mountd"
-> > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
-> > >     rc=$?
-> > >     if [ "$rc" -ne "0" ]; then
-> > >         ocf_exit_reason "nfs-mountd is not running"
-> > >         return $OCF_NOT_RUNNING
-> > >     fi
-> > >
-> > >     ocf_log debug "Status: nfs-idmapd"
-> > >     fn=`mktemp`
-> > >     nfs_exec status nfs-idmapd > $fn 2>&1
-> > >     rc=$?
-> > >     ocf_log debug "$(cat $fn)"
-> > >     rm -f $fn
-> > >     if [ "$rc" -ne "0" ]; then
-> > >         ocf_exit_reason "nfs-idmapd is not running"
-> > >         return $OCF_NOT_RUNNING
-> > >     fi
-> > >
-> > >     ocf_log debug "Status: rpc-statd"
-> > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
-> > >     rc=$?
-> > >     if [ "$rc" -ne "0" ]; then
-> > >         ocf_exit_reason "rpc-statd is not running"
-> > >         return $OCF_NOT_RUNNING
-> > >     fi
-> > >
-> > >     nfs_exec is-active nfs-server
-> > >     rc=$?
-> > >
-> > >     # Now systemctl is-active can't detect the failure of kernel
-> > > process like nfsd.
-> > >     # So, if the return value of systemctl is-active is 0, check the
-> > > threads number
-> > >     # to make sure the process is running really.
-> > >     # /proc/fs/nfsd/threads has the numbers of the nfsd threads.
-> > >     if [ $rc -eq 0 ]; then
-> > >         threads_num=`cat /proc/fs/nfsd/threads 2>/dev/null`
-> > >         if [ $? -eq 0 ]; then
-> > >             if [ $threads_num -gt 0 ]; then
-> > >                 return $OCF_SUCCESS
-> > >             else
-> > >                 return 3
-> > >             fi
-> > >         else
-> > >             return $OCF_ERR_GENERIC
-> > >         fi
-> > >     fi
-> > >
-> > >     return $rc
-> > > }
-> > > =======================================================================
+-struct readdirvec {
+-	unsigned long nr;
+-	unsigned long index;
+-	struct page *pages[NFS_MAX_READDIR_RAPAGES];
+-};
+-
+ typedef int (*decode_dirent_t)(struct xdr_stream *, struct nfs_entry *, bool);
+ typedef struct {
+ 	struct file	*file;
+ 	struct page	*page;
+ 	struct dir_context *ctx;
+ 	unsigned long	page_index;
+-	struct readdirvec pvec;
+ 	u64		*dir_cookie;
+ 	u64		last_cookie;
+ 	loff_t		current_index;
+@@ -532,10 +525,6 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
+ 	struct nfs_cache_array *array;
+ 	unsigned int count = 0;
+ 	int status;
+-	int max_rapages = NFS_MAX_READDIR_RAPAGES;
+-
+-	desc->pvec.index = desc->page_index;
+-	desc->pvec.nr = 0;
+ 
+ 	scratch = alloc_page(GFP_KERNEL);
+ 	if (scratch == NULL)
+@@ -560,40 +549,20 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
+ 		if (desc->plus)
+ 			nfs_prime_dcache(file_dentry(desc->file), entry);
+ 
+-		status = nfs_readdir_add_to_array(entry, desc->pvec.pages[desc->pvec.nr]);
+-		if (status == -ENOSPC) {
+-			desc->pvec.nr++;
+-			if (desc->pvec.nr == max_rapages)
+-				break;
+-			status = nfs_readdir_add_to_array(entry, desc->pvec.pages[desc->pvec.nr]);
+-		}
++		status = nfs_readdir_add_to_array(entry, page);
+ 		if (status != 0)
+ 			break;
+ 	} while (!entry->eof);
+ 
+-	/*
+-	 * page and desc->pvec.pages[0] are valid, don't need to check
+-	 * whether or not to be NULL.
+-	 */
+-	copy_highpage(page, desc->pvec.pages[0]);
+-
+ out_nopages:
+ 	if (count == 0 || (status == -EBADCOOKIE && entry->eof != 0)) {
+-		array = kmap_atomic(desc->pvec.pages[desc->pvec.nr]);
++		array = kmap(page);
+ 		array->eof_index = array->size;
+ 		status = 0;
+-		kunmap_atomic(array);
++		kunmap(page);
+ 	}
+ 
+ 	put_page(scratch);
+-
+-	/*
+-	 * desc->pvec.nr > 0 means at least one page was completely filled,
+-	 * we should return -ENOSPC. Otherwise function
+-	 * nfs_readdir_xdr_to_array will enter infinite loop.
+-	 */
+-	if (desc->pvec.nr > 0)
+-		return -ENOSPC;
+ 	return status;
+ }
+ 
+@@ -627,24 +596,6 @@ int nfs_readdir_alloc_pages(struct page **pages, unsigned int npages)
+ 	return -ENOMEM;
+ }
+ 
+-/*
+- * nfs_readdir_rapages_init initialize rapages by nfs_cache_array structure.
+- */
+-static
+-void nfs_readdir_rapages_init(nfs_readdir_descriptor_t *desc)
+-{
+-	struct nfs_cache_array *array;
+-	int max_rapages = NFS_MAX_READDIR_RAPAGES;
+-	int index;
+-
+-	for (index = 0; index < max_rapages; index++) {
+-		array = kmap_atomic(desc->pvec.pages[index]);
+-		memset(array, 0, sizeof(struct nfs_cache_array));
+-		array->eof_index = -1;
+-		kunmap_atomic(array);
+-	}
+-}
+-
+ static
+ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, struct inode *inode)
+ {
+@@ -655,12 +606,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 	int status = -ENOMEM;
+ 	unsigned int array_size = ARRAY_SIZE(pages);
+ 
+-	/*
+-	 * This means we hit readdir rdpages miss, the preallocated rdpages
+-	 * are useless, the preallocate rdpages should be reinitialized.
+-	 */
+-	nfs_readdir_rapages_init(desc);
+-
+ 	entry.prev_cookie = 0;
+ 	entry.cookie = desc->last_cookie;
+ 	entry.eof = 0;
+@@ -721,24 +666,9 @@ int nfs_readdir_filler(void *data, struct page* page)
+ 	struct inode	*inode = file_inode(desc->file);
+ 	int ret;
+ 
+-	/*
+-	 * If desc->page_index in range desc->pvec.index and
+-	 * desc->pvec.index + desc->pvec.nr, we get readdir cache hit.
+-	 */
+-	if (desc->page_index >= desc->pvec.index &&
+-		desc->page_index < (desc->pvec.index + desc->pvec.nr)) {
+-		/*
+-		 * page and desc->pvec.pages[x] are valid, don't need to check
+-		 * whether or not to be NULL.
+-		 */
+-		copy_highpage(page, desc->pvec.pages[desc->page_index - desc->pvec.index]);
+-		ret = 0;
+-	} else {
+-		ret = nfs_readdir_xdr_to_array(desc, page, inode);
+-		if (ret < 0)
+-			goto error;
+-	}
+-
++	ret = nfs_readdir_xdr_to_array(desc, page, inode);
++	if (ret < 0)
++		goto error;
+ 	SetPageUptodate(page);
+ 
+ 	if (invalidate_inode_pages2_range(inode->i_mapping, page->index + 1, -1) < 0) {
+@@ -903,7 +833,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 			*desc = &my_desc;
+ 	struct nfs_open_dir_context *dir_ctx = file->private_data;
+ 	int res = 0;
+-	int max_rapages = NFS_MAX_READDIR_RAPAGES;
+ 
+ 	dfprintk(FILE, "NFS: readdir(%pD2) starting at cookie %llu\n",
+ 			file, (long long)ctx->pos);
+@@ -923,12 +852,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	desc->decode = NFS_PROTO(inode)->decode_dirent;
+ 	desc->plus = nfs_use_readdirplus(inode, ctx);
+ 
+-	res = nfs_readdir_alloc_pages(desc->pvec.pages, max_rapages);
+-	if (res < 0)
+-		return -ENOMEM;
+-
+-	nfs_readdir_rapages_init(desc);
+-
+ 	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode))
+ 		res = nfs_revalidate_mapping(inode, file->f_mapping);
+ 	if (res < 0)
+@@ -964,7 +887,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 			break;
+ 	} while (!desc->eof);
+ out:
+-	nfs_readdir_free_pages(desc->pvec.pages, max_rapages);
+ 	if (res > 0)
+ 		res = 0;
+ 	dfprintk(FILE, "NFS: readdir(%pD2) returns %d\n", file, res);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 498fab72f70b..81e2fdff227e 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -69,8 +69,7 @@ struct nfs_clone_mount {
+  * Maximum number of pages that readdir can use for creating
+  * a vmapped array of pages.
+  */
+-#define NFS_MAX_READDIR_PAGES 64
+-#define NFS_MAX_READDIR_RAPAGES 8
++#define NFS_MAX_READDIR_PAGES 8
+ 
+ struct nfs_client_initdata {
+ 	unsigned long init_flags;
+-- 
+2.20.1
+
