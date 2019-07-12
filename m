@@ -2,187 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 278B3674EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 20:02:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 842BC67549
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 21:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfGLSCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Jul 2019 14:02:49 -0400
-Received: from mail-vs1-f46.google.com ([209.85.217.46]:44011 "EHLO
-        mail-vs1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfGLSCt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jul 2019 14:02:49 -0400
-Received: by mail-vs1-f46.google.com with SMTP id j26so7235714vsn.10
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2019 11:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WBDRsvz9ghxcV0Hcoa1x+QL3bWdcbA0vWkPF5MxrNM0=;
-        b=Db+g8Z6E+zsA+fHarRdbdSgRWXQs9UWdeXHh7qvGhPBQ+37Q/DH9Wn7NyYb3XaKuDB
-         5c7gXKS3aUPr56QyJ4AG03JfSagh1VGqRE6degr2UbCoRjgrKc66QxGKpLm16bkhHnrs
-         v0v23htR8wT5S/n1C09mrv223so9yNHshZlzH6zP9Y+tcCpN9oO/aAMCVhS0APISoKT8
-         vTfvCQeAt5DgjwNdQYpCzLK1u5C+VmHAf1M3806ghJexbkTVtqD573yIRE25TBKc4aXg
-         9uNTmtgJCL+3Km5DHy9zqtn/W+oiIEOmWrlG6xsZxYcO85b3jv13CpDcQeluo9t/myWz
-         J3xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WBDRsvz9ghxcV0Hcoa1x+QL3bWdcbA0vWkPF5MxrNM0=;
-        b=MwW+Ntsen1CTbxCTOPC4skUYL8eFyFqzuJynFAoVGsFyCpAwvLf2MF/aUKMH3lR13o
-         7BtNSsWducxNBxhGvV0UcJhE8Jgw7z5rH0iTLUnFMUHnY461jQqLCQTAmaME3o0K3VE/
-         igs7YhYRE5kKvJKY6YDG9c9Pxzia2W19D4EwZbxNAiBnHhx5mhL1fKvMmiywwNJRGB9P
-         WIke2RNsHYqhQ0I0HCs1X7DBtVXs+KcxR9wu4YDaX5YB4DBRwjo4IoA/XMwe/e2vDBnM
-         T5EQrSgWZzj1ARxTSIzJBIJX+yBdyKdQfXao9OzpAgKi2oOOsNWiNhYhX/IqeX2tqWD/
-         10vw==
-X-Gm-Message-State: APjAAAVLSlQ02MMLl11d5wHMokCsV6BiKJeSyjILTt8BdkFtCw4vBCqZ
-        h3qjfJowWCF7uiU/j7CeC/v9Uan8DgCUZBH1tB8zuw==
-X-Google-Smtp-Source: APXvYqzw6la3NphOnuoeEkygsrPScqCjhNza+lEmvnaYpk1NGWAunXF0famfvOQ1oBmt187UmtgbrbKtYGrHgIE0ZQo=
-X-Received: by 2002:a67:8907:: with SMTP id l7mr9725186vsd.194.1562954567883;
- Fri, 12 Jul 2019 11:02:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAN-5tyF2AL8Bx5QS3HGYzzvjw5vnkfmFxWEmqe_BWfvWCVtDFg@mail.gmail.com>
- <1d019c416f69aa7f3ba7fed3bcfd4c08088fba57.camel@hammerspace.com>
- <CAN-5tyG0jdyn8C11v6b8=v3d1p=WoMAhXrAw8mWGEUn-TVXJ=g@mail.gmail.com>
- <f614be728542c2cb9dd026a5e97b78d4e74a30af.camel@hammerspace.com>
- <CAN-5tyHkdmTJZAYwAcfUy4hYOz=KHgdBeTrYMNYiWQaKp7UrJA@mail.gmail.com> <b220fa1ef8b73c99aacb28285af9025d5c7a55fd.camel@hammerspace.com>
-In-Reply-To: <b220fa1ef8b73c99aacb28285af9025d5c7a55fd.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 12 Jul 2019 14:02:36 -0400
-Message-ID: <CAN-5tyEiJUS_HJPCaO+A272f-orQqeRQo-7zF8qMcieZt=410Q@mail.gmail.com>
-Subject: Re: multipath patches
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        id S1727118AbfGLTJL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Jul 2019 15:09:11 -0400
+Received: from mail-eopbgr760130.outbound.protection.outlook.com ([40.107.76.130]:1472
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726976AbfGLTJL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 12 Jul 2019 15:09:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LtUGrEQGDSGP7X8j3kzybHoPoel7mLLXSr5JFjmAe3ABpWzx6FWsUzDsjVp/kYEzVogJQeeEt63/KOmfw2+nKbAjHtUXf+GKsQFAWb3ubYuQfe4nOWBJjhp1GZoJtKrRK9UcO86rtjW+7NxuLNusrsBnLqS4apRTh3yAMhQTTrrZNmLc+H9eXrYr3VpOe478MxHr7MhgW79fsQ7kcZ5zIQqSs1tw20Mgiwnttx+w0jm7x8jXfCCa3rPZni+OI9UOp2/hovRo34SVVVKDH8OxdE0cMdZkvb8w5UD0s6oSK6yibmXFN0osRrUl2kvI1ZyFV8EkYekhihDZrf1lwP3/0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EN+00CRLjdYaUGDo2uVEYG62tqTDM9OLIYK4yjEnyho=;
+ b=Op9P/5/S3qDlphLM4RDtgivxEDNzmQFuhRFsL8/AI7rWScUmIZFFZHMXVEdQ56r8KA7QxvOKh1VZZjOwSF5rqRVemDn/sCteYV2S4BJ5/aAxciB3Gh35TuZ8uZpzwjAdEmJawBvFEjO+cXXzGmC8wDLme4MxlY4WIGZqkIYwkL/Yed+n7Lbzl8Q8CJ88iPBtfqNU9Nll+S9iEV0KGsFr5XJwCpJqwnMejH8GjWzV0azZgRbFoLgxJSxVlwGejAtohCxXS4yhogo1I5PB5QQiA51MLco9OBaRxg7qcJWEUiIYWKVfc8ewO7xyWmJH/Uu6V1fd0J86wseLwM/utZ1bpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=hammerspace.com;dmarc=pass action=none
+ header.from=hammerspace.com;dkim=pass header.d=hammerspace.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EN+00CRLjdYaUGDo2uVEYG62tqTDM9OLIYK4yjEnyho=;
+ b=SUvKh1lfiZhJRiI2PEXiPoNTy72WWbMo0eMuJo82pkDaZ565hd9/KCrjZhGPuwB3OnkLfEYf+Rp6RMHfRk1X5Es9BRAYUBKZF5OkKrL75NSJdqrk1XqqTQGIEbreeuVkmdLTgx9Z3cxVU5lO0/KaQOjy/jU0L5n5Pmazgh7e5/w=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1051.namprd13.prod.outlook.com (10.168.234.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.7; Fri, 12 Jul 2019 19:09:07 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93%5]) with mapi id 15.20.2094.007; Fri, 12 Jul 2019
+ 19:09:07 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "neilb@suse.com" <neilb@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: multipath patches
+Thread-Topic: multipath patches
+Thread-Index: AQHVOBvNTX2CipqtKUShUmL2lFq8ZqbFzciAgAAR7YCAAAsPAIABRcuAgAAKzwCAAAxjAIAAEpQA
+Date:   Fri, 12 Jul 2019 19:09:07 +0000
+Message-ID: <88a507b1974d9a8f9c2afa17f246feab31d6ee09.camel@hammerspace.com>
+References: <CAN-5tyF2AL8Bx5QS3HGYzzvjw5vnkfmFxWEmqe_BWfvWCVtDFg@mail.gmail.com>
+         <1d019c416f69aa7f3ba7fed3bcfd4c08088fba57.camel@hammerspace.com>
+         <CAN-5tyG0jdyn8C11v6b8=v3d1p=WoMAhXrAw8mWGEUn-TVXJ=g@mail.gmail.com>
+         <f614be728542c2cb9dd026a5e97b78d4e74a30af.camel@hammerspace.com>
+         <CAN-5tyHkdmTJZAYwAcfUy4hYOz=KHgdBeTrYMNYiWQaKp7UrJA@mail.gmail.com>
+         <b220fa1ef8b73c99aacb28285af9025d5c7a55fd.camel@hammerspace.com>
+         <CAN-5tyEiJUS_HJPCaO+A272f-orQqeRQo-7zF8qMcieZt=410Q@mail.gmail.com>
+In-Reply-To: <CAN-5tyEiJUS_HJPCaO+A272f-orQqeRQo-7zF8qMcieZt=410Q@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 861c27d7-bd4a-4847-37f4-08d706fc6a23
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1051;
+x-ms-traffictypediagnostic: DM5PR13MB1051:
+x-microsoft-antispam-prvs: <DM5PR13MB105120B723FB27A7390B8BA6B8F20@DM5PR13MB1051.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00963989E5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(39830400003)(366004)(199004)(189003)(8936002)(2351001)(66066001)(5660300002)(102836004)(6116002)(53936002)(3846002)(2906002)(76176011)(221733001)(486006)(6506007)(71190400001)(81156014)(4326008)(6436002)(7736002)(5640700003)(71200400001)(558084003)(478600001)(2171002)(305945005)(2501003)(81166006)(3480700005)(6246003)(1730700003)(6486002)(6512007)(8676002)(446003)(316002)(14454004)(68736007)(26005)(11346002)(54906003)(66446008)(66556008)(64756008)(66946007)(25786009)(36756003)(229853002)(2616005)(118296001)(99286004)(256004)(7116003)(186003)(476003)(76116006)(86362001)(6916009)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1051;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +Sc/C8/9Z+HbntgFSjDWNYJSkk8nb+szRS3SkUK3LzlEHuGi0zXAUzUPqaEe3BVia5G+oRr2WZ+daU1Xx91oIQHntes/cLLgMCkD+Yr/pJOGvCOEiQMBjOCyfgFRYoLhQXPnkj4H79vMsTU61Kni0RoStHZ7wwEsOB6wf85vdC7SA52uzdo+jw0UZnv7pHKAuq3/n9uc1MWgWiE0D/DI7uQDBmjdWoTR+JSDJ4QwrjqhdASAv9EA9thx0L82ja1Nf2xseOwGc5Q5TEpnOGdZ9+GXvqxQQewBK9CEecyvHCzdGUfNGCxWJBDCgl09nsPwoGj8n0thIMGg8wDeodyBToEfEBhm6TA5/VVO0p7ADlXLtmQ3aSempa/pYI1bkTWCpaPJ2iAKKV1DV+dvEIt32uD2jd6jbIo4cHCKAdvI4Vk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EBAFA37387167147A2FE9236888DD2BF@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 861c27d7-bd4a-4847-37f4-08d706fc6a23
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 19:09:07.7773
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1051
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 1:18 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Fri, 2019-07-12 at 12:39 -0400, Olga Kornievskaia wrote:
-> > On Thu, Jul 11, 2019 at 5:13 PM Trond Myklebust <
-> > trondmy@hammerspace.com> wrote:
-> > > On Thu, 2019-07-11 at 16:33 -0400, Olga Kornievskaia wrote:
-> > > > On Thu, Jul 11, 2019 at 3:29 PM Trond Myklebust <
-> > > > trondmy@hammerspace.com> wrote:
-> > > > > On Thu, 2019-07-11 at 15:06 -0400, Olga Kornievskaia wrote:
-> > > > > > Hi Trond,
-> > > > > >
-> > > > > > I see that you have nconnect patches in your testing branch
-> > > > > > (as
-> > > > > > well
-> > > > > > as your linux-next and I assume they are the same).  There is
-> > > > > > something wrong with that version. A mount hangs the machine.
-> > > > > >
-> > > > > > [  132.143379] watchdog: BUG: soft lockup - CPU#0 stuck for
-> > > > > > 23s!
-> > > > > > [mount.nfs:2624]
-> > > > > >
-> > > > > > I don't have such problems with the patch series that Neil
-> > > > > > has
-> > > > > > posted.
-> > > > > >
-> > > > > > Thank you.
-> > > > >
-> > > > > How are the patchsets different? As far as I know, all I did
-> > > > > was
-> > > > > apply
-> > > > > the 3 patches that Neil added to my existing branch.
-> > > >
-> > > > I'm not sure. I had a problem with your "multipath" branch before
-> > > > and
-> > > > I recall what I did is went back and redownloaded your posted
-> > > > patches.
-> > > > That was when I was testing performance. So if you haven't
-> > > > touched
-> > > > that branch and just used it I think it's the same problem.
-> > > >
-> > > > In the current testing branch I don't see several patches that
-> > > > Neil
-> > > > has added (posted) to the mailing list. So I'm not sure what you
-> > > > mean
-> > > > you added 3 of his patches on top of yours. At most I can say
-> > > > maybe
-> > > > you added 2 of his (one that allows for v2 and v3 and another
-> > > > that
-> > > > does state operations on a single connection. There are no
-> > > > patches
-> > > > for
-> > > > sunrpc stats that were posted).
-> > > >
-> > > > What I know is that if I revert your branch to
-> > > > bf11fbdb20b385157b046ea7781f04d0c62554a3 before patches and apply
-> > > > Neils patches. All is fine. I really don't want to debug a non-
-> > > > working
-> > > > version when there is one that works.
-> > >
-> > > Sure, but that is not really an option given the rules for how
-> > > trees in
-> > > linux-next are supposed to work. They are considered to be more or
-> > > less
-> > > stable.
-> > >
-> > > Anyhow, I think I've found the bug. Neil had silently fixed it in
-> > > one
-> > > of my patches, so I've added an incremental patch that does more or
-> > > less what he did.
-> >
-> > I just pulled and I still have a problem with the nconnect mount.
-> > Machine still hangs.
-> >
-> > Stack trace isn't in NFS but I'm betting it's somehow related
-> >
-> > [  235.756747] general protection fault: 0000 [#1] SMP PTI
-> > [  235.765187] CPU: 0 PID: 2780 Comm: pool Tainted: G        W
-> > 5.2.0-rc7+ #29
-> > [  235.768555] Hardware name: VMware, Inc. VMware Virtual
-> > Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
-> > [  235.774368] RIP: 0010:kmem_cache_alloc_node_trace+0x10b/0x1e0
-> > [  235.777576] Code: 4d 89 e1 41 f6 44 24 0b 04 0f 84 5f ff ff ff 4c
-> > 89 e7 e8 08 b6 01 00 49 89 c1 e9 4f ff ff ff 41 8b 41 20 49 8b 39 48
-> > 8d 4a 01 <49> 8b 1c 06 4c 89 f0 65 48 0f c7 0f 0f 94 c0 84 c0 0f 84
-> > 36
-> > ff ff
-> > [  235.786811] RSP: 0018:ffffbc7c4200fe58 EFLAGS: 00010246
-> > [  235.789778] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> > 0000000000002b7c
-> > [  235.793204] RDX: 0000000000002b7b RSI: 0000000000000dc0 RDI:
-> > 000000000002d96
-> > [  235.796182] RBP: 0000000000000dc0 R08: ffff9c7bfa82d960 R09:
-> > ffff9c7bcfc06d00
-> > [  235.799135] R10: ffff9c7bfddf0240 R11: 0000000000000001 R12:
-> > ffff9c7bcfc06d00
-> > [  235.802094] R13: 0000000000000000 R14: f000ff53f000ff53 R15:
-> > ffffffffbe2d4d71
-> > [  235.805072] FS:  00007fd7f1d48700(0000) GS:ffff9c7bfa800000(0000)
-> > knlGS:0000000000000000
-> > [  235.808430] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  235.810762] CR2: 00007fd7f0eb65a4 CR3: 0000000012046005 CR4:
-> > 00000000001606f0
-> > [  235.813662] Call Trace:
-> > [  235.814694]  alloc_rt_sched_group+0xf1/0x250
-> > [  235.816439]  sched_create_group+0x59/0x70
-> > [  235.818094]  sched_autogroup_create_attach+0x3a/0x160
-> > [  235.820148]  ksys_setsid+0xeb/0x100
-> > [  235.821645]  __ia32_sys_setsid+0xa/0x10
-> > [  235.823216]  do_syscall_64+0x55/0x1a0
-> > [  235.824710]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
->
-> Ah.. Missing xprt_get(). Fixed in the 'testing' branch now. I'll send
-> out a patch for review.
-
-Hi Trond,
-
-With the latest patch in the testing branch, I can mount.
-
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gRnJpLCAyMDE5LTA3LTEyIGF0IDE0OjAyIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gDQo+IEhpIFRyb25kLA0KPiANCj4gV2l0aCB0aGUgbGF0ZXN0IHBhdGNoIGluIHRoZSB0
+ZXN0aW5nIGJyYW5jaCwgSSBjYW4gbW91bnQuDQoNCkV4Y2VsbGVudCEgVGhhbmtzIGZvciB5b3Vy
+IHBhdGllbmNlIGFuZCBmb3IgdGVzdGluZy4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4
+IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1t
+ZXJzcGFjZS5jb20NCg0KDQo=
