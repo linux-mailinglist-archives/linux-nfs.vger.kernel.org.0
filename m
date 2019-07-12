@@ -2,179 +2,187 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E126741D
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 19:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 278B3674EB
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2019 20:02:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfGLRXQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Jul 2019 13:23:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41781 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfGLRXQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jul 2019 13:23:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id j5so17758879ioj.8
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2019 10:23:15 -0700 (PDT)
+        id S1726628AbfGLSCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Jul 2019 14:02:49 -0400
+Received: from mail-vs1-f46.google.com ([209.85.217.46]:44011 "EHLO
+        mail-vs1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfGLSCt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jul 2019 14:02:49 -0400
+Received: by mail-vs1-f46.google.com with SMTP id j26so7235714vsn.10
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2019 11:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QRxEucOKvh330u2yQw+VANkemc34EsEZ8HNyJNjE/r8=;
-        b=ib20pIjQm9lM9aOuIq44c+8ONg3NKPzPDELDKEoESE0S5HaF8wzimWXUj1KxkLwuUG
-         E7DrvKhch/hxBrQil7F1s/U/AMcC7bnbMdNaioiKxUkLSh4JSBvTcXrUAurFCpGYT6uw
-         GDNJYb3u/lnW326JjbNRUQWboLwR6eU5dfsTkSXCsZ6dA6XmvO8eO++lXlGJgwiERz4a
-         SOofjmwD+sdrOltQl654nZGRw9mbEYGi6nHs9x30ds7urNA4M6yJ66jCJFRSqLgxSaEe
-         CAHDUDATZV99uWgRBJXA2bp0CSfrBdoSgYDR4R2+p7wcEPk/ndtXFHcsraxlozHsS50P
-         bvxg==
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WBDRsvz9ghxcV0Hcoa1x+QL3bWdcbA0vWkPF5MxrNM0=;
+        b=Db+g8Z6E+zsA+fHarRdbdSgRWXQs9UWdeXHh7qvGhPBQ+37Q/DH9Wn7NyYb3XaKuDB
+         5c7gXKS3aUPr56QyJ4AG03JfSagh1VGqRE6degr2UbCoRjgrKc66QxGKpLm16bkhHnrs
+         v0v23htR8wT5S/n1C09mrv223so9yNHshZlzH6zP9Y+tcCpN9oO/aAMCVhS0APISoKT8
+         vTfvCQeAt5DgjwNdQYpCzLK1u5C+VmHAf1M3806ghJexbkTVtqD573yIRE25TBKc4aXg
+         9uNTmtgJCL+3Km5DHy9zqtn/W+oiIEOmWrlG6xsZxYcO85b3jv13CpDcQeluo9t/myWz
+         J3xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QRxEucOKvh330u2yQw+VANkemc34EsEZ8HNyJNjE/r8=;
-        b=Hj/OKTAuZpRetIWs3syC30SR71c58WrJ5uDTmun9NtWiIa1IHurDasBfhGwQBwi58o
-         W7jnDdShIDmPUwVP/mwG2iIdcult3D/f2mUVqLPD3ZoCsFrYegWPgA3joncPz/LgBe/r
-         tu0wimT4XepJYhZX0NtGwYGvMwTp9BhzRT5VlkGkyh15Usyhua1jIWSSXo6AJqCJEtmu
-         DdxQszTYO86N1yUaq5ivW08QmN3AiNIybVHEuaCJFGmu3TjEYcRqB4O5/v3Dnna3YGgD
-         HDC1Ekc9Ntk2+y75C4JvtQkI0pJWc1QNTFdAB9morctVDr97GNSjLmjtgmh3P4i1o9Ke
-         UymA==
-X-Gm-Message-State: APjAAAVfPbDy1i61Lu1fAgVTaNpTGvyqRIHQ5q+VvzcR8zwq1bKvaWtF
-        G8c/nzNYiNN3A2vcGbXv4wBsIHpPFg==
-X-Google-Smtp-Source: APXvYqykCf/2PZb1sQF34OEahG4XMeUkthu5sdhzoEJis9oDMxlN1nKOASyXhi3ZsnSc25MPALBOaw==
-X-Received: by 2002:a02:3b62:: with SMTP id i34mr13091154jaf.91.1562952194706;
-        Fri, 12 Jul 2019 10:23:14 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id i23sm6392496ioj.24.2019.07.12.10.23.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:23:13 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Olga Kornievskaia <aglo@umich.edu>, Neil Brown <neilb@suse.com>
-Subject: [PATCH] SUNRPC: Fix transport accounting when caller specifies an rpc_xprt
-Date:   Fri, 12 Jul 2019 13:21:06 -0400
-Message-Id: <20190712172106.18893-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WBDRsvz9ghxcV0Hcoa1x+QL3bWdcbA0vWkPF5MxrNM0=;
+        b=MwW+Ntsen1CTbxCTOPC4skUYL8eFyFqzuJynFAoVGsFyCpAwvLf2MF/aUKMH3lR13o
+         7BtNSsWducxNBxhGvV0UcJhE8Jgw7z5rH0iTLUnFMUHnY461jQqLCQTAmaME3o0K3VE/
+         igs7YhYRE5kKvJKY6YDG9c9Pxzia2W19D4EwZbxNAiBnHhx5mhL1fKvMmiywwNJRGB9P
+         WIke2RNsHYqhQ0I0HCs1X7DBtVXs+KcxR9wu4YDaX5YB4DBRwjo4IoA/XMwe/e2vDBnM
+         T5EQrSgWZzj1ARxTSIzJBIJX+yBdyKdQfXao9OzpAgKi2oOOsNWiNhYhX/IqeX2tqWD/
+         10vw==
+X-Gm-Message-State: APjAAAVLSlQ02MMLl11d5wHMokCsV6BiKJeSyjILTt8BdkFtCw4vBCqZ
+        h3qjfJowWCF7uiU/j7CeC/v9Uan8DgCUZBH1tB8zuw==
+X-Google-Smtp-Source: APXvYqzw6la3NphOnuoeEkygsrPScqCjhNza+lEmvnaYpk1NGWAunXF0famfvOQ1oBmt187UmtgbrbKtYGrHgIE0ZQo=
+X-Received: by 2002:a67:8907:: with SMTP id l7mr9725186vsd.194.1562954567883;
+ Fri, 12 Jul 2019 11:02:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAN-5tyF2AL8Bx5QS3HGYzzvjw5vnkfmFxWEmqe_BWfvWCVtDFg@mail.gmail.com>
+ <1d019c416f69aa7f3ba7fed3bcfd4c08088fba57.camel@hammerspace.com>
+ <CAN-5tyG0jdyn8C11v6b8=v3d1p=WoMAhXrAw8mWGEUn-TVXJ=g@mail.gmail.com>
+ <f614be728542c2cb9dd026a5e97b78d4e74a30af.camel@hammerspace.com>
+ <CAN-5tyHkdmTJZAYwAcfUy4hYOz=KHgdBeTrYMNYiWQaKp7UrJA@mail.gmail.com> <b220fa1ef8b73c99aacb28285af9025d5c7a55fd.camel@hammerspace.com>
+In-Reply-To: <b220fa1ef8b73c99aacb28285af9025d5c7a55fd.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 12 Jul 2019 14:02:36 -0400
+Message-ID: <CAN-5tyEiJUS_HJPCaO+A272f-orQqeRQo-7zF8qMcieZt=410Q@mail.gmail.com>
+Subject: Re: multipath patches
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "neilb@suse.com" <neilb@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ensure that we do the required accounting for the round robin queue
-when the caller to rpc_init_task() has passed in a transport to be
-used.
+On Fri, Jul 12, 2019 at 1:18 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Fri, 2019-07-12 at 12:39 -0400, Olga Kornievskaia wrote:
+> > On Thu, Jul 11, 2019 at 5:13 PM Trond Myklebust <
+> > trondmy@hammerspace.com> wrote:
+> > > On Thu, 2019-07-11 at 16:33 -0400, Olga Kornievskaia wrote:
+> > > > On Thu, Jul 11, 2019 at 3:29 PM Trond Myklebust <
+> > > > trondmy@hammerspace.com> wrote:
+> > > > > On Thu, 2019-07-11 at 15:06 -0400, Olga Kornievskaia wrote:
+> > > > > > Hi Trond,
+> > > > > >
+> > > > > > I see that you have nconnect patches in your testing branch
+> > > > > > (as
+> > > > > > well
+> > > > > > as your linux-next and I assume they are the same).  There is
+> > > > > > something wrong with that version. A mount hangs the machine.
+> > > > > >
+> > > > > > [  132.143379] watchdog: BUG: soft lockup - CPU#0 stuck for
+> > > > > > 23s!
+> > > > > > [mount.nfs:2624]
+> > > > > >
+> > > > > > I don't have such problems with the patch series that Neil
+> > > > > > has
+> > > > > > posted.
+> > > > > >
+> > > > > > Thank you.
+> > > > >
+> > > > > How are the patchsets different? As far as I know, all I did
+> > > > > was
+> > > > > apply
+> > > > > the 3 patches that Neil added to my existing branch.
+> > > >
+> > > > I'm not sure. I had a problem with your "multipath" branch before
+> > > > and
+> > > > I recall what I did is went back and redownloaded your posted
+> > > > patches.
+> > > > That was when I was testing performance. So if you haven't
+> > > > touched
+> > > > that branch and just used it I think it's the same problem.
+> > > >
+> > > > In the current testing branch I don't see several patches that
+> > > > Neil
+> > > > has added (posted) to the mailing list. So I'm not sure what you
+> > > > mean
+> > > > you added 3 of his patches on top of yours. At most I can say
+> > > > maybe
+> > > > you added 2 of his (one that allows for v2 and v3 and another
+> > > > that
+> > > > does state operations on a single connection. There are no
+> > > > patches
+> > > > for
+> > > > sunrpc stats that were posted).
+> > > >
+> > > > What I know is that if I revert your branch to
+> > > > bf11fbdb20b385157b046ea7781f04d0c62554a3 before patches and apply
+> > > > Neils patches. All is fine. I really don't want to debug a non-
+> > > > working
+> > > > version when there is one that works.
+> > >
+> > > Sure, but that is not really an option given the rules for how
+> > > trees in
+> > > linux-next are supposed to work. They are considered to be more or
+> > > less
+> > > stable.
+> > >
+> > > Anyhow, I think I've found the bug. Neil had silently fixed it in
+> > > one
+> > > of my patches, so I've added an incremental patch that does more or
+> > > less what he did.
+> >
+> > I just pulled and I still have a problem with the nconnect mount.
+> > Machine still hangs.
+> >
+> > Stack trace isn't in NFS but I'm betting it's somehow related
+> >
+> > [  235.756747] general protection fault: 0000 [#1] SMP PTI
+> > [  235.765187] CPU: 0 PID: 2780 Comm: pool Tainted: G        W
+> > 5.2.0-rc7+ #29
+> > [  235.768555] Hardware name: VMware, Inc. VMware Virtual
+> > Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> > [  235.774368] RIP: 0010:kmem_cache_alloc_node_trace+0x10b/0x1e0
+> > [  235.777576] Code: 4d 89 e1 41 f6 44 24 0b 04 0f 84 5f ff ff ff 4c
+> > 89 e7 e8 08 b6 01 00 49 89 c1 e9 4f ff ff ff 41 8b 41 20 49 8b 39 48
+> > 8d 4a 01 <49> 8b 1c 06 4c 89 f0 65 48 0f c7 0f 0f 94 c0 84 c0 0f 84
+> > 36
+> > ff ff
+> > [  235.786811] RSP: 0018:ffffbc7c4200fe58 EFLAGS: 00010246
+> > [  235.789778] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+> > 0000000000002b7c
+> > [  235.793204] RDX: 0000000000002b7b RSI: 0000000000000dc0 RDI:
+> > 000000000002d96
+> > [  235.796182] RBP: 0000000000000dc0 R08: ffff9c7bfa82d960 R09:
+> > ffff9c7bcfc06d00
+> > [  235.799135] R10: ffff9c7bfddf0240 R11: 0000000000000001 R12:
+> > ffff9c7bcfc06d00
+> > [  235.802094] R13: 0000000000000000 R14: f000ff53f000ff53 R15:
+> > ffffffffbe2d4d71
+> > [  235.805072] FS:  00007fd7f1d48700(0000) GS:ffff9c7bfa800000(0000)
+> > knlGS:0000000000000000
+> > [  235.808430] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  235.810762] CR2: 00007fd7f0eb65a4 CR3: 0000000012046005 CR4:
+> > 00000000001606f0
+> > [  235.813662] Call Trace:
+> > [  235.814694]  alloc_rt_sched_group+0xf1/0x250
+> > [  235.816439]  sched_create_group+0x59/0x70
+> > [  235.818094]  sched_autogroup_create_attach+0x3a/0x160
+> > [  235.820148]  ksys_setsid+0xeb/0x100
+> > [  235.821645]  __ia32_sys_setsid+0xa/0x10
+> > [  235.823216]  do_syscall_64+0x55/0x1a0
+> > [  235.824710]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+>
+> Ah.. Missing xprt_get(). Fixed in the 'testing' branch now. I'll send
+> out a patch for review.
 
-Reported-by: Olga Kornievskaia <aglo@umich.edu>
-Reported-by: Neil Brown <neilb@suse.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- include/linux/sunrpc/clnt.h |  2 ++
- net/sunrpc/clnt.c           | 42 ++++++++++++++++++-------------------
- net/sunrpc/sched.c          |  3 ++-
- 3 files changed, 24 insertions(+), 23 deletions(-)
+Hi Trond,
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 4619098affa3..4e070e00c143 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -164,6 +164,8 @@ void		rpc_shutdown_client(struct rpc_clnt *);
- void		rpc_release_client(struct rpc_clnt *);
- void		rpc_task_release_transport(struct rpc_task *);
- void		rpc_task_release_client(struct rpc_task *);
-+struct rpc_xprt	*rpc_task_get_xprt(struct rpc_clnt *clnt,
-+		struct rpc_xprt *xprt);
- 
- int		rpcb_create_local(struct net *);
- void		rpcb_put_local(struct net *);
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index d599fab8adcb..383555d2b522 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -978,11 +978,10 @@ struct rpc_clnt *rpc_bind_new_program(struct rpc_clnt *old,
- }
- EXPORT_SYMBOL_GPL(rpc_bind_new_program);
- 
--static struct rpc_xprt *
--rpc_task_get_xprt(struct rpc_clnt *clnt)
-+struct rpc_xprt *
-+rpc_task_get_xprt(struct rpc_clnt *clnt, struct rpc_xprt *xprt)
- {
- 	struct rpc_xprt_switch *xps;
--	struct rpc_xprt *xprt= xprt_iter_get_next(&clnt->cl_xpi);
- 
- 	if (!xprt)
- 		return NULL;
-@@ -995,24 +994,6 @@ rpc_task_get_xprt(struct rpc_clnt *clnt)
- 	return xprt;
- }
- 
--static struct rpc_xprt *
--rpc_task_get_first_xprt(struct rpc_clnt *clnt)
--{
--	struct rpc_xprt_switch *xps;
--	struct rpc_xprt *xprt;
--
--	rcu_read_lock();
--	xprt = xprt_get(rcu_dereference(clnt->cl_xprt));
--	if (xprt) {
--		atomic_long_inc(&xprt->queuelen);
--		xps = rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
--		atomic_long_inc(&xps->xps_queuelen);
--	}
--	rcu_read_unlock();
--
--	return xprt;
--}
--
- static void
- rpc_task_release_xprt(struct rpc_clnt *clnt, struct rpc_xprt *xprt)
- {
-@@ -1057,6 +1038,23 @@ void rpc_task_release_client(struct rpc_task *task)
- 	}
- }
- 
-+static struct rpc_xprt *
-+rpc_task_get_first_xprt(struct rpc_clnt *clnt)
-+{
-+	struct rpc_xprt *xprt;
-+
-+	rcu_read_lock();
-+	xprt = xprt_get(rcu_dereference(clnt->cl_xprt));
-+	rcu_read_unlock();
-+	return rpc_task_get_xprt(clnt, xprt);
-+}
-+
-+static struct rpc_xprt *
-+rpc_task_get_next_xprt(struct rpc_clnt *clnt)
-+{
-+	return rpc_task_get_xprt(clnt, xprt_iter_get_next(&clnt->cl_xpi));
-+}
-+
- static
- void rpc_task_set_transport(struct rpc_task *task, struct rpc_clnt *clnt)
- {
-@@ -1065,7 +1063,7 @@ void rpc_task_set_transport(struct rpc_task *task, struct rpc_clnt *clnt)
- 	if (task->tk_flags & RPC_TASK_NO_ROUND_ROBIN)
- 		task->tk_xprt = rpc_task_get_first_xprt(clnt);
- 	else
--		task->tk_xprt = rpc_task_get_xprt(clnt);
-+		task->tk_xprt = rpc_task_get_next_xprt(clnt);
- }
- 
- static
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 8a0779e963f9..1f275aba786f 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -1092,7 +1092,8 @@ static void rpc_init_task(struct rpc_task *task, const struct rpc_task_setup *ta
- 	/* Initialize workqueue for async tasks */
- 	task->tk_workqueue = task_setup_data->workqueue;
- 
--	task->tk_xprt = xprt_get(task_setup_data->rpc_xprt);
-+	task->tk_xprt = rpc_task_get_xprt(task_setup_data->rpc_client,
-+			xprt_get(task_setup_data->rpc_xprt));
- 
- 	task->tk_op_cred = get_rpccred(task_setup_data->rpc_op_cred);
- 
--- 
-2.21.0
+With the latest patch in the testing branch, I can mount.
 
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
