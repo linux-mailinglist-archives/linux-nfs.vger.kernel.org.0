@@ -2,304 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4037B67ABF
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2019 17:01:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2708567CBA
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jul 2019 04:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfGMPBo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 13 Jul 2019 11:01:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40452 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfGMPBo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 13 Jul 2019 11:01:44 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e8so12382947otl.7
-        for <linux-nfs@vger.kernel.org>; Sat, 13 Jul 2019 08:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=techterra-in.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IakPEVndv6+5kSt7KLos8mbf2liPZSFNFP8OVEIa1iE=;
-        b=M24hlxohJDoP3wJBUYCde7FYQQRA124FyXTCMs9TmHff1AKU6rkB11R3e+pk5hyoQa
-         Fl65HJsUEpXattQbMktfJwPtjAqxhv6D/Iri4Qeajr393JH6kqwqendaPvFU0SzEfCPT
-         4jzx1GyzlpGdE9Vb66Uldjav/ogrtWplAufPdzsnLCsDY9ptbhLt6zjDxy8akTRAZ1qn
-         zrh/txKuTic3Aawk0Kxj7am5QJpkLb+jDBxFGJsAwQR8Ofjnmg5St+s4FWv1XC0d8oJL
-         uGu5j56qsKD1sriShvhvtxzS4EZF9bWow7hu1o/O/vkUyXFBh76IsYebbbZKWfWauQoj
-         g2Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IakPEVndv6+5kSt7KLos8mbf2liPZSFNFP8OVEIa1iE=;
-        b=nivejxSC8I+VmpoXJ6kE4laX3MiAVNZA/fveQvQWlfgYqKjiPAl2BzETOVijrBIEb6
-         0iETeEiPO139uKCvoreF5/VuoLwY9AMUy/DuaWefMVEfjI/22RIJB+7Blmwly6dkjUER
-         FrxGH8hFNpfK3IhNxwRai+05p2X2jZVxuUq6tldraZ7Eijk6CDJ5BwK8iR3+dEWZK6Ok
-         cOhGOo7fFiEuq1EN68R4MRdKGfuXmkt+E8IhZfw8X5iLIO38uU6ppXovCfY8qT6M+Nfm
-         kSH+kS3BCVUQ65yoZtIdIPsEnhwZ/gtwAA1PAnKholOtKobPxK+n/EO+pUzH+AP9ajzL
-         /8yw==
-X-Gm-Message-State: APjAAAWq/lzyvKz12PxFognYdSnrix8IkPJ88VyDnxz/sNOIQn+dPC6x
-        Bqele7WrM5pDUDQw0yLzyNcCzm5vtF89RtcDbVozhVbn
-X-Google-Smtp-Source: APXvYqzXJWQ+c/noZGgtiakgj3JHCYM7Ot/7LmnNI0WOqjqh/GzkqUrm1yIog9mk5z7iIO9nmRR9UoaY0zV0gidJS6g=
-X-Received: by 2002:a9d:560b:: with SMTP id e11mr13266458oti.129.1563030102927;
- Sat, 13 Jul 2019 08:01:42 -0700 (PDT)
+        id S1728106AbfGNCpt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 13 Jul 2019 22:45:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56550 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727918AbfGNCpt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 13 Jul 2019 22:45:49 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 12EC11D3CA4F278F5E32;
+        Sun, 14 Jul 2019 10:45:46 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 14 Jul 2019
+ 10:45:40 +0800
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     Vasily Averin <vvs@virtuozzo.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+ <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+ <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
+ <20190712140729.GA11583@kroah.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
+Date:   Sun, 14 Jul 2019 10:45:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
- <20190711164937.GA4131@coeurl.usersys.redhat.com> <CALuPYL0+VdUsjeFx70xJkJUxc8SOdsTzALeeHcfd33fx4E_iTg@mail.gmail.com>
- <20190712141657.GB4131@coeurl.usersys.redhat.com>
-In-Reply-To: <20190712141657.GB4131@coeurl.usersys.redhat.com>
-From:   Indivar Nair <indivar.nair@techterra.in>
-Date:   Sat, 13 Jul 2019 20:31:06 +0530
-Message-ID: <CALuPYL13mQDg_F4rTv2FK8SEgyS56aRnv2MgNu=KUL0W3BmhEQ@mail.gmail.com>
-Subject: Re: rpc.statd dies because of pacemaker monitoring
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190712140729.GA11583@kroah.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks once again, Scott,
+On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
+> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
+>> On 2019/7/11 21:57, Vasily Averin wrote:
+>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
+>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>>>>> list to form a ring or lose other members of the list.
+>>>>>
+>>>>> I think is not enough to _prevent_ 2nd register attempt,
+>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>>>>
+>>>>
+>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+>>>>
+>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
+>>>>
+>>>> Duplicate registration was checked in notifier_chain_register() but only 
+>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
+>>>> ("kernel/notifier.c: double register detection")
+>>>>
+>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>>>>  which triggers an alarm and exits when a duplicate registration is detected.
+>>>>
+>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>>>>> and it can lead to host crash in any time: 
+>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>>>>> on the other hand you can never call 2nd unregister at all.
+>>>>
+>>>> Since the member was not added to the linked list at the time of the second registration, 
+>>>> no linked list ring was formed. 
+>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
+>>>> After patching, the fault has been alleviated
+>>>
+>>> You are wrong here.
+>>> 2nd notifier's registration is a pure bug, this should never happen.
+>>> If you know the way to reproduce this situation -- you need to fix it. 
+>>>
+>>> 2nd registration can happen in 2 cases:
+>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
+>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+>>> 2) some subsystem is registered twice, for example from  different namespaces.
+>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+>>> in second namespace, it also can lead to unexpacted behaviour.
+>>>
+>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
+>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
+>> notifier_chain_cond_register() direct exit without triggering WARN() ?
+> 
+> It should recover from this, if it can be detected.  The main point is
+> that not all apis have to be this "robust" when used within the kernel
+> as we do allow for the callers to know what they are doing :)
+> 
+In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
+ We can intercept this situation and avoid forming a linked list ring to make the API more rob
 
-The patch seems like a neat solution
-It will declare rpc.statd dead only after checking multiple times. Super.
-I will patch the nfsserver resource file.
-(It should probably be added to the original source code.)
+> If this does not cause any additional problems or slow downs, it's
+> probably fine to add.
+> 
+Notifier_chain_register() is not a system hotspot function.
+At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
+It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
+At the same time, avoiding the formation of a link ring can make the system more robust.
 
-We have a proper entry for 127.0.0.1 in the hosts file and the
-nsswtich.conf file says, "files dns".
-So if it checks the /etc/hosts first, why would the pacemaker's check timeout?
-Shouldn't pacemaker get a quick response?
+> thanks,
+> 
+> greg k-h
+> 
+> .
+> 
+Thanks
 
-Localhost entries in the /etc/hosts file -
--------------------------------------------------------------------------------------------------------------------------------------
-127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
--------------------------------------------------------------------------------------------------------------------------------------
-
-Regards,
-
-
-Indivar Nair
+Xiaoming Ni
 
 
-
-
-
-
-On Fri, Jul 12, 2019 at 7:47 PM Scott Mayhew <smayhew@redhat.com> wrote:
->
-> On Fri, 12 Jul 2019, Indivar Nair wrote:
->
-> > Hi Scott,
-> >
-> > Thanks a lot.
-> > Yes, it is a 10+ year old AD setup, which was migrated to Samba4AD
-> > (samba+named) a few years ago.
-> > It has lot of stale entries, and fwd - rev lookup mismatches.
-> >
-> > Will start cleaning up DNS right away.
-> >
-> > In the meantime, is there any way to increase the rpc ping timeout?
->
-> You could build the rpcinfo.c program from source (it's in the rpcbind
-> git tree) with a longer timeout.
->
-> > OR
-> > Is there any way to temporarily disable DNS lookups by lockd?
->
-> rpc.statd is doing the DNS lookups, and no there's not a way to disable it.
-> Doing so would probably make the reboot notifications less reliable, and
-> clients wouldn't know to reclaim locks, and the risk of data corruption
-> goes up.
->
-> You could prevent the DNS lookups from occurring by adding entries (properly
-> formatted... see the hosts(5) man page) for all your clients into the
-> /etc/hosts file on your NFS server nodes.  That's assuming that your nsswitch
-> configuration has "files" before "dns" for host lookups.  Depending on how
-> many clients you have, that might be the easiest option.
->
-> Another option might be to try adding a simple retry mechanism to the part
-> of the nfsserver resource agent that checks rpc.statd, something like:
->
-> diff --git a/heartbeat/nfsserver b/heartbeat/nfsserver
-> index bf59da98..c9dcc74e 100755
-> --- a/heartbeat/nfsserver
-> +++ b/heartbeat/nfsserver
-> @@ -334,8 +334,13 @@ nfsserver_systemd_monitor()
->         fi
->
->         ocf_log debug "Status: rpc-statd"
-> -       rpcinfo -t localhost 100024 > /dev/null 2>&1
-> -       rc=$?
-> +       for i in `seq 1 3`; do
-> +               rpcinfo -t localhost 100024 >/dev/null 2>&1
-> +               rc=$?
-> +               if [ $rc -eq 0 ]; then
-> +                       break
-> +               fi
-> +       done
->         if [ "$rc" -ne "0" ]; then
->                 ocf_exit_reason "rpc-statd is not running"
->                 return $OCF_NOT_RUNNING
-> >
-> > Regards,
-> >
-> >
-> > Indivar Nair
-> >
-> > On Thu, Jul 11, 2019 at 10:19 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> > >
-> > > On Thu, 11 Jul 2019, Indivar Nair wrote:
-> > >
-> > > > Hi ...,
-> > > >
-> > > > I have a 2 node Pacemaker cluster built using CentOS 7.6.1810
-> > > > It serves files using NFS and Samba.
-> > > >
-> > > > Every 15 - 20 minutes, the rpc.statd service fails, and the whole NFS
-> > > > service is restarted.
-> > > > After investigation, it was found that the service fails after a few
-> > > > rounds of monitoring by Pacemaker.
-> > > > The Pacemaker's script runs the following command to check whether all
-> > > > the services are running -
-> > > > ---------------------------------------------------------------------------------------------------------------------------------------
-> > > >     rpcinfo > /dev/null 2>&1
-> > > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
-> > > >     nfs_exec status nfs-idmapd > $fn 2>&1
-> > > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
-> > >
-> > > I would check to make sure your DNS setup is working properly.
-> > > rpc.statd uses the canonical hostnames for comparison purposes whenever
-> > > it gets an SM_MON or SM_UNMON request from lockd and when it gets an
-> > > SM_NOTIFY from a rebooted NFS client.  That involves calls to
-> > > getaddrinfo() and getnameinfo() which in turn could result in requests
-> > > to a DNS server.  rpc.statd is single-threaded, so if it's blocked
-> > > waiting for one of those requests, then it's unable to respond to the
-> > > RPC ping (which has a timeout of 10 seconds) generated by the rpcinfo
-> > > program.
-> > >
-> > > I ran into a similar scenario in the past where a client was launching
-> > > multiple instances of rpc.statd.  When the client does a v3 mount it
-> > > does a similar RPC ping (with a more aggressive timeout) to see if
-> > > rpc.statd is running... if not then it calls out to
-> > > /usr/sbin/start-statd (which in the past simply called 'exec rpc.statd
-> > > --no-notify' but now has additional checks).  Likewise rpc.statd does
-> > > it's own RPC ping to make sure there's not one already running.  It
-> > > wound up that the user had a flakey DNS server and requests were taking
-> > > over 30 seconds to time out, thus thwarting all those additional checks,
-> > > and they wound up with multiple copies of rpc.statd running.
-> > >
-> > > You could be running into a similar scenario here and pacemaker could be
-> > > deciding that rpc.statd's not running when it's actually fine.
-> > >
-> > > -Scott
-> > >
-> > > > ---------------------------------------------------------------------------------------------------------------------------------------
-> > > > The script is scheduled to check every 20 seconds.
-> > > >
-> > > > This is the message we get in the logs -
-> > > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > > 127.0.0.1 ALLOWED
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > > from 127.0.0.1
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > > 127.0.0.1 ALLOWED (cached)
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > > from 127.0.0.1
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
-> > > > 127.0.0.1 ALLOWED (cached)
-> > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
-> > > > from 127.0.0.1
-> > > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > >
-> > > > After 10 seconds, we get his message -
-> > > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > > Jul 09 07:34:09 virat-nd01 nfsserver(virat-nfs-daemon)[54087]: ERROR:
-> > > > rpc-statd is not running
-> > > > -------------------------------------------------------------------------------------------------------------------------------------
-> > > > Once we get this error, the NFS service is automatically restarted.
-> > > >
-> > > > "ERROR: rpc-statd is not running" message is from the pacemaker's
-> > > > monitoring script.
-> > > > I have pasted that part of the script below.
-> > > >
-> > > > I disabled monitoring and everything is working fine, since then.
-> > > >
-> > > > I cant keep the cluster monitoring disabled forever.
-> > > >
-> > > > Kindly help.
-> > > >
-> > > > Regards,
-> > > >
-> > > >
-> > > > Indivar Nair
-> > > >
-> > > > Part of the pacemaker script that does the monitoring
-> > > > (/usr/lib/ocf/resources.d/heartbeat/nfsserver)
-> > > > =======================================================================
-> > > > nfsserver_systemd_monitor()
-> > > > {
-> > > >     local threads_num
-> > > >     local rc
-> > > >     local fn
-> > > >
-> > > >     ocf_log debug "Status: rpcbind"
-> > > >     rpcinfo > /dev/null 2>&1
-> > > >     rc=$?
-> > > >     if [ "$rc" -ne "0" ]; then
-> > > >         ocf_exit_reason "rpcbind is not running"
-> > > >         return $OCF_NOT_RUNNING
-> > > >     fi
-> > > >
-> > > >     ocf_log debug "Status: nfs-mountd"
-> > > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
-> > > >     rc=$?
-> > > >     if [ "$rc" -ne "0" ]; then
-> > > >         ocf_exit_reason "nfs-mountd is not running"
-> > > >         return $OCF_NOT_RUNNING
-> > > >     fi
-> > > >
-> > > >     ocf_log debug "Status: nfs-idmapd"
-> > > >     fn=`mktemp`
-> > > >     nfs_exec status nfs-idmapd > $fn 2>&1
-> > > >     rc=$?
-> > > >     ocf_log debug "$(cat $fn)"
-> > > >     rm -f $fn
-> > > >     if [ "$rc" -ne "0" ]; then
-> > > >         ocf_exit_reason "nfs-idmapd is not running"
-> > > >         return $OCF_NOT_RUNNING
-> > > >     fi
-> > > >
-> > > >     ocf_log debug "Status: rpc-statd"
-> > > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
-> > > >     rc=$?
-> > > >     if [ "$rc" -ne "0" ]; then
-> > > >         ocf_exit_reason "rpc-statd is not running"
-> > > >         return $OCF_NOT_RUNNING
-> > > >     fi
-> > > >
-> > > >     nfs_exec is-active nfs-server
-> > > >     rc=$?
-> > > >
-> > > >     # Now systemctl is-active can't detect the failure of kernel
-> > > > process like nfsd.
-> > > >     # So, if the return value of systemctl is-active is 0, check the
-> > > > threads number
-> > > >     # to make sure the process is running really.
-> > > >     # /proc/fs/nfsd/threads has the numbers of the nfsd threads.
-> > > >     if [ $rc -eq 0 ]; then
-> > > >         threads_num=`cat /proc/fs/nfsd/threads 2>/dev/null`
-> > > >         if [ $? -eq 0 ]; then
-> > > >             if [ $threads_num -gt 0 ]; then
-> > > >                 return $OCF_SUCCESS
-> > > >             else
-> > > >                 return 3
-> > > >             fi
-> > > >         else
-> > > >             return $OCF_ERR_GENERIC
-> > > >         fi
-> > > >     fi
-> > > >
-> > > >     return $rc
-> > > > }
-> > > > =======================================================================
