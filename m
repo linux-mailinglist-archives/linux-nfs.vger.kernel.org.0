@@ -2,150 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A3076834F
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2019 07:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 500786835A
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2019 07:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfGOFij (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Jul 2019 01:38:39 -0400
-Received: from relay.sw.ru ([185.231.240.75]:40858 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfGOFii (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:38:38 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hmtgp-00084E-4u; Mon, 15 Jul 2019 08:38:19 +0300
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Xiaoming Ni <nixiaoming@huawei.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
- <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
-Date:   Mon, 15 Jul 2019 08:38:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1725787AbfGOF4w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Jul 2019 01:56:52 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:44826 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfGOF4w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jul 2019 01:56:52 -0400
+Received: by mail-io1-f69.google.com with SMTP id s9so18739749iob.11
+        for <linux-nfs@vger.kernel.org>; Sun, 14 Jul 2019 22:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=elastifile-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=JEGL9vL5k2zIpfsw1wym/aMjvVSZu3SnJxjoHLqwbSc=;
+        b=DflHkV/NPuagXGoxxF5wtoMoiU5rmBpaL9HvkKlDiJ4qZgsYT7FNt/to6aBCkwpC3D
+         Ml/gDP6qugbFDoaLfKrspo7VMfZWb3pFRmGHfiOtjs3frfALbjoySW31BU/FHNodbrd3
+         tXWoHaxMqFZ/lfl/bjqZsqRaw9uyGyZ6z9Bi5TB1nqhElp0QxEUBVDAVfO+om5nGKqJ9
+         b0IG4WX32iDdFZiJqRUcaE+qOWzCdf7n0dRQUD09AarDJGPjbuTxC4ZiwK6Ww4SNg88T
+         KhKtLNnAzPmw2W/RvrcO1TG7bgz+RuHKHDbPS+9dskq/VY8cfndOIZUyqB3hWcYjw2cE
+         X1hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=JEGL9vL5k2zIpfsw1wym/aMjvVSZu3SnJxjoHLqwbSc=;
+        b=oN/R5j1x7OTcutJG1cCgQITCZExKiCDs+exdEXF7tD3CY1MwtCbQTlmW+P5Lh3bcD+
+         OnTbGYlAzm8idm9QbcTUfmmdF/gYJCEnUzyqsJ7yUO6Ohmb9VmeCPSmheVRz2B4BUaX1
+         Cwgqklt1EX/XW6oF5PJCRIp8Q3a6CNY3uKeVWpV8ijbfjZ/06S9dz/J03SMUIbxHMaih
+         JAe0Ov2BV8yJHa0u9te7dIggSYC2uK8UuOBMhkXVnn5QmGtDFMTIkLtk+dtwe/+74Ivs
+         fK3EslxFe85EGFNDMtF6zslVW/JMrzo/uygLBF9av75bJaH1+t9YDd2Jrx4wmc1VtJzc
+         miLg==
+X-Gm-Message-State: APjAAAX7LAGj+0Iy+g8pRf+245S3TceHkKhECZLEIwyK3FboRlPLlUpg
+        rvzv5hBE8XJsTpSEZgMGixLhY98zZJG7DCFqKpbOdSBE
+X-Google-Smtp-Source: APXvYqzyzhAK0oN9n9m/pugEsyIHWfFWxkngLD9iiXmWHQStA40kBECRmjhm4WKK6vqGc2Tx5J8Edo/xCtBc12EmyOE=
+X-Received: by 2002:a02:1c0a:: with SMTP id c10mr26522638jac.69.1563170211087;
+ Sun, 14 Jul 2019 22:56:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Noam Lewis <noam.lewis@elastifile.com>
+Date:   Mon, 15 Jul 2019 08:56:14 +0300
+Message-ID: <CALDUuiDyf5mfNVLeTKHNkU+bTbsKLOoHw_rZm1khcaiep-cEDQ@mail.gmail.com>
+Subject: large directory iteration (getdents) over NFS mount resets due to stat
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 7/14/19 5:45 AM, Xiaoming Ni wrote:
-> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
->> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->>> On 2019/7/11 21:57, Vasily Averin wrote:
->>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>>>>> list to form a ring or lose other members of the list.
->>>>>>
->>>>>> I think is not enough to _prevent_ 2nd register attempt,
->>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>>>>
->>>>>
->>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>>>>
->>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>>>>
->>>>> Duplicate registration was checked in notifier_chain_register() but only 
->>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
->>>>> ("kernel/notifier.c: double register detection")
->>>>>
->>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>>>>  which triggers an alarm and exits when a duplicate registration is detected.
->>>>>
->>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>>>>> and it can lead to host crash in any time: 
->>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>>>>> on the other hand you can never call 2nd unregister at all.
->>>>>
->>>>> Since the member was not added to the linked list at the time of the second registration, 
->>>>> no linked list ring was formed. 
->>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
->>>>> After patching, the fault has been alleviated
->>>>
->>>> You are wrong here.
->>>> 2nd notifier's registration is a pure bug, this should never happen.
->>>> If you know the way to reproduce this situation -- you need to fix it. 
->>>>
->>>> 2nd registration can happen in 2 cases:
->>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
->>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
->>>> 2) some subsystem is registered twice, for example from  different namespaces.
->>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
->>>> in second namespace, it also can lead to unexpacted behaviour.
->>>>
->>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->>> notifier_chain_cond_register() direct exit without triggering WARN() ?
->>
->> It should recover from this, if it can be detected.  The main point is
->> that not all apis have to be this "robust" when used within the kernel
->> as we do allow for the callers to know what they are doing :)
->>
-> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
->  We can intercept this situation and avoid forming a linked list ring to make the API more rob
+I've encountered a problem while iterating large directories via an NFS mount.
 
-Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
-If double register event was detected -- it means you have bug in kernel.
+Scenario:
 
-Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
+1. Linux NFS client iterates a directory with many (millions) of
+files, e.g. via getdents() until all entries are done. In my case,
+READDIRPLUS is being used under the hood. Trivial reproduction is to
+run: ls -la
+2. At the same time, run the stat tool on a file inside that directory.
 
->> If this does not cause any additional problems or slow downs, it's
->> probably fine to add.
->>
-> Notifier_chain_register() is not a system hotspot function.
-> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
-> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
-> At the same time, avoiding the formation of a link ring can make the system more robust.
+The directory on the server is not being modified anywhere (on this
+client or any other client).
 
-I disagree, 
-yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
+Result: the next or ongoing getdents will get stuck for a long time
+(tens of seconds to minutes). It appears to be re-iterating some of
+the work it already did, by going back to a previous NFS READDIRPLUS
+cookie.
 
->> thanks,
->>
->> greg k-h
->>
->> .
->>
-> Thanks
-> 
-> Xiaoming Ni
-> 
-> 
-> 
+
+Things I've tried as workarounds:
+- Mounting with nordirplus - the iteration doesn't seem to reset or at
+least getdents doesn't get stuck, but now I have tons of LOOKUPs, as
+expected.
+- Setting actimeo=(large number) doesn't affect the behavior
+
+Questions:
+1. Why does the stat command cause this?
+2. How can I avoid the reset, i.e. ensure forward progress of the dir iteration?
