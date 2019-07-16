@@ -2,164 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC07B6A06D
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2019 04:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B2086A44B
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2019 10:53:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbfGPCAu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Jul 2019 22:00:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2229 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729533AbfGPCAu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 15 Jul 2019 22:00:50 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 951A37DC6F0DD85EDD34;
-        Tue, 16 Jul 2019 10:00:47 +0800 (CST)
-Received: from [127.0.0.1] (10.57.88.168) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
- 10:00:38 +0800
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Vasily Averin <vvs@virtuozzo.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
- <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
- <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
-Date:   Tue, 16 Jul 2019 10:00:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.88.168]
-X-CFilter-Loop: Reflected
+        id S1727906AbfGPIxg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Jul 2019 04:53:36 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:3246 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPIxf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Jul 2019 04:53:35 -0400
+X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jul 2019 04:53:34 EDT
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5d2d8e4d7b6-6e9dd; Tue, 16 Jul 2019 16:43:58 +0800 (CST)
+X-RM-TRANSID: 2eeb5d2d8e4d7b6-6e9dd
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[223.105.0.243])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65d2d8e4cfc6-46186;
+        Tue, 16 Jul 2019 16:43:58 +0800 (CST)
+X-RM-TRANSID: 2ee65d2d8e4cfc6-46186
+From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: fix 'passing zero to PTR_ERR()' warning
+Date:   Tue, 16 Jul 2019 16:43:50 +0800
+Message-Id: <1563266630-6471-1-git-send-email-dingxiang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2019/7/15 13:38, Vasily Averin wrote:
-> On 7/14/19 5:45 AM, Xiaoming Ni wrote:
->> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
->>> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->>>> On 2019/7/11 21:57, Vasily Averin wrote:
->>>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>>>>>> list to form a ring or lose other members of the list.
->>>>>>>
->>>>>>> I think is not enough to _prevent_ 2nd register attempt,
->>>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>>>>>
->>>>>>
->>>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>>>>>
->>>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>>>>>
->>>>>> Duplicate registration was checked in notifier_chain_register() but only 
->>>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
->>>>>> ("kernel/notifier.c: double register detection")
->>>>>>
->>>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>>>>>  which triggers an alarm and exits when a duplicate registration is detected.
->>>>>>
->>>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>>>>>> and it can lead to host crash in any time: 
->>>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>>>>>> on the other hand you can never call 2nd unregister at all.
->>>>>>
->>>>>> Since the member was not added to the linked list at the time of the second registration, 
->>>>>> no linked list ring was formed. 
->>>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
->>>>>> After patching, the fault has been alleviated
->>>>>
->>>>> You are wrong here.
->>>>> 2nd notifier's registration is a pure bug, this should never happen.
->>>>> If you know the way to reproduce this situation -- you need to fix it. 
->>>>>
->>>>> 2nd registration can happen in 2 cases:
->>>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
->>>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
->>>>> 2) some subsystem is registered twice, for example from  different namespaces.
->>>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
->>>>> in second namespace, it also can lead to unexpacted behaviour.
->>>>>
->>>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->>>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->>>> notifier_chain_cond_register() direct exit without triggering WARN() ?
->>>
->>> It should recover from this, if it can be detected.  The main point is
->>> that not all apis have to be this "robust" when used within the kernel
->>> as we do allow for the callers to know what they are doing :)
->>>
->> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
->>  We can intercept this situation and avoid forming a linked list ring to make the API more rob
-> 
-> Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
-> If double register event was detected -- it means you have bug in kernel.
-> 
-> Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
-> 
->>> If this does not cause any additional problems or slow downs, it's
->>> probably fine to add.
->>>
->> Notifier_chain_register() is not a system hotspot function.
->> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
->> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
->> At the same time, avoiding the formation of a link ring can make the system more robust.
-> 
-> I disagree, 
-> yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
+Fix a static code checker warning:
+fs/nfs/nfs4idmap.c:331
+	nfs_idmap_get_key() warn: passing zero to 'PTR_ERR'
 
-Sorry, my description is not accurate.
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+---
+ fs/nfs/nfs4idmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My patch feature does not prevent users from repeatedly registering hooks.
-But avoiding the chain ring caused by the user repeatedly registering the hook
-
-There are no modules for duplicate registration hooks in the current system.
-But considering that not all modules are in the kernel source tree,
-In order to improve the robustness of the kernel API, we should avoid the linked list ring caused by repeated registration.
-Or in order to improve the efficiency of problem location, when the duplicate registration is checked, the system crashes directly.
-
-On the other hand, the difference between notifier_chain_register() and notifier_chain_cond_register() for duplicate registrations is confusing:
-Blocking the formation of the linked list ring in notifier_chain_cond_register()
-There is no interception of the linked list ring in notifier_chain_register(), just an alarm.
-Give me the illusion: Isn't notifier_chain_register() allowed to create a linked list ring?
-
-Thanks
-
-xiaoming Ni
+diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
+index 1e72963..f71bb7f 100644
+--- a/fs/nfs/nfs4idmap.c
++++ b/fs/nfs/nfs4idmap.c
+@@ -328,7 +328,7 @@ static ssize_t nfs_idmap_get_key(const char *name, size_t namelen,
+ 
+ 	payload = user_key_payload_rcu(rkey);
+ 	if (IS_ERR_OR_NULL(payload)) {
+-		ret = PTR_ERR(payload);
++		ret = PTR_ERR_OR_ZERO(payload);
+ 		goto out_up;
+ 	}
+ 
+-- 
+1.9.1
 
 
 
