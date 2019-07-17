@@ -2,61 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC5766C149
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 21:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755036C272
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 23:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbfGQTEI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jul 2019 15:04:08 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40914 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfGQTEI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 15:04:08 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3C8161475AE87;
-        Wed, 17 Jul 2019 12:04:07 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 12:04:06 -0700 (PDT)
-Message-Id: <20190717.120406.1122378175032864724.davem@davemloft.net>
-To:     pablo@netfilter.org
-Cc:     adobriyan@gmail.com, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com, andy@greyhouse.net,
-        kadlec@netfilter.org, fw@strlen.de, bfields@fieldses.org,
-        chuck.lever@oracle.com
-Subject: Re: [PATCH 2/2] net: apply proc_net_mkdir() harder
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190716185220.hnlyiievuucdtn7x@salvia>
-References: <20190706165521.GB10550@avx2>
-        <20190716185220.hnlyiievuucdtn7x@salvia>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 17 Jul 2019 12:04:07 -0700 (PDT)
+        id S1727205AbfGQVNR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jul 2019 17:13:17 -0400
+Received: from fieldses.org ([173.255.197.46]:59344 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727184AbfGQVNR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Jul 2019 17:13:17 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0C8991E29; Wed, 17 Jul 2019 17:13:17 -0400 (EDT)
+Date:   Wed, 17 Jul 2019 17:13:17 -0400
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] NFSD fill-in netloc4 structure
+Message-ID: <20190717211317.GM24608@fieldses.org>
+References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
+ <20190708192352.12614-2-olga.kornievskaia@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708192352.12614-2-olga.kornievskaia@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-Date: Tue, 16 Jul 2019 20:52:20 +0200
-
-> On Sat, Jul 06, 2019 at 07:55:21PM +0300, Alexey Dobriyan wrote:
->> From: "Hallsmark, Per" <Per.Hallsmark@windriver.com>
->> 
->> proc_net_mkdir() should be used to create stuff under /proc/net,
->> so that dentry revalidation kicks in.
->> 
->> See
->> 
->> 	commit 1fde6f21d90f8ba5da3cb9c54ca991ed72696c43
->> 	proc: fix /proc/net/* after setns(2)
->> 
->> 	[added more chunks --adobriyan]
+On Mon, Jul 08, 2019 at 03:23:45PM -0400, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
 > 
-> I don't find this in the tree,
+> nfs.4 defines nfs42_netaddr structure that represents netloc4.
+> 
+> Populate needed fields from the sockaddr structure.
+> 
+> This will be used by flexfiles and 4.2 inter copy
+> 
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 24187b5..8f4fc50 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -19,6 +19,7 @@
+>  #include <linux/sunrpc/svc.h>
+>  #include <linux/sunrpc/svc_xprt.h>
+>  #include <linux/sunrpc/msg_prot.h>
+> +#include <linux/sunrpc/addr.h>
+>  
+>  #include <uapi/linux/nfsd/debug.h>
+>  
+> @@ -375,6 +376,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
+>  
+>  extern const u32 nfsd_suppattrs[3][3];
+>  
+> +static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
+> +				    struct nfs42_netaddr *netaddr)
+> +{
+> +	struct sockaddr_in *sin = (struct sockaddr_in *)addr;
+> +	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
+> +	unsigned int port;
+> +	size_t ret_addr, ret_port;
+> +
+> +	switch (addr->sa_family) {
+> +	case AF_INET:
+> +		port = ntohs(sin->sin_port);
+> +		sprintf(netaddr->netid, "tcp");
+> +		netaddr->netid_len = 3;
+> +		break;
+> +	case AF_INET6:
+> +		port = ntohs(sin6->sin6_port);
+> +		sprintf(netaddr->netid, "tcp6");
+> +		netaddr->netid_len = 4;
+> +		break;
+> +	default:
+> +		return nfserr_inval;
+> +	}
+> +	ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
+> +	ret_port = snprintf(netaddr->addr + ret_addr,
+> +			    RPCBIND_MAXUADDRLEN + 1 - ret_addr,
+> +			    ".%u.%u", port >> 8, port & 0xff);
+> +	WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
+> +	netaddr->addr_len = ret_addr + ret_port;
+> +	return 0;
+> +}
 
-Because there were changes requested.
+Kinda surprised we don't already do something like this elsewhere, but I
+don't see anything exactly the same.  Might be possible to put this in
+net/sunrpc/addr.c and share some code with rpc_sockaddr2uaddr?  I'll
+leave it to you whether that looks worth it.
 
+--b.
+
+> +
+>  static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+>  {
+>  	return !((bm1[0] & ~bm2[0]) ||
+> -- 
+> 1.8.3.1
