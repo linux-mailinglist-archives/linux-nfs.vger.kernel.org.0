@@ -2,415 +2,320 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 816306BDB4
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 15:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4B66BF64
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 17:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbfGQNzO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jul 2019 09:55:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55764 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfGQNzO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 09:55:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDn6Jw045451;
-        Wed, 17 Jul 2019 13:55:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=cThDjhYGvn4YhsqOqg/3p7wMMxqv+7C11vSdtn3eScQ=;
- b=PFpyviXY3yUD8WSrP5JX9MMdrdgQt60TOwYJKNAR+DFUJ9/jq6rW834FnhIf8YXqnIAT
- nrmlZ7NDB0PS1RK8JyUlMwc1alDZhC2aowk79A96ZwdubwrEPX7Y0N6Q+LXuyOKSRJ9D
- o61+el5FxV0WBaDRUuQzNAg0HCBfVTondCrH2dnYZZFSfQDqvrXTDsQnRgrf0xysLmtk
- vlirhZDTxIVBToAME4CGaHlO3dRFOteJPclBGAUVtxiRs5pORnQbS2Czz322ZgIcWteb
- /e0Qqn+RP/0A2JLhjpQsyXq7hbcnD92hjKQehgt04IiFuZrblVKnThiGh7Tbw2axeuq9 cw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tq7xr2u90-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:55:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDlxI3057530;
-        Wed, 17 Jul 2019 13:55:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tq4duhgbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:55:10 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HDt9ri008173;
-        Wed, 17 Jul 2019 13:55:09 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 13:55:09 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/2] SUNRPC: Fix up backchannel slot table accounting
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20190716200157.38583-1-trond.myklebust@hammerspace.com>
-Date:   Wed, 17 Jul 2019 09:55:04 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <99A569FB-DD7F-4547-AB06-FEB5DABA8488@oracle.com>
-References: <20190716200157.38583-1-trond.myklebust@hammerspace.com>
-To:     Trond Myklebust <trondmy@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170166
+        id S1727519AbfGQP6x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jul 2019 11:58:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37747 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfGQP6x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 11:58:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s20so25573474otp.4
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Jul 2019 08:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=techterra-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=haaTfVZICEqg58YpdqPhOsrfZkLz52t+gj2K7g+elW4=;
+        b=13N+Q6Cj/zikyZEiRIFaKHnNGbpU36jSFLtvCQNR1ecGbOQ4YhCrkH1/rotLpJ+AwQ
+         mz/KCWfN8kuNGfH5lM1OaCWJHCLCzlv1sfvmoSM4HbX3VjkFGCaHS5TDK6cZhq+AaHxk
+         I6SmvoACwp+I9cB0pP0TxNsLIVt4hksDPADGUsAA4virEg0dIUWR5evc8ZHMCBYQlt5M
+         fjEUKlelot5mx9jh6vTZR1MBbVAYgaa0zQzN17ImcRHt10TROTlZGDlmU2hte6uPHflf
+         rHKGFZCTZZISQAPtL6oGevw1E/u2P6noNFBhla1vH8ATX1MelkWz+ieuMYCyFpoem51O
+         QzKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=haaTfVZICEqg58YpdqPhOsrfZkLz52t+gj2K7g+elW4=;
+        b=ONGPM2pkhBgDXDMaZjw5j2FP64q7B6IQ+RMCzB/B1FvwWpbFTOS74HWeb3NnpUjBdx
+         1aK5/3HXb4sgnh5oXjcEVZnwcdO3rW69j3syxiZkG0AwkjnKyESvexpKjz6ADAA/V7qY
+         lGcAU/JpJAe+vTaWtWu57q/vYA116QDaj788x9j5bGyqGmN8MvUyqQLO4mauWAZnm7+n
+         utWJ85q1RhopDJtEHLXCVW49oAknp21h2Kg7RhFHQq0J5TPuhtM1w9yL8ll8B/Pj9q6Z
+         fhPFjzX1UEM4X2RIUB2xPvz2nl3jsOhGwDir7cpK+tsdwTxVwJn51O8QdaRuGzuQZYCE
+         FPDA==
+X-Gm-Message-State: APjAAAX74DL+R1OCDV3sNDMro8PH5jIzosjvlE8cmEyKmtYQFFLJEPOt
+        WGfsA24h0UhJ+5PdTNa2HUCSnK6KrxdmYYKLI14=
+X-Google-Smtp-Source: APXvYqx76I6N88Gg46EQlT/Vwo7R5QA8OzvlPDP6AJIcO+HcMjDYBFcQT60LSL6v55XVgFOxtaU/d2wn5XoJ2/uzfO8=
+X-Received: by 2002:a9d:3d8a:: with SMTP id l10mr28787067otc.343.1563379131191;
+ Wed, 17 Jul 2019 08:58:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <CALuPYL1_rvyn9A6gZnMCE8p87WoYjsU4BuUKT2OuxXUDiumO2w@mail.gmail.com>
+ <20190711164937.GA4131@coeurl.usersys.redhat.com> <CALuPYL0+VdUsjeFx70xJkJUxc8SOdsTzALeeHcfd33fx4E_iTg@mail.gmail.com>
+ <20190712141657.GB4131@coeurl.usersys.redhat.com> <CALuPYL13mQDg_F4rTv2FK8SEgyS56aRnv2MgNu=KUL0W3BmhEQ@mail.gmail.com>
+In-Reply-To: <CALuPYL13mQDg_F4rTv2FK8SEgyS56aRnv2MgNu=KUL0W3BmhEQ@mail.gmail.com>
+From:   Indivar Nair <indivar.nair@techterra.in>
+Date:   Wed, 17 Jul 2019 21:28:14 +0530
+Message-ID: <CALuPYL18_n6R+_jC-DyqcP7EPRGNqSeLD8u0tcv6NNpDy5pM7Q@mail.gmail.com>
+Subject: Re: rpc.statd dies because of pacemaker monitoring
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond-
+Hi Scott,
 
-> On Jul 16, 2019, at 4:01 PM, Trond Myklebust <trondmy@gmail.com> =
-wrote:
->=20
-> Add a per-transport maximum limit in the socket case, and add
-> helpers to allow the NFSv4 code to discover that limit.
+Could you help me out with my query in the earlier email?
+I would like to get to the root cause of the issue.
+Since it is a storage system that is heavily used, I need to make sure
+that the issue does not crop even after fixing the DNS.
 
-For RDMA, the number of credits is permitted to change during the life
-of the connection, so this is not a fixed limit for such transports.
+Thanks.
 
-And, AFAICT, it's not necessary to know the transport's limit. The
-lesser of the NFS backchannel and RPC/RDMA reverse credit limit will
-be used.
-
-The patch description doesn't explain why this change is now necessary,
-so I don't get what's going on here.
+Regards,
 
 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
-> fs/nfs/nfs4proc.c                 |  3 +++
-> include/linux/sunrpc/bc_xprt.h    |  1 +
-> include/linux/sunrpc/clnt.h       |  1 +
-> include/linux/sunrpc/xprt.h       |  6 +++--
-> net/sunrpc/backchannel_rqst.c     | 40 +++++++++++++++++--------------
-> net/sunrpc/clnt.c                 | 13 ++++++++++
-> net/sunrpc/svc.c                  |  2 +-
-> net/sunrpc/xprtrdma/backchannel.c |  7 ++++++
-> net/sunrpc/xprtrdma/transport.c   |  1 +
-> net/sunrpc/xprtrdma/xprt_rdma.h   |  1 +
-> net/sunrpc/xprtsock.c             |  1 +
-> 11 files changed, 55 insertions(+), 21 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 52de7245a2ee..39896afc6edf 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -8380,6 +8380,7 @@ static void nfs4_init_channel_attrs(struct =
-nfs41_create_session_args *args,
-> {
-> 	unsigned int max_rqst_sz, max_resp_sz;
-> 	unsigned int max_bc_payload =3D rpc_max_bc_payload(clnt);
-> +	unsigned int max_bc_slots =3D rpc_num_bc_slots(clnt);
->=20
-> 	max_rqst_sz =3D NFS_MAX_FILE_IO_SIZE + nfs41_maxwrite_overhead;
-> 	max_resp_sz =3D NFS_MAX_FILE_IO_SIZE + nfs41_maxread_overhead;
-> @@ -8402,6 +8403,8 @@ static void nfs4_init_channel_attrs(struct =
-nfs41_create_session_args *args,
-> 	args->bc_attrs.max_resp_sz_cached =3D 0;
-> 	args->bc_attrs.max_ops =3D NFS4_MAX_BACK_CHANNEL_OPS;
-> 	args->bc_attrs.max_reqs =3D max_t(unsigned short, =
-max_session_cb_slots, 1);
-> +	if (args->bc_attrs.max_reqs > max_bc_slots)
-> +		args->bc_attrs.max_reqs =3D max_bc_slots;
->=20
-> 	dprintk("%s: Back Channel : max_rqst_sz=3D%u max_resp_sz=3D%u "
-> 		"max_resp_sz_cached=3D%u max_ops=3D%u max_reqs=3D%u\n",
-> diff --git a/include/linux/sunrpc/bc_xprt.h =
-b/include/linux/sunrpc/bc_xprt.h
-> index d4229a78524a..87d27e13d885 100644
-> --- a/include/linux/sunrpc/bc_xprt.h
-> +++ b/include/linux/sunrpc/bc_xprt.h
-> @@ -43,6 +43,7 @@ void xprt_destroy_backchannel(struct rpc_xprt *, =
-unsigned int max_reqs);
-> int xprt_setup_bc(struct rpc_xprt *xprt, unsigned int min_reqs);
-> void xprt_destroy_bc(struct rpc_xprt *xprt, unsigned int max_reqs);
-> void xprt_free_bc_rqst(struct rpc_rqst *req);
-> +unsigned int xprt_bc_max_slots(struct rpc_xprt *xprt);
->=20
-> /*
->  * Determine if a shared backchannel is in use
-> diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-> index 4e070e00c143..abc63bd1be2b 100644
-> --- a/include/linux/sunrpc/clnt.h
-> +++ b/include/linux/sunrpc/clnt.h
-> @@ -194,6 +194,7 @@ void		rpc_setbufsize(struct rpc_clnt =
-*, unsigned int, unsigned int);
-> struct net *	rpc_net_ns(struct rpc_clnt *);
-> size_t		rpc_max_payload(struct rpc_clnt *);
-> size_t		rpc_max_bc_payload(struct rpc_clnt *);
-> +unsigned int	rpc_num_bc_slots(struct rpc_clnt *);
-> void		rpc_force_rebind(struct rpc_clnt *);
-> size_t		rpc_peeraddr(struct rpc_clnt *, struct sockaddr =
-*, size_t);
-> const char	*rpc_peeraddr2str(struct rpc_clnt *, enum =
-rpc_display_format_t);
-> diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-> index ed76e5fb36c1..13e108bcc9eb 100644
-> --- a/include/linux/sunrpc/xprt.h
-> +++ b/include/linux/sunrpc/xprt.h
-> @@ -158,6 +158,7 @@ struct rpc_xprt_ops {
-> 	int		(*bc_setup)(struct rpc_xprt *xprt,
-> 				    unsigned int min_reqs);
-> 	size_t		(*bc_maxpayload)(struct rpc_xprt *xprt);
-> +	unsigned int	(*bc_num_slots)(struct rpc_xprt *xprt);
-> 	void		(*bc_free_rqst)(struct rpc_rqst *rqst);
-> 	void		(*bc_destroy)(struct rpc_xprt *xprt,
-> 				      unsigned int max_reqs);
-> @@ -251,8 +252,9 @@ struct rpc_xprt {
-> #if defined(CONFIG_SUNRPC_BACKCHANNEL)
-> 	struct svc_serv		*bc_serv;       /* The RPC service which =
-will */
-> 						/* process the callback =
-*/
-> -	int			bc_alloc_count;	/* Total number of =
-preallocs */
-> -	atomic_t		bc_free_slots;
-> +	unsigned int		bc_alloc_max;
-> +	unsigned int		bc_alloc_count;	/* Total number of =
-preallocs */
-> +	atomic_t		bc_slot_count;	/* Number of allocated =
-slots */
-> 	spinlock_t		bc_pa_lock;	/* Protects the =
-preallocated
-> 						 * items */
-> 	struct list_head	bc_pa_list;	/* List of preallocated
-> diff --git a/net/sunrpc/backchannel_rqst.c =
-b/net/sunrpc/backchannel_rqst.c
-> index c47d82622fd1..339e8c077c2d 100644
-> --- a/net/sunrpc/backchannel_rqst.c
-> +++ b/net/sunrpc/backchannel_rqst.c
-> @@ -31,25 +31,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF =
-SUCH DAMAGE.
-> #define RPCDBG_FACILITY	RPCDBG_TRANS
-> #endif
->=20
-> +#define BC_MAX_SLOTS	64U
-> +
-> +unsigned int xprt_bc_max_slots(struct rpc_xprt *xprt)
-> +{
-> +	return BC_MAX_SLOTS;
-> +}
-> +
-> /*
->  * Helper routines that track the number of preallocation elements
->  * on the transport.
->  */
-> static inline int xprt_need_to_requeue(struct rpc_xprt *xprt)
-> {
-> -	return xprt->bc_alloc_count < atomic_read(&xprt->bc_free_slots);
-> -}
-> -
-> -static inline void xprt_inc_alloc_count(struct rpc_xprt *xprt, =
-unsigned int n)
-> -{
-> -	atomic_add(n, &xprt->bc_free_slots);
-> -	xprt->bc_alloc_count +=3D n;
-> -}
-> -
-> -static inline int xprt_dec_alloc_count(struct rpc_xprt *xprt, =
-unsigned int n)
-> -{
-> -	atomic_sub(n, &xprt->bc_free_slots);
-> -	return xprt->bc_alloc_count -=3D n;
-> +	return xprt->bc_alloc_count < xprt->bc_alloc_max;
-> }
->=20
-> /*
-> @@ -145,6 +140,9 @@ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned =
-int min_reqs)
->=20
-> 	dprintk("RPC:       setup backchannel transport\n");
->=20
-> +	if (min_reqs > BC_MAX_SLOTS)
-> +		min_reqs =3D BC_MAX_SLOTS;
-> +
-> 	/*
-> 	 * We use a temporary list to keep track of the preallocated
-> 	 * buffers.  Once we're done building the list we splice it
-> @@ -172,7 +170,9 @@ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned =
-int min_reqs)
-> 	 */
-> 	spin_lock(&xprt->bc_pa_lock);
-> 	list_splice(&tmp_list, &xprt->bc_pa_list);
-> -	xprt_inc_alloc_count(xprt, min_reqs);
-> +	xprt->bc_alloc_count +=3D min_reqs;
-> +	xprt->bc_alloc_max +=3D min_reqs;
-> +	atomic_add(min_reqs, &xprt->bc_slot_count);
-> 	spin_unlock(&xprt->bc_pa_lock);
->=20
-> 	dprintk("RPC:       setup backchannel transport done\n");
-> @@ -220,11 +220,13 @@ void xprt_destroy_bc(struct rpc_xprt *xprt, =
-unsigned int max_reqs)
-> 		goto out;
->=20
-> 	spin_lock_bh(&xprt->bc_pa_lock);
-> -	xprt_dec_alloc_count(xprt, max_reqs);
-> +	xprt->bc_alloc_max -=3D max_reqs;
-> 	list_for_each_entry_safe(req, tmp, &xprt->bc_pa_list, =
-rq_bc_pa_list) {
-> 		dprintk("RPC:        req=3D%p\n", req);
-> 		list_del(&req->rq_bc_pa_list);
-> 		xprt_free_allocation(req);
-> +		xprt->bc_alloc_count--;
-> +		atomic_dec(&xprt->bc_slot_count);
-> 		if (--max_reqs =3D=3D 0)
-> 			break;
-> 	}
-> @@ -241,13 +243,14 @@ static struct rpc_rqst =
-*xprt_get_bc_request(struct rpc_xprt *xprt, __be32 xid,
-> 	struct rpc_rqst *req =3D NULL;
->=20
-> 	dprintk("RPC:       allocate a backchannel request\n");
-> -	if (atomic_read(&xprt->bc_free_slots) <=3D 0)
-> -		goto not_found;
-> 	if (list_empty(&xprt->bc_pa_list)) {
-> 		if (!new)
-> 			goto not_found;
-> +		if (atomic_read(&xprt->bc_slot_count) >=3D BC_MAX_SLOTS)
-> +			goto not_found;
-> 		list_add_tail(&new->rq_bc_pa_list, &xprt->bc_pa_list);
-> 		xprt->bc_alloc_count++;
-> +		atomic_inc(&xprt->bc_slot_count);
-> 	}
-> 	req =3D list_first_entry(&xprt->bc_pa_list, struct rpc_rqst,
-> 				rq_bc_pa_list);
-> @@ -291,6 +294,7 @@ void xprt_free_bc_rqst(struct rpc_rqst *req)
-> 	if (xprt_need_to_requeue(xprt)) {
-> 		list_add_tail(&req->rq_bc_pa_list, &xprt->bc_pa_list);
-> 		xprt->bc_alloc_count++;
-> +		atomic_inc(&xprt->bc_slot_count);
-> 		req =3D NULL;
-> 	}
-> 	spin_unlock_bh(&xprt->bc_pa_lock);
-> @@ -357,7 +361,7 @@ void xprt_complete_bc_request(struct rpc_rqst =
-*req, uint32_t copied)
->=20
-> 	spin_lock(&xprt->bc_pa_lock);
-> 	list_del(&req->rq_bc_pa_list);
-> -	xprt_dec_alloc_count(xprt, 1);
-> +	xprt->bc_alloc_count--;
-> 	spin_unlock(&xprt->bc_pa_lock);
->=20
-> 	req->rq_private_buf.len =3D copied;
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 383555d2b522..79c849391cb9 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -1526,6 +1526,19 @@ size_t rpc_max_bc_payload(struct rpc_clnt =
-*clnt)
-> }
-> EXPORT_SYMBOL_GPL(rpc_max_bc_payload);
->=20
-> +unsigned int rpc_num_bc_slots(struct rpc_clnt *clnt)
-> +{
-> +	struct rpc_xprt *xprt;
-> +	unsigned int ret;
-> +
-> +	rcu_read_lock();
-> +	xprt =3D rcu_dereference(clnt->cl_xprt);
-> +	ret =3D xprt->ops->bc_num_slots(xprt);
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(rpc_num_bc_slots);
-> +
-> /**
->  * rpc_force_rebind - force transport to check that remote port is =
-unchanged
->  * @clnt: client to rebind
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index e15cb704453e..220b79988000 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1595,7 +1595,7 @@ bc_svc_process(struct svc_serv *serv, struct =
-rpc_rqst *req,
-> 	/* Parse and execute the bc call */
-> 	proc_error =3D svc_process_common(rqstp, argv, resv);
->=20
-> -	atomic_inc(&req->rq_xprt->bc_free_slots);
-> +	atomic_dec(&req->rq_xprt->bc_slot_count);
-> 	if (!proc_error) {
-> 		/* Processing error: drop the request */
-> 		xprt_free_bc_request(req);
-> diff --git a/net/sunrpc/xprtrdma/backchannel.c =
-b/net/sunrpc/xprtrdma/backchannel.c
-> index ce986591f213..59e624b1d7a0 100644
-> --- a/net/sunrpc/xprtrdma/backchannel.c
-> +++ b/net/sunrpc/xprtrdma/backchannel.c
-> @@ -52,6 +52,13 @@ size_t xprt_rdma_bc_maxpayload(struct rpc_xprt =
-*xprt)
-> 	return maxmsg - RPCRDMA_HDRLEN_MIN;
-> }
->=20
-> +unsigned int xprt_rdma_bc_max_slots(struct rpc_xprt *xprt)
-> +{
-> +	struct rpcrdma_xprt *r_xprt =3D rpcx_to_rdmax(xprt);
-> +
-> +	return r_xprt->rx_buf.rb_bc_srv_max_requests;
-> +}
-> +
-> static int rpcrdma_bc_marshal_reply(struct rpc_rqst *rqst)
-> {
-> 	struct rpcrdma_xprt *r_xprt =3D rpcx_to_rdmax(rqst->rq_xprt);
-> diff --git a/net/sunrpc/xprtrdma/transport.c =
-b/net/sunrpc/xprtrdma/transport.c
-> index 4993aa49ecbe..52abddac19e5 100644
-> --- a/net/sunrpc/xprtrdma/transport.c
-> +++ b/net/sunrpc/xprtrdma/transport.c
-> @@ -812,6 +812,7 @@ static const struct rpc_xprt_ops xprt_rdma_procs =3D=
- {
-> #if defined(CONFIG_SUNRPC_BACKCHANNEL)
-> 	.bc_setup		=3D xprt_rdma_bc_setup,
-> 	.bc_maxpayload		=3D xprt_rdma_bc_maxpayload,
-> +	.bc_num_slots		=3D xprt_rdma_bc_max_slots,
-> 	.bc_free_rqst		=3D xprt_rdma_bc_free_rqst,
-> 	.bc_destroy		=3D xprt_rdma_bc_destroy,
-> #endif
-> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h =
-b/net/sunrpc/xprtrdma/xprt_rdma.h
-> index 8378f45d2da7..92ce09fcea74 100644
-> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
-> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-> @@ -605,6 +605,7 @@ void xprt_rdma_cleanup(void);
-> #if defined(CONFIG_SUNRPC_BACKCHANNEL)
-> int xprt_rdma_bc_setup(struct rpc_xprt *, unsigned int);
-> size_t xprt_rdma_bc_maxpayload(struct rpc_xprt *);
-> +unsigned int xprt_rdma_bc_max_slots(struct rpc_xprt *);
-> int rpcrdma_bc_post_recv(struct rpcrdma_xprt *, unsigned int);
-> void rpcrdma_bc_receive_call(struct rpcrdma_xprt *, struct rpcrdma_rep =
-*);
-> int xprt_rdma_bc_send_reply(struct rpc_rqst *rqst);
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index 3c2cc96afcaa..6b1fca51028a 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -2788,6 +2788,7 @@ static const struct rpc_xprt_ops xs_tcp_ops =3D =
-{
-> #ifdef CONFIG_SUNRPC_BACKCHANNEL
-> 	.bc_setup		=3D xprt_setup_bc,
-> 	.bc_maxpayload		=3D xs_tcp_bc_maxpayload,
-> +	.bc_num_slots		=3D xprt_bc_max_slots,
-> 	.bc_free_rqst		=3D xprt_free_bc_rqst,
-> 	.bc_destroy		=3D xprt_destroy_bc,
-> #endif
-> --=20
-> 2.21.0
->=20
+Indivar Nair
 
---
-Chuck Lever
-
-
-
+On Sat, Jul 13, 2019 at 8:31 PM Indivar Nair <indivar.nair@techterra.in> wrote:
+>
+> Thanks once again, Scott,
+>
+> The patch seems like a neat solution
+> It will declare rpc.statd dead only after checking multiple times. Super.
+> I will patch the nfsserver resource file.
+> (It should probably be added to the original source code.)
+>
+> We have a proper entry for 127.0.0.1 in the hosts file and the
+> nsswtich.conf file says, "files dns".
+> So if it checks the /etc/hosts first, why would the pacemaker's check timeout?
+> Shouldn't pacemaker get a quick response?
+>
+> Localhost entries in the /etc/hosts file -
+> -------------------------------------------------------------------------------------------------------------------------------------
+> 127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+> ::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+> -------------------------------------------------------------------------------------------------------------------------------------
+>
+> Regards,
+>
+>
+> Indivar Nair
+>
+>
+>
+>
+>
+>
+> On Fri, Jul 12, 2019 at 7:47 PM Scott Mayhew <smayhew@redhat.com> wrote:
+> >
+> > On Fri, 12 Jul 2019, Indivar Nair wrote:
+> >
+> > > Hi Scott,
+> > >
+> > > Thanks a lot.
+> > > Yes, it is a 10+ year old AD setup, which was migrated to Samba4AD
+> > > (samba+named) a few years ago.
+> > > It has lot of stale entries, and fwd - rev lookup mismatches.
+> > >
+> > > Will start cleaning up DNS right away.
+> > >
+> > > In the meantime, is there any way to increase the rpc ping timeout?
+> >
+> > You could build the rpcinfo.c program from source (it's in the rpcbind
+> > git tree) with a longer timeout.
+> >
+> > > OR
+> > > Is there any way to temporarily disable DNS lookups by lockd?
+> >
+> > rpc.statd is doing the DNS lookups, and no there's not a way to disable it.
+> > Doing so would probably make the reboot notifications less reliable, and
+> > clients wouldn't know to reclaim locks, and the risk of data corruption
+> > goes up.
+> >
+> > You could prevent the DNS lookups from occurring by adding entries (properly
+> > formatted... see the hosts(5) man page) for all your clients into the
+> > /etc/hosts file on your NFS server nodes.  That's assuming that your nsswitch
+> > configuration has "files" before "dns" for host lookups.  Depending on how
+> > many clients you have, that might be the easiest option.
+> >
+> > Another option might be to try adding a simple retry mechanism to the part
+> > of the nfsserver resource agent that checks rpc.statd, something like:
+> >
+> > diff --git a/heartbeat/nfsserver b/heartbeat/nfsserver
+> > index bf59da98..c9dcc74e 100755
+> > --- a/heartbeat/nfsserver
+> > +++ b/heartbeat/nfsserver
+> > @@ -334,8 +334,13 @@ nfsserver_systemd_monitor()
+> >         fi
+> >
+> >         ocf_log debug "Status: rpc-statd"
+> > -       rpcinfo -t localhost 100024 > /dev/null 2>&1
+> > -       rc=$?
+> > +       for i in `seq 1 3`; do
+> > +               rpcinfo -t localhost 100024 >/dev/null 2>&1
+> > +               rc=$?
+> > +               if [ $rc -eq 0 ]; then
+> > +                       break
+> > +               fi
+> > +       done
+> >         if [ "$rc" -ne "0" ]; then
+> >                 ocf_exit_reason "rpc-statd is not running"
+> >                 return $OCF_NOT_RUNNING
+> > >
+> > > Regards,
+> > >
+> > >
+> > > Indivar Nair
+> > >
+> > > On Thu, Jul 11, 2019 at 10:19 PM Scott Mayhew <smayhew@redhat.com> wrote:
+> > > >
+> > > > On Thu, 11 Jul 2019, Indivar Nair wrote:
+> > > >
+> > > > > Hi ...,
+> > > > >
+> > > > > I have a 2 node Pacemaker cluster built using CentOS 7.6.1810
+> > > > > It serves files using NFS and Samba.
+> > > > >
+> > > > > Every 15 - 20 minutes, the rpc.statd service fails, and the whole NFS
+> > > > > service is restarted.
+> > > > > After investigation, it was found that the service fails after a few
+> > > > > rounds of monitoring by Pacemaker.
+> > > > > The Pacemaker's script runs the following command to check whether all
+> > > > > the services are running -
+> > > > > ---------------------------------------------------------------------------------------------------------------------------------------
+> > > > >     rpcinfo > /dev/null 2>&1
+> > > > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
+> > > > >     nfs_exec status nfs-idmapd > $fn 2>&1
+> > > > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
+> > > >
+> > > > I would check to make sure your DNS setup is working properly.
+> > > > rpc.statd uses the canonical hostnames for comparison purposes whenever
+> > > > it gets an SM_MON or SM_UNMON request from lockd and when it gets an
+> > > > SM_NOTIFY from a rebooted NFS client.  That involves calls to
+> > > > getaddrinfo() and getnameinfo() which in turn could result in requests
+> > > > to a DNS server.  rpc.statd is single-threaded, so if it's blocked
+> > > > waiting for one of those requests, then it's unable to respond to the
+> > > > RPC ping (which has a timeout of 10 seconds) generated by the rpcinfo
+> > > > program.
+> > > >
+> > > > I ran into a similar scenario in the past where a client was launching
+> > > > multiple instances of rpc.statd.  When the client does a v3 mount it
+> > > > does a similar RPC ping (with a more aggressive timeout) to see if
+> > > > rpc.statd is running... if not then it calls out to
+> > > > /usr/sbin/start-statd (which in the past simply called 'exec rpc.statd
+> > > > --no-notify' but now has additional checks).  Likewise rpc.statd does
+> > > > it's own RPC ping to make sure there's not one already running.  It
+> > > > wound up that the user had a flakey DNS server and requests were taking
+> > > > over 30 seconds to time out, thus thwarting all those additional checks,
+> > > > and they wound up with multiple copies of rpc.statd running.
+> > > >
+> > > > You could be running into a similar scenario here and pacemaker could be
+> > > > deciding that rpc.statd's not running when it's actually fine.
+> > > >
+> > > > -Scott
+> > > >
+> > > > > ---------------------------------------------------------------------------------------------------------------------------------------
+> > > > > The script is scheduled to check every 20 seconds.
+> > > > >
+> > > > > This is the message we get in the logs -
+> > > > > -------------------------------------------------------------------------------------------------------------------------------------
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
+> > > > > 127.0.0.1 ALLOWED
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
+> > > > > from 127.0.0.1
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
+> > > > > 127.0.0.1 ALLOWED (cached)
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
+> > > > > from 127.0.0.1
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: check_default: access by
+> > > > > 127.0.0.1 ALLOWED (cached)
+> > > > > Jul 09 07:33:56 virat-nd01 rpc.mountd[51641]: Received NULL request
+> > > > > from 127.0.0.1
+> > > > > -------------------------------------------------------------------------------------------------------------------------------------
+> > > > >
+> > > > > After 10 seconds, we get his message -
+> > > > > -------------------------------------------------------------------------------------------------------------------------------------
+> > > > > Jul 09 07:34:09 virat-nd01 nfsserver(virat-nfs-daemon)[54087]: ERROR:
+> > > > > rpc-statd is not running
+> > > > > -------------------------------------------------------------------------------------------------------------------------------------
+> > > > > Once we get this error, the NFS service is automatically restarted.
+> > > > >
+> > > > > "ERROR: rpc-statd is not running" message is from the pacemaker's
+> > > > > monitoring script.
+> > > > > I have pasted that part of the script below.
+> > > > >
+> > > > > I disabled monitoring and everything is working fine, since then.
+> > > > >
+> > > > > I cant keep the cluster monitoring disabled forever.
+> > > > >
+> > > > > Kindly help.
+> > > > >
+> > > > > Regards,
+> > > > >
+> > > > >
+> > > > > Indivar Nair
+> > > > >
+> > > > > Part of the pacemaker script that does the monitoring
+> > > > > (/usr/lib/ocf/resources.d/heartbeat/nfsserver)
+> > > > > =======================================================================
+> > > > > nfsserver_systemd_monitor()
+> > > > > {
+> > > > >     local threads_num
+> > > > >     local rc
+> > > > >     local fn
+> > > > >
+> > > > >     ocf_log debug "Status: rpcbind"
+> > > > >     rpcinfo > /dev/null 2>&1
+> > > > >     rc=$?
+> > > > >     if [ "$rc" -ne "0" ]; then
+> > > > >         ocf_exit_reason "rpcbind is not running"
+> > > > >         return $OCF_NOT_RUNNING
+> > > > >     fi
+> > > > >
+> > > > >     ocf_log debug "Status: nfs-mountd"
+> > > > >     rpcinfo -t localhost 100005 > /dev/null 2>&1
+> > > > >     rc=$?
+> > > > >     if [ "$rc" -ne "0" ]; then
+> > > > >         ocf_exit_reason "nfs-mountd is not running"
+> > > > >         return $OCF_NOT_RUNNING
+> > > > >     fi
+> > > > >
+> > > > >     ocf_log debug "Status: nfs-idmapd"
+> > > > >     fn=`mktemp`
+> > > > >     nfs_exec status nfs-idmapd > $fn 2>&1
+> > > > >     rc=$?
+> > > > >     ocf_log debug "$(cat $fn)"
+> > > > >     rm -f $fn
+> > > > >     if [ "$rc" -ne "0" ]; then
+> > > > >         ocf_exit_reason "nfs-idmapd is not running"
+> > > > >         return $OCF_NOT_RUNNING
+> > > > >     fi
+> > > > >
+> > > > >     ocf_log debug "Status: rpc-statd"
+> > > > >     rpcinfo -t localhost 100024 > /dev/null 2>&1
+> > > > >     rc=$?
+> > > > >     if [ "$rc" -ne "0" ]; then
+> > > > >         ocf_exit_reason "rpc-statd is not running"
+> > > > >         return $OCF_NOT_RUNNING
+> > > > >     fi
+> > > > >
+> > > > >     nfs_exec is-active nfs-server
+> > > > >     rc=$?
+> > > > >
+> > > > >     # Now systemctl is-active can't detect the failure of kernel
+> > > > > process like nfsd.
+> > > > >     # So, if the return value of systemctl is-active is 0, check the
+> > > > > threads number
+> > > > >     # to make sure the process is running really.
+> > > > >     # /proc/fs/nfsd/threads has the numbers of the nfsd threads.
+> > > > >     if [ $rc -eq 0 ]; then
+> > > > >         threads_num=`cat /proc/fs/nfsd/threads 2>/dev/null`
+> > > > >         if [ $? -eq 0 ]; then
+> > > > >             if [ $threads_num -gt 0 ]; then
+> > > > >                 return $OCF_SUCCESS
+> > > > >             else
+> > > > >                 return 3
+> > > > >             fi
+> > > > >         else
+> > > > >             return $OCF_ERR_GENERIC
+> > > > >         fi
+> > > > >     fi
+> > > > >
+> > > > >     return $rc
+> > > > > }
+> > > > > =======================================================================
