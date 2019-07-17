@@ -2,100 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E89FA6B039
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2019 22:06:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48BC96B6E3
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 08:45:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfGPUGo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Jul 2019 16:06:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38327 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfGPUGo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Jul 2019 16:06:44 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so9748181ioa.5
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Jul 2019 13:06:43 -0700 (PDT)
+        id S1725893AbfGQGpf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jul 2019 02:45:35 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55477 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQGpf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 02:45:35 -0400
+Received: by mail-io1-f71.google.com with SMTP id f22so26046855ioh.22
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jul 2019 23:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=atThEGgEE9DrVcla4yIbNh7r1fiMhKX/2srXNZ+dEKM=;
-        b=udiWPPpXfZo/G8neCXtUqCvwkxN64QjxvpBe3X1TtU7drVBBAiiW5w7Dz0vxq7wOt6
-         4M1w2yo0FGW/qDk+1UVyGSgUlt6AXzF+DMMgCM8F06DqS9X/7VTCM0Mlz6T2nbpwX63C
-         yfdPdWHgobYmAOlfnYF0A+TqoGVACxQ1w3Gvvl3f5gm7vFzx7pPLECKcvHzbpaEZSpxa
-         0sC/IyldnzSNE0qi9WO65eNUI/ehaLfB7bmKfSgGdwuI+XCwhA0DTqIIuayIHAP7Yy8h
-         p/RHVgaZpHXmbSEuKk5QdeustTlkyJ0iEcLe8M4/O81f7h1svHMaFXmMF3pPkT25X6Xi
-         oh4Q==
+        d=elastifile-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=W9ZSb7c9UPvAQzufvcCLudz3Bnprr6IxzBWAACexaNM=;
+        b=OcOlIOmsQrypzBwiAB2JqhUWtS61soAbBdLGJdFeJenZWfctcmcB7qBz+zQOUwGu85
+         uq6azILTkLto2PsAqo0cJ1mEjM7/IlkkSiL5eRAl1Ubp+F8lQptQP0gZBjnXFgPc9ThF
+         zQ9mBqaau++zGIJuHZjmeWIxQGRBx1C2Asgwt7s5XNvdEJtwax4ToLVeVUqwY9TOrNUG
+         m7kQ0bi/z3Z0HF+hQNNS2fsmN2OIsDL1TcTYHeNIF70zOtVuUTo65MvQSlvJ5kH7BkQX
+         PXYJUHi8h80/VWQbia1r4zDPvMSX/Ho0OuFNaw4LCg2Nbn7b+EXSQG+XAZjidyRXEOuk
+         4ngg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=atThEGgEE9DrVcla4yIbNh7r1fiMhKX/2srXNZ+dEKM=;
-        b=VvpOTGrUoG2tOGbmfrVrdM3LbwpPcWDpMl5NkAl1hcxwi/ReOuJFBOKHt2qWRhKKwn
-         wHosYr0C8cl/0LDoB0JU7+9FQ8w5uCC02c591yjbS5ms6cgCg9br2XDsZX0tgjUoAYmS
-         JO+qtZukNEg6mPds5GNq2a5P7U9GFEjomiQ00LzcqMesg1NhCvxQTl1Q9V+GRt4ePM4b
-         tlGOdnmJeuQaxlhsHtW1UNUnmyfYY6nefLA4mVutwZh83mh3B1D09OJqMsulicvRQwQm
-         DS1AQJ3QXkounDAH7LWSK+x18m2+9juDAhstn91j0ev3dsxvMsi00lFoDjuN61kOpH8K
-         9FnQ==
-X-Gm-Message-State: APjAAAWBBESI+kPhDH/zyrjwdg8vv0WJJucfGHnm2g5khjKyRIv4ZkbV
-        rVJx7RpLQDAOJ2PLxUIX1QipaSU=
-X-Google-Smtp-Source: APXvYqybv9Ka3oIvXJmSsRrjiquTHlNFy8gYiRKLYO8M/8QxAhFBr+dWVPQmhd3Mk9snwGy3bavocg==
-X-Received: by 2002:a02:cb4b:: with SMTP id k11mr36547953jap.109.1563307602833;
-        Tue, 16 Jul 2019 13:06:42 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id i3sm18393763ion.9.2019.07.16.13.06.42
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 13:06:42 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] SUNRPC: Fix a hang in xprt_switch_set_next_cursor()
-Date:   Tue, 16 Jul 2019 16:04:33 -0400
-Message-Id: <20190716200433.38758-3-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190716200433.38758-2-trond.myklebust@hammerspace.com>
-References: <20190716200433.38758-1-trond.myklebust@hammerspace.com>
- <20190716200433.38758-2-trond.myklebust@hammerspace.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=W9ZSb7c9UPvAQzufvcCLudz3Bnprr6IxzBWAACexaNM=;
+        b=VF8t17FFbXRRa83UmaTAiiskgXhDZcARIepu7vHSPLce5u4OSB71ix+ZQHCHv2pV8g
+         DgBlmzju7V62a3ck2PhkJ2VZ5hk4hZU895M2wB8eX3ys/CXrxyXnjL3tbRpL572siaq/
+         ds0MSWjeslIKG+RvFbuiM0n37iujhWm5+9kAXv7qwuGjU0B/wFOMeMiSH1ZcZzTK2uuW
+         XYTGnwAfAAlquH64YmO+7jBOmcPtiW5uXot5b5YioKTRGjoagWjydYp2DuMWqPXgBCTJ
+         jAjAj/KPWtQBbkpPtoYdu6TIcynwIQoF70uXxuecz8hU4s3njmoJ2aZ+nlDj9aT84GAS
+         rdUw==
+X-Gm-Message-State: APjAAAVlLfZNHw7iircto5mAhgCaWWH6TuN/Ar85Igj7pCBo78vZiipt
+        tIyJwXeqmTaXF60aQrpccRoXICH/8oQsGCX7UaDmDCEZcYc=
+X-Google-Smtp-Source: APXvYqxbczWE4muRvBzb2L7npWPEPFDu4J8Mmy8IzxiqfEQ/5NEx6uAri9di8kOu7eidZO2Tbvzqr9awN5/w75tDmo4=
+X-Received: by 2002:a5e:c24b:: with SMTP id w11mr24834274iop.111.1563345934419;
+ Tue, 16 Jul 2019 23:45:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALDUuiDyf5mfNVLeTKHNkU+bTbsKLOoHw_rZm1khcaiep-cEDQ@mail.gmail.com>
+In-Reply-To: <CALDUuiDyf5mfNVLeTKHNkU+bTbsKLOoHw_rZm1khcaiep-cEDQ@mail.gmail.com>
+From:   Noam Lewis <noam.lewis@elastifile.com>
+Date:   Wed, 17 Jul 2019 09:44:58 +0300
+Message-ID: <CALDUuiDG8mKRtH+Zhoc7kQjoKN-SpTn-xaKm=oh+sXHDQ47sug@mail.gmail.com>
+Subject: Re: large directory iteration (getdents) over NFS mount resets due to stat
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Apparently we do need the memory barrier.
+I'm starting to think this is a bug. I can't see a good reason why
+accessing (stat) a directory entry should cause the READDIRPLUS cookie
+to be reset.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- net/sunrpc/xprtmultipath.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+It seems that the trigger for iteration reset is accessing a directory
+entry that doesn't have a valid entry in the cache. If it does has a
+valid cache entry it doesn't trigger the cookie reset. Note, it
+doesn't matter if the entry (or traversed dir) has actually changed:
+the reset occurs even if both did not change on the server side.
 
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index c12778e1235e..852da66cdaec 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -293,18 +293,14 @@ struct rpc_xprt *xprt_switch_set_next_cursor(struct list_head *head,
- 		struct rpc_xprt **cursor,
- 		xprt_switch_find_xprt_t find_next)
- {
--	struct rpc_xprt *cur, *pos, *old;
-+	struct rpc_xprt *pos, *old;
- 
--	cur = READ_ONCE(*cursor);
--	for (;;) {
--		old = cur;
-+	old = READ_ONCE(*cursor);
-+	do {
- 		pos = find_next(head, old);
- 		if (pos == NULL)
- 			break;
--		cur = cmpxchg_relaxed(cursor, old, pos);
--		if (cur == old)
--			break;
--	}
-+	} while (!try_cmpxchg(cursor, &old, pos));
- 	return pos;
- }
- 
--- 
-2.21.0
+Setting actimeo to a large enough value allows the dir iteration to
+complete without any resets, but this is just a workaround that isn't
+acceptable if the file system is being modified or if there isn't
+enough memory. It's also heuristic and can lead to unexpected hiccups
+if something in the environment changes.
 
+So my questions still stand: is this expected behavior? What's the reason?
+
+P.S. I'm using NFSv3
+
+On Mon, Jul 15, 2019, 08:56 Noam Lewis <noam.lewis@elastifile.com> wrote:
+>
+> I've encountered a problem while iterating large directories via an NFS mount.
+>
+> Scenario:
+>
+> 1. Linux NFS client iterates a directory with many (millions) of
+> files, e.g. via getdents() until all entries are done. In my case,
+> READDIRPLUS is being used under the hood. Trivial reproduction is to
+> run: ls -la
+> 2. At the same time, run the stat tool on a file inside that directory.
+>
+> The directory on the server is not being modified anywhere (on this
+> client or any other client).
+>
+> Result: the next or ongoing getdents will get stuck for a long time
+> (tens of seconds to minutes). It appears to be re-iterating some of
+> the work it already did, by going back to a previous NFS READDIRPLUS
+> cookie.
+>
+>
+> Things I've tried as workarounds:
+> - Mounting with nordirplus - the iteration doesn't seem to reset or at
+> least getdents doesn't get stuck, but now I have tons of LOOKUPs, as
+> expected.
+> - Setting actimeo=(large number) doesn't affect the behavior
+>
+> Questions:
+> 1. Why does the stat command cause this?
+> 2. How can I avoid the reset, i.e. ensure forward progress of the dir iteration?
