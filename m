@@ -2,84 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F076C0D4
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 20:11:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 710A36C0D6
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2019 20:13:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388738AbfGQSKl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jul 2019 14:10:41 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43482 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfGQSKl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 14:10:41 -0400
-Received: by mail-io1-f67.google.com with SMTP id k20so47199547ios.10
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Jul 2019 11:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GWknZRopD8p9OMK8Koi/AQBMww+znmZ7JvQh1SBVqGc=;
-        b=po67loUhSPSqi0yEkBq+dtDeprojwCjor5vjOo3sQcMTWkL17uhg/JSZ0varkhXio9
-         eqju4icnQjl+jpM6gFZN8Ql1rbm2ByHWwu8J/pVSJ8+QbyIT/RvQOTyN6b1JVbvW4C/K
-         znk36kXA1AtXb13E2hvtwrHE0yTFoYjjQU5mpQRnpEmrDHhQuJ1yeMoXwZ2YEfy9SL4C
-         RA0VdrUcEkdsj1dODmrgjufz2Sn/hxTCARbhs+5ghSTZHWTSwZl2eJwlfrTgAfFdD/s3
-         DNTkDXFf/RL9HjeLWpARNq4/ePBYwPf12TudHSf2fA/M8ChkNisnyOtjF3yQUbMR1W7+
-         KjvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GWknZRopD8p9OMK8Koi/AQBMww+znmZ7JvQh1SBVqGc=;
-        b=XvqA+GcBYacpH2N+33chOXgVZosSmZ71h7kXnx/rjbPnpYLfCM68gTQwDYB8Hn/tJM
-         Evv30+PTyYrgV5M14wIsJdsSKMj1gllcAoORTd57e9iDDs5NMhTmi5YmJSmfuD33fkw+
-         XLIFB/jJ9G8dqpYI+gqKXxk9XSNhZMw3MkPbUb+9NYn4qZHSQV9VAZFhybffrnzh1BZe
-         +lJ+M0se2K1v8wdCwkNskaNW7b/20rxnFV+vdrBW+GKhjRuCX8D8S2ixc269dRW5amFV
-         0B8qtJA8bCRB015o4NKrDIqwuSYDz6ys5lfsp/nIu9kSpFjldnL3PkN5sIaV6nInR4CP
-         rqMA==
-X-Gm-Message-State: APjAAAXsrduIo4vhJSvnDuIj7sfqOFAr/VISXxEiRTTeSy6312o82Nvq
-        EYqfke6ZaeQAM4awg0/Rq/CRUXI=
-X-Google-Smtp-Source: APXvYqzBk82jo4WSgxytZiUYRpp/6Rfwglt3vJ0hF7DX7asiQ3UBYcTQRy9Hgfk0qF+jdj3EyBtd5w==
-X-Received: by 2002:a5d:960f:: with SMTP id w15mr1870339iol.24.1563387039430;
-        Wed, 17 Jul 2019 11:10:39 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id h18sm19923913iob.80.2019.07.17.11.10.38
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 11:10:38 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] pnfs/flexfiles: Fix PTR_ERR() dereferences in ff_layout_track_ds_error
-Date:   Wed, 17 Jul 2019 14:08:31 -0400
-Message-Id: <20190717180831.48651-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727335AbfGQSNF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jul 2019 14:13:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54932 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbfGQSNF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jul 2019 14:13:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HI9B2M098651;
+        Wed, 17 Jul 2019 18:13:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=xYUQhCC6mvEgCpQqswuZXWY/CRagRo/4lCv9KlsqPpI=;
+ b=fxCzVmek5S3fPyzBHQDuvwTwQpM9FfkHdT3bZkV36bK7YOtntIzHDnc5M2WN3ChJlnXU
+ N7A7ci1kZOHTlhQNGu4tPkEiWE9BJ9niHL7t09jhtRuw/EjwRlOKYdP2VH6v1xQVZYDl
+ sUQxZOe7Hqtu5ZV/75QMQIl8gXnbiuDXeHgrGV4cacnx+YNINQjJV3ncLriOMgdxhrmj
+ 1QP5QD+jJfL0XXpJvjKgzzFyqmclB9otSCTPMOWDwpmokoysHFSj/1MT1Rp9nbv2IWt6
+ hQ67HqP88gHHoaAsu7sywfDVbPWu7ydlpf2XkvLx0LsoKp7UZQTn4cs51nbRv2UtEvzf mA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2tq7xr4fyn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 18:13:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HI7gEr177982;
+        Wed, 17 Jul 2019 18:13:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2tt77h9p5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 18:13:00 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HICvFC007838;
+        Wed, 17 Jul 2019 18:12:59 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jul 2019 18:12:57 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 1/2] SUNRPC: Fix up backchannel slot table accounting
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <97e9839faef3d1bc901d4ced3d0cf2e0bf2a0bd1.camel@hammerspace.com>
+Date:   Wed, 17 Jul 2019 14:12:56 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F138F86C-84FB-4FEA-8240-FDAD6FD4CE38@oracle.com>
+References: <20190716200157.38583-1-trond.myklebust@hammerspace.com>
+ <99A569FB-DD7F-4547-AB06-FEB5DABA8488@oracle.com>
+ <97e9839faef3d1bc901d4ced3d0cf2e0bf2a0bd1.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907170208
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907170208
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-mirror->mirror_ds can be NULL if uninitialised, but can contain
-a PTR_ERR() if call to GETDEVICEINFO failed.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index 19f856f45689..3eda40a320a5 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -257,7 +257,7 @@ int ff_layout_track_ds_error(struct nfs4_flexfile_layout *flo,
- 	if (status == 0)
- 		return 0;
- 
--	if (mirror->mirror_ds == NULL)
-+	if (IS_ERR_OR_NULL(mirror->mirror_ds))
- 		return -EINVAL;
- 
- 	dserr = kmalloc(sizeof(*dserr), gfp_flags);
--- 
-2.21.0
+> On Jul 17, 2019, at 1:19 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Wed, 2019-07-17 at 09:55 -0400, Chuck Lever wrote:
+>> Hi Trond-
+>>=20
+>>> On Jul 16, 2019, at 4:01 PM, Trond Myklebust <trondmy@gmail.com>
+>>> wrote:
+>>>=20
+>>> Add a per-transport maximum limit in the socket case, and add
+>>> helpers to allow the NFSv4 code to discover that limit.
+>>=20
+>> For RDMA, the number of credits is permitted to change during the
+>> life
+>> of the connection, so this is not a fixed limit for such transports.
+>=20
+> This is defining a maximum value, which is used for backchannel =
+session
+> slot negotiation.
+>=20
+>>=20
+>> And, AFAICT, it's not necessary to know the transport's limit. The
+>> lesser of the NFS backchannel and RPC/RDMA reverse credit limit will
+>> be used.
+>=20
+> The server needs to know how many requests it can send in parallel on
+> the back channel. If it sends too many, which it can and will do on
+> TCP, then we currently break the connection, and so callbacks end up
+> being dropped or missed altogether.
+
+IIUC, RPC/RDMA has a fixed maximum constant. Would you like a patch at
+some point that advertises that constant via ->bc_num_slots ?
+
+
+--
+Chuck Lever
+
+
 
