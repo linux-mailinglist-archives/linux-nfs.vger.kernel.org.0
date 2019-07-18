@@ -2,297 +2,260 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E72C6D57D
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jul 2019 21:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADEC6D5B6
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jul 2019 22:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfGRTyd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Jul 2019 15:54:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45318 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfGRTyd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Jul 2019 15:54:33 -0400
-Received: by mail-io1-f65.google.com with SMTP id g20so53494791ioc.12
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Jul 2019 12:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eZf1JGBtEpdR2Kn5xIsk4bVnVt8djUuW1ZWe+4cxkFY=;
-        b=pkBzgVvTTtRY0IrDLcTV50nvoNaM/1aK5NMPmbkgXlL5HRYVYZQRMid19zvSEtwoea
-         L0+MwUIfxEGFgKJN2lUI+LOJvMblXSy1T+qrdbs0xQbwTNZ7no0wguXbbHgOm0xWWzWL
-         7vpGD3m1GUzvwITVRa/7zW0BbSB3/YpapZsc5fE89erramj/0rCtECPsqqwYecEOdlXu
-         XpgYyXHcu0g6AnLwlRhx0UaZWjkQ4Gz+ROVhiBVDiVw7+O3Myubs1GP1Y9624e6PrUXs
-         o1Go7oe5pgOLLgAtSmSzZyu/q5ePlkO1OQCvPfrNul+URSq/N22eZ6y3xT4DOJl91uLf
-         HjKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eZf1JGBtEpdR2Kn5xIsk4bVnVt8djUuW1ZWe+4cxkFY=;
-        b=KjW1S9CS6iY/BfChl4HYptvFO2z+kejarWXjHXn1Ff6GJmyW5rgEGN5MU7RoZDxcVu
-         LUuHwqzPRIMMo4GotKbyR61WXHRbfQz9/UAy5EcNdqyurslkacYYiz07ReS7AZDL2Rde
-         Du/Wgv7h3U7J/PfqCr7kUZ0CWRCTOAI3m1Z9bR9dJSv5Ie0b49BPLh9ZkcFn9pevu4VV
-         mMK5Kp3y1pynhrP2Zsneq/jyFlfJYqMeut/Ns63tApqEKvp8tPOHyqHdVyQHXVN/Kr+v
-         dGFrsWq2C7fLHQ/fzRBp6tYmd0ooKVRDC7X6cGl4sTND5pAd3U5ryQqzFQBKsXQjkYDm
-         61Ug==
-X-Gm-Message-State: APjAAAVy+US8CzJzg+vl32EiuV8b4UXnE+xAVU3Vd6x0qxnl3iUff/LG
-        39GDDK59uNdk/DRkpKpQn/6Qy8E=
-X-Google-Smtp-Source: APXvYqxHdh/NTEqWzYjNfBkO2xF9XbZSWPsA4kqwSyHywSd78cBov8eWB7I5Bvwr3sYI2neluzag8w==
-X-Received: by 2002:a5d:96d8:: with SMTP id r24mr45666276iol.269.1563479671881;
-        Thu, 18 Jul 2019 12:54:31 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id j23sm21969825ioo.6.2019.07.18.12.54.31
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 12:54:31 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] pnfs/flexfiles: Add tracepoints for detecting pnfs fallback to MDS
-Date:   Thu, 18 Jul 2019 15:52:24 -0400
-Message-Id: <20190718195224.36419-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
+        id S2391581AbfGRUZJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Jul 2019 16:25:09 -0400
+Received: from mail-eopbgr820131.outbound.protection.outlook.com ([40.107.82.131]:8672
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727687AbfGRUZJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 18 Jul 2019 16:25:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gBlTUc9uCk4OfuMwdEKHrat/34WpUitYJ1VUJsu0rVeqTjsk8m+56/lI0SqOzYIZDFXdcS4sgHPoUyK8Ru8hvRePop3dWh0WicBTZpyTHe2X/P0l3xxTh3bEEHkQEyBkHiZ/C75yI5iWSxt9dZmFlNbHPxYQHVQK76g9HgnPNFSQso9MiCaYNEMd/zioegufbWJJqndx0COzsix8BDyXci1SGe2G/iFQ+SLNOO4MYa6+b5EmV9MkH4XDXx4yK8cRylsqqmsNdmS+yt9UYbKzKcwjuX2r/b2KToHaBDkuhDKTK1EukDc+AWsyaZkYhEtoYsaKkZhwki2TNkcHPLmhlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/37HH/4WCOnc+mn18fTimdigu0hI3A3FRku7NS2CIM=;
+ b=O5NukmQeUyxkUmT2viwVzHiM2bAH+Qq0668FJZjFBoopIYoYVQ+AVPIwE9HkLQPnJehBO51Hr5Yt/Um/3oKNFQcn4I0nAwh9pPIaeSKcekPb2wbfi8tYMK+s9PPZQvbEzJnxgSW46im8xajN6bf2b4Ncsz2wZawLZfvh2ciCVWkthwuZtRgDkloOYFo2WvYQOR/vML5DVWB2JUqRHLeywIWbSKlTUbrRz6c6NdqWMvtDluynZHRE/MI+MSprOUwqvTGrjGcPSG123XT8TNzT2bFEz3mhsPTOt5fJatqf1L/oVH7gjzO/lTlClIO9N784/ieoYKNnFaFgL0i7mVdang==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=hammerspace.com;dmarc=pass action=none
+ header.from=hammerspace.com;dkim=pass header.d=hammerspace.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/37HH/4WCOnc+mn18fTimdigu0hI3A3FRku7NS2CIM=;
+ b=BndBh7jr8y46xFT1Yahy/UYjYNFdkXxf8vXPOAZUwedyHB26tBoo09NVyqqVwjGB6tyh/xGyy/NqBhVcRQJ0OstToXceumWUmD/parKOF4LsFNEEtpQESEipRckFp51oRmEc8ewZgi769SEaLTM6EE7J5gWERl1/dTMwUiX+GuY=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1676.namprd13.prod.outlook.com (10.171.154.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.6; Thu, 18 Jul 2019 20:25:03 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93%5]) with mapi id 15.20.2115.005; Thu, 18 Jul 2019
+ 20:25:03 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS changes for Linux 5.3
+Thread-Topic: [GIT PULL] Please pull NFS changes for Linux 5.3
+Thread-Index: AQHVPabhnzGKEYNl5Uy1JGaP2DrGNQ==
+Date:   Thu, 18 Jul 2019 20:25:03 +0000
+Message-ID: <333e896cf5bcadd8547fbe4a06388dd3104ff910.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 544ac7c2-83b2-4562-9381-08d70bbe042d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1676;
+x-ms-traffictypediagnostic: DM5PR13MB1676:
+x-microsoft-antispam-prvs: <DM5PR13MB16760B38AC5D293D8EB0E235B8C80@DM5PR13MB1676.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(376002)(366004)(39830400003)(189003)(199004)(118296001)(66476007)(7736002)(6436002)(6512007)(36756003)(5640700003)(86362001)(2351001)(6916009)(66066001)(476003)(2616005)(305945005)(2501003)(66946007)(66556008)(66446008)(64756008)(2906002)(5660300002)(76116006)(256004)(102836004)(6506007)(8676002)(26005)(486006)(186003)(478600001)(71200400001)(25786009)(316002)(99286004)(54906003)(8936002)(81166006)(81156014)(6116002)(3846002)(68736007)(53936002)(71190400001)(4326008)(6486002)(14454004)(1730700003)(14444005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1676;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FlCaeBEVKLW6L6grOdtvSqL4/pkrUTbO7IWeLExq7izZOAfe5M0MdlkpHe3R+apPoMqahgEAI+dPFzqrD7LKMMoasQEISjI8GfC9wlTuZkntHhqIkx72pBJYa0hOw+5v46sYNRCfPtW8gb5dp04esuJLkw6fuPeJec9CRpYGd1tDxMRXtkicMhR5ydiD4dbZoMnWyMMx5mUuFqTyj61gTiotyEuz5xu/5j44SM6PVJ7a+a1uyR1YteU5JXWLkg7Bu2ut7XzBQTfWXCukq8vuZmL54U6uzdTCuRguWt4oGJJsCkpPKOaRm//9amQ1dBo4agOwBQoZILJd0mYTM9pTQ8dWWeNV8NGGYGaXwO8ukwM7d4APYqhvWxSHzhjvD62kL1f8iKAbCMuMa3C64BPBqJgSoTNCV5A4wrjiqunWoyg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <72CFEF62EA7E434782A26A9FF7092715@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 544ac7c2-83b2-4562-9381-08d70bbe042d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 20:25:03.6772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: trondmy@hammerspace.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1676
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add tracepoints to allow debugging of the event chain leading to
-a pnfs fallback to doing I/O through the MDS.
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 26 +++++++++
- fs/nfs/nfs4trace.c                     |  8 +++
- fs/nfs/nfs4trace.h                     | 76 +++++++++++++++++++++++++-
- fs/nfs/pnfs.c                          |  2 +
- include/linux/nfs4.h                   |  1 +
- 5 files changed, 112 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index bcff3bf5ae09..b04e20d28162 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -934,6 +934,10 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	if (pgio->pg_error < 0)
- 		return;
- out_mds:
-+	trace_pnfs_mds_fallback_pg_init_read(pgio->pg_inode,
-+			0, NFS4_MAX_UINT64, IOMODE_READ,
-+			NFS_I(pgio->pg_inode)->layout,
-+			pgio->pg_lseg);
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
- 	nfs_pageio_reset_read_mds(pgio);
-@@ -1000,6 +1004,10 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	return;
- 
- out_mds:
-+	trace_pnfs_mds_fallback_pg_init_write(pgio->pg_inode,
-+			0, NFS4_MAX_UINT64, IOMODE_RW,
-+			NFS_I(pgio->pg_inode)->layout,
-+			pgio->pg_lseg);
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
- 	nfs_pageio_reset_write_mds(pgio);
-@@ -1026,6 +1034,10 @@ ff_layout_pg_get_mirror_count_write(struct nfs_pageio_descriptor *pgio,
- 	if (pgio->pg_lseg)
- 		return FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg);
- 
-+	trace_pnfs_mds_fallback_pg_get_mirror_count(pgio->pg_inode,
-+			0, NFS4_MAX_UINT64, IOMODE_RW,
-+			NFS_I(pgio->pg_inode)->layout,
-+			pgio->pg_lseg);
- 	/* no lseg means that pnfs is not in use, so no mirroring here */
- 	nfs_pageio_reset_write_mds(pgio);
- out:
-@@ -1075,6 +1087,10 @@ static void ff_layout_reset_write(struct nfs_pgio_header *hdr, bool retry_pnfs)
- 			hdr->args.count,
- 			(unsigned long long)hdr->args.offset);
- 
-+		trace_pnfs_mds_fallback_write_done(hdr->inode,
-+				hdr->args.offset, hdr->args.count,
-+				IOMODE_RW, NFS_I(hdr->inode)->layout,
-+				hdr->lseg);
- 		task->tk_status = pnfs_write_done_resend_to_mds(hdr);
- 	}
- }
-@@ -1094,6 +1110,10 @@ static void ff_layout_reset_read(struct nfs_pgio_header *hdr)
- 			hdr->args.count,
- 			(unsigned long long)hdr->args.offset);
- 
-+		trace_pnfs_mds_fallback_read_done(hdr->inode,
-+				hdr->args.offset, hdr->args.count,
-+				IOMODE_READ, NFS_I(hdr->inode)->layout,
-+				hdr->lseg);
- 		task->tk_status = pnfs_read_done_resend_to_mds(hdr);
- 	}
- }
-@@ -1827,6 +1847,9 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- out_failed:
- 	if (ff_layout_avoid_mds_available_ds(lseg))
- 		return PNFS_TRY_AGAIN;
-+	trace_pnfs_mds_fallback_read_pagelist(hdr->inode,
-+			hdr->args.offset, hdr->args.count,
-+			IOMODE_READ, NFS_I(hdr->inode)->layout, lseg);
- 	return PNFS_NOT_ATTEMPTED;
- }
- 
-@@ -1892,6 +1915,9 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
- out_failed:
- 	if (ff_layout_avoid_mds_available_ds(lseg))
- 		return PNFS_TRY_AGAIN;
-+	trace_pnfs_mds_fallback_write_pagelist(hdr->inode,
-+			hdr->args.offset, hdr->args.count,
-+			IOMODE_RW, NFS_I(hdr->inode)->layout, lseg);
- 	return PNFS_NOT_ATTEMPTED;
- }
- 
-diff --git a/fs/nfs/nfs4trace.c b/fs/nfs/nfs4trace.c
-index e9fb3e50a999..1a8f376b3f73 100644
---- a/fs/nfs/nfs4trace.c
-+++ b/fs/nfs/nfs4trace.c
-@@ -16,4 +16,12 @@
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_read);
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_write);
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_commit_ds);
-+
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_pg_init_read);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_pg_init_write);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_pg_get_mirror_count);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_read_done);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_write_done);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_read_pagelist);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(pnfs_mds_fallback_write_pagelist);
- #endif
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index d85f20945a2b..b2f395fa7350 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -1771,6 +1771,7 @@ TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_BLOCKED);
- TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_INVALID_OPEN);
- TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_RETRY);
- TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET);
-+TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_EXIT);
- 
- #define show_pnfs_update_layout_reason(reason)				\
- 	__print_symbolic(reason,					\
-@@ -1786,7 +1787,8 @@ TRACE_DEFINE_ENUM(PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET);
- 		{ PNFS_UPDATE_LAYOUT_BLOCKED, "layouts blocked" },	\
- 		{ PNFS_UPDATE_LAYOUT_INVALID_OPEN, "invalid open" },	\
- 		{ PNFS_UPDATE_LAYOUT_RETRY, "retrying" },	\
--		{ PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET, "sent layoutget" })
-+		{ PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET, "sent layoutget" }, \
-+		{ PNFS_UPDATE_LAYOUT_EXIT, "exit" })
- 
- TRACE_EVENT(pnfs_update_layout,
- 		TP_PROTO(struct inode *inode,
-@@ -1845,6 +1847,78 @@ TRACE_EVENT(pnfs_update_layout,
- 		)
- );
- 
-+DECLARE_EVENT_CLASS(pnfs_layout_event,
-+		TP_PROTO(struct inode *inode,
-+			loff_t pos,
-+			u64 count,
-+			enum pnfs_iomode iomode,
-+			struct pnfs_layout_hdr *lo,
-+			struct pnfs_layout_segment *lseg
-+		),
-+		TP_ARGS(inode, pos, count, iomode, lo, lseg),
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u64, fileid)
-+			__field(u32, fhandle)
-+			__field(loff_t, pos)
-+			__field(u64, count)
-+			__field(enum pnfs_iomode, iomode)
-+			__field(int, layoutstateid_seq)
-+			__field(u32, layoutstateid_hash)
-+			__field(long, lseg)
-+		),
-+		TP_fast_assign(
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = NFS_FILEID(inode);
-+			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-+			__entry->pos = pos;
-+			__entry->count = count;
-+			__entry->iomode = iomode;
-+			if (lo != NULL) {
-+				__entry->layoutstateid_seq =
-+				be32_to_cpu(lo->plh_stateid.seqid);
-+				__entry->layoutstateid_hash =
-+				nfs_stateid_hash(&lo->plh_stateid);
-+			} else {
-+				__entry->layoutstateid_seq = 0;
-+				__entry->layoutstateid_hash = 0;
-+			}
-+			__entry->lseg = (long)lseg;
-+		),
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x "
-+			"iomode=%s pos=%llu count=%llu "
-+			"layoutstateid=%d:0x%08x lseg=0x%lx",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle,
-+			show_pnfs_iomode(__entry->iomode),
-+			(unsigned long long)__entry->pos,
-+			(unsigned long long)__entry->count,
-+			__entry->layoutstateid_seq, __entry->layoutstateid_hash,
-+			__entry->lseg
-+		)
-+);
-+
-+#define DEFINE_PNFS_LAYOUT_EVENT(name) \
-+	DEFINE_EVENT(pnfs_layout_event, name, \
-+		TP_PROTO(struct inode *inode, \
-+			loff_t pos, \
-+			u64 count, \
-+			enum pnfs_iomode iomode, \
-+			struct pnfs_layout_hdr *lo, \
-+			struct pnfs_layout_segment *lseg \
-+		), \
-+		TP_ARGS(inode, pos, count, iomode, lo, lseg))
-+
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_pg_init_read);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_pg_init_write);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_pg_get_mirror_count);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_read_done);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_write_done);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_read_pagelist);
-+DEFINE_PNFS_LAYOUT_EVENT(pnfs_mds_fallback_write_pagelist);
-+
- #endif /* CONFIG_NFS_V4_1 */
- 
- #endif /* _TRACE_NFS4_H */
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 758917463700..75bd5b552ba4 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2037,6 +2037,8 @@ pnfs_update_layout(struct inode *ino,
- out_put_layout_hdr:
- 	if (first)
- 		pnfs_clear_first_layoutget(lo);
-+	trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
-+				 PNFS_UPDATE_LAYOUT_EXIT);
- 	pnfs_put_layout_hdr(lo);
- out:
- 	dprintk("%s: inode %s/%llu pNFS layout segment %s for "
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 22494d170619..fd59904a282c 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -660,6 +660,7 @@ enum pnfs_update_layout_reason {
- 	PNFS_UPDATE_LAYOUT_BLOCKED,
- 	PNFS_UPDATE_LAYOUT_INVALID_OPEN,
- 	PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET,
-+	PNFS_UPDATE_LAYOUT_EXIT,
- };
- 
- #define NFS4_OP_MAP_NUM_LONGS					\
--- 
-2.21.0
-
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgYmNjMGU2NWY0
+N2RlZjAxMGQ4ZDFjNGNmMDliZGM2OThmZTA2MWI3NzoNCg0KICBNZXJnZSB0YWcgJ21pcHNfZml4
+ZXNfNS4yXzInIG9mIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
+dC9taXBzL2xpbnV4ICgyMDE5LTA3LTA2IDEwOjMyOjEyIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxl
+IGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9w
+cm9qZWN0cy90cm9uZG15L2xpbnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuMy0xDQoNCmZvciB5
+b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byBkNWI5MjE2ZmQ1MTE0YmU0ZWQ5OGNhOWMxZWNjNWYx
+NjRjZDhjZjVlOg0KDQogIHBuZnMvZmxleGZpbGVzOiBBZGQgdHJhY2Vwb2ludHMgZm9yIGRldGVj
+dGluZyBwbmZzIGZhbGxiYWNrIHRvIE1EUyAoMjAxOS0wNy0xOCAxNTo1MDoyOCAtMDQwMCkNCg0K
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQ0KTkZTIGNsaWVudCB1cGRhdGVzIGZvciBMaW51eCA1LjMNCg0KSGlnaGxpZ2h0cyBp
+bmNsdWRlOg0KDQpTdGFibGUgZml4ZXM6DQotIFNVTlJQQzogRW5zdXJlIGJ2ZWNzIGFyZSByZS1z
+eW5jZWQgd2hlbiB3ZSByZS1lbmNvZGUgdGhlIFJQQyByZXF1ZXN0DQotIEZpeCBhbiBPb3BzIGlu
+IGZmX2xheW91dF90cmFja19kc19lcnJvciBkdWUgdG8gYSBQVFJfRVJSKCkgZGVyZWZlcmVuY2UN
+Ci0gUmV2ZXJ0IGJ1Z2d5IE5GUyByZWFkZGlycGx1cyBvcHRpbWlzYXRpb24NCi0gTkZTdjQ6IEhh
+bmRsZSB0aGUgc3BlY2lhbCBMaW51eCBmaWxlIG9wZW4gYWNjZXNzIG1vZGUNCi0gcG5mczogRml4
+IGEgcHJvYmxlbSB3aGVyZSB3ZSBncmF0dWl0b3VzbHkgc3RhcnQgZG9pbmcgSS9PIHRocm91Z2gg
+dGhlIE1EUw0KDQpGZWF0dXJlczoNCi0gQWxsb3cgTkZTIGNsaWVudCB0byBzZXQgdXAgbXVsdGlw
+bGUgVENQIGNvbm5lY3Rpb25zIHRvIHRoZSBzZXJ2ZXIgdXNpbmcNCiAgIGEgbmV3ICduY29ubmVj
+dD1YJyBtb3VudCBvcHRpb24uIFF1ZXVlIGxlbmd0aCBpcyB1c2VkIHRvIGJhbGFuY2UgbG9hZC4N
+Ci0gRW5oYW5jZSBzdGF0aXN0aWNzIHJlcG9ydGluZyB0byByZXBvcnQgb24gYWxsIHRyYW5zcG9y
+dHMgd2hlbiB1c2luZw0KICAgbXVsdGlwbGUgY29ubmVjdGlvbnMuDQotIFNwZWVkIHVwIFNVTlJQ
+QyBieSByZW1vdmluZyBiaC1zYWZlIHNwaW5sb2Nrcw0KLSBBZGQgYSBtZWNoYW5pc20gdG8gYWxs
+b3cgTkZTdjQgdG8gcmVxdWVzdCB0aGF0IGNvbnRhaW5lcnMgc2V0IGENCiAgIHVuaXF1ZSBwZXIt
+aG9zdCBpZGVudGlmaWVyIGZvciB3aGVuIHRoZSBob3N0bmFtZSBpcyBub3Qgc2V0Lg0KLSBFbnN1
+cmUgTkZTdjQgdXBkYXRlcyB0aGUgbGVhc2VfdGltZSBhZnRlciBhIGNsaWVudGlkIHVwZGF0ZQ0K
+DQpCdWdmaXhlcyBhbmQgY2xlYW51cDoNCi0gRml4IHVzZS1hZnRlci1mcmVlIGluIHJwY3JkbWFf
+cG9zdF9yZWN2cw0KLSBGaXggYSBtZW1vcnkgbGVhayB3aGVuIG5mc19tYXRjaF9jbGllbnQoKSBp
+cyBpbnRlcnJ1cHRlZA0KLSBGaXggYnVnZ3kgZmlsZSBhY2Nlc3MgY2hlY2tpbmcgaW4gTkZTdjQg
+b3BlbiBmb3IgZXhlY3V0ZQ0KLSBkaXNhYmxlIHVuc3VwcG9ydGVkIGNsaWVudCBzaWRlIGRlZHVw
+bGljYXRpb24NCi0gRml4IHNwdXJpb3VzIGNsaWVudCBkaXNjb25uZWN0aW9ucw0KLSBGaXggb2Nj
+YXNpb25hbCBSRE1BIHRyYW5zcG9ydCBkZWFkbG9jaw0KLSBWYXJpb3VzIFJETUEgY2xlYW51cHMN
+Ci0gVmFyaW91cyB0cmFjZXBvaW50IGZpeGVzDQotIEZpeCB0aGUgVENQIGNhbGxiYWNrIGNoYW5u
+ZWwgdG8gZ3VhcmFudGVlIHRoZSBzZXJ2ZXIgY2FuIGFjdHVhbGx5IHNlbmQNCiAgIHRoZSBudW1i
+ZXIgb2YgY2FsbGJhY2sgcmVxdWVzdHMgdGhhdCB3YXMgbmVnb3RpYXRlZCBhdCBtb3VudCB0aW1l
+Lg0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tDQpBbm5hIFNjaHVtYWtlciAoMSk6DQogICAgICBTVU5SUEM6IERyb3AgcmVk
+dW5kYW50IENPTkZJR18gZnJvbSBDT05GSUdfU1VOUlBDX0RJU0FCTEVfSU5TRUNVUkVfRU5DVFlQ
+RVMNCg0KQmVuamFtaW4gQ29kZGluZ3RvbiAoMSk6DQogICAgICBORlM6IENsZWFudXAgaWYgbmZz
+X21hdGNoX2NsaWVudCBpcyBpbnRlcnJ1cHRlZA0KDQpDaHVjayBMZXZlciAoMTkpOg0KICAgICAg
+eHBydHJkbWE6IEZpeCBhIEJVRyB3aGVuIHRyYWNpbmcgaXMgZW5hYmxlZCB3aXRoIE5GU3Y0LjEg
+b24gUkRNQQ0KICAgICAgeHBydHJkbWE6IEZpeCB1c2UtYWZ0ZXItZnJlZSBpbiBycGNyZG1hX3Bv
+c3RfcmVjdnMNCiAgICAgIHhwcnRyZG1hOiBSZXBsYWNlIHVzZSBvZiB4ZHJfc3RyZWFtX3BvcyBp
+biBycGNyZG1hX21hcnNoYWxfcmVxDQogICAgICB4cHJ0cmRtYTogRml4IG9jY2FzaW9uYWwgdHJh
+bnNwb3J0IGRlYWRsb2NrDQogICAgICB4cHJ0cmRtYTogUmVtb3ZlIHRoZSBSUENSRE1BX1JFUV9G
+X1BFTkRJTkcgZmxhZw0KICAgICAgeHBydHJkbWE6IFJlbW92ZSBmcl9zdGF0ZQ0KICAgICAgeHBy
+dHJkbWE6IEFkZCBtZWNoYW5pc20gdG8gcGxhY2UgTVJzIGJhY2sgb24gdGhlIGZyZWUgbGlzdA0K
+ICAgICAgeHBydHJkbWE6IFJlZHVjZSBjb250ZXh0IHN3aXRjaGluZyBkdWUgdG8gTG9jYWwgSW52
+YWxpZGF0aW9uDQogICAgICB4cHJ0cmRtYTogV2FrZSBSUENzIGRpcmVjdGx5IGluIHJwY3JkbWFf
+d2Nfc2VuZCBwYXRoDQogICAgICB4cHJ0cmRtYTogU2ltcGxpZnkgcnBjcmRtYV9yZXBfY3JlYXRl
+DQogICAgICB4cHJ0cmRtYTogU3RyZWFtbGluZSBycGNyZG1hX3Bvc3RfcmVjdnMNCiAgICAgIHhw
+cnRyZG1hOiBSZWZhY3RvciBjaHVuayBlbmNvZGluZw0KICAgICAgeHBydHJkbWE6IFJlbW92ZSBy
+cGNyZG1hX3JlcTo6cmxfYnVmZmVyDQogICAgICB4cHJ0cmRtYTogTW9kZXJuaXplIG9wcy0+Y29u
+bmVjdA0KICAgICAgTkZTNDogQWRkIGEgdHJhY2UgZXZlbnQgdG8gcmVjb3JkIGludmFsaWQgQ0Ig
+c2VxdWVuY2UgSURzDQogICAgICBORlM6IEZpeCBzaG93X25mc19lcnJvcnMgbWFjcm9zIGFnYWlu
+DQogICAgICBORlM6IERpc3BsYXkgc3ltYm9saWMgc3RhdHVzIGNvZGUgbmFtZXMgaW4gdHJhY2Ug
+bG9nDQogICAgICBORlM6IFVwZGF0ZSBzeW1ib2xpYyBmbGFncyBkaXNwbGF5ZWQgYnkgdHJhY2Ug
+ZXZlbnRzDQogICAgICBORlM6IFJlY29yZCB0YXNrLCBjbGllbnQgSUQsIGFuZCBYSUQgaW4geGRy
+X3N0YXR1cyB0cmFjZSBwb2ludHMNCg0KRGFycmljayBKLiBXb25nICgxKToNCiAgICAgIG5mczog
+ZGlzYWJsZSBjbGllbnQgc2lkZSBkZWR1cGxpY2F0aW9uDQoNCkRhdmUgV3lzb2NoYW5za2kgKDUp
+Og0KICAgICAgU1VOUlBDOiBNb3ZlIGNhbGwgdG8gcnBjX2NvdW50X2lvc3RhdHMgYmVmb3JlIHJw
+Y19jYWxsX2RvbmUNCiAgICAgIFNVTlJQQzogVXNlIHByb3BlciBwcmludGsgc3BlY2lmaWVycyBm
+b3IgdW5zaWduZWQgbG9uZyBsb25nDQogICAgICBTVU5SUEM6IENvdW50IG9wcyBjb21wbGV0aW5n
+IHdpdGggdGtfc3RhdHVzIDwgMA0KICAgICAgTkZTdjQ6IEFkZCBsZWFzZV90aW1lIGFuZCBsZWFz
+ZV9leHBpcmVkIHRvICduZnM0OicgbGluZSBvZiBtb3VudHN0YXRzDQogICAgICBTVU5SUEM6IEZp
+eCBwb3NzaWJsZSBhdXRvZGlzY29ubmVjdCBkdXJpbmcgY29ubmVjdCBkdWUgdG8gb2xkIGxhc3Rf
+dXNlZA0KDQpEb25hbGQgQnVjemVrICg0KToNCiAgICAgIG5mczogRml4IGNvcHktYW5kLXBhc3Rl
+IGVycm9yIGluIGRlYnVnIG1lc3NhZ2UNCiAgICAgIG5mczQ6IE1ha2UgbmZzNF9wcm9jX2dldF9s
+ZWFzZV90aW1lIGF2YWlsYWJsZSBmb3IgbmZzNC4wDQogICAgICBuZnM0OiBSZW5hbWUgbmZzNDFf
+c2V0dXBfc3RhdGVfcmVuZXdhbA0KICAgICAgbmZzNC4wOiBSZWZldGNoIGxlYXNlX3RpbWUgYWZ0
+ZXIgY2xpZW50aWQgdXBkYXRlDQoNCk1hcmt1cyBFbGZyaW5nICgyKToNCiAgICAgIE5GUzogVXNl
+IHNlcV9wdXRjKCkgaW4gbmZzX3Nob3dfc3RhdHMoKQ0KICAgICAgTkZTOiBSZXBsYWNlIDE2IHNl
+cV9wcmludGYoKSBjYWxscyBieSBzZXFfcHV0cygpDQoNCk1heCBLZWxsZXJtYW5uICgxKToNCiAg
+ICAgIFJldmVydCAiTkZTOiByZWFkZGlycGx1cyBvcHRpbWl6YXRpb24gYnkgY2FjaGUgbWVjaGFu
+aXNtIiAobWVtbGVhaykNCg0KTmVpbEJyb3duICgzKToNCiAgICAgIE5GUzogc2VuZCBzdGF0ZSBt
+YW5hZ2VtZW50IG9uIGEgc2luZ2xlIGNvbm5lY3Rpb24uDQogICAgICBTVU5SUEM6IGVuaGFuY2Ug
+cnBjX2NsbnRfc2hvd19zdGF0cygpIHRvIHJlcG9ydCBvbiBhbGwgeHBydHMuDQogICAgICBTVU5S
+UEM6IGFkZCBsaW5rcyBmb3IgYWxsIGNsaWVudCB4cHJ0cyB0byBkZWJ1Z2ZzDQoNClRyb25kIE15
+a2xlYnVzdCAoMzYpOg0KICAgICAgTkZTdjQ6IEhhbmRsZSBvcGVuIGZvciBleGVjdXRlIGNvcnJl
+Y3RseQ0KICAgICAgTkZTdjQ6IEhhbmRsZSB0aGUgc3BlY2lhbCBMaW51eCBmaWxlIG9wZW4gYWNj
+ZXNzIG1vZGUNCiAgICAgIFNVTlJQQzogUmVwbGFjZSB0aGUgcXVldWUgdGltZXIgd2l0aCBhIGRl
+bGF5ZWQgd29yayBmdW5jdGlvbg0KICAgICAgU1VOUlBDOiBSZXBsYWNlIGRpcmVjdCB0YXNrIHdh
+a2V1cHMgZnJvbSBzb2Z0aXJxIGNvbnRleHQNCiAgICAgIFNVTlJQQzogUmVtb3ZlIHRoZSBiaC1z
+YWZlIGxvY2sgcmVxdWlyZW1lbnQgb24geHBydC0+dHJhbnNwb3J0X2xvY2sNCiAgICAgIE5GUzog
+Q3JlYXRlIGEgcm9vdCBORlMgZGlyZWN0b3J5IGluIC9zeXMvZnMvbmZzDQogICAgICBORlM6IENs
+ZWFudXAgLSBhZGQgbmZzX2NsaWVudHNfZXhpdCB0byBtaXJyb3IgbmZzX2NsaWVudHNfaW5pdA0K
+ICAgICAgU1VOUlBDOiBBZGQgYmFzaWMgbG9hZCBiYWxhbmNpbmcgdG8gdGhlIHRyYW5zcG9ydCBz
+d2l0Y2gNCiAgICAgIFNVTlJQQzogUmVtb3ZlIHRoZSBiaC1zYWZlIGxvY2sgcmVxdWlyZW1lbnQg
+b24gdGhlIHJwY193YWl0X3F1ZXVlLT5sb2NrDQogICAgICBORlM6IEFkZCBkZWZlcnJlZCBjYWNo
+ZSBpbnZhbGlkYXRpb24gZm9yIGNsb3NlLXRvLW9wZW4gY29uc2lzdGVuY3kgdmlvbGF0aW9ucw0K
+ICAgICAgTkZTOiBBZGQgc3lzZnMgc3VwcG9ydCBmb3IgcGVyLWNvbnRhaW5lciBpZGVudGlmaWVy
+DQogICAgICBTVU5SUEM6IEFsbG93IGNyZWF0aW9uIG9mIFJQQyBjbGllbnRzIHdpdGggbXVsdGlw
+bGUgY29ubmVjdGlvbnMNCiAgICAgIE5GUzogQWRkIGEgbW91bnQgb3B0aW9uIHRvIHNwZWNpZnkg
+bnVtYmVyIG9mIFRDUCBjb25uZWN0aW9ucyB0byB1c2UNCiAgICAgIE5GU3Y0OiBBbGxvdyBtdWx0
+aXBsZSBjb25uZWN0aW9ucyB0byBORlN2NC54ICh4PjApIHNlcnZlcnMNCiAgICAgIHBORlM6IEFs
+bG93IG11bHRpcGxlIGNvbm5lY3Rpb25zIHRvIHRoZSBEUw0KICAgICAgTkZTOiBEaXNwbGF5IHRo
+ZSAibmNvbm5lY3QiIG1vdW50IG9wdGlvbiBpZiBpdCBpcyBzZXQuDQogICAgICBORlM6IEFsbG93
+IG11bHRpcGxlIGNvbm5lY3Rpb25zIHRvIGEgTkZTdjIgb3IgTkZTdjMgc2VydmVyDQogICAgICBN
+ZXJnZSBicmFuY2ggJ2JoLXJlbW92ZScNCiAgICAgIFNVTlJQQzogUmVtb3ZlIHdhcm5pbmcgaW4g
+ZGVidWdmcy5jIHdoZW4gY29tcGlsaW5nIHdpdGggVz0xDQogICAgICBNZXJnZSBicmFuY2ggJ2Nh
+Y2hlX2NvbnNpc3RlbmN5Jw0KICAgICAgTWVyZ2UgYnJhbmNoICdjb250YWluZXJzJw0KICAgICAg
+TWVyZ2UgYnJhbmNoICdtdWx0aXBhdGhfdGNwJw0KICAgICAgTkZTOiBDbGVhbiB1cCB3cml0ZWJh
+Y2sgY29kZQ0KICAgICAgTWVyZ2UgdGFnICduZnMtcmRtYS1mb3ItNS4zLTEnIG9mIGdpdDovL2dp
+dC5saW51eC1uZnMub3JnL3Byb2plY3RzL2FubmEvbGludXgtbmZzDQogICAgICBTVU5SUEM6IEZp
+eCB0cmFuc3BvcnQgYWNjb3VudGluZyB3aGVuIGNhbGxlciBzcGVjaWZpZXMgYW4gcnBjX3hwcnQN
+CiAgICAgIE5GU3Y0OiBWYWxpZGF0ZSB0aGUgc3RhdGVpZCBiZWZvcmUgYXBwbHlpbmcgaXQgdG8g
+c3RhdGUgcmVjb3ZlcnkNCiAgICAgIFNVTlJQQzogUmVwbGFjZSBkaXZpc2lvbiBieSBtdWx0aXBs
+aWNhdGlvbiBpbiBjYWxjdWxhdGlvbiBvZiBxdWV1ZSBsZW5ndGgNCiAgICAgIFNVTlJQQzogU2tp
+cCB6ZXJvLXJlZmNvdW50IHRyYW5zcG9ydHMNCiAgICAgIFNVTlJQQzogRml4IGluaXRpYWxpc2F0
+aW9uIG9mIHN0cnVjdCBycGNfeHBydF9zd2l0Y2gNCiAgICAgIFNVTlJQQzogRml4IHVwIGJhY2tj
+aGFubmVsIHNsb3QgdGFibGUgYWNjb3VudGluZw0KICAgICAgTkZTdjQ6IERvbid0IHVzZSB0aGUg
+emVybyBzdGF0ZWlkIHdpdGggbGF5b3V0Z2V0DQogICAgICBwbmZzL2ZsZXhmaWxlczogRml4IFBU
+Ul9FUlIoKSBkZXJlZmVyZW5jZXMgaW4gZmZfbGF5b3V0X3RyYWNrX2RzX2Vycm9yDQogICAgICBT
+VU5SUEM6IEVuc3VyZSB0aGUgYnZlY3MgYXJlIHJlc2V0IHdoZW4gd2UgcmUtZW5jb2RlIHRoZSBS
+UEMgcmVxdWVzdA0KICAgICAgU1VOUlBDOiBPcHRpbWlzZSB0cmFuc3BvcnQgYmFsYW5jaW5nIGNv
+ZGUNCiAgICAgIHBuZnM6IEZpeCBhIHByb2JsZW0gd2hlcmUgd2UgZ3JhdHVpdG91c2x5IHN0YXJ0
+IGRvaW5nIEkvTyB0aHJvdWdoIHRoZSBNRFMNCiAgICAgIHBuZnMvZmxleGZpbGVzOiBBZGQgdHJh
+Y2Vwb2ludHMgZm9yIGRldGVjdGluZyBwbmZzIGZhbGxiYWNrIHRvIE1EUw0KDQogZnMvbmZzL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstDQogZnMvbmZzL2NhbGxi
+YWNrX3Byb2MuYyAgICAgICAgICAgICAgICAgICAgIHwgIDI4ICsrLQ0KIGZzL25mcy9jbGllbnQu
+YyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyNCArKy0NCiBmcy9uZnMvZGlyLmMgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgOTQgKy0tLS0tLS0tDQogZnMvbmZzL2ZsZXhm
+aWxlbGF5b3V0L2ZsZXhmaWxlbGF5b3V0LmMgICAgIHwgIDI2ICsrKw0KIGZzL25mcy9mbGV4Zmls
+ZWxheW91dC9mbGV4ZmlsZWxheW91dGRldi5jICB8ICAgMiArLQ0KIGZzL25mcy9pbm9kZS5jICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAzMCArKy0NCiBmcy9uZnMvaW50ZXJuYWwuaCAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKy0NCiBmcy9uZnMvbmV0bnMuaCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKw0KIGZzL25mcy9uZnMyeGRyLmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgMiArLQ0KIGZzL25mcy9uZnMzY2xpZW50LmMgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMyArDQogZnMvbmZzL25mczN4ZHIuYyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAyICstDQogZnMvbmZzL25mczRfZnMuaCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICA0ICstDQogZnMvbmZzL25mczRjbGllbnQuYyAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgIDE0ICstDQogZnMvbmZzL25mczRmaWxlLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICA4ICstDQogZnMvbmZzL25mczRwcm9jLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+IDgwICsrKysrLS0NCiBmcy9uZnMvbmZzNHN0YXRlLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgNDkgKysrLS0NCiBmcy9uZnMvbmZzNHRyYWNlLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDggKw0KIGZzL25mcy9uZnM0dHJhY2UuaCAgICAgICAgICAgICAgICAgICAgICAgICB8IDI4
+MyArKysrKysrKysrKysrKysrKystLS0tLS0tDQogZnMvbmZzL25mczR4ZHIuYyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDE2ICstDQogZnMvbmZzL25mc3RyYWNlLmggICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgMjMzICsrKysrKysrKysrKysrLS0tLS0tDQogZnMvbmZzL3BhZ2VsaXN0
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICstDQogZnMvbmZzL3BuZnMuYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIwICstDQogZnMvbmZzL3N1cGVyLmMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDU3ICsrKy0tDQogZnMvbmZzL3N5c2ZzLmMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMTg3ICsrKysrKysrKysrKysrKysrDQogZnMvbmZzL3N5
+c2ZzLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI1ICsrKw0KIGZzL25mcy93cml0
+ZS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArLQ0KIGluY2x1ZGUvbGludXgv
+bmZzNC5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQogaW5jbHVkZS9saW51eC9uZnNf
+ZnMuaCAgICAgICAgICAgICAgICAgICAgIHwgICAyICsNCiBpbmNsdWRlL2xpbnV4L25mc19mc19z
+Yi5oICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGluY2x1ZGUvbGludXgvc3VucnBjL2JjX3hw
+cnQuaCAgICAgICAgICAgICB8ICAgMSArDQogaW5jbHVkZS9saW51eC9zdW5ycGMvY2xudC5oICAg
+ICAgICAgICAgICAgIHwgICA0ICsNCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy9tZXRyaWNzLmggICAg
+ICAgICAgICAgfCAgIDcgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy9zY2hlZC5oICAgICAgICAg
+ICAgICAgfCAgIDQgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmggICAgICAgICAgICAg
+ICAgfCAgMTAgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0bXVsdGlwYXRoLmggICAgICAg
+fCAgIDIgKw0KIGluY2x1ZGUvbGludXgvc3VucnBjL3hwcnRzb2NrLmggICAgICAgICAgICB8ICAg
+NSArDQogaW5jbHVkZS90cmFjZS9ldmVudHMvcnBjcmRtYS5oICAgICAgICAgICAgIHwgIDkwICsr
+KysrKy0tDQogbmV0L3N1bnJwYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAy
+ICstDQogbmV0L3N1bnJwYy9iYWNrY2hhbm5lbF9ycXN0LmMgICAgICAgICAgICAgIHwgIDQwICsr
+LS0NCiBuZXQvc3VucnBjL2NsbnQuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgOTUgKysr
+KysrKystDQogbmV0L3N1bnJwYy9kZWJ1Z2ZzLmMgICAgICAgICAgICAgICAgICAgICAgIHwgIDQ4
+ICsrKy0tDQogbmV0L3N1bnJwYy9zY2hlZC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDgx
+ICsrKystLS0NCiBuZXQvc3VucnBjL3N0YXRzLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+MjMgKy0NCiBuZXQvc3VucnBjL3N2Yy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIg
+Ky0NCiBuZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMDEgKysr
+KystLS0tDQogbmV0L3N1bnJwYy94cHJ0bXVsdGlwYXRoLmMgICAgICAgICAgICAgICAgIHwgIDg5
+ICsrKysrKy0tDQogbmV0L3N1bnJwYy94cHJ0cmRtYS9iYWNrY2hhbm5lbC5jICAgICAgICAgIHwg
+ICA3ICsNCiBuZXQvc3VucnBjL3hwcnRyZG1hL2Zyd3Jfb3BzLmMgICAgICAgICAgICAgfCAzMjcg
+KysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3JwY19y
+ZG1hLmMgICAgICAgICAgICAgfCAxNTIgKysrKysrLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRy
+ZG1hL3N2Y19yZG1hX2JhY2tjaGFubmVsLmMgfCAgIDQgKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1h
+L3N2Y19yZG1hX3RyYW5zcG9ydC5jICAgfCAgIDggKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3Ry
+YW5zcG9ydC5jICAgICAgICAgICAgfCAgODQgKysrKysrLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1h
+L3ZlcmJzLmMgICAgICAgICAgICAgICAgfCAxMTUgKysrKystLS0tLQ0KIG5ldC9zdW5ycGMveHBy
+dHJkbWEveHBydF9yZG1hLmggICAgICAgICAgICB8ICA0NSArKy0tDQogbmV0L3N1bnJwYy94cHJ0
+c29jay5jICAgICAgICAgICAgICAgICAgICAgIHwgMTI2ICsrKysrKystLS0tDQogNTYgZmlsZXMg
+Y2hhbmdlZCwgMTgzMiBpbnNlcnRpb25zKCspLCA4NjUgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGZzL25mcy9zeXNmcy5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGZzL25mcy9zeXNm
+cy5oDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBI
+YW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
