@@ -2,27 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5CCB6EA92
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jul 2019 20:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E78336EC53
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jul 2019 00:01:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfGSSSE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Jul 2019 14:18:04 -0400
-Received: from fieldses.org ([173.255.197.46]:58526 "EHLO fieldses.org"
+        id S1727734AbfGSWBQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Jul 2019 18:01:16 -0400
+Received: from fieldses.org ([173.255.197.46]:58670 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728461AbfGSSSE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 19 Jul 2019 14:18:04 -0400
+        id S1727344AbfGSWBQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 19 Jul 2019 18:01:16 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 9C9C41C89; Fri, 19 Jul 2019 14:18:03 -0400 (EDT)
-Date:   Fri, 19 Jul 2019 14:18:03 -0400
-To:     John Bartoszewski <john.bartoszewski@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: zfs server slow mounting ( mtab ?)
-Message-ID: <20190719181803.GA21002@fieldses.org>
-References: <CAMttjSSQibhZ4ekSMVRF0jeREA9n9s6puAJcOTR2vyn=W2W5sg@mail.gmail.com>
+        id 6B29A1D39; Fri, 19 Jul 2019 18:01:16 -0400 (EDT)
+Date:   Fri, 19 Jul 2019 18:01:16 -0400
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
+Message-ID: <20190719220116.GA24373@fieldses.org>
+References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
+ <20190708192352.12614-6-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMttjSSQibhZ4ekSMVRF0jeREA9n9s6puAJcOTR2vyn=W2W5sg@mail.gmail.com>
+In-Reply-To: <20190708192352.12614-6-olga.kornievskaia@gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -30,64 +31,90 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 04:59:02PM -0600, John Bartoszewski wrote:
-> I'm trying to setup a nfs server with over 3500+ zfs datasets
-> being exported. Only NFSv3 is needed.
+On Mon, Jul 08, 2019 at 03:23:49PM -0400, Olga Kornievskaia wrote:
+> Incoming stateid (used by a READ) could be a saved copy stateid.
+> On first use make it active and check that the copy has started
+> within the allowable lease time.
 > 
-> The OS had a 4.4.172 kernel and nfs-utils 1.30. With these versions
-> when a client tried to mount an exported dataset, rpc.mountd spiked to
-> 100% for several minutes, the kernel produced a bug and a trace
-> output, and the client never finished.
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfsd/nfs4state.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 > 
-> I have built a 4.19.56 kernel, libevent 2.1.10, util-linux 2.34 (for
-> libblkid), and nfs-utils 2.4.1. With this setup rpc.mountd does spike
-> to 100%, but at least a mount finishes, but it takes about 5 minutes.
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 2555eb9..b786625 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5232,6 +5232,49 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+>  
+>  	return 0;
+>  }
+> +/*
+> + * A READ from an inter server to server COPY will have a
+> + * copy stateid. Return the parent nfs4_stid.
+> + */
+> +static __be32 _find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+> +		     struct nfs4_cpntf_state **cps)
+> +{
+> +	struct nfs4_cpntf_state *state = NULL;
+> +
+> +	if (st->si_opaque.so_clid.cl_id != nn->s2s_cp_cl_id)
+> +		return nfserr_bad_stateid;
+> +	spin_lock(&nn->s2s_cp_lock);
+> +	state = idr_find(&nn->s2s_cp_stateids, st->si_opaque.so_id);
+> +	if (state)
+> +		refcount_inc(&state->cp_p_stid->sc_count);
+> +	spin_unlock(&nn->s2s_cp_lock);
+> +	if (!state)
+> +		return nfserr_bad_stateid;
+> +	*cps = state;
+> +	return 0;
+> +}
+> +
+> +static __be32 find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+> +			       struct nfs4_stid **stid)
+> +{
+> +	__be32 status;
+> +	struct nfs4_cpntf_state *cps = NULL;
+> +
+> +	status = _find_cpntf_state(nn, st, &cps);
+> +	if (status)
+> +		return status;
+> +
+> +	/* Did the inter server to server copy start in time? */
+> +	if (cps->cp_active == false && !time_after(cps->cp_timeout, jiffies)) {
+> +		nfs4_put_stid(cps->cp_p_stid);
+> +		return nfserr_partner_no_auth;
 
-Have you experimented with the --num-threads option?  If so, did it
-help?
+I wonder whether instead of checking the time we should instead be
+destroying copy stateid's as they expire, so the fact that you were
+still able to look up the stateid suggests that it's good.  Or would
+that result in returning the wrong error here?  Just curious.
 
-> nfs-utils was configured with:
-> ./configure --disable-tirpc  --disable-nfsv4 --disable-nfsv41
-> --disable-gss --disable-ipv6
-> 
-> Stracing the new rpc.mountd it appears all the time is spent reading
-> the mtab.
-> 
-> Below is some of the output from:
-> /sbin/rpc.mountd --foreground --debug all
-> 
-> rpc.mountd: nfsd_fh: found 0x6173d50 path /
-> rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.24'
-> rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
-> rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.254'
-> rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
-> rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport'
-> rpc.mountd: nfsd_export: found 0x6174260 path /nfsexport
-> rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 7
-> \x43000a00000000001ce354a654a34fd4a09f9b59f6aebb11'
-> rpc.mountd: nfsd_fh: found 0x6174270 path /nfsexport
-> rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport/home'
-> rpc.mountd: nfsd_export: found 0x4cf8bc0 path /nfsexport/home
-> rpc.mountd: Received NULL request from 10.222.33.254
-> rpc.mountd: Received NULL request from 10.222.33.254
-> rpc.mountd: Received MNT3(/nfsexport/home/timmy) request from 10.222.33.254
-> rpc.mountd: authenticated mount request from 10.222.33.254:694 for
-> /nfsexport/home/timmy (/nfsexport/home/timmy)
-> rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 6 \x947e3e1400c9c79b0000000000000000'
-> rpc.mountd: nfsd_fh: found 0x4e54390 path /nfsexport/home/timmy
-> 
-> As you can see it searches for /, then /nfsexport, then /nfsexport/home,
-> and finally /nfsexport/home/timmy
-> 
-> But when zfs populates the mtab, the top level of the datasets
-> ( /nfsexport ) is at the bottom of the mtab, 3500 lines down.
-> The next level is also at the bottom. So getmntent has to
-> read the mtab stream through several times. Actually:
-> open("/etc/mtab", O_RDONLY|O_CLOEXEC)   = 10
-> is called 50000 times during this one mount attempt.
+> +	} else
+> +		cps->cp_active = true;
+> +
+> +	*stid = cps->cp_p_stid;
 
-I haven't looked at the v3 mountd code in a while.  I guess the next
-step would be to figure out what the rest of the call stack is--who's
-calling getmntent and why?
+What guarantees that cp_p_stid still points to a valid stateid?  (E.g.
+if this is an open stateid that has since been closed.)
 
 --b.
+
+> +
+> +	return nfs_ok;
+> +}
+>  
+>  /*
+>   * Checks for stateid operations
+> @@ -5264,6 +5307,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+>  	status = nfsd4_lookup_stateid(cstate, stateid,
+>  				NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
+>  				&s, nn);
+> +	if (status == nfserr_bad_stateid)
+> +		status = find_cpntf_state(nn, stateid, &s);
+>  	if (status)
+>  		return status;
+>  	status = nfsd4_stid_check_stateid_generation(stateid, s,
+> -- 
+> 1.8.3.1
