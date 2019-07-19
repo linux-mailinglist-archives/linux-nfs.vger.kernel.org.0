@@ -2,100 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 233F96D800
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jul 2019 02:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5CCB6EA92
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jul 2019 20:18:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfGSAy5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Jul 2019 20:54:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45037 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfGSAy4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Jul 2019 20:54:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so54851486iob.11;
-        Thu, 18 Jul 2019 17:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=nUnEs6T4yxPkW6WREIbs9wEKoNb3SkiM2LwRerDYtYk=;
-        b=Zp+YsoOb4+YimJVFP+rmmehJ7QupMsunxLPRhTMQ7jXnoaHswwRA1ATocJLmEZGCVY
-         dZ17PXS2HfTKZjCak2QKCM3/KtBhoIdhYkiY6ZFEGdN0TSOsFEB8NEWffhOLlN8DIUaP
-         AQ+cySK3q/XQid4gwfTVHkupIG6TIW0UG/4NchdhoFk5HmOC4b0Qxm8gqd7KSn6+qSrz
-         GI95Nl5k0smjnpB+/CnFURsbzqPPljIRcaz7TXyVjzsPGtLgeXT9C+4GuWUGrZ+0sJJJ
-         wrQ5u3WIkZI1FRzkNTSbRSmSYAPIQyKqWygmLS2XiKrdNf47MvFkG3/EGWveYPkmg7JK
-         O1iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=nUnEs6T4yxPkW6WREIbs9wEKoNb3SkiM2LwRerDYtYk=;
-        b=iB0fGa5/E7q9k3wPXh4+J+DerU9HRJ5jxWv1L2NLzdN5vJFdQza/5EerNmmLIOuHhj
-         WrG10pZNc2WbWBf9NVpX4/gpM0F0AcxV3r0Vmc3W5C3DNwWKB7S0YLnvgiWDDDmJ2bjr
-         +PFvHUfVPQFRQDoM3a+FOcnvRf1HgxJeLIgoQKjprrk035mdKkh8hs/myXrFTimOS1lb
-         rUvFf1xZcBo/NDCSmWFmx8pDVtfKv1qGAWXztkKoQVoXnlGIAM2W2IaR4UIrANEBgRrC
-         cehXqADZ//WcPJbgd2M4/ZFgBdIdvuUd+n4+3xSckUqR/xauz8/PkrIne7aboyaMDJ5+
-         W2Wg==
-X-Gm-Message-State: APjAAAVe2KMyvhaS82ih3p/6khUhCQ/mUG0+NJIDj1m+2JRbJ1T/2a4Y
-        gFXcpF9KsAKXCErdyMnjx4ZqP6U=
-X-Google-Smtp-Source: APXvYqwikNozvQi4R3soApB/iJlhaGuStqO4QQnVBFjrE2Ytb3ZeiZdtH/Xrt2hG/+qMMTCYJdU2HQ==
-X-Received: by 2002:a5e:c247:: with SMTP id w7mr4634487iop.72.1563497695696;
-        Thu, 18 Jul 2019 17:54:55 -0700 (PDT)
-Received: from leira (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id s10sm79919683iod.46.2019.07.18.17.54.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 17:54:54 -0700 (PDT)
-Message-ID: <219efbee81f7f22bdaf9764011cf831385837f74.camel@gmail.com>
-Subject: Re: [PATCH] pnfs: Fix a problem where we gratuitously start doing
- I/O through the MDS
-From:   Trond Myklebust <trondmy@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Date:   Thu, 18 Jul 2019 20:54:53 -0400
-In-Reply-To: <20190719004529.2E4422173B@mail.kernel.org>
-References: <20190718194039.119185-1-trond.myklebust@hammerspace.com>
-         <20190719004529.2E4422173B@mail.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1729317AbfGSSSE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Jul 2019 14:18:04 -0400
+Received: from fieldses.org ([173.255.197.46]:58526 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728461AbfGSSSE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 19 Jul 2019 14:18:04 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9C9C41C89; Fri, 19 Jul 2019 14:18:03 -0400 (EDT)
+Date:   Fri, 19 Jul 2019 14:18:03 -0400
+To:     John Bartoszewski <john.bartoszewski@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: zfs server slow mounting ( mtab ?)
+Message-ID: <20190719181803.GA21002@fieldses.org>
+References: <CAMttjSSQibhZ4ekSMVRF0jeREA9n9s6puAJcOTR2vyn=W2W5sg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMttjSSQibhZ4ekSMVRF0jeREA9n9s6puAJcOTR2vyn=W2W5sg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Sasha,
+On Fri, Jul 05, 2019 at 04:59:02PM -0600, John Bartoszewski wrote:
+> I'm trying to setup a nfs server with over 3500+ zfs datasets
+> being exported. Only NFSv3 is needed.
+> 
+> The OS had a 4.4.172 kernel and nfs-utils 1.30. With these versions
+> when a client tried to mount an exported dataset, rpc.mountd spiked to
+> 100% for several minutes, the kernel produced a bug and a trace
+> output, and the client never finished.
+> 
+> I have built a 4.19.56 kernel, libevent 2.1.10, util-linux 2.34 (for
+> libblkid), and nfs-utils 2.4.1. With this setup rpc.mountd does spike
+> to 100%, but at least a mount finishes, but it takes about 5 minutes.
 
-On Fri, 2019-07-19 at 00:45 +0000, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: d03360aaf5cc pNFS: Ensure we return the error if
-> someone kills a waiting layoutget.
-> 
-> The bot has tested the following trees: v5.2.1, v5.1.18, v4.19.59.
-> 
-> v5.2.1: Build OK!
-> v5.1.18: Build OK!
-> v4.19.59: Failed to apply! Possible dependencies:
->     400417b05f3e ("pNFS: Fix a typo in pnfs_update_layout")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is
-> upstream.
-> 
-> How should we proceed with this patch?
-> 
+Have you experimented with the --num-threads option?  If so, did it
+help?
 
-Please apply both patches.
-i.e. Please apply
+> nfs-utils was configured with:
+> ./configure --disable-tirpc  --disable-nfsv4 --disable-nfsv41
+> --disable-gss --disable-ipv6
+> 
+> Stracing the new rpc.mountd it appears all the time is spent reading
+> the mtab.
+> 
+> Below is some of the output from:
+> /sbin/rpc.mountd --foreground --debug all
+> 
+> rpc.mountd: nfsd_fh: found 0x6173d50 path /
+> rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.24'
+> rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
+> rpc.mountd: auth_unix_ip: inbuf 'nfsd 10.222.33.254'
+> rpc.mountd: auth_unix_ip: client 0x1d5bbb0 '10.222.33.0/24'
+> rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport'
+> rpc.mountd: nfsd_export: found 0x6174260 path /nfsexport
+> rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 7
+> \x43000a00000000001ce354a654a34fd4a09f9b59f6aebb11'
+> rpc.mountd: nfsd_fh: found 0x6174270 path /nfsexport
+> rpc.mountd: nfsd_export: inbuf '10.222.33.0/24 /nfsexport/home'
+> rpc.mountd: nfsd_export: found 0x4cf8bc0 path /nfsexport/home
+> rpc.mountd: Received NULL request from 10.222.33.254
+> rpc.mountd: Received NULL request from 10.222.33.254
+> rpc.mountd: Received MNT3(/nfsexport/home/timmy) request from 10.222.33.254
+> rpc.mountd: authenticated mount request from 10.222.33.254:694 for
+> /nfsexport/home/timmy (/nfsexport/home/timmy)
+> rpc.mountd: nfsd_fh: inbuf '10.222.33.0/24 6 \x947e3e1400c9c79b0000000000000000'
+> rpc.mountd: nfsd_fh: found 0x4e54390 path /nfsexport/home/timmy
+> 
+> As you can see it searches for /, then /nfsexport, then /nfsexport/home,
+> and finally /nfsexport/home/timmy
+> 
+> But when zfs populates the mtab, the top level of the datasets
+> ( /nfsexport ) is at the bottom of the mtab, 3500 lines down.
+> The next level is also at the bottom. So getmntent has to
+> read the mtab stream through several times. Actually:
+> open("/etc/mtab", O_RDONLY|O_CLOEXEC)   = 10
+> is called 50000 times during this one mount attempt.
 
-400417b05f3e ("pNFS: Fix a typo in pnfs_update_layout")
-58bbeab425c6 ("pnfs: Fix a problem where we gratuitously start doing
-I/O through the MDS")
+I haven't looked at the v3 mountd code in a while.  I guess the next
+step would be to figure out what the rest of the call stack is--who's
+calling getmntent and why?
 
-Thanks
-  Trond
-
-
+--b.
