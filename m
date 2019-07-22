@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DBCC70A35
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 21:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44E9C70A3B
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 22:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfGVT70 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Jul 2019 15:59:26 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:40397 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbfGVT70 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Jul 2019 15:59:26 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a186so25541178vsd.7
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 12:59:25 -0700 (PDT)
+        id S1732414AbfGVUAf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Jul 2019 16:00:35 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36950 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732268AbfGVUAf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Jul 2019 16:00:35 -0400
+Received: by mail-ua1-f68.google.com with SMTP id z13so15932642uaa.4
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 13:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AXAiNBKSGvHHvKKPrqoK3zYqyQGzmtM3JyZq0oeg6bQ=;
-        b=WS1zMKYJqnjIlK0FgNrL0zM36cUcLWe6HfJ6fXCUIjYJiu8+IlGyxJeFj8Us0P2sF2
-         M1ZDxrbh9EfUX21kINEzXIwCPHWYDna+WXT/ju7ukLyxr2vZ0NmzLd1I2cQ4OAIOfO64
-         9cW68F2idZQXhKcTu0u795zkbuNrMsgOeq9OteqKx7MkVaKPI2lBd78GYwPwvaS/I3rt
-         ySxDSBKl1vPA7mPsfvOO4PAT4H1CwLEyRcSyrfIns0t7Efr1iElb5rMuqQjlmJv5xovK
-         SrwuP0H5qEMNtIu4F2S9q1BXQfgVontII5kGjUIz3MWA6WaWC+IfT1FuOM1YbernMOtQ
-         WzsQ==
+        bh=hS6Nw3jezE2dmpmrFy1yqWvlRMAaDsyZpwkCrzVFJM4=;
+        b=iiY7QV/tyj72HzSGY/W2oEpvNl/eqDhEtXYjUBx0nSi1xNGVmdbLNVAi4xcGsQNkOH
+         asBM8MKamicppt03/3rxaburAp/Z9lTqky72ay5stBUGmKTbMY8dX6Yakk7ZwAelJCx9
+         t7HtnAtkZlT6WVLueqf9RYQLkqMnZ0QClpGsWwWWEQE4SyTh7PwvNzrW1hNsT3Dam6lU
+         ZShttiT6qLm/co6wXHq3tYHKAFUZ98slHvrcwpYCTaw7UgACvX+dWpgiD19ndkx2iKCp
+         NozVFNjXHtv1fSJolXVYzs/0lg4tUmcQIs6zofvvqfYmfmZxJ4ZOgr4u9n5FvYnfTxWc
+         oiRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AXAiNBKSGvHHvKKPrqoK3zYqyQGzmtM3JyZq0oeg6bQ=;
-        b=Um2yvU/Fedtv17S7vHdFneQHmkxS50gNtopcwkUZMI61YJ3rqH+yNUhfpRXQT5SFP8
-         X5Wir539JdzTZWRdw/L6ATPt4RfBB2W7KHMrv3ZdDOjtwBktwOedgCHoYgWTxls78gNw
-         LbOWhsP38qeswbB8xplkwSY/K2ACI1Jy7Xb3OxzCQJcl01L0Y4CwlPaAguKo7RiASXnR
-         VVCdZtx4J5RuIgcnIhgNddgWgpt8FsVlKQURYjaOgrGi5mJQyfGrBAnz6rAjtwZiIlRH
-         IPegnfK2VMRXZL7cOHXBNeEWegnz9x2D/xuzp+8iNiLrrzpgZk8uELZPg65MJkn1vbNj
-         JVew==
-X-Gm-Message-State: APjAAAUBsmXKNyBCMj+2ZAkoXC9rP/7JpJKLHtxGypahtOnQfrbBPnP6
-        V0AIdcoYbjbbYxxLNTESMbUqfV6ZOPFbFjz6iWk=
-X-Google-Smtp-Source: APXvYqz3y0UB/EFJjPINHZKvb555l0p+cHi8wsNCLVfipnxoVmtiDstRLawCjxVqix+UUt6FJ8of+/Ou+YaxCHuzoyI=
-X-Received: by 2002:a67:dc1:: with SMTP id 184mr45626966vsn.164.1563825565340;
- Mon, 22 Jul 2019 12:59:25 -0700 (PDT)
+        bh=hS6Nw3jezE2dmpmrFy1yqWvlRMAaDsyZpwkCrzVFJM4=;
+        b=TlTJmLRIXfhAHUgNryq2keALmSf0F4PtgI2pSBgrbeCk8jeJhaMC7cZKdJNrWPGGGF
+         Dwii/+gkzmkQcHkUtNqt79JaM7D+UtjkJuxur8Ln1Xb44YXVN1UpZiljEqNWjFwRhZnY
+         BIKj/NX9qtTMLCuKMVUIg4VwcfUqZ+3c/6kLAhRilbOZTyjWTQjXaQluorXxFvnDKUHQ
+         GVnV4GyYYMJb6hkiC1DFnrPmvgzKuXXDVxGHFCJij/Y6w+2nWsy4POuNyQ32SWFhoJsA
+         sQOzfF9RnkUIznPW9MGQM4R+OFMVC8sVM4y4HhSAaT158HYi/CuDYwwx4FhsKD4u8KAu
+         umQg==
+X-Gm-Message-State: APjAAAWbkWsQAL/qBc5i22ZjQm8oblOapkDU7SlhCv2gsyZPUrdy91Nk
+        vwxtCRERBCxulww62qV13gBTwyiRp6se8kMRQr1Jow==
+X-Google-Smtp-Source: APXvYqxkRFq1P+mrcZtq+2ljl02dNDSJ0udUiSksbtF0IXJBVa/i71OcRHYAt2F1yGUEZZ7hEWniT0nXys51Nzz45C0=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr44613509uag.40.1563825633295;
+ Mon, 22 Jul 2019 13:00:33 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-2-olga.kornievskaia@gmail.com> <20190717211317.GM24608@fieldses.org>
-In-Reply-To: <20190717211317.GM24608@fieldses.org>
+ <20190708192352.12614-3-olga.kornievskaia@gmail.com> <20190717214036.GN24608@fieldses.org>
+In-Reply-To: <20190717214036.GN24608@fieldses.org>
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Mon, 22 Jul 2019 15:59:14 -0400
-Message-ID: <CAN-5tyHxY0YPoXwK0pVudfH3n9SiNwzmYOywzmtpYSHFZkH23Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/8] NFSD fill-in netloc4 structure
+Date:   Mon, 22 Jul 2019 16:00:22 -0400
+Message-ID: <CAN-5tyEju4eM+f1oR8mzrQ9pYBZDL23G+eh8V_uQEcs__Sad-w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/8] NFSD add ca_source_server<> to COPY
 To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         linux-nfs <linux-nfs@vger.kernel.org>
@@ -57,84 +57,158 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 5:13 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Wed, Jul 17, 2019 at 5:40 PM J. Bruce Fields <bfields@fieldses.org> wrote:
 >
-> On Mon, Jul 08, 2019 at 03:23:45PM -0400, Olga Kornievskaia wrote:
+> On Mon, Jul 08, 2019 at 03:23:46PM -0400, Olga Kornievskaia wrote:
 > > From: Olga Kornievskaia <kolga@netapp.com>
 > >
-> > nfs.4 defines nfs42_netaddr structure that represents netloc4.
+> > Decode the ca_source_server list that's sent but only use the
+> > first one. Presence of non-zero list indicates an "inter" copy.
 > >
-> > Populate needed fields from the sockaddr structure.
-> >
-> > This will be used by flexfiles and 4.2 inter copy
-> >
+> > Signed-off-by: Andy Adamson <andros@netapp.com>
 > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 > > ---
-> >  fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
+> >  fs/nfsd/nfs4xdr.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
+> >  fs/nfsd/xdr4.h    | 12 +++++----
+> >  2 files changed, 80 insertions(+), 7 deletions(-)
 > >
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index 24187b5..8f4fc50 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/sunrpc/svc.h>
-> >  #include <linux/sunrpc/svc_xprt.h>
-> >  #include <linux/sunrpc/msg_prot.h>
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index 52c4f6d..15f53bb 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -40,6 +40,7 @@
+> >  #include <linux/utsname.h>
+> >  #include <linux/pagemap.h>
+> >  #include <linux/sunrpc/svcauth_gss.h>
 > > +#include <linux/sunrpc/addr.h>
 > >
-> >  #include <uapi/linux/nfsd/debug.h>
+> >  #include "idmap.h"
+> >  #include "acl.h"
+> > @@ -1744,11 +1745,58 @@ static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp, str
+> >       DECODE_TAIL;
+> >  }
 > >
-> > @@ -375,6 +376,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
-> >
-> >  extern const u32 nfsd_suppattrs[3][3];
-> >
-> > +static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
-> > +                                 struct nfs42_netaddr *netaddr)
+> > +static __be32 nfsd4_decode_nl4_server(struct nfsd4_compoundargs *argp,
+> > +                                   struct nl4_server *ns)
 > > +{
-> > +     struct sockaddr_in *sin = (struct sockaddr_in *)addr;
-> > +     struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
-> > +     unsigned int port;
-> > +     size_t ret_addr, ret_port;
+> > +     DECODE_HEAD;
+> > +     struct nfs42_netaddr *naddr;
 > > +
-> > +     switch (addr->sa_family) {
-> > +     case AF_INET:
-> > +             port = ntohs(sin->sin_port);
-> > +             sprintf(netaddr->netid, "tcp");
-> > +             netaddr->netid_len = 3;
+> > +     READ_BUF(4);
+> > +     ns->nl4_type = be32_to_cpup(p++);
+> > +
+> > +     /* currently support for 1 inter-server source server */
+> > +     switch (ns->nl4_type) {
+> > +     case NL4_NAME:
+> > +     case NL4_URL:
+> > +             READ_BUF(4);
+> > +             ns->u.nl4_str_sz = be32_to_cpup(p++);
+> > +             if (ns->u.nl4_str_sz > NFS4_OPAQUE_LIMIT)
+> > +                     goto xdr_error;
+> > +
+> > +             READ_BUF(ns->u.nl4_str_sz);
+> > +             COPYMEM(ns->u.nl4_str,
+> > +                     ns->u.nl4_str_sz);
 > > +             break;
-> > +     case AF_INET6:
-> > +             port = ntohs(sin6->sin6_port);
-> > +             sprintf(netaddr->netid, "tcp6");
-> > +             netaddr->netid_len = 4;
-> > +             break;
-> > +     default:
-> > +             return nfserr_inval;
-> > +     }
-> > +     ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
-> > +     ret_port = snprintf(netaddr->addr + ret_addr,
-> > +                         RPCBIND_MAXUADDRLEN + 1 - ret_addr,
-> > +                         ".%u.%u", port >> 8, port & 0xff);
-> > +     WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
-> > +     netaddr->addr_len = ret_addr + ret_port;
-> > +     return 0;
-> > +}
 >
-> Kinda surprised we don't already do something like this elsewhere, but I
-> don't see anything exactly the same.  Might be possible to put this in
-> net/sunrpc/addr.c and share some code with rpc_sockaddr2uaddr?  I'll
-> leave it to you whether that looks worth it.
+> Do we actually have plans to use this case?  If not, it's probably not
+> worth saving these fields.
 
-I'll investigate how to move this into the sunrpc. Client also
-populates nfs42_netaddr structure but it's slightly different. I need
-to go back and see if what's shareable.
+We don't use them. They were there for "completeness".  I can remove
+them to simplify the code.
 
 >
 > --b.
 >
+> > +     case NL4_NETADDR:
+> > +             naddr = &ns->u.nl4_addr;
 > > +
-> >  static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+> > +             READ_BUF(4);
+> > +             naddr->netid_len = be32_to_cpup(p++);
+> > +             if (naddr->netid_len > RPCBIND_MAXNETIDLEN)
+> > +                     goto xdr_error;
+> > +
+> > +             READ_BUF(naddr->netid_len + 4); /* 4 for uaddr len */
+> > +             COPYMEM(naddr->netid, naddr->netid_len);
+> > +
+> > +             naddr->addr_len = be32_to_cpup(p++);
+> > +             if (naddr->addr_len > RPCBIND_MAXUADDRLEN)
+> > +                     goto xdr_error;
+> > +
+> > +             READ_BUF(naddr->addr_len);
+> > +             COPYMEM(naddr->addr, naddr->addr_len);
+> > +             break;
+> > +     default:
+> > +             goto xdr_error;
+> > +     }
+> > +     DECODE_TAIL;
+> > +}
+> > +
+> >  static __be32
+> >  nfsd4_decode_copy(struct nfsd4_compoundargs *argp, struct nfsd4_copy *copy)
 > >  {
-> >       return !((bm1[0] & ~bm2[0]) ||
+> >       DECODE_HEAD;
+> > -     unsigned int tmp;
+> > +     struct nl4_server *ns_dummy;
+> > +     int i, count;
+> >
+> >       status = nfsd4_decode_stateid(argp, &copy->cp_src_stateid);
+> >       if (status)
+> > @@ -1763,8 +1811,31 @@ static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp, str
+> >       p = xdr_decode_hyper(p, &copy->cp_count);
+> >       p++; /* ca_consecutive: we always do consecutive copies */
+> >       copy->cp_synchronous = be32_to_cpup(p++);
+> > -     tmp = be32_to_cpup(p); /* Source server list not supported */
+> > +     count = be32_to_cpup(p++);
+> >
+> > +     copy->cp_intra = false;
+> > +     if (count == 0) { /* intra-server copy */
+> > +             copy->cp_intra = true;
+> > +             goto intra;
+> > +     }
+> > +
+> > +     /* decode all the supplied server addresses but use first */
+> > +     status = nfsd4_decode_nl4_server(argp, &copy->cp_src);
+> > +     if (status)
+> > +             return status;
+> > +
+> > +     ns_dummy = kmalloc(sizeof(struct nl4_server), GFP_KERNEL);
+> > +     if (ns_dummy == NULL)
+> > +             return nfserrno(-ENOMEM);
+> > +     for (i = 0; i < count - 1; i++) {
+> > +             status = nfsd4_decode_nl4_server(argp, ns_dummy);
+> > +             if (status) {
+> > +                     kfree(ns_dummy);
+> > +                     return status;
+> > +             }
+> > +     }
+> > +     kfree(ns_dummy);
+> > +intra:
+> >       DECODE_TAIL;
+> >  }
+> >
+> > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> > index feeb6d4..513c9ff 100644
+> > --- a/fs/nfsd/xdr4.h
+> > +++ b/fs/nfsd/xdr4.h
+> > @@ -516,11 +516,13 @@ struct nfsd42_write_res {
+> >
+> >  struct nfsd4_copy {
+> >       /* request */
+> > -     stateid_t       cp_src_stateid;
+> > -     stateid_t       cp_dst_stateid;
+> > -     u64             cp_src_pos;
+> > -     u64             cp_dst_pos;
+> > -     u64             cp_count;
+> > +     stateid_t               cp_src_stateid;
+> > +     stateid_t               cp_dst_stateid;
+> > +     u64                     cp_src_pos;
+> > +     u64                     cp_dst_pos;
+> > +     u64                     cp_count;
+> > +     struct nl4_server       cp_src;
+> > +     bool                    cp_intra;
+> >
+> >       /* both */
+> >       bool            cp_synchronous;
 > > --
 > > 1.8.3.1
