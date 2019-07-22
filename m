@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 869D170A4A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 22:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A37270A82
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 22:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732440AbfGVUDv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Jul 2019 16:03:51 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:34864 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729576AbfGVUDt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Jul 2019 16:03:49 -0400
-Received: by mail-ua1-f65.google.com with SMTP id j21so15937456uap.2
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 13:03:49 -0700 (PDT)
+        id S1732443AbfGVUR4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Jul 2019 16:17:56 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:41747 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729935AbfGVUR4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Jul 2019 16:17:56 -0400
+Received: by mail-ua1-f67.google.com with SMTP id 34so15953984uar.8
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 13:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OphZp6tZGdy/5IC/XsUavEknYw16Cuaz8+wzjR9hwZ4=;
-        b=Hr3GY4U2wDTB4sGQEmJlQTpYV9z05qzKiLE65xcW4WTc3CcNGPT4bsKVeoRs43kI8L
-         lrRE86k3g64tzmYBXc9V2nEclw4C8njwrnalB1YJPv5uLCRrafqF1dczZN1Fg0VB9g+Y
-         SXYsXveJNUyW2cyzcM/UpSLwr1NB/yXYikI3ipuS0yhR7jy25JeLwppwJ5zo2OAz65V1
-         Ecvd1EKWVJBIQNMnTSRGEp0So8GZYm2brSeADtVvL1g/SpbsYl2gpf3bpN52TgftIOke
-         ETIVYJl3YlANEcm6HB67+5UNWl+U3ZEIeYfWsV5KrCvsPHFA6OLVhIm84ykKNcqpHXpC
-         xhIA==
+        bh=H2VZ8MOaRKPe9ojbs+6zjHml1g6eEpiP1seQ57al7xE=;
+        b=q+efHb1XA5iB4W+a2HYlAdPssqDEM9tO8N25X8PjslHsdsJwnDusSVJASZt/08t8DT
+         RhBRVjlXgug9SyrsBCI75VA6ao036dZp0CtnET0LBRbyh92KUXJ7WaZ6QfUMMjbL2h1M
+         BljdoFz3hgpm5++mvJ1mRfyH6oiUiUwKMVjB0ScPMgxn0RCP0kKycbatlIHAUs7f9nEQ
+         J6atkNeDm4GmsBAuiJMOHLPnnpxGcfY8wEztW8oeYPKKC1Iw6d1rXbEILGmgDG+mPO2m
+         1vdQOgH9W8bapM3UvniLy2vI0wPkdujGlXLpGX+SQPPCk+5XLlUpDmW3A7eW1489XvEi
+         23eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OphZp6tZGdy/5IC/XsUavEknYw16Cuaz8+wzjR9hwZ4=;
-        b=LeWbbbNdLxD26gGoQI7cRpkVj8bCQefz4hL5eg+ViETGQuS9z3D6yPkMwMG2vvCTLX
-         6naYkoPWXju6/NncqdbTE38Hb+ZAzq9Wx27a6FhBZOTxgGgyF5tdxq2qHomNWNPfa0GY
-         rHgURCYtjdSoluoufbXpmFHcOJerkKxAQ7PQsM3AMdKlqMHxQSjNn70WFqAmD3TtjfBq
-         jBtxm3C7Jn5//5H8m0QXD7OqiSrUYLlBmCzklXzoY6H4z5Ny/Xz9NqJY8hNah1+NXa5O
-         DNmF5ICDFk8X7vhUi4hwwj+5QILehNm4sp1EyC8c7fkTpw0LDN7BzlSmD/GUwxSrOR9J
-         RxCQ==
-X-Gm-Message-State: APjAAAWXrhDl+KWiUNRgabxUkeYj+JZywpcXkJ2u06KKT6KBNagzzl+v
-        w4jBQxK7T4b/FhXJEl8bqylxPAW/aNTB6ZAZQyQ=
-X-Google-Smtp-Source: APXvYqxj826HoMq0dzLsIy3HiojRfZDeyKeXiX88CAhXPsoWKqUJ1QIj9hyRbx5QROB5io+3QBMWRe3ovvqCx2UR72g=
-X-Received: by 2002:ab0:3159:: with SMTP id e25mr26359458uam.81.1563825829018;
- Mon, 22 Jul 2019 13:03:49 -0700 (PDT)
+        bh=H2VZ8MOaRKPe9ojbs+6zjHml1g6eEpiP1seQ57al7xE=;
+        b=IdFYIdSKuMSCVn52NV7eN4+v+D3qLnDTIT23jAw7W+JaKUc/WTUvT19UmZX7krqKvf
+         H24nvFQoQjZfN3QVsADVoHdQ4zaIGJD1E/GD5dXjkra+4suunU9APIpBh+YqTEEXEhBH
+         EbNj+CLpc6vhLWDTJsUTcDSRFhPBpR3tn0rqDed/XooQmjecJDf9IOFrKL6n7vpTSnTh
+         9a9xvpEbYsG5Di7rXjognqIt8J3J+R5Fcnl0XpvOBteCLlkklNxNT7binHxd9/lqfMny
+         LPfM+7xaBnJqz3RjUrqw6lqb4TwoYu5o/trqHuwchMbRj4hpijrh6kQ1WtpnXpfZFaBR
+         VTGA==
+X-Gm-Message-State: APjAAAWyzvFdxlAUjKWPhvj1xsP3VO2Kwp/Kq6qbwFM/M7bdw2vpPbUg
+        Lgx53ID+Lo4zxdgUX1evPk71h1yr4CFqwQ93MPo=
+X-Google-Smtp-Source: APXvYqziAegffZ7iKHVg/fQOoqRq44d/LJeu6W4EA+QZWlG87RYSD0VBvqQmqGnamsmM6KjBKjXlSX+dASns8wgsp3M=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr44722484uag.40.1563826674769;
+ Mon, 22 Jul 2019 13:17:54 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-5-olga.kornievskaia@gmail.com> <20190717221507.GP24608@fieldses.org>
-In-Reply-To: <20190717221507.GP24608@fieldses.org>
+ <20190708192352.12614-5-olga.kornievskaia@gmail.com> <20190717230726.GA26801@fieldses.org>
+In-Reply-To: <20190717230726.GA26801@fieldses.org>
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Mon, 22 Jul 2019 16:03:38 -0400
-Message-ID: <CAN-5tyHU2EkNsqzSVHcNZfnJ4cHKJaYk9F98O3Ur97uQMyOrbw@mail.gmail.com>
+Date:   Mon, 22 Jul 2019 16:17:44 -0400
+Message-ID: <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com>
 Subject: Re: [PATCH v4 4/8] NFSD add COPY_NOTIFY operation
 To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
@@ -57,63 +57,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 6:15 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Wed, Jul 17, 2019 at 7:07 PM J. Bruce Fields <bfields@fieldses.org> wrote:
 >
 > On Mon, Jul 08, 2019 at 03:23:48PM -0400, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > Introducing the COPY_NOTIFY operation.
-> >
-> > Create a new unique stateid that will keep track of the copy
-> > state and the upcoming READs that will use that stateid. Keep
-> > it in the list associated with parent stateid.
-> >
-> > Return single netaddr to advertise to the copy.
-> >
-> > Signed-off-by: Andy Adamson <andros@netapp.com>
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  fs/nfsd/nfs4proc.c  | 71 +++++++++++++++++++++++++++++++++++----
-> >  fs/nfsd/nfs4state.c | 64 +++++++++++++++++++++++++++++++----
-> >  fs/nfsd/nfs4xdr.c   | 97 +++++++++++++++++++++++++++++++++++++++++++++++++++--
-> >  fs/nfsd/state.h     | 18 ++++++++--
-> >  fs/nfsd/xdr4.h      | 13 +++++++
-> >  5 files changed, 247 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index cfd8767..c39fa72 100644
-> > --- a/fs/nfsd/nfs4proc.c
-> > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -37,6 +37,7 @@
-> >  #include <linux/falloc.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/kthread.h>
-> > +#include <linux/sunrpc/addr.h>
-> >
-> >  #include "idmap.h"
-> >  #include "cache.h"
-> > @@ -1033,7 +1034,8 @@ static __be32 nfsd4_do_lookupp(struct svc_rqst *rqstp, struct svc_fh *fh)
-> >  static __be32
-> >  nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> >                 stateid_t *src_stateid, struct file **src,
-> > -               stateid_t *dst_stateid, struct file **dst)
-> > +               stateid_t *dst_stateid, struct file **dst,
-> > +               struct nfs4_stid **stid)
+> > @@ -726,24 +727,53 @@ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *sla
+> >  /*
+> >   * Create a unique stateid_t to represent each COPY.
+> >   */
+> > -int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
+> > +static int nfs4_init_cp_state(struct nfsd_net *nn, void *ptr, stateid_t *stid)
 > >  {
-> >       __be32 status;
+> >       int new_id;
 > >
-> > @@ -1050,7 +1052,7 @@ static __be32 nfsd4_do_lookupp(struct svc_rqst *rqstp, struct svc_fh *fh)
+> >       idr_preload(GFP_KERNEL);
+> >       spin_lock(&nn->s2s_cp_lock);
+> > -     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, copy, 0, 0, GFP_NOWAIT);
+> > +     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, ptr, 0, 0, GFP_NOWAIT);
+> >       spin_unlock(&nn->s2s_cp_lock);
+> >       idr_preload_end();
+> >       if (new_id < 0)
+> >               return 0;
+> > -     copy->cp_stateid.si_opaque.so_id = new_id;
+> > -     copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
+> > -     copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
+> > +     stid->si_opaque.so_id = new_id;
+> > +     stid->si_opaque.so_clid.cl_boot = nn->boot_time;
+> > +     stid->si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
+> >       return 1;
+> >  }
 > >
-> >       status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
-> >                                           dst_stateid, WR_STATE, dst, NULL,
-> > -                                         NULL);
-> > +                                         stid);
+> > -void nfs4_free_cp_state(struct nfsd4_copy *copy)
+> > +int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
+> > +{
+> > +     return nfs4_init_cp_state(nn, copy, &copy->cp_stateid);
+> > +}
 >
-> Doesn't this belong with the previous patch?
+> This little bit of refactoring could go into a seperate patch.  It's
+> easier for me to review lots of smaller patches.
+>
+> But I don't understand why you're doing it.
+>
+> Also, I'm a little suspicious of code that doesn't initialize an object
+> till after it's been added to a global structure.  The more typical
+> pattern is:
+>
+>
+>         initialize foo
+>         take locks, add foo global structure, drop locks.
+>
+> This prevents anyone doing a lookup from finding "foo" while it's still
+> in a partially initialized state.
 
-I could. I think what Andy did was first changed the code to add
-ability to add to the nfs4_stid and this patch actually uses it.
-Sounds like you prefer this to be in the previous patch?
+Let me try to explain the change. This change is due to the fact that
+now both COPY_NOTIFY and COPY both are generating unique stateid
+(COPY_NOTIFY needs a unique stateid to passed into the COPY and COPY
+is generating a unique stateid to be referred to by callbacks).
+Previously we had just the COPY generating the stateid (so it was
+stored in the nfs4_copy structure) but now we have the COPY_NOTIFY
+which doesn't create nfs4_copy when it's processing the operation but
+still needs a unique stateid (stored in the stateid structure).
+
+Let me see if I understand your suspicion and ask for guidance how to
+resolve it as perhaps I'm misusing the function. idr_alloc_cyclic()
+keeps track of the structure of the 2nd arguments with a value it
+returns. How do I initiate the structure with the value of the
+function without knowing the value which can only be returned when I
+call the function to add it to the list? what you are suggesting is to
+somehow get the value for the new_id but not associate anything then
+update the copy structure with that value and then call
+idr_alloc_cyclic() (or something else) to create that association of
+the new_id and the structure? I don't know how to do that.
 
 >
 > --b.
