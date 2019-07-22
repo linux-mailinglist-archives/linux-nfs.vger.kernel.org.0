@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF5096FFEF
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 14:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AD4B6FFF1
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 14:42:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfGVMmE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Jul 2019 08:42:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52048 "EHLO mx1.redhat.com"
+        id S1728094AbfGVMmX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Jul 2019 08:42:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40912 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfGVMmE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:42:04 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1727123AbfGVMmX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:42:23 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BA82385541
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 12:42:03 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 73D8246673
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 12:42:22 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-116-68.phx2.redhat.com [10.3.116.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 58BB060BF1;
-        Mon, 22 Jul 2019 12:42:03 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 156B361352;
+        Mon, 22 Jul 2019 12:42:22 +0000 (UTC)
 Subject: Re: [nfs-utils PATCH 1/2] sqlite.c: restore zero-padding to the
  recovery table names
 To:     Scott Mayhew <smayhew@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
 References: <20190626190432.16257-1-smayhew@redhat.com>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <064ffcca-1fb3-ff5a-181c-ba7846b89b54@RedHat.com>
-Date:   Mon, 22 Jul 2019 08:42:02 -0400
+Message-ID: <bbe04e60-f197-c0b6-0010-4acb58458411@RedHat.com>
+Date:   Mon, 22 Jul 2019 08:42:21 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -34,8 +34,8 @@ In-Reply-To: <20190626190432.16257-1-smayhew@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 22 Jul 2019 12:42:03 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 22 Jul 2019 12:42:22 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -60,9 +60,10 @@ On 6/26/19 3:04 PM, Scott Mayhew wrote:
 > Fixes: a8133e1fd1742 ("sqlite.c: Use PRIx64 macro to print 64-bit integers")
 > 
 > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed... 
+Committed.... 
 
 steved.
+
 > ---
 >  utils/nfsdcld/sqlite.c | 18 +++++++++---------
 >  1 file changed, 9 insertions(+), 9 deletions(-)
