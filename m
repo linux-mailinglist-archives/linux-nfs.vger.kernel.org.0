@@ -2,53 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E14D572002
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 21:20:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 941B572005
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 21:21:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbfGWTU1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jul 2019 15:20:27 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40771 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732108AbfGWTU1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jul 2019 15:20:27 -0400
-Received: by mail-vs1-f65.google.com with SMTP id a186so28042598vsd.7;
-        Tue, 23 Jul 2019 12:20:26 -0700 (PDT)
+        id S1732108AbfGWTVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 15:21:13 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44457 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfGWTVM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jul 2019 15:21:12 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 8so17421832uaz.11;
+        Tue, 23 Jul 2019 12:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=PSOyLU99Qvriu6fd4r1ppjHclfYpOzpgO99xINeCfKI=;
-        b=A51vcXjueHM1ZpPBT9gXODOed04QNtdYMKZl1f6ZWTKbFedM8+nffOg0ze4uPbfYtz
-         9PnQrcVNmLmxemdgzfdaNXzkT7pwbwecT5ajIOk9PUkCMK9yuAQaaW6Y5xpoQdrrMMu/
-         dap+g+RV3IPbcaweZq48bcbTk/sJFFbh3TvB76gZBw/gncCHrGnGSQUFCo9isDgeM0OK
-         3UcIRkqYdQZcONawKIUJ3E8sqygSlNoy/0fo3GXa55rinwsi5FmvQC59JU3wLowKsiIu
-         /m23Yazf86mpFAPY6UFCc8nkvseAvX9gIey3jFwEXumT3Fv37n2cFoz29cF1HAZTdF3+
-         ZQUg==
+        h=sender:subject:from:to:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=uuVV5Bzj1+ed+zYOSSjrRJ4SQAKc7kcdflVmOgtoRHc=;
+        b=f6ME7pCGpRCXx0sxMNLrM9/tj23/PD1rUUpLDekxxHMuF1VvL6OEpb1Q753el+9KDd
+         X/tLlPCxH1tlkwvvl95t2fyDOu5ib7UP6sSK3Or+MpD0x7R1iG6QLyzHx18jTudBcxnl
+         pD0Hp8y/4RSGyrJgr8QR3TusAHaLfwmk75qy5xM02nNhgx4onhmElFKBEq77FTo4nBPv
+         NtmeU7HJHnnrD+RvS9ogAbnBC1O2OMvfFmDyLvDmq+Q0ltjXV35sOQQ7+rsKMwK7fmMN
+         L2A46cQKjEpl/LybdkIihzGv/EC7vZ3BYu/exHkov5uBw/45Iy/0MCi0mhFteX44Jaus
+         6T5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=PSOyLU99Qvriu6fd4r1ppjHclfYpOzpgO99xINeCfKI=;
-        b=HYWO/6+GSsJBNloZ4chmeF/MaqmETDH1OJ1ZPLZ+3b6fcJVDbB3VjFJGy+5eBn51PP
-         EsiewIGVA5lFVgejfQs9huKk3yJ+jFC8MkNcoVzI1RymdKBzl+87umYqBmHNnAKY2yup
-         7fGdG+Ek2fNP9wNHt/Lg/25VdrBhp21QJ5PKK1QnbHEZq9oRMw3tH2ZgIEbWEGJsITB2
-         Kvi9tJQLAjjSgMuHR7uPTonc24OfjLvrpiGiFTK2obUiNnB7Oh0yz2vow5UQ4NbGadZH
-         skjv5GiBVXOTo7FD7C2vkNJu20Ahp9g168mlGXRLQfg8jOTUPgX7Kg+Wc42d5eneu5dM
-         dFaw==
-X-Gm-Message-State: APjAAAW+IlgW+CY7qmPhIhLZKWJ0N+Qk0yHJ8MEAqM7Weqbpmmh2o+H8
-        YHlBiMHejUDschWLazDfDYbjg+jLiZpDxQ==
-X-Google-Smtp-Source: APXvYqwv4zsVjylE0zaFKPy5XFWkDSDEiwZTftUksKLuojtUB5cH5zNCX6t7oeauOJxXXqEDFj/YVA==
-X-Received: by 2002:a05:6102:105a:: with SMTP id h26mr52778537vsq.185.1563909625619;
-        Tue, 23 Jul 2019 12:20:25 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=uuVV5Bzj1+ed+zYOSSjrRJ4SQAKc7kcdflVmOgtoRHc=;
+        b=F6VKmbLdvlgyAsPX/0rQuMDiX1YMmDRveITAXWrbk8apzo1chz9ldmwjK9ivjy/nAj
+         n3FtifZ1lt3Sma3qQZ58nyiiQ0LcOuUFV+3zdhSDrVG9mLeHq7WBGGaUFgJRUHvywa5r
+         kqE+aMtvLph5REWhWo4RqPGddGQRnDv/svq8G+UWT83Ylhw1O0rHAWoKrfLfqjQ+6m42
+         TuyM8ZbBeMcTcanIgwZGhTXkpcZEdk+x3Vrm5UxGza9oxWqEKZswS6AZeY9rN3NJdKL2
+         D7hrQQ0bSKlsqkxTbBjQH2OpqkgvbI6nQDigXKh9j05OT2lU86EhW/2p0Vq6n8haOrFH
+         yFFg==
+X-Gm-Message-State: APjAAAX46P5mCd2gJboDPcdU5jV+ylSvLpSaoeGLt6iQbJg/WrKSur6g
+        StCkp3sp6i7tXZlU279///XQnz1gOI8oNw==
+X-Google-Smtp-Source: APXvYqxx0zgSUEWKfp2lQKg2Ac4IGPijsue7PnSm2js5uNlckYdN2Wi9V7iXY0M0GulFjHrep332PA==
+X-Received: by 2002:ab0:3484:: with SMTP id c4mr50433023uar.51.1563909671652;
+        Tue, 23 Jul 2019 12:21:11 -0700 (PDT)
 Received: from seurat29.1015granger.net (dhcp-82c9.meeting.ietf.org. [31.133.130.201])
-        by smtp.gmail.com with ESMTPSA id j11sm21498475vsd.0.2019.07.23.12.20.25
+        by smtp.gmail.com with ESMTPSA id o5sm5032911uar.4.2019.07.23.12.21.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 12:20:25 -0700 (PDT)
-Subject: [PATCH v1 0/2] NFS/RDMA-related NFSD patches for -next
+        Tue, 23 Jul 2019 12:21:11 -0700 (PDT)
+Subject: [PATCH v1 1/2] svcrdma: Remove svc_rdma_wq
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Tue, 23 Jul 2019 15:20:03 -0400
-Message-ID: <156390950940.6811.3316103129070572088.stgit@seurat29.1015granger.net>
+Date:   Tue, 23 Jul 2019 15:20:50 -0400
+Message-ID: <156390963067.6811.7659055442275585873.stgit@seurat29.1015granger.net>
+In-Reply-To: <156390950940.6811.3316103129070572088.stgit@seurat29.1015granger.net>
+References: <156390950940.6811.3316103129070572088.stgit@seurat29.1015granger.net>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -58,22 +61,72 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi-
+Clean up: the system workqueue will work just as well.
 
-Two server side patches for NFSD. Both are minor.
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-
-Chuck Lever (2):
-      svcrdma: Remove svc_rdma_wq
-      svcrdma: Use llist for managing cache of recv_ctxts
-
-
- include/linux/sunrpc/svc_rdma.h          |    6 +++---
+ include/linux/sunrpc/svc_rdma.h          |    1 -
  net/sunrpc/xprtrdma/svc_rdma.c           |    7 -------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |   24 ++++++++++--------------
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    6 +++---
- 4 files changed, 16 insertions(+), 27 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    3 ++-
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
---
-Chuck Lever
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index 981f0d726ad4..edb39900fe04 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -200,7 +200,6 @@ extern struct svc_xprt_class svc_rdma_bc_class;
+ #endif
+ 
+ /* svc_rdma.c */
+-extern struct workqueue_struct *svc_rdma_wq;
+ extern int svc_rdma_init(void);
+ extern void svc_rdma_cleanup(void);
+ 
+diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
+index abdb3004a1e3..97bca509a391 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma.c
++++ b/net/sunrpc/xprtrdma/svc_rdma.c
+@@ -73,8 +73,6 @@ atomic_t rdma_stat_rq_prod;
+ atomic_t rdma_stat_sq_poll;
+ atomic_t rdma_stat_sq_prod;
+ 
+-struct workqueue_struct *svc_rdma_wq;
+-
+ /*
+  * This function implements reading and resetting an atomic_t stat
+  * variable through read/write to a proc file. Any write to the file
+@@ -230,7 +228,6 @@ static struct ctl_table svcrdma_root_table[] = {
+ void svc_rdma_cleanup(void)
+ {
+ 	dprintk("SVCRDMA Module Removed, deregister RPC RDMA transport\n");
+-	destroy_workqueue(svc_rdma_wq);
+ 	if (svcrdma_table_header) {
+ 		unregister_sysctl_table(svcrdma_table_header);
+ 		svcrdma_table_header = NULL;
+@@ -246,10 +243,6 @@ int svc_rdma_init(void)
+ 	dprintk("\tmax_bc_requests  : %u\n", svcrdma_max_bc_requests);
+ 	dprintk("\tmax_inline       : %d\n", svcrdma_max_req_size);
+ 
+-	svc_rdma_wq = alloc_workqueue("svc_rdma", 0, 0);
+-	if (!svc_rdma_wq)
+-		return -ENOMEM;
+-
+ 	if (!svcrdma_table_header)
+ 		svcrdma_table_header =
+ 			register_sysctl_table(svcrdma_root_table);
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 7df6de6e9162..f8e48d6824a0 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -632,8 +632,9 @@ static void svc_rdma_free(struct svc_xprt *xprt)
+ {
+ 	struct svcxprt_rdma *rdma =
+ 		container_of(xprt, struct svcxprt_rdma, sc_xprt);
++
+ 	INIT_WORK(&rdma->sc_work, __svc_rdma_free);
+-	queue_work(svc_rdma_wq, &rdma->sc_work);
++	schedule_work(&rdma->sc_work);
+ }
+ 
+ static int svc_rdma_has_wspace(struct svc_xprt *xprt)
+
