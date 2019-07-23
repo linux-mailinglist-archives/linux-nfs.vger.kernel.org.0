@@ -2,160 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C0470A9A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2019 22:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 354E7711E0
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 08:27:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbfGVUYU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Jul 2019 16:24:20 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33497 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729621AbfGVUYU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Jul 2019 16:24:20 -0400
-Received: by mail-vs1-f66.google.com with SMTP id m8so27313137vsj.0
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2019 13:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OyLY8vZGbNtKNzk8EZ6eo74FGjMtzBY30Su26WbZ/H4=;
-        b=odKgsY/QIZDZ5z3Y0eRLl+oZ2H4jEjjtvXQtxfEuNd6oPqPQEN8kY1gSaMaAuiUwqs
-         Wk46znlogXhsoV2FCet4Xz3WmM3vcerYzoTzFYP3M3p9i2kSmFKsD7QKU6VBKGOviXD1
-         NeJBBsokUvTZRCFC2szqlHEhmGSWfYpzoJlPncUlsSTLSX3O53dHgUFhqC66yu+kKIOp
-         Ue3jqTJa5A2/ehjk6ytxJV5ETxIfEGKRioSydOVmiFB+ZLBKC0U/vrS2JocgiXJS83h0
-         EmZAaqz08K/dcGTQjnlama+KCnnDqQZV0hLLOdT2YmyT+/xC7H9tF7gb+SW4KpwQfhJy
-         16rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OyLY8vZGbNtKNzk8EZ6eo74FGjMtzBY30Su26WbZ/H4=;
-        b=k+A0z4N0hbbbmbTYiEfGnivB9d7EW/wwUz9ufGw86KVDV3AxlJ7xkiSgLKKfTaNJYk
-         hjQd3avCp5nxBqEz7YpSp/ngPYtXNTPe7h0yhKp8b+jbTG3zKTmNqtd5TWF+Bwb30vf3
-         yKhCKnTcSHsT2p1G1ZbhsACk2x38JoAEj49XTOFxDgqRvr8lMR06H1O6PpAVsx03hQqS
-         fUH/zx9HeBJymnWBQofwnzVcXAzT/S7JrxDdrkrqDvDdJtLfsaVf9Mz9Endh2SQAegD0
-         pdeNk9Sx5X7A7oQOJX4dnP2zYSK8ZSPA5UaTOFlwDLNes7FDoV8/EXc4p/k77hqR+Vit
-         TiDw==
-X-Gm-Message-State: APjAAAWAkvATeZodd2d16S+oSiysR0/IwnUqr7C99qKWvVLu1A9eKPdb
-        RCjw+CknvKVa7XCFLkHFK0WatTTx/L6+iQXvSS4=
-X-Google-Smtp-Source: APXvYqziUGmjkOnyHKV3nrORd8rguLUwGXg7x5OeXIrfif3oZQbd63v9CeIUoSAWp+4wQzsVqnIPu3WeQ9nm63BIBVg=
-X-Received: by 2002:a67:79d4:: with SMTP id u203mr43895414vsc.85.1563827059016;
- Mon, 22 Jul 2019 13:24:19 -0700 (PDT)
+        id S1728683AbfGWG1T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 02:27:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53988 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbfGWG1T (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 02:27:19 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0027A308A9E2;
+        Tue, 23 Jul 2019 06:27:19 +0000 (UTC)
+Received: from localhost (dhcp-12-152.nay.redhat.com [10.66.12.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D2465D721;
+        Tue, 23 Jul 2019 06:27:18 +0000 (UTC)
+From:   Yongcheng Yang <yongcheng.yang@gmail.com>
+To:     "J . Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org,
+        Yongcheng Yang <yongcheng.yang@gmail.com>
+Subject: [PATCH 1/2] nfs4_getfacl: return 1 for unknown option and won't use '-?' anymore
+Date:   Tue, 23 Jul 2019 14:27:12 +0800
+Message-Id: <20190723062713.20570-1-yongcheng.yang@gmail.com>
 MIME-Version: 1.0
-References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-6-olga.kornievskaia@gmail.com> <20190719220116.GA24373@fieldses.org>
-In-Reply-To: <20190719220116.GA24373@fieldses.org>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Mon, 22 Jul 2019 16:24:08 -0400
-Message-ID: <CAN-5tyHdxBcEH0xPV2814nUMEHPCsQ9iD_A7K=W3ZeE6b4OJxg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 23 Jul 2019 06:27:19 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 6:01 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Mon, Jul 08, 2019 at 03:23:49PM -0400, Olga Kornievskaia wrote:
-> > Incoming stateid (used by a READ) could be a saved copy stateid.
-> > On first use make it active and check that the copy has started
-> > within the allowable lease time.
-> >
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  fs/nfsd/nfs4state.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 2555eb9..b786625 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -5232,6 +5232,49 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
-> >
-> >       return 0;
-> >  }
-> > +/*
-> > + * A READ from an inter server to server COPY will have a
-> > + * copy stateid. Return the parent nfs4_stid.
-> > + */
-> > +static __be32 _find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
-> > +                  struct nfs4_cpntf_state **cps)
-> > +{
-> > +     struct nfs4_cpntf_state *state = NULL;
-> > +
-> > +     if (st->si_opaque.so_clid.cl_id != nn->s2s_cp_cl_id)
-> > +             return nfserr_bad_stateid;
-> > +     spin_lock(&nn->s2s_cp_lock);
-> > +     state = idr_find(&nn->s2s_cp_stateids, st->si_opaque.so_id);
-> > +     if (state)
-> > +             refcount_inc(&state->cp_p_stid->sc_count);
-> > +     spin_unlock(&nn->s2s_cp_lock);
-> > +     if (!state)
-> > +             return nfserr_bad_stateid;
-> > +     *cps = state;
-> > +     return 0;
-> > +}
-> > +
-> > +static __be32 find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
-> > +                            struct nfs4_stid **stid)
-> > +{
-> > +     __be32 status;
-> > +     struct nfs4_cpntf_state *cps = NULL;
-> > +
-> > +     status = _find_cpntf_state(nn, st, &cps);
-> > +     if (status)
-> > +             return status;
-> > +
-> > +     /* Did the inter server to server copy start in time? */
-> > +     if (cps->cp_active == false && !time_after(cps->cp_timeout, jiffies)) {
-> > +             nfs4_put_stid(cps->cp_p_stid);
-> > +             return nfserr_partner_no_auth;
->
-> I wonder whether instead of checking the time we should instead be
-> destroying copy stateid's as they expire, so the fact that you were
-> still able to look up the stateid suggests that it's good.  Or would
-> that result in returning the wrong error here?  Just curious.
+The getopt_long() function will return '?' if encounters an option
+character that was not in optstring. So it's impossible to tell the
+option '-?' from an unrecognized option. Don't mention it in Usage.
 
-In order to destroy copy stateid as they expire we need some thread
-monitoring the copies and then remove the expired one. That seems like
-a lot more work than what's currently there. The spec says that the
-use of the copy has to start without a certain timeout and that's what
-this is suppose to enforce. If the client took too long start the
-copy, it'll get an error. I don't think it matters what error code is
-returned BAD_STATEID or PARTNER_NO_AUTH both imply the stateid is bad.
+Signed-off-by: Yongcheng Yang <yongcheng.yang@gmail.com>
+---
+ nfs4_getfacl/nfs4_getfacl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
->
-> > +     } else
-> > +             cps->cp_active = true;
-> > +
-> > +     *stid = cps->cp_p_stid;
->
-> What guarantees that cp_p_stid still points to a valid stateid?  (E.g.
-> if this is an open stateid that has since been closed.)
+diff --git a/nfs4_getfacl/nfs4_getfacl.c b/nfs4_getfacl/nfs4_getfacl.c
+index 4df2b04..2f57866 100644
+--- a/nfs4_getfacl/nfs4_getfacl.c
++++ b/nfs4_getfacl/nfs4_getfacl.c
+@@ -88,10 +88,14 @@ int main(int argc, char **argv)
+ 			case 'c':
+ 				ignore_comment = 1;
+ 				break;
+-			default:
++			case 'h':
+ 				usage(1);
+ 				res = 0;
+ 				goto out;
++			case '?':
++			default:
++				usage(0);
++				goto out;
+ 		}
+ 	}
+ 
+@@ -131,7 +135,7 @@ static void usage(int label)
+ {
+ 	if (label)
+ 		fprintf(stderr, "%s %s -- get NFSv4 file or directory access control lists.\n", execname, VERSION);
+-	fprintf(stderr, "Usage: %s [-R] file ...\n  -H, --more-help\tdisplay ACL format information\n  -?, -h, --help\tdisplay this help text\n  -R --recursive\trecurse into subdirectories\n  -c, --omit-header\tDo not display the comment header (Do not print filename)\n", execname);
++	fprintf(stderr, "Usage: %s [-R] file ...\n  -H, --more-help\tdisplay ACL format information\n  -h, --help\tdisplay this help text\n  -R --recursive\trecurse into subdirectories\n  -c, --omit-header\tDo not display the comment header (Do not print filename)\n", execname);
+ }
+ 
+ static void more_help()
+-- 
+2.20.1
 
-A copy (or copy_notify) stateid takes a reference on the parent, thus
-we guaranteed that pointer is still a valid stateid.
-
->
-> --b.
->
-> > +
-> > +     return nfs_ok;
-> > +}
-> >
-> >  /*
-> >   * Checks for stateid operations
-> > @@ -5264,6 +5307,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
-> >       status = nfsd4_lookup_stateid(cstate, stateid,
-> >                               NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
-> >                               &s, nn);
-> > +     if (status == nfserr_bad_stateid)
-> > +             status = find_cpntf_state(nn, stateid, &s);
-> >       if (status)
-> >               return status;
-> >       status = nfsd4_stid_check_stateid_generation(stateid, s,
-> > --
-> > 1.8.3.1
