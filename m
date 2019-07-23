@@ -2,133 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE0072107
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 22:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61BEB7212C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 22:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733040AbfGWUpi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jul 2019 16:45:38 -0400
-Received: from fieldses.org ([173.255.197.46]:34464 "EHLO fieldses.org"
+        id S2389107AbfGWU6r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 16:58:47 -0400
+Received: from fieldses.org ([173.255.197.46]:34480 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731769AbfGWUpi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:45:38 -0400
+        id S2389103AbfGWU6r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:58:47 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 328781CE7; Tue, 23 Jul 2019 16:45:37 -0400 (EDT)
-Date:   Tue, 23 Jul 2019 16:45:37 -0400
+        id 4E8B82011; Tue, 23 Jul 2019 16:58:46 -0400 (EDT)
+Date:   Tue, 23 Jul 2019 16:58:46 -0400
 From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 4/8] NFSD add COPY_NOTIFY operation
-Message-ID: <20190723204537.GA19559@fieldses.org>
+Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
+Message-ID: <20190723205846.GB19559@fieldses.org>
 References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-5-olga.kornievskaia@gmail.com>
- <20190717230726.GA26801@fieldses.org>
- <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com>
+ <20190708192352.12614-6-olga.kornievskaia@gmail.com>
+ <20190719220116.GA24373@fieldses.org>
+ <CAN-5tyHdxBcEH0xPV2814nUMEHPCsQ9iD_A7K=W3ZeE6b4OJxg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com>
+In-Reply-To: <CAN-5tyHdxBcEH0xPV2814nUMEHPCsQ9iD_A7K=W3ZeE6b4OJxg@mail.gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:17:44PM -0400, Olga Kornievskaia wrote:
-> On Wed, Jul 17, 2019 at 7:07 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Mon, Jul 22, 2019 at 04:24:08PM -0400, Olga Kornievskaia wrote:
+> On Fri, Jul 19, 2019 at 6:01 PM J. Bruce Fields <bfields@fieldses.org> wrote:
 > >
-> > On Mon, Jul 08, 2019 at 03:23:48PM -0400, Olga Kornievskaia wrote:
-> > > @@ -726,24 +727,53 @@ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *sla
-> > >  /*
-> > >   * Create a unique stateid_t to represent each COPY.
-> > >   */
-> > > -int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
-> > > +static int nfs4_init_cp_state(struct nfsd_net *nn, void *ptr, stateid_t *stid)
-> > >  {
-> > >       int new_id;
+> > On Mon, Jul 08, 2019 at 03:23:49PM -0400, Olga Kornievskaia wrote:
+> > > Incoming stateid (used by a READ) could be a saved copy stateid.
+> > > On first use make it active and check that the copy has started
+> > > within the allowable lease time.
 > > >
-> > >       idr_preload(GFP_KERNEL);
-> > >       spin_lock(&nn->s2s_cp_lock);
-> > > -     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, copy, 0, 0, GFP_NOWAIT);
-> > > +     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, ptr, 0, 0, GFP_NOWAIT);
-> > >       spin_unlock(&nn->s2s_cp_lock);
-> > >       idr_preload_end();
-> > >       if (new_id < 0)
-> > >               return 0;
-> > > -     copy->cp_stateid.si_opaque.so_id = new_id;
-> > > -     copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
-> > > -     copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
-> > > +     stid->si_opaque.so_id = new_id;
-> > > +     stid->si_opaque.so_clid.cl_boot = nn->boot_time;
-> > > +     stid->si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
-> > >       return 1;
+> > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > ---
+> > >  fs/nfsd/nfs4state.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 45 insertions(+)
+> > >
+> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > index 2555eb9..b786625 100644
+> > > --- a/fs/nfsd/nfs4state.c
+> > > +++ b/fs/nfsd/nfs4state.c
+> > > @@ -5232,6 +5232,49 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+> > >
+> > >       return 0;
 > > >  }
-> > >
-> > > -void nfs4_free_cp_state(struct nfsd4_copy *copy)
-> > > +int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
+> > > +/*
+> > > + * A READ from an inter server to server COPY will have a
+> > > + * copy stateid. Return the parent nfs4_stid.
+> > > + */
+> > > +static __be32 _find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+> > > +                  struct nfs4_cpntf_state **cps)
 > > > +{
-> > > +     return nfs4_init_cp_state(nn, copy, &copy->cp_stateid);
+> > > +     struct nfs4_cpntf_state *state = NULL;
+> > > +
+> > > +     if (st->si_opaque.so_clid.cl_id != nn->s2s_cp_cl_id)
+> > > +             return nfserr_bad_stateid;
+> > > +     spin_lock(&nn->s2s_cp_lock);
+> > > +     state = idr_find(&nn->s2s_cp_stateids, st->si_opaque.so_id);
+> > > +     if (state)
+> > > +             refcount_inc(&state->cp_p_stid->sc_count);
+> > > +     spin_unlock(&nn->s2s_cp_lock);
+> > > +     if (!state)
+> > > +             return nfserr_bad_stateid;
+> > > +     *cps = state;
+> > > +     return 0;
 > > > +}
+> > > +
+> > > +static __be32 find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+> > > +                            struct nfs4_stid **stid)
+> > > +{
+> > > +     __be32 status;
+> > > +     struct nfs4_cpntf_state *cps = NULL;
+> > > +
+> > > +     status = _find_cpntf_state(nn, st, &cps);
+> > > +     if (status)
+> > > +             return status;
+> > > +
+> > > +     /* Did the inter server to server copy start in time? */
+> > > +     if (cps->cp_active == false && !time_after(cps->cp_timeout, jiffies)) {
+> > > +             nfs4_put_stid(cps->cp_p_stid);
+> > > +             return nfserr_partner_no_auth;
 > >
-> > This little bit of refactoring could go into a seperate patch.  It's
-> > easier for me to review lots of smaller patches.
-> >
-> > But I don't understand why you're doing it.
-> >
-> > Also, I'm a little suspicious of code that doesn't initialize an object
-> > till after it's been added to a global structure.  The more typical
-> > pattern is:
-> >
-> >
-> >         initialize foo
-> >         take locks, add foo global structure, drop locks.
-> >
-> > This prevents anyone doing a lookup from finding "foo" while it's still
-> > in a partially initialized state.
+> > I wonder whether instead of checking the time we should instead be
+> > destroying copy stateid's as they expire, so the fact that you were
+> > still able to look up the stateid suggests that it's good.  Or would
+> > that result in returning the wrong error here?  Just curious.
 > 
-> Let me try to explain the change. This change is due to the fact that
-> now both COPY_NOTIFY and COPY both are generating unique stateid
-> (COPY_NOTIFY needs a unique stateid to passed into the COPY and COPY
-> is generating a unique stateid to be referred to by callbacks).
-> Previously we had just the COPY generating the stateid (so it was
-> stored in the nfs4_copy structure) but now we have the COPY_NOTIFY
-> which doesn't create nfs4_copy when it's processing the operation but
-> still needs a unique stateid (stored in the stateid structure).
+> In order to destroy copy stateid as they expire we need some thread
+> monitoring the copies and then remove the expired one.
 
-The usual way to handle a situation like this is to store in the idr a
-pointer to the stateid (copy->cp_stateid or cps->cp_stateid).  When you
-do a lookup you do something like:
+It would be just another thing to do in the laundromat thread.
 
-	st = idr_find(...);
-	copy = container_of(st, struct nfsd4_copy, cp_stateid);
+So when do we free these things?  The only free_cpntf_state() caller I
+can find is in nfsd4_offload_cancel, but I think the client only calls
+those in case of interrupts or other unusual events.  What about a copy
+that terminates normally?
 
-to get a copy to the larger structure.
+> That seems like
+> a lot more work than what's currently there. The spec says that the
+> use of the copy has to start without a certain timeout and that's what
+> this is suppose to enforce. If the client took too long start the
+> copy, it'll get an error. I don't think it matters what error code is
+> returned BAD_STATEID or PARTNER_NO_AUTH both imply the stateid is bad.
+> 
+> >
+> > > +     } else
+> > > +             cps->cp_active = true;
+> > > +
+> > > +     *stid = cps->cp_p_stid;
+> >
+> > What guarantees that cp_p_stid still points to a valid stateid?  (E.g.
+> > if this is an open stateid that has since been closed.)
+> 
+> A copy (or copy_notify) stateid takes a reference on the parent, thus
+> we guaranteed that pointer is still a valid stateid.
 
-By the way, in find_internal_cpntf_state, a buggy or malicious client
-could cause idr_find to look up a copy (not a copy_notify) stateid.  The
-code needs some way to distinguish the two cases.  You could use a
-different cl_id for the two cases.  That might also be handy for
-debugging.  And/or you could do as we do in the case of open, lock, and
-other stateid's and embed a common structure that also includes a "type"
-field.  (See nfs4_stid->sc_type).
-
-> Let me see if I understand your suspicion and ask for guidance how to
-> resolve it as perhaps I'm misusing the function. idr_alloc_cyclic()
-> keeps track of the structure of the 2nd arguments with a value it
-> returns. How do I initiate the structure with the value of the
-> function without knowing the value which can only be returned when I
-> call the function to add it to the list? what you are suggesting is to
-> somehow get the value for the new_id but not associate anything then
-> update the copy structure with that value and then call
-> idr_alloc_cyclic() (or something else) to create that association of
-> the new_id and the structure? I don't know how to do that.
-
-You could move the initialization under the s2s_cp_lock.  But there's
-additional initialization that's done in the caller.
-
-So, either this needs more locking, or maybe some flag value set to
-indicate that the object is initialized and safe to use.  (In the case
-of open/lock/etc.  stateid's I think that is sc_type.  I'm not
-completely convinced we've got that correct, though.)
+I only see a reference count taken when one is looked up, in
+find_internal_cpntf_state.  That's too late.
 
 --b.
+
+> 
+> >
+> > --b.
+> >
+> > > +
+> > > +     return nfs_ok;
+> > > +}
+> > >
+> > >  /*
+> > >   * Checks for stateid operations
+> > > @@ -5264,6 +5307,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+> > >       status = nfsd4_lookup_stateid(cstate, stateid,
+> > >                               NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
+> > >                               &s, nn);
+> > > +     if (status == nfserr_bad_stateid)
+> > > +             status = find_cpntf_state(nn, stateid, &s);
+> > >       if (status)
+> > >               return status;
+> > >       status = nfsd4_stid_check_stateid_generation(stateid, s,
+> > > --
+> > > 1.8.3.1
