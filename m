@@ -2,214 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7896A71ECE
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 20:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E586D71FF8
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 21:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbfGWSLM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jul 2019 14:11:12 -0400
-Received: from mail-eopbgr750048.outbound.protection.outlook.com ([40.107.75.48]:57414
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfGWSLM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:11:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lazojrADfmxd4tBLTOQTIO/1C2Uf8Nye0+hTX4MGhuN3gLYKhVWkKz0msBQM/alSq3aqpTpuVim6weM2+wML4wtkBYKI7aXyDBV9HHSiTAurP3kuAhnazy0W2qcvsUurAPb+sA3jQM3RRO0A5ahaogUq/9aLGoyKp5NQJbwFO4XT1Nc5sYWCV855/Hpbrk2dl7eyJ4gfGbT/V46/ogWU2Y4qkA26qdH8Ka6vN7DAstYjPyyodtr8Q2Ji5KK1s1jH3+EnSrvRSlkV8AUebuHXqtfoVPL7mGdouflfgr4jrJ94hbf0s/rQm1lPqp64ZXfpVLAZI7+hnOH1u1FX0bPhhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=clRJX7S89xx4feXXl9nIiFMoYTg49R2LxzcGsGuPrts=;
- b=R6PON9YJu3KMAyLVQijZCN37WcOWhMVbzPcqBokPmD9nvhDwnedzKShe2YjxP+DSUwZXkNYxcste+RmmES+kIBmDAzMwdd1/jZGdup7nhEVkuy4Mk2wtXzLLMbZKCVLZVjAJZEpqipZidQ8DlcaFZi4TKEwD2FEvXNtHO8InGtPOPFdR661HledWs4jRL8htQkeuyyF8ewHa6ATWWjO+OZbxXgQ2Hg89CNwLV2mtzFNeXxHEYld6zpiv3zGFqPEuISNONVF7MdSVZ10KaQ/MkK+7byTnQ73/SIcUzzf8Mrktkgj9//rH4gQa2Xf8kURjpJrTshmVfFxTXjpoUwGSzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=netapp.com;dmarc=pass action=none
- header.from=netapp.com;dkim=pass header.d=netapp.com;arc=none
+        id S1729661AbfGWTOA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 15:14:00 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39851 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbfGWTOA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jul 2019 15:14:00 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u3so29625487vsh.6;
+        Tue, 23 Jul 2019 12:13:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=clRJX7S89xx4feXXl9nIiFMoYTg49R2LxzcGsGuPrts=;
- b=h3KgVyElVR5O86ZKNKXBSxI2NvK3LzCsmxCM5dstIQzcq41wp9RKGyEUkK0Q0ZsKtC1vvMVyKx/CFdsQCgPss086LufOePE8hUMJPcETUa/wvSd0Wnmn1Dp8vVZoaiQ8TZkyvSOQQT5RsChmRFQpWvjTQsmQptEE6XeUgzS2i0c=
-Received: from CY4PR06MB3479.namprd06.prod.outlook.com (10.175.117.23) by
- CY4PR06MB3462.namprd06.prod.outlook.com (10.175.121.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Tue, 23 Jul 2019 18:11:04 +0000
-Received: from CY4PR06MB3479.namprd06.prod.outlook.com
- ([fe80::59bc:ecce:ea85:d586]) by CY4PR06MB3479.namprd06.prod.outlook.com
- ([fe80::59bc:ecce:ea85:d586%8]) with mapi id 15.20.2094.017; Tue, 23 Jul 2019
- 18:11:04 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>,
-        "neilb@suse.com" <neilb@suse.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "trondmy@hammerspace.com" <trondmy@hammerspace.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 3/9] NFS: send state management on a single connection.
-Thread-Topic: [PATCH 3/9] NFS: send state management on a single connection.
-Thread-Index: AQHVFoC06tUqgmWzFkmxu1hisPydXabY1viA
-Date:   Tue, 23 Jul 2019 18:11:04 +0000
-Message-ID: <29913e2feb35dedd640224a6e9984a8b2c758c5e.camel@netapp.com>
-References: <155917564898.3988.6096672032831115016.stgit@noble.brown>
-         <155917688863.3988.8318604225894720148.stgit@noble.brown>
-In-Reply-To: <155917688863.3988.8318604225894720148.stgit@noble.brown>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [73.145.169.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e567883a-57f0-4c42-a567-08d70f9920ae
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR06MB3462;
-x-ms-traffictypediagnostic: CY4PR06MB3462:
-x-microsoft-antispam-prvs: <CY4PR06MB3462D4B16CBBD4FCD721DE00F8C70@CY4PR06MB3462.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:33;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(189003)(199004)(76176011)(478600001)(6486002)(110136005)(446003)(6436002)(58126008)(316002)(2501003)(53936002)(81166006)(81156014)(2616005)(8676002)(25786009)(186003)(36756003)(26005)(8936002)(68736007)(6512007)(11346002)(476003)(4326008)(229853002)(71190400001)(91956017)(6246003)(102836004)(14454004)(66556008)(71200400001)(6506007)(66946007)(99286004)(64756008)(305945005)(66066001)(76116006)(14444005)(256004)(6116002)(2906002)(86362001)(2201001)(66446008)(118296001)(66476007)(3846002)(2171002)(5660300002)(486006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR06MB3462;H:CY4PR06MB3479.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3XaG6Yq1D12wpYQq/0TdqobduIWO6gvRvleMU4fJRVkCvnBcCQZVhoiPKQztHudUd21FCM4/EgWpp4ugTwTgkHv52zZqEKThTjoDAYishWBAsW8CiGia4ndKyVRI5GLeC6NtwptVTbrKuR73AIRKDRPktZzgvd4s4T9nfi4xqzLtBDB0B34EmwCIptVkil5+ydsKbDV7pegj00Dygiu7AX8Fva0nxn2gADRYuEYLpZUhHpZ986jcX2kdUAwiMA40BiwJvmt0bHBGhURTE+Kxvnrvb8XHabu6FTTHuUkGjZ+GqC5wNMBwbi8/x/lZBq7xFIeRvOG92OCZ15tox2P8LZNGIi87DaTsv85Mae//uzvULUg4pfrz4QIjyx4odpHdLHv40YBmPQFBoBcu2OHX4OxBcdjdhBw+jnODiz4i2Sw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5E69F62A963055429AA76B7325401B9B@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=mCFR2IQNm0hmioLVOd7QF/xJfVRtWFkovxZJz2yC7AU=;
+        b=kghJOur2nzo23SRl91iCsTz2CjZTC1wGF6CEwLnGg2mcWP4nqZdK2clgIQN65Cg0dH
+         6dWW6CgwPIfvcr+K0hjDuMU9SupACSGDGyzsXaqFFACM7Ta00flpJ0L9W8romd9Cp1yX
+         lgrGGuUPYT88AHImPcytWvhg/4qaAt6TK6QI06uJQvtIBzTPv99KOrclKTOA4e7lS/Xq
+         vpI2bvzjlA+o2VBhfCYN6HESRPlu1INeMvsg4mVVOzq69ZDUFyA+c264iXb3hWR7eEYq
+         a+pLa6EIpOby+4ffhrQ7Ve8i6oXc3hQJXkS/4Sf7oxbIqRn9/tl19JtfaaHgw6wLTb+i
+         f+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=mCFR2IQNm0hmioLVOd7QF/xJfVRtWFkovxZJz2yC7AU=;
+        b=H1pCc3vsNuZpmIbHObqco6H/Lu96VH4g1Nj8eMGeMMQgfRIRHBAvY6pJdJ/OoNdoeX
+         BLQI81dyiLTpea9LcWLmKh4rkkhrvlau/WjpS/DSZfgIzi0dSctEet23iw52EasY4nPK
+         Yd77HNPO6P4Fe0q99jJIfdYOCnXowPhTfycMu46E2A1F6GEFEQHr30ivKJmhhEciaQCB
+         M9Bh010cAQ5nxAL5n9kdTZG0R2ShQa6deBLVP5K5I0b5vFQf3eZUNnaqsQpXKDQU6S7M
+         3t+qjqXmHBoREx3wbDRGdK7FiGhqYIgxnFeIcBaVFALDl0WgUzUz2kM74bC8AKTp44Kp
+         Bwxg==
+X-Gm-Message-State: APjAAAUfvrlJU983VqZdTYcILMRp7dRdziFxqL7cDgtuXvijAUd9ZAoj
+        rfSVUg1ON/EI+6qydOcwJP/FWB0o9WK8Ww==
+X-Google-Smtp-Source: APXvYqyxG/2hpnYJeRDXmNuM0ujhurNc4eqen+D0JDOO8yhUGCACahyO/ghn4Gd3Miss4oXPjxwPrw==
+X-Received: by 2002:a67:f75a:: with SMTP id w26mr45539455vso.148.1563909238532;
+        Tue, 23 Jul 2019 12:13:58 -0700 (PDT)
+Received: from seurat29.1015granger.net (dhcp-82c9.meeting.ietf.org. [31.133.130.201])
+        by smtp.gmail.com with ESMTPSA id j80sm5541004vkj.47.2019.07.23.12.13.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 12:13:58 -0700 (PDT)
+Subject: [PATCH v1] rdma: Enable ib_alloc_cq to spread work over a device's
+ comp_vectors
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Tue, 23 Jul 2019 15:13:37 -0400
+Message-ID: <156390915496.6759.4305845732131573253.stgit@seurat29.1015granger.net>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e567883a-57f0-4c42-a567-08d70f9920ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 18:11:04.6315
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bjschuma@netapp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR06MB3462
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgTmVpbCwNCg0KT24gVGh1LCAyMDE5LTA1LTMwIGF0IDEwOjQxICsxMDAwLCBOZWlsQnJvd24g
-d3JvdGU6DQo+IFdpdGggTkZTdjQuMSwgZGlmZmVyZW50IG5ldHdvcmsgY29ubmVjdGlvbnMgbmVl
-ZCB0byBiZSBleHBsaWNpdGx5DQo+IGJvdW5kIHRvIGEgc2Vzc2lvbi4gIER1cmluZyBzZXNzaW9u
-IHN0YXJ0dXAsIHRoaXMgaXMgbm90IHBvc3NpYmxlDQo+IHNvIG9ubHkgYSBzaW5nbGUgY29ubmVj
-dGlvbiBtdXN0IGJlIHVzZWQgZm9yIHNlc3Npb24gc3RhcnR1cC4NCj4gDQo+IFNvIGFkZCBhIHRh
-c2sgZmxhZyB0byBkaXNhYmxlIHRoZSBkZWZhdWx0IHJvdW5kLXJvYmluIGNob2ljZSBvZg0KPiBj
-b25uZWN0aW9ucyAod2hlbiBuY29ubmVjdCA+IDEpIGFuZCBmb3JjZSB0aGUgdXNlIG9mIGEgc2lu
-Z2xlDQo+IGNvbm5lY3Rpb24uDQo+IFRoZW4gdXNlIHRoYXQgZmxhZyBvbiBhbGwgcmVxdWVzdHMg
-Zm9yIHNlc3Npb24gbWFuYWdlbWVudCAtIGZvcg0KPiBjb25zaXN0ZW5jZSwgaW5jbHVkZSBORlN2
-NC4wIG1hbmFnZW1lbnQgKFNFVENMSUVOVElEKSBhbmQgc2Vzc2lvbg0KPiBkZXN0cnVjdGlvbg0K
-PiANCj4gUmVwb3J0ZWQtYnk6IENodWNrIExldmVyIDxjaHVjay5sZXZlckBvcmFjbGUuY29tPg0K
-PiBTaWduZWQtb2ZmLWJ5OiBOZWlsQnJvd24gPG5laWxiQHN1c2UuY29tPg0KPiAtLS0NCj4gIGZz
-L25mcy9uZnM0cHJvYy5jICAgICAgICAgICAgfCAgIDIyICsrKysrKysrKysrKystLS0tLS0tLS0N
-Cj4gIGluY2x1ZGUvbGludXgvc3VucnBjL3NjaGVkLmggfCAgICAxICsNCj4gIG5ldC9zdW5ycGMv
-Y2xudC5jICAgICAgICAgICAgfCAgIDI0ICsrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgMyBm
-aWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IGluZGV4
-IGMyOWNiZWY2YjUzZi4uMjJiM2RiZmM0ZmExIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNHBy
-b2MuYw0KPiArKysgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBAQCAtNTk3OCw3ICs1OTc4LDcgQEAg
-aW50IG5mczRfcHJvY19zZXRjbGllbnRpZChzdHJ1Y3QgbmZzX2NsaWVudA0KPiAqY2xwLCB1MzIg
-cHJvZ3JhbSwNCj4gIAkJLnJwY19tZXNzYWdlID0gJm1zZywNCj4gIAkJLmNhbGxiYWNrX29wcyA9
-ICZuZnM0X3NldGNsaWVudGlkX29wcywNCj4gIAkJLmNhbGxiYWNrX2RhdGEgPSAmc2V0Y2xpZW50
-aWQsDQo+IC0JCS5mbGFncyA9IFJQQ19UQVNLX1RJTUVPVVQsDQo+ICsJCS5mbGFncyA9IFJQQ19U
-QVNLX1RJTUVPVVQgfCBSUENfVEFTS19OT19ST1VORF9ST0JJTiwNCj4gIAl9Ow0KPiAgCWludCBz
-dGF0dXM7DQo+ICANCj4gQEAgLTYwNDQsNyArNjA0NCw4IEBAIGludCBuZnM0X3Byb2Nfc2V0Y2xp
-ZW50aWRfY29uZmlybShzdHJ1Y3QNCj4gbmZzX2NsaWVudCAqY2xwLA0KPiAgCWRwcmludGsoIk5G
-UyBjYWxsICBzZXRjbGllbnRpZF9jb25maXJtIGF1dGg9JXMsIChjbGllbnQgSUQNCj4gJWxseClc
-biIsDQo+ICAJCWNscC0+Y2xfcnBjY2xpZW50LT5jbF9hdXRoLT5hdV9vcHMtPmF1X25hbWUsDQo+
-ICAJCWNscC0+Y2xfY2xpZW50aWQpOw0KPiAtCXN0YXR1cyA9IHJwY19jYWxsX3N5bmMoY2xwLT5j
-bF9ycGNjbGllbnQsICZtc2csDQo+IFJQQ19UQVNLX1RJTUVPVVQpOw0KPiArCXN0YXR1cyA9IHJw
-Y19jYWxsX3N5bmMoY2xwLT5jbF9ycGNjbGllbnQsICZtc2csDQo+ICsJCQkgICAgICAgUlBDX1RB
-U0tfVElNRU9VVCB8DQo+IFJQQ19UQVNLX05PX1JPVU5EX1JPQklOKTsNCj4gIAl0cmFjZV9uZnM0
-X3NldGNsaWVudGlkX2NvbmZpcm0oY2xwLCBzdGF0dXMpOw0KPiAgCWRwcmludGsoIk5GUyByZXBs
-eSBzZXRjbGllbnRpZF9jb25maXJtOiAlZFxuIiwgc3RhdHVzKTsNCj4gIAlyZXR1cm4gc3RhdHVz
-Ow0KPiBAQCAtNzYzMyw3ICs3NjM0LDcgQEAgc3RhdGljIGludCBfbmZzNF9wcm9jX3NlY2luZm8o
-c3RydWN0IGlub2RlDQo+ICpkaXIsIGNvbnN0IHN0cnVjdCBxc3RyICpuYW1lLCBzdHJ1Y3QNCj4g
-IAkJTkZTX1NQNF9NQUNIX0NSRURfU0VDSU5GTywgJmNsbnQsICZtc2cpOw0KPiAgDQo+ICAJc3Rh
-dHVzID0gbmZzNF9jYWxsX3N5bmMoY2xudCwgTkZTX1NFUlZFUihkaXIpLCAmbXNnLA0KPiAmYXJn
-cy5zZXFfYXJncywNCj4gLQkJCQkmcmVzLnNlcV9yZXMsIDApOw0KPiArCQkJCSZyZXMuc2VxX3Jl
-cywgUlBDX1RBU0tfTk9fUk9VTkRfUk9CSU4pOw0KDQpJJ20gY29uZnVzZWQgYWJvdXQgd2hhdCBz
-ZXR0aW5nIFJQQ19UQVNLX05PX1JPVU5EX1JPQklOIGFzIHRoZQ0KImNhY2hlX3JlcGx5IiBhcmd1
-bWVudCB0byBuZnM0X2NhbGxfc3luYygpIGFjdHVhbGx5IGRvZXMuIEFzIGZhciBhcyBJDQpjYW4g
-dGVsbCwgaXQncyBwYXNzZWQgdG8gbmZzNF9pbml0X3NlcXVlbmNlKCkgd2hpY2ggc2V0cyBpdCB0
-byB0aGUNCm5mczRfc2VxdWVuY2VfYXJncyAic2FfY2FjaGVfdGhpcyIgZmllbGQsIHdoaWNoIGlz
-IGEgb25lIGJpdCBib29sZWFuDQooZGVmaW5lZCBpbiBpbmNsdWRlL2xpbnV4L25mc194ZHIuaCku
-IFNvIHdoeSBwYXNzIHRoZSBmbGFnPw0KDQo+ICAJZHByaW50aygiTkZTIHJlcGx5ICBzZWNpbmZv
-OiAlZFxuIiwgc3RhdHVzKTsNCj4gIA0KPiAgCXB1dF9jcmVkKGNyZWQpOw0KPiBAQCAtNzk3MSw3
-ICs3OTcyLDcgQEAgbmZzNF9ydW5fZXhjaGFuZ2VfaWQoc3RydWN0IG5mc19jbGllbnQgKmNscCwN
-Cj4gY29uc3Qgc3RydWN0IGNyZWQgKmNyZWQsDQo+ICAJCS5ycGNfY2xpZW50ID0gY2xwLT5jbF9y
-cGNjbGllbnQsDQo+ICAJCS5jYWxsYmFja19vcHMgPSAmbmZzNF9leGNoYW5nZV9pZF9jYWxsX29w
-cywNCj4gIAkJLnJwY19tZXNzYWdlID0gJm1zZywNCj4gLQkJLmZsYWdzID0gUlBDX1RBU0tfVElN
-RU9VVCwNCj4gKwkJLmZsYWdzID0gUlBDX1RBU0tfVElNRU9VVCB8IFJQQ19UQVNLX05PX1JPVU5E
-X1JPQklOLA0KPiAgCX07DQo+ICAJc3RydWN0IG5mczQxX2V4Y2hhbmdlX2lkX2RhdGEgKmNhbGxk
-YXRhOw0KPiAgCWludCBzdGF0dXM7DQo+IEBAIC04MTk2LDcgKzgxOTcsOCBAQCBzdGF0aWMgaW50
-IF9uZnM0X3Byb2NfZGVzdHJveV9jbGllbnRpZChzdHJ1Y3QNCj4gbmZzX2NsaWVudCAqY2xwLA0K
-PiAgCX07DQo+ICAJaW50IHN0YXR1czsNCj4gIA0KPiAtCXN0YXR1cyA9IHJwY19jYWxsX3N5bmMo
-Y2xwLT5jbF9ycGNjbGllbnQsICZtc2csDQo+IFJQQ19UQVNLX1RJTUVPVVQpOw0KPiArCXN0YXR1
-cyA9IHJwY19jYWxsX3N5bmMoY2xwLT5jbF9ycGNjbGllbnQsICZtc2csDQo+ICsJCQkgICAgICAg
-UlBDX1RBU0tfVElNRU9VVCB8DQo+IFJQQ19UQVNLX05PX1JPVU5EX1JPQklOKTsNCj4gIAl0cmFj
-ZV9uZnM0X2Rlc3Ryb3lfY2xpZW50aWQoY2xwLCBzdGF0dXMpOw0KPiAgCWlmIChzdGF0dXMpDQo+
-ICAJCWRwcmludGsoIk5GUzogR290IGVycm9yICVkIGZyb20gdGhlIHNlcnZlciAlcyBvbiAiDQo+
-IEBAIC04NDc1LDcgKzg0NzcsOCBAQCBzdGF0aWMgaW50IF9uZnM0X3Byb2NfY3JlYXRlX3Nlc3Np
-b24oc3RydWN0DQo+IG5mc19jbGllbnQgKmNscCwNCj4gIAluZnM0X2luaXRfY2hhbm5lbF9hdHRy
-cygmYXJncywgY2xwLT5jbF9ycGNjbGllbnQpOw0KPiAgCWFyZ3MuZmxhZ3MgPSAoU0VTU0lPTjRf
-UEVSU0lTVCB8IFNFU1NJT040X0JBQ0tfQ0hBTik7DQo+ICANCj4gLQlzdGF0dXMgPSBycGNfY2Fs
-bF9zeW5jKHNlc3Npb24tPmNscC0+Y2xfcnBjY2xpZW50LCAmbXNnLA0KPiBSUENfVEFTS19USU1F
-T1VUKTsNCj4gKwlzdGF0dXMgPSBycGNfY2FsbF9zeW5jKHNlc3Npb24tPmNscC0+Y2xfcnBjY2xp
-ZW50LCAmbXNnLA0KPiArCQkJICAgICAgIFJQQ19UQVNLX1RJTUVPVVQgfA0KPiBSUENfVEFTS19O
-T19ST1VORF9ST0JJTik7DQo+ICAJdHJhY2VfbmZzNF9jcmVhdGVfc2Vzc2lvbihjbHAsIHN0YXR1
-cyk7DQo+ICANCj4gIAlzd2l0Y2ggKHN0YXR1cykgew0KPiBAQCAtODU1MSw3ICs4NTU0LDggQEAg
-aW50IG5mczRfcHJvY19kZXN0cm95X3Nlc3Npb24oc3RydWN0DQo+IG5mczRfc2Vzc2lvbiAqc2Vz
-c2lvbiwNCj4gIAlpZiAoIXRlc3RfYW5kX2NsZWFyX2JpdChORlM0X1NFU1NJT05fRVNUQUJMSVNI
-RUQsICZzZXNzaW9uLQ0KPiA+c2Vzc2lvbl9zdGF0ZSkpDQo+ICAJCXJldHVybiAwOw0KPiAgDQo+
-IC0Jc3RhdHVzID0gcnBjX2NhbGxfc3luYyhzZXNzaW9uLT5jbHAtPmNsX3JwY2NsaWVudCwgJm1z
-ZywNCj4gUlBDX1RBU0tfVElNRU9VVCk7DQo+ICsJc3RhdHVzID0gcnBjX2NhbGxfc3luYyhzZXNz
-aW9uLT5jbHAtPmNsX3JwY2NsaWVudCwgJm1zZywNCj4gKwkJCSAgICAgICBSUENfVEFTS19USU1F
-T1VUIHwNCj4gUlBDX1RBU0tfTk9fUk9VTkRfUk9CSU4pOw0KPiAgCXRyYWNlX25mczRfZGVzdHJv
-eV9zZXNzaW9uKHNlc3Npb24tPmNscCwgc3RhdHVzKTsNCj4gIA0KPiAgCWlmIChzdGF0dXMpDQo+
-IEBAIC04ODA1LDcgKzg4MDksNyBAQCBzdGF0aWMgaW50IG5mczQxX3Byb2NfcmVjbGFpbV9jb21w
-bGV0ZShzdHJ1Y3QNCj4gbmZzX2NsaWVudCAqY2xwLA0KPiAgCQkucnBjX2NsaWVudCA9IGNscC0+
-Y2xfcnBjY2xpZW50LA0KPiAgCQkucnBjX21lc3NhZ2UgPSAmbXNnLA0KPiAgCQkuY2FsbGJhY2tf
-b3BzID0gJm5mczRfcmVjbGFpbV9jb21wbGV0ZV9jYWxsX29wcywNCj4gLQkJLmZsYWdzID0gUlBD
-X1RBU0tfQVNZTkMsDQo+ICsJCS5mbGFncyA9IFJQQ19UQVNLX0FTWU5DIHwgUlBDX1RBU0tfTk9f
-Uk9VTkRfUk9CSU4sDQo+ICAJfTsNCj4gIAlpbnQgc3RhdHVzID0gLUVOT01FTTsNCj4gIA0KPiBA
-QCAtOTMyNCw3ICs5MzI4LDcgQEAgX25mczQxX3Byb2Nfc2VjaW5mb19ub19uYW1lKHN0cnVjdCBu
-ZnNfc2VydmVyDQo+ICpzZXJ2ZXIsIHN0cnVjdCBuZnNfZmggKmZoYW5kbGUsDQo+ICANCj4gIAlk
-cHJpbnRrKCItLT4gJXNcbiIsIF9fZnVuY19fKTsNCj4gIAlzdGF0dXMgPSBuZnM0X2NhbGxfc3lu
-YyhjbG50LCBzZXJ2ZXIsICZtc2csICZhcmdzLnNlcV9hcmdzLA0KPiAtCQkJCSZyZXMuc2VxX3Jl
-cywgMCk7DQo+ICsJCQkJJnJlcy5zZXFfcmVzLCBSUENfVEFTS19OT19ST1VORF9ST0JJTik7DQoN
-ClNhbWUgcXVlc3Rpb24gaGVyZS4NCg0KVGhhbmtzLA0KQW5uYQ0KDQo+ICAJZHByaW50aygiPC0t
-ICVzIHN0YXR1cz0lZFxuIiwgX19mdW5jX18sIHN0YXR1cyk7DQo+ICANCj4gIAlwdXRfY3JlZChj
-cmVkKTsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc3VucnBjL3NjaGVkLmgNCj4gYi9p
-bmNsdWRlL2xpbnV4L3N1bnJwYy9zY2hlZC5oDQo+IGluZGV4IGQwZTQ1MTg2OGYwMi4uMTE0MjRi
-ZGYwOWU2IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy9zY2hlZC5oDQo+ICsr
-KyBiL2luY2x1ZGUvbGludXgvc3VucnBjL3NjaGVkLmgNCj4gQEAgLTEyNiw2ICsxMjYsNyBAQCBz
-dHJ1Y3QgcnBjX3Rhc2tfc2V0dXAgew0KPiAgI2RlZmluZSBSUENfQ0FMTF9NQUpPUlNFRU4JMHgw
-MDIwCQkvKiBtYWpvciB0aW1lb3V0IHNlZW4NCj4gKi8NCj4gICNkZWZpbmUgUlBDX1RBU0tfUk9P
-VENSRURTCTB4MDA0MAkJLyogZm9yY2Ugcm9vdCBjcmVkcw0KPiAqLw0KPiAgI2RlZmluZSBSUENf
-VEFTS19EWU5BTUlDCTB4MDA4MAkJLyogdGFzayB3YXMNCj4ga21hbGxvYydlZCAqLw0KPiArI2Rl
-ZmluZQlSUENfVEFTS19OT19ST1VORF9ST0JJTgkweDAxMDAJCS8qIHNlbmQNCj4gcmVxdWVzdHMg
-b24gIm1haW4iIHhwcnQgKi8NCj4gICNkZWZpbmUgUlBDX1RBU0tfU09GVAkJMHgwMjAwCQkvKiBV
-c2Ugc29mdA0KPiB0aW1lb3V0cyAqLw0KPiAgI2RlZmluZSBSUENfVEFTS19TT0ZUQ09OTgkweDA0
-MDAJCS8qIEZhaWwgaWYgY2FuJ3QNCj4gY29ubmVjdCAqLw0KPiAgI2RlZmluZSBSUENfVEFTS19T
-RU5UCQkweDA4MDAJCS8qIG1lc3NhZ2UNCj4gd2FzIHNlbnQgKi8NCj4gZGlmZiAtLWdpdCBhL25l
-dC9zdW5ycGMvY2xudC5jIGIvbmV0L3N1bnJwYy9jbG50LmMNCj4gaW5kZXggMzYxOWRkNWU5ZTBl
-Li40NTgwMmRkM2ZjODYgMTAwNjQ0DQo+IC0tLSBhL25ldC9zdW5ycGMvY2xudC5jDQo+ICsrKyBi
-L25ldC9zdW5ycGMvY2xudC5jDQo+IEBAIC0xMDEzLDYgKzEwMTMsMjQgQEAgeHBydF9nZXRfY2xp
-ZW50KHN0cnVjdCBycGNfeHBydCAqeHBydCwgc3RydWN0DQo+IHJwY19jbG50ICpjbG50KQ0KPiAg
-CXJldHVybiB4cHJ0Ow0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgc3RydWN0IHJwY194cHJ0ICoNCj4g
-K3JwY190YXNrX2dldF9maXJzdF94cHJ0KHN0cnVjdCBycGNfY2xudCAqY2xudCkNCj4gK3sNCj4g
-KwlzdHJ1Y3QgcnBjX3hwcnRfc3dpdGNoICp4cHM7DQo+ICsJc3RydWN0IHJwY194cHJ0ICp4cHJ0
-Ow0KPiArDQo+ICsJcmN1X3JlYWRfbG9jaygpOw0KPiArCXhwcnQgPSB4cHJ0X2dldChyY3VfZGVy
-ZWZlcmVuY2UoY2xudC0+Y2xfeHBydCkpOw0KPiArCWlmICh4cHJ0KSB7DQo+ICsJCWF0b21pY19s
-b25nX2luYygmeHBydC0+cXVldWVsZW4pOw0KPiArCQl4cHMgPSByY3VfZGVyZWZlcmVuY2UoY2xu
-dC0+Y2xfeHBpLnhwaV94cHN3aXRjaCk7DQo+ICsJCWF0b21pY19sb25nX2luYygmeHBzLT54cHNf
-cXVldWVsZW4pOw0KPiArCX0NCj4gKwlyY3VfcmVhZF91bmxvY2soKTsNCj4gKw0KPiArCXJldHVy
-biB4cHJ0Ow0KPiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZA0KPiAgcnBjX3Rhc2tfcmVsZWFzZV94
-cHJ0KHN0cnVjdCBycGNfY2xudCAqY2xudCwgc3RydWN0IHJwY194cHJ0ICp4cHJ0KQ0KPiAgew0K
-PiBAQCAtMTA2MCw3ICsxMDc4LDExIEBAIHZvaWQgcnBjX3Rhc2tfcmVsZWFzZV9jbGllbnQoc3Ry
-dWN0IHJwY190YXNrDQo+ICp0YXNrKQ0KPiAgc3RhdGljDQo+ICB2b2lkIHJwY190YXNrX3NldF90
-cmFuc3BvcnQoc3RydWN0IHJwY190YXNrICp0YXNrLCBzdHJ1Y3QgcnBjX2NsbnQNCj4gKmNsbnQp
-DQo+ICB7DQo+IC0JaWYgKCF0YXNrLT50a194cHJ0KQ0KPiArCWlmICh0YXNrLT50a194cHJ0KQ0K
-PiArCQlyZXR1cm47DQo+ICsJaWYgKHRhc2stPnRrX2ZsYWdzICYgUlBDX1RBU0tfTk9fUk9VTkRf
-Uk9CSU4pDQo+ICsJCXRhc2stPnRrX3hwcnQgPSBycGNfdGFza19nZXRfZmlyc3RfeHBydChjbG50
-KTsNCj4gKwllbHNlDQo+ICAJCXRhc2stPnRrX3hwcnQgPSBycGNfdGFza19nZXRfeHBydChjbG50
-KTsNCj4gIH0NCj4gIA0KPiANCj4gDQo=
+Send and Receive completion is handled on a single CPU selected at
+the time each Completion Queue is allocated. Typically this is when
+an initiator instantiates an RDMA transport, or when a target
+accepts an RDMA connection.
+
+Some ULPs cannot open a connection per CPU to spread completion
+workload across available CPUs. For these ULPs, allow the RDMA core
+to select a completion vector based on the device's complement of
+available comp_vecs.
+
+When a ULP elects to use RDMA_CORE_ANY_COMPVEC, if multiple CPUs are
+available, a different CPU will be selected for each Completion
+Queue. For the moment, a simple round-robin mechanism is used.
+
+Suggested-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ drivers/infiniband/core/cq.c             |   20 +++++++++++++++++++-
+ include/rdma/ib_verbs.h                  |    3 +++
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    6 ++++--
+ net/sunrpc/xprtrdma/verbs.c              |    5 ++---
+ 4 files changed, 28 insertions(+), 6 deletions(-)
+
+Jason-
+
+If this patch is acceptable to all, then I would expect you to take
+it through the RDMA tree.
+
+
+diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
+index 7c599878ccf7..a89d549490c4 100644
+--- a/drivers/infiniband/core/cq.c
++++ b/drivers/infiniband/core/cq.c
+@@ -165,12 +165,27 @@ static void ib_cq_completion_workqueue(struct ib_cq *cq, void *private)
+ 	queue_work(cq->comp_wq, &cq->work);
+ }
+ 
++/*
++ * Attempt to spread ULP completion queues over a device's completion
++ * vectors so that all available CPU cores can help service the device's
++ * interrupt workload. This mechanism may be improved at a later point
++ * to dynamically take into account the system's actual workload.
++ */
++static int ib_get_comp_vector(struct ib_device *dev)
++{
++	static atomic_t cv;
++
++	if (dev->num_comp_vectors > 1)
++		return atomic_inc_return(&cv) % dev->num_comp_vectors;
++	return 0;
++}
++
+ /**
+  * __ib_alloc_cq_user - allocate a completion queue
+  * @dev:		device to allocate the CQ for
+  * @private:		driver private data, accessible from cq->cq_context
+  * @nr_cqe:		number of CQEs to allocate
+- * @comp_vector:	HCA completion vectors for this CQ
++ * @comp_vector:	HCA completion vector for this CQ
+  * @poll_ctx:		context to poll the CQ from.
+  * @caller:		module owner name.
+  * @udata:		Valid user data or NULL for kernel object
+@@ -208,6 +223,9 @@ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
+ 	cq->res.type = RDMA_RESTRACK_CQ;
+ 	rdma_restrack_set_task(&cq->res, caller);
+ 
++	if (comp_vector == RDMA_CORE_ANY_COMPVEC)
++		cq_attr.comp_vector = ib_get_comp_vector(dev);
++
+ 	ret = dev->ops.create_cq(cq, &cq_attr, NULL);
+ 	if (ret)
+ 		goto out_free_wc;
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index c5f8a9f17063..547d36bcef7e 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -3669,6 +3669,9 @@ static inline int ib_post_recv(struct ib_qp *qp,
+ 	return qp->device->ops.post_recv(qp, recv_wr, bad_recv_wr ? : &dummy);
+ }
+ 
++/* Tell the RDMA core to select an appropriate comp_vector */
++#define RDMA_CORE_ANY_COMPVEC	((int)(-1))
++
+ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
+ 				 int nr_cqe, int comp_vector,
+ 				 enum ib_poll_context poll_ctx,
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 3fe665152d95..7df6de6e9162 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -455,13 +455,15 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		goto errout;
+ 	}
+ 	newxprt->sc_sq_cq = ib_alloc_cq(dev, newxprt, newxprt->sc_sq_depth,
+-					0, IB_POLL_WORKQUEUE);
++					RDMA_CORE_ANY_COMPVEC,
++					IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(newxprt->sc_sq_cq)) {
+ 		dprintk("svcrdma: error creating SQ CQ for connect request\n");
+ 		goto errout;
+ 	}
+ 	newxprt->sc_rq_cq = ib_alloc_cq(dev, newxprt, rq_depth,
+-					0, IB_POLL_WORKQUEUE);
++					RDMA_CORE_ANY_COMPVEC,
++					IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(newxprt->sc_rq_cq)) {
+ 		dprintk("svcrdma: error creating RQ CQ for connect request\n");
+ 		goto errout;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 805b1f35e1ca..6e5989e2b8ed 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -523,8 +523,7 @@ int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 
+ 	sendcq = ib_alloc_cq(ia->ri_id->device, NULL,
+ 			     ep->rep_attr.cap.max_send_wr + 1,
+-			     ia->ri_id->device->num_comp_vectors > 1 ? 1 : 0,
+-			     IB_POLL_WORKQUEUE);
++			     RDMA_CORE_ANY_COMPVEC, IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(sendcq)) {
+ 		rc = PTR_ERR(sendcq);
+ 		goto out1;
+@@ -532,7 +531,7 @@ int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 
+ 	recvcq = ib_alloc_cq(ia->ri_id->device, NULL,
+ 			     ep->rep_attr.cap.max_recv_wr + 1,
+-			     0, IB_POLL_WORKQUEUE);
++			     RDMA_CORE_ANY_COMPVEC, IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(recvcq)) {
+ 		rc = PTR_ERR(recvcq);
+ 		goto out2;
+
