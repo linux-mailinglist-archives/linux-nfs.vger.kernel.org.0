@@ -2,68 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7E5A711E1
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 08:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1C567158B
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2019 11:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfGWG1Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jul 2019 02:27:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41160 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbfGWG1Y (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Jul 2019 02:27:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 207A0356D2;
-        Tue, 23 Jul 2019 06:27:24 +0000 (UTC)
-Received: from localhost (dhcp-12-152.nay.redhat.com [10.66.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E5A55C28C;
-        Tue, 23 Jul 2019 06:27:23 +0000 (UTC)
-From:   Yongcheng Yang <yongcheng.yang@gmail.com>
-To:     "J . Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Yongcheng Yang <yongcheng.yang@gmail.com>
-Subject: [PATCH 2/2] nfs4_getfacl: revise the Usage format as new options added
-Date:   Tue, 23 Jul 2019 14:27:13 +0800
-Message-Id: <20190723062713.20570-2-yongcheng.yang@gmail.com>
-In-Reply-To: <20190723062713.20570-1-yongcheng.yang@gmail.com>
-References: <20190723062713.20570-1-yongcheng.yang@gmail.com>
+        id S1731438AbfGWJ5b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 05:57:31 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:53741 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726284AbfGWJ5b (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jul 2019 05:57:31 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id DF7801C2;
+        Tue, 23 Jul 2019 05:57:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 23 Jul 2019 05:57:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Zbd+0lFfDUojgP4BWfcs/ZQBaie
+        1qowPB18eb++FXL4=; b=dL3TL7OqIOmkE39X0npwco1n8brYmI0rucSTaKvyMqB
+        uGMuDCr0JExVjZE3WyILp8yZhF7inDnNK8cyZEbsC36dnV+fHc5T9ucoxBtk1+IX
+        q+gqOVWeyjbCw0qmwA9AH4GyouHhiBSuxc9AEq+YS3YLP59UpfC5ATrq7/Y7cp51
+        qiqbWBC9joj9TmgvF//+w0brL4zqXj4TtgHD9PL4ZsdkecrZuJu+8UhVxasoRUAh
+        8t4m5ZipirWXDKWjtGx8QGD39gxBLA6FYVqAwxsyi1t2LvzLdbljQtdfyy7ZJMQL
+        /071UlL3yjoCzdXU8BzN5KhKU5KnaCsBRn98IYcjLAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Zbd+0l
+        FfDUojgP4BWfcs/ZQBaie1qowPB18eb++FXL4=; b=UaZTSsJvTTm9IuBWkzJvBE
+        CFfVJiWlCqKYyv5oBYqTfZxOU8UcYzhcakQMRSha5XTO11/Sg3obUnM1Bn4uQ4eK
+        yrOfKhSqLJKGe4YGmxg6hMUN4EzoeOKBYKPlXpe6mnWxl0zVGZzrez2Ttnlmp+PC
+        TFtqwQeiHlp3sokL2FfigTiGcL6G4e/NDf/rkdM56S+lp8HRxwEZyD9PZuPMeo9O
+        zbx7KiDhAmklRSlbqXmTWtOUS45JShrhVhNBtpc5rLfTRPr7wN7FXA7ZYGqtjMzu
+        juZrxySbA2YP2HassjuH7ZenCa5Ib1R26lpU7NtIrbh84GWUSbtn4IHWved8RCiA
+        ==
+X-ME-Sender: <xms:Cdo2Xb72H8LGLWkabGjE1UqasRPd4aK9tGF-z2GLdtwzUS6nJv1HWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeekgddvvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Cdo2XZW6OzlCitdpIW-1KE6fbdOEw5l_0pbKJBMGmK3KbJb9pQCtrw>
+    <xmx:Cdo2XYF5Ac2Jud7UFw-vWGBSYAoekQwRBXPxwLG3ZTluJ7PhBkzj8A>
+    <xmx:Cdo2XQPJJoF7y-beWiTeJdX7n8eLbvnmThGSoOTRY4WwgRVM9XvoIg>
+    <xmx:Cdo2XUqo-6bLX6NrQXc2hDiV9_wQpYEIvuSEpvYNIH--z-trI8lEEw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D9646380075;
+        Tue, 23 Jul 2019 05:57:28 -0400 (EDT)
+Date:   Tue, 23 Jul 2019 11:57:25 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] pnfs: Fix a problem where we gratuitously start doing
+ I/O through the MDS
+Message-ID: <20190723095725.GB3931@kroah.com>
+References: <20190718194039.119185-1-trond.myklebust@hammerspace.com>
+ <20190719004529.2E4422173B@mail.kernel.org>
+ <219efbee81f7f22bdaf9764011cf831385837f74.camel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 23 Jul 2019 06:27:24 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <219efbee81f7f22bdaf9764011cf831385837f74.camel@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Yongcheng Yang <yongcheng.yang@gmail.com>
----
- nfs4_getfacl/nfs4_getfacl.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+On Thu, Jul 18, 2019 at 08:54:53PM -0400, Trond Myklebust wrote:
+> Hi Sasha,
+> 
+> On Fri, 2019-07-19 at 00:45 +0000, Sasha Levin wrote:
+> > Hi,
+> > 
+> > [This is an automated email]
+> > 
+> > This commit has been processed because it contains a "Fixes:" tag,
+> > fixing commit: d03360aaf5cc pNFS: Ensure we return the error if
+> > someone kills a waiting layoutget.
+> > 
+> > The bot has tested the following trees: v5.2.1, v5.1.18, v4.19.59.
+> > 
+> > v5.2.1: Build OK!
+> > v5.1.18: Build OK!
+> > v4.19.59: Failed to apply! Possible dependencies:
+> >     400417b05f3e ("pNFS: Fix a typo in pnfs_update_layout")
+> > 
+> > 
+> > NOTE: The patch will not be queued to stable trees until it is
+> > upstream.
+> > 
+> > How should we proceed with this patch?
+> > 
+> 
+> Please apply both patches.
+> i.e. Please apply
+> 
+> 400417b05f3e ("pNFS: Fix a typo in pnfs_update_layout")
+> 58bbeab425c6 ("pnfs: Fix a problem where we gratuitously start doing
+> I/O through the MDS")
 
-diff --git a/nfs4_getfacl/nfs4_getfacl.c b/nfs4_getfacl/nfs4_getfacl.c
-index 2f57866..e068095 100644
---- a/nfs4_getfacl/nfs4_getfacl.c
-+++ b/nfs4_getfacl/nfs4_getfacl.c
-@@ -135,7 +135,16 @@ static void usage(int label)
- {
- 	if (label)
- 		fprintf(stderr, "%s %s -- get NFSv4 file or directory access control lists.\n", execname, VERSION);
--	fprintf(stderr, "Usage: %s [-R] file ...\n  -H, --more-help\tdisplay ACL format information\n  -h, --help\tdisplay this help text\n  -R --recursive\trecurse into subdirectories\n  -c, --omit-header\tDo not display the comment header (Do not print filename)\n", execname);
-+
-+	static const char *gfusage = \
-+	"Usage: %s [OPTIONS] file ...\n"
-+	" .. where OPTIONS is any (or none) of:\n"
-+	"   -H, --more-help	 display ACL format information\n"
-+	"   -h, --help		 display this help text\n"
-+	"   -R, --recursive	 recurse into subdirectories\n"
-+	"   -c, --omit-header	 Do not display the comment header (Do not print filename)\n";
-+
-+	fprintf(stderr, gfusage, execname);
- }
- 
- static void more_help()
--- 
-2.20.1
+Now done, thanks.
 
+greg k-h
