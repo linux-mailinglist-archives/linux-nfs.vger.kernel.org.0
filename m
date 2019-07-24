@@ -2,173 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0643073090
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2019 16:01:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADFE6741F7
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jul 2019 01:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfGXOBn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Jul 2019 10:01:43 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54808 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXOBm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Jul 2019 10:01:42 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ODwaJ8127973;
-        Wed, 24 Jul 2019 14:01:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=p5+J4+T1cKwr1UY7FwBFlqqWsMQRrVqKRMVYskH/Vao=;
- b=ibWcY6ORyYhSsRk4lJX5k05NRkjGonmO4dGR5lMgzej+o5Y9n5N8kuyjaYYJ+RBYqwfw
- O9P2UjdBwik/0dRUTZ+0+i5N5O6pvdZI35qC9NZv66G0kiknFnnOrulAj/sj4d1QTqdO
- Jg5BnXopnvZNumNRiav80Wy4UELOcD6npeZu0uWBjz2Ca4RrqIPaR/FgevuMLHRd1Ah+
- YwI33jPIIzB8ljNBTAEA/Ir9rluvJKUP+Pj+fbqEsc0oS0tcI6659zdz1/ckwPmOTu77
- +E7BIKMKAuFMivNQFf/775pRTgiLDqkfLj20TteOS5ftNBp2xz6Jts0J14CmHffqvdPn Lg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tx61bwnke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 14:01:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ODvdxq044402;
-        Wed, 24 Jul 2019 14:01:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tx60xy5s2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 14:01:38 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6OE1c3p030123;
-        Wed, 24 Jul 2019 14:01:38 GMT
-Received: from [172.16.134.18] (/207.115.96.130)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 07:01:37 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v1] rdma: Enable ib_alloc_cq to spread work over a
- device's comp_vectors
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20190724054736.GW5125@mtr-leonro.mtl.com>
-Date:   Wed, 24 Jul 2019 10:01:36 -0400
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        id S1729702AbfGXXX0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Jul 2019 19:23:26 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2928 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfGXXX0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Jul 2019 19:23:26 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d38e8730000>; Wed, 24 Jul 2019 16:23:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 16:23:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 24 Jul 2019 16:23:23 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 23:23:22 +0000
+Subject: Re: [PATCH 00/12] block/bio, fs: convert put_page() to
+ put_user_page*()
+To:     Christoph Hellwig <hch@infradead.org>, <john.hubbard@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <samba-technical@lists.samba.org>,
+        <v9fs-developer@lists.sourceforge.net>,
+        <virtualization@lists.linux-foundation.org>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <20190724061750.GA19397@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <17f12f3d-981e-a717-c8e5-bfbbfb7ec1a3@nvidia.com>
+Date:   Wed, 24 Jul 2019 16:23:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190724061750.GA19397@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <8AC10EC7-5203-4D82-A455-2589DA6ADB9D@oracle.com>
-References: <156390915496.6759.4305845732131573253.stgit@seurat29.1015granger.net>
- <20190724054736.GW5125@mtr-leonro.mtl.com>
-To:     Leon Romanovsky <leon@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240156
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564010611; bh=U/byz8o3kezigETW8hWUjg+JqkNm/y0Q4UHjAnDVaRI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=POKycPna3sFHaptSpPG8JFNhdv+KWPJt4Fqq7qra/U5uujHxVhga0mA2hyYe3oLWO
+         rvMjdBQgQaYdhe3tYVq3xzWzC7PXLH9gVg6v6GfrdnHKhzPSXOdrUzDa4Sfy+FpWme
+         AYx8XN4QHijtxUQThz9jDsFglp/BwmD6wmVyo2Ou4HoX36ySg8r0DnnWDfRMrkzmXC
+         XvSXsG7L9llJHump4bjV4yoH02Li7EYgdYhEFhGR3d1oO3a9DGx7nb70VEc+guaDrP
+         BAn4DIKE83X0lqImHCnmIIbgjVMdzz9Q4ePUhHR77cnRWD+JGehn4V8I2IYZgTvKbn
+         0ENu9Hbk0xmXw==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Leon, thanks for taking a look. Responses below.
-
-
-> On Jul 24, 2019, at 1:47 AM, Leon Romanovsky <leon@kernel.org> wrote:
+On 7/23/19 11:17 PM, Christoph Hellwig wrote:
+> On Tue, Jul 23, 2019 at 09:25:06PM -0700, john.hubbard@gmail.com wrote:
+>> * Store, in the iov_iter, a "came from gup (get_user_pages)" parameter.
+>>   Then, use the new iov_iter_get_pages_use_gup() to retrieve it when
+>>   it is time to release the pages. That allows choosing between put_page=
+()
+>>   and put_user_page*().
+>>
+>> * Pass in one more piece of information to bio_release_pages: a "from_gu=
+p"
+>>   parameter. Similar use as above.
+>>
+>> * Change the block layer, and several file systems, to use
+>>   put_user_page*().
 >=20
-> On Tue, Jul 23, 2019 at 03:13:37PM -0400, Chuck Lever wrote:
->> Send and Receive completion is handled on a single CPU selected at
->> the time each Completion Queue is allocated. Typically this is when
->> an initiator instantiates an RDMA transport, or when a target
->> accepts an RDMA connection.
->>=20
->> Some ULPs cannot open a connection per CPU to spread completion
->> workload across available CPUs. For these ULPs, allow the RDMA core
->> to select a completion vector based on the device's complement of
->> available comp_vecs.
->>=20
->> When a ULP elects to use RDMA_CORE_ANY_COMPVEC, if multiple CPUs are
->> available, a different CPU will be selected for each Completion
->> Queue. For the moment, a simple round-robin mechanism is used.
->>=20
->> Suggested-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> I think we can do this in a simple and better way.  We have 5 ITER_*
+> types.  Of those ITER_DISCARD as the name suggests never uses pages, so
+> we can skip handling it.  ITER_PIPE is rejected =D1=96n the direct I/O pa=
+th,
+> which leaves us with three.
 >=20
-> It make me wonder why do we need comp_vector as an argument to =
-ib_alloc_cq?
-> =46rom what I see, or callers are internally implementing similar =
-logic
-> to proposed here, or they don't care (set 0).
+> Out of those ITER_BVEC needs a user page reference, so we want to call
 
-The goal of this patch is to deduplicate that "similar logic".
-Callers that implement this logic already can use
-RDMA_CORE_ANY_COMPVEC and get rid of their own copy.
+               ^ ITER_IOVEC, I hope. Otherwise I'm hopeless lost. :)
 
-
-> Can we enable this comp_vector for everyone and simplify our API?
-
-We could create a new CQ allocation API that does not take a
-comp vector. That might be cleaner than passing in a -1.
-
-But I think some ULPs still want to use the existing API to
-allocate one CQ for each of a device's comp vectors.
-
-
->> ---
->> drivers/infiniband/core/cq.c             |   20 +++++++++++++++++++-
->> include/rdma/ib_verbs.h                  |    3 +++
->> net/sunrpc/xprtrdma/svc_rdma_transport.c |    6 ++++--
->> net/sunrpc/xprtrdma/verbs.c              |    5 ++---
->> 4 files changed, 28 insertions(+), 6 deletions(-)
->>=20
->> Jason-
->>=20
->> If this patch is acceptable to all, then I would expect you to take
->> it through the RDMA tree.
->>=20
->>=20
->> diff --git a/drivers/infiniband/core/cq.c =
-b/drivers/infiniband/core/cq.c
->> index 7c599878ccf7..a89d549490c4 100644
->> --- a/drivers/infiniband/core/cq.c
->> +++ b/drivers/infiniband/core/cq.c
->> @@ -165,12 +165,27 @@ static void ib_cq_completion_workqueue(struct =
-ib_cq *cq, void *private)
->> 	queue_work(cq->comp_wq, &cq->work);
->> }
->>=20
->> +/*
->> + * Attempt to spread ULP completion queues over a device's =
-completion
->> + * vectors so that all available CPU cores can help service the =
-device's
->> + * interrupt workload. This mechanism may be improved at a later =
-point
->> + * to dynamically take into account the system's actual workload.
->> + */
->> +static int ib_get_comp_vector(struct ib_device *dev)
->> +{
->> +	static atomic_t cv;
->> +
->> +	if (dev->num_comp_vectors > 1)
->> +		return atomic_inc_return(&cv) % dev->num_comp_vectors;
+> put_user_page* on it.  ITER_BVEC always already has page reference,
+> which means in the block direct I/O path path we alread don't take
+> a page reference.  We should extent that handling to all other calls
+> of iov_iter_get_pages / iov_iter_get_pages_alloc.  I think we should
+> just reject ITER_KVEC for direct I/O as well as we have no users and
+> it is rather pointless.  Alternatively if we see a use for it the
+> callers should always have a life page reference anyway (or might
+> be on kmalloc memory), so we really should not take a reference either.
 >=20
-> It is worth to take into account num_online_cpus(),
+> In other words:  the only time we should ever have to put a page in
+> this patch is when they are user pages.  We'll need to clean up
+> various bits of code for that, but that can be done gradually before
+> even getting to the actual put_user_pages conversion.
+>=20
 
-I don't believe it is.
-
-H=C3=A5kon has convinced me that assigning interrupt vectors to
-CPUs is in the domain of user space (ie, driven by policy).
-In addition, one assumes that taking a CPU offline properly
-will also involve re-assigning interrupt vectors that point
-to that core.
-
-In any event, this code can be modified after it is merged
-if it is necessary to accommodate such requirements.
-
---
-Chuck Lever
+Sounds great. I'm part way into it and it doesn't look too bad. The main
+question is where to scatter various checks and assertions, to keep
+the kvecs out of direct I/0. Or at least keep the gups away from=20
+direct I/0.
 
 
-
+thanks,
+--=20
+John Hubbard
+NVIDIA
