@@ -2,113 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E0A7242D
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2019 04:03:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 830ED724EB
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2019 04:51:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfGXCDB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jul 2019 22:03:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58356 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbfGXCDB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jul 2019 22:03:01 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1wZCE029592;
-        Wed, 24 Jul 2019 02:02:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=aPJ/gz+1htaF0JhpGjhp8e3/McToimuUgnVMZqHte9s=;
- b=Je6bXjfvhms99P77tbjOa/GUP3fCbw+7/Jpcme25tvf+ziqD7j//GF+yZWuPOW+bPSou
- T507xOemfOsA12Rz1jBR01Z4mwJFdAIh8VUMFDueI5M8ZzS6d8EZBA0pub8og66qm4s6
- j7labDK7Ph+mSL7gnwObln3ayUujWHZgha8wIxg/dEZ7YOSzINjWbXLhKGKymEEjc7vW
- kXtNeFjZIsRwrsAWlRPN+C5IONGL/0FAwmfqmRYdX/BJs2gVLG4dgxFJw5A1XQPiiEDU
- OOEWKi26aD60jxZRcWIR6D1owq6Etx/g4CzqgJQjJM3xKwAQK6A8tLVPdaP3OL3WJ7/s lA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tx61bt601-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:02:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1vO96057801;
-        Wed, 24 Jul 2019 02:02:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2tx60xk9hy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:02:23 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O22LdJ003994;
-        Wed, 24 Jul 2019 02:02:21 GMT
-Received: from [31.133.156.81] (/31.133.156.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 19:02:21 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] rpcrdma_decode_msg: check xdr_inline_decode result
-From:   Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: iPad Mail (16F203)
-In-Reply-To: <20190724015115.3493-1-navid.emamdoost@gmail.com>
-Date:   Tue, 23 Jul 2019 22:02:09 -0400
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        secalert@redhat.com,
+        id S1725899AbfGXCvK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jul 2019 22:51:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfGXCvK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:51:10 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C33229F3;
+        Wed, 24 Jul 2019 02:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563936669;
+        bh=58GvADylPQ9DbBziu9oSNZ/UR9579iHMOg2RDGDnwqw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ntaqi3vurk28SUcUUFpVXaq7Yq++lilbOtifesJz/yTBeeTOuSZC9uPoc6etauNQe
+         ZgcEojF97wEHJ+WQwv28c++Hf9Yb3fuJ8qBe5UpCnIYRqxmI1QN6Wl2Tqgw1VLRNx0
+         S8UVlwc9NqzndoUusjemaiR4JMtZaLQsNON9M/ng=
+Date:   Tue, 23 Jul 2019 19:51:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         "J. Bruce Fields" <bfields@fieldses.org>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AE745E5F-63A8-4377-98E8-512828179FC0@oracle.com>
-References: <20190724015115.3493-1-navid.emamdoost@gmail.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240020
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 1 open syzbot bug in "net/sunrpc" subsystem
+Message-ID: <20190724025107.GM643@sol.localdomain>
+Mail-Followup-To: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 1 of them as possibly being a bug in the "net/sunrpc" subsystem.
 
-> On Jul 23, 2019, at 9:51 PM, Navid Emamdoost <navid.emamdoost@gmail.com> w=
-rote:
->=20
-> xdr_inline_decode may return NULL, so the check is necessary. The base
-> pointer will be dereferenced later in rpcrdma_inline_fixup.
+If you believe this bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-NACK. When xdr_inline_decode is passed a zero =E2=80=9Clength=E2=80=9D argum=
-ent, it can never return NULL.
+If you believe I misattributed this bug to the "net/sunrpc" subsystem, please
+let me know, and if possible forward the report to the correct people or mailing
+list.
 
+Here is the bug:
 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> net/sunrpc/xprtrdma/rpc_rdma.c | 3 +++
-> 1 file changed, 3 insertions(+)
->=20
-> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma=
-.c
-> index 4345e6912392..d0479efe0e72 100644
-> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> @@ -1160,6 +1160,9 @@ rpcrdma_decode_msg(struct rpcrdma_xprt *r_xprt, stru=
-ct rpcrdma_rep *rep,
->=20
->    /* Build the RPC reply's Payload stream in rqst->rq_rcv_buf */
->    base =3D (char *)xdr_inline_decode(xdr, 0);
-> +    if (!base)
-> +        return -EIO;
-> +
->    rpclen =3D xdr_stream_remaining(xdr);
->    r_xprt->rx_stats.fixup_copy_count +=3D
->        rpcrdma_inline_fixup(rqst, base, rpclen, writelist & 3);
-> --=20
-> 2.17.1
->=20
+--------------------------------------------------------------------------------
+Title:              linux-next test error: WARNING in remove_proc_entry
+Last occurred:      69 days ago
+Reported:           71 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0b23d0049d5af6699d68ff17e2db121569b78fd4
+Original thread:    https://lkml.kernel.org/lkml/00000000000055d6590588bf90bf@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000055d6590588bf90bf@google.com
 
