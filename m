@@ -2,175 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2466676BE1
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2019 16:44:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E12F47740D
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2019 00:33:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfGZOoI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jul 2019 10:44:08 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52009 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGZOoI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jul 2019 10:44:08 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so48251075wma.1
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2019 07:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0it7ph8pv0lc5cmLwYGtG491NIBpufEySPNyr9I0N7M=;
-        b=hbddEW5VgITbW74v7jSaIMfJ8d/RmzjWulM+PFdBUjDyBJJEO/xS0B16wolGCSFl4g
-         jzfP4YKriYkQBUfNI22dyKx1F6uvl5U9hifcTFY/1WXjOuWh6AlYdEDAnADOzvyWTCTl
-         HxYB1T1RXSb7wS7uSL7eEUujb/mDsdYyed6Wvc/qOVTzIcSVUMq1tBbqqwTQ/I2TtbyF
-         DQS43DtAtR0n8lxR906Em1EEJY2Q84NqyfoN+dt4QnRXdbk+0oH8YW/NMu0PMblZ18/f
-         cDIRVxrEoi5ihe50/KzFNiEOrzuKMjPyhP9byW8cz5lnBvOQzT3sKqFYkAayH1CVL9rA
-         Ipdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0it7ph8pv0lc5cmLwYGtG491NIBpufEySPNyr9I0N7M=;
-        b=DYpC1aLxjV/DttjnvUmuX4kvdhYfkANZG5AzO3Im7jQ24XifH1smcSnpDnrjctdDVS
-         bbgupNwcxN7oz2oT6XrIfA8RCH7G0kPSYPPRtgnWqWaKCsFJCUmsquFN8jsBHbYH9nIe
-         FfquC2gSeECGL6Uetac9ekUD6xPdop2tT6KGYwB3Xm2fN5ojrS9pnimYWZ8CuhkUhG6Z
-         n++NzwnGyqBdrBkx4Q2e92bWJyVQ/FWjZNqywW/F1hEnlKWD+uVrwBGJ+k6i6e+WHupc
-         /PupVishQz4/6YtHrD9aYx9oFwtsV8Zs13HonjEaQIdafppKu2Me6dUGjHwWqS0aCa6t
-         aVFQ==
-X-Gm-Message-State: APjAAAV0wRDU7x8qUJdJ+ckZhQh0EyYzQ5W3NYR4fZW4xBHgfseyZ3YS
-        4HZDI+YSbxepVVvp4TB/1s8=
-X-Google-Smtp-Source: APXvYqxR24Prtl6P5Z8ryc8XWRCjisPD10vEa37CvREeweU0JVsSYq8Fbs9MrE7MSNkVD7+kNOsrpw==
-X-Received: by 2002:a7b:c313:: with SMTP id k19mr19865834wmj.2.1564152246228;
-        Fri, 26 Jul 2019 07:44:06 -0700 (PDT)
-Received: from ?IPv6:2a01:36d:104:9516:55af:3507:6a9f:3d90? (2a01-036d-0104-9516-55af-3507-6a9f-3d90.pool6.digikabel.hu. [2a01:36d:104:9516:55af:3507:6a9f:3d90])
-        by smtp.gmail.com with ESMTPSA id g12sm74963272wrv.9.2019.07.26.07.44.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 07:44:05 -0700 (PDT)
-From:   Zoltan Karcagi <zkr7432@gmail.com>
-Subject: [PATCH] Fix include order between config.h and stat.h
-To:     linux-nfs@vger.kernel.org
-Cc:     zkr7432@gmail.com
-References: <5bcd51ef-9ffb-2650-108f-8d7b04beb655@gmail.com>
-Message-ID: <5c60f0b3-4498-96ec-be59-2dce85de3680@gmail.com>
-Date:   Fri, 26 Jul 2019 16:44:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <5bcd51ef-9ffb-2650-108f-8d7b04beb655@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727267AbfGZWdC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jul 2019 18:33:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfGZWdC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 26 Jul 2019 18:33:02 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 42F0D300CB07;
+        Fri, 26 Jul 2019 22:33:02 +0000 (UTC)
+Received: from dwysocha.rdu.csb (dhcp-12-212-173.gsslab.rdu.redhat.com [10.12.212.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C01EE5DE6F;
+        Fri, 26 Jul 2019 22:33:01 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     bfields@fieldses.org
+Cc:     neilb@suse.com, linux-nfs@vger.kernel.org
+Subject: [RFC PATCH] SUNRPC: Track writers of the 'channel' file to improve cache_listeners_exist
+Date:   Fri, 26 Jul 2019 18:33:01 -0400
+Message-Id: <1564180381-9916-1-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <20190725185421.GA15073@fieldses.org>
+References: <20190725185421.GA15073@fieldses.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 26 Jul 2019 22:33:02 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-At least on Arch linux ARM, the definition of struct stat in stat.h depends
-on __USE_FILE_OFFSET64. This symbol comes from config.h when defined,
-therefore config.h must always be included before stat.h. Fix all
-occurrences where the order is wrong by moving config.h to the top.
+The sunrpc cache interface is susceptible to being fooled by a rogue
+process just reading a 'channel' file.  If this happens the kernel
+may think a valid daemon exists to service the cache when it does not.
+For example, the following may fool the kernel:
+cat /proc/net/rpc/auth.unix.gid/channel
 
-This fixes the client side error "Stale file handle" when mounting from
-a server running Arch Linux ARM.
+Change the tracking of readers to writers when considering whether a
+listener exists as all valid daemon processes either open a channel
+file O_RDWR or O_WRONLY.  While this does not prevent a rogue process
+from "stealing" a message from the kernel, it does at least improve
+the kernels perception of whether a valid process servicing the cache
+exists.
 
-Signed-off-by: Zoltan Karcagi <zkr7432@gmail.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 ---
- support/misc/nfsd_path.c         | 5 ++++-
- support/misc/xstat.c             | 5 ++++-
- utils/blkmapd/device-discovery.c | 8 ++++----
- utils/idmapd/idmapd.c            | 8 ++++----
- 4 files changed, 16 insertions(+), 10 deletions(-)
+ include/linux/sunrpc/cache.h |  6 +++---
+ net/sunrpc/cache.c           | 12 ++++++++----
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-index 84e48028..f078a668 100644
---- a/support/misc/nfsd_path.c
-+++ b/support/misc/nfsd_path.c
-@@ -1,3 +1,7 @@
-+#ifdef HAVE_CONFIG_H
-+#include <config.h>
-+#endif
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index c7f38e8..f7d086b 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -107,9 +107,9 @@ struct cache_detail {
+ 	/* fields for communication over channel */
+ 	struct list_head	queue;
+ 
+-	atomic_t		readers;		/* how many time is /chennel open */
+-	time_t			last_close;		/* if no readers, when did last close */
+-	time_t			last_warn;		/* when we last warned about no readers */
++	atomic_t		writers;		/* how many time is /channel open */
++	time_t			last_close;		/* if no writers, when did last close */
++	time_t			last_warn;		/* when we last warned about no writers */
+ 
+ 	union {
+ 		struct proc_dir_entry	*procfs;
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 6f1528f..a6a6190 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -373,7 +373,7 @@ void sunrpc_init_cache_detail(struct cache_detail *cd)
+ 	spin_lock(&cache_list_lock);
+ 	cd->nextcheck = 0;
+ 	cd->entries = 0;
+-	atomic_set(&cd->readers, 0);
++	atomic_set(&cd->writers, 0);
+ 	cd->last_close = 0;
+ 	cd->last_warn = -1;
+ 	list_add(&cd->others, &cache_list);
+@@ -1029,11 +1029,13 @@ static int cache_open(struct inode *inode, struct file *filp,
+ 		}
+ 		rp->offset = 0;
+ 		rp->q.reader = 1;
+-		atomic_inc(&cd->readers);
 +
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-@@ -5,7 +9,6 @@
- #include <stdlib.h>
- #include <unistd.h>
+ 		spin_lock(&queue_lock);
+ 		list_add(&rp->q.list, &cd->queue);
+ 		spin_unlock(&queue_lock);
+ 	}
++	if (filp->f_mode & FMODE_WRITE)
++		atomic_inc(&cd->writers);
+ 	filp->private_data = rp;
+ 	return 0;
+ }
+@@ -1062,8 +1064,10 @@ static int cache_release(struct inode *inode, struct file *filp,
+ 		filp->private_data = NULL;
+ 		kfree(rp);
  
--#include "config.h"
- #include "conffile.h"
- #include "xmalloc.h"
- #include "xlog.h"
-diff --git a/support/misc/xstat.c b/support/misc/xstat.c
-index fa047880..4c997eea 100644
---- a/support/misc/xstat.c
-+++ b/support/misc/xstat.c
-@@ -1,3 +1,7 @@
-+#ifdef HAVE_CONFIG_H
-+#include <config.h>
-+#endif
-+
- #include <errno.h>
- #include <sys/types.h>
- #include <fcntl.h>
-@@ -5,7 +9,6 @@
- #include <sys/sysmacros.h>
- #include <unistd.h>
++	}
++	if (filp->f_mode & FMODE_WRITE) {
++		atomic_dec(&cd->writers);
+ 		cd->last_close = seconds_since_boot();
+-		atomic_dec(&cd->readers);
+ 	}
+ 	module_put(cd->owner);
+ 	return 0;
+@@ -1171,7 +1175,7 @@ static void warn_no_listener(struct cache_detail *detail)
  
--#include "config.h"
- #include "xstat.h"
- 
- #ifdef HAVE_FSTATAT
-diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
-index e811703d..f5f9b10b 100644
---- a/utils/blkmapd/device-discovery.c
-+++ b/utils/blkmapd/device-discovery.c
-@@ -26,6 +26,10 @@
-  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
-+#ifdef HAVE_CONFIG_H
-+#include "config.h"
-+#endif /* HAVE_CONFIG_H */
-+
- #include <sys/sysmacros.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-@@ -51,10 +55,6 @@
- #include <errno.h>
- #include <libdevmapper.h>
- 
--#ifdef HAVE_CONFIG_H
--#include "config.h"
--#endif /* HAVE_CONFIG_H */
--
- #include "device-discovery.h"
- #include "xcommon.h"
- #include "nfslib.h"
-diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
-index 62e37b8a..267acea5 100644
---- a/utils/idmapd/idmapd.c
-+++ b/utils/idmapd/idmapd.c
-@@ -34,6 +34,10 @@
-  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
-+#ifdef HAVE_CONFIG_H
-+#include "config.h"
-+#endif /* HAVE_CONFIG_H */
-+
- #include <sys/types.h>
- #include <sys/time.h>
- #include <sys/inotify.h>
-@@ -62,10 +66,6 @@
- #include <libgen.h>
- #include <nfsidmap.h>
- 
--#ifdef HAVE_CONFIG_H
--#include "config.h"
--#endif /* HAVE_CONFIG_H */
--
- #include "xlog.h"
- #include "conffile.h"
- #include "queue.h"
+ static bool cache_listeners_exist(struct cache_detail *detail)
+ {
+-	if (atomic_read(&detail->readers))
++	if (atomic_read(&detail->writers))
+ 		return true;
+ 	if (detail->last_close == 0)
+ 		/* This cache was never opened */
 -- 
-2.22.0
+1.8.3.1
+
