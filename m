@@ -2,147 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D2EB78D88
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 16:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4510278DA6
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 16:19:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfG2OLs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jul 2019 10:11:48 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42090 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbfG2OLs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jul 2019 10:11:48 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 190so40828120vsf.9
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2019 07:11:47 -0700 (PDT)
+        id S2387596AbfG2OTr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jul 2019 10:19:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46203 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387763AbfG2OTr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jul 2019 10:19:47 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r4so44162616qkm.13
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2019 07:19:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1I1WwgDXJhh+Tuva6YPuunwm3cSQkPUBSiNCY6cVLwg=;
-        b=raaJR6Val7tr6K4JaeEpHNQ9LVhobYsP6Ush0r+GSJzR0an6uKk1LL5Om4SR7/EpUn
-         HR8lzfgWTE8aHvZZr62LSGpoJ/C9TjGfg2/FYrsbrJWEnrTByKeyRm7b+DFWx3EVmFLq
-         QdXYJk7AcpFv1dra/dit2h0LwfHpHMM2R+s4lSuk9vp6CUSk1/bhxZ3+dm7wKsFJgpuy
-         CoAwwi10IKQXG2kv2lRdNXYxbTkdsyXWRxc5cqVw3355v9YUhOLeIhRmd4LACL4enUu+
-         QTjNLiy/NVQfn/C2mSWGRzP9sxMF9TPYf3I7rAZnXjVj+30m2C+CoUF7lTFFFrAZIMRF
-         BnmQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tp13KIZyxW/HUo/k7TqlcYpzZ2vSqWCZ8hRiWQUnNrA=;
+        b=oawsf/tX9gqElOJd5+WpuZm4xmAz1Ab6RkxbNDYNIMxEI56FFfOeijaPCmNE4Lj/Dq
+         oawS3zAbpLWZ5LJAqqRzyqz/lDNdlGwFckSUUcmjwpvkJvCVsTnWlZXIIb2xoVpV0f7C
+         S/1lZMrSb5yKjldwRHVMhnTwPDa8KANACfUKgvqJVnSzon7qohWZEBEMCCHOHv3SypH2
+         rr9YhD1VWWCG6gYsYp3HZlQ22GwMHe1a1STtXa+2n6SzBi1vtqVU1sorpu9Q05JhCegV
+         ktwc5iyQaigLO1fhKJ2kJaDmx2R5+xNoBC1F1wpkdzPQhUntQvc3Y30wlOU2U5GEJOZc
+         U3Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1I1WwgDXJhh+Tuva6YPuunwm3cSQkPUBSiNCY6cVLwg=;
-        b=uBgdLyN+Z+Ubkeg3veEFlfjNRY0Hmm5Fqt6yluPvbWJTFkcRSBBkmJ1/VK+9hQz4ur
-         6VSuqRq/IqDJQAtQt+H/MT31znFOBNdajt4qpRtj1Zfrbcn2bha0qBWPPm7II/4a7Fbw
-         FjNo0gCJ0vEFnqkmeqQ6V04aiSWpiLyIjHbvlOh7Vpl/rXNisAYnJzMg8DzJxzyjCSNh
-         X5++Q+QHXx/yYrC3Rti2sBk0p96gDd+DGs6HuCwkTlPui3iXVUhJK6hNI9QiKly+jjH1
-         +oiur6v6ienPFuaslphnivm4n40ABWAtr/vByRH5sBPK4DBBzHkRRVGd+sVJvVvXJYPV
-         WmMA==
-X-Gm-Message-State: APjAAAVDTTKHd5AuhOvb5ulNcISofDDysgeM4DsdTNDk7p/qhz3R3mtz
-        evQaw58yILh5TnE7f5RiF57ouUfEj85e5LtCgyE=
-X-Google-Smtp-Source: APXvYqxfXLxb4he3ATkWStwY8KydmXriDtZv5pSgEFNrqA3wvqjrm6q3Xx6osKnCzxxvAmYIM5ZgoPWFrsyNVrDCnts=
-X-Received: by 2002:a67:dc1:: with SMTP id 184mr8623268vsn.164.1564409507330;
- Mon, 29 Jul 2019 07:11:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tp13KIZyxW/HUo/k7TqlcYpzZ2vSqWCZ8hRiWQUnNrA=;
+        b=kXShmxVD9Xikuqyey2fZ5ptlHOsFxpB/oryFobwuyJfsaHNwisc3QAPfVqXJiB8k01
+         2v1TSYTr7ze6pgabs9igCJ195y2kGAOAB3kFGrF4hcSVkz6N8+zRRbJOm2ipzRq+rcN4
+         HEF+JT01MhkBJDnGPgHwH6IAks/RNE6BJB4SLWWTynZFMSodekXImS5bJBUvqACXkJox
+         Vi/BU6TZWDAnlScqTWY5JqFm1Xs+R0/alxwwgjRoUs8GOlSY9OUj9aPh6OX5tzIzdWQY
+         0v9MWolNUASV6XE/GMz7oyrRQFEImL5PKsCN5MgY27I6JWJ9EgWGPaiU9RHIo0Lh5m+I
+         N+Vg==
+X-Gm-Message-State: APjAAAXZueM7vzQ9fn+q7njpXW248xqcNIjpQD6NpFMD+hK8dfTNUQU7
+        q4inLrh5cZm7L9SbZdV9AjDymQ==
+X-Google-Smtp-Source: APXvYqwlcdfRKnJ5qhYvNehqw7PetDVYBSyws4Kc3e74wuN7fKiYbK3taI/YYGg9dA7gVGaeqeF7pg==
+X-Received: by 2002:a37:a090:: with SMTP id j138mr73759023qke.83.1564409985925;
+        Mon, 29 Jul 2019 07:19:45 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c26sm25950347qtp.40.2019.07.29.07.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 07:19:45 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hs6V7-0007FN-1r; Mon, 29 Jul 2019 11:19:45 -0300
+Date:   Mon, 29 Jul 2019 11:19:45 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
+Subject: Re: [PATCH v2] rdma: Enable ib_alloc_cq to spread work over a
+ device's comp_vectors
+Message-ID: <20190729141945.GF17990@ziepe.ca>
+References: <20190728163027.3637.70740.stgit@manet.1015granger.net>
+ <20190729054933.GK4674@mtr-leonro.mtl.com>
 MIME-Version: 1.0
-References: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
- <f105f5a8-d38f-a58a-38d1-6b7a4df4dc9d@cn.fujitsu.com> <89d5612e-9af6-8f2e-15d8-ff6af29d508a@redhat.com>
- <016101d5359b$c71f06c0$555d1440$@mindspring.com> <4d6599c3-2280-e919-b60f-905f86452ac1@cn.fujitsu.com>
- <2d2f5b86-682a-e5d3-b9d9-18573c84073d@cn.fujitsu.com>
-In-Reply-To: <2d2f5b86-682a-e5d3-b9d9-18573c84073d@cn.fujitsu.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 29 Jul 2019 10:11:36 -0400
-Message-ID: <CAN-5tyHLNDdYBEWcik+EX2X=vRYkt788C=Wif=_tPcQMSuAtjA@mail.gmail.com>
-Subject: Re: [PATCH] CACHE: Fix test script as delegation being introduced
-To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Jorge Mora <Jorge.Mora@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729054933.GK4674@mtr-leonro.mtl.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Su,
+On Mon, Jul 29, 2019 at 08:49:33AM +0300, Leon Romanovsky wrote:
+> > +/**
+> > + * ib_alloc_cq_any: Allocate kernel CQ
+> > + * @dev: The IB device
+> > + * @private: Private data attached to the CQE
+> > + * @nr_cqe: Number of CQEs in the CQ
+> > + * @poll_ctx: Context used for polling the CQ
+> > + */
+> > +static inline struct ib_cq *ib_alloc_cq_any(struct ib_device *dev,
+> > +					    void *private, int nr_cqe,
+> > +					    enum ib_poll_context poll_ctx)
+> > +{
+> > +	return __ib_alloc_cq_any(dev, private, nr_cqe, poll_ctx,
+> > +				 KBUILD_MODNAME);
+> > +}
+> 
+> This should be macro and not inline function, because compiler can be
+> instructed do not inline functions (there is kconfig option for that)
+> and it will cause that wrong KBUILD_MODNAME will be inserted (ib_core
+> instead of ulp).
 
-For nfstest patches, you should cc nfstest maintainer (Jorge Mora
-mora@netapp.com).
+No, it can't, a static inline can only be de-inlined within the same
+compilation unit, so KBUILD_MODNAME can never be mixed up.
 
-On Sun, Jul 28, 2019 at 9:56 PM Su Yanjun <suyj.fnst@cn.fujitsu.com> wrote:
->
-> Hi bruce.
->
-> Sorry for my late reply. Our mail system has some problem that ignores your reply.
->
-> I Get the reply by google seach.
->
-> We tested the option "clientaddr=0.0.0.0" and the test case also fails.
->
-> Thanks
->
-> On Mon, Apr 08, 2019 at 10:47:56AM +0800, Su Yanjun<suyj.fnst@cn.fujitsu.com>  wrote:
-> > When we run nfstest_cache with nfsversion=4, it fails.
-> > As i know nfsv4 introduces delegation, so nfstest_cache runs fail
-> > since nfsv4.
-> >
-> > The test commandline is as below:
-> > ./nfstest_cache --nfsversion=4 -e /nfsroot --server 192.168.102.143
-> > --client 192.168.102.142 --runtest acregmax_data --verbose all
-> >
-> > This patch adds compatible code for nfsv3 and nfsv4.
-> > When we test nfsv4, just use 'chmod' to recall delegation, then
-> > run the test. As 'chmod' will modify atime, so use 'noatime' mount option.
->
-> I don't think a chmod is a reliable way to recall delegations.
->
-> Maybe mount with "clientaddr=0.0.0.0"?  From the nfs man page:
->
->         Can  specify a value of IPv4_ANY (0.0.0.0) or equivalent IPv6
->         any address  which will  signal to the NFS server that this NFS
->         client does not want delegations.
->
-> (I wonder if that documentation's still accurate for versions >= 4.1?)
->
-> --b.
-> >
-> > Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-> > ---
-> > test/nfstest_cache | 12 +++++++++++-
-> > 1 file changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/test/nfstest_cache b/test/nfstest_cache
-> > index 0838418..a31d48f 100755
-> > --- a/test/nfstest_cache
-> > +++ b/test/nfstest_cache
-> > @@ -165,8 +165,13 @@ class CacheTest(TestUtil):
-> > fd = None
-> > attr = 'data' if data_cache else 'attribute'
-> > header = "Verify consistency of %s caching with %s on a file" %
-> > (attr, self.nfsstr())
-> > +
-> > # Mount options
-> > - mtopts = "hard,intr,rsize=4096,wsize=4096"
-> > + if self.nfsversion >= 4:
-> > + mtopts = "noatime,hard,intr,rsize=4096,wsize=4096"
-> > + else: + mtopts = "hard,intr,rsize=4096,wsize=4096"
-> > +
-> > if actimeo:
-> > header += " actimeo = %d" % actimeo
-> > mtopts += ",actimeo=%d" % actimeo
-> > @@ -216,6 +221,11 @@ class CacheTest(TestUtil):
-> > if fstat.st_size != dlen:
-> > raise Exception("Size of newly created file is %d, should have been
-> > %d" %(fstat.st_size, dlen))
-> > + if self.nfsversion >= 4:
-> > + # revoke delegation
-> > + self.dprint('DBG3', "revoke delegation")
-> > + self.clientobj.run_cmd('chmod +x %s' % self.absfile)
-> > +
-> > if acregmax:
-> > # Stat the unchanging file until acregmax is hit
-> > # each stat doubles the valid cache time
-> >
-> > --
-> > 2.7.4
-> >
-> >
->
->
->
+You only need to use macros of the value changes within the
+compilation unit.
+
+Jason
