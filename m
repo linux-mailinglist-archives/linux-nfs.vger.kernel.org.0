@@ -2,283 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7A97848F
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 07:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A1A786B0
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 09:50:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfG2Ftk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jul 2019 01:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2Ftk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:49:40 -0400
-Received: from localhost (unknown [77.137.115.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EF3D2073F;
-        Mon, 29 Jul 2019 05:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564379378;
-        bh=5FSf7zYaAcj4Rbx53EQ++OMWByWA3rHKkdAgYw393Jg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FEhpg/VSfTXeZELoy7HVC7r+CT8/Qdny5rMk6KgKGYq7P4klXznvOTIuQUAYxPTod
-         v9jgsogtOSTODkXX5MriGp0dNXPYGbH5gfMRD5UYSvHOh9v7cBLt/FRhA8K9hRvDYA
-         /kA0KMR1UOPjbMFjzEv3MMTvFwIl5Z+ndNnB0vDE=
-Date:   Mon, 29 Jul 2019 08:49:33 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, v9fs-developer@lists.sourceforge.net
-Subject: Re: [PATCH v2] rdma: Enable ib_alloc_cq to spread work over a
- device's comp_vectors
-Message-ID: <20190729054933.GK4674@mtr-leonro.mtl.com>
-References: <20190728163027.3637.70740.stgit@manet.1015granger.net>
+        id S1726804AbfG2Huy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jul 2019 03:50:54 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:11694 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726717AbfG2Huy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jul 2019 03:50:54 -0400
+X-IronPort-AV: E=Sophos;i="5.64,321,1559491200"; 
+   d="scan'208";a="72426416"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 29 Jul 2019 15:50:51 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 9723E4CDE889;
+        Mon, 29 Jul 2019 15:50:52 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 29 Jul 2019 15:50:54 +0800
+Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+CC:     <linux-nfs@vger.kernel.org>, <dang@redhat.com>,
+        <ffilzlnx@mindspring.com>
+References: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
+ <f105f5a8-d38f-a58a-38d1-6b7a4df4dc9d@cn.fujitsu.com>
+ <89d5612e-9af6-8f2e-15d8-ff6af29d508a@redhat.com>
+ <016101d5359b$c71f06c0$555d1440$@mindspring.com>
+ <4d6599c3-2280-e919-b60f-905f86452ac1@cn.fujitsu.com>
+ <20190710000855.GE1536@fieldses.org>
+ <b5ec42ea-7f50-0920-5794-32c379681225@cn.fujitsu.com>
+Message-ID: <b9fa5b22-b2fb-b96f-d943-7ad3f00e16bb@cn.fujitsu.com>
+Date:   Mon, 29 Jul 2019 15:49:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <b5ec42ea-7f50-0920-5794-32c379681225@cn.fujitsu.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190728163027.3637.70740.stgit@manet.1015granger.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 9723E4CDE889.AC812
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 12:30:27PM -0400, Chuck Lever wrote:
-> Send and Receive completion is handled on a single CPU selected at
-> the time each Completion Queue is allocated. Typically this is when
-> an initiator instantiates an RDMA transport, or when a target
-> accepts an RDMA connection.
->
-> Some ULPs cannot open a connection per CPU to spread completion
-> workload across available CPUs and MSI vectors. For such ULPs,
-> provide an API that allows the RDMA core to select a completion
-> vector based on the device's complement of available comp_vecs.
->
-> ULPs that invoke ib_alloc_cq() with only comp_vector 0 are converted
-> to use the new API so that their completion workloads interfere less
-> with each other.
->
-> Suggested-by: H�kon Bugge <haakon.bugge@oracle.com>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Cc: <linux-cifs@vger.kernel.org>
-> Cc: <v9fs-developer@lists.sourceforge.net>
-> ---
->  drivers/infiniband/core/cq.c             |   29 +++++++++++++++++++++++++++++
->  drivers/infiniband/ulp/srpt/ib_srpt.c    |    4 ++--
->  fs/cifs/smbdirect.c                      |   10 ++++++----
->  include/rdma/ib_verbs.h                  |   19 +++++++++++++++++++
->  net/9p/trans_rdma.c                      |    6 +++---
->  net/sunrpc/xprtrdma/svc_rdma_transport.c |    8 ++++----
->  net/sunrpc/xprtrdma/verbs.c              |   13 ++++++-------
->  7 files changed, 69 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
-> index 7c59987..ea3bb0d 100644
-> --- a/drivers/infiniband/core/cq.c
-> +++ b/drivers/infiniband/core/cq.c
-> @@ -253,6 +253,35 @@ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
->  EXPORT_SYMBOL(__ib_alloc_cq_user);
->
->  /**
-> + * __ib_alloc_cq_any - allocate a completion queue
-> + * @dev:		device to allocate the CQ for
-> + * @private:		driver private data, accessible from cq->cq_context
-> + * @nr_cqe:		number of CQEs to allocate
-> + * @poll_ctx:		context to poll the CQ from.
-> + * @caller:		module owner name.
-> + *
-> + * Attempt to spread ULP Completion Queues over each device's interrupt
-> + * vectors.
-> + */
-> +struct ib_cq *__ib_alloc_cq_any(struct ib_device *dev, void *private,
-> +				int nr_cqe, enum ib_poll_context poll_ctx,
-> +				const char *caller)
-> +{
-> +	static atomic_t counter;
-> +	int comp_vector;
+Any ping?
 
-int comp_vector = 0;
-
-> +
-> +	comp_vector = 0;
-
-This assignment is better to be part of initialization.
-
-> +	if (dev->num_comp_vectors > 1)
-> +		comp_vector =
-> +			atomic_inc_return(&counter) %
-
-Don't we need manage "free list" of comp_vectors? Otherwise we can find
-ourselves providing already "taken" comp_vector.
-
-Just as an example:
-dev->num_comp_vectors = 2
-num_online_cpus = 4
-
-The following combination will give us same comp_vector:
-1. ib_alloc_cq_any()
-2. ib_alloc_cq_any()
-3. ib_free_cq()
-4. goto 2
-
-> +			min_t(int, dev->num_comp_vectors, num_online_cpus());
-> +
-> +	return __ib_alloc_cq_user(dev, private, nr_cqe, comp_vector, poll_ctx,
-> +				  caller, NULL);
-> +}
-> +EXPORT_SYMBOL(__ib_alloc_cq_any);
-> +
-> +/**
->   * ib_free_cq_user - free a completion queue
->   * @cq:		completion queue to free.
->   * @udata:	User data or NULL for kernel object
-> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> index 1a039f1..e25c70a 100644
-> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> @@ -1767,8 +1767,8 @@ static int srpt_create_ch_ib(struct srpt_rdma_ch *ch)
->  		goto out;
+在 2019/7/12 10:27, Su Yanjun 写道:
 >
->  retry:
-> -	ch->cq = ib_alloc_cq(sdev->device, ch, ch->rq_size + sq_size,
-> -			0 /* XXX: spread CQs */, IB_POLL_WORKQUEUE);
-> +	ch->cq = ib_alloc_cq_any(sdev->device, ch, ch->rq_size + sq_size,
-> +				 IB_POLL_WORKQUEUE);
->  	if (IS_ERR(ch->cq)) {
->  		ret = PTR_ERR(ch->cq);
->  		pr_err("failed to create CQ cqe= %d ret= %d\n",
-> diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-> index cd07e53..3c91fa9 100644
-> --- a/fs/cifs/smbdirect.c
-> +++ b/fs/cifs/smbdirect.c
-> @@ -1654,15 +1654,17 @@ static struct smbd_connection *_smbd_get_connection(
+> 在 2019/7/10 8:08, J. Bruce Fields 写道:
+>> On Tue, Jul 09, 2019 at 01:27:31PM +0800, Su Yanjun wrote:
+>>> Hi Bruce
+>>>
+>>> 在 2019/7/8 22:45, Frank Filz 写道:
+>>>> Yea, sorry, I totally missed this, but it does look like it's a 
+>>>> Kernel nfsd
+>>> Any suggestions?
+>>>> issue.
+>> I don't know.  I'd probably want to check a packet trace first to make
+>> completely sure I understand what's happening on the wire.  It may be a
+>> couple weeks before I get to this.
 >
->  	info->send_cq = NULL;
->  	info->recv_cq = NULL;
-> -	info->send_cq = ib_alloc_cq(info->id->device, info,
-> -			info->send_credit_target, 0, IB_POLL_SOFTIRQ);
-> +	info->send_cq =
-> +		ib_alloc_cq_any(info->id->device, info,
-> +				info->send_credit_target, IB_POLL_SOFTIRQ);
->  	if (IS_ERR(info->send_cq)) {
->  		info->send_cq = NULL;
->  		goto alloc_cq_failed;
->  	}
+> We capture the packets in attachment.
 >
-> -	info->recv_cq = ib_alloc_cq(info->id->device, info,
-> -			info->receive_credit_max, 0, IB_POLL_SOFTIRQ);
-> +	info->recv_cq =
-> +		ib_alloc_cq_any(info->id->device, info,
-> +				info->receive_credit_max, IB_POLL_SOFTIRQ);
->  	if (IS_ERR(info->recv_cq)) {
->  		info->recv_cq = NULL;
->  		goto alloc_cq_failed;
-> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-> index c5f8a9f..2a1523cc 100644
-> --- a/include/rdma/ib_verbs.h
-> +++ b/include/rdma/ib_verbs.h
-> @@ -3711,6 +3711,25 @@ static inline struct ib_cq *ib_alloc_cq(struct ib_device *dev, void *private,
->  				NULL);
->  }
+> Through packet capture analysis, there is a parameter *new lock owner* 
+> related.
 >
-> +struct ib_cq *__ib_alloc_cq_any(struct ib_device *dev, void *private,
-> +				int nr_cqe, enum ib_poll_context poll_ctx,
-> +				const char *caller);
-> +
-> +/**
-> + * ib_alloc_cq_any: Allocate kernel CQ
-> + * @dev: The IB device
-> + * @private: Private data attached to the CQE
-> + * @nr_cqe: Number of CQEs in the CQ
-> + * @poll_ctx: Context used for polling the CQ
-> + */
-> +static inline struct ib_cq *ib_alloc_cq_any(struct ib_device *dev,
-> +					    void *private, int nr_cqe,
-> +					    enum ib_poll_context poll_ctx)
-> +{
-> +	return __ib_alloc_cq_any(dev, private, nr_cqe, poll_ctx,
-> +				 KBUILD_MODNAME);
-> +}
+> When locking, if lock->lk_is_new is true (create new lock owner), it 
+> will check lock owner's existence.
+>
+> Below is the execution path.
+>
+> nfsd4_lock:
+>  if(lock->lk_is_new)
+>    lstatus = lookup_or_create_lock_state(cstate, open_stp, lock, 
+> &lock_stp, &new);
+>
+> lookup_or_create_lock_state:
+>  lo = find_lockowner_str(cl, &lock->lk_new_owner);
+>  if(!lo) {
+>  ...
+>  } else {
+>     status = nfserr_bad_seqid;
+>  }
+>
+> find_lockowner_str will check lock owner from  hash table.
+>
+> In this case unlock doesnot delete existed lock owner from hash table 
+> so when lock again it
+> returns error.
+>
+> So my question is
+> 1. Does each lock always need new lock owner?
+> 2. In this case, unlock doesnot delete lock owner from hash table, is 
+> it normal?
+>
+> Thanks
+>
+>> --b.
+>>
+>>>> Frank
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: Daniel Gryniewicz [mailto:dang@redhat.com]
+>>>>> Sent: Monday, July 8, 2019 6:49 AM
+>>>>> To: Su Yanjun <suyj.fnst@cn.fujitsu.com>; ffilzlnx@mindspring.com
+>>>>> Cc: linux-nfs@vger.kernel.org
+>>>>> Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in
+>>>>> 5.2.0-rc7
+>>>>>
+>>>>> Is this running knfsd or Ganesha as the server?  If it's Ganesha, the
+>>>>> question
+>>>>> would be better asked on the Ganesha Devel list
+>>>>> devel@lists.nfs-ganesha.org
+>>>>>
+>>>>> If it's knfsd, than Frank isn't the right person to ask.
+>>> We are using the knfsd.
+>>>>> Daniel
+>>>>>
+>>>>> On 7/7/19 10:20 PM, Su Yanjun wrote:
+>>>>>> Ang ping?
+>>>>>>
+>>>>>> 在 2019/7/3 9:34, Su Yanjun 写道:
+>>>>>>> Hi Frank
+>>>>>>>
+>>>>>>> We tested the pynfs of NFSv4.0 on the latest version of the kernel
+>>>>>>> (5.2.0-rc7).
+>>>>>>> I encountered a problem while testing st_lock.testOpenUpgradeLock.
+>>>>>>> The problem is now as follows:
+>>>>>>> **************************************************
+>>>>>>> LOCK24 st_lock.testOpenUpgradeLock : FAILURE
+>>>>>>>             OP_LOCK should return NFS4_OK, instead got
+>>>>>>>             NFS4ERR_BAD_SEQID
+>>>>>>> **************************************************
+>>>>>>> Is this normal?
+>>>>>>>
+>>>>>>> The case is as follows:
+>>>>>>> Def testOpenUpgradeLock(t, env):
+>>>>>>>      """Try open, lock, open, downgrade, close
+>>>>>>>
+>>>>>>>      FLAGS: all lock
+>>>>>>>      CODE: LOCK24
+>>>>>>>      """
+>>>>>>>      c= env.c1
+>>>>>>>      C.init_connection()
+>>>>>>>      Os = open_sequence(c, t.code, lockowner="lockowner_LOCK24")
+>>>>>>>      Os.open(OPEN4_SHARE_ACCESS_READ)
+>>>>>>>      Os.lock(READ_LT)
+>>>>>>>      Os.open(OPEN4_SHARE_ACCESS_WRITE)
+>>>>>>>      Os.unlock()
+>>>>>>>      Os.downgrade(OPEN4_SHARE_ACCESS_WRITE)
+>>>>>>>      Os.lock(WRITE_LT)
+>>>>>>>      Os.close()
+>>>>>>>
+>>>>>>> After investigation, there was an error in unlock->lock. When
+>>>>>>> unlocking, the lockowner of the file was not released, causing an
+>>>>>>> error when locking again.
+>>>>>>> Will nfs4.0 support 1) open-> 2) lock-> 3) unlock-> 4) lock this
+>>>>>>> function?
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>
+>>
 
-This should be macro and not inline function, because compiler can be
-instructed do not inline functions (there is kconfig option for that)
-and it will cause that wrong KBUILD_MODNAME will be inserted (ib_core
-instead of ulp).
 
-And yes, commit c4367a26357b ("IB: Pass uverbs_attr_bundle down ib_x
-destroy path") did it completely wrong.
-
-> +
->  /**
->   * ib_free_cq_user - Free kernel/user CQ
->   * @cq: The CQ to free
-> diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
-> index bac8dad..b21c3c2 100644
-> --- a/net/9p/trans_rdma.c
-> +++ b/net/9p/trans_rdma.c
-> @@ -685,9 +685,9 @@ static int p9_rdma_bind_privport(struct p9_trans_rdma *rdma)
->  		goto error;
->
->  	/* Create the Completion Queue */
-> -	rdma->cq = ib_alloc_cq(rdma->cm_id->device, client,
-> -			opts.sq_depth + opts.rq_depth + 1,
-> -			0, IB_POLL_SOFTIRQ);
-> +	rdma->cq = ib_alloc_cq_any(rdma->cm_id->device, client,
-> +				   opts.sq_depth + opts.rq_depth + 1,
-> +				   IB_POLL_SOFTIRQ);
->  	if (IS_ERR(rdma->cq))
->  		goto error;
->
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> index 3fe6651..4d3db6e 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> @@ -454,14 +454,14 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
->  		dprintk("svcrdma: error creating PD for connect request\n");
->  		goto errout;
->  	}
-> -	newxprt->sc_sq_cq = ib_alloc_cq(dev, newxprt, newxprt->sc_sq_depth,
-> -					0, IB_POLL_WORKQUEUE);
-> +	newxprt->sc_sq_cq = ib_alloc_cq_any(dev, newxprt, newxprt->sc_sq_depth,
-> +					    IB_POLL_WORKQUEUE);
->  	if (IS_ERR(newxprt->sc_sq_cq)) {
->  		dprintk("svcrdma: error creating SQ CQ for connect request\n");
->  		goto errout;
->  	}
-> -	newxprt->sc_rq_cq = ib_alloc_cq(dev, newxprt, rq_depth,
-> -					0, IB_POLL_WORKQUEUE);
-> +	newxprt->sc_rq_cq =
-> +		ib_alloc_cq_any(dev, newxprt, rq_depth, IB_POLL_WORKQUEUE);
->  	if (IS_ERR(newxprt->sc_rq_cq)) {
->  		dprintk("svcrdma: error creating RQ CQ for connect request\n");
->  		goto errout;
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 805b1f35..b10aa16 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -521,18 +521,17 @@ int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
->  	init_waitqueue_head(&ep->rep_connect_wait);
->  	ep->rep_receive_count = 0;
->
-> -	sendcq = ib_alloc_cq(ia->ri_id->device, NULL,
-> -			     ep->rep_attr.cap.max_send_wr + 1,
-> -			     ia->ri_id->device->num_comp_vectors > 1 ? 1 : 0,
-> -			     IB_POLL_WORKQUEUE);
-> +	sendcq = ib_alloc_cq_any(ia->ri_id->device, NULL,
-> +				 ep->rep_attr.cap.max_send_wr + 1,
-> +				 IB_POLL_WORKQUEUE);
->  	if (IS_ERR(sendcq)) {
->  		rc = PTR_ERR(sendcq);
->  		goto out1;
->  	}
->
-> -	recvcq = ib_alloc_cq(ia->ri_id->device, NULL,
-> -			     ep->rep_attr.cap.max_recv_wr + 1,
-> -			     0, IB_POLL_WORKQUEUE);
-> +	recvcq = ib_alloc_cq_any(ia->ri_id->device, NULL,
-> +				 ep->rep_attr.cap.max_recv_wr + 1,
-> +				 IB_POLL_WORKQUEUE);
->  	if (IS_ERR(recvcq)) {
->  		rc = PTR_ERR(recvcq);
->  		goto out2;
->
