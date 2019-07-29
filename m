@@ -2,132 +2,274 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD02D791D3
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 19:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7ED791F9
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2019 19:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfG2RMF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jul 2019 13:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbfG2RMF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:12:05 -0400
-Received: from localhost (unknown [77.137.115.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6298206BA;
-        Mon, 29 Jul 2019 17:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564420324;
-        bh=ekpbK+Fura14peaaAT1tvUqSV0rNrJNhzNho9n7q3HU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nDzMTv/qYk+oX2kbDjbHqDGE85LjRNjlpYthX4C1cUgUs/KBG9SYIiY32rpBxiGhJ
-         ulsE2qNtpvKFs5AdR9+iMykQJkdXElw11tcCNhCMIsqJFrRvSj49bdowErsaWdC/71
-         p1JizJ+p+dkB9jCUZLzKesbiFTp0sRiueNDV+NT4=
-Date:   Mon, 29 Jul 2019 20:12:01 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-cifs@vger.kernel.org, v9fs-developer@lists.sourceforge.net
-Subject: Re: [PATCH v2] rdma: Enable ib_alloc_cq to spread work over a
- device's comp_vectors
-Message-ID: <20190729171201.GO4674@mtr-leonro.mtl.com>
-References: <20190728163027.3637.70740.stgit@manet.1015granger.net>
- <20190729054933.GK4674@mtr-leonro.mtl.com>
- <9AF784D9-E0B4-473F-9D5F-7858F6FE1FDD@oracle.com>
+        id S1727575AbfG2RWN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jul 2019 13:22:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42216 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2RWN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jul 2019 13:22:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id e20so91350180iob.9;
+        Mon, 29 Jul 2019 10:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=R7WM1mP9dHKgOvOOeHJvri8jBS7JjQUoOhPlHTRSHgg=;
+        b=E8Tw2LfGWL1MYb2alpqHiKjnCQ9ss3826ZpOOvVPlOsrZE1TL8exkSYAlqgE8RKaid
+         dLTlSzJ7VwLg/YUTsElDFpA3VEamJa/4KMrSsqr71fuXlfZz0yM+6ncMRQscKFoDuj+S
+         fO+TuFhC22BrXLIWjGin2fkyv/p0ymOVtqrU6K7YB0R2HcKAXv52oRh0ae9tlOkb2wgT
+         F+uZwceS2AXvPhZcTU2p3Ns5lHbiB/SHEHyb/jRqTSDyEELJenV5bBMlOvduvmnJ8rCU
+         HaLAiG3TzxRL1uoZHJnNRrrgaIIcso5nu78cTxVXkLjrueuECPQoVO++GsRakgsy1bCR
+         /uqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=R7WM1mP9dHKgOvOOeHJvri8jBS7JjQUoOhPlHTRSHgg=;
+        b=lKqARy7MewKap8/MW1YJTzesLeJ8oL9MPZPrvSna/W+Epl1bRIlTeAqZvbbcs3sRtQ
+         Cmqp1LtyIHtW/5MLstUUOkoH3rJlO+zEzIBcb7lfUXat4KwsAKd3N/F2QP0ywzVyE0Vk
+         9gfNfckI4YTfsVmNSLy1n5995UFSO3c/NpIrB4u6UPp8ixsNOnDleka+PTH4JOQ8Lthu
+         /6VRz0udsR/GFpKebNLX6cau5eC79Oi9gkJgDIyOkAKitqGhlwy7CS7HJ1ZxjCrt7NdO
+         8kxt4xlWgY/5E11wqKRzWrg7KyaSMHtCkOYdlIol5zI6xNG8yA0FtjdBMeZiIE/najxF
+         I4Dw==
+X-Gm-Message-State: APjAAAVICKfZS1NNQ6tWqFxQKNyukdvC8JdkvXv02Y+fLdjpHhCv5mav
+        czFjtW4/BI97rVwhRbkgHsAt5LCd
+X-Google-Smtp-Source: APXvYqwKTpgTv/56WMJr6rLdGnXUng6esUGd9p/w4LSMWGEyEWHK0UMcN/nd5nncRfpanYf1awBbIQ==
+X-Received: by 2002:a6b:8bd1:: with SMTP id n200mr105992933iod.134.1564420931583;
+        Mon, 29 Jul 2019 10:22:11 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id x22sm44926014ioh.87.2019.07.29.10.22.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 10:22:10 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x6THM9qk004036;
+        Mon, 29 Jul 2019 17:22:09 GMT
+Subject: [PATCH v3] rdma: Enable ib_alloc_cq to spread work over a device's
+ comp_vectors
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net
+Date:   Mon, 29 Jul 2019 13:22:09 -0400
+Message-ID: <20190729171923.13428.52555.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9AF784D9-E0B4-473F-9D5F-7858F6FE1FDD@oracle.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:24:12AM -0400, Chuck Lever wrote:
->
->
-> > On Jul 29, 2019, at 1:49 AM, Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Sun, Jul 28, 2019 at 12:30:27PM -0400, Chuck Lever wrote:
-> >> Send and Receive completion is handled on a single CPU selected at
-> >> the time each Completion Queue is allocated. Typically this is when
-> >> an initiator instantiates an RDMA transport, or when a target
-> >> accepts an RDMA connection.
-> >>
-> >> Some ULPs cannot open a connection per CPU to spread completion
-> >> workload across available CPUs and MSI vectors. For such ULPs,
-> >> provide an API that allows the RDMA core to select a completion
-> >> vector based on the device's complement of available comp_vecs.
-> >>
-> >> ULPs that invoke ib_alloc_cq() with only comp_vector 0 are converted
-> >> to use the new API so that their completion workloads interfere less
-> >> with each other.
-> >>
-> >> Suggested-by: Håkon Bugge <haakon.bugge@oracle.com>
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> Cc: <linux-cifs@vger.kernel.org>
-> >> Cc: <v9fs-developer@lists.sourceforge.net>
-> >> ---
-> >> drivers/infiniband/core/cq.c             |   29 +++++++++++++++++++++++++++++
-> >> drivers/infiniband/ulp/srpt/ib_srpt.c    |    4 ++--
-> >> fs/cifs/smbdirect.c                      |   10 ++++++----
-> >> include/rdma/ib_verbs.h                  |   19 +++++++++++++++++++
-> >> net/9p/trans_rdma.c                      |    6 +++---
-> >> net/sunrpc/xprtrdma/svc_rdma_transport.c |    8 ++++----
-> >> net/sunrpc/xprtrdma/verbs.c              |   13 ++++++-------
-> >> 7 files changed, 69 insertions(+), 20 deletions(-)
-> >>
-> >> diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
-> >> index 7c59987..ea3bb0d 100644
-> >> --- a/drivers/infiniband/core/cq.c
-> >> +++ b/drivers/infiniband/core/cq.c
-> >> @@ -253,6 +253,35 @@ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
-> >> EXPORT_SYMBOL(__ib_alloc_cq_user);
-> >>
-> >> /**
-> >> + * __ib_alloc_cq_any - allocate a completion queue
-> >> + * @dev:		device to allocate the CQ for
-> >> + * @private:		driver private data, accessible from cq->cq_context
-> >> + * @nr_cqe:		number of CQEs to allocate
-> >> + * @poll_ctx:		context to poll the CQ from.
-> >> + * @caller:		module owner name.
-> >> + *
-> >> + * Attempt to spread ULP Completion Queues over each device's interrupt
-> >> + * vectors.
-> >> + */
-> >> +struct ib_cq *__ib_alloc_cq_any(struct ib_device *dev, void *private,
-> >> +				int nr_cqe, enum ib_poll_context poll_ctx,
-> >> +				const char *caller)
-> >> +{
-> >> +	static atomic_t counter;
-> >> +	int comp_vector;
-> >
-> > int comp_vector = 0;
-> >
-> >> +
-> >> +	comp_vector = 0;
-> >
-> > This assignment is better to be part of initialization.
-> >
-> >> +	if (dev->num_comp_vectors > 1)
-> >> +		comp_vector =
-> >> +			atomic_inc_return(&counter) %
-> >
-> > Don't we need manage "free list" of comp_vectors? Otherwise we can find
-> > ourselves providing already "taken" comp_vector.
->
-> Many ULPs use only comp_vector 0 today. It is obviously harmless
-> to have more than one ULP using the same comp_vector.
->
-> The point of this patch is best effort spreading. This algorithm
-> has been proposed repeatedly for several years on this list, and
-> each time the consensus has been this is simple and good enough.
+Send and Receive completion is handled on a single CPU selected at
+the time each Completion Queue is allocated. Typically this is when
+an initiator instantiates an RDMA transport, or when a target
+accepts an RDMA connection.
 
-Agree, it is better than current implementation.
+Some ULPs cannot open a connection per CPU to spread completion
+workload across available CPUs and MSI vectors. For such ULPs,
+provide an API that allows the RDMA core to select a completion
+vector based on the device's complement of available comp_vecs.
 
+ULPs that invoke ib_alloc_cq() with only comp_vector 0 are converted
+to use the new API so that their completion workloads interfere less
+with each other.
+
+Suggested-by: HÃ¥kon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Cc: <linux-cifs@vger.kernel.org>
+Cc: <v9fs-developer@lists.sourceforge.net>
+---
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    8 ++++----
+ net/sunrpc/xprtrdma/verbs.c              |   13 ++++++-------
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-Thanks
+Changes since v2:
+- Reviewed-by tag added
+- Fix initialization of comp_vector value
+- Clarify comments based on review
+
+diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
+index 7c59987..bbfded6 100644
+--- a/drivers/infiniband/core/cq.c
++++ b/drivers/infiniband/core/cq.c
+@@ -253,6 +253,34 @@ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
+ EXPORT_SYMBOL(__ib_alloc_cq_user);
+ 
+ /**
++ * __ib_alloc_cq_any - allocate a completion queue
++ * @dev:		device to allocate the CQ for
++ * @private:		driver private data, accessible from cq->cq_context
++ * @nr_cqe:		number of CQEs to allocate
++ * @poll_ctx:		context to poll the CQ from
++ * @caller:		module owner name
++ *
++ * Attempt to spread ULP Completion Queues over each device's interrupt
++ * vectors. A simple best-effort mechanism is used.
++ */
++struct ib_cq *__ib_alloc_cq_any(struct ib_device *dev, void *private,
++				int nr_cqe, enum ib_poll_context poll_ctx,
++				const char *caller)
++{
++	static atomic_t counter;
++	int comp_vector = 0;
++
++	if (dev->num_comp_vectors > 1)
++		comp_vector =
++			atomic_inc_return(&counter) %
++			min_t(int, dev->num_comp_vectors, num_online_cpus());
++
++	return __ib_alloc_cq_user(dev, private, nr_cqe, comp_vector, poll_ctx,
++				  caller, NULL);
++}
++EXPORT_SYMBOL(__ib_alloc_cq_any);
++
++/**
+  * ib_free_cq_user - free a completion queue
+  * @cq:		completion queue to free.
+  * @udata:	User data or NULL for kernel object
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+index 1a039f1..e25c70a 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -1767,8 +1767,8 @@ static int srpt_create_ch_ib(struct srpt_rdma_ch *ch)
+ 		goto out;
+ 
+ retry:
+-	ch->cq = ib_alloc_cq(sdev->device, ch, ch->rq_size + sq_size,
+-			0 /* XXX: spread CQs */, IB_POLL_WORKQUEUE);
++	ch->cq = ib_alloc_cq_any(sdev->device, ch, ch->rq_size + sq_size,
++				 IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(ch->cq)) {
+ 		ret = PTR_ERR(ch->cq);
+ 		pr_err("failed to create CQ cqe= %d ret= %d\n",
+diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+index cd07e53..3c91fa9 100644
+--- a/fs/cifs/smbdirect.c
++++ b/fs/cifs/smbdirect.c
+@@ -1654,15 +1654,17 @@ static struct smbd_connection *_smbd_get_connection(
+ 
+ 	info->send_cq = NULL;
+ 	info->recv_cq = NULL;
+-	info->send_cq = ib_alloc_cq(info->id->device, info,
+-			info->send_credit_target, 0, IB_POLL_SOFTIRQ);
++	info->send_cq =
++		ib_alloc_cq_any(info->id->device, info,
++				info->send_credit_target, IB_POLL_SOFTIRQ);
+ 	if (IS_ERR(info->send_cq)) {
+ 		info->send_cq = NULL;
+ 		goto alloc_cq_failed;
+ 	}
+ 
+-	info->recv_cq = ib_alloc_cq(info->id->device, info,
+-			info->receive_credit_max, 0, IB_POLL_SOFTIRQ);
++	info->recv_cq =
++		ib_alloc_cq_any(info->id->device, info,
++				info->receive_credit_max, IB_POLL_SOFTIRQ);
+ 	if (IS_ERR(info->recv_cq)) {
+ 		info->recv_cq = NULL;
+ 		goto alloc_cq_failed;
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index c5f8a9f..2a1523cc 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -3711,6 +3711,25 @@ static inline struct ib_cq *ib_alloc_cq(struct ib_device *dev, void *private,
+ 				NULL);
+ }
+ 
++struct ib_cq *__ib_alloc_cq_any(struct ib_device *dev, void *private,
++				int nr_cqe, enum ib_poll_context poll_ctx,
++				const char *caller);
++
++/**
++ * ib_alloc_cq_any: Allocate kernel CQ
++ * @dev: The IB device
++ * @private: Private data attached to the CQE
++ * @nr_cqe: Number of CQEs in the CQ
++ * @poll_ctx: Context used for polling the CQ
++ */
++static inline struct ib_cq *ib_alloc_cq_any(struct ib_device *dev,
++					    void *private, int nr_cqe,
++					    enum ib_poll_context poll_ctx)
++{
++	return __ib_alloc_cq_any(dev, private, nr_cqe, poll_ctx,
++				 KBUILD_MODNAME);
++}
++
+ /**
+  * ib_free_cq_user - Free kernel/user CQ
+  * @cq: The CQ to free
+diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
+index bac8dad..b21c3c2 100644
+--- a/net/9p/trans_rdma.c
++++ b/net/9p/trans_rdma.c
+@@ -685,9 +685,9 @@ static int p9_rdma_bind_privport(struct p9_trans_rdma *rdma)
+ 		goto error;
+ 
+ 	/* Create the Completion Queue */
+-	rdma->cq = ib_alloc_cq(rdma->cm_id->device, client,
+-			opts.sq_depth + opts.rq_depth + 1,
+-			0, IB_POLL_SOFTIRQ);
++	rdma->cq = ib_alloc_cq_any(rdma->cm_id->device, client,
++				   opts.sq_depth + opts.rq_depth + 1,
++				   IB_POLL_SOFTIRQ);
+ 	if (IS_ERR(rdma->cq))
+ 		goto error;
+ 
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 3fe6651..4d3db6e 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -454,14 +454,14 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		dprintk("svcrdma: error creating PD for connect request\n");
+ 		goto errout;
+ 	}
+-	newxprt->sc_sq_cq = ib_alloc_cq(dev, newxprt, newxprt->sc_sq_depth,
+-					0, IB_POLL_WORKQUEUE);
++	newxprt->sc_sq_cq = ib_alloc_cq_any(dev, newxprt, newxprt->sc_sq_depth,
++					    IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(newxprt->sc_sq_cq)) {
+ 		dprintk("svcrdma: error creating SQ CQ for connect request\n");
+ 		goto errout;
+ 	}
+-	newxprt->sc_rq_cq = ib_alloc_cq(dev, newxprt, rq_depth,
+-					0, IB_POLL_WORKQUEUE);
++	newxprt->sc_rq_cq =
++		ib_alloc_cq_any(dev, newxprt, rq_depth, IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(newxprt->sc_rq_cq)) {
+ 		dprintk("svcrdma: error creating RQ CQ for connect request\n");
+ 		goto errout;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 805b1f35..b10aa16 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -521,18 +521,17 @@ int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 	init_waitqueue_head(&ep->rep_connect_wait);
+ 	ep->rep_receive_count = 0;
+ 
+-	sendcq = ib_alloc_cq(ia->ri_id->device, NULL,
+-			     ep->rep_attr.cap.max_send_wr + 1,
+-			     ia->ri_id->device->num_comp_vectors > 1 ? 1 : 0,
+-			     IB_POLL_WORKQUEUE);
++	sendcq = ib_alloc_cq_any(ia->ri_id->device, NULL,
++				 ep->rep_attr.cap.max_send_wr + 1,
++				 IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(sendcq)) {
+ 		rc = PTR_ERR(sendcq);
+ 		goto out1;
+ 	}
+ 
+-	recvcq = ib_alloc_cq(ia->ri_id->device, NULL,
+-			     ep->rep_attr.cap.max_recv_wr + 1,
+-			     0, IB_POLL_WORKQUEUE);
++	recvcq = ib_alloc_cq_any(ia->ri_id->device, NULL,
++				 ep->rep_attr.cap.max_recv_wr + 1,
++				 IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(recvcq)) {
+ 		rc = PTR_ERR(recvcq);
+ 		goto out2;
+
