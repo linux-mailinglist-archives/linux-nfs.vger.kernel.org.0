@@ -2,124 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DFE7AF39
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 19:11:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 179287B485
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 22:50:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbfG3RKo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Jul 2019 13:10:44 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:45343 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730352AbfG3RKU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Jul 2019 13:10:20 -0400
-Received: by mail-vk1-f194.google.com with SMTP id e83so12912919vke.12
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Jul 2019 10:10:19 -0700 (PDT)
+        id S1728463AbfG3UuA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Jul 2019 16:50:00 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:42837 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfG3UuA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Jul 2019 16:50:00 -0400
+Received: by mail-vk1-f193.google.com with SMTP id 130so13152883vkn.9
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Jul 2019 13:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h7w3jabGisruvUIuF8lyTl7ouhEetjcBJThcSAhc5qM=;
-        b=uf6e8P5DVOms+z+RdFmpOkF867l9fBxYmX8e4nl3TeLuhoSMFUZmNW6dxcZVbboqGM
-         /TlH9r9VDMf6zKkRWvFU2Or9yhY9Os0yp74LMyzNXFJa8/TJ9Wv/WfElTNMnVDP22UUj
-         zEXHCW7zMe5/txG5M0TZYJnHL6SgVM2CAZ5KkztASe1IMYNDn1IVBG42bXUVK1/Aj7+w
-         x9WwBx83PBmpiiBHU0CWAGqTLi2jQiRYR/Sad7H5fHsdh8yPsseJp0Uu0rQ16vfe8QB4
-         hFePBKvT14661HGpw6/QUM0v8AQ1dbmjWYfEQEUviRHDSpOSSejyhTEbfVnkB7xmnWw2
-         V35A==
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=7O0xpR9ISxJJt1qBQGL/TmB8JotWJ/Wmqn/qCFqoLEg=;
+        b=RuKL3QCvAxuSPyEmAkggDveYyZDZfa+Cs9nwRALPU4eQJuEFlcGL0s+Nwo5F0q1Zwh
+         7m4QunQqXVMHRq8DE7F4l/33fzbLV7Tu9ld3oG5VzxF+GbuyNVk6XHVOfc8KcSDfTqVQ
+         0uihBlRC1CTr4jZYnHlEAowLwfi07jSG5gsL2hCz+YvkvIV7QHUUW81rZ9ASxP0aCws7
+         aEstwhI1ztiR8BcfCOJ0P5sz5Wl9SweUuMCkooDVGt71lZ00joq9VFen/PC7X310yKK1
+         hBbo0927Tx+/EoDgntTwT4bbXW59S0QKiqggaV0APsz5dXwacmCp9RbdELyahx0tJjgR
+         03Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h7w3jabGisruvUIuF8lyTl7ouhEetjcBJThcSAhc5qM=;
-        b=GGXrmoWCupwXuAUhhYHSvS58h9cI6fESVNO+hSICsIb0nb1wDiMTA/ID3OH4cHXgQ/
-         ekz8OpMN+kotfq9v5XyvViWJbzDWET71W70/AVsX1qSuijKraJn/buw3g1AmSN6wIWKX
-         NJNuJwahiACCmDz1xADWok6PzY0sUVc+xQow0VbqK+jY8eANEWbiiTlxDrvGTUMNVli2
-         /CyxfsOLQTLafSXT5JVs1Gg+HkRb+dUODXbbr77dERjxasocEHAGFFDuy+QuLFzyzy/p
-         eoSnz2fKthJ2/G1XIi8TC4Ox6sQy4XpGmnjMHdaZ64HxsROT6NKSeELrwpwkW0acm30U
-         RFsg==
-X-Gm-Message-State: APjAAAV2t9KbaWc/tL63ihaXWNUee//27yesD536G7/z/SLs/xJ4nVXj
-        ZRbmP+PTb9p0uS0b8pCTLM53L4tg9WmhVjY6QtZ+gA==
-X-Google-Smtp-Source: APXvYqy3WndQ0pLxR0Fa2Xapv5Q1J8Fl9pDgR9j7kK2KzRjhHPyeQv/xTobUAMLja6Z+QQfVdVGNLk/y0WuSsUbCeXc=
-X-Received: by 2002:a1f:4107:: with SMTP id o7mr45077857vka.34.1564506618489;
- Tue, 30 Jul 2019 10:10:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=7O0xpR9ISxJJt1qBQGL/TmB8JotWJ/Wmqn/qCFqoLEg=;
+        b=r1AfSbbg1OIchKtudR/B3bjphlKacEI+bCoh1WLQEczEKkTgZC5Ds7jwENsDAloqZr
+         mhakH1btFrjc9Y1xEApk+6EkTlSPGltyZ//raj+6l4SrTQS9RyLMGxvcLdAz60UMiuSk
+         dA32rxo33u8W8Sfw3eBDnA69qKZqv/r8iZac0TgpltW2S8XWLmngKuuDBy+w4TwhTgUc
+         /NuQtadcyBx8HwFDyaEx/K6hyXEYO2FETRRtNvYzOJwBYoNBzW89Ht4919yWoltKxqbV
+         6M4FaIChP/nxov2wHZeIJBmO/4rhvElYzuE43DAuN0qYrBGDHL2wd7gX7DXtMQtMcdKv
+         ua9g==
+X-Gm-Message-State: APjAAAWEr0Tqn4TT3ocWX5opwF6DulbcZzUI17dvnn6vUqwUnpCvDzbv
+        EZpblNhxrPzOoIuS+pwDXFqP5/xcNxjG1QSNYBvBUj9W
+X-Google-Smtp-Source: APXvYqx8ClJlmWo4T7YJLLfnmyT2Z/7t+HCisErGtEZFm1EhS4XII6DLvGyEAAqMepNQFFdmwnZEaEG8MRe267vHWUI=
+X-Received: by 2002:a1f:a043:: with SMTP id j64mr45223144vke.87.1564519799473;
+ Tue, 30 Jul 2019 13:49:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-5-olga.kornievskaia@gmail.com> <20190717230726.GA26801@fieldses.org>
- <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com>
- <20190723204537.GA19559@fieldses.org> <CAN-5tyGL+BR+1E1N-HzH3-mmjze8AkBHpYAm0k3i0Dt+iP1ORQ@mail.gmail.com>
- <20190730155528.GE31707@fieldses.org> <CAN-5tyGwyasodrUe4Y+p_Er6XNOBk+mgiaXKXWSBsM5ac4areg@mail.gmail.com>
-In-Reply-To: <CAN-5tyGwyasodrUe4Y+p_Er6XNOBk+mgiaXKXWSBsM5ac4areg@mail.gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 30 Jul 2019 13:10:07 -0400
-Message-ID: <CAN-5tyErgJ6TFLJzmRypmfqObPoA7-LEvFJ0iC4ky=yXyeRBGw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] NFSD add COPY_NOTIFY operation
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Tue, 30 Jul 2019 16:49:48 -0400
+Message-ID: <CAN-5tyF7S1wU05Q6=L=0QSYr6pmAj67AcCxhRsLZFqHbGoJwgg@mail.gmail.com>
+Subject: oops in 5.2-rc7
+To:     trond.myklebust@hammerspace.com,
+        Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:13 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> On Tue, Jul 30, 2019 at 11:55 AM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Tue, Jul 30, 2019 at 11:48:27AM -0400, Olga Kornievskaia wrote:
-> > > On Tue, Jul 23, 2019 at 4:46 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > > >
-> > > > On Mon, Jul 22, 2019 at 04:17:44PM -0400, Olga Kornievskaia wrote:
-> > > > > Let me see if I understand your suspicion and ask for guidance how to
-> > > > > resolve it as perhaps I'm misusing the function. idr_alloc_cyclic()
-> > > > > keeps track of the structure of the 2nd arguments with a value it
-> > > > > returns. How do I initiate the structure with the value of the
-> > > > > function without knowing the value which can only be returned when I
-> > > > > call the function to add it to the list? what you are suggesting is to
-> > > > > somehow get the value for the new_id but not associate anything then
-> > > > > update the copy structure with that value and then call
-> > > > > idr_alloc_cyclic() (or something else) to create that association of
-> > > > > the new_id and the structure? I don't know how to do that.
-> > > >
-> > > > You could move the initialization under the s2s_cp_lock.  But there's
-> > > > additional initialization that's done in the caller.
-> > >
-> > > I still don't understand what you are looking for here and why. I'm
-> > > following what the normal stid allocation does.  There is no extra code
-> > > there to see if it initiated or not. nfs4_alloc_stid() calls
-> > > idr_alloc_cyclic() creates an association between the stid pointer and
-> > > at the time uninitialized nfs4_stid structure which is then filled in
-> > > with the return of the idr_alloc_cyclic(). That's exactly what the new
-> > > code is doing (well accept that i'll change it to store the
-> > > stateid_t).
-> >
-> > Yes, I'm a little worried about normal stid allocation too.  It's got
-> > one extra safeguard because of the check for 0 sc_type in the lookup,
-> > I haven't yet convinced myself that's enough.
-> >
-> > The race I'm worried about is: one task does the idr allocation and
-> > drops locks.  Before it has the chance to finish initializing the
-> > object, a second task looks it up in the idr and does something with it.
-> > It sees the not-yet-initialized fields.
->
-> Can the spin_lock() that we call before the idr_alloc_cyclic() be held
-> thru the initialization of the stid then? I'm just not sure what this
-> idr_preload_end() with a spin_lock but otherwise I don't see why we
-> can't and since idr_find() takes the same spin lock before the call,
-> it would solve the problem.
+I'm running into the following oops running nfstest_posix tests on
+Trond's testing branch commit
+d5b9216fd5114be4ed98ca9c1ecc5f164cd8cf5e.  I'll go ahead and see what
+patch introduced this but for another data point 5.2-rc5 was OK.
 
-actually instead moving initialization of other stid fields prior to
-calling the idr_alloc_cycle would never expose the un-initialized
-value so
-
-stid->..cl_boot = nn->boot_time
-stid->.. cl_id = nn->..id
-..
-spinlock()
-newid = idr_alloc_cycle(stid)
-stid->..id = newid
-unlock()
-
-
->
-> >
-> > --b.
+unknown000C29789DA7 login: [ 2726.940822] BUG: kernel NULL pointer
+dereference, address: 0000000000000040
+[ 2726.946600] #PF: supervisor read access in kernel mode
+[ 2726.949607] #PF: error_code(0x0000) - not-present page
+[ 2726.952974] PGD 0 P4D 0
+[ 2726.954779] Oops: 0000 [#1] SMP PTI
+[ 2726.957452] CPU: 0 PID: 4556 Comm: python Not tainted 5.2.0-rc7+ #35
+[ 2726.962258] Hardware name: VMware, Inc. VMware Virtual
+Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[ 2726.969821] RIP: 0010:nfs4_do_setattr+0x18f/0x420 [nfsv4]
+[ 2726.972969] Code: be 02 00 00 00 48 89 df 4c 89 fa e8 8b 93 01 00
+84 c0 0f 85 30 01 00 00 48 8b 44 24 30 48 85 c0 0f 84 f7 00 00 00 48
+8b 40 60 <48> 8b 40 40 f6 c4 02 0f 85 35 02 00 00 48 8b 7c 24 30 e8 0a
+7a fa
+[ 2726.982348] RSP: 0018:ffffa303c270bad0 EFLAGS: 00010286
+[ 2726.984766] RAX: 0000000000000000 RBX: ffff93237ab4fd98 RCX: ffffa303c270bb08
+[ 2726.988368] RDX: ffffa303c270bbb8 RSI: 0000000000000002 RDI: 0000000000000000
+[ 2726.992911] RBP: ffffa303c270bc28 R08: ffff9323729f1200 R09: 0000000000000000
+[ 2726.997324] R10: 0008000000000000 R11: ffffffffc08f1d40 R12: ffff9323790c6800
+[ 2727.001705] R13: ffffa303c270bba0 R14: 00000001002508f0 R15: ffffa303c270bbb8
+[ 2727.006000] FS:  00007f867f7fb580(0000) GS:ffff93237cc00000(0000)
+knlGS:0000000000000000
+[ 2727.010822] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2727.014354] CR2: 0000000000000040 CR3: 00000000031b0002 CR4: 00000000001606f0
+[ 2727.018261] Call Trace:
+[ 2727.019565]  nfs4_proc_setattr+0xb5/0x150 [nfsv4]
+[ 2727.021728]  nfs_setattr+0xdf/0x1d0 [nfs]
+[ 2727.023654]  notify_change+0x2cf/0x460
+[ 2727.025865]  do_truncate+0x74/0xc0
+[ 2727.027399]  path_openat+0xbe3/0xe40
+[ 2727.029250]  do_filp_open+0x93/0x100
+[ 2727.030883]  do_sys_open+0x186/0x220
+[ 2727.032622]  do_syscall_64+0x55/0x1a0
+[ 2727.034353]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 2727.039647] RIP: 0033:0x7f867effa2af
+[ 2727.041899] Code: 52 89 f0 25 00 00 41 00 3d 00 00 41 00 74 44 8b
+05 a6 d1 20 00 85 c0 75 65 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff
+ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 9d 00 00 00 48 8b 4c 24 28 64 48 33
+0c 25
+[ 2727.053137] RSP: 002b:00007fff329ec520 EFLAGS: 00000246 ORIG_RAX:
+0000000000000101
+[ 2727.057740] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f867effa2af
+[ 2727.061558] RDX: 0000000000000203 RSI: 000056124897a390 RDI: 00000000ffffff9c
+[ 2727.064591] RBP: 00005612485692f0 R08: 00005612489e0c30 R09: 0000000000000003
+[ 2727.067803] R10: 0000000000000000 R11: 0000000000000246 R12: 00007f867878e500
+[ 2727.071309] R13: 00007f867df88fc0 R14: 00005612485692f0 R15: 00007f867f7b3b48
+[ 2727.074347] Modules linked in: cts rpcsec_gss_krb5 nfsv4
+dns_resolver nfs lockd grace fuse rfcomm bridge stp llc nf_tables
+nfnetlink bnep snd_seq_midi snd_seq_midi_event crct10dif_pclmul
+crc32_pclmul ghash_clmulni_intel aesni_intel vmw_balloon glue_helper
+crypto_simd cryptd btusb btrtl btbcm pcspkr btintel snd_ens1371
+bluetooth snd_ac97_codec ac97_bus uvcvideo snd_seq videobuf2_vmalloc
+videobuf2_memops rfkill videobuf2_v4l2 snd_pcm videodev ecdh_generic
+snd_timer videobuf2_common ecc snd_rawmidi snd_seq_device snd
+soundcore vmw_vmci i2c_piix4 auth_rpcgss sunrpc ip_tables xfs
+libcrc32c sd_mod sr_mod cdrom vmwgfx ata_generic pata_acpi
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm
+crc32c_intel drm mptspi scsi_transport_spi mptscsih serio_raw i2c_core
+e1000 ata_piix mptbase libata dm_mirror dm_region_hash dm_log dm_mod
+[ 2727.104414] CR2: 0000000000000040
+[ 2727.106856] ---[ end trace 67bd5a3a86242a9d ]---
