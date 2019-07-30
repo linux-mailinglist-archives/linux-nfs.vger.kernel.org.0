@@ -2,74 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30E4F7ACF9
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 17:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3907AD07
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 17:57:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfG3Pz3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Jul 2019 11:55:29 -0400
-Received: from fieldses.org ([173.255.197.46]:41514 "EHLO fieldses.org"
+        id S1729275AbfG3P5V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Jul 2019 11:57:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40090 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfG3Pz3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:55:29 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B4A7BC56; Tue, 30 Jul 2019 11:55:28 -0400 (EDT)
-Date:   Tue, 30 Jul 2019 11:55:28 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 4/8] NFSD add COPY_NOTIFY operation
-Message-ID: <20190730155528.GE31707@fieldses.org>
-References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-5-olga.kornievskaia@gmail.com>
- <20190717230726.GA26801@fieldses.org>
- <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com>
- <20190723204537.GA19559@fieldses.org>
- <CAN-5tyGL+BR+1E1N-HzH3-mmjze8AkBHpYAm0k3i0Dt+iP1ORQ@mail.gmail.com>
+        id S1726363AbfG3P5U (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:57:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD19A300CB0C;
+        Tue, 30 Jul 2019 15:57:17 +0000 (UTC)
+Received: from redhat.com (ovpn-112-36.rdu2.redhat.com [10.10.112.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A63655D6A7;
+        Tue, 30 Jul 2019 15:57:05 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 11:57:02 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, samba-technical@lists.samba.org,
+        v9fs-developer@lists.sourceforge.net,
+        virtualization@lists.linux-foundation.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead of
+ bool
+Message-ID: <20190730155702.GB10366@redhat.com>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <20190724042518.14363-4-jhubbard@nvidia.com>
+ <20190724053053.GA18330@infradead.org>
+ <20190729205721.GB3760@redhat.com>
+ <20190730102557.GA1700@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAN-5tyGL+BR+1E1N-HzH3-mmjze8AkBHpYAm0k3i0Dt+iP1ORQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190730102557.GA1700@lst.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 30 Jul 2019 15:57:19 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:48:27AM -0400, Olga Kornievskaia wrote:
-> On Tue, Jul 23, 2019 at 4:46 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Mon, Jul 22, 2019 at 04:17:44PM -0400, Olga Kornievskaia wrote:
-> > > Let me see if I understand your suspicion and ask for guidance how to
-> > > resolve it as perhaps I'm misusing the function. idr_alloc_cyclic()
-> > > keeps track of the structure of the 2nd arguments with a value it
-> > > returns. How do I initiate the structure with the value of the
-> > > function without knowing the value which can only be returned when I
-> > > call the function to add it to the list? what you are suggesting is to
-> > > somehow get the value for the new_id but not associate anything then
-> > > update the copy structure with that value and then call
-> > > idr_alloc_cyclic() (or something else) to create that association of
-> > > the new_id and the structure? I don't know how to do that.
-> >
-> > You could move the initialization under the s2s_cp_lock.  But there's
-> > additional initialization that's done in the caller.
+On Tue, Jul 30, 2019 at 12:25:57PM +0200, Christoph Hellwig wrote:
+> On Mon, Jul 29, 2019 at 04:57:21PM -0400, Jerome Glisse wrote:
+> > > All pages releases by bio_release_pages should come from
+> > > get_get_user_pages, so I don't really see the point here.
+> > 
+> > No they do not all comes from GUP for see various callers
+> > of bio_check_pages_dirty() for instance iomap_dio_zero()
+> > 
+> > I have carefully tracked down all this and i did not do
+> > anyconvertion just for the fun of it :)
 > 
-> I still don't understand what you are looking for here and why. I'm
-> following what the normal stid allocation does.  There is no extra code
-> there to see if it initiated or not. nfs4_alloc_stid() calls
-> idr_alloc_cyclic() creates an association between the stid pointer and
-> at the time uninitialized nfs4_stid structure which is then filled in
-> with the return of the idr_alloc_cyclic(). That's exactly what the new
-> code is doing (well accept that i'll change it to store the
-> stateid_t).
+> Well, the point is _should_ not necessarily do.  iomap_dio_zero adds the
+> ZERO_PAGE, which we by definition don't need to refcount.  So we can
+> mark this bio BIO_NO_PAGE_REF safely after removing the get_page there.
+> 
+> Note that the equivalent in the old direct I/O code, dio_refill_pages,
+> will be a little more complicated as it can match user pages and the
+> ZERO_PAGE in a single bio, so a per-bio flag won't handle it easily.
+> Maybe we just need to use a separate bio there as well.
+> 
+> In general with series like this we should not encode the status quo an
+> pile new hacks upon the old one, but thing where we should be and fix
+> up the old warts while having to wade through all that code.
 
-Yes, I'm a little worried about normal stid allocation too.  It's got
-one extra safeguard because of the check for 0 sc_type in the lookup,
-I haven't yet convinced myself that's enough.
+Other user can also add page that are not coming from GUP but need to
+have a reference see __blkdev_direct_IO() saddly bio get fill from many
+different places and not always with GUP. So we can not say that all
+pages here are coming from bio. I had a different version of the patchset
+i think that was adding a new release dirty function for GUP versus non
+GUP bio. I posted it a while ago, i will try to dig it up once i am
+back.
 
-The race I'm worried about is: one task does the idr allocation and
-drops locks.  Before it has the chance to finish initializing the
-object, a second task looks it up in the idr and does something with it.
-It sees the not-yet-initialized fields.
-
---b.
+Cheers,
+Jérôme
