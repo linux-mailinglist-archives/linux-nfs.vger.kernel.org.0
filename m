@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1157ACAE
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 17:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 740237ACAF
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2019 17:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfG3Psk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Jul 2019 11:48:40 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37452 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfG3Psj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Jul 2019 11:48:39 -0400
-Received: by mail-ua1-f66.google.com with SMTP id z13so25633073uaa.4
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Jul 2019 08:48:39 -0700 (PDT)
+        id S1730509AbfG3Psw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Jul 2019 11:48:52 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36797 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfG3Psw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Jul 2019 11:48:52 -0400
+Received: by mail-vs1-f68.google.com with SMTP id y16so43771286vsc.3
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Jul 2019 08:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Cg8JdDEDQWaT/QH98aqbdhPiXBsEqe0H2hAiXSt/Gpw=;
-        b=pnt4Edz4L4dahGNogw8BECc1M/GE9VmfyTIEl2RDgbLO/LC34WODtKtiCXvNHvfv83
-         B3VDJTYDznhknsXCnuja8+UQHYUp9oCAk3ni5CiTUUeIjyaCkMvx6KwFRvkA+jh7TivK
-         qWNNPBqjS9cjIZIaemkwiArUn9WwfCzGCh+IqU/gor/wBMg11lfuPmCQGr8WHK1soaIn
-         GpcIsi7CCLQwM7JIOZPlgMexTZDx5sy0Kj/Mjz1+cjTQc/nuT1QnQ6LW0UrpVInHCQyL
-         dhyCqJuNrFZXOKY+F3/IXKIYQ2JwGhlWRVPsexlq+MDcnNDpLyWpjXZ09vIqKRyJo7F7
-         MqzQ==
+        bh=hFLfAMk00hdmY9QKxREnCJ0q6m0jmdvFUXj+kjxiZ+o=;
+        b=K1CcuXf3Nqloz09gDQgV7pulRCDXXzMkprAgIVdfByg6ntrcYuxElecvJxzmWOFsLz
+         /IfUjSh3xJKWlsob/imAutf0UTbr8ScAekdr06Mtf1iiDZ36gEiysiG/ygn8Gcu/kDbW
+         EahBUg/YBDxgj1HFjfkT9oBrE3fY5ORzbjB4m8HgvmBh3L8tswBqU8LqrnvLl9ga1Hmv
+         RcL79XkpjS/f0P1nCmirsAxQ0uXENS/fLRJoncyZc+NtmUt7fcQ7pg9whfa9ow33o6ul
+         +7I3cm9Ou1kjVK3BEHi4o/g8APocf1VcTnKi6pwBF2Z+G8lj+LnrEiIwRprVPZa0cLC0
+         N1rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Cg8JdDEDQWaT/QH98aqbdhPiXBsEqe0H2hAiXSt/Gpw=;
-        b=YAN53m0X7osJ3isRsC3Xk9ps1EcB9wYzsS34lCGx3yBVHyaH8+foRzmkGT24xUNKh6
-         uRtt7W3VvsBqaEnzTMZKQfQwwxiTtgJjnda86WvfC/W4LIiRo498FdrbwTc5Fkknhddh
-         6FgfCzRRlFIwTZPEhJqGYsNld4u1C4U1mtUvor7XoA0SOXhpX04O0EIwHvkRl8It7xNF
-         0zfEqaWcb8iQ3M4XBPvQ/hVAvpd8lFaM0JaHr3R911jlfqhdAzrx39rvTYuOiAC9AIjB
-         1xNrSALgqyRz4Hi7tERW0mrYtAkYzppFj88FvrARiDX61FqL1kEo9IzUmQFRP4SKNXwM
-         9Lkg==
-X-Gm-Message-State: APjAAAUfmOjXJfRNIO1tq8v/Xi3/t//crZ3n+jbcT0Yt6KrjsZzM4cF7
-        F7CV2+qAjTeD2WwL+jj6Ud+Hn/IzbK3HCce0587JDQ==
-X-Google-Smtp-Source: APXvYqzy1i7O5wU2Ud9Z3XwyScd9v1RTYHVADcIrQEGu7gjbE5VUL9nU4WVFlTrMfbPUTp68SyMBCfUHdWeRz19gCH8=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr73307514uag.40.1564501718297;
- Tue, 30 Jul 2019 08:48:38 -0700 (PDT)
+        bh=hFLfAMk00hdmY9QKxREnCJ0q6m0jmdvFUXj+kjxiZ+o=;
+        b=awQJ1nGHyv4rSkRL7AD6QDg7Z80T7yVoU/M/jfX1p1jhaTUqgd0WMQ0nPaMlP0/IT5
+         seZpbPm1gZS+cVApHCgcjVI4Or2AeudzBg6niTS0UVKMfIigMX6vOifq9ZVoTf8b3k1i
+         E0Lr9Yb70Y/LalMRCiicUInf9lnKdEDZRz396Ukc+zY0TcXTqudjRJXcehaLK8gk9jb+
+         +wZoGXqXstCFKEpPgw0fW4wYL6BFsrGfNNO3JbY21f3Ycs6bVrbBKg9T2FlYhobczAJF
+         15gGq/cUBCUsgf3dXDYch6JZuCfh0hTNP01IHtze50e1BqNNVfDsuHSJD3Ayb+6yGltc
+         pe4A==
+X-Gm-Message-State: APjAAAVzDHrx8CdzOGbNT/fL77s5sIrTTaQMyCLSpPrVfm6QK0vwffCa
+        B0mRy/fohldl/pUUFZ+mJwLKsYSuMkXSPvIZjds=
+X-Google-Smtp-Source: APXvYqxbDOftSMEvh3iScxWDPd1xhY9huPSm/+nlxUltzugpLnHDD3A+yFgxN0SywmblxehtApcnbBC2SZDrPLfIXw8=
+X-Received: by 2002:a67:8907:: with SMTP id l7mr73476327vsd.194.1564501730949;
+ Tue, 30 Jul 2019 08:48:50 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190708192352.12614-1-olga.kornievskaia@gmail.com>
- <20190708192352.12614-5-olga.kornievskaia@gmail.com> <20190717230726.GA26801@fieldses.org>
- <CAN-5tyHmODP2+nMiinTEP5WZzXz=m=j9LBSWv=b=N3C211JaLg@mail.gmail.com> <20190723204537.GA19559@fieldses.org>
-In-Reply-To: <20190723204537.GA19559@fieldses.org>
+ <20190708192352.12614-2-olga.kornievskaia@gmail.com> <20190717211317.GM24608@fieldses.org>
+ <CAN-5tyHxY0YPoXwK0pVudfH3n9SiNwzmYOywzmtpYSHFZkH23Q@mail.gmail.com>
+In-Reply-To: <CAN-5tyHxY0YPoXwK0pVudfH3n9SiNwzmYOywzmtpYSHFZkH23Q@mail.gmail.com>
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 30 Jul 2019 11:48:27 -0400
-Message-ID: <CAN-5tyGL+BR+1E1N-HzH3-mmjze8AkBHpYAm0k3i0Dt+iP1ORQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] NFSD add COPY_NOTIFY operation
+Date:   Tue, 30 Jul 2019 11:48:40 -0400
+Message-ID: <CAN-5tyHD4ms1b9udXb8cXKC+N0vZbpmG7cb_TmnB9GTLoOr45g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/8] NFSD fill-in netloc4 structure
 To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         linux-nfs <linux-nfs@vger.kernel.org>
@@ -58,119 +58,109 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 4:46 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Mon, Jul 22, 2019 at 3:59 PM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
 >
-> On Mon, Jul 22, 2019 at 04:17:44PM -0400, Olga Kornievskaia wrote:
-> > On Wed, Jul 17, 2019 at 7:07 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > >
-> > > On Mon, Jul 08, 2019 at 03:23:48PM -0400, Olga Kornievskaia wrote:
-> > > > @@ -726,24 +727,53 @@ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *sla
-> > > >  /*
-> > > >   * Create a unique stateid_t to represent each COPY.
-> > > >   */
-> > > > -int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
-> > > > +static int nfs4_init_cp_state(struct nfsd_net *nn, void *ptr, stateid_t *stid)
-> > > >  {
-> > > >       int new_id;
-> > > >
-> > > >       idr_preload(GFP_KERNEL);
-> > > >       spin_lock(&nn->s2s_cp_lock);
-> > > > -     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, copy, 0, 0, GFP_NOWAIT);
-> > > > +     new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, ptr, 0, 0, GFP_NOWAIT);
-> > > >       spin_unlock(&nn->s2s_cp_lock);
-> > > >       idr_preload_end();
-> > > >       if (new_id < 0)
-> > > >               return 0;
-> > > > -     copy->cp_stateid.si_opaque.so_id = new_id;
-> > > > -     copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
-> > > > -     copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
-> > > > +     stid->si_opaque.so_id = new_id;
-> > > > +     stid->si_opaque.so_clid.cl_boot = nn->boot_time;
-> > > > +     stid->si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
-> > > >       return 1;
-> > > >  }
-> > > >
-> > > > -void nfs4_free_cp_state(struct nfsd4_copy *copy)
-> > > > +int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
-> > > > +{
-> > > > +     return nfs4_init_cp_state(nn, copy, &copy->cp_stateid);
-> > > > +}
-> > >
-> > > This little bit of refactoring could go into a seperate patch.  It's
-> > > easier for me to review lots of smaller patches.
-> > >
-> > > But I don't understand why you're doing it.
-> > >
-> > > Also, I'm a little suspicious of code that doesn't initialize an object
-> > > till after it's been added to a global structure.  The more typical
-> > > pattern is:
-> > >
-> > >
-> > >         initialize foo
-> > >         take locks, add foo global structure, drop locks.
-> > >
-> > > This prevents anyone doing a lookup from finding "foo" while it's still
-> > > in a partially initialized state.
+> On Wed, Jul 17, 2019 at 5:13 PM J. Bruce Fields <bfields@fieldses.org> wrote:
 > >
-> > Let me try to explain the change. This change is due to the fact that
-> > now both COPY_NOTIFY and COPY both are generating unique stateid
-> > (COPY_NOTIFY needs a unique stateid to passed into the COPY and COPY
-> > is generating a unique stateid to be referred to by callbacks).
-> > Previously we had just the COPY generating the stateid (so it was
-> > stored in the nfs4_copy structure) but now we have the COPY_NOTIFY
-> > which doesn't create nfs4_copy when it's processing the operation but
-> > still needs a unique stateid (stored in the stateid structure).
+> > On Mon, Jul 08, 2019 at 03:23:45PM -0400, Olga Kornievskaia wrote:
+> > > From: Olga Kornievskaia <kolga@netapp.com>
+> > >
+> > > nfs.4 defines nfs42_netaddr structure that represents netloc4.
+> > >
+> > > Populate needed fields from the sockaddr structure.
+> > >
+> > > This will be used by flexfiles and 4.2 inter copy
+> > >
+> > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > ---
+> > >  fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > >
+> > > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > > index 24187b5..8f4fc50 100644
+> > > --- a/fs/nfsd/nfsd.h
+> > > +++ b/fs/nfsd/nfsd.h
+> > > @@ -19,6 +19,7 @@
+> > >  #include <linux/sunrpc/svc.h>
+> > >  #include <linux/sunrpc/svc_xprt.h>
+> > >  #include <linux/sunrpc/msg_prot.h>
+> > > +#include <linux/sunrpc/addr.h>
+> > >
+> > >  #include <uapi/linux/nfsd/debug.h>
+> > >
+> > > @@ -375,6 +376,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
+> > >
+> > >  extern const u32 nfsd_suppattrs[3][3];
+> > >
+> > > +static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
+> > > +                                 struct nfs42_netaddr *netaddr)
+> > > +{
+> > > +     struct sockaddr_in *sin = (struct sockaddr_in *)addr;
+> > > +     struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
+> > > +     unsigned int port;
+> > > +     size_t ret_addr, ret_port;
+> > > +
+> > > +     switch (addr->sa_family) {
+> > > +     case AF_INET:
+> > > +             port = ntohs(sin->sin_port);
+> > > +             sprintf(netaddr->netid, "tcp");
+> > > +             netaddr->netid_len = 3;
+> > > +             break;
+> > > +     case AF_INET6:
+> > > +             port = ntohs(sin6->sin6_port);
+> > > +             sprintf(netaddr->netid, "tcp6");
+> > > +             netaddr->netid_len = 4;
+> > > +             break;
+> > > +     default:
+> > > +             return nfserr_inval;
+> > > +     }
+> > > +     ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
+> > > +     ret_port = snprintf(netaddr->addr + ret_addr,
+> > > +                         RPCBIND_MAXUADDRLEN + 1 - ret_addr,
+> > > +                         ".%u.%u", port >> 8, port & 0xff);
+> > > +     WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
+> > > +     netaddr->addr_len = ret_addr + ret_port;
+> > > +     return 0;
+> > > +}
+> >
+> > Kinda surprised we don't already do something like this elsewhere, but I
+> > don't see anything exactly the same.  Might be possible to put this in
+> > net/sunrpc/addr.c and share some code with rpc_sockaddr2uaddr?  I'll
+> > leave it to you whether that looks worth it.
 >
-> The usual way to handle a situation like this is to store in the idr a
-> pointer to the stateid (copy->cp_stateid or cps->cp_stateid).  When you
+> I'll investigate how to move this into the sunrpc. Client also
+> populates nfs42_netaddr structure but it's slightly different. I need
+> to go back and see if what's shareable.
 
-Ok I'll store the stateid directly.
+Ok I'd like argue for the code to stay as is because
+1. can't move the whole function into addr.c because it created a data
+structure (nfs42_netaddr) that rpc knows nothing about
+2. While the nfs42_netaddr->addr is the output of the rpc_sock2uaddr()
+but we still need the switch to populate the netid . Also since
+rpc_sock2uaddr returns memory than the nfs42_netaddr data structure
+needs to change to store pointers (and that's shared with the client).
+Thus client and server would need to add other code to free the
+created netaddr.
+3. this function as is can be used by the flexfile layout as well
+(they also decided not to share code with rpc_sockaddr2uaddr but use
+same content). that function also doesn't want the memory to be
+allocated.
 
-> do a lookup you do something like:
+Maybe I'm wrong about all of it and it all needs to be re-written to
+take dynamic memory. But to use as is I don't want to call it and then
+memcpy into existing static buffers and freeing what
+rpc_sockaddr2uaddr has allocated.
+
+
+
 >
->         st = idr_find(...);
->         copy = container_of(st, struct nfsd4_copy, cp_stateid);
->
-> to get a copy to the larger structure.
->
-> By the way, in find_internal_cpntf_state, a buggy or malicious client
-> could cause idr_find to look up a copy (not a copy_notify) stateid.  The
-> code needs some way to distinguish the two cases.  You could use a
-> different cl_id for the two cases.  That might also be handy for
-> debugging.  And/or you could do as we do in the case of open, lock, and
-> other stateid's and embed a common structure that also includes a "type"
-> field.  (See nfs4_stid->sc_type).
-
-I'll add 2 new sc_types and make sure that during the look up the
-entry retrieved is of the appropriate type.
-
-
-> > Let me see if I understand your suspicion and ask for guidance how to
-> > resolve it as perhaps I'm misusing the function. idr_alloc_cyclic()
-> > keeps track of the structure of the 2nd arguments with a value it
-> > returns. How do I initiate the structure with the value of the
-> > function without knowing the value which can only be returned when I
-> > call the function to add it to the list? what you are suggesting is to
-> > somehow get the value for the new_id but not associate anything then
-> > update the copy structure with that value and then call
-> > idr_alloc_cyclic() (or something else) to create that association of
-> > the new_id and the structure? I don't know how to do that.
->
-> You could move the initialization under the s2s_cp_lock.  But there's
-> additional initialization that's done in the caller.
-
-I still don't understand what you are looking for here and why. I'm
-following what the normal stid allocation does. There is no extra code
-there to see if it initiated or not. nfs4_alloc_stid() calls
-idr_alloc_cyclic() creates an association between the stid pointer and
-at the time uninitialized nfs4_stid structure which is then filled in
-with the return of the idr_alloc_cyclic(). That's exactly what the new
-code is doing (well accept that i'll change it to store the
-stateid_t).
-
-> So, either this needs more locking, or maybe some flag value set to
-> indicate that the object is initialized and safe to use.  (In the case
-> of open/lock/etc.  stateid's I think that is sc_type.  I'm not
-> completely convinced we've got that correct, though.)
->
-> --b.
+> >
+> > --b.
+> >
+> > > +
+> > >  static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+> > >  {
+> > >       return !((bm1[0] & ~bm2[0]) ||
+> > > --
+> > > 1.8.3.1
