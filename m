@@ -2,95 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67DAE7B605
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2019 01:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 993DA7B618
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2019 01:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfG3XDk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Jul 2019 19:03:40 -0400
-Received: from fieldses.org ([173.255.197.46]:41902 "EHLO fieldses.org"
+        id S1726843AbfG3XI4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Jul 2019 19:08:56 -0400
+Received: from fieldses.org ([173.255.197.46]:41940 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfG3XDk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:03:40 -0400
+        id S1726704AbfG3XI4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 30 Jul 2019 19:08:56 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id DADB82010; Tue, 30 Jul 2019 19:03:39 -0400 (EDT)
-Date:   Tue, 30 Jul 2019 19:03:39 -0400
+        id 15EF61C26; Tue, 30 Jul 2019 19:08:56 -0400 (EDT)
+Date:   Tue, 30 Jul 2019 19:08:56 -0400
 From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     Jia-Ju Bai <baijiaju1990@gmail.com>
 Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] fs: nfsd: Fix three possible null-pointer dereferences
-Message-ID: <20190730230339.GD3544@fieldses.org>
+Message-ID: <20190730230856.GE3544@fieldses.org>
 References: <20190724082803.1077-1-baijiaju1990@gmail.com>
+ <20190730230339.GD3544@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724082803.1077-1-baijiaju1990@gmail.com>
+In-Reply-To: <20190730230339.GD3544@fieldses.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 04:28:03PM +0800, Jia-Ju Bai wrote:
-> In nfs4_xdr_dec_cb_recall(), nfs4_xdr_dec_cb_layout() and
-> nfs4_xdr_dec_cb_notify_lock(), there is an if statement to check whether
-> cb is NULL.
-> 
-> When cb is NULL, the three functions all call:
->     decode_cb_op_status(..., &cb->cb_status);
-> 
-> Thus, possible null-pointer dereferences may occur.
-> 
-> To fix these possible bugs, -EINVAL is returned when cb is NULL.
-> 
-> These bugs are found by a static analysis tool STCheck written by us.
+On Tue, Jul 30, 2019 at 07:03:39PM -0400, J. Bruce Fields wrote:
+> Thanks!  But I think actually the correct fix is just to remove the NULL
+> checks entirely.
 
-Thanks!  But I think actually the correct fix is just to remove the NULL
-checks entirely.
+So, something like the following (untested).--b.
 
---b.
+commit 7ce38d2d8a66
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Tue Jul 30 19:06:38 2019 -0400
 
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  fs/nfsd/nfs4callback.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 397eb7820929..55949a158b6b 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -516,7 +516,8 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *rqstp,
->  		status = decode_cb_sequence4res(xdr, cb);
->  		if (unlikely(status || cb->cb_seq_status))
->  			return status;
-> -	}
-> +	} else
-> +		return -EINVAL;
->  
->  	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
->  }
-> @@ -608,7 +609,9 @@ static int nfs4_xdr_dec_cb_layout(struct rpc_rqst *rqstp,
->  		status = decode_cb_sequence4res(xdr, cb);
->  		if (unlikely(status || cb->cb_seq_status))
->  			return status;
-> -	}
-> +	} else
-> +		return -EINVAL;
-> +
->  	return decode_cb_op_status(xdr, OP_CB_LAYOUTRECALL, &cb->cb_status);
->  }
->  #endif /* CONFIG_NFSD_PNFS */
-> @@ -667,7 +670,9 @@ static int nfs4_xdr_dec_cb_notify_lock(struct rpc_rqst *rqstp,
->  		status = decode_cb_sequence4res(xdr, cb);
->  		if (unlikely(status || cb->cb_seq_status))
->  			return status;
-> -	}
-> +	} else
-> +		return -EINVAL;
-> +	
->  	return decode_cb_op_status(xdr, OP_CB_NOTIFY_LOCK, &cb->cb_status);
->  }
->  
-> -- 
-> 2.17.0
+    nfsd: Remove unnecessary NULL checks
+    
+    "cb" is never actually NULL in these functions.
+    
+    On a quick skim of the history, they seem to have been there from the
+    beginning.  I'm not sure if they originally served a purpose.
+    
+    Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 397eb7820929..524111420b48 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -512,11 +512,9 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *rqstp,
+ 	if (unlikely(status))
+ 		return status;
+ 
+-	if (cb != NULL) {
+-		status = decode_cb_sequence4res(xdr, cb);
+-		if (unlikely(status || cb->cb_seq_status))
+-			return status;
+-	}
++	status = decode_cb_sequence4res(xdr, cb);
++	if (unlikely(status || cb->cb_seq_status))
++		return status;
+ 
+ 	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
+ }
+@@ -604,11 +602,10 @@ static int nfs4_xdr_dec_cb_layout(struct rpc_rqst *rqstp,
+ 	if (unlikely(status))
+ 		return status;
+ 
+-	if (cb) {
+-		status = decode_cb_sequence4res(xdr, cb);
+-		if (unlikely(status || cb->cb_seq_status))
+-			return status;
+-	}
++	status = decode_cb_sequence4res(xdr, cb);
++	if (unlikely(status || cb->cb_seq_status))
++		return status;
++
+ 	return decode_cb_op_status(xdr, OP_CB_LAYOUTRECALL, &cb->cb_status);
+ }
+ #endif /* CONFIG_NFSD_PNFS */
+@@ -663,11 +660,10 @@ static int nfs4_xdr_dec_cb_notify_lock(struct rpc_rqst *rqstp,
+ 	if (unlikely(status))
+ 		return status;
+ 
+-	if (cb) {
+-		status = decode_cb_sequence4res(xdr, cb);
+-		if (unlikely(status || cb->cb_seq_status))
+-			return status;
+-	}
++	status = decode_cb_sequence4res(xdr, cb);
++	if (unlikely(status || cb->cb_seq_status))
++		return status;
++
+ 	return decode_cb_op_status(xdr, OP_CB_NOTIFY_LOCK, &cb->cb_status);
+ }
+ 
+@@ -759,11 +755,10 @@ static int nfs4_xdr_dec_cb_offload(struct rpc_rqst *rqstp,
+ 	if (unlikely(status))
+ 		return status;
+ 
+-	if (cb) {
+-		status = decode_cb_sequence4res(xdr, cb);
+-		if (unlikely(status || cb->cb_seq_status))
+-			return status;
+-	}
++	status = decode_cb_sequence4res(xdr, cb);
++	if (unlikely(status || cb->cb_seq_status))
++		return status;
++
+ 	return decode_cb_op_status(xdr, OP_CB_OFFLOAD, &cb->cb_status);
+ }
+ /*
