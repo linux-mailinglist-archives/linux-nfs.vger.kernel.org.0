@@ -2,64 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE917E3B8
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 22:01:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F4CF7E51F
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2019 00:02:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388957AbfHAUBC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Aug 2019 16:01:02 -0400
-Received: from fieldses.org ([173.255.197.46]:44390 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388766AbfHAUBC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:01:02 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E24AF7CB; Thu,  1 Aug 2019 16:01:01 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 16:01:01 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Cc:     linux-nfs@vger.kernel.org, Tom Haynes <loghyr@gmail.com>
-Subject: Re: [PATCH] st_flex: fix uid/gid formatting in error message
-Message-ID: <20190801200101.GB21527@fieldses.org>
-References: <20190722141602.14274-1-tigran.mkrtchyan@desy.de>
+        id S1726403AbfHAWCq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Aug 2019 18:02:46 -0400
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:32968 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389317AbfHAWCq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Aug 2019 18:02:46 -0400
+Received: by mail-lf1-f50.google.com with SMTP id x3so51527645lfc.0
+        for <linux-nfs@vger.kernel.org>; Thu, 01 Aug 2019 15:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PzgYLjc0DlH8R4/Bp3L3s/7baqBYRuLh++BLgTY5K6I=;
+        b=bfXgAeFCx7SbQU55pHYa0+qyjg5O0iNcK+vjjFJNssv9L/GDxastw0rnwyTNrIP6xB
+         PrYFfamTQdnKk+tbesPOX5J9We65zz9x7UPt1q23dq0U6xDJvvhd5wh5TCvMWHaIsiY3
+         FAVfLqqa6Eamt4N703CkKzw0FS1/35yDiHVnXZcCkYmW1PigYxx4mDqXAQTsM80mH2Gx
+         IOXcvKwb9ghfYF94gJ/ObqUW7DIN5tnvsvEZE3N2i001x0MxZZfYS+bYgqIw/Oqi4o1K
+         bw78S4e3Ulls8gvfwYXDTHGg+6taHSrzWgjAx37QLgYvawipGGz0x/38bYNAVdu7LQs7
+         zrtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PzgYLjc0DlH8R4/Bp3L3s/7baqBYRuLh++BLgTY5K6I=;
+        b=rM0ne4vXdgTZPK0ihRKY7Bw4XocSb4tLAn7CYXSV/BkJWA/DjrAJErcSX53kSqcDNT
+         LQ8C3SEb2GzzBfUUhFD1w00O8fi0or/YKg3wvEKuezrCSr9maNholOthsDhtuYXM7Nit
+         YRdSQnA3KGosVA9E/TC1uNICsU3kDnwfWKLKQnD4AepTrFbRVK1Wq1E3OTZO+UlJvn6v
+         LT2WsGtqwMKtSOs/GCjrWvP+SzFL5v9LIlCLhLiS5azqnzFF9cF7IX4HJgLiiqCe3DfV
+         3RnBvVXWC4cvzXvoph1x4gHC8cZneyTclLyyaUOxW7pdc0qrPPsFJ/Z11OnhLGvFc1Kn
+         R6lg==
+X-Gm-Message-State: APjAAAW9baLFgs6TalZRddFBJN9BvjCeJ/bDreX62ge7lbDVotbcuMjn
+        f0O/2fJOgHYY6OP4vty9CYLDgm4kCd68pky+Dg==
+X-Google-Smtp-Source: APXvYqzmq0uXfwJt7g/bBIxK05IIy7u3ZYdIDXtXkS+45JB5jOtl3Mi1LGyMsk7G9yx299JjIG2MwsqssmU7yB7cG7I=
+X-Received: by 2002:a19:4349:: with SMTP id m9mr61702928lfj.64.1564696964070;
+ Thu, 01 Aug 2019 15:02:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722141602.14274-1-tigran.mkrtchyan@desy.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <2d7f0c7e-a82a-5adb-df94-3ac4fa6b0dfe@schaufler-ca.com>
+In-Reply-To: <2d7f0c7e-a82a-5adb-df94-3ac4fa6b0dfe@schaufler-ca.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 1 Aug 2019 18:02:32 -0400
+Message-ID: <CAHC9VhQRUGbU70p8p+zoxqgAF-W92Zz=rOjFB68JsaitrfQt_g@mail.gmail.com>
+Subject: Re: Security labeling in NFS4 - who owns it?
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     linux-nfs@vger.kernel.org,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:16:02PM +0200, Tigran Mkrtchyan wrote:
-> as ffds_user and ffds_group are utf8 encoded string use '%s' when
-> constructing an error message.
+On Thu, Aug 1, 2019 at 3:39 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> As part of my work on LSM stacking I've encountered some issues with
+> the Linux implementation of NFS4 security labels. For example, the LFS
+> data is ignored, so even if the client and server are willing to identify
+> the kind of information they are passing, the identity information isn't
+> available. The code asks if attributes requested are mandatory access
+> control attributes, but cannot differentiate between which of the possible
+> security attribute the other end is providing.
+>
+> Is anyone actively owing the NFS labeling code? I'd like to bounce an
+> idea or two around before committing too much time to my ideas of
+> solutions.
 
-Thanks, applied--sorry for being slow to get to this.
+I guess it all depends on what you mean by "own".  Historically it has
+been a mix of the NFS and SELinux folks that have worked on it and
+contributed patches, with code sprinkled between the two subsystems
+(and possibly elsewhere too).
 
---b.
+I suspect a better question would be: who should you work with to
+discuss issues the labeled NFS code?  I don't want to assume too much,
+but I think you know the answer to that one already ;)
 
-> 
-> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-> ---
->  nfs4.1/server41tests/st_flex.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
-> index 335b2c8..f4ac739 100644
-> --- a/nfs4.1/server41tests/st_flex.py
-> +++ b/nfs4.1/server41tests/st_flex.py
-> @@ -313,10 +313,10 @@ def testFlexLayoutTestAccess(t, env):
->      gid_rd = ds.ffds_group
->  
->      if uid_rw == uid_rd:
-> -        fail("Expected uid_rd != %i, got %i" % (uid_rd, uid_rw))
-> +        fail("Expected uid_rd != %s, got %s" % (uid_rd, uid_rw))
->  
->      if gid_rw != gid_rd:
-> -        fail("Expected gid_rd == %i, got %i" % (gid_rd, gid_rw))
-> +        fail("Expected gid_rd == %s, got %s" % (gid_rd, gid_rw))
->  
->      res = close_file(sess, fh, stateid=open_stateid)
->      check(res)
-> -- 
-> 2.21.0
+-- 
+paul moore
+www.paul-moore.com
