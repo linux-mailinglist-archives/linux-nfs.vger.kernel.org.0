@@ -2,117 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A63C77D06E
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 00:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 506D47D728
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 10:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfGaWFn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Jul 2019 18:05:43 -0400
-Received: from fieldses.org ([173.255.197.46]:43134 "EHLO fieldses.org"
+        id S1728697AbfHAIUM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Aug 2019 04:20:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:41407 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbfGaWFn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:05:43 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 663E4ABE; Wed, 31 Jul 2019 18:05:42 -0400 (EDT)
-Date:   Wed, 31 Jul 2019 18:05:42 -0400
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 00/16] Cache open file descriptors in knfsd
-Message-ID: <20190731220542.GA20006@fieldses.org>
-References: <20190630135240.7490-1-trond.myklebust@hammerspace.com>
+        id S1728146AbfHAIUM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:20:12 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 21DE768AFE; Thu,  1 Aug 2019 10:20:05 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 10:20:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, samba-technical@lists.samba.org,
+        v9fs-developer@lists.sourceforge.net,
+        virtualization@lists.linux-foundation.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead
+ of bool
+Message-ID: <20190801082004.GA17348@lst.de>
+References: <20190724042518.14363-1-jhubbard@nvidia.com> <20190724042518.14363-4-jhubbard@nvidia.com> <20190724053053.GA18330@infradead.org> <20190729205721.GB3760@redhat.com> <20190730102557.GA1700@lst.de> <20190730155702.GB10366@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190630135240.7490-1-trond.myklebust@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <20190730155702.GB10366@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sorry for the delay responding....
+On Tue, Jul 30, 2019 at 11:57:02AM -0400, Jerome Glisse wrote:
+> Other user can also add page that are not coming from GUP but need to
+> have a reference see __blkdev_direct_IO()
 
-On Sun, Jun 30, 2019 at 09:52:24AM -0400, Trond Myklebust wrote:
-> When a NFSv3 READ or WRITE request comes in, the first thing knfsd has
-> to do is open a new file descriptor.
-
-I assume it shouldn't make a significant difference for NFSv4?
-
-> While this is often a relatively
-> inexpensive thing to do for most local filesystems, it is usually less
-> so for FUSE, clustered or networked filesystems that are being exported
-> by knfsd.
-> 
-> This set of patches attempts to reduce some of that cost by caching
-> open file descriptors so that they may be reused by other incoming
-> READ/WRITE requests for the same file.
-> One danger when doing this, is that knfsd may end up caching file
-> descriptors for files that have been unlinked. In order to deal with
-> this issue, we use fsnotify to monitor the files, and have hooks to
-> evict those descriptors from the file cache if the i_nlink value
-> goes to 0.
-
-That was one of the objections to previous attempts at a file cache so
-it's good to have a simple solution.
-
-This attempt seems pretty well thought-out.  I'll tentatively target
-this for 5.4 pending some more review and testing.
-
---b.
-
-> 
-> Jeff Layton (12):
->   sunrpc: add a new cache_detail operation for when a cache is flushed
->   locks: create a new notifier chain for lease attempts
->   nfsd: add a new struct file caching facility to nfsd
->   nfsd: hook up nfsd_write to the new nfsd_file cache
->   nfsd: hook up nfsd_read to the nfsd_file cache
->   nfsd: hook nfsd_commit up to the nfsd_file cache
->   nfsd: convert nfs4_file->fi_fds array to use nfsd_files
->   nfsd: convert fi_deleg_file and ls_file fields to nfsd_file
->   nfsd: hook up nfs4_preprocess_stateid_op to the nfsd_file cache
->   nfsd: have nfsd_test_lock use the nfsd_file cache
->   nfsd: rip out the raparms cache
->   nfsd: close cached files prior to a REMOVE or RENAME that would
->     replace target
-> 
-> Trond Myklebust (4):
->   notify: export symbols for use by the knfsd file cache
->   vfs: Export flush_delayed_fput for use by knfsd.
->   nfsd: Fix up some unused variable warnings
->   nfsd: Fix the documentation for svcxdr_tmpalloc()
-> 
->  fs/file_table.c                  |   1 +
->  fs/locks.c                       |  62 +++
->  fs/nfsd/Kconfig                  |   1 +
->  fs/nfsd/Makefile                 |   3 +-
->  fs/nfsd/blocklayout.c            |   3 +-
->  fs/nfsd/export.c                 |  13 +
->  fs/nfsd/filecache.c              | 885 +++++++++++++++++++++++++++++++
->  fs/nfsd/filecache.h              |  60 +++
->  fs/nfsd/nfs4layouts.c            |  12 +-
->  fs/nfsd/nfs4proc.c               |  83 +--
->  fs/nfsd/nfs4state.c              | 183 ++++---
->  fs/nfsd/nfs4xdr.c                |  31 +-
->  fs/nfsd/nfssvc.c                 |  16 +-
->  fs/nfsd/state.h                  |  10 +-
->  fs/nfsd/trace.h                  | 140 +++++
->  fs/nfsd/vfs.c                    | 295 ++++-------
->  fs/nfsd/vfs.h                    |   9 +-
->  fs/nfsd/xdr4.h                   |  19 +-
->  fs/notify/fsnotify.h             |   2 -
->  fs/notify/group.c                |   2 +
->  fs/notify/mark.c                 |   6 +
->  include/linux/fs.h               |   5 +
->  include/linux/fsnotify_backend.h |   2 +
->  include/linux/sunrpc/cache.h     |   1 +
->  net/sunrpc/cache.c               |   3 +
->  25 files changed, 1465 insertions(+), 382 deletions(-)
->  create mode 100644 fs/nfsd/filecache.c
->  create mode 100644 fs/nfsd/filecache.h
-> 
-> -- 
-> 2.21.0
+Except for the zero page case I mentioned in my last mail explicitly,
+and the KVEC/PIPE type iov vecs from the original mail what other
+pages do you see to get added?
