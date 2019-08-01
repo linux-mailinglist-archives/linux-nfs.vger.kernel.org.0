@@ -2,89 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E331D7E396
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 21:56:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE917E3B8
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 22:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388721AbfHATxr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Aug 2019 15:53:47 -0400
-Received: from fieldses.org ([173.255.197.46]:44350 "EHLO fieldses.org"
+        id S2388957AbfHAUBC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Aug 2019 16:01:02 -0400
+Received: from fieldses.org ([173.255.197.46]:44390 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388679AbfHATxr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:53:47 -0400
+        id S2388766AbfHAUBC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:01:02 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id E4FA21C95; Thu,  1 Aug 2019 15:53:46 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 15:53:46 -0400
+        id E24AF7CB; Thu,  1 Aug 2019 16:01:01 -0400 (EDT)
+Date:   Thu, 1 Aug 2019 16:01:01 -0400
 From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Wenbin Zeng <wenbin.zeng@gmail.com>
-Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        wenbinzeng@tencent.com, dsahern@gmail.com,
-        nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-Message-ID: <20190801195346.GA21527@fieldses.org>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+To:     Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Cc:     linux-nfs@vger.kernel.org, Tom Haynes <loghyr@gmail.com>
+Subject: Re: [PATCH] st_flex: fix uid/gid formatting in error message
+Message-ID: <20190801200101.GB21527@fieldses.org>
+References: <20190722141602.14274-1-tigran.mkrtchyan@desy.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+In-Reply-To: <20190722141602.14274-1-tigran.mkrtchyan@desy.de>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I lost track, what happened to these patches?
+On Mon, Jul 22, 2019 at 04:16:02PM +0200, Tigran Mkrtchyan wrote:
+> as ffds_user and ffds_group are utf8 encoded string use '%s' when
+> constructing an error message.
+
+Thanks, applied--sorry for being slow to get to this.
 
 --b.
 
-On Wed, Jun 12, 2019 at 08:09:27PM +0800, Wenbin Zeng wrote:
-> This patch series fixes an auth_gss bug that results in netns refcount
-> leaks when use-gss-proxy is set to 1.
 > 
-> The problem was found in privileged docker containers with gssproxy service
-> enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding
-> struct net->count ends up at 2 after container gets killed, the consequence
-> is that the struct net cannot be freed.
+> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+> ---
+>  nfs4.1/server41tests/st_flex.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> It turns out that write_gssp() called gssp_rpc_create() to create a rpc
-> client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed
-> to decrease net->count but it never gets called because its call-path is:
->         net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
-> Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this
-> is a deadlock situation.
-> 
-> To fix the problem, we must break the deadlock, rpcsec_gss_exit_net()
-> should move out of the put() path and find another chance to get called,
-> I think nsfs_evict() is a good place to go, when netns inode gets evicted
-> we call rpcsec_gss_exit_net() to free the rpc client, this requires a new
-> callback i.e. evict to be added in struct proc_ns_operations, and add
-> netns_evict() as one of netns_operations as well.
-> 
-> v1->v2:
->  * in nsfs_evict(), move ->evict() in front of ->put()
-> v2->v3:
->  * rpcsec_gss_evict_net() directly call gss_svc_shutdown_net() regardless
->    if gssp_clnt is null, this is exactly same to what rpcsec_gss_exit_net()
->    previously did
-> 
-> Wenbin Zeng (3):
->   nsfs: add evict callback into struct proc_ns_operations
->   netns: add netns_evict into netns_operations
->   auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
->     use-gss-proxy==1
-> 
->  fs/nsfs.c                      |  2 ++
->  include/linux/proc_ns.h        |  1 +
->  include/net/net_namespace.h    |  1 +
->  net/core/net_namespace.c       | 12 ++++++++++++
->  net/sunrpc/auth_gss/auth_gss.c |  4 ++--
->  5 files changed, 18 insertions(+), 2 deletions(-)
-> 
+> diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
+> index 335b2c8..f4ac739 100644
+> --- a/nfs4.1/server41tests/st_flex.py
+> +++ b/nfs4.1/server41tests/st_flex.py
+> @@ -313,10 +313,10 @@ def testFlexLayoutTestAccess(t, env):
+>      gid_rd = ds.ffds_group
+>  
+>      if uid_rw == uid_rd:
+> -        fail("Expected uid_rd != %i, got %i" % (uid_rd, uid_rw))
+> +        fail("Expected uid_rd != %s, got %s" % (uid_rd, uid_rw))
+>  
+>      if gid_rw != gid_rd:
+> -        fail("Expected gid_rd == %i, got %i" % (gid_rd, gid_rw))
+> +        fail("Expected gid_rd == %s, got %s" % (gid_rd, gid_rw))
+>  
+>      res = close_file(sess, fh, stateid=open_stateid)
+>      check(res)
 > -- 
-> 1.8.3.1
+> 2.21.0
