@@ -2,62 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 506D47D728
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 10:20:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7609C7D9C0
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Aug 2019 12:59:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfHAIUM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Aug 2019 04:20:12 -0400
-Received: from verein.lst.de ([213.95.11.211]:41407 "EHLO verein.lst.de"
+        id S1731291AbfHAK7E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Aug 2019 06:59:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45541 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbfHAIUM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:20:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 21DE768AFE; Thu,  1 Aug 2019 10:20:05 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 10:20:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, samba-technical@lists.samba.org,
-        v9fs-developer@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead
- of bool
-Message-ID: <20190801082004.GA17348@lst.de>
-References: <20190724042518.14363-1-jhubbard@nvidia.com> <20190724042518.14363-4-jhubbard@nvidia.com> <20190724053053.GA18330@infradead.org> <20190729205721.GB3760@redhat.com> <20190730102557.GA1700@lst.de> <20190730155702.GB10366@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730155702.GB10366@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726756AbfHAK7E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 1 Aug 2019 06:59:04 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 350443148090
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Aug 2019 10:59:04 +0000 (UTC)
+Received: from jumitche.remote.csb (unknown [10.33.36.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89A8760BE0;
+        Thu,  1 Aug 2019 10:59:03 +0000 (UTC)
+Message-ID: <1564657141.8625.7.camel@redhat.com>
+Subject: [PATCH] nfs-utils: Fix memory leak on error in nfs-server-generator
+From:   Alice J Mitchell <ajmitchell@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Steve Dickson <steved@redhat.com>
+Date:   Thu, 01 Aug 2019 11:59:01 +0100
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 01 Aug 2019 10:59:04 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:57:02AM -0400, Jerome Glisse wrote:
-> Other user can also add page that are not coming from GUP but need to
-> have a reference see __blkdev_direct_IO()
+Fix the trivial memory leak in the error handling of nfs-server-generator
 
-Except for the zero page case I mentioned in my last mail explicitly,
-and the KVEC/PIPE type iov vecs from the original mail what other
-pages do you see to get added?
+Signed-off-by: Alice J Mitchell <ajmitchell@redhat.com>
+---
+ systemd/nfs-server-generator.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/systemd/nfs-server-generator.c b/systemd/nfs-server-generator.c
+index 737f109..eec98fd 100644
+--- a/systemd/nfs-server-generator.c
++++ b/systemd/nfs-server-generator.c
+@@ -25,6 +25,7 @@
+ #include <ctype.h>
+ #include <stdio.h>
+ #include <mntent.h>
++#include <alloca.h>
+ 
+ #include "misc.h"
+ #include "nfslib.h"
+@@ -98,7 +99,7 @@ int main(int argc, char *argv[])
+ 		exit(1);
+ 	}
+ 
+-	path = malloc(strlen(argv[1]) + sizeof(dirbase) + sizeof(filebase));
++	path = alloca(strlen(argv[1]) + sizeof(dirbase) + sizeof(filebase));
+ 	if (!path)
+ 		exit(2);
+ 	if (export_read(_PATH_EXPORTS, 1) +
+-- 
+1.8.3.1
+
