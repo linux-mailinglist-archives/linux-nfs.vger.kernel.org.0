@@ -2,102 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFAFF7EA6A
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2019 04:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B6F47EB85
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2019 06:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfHBCjE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Aug 2019 22:39:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11756 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfHBCjE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Aug 2019 22:39:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d43a24e0000>; Thu, 01 Aug 2019 19:39:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 01 Aug 2019 19:39:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 01 Aug 2019 19:39:01 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 2 Aug
- 2019 02:39:00 +0000
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-To:     <john.hubbard@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
+        id S1731718AbfHBEg5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Aug 2019 00:36:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728157AbfHBEg4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 2 Aug 2019 00:36:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56E85AD2B;
+        Fri,  2 Aug 2019 04:36:53 +0000 (UTC)
+Subject: Re: [PATCH 20/34] xen: convert put_page() to put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
+        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
+        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        rds-devel@oss.oracle.com,
         =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>
-References: <20190802021653.4882-1-jhubbard@nvidia.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <ec87b662-0fc2-0951-1337-a91b4888201b@nvidia.com>
-Date:   Thu, 1 Aug 2019 19:39:00 -0700
+        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802022005.5117-21-jhubbard@nvidia.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <4471e9dc-a315-42c1-0c3c-55ba4eeeb106@suse.com>
+Date:   Fri, 2 Aug 2019 06:36:51 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190802021653.4882-1-jhubbard@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20190802022005.5117-21-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564713550; bh=uB7qKWJf2vIk7MCI51NrKGKnU0tjP3n9YQM4FSsQ99A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aftmkmmNomCdfG4/nsU7QFjmse0kzSiVn7k6qdyITGQKtpIb7fXB3ira93x2ikjhP
-         hh9fWh6OxSH7I4ITUxx9rk4nMXoUcCl6xE7j7d8OaKs0QzK3tWjGXYe1PPsA5+CMkF
-         sKiN+5/hdBTh4TsmJWAPetkvcksKG1W7KX4K24lGpfHw6t/QQ4fbKf5zlriq/zHiCI
-         WN7lLvY4tFrWOLTfdOFRIa/sFBuq00RVcHrLnsHi/Dnbw2dVeWXrugMTAYnP04jnRA
-         tXP1GLNpYcsDC/T0sb/csl6pvYXC87xnKjlVca8dQdSp/cuFTGUobSHcHyKfqM9q/X
-         eCw5n+JFkzHyg==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/1/19 7:16 PM, john.hubbard@gmail.com wrote:
+On 02.08.19 04:19, john.hubbard@gmail.com wrote:
 > From: John Hubbard <jhubbard@nvidia.com>
 > 
-> Hi,
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
 > 
-> These are best characterized as miscellaneous conversions: many (not all)
-> call sites that don't involve biovec or iov_iter, nor mm/. It also leaves
-> out a few call sites that require some more work. These are mostly pretty
-> simple ones.
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
 > 
-> It's probably best to send all of these via Andrew's -mm tree, assuming
-> that there are no significant merge conflicts with ongoing work in other
-> trees (which I doubt, given that these are small changes).
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: xen-devel@lists.xenproject.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>   drivers/xen/gntdev.c  | 5 +----
+>   drivers/xen/privcmd.c | 7 +------
+>   2 files changed, 2 insertions(+), 10 deletions(-)
 > 
+> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+> index 4c339c7e66e5..2586b3df2bb6 100644
+> --- a/drivers/xen/gntdev.c
+> +++ b/drivers/xen/gntdev.c
+> @@ -864,10 +864,7 @@ static int gntdev_get_page(struct gntdev_copy_batch *batch, void __user *virt,
+>   
+>   static void gntdev_put_pages(struct gntdev_copy_batch *batch)
+>   {
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < batch->nr_pages; i++)
+> -		put_page(batch->pages[i]);
+> +	put_user_pages(batch->pages, batch->nr_pages);
+>   	batch->nr_pages = 0;
+>   }
+>   
+> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> index 2f5ce7230a43..29e461dbee2d 100644
+> --- a/drivers/xen/privcmd.c
+> +++ b/drivers/xen/privcmd.c
+> @@ -611,15 +611,10 @@ static int lock_pages(
+>   
+>   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+>   {
+> -	unsigned int i;
+> -
+>   	if (!pages)
+>   		return;
+>   
+> -	for (i = 0; i < nr_pages; i++) {
+> -		if (pages[i])
+> -			put_page(pages[i]);
+> -	}
+> +	put_user_pages(pages, nr_pages);
 
-In case anyone is wondering, this truncated series is due to a script failure:
-git-send-email chokes when it hits email addresses whose names have a
-comma in them, as happened here with patch 0003.  
+You are not handling the case where pages[i] is NULL here. Or am I
+missing a pending patch to put_user_pages() here?
 
-Please disregard this set and reply to the other thread.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Juergen
