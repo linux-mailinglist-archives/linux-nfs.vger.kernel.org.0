@@ -2,143 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D95EF80833
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2019 22:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F4C880885
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Aug 2019 00:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfHCUDI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 3 Aug 2019 16:03:08 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10527 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbfHCUDI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 3 Aug 2019 16:03:08 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d45e87a0000>; Sat, 03 Aug 2019 13:03:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 03 Aug 2019 13:03:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 03 Aug 2019 13:03:06 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
- 2019 20:03:05 +0000
-Subject: Re: [PATCH 06/34] drm/i915: convert put_page() to put_user_page*()
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <john.hubbard@gmail.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-7-jhubbard@nvidia.com>
- <156473756254.19842.12384378926183716632@jlahtine-desk.ger.corp.intel.com>
- <7d9a9c57-4322-270b-b636-7214019f87e9@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <22c309f6-a7ca-2624-79c3-b16a1487f488@nvidia.com>
-Date:   Sat, 3 Aug 2019 13:03:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <7d9a9c57-4322-270b-b636-7214019f87e9@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+        id S1729196AbfHCWWy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 3 Aug 2019 18:22:54 -0400
+Received: from mail-eopbgr800131.outbound.protection.outlook.com ([40.107.80.131]:12135
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729195AbfHCWWy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 3 Aug 2019 18:22:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J9zK2kD7zn6rMrLlNZILLKAUGjwnwK9Vzs4AfYhiBGeoabdoKOO6EmjI8dqiAE71wfULO4XnDcW51UXDfxTExypzQbayEBueVqoV1eObdFKRWJ1dqjeAzTfP/dThhAaxp/u/x/2GnFqb4c9mNBm9r+mq4bvWgqjrNj/se7mlOEgRgwWEb+UZayQUgS0tUCRSSqe1T2FBlL05lrtTKTbd8//CneByvUtJv8v/1dmo5FXumQaaZQO8etVM+VbQFwSVHMpWa+ksFBO/+GrV1N0lvunEFPwyBZ0Z8J/upL8P9a5uQe6qfXkt/fs/KnRGpJ/4r9L4wH398PFlyzGQKW96bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hqbvkg9pC7dOGLWXW4cXfbIazXnO5DnwOohLLGYYPjs=;
+ b=WoBIv9ieqEXkjMW+a9kGDgAGm2mK/meQGFNRqwf3MbhP42D1/flgNbCQf85hbCQFhFTmfrbO7i8zMKO1aCkLZ8jQXcrGKlrHvSf1ZUZPWIKKiWZKU8QJjH67ZQFmUhiT/jrQoXvEL/kynzk5pWYuQ3o/e7lNhes4AATyyQaFgvafR5qu0ngYodfPD1L8doKTPvHuxfdS6yu68CvsdQwVwVcveGRlVh5ZOtUIXnUMD3ahx8KmHz50/acStYu4V4RiGqT7yudy1PIEhcD5zj1HjHK8sBpmUIsX4v6IZ2yGYNiQayT8o+nop/0URfUm+kzCs2f39zYJX5Y5h15u+zhT/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=hammerspace.com;dmarc=pass action=none
+ header.from=hammerspace.com;dkim=pass header.d=hammerspace.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hqbvkg9pC7dOGLWXW4cXfbIazXnO5DnwOohLLGYYPjs=;
+ b=AZOkXR6QnCUPe5lpDDBDiVPSRxfLjvc54UEEIOT5PJ8HDArIodk9z4nDdhgUmmxYBVrH6K7ucwrIIk1kvfjXdWOSvVr7htMiCt4CflTqb4FeTeevDNdUIo5a6wYfY1sy2rqjqvcUvl/KNwI8uae5rcJ8Zzf5ApBzu1j0rfj74qM=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1707.namprd13.prod.outlook.com (10.171.154.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.9; Sat, 3 Aug 2019 22:22:50 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::28ef:bf07:4680:dc93%5]) with mapi id 15.20.2157.009; Sat, 3 Aug 2019
+ 22:22:50 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "jhubbard@nvidia.com" <jhubbard@nvidia.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFSv4: Fix a potential sleep while atomic in
+ nfs4_do_reclaim()
+Thread-Topic: [PATCH] NFSv4: Fix a potential sleep while atomic in
+ nfs4_do_reclaim()
+Thread-Index: AQHVSgm+TlNEYd+F20ugHv7hAVnQoKbpyWyAgAA2dgA=
+Date:   Sat, 3 Aug 2019 22:22:50 +0000
+Message-ID: <47e39b00da52c3b873f6f23b420cbc8b3ad9139e.camel@hammerspace.com>
+References: <20190803144042.15187-1-trond.myklebust@hammerspace.com>
+         <f90372ee-272b-5bbb-e99a-796bccfa787a@nvidia.com>
+In-Reply-To: <f90372ee-272b-5bbb-e99a-796bccfa787a@nvidia.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564862587; bh=ilU/8cKxAxLoWjJW9QtQ++HPyf9Kp7C47ReaMR8aBDk=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I2YSIJHtEvh6s6ys5+qZOy9oK09e18lfnMQt77fXZCyrgzqntxCUGfZ7oWikmHJt5
-         4V1+y4MySAejsYy1JLbf4x7KQ0hiidb6jg5xsakkPPG/MxjywoS180jIN6uhV11y/O
-         011sP6dgxSCe7CPHZfVmc5h9v3h4EFz6CzWGnO3zjeLQA+xNf7n8Aq4VIo5dqejc1s
-         ogxZqWO3QmjUKVwNVzjjVrVg9ptoPI8+f8bAuuTtyZ6ixyHn7fxeF7f3r5zkr6u4id
-         LKe10E8R/74E4Fa+DG9GwiVmNsBu++raNIZCy4+8RyCJBTlO14Pl8lc8yCIpDgUHCO
-         oxDfeJ3aA6pnw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dde42cde-2b89-40ec-6487-08d718611f0a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1707;
+x-ms-traffictypediagnostic: DM5PR13MB1707:
+x-microsoft-antispam-prvs: <DM5PR13MB17076BE1640DEFADD0E14E7EB8D80@DM5PR13MB1707.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0118CD8765
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(39830400003)(376002)(366004)(189003)(199004)(85644002)(66446008)(5660300002)(91956017)(102836004)(66946007)(5640700003)(6486002)(76116006)(64756008)(229853002)(66476007)(66556008)(7736002)(305945005)(6436002)(6916009)(2501003)(25786009)(486006)(4326008)(36756003)(14454004)(68736007)(6512007)(53936002)(476003)(2616005)(6116002)(316002)(3846002)(26005)(6246003)(2906002)(11346002)(446003)(186003)(81166006)(81156014)(99286004)(76176011)(6506007)(53546011)(118296001)(1730700003)(86362001)(256004)(14444005)(71200400001)(66066001)(71190400001)(8936002)(478600001)(2351001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1707;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5uYy2K0s680Apzk/YnOQe7SSdAu8gQpcgJcq6Gyem6A84ODUSY1JgVKRpeN7s24AQpP7L7KzbHmqfzD5rSwq059RdvmNerXvvU6+OdH6qEBNmWxtieqO2VLHav/MSOdFGxAZhc5VAbS3bS6TDrGLFLmyAWEq3mFqg13vWKYVFpyih+liktWeySl1VJYcJrAEZtGSrD2u3jitLNTRtWCKPHFcqXJIGroSeKD9jSQtPUdsVE2K3p2TfAJn/rNp+G4ghuJQy4lChpuX8kJPZhB4qtcYgjHbWJEQM5KFqATfthodK5PteBYCfuN/qwQC47mDyOoSZDAD5cUPlZEkoE3VA5Lyjcag1SLM3Hgfn2Bg8IHF4JGpU8EFHk/34QhXbscPcLTgarr5bzzNT3sRq38EIjaO7cteHgihLkK+AEt8JRc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E599A3E0602DB408969DCEE78572D4F@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dde42cde-2b89-40ec-6487-08d718611f0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2019 22:22:50.6624
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 81wfOSRmaOsj5SFWtlxM1Dbkb0+1ysGEXOrlq6ezA0dvgScGKLPs36dD1kr/6OdbG5brWIK17tE+YUwPXagF5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1707
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/2/19 11:48 AM, John Hubbard wrote:
-> On 8/2/19 2:19 AM, Joonas Lahtinen wrote:
->> Quoting john.hubbard@gmail.com (2019-08-02 05:19:37)
->>> From: John Hubbard <jhubbard@nvidia.com>
-...
-> In order to deal with the merge problem, I'll drop this patch from my ser=
-ies,
-> and I'd recommend that the drm-intel-next take the following approach:
-
-Actually, I just pulled the latest linux.git, and there are a few changes:
-
->=20
-> 1) For now, s/put_page/put_user_page/ in i915_gem_userptr_put_pages(),
-> and fix up the set_page_dirty() --> set_page_dirty_lock() issue, like thi=
-s
-> (based against linux.git):
->=20
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/dr=
-m/i915/gem/i915_gem_userptr.c
-> index 528b61678334..94721cc0093b 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> @@ -664,10 +664,10 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_obje=
-ct *obj,
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for_each_sgt_page(page, sgt_it=
-er, pages) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (obj->mm.dirty)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_page_dirty=
-(page);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_page_dirty=
-_lock(page);
-
-I see you've already applied this fix to your tree, in linux.git already.
-
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 mark_page_accessed(page);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 put_page(page);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 put_user_page(page);
-
-But this conversion still needs doing. So I'll repost a patch that only doe=
-s=20
-this (plus the other call sites).=20
-
-That can go in via either your tree, or Andrew's -mm tree, without generati=
-ng
-any conflicts.
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+T24gU2F0LCAyMDE5LTA4LTAzIGF0IDEyOjA3IC0wNzAwLCBKb2huIEh1YmJhcmQgd3JvdGU6DQo+
+IE9uIDgvMy8xOSA3OjQwIEFNLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gSm9obiBIdWJi
+YXJkIHJlcG9ydHMgc2VlaW5nIHRoZSBmb2xsb3dpbmcgc3RhY2sgdHJhY2U6DQo+ID4gDQo+ID4g
+bmZzNF9kb19yZWNsYWltDQo+ID4gICAgcmN1X3JlYWRfbG9jayAvKiB3ZSBhcmUgbm93IGluX2F0
+b21pYygpIGFuZCBtdXN0IG5vdCBzbGVlcCAqLw0KPiA+ICAgICAgICBuZnM0X3B1cmdlX3N0YXRl
+X293bmVycw0KPiA+ICAgICAgICAgICAgbmZzNF9mcmVlX3N0YXRlX293bmVyDQo+ID4gICAgICAg
+ICAgICAgICAgbmZzNF9kZXN0cm95X3NlcWlkX2NvdW50ZXINCj4gPiAgICAgICAgICAgICAgICAg
+ICAgcnBjX2Rlc3Ryb3lfd2FpdF9xdWV1ZQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgY2Fu
+Y2VsX2RlbGF5ZWRfd29ya19zeW5jDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX19j
+YW5jZWxfd29ya190aW1lcg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2Zs
+dXNoX3dvcmsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXJ0X2Zs
+dXNoX3dvcmsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtaWdo
+dF9zbGVlcDoNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKGtl
+cm5lbC93b3JrcXVldWUuYzoyOTc1Og0KPiA+IEJVRykNCj4gPiANCj4gPiBUaGUgc29sdXRpb24g
+aXMgdG8gc2VwYXJhdGUgb3V0IHRoZSBmcmVlaW5nIG9mIHRoZSBzdGF0ZSBvd25lcnMNCj4gPiBm
+cm9tIG5mczRfcHVyZ2Vfc3RhdGVfb3duZXJzKCksIGFuZCBwZXJmb3JtIHRoYXQgb3V0c2lkZSB0
+aGUgYXRvbWljDQo+ID4gY29udGV4dC4NCj4gPiANCj4gDQo+IEFsbCBiZXR0ZXIgbm93LS10aGlz
+IGRlZmluaXRlbHkgZml4ZXMgaXQuIEkgY2FuIHJlYm9vdCB0aGUgc2VydmVyLA0KPiBhbmQNCj4g
+b2YgY291cnNlIHRoYXQgYmFja3RyYWNlIGlzIGdvbmUuIFRoZW4gdGhlIGNsaWVudCBtb3VudHMg
+aGFuZywgc28gSQ0KPiBkbw0KPiBhIG1vdW50IC1hIC1vIHJlbW91bnQsIGFuZCBhZnRlciBhYm91
+dCAxIG1pbnV0ZSwgdGhlIGNsaWVudCBtb3VudHMNCj4gc3RhcnQgd29ya2luZyBhZ2Fpbiwgd2l0
+aCBubyBpbmRpY2F0aW9uIG9mIHByb2JsZW1zLiBJIGFzc3VtZSB0aGF0DQo+IHRoZQ0KPiBwYXVz
+ZSBpcyBieSBkZXNpZ24tLXRpbWluZyBvdXQgc29tZXdoZXJlLCB0byByZWNvdmVyIGZyb20gdGhl
+IHNlcnZlcg0KPiBnb2luZyBtaXNzaW5nIGZvciBhIHdoaWxlLiBJZiBzbywgdGhlbiBhbGwgaXMg
+d2VsbC4NCj4gDQoNClRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHRoZSByZXBvcnQsIGFuZCBmb3IgdGVz
+dGluZyENCg0KV2l0aCByZWdhcmRzIHRvIHRoZSAxIG1pbnV0ZSBkZWxheSwgSSBzdHJvbmdseSBz
+dXNwZWN0IHRoYXQgd2hhdCB5b3UNCmFyZSBzZWVpbmcgaXMgdGhlIE5GU3Y0ICJncmFjZSBwZXJp
+b2QiLg0KDQpBZnRlciBhIE5GU3Y0Lnggc2VydmVyIHJlYm9vdCwgdGhlIGNsaWVudHMgYXJlIGdp
+dmVuIGEgY2VydGFpbiBhbW91bnQNCm9mIHRpbWUgaW4gd2hpY2ggdG8gcmVjb3ZlciB0aGUgZmls
+ZSBvcGVuIHN0YXRlIGFuZCBsb2NrIHN0YXRlIHRoYXQNCnRoZXkgbWF5IGhhdmUgaGVsZCBiZWZv
+cmUgdGhlIHJlYm9vdC4gQWxsIG5vbi1yZWNvdmVyeSBvcGVucywgbG9ja3MgYW5kDQphbGwgSS9P
+IGFyZSBzdG9wcGVkIHdoaWxlIHRoaXMgcmVjb3ZlcnkgcHJvY2VzcyBpcyBoYXBwZW5pbmcgdG8g
+ZW5zdXJlDQp0aGF0IGxvY2tpbmcgY29uZmxpY3RzIGRvIG5vdCBvY2N1ci4gVGhpcyBlbnN1cmVz
+IHRoYXQgYWxsIGxvY2tzIGNhbg0Kc3Vydml2ZSBzZXJ2ZXIgcmVib290cyB3aXRob3V0IGFueSBs
+b3NzIG9mIGF0b21pY2l0eS4NCg0KV2l0aCBORlN2NC4xIGFuZCBORlN2NC4yLCB0aGUgc2VydmVy
+IGNhbiBkZXRlcm1pbmUgd2hlbiBhbGwgdGhlIGNsaWVudHMNCmhhdmUgZmluaXNoZWQgcmVjb3Zl
+cmluZyBzdGF0ZSBhbmQgZW5kIHRoZSBncmFjZSBwZXJpb2QgZWFybHksIGhvd2V2ZXINCkkndmUg
+cmVjZW50bHkgc2VlbiBjYXNlcyB3aGVyZSB0aGF0IHdhcyBub3QgaGFwcGVuaW5nLiBJJ20gbm90
+IHN1cmUgeWV0DQppZiB0aGF0IGlzIGEgcmVhbCBzZXJ2ZXIgcmVncmVzc2lvbi4NCg0KQ2hlZXJz
+DQogIFRyb25kDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50
+YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
