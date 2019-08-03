@@ -2,107 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9FFC802C5
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2019 00:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F8C803B2
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2019 03:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392399AbfHBWcj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Aug 2019 18:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729919AbfHBWci (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:32:38 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58F57206A3;
-        Fri,  2 Aug 2019 22:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564785158;
-        bh=z6ytUlp+CIECyVYgzsmKAgNAlD3y+8CHq71PuCQ0D+c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cpjIBy8JqGDmfo2YvJ1zHX2H3F5SzV7XyBEUvKOoDGfZiHGtVeJHlsiNF8f/o/lw/
-         1IriX/50tm1jxxFU6BHxnU7AmYr31cK1qfEIW7FiUI67JvLd42gEz50jymZEZTSESa
-         2e28o/zwwAXm5Iq/SkAmipJbFc8z+f7/iU9PnXtA=
-Message-ID: <2f0d5993e9731808b73b0018f5fc4b3335fc6373.camel@kernel.org>
-Subject: Re: [PATCH 03/34] net/ceph: convert put_page() to put_user_page*()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Date:   Fri, 02 Aug 2019 18:32:33 -0400
-In-Reply-To: <20190802022005.5117-4-jhubbard@nvidia.com>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
-         <20190802022005.5117-4-jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S2388735AbfHCB1k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Aug 2019 21:27:40 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14799 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388638AbfHCB1k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Aug 2019 21:27:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d44e30c0000>; Fri, 02 Aug 2019 18:27:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 02 Aug 2019 18:27:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 18:27:39 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
+ 2019 01:27:39 +0000
+From:   John Hubbard <jhubbard@nvidia.com>
+Subject: NFSv4: rare bug *and* root cause captured in the wild
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+X-Nvconfidentiality: public
+Message-ID: <dba47642-1ff2-81d0-14d7-fd2fa397770e@nvidia.com>
+Date:   Fri, 2 Aug 2019 18:27:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564795660; bh=VkF+dYkLEMuE38OO7xSjtD6Jc/mXTWO+u/A2pmORYbE=;
+        h=X-PGP-Universal:From:Subject:To:X-Nvconfidentiality:Message-ID:
+         Date:User-Agent:MIME-Version:X-Originating-IP:X-ClientProxiedBy:
+         Content-Type:Content-Language:Content-Transfer-Encoding;
+        b=IUli3Vr4a+380i4BjZeED+in6na0AfJPULPkKh1SiEdYEEvNKXegT5wSX8YzPMJCX
+         USmQ9ypArQRY6X0LI+T7xbKskyRjia8AAbrdVZHxoAMIWIlFl3pc9zYu6cjGEqp8uA
+         1t1pzosFbC/5CBGvGeRcHnTajXcdKvbhKx/eVoppy+oLh2MDmI965SMPmvrBBp5ItF
+         kNcuHV5nTKp3AQ2w1SpL+jm0xoBIICiqD+GqFpKU+ITc0d4wDaRhv4lxWX6zkCO7Xq
+         RAefjT0f1Qxv1iV4s2RwG27S56BabsbF73rPp2Za5aNZGj4SPPrtU08wD0+kh81EL/
+         BLpB8bzpDXtXw==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2019-08-01 at 19:19 -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Ilya Dryomov <idryomov@gmail.com>
-> Cc: Sage Weil <sage@redhat.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: ceph-devel@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  net/ceph/pagevec.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/net/ceph/pagevec.c b/net/ceph/pagevec.c
-> index 64305e7056a1..c88fff2ab9bd 100644
-> --- a/net/ceph/pagevec.c
-> +++ b/net/ceph/pagevec.c
-> @@ -12,13 +12,7 @@
->  
->  void ceph_put_page_vector(struct page **pages, int num_pages, bool dirty)
->  {
-> -	int i;
-> -
-> -	for (i = 0; i < num_pages; i++) {
-> -		if (dirty)
-> -			set_page_dirty_lock(pages[i]);
-> -		put_page(pages[i]);
-> -	}
-> +	put_user_pages_dirty_lock(pages, num_pages, dirty);
->  	kvfree(pages);
->  }
->  EXPORT_SYMBOL(ceph_put_page_vector);
+Hi,
 
-This patch looks sane enough. Assuming that the earlier patches are OK:
+While testing unrelated (put_user_pages) work on Linux 5.3-rc2+,
+I rebooted the NFS *server*, tried to ssh to the client, and the
+client dumped a backtrace as shown below.
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+Good news: I found that I can reliably reproduce it with those steps, 
+at commit 1e78030e5e5b (in linux.git) plus my 34-patch series [1], which
+off course is completely unrelated. :) Anyway, I'm making a note of the 
+exact repro commit, so I don't lose the repro.
 
+I see what's wrong, but I do *not* see an easy fix. Can one of the
+designers please recommend an approach to fixing this?
+
+This is almost certainly caused by commit 7e0a0e38fcfe ("SUNRPC: 
+Replace the queue timer with a delayed work function"), which changed 
+over to running things in process (kthread) context. The commit is dated
+May 1, 2019, but I've only been running NFSv4 for a couple days, so
+the problem has likely been there all along, not specific to 5.3.
+
+The call stack starts off in atomic context, so we get the bug:
+
+nfs4_do_reclaim
+    rcu_read_lock /* we are now in_atomic() and must not sleep */
+        nfs4_purge_state_owners
+            nfs4_free_state_owner
+                nfs4_destroy_seqid_counter
+                    rpc_destroy_wait_queue
+                        cancel_delayed_work_sync
+                            __cancel_work_timer
+                                __flush_work
+                                    start_flush_work
+                                        might_sleep: 
+                                         (kernel/workqueue.c:2975: BUG)
+
+Details: actual backtrace I am seeing:
+
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2975
+in_atomic(): 1, irqs_disabled(): 0, pid: 2224, name: 10.110.48.28-ma
+1 lock held by 10.110.48.28-ma/2224:
+ #0: 00000000d338d2ec (rcu_read_lock){....}, at: nfs4_do_reclaim+0x22/0x6b0 [nfsv4]
+CPU: 8 PID: 2224 Comm: 10.110.48.28-ma Not tainted 5.3.0-rc2-hubbard-github+ #52
+Hardware name: ASUS X299-A/PRIME X299-A, BIOS 1704 02/14/2019
+Call Trace:
+ dump_stack+0x46/0x60
+ ___might_sleep.cold+0x8e/0x9b
+ __flush_work+0x61/0x370
+ ? find_held_lock+0x2b/0x80
+ ? add_timer+0x100/0x200
+ ? _raw_spin_lock_irqsave+0x35/0x40
+ __cancel_work_timer+0xfb/0x180
+ ? nfs4_purge_state_owners+0xf4/0x170 [nfsv4]
+ nfs4_free_state_owner+0x10/0x50 [nfsv4]
+ nfs4_purge_state_owners+0x139/0x170 [nfsv4]
+ nfs4_do_reclaim+0x7a/0x6b0 [nfsv4]
+ ? pnfs_destroy_layouts_byclid+0xc4/0x100 [nfsv4]
+ nfs4_state_manager+0x6be/0x7f0 [nfsv4]
+ nfs4_run_state_manager+0x1b/0x40 [nfsv4]
+ kthread+0xfb/0x130
+ ? nfs4_state_manager+0x7f0/0x7f0 [nfsv4]
+ ? kthread_bind+0x20/0x20
+ ret_from_fork+0x35/0x40
+
+And last but not least, some words of encouragement: the reason I moved 
+from NFSv3 to NFSv4 is that the easy authentication (matching UIDs on
+client and server) now works perfectly. Yea! So I'm enjoying v4, despite 
+the occasional minor glitch. :)
+
+[1] https://lore.kernel.org/r/20190802022005.5117-1-jhubbard@nvidia.com
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
