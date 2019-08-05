@@ -2,89 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2242A8228F
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:38:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 008F282325
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfHEQi6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Aug 2019 12:38:58 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44652 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEQi5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Aug 2019 12:38:57 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v129so56356611vsb.11
-        for <linux-nfs@vger.kernel.org>; Mon, 05 Aug 2019 09:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DIlnyrAQubtRedXdK/WQR+4utAEMUGb5wkLmNWPU8B4=;
-        b=ZVFjlMNT67wOJwS8e1dCCGNvoVwDzEEEED/uZCRyHmVTGqW4BNGTVPaKxKDMK6OjM0
-         qISdcydjpK+M5jgYPuT5fH0NxrnSWy9GWxj4eWo6rM/czsYP2TrDsGjzOdDypESwQ6s8
-         AqvM5U6ghOw2DaPoYtphjeekhf7glCXTPC1nnSY8obRqZwGg5CTTCERGqF5Nz3Ym3yCx
-         7ci28/qJJyHm+pf0aJCrdbELBjz5aW35+L/IOAq2mvYViQadwbvwLl5bfep+6sMksU39
-         Zj2TcKX66av+n0daOup4ualx6YvRoqJL+jRxjw9UEWx5dYFwYu93bGuVXcByt5o3tmpI
-         AqOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DIlnyrAQubtRedXdK/WQR+4utAEMUGb5wkLmNWPU8B4=;
-        b=k3fBZiYauieiT9XOcq8Y/9SafTVvERwhgMp6H9w+XFDSGQqI5pSyZnNpPMjBaxyHdc
-         la7VMFJJyhYMMU2OpQzh0kKYlvkB7Ha1uLVj3OQ39Q7e3xDIosgpGgoZ+5iF9YumihNl
-         jryeB5bAfw0qBxIv+dMMZ+L1GPZhDqZU0ALylZSYhsPda9BJhm5tC+fzfwAQHGiPGo+b
-         0zkbvPVAcI+EDjKGqMmwztLVWSQM6uJsUaQXAvrqyHRrQyISOOPhPDbbkXv4SO1PFgWt
-         /P0vbjUsc9ki0O5p1P5f0dRfQmc/c7ieGCOSzmb7L8wTtiTs0NSZu97Qz4I+HX0ow0FH
-         Kn6Q==
-X-Gm-Message-State: APjAAAXdL4uqmhweeBvxlxtmWXkjewBFJ5Q0rX3zmpOoGG7SU8Ggt2YE
-        vK3QvwGZzzaKTBvQoNrClXDSTmFk06j0jGYFuEg=
-X-Google-Smtp-Source: APXvYqzq0iAqa7ls4JCCOuN55DQS8xdTpSp1U4IrJTLWT65gugWhvudoYFtJY1JjTFK4YF6+CSJCBfxiO3IJSvU/5LY=
-X-Received: by 2002:a67:dc1:: with SMTP id 184mr36325218vsn.164.1565023136933;
- Mon, 05 Aug 2019 09:38:56 -0700 (PDT)
+        id S1729287AbfHEQxO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 12:53:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:43074 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728760AbfHEQxN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:53:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:53:12 -0700
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="168030649"
+Received: from rdvivi-losangeles.jf.intel.com (HELO intel.com) ([10.7.196.65])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:53:12 -0700
+Date:   Mon, 5 Aug 2019 09:53:46 -0700
+From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        sparclinux@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        ceph-devel@vger.kernel.org, devel@driverdev.osuosl.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        x86@kernel.org, amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, xen-devel@lists.xenproject.org,
+        devel@lists.orangefs.org, linux-media@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        intel-gfx@lists.freedesktop.org, linux-block@vger.kernel.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-xfs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 06/34] drm/i915: convert put_page() to put_user_page*()
+Message-ID: <20190805165346.GB25953@intel.com>
+References: <20190804224915.28669-1-jhubbard@nvidia.com>
+ <20190804224915.28669-7-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190803144320.15276-1-trond.myklebust@hammerspace.com>
-In-Reply-To: <20190803144320.15276-1-trond.myklebust@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 5 Aug 2019 12:38:45 -0400
-Message-ID: <CAN-5tyGWuJgZN-riN2A-mKuwobCe8USWv6mCXLZfE8i=Je-XwA@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: Fix an Oops in nfs4_do_setattr
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190804224915.28669-7-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Aug 3, 2019 at 10:45 AM Trond Myklebust <trondmy@gmail.com> wrote:
->
-> If the user specifies an open mode of 3, then we don't have a NFSv4 state
-> attached to the context, and so we Oops when we try to dereference it.
->
-> Reported-by: Olga Kornievskaia <aglo@umich.edu>
-> Fixes: 29b59f9416937 ("NFSv4: change nfs4_do_setattr to take...")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Cc: stable@vger.kernel.org # v4.10: 991eedb1371dc: NFSv4: Only pass the...
-> Cc: stable@vger.kernel.org # v4.10+
+On Sun, Aug 04, 2019 at 03:48:47PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> This is a merge-able version of the fix, because it restricts
+> itself to put_user_page() and put_user_pages(), both of which
+> have not changed their APIs. Later, i915_gem_userptr_put_pages()
+> can be simplified to use put_user_pages_dirty_lock().
+
+Thanks for that.
+with this version we won't have any conflict.
+
+Ack for going through mm tree.
+
+> 
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  fs/nfs/nfs4proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 3e0b93f2b61a..12b2b65ad8a8 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -3214,7 +3214,7 @@ static int _nfs4_do_setattr(struct inode *inode,
->
->         if (nfs4_copy_delegation_stateid(inode, FMODE_WRITE, &arg->stateid, &delegation_cred)) {
->                 /* Use that stateid */
-> -       } else if (ctx != NULL) {
-> +       } else if (ctx != NULL && ctx->state) {
->                 struct nfs_lock_context *l_ctx;
->                 if (!nfs4_valid_open_stateid(ctx->state))
->                         return -EBADF;
-
-Thank you Trond. No longer oops-ing with this patch.
-
-> --
-> 2.21.0
->
+>  drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> index 2caa594322bc..76dda2923cf1 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> @@ -527,7 +527,7 @@ __i915_gem_userptr_get_pages_worker(struct work_struct *_work)
+>  	}
+>  	mutex_unlock(&obj->mm.lock);
+>  
+> -	release_pages(pvec, pinned);
+> +	put_user_pages(pvec, pinned);
+>  	kvfree(pvec);
+>  
+>  	i915_gem_object_put(obj);
+> @@ -640,7 +640,7 @@ static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
+>  		__i915_gem_userptr_set_active(obj, true);
+>  
+>  	if (IS_ERR(pages))
+> -		release_pages(pvec, pinned);
+> +		put_user_pages(pvec, pinned);
+>  	kvfree(pvec);
+>  
+>  	return PTR_ERR_OR_ZERO(pages);
+> @@ -675,7 +675,7 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
+>  			set_page_dirty_lock(page);
+>  
+>  		mark_page_accessed(page);
+> -		put_page(page);
+> +		put_user_page(page);
+>  	}
+>  	obj->mm.dirty = false;
+>  
+> -- 
+> 2.22.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
