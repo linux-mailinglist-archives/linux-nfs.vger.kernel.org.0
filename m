@@ -2,64 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5430581055
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 04:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23E8B810C2
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 06:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfHECoB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 4 Aug 2019 22:44:01 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:12794 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726666AbfHECoB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 4 Aug 2019 22:44:01 -0400
-X-IronPort-AV: E=Sophos;i="5.64,348,1559491200"; 
-   d="scan'208";a="72965382"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 05 Aug 2019 10:43:57 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id 3BA784CDB941
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Aug 2019 10:44:00 +0800 (CST)
-Received: from [10.167.226.33] (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Mon, 5 Aug 2019 10:44:03 +0800
-To:     <linux-nfs@vger.kernel.org>
-CC:     <cuiyue-fnst@cn.fujitsu.com>
-From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Subject: BUG,
-Message-ID: <bbc5ed2e-d517-0a5a-1add-1c846d00e88a@cn.fujitsu.com>
-Date:   Mon, 5 Aug 2019 10:42:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1727193AbfHEEPd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 00:15:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41512 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726454AbfHEEPc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Aug 2019 00:15:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56732ACC1;
+        Mon,  5 Aug 2019 04:15:29 +0000 (UTC)
+Subject: Re: [PATCH v2 20/34] xen: convert put_page() to put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
+        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        rds-devel@oss.oracle.com,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190804224915.28669-1-jhubbard@nvidia.com>
+ <20190804224915.28669-21-jhubbard@nvidia.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <82afb221-52a2-b399-46f5-0ee1f21c3417@suse.com>
+Date:   Mon, 5 Aug 2019 06:15:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: 3BA784CDB941.AB978
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
-X-Spam-Status: No
+In-Reply-To: <20190804224915.28669-21-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On 05.08.19 00:49, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> This also handles pages[i] == NULL cases, thanks to an approach
+> that is actually written by Juergen Gross.
+> 
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> 
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: xen-devel@lists.xenproject.org
+> ---
+> 
+> Hi Juergen,
+> 
+> Say, this is *exactly* what you proposed in your gup.patch, so
+> I've speculatively added your Signed-off-by above, but need your
+> approval before that's final. Let me know please...
 
-When I tested xfstests generic/465 with NFS, there was something unexpected.
-
-When memory of NFS server was 10G, test passed.
-But when memory of NFS server was 4G, test failed.
-
-Fail message was as below.
-     non-aio dio test
-     encounter an error: block 4 offset 0, content 62
-     aio-dio test
-     encounter an error: block 1 offset 0, content 62
-
-All of the NFS versions(v3 v4.0 v4.1 v4.2) have  this problem.
-Maybe something is wrong about NFS's I/O operation.
-
-Thanks in advance.
+Yes, that's fine with me.
 
 
-
-
+Juergen
