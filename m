@@ -2,86 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E8B810C2
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 06:15:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C52A98210A
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfHEEPd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Aug 2019 00:15:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41512 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726454AbfHEEPc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Aug 2019 00:15:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56732ACC1;
-        Mon,  5 Aug 2019 04:15:29 +0000 (UTC)
-Subject: Re: [PATCH v2 20/34] xen: convert put_page() to put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        rds-devel@oss.oracle.com,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>
-References: <20190804224915.28669-1-jhubbard@nvidia.com>
- <20190804224915.28669-21-jhubbard@nvidia.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <82afb221-52a2-b399-46f5-0ee1f21c3417@suse.com>
-Date:   Mon, 5 Aug 2019 06:15:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728401AbfHEQCk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 12:02:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfHEQCk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:02:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0F7E8300BEAE;
+        Mon,  5 Aug 2019 16:02:40 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBD6760127;
+        Mon,  5 Aug 2019 16:02:38 +0000 (UTC)
+Message-ID: <1d2aadf8054b3ba2c50464e17fc477eb92bcf1b1.camel@redhat.com>
+Subject: Re: [PATCH v3] rdma: Enable ib_alloc_cq to spread work over a
+ device's comp_vectors
+From:   Doug Ledford <dledford@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net
+Date:   Mon, 05 Aug 2019 12:02:36 -0400
+In-Reply-To: <20190729171923.13428.52555.stgit@manet.1015granger.net>
+References: <20190729171923.13428.52555.stgit@manet.1015granger.net>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rzLvz2895y4p8Iv09iVf"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20190804224915.28669-21-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 05 Aug 2019 16:02:40 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 05.08.19 00:49, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> This also handles pages[i] == NULL cases, thanks to an approach
-> that is actually written by Juergen Gross.
-> 
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: xen-devel@lists.xenproject.org
-> ---
-> 
-> Hi Juergen,
-> 
-> Say, this is *exactly* what you proposed in your gup.patch, so
-> I've speculatively added your Signed-off-by above, but need your
-> approval before that's final. Let me know please...
 
-Yes, that's fine with me.
+--=-rzLvz2895y4p8Iv09iVf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2019-07-29 at 13:22 -0400, Chuck Lever wrote:
+> Send and Receive completion is handled on a single CPU selected at
+> the time each Completion Queue is allocated. Typically this is when
+> an initiator instantiates an RDMA transport, or when a target
+> accepts an RDMA connection.
+>=20
+> Some ULPs cannot open a connection per CPU to spread completion
+> workload across available CPUs and MSI vectors. For such ULPs,
+> provide an API that allows the RDMA core to select a completion
+> vector based on the device's complement of available comp_vecs.
+>=20
+> ULPs that invoke ib_alloc_cq() with only comp_vector 0 are converted
+> to use the new API so that their completion workloads interfere less
+> with each other.
+>=20
+> Suggested-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> Cc: <linux-cifs@vger.kernel.org>
+> Cc: <v9fs-developer@lists.sourceforge.net>
 
-Juergen
+This looks reasonable to me Chuck, and we have plenty of time to test it
+in for-next before the next merge window, so applied to for-next, thanks
+:-)
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-rzLvz2895y4p8Iv09iVf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1IUxwACgkQuCajMw5X
+L90alRAArGLywfldeAGttkpNxU/+G7ArXLXpxOcAv2PYk6zfhBZ1GsL29zmyeP4B
+P7t0OYuE6W8MNDGk/a8jLaEQvTFBGLqglUGdOPmMvHQDmV9xbcpBHuwGpyiQY42u
+EwS4Rb/6jt/aK888ARE8MC5ArWK5F4zrXNEnXeZwAtmi7bia31iT3FzQiivOxgYK
+KpC/PRrcIQ8Aq7nXq/qh8YmzO0AMUxX3WF5hi4baZZDnlBztNBZFlaboR8yTgDtN
+7BHUjC+fIDy0ZzewjhZJjJkS1e/Ym2R5786KYyWEzUVhNQDyLAIGPr2y5K8N0i7n
+LVQ+QeFlQmlvQzGsCjt5CEhOuB1L+fVz2G8OQL+w/f4Z9HMzZYGrvJ9HpQzmFgp6
+M0yZCLBBSg1rV9GNnhvyICIXTnn2MjOdWNpBU73MeATU+4c+SckGvLX2RbLpX67D
+u0uckXe2Z/sXwkKFM86Zpo7ijaaFNQbmcKtToMmSVME9+xP1YSTWtgBwxZP7rVDs
+TF8Ggxta+W7By0BCRkzMwGjsfrt3SgwXsEebww5GTh7wTyDu4YH+AMcP65SCeMio
++DyBoy8b8nCWiYN/IlpOVxMNmPj332MV1LhvP7HfqRkmLo0LoHC3VK2HMNVfWR62
+GEjvJkbBMjrf7TIdHpcLKFbMtMvoQIXXYPYIPDk4r1pf43jvvVA=
+=l7Wu
+-----END PGP SIGNATURE-----
+
+--=-rzLvz2895y4p8Iv09iVf--
+
