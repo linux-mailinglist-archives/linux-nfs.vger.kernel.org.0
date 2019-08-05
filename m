@@ -2,101 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C52A98210A
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82E908214D
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfHEQCk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Aug 2019 12:02:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48290 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfHEQCk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:02:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0F7E8300BEAE;
-        Mon,  5 Aug 2019 16:02:40 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBD6760127;
-        Mon,  5 Aug 2019 16:02:38 +0000 (UTC)
-Message-ID: <1d2aadf8054b3ba2c50464e17fc477eb92bcf1b1.camel@redhat.com>
+        id S1728848AbfHEQJD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 12:09:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36976 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbfHEQJD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Aug 2019 12:09:03 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d1so7165021pgp.4;
+        Mon, 05 Aug 2019 09:09:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ILZYy/Qkh2SOroGxB401ESLDlG+ppsquN1OQynPyiSU=;
+        b=Db+xXkTUSvOFvD9NgxsIuCJ8BpKw+snEQ5dKKMfxRnl2UcqfRQHIQaydo8o8s1mvFB
+         v66UcKUVg/yEALyxcosAOPyHpT6fCE3sCLVIHhve57kbTPJpWKZl1ogdvO4ir31v0r1J
+         6nolSJsprQ4vgIdeNmQrjY0xnNWUUv0nB83CGKZoVdFlfCH72NCrHsL+9adCE0fFBTyS
+         DIzAZZq1B/yJhlJWyXlK+sc08VeCrAK5ZC1T5pXJD+rvlelOR6OJZk6T0AAGWLWZr572
+         gaGYL5pPZseljDjpJqTvsgCTtc63AK83Vb5syB/MX8Zc80S9mazO78pTuMOI2EIoqMRg
+         oKUA==
+X-Gm-Message-State: APjAAAVPE/7m8hE1TJP4gBNJZ6LaqD0yupHQ5qcE5/udYw5lf6qTJpUq
+        7hSDlPp4S7O8nqyjZ3vDwAA=
+X-Google-Smtp-Source: APXvYqwAxl1pBS8AeJ6EZK9QTwP7S8jW1nhyg9FAGS/zhrgSmhxNmxd6AUEWfED1glvlzd4Q5NiPYA==
+X-Received: by 2002:a62:2aca:: with SMTP id q193mr75352974pfq.209.1565021342284;
+        Mon, 05 Aug 2019 09:09:02 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id b136sm111692066pfb.73.2019.08.05.09.09.00
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 09:09:01 -0700 (PDT)
 Subject: Re: [PATCH v3] rdma: Enable ib_alloc_cq to spread work over a
  device's comp_vectors
-From:   Doug Ledford <dledford@redhat.com>
 To:     Chuck Lever <chuck.lever@oracle.com>, jgg@ziepe.ca
 Cc:     linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
         linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net
-Date:   Mon, 05 Aug 2019 12:02:36 -0400
-In-Reply-To: <20190729171923.13428.52555.stgit@manet.1015granger.net>
 References: <20190729171923.13428.52555.stgit@manet.1015granger.net>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rzLvz2895y4p8Iv09iVf"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <f181b5b6-df7c-d657-4ec6-4a4e56a9b5ff@acm.org>
+Date:   Mon, 5 Aug 2019 09:09:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 05 Aug 2019 16:02:40 +0000 (UTC)
+In-Reply-To: <20190729171923.13428.52555.stgit@manet.1015granger.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On 7/29/19 10:22 AM, Chuck Lever wrote:
+> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> index 1a039f1..e25c70a 100644
+> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> @@ -1767,8 +1767,8 @@ static int srpt_create_ch_ib(struct srpt_rdma_ch *ch)
+>   		goto out;
+>   
+>   retry:
+> -	ch->cq = ib_alloc_cq(sdev->device, ch, ch->rq_size + sq_size,
+> -			0 /* XXX: spread CQs */, IB_POLL_WORKQUEUE);
+> +	ch->cq = ib_alloc_cq_any(sdev->device, ch, ch->rq_size + sq_size,
+> +				 IB_POLL_WORKQUEUE);
+>   	if (IS_ERR(ch->cq)) {
+>   		ret = PTR_ERR(ch->cq);
+>   		pr_err("failed to create CQ cqe= %d ret= %d\n",
+Hi Chuck,
 
---=-rzLvz2895y4p8Iv09iVf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Please Cc me for future srp and srpt patches. I think my name appears 
+next to both drivers in the MAINTAINERS file.
 
-On Mon, 2019-07-29 at 13:22 -0400, Chuck Lever wrote:
-> Send and Receive completion is handled on a single CPU selected at
-> the time each Completion Queue is allocated. Typically this is when
-> an initiator instantiates an RDMA transport, or when a target
-> accepts an RDMA connection.
->=20
-> Some ULPs cannot open a connection per CPU to spread completion
-> workload across available CPUs and MSI vectors. For such ULPs,
-> provide an API that allows the RDMA core to select a completion
-> vector based on the device's complement of available comp_vecs.
->=20
-> ULPs that invoke ib_alloc_cq() with only comp_vector 0 are converted
-> to use the new API so that their completion workloads interfere less
-> with each other.
->=20
-> Suggested-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-> Cc: <linux-cifs@vger.kernel.org>
-> Cc: <v9fs-developer@lists.sourceforge.net>
+Thanks,
 
-This looks reasonable to me Chuck, and we have plenty of time to test it
-in for-next before the next merge window, so applied to for-next, thanks
-:-)
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-rzLvz2895y4p8Iv09iVf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1IUxwACgkQuCajMw5X
-L90alRAArGLywfldeAGttkpNxU/+G7ArXLXpxOcAv2PYk6zfhBZ1GsL29zmyeP4B
-P7t0OYuE6W8MNDGk/a8jLaEQvTFBGLqglUGdOPmMvHQDmV9xbcpBHuwGpyiQY42u
-EwS4Rb/6jt/aK888ARE8MC5ArWK5F4zrXNEnXeZwAtmi7bia31iT3FzQiivOxgYK
-KpC/PRrcIQ8Aq7nXq/qh8YmzO0AMUxX3WF5hi4baZZDnlBztNBZFlaboR8yTgDtN
-7BHUjC+fIDy0ZzewjhZJjJkS1e/Ym2R5786KYyWEzUVhNQDyLAIGPr2y5K8N0i7n
-LVQ+QeFlQmlvQzGsCjt5CEhOuB1L+fVz2G8OQL+w/f4Z9HMzZYGrvJ9HpQzmFgp6
-M0yZCLBBSg1rV9GNnhvyICIXTnn2MjOdWNpBU73MeATU+4c+SckGvLX2RbLpX67D
-u0uckXe2Z/sXwkKFM86Zpo7ijaaFNQbmcKtToMmSVME9+xP1YSTWtgBwxZP7rVDs
-TF8Ggxta+W7By0BCRkzMwGjsfrt3SgwXsEebww5GTh7wTyDu4YH+AMcP65SCeMio
-+DyBoy8b8nCWiYN/IlpOVxMNmPj332MV1LhvP7HfqRkmLo0LoHC3VK2HMNVfWR62
-GEjvJkbBMjrf7TIdHpcLKFbMtMvoQIXXYPYIPDk4r1pf43jvvVA=
-=l7Wu
------END PGP SIGNATURE-----
-
---=-rzLvz2895y4p8Iv09iVf--
-
+Bart.
