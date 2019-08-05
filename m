@@ -2,130 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 008F282325
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 18:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71508823C8
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 19:15:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfHEQxO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Aug 2019 12:53:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43074 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbfHEQxN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:53:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:53:12 -0700
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="168030649"
-Received: from rdvivi-losangeles.jf.intel.com (HELO intel.com) ([10.7.196.65])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:53:12 -0700
-Date:   Mon, 5 Aug 2019 09:53:46 -0700
-From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        ceph-devel@vger.kernel.org, devel@driverdev.osuosl.org,
-        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
-        x86@kernel.org, amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, xen-devel@lists.xenproject.org,
-        devel@lists.orangefs.org, linux-media@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, linux-block@vger.kernel.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 06/34] drm/i915: convert put_page() to put_user_page*()
-Message-ID: <20190805165346.GB25953@intel.com>
-References: <20190804224915.28669-1-jhubbard@nvidia.com>
- <20190804224915.28669-7-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804224915.28669-7-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1728818AbfHERPq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 13:15:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42562 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfHERPp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Aug 2019 13:15:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75HE8Io145577;
+        Mon, 5 Aug 2019 17:15:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=nPFbMWDy/GPZ7qzfaZqz6U6+uWj0/xLsMBVQnP4Sfiw=;
+ b=KBw3Y+0yGPt4x914tL/z2ZGH0gzolkKnoJNLuxRSLTsTqxj85gHV4zMqrIISLfrTa9YS
+ BtjkPDvuMdSXu6EJ3VbezizS0grQE4TX1HLlq7lgkRKM3kOCdN3lPFEeA4c2rDEfdStu
+ SMUksNORwHAh6PRmXdbXWRz6/BgdgDJS0/Z+E0MHt3ElLUTf62UdoAq7QPqTczoM+VFI
+ m9bDcaOM6z9gxLODEJOGJraC5jIDxRojAmiRZ9eU6Q3HosCBZddAQ2UOLJWBKZMZpbrg
+ CzJ6Kp68V2sdTEBmbLZCs4S2vi4iYOYNOulWc1SS1JK40Lo2nNrz3obR3JTBKtiPfb8S nA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u527pghux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 17:15:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75H1j1A177873;
+        Mon, 5 Aug 2019 17:15:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2u5233d9s0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 17:15:33 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x75HFV0I022474;
+        Mon, 5 Aug 2019 17:15:31 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 10:15:23 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v3] rdma: Enable ib_alloc_cq to spread work over a
+ device's comp_vectors
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <f181b5b6-df7c-d657-4ec6-4a4e56a9b5ff@acm.org>
+Date:   Mon, 5 Aug 2019 13:15:22 -0400
+Cc:     jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <87D288BC-65F8-4678-A8C5-DEF7C3355BC7@oracle.com>
+References: <20190729171923.13428.52555.stgit@manet.1015granger.net>
+ <f181b5b6-df7c-d657-4ec6-4a4e56a9b5ff@acm.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908050185
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908050185
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 03:48:47PM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> This is a merge-able version of the fix, because it restricts
-> itself to put_user_page() and put_user_pages(), both of which
-> have not changed their APIs. Later, i915_gem_userptr_put_pages()
-> can be simplified to use put_user_pages_dirty_lock().
+Hi Bart-
 
-Thanks for that.
-with this version we won't have any conflict.
+> On Aug 5, 2019, at 12:09 PM, Bart Van Assche <bvanassche@acm.org> =
+wrote:
+>=20
+> On 7/29/19 10:22 AM, Chuck Lever wrote:
+>> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c =
+b/drivers/infiniband/ulp/srpt/ib_srpt.c
+>> index 1a039f1..e25c70a 100644
+>> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+>> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+>> @@ -1767,8 +1767,8 @@ static int srpt_create_ch_ib(struct =
+srpt_rdma_ch *ch)
+>>  		goto out;
+>>    retry:
+>> -	ch->cq =3D ib_alloc_cq(sdev->device, ch, ch->rq_size + sq_size,
+>> -			0 /* XXX: spread CQs */, IB_POLL_WORKQUEUE);
+>> +	ch->cq =3D ib_alloc_cq_any(sdev->device, ch, ch->rq_size + =
+sq_size,
+>> +				 IB_POLL_WORKQUEUE);
+>>  	if (IS_ERR(ch->cq)) {
+>>  		ret =3D PTR_ERR(ch->cq);
+>>  		pr_err("failed to create CQ cqe=3D %d ret=3D %d\n",
+> Hi Chuck,
+>=20
+> Please Cc me for future srp and srpt patches. I think my name appears =
+next to both drivers in the MAINTAINERS file.
 
-Ack for going through mm tree.
+I see your name listed, but I thought the rule was to Cc: the mailing =
+list
+which is listed for that component. My bad.
 
-> 
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> index 2caa594322bc..76dda2923cf1 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> @@ -527,7 +527,7 @@ __i915_gem_userptr_get_pages_worker(struct work_struct *_work)
->  	}
->  	mutex_unlock(&obj->mm.lock);
->  
-> -	release_pages(pvec, pinned);
-> +	put_user_pages(pvec, pinned);
->  	kvfree(pvec);
->  
->  	i915_gem_object_put(obj);
-> @@ -640,7 +640,7 @@ static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
->  		__i915_gem_userptr_set_active(obj, true);
->  
->  	if (IS_ERR(pages))
-> -		release_pages(pvec, pinned);
-> +		put_user_pages(pvec, pinned);
->  	kvfree(pvec);
->  
->  	return PTR_ERR_OR_ZERO(pages);
-> @@ -675,7 +675,7 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
->  			set_page_dirty_lock(page);
->  
->  		mark_page_accessed(page);
-> -		put_page(page);
-> +		put_user_page(page);
->  	}
->  	obj->mm.dirty = false;
->  
-> -- 
-> 2.22.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+Chuck Lever
+
+
+
