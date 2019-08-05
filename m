@@ -2,112 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71508823C8
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 19:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9379282413
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2019 19:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfHERPq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Aug 2019 13:15:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42562 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfHERPp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Aug 2019 13:15:45 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75HE8Io145577;
-        Mon, 5 Aug 2019 17:15:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=nPFbMWDy/GPZ7qzfaZqz6U6+uWj0/xLsMBVQnP4Sfiw=;
- b=KBw3Y+0yGPt4x914tL/z2ZGH0gzolkKnoJNLuxRSLTsTqxj85gHV4zMqrIISLfrTa9YS
- BtjkPDvuMdSXu6EJ3VbezizS0grQE4TX1HLlq7lgkRKM3kOCdN3lPFEeA4c2rDEfdStu
- SMUksNORwHAh6PRmXdbXWRz6/BgdgDJS0/Z+E0MHt3ElLUTf62UdoAq7QPqTczoM+VFI
- m9bDcaOM6z9gxLODEJOGJraC5jIDxRojAmiRZ9eU6Q3HosCBZddAQ2UOLJWBKZMZpbrg
- CzJ6Kp68V2sdTEBmbLZCs4S2vi4iYOYNOulWc1SS1JK40Lo2nNrz3obR3JTBKtiPfb8S nA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u527pghux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 17:15:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75H1j1A177873;
-        Mon, 5 Aug 2019 17:15:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2u5233d9s0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 17:15:33 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x75HFV0I022474;
-        Mon, 5 Aug 2019 17:15:31 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 05 Aug 2019 10:15:23 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3] rdma: Enable ib_alloc_cq to spread work over a
- device's comp_vectors
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <f181b5b6-df7c-d657-4ec6-4a4e56a9b5ff@acm.org>
-Date:   Mon, 5 Aug 2019 13:15:22 -0400
-Cc:     jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <87D288BC-65F8-4678-A8C5-DEF7C3355BC7@oracle.com>
-References: <20190729171923.13428.52555.stgit@manet.1015granger.net>
- <f181b5b6-df7c-d657-4ec6-4a4e56a9b5ff@acm.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908050185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908050185
+        id S1728518AbfHERjJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Aug 2019 13:39:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51470 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbfHERjI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Aug 2019 13:39:08 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 74DB8C056807;
+        Mon,  5 Aug 2019 17:39:06 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (rt4.app.eng.rdu2.redhat.com [10.10.161.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D7C3E5DA60;
+        Mon,  5 Aug 2019 17:39:01 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (localhost [127.0.0.1])
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x75Hd0BJ023399;
+        Mon, 5 Aug 2019 13:39:00 -0400
+Received: (from apache@localhost)
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4/Submit) id x75Hcnwa023396;
+        Mon, 5 Aug 2019 13:38:49 -0400
+From:   Red Hat Product Security <secalert@redhat.com>
+X-PGP-Public-Key: https://www.redhat.com/security/650d5882.txt
+Subject: [engineering.redhat.com #494100] Question on submitting patch for a security bug
+Reply-To: secalert@redhat.com
+In-Reply-To: <CAJ7L_Gp2HJoFOVxTgakCJw3LMuiPY0+60-giOtw3OwRD6zyNTQ@mail.gmail.com>
+References: <RT-Ticket-494100@engineering.redhat.com>
+ <CAJ7L_Gp2HJoFOVxTgakCJw3LMuiPY0+60-giOtw3OwRD6zyNTQ@mail.gmail.com>
+Message-ID: <rt-4.0.13-23214-1565026728-1358.494100-5-0@engineering.redhat.com>
+X-RT-Loop-Prevention: engineering.redhat.com
+RT-Ticket: engineering.redhat.com #494100
+Managed-BY: RT 4.0.13 (http://www.bestpractical.com/rt/)
+RT-Originator: pjp@redhat.com
+To:     b.zolnierkie@samsung.com, bob.liu@oracle.com,
+        chuck.lever@oracle.com, davem@davemloft.net, emamd001@umn.edu,
+        gregkh@linuxfoundation.org, kubakici@wp.pl, kvalo@codeaurora.org,
+        navid.emamdoost@gmail.com, sam@ravnborg.org
+CC:     airlied@linux.ie, alexandre.belloni@bootlin.com,
+        alexandre.torgue@st.com, allison@lohutok.net,
+        andriy.shevchenko@linux.intel.com, anna.schumaker@netapp.com,
+        axboe@kernel.dk, bfields@fieldses.org, colin.king@canonical.com,
+        daniel@ffwll.ch, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, joabreu@synopsys.com,
+        johnfwhitmore@gmail.com, josef@toxicpanda.com, jslaby@suse.com,
+        kjlu@umn.edu, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org, matthias.bgg@gmail.com,
+        matthias@redhat.com, mcoquelin.stm32@gmail.com,
+        nbd@other.debian.org, netdev@vger.kernel.org,
+        nishkadg.linux@gmail.com, peppe.cavallaro@st.com, smccaman@umn.edu,
+        tglx@linutronix.de, thierry.reding@gmail.com,
+        trond.myklebust@hammerspace.com, unglinuxdriver@microchip.com,
+        vishal@chelsio.com, vkoul@kernel.org
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+X-RT-Original-Encoding: utf-8
+Date:   Mon, 5 Aug 2019 13:38:48 -0400
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 05 Aug 2019 17:39:08 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bart-
+Hello Navid,
 
-> On Aug 5, 2019, at 12:09 PM, Bart Van Assche <bvanassche@acm.org> =
-wrote:
->=20
-> On 7/29/19 10:22 AM, Chuck Lever wrote:
->> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c =
-b/drivers/infiniband/ulp/srpt/ib_srpt.c
->> index 1a039f1..e25c70a 100644
->> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
->> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
->> @@ -1767,8 +1767,8 @@ static int srpt_create_ch_ib(struct =
-srpt_rdma_ch *ch)
->>  		goto out;
->>    retry:
->> -	ch->cq =3D ib_alloc_cq(sdev->device, ch, ch->rq_size + sq_size,
->> -			0 /* XXX: spread CQs */, IB_POLL_WORKQUEUE);
->> +	ch->cq =3D ib_alloc_cq_any(sdev->device, ch, ch->rq_size + =
-sq_size,
->> +				 IB_POLL_WORKQUEUE);
->>  	if (IS_ERR(ch->cq)) {
->>  		ret =3D PTR_ERR(ch->cq);
->>  		pr_err("failed to create CQ cqe=3D %d ret=3D %d\n",
-> Hi Chuck,
->=20
-> Please Cc me for future srp and srpt patches. I think my name appears =
-next to both drivers in the MAINTAINERS file.
+On Thu, 18 Jul 2019 01:30:20 GMT, emamd001@umn.edu wrote:
+> I've found a null dereference bug in the Linux kernel source code. I was
+> wondering should I cc the patch to you as well (along with the
+> maintainers)?
 
-I see your name listed, but I thought the rule was to Cc: the mailing =
-list
-which is listed for that component. My bad.
+No. Please do not cc <secalert@redhat.com> on the upstream kernel patches.
+It is meant for reporting security issues only.
 
---
-Chuck Lever
+Going through the patches here
+
+1. Issues in ../staging/ drivers are not considered for CVE, they are not to be
+used
+in production environment.
+
+2. Many of the patches listed fix NULL pointer dereference when memory
+allocation
+fails and returns NULL.
+
+3. Do you happen to have reproducers for these issues? Could an unprivileged
+user trigger them?
+
+> Also, I was wondering what are the steps to get CVE for the bug (this is
+> the first time I am reporting a bug)?
+
+Generally CVE is assigned after confirming that a given issue really is a
+security issue. And it may
+have impact ranging from information leakage, DoS to privilege escalation or
+maybe arbitrary code
+execution. Every NULL pointer dereference is not security issue.
 
 
+Hope it helps. Thank you.
+---
+Prasad J Pandit / Red Hat Product Security Team
 
