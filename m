@@ -2,57 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C9B835DD
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Aug 2019 17:54:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762B4835DF
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Aug 2019 17:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbfHFPyb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Aug 2019 11:54:31 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36921 "EHLO
+        id S2387454AbfHFPyh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Aug 2019 11:54:37 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41533 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733105AbfHFPyb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Aug 2019 11:54:31 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s20so28189059otp.4;
-        Tue, 06 Aug 2019 08:54:30 -0700 (PDT)
+        with ESMTP id S1733105AbfHFPyg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Aug 2019 11:54:36 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so93685794ota.8;
+        Tue, 06 Aug 2019 08:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=q0PNNvsO6MAnJYGtc+hx6aPJ1mx2BHWsOzx9TV/Ouzc=;
-        b=cPwbO7p42ungBThn5zpPAnBsRh7frHvdPxGDsdDAU3oonjcQHdQcj6e1WURmmVa9pb
-         RdQoYuvbsU4jHP3duRDdt8HIn8TObA6j6TUCvSc0VJybgpjKKrJhtOokGzuit36w8b0w
-         JYt0Jlp95qAPP40VfS10YMV+6yoTTRltTR5pGtP5WURX0GaObyU7yxPWJM0px2XoSkJb
-         /F8mbC+LAnXZ16sXjeRQrKoNjKbf+MZ7+j1pI3SFsJ969okPIYYctSJYKa1j0rDgkV0k
-         38BKITI52g9NAloMY2ZqJI43DbsPwKQLui6jtcVBw3oLGw3T1IZ/JWAl4jR0yU9j2X/E
-         0aag==
+        bh=5Q8M+QTopchKexUTh9SVNA/1Pd4YjmWytnWlQnNZ1x4=;
+        b=R57Tot1Pfr1OJvBz65Qm4TpQj4GRW32A6Z5wsVi08nbtW1Sw/c3Zb80RGoUS59/iqc
+         mjCQ6vi7IRJMdV77qTdegxk/MNq84ffxPaAjvFF6lzYrNbpS/7k11i/MIr0t9dzIF+TX
+         rvyTr8p72fJwY3G/cp0XWmyriRughzk2OXthXj7h1aa88iM3QVrTs3PrRZQPCnR9St54
+         0B2vAvmOVPEsSaEy4/pcIDNVo1MeqnVFoJ9paW3+PKF8YE5YBTQPf6NkUiNx+thPT0k8
+         vAMYpN+rzEXxMLdPzDsRHFgXPR+XSbc3dwYIFzOYeo8uLAYp1J1MDLADr2tEIbwqNIIs
+         E09Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=q0PNNvsO6MAnJYGtc+hx6aPJ1mx2BHWsOzx9TV/Ouzc=;
-        b=rZS9eU21irxFFI11/VxBms0utmyFzdGhBLa577zJaYT61uq3e8hk5WL4YeK7Vtq0Nk
-         B/9NRusOef7ct03eliwZwqAu2HhAtuEP7KGyNEgoHivUjWXDGnhceQwntBsjb47Uk86Y
-         4LnAe32S4DaAsqSinKE6BQ+NjY1/gDASgkIAH2YyLMNpTRrEmP8YRBMYFZF5EgmCy6MA
-         rNU+gNdTJ5F5XPTIAvdMzKd7vmVc9BAihVh0bNWP9vBqW8lh9abM5WHIRDmrQKv6rYDX
-         KdYKFITZ6bKw8yUzi2S8uqJkUZgVKjx6M4oYzcWWoeoCjc02O212STOE9zBGdwc8T4nl
-         Tc1w==
-X-Gm-Message-State: APjAAAVEMMhmLy3ojbPgMm6qe3TUqFuQfZY6WHTC7IiyFSJc49dIplEb
-        LgNv8ZH3JxppMB5XDN8slGHxwvqD
-X-Google-Smtp-Source: APXvYqz4A6kUw5F7rdYvfq9Vt6jidOYvKP08tArJUsEEs7eix6czY8z7qm4g+NRlCl5qcV5R44Joow==
-X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr3942104ion.160.1565106870169;
-        Tue, 06 Aug 2019 08:54:30 -0700 (PDT)
+        bh=5Q8M+QTopchKexUTh9SVNA/1Pd4YjmWytnWlQnNZ1x4=;
+        b=n0avs7/SN9Ukx+OPQvJ6fBWkUGDhdZYrETjXlHnd2VnX7virKpondKyzZlEyHr4q88
+         NcpErAb26IOkotYCQ4QFqEUUQfbeM+C6w4sjNeKPnwu49RVGypnVA2Hg6Z8cG5Oz5itl
+         uKB5FfL5xnZsd5vAB95EpWjLBwzp6vLRIBDO9p1PJMODhq9TJRFdFkqetrgsE/Ta9lM2
+         VNrnCocgfTMNQpNfEE551LeJcSMuT2r0v2vzkZbC4J3VYxA79E9BV+/KBi1GMRg4AKPO
+         nXsMh17Eza7NTu6OlDke8UlXpCXzEZN7eI09wpN22AhhfrJ0Yluml0gVFZ1auTFRyCEi
+         sE5A==
+X-Gm-Message-State: APjAAAW2HpilMOEnVO0jg8h315VnQvUEPzgxvBuUg/5MrCWkIneMdf1P
+        xFsJDzHWWMI48XN5h4oMpaAOvknZ
+X-Google-Smtp-Source: APXvYqz3+qfd6e0kHDRn8BL1YBwR1jHlcEQQPpBww+XiSOPwX9Ll3DM8Kbkw1+XfiX6pTf6aNa/y/w==
+X-Received: by 2002:a6b:7208:: with SMTP id n8mr3044169ioc.151.1565106875297;
+        Tue, 06 Aug 2019 08:54:35 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id j25sm118035469ioj.67.2019.08.06.08.54.29
+        by smtp.gmail.com with ESMTPSA id c11sm48893566ioi.72.2019.08.06.08.54.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 08:54:29 -0700 (PDT)
+        Tue, 06 Aug 2019 08:54:34 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x76FsTVw011535;
-        Tue, 6 Aug 2019 15:54:29 GMT
-Subject: [PATCH v1 08/18] xprtrdma: Simplify rpcrdma_mr_pop
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x76FsYv4011538;
+        Tue, 6 Aug 2019 15:54:34 GMT
+Subject: [PATCH v1 09/18] xprtrdma: Combine rpcrdma_mr_put and
+ rpcrdma_mr_unmap_and_put
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Tue, 06 Aug 2019 11:54:29 -0400
-Message-ID: <20190806155428.9529.15251.stgit@manet.1015granger.net>
+Date:   Tue, 06 Aug 2019 11:54:34 -0400
+Message-ID: <20190806155434.9529.25157.stgit@manet.1015granger.net>
 In-Reply-To: <20190806155246.9529.14571.stgit@manet.1015granger.net>
 References: <20190806155246.9529.14571.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -64,117 +65,116 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: rpcrdma_mr_pop call sites check if the list is empty
-first. Let's replace the list_empty with less costly logic.
+Clean up. There is only one remaining rpcrdma_mr_put call site, and
+it can be directly replaced with unmap_and_put because mr->mr_dir is
+set to DMA_NONE just before the call.
+
+Now all the call sites do a DMA unmap, and we can just rename
+mr_unmap_and_put to mr_put, which nicely matches mr_get.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/frwr_ops.c  |   12 ++++--------
- net/sunrpc/xprtrdma/rpc_rdma.c  |    7 +------
- net/sunrpc/xprtrdma/verbs.c     |    6 ++----
- net/sunrpc/xprtrdma/xprt_rdma.h |    7 ++++---
- 4 files changed, 11 insertions(+), 21 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c  |    6 +++---
+ net/sunrpc/xprtrdma/verbs.c     |   32 ++++++++------------------------
+ net/sunrpc/xprtrdma/xprt_rdma.h |    1 -
+ 3 files changed, 11 insertions(+), 28 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 3a10bff..d7e763f 100644
+index d7e763f..97e1804 100644
 --- a/net/sunrpc/xprtrdma/frwr_ops.c
 +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -126,12 +126,10 @@ void frwr_release_mr(struct rpcrdma_mr *mr)
-  */
- void frwr_reset(struct rpcrdma_req *req)
- {
--	while (!list_empty(&req->rl_registered)) {
--		struct rpcrdma_mr *mr;
-+	struct rpcrdma_mr *mr;
+@@ -129,7 +129,7 @@ void frwr_reset(struct rpcrdma_req *req)
+ 	struct rpcrdma_mr *mr;
  
--		mr = rpcrdma_mr_pop(&req->rl_registered);
-+	while ((mr = rpcrdma_mr_pop(&req->rl_registered)))
- 		rpcrdma_mr_unmap_and_put(mr);
--	}
+ 	while ((mr = rpcrdma_mr_pop(&req->rl_registered)))
+-		rpcrdma_mr_unmap_and_put(mr);
++		rpcrdma_mr_put(mr);
  }
  
  /**
-@@ -532,8 +530,7 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	 */
- 	frwr = NULL;
- 	prev = &first;
--	while (!list_empty(&req->rl_registered)) {
--		mr = rpcrdma_mr_pop(&req->rl_registered);
-+	while ((mr = rpcrdma_mr_pop(&req->rl_registered))) {
+@@ -453,7 +453,7 @@ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs)
+ 		if (mr->mr_handle == rep->rr_inv_rkey) {
+ 			list_del_init(&mr->mr_list);
+ 			trace_xprtrdma_mr_remoteinv(mr);
+-			rpcrdma_mr_unmap_and_put(mr);
++			rpcrdma_mr_put(mr);
+ 			break;	/* only one invalidated MR per RPC */
+ 		}
+ }
+@@ -463,7 +463,7 @@ static void __frwr_release_mr(struct ib_wc *wc, struct rpcrdma_mr *mr)
+ 	if (wc->status != IB_WC_SUCCESS)
+ 		rpcrdma_mr_recycle(mr);
+ 	else
+-		rpcrdma_mr_unmap_and_put(mr);
++		rpcrdma_mr_put(mr);
+ }
  
- 		trace_xprtrdma_mr_localinv(mr);
- 		r_xprt->rx_stats.local_inv_needed++;
-@@ -632,8 +629,7 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	 */
- 	frwr = NULL;
- 	prev = &first;
--	while (!list_empty(&req->rl_registered)) {
--		mr = rpcrdma_mr_pop(&req->rl_registered);
-+	while ((mr = rpcrdma_mr_pop(&req->rl_registered))) {
- 
- 		trace_xprtrdma_mr_localinv(mr);
- 		r_xprt->rx_stats.local_inv_needed++;
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 4345e69..0ac096a 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -841,12 +841,7 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
- 	 * chunks. Very likely the connection has been replaced,
- 	 * so these registrations are invalid and unusable.
- 	 */
--	while (unlikely(!list_empty(&req->rl_registered))) {
--		struct rpcrdma_mr *mr;
--
--		mr = rpcrdma_mr_pop(&req->rl_registered);
--		rpcrdma_mr_recycle(mr);
--	}
-+	frwr_reset(req);
- 
- 	/* This implementation supports the following combinations
- 	 * of chunk lists in one RPC-over-RDMA Call message:
+ /**
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index bf7a7cf..dd5692c 100644
+index dd5692c..107116b 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1205,13 +1205,11 @@ struct rpcrdma_mr *
- rpcrdma_mr_get(struct rpcrdma_xprt *r_xprt)
- {
- 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
--	struct rpcrdma_mr *mr = NULL;
-+	struct rpcrdma_mr *mr;
+@@ -1225,34 +1225,15 @@ struct rpcrdma_mr *
+ 	return NULL;
+ }
  
- 	spin_lock(&buf->rb_mrlock);
--	if (!list_empty(&buf->rb_mrs))
--		mr = rpcrdma_mr_pop(&buf->rb_mrs);
-+	mr = rpcrdma_mr_pop(&buf->rb_mrs);
- 	spin_unlock(&buf->rb_mrlock);
+-static void
+-__rpcrdma_mr_put(struct rpcrdma_buffer *buf, struct rpcrdma_mr *mr)
+-{
+-	spin_lock(&buf->rb_mrlock);
+-	rpcrdma_mr_push(mr, &buf->rb_mrs);
+-	spin_unlock(&buf->rb_mrlock);
+-}
 -
- 	if (!mr)
- 		goto out_nomrs;
- 	return mr;
+-/**
+- * rpcrdma_mr_put - Release an rpcrdma_mr object
+- * @mr: object to release
+- *
+- */
+-void
+-rpcrdma_mr_put(struct rpcrdma_mr *mr)
+-{
+-	__rpcrdma_mr_put(&mr->mr_xprt->rx_buf, mr);
+-}
+-
+ /**
+- * rpcrdma_mr_unmap_and_put - DMA unmap an MR and release it
+- * @mr: object to release
++ * rpcrdma_mr_put - DMA unmap an MR and release it
++ * @mr: MR to release
+  *
+  */
+-void
+-rpcrdma_mr_unmap_and_put(struct rpcrdma_mr *mr)
++void rpcrdma_mr_put(struct rpcrdma_mr *mr)
+ {
+ 	struct rpcrdma_xprt *r_xprt = mr->mr_xprt;
++	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 
+ 	if (mr->mr_dir != DMA_NONE) {
+ 		trace_xprtrdma_mr_unmap(mr);
+@@ -1260,7 +1241,10 @@ struct rpcrdma_mr *
+ 				mr->mr_sg, mr->mr_nents, mr->mr_dir);
+ 		mr->mr_dir = DMA_NONE;
+ 	}
+-	__rpcrdma_mr_put(&r_xprt->rx_buf, mr);
++
++	spin_lock(&buf->rb_mrlock);
++	rpcrdma_mr_push(mr, &buf->rb_mrs);
++	spin_unlock(&buf->rb_mrlock);
+ }
+ 
+ /**
 diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index f90643d..54e6d88 100644
+index 54e6d88..345158b 100644
 --- a/net/sunrpc/xprtrdma/xprt_rdma.h
 +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -343,7 +343,7 @@ struct rpcrdma_req {
+@@ -490,7 +490,6 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+ 
+ struct rpcrdma_mr *rpcrdma_mr_get(struct rpcrdma_xprt *r_xprt);
+ void rpcrdma_mr_put(struct rpcrdma_mr *mr);
+-void rpcrdma_mr_unmap_and_put(struct rpcrdma_mr *mr);
+ 
  static inline void
- rpcrdma_mr_push(struct rpcrdma_mr *mr, struct list_head *list)
- {
--	list_add_tail(&mr->mr_list, list);
-+	list_add(&mr->mr_list, list);
- }
- 
- static inline struct rpcrdma_mr *
-@@ -351,8 +351,9 @@ struct rpcrdma_req {
- {
- 	struct rpcrdma_mr *mr;
- 
--	mr = list_first_entry(list, struct rpcrdma_mr, mr_list);
--	list_del_init(&mr->mr_list);
-+	mr = list_first_entry_or_null(list, struct rpcrdma_mr, mr_list);
-+	if (mr)
-+		list_del_init(&mr->mr_list);
- 	return mr;
- }
- 
+ rpcrdma_mr_recycle(struct rpcrdma_mr *mr)
 
