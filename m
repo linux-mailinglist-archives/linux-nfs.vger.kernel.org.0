@@ -2,110 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E258484E
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2019 11:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6974C8508C
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2019 18:02:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbfHGJAL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Aug 2019 05:00:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3024 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725891AbfHGJAL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:00:11 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 02:00:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="185927601"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2019 02:00:09 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hvHnj-0005sm-Rd; Wed, 07 Aug 2019 12:00:07 +0300
-Date:   Wed, 7 Aug 2019 12:00:07 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <20190807090007.GK30120@smile.fi.intel.com>
-References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
- <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190806121931.GA29578@smile.fi.intel.com>
- <20190806185008.GC9456@parsley.fieldses.org>
+        id S1730097AbfHGQCx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Aug 2019 12:02:53 -0400
+Received: from mail-vk1-f179.google.com ([209.85.221.179]:43053 "EHLO
+        mail-vk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGQCw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Aug 2019 12:02:52 -0400
+Received: by mail-vk1-f179.google.com with SMTP id b200so18128165vkf.10
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Aug 2019 09:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CBszmlteBVRLK66/tIhFYd2NKWwV40ynlEYx/Scr1rc=;
+        b=VjnglCMox2FE49Rs6QirZEvIQOQT8u0Yt2zOT616uFSh6J8oM29mw/oGTp6kzOT/XB
+         VwmjWCMLGWcfhiBkuPe/E0zMbE/4bIW5QapoGP8vD2tb/t0ll4yEt2mHwoBCvCem8cHR
+         WqVrv6w6ZhxRhXElQt883exzuCOAs7jbZts4/NrQg2mCp99lKTOPl6M79aVABtXVA8ql
+         6kmsx/DdesiE0sryfxP3cIqLTKAY4vT3Cqp2WlK4ZYnJqrM2lqMprrxFaB5iQoJ4q91f
+         2XJHSbDKTWlrVRXJnO9sEycPeOXy0XfyU4EBuQ6Pm15ON/ebJRFyG7CZ7FwArBYSr5B+
+         qAtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CBszmlteBVRLK66/tIhFYd2NKWwV40ynlEYx/Scr1rc=;
+        b=Tvq/ZW+388G26pusaZlxgaX22plRwf8We1tfyIM/JQLDa+6zTWRx03XqqGvEAEVW58
+         +qIp8z4Mm7WR7C7NJnKJvlIWRinJL0bq7CSEcllsC5JCebl1HQHuJ0gSkwD1mXdMJRxC
+         TM71KCjmEng1PsRHth6FAcYAe98mGQIWb/83uVpds1dRq521wj652BA9H8TVPg4PPNY2
+         TlmwAJTD+3kWGTc/MPuizXrs9xs2tuFhoSwDBi+e74k5sEmWcncBMbDeEh/xmDBREZZ1
+         MAWD9PUxP2f4bTzpSk5jEBT8LCKSntxGrZYBxorAxy5nJDIzFy1xRBjRWFRF9uZR7yg6
+         OprQ==
+X-Gm-Message-State: APjAAAUK7qhjbnC7UyvvUXxQgqWrAok08TwAxmbQKkSzIKEdeNtV3xAc
+        xGqyHlN/a/oaDOuFRo5OwB9X58tOcAwD6EohfELLXdom
+X-Google-Smtp-Source: APXvYqz0wH9uEvzmVqItw027ax0JYTK+1XVz4hG09cV9t3z42l0u1z5cRkWfK4/tloEOcykL1mYf8rCd0mex6IKoA8o=
+X-Received: by 2002:a1f:5285:: with SMTP id g127mr801781vkb.83.1565193771702;
+ Wed, 07 Aug 2019 09:02:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806185008.GC9456@parsley.fieldses.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190723205846.GB19559@fieldses.org> <CAN-5tyFTRr9KPYAzq-EaOMqDeJU31-qHGsLyCmEtd18OMxCFNQ@mail.gmail.com>
+ <CAN-5tyEbwjPNbXKWXv+3=geisjH-i=xKWRqgyXa3v9Xk=OvdEw@mail.gmail.com>
+ <20190731215118.GA13311@parsley.fieldses.org> <CAN-5tyGz5M1eMFC=CJUEdTB7cAq-PRis8SJMEnrcr4Svmmy03w@mail.gmail.com>
+ <20190801151239.GC17654@fieldses.org> <CAN-5tyE8xdJhs5C_bOo0a9yLRUAvkKi7OLOq47He5P0OR8PGyQ@mail.gmail.com>
+ <CAN-5tyEx7-kddfgsvSGAsCD3amMXq-iGLkQN2GdmaXOc19GwkA@mail.gmail.com>
+ <20190801181158.GC19461@fieldses.org> <CAN-5tyEiO=kBQC=pLu_aeVfV+3f3KWFbz_1ooG8qBLoBqFaehQ@mail.gmail.com>
+ <20190801193654.GA12211@parsley.fieldses.org>
+In-Reply-To: <20190801193654.GA12211@parsley.fieldses.org>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 7 Aug 2019 12:02:40 -0400
+Message-ID: <CAN-5tyFSRcnOT5kuF_1iKZDu=KyjEj+3tcq0ARSNOeuSmJMYGQ@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 02:50:08PM -0400, J. Bruce Fields wrote:
-> On Tue, Aug 06, 2019 at 03:19:31PM +0300, Andy Shevchenko wrote:
-> > On Thu, Jun 20, 2019 at 10:51:07AM -0400, J. Bruce Fields wrote:
-> > > From: "J. Bruce Fields" <bfields@redhat.com>
-> > > 
-> > > I'm exposing some information about NFS clients in pseudofiles.  I
-> > > expect to eventually have simple tools to help read those pseudofiles.
-> > > 
-> > > But it's also helpful if the raw files are human-readable to the extent
-> > > possible.  It aids debugging and makes them usable on systems that don't
-> > > have the latest nfs-utils.
-> > > 
-> > > A minor challenge there is opaque client-generated protocol objects like
-> > > state owners and client identifiers.  Some clients generate those to
-> > > include handy information in plain ascii.  But they may also include
-> > > arbitrary byte sequences.
-> > > 
-> > > I think the simplest approach is to limit to isprint(c) && isascii(c)
-> > > and escape everything else.
-> > > 
-> > > That means you can just cat the file and get something that looks OK.
-> > > Also, I'm trying to keep these files legal YAML, which requires them to
-> > > UTF-8, and this is a simple way to guarantee that.
-> > 
-> > Two questions:
-> > - why can't be original function extended to cover this case
-> >   (using additional flags, maybe)?
-> 
-> I found the ESCAPE_NP/"only" logic made it a little difficult to extend
-> string_escape_mem().
+On Thu, Aug 1, 2019 at 3:36 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> On Thu, Aug 01, 2019 at 02:24:04PM -0400, Olga Kornievskaia wrote:
+> > i was just looking at close_lru and delegation_lru but I guess that's
+> > not a list of delegation or open stateids but rather some complex of
+> > not deleting the stateid right away but moving it to nfs4_ol_stateid
+> > and the list on the nfsd_net. Are you looking for something similar
+> > for the copy_notify state or can I just keep a global list of the
+> > nfs4_client and add and delete of that (not move to the delete later)?
+>
+> A global list seems like it should work if the locking's OK.
 
-Maybe it requires more thinking about?
-I think it is still possible to extend existing, rather to take workarounds
-like this one.
+I'm having issues taking a reference on a parent stateid and being
+able to clean it. Let me try to explain.
 
-> So, I wrote a patch series that removes the string_escape_mem flags that
-> aren't used
+Since I take a reference on the stateid, then during what would have
+been the last put (due to say a close operation), stateid isn't
+released. Now that stateid is sticking around. I personally would have
+liked on what would have been a close and release of the stateid to
+release the copy notify state(s) (which was being done before but
+having a reference makes it hard? i want to count number of copy
+notify states and if then somehow if the num_copies-1 is going to make
+it 0, then decrement by num_copies (and the normal -1) but if it's not
+the last reference then it shouldn't be decremented.
 
-Have you considered the potential users that can be converted to use
-string_escape_mem()?
+Now say no fancy logic happens on close so we have these stateids left
+over . What to do on unmount? It will error with err_client_busy since
+there are non-zero copy notify states and only after a lease period it
+will release the resources (when the close of the file should have
+removed any copy notify state)?
 
-I know about at least one (needs to be reworked a bit, but it is in slow
-progress).
+Question: would it be acceptable to do something like this on freeing
+of the parent stateid?
 
-There are potentially others that would be converted using "unused" flags.
+@@ -896,8 +931,12 @@ static void block_delegations(struct knfsd_fh *fh)
+        might_lock(&clp->cl_lock);
 
->, simplifies it a bit, then separates the flags into two
-> different types: those that select which characters to escape
-> (non-printable, non-ascii, whitespace, etc.) and those that choose a
-> style of escaping to use (octal, hex, or \\).  That seems to make the
-> code a little easier to extend while still covering the cases people
-> actually use.  I'll try to get those out this week and you can tell me
-> what you think.
+        if (!refcount_dec_and_lock(&s->sc_count, &clp->cl_lock)) {
+-               wake_up_all(&close_wq);
+-               return;
++               if (!refcount_sub_and_test_checked(s->sc_cp_list_size,
++                               &s->sc_count)) {
++                       refcount_add_checked(s->sc_cp_list_size, &s->sc_count);
++                       wake_up_all(&close_wq);
++                       return;
++               }
+        }
+        idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
+        spin_unlock(&clp->cl_lock);
 
-Will be glad to help!
+then free the copy notify stateids associated with stateid.
 
-In any case regarding to this one, I would like rather to see it's never
-appeared, or now will be gone in favour of string_escape_mem() extension.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Laundromat would still be checking the copy_notify stateids for
+anything that's been not active for a while (but not closed).
 
 
+
+
+
+>
+> --b.
