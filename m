@@ -2,145 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ACE985144
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2019 18:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29E2853A6
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2019 21:36:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfHGQmV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Aug 2019 12:42:21 -0400
-Received: from mail-ua1-f45.google.com ([209.85.222.45]:39957 "EHLO
-        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730010AbfHGQmU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Aug 2019 12:42:20 -0400
-Received: by mail-ua1-f45.google.com with SMTP id s4so35258390uad.7
-        for <linux-nfs@vger.kernel.org>; Wed, 07 Aug 2019 09:42:20 -0700 (PDT)
+        id S2389293AbfHGTgP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Aug 2019 15:36:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40871 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389273AbfHGTgP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Aug 2019 15:36:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so51735512oth.7
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Aug 2019 12:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A1lHuxtLOgSJEJ1WU8wknw2L4Ff4Fm0om2s31/P03jQ=;
-        b=XUYhQ5tfndW9eJN5gFkuvV3LmUHOcMN6i2YkcWlzufQrvpBFK6LJlkz6u6tAoQoudQ
-         cQF35T3/TYvcOpRfvnwtAMposS5sE0CmmZfFnFsuaG30N4zQODAV7hn22eS8DgWbuuxx
-         d40eglTx8VADxyz038XlGKJBjARgxTW2u5uu7OKPS4VWNH8f7ESpTQo4pNOdk9IuWxTn
-         3kkV754gem/2sco2tn/oCTp4CMgria4pKg6UO89r3UKYk//lnEmQC74D3WWlOUFMpmdT
-         CtQVvf+nfPBVJWF1XF6o/A8tceCH3j60roIaQz23LQpEYcuDIWPhZuEQSue2By0kr68i
-         YFcQ==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BLwUconpSd4fc18pxrnnaYROcXN/y55tc48Wt07pbi0=;
+        b=OiWByV4IjttMmDEE9xddygJUq9kO0m2DSiVIH790w8+kD2xx4n8qaRNgev9oZaiL+x
+         LNtkcVJZxKCQn6dxlhaBAgnCpf++ZRLAG8oF3Smxd0VT+AMVE+jud4ymidQPwCYShmMW
+         6MO2MKX/wPQsphEy5Ys3qCDYWEkOMqyWi1L6UuHz3XJuytDhu04ruLnYKJREk9OTHPdI
+         1CUcvXf+RKStwwpbTr+2zZqEiVZ/2IadGGuFoDZX+bPQvo6T/i48Izxyv3zByVAVKI9o
+         Fdue9UpKyKpfZ00TdhN3VP7GWxnjwocrygU1htzM9gn6ySPw7FmHc1e4o3q1UYsfJzE1
+         Ve6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A1lHuxtLOgSJEJ1WU8wknw2L4Ff4Fm0om2s31/P03jQ=;
-        b=tJrZc3tDuA1/3dhsb5wFKNxN7l4TJPzxc/CmCfLgFdJVE3KIctF2mnMAoHC3N86Ex5
-         WelPOH3YE/1v115wNq32fyZzwWObtyi+JMjB3TbCEXgaeFSrWr/lK6FYJsSZOF+FsK0g
-         t7fxAcK/XqpTiYnYcHMWfJN8wrjG2eOhk/281qPWJDAaFWXTacOo6fLuaoqpO9DW/fUJ
-         prO64WWZ2DtJneYsGTu8iJnZnrdpgoUjuPbQ+fAWEHwYPj9UrMeM/6ZEQ5rjlYOjioPp
-         jxqiIE0KMqwDDjoDgQYPQ27xkxF0RiHYw60oc+PIchi5xGk3mhukTheA0ilZh8eu7RFW
-         5vYQ==
-X-Gm-Message-State: APjAAAV5aM820kmH3Gxk5IG5hAqdGaUk5LYtW90YRD3ibvsPijNL9G6C
-        3CeUcAQpNHpm2z6xbpnie65SWcdzaT2QtONhq/da4Q==
-X-Google-Smtp-Source: APXvYqx+nu8yyWdE/8WiTSFzL0/HFvfRuH0YWhqItqVjGkJc7X8w9EncjzjiDGcHpZg2WU3ssBEcgMoAZf7e+3ehOsA=
-X-Received: by 2002:ab0:6881:: with SMTP id t1mr6211268uar.65.1565196139582;
- Wed, 07 Aug 2019 09:42:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BLwUconpSd4fc18pxrnnaYROcXN/y55tc48Wt07pbi0=;
+        b=RzSocth3R3y56+gkawxnLPUgpkuRZRNRDaDI0C4tGhkuoUPIb7DQuHVqTRrBvi3IbB
+         V4tF2iGY8aXEysRUXdKTfndPfQUK4AsunlFTyRK+Ol63Ekb2s9E0CMH6DQp/kAWnZ2xN
+         SBmMxHXKiaeY6/5Bp1EDesf8OQO2q4GHWbCPUu8GmmXTMYGLSwUrdTRDNkILGJDQzsCo
+         qGbjqDLjXmYLzrH3SqePDiHyjY4VE/h8csqXL9qd2pfOoaTslPZp7zn9kIkt3zRGzlXL
+         3iSLNyxF/BlAmndeRR55KVRkAyQg8mssMuVVMUkeOJqgUQtsmk2HTF+KqS+3RMe7nbWN
+         50VQ==
+X-Gm-Message-State: APjAAAVSVr4lorw4QwUW3yQcriMqwR8rSJMcYdQDHBfrVof2sn1luFxR
+        Gj3eMnhbq4Hg0K6kQoXwTVqgQ+A=
+X-Google-Smtp-Source: APXvYqxmTzy3YuPQkWeaE0CmmZxOKP80fQR7laoVc4UNiUFkLCelogxS6U6Gt7GHHvKP+oZQlFqZGw==
+X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr12146868jao.136.1565206573252;
+        Wed, 07 Aug 2019 12:36:13 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id l26sm5361365ioj.24.2019.08.07.12.36.12
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 12:36:12 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Ensure state recovery handles ETIMEDOUT correctly
+Date:   Wed,  7 Aug 2019 15:34:04 -0400
+Message-Id: <20190807193404.123590-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CAN-5tyEbwjPNbXKWXv+3=geisjH-i=xKWRqgyXa3v9Xk=OvdEw@mail.gmail.com>
- <20190731215118.GA13311@parsley.fieldses.org> <CAN-5tyGz5M1eMFC=CJUEdTB7cAq-PRis8SJMEnrcr4Svmmy03w@mail.gmail.com>
- <20190801151239.GC17654@fieldses.org> <CAN-5tyE8xdJhs5C_bOo0a9yLRUAvkKi7OLOq47He5P0OR8PGyQ@mail.gmail.com>
- <CAN-5tyEx7-kddfgsvSGAsCD3amMXq-iGLkQN2GdmaXOc19GwkA@mail.gmail.com>
- <20190801181158.GC19461@fieldses.org> <CAN-5tyEiO=kBQC=pLu_aeVfV+3f3KWFbz_1ooG8qBLoBqFaehQ@mail.gmail.com>
- <20190801193654.GA12211@parsley.fieldses.org> <CAN-5tyFSRcnOT5kuF_1iKZDu=KyjEj+3tcq0ARSNOeuSmJMYGQ@mail.gmail.com>
- <20190807160843.GD24728@fieldses.org>
-In-Reply-To: <20190807160843.GD24728@fieldses.org>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Wed, 7 Aug 2019 12:42:08 -0400
-Message-ID: <CAN-5tyGzbvmSfw2=KF_4_q+nyv1=L0Chz2bBUjsPiqg+3qoJ8Q@mail.gmail.com>
-Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 12:09 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Wed, Aug 07, 2019 at 12:02:40PM -0400, Olga Kornievskaia wrote:
-> > On Thu, Aug 1, 2019 at 3:36 PM J. Bruce Fields <bfields@redhat.com> wrote:
-> > >
-> > > On Thu, Aug 01, 2019 at 02:24:04PM -0400, Olga Kornievskaia wrote:
-> > > > i was just looking at close_lru and delegation_lru but I guess that's
-> > > > not a list of delegation or open stateids but rather some complex of
-> > > > not deleting the stateid right away but moving it to nfs4_ol_stateid
-> > > > and the list on the nfsd_net. Are you looking for something similar
-> > > > for the copy_notify state or can I just keep a global list of the
-> > > > nfs4_client and add and delete of that (not move to the delete later)?
-> > >
-> > > A global list seems like it should work if the locking's OK.
-> >
-> > I'm having issues taking a reference on a parent stateid and being
-> > able to clean it. Let me try to explain.
->
-> With other stateid parent relationships I believe what we do is: instead
-> of the child taking a reference on the parent, we ensure that the child
-> is destroyed, and that nobody can be holding a pointer to it, before we
-> destroy the parent.
+Ensure that the state recovery code handles ETIMEDOUT correctly,
+and also that we set RPC_TASK_TIMEOUT when recovering open state.
 
-I don't think we can get away from not taking a reference on the
-parent. When a READ comes with the copy_notify stateid, it's used to
-lookup the parent state because the nfs4_preprocess_stateid_op() that
-checks the validity of the stateid for a given operation needs to
-check validity of that parent stateid). Otherwise, we'd have to
-special case the READ calling nfs4_preprocess_stateid_op() and special
-call that function to when called from READ and finding a copy_notify
-stateid will forego the other checks. Do you want me to that instead
-of what I proposed below?
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4proc.c  | 2 ++
+ fs/nfs/nfs4state.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
->
-> --b.
->
-> > Since I take a reference on the stateid, then during what would have
-> > been the last put (due to say a close operation), stateid isn't
-> > released. Now that stateid is sticking around. I personally would have
-> > liked on what would have been a close and release of the stateid to
-> > release the copy notify state(s) (which was being done before but
-> > having a reference makes it hard? i want to count number of copy
-> > notify states and if then somehow if the num_copies-1 is going to make
-> > it 0, then decrement by num_copies (and the normal -1) but if it's not
-> > the last reference then it shouldn't be decremented.
-> >
-> > Now say no fancy logic happens on close so we have these stateids left
-> > over . What to do on unmount? It will error with err_client_busy since
-> > there are non-zero copy notify states and only after a lease period it
-> > will release the resources (when the close of the file should have
-> > removed any copy notify state)?
-> >
-> > Question: would it be acceptable to do something like this on freeing
-> > of the parent stateid?
-> >
-> > @@ -896,8 +931,12 @@ static void block_delegations(struct knfsd_fh *fh)
-> >         might_lock(&clp->cl_lock);
-> >
-> >         if (!refcount_dec_and_lock(&s->sc_count, &clp->cl_lock)) {
-> > -               wake_up_all(&close_wq);
-> > -               return;
-> > +               if (!refcount_sub_and_test_checked(s->sc_cp_list_size,
-> > +                               &s->sc_count)) {
-> > +                       refcount_add_checked(s->sc_cp_list_size, &s->sc_count);
-> > +                       wake_up_all(&close_wq);
-> > +                       return;
-> > +               }
-> >         }
-> >         idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> >         spin_unlock(&clp->cl_lock);
-> >
-> > then free the copy notify stateids associated with stateid.
-> >
-> > Laundromat would still be checking the copy_notify stateids for
-> > anything that's been not active for a while (but not closed).
-> >
-> >
-> >
-> >
-> >
-> > >
-> > > --b.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 12b2b65ad8a8..1406858bae6c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2179,6 +2179,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
+ 		case -ENOENT:
+ 		case -EAGAIN:
+ 		case -ESTALE:
++		case -ETIMEDOUT:
+ 			break;
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+@@ -2499,6 +2500,7 @@ static int nfs4_run_open_task(struct nfs4_opendata *data,
+ 	if (!ctx) {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 1);
+ 		data->is_recover = true;
++		task_setup_data.flags |= RPC_TASK_TIMEOUT;
+ 	} else {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 0);
+ 		pnfs_lgopen_prepare(data, ctx);
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index a4e866b2b43b..cad4e064b328 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1529,6 +1529,7 @@ static int nfs4_reclaim_locks(struct nfs4_state *state, const struct nfs4_state_
+ 		switch (status) {
+ 		case 0:
+ 			break;
++		case -ETIMEDOUT:
+ 		case -ESTALE:
+ 		case -NFS4ERR_ADMIN_REVOKED:
+ 		case -NFS4ERR_STALE_STATEID:
+@@ -1682,11 +1683,13 @@ static int nfs4_reclaim_open_state(struct nfs4_state_owner *sp, const struct nfs
+ 		case -NFS4ERR_EXPIRED:
+ 		case -NFS4ERR_NO_GRACE:
+ 			nfs4_state_mark_reclaim_nograce(sp->so_server->nfs_client, state);
++			/* Fall through */
+ 		case -NFS4ERR_STALE_CLIENTID:
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+ 		case -NFS4ERR_BAD_HIGH_SLOT:
+ 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
++		case -ETIMEDOUT:
+ 			goto out_err;
+ 		}
+ 		nfs4_put_open_state(state);
+@@ -1971,7 +1974,6 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
+ 		return -EPERM;
+ 	case -EACCES:
+ 	case -NFS4ERR_DELAY:
+-	case -ETIMEDOUT:
+ 	case -EAGAIN:
+ 		ssleep(1);
+ 		break;
+@@ -2600,7 +2602,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 		}
+ 
+ 		/* Now recover expired state... */
+-		if (test_and_clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
++		if (test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
+ 			section = "reclaim nograce";
+ 			status = nfs4_do_reclaim(clp,
+ 				clp->cl_mvops->nograce_recovery_ops);
+@@ -2608,6 +2610,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 				continue;
+ 			if (status < 0)
+ 				goto out_error;
++			clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
+ 		}
+ 
+ 		nfs4_end_drain_session(clp);
+-- 
+2.21.0
+
