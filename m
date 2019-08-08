@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4DC86B4B
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 22:19:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00FD686B4C
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 22:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404695AbfHHUS7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Aug 2019 16:18:59 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45314 "EHLO
+        id S2404699AbfHHUTB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Aug 2019 16:19:01 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44972 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404699AbfHHUS6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Aug 2019 16:18:58 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x21so30525206otq.12
-        for <linux-nfs@vger.kernel.org>; Thu, 08 Aug 2019 13:18:58 -0700 (PDT)
+        with ESMTP id S2404689AbfHHUTA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Aug 2019 16:19:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so73567264otl.11
+        for <linux-nfs@vger.kernel.org>; Thu, 08 Aug 2019 13:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=96csoeLSjTb50KBiWwpM8v2p5EFPAXKbclrkTbMvXN8=;
-        b=HH2XgA1XUs5jRiCppJ33swhlz+rguAhdmrfJzDZDz7ZI/Nz4XIIuCj396BfizbKm9Q
-         4iSUTqk6auIbdARhvyhuUrVFAPU0u0hN3jddrxwpL66+LLbNR+8rlitKG6V8hilP/CID
-         qii/JLANI44iuEbSdU1kumfqgG0yk8Y4q4chhR9CxsxK6wxuGAeeYLopiXZc71l0Os2P
-         qg7+DzvanYRykz9M7HQRU97ij0UzC95Ro4jCm3w8VxRqDtoguG3uGlL33eG+ooDJaY+A
-         pZ87Jysp+h+Ly6AJuwnxVYz17gf0PbmaD2Xcj8NY/RYGE9YYRm+TueQbHkYkggi+mTb3
-         CuUQ==
+        bh=vBoc3inh6kSD44ijq/zB+cTyxJaoMyw5d5rHe5SNC0g=;
+        b=Z1sMh3Tll+0Isldf+WO9jtWqVS6SofspTKgL8/1483N8vpsb3OoHnR5atA4Smnlz+H
+         p9eix+RG2WZe3ZfOKe7sVGwxFKZiGXacYNPgYt+l/eDfw55IshyneH5zMiJxjO/EmluY
+         qO2omTMEGTTny1ncpaNCOHu53ehcmU6AWxdNXHkOEUG/dmfqI95YeiOj9PVffmMU1OvC
+         PDUClGRVXH/SmnBTFyT+Ixf0zJ0ADGqCa4G/2MXd0bL6/LCHNuChqtcTYt38y9Pg+jjr
+         2vtJHO1J9C8F9ko0cNHthuWj9WTYhOhjJdOwHmw64PYNavMzWiMciEMJzWCs4xbPbH53
+         LcDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=96csoeLSjTb50KBiWwpM8v2p5EFPAXKbclrkTbMvXN8=;
-        b=GfoSTkutqgUj+//hQCIF09Bntf7kEeTkfeWiweIGy+CasYDr77SFBtnJl05iKDthXB
-         c8fQ3ga93nAeVLwuo9UqGz54bEN0QWUl1VysBQgvmQpNQBmRimkFIBhB02lJ1xKKfxFt
-         B7ttMCc0xupoTugpD9jshmXukOmgiUcr6syRA+NexpXrhZSBrXRwdIna7roxM1c7iK/1
-         d3AmIPqf8DGgAMR13FUMnOTKg++FPEWA2lJAqQGrRqKEbd8SFDm1LxO07C2FrMKMLYDl
-         uDB0AESeQ5Q4nHLxCZSuWC8o2yU5iciIgiM2nSUUMVQj8IPPr2pTh/HTFuxPxbdhsn4P
-         NdYw==
-X-Gm-Message-State: APjAAAXaLC34M8lm3g0YvVCSsBm3F5T/WhrDlfiI37V1N/1yr9DuiAmA
-        dJD0jCKJoz++lU1q4CnKQeM=
-X-Google-Smtp-Source: APXvYqye4A2ltRkTzr7Gp+YYtcM+lSAE/08Ah8NdJRpaiC0QFlCV3mqe9gHCGzijLNhWkQmmXksk4g==
-X-Received: by 2002:a05:6602:cc:: with SMTP id z12mr759190ioe.86.1565295537931;
-        Thu, 08 Aug 2019 13:18:57 -0700 (PDT)
+        bh=vBoc3inh6kSD44ijq/zB+cTyxJaoMyw5d5rHe5SNC0g=;
+        b=LCz6DY+oPIIFYGLq88Xc311ySt532wqtqFZvJQ3enzHfUGWzkj0up0N7Nc+yIrSa+F
+         oK9MHJeJPFqsocRG6FKmsHdfnPJXZlSoe4O/pbxDm7hNhsRi+sIw70Nzdn/WMArl7OXH
+         AlIjepOitKNPOQqDxdOVqMntGVqu0wprzjYQrElbRb0gWkYKbAyaHFyRc04tCnC0WepR
+         nOxvGWI29BuclW2cFl2hPtX4ItEdLChVFrydFIkh9Fvn7rvyZBPJrOvhUhHDXHx/znJs
+         uztcAiU0Nxf4UfivmpKWEGwjOxz9NLaWyucEkqRxaHhPLPl/wRM5WhzZa0e7eiLjGBRT
+         Op3Q==
+X-Gm-Message-State: APjAAAVfPLsFlzHhNi6zn1Txh17yfoOC7WxsNLtO0Z8SWSF259hfRgMn
+        wt2q54DYmDOPzk+76SPTBxZkcx0v
+X-Google-Smtp-Source: APXvYqxBYSiF/Q5ntNZ1NKiMkrUfQG9k7Sda4cvr3wW6PnaqIL7NNb2yDrH7JBs5mAdpY7Ny6wcQVw==
+X-Received: by 2002:a02:c992:: with SMTP id b18mr5074949jap.128.1565295538873;
+        Thu, 08 Aug 2019 13:18:58 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id m20sm93590523ioh.4.2019.08.08.13.18.57
+        by smtp.gmail.com with ESMTPSA id m20sm93590523ioh.4.2019.08.08.13.18.58
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Thu, 08 Aug 2019 13:18:57 -0700 (PDT)
+        Thu, 08 Aug 2019 13:18:58 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v5 8/9] NFSD: allow inter server COPY to have a STALE source server fh
-Date:   Thu,  8 Aug 2019 16:18:47 -0400
-Message-Id: <20190808201848.36640-9-olga.kornievskaia@gmail.com>
+Subject: [PATCH v5 9/9] NFSD add nfs4 inter ssc to nfsd4_copy
+Date:   Thu,  8 Aug 2019 16:18:48 -0400
+Message-Id: <20190808201848.36640-10-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
 References: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
@@ -57,174 +57,473 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The inter server to server COPY source server filehandle
-is a foreign filehandle as the COPY is sent to the destination
-server.
+From: Olga Kornievskaia <kolga@netapp.com>
+
+Given a universal address, mount the source server from the destination
+server.  Use an internal mount. Call the NFS client nfs42_ssc_open to
+obtain the NFS struct file suitable for nfsd_copy_range.
+
+Ability to do "inter" server-to-server depends on the an nfsd kernel
+parameter "inter_copy_offload_enable".
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfsd/Kconfig    | 10 +++++++++
- fs/nfsd/nfs4proc.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfsfh.h    |  5 ++++-
- fs/nfsd/xdr4.h     |  1 +
- 4 files changed, 70 insertions(+), 5 deletions(-)
+ fs/nfsd/nfs4proc.c  | 295 ++++++++++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4state.c |   6 +-
+ fs/nfsd/nfssvc.c    |   6 ++
+ fs/nfsd/state.h     |   3 +
+ fs/nfsd/xdr4.h      |   5 +
+ 5 files changed, 291 insertions(+), 24 deletions(-)
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index d25f6bb..bef3a58 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -132,6 +132,16 @@ config NFSD_FLEXFILELAYOUT
- 
- 	  If unsure, say N.
- 
-+config NFSD_V4_2_INTER_SSC
-+	bool "NFSv4.2 inter server to server COPY"
-+	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
-+	help
-+	  This option enables support for NFSv4.2 inter server to
-+	  server copy where the destination server calls the NFSv4.2
-+	  client to read the data to copy from the source server.
-+
-+	  If unsure, say N.
-+
- config NFSD_V4_SECURITY_LABEL
- 	bool "Provide Security Label support for NFSv4 server"
- 	depends on NFSD_V4 && SECURITY
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index ef961f1..e5a8da1 100644
+index e5a8da1..3097632 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -504,12 +504,20 @@ static __be32 nfsd4_open_omfg(struct svc_rqst *rqstp, struct nfsd4_compound_stat
- 	    union nfsd4_op_u *u)
- {
- 	struct nfsd4_putfh *putfh = &u->putfh;
-+	__be32 ret;
- 
- 	fh_put(&cstate->current_fh);
- 	cstate->current_fh.fh_handle.fh_size = putfh->pf_fhlen;
- 	memcpy(&cstate->current_fh.fh_handle.fh_base, putfh->pf_fhval,
- 	       putfh->pf_fhlen);
--	return fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
-+	ret = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
+@@ -1153,6 +1153,209 @@ void nfsd4_shutdown_copy(struct nfs4_client *clp)
+ 	while ((copy = nfsd4_get_copy(clp)) != NULL)
+ 		nfsd4_stop_copy(copy);
+ }
 +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-+	if (ret == nfserr_stale && putfh->no_verify) {
-+		SET_FH_FLAG(&cstate->current_fh, NFSD4_FH_FOREIGN);
-+		ret = 0;
++
++extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
++				   struct nfs_fh *src_fh,
++				   nfs4_stateid *stateid);
++extern void nfs42_ssc_close(struct file *filep);
++
++extern void nfs_sb_deactive(struct super_block *sb);
++
++#define NFSD42_INTERSSC_MOUNTOPS "vers=4.2,addr=%s,sec=sys"
++
++/**
++ * Support one copy source server for now.
++ */
++static __be32
++nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
++		       struct vfsmount **mount)
++{
++	struct file_system_type *type;
++	struct vfsmount *ss_mnt;
++	struct nfs42_netaddr *naddr;
++	struct sockaddr_storage tmp_addr;
++	size_t tmp_addrlen, match_netid_len = 3;
++	char *startsep = "", *endsep = "", *match_netid = "tcp";
++	char *ipaddr, *dev_name, *raw_data;
++	int len, raw_len, status = -EINVAL;
++
++	naddr = &nss->u.nl4_addr;
++	tmp_addrlen = rpc_uaddr2sockaddr(SVC_NET(rqstp), naddr->addr,
++					 naddr->addr_len,
++					 (struct sockaddr *)&tmp_addr,
++					 sizeof(tmp_addr));
++	if (tmp_addrlen == 0)
++		goto out_err;
++
++	if (tmp_addr.ss_family == AF_INET6) {
++		startsep = "[";
++		endsep = "]";
++		match_netid = "tcp6";
++		match_netid_len = 4;
 +	}
-+#endif
-+	return ret;
++
++	if (naddr->netid_len != match_netid_len ||
++		strncmp(naddr->netid, match_netid, naddr->netid_len))
++		goto out_err;
++
++	/* Construct the raw data for the vfs_kern_mount call */
++	len = RPC_MAX_ADDRBUFLEN + 1;
++	ipaddr = kzalloc(len, GFP_KERNEL);
++	if (!ipaddr)
++		goto out_err;
++
++	rpc_ntop((struct sockaddr *)&tmp_addr, ipaddr, len);
++
++	/* 2 for ipv6 endsep and startsep. 3 for ":/" and trailing '/0'*/
++
++	raw_len = strlen(NFSD42_INTERSSC_MOUNTOPS) + strlen(ipaddr);
++	raw_data = kzalloc(raw_len, GFP_KERNEL);
++	if (!raw_data)
++		goto out_free_ipaddr;
++
++	snprintf(raw_data, raw_len, NFSD42_INTERSSC_MOUNTOPS, ipaddr);
++
++	status = -ENODEV;
++	type = get_fs_type("nfs");
++	if (!type)
++		goto out_free_rawdata;
++
++	/* Set the server:<export> for the vfs_kern_mount call */
++	dev_name = kzalloc(len + 5, GFP_KERNEL);
++	if (!dev_name)
++		goto out_free_rawdata;
++	snprintf(dev_name, len + 5, "%s%s%s:/", startsep, ipaddr, endsep);
++
++	/* Use an 'internal' mount: SB_KERNMOUNT -> MNT_INTERNAL */
++	ss_mnt = vfs_kern_mount(type, SB_KERNMOUNT, dev_name, raw_data);
++	module_put(type->owner);
++	if (IS_ERR(ss_mnt))
++		goto out_free_devname;
++
++	status = 0;
++	*mount = ss_mnt;
++
++out_free_devname:
++	kfree(dev_name);
++out_free_rawdata:
++	kfree(raw_data);
++out_free_ipaddr:
++	kfree(ipaddr);
++out_err:
++	return status;
++}
++
++static void
++nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
++{
++	nfs_sb_deactive(ss_mnt->mnt_sb);
++	mntput(ss_mnt);
++}
++
++/**
++ * nfsd4_setup_inter_ssc
++ *
++ * Verify COPY destination stateid.
++ * Connect to the source server with NFSv4.1.
++ * Create the source struct file for nfsd_copy_range.
++ * Called with COPY cstate:
++ *    SAVED_FH: source filehandle
++ *    CURRENT_FH: destination filehandle
++ *
++ * Returns errno (not nfserrxxx)
++ */
++static __be32
++nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
++		      struct nfsd4_compound_state *cstate,
++		      struct nfsd4_copy *copy, struct vfsmount **mount)
++{
++	struct svc_fh *s_fh = NULL;
++	stateid_t *s_stid = &copy->cp_src_stateid;
++	__be32 status = -EINVAL;
++
++	/* Verify the destination stateid and set dst struct file*/
++	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
++					    &copy->cp_dst_stateid,
++					    WR_STATE, &copy->file_dst, NULL,
++					    NULL);
++	if (status)
++		goto out;
++
++	status = nfsd4_interssc_connect(&copy->cp_src, rqstp, mount);
++	if (status)
++		goto out;
++
++	s_fh = &cstate->save_fh;
++
++	copy->c_fh.size = s_fh->fh_handle.fh_size;
++	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
++	copy->stateid.seqid = s_stid->si_generation;
++	memcpy(copy->stateid.other, (void *)&s_stid->si_opaque,
++	       sizeof(stateid_opaque_t));
++
++	status = 0;
++out:
++	return status;
++}
++
++static void
++nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *src,
++			struct file *dst)
++{
++	nfs42_ssc_close(src);
++	fput(src);
++	fput(dst);
++	mntput(ss_mnt);
++}
++
++#else /* CONFIG_NFSD_V4_2_INTER_SSC */
++
++static __be32
++nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
++		      struct nfsd4_compound_state *cstate,
++		      struct nfsd4_copy *copy,
++		      struct vfsmount **mount)
++{
++	*mount = NULL;
++	return -EINVAL;
++}
++
++static void
++nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *src,
++			struct file *dst)
++{
++}
++
++static void
++nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
++{
++}
++
++static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
++				   struct nfs_fh *src_fh,
++				   nfs4_stateid *stateid)
++{
++	return NULL;
++}
++#endif /* CONFIG_NFSD_V4_2_INTER_SSC */
++
++static __be32
++nfsd4_setup_intra_ssc(struct svc_rqst *rqstp,
++		      struct nfsd4_compound_state *cstate,
++		      struct nfsd4_copy *copy)
++{
++	return nfsd4_verify_copy(rqstp, cstate, &copy->cp_src_stateid,
++				 &copy->file_src, &copy->cp_dst_stateid,
++				 &copy->file_dst, NULL);
++}
++
++static void
++nfsd4_cleanup_intra_ssc(struct file *src, struct file *dst)
++{
++	fput(src);
++	fput(dst);
++}
+ 
+ static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
+ {
+@@ -1217,12 +1420,16 @@ static __be32 nfsd4_do_copy(struct nfsd4_copy *copy, bool sync)
+ 		status = nfs_ok;
+ 	}
+ 
+-	fput(copy->file_src);
+-	fput(copy->file_dst);
++	if (!copy->cp_intra) /* Inter server SSC */
++		nfsd4_cleanup_inter_ssc(copy->ss_mnt, copy->file_src,
++					copy->file_dst);
++	else
++		nfsd4_cleanup_intra_ssc(copy->file_src, copy->file_dst);
++
+ 	return status;
+ }
+ 
+-static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
++static int dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ {
+ 	dst->cp_src_pos = src->cp_src_pos;
+ 	dst->cp_dst_pos = src->cp_dst_pos;
+@@ -1232,8 +1439,17 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ 	memcpy(&dst->fh, &src->fh, sizeof(src->fh));
+ 	dst->cp_clp = src->cp_clp;
+ 	dst->file_dst = get_file(src->file_dst);
+-	dst->file_src = get_file(src->file_src);
++	dst->cp_intra = src->cp_intra;
++	if (src->cp_intra) /* for inter, file_src doesn't exist yet */
++		dst->file_src = get_file(src->file_src);
+ 	memcpy(&dst->cp_stateid, &src->cp_stateid, sizeof(src->cp_stateid));
++	memcpy(&dst->cp_src, &src->cp_src, sizeof(struct nl4_server));
++	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
++	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
++	dst->ss_mnt = src->ss_mnt;
++
++	return 0;
++
+ }
+ 
+ static void cleanup_async_copy(struct nfsd4_copy *copy)
+@@ -1252,7 +1468,18 @@ static int nfsd4_do_async_copy(void *data)
+ 	struct nfsd4_copy *copy = (struct nfsd4_copy *)data;
+ 	struct nfsd4_copy *cb_copy;
+ 
++	if (!copy->cp_intra) { /* Inter server SSC */
++		copy->file_src = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
++					      &copy->stateid);
++		if (IS_ERR(copy->file_src)) {
++			copy->nfserr = nfserr_offload_denied;
++			nfsd4_interssc_disconnect(copy->ss_mnt);
++			goto do_callback;
++		}
++	}
++
+ 	copy->nfserr = nfsd4_do_copy(copy, 0);
++do_callback:
+ 	cb_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
+ 	if (!cb_copy)
+ 		goto out;
+@@ -1276,11 +1503,20 @@ static int nfsd4_do_async_copy(void *data)
+ 	__be32 status;
+ 	struct nfsd4_copy *async_copy = NULL;
+ 
+-	status = nfsd4_verify_copy(rqstp, cstate, &copy->cp_src_stateid,
+-				   &copy->file_src, &copy->cp_dst_stateid,
+-				   &copy->file_dst, NULL);
+-	if (status)
+-		goto out;
++	if (!copy->cp_intra) { /* Inter server SSC */
++		if (!inter_copy_offload_enable || copy->cp_synchronous) {
++			status = nfserr_notsupp;
++			goto out;
++		}
++		status = nfsd4_setup_inter_ssc(rqstp, cstate, copy,
++					&copy->ss_mnt);
++		if (status)
++			return nfserr_offload_denied;
++	} else {
++		status = nfsd4_setup_intra_ssc(rqstp, cstate, copy);
++		if (status)
++			return status;
++	}
+ 
+ 	copy->cp_clp = cstate->clp;
+ 	memcpy(&copy->fh, &cstate->current_fh.fh_handle,
+@@ -1291,15 +1527,15 @@ static int nfsd4_do_async_copy(void *data)
+ 		status = nfserrno(-ENOMEM);
+ 		async_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
+ 		if (!async_copy)
+-			goto out;
+-		if (!nfs4_init_copy_state(nn, copy)) {
+-			kfree(async_copy);
+-			goto out;
+-		}
++			goto out_err;
++		if (!nfs4_init_copy_state(nn, copy))
++			goto out_err;
+ 		refcount_set(&async_copy->refcount, 1);
+ 		memcpy(&copy->cp_res.cb_stateid, &copy->cp_stateid,
+ 			sizeof(copy->cp_stateid));
+-		dup_copy_fields(copy, async_copy);
++		status = dup_copy_fields(copy, async_copy);
++		if (status)
++			goto out_err;
+ 		async_copy->copy_task = kthread_create(nfsd4_do_async_copy,
+ 				async_copy, "%s", "copy thread");
+ 		if (IS_ERR(async_copy->copy_task))
+@@ -1310,12 +1546,16 @@ static int nfsd4_do_async_copy(void *data)
+ 		spin_unlock(&async_copy->cp_clp->async_lock);
+ 		wake_up_process(async_copy->copy_task);
+ 		status = nfs_ok;
+-	} else
++	} else {
+ 		status = nfsd4_do_copy(copy, 1);
++	}
+ out:
+ 	return status;
+ out_err:
+ 	cleanup_async_copy(async_copy);
++	status = nfserrno(-ENOMEM);
++	if (!copy->cp_intra)
++		nfsd4_interssc_disconnect(copy->ss_mnt);
+ 	goto out;
+ }
+ 
+@@ -1326,7 +1566,7 @@ struct nfsd4_copy *
+ 
+ 	spin_lock(&clp->async_lock);
+ 	list_for_each_entry(copy, &clp->async_copies, copies) {
+-		if (memcmp(&copy->cp_stateid, stateid, NFS4_STATEID_SIZE))
++		if (memcmp(&copy->cp_stateid.stid, stateid, NFS4_STATEID_SIZE))
+ 			continue;
+ 		refcount_inc(&copy->refcount);
+ 		spin_unlock(&clp->async_lock);
+@@ -1347,12 +1587,25 @@ struct nfsd4_copy *
+ 	struct nfs4_client *clp = cstate->clp;
+ 
+ 	copy = find_async_copy(clp, &os->stateid);
+-	if (copy)
++	if (!copy) {
++		struct nfs4_cpntf_state *cps = NULL;
++		struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
++
++		status = find_internal_cpntf_state(nn, &os->stateid, &cps);
++		if (status)
++			return status;
++		if (cps) {
++			spin_lock(&clp->cpntf_lock);
++			list_del(&cps->cpntf);
++			spin_unlock(&clp->cpntf_lock);
++			nfs4_put_stid(cps->cp_p_stid);
++			free_cpntf_state(nn, cps);
++			return nfs_ok;
++		}
++	} else
+ 		nfsd4_stop_copy(copy);
+-	else
+-		status = nfserr_bad_stateid;
+ 
+-	return status;
++	return nfs_ok;
  }
  
  static __be32
-@@ -1967,6 +1975,45 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
- 		- rqstp->rq_auth_slack;
- }
- 
-+#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-+static __be32
-+check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
-+{
-+	struct nfsd4_op	*op, *current_op, *saved_op;
-+	struct nfsd4_copy *copy;
-+	struct nfsd4_putfh *putfh;
-+	int i;
-+
-+	/* traverse all operation and if it's a COPY compound, mark the
-+	 * source filehandle to skip verification
-+	 */
-+	for (i = 0; i < args->opcnt; i++) {
-+		op = &args->ops[i];
-+		if (op->opnum == OP_PUTFH)
-+			current_op = op;
-+		else if (op->opnum == OP_SAVEFH)
-+			saved_op = current_op;
-+		else if (op->opnum == OP_RESTOREFH)
-+			current_op = saved_op;
-+		else if (op->opnum == OP_COPY) {
-+			copy = (struct nfsd4_copy *)&op->u;
-+			if (!saved_op)
-+				return nfserr_nofilehandle;
-+			putfh = (struct nfsd4_putfh *)&saved_op->u;
-+			if (!copy->cp_intra)
-+				putfh->no_verify = true;
-+		}
-+	}
-+	return nfs_ok;
-+}
-+#else
-+static __be32
-+check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
-+{
-+	return nfs_ok;
-+}
-+#endif
-+
- /*
-  * COMPOUND call.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 85d00b2..9032e6e 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5676,8 +5676,8 @@ void free_cpntf_state(struct nfsd_net *nn, struct nfs4_cpntf_state *cps)
+  * A READ from an inter server to server COPY will have a
+  * copy stateid. Return the parent nfs4_stid.
   */
-@@ -2015,6 +2062,9 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
- 		resp->opcnt = 1;
- 		goto encode_op;
- 	}
-+	status = check_if_stalefh_allowed(args);
-+	if (status)
-+		goto out;
+-static __be32 _find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+-		     struct nfs4_cpntf_state **cps)
++__be32 find_internal_cpntf_state(struct nfsd_net *nn, stateid_t *st,
++				 struct nfs4_cpntf_state **cps)
+ {
+ 	struct nfs4_cpntf_state *state = NULL;
  
- 	trace_nfsd_compound(rqstp, args->opcnt);
- 	while (!status && resp->opcnt < args->opcnt) {
-@@ -2030,13 +2080,14 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
- 				op->status = nfsd4_open_omfg(rqstp, cstate, op);
- 			goto encode_op;
- 		}
--
--		if (!current_fh->fh_dentry) {
-+		if (!current_fh->fh_dentry &&
-+				!HAS_FH_FLAG(current_fh, NFSD4_FH_FOREIGN)) {
- 			if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_FH)) {
- 				op->status = nfserr_nofilehandle;
- 				goto encode_op;
- 			}
--		} else if (current_fh->fh_export->ex_fslocs.migrated &&
-+		} else if (current_fh->fh_export &&
-+			   current_fh->fh_export->ex_fslocs.migrated &&
- 			  !(op->opdesc->op_flags & ALLOWED_ON_ABSENT_FS)) {
- 			op->status = nfserr_moved;
- 			goto encode_op;
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 755e256..b9c7568 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -35,7 +35,7 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+@@ -5700,7 +5700,7 @@ static __be32 find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+ 	__be32 status;
+ 	struct nfs4_cpntf_state *cps = NULL;
  
- 	bool			fh_locked;	/* inode locked by us */
- 	bool			fh_want_write;	/* remount protection taken */
--
-+	int			fh_flags;	/* FH flags */
- #ifdef CONFIG_NFSD_V3
- 	bool			fh_post_saved;	/* post-op attrs saved */
- 	bool			fh_pre_saved;	/* pre-op attrs saved */
-@@ -56,6 +56,9 @@ static inline ino_t u32_to_ino_t(__u32 uino)
- #endif /* CONFIG_NFSD_V3 */
+-	status = _find_cpntf_state(nn, st, &cps);
++	status = find_internal_cpntf_state(nn, st, &cps);
+ 	if (status)
+ 		return status;
  
- } svc_fh;
-+#define NFSD4_FH_FOREIGN (1<<0)
-+#define SET_FH_FLAG(c, f) ((c)->fh_flags |= (f))
-+#define HAS_FH_FLAG(c, f) ((c)->fh_flags & (f))
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 18d94ea..033bfcb 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -30,6 +30,12 @@
  
- enum nfsd_fsid {
- 	FSID_DEV = 0,
+ #define NFSDDBG_FACILITY	NFSDDBG_SVC
+ 
++bool inter_copy_offload_enable;
++EXPORT_SYMBOL_GPL(inter_copy_offload_enable);
++module_param(inter_copy_offload_enable, bool, 0644);
++MODULE_PARM_DESC(inter_copy_offload_enable,
++		 "Enable inter server to server copy offload. Default: false");
++
+ extern struct svc_program	nfsd_program;
+ static int			nfsd(void *vrqstp);
+ #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 16be2f4..c0a1966 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -680,6 +680,9 @@ extern struct nfs4_client_reclaim *nfs4_client_to_reclaim(struct xdr_netobj name
+ extern struct nfsd4_copy *
+ find_async_copy(struct nfs4_client *clp, stateid_t *staetid);
+ extern void free_cpntf_state(struct nfsd_net *nn, struct nfs4_cpntf_state *cps);
++extern __be32 find_internal_cpntf_state(struct nfsd_net *nn, stateid_t *st,
++		struct nfs4_cpntf_state **cps);
++
+ static inline void get_nfs4_file(struct nfs4_file *fi)
+ {
+ 	refcount_inc(&fi->fi_ref);
 diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 687f81d..d76f9be 100644
+index d76f9be..75b884f 100644
 --- a/fs/nfsd/xdr4.h
 +++ b/fs/nfsd/xdr4.h
-@@ -221,6 +221,7 @@ struct nfsd4_lookup {
- struct nfsd4_putfh {
- 	u32		pf_fhlen;           /* request */
- 	char		*pf_fhval;          /* request */
-+	bool		no_verify;	    /* represents foreigh fh */
+@@ -550,7 +550,12 @@ struct nfsd4_copy {
+ 	struct task_struct	*copy_task;
+ 	refcount_t		refcount;
+ 	bool			stopped;
++
++	struct vfsmount		*ss_mnt;
++	struct nfs_fh		c_fh;
++	nfs4_stateid		stateid;
  };
++extern bool inter_copy_offload_enable;
  
- struct nfsd4_open {
+ struct nfsd4_seek {
+ 	/* request */
 -- 
 1.8.3.1
 
