@@ -2,131 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A238688F
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 20:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3518A868D3
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 20:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390196AbfHHSSx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Aug 2019 14:18:53 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14243 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731038AbfHHSSw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Aug 2019 14:18:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4c678b0000>; Thu, 08 Aug 2019 11:18:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 11:18:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 08 Aug 2019 11:18:50 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 18:18:49 +0000
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-To:     "Weiny, Ira" <ira.weiny@intel.com>,
-        Michal Hocko <mhocko@kernel.org>
-CC:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "devel@lists.orangefs.org" <devel@lists.orangefs.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
- <20190802124146.GL25064@quack2.suse.cz>
- <20190802142443.GB5597@bombadil.infradead.org>
- <20190802145227.GQ25064@quack2.suse.cz>
- <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
- <20190807083726.GA14658@quack2.suse.cz>
- <20190807084649.GQ11812@dhcp22.suse.cz>
- <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
- <e648a7f3-6a1b-c9ea-1121-7ab69b6b173d@nvidia.com>
- <2807E5FD2F6FDA4886F6618EAC48510E79E79644@CRSMSX101.amr.corp.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b1b33292-d929-f9ff-dd75-02828228f35e@nvidia.com>
-Date:   Thu, 8 Aug 2019 11:18:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79E79644@CRSMSX101.amr.corp.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565288332; bh=JXH0z+PATu5ChINAttu0xw8NI7VYrjVhdTogRmB3Q5s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ne1ScLdQ+tu5qOaISiLlk/MzD+D0tWGCUEcW8KATp/99KORz80qhTvSS0MA86k71v
-         1gG74XZNfpVRbFXyQsXs+wV66Ly/i7Omeym8buU22OwtUh/B674iBCJPOoXFe5hxmV
-         1e7OUBsDbdwXkl/h4Pjx1eOWT4qAVANZ24jESe93raeMkGLORABLpzcfJ+l/YUvFr/
-         bUBCYBUk9JXLyxcXRRJ6Qo5DLPNTbuOY1/JVx8JLOWf78tx+O5w4P2ZxYGmo4q53CG
-         aum+FjJWUhUsxhssDMyUyjXEHRPMBfcGtXYtpdJqmbhfodN4x0QDM6mw3fwyew2GF4
-         p5OXETBP5SbRg==
+        id S1733248AbfHHSee (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Aug 2019 14:34:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33190 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfHHSee (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:34:34 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2CCFE30C3A1F
+        for <linux-nfs@vger.kernel.org>; Thu,  8 Aug 2019 18:34:34 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-121-91.rdu2.redhat.com [10.10.121.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 13E0A19C69;
+        Thu,  8 Aug 2019 18:34:34 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id B439E20AAD; Thu,  8 Aug 2019 14:34:33 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH RFC v2 0/4] add principal to the data being tracked by nfsdcld
+Date:   Thu,  8 Aug 2019 14:34:29 -0400
+Message-Id: <20190808183433.3557-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 08 Aug 2019 18:34:34 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/8/19 9:25 AM, Weiny, Ira wrote:
->>
->> On 8/7/19 7:36 PM, Ira Weiny wrote:
->>> On Wed, Aug 07, 2019 at 10:46:49AM +0200, Michal Hocko wrote:
->>>> On Wed 07-08-19 10:37:26, Jan Kara wrote:
->>>>> On Fri 02-08-19 12:14:09, John Hubbard wrote:
->>>>>> On 8/2/19 7:52 AM, Jan Kara wrote:
->>>>>>> On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
->>>>>>>> On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
->>>>>>>>> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
->>>>>>>>>> On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
->>   [...]
-> Yep I can do this.  I did not realize that Andrew had accepted any of this work.  I'll check out his tree.  But I don't think he is going to accept this series through his tree.  So what is the ETA on that landing in Linus' tree?
-> 
+At the spring bakeathon, Chuck suggested that we should store the
+kerberos principal in addition to the client id string in nfsdcld.  The
+idea is to prevent an illegitimate client from reclaiming another
+client's opens by supplying that client's id string.  This is an initial
+attempt at doing that.
 
-I'd expect it to go into 5.4, according to my understanding of how
-the release cycles are arranged.
+The first patch adds support for a "GetVersion" upcall which allows nfsd
+to determine the maximum message version that nfsdcld supports.  Right
+now it's based on the value of CLD_UPCALL_VERSION from cld.h, but I was
+thinking we may wish to add a command-line option (and an nfs.conf)
+option to make it possible to use a lower version than
+CLD_UPCALL_VERSION.  My thinking here is that an older nfsdcld daemon
+won't be compatible with the new database schema... rather than worrying
+about messing with downgrading the database, just use the command-line
+option to make it behave like an older daemon.
 
+The second patch adds handling for the v2 Cld_Create and Cld_GraceStart
+upcalls, which can include the kerberos principal which we'll store
+along with the client id string in the database.  Note that if we're
+talking to an old kernel that does the v1 upcall, everything still works
+(we just ignore the new columns in the database).
 
-> To that point I'm still not sure who would take all this as I am now touching mm, procfs, rdma, ext4, and xfs.
-> 
-> I just thought I would chime in with my progress because I'm to a point where things are working and so I can submit the code but I'm not sure what I can/should depend on landing...  Also, now that 0day has run overnight it has found issues with this rebase so I need to clean those up...  Perhaps I will base on Andrew's tree prior to doing that...
+The third patch adds a tool for manipulating nfsdcld's database schema.
+It's mostly intended to be used to downgrade the database in the
+(hopefully rare) event that an admin would want to downgrade nfsdcld.
+It also provides the ability for fixing broken recovery table names
+(which nfsdcld also fixes automatically) as well as the ability to print
+the contents of the database.
 
-I'm certainly not the right person to answer, but in spite of that, I'd think
-Andrew's tree is a reasonable place for it. Sort of.
+The final patch updates the nfsdcld man page.
 
-thanks,
+Questions:
+1. Why do we have a copy of cld.h in support/include?  It seems
+unnecessary... maybe we should get rid of it so that we're always
+using the cld.h from the kernel headers?
+2. Should there be a command line option to allow nfsdcld to advertise a
+lower upcall version to nfsd in the GetVersion upcall reply?
+
+Changes since v1:
+- added a tool for manipulating nfsdcld's sqlite database schema
+- updated the nfsdcld man page
+
+Scott Mayhew (4):
+  nfsdcld: add a "GetVersion" upcall
+  nfsdcld: add support for upcall version 2
+  Add a tool for manipulating the nfsdcld sqlite database schema.
+  nfsdcld: update nfsdcld.man
+
+ configure.ac                    |   1 +
+ support/include/cld.h           |  37 ++++-
+ tools/Makefile.am               |   4 +
+ tools/clddb-tool/Makefile.am    |  13 ++
+ tools/clddb-tool/clddb-tool.man |  83 ++++++++++
+ tools/clddb-tool/clddb-tool.py  | 261 ++++++++++++++++++++++++++++++++
+ utils/nfsdcld/cld-internal.h    |  13 +-
+ utils/nfsdcld/nfsdcld.c         | 140 ++++++++++++++---
+ utils/nfsdcld/nfsdcld.man       |  32 +++-
+ utils/nfsdcld/sqlite.c          | 238 ++++++++++++++++++++++++-----
+ utils/nfsdcld/sqlite.h          |   2 +
+ 11 files changed, 755 insertions(+), 69 deletions(-)
+ create mode 100644 tools/clddb-tool/Makefile.am
+ create mode 100644 tools/clddb-tool/clddb-tool.man
+ create mode 100644 tools/clddb-tool/clddb-tool.py
+
 -- 
-John Hubbard
-NVIDIA
+2.17.2
+
