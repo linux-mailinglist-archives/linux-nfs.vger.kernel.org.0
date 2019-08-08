@@ -2,775 +2,460 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3089E868D6
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 20:34:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D74868D7
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 20:34:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfHHSeg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1732786AbfHHSeg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Thu, 8 Aug 2019 14:34:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52970 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:33200 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732786AbfHHSef (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S1725535AbfHHSef (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Thu, 8 Aug 2019 14:34:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7BF8D6128A
+        by mx1.redhat.com (Postfix) with ESMTPS id A576E3145426
         for <linux-nfs@vger.kernel.org>; Thu,  8 Aug 2019 18:34:34 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-121-91.rdu2.redhat.com [10.10.121.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 20CA019C7F;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D7685C231;
         Thu,  8 Aug 2019 18:34:34 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id C08F820C3B; Thu,  8 Aug 2019 14:34:33 -0400 (EDT)
+        id C3D4520D2C; Thu,  8 Aug 2019 14:34:33 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     steved@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH RFC v2 2/4] nfsdcld: add support for upcall version 2
-Date:   Thu,  8 Aug 2019 14:34:31 -0400
-Message-Id: <20190808183433.3557-3-smayhew@redhat.com>
+Subject: [nfs-utils PATCH RFC v2 3/4] Add a tool for manipulating the nfsdcld sqlite database schema.
+Date:   Thu,  8 Aug 2019 14:34:32 -0400
+Message-Id: <20190808183433.3557-4-smayhew@redhat.com>
 In-Reply-To: <20190808183433.3557-1-smayhew@redhat.com>
 References: <20190808183433.3557-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 08 Aug 2019 18:34:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 08 Aug 2019 18:34:34 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Version 2 upcalls will allow the nfsd to include the kerberos principal
-string (actually the first 1024 bytes of it) in the Cld_Create upcall.
-If present, the principal will be stored along with the client id string
-in the database, and will be included in the Cld_GraceStart downcall
-whenever nfsd restarts.
+The "clddb-tool" is mainly for downgrading the nfsdcld sqlite database
+schema in the event that an admin wants to downgrade nfsdcld.  It also
+provides options for fixing corrupt table names (note newer versions of
+nfsdcld take care of this automatically) and for printing the contents
+of the database.
 
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- support/include/cld.h        |  26 +++-
- utils/nfsdcld/cld-internal.h |  11 +-
- utils/nfsdcld/nfsdcld.c      |  97 +++++++++++---
- utils/nfsdcld/sqlite.c       | 236 +++++++++++++++++++++++++++++------
- utils/nfsdcld/sqlite.h       |   2 +
- 5 files changed, 316 insertions(+), 56 deletions(-)
+ configure.ac                    |   1 +
+ tools/Makefile.am               |   4 +
+ tools/clddb-tool/Makefile.am    |  13 ++
+ tools/clddb-tool/clddb-tool.man |  83 ++++++++++
+ tools/clddb-tool/clddb-tool.py  | 261 ++++++++++++++++++++++++++++++++
+ 5 files changed, 362 insertions(+)
+ create mode 100644 tools/clddb-tool/Makefile.am
+ create mode 100644 tools/clddb-tool/clddb-tool.man
+ create mode 100644 tools/clddb-tool/clddb-tool.py
 
-diff --git a/support/include/cld.h b/support/include/cld.h
-index 00a40da..c58efda 100644
---- a/support/include/cld.h
-+++ b/support/include/cld.h
-@@ -23,7 +23,7 @@
- #define _NFSD_CLD_H
+diff --git a/configure.ac b/configure.ac
+index 50002b4..954abfd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -652,6 +652,7 @@ AC_CONFIG_FILES([
+ 	tools/mountstats/Makefile
+ 	tools/nfs-iostat/Makefile
+ 	tools/nfsconf/Makefile
++        tools/clddb-tool/Makefile
+ 	utils/Makefile
+ 	utils/blkmapd/Makefile
+ 	utils/nfsdcld/Makefile
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 4266da4..53e6117 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -8,6 +8,10 @@ endif
  
- /* latest upcall version available */
--#define CLD_UPCALL_VERSION 1
-+#define CLD_UPCALL_VERSION 2
+ OPTDIRS += nfsconf
  
- /* defined by RFC3530 */
- #define NFS4_OPAQUE_LIMIT 1024
-@@ -43,6 +43,17 @@ struct cld_name {
- 	unsigned char	cn_id[NFS4_OPAQUE_LIMIT];	/* client-provided */
- } __attribute__((packed));
- 
-+/* principal of the form servicetype@hostname */
-+struct cld_principal {
-+	uint16_t	cp_len;				/* length of cp_data */
-+	unsigned char	cp_data[NFS4_OPAQUE_LIMIT];	/* princ from cred */
-+} __attribute__((packed));
++if CONFIG_NFSDCLD
++OPTDIRS += clddb-tool
++endif
 +
-+struct cld_clntinfo {
-+	struct cld_name		cc_name;
-+	struct cld_principal	cc_principal;
-+} __attribute__((packed));
+ SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat $(OPTDIRS)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/tools/clddb-tool/Makefile.am b/tools/clddb-tool/Makefile.am
+new file mode 100644
+index 0000000..15a8fd4
+--- /dev/null
++++ b/tools/clddb-tool/Makefile.am
+@@ -0,0 +1,13 @@
++## Process this file with automake to produce Makefile.in
++PYTHON_FILES =  clddb-tool.py
 +
- /* message struct for communication with userspace */
- struct cld_msg {
- 	uint8_t		cm_vers;		/* upcall version */
-@@ -56,6 +67,19 @@ struct cld_msg {
- 	} __attribute__((packed)) cm_u;
- } __attribute__((packed));
- 
-+/* version 2 message includes the principal */
-+struct cld_msg_v2 {
-+	uint8_t		cm_vers;		/* upcall version */
-+	uint8_t		cm_cmd;			/* upcall command */
-+	int16_t		cm_status;		/* return code */
-+	uint32_t	cm_xid;			/* transaction id */
-+	union {
-+		struct cld_name	cm_name;
-+		uint8_t		cm_version;	/* for getting max version */
-+		struct cld_clntinfo cm_clntinfo; /* name & princ */
-+	} __attribute__((packed)) cm_u;
-+} __attribute__((packed));
++man8_MANS	= clddb-tool.man
 +
- struct cld_msg_hdr {
- 	uint8_t		cm_vers;		/* upcall version */
- 	uint8_t		cm_cmd;			/* upcall command */
-diff --git a/utils/nfsdcld/cld-internal.h b/utils/nfsdcld/cld-internal.h
-index f33cb04..05f01be 100644
---- a/utils/nfsdcld/cld-internal.h
-+++ b/utils/nfsdcld/cld-internal.h
-@@ -18,11 +18,20 @@
- #ifndef _CLD_INTERNAL_H_
- #define _CLD_INTERNAL_H_
- 
-+#if CLD_UPCALL_VERSION >= 2
-+#define UPCALL_VERSION		2
-+#else
-+#define UPCALL_VERSION		1
-+#endif
++EXTRA_DIST	= $(man8_MANS) $(PYTHON_FILES)
 +
- struct cld_client {
- 	int			cl_fd;
- 	struct event		cl_event;
- 	union {
--		struct cld_msg	cl_msg;
-+		struct cld_msg		cl_msg;
-+#if UPCALL_VERSION >= 2
-+		struct cld_msg_v2	cl_msg_v2;
-+#endif
- 	} cl_u;
- };
- 
-diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-index aa5594b..07d9ec2 100644
---- a/utils/nfsdcld/nfsdcld.c
-+++ b/utils/nfsdcld/nfsdcld.c
-@@ -60,8 +60,6 @@
- 
- #define NFSD_END_GRACE_FILE "/proc/fs/nfsd/v4_end_grace"
- 
--#define UPCALL_VERSION		1
--
- /* private data structures */
- 
- /* global variables */
-@@ -338,20 +336,46 @@ cld_check_grace_period(void)
- 	return ret;
- }
- 
-+#if UPCALL_VERSION >= 2
-+static ssize_t cld_message_size(void *msg)
-+{
-+	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)msg;
++all-local: $(PYTHON_FILES)
 +
-+	switch (hdr->cm_vers) {
-+	case 1:
-+		return sizeof(struct cld_msg);
-+	case 2:
-+		return sizeof(struct cld_msg_v2);
-+	default:
-+		xlog(L_FATAL, "%s invalid upcall version %d", __func__,
-+		     hdr->cm_vers);
-+		exit(-EINVAL);
-+	}
-+}
-+#else
-+static ssize_t cld_message_size(void *UNUSED(msg))
-+{
-+	return sizeof(struct cld_msg);
-+}
-+#endif
++install-data-hook:
++	$(INSTALL) -m 755 clddb-tool.py $(DESTDIR)$(sbindir)/clddb-tool
 +
- static void
- cld_not_implemented(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	xlog(D_GENERAL, "%s: downcalling with not implemented error", __func__);
- 
- 	/* set up reply */
- 	cmsg->cm_status = -EOPNOTSUPP;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize)
- 		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-@@ -370,15 +394,18 @@ cld_get_version(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	xlog(D_GENERAL, "%s: version = %u.", __func__, UPCALL_VERSION);
- 
- 	cmsg->cm_u.cm_version = UPCALL_VERSION;
- 	cmsg->cm_status = 0;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
-@@ -398,7 +425,11 @@ cld_create(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	ret = cld_check_grace_period();
- 	if (ret)
-@@ -406,15 +437,25 @@ cld_create(struct cld_client *clnt)
- 
- 	xlog(D_GENERAL, "%s: create client record.", __func__);
- 
--
-+#if UPCALL_VERSION >= 2
-+	if (cmsg->cm_vers >= 2)
-+		ret = sqlite_insert_client_and_princ(
-+					cmsg->cm_u.cm_clntinfo.cc_name.cn_id,
-+					cmsg->cm_u.cm_clntinfo.cc_name.cn_len,
-+					cmsg->cm_u.cm_clntinfo.cc_principal.cp_data,
-+					cmsg->cm_u.cm_clntinfo.cc_principal.cp_len);
-+	else
-+		ret = sqlite_insert_client(cmsg->cm_u.cm_name.cn_id,
-+					   cmsg->cm_u.cm_name.cn_len);
-+#else
- 	ret = sqlite_insert_client(cmsg->cm_u.cm_name.cn_id,
- 				   cmsg->cm_u.cm_name.cn_len);
-+#endif
- 
- reply:
- 	cmsg->cm_status = ret ? -EREMOTEIO : ret;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
-@@ -434,7 +475,11 @@ cld_remove(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	ret = cld_check_grace_period();
- 	if (ret)
-@@ -448,8 +493,7 @@ cld_remove(struct cld_client *clnt)
- reply:
- 	cmsg->cm_status = ret ? -EREMOTEIO : ret;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "%s: downcall with status %d", __func__,
- 			cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
-@@ -470,7 +514,11 @@ cld_check(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	/*
- 	 * If we get a check upcall at all, it means we're talking to an old
-@@ -495,8 +543,7 @@ reply:
- 	/* set up reply */
- 	cmsg->cm_status = ret ? -EACCES : ret;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "%s: downcall with status %d", __func__,
- 			cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
-@@ -517,7 +564,11 @@ cld_gracedone(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	/*
- 	 * If we got a "gracedone" upcall while we're not in grace, then
-@@ -552,8 +603,7 @@ reply:
- 	/* set up reply: downcall with 0 status */
- 	cmsg->cm_status = ret ? -EREMOTEIO : ret;
- 
--	bsize = sizeof(*cmsg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
-@@ -571,12 +621,15 @@ reply:
- static int
- gracestart_callback(struct cld_client *clnt) {
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	cmsg->cm_status = -EINPROGRESS;
- 
--	bsize = sizeof(struct cld_msg);
--
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "Sending client %.*s",
- 			cmsg->cm_u.cm_name.cn_len, cmsg->cm_u.cm_name.cn_id);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
-@@ -590,7 +643,11 @@ cld_gracestart(struct cld_client *clnt)
- {
- 	int ret;
- 	ssize_t bsize, wsize;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	xlog(D_GENERAL, "%s: updating grace epochs", __func__);
- 
-@@ -606,7 +663,7 @@ reply:
- 	/* set up reply: downcall with 0 status */
- 	cmsg->cm_status = ret ? -EREMOTEIO : ret;
- 
--	bsize = sizeof(struct cld_msg);
-+	bsize = cld_message_size(cmsg);
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
-@@ -626,7 +683,11 @@ cldcb(int UNUSED(fd), short which, void *data)
- {
- 	ssize_t len;
- 	struct cld_client *clnt = data;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	if (which != EV_READ)
- 		goto out;
-diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
-index 6525fc1..2450c9a 100644
---- a/utils/nfsdcld/sqlite.c
-+++ b/utils/nfsdcld/sqlite.c
-@@ -37,8 +37,9 @@
-  *        them in the database.
-  *
-  * rec-CCCCCCCCCCCCCCCC (where C is the hex representation of the epoch value):
-- *        a single "id" column containing a BLOB with the long-form clientid
-- *        as sent by the client.
-+ *        an "id" column containing a BLOB with the long-form clientid
-+ *        as sent by the client, and a "principal" column containing a BLOB
-+ *        with the first 1024 bytes of the kerberos principal (if available).
-  */
- 
- #ifdef HAVE_CONFIG_H
-@@ -69,7 +70,7 @@
- #include "legacy.h"
- #include "nfslib.h"
- 
--#define CLD_SQLITE_LATEST_SCHEMA_VERSION 3
-+#define CLD_SQLITE_LATEST_SCHEMA_VERSION 4
- #define CLTRACK_DEFAULT_STORAGEDIR NFS_STATEDIR "/nfsdcltrack"
- 
- /* in milliseconds */
-@@ -173,35 +174,56 @@ out:
- }
- 
- static int
--sqlite_maindb_update_schema(int oldversion)
-+sqlite_add_princ_col_cb(void *UNUSED(arg), int ncols, char **cols,
-+			    char **UNUSED(colnames))
- {
--	int ret, ret2;
-+	int ret;
- 	char *err;
- 
--	/* begin transaction */
--	ret = sqlite3_exec(dbh, "BEGIN EXCLUSIVE TRANSACTION;", NULL, NULL,
--				&err);
-+	if (ncols > 1)
-+		return -EINVAL;
-+	ret = snprintf(buf, sizeof(buf), "ALTER TABLE \"%s\" "
-+			"ADD COLUMN principal BLOB;", cols[0]);
-+	if (ret < 0) {
-+		xlog(L_ERROR, "sprintf failed!");
-+		return -EINVAL;
-+	} else if ((size_t)ret >= sizeof(buf)) {
-+		xlog(L_ERROR, "sprintf output too long! (%d chars)", ret);
-+		return -EINVAL;
-+	}
-+	ret = sqlite3_exec(dbh, (const char *)buf, NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
--		xlog(L_ERROR, "Unable to begin transaction: %s", err);
--		goto rollback;
-+		xlog(L_ERROR, "Unable to add principal column to table %s: %s",
-+		     cols[0], err);
-+		goto out;
- 	}
-+	xlog(D_GENERAL, "Added principal column to table %s", cols[0]);
-+out:
-+	sqlite3_free(err);
-+	return ret;
-+}
- 
--	/*
--	 * Check schema version again. This time, under an exclusive
--	 * transaction to guard against racing DB setup attempts
--	 */
--	ret = sqlite_query_schema_version();
--	if (ret != oldversion) {
--		if (ret == CLD_SQLITE_LATEST_SCHEMA_VERSION)
--			/* Someone else raced in and set it up */
--			ret = 0;
--		else
--			/* Something went wrong -- fail! */
--			ret = -EINVAL;
--		goto rollback;
-+static int
-+sqlite_maindb_update_v3_to_v4(void)
-+{
-+	int ret;
-+	char *err;
++MAINTAINERCLEANFILES=Makefile.in
+diff --git a/tools/clddb-tool/clddb-tool.man b/tools/clddb-tool/clddb-tool.man
+new file mode 100644
+index 0000000..e80b2c0
+--- /dev/null
++++ b/tools/clddb-tool/clddb-tool.man
+@@ -0,0 +1,83 @@
++.\"
++.\" clddb-tool(8)
++.\"
++.TH clddb-tool 8 "07 Aug 2019"
++.SH NAME
++clddb-tool \- Tool for manipulating the nfsdcld sqlite database
++.SH SYNOPSIS
++.B clddb-tool
++.RB [ \-h | \-\-help ]
++.P
++.B clddb-tool
++.RB [ \-p | \-\-path
++.IR dbpath ]
++.B fix-table-names
++.RB [ \-h | \-\-help ]
++.P
++.B clddb-tool
++.RB [ \-p | \-\-path
++.IR dbpath ]
++.B downgrade-schema
++.RB [ \-h | \-\-help ]
++.RB [ \-v | \-\-version
++.IR to-version ]
++.P
++.B clddb-tool
++.RB [ \-p | \-\-path
++.IR dbpath ]
++.B print
++.RB [ \-h | \-\-help ]
++.RB [ \-s | \-\-summary ]
++.P
 +
-+	ret = sqlite3_exec(dbh, "SELECT name FROM sqlite_master "
-+			   "WHERE type=\"table\" AND name LIKE \"%rec-%\";",
-+			   sqlite_add_princ_col_cb, NULL, &err);
-+	if (ret != SQLITE_OK) {
-+		xlog(L_ERROR, "%s: Failed to update tables!: %s", __func__, err);
- 	}
-+	sqlite3_free(err);
-+	return ret;
-+}
- 
--	/* Still at old version -- do conversion */
-+static int
-+sqlite_maindb_update_v1v2_to_v4(void)
-+{
-+	int ret;
-+	char *err;
- 
- 	/* create grace table */
- 	ret = sqlite3_exec(dbh, "CREATE TABLE grace "
-@@ -209,7 +231,7 @@ sqlite_maindb_update_schema(int oldversion)
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to create grace table: %s", err);
--		goto rollback;
-+		goto out;
- 	}
- 
- 	/* insert initial epochs into grace table */
-@@ -218,26 +240,26 @@ sqlite_maindb_update_schema(int oldversion)
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to set initial epochs: %s", err);
--		goto rollback;
-+		goto out;
- 	}
- 
- 	/* create recovery table for current epoch */
- 	ret = sqlite3_exec(dbh, "CREATE TABLE \"rec-0000000000000001\" "
--				"(id BLOB PRIMARY KEY);",
-+				"(id BLOB PRIMARY KEY, principal BLOB);",
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to create recovery table "
- 				"for current epoch: %s", err);
--		goto rollback;
-+		goto out;
- 	}
- 
- 	/* copy records from old clients table */
--	ret = sqlite3_exec(dbh, "INSERT INTO \"rec-0000000000000001\" "
-+	ret = sqlite3_exec(dbh, "INSERT INTO \"rec-0000000000000001\" (id) "
- 				"SELECT id FROM clients;",
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to copy client records: %s", err);
--		goto rollback;
-+		goto out;
- 	}
- 
- 	/* drop the old clients table */
-@@ -245,9 +267,57 @@ sqlite_maindb_update_schema(int oldversion)
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to drop old clients table: %s", err);
-+	}
-+out:
-+	sqlite3_free(err);
-+	return ret;
-+}
++.SH DESCRIPTION
++.RB "The " clddb-tool " command is provided to perform some manipulation of the nfsdcld sqlite database schema and to print the contents of the database."
++.SS Sub-commands
++Valid
++.B clddb-tool
++subcommands are:
++.IP "\fBfix-table-names\fP"
++.RB "A previous version of " nfsdcld "(8) contained a bug that corrupted the reboot epoch table names.  This sub-command will fix those table names."
++.IP "\fBdowngrade-schema\fP"
++Downgrade the database schema.  Currently the schema can only to downgraded from version 4 to version 3.
++.IP "\fBprint\fP"
++Display the contents of the database.  Prints the schema version and the values of the current and recovery epochs.  If the
++.BR \-s | \-\-summary
++option is not given, also prints the clients in the reboot epoch tables.
++.SH OPTIONS
++.SS Options valid for all sub-commands
++.TP
++.B \-h, \-\-help
++Show the help message and exit
++.TP
++\fB\-p \fIdbpath\fR, \fB\-\-path \fIdbpath\fR
++Open the sqlite database located at
++.I dbpath
++instead of
++.IR /var/lib/nfs/nfsdcld/main.sqlite ".  "
++This is mainly for testing purposes.
++.SS Options specific to the downgrade-schema sub-command
++.TP
++\fB\-v \fIto-version\fR, \fB\-\-version \fIto-version\fR
++The schema version to downgrade to.  Currently the schema can only be downgraded to version 3.
++.SS Options specific to the print sub-command
++.TP
++.B \-s, \-\-summary
++Do not list the clients in the reboot epoch tables in the output.
++.SH NOTES
++The
++.B clddb-tool
++command will not allow the
++.B fix-table-names
++or
++.B downgrade-schema
++subcommands to be used if
++.BR nfsdcld (8)
++is running.
++.SH FILES
++.TP
++.B /var/lib/nfs/nfsdcld/main.sqlite
++.SH SEE ALSO
++.BR nfsdcld (8)
++.SH AUTHOR
++Scott Mayhew <smayhew@redhat.com>
+diff --git a/tools/clddb-tool/clddb-tool.py b/tools/clddb-tool/clddb-tool.py
+new file mode 100644
+index 0000000..b34859d
+--- /dev/null
++++ b/tools/clddb-tool/clddb-tool.py
+@@ -0,0 +1,261 @@
++#!/usr/bin/python3
++"""Tool for manipulating the nfsdcld sqlite database
++"""
 +
-+static int
-+sqlite_maindb_update_schema(int oldversion)
-+{
-+	int ret, ret2;
-+	char *err;
++__copyright__ = """
++Copyright (C) 2019 Scott Mayhew <smayhew@redhat.com>
 +
-+	/* begin transaction */
-+	ret = sqlite3_exec(dbh, "BEGIN EXCLUSIVE TRANSACTION;", NULL, NULL,
-+				&err);
-+	if (ret != SQLITE_OK) {
-+		xlog(L_ERROR, "Unable to begin transaction: %s", err);
-+		goto rollback;
-+	}
++This program is free software; you can redistribute it and/or
++modify it under the terms of the GNU General Public License
++as published by the Free Software Foundation; either version 2
++of the License, or (at your option) any later version.
 +
-+	/*
-+	 * Check schema version again. This time, under an exclusive
-+	 * transaction to guard against racing DB setup attempts
-+	 */
-+	ret = sqlite_query_schema_version();
-+	if (ret != oldversion) {
-+		if (ret == CLD_SQLITE_LATEST_SCHEMA_VERSION)
-+			/* Someone else raced in and set it up */
-+			ret = 0;
-+		else
-+			/* Something went wrong -- fail! */
-+			ret = -EINVAL;
- 		goto rollback;
- 	}
- 
-+	/* Still at old version -- do conversion */
++This program is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
 +
-+	switch (oldversion) {
-+	case 3:
-+	case 2:
-+		ret = sqlite_maindb_update_v3_to_v4();
-+		break;
-+	case 1:
-+		ret = sqlite_maindb_update_v1v2_to_v4();
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+	if (ret != SQLITE_OK)
-+		goto rollback;
++You should have received a copy of the GNU General Public License
++along with this program; if not, write to the Free Software
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++MA  02110-1301, USA.
++"""
 +
- 	ret = snprintf(buf, sizeof(buf), "UPDATE parameters SET value = %d "
- 			"WHERE key = \"version\";",
- 			CLD_SQLITE_LATEST_SCHEMA_VERSION);
-@@ -300,7 +370,7 @@ rollback:
-  * transaction. On any error, rollback the transaction.
-  */
- static int
--sqlite_maindb_init_v3(void)
-+sqlite_maindb_init_v4(void)
- {
- 	int ret, ret2;
- 	char *err = NULL;
-@@ -360,7 +430,7 @@ sqlite_maindb_init_v3(void)
- 
- 	/* create recovery table for current epoch */
- 	ret = sqlite3_exec(dbh, "CREATE TABLE \"rec-0000000000000001\" "
--				"(id BLOB PRIMARY KEY);",
-+				"(id BLOB PRIMARY KEY, principal BLOB);",
- 				NULL, NULL, &err);
- 	if (ret != SQLITE_OK) {
- 		xlog(L_ERROR, "Unable to create recovery table "
-@@ -675,7 +745,7 @@ sqlite_copy_cltrack_records(int *num_rec)
- 		xlog(L_ERROR, "Unable to clear records from current epoch: %s", err);
- 		goto rollback;
- 	}
--	ret = snprintf(buf, sizeof(buf), "INSERT INTO \"rec-%016" PRIx64 "\" "
-+	ret = snprintf(buf, sizeof(buf), "INSERT INTO \"rec-%016" PRIx64 "\" (id) "
- 				"SELECT id FROM attached.clients;",
- 				current_epoch);
- 	if (ret < 0) {
-@@ -763,6 +833,12 @@ sqlite_prepare_dbh(const char *topdir)
- 		/* DB is already set up. Do nothing */
- 		ret = 0;
- 		break;
-+	case 3:
-+		/* Old DB -- update to new schema */
-+		ret = sqlite_maindb_update_schema(3);
-+		if (ret)
-+			goto out_close;
-+		break;
- 	case 2:
- 		/* Old DB -- update to new schema */
- 		ret = sqlite_maindb_update_schema(2);
-@@ -778,7 +854,7 @@ sqlite_prepare_dbh(const char *topdir)
- 		break;
- 	case 0:
- 		/* Query failed -- try to set up new DB */
--		ret = sqlite_maindb_init_v3();
-+		ret = sqlite_maindb_init_v4();
- 		if (ret)
- 			goto out_close;
- 		break;
-@@ -835,7 +911,62 @@ sqlite_insert_client(const unsigned char *clname, const size_t namelen)
- 	int ret;
- 	sqlite3_stmt *stmt = NULL;
- 
--	ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%016" PRIx64 "\" "
-+	ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%016" PRIx64 "\" (id) "
-+				"VALUES (?);", current_epoch);
-+	if (ret < 0) {
-+		xlog(L_ERROR, "sprintf failed!");
-+		return ret;
-+	} else if ((size_t)ret >= sizeof(buf)) {
-+		xlog(L_ERROR, "sprintf output too long! (%d chars)", ret);
-+		return -EINVAL;
-+	}
++import argparse
++import os
++import sqlite3
++import sys
 +
-+	ret = sqlite3_prepare_v2(dbh, buf, -1, &stmt, NULL);
-+	if (ret != SQLITE_OK) {
-+		xlog(L_ERROR, "%s: insert statement prepare failed: %s",
-+			__func__, sqlite3_errmsg(dbh));
-+		return ret;
-+	}
 +
-+	ret = sqlite3_bind_blob(stmt, 1, (const void *)clname, namelen,
-+				SQLITE_STATIC);
-+	if (ret != SQLITE_OK) {
-+		xlog(L_ERROR, "%s: bind blob failed: %s", __func__,
-+				sqlite3_errmsg(dbh));
-+		goto out_err;
-+	}
++class CldDb():
++    def __init__(self, path):
++        self.con = sqlite3.connect(path)
++        self.con.row_factory = sqlite3.Row
++        for row in self.con.execute('select value from parameters '
++                                    'where key = "version"'):
++            self.version = int(row['value'])
++        for row in self.con.execute('select * from grace'):
++            self.current = int(row['current'])
++            self.recovery = int(row['recovery'])
 +
-+	ret = sqlite3_step(stmt);
-+	if (ret == SQLITE_DONE)
-+		ret = SQLITE_OK;
-+	else
-+		xlog(L_ERROR, "%s: unexpected return code from insert: %s",
-+				__func__, sqlite3_errmsg(dbh));
++    def __del__(self):
++        self.con.close()
 +
-+out_err:
-+	xlog(D_GENERAL, "%s: returning %d", __func__, ret);
-+	sqlite3_finalize(stmt);
-+	return ret;
-+}
++    def __str__(self):
++        return ('Schema version: {self.version} '
++                'current epoch: {self.current} '
++                'recovery epoch: {self.recovery}'.format(self=self))
 +
-+#if UPCALL_VERSION >= 2
-+/*
-+ * Create a client record including the principal
-+ *
-+ * Returns a non-zero sqlite error code, or SQLITE_OK (aka 0)
-+ */
-+int
-+sqlite_insert_client_and_princ(const unsigned char *clname, const size_t namelen,
-+		const unsigned char *clprinc, const size_t princlen)
-+{
-+	int ret;
-+	sqlite3_stmt *stmt = NULL;
++    def _print_clients(self, epoch):
++        if epoch:
++            for row in self.con.execute('select * from "rec-{:016x}"'
++                                        .format(epoch)):
++                if self.version == 4:
++                    print('id = {}, principal = {}'
++                          .format(row['id'].decode(),
++                                  row['principal'].decode()))
++                else:
++                    print('id = {}'.format(row['id'].decode()))
 +
-+	if (princlen > 0)
-+		ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%016" PRIx64 "\" "
-+				"VALUES (?, ?);", current_epoch);
-+	else
-+		ret = snprintf(buf, sizeof(buf), "INSERT OR REPLACE INTO \"rec-%016" PRIx64 "\" (id) "
- 				"VALUES (?);", current_epoch);
- 	if (ret < 0) {
- 		xlog(L_ERROR, "sprintf failed!");
-@@ -860,6 +991,16 @@ sqlite_insert_client(const unsigned char *clname, const size_t namelen)
- 		goto out_err;
- 	}
- 
-+	if (princlen > 0) {
-+		ret = sqlite3_bind_blob(stmt, 2, (const void *)clprinc, princlen,
-+					SQLITE_STATIC);
-+		if (ret != SQLITE_OK) {
-+			xlog(L_ERROR, "%s: bind blob failed: %s", __func__,
-+					sqlite3_errmsg(dbh));
-+			goto out_err;
-+		}
-+	}
++    def print_current_clients(self):
++        print('Clients in current epoch:')
++        self._print_clients(self.current)
 +
- 	ret = sqlite3_step(stmt);
- 	if (ret == SQLITE_DONE)
- 		ret = SQLITE_OK;
-@@ -872,6 +1013,14 @@ out_err:
- 	sqlite3_finalize(stmt);
- 	return ret;
- }
-+#else
-+int
-+sqlite_insert_client_and_princ(const unsigned char *clname, const size_t namelen,
-+		const unsigned char *clprinc, const size_t princlen)
-+{
-+	return -EINVAL;
-+}
-+#endif
- 
- /* Remove a client record */
- int
-@@ -1024,7 +1173,7 @@ sqlite_grace_start(void)
- 		}
- 
- 		ret = snprintf(buf, sizeof(buf), "CREATE TABLE \"rec-%016" PRIx64 "\" "
--				"(id BLOB PRIMARY KEY);",
-+				"(id BLOB PRIMARY KEY, principal blob);",
- 				tcur);
- 		if (ret < 0) {
- 			xlog(L_ERROR, "sprintf failed!");
-@@ -1152,7 +1301,11 @@ sqlite_iterate_recovery(int (*cb)(struct cld_client *clnt), struct cld_client *c
- {
- 	int ret;
- 	sqlite3_stmt *stmt = NULL;
-+#if UPCALL_VERSION >= 2
-+	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-+#else
- 	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-+#endif
- 
- 	if (recovery_epoch == 0) {
- 		xlog(D_GENERAL, "%s: not in grace!", __func__);
-@@ -1177,9 +1330,20 @@ sqlite_iterate_recovery(int (*cb)(struct cld_client *clnt), struct cld_client *c
- 	}
- 
- 	while ((ret = sqlite3_step(stmt)) == SQLITE_ROW) {
-+#if UPCALL_VERSION >= 2
-+		memcpy(&cmsg->cm_u.cm_clntinfo.cc_name.cn_id,
-+			sqlite3_column_blob(stmt, 0), NFS4_OPAQUE_LIMIT);
-+		cmsg->cm_u.cm_clntinfo.cc_name.cn_len = sqlite3_column_bytes(stmt, 0);
-+		if (sqlite3_column_bytes(stmt, 1) > 0) {
-+			memcpy(&cmsg->cm_u.cm_clntinfo.cc_principal.cp_data,
-+				sqlite3_column_blob(stmt, 1), NFS4_OPAQUE_LIMIT);
-+			cmsg->cm_u.cm_clntinfo.cc_principal.cp_len = sqlite3_column_bytes(stmt, 1);
-+		}
-+#else
- 		memcpy(&cmsg->cm_u.cm_name.cn_id, sqlite3_column_blob(stmt, 0),
- 			NFS4_OPAQUE_LIMIT);
- 		cmsg->cm_u.cm_name.cn_len = sqlite3_column_bytes(stmt, 0);
-+#endif
- 		cb(clnt);
- 	}
- 	if (ret == SQLITE_DONE)
-diff --git a/utils/nfsdcld/sqlite.h b/utils/nfsdcld/sqlite.h
-index 7741382..aa52189 100644
---- a/utils/nfsdcld/sqlite.h
-+++ b/utils/nfsdcld/sqlite.h
-@@ -24,6 +24,8 @@ struct cld_client;
- 
- int sqlite_prepare_dbh(const char *topdir);
- int sqlite_insert_client(const unsigned char *clname, const size_t namelen);
-+int sqlite_insert_client_and_princ(const unsigned char *clname, const size_t namelen,
-+		const unsigned char *clprinc, const size_t princlen);
- int sqlite_remove_client(const unsigned char *clname, const size_t namelen);
- int sqlite_check_client(const unsigned char *clname, const size_t namelen);
- int sqlite_grace_start(void);
++    def print_recovery_clients(self):
++        if self.recovery:
++            print('Clients in recovery epoch:')
++            self._print_clients(self.recovery)
++
++    def check_bad_table_names(self):
++        bad_names = []
++        for row in self.con.execute('select name from sqlite_master '
++                                    'where type = "table" '
++                                    'and name like "%rec-%" '
++                                    'and length(name) < 20'):
++            bad_names.append(row['name'])
++        return bad_names
++
++    def fix_bad_table_names(self):
++        try:
++            self.con.execute('begin exclusive transaction')
++            bad_names = self.check_bad_table_names()
++            for bad_name in bad_names:
++                epoch = int(bad_name.split('-')[1], base=16)
++                if epoch == self.current or epoch == self.recovery:
++                    if epoch == self.current:
++                        which = 'current'
++                    else:
++                        which = 'recovery'
++                    print('found invalid table name {} for {} epoch'
++                          .format(bad_name, which))
++                    self.con.execute('alter table "{}" '
++                                     'rename to "rec-{:016x}"'
++                                     .format(bad_name, epoch))
++                    print('renamed to rec-{:016x}'.format(epoch))
++                else:
++                    print('found invalid table name {} for unknown epoch {}'
++                          .format(bad_name, epoch))
++                    self.con.execute('drop table "{}"'.format(bad_name))
++                    print('dropped table {}'.format(bad_name))
++        except sqlite3.Error:
++            self.con.rollback()
++        else:
++            self.con.commit()
++
++    def has_princ_data(self):
++        if self.version < 4:
++            return False
++        for row in self.con.execute('select count(*) '
++                                    'from "rec-{:016x}" '
++                                    'where principal not null'
++                                    .format(self.current)):
++            count = row[0]
++        if self.recovery:
++            for row in self.con.execute('select count(*) '
++                                        'from "rec-{:016x}" '
++                                        'where principal not null'
++                                        .format(self.current)):
++                count = count + row[0]
++        if count:
++            return True
++        return False
++
++    def _downgrade_table_v4_to_v3(self, epoch):
++        if not self.con.in_transaction:
++            raise sqlite3.Error
++        try:
++            self.con.execute('create table "new_rec-{:016x}" '
++                             '(id blob primary key)'.format(epoch))
++            self.con.execute('insert into "new_rec-{:016x}" '
++                             'select id from "rec-{:016x}"'
++                             .format(epoch, epoch))
++            self.con.execute('drop table "rec-{:016x}"'.format(epoch))
++            self.con.execute('alter table "new_rec-{:016x}" '
++                             'rename to "rec-{:016x}"'
++                             .format(epoch, epoch))
++        except sqlite3.Error:
++            raise
++
++    def downgrade_schema_v4_to_v3(self):
++        try:
++            self.con.execute('begin exclusive transaction')
++            for row in self.con.execute('select value from parameters '
++                                        'where key = "version"'):
++                version = int(row['value'])
++            if version != self.version:
++                raise sqlite3.Error
++            for row in self.con.execute('select * from grace'):
++                current = int(row['current'])
++                recovery = int(row['recovery'])
++            if current != self.current:
++                raise sqlite3.Error
++            if recovery != self.recovery:
++                raise sqlite3.Error
++            self._downgrade_table_v4_to_v3(current)
++            if recovery:
++                self._downgrade_table_v4_to_v3(recovery)
++            self.con.execute('update parameters '
++                             'set value = "3" '
++                             'where key = "version"')
++            self.version = 3
++        except sqlite3.Error:
++            self.con.rollback()
++            print('Downgrade failed')
++        else:
++            self.con.commit()
++            print('Downgrade successful')
++
++
++def nfsdcld_active():
++    rc = os.system('ps -C nfsdcld >/dev/null 2>/dev/null')
++    if rc == 0:
++        return True
++    return False
++
++
++def fix_table_names_command(db, args):
++    if nfsdcld_active():
++        print('Warning: nfsdcld is running!')
++        ans = input('Continue? ')
++        if ans.lower() not in ['y', 'yes']:
++            print('Operation canceled.')
++            return
++    bad_names = db.check_bad_table_names()
++    if not bad_names:
++        print('No invalid table names found.')
++        return
++    db.fix_bad_table_names()
++
++
++def downgrade_schema_command(db, args):
++    if nfsdcld_active():
++        print('Warning: nfsdcld is running!')
++        ans = input('Continue? ')
++        if ans.lower() not in ['y', 'yes']:
++            print('Operation canceled')
++            return
++    if db.version != 4:
++        print('Cannot downgrade database from schema version {}.'
++              .format(db.version))
++        return
++    if args.version != 3:
++        print('Cannot downgrade to version {}.'.format(args.version))
++        return
++    bad_names = db.check_bad_table_names()
++    if bad_names:
++        print('Invalid table names detected.')
++        print('Please run "{} fix-table-names" before downgrading the schema.'
++              .format(sys.argv[0]))
++        return
++    if db.has_princ_data():
++        print('Warning: database has principal data, which will be erased.')
++        ans = input('Continue? ')
++        if ans.lower() not in ['y', 'yes']:
++            print('Operation canceled')
++            return
++    db.downgrade_schema_v4_to_v3()
++
++
++def print_command(db, args):
++    print(str(db))
++    if not args.summary:
++        bad_names = db.check_bad_table_names()
++        if bad_names:
++            print('Invalid table names detected.')
++            print('Please run "{} fix-table-names".'.format(sys.argv[0]))
++            return
++        db.print_current_clients()
++        db.print_recovery_clients()
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('-p', '--path',
++                        default='/var/lib/nfs/nfsdcld/main.sqlite',
++                        help='path to the database '
++                        '(default: /var/lib/nfs/nfsdcld/main.sqlite)')
++    subparsers = parser.add_subparsers(help='sub-command help')
++    fix_parser = subparsers.add_parser('fix-table-names',
++                                       help='fix invalid table names')
++    fix_parser.set_defaults(func=fix_table_names_command)
++    downgrade_parser = subparsers.add_parser('downgrade-schema',
++                                             help='downgrade database schema')
++    downgrade_parser.add_argument('-v', '--version', type=int, choices=[3],
++                                  default=3,
++                                  help='version to downgrade to')
++    downgrade_parser.set_defaults(func=downgrade_schema_command)
++    print_parser = subparsers.add_parser('print',
++                                         help='print database info')
++    print_parser.add_argument('-s', '--summary', default=False,
++                              action='store_true',
++                              help='print summary only')
++    print_parser.set_defaults(func=print_command)
++    args = parser.parse_args()
++    if not os.path.exists(args.path):
++        return parser.print_usage()
++    clddb = CldDb(args.path)
++    return args.func(clddb, args)
++
++
++if __name__ == '__main__':
++    main()
 -- 
 2.17.2
 
