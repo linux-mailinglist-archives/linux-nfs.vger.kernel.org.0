@@ -2,85 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44CF6859DF
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 07:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49310860D0
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 13:26:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbfHHFmp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Aug 2019 01:42:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:56463 "EHLO ozlabs.org"
+        id S1728964AbfHHLZU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Aug 2019 07:25:20 -0400
+Received: from fieldses.org ([173.255.197.46]:53136 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfHHFmp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 8 Aug 2019 01:42:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463y252c4Xz9sN1;
-        Thu,  8 Aug 2019 15:42:37 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?SsOpcsO0?= =?utf-8?B?bWU=?= Glisse 
-        <jglisse@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 38/41] powerpc: convert put_page() to put_user_page*()
-In-Reply-To: <20190807013340.9706-39-jhubbard@nvidia.com>
-References: <20190807013340.9706-1-jhubbard@nvidia.com> <20190807013340.9706-39-jhubbard@nvidia.com>
-Date:   Thu, 08 Aug 2019 15:42:34 +1000
-Message-ID: <87k1botdpx.fsf@concordia.ellerman.id.au>
+        id S1728289AbfHHLZU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 8 Aug 2019 07:25:20 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 80BCF2070; Thu,  8 Aug 2019 07:25:19 -0400 (EDT)
+Date:   Thu, 8 Aug 2019 07:25:19 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
+Message-ID: <20190808112519.GA7830@fieldses.org>
+References: <CAN-5tyGz5M1eMFC=CJUEdTB7cAq-PRis8SJMEnrcr4Svmmy03w@mail.gmail.com>
+ <20190801151239.GC17654@fieldses.org>
+ <CAN-5tyE8xdJhs5C_bOo0a9yLRUAvkKi7OLOq47He5P0OR8PGyQ@mail.gmail.com>
+ <CAN-5tyEx7-kddfgsvSGAsCD3amMXq-iGLkQN2GdmaXOc19GwkA@mail.gmail.com>
+ <20190801181158.GC19461@fieldses.org>
+ <CAN-5tyEiO=kBQC=pLu_aeVfV+3f3KWFbz_1ooG8qBLoBqFaehQ@mail.gmail.com>
+ <20190801193654.GA12211@parsley.fieldses.org>
+ <CAN-5tyFSRcnOT5kuF_1iKZDu=KyjEj+3tcq0ARSNOeuSmJMYGQ@mail.gmail.com>
+ <20190807160843.GD24728@fieldses.org>
+ <CAN-5tyGzbvmSfw2=KF_4_q+nyv1=L0Chz2bBUjsPiqg+3qoJ8Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN-5tyGzbvmSfw2=KF_4_q+nyv1=L0Chz2bBUjsPiqg+3qoJ8Q@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi John,
+On Wed, Aug 07, 2019 at 12:42:08PM -0400, Olga Kornievskaia wrote:
+> On Wed, Aug 7, 2019 at 12:09 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+> >
+> > On Wed, Aug 07, 2019 at 12:02:40PM -0400, Olga Kornievskaia wrote:
+> > > On Thu, Aug 1, 2019 at 3:36 PM J. Bruce Fields <bfields@redhat.com> wrote:
+> > > >
+> > > > On Thu, Aug 01, 2019 at 02:24:04PM -0400, Olga Kornievskaia wrote:
+> > > > > i was just looking at close_lru and delegation_lru but I guess that's
+> > > > > not a list of delegation or open stateids but rather some complex of
+> > > > > not deleting the stateid right away but moving it to nfs4_ol_stateid
+> > > > > and the list on the nfsd_net. Are you looking for something similar
+> > > > > for the copy_notify state or can I just keep a global list of the
+> > > > > nfs4_client and add and delete of that (not move to the delete later)?
+> > > >
+> > > > A global list seems like it should work if the locking's OK.
+> > >
+> > > I'm having issues taking a reference on a parent stateid and being
+> > > able to clean it. Let me try to explain.
+> >
+> > With other stateid parent relationships I believe what we do is: instead
+> > of the child taking a reference on the parent, we ensure that the child
+> > is destroyed, and that nobody can be holding a pointer to it, before we
+> > destroy the parent.
+> 
+> I don't think we can get away from not taking a reference on the
+> parent. When a READ comes with the copy_notify stateid, it's used to
+> lookup the parent state because the nfs4_preprocess_stateid_op() that
+> checks the validity of the stateid for a given operation needs to
+> check validity of that parent stateid). Otherwise, we'd have to
+> special case the READ calling nfs4_preprocess_stateid_op() and special
+> call that function to when called from READ and finding a copy_notify
+> stateid will forego the other checks. Do you want me to that instead
+> of what I proposed below?
 
-john.hubbard@gmail.com writes:
-> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
-> index b056cae3388b..e126193ba295 100644
-> --- a/arch/powerpc/mm/book3s64/iommu_api.c
-> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
-> @@ -203,6 +202,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
->  {
->  	long i;
->  	struct page *page = NULL;
-> +	bool dirty = false;
+Um, honestly I'm not sure I understand your code below yet.  I'll take
+another look....
 
-I don't think you need that initialisation do you?
+> > > Since I take a reference on the stateid, then during what would have
+> > > been the last put (due to say a close operation), stateid isn't
+> > > released. Now that stateid is sticking around. I personally would have
+> > > liked on what would have been a close and release of the stateid to
+> > > release the copy notify state(s)
 
->  	if (!mem->hpas)
->  		return;
-> @@ -215,10 +215,9 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
->  		if (!page)
->  			continue;
->  
-> -		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
-> -			SetPageDirty(page);
-> +		dirty = mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY;
-> -		put_page(page);
-> +		put_user_pages_dirty_lock(&page, 1, dirty);
->  		mem->hpas[i] = 0;
->  	}
->  }
+That's OK with me as long as it works.  Did I complain about it?  The
+only real requirement is that we've got *some* way to assure that we
+aren't going to find a copy_notify stateid and try to follow it to its
+parent, after the parent's been freed.
 
-cheers
+--b.
+
+> > > (which was being done before but
+> > > having a reference makes it hard? i want to count number of copy
+> > > notify states and if then somehow if the num_copies-1 is going to make
+> > > it 0, then decrement by num_copies (and the normal -1) but if it's not
+> > > the last reference then it shouldn't be decremented.
+> > >
+> > > Now say no fancy logic happens on close so we have these stateids left
+> > > over . What to do on unmount? It will error with err_client_busy since
+> > > there are non-zero copy notify states and only after a lease period it
+> > > will release the resources (when the close of the file should have
+> > > removed any copy notify state)?
+> > >
+> > > Question: would it be acceptable to do something like this on freeing
+> > > of the parent stateid?
+> > >
+> > > @@ -896,8 +931,12 @@ static void block_delegations(struct knfsd_fh *fh)
+> > >         might_lock(&clp->cl_lock);
+> > >
+> > >         if (!refcount_dec_and_lock(&s->sc_count, &clp->cl_lock)) {
+> > > -               wake_up_all(&close_wq);
+> > > -               return;
+> > > +               if (!refcount_sub_and_test_checked(s->sc_cp_list_size,
+> > > +                               &s->sc_count)) {
+> > > +                       refcount_add_checked(s->sc_cp_list_size, &s->sc_count);
+> > > +                       wake_up_all(&close_wq);
+> > > +                       return;
+> > > +               }
+> > >         }
+> > >         idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
+> > >         spin_unlock(&clp->cl_lock);
+> > >
+> > > then free the copy notify stateids associated with stateid.
+> > >
+> > > Laundromat would still be checking the copy_notify stateids for
+> > > anything that's been not active for a while (but not closed).
+> > >
+> > >
+> > >
+> > >
+> > >
+> > > >
+> > > > --b.
