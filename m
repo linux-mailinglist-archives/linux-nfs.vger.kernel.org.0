@@ -2,133 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49310860D0
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 13:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94934860D8
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2019 13:28:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfHHLZU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Aug 2019 07:25:20 -0400
-Received: from fieldses.org ([173.255.197.46]:53136 "EHLO fieldses.org"
+        id S1727824AbfHHL2o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Aug 2019 07:28:44 -0400
+Received: from fieldses.org ([173.255.197.46]:53142 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfHHLZU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 8 Aug 2019 07:25:20 -0400
+        id S1726055AbfHHL2o (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 8 Aug 2019 07:28:44 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 80BCF2070; Thu,  8 Aug 2019 07:25:19 -0400 (EDT)
-Date:   Thu, 8 Aug 2019 07:25:19 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 5/8] NFSD check stateids against copy stateids
-Message-ID: <20190808112519.GA7830@fieldses.org>
-References: <CAN-5tyGz5M1eMFC=CJUEdTB7cAq-PRis8SJMEnrcr4Svmmy03w@mail.gmail.com>
- <20190801151239.GC17654@fieldses.org>
- <CAN-5tyE8xdJhs5C_bOo0a9yLRUAvkKi7OLOq47He5P0OR8PGyQ@mail.gmail.com>
- <CAN-5tyEx7-kddfgsvSGAsCD3amMXq-iGLkQN2GdmaXOc19GwkA@mail.gmail.com>
- <20190801181158.GC19461@fieldses.org>
- <CAN-5tyEiO=kBQC=pLu_aeVfV+3f3KWFbz_1ooG8qBLoBqFaehQ@mail.gmail.com>
- <20190801193654.GA12211@parsley.fieldses.org>
- <CAN-5tyFSRcnOT5kuF_1iKZDu=KyjEj+3tcq0ARSNOeuSmJMYGQ@mail.gmail.com>
- <20190807160843.GD24728@fieldses.org>
- <CAN-5tyGzbvmSfw2=KF_4_q+nyv1=L0Chz2bBUjsPiqg+3qoJ8Q@mail.gmail.com>
+        id 16DD22070; Thu,  8 Aug 2019 07:28:44 -0400 (EDT)
+Date:   Thu, 8 Aug 2019 07:28:44 -0400
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <20190808112844.GB7830@fieldses.org>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190806121931.GA29578@smile.fi.intel.com>
+ <20190806185008.GC9456@parsley.fieldses.org>
+ <20190807090007.GK30120@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN-5tyGzbvmSfw2=KF_4_q+nyv1=L0Chz2bBUjsPiqg+3qoJ8Q@mail.gmail.com>
+In-Reply-To: <20190807090007.GK30120@smile.fi.intel.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 12:42:08PM -0400, Olga Kornievskaia wrote:
-> On Wed, Aug 7, 2019 at 12:09 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Wed, Aug 07, 2019 at 12:02:40PM -0400, Olga Kornievskaia wrote:
-> > > On Thu, Aug 1, 2019 at 3:36 PM J. Bruce Fields <bfields@redhat.com> wrote:
-> > > >
-> > > > On Thu, Aug 01, 2019 at 02:24:04PM -0400, Olga Kornievskaia wrote:
-> > > > > i was just looking at close_lru and delegation_lru but I guess that's
-> > > > > not a list of delegation or open stateids but rather some complex of
-> > > > > not deleting the stateid right away but moving it to nfs4_ol_stateid
-> > > > > and the list on the nfsd_net. Are you looking for something similar
-> > > > > for the copy_notify state or can I just keep a global list of the
-> > > > > nfs4_client and add and delete of that (not move to the delete later)?
-> > > >
-> > > > A global list seems like it should work if the locking's OK.
-> > >
-> > > I'm having issues taking a reference on a parent stateid and being
-> > > able to clean it. Let me try to explain.
-> >
-> > With other stateid parent relationships I believe what we do is: instead
-> > of the child taking a reference on the parent, we ensure that the child
-> > is destroyed, and that nobody can be holding a pointer to it, before we
-> > destroy the parent.
+On Wed, Aug 07, 2019 at 12:00:07PM +0300, Andy Shevchenko wrote:
+> Maybe it requires more thinking about?
+> I think it is still possible to extend existing, rather to take workarounds
+> like this one.
+
+Yeah, agreed.
+
+> > So, I wrote a patch series that removes the string_escape_mem flags that
+> > aren't used
 > 
-> I don't think we can get away from not taking a reference on the
-> parent. When a READ comes with the copy_notify stateid, it's used to
-> lookup the parent state because the nfs4_preprocess_stateid_op() that
-> checks the validity of the stateid for a given operation needs to
-> check validity of that parent stateid). Otherwise, we'd have to
-> special case the READ calling nfs4_preprocess_stateid_op() and special
-> call that function to when called from READ and finding a copy_notify
-> stateid will forego the other checks. Do you want me to that instead
-> of what I proposed below?
+> Have you considered the potential users that can be converted to use
+> string_escape_mem()?
+> 
+> I know about at least one (needs to be reworked a bit, but it is in slow
+> progress).
+> 
+> There are potentially others that would be converted using "unused" flags.
 
-Um, honestly I'm not sure I understand your code below yet.  I'll take
-another look....
+OK, that'd be interesting to know about.
 
-> > > Since I take a reference on the stateid, then during what would have
-> > > been the last put (due to say a close operation), stateid isn't
-> > > released. Now that stateid is sticking around. I personally would have
-> > > liked on what would have been a close and release of the stateid to
-> > > release the copy notify state(s)
+> 
+> >, simplifies it a bit, then separates the flags into two
+> > different types: those that select which characters to escape
+> > (non-printable, non-ascii, whitespace, etc.) and those that choose a
+> > style of escaping to use (octal, hex, or \\).  That seems to make the
+> > code a little easier to extend while still covering the cases people
+> > actually use.  I'll try to get those out this week and you can tell me
+> > what you think.
+> 
+> Will be glad to help!
+> 
+> In any case regarding to this one, I would like rather to see it's never
+> appeared, or now will be gone in favour of string_escape_mem() extension.
 
-That's OK with me as long as it works.  Did I complain about it?  The
-only real requirement is that we've got *some* way to assure that we
-aren't going to find a copy_notify stateid and try to follow it to its
-parent, after the parent's been freed.
+To be clear, it's already merged.  Apologies, I actually saw your name
+when looking for people to cc, but the last commit was 5 years ago and I
+assumed you'd moved on.  The project to extend string_escape_mem()
+looked more complicated than I first expected so I decided to merge this
+first and then follow up with my attempt at that.
 
 --b.
-
-> > > (which was being done before but
-> > > having a reference makes it hard? i want to count number of copy
-> > > notify states and if then somehow if the num_copies-1 is going to make
-> > > it 0, then decrement by num_copies (and the normal -1) but if it's not
-> > > the last reference then it shouldn't be decremented.
-> > >
-> > > Now say no fancy logic happens on close so we have these stateids left
-> > > over . What to do on unmount? It will error with err_client_busy since
-> > > there are non-zero copy notify states and only after a lease period it
-> > > will release the resources (when the close of the file should have
-> > > removed any copy notify state)?
-> > >
-> > > Question: would it be acceptable to do something like this on freeing
-> > > of the parent stateid?
-> > >
-> > > @@ -896,8 +931,12 @@ static void block_delegations(struct knfsd_fh *fh)
-> > >         might_lock(&clp->cl_lock);
-> > >
-> > >         if (!refcount_dec_and_lock(&s->sc_count, &clp->cl_lock)) {
-> > > -               wake_up_all(&close_wq);
-> > > -               return;
-> > > +               if (!refcount_sub_and_test_checked(s->sc_cp_list_size,
-> > > +                               &s->sc_count)) {
-> > > +                       refcount_add_checked(s->sc_cp_list_size, &s->sc_count);
-> > > +                       wake_up_all(&close_wq);
-> > > +                       return;
-> > > +               }
-> > >         }
-> > >         idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> > >         spin_unlock(&clp->cl_lock);
-> > >
-> > > then free the copy notify stateids associated with stateid.
-> > >
-> > > Laundromat would still be checking the copy_notify stateids for
-> > > anything that's been not active for a while (but not closed).
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > >
-> > > > --b.
