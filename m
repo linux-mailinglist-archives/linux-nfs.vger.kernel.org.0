@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5D188FEA
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2019 08:00:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4058F88FED
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2019 08:11:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725826AbfHKGAq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 11 Aug 2019 02:00:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:42978 "EHLO mga07.intel.com"
+        id S1725826AbfHKGLv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 11 Aug 2019 02:11:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61257 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfHKGAq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 11 Aug 2019 02:00:46 -0400
+        id S1725776AbfHKGLv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 11 Aug 2019 02:11:51 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2019 23:00:18 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2019 23:11:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,372,1559545200"; 
-   d="gz'50?scan'50,208,50";a="178034173"
+   d="gz'50?scan'50,208,50";a="327034819"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 10 Aug 2019 23:00:16 -0700
+  by orsmga004.jf.intel.com with ESMTP; 10 Aug 2019 23:11:22 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hwgts-0000fv-6K; Sun, 11 Aug 2019 14:00:16 +0800
-Date:   Sun, 11 Aug 2019 13:59:38 +0800
+        id 1hwh4W-0005x5-U1; Sun, 11 Aug 2019 14:11:16 +0800
+Date:   Sun, 11 Aug 2019 14:10:51 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
 Cc:     kbuild-all@01.org, bfields@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v5 2/9] NFSD add ca_source_server<> to COPY
-Message-ID: <201908111339.b5lO5WJL%lkp@intel.com>
-References: <20190808201848.36640-3-olga.kornievskaia@gmail.com>
+Subject: Re: [PATCH v5 4/9] NFSD COPY_NOTIFY xdr
+Message-ID: <201908111444.VHDobRrT%lkp@intel.com>
+References: <20190808201848.36640-5-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="dovtqkkvslwxlkmd"
+Content-Type: multipart/mixed; boundary="zidpfv5wuuhicoed"
 Content-Disposition: inline
-In-Reply-To: <20190808201848.36640-3-olga.kornievskaia@gmail.com>
+In-Reply-To: <20190808201848.36640-5-olga.kornievskaia@gmail.com>
 X-Patchwork-Hint: ignore
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -43,7 +43,7 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---dovtqkkvslwxlkmd
+--zidpfv5wuuhicoed
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -79,9 +79,15 @@ All errors (new ones prefixed by >>):
    In file included from fs/nfsd/pnfs.h:10:0,
                     from fs/nfsd/nfsctl.c:27:
    fs/nfsd/xdr4.h: At top level:
->> fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
+   fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
      struct nl4_server cp_src;
                        ^~~~~~
+>> fs/nfsd/xdr4.h:577:20: error: field 'cpn_dst' has incomplete type
+     struct nl4_server cpn_dst;
+                       ^~~~~~~
+>> fs/nfsd/xdr4.h:583:20: error: field 'cpn_src' has incomplete type
+     struct nl4_server cpn_src;
+                       ^~~~~~~
 --
    In file included from fs/nfsd/state.h:42:0,
                     from fs/nfsd/xdr4.h:40,
@@ -95,27 +101,54 @@ All errors (new ones prefixed by >>):
                      ^~
    In file included from fs/nfsd/nfs4xdr.c:47:0:
    fs/nfsd/xdr4.h: At top level:
->> fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
+   fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
      struct nl4_server cp_src;
                        ^~~~~~
+>> fs/nfsd/xdr4.h:577:20: error: field 'cpn_dst' has incomplete type
+     struct nl4_server cpn_dst;
+                       ^~~~~~~
+>> fs/nfsd/xdr4.h:583:20: error: field 'cpn_src' has incomplete type
+     struct nl4_server cpn_src;
+                       ^~~~~~~
    fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_nl4_server':
->> fs/nfsd/nfs4xdr.c:1743:4: error: dereferencing pointer to incomplete type 'struct nl4_server'
+   fs/nfsd/nfs4xdr.c:1743:4: error: dereferencing pointer to incomplete type 'struct nl4_server'
      ns->nl4_type = be32_to_cpup(p++);
        ^~
->> fs/nfsd/nfs4xdr.c:1747:7: error: 'NL4_NETADDR' undeclared (first use in this function); did you mean 'RTM_GETADDR'?
+   fs/nfsd/nfs4xdr.c:1747:7: error: 'NL4_NETADDR' undeclared (first use in this function); did you mean 'RTM_GETADDR'?
      case NL4_NETADDR:
           ^~~~~~~~~~~
           RTM_GETADDR
    fs/nfsd/nfs4xdr.c:1747:7: note: each undeclared identifier is reported only once for each function it appears in
->> fs/nfsd/nfs4xdr.c:1751:8: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
+   fs/nfsd/nfs4xdr.c:1751:8: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
       naddr->netid_len = be32_to_cpup(p++);
            ^~
    fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_copy':
->> fs/nfsd/nfs4xdr.c:1804:28: error: invalid application of 'sizeof' to incomplete type 'struct nl4_server'
+   fs/nfsd/nfs4xdr.c:1804:28: error: invalid application of 'sizeof' to incomplete type 'struct nl4_server'
      ns_dummy = kmalloc(sizeof(struct nl4_server), GFP_KERNEL);
                                ^~~~~~
+   fs/nfsd/nfs4xdr.c: In function 'nfsd42_encode_nl4_server':
+   fs/nfsd/nfs4xdr.c:4338:7: error: 'NL4_NETADDR' undeclared (first use in this function); did you mean 'RTM_GETADDR'?
+     case NL4_NETADDR:
+          ^~~~~~~~~~~
+          RTM_GETADDR
+   In file included from include/linux/sunrpc/svcauth_gss.h:15:0,
+                    from fs/nfsd/nfs4xdr.c:42:
+   fs/nfsd/nfs4xdr.c:4346:21: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
+       (XDR_QUADLEN(addr->netid_len) * 4) +
+                        ^
+   include/linux/sunrpc/xdr.h:27:28: note: in definition of macro 'XDR_QUADLEN'
+    #define XDR_QUADLEN(l)  (((l) + 3) >> 2)
+                               ^
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_encode_copy_notify':
+   fs/nfsd/nfs4xdr.c:4432:1: warning: control reaches end of non-void function [-Wreturn-type]
+    }
+    ^
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_copy_notify':
+   fs/nfsd/nfs4xdr.c:1836:1: warning: control reaches end of non-void function [-Wreturn-type]
+    }
+    ^
 
-vim +/cp_src +527 fs/nfsd/xdr4.h
+vim +/cpn_dst +577 fs/nfsd/xdr4.h
 
    519	
    520	struct nfsd4_copy {
@@ -152,17 +185,49 @@ vim +/cp_src +527 fs/nfsd/xdr4.h
    551		bool			stopped;
    552	};
    553	
+   554	struct nfsd4_seek {
+   555		/* request */
+   556		stateid_t	seek_stateid;
+   557		loff_t		seek_offset;
+   558		u32		seek_whence;
+   559	
+   560		/* response */
+   561		u32		seek_eof;
+   562		loff_t		seek_pos;
+   563	};
+   564	
+   565	struct nfsd4_offload_status {
+   566		/* request */
+   567		stateid_t	stateid;
+   568	
+   569		/* response */
+   570		u64		count;
+   571		u32		status;
+   572	};
+   573	
+   574	struct nfsd4_copy_notify {
+   575		/* request */
+   576		stateid_t		cpn_src_stateid;
+ > 577		struct nl4_server	cpn_dst;
+   578	
+   579		/* response */
+   580		stateid_t		cpn_cnr_stateid;
+   581		u64			cpn_sec;
+   582		u32			cpn_nsec;
+ > 583		struct nl4_server	cpn_src;
+   584	};
+   585	
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---dovtqkkvslwxlkmd
+--zidpfv5wuuhicoed
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICPitT10AAy5jb25maWcAlDzbcuM2su/5CtXkJamtSWyP40ydU36ASJBCRBIMAMqSX1iO
+H4sICNKwT10AAy5jb25maWcAlDzbcuM2su/5CtXkJamtSWyP40ydU36ASJBCRBIMAMqSX1iO
 Lc+61mPPke3dmb8/3QAvDRDUZLdSO1Z34953NPjjDz8u2Nvr8+eb14fbm8fHb4tP+6f94eZ1
 f7e4f3jc/+8ilYtKmgVPhfkFiIuHp7evv379eNFenC9+++XDLyfvD7dni/X+8LR/XCTPT/cP
 n96g/cPz0w8//gD//QjAz1+gq8P/LD7d3r7/ffFTuv/r4eZp8fsv59D69ORn9xfQJrLKRN4m
@@ -677,4 +742,4 @@ pNBxBOtHbBjXy9ac/qdX556nvwPIZak5Y6x38BoHVeqtlwsynyqtIk99aSdkSw76oBvgBryp
 yy1KMMHoSt55qgiXqsOjNbocY3PkSh2t9suy2na2q5K2F7Fqzai7cZXMMcwMwIbzvwHoSjkX
 /8EBAA==
 
---dovtqkkvslwxlkmd--
+--zidpfv5wuuhicoed--
