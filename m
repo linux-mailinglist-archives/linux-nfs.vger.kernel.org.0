@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE80988FE1
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2019 07:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D5D188FEA
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2019 08:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbfHKFtS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 11 Aug 2019 01:49:18 -0400
-Received: from mga14.intel.com ([192.55.52.115]:42001 "EHLO mga14.intel.com"
+        id S1725826AbfHKGAq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 11 Aug 2019 02:00:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42978 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfHKFtS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 11 Aug 2019 01:49:18 -0400
+        id S1725776AbfHKGAq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 11 Aug 2019 02:00:46 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2019 22:49:09 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2019 23:00:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,372,1559545200"; 
-   d="gz'50?scan'50,208,50";a="187061914"
+   d="gz'50?scan'50,208,50";a="178034173"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 10 Aug 2019 22:49:07 -0700
+  by orsmga003.jf.intel.com with ESMTP; 10 Aug 2019 23:00:16 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hwgj4-000EXL-Tq; Sun, 11 Aug 2019 13:49:06 +0800
-Date:   Sun, 11 Aug 2019 13:48:38 +0800
+        id 1hwgts-0000fv-6K; Sun, 11 Aug 2019 14:00:16 +0800
+Date:   Sun, 11 Aug 2019 13:59:38 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
 Cc:     kbuild-all@01.org, bfields@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v5 1/9] NFSD fill-in netloc4 structure
-Message-ID: <201908111349.HDWO4xNv%lkp@intel.com>
-References: <20190808201848.36640-2-olga.kornievskaia@gmail.com>
+Subject: Re: [PATCH v5 2/9] NFSD add ca_source_server<> to COPY
+Message-ID: <201908111339.b5lO5WJL%lkp@intel.com>
+References: <20190808201848.36640-3-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="2aipuh3v3tng7n2w"
+Content-Type: multipart/mixed; boundary="dovtqkkvslwxlkmd"
 Content-Disposition: inline
-In-Reply-To: <20190808201848.36640-2-olga.kornievskaia@gmail.com>
+In-Reply-To: <20190808201848.36640-3-olga.kornievskaia@gmail.com>
 X-Patchwork-Hint: ignore
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -43,7 +43,7 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---2aipuh3v3tng7n2w
+--dovtqkkvslwxlkmd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -66,64 +66,103 @@ reproduce:
 If you fix the issue, kindly add following tag
 Reported-by: kbuild test robot <lkp@intel.com>
 
-All error/warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from fs/nfsd/state.h:42:0,
-                    from fs/nfsd/trace.h:128,
-                    from fs/nfsd/trace.c:3:
->> fs/nfsd/nfsd.h:391:16: warning: 'struct nfs42_netaddr' declared inside parameter list will not be visible outside of this definition or declaration
+   In file included from fs/nfsd/nfsctl.c:23:0:
+   fs/nfsd/nfsd.h:391:16: warning: 'struct nfs42_netaddr' declared inside parameter list will not be visible outside of this definition or declaration
             struct nfs42_netaddr *netaddr)
                    ^~~~~~~~~~~~~
    fs/nfsd/nfsd.h: In function 'nfsd4_set_netaddr':
->> fs/nfsd/nfsd.h:401:18: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
+   fs/nfsd/nfsd.h:401:18: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
       sprintf(netaddr->netid, "tcp");
                      ^~
+   In file included from fs/nfsd/pnfs.h:10:0,
+                    from fs/nfsd/nfsctl.c:27:
+   fs/nfsd/xdr4.h: At top level:
+>> fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
+     struct nl4_server cp_src;
+                       ^~~~~~
+--
+   In file included from fs/nfsd/state.h:42:0,
+                    from fs/nfsd/xdr4.h:40,
+                    from fs/nfsd/nfs4xdr.c:47:
+   fs/nfsd/nfsd.h:391:16: warning: 'struct nfs42_netaddr' declared inside parameter list will not be visible outside of this definition or declaration
+            struct nfs42_netaddr *netaddr)
+                   ^~~~~~~~~~~~~
+   fs/nfsd/nfsd.h: In function 'nfsd4_set_netaddr':
+   fs/nfsd/nfsd.h:401:18: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
+      sprintf(netaddr->netid, "tcp");
+                     ^~
+   In file included from fs/nfsd/nfs4xdr.c:47:0:
+   fs/nfsd/xdr4.h: At top level:
+>> fs/nfsd/xdr4.h:527:20: error: field 'cp_src' has incomplete type
+     struct nl4_server cp_src;
+                       ^~~~~~
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_nl4_server':
+>> fs/nfsd/nfs4xdr.c:1743:4: error: dereferencing pointer to incomplete type 'struct nl4_server'
+     ns->nl4_type = be32_to_cpup(p++);
+       ^~
+>> fs/nfsd/nfs4xdr.c:1747:7: error: 'NL4_NETADDR' undeclared (first use in this function); did you mean 'RTM_GETADDR'?
+     case NL4_NETADDR:
+          ^~~~~~~~~~~
+          RTM_GETADDR
+   fs/nfsd/nfs4xdr.c:1747:7: note: each undeclared identifier is reported only once for each function it appears in
+>> fs/nfsd/nfs4xdr.c:1751:8: error: dereferencing pointer to incomplete type 'struct nfs42_netaddr'
+      naddr->netid_len = be32_to_cpup(p++);
+           ^~
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_copy':
+>> fs/nfsd/nfs4xdr.c:1804:28: error: invalid application of 'sizeof' to incomplete type 'struct nl4_server'
+     ns_dummy = kmalloc(sizeof(struct nl4_server), GFP_KERNEL);
+                               ^~~~~~
 
-vim +401 fs/nfsd/nfsd.h
+vim +/cp_src +527 fs/nfsd/xdr4.h
 
-   389	
-   390	static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
- > 391					    struct nfs42_netaddr *netaddr)
-   392	{
-   393		struct sockaddr_in *sin = (struct sockaddr_in *)addr;
-   394		struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
-   395		unsigned int port;
-   396		size_t ret_addr, ret_port;
-   397	
-   398		switch (addr->sa_family) {
-   399		case AF_INET:
-   400			port = ntohs(sin->sin_port);
- > 401			sprintf(netaddr->netid, "tcp");
-   402			netaddr->netid_len = 3;
-   403			break;
-   404		case AF_INET6:
-   405			port = ntohs(sin6->sin6_port);
-   406			sprintf(netaddr->netid, "tcp6");
-   407			netaddr->netid_len = 4;
-   408			break;
-   409		default:
-   410			return nfserr_inval;
-   411		}
-   412		ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
-   413		ret_port = snprintf(netaddr->addr + ret_addr,
-   414				    RPCBIND_MAXUADDRLEN + 1 - ret_addr,
-   415				    ".%u.%u", port >> 8, port & 0xff);
-   416		WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
-   417		netaddr->addr_len = ret_addr + ret_port;
-   418		return 0;
-   419	}
-   420	
+   519	
+   520	struct nfsd4_copy {
+   521		/* request */
+   522		stateid_t		cp_src_stateid;
+   523		stateid_t		cp_dst_stateid;
+   524		u64			cp_src_pos;
+   525		u64			cp_dst_pos;
+   526		u64			cp_count;
+ > 527		struct nl4_server	cp_src;
+   528		bool			cp_intra;
+   529	
+   530		/* both */
+   531		bool		cp_synchronous;
+   532	
+   533		/* response */
+   534		struct nfsd42_write_res	cp_res;
+   535	
+   536		/* for cb_offload */
+   537		struct nfsd4_callback	cp_cb;
+   538		__be32			nfserr;
+   539		struct knfsd_fh		fh;
+   540	
+   541		struct nfs4_client      *cp_clp;
+   542	
+   543		struct file             *file_src;
+   544		struct file             *file_dst;
+   545	
+   546		stateid_t		cp_stateid;
+   547	
+   548		struct list_head	copies;
+   549		struct task_struct	*copy_task;
+   550		refcount_t		refcount;
+   551		bool			stopped;
+   552	};
+   553	
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---2aipuh3v3tng7n2w
+--dovtqkkvslwxlkmd
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICISpT10AAy5jb25maWcAlDzbcuM2su/5CtXkJamtSWyP40ydU36ASJBCRBIMAMqSX1iO
+H4sICPitT10AAy5jb25maWcAlDzbcuM2su/5CtXkJamtSWyP40ydU36ASJBCRBIMAMqSX1iO
 Lc+61mPPke3dmb8/3QAvDRDUZLdSO1Z34953NPjjDz8u2Nvr8+eb14fbm8fHb4tP+6f94eZ1
 f7e4f3jc/+8ilYtKmgVPhfkFiIuHp7evv379eNFenC9+++XDLyfvD7dni/X+8LR/XCTPT/cP
 n96g/cPz0w8//gD//QjAz1+gq8P/LD7d3r7/ffFTuv/r4eZp8fsv59D69ORn9xfQJrLKRN4m
@@ -638,4 +677,4 @@ pNBxBOtHbBjXy9ac/qdX556nvwPIZak5Y6x38BoHVeqtlwsynyqtIk99aSdkSw76oBvgBryp
 yy1KMMHoSt55qgiXqsOjNbocY3PkSh2t9suy2na2q5K2F7Fqzai7cZXMMcwMwIbzvwHoSjkX
 /8EBAA==
 
---2aipuh3v3tng7n2w--
+--dovtqkkvslwxlkmd--
