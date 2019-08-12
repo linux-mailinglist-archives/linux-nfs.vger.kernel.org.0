@@ -2,93 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13C62894A0
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2019 00:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E9AE898E9
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2019 10:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfHKWKx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 11 Aug 2019 18:10:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33592 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKWKx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 11 Aug 2019 18:10:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so47040276plo.0
-        for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2019 15:10:53 -0700 (PDT)
+        id S1727149AbfHLInt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Aug 2019 04:43:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50536 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbfHLInt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Aug 2019 04:43:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so11377754wml.0
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2019 01:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y0HLReDwVapvA2oWE+2Vqxzu1PwSLTB9rNZL5Lm44ko=;
-        b=I8jkgSLn4np++EUqIuR97ZBcA98ahLBESvX4z1WoSYRLKGKyUykXZu6jvQhkMocvXr
-         VXsD1kLn5id9fOzyCIO8WRHOgj0xOIAMT817sUydFfNzD03aBzUAHNBkRPBjPfdZhmvW
-         Kt8ylbVPOc6dib5GqkqL2E7XgetKALXybIwPTXwFh9USwNpSW+OrHZpAyXsL4MLnd8x2
-         fwk+IiXe14/+Vqxnb9ajATM3HCakcmnMiPoIwm2XrddAEUVC8FmZwvtxPpRUgGZaGqiZ
-         ffn5P2SV0Pj/eVqk0G1YtGYgF4D6T/IG8GZcj8gI3VvLjZg/ruemGvN+EK9Uu4rCl1l6
-         u60A==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4GRU+gfEaZVdoNnEzA4YJyao1a/uzCbAsRKhm3YTcyo=;
+        b=E1Zn7vDlJ1RnPa8bJ41HuOWPP4io1s1AABlqGtCBljTuK7+TURw7ixivlCvZ/vSOEO
+         GPHQeBFDsx7coSpNYijB964Cfw+um7e28loq7/FcJ+NNUsJP3ivcuwNxZjxvfRWFwiaV
+         IxIFpxBv1EntbgY9rJT8z8b7to13wsQwggaZDxEKwcVDE8igTBpAUVY2eoyzXKEHqETs
+         TDMRPuoWifjBnMWQ05+AcPqJ8E/L9Mw4kqLrjKJR0LN+JTRoHhxvOV7rEgR/9xdRIKAw
+         FC9vmhHx0LucHseu0u01jOuMzKPDGjAAonUaGJkrdZKKBriAOMAQlo+9+midT61TmdzU
+         jKZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=y0HLReDwVapvA2oWE+2Vqxzu1PwSLTB9rNZL5Lm44ko=;
-        b=Pa3QdgvCR5+ooKEmyNu4ILDA89fl1ufKuaidzP8SgsLKpmS/up7Q/3Ocv8BY6oV/KB
-         xCLnA+sTBr0RehYMRmFHgWhn9LitaGh4YSTT6RnWIjMu0AU0s9yOyWCdFurSdrwjPTJ1
-         0eSd7FcAzVNtHiHmbFJhVpiExDKBcckTazld3yWj9h/CTWoRqXyFAEvIXRGg8YcZ/OGw
-         VeJpws2zFSyv90uxMRZbVZN+cganBFUN3jFtp2KX2qVSmgfMWn6T7sr+2sfmIGP2I76o
-         ZWNAgCP69qWCrNltXyqw6wBbn+XDzW+FqZBsFDSRW53QN53zuGhkh72jhEsd74ed4B7u
-         2B9w==
-X-Gm-Message-State: APjAAAXKQgUC8GhsQXG3G6Ez2S8AgVQ6yUX0xM7R28WbT+Umb5zejVJ6
-        47/yRVk6QjYnuGZbYkTn6NejGuaX
-X-Google-Smtp-Source: APXvYqxP64xlrcSacqfgFfTxeo+eyl+ZKaaVp+p0KSGKFa4YpvfiKi9MBgbCrBoTj0EqwvxZSs3VfQ==
-X-Received: by 2002:a17:902:d894:: with SMTP id b20mr24598953plz.134.1565561452493;
-        Sun, 11 Aug 2019 15:10:52 -0700 (PDT)
-Received: from localhost ([108.161.26.224])
-        by smtp.gmail.com with ESMTPSA id l17sm29428357pgj.44.2019.08.11.15.10.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 15:10:51 -0700 (PDT)
-From:   Matt Turner <mattst88@gmail.com>
+        bh=4GRU+gfEaZVdoNnEzA4YJyao1a/uzCbAsRKhm3YTcyo=;
+        b=XLjfXQ1vbtKq89iULwxpmsF3hTV5XjvDaxbivTlLEyI24O0VrKenIH5ztUtrzBWThC
+         fDC3tmxZ57KYmlVi7lvbBQUtc02O9vWeOdzHe1A7vsU3oVyLrsq1rk6EJSjbgmhFqhwa
+         RrjypDPoZrwbPG09n8KR3C3NEKUdx0G/1Rcq+AxX2YKzTXYs3DXYIMgI5yvXjLMmMSna
+         O1L1goVJIO7oxoGJes5XkpVTAxHnK6RyONbCbTTG//PZr5XIzFb9BD0CHsbttqbnHhuU
+         1Fm1zkAL7DIi4jcigUQJRSN3YQhmV0vjJjW8K4e2sL7bPto9ZQ0kv+Tv9jrhqiyTQyOk
+         2nUw==
+X-Gm-Message-State: APjAAAVOyBYuGc1G/ipdzeDC0C9H2MVtbrleosVzWl6rmyQkVNRoaITM
+        AudI9EdQLIMAO8ewvjfKf2Y=
+X-Google-Smtp-Source: APXvYqzkms/AKltmop3yiMAVmMjWOeWi+TOBu9LleUBngCQMOQvzukxMRAhFcgHvdaWQ5l1W6PkRpA==
+X-Received: by 2002:a1c:7516:: with SMTP id o22mr26852068wmc.19.1565599427299;
+        Mon, 12 Aug 2019 01:43:47 -0700 (PDT)
+Received: from ?IPv6:2a01:36d:104:4209:30ab:10ee:e3fe:96a3? (2a01-036d-0104-4209-30ab-10ee-e3fe-96a3.pool6.digikabel.hu. [2a01:36d:104:4209:30ab:10ee:e3fe:96a3])
+        by smtp.gmail.com with ESMTPSA id o6sm230395875wra.27.2019.08.12.01.43.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 01:43:46 -0700 (PDT)
+From:   Zoltan Karcagi <zkr7432@gmail.com>
+Subject: Re: [PATCH] Fix include order between config.h and stat.h
 To:     linux-nfs@vger.kernel.org
-Cc:     Matt Turner <mattst88@gmail.com>
-Subject: [PATCH nfs-utils] gssd: Look in lib32 for gss libs aswell.
-Date:   Sun, 11 Aug 2019 15:10:44 -0700
-Message-Id: <20190811221044.13777-1-mattst88@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Cc:     Steve Dickson <steved@redhat.com>
+References: <5bcd51ef-9ffb-2650-108f-8d7b04beb655@gmail.com>
+ <5c60f0b3-4498-96ec-be59-2dce85de3680@gmail.com>
+Message-ID: <253344bb-7b58-820c-acfd-57897b1113a5@gmail.com>
+Date:   Mon, 12 Aug 2019 10:43:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c60f0b3-4498-96ec-be59-2dce85de3680@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Akin to commit da999b81b058 ("Look in lib64 for gss libs aswell.")
+Ping...
 
-mips/n32 systems have libraries in lib32 (but not lib or lib64). Without
-checking lib32, configure fails with
-
-checking for Kerberos v5... configure: error: Kerberos v5 with GSS
-         support not found: consider --disable-gss or --with-krb5=
-
-Signed-off-by: Matt Turner <mattst88@gmail.com>
----
- aclocal/kerberos5.m4 | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/aclocal/kerberos5.m4 b/aclocal/kerberos5.m4
-index 8a0f3e4c..faa58049 100644
---- a/aclocal/kerberos5.m4
-+++ b/aclocal/kerberos5.m4
-@@ -38,9 +38,11 @@ AC_DEFUN([AC_KERBEROS_V5],[
-       AC_DEFINE_UNQUOTED(KRB5_VERSION, $K5VERS, [Define this as the Kerberos version number])
-       if test -f $dir/include/gssapi/gssapi_krb5.h -a \
-                 \( -f $dir/lib/libgssapi_krb5.a -o \
-+                   -f $dir/lib/libgssapi_krb5.so -o \
-+                   -f $dir/lib32/libgssapi_krb5.a -o \
-+                   -f $dir/lib32/libgssapi_krb5.so -o \
-                    -f $dir/lib64/libgssapi_krb5.a -o \
--                   -f $dir/lib64/libgssapi_krb5.so -o \
--                   -f $dir/lib/libgssapi_krb5.so \) ; then
-+                   -f $dir/lib64/libgssapi_krb5.so \) ; then
-          AC_DEFINE(HAVE_KRB5, 1, [Define this if you have MIT Kerberos libraries])
-          KRBDIR="$dir"
-          gssapi_lib=gssapi_krb5
--- 
-2.21.0
+On 7/26/19 4:44 PM, Zoltan Karcagi wrote:
+> At least on Arch linux ARM, the definition of struct stat in stat.h depends
+> on __USE_FILE_OFFSET64. This symbol comes from config.h when defined,
+> therefore config.h must always be included before stat.h. Fix all
+> occurrences where the order is wrong by moving config.h to the top.
+> 
+> This fixes the client side error "Stale file handle" when mounting from
+> a server running Arch Linux ARM.
+> 
+> Signed-off-by: Zoltan Karcagi <zkr7432@gmail.com>
+> ---
+>  support/misc/nfsd_path.c         | 5 ++++-
+>  support/misc/xstat.c             | 5 ++++-
+>  utils/blkmapd/device-discovery.c | 8 ++++----
+>  utils/idmapd/idmapd.c            | 8 ++++----
+>  4 files changed, 16 insertions(+), 10 deletions(-)
+> 
+> diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
+> index 84e48028..f078a668 100644
+> --- a/support/misc/nfsd_path.c
+> +++ b/support/misc/nfsd_path.c
+> @@ -1,3 +1,7 @@
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <errno.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> @@ -5,7 +9,6 @@
+>  #include <stdlib.h>
+>  #include <unistd.h>
+>  
+> -#include "config.h"
+>  #include "conffile.h"
+>  #include "xmalloc.h"
+>  #include "xlog.h"
+> diff --git a/support/misc/xstat.c b/support/misc/xstat.c
+> index fa047880..4c997eea 100644
+> --- a/support/misc/xstat.c
+> +++ b/support/misc/xstat.c
+> @@ -1,3 +1,7 @@
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <errno.h>
+>  #include <sys/types.h>
+>  #include <fcntl.h>
+> @@ -5,7 +9,6 @@
+>  #include <sys/sysmacros.h>
+>  #include <unistd.h>
+>  
+> -#include "config.h"
+>  #include "xstat.h"
+>  
+>  #ifdef HAVE_FSTATAT
+> diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
+> index e811703d..f5f9b10b 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -26,6 +26,10 @@
+>   * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>   */
+>  
+> +#ifdef HAVE_CONFIG_H
+> +#include "config.h"
+> +#endif /* HAVE_CONFIG_H */
+> +
+>  #include <sys/sysmacros.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> @@ -51,10 +55,6 @@
+>  #include <errno.h>
+>  #include <libdevmapper.h>
+>  
+> -#ifdef HAVE_CONFIG_H
+> -#include "config.h"
+> -#endif /* HAVE_CONFIG_H */
+> -
+>  #include "device-discovery.h"
+>  #include "xcommon.h"
+>  #include "nfslib.h"
+> diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
+> index 62e37b8a..267acea5 100644
+> --- a/utils/idmapd/idmapd.c
+> +++ b/utils/idmapd/idmapd.c
+> @@ -34,6 +34,10 @@
+>   *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>   */
+>  
+> +#ifdef HAVE_CONFIG_H
+> +#include "config.h"
+> +#endif /* HAVE_CONFIG_H */
+> +
+>  #include <sys/types.h>
+>  #include <sys/time.h>
+>  #include <sys/inotify.h>
+> @@ -62,10 +66,6 @@
+>  #include <libgen.h>
+>  #include <nfsidmap.h>
+>  
+> -#ifdef HAVE_CONFIG_H
+> -#include "config.h"
+> -#endif /* HAVE_CONFIG_H */
+> -
+>  #include "xlog.h"
+>  #include "conffile.h"
+>  #include "queue.h"
+> 
 
