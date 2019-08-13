@@ -2,28 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C878BDF3
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 18:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102C28BF19
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 19:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfHMQF2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Aug 2019 12:05:28 -0400
-Received: from mx1.math.uh.edu ([129.7.128.32]:50814 "EHLO mx1.math.uh.edu"
+        id S1726785AbfHMRA5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Aug 2019 13:00:57 -0400
+Received: from mx2.math.uh.edu ([129.7.128.33]:40622 "EHLO mx2.math.uh.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbfHMQF1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:05:27 -0400
-X-Greylist: delayed 3391 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Aug 2019 12:05:27 EDT
+        id S1726637AbfHMRA4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:00:56 -0400
 Received: from epithumia.math.uh.edu ([129.7.128.2])
-        by mx1.math.uh.edu with esmtp (Exim 4.92)
+        by mx2.math.uh.edu with esmtp (Exim 4.92)
         (envelope-from <tibbs@math.uh.edu>)
-        id 1hxYPv-0000RG-LW
-        for linux-nfs@vger.kernel.org; Tue, 13 Aug 2019 10:08:56 -0500
+        id 1hxaAJ-0005LT-1p
+        for linux-nfs@vger.kernel.org; Tue, 13 Aug 2019 12:00:56 -0500
 Received: by epithumia.math.uh.edu (Postfix, from userid 7225)
-        id 91176801554; Tue, 13 Aug 2019 10:08:55 -0500 (CDT)
+        id F1CFE801554; Tue, 13 Aug 2019 12:00:54 -0500 (CDT)
 From:   Jason L Tibbitts III <tibbs@math.uh.edu>
 To:     linux-nfs@vger.kernel.org
-Subject: Regression in 5.1.20: Reading long directory fails
-Date:   Tue, 13 Aug 2019 10:08:55 -0500
-Message-ID: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+Date:   Tue, 13 Aug 2019 12:00:54 -0500
+In-Reply-To: <ufak1bhyuew.fsf@epithumia.math.uh.edu> (Jason L. Tibbitts, III's
+        message of "Tue, 13 Aug 2019 10:08:55 -0500")
+Message-ID: <ufazhkdxant.fsf@epithumia.math.uh.edu>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -33,29 +35,15 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A user reported to me that they couldn't see the entirety of their home
-directory.  And indeed:
+To follow up, I built 5.1.20 with just commit
+3536b79ba75ba44b9ac1a9f1634f2e833bbb735c reverted and I can now get a
+listing of that directory without error.  Since it's a revert of
+something else, and this is a new problem, I wonder if the revert went
+awry or if something else came to depend on the behavior which was
+reverted.  Again, I'm happy to provide any debugging information you
+might request.
 
-[root@ld00 ~]# ls -l ~dblecher|wc -l
-ls: reading directory '/home/dblecher': Input/output error
-1844
-[root@ld00 ~]# cat /proc/version Linux version 5.1.20-300.fc30.x86_64 (mockbuild@bkernel04.phx2.fedoraproject.org) (gcc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #1 SMP Fri Jul 26 15:03:11 UTC 2019
-
-Mount options are: nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5i
-The server is running CentOS 7 (kernel 3.10.0-957.12.2.el7.x86_64).
-
-The problem does not appear in 5.1.19 and all 7657 entries in that
-directory are returned.
-
-Looking at the 5.1.20 changelog I see a few NFS-related changes but
-commit 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c:
-  Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
-stands out; I'm working on building a kernel with the revert reverted.
-
-Note that this doesn't happen on any directory with lots of files; I've
-only managed to see it on this particular user's overly large home
-directory.  So I can trivially reproduce it but I don't know how anyone
-else could.  I'm happy to collect any debugging data that might be
-needed.
+Also note that the problem persists in 5.2.8.  I see Fedora has a 5.3.0
+rc4 build going, so I'll test that one as soon as it finishes.
 
  - J<
