@@ -2,104 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B2C8AEB9
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 07:25:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 273C58BB89
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 16:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfHMFYr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Aug 2019 01:24:47 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:39199 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfHMFYq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Aug 2019 01:24:46 -0400
-Received: from [192.168.178.60] ([109.104.47.130]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPGiR-1hevT50O45-00PbYR; Tue, 13 Aug 2019 07:23:46 +0200
-Subject: Re: [PATCH v2 15/34] staging/vc04_services: convert put_page() to
- put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        ceph-devel@vger.kernel.org, devel@driverdev.osuosl.org,
-        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
-        Suniel Mahesh <sunil.m@techveda.org>, x86@kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mihaela Muraru <mihaela.muraru21@gmail.com>,
-        xen-devel@lists.xenproject.org, devel@lists.orangefs.org,
-        linux-media@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        intel-gfx@lists.freedesktop.org,
-        Kishore KP <kishore.p@techveda.org>,
-        linux-block@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sidong Yang <realwakka@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
-        Eric Anholt <eric@anholt.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-References: <20190804224915.28669-1-jhubbard@nvidia.com>
- <20190804224915.28669-16-jhubbard@nvidia.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <f92a9b35-072c-a452-3248-ded047a9ee7e@i2se.com>
-Date:   Tue, 13 Aug 2019 07:23:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729163AbfHMOaQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Aug 2019 10:30:16 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32785 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbfHMOaQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Aug 2019 10:30:16 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q20so20302901otl.0
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Aug 2019 07:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dodPeBHiTvXQpNHuEhbNlONL9Drrpvmy/8YMtOGC/4E=;
+        b=ORA9DuNIXC3zPuUm1/0HhV3KegzLJGzA2q0tprr3zARJ4vWYGMrEcA7ozf3C3GmA+5
+         vxBbaCrlh2dd4yykKOK2/YO89S3e5QUjgxN9uf1EWj2xy4Mo281M2dYSxe5abyLr5g1m
+         uV2jG1YiIt81/yLwPg1M+UHnsSzV6rLuAqGiy8BEpNi/IJHZWwRDu5bv4ehRRigBco33
+         bHpNkUSjD4fept7dmEODnTsOcaqG3Lsg/DD/ZYGKjG2/2KT7s4u8YXMdyb7Yjq2XJuD3
+         62qbANrJjPjvPRHH3jS7VlbBuXPWhklmUt91M+806rsIctWk9jpjk2gPkWrse10zDxfe
+         sf6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dodPeBHiTvXQpNHuEhbNlONL9Drrpvmy/8YMtOGC/4E=;
+        b=fhUyPwtgLPyfizSUy4UOJigWgJVwqh/CcGI0DRC5TXW7LVi9bw62DPfYitM/FA+Mt4
+         QYe+mkNVKBcM7KQX+nKclFOEvafnhwxKBlX5xMGcI7ISKYVKKx1IcS1UL+63w72VWl6s
+         qgnLTNp6rFLJ8Y3fbfeGj2dV/Sdjc1MUcKRvd8rbpu0YxXlFkw3/f7Z+o+ATGNXwiBOX
+         jMcaFrsYsolzx1FxNeQ42z7Ufg97KRRtFSS8Oq3PiCjLGpqNRMNyD1XXPcHz66P4xt8K
+         fXXQvLm+3vBFwa0MlssTc93sOPUDVXVEGGdXPrDX1fO5Yw66NarhbkBXYBEsmypazdck
+         C6DA==
+X-Gm-Message-State: APjAAAWOS3wJJLNyPhMLWoq+y+oAuljtACXLzKmqzsbmkgSw/kxVb5QE
+        imi1hjxTurTwDq3FugElOvZo7xg=
+X-Google-Smtp-Source: APXvYqw325CEAjBNw8aQXAQFUqP4+xvF8Y8TWqsiQFDf8d0iOGzGBerIqYfEAwRaXxgyOMD1MiCwxQ==
+X-Received: by 2002:a02:c916:: with SMTP id t22mr42779652jao.24.1565706614624;
+        Tue, 13 Aug 2019 07:30:14 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id o6sm9429161ioh.22.2019.08.13.07.30.13
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 07:30:14 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/5] NFS: Don't refresh attributes with mounted-on-file information
+Date:   Tue, 13 Aug 2019 10:28:02 -0400
+Message-Id: <20190813142806.123268-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190804224915.28669-16-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:WLtnGHSdIdsSOgSCw9gLWN/He07a3vhG8P/jw9q/ZsKCLbsJUeS
- 5llVNlt7KE/tvHn+5EOmDYYv4pX1cHVWKOXHtrw4HQWAHuCkTohFsgxlEY0fExapDm8vR8t
- zVIsUr/Bms6Kvxj5sCY8IbKiNL01LBum+j6x95pPZHXG9iG9KDUI7QIiVK2/58tc3NB1jnX
- y7VHJG/KIA+fGCfAbINIQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:e2tiG/LoUCE=:MfCllk8c06iYHLUWJWcKAL
- cdQ1fi1ypP4tC6pu8XAt4M+fU5mGlkjM5ziFPw9nAP5+ICbjFLhxsiDLATVpll3xwUgna69cS
- Ev9bpFgmBYRqbHsiOVM335kNgAU19xY/LXN/GzEuigzotpDhc5IdC4FGsNTdqmIYi0Bx4dgCw
- bLM/SrMXG40Mg1UArtxdqWQvHnINj7yK6JacwPswBAo33CV5S5U4U1PS67DpEMKA7dX0oduGb
- 5fQtkN1kvCZEg2/ekJnnb+PAR6KRS8Eu0zqK7cwQwWxs+nxHFNvcdfFolT7waPuKj24rhpnjW
- ZntPcErm15w8EJ72vFuARtCUk4Lh4jU+zYNtoDE6B8RJqr/+yxycmwEDucEbNXrujkaPH72RU
- fWCHjlXjsJS29DRMlBs91cqiKMaK/ktbzSpegz+iLEJq/HkDuPh/jiz/b8w2crkMXTYEXfcIb
- WqkuI5hHrAdEh99xa/X99FupD8F6iZ52Pv/g2glNHL9WlKL41btCn/KodqBqy/glIqHZeYzq2
- SXjRol/t4oy36qgSCQmUGiCt1lssYLkBWOzcxjui5lZUL2V9O7wn91tHl7G+DbqjQzgMyVtBP
- 60iHHkwkWe3su3M3o+o4m8sWd9OG5XIToU/4cSDhBQohrRIKKqoUbXAyCJH96bxaYdq/zseIf
- oMsHaN/31pBaLs6MtsAa2tu5PRj9qlBX5kso+Y5up4mj5gl7CfIWyGwpM4gPWtVKv1En5k3ZR
- HR/0MJ6spaP8P86u5+VALfxj2aM5bbcj+ZVczoVE2BIVl4lPQEesVoHHwFc=
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 05.08.19 00:48, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
->
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
->
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mihaela Muraru <mihaela.muraru21@gmail.com>
-> Cc: Suniel Mahesh <sunil.m@techveda.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Sidong Yang <realwakka@gmail.com>
-> Cc: Kishore KP <kishore.p@techveda.org>
-> Cc: linux-rpi-kernel@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devel@driverdev.osuosl.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+If we've been given the attributes of the mounted-on-file, then do not
+use those to check or update the attributes on the application-visible
+inode.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/inode.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 8a1758200b57..c764cfe456e5 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1403,12 +1403,21 @@ static int nfs_check_inode_attributes(struct inode *inode, struct nfs_fattr *fat
+ 	if (NFS_PROTO(inode)->have_delegation(inode, FMODE_READ))
+ 		return 0;
+ 
++	/* No fileid? Just exit */
++	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
++		return 0;
+ 	/* Has the inode gone and changed behind our back? */
+-	if ((fattr->valid & NFS_ATTR_FATTR_FILEID) && nfsi->fileid != fattr->fileid)
++	if (nfsi->fileid != fattr->fileid) {
++		/* Is this perhaps the mounted-on fileid? */
++		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
++		    nfsi->fileid == fattr->mounted_on_fileid)
++			return 0;
+ 		return -ESTALE;
++	}
+ 	if ((fattr->valid & NFS_ATTR_FATTR_TYPE) && (inode->i_mode & S_IFMT) != (fattr->mode & S_IFMT))
+ 		return -ESTALE;
+ 
++
+ 	if (!nfs_file_has_buffered_writers(nfsi)) {
+ 		/* Verify a few of the more important attributes */
+ 		if ((fattr->valid & NFS_ATTR_FATTR_CHANGE) != 0 && !inode_eq_iversion_raw(inode, fattr->change_attr))
+@@ -1768,18 +1777,6 @@ int nfs_post_op_update_inode_force_wcc(struct inode *inode, struct nfs_fattr *fa
+ EXPORT_SYMBOL_GPL(nfs_post_op_update_inode_force_wcc);
+ 
+ 
+-static inline bool nfs_fileid_valid(struct nfs_inode *nfsi,
+-				    struct nfs_fattr *fattr)
+-{
+-	bool ret1 = true, ret2 = true;
+-
+-	if (fattr->valid & NFS_ATTR_FATTR_FILEID)
+-		ret1 = (nfsi->fileid == fattr->fileid);
+-	if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+-		ret2 = (nfsi->fileid == fattr->mounted_on_fileid);
+-	return ret1 || ret2;
+-}
+-
+ /*
+  * Many nfs protocol calls return the new file attributes after
+  * an operation.  Here we update the inode to reflect the state
+@@ -1810,7 +1807,15 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			nfs_display_fhandle_hash(NFS_FH(inode)),
+ 			atomic_read(&inode->i_count), fattr->valid);
+ 
+-	if (!nfs_fileid_valid(nfsi, fattr)) {
++	/* No fileid? Just exit */
++	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
++		return 0;
++	/* Has the inode gone and changed behind our back? */
++	if (nfsi->fileid != fattr->fileid) {
++		/* Is this perhaps the mounted-on fileid? */
++		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
++		    nfsi->fileid == fattr->mounted_on_fileid)
++			return 0;
+ 		printk(KERN_ERR "NFS: server %s error: fileid changed\n"
+ 			"fsid %s: expected fileid 0x%Lx, got 0x%Lx\n",
+ 			NFS_SERVER(inode)->nfs_client->cl_hostname,
+-- 
+2.21.0
+
