@@ -2,129 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 771E78A849
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2019 22:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0B2C8AEB9
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 07:25:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfHLUUw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Aug 2019 16:20:52 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.3]:51216 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727527AbfHLUUv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Aug 2019 16:20:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ford.com;
-        s=ml20180701; t=1565641251; i=@ford.com;
-        bh=RTQbyQrwNstqr/uS3AIhUhSrVUTIJ1lL3lx6EqnZUqI=;
-        h=From:To:Subject:Date:Message-ID:Content-Type:
-         Content-Transfer-Encoding:MIME-Version;
-        b=OeVE78SC5vYyTg1awr2VYZzujbm6dIA1goP1zNOxmSFxIyrX7AAGH2nGO2tZ7ZtnS
-         4y0WpMO/QV3x5mj3USm0SED11jIujjTroi7wjyZqeqSuj3jd+469+7ReWQDwwndQ5I
-         0DzIe+ZTvhvj+Y9PVuQ5maxsp3oZnKGE+yVexT2LTtLuMPbPCHAmF/eGU85hcl9zmN
-         UH3GGQMkY7d4YvoPoJZDFexqvg44YEXx8xYRalvH/SgaOXKP19WBUq3eo1dh0R3OSw
-         gkoOqtFDQitm9p7p0epdw8CntYPSlz13hfk/8LDDJ2+bqDR05RMPj9FMXUx1Wp0TWC
-         oXjKJiTGIb9CQ==
-Received: from [67.219.246.97] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.us-east-1.aws.symcld.net id EE/C1-10607-32AC15D5; Mon, 12 Aug 2019 20:20:51 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleJIrShJLcpLzFFi42LpYBJi1lU6FRh
-  r8PSSrsWFA6dZHRg9Pm+SC2CMYs3MS8qvSGDN+HL3ClPBZd6KiSfuMTcwNnN3MXJxCAmcYpRY
-  8/wHE4TzkVHiY/c7KOcIo8SNHw1ADicHm4CWRPv/o6wgtoiAtcSZ5insILawgJzEsbszGCHiy
-  hI3Zs2FqtGT2Dz9O5jNIqAqsWnLSxYQm1fAXGLhrFYwm1FATOL7qTVg85kFxCVuPZkPZksICE
-  osmr2HGcIWk/i36yEbhC0v8ejvXBaIeh2JBbs/sUHY2hLLFr5mhpgvKHFy5hMWiHpJiYMrbrB
-  MYBSehWTFLCTts5C0z0LSvoCRZRWjWVJRZnpGSW5iZo6uoYGBrqGhka6hrpGpoV5ilW6SXmmx
-  bmpicYkukFterFdcmZuck6KXl1qyiREYHSkFjL93MN4/8lrvEKMkB5OSKG9RbGCsEF9SfkplR
-  mJxRnxRaU5q8SFGGQ4OJQle/5NAOcGi1PTUirTMHGCkwqQlOHiURHjVQdK8xQWJucWZ6RCpU4
-  zGHBNezl3EzHHw6LxFzEIsefl5qVLivEdPAJUKgJRmlObBDYIlkEuMslLCvIwMDAxCPAWpRbm
-  ZJajyrxjFORiVhHlbjgNN4cnMK4Hb9wroFCagU7if+IKcUpKIkJJqYNrVX/7ltOxztdNphb39
-  Ek0sexsjZZkvrJkYxz7tvu3h9ZsX7V45mUtK/kbIocc/tD39RdKuvTW5t1FCQ3/TJ4ulvInyW
-  p6fn6nyn828FjsvQPKm1YL4Vdl/hBLMvh2XXlL8d8L91ZNDNJX/FpmteLKdwTXscb/e908Pyy
-  4/UX6zYva5CvMLOsFbLr03NrvB+SRaOv7N8prJ3/Sfi0TUXOh4mHZe/dZ5n9hGZZP2I5t1Nfl
-  6zuzomXte5PfF7byxubKXZGYFvvf1Wcq+LZntpYKK9ZzLizlXWQp17Nj0S1ND977WG67HSXMX
-  iqd/+9c+Z4599+q92yq6uWS/H7gSt2iq2rcLUVtcd12aGfeYa2WYEktxRqKhFnNRcSIAglAir
-  psDAAA=
-X-Env-Sender: echan17@ford.com
-X-Msg-Ref: server-9.tower-381.messagelabs.com!1565641250!398251!1
-X-Originating-IP: [136.2.18.3]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 2045 invoked from network); 12 Aug 2019 20:20:50 -0000
-Received: from chipo1.azell.com (HELO chipo1.azell.com) (136.2.18.3)
-  by server-9.tower-381.messagelabs.com with ECDHE-RSA-AES128-GCM-SHA256 encrypted SMTP; 12 Aug 2019 20:20:50 -0000
-Received: from fcis870a.md4.ford.com (EHLO nafcmb04.EXCHANGE.FORD.COM) ([19.107.2.39])
-        by chipo1.azell.com (MOS 4.4.8-GA FastPath queued)
-        with ESMTP id AXM78125;
-        Mon, 12 Aug 2019 20:20:50 +0000 (GMT)
-Received: from naecmb02.exchange.ford.com (19.106.119.7) by
- nafcmb04.EXCHANGE.FORD.COM (19.107.19.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 12 Aug 2019 16:20:49 -0400
-Received: from naecmb02.exchange.ford.com ([fe80::f072:e8f6:ad65:c6bb]) by
- NAECMB02.exchange.ford.com ([fe80::f072:e8f6:ad65:c6bb%9]) with mapi id
- 15.01.1713.004; Mon, 12 Aug 2019 16:20:49 -0400
-From:   "Chan, Ewen (E.)" <echan17@ford.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: How do I set up pNFS?
-Thread-Topic: How do I set up pNFS?
-Thread-Index: AdVRS22/pzmSQBOWSfehiCyoiRhL3Q==
-Date:   Mon, 12 Aug 2019 20:20:49 +0000
-Message-ID: <b7585075f56e4e7d9788a1be33251680@ford.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [19.37.76.52]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726282AbfHMFYr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Aug 2019 01:24:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:39199 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfHMFYq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Aug 2019 01:24:46 -0400
+Received: from [192.168.178.60] ([109.104.47.130]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MPGiR-1hevT50O45-00PbYR; Tue, 13 Aug 2019 07:23:46 +0200
+Subject: Re: [PATCH v2 15/34] staging/vc04_services: convert put_page() to
+ put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        sparclinux@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        ceph-devel@vger.kernel.org, devel@driverdev.osuosl.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        Suniel Mahesh <sunil.m@techveda.org>, x86@kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mihaela Muraru <mihaela.muraru21@gmail.com>,
+        xen-devel@lists.xenproject.org, devel@lists.orangefs.org,
+        linux-media@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        intel-gfx@lists.freedesktop.org,
+        Kishore KP <kishore.p@techveda.org>,
+        linux-block@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sidong Yang <realwakka@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+References: <20190804224915.28669-1-jhubbard@nvidia.com>
+ <20190804224915.28669-16-jhubbard@nvidia.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <f92a9b35-072c-a452-3248-ded047a9ee7e@i2se.com>
+Date:   Tue, 13 Aug 2019 07:23:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190804224915.28669-16-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:WLtnGHSdIdsSOgSCw9gLWN/He07a3vhG8P/jw9q/ZsKCLbsJUeS
+ 5llVNlt7KE/tvHn+5EOmDYYv4pX1cHVWKOXHtrw4HQWAHuCkTohFsgxlEY0fExapDm8vR8t
+ zVIsUr/Bms6Kvxj5sCY8IbKiNL01LBum+j6x95pPZHXG9iG9KDUI7QIiVK2/58tc3NB1jnX
+ y7VHJG/KIA+fGCfAbINIQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:e2tiG/LoUCE=:MfCllk8c06iYHLUWJWcKAL
+ cdQ1fi1ypP4tC6pu8XAt4M+fU5mGlkjM5ziFPw9nAP5+ICbjFLhxsiDLATVpll3xwUgna69cS
+ Ev9bpFgmBYRqbHsiOVM335kNgAU19xY/LXN/GzEuigzotpDhc5IdC4FGsNTdqmIYi0Bx4dgCw
+ bLM/SrMXG40Mg1UArtxdqWQvHnINj7yK6JacwPswBAo33CV5S5U4U1PS67DpEMKA7dX0oduGb
+ 5fQtkN1kvCZEg2/ekJnnb+PAR6KRS8Eu0zqK7cwQwWxs+nxHFNvcdfFolT7waPuKj24rhpnjW
+ ZntPcErm15w8EJ72vFuARtCUk4Lh4jU+zYNtoDE6B8RJqr/+yxycmwEDucEbNXrujkaPH72RU
+ fWCHjlXjsJS29DRMlBs91cqiKMaK/ktbzSpegz+iLEJq/HkDuPh/jiz/b8w2crkMXTYEXfcIb
+ WqkuI5hHrAdEh99xa/X99FupD8F6iZ52Pv/g2glNHL9WlKL41btCn/KodqBqy/glIqHZeYzq2
+ SXjRol/t4oy36qgSCQmUGiCt1lssYLkBWOzcxjui5lZUL2V9O7wn91tHl7G+DbqjQzgMyVtBP
+ 60iHHkwkWe3su3M3o+o4m8sWd9OG5XIToU/4cSDhBQohrRIKKqoUbXAyCJH96bxaYdq/zseIf
+ oMsHaN/31pBaLs6MtsAa2tu5PRj9qlBX5kso+Y5up4mj5gl7CfIWyGwpM4gPWtVKv1En5k3ZR
+ HR/0MJ6spaP8P86u5+VALfxj2aM5bbcj+ZVczoVE2BIVl4lPQEesVoHHwFc=
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To Whom It May Concern:
-
-Here is what I am looking to do:
-
-I have a small cluster consisting of four dual socket Xeon nodes and each n=
-ode has 128 GB of RAM.
-
-What I want to do is create a 64 GB tmpfs mount point on all four nodes and=
- then export it using pNFS (NFS either version 4.1 or 4.2) so that all four=
- nodes would "see" a 256 GB tmpfs mount point (4*64 GB) that is then shared=
- acrossed all four nodes.
-
-(I also have an Mellanox ConnectX-4 dual port 100 Gbps 4x EDR Infiniband ad=
-apter, so bandwidth shouldn't be an issue for me).
-
-In my /etc/exports, I've already added proto=3Drdma, port=3D20049 to the mo=
-unt point export options.
-
-In doing some of my research on here: http://wiki.linux-nfs.org/wiki/index.=
-php/Main_Page, it gives the example that the server appears to be just a si=
-ngle server and that pNFS is just for multiple clients to access the same N=
-FS export mount point rather than having multiple servers contribute its ow=
-n portion of the space to the shared, scalable NFS mount point.
-
-If I want to do something like this, how would I create it such that the ex=
-ported mount point and the client mount point would know that it is a distr=
-ibuted, shared pNFS pool/mount point?
-
-i.e. would all four nodes be both pNFS (NFS v4.1 or v4.2) server AND client=
-, such that each node will have a line in /etc/exports and it would also ha=
-ve the corresponding line to mount it in /etc/fstab?
-
-Will having all four nodes add towards the pNFS mount point or will pNFS ge=
-t confused because there are four NFS servers trying to be the NFS server s=
-imultaneously?
-
-I hope that my question makes sense.
-
-Your help in this matter is greatly appreciated.
-
-Thank you.
-
-Ewen Chan
-CX482/483 FE Engineer
-Ford Motor Company
-
+On 05.08.19 00:48, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+>
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+>
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mihaela Muraru <mihaela.muraru21@gmail.com>
+> Cc: Suniel Mahesh <sunil.m@techveda.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Sidong Yang <realwakka@gmail.com>
+> Cc: Kishore KP <kishore.p@techveda.org>
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devel@driverdev.osuosl.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
