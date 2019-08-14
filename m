@@ -2,102 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 655058C009
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2019 19:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A51B8C66E
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2019 04:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfHMR5v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Aug 2019 13:57:51 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:41281 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbfHMR5v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Aug 2019 13:57:51 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 34so4078854uar.8
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Aug 2019 10:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XpQND1XZHIiUZfGMF+NRG/FaA+qhdUEGMoPArempL90=;
-        b=TAv8kzA8KIJl3z7uoFAX8gZZwNv9b4+MuZ38c8GpkQ79zEJHi0r87MxOw/0mM6FHdC
-         LtY8zWjJvSIjHUI0/CN3oicxW5YGqQTc9EgNRS99bSAS1knOK68HAY+IlK2K4SNnFqR5
-         xTT3uBsz6UJQAC+XXeeSWdJidQDTQbcpiXKd66xwdGeyWGn6LC7DfbB+qF7ioG8cVUxA
-         qwmhTONxrCJnFB0qeablYQgIACfrMovnvXjsh7IPMQ+kjgRNvFgG4arwEk7n/GpAtUHf
-         G+LBi2KlvR9yzxePuLQCsQzeqF2DYdnx3lnYtkv60ijo/qq9qfJqS3PWM9F9kBLxHNPP
-         XbGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XpQND1XZHIiUZfGMF+NRG/FaA+qhdUEGMoPArempL90=;
-        b=K/duuAAbGe3nBw2H9loDbuqgUGsoc6ZGEY+LcxcigETDaFknNZyCt/oYdoogQylaW9
-         /w0hywnue6WiwNCKj0AYijp1EaSKwmggrVw0olOt0/37W5KeiLmEuB3x6BmI8MZQtLl6
-         HdmvkTKQA3pIjD3rlJnXrJHJ+NEFznvgsRpkdyY/P/bPHTGUG3VY6y5ZMuO8zJ0bcUub
-         s9YH8tsm1SB0EvDrpAcQrubDa/PqWpqHbFtc5NKod12vDXSPwsHvkIkQ4vFWckgjmE6H
-         Iuu7FtAsQXAqthCUPNEOEnGJO16YgVz5YYuYqsgOaLp0lcoTwGhHXIRBSRVL5g/1z6nW
-         JeCA==
-X-Gm-Message-State: APjAAAUcQO1NyPoJR6HUHTsReXb3Ra29L/sn3fPDRW1L8LH5JVG5h1ke
-        k76agyV6J9j5SSoGc7ZX9ewyi5ZHWClJclRIGO+UQsfi
-X-Google-Smtp-Source: APXvYqzC+TJR0PJ9Koh5rEPa/ylpgRMhqwXFcYehwIG7udT3QzGPTG05XSx4TgH2CxUHL3nNhOj0CJQLy0T14xD3zyI=
-X-Received: by 2002:a9f:2e0e:: with SMTP id t14mr25088798uaj.119.1565719070733;
- Tue, 13 Aug 2019 10:57:50 -0700 (PDT)
+        id S1727524AbfHNCP0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Aug 2019 22:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728714AbfHNCOY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C5E20842;
+        Wed, 14 Aug 2019 02:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565748863;
+        bh=Y0flpr7SM2SrV0eMr6RjFTOsrFxL7Qqx4oksAdmTAA0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uUgOywhyPbLC476bUDL2W5KkCi50DKw2X1ROZWXXCJASvS7oTe53EXPx7lG7QaIS2
+         p2Ylcv1PGXmkResFNwi+q2YEvatOcTAY4BjFp/NzTjU24KOt0RIU5XRjDOhLp/XFxq
+         rxBXCw/cK+nZlbXPE9gFBfDkSLoKdJ9Q6bBgys08=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 110/123] NFSv4: Ensure state recovery handles ETIMEDOUT correctly
+Date:   Tue, 13 Aug 2019 22:10:34 -0400
+Message-Id: <20190814021047.14828-110-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
+References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
- <20190808201848.36640-6-olga.kornievskaia@gmail.com> <CAN-5tyF6ZMf_jiKycK1rk9v7xATDb=j_e5d0QBp9LOgdvn-utA@mail.gmail.com>
- <CAN-5tyEyvjJB+4_bKZmEYhv2KrVvk7dDvF27i6mx4naDt33Nww@mail.gmail.com> <20190812200019.GB29812@parsley.fieldses.org>
-In-Reply-To: <20190812200019.GB29812@parsley.fieldses.org>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 13 Aug 2019 13:57:39 -0400
-Message-ID: <CAN-5tyFpHHsH3n8u+qGyp7POdSRHesiKgd3-YQoE9jJSPBVYRw@mail.gmail.com>
-Subject: Re: [PATCH v5 5/9] NFSD add COPY_NOTIFY operation
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:00 PM J. Bruce Fields <bfields@redhat.com> wrote:
->
-> On Mon, Aug 12, 2019 at 03:16:47PM -0400, Olga Kornievskaia wrote:
-> > On Mon, Aug 12, 2019 at 12:19 PM Olga Kornievskaia
-> > <olga.kornievskaia@gmail.com> wrote:
-> > > While this passes my testing, in theory this allows for the race that
-> > > we get the copy notify size but then offload_cancel arrive and change
-> > > the value. Then refcount_sub_and test_check would have an incorrect
-> > > value (can subtract larger than an actual reference count). I have no
-> > > solution for that as there is no refcount_sub_and_lock() that will
-> > > allow to decrement by a multiple under a lock. Thoughts?
-> >
-> > I tried not to use the client's cl_lock but instead use a specific
-> > lock to protect the copy notifies stateid on the stateid list. But
-> > since stateid's reference counter (sc_count) is protected by it, I
-> > think by getting rid of the special lock and using cl_lock will solve
-> > the problem of coordinating access between the sc_count and the
-> > copy_notify stateid list. Are the any problems with using such a big
-> > lock?
->
-> Probably not.  But it can be confusing when a single lock is used for
-> several different things.  A comment explaining why you need it might
-> help.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-While holding the client's cl_lock to manipulate the list of copy
-notify stateids solves the refcount problem. It generates a different
-problem for the laundromat thread. There, client list is traversed
-already holding the cl_lock, so I can't call routines to free
-copy_notify stateid because in turn it calls nfs4_put_stid() which
-wants to take the cl_lock. Putting the copy_notify stateid on the
-reaplist and then I lose a pointer to the client structure that I need
-to take the lock. Then it seems the nfs4_cpntf_state structure would
-need to keep a pointer to the client structure but then I get a
-problem of making sure the nfs4_client structure isn't going away and
-because it even a bigger mess.
+[ Upstream commit 67e7b52d44e3d539dfbfcd866c3d3d69da23a909 ]
 
-I think I need to remove the code in the laundromat that looks for the
-not referenced copy_notifies stateid and just rely on cleaning on the
-removal of the stateid (basically what I originally had). Or I need to
-rely on the client to always send FREE_STATEID. I don't see other
-options, do you?
+Ensure that the state recovery code handles ETIMEDOUT correctly,
+and also that we set RPC_TASK_TIMEOUT when recovering open state.
 
->
-> --b.
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/nfs4proc.c  | 2 ++
+ fs/nfs/nfs4state.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index b3fd75c8629a4..c738b0b65178e 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2146,6 +2146,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
+ 		case -ENOENT:
+ 		case -EAGAIN:
+ 		case -ESTALE:
++		case -ETIMEDOUT:
+ 			break;
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+@@ -2467,6 +2468,7 @@ static int nfs4_run_open_task(struct nfs4_opendata *data,
+ 	if (!ctx) {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 1);
+ 		data->is_recover = true;
++		task_setup_data.flags |= RPC_TASK_TIMEOUT;
+ 	} else {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 0);
+ 		pnfs_lgopen_prepare(data, ctx);
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 261de26d897f7..0e69cd846afb5 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1528,6 +1528,7 @@ static int nfs4_reclaim_locks(struct nfs4_state *state, const struct nfs4_state_
+ 		switch (status) {
+ 		case 0:
+ 			break;
++		case -ETIMEDOUT:
+ 		case -ESTALE:
+ 		case -NFS4ERR_ADMIN_REVOKED:
+ 		case -NFS4ERR_STALE_STATEID:
+@@ -1681,11 +1682,13 @@ static int nfs4_reclaim_open_state(struct nfs4_state_owner *sp, const struct nfs
+ 		case -NFS4ERR_EXPIRED:
+ 		case -NFS4ERR_NO_GRACE:
+ 			nfs4_state_mark_reclaim_nograce(sp->so_server->nfs_client, state);
++			/* Fall through */
+ 		case -NFS4ERR_STALE_CLIENTID:
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+ 		case -NFS4ERR_BAD_HIGH_SLOT:
+ 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
++		case -ETIMEDOUT:
+ 			goto out_err;
+ 		}
+ 		nfs4_put_open_state(state);
+@@ -1970,7 +1973,6 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
+ 		return -EPERM;
+ 	case -EACCES:
+ 	case -NFS4ERR_DELAY:
+-	case -ETIMEDOUT:
+ 	case -EAGAIN:
+ 		ssleep(1);
+ 		break;
+@@ -2599,7 +2601,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 		}
+ 
+ 		/* Now recover expired state... */
+-		if (test_and_clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
++		if (test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
+ 			section = "reclaim nograce";
+ 			status = nfs4_do_reclaim(clp,
+ 				clp->cl_mvops->nograce_recovery_ops);
+@@ -2607,6 +2609,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 				continue;
+ 			if (status < 0)
+ 				goto out_error;
++			clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
+ 		}
+ 
+ 		nfs4_end_drain_session(clp);
+-- 
+2.20.1
+
