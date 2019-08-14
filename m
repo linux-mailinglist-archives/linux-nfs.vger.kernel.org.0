@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7FF8C7A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2019 04:25:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB208C7E9
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2019 04:28:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbfHNCYA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Aug 2019 22:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
+        id S1727650AbfHNC1c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Aug 2019 22:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbfHNCX7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:59 -0400
+        id S1730300AbfHNC0X (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B7F2084F;
-        Wed, 14 Aug 2019 02:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 973DC208C2;
+        Wed, 14 Aug 2019 02:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749438;
-        bh=YwYt7FiscGeGR5QMO7/WM1FJPf2EfiKEIFP9KwsgsHU=;
+        s=default; t=1565749583;
+        bh=rvGvV5611w8c4pUuxjDfYdGpdtKIqZg8xBa9evfeSk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3w2m4Z4THDwPp3s5YIV1nnZw6UWpo1w/bjGS3w+WqgVTmKk9Yrvl59EytQtduD1N
-         WrItkY9Wp/PAIOtNS49UdL4JhEPzHalD7Wn47ljUSqSHbU4+khDyvt/8T7qWpms52q
-         IHApzbPCwilCnAnN8dbwoGFPExfyHXGLQP4OgHYw=
+        b=Td51MDRpBV3clQXcO0dFLOo/dzUnt6PhXqcPDr3SikrZYQHJdQbNRm8L0d99s/yub
+         ngBXHm2siQ3fb8CKjtBwri7UfI+HIFZT7Nq91/D99Pw5/us8TnUx41JoYViYI60Gud
+         sWbKqnurYd1ydC0xEQxuCdg7qtWku1V0iqFizDDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/33] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
-Date:   Tue, 13 Aug 2019 22:23:09 -0400
-Message-Id: <20190814022323.17111-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 18/28] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
+Date:   Tue, 13 Aug 2019 22:25:40 -0400
+Message-Id: <20190814022550.17463-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
-References: <20190814022323.17111-1-sashal@kernel.org>
+In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
+References: <20190814022550.17463-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -77,10 +77,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 28 insertions(+), 7 deletions(-)
 
 diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 1452177c822db..c719389381dc4 100644
+index 4afdee420d253..9f15696f55b9f 100644
 --- a/fs/nfs/nfs4_fs.h
 +++ b/fs/nfs/nfs4_fs.h
-@@ -434,7 +434,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
+@@ -416,7 +416,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
  
  extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, struct rpc_cred *, gfp_t);
  extern void nfs4_put_state_owner(struct nfs4_state_owner *);
@@ -91,10 +91,10 @@ index 1452177c822db..c719389381dc4 100644
  extern void nfs4_put_open_state(struct nfs4_state *);
  extern void nfs4_close_state(struct nfs4_state *, fmode_t);
 diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 43f42cc30a606..1ec6dd4f3e2e4 100644
+index ae91d1e450be7..dac20f31f01f8 100644
 --- a/fs/nfs/nfs4client.c
 +++ b/fs/nfs/nfs4client.c
-@@ -781,9 +781,12 @@ int nfs41_walk_client_list(struct nfs_client *new,
+@@ -685,9 +685,12 @@ int nfs41_walk_client_list(struct nfs_client *new,
  
  static void nfs4_destroy_server(struct nfs_server *server)
  {
@@ -109,7 +109,7 @@ index 43f42cc30a606..1ec6dd4f3e2e4 100644
  
  /*
 diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 6f474b0670323..4e63daeef6339 100644
+index 5be61affeefd8..ef3ed2b1fd278 100644
 --- a/fs/nfs/nfs4state.c
 +++ b/fs/nfs/nfs4state.c
 @@ -611,24 +611,39 @@ void nfs4_put_state_owner(struct nfs4_state_owner *sp)
@@ -156,7 +156,7 @@ index 6f474b0670323..4e63daeef6339 100644
  		list_del(&sp->so_lru);
  		nfs4_free_state_owner(sp);
  	}
-@@ -1764,12 +1779,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
+@@ -1724,12 +1739,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
  	struct nfs4_state_owner *sp;
  	struct nfs_server *server;
  	struct rb_node *pos;
@@ -171,7 +171,7 @@ index 6f474b0670323..4e63daeef6339 100644
  		spin_lock(&clp->cl_lock);
  		for (pos = rb_first(&server->state_owners);
  		     pos != NULL;
-@@ -1798,6 +1814,7 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
+@@ -1758,6 +1774,7 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
  		spin_unlock(&clp->cl_lock);
  	}
  	rcu_read_unlock();
