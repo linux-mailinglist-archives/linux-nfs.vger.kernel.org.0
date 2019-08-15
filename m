@@ -2,77 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1834C8DD39
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2019 20:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D95B78F523
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Aug 2019 21:54:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfHNSnv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Aug 2019 14:43:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56588 "EHLO mx1.redhat.com"
+        id S1730148AbfHOTyE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Aug 2019 15:54:04 -0400
+Received: from fieldses.org ([173.255.197.46]:34694 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbfHNSnv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:43:51 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5E331935D1;
-        Wed, 14 Aug 2019 18:43:51 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D028583789;
-        Wed, 14 Aug 2019 18:43:50 +0000 (UTC)
-From:   Steve Dickson <SteveD@RedHat.com>
-Subject: The Fall Bakeathon in Westford, Ma (reminder)
-To:     NFSv4 <nfsv4@ietf.org>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Message-ID: <0f4a8046-87af-2cdd-c962-d4001093e71f@RedHat.com>
-Date:   Wed, 14 Aug 2019 14:43:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729818AbfHOTyE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:54:04 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 3B0CA63F; Thu, 15 Aug 2019 15:54:04 -0400 (EDT)
+Date:   Thu, 15 Aug 2019 15:54:04 -0400
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: use i_wrlock instead of rcu for nfsdfs i_private
+Message-ID: <20190815195404.GA19554@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 14 Aug 2019 18:43:51 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[Just a quick reminder the bakeathon is about 2 mos out]
-[we are looking forward to another excellent turnout!]
-[The hotel blocks will be expiring in the middle of next ]
-[month... If there are any issue please let me know ]
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-Hello all....
+synchronize_rcu() gets called multiple times each time a client is
+destroyed.  If the laundromat thread has a lot of clients to destroy,
+the delay can be noticeable.  This was causing pynfs test RENEW3 to
+fail.
 
-Red Hat is pleased to announce the Fall NFS Bake-a-ton will be
-again hosted by Red Hat in Westford, MA office.
+We could embed an rcu_head in each inode and do the kref_put in an rcu
+callback.  But simplest is just to take a lock here.
 
-I've very hopeful a couple new server vendors will be
-attending... and hopefully to do some new RoCE testing as
-well as the usual NFSoRDMA and v4.x testing.   
+(I also wonder if the laundromat thread would be better replaced by a
+bunch of scheduled work or timers or something.)
 
-The Date: *the 2ed full week in Oct (14th - 18th)*
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ fs/nfsd/nfsctl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Details and registration info:
-    http://www.nfsv4bat.org/Events/2019/Oct/BAT/index.html
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 928a0b2c05dc..b14f825c62fe 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1215,11 +1215,9 @@ static void clear_ncl(struct inode *inode)
+ 	struct nfsdfs_client *ncl = inode->i_private;
+ 
+ 	inode->i_private = NULL;
+-	synchronize_rcu();
+ 	kref_put(&ncl->cl_ref, ncl->cl_release);
+ }
+ 
+-
+ static struct nfsdfs_client *__get_nfsdfs_client(struct inode *inode)
+ {
+ 	struct nfsdfs_client *nc = inode->i_private;
+@@ -1233,9 +1231,9 @@ struct nfsdfs_client *get_nfsdfs_client(struct inode *inode)
+ {
+ 	struct nfsdfs_client *nc;
+ 
+-	rcu_read_lock();
++	inode_lock_shared(inode);
+ 	nc = __get_nfsdfs_client(inode);
+-	rcu_read_unlock();
++	inode_unlock_shared(inode);
+ 	return nc;
+ }
+ /* from __rpc_unlink */
+-- 
+2.21.0
 
-I'm using the same hotels and the prices are the same
-or lower. The block reservations for the Residence Inn
-and Hampton Inn end on *Wed Sept 14th*
-
-    * Residence Inn Marriott - closest; w/ shuttle; full kitchen; free breakfast 
-    * Westford Regency Inn - w/bar ; w/shuttle 
-    * Hampton Inn - free breakfast 
-
-When registering (i.e. replying to this email) please give me
-   * Company Name
-   * How engineers are coming
-   * T-shirt sizes
-   * Hotel you will be staying in
-
-Any questions... Feel free to reach out... 
-
-I hope to see you in October!!!
-
-steved.
