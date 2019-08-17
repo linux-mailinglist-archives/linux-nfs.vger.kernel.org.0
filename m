@@ -2,182 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 730AC90A79
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2019 23:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B215090BF5
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Aug 2019 03:43:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfHPVuL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Aug 2019 17:50:11 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:32807 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfHPVuL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Aug 2019 17:50:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id z3so9129481iog.0;
-        Fri, 16 Aug 2019 14:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=hlzYAOo1dHYf3fdfTKCWewuOI3rJaLH+SGb6LnWdClM=;
-        b=BIld9Fb6o5qIkGPZvCgK1+icGivU+79gWtvABLHLUqznDSDyEBpOB8h9OBJisDeBNP
-         JhQQUmT6Q3ofaq7TJn+yictP3SKQJ2M4VywzG4vg2v570DeOu9ursRSm2D6GXiqO6BWb
-         WxsDLYY9sLOdmO56HRwr8Ftae5IjPFopdBui2VCJcBWJitFHxv7uRd3tL02Yor76WDUC
-         tb/ai1F7PGkOZA0WD04RFQXa7AsVOs/WYTiFdxu+FU2ZAJ+HgNAVsRWa5Cw+AVjTtMse
-         vRw7R7zc6fmLiWm19ESCB5Ji29E34BRurcwsDzJEWhFiPV2VW2HSS7N8k7p9OtvQIFwM
-         1ixg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=hlzYAOo1dHYf3fdfTKCWewuOI3rJaLH+SGb6LnWdClM=;
-        b=F8vlel0std56PhM5yYeNXRiiJsfbCGQoA6cjrXlsA/2feOL1zfSr2UnwnxoUocXDvx
-         B97VeL/s1xOFgoNe403I9Z7DxqpfaW5w7hdWWeVVi3eVPWrU/XpH9JXENV9f32oOStfi
-         3peZGJYmejnskWrh1GT6N/ZfyQgPkzndlFrmhwhalGAbYPVCqbMIGehYaWl43xdwKGls
-         RCzeijCJ52mYags/6ynwRFy9AzVCaJAvrIio//xF9HrbFq6+/1AIS0/Jf7HlicvHSR9y
-         5iEyJHherXDLkdzuNUH7udTPRicEzUigqEiS5J4S/UHjJuAbU15zBqTdqbqlSzvYpYo1
-         E6Fw==
-X-Gm-Message-State: APjAAAWJYWcDdcoCr7M4DMNUdeDsgg5fRpHGePOL0E79lItWG4kExdEp
-        xTpm17cdJQrpCy7KMxTaPnI=
-X-Google-Smtp-Source: APXvYqws8MGvDoDsIkIlKlPdFcuB3g5fA4GaX5EfH+nH2t8NOpljrkp2Azgua2vdjVymzd7uulsBJw==
-X-Received: by 2002:a5d:9942:: with SMTP id v2mr1913291ios.177.1565992210225;
-        Fri, 16 Aug 2019 14:50:10 -0700 (PDT)
-Received: from seurat29.1015granger.net ([8.46.76.57])
-        by smtp.gmail.com with ESMTPSA id m10sm5885787ioj.75.2019.08.16.14.50.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 14:50:09 -0700 (PDT)
-Subject: [PATCH 2/2] svcrdma: Use llist for managing cache of recv_ctxts
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     bfields@fieldses.org
+        id S1726047AbfHQBnb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Aug 2019 21:43:31 -0400
+Received: from fieldses.org ([173.255.197.46]:36180 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfHQBnb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 16 Aug 2019 21:43:31 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A80A763F; Fri, 16 Aug 2019 21:43:30 -0400 (EDT)
+Date:   Fri, 16 Aug 2019 21:43:30 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Fri, 16 Aug 2019 17:49:38 -0400
-Message-ID: <156599215880.1245.16378203886528228113.stgit@seurat29.1015granger.net>
-In-Reply-To: <156599209136.1245.654792745471627630.stgit@seurat29.1015granger.net>
+Subject: Re: [PATCH 1/2] svcrdma: Remove svc_rdma_wq
+Message-ID: <20190817014330.GA14789@fieldses.org>
 References: <156599209136.1245.654792745471627630.stgit@seurat29.1015granger.net>
-User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156599209136.1245.654792745471627630.stgit@seurat29.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use a wait-free mechanism for managing the svc_rdma_recv_ctxts free
-list. Subsequently, sc_recv_lock can be eliminated.
+Thanks!  Applying both for 5.4.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_rdma.h          |    5 +++--
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |   24 ++++++++++--------------
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    3 +--
- 3 files changed, 14 insertions(+), 18 deletions(-)
+--b.
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index edb39900fe04..40f65888dd38 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -42,6 +42,7 @@
- 
- #ifndef SVC_RDMA_H
- #define SVC_RDMA_H
-+#include <linux/llist.h>
- #include <linux/sunrpc/xdr.h>
- #include <linux/sunrpc/svcsock.h>
- #include <linux/sunrpc/rpc_rdma.h>
-@@ -107,8 +108,7 @@ struct svcxprt_rdma {
- 	struct list_head     sc_read_complete_q;
- 	struct work_struct   sc_work;
- 
--	spinlock_t	     sc_recv_lock;
--	struct list_head     sc_recv_ctxts;
-+	struct llist_head    sc_recv_ctxts;
- };
- /* sc_flags */
- #define RDMAXPRT_CONN_PENDING	3
-@@ -125,6 +125,7 @@ enum {
- #define RPCSVC_MAXPAYLOAD_RDMA	RPCSVC_MAXPAYLOAD
- 
- struct svc_rdma_recv_ctxt {
-+	struct llist_node	rc_node;
- 	struct list_head	rc_list;
- 	struct ib_recv_wr	rc_recv_wr;
- 	struct ib_cqe		rc_cqe;
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 65e2fb9aac65..96bccd398469 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -172,9 +172,10 @@ static void svc_rdma_recv_ctxt_destroy(struct svcxprt_rdma *rdma,
- void svc_rdma_recv_ctxts_destroy(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_recv_ctxt *ctxt;
-+	struct llist_node *node;
- 
--	while ((ctxt = svc_rdma_next_recv_ctxt(&rdma->sc_recv_ctxts))) {
--		list_del(&ctxt->rc_list);
-+	while ((node = llist_del_first(&rdma->sc_recv_ctxts))) {
-+		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
- 		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
- 	}
- }
-@@ -183,21 +184,18 @@ static struct svc_rdma_recv_ctxt *
- svc_rdma_recv_ctxt_get(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_recv_ctxt *ctxt;
-+	struct llist_node *node;
- 
--	spin_lock(&rdma->sc_recv_lock);
--	ctxt = svc_rdma_next_recv_ctxt(&rdma->sc_recv_ctxts);
--	if (!ctxt)
-+	node = llist_del_first(&rdma->sc_recv_ctxts);
-+	if (!node)
- 		goto out_empty;
--	list_del(&ctxt->rc_list);
--	spin_unlock(&rdma->sc_recv_lock);
-+	ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
- 
- out:
- 	ctxt->rc_page_count = 0;
- 	return ctxt;
- 
- out_empty:
--	spin_unlock(&rdma->sc_recv_lock);
--
- 	ctxt = svc_rdma_recv_ctxt_alloc(rdma);
- 	if (!ctxt)
- 		return NULL;
-@@ -218,11 +216,9 @@ void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
- 	for (i = 0; i < ctxt->rc_page_count; i++)
- 		put_page(ctxt->rc_pages[i]);
- 
--	if (!ctxt->rc_temp) {
--		spin_lock(&rdma->sc_recv_lock);
--		list_add(&ctxt->rc_list, &rdma->sc_recv_ctxts);
--		spin_unlock(&rdma->sc_recv_lock);
--	} else
-+	if (!ctxt->rc_temp)
-+		llist_add(&ctxt->rc_node, &rdma->sc_recv_ctxts);
-+	else
- 		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
- }
- 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 30dbbc77ad16..145a3615c319 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -140,14 +140,13 @@ static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
- 	INIT_LIST_HEAD(&cma_xprt->sc_rq_dto_q);
- 	INIT_LIST_HEAD(&cma_xprt->sc_read_complete_q);
- 	INIT_LIST_HEAD(&cma_xprt->sc_send_ctxts);
--	INIT_LIST_HEAD(&cma_xprt->sc_recv_ctxts);
-+	init_llist_head(&cma_xprt->sc_recv_ctxts);
- 	INIT_LIST_HEAD(&cma_xprt->sc_rw_ctxts);
- 	init_waitqueue_head(&cma_xprt->sc_send_wait);
- 
- 	spin_lock_init(&cma_xprt->sc_lock);
- 	spin_lock_init(&cma_xprt->sc_rq_dto_lock);
- 	spin_lock_init(&cma_xprt->sc_send_lock);
--	spin_lock_init(&cma_xprt->sc_recv_lock);
- 	spin_lock_init(&cma_xprt->sc_rw_ctxt_lock);
- 
- 	/*
-
+On Fri, Aug 16, 2019 at 05:48:36PM -0400, Chuck Lever wrote:
+> Clean up: the system workqueue will work just as well.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/linux/sunrpc/svc_rdma.h          |    1 -
+>  net/sunrpc/xprtrdma/svc_rdma.c           |    7 -------
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c |    3 ++-
+>  3 files changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+> index 981f0d726ad4..edb39900fe04 100644
+> --- a/include/linux/sunrpc/svc_rdma.h
+> +++ b/include/linux/sunrpc/svc_rdma.h
+> @@ -200,7 +200,6 @@ extern struct svc_xprt_class svc_rdma_bc_class;
+>  #endif
+>  
+>  /* svc_rdma.c */
+> -extern struct workqueue_struct *svc_rdma_wq;
+>  extern int svc_rdma_init(void);
+>  extern void svc_rdma_cleanup(void);
+>  
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
+> index abdb3004a1e3..97bca509a391 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma.c
+> @@ -73,8 +73,6 @@ atomic_t rdma_stat_rq_prod;
+>  atomic_t rdma_stat_sq_poll;
+>  atomic_t rdma_stat_sq_prod;
+>  
+> -struct workqueue_struct *svc_rdma_wq;
+> -
+>  /*
+>   * This function implements reading and resetting an atomic_t stat
+>   * variable through read/write to a proc file. Any write to the file
+> @@ -230,7 +228,6 @@ static struct ctl_table svcrdma_root_table[] = {
+>  void svc_rdma_cleanup(void)
+>  {
+>  	dprintk("SVCRDMA Module Removed, deregister RPC RDMA transport\n");
+> -	destroy_workqueue(svc_rdma_wq);
+>  	if (svcrdma_table_header) {
+>  		unregister_sysctl_table(svcrdma_table_header);
+>  		svcrdma_table_header = NULL;
+> @@ -246,10 +243,6 @@ int svc_rdma_init(void)
+>  	dprintk("\tmax_bc_requests  : %u\n", svcrdma_max_bc_requests);
+>  	dprintk("\tmax_inline       : %d\n", svcrdma_max_req_size);
+>  
+> -	svc_rdma_wq = alloc_workqueue("svc_rdma", 0, 0);
+> -	if (!svc_rdma_wq)
+> -		return -ENOMEM;
+> -
+>  	if (!svcrdma_table_header)
+>  		svcrdma_table_header =
+>  			register_sysctl_table(svcrdma_root_table);
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> index 4d3db6ee7f09..30dbbc77ad16 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> @@ -630,8 +630,9 @@ static void svc_rdma_free(struct svc_xprt *xprt)
+>  {
+>  	struct svcxprt_rdma *rdma =
+>  		container_of(xprt, struct svcxprt_rdma, sc_xprt);
+> +
+>  	INIT_WORK(&rdma->sc_work, __svc_rdma_free);
+> -	queue_work(svc_rdma_wq, &rdma->sc_work);
+> +	schedule_work(&rdma->sc_work);
+>  }
+>  
+>  static int svc_rdma_has_wspace(struct svc_xprt *xprt)
