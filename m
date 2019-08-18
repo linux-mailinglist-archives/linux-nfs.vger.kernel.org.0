@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA137918C5
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Aug 2019 20:22:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44F9D918C6
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Aug 2019 20:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfHRSV3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1727058AbfHRSV3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sun, 18 Aug 2019 14:21:29 -0400
-Received: from mail-io1-f52.google.com ([209.85.166.52]:40769 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfHRSV3 (ORCPT
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36878 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfHRSV3 (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Aug 2019 14:21:29 -0400
-Received: by mail-io1-f52.google.com with SMTP id t6so16110082ios.7
+Received: by mail-io1-f65.google.com with SMTP id q22so16090949iog.4
         for <linux-nfs@vger.kernel.org>; Sun, 18 Aug 2019 11:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RgKYMz813mTgubN3jIYvlY//WBYpfQ2oOh3VBH2oqz4=;
-        b=VpyLQ5b7qdJSxHucYikZzMrhMWB+JBNSbmiMVbdHweniFSMeIlRO0jRizcMvuCS/uy
-         vcGaaeUly7BKCplnq1G5+n124FBz0Mkc0o32i3qY+rndPDYcAZUMnRu5v4q8nfVERF98
-         0abt8w+58FlLkHw1MLRNltyQF32c1ZZQLCpK4Xz9PJNze9a1J/y2agvGVy2HuEZQMV19
-         aqKhhjBkobVumuFD1rb6CNRgXstvI8dOPgjRt01wX9sAng1CtNaNOv0XkdKCT9Hed9NZ
-         TrcpJi21bmTXfklkCLWWxQE9/VKG7FnJ0fIBXPIMCK+d6sATlVdR9BhlJDdhbxK57vls
-         eVew==
+        bh=zMTL8eAE2fsV+kXbzBynz4mEZYtb9N7gNpsezC7pvlc=;
+        b=cKizCAURtG5hn3qAHtTnYaDo1/b3xUeBihaiLsb44RpVmNIcOq7V+Kt+u4WSqwtJrn
+         V6ZbRI3EbYYNtWQ54mXzr20QXY9Q/A3QP/Z+6PL+MWeso32/NMHzjh0L3b89g9jPmx0s
+         TuAskEzKnr4X0GdRHdrBrpDiADP/heEi1UQGaUqBBSchilfe2RkTIlmnYklxpnBYIMC9
+         5ZagAZ8w/QSWBruIIPVRDVgqZsYIYSfJLZF00EiGwx2o2fxV3l+wms9jUP9o9dc3BJRJ
+         SkImkmnrAwuNGjwUTh9jHMZCcsjZwXEL8YDv/l4cDDeSZDI2XtnR3f/5hAKKlBAVFXvR
+         QTpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RgKYMz813mTgubN3jIYvlY//WBYpfQ2oOh3VBH2oqz4=;
-        b=oH0Ixc7R3btarZd8cDlr/49vnG+X8T6/LXBDSLO4HoVuZv0+hU00OxwSVIPoMtGy3H
-         L+d2LIvhZ18qImPavY/93Vx8C0Gh87qPAXONsdR8C3wYGTWpa4COWj8wg2yT5Gd4DkhU
-         rFh85jY0tLbiB/KqZhTCKDrMSvRa0/5ZUG5fuSOLhKFOj7sSvZa1gojhHZ8BYEgNeGy7
-         ZSrDAHFHUZ/7Pyi6qfjenzXvlCeteP4BFeLqHPtlvf+H4zhaOBWawOtV0obZ/NQ32Xm/
-         S9iBaOK161gns5sOH3JaWMBwQoI/5us3ns9a5nDg+9i+L6B6FLMXRnMYY5MFyaskwfjC
-         gsvg==
-X-Gm-Message-State: APjAAAW4zwvBujZeRAQotMlESoGGdULv16/R628kQTbOIfxHQmkgCUNr
-        fb+ls2rHdGPuDF++GQrbxiNvZhA=
-X-Google-Smtp-Source: APXvYqy3dSNHarkt9hrfkEk9l1r/D0CSyu6DDbXCSNAcFsWD0Q4HriYq65j9FB1eo/dfBsVUF6Ksmw==
-X-Received: by 2002:a02:a409:: with SMTP id c9mr23315328jal.74.1566152487484;
-        Sun, 18 Aug 2019 11:21:27 -0700 (PDT)
+        bh=zMTL8eAE2fsV+kXbzBynz4mEZYtb9N7gNpsezC7pvlc=;
+        b=j7sW+q6nscrIvLjmJ6IibOV31HYo5AJWQvs+XCYlE7q3K0n7x6fxrrxX5Xfsv3wcns
+         zU8SxDU/lHmArRxAZqXRDxBQAUtIo5yugri0/B46R5RHkYW95nNxtpSgcT/v6Bo2udsi
+         JwWZbTECuKRghPk51SopiofKOcTfxHOk5/zxeLmHBQhiw8Yfbh3Xe8RksPxfmOrsyndq
+         TNFGPakbHbzuYfrak99bvF0RJU1Dyq/bI6GZN8pz+Cd8VdxuHgls4kaiSxTEEP0s724d
+         YqHgy7eYVt/VMIxd11rtCJhlXeMnPS+QdkDHRGp319zAqSv20ntfvwK1yKX7oyVUimDd
+         VC7w==
+X-Gm-Message-State: APjAAAWuVNsD3Dt5oAXvvsJz1VYbsUr9CDBIgXDfr4QO+ywSD4tgTeaA
+        Bzd1IRx5IoQWMh2CQZ59iVBR0vg=
+X-Google-Smtp-Source: APXvYqyJLkyQlIpgBA/qIUsG2dYMLooMrRZU+dIoUpZhENYCNRFJJYa2TFzNSs2MVKHqbiRJooxGCA==
+X-Received: by 2002:a6b:dd18:: with SMTP id f24mr9913136ioc.97.1566152488206;
+        Sun, 18 Aug 2019 11:21:28 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id n22sm10317844iob.37.2019.08.18.11.21.26
+        by smtp.gmail.com with ESMTPSA id n22sm10317844iob.37.2019.08.18.11.21.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 11:21:26 -0700 (PDT)
+        Sun, 18 Aug 2019 11:21:27 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     "J. Bruce Fields" <bfields@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 13/16] nfsd: rip out the raparms cache
-Date:   Sun, 18 Aug 2019 14:18:56 -0400
-Message-Id: <20190818181859.8458-14-trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 14/16] nfsd: close cached files prior to a REMOVE or RENAME that would replace target
+Date:   Sun, 18 Aug 2019 14:18:57 -0400
+Message-Id: <20190818181859.8458-15-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190818181859.8458-13-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190818181859.8458-14-trond.myklebust@hammerspace.com>
 References: <20190818181859.8458-1-trond.myklebust@hammerspace.com>
  <20190818181859.8458-2-trond.myklebust@hammerspace.com>
  <20190818181859.8458-3-trond.myklebust@hammerspace.com>
@@ -66,6 +66,7 @@ References: <20190818181859.8458-1-trond.myklebust@hammerspace.com>
  <20190818181859.8458-11-trond.myklebust@hammerspace.com>
  <20190818181859.8458-12-trond.myklebust@hammerspace.com>
  <20190818181859.8458-13-trond.myklebust@hammerspace.com>
+ <20190818181859.8458-14-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -75,264 +76,149 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Jeff Layton <jeff.layton@primarydata.com>
 
-The raparms cache was set up in order to ensure that we carry readahead
-information forward from one RPC call to the next. In other words, it
-was set up because each RPC call was forced to open a struct file, then
-close it, causing the loss of readahead information that is normally
-cached in that struct file, and used to keep the page cache filled when
-a user calls read() multiple times on the same file descriptor.
+It's not uncommon for some workloads to do a bunch of I/O to a file and
+delete it just afterward. If knfsd has a cached open file however, then
+the file may still be open when the dentry is unlinked. If the
+underlying filesystem is nfs, then that could trigger it to do a
+sillyrename.
 
-Now that we cache the struct file, and reuse it for all the I/O calls
-to a given file by a given user, we no longer have to keep a separate
-readahead cache.
+On a REMOVE or RENAME scan the nfsd_file cache for open files that
+correspond to the inode, and proactively unhash and put their
+references. This should prevent any delete-on-last-close activity from
+occurring, solely due to knfsd's open file cache.
+
+This must be done synchronously though so we use the variants that call
+flush_delayed_fput. There are deadlock possibilities if you call
+flush_delayed_fput while holding locks, however. In the case of
+nfsd_rename, we don't even do the lookups of the dentries to be renamed
+until we've locked for rename.
+
+Once we've figured out what the target dentry is for a rename, check to
+see whether there are cached open files associated with it. If there
+are, then unwind all of the locking, close them all, and then reattempt
+the rename.
 
 Signed-off-by: Jeff Layton <jeff.layton@primarydata.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfsd/nfssvc.c |  13 +----
- fs/nfsd/vfs.c    | 149 -----------------------------------------------
- fs/nfsd/vfs.h    |   6 --
- 3 files changed, 1 insertion(+), 167 deletions(-)
+ fs/nfsd/vfs.c | 62 +++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 53 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index a6b1eab7b722..d02712ca2685 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -317,22 +317,12 @@ static int nfsd_startup_generic(int nrservs)
- 	ret = nfsd_file_cache_init();
- 	if (ret)
- 		goto dec_users;
--	/*
--	 * Readahead param cache - will no-op if it already exists.
--	 * (Note therefore results will be suboptimal if number of
--	 * threads is modified after nfsd start.)
--	 */
--	ret = nfsd_racache_init(2*nrservs);
--	if (ret)
--		goto out_file_cache;
- 
- 	ret = nfs4_state_start();
- 	if (ret)
--		goto out_racache;
-+		goto out_file_cache;
- 	return 0;
- 
--out_racache:
--	nfsd_racache_shutdown();
- out_file_cache:
- 	nfsd_file_cache_shutdown();
- dec_users:
-@@ -347,7 +337,6 @@ static void nfsd_shutdown_generic(void)
- 
- 	nfs4_state_shutdown();
- 	nfsd_file_cache_shutdown();
--	nfsd_racache_shutdown();
- }
- 
- static bool nfsd_needs_lockd(struct nfsd_net *nn)
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index ec254bff1893..8e2c8f36eba3 100644
+index 8e2c8f36eba3..84e87772c2b8 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -49,34 +49,6 @@
+@@ -1590,6 +1590,26 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 	goto out_unlock;
+ }
  
- #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
++static void
++nfsd_close_cached_files(struct dentry *dentry)
++{
++	struct inode *inode = d_inode(dentry);
++
++	if (inode && S_ISREG(inode->i_mode))
++		nfsd_file_close_inode_sync(inode);
++}
++
++static bool
++nfsd_has_cached_files(struct dentry *dentry)
++{
++	bool		ret = false;
++	struct inode *inode = d_inode(dentry);
++
++	if (inode && S_ISREG(inode->i_mode))
++		ret = nfsd_file_is_cached(inode);
++	return ret;
++}
++
+ /*
+  * Rename a file
+  * N.B. After this call _both_ ffhp and tfhp need an fh_put
+@@ -1602,6 +1622,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	struct inode	*fdir, *tdir;
+ 	__be32		err;
+ 	int		host_err;
++	bool		has_cached = false;
  
--
--/*
-- * This is a cache of readahead params that help us choose the proper
-- * readahead strategy. Initially, we set all readahead parameters to 0
-- * and let the VFS handle things.
-- * If you increase the number of cached files very much, you'll need to
-- * add a hash table here.
-- */
--struct raparms {
--	struct raparms		*p_next;
--	unsigned int		p_count;
--	ino_t			p_ino;
--	dev_t			p_dev;
--	int			p_set;
--	struct file_ra_state	p_ra;
--	unsigned int		p_hindex;
--};
--
--struct raparm_hbucket {
--	struct raparms		*pb_head;
--	spinlock_t		pb_lock;
--} ____cacheline_aligned_in_smp;
--
--#define RAPARM_HASH_BITS	4
--#define RAPARM_HASH_SIZE	(1<<RAPARM_HASH_BITS)
--#define RAPARM_HASH_MASK	(RAPARM_HASH_SIZE-1)
--static struct raparm_hbucket	raparm_hash[RAPARM_HASH_SIZE];
--
- /* 
-  * Called from nfsd_lookup and encode_dirent. Check if we have crossed 
-  * a mount point.
-@@ -822,67 +794,6 @@ nfsd_open_verified(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+ 	err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
+ 	if (err)
+@@ -1620,6 +1641,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	if (!flen || isdotent(fname, flen) || !tlen || isdotent(tname, tlen))
+ 		goto out;
+ 
++retry:
+ 	host_err = fh_want_write(ffhp);
+ 	if (host_err) {
+ 		err = nfserrno(host_err);
+@@ -1659,11 +1681,16 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	if (ffhp->fh_export->ex_path.dentry != tfhp->fh_export->ex_path.dentry)
+ 		goto out_dput_new;
+ 
+-	host_err = vfs_rename(fdir, odentry, tdir, ndentry, NULL, 0);
+-	if (!host_err) {
+-		host_err = commit_metadata(tfhp);
+-		if (!host_err)
+-			host_err = commit_metadata(ffhp);
++	if (nfsd_has_cached_files(ndentry)) {
++		has_cached = true;
++		goto out_dput_old;
++	} else {
++		host_err = vfs_rename(fdir, odentry, tdir, ndentry, NULL, 0);
++		if (!host_err) {
++			host_err = commit_metadata(tfhp);
++			if (!host_err)
++				host_err = commit_metadata(ffhp);
++		}
+ 	}
+  out_dput_new:
+ 	dput(ndentry);
+@@ -1676,12 +1703,26 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	 * as that would do the wrong thing if the two directories
+ 	 * were the same, so again we do it by hand.
+ 	 */
+-	fill_post_wcc(ffhp);
+-	fill_post_wcc(tfhp);
++	if (!has_cached) {
++		fill_post_wcc(ffhp);
++		fill_post_wcc(tfhp);
++	}
+ 	unlock_rename(tdentry, fdentry);
+ 	ffhp->fh_locked = tfhp->fh_locked = false;
+ 	fh_drop_write(ffhp);
+ 
++	/*
++	 * If the target dentry has cached open files, then we need to try to
++	 * close them prior to doing the rename. Flushing delayed fput
++	 * shouldn't be done with locks held however, so we delay it until this
++	 * point and then reattempt the whole shebang.
++	 */
++	if (has_cached) {
++		has_cached = false;
++		nfsd_close_cached_files(ndentry);
++		dput(ndentry);
++		goto retry;
++	}
+ out:
  	return err;
  }
+@@ -1728,10 +1769,13 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 	if (!type)
+ 		type = d_inode(rdentry)->i_mode & S_IFMT;
  
--
--
--struct raparms *
--nfsd_init_raparms(struct file *file)
--{
--	struct inode *inode = file_inode(file);
--	dev_t dev = inode->i_sb->s_dev;
--	ino_t ino = inode->i_ino;
--	struct raparms	*ra, **rap, **frap = NULL;
--	int depth = 0;
--	unsigned int hash;
--	struct raparm_hbucket *rab;
--
--	hash = jhash_2words(dev, ino, 0xfeedbeef) & RAPARM_HASH_MASK;
--	rab = &raparm_hash[hash];
--
--	spin_lock(&rab->pb_lock);
--	for (rap = &rab->pb_head; (ra = *rap); rap = &ra->p_next) {
--		if (ra->p_ino == ino && ra->p_dev == dev)
--			goto found;
--		depth++;
--		if (ra->p_count == 0)
--			frap = rap;
--	}
--	depth = nfsdstats.ra_size;
--	if (!frap) {	
--		spin_unlock(&rab->pb_lock);
--		return NULL;
--	}
--	rap = frap;
--	ra = *frap;
--	ra->p_dev = dev;
--	ra->p_ino = ino;
--	ra->p_set = 0;
--	ra->p_hindex = hash;
--found:
--	if (rap != &rab->pb_head) {
--		*rap = ra->p_next;
--		ra->p_next   = rab->pb_head;
--		rab->pb_head = ra;
--	}
--	ra->p_count++;
--	nfsdstats.ra_depth[depth*10/nfsdstats.ra_size]++;
--	spin_unlock(&rab->pb_lock);
--
--	if (ra->p_set)
--		file->f_ra = ra->p_ra;
--	return ra;
--}
--
--void nfsd_put_raparams(struct file *file, struct raparms *ra)
--{
--	struct raparm_hbucket *rab = &raparm_hash[ra->p_hindex];
--
--	spin_lock(&rab->pb_lock);
--	ra->p_ra = file->f_ra;
--	ra->p_set = 1;
--	ra->p_count--;
--	spin_unlock(&rab->pb_lock);
--}
--
- /*
-  * Grab and keep cached pages associated with a file in the svc_rqst
-  * so that they can be passed to the network sendmsg/sendpage routines
-@@ -2094,63 +2005,3 @@ nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
- 
- 	return err? nfserrno(err) : 0;
- }
--
--void
--nfsd_racache_shutdown(void)
--{
--	struct raparms *raparm, *last_raparm;
--	unsigned int i;
--
--	dprintk("nfsd: freeing readahead buffers.\n");
--
--	for (i = 0; i < RAPARM_HASH_SIZE; i++) {
--		raparm = raparm_hash[i].pb_head;
--		while(raparm) {
--			last_raparm = raparm;
--			raparm = raparm->p_next;
--			kfree(last_raparm);
--		}
--		raparm_hash[i].pb_head = NULL;
--	}
--}
--/*
-- * Initialize readahead param cache
-- */
--int
--nfsd_racache_init(int cache_size)
--{
--	int	i;
--	int	j = 0;
--	int	nperbucket;
--	struct raparms **raparm = NULL;
--
--
--	if (raparm_hash[0].pb_head)
--		return 0;
--	nperbucket = DIV_ROUND_UP(cache_size, RAPARM_HASH_SIZE);
--	nperbucket = max(2, nperbucket);
--	cache_size = nperbucket * RAPARM_HASH_SIZE;
--
--	dprintk("nfsd: allocating %d readahead buffers.\n", cache_size);
--
--	for (i = 0; i < RAPARM_HASH_SIZE; i++) {
--		spin_lock_init(&raparm_hash[i].pb_lock);
--
--		raparm = &raparm_hash[i].pb_head;
--		for (j = 0; j < nperbucket; j++) {
--			*raparm = kzalloc(sizeof(struct raparms), GFP_KERNEL);
--			if (!*raparm)
--				goto out_nomem;
--			raparm = &(*raparm)->p_next;
--		}
--		*raparm = NULL;
--	}
--
--	nfsdstats.ra_size = cache_size;
--	return 0;
--
--out_nomem:
--	dprintk("nfsd: kmalloc failed, freeing readahead buffers\n");
--	nfsd_racache_shutdown();
--	return -ENOMEM;
--}
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 31fdae34e028..e0f7792165a6 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -40,8 +40,6 @@
- typedef int (*nfsd_filldir_t)(void *, const char *, int, loff_t, u64, unsigned);
- 
- /* nfsd/vfs.c */
--int		nfsd_racache_init(int);
--void		nfsd_racache_shutdown(void);
- int		nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
- 		                struct svc_export **expp);
- __be32		nfsd_lookup(struct svc_rqst *, struct svc_fh *,
-@@ -80,7 +78,6 @@ __be32		nfsd_open(struct svc_rqst *, struct svc_fh *, umode_t,
- 				int, struct file **);
- __be32		nfsd_open_verified(struct svc_rqst *, struct svc_fh *, umode_t,
- 				int, struct file **);
--struct raparms;
- __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				struct file *file, loff_t offset,
- 				unsigned long *count);
-@@ -118,9 +115,6 @@ __be32		nfsd_statfs(struct svc_rqst *, struct svc_fh *,
- __be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
- 				struct dentry *, int);
- 
--struct raparms *nfsd_init_raparms(struct file *file);
--void		nfsd_put_raparams(struct file *file, struct raparms *ra);
--
- static inline int fh_want_write(struct svc_fh *fh)
- {
- 	int ret;
+-	if (type != S_IFDIR)
++	if (type != S_IFDIR) {
++		nfsd_close_cached_files(rdentry);
+ 		host_err = vfs_unlink(dirp, rdentry, NULL);
+-	else
++	} else {
+ 		host_err = vfs_rmdir(dirp, rdentry);
++	}
++
+ 	if (!host_err)
+ 		host_err = commit_metadata(fhp);
+ 	dput(rdentry);
 -- 
 2.21.0
 
