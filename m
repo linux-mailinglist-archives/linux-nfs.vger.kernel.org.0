@@ -2,149 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82AB991836
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Aug 2019 19:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BE7918B6
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Aug 2019 20:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfHRRAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Aug 2019 13:00:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34149 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfHRQ7z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Aug 2019 12:59:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b24so5747431pfp.1;
-        Sun, 18 Aug 2019 09:59:55 -0700 (PDT)
+        id S1726926AbfHRSVI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Aug 2019 14:21:08 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32780 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfHRSVI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Aug 2019 14:21:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so16095764iog.0
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Aug 2019 11:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HGJ0SLLZ/8OiPn6gk75MHhbU4//pD3TrNh/zboW2EHI=;
-        b=msrzD0Y9xNpt458A4zyO9I98iFYcvBfMe8wPmB4FuYb3QQzBzYSqAhtBY/qrcW87AA
-         SQOgbWAt8qWQgvjbDY4qNud6q5rh553E4XHK6sf1AcRzUfvlYZz5i/CT7VilNmYgzdLI
-         HrmeF8L99G+ZkbT4IZg8w5PYn83VtO9LOL7aDKodtY5eqe3nPow7+cVDOtlI3raF7pxJ
-         gGO1eBjOG1FKJM/AGZWTPRXUVV1fFwvh/Ak2irv3b7+p1wwiKDUmImv3hGowvt0/eFDj
-         F38j2DvADFJ8dC/gYf/tJjtzgYgAEFhZ26p7QrQ9jvKjUr4T7STs/hPEbFdZFxbOpXy3
-         ufTg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8GE+H4lHDFBjgHsBVUQI6N/9/0x4WTrPdZsB9ZY0txw=;
+        b=PKIIMkAzmM+7nfQxpJlxc5p8RU3Ssvn4nRr/N3WMMqWJ6WgOJZDkRXZDg1hThUCpub
+         QSmtA9o1+qizPkGT6bfaN8RW/qsw0vJqxX7VTGIuMgzYdaG4Euiuz3mud6l7WUvvDjfM
+         zEldKnhBHTwTWDYDi4kprHtjyZ2rLwQpJJESPC58ZhcNnldPNoq+BTkkRROW0hFr1Mol
+         CFjlKl0d5X7jW02BTT2n8D0K6htf9y5I7bNPNR9q00FjVP3zXpiiO0beIXgweaz+gO+5
+         QepoiWO5HOYnhtukxwGrtgMApH2oYOI0Qng7zjAOSP29audv2oIs/v4Mc20zV519OUVj
+         cjpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HGJ0SLLZ/8OiPn6gk75MHhbU4//pD3TrNh/zboW2EHI=;
-        b=ZTa14xzgdNHTTFnURDEmvVRu+E/1CvCpKyVaLpGysxKxH+mibTzlcMoriO2Hd8g920
-         WY+iFZlsEZJLunVOwYuH12dfARtvkY683UWj76zMLuApSuvZ7EdsWXqwIBHGMQtV1bKa
-         CsVOW32motx1CFb/WZauCFLW/bV90oBWTEWpIfKgHAGTjhYfxWe0v51B5fG1ZgTivUju
-         xjjbf4Hna/hZAOb8XFVSAqXD5INOJf3yjswKgykUaqVr1r2n6pa7mKfXxvKRrhsKtYBc
-         yJ1eVOIpJLivZzVYZfgFLmQUKKtUHx/cdiHECQwPVRjnuqdmZMmcw7JvNy1Wi3E6vM+7
-         Drrw==
-X-Gm-Message-State: APjAAAWzVlmQMBEXz+fa8bZlcQ3pSOE22ANspA7r+NSjPEXTzMih/CNT
-        KpLq2aLIpI6HLuy4N7CS6us=
-X-Google-Smtp-Source: APXvYqzxqwkDUvkPJOOZEtUbgNwAcxhbG0Q3MVR+Ce1pxVGHbDA3DuIuRfR52BAYtZsFDlhHQI1Azg==
-X-Received: by 2002:a17:90a:e38e:: with SMTP id b14mr16763092pjz.125.1566147594799;
-        Sun, 18 Aug 2019 09:59:54 -0700 (PDT)
-Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id b136sm15732831pfb.73.2019.08.18.09.59.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8GE+H4lHDFBjgHsBVUQI6N/9/0x4WTrPdZsB9ZY0txw=;
+        b=DXLY5FQ6iN/h1qiowXis2T8OLP0V5RUBPiFMz2uUm/HZCaVp7AmRLU+EogUx1Sjlym
+         sGjMFvJfaUw1M1ocFIamkcykapUFOOba2SYBpnnqKTuMJa4nKNMl5lY2kU7dkNF2FZwn
+         yD2qESkztEB0IRwH/sweplNP6x7JRXQ9Kw6scyjeK86gd6EYafNmGh6ukmU/AWDwYoeX
+         Ycg4iwuCYNtMCddhuEUI1sWgaDANF/LCJ0dFnjwEGI4Tg1DgwFw8T6/HGbfkQOyLwNRd
+         5lz+9M6vnssVMOXDV80fNMfgDy/N/KuK8O/zfQ7r1YUHV6sE9JpYijTEIzD+PgEonx9s
+         8dKw==
+X-Gm-Message-State: APjAAAUSMrewWfdOpkQFTbgqfzMf0h7ORPaPsf6IqlSa4WR+rGETqBzY
+        zJeKK4+WfeaSi8CMrOcbPgbyqTU=
+X-Google-Smtp-Source: APXvYqzlVw6WeB0OgDF6XrnUIoX4yaVQgTUmIdvDlFaoC7UNL67DUHiiVgIFyQPcCeHPCVp+hxlL2w==
+X-Received: by 2002:a5e:9314:: with SMTP id k20mr22518713iom.235.1566152467018;
+        Sun, 18 Aug 2019 11:21:07 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id n22sm10317844iob.37.2019.08.18.11.21.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Aug 2019 09:59:54 -0700 (PDT)
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        arnd@arndb.de, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org
-Subject: [PATCH v8 10/20] fs: nfs: Initialize filesystem timestamp ranges
-Date:   Sun, 18 Aug 2019 09:58:07 -0700
-Message-Id: <20190818165817.32634-11-deepa.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190818165817.32634-1-deepa.kernel@gmail.com>
-References: <20190818165817.32634-1-deepa.kernel@gmail.com>
+        Sun, 18 Aug 2019 11:21:06 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 00/16] Cache open file descriptors in knfsd
+Date:   Sun, 18 Aug 2019 14:18:43 -0400
+Message-Id: <20190818181859.8458-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fill in the appropriate limits to avoid inconsistencies
-in the vfs cached inode times when timestamps are
-outside the permitted range.
+When a NFSv3 READ or WRITE request comes in, the first thing knfsd has
+to do is open a new file descriptor. While this is often a relatively
+inexpensive thing to do for most local filesystems, it is usually less
+so for FUSE, clustered or networked filesystems that are being exported
+by knfsd.
 
-The time formats for various verious is detailed in the
-RFCs as below:
+This set of patches attempts to reduce some of that cost by caching
+open file descriptors so that they may be reused by other incoming
+READ/WRITE requests for the same file.
+One danger when doing this, is that knfsd may end up caching file
+descriptors for files that have been unlinked. In order to deal with
+this issue, we use fsnotify to monitor the files, and have hooks to
+evict those descriptors from the file cache if the i_nlink value
+goes to 0.
 
-https://tools.ietf.org/html/rfc7862(time metadata)
-https://tools.ietf.org/html/rfc7530:
+-------
+v2:
+- Fix a double semicolon in fs/nfsd/filecache.c
+- Adjust changelog for "nfsd: rip out the raparms cache" as per Chuck's
+  request.
+-------
 
-nfstime4
+Jeff Layton (12):
+  sunrpc: add a new cache_detail operation for when a cache is flushed
+  locks: create a new notifier chain for lease attempts
+  nfsd: add a new struct file caching facility to nfsd
+  nfsd: hook up nfsd_write to the new nfsd_file cache
+  nfsd: hook up nfsd_read to the nfsd_file cache
+  nfsd: hook nfsd_commit up to the nfsd_file cache
+  nfsd: convert nfs4_file->fi_fds array to use nfsd_files
+  nfsd: convert fi_deleg_file and ls_file fields to nfsd_file
+  nfsd: hook up nfs4_preprocess_stateid_op to the nfsd_file cache
+  nfsd: have nfsd_test_lock use the nfsd_file cache
+  nfsd: rip out the raparms cache
+  nfsd: close cached files prior to a REMOVE or RENAME that would
+    replace target
 
-   struct nfstime4 {
-           int64_t         seconds;
-           uint32_t        nseconds;
-   };
+Trond Myklebust (4):
+  notify: export symbols for use by the knfsd file cache
+  vfs: Export flush_delayed_fput for use by knfsd.
+  nfsd: Fix up some unused variable warnings
+  nfsd: Fix the documentation for svcxdr_tmpalloc()
 
-https://tools.ietf.org/html/rfc1094
+ fs/file_table.c                  |   1 +
+ fs/locks.c                       |  61 +++
+ fs/nfsd/Kconfig                  |   1 +
+ fs/nfsd/Makefile                 |   3 +-
+ fs/nfsd/blocklayout.c            |   3 +-
+ fs/nfsd/export.c                 |  13 +
+ fs/nfsd/filecache.c              | 885 +++++++++++++++++++++++++++++++
+ fs/nfsd/filecache.h              |  60 +++
+ fs/nfsd/nfs4layouts.c            |  12 +-
+ fs/nfsd/nfs4proc.c               |  83 +--
+ fs/nfsd/nfs4state.c              | 183 ++++---
+ fs/nfsd/nfs4xdr.c                |  31 +-
+ fs/nfsd/nfssvc.c                 |  16 +-
+ fs/nfsd/state.h                  |  10 +-
+ fs/nfsd/trace.h                  | 140 +++++
+ fs/nfsd/vfs.c                    | 295 ++++-------
+ fs/nfsd/vfs.h                    |   9 +-
+ fs/nfsd/xdr4.h                   |  19 +-
+ fs/notify/fsnotify.h             |   2 -
+ fs/notify/group.c                |   2 +
+ fs/notify/mark.c                 |   6 +
+ include/linux/fs.h               |   5 +
+ include/linux/fsnotify_backend.h |   2 +
+ include/linux/sunrpc/cache.h     |   1 +
+ net/sunrpc/cache.c               |   3 +
+ 25 files changed, 1464 insertions(+), 382 deletions(-)
+ create mode 100644 fs/nfsd/filecache.c
+ create mode 100644 fs/nfsd/filecache.h
 
-          struct timeval {
-              unsigned int seconds;
-              unsigned int useconds;
-          };
-
-https://tools.ietf.org/html/rfc1813
-
-struct nfstime3 {
-         uint32   seconds;
-         uint32   nseconds;
-      };
-
-Use the limits as per the RFC.
-
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: trond.myklebust@hammerspace.com
-Cc: anna.schumaker@netapp.com
-Cc: linux-nfs@vger.kernel.org
----
- fs/nfs/super.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 703f595dce90..19a76cfa8b1f 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2382,6 +2382,15 @@ void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
- 		sb->s_flags |= SB_POSIXACL;
- 		sb->s_time_gran = 1;
- 		sb->s_export_op = &nfs_export_ops;
-+	} else
-+		sb->s_time_gran = 1000;
-+
-+	if (server->nfs_client->rpc_ops->version != 4) {
-+		sb->s_time_min = 0;
-+		sb->s_time_max = U32_MAX;
-+	} else {
-+		sb->s_time_min = S64_MIN;
-+		sb->s_time_max = S64_MAX;
- 	}
- 
-  	nfs_initialise_sb(sb);
-@@ -2402,7 +2411,6 @@ static void nfs_clone_super(struct super_block *sb,
- 	sb->s_maxbytes = old_sb->s_maxbytes;
- 	sb->s_xattr = old_sb->s_xattr;
- 	sb->s_op = old_sb->s_op;
--	sb->s_time_gran = 1;
- 	sb->s_export_op = old_sb->s_export_op;
- 
- 	if (server->nfs_client->rpc_ops->version != 2) {
-@@ -2410,6 +2418,16 @@ static void nfs_clone_super(struct super_block *sb,
- 		 * so ourselves when necessary.
- 		 */
- 		sb->s_flags |= SB_POSIXACL;
-+		sb->s_time_gran = 1;
-+	} else
-+		sb->s_time_gran = 1000;
-+
-+	if (server->nfs_client->rpc_ops->version != 4) {
-+		sb->s_time_min = 0;
-+		sb->s_time_max = U32_MAX;
-+	} else {
-+		sb->s_time_min = S64_MIN;
-+		sb->s_time_max = S64_MAX;
- 	}
- 
-  	nfs_initialise_sb(sb);
 -- 
-2.17.1
+2.21.0
 
