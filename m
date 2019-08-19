@@ -2,56 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CD2994E16
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2019 21:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E9B494E18
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2019 21:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfHST3D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Aug 2019 15:29:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44075 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbfHST3C (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Aug 2019 15:29:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id j4so6802308iop.11
-        for <linux-nfs@vger.kernel.org>; Mon, 19 Aug 2019 12:29:02 -0700 (PDT)
+        id S1728429AbfHST3E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Aug 2019 15:29:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33994 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbfHST3E (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Aug 2019 15:29:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so6869876ioa.1
+        for <linux-nfs@vger.kernel.org>; Mon, 19 Aug 2019 12:29:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ARgeRH0qJSHZt9N0Ens++USvK3Kh/gI5lM7N7JB37Dg=;
-        b=gokaQI+p2Khink+aK/wCdCru+Ksf/GgOxPDVW4ZCXLuD5dr5RW1M+k25GBGaTtitEc
-         CUv+G8QFMZF6G0O98zCeLzCAkQ/G+6zBXGUsp1VrbEckXFF+RuH6ldE2N1fMSM6fCpM0
-         SHO3I7dmoNJRJkxZT7JkmWXAvG1KuSNDjhAdQigQ82I7BAINsJNw0YPchV3dG7u1UWf9
-         6VaozAhiLYlXgNaN74NqHqyhfwvTqanR97tAZoZTCXMuJY5QwSMi1QcOOv5d/bKCIdgb
-         2RkazVQ/xGrH75ggHm1+EejhskBXdXuM3jbzbeU5D6ohlJ3FPAU25xwE17ixlCUMwyiz
-         QNTg==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+O0L4th40lZfUVO9h1Mje9KCwXPgIa9fuj6EJ2cZs+8=;
+        b=Btr9ix3b1xztCHj5X+hQqlPVKYBNLR7kIWvCamMJ2uxR4+lkH0AXXu98et2mtYHvIA
+         /oO2D4S0DEFK/nCzPEPxKd9V5q70BBlei+heYvhtanNCCDTZnXYxIUil7uGK5Y/OOK5M
+         FBBd9Zer/8XX/AqRlQHi61MbQmAlYTT7VNm2dr4DjEINs/UWblbIQTeVnQjiEHOL936t
+         +PzJ+KU6+f6dCZ8hVsVs4NteBoRg+V9oS+PH7SF8wKZ0+UvFHM6T7ktrACLBXaU58mk2
+         kjh+yq9WXAwGV5A7aIB5T6rPBhG5oEMt9hYHI79u8BLg39H5SJr2QEUfm55/qSIlCO22
+         DDAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ARgeRH0qJSHZt9N0Ens++USvK3Kh/gI5lM7N7JB37Dg=;
-        b=C9UPNYdAx4XW0MjlBBQYCmomtODfy9upt5PsGso+yQq0VAM4VVudPG0zvBBJK06OW6
-         2p1v9LV4yygJtZlokEC8G4wg8VH/9+YkXu8i1MJBFDWIcqB/aNiruwouN6zNDA+VlyDl
-         EdN8rM3lzogYqcB5duzhQaktSXBEIfM7NYDi9lH0PUabhA7NP3HiOe+1c5qnYicde+fW
-         L5wIRxgVNBmj+G2WYYeEXVt/2Tp4xuUNcrIzi7GRdb9My1Ck94orG/X03gIQslmEI6Bf
-         5NBdLGwsjxBLWGSwAM9PEEM2RoWx53SJf2iifP713a1IH2bR1wxsCyfg6SaX8Hou0O9H
-         f3hA==
-X-Gm-Message-State: APjAAAVbC8uOmHiey/JYtjPBC8Gt0ZwLesGllwLiy/wzFsfln89hlde/
-        FMXwBvUPMZO8oqad0qBmA9I=
-X-Google-Smtp-Source: APXvYqzpBKUPxTZC8adDVxW7GCvwLElOQ8BTN2uGCBsUu7GYJ+4VM9uMjnF0zxnoIIYIWsH3k991+A==
-X-Received: by 2002:a6b:b556:: with SMTP id e83mr13642304iof.128.1566242941930;
-        Mon, 19 Aug 2019 12:29:01 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=+O0L4th40lZfUVO9h1Mje9KCwXPgIa9fuj6EJ2cZs+8=;
+        b=Eu7o8AtmtI8NX7Nh4r2furGvl4h+KgiQEhVA07kOdTqHlVLlyv5Qlc/Y1Nvg982dHC
+         btd/qEQMkqs76TqpbQoofQ81II3R3K//JpbMxHkW9pYiI+IM1TlZCw0I6IsBEGPiYoPm
+         hY5zwG3LMnCfQifQ88KwjPNKxg9yLhn/maLDzZDICPqSG+YC1e3scBs2vMzFunOSKcQE
+         LF0jr83ty82AwIKPRaRcuc0cvBdkqV5hb7me38trFIVE3UnY0IOPl6LGAKNBYlzK7Y0M
+         9/51YTiFFtFKz4iotERW/vegRfAub5mKs16FRZ0wK0lF56Nd3Toi5dfuUGC+/CmqJ6CU
+         t4+w==
+X-Gm-Message-State: APjAAAUjNxyA7zqxgLdSDWOwCqWIIlwT4MIl4e9QGonqu1UYhvGtSJeJ
+        aNITEUpGVSlIcc/TJ6jub7WljpPl+P8=
+X-Google-Smtp-Source: APXvYqzQ8q4fdtpKbWLhRKXUZFclqlaRCZ+6LoPT2/B4Mb1/mcYaTz6K3fb1owFQO90jhZnI7XB+Og==
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr15023269iok.144.1566242943225;
+        Mon, 19 Aug 2019 12:29:03 -0700 (PDT)
 Received: from gouda.nowheycreamery.com (d28-23-121-75.dim.wideopenwest.com. [23.28.75.121])
         by smtp.gmail.com with ESMTPSA id v23sm16243957ioh.58.2019.08.19.12.29.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 12:29:01 -0700 (PDT)
+        Mon, 19 Aug 2019 12:29:02 -0700 (PDT)
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 0/6] NFS: Add an nfs4_call_sync_custom()  function
-Date:   Mon, 19 Aug 2019 15:28:54 -0400
-Message-Id: <20190819192900.19312-1-Anna.Schumaker@Netapp.com>
+Subject: [PATCH 1/6] NFS: Add an nfs4_call_sync_custom() function
+Date:   Mon, 19 Aug 2019 15:28:55 -0400
+Message-Id: <20190819192900.19312-2-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190819192900.19312-1-Anna.Schumaker@Netapp.com>
+References: <20190819192900.19312-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -61,26 +63,63 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-The nfs4_call_sync() function creates a default rpc_task_setup structure
-that works for most, but not all, cases. We have some code duplication
-in functions that can't use nfs4_call_sync(), so these patches aim to
-help with that and make it easier to customize synchronous RPC calls in
-the future
+There are a few cases where we need to manually configure the
+rpc_task_setup structure to get the behavior we want.
 
-Anna.
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/nfs4proc.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-
-Anna Schumaker (6):
-  NFS: Add an nfs4_call_sync_custom() function
-  NFS: Have nfs4_proc_setclientid() call nfs4_call_sync_custom()
-  NFS: Have _nfs4_proc_secinfo() call nfs4_call_sync_custom()
-  NFS: Have nfs41_proc_reclaim_complete() call nfs4_call_sync_custom()
-  NFS: Have nfs41_proc_secinfo_no_name() call nfs4_call_sync_custom()
-  NFS: Have nfs4_proc_get_lease_time() call nfs4_call_sync_custom()
-
- fs/nfs/nfs4proc.c | 106 +++++++++++++++++++++++++---------------------
- 1 file changed, 57 insertions(+), 49 deletions(-)
-
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1406858bae6c..e5b6499c0b8b 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1073,14 +1073,26 @@ static const struct rpc_call_ops nfs40_call_sync_ops = {
+ 	.rpc_call_done = nfs40_call_sync_done,
+ };
+ 
++static int nfs4_call_sync_custom(struct rpc_task_setup *task_setup)
++{
++	int ret;
++	struct rpc_task *task;
++
++	task = rpc_run_task(task_setup);
++	if (IS_ERR(task))
++		return PTR_ERR(task);
++
++	ret = task->tk_status;
++	rpc_put_task(task);
++	return ret;
++}
++
+ static int nfs4_call_sync_sequence(struct rpc_clnt *clnt,
+ 				   struct nfs_server *server,
+ 				   struct rpc_message *msg,
+ 				   struct nfs4_sequence_args *args,
+ 				   struct nfs4_sequence_res *res)
+ {
+-	int ret;
+-	struct rpc_task *task;
+ 	struct nfs_client *clp = server->nfs_client;
+ 	struct nfs4_call_sync_data data = {
+ 		.seq_server = server,
+@@ -1094,14 +1106,7 @@ static int nfs4_call_sync_sequence(struct rpc_clnt *clnt,
+ 		.callback_data = &data
+ 	};
+ 
+-	task = rpc_run_task(&task_setup);
+-	if (IS_ERR(task))
+-		ret = PTR_ERR(task);
+-	else {
+-		ret = task->tk_status;
+-		rpc_put_task(task);
+-	}
+-	return ret;
++	return nfs4_call_sync_custom(&task_setup);
+ }
+ 
+ int nfs4_call_sync(struct rpc_clnt *clnt,
 -- 
 2.22.1
 
