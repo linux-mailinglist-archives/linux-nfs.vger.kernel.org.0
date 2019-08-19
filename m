@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EF21950DF
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 00:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D403950E1
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 00:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfHSWgl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Aug 2019 18:36:41 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44864 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbfHSWgl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Aug 2019 18:36:41 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w4so3209037ote.11;
-        Mon, 19 Aug 2019 15:36:40 -0700 (PDT)
+        id S1728508AbfHSWh2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Aug 2019 18:37:28 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45136 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728494AbfHSWh2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Aug 2019 18:37:28 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v12so2587191oic.12;
+        Mon, 19 Aug 2019 15:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=v/LwbD9loDDrhZ9x90qmsZdLimN0wXa2LzcUKgQfxQc=;
-        b=EoDZczF5XYhNzKSOJKgZp4lVYMH6JteEpKYL23AgOlFpEt2C2Qg8DWoHCfMrhCKtgF
-         m5EkayDhhIj81vaOqlT7gdwRsflgWI8deRMbWmGQAM8709SpBM6VzjZ4lfg9HIv2pGgZ
-         pt655Gyb5tglMhXdqMxy0/COunKOq3Mk3AkV1Xcjl6Oh8GjhMaNZ/NX5DRqi15gd6t4q
-         DT3/bR0rnvd76ZzmyoVa5z+6RL8gwqs0HD1uHzdQHfeZ9WGK4uTB5xyl6xxBziv81oJV
-         owuL9bTO1SgBZnsLt+tEdpQukQt+ccv7zJU0NmR+FuuNjid3LRU6YvWgWj/1E0sDCZfE
-         XdoA==
+        bh=KGw+O8zhRdR6qOzf1+hFXDgB8d55DXqyorgudiaLglA=;
+        b=Sn4TwetYV1xBZAep9BXXAFmwF7kGpp8l16LWM65wutSt1AceQdBSJmwzayzUwQ6vay
+         Qvji3v0RFTt9PHNniGiETy7AsVGMHXa3mqnoWFsPGiqcL1aORVPMrGHo1Bd+j7Eb87aR
+         7LMfud0rJ66jp1xdKoj5rvQZUmqzqJcxz09csJO6vTT8pB069BjgwfAXMb5MChRg+5u/
+         rbkYatrun4C+8kKRlNE5zkDldDiDWUw/Ncte8jz5eRDhI3XuWn/hdIIoXnG7qF9KBFoE
+         h4zbYVQcupqLiHkN97vWg/QUga63q9a4/i5Z43OZih1iQz9WZ2PVnAh3PK+p7MjQKAG2
+         TVtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=v/LwbD9loDDrhZ9x90qmsZdLimN0wXa2LzcUKgQfxQc=;
-        b=g6TAqYdJCohfUK1mLuprB5lno/9lFUXktGbsama3oiqIXpHmbQCs+cEAAKLDMy/YcM
-         xdcG42wkTGzrgBT9LPhBVnl3l1SKH1KgfZ458iBT/AE7esrcvDBw0VtZm1teLueJ++Yd
-         bq1dEsaBRU/eov/4wyQgLQuO4xKhjC1f+CtzCBhvvV6MIuB85Fn3Ce5+ub4g8zUR5MYL
-         VCcM1n3mPauCHqhB58cUqSCFg9ja84lgsrCFOqQ+m5nL4SlilRi24HugCOUKBKiExJFE
-         0BsZmtwuBD9Rh7VQSdhaYQP3QE0yr8gpJzAzw/vwHzpS4vGDmPwZJsbEWz05xY8i88N0
-         ftRQ==
-X-Gm-Message-State: APjAAAWTL7drtdfi/VxZp5ZDRlfDLkV+6PxP3EAnDuqPiwpY1MeEyVmu
-        GWqdRB0E0OWGjwk9Cheircd5fZao
-X-Google-Smtp-Source: APXvYqzZTwKdznpHNOaf3S1X3ioDVgrnRrA/tU3eV2d/AsA5PY5eDzAEeQOHHScdn1UnDhbZPkZ3+g==
-X-Received: by 2002:a9d:591a:: with SMTP id t26mr17062173oth.170.1566254200348;
-        Mon, 19 Aug 2019 15:36:40 -0700 (PDT)
+        bh=KGw+O8zhRdR6qOzf1+hFXDgB8d55DXqyorgudiaLglA=;
+        b=JxzcF5h50vWurRtJY/coxqqZOuYkWl4Nt4HSzR5XGiHHDWAVI0yredWHwyHrGeYOsL
+         mo8Q1qS6Dhwsp9u17TgldBz4aT4yAAsn10QnmMuk0FPdLo8CiCe7xH++L9ijvGAB0/nu
+         AUOSrac1v6FMnM9LUYYcnOR4dDWOZuz0e5mzoOAx8TDcDtyE7uns+50mT3BC1TGiCV6p
+         q5QAWWX4bX3QUrUGVlAUPtvUI2AkM3SWlTAWOI0yP2NNQnhVZLRZ63j91QZsbAbpUft6
+         YF5dgmlA99Yrc1oEYBwirw1gftLWEVW36vjuU12vkM0vS0PIfgmTjUR+VPm6l7P3HcIQ
+         O3Mg==
+X-Gm-Message-State: APjAAAWoXZAomIl9aYpT0Oue8KU20coS+V7nGQoVm9oNA/MUr/Ceg+8t
+        2dXaGFzMgYszz0JQe5IMcQFfDX3G
+X-Google-Smtp-Source: APXvYqx8rizhqOOm6eIIZGHJ1F5x0Tdwk1fM5A/EW+r4/16jx3mdyJtZ9QKxCeMMw1+gIK+F775nxw==
+X-Received: by 2002:aca:3804:: with SMTP id f4mr14365915oia.144.1566254246924;
+        Mon, 19 Aug 2019 15:37:26 -0700 (PDT)
 Received: from seurat29.1015granger.net ([12.235.16.3])
-        by smtp.gmail.com with ESMTPSA id v17sm4713375oif.1.2019.08.19.15.36.39
+        by smtp.gmail.com with ESMTPSA id 23sm1541199oiz.8.2019.08.19.15.37.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Aug 2019 15:36:40 -0700 (PDT)
-Subject: [PATCH v2 01/21] SUNRPC: Remove rpc_wake_up_queued_task_on_wq()
+        Mon, 19 Aug 2019 15:37:26 -0700 (PDT)
+Subject: [PATCH v2 02/21] SUNRPC: Inline xdr_commit_encode
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 19 Aug 2019 18:36:19 -0400
-Message-ID: <156625415896.8161.6772555466035123844.stgit@seurat29.1015granger.net>
+Date:   Mon, 19 Aug 2019 18:37:05 -0400
+Message-ID: <156625420544.8161.7549333388864452214.stgit@seurat29.1015granger.net>
 In-Reply-To: <156625401091.8161.14744201497689200191.stgit@seurat29.1015granger.net>
 References: <156625401091.8161.14744201497689200191.stgit@seurat29.1015granger.net>
 User-Agent: StGit/unknown-version
@@ -62,70 +62,27 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: commit c544577daddb ("SUNRPC: Clean up transport write
-space handling") appears to have removed the last caller of
-rpc_wake_up_queued_task_on_wq().
+Micro-optimization: For xdr_commit_encode call sites in
+net/sunrpc/xdr.c, eliminate the extra calling sequence.  On my
+client, this change saves about a microsecond for every 30 calls
+to xdr_reserve_space().
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/sched.h |    3 ---
- net/sunrpc/sched.c           |   27 ++++-----------------------
- 2 files changed, 4 insertions(+), 26 deletions(-)
+ net/sunrpc/xdr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-index baa3ecdb882f..d1283bddd218 100644
---- a/include/linux/sunrpc/sched.h
-+++ b/include/linux/sunrpc/sched.h
-@@ -243,9 +243,6 @@ void		rpc_sleep_on_priority_timeout(struct rpc_wait_queue *queue,
- void		rpc_sleep_on_priority(struct rpc_wait_queue *,
- 					struct rpc_task *,
- 					int priority);
--void rpc_wake_up_queued_task_on_wq(struct workqueue_struct *wq,
--		struct rpc_wait_queue *queue,
--		struct rpc_task *task);
- void		rpc_wake_up_queued_task(struct rpc_wait_queue *,
- 					struct rpc_task *);
- void		rpc_wake_up_queued_task_set_status(struct rpc_wait_queue *,
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 1f275aba786f..f25c4b9ba185 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -541,33 +541,14 @@ rpc_wake_up_task_on_wq_queue_action_locked(struct workqueue_struct *wq,
- 	return NULL;
- }
- 
--static void
--rpc_wake_up_task_on_wq_queue_locked(struct workqueue_struct *wq,
--		struct rpc_wait_queue *queue, struct rpc_task *task)
--{
--	rpc_wake_up_task_on_wq_queue_action_locked(wq, queue, task, NULL, NULL);
--}
--
- /*
-  * Wake up a queued task while the queue lock is being held
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 48c93b9e525e..7ba0ede6b417 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -560,7 +560,7 @@ EXPORT_SYMBOL_GPL(xdr_init_encode);
+  * required at the end of encoding, or any other time when the xdr_buf
+  * data might be read.
   */
--static void rpc_wake_up_task_queue_locked(struct rpc_wait_queue *queue, struct rpc_task *task)
-+static void rpc_wake_up_task_queue_locked(struct rpc_wait_queue *queue,
-+					  struct rpc_task *task)
+-void xdr_commit_encode(struct xdr_stream *xdr)
++inline void xdr_commit_encode(struct xdr_stream *xdr)
  {
--	rpc_wake_up_task_on_wq_queue_locked(rpciod_workqueue, queue, task);
--}
--
--/*
-- * Wake up a task on a specific queue
-- */
--void rpc_wake_up_queued_task_on_wq(struct workqueue_struct *wq,
--		struct rpc_wait_queue *queue,
--		struct rpc_task *task)
--{
--	if (!RPC_IS_QUEUED(task))
--		return;
--	spin_lock(&queue->lock);
--	rpc_wake_up_task_on_wq_queue_locked(wq, queue, task);
--	spin_unlock(&queue->lock);
-+	rpc_wake_up_task_on_wq_queue_action_locked(rpciod_workqueue, queue,
-+						   task, NULL, NULL);
- }
- 
- /*
+ 	int shift = xdr->scratch.iov_len;
+ 	void *page;
 
