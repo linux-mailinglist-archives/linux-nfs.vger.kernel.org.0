@@ -2,125 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DDDB9693A
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 21:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE88696997
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 21:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfHTTP3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 20 Aug 2019 15:15:29 -0400
-Received: from fieldses.org ([173.255.197.46]:40490 "EHLO fieldses.org"
+        id S1730732AbfHTTkr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Aug 2019 15:40:47 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:40282 "EHLO ajax.cs.uga.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfHTTP3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:15:29 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 987731E19; Tue, 20 Aug 2019 15:15:28 -0400 (EDT)
-Date:   Tue, 20 Aug 2019 15:15:28 -0400
-To:     "Goetz, Patrick G" <pgoetz@math.utexas.edu>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Does NFSv4 translate POSIX ACL's?
-Message-ID: <20190820191528.GA9039@fieldses.org>
-References: <87bee5fc-5461-01b2-ad9d-9c60e86396c1@math.utexas.edu>
+        id S1727358AbfHTTkq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:40:46 -0400
+X-Greylist: delayed 2779 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 15:40:46 EDT
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7KIsOnE056106
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Aug 2019 14:54:25 -0400
+Received: by mail-lf1-f53.google.com with SMTP id j17so4937319lfp.3;
+        Tue, 20 Aug 2019 11:54:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAXDVqMnMY/VUh71YC9MAaUg3v+AsPdC8apTM/AoGtHxZacks+UQ
+        1r0+44WcqBPQCCQn8aUMpKWfS/QpBCPpuE1T1OY=
+X-Google-Smtp-Source: APXvYqyXYab+vfd5fRIYnwb+fZMMDdkpt6E9BbmrMBpQqeq78/BR/mO8CFP3tFaozOVeHNsowMDj447564dbUEq/jUY=
+X-Received: by 2002:a19:4c88:: with SMTP id z130mr16540511lfa.149.1566327263894;
+ Tue, 20 Aug 2019 11:54:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bee5fc-5461-01b2-ad9d-9c60e86396c1@math.utexas.edu>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+References: <1566287651-11386-1-git-send-email-wenwen@cs.uga.edu> <bf426508041337ff4059ca2cf02022a151134e5a.camel@netapp.com>
+In-Reply-To: <bf426508041337ff4059ca2cf02022a151134e5a.camel@netapp.com>
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Tue, 20 Aug 2019 14:53:47 -0400
+X-Gmail-Original-Message-ID: <CAAa=b7c=1ZtsFVhmxHrX7_AVG6=8OPOZ98R=vket0nCJZDqQNg@mail.gmail.com>
+Message-ID: <CAAa=b7c=1ZtsFVhmxHrX7_AVG6=8OPOZ98R=vket0nCJZDqQNg@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: Fix a memory leak bug
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        Wenwen Wang <wenwen@cs.uga.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:35:16PM +0000, Goetz, Patrick G wrote:
-> Posting to this list out of desperation, as I've exhausted all the other 
-> resources I can get my hands on.
+On Tue, Aug 20, 2019 at 9:41 AM Schumaker, Anna
+<Anna.Schumaker@netapp.com> wrote:
+>
+> Hi Wenwen,
+>
+> On Tue, 2019-08-20 at 02:54 -0500, Wenwen Wang wrote:
+> > In nfs4_try_migration(), if nfs4_begin_drain_session() fails, the
+> > previously allocated 'page' and 'locations' are not deallocated,
+> > leading to
+> > memory leaks. To fix this issue, free 'page' and 'locations' before
+> > returning the error.
+> >
+> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > ---
+> >  fs/nfs/nfs4state.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> > index cad4e06..37823dc 100644
+> > --- a/fs/nfs/nfs4state.c
+> > +++ b/fs/nfs/nfs4state.c
+> > @@ -2095,8 +2095,12 @@ static int nfs4_try_migration(struct
+> > nfs_server *server, const struct cred *cred
+> >         }
+> >
+> >         status = nfs4_begin_drain_session(clp);
+> > -       if (status != 0)
+> > +       if (status != 0) {
+> > +               if (page != NULL)
+> > +                       __free_page(page);
+> > +               kfree(locations);
+> >                 return status;
+>
+> Thanks for the suggestion! I think a better option would be to switch
+> the "return status" into a "goto out" so we can keep all our cleanup
+> code in a single place in case we ever need to change it in the future.
+>
+> What do you think?
 
-I'm not sure I understand the setup exactly, but it doesn't appear to
-have anything to do with ACLs exactly, it's users that are the problem.
-You'd have exactly the same problem if you were using only mode bits.
+Thanks for your comments! I will rework the patch.
 
-All NFS permissions are evaluated pretty much only on the server side.
-When you read a directory, for example, the client doesn't fetch the ACL
-and mode bits and check permissions itself.  It just sends the READDIR
-(or an ACCESS call) with rpc credentials identifying the user performing
-the call, and it's up to the server whether or not to return a
-permission error.
+Wenwen
 
-Groups are handled differently depending on the security flavor--if
-you're using kerberos, it's up to the server to decide which group your
-user is a member of.  If you're using auth_sys/auth_unix, then the
-client sends a list of groups with each rpc call.  (But the Linux server
-has a --manage-gids option that tells the server to ignore that and use
-server side group memberships.)
-
-Hope that helps.  This doesn't look like anything to do with ACL
-mapping, in any case.
-
---b.
-
-
-> The full blown issue has been posted here:
-> 
->  
-> https://unix.stackexchange.com/questions/536300/why-is-nfsv4-not-translating-posix-acls-in-a-usable-way
-> 
-> I have an NFSv4 exported folder (base filesystem: XFS) which must afford 
-> read access to a program on folders which are otherwise hidden from the 
-> public.  On the NFS server:
-> 
->    root@kraken:/EM/EMtifs# getfacl pgoetz
->    # file: pgoetz
->    # owner: pgoetz
->    # group: cns-cnsitlabusers
->    user::rwx
->    group::r-x
->    other::---
->    default:user::rwx
->    default:user:cryosparc_user:r-x
->    default:group::r-x
->    default:mask::r-x
->    default:other::---
-> 
->    root@kraken:/EM/EMtifs# id cryosparc_user
->    uid=1017(cryosparc_user) gid=1017(cryosparc_user) 
-> groups=1017(cryosparc_user)
-> 
-> 
-> The NFS client appears to be translating the POSIX ACL:
-> 
->    root@javelina:/EM/EMtifs# nfs4_getfacl pgoetz
->    A::OWNER@:rwaDxtTcCy
->    A::GROUP@:rxtcy
->    A::EVERYONE@:tcy
->    A:fdi:OWNER@:rwaDxtTcCy
->    A:fdi:1017:rxtcy
->    A:fdi:GROUP@:rxtcy
->    A:fdi:EVERYONE@:tcy
-> 
->    root@javelina:/EM/EMtifs# id cryosparc_user
->    uid=1017(cryosparc_user) gid=1017(cryosparc_user) 
-> groups=1017(cryosparc_user)
-> 
-> However,
-> 
->    cryosparc_user@javelina:/EM/EMtifs$ whoami
->    cryosparc_user
->    cryosparc_user@javelina:/EM/EMtifs$ ls pgoetz
->    ls: cannot open directory 'pgoetz': Permission denied
-> 
-> Host OS on both machines: Ubuntu 18.04
-> NFS version: 1.3.4
-> Mount entry in /etc/fstab:
->    kraken.biosci.utexas.edu:/EM  /EM  nfs4  _netdev,auto  0  0
-> 
-> 
-> I found this document that Bruce wrote:
-> 
->    https://tools.ietf.org/html/draft-ietf-nfsv4-acl-mapping-02
-> 
-> but it doesn't appear to have risen to the level of RFC?  RFC 7530 
-> doesn't appear to have anything to say on the matter.  Since the 
-> processing program primarily runs on the workstations, I need to make 
-> this work somehow, and can't add the program user to the user group as 
-> explained in the StackExchange post.
-> 
-> 
+> Anna
+>
+> > +       }
+> >
+> >         status = nfs4_replace_transport(server, locations);
+> >         if (status != 0) {
+> > --
+> > 2.7.4
+> >
