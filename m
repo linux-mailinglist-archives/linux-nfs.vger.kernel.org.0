@@ -2,79 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3D7D958F5
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 09:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B1E95CDD
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2019 13:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbfHTHyT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 20 Aug 2019 03:54:19 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:43696 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTHyT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Aug 2019 03:54:19 -0400
-Received: by mail-yb1-f196.google.com with SMTP id o82so1655127ybg.10;
-        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OjkK6EB2PuI2qQbEQ93AzCQ5P3wMA5I+qFalZij811o=;
-        b=gXa6zBs/Vbdo8i/Zn03xEZQldj+P0MbGSsCx3mhD9VSJDB4G3745OtRwYKBq9yL+Px
-         E+v393O7WKDAy03bintkbcCfgUkADvdcHbXiCYOeNUnfLgYyMYFGKpjB7tbizkGMlYSM
-         Rbz4GqZNIKwn4Woq44OATK5tKqZk3uBxzX211wHKoSCXEGaZlzWZxxTKz4SaiflXZEd9
-         n+lLJbUulxjxxvaF3/z9F+gZgYfFOJV+HGJLRFprAAr67hfwWv5v6Y+sYN4Lji/qAa8k
-         tmk8ZUVYWPvX83XBZksu9gK5Pkqc2rogU/FzUXU9aB7h7OeQ7xuIECZBTtNVPP6i5U6p
-         oIbg==
-X-Gm-Message-State: APjAAAVX0n8mH58giXg15G46LDkALP40dS+TNcBm6oMyR8UBI8qSUrw8
-        igAenpH2qBWRCS8aZDPxrWk=
-X-Google-Smtp-Source: APXvYqwXfHgvtpvoCxcqC68OdHOkyoo1ZThYfoBbHm7jWpj5bnNPAx0YGY9TW7kmf3RukgXpxJQNKg==
-X-Received: by 2002:a25:2403:: with SMTP id k3mr18920369ybk.377.1566287658366;
-        Tue, 20 Aug 2019 00:54:18 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id t63sm3448566ywf.92.2019.08.20.00.54.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 00:54:16 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] NFSv4: Fix a memory leak bug
-Date:   Tue, 20 Aug 2019 02:54:10 -0500
-Message-Id: <1566287651-11386-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        id S1729699AbfHTLFS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Aug 2019 07:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729553AbfHTLFS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:05:18 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF55205C9;
+        Tue, 20 Aug 2019 11:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566299116;
+        bh=T0rmHh8w3H3bwdXLru7KFY2A/8hjJcNt2eMc9MdFvoU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=OWYdJNUzSee+UuIh6LQ3YFru0x6seE2TTCifysIDGNOjR8O4ScYkdj2Vrw5S/JeTB
+         qmDzLYeDaoNBfNwX5IDihFikAWZqI1dzLhII85Qm3JJy6zIH2yIFue45EEMtXZPwcN
+         fgzdH+WlULgP+SUhyw7NDBScX/I9XuZMIU+ITkEg=
+Message-ID: <27d1943a0027cb4f658334fad8dc880df133c22d.camel@kernel.org>
+Subject: Re: [PATCH v8 00/20] vfs: Add support for timestamp limits
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        arnd@arndb.de, adilger.kernel@dilger.ca, adrian.hunter@intel.com,
+        aivazian.tigran@gmail.com, al@alarsen.net,
+        anna.schumaker@netapp.com, anton@enomsg.org,
+        asmadeus@codewreck.org, ccross@android.com,
+        ceph-devel@vger.kernel.org, coda@cs.cmu.edu,
+        codalist@coda.cs.cmu.edu, darrick.wong@oracle.com,
+        dedekind1@gmail.com, devel@lists.orangefs.org, dsterba@suse.com,
+        dushistov@mail.ru, dwmw2@infradead.org, ericvh@gmail.com,
+        gregkh@linuxfoundation.org, hch@infradead.org, hch@lst.de,
+        hirofumi@mail.parknet.co.jp, hubcap@omnibond.com,
+        idryomov@gmail.com, jack@suse.com, jaegeuk@kernel.org,
+        jaharkes@cs.cmu.edu, jfs-discussion@lists.sourceforge.net,
+        jlbec@evilplan.org, keescook@chromium.org,
+        linux-cifs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-karma-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        lucho@ionkov.net, luisbg@kernel.org, martin@omnibond.com,
+        me@bobcopeland.com, mikulas@artax.karlin.mff.cuni.cz,
+        nico@fluxnic.net, phillip@squashfs.org.uk,
+        reiserfs-devel@vger.kernel.org, richard@nod.at, sage@redhat.com,
+        salah.triki@gmail.com, sfrench@samba.org, shaggy@kernel.org,
+        tj@kernel.org, tony.luck@intel.com,
+        trond.myklebust@hammerspace.com, tytso@mit.edu,
+        v9fs-developer@lists.sourceforge.net, yuchao0@huawei.com,
+        zyan@redhat.com
+Date:   Tue, 20 Aug 2019 07:05:10 -0400
+In-Reply-To: <20190818165817.32634-1-deepa.kernel@gmail.com>
+References: <20190818165817.32634-1-deepa.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In nfs4_try_migration(), if nfs4_begin_drain_session() fails, the
-previously allocated 'page' and 'locations' are not deallocated, leading to
-memory leaks. To fix this issue, free 'page' and 'locations' before
-returning the error.
+On Sun, 2019-08-18 at 09:57 -0700, Deepa Dinamani wrote:
+> The series is an update and a more complete version of the
+> previously posted series at
+> https://lore.kernel.org/linux-fsdevel/20180122020426.2988-1-deepa.kernel@gmail.com/
+> 
+> Thanks to Arnd Bergmann for doing a few preliminary reviews.
+> They helped me fix a few issues I had overlooked.
+> 
+> The limits (sometimes granularity also) for the filesystems updated here are according to the
+> following table:
+> 
+> File system   Time type                      Start year Expiration year Granularity
+> cramfs        fixed                          0          0
+> romfs         fixed                          0          0
+> pstore        ascii seconds (27 digit ascii) S64_MIN    S64_MAX         1
+> coda          INT64                          S64_MIN    S64_MAX         1
+> omfs          64-bit milliseconds            0          U64_MAX/ 1000   NSEC_PER_MSEC
+> befs          unsigned 48-bit seconds        0          0xffffffffffff  alloc_super
+> bfs           unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> efs           unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> ext2          signed 32-bit seconds          S32_MIN    S32_MAX         alloc_super
+> ext3          signed 32-bit seconds          S32_MIN    S32_MAX         alloc_super
+> ext4 (old)    signed 32-bit seconds          S32_MIN    S32_MAX         alloc_super
+> ext4 (extra)  34-bit seconds, 30-bit ns      S32_MIN    0x37fffffff	1
+> freevxfs      u32 secs/usecs                 0          U32_MAX         alloc_super
+> jffs2         unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> jfs           unsigned 32-bit seconds/ns     0          U32_MAX         1
+> minix         unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> orangefs      u64 seconds                    0          U64_MAX         alloc_super
+> qnx4          unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> qnx6          unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> reiserfs      unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> squashfs      unsigned 32-bit seconds        0          U32_MAX         alloc_super
+> ufs1          signed 32-bit seconds          S32_MIN    S32_MAX         NSEC_PER_SEC
+> ufs2          signed 64-bit seconds/u32 ns   S64_MIN    S64_MAX         1
+> xfs           signed 32-bit seconds/ns       S32_MIN    S32_MAX         1
+> ceph          unsigned 32-bit second/ns      0          U32_MAX         1000
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- fs/nfs/nfs4state.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Looks reasonable, overall.
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index cad4e06..37823dc 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2095,8 +2095,12 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 	}
- 
- 	status = nfs4_begin_drain_session(clp);
--	if (status != 0)
-+	if (status != 0) {
-+		if (page != NULL)
-+			__free_page(page);
-+		kfree(locations);
- 		return status;
-+	}
- 
- 	status = nfs4_replace_transport(server, locations);
- 	if (status != 0) {
+Note that the granularity changed recently for cephfs. See commit
+0f7cf80ae96c2a (ceph: initialize superblock s_time_gran to 1).
+
+In any case, you can add my Acked-by
+
 -- 
-2.7.4
+Jeff Layton <jlayton@kernel.org>
 
