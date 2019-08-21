@@ -2,78 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E158497035
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2019 05:21:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0643897081
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2019 05:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfHUDV2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 20 Aug 2019 23:21:28 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41894 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHUDV2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Aug 2019 23:21:28 -0400
-Received: by mail-yb1-f193.google.com with SMTP id 1so2799ybj.8;
-        Tue, 20 Aug 2019 20:21:28 -0700 (PDT)
+        id S1727188AbfHUDsv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Aug 2019 23:48:51 -0400
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:42422 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfHUDsv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Aug 2019 23:48:51 -0400
+Received: by mail-oi1-f169.google.com with SMTP id o6so555919oic.9
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Aug 2019 20:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DNeO2I5P7X1Lbvd2VIQqSVnNMPmHOfkiBxbwoy7aOis=;
+        b=azVQoxxsK3C5RN9SSDKAjKCwrJ0JFXMJwQyItUs9Zy8d7o/ESF6YdgOmKmQLYJQfoM
+         RKK84QFCZEtiDvhegDfz+K5VcCdHPfSJbbsrn/uYTzBivfivh2rnieZqD4+C6NFv8WuK
+         hqEkJJmFhXlZJlacoTpIc1YMg7/eLH6ogRIy5nFBGMaYRTn9qKE3AlRE65skc7cy7R0Y
+         R15phWfS3qXDepRKz7kscbeL3M4soYteIn3Ozk6sHIgMAUnPK010dtqpJgk0JDNtPaeS
+         ahmjzFe/Ra1AERPQnu+ocANaEttZ1yfR+9uSmMnHrzq+8pMTxSM+qD8pUTdc4v2B+mvJ
+         1Fxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oBua0iXLtvX1pOMS/2zzOhz5z0JgebEFIjoemm0o1zg=;
-        b=tl8rsslErn9PGe+OVdq/oZpM6lz5Cw9WnJix3wZLV4MDA2WEC38F+41/V/93PZMYpZ
-         FgAhE5MbYjmjIPkON2MY27ZKl59S50+2dmjo5mvH+Eo658Vy7y6l5ptLhXKHD9yCH/cx
-         e7qa5IVLG1QTKt3IHjCUArz0LBtCdBgqmP0iDPGJNw9DlI3e0DB21rSTCv2Vr6jKbvjN
-         xjXYe8w37AQYbxFyw4Dkx0YzbPK4U/j+CtyvbW+GWOtFo7bPI5uG3CFaxAtgsMz0y9Ka
-         LzpZhb6w+wjy4tjfGcWQRvpVaSeKzdStZH4XkjSw+vFLD+LIzP0Kslnb3Wy2rKtWoI80
-         U3Ag==
-X-Gm-Message-State: APjAAAX40JpbT0pgDoyVPBazbT/ievSwQxAY0idjnIADKWnW4jast7RW
-        XlODKA1ReXntMIvVfOA3gXk=
-X-Google-Smtp-Source: APXvYqzG0jFrd7IJ/ULq0FqPi7FlGQPQ+MgMODAgXi6rX0jRCVcyvBpjUjZNovtVW0cbAOeH8/64Bw==
-X-Received: by 2002:a25:bb03:: with SMTP id z3mr22552927ybg.160.1566357687559;
-        Tue, 20 Aug 2019 20:21:27 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id m40sm4228901ywh.2.2019.08.20.20.21.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 20:21:26 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] NFSv4: Fix a memory leak bug
-Date:   Tue, 20 Aug 2019 22:21:21 -0500
-Message-Id: <1566357681-4586-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DNeO2I5P7X1Lbvd2VIQqSVnNMPmHOfkiBxbwoy7aOis=;
+        b=HhNdXNaFVPp5iEN/KU5n2TVd+iWit/5Z/lmQtes2oQertQCMuZ13ZgdmgxMVHa5D1/
+         FQXcuyBut2zg3LSvo2ROBWsMYkPHw6sULafxKGgtpC0LyMEBR/hU77UuBbVsJHX55iBn
+         cTnJvQqt5X9Vit7BffDo2Qq16kzPGYpAFuL2rQK2G42FimZRuZ5OkgsSDYIpzcQ1nSrv
+         IiTF/HIEt8Wx3tfW64u2sdk4/7PWTYbm1Jk34/XNksHz3dS1B7aah2IIS001bq5J7xG3
+         erj9yufOKsBBFWe+QupTEVTSBTukKUTZGv/hwtMFKCIdpJFYNzPya3nGDvOOt9EfaEaY
+         17QA==
+X-Gm-Message-State: APjAAAWRoEtXrWgP6fZxUbNA5auVaca1aP3LRkjXvb2AoYBmR4gJBs9A
+        TcTKrw2FfEuxBoSoJR9uEObCyzL1IuxXHvo3aZMSbA==
+X-Google-Smtp-Source: APXvYqzAxxh0GTyz2p6TU6M3TxnFZxOT+XsgGtpQK1Nfz7TEWwmtVmKCu8mBDHODmhXoIT1MWpOrBWDCDod/7kCyI+k=
+X-Received: by 2002:aca:d558:: with SMTP id m85mr2482178oig.0.1566359330468;
+ Tue, 20 Aug 2019 20:48:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
+In-Reply-To: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 20 Aug 2019 20:48:39 -0700
+Message-ID: <CAPcyv4iPuTpk9bifyX5yQxO8gT0fRhYXPrwk-obazWA=Dou3iQ@mail.gmail.com>
+Subject: Re: kernel panic in 5.3-rc5, nfsd_reply_cache_stats_show+0x11
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     CHUCK_LEVER <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In nfs4_try_migration(), if nfs4_begin_drain_session() fails, the
-previously allocated 'page' and 'locations' are not deallocated, leading to
-memory leaks. To fix this issue, go to the 'out' label to free 'page' and
-'locations' before returning the error.
+On Tue, Aug 20, 2019 at 6:39 PM <jane.chu@oracle.com> wrote:
+>
+> Hi,
+>
+> Apology if there is a better channel reporting the issue, if so, please
+> let me know.
+>
+> I just saw below regression in 5.3-rc5 kernel, but not in 5.2-rc7 or
+> earlier kernels.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- fs/nfs/nfs4state.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index cad4e06..e916aba 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2095,8 +2095,10 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 	}
- 
- 	status = nfs4_begin_drain_session(clp);
--	if (status != 0)
--		return status;
-+	if (status != 0) {
-+		result = status;
-+		goto out;
-+	}
- 
- 	status = nfs4_replace_transport(server, locations);
- 	if (status != 0) {
--- 
-2.7.4
-
+Is the error stable enough to bisect?
