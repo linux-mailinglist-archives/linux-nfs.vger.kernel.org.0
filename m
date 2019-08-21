@@ -2,52 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A391E985AB
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2019 22:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D93F986A5
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2019 23:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfHUUfC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Aug 2019 16:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbfHUUfC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:35:02 -0400
-Subject: Re: [GIT PULL] nfsd bugfixes for 5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566419701;
-        bh=f2vThZms9ade6ULNLIYBpJ1ksg1haTxzagrJMrBGACw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xzqbnHsQmRYPjwrXdzw8uHtUga6MTUW3/HUBEdHV1bnXCDztSzkoeggrlMokqCatx
-         Wvw0w05qZ48fO3AGUfKx+O9i+4ymfG5aQqyuCSt5Z7FqY/TJxGIblUFi3cJl2nufOc
-         Y3EusHHUuDq6kbiuYJ89D/z+XzHK8ghScKBvsRMk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190821150646.GC22104@fieldses.org>
-References: <20190821150646.GC22104@fieldses.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190821150646.GC22104@fieldses.org>
-X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.3-1
-X-PR-Tracked-Commit-Id: 78e70e780b289ff59ec33a9f9c1fcecaf17a46e1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2babd34df2294a72df02dc4a3745df3408147eba
-Message-Id: <156641970165.4116.17330431153924630328.pr-tracker-bot@kernel.org>
-Date:   Wed, 21 Aug 2019 20:35:01 +0000
-To:     bfields@fieldses.org (J. Bruce Fields)
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S1729393AbfHUVgN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Aug 2019 17:36:13 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41048 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729368AbfHUVgN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Aug 2019 17:36:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7LLYpZo111939;
+        Wed, 21 Aug 2019 21:36:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=88wKBaIVMQOQLnyvsrZq+u1QdEVdAF+O4a14ZWXAtTw=;
+ b=RQY6rs+QCDoIjDYZvnAOWeeg2co0+4Cx7VGQ92vQL7xYZSx2ovGj8PtZSwVV4YlgkP2a
+ z9t3o+qWr+E8cKz2urdddd5LAPXucLnN+D+xO+xGByj+zGjtBWjYsK30NJIhKy/vewbD
+ VlKns8aCASOnYPutxFLYlmSzE/icg9xhuJb7F97QUf85N+csC4dzfjwXWm/hyDiHlYz6
+ KZQ8fLXf7foC5k+zmpzxI1yWVgfP2l6g5E7XA+Pg2xSU/4Jtg7IRC7WUVcIuKvpqpSAY
+ JOvJaBc6rx54d7s/Dbre7kYNPBNuArJkk2T7uQkDixe3uEctgkE54Mp0REswqY4IxoDW 2A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2uea7r0mmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 21:36:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7LLXGIZ185990;
+        Wed, 21 Aug 2019 21:36:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2ugj7qwgkp-19
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 21:36:05 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7LLSYHS008091;
+        Wed, 21 Aug 2019 21:28:34 GMT
+Received: from [10.132.92.146] (/10.132.92.146)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 21 Aug 2019 14:28:34 -0700
+Subject: Re: kernel panic in 5.3-rc5, nfsd_reply_cache_stats_show+0x11
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     CHUCK_LEVER <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
+ <CAPcyv4iPuTpk9bifyX5yQxO8gT0fRhYXPrwk-obazWA=Dou3iQ@mail.gmail.com>
+ <20190821141228.GA22104@fieldses.org>
+From:   jane.chu@oracle.com
+Organization: Oracle Corporation
+Message-ID: <5324fe77-1a9a-bac7-d96c-1f1eb59e4c9d@oracle.com>
+Date:   Wed, 21 Aug 2019 14:28:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190821141228.GA22104@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908210210
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908210210
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Wed, 21 Aug 2019 11:06:46 -0400:
+Hi, Bruce, Dan,
 
-> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.3-1
+This patch took care the panic issue.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2babd34df2294a72df02dc4a3745df3408147eba
+thanks,
+-jane
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+On 8/21/19 7:12 AM, J. Bruce Fields wrote:
+> Probably just needs the following.
+> 
+> I've been slow to get some bugfixes upstream, sorry--I'll go send a pull
+> request now....
+> 
+> --b.
+> 
+> commit 78e70e780b28
+> Author: He Zhe <zhe.he@windriver.com>
+> Date:   Tue Aug 6 17:41:04 2019 +0800
+> 
+>      nfsd4: Fix kernel crash when reading proc file reply_cache_stats
+>      
+>      reply_cache_stats uses wrong parameter as seq file private structure and
+>      thus causes the following kernel crash when users read
+>      /proc/fs/nfsd/reply_cache_stats
+>      
+>      BUG: kernel NULL pointer dereference, address: 00000000000001f9
+>      PGD 0 P4D 0
+>      Oops: 0000 [#3] SMP PTI
+>      CPU: 6 PID: 1502 Comm: cat Tainted: G      D           5.3.0-rc3+ #1
+>      Hardware name: Intel Corporation Broadwell Client platform/Basking Ridge, BIOS BDW-E2R1.86C.0118.R01.1503110618 03/11/2015
+>      RIP: 0010:nfsd_reply_cache_stats_show+0x3b/0x2d0
+>      Code: 41 54 49 89 f4 48 89 fe 48 c7 c7 b3 10 33 88 53 bb e8 03 00 00 e8 88 82 d1 ff bf 58 89 41 00 e8 eb c5 85 00 48 83 eb 01 75 f0 <41> 8b 94 24 f8 01 00 00 48 c7 c6 be 10 33 88 4c 89 ef bb e8 03 00
+>      RSP: 0018:ffffaa520106fe08 EFLAGS: 00010246
+>      RAX: 000000cfe1a77123 RBX: 0000000000000000 RCX: 0000000000291b46
+>      RDX: 000000cf00000000 RSI: 0000000000000006 RDI: 0000000000291b28
+>      RBP: ffffaa520106fe20 R08: 0000000000000006 R09: 000000cfe17e55dd
+>      R10: ffffa424e47c0000 R11: 000000000000030b R12: 0000000000000001
+>      R13: ffffa424e5697000 R14: 0000000000000001 R15: ffffa424e5697000
+>      FS:  00007f805735f580(0000) GS:ffffa424f8f80000(0000) knlGS:0000000000000000
+>      CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>      CR2: 00000000000001f9 CR3: 00000000655ce005 CR4: 00000000003606e0
+>      Call Trace:
+>       seq_read+0x194/0x3e0
+>       __vfs_read+0x1b/0x40
+>       vfs_read+0x95/0x140
+>       ksys_read+0x61/0xe0
+>       __x64_sys_read+0x1a/0x20
+>       do_syscall_64+0x4d/0x120
+>       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>      RIP: 0033:0x7f805728b861
+>      Code: fe ff ff 50 48 8d 3d 86 b4 09 00 e8 79 e0 01 00 66 0f 1f 84 00 00 00 00 00 48 8d 05 d9 19 0d 00 8b 00 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 c3 66 0f 1f 44 00 00 48 83 ec 28 48 89 54
+>      RSP: 002b:00007ffea1ce3c38 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+>      RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f805728b861
+>      RDX: 0000000000020000 RSI: 00007f8057183000 RDI: 0000000000000003
+>      RBP: 00007f8057183000 R08: 00007f8057182010 R09: 0000000000000000
+>      R10: 0000000000000022 R11: 0000000000000246 R12: 0000559a60e8ff10
+>      R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+>      Modules linked in:
+>      CR2: 00000000000001f9
+>      ---[ end trace 01613595153f0cba ]---
+>      RIP: 0010:nfsd_reply_cache_stats_show+0x3b/0x2d0
+>      Code: 41 54 49 89 f4 48 89 fe 48 c7 c7 b3 10 33 88 53 bb e8 03 00 00 e8 88 82 d1 ff bf 58 89 41 00 e8 eb c5 85 00 48 83 eb 01 75 f0 <41> 8b 94 24 f8 01 00 00 48 c7 c6 be 10 33 88 4c 89 ef bb e8 03 00
+>      RSP: 0018:ffffaa52004b3e08 EFLAGS: 00010246
+>      RAX: 0000002bab45a7c6 RBX: 0000000000000000 RCX: 0000000000291b4c
+>      RDX: 0000002b00000000 RSI: 0000000000000004 RDI: 0000000000291b28
+>      RBP: ffffaa52004b3e20 R08: 0000000000000004 R09: 0000002bab1c8c7a
+>      R10: ffffa424e5500000 R11: 00000000000002a9 R12: 0000000000000001
+>      R13: ffffa424e4475000 R14: 0000000000000001 R15: ffffa424e4475000
+>      FS:  00007f805735f580(0000) GS:ffffa424f8f80000(0000) knlGS:0000000000000000
+>      CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>      CR2: 00000000000001f9 CR3: 00000000655ce005 CR4: 00000000003606e0
+>      Killed
+>      
+>      Fixes: 3ba75830ce17 ("nfsd4: drc containerization")
+>      Signed-off-by: He Zhe <zhe.he@windriver.com>
+>      Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> 
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index 26ad75ae2be0..96352ab7bd81 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -571,7 +571,7 @@ nfsd_cache_append(struct svc_rqst *rqstp, struct kvec *data)
+>    */
+>   static int nfsd_reply_cache_stats_show(struct seq_file *m, void *v)
+>   {
+> -	struct nfsd_net *nn = v;
+> +	struct nfsd_net *nn = m->private;
+>   
+>   	seq_printf(m, "max entries:           %u\n", nn->max_drc_entries);
+>   	seq_printf(m, "num entries:           %u\n",
+> 
