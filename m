@@ -2,111 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB9089C2D7
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Aug 2019 12:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8BA29C4CC
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Aug 2019 18:10:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfHYKMq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 25 Aug 2019 06:12:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33262 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfHYKMq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Aug 2019 06:12:46 -0400
-Received: by mail-io1-f65.google.com with SMTP id z3so30463378iog.0
-        for <linux-nfs@vger.kernel.org>; Sun, 25 Aug 2019 03:12:45 -0700 (PDT)
+        id S1728357AbfHYQKN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 25 Aug 2019 12:10:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43576 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfHYQKN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Aug 2019 12:10:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id 18so31469247ioe.10
+        for <linux-nfs@vger.kernel.org>; Sun, 25 Aug 2019 09:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zadara-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fMpyQvF6VzughydnrGZHt+I7Ql6B0+O3aZ99w06rrB0=;
-        b=WRMep0SfYrMDheaLekaO6LNsHOt0YTl0JHu32AtcogB8IE0Z7iIUvr8W48sMCW+qmM
-         wb8+vpr/pdO5Gaz/dqA48yD9ho8XMbgAxHTOTzb7OUpmbG9XsH+fCAysroGb5UgGgrPq
-         roIPdCnMho4fLhYpBqoXp/2dboGv35kxLWKOXu7DQTofp1H6QJb+QDTm2Q3tjeaSYvzD
-         K30hGbw/+mTXH8kYfi5hZZhkVMGcMUcHq/WfIZcA3yjDvWouGqk1UlZj6mynvHPrNyga
-         FGLAQEtDrIKGYcGNnX3SBqcnTTVI42QZT0aqvBUxuRP4H7F8afjfkT2wx5N79yRxTTId
-         y0iQ==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z5zMDIXCw8WdhoFxDWVHYbDm1Io0ZVoKImtP8ITmnFw=;
+        b=HjxtpuNZ9TpYHx2hg93Soq4Gnqe2GvjigS3h2qwByTARNnRD17NW+QEgF+ZpRglj+v
+         VV2bREgRhnbu7qVr/TiACOw/TiGaIFkeRvPQORytoWd3ddmtXYOQWdvUz1zfxmeuD54p
+         JBr7pC5yqKqNQPd1wALcCVsLl3OoABxc9DqAmzRsLS6mdEVooxt/STxXF+6yiKSTvuBh
+         ywQoNdzqThkqAV/D6KnfsEFkTZ3NiewTgEXAWQnKgcAHc1axCpwnpsCVan6k3fajwvdB
+         L6JmFKgIFOQ86TZh4whJGn1OuSw1KC8ugS1KCuz+s2dxHfGUh6iRcb1pwfnAMuDCNeNP
+         Dd1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fMpyQvF6VzughydnrGZHt+I7Ql6B0+O3aZ99w06rrB0=;
-        b=tmv3QgyBED3lIHDfHks8P2NK5SHGUmx2h8u/yM5Ut3CW7sUWqNqB1nOKKEKtOfMvzT
-         U7Nv4lf1XI5mjlVw3nishGxwdqGbCtMDzbQKs6FoHadjSslz0k51wrwAglaZPQmKE7DV
-         a5CKCMhFfqa55uTqV2xWDOxbbkF0N+5y/cIeeEJD50m3lg5zGT87QSceWMQTb6/fbtQT
-         mIzx+mpfjYpEDRMh1tHjeyR33yVu/nTgHKE5ucOLI5Sw126PwQN4S3fmrm8ZEBZXmk/d
-         rLaV9XLfrOcYH5pFZkQFT4BzgtyZwjzFTTLCM7BbNFBZmjI9BDlx/g2R/HlF+/svUHBs
-         TVAQ==
-X-Gm-Message-State: APjAAAWkxAOW29AM9QERyVTtApYDjwZuYrounz7t+TKYmrwR3De2ayN3
-        KkrJWc+wEFWfHAVBFEoI2YsASh3KfHJgE1cej1Fwtg==
-X-Google-Smtp-Source: APXvYqxr7+J1ckULATkxxljBqpvrUxVstFS1oYrb+2SWBrzUbjBu3cME5YdbOEUeT55SSyAsEpBjgwxKOZk24dgms1A=
-X-Received: by 2002:a02:3e86:: with SMTP id s128mr12524010jas.14.1566727965414;
- Sun, 25 Aug 2019 03:12:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z5zMDIXCw8WdhoFxDWVHYbDm1Io0ZVoKImtP8ITmnFw=;
+        b=fvx7aRno2sO6LqCD0VTmW5/K5QxJKq52Ng0pUnONPYWTCN764orP6I7XMGpCjiSTXR
+         MhLivHz+Lz9K0q/H8UqkMNvMVY5OrJvN3n1FbLLiZvhlY5jK0vf9RJe2O+Wq1P0hivhH
+         n9J6e0STluWsrnFiMaqYB6MU6NWnFrqBuM8b47Tg7/3iHlGrl5sS0LhUGIkcI0JQuIXR
+         ydnaKESRrkcMfBCY1ngWndsqg3J7Cw+KAO0HfuF6CIBelYgjKvCYEHhugqUIzm4KRFsT
+         5H0MGAJgwOmpz+V0gyXuXt1nUPk3/mU9VHkqGggLxDxZ1twcy93p0yEmY+K3eg00Rhmb
+         U9wQ==
+X-Gm-Message-State: APjAAAVsoNAaIxqJXrKvkCZGK3l9s0FEBvyYDJYW+4+EIi7ldC2lvitC
+        Ylj2Eqm7AI6nxcwW6PO3jV8ubXN0PQ==
+X-Google-Smtp-Source: APXvYqwfPtY2UEE2WwqwyrJMGUgpF4adtHNddnzF9nwqlrjMAzbQJRtlJMUGpX6ZaLEVNuM7ElJBkQ==
+X-Received: by 2002:a02:c64a:: with SMTP id k10mr14674299jan.22.1566749411660;
+        Sun, 25 Aug 2019 09:10:11 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id m67sm12477643iof.21.2019.08.25.09.10.10
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 09:10:10 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Fix writepage(s) error handling to not report errors twice
+Date:   Sun, 25 Aug 2019 12:08:03 -0400
+Message-Id: <20190825160803.70038-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1566406146-7887-1-git-send-email-alex@zadara.com>
-In-Reply-To: <1566406146-7887-1-git-send-email-alex@zadara.com>
-From:   Alex Lyakas <alex@zadara.com>
-Date:   Sun, 25 Aug 2019 13:12:34 +0300
-Message-ID: <CAOcd+r0bXefi79dnwrwsDN1OecScfTjc8DYS5_9A8D5XKrh7QQ@mail.gmail.com>
-Subject: Re: [RFC-PATCH] nfsd: when unhashing openowners, increment
- openowner's refcount
-To:     bfields@fieldses.org, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, Shyam Kaushik <shyam@zadara.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce, Chuck,
+If writepage()/writepages() saw an error, but handled it without
+reporting it, we should not be re-reporting that error on exit.
 
-You are listed as maintainers of nfsd. Can you please take a look at
-the below patch?
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/write.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-Thanks,
-Alex.
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index cee9905e419c..5f17f8036710 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -623,8 +623,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
+ 	/* If there is a fatal error that covers this write, just exit */
+ 	ret = 0;
+ 	mapping = page_file_mapping(page);
+-	if (test_bit(AS_ENOSPC, &mapping->flags) ||
+-	    test_bit(AS_EIO, &mapping->flags))
++	if (nfs_error_is_fatal_on_server(pgio->pg_error))
+ 		goto out_launder;
+ 
+ 	if (!nfs_pageio_add_request(pgio, req)) {
+@@ -638,6 +637,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
+ 		} else
+ 			ret = -EAGAIN;
+ 		nfs_redirty_request(req);
++		pgio->pg_error = 0;
+ 	} else
+ 		nfs_add_stats(page_file_mapping(page)->host,
+ 				NFSIOS_WRITEPAGES, 1);
+@@ -657,7 +657,7 @@ static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
+ 	ret = nfs_page_async_flush(pgio, page);
+ 	if (ret == -EAGAIN) {
+ 		redirty_page_for_writepage(wbc, page);
+-		ret = 0;
++		ret = AOP_WRITEPAGE_ACTIVATE;
+ 	}
+ 	return ret;
+ }
+@@ -676,10 +676,11 @@ static int nfs_writepage_locked(struct page *page,
+ 	nfs_pageio_init_write(&pgio, inode, 0,
+ 				false, &nfs_async_write_completion_ops);
+ 	err = nfs_do_writepage(page, wbc, &pgio);
++	pgio.pg_error = 0;
+ 	nfs_pageio_complete(&pgio);
+ 	if (err < 0)
+ 		return err;
+-	if (pgio.pg_error < 0)
++	if (nfs_error_is_fatal(pgio.pg_error))
+ 		return pgio.pg_error;
+ 	return 0;
+ }
+@@ -689,7 +690,8 @@ int nfs_writepage(struct page *page, struct writeback_control *wbc)
+ 	int ret;
+ 
+ 	ret = nfs_writepage_locked(page, wbc);
+-	unlock_page(page);
++	if (ret != AOP_WRITEPAGE_ACTIVATE)
++		unlock_page(page);
+ 	return ret;
+ }
+ 
+@@ -698,7 +700,8 @@ static int nfs_writepages_callback(struct page *page, struct writeback_control *
+ 	int ret;
+ 
+ 	ret = nfs_do_writepage(page, wbc, data);
+-	unlock_page(page);
++	if (ret != AOP_WRITEPAGE_ACTIVATE)
++		unlock_page(page);
+ 	return ret;
+ }
+ 
+@@ -724,13 +727,14 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 				&nfs_async_write_completion_ops);
+ 	pgio.pg_io_completion = ioc;
+ 	err = write_cache_pages(mapping, wbc, nfs_writepages_callback, &pgio);
++	pgio.pg_error = 0;
+ 	nfs_pageio_complete(&pgio);
+ 	nfs_io_completion_put(ioc);
+ 
+ 	if (err < 0)
+ 		goto out_err;
+ 	err = pgio.pg_error;
+-	if (err < 0)
++	if (nfs_error_is_fatal(err))
+ 		goto out_err;
+ 	return 0;
+ out_err:
+-- 
+2.21.0
 
-On Wed, Aug 21, 2019 at 7:50 PM Alex Lyakas <alex@zadara.com> wrote:
->
-> release_openowner() expects an extra refcnt taken for the openowner,
-> which it is releasing.
->
->  With nfsd_inject_forget_client_openowners() and nfsd_inject_forget_openowners(),
-> we unhash openowners and collect them into a reaplist. Later we call
-> nfsd_reap_openowners(), which calls release_openowner(), which releases all openowner's stateids.
-> Each OPEN stateid holds a refcnt on the openowner. Therefore, after releasing
-> the last OPEN stateid via its sc_free function, which is nfs4_free_ol_stateid,
-> nfs4_put_stateowner() will be called, which will realize its the last
-> refcnt for the openowner. As a result, openowner will be freed.
-> But later, release_openowner() will go ahead and call release_last_closed_stateid()
-> and nfs4_put_stateowner() on the same openowner which was just released.
-> This corrupts memory and causes random crashes.
->
-> After we fixed this, we confirmed that the openowner is not freed
-> prematurely. It is freed by release_openowner() final call
-> to nfs4_put_stateowner().
->
-> However, we still get (other) random crashes and memory corruptions
-> when nfsd_inject_forget_client_openowners() and
-> nfsd_inject_forget_openowners().
-> According to our analysis, we don't see any other refcount issues.
-> Can anybody from the community review these flows for other potentials issues?
->
-> Signed-off-by: Alex Lyakas <alex@zadara.com>
-> ---
->  fs/nfsd/nfs4state.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7857942..4e9afca 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -7251,6 +7251,7 @@ static u64 nfsd_foreach_client_lock(struct nfs4_client *clp, u64 max,
->                         func(oop);
->                         if (collect) {
->                                 atomic_inc(&clp->cl_rpc_users);
-> +                               nfs4_get_stateowner(&oop->oo_owner);
->                                 list_add(&oop->oo_perclient, collect);
->                         }
->                 }
-> --
-> 1.9.1
->
