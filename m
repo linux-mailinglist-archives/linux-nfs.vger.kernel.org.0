@@ -2,75 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A615A9C6DD
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2019 02:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE5E69CAF5
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2019 09:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfHZAjY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 25 Aug 2019 20:39:24 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:27338 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726312AbfHZAjY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Aug 2019 20:39:24 -0400
-X-IronPort-AV: E=Sophos;i="5.64,431,1559491200"; 
-   d="scan'208";a="74253732"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Aug 2019 08:39:22 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id EA3B44CE045C
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2019 08:39:17 +0800 (CST)
-Received: from [10.167.226.33] (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Mon, 26 Aug 2019 08:39:35 +0800
-Subject: Re: NFS issues about aio and dio test
-From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
-To:     <linux-nfs@vger.kernel.org>
-CC:     <cuiyue-fnst@cn.fujitsu.com>
-References: <975395cc-62f2-843f-cc71-82339b2869cd@cn.fujitsu.com>
-Message-ID: <65ea4ea2-548f-1546-059a-af901bba2e87@cn.fujitsu.com>
-Date:   Mon, 26 Aug 2019 08:37:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1727563AbfHZHtI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Aug 2019 03:49:08 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:54917 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727674AbfHZHtI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Aug 2019 03:49:08 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 89037377
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2019 03:49:06 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 26 Aug 2019 03:49:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=Ngx/N2sgJZBewYkvtYJmlECxAF
+        AHU1SdApns+TaMaTY=; b=sb9uXFe/uAJjBAZHJhgtus72tfGyIb3iRfxB/eSRh4
+        D8U7YykxljcsSuUrga6CHaueh6ggNKMfH8DUXgv7CAVNFTO1m8cH34fsAM9dvRbs
+        OZspchJyKb6E+r63zqbKd6BNJDYyGQsrrm+lbzglqY8C2bb6x3Xtd9UFg7JxyseX
+        3hLOGsSetICY8YDMqIDZr/khDDeLWTPb57iriviz/x17yVafZaKWEpiyks8ZqpcI
+        pm6gsmpqiJ1Y66wPQenOxl0iE0nvPvk+RDRFRfnNauwZNc5N2/3eGHImbkTfaIYW
+        r6gpns36eYU1F1MjAw2KrzRKEvuMIVL6XCLmfnye5yHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Ngx/N2sgJZBewYkvt
+        YJmlECxAFAHU1SdApns+TaMaTY=; b=WEng3x6qxs+mxNGK82YstO0qimFQsotVg
+        h5Dmng+RpVvG3s+XII5LSSj8WXVJM+5cPRrM9iOyHGkoBb5TLvbOg+5jFrT3DABu
+        HoYEcb2yqrQKrF4OXLI8qnpIXlmU26AO5JS0BbLR6LdyDmE3k6Kn/YG8IkFX8Oxi
+        lmMWNyZ0AwisNcUR4BaZVZK0Vf83QtO2BnFGbw5hmc/gh1y/mnQGAAPjBegR2ZkE
+        xbqQKTaBoq24iJOJLnWwV/7/q1QJC6J7zO2iZaG3UJxRIgp3rZXhGoVz05gInm0p
+        kuXF/+nzIrXfY3PPNYyG0K5lpdl1qIC65QgKUnYYVyYF5BUX8/FlA==
+X-ME-Sender: <xms:8Y5jXW-5IndnI1CWWg8GAhNq4sx-M3Uu-0m3aKlnFrfGQ_psX0UA4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedguddvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefrrghtrhhitghkucfuthgvihhnhhgrrhguthcuoehpshesphhk
+    shdrihhmqeenucfkphepjeekrdehhedrvdefrddutdeknecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehpshesphhkshdrihhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:8Y5jXSzByyJO6Cz1z49CcDguzecrotuXV7fkuiM9WYXLQVu9dxaiKA>
+    <xmx:8Y5jXVbOe0rU6mcW-yR6EnYs2sy_tBgWFRUPB2KMee3Ep5xXn9ZEdA>
+    <xmx:8Y5jXWr194C_njh1rrOKW-BGIhMDnK3YvFQXnSBvs5QGx22PZSpqtA>
+    <xmx:8o5jXXqYQAW9lL1xiO6Rog5v_rVRv8gXyqQVei91x_cXyIYc9wzhFQ>
+Received: from NSJAIL (x4e37176c.dyn.telefonica.de [78.55.23.108])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 09294D6005E
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2019 03:49:04 -0400 (EDT)
+Received: from localhost (10.192.0.11 [10.192.0.11])
+        by NSJAIL (OpenSMTPD) with ESMTPSA id db4080a9 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 26 Aug 2019 07:49:01 +0000 (UTC)
+From:   Patrick Steinhardt <ps@pks.im>
+To:     linux-nfs@vger.kernel.org
+Cc:     Patrick Steinhardt <ps@pks.im>
+Subject: [PATCH 1/3] mount: fix compilation if __GLIBC__ is not defined
+Date:   Mon, 26 Aug 2019 09:48:50 +0200
+Message-Id: <6de0089348765e60bcdf59ef5813d7bb631c967f.1566805721.git.ps@pks.im>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <975395cc-62f2-843f-cc71-82339b2869cd@cn.fujitsu.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: EA3B44CE045C.ADA96
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
-X-Spam-Status: No
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Any ping?
+As glibc versions before v2.24 couldn't safely include <linux/in6.h>,
+commit 8af595b7 (mount: support compiling with old glibc, 2017-07-26)
+introduced some preprocessor checks to special-case such old versions.
+While there is a check whether __GLIBC__ is defined at all, it only
+applies to the first comparison `__GLIBC__ < 2`, but doesn't apply to
+the second check due to operator precedence. Thus the preprocessor may
+use an undefined value and thus generate an error if __GLIBC__ is not
+defined.
 
-在 2019/8/6 14:08, Su Yanjun 写道:
-> Hi,
->
-> When I tested xfstests generic/465 with NFS, there was something 
-> unexpected.
->
-> When memory of NFS server was 10G, test passed.
-> But when memory of NFS server was 4G, test failed.
->
-> Fail message was as below.
->     non-aio dio test
->     encounter an error: block 4 offset 0, content 62
->     aio-dio test
->     encounter an error: block 1 offset 0, content 62
->
-> All of the NFS versions(v3 v4.0 v4.1 v4.2) have  this problem.
-> Maybe something is wrong about NFS's I/O operation.
->
-> Thanks in advance.
->
->
->
->
->
->
->
+Fix the issue by wrapping the version check in braces.
 
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
+---
+ utils/mount/network.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils/mount/network.c b/utils/mount/network.c
+index e166a823..6ac913d9 100644
+--- a/utils/mount/network.c
++++ b/utils/mount/network.c
+@@ -39,7 +39,7 @@
+ #include <sys/socket.h>
+ #include <sys/wait.h>
+ #include <sys/stat.h>
+-#if defined(__GLIBC__) && (__GLIBC__ < 2) || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 24)
++#if defined(__GLIBC__) && ((__GLIBC__ < 2) || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 24))
+ /* Cannot safely include linux/in6.h in old glibc, so hardcode the needed values */
+ # define IPV6_PREFER_SRC_PUBLIC 2
+ # define IPV6_ADDR_PREFERENCES 72
+-- 
+2.23.0
 
