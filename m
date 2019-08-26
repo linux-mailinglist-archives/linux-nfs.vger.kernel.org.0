@@ -2,83 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E60589D450
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2019 18:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 736659D483
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2019 18:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfHZQqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Aug 2019 12:46:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40552 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbfHZQqC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:46:02 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3687F7F75E;
-        Mon, 26 Aug 2019 16:46:02 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D851260BEC;
-        Mon, 26 Aug 2019 16:46:01 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 18:46:00 +0200
-From:   Niels de Vos <ndevos@redhat.com>
-To:     "de Vandiere, Louis" <louis.devandiere@atos.net>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Maximum Number of ACL on NFSv4
-Message-ID: <20190826164600.GD28580@ndevos-x270>
-References: <AM5PR0202MB25641230B578F7D080A67BA4E7A40@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <AM5PR0202MB2564E6F05627D0EF49D043DFE7A40@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <85fc5336-416f-2668-c9e2-8474e6e40c33@math.utexas.edu>
- <AM5PR0202MB25644F1290D20A1996C5EED4E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
+        id S1729344AbfHZQxt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Aug 2019 12:53:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40031 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728560AbfHZQxt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Aug 2019 12:53:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id t6so38966639ios.7
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2019 09:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lpWAmjlHy5+1fLi4QyLuasUyp3uzvNmNttlLw5DWg5k=;
+        b=GqZUmM2dMBUUQO0CdGn/gpQPc6nivYx16pzkmekDwbArTsrHbQhKafIupW2K4lUXVJ
+         IaT4nGIH//CFLjeKBhK6LUHKxHQaJ2gzSDrleq8d22uekLmOY8izIREObrveAN/EKqy8
+         NM/2bU9V1InImPCrgHTf4gbQEvkvLvugbu5UrP/U7fSP6xPHgnGJU9c7PWewP23uB7d5
+         rK/A3Ih+YNMU/oEte7SrJuFlOz6xYGncDs1Df5uG3TxWflZIV0gxT8pK1UT+zXjC5JfG
+         S6DIVURU1i+yz897MAYAVjodWB4YOMrMZo57baY7UmdELMsNatctXXL9yFO7xRgPdm1M
+         8IXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lpWAmjlHy5+1fLi4QyLuasUyp3uzvNmNttlLw5DWg5k=;
+        b=qyKFFZz5bSdrumi3UhcptqLMXQXAYCxbCbrtMDbQ1CuVFMkjUmYFpO+R5+A0mDZaV8
+         HFqmPk3lUGDk3b70u44PIxe4edsK34A6kh5XXJ/GWqEelcf3ousp6pQd04GLTkOyC1+7
+         9HDRWqgilAEIRQ7WBTCKdZ394LtZhY+tdd/7ORxWp6+K/0R4oNRMveoGu6cTIqnJY6tf
+         eYMgT6GLr7dRXjGOdtfNkhEPK+8QIH+Th3iNYe6GIYLl3aObTAYAvN8xYJ5HO+cxP8tg
+         kFmLyQwBe8UlBziEQMS8Umt2QYy0seImQZRwxnaAoOsxE9Cmq+KWfAFpiXNfdsaZR4TB
+         rVQQ==
+X-Gm-Message-State: APjAAAVKv7KioCZigknlVxfeOaaRxXrqIkldt+OM7vFluDKeXwExa+SD
+        ReDePwmfdqPoifyVIibD3g==
+X-Google-Smtp-Source: APXvYqySTog91U1fskOuq0t2CVFDz71v/GyyU2w2bp7F1sfWCT04PQdousbMwqWCig/kKNOhfOKS1A==
+X-Received: by 2002:a02:ac84:: with SMTP id x4mr18150196jan.2.1566838428115;
+        Mon, 26 Aug 2019 09:53:48 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id u24sm10613490iot.38.2019.08.26.09.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 09:53:47 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] Handling NFSv3 I/O errors in knfsd
+Date:   Mon, 26 Aug 2019 12:50:18 -0400
+Message-Id: <20190826165021.81075-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR0202MB25644F1290D20A1996C5EED4E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 26 Aug 2019 16:46:02 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:53:05PM +0000, de Vandiere, Louis wrote:
-> Yes, I assume it's not very frequent to have hundreds of NFSv4 ACLs. For compliance and organizational issue, we cannot use groups efficiently to manage access to the shares, so it's user-based and case by case.
->  
-> My real goal is to be able to replicate some files to a new NFSv4 server while preserving the ACLs. By using "cp -R --preserve=all acl-folder/", I'm able to preserve the ACLs when their number does not exceed 200, above it, I see the "File too large" error while rsync does not work at all (even in version 3.1.3). That's why I'm digging into this and checking what possibly could go wrong.
+Recently, a number of changes went into the kernel to try to ensure
+that I/O errors (specifically write errors) are reported to the
+application once and only once. The vehicle for ensuring the errors
+are reported is the struct file, which uses the 'f_wb_err' field to
+track which errors have been reported.
 
-You might be hitting a limit in the filesystem on the NFS server. The
-ACLs are stored in extended attributes. Depending on the filesystem, you
-may be able to configure larger inode sizes (or other storage for
-xattrs). With XFS this can be done with 'mkfs -t xfs -i size=.. ...',
+The problem is that errors are mainly intended to be reported through
+fsync(). If the client is doing synchronous writes, then all is well,
+but if it is doing unstable writes, then the errors may not be
+reported until the client calls COMMIT. If the file cache has
+thrown out the struct file, due to memory pressure, or just because
+the client took a long while between the last WRITE and the COMMIT,
+then the error report may be lost, and the client may just think
+its data is safely stored.
 
-HTH,
-Niels
+Note that the problem is compounded by the fact that NFSv3 is stateless,
+so the server never knows that the client may have rebooted, so there
+can be no guarantee that a COMMIT will ever be sent.
 
+The following patch set attempts to remedy the situation using 2
+strategies:
 
-> 
-> Thank you.
-> Best,
-> Louis de Vandière
-> 
-> 
-> -----Original Message-----
-> From: Goetz, Patrick G <pgoetz@math.utexas.edu> 
-> Sent: Monday, August 26, 2019 8:44 AM
-> To: de Vandiere, Louis <louis.devandiere@atos.net>; linux-nfs@vger.kernel.org
-> Subject: Re: Maximum Number of ACL on NFSv4
-> 
-> I'm dying to know what the use case is for this, and why you can't just do this with group permissions (unless you're talking about hundreds of group ACLs).
-> 
-> On 8/23/19 5:31 PM, de Vandiere, Louis wrote:
-> > Hi,
-> > 
-> > I'm currently trying to apply hundreds of ACLs on file hosted on a NFSv4 server (nfs-utils-1.3.0-0.61.el7.x86_64 and nfs4-acl-tools.0.3.3-19.el7.x86_64). It appears that the limit I can apply is 207. After the limit is reached, the command "nfs4_setfacl -a" returned the error "Failed setxattr operation: File too large". The same problem happens if I use an ACL with more than 200 line in it. I did a little debugging session but I was not able to come up with an explanation on why I'm facing such an issue.
-> > 
-> > On the other hand, I can apply hundreds of ACLs on XFS without issue. Do you know if it could be a bug with the nfs4-acl-tools package?
-> > Thank you for your support.
-> > Best,
-> > Louis de Vandière
-> >>> This message is from an external sender. Learn more about why this <<
-> >>> matters at https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flinks.utexas.edu%2Frtyclf&amp;data=02%7C01%7Clouis.devandiere%40atos.net%7Ce6d6b4705cde46bf455a08d72a2b93df%7C33440fc6b7c7412cbb730e70b0198d5a%7C0%7C0%7C637024238975648645&amp;sdata=EgTg3%2BPyIrnqG6axcHOybKZ1AldsGXj8CIC5z0F0Rac%3D&amp;reserved=0.                        <<
-> > 
+1) If the inode is dirty, then avoid garbage collecting the file
+   from the file cache.
+2) If the file is closed, and we see that it would have reported
+   an error to COMMIT, then we bump the boot verifier in order to
+   ensure the client retransmits all its writes.
+
+Note that if multiple clients were writing to the same file, then
+we probably want to bump the boot verifier anyway, since only one
+COMMIT will see the error report (because the cached file is also
+shared).
+
+So in order to implement the above strategy, we first have to do
+the following: split up the file cache to act per net namespace,
+since the boot verifier is per net namespace. Then add a helper
+to update the boot verifier.
+
+Trond Myklebust (3):
+  nfsd: nfsd_file cache entries should be per net namespace
+  nfsd: Support the server resetting the boot verifier
+  nfsd: Don't garbage collect files that might contain write errors
+
+ fs/nfsd/export.c    |  2 +-
+ fs/nfsd/filecache.c | 76 +++++++++++++++++++++++++++++++++++++--------
+ fs/nfsd/filecache.h |  3 +-
+ fs/nfsd/netns.h     |  4 +++
+ fs/nfsd/nfs3xdr.c   | 13 +++++---
+ fs/nfsd/nfs4proc.c  | 14 +++------
+ fs/nfsd/nfsctl.c    |  1 +
+ fs/nfsd/nfssvc.c    | 32 ++++++++++++++++++-
+ 8 files changed, 115 insertions(+), 30 deletions(-)
+
+-- 
+2.21.0
+
