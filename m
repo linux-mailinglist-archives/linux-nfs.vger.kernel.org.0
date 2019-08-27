@@ -2,59 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 596C49F487
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 22:51:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21CC19F494
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 22:55:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfH0Uv6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Aug 2019 16:51:58 -0400
-Received: from fieldses.org ([173.255.197.46]:48176 "EHLO fieldses.org"
+        id S1727887AbfH0UzD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Aug 2019 16:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfH0Uv6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:51:58 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 60EA01C84; Tue, 27 Aug 2019 16:51:58 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 16:51:58 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Alex Lyakas <alex@zadara.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        Shyam Kaushik <shyam@zadara.com>
-Subject: Re: [RFC-PATCH] nfsd: when unhashing openowners, increment
- openowner's refcount
-Message-ID: <20190827205158.GB13198@fieldses.org>
-References: <1566406146-7887-1-git-send-email-alex@zadara.com>
- <CAOcd+r0bXefi79dnwrwsDN1OecScfTjc8DYS5_9A8D5XKrh7QQ@mail.gmail.com>
- <20190826133951.GC22759@fieldses.org>
- <CAOcd+r059fh7J8T=6MdjPSCP39K5fpOZTsXZDUKq5TrPv_RcVQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOcd+r059fh7J8T=6MdjPSCP39K5fpOZTsXZDUKq5TrPv_RcVQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1726675AbfH0UzD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 27 Aug 2019 16:55:03 -0400
+Subject: Re: [GIT PULL] Please pull NFS client bugfixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566939302;
+        bh=UxQO7FIOj6mG250fGU5cCX/bdK2Gf+7g6CRwXFKg+1A=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=miY4KzuAcffHbLKmPIK1HX8lHlyvBPivEcfbE59DVY8QFWlEXfMmiPKqyXJhjISfc
+         iGVxBz1OrEn8gkwcwRfKRRrqYVy/shg3lDXoc640npsYdezQRzPHU3EwgQ1lawxrME
+         FhvnsPCxCMSK1ElDp6GI2FIzaBgzIL10REv+5Ekc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
+References: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
+ tags/nfs-for-5.3-3
+X-PR-Tracked-Commit-Id: 99300a85260c2b7febd57082a617d1062532067e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9e8312f5e160ade069e131d54ab8652cf0e86e1a
+Message-Id: <156693930273.9420.6053224282397353518.pr-tracker-bot@kernel.org>
+Date:   Tue, 27 Aug 2019 20:55:02 +0000
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 12:05:28PM +0300, Alex Lyakas wrote:
-> Is the described issue familiar to you?
+The pull request you sent on Tue, 27 Aug 2019 19:26:51 +0000:
 
-Yep, got it, but I haven't seen anyone try to solve it using the fault
-injection code, that's interesting!
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.3-3
 
-There's also fs/nfsd/unlock_filesystem.  It only unlocks NLM (NFSv3)
-locks.  But it'd probably be reasonable to teach it to get NFSv4 state
-too (locks, opens, delegations, and layouts).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9e8312f5e160ade069e131d54ab8652cf0e86e1a
 
-But my feeling's always been that the cleanest way to do it is to create
-two containers with separate net namespaces and run nfsd in both of
-them.  You can start and stop the servers in the different containers
-independently.
+Thank you!
 
-> It is very easily reproducible. What is the way to solve it? To our
-> understanding, if we un-export a FS from nfsd, we should be able to
-> unmount it.
-
-Unexporting has never removed locks or opens or other state, for what
-it's worth.
-
---b.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
