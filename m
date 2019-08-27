@@ -2,121 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4396C9EC26
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 17:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 830279EC2B
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 17:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfH0PPl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Aug 2019 11:15:41 -0400
-Received: from mail-eopbgr700106.outbound.protection.outlook.com ([40.107.70.106]:53472
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727219AbfH0PPl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:15:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IGt0cAmC5a8zWmaDlnetWNH6v1R3rULR81PCc5O1ttrh60bPZZ9YEHR8CIx7+zijXCWStIt9Te271x+rLTp7Q0FKsLVFsQkhNgemJTIkoNKLXEu+gkYNULr+jDTnkJe/WYhPKH7wWfQnIOZBFiu2wz4VUYHTGzDdXGg6BBvNiEC9Pl3qCc3buHt0cRuh52c6+hE6IcC/yGf48s+/V0VLBekj+iBSV+Kuvpx4A5Eo0f8/SKaSgHZQSYBxP2k8evwgRravP7WIjjEaxRZAPQlDQKV94ZcJnbzO2cn67gvkZFrFTcBY70vztZ3qx8Cd0WV6Tq8ZjbNmksgYAdXuKREO1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M9TQffmatEXLg51oUoycEnfdyW6wi6Dad38gt+w22DY=;
- b=Iml0uWKM0Z1uNe5pq0iLt5yduZk5rU2pRT+lAi8EY4fJtcSA3md1cGuk/f+ndxV/4p3l24EFON1aQZZVm14dTVCOlV0QL8ErwkGtTh+9vm2nfCAPbxwmvJRDYXNt7MXUkl/ACwXewAap+G7aXuGhXpyNLSYNtdaFggv4U+8hoqVr0V0VgIHXEJc7zNMVFi4904YDGs9Ld0ovge3Sb0HmjK8SOkzjKE++Awvosx+FQ+sL+1ncRxjrqxwuZimuGDxwQ6Ol2pOY7w8ijDV5Sg0wOJtjIexGu1lgGAjPR7H2jZIjYL2HlFnr2sLHMRUyPlXS8ZAcTKwLbOaBgrG+TFmSyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M9TQffmatEXLg51oUoycEnfdyW6wi6Dad38gt+w22DY=;
- b=SqxSTPg3e/3n/9tkf69yiuN5qeAhLO37l8M52Tx5m5jx+PsCJ6dln7lqHDE7o6Awx+CmivOWWN1Lh4dMDTgAi082v8wcjAAZqu5Rg4oqkG5T+Sqi0PJD/thoTnI8r4FoPHSdruPh3QGaozkfMaH6whnDH85HKGQv/rUq2SnUu+4=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1577.namprd13.prod.outlook.com (10.175.110.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.14; Tue, 27 Aug 2019 15:15:36 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::5d60:e645:84a2:be75]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::5d60:e645:84a2:be75%7]) with mapi id 15.20.2220.013; Tue, 27 Aug 2019
- 15:15:36 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-CC:     "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "jlayton@poochiereds.net" <jlayton@poochiereds.net>
+        id S1727784AbfH0PRg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Aug 2019 11:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727219AbfH0PRg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:17:36 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91F782070B;
+        Tue, 27 Aug 2019 15:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566919055;
+        bh=1J5swPyXCKuTbz88FUBhhA0l7vB27nP7ZPr8ExIt1wc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=mGnaGu6z1FRe6FyupDKbAA+vdf5f1256Vu8tupwgCxiNmgkL83BdORQvB85V6AvCl
+         gpww3t1aXNiXXFB2G49na6tMX1ZEgnTO/dhBm/kjyBRpImWGtLCIkUfX/3bsQ9n6i+
+         BEcJmhhE8ClsPbwcM1WPR2ealg6HCEGCzghvuDOc=
+Message-ID: <7864c3d642f771f8a99f5d511ccd0a77e12ef4cb.camel@kernel.org>
 Subject: Re: [PATCH 0/3] Handling NFSv3 I/O errors in knfsd
-Thread-Topic: [PATCH 0/3] Handling NFSv3 I/O errors in knfsd
-Thread-Index: AQHVXC7WXUD5cV8FEUS4EYbsSk6I0qcN59MAgAAC84CAARwhgIAADvgAgAABfYCAAAA/AIAABJIA
-Date:   Tue, 27 Aug 2019 15:15:35 +0000
-Message-ID: <1ee75165d548b336f5724b6d655aa2545b9270c3.camel@hammerspace.com>
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Date:   Tue, 27 Aug 2019 11:17:33 -0400
+In-Reply-To: <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
 References: <20190826165021.81075-1-trond.myklebust@hammerspace.com>
          <20190826205156.GA27834@fieldses.org>
          <ef9f2791ef395d7c968a386ce0a32ea503d6478f.camel@hammerspace.com>
          <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
-         <ec7a06f8e74867e65c26580e8504e2879f4cd595.camel@hammerspace.com>
-         <20190827145819.GB9804@fieldses.org> <20190827145912.GC9804@fieldses.org>
-In-Reply-To: <20190827145912.GC9804@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a76a2124-ee98-4540-d1e3-08d72b01698e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1577;
-x-ms-traffictypediagnostic: DM5PR13MB1577:
-x-microsoft-antispam-prvs: <DM5PR13MB15770010753235D39256F07FB8A00@DM5PR13MB1577.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(366004)(346002)(376002)(136003)(189003)(199004)(86362001)(71190400001)(486006)(5640700003)(76116006)(66476007)(66556008)(64756008)(66446008)(26005)(102836004)(2351001)(186003)(91956017)(229853002)(66066001)(118296001)(54906003)(81156014)(1730700003)(81166006)(8676002)(8936002)(71200400001)(478600001)(66946007)(14454004)(6116002)(3846002)(7736002)(305945005)(6506007)(446003)(36756003)(4326008)(5660300002)(6246003)(11346002)(2616005)(76176011)(316002)(256004)(2501003)(6512007)(476003)(2906002)(53936002)(99286004)(6486002)(6436002)(6916009)(25786009)(17423001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1577;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z0Okpsa3Cb955JZBJTsgv62O48XpRUhQbqwgNV/cI4OGZcTfg8sm3hkL2soExT1HcyauHagelK7jLzVxsUq9Zz92CZwO4NUocUmnG1Zixq7bHKE0VsPsp9hSltj5k7fCvg+Um5T89i0PgLV+bNcHeMJS1LVqYkKUcAoORL7o86iFUmFTDThSLPNnbZ1Bss/VnIeFgCKBDZMBAGkhZgEUl6EOeka+o6jkQssM2C4+ex40qRM43w0+SUCg/gM7a8l3HeeL7Fiy0W/MMiYyfJD+bLpgR3wcXO4zRPRIwyNCGVAX+wD6COL0WVrgOQq5KpYg0D3aYHXTNE9mlU/TAaS/TA2BE91Bleb3C7uYHal8uAdiiEbjFlk52UL04R0WJQYdM8uH04FNGMtGq1NC3ptXdwnE/RocEN0L5OLhuVuiEB8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <67087AD39AA4944BA5AEABF1EFEA48D1@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a76a2124-ee98-4540-d1e3-08d72b01698e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 15:15:36.0444
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bw4Ff5gqxzW7GvvqH4qqmCFAVaVZB3hi44kqyQiU2vz22mXdILYsrGu0wGE+cOuUVvb0VoY30kmmrr3dWcNKKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1577
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDEwOjU5IC0wNDAwLCBiZmllbGRzQGZpZWxkc2VzLm9yZyB3
-cm90ZToNCj4gT24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgMTA6NTg6MTlBTSAtMDQwMCwgYmZpZWxk
-c0BmaWVsZHNlcy5vcmcgd3JvdGU6DQo+ID4gT24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgMDI6NTM6
-MDFQTSArMDAwMCwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0KPiA+ID4gVGhlIG9uZSBwcm9ibGVt
-IGlzIHRoYXQgdGhlIGxvb3BpbmcgZm9yZXZlciBjbGllbnQgY2FuIGNhdXNlDQo+ID4gPiBvdGhl
-cg0KPiA+ID4gY2xpZW50cyB0byBsb29wIGZvcmV2ZXIgb24gdGhlaXIgb3RoZXJ3aXNlIHN1Y2Nl
-c3NmdWwgd3JpdGVzIG9uDQo+ID4gPiBvdGhlcg0KPiA+ID4gZmlsZXMuDQo+ID4gDQo+ID4gWWVh
-aCwgdGhhdCdzIHRoZSBjYXNlIEkgd2FzIHdvbmRlcmluZyBhYm91dC4NCj4gPiANCj4gPiA+IFRo
-YXQncyBiYWQsIGJ1dCBhZ2FpbiwgdGhhdCdzIGR1ZSB0byBjbGllbnQgYmVoYXZpb3VyIHRoYXQg
-aXMNCj4gPiA+IHRveGljIGV2ZW4gdG9kYXkuDQo+ID4gDQo+ID4gU28gbXkgd29ycnkgd2FzIHRo
-YXQgaWYgd3JpdGUgZXJyb3JzIGFyZSByYXJlIGFuZCB0aGUgY29uc2VxdWVuY2VzDQo+ID4gb2YN
-Cj4gPiB0aGUgc2luZ2xlIGNsaWVudCBsb29waW5nIGZvcmV2ZXIgYXJlIHJlbGF0aXZlbHkgbWls
-ZCwgdGhlbiB0aGVyZQ0KPiA+IG1pZ2h0DQo+ID4gYmUgZGVwbG95ZWQgY2xpZW50cyB0aGF0IGdl
-dCBhd2F5IHdpdGggdGhhdCBiZWhhdmlvci4NCj4gPiANCj4gPiBCdXQgbWF5YmUgdGhlIGJlaGF2
-aW9yJ3MgYSBsb3QgbW9yZSAidG94aWMiIHRoYW4gSSBpbWFnaW5lZCwgaGVuY2UNCj4gPiB1bmxp
-a2VseSB0byBiZSB2ZXJ5IGNvbW1vbi4NCj4gDQo+IChBbmQsIHRvIGJlIGNsZWFyLCBJIGxpa2Ug
-dGhlIGlkZWEsIGp1c3QgbWFraW5nIHN1cmUgSSdtIG5vdA0KPiBvdmVybG9va2luZw0KPiBhbnkg
-cHJvYmxlbXMuLi4uKQ0KPiANCkknbSBvcGVuIHRvIG90aGVyIHN1Z2dlc3Rpb25zLCBidXQgSSdt
-IGhhdmluZyB0cm91YmxlIGZpbmRpbmcgb25lIHRoYXQNCmNhbiBzY2FsZSBjb3JyZWN0bHkgKGku
-ZS4gbm90IHJlcXVpcmUgcGVyLWNsaWVudCB0cmFja2luZyksIHByZXZlbnQNCnNpbGVudCBjb3Jy
-dXB0aW9uIChieSBjYXVzaW5nIGNsaWVudHMgdG8gbWlzcyBlcnJvcnMpLCB3aGlsZSBub3QNCnJl
-bHlpbmcgb24gb3B0aW9uYWwgZmVhdHVyZXMgdGhhdCBtYXkgbm90IGJlIGltcGxlbWVudGVkIGJ5
-IGFsbCBORlN2Mw0KY2xpZW50cyAoZS5nLiBwZXItZmlsZSB3cml0ZSB2ZXJpZmllcnMgYXJlIG5v
-dCBpbXBsZW1lbnRlZCBieSAqQlNEKS4NCg0KVGhhdCBzYWlkLCBpdCBzZWVtcyB0byBtZSB0aGF0
-IHRvIGRvIG5vdGhpbmcgc2hvdWxkIG5vdCBiZSBhbiBvcHRpb24sDQphcyB0aGF0IHdvdWxkIGlt
-cGx5IHRvbGVyYXRpbmcgc2lsZW50IGNvcnJ1cHRpb24gb2YgZmlsZSBkYXRhLg0KDQotLSANClRy
-b25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0K
-dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, 2019-08-27 at 09:59 -0400, Chuck Lever wrote:
+> > On Aug 26, 2019, at 5:02 PM, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> > 
+> > On Mon, 2019-08-26 at 16:51 -0400, J. Bruce Fields wrote:
+> > > On Mon, Aug 26, 2019 at 12:50:18PM -0400, Trond Myklebust wrote:
+> > > > Recently, a number of changes went into the kernel to try to ensure
+> > > > that I/O errors (specifically write errors) are reported to the
+> > > > application once and only once. The vehicle for ensuring the errors
+> > > > are reported is the struct file, which uses the 'f_wb_err' field to
+> > > > track which errors have been reported.
+> > > > 
+> > > > The problem is that errors are mainly intended to be reported
+> > > > through
+> > > > fsync(). If the client is doing synchronous writes, then all is
+> > > > well,
+> > > > but if it is doing unstable writes, then the errors may not be
+> > > > reported until the client calls COMMIT. If the file cache has
+> > > > thrown out the struct file, due to memory pressure, or just because
+> > > > the client took a long while between the last WRITE and the COMMIT,
+> > > > then the error report may be lost, and the client may just think
+> > > > its data is safely stored.
+> > > 
+> > > These were lost before the file caching patches as well, right?  Or
+> > > is
+> > > there some regression? 
+> > 
+> > Correct. This is not a regression, but an attempt to fix a problem that
+> > has existed for some time now.
+> > 
+> > > > Note that the problem is compounded by the fact that NFSv3 is
+> > > > stateless,
+> > > > so the server never knows that the client may have rebooted, so
+> > > > there
+> > > > can be no guarantee that a COMMIT will ever be sent.
+> > > > 
+> > > > The following patch set attempts to remedy the situation using 2
+> > > > strategies:
+> > > > 
+> > > > 1) If the inode is dirty, then avoid garbage collecting the file
+> > > >   from the file cache.
+> > > > 2) If the file is closed, and we see that it would have reported
+> > > >   an error to COMMIT, then we bump the boot verifier in order to
+> > > >   ensure the client retransmits all its writes.
+> > > 
+> > > Sounds sensible to me.
+> > > 
+> > > > Note that if multiple clients were writing to the same file, then
+> > > > we probably want to bump the boot verifier anyway, since only one
+> > > > COMMIT will see the error report (because the cached file is also
+> > > > shared).
+> > > 
+> > > I'm confused by the "probably should".  So that's future work?  I
+> > > guess
+> > > it'd mean some additional work to identify that case.  You can't
+> > > really
+> > > even distinguish clients in the NFSv3 case, but I suppose you could
+> > > use
+> > > IP address or TCP connection as an approximation.
+> > 
+> > I'm suggesting we should do this too, but I haven't done so yet in
+> > these patches. I'd like to hear other opinions (particularly from you,
+> > Chuck and Jeff).
+> 
+> The strategy of handling these errors more carefully seems good.
+> Bumping the write/commit verifier so the client writes again to
+> retrieve the latent error is clever!
+> 
+
+Yes, this would seem to neatly solve a whole class of related problems
+in these sorts of scenarios. I also think we ought to bump the verifier
+whenever nfsd sees a writeback error, as you have a great point that
+we'll only report writeback errors on the first COMMIT after an error
+today. Fixing that would be a nice goal.
+
+We should note though that the verifier is a per net-namespace value, so
+if you get a transient writeback error on one inode, any inode that is
+currently dirty will probably end up having its writes retransmitted
+once you bump the verifier.
+
+That seems like an acceptable thing to do in these scenarios, but we may
+need to consider making the verifier more granular if that turns out to
+cause a lot of re-write activity that isn't necessary.
+
+> It's not clear to me though that the NFSv3 protocol can deal with
+> the multi-client write scenario, since it is stateless. We are now
+> making it stateful in some sense by preserving error state on the
+> server across NFS requests, without having any sense of an open
+> file in the protocol itself.
+> 
+
+I think it's worthwhile to do the best we can here. WRITE/COMMIT are
+inherently stateful to some degree in that they involve a verifier.
+Trond's proposal is just utilizing that fact to ensure that we deliver
+writeback errors more widely. I like it!
+
+> Would an "approximation" without open state be good enough? I
+> assume you are doing this to more fully support the FlexFiles
+> layout type. Do you have any analysis or thought about this next
+> step?
+> 
+> I also echo Bruce's concern about whether the client implementations
+> are up to snuff. There could be long-standing bugs or their protocol
+> implementation could be missing parts. This is more curiosity than
+> an objection, but maybe noting which client implementations you've
+> tested with would be good.
+> 
+> 
+> > > --b.
+> > > 
+> > > > So in order to implement the above strategy, we first have to do
+> > > > the following: split up the file cache to act per net namespace,
+> > > > since the boot verifier is per net namespace. Then add a helper
+> > > > to update the boot verifier.
+> > > > 
+> > > > Trond Myklebust (3):
+> > > >  nfsd: nfsd_file cache entries should be per net namespace
+> > > >  nfsd: Support the server resetting the boot verifier
+> > > >  nfsd: Don't garbage collect files that might contain write errors
+> > > > 
+> > > > fs/nfsd/export.c    |  2 +-
+> > > > fs/nfsd/filecache.c | 76 +++++++++++++++++++++++++++++++++++++--
+> > > > ------
+> > > > fs/nfsd/filecache.h |  3 +-
+> > > > fs/nfsd/netns.h     |  4 +++
+> > > > fs/nfsd/nfs3xdr.c   | 13 +++++---
+> > > > fs/nfsd/nfs4proc.c  | 14 +++------
+> > > > fs/nfsd/nfsctl.c    |  1 +
+> > > > fs/nfsd/nfssvc.c    | 32 ++++++++++++++++++-
+> > > > 8 files changed, 115 insertions(+), 30 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.21.0
+> > -- 
+> > Trond Myklebust
+> > Linux NFS client maintainer, Hammerspace
+> > trond.myklebust@hammerspace.com
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
