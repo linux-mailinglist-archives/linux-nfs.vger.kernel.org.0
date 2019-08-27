@@ -2,193 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 830279EC2B
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 17:17:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 913849EC4F
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2019 17:21:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfH0PRg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Aug 2019 11:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbfH0PRg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:17:36 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F782070B;
-        Tue, 27 Aug 2019 15:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566919055;
-        bh=1J5swPyXCKuTbz88FUBhhA0l7vB27nP7ZPr8ExIt1wc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mGnaGu6z1FRe6FyupDKbAA+vdf5f1256Vu8tupwgCxiNmgkL83BdORQvB85V6AvCl
-         gpww3t1aXNiXXFB2G49na6tMX1ZEgnTO/dhBm/kjyBRpImWGtLCIkUfX/3bsQ9n6i+
-         BEcJmhhE8ClsPbwcM1WPR2ealg6HCEGCzghvuDOc=
-Message-ID: <7864c3d642f771f8a99f5d511ccd0a77e12ef4cb.camel@kernel.org>
+        id S1726170AbfH0PVQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Aug 2019 11:21:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42518 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbfH0PVP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Aug 2019 11:21:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RFJOmg136201;
+        Tue, 27 Aug 2019 15:20:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=nKdOe2NjQQ/QOzX3hakv1W4OMjckDYxdgPCafvsYBwo=;
+ b=pZBNivYYaIoqPUcS8z/PMKMg6XBbdwZwOE4cQ9fE+apwAg+DY/YNmh3HhehZsByRDrC2
+ sgGtmnM0KP9TI4/VlMAJTnCKKoZZcRRhk5E4oqCY12xw3RhpAeX1JIEwFNGRYyYzp+Ri
+ 66XoWh3xfvdiCWS/AFzBATG8QNoRTTq6FNT893lfsmw7k6HEK3kNX6njRNH00zWQBGu0
+ uKjt5xyp5R/9tqOk7YAr2hQWIQf5ThNfxnAgJp7cSOHOrOtdL3jfLmoLVfZBjQ9+6uEX
+ qhvWuWIxKJyTebECDEudE6vkQu15vVXXXfq+I+HfeUsEFgyUL0G09Di8FzLlX5l9aoLv zA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2un6qtr73g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 15:20:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RFIcs2030966;
+        Tue, 27 Aug 2019 15:20:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2umj2ytss3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 15:20:46 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7RFKjTd030330;
+        Tue, 27 Aug 2019 15:20:45 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 27 Aug 2019 08:20:45 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: [PATCH 0/3] Handling NFSv3 I/O errors in knfsd
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <1ee75165d548b336f5724b6d655aa2545b9270c3.camel@hammerspace.com>
+Date:   Tue, 27 Aug 2019 11:20:44 -0400
 Cc:     Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@redhat.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>
-Date:   Tue, 27 Aug 2019 11:17:33 -0400
-In-Reply-To: <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
+        Bruce Fields <bfields@redhat.com>,
+        Jeff Layton <jlayton@poochiereds.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7FDE5284-AD41-46B6-A257-DE9D5F24932D@oracle.com>
 References: <20190826165021.81075-1-trond.myklebust@hammerspace.com>
-         <20190826205156.GA27834@fieldses.org>
-         <ef9f2791ef395d7c968a386ce0a32ea503d6478f.camel@hammerspace.com>
-         <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+ <20190826205156.GA27834@fieldses.org>
+ <ef9f2791ef395d7c968a386ce0a32ea503d6478f.camel@hammerspace.com>
+ <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
+ <ec7a06f8e74867e65c26580e8504e2879f4cd595.camel@hammerspace.com>
+ <20190827145819.GB9804@fieldses.org> <20190827145912.GC9804@fieldses.org>
+ <1ee75165d548b336f5724b6d655aa2545b9270c3.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908270156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908270156
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2019-08-27 at 09:59 -0400, Chuck Lever wrote:
-> > On Aug 26, 2019, at 5:02 PM, Trond Myklebust <trondmy@hammerspace.com> wrote:
-> > 
-> > On Mon, 2019-08-26 at 16:51 -0400, J. Bruce Fields wrote:
-> > > On Mon, Aug 26, 2019 at 12:50:18PM -0400, Trond Myklebust wrote:
-> > > > Recently, a number of changes went into the kernel to try to ensure
-> > > > that I/O errors (specifically write errors) are reported to the
-> > > > application once and only once. The vehicle for ensuring the errors
-> > > > are reported is the struct file, which uses the 'f_wb_err' field to
-> > > > track which errors have been reported.
-> > > > 
-> > > > The problem is that errors are mainly intended to be reported
-> > > > through
-> > > > fsync(). If the client is doing synchronous writes, then all is
-> > > > well,
-> > > > but if it is doing unstable writes, then the errors may not be
-> > > > reported until the client calls COMMIT. If the file cache has
-> > > > thrown out the struct file, due to memory pressure, or just because
-> > > > the client took a long while between the last WRITE and the COMMIT,
-> > > > then the error report may be lost, and the client may just think
-> > > > its data is safely stored.
-> > > 
-> > > These were lost before the file caching patches as well, right?  Or
-> > > is
-> > > there some regression? 
-> > 
-> > Correct. This is not a regression, but an attempt to fix a problem that
-> > has existed for some time now.
-> > 
-> > > > Note that the problem is compounded by the fact that NFSv3 is
-> > > > stateless,
-> > > > so the server never knows that the client may have rebooted, so
-> > > > there
-> > > > can be no guarantee that a COMMIT will ever be sent.
-> > > > 
-> > > > The following patch set attempts to remedy the situation using 2
-> > > > strategies:
-> > > > 
-> > > > 1) If the inode is dirty, then avoid garbage collecting the file
-> > > >   from the file cache.
-> > > > 2) If the file is closed, and we see that it would have reported
-> > > >   an error to COMMIT, then we bump the boot verifier in order to
-> > > >   ensure the client retransmits all its writes.
-> > > 
-> > > Sounds sensible to me.
-> > > 
-> > > > Note that if multiple clients were writing to the same file, then
-> > > > we probably want to bump the boot verifier anyway, since only one
-> > > > COMMIT will see the error report (because the cached file is also
-> > > > shared).
-> > > 
-> > > I'm confused by the "probably should".  So that's future work?  I
-> > > guess
-> > > it'd mean some additional work to identify that case.  You can't
-> > > really
-> > > even distinguish clients in the NFSv3 case, but I suppose you could
-> > > use
-> > > IP address or TCP connection as an approximation.
-> > 
-> > I'm suggesting we should do this too, but I haven't done so yet in
-> > these patches. I'd like to hear other opinions (particularly from you,
-> > Chuck and Jeff).
-> 
-> The strategy of handling these errors more carefully seems good.
-> Bumping the write/commit verifier so the client writes again to
-> retrieve the latent error is clever!
-> 
 
-Yes, this would seem to neatly solve a whole class of related problems
-in these sorts of scenarios. I also think we ought to bump the verifier
-whenever nfsd sees a writeback error, as you have a great point that
-we'll only report writeback errors on the first COMMIT after an error
-today. Fixing that would be a nice goal.
 
-We should note though that the verifier is a per net-namespace value, so
-if you get a transient writeback error on one inode, any inode that is
-currently dirty will probably end up having its writes retransmitted
-once you bump the verifier.
+> On Aug 27, 2019, at 11:15 AM, Trond Myklebust =
+<trondmy@hammerspace.com> wrote:
+>=20
+> On Tue, 2019-08-27 at 10:59 -0400, bfields@fieldses.org wrote:
+>> On Tue, Aug 27, 2019 at 10:58:19AM -0400, bfields@fieldses.org wrote:
+>>> On Tue, Aug 27, 2019 at 02:53:01PM +0000, Trond Myklebust wrote:
+>>>> The one problem is that the looping forever client can cause
+>>>> other
+>>>> clients to loop forever on their otherwise successful writes on
+>>>> other
+>>>> files.
+>>>=20
+>>> Yeah, that's the case I was wondering about.
+>>>=20
+>>>> That's bad, but again, that's due to client behaviour that is
+>>>> toxic even today.
+>>>=20
+>>> So my worry was that if write errors are rare and the consequences
+>>> of
+>>> the single client looping forever are relatively mild, then there
+>>> might
+>>> be deployed clients that get away with that behavior.
+>>>=20
+>>> But maybe the behavior's a lot more "toxic" than I imagined, hence
+>>> unlikely to be very common.
+>>=20
+>> (And, to be clear, I like the idea, just making sure I'm not
+>> overlooking
+>> any problems....)
+>>=20
+> I'm open to other suggestions, but I'm having trouble finding one that
+> can scale correctly (i.e. not require per-client tracking), prevent
+> silent corruption (by causing clients to miss errors), while not
+> relying on optional features that may not be implemented by all NFSv3
+> clients (e.g. per-file write verifiers are not implemented by *BSD).
+>=20
+> That said, it seems to me that to do nothing should not be an option,
+> as that would imply tolerating silent corruption of file data.
 
-That seems like an acceptable thing to do in these scenarios, but we may
-need to consider making the verifier more granular if that turns out to
-cause a lot of re-write activity that isn't necessary.
+Agree, we should move forward. I'm not saying "do nothing," I'm
+just trying to understand what is improved and what is still left
+to do (maybe nothing).
 
-> It's not clear to me though that the NFSv3 protocol can deal with
-> the multi-client write scenario, since it is stateless. We are now
-> making it stateful in some sense by preserving error state on the
-> server across NFS requests, without having any sense of an open
-> file in the protocol itself.
-> 
 
-I think it's worthwhile to do the best we can here. WRITE/COMMIT are
-inherently stateful to some degree in that they involve a verifier.
-Trond's proposal is just utilizing that fact to ensure that we deliver
-writeback errors more widely. I like it!
+--
+Chuck Lever
 
-> Would an "approximation" without open state be good enough? I
-> assume you are doing this to more fully support the FlexFiles
-> layout type. Do you have any analysis or thought about this next
-> step?
-> 
-> I also echo Bruce's concern about whether the client implementations
-> are up to snuff. There could be long-standing bugs or their protocol
-> implementation could be missing parts. This is more curiosity than
-> an objection, but maybe noting which client implementations you've
-> tested with would be good.
-> 
-> 
-> > > --b.
-> > > 
-> > > > So in order to implement the above strategy, we first have to do
-> > > > the following: split up the file cache to act per net namespace,
-> > > > since the boot verifier is per net namespace. Then add a helper
-> > > > to update the boot verifier.
-> > > > 
-> > > > Trond Myklebust (3):
-> > > >  nfsd: nfsd_file cache entries should be per net namespace
-> > > >  nfsd: Support the server resetting the boot verifier
-> > > >  nfsd: Don't garbage collect files that might contain write errors
-> > > > 
-> > > > fs/nfsd/export.c    |  2 +-
-> > > > fs/nfsd/filecache.c | 76 +++++++++++++++++++++++++++++++++++++--
-> > > > ------
-> > > > fs/nfsd/filecache.h |  3 +-
-> > > > fs/nfsd/netns.h     |  4 +++
-> > > > fs/nfsd/nfs3xdr.c   | 13 +++++---
-> > > > fs/nfsd/nfs4proc.c  | 14 +++------
-> > > > fs/nfsd/nfsctl.c    |  1 +
-> > > > fs/nfsd/nfssvc.c    | 32 ++++++++++++++++++-
-> > > > 8 files changed, 115 insertions(+), 30 deletions(-)
-> > > > 
-> > > > -- 
-> > > > 2.21.0
-> > -- 
-> > Trond Myklebust
-> > Linux NFS client maintainer, Hammerspace
-> > trond.myklebust@hammerspace.com
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
 
--- 
-Jeff Layton <jlayton@kernel.org>
 
