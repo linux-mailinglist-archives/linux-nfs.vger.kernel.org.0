@@ -2,63 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6A789FB32
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBC19FB30
 	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 09:10:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfH1HKi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Aug 2019 03:10:38 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:41423 "EHLO
+        id S1726441AbfH1HKh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Aug 2019 03:10:37 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:60569 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726258AbfH1HKi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Aug 2019 03:10:38 -0400
+        by vger.kernel.org with ESMTP id S1726292AbfH1HKh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Aug 2019 03:10:37 -0400
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1473922138
+        by mailout.nyi.internal (Postfix) with ESMTP id 5E96621B0E
         for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2019 03:10:36 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute1.internal (MEProxy); Wed, 28 Aug 2019 03:10:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=5SpWWxKolQCsrogR0KPoOW+a/g
-        T7H5pZ2jP6BYVBXJs=; b=aGaN3lcCV8M7NWkLsFmBKLOTOYJYkBuW4nW4IJrb1r
-        9Y//cnUCpNsUSn8U2UU/lPRBQCtUrTRF56zBjeoa5DUWKXb3qnV0IN6BsyjUJshw
-        R5EqRogv13clvGe1IEpWEkaHEsB6Vy27aLKliAM+xfsyEHzGq5EeIOEXJHMkGCZo
-        hrn3KuT4KYKnRyS4RhfL7rcn8PBlg1ubkVEMf+lpbwXfrpPJvyZajdzuaO+Wz7OH
-        M9R317u7VSgUnW3kNv5UuSg6mfYlaMcpfNLhHX53AHQtJ5kPWofj1kBMCnO6sO1b
-        zKos7HbRzmNOSnypD/taYiJi5XXDBln1AIHTx6ZIkxhA==
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=1d54FNDRbTuME
+        hWLgxs6sn6X+kyM4FlE9PwhjBe0F6Y=; b=ebk9prBpjcpiH+QyA2UCWLoW+SzEK
+        C2En8sCiQvEj+p8LmpGOC3nfelMBJe0B2aLaqRk1Rw64XpdK4WlGKcmpkYuKnrzR
+        2gzoLA02tXHu+76oiWl15HFpZsaL9yy3WEBfaO8wnKaWKmamlKFZ5nNU/XTTrFbR
+        ncPLTfBALtJglLWze0i0VRKSuwTncTQUOjVtwoHzyjVRb3e4V1VWy/9z2TTzduxv
+        W1PHLC5s5RdIJDZJidQFaaxiRPMaKKFeOY7bA3OiOpzBjFLPAJglRzNx6hciyT3m
+        jftOGKzcp0m5FMI4/PaEGUlDkqu4M6QgF/xI0NhYfgUsIKwsepzLZDw1w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5SpWWxKolQCsrogR0
-        KPoOW+a/gT7H5pZ2jP6BYVBXJs=; b=P1BtiXT9BBvuHdG9O7bP5j+Oq+RUPdsCQ
-        uLlctS7ccxgjzenyd5cFTC/4p4iZqJA0NdZv9lSag11nLEb323g5laDOknkC20P8
-        pRvGqHzr2Vn50roBbRPgQZfoGD811yln1Hlb/k3aywgBGssaaPPZFdrLbGC/WNAV
-        U0WHtCEpB74cagBk9tx0K7lLrn/tmHGzPHRDz4srqB11VUDszQ5BaI37xqrqb2OU
-        MGU+pVi4si3/k90Sp+aE9d4uP4SVj7aUOgsHhzeSbQwW0hXpWa5Ex/l/OjgyFk08
-        7aHwYJSRNCjm/bvvoZjLY/DSWV/qsnakhvLn7nZN053nJAOAMcnaA==
-X-ME-Sender: <xms:6yhmXamk_W-2zrSGMzGG8aRbXXrT7obWC1I_2HgeYQJRAj_B65mRjQ>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=1d54FNDRbTuMEhWLgxs6sn6X+kyM4FlE9PwhjBe0F6Y=; b=xamANkOE
+        LLQUyKPUna34hvKUoL8kVT6fDBB0TIuIybQWz9sAlEfxxmpdT+60FGPkdX0MGJeb
+        toA9s/3uWBeTMlf0CL1FqBnO2z+N3eE6jBOSljYCoVTQqK1Xgu3zy/fcIjrh0orR
+        eaPPh+AOY/K7zVO10eAKHHai1UbsPJ29qtM2/fbOZFi3VCoalGLlkjnIM/kS1pB3
+        /F14D0gAwmZ4+6JpkM1t/ieo0hps9VULZci87zXT9K8BSpCM64t4+uTvAVv+Uw6f
+        m5bYU4Makmn/UWpaNulUGL0bI0WNwfmsxPtnsNVtxD2pFwHdglhiyo41paJp+Vg5
+        Dau2lL9hwNEvbQ==
+X-ME-Sender: <xms:7ChmXVqbflwPZAoOnLg-lc3gIGyD_q-fNXFlsM6-NOPDHJ_CcoTrmw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehledgudduiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpefrrghtrhhitghkucfuthgvihhnhhgrrhguthcuoehpshesphhk
-    shdrihhmqeenucfkphepjeejrdduuddrudehhedrvdehheenucfrrghrrghmpehmrghilh
-    hfrhhomhepphhssehpkhhsrdhimhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:6yhmXZNow_giUUpWrmD4JwLi6r4uLf8krGmGH-ZzXYU0SIX9N5hv7A>
-    <xmx:6yhmXeOceVutTvIc0Bsqaw2KF7DBcggfALx18iB-YsiZEvPClCslLQ>
-    <xmx:6yhmXaiaQ5z-FEdg3loTQ2vw_qjg2AdoFb1bxaIPC9lurrD9NQ7V6Q>
-    <xmx:7ChmXdtcpQz6Ty4axThenFC5LPMwhIkFbdSsIQP6-pDIpm32n9-gbw>
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpefrrghtrhhitghkucfuthgvihhnhhgrrhguthcuoehpshes
+    phhkshdrihhmqeenucfkphepjeejrdduuddrudehhedrvdehheenucfrrghrrghmpehmrg
+    hilhhfrhhomhepphhssehpkhhsrdhimhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:7ChmXVXhzg1-dRfz1v23_CkrHaRGYCRM_bAC4MV-AVsCzhw7aeMf_w>
+    <xmx:7ChmXaQ2c57qgfvuoQ4NTJWFBrH0jFcp6Gz6kf9_qo6qubAUgEqBnA>
+    <xmx:7ChmXZR-xsyHjccmByFKrrQqaR3Gqqo4VhT0v5aN8MeRPjxEmGV9gg>
+    <xmx:7ChmXfwWYqyviE7dEo8PJL7_1rMOa1qd1yCNuqL1UxCUH1M0DA84lA>
 Received: from NSJAIL (x4d0b9bff.dyn.telefonica.de [77.11.155.255])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 50107D6005D
+        by mail.messagingengine.com (Postfix) with ESMTPA id CCF7ED6005F
         for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2019 03:10:35 -0400 (EDT)
 Received: from localhost (10.192.0.11 [10.192.0.11])
-        by NSJAIL (OpenSMTPD) with ESMTPSA id 8cc7902e (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        by NSJAIL (OpenSMTPD) with ESMTPSA id e21ee48a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
         Wed, 28 Aug 2019 07:10:33 +0000 (UTC)
 From:   Patrick Steinhardt <ps@pks.im>
 To:     linux-nfs@vger.kernel.org
 Cc:     Patrick Steinhardt <ps@pks.im>
-Subject: [PATCH 0/6] Fixes for various compiler warnings
-Date:   Wed, 28 Aug 2019 09:10:11 +0200
-Message-Id: <cover.1566976047.git.ps@pks.im>
+Subject: [PATCH 1/6] Annotate unused fields with UNUSED
+Date:   Wed, 28 Aug 2019 09:10:12 +0200
+Message-Id: <724274b0bf9340bc11f6741759ce1e43b82de7be.1566976047.git.ps@pks.im>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1566976047.git.ps@pks.im>
+References: <cover.1566976047.git.ps@pks.im>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -66,38 +69,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+There are some parameters that may be potentially unused. Add the UNUSED
+macro to avoid any warnings.
 
-here's some assorted fixes for compiler warnings I'm seeing on my
-platform. Most warnings are probably due to using musl libc, but
-the fixes should be the correct thing to do regardless. With this
-patchset, I can now compile nfs-utils with -Werror just fine.
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
+---
+ support/misc/xstat.c     | 3 ++-
+ support/nfs/rpc_socket.c | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Regards
-Patrick
-
-Patrick Steinhardt (6):
-  Annotate unused fields with UNUSED
-  Use <fcntl.h> header instead of <sys/fcntl.h>
-  Use <poll.h> header instead of <sys/poll.h>
-  configure.ac: Add <sys/socket.h> header when checking
-    sizeof(socklen_t)
-  nfsd_path: Include missing header for `struct stat`
-  mountd: Use unsigned for filesystem type magic constants
-
- configure.ac                   | 5 ++++-
- support/export/xtab.c          | 2 +-
- support/include/nfsd_path.h    | 2 ++
- support/misc/xstat.c           | 3 ++-
- support/nfs/rmtab.c            | 2 +-
- support/nfs/rpc_socket.c       | 3 ++-
- support/nfs/svc_socket.c       | 2 +-
- support/nfs/xio.c              | 2 +-
- utils/gssd/svcgssd_main_loop.c | 2 +-
- utils/mountd/cache.c           | 4 ++--
- utils/statd/sm-notify.c        | 2 +-
- 11 files changed, 18 insertions(+), 11 deletions(-)
-
+diff --git a/support/misc/xstat.c b/support/misc/xstat.c
+index 4c997eea..661e29e4 100644
+--- a/support/misc/xstat.c
++++ b/support/misc/xstat.c
+@@ -9,6 +9,7 @@
+ #include <sys/sysmacros.h>
+ #include <unistd.h>
+ 
++#include "nfslib.h"
+ #include "xstat.h"
+ 
+ #ifdef HAVE_FSTATAT
+@@ -66,7 +67,7 @@ statx_stat_nosync(int fd, const char *pathname, struct stat *statbuf, int flags)
+ #else
+ 
+ static int
+-statx_stat_nosync(int fd, const char *pathname, struct stat *statbuf, int flags)
++statx_stat_nosync(int UNUSED(fd), const char *UNUSED(pathname), struct stat *UNUSED(statbuf), int UNUSED(flags))
+ {
+ 	errno = ENOSYS;
+ 	return -1;
+diff --git a/support/nfs/rpc_socket.c b/support/nfs/rpc_socket.c
+index bdf6d2f6..03048feb 100644
+--- a/support/nfs/rpc_socket.c
++++ b/support/nfs/rpc_socket.c
+@@ -41,6 +41,7 @@
+ #include <rpc/pmap_prot.h>
+ 
+ #include "sockaddr.h"
++#include "nfslib.h"
+ #include "nfsrpc.h"
+ 
+ #ifdef HAVE_LIBTIRPC
+@@ -519,7 +520,7 @@ CLIENT *nfs_get_priv_rpcclient(const struct sockaddr *sap,
+  * Returns program number of first name to be successfully looked
+  * up, or the default program number if all lookups fail.
+  */
+-rpcprog_t nfs_getrpcbyname(const rpcprog_t program, const char *table[])
++rpcprog_t nfs_getrpcbyname(const rpcprog_t program, const char *UNUSED(table[]))
+ {
+ #ifdef HAVE_GETRPCBYNAME
+ 	struct rpcent *entry;
 -- 
 2.23.0
 
