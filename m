@@ -2,159 +2,240 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB85EA0A79
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 21:29:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62264A0B54
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 22:25:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfH1T3c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Aug 2019 15:29:32 -0400
-Received: from fieldses.org ([173.255.197.46]:49418 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfH1T3c (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:29:32 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6154D1E3B; Wed, 28 Aug 2019 15:29:31 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 15:29:31 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     "de Vandiere, Louis" <louis.devandiere@atos.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1726687AbfH1UZW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Aug 2019 16:25:22 -0400
+Received: from mail-eopbgr750104.outbound.protection.outlook.com ([40.107.75.104]:34166
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726657AbfH1UZW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:25:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JXluWh7q5/rRqIiZJlJ6b7gw7a5QGbuaKx+PsUfSyKHhPTK7K9pASs2qVrVmAEjyoo/r/p/ZLYJ2OD40tLOVZhWnnxcf9s/xidIBm7EJJNH1a5cSCmCjeUJ7IJ9TZfetnsaQIns4ZmNi0epSkjaxE7f95kVgc8QckGS6JdMlBf9nSXn6L0MVldci6MQmwaYEvVXGEK8h7zcn4LvbZAfUM1dzZoYRAYd8eC0L65/zMsDKVM7iTbbFnwNASLWLrkxkQpIfPv4eRsv4nEbcFn3WzvSjd9GEJt2uWuaOBVlqoCXSjvoBkhV37IPNqcFFwEUM7lbcvai5i0DtuuO2yNNXMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kBCDKc/XRkG9TIWRip2ZdV6dY6e6T9QhvfObcv7M26k=;
+ b=XsxNAnINXhgyCvXT+TQd6NEqR4+MJHMz2cgPbhGKOMqlkvfrT2iAlnyU+ukLolhI4Ue8y0MpglOmHHhHQySFuaH7SZ//vtJC70Vq8rAhMN8/PvZa3ws73wFvMxVq+bzkn45yDrGPlIhC/A+byKv5+HqC51JKMph3KBMN4uadNshHGNjPDETGp16gxYpCp+tQ0U5XWpBhn/RwgP7a9/QzvJXuV5dNYZxFxi901Fs/702lRX/uiva47EWw4wOBEt2Z7s8sav7Wz60lEwrQBAXeru+/Xuh9XU4CR/DsA4+UECus4oQaw5MvJAUGu7rHlJ77VtAOSK4W2W7YhDI/fyidhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kBCDKc/XRkG9TIWRip2ZdV6dY6e6T9QhvfObcv7M26k=;
+ b=QXGYVM2Eg/+hP8YfJt4FbXF/5Dz5kWn7GJ8LCzG95c5SyhcAJ9zSZqXfPGMKpMhPvAlVYPpnojwqyyoayA7RcFXhASNAvtVKitiU5JeRbe6MT+KDjCFzrfYnuYwYq67sIdgQK6UiZYiG5RNYEGCXsGR0u5UswGrMBZ234Y+7eqk=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1001.namprd13.prod.outlook.com (10.168.237.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.15; Wed, 28 Aug 2019 20:25:16 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::5d60:e645:84a2:be75]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::5d60:e645:84a2:be75%7]) with mapi id 15.20.2220.013; Wed, 28 Aug 2019
+ 20:25:16 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "louis.devandiere@atos.net" <louis.devandiere@atos.net>
 Subject: Re: Maximum Number of ACL on NFSv4
-Message-ID: <20190828192931.GA30217@fieldses.org>
+Thread-Topic: Maximum Number of ACL on NFSv4
+Thread-Index: AdVZ/zHAXlVbOFcuRg6ALmyIfYKMtQAAvtpwAISMAoAAAgBdYAAEV7cAAADj6cAABNvhgAAIJ0pwAFl2joAAAjaKgAAAtv2AAAHyS4A=
+Date:   Wed, 28 Aug 2019 20:25:16 +0000
+Message-ID: <848b2abbedb5147e7a7e527111018fb04ec9ed7d.camel@hammerspace.com>
 References: <AM5PR0202MB25641230B578F7D080A67BA4E7A40@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <AM5PR0202MB2564E6F05627D0EF49D043DFE7A40@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <85fc5336-416f-2668-c9e2-8474e6e40c33@math.utexas.edu>
- <AM5PR0202MB25644F1290D20A1996C5EED4E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <20190826164600.GD28580@ndevos-x270>
- <AM5PR0202MB2564874D2AD5845AE3CD13DAE7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <CAN-5tyHjQfrFU_iGXKSDSLnR6ywXizAqtU=5et1ESgKLCgHkAA@mail.gmail.com>
- <AM5PR0202MB2564D07CBF6B765EDABAAAB1E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
- <20190828180541.GC29148@fieldses.org>
- <CAN-5tyEth0YYiuS0oe8Q_LN-7Z8NXiF3hJPj1sL5MYCXjF-jnQ@mail.gmail.com>
+         <AM5PR0202MB2564E6F05627D0EF49D043DFE7A40@AM5PR0202MB2564.eurprd02.prod.outlook.com>
+         <85fc5336-416f-2668-c9e2-8474e6e40c33@math.utexas.edu>
+         <AM5PR0202MB25644F1290D20A1996C5EED4E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
+         <20190826164600.GD28580@ndevos-x270>
+         <AM5PR0202MB2564874D2AD5845AE3CD13DAE7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
+         <CAN-5tyHjQfrFU_iGXKSDSLnR6ywXizAqtU=5et1ESgKLCgHkAA@mail.gmail.com>
+         <AM5PR0202MB2564D07CBF6B765EDABAAAB1E7A10@AM5PR0202MB2564.eurprd02.prod.outlook.com>
+         <20190828180541.GC29148@fieldses.org>
+         <CAN-5tyEth0YYiuS0oe8Q_LN-7Z8NXiF3hJPj1sL5MYCXjF-jnQ@mail.gmail.com>
+         <20190828192931.GA30217@fieldses.org>
+In-Reply-To: <20190828192931.GA30217@fieldses.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 147ebeb2-096e-4d32-63cd-08d72bf5d6b5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR13MB1001;
+x-ms-traffictypediagnostic: DM5PR13MB1001:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <DM5PR13MB1001CCECBDE3729DFFAF73B5B8A30@DM5PR13MB1001.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(346002)(136003)(396003)(366004)(376002)(199004)(40764003)(189003)(42274003)(13464003)(54094003)(5660300002)(118296001)(2501003)(2906002)(102836004)(186003)(229853002)(6506007)(6116002)(66574012)(3846002)(2171002)(53546011)(71190400001)(256004)(26005)(71200400001)(6246003)(6306002)(25786009)(76176011)(6512007)(4326008)(14444005)(66066001)(476003)(53936002)(91956017)(486006)(66446008)(6486002)(7736002)(66946007)(66476007)(66556008)(64756008)(316002)(110136005)(99286004)(2616005)(76116006)(305945005)(8676002)(446003)(54906003)(86362001)(14454004)(966005)(8936002)(81166006)(478600001)(6436002)(45080400002)(11346002)(36756003)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1001;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZszrHg1LTR5mK3KRpmp9GoexB4yCMANjH7GduFn3i3CeiN7wL0ZMiHi5AKnDKfK5kFn3caQYbj6SIbDC/d/iaJbU6dgcSprS4Nda50BJ68DbkKu3d3dO3TyXwEdrGGyjJ1e4eUHw2Aqe0K8Yra9gfOwOWRMgNWVr0euKqieq/7tV9zvIrnPK7+Em97iLzGhleluvGq+B3/jFapnCqAb4IJFMczvdRzKQo14w9+OE4JN3AALvHzULe3l4n5PW9f2h4LiewJM/E3sB9/e1TaZHYDdS9CdM62gHOv74MrxpqEpEuqaAZv9iBQKuY67ngsFKgX+kYAXVFGYMe0pSy/zi/lxq5tYEZq51alyl9yYSjautrBGIwxF2pAKNpBN+dwTKfH++0z84BvAm50NODNyQqAX0jkYxZoaIEETtHNdoweQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B79D340C1CB13943AF28629FB15EC379@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAN-5tyEth0YYiuS0oe8Q_LN-7Z8NXiF3hJPj1sL5MYCXjF-jnQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 147ebeb2-096e-4d32-63cd-08d72bf5d6b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 20:25:16.3369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HuG/v/dqh+RmkixS9eDWgHK1CKYIk7tSMlb1ioqc9OSr0FntzMC3ZHvpoQATGYYLvkyuEg2lQdGfIQ+tQM3N9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1001
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 03:09:03PM -0400, Olga Kornievskaia wrote:
-> On Wed, Aug 28, 2019 at 2:06 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Mon, Aug 26, 2019 at 11:28:21PM +0000, de Vandiere, Louis wrote:
-> > > Thank you Olga! Somehow, I failed to look into this file although I looked in fs/nfs/ without success and I understand why now.
-> > >
-> > > I'd like to see it increased and be scalable like XFS is, but I understand it might impact multiple libraries. Should I open a bug/feature request somewhere?
-> >
-> > I wonder if it'd be OK to remove the limit completely (and then leave
-> > it to the filesystem to reject if if it wants).
-> >
-> > It does mean we're passing an arbitrary client-supplied value to
-> > kmalloc.  Is it OK to do that and just leave it to the allocator to
-> > reject excessive requests, or do we risk pushing it into making heroic
-> > efforts to satisfy a possibly malicious or broken client?
-> >
-> > I wonder if there's also a risk in passing down posix ACLs larger than
-> > could have been created with the setxattr system call.
-> >
-> > Assuming it's still safest to have a limit....
-> >
-> > XATTR_LIST_MAX is a global limit on the size of xattrs.  We could try to
-> > estimate how big the converted posix ACL will be and work out a maximum
-> > based on that.
-> 
-> I agree there should be a limit and using XATTR_LIST_MAX sounds
-> reasonable to me.
-
-OK.  And, whoops, I meant to say XATTR_SIZE_MAX.  (Both are currently
-64K, though.)
-
---b.
-
-> 
-> >
-> > --b.
-> >
-> > >
-> > > Best,
-> > > Louis de Vandière
-> > >
-> > > -----Original Message-----
-> > > From: Olga Kornievskaia <aglo@umich.edu>
-> > > Sent: Monday, August 26, 2019 2:31 PM
-> > > To: de Vandiere, Louis <louis.devandiere@atos.net>
-> > > Cc: linux-nfs@vger.kernel.org
-> > > Subject: Re: Maximum Number of ACL on NFSv4
-> > >
-> > > From fs/nfsd/acl.h
-> > > /*
-> > >  * Maximum ACL we'll accept from a client; chosen (somewhat
-> > >  * arbitrarily) so that kmalloc'ing the ACL shouldn't require a
-> > >  * high-order allocation.  This allows 204 ACEs on x86_64:
-> > >  */
-> > > #define NFS4_ACL_MAX ((PAGE_SIZE - sizeof(struct nfs4_acl)) \
-> > >                         / sizeof(struct nfs4_ace))
-> > >
-> > > I don't know how Bruce feels about increasing that limit. Perhaps he'd be opened to a patch that increases that.
-> > >
-> > > On Mon, Aug 26, 2019 at 2:30 PM de Vandiere, Louis <louis.devandiere@atos.net> wrote:
-> > > >
-> > > > Thanks Niels, I tried your suggestion. According to the documentation (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flinux.die.net%2Fman%2F8%2Fmkfs.xfs&amp;data=02%7C01%7Clouis.devandiere%40atos.net%7Ce185f99cb3ad476fd39308d72a5bf6d5%7C33440fc6b7c7412cbb730e70b0198d5a%7C0%7C0%7C637024446785324973&amp;sdata=HZbnVSzTKKCXpEv5JLgZKeEgQx5BPKeEs4SYZqRhhbk%3D&amp;reserved=0), the maximum size for the inode is 2048 byte. So I set it to this value, and faced the exact same limitation. On the other hand, when I used setfacl -m on the XFS mounted disk, I did not face any limitation and I was able to set thousands of ACLs on a single file.
-> > > >
-> > > > When I do a strace, I see two different types of ACL used when the system calls setxattr: system.posix_acl_default and system.nfsv4_acl. I tried to look for hardcoded limits associated with system.nfsv4_acl but I don't have much experience with C and linux kernel.
-> > > >
-> > > > Thank you for your help.
-> > > > Best,
-> > > > Louis de Vandière
-> > > >
-> > > > -----Original Message-----
-> > > > From: Niels de Vos <ndevos@redhat.com>
-> > > > Sent: Monday, August 26, 2019 11:46 AM
-> > > > To: de Vandiere, Louis <louis.devandiere@atos.net>
-> > > > Cc: linux-nfs@vger.kernel.org
-> > > > Subject: Re: Maximum Number of ACL on NFSv4
-> > > >
-> > > > On Mon, Aug 26, 2019 at 02:53:05PM +0000, de Vandiere, Louis wrote:
-> > > > > Yes, I assume it's not very frequent to have hundreds of NFSv4 ACLs. For compliance and organizational issue, we cannot use groups efficiently to manage access to the shares, so it's user-based and case by case.
-> > > > >
-> > > > > My real goal is to be able to replicate some files to a new NFSv4 server while preserving the ACLs. By using "cp -R --preserve=all acl-folder/", I'm able to preserve the ACLs when their number does not exceed 200, above it, I see the "File too large" error while rsync does not work at all (even in version 3.1.3). That's why I'm digging into this and checking what possibly could go wrong.
-> > > >
-> > > > You might be hitting a limit in the filesystem on the NFS server. The
-> > > > ACLs are stored in extended attributes. Depending on the filesystem,
-> > > > you may be able to configure larger inode sizes (or other storage for
-> > > > xattrs). With XFS this can be done with 'mkfs -t xfs -i size=.. ...',
-> > > >
-> > > > HTH,
-> > > > Niels
-> > > >
-> > > >
-> > > > >
-> > > > > Thank you.
-> > > > > Best,
-> > > > > Louis de Vandière
-> > > > >
-> > > > >
-> > > > > -----Original Message-----
-> > > > > From: Goetz, Patrick G <pgoetz@math.utexas.edu>
-> > > > > Sent: Monday, August 26, 2019 8:44 AM
-> > > > > To: de Vandiere, Louis <louis.devandiere@atos.net>;
-> > > > > linux-nfs@vger.kernel.org
-> > > > > Subject: Re: Maximum Number of ACL on NFSv4
-> > > > >
-> > > > > I'm dying to know what the use case is for this, and why you can't just do this with group permissions (unless you're talking about hundreds of group ACLs).
-> > > > >
-> > > > > On 8/23/19 5:31 PM, de Vandiere, Louis wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > I'm currently trying to apply hundreds of ACLs on file hosted on a NFSv4 server (nfs-utils-1.3.0-0.61.el7.x86_64 and nfs4-acl-tools.0.3.3-19.el7.x86_64). It appears that the limit I can apply is 207. After the limit is reached, the command "nfs4_setfacl -a" returned the error "Failed setxattr operation: File too large". The same problem happens if I use an ACL with more than 200 line in it. I did a little debugging session but I was not able to come up with an explanation on why I'm facing such an issue.
-> > > > > >
-> > > > > > On the other hand, I can apply hundreds of ACLs on XFS without issue. Do you know if it could be a bug with the nfs4-acl-tools package?
-> > > > > > Thank you for your support.
-> > > > > > Best,
-> > > > > > Louis de Vandière
-> > > > > >>> This message is from an external sender. Learn more about why this <<
-> > > > > >>> matters at https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flinks.utexas.edu%2Frtyclf&amp;data=02%7C01%7Clouis.devandiere%40atos.net%7Ce185f99cb3ad476fd39308d72a5bf6d5%7C33440fc6b7c7412cbb730e70b0198d5a%7C0%7C0%7C637024446785324973&amp;sdata=r345rqWN4GKT0mBmQmMTnaC%2FFEyUTidjBlGeAMRdEpA%3D&amp;reserved=0.                        <<
-> > > > > >
+T24gV2VkLCAyMDE5LTA4LTI4IGF0IDE1OjI5IC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIFdlZCwgQXVnIDI4LCAyMDE5IGF0IDAzOjA5OjAzUE0gLTA0MDAsIE9sZ2EgS29ybmll
+dnNrYWlhIHdyb3RlOg0KPiA+IE9uIFdlZCwgQXVnIDI4LCAyMDE5IGF0IDI6MDYgUE0gSi4gQnJ1
+Y2UgRmllbGRzIDwNCj4gPiBiZmllbGRzQGZpZWxkc2VzLm9yZz4gd3JvdGU6DQo+ID4gPiBPbiBN
+b24sIEF1ZyAyNiwgMjAxOSBhdCAxMToyODoyMVBNICswMDAwLCBkZSBWYW5kaWVyZSwgTG91aXMN
+Cj4gPiA+IHdyb3RlOg0KPiA+ID4gPiBUaGFuayB5b3UgT2xnYSEgU29tZWhvdywgSSBmYWlsZWQg
+dG8gbG9vayBpbnRvIHRoaXMgZmlsZQ0KPiA+ID4gPiBhbHRob3VnaCBJIGxvb2tlZCBpbiBmcy9u
+ZnMvIHdpdGhvdXQgc3VjY2VzcyBhbmQgSSB1bmRlcnN0YW5kDQo+ID4gPiA+IHdoeSBub3cuDQo+
+ID4gPiA+IA0KPiA+ID4gPiBJJ2QgbGlrZSB0byBzZWUgaXQgaW5jcmVhc2VkIGFuZCBiZSBzY2Fs
+YWJsZSBsaWtlIFhGUyBpcywgYnV0IEkNCj4gPiA+ID4gdW5kZXJzdGFuZCBpdCBtaWdodCBpbXBh
+Y3QgbXVsdGlwbGUgbGlicmFyaWVzLiBTaG91bGQgSSBvcGVuIGENCj4gPiA+ID4gYnVnL2ZlYXR1
+cmUgcmVxdWVzdCBzb21ld2hlcmU/DQo+ID4gPiANCj4gPiA+IEkgd29uZGVyIGlmIGl0J2QgYmUg
+T0sgdG8gcmVtb3ZlIHRoZSBsaW1pdCBjb21wbGV0ZWx5IChhbmQgdGhlbg0KPiA+ID4gbGVhdmUN
+Cj4gPiA+IGl0IHRvIHRoZSBmaWxlc3lzdGVtIHRvIHJlamVjdCBpZiBpZiBpdCB3YW50cykuDQo+
+ID4gPiANCj4gPiA+IEl0IGRvZXMgbWVhbiB3ZSdyZSBwYXNzaW5nIGFuIGFyYml0cmFyeSBjbGll
+bnQtc3VwcGxpZWQgdmFsdWUgdG8NCj4gPiA+IGttYWxsb2MuICBJcyBpdCBPSyB0byBkbyB0aGF0
+IGFuZCBqdXN0IGxlYXZlIGl0IHRvIHRoZSBhbGxvY2F0b3INCj4gPiA+IHRvDQo+ID4gPiByZWpl
+Y3QgZXhjZXNzaXZlIHJlcXVlc3RzLCBvciBkbyB3ZSByaXNrIHB1c2hpbmcgaXQgaW50byBtYWtp
+bmcNCj4gPiA+IGhlcm9pYw0KPiA+ID4gZWZmb3J0cyB0byBzYXRpc2Z5IGEgcG9zc2libHkgbWFs
+aWNpb3VzIG9yIGJyb2tlbiBjbGllbnQ/DQo+ID4gPiANCj4gPiA+IEkgd29uZGVyIGlmIHRoZXJl
+J3MgYWxzbyBhIHJpc2sgaW4gcGFzc2luZyBkb3duIHBvc2l4IEFDTHMgbGFyZ2VyDQo+ID4gPiB0
+aGFuDQo+ID4gPiBjb3VsZCBoYXZlIGJlZW4gY3JlYXRlZCB3aXRoIHRoZSBzZXR4YXR0ciBzeXN0
+ZW0gY2FsbC4NCj4gPiA+IA0KPiA+ID4gQXNzdW1pbmcgaXQncyBzdGlsbCBzYWZlc3QgdG8gaGF2
+ZSBhIGxpbWl0Li4uLg0KPiA+ID4gDQo+ID4gPiBYQVRUUl9MSVNUX01BWCBpcyBhIGdsb2JhbCBs
+aW1pdCBvbiB0aGUgc2l6ZSBvZiB4YXR0cnMuICBXZSBjb3VsZA0KPiA+ID4gdHJ5IHRvDQo+ID4g
+PiBlc3RpbWF0ZSBob3cgYmlnIHRoZSBjb252ZXJ0ZWQgcG9zaXggQUNMIHdpbGwgYmUgYW5kIHdv
+cmsgb3V0IGENCj4gPiA+IG1heGltdW0NCj4gPiA+IGJhc2VkIG9uIHRoYXQuDQo+ID4gDQo+ID4g
+SSBhZ3JlZSB0aGVyZSBzaG91bGQgYmUgYSBsaW1pdCBhbmQgdXNpbmcgWEFUVFJfTElTVF9NQVgg
+c291bmRzDQo+ID4gcmVhc29uYWJsZSB0byBtZS4NCj4gDQo+IE9LLiAgQW5kLCB3aG9vcHMsIEkg
+bWVhbnQgdG8gc2F5IFhBVFRSX1NJWkVfTUFYLiAgKEJvdGggYXJlIGN1cnJlbnRseQ0KPiA2NEss
+IHRob3VnaC4pDQo+IA0KDQpVbW0uLi4gRG9uJ3QgZm9yZ2V0IHRoYXQgTkZTdjQgQUNMIGFjZXMg
+YXJlIHR5cGljYWxseSBtdWNoIGxhcmdlciB0aGFuDQpQT1NJWCBBQ0wgYWNlcyBiZWNhdXNlIHRo
+ZSB1c2VyL2dyb3VwIG5hbWVzIGFyZSBlbmNvZGVkIGFzIHN0cmluZ3MsIG5vdA0KYmluYXJ5IHVp
+ZHMgYW5kIGdpZHMuDQoNCklPVzogVGhlIHNpemUgb2YgdGhlIFJQQyBtZXNzYWdlIGlzIGxpa2Vs
+eSB0byBiZSBhIGxvdCBsYXJnZXIgdGhhbiB0aGUNCnJlc3VsdGluZyBQT1NJWCBBQ0wuLi4NCg0K
+PiAtLWIuDQo+IA0KPiA+ID4gLS1iLg0KPiA+ID4gDQo+ID4gPiA+IEJlc3QsDQo+ID4gPiA+IExv
+dWlzIGRlIFZhbmRpw6hyZQ0KPiA+ID4gPiANCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPiA+ID4gRnJvbTogT2xnYSBLb3JuaWV2c2thaWEgPGFnbG9AdW1pY2guZWR1Pg0K
+PiA+ID4gPiBTZW50OiBNb25kYXksIEF1Z3VzdCAyNiwgMjAxOSAyOjMxIFBNDQo+ID4gPiA+IFRv
+OiBkZSBWYW5kaWVyZSwgTG91aXMgPGxvdWlzLmRldmFuZGllcmVAYXRvcy5uZXQ+DQo+ID4gPiA+
+IENjOiBsaW51eC1uZnNAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBNYXhp
+bXVtIE51bWJlciBvZiBBQ0wgb24gTkZTdjQNCj4gPiA+ID4gDQo+ID4gPiA+IEZyb20gZnMvbmZz
+ZC9hY2wuaA0KPiA+ID4gPiAvKg0KPiA+ID4gPiAgKiBNYXhpbXVtIEFDTCB3ZSdsbCBhY2NlcHQg
+ZnJvbSBhIGNsaWVudDsgY2hvc2VuIChzb21ld2hhdA0KPiA+ID4gPiAgKiBhcmJpdHJhcmlseSkg
+c28gdGhhdCBrbWFsbG9jJ2luZyB0aGUgQUNMIHNob3VsZG4ndCByZXF1aXJlIGENCj4gPiA+ID4g
+ICogaGlnaC1vcmRlciBhbGxvY2F0aW9uLiAgVGhpcyBhbGxvd3MgMjA0IEFDRXMgb24geDg2XzY0
+Og0KPiA+ID4gPiAgKi8NCj4gPiA+ID4gI2RlZmluZSBORlM0X0FDTF9NQVggKChQQUdFX1NJWkUg
+LSBzaXplb2Yoc3RydWN0IG5mczRfYWNsKSkgXA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAvIHNpemVvZihzdHJ1Y3QgbmZzNF9hY2UpKQ0KPiA+ID4gPiANCj4gPiA+ID4gSSBkb24n
+dCBrbm93IGhvdyBCcnVjZSBmZWVscyBhYm91dCBpbmNyZWFzaW5nIHRoYXQgbGltaXQuDQo+ID4g
+PiA+IFBlcmhhcHMgaGUnZCBiZSBvcGVuZWQgdG8gYSBwYXRjaCB0aGF0IGluY3JlYXNlcyB0aGF0
+Lg0KPiA+ID4gPiANCj4gPiA+ID4gT24gTW9uLCBBdWcgMjYsIDIwMTkgYXQgMjozMCBQTSBkZSBW
+YW5kaWVyZSwgTG91aXMgPA0KPiA+ID4gPiBsb3Vpcy5kZXZhbmRpZXJlQGF0b3MubmV0PiB3cm90
+ZToNCj4gPiA+ID4gPiBUaGFua3MgTmllbHMsIEkgdHJpZWQgeW91ciBzdWdnZXN0aW9uLiBBY2Nv
+cmRpbmcgdG8gdGhlDQo+ID4gPiA+ID4gZG9jdW1lbnRhdGlvbiAoDQo+ID4gPiA+ID4gaHR0cHM6
+Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJG
+JTJGbGludXguZGllLm5ldCUyRm1hbiUyRjglMkZta2ZzLnhmcyZhbXA7ZGF0YT0wMiU3QzAxJTdD
+bG91aXMuZGV2YW5kaWVyZSU0MGF0b3MubmV0JTdDZTE4NWY5OWNiM2FkNDc2ZmQzOTMwOGQ3MmE1
+YmY2ZDUlN0MzMzQ0MGZjNmI3Yzc0MTJjYmI3MzBlNzBiMDE5OGQ1YSU3QzAlN0MwJTdDNjM3MDI0
+NDQ2Nzg1MzI0OTczJmFtcDtzZGF0YT1IWmJuVlN6VEtLQ1hwRXY1SkxnWktlRWdReDVCUEtlRXM0
+U1lacVJoaGJrJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4gPiA+ID4gKSwgdGhlIG1heGltdW0gc2l6
+ZSBmb3IgdGhlIGlub2RlIGlzIDIwNDggYnl0ZS4gU28gSSBzZXQgaXQNCj4gPiA+ID4gPiB0byB0
+aGlzIHZhbHVlLCBhbmQgZmFjZWQgdGhlIGV4YWN0IHNhbWUgbGltaXRhdGlvbi4gT24gdGhlDQo+
+ID4gPiA+ID4gb3RoZXIgaGFuZCwgd2hlbiBJIHVzZWQgc2V0ZmFjbCAtbSBvbiB0aGUgWEZTIG1v
+dW50ZWQgZGlzaywgSQ0KPiA+ID4gPiA+IGRpZCBub3QgZmFjZSBhbnkgbGltaXRhdGlvbiBhbmQg
+SSB3YXMgYWJsZSB0byBzZXQgdGhvdXNhbmRzDQo+ID4gPiA+ID4gb2YgQUNMcyBvbiBhIHNpbmds
+ZSBmaWxlLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IFdoZW4gSSBkbyBhIHN0cmFjZSwgSSBzZWUg
+dHdvIGRpZmZlcmVudCB0eXBlcyBvZiBBQ0wgdXNlZA0KPiA+ID4gPiA+IHdoZW4gdGhlIHN5c3Rl
+bSBjYWxscyBzZXR4YXR0cjogc3lzdGVtLnBvc2l4X2FjbF9kZWZhdWx0IGFuZA0KPiA+ID4gPiA+
+IHN5c3RlbS5uZnN2NF9hY2wuIEkgdHJpZWQgdG8gbG9vayBmb3IgaGFyZGNvZGVkIGxpbWl0cw0K
+PiA+ID4gPiA+IGFzc29jaWF0ZWQgd2l0aCBzeXN0ZW0ubmZzdjRfYWNsIGJ1dCBJIGRvbid0IGhh
+dmUgbXVjaA0KPiA+ID4gPiA+IGV4cGVyaWVuY2Ugd2l0aCBDIGFuZCBsaW51eCBrZXJuZWwuDQo+
+ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhhbmsgeW91IGZvciB5b3VyIGhlbHAuDQo+ID4gPiA+ID4g
+QmVzdCwNCj4gPiA+ID4gPiBMb3VpcyBkZSBWYW5kacOocmUNCj4gPiA+ID4gPiANCj4gPiA+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IE5pZWxzIGRlIFZv
+cyA8bmRldm9zQHJlZGhhdC5jb20+DQo+ID4gPiA+ID4gU2VudDogTW9uZGF5LCBBdWd1c3QgMjYs
+IDIwMTkgMTE6NDYgQU0NCj4gPiA+ID4gPiBUbzogZGUgVmFuZGllcmUsIExvdWlzIDxsb3Vpcy5k
+ZXZhbmRpZXJlQGF0b3MubmV0Pg0KPiA+ID4gPiA+IENjOiBsaW51eC1uZnNAdmdlci5rZXJuZWwu
+b3JnDQo+ID4gPiA+ID4gU3ViamVjdDogUmU6IE1heGltdW0gTnVtYmVyIG9mIEFDTCBvbiBORlN2
+NA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IE9uIE1vbiwgQXVnIDI2LCAyMDE5IGF0IDAyOjUzOjA1
+UE0gKzAwMDAsIGRlIFZhbmRpZXJlLCBMb3Vpcw0KPiA+ID4gPiA+IHdyb3RlOg0KPiA+ID4gPiA+
+ID4gWWVzLCBJIGFzc3VtZSBpdCdzIG5vdCB2ZXJ5IGZyZXF1ZW50IHRvIGhhdmUgaHVuZHJlZHMg
+b2YNCj4gPiA+ID4gPiA+IE5GU3Y0IEFDTHMuIEZvciBjb21wbGlhbmNlIGFuZCBvcmdhbml6YXRp
+b25hbCBpc3N1ZSwgd2UNCj4gPiA+ID4gPiA+IGNhbm5vdCB1c2UgZ3JvdXBzIGVmZmljaWVudGx5
+IHRvIG1hbmFnZSBhY2Nlc3MgdG8gdGhlDQo+ID4gPiA+ID4gPiBzaGFyZXMsIHNvIGl0J3MgdXNl
+ci1iYXNlZCBhbmQgY2FzZSBieSBjYXNlLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBNeSBy
+ZWFsIGdvYWwgaXMgdG8gYmUgYWJsZSB0byByZXBsaWNhdGUgc29tZSBmaWxlcyB0byBhIG5ldw0K
+PiA+ID4gPiA+ID4gTkZTdjQgc2VydmVyIHdoaWxlIHByZXNlcnZpbmcgdGhlIEFDTHMuIEJ5IHVz
+aW5nICJjcCAtUiAtLQ0KPiA+ID4gPiA+ID4gcHJlc2VydmU9YWxsIGFjbC1mb2xkZXIvIiwgSSdt
+IGFibGUgdG8gcHJlc2VydmUgdGhlIEFDTHMNCj4gPiA+ID4gPiA+IHdoZW4gdGhlaXIgbnVtYmVy
+IGRvZXMgbm90IGV4Y2VlZCAyMDAsIGFib3ZlIGl0LCBJIHNlZSB0aGUNCj4gPiA+ID4gPiA+ICJG
+aWxlIHRvbyBsYXJnZSIgZXJyb3Igd2hpbGUgcnN5bmMgZG9lcyBub3Qgd29yayBhdCBhbGwNCj4g
+PiA+ID4gPiA+IChldmVuIGluIHZlcnNpb24gMy4xLjMpLiBUaGF0J3Mgd2h5IEknbSBkaWdnaW5n
+IGludG8gdGhpcw0KPiA+ID4gPiA+ID4gYW5kIGNoZWNraW5nIHdoYXQgcG9zc2libHkgY291bGQg
+Z28gd3JvbmcuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gWW91IG1pZ2h0IGJlIGhpdHRpbmcgYSBs
+aW1pdCBpbiB0aGUgZmlsZXN5c3RlbSBvbiB0aGUgTkZTDQo+ID4gPiA+ID4gc2VydmVyLiBUaGUN
+Cj4gPiA+ID4gPiBBQ0xzIGFyZSBzdG9yZWQgaW4gZXh0ZW5kZWQgYXR0cmlidXRlcy4gRGVwZW5k
+aW5nIG9uIHRoZQ0KPiA+ID4gPiA+IGZpbGVzeXN0ZW0sDQo+ID4gPiA+ID4geW91IG1heSBiZSBh
+YmxlIHRvIGNvbmZpZ3VyZSBsYXJnZXIgaW5vZGUgc2l6ZXMgKG9yIG90aGVyDQo+ID4gPiA+ID4g
+c3RvcmFnZSBmb3INCj4gPiA+ID4gPiB4YXR0cnMpLiBXaXRoIFhGUyB0aGlzIGNhbiBiZSBkb25l
+IHdpdGggJ21rZnMgLXQgeGZzIC1pDQo+ID4gPiA+ID4gc2l6ZT0uLiAuLi4nLA0KPiA+ID4gPiA+
+IA0KPiA+ID4gPiA+IEhUSCwNCj4gPiA+ID4gPiBOaWVscw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+IA0KPiA+ID4gPiA+ID4gVGhhbmsgeW91Lg0KPiA+ID4gPiA+ID4gQmVzdCwNCj4gPiA+ID4gPiA+
+IExvdWlzIGRlIFZhbmRpw6hyZQ0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4g
+PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gPiBGcm9tOiBHb2V0eiwg
+UGF0cmljayBHIDxwZ29ldHpAbWF0aC51dGV4YXMuZWR1Pg0KPiA+ID4gPiA+ID4gU2VudDogTW9u
+ZGF5LCBBdWd1c3QgMjYsIDIwMTkgODo0NCBBTQ0KPiA+ID4gPiA+ID4gVG86IGRlIFZhbmRpZXJl
+LCBMb3VpcyA8bG91aXMuZGV2YW5kaWVyZUBhdG9zLm5ldD47DQo+ID4gPiA+ID4gPiBsaW51eC1u
+ZnNAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4gPiBTdWJqZWN0OiBSZTogTWF4aW11bSBOdW1i
+ZXIgb2YgQUNMIG9uIE5GU3Y0DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEknbSBkeWluZyB0
+byBrbm93IHdoYXQgdGhlIHVzZSBjYXNlIGlzIGZvciB0aGlzLCBhbmQgd2h5DQo+ID4gPiA+ID4g
+PiB5b3UgY2FuJ3QganVzdCBkbyB0aGlzIHdpdGggZ3JvdXAgcGVybWlzc2lvbnMgKHVubGVzcw0K
+PiA+ID4gPiA+ID4geW91J3JlIHRhbGtpbmcgYWJvdXQgaHVuZHJlZHMgb2YgZ3JvdXAgQUNMcyku
+DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE9uIDgvMjMvMTkgNTozMSBQTSwgZGUgVmFuZGll
+cmUsIExvdWlzIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiBIaSwNCj4gPiA+ID4gPiA+ID4gDQo+ID4g
+PiA+ID4gPiA+IEknbSBjdXJyZW50bHkgdHJ5aW5nIHRvIGFwcGx5IGh1bmRyZWRzIG9mIEFDTHMg
+b24gZmlsZQ0KPiA+ID4gPiA+ID4gPiBob3N0ZWQgb24gYSBORlN2NCBzZXJ2ZXIgKG5mcy11dGls
+cy0xLjMuMC0wLjYxLmVsNy54ODZfNjQgDQo+ID4gPiA+ID4gPiA+IGFuZCBuZnM0LWFjbC10b29s
+cy4wLjMuMy0xOS5lbDcueDg2XzY0KS4gSXQgYXBwZWFycyB0aGF0DQo+ID4gPiA+ID4gPiA+IHRo
+ZSBsaW1pdCBJIGNhbiBhcHBseSBpcyAyMDcuIEFmdGVyIHRoZSBsaW1pdCBpcyByZWFjaGVkLA0K
+PiA+ID4gPiA+ID4gPiB0aGUgY29tbWFuZCAibmZzNF9zZXRmYWNsIC1hIiByZXR1cm5lZCB0aGUg
+ZXJyb3IgIkZhaWxlZA0KPiA+ID4gPiA+ID4gPiBzZXR4YXR0ciBvcGVyYXRpb246IEZpbGUgdG9v
+IGxhcmdlIi4gVGhlIHNhbWUgcHJvYmxlbQ0KPiA+ID4gPiA+ID4gPiBoYXBwZW5zIGlmIEkgdXNl
+IGFuIEFDTCB3aXRoIG1vcmUgdGhhbiAyMDAgbGluZSBpbiBpdC4gSQ0KPiA+ID4gPiA+ID4gPiBk
+aWQgYSBsaXR0bGUgZGVidWdnaW5nIHNlc3Npb24gYnV0IEkgd2FzIG5vdCBhYmxlIHRvIGNvbWUN
+Cj4gPiA+ID4gPiA+ID4gdXAgd2l0aCBhbiBleHBsYW5hdGlvbiBvbiB3aHkgSSdtIGZhY2luZyBz
+dWNoIGFuIGlzc3VlLg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gT24gdGhlIG90aGVy
+IGhhbmQsIEkgY2FuIGFwcGx5IGh1bmRyZWRzIG9mIEFDTHMgb24gWEZTDQo+ID4gPiA+ID4gPiA+
+IHdpdGhvdXQgaXNzdWUuIERvIHlvdSBrbm93IGlmIGl0IGNvdWxkIGJlIGEgYnVnIHdpdGggdGhl
+DQo+ID4gPiA+ID4gPiA+IG5mczQtYWNsLXRvb2xzIHBhY2thZ2U/DQo+ID4gPiA+ID4gPiA+IFRo
+YW5rIHlvdSBmb3IgeW91ciBzdXBwb3J0Lg0KPiA+ID4gPiA+ID4gPiBCZXN0LA0KPiA+ID4gPiA+
+ID4gPiBMb3VpcyBkZSBWYW5kacOocmUNCj4gPiA+ID4gPiA+ID4gPiA+IFRoaXMgbWVzc2FnZSBp
+cyBmcm9tIGFuIGV4dGVybmFsIHNlbmRlci4gTGVhcm4gbW9yZQ0KPiA+ID4gPiA+ID4gPiA+ID4g
+YWJvdXQgd2h5IHRoaXMgPDwNCj4gPiA+ID4gPiA+ID4gPiA+IG1hdHRlcnMgYXQgDQo+ID4gPiA+
+ID4gPiA+ID4gPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29t
+Lz91cmw9aHR0cHMlM0ElMkYlMkZsaW5rcy51dGV4YXMuZWR1JTJGcnR5Y2xmJmFtcDtkYXRhPTAy
+JTdDMDElN0Nsb3Vpcy5kZXZhbmRpZXJlJTQwYXRvcy5uZXQlN0NlMTg1Zjk5Y2IzYWQ0NzZmZDM5
+MzA4ZDcyYTViZjZkNSU3QzMzNDQwZmM2YjdjNzQxMmNiYjczMGU3MGIwMTk4ZDVhJTdDMCU3QzAl
+N0M2MzcwMjQ0NDY3ODUzMjQ5NzMmYW1wO3NkYXRhPXIzNDVycVdONEdLVDBtQm1RbU1UbmFDJTJG
+RkV5VVRpZGpCbEdlQU1SZEVwQSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+ID4gPiA+ID4gPiA+ID4g
+LiAgICAgICAgICAgICAgICAgICAgICAgIDw8DQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXgg
+TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
+cnNwYWNlLmNvbQ0KDQoNCg==
