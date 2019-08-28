@@ -2,107 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF631A0075
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 13:06:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45740A0241
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 14:52:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbfH1LGB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Aug 2019 07:06:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59178 "EHLO mx1.redhat.com"
+        id S1726394AbfH1Mww (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Aug 2019 08:52:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:15587 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH1LGB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:06:01 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726368AbfH1Mww (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:52:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D53278980E2;
-        Wed, 28 Aug 2019 11:06:00 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-112-84.rdu2.redhat.com [10.10.112.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA3525C221;
-        Wed, 28 Aug 2019 11:05:59 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org, Anna.Schumaker@netapp.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] NFSv3: nfs_instantiate() might succeed leaving dentry
- negative unhashed
-Date:   Wed, 28 Aug 2019 07:05:57 -0400
-Message-ID: <19F3F549-6C84-4DD6-A8E9-2562DAE70CF0@redhat.com>
-In-Reply-To: <720c018fc83192cdea73f8f26ca737e5ac393902.camel@hammerspace.com>
-References: <d2076a27c1f3faa0d732e64d49bcbab054cae23b.1566850914.git.bcodding@redhat.com>
- <e3b9ff47b2b195796ac30e8580764ce549d3c325.camel@hammerspace.com>
- <D44A2F26-920E-427A-90E2-D800606EA748@redhat.com>
- <720c018fc83192cdea73f8f26ca737e5ac393902.camel@hammerspace.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id EA4F22D0FB7;
+        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
+Received: from bcodding.csb (ovpn-112-84.rdu2.redhat.com [10.10.112.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AD2219D7A;
+        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 94486109C550; Wed, 28 Aug 2019 08:52:50 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH] freezer,NFS: add an unsafe schedule_timeout_interruptable freezable helper for NFS
+Date:   Wed, 28 Aug 2019 08:52:50 -0400
+Message-Id: <9cf306ec17800f909f44a3889f52c6818b56bdbb.1566992889.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 28 Aug 2019 11:06:01 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 28 Aug 2019 12:52:52 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 27 Aug 2019, at 7:46, Trond Myklebust wrote:
-> On Tue, 2019-08-27 at 06:33 -0400, Benjamin Coddington wrote:
->> On 26 Aug 2019, at 16:39, Trond Myklebust wrote:
->>> If this is a consequence of a race in nfs_instantiate, then why are
->>> we
->>> not fix it there? Won't we otherwise end up having to duplicate the
->>> above code in all the other callers?
->>>
->>> IOW: why not simply modify nfs_instantiate() to return the dentry
->>> from
->>> d_splice_alias(), much like we already do for nfs_lookup()?
->>
->> None of the other callers care about the dentry and it seemed more
->> invasive.
->> It is also an accepted pattern for VFS - that's why Al justified it
->> in
->> b0c6108ecf64.
->
-> It is racy, though. Nothing guarantees that a dentry for that file is
-> still hashed under the same name when you look it up again, so it is
-> better to pass it back directly from the d_splice_alias() call.
->
->> If you'd rather change all the callers, let me know and I can send
->> that.
->
-> If you'd prefer not to have to change all the callers, then perhaps
-> split the function into two parts:
-> - The inner part that returns the dentry from d_splice_alias() on
-> success, and which can be called directly from nfs3_do_create().
-> - Then a wrapper that works like nfs_instantiate() by dput()ing the
-> valid dentry (and returning 0) or otherwise converting the ERR_PTR()
-> and returning that.
+After commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed
+operations") my NFS client dumps lockdep warnings:
 
-Ok, sounds fine.
+	====================================
+	WARNING: dir_create.sh/1911 still has locks held!
+	5.3.0-rc6.47364e5cdc #1 Not tainted
+	------------------------------------
+	1 lock held by dir_create.sh/1911:
+	 #0: 000000005345f559 (sb_writers#21){.+.+}, at: mnt_want_write+0x20/0x50
 
-One thing that strikes me as odd is the d_drop() at the top of
-nfs_instantiate().  That seems wrong if the next check for positive bypasses
-the work of hashing it again.
+	stack backtrace:
+	CPU: 1 PID: 1911 Comm: dir_create.sh Not tainted 5.3.0-rc6.47364e5cdc #1
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+	Call Trace:
+	 dump_stack+0x85/0xcb
+	 nfs4_handle_exception+0x1df/0x250 [nfsv4]
+	 nfs4_do_open+0x38b/0x850 [nfsv4]
+	 ? __filemap_fdatawrite_range+0xc1/0x100
+	 nfs4_atomic_open+0xe7/0x100 [nfsv4]
+	 nfs4_file_open+0x103/0x260 [nfsv4]
+	 ? nfs42_remap_file_range+0x220/0x220 [nfsv4]
+	 do_dentry_open+0x205/0x3c0
+	 path_openat+0x2ba/0xc80
+	 do_filp_open+0x9b/0x110
+	 ? kvm_sched_clock_read+0x14/0x30
+	 ? sched_clock+0x5/0x10
+	 ? sched_clock_cpu+0xc/0xc0
+	 ? _raw_spin_unlock+0x24/0x30
+	 ? do_sys_open+0x1bd/0x260
+	 do_sys_open+0x1bd/0x260
+	 do_syscall_64+0x75/0x320
+	 ? trace_hardirqs_off_thunk+0x1a/0x20
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	RIP: 0033:0x7fd49b2535ce
 
-Can you give me a hint as to why the paths are that way?  Otherwise, I think
-it should change as:
+This patch follows prior art in commit 416ad3c9c006 ("freezer: add unsafe
+versions of freezable helpers for NFS") to skip lock dependency checks for
+NFS.
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 8d501093660f..7720a19b38d3 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1682,11 +1682,12 @@ int nfs_instantiate(struct dentry *dentry, struct
-nfs_fh *fhandle,
-        struct dentry *d;
-        int error = -EACCES;
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/nfs4proc.c       |  2 +-
+ include/linux/freezer.h | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
--       d_drop(dentry);
--
-        /* We may have been initialized further down */
-        if (d_really_is_positive(dentry))
-                goto out;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1406858bae6c..b9c46373da25 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -415,7 +415,7 @@ static int nfs4_delay_interruptible(long *timeout)
+ {
+ 	might_sleep();
+ 
+-	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
++	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
+ 	if (!signal_pending(current))
+ 		return 0;
+ 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
+diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+index 21f5aa0b217f..53e66eec837a 100644
+--- a/include/linux/freezer.h
++++ b/include/linux/freezer.h
+@@ -217,6 +217,16 @@ static inline long freezable_schedule_timeout_killable(long timeout)
+ 	return __retval;
+ }
+ 
++/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
++static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
++{
++	long __retval;
++	freezer_do_not_count();
++	__retval = schedule_timeout_interruptible(timeout);
++	freezer_count_unsafe();
++	return __retval;
++}
 +
-+       d_drop(dentry);
+ /* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
+ static inline long freezable_schedule_timeout_killable_unsafe(long timeout)
+ {
+-- 
+2.20.1
 
-        if (fhandle->size == 0) {
-                error = NFS_PROTO(dir)->lookup(dir, &dentry->d_name,
-fhandle, fattr, NULL);
-                if (error)
-
-Ben
