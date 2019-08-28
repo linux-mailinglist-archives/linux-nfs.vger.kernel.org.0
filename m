@@ -2,120 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45740A0241
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 14:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECAB9A03AA
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 15:48:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfH1Mww (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Aug 2019 08:52:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15587 "EHLO mx1.redhat.com"
+        id S1726410AbfH1Nsj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Aug 2019 09:48:39 -0400
+Received: from fieldses.org ([173.255.197.46]:48940 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfH1Mww (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:52:52 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA4F22D0FB7;
-        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
-Received: from bcodding.csb (ovpn-112-84.rdu2.redhat.com [10.10.112.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AD2219D7A;
-        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 94486109C550; Wed, 28 Aug 2019 08:52:50 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH] freezer,NFS: add an unsafe schedule_timeout_interruptable freezable helper for NFS
-Date:   Wed, 28 Aug 2019 08:52:50 -0400
-Message-Id: <9cf306ec17800f909f44a3889f52c6818b56bdbb.1566992889.git.bcodding@redhat.com>
+        id S1726407AbfH1Nsj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:48:39 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 53BED7CC; Wed, 28 Aug 2019 09:48:39 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 09:48:39 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "jlayton@redhat.com" <jlayton@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bfields@redhat.com" <bfields@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "jlayton@poochiereds.net" <jlayton@poochiereds.net>
+Subject: Re: [PATCH 0/3] Handling NFSv3 I/O errors in knfsd
+Message-ID: <20190828134839.GA26492@fieldses.org>
+References: <20190826165021.81075-1-trond.myklebust@hammerspace.com>
+ <20190826205156.GA27834@fieldses.org>
+ <ef9f2791ef395d7c968a386ce0a32ea503d6478f.camel@hammerspace.com>
+ <61F77AD6-BD02-4322-B944-0DC263EB9BD8@oracle.com>
+ <ec7a06f8e74867e65c26580e8504e2879f4cd595.camel@hammerspace.com>
+ <20190827145819.GB9804@fieldses.org>
+ <20190827145912.GC9804@fieldses.org>
+ <1ee75165d548b336f5724b6d655aa2545b9270c3.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 28 Aug 2019 12:52:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ee75165d548b336f5724b6d655aa2545b9270c3.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-After commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed
-operations") my NFS client dumps lockdep warnings:
+On Tue, Aug 27, 2019 at 03:15:35PM +0000, Trond Myklebust wrote:
+> I'm open to other suggestions, but I'm having trouble finding one that
+> can scale correctly (i.e. not require per-client tracking), prevent
+> silent corruption (by causing clients to miss errors), while not
+> relying on optional features that may not be implemented by all NFSv3
+> clients (e.g. per-file write verifiers are not implemented by *BSD).
+> 
+> That said, it seems to me that to do nothing should not be an option,
+> as that would imply tolerating silent corruption of file data.
 
-	====================================
-	WARNING: dir_create.sh/1911 still has locks held!
-	5.3.0-rc6.47364e5cdc #1 Not tainted
-	------------------------------------
-	1 lock held by dir_create.sh/1911:
-	 #0: 000000005345f559 (sb_writers#21){.+.+}, at: mnt_want_write+0x20/0x50
+So should we increment the boot verifier every time we discover an error
+on an asynchronous write?
 
-	stack backtrace:
-	CPU: 1 PID: 1911 Comm: dir_create.sh Not tainted 5.3.0-rc6.47364e5cdc #1
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
-	Call Trace:
-	 dump_stack+0x85/0xcb
-	 nfs4_handle_exception+0x1df/0x250 [nfsv4]
-	 nfs4_do_open+0x38b/0x850 [nfsv4]
-	 ? __filemap_fdatawrite_range+0xc1/0x100
-	 nfs4_atomic_open+0xe7/0x100 [nfsv4]
-	 nfs4_file_open+0x103/0x260 [nfsv4]
-	 ? nfs42_remap_file_range+0x220/0x220 [nfsv4]
-	 do_dentry_open+0x205/0x3c0
-	 path_openat+0x2ba/0xc80
-	 do_filp_open+0x9b/0x110
-	 ? kvm_sched_clock_read+0x14/0x30
-	 ? sched_clock+0x5/0x10
-	 ? sched_clock_cpu+0xc/0xc0
-	 ? _raw_spin_unlock+0x24/0x30
-	 ? do_sys_open+0x1bd/0x260
-	 do_sys_open+0x1bd/0x260
-	 do_syscall_64+0x75/0x320
-	 ? trace_hardirqs_off_thunk+0x1a/0x20
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-	RIP: 0033:0x7fd49b2535ce
-
-This patch follows prior art in commit 416ad3c9c006 ("freezer: add unsafe
-versions of freezable helpers for NFS") to skip lock dependency checks for
-NFS.
-
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- fs/nfs/nfs4proc.c       |  2 +-
- include/linux/freezer.h | 10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 1406858bae6c..b9c46373da25 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -415,7 +415,7 @@ static int nfs4_delay_interruptible(long *timeout)
- {
- 	might_sleep();
- 
--	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
-+	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
- 	if (!signal_pending(current))
- 		return 0;
- 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
-diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-index 21f5aa0b217f..53e66eec837a 100644
---- a/include/linux/freezer.h
-+++ b/include/linux/freezer.h
-@@ -217,6 +217,16 @@ static inline long freezable_schedule_timeout_killable(long timeout)
- 	return __retval;
- }
- 
-+/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
-+static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
-+{
-+	long __retval;
-+	freezer_do_not_count();
-+	__retval = schedule_timeout_interruptible(timeout);
-+	freezer_count_unsafe();
-+	return __retval;
-+}
-+
- /* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
- static inline long freezable_schedule_timeout_killable_unsafe(long timeout)
- {
--- 
-2.20.1
-
+--b.
