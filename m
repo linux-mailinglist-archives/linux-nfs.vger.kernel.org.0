@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B987A0858
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 19:28:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2003A08DA
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2019 19:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfH1R2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Aug 2019 13:28:50 -0400
-Received: from fieldses.org ([173.255.197.46]:49336 "EHLO fieldses.org"
+        id S1726566AbfH1RqK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Aug 2019 13:46:10 -0400
+Received: from fieldses.org ([173.255.197.46]:49346 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1R2u (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:28:50 -0400
+        id S1726515AbfH1RqJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:46:09 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 9A2F7BD8; Wed, 28 Aug 2019 13:28:49 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 13:28:49 -0400
-To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Cc:     linux-nfs@vger.kernel.org, cuiyue-fnst@cn.fujitsu.com
-Subject: Re: NFS issues about aio and dio test
-Message-ID: <20190828172849.GA29148@fieldses.org>
-References: <975395cc-62f2-843f-cc71-82339b2869cd@cn.fujitsu.com>
- <65ea4ea2-548f-1546-059a-af901bba2e87@cn.fujitsu.com>
+        id 480341E3B; Wed, 28 Aug 2019 13:46:09 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 13:46:09 -0400
+To:     Jason L Tibbitts III <tibbs@math.uh.edu>
+Cc:     linux-nfs@vger.kernel.org, km@cm4all.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Message-ID: <20190828174609.GB29148@fieldses.org>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <65ea4ea2-548f-1546-059a-af901bba2e87@cn.fujitsu.com>
+In-Reply-To: <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -32,36 +32,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 08:37:41AM +0800, Su Yanjun wrote:
-> Any ping?
+On Thu, Aug 22, 2019 at 02:39:26PM -0500, Jason L Tibbitts III wrote:
+> I now have another user reporting the same failure of readdir on a long
+> directory which showed up in 5.1.20 and was traced to
+> 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c.  I'm not sure what to do to
+> get more traction besides reposting and adding some addresses to the CC
+> list.  If there is any information I can provide which might help to get
+> to the bottom of this, please let me know.
 > 
-> 在 2019/8/6 14:08, Su Yanjun 写道:
-> >Hi,
-> >
-> >When I tested xfstests generic/465 with NFS, there was something
-> >unexpected.
-> >
-> >When memory of NFS server was 10G, test passed.
-> >But when memory of NFS server was 4G, test failed.
-> >
-> >Fail message was as below.
-> >    non-aio dio test
-> >    encounter an error: block 4 offset 0, content 62
-> >    aio-dio test
-> >    encounter an error: block 1 offset 0, content 62
-> >
-> >All of the NFS versions(v3 v4.0 v4.1 v4.2) have  this problem.
-> >Maybe something is wrong about NFS's I/O operation.
-> >
-> >Thanks in advance.
+> To recap:
+> 
+> 5.1.20 introduced a regression reading some large directories.  In this
+> case, the directory should have 7800 files or so in it:
+> 
+> [root@ld00 ~]# ls -l ~dblecher|wc -l
+> ls: reading directory '/home/dblecher': Input/output error
+> 1844
+> [root@ld00 ~]# cat /proc/version Linux version 5.1.20-300.fc30.x86_64 (mockbuild@bkernel04.phx2.fedoraproject.org) (gcc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #1 SMP Fri Jul 26 15:03:11 UTC 2019
+> 
+> (The server is a Centos 7 machine running kernel 3.10.0-957.12.2.el7.x86_64.)
+> 
+> Building a kernel which reverts commit 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c:
+>   Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
 
-Off the top of my head it doesn't look familiar.
+Looks like that's db531db951f950b8 upstream.  (Do you know if it's
+reproduceable upstream as well?)
 
-What kernel version are you running on client and server?
+> fixes the issue, but of course that revert was fixing a real issue so
+> I'm not sure what to do.
+> 
+> I can trivially reproduce this by simply trying to list the problematic
+> directories but I'm not sure how to construct such a directory; simply
+> creating 10000 files doesn't cause the problem for me.
 
-Did this test previously pass on an older kernel (so, was this a recent
-regression?)
+Maybe it depends on having names of the right length to place some bit
+of xdr on a boundary.  I wonder if it'd be possible to reproduce just by
+varying the name lengths randomly till you hit it.
 
-Have you looked at generic/465 to see what exactly is happening here?
+The fact that the problematic patch fixed a memory leak also makes me
+wonder if it might have gone to far and freed something out from under
+the readdir code.
+
+> I am willing to
+> test patches and can build my own kernels, and I'm happy to provide any
+> debugging information you might require.  Unfortunately I don't know
+> enough to dig in and figure out for myself what's going wrong.
+> 
+> I did file https://bugzilla.redhat.com/show_bug.cgi?id=1740954 just to
+> have this in a bug tracker somewhere.  I'm happy to file one somewhere
+> else if that would help.
+
+No clever debugging ideas off the top of my head, I'm afraid.  I might
+start by patching the kernel or doing some tracing to figure out exactly
+where that EIO is being generated?
 
 --b.
