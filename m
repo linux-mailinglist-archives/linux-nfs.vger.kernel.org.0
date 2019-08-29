@@ -2,207 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12702A230E
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2019 20:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FEFCA2737
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2019 21:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2SNC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Aug 2019 14:13:02 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37740 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfH2SNC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Aug 2019 14:13:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id q12so8809536iog.4
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2019 11:13:01 -0700 (PDT)
+        id S1728143AbfH2TXz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Aug 2019 15:23:55 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40334 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfH2TXz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Aug 2019 15:23:55 -0400
+Received: by mail-vs1-f65.google.com with SMTP id i128so3189621vsc.7
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2019 12:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zadara-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DvUVCWweJqz9GgGV84lI5+GoH0RrjDa34Uh97IPVVnE=;
-        b=bI/d/9LBVY6fUonD4Dh59gpB0n56Y13vWsT8iXw+nFZUPOJHqcYyuIMzVlLNvEEsH1
-         xzKSK1sBVYCq0UeD/YbqjwyE4NEZKGTKb0qhEfoGpGfD4dHJt7T0AuBbNe7wjhQCRp53
-         /V4RinlgksmH9czC4bHp5ddh6EJE1ULHXS89556koXIG0d44gT2egOEh0P6aQSAHx+Bf
-         eAV7nO18PrWsbL+YRklWyOnSVKENf80dPy/Qy6869YJB5SyLMaZJYwRAGO/lTEgltbOg
-         uJRYZRiN9CBS8SK5uqbXdhR5QKggiC3hJ5G+QwPHoYVEEt6B9PsisHwRpA3jj0yp2/77
-         J9zQ==
+        bh=TX7nZAwHLhviw3X+bn/byWo3/tYGyaYnRaK2qp7/2fk=;
+        b=KFmONNT1pLqKJPKkk2/8g1QaCduL/jNaAWWekJYRRkuNZpGg1jCbU4YvmwaQQIMWIs
+         UzkgeAFYgOGpPtgEXZKy3M+05noxWGKDOe+qxe5nKTK25qYz3TzxRbArOYqt7Mm7GUUS
+         qTz+tmoSE6ZxGXTGtt1VoevkubJVIBVL6wtm34vmQ+//3J1Ye5MucT422UgOAQvd8uNy
+         EorER+DW+dyf5j1F8cbZdeGe/FRVCHZYViIcYRvu9pToNM8iekHd3Yw0E1tXBK9QKZok
+         oL6kLsjchIRbWYX/BfBiCluA6FhkCXxj6A2fe8BwPDTc63pz28gvDMj7W30IA+0jijR2
+         tVNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DvUVCWweJqz9GgGV84lI5+GoH0RrjDa34Uh97IPVVnE=;
-        b=ZRGWDaxzfm4RkPIqx/zxV/YhICcwOUjXtMnH0ncBSJoffG8tn/iRwCZwIWQ1ERfn0I
-         BRfP+Acdz52mNX0ArYNodLOv0fJmdOIo5GAFnYi+Wpq4dUm4tPJIdv/7nNoNguTKGL2Q
-         y160zKR951ETeOhuni2FESAaTnVGUdjG4GYKVlZrRx/CTVuT1cfUsfKJ6/RvLVF9t/PL
-         aXaVBAThKgDrSox4rKfNSd4dE1vVJS/yK253jdsieRtqrbtCxnXrLyDwnK5OV5O1MVtT
-         /CH9UzSmgyagP6iJMgjySgj0uNJB192gg+aSWkULYbTpQhQgOwZGBzWtcOvJw7t5dReT
-         uVxA==
-X-Gm-Message-State: APjAAAXeBR5OUOPzIRAuo9QYdiwT9zFjhs1ophkInURs3LAWV0ByVwjS
-        S2yjl76jcKMjwUA95xTHNmH8unuwt23EriPtA70o2w==
-X-Google-Smtp-Source: APXvYqyfqWZAXfrJsO0EIOGPEOiVTmTphsF8Nd5/zTEEW/QM592W7fkmwVxpSXL9FCmqxUOGOoCfgRt0e+Sd/MmdUdU=
-X-Received: by 2002:a5d:8788:: with SMTP id f8mr12541175ion.20.1567102381218;
- Thu, 29 Aug 2019 11:13:01 -0700 (PDT)
+        bh=TX7nZAwHLhviw3X+bn/byWo3/tYGyaYnRaK2qp7/2fk=;
+        b=UN5edtMfbYDoDQN4vsUC/cr5/eW78aGfQhruMJ+KmNXsBl78apdPvjSO9BPJb2WM9+
+         daKz2ipv62cGiu603GLtWBPimSa/65HOgib1VeQp5j0QEAPBV6jyil1uNd4NESmoF4/G
+         M34J9OwXJXX7J7Q2GqOwPFM+P0ZqgN903tcgA0kxM7uq4Ytce6nQCsH5fOfHXbobTi4Y
+         FW3BEfM9aFlADNSKqs5Rw9a8OCPQGlYiBE2EnkxW4dV8dE7TMy/Juq2MhaF+NjV8rERo
+         sq2x+0GQEXcZDC/3+FqdncFDEAPg/6LlIVKS7ejUCkU1VL00zlfYmj0cbq1GiPe0GBMp
+         bahQ==
+X-Gm-Message-State: APjAAAWxZCWd7wxaxd5cHnO9hcjy7U+VLmEwfqOng5af6vDSisXnnw2d
+        2UP32qCrk+XiPhJTUDYvWKnAvHFtPzpMLzR+OD0=
+X-Google-Smtp-Source: APXvYqx4IvfFTFOYF9Z1oldMFyFmPMR4FT5VqJmUqASE9SsMh7Jlu0USu+ulJcrqVCCP88oLVdiJmKryEV8xM3RgQi8=
+X-Received: by 2002:a67:10c6:: with SMTP id 189mr6512496vsq.194.1567106634205;
+ Thu, 29 Aug 2019 12:23:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1566406146-7887-1-git-send-email-alex@zadara.com>
- <CAOcd+r0bXefi79dnwrwsDN1OecScfTjc8DYS5_9A8D5XKrh7QQ@mail.gmail.com>
- <20190826133951.GC22759@fieldses.org> <CAOcd+r059fh7J8T=6MdjPSCP39K5fpOZTsXZDUKq5TrPv_RcVQ@mail.gmail.com>
- <20190827205158.GB13198@fieldses.org> <CAOcd+r0Ybfr1WszjYc1K19Cf7JmKowy=Go6nc8Fexf5KxNyf=A@mail.gmail.com>
- <20190828165429.GC26284@fieldses.org>
-In-Reply-To: <20190828165429.GC26284@fieldses.org>
-From:   Alex Lyakas <alex@zadara.com>
-Date:   Thu, 29 Aug 2019 21:12:49 +0300
-Message-ID: <CAOcd+r3e52q_ds3zjya98whYarqoXf5C2umNEX-AGp4-R6=Cuw@mail.gmail.com>
-Subject: Re: [RFC-PATCH] nfsd: when unhashing openowners, increment
- openowner's refcount
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        Shyam Kaushik <shyam@zadara.com>
+References: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
+ <20190808201848.36640-6-olga.kornievskaia@gmail.com> <CAN-5tyF6ZMf_jiKycK1rk9v7xATDb=j_e5d0QBp9LOgdvn-utA@mail.gmail.com>
+ <CAN-5tyEyvjJB+4_bKZmEYhv2KrVvk7dDvF27i6mx4naDt33Nww@mail.gmail.com>
+ <20190812200019.GB29812@parsley.fieldses.org> <CAN-5tyFpHHsH3n8u+qGyp7POdSRHesiKgd3-YQoE9jJSPBVYRw@mail.gmail.com>
+ <CAN-5tyEX=4pfntZudpfkN9Pr9OpZfpvKj+NyT-bBD9YJ5fsg7Q@mail.gmail.com>
+In-Reply-To: <CAN-5tyEX=4pfntZudpfkN9Pr9OpZfpvKj+NyT-bBD9YJ5fsg7Q@mail.gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 29 Aug 2019 15:23:43 -0400
+Message-ID: <CAN-5tyHOr+0WVthzu6G9qOwaVG0R+yUpuh2iyaTpBkw_O5XGAA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/9] NFSD add COPY_NOTIFY operation
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
-
-On Wed, Aug 28, 2019 at 7:54 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Wed, Aug 14, 2019 at 11:05 AM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
 >
-> On Wed, Aug 28, 2019 at 06:20:22PM +0300, Alex Lyakas wrote:
-> > On Tue, Aug 27, 2019 at 11:51 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > >
-> > > On Tue, Aug 27, 2019 at 12:05:28PM +0300, Alex Lyakas wrote:
-> > > > Is the described issue familiar to you?
-> > >
-> > > Yep, got it, but I haven't seen anyone try to solve it using the fault
-> > > injection code, that's interesting!
-> > >
-> > > There's also fs/nfsd/unlock_filesystem.  It only unlocks NLM (NFSv3)
-> > > locks.  But it'd probably be reasonable to teach it to get NFSv4 state
-> > > too (locks, opens, delegations, and layouts).
-> > >
-> > > But my feeling's always been that the cleanest way to do it is to create
-> > > two containers with separate net namespaces and run nfsd in both of
-> > > them.  You can start and stop the servers in the different containers
-> > > independently.
+> On Tue, Aug 13, 2019 at 1:57 PM Olga Kornievskaia
+> <olga.kornievskaia@gmail.com> wrote:
 > >
-> > I am looking at the code, and currently nfsd creates a single
-> > namespace subsystem in init_nfsd. All nfs4_clients run in this
-> > subsystem.
+> > On Mon, Aug 12, 2019 at 4:00 PM J. Bruce Fields <bfields@redhat.com> wrote:
+> > >
+> > > On Mon, Aug 12, 2019 at 03:16:47PM -0400, Olga Kornievskaia wrote:
+> > > > On Mon, Aug 12, 2019 at 12:19 PM Olga Kornievskaia
+> > > > <olga.kornievskaia@gmail.com> wrote:
+> > > > > While this passes my testing, in theory this allows for the race that
+> > > > > we get the copy notify size but then offload_cancel arrive and change
+> > > > > the value. Then refcount_sub_and test_check would have an incorrect
+> > > > > value (can subtract larger than an actual reference count). I have no
+> > > > > solution for that as there is no refcount_sub_and_lock() that will
+> > > > > allow to decrement by a multiple under a lock. Thoughts?
+> > > >
+> > > > I tried not to use the client's cl_lock but instead use a specific
+> > > > lock to protect the copy notifies stateid on the stateid list. But
+> > > > since stateid's reference counter (sc_count) is protected by it, I
+> > > > think by getting rid of the special lock and using cl_lock will solve
+> > > > the problem of coordinating access between the sc_count and the
+> > > > copy_notify stateid list. Are the any problems with using such a big
+> > > > lock?
+> > >
+> > > Probably not.  But it can be confusing when a single lock is used for
+> > > several different things.  A comment explaining why you need it might
+> > > help.
 > >
-> > So the proposal is to use register_pernet_subsys() for every
-> > filesystem that is exported?
+> > While holding the client's cl_lock to manipulate the list of copy
+> > notify stateids solves the refcount problem. It generates a different
+> > problem for the laundromat thread. There, client list is traversed
+> > already holding the cl_lock, so I can't call routines to free
+> > copy_notify stateid because in turn it calls nfs4_put_stid() which
+> > wants to take the cl_lock. Putting the copy_notify stateid on the
+> > reaplist and then I lose a pointer to the client structure that I need
+> > to take the lock. Then it seems the nfs4_cpntf_state structure would
+> > need to keep a pointer to the client structure but then I get a
+> > problem of making sure the nfs4_client structure isn't going away and
+> > because it even a bigger mess.
+> >
+> > I think I need to remove the code in the laundromat that looks for the
+> > not referenced copy_notifies stateid and just rely on cleaning on the
+> > removal of the stateid (basically what I originally had). Or I need to
+> > rely on the client to always send FREE_STATEID. I don't see other
+> > options, do you?
 >
-> No, I'm proposing any krenel changes.  Just create separate net
-> namespaces from userspace and start nfsd from within them.  And you'll
-> also need to arrange for them different nfsd's to get different exports.
->
-> In practice, the best way to do this may be using some container
-> management service, I'm not sure.
->
-> > I presume that current nfsd code cannot
-> > do this, and some rework is required to move away from a single
-> > subsystem to per-export subsystem. Also, grepping through kernel code,
-> > I see that namespace subsystems are created by different modules as
-> > part of module initialization, rather than doing that dynamically.
-> > Furthermore, in our case the same nfsd machine S can export tens or
-> > even hundreds of local filesystems.Is this fine to have hundreds of
-> > subsystems?
->
-> I haven't done it myself, but I suspect hundreds of containers should be
-> OK.  It may depend on available resources, of course.
->
-> > Otherwise, I understand that the current behavior is a "won't fix",
-> > and it is expected for the client machine to unmount the export before
-> > un-exporting the file system at nfsd machine. Is this correct?
->
-> You're definitely not the only ones to request this, so I'd like to have
-> a working solution.
->
-> My preference would be to try the namespace/container approach first.
-> And if that turns out no to work well for some reason, to update
-> fs/nfsd/unlock_filesystem to handle NFSv4 stuff.
->
-> The fault injection code isn't the right interface for this.  Even if we
-> did decide it was worth fixing up and maintaining--it's really only
-> designed for testing clients.  I'd expect distros not to build it in
-> their default kernels.
+> Ignore this Bruce. Trond gave me a good idea and gets me unstuck.
 
 Hi Bruce,
 
-We evaluated the network namespaces approach. But, unfortunately, it
-doesn't fit easily into how our system is currently structured. We
-would have to create and configure interfaces for every namespace, and
-have a separate IP address (presumably) for every namespace. All this
-seems a bit of an overkill, to just have several local filesystems
-exported to the same client (which is when we hit the issue). I would
-assume that some other users would argue as well that creating a
-separate network namespace for every local filesystem is not the way
-to go from the administration point of view.
+I'm stuck again. The idea that Trond gave me is to instead of storing
+the pointer to the stateid, (copy) store the stateid_t structure
+itself and then use it to look it up the appropriate nfs4_stid.
 
-Regarding the failure injection code, we did not actually enable and
-use it. We instead wrote some custom code that is highly modeled after
-the failure injection code. And that's how we found the openowner
-refcnt issue, from which this thread started. Similarly to the failure
-injection code, our code iterates over all the clients, all the
-openowners, all the OPEN-stateids and the opened files. Then for each
-opened file, it decides whether this file belongs to the file system
-that has been just un-exported. To accomplish that, we added a custom
-field to nfs4_file:
-struct nfs4_file {
-    atomic_t        fi_ref;
-    spinlock_t        fi_lock;
-    ...
-#ifdef CONFIG_NFSD_ZADARA
-    u64    fi_share_id; /* which exported FS this file belongs to; non-zero */
-#endif /*CONFIG_NFSD_ZADARA*/
-};
+The problem with that is when nfsd4_lookup_stateid() is called it
+takes is a compound state (cstate) which has a client pointer and
+during the lookup it's verified that the client looking up the stateid
+is the same that generate the stateid which is not the case with copy
+offload.
 
-We also added some simple data structure that tracks all the exported
-file systems, and assigns a unique "share_id" for each.In
-find_or_add_file(), we consult the custom data structure that we
-added, and assign a "fi_share_id" for every nfs4_file that is
-newly-created.
+I tried also saving a cl_clientid and using that to lookup the
+nfs4_client that's needed for the stateid lookup but I'm not sure
+that's possible. lookup_clientid() calls find_client_in_id_table() and
+always passes "false" for sessions args. Original client has minor
+version 2 and then the check if (clp->minor_versions != sessions)
+fails. I don't understand what this logic is suppose to check.
 
-The code that "forgets" all the relevant openowners looks like:
+Should I be writing special version of the lookup_clientid that
+ignores that check (when called in the path of the copy_notify
+verification)? Or any other ideas of how to get passed this would be
+appreciated it.
 
-void forget_openowners_of_share_id(uint64 share_id)
-{
-    spin_lock(&nn->client_lock);
-    list_for_each_entry(clp, &nn->client_lru, cl_lru) {
-        spin_lock(&clp->cl_lock);
-        list_for_each_entry_safe(oo, oo_next, &clp->cl_openowners,
-oo_perclient) {
-            list_for_each_entry(stp, &oo->oo_owner.so_stateids,
-st_perstateowner) {
-                if (stp->st_stid.sc_file->fi_share_id == share_id) {
-                   // This file belongs to relevant share_id
-                    ...
-                }
-            }
-            if (openowner has only files from this "share_id") {
-                // we don't expect same openowner to have files from
-different share_ids
-                nfs4_get_stateowner(&oo->oo_owner);// take extra refcnt
-                unhash_openowner_locked(oo);
-                atomic_inc(&clp->cl_refcount);
-                list_add(&oo->oo_perclient, &openowner_reaplist);
-            }
-        }
-        spin_unlock(&clp->cl_lock);
-    }
-    spin_unlock(&nn->client_lock);
+Thank you.
 
-    nfsd_reap_openowners(&reaplist);
-}
 
-So this code is very similar to the existing failure injection code.
-It's just that the criteria for openowner selection is different.
-
-Currently this code is invoked from a custom procfs entry, by
-user-space application, before unmounting the local file system.
-
-Would moving this code into the "unlock_filesystem" infrastructure be
-acceptable? Since the "share_id" approach is very custom for our
-usage, what criteria would you suggest for selecting the openowners to
-be "forgotten"?
-
-Thanks,
-Alex.
+>
+> >
+> > >
+> > > --b.
