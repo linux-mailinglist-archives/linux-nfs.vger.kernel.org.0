@@ -2,171 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90113A33AB
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 11:21:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4117A3AE4
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 17:48:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfH3JVC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Aug 2019 05:21:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55161 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfH3JVC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:21:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E3523307D91F;
-        Fri, 30 Aug 2019 09:21:01 +0000 (UTC)
-Received: from localhost (dhcp-12-152.nay.redhat.com [10.66.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 598C9600F8;
-        Fri, 30 Aug 2019 09:21:01 +0000 (UTC)
-From:   Yongcheng Yang <yongcheng.yang@gmail.com>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Yongcheng Yang <yongcheng.yang@gmail.com>
-Subject: [PATCH 1/1] nfsd: Adjust nfs.conf setting/parsing of rdma port
-Date:   Fri, 30 Aug 2019 17:20:58 +0800
-Message-Id: <20190830092058.18021-1-yongcheng.yang@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 30 Aug 2019 09:21:01 +0000 (UTC)
+        id S1728373AbfH3Psg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Aug 2019 11:48:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40743 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3Psg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Aug 2019 11:48:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so3745662pgj.7;
+        Fri, 30 Aug 2019 08:48:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4oHQ/J6gD7m5a2hZJIzg30k30/iTJHkHY5qB+o+D4cE=;
+        b=h7oWCY6wHIupyilklhVw3zKKmS4N6rNYStKFd6M4mXY2zoBod9UZ8VCkDGXpvOwPEx
+         y0aASnlb2KjG+wF+/aUT2biKn+NEObcgE8m7DGPrZYueZa0oebuiKl0kXOBZW/YvAFgG
+         wiNfxFX1BU+QMvruLmfNr9RwuUgTVgZhni7EzWpQBGg9w69s5GjxRS3CR8rDUkEmFDvX
+         StbzvePxJ6JAeogsEcWDy1lOLEazKGBM7XSWMidYvC4oTqL+OIaD7n27qxye/p6T0bld
+         MAh4tx6oguKUb4RPv6qhdVfxJi3jyYGLfFoX32P7ntEtN8+5CPxBMCDh7sUKz71y0419
+         8ZHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4oHQ/J6gD7m5a2hZJIzg30k30/iTJHkHY5qB+o+D4cE=;
+        b=Rz2IvZhXVmR270TP1rqP+bsFbqlAzUFU+ogsw0a3zcwY73Ays/M2RoDIJGwjPEAIqb
+         VYIwMfiipdHXcn9UC5yDpmbdtlCxpSodv34k2jMbhAMUb4I1D1yTK97Vu+tKBIsc37s8
+         GSCCNIKpF+abp2YA7U7eDhepIydRU1+LGf+acYScrkZkAfI3Hsr9G0xmS6leWTO9GV1P
+         qKDUHC9/gYZhX6lYFYRG/Xe02tstyg3JDXt3BT27nS1ahs9QQ9wMYFFB/h96WRjXfAq2
+         cbwSTh8hXhQ9zOW+8zNECzDG6byv/+l0qNgvc+1tAE4pTmC0mHYePB1ZZAf5EqhfCUie
+         a90g==
+X-Gm-Message-State: APjAAAW5HNQUG6kwZYONGxLATMVAklsEp4QxQYDrVtQ9vXyJEDMlefx4
+        CC+IzJtV3xgw4tuO/Q2bDZk=
+X-Google-Smtp-Source: APXvYqw+TTjvl6C13mK+Kx+U+c7BoLzOucbYEU3GqDfQjm5bxaW7IFfh1q/TNPR40tNdaKG3mocNEw==
+X-Received: by 2002:a17:90a:c386:: with SMTP id h6mr16090687pjt.122.1567180114546;
+        Fri, 30 Aug 2019 08:48:34 -0700 (PDT)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id z28sm8093085pfj.74.2019.08.30.08.48.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 08:48:33 -0700 (PDT)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     arnd@arndb.de, viro@zeniv.linux.org.uk
+Cc:     adilger@dilger.ca, aivazian.tigran@gmail.com,
+        darrick.wong@oracle.com, deepa.kernel@gmail.com, dsterba@suse.com,
+        gregkh@linuxfoundation.org, jlayton@kernel.org,
+        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+        me@bobcopeland.com, y2038@lists.linaro.org,
+        adrian.hunter@intel.com, al@alarsen.net, anna.schumaker@netapp.com,
+        anton@enomsg.org, asmadeus@codewreck.org, ccross@android.com,
+        ceph-devel@vger.kernel.org, coda@cs.cmu.edu,
+        codalist@coda.cs.cmu.edu, dedekind1@gmail.com,
+        devel@lists.orangefs.org, dushistov@mail.ru, dwmw2@infradead.org,
+        ericvh@gmail.com, hch@infradead.org, hch@lst.de,
+        hirofumi@mail.parknet.co.jp, hubcap@omnibond.com,
+        idryomov@gmail.com, jack@suse.com, jaegeuk@kernel.org,
+        jaharkes@cs.cmu.edu, jfs-discussion@lists.sourceforge.net,
+        jlbec@evilplan.org, linux-cifs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-karma-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        lucho@ionkov.net, luisbg@kernel.org, martin@omnibond.com,
+        mikulas@artax.karlin.mff.cuni.cz, nico@fluxnic.net,
+        phillip@squashfs.org.uk, reiserfs-devel@vger.kernel.org,
+        richard@nod.at, sage@redhat.com, salah.triki@gmail.com,
+        sfrench@samba.org, shaggy@kernel.org, tj@kernel.org,
+        tony.luck@intel.com, trond.myklebust@hammerspace.com,
+        tytso@mit.edu, v9fs-developer@lists.sourceforge.net,
+        yuchao0@huawei.com, zyan@redhat.com
+Subject: [GIT PULL RESEND] vfs: Add support for timestamp limits
+Date:   Fri, 30 Aug 2019 08:47:44 -0700
+Message-Id: <20190830154744.4868-1-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAK8P3a1XjOMpuS12Xao1xqOLFOuz1Jb8dTAfrhLcE643sSkC5g@mail.gmail.com>
+References: <CAK8P3a1XjOMpuS12Xao1xqOLFOuz1Jb8dTAfrhLcE643sSkC5g@mail.gmail.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The rpc.nfsd program can use option "--rdma" to enable
-RDMA on the standard port (nfsrdma/20049) or "--rdma=port"
-for an alternate port.
+[resending, rebased onto linux v5.3-rc6, and dropped orangefs patch from the series]
 
-But now in /etc/nfs.conf, we need to specify the port
-number (e.g. rdma=nfsrdma) to enable it, which is not
-convenient.
-The default setting "rdma=n" may cause more confusion.
+Hi Al, Arnd,
 
-Update to enable RDMA on standard port when setting
-boolean YES to "rdma=". And using "rdma-port=" for an
-alternate port if necessary.
+This is a pull request for filling in min and max timestamps for filesystems.
+I've added all the acks, and dropped the adfs patch. That will be merged through
+Russell's tree.
 
-Also let previous config (e.g. rdma=nfsrdma) work as well.
+Dropped orangefs until the maintainers decide what its limits should be.
 
-Signed-off-by: Yongcheng Yang <yongcheng.yang@gmail.com>
----
-Hello SteveD,
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-I did some simple test:
-~~~~~~~~~~~~~~~~~~~~~~~
-[root@ rpc-nfsd]# cp rpc.nfsd.new /usr/sbin/rpc.nfsd
-cp: overwrite '/usr/sbin/rpc.nfsd'? y
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=nfsrdma      <<<<<<<<< previous pattern
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-[nfsd]
-rdma 20049
-rdma 20049
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=y            <<<<<<<<< boolean YES
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-rdma 20049
-rdma 20049
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=n            <<<<<<<<< boolean NO
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=12345        <<<<<<<<< previous pattern
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-rdma 12345
-rdma 12345
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=yes          <<<<<<<<< boolean YES
-rdma-port=54321   <<<<<<<<< another port number
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-rdma 54321
-rdma 54321
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-rdma=n          <<<<<<<<< boolean NO won't enable it even with rdma-port set
-rdma-port=54321
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-[root@ rpc-nfsd]# vi /etc/nfs.conf
-[root@ rpc-nfsd]# cat /etc/nfs.conf
-[nfsd]
-#rdma=n
-rdma-port=54321
-[root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
-[root@ rpc-nfsd]# 
-~~~~~~~~~~~~~~~~~~~~~~~
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
 
-Thanks,
-Yongcheng
+are available in the Git repository at:
 
----
- nfs.conf            | 1 +
- utils/nfsd/nfsd.c   | 9 ++++++++-
- utils/nfsd/nfsd.man | 6 +++++-
- 3 files changed, 14 insertions(+), 2 deletions(-)
+  https://github.com/deepa-hub/vfs limits
 
-diff --git a/nfs.conf b/nfs.conf
-index 85097fd1..186a5b19 100644
---- a/nfs.conf
-+++ b/nfs.conf
-@@ -63,6 +63,7 @@
- # vers4.1=y
- # vers4.2=y
- # rdma=n
-+# rdma-port=20049
- #
- [statd]
- # debug=0
-diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-index b256bd9f..a412a026 100644
---- a/utils/nfsd/nfsd.c
-+++ b/utils/nfsd/nfsd.c
-@@ -92,7 +92,14 @@ main(int argc, char **argv)
- 	port = conf_get_str("nfsd", "port");
- 	if (!port)
- 		port = "nfs";
--	rdma_port = conf_get_str("nfsd", "rdma");
-+	if (conf_get_bool("nfsd", "rdma", false)) {
-+		rdma_port = conf_get_str("nfsd", "rdma-port");
-+		if (!rdma_port)
-+			rdma_port = "nfsrdma";
-+	}
-+	/* backward compatibility - nfs.conf used to set rdma port directly */
-+	if (!rdma_port)
-+		rdma_port = conf_get_str("nfsd", "rdma");
- 	if (conf_get_bool("nfsd", "udp", NFSCTL_UDPISSET(protobits)))
- 		NFSCTL_UDPSET(protobits);
- 	else
-diff --git a/utils/nfsd/nfsd.man b/utils/nfsd/nfsd.man
-index d83ef869..2701ba78 100644
---- a/utils/nfsd/nfsd.man
-+++ b/utils/nfsd/nfsd.man
-@@ -144,7 +144,11 @@ The lease time for NFSv4, in seconds.
- Set the port for TCP/UDP to bind to.
- .TP
- .B rdma
--Set RDMA port.  Use "rdma=nfsrdma" to enable standard port.
-+Enable RDMA port (with "on" or "yes" etc) on the standard port
-+("nfsrdma", port 20049).
-+.TP
-+.B rdma-port
-+Set an alternate RDMA port.
- .TP
- .B UDP
- Enable (with "on" or "yes" etc) or disable ("off", "no") UDP support.
--- 
-2.20.1
+for you to fetch changes up to 5ad32b3acded06183f40806f76b030c3143017bb:
 
+  isofs: Initialize filesystem timestamp ranges (2019-08-30 08:11:25 -0700)
+
+----------------------------------------------------------------
+
+- Deepa
+
+Deepa Dinamani (18):
+      vfs: Add file timestamp range support
+      vfs: Add timestamp_truncate() api
+      timestamp_truncate: Replace users of timespec64_trunc
+      mount: Add mount warning for impending timestamp expiry
+      utimes: Clamp the timestamps before update
+      fs: Fill in max and min timestamps in superblock
+      9p: Fill min and max timestamps in sb
+      ext4: Initialize timestamps limits
+      fs: nfs: Initialize filesystem timestamp ranges
+      fs: cifs: Initialize filesystem timestamp ranges
+      fs: fat: Initialize filesystem timestamp ranges
+      fs: affs: Initialize filesystem timestamp ranges
+      fs: sysv: Initialize filesystem timestamp ranges
+      fs: ceph: Initialize filesystem timestamp ranges
+      fs: hpfs: Initialize filesystem timestamp ranges
+      fs: omfs: Initialize filesystem timestamp ranges
+      pstore: fs superblock limits
+      isofs: Initialize filesystem timestamp ranges
+
+ fs/9p/vfs_super.c        |  6 +++++-
+ fs/affs/amigaffs.c       |  2 +-
+ fs/affs/amigaffs.h       |  3 +++
+ fs/affs/inode.c          |  4 ++--
+ fs/affs/super.c          |  4 ++++
+ fs/attr.c                | 21 ++++++++++++---------
+ fs/befs/linuxvfs.c       |  2 ++
+ fs/bfs/inode.c           |  2 ++
+ fs/ceph/super.c          |  2 ++
+ fs/cifs/cifsfs.c         | 22 ++++++++++++++++++++++
+ fs/cifs/netmisc.c        | 14 +++++++-------
+ fs/coda/inode.c          |  3 +++
+ fs/configfs/inode.c      | 12 ++++++------
+ fs/cramfs/inode.c        |  2 ++
+ fs/efs/super.c           |  2 ++
+ fs/ext2/super.c          |  2 ++
+ fs/ext4/ext4.h           | 10 +++++++++-
+ fs/ext4/super.c          | 17 +++++++++++++++--
+ fs/f2fs/file.c           | 21 ++++++++++++---------
+ fs/fat/inode.c           | 12 ++++++++++++
+ fs/freevxfs/vxfs_super.c |  2 ++
+ fs/hpfs/hpfs_fn.h        |  6 ++----
+ fs/hpfs/super.c          |  2 ++
+ fs/inode.c               | 33 ++++++++++++++++++++++++++++++++-
+ fs/isofs/inode.c         |  7 +++++++
+ fs/jffs2/fs.c            |  3 +++
+ fs/jfs/super.c           |  2 ++
+ fs/kernfs/inode.c        |  7 +++----
+ fs/minix/inode.c         |  2 ++
+ fs/namespace.c           | 33 ++++++++++++++++++++++++++++++++-
+ fs/nfs/super.c           | 20 +++++++++++++++++++-
+ fs/ntfs/inode.c          | 21 ++++++++++++---------
+ fs/omfs/inode.c          |  4 ++++
+ fs/pstore/ram.c          |  2 ++
+ fs/qnx4/inode.c          |  2 ++
+ fs/qnx6/inode.c          |  2 ++
+ fs/reiserfs/super.c      |  3 +++
+ fs/romfs/super.c         |  2 ++
+ fs/squashfs/super.c      |  2 ++
+ fs/super.c               |  2 ++
+ fs/sysv/super.c          |  5 ++++-
+ fs/ubifs/file.c          | 21 ++++++++++++---------
+ fs/ufs/super.c           |  7 +++++++
+ fs/utimes.c              |  6 ++----
+ fs/xfs/xfs_super.c       |  2 ++
+ include/linux/fs.h       |  5 +++++
+ include/linux/time64.h   |  2 ++
+ 47 files changed, 296 insertions(+), 72 deletions(-)
