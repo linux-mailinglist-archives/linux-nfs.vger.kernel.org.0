@@ -2,95 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B83D3A3BF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 18:27:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72DE6A3C14
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 18:33:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfH3Q1Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Aug 2019 12:27:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49242 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbfH3Q1Z (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:27:25 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2BF0B1893FB1
-        for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2019 16:27:25 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12B12600F8;
-        Fri, 30 Aug 2019 16:27:25 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id B8A1520B4C; Fri, 30 Aug 2019 12:27:24 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH v2 4/4] nfsdcld: update nfsdcld.man
-Date:   Fri, 30 Aug 2019 12:27:24 -0400
-Message-Id: <20190830162724.13862-5-smayhew@redhat.com>
-In-Reply-To: <20190830162724.13862-1-smayhew@redhat.com>
-References: <20190830162724.13862-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 30 Aug 2019 16:27:25 +0000 (UTC)
+        id S1727922AbfH3QdU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Aug 2019 12:33:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53032 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfH3QdU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Aug 2019 12:33:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UGX6Cg022227;
+        Fri, 30 Aug 2019 16:33:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=7F9jX+3JTIa1zj/Hv1wR+TjKUvAq2ErBXof15YLfvH8=;
+ b=B4E034NE7xCCqU2TL6QzXdbuiPGZjMgLvmXmEwq/+0GL6ow88KFbcl3pugUWE1vhsblA
+ OlhGjoSlr0wS3BDpSfrLs0rVkFb8GMA9syHQ161ICvw8UV0zzNeednUNBgmqq/E+rGqh
+ +yRyBfsoQLOEK2DhFNKn/KpcbLYSvUPHfx5wNHUqNe7YuStdUvlqz8ZLkVEtGBeZ5jg+
+ 2LOOtnulTqK9w4KKWI562xlnCoAxUw5KTm8YGPc44SYEwXCpor0lGlLI9SZ5QycLMD4q
+ rQ7liGDvh/7ZUITcwFBgnvdFZHJcpCkkZzmINxm2Gz+5w00y6sVQajBPC5Igb9WbRb5T iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2uq7dng01c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 16:33:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UGWum5145599;
+        Fri, 30 Aug 2019 16:33:07 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2upxabgq23-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 16:33:03 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7UGWpw4004525;
+        Fri, 30 Aug 2019 16:32:51 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 30 Aug 2019 09:32:51 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 0/2] nfsd: add principal to the data being tracked by
+ nfsdcld
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20190830162631.13195-1-smayhew@redhat.com>
+Date:   Fri, 30 Aug 2019 12:32:50 -0400
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Simo Sorce <simo@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <A732539C-837A-4764-8281-C26E4203DE25@oracle.com>
+References: <20190830162631.13195-1-smayhew@redhat.com>
+To:     Scott Mayhew <smayhew@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908300163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908300163
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Added some historical information to the notes section, along with
-some information regarding upgrading and downgrading nfsdcld.
+Simo, any comments or questions?
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- utils/nfsdcld/nfsdcld.man | 32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
+Patches can be found here:
 
-diff --git a/utils/nfsdcld/nfsdcld.man b/utils/nfsdcld/nfsdcld.man
-index c271d14..4c2b1e8 100644
---- a/utils/nfsdcld/nfsdcld.man
-+++ b/utils/nfsdcld/nfsdcld.man
-@@ -185,15 +185,37 @@ on stable storage by manipulating information on the filesystem
- directly, in the directory to which \fI/proc/fs/nfsd/nfsv4recoverydir\fR
- points.
- .PP
--This daemon requires a kernel that supports the nfsdcld upcall. If the
--kernel does not support the new upcall, or is using the legacy client
--name tracking code then it will not create the pipe that nfsdcld uses to
--talk to the kernel.
-+This changed with the original introduction of \fBnfsdcld\fR upcall in kernel version 3.4,
-+which was later deprecated in favor of the \fBnfsdcltrack\fR(8) usermodehelper
-+program, support for which was added in kernel version 3.8.  However, since the
-+usermodehelper upcall does not work in containers, support for a new version of
-+the \fBnfsdcld\fR upcall was added in kernel version 5.2.
-+.PP
-+This daemon requires a kernel that supports the \fBnfsdcld\fR upcall. On older kernels, if
-+the legacy client name tracking code was in use, then the kernel would not create the
-+pipe that \fBnfsdcld\fR uses to talk to the kernel.  On newer kernels, nfsd attempts to
-+initialize client tracking in the following order:  First, the \fBnfsdcld\fR upcall.  Second,
-+the \fBnfsdcltrack\fR usermodehelper upcall.  Finally, the legacy client tracking.
- .PP
- This daemon should be run as root, as the pipe that it uses to communicate
- with the kernel is only accessable by root. The daemon however does drop all
- superuser capabilities after starting. Because of this, the \fIstoragedir\fR
- should be owned by root, and be readable and writable by owner.
-+.PP
-+The daemon now supports different upcall versions to allow the kernel to pass additional
-+data to be stored in the on-disk database.  The kernel will query the supported upcall
-+version from \fBnfsdcld\fR during client tracking initialization.  A restart of \fBnfsd\fR is
-+not necessary after upgrading \fBnfsdcld\fR, however \fBnfsd\fR will not use a later upcall
-+version until restart.  A restart of \fBnfsd is necessary\fR after downgrading \fBnfsdcld\fR,
-+to ensure that \fBnfsd\fR does not use an upcall version that \fBnfsdcld\fR does not support.
-+Additionally, a downgrade of \fBnfsdcld\fR requires the schema of the on-disk database to
-+be downgraded as well.  That can be accomplished using the \fBclddb-tool\fR(8) utility.
-+.SH FILES
-+.TP
-+.B /var/lib/nfs/nfsdcld/main.sqlite
-+.SH SEE ALSO
-+.BR nfsdcltrack "(8), " clddb-tool (8)
- .SH "AUTHORS"
- .IX Header "AUTHORS"
--The nfsdcld daemon was developed by Jeff Layton <jlayton@redhat.com>.
-+The nfsdcld daemon was developed by Jeff Layton <jlayton@redhat.com>
-+with modifications from Scott Mayhew <smayhew@redhat.com>.
--- 
-2.17.2
+https://marc.info/?l=linux-nfs&m=156718239314526&w=2
+
+https://marc.info/?l=linux-nfs&m=156718239414527&w=2
+
+
+> On Aug 30, 2019, at 12:26 PM, Scott Mayhew <smayhew@redhat.com> wrote:
+> 
+> At the spring bakeathon, Chuck suggested that we should store the
+> kerberos principal in addition to the client id string in nfsdcld.  The
+> idea is to prevent an illegitimate client from reclaiming another
+> client's opens by supplying that client's id string.
+> 
+> The first patch lays some groundwork for supporting multiple message
+> versions for the nfsdcld upcalls, adding fields for version and message
+> length to the nfsd4_client_tracking_ops (these fields are only used for
+> the nfsdcld upcalls and ignored for the other tracking methods), as well
+> as an upcall to get the maximum version supported by the userspace
+> daemon.
+> 
+> The second patch actually adds the v2 message, which adds the principal
+> (actually just the first 1024 bytes) to the Cld_Create upcall and to the
+> Cld_GraceStart downcall (which is what loads the data in the
+> reclaim_str_hashtbl). I couldn't really figure out what the maximum length
+> of a kerberos principal actually is (looking at krb5.h the length field in
+> the struct krb5_data is an unsigned int, so I guess it can be pretty big).
+> I don't think the principal will be that large in practice, and even if
+> it is the first 1024 bytes should be sufficient for our purposes.
+> 
+> Scott Mayhew (2):
+>  nfsd: add a "GetVersion" upcall for nfsdcld
+>  nfsd: add support for upcall version 2
+> 
+> fs/nfsd/nfs4recover.c         | 332 +++++++++++++++++++++++++++-------
+> fs/nfsd/nfs4state.c           |   6 +-
+> fs/nfsd/state.h               |   3 +-
+> include/uapi/linux/nfsd/cld.h |  37 +++-
+> 4 files changed, 311 insertions(+), 67 deletions(-)
+> 
+> -- 
+> 2.17.2
+> 
+
+--
+Chuck Lever
+
+
 
