@@ -2,127 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0220AA3E13
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 21:00:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50038A3E23
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 21:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfH3TA6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Aug 2019 15:00:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53272 "EHLO mx1.redhat.com"
+        id S1727888AbfH3TIF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Aug 2019 15:08:05 -0400
+Received: from fieldses.org ([173.255.197.46]:51272 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbfH3TA5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 30 Aug 2019 15:00:57 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89413C059B7C;
-        Fri, 30 Aug 2019 19:00:57 +0000 (UTC)
-Received: from ovpn-118-39.phx2.redhat.com (ovpn-118-39.phx2.redhat.com [10.3.118.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FB131001284;
-        Fri, 30 Aug 2019 19:00:55 +0000 (UTC)
-Message-ID: <4598a6617fcb0123fb8c5c19e0ed2e489b242bcf.camel@redhat.com>
-Subject: Re: [PATCH 0/2] nfsd: add principal to the data being tracked by
- nfsdcld
-From:   Simo Sorce <simo@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Scott Mayhew <smayhew@redhat.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Fri, 30 Aug 2019 15:00:54 -0400
-In-Reply-To: <A732539C-837A-4764-8281-C26E4203DE25@oracle.com>
-References: <20190830162631.13195-1-smayhew@redhat.com>
-         <A732539C-837A-4764-8281-C26E4203DE25@oracle.com>
-Organization: Red Hat, Inc.
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 30 Aug 2019 19:00:57 +0000 (UTC)
+        id S1727791AbfH3TIF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 30 Aug 2019 15:08:05 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CEFA81CB4; Fri, 30 Aug 2019 15:08:04 -0400 (EDT)
+Date:   Fri, 30 Aug 2019 15:08:04 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Alex Lyakas <alex@zadara.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        Shyam Kaushik <shyam@zadara.com>
+Subject: Re: [RFC-PATCH] nfsd: when unhashing openowners, increment
+ openowner's refcount
+Message-ID: <20190830190804.GB5053@fieldses.org>
+References: <1566406146-7887-1-git-send-email-alex@zadara.com>
+ <CAOcd+r0bXefi79dnwrwsDN1OecScfTjc8DYS5_9A8D5XKrh7QQ@mail.gmail.com>
+ <20190826133951.GC22759@fieldses.org>
+ <CAOcd+r059fh7J8T=6MdjPSCP39K5fpOZTsXZDUKq5TrPv_RcVQ@mail.gmail.com>
+ <20190827205158.GB13198@fieldses.org>
+ <CAOcd+r0Ybfr1WszjYc1K19Cf7JmKowy=Go6nc8Fexf5KxNyf=A@mail.gmail.com>
+ <20190828165429.GC26284@fieldses.org>
+ <CAOcd+r3e52q_ds3zjya98whYarqoXf5C2umNEX-AGp4-R6=Cuw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOcd+r3e52q_ds3zjya98whYarqoXf5C2umNEX-AGp4-R6=Cuw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2019-08-30 at 12:32 -0400, Chuck Lever wrote:
-> Simo, any comments or questions?
+On Thu, Aug 29, 2019 at 09:12:49PM +0300, Alex Lyakas wrote:
+> We evaluated the network namespaces approach. But, unfortunately, it
+> doesn't fit easily into how our system is currently structured. We
+> would have to create and configure interfaces for every namespace, and
+> have a separate IP address (presumably) for every namespace.
 
-Although it is unlikely, in most scenarios to have a principal name
-longer than 1024 characters, it is definitely not impossible, given the
-principal name for hosts is generally compose of 3 components:
-- a short service name
-- a fully qualified hostname
-- a realm name
+Yes.
 
-The service name is generally "nfs" or "host" in the NFSv4 case,
-however the realm name can be arbitrarily large and usually is the
-capitalized domain name where the realm resides.
+> All this
+> seems a bit of an overkill, to just have several local filesystems
+> exported to the same client (which is when we hit the issue). I would
+> assume that some other users would argue as well that creating a
+> separate network namespace for every local filesystem is not the way
+> to go from the administration point of view.
 
-While thinking about this I wondered, why not simply hash (SHA-256 for
-example) the principal name and store the hash instead?
+OK, makes sense.
 
-It will make the length fixed and uniform and probably often shorter
-than the real principal names, so saving space in the general case.
+And I take it you don't want to go around to each client and shut things
+down cleanly.  And you're fine with the client applications erroring out
+when you yank their filesystem out from underneath them.
 
-I am not against truncating to 1024, but a hash would be more elegant
-and correct.
+(I wonder what happens these days when that happens on a linux client
+when there are dirty pages.  I think you may just end up with a useless
+mount that you can't get rid of till you power down the client.)
 
-Simo.
+> Regarding the failure injection code, we did not actually enable and
+> use it. We instead wrote some custom code that is highly modeled after
+> the failure injection code.
 
-
-> Patches can be found here:
+Sounds interesting....  I'll try to understand it and give some comments
+later.
+...
+> Currently this code is invoked from a custom procfs entry, by
+> user-space application, before unmounting the local file system.
 > 
-> https://marc.info/?l=linux-nfs&m=156718239314526&w=2
-> 
-> https://marc.info/?l=linux-nfs&m=156718239414527&w=2
-> 
-> 
-> > On Aug 30, 2019, at 12:26 PM, Scott Mayhew <smayhew@redhat.com> wrote:
-> > 
-> > At the spring bakeathon, Chuck suggested that we should store the
-> > kerberos principal in addition to the client id string in nfsdcld.  The
-> > idea is to prevent an illegitimate client from reclaiming another
-> > client's opens by supplying that client's id string.
-> > 
-> > The first patch lays some groundwork for supporting multiple message
-> > versions for the nfsdcld upcalls, adding fields for version and message
-> > length to the nfsd4_client_tracking_ops (these fields are only used for
-> > the nfsdcld upcalls and ignored for the other tracking methods), as well
-> > as an upcall to get the maximum version supported by the userspace
-> > daemon.
-> > 
-> > The second patch actually adds the v2 message, which adds the principal
-> > (actually just the first 1024 bytes) to the Cld_Create upcall and to the
-> > Cld_GraceStart downcall (which is what loads the data in the
-> > reclaim_str_hashtbl). I couldn't really figure out what the maximum length
-> > of a kerberos principal actually is (looking at krb5.h the length field in
-> > the struct krb5_data is an unsigned int, so I guess it can be pretty big).
-> > I don't think the principal will be that large in practice, and even if
-> > it is the first 1024 bytes should be sufficient for our purposes.
-> > 
-> > Scott Mayhew (2):
-> >  nfsd: add a "GetVersion" upcall for nfsdcld
-> >  nfsd: add support for upcall version 2
-> > 
-> > fs/nfsd/nfs4recover.c         | 332 +++++++++++++++++++++++++++-------
-> > fs/nfsd/nfs4state.c           |   6 +-
-> > fs/nfsd/state.h               |   3 +-
-> > include/uapi/linux/nfsd/cld.h |  37 +++-
-> > 4 files changed, 311 insertions(+), 67 deletions(-)
-> > 
-> > -- 
-> > 2.17.2
-> > 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
+> Would moving this code into the "unlock_filesystem" infrastructure be
+> acceptable?
 
--- 
-Simo Sorce
-RHEL Crypto Team
-Red Hat, Inc
+Yes.  I'd be interested in patches.
 
+> Since the "share_id" approach is very custom for our
+> usage, what criteria would you suggest for selecting the openowners to
+> be "forgotten"?
 
+The share_id shouldn't be necessary.  I'll think about it.
 
-
+--b.
