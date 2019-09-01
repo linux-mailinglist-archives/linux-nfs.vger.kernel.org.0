@@ -2,59 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AD28A3EB0
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2019 21:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FDA8A4ADE
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Sep 2019 19:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfH3Tyo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Aug 2019 15:54:44 -0400
-Received: from fieldses.org ([173.255.197.46]:51296 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbfH3Tyo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 30 Aug 2019 15:54:44 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 011541CB4; Fri, 30 Aug 2019 15:54:44 -0400 (EDT)
-Date:   Fri, 30 Aug 2019 15:54:43 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Alex Lyakas <alex@zadara.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        Shyam Kaushik <shyam@zadara.com>
-Subject: Re: [RFC-PATCH] nfsd: when unhashing openowners, increment
- openowner's refcount
-Message-ID: <20190830195443.GC5053@fieldses.org>
-References: <1566406146-7887-1-git-send-email-alex@zadara.com>
- <CAOcd+r0bXefi79dnwrwsDN1OecScfTjc8DYS5_9A8D5XKrh7QQ@mail.gmail.com>
- <20190826133951.GC22759@fieldses.org>
- <CAOcd+r059fh7J8T=6MdjPSCP39K5fpOZTsXZDUKq5TrPv_RcVQ@mail.gmail.com>
- <20190827205158.GB13198@fieldses.org>
- <CAOcd+r0Ybfr1WszjYc1K19Cf7JmKowy=Go6nc8Fexf5KxNyf=A@mail.gmail.com>
- <20190828165429.GC26284@fieldses.org>
- <CAOcd+r3e52q_ds3zjya98whYarqoXf5C2umNEX-AGp4-R6=Cuw@mail.gmail.com>
+        id S1728883AbfIAR0S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 Sep 2019 13:26:18 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39820 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728570AbfIAR0R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Sep 2019 13:26:17 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 84F4C8201F; Sun,  1 Sep 2019 19:26:02 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 19:25:59 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        rjw@rjwysocki.net, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] freezer,NFS: add an unsafe
+ schedule_timeout_interruptable freezable helper for NFS
+Message-ID: <20190901172559.GF1047@bug>
+References: <5fbe3d2c1e83face5c916891ef2823376eec3808.1567092682.git.bcodding@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOcd+r3e52q_ds3zjya98whYarqoXf5C2umNEX-AGp4-R6=Cuw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <5fbe3d2c1e83face5c916891ef2823376eec3808.1567092682.git.bcodding@redhat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 09:12:49PM +0300, Alex Lyakas wrote:
-> Would moving this code into the "unlock_filesystem" infrastructure be
-> acceptable? Since the "share_id" approach is very custom for our
-> usage, what criteria would you suggest for selecting the openowners to
-> be "forgotten"?
+On Thu 2019-08-29 11:33:37, Benjamin Coddington wrote:
+> After commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed
+> operations") my NFS client dumps lockdep warnings:
+> 
+> 	====================================
+> 	WARNING: dir_create.sh/1911 still has locks held!
+> 
+> This patch follows prior art in commit 416ad3c9c006 ("freezer: add unsafe
+> versions of freezable helpers for NFS") to skip lock dependency checks for
+> NFS.
+> 
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 
-Have you looked at what unlock_filesystem()?  It's just translating the
-given path to a superblock, then matching that against inodes in
-nlmsvc_match_sb().
 
-It's a little more complicated for nfs4_files since they don't have a
-pointer to the inode. (Maybe it should.)  You can see how I get around
-this in e.g.  fs/nfsd/nfs4state.c:nfs4_show_lock().
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-A superblock isn't the same thing as an export, thanks to bind mounts
-and subdirectory exports.  But if the goal is to be able to unmount,
-then a superblock is probably what you want.
-
---b.
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
