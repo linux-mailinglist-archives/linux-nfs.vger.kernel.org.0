@@ -2,131 +2,163 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98915A5BAE
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2019 19:06:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 417EFA5F28
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2019 04:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfIBRGa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Sep 2019 13:06:30 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39155 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfIBRG3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Sep 2019 13:06:29 -0400
-Received: by mail-io1-f67.google.com with SMTP id d25so27777003iob.6
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Sep 2019 10:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6qGSzyND4rX/g7mlQIjH5fUw5mfZyJz2GUWpcwS3xfQ=;
-        b=WI0oEPHbWiFh7rMo21/DKwuBP3xQl9UeZJguYnjgVrMLsIVPoZRpLIn6V77o6i98RP
-         FLhv/qOSCMks/QHMczZO0Kcc+j+pm/qoamLL7Pl5zAfowI25epLsG2cx55FjebSmyC7G
-         faFz09VPHAzoLlLAa4aV3dC5s/NAZ0Rx1Zkk0tLXeCjEF6s5ZI2zhZ6xXbgu6MiGsJCs
-         VpN13I63izZAi82mqULenfK8ZQ/vRbLMAoMNia/WdVRbZO/TbHcDwKk0FJRVwCL42YFX
-         SO745ymn6JpwX+sJJ3hHUlfDURLiLeR0+UsgmZHIQbPrRjm2/gW7RtPoZNdBHO0mE7v+
-         +CZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6qGSzyND4rX/g7mlQIjH5fUw5mfZyJz2GUWpcwS3xfQ=;
-        b=kNfpwx40SXtGqtTqIfGX+90gYk1SCHZbpWyZs4vFv4Ci8MMb8VCjrSXUiJ9g7cH/Uf
-         kFFEhSYjzlZHfgrPazyxN8iQ+FiXD0wcFx0Q1cbC2GNuRjdBo1jMOX2WHfhvtz6bWQ90
-         ljSFgkds4nA+2IbGzxtx7J+/qL6SK70CQ1mpbQJJBLdHIxjCtXyIQkqjBTOj9fcJyHiH
-         nA4mOsLJ3rchJTd80qoG0sDFifYb0E2I7tqnzvB10HakhDg3PYF9Wyr6erqdWSaz3Rf5
-         jWht9EudWDH3jr405mE4vOEYa/VDKcN95p6EnlV6jp4fVXgCojGwkgL0AI96fzSXXpiT
-         28nw==
-X-Gm-Message-State: APjAAAU8/sWDZk2sZ2uT5JVvmW7zEkQuUg2nh2YB6XtlIpEf7WCGFcFz
-        qwLd25xFgEjGj8Qww4D2WvwHuaiKbQ==
-X-Google-Smtp-Source: APXvYqz51BaGZrIsPbTjSk5tUxmJJaZru4HrgZL6jli2DuGSFvbORyzYNhw56HxhHAK3+9jRSkbdFQ==
-X-Received: by 2002:a02:920b:: with SMTP id x11mr11584591jag.17.1567443988318;
-        Mon, 02 Sep 2019 10:06:28 -0700 (PDT)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id o3sm7655322iob.64.2019.09.02.10.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 10:06:27 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     "J.Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 4/4] nfsd: Reset the boot verifier on all write I/O errors
-Date:   Mon,  2 Sep 2019 13:02:58 -0400
-Message-Id: <20190902170258.92522-5-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190902170258.92522-4-trond.myklebust@hammerspace.com>
-References: <20190902170258.92522-1-trond.myklebust@hammerspace.com>
- <20190902170258.92522-2-trond.myklebust@hammerspace.com>
- <20190902170258.92522-3-trond.myklebust@hammerspace.com>
- <20190902170258.92522-4-trond.myklebust@hammerspace.com>
+        id S1726731AbfICCHq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Sep 2019 22:07:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32908 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfICCHq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 2 Sep 2019 22:07:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6C00CACC4;
+        Tue,  3 Sep 2019 02:07:44 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "schumaker.anna\@gmail.com" <schumaker.anna@gmail.com>
+Date:   Tue, 03 Sep 2019 12:07:37 +1000
+Cc:     "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>
+Subject: Re: [PATCH 4/6] NFS: Have nfs41_proc_reclaim_complete() call nfs4_call_sync_custom()
+In-Reply-To: <68876eaa4fc3f387ea7e3329af9f3b520ef96c5c.camel@hammerspace.com>
+References: <20190819192900.19312-1-Anna.Schumaker@Netapp.com> <20190819192900.19312-5-Anna.Schumaker@Netapp.com> <8bd34fcbd352a2d5c4a8c757919f044bfaa76c60.camel@hammerspace.com> <87sgpfec3e.fsf@notabene.neil.brown.name> <68876eaa4fc3f387ea7e3329af9f3b520ef96c5c.camel@hammerspace.com>
+Message-ID: <878sr6dtee.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If multiple clients are writing to the same file, then due to the fact
-we share a single file descriptor between all NFSv3 clients writing
-to the file, we have a situation where clients can miss the fact that
-their file data was not persisted. While this should be rare, it
-could cause silent data loss in situations where multiple clients
-are using NLM locking or O_DIRECT to write to the same file.
-Unfortunately, the stateless nature of NFSv3 and the fact that we
-can only identify clients by their IP address means that we cannot
-trivially cache errors; we would not know when it is safe to
-release them from the cache.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-So the solution is to declare a reboot. We understand that this
-should be a rare occurrence, since disks are usually stable. The
-most frequent occurrence is likely to be ENOSPC, at which point
-all writes to the given filesystem are likely to fail anyway.
+On Mon, Sep 02 2019, Trond Myklebust wrote:
 
-So the expectation is that clients will be forced to retry their
-writes until they hit the fatal error.
+> On Mon, 2019-09-02 at 11:11 +1000, NeilBrown wrote:
+>> On Mon, Aug 19 2019, Trond Myklebust wrote:
+>>=20
+>> > On Mon, 2019-08-19 at 15:28 -0400, schumaker.anna@gmail.com wrote:
+>> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>> > >=20
+>> > > An async call followed by an rpc_wait_for_completion() is
+>> > > basically
+>> > > the
+>> > > same as a synchronous call, so we can use nfs4_call_sync_custom()
+>> > > to
+>> > > keep our custom callback ops and the RPC_TASK_NO_ROUND_ROBIN
+>> > > flag.
+>> > >=20
+>> > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>> > > ---
+>> > >  fs/nfs/nfs4proc.c | 13 ++-----------
+>> > >  1 file changed, 2 insertions(+), 11 deletions(-)
+>> > >=20
+>> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> > > index de2b3fd806ef..1b7863ec12d3 100644
+>> > > --- a/fs/nfs/nfs4proc.c
+>> > > +++ b/fs/nfs/nfs4proc.c
+>> > > @@ -8857,7 +8857,6 @@ static int
+>> > > nfs41_proc_reclaim_complete(struct
+>> > > nfs_client *clp,
+>> > >  		const struct cred *cred)
+>> > >  {
+>> > >  	struct nfs4_reclaim_complete_data *calldata;
+>> > > -	struct rpc_task *task;
+>> > >  	struct rpc_message msg =3D {
+>> > >  		.rpc_proc =3D
+>> > > &nfs4_procedures[NFSPROC4_CLNT_RECLAIM_COMPLETE],
+>> > >  		.rpc_cred =3D cred,
+>> > > @@ -8866,7 +8865,7 @@ static int
+>> > > nfs41_proc_reclaim_complete(struct
+>> > > nfs_client *clp,
+>> > >  		.rpc_client =3D clp->cl_rpcclient,
+>> > >  		.rpc_message =3D &msg,
+>> > >  		.callback_ops =3D &nfs4_reclaim_complete_call_ops,
+>> > > -		.flags =3D RPC_TASK_ASYNC | RPC_TASK_NO_ROUND_ROBIN,
+>> > > +		.flags =3D RPC_TASK_NO_ROUND_ROBIN,
+>> > >  	};
+>> > >  	int status =3D -ENOMEM;
+>> > >=20=20
+>> > > @@ -8881,15 +8880,7 @@ static int
+>> > > nfs41_proc_reclaim_complete(struct
+>> > > nfs_client *clp,
+>> > >  	msg.rpc_argp =3D &calldata->arg;
+>> > >  	msg.rpc_resp =3D &calldata->res;
+>> > >  	task_setup_data.callback_data =3D calldata;
+>> > > -	task =3D rpc_run_task(&task_setup_data);
+>> > > -	if (IS_ERR(task)) {
+>> > > -		status =3D PTR_ERR(task);
+>> > > -		goto out;
+>> > > -	}
+>> > > -	status =3D rpc_wait_for_completion_task(task);
+>> > > -	if (status =3D=3D 0)
+>> > > -		status =3D task->tk_status;
+>> > > -	rpc_put_task(task);
+>> > > +	status =3D nfs4_call_sync_custom(&task_setup_data);
+>> > >  out:
+>> > >  	dprintk("<-- %s status=3D%d\n", __func__, status);
+>> > >  	return status;
+>> >=20
+>> > Hmm... I'm a little confused. Why does RECLAIM_COMPLETE need
+>> > RPC_TASK_NO_ROUND_ROBIN? It should be ordered so it is called after
+>> > BIND_CONN_TO_SESSION in nfs4_state_manager(), so in principle it is
+>> > supposed to be able to recover from an error like
+>> > NFS4ERR_CONN_NOT_BOUND_TO_SESSION. Are there other situations where
+>> > we
+>> > need RPC_TASK_NO_ROUND_ROBIN?
+>>=20
+>> I thought it was conceptually simpler to keep *all* state management
+>> commands on the one connection.  It probably isn't strictly necessary
+>> as
+>> you say, but equally there is no need to distribute them over
+>> multiple
+>> connections.
+>> Having them all on the one connection might make analysing a packet
+>> trace easier...
+>>=20
+>
+> We do want BIND_CONN_TO_SESSION to be a part of the recovery process
+> where and when it is needed. If not, we end up having to catch a load
+> of NFS4ERR_CONN_NOT_BOUND_TO_SESSION errors once the recovery thread is
+> done, and having to then kick off a second recovery just to handle
+> those errors.
+>
+> IOW: Deliberately suppressing those errors by trying to route all the
+> recovery through a single connection is actually not helpful.
+> Right now, we will catch those errors in the case where there is state
+> recovery to be performed (since those calls are allowed to be routed
+> through all connections) but it might be nice to also use
+> RECLAIM_COMPLETE as a canary for connection binding.
+>
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfsd/vfs.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+Sounds reasonable.  Thanks for the explanation.  I certainly have no
+objection.
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 84e87772c2b8..0867d5319fdb 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -958,8 +958,12 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file *file,
- 	nfsdstats.io_write += *cnt;
- 	fsnotify_modify(file);
- 
--	if (stable && use_wgather)
-+	if (stable && use_wgather) {
- 		host_err = wait_for_concurrent_writes(file);
-+		if (host_err < 0)
-+			nfsd_reset_boot_verifier(net_generic(SVC_NET(rqstp),
-+						 nfsd_net_id));
-+	}
- 
- out_nfserr:
- 	if (host_err >= 0) {
-@@ -1063,10 +1067,17 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (EX_ISSYNC(fhp->fh_export)) {
- 		int err2 = vfs_fsync_range(nf->nf_file, offset, end, 0);
- 
--		if (err2 != -EINVAL)
--			err = nfserrno(err2);
--		else
-+		switch (err2) {
-+		case 0:
-+			break;
-+		case -EINVAL:
- 			err = nfserr_notsupp;
-+			break;
-+		default:
-+			err = nfserrno(err2);
-+			nfsd_reset_boot_verifier(net_generic(nf->nf_net,
-+						 nfsd_net_id));
-+		}
- 	}
- 
- 	nfsd_file_put(nf);
--- 
-2.21.0
+Thanks,
+NeilBrown
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1tyukACgkQOeye3VZi
+gbmmCxAAhw1mBtmkb35BVXIvvy1WoB9FOdqJAM66+Tl5CV639xPOVGw0pyzdMb1c
+9WeyHYin5clyDfgOhIiP8wimr7rXIkAib4XM1n7GjudB8rvFVQGz3MpofVPZOF+j
+Bje9FA/ClsYASmVTh+wXGntoIE70mz3RwOf36tjO5l+Z8Nj4ABbBCrqu7b7nk3yz
+HIMZHkaXNJyr1BdMMEMnpW8O/GbCXR0Rh9Q39WiE4nt2R5L0K9BJnwgVgaWy6P9k
+27TqIYvCvqaarY+fC1Ry1iuG0zbpAsGsv9TvpyrkiICU1ChsbRANEjqZSTtTE4YI
+YcTo2R1sFYb6L3mNsfMzlOyVVTTbbCU41dGEaI2OVOjy3G8E0y0DvzIbR3Ifumzx
+y/YhZVkYaLxpaeNUwWPbljBijjlpQZSiKm5ddrN3kH0GekFJj0KYIW75Cjh/DZpu
+erusMPPQ+kqFGtfPHjXEV7TEPMVjHbQ2JwHmqoGpo1xKCV36aKpZiqVIv9apZcLm
+8QzUD5aDWqfC3XNgddj8gPUkiqG9NbF1bcJovI6O1GIaVPIdbnzqK93OX4TnHN3h
+J1CrtGdCL5sai1uFCVUerzzOKtORJHZlF7lcsD76t93Zr2Jqcmwf8PFfk7yzybFM
+sLAf2h9R5e3B2oWyBlxLl6HKLGEKYq9HUrefQ6AD/2hCAKHjnBE=
+=Rrxt
+-----END PGP SIGNATURE-----
+--=-=-=--
