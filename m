@@ -2,94 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C82ECA7246
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2019 20:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1119BA7321
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2019 21:06:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfICSJp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Sep 2019 14:09:45 -0400
-Received: from mailin.studentenwerk.mhn.de ([141.84.225.229]:33810 "EHLO
-        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727352AbfICSJp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Sep 2019 14:09:45 -0400
-X-Greylist: delayed 413 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Sep 2019 14:09:44 EDT
-Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
-        by email.studentenwerk.mhn.de (Postfix) with ESMTP id 46NFDB3KQbzRhSl;
-        Tue,  3 Sep 2019 20:02:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de;
-        s=stwm-20170627; t=1567533770;
-        bh=cDBU6ESHTAM3Zu+XZG0ThiswLTZCCx+T14baC5kz5RE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUfKGroBMvZr9bWL6bvu2wHF6cW24EWEK2kkcpSnfuO4PJqhNs/GyHai4u8Ws6Jww
-         83xWPkP3NWu/+5KIbnIH5RysurPrZ6Cqsnvp0RDeJtwwaii/64f8FFLtjJJCVxYFlW
-         J2R44xg9DCGklrBW8YIzgsUNjBl2hQswz0qiaV2OXm5d+MKfMaMqFhJ9AEcl1Ybdcq
-         BZ0TbdsO0dV6ddXrZDa0+w79j1mDRzO6MzEgdrSjCSacDmCIE+TCfpwv3hCXUHLEEX
-         EWW43y0dua6vMakLM8iwCOPZ+yxbUD6CX3ruDFA0dyjC2S8X6WqU93iF/E0KsVNBAm
-         aYiCkmbE3DmJw==
-From:   Wolfgang Walter <linux@stwm.de>
-To:     Jason L Tibbitts III <tibbs@math.uh.edu>
+        id S1725955AbfICTGw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Sep 2019 15:06:52 -0400
+Received: from mx1.math.uh.edu ([129.7.128.32]:39344 "EHLO mx1.math.uh.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfICTGv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:06:51 -0400
+Received: from epithumia.math.uh.edu ([129.7.128.2])
+        by mx1.math.uh.edu with esmtp (Exim 4.92)
+        (envelope-from <tibbs@math.uh.edu>)
+        id 1i5E8P-0006ab-O8; Tue, 03 Sep 2019 14:06:48 -0500
+Received: by epithumia.math.uh.edu (Postfix, from userid 7225)
+        id A5F6B801554; Tue,  3 Sep 2019 14:06:33 -0500 (CDT)
+From:   Jason L Tibbitts III <tibbs@math.uh.edu>
+To:     Wolfgang Walter <linux@stwm.de>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         linux-nfs@vger.kernel.org, km@cm4all.com,
         linux-kernel@vger.kernel.org
 Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Tue, 03 Sep 2019 20:02:50 +0200
-Message-ID: <4418877.15LTP4gqqJ@stwm.de>
-User-Agent: KMail/4.14.3 (Linux/5.0.6-050006-generic; KDE/4.14.13; x86_64; ; )
-In-Reply-To: <ufa5zm9s7kz.fsf@epithumia.math.uh.edu>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu> <ufay2zduosz.fsf@epithumia.math.uh.edu> <ufa5zm9s7kz.fsf@epithumia.math.uh.edu>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+        <ufay2zduosz.fsf@epithumia.math.uh.edu>
+        <ufa5zm9s7kz.fsf@epithumia.math.uh.edu> <4418877.15LTP4gqqJ@stwm.de>
+Date:   Tue, 03 Sep 2019 14:06:33 -0500
+In-Reply-To: <4418877.15LTP4gqqJ@stwm.de> (Wolfgang Walter's message of "Tue,
+        03 Sep 2019 20:02:50 +0200")
+Message-ID: <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-Spam-Score: -2.9 (--)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Am Dienstag, 3. September 2019, 10:49:48 schrieb Jason L Tibbitts III:
-> >>>>> "JLT" =3D=3D Jason L Tibbitts <tibbs@math.uh.edu> writes:
-> JLT> Certainly a server reboot, or maybe even just
-> JLT> unmounting and remounting the filesystem or copying the data to
-> JLT> another filesystem would tell me that.  In any case, as soon as =
-I
-> JLT> am able to mess with that server, I'll know more.
->=20
-> Rebooting the server did not make any difference, and now more users =
-are
-> seeing the problem.  At this point I'm in a state where NFS simply is=
-n't
-> reliable at all, and I'm not sure what to do.  If Centos 8 were out,
-> I'd work on moving to that just so that the server was a little more
-> modern.  (Currently the server is Centos 7.)  I guess I could try usi=
-ng
-> Fedora, or installing one of the upstream kernels, just in case this =
-has
-> to do with some interaction between the client and the old RHEL7 kern=
-el.
->=20
-> I do have a packet capture of a directory listing that fails with EIO=
-,
-> but I'm not sure if it's safe to simply post it, and I'm not sure wha=
-t
-> tshark options would be useful in decoding it.
->=20
-> I do know that I can rsync one of the problematic directories to a
-> different server (running the same kernel) and it doesn't have the sa=
-me
-> problem.  What I'll try next is rsyncing to a different filesystem on=
+>>>>> "WW" == Wolfgang Walter <linux@stwm.de> writes:
 
-> the same server, but again I'll have to wait until people log off to =
-do
-> proper testing.
->=20
->  - J<
+WW> What filesystem do you use on the server? xfs?
 
-What filesystem do you use on the server? xfs? If yes, does it use 64bi=
-t=20
-inodes (or started to use them)? Do you set a fsid when you export the=20=
+Yeah, it's XFS.
 
-filesystem?
+WW> If yes, does it use 64bit inodes (or started to use them)?
 
-Regards,
---=20
-Wolfgang Walter
-Studentenwerk M=FCnchen
-Anstalt des =F6ffentlichen Rechts
+These filesystems aren't super old, and were all created with the
+default RHEL7 options.  I'm not sure how to check that 64 bit inodes are
+being used, though.  xfs_info says:
+
+meta-data=/dev/mapper/nas-faculty--08 isize=256    agcount=4, agsize=3276800 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=0        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=13107200, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=0
+log      =internal               bsize=4096   blocks=6400, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+WW> Do you set a fsid when you export the filesystem?
+
+I have never done so on any server.
+
+And note that the servers are basically unchanged for quite some time,
+while the problem I'm having is new.  I want to find some server-related
+cause for this but so far I haven't been able to do so.  It seems my
+best option now seems to be to migrate all data off of this server and
+then wipe, reinstall and see if the problem reoccurs.
+
+ - J<
