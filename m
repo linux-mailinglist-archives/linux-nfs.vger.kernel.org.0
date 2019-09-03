@@ -2,383 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B99EBA74AF
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2019 22:33:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A6AA7652
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2019 23:37:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfICUc2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Sep 2019 16:32:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40806 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbfICUcX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:32:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD9203082133;
-        Tue,  3 Sep 2019 20:32:22 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91C5A5C207;
-        Tue,  3 Sep 2019 20:32:22 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 13A8C20F7F; Tue,  3 Sep 2019 16:32:16 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        id S1726177AbfICVhe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Sep 2019 17:37:34 -0400
+Received: from dresden.studentenwerk.mhn.de ([141.84.225.229]:34850 "EHLO
+        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725882AbfICVhe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Sep 2019 17:37:34 -0400
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+        by email.studentenwerk.mhn.de (Postfix) with ESMTP id 46NKzt6zfJzRhSl;
+        Tue,  3 Sep 2019 23:37:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de;
+        s=stwm-20170627; t=1567546650;
+        bh=x71KSc2S5IaHepI+fQ1jtlydMrj7kQCHxn9jAXkAW6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k0breuMkUhAE0GGU0llN2c7HZwP//0ZLfgHw5SUfs1d4ZCj9Yxdnbxno2eO2kEOZU
+         eh1K6Vu2UZVUBbUW1HWx+Bv9GdnZ5q143Sawq0I+85ovGQC8W60Z+qIT0Jitg6xbvV
+         4rPyA36f3pWq68s3mzYXklOIxBrq3qbXK7NfEbyXuQLMTVP9BrxA96MpBUhkW+EmZ5
+         8y+l3xxc+FV2CsD+hQeeoEIrz4teMyGTjZ28+tEq9FSIfRSMaLYBsBC6VSPuZwZ8lN
+         gDqQbrUXX8f/QJLzEwQ5WWSc3bAokfnTtIPAOoewfA1g8ZRBXPtqO8Btln7Z7TZOoG
+         qcKymjAbvBv3Q==
+From:   Wolfgang Walter <linux@stwm.de>
+To:     Jason L Tibbitts III <tibbs@math.uh.edu>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, km@cm4all.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 26/26] NFS: Attach supplementary error information to fs_context.
-Date:   Tue,  3 Sep 2019 16:32:15 -0400
-Message-Id: <20190903203215.9157-27-smayhew@redhat.com>
-In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
-References: <20190903203215.9157-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 03 Sep 2019 20:32:22 +0000 (UTC)
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Tue, 03 Sep 2019 23:37:30 +0200
+Message-ID: <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+User-Agent: KMail/4.14.3 (Linux/5.0.6-050006-generic; KDE/4.14.13; x86_64; ; )
+In-Reply-To: <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu> <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Split out from commit "NFS: Add fs_context support."
+Am Dienstag, 3. September 2019, 14:06:33 schrieb Jason L Tibbitts III:
+> >>>>> "WW" =3D=3D Wolfgang Walter <linux@stwm.de> writes:
+> WW> What filesystem do you use on the server? xfs?
+>=20
+> Yeah, it's XFS.
+>=20
+> WW> If yes, does it use 64bit inodes (or started to use them)?
+>=20
+> These filesystems aren't super old, and were all created with the
+> default RHEL7 options.  I'm not sure how to check that 64 bit inodes =
+are
+> being used, though.  xfs_info says:
+>=20
+> meta-data=3D/dev/mapper/nas-faculty--08 isize=3D256    agcount=3D4, a=
+gsize=3D3276800
+> blks =3D                       sectsz=3D512   attr=3D2, projid32bit=3D=
+1 =3D         =20
+>             crc=3D0        finobt=3D0 spinodes=3D0
+> data     =3D                       bsize=3D4096   blocks=3D13107200, =
+imaxpct=3D25
+>          =3D                       sunit=3D0      swidth=3D0 blks
+> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0 ftype=3D=
+0
+> log      =3Dinternal               bsize=3D4096   blocks=3D6400, vers=
+ion=3D2
+>          =3D                       sectsz=3D512   sunit=3D0 blks, laz=
+y-count=3D1
+> realtime =3Dnone                   extsz=3D4096   blocks=3D0, rtexten=
+ts=3D0
+>=20
+> WW> Do you set a fsid when you export the filesystem?
+>=20
+> I have never done so on any server.
+>=20
+> And note that the servers are basically unchanged for quite some time=
+,
+> while the problem I'm having is new.  I want to find some server-rela=
+ted
+> cause for this but so far I haven't been able to do so.  It seems my
+> best option now seems to be to migrate all data off of this server an=
+d
+> then wipe, reinstall and see if the problem reoccurs.
+>=20
+>  - J<
 
-Add wrappers nfs_errorf(), nfs_invalf(), and nfs_warnf() which log error
-information to the fs_context.  Convert some printk's to use these new
-wrappers instead.
+I'm not familiar with RHEL7. But kernel 5.1.20 uses the inode64 mount o=
+ption=20
+by default, as far as I know (see Documentation/filesystems/xfs.txt). S=
+o if=20
+you do not use the mount option inode32 your xfs may now uses inode64 f=
+or=20
+newly created files?
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfs/fs_context.c | 105 +++++++++++++++-----------------------------
- fs/nfs/getroot.c    |   3 ++
- fs/nfs/internal.h   |   4 ++
- fs/nfs/namespace.c  |   2 +-
- fs/nfs/nfs4super.c  |   2 +
- fs/nfs/super.c      |   4 +-
- 6 files changed, 48 insertions(+), 72 deletions(-)
+We had similar problems some time ago. Then, inode64 was indeed the cau=
+se of=20
+the problem. With inode64 it seems that only little room is left in the=
+ nfs4=20
+handle for the fsid. When nfs mangles fsid and the xfs inode number to =
+form a=20
+nfs4 handle it seems that in large directories different files may end =
+having=20
+the same handle if there inodes do not fit in 32bit.
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 7284c5a18e2b..09525a40df0a 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -321,10 +321,8 @@ static int nfs_auth_info_add(struct fs_context *fc,
- 			return 0;
- 	}
- 
--	if (auth_info->flavor_len + 1 >= max_flavor_len) {
--		dfprintk(MOUNT, "NFS: too many sec= flavors\n");
--		return -EINVAL;
--	}
-+	if (auth_info->flavor_len + 1 >= max_flavor_len)
-+		return nfs_invalf(fc, "NFS: too many sec= flavors");
- 
- 	auth_info->flavors[auth_info->flavor_len++] = flavor;
- 	return 0;
-@@ -381,9 +379,7 @@ static int nfs_parse_security_flavors(struct fs_context *fc,
- 			pseudoflavor = RPC_AUTH_GSS_SPKMP;
- 			break;
- 		default:
--			dfprintk(MOUNT,
--				 "NFS: sec= option '%s' not recognized\n", p);
--			return -EINVAL;
-+			return nfs_invalf(fc, "NFS: sec=%s option not recognized", p);
- 		}
- 
- 		ret = nfs_auth_info_add(fc, &ctx->auth_info, pseudoflavor);
-@@ -428,8 +424,7 @@ static int nfs_parse_version_string(struct fs_context *fc,
- 		ctx->minorversion = 2;
- 		break;
- 	default:
--		dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
--		return -EINVAL;
-+		return nfs_invalf(fc, "NFS: Unsupported NFS version");
- 	}
- 	return 0;
- }
-@@ -454,10 +449,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 
- 	switch (opt) {
- 	case Opt_source:
--		if (fc->source) {
--			dfprintk(MOUNT, "NFS: Multiple sources not supported\n");
--			return -EINVAL;
--		}
-+		if (fc->source)
-+			return nfs_invalf(fc, "NFS: Multiple sources not supported");
- 		fc->source = param->string;
- 		param->string = NULL;
- 		break;
-@@ -667,8 +660,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			xprt_load_transport(param->string);
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
--			return -EINVAL;
-+			return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
- 		}
- 
- 		ctx->protofamily = protofamily;
-@@ -691,8 +683,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			break;
- 		case Opt_xprt_rdma: /* not used for side protocols */
- 		default:
--			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
--			return -EINVAL;
-+			return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
- 		}
- 		ctx->mountfamily = mountfamily;
- 		break;
-@@ -777,13 +768,11 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 	return 0;
- 
- out_invalid_value:
--	printk(KERN_INFO "NFS: Bad mount option value specified\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Bad mount option value specified");
- out_invalid_address:
--	printk(KERN_INFO "NFS: Bad IP address specified\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Bad IP address specified");
- out_of_bounds:
--	printk(KERN_INFO "NFS: Value for '%s' out of range\n", param->key);
-+	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
- 	return -ERANGE;
- }
- 
-@@ -849,19 +838,15 @@ static int nfs_parse_source(struct fs_context *fc,
- 	return 0;
- 
- out_bad_devname:
--	dfprintk(MOUNT, "NFS: device name not in host:path format\n");
--	return -EINVAL;
--
-+	return nfs_invalf(fc, "NFS: device name not in host:path format");
- out_nomem:
--	dfprintk(MOUNT, "NFS: not enough memory to parse device name\n");
-+	nfs_errorf(fc, "NFS: not enough memory to parse device name");
- 	return -ENOMEM;
--
- out_hostname:
--	dfprintk(MOUNT, "NFS: server hostname too long\n");
-+	nfs_errorf(fc, "NFS: server hostname too long");
- 	return -ENAMETOOLONG;
--
- out_path:
--	dfprintk(MOUNT, "NFS: export pathname too long\n");
-+	nfs_errorf(fc, "NFS: export pathname too long");
- 	return -ENAMETOOLONG;
- }
- 
-@@ -1018,29 +1003,23 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- 		ctx->skip_reconfig_option_check = true;
- 		return 0;
- 	}
--	dfprintk(MOUNT, "NFS: mount program didn't pass any mount data\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: mount program didn't pass any mount data");
- 
- out_no_v3:
--	dfprintk(MOUNT, "NFS: nfs_mount_data version %d does not support v3\n",
--		 data->version);
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: nfs_mount_data version does not support v3");
- 
- out_no_sec:
--	dfprintk(MOUNT, "NFS: nfs_mount_data version supports only AUTH_SYS\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: nfs_mount_data version supports only AUTH_SYS");
- 
- out_nomem:
--	dfprintk(MOUNT, "NFS: not enough memory to handle mount options\n");
-+	dfprintk(MOUNT, "NFS: not enough memory to handle mount options");
- 	return -ENOMEM;
- 
- out_no_address:
--	dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
- 
- out_invalid_fh:
--	dfprintk(MOUNT, "NFS: invalid root filehandle\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: invalid root filehandle");
- }
- 
- /*
-@@ -1134,21 +1113,17 @@ static int nfs4_parse_monolithic(struct fs_context *fc,
- 		ctx->skip_reconfig_option_check = true;
- 		return 0;
- 	}
--	dfprintk(MOUNT, "NFS4: mount program didn't pass any mount data\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS4: mount program didn't pass any mount data");
- 
- out_inval_auth:
--	dfprintk(MOUNT, "NFS4: Invalid number of RPC auth flavours %d\n",
--		 data->auth_flavourlen);
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS4: Invalid number of RPC auth flavours %d",
-+		      data->auth_flavourlen);
- 
- out_no_address:
--	dfprintk(MOUNT, "NFS4: mount program didn't pass remote address\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS4: mount program didn't pass remote address");
- 
- out_invalid_transport_udp:
--	dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
- }
- 
- /*
-@@ -1165,8 +1140,7 @@ static int nfs_fs_context_parse_monolithic(struct fs_context *fc,
- 		return nfs4_parse_monolithic(fc, data);
- #endif
- 
--	dfprintk(MOUNT, "NFS: Unsupported monolithic data version\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Unsupported monolithic data version");
- }
- 
- /*
-@@ -1254,32 +1228,25 @@ static int nfs_fs_context_validate(struct fs_context *fc)
- 	return 0;
- 
- out_no_device_name:
--	dfprintk(MOUNT, "NFS: Device name not specified\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Device name not specified");
- out_v4_not_compiled:
--	dfprintk(MOUNT, "NFS: NFSv4 is not compiled into kernel\n");
-+	nfs_errorf(fc, "NFS: NFSv4 is not compiled into kernel");
- 	return -EPROTONOSUPPORT;
- out_invalid_transport_udp:
--	dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
- out_no_address:
--	dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
- out_mountproto_mismatch:
--	dfprintk(MOUNT, "NFS: Mount server address does not match mountproto= option\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Mount server address does not match mountproto= option");
- out_proto_mismatch:
--	dfprintk(MOUNT, "NFS: Server address does not match proto= option\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: Server address does not match proto= option");
- out_minorversion_mismatch:
--	dfprintk(MOUNT, "NFS: Mount option vers=%u does not support minorversion=%u\n",
-+	return nfs_invalf(fc, "NFS: Mount option vers=%u does not support minorversion=%u",
- 			  ctx->version, ctx->minorversion);
--	return -EINVAL;
- out_migration_misuse:
--	dfprintk(MOUNT, "NFS: 'Migration' not supported for this NFS version\n");
--	return -EINVAL;
-+	return nfs_invalf(fc, "NFS: 'Migration' not supported for this NFS version");
- out_version_unavailable:
--	dfprintk(MOUNT, "NFS: Version unavailable\n");
-+	nfs_errorf(fc, "NFS: Version unavailable");
- 	return ret;
- }
- 
-diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
-index ab45496d23a6..b012c2668a1f 100644
---- a/fs/nfs/getroot.c
-+++ b/fs/nfs/getroot.c
-@@ -86,6 +86,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
- 	error = server->nfs_client->rpc_ops->getroot(server, ctx->mntfh, &fsinfo);
- 	if (error < 0) {
- 		dprintk("nfs_get_root: getattr error = %d\n", -error);
-+		nfs_errorf(fc, "NFS: Couldn't getattr on root");
- 		goto out_fattr;
- 	}
- 
-@@ -93,6 +94,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
- 	if (IS_ERR(inode)) {
- 		dprintk("nfs_get_root: get root inode failed\n");
- 		error = PTR_ERR(inode);
-+		nfs_errorf(fc, "NFS: Couldn't get root inode");
- 		goto out_fattr;
- 	}
- 
-@@ -108,6 +110,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
- 	if (IS_ERR(root)) {
- 		dprintk("nfs_get_root: get root dentry failed\n");
- 		error = PTR_ERR(root);
-+		nfs_errorf(fc, "NFS: Couldn't get root dentry");
- 		goto out_fattr;
- 	}
- 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index e0911815e153..e1f46034814f 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -141,6 +141,10 @@ struct nfs_fs_context {
- 	} clone_data;
- };
- 
-+#define nfs_errorf(fc, fmt, ...) errorf(fc, fmt, ## __VA_ARGS__)
-+#define nfs_invalf(fc, fmt, ...) invalf(fc, fmt, ## __VA_ARGS__)
-+#define nfs_warnf(fc, fmt, ...) warnf(fc, fmt, ## __VA_ARGS__)
-+
- static inline struct nfs_fs_context *nfs_fc2context(const struct fs_context *fc)
- {
- 	return fc->fs_private;
-diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index 3e566a632215..c1824bc6336b 100644
---- a/fs/nfs/namespace.c
-+++ b/fs/nfs/namespace.c
-@@ -278,7 +278,7 @@ int nfs_do_submount(struct fs_context *fc)
- 
- 	p = nfs_devname(dentry, buffer, 4096);
- 	if (IS_ERR(p)) {
--		dprintk("NFS: Couldn't determine submount pathname\n");
-+		nfs_errorf(fc, "NFS: Couldn't determine submount pathname");
- 		ret = PTR_ERR(p);
- 	} else {
- 		ret = vfs_parse_fs_string(fc, "source", p, buffer + 4096 - p);
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 3b27c5e3d781..54e9c54bd08d 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -225,6 +225,7 @@ int nfs4_try_get_tree(struct fs_context *fc)
- 			   fc, ctx->nfs_server.hostname,
- 			   ctx->nfs_server.export_path);
- 	if (err) {
-+		nfs_errorf(fc, "NFS4: Couldn't follow remote path");
- 		dfprintk(MOUNT, "<-- nfs4_try_get_tree() = %d [error]\n", err);
- 	} else {
- 		dfprintk(MOUNT, "<-- nfs4_try_get_tree() = 0\n");
-@@ -247,6 +248,7 @@ int nfs4_get_referral_tree(struct fs_context *fc)
- 			    fc, ctx->nfs_server.hostname,
- 			    ctx->nfs_server.export_path);
- 	if (err) {
-+		nfs_errorf(fc, "NFS4: Couldn't follow remote path");
- 		dfprintk(MOUNT, "<-- nfs4_get_referral_tree() = %d [error]\n", err);
- 	} else {
- 		dfprintk(MOUNT, "<-- nfs4_get_referral_tree() = 0\n");
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 60174a30a91a..2e363cc65688 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1189,7 +1189,7 @@ int nfs_get_tree_common(struct fs_context *fc)
- 	fc->s_fs_info = NULL;
- 	if (IS_ERR(s)) {
- 		error = PTR_ERR(s);
--		dfprintk(MOUNT, "NFS: Couldn't get superblock\n");
-+		nfs_errorf(fc, "NFS: Couldn't get superblock");
- 		goto out_err_nosb;
- 	}
- 
-@@ -1218,7 +1218,7 @@ int nfs_get_tree_common(struct fs_context *fc)
- 
- 	error = nfs_get_root(s, fc);
- 	if (error < 0) {
--		dfprintk(MOUNT, "NFS: Couldn't get root dentry\n");
-+		nfs_errorf(fc, "NFS: Couldn't get root dentry");
- 		goto error_splat_super;
- 	}
- 
--- 
-2.17.2
+You may try setting a rather small fsid (say 500) and reexport the fs a=
+nd then=20
+see, if the problem disappears. I think our problems dissappered then, =
+but I=20
+do not remember exactly. We now use inode32 to avoid the problem.
 
+
+Regards,
+--=20
+Wolfgang Walter
+Studentenwerk M=FCnchen
+Anstalt des =F6ffentlichen Rechts
