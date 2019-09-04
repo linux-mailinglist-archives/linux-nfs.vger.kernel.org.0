@@ -2,39 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2D33A8B8A
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 21:28:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F00BA8CF4
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 21:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387656AbfIDQDY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Sep 2019 12:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
+        id S1732156AbfIDQTo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Sep 2019 12:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbfIDQDX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:23 -0400
+        id S1730299AbfIDP6T (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AD52341C;
-        Wed,  4 Sep 2019 16:03:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 369A722CED;
+        Wed,  4 Sep 2019 15:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613003;
-        bh=s3X8KYhopGYFylN09akusJr4NOztZXLrmbfsb8R3yHg=;
+        s=default; t=1567612698;
+        bh=dQ1rcYng/vG9JREecmlY+aQhD8bv93+NXvLH83n+QRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHdrcNM09meJKAVE9ibnAWZuFC7KXbCGTsPxR3xBjuJlUteMw3962+3JyLGztP2LG
-         ayD7p6A+KNOzcLvaNdiMTKVWC07fHoNDJ9jzbJgoLhyhOxm7QOfEPinC4xsBP8OzSP
-         dJCehKEArlxASU4cYE6RudjLpa4kX5/zwxDTo1bA=
+        b=QjKURkjedyQtM+2vCz2wQ62EwkRwNXn3zfwdRtpl5mvc/p3UGtCxkooPWkgyf7WRV
+         Pzx8p4XHQe5eHUaT2Q739w02R7Qev2SAomyoV3zsxsNBJU3pI83HrwIeZW3CPKeW6j
+         3lgIxPYXHXgQs45LDKHhS2wnxhqD4gyYfViq4SSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/20] NFSv2: Fix write regression
-Date:   Wed,  4 Sep 2019 12:02:55 -0400
-Message-Id: <20190904160303.5062-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 26/94] NFSv4: Fix return value in nfs_finish_open()
+Date:   Wed,  4 Sep 2019 11:56:31 -0400
+Message-Id: <20190904155739.2816-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
-References: <20190904160303.5062-1-sashal@kernel.org>
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,36 +44,31 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
+[ Upstream commit 9821421a291b548ef4369c6998745baa36ddecd5 ]
 
-Ensure we update the write result count on success, since the
-RPC call itself does not do so.
+If the file turns out to be of the wrong type after opening, we want
+to revalidate the path and retry, so return EOPENSTALE rather than
+ESTALE.
 
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Tested-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfs/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index 80ecdf2ec8b6a..b83e14ad13c45 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -610,8 +610,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
- 
- static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
--	if (task->tk_status >= 0)
-+	if (task->tk_status >= 0) {
-+		hdr->res.count = hdr->args.count;
- 		nfs_writeback_update_inode(hdr);
-+	}
- 	return 0;
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 9f44ddc34c7bf..3321cc7a7ead1 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1483,7 +1483,7 @@ static int nfs_finish_open(struct nfs_open_context *ctx,
+ 	if (S_ISREG(file->f_path.dentry->d_inode->i_mode))
+ 		nfs_file_set_open_context(file, ctx);
+ 	else
+-		err = -ESTALE;
++		err = -EOPENSTALE;
+ out:
+ 	return err;
  }
- 
 -- 
 2.20.1
 
