@@ -2,39 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6B8A8A57
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 21:25:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE3EA8AC3
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 21:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbfIDP7C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Sep 2019 11:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33278 "EHLO mail.kernel.org"
+        id S1732738AbfIDQAc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Sep 2019 12:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732222AbfIDP7C (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:02 -0400
+        id S1732734AbfIDQAc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5745022DBF;
-        Wed,  4 Sep 2019 15:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 256BC2341C;
+        Wed,  4 Sep 2019 16:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612741;
-        bh=+PpyBe9AIAsblW3JyysaNGodo98udWJcx/rWMlVM3eg=;
+        s=default; t=1567612831;
+        bh=bVOk13PRzIHQGBfYtVxop4HBf3WHR2t6grZQC+tJR1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMjeTWpBfql8weIbqMAcRKBFa6putFfMakXzh1FtdtW7G1OfG0jyVSDiRH10lVN2z
-         p4AI0gJhySufpFq3sDV4erlNdwFqNQIL9oQpMa2uHfFa/8Xpem32iY/pGUhVQ+rkkE
-         SuUwBdRNMyBqUXQZlJ04xECGjj5O17CS7tleF9dk=
+        b=ISvHK4dxV6ei8wshpVQ5C9LWQl+S7lTlVcw0sKkgPcmCdsK4LFSbtfDiRgwwN/m14
+         WYZHfl9Re0RD22X0O0E+R4cSD1qD9GD8yqmEtQUKnaEDe2lcnN8kt0adI5TtC24Uyy
+         1u0b+bAwzdtgXzGGKZETOCzu6N/T2riLqWrzJsEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 54/94] NFSv2: Fix write regression
-Date:   Wed,  4 Sep 2019 11:56:59 -0400
-Message-Id: <20190904155739.2816-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/52] NFSv4: Fix return values for nfs4_file_open()
+Date:   Wed,  4 Sep 2019 11:59:31 -0400
+Message-Id: <20190904160004.3671-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
-References: <20190904155739.2816-1-sashal@kernel.org>
+In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
+References: <20190904160004.3671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,36 +44,47 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
+[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
 
-Ensure we update the write result count on success, since the
-RPC call itself does not do so.
+Currently, we are translating RPC level errors such as timeouts,
+as well as interrupts etc into EOPENSTALE, which forces a single
+replay of the open attempt. What we actually want to do is
+force the replay only in the cases where the returned error
+indicates that the file may have changed on the server.
 
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+So the fix is to spell out the exact set of errors where we want
+to return EOPENSTALE.
+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Tested-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4file.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index ec79d2214a78c..0f7288b94633b 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -616,8 +616,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
- 
- static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
--	if (task->tk_status >= 0)
-+	if (task->tk_status >= 0) {
-+		hdr->res.count = hdr->args.count;
- 		nfs_writeback_update_inode(hdr);
-+	}
- 	return 0;
- }
- 
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 61abbb087ed13..75d3cf86f1723 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (IS_ERR(inode)) {
+ 		err = PTR_ERR(inode);
+ 		switch (err) {
+-		case -EPERM:
+-		case -EACCES:
+-		case -EDQUOT:
+-		case -ENOSPC:
+-		case -EROFS:
+-			goto out_put_ctx;
+ 		default:
++			goto out_put_ctx;
++		case -ENOENT:
++		case -ESTALE:
++		case -EISDIR:
++		case -ENOTDIR:
++		case -ELOOP:
+ 			goto out_drop;
+ 		}
+ 	}
 -- 
 2.20.1
 
