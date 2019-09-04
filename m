@@ -2,54 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B55A9232
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 21:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8DE7A9419
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 22:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbfIDTKC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Sep 2019 15:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
+        id S1729753AbfIDUuQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Sep 2019 16:50:16 -0400
+Received: from fieldses.org ([173.255.197.46]:55740 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731901AbfIDTKC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:10:02 -0400
-Subject: Re: [GIT PULL] Please pull NFS bugfix
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567624202;
-        bh=B0u7KtP/S4qWMpiog5R6QkXAoTWkFXZ4gppz5eNNcR4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xSLhBL89hJgSBv4X8IAF2WaTDnS1/q2zcqywtlgkiOS9UoCaxAh5w3pvvtQhHsX+B
-         jxGSm3VAZZUqUpjHQxOqGdu2LIES3LNq0Cd6KuZVq0HZvxjgTYtEOZq3hoiSTIBql1
-         lzdaLb3q5cM2m/+aYeA9PF9Hxm1a2uXRgqCEP5Pk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <9c0f3a52cd4e0075713fb7b9a2adbc7f05adadb3.camel@hammerspace.com>
-References: <9c0f3a52cd4e0075713fb7b9a2adbc7f05adadb3.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <9c0f3a52cd4e0075713fb7b9a2adbc7f05adadb3.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
- tags/nfs-for-5.3-4
-X-PR-Tracked-Commit-Id: eb3d8f42231aec65b64b079dd17bd6c008a3fe29
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3b47fd5ca9ead91156bcdf6435279ad0b14a650c
-Message-Id: <156762420197.10973.5210895278625856980.pr-tracker-bot@kernel.org>
-Date:   Wed, 04 Sep 2019 19:10:01 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        id S1728526AbfIDUuQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:50:16 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id D613A1CB3; Wed,  4 Sep 2019 16:50:15 -0400 (EDT)
+Date:   Wed, 4 Sep 2019 16:50:15 -0400
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v5 0/9] server-side support for "inter" SSC copy
+Message-ID: <20190904205015.GD14319@fieldses.org>
+References: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Wed, 4 Sep 2019 17:11:29 +0000:
+What do we know about the status of NFSv4.2 and COPY support on Netapp
+or other servers?  In either the single-server or inter-server cases?
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.3-4
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3b47fd5ca9ead91156bcdf6435279ad0b14a650c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+--b.
