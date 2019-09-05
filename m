@@ -2,146 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FE40A943F
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2019 22:58:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E4F6A9779
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2019 02:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfIDU6d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Sep 2019 16:58:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfIDU6d (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:58:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 37BCD3CA04;
-        Wed,  4 Sep 2019 20:58:33 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F29160852;
-        Wed,  4 Sep 2019 20:58:27 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 41E5F209F3; Wed,  4 Sep 2019 16:58:26 -0400 (EDT)
-Date:   Wed, 4 Sep 2019 16:58:26 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Simo Sorce <simo@redhat.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/2] nfsd: add principal to the data being tracked by
- nfsdcld
-Message-ID: <20190904205826.GH11980@coeurl.usersys.redhat.com>
-References: <20190830162631.13195-1-smayhew@redhat.com>
- <A732539C-837A-4764-8281-C26E4203DE25@oracle.com>
- <4598a6617fcb0123fb8c5c19e0ed2e489b242bcf.camel@redhat.com>
+        id S1725965AbfIEAFz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Sep 2019 20:05:55 -0400
+Received: from mail-vs1-f50.google.com ([209.85.217.50]:42468 "EHLO
+        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfIEAFz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Sep 2019 20:05:55 -0400
+Received: by mail-vs1-f50.google.com with SMTP id m22so294039vsl.9
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Sep 2019 17:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7UhoxhGYQFRIUho2ck0sgr1i5vdo/L1hboF0b73um5Y=;
+        b=RySJnSaS/371/6irNfq1iHAq/0Irsq/g+ONajWA2yfwviziEkq0JVRjd3lCFjtlzvT
+         94RzDxx7Gu8Xi00y+J+B2GL4De86w3Sm7BSMHGGaDfxbhQsPMauixhsIXcjd6ogQgA3G
+         hNthEnc9CfbT9NdENLW0HiQIvlZwGs/QPKA/gm+BLqQHgIvU5e0pF+FuVWNUuyIpx04F
+         f2B7XI25ab8hcR0E2PJYtBaovoMunpMOB/ZG+8/ybWYdDv+7k74bWDJ7aHo3NSyLmsFa
+         9GFu34v1PQtmW/Alr2B05pIqife4EHwAI5+8AQmBMlaU9Uu7r+pXfpgkMLbJlkxbkeqN
+         ciYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7UhoxhGYQFRIUho2ck0sgr1i5vdo/L1hboF0b73um5Y=;
+        b=VR+jjqJf3btiSGRg6IGi7GIYlVcwOU3jToywsjC0nVgleqHKfnx1ROgZJhs3yJWo5f
+         ZFqC4xhII/YjOPvOjrd4TjxLxVOL/JeCCefI/cirLIZ+QS90FcZ7/26vY4AcFrnam736
+         oVDzEfyLbRr4Bd17KNPKsJ/VRHyPdlws1NyhygVhSROdSqzJk7QJKkb7JtIizBKlJxmf
+         1OGwRQ0R6qAJNeaA+U6T4Ihxyw3Abz0Q2C/BWWQ0TekcCZ0PHAKdepK985+YNSLoBgAB
+         mUfpcSOE0WGwhuLjYGRozNJkjiHuorDMYWSyS0zV1FwSU4s6Z0rtzVJpUvG4f1wOhCpD
+         cB3Q==
+X-Gm-Message-State: APjAAAWN2X1p6K3/YmAAALSeIb33aoxiKQeYvStZXKOod1QS9oGZoTjI
+        kEnFNoMNN2ppHHnvH/Wl5lu1P5CCHzhgBLNIuQk=
+X-Google-Smtp-Source: APXvYqwl1emc9GyjkT8Ybs07grfg1A/om/udun6PwxE1ZblFxkWE4NGJ63urjwY+1jDuhPIJm4/jCZuSXvP348XhA+g=
+X-Received: by 2002:a67:10c6:: with SMTP id 189mr309046vsq.194.1567641953823;
+ Wed, 04 Sep 2019 17:05:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4598a6617fcb0123fb8c5c19e0ed2e489b242bcf.camel@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 04 Sep 2019 20:58:33 +0000 (UTC)
+References: <20190808201848.36640-1-olga.kornievskaia@gmail.com> <20190904205015.GD14319@fieldses.org>
+In-Reply-To: <20190904205015.GD14319@fieldses.org>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 4 Sep 2019 20:05:42 -0400
+Message-ID: <CAN-5tyGcT6rCpzOB3coj4H19-BuDsBRheD=rsRHZthn7STNq0Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] server-side support for "inter" SSC copy
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 30 Aug 2019, Simo Sorce wrote:
+On Wed, Sep 4, 2019 at 4:50 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> What do we know about the status of NFSv4.2 and COPY support on Netapp
+> or other servers?  In either the single-server or inter-server cases?
 
-> On Fri, 2019-08-30 at 12:32 -0400, Chuck Lever wrote:
-> > Simo, any comments or questions?
-> 
-> Although it is unlikely, in most scenarios to have a principal name
-> longer than 1024 characters, it is definitely not impossible, given the
-> principal name for hosts is generally compose of 3 components:
-> - a short service name
-> - a fully qualified hostname
-> - a realm name
+I'm unaware of any other (current/on-going) implementations. Netapp is
+interested in having (implementing) this 4.2 feature though (single
+server case for sure not sure about the inter-server).
 
-Right now I'm using the svc_cred.cr_principal, which doesn't include
-the realm.  The reason I chose that was because it's set by both
-gssproxy and rpc.svcgssd.  I suppose I can check
-svc_cred.cr_raw_princpal first and then fall back to
-svc_cred.cr_principal.
-> 
-> The service name is generally "nfs" or "host" in the NFSv4 case,
-> however the realm name can be arbitrarily large and usually is the
-> capitalized domain name where the realm resides.
-> 
-> While thinking about this I wondered, why not simply hash (SHA-256 for
-> example) the principal name and store the hash instead?
-> 
-> It will make the length fixed and uniform and probably often shorter
-> than the real principal names, so saving space in the general case.
-> 
-> I am not against truncating to 1024, but a hash would be more elegant
-> and correct.
-
-I can do that.  Is there any reason I would want to convert the hash to
-to a human-readable format (i.e. something that would match the
-sha256sum command-line tool's output) or can I just use the raw buffer?
-Note that if we wanted to print the hash in an error message or
-something, I can just use printk's %*phN format specifier...
-
--Scott
-> 
-> Simo.
-> 
-> 
-> > Patches can be found here:
-> > 
-> > https://marc.info/?l=linux-nfs&m=156718239314526&w=2
-> > 
-> > https://marc.info/?l=linux-nfs&m=156718239414527&w=2
-> > 
-> > 
-> > > On Aug 30, 2019, at 12:26 PM, Scott Mayhew <smayhew@redhat.com> wrote:
-> > > 
-> > > At the spring bakeathon, Chuck suggested that we should store the
-> > > kerberos principal in addition to the client id string in nfsdcld.  The
-> > > idea is to prevent an illegitimate client from reclaiming another
-> > > client's opens by supplying that client's id string.
-> > > 
-> > > The first patch lays some groundwork for supporting multiple message
-> > > versions for the nfsdcld upcalls, adding fields for version and message
-> > > length to the nfsd4_client_tracking_ops (these fields are only used for
-> > > the nfsdcld upcalls and ignored for the other tracking methods), as well
-> > > as an upcall to get the maximum version supported by the userspace
-> > > daemon.
-> > > 
-> > > The second patch actually adds the v2 message, which adds the principal
-> > > (actually just the first 1024 bytes) to the Cld_Create upcall and to the
-> > > Cld_GraceStart downcall (which is what loads the data in the
-> > > reclaim_str_hashtbl). I couldn't really figure out what the maximum length
-> > > of a kerberos principal actually is (looking at krb5.h the length field in
-> > > the struct krb5_data is an unsigned int, so I guess it can be pretty big).
-> > > I don't think the principal will be that large in practice, and even if
-> > > it is the first 1024 bytes should be sufficient for our purposes.
-> > > 
-> > > Scott Mayhew (2):
-> > >  nfsd: add a "GetVersion" upcall for nfsdcld
-> > >  nfsd: add support for upcall version 2
-> > > 
-> > > fs/nfsd/nfs4recover.c         | 332 +++++++++++++++++++++++++++-------
-> > > fs/nfsd/nfs4state.c           |   6 +-
-> > > fs/nfsd/state.h               |   3 +-
-> > > include/uapi/linux/nfsd/cld.h |  37 +++-
-> > > 4 files changed, 311 insertions(+), 67 deletions(-)
-> > > 
-> > > -- 
-> > > 2.17.2
-> > > 
-> > 
-> > --
-> > Chuck Lever
-> > 
-> > 
-> > 
-> 
-> -- 
-> Simo Sorce
-> RHEL Crypto Team
-> Red Hat, Inc
-> 
-> 
-> 
-> 
+>
+> --b.
