@@ -2,122 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70860A9DAF
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2019 11:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1DD3AA1A0
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2019 13:37:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbfIEJA7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Sep 2019 05:00:59 -0400
-Received: from mout.web.de ([212.227.17.11]:53029 "EHLO mout.web.de"
+        id S1732629AbfIELh1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Sep 2019 07:37:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55356 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfIEJA7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:00:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567674041;
-        bh=oB3bmBAKtdD7xnQeTE01Fpj2GGVIbeI0onzpxEhFfcY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=EltrRV35wq83LsJvrbIUK/3bpz2V4kEVyc+F/AmWu5M7HvUhhIppaTqUYQB6cNSb0
-         W2llsPsor7qawsISNJmUh43IoKq5CNuPBcaKaW4pMDod6IcjJoHFXHnx96KPUhzT72
-         Mzo80lU8Y/QWO2fvV24W//YR8Tkgik7BgxavwbSE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.131.221]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LqUbl-1iakjB3BlR-00e4tW; Thu, 05
- Sep 2019 11:00:40 +0200
-Subject: Re: NFS: Checking the handling of patch variations
-To:     zhong jiang <zhongjiang@huawei.com>,
-        kernel-janitors@vger.kernel.org
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1567490688-17872-1-git-send-email-zhongjiang@huawei.com>
- <ee684073-bd3e-9a1c-4d38-702f55affba4@web.de> <5D7075B7.3080400@huawei.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6687a296-e656-872e-02e4-e2722383d363@web.de>
-Date:   Thu, 5 Sep 2019 11:00:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        id S1731633AbfIELh1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:37:27 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A7F402E97D5;
+        Thu,  5 Sep 2019 11:37:26 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-147.phx2.redhat.com [10.3.116.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 44E035D9CA;
+        Thu,  5 Sep 2019 11:37:26 +0000 (UTC)
+Subject: Re: [PATCH 1/1] nfsd: Adjust nfs.conf setting/parsing of rdma port
+To:     Yongcheng Yang <yongcheng.yang@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20190830092058.18021-1-yongcheng.yang@gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <ad0c81b0-bf92-a88a-4364-42d7ad22fb5f@RedHat.com>
+Date:   Thu, 5 Sep 2019 07:37:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <5D7075B7.3080400@huawei.com>
+In-Reply-To: <20190830092058.18021-1-yongcheng.yang@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:JGI4Kdb1X+tX6r1o//YJwssZSVrhn4aPjhxvTHKP+LPXAolf4WC
- Rjf3nYQR9kJMSBl5LC9CcQXxj+UDUR8h4LclQuRlAGPl475FWvxzEd9RfuUW9NIz+XdnDcd
- tMtNKI2igB6tOCKGgt3wzPkF8C2LRflSKK0QaMzvkizHoWocvIkHx/O3olY602VN+930hbD
- UekodEPGJA6Mw41WRdt6w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LRic+8Eijb8=:aVzZP2KymNl1d5QHIvOOI0
- NHkAV1DCL7uUVa9Lseiif/BXzrL5yylqT1X4wP1Yg9QDcwIHnDs7CQwyen9f+KuQP0/i/XA6/
- C9MKN8CIUxJYaLWcbQPHlEyOW373Juay4rlwq5mtPhYKaAUSL1Zd6MOndGyIo9vCToFA5ckJm
- JtHwGdRt5Tav2fvfGmrfWr2AlbTC3LsGgF7sra33+Jv/IsP4NuYFeoZ2k9gN/7gBiDPpTalYQ
- rZkWw/Ctetb0d7Hh7z1SLu+U6MuFaKFMQ2dOapTQ7ZuO+JUnoCHMmWdjXa4MbEGXODxHFM+Vx
- Nc80d8gQJKlHu+UCKJVWPfvrYkpll0xTrahs1FFaNu+DU9gmxCPsgT9NK+cU/OwlPLOkU0ewj
- 4AbMtC4ksO6FzgeXOysz+QBQu8Lyrz2d27wfsEa0TR7VTyyuJSfE4vYhMR5DXve4+pM0WHsrT
- dS1IpOgaXExFdHXwCjEnn6czmKHDsXZMShWuqaYCCracx9fSmv+IqPfG0RuZYOvOyc9JXc6vG
- SG/vfNFWzqQtLx+Hy1wb80egcVlkbeveq1A7QskaIvbfqJQ2ec7P6Xq++xosMF6VcEvRzxAZH
- bfVsGPqIeqco3mqni0rh9n+392g1N1I4nmUA/Unleo/2MNOkj1mPtfIzAjcMkIlYfooU+9nl3
- Rb1IJlgqP2GoR6BgD26IGVDOnYnJ5dAPed4Ej6SxLx5FNbXyDq192sigJA6DpcLXK4CJrVtoT
- oZm4KM1iyyJjdO2Gunz3BPT5w3vHCbk77xI1vbrK/5DrtZp3S6CgbAl3hyrB1pz3b+ZoNxJEn
- Plqybkuf0jcV76sLbZLzoiD6sBPqST30T0HWDgbe5nblrW0EjgSaeChR26K/yzq/9GTO873jj
- iCKKtTGdpV4Gp7rRbj2oHmsZL+d1FVzZiROzA4P4TMxP5Q0Zmcx1TSebMI8J5liBisWYjQTfo
- 5m13vuWIWcrt5Q2VIGWJY3hlqjZ57JAbORrNd0f9vvzQasqZlLhqaYC4cvOjBMNpsBuwm+vNh
- UA1Oo8uEtslpzfiMvealV71fHvxW97+4W0JiR/kOAk5SE1Go3Amy/bDm0y2r8hwIIv0qw9DiP
- SlnEvcqCB/glwneJuAH4d6jTIWZ//orwSCM+5/rxkhklJLdNfPZx9LH1+wYtunkiJp1nykpaH
- p2RNwavHuMemKihI+oIXAQhPqdaLlA39WmH26E1uPdwKfTsQapPY7abvbPI8v6T4SSFOW22cn
- JZA8MR3nNewhVCiMW
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 05 Sep 2019 11:37:26 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
->> I suggest to take another look at a similar patch.
-> How to fast find out the similar patch. Search the key word doesn't work well.
 
-This is a recurring development challenge, isn't it?
 
-The occurrence of related update suggestions can occasionally become
-more interesting.
+On 8/30/19 5:20 AM, Yongcheng Yang wrote:
+> The rpc.nfsd program can use option "--rdma" to enable
+> RDMA on the standard port (nfsrdma/20049) or "--rdma=port"
+> for an alternate port.
+> 
+> But now in /etc/nfs.conf, we need to specify the port
+> number (e.g. rdma=nfsrdma) to enable it, which is not
+> convenient.
+> The default setting "rdma=n" may cause more confusion.
+> 
+> Update to enable RDMA on standard port when setting
+> boolean YES to "rdma=". And using "rdma-port=" for an
+> alternate port if necessary.
+> 
+> Also let previous config (e.g. rdma=nfsrdma) work as well.
+> 
+> Signed-off-by: Yongcheng Yang <yongcheng.yang@gmail.com>
+Committed.... 
 
-Regards,
-Markus
+steved.
+
+> ---
+> Hello SteveD,
+> 
+> I did some simple test:
+> ~~~~~~~~~~~~~~~~~~~~~~~
+> [root@ rpc-nfsd]# cp rpc.nfsd.new /usr/sbin/rpc.nfsd
+> cp: overwrite '/usr/sbin/rpc.nfsd'? y
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=nfsrdma      <<<<<<<<< previous pattern
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> [nfsd]
+> rdma 20049
+> rdma 20049
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=y            <<<<<<<<< boolean YES
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> rdma 20049
+> rdma 20049
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=n            <<<<<<<<< boolean NO
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=12345        <<<<<<<<< previous pattern
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> rdma 12345
+> rdma 12345
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=yes          <<<<<<<<< boolean YES
+> rdma-port=54321   <<<<<<<<< another port number
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> rdma 54321
+> rdma 54321
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> rdma=n          <<<<<<<<< boolean NO won't enable it even with rdma-port set
+> rdma-port=54321
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> [root@ rpc-nfsd]# vi /etc/nfs.conf
+> [root@ rpc-nfsd]# cat /etc/nfs.conf
+> [nfsd]
+> #rdma=n
+> rdma-port=54321
+> [root@ rpc-nfsd]# systemctl restart nfs-server && cat /proc/fs/nfsd/portlist | grep -w rdma
+> [root@ rpc-nfsd]# 
+> ~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Thanks,
+> Yongcheng
+> 
+> ---
+>  nfs.conf            | 1 +
+>  utils/nfsd/nfsd.c   | 9 ++++++++-
+>  utils/nfsd/nfsd.man | 6 +++++-
+>  3 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/nfs.conf b/nfs.conf
+> index 85097fd1..186a5b19 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -63,6 +63,7 @@
+>  # vers4.1=y
+>  # vers4.2=y
+>  # rdma=n
+> +# rdma-port=20049
+>  #
+>  [statd]
+>  # debug=0
+> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+> index b256bd9f..a412a026 100644
+> --- a/utils/nfsd/nfsd.c
+> +++ b/utils/nfsd/nfsd.c
+> @@ -92,7 +92,14 @@ main(int argc, char **argv)
+>  	port = conf_get_str("nfsd", "port");
+>  	if (!port)
+>  		port = "nfs";
+> -	rdma_port = conf_get_str("nfsd", "rdma");
+> +	if (conf_get_bool("nfsd", "rdma", false)) {
+> +		rdma_port = conf_get_str("nfsd", "rdma-port");
+> +		if (!rdma_port)
+> +			rdma_port = "nfsrdma";
+> +	}
+> +	/* backward compatibility - nfs.conf used to set rdma port directly */
+> +	if (!rdma_port)
+> +		rdma_port = conf_get_str("nfsd", "rdma");
+>  	if (conf_get_bool("nfsd", "udp", NFSCTL_UDPISSET(protobits)))
+>  		NFSCTL_UDPSET(protobits);
+>  	else
+> diff --git a/utils/nfsd/nfsd.man b/utils/nfsd/nfsd.man
+> index d83ef869..2701ba78 100644
+> --- a/utils/nfsd/nfsd.man
+> +++ b/utils/nfsd/nfsd.man
+> @@ -144,7 +144,11 @@ The lease time for NFSv4, in seconds.
+>  Set the port for TCP/UDP to bind to.
+>  .TP
+>  .B rdma
+> -Set RDMA port.  Use "rdma=nfsrdma" to enable standard port.
+> +Enable RDMA port (with "on" or "yes" etc) on the standard port
+> +("nfsrdma", port 20049).
+> +.TP
+> +.B rdma-port
+> +Set an alternate RDMA port.
+>  .TP
+>  .B UDP
+>  Enable (with "on" or "yes" etc) or disable ("off", "no") UDP support.
+> 
