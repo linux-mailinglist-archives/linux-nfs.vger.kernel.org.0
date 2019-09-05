@@ -2,74 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ADB2A97B7
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2019 02:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78349A9877
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2019 04:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfIEAuE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Sep 2019 20:50:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbfIEAuD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:50:03 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7315307D96D;
-        Thu,  5 Sep 2019 00:50:03 +0000 (UTC)
-Received: from ovpn-116-252.phx2.redhat.com (ovpn-116-252.phx2.redhat.com [10.3.116.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4302A5D71C;
-        Thu,  5 Sep 2019 00:50:02 +0000 (UTC)
-Message-ID: <90d43fc29c623aef70609bf02ef3eba54652c8ce.camel@redhat.com>
-Subject: Re: [PATCH 0/2] nfsd: add principal to the data being tracked by
- nfsdcld
-From:   Simo Sorce <simo@redhat.com>
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 04 Sep 2019 20:50:01 -0400
-In-Reply-To: <20190904205826.GH11980@coeurl.usersys.redhat.com>
-References: <20190830162631.13195-1-smayhew@redhat.com>
-         <A732539C-837A-4764-8281-C26E4203DE25@oracle.com>
-         <4598a6617fcb0123fb8c5c19e0ed2e489b242bcf.camel@redhat.com>
-         <20190904205826.GH11980@coeurl.usersys.redhat.com>
-Organization: Red Hat, Inc.
+        id S1727900AbfIEClA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Sep 2019 22:41:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53932 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727162AbfIEClA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:41:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B0203874C53B39768FF9;
+        Thu,  5 Sep 2019 10:40:58 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 10:40:56 +0800
+Message-ID: <5D7075B7.3080400@huawei.com>
+Date:   Thu, 5 Sep 2019 10:40:55 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+MIME-Version: 1.0
+To:     Markus Elfring <Markus.Elfring@web.de>
+CC:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: Re: NFS: remove the redundant check when kfree an object in nfs_netns_client_release
+References: <1567490688-17872-1-git-send-email-zhongjiang@huawei.com> <ee684073-bd3e-9a1c-4d38-702f55affba4@web.de>
+In-Reply-To: <ee684073-bd3e-9a1c-4d38-702f55affba4@web.de>
 Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 05 Sep 2019 00:50:03 +0000 (UTC)
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2019-09-04 at 16:58 -0400, Scott Mayhew wrote:
-> > While thinking about this I wondered, why not simply hash (SHA-256 for
-> > example) the principal name and store the hash instead?
-> > 
-> > It will make the length fixed and uniform and probably often shorter
-> > than the real principal names, so saving space in the general case.
-> > 
-> > I am not against truncating to 1024, but a hash would be more elegant
-> > and correct.
-> 
-> I can do that.  Is there any reason I would want to convert the hash to
-> to a human-readable format (i.e. something that would match the
-> sha256sum command-line tool's output) or can I just use the raw buffer?
-> Note that if we wanted to print the hash in an error message or
-> something, I can just use printk's %*phN format specifier...
+On 2019/9/4 23:11, Markus Elfring wrote:
+>> kfree has taken the null check in account.
+> I suggest to take another look at a similar patch.
+How to fast find out the similar patch. Search the key word doesn't work well.
 
-I do not see a reason to waste time turning to ascii before the time
-you really need to. A byte buffer is perfectly fine.
-
-Simo.
-
--- 
-Simo Sorce
-RHEL Crypto Team
-Red Hat, Inc
-
-
+Thanks,
+zhong jiang
+> NFS: fix ifnullfree.cocci warnings
+> https://lkml.org/lkml/2019/7/7/73
+> https://lore.kernel.org/patchwork/patch/1098005/
+> https://lore.kernel.org/r/alpine.DEB.2.21.1907071844310.2521@hadrien/
+>
+> Regards,
+> Markus
+>
+> .
+>
 
 
