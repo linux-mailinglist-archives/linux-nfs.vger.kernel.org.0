@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF032AC0C9
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2019 21:46:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28EA7AC0CA
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2019 21:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392509AbfIFTqq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Sep 2019 15:46:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45925 "EHLO
+        id S2392530AbfIFTqr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Sep 2019 15:46:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34835 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392364AbfIFTqq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Sep 2019 15:46:46 -0400
-Received: by mail-io1-f67.google.com with SMTP id f12so15341274iog.12
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Sep 2019 12:46:46 -0700 (PDT)
+        with ESMTP id S2392364AbfIFTqr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Sep 2019 15:46:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id f4so14694148ion.2
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Sep 2019 12:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oYFP7LnHnffo4j/n4viWpRrrs/1IS/MsGu8QY/P3UN4=;
-        b=jDbrpG/DuFLTBs765iu9l69XllXeLOL/F0ipjh4ACio2/EgnISw3Vq2MzoYKK04L0K
-         BkviwOB3AwZUaWkqcRU0SzDD6F+auJEt6Gq5pI3myk2M8kObrrBFjg+pX79CUhV16Pag
-         N9eX/QKwBTkpUE5ZKVYvKKgDUHIFaSOz0q2aXZ4FaF/ouqlbkIWXIemepYPGP9oyOiA/
-         moX6efuJ7YMHqWFFz2pgQv1n6jjPcZayMQAl1gX4kkdct88cnYAYHA14fni0JKm57DgJ
-         OL3fqfyhnTT+B6YqerYPtJYeq+TFacjK9FMHJG2JmZ6F/DX9zxx36zw0CsiBwfdbm/Ra
-         6KSw==
+        bh=XL+yl/IdkZ6v8a9Bn/wwa3yKd1v2tHt/DxTYczYrYOw=;
+        b=pNTTzHJwCgWlHmiE8DHFzPkm27VvVifOfwJ4a7Tl+PxqbMW4+NeQlz60pOytkXqq02
+         NMAVMJBk77Y5QS1jY4AnbAGd3JSNNL72r0H0U7b7TTb+0ydqmW2XNLt5H+irRDGxLt1W
+         gtJ8cBjeaW6XnlIv+8ndQstrfvjbGNwxP3aJRAM0BKWRe1eyDJWRd2hTH5l5k8To7iMI
+         RabdqTxRKAMfM/NzOR3EsbHfudRtk7RLtZl+5I/fGKoxBYhDlPIpDL3uijqxFK17IVps
+         D5sAGElTES8jnsxBMMK8NwhIVPZcV50eMZUtyBiJShzTTFmy4oADgoLYK0D8pvPmFpaH
+         ZGgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=oYFP7LnHnffo4j/n4viWpRrrs/1IS/MsGu8QY/P3UN4=;
-        b=HDWAQq+IUa1ChGIWDUR1faidbuJtp9Rdywk/7B+yYXw5ST8LmrRrv1UxVpGNvY5f0I
-         jNo/RkuSjS3SKBy8rJwx0YXfIVf1fg71x+v21rEN6c13/P9a/WS2uKTCLiYj1LU+RZ+D
-         BC/B/Y+6t5HauEJtT0vOwtL3oCmihbw72+xF/5lizvjBpquPAe42cM1BKkFdOUsTkkEP
-         rxjgWMg9TXDNtIrXjwK0jzz7kBLRr4ZcCyXjTIirZwtHYZM1Eyjn6jGiMun88yFajx1p
-         HuWdemxk07P/hAZFIhBKWq03u4Jp0z5WykY02UT4xdytaNhpZaWuPpWBo5ex8jRvvc6/
-         4CuA==
-X-Gm-Message-State: APjAAAUu5kxoJ/5Pyme4M7FDGmaiuCoWDErvo+nyzPhtu7O+SVrlvrO1
-        qVCZrYXaHfFXvr48EULWJXo=
-X-Google-Smtp-Source: APXvYqztxOm055zPL2mqo+7RDPoI7BKnRREIQsoOTooIh0Trx01+q8HgajEOteUbTNDlIOOLTlrXWQ==
-X-Received: by 2002:a02:a403:: with SMTP id c3mr11338349jal.93.1567799205572;
-        Fri, 06 Sep 2019 12:46:45 -0700 (PDT)
+        bh=XL+yl/IdkZ6v8a9Bn/wwa3yKd1v2tHt/DxTYczYrYOw=;
+        b=Sn09VmMHG/SP9hls3Vne91Fgr5CwOeW6tY9HxfsOW4Q1tlqH+yzF7Lagzdhyu4X8j5
+         LW3PcpFl3llXKczygUxJZYSJj28I5HbOlH9G3MTPQv3hcW5xgvRnk3scGBkwsHDemsol
+         8p7sjbl5dt0WvXn/hFrLYkq0V2Xbnmyh1aLwdjL6ARaCjMS9YfK4YRy0BnKJ5l9IclQu
+         ufmi8ndS3byjiYlXZ2R1XfyEj4i5ZH8SejkgOgVnhrB/Fpy9dTG/4G5mpZN544VszVIm
+         aQVM3UNbgj2YXl4HtQi3rk52H/oZiSuai7GIArIIFY1nq+0qi90QDGQNupaJNLOstmW5
+         IvpA==
+X-Gm-Message-State: APjAAAXpPAGiLM5PHuiEZ4UvQ3pBZqbF36WpwXgPGYd5N1rQsgjOM1QF
+        bhe6KNLihei+u6WZ/6eeDZM=
+X-Google-Smtp-Source: APXvYqw65dprFjRsWkUyZmzMTp7eMnTLxVkYQGpNxVYlUr7fnoAXPugDy/eCFVr+LZ7sbcHK+qT/0A==
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr11639326jal.70.1567799206567;
+        Fri, 06 Sep 2019 12:46:46 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id i14sm5118085ioi.47.2019.09.06.12.46.44
+        by smtp.gmail.com with ESMTPSA id i14sm5118085ioi.47.2019.09.06.12.46.45
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 06 Sep 2019 12:46:45 -0700 (PDT)
+        Fri, 06 Sep 2019 12:46:46 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v6 11/19] NFSD fill-in netloc4 structure
-Date:   Fri,  6 Sep 2019 15:46:23 -0400
-Message-Id: <20190906194631.3216-12-olga.kornievskaia@gmail.com>
+Subject: [PATCH v6 12/19] NFSD add ca_source_server<> to COPY
+Date:   Fri,  6 Sep 2019 15:46:24 -0400
+Message-Id: <20190906194631.3216-13-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190906194631.3216-1-olga.kornievskaia@gmail.com>
 References: <20190906194631.3216-1-olga.kornievskaia@gmail.com>
@@ -58,69 +58,133 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Decode the ca_source_server list that's sent but only use the
+first one. Presence of non-zero list indicates an "inter" copy.
 
-nfs.4 defines nfs42_netaddr structure that represents netloc4.
-
-Populate needed fields from the sockaddr structure.
-
-This will be used by flexfiles and 4.2 inter copy
-
+Signed-off-by: Andy Adamson <andros@netapp.com>
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ fs/nfsd/nfs4xdr.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/xdr4.h    | 12 ++++++-----
+ 2 files changed, 69 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index af29475..687f8e1 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -19,6 +19,7 @@
- #include <linux/sunrpc/svc.h>
- #include <linux/sunrpc/svc_xprt.h>
- #include <linux/sunrpc/msg_prot.h>
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 4428118..4059a09 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -40,6 +40,7 @@
+ #include <linux/utsname.h>
+ #include <linux/pagemap.h>
+ #include <linux/sunrpc/svcauth_gss.h>
 +#include <linux/sunrpc/addr.h>
  
- #include <uapi/linux/nfsd/debug.h>
+ #include "idmap.h"
+ #include "acl.h"
+@@ -1732,11 +1733,47 @@ static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp, str
+ 	DECODE_TAIL;
+ }
  
-@@ -386,6 +387,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
- 
- extern const u32 nfsd_suppattrs[3][3];
- 
-+static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
-+				    struct nfs42_netaddr *netaddr)
++static __be32 nfsd4_decode_nl4_server(struct nfsd4_compoundargs *argp,
++				      struct nl4_server *ns)
 +{
-+	struct sockaddr_in *sin = (struct sockaddr_in *)addr;
-+	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
-+	unsigned int port;
-+	size_t ret_addr, ret_port;
++	DECODE_HEAD;
++	struct nfs42_netaddr *naddr;
 +
-+	switch (addr->sa_family) {
-+	case AF_INET:
-+		port = ntohs(sin->sin_port);
-+		sprintf(netaddr->netid, "tcp");
-+		netaddr->netid_len = 3;
-+		break;
-+	case AF_INET6:
-+		port = ntohs(sin6->sin6_port);
-+		sprintf(netaddr->netid, "tcp6");
-+		netaddr->netid_len = 4;
++	READ_BUF(4);
++	ns->nl4_type = be32_to_cpup(p++);
++
++	/* currently support for 1 inter-server source server */
++	switch (ns->nl4_type) {
++	case NL4_NETADDR:
++		naddr = &ns->u.nl4_addr;
++
++		READ_BUF(4);
++		naddr->netid_len = be32_to_cpup(p++);
++		if (naddr->netid_len > RPCBIND_MAXNETIDLEN)
++			goto xdr_error;
++
++		READ_BUF(naddr->netid_len + 4); /* 4 for uaddr len */
++		COPYMEM(naddr->netid, naddr->netid_len);
++
++		naddr->addr_len = be32_to_cpup(p++);
++		if (naddr->addr_len > RPCBIND_MAXUADDRLEN)
++			goto xdr_error;
++
++		READ_BUF(naddr->addr_len);
++		COPYMEM(naddr->addr, naddr->addr_len);
 +		break;
 +	default:
-+		return nfserr_inval;
++		goto xdr_error;
 +	}
-+	ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
-+	ret_port = snprintf(netaddr->addr + ret_addr,
-+			    RPCBIND_MAXUADDRLEN + 1 - ret_addr,
-+			    ".%u.%u", port >> 8, port & 0xff);
-+	WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
-+	netaddr->addr_len = ret_addr + ret_port;
-+	return 0;
++	DECODE_TAIL;
 +}
 +
- static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+ static __be32
+ nfsd4_decode_copy(struct nfsd4_compoundargs *argp, struct nfsd4_copy *copy)
  {
- 	return !((bm1[0] & ~bm2[0]) ||
+ 	DECODE_HEAD;
+-	unsigned int tmp;
++	struct nl4_server *ns_dummy;
++	int i, count;
+ 
+ 	status = nfsd4_decode_stateid(argp, &copy->cp_src_stateid);
+ 	if (status)
+@@ -1751,8 +1788,31 @@ static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp, str
+ 	p = xdr_decode_hyper(p, &copy->cp_count);
+ 	p++; /* ca_consecutive: we always do consecutive copies */
+ 	copy->cp_synchronous = be32_to_cpup(p++);
+-	tmp = be32_to_cpup(p); /* Source server list not supported */
++	count = be32_to_cpup(p++);
++
++	copy->cp_intra = false;
++	if (count == 0) { /* intra-server copy */
++		copy->cp_intra = true;
++		goto intra;
++	}
+ 
++	/* decode all the supplied server addresses but use first */
++	status = nfsd4_decode_nl4_server(argp, &copy->cp_src);
++	if (status)
++		return status;
++
++	ns_dummy = kmalloc(sizeof(struct nl4_server), GFP_KERNEL);
++	if (ns_dummy == NULL)
++		return nfserrno(-ENOMEM);
++	for (i = 0; i < count - 1; i++) {
++		status = nfsd4_decode_nl4_server(argp, ns_dummy);
++		if (status) {
++			kfree(ns_dummy);
++			return status;
++		}
++	}
++	kfree(ns_dummy);
++intra:
+ 	DECODE_TAIL;
+ }
+ 
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index d64c870..dedc316 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -519,11 +519,13 @@ struct nfsd42_write_res {
+ 
+ struct nfsd4_copy {
+ 	/* request */
+-	stateid_t	cp_src_stateid;
+-	stateid_t	cp_dst_stateid;
+-	u64		cp_src_pos;
+-	u64		cp_dst_pos;
+-	u64		cp_count;
++	stateid_t		cp_src_stateid;
++	stateid_t		cp_dst_stateid;
++	u64			cp_src_pos;
++	u64			cp_dst_pos;
++	u64			cp_count;
++	struct nl4_server	cp_src;
++	bool			cp_intra;
+ 
+ 	/* both */
+ 	bool		cp_synchronous;
 -- 
 1.8.3.1
 
