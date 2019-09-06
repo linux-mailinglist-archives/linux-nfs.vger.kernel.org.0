@@ -2,148 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65FABAC1A9
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2019 22:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A1EAC32B
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2019 01:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391714AbfIFUxZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Sep 2019 16:53:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46242 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbfIFUxZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Sep 2019 16:53:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86KnbtS193716;
-        Fri, 6 Sep 2019 20:50:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=mHvw5dftco6c801VEwPpHaMi0k0vHWogr6jdjy+fFQ8=;
- b=H28owAN25StxO3iaWBOnmLvCgPOKB5zqjEZKoYDp2odxQK2+rhrLPCBzd4Z9Q17LPjjK
- 0WFZTChDnIdYiTPk5AZo/6h6thww0zdGo5Z466MQUZ8TjtiUwSRG77QAZQGhUuPlUmYQ
- CXnVr4c1mP3InKy5LDVwS+i/FSW0XGr+sRltMtJ9F7fwfHFKqiNr7pviMGNu/izNB9qH
- I8+rnTLrAGH6aQy9BnCqwnIPd6iuNggyZ7sk7ydj+J3ZMd6a9icsPwS0buY4sRc7kUsN
- Yjz8mhWpp2B8dRJa+KNOf9nvxX2YxfO03sJ0ZAZHM0b5dT5S3AJv33wxZEPIJkEStQ0n VQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2uuxmd01wx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 20:50:45 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86Kmpoa018348;
-        Fri, 6 Sep 2019 20:50:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uu1ba4d5g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 20:50:44 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x86KobdM007945;
-        Fri, 6 Sep 2019 20:50:37 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Sep 2019 13:50:37 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
-Date:   Fri, 6 Sep 2019 16:50:36 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Wolfgang Walter <linux@stwm.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
-To:     Jason L Tibbitts III <tibbs@math.uh.edu>,
-        Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9372 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909060212
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9372 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909060212
+        id S2393104AbfIFXgO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Sep 2019 19:36:14 -0400
+Received: from mail-io1-f46.google.com ([209.85.166.46]:45905 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388714AbfIFXgO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Sep 2019 19:36:14 -0400
+Received: by mail-io1-f46.google.com with SMTP id f12so16550146iog.12
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Sep 2019 16:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fR3fsVAD1gPU7Xx4DJ3MZu5LaPpOW7ufrAJLp5zCznk=;
+        b=ckcUp0eKoAyxkM++ItrCTT4fjSjfxtbZjnSCygTDTkz13qUHKV/fU9Zkgoo9bsFB5N
+         7JEdjh2RQ4zlhPB7cUb4BJLjZ50zvpvI9FAhcSoKvEOhR8xMXxwdnVODw+11K+ymkaWs
+         uM1j20UjElgf1qvI2S9md4KqlxwVcnQORD3iUFja0GZcSxocKm1I1JpUHlv1eUDOe9oK
+         O5aoZT6tfWzs/1wCzEf3+IbINxIFQt5bD1+Iai8d+pj7SZUbk1Ywi/5LbfTnzh9pFnG1
+         696dzuIvGaeMM/RUEFJIMzPrJEVhxyBMIdujBgYSu4xXH2MoRKqZl64Zavf5pAPcvU/5
+         c3+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fR3fsVAD1gPU7Xx4DJ3MZu5LaPpOW7ufrAJLp5zCznk=;
+        b=m5SpzaP1tofqRH9WNV+gtXT5HIbqYbP+J19s4ZckRz/k6UAog7lgpZ7wwmQK80/U+e
+         qd3a6bOrsogr/so+rtl9VKAva3lOm/d7zODF5TibKnwTGhiFwQ7DtVy5pXDlFv+clf8u
+         NOczWj0zzgNvdYKDJPoPhkH9l6kdwXd0ezhmQe03LXNUySG6orM5HoIQXgz8UNjfSPQZ
+         GPvTf0iU8eNzvW5GpPihcCNEZ1a0gZ0GP6MgzSKgp8LzBCw06+wcgpVVs7r8wdZ9lJct
+         wKS7PVSxalbmbuut/moMOo0OSJVLxw3V+Nztw4h1mczsNxeL4LhTR/oSk2FzegLxXVDx
+         foxQ==
+X-Gm-Message-State: APjAAAWrPiOU67i2TzN6uX7Updb4/fLUomlRYsxw+ICvuhN1D8MLN6cP
+        MwvqHyv7BYdvmMIdzlPJbEPjq8xamnk=
+X-Google-Smtp-Source: APXvYqzAR3OA25Ty/rkpT3E1Ro0D/G5gJ6VVDbuSwVEmuuaQ4c176iAtj9o8nlT3RFS4ubyDDwm0EA==
+X-Received: by 2002:a6b:6603:: with SMTP id a3mr13641271ioc.50.1567812973160;
+        Fri, 06 Sep 2019 16:36:13 -0700 (PDT)
+Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id r138sm10439360iod.59.2019.09.06.16.36.12
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 06 Sep 2019 16:36:12 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v7 00/21] client and server support for "inter" SSC copy
+Date:   Fri,  6 Sep 2019 19:35:50 -0400
+Message-Id: <20190906233611.4031-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Olga Kornievskaia <kolga@netapp.com>
 
+As per Bruce's request submitting the client and server series together
+as there is a common patch that's needed by both.
 
-> On Sep 6, 2019, at 4:47 PM, Jason L Tibbitts III <tibbs@math.uh.edu> =
-wrote:
->=20
->>>>>> "JBF" =3D=3D J Bruce Fields <bfields@fieldses.org> writes:
->=20
-> JBF> Those readdir changes were client-side, right?  Based on that I'd
-> JBF> been assuming a client bug, but maybe it'd be worth getting a =
-full
-> JBF> packet capture of the readdir reply to make sure it's legit.
->=20
-> I have been working with bcodding on IRC for the past couple of days =
-on
-> this.  Fortunately I was able to come up with way to fill up a =
-directory
-> in such a way that it will fail with certainty and as a bonus doesn't
-> include any user data so I can feel OK about sharing packet captures.  =
-I
-> have a capture alongside a kernel trace of the problematic operation =
-in
-> https://www.math.uh.edu/~tibbs/nfs/.  Not that I can particularly tell
-> anything useful from that, but bcodding says that it seems to point to
-> some issue in sunrpc.
->=20
-> And because I can easily reproduce this and I was able to do a bisect:
->=20
-> 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d is the first bad commit
-> commit 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d
-> Author: Chuck Lever <chuck.lever@oracle.com>
-> Date:   Mon Feb 11 11:25:41 2019 -0500
->=20
->    SUNRPC: Use au_rslack when computing reply buffer size
->=20
->    au_rslack is significantly smaller than (au_cslack << 2). Using
->    that value results in smaller receive buffers. In some cases this
->    eliminates an extra segment in Reply chunks (RPC/RDMA).
->=20
->    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->=20
-> :040000 040000 d4d1ce2fbe0035c5bd9df976b8c448df85dcb505 =
-7011a792dfe72ff9cd70d66e45d353f3d7817e3e M      net
->=20
-> But of course, I can't say whether this is the actual bad commit or
-> whether it just introduced a behavior change which alters the =
-conditions
-> under which the problem appears.
+v7
+--- added new patch (11/21) that checks the size of the file and
+decides to either do a sync intra, or not do inter at all and fallback
+on traditional copy.
 
-The first place I'd start looking is the XDR constants at the head of =
-fs/nfs/nfs4xdr.c
-having to do with READDIR.
+v6 server-side changes
+--- removed global copy notify list and instead relying only on the idr
+list of stateids. Laundromat now traverses that list and if copy notify
+state wasn't referenced in a lease period, state is deleted.
+--- removed storing parent's stid pointer in the copy notify state.
+instead storing the parent's stateid and client id then using it to
+lookup the stid structure and client structure during validation of
+the stateid of the READ.
+--- added a refcount to the copy notify state to make sure only 1 will
+delete it (as it can be delete either by the nfs4_put_stid(),
+laundromat, or offload_cancel op. basically all access to the copy state
+is using just one global lock now (netd->s2s_cp_lock).
+--- added a type to the copy_stateid_t to distinguish copy notify state
+kept by the source server and copy state used by the destination server.
+--- previously with a global copy notify list, the check if client has
+state before unmounting checked if the list was empty, now the code
+traverses the idr list and looks for anything with a matching clientid
+(again under the global s2s_cp_lock).
 
-The report of behavior changes with the use of krb5p also makes this =
-commit plausible.
+Olga Kornievskaia (21):
+  NFS NFSD: defining nl4_servers structure needed by both
+  NFS: add COPY_NOTIFY operation
+  NFS: add ca_source_server<> to COPY
+  NFS: inter ssc open
+  NFS: skip recovery of copy open on dest server
+  NFS: for "inter" copy treat ESTALE as ENOTSUPP
+  NFS: COPY handle ERR_OFFLOAD_DENIED
+  NFS: also send OFFLOAD_CANCEL to source server
+  NFS handle NFS4ERR_PARTNER_NO_AUTH error
+  NFS: handle source server reboot
+  NFS based on file size issue sync copy or fallback to generic copy
+    offload
+  NFS: replace cross device check in copy_file_range
+  NFSD fill-in netloc4 structure
+  NFSD add ca_source_server<> to COPY
+  NFSD return nfs4_stid in nfs4_preprocess_stateid_op
+  NFSD COPY_NOTIFY xdr
+  NFSD add COPY_NOTIFY operation
+  NFSD check stateids against copy stateids
+  NFSD generalize nfsd4_compound_state flag names
+  NFSD: allow inter server COPY to have a STALE source server fh
+  NFSD add nfs4 inter ssc to nfsd4_copy
 
+ fs/nfs/nfs42.h            |  15 +-
+ fs/nfs/nfs42proc.c        | 199 ++++++++++++++---
+ fs/nfs/nfs42xdr.c         | 190 +++++++++++++++-
+ fs/nfs/nfs4_fs.h          |  11 +
+ fs/nfs/nfs4client.c       |   2 +-
+ fs/nfs/nfs4file.c         | 139 +++++++++++-
+ fs/nfs/nfs4proc.c         |   7 +-
+ fs/nfs/nfs4state.c        |  40 +++-
+ fs/nfs/nfs4xdr.c          |   1 +
+ fs/nfsd/Kconfig           |  10 +
+ fs/nfsd/nfs4proc.c        | 440 ++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4state.c       | 215 +++++++++++++++++--
+ fs/nfsd/nfs4xdr.c         | 154 ++++++++++++-
+ fs/nfsd/nfsd.h            |  32 +++
+ fs/nfsd/nfsfh.h           |   5 +-
+ fs/nfsd/nfssvc.c          |   6 +
+ fs/nfsd/state.h           |  34 ++-
+ fs/nfsd/xdr4.h            |  39 +++-
+ include/linux/nfs4.h      |  25 +++
+ include/linux/nfs_fs.h    |   4 +-
+ include/linux/nfs_fs_sb.h |   1 +
+ include/linux/nfs_xdr.h   |  17 ++
+ 22 files changed, 1461 insertions(+), 125 deletions(-)
 
-> And just to make sure that the blame doesn't lie with the old RHEL7
-> kernel, I rsynced over the problematic directory to a machine running
-> something slightly more modern (5.1.11, which I know I need to update,
-> but it's already set up to do kerberised NFS) and the same problem
-> exists, though the directory listing does fail at a different place.
->=20
-> - J<
-
---
-Chuck Lever
-
-
+-- 
+2.18.1
 
