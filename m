@@ -2,112 +2,337 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78E02ABC8A
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2019 17:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3981ABD69
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2019 18:12:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388663AbfIFPcE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 6 Sep 2019 11:32:04 -0400
-Received: from mail-eopbgr660053.outbound.protection.outlook.com ([40.107.66.53]:53461
-        "EHLO CAN01-QB1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725871AbfIFPcE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:32:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gkA9DP+wcBLQP2f92IBvWWIeka/AKBr3PgBInFgE1i5dQ0Ug2UsmuzE4GdH4K0XjkUcg0mU01YokXvFtMDgmM+qeinhwDA/+Ae9b6Y2qLjiLQ61Es8LTi/HteT5tLhDas5nxvWaq591TsOIit3+mEFMLGdg4j3DAizZsLH0cX6Chutj0B0jwnMaGHjxKfdnGleSKVhOwXpbC2rTVyujt7c2yr1ZREP8lwJBxtuF0b1bkWa4jM1L7M8XonIPrK0NUTH/wc08j5c9B3pg8NziUL4NoOjZ2BXAJ8m9iWJ2vv8YQRKnSuQ14RSNmFEtBF8cSCbd9+XprWvss6tP0IK/Wjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bKIZHMkaGGbr1bIBcaGflVaaINwx7BSyg+HrOnZ+sj8=;
- b=HQ6voW57yZNLMTNVwgzKwx0nNju//alVYnYQYQz0ow3LNXjfgTBjsbEMt3SYOBINdY+plW0KugaEY/b2zSIXLJlZTPTNUSgbjFdc7aC4FvCkHE10FWIl9aCQ5J0j/FINQrN061BBY8h8FS528cvh/OiZnZuTBGWwMJBiH5LIxNp+Nj3dQr7q1TDdZWC0saQ7nrX07bUWoAa565TJzJ720UHFv0zFaZAbtXDXvg6is6bxAawEHJGttQ6TNo0whR+mHLQf7YZKJHKco54AZ0GS2gu2uGpK9MMcILHLlZten/WcEu8yooI6+50ugxrRCwwQ/XM4JN7jWqH9giT50iLKgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
- dkim=pass header.d=uoguelph.ca; arc=none
-Received: from YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM (10.255.42.216) by
- YT1PR01MB3626.CANPRD01.PROD.OUTLOOK.COM (10.255.41.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.15; Fri, 6 Sep 2019 15:32:01 +0000
-Received: from YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::4031:c693:f53a:9ce3]) by YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::4031:c693:f53a:9ce3%7]) with mapi id 15.20.2241.018; Fri, 6 Sep 2019
- 15:32:01 +0000
-From:   Rick Macklem <rmacklem@uoguelph.ca>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-CC:     "J. Bruce Fields" <bfields@fieldses.org>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v5 0/9] server-side support for "inter" SSC copy
-Thread-Topic: [PATCH v5 0/9] server-side support for "inter" SSC copy
-Thread-Index: AQHVY2Jcg39MoyU1GESbWgASmNNYIKccNIsAgAABEVeAAoDhgIAAElOR
-Date:   Fri, 6 Sep 2019 15:32:01 +0000
-Message-ID: <YT1PR01MB29073642E8A8630E6E1C38D2DDBA0@YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM>
-References: <20190808201848.36640-1-olga.kornievskaia@gmail.com>
- <20190904205015.GD14319@fieldses.org>
- <CAN-5tyGcT6rCpzOB3coj4H19-BuDsBRheD=rsRHZthn7STNq0Q@mail.gmail.com>
- <YT1PR01MB29074F44ABABECF04D4A18E0DDBB0@YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM>,<CAN-5tyEqPsybNe_e4XLqxRNygo1ci446Wq0jvVEFEBhip-eXdg@mail.gmail.com>
-In-Reply-To: <CAN-5tyEqPsybNe_e4XLqxRNygo1ci446Wq0jvVEFEBhip-eXdg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rmacklem@uoguelph.ca; 
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2aa9d93d-3b53-49e2-75ec-08d732df5d3e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:YT1PR01MB3626;
-x-ms-traffictypediagnostic: YT1PR01MB3626:
-x-microsoft-antispam-prvs: <YT1PR01MB362640BE49DBC6A08C7F7BADDDBA0@YT1PR01MB3626.CANPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(366004)(136003)(396003)(39860400002)(376002)(189003)(199004)(54906003)(66446008)(7696005)(86362001)(66946007)(66476007)(64756008)(66556008)(76116006)(229853002)(5660300002)(102836004)(4326008)(478600001)(6506007)(6246003)(305945005)(76176011)(53936002)(71190400001)(786003)(316002)(71200400001)(256004)(25786009)(99286004)(74316002)(8936002)(6436002)(486006)(2906002)(9686003)(55016002)(46003)(186003)(6916009)(52536014)(11346002)(8676002)(14454004)(446003)(476003)(33656002)(81166006)(81156014)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:YT1PR01MB3626;H:YT1PR01MB2907.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: uoguelph.ca does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FN+wadK4iMquitKOOdfOozGRzPv6yRvAWMIUs5Q6zjXbLBhvKAWUdT/1R5KHC9LImxxFuhOa3YQL6+IzmQz8tdMdP8J/CyQ+M7oJisdUDTAzmvdhDZ5FCMI81lK1s5GUIC0DqQgZ+hYNtRAP62fXOVXQMSmIPgky5/lMYNwypaaBB4AosKie6VOpBuTOXEGHDvrR3ClDEyoKQ7N637I8GAlSz4mgt/7CNfvO7O1DMn7aMq0JmHu3O4wIYdN618Z6QUh74Bq3vzXFICJNi+4F0BJUixDF5ShC5WEbs7lHwyyN4UlBM1STFf57A2aFdai+phYDZYiu/A6+q6qUBSKsfLo9YgMcejEHvpVCmUCEiFZ8th8nVID1wQjME44AWZd/Srm3Ux56ijyDRquVeXo7sZQB6A/MgzPgGhcj4kBj7UU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        id S1726087AbfIFQMh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Sep 2019 12:12:37 -0400
+Received: from fieldses.org ([173.255.197.46]:57594 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfIFQMh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:12:37 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 607081C9D; Fri,  6 Sep 2019 12:12:36 -0400 (EDT)
+Date:   Fri, 6 Sep 2019 12:12:36 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Alex Lyakas <alex@zadara.com>
+Cc:     linux-nfs@vger.kernel.org, shyam@zadara.com
+Subject: Re: [RFC-PATCH] nfsd: provide a procfs entry to release stateids of
+ a particular local filesystem
+Message-ID: <20190906161236.GF17204@fieldses.org>
+References: <1567518908-1720-1-git-send-email-alex@zadara.com>
 MIME-Version: 1.0
-X-OriginatorOrg: uoguelph.ca
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aa9d93d-3b53-49e2-75ec-08d732df5d3e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 15:32:01.8545
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VKznh/+jJ3URM+PzSUvWHj01npnU+xVC0Uris0m8S6vikyq4sys7XiqhWPAfI15AZN0HqR0elHuINKNPoqAkpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PR01MB3626
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567518908-1720-1-git-send-email-alex@zadara.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Olga Kornievskaia wrote:
->On Wed, Sep 4, 2019 at 8:13 PM Rick Macklem <rmacklem@uoguelph.ca> wrote:
->>
->> >Olga Kornievskaia wrote:
->> >On Wed, Sep 4, 2019 at 4:50 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->> >>
->> >> What do we know about the status of NFSv4.2 and COPY support on Netapp
->> >> or other servers?  In either the single-server or inter-server cases?
->> >
->> >I'm unaware of any other (current/on-going) implementations. Netapp is
->> >interested in having (implementing) this 4.2 feature though (single
->> >server case for sure not sure about the inter-server).
->>
->> Just fyi, I have implemented the single-server case for FreeBSD. (The code is
->> currently in a projects area of the FreeBSD subversion repository, which makes
->> it a little awkward to set up for testing at this point, but if anyone is interested,
->> just email me.)
->
->That's great Rick. Have you done any interoperability with the linux
-implementation?
-Not yet, but I am planning on doing so soon.
+On Tue, Sep 03, 2019 at 04:55:08PM +0300, Alex Lyakas wrote:
+> This patch addresses the following issue:
 
-> Will the code go into the main freeBSD release (or is
->already there)?
-Not there yet. My target is FreeBSD13.
+Thanks for the patch and the good explanation!
 
-rick
+I'd rather we just call nfs4_release_stateids() from write_unlock_fs().
 
+That modifies the behavior of the existing unlock_filesystem interface,
+so, yes, adding a new file would be the more conservative approach.
 
-> I haven't yet implemented the async case, but plan on doing so soon, rick
+But really I think that the only use of unlock_filesystem is to allow
+unmounting, and the fact that it only handles NLM locks is just a bug
+that we should fix.
+
+You'll want to cover delegations as well.  And probably pNFS layouts.
+It'd be OK to do that incrementally in followup patches.
+
+Style nits:
+
+I assume all the print statements are just for temporary debugging.
+
+Try to keep lines to 80 characters.  I'd break the inner loop of
+nfs4_release_stateids() into a separate nfs4_release_client_stateids(sb,
+clp).
+
+--b.
+
+> - Create two local file systems FS1 and FS2 on the server machine S.
+> - Export both FS1 and FS2 through nfsd to the same nfs client, running on client machine C.
+> - On C, mount both exported file systems and start writing files to both of them.
+> - After few minutes, on server machine S, un-export FS1 only.
+> - Do not unmount FS1 on the client machine C prior to un-exporting.
+> - Also, FS2 remains exported to C.
+> - Now we want to unmount FS1 on the server machine S, but we fail, because there are still open files on FS1 held by nfsd.
+> 
+> Debugging this issue showed the following root cause: there is a nfs4_client entry for the client C.
+> This entry has two nfs4_openowners, for FS1 and FS2, although FS1 was un-exported.
+> Looking at the stateids of both openowners, we see that they have stateids of kind NFS4_OPEN_STID,
+> and each stateid is holding a nfs4_file. The reason we cannot unmount FS1, is because we still have
+> an openowner for FS1, holding open-stateids, which hold open files on FS1.
+> 
+> The laundromat doesn't help in this case, because it can only decide per-nfs4_client that it should be purged.
+> But in this case, since FS2 is still exported to C, there is no reason to purge the nfs4_client.
+> 
+> This situation remains until we un-export FS2 as well.
+> Then the whole nfs4_client is purged, and all the files get closed, and we can unmount both FS1 and FS2.
+> 
+> This patch allows user-space to tell nfsd to release stateids of a particular local filesystem.
+> After that, it is possible to unmount the local filesystem.
+> 
+> This patch is based on kernel 4.14.99, which we currently use.
+> That's why marking it as RFC.
+> 
+> Signed-off-by: Alex Lyakas <alex@zadara.com>
+> ---
+>  fs/nfsd/nfs4state.c | 107 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  fs/nfsd/nfsctl.c    |  46 ++++++++++++++++++++++
+>  fs/nfsd/state.h     |   2 +
+>  3 files changed, 154 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 3cf0b2e..4081753 100755
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -6481,13 +6481,13 @@ struct nfs4_client_reclaim *
+>  	return nfs_ok;
+>  }
+>  
+> -#ifdef CONFIG_NFSD_FAULT_INJECTION
+>  static inline void
+>  put_client(struct nfs4_client *clp)
+>  {
+>  	atomic_dec(&clp->cl_refcount);
+>  }
+>  
+> +#ifdef CONFIG_NFSD_FAULT_INJECTION
+>  static struct nfs4_client *
+>  nfsd_find_client(struct sockaddr_storage *addr, size_t addr_size)
+>  {
+> @@ -6811,6 +6811,7 @@ static u64 nfsd_foreach_client_lock(struct nfs4_client *clp, u64 max,
+>  
+>  	return count;
+>  }
+> +#endif /* CONFIG_NFSD_FAULT_INJECTION */
+>  
+>  static void
+>  nfsd_reap_openowners(struct list_head *reaplist)
+> @@ -6826,6 +6827,7 @@ static u64 nfsd_foreach_client_lock(struct nfs4_client *clp, u64 max,
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_NFSD_FAULT_INJECTION
+>  u64
+>  nfsd_inject_forget_client_openowners(struct sockaddr_storage *addr,
+>  				     size_t addr_size)
+> @@ -7072,6 +7074,109 @@ static u64 nfsd_find_all_delegations(struct nfs4_client *clp, u64 max,
+>  #endif /* CONFIG_NFSD_FAULT_INJECTION */
+>  
+>  /*
+> + * Attempts to release the stateids that have open files on the specified superblock.
+> + */
+> +void
+> +nfs4_release_stateids(struct super_block * sb)
+> +{
+> +	struct nfsd_net *nn = net_generic(current->nsproxy->net_ns, nfsd_net_id);
+> +	struct nfs4_client *clp = NULL;
+> +	struct nfs4_openowner *oo = NULL, *oo_next = NULL;
+> +	LIST_HEAD(openowner_reaplist);
+> +	unsigned int n_openowners = 0;
+> +
+> +	if (!nfsd_netns_ready(nn))
+> +		return;
+> +
+> +	pr_info("=== Release stateids for sb=%p ===\n", sb);
+> +
+> +	spin_lock(&nn->client_lock);
+> +	list_for_each_entry(clp, &nn->client_lru, cl_lru) {
+> +		char cl_addr[INET6_ADDRSTRLEN] = {'\0'};
+> +
+> +		rpc_ntop((struct sockaddr*)&clp->cl_addr, cl_addr, sizeof(cl_addr));
+> +		pr_debug("Looking at client=%p/%s cl_clientid=%u:%u refcnt=%d\n",
+> +			     clp, cl_addr, clp->cl_clientid.cl_boot, clp->cl_clientid.cl_id,
+> +			     atomic_read(&clp->cl_refcount));
+> +
+> +		spin_lock(&clp->cl_lock);
+> +		list_for_each_entry_safe(oo, oo_next, &clp->cl_openowners, oo_perclient) {
+> +			struct nfs4_ol_stateid *stp = NULL;
+> +			bool found_my_sb = false, found_other_sb = false;
+> +			struct super_block *other_sb = NULL;
+> +
+> +			pr_debug(" Openowner %p %.*s\n", oo, oo->oo_owner.so_owner.len, oo->oo_owner.so_owner.data);
+> +			pr_debug(" oo_close_lru=%s oo_last_closed_stid=%p refcnt=%d so_is_open_owner=%u\n",
+> +				     list_empty(&oo->oo_close_lru) ? "N" : "Y", oo->oo_last_closed_stid,
+> +				     atomic_read(&oo->oo_owner.so_count), oo->oo_owner.so_is_open_owner);
+> +
+> +			list_for_each_entry(stp, &oo->oo_owner.so_stateids, st_perstateowner) {
+> +				struct nfs4_file *fp = NULL;
+> +				struct file *filp = NULL;
+> +				struct super_block *f_sb = NULL;
+> +				if (stp->st_stid.sc_file == NULL)
+> +					continue;
+> +
+> +				fp = stp->st_stid.sc_file;
+> +				filp = find_any_file(fp);
+> +				if (filp != NULL)
+> +					f_sb = file_inode(filp)->i_sb;
+> +				pr_debug("   filp=%p sb=%p my_sb=%p\n", filp, f_sb, sb);
+> +				if (f_sb == sb) {
+> +					found_my_sb = true;
+> +				} else {
+> +					found_other_sb = true;
+> +					other_sb = f_sb;
+> +				}
+> +				if (filp != NULL)
+> +					fput(filp);
+> +			}
+> +
+> +			/* openowner does not have files from needed fs, skip it */
+> +			if (!found_my_sb)
+> +				continue;
+> +
+> +			/*
+> +			 * we do not expect same openowhner having open files from more than one fs.
+> +			 * but if it happens, we cannot release this openowner.
+> +			 */
+> +			if (found_other_sb) {
+> +				pr_warn(" client=%p/%s openowner %p %.*s has files from sb=%p but also from sb=%p, skipping it!\n",
+> +					    clp, cl_addr, oo, oo->oo_owner.so_owner.len, oo->oo_owner.so_owner.data, sb, other_sb);
+> +				continue;
+> +			}
+> +
+> +			/*
+> +			 * Each OPEN stateid holds a refcnt on the openowner (and LOCK stateid holds a refcnt on the lockowner).
+> +			 * This refcnt is dropped when nfs4_free_ol_stateid is called, which calls nfs4_put_stateowner.
+> +			 * The last refcnt drop, unhashes and frees the openowner.
+> +			 * As a result, after we free the last stateid, the openowner will be also be freed.
+> +			 * But we still need the openowner to be around, because we need to call release_last_closed_stateid(),
+> +			 * which is what release_openowner() does (we are doing equivalent of that).
+> +			 * So we need to grab an extra refcnt for the openowner here.
+> +			 */
+> +			nfs4_get_stateowner(&oo->oo_owner);
+> +
+> +			/* see: nfsd_collect_client_openowners(), nfsd_foreach_client_openowner() */
+> +			unhash_openowner_locked(oo);
+> +			/*
+> +			 * By incrementing cl_refcount under "nn->client_lock" we, hopefully, protect that client from being killed via mark_client_expired_locked().
+> +			 * We increment cl_refcount once per each openowner.
+> +			 */
+> +			atomic_inc(&clp->cl_refcount);
+> +			list_add(&oo->oo_perclient, &openowner_reaplist);
+> +			++n_openowners;
+> +		}
+> +		spin_unlock(&clp->cl_lock);
+> +	}
+> +	spin_unlock(&nn->client_lock);
+> +
+> +	pr_info("Collected %u openowners for removal (sb=%p)\n", n_openowners, sb);
+> +
+> +	nfsd_reap_openowners(&openowner_reaplist);
+> +}
+> +
+> +/*
+>   * Since the lifetime of a delegation isn't limited to that of an open, a
+>   * client may quite reasonably hang on to a delegation as long as it has
+>   * the inode cached.  This becomes an obvious problem the first time a
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 4824363..8b38186 100755
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -37,6 +37,7 @@ enum {
+>  	NFSD_Fh,
+>  	NFSD_FO_UnlockIP,
+>  	NFSD_FO_UnlockFS,
+> +	NFSD_FO_ReleaseStateIds,
+>  	NFSD_Threads,
+>  	NFSD_Pool_Threads,
+>  	NFSD_Pool_Stats,
+> @@ -64,6 +65,7 @@ enum {
+>  static ssize_t write_filehandle(struct file *file, char *buf, size_t size);
+>  static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size);
+>  static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size);
+> +static ssize_t write_release_stateids(struct file *file, char *buf, size_t size);
+>  static ssize_t write_threads(struct file *file, char *buf, size_t size);
+>  static ssize_t write_pool_threads(struct file *file, char *buf, size_t size);
+>  static ssize_t write_versions(struct file *file, char *buf, size_t size);
+> @@ -81,6 +83,7 @@ static ssize_t (*write_op[])(struct file *, char *, size_t) = {
+>  	[NFSD_Fh] = write_filehandle,
+>  	[NFSD_FO_UnlockIP] = write_unlock_ip,
+>  	[NFSD_FO_UnlockFS] = write_unlock_fs,
+> +	[NFSD_FO_ReleaseStateIds] = write_release_stateids,
+>  	[NFSD_Threads] = write_threads,
+>  	[NFSD_Pool_Threads] = write_pool_threads,
+>  	[NFSD_Versions] = write_versions,
+> @@ -328,6 +331,47 @@ static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
+>  }
+>  
+>  /**
+> + * write_release_stateids - Release stateids of a local file system
+> + *
+> + * Experimental.
+> + *
+> + * Input:
+> + *			buf:	'\n'-terminated C string containing the
+> + *				absolute pathname of a local file system
+> + *			size:	length of C string in @buf
+> + * Output:
+> + *	On success:	returns zero if all openowners were released
+> + *	On error:	return code is negative errno value
+> + */
+> +static ssize_t write_release_stateids(struct file *file, char *buf, size_t size)
+> +{
+> +	struct path path;
+> +	char *fo_path = NULL;
+> +	int error = 0;
+> +
+> +	/* sanity check */
+> +	if (size == 0)
+> +		return -EINVAL;
+> +
+> +	if (buf[size-1] != '\n')
+> +		return -EINVAL;
+> +
+> +	fo_path = buf;
+> +	error = qword_get(&buf, fo_path, size);
+> +	if (error < 0)
+> +		return -EINVAL;
+> +
+> +	error = kern_path(fo_path, 0, &path);
+> +	if (error)
+> +		return error;
+> +
+> +	nfs4_release_stateids(path.dentry->d_sb);
+> +
+> +	path_put(&path);
+> +	return 0;
+> +}
+> +
+> +/**
+>   * write_filehandle - Get a variable-length NFS file handle by path
+>   *
+>   * On input, the buffer contains a '\n'-terminated C string comprised of
+> @@ -1167,6 +1211,8 @@ static int nfsd_fill_super(struct super_block * sb, void * data, int silent)
+>  					&transaction_ops, S_IWUSR|S_IRUSR},
+>  		[NFSD_FO_UnlockFS] = {"unlock_filesystem",
+>  					&transaction_ops, S_IWUSR|S_IRUSR},
+> +		[NFSD_FO_ReleaseStateIds] = {"release_stateids",
+> +					&transaction_ops, S_IWUSR|S_IRUSR},
+>  		[NFSD_Fh] = {"filehandle", &transaction_ops, S_IWUSR|S_IRUSR},
+>  		[NFSD_Threads] = {"threads", &transaction_ops, S_IWUSR|S_IRUSR},
+>  		[NFSD_Pool_Threads] = {"pool_threads", &transaction_ops, S_IWUSR|S_IRUSR},
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 86aa92d..acee094 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -632,6 +632,8 @@ extern struct nfs4_client_reclaim *nfs4_client_to_reclaim(const char *name,
+>  							struct nfsd_net *nn);
+>  extern bool nfs4_has_reclaimed_state(const char *name, struct nfsd_net *nn);
+>  
+> +extern void nfs4_release_stateids(struct super_block *sb);
+> +
+>  struct nfs4_file *find_file(struct knfsd_fh *fh);
+>  void put_nfs4_file(struct nfs4_file *fi);
+>  static inline void get_nfs4_file(struct nfs4_file *fi)
+> -- 
+> 1.9.1
