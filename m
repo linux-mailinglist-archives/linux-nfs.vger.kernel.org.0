@@ -2,117 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C747DACC79
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Sep 2019 13:39:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8AA1ACF69
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Sep 2019 17:19:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfIHLjL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Sep 2019 07:39:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35918 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbfIHLjL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 8 Sep 2019 07:39:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4D2CA2F366C;
-        Sun,  8 Sep 2019 11:39:10 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B74AB600C6;
-        Sun,  8 Sep 2019 11:39:08 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
+        id S1726717AbfIHPTq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Sep 2019 11:19:46 -0400
+Received: from mail-eopbgr780092.outbound.protection.outlook.com ([40.107.78.92]:39577
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726527AbfIHPTp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 8 Sep 2019 11:19:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DLUaCUXJBvtYdD7OdfYWZvnfFp89YIJMf65NJ9gpGuCbGLewx/nXSmy2K0+Db/pL9LO6HHzT/IObeFACxImgL2Z1R2dNuimI4EOWmNHI1ZoJVvfBougPxQWTgxZLAf14Vab1A5TrkiCFC+F5nCWFe3tp2UtukzJZ+lwW5lDOBM/OHoZm9PLUIYl0DBjnfjn67oubo9snurEFqcmpIkQPz3m5Lk0wTb2hBItf1JXboQ6/Fw/GJyU+K5l1cyrgTJzl5b64f+7OFREwCq2bf2bW+SgGe6ajdfEopdE2Q4eYs9KlUfwl18vKZY98cLp7306wt/nStlfzhP/ZnxN35OLf+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KVLRhpyWFGtPnHxfQXCxBrNGS6t4HXiANOQLHvW1Wi4=;
+ b=lhKtBGZw0Hxqm0DWJhAeC9ZKM/lvf1ofoDzUtmLKpjCIxeW9ZzsCS0jH8Vj+h8aZ+DjfN0hSR7LwtcqmzOj2DuXW+CuUCMCS1E2IqMS4OSf9mYdPS3vNpySHqTCdFV7vqhkSSa85CYVFQFlzgwa1CYdHpY0MUDwh0YlU7bLLl9+8tvC2Cz/qKefxTFqp8o0zRBdsnWuOsM7lsm2jrIdLn/4u5WHwfFi1q/MXAXoXt6xQ+u21IOmFdqKWSAq3OlKusTmb+VKXUMGzPCVEfeAKlpsB58AmT96amWhOLCHMY0e0VhAjk07Y4h1jTI8I0NBb5p1vQ/OA+FbFnudMZ8upOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KVLRhpyWFGtPnHxfQXCxBrNGS6t4HXiANOQLHvW1Wi4=;
+ b=H9qUQIwVh1krDNiCHrgk3QWvJbw90ArinfH9AfpM/T3Jj+NfGU0llU/oaiujn9tUn1qfFclkIG709XSz5+lfyVwQIUzBju5/P6BLfeWYZ6QP14c/Qll47SLVAMtJZCwTJhrVrFG3t4zukqyVo+jt3s8395WDZMcX1z4pVDi7Kjg=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1100.namprd13.prod.outlook.com (10.168.118.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.10; Sun, 8 Sep 2019 15:19:40 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2263.005; Sun, 8 Sep 2019
+ 15:19:40 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bcodding@redhat.com" <bcodding@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC:     "tibbs@math.uh.edu" <tibbs@math.uh.edu>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "linux@stwm.de" <linux@stwm.de>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "km@cm4all.com" <km@cm4all.com>
 Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Sun, 08 Sep 2019 07:39:08 -0400
-Message-ID: <A862CFCD-76A2-4373-8F44-F156DB38E6A5@redhat.com>
-In-Reply-To: <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+Thread-Topic: Regression in 5.1.20: Reading long directory fails
+Thread-Index: AQHVUfDuoAq39fX+s0K+L+pluMBkM6cHnsTegAlOTYCAAAwCNIAJQZHggAAlEwCAABHoXoAAKhIAgABG1wuAA/3qgIAAZExXgAAA1wCAAoqWAIAAPZqA
+Date:   Sun, 8 Sep 2019 15:19:40 +0000
+Message-ID: <1ebf86cff330eb15c02249f0dac415a8aff99f49.camel@hammerspace.com>
 References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+         <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+         <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+         <ufad0ggrfrk.fsf@epithumia.math.uh.edu>
+         <20190906144837.GD17204@fieldses.org>
+         <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+         <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+         <A862CFCD-76A2-4373-8F44-F156DB38E6A5@redhat.com>
+In-Reply-To: <A862CFCD-76A2-4373-8F44-F156DB38E6A5@redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.36.167.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aa43c273-f30b-48fd-d7e4-08d7346ff832
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1100;
+x-ms-traffictypediagnostic: DM5PR13MB1100:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR13MB1100297592CEB03906CECFBBB8B40@DM5PR13MB1100.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0154C61618
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(136003)(189003)(199004)(81156014)(54906003)(14454004)(6246003)(53546011)(110136005)(14444005)(6486002)(256004)(6512007)(102836004)(81166006)(229853002)(86362001)(4326008)(508600001)(118296001)(25786009)(99286004)(5660300002)(7736002)(6306002)(2616005)(486006)(6116002)(3846002)(91956017)(476003)(36756003)(66066001)(11346002)(8936002)(6506007)(8676002)(446003)(2501003)(53936002)(26005)(71200400001)(71190400001)(186003)(966005)(76176011)(76116006)(66446008)(64756008)(66556008)(66476007)(6436002)(2906002)(305945005)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1100;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XBzOhXkV6iLghHp7XGUllwBSGxv7h8wD9Fb/FFD7Y23Q8iwE+N3boRG9pG+CGmqGCjdiwEo02Phv9z4LPzhftahmy82zRlHIfy3Bl9F/wLbEa3FVc92P0E8C9kGz8en5Y9EJTnUIMxTcvBOn0xyke2xlp/AQJplnEc4sC7/mHrYRtE7QtUuIUhsjgehhrVV0msH7/YPx1ACUtNqcp26e/GuB8/8k4poqpkP4cd62jMGVrPLYyngDy6edAuMfgSAGTZtTvp99Fek3jCn2iq6uZGttYhP0s8/UrUKrpwUCTAoPGJLJvCB0wvWnwK6BWLEmfgWXu8Hg2rrW0XLp+AeR0n+ZAy3EyX0Xweh4ArDD4uqSU36CZnTbpObo8PIQ4Gp2C06eEXE49MJ5U9K3YOvaF7hbNEkTrb/wBvWVBW1tPZw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EAD66A8E5D47354D97A4A29E8F742923@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sun, 08 Sep 2019 11:39:10 +0000 (UTC)
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa43c273-f30b-48fd-d7e4-08d7346ff832
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2019 15:19:40.4921
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0LOLU2UBKbefs4jDHuMn0NW6qbniChdvIXc6pDTHCN+zejIw/vrhTkeVPcEYr28zTpBo6/RlscHGEql3kYLwXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1100
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 6 Sep 2019, at 16:50, Chuck Lever wrote:
-
->> On Sep 6, 2019, at 4:47 PM, Jason L Tibbitts III <tibbs@math.uh.edu> 
->> wrote:
->>
->>>>>>> "JBF" == J Bruce Fields <bfields@fieldses.org> writes:
->>
->> JBF> Those readdir changes were client-side, right?  Based on that 
->> I'd
->> JBF> been assuming a client bug, but maybe it'd be worth getting a 
->> full
->> JBF> packet capture of the readdir reply to make sure it's legit.
->>
->> I have been working with bcodding on IRC for the past couple of days 
->> on
->> this.  Fortunately I was able to come up with way to fill up a 
->> directory
->> in such a way that it will fail with certainty and as a bonus doesn't
->> include any user data so I can feel OK about sharing packet captures. 
->>  I
->> have a capture alongside a kernel trace of the problematic operation 
->> in
->> https://www.math.uh.edu/~tibbs/nfs/.  Not that I can particularly 
->> tell
->> anything useful from that, but bcodding says that it seems to point 
->> to
->> some issue in sunrpc.
->>
->> And because I can easily reproduce this and I was able to do a 
->> bisect:
->>
->> 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d is the first bad commit
->> commit 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d
->> Author: Chuck Lever <chuck.lever@oracle.com>
->> Date:   Mon Feb 11 11:25:41 2019 -0500
->>
->>    SUNRPC: Use au_rslack when computing reply buffer size
->>
->>    au_rslack is significantly smaller than (au_cslack << 2). Using
->>    that value results in smaller receive buffers. In some cases this
->>    eliminates an extra segment in Reply chunks (RPC/RDMA).
->>
->>    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>
->> :040000 040000 d4d1ce2fbe0035c5bd9df976b8c448df85dcb505 
->> 7011a792dfe72ff9cd70d66e45d353f3d7817e3e M      net
->>
->> But of course, I can't say whether this is the actual bad commit or
->> whether it just introduced a behavior change which alters the 
->> conditions
->> under which the problem appears.
->
-> The first place I'd start looking is the XDR constants at the head of 
-> fs/nfs/nfs4xdr.c
-> having to do with READDIR.
->
-> The report of behavior changes with the use of krb5p also makes this 
-> commit plausible.
-
-After sprinkling the printk's, we're coming up one word short in the 
-receive
-buffer.  I think we're not accounting for the xdr pad of buf->pages for 
-NFS4
-readdir -- but I need to check the RFCs.  Anyone know if v4 READDIR 
-results
-have to be aligned?
-
-Also need to check just why krb5i is the only auth that cares..
-
-Ben
+T24gU3VuLCAyMDE5LTA5LTA4IGF0IDA3OjM5IC0wNDAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
+b3RlOg0KPiBPbiA2IFNlcCAyMDE5LCBhdCAxNjo1MCwgQ2h1Y2sgTGV2ZXIgd3JvdGU6DQo+IA0K
+PiA+ID4gT24gU2VwIDYsIDIwMTksIGF0IDQ6NDcgUE0sIEphc29uIEwgVGliYml0dHMgSUlJIDwN
+Cj4gPiA+IHRpYmJzQG1hdGgudWguZWR1PiANCj4gPiA+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+
+ID4gPiA+ID4gIkpCRiIgPT0gSiBCcnVjZSBGaWVsZHMgPGJmaWVsZHNAZmllbGRzZXMub3JnPiB3
+cml0ZXM6DQo+ID4gPiANCj4gPiA+IEpCRj4gVGhvc2UgcmVhZGRpciBjaGFuZ2VzIHdlcmUgY2xp
+ZW50LXNpZGUsIHJpZ2h0PyAgQmFzZWQgb24NCj4gPiA+IHRoYXQgDQo+ID4gPiBJJ2QNCj4gPiA+
+IEpCRj4gYmVlbiBhc3N1bWluZyBhIGNsaWVudCBidWcsIGJ1dCBtYXliZSBpdCdkIGJlIHdvcnRo
+IGdldHRpbmcNCj4gPiA+IGEgDQo+ID4gPiBmdWxsDQo+ID4gPiBKQkY+IHBhY2tldCBjYXB0dXJl
+IG9mIHRoZSByZWFkZGlyIHJlcGx5IHRvIG1ha2Ugc3VyZSBpdCdzIGxlZ2l0Lg0KPiA+ID4gDQo+
+ID4gPiBJIGhhdmUgYmVlbiB3b3JraW5nIHdpdGggYmNvZGRpbmcgb24gSVJDIGZvciB0aGUgcGFz
+dCBjb3VwbGUgb2YNCj4gPiA+IGRheXMgDQo+ID4gPiBvbg0KPiA+ID4gdGhpcy4gIEZvcnR1bmF0
+ZWx5IEkgd2FzIGFibGUgdG8gY29tZSB1cCB3aXRoIHdheSB0byBmaWxsIHVwIGEgDQo+ID4gPiBk
+aXJlY3RvcnkNCj4gPiA+IGluIHN1Y2ggYSB3YXkgdGhhdCBpdCB3aWxsIGZhaWwgd2l0aCBjZXJ0
+YWludHkgYW5kIGFzIGEgYm9udXMNCj4gPiA+IGRvZXNuJ3QNCj4gPiA+IGluY2x1ZGUgYW55IHVz
+ZXIgZGF0YSBzbyBJIGNhbiBmZWVsIE9LIGFib3V0IHNoYXJpbmcgcGFja2V0DQo+ID4gPiBjYXB0
+dXJlcy4gDQo+ID4gPiAgSQ0KPiA+ID4gaGF2ZSBhIGNhcHR1cmUgYWxvbmdzaWRlIGEga2VybmVs
+IHRyYWNlIG9mIHRoZSBwcm9ibGVtYXRpYw0KPiA+ID4gb3BlcmF0aW9uIA0KPiA+ID4gaW4NCj4g
+PiA+IGh0dHBzOi8vd3d3Lm1hdGgudWguZWR1L350aWJicy9uZnMvLiAgTm90IHRoYXQgSSBjYW4N
+Cj4gPiA+IHBhcnRpY3VsYXJseSANCj4gPiA+IHRlbGwNCj4gPiA+IGFueXRoaW5nIHVzZWZ1bCBm
+cm9tIHRoYXQsIGJ1dCBiY29kZGluZyBzYXlzIHRoYXQgaXQgc2VlbXMgdG8NCj4gPiA+IHBvaW50
+IA0KPiA+ID4gdG8NCj4gPiA+IHNvbWUgaXNzdWUgaW4gc3VucnBjLg0KPiA+ID4gDQo+ID4gPiBB
+bmQgYmVjYXVzZSBJIGNhbiBlYXNpbHkgcmVwcm9kdWNlIHRoaXMgYW5kIEkgd2FzIGFibGUgdG8g
+ZG8gYSANCj4gPiA+IGJpc2VjdDoNCj4gPiA+IA0KPiA+ID4gMmM5NGI4ZWNhMWEyNmNkNDYwMTBk
+NmU3M2EyM2RhNWYyZTkzYTE5ZCBpcyB0aGUgZmlyc3QgYmFkIGNvbW1pdA0KPiA+ID4gY29tbWl0
+IDJjOTRiOGVjYTFhMjZjZDQ2MDEwZDZlNzNhMjNkYTVmMmU5M2ExOWQNCj4gPiA+IEF1dGhvcjog
+Q2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+DQo+ID4gPiBEYXRlOiAgIE1vbiBG
+ZWIgMTEgMTE6MjU6NDEgMjAxOSAtMDUwMA0KPiA+ID4gDQo+ID4gPiAgICBTVU5SUEM6IFVzZSBh
+dV9yc2xhY2sgd2hlbiBjb21wdXRpbmcgcmVwbHkgYnVmZmVyIHNpemUNCj4gPiA+IA0KPiA+ID4g
+ICAgYXVfcnNsYWNrIGlzIHNpZ25pZmljYW50bHkgc21hbGxlciB0aGFuIChhdV9jc2xhY2sgPDwg
+MikuDQo+ID4gPiBVc2luZw0KPiA+ID4gICAgdGhhdCB2YWx1ZSByZXN1bHRzIGluIHNtYWxsZXIg
+cmVjZWl2ZSBidWZmZXJzLiBJbiBzb21lIGNhc2VzDQo+ID4gPiB0aGlzDQo+ID4gPiAgICBlbGlt
+aW5hdGVzIGFuIGV4dHJhIHNlZ21lbnQgaW4gUmVwbHkgY2h1bmtzIChSUEMvUkRNQSkuDQo+ID4g
+PiANCj4gPiA+ICAgIFNpZ25lZC1vZmYtYnk6IENodWNrIExldmVyIDxjaHVjay5sZXZlckBvcmFj
+bGUuY29tPg0KPiA+ID4gICAgU2lnbmVkLW9mZi1ieTogQW5uYSBTY2h1bWFrZXIgPEFubmEuU2No
+dW1ha2VyQE5ldGFwcC5jb20+DQo+ID4gPiANCj4gPiA+IDowNDAwMDAgMDQwMDAwIGQ0ZDFjZTJm
+YmUwMDM1YzViZDlkZjk3NmI4YzQ0OGRmODVkY2I1MDUgDQo+ID4gPiA3MDExYTc5MmRmZTcyZmY5
+Y2Q3MGQ2NmU0NWQzNTNmM2Q3ODE3ZTNlIE0gICAgICBuZXQNCj4gPiA+IA0KPiA+ID4gQnV0IG9m
+IGNvdXJzZSwgSSBjYW4ndCBzYXkgd2hldGhlciB0aGlzIGlzIHRoZSBhY3R1YWwgYmFkIGNvbW1p
+dA0KPiA+ID4gb3INCj4gPiA+IHdoZXRoZXIgaXQganVzdCBpbnRyb2R1Y2VkIGEgYmVoYXZpb3Ig
+Y2hhbmdlIHdoaWNoIGFsdGVycyB0aGUgDQo+ID4gPiBjb25kaXRpb25zDQo+ID4gPiB1bmRlciB3
+aGljaCB0aGUgcHJvYmxlbSBhcHBlYXJzLg0KPiA+IA0KPiA+IFRoZSBmaXJzdCBwbGFjZSBJJ2Qg
+c3RhcnQgbG9va2luZyBpcyB0aGUgWERSIGNvbnN0YW50cyBhdCB0aGUgaGVhZA0KPiA+IG9mIA0K
+PiA+IGZzL25mcy9uZnM0eGRyLmMNCj4gPiBoYXZpbmcgdG8gZG8gd2l0aCBSRUFERElSLg0KPiA+
+IA0KPiA+IFRoZSByZXBvcnQgb2YgYmVoYXZpb3IgY2hhbmdlcyB3aXRoIHRoZSB1c2Ugb2Yga3Ji
+NXAgYWxzbyBtYWtlcw0KPiA+IHRoaXMgDQo+ID4gY29tbWl0IHBsYXVzaWJsZS4NCj4gDQo+IEFm
+dGVyIHNwcmlua2xpbmcgdGhlIHByaW50aydzLCB3ZSdyZSBjb21pbmcgdXAgb25lIHdvcmQgc2hv
+cnQgaW4gdGhlIA0KPiByZWNlaXZlDQo+IGJ1ZmZlci4gIEkgdGhpbmsgd2UncmUgbm90IGFjY291
+bnRpbmcgZm9yIHRoZSB4ZHIgcGFkIG9mIGJ1Zi0+cGFnZXMNCj4gZm9yIA0KPiBORlM0DQo+IHJl
+YWRkaXIgLS0gYnV0IEkgbmVlZCB0byBjaGVjayB0aGUgUkZDcy4gIEFueW9uZSBrbm93IGlmIHY0
+IFJFQURESVIgDQo+IHJlc3VsdHMNCj4gaGF2ZSB0byBiZSBhbGlnbmVkPw0KPiANCj4gQWxzbyBu
+ZWVkIHRvIGNoZWNrIGp1c3Qgd2h5IGtyYjVpIGlzIHRoZSBvbmx5IGF1dGggdGhhdCBjYXJlcy4u
+DQo+IA0KDQpJJ20gbm90IHNlZWluZyB0aGF0LiBJZiB5b3UgbG9vayBhdCBjb21taXQgMDJlZjA0
+ZTQzMmJhLCB5b3UnbGwgc2VlDQp0aGF0IENodWNrIGRpZCBhZGQgYSAncGFkZGluZyB0ZXJtJyB0
+byBkZWNvZGVfcmVhZGRpcl9tYXhzeiBpbiB0aGUNCk5GU3Y0IGNhc2UuDQpUaGUgb3RoZXIgdGhp
+bmcgdG8gcmVtZW1iZXIgaXMgdGhhdCBhIHJlYWRkaXIgJ2Rpcmxpc3Q0JyBlbnRyeSBpcw0KYWx3
+YXlzIHdvcmQgYWxpZ25lZCAoaXJyZXNwZWN0aXZlIG9mIHRoZSBsZW5ndGggb2YgdGhlIGZpbGVu
+YW1lKSwgc28NCnRoZXJlIGlzIG5vIHBhZGRpbmcgdGhhdCBuZWVkcyB0byBiZSB0YWtlbiBpbnRv
+IGFjY291bnQuDQoNCkkgdGhpbmsgd2UgcHJvYmFibHkgcmF0aGVyIHdhbnQgdG8gbG9vayBhdCBo
+b3cgYXV0aC0+YXVfcmFsaWduIGlzIGJlaW5nDQpjYWxjdWxhdGVkIGZvciB0aGUgY2FzZSBvZiBr
+cmI1aS4gSSdtIHJlYWxseSBub3QgdW5kZXJzdGFuZGluZyB3aHkNCmF1dGgtPmF1X3JhbGlnbiBz
+aG91bGQgbm90IHRha2UgaW50byBhY2NvdW50IHRoZSBwcmVzZW5jZSBvZiB0aGUgbWljLg0KQ2h1
+Y2s/DQoNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5l
+ciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
