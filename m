@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66E49ADA44
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2019 15:48:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0442FADA79
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2019 15:52:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfIINs5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Sep 2019 09:48:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32797 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731232AbfIINs5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Sep 2019 09:48:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so28825990ioo.0
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2019 06:48:56 -0700 (PDT)
+        id S2404956AbfIINwn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Sep 2019 09:52:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46236 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404954AbfIINwn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Sep 2019 09:52:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id d17so6896223ios.13
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2019 06:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=ocfZ5OwsTrlnGSnz6Lo/yeZCShsngwgHFOdgjRdDBN0=;
-        b=NT9RRfLHj/x3CCGQB8nURPOta8btuJKL9RrbESWgpJWLHLlA7qq7DncsOalFSfuuLA
-         INbTChadI01wbAA3ck221x+8syKf0501wGixVP9pyjKZrry/YlRnzwDfBJDPyHzsbmFz
-         T5E1qA5RW6QntOi8QUUIPgxLWUYfeuJLqXPvfJo7sN9fLKxkWOeQvm5A0oUvIS+C6ech
-         esOq6+dB9wLBoefGOAt8zqrttemoUfwSgGQS5272hEDSAMBqU0yAi0VWDk9UkfS+qkJj
-         UzN6hd5MyPwDpvr6HvOvMQ0ijRFJ/v3bfNTyfgOICdWTcXFw/7FNzQ2IHZpOjADDuZdU
-         Bd4A==
+        b=qKFWFBSRpbc5Lua9hGMok+6P/DYrMQ0JlCkDmLHs/bcSj/hR2EKtm2dEMVVnt9Won0
+         CPGZUH4pJXYr6be+2WtYRx1V5jPCBZ8AuPWBTUqpUnUlu4iRcDdhLq073ellxDFq2S5I
+         OirO2YWJ2vnb/UAzmzLNDt2JMfplpUWMKp6g20KcDWrGFYSgD+QP1G3DvDzRfrlcK6RF
+         bBDhZ3705Bw3YQ3/RR++FZRmmzBahCXFYmhrPyl/KEWqqU0vILoinzhLgXIzLA17Fc8E
+         nExF2iFc83KvozWMlshNiFcxmhEApqxr0bEN2RVqyMTibkbFcQ8CcaafWB4AkCBfhHl6
+         0HeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=ocfZ5OwsTrlnGSnz6Lo/yeZCShsngwgHFOdgjRdDBN0=;
-        b=NPJ4ssG2AZqDYSOFxaKdmwkaXCrFiY3cJt+wTEPOvnWn8vuolYJ9AHAX3SQ0qeC1g9
-         KiJOdksHIzT0AXjPwt/EK3q8aMVCkFxnMK7MIVcDRVQdLQdc+UHo6y2MGP/f8njCY36j
-         wlqJpqDv24aoH9D8mKkN8h0NfmBowxE1fjNabl3fh5RsXQwqFi41W8I4tkliEqJDiEu/
-         vkWE8f/K8lksaLptF9QJBUdh/qs6KTBY0+Y5XAIH3fppm4bJRm/jSbnOeCqEXD5uTKfh
-         V95a2CCm3jVVDoXSLF3CqC16WNB0/tHVeVH4T87N0dJwfgXmbVe0EeoLonKeAL0XbQ4H
-         bs1A==
-X-Gm-Message-State: APjAAAUIaVwNMcd5u1NGsTFNcdakMNJOxrV5F1LDFBRY7m6Btx6h+w9W
-        xiJMkwIyWgQmvNsDsp3ZPiWGGWQScQ==
-X-Google-Smtp-Source: APXvYqx62bQNsAthUD0IkVQrUUjyvdvVSsrtrvoq2Lv9HiwRgl+lAQUIK2UrHZ3RCxH7iGi6F7uTtA==
-X-Received: by 2002:a5e:da44:: with SMTP id o4mr12114484iop.80.1568036935895;
-        Mon, 09 Sep 2019 06:48:55 -0700 (PDT)
+        b=BhzzBLxjtPR+i3r/29tEti8o6nxt1ETx7S4dWVAe8GFZKwYPXbOSzaxOjvS67BFQE0
+         81Hm2B5jZXFPtVLhe6MXIvxvrOqsl1qDgLWzsEI90SBUdLrb5RwOcZIl7eFAXx87u3TP
+         lxH5R1pZinmX3H3Q+xdEOylx2k8vFuhsZFL1y6sNmzatIYWsBJG6h4IR5Cy1EoBWWEbi
+         9cY0ktNFnCynbs+u0RPHotnRjWrmnNAgCfkEomZW21Wnbc8c/ODwweNhYV+6tVml7L5h
+         eGDwcDrhmh2vokY7N6ZBydvXblzlwKa0rELPtd5Mkxp43spK1SBT1idWPVxJsC3GmWHX
+         /kHQ==
+X-Gm-Message-State: APjAAAV6KmlUVh326P2Thea2NyeS8XxbICzcuEo8MMcAMaj2Vq7ayJ7f
+        RisaAYy9UcA1YqrcsZkZAepSPDKOHw==
+X-Google-Smtp-Source: APXvYqzZLSblZV7zml2Irj46R1QqjRWY0MP/dy7v/t0WZTO0YBMGQuaroBubu1R86rYLRjY9p5dO/g==
+X-Received: by 2002:a6b:3b94:: with SMTP id i142mr26910902ioa.212.1568037161802;
+        Mon, 09 Sep 2019 06:52:41 -0700 (PDT)
 Received: from localhost.localdomain (50-36-167-63.alma.mi.frontiernet.net. [50.36.167.63])
-        by smtp.gmail.com with ESMTPSA id c4sm11356695ioa.76.2019.09.09.06.48.55
+        by smtp.gmail.com with ESMTPSA id i20sm958308ioh.77.2019.09.09.06.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 06:48:55 -0700 (PDT)
+        Mon, 09 Sep 2019 06:52:41 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     Anna Schumaker <Anna.Schumakerr@netapp.com>
+To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
 Subject: [PATCH] SUNRPC: Dequeue the request from the receive queue while we're re-encoding
-Date:   Mon,  9 Sep 2019 09:46:47 -0400
-Message-Id: <20190909134647.77523-1-trond.myklebust@hammerspace.com>
+Date:   Mon,  9 Sep 2019 09:50:33 -0400
+Message-Id: <20190909135033.77710-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
