@@ -2,259 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B2A9ACFDA
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Sep 2019 18:53:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC7E9AD1F9
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2019 04:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfIHQxv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Sep 2019 12:53:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36742 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730022AbfIHQxu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Sep 2019 12:53:50 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x88GmukU099786;
-        Sun, 8 Sep 2019 16:51:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=A5tT5gwGxBzxIbSUs3TEITFv8DLQ5Lq2YlaSKYXEY6Y=;
- b=nWKgxBojQ7025srGvTIj0+9K37fUqq/OBSsW3f16zVrTMS7DkTAYEuFsJMQjy7U6B2Kd
- Yy07AAgrc24bjs7xbm9LZoIqPW4wxFY+OtnVNuDQwiHWE0JyzGnUqpgvB9Qwl5JQ1s6M
- JFotwOpfwwgAHA0aGxuPLxz30XaBndn1+dBcQpFbZKsOhwz/z3iseTpT0ZwwrSDIJEl8
- DzD6bf6tbW90VMRgIDbAsUh6tukFewDgzDsLr7dKwMWVWCDFgTDJgF31+HLyTQ4jgGKh
- XyFMxd2XdZZu4k2SL9RbnbVJmmcfubzDdCAukUl6XifI0+ZT25MGn/3kE4uGvzmY1fO2 vA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2uw1jxrebx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Sep 2019 16:51:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x88GmfpW108982;
-        Sun, 8 Sep 2019 16:51:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2uve9c3ycj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Sep 2019 16:51:21 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x88GpJ2M003277;
-        Sun, 8 Sep 2019 16:51:19 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 08 Sep 2019 09:51:19 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <9c3483e089986fa9f5e8af8ea9e552f4313ecd6a.camel@hammerspace.com>
-Date:   Sun, 8 Sep 2019 12:51:18 -0400
-Cc:     "tibbs@math.uh.edu" <tibbs@math.uh.edu>,
-        Bruce Fields <bfields@fieldses.org>,
-        "linux@stwm.de" <linux@stwm.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "km@cm4all.com" <km@cm4all.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <87C8F695-2729-4A65-9738-2E651A344BA7@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <A862CFCD-76A2-4373-8F44-F156DB38E6A5@redhat.com>
- <1ebf86cff330eb15c02249f0dac415a8aff99f49.camel@hammerspace.com>
- <3B2EEB3C-3305-4A50-A55B-51093A985284@oracle.com>
- <9c3483e089986fa9f5e8af8ea9e552f4313ecd6a.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "bcodding@redhat.com" <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9374 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909080185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9374 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909080185
+        id S1732957AbfIICgL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Sep 2019 22:36:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33599 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731928AbfIICgK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Sep 2019 22:36:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t11so5865677plo.0
+        for <linux-nfs@vger.kernel.org>; Sun, 08 Sep 2019 19:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fGl0467DNWpNCh493JC4NyhOyXJ6p/TNVqtSivK+TJI=;
+        b=HYwl7A60IgY2Ug7EoRZYJ2ZglmB3AiqiKeS4PDpXAgHXGUUF3OnPughxkYBhvJllGh
+         NKvNofNK90zFh+7kS12nuOsYp/bkCrFiz8K5V5RG9hm9fzarRyc5o4bchDphihgQJuDE
+         q5oxvtaJCuz4XutsRGc6F126TuZFm/TtZCkNTlIu12ijuFi2As3wgCv7wO9ZTkv3CYDe
+         8uM9pTO02g7xGLguGhLj4+bheZO9QnFdXCsbuTjiacRowZfhRlSHaisHfk41BirhQyR8
+         l0azkTX9iM275kfpiXVS9mJMYRiaaR9ktYyPPfd/oxbQJl/e2I8DB+j3g/yD2634Y+hj
+         mF2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fGl0467DNWpNCh493JC4NyhOyXJ6p/TNVqtSivK+TJI=;
+        b=T/DKSepAIFE34+dq+N5eBeKYKN/W4H3MFT+8rh0rhTOQzdo+Etdf6uxMnyttOfHzXf
+         m2ZRQ35rucW/AAydJKSIpTN0xJVqayJQSVFnAx5D/D0H7GzqJuGk8NVleNZXY3b8eloS
+         3o94amfbfLQ+8pz/e3FTazzFvJz7jufYK1o761VhRTcZDSlR5ezdXCzPGJMzfl22necR
+         JYitkJW10FbY/Nnap3QHIBN061O9eG5P0WYhTkR9ne4hwwHnM3sFvFpBjzacS+Mdi1qI
+         31Ict9emx2NS4cBiIbeiniRbN4yry6f2EE886uW9deLKavfHRJ57gnnQkRV31qm6J8pN
+         Z9Gw==
+X-Gm-Message-State: APjAAAUenyfh+09sxr+PeNoXzEjQTJBhsLIBD6d8zrqpfnC3SeBRqOvQ
+        2I09mG918PCVB2zeUGcWXDo=
+X-Google-Smtp-Source: APXvYqyGx4rquNY6/gEt8u82zXsQzGMoJZr2XrNq99W3GnVShtGxLvERLqYuPtNIYWYc0UgTcsq8Qg==
+X-Received: by 2002:a17:902:9a05:: with SMTP id v5mr9301914plp.237.1567996568556;
+        Sun, 08 Sep 2019 19:36:08 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id q42sm13378860pja.16.2019.09.08.19.36.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Sep 2019 19:36:07 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 10:36:00 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>
+Subject: Re: nfs-for-5.3-3 update "breaks" NFSv4 directIO somehow
+Message-ID: <20190909023600.sxygdyclxm4ivllw@XZHOUW.usersys.redhat.com>
+References: <20190828102256.3nhyb2ngzitwd7az@XZHOUW.usersys.redhat.com>
+ <00923c9f5d5a69e8225640abcf7ad54df2cb62d2.camel@hammerspace.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00923c9f5d5a69e8225640abcf7ad54df2cb62d2.camel@hammerspace.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Aug 28, 2019 at 03:32:25PM +0000, Trond Myklebust wrote:
+> On Wed, 2019-08-28 at 18:22 +0800, Murphy Zhou wrote:
+> > Hi,
+> > 
+> > If write to file with O_DIRECT, then read it without O_DIRECT, read
+> > returns 0.
+> > From tshark output, looks like the READ call is missing.
+> > 
+> > LTP[1] dio tests spot this. Things work well before this update.
+> > 
+> > Bisect log is pointing to:
+> > 
+> > 	commit 7e10cc25bfa0dd3602bbcf5cc9c759a90eb675dc
+> > 	Author: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > 	Date:   Fri Aug 9 12:06:43 2019 -0400
+> > 	
+> > 	    NFS: Don't refresh attributes with mounted-on-file
+> > informatio
+> > 
+> > With this commit reverted, the tests pass again.
+> > 
+> > It's only about NFSv4(4.0 4.1 and 4.2), NFSv3 works well.
+> > 
+> > Bisect log, outputs of tshark, sample test programme derived from
+> > LTP diotest02.c and a simple test script are attached.
+> > 
+> > If this is an expected change, we will need to update the testcases.
+> 
+> That is not intentional, so thanks for reporting it! Does the following
+> fix help?
 
+Hi Trond,
 
-> On Sep 8, 2019, at 12:47 PM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Sun, 2019-09-08 at 11:48 -0400, Chuck Lever wrote:
->>> On Sep 8, 2019, at 11:19 AM, Trond Myklebust <
->>> trondmy@hammerspace.com> wrote:
->>>=20
->>> On Sun, 2019-09-08 at 07:39 -0400, Benjamin Coddington wrote:
->>>> On 6 Sep 2019, at 16:50, Chuck Lever wrote:
->>>>=20
->>>>>> On Sep 6, 2019, at 4:47 PM, Jason L Tibbitts III <
->>>>>> tibbs@math.uh.edu>=20
->>>>>> wrote:
->>>>>>=20
->>>>>>>>>>> "JBF" =3D=3D J Bruce Fields <bfields@fieldses.org>
->>>>>>>>>>> writes:
->>>>>>=20
->>>>>> JBF> Those readdir changes were client-side, right?  Based on
->>>>>> that=20
->>>>>> I'd
->>>>>> JBF> been assuming a client bug, but maybe it'd be worth
->>>>>> getting
->>>>>> a=20
->>>>>> full
->>>>>> JBF> packet capture of the readdir reply to make sure it's
->>>>>> legit.
->>>>>>=20
->>>>>> I have been working with bcodding on IRC for the past couple
->>>>>> of
->>>>>> days=20
->>>>>> on
->>>>>> this.  Fortunately I was able to come up with way to fill up
->>>>>> a=20
->>>>>> directory
->>>>>> in such a way that it will fail with certainty and as a bonus
->>>>>> doesn't
->>>>>> include any user data so I can feel OK about sharing packet
->>>>>> captures.=20
->>>>>> I
->>>>>> have a capture alongside a kernel trace of the problematic
->>>>>> operation=20
->>>>>> in
->>>>>> https://www.math.uh.edu/~tibbs/nfs/.  Not that I can
->>>>>> particularly=20
->>>>>> tell
->>>>>> anything useful from that, but bcodding says that it seems to
->>>>>> point=20
->>>>>> to
->>>>>> some issue in sunrpc.
->>>>>>=20
->>>>>> And because I can easily reproduce this and I was able to do
->>>>>> a=20
->>>>>> bisect:
->>>>>>=20
->>>>>> 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d is the first bad
->>>>>> commit
->>>>>> commit 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d
->>>>>> Author: Chuck Lever <chuck.lever@oracle.com>
->>>>>> Date:   Mon Feb 11 11:25:41 2019 -0500
->>>>>>=20
->>>>>>  SUNRPC: Use au_rslack when computing reply buffer size
->>>>>>=20
->>>>>>  au_rslack is significantly smaller than (au_cslack << 2).
->>>>>> Using
->>>>>>  that value results in smaller receive buffers. In some
->>>>>> cases
->>>>>> this
->>>>>>  eliminates an extra segment in Reply chunks (RPC/RDMA).
->>>>>>=20
->>>>>>  Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>>>>>  Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>>>>>=20
->>>>>> :040000 040000 d4d1ce2fbe0035c5bd9df976b8c448df85dcb505=20
->>>>>> 7011a792dfe72ff9cd70d66e45d353f3d7817e3e M      net
->>>>>>=20
->>>>>> But of course, I can't say whether this is the actual bad
->>>>>> commit
->>>>>> or
->>>>>> whether it just introduced a behavior change which alters
->>>>>> the=20
->>>>>> conditions
->>>>>> under which the problem appears.
->>>>>=20
->>>>> The first place I'd start looking is the XDR constants at the
->>>>> head
->>>>> of=20
->>>>> fs/nfs/nfs4xdr.c
->>>>> having to do with READDIR.
->>>>>=20
->>>>> The report of behavior changes with the use of krb5p also makes
->>>>> this=20
->>>>> commit plausible.
->>>>=20
->>>> After sprinkling the printk's, we're coming up one word short in
->>>> the=20
->>>> receive
->>>> buffer.  I think we're not accounting for the xdr pad of buf-
->>>>> pages
->>>> for=20
->>>> NFS4
->>>> readdir -- but I need to check the RFCs.  Anyone know if v4
->>>> READDIR=20
->>>> results
->>>> have to be aligned?
->>>>=20
->>>> Also need to check just why krb5i is the only auth that cares..
->>>>=20
->>>=20
->>> I'm not seeing that. If you look at commit 02ef04e432ba, you'll see
->>> that Chuck did add a 'padding term' to decode_readdir_maxsz in the
->>> NFSv4 case.
->>> The other thing to remember is that a readdir 'dirlist4' entry is
->>> always word aligned (irrespective of the length of the filename),
->>> so
->>> there is no padding that needs to be taken into account.
->>>=20
->>> I think we probably rather want to look at how auth->au_ralign is
->>> being
->>> calculated for the case of krb5i. I'm really not understanding why
->>> auth->au_ralign should not take into account the presence of the
->>> mic.
->>> Chuck?
->>=20
->> I'm looking at gss_unwrap_resp_integ():
->>=20
->> 1971         auth->au_rslack =3D auth->au_verfsize + 2 + 1 +
->> XDR_QUADLEN(mic.len);
->> 1972         auth->au_ralign =3D auth->au_verfsize + 2;
->>=20
->> au_ralign now sets the alignment of the _start_ of the RPC message
->> body.
->> The MIC comes _after_ the RPC message body for krb5i.
->>=20
->> If Ben is off by one quad, that's not the MIC, which is typically 32
->> octets,
->> isn't it?
->>=20
->> Maybe some variable-length data item in the returned file attributes
->> is missing
->> an XDR pad.
->=20
-> The only two pieces of variable length data in the readdir payload are
-> the file name and the filehandle data. Those might present a problem
-> when encoding on the server side, but not when decoding on the client
-> side, since they are embedded in the dirlist4 (which, as I said, is
-> automatically aligned).
+Will you queue this fix for v5.3 ?
 
-The next thing I'd try, then, is to match the Wireshark-dissected
-READDIR4 reply that fails with the macros at the top of fs/nfs/nfs4xdr.c
-and look for anything that is missing.
+Thanks!
 
-
-> Hmm... One thing that does bother me in both gss_unwrap_resp_integ()
-> and gss_unwrap_resp_priv() is that if the seqno does not match, then =
-we
-> return EIO. What if we had to retransmit a request, but the server
-> managed to squeeze off a reply to the first transmission?
-> Note: it should be pretty easy to catch issues such as this, since we
-> do have tracepoints for them. That said, it is pretty hard to imagine
-> this being the problem here if the bug is always reproducible (since
-> retransmissions typically are not).
->=20
-> --=20
+> 
+> 8<------------------------
+> From ce61618bc085d8cea8a614b5e1eb09e16ea8e036 Mon Sep 17 00:00:00 2001
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Wed, 28 Aug 2019 11:26:13 -0400
+> Subject: [PATCH] NFS: Fix inode fileid checks in attribute revalidation code
+> 
+> We want to throw out the attrbute if it refers to the mounted on fileid,
+> and not the real fileid. However we do not want to block cache consistency
+> updates from NFSv4 writes.
+> 
+> Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+> Fixes: 7e10cc25bfa0 ("NFS: Don't refresh attributes with mounted-on-file...")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/inode.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index c764cfe456e5..d7e78b220cf6 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -1404,10 +1404,11 @@ static int nfs_check_inode_attributes(struct inode *inode, struct nfs_fattr *fat
+>  		return 0;
+>  
+>  	/* No fileid? Just exit */
+> -	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+> -		return 0;
+> +	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+> +		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> +			return 0;
+>  	/* Has the inode gone and changed behind our back? */
+> -	if (nfsi->fileid != fattr->fileid) {
+> +	} else if (nfsi->fileid != fattr->fileid) {
+>  		/* Is this perhaps the mounted-on fileid? */
+>  		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
+>  		    nfsi->fileid == fattr->mounted_on_fileid)
+> @@ -1808,10 +1809,11 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+>  			atomic_read(&inode->i_count), fattr->valid);
+>  
+>  	/* No fileid? Just exit */
+> -	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+> -		return 0;
+> +	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+> +		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> +			return 0;
+>  	/* Has the inode gone and changed behind our back? */
+> -	if (nfsi->fileid != fattr->fileid) {
+> +	} else if (nfsi->fileid != fattr->fileid) {
+>  		/* Is this perhaps the mounted-on fileid? */
+>  		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
+>  		    nfsi->fileid == fattr->mounted_on_fileid)
+> -- 
+> 2.21.0
+> 
+> -- 
 > Trond Myklebust
 > Linux NFS client maintainer, Hammerspace
 > trond.myklebust@hammerspace.com
-
---
-Chuck Lever
-
-
-
+> 
+> 
