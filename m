@@ -2,164 +2,206 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38C59AD213
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2019 04:58:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18CDAD227
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2019 05:20:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfIIC6l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Sep 2019 22:58:41 -0400
-Received: from mail-eopbgr780101.outbound.protection.outlook.com ([40.107.78.101]:36555
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733260AbfIIC6l (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 8 Sep 2019 22:58:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JsUwrRQnvdQ0FL45E90FrF+5Rl9Lx5nBZ1pGUNaVSn5nTllZG58CiRGZrcYMo3cYH53KV1/Hb6jzgf4VrKu+emOWmErb4f5y76SWIp3shvvypvQbjCKA9tUnUSodbuPIAQUxCGQ2Hl0aT3+CZ+LbQbMzLa9z1Kf7Zzxxlv6ISiqhI65o7sT20CT2Eplf3/BqYm6kUS00DVQo5i6HxOVXcYjorfnXTqTawlMtLnSgbYDcwcNGr45IWxXGOFd+rlFpcC9mxLWi1EIuv8L9bfKSP8Y2U2YRQy9awB114LW9XmAkimOtz6PDURJaEi1aPEBqL/rsC4eCwjEYi5suG5p6HQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCgjx8pBNUVbIji12BS49huN1zrKtD64LRXCHnPbqKo=;
- b=akl4D1G92RtPh1aaaZ/Tf39xZpZqtv2EWGxm9Ra5MM9gL9pOJz00tJ3kxKTuqi347DI+de3wNtlt9mUhDTJT+WirUsddRTUDBATv02go1wN8xaLE90dlHNI9JTkq4fCxjcoJOvKRXWocK+emL7ZbZVnFp+APBuV1ouNzsFZ+cfU2GOH1B+IewiydC6qYzbp+aSBnZHAO0Zc0iZG8qFFmBWlDjJPlGWSg3WGY9smAw33ekZX6z5Rx9aXORecKUQz5CAPL3JWHhWLg0KmPiAD0mLGlZed8qfhDiIzlv0Tt2CZxHIDAodYDyLnLVk999rDvSNw2IWU0ekoRZPmIJbIw5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCgjx8pBNUVbIji12BS49huN1zrKtD64LRXCHnPbqKo=;
- b=gShelNFSjdZWFXOxWjmLmOYxF1qB3IyZtFsVcqNtOUG3SgXjKfKmXqgHjODK9Qtsh9CI+zMgkgHD2EW/00zEMzBYPzXHuhhdK5cNpPeWFG2h83IOOfGWD9znJN9tGHIbg6TjGCRg1uTlwVZg6pdeSIBk83gCVII0punV45RvGu4=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1850.namprd13.prod.outlook.com (10.171.155.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.10; Mon, 9 Sep 2019 02:58:36 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2263.005; Mon, 9 Sep 2019
- 02:58:36 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        id S2387453AbfIIDUE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Sep 2019 23:20:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37023 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387412AbfIIDUD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Sep 2019 23:20:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y5so5496371pfo.4
+        for <linux-nfs@vger.kernel.org>; Sun, 08 Sep 2019 20:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PDMOKvnuHVKtK5q6amgpUvAYTQL7I1LWcmPCTMqDgd8=;
+        b=MTHmDQrT/WA5HMwSQ0nnRXOrDwOrhjJL+yLD6cIZrA4VpD6WB2HypAL18IKoBGj+Bq
+         VXV1lvZZiTOiKoQQRPndgdDE33oRNIWfWSkFBOm2iGVVLGsfS2rkdNWFT5yycXD2wrgh
+         QeGZNmvOrxCIpUviqKb5uXBWek45XjP15qKxmA7tOkCyk4CmQJbm2JE8nlwwvtXZ5c4h
+         j3ZZ7QXniqoBdc9/jJZHOSSRh3l4bUT1B/PcTbaay2SMlYWgLCeARWPQCtuXyqAUMCh1
+         3/epkkkOki71EG/5FeVcb8TKs7em+rMidaSLx+jN2pqZiqH8zeQBIRXPUFQTXJRuGao+
+         d1QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PDMOKvnuHVKtK5q6amgpUvAYTQL7I1LWcmPCTMqDgd8=;
+        b=OVsEdLN72X/U/lbdfbGseVbLSS/O8JPuV1LOWuGmlScg9h8pmD6GX6DOE/WKCk6XcH
+         oQ3cc6vtSafvYhMlennDDGWPu0bvgRkNm1UMPbND3ezmzeRWGHM/zimrUxg8h36C3nEZ
+         e5Q0YMXUP4La0hmYjy9rmY6vlyIKszXjKz1E1zNfqlsCzMXIA2Kv+rd0SHRrz0ucFHcl
+         PX+8GQEqkF0F6/t1ZYKctMeH85BzkcZxLKwZjMl59YeuREbuR64t9PoYFe8nkqS6WX2B
+         7uMXFb5gHC+Kz8SU92qai3oKuqcEo2255cGgtq2YgsF0V4ZZmaeyXT5u/MVusAsfUAX2
+         nl6Q==
+X-Gm-Message-State: APjAAAV+L3n1WohAiHYuk/wpA0xX+FT0mqgaD/G2sWNKpiDriKQnvf18
+        P5NgLH7V8Y5MoXbKqxAKTjE=
+X-Google-Smtp-Source: APXvYqzFUWjx6Rm90BnwUlmH+QQaH0B7w8Cidabfpd7boQcD22KbBnHNWIWHSDZwH6ay62F+sevb+Q==
+X-Received: by 2002:a17:90a:1609:: with SMTP id n9mr3139481pja.64.1567999202788;
+        Sun, 08 Sep 2019 20:20:02 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id i137sm12727127pgc.4.2019.09.08.20.20.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Sep 2019 20:20:02 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 11:19:54 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "ltp@lists.linux.it" <ltp@lists.linux.it>
 Subject: Re: nfs-for-5.3-3 update "breaks" NFSv4 directIO somehow
-Thread-Topic: nfs-for-5.3-3 update "breaks" NFSv4 directIO somehow
-Thread-Index: AQHVXYqWkaBiigZLzUiLlkqzKNa/B6cQsH6AgBIDDgCAAAZNgA==
-Date:   Mon, 9 Sep 2019 02:58:35 +0000
-Message-ID: <77a371f6d9c290de0cca00ff272ea831e0d124b8.camel@hammerspace.com>
+Message-ID: <20190909031954.7y6ajlwyojdbstcv@XZHOUW.usersys.redhat.com>
 References: <20190828102256.3nhyb2ngzitwd7az@XZHOUW.usersys.redhat.com>
-         <00923c9f5d5a69e8225640abcf7ad54df2cb62d2.camel@hammerspace.com>
-         <20190909023600.sxygdyclxm4ivllw@XZHOUW.usersys.redhat.com>
-In-Reply-To: <20190909023600.sxygdyclxm4ivllw@XZHOUW.usersys.redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.36.167.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 39fe7ae5-8adf-4b37-827b-08d734d19bba
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1850;
-x-ms-traffictypediagnostic: DM5PR13MB1850:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <DM5PR13MB18502EA991897D58C2983EEEB8B70@DM5PR13MB1850.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:586;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(366004)(136003)(346002)(376002)(189003)(199004)(6506007)(81166006)(118296001)(66066001)(5660300002)(81156014)(15650500001)(66446008)(64756008)(6436002)(66556008)(66476007)(86362001)(71200400001)(71190400001)(76116006)(76176011)(36756003)(66946007)(8676002)(91956017)(14454004)(15974865002)(99286004)(7736002)(102836004)(5024004)(14444005)(53546011)(2501003)(186003)(26005)(11346002)(476003)(2616005)(3846002)(2906002)(486006)(6116002)(6246003)(229853002)(25786009)(2351001)(316002)(54906003)(478600001)(8936002)(4326008)(6486002)(966005)(256004)(6916009)(6306002)(1361003)(53936002)(6512007)(5640700003)(305945005)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1850;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oFiqGevtg6KHpE5k9j14k1AIQIPuYxdS4ac3xM6kFDz0PO5L1JmhGSux09bR43aO7W8ax3lilL68SVq00SWEZJldNtyr8eqGQr4KeVP0Ru9T+fNFqTvJA/ntYRq4pShPvnpCFpGhuB6oAw7bGq66s52HAXQnmiOpE0/myKVHEoAGBw8OL7bOIUxqbGT/oYEYvGt3vHEJ7RH+pRiDeVRVrULmJ9sJrQa2MgFJa4sDfl8qhr0PN+KJDK1WJW/xh4cK7SyxzzHldPIQwjQeMmBXDjvQWgwXjQu6T9fxuPkv9PLtCpxiU4WUsbNmn9oRkKzO69a984OnS/eoH7jZCUjzqxCWr0BaQRd/CUJlMaMSGK8PVHCdIWvmvfoqNWmuJFP6C6HYKMGoUwpYsE0+mIkvm53Tnv8M0BptCQ7R0Eh36JE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CAD735D8DBFECA479A1639498BDD391E@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <00923c9f5d5a69e8225640abcf7ad54df2cb62d2.camel@hammerspace.com>
+ <20190909023600.sxygdyclxm4ivllw@XZHOUW.usersys.redhat.com>
+ <77a371f6d9c290de0cca00ff272ea831e0d124b8.camel@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39fe7ae5-8adf-4b37-827b-08d734d19bba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 02:58:35.9276
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JUM1OiO58aC+gjeEWAXTK3eqWa4I4TsypzY/dRowbmK8OaCm2D8jmAhxhCyRXwKsgyg+CO0XIx2pFwpEhv9GKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1850
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77a371f6d9c290de0cca00ff272ea831e0d124b8.camel@hammerspace.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA5LTA5IGF0IDEwOjM2ICswODAwLCBNdXJwaHkgWmhvdSB3cm90ZToNCj4g
-T24gV2VkLCBBdWcgMjgsIDIwMTkgYXQgMDM6MzI6MjVQTSArMDAwMCwgVHJvbmQgTXlrbGVidXN0
-IHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAxOS0wOC0yOCBhdCAxODoyMiArMDgwMCwgTXVycGh5IFpo
-b3Ugd3JvdGU6DQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gSWYgd3JpdGUgdG8gZmlsZSB3aXRo
-IE9fRElSRUNULCB0aGVuIHJlYWQgaXQgd2l0aG91dCBPX0RJUkVDVCwNCj4gPiA+IHJlYWQNCj4g
-PiA+IHJldHVybnMgMC4NCj4gPiA+IEZyb20gdHNoYXJrIG91dHB1dCwgbG9va3MgbGlrZSB0aGUg
-UkVBRCBjYWxsIGlzIG1pc3NpbmcuDQo+ID4gPiANCj4gPiA+IExUUFsxXSBkaW8gdGVzdHMgc3Bv
-dCB0aGlzLiBUaGluZ3Mgd29yayB3ZWxsIGJlZm9yZSB0aGlzIHVwZGF0ZS4NCj4gPiA+IA0KPiA+
-ID4gQmlzZWN0IGxvZyBpcyBwb2ludGluZyB0bzoNCj4gPiA+IA0KPiA+ID4gCWNvbW1pdCA3ZTEw
-Y2MyNWJmYTBkZDM2MDJiYmNmNWNjOWM3NTlhOTBlYjY3NWRjDQo+ID4gPiAJQXV0aG9yOiBUcm9u
-ZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gPiAJRGF0
-ZTogICBGcmkgQXVnIDkgMTI6MDY6NDMgMjAxOSAtMDQwMA0KPiA+ID4gCQ0KPiA+ID4gCSAgICBO
-RlM6IERvbid0IHJlZnJlc2ggYXR0cmlidXRlcyB3aXRoIG1vdW50ZWQtb24tZmlsZQ0KPiA+ID4g
-aW5mb3JtYXRpbw0KPiA+ID4gDQo+ID4gPiBXaXRoIHRoaXMgY29tbWl0IHJldmVydGVkLCB0aGUg
-dGVzdHMgcGFzcyBhZ2Fpbi4NCj4gPiA+IA0KPiA+ID4gSXQncyBvbmx5IGFib3V0IE5GU3Y0KDQu
-MCA0LjEgYW5kIDQuMiksIE5GU3YzIHdvcmtzIHdlbGwuDQo+ID4gPiANCj4gPiA+IEJpc2VjdCBs
-b2csIG91dHB1dHMgb2YgdHNoYXJrLCBzYW1wbGUgdGVzdCBwcm9ncmFtbWUgZGVyaXZlZCBmcm9t
-DQo+ID4gPiBMVFAgZGlvdGVzdDAyLmMgYW5kIGEgc2ltcGxlIHRlc3Qgc2NyaXB0IGFyZSBhdHRh
-Y2hlZC4NCj4gPiA+IA0KPiA+ID4gSWYgdGhpcyBpcyBhbiBleHBlY3RlZCBjaGFuZ2UsIHdlIHdp
-bGwgbmVlZCB0byB1cGRhdGUgdGhlDQo+ID4gPiB0ZXN0Y2FzZXMuDQo+ID4gDQo+ID4gVGhhdCBp
-cyBub3QgaW50ZW50aW9uYWwsIHNvIHRoYW5rcyBmb3IgcmVwb3J0aW5nIGl0ISBEb2VzIHRoZQ0K
-PiA+IGZvbGxvd2luZw0KPiA+IGZpeCBoZWxwPw0KPiANCj4gSGkgVHJvbmQsDQo+IA0KPiBXaWxs
-IHlvdSBxdWV1ZSB0aGlzIGZpeCBmb3IgdjUuMyA/DQo+IA0KPiBUaGFua3MhDQo+IA0KDQpJdCBp
-cyBhbHJlYWR5IGluIDUuMy1yYzg6IA0KDQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD1lYjNkOGY0MjIz
-MWFlYzY1YjY0YjA3OWRkMTdiZDZjMDA4YTNmZTI5DQoNCkNoZWVycw0KICBUcm9uZA0KDQo+ID4g
-ODwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiBGcm9tIGNlNjE2MThiYzA4NWQ4Y2VhOGE2
-MTRiNWUxZWIwOWUxNmVhOGUwMzYgTW9uIFNlcCAxNyAwMDowMDowMA0KPiA+IDIwMDENCj4gPiBG
-cm9tOiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+
-ID4gRGF0ZTogV2VkLCAyOCBBdWcgMjAxOSAxMToyNjoxMyAtMDQwMA0KPiA+IFN1YmplY3Q6IFtQ
-QVRDSF0gTkZTOiBGaXggaW5vZGUgZmlsZWlkIGNoZWNrcyBpbiBhdHRyaWJ1dGUNCj4gPiByZXZh
-bGlkYXRpb24gY29kZQ0KPiA+IA0KPiA+IFdlIHdhbnQgdG8gdGhyb3cgb3V0IHRoZSBhdHRyYnV0
-ZSBpZiBpdCByZWZlcnMgdG8gdGhlIG1vdW50ZWQgb24NCj4gPiBmaWxlaWQsDQo+ID4gYW5kIG5v
-dCB0aGUgcmVhbCBmaWxlaWQuIEhvd2V2ZXIgd2UgZG8gbm90IHdhbnQgdG8gYmxvY2sgY2FjaGUN
-Cj4gPiBjb25zaXN0ZW5jeQ0KPiA+IHVwZGF0ZXMgZnJvbSBORlN2NCB3cml0ZXMuDQo+ID4gDQo+
-ID4gUmVwb3J0ZWQtYnk6IE11cnBoeSBaaG91IDxqZW5jY2Uua2VybmVsQGdtYWlsLmNvbT4NCj4g
-PiBGaXhlczogN2UxMGNjMjViZmEwICgiTkZTOiBEb24ndCByZWZyZXNoIGF0dHJpYnV0ZXMgd2l0
-aCBtb3VudGVkLQ0KPiA+IG9uLWZpbGUuLi4iKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFRyb25kIE15
-a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiAtLS0NCj4gPiAg
-ZnMvbmZzL2lub2RlLmMgfCAxNCArKysrKysrKy0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-OCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9m
-cy9uZnMvaW5vZGUuYyBiL2ZzL25mcy9pbm9kZS5jDQo+ID4gaW5kZXggYzc2NGNmZTQ1NmU1Li5k
-N2U3OGIyMjBjZjYgMTAwNjQ0DQo+ID4gLS0tIGEvZnMvbmZzL2lub2RlLmMNCj4gPiArKysgYi9m
-cy9uZnMvaW5vZGUuYw0KPiA+IEBAIC0xNDA0LDEwICsxNDA0LDExIEBAIHN0YXRpYyBpbnQNCj4g
-PiBuZnNfY2hlY2tfaW5vZGVfYXR0cmlidXRlcyhzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3Qg
-bmZzX2ZhdHRyDQo+ID4gKmZhdA0KPiA+ICAJCXJldHVybiAwOw0KPiA+ICANCj4gPiAgCS8qIE5v
-IGZpbGVpZD8gSnVzdCBleGl0ICovDQo+ID4gLQlpZiAoIShmYXR0ci0+dmFsaWQgJiBORlNfQVRU
-Ul9GQVRUUl9GSUxFSUQpKQ0KPiA+IC0JCXJldHVybiAwOw0KPiA+ICsJaWYgKCEoZmF0dHItPnZh
-bGlkICYgTkZTX0FUVFJfRkFUVFJfRklMRUlEKSkgew0KPiA+ICsJCWlmIChmYXR0ci0+dmFsaWQg
-JiBORlNfQVRUUl9GQVRUUl9NT1VOVEVEX09OX0ZJTEVJRCkNCj4gPiArCQkJcmV0dXJuIDA7DQo+
-ID4gIAkvKiBIYXMgdGhlIGlub2RlIGdvbmUgYW5kIGNoYW5nZWQgYmVoaW5kIG91ciBiYWNrPyAq
-Lw0KPiA+IC0JaWYgKG5mc2ktPmZpbGVpZCAhPSBmYXR0ci0+ZmlsZWlkKSB7DQo+ID4gKwl9IGVs
-c2UgaWYgKG5mc2ktPmZpbGVpZCAhPSBmYXR0ci0+ZmlsZWlkKSB7DQo+ID4gIAkJLyogSXMgdGhp
-cyBwZXJoYXBzIHRoZSBtb3VudGVkLW9uIGZpbGVpZD8gKi8NCj4gPiAgCQlpZiAoKGZhdHRyLT52
-YWxpZCAmIE5GU19BVFRSX0ZBVFRSX01PVU5URURfT05fRklMRUlEKQ0KPiA+ICYmDQo+ID4gIAkJ
-ICAgIG5mc2ktPmZpbGVpZCA9PSBmYXR0ci0+bW91bnRlZF9vbl9maWxlaWQpDQo+ID4gQEAgLTE4
-MDgsMTAgKzE4MDksMTEgQEAgc3RhdGljIGludCBuZnNfdXBkYXRlX2lub2RlKHN0cnVjdCBpbm9k
-ZQ0KPiA+ICppbm9kZSwgc3RydWN0IG5mc19mYXR0ciAqZmF0dHIpDQo+ID4gIAkJCWF0b21pY19y
-ZWFkKCZpbm9kZS0+aV9jb3VudCksIGZhdHRyLT52YWxpZCk7DQo+ID4gIA0KPiA+ICAJLyogTm8g
-ZmlsZWlkPyBKdXN0IGV4aXQgKi8NCj4gPiAtCWlmICghKGZhdHRyLT52YWxpZCAmIE5GU19BVFRS
-X0ZBVFRSX0ZJTEVJRCkpDQo+ID4gLQkJcmV0dXJuIDA7DQo+ID4gKwlpZiAoIShmYXR0ci0+dmFs
-aWQgJiBORlNfQVRUUl9GQVRUUl9GSUxFSUQpKSB7DQo+ID4gKwkJaWYgKGZhdHRyLT52YWxpZCAm
-IE5GU19BVFRSX0ZBVFRSX01PVU5URURfT05fRklMRUlEKQ0KPiA+ICsJCQlyZXR1cm4gMDsNCj4g
-PiAgCS8qIEhhcyB0aGUgaW5vZGUgZ29uZSBhbmQgY2hhbmdlZCBiZWhpbmQgb3VyIGJhY2s/ICov
-DQo+ID4gLQlpZiAobmZzaS0+ZmlsZWlkICE9IGZhdHRyLT5maWxlaWQpIHsNCj4gPiArCX0gZWxz
-ZSBpZiAobmZzaS0+ZmlsZWlkICE9IGZhdHRyLT5maWxlaWQpIHsNCj4gPiAgCQkvKiBJcyB0aGlz
-IHBlcmhhcHMgdGhlIG1vdW50ZWQtb24gZmlsZWlkPyAqLw0KPiA+ICAJCWlmICgoZmF0dHItPnZh
-bGlkICYgTkZTX0FUVFJfRkFUVFJfTU9VTlRFRF9PTl9GSUxFSUQpDQo+ID4gJiYNCj4gPiAgCQkg
-ICAgbmZzaS0+ZmlsZWlkID09IGZhdHRyLT5tb3VudGVkX29uX2ZpbGVpZCkNCj4gPiAtLSANCj4g
-PiAyLjIxLjANCj4gPiANCj4gPiAtLSANCj4gPiBUcm9uZCBNeWtsZWJ1c3QNCj4gPiBMaW51eCBO
-RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQo+ID4gdHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbQ0KPiA+IA0KPiA+IA0KVHJvbmQgTXlrbGVidXN0DQpDVE8sIEhhbW1lcnNw
-YWNlIEluYw0KNDMwMCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUgMTA1DQpMb3MgQWx0b3MsIENBIDk0
-MDIyDQp3d3cuaGFtbWVyLnNwYWNlDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMg
-Y2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3Bh
-Y2UuY29tDQoNCg0K
+On Mon, Sep 09, 2019 at 02:58:35AM +0000, Trond Myklebust wrote:
+> On Mon, 2019-09-09 at 10:36 +0800, Murphy Zhou wrote:
+> > On Wed, Aug 28, 2019 at 03:32:25PM +0000, Trond Myklebust wrote:
+> > > On Wed, 2019-08-28 at 18:22 +0800, Murphy Zhou wrote:
+> > > > Hi,
+> > > > 
+> > > > If write to file with O_DIRECT, then read it without O_DIRECT,
+> > > > read
+> > > > returns 0.
+> > > > From tshark output, looks like the READ call is missing.
+> > > > 
+> > > > LTP[1] dio tests spot this. Things work well before this update.
+> > > > 
+> > > > Bisect log is pointing to:
+> > > > 
+> > > > 	commit 7e10cc25bfa0dd3602bbcf5cc9c759a90eb675dc
+> > > > 	Author: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > 	Date:   Fri Aug 9 12:06:43 2019 -0400
+> > > > 	
+> > > > 	    NFS: Don't refresh attributes with mounted-on-file
+> > > > informatio
+> > > > 
+> > > > With this commit reverted, the tests pass again.
+> > > > 
+> > > > It's only about NFSv4(4.0 4.1 and 4.2), NFSv3 works well.
+> > > > 
+> > > > Bisect log, outputs of tshark, sample test programme derived from
+> > > > LTP diotest02.c and a simple test script are attached.
+> > > > 
+> > > > If this is an expected change, we will need to update the
+> > > > testcases.
+> > > 
+> > > That is not intentional, so thanks for reporting it! Does the
+> > > following
+> > > fix help?
+> > 
+> > Hi Trond,
+> > 
+> > Will you queue this fix for v5.3 ?
+> > 
+> > Thanks!
+> > 
+> 
+> It is already in 5.3-rc8: 
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eb3d8f42231aec65b64b079dd17bd6c008a3fe29
+
+
+Oh sorry.. I'll go to get some coffee. Checked that with this patch regression
+tests looks good.
+
+Thanks!
+M
+
+> 
+> Cheers
+>   Trond
+> 
+> > > 8<------------------------
+> > > From ce61618bc085d8cea8a614b5e1eb09e16ea8e036 Mon Sep 17 00:00:00
+> > > 2001
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > Date: Wed, 28 Aug 2019 11:26:13 -0400
+> > > Subject: [PATCH] NFS: Fix inode fileid checks in attribute
+> > > revalidation code
+> > > 
+> > > We want to throw out the attrbute if it refers to the mounted on
+> > > fileid,
+> > > and not the real fileid. However we do not want to block cache
+> > > consistency
+> > > updates from NFSv4 writes.
+> > > 
+> > > Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+> > > Fixes: 7e10cc25bfa0 ("NFS: Don't refresh attributes with mounted-
+> > > on-file...")
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > >  fs/nfs/inode.c | 14 ++++++++------
+> > >  1 file changed, 8 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> > > index c764cfe456e5..d7e78b220cf6 100644
+> > > --- a/fs/nfs/inode.c
+> > > +++ b/fs/nfs/inode.c
+> > > @@ -1404,10 +1404,11 @@ static int
+> > > nfs_check_inode_attributes(struct inode *inode, struct nfs_fattr
+> > > *fat
+> > >  		return 0;
+> > >  
+> > >  	/* No fileid? Just exit */
+> > > -	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+> > > -		return 0;
+> > > +	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+> > > +		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> > > +			return 0;
+> > >  	/* Has the inode gone and changed behind our back? */
+> > > -	if (nfsi->fileid != fattr->fileid) {
+> > > +	} else if (nfsi->fileid != fattr->fileid) {
+> > >  		/* Is this perhaps the mounted-on fileid? */
+> > >  		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> > > &&
+> > >  		    nfsi->fileid == fattr->mounted_on_fileid)
+> > > @@ -1808,10 +1809,11 @@ static int nfs_update_inode(struct inode
+> > > *inode, struct nfs_fattr *fattr)
+> > >  			atomic_read(&inode->i_count), fattr->valid);
+> > >  
+> > >  	/* No fileid? Just exit */
+> > > -	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+> > > -		return 0;
+> > > +	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+> > > +		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> > > +			return 0;
+> > >  	/* Has the inode gone and changed behind our back? */
+> > > -	if (nfsi->fileid != fattr->fileid) {
+> > > +	} else if (nfsi->fileid != fattr->fileid) {
+> > >  		/* Is this perhaps the mounted-on fileid? */
+> > >  		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+> > > &&
+> > >  		    nfsi->fileid == fattr->mounted_on_fileid)
+> > > -- 
+> > > 2.21.0
+> > > 
+> > > -- 
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > > 
+> > > 
+> Trond Myklebust
+> CTO, Hammerspace Inc
+> 4300 El Camino Real, Suite 105
+> Los Altos, CA 94022
+> www.hammer.space
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
