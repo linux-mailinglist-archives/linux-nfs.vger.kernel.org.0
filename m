@@ -2,101 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 045AAAEB2E
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 15:11:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D7BAEB8E
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 15:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfIJNLT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Sep 2019 09:11:19 -0400
-Received: from fieldses.org ([173.255.197.46]:32792 "EHLO fieldses.org"
+        id S1727402AbfIJN2i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Sep 2019 09:28:38 -0400
+Received: from fieldses.org ([173.255.197.46]:32828 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfIJNLS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:11:18 -0400
+        id S1726394AbfIJN2i (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:28:38 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 903522014; Tue, 10 Sep 2019 09:11:18 -0400 (EDT)
-Date:   Tue, 10 Sep 2019 09:11:18 -0400
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     "J.Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Handling NFSv3 I/O errors in knfsd
-Message-ID: <20190910131118.GA26695@fieldses.org>
-References: <20190902170258.92522-1-trond.myklebust@hammerspace.com>
+        id 4F1632010; Tue, 10 Sep 2019 09:28:37 -0400 (EDT)
+Date:   Tue, 10 Sep 2019 09:28:37 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     chuck.lever@oracle.com, simo@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] add hash of the kerberos principal to the data
+ being tracked by nfsdcld
+Message-ID: <20190910132837.GB26695@fieldses.org>
+References: <20190909201031.12323-1-smayhew@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902170258.92522-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190909201031.12323-1-smayhew@redhat.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Looks OK to me; applying for 5.4.
+Applying for 5.4, thanks--b.
 
-Any ideas for easy ways to test this?  Maybe I should look at
-Documentation/fault-injection/fault-injection.txt.
-
---b.
-
-On Mon, Sep 02, 2019 at 01:02:54PM -0400, Trond Myklebust wrote:
-> Recently, a number of changes went into the kernel to try to ensure
-> that I/O errors (specifically write errors) are reported to the
-> application once and only once. The vehicle for ensuring the errors
-> are reported is the struct file, which uses the 'f_wb_err' field to
-> track which errors have been reported.
+On Mon, Sep 09, 2019 at 04:10:29PM -0400, Scott Mayhew wrote:
+> At the spring bakeathon, Chuck suggested that we should store the
+> kerberos principal in addition to the client id string in nfsdcld.  The
+> idea is to prevent an illegitimate client from reclaiming another
+> client's opens by supplying that client's id string.
 > 
-> The problem is that errors are mainly intended to be reported through
-> fsync(). If the client is doing synchronous writes, then all is well,
-> but if it is doing unstable writes, then the errors may not be
-> reported until the client calls COMMIT. If the file cache has
-> thrown out the struct file, due to memory pressure, or just because
-> the client took a long while between the last WRITE and the COMMIT,
-> then the error report may be lost, and the client may just think
-> its data is safely stored.
+> The first patch lays some groundwork for supporting multiple message
+> versions for the nfsdcld upcalls, adding fields for version and message
+> length to the nfsd4_client_tracking_ops (these fields are only used for
+> the nfsdcld upcalls and ignored for the other tracking methods), as well
+> as an upcall to get the maximum version supported by the userspace
+> daemon.
 > 
-> Note that the problem is compounded by the fact that NFSv3 is stateless,
-> so the server never knows that the client may have rebooted, so there
-> can be no guarantee that a COMMIT will ever be sent.
+> The second patch actually adds the v2 message, which adds the sha256 hash
+> of the kerberos principal to the Cld_Create upcall and to the Cld_GraceStart
+> downcall (which is what loads the data in the reclaim_str_hashtbl).
 > 
-> The following patch set attempts to remedy the situation using 2
-> strategies:
+> Changes since v1:
+> - use the sha256 hash of a principal instead of the principal itself
+> - prefer the cr_raw_principal (returned by gssproxy) if it exists, then
+>   fall back to cr_principal (returned by both gssproxy and rpc.svcgssd)
 > 
-> 1) If the inode is dirty, then avoid garbage collecting the file
->    from the file cache.
-> 2) If the file is closed, and we see that it would have reported
->    an error to COMMIT, then we bump the boot verifier in order to
->    ensure the client retransmits all its writes.
+> Scott Mayhew (2):
+>   nfsd: add a "GetVersion" upcall for nfsdcld
+>   nfsd: add support for upcall version 2
 > 
-> Note that if multiple clients were writing to the same file, then
-> we probably want to bump the boot verifier anyway, since only one
-> COMMIT will see the error report (because the cached file is also
-> shared).
-> 
-> So in order to implement the above strategy, we first have to do
-> the following: split up the file cache to act per net namespace,
-> since the boot verifier is per net namespace. Then add a helper
-> to update the boot verifier.
-> 
-> ---
-> v2:
-> - Add patch to bump the boot verifier on all write/commit errors
-> - Fix initialisation of 'seq' in nfsd_copy_boot_verifier()
-> 
-> Trond Myklebust (4):
->   nfsd: nfsd_file cache entries should be per net namespace
->   nfsd: Support the server resetting the boot verifier
->   nfsd: Don't garbage collect files that might contain write errors
->   nfsd: Reset the boot verifier on all write I/O errors
-> 
->  fs/nfsd/export.c    |  2 +-
->  fs/nfsd/filecache.c | 76 +++++++++++++++++++++++++++++++++++++--------
->  fs/nfsd/filecache.h |  3 +-
->  fs/nfsd/netns.h     |  4 +++
->  fs/nfsd/nfs3xdr.c   | 13 +++++---
->  fs/nfsd/nfs4proc.c  | 14 +++------
->  fs/nfsd/nfsctl.c    |  1 +
->  fs/nfsd/nfssvc.c    | 32 ++++++++++++++++++-
->  fs/nfsd/vfs.c       | 19 +++++++++---
->  9 files changed, 130 insertions(+), 34 deletions(-)
+>  fs/nfsd/nfs4recover.c         | 388 ++++++++++++++++++++++++++++------
+>  fs/nfsd/nfs4state.c           |   6 +-
+>  fs/nfsd/state.h               |   3 +-
+>  include/uapi/linux/nfsd/cld.h |  41 +++-
+>  4 files changed, 371 insertions(+), 67 deletions(-)
 > 
 > -- 
-> 2.21.0
+> 2.17.2
