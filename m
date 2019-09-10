@@ -2,84 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98579AED8F
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 16:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC1DAEDB0
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 16:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbfIJOqE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Sep 2019 10:46:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46482 "EHLO mx1.redhat.com"
+        id S2388516AbfIJOuE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Sep 2019 10:50:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36465 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfIJOqE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:46:04 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1730052AbfIJOuE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:50:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CED0C04B940;
-        Tue, 10 Sep 2019 14:46:04 +0000 (UTC)
-Received: from ovpn-116-252.phx2.redhat.com (ovpn-116-252.phx2.redhat.com [10.3.116.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFECF19C4F;
-        Tue, 10 Sep 2019 14:46:03 +0000 (UTC)
-Message-ID: <2351c8f2f97d8730fa4fc4e49175b6c42ddb3484.camel@redhat.com>
-Subject: Re: [PATCH v2 0/2] add hash of the kerberos principal to the data
- being tracked by nfsdcld
-From:   Simo Sorce <simo@redhat.com>
-To:     Scott Mayhew <smayhew@redhat.com>, bfields@fieldses.org,
-        chuck.lever@oracle.com
+        by mx1.redhat.com (Postfix) with ESMTPS id 664A0A3818C
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2019 14:50:04 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 47C675D6D0;
+        Tue, 10 Sep 2019 14:50:04 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id E1119209B9; Tue, 10 Sep 2019 10:50:03 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     steved@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 10 Sep 2019 10:46:02 -0400
-In-Reply-To: <20190909201031.12323-1-smayhew@redhat.com>
-References: <20190909201031.12323-1-smayhew@redhat.com>
-Organization: Red Hat, Inc.
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 10 Sep 2019 14:46:04 +0000 (UTC)
+Subject: [nfs-utils PATCH v3 0/4] add hash of the kerberos principal to the data being tracked by nfsdcld
+Date:   Tue, 10 Sep 2019 10:49:59 -0400
+Message-Id: <20190910145003.4165-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 10 Sep 2019 14:50:04 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2019-09-09 at 16:10 -0400, Scott Mayhew wrote:
-> At the spring bakeathon, Chuck suggested that we should store the
-> kerberos principal in addition to the client id string in nfsdcld.  The
-> idea is to prevent an illegitimate client from reclaiming another
-> client's opens by supplying that client's id string.
-> 
-> The first patch lays some groundwork for supporting multiple message
-> versions for the nfsdcld upcalls, adding fields for version and message
-> length to the nfsd4_client_tracking_ops (these fields are only used for
-> the nfsdcld upcalls and ignored for the other tracking methods), as well
-> as an upcall to get the maximum version supported by the userspace
-> daemon.
-> 
-> The second patch actually adds the v2 message, which adds the sha256 hash
-> of the kerberos principal to the Cld_Create upcall and to the Cld_GraceStart
-> downcall (which is what loads the data in the reclaim_str_hashtbl).
-> 
-> Changes since v1:
-> - use the sha256 hash of a principal instead of the principal itself
-> - prefer the cr_raw_principal (returned by gssproxy) if it exists, then
->   fall back to cr_principal (returned by both gssproxy and rpc.svcgssd)
-> 
-> Scott Mayhew (2):
->   nfsd: add a "GetVersion" upcall for nfsdcld
->   nfsd: add support for upcall version 2
-> 
->  fs/nfsd/nfs4recover.c         | 388 ++++++++++++++++++++++++++++------
->  fs/nfsd/nfs4state.c           |   6 +-
->  fs/nfsd/state.h               |   3 +-
->  include/uapi/linux/nfsd/cld.h |  41 +++-
->  4 files changed, 371 insertions(+), 67 deletions(-)
-> 
+At the spring bakeathon, Chuck suggested that we should store the
+kerberos principal in addition to the client id string in nfsdcld.  The
+idea is to prevent an illegitimate client from reclaiming another
+client's opens by supplying that client's id string.
 
-LGTM.
+The first patch adds support for a "GetVersion" upcall which allows nfsd
+to determine the maximum message version that nfsdcld supports.  Right
+now it's based on the value of CLD_UPCALL_VERSION from cld.h, but I was
+thinking we may wish to add a command-line option (and an nfs.conf)
+option to make it possible to use a lower version than
+CLD_UPCALL_VERSION.  My thinking here is that an older nfsdcld daemon
+won't be compatible with the new database schema... rather than worrying
+about messing with downgrading the database, just use the command-line
+option to make it behave like an older daemon.
+
+The second patch adds handling for the v2 Cld_Create and Cld_GraceStart
+upcalls, which can include a hash of the kerberos principal which we'll
+store along with the client id string in the database.  Note that if we're
+talking to an old kernel that does the v1 upcall, everything still works
+(we just ignore the new columns in the database).
+
+The third patch adds a tool for manipulating nfsdcld's database schema.
+It's mostly intended to be used to downgrade the database in the
+(hopefully rare) event that an admin would want to downgrade nfsdcld.
+It also provides the ability for fixing broken recovery table names
+(which nfsdcld also fixes automatically) as well as the ability to print
+the contents of the database.
+
+The final patch updates the nfsdcld man page.
+
+Changes since v2:
+- we're storing a sha256 hash of a principal instead of the principal
+  itself
+
+Changes since v1:
+- added a tool for manipulating nfsdcld's sqlite database schema
+- updated the nfsdcld man page
+
+Scott Mayhew (4):
+  nfsdcld: add a "GetVersion" upcall
+  nfsdcld: add support for upcall version 2
+  Add a tool for manipulating the nfsdcld sqlite database schema.
+  nfsdcld: update nfsdcld.man
+
+ configure.ac                    |   1 +
+ support/include/cld.h           |  41 ++++-
+ tools/Makefile.am               |   4 +
+ tools/clddb-tool/Makefile.am    |  13 ++
+ tools/clddb-tool/clddb-tool.man |  83 ++++++++++
+ tools/clddb-tool/clddb-tool.py  | 266 ++++++++++++++++++++++++++++++++
+ utils/nfsdcld/cld-internal.h    |  13 +-
+ utils/nfsdcld/nfsdcld.c         | 140 ++++++++++++++---
+ utils/nfsdcld/nfsdcld.man       |  32 +++-
+ utils/nfsdcld/sqlite.c          | 239 +++++++++++++++++++++++-----
+ utils/nfsdcld/sqlite.h          |   2 +
+ 11 files changed, 765 insertions(+), 69 deletions(-)
+ create mode 100644 tools/clddb-tool/Makefile.am
+ create mode 100644 tools/clddb-tool/clddb-tool.man
+ create mode 100644 tools/clddb-tool/clddb-tool.py
 
 -- 
-Simo Sorce
-RHEL Crypto Team
-Red Hat, Inc
-
-
-
+2.17.2
 
