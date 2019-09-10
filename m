@@ -2,127 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E87B2AE2AD
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 05:58:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 045AAAEB2E
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 15:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392935AbfIJD6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Sep 2019 23:58:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33042 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392933AbfIJD6I (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 9 Sep 2019 23:58:08 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C9D799A7E3F6E758FE2;
-        Tue, 10 Sep 2019 11:58:03 +0800 (CST)
-Received: from [127.0.0.1] (10.57.88.168) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Sep 2019
- 11:57:56 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Vasily Averin <vvs@virtuozzo.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
- <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
- <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
- <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
- <e4753c70-de7c-063a-dc49-0edc7520ccd2@virtuozzo.com>
- <d418e8ed-de54-53af-a0db-3535ae50e540@huawei.com>
- <0d245a97-1169-9ef2-e502-043ba80eaa8c@virtuozzo.com>
-Message-ID: <664674a5-5ed9-8f0a-27ae-b4b868e96bdb@huawei.com>
-Date:   Tue, 10 Sep 2019 11:57:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730244AbfIJNLT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Sep 2019 09:11:19 -0400
+Received: from fieldses.org ([173.255.197.46]:32792 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbfIJNLS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:11:18 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 903522014; Tue, 10 Sep 2019 09:11:18 -0400 (EDT)
+Date:   Tue, 10 Sep 2019 09:11:18 -0400
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     "J.Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Handling NFSv3 I/O errors in knfsd
+Message-ID: <20190910131118.GA26695@fieldses.org>
+References: <20190902170258.92522-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
-In-Reply-To: <0d245a97-1169-9ef2-e502-043ba80eaa8c@virtuozzo.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.88.168]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902170258.92522-1-trond.myklebust@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Looks OK to me; applying for 5.4.
 
-On 2019/7/17 19:15, Vasily Averin wrote:
-> On 7/16/19 5:07 PM, Xiaoming Ni wrote:
->> On 2019/7/16 18:20, Vasily Averin wrote:
->>> On 7/16/19 5:00 AM, Xiaoming Ni wrote:
->>>> On 2019/7/15 13:38, Vasily Averin wrote:
->>>>> On 7/14/19 5:45 AM, Xiaoming Ni wrote:
->>>>>> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
->>>>>>> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->>>>>>>> On 2019/7/11 21:57, Vasily Averin wrote:
->>>>>>>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>>>>>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>>>>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
-....
-...
->>>>>>>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->>>>>>>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->>>>>>>> notifier_chain_cond_register() direct exit without triggering WARN() ?
->>>>>>>
->>>>>>> It should recover from this, if it can be detected.  The main point is
->>>>>>> that not all apis have to be this "robust" when used within the kernel
->>>>>>> as we do allow for the callers to know what they are doing :)
->>>>>>>
->>>>>> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
->>>>>>  We can intercept this situation and avoid forming a linked list ring to make the API more rob
-...
-...
+Any ideas for easy ways to test this?  Maybe I should look at
+Documentation/fault-injection/fault-injection.txt.
 
-> Yes, I'm agree, at present there are no difference between
-> notifier_chain_cond_register() and notifier_chain_register()
-> 
-> Question is -- how to improve it.
-> You propose to remove notifier_chain_cond_register() by some way.
-> Another option is return an error, for some abstract callers who expect possible double registration.
-> 
-> Frankly speaking I prefer second one,
-> however because of kernel do not have any such callers right now seems you are right, 
-> and we can delete notifier_chain_cond_register().
-> 
-> So let me finally accept your patch-set.
-> 
-> Thank you,
-> 	Vasily Averin
-> 
-> .
->
+--b.
 
-Dear Greg Kroah-Hartman
-is there any other opinion on this patch set?
-can you pick this series?
-
-thanks
-	Xiaoming Ni
-
+On Mon, Sep 02, 2019 at 01:02:54PM -0400, Trond Myklebust wrote:
+> Recently, a number of changes went into the kernel to try to ensure
+> that I/O errors (specifically write errors) are reported to the
+> application once and only once. The vehicle for ensuring the errors
+> are reported is the struct file, which uses the 'f_wb_err' field to
+> track which errors have been reported.
+> 
+> The problem is that errors are mainly intended to be reported through
+> fsync(). If the client is doing synchronous writes, then all is well,
+> but if it is doing unstable writes, then the errors may not be
+> reported until the client calls COMMIT. If the file cache has
+> thrown out the struct file, due to memory pressure, or just because
+> the client took a long while between the last WRITE and the COMMIT,
+> then the error report may be lost, and the client may just think
+> its data is safely stored.
+> 
+> Note that the problem is compounded by the fact that NFSv3 is stateless,
+> so the server never knows that the client may have rebooted, so there
+> can be no guarantee that a COMMIT will ever be sent.
+> 
+> The following patch set attempts to remedy the situation using 2
+> strategies:
+> 
+> 1) If the inode is dirty, then avoid garbage collecting the file
+>    from the file cache.
+> 2) If the file is closed, and we see that it would have reported
+>    an error to COMMIT, then we bump the boot verifier in order to
+>    ensure the client retransmits all its writes.
+> 
+> Note that if multiple clients were writing to the same file, then
+> we probably want to bump the boot verifier anyway, since only one
+> COMMIT will see the error report (because the cached file is also
+> shared).
+> 
+> So in order to implement the above strategy, we first have to do
+> the following: split up the file cache to act per net namespace,
+> since the boot verifier is per net namespace. Then add a helper
+> to update the boot verifier.
+> 
+> ---
+> v2:
+> - Add patch to bump the boot verifier on all write/commit errors
+> - Fix initialisation of 'seq' in nfsd_copy_boot_verifier()
+> 
+> Trond Myklebust (4):
+>   nfsd: nfsd_file cache entries should be per net namespace
+>   nfsd: Support the server resetting the boot verifier
+>   nfsd: Don't garbage collect files that might contain write errors
+>   nfsd: Reset the boot verifier on all write I/O errors
+> 
+>  fs/nfsd/export.c    |  2 +-
+>  fs/nfsd/filecache.c | 76 +++++++++++++++++++++++++++++++++++++--------
+>  fs/nfsd/filecache.h |  3 +-
+>  fs/nfsd/netns.h     |  4 +++
+>  fs/nfsd/nfs3xdr.c   | 13 +++++---
+>  fs/nfsd/nfs4proc.c  | 14 +++------
+>  fs/nfsd/nfsctl.c    |  1 +
+>  fs/nfsd/nfssvc.c    | 32 ++++++++++++++++++-
+>  fs/nfsd/vfs.c       | 19 +++++++++---
+>  9 files changed, 130 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.21.0
