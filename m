@@ -2,92 +2,200 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1742CAEFC3
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 18:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF23AF01B
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2019 19:05:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436863AbfIJQlI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Sep 2019 12:41:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53839 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbfIJQlI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Sep 2019 12:41:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q18so315204wmq.3
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2019 09:41:06 -0700 (PDT)
+        id S2436815AbfIJRFJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Sep 2019 13:05:09 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40900 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436760AbfIJRFJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Sep 2019 13:05:09 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so39137070iof.7
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2019 10:05:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=hRCzU5lJo22ySj7G9Sr5ny3Ys8KFS7ga2Kw7bmOqA8FsnLcUSqaLqf1fsukg3JjKa0
-         ihPJVvCNc62bshoPuRxAaAeQTQbo0qKr+dM2LAPlKc8b0XM9xd6tHAusBczzm1sG6BXy
-         rrh9P8/BRrOzo8ywOoQZHo+/qImc+ooPub8Vy0oPOj/bRpVOx2LnV07glFKnSL1HZCaM
-         DEToWWlBirQkJfZyBi4/xJQha7N1q7DBbY0eaCTrOe4rO6xfU4DX0DxmNq3lLtllXLaw
-         IjQhVQa0r0VgEIJnDWn5zHZURaGplo1FFjdcZES24ANzs7OlphKYlBDlIWPsP/c9LKTV
-         C7cQ==
+        bh=jujwM56kPgDRllqGRmd8xDdso1+OBvApNmETfxOr8+s=;
+        b=pSKo6xNBquBboxVi7W+1k/A3HJGqxjEPvrY3yksSogtL81YSr5AW1mI/m4qv3ghjWj
+         CnjgrTfeY3lkmhj+VCUI+FFooWJAE57TdZ5hcNMAmSQq/XVa9Y9a4f5bFaLHXDEy92sY
+         bQl+/BXh/IdlRYBNkkVGs2tb6jumiLroAyoHzz3Eb5cqIZv18kECOn9ZHRvk+McKB99x
+         rUAk7r+BJ5NNx1lgkZ9Z0Vk1YD9Dxb8Y3QpplgnNlt/KjUEGq+r5i/XkgK+rWsR63yxh
+         4nmytZvtFn1eSzduLwOinOB83l3x/sByPr/oNkiOryuIzlTJMSe+U9aI5XZdx2lDyt/f
+         2E+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=Vo+uRnRSYFWckkpIHVZlqh7dal2ZigsQcVqE1p/uN5m5Q1HnhWYXFoScKMcPz2jlVY
-         XQz5VQDki6YwbjA+/4UCuSIP7vFZOFhPTCu9qewQ2zUsH2fPAv0GwBFezKywHh9kFmOz
-         1ZJd2vuxEYHKxdz7/jMNpmaJeOMlrpaKGCQ7QfFLP+4BbNW2CEwGO+UR9RaLf+d0wSTW
-         XBgIP0YoNi8iDCM1sjS0c7A2bvUFH34gyked8a5fUUs83AueZ+PR5hMqpHnXo8DTik/F
-         K9RUWPwWMd4qVHShhj/83dirussehcC9qXDqixXFiwOLDKFcpyLJ2Djr6tzWmebA5rQK
-         kYjg==
-X-Gm-Message-State: APjAAAVsc/JaxW1Dyvpy6UwB6gfF6qQJJPs4j2luwoJC+eVTEJSFYa0w
-        dL/hGl7odKZ9WkLF6g4G2sQH//aMh29rvqIYJ4k=
-X-Google-Smtp-Source: APXvYqxVMR/DV8S+g0N6yK10dKvKQsEShkmmsGacWaLuAp8OwrrOJxIqnkEe6Jrqw0KashJpWiDH2tdPX6hm7rSi/j4=
-X-Received: by 2002:a1c:608b:: with SMTP id u133mr324770wmb.27.1568133666017;
- Tue, 10 Sep 2019 09:41:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jujwM56kPgDRllqGRmd8xDdso1+OBvApNmETfxOr8+s=;
+        b=IsplJEeK0P4XQEvJSPOtSHCyD72adiHyHYYtvntLDgJ+eAKjvN2DD9cj5Fp9+inz9N
+         CpwDDq6qY/fYAYQ3cSz4je59ajlHXtx1soxEUuUO6shEpeRBgwCIZ/EszldZNS/x1Fad
+         EKMZBzsscsNCH9nntj7oK1xBPstHjqk5VfrRm6ccW+N+Enq6+7OzLUh4pxiIk0Y7jFbZ
+         9u9HyjMph/JamGOBjcZNGy3tzqTpxfw3ArhLMafRN2Dck0G2qT3Ar3pL9yHbZLG/8n4q
+         WKz+XcE8nr+GTFdyGZt0CM8WWb3QSCoBBcf+X2LAJRbj6N3g4TjOp1RKFSB6/X7FKH+b
+         RCnw==
+X-Gm-Message-State: APjAAAVXBr7Dk3WnYKhGoFRUY7cZetYHYkorfNsFCU4olRcJzFmKbINs
+        S1dK2CWSTfjbiezoSVXtq1XNm37mPQ==
+X-Google-Smtp-Source: APXvYqwZv26OugVwhGtZ9Mk1ZBQj7NIDhsE0UZCOu6YynnyaUS8Jq2/p7YDznHaApeNobUFQFDH5TQ==
+X-Received: by 2002:a6b:9107:: with SMTP id t7mr32784916iod.150.1568135105949;
+        Tue, 10 Sep 2019 10:05:05 -0700 (PDT)
+Received: from localhost.localdomain (50-36-167-63.alma.mi.frontiernet.net. [50.36.167.63])
+        by smtp.gmail.com with ESMTPSA id e5sm5661417ioh.44.2019.09.10.10.05.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 10:05:05 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2] SUNRPC: Dequeue the request from the receive queue while we're re-encoding
+Date:   Tue, 10 Sep 2019 13:01:35 -0400
+Message-Id: <20190910170135.104865-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Received: by 2002:adf:afce:0:0:0:0:0 with HTTP; Tue, 10 Sep 2019 09:41:05
- -0700 (PDT)
-Reply-To: joeakaba00@gmail.com
-From:   joe akaba <edohkossibrice@gmail.com>
-Date:   Tue, 10 Sep 2019 18:41:05 +0200
-Message-ID: <CAPn8y9Jg7qG=PzPE-X9Z7tQNM86UZ8qA3QKU3hk_N-cowG7vmQ@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hallo
+Ensure that we dequeue the request from the transport receive queue
+while we're re-encoding to prevent issues like use-after-free when
+we release the bvec.
 
-Mein Name ist Joe Akaba. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
-Ihnen anbieten
-die n=C3=A4chsten Verwandten zu meinem Klienten. Sie erben die Summe von
-(8,5 Millionen US-Dollar)
-Dollar, die mein Kunde vor seinem Tod in der Bank gelassen hat.
+Fixes: 7536908982047 ("SUNRPC: Ensure the bvecs are reset when we re-encode...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.20+
+---
+v2: Ensure we also reset req->rq_reply_bytes_recvd in rpc_xdr_encode()
 
-Mein Mandant ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau
-bei einem Autounfall ums Leben gekommen ist
-und nur Sohn. Ich werde mit 50% des Gesamtfonds berechtigt sein, w=C3=A4hre=
-nd 50%
-sein f=C3=BCr dich.
-Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
-Informationen: joeakaba00@gmail.com
+ include/linux/sunrpc/xprt.h |  1 +
+ net/sunrpc/clnt.c           |  6 ++---
+ net/sunrpc/xprt.c           | 54 +++++++++++++++++++++----------------
+ 3 files changed, 35 insertions(+), 26 deletions(-)
 
-Vielen Dank im Voraus,
-Mr.Joe Akaba
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index 13e108bcc9eb..d783e15ba898 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -352,6 +352,7 @@ bool			xprt_prepare_transmit(struct rpc_task *task);
+ void			xprt_request_enqueue_transmit(struct rpc_task *task);
+ void			xprt_request_enqueue_receive(struct rpc_task *task);
+ void			xprt_request_wait_receive(struct rpc_task *task);
++void			xprt_request_dequeue_xprt(struct rpc_task *task);
+ bool			xprt_request_need_retransmit(struct rpc_task *task);
+ void			xprt_transmit(struct rpc_task *task);
+ void			xprt_end_transmit(struct rpc_task *task);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index a07b516e503a..7a75f34ad393 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1862,6 +1862,7 @@ rpc_xdr_encode(struct rpc_task *task)
+ 		     req->rq_rbuffer,
+ 		     req->rq_rcvsize);
+ 
++	req->rq_reply_bytes_recvd = 0;
+ 	req->rq_snd_buf.head[0].iov_len = 0;
+ 	xdr_init_encode(&xdr, &req->rq_snd_buf,
+ 			req->rq_snd_buf.head[0].iov_base, req);
+@@ -1881,6 +1882,8 @@ call_encode(struct rpc_task *task)
+ 	if (!rpc_task_need_encode(task))
+ 		goto out;
+ 	dprint_status(task);
++	/* Dequeue task from the receive queue while we're encoding */
++	xprt_request_dequeue_xprt(task);
+ 	/* Encode here so that rpcsec_gss can use correct sequence number. */
+ 	rpc_xdr_encode(task);
+ 	/* Did the encode result in an error condition? */
+@@ -2518,9 +2521,6 @@ call_decode(struct rpc_task *task)
+ 		return;
+ 	case -EAGAIN:
+ 		task->tk_status = 0;
+-		xdr_free_bvec(&req->rq_rcv_buf);
+-		req->rq_reply_bytes_recvd = 0;
+-		req->rq_rcv_buf.len = 0;
+ 		if (task->tk_client->cl_discrtry)
+ 			xprt_conditional_disconnect(req->rq_xprt,
+ 						    req->rq_connect_cookie);
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index 2e71f5455c6c..20631d64312c 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1323,6 +1323,36 @@ xprt_request_dequeue_transmit(struct rpc_task *task)
+ 	spin_unlock(&xprt->queue_lock);
+ }
+ 
++/**
++ * xprt_request_dequeue_xprt - remove a task from the transmit+receive queue
++ * @task: pointer to rpc_task
++ *
++ * Remove a task from the transmit and receive queues, and ensure that
++ * it is not pinned by the receive work item.
++ */
++void
++xprt_request_dequeue_xprt(struct rpc_task *task)
++{
++	struct rpc_rqst	*req = task->tk_rqstp;
++	struct rpc_xprt *xprt = req->rq_xprt;
++
++	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
++	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
++	    xprt_is_pinned_rqst(req)) {
++		spin_lock(&xprt->queue_lock);
++		xprt_request_dequeue_transmit_locked(task);
++		xprt_request_dequeue_receive_locked(task);
++		while (xprt_is_pinned_rqst(req)) {
++			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
++			spin_unlock(&xprt->queue_lock);
++			xprt_wait_on_pinned_rqst(req);
++			spin_lock(&xprt->queue_lock);
++			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
++		}
++		spin_unlock(&xprt->queue_lock);
++	}
++}
++
+ /**
+  * xprt_request_prepare - prepare an encoded request for transport
+  * @req: pointer to rpc_rqst
+@@ -1747,28 +1777,6 @@ void xprt_retry_reserve(struct rpc_task *task)
+ 	xprt_do_reserve(xprt, task);
+ }
+ 
+-static void
+-xprt_request_dequeue_all(struct rpc_task *task, struct rpc_rqst *req)
+-{
+-	struct rpc_xprt *xprt = req->rq_xprt;
+-
+-	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
+-	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
+-	    xprt_is_pinned_rqst(req)) {
+-		spin_lock(&xprt->queue_lock);
+-		xprt_request_dequeue_transmit_locked(task);
+-		xprt_request_dequeue_receive_locked(task);
+-		while (xprt_is_pinned_rqst(req)) {
+-			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
+-			spin_unlock(&xprt->queue_lock);
+-			xprt_wait_on_pinned_rqst(req);
+-			spin_lock(&xprt->queue_lock);
+-			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
+-		}
+-		spin_unlock(&xprt->queue_lock);
+-	}
+-}
+-
+ /**
+  * xprt_release - release an RPC request slot
+  * @task: task which is finished with the slot
+@@ -1788,7 +1796,7 @@ void xprt_release(struct rpc_task *task)
+ 	}
+ 
+ 	xprt = req->rq_xprt;
+-	xprt_request_dequeue_all(task, req);
++	xprt_request_dequeue_xprt(task);
+ 	spin_lock(&xprt->transport_lock);
+ 	xprt->ops->release_xprt(xprt, task);
+ 	if (xprt->ops->release_request)
+-- 
+2.21.0
 
-
-
-
-Hello
-
-My name is Joe Akaba I am a lawyer by profession. I wish to offer you
-the next of kin to my client. You will inherit the sum of ($8.5 Million)
-dollars my client left in the bank before his death.
-
-My client is a citizen of your country who died in auto crash with his wife
-and only son. I will be entitled with 50% of the total fund while 50% will
-be for you.
-Please contact my private email here for more details:joeakaba00@gmail.com
-
-Many thanks in advance,
-Mr.Joe Akaba
