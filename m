@@ -2,58 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D174CB032C
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2019 19:56:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C9B7B0333
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2019 19:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfIKR4f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Sep 2019 13:56:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56858 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729675AbfIKR4f (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Sep 2019 13:56:35 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHnIdo008474;
-        Wed, 11 Sep 2019 17:54:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=AUeQRUUFdHpNLBcc428WLypzGQ/LjLJEnFYlu11VwoU=;
- b=UDYiwiFSkQwdICVVLQDO8Gz8JGcZ6+v+5VNE/72zbZwrOqBFiImsxCv+rBycXZoznlHD
- kmE9oDTRbIcAbvGa3hBcacrQ6WZdwJTWpQykgJvFbu7s9pL6VNbFpIXXgeOMLJHfUyXH
- mYwklrkyf/h/pWNm7fA+DIQDEr5KQxTm5J3VsOm1UPsqbHpm5TlG35eaLnTuZvia3OCN
- sKf9zeyFEzyTBBQHf3CQ05jhv3B8yGtoS8fu8XqKNpEq15GQ5oKO63cLT25OE5uc4e13
- 8qIXrEgbpy8ifVm/GxjFOuOKRM59DIZzw5M+31UZ51GLi7ZFXOFR62bz/+7GOMCT22XZ zA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uw1m93u11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:54:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHrkat088487;
-        Wed, 11 Sep 2019 17:54:16 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uxj8924jv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:54:16 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BHsFv0022162;
-        Wed, 11 Sep 2019 17:54:15 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 10:54:15 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
-Date:   Wed, 11 Sep 2019 13:54:14 -0400
-Cc:     Jason L Tibbitts III <tibbs@math.uh.edu>,
-        Bruce Fields <bfields@fieldses.org>,
-        Wolfgang Walter <linux@stwm.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        id S1729696AbfIKR7V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Sep 2019 13:59:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39182 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729675AbfIKR7V (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:59:21 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 090BF10CC1F9;
+        Wed, 11 Sep 2019 17:59:21 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CD365D9E2;
+        Wed, 11 Sep 2019 17:59:20 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
+        "Bruce Fields" <bfields@fieldses.org>,
+        "Wolfgang Walter" <linux@stwm.de>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
         km@cm4all.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Wed, 11 Sep 2019 13:59:19 -0400
+Message-ID: <8DD22D2C-A26B-430E-AB10-E420B4C6A8F0@redhat.com>
+In-Reply-To: <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
 References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
  <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
  <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
@@ -65,95 +41,75 @@ References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
  <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
  <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
  <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
- <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110165
+ <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Wed, 11 Sep 2019 17:59:21 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On 11 Sep 2019, at 13:43, Chuck Lever wrote:
 
-
-> On Sep 11, 2019, at 1:50 PM, Benjamin Coddington <bcodding@redhat.com> =
-wrote:
->=20
-> On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
->=20
+>> On Sep 11, 2019, at 1:40 PM, Benjamin Coddington 
+>> <bcodding@redhat.com> wrote:
+>>
 >> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
->>=20
->>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->>>>=20
->>>>=20
+>>
+>>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
+>>>> <bcodding@redhat.com> wrote:
+>>>>
+>>>>
 >>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->>>>=20
->>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->>>>>>=20
->>>>=20
->>>>>> Instead, I think we want to make sure the mic falls squarely into =
-the tail
+>>>>
+>>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
+>>>>>> <bcodding@redhat.com> wrote:
+>>>>>>
+>>>>
+>>>>>> Instead, I think we want to make sure the mic falls squarely into 
+>>>>>> the tail
 >>>>>> every time.
->>>>>=20
->>>>> I'm not clear how you could do that. The length of the page data =
-is not
->>>>> known to the client before it parses the reply. Are you suggesting =
-that
+>>>>>
+>>>>> I'm not clear how you could do that. The length of the page data 
+>>>>> is not
+>>>>> known to the client before it parses the reply. Are you suggesting 
+>>>>> that
 >>>>> gss_unwrap should do it somehow?
->>>>=20
+>>>>
 >>>> Is it too niave to always put the mic at the end of the tail?
->>>=20
+>>>
 >>> The size of the page content is variable.
->>>=20
->>> The only way the MIC will fall into the tail is if the page content =
-is
->>> exactly the largest expected size. When the page content is smaller =
-than
->>> that, the receive logic will place part or all of the MIC in =
-->pages.
->>=20
->> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be =
-renamed
+>>>
+>>> The only way the MIC will fall into the tail is if the page content 
+>>> is
+>>> exactly the largest expected size. When the page content is smaller 
+>>> than
+>>> that, the receive logic will place part or all of the MIC in 
+>>> ->pages.
+>>
+>> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
+>> renamed
 >> and repurposed to be "move the mic from wherever it is to the end of
 >> xdr_buf's tail".
->>=20
->> But now I see what you mean, and I also see that it is already trying =
-to do
+>>
+>> But now I see what you mean, and I also see that it is already trying 
+>> to do
 >> that.. and we don't want to overlap the copy..
->>=20
->> So, really, we need the tail to be larger than twice the mic.. less =
-1.  That
+>>
+>> So, really, we need the tail to be larger than twice the mic.. less 
+>> 1.  That
 >> means the fix is probably just increasing rslack for krb5i.
->=20
-> .. or we can keep the tighter tail space, and if we detect the mic =
-straddles
-> the page and tail, we can move the mic into the tail with 2 copies, =
-first
-> move the bit in the tail back, then move the bit in the pages.
->=20
-> Which is preferred, less allocation, or in the rare case this occurs, =
-doing
-> copy twice?
+>
+> What's the justification for that particular maximum size? Are you 
+> sure the
+> page contents are not spilling into the tail?
 
-It sounds like the bug is that the current code does not deal correctly
-when the MIC crosses the boundary between ->pages and ->tail? I'd like
-to see that addressed rather than changing rslack.
+In the problem case, I am sure they are not.
 
-
---
-Chuck Lever
-
-
-
+The justification is that if the mic straddles pages and tail, today we 
+try
+to copy it to the end of the tail.  The room we'd need for that is the 
+size
+of the mic less any of it that is up in the pages.
