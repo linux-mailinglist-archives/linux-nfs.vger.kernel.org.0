@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3CCB0E8B
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2019 14:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69048B0E93
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2019 14:09:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfILMGh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Sep 2019 08:06:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40769 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfILMGh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Sep 2019 08:06:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id h144so53781870iof.7
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Sep 2019 05:06:36 -0700 (PDT)
+        id S1731474AbfILMJB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Sep 2019 08:09:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45382 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731320AbfILMJB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Sep 2019 08:09:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id f12so53798738iog.12
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Sep 2019 05:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dXWAStlMSQv9OSmQPKw8qPt6Fgo1E+MiUZj9GCes4LA=;
-        b=iCBBBaN3x909az4qMPc/gVpclz/AHc/aD6Ibc4hhd+wb2A6EDbpzckaI0Shq2ftZs/
-         1Ol+2c2VDP5XXxiekuC3NWl0obNwWKkIHwqOoBsmXh/tHu7PmKZsCon5NJ/HYbvbjHXF
-         ggqekBkmEGpxI7pHFEbvYoxB38JT6dTVqWvPjLH/zAvsv8OLBvYt9eIj3retfwIsGLKx
-         CwUEir0z9hCkqcdaFd2Xi7g3P0yw/0wiqikMH5ecIA7saIXMp2+3CeIE7aywKMlKztqr
-         6dFPq/iFqOYE3qASiLL1capszrceG+6mjVstJp7hWpW8GhSLwHEhfhJjU4/Hhi8kKyuW
-         1PJw==
+        bh=d8ZixN+k2MPi6o7J+EFSTvWu1Ymp0kkCai84UaRmYPI=;
+        b=A29JJOW+MsS/4OdwRehgGqOBLyw2vZARj9DVZtiTS87d6Dq/JatbG5iXxGZEdfJaA1
+         EL6TyIIrlZjrdzUgPBNGopiAttCz83EABjzYml3FUQmns26nhL+2dBZCyDjB/5FJA1Ef
+         z7h/FfsAGpY7SFvMVWGlYNkxWpu+rnOfJZ6GRBFcgEOe+ZeANtL8qm9rbRkJtm+TNye3
+         qR+GZuI5BtBTuf+hTXCaN5yp9MR419DZxPWsMSb9dCtROC78zmCKIS8U7EElyVIxrto6
+         dABlNp+zuZR1pUWH4zSsmL+Bj0OakyWr8zyvgG6DjQhFBOQxqwavEz1Oepk6WlbpgeCF
+         9OyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dXWAStlMSQv9OSmQPKw8qPt6Fgo1E+MiUZj9GCes4LA=;
-        b=W7Xt0JkxX7yKLYEsmqO14UbUpeDh10TuYOkjKoqR+KNiSJtJCxtbSGpXtsE12CYQRE
-         netxpkuD1PBtTMJpf982ctHrLcujzgCfawIzIuBt4oH+Dtaal73ZjnuOPctIA4ZfUtrF
-         qiDDL3oypcgNEIaCqrrljFAUx8IrdOnjux/3R364BzYcIV7RUydgRFIMqjdzEde4wegt
-         rDvcg8Oc4CUch6taFdjhyUvob6vImVPfkkQpIGjSvVTwacUV03tkIKgOio/t5QV0eEKe
-         hSxga8C0TQ8oLgu/CK6nexaGiz9ZLF8DlKR2dkQHhoJ63PykY293y8xCgJo5D3R6UL5Z
-         fDPQ==
-X-Gm-Message-State: APjAAAXshn0Xn2HhKTVnlidZorCvfzjSe0sKxE6iotqYwLepB3fsWg//
-        FimcZRuF2oPq6L0uLJWr9A==
-X-Google-Smtp-Source: APXvYqwO8pklk1jzMoKm4i63NPLacB4mv1YJZXjI1+qXMNM47w1nSKZxQgm74q92a7abWV1VpOcyXg==
-X-Received: by 2002:a5e:8307:: with SMTP id x7mr4122628iom.257.1568289995089;
-        Thu, 12 Sep 2019 05:06:35 -0700 (PDT)
+        bh=d8ZixN+k2MPi6o7J+EFSTvWu1Ymp0kkCai84UaRmYPI=;
+        b=meSxwaLpHpPpsYsZa704rQYKxETulwOmHlOIQFTpeQIrbI6nbrRb/qYuCY3leBIJba
+         06+N8ve/tjSH+aGT8fMlKTjxYFQ1jUYfZ4JXaFcyBD8ZNFn7er32FvQtHCV6ZulUlq/P
+         fbPedgQ3ZCMpqotVkh0vYVPNOA4cCCLJt38b13omWZ3XmUR3J8Oqx+wzktJOgGwOQZl1
+         o332x6omDKQNWZNqi7Fm3HX5sZVEj7SFPW3JLzIYxJRYl/JcsRFj5O12ylfR7cQdM8qh
+         ALuKbdt1VkBmBk0b7V3npZsMPcljEp3eMW0Wiso5NOJJ4yue8V55Ht8Goynhv8brBBC+
+         VmTg==
+X-Gm-Message-State: APjAAAXBmvhbl10sBSEFYOS0JRBG8x39Lg/uqHsa768IXKJZNmj88WCt
+        cgvnldQMo6z60dKor8vTTih601CPJA==
+X-Google-Smtp-Source: APXvYqylpqi+K/ezdaesnlGMb4V/XdAWO3r+7RP77ZDNgQXBOEn5RON2ALjbnflcqsXriITXU0kffg==
+X-Received: by 2002:a6b:e903:: with SMTP id u3mr2192361iof.241.1568290140038;
+        Thu, 12 Sep 2019 05:09:00 -0700 (PDT)
 Received: from localhost.localdomain (50-36-167-63.alma.mi.frontiernet.net. [50.36.167.63])
-        by smtp.gmail.com with ESMTPSA id d20sm19963920ioh.2.2019.09.12.05.06.33
+        by smtp.gmail.com with ESMTPSA id h3sm16666370iol.73.2019.09.12.05.08.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 05:06:34 -0700 (PDT)
+        Thu, 12 Sep 2019 05:08:59 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: Don't receive TCP data into a request buffer that has been reset
-Date:   Thu, 12 Sep 2019 08:04:25 -0400
-Message-Id: <20190912120425.11199-1-trond.myklebust@hammerspace.com>
+Subject: [PATCH] SUNRPC: RPC level errors should always set task->tk_rpc_status
+Date:   Thu, 12 Sep 2019 08:06:51 -0400
+Message-Id: <20190912120651.11277-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,54 +59,70 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If we've removed the request from the receive list, and have added
-it back after resetting the request receive buffer, then we should
-only receive message data if it is a new reply (i.e. if
-transport->recv.copied is zero).
+Ensure that we set task->tk_rpc_status for all RPC level errors so that
+the caller can distinguish between those and server reply status errors.
 
-Fixes: 277e4ab7d530b ("SUNRPC: Simplify TCP receive code by switching...")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xprtsock.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/sunrpc/clnt.c  | 6 +++---
+ net/sunrpc/sched.c | 5 ++++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index e2176c167a57..9ac88722fa83 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -562,10 +562,14 @@ xs_read_stream_call(struct sock_xprt *transport, struct msghdr *msg, int flags)
- 		printk(KERN_WARNING "Callback slot table overflowed\n");
- 		return -ESHUTDOWN;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 7a75f34ad393..e7fdc400506e 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1837,7 +1837,7 @@ call_allocate(struct rpc_task *task)
+ 		return;
  	}
-+	if (transport->recv.copied && !req->rq_private_buf.len)
-+		return -ESHUTDOWN;
  
- 	ret = xs_read_stream_request(transport, msg, flags, req);
- 	if (msg->msg_flags & (MSG_EOR|MSG_TRUNC))
- 		xprt_complete_bc_request(req, transport->recv.copied);
-+	else
-+		req->rq_private_buf.len = transport->recv.copied;
- 
- 	return ret;
+-	rpc_exit(task, -ERESTARTSYS);
++	rpc_call_rpcerror(task, -ERESTARTSYS);
  }
-@@ -587,7 +591,7 @@ xs_read_stream_reply(struct sock_xprt *transport, struct msghdr *msg, int flags)
- 	/* Look up and lock the request corresponding to the given XID */
- 	spin_lock(&xprt->queue_lock);
- 	req = xprt_lookup_rqst(xprt, transport->recv.xid);
--	if (!req) {
-+	if (!req || (transport->recv.copied && !req->rq_private_buf.len)) {
- 		msg->msg_flags |= MSG_TRUNC;
- 		goto out;
+ 
+ static int
+@@ -2561,7 +2561,7 @@ rpc_encode_header(struct rpc_task *task, struct xdr_stream *xdr)
+ 	return 0;
+ out_fail:
+ 	trace_rpc_bad_callhdr(task);
+-	rpc_exit(task, error);
++	rpc_call_rpcerror(task, error);
+ 	return error;
+ }
+ 
+@@ -2628,7 +2628,7 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
+ 		return -EAGAIN;
  	}
-@@ -599,6 +603,8 @@ xs_read_stream_reply(struct sock_xprt *transport, struct msghdr *msg, int flags)
- 	spin_lock(&xprt->queue_lock);
- 	if (msg->msg_flags & (MSG_EOR|MSG_TRUNC))
- 		xprt_complete_rqst(req->rq_task, transport->recv.copied);
-+	else
-+		req->rq_private_buf.len = transport->recv.copied;
- 	xprt_unpin_rqst(req);
- out:
- 	spin_unlock(&xprt->queue_lock);
+ out_err:
+-	rpc_exit(task, error);
++	rpc_call_rpcerror(task, error);
+ 	return error;
+ 
+ out_unparsable:
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 1f275aba786f..53934fe73a9d 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -930,8 +930,10 @@ static void __rpc_execute(struct rpc_task *task)
+ 		/*
+ 		 * Signalled tasks should exit rather than sleep.
+ 		 */
+-		if (RPC_SIGNALLED(task))
++		if (RPC_SIGNALLED(task)) {
++			task->tk_rpc_status = -ERESTARTSYS;
+ 			rpc_exit(task, -ERESTARTSYS);
++		}
+ 
+ 		/*
+ 		 * The queue->lock protects against races with
+@@ -967,6 +969,7 @@ static void __rpc_execute(struct rpc_task *task)
+ 			 */
+ 			dprintk("RPC: %5u got signal\n", task->tk_pid);
+ 			set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
++			task->tk_rpc_status = -ERESTARTSYS;
+ 			rpc_exit(task, -ERESTARTSYS);
+ 		}
+ 		dprintk("RPC: %5u sync task resuming\n", task->tk_pid);
 -- 
 2.21.0
 
