@@ -2,127 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69048B0E93
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2019 14:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ABF0B0EDE
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2019 14:29:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfILMJB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Sep 2019 08:09:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45382 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731320AbfILMJB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Sep 2019 08:09:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id f12so53798738iog.12
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Sep 2019 05:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d8ZixN+k2MPi6o7J+EFSTvWu1Ymp0kkCai84UaRmYPI=;
-        b=A29JJOW+MsS/4OdwRehgGqOBLyw2vZARj9DVZtiTS87d6Dq/JatbG5iXxGZEdfJaA1
-         EL6TyIIrlZjrdzUgPBNGopiAttCz83EABjzYml3FUQmns26nhL+2dBZCyDjB/5FJA1Ef
-         z7h/FfsAGpY7SFvMVWGlYNkxWpu+rnOfJZ6GRBFcgEOe+ZeANtL8qm9rbRkJtm+TNye3
-         qR+GZuI5BtBTuf+hTXCaN5yp9MR419DZxPWsMSb9dCtROC78zmCKIS8U7EElyVIxrto6
-         dABlNp+zuZR1pUWH4zSsmL+Bj0OakyWr8zyvgG6DjQhFBOQxqwavEz1Oepk6WlbpgeCF
-         9OyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d8ZixN+k2MPi6o7J+EFSTvWu1Ymp0kkCai84UaRmYPI=;
-        b=meSxwaLpHpPpsYsZa704rQYKxETulwOmHlOIQFTpeQIrbI6nbrRb/qYuCY3leBIJba
-         06+N8ve/tjSH+aGT8fMlKTjxYFQ1jUYfZ4JXaFcyBD8ZNFn7er32FvQtHCV6ZulUlq/P
-         fbPedgQ3ZCMpqotVkh0vYVPNOA4cCCLJt38b13omWZ3XmUR3J8Oqx+wzktJOgGwOQZl1
-         o332x6omDKQNWZNqi7Fm3HX5sZVEj7SFPW3JLzIYxJRYl/JcsRFj5O12ylfR7cQdM8qh
-         ALuKbdt1VkBmBk0b7V3npZsMPcljEp3eMW0Wiso5NOJJ4yue8V55Ht8Goynhv8brBBC+
-         VmTg==
-X-Gm-Message-State: APjAAAXBmvhbl10sBSEFYOS0JRBG8x39Lg/uqHsa768IXKJZNmj88WCt
-        cgvnldQMo6z60dKor8vTTih601CPJA==
-X-Google-Smtp-Source: APXvYqylpqi+K/ezdaesnlGMb4V/XdAWO3r+7RP77ZDNgQXBOEn5RON2ALjbnflcqsXriITXU0kffg==
-X-Received: by 2002:a6b:e903:: with SMTP id u3mr2192361iof.241.1568290140038;
-        Thu, 12 Sep 2019 05:09:00 -0700 (PDT)
-Received: from localhost.localdomain (50-36-167-63.alma.mi.frontiernet.net. [50.36.167.63])
-        by smtp.gmail.com with ESMTPSA id h3sm16666370iol.73.2019.09.12.05.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 05:08:59 -0700 (PDT)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     Anna Schumaker <Anna.Schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: RPC level errors should always set task->tk_rpc_status
-Date:   Thu, 12 Sep 2019 08:06:51 -0400
-Message-Id: <20190912120651.11277-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.21.0
+        id S1731634AbfILM3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Sep 2019 08:29:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38794 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731547AbfILM3u (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:29:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 156B5A37182;
+        Thu, 12 Sep 2019 12:29:49 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 801EB600C4;
+        Thu, 12 Sep 2019 12:29:47 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
+        "Bruce Fields" <bfields@fieldses.org>,
+        "Wolfgang Walter" <linux@stwm.de>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Thu, 12 Sep 2019 08:29:47 -0400
+Message-ID: <EC2B51FB-8C22-4513-B59F-0F0741F694EB@redhat.com>
+In-Reply-To: <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+ <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+ <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+ <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
+ <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+ <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
+ <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Thu, 12 Sep 2019 12:29:49 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ensure that we set task->tk_rpc_status for all RPC level errors so that
-the caller can distinguish between those and server reply status errors.
+On 11 Sep 2019, at 13:54, Chuck Lever wrote:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- net/sunrpc/clnt.c  | 6 +++---
- net/sunrpc/sched.c | 5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+>> On Sep 11, 2019, at 1:50 PM, Benjamin Coddington 
+>> <bcodding@redhat.com> wrote:
+>>
+>> On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
+>>
+>>> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
+>>>
+>>>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
+>>>>> <bcodding@redhat.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
+>>>>>
+>>>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
+>>>>>>> <bcodding@redhat.com> wrote:
+>>>>>>>
+>>>>>
+>>>>>>> Instead, I think we want to make sure the mic falls squarely 
+>>>>>>> into the tail
+>>>>>>> every time.
+>>>>>>
+>>>>>> I'm not clear how you could do that. The length of the page data 
+>>>>>> is not
+>>>>>> known to the client before it parses the reply. Are you 
+>>>>>> suggesting that
+>>>>>> gss_unwrap should do it somehow?
+>>>>>
+>>>>> Is it too niave to always put the mic at the end of the tail?
+>>>>
+>>>> The size of the page content is variable.
+>>>>
+>>>> The only way the MIC will fall into the tail is if the page content 
+>>>> is
+>>>> exactly the largest expected size. When the page content is smaller 
+>>>> than
+>>>> that, the receive logic will place part or all of the MIC in 
+>>>> ->pages.
+>>>
+>>> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
+>>> renamed
+>>> and repurposed to be "move the mic from wherever it is to the end of
+>>> xdr_buf's tail".
+>>>
+>>> But now I see what you mean, and I also see that it is already 
+>>> trying to do
+>>> that.. and we don't want to overlap the copy..
+>>>
+>>> So, really, we need the tail to be larger than twice the mic.. less 
+>>> 1.  That
+>>> means the fix is probably just increasing rslack for krb5i.
+>>
+>> .. or we can keep the tighter tail space, and if we detect the mic 
+>> straddles
+>> the page and tail, we can move the mic into the tail with 2 copies, 
+>> first
+>> move the bit in the tail back, then move the bit in the pages.
+>>
+>> Which is preferred, less allocation, or in the rare case this occurs, 
+>> doing
+>> copy twice?
+>
+> It sounds like the bug is that the current code does not deal 
+> correctly
+> when the MIC crosses the boundary between ->pages and ->tail? I'd like
+> to see that addressed rather than changing rslack.
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 7a75f34ad393..e7fdc400506e 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1837,7 +1837,7 @@ call_allocate(struct rpc_task *task)
- 		return;
- 	}
- 
--	rpc_exit(task, -ERESTARTSYS);
-+	rpc_call_rpcerror(task, -ERESTARTSYS);
- }
- 
- static int
-@@ -2561,7 +2561,7 @@ rpc_encode_header(struct rpc_task *task, struct xdr_stream *xdr)
- 	return 0;
- out_fail:
- 	trace_rpc_bad_callhdr(task);
--	rpc_exit(task, error);
-+	rpc_call_rpcerror(task, error);
- 	return error;
- }
- 
-@@ -2628,7 +2628,7 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
- 		return -EAGAIN;
- 	}
- out_err:
--	rpc_exit(task, error);
-+	rpc_call_rpcerror(task, error);
- 	return error;
- 
- out_unparsable:
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 1f275aba786f..53934fe73a9d 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -930,8 +930,10 @@ static void __rpc_execute(struct rpc_task *task)
- 		/*
- 		 * Signalled tasks should exit rather than sleep.
- 		 */
--		if (RPC_SIGNALLED(task))
-+		if (RPC_SIGNALLED(task)) {
-+			task->tk_rpc_status = -ERESTARTSYS;
- 			rpc_exit(task, -ERESTARTSYS);
-+		}
- 
- 		/*
- 		 * The queue->lock protects against races with
-@@ -967,6 +969,7 @@ static void __rpc_execute(struct rpc_task *task)
- 			 */
- 			dprintk("RPC: %5u got signal\n", task->tk_pid);
- 			set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
-+			task->tk_rpc_status = -ERESTARTSYS;
- 			rpc_exit(task, -ERESTARTSYS);
- 		}
- 		dprintk("RPC: %5u sync task resuming\n", task->tk_pid);
--- 
-2.21.0
+Here's what I'm about to run through my testing:
 
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 48c93b9e525e..d6ffc9011269 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1238,14 +1238,21 @@ EXPORT_SYMBOL_GPL(xdr_encode_word);
+
+  /* If the netobj starting offset bytes from the start of xdr_buf is 
+contained
+   * entirely in the head or the tail, set object to point to it; 
+otherwise
+- * try to find space for it at the end of the tail, copy it there, and
+- * set obj to point to it. */
++ * try to find space for it at the end of the tail, and copy it there.  
+If
++ * the netobj is partly within the page data and tail, shrink the pages 
+to
++ * move the object into the tail */
+  int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, 
+unsigned int offset)
+  {
+         struct xdr_buf subbuf;
++       unsigned int page_range;
+
+         if (xdr_decode_word(buf, offset, &obj->len))
+                 return -EFAULT;
++
++       page_range = buf->head->iov_len + buf->page_len - offset + 4;
++       if (page_range > 0 && page_range < obj->len)
++               xdr_shrink_pagelen(buf, page_range);
++
+         if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
+                 return -EFAULT;
+
+
+Is the use of xdr_shrink_pagelen() at this point in the decoding a 
+problem for RDMA?
+
+Ben
