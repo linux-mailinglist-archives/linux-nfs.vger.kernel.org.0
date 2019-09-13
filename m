@@ -2,213 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C3F7B1E13
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2019 15:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00FC1B2267
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2019 16:42:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfIMNCY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Sep 2019 09:02:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59332 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfIMNCY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:02:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A58D309174E;
-        Fri, 13 Sep 2019 13:02:23 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC8A519C78;
-        Fri, 13 Sep 2019 13:02:22 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@gmail.com>,
-        "Anna Schumaker" <Anna.Schumaker@netapp.com>
-Cc:     "Al Viro" <viro@zeniv.linux.org.uk>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] NFSv3: use nfs_add_or_obtain() to create and
- reference inodes
-Date:   Fri, 13 Sep 2019 09:02:21 -0400
-Message-ID: <ED577122-CC95-4A39-9376-CC0DC4D73EC6@redhat.com>
-In-Reply-To: <157982bc982443f8c675d4269e70da55afa82821.1568377101.git.bcodding@redhat.com>
-References: <cover.1568377101.git.bcodding@redhat.com>
- <157982bc982443f8c675d4269e70da55afa82821.1568377101.git.bcodding@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 13 Sep 2019 13:02:23 +0000 (UTC)
+        id S2387936AbfIMOmZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Sep 2019 10:42:25 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35826 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729729AbfIMOmZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Sep 2019 10:42:25 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DEcnM9026004;
+        Fri, 13 Sep 2019 14:42:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=mh4dqjUFLQmplHhMZ0HIZoanSXA+XGG1R7zJICqYDhs=;
+ b=Vx7SC8fpxj0M6AG8wlV2om91yPE3iu5J+dp2X7j8wYMWEJneMXUHQcGSiIx5brqUulVR
+ 9nNWXgOhGqalWAS3pJgYe6h7HHwx6ZJPCIULjjepZKSYAcsvJh+StklDuxTScV6y2suW
+ uu5ecbnfxEdiwqEj1M6vpgj5pP/jnp6fMKMv2FvrYGRynwwi1vh6vVpEB3kDttvJ6Uev
+ hrxQggWFbozfJxw8syY8HHC9Mg3+14M1ytoxDTBPbTjpjVfmCw/i1DXJKr6sW0SQ9XqE
+ NrMsdEA2/Gd8nelldj0LjE3qiaN94CqJYjh2vrxjjD9H2XpPfaNvzIfjDASQkykMHK69 ZA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2uytd3n4rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 14:42:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DEXrOO030764;
+        Fri, 13 Sep 2019 14:42:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2uytdjcr29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 14:42:06 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8DEfqQo023557;
+        Fri, 13 Sep 2019 14:41:55 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Sep 2019 07:41:52 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 1/2] SUNRPC: Fix buffer handling of GSS MIC with less
+ slack
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <043d2ca649c3d81cdf0b43b149cd43069ad1c1e2.1568307763.git.bcodding@redhat.com>
+Date:   Fri, 13 Sep 2019 10:41:51 -0400
+Cc:     trond.myklebust@hammerspace.com,
+        Anna Schumaker <anna.schumaker@netapp.com>, tibbs@math.uh.edu,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@fieldses.org>, km@cm4all.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <181DFFE9-F11A-421A-97FA-E3478B7A8C51@oracle.com>
+References: <043d2ca649c3d81cdf0b43b149cd43069ad1c1e2.1568307763.git.bcodding@redhat.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909130146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909130147
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 13 Sep 2019, at 8:29, Benjamin Coddington wrote:
 
-mm.. not sure what happened to the body here.. maybe I didn't have one.
-Should at least have:
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> On Sep 12, 2019, at 1:07 PM, Benjamin Coddington <bcodding@redhat.com> =
+wrote:
+>=20
+> The GSS Message Integrity Check data for krb5i may lie partially in =
+the XDR
+> reply buffer's pages and tail.  If so, we try to copy the entire MIC =
+into
+> free space in the tail.  But as the estimations of the slack space =
+required
+> for authentication and verification have improved there may be less =
+free
+> space in the tail to complete this copy -- see commit 2c94b8eca1a2
+> ("SUNRPC: Use au_rslack when computing reply buffer size").  In fact, =
+there
+> may only be room in the tail for a single copy of the MIC, and not =
+part of
+> the MIC and then another complete copy.
+>=20
+> The real world failure reported is that `ls` of a directory on NFS may
+> sometimes return -EIO, which can be traced back to =
+xdr_buf_read_netobj()
+> failing to find available free space in the tail to copy the MIC.
+>=20
+> Fix this by checking for the case of the MIC crossing the boundaries =
+of
+> head, pages, and tail. If so, shift the buffer until the MIC is =
+contained
+> completely within the pages or tail.  This allows the remainder of the
+> function to create a sub buffer that directly address the complete =
+MIC.
+>=20
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> Cc: stable@vger.kernel.org
+
+# v5.1 ?
+
 
 > ---
->  fs/nfs/nfs3proc.c | 45 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 36 insertions(+), 9 deletions(-)
->
-> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-> index a3ad2d46fd42..9eb2f1a503ab 100644
-> --- a/fs/nfs/nfs3proc.c
-> +++ b/fs/nfs/nfs3proc.c
-> @@ -279,15 +279,17 @@ static struct nfs3_createdata 
-> *nfs3_alloc_createdata(void)
->  	return data;
->  }
->
-> -static int nfs3_do_create(struct inode *dir, struct dentry *dentry, 
-> struct nfs3_createdata *data)
-> +static struct dentry *
-> +nfs3_do_create(struct inode *dir, struct dentry *dentry, struct 
-> nfs3_createdata *data)
->  {
->  	int status;
->
->  	status = rpc_call_sync(NFS_CLIENT(dir), &data->msg, 0);
->  	nfs_post_op_update_inode(dir, data->res.dir_attr);
-> -	if (status == 0)
-> -		status = nfs_instantiate(dentry, data->res.fh, data->res.fattr, 
-> NULL);
-> -	return status;
-> +	if (status != 0)
-> +		return ERR_PTR(status);
+> net/sunrpc/xdr.c | 45 +++++++++++++++++++++++++++------------------
+> 1 file changed, 27 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 48c93b9e525e..6e05a9693568 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -1237,39 +1237,48 @@ xdr_encode_word(struct xdr_buf *buf, unsigned =
+int base, u32 obj)
+> EXPORT_SYMBOL_GPL(xdr_encode_word);
+>=20
+> /* If the netobj starting offset bytes from the start of xdr_buf is =
+contained
+> - * entirely in the head or the tail, set object to point to it; =
+otherwise
+> - * try to find space for it at the end of the tail, copy it there, =
+and
+> - * set obj to point to it. */
+> + * entirely in the head, pages, or tail, set object to point to it; =
+otherwise
+> + * shift the buffer until it is contained entirely within the pages =
+or tail.
+> + */
+> int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, =
+unsigned int offset)
+> {
+> 	struct xdr_buf subbuf;
+> +	unsigned int len_to_boundary;
+>=20
+> 	if (xdr_decode_word(buf, offset, &obj->len))
+> 		return -EFAULT;
+> -	if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
 > +
-> +	return nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr, 
-> NULL);
->  }
->
->  static void nfs3_free_createdata(struct nfs3_createdata *data)
-> @@ -304,6 +306,7 @@ nfs3_proc_create(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr,
->  {
->  	struct posix_acl *default_acl, *acl;
->  	struct nfs3_createdata *data;
-> +	struct dentry *d_alias;
->  	int status = -ENOMEM;
->
->  	dprintk("NFS call  create %pd\n", dentry);
-> @@ -330,7 +333,8 @@ nfs3_proc_create(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr,
->  		goto out;
->
->  	for (;;) {
-> -		status = nfs3_do_create(dir, dentry, data);
-> +		d_alias = nfs3_do_create(dir, dentry, data);
-> +		status = PTR_ERR_OR_ZERO(d_alias);
->
->  		if (status != -ENOTSUPP)
->  			break;
-> @@ -355,6 +359,9 @@ nfs3_proc_create(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr,
->  	if (status != 0)
->  		goto out_release_acls;
->
-> +	if (d_alias)
-> +		dentry = d_alias;
+> +	offset +=3D 4;
 > +
->  	/* When we created the file with exclusive semantics, make
->  	 * sure we set the attributes afterwards. */
->  	if (data->arg.create.createmode == NFS3_CREATE_EXCLUSIVE) {
-> @@ -372,11 +379,13 @@ nfs3_proc_create(struct inode *dir, struct 
-> dentry *dentry, struct iattr *sattr,
->  		nfs_post_op_update_inode(d_inode(dentry), data->res.fattr);
->  		dprintk("NFS reply setattr (post-create): %d\n", status);
->  		if (status != 0)
-> -			goto out_release_acls;
-> +			goto out_dput;
->  	}
->
->  	status = nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
->
-> +out_dput:
-> +	dput(d_alias);
->  out_release_acls:
->  	posix_acl_release(acl);
->  	posix_acl_release(default_acl);
-> @@ -504,6 +513,7 @@ nfs3_proc_symlink(struct inode *dir, struct dentry 
-> *dentry, struct page *page,
->  		  unsigned int len, struct iattr *sattr)
->  {
->  	struct nfs3_createdata *data;
-> +	struct dentry *d_alias;
->  	int status = -ENOMEM;
->
->  	if (len > NFS3_MAXPATHLEN)
-> @@ -522,7 +532,11 @@ nfs3_proc_symlink(struct inode *dir, struct 
-> dentry *dentry, struct page *page,
->  	data->arg.symlink.pathlen = len;
->  	data->arg.symlink.sattr = sattr;
->
-> -	status = nfs3_do_create(dir, dentry, data);
-> +	d_alias = nfs3_do_create(dir, dentry, data);
-> +	status = PTR_ERR_OR_ZERO(d_alias);
+> +	/* Is the obj partially in the head? */
+> +	len_to_boundary =3D buf->head->iov_len - offset;
+> +	if (len_to_boundary > 0 && len_to_boundary < obj->len)
+> +		xdr_shift_buf(buf, len_to_boundary);
 > +
-> +	if (status == 0)
-> +		dput(d_alias);
->
->  	nfs3_free_createdata(data);
->  out:
-> @@ -535,6 +549,7 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr)
->  {
->  	struct posix_acl *default_acl, *acl;
->  	struct nfs3_createdata *data;
-> +	struct dentry *d_alias;
->  	int status = -ENOMEM;
->
->  	dprintk("NFS call  mkdir %pd\n", dentry);
-> @@ -553,12 +568,18 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr)
->  	data->arg.mkdir.len = dentry->d_name.len;
->  	data->arg.mkdir.sattr = sattr;
->
-> -	status = nfs3_do_create(dir, dentry, data);
-> +	d_alias = nfs3_do_create(dir, dentry, data);
-> +	status = PTR_ERR_OR_ZERO(d_alias);
+> +	/* Is the obj partially in the pages? */
+> +	len_to_boundary =3D buf->head->iov_len + buf->page_len - offset;
+> +	if (len_to_boundary > 0 && len_to_boundary < obj->len)
+> +		xdr_shrink_pagelen(buf, len_to_boundary);
+
+Do you need to check if the obj is entirely in ->pages but crosses a =
+page boundary?
+
+
 > +
->  	if (status != 0)
->  		goto out_release_acls;
->
-> +	if (d_alias)
-> +		dentry = d_alias;
+> +	if (xdr_buf_subsegment(buf, &subbuf, offset, obj->len))
+> 		return -EFAULT;
+>=20
+> -	/* Is the obj contained entirely in the head? */
+> -	obj->data =3D subbuf.head[0].iov_base;
+> -	if (subbuf.head[0].iov_len =3D=3D obj->len)
+> -		return 0;
+> -	/* ..or is the obj contained entirely in the tail? */
+> +	/* Most likely: is the obj contained entirely in the tail? */
+> 	obj->data =3D subbuf.tail[0].iov_base;
+> 	if (subbuf.tail[0].iov_len =3D=3D obj->len)
+> 		return 0;
+>=20
+> -	/* use end of tail as storage for obj:
+> -	 * (We don't copy to the beginning because then we'd have
+> -	 * to worry about doing a potentially overlapping copy.
+> -	 * This assumes the object is at most half the length of the
+> -	 * tail.) */
+> +	/* ..or is the obj contained entirely in the head? */
+> +	obj->data =3D subbuf.head[0].iov_base;
+> +	if (subbuf.head[0].iov_len =3D=3D obj->len)
+> +		return 0;
 > +
->  	status = nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
->
-> +	dput(d_alias);
->  out_release_acls:
->  	posix_acl_release(acl);
->  	posix_acl_release(default_acl);
-> @@ -660,6 +681,7 @@ nfs3_proc_mknod(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr,
->  {
->  	struct posix_acl *default_acl, *acl;
->  	struct nfs3_createdata *data;
-> +	struct dentry *d_alias;
->  	int status = -ENOMEM;
->
->  	dprintk("NFS call  mknod %pd %u:%u\n", dentry,
-> @@ -698,12 +720,17 @@ nfs3_proc_mknod(struct inode *dir, struct dentry 
-> *dentry, struct iattr *sattr,
->  		goto out;
->  	}
->
-> -	status = nfs3_do_create(dir, dentry, data);
-> +	d_alias = nfs3_do_create(dir, dentry, data);
-> +	status = PTR_ERR_OR_ZERO(d_alias);
->  	if (status != 0)
->  		goto out_release_acls;
->
-> +	if (d_alias)
-> +		dentry = d_alias;
+> +	/* obj is in the pages: move to tail */
+> 	if (obj->len > buf->buflen - buf->len)
+> 		return -ENOMEM;
+> -	if (buf->tail[0].iov_len !=3D 0)
+> -		obj->data =3D buf->tail[0].iov_base + =
+buf->tail[0].iov_len;
+> -	else
+> -		obj->data =3D buf->head[0].iov_base + =
+buf->head[0].iov_len;
+> +	obj->data =3D buf->head[0].iov_base + buf->head[0].iov_len;
+> 	__read_bytes_from_xdr_buf(&subbuf, obj->data, obj->len);
 > +
->  	status = nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
->
-> +	dput(d_alias);
->  out_release_acls:
->  	posix_acl_release(acl);
->  	posix_acl_release(default_acl);
-> -- 
+> 	return 0;
+> }
+> EXPORT_SYMBOL_GPL(xdr_buf_read_netobj);
+> --=20
 > 2.20.1
+>=20
+
+--
+Chuck Lever
+
+
+
