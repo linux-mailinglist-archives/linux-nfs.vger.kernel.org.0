@@ -2,73 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 616E4B16E2
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2019 02:29:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2954DB1D3A
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2019 14:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfIMA3r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Sep 2019 20:29:47 -0400
-Received: from fieldses.org ([173.255.197.46]:35374 "EHLO fieldses.org"
+        id S2387523AbfIMMSE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Sep 2019 08:18:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37640 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfIMA3r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 12 Sep 2019 20:29:47 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B0B451B96; Thu, 12 Sep 2019 20:29:46 -0400 (EDT)
-Date:   Thu, 12 Sep 2019 20:29:46 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v6 05/19] NFS: inter ssc open
-Message-ID: <20190913002946.GC8069@fieldses.org>
-References: <20190906194631.3216-1-olga.kornievskaia@gmail.com>
- <20190906194631.3216-6-olga.kornievskaia@gmail.com>
- <20190912202352.GB5054@fieldses.org>
- <CAN-5tyFsXNWxBi3m=32hiOLakjdV_w1tk15i6k_DrSqbLk5Kig@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyFsXNWxBi3m=32hiOLakjdV_w1tk15i6k_DrSqbLk5Kig@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S2387450AbfIMMRv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:17:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F16B8980E1;
+        Fri, 13 Sep 2019 12:17:51 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A3B45D9E2;
+        Fri, 13 Sep 2019 12:17:48 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id A8C0520ACC; Fri, 13 Sep 2019 08:17:48 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 04/26] nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+Date:   Fri, 13 Sep 2019 08:17:26 -0400
+Message-Id: <20190913121748.25391-5-smayhew@redhat.com>
+In-Reply-To: <20190913121748.25391-1-smayhew@redhat.com>
+References: <20190913121748.25391-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 13 Sep 2019 12:17:51 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 06:51:58PM -0400, Olga Kornievskaia wrote:
-> On Thu, Sep 12, 2019 at 4:23 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Fri, Sep 06, 2019 at 03:46:17PM -0400, Olga Kornievskaia wrote:
-> > > +static int read_name_gen = 1;
-> > > +#define SSC_READ_NAME_BODY "ssc_read_%d"
-> > > +
-> > ...
-> > > +     res = ERR_PTR(-ENOMEM);
-> > > +     len = strlen(SSC_READ_NAME_BODY) + 16;
-> > > +     read_name = kzalloc(len, GFP_NOFS);
-> > > +     if (read_name == NULL)
-> > > +             goto out;
-> > > +     snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
-> > ...
-> > > +     filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
-> > > +                                  r_ino->i_fop);
-> >
-> > So, I"m curious: does this "name" ever get used anywhere?  Can you see
-> > it from userspace somehow, for example?  Does it have some debugging
-> > value?  Or could it just be the empty string?
-> 
-> Name isn't seen anywhere (nor is the mount visible to the use -- ie
-> doing a mount command). It's needed to create a file structure to
-> represent the file opened the source server (without the open).
-> Honestly, I'm not sure what kind of weirdness can arise from having an
-> empty name string.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-I doubt the name matters.
+They are identical now.
 
-> Is there a reason for not trying to generate unique
-> names for this?
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/nfs/nfs4super.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
-I doubt it's a problem, really, just a little unnecessary code.
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 773c347df3ab..d0237d8ffa2b 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -22,8 +22,6 @@ static struct dentry *nfs4_remote_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *raw_data);
+ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *raw_data);
+-static struct dentry *nfs4_remote_referral_mount(struct file_system_type *fs_type,
+-	int flags, const char *dev_name, void *raw_data);
+ 
+ static struct file_system_type nfs4_remote_fs_type = {
+ 	.owner		= THIS_MODULE,
+@@ -33,14 +31,6 @@ static struct file_system_type nfs4_remote_fs_type = {
+ 	.fs_flags	= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+ };
+ 
+-static struct file_system_type nfs4_remote_referral_fs_type = {
+-	.owner		= THIS_MODULE,
+-	.name		= "nfs4",
+-	.mount		= nfs4_remote_referral_mount,
+-	.kill_sb	= nfs_kill_super,
+-	.fs_flags	= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+-};
+-
+ struct file_system_type nfs4_referral_fs_type = {
+ 	.owner		= THIS_MODULE,
+ 	.name		= "nfs4",
+@@ -111,8 +101,7 @@ nfs4_remote_mount(struct file_system_type *fs_type, int flags,
+ 	return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
+ }
+ 
+-static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
+-					  struct nfs_server *server, int flags,
++static struct vfsmount *nfs_do_root_mount(struct nfs_server *server, int flags,
+ 					  struct nfs_mount_info *info,
+ 					  const char *hostname)
+ {
+@@ -135,7 +124,7 @@ static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
+ 	else
+ 		snprintf(root_devname, len, "%s:/", hostname);
+ 	info->server = server;
+-	root_mnt = vfs_kern_mount(fs_type, flags, root_devname, info);
++	root_mnt = vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, info);
+ 	if (info->server)
+ 		nfs_free_server(info->server);
+ 	info->server = NULL;
+@@ -245,7 +234,7 @@ struct dentry *nfs4_try_mount(int flags, const char *dev_name,
+ 
+ 	export_path = data->nfs_server.export_path;
+ 	data->nfs_server.export_path = "/";
+-	root_mnt = nfs_do_root_mount(&nfs4_remote_fs_type,
++	root_mnt = nfs_do_root_mount(
+ 			nfs4_create_server(mount_info, &nfs_v4),
+ 			flags, mount_info,
+ 			data->nfs_server.hostname);
+@@ -259,13 +248,6 @@ struct dentry *nfs4_try_mount(int flags, const char *dev_name,
+ 	return res;
+ }
+ 
+-static struct dentry *
+-nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
+-			   const char *dev_name, void *raw_data)
+-{
+-	return nfs_fs_mount_common(flags, dev_name, raw_data, &nfs_v4);
+-}
+-
+ /*
+  * Create an NFS4 server record on referral traversal
+  */
+@@ -290,7 +272,7 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
+ 
+ 	export_path = data->mnt_path;
+ 	data->mnt_path = "/";
+-	root_mnt = nfs_do_root_mount(&nfs4_remote_referral_fs_type,
++	root_mnt = nfs_do_root_mount(
+ 			nfs4_create_referral_server(mount_info.cloned,
+ 						    mount_info.mntfh),
+ 			flags, &mount_info, data->hostname);
+-- 
+2.17.2
 
---b.
