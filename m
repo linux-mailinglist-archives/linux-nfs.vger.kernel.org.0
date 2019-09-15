@@ -2,76 +2,233 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3343B297D
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Sep 2019 05:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE96BB3073
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Sep 2019 16:08:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390908AbfINDgQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Sep 2019 23:36:16 -0400
-Received: from elasmtp-masked.atl.sa.earthlink.net ([209.86.89.68]:56690 "EHLO
-        elasmtp-masked.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390905AbfINDgQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Sep 2019 23:36:16 -0400
-X-Greylist: delayed 40791 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Sep 2019 23:36:16 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
-        s=dk12062016; t=1568432176; bh=yXTPe/4asCX0ogVmzm2LRYU/4ozOO5vsPXEg
-        A6rmfEI=; h=Received:From:To:References:In-Reply-To:Subject:Date:
-         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-         X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:
-         X-Originating-IP; b=KhkDvgdE5njG+Bt3dp0G1p2j2WGamCEV5Et8Q3hnMUl8k6
-        iAWrls4SRn/T8qBPT+IeziBv2Wupvu926obv+xad/1BQpuAba8aYkuDtGwFE27BYvbI
-        ELm8xocjuTHC84CGXLcs/oIhYOjJeOdMzzPL/6OyE2fVxEohNaVK1Rv11UrdTVb5f2B
-        /oPJ2jRMxAB2U05yQckFIGSIkF360x18EQcTMS1sprfy6J3RHnAJviYSjEFGwILYCFI
-        AADUYS4nUsZuRrAH1mglgJ8Tqe3GdOpYB/VXbmBMzUjGwiHb7+95c0htv1R4yzHXSM1
-        Vkf6xTi8L1nTB4I3sbIG4RVUjqWQ==
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
-  s=dk12062016; d=mindspring.com;
-  b=W8gln25pTE7EfOw31mxfeICyibmTLd429MskPD80AiiIVxyCmO4x59Os9HYTgEm3D7DEerVhQ1xILIoXPb5kCrIbmab/I5FPz2aSFIvWsdSUN4bc0iQv8eHKgQYpCjibYqZOQSVLkBD8WmyjA9DSr+OSxe4rbl4JBLE5R/hdAUkdamS+y9QCJ5Rm/4cS7t3NAlwguvNI7Iht0zdRjo2p+iffTrOwBOGEKAWRZq71G11kb+lC7GdDEC3hy7tNG/SZRQIo4rZySZz9wbvN+ZWKXY9T7CtjU6DDIUsovCeG7EcVHIe8mSVl5hMT6RZpPMnkyXxtvvH8ShDLAfGG19kvWg==;
-  h=Received:From:To:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:X-Originating-IP;
-Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
-        by elasmtp-masked.atl.sa.earthlink.net with esmtpa (Exim 4)
-        (envelope-from <ffilzlnx@mindspring.com>)
-        id 1i8oFD-0009YP-Kx; Fri, 13 Sep 2019 12:16:23 -0400
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     <dang@redhat.com>, "'Olga Kornievskaia'" <aglo@umich.edu>,
-        "'linux-nfs'" <linux-nfs@vger.kernel.org>
-References: <CAN-5tyG97C6GTXOz5G6z8SL+jNKYa0siWnSfjijRNVucFs3KwA@mail.gmail.com> <080bf93a-0e66-bb56-a54f-5496c688bb70@redhat.com>
-In-Reply-To: <080bf93a-0e66-bb56-a54f-5496c688bb70@redhat.com>
-Subject: RE: support for UDP
-Date:   Fri, 13 Sep 2019 09:16:23 -0700
-Message-ID: <09ff01d56a4e$96857660$c3906320$@mindspring.com>
+        id S1728741AbfIOOIv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 15 Sep 2019 10:08:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38172 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfIOOIv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 15 Sep 2019 10:08:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 71C9F58569;
+        Sun, 15 Sep 2019 14:08:50 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5A235D9D6;
+        Sun, 15 Sep 2019 14:08:48 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     trond.myklebust@hammerspace.com,
+        "Anna Schumaker" <anna.schumaker@netapp.com>, tibbs@math.uh.edu,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Bruce Fields" <bfields@fieldses.org>, km@cm4all.com
+Subject: Re: [PATCH 1/2] SUNRPC: Fix buffer handling of GSS MIC with less
+ slack
+Date:   Sun, 15 Sep 2019 10:08:46 -0400
+Message-ID: <729A78EB-FF00-40D4-B5BB-C745E5348C28@redhat.com>
+In-Reply-To: <B8F99914-8343-4D37-9EDC-554B855B810A@redhat.com>
+References: <043d2ca649c3d81cdf0b43b149cd43069ad1c1e2.1568307763.git.bcodding@redhat.com>
+ <2122CC7A-A7FA-4CA0-A31F-E4852DFE0680@oracle.com>
+ <B8F99914-8343-4D37-9EDC-554B855B810A@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQH5HHcSgQ9YLcaKJGu1LCOipit+sQH3xOe4ptKlgVA=
-Content-Language: en-us
-X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4dc5db1cb85d1b96aeee988463eabe8cbe350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
-X-Originating-IP: 76.105.143.216
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Sun, 15 Sep 2019 14:08:50 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On 9/13/19 11:14 AM, Olga Kornievskaia wrote:
-> > Hi folks,
-> >
-> > I'd like to gauge what people think. Do you think we'd ever do a =
-bold
-> > thing like drop the UDP support in the upstream kernel (obviously =
-with
-> > a plan to fade it out with a config option that we did with the des
-> > support)...
-> >
->=20
-> Yes, please.
 
-Yea, it would certainly be nice to not have to worry about UDP =
-connections. They don't work for NFS in high speed high bandwidth =
-workloads due to the issues with fragment reassembly. Their use for NFS =
-v3 sideband protocols doesn't really buy much.
 
-Of course we'll still have to support UDP for 10 more years...
+On 13 Sep 2019, at 13:39, Benjamin Coddington wrote:
 
-Frank
+> On 13 Sep 2019, at 12:05, Chuck Lever wrote:
+>
+>> Hi Ben-
+>>
+>> A few review comments below.
+>>
+>>
+>>> On Sep 12, 2019, at 1:07 PM, Benjamin Coddington 
+>>> <bcodding@redhat.com> wrote:
+>>>
+>>> The GSS Message Integrity Check data for krb5i may lie partially in 
+>>> the XDR
+>>> reply buffer's pages and tail.  If so, we try to copy the entire MIC 
+>>> into
+>>> free space in the tail.  But as the estimations of the slack space 
+>>> required
+>>> for authentication and verification have improved there may be less 
+>>> free
+>>> space in the tail to complete this copy -- see commit 2c94b8eca1a2
+>>> ("SUNRPC: Use au_rslack when computing reply buffer size").  In 
+>>> fact, there
+>>> may only be room in the tail for a single copy of the MIC, and not 
+>>> part of
+>>> the MIC and then another complete copy.
+>>>
+>>> The real world failure reported is that `ls` of a directory on NFS 
+>>> may
+>>> sometimes return -EIO, which can be traced back to 
+>>> xdr_buf_read_netobj()
+>>> failing to find available free space in the tail to copy the MIC.
+>>>
+>>> Fix this by checking for the case of the MIC crossing the boundaries 
+>>> of
+>>> head, pages, and tail. If so, shift the buffer until the MIC is 
+>>> contained
+>>> completely within the pages or tail.  This allows the remainder of 
+>>> the
+>>> function to create a sub buffer that directly address the complete 
+>>> MIC.
+>>>
+>>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>> net/sunrpc/xdr.c | 45 +++++++++++++++++++++++++++------------------
+>>> 1 file changed, 27 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+>>> index 48c93b9e525e..6e05a9693568 100644
+>>> --- a/net/sunrpc/xdr.c
+>>> +++ b/net/sunrpc/xdr.c
+>>> @@ -1237,39 +1237,48 @@ xdr_encode_word(struct xdr_buf *buf, 
+>>> unsigned int base, u32 obj)
+>>> EXPORT_SYMBOL_GPL(xdr_encode_word);
+>>>
+>>> /* If the netobj starting offset bytes from the start of xdr_buf is 
+>>> contained
+>>> - * entirely in the head or the tail, set object to point to it; 
+>>> otherwise
+>>> - * try to find space for it at the end of the tail, copy it there, 
+>>> and
+>>> - * set obj to point to it. */
+>>> + * entirely in the head, pages, or tail, set object to point to it; 
+>>> otherwise
+>>> + * shift the buffer until it is contained entirely within the pages 
+>>> or tail.
+>>> + */
+>>
+>> Nit: I would explicitly note in this comment that there is no need
+>> for the caller to free @obj, and perhaps it should be noted that
+>> the organization of @buf can be changed by this function.
+>>
+>> Maybe more appropriate for 2/2.
+>
+> Ok.. yes.. though I don't feel strongly about noting that *obj doesn't
+> need to be freed.
+>
+>
+>>> int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, 
+>>> unsigned int offset)
+>>> {
+>>> 	struct xdr_buf subbuf;
+>>> +	unsigned int len_to_boundary;
+>>>
+>>> 	if (xdr_decode_word(buf, offset, &obj->len))
+>>> 		return -EFAULT;
+>>> -	if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
+>>> +
+>>> +	offset += 4;
+>>
+>> Nit: No blank line before "offset += 4;" would help me understand
+>> how the offset bump is related to xdr_decode_word(). It took me
+>> a few blinks to see.
+>>
+>>
+>>> +
+>>> +	/* Is the obj partially in the head? */
+>>> +	len_to_boundary = buf->head->iov_len - offset;
+>>> +	if (len_to_boundary > 0 && len_to_boundary < obj->len)
+>>
+>> I'm not especially excited about the integer underflow when offset
+>> is larger than buf->head->iov_len. This might be more explicit:
+>>
+>>         if (offset < buf->head[0].iov_len &&
+>>             offset + obj->len > buf->head[0].iov_len)
+>
+> Yep, makes sense - and I prefer the clarity.
+>
+>>> +		xdr_shift_buf(buf, len_to_boundary);
+>>> +
+>>> +	/* Is the obj partially in the pages? */
+>>> +	len_to_boundary = buf->head->iov_len + buf->page_len - offset;
+>>> +	if (len_to_boundary > 0 && len_to_boundary < obj->len)
+>>
+>> Ditto.
+>>
+>>
+>>> +		xdr_shrink_pagelen(buf, len_to_boundary);
+>>> +
+>>> +	if (xdr_buf_subsegment(buf, &subbuf, offset, obj->len))
+>>> 		return -EFAULT;
+>>>
+>>> -	/* Is the obj contained entirely in the head? */
+>>> -	obj->data = subbuf.head[0].iov_base;
+>>> -	if (subbuf.head[0].iov_len == obj->len)
+>>> -		return 0;
+>>> -	/* ..or is the obj contained entirely in the tail? */
+>>> +	/* Most likely: is the obj contained entirely in the tail? */
+>>> 	obj->data = subbuf.tail[0].iov_base;
+>>> 	if (subbuf.tail[0].iov_len == obj->len)
+>>> 		return 0;
+>>>
+>>> -	/* use end of tail as storage for obj:
+>>> -	 * (We don't copy to the beginning because then we'd have
+>>> -	 * to worry about doing a potentially overlapping copy.
+>>> -	 * This assumes the object is at most half the length of the
+>>> -	 * tail.) */
+>>> +	/* ..or is the obj contained entirely in the head? */
+>>> +	obj->data = subbuf.head[0].iov_base;
+>>> +	if (subbuf.head[0].iov_len == obj->len)
+>>> +		return 0;
+>>
+>> It looks like you're reversing these two tests as a 
+>> micro-optimization?
+>> Maybe that should be left for another patch, since this is supposed 
+>> to
+>> be a narrow fix.
+>
+> Yes, if not done here - is it even worth another patch?
+>
+>> Also, I found the new comments confusing: here they refer to the head
+>> and tail of @subbuf; above they refer to head and tail of @buf. Note 
+>> for
+>> 2/2, I guess.
+>
+> I can clarify in 2/2.
+>
+>>> +
+>>> +	/* obj is in the pages: move to tail */
+>>> 	if (obj->len > buf->buflen - buf->len)
+>>> 		return -ENOMEM;
+>>> -	if (buf->tail[0].iov_len != 0)
+>>> -		obj->data = buf->tail[0].iov_base + buf->tail[0].iov_len;
+>>> -	else
+>>> -		obj->data = buf->head[0].iov_base + buf->head[0].iov_len;
+>>> +	obj->data = buf->head[0].iov_base + buf->head[0].iov_len;
+>>
+>> Not sure this is a safe change. It's possible that the head buffer
+>> and tail buffer are not contiguous, which is what the 
+>> buf->tail.iov_len
+>> check is looking for, IMO. Can this hunk be left out?
+>
+> That's something I missed somehow, thanks for pointing it out.  I see 
+> now
+> that the transport can allocate them any way it likes.
 
+Just looking at this again today -- we can definitely keep the check, 
+but
+the second half of the statement also assumes a contiguous head/tail 
+range.
+I think it's safe to just remove the test altogether and place the 
+netobj at
+the end of the tail.  Then in 2/2, we'll just place it at the beginning 
+of
+the tail because the function is specialized for the mic.
+
+Ben
