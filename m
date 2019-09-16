@@ -2,238 +2,628 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45A01B3D56
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 17:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E3FB4067
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 20:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfIPPMl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Sep 2019 11:12:41 -0400
-Received: from esa12.utexas.iphmx.com ([216.71.154.221]:2830 "EHLO
-        esa12.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfIPPMl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 11:12:41 -0400
-IronPort-SDR: Gl9gQq6CUxTD52VtWqxFxTCmh8CIeTticY0rB7eH405gf7OCCmXzOczSOvjdOxUeOmQtWqo5cc
- 1r4f0LfXYU5lUhY6ZFWpCzXCnxhjNgHQpkCZaF/KAbRW51l/+9I7ddRROGXKvH8c+/omu/3Vox
- uVTMU0n3S5Gz6dmmIp9S2AVb4JbJWLp1kkbigZHlXysClko6Y5MZSAtWQPQKa7acxcKtsOs/SM
- UUzwACob6v+F+WMD5ik+6RhTHSqlaAXRcpHoimhunAKqPOoqZPDUJfIbVzjCrJyfkmD+IkBPaU
- ib0=
-X-Utexas-Sender-Group: RELAYLIST-O365
-X-IronPort-MID: 153032683
-IronPort-PHdr: =?us-ascii?q?9a23=3AWwgD3x0FTQ0F1by/smDT+zVfbzU7u7jyIg8e44?=
- =?us-ascii?q?YmjLQLaKm44pD+JxKCt+51ggrPWoPWo7JfhuzavrqoeFRI4I3J8RVgOIdJSw?=
- =?us-ascii?q?dDjMwXmwI6B8vQEUL8IeL4RykzAMQESUNo73igd0VZBZW2ag=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EoAAD1pX9dhzUlL2hmGgEBAQEBAgE?=
- =?us-ascii?q?BAQEHAgEBAQGBZ4FFKSdwcwMECyoKhBeDRwOFMoU+glx+mUUDGDwBCAEBAQE?=
- =?us-ascii?q?BAQEBAQcBHw4CAQEChD0CF4J8OBMCAwkBAQUBAQEBAQUEAgIQAQEBCA0JCCm?=
- =?us-ascii?q?FNQyDRTkyAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQI?=
- =?us-ascii?q?UJDkBAQEDEhEEDQwBATgPAgEIDgoCAiYCAgIwFRACBAE0gwABgWoDHQGgJD0?=
- =?us-ascii?q?CIwE+AguBBCmIYAEBcn8zgn0BAQWCSIJIGEIJgUwDBoEMKIwKBoFBPoERJwy?=
- =?us-ascii?q?CKjU+gQQBgVwFgRgmAQEIAgQQF4J0gliMVgmCb4dZlUcKgiKHBY11BhuCNYt?=
- =?us-ascii?q?siniCBoIrgU6ICodwHJB2AgQCBAUCDgEBBYFpgXpyE4MngkIMDAIJFW8BAoJ?=
- =?us-ascii?q?IaolpQQExgSmMeg4XgQsBgSIBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2EoAAD1pX9dhzUlL2hmGgEBAQEBAgEBAQEHAgEBAQGBZ?=
- =?us-ascii?q?4FFKSdwcwMECyoKhBeDRwOFMoU+glx+mUUDGDwBCAEBAQEBAQEBAQcBHw4CA?=
- =?us-ascii?q?QEChD0CF4J8OBMCAwkBAQUBAQEBAQUEAgIQAQEBCA0JCCmFNQyDRTkyAQEBA?=
- =?us-ascii?q?QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQIUJDkBAQEDEhEED?=
- =?us-ascii?q?QwBATgPAgEIDgoCAiYCAgIwFRACBAE0gwABgWoDHQGgJD0CIwE+AguBBCmIY?=
- =?us-ascii?q?AEBcn8zgn0BAQWCSIJIGEIJgUwDBoEMKIwKBoFBPoERJwyCKjU+gQQBgVwFg?=
- =?us-ascii?q?RgmAQEIAgQQF4J0gliMVgmCb4dZlUcKgiKHBY11BhuCNYtsiniCBoIrgU6IC?=
- =?us-ascii?q?odwHJB2AgQCBAUCDgEBBYFpgXpyE4MngkIMDAIJFW8BAoJIaolpQQExgSmMe?=
- =?us-ascii?q?g4XgQsBgSIBAQ?=
-X-IronPort-AV: E=Sophos;i="5.64,513,1559538000"; 
-   d="scan'208";a="153032683"
-X-Utexas-Seen-Outbound: true
-Received: from mail-cys01nam02lp2053.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.53])
-  by esa12.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 10:12:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P9sqEmXqi/NLNA3dWWH1vx4xY9uJUGvve6tKVoTo4/f5w6i3MgbTDqlCnHIpotwTiMStKH6P2/XN4EtWY0OycrMjA2xrl64J+XfUwdrQGqUmTM1SqPoADbqBWq7J4sJL54YBEc0hWkSfyilbVOwDK6uia9Cv7OnBt7i+uH4yGCQ44sTaIO+gpuduRgAyLdlTmCKsYwKPdTD/rfjypLAe2jvftgXzS613AGEVWATTMEGGXc/pFZWvc1jaQbW6czT+31zhabf/PfiJdMbznfRnu2Tpr2AC7zENogGPq0aeLr/PmB4UXeVHJ3zIp59/JWXMk2ymoUCockxjypT4jz3UrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oX9iikxPnI8pHT9B20hUIYuIjBPVdZeqiSL40Z44gVU=;
- b=MZiryp3Pu74irpez5T3VuRsIlpBaYpVvmuIFHquHdFMO0j9nMdDl5WB/SEeqAhQxBpu+fHkmdeJfU7jFbAmCX5vPxc0rPDwsDFFza0EqpltZaOmZVYeVuAqhpbWKODghDdqoTBbrq5ZlwsPhPyXb2uFMYG3oknzMr7SDqn31X2RfXRMP8MgIIaNUsAHD9zq2XvJUan9D0KcUeMePHtcwj+2CU1tEAMeK+TzsSj75MZ4WqiluC/piaCvYeKP9BLVGm1MbbfP58YgNMIiWHC4lyStyCtJXrGyWDAnDwr3PTVdPLQlDzwrdmrKaeuJJ+GpavnL9bWECEBgjwAFpeyjbXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=math.utexas.edu; dmarc=pass action=none
- header.from=math.utexas.edu; dkim=pass header.d=math.utexas.edu; arc=none
+        id S2390400AbfIPSd4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Sep 2019 14:33:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36710 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731110AbfIPSd4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 14:33:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so1448356iof.3
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 11:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=utexas.onmicrosoft.com; s=selector2-utexas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oX9iikxPnI8pHT9B20hUIYuIjBPVdZeqiSL40Z44gVU=;
- b=Qe+aZsG9BYPnfDBD7oQBAThq3jroXvNSQ2YSMttoRHdfltAer8ka58EZOlU+MEVXNgLxXnV6S0bhXYT0RHxexSZaFsoETetEaBAVFvMeXgo7GMJL33JzS/v7MdgoCNLdv7FDGCWtCz49LS7w4NiakRwzScGJFCngN4th0KmdrLU=
-Received: from DM5PR0601MB3606.namprd06.prod.outlook.com (10.167.108.144) by
- DM5PR0601MB3637.namprd06.prod.outlook.com (10.167.108.151) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.15; Mon, 16 Sep 2019 15:12:38 +0000
-Received: from DM5PR0601MB3606.namprd06.prod.outlook.com
- ([fe80::d8c3:f0ba:974c:3085]) by DM5PR0601MB3606.namprd06.prod.outlook.com
- ([fe80::d8c3:f0ba:974c:3085%7]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 15:12:38 +0000
-From:   "Goetz, Patrick G" <pgoetz@math.utexas.edu>
-To:     Peter Eriksson <pen@lysator.liu.se>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: (Ubuntu 18.04) NFSv4+sec=krb5 client turns into a DoS device
- after ticket expires?
-Thread-Topic: (Ubuntu 18.04) NFSv4+sec=krb5 client turns into a DoS device
- after ticket expires?
-Thread-Index: AQHVbFoYE4jyTZnL4EWv78OKX+vWqacuaaKA
-Date:   Mon, 16 Sep 2019 15:12:38 +0000
-Message-ID: <77b99814-9253-e3cb-06f2-c57bc2c9b17d@math.utexas.edu>
-References: <213387E7-35EB-415C-989E-3148D9157D23@lysator.liu.se>
-In-Reply-To: <213387E7-35EB-415C-989E-3148D9157D23@lysator.liu.se>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR04CA0089.namprd04.prod.outlook.com
- (2603:10b6:805:f2::30) To DM5PR0601MB3606.namprd06.prod.outlook.com
- (2603:10b6:4:7c::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pgoetz@math.utexas.edu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [67.198.113.142]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9e3c241e-a67c-49cb-d289-08d73ab84fb6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR0601MB3637;
-x-ms-traffictypediagnostic: DM5PR0601MB3637:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM5PR0601MB3637A07F0C4EDC19A5DDBC1F838C0@DM5PR0601MB3637.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(786003)(476003)(11346002)(25786009)(2616005)(71200400001)(8936002)(486006)(446003)(66066001)(6116002)(3846002)(6246003)(75432002)(71190400001)(66476007)(66556008)(64756008)(66446008)(66946007)(256004)(8676002)(2501003)(14444005)(81166006)(81156014)(478600001)(31696002)(966005)(31686004)(316002)(88552002)(186003)(7736002)(305945005)(6306002)(5660300002)(6512007)(26005)(102836004)(86362001)(53546011)(6506007)(386003)(14454004)(99286004)(76176011)(229853002)(110136005)(53936002)(2906002)(52116002)(6486002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0601MB3637;H:DM5PR0601MB3606.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: math.utexas.edu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6oPIBW6u9xyE1C2exQvdngQnpTgkQ2Ji5kAJG5iOc/5SEb+MDWpVPmpoCxE3+YCepS1MnXIJDBXeMNDsQLezlS4tL58lLg23KdYaYRJWX1WoBB3dakLlXIsZOFpHsY+wQ/wRv9/PLrPS58WX9YYk38fD/Vyx7RTmomYZ8tQWL0MxIVpb9kwB+zghzvnIGPMjelV58HhHc823yqvSgf1DXjmHXwkC9gieUEIzDkmnwd3vE+TSvNHHAfZH32uoYNK23cp9ol5W+nbp5T5NnAiZlAcooSV2ldhFC8skLuKPY4iAwNAEp3YUNNmF0rezocCwbNbs9hOlrsDjGUKxAyzF24ss7BuQAfotWGuqxbJBgl/eUI8J9d9gwhWXYp7LkhZtTKcRKLFtd3k1SFcHodo2gTgBYYZUX6dJ12ngGj/xsGI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <75062418BFA041419331FFCB08EC9D85@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=3ZMDvBcxVCZiATtwxVxoQnnyC5rLjLZcPa1d6pGYhOg=;
+        b=UfDgQlB138tZGWKQGXjBaccUregMBuspLFSutnAWu2GFdJ45RXpEgUYkkMkilcYh6e
+         pHmucSKhhOzvwU59x6/Js32P/zFc9Zy1liH4PJulf5hDCnsV0isdoCiaZ83OpGtO2gJk
+         b98RUzj4HRkoODfUmwlRJz/gU1daL88Z6eg6FeiCDJofe077PU9ZFS9cnha1rkN35od7
+         zc0J9RcNnwyYovcI3peGgk6ibeQcxsjAbE+vxnN25MQpaQqACliFkveGd42g22QaP5CJ
+         4KonoFh9F+F9k+R22luqG0/kQGDFOG3DZdr8uz37qoySDVpisjwD6/HrDpJHYHkq1Ttg
+         +1Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=3ZMDvBcxVCZiATtwxVxoQnnyC5rLjLZcPa1d6pGYhOg=;
+        b=gZdrNj2hY0jQ1lE14oQddk7k/y9f4HlllLtzgiCyQ+pIFwz/SgdJC23/T8TiTeFkAJ
+         +I70oiJwMqKapoB9cIlarLbqoJ3dB8zW1BsKlSWemSUJYmn07ilpW1ggN7bG/JzrbZaR
+         DUmNPDl+cSpmI6A1RXZnfyFK/mbqVSAxk+M/V37eveLn55+5AGkpmG2Tmsc5oRLAp4Xp
+         FF084Tm2603lkOxlol56r7IR6kxsh/mooMgYJRuXZiozDlxZ2bxW4L8Dokgh+fJfh5vt
+         dds0brnWmy1TlUeRNAdimDf9X3e4dnV8PLFZRY0P1Vgg/9nltxxZTeX+wwVfAteIi9rP
+         rR0w==
+X-Gm-Message-State: APjAAAV75z54ws7qUFJM9TyYZn3voQjB0QAuInqi2Y4Aut5zh8u0pFeg
+        uTtbmWXBnP/pq4nqgDysaFfPTv5N
+X-Google-Smtp-Source: APXvYqx21edJUIzwyF/EyufAyCEG4IbyaVvdCQ2T4uQWsKtP7Zz6BN13AIwrJ4FxN/bjdiY/TdKX+g==
+X-Received: by 2002:a02:7f49:: with SMTP id r70mr258412jac.85.1568658834625;
+        Mon, 16 Sep 2019 11:33:54 -0700 (PDT)
+Received: from [10.30.197.57] ([204.77.163.55])
+        by smtp.gmail.com with ESMTPSA id i24sm28861909ioe.6.2019.09.16.11.33.53
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2019 11:33:53 -0700 (PDT)
+From:   Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [nfs-utils PATCH v2] Add printf format checking
+To:     linux-nfs@vger.kernel.org
+References: <20190906163351.22944-1-JPEWhacker@gmail.com>
+ <20190906202425.15013-1-JPEWhacker@gmail.com>
+Message-ID: <4bafb8fa-4908-c66f-8f4c-6b4b65acdeba@gmail.com>
+Date:   Mon, 16 Sep 2019 13:33:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: math.utexas.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e3c241e-a67c-49cb-d289-08d73ab84fb6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 15:12:38.5787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CBIyZGDM41/dDlBa4VfIVLKYUVjygoOEOLNi9EcrjqNtoNtsLr/ULUuPQZrVshO6gH9IkOI1LD5nLqXd43LgMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0601MB3637
+In-Reply-To: <20190906202425.15013-1-JPEWhacker@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-VGhpcyBpcyBvZmYgdG9waWMsIGJ1dCBpdCBzb3VuZHMgbGlrZSB5b3UgbWlnaHQgYmUgYWNjZXNz
-aW5nIElNQVAgDQpmb2xkZXJzIG92ZXIgTkZTPyAgVGhpcyBpcyBhIGJhZCBpZGVhIGlmIHlvdSBh
-cmUgLS0ganVzdCB1c2UgdGhlIElNQVAgDQpwcm90b2NvbCBhbmQgdXNlIGxvY2FsIHN0b3JhZ2Ug
-b24gdGhlIElNQVAgc2VydmVyLiAgQW55dGhpbmcgZWxzZSBpcyBhIA0KcmVjaXBlIGZvciBsb3N0
-IG1haWwgYW5kIGVuZGxlc3MgaGVhZGFjaGVzLg0KDQpPbiA5LzE2LzE5IDE6MzMgQU0sIFBldGVy
-IEVyaWtzc29uIHdyb3RlOg0KPiBXZeKAmXJlIGludmVzdGlnYXRpbmcgYSBwcm9ibGVtIHdoZXJl
-IHdlIGFyZSBzZWVpbmcgYSBudW1iZXIgb2YgVWJ1bnR1IDE4LjA0IExpbnV4IGNsaWVudHMgdGhh
-dCBib21iYXJkcyBvdXIgTkZTIFNlcnZlcnMgd2l0aCBUQ1AgY29ubmVjdGlvbnMuIExpa2UgNDAw
-IHJlcXVlc3RzL3NlY29uZCBvZiBuZXcgVENQIGNvbm5lY3Rpb24gcmVxdWVzdHMgdG8gdGhlIE5G
-UyBzZXJ2ZXIgcG9ydCAod2l0aCB1bmlxdWUgc291cmNlIHBvcnQgbnVtYmVycykgd2hpY2ggY2F1
-c2VzIHRoZSBmaXJld2FsbCBzdGF0ZSB0cmFja2luZyB0YWJsZXMgb24gdGhlIHNlcnZlciB0byBn
-cm93IGxpa2UgY3JhenkuDQo+IA0KPiBUaGUgc3RyZWFtIG9mIElQIHBhY2tldHMgd2UgYXJlIHNl
-ZWluZyBsb29rIGxpa2UgdGhpcyAodGltZXMgaW4gc2Vjb25kcyk6DQo+IA0KPiAwLjAwMTI4MCBD
-bGllbnQgLT4gU2VydmVyIFNZTg0KPiAwLjAwMTI4OSBTZXJ2ZXIgLT4gQ2xpZW50IFNZTitBQ0sN
-Cj4gMC4wMDE1MTYgQ2xpZW50IC0+IFNlcnZlciBBQ0sNCj4gMC4wMDM2MDkgQ2xpZW50IC0+IFNl
-cnZlciBGSU4rQUNLDQo+IDAuMDAzNjE1IFNlcnZlciAtPiBDbGllbnQgQUNLDQo+IDAuMDAzNjIw
-IFNlcnZlciAtPiBDbGllbnQgRklOK0FDSw0KPiAwLjAwMzg0MSBDbGllbnQgLT4gU2VydmVyIEFD
-Sw0KPiA8cmVwZWF0IDIwMC00MDAgdGltZXMvcz4NCj4gDQo+IEllLCBpbml0aWF0ZSBhIG5ldyBj
-b25uZWN0aW9uIGFuZCB0aGVuIGltbWVkaWF0ZWx5IGRpc2Nvbm5lY3QgYWdhaW4uDQo+IA0KPiBP
-biB0aGUgY2xpZW50IHRoaXMgY29pbmNpZGVzIHdpdGggYSB1c2VyIHdoaWNoIGhhcyB0aGVpciBo
-b21lIGRpcmVjdG9yeSBtb3VudGVkIHZpYSBORlMgKHY0KSB3aXRoIHNlYz1rcmI1IGFuZCBhbiBl
-eHBpcmVkIEtlcmJlcm9zIHRpY2tldCBhbmQgaGF2aW5nIGFuIOKAnGV2b2x1dGlvbuKAnSBwcm9j
-ZXNzIHJ1bm5pbmcuIFRoaXMgc29tZWhvdyBjYXVzZXMgcnBjLmdzc2QgdG8gcnVuIGEgbG90Li4u
-DQo+IA0KPiBUaGUgcnBjLmdzc2Qgc2VlbXMgdG8gYmUgZG9pbmcgdGhpczoNCj4gDQo+PiBUYXNr
-czogMjY2IHRvdGFsLCAgIDEgcnVubmluZywgMTkzIHNsZWVwaW5nLCAgIDAgc3RvcHBlZCwgICAw
-IHpvbWJpZQ0KPj4gJUNwdShzKTogIDUuMCB1cywgIDEuNSBzeSwgIDAuMCBuaSwgOTMuMSBpZCwg
-IDAuMCB3YSwgIDAuMCBoaSwgIDAuNCBzaSwgIDAuMCBzdA0KPj4gS2lCIE1lbSA6IDE2MzAzMjY0
-IHRvdGFsLCAgIDk1NTg0NCBmcmVlLCAgMzkxMjgyMCB1c2VkLCAxMTQzNDYwMCBidWZmL2NhY2hl
-DQo+PiBLaUIgU3dhcDogIDc4MTIwOTIgdG90YWwsICA3ODExNTgwIGZyZWUsICAgICAgNTEyIHVz
-ZWQuIDExNDgxNzA4IGF2YWlsIE1lbQ0KPj4gICAgUElEIFVTRVIgICAgICBQUiAgTkkgICAgVklS
-VCAgICBSRVMgICAgU0hSIFMgICVDUFUgJU1FTSAgICAgVElNRSsgQ09NTUFORA0KPj4gICAgNzA1
-IHJvb3QgICAgICAyMCAgIDAgIDMyODg4OCAgIDQ5MjQgICAzNTY4IFMgIDIwLjggIDAuMCAgIDE1
-MjA6MjcgcnBjLmdzc2QNCj4gDQo+PiBlcG9sbF93YWl0KDQsIFt7RVBPTExJTiwge3UzMj05LCB1
-NjQ9OX19XSwgMzIsIC0xKSA9IDENCj4+IHJlYWQoOSwgIm1lY2g9a3JiNSB1aWQ9MTAzNjk4NSBl
-bmN0eXBlcz0xIi4uLiwgMzI3NjgpID0gNTANCj4+IGNsb25lKGNoaWxkX3N0YWNrPTB4N2Y0NzQ2
-ZjVmZmIwLCBmbGFncz1DTE9ORV9WTXxDTE9ORV9GU3xDTE9ORV9GSUxFU3xDTE9ORV9TSUdIQU5E
-fENMT05FX1RIUkVBRHxDTE9ORV9TWVNWU0VNfENMT05FX1NFVFRMU3xDTE9ORV9QQVJFTlRfU0VU
-VElEfENMT05FX0NISUxEX0NMRUFSVElELCBwYXJlbnRfdGlkcHRyPTB4N2Y0NzQ2ZjYwOWQwLCB0
-bHM9MHg3ZjQ3NDZmNjA3MDAsIGNoaWxkX3RpZHB0cj0weDdmNDc0NmY2MDlkMCkgPSAxMzEwDQo+
-PiBlcG9sbF93YWl0KDQsIFt7RVBPTExJTiwge3UzMj05LCB1NjQ9OX19XSwgMzIsIC0xKSA9IDEN
-Cj4gDQo+IA0KPiBFdm9sdXRpb24gaGFzIGEgbnVtYmVyIG9mIGZpbGUgZGVzY3JpcHRvcnMgb3Bl
-bjoNCj4gDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgY3dkICAgICAgIERJUiAgICAgICAg
-ICAgICAgIDAsNjggICAgICAgNDUgICAgICAgIDQgL2hvbWUvb2xhaGE5MyAoZmlsdXIwNC5pdC5s
-aXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgbWVtICAg
-ICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAyMjk5MDkgL2hvbWUvb2xhaGE5
-My8uY2FjaGUvbWVzYV9zaGFkZXJfY2FjaGUvaW5kZXggKGZpbHVyMDQuaXQubGl1LnNlOi9zdGFm
-Zi9vbGFoYTkzKSAoc3RhdDogUGVybWlzc2lvbiBkZW5pZWQpDQo+PiBldm9sdXRpb24gMjY5MTYg
-b2xhaGE5MyAgbWVtICAgICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAxNzU0
-MjkgL2hvbWUvb2xhaGE5My8uY29uZmlnL2Rjb25mL3VzZXIgKGZpbHVyMDQuaXQubGl1LnNlOi9z
-dGFmZi9vbGFoYTkzKSAoc3RhdDogUGVybWlzc2lvbiBkZW5pZWQpDQo+PiBldm9sdXRpb24gMjY5
-MTYgb2xhaGE5MyAgbWVtICAgICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAx
-NzE3MzkgL2hvbWUvb2xhaGE5My8ubG9jYWwvc2hhcmUvZ3Zmcy1tZXRhZGF0YS8ubmZzMDAwMDAw
-MDAwMDAyOWVkYjAwMDAwMzMzIChmaWx1cjA0Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykgKHN0
-YXQ6IFBlcm1pc3Npb24gZGVuaWVkKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAxNXUg
-ICAgICBSRUcgICAgICAgICAgICAgICAwLDY4ICAgIDI4NjcyICAgMjMwNTM5IC9ob21lL29sYWhh
-OTMvLnBraS9uc3NkYi9jZXJ0OS5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMp
-DQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgIDE2dSAgICAgIFJFRyAgICAgICAgICAgICAg
-IDAsNjggICAgMjg2NzIgICAyMzA1NDEgL2hvbWUvb2xhaGE5My8ucGtpL25zc2RiL2tleTQuZGIg
-KGZpbHVyMDQuaXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9s
-YWhhOTMgICAxOHUgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAg
-IC9ob21lL29sYWhhOTMvLmNhY2hlL2V2b2x1dGlvbi9tYWlsL2UwMTNmYTU2ZmVjODY4NWU1Y2I3
-MTczM2I2NjIxNmI1MTQ5NWE5NDQvZm9sZGVycy5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZm
-L29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgIDE5dSAgdW5rbm93biAgICAg
-ICAgICAgICAgIDAsNjggICAgICAgICAgICAgICAgICAgL2hvbWUvb2xhaGE5My8uY2FjaGUvZXZv
-bHV0aW9uL21haWwvMWU0OWM0ZDUxYTEwMWE3NzUzNzNlNjQ1NWM0Y2U3NWIxYmNjODdhOS9mb2xk
-ZXJzLmRiIChmaWx1cjA0Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAy
-NjkxNiBvbGFoYTkzICAgMjF1ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAg
-ICAgICAgICAvaG9tZS9vbGFoYTkzLy5jYWNoZS9ldm9sdXRpb24vbWFpbC8xM2Y3MTBkODY1OWE3
-OWZkNDJlYTNhZmY1M2IxMTZmNmE2N2JiYmViL2ZvbGRlcnMuZGIgKGZpbHVyMDQuaXQubGl1LnNl
-Oi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAyMnUgIHVua25v
-d24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9ob21lL29sYWhhOTMvLmNh
-Y2hlL2V2b2x1dGlvbi9tYWlsLzk0ZTU1YmZkYmY2ZmU4ZjkzY2VlZGVmMWE3YWUyNDdmYjk3ZWEy
-ZmYvZm9sZGVycy5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9s
-dXRpb24gMjY5MTYgb2xhaGE5MyAgIDIzdSAgdW5rbm93biAgICAgICAgICAgICAgIDAsNjggICAg
-ICAgICAgICAgICAgICAgL2hvbWUvb2xhaGE5My8uY2FjaGUvZXZvbHV0aW9uL21haWwvMTZlMWQ1
-ZDRmY2YzYzI2ZTQ1YjM2Njc1OWZkZDA2ZGYxYjU1Yjk3OS9mb2xkZXJzLmRiIChmaWx1cjA0Lml0
-LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAyNjkxNiBvbGFoYTkzICAgMjR1
-ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAgICAgICAgICAvaG9tZS9vbGFo
-YTkzLy5sb2NhbC9zaGFyZS9ldm9sdXRpb24vbWFpbC9sb2NhbC9mb2xkZXJzLmRiIChmaWx1cjA0
-Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAyNjkxNiBvbGFoYTkzICAg
-MjV1ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAgICAgICAgICAvaG9tZS9v
-bGFoYTkzLy5sb2NhbC9zaGFyZS9ldm9sdXRpb24vbWFpbC92Zm9sZGVyL2ZvbGRlcnMuZGIgKGZp
-bHVyMDQuaXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhh
-OTMgICAyNnUgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9o
-b21lL29sYWhhOTMvLmNvbmZpZy9ldm9sdXRpb24vbWFpbC9yZW1vdGUtY29udGVudC5kYiAoZmls
-dXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5
-MyAgIDI3dSAgdW5rbm93biAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAgICAgICAgL2hv
-bWUvb2xhaGE5My8uY29uZmlnL2V2b2x1dGlvbi9tYWlsL3Byb3BlcnRpZXMuZGIgKGZpbHVyMDQu
-aXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAy
-OXIgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9ob21lL29s
-YWhhOTMvLmxvY2FsL3NoYXJlL2d2ZnMtbWV0YWRhdGEvLm5mczAwMDAwMDAwMDAwMjllZGIwMDAw
-MDMzMyAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+IA0KPiANCj4gUmVwZWF0
-ZWQgZXJyb3JzIGZyb20gZXZvbHV0aW9uIGluIHRoZSBsb2cgZmlsZXM6DQo+IA0KPj4gU2VwIDEz
-IDE2OjAxOjQ4IGxpbGxlNzEgZXZvbHV0aW9uWzI2OTE2XTogY2FtZWxfc3RvcmVfc3VtbWFyeV9k
-aXNjb25uZWN0X2ZvbGRlcl9zdW1tYXJ5OiBTdG9yZSBzdW1tYXJ5IDB4NTU5YjQ0MTk0MzkwIGlz
-IG5vdCBjb25uZWN0ZWQgdG8gZm9sZGVyIHN1bW1hcnkgMHg3ZmNhZjQwNDI4ZTANCj4+IFNlcCAx
-MyAxNjowMTo0OCBsaWxsZTcxIGV2b2x1dGlvblsyNjkxNl06IFVuYWJsZSB0byBsb2FkIHN1bW1h
-cnk6IGRpc2sgSS9PIGVycm9yDQo+PiBTZXAgMTMgMTY6MDE6NDggbGlsbGU3MSBldm9sdXRpb25b
-MjY5MTZdOiBHRXJyb3Igc2V0IG92ZXIgdGhlIHRvcCBvZiBhIHByZXZpb3VzIEdFcnJvciBvciB1
-bmluaXRpYWxpemVkIG1lbW9yeS4NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBUaGlzIGluZGljYXRlcyBhIGJ1ZyBpbiBzb21lb25lJ3MgY29kZS4gWW91IG11
-c3QgZW5zdXJlIGFuIGVycm9yIGlzIE5VTEwgYmVmb3JlIGl0J3Mgc2V0Lg0KPj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFRoZSBvdmVyd3JpdGluZyBlcnJvciBt
-ZXNzYWdlIHdhczogZGlzayBJL08gZXJyb3INCj4gDQo+IFJlc3RhcnRpbmcgcnBjLmdzc2QgZG9l
-c27igJl0IHNlZW0gdG8gaGVscC4gUmVtb3ZpbmcgdGhlIGV4cGlyZWQga2VyYmVyb3MgY2FjaGUg
-ZmlsZSBkb2VzbuKAmXQgaGVscC4gU28gbXkgZ3Vlc3MgaXMgdGhhdCBldm9sdXRpb24gc29tZWhv
-dyB0cmlnZ2VycyBuZXcgTkZTIHNlcnZlciBjb25uZWN0aW9ucyBidXQgdGhlbiB0aGUga2VybmVs
-IGltbWVkaWF0ZWx5IHRlcm1pbmF0ZXMgaXQgd2l0aG91dCBldmVyIHNlbmRpbmcgYW55IGRhdGEg
-dG8gdGhlIE5GUyBzZXJ2ZXIuDQo+IA0KPiAoUmVib290aW5nIHRoZSBjbGllbnQgd29ya3MgLSBi
-dXQuLiA6LSkNCj4gDQo+IA0KPiBJdCB3b3VsZCBoYXZlIGJlZW4gbmljZSBpZiBhbiBleHBpcmVk
-IGtlcmJlcm9zIGNhY2hlIGRpZG7igJl0IGNhdXNlIHRoaXMgYWdncmVzc2l2ZSBiZWhhdmlvdXLi
-gKYNCj4gDQo+IC0gUGV0ZXINCj4+PiBUaGlzIG1lc3NhZ2UgaXMgZnJvbSBhbiBleHRlcm5hbCBz
-ZW5kZXIuIExlYXJuIG1vcmUgYWJvdXQgd2h5IHRoaXMgPDwNCj4+PiBtYXR0ZXJzIGF0IGh0dHBz
-Oi8vbGlua3MudXRleGFzLmVkdS9ydHljbGYuICAgICAgICAgICAgICAgICAgICAgICAgPDwNCg==
+On 9/6/19 3:24 PM, Joshua Watt wrote:
+> Adds a configure time check for __attribute__((format)) and then uses it
+> to enforce checking the format of several printf-like functions. Several
+> invalid uses of format codes that were discovered have now been fixed.
+>
+> V2: Fix use of "%jd" format code on an argument that wasn't intmax_t
+
+ping?
+
+>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>   aclocal/ax_gcc_func_attribute.m4 | 238 +++++++++++++++++++++++++++++++
+>   configure.ac                     |   1 +
+>   support/include/xcommon.h        |  18 ++-
+>   support/include/xlog.h           |  20 ++-
+>   support/nfs/svc_create.c         |   2 +-
+>   support/nsm/rpc.c                |   2 +-
+>   utils/exportfs/exportfs.c        |   3 +
+>   utils/mountd/cache.c             |   3 +-
+>   utils/mountd/mountd.c            |   4 +-
+>   utils/nfsdcld/nfsdcld.c          |   2 +-
+>   utils/nfsdcld/sqlite.c           |   2 +-
+>   utils/nfsidmap/nfsidmap.c        |   8 +-
+>   utils/statd/rmtcall.c            |   2 +-
+>   utils/statd/statd.c              |   2 +-
+>   utils/statd/svc_run.c            |   5 +-
+>   15 files changed, 287 insertions(+), 25 deletions(-)
+>   create mode 100644 aclocal/ax_gcc_func_attribute.m4
+>
+> diff --git a/aclocal/ax_gcc_func_attribute.m4 b/aclocal/ax_gcc_func_attribute.m4
+> new file mode 100644
+> index 00000000..098c9aad
+> --- /dev/null
+> +++ b/aclocal/ax_gcc_func_attribute.m4
+> @@ -0,0 +1,238 @@
+> +# ===========================================================================
+> +#  https://www.gnu.org/software/autoconf-archive/ax_gcc_func_attribute.html
+> +# ===========================================================================
+> +#
+> +# SYNOPSIS
+> +#
+> +#   AX_GCC_FUNC_ATTRIBUTE(ATTRIBUTE)
+> +#
+> +# DESCRIPTION
+> +#
+> +#   This macro checks if the compiler supports one of GCC's function
+> +#   attributes; many other compilers also provide function attributes with
+> +#   the same syntax. Compiler warnings are used to detect supported
+> +#   attributes as unsupported ones are ignored by default so quieting
+> +#   warnings when using this macro will yield false positives.
+> +#
+> +#   The ATTRIBUTE parameter holds the name of the attribute to be checked.
+> +#
+> +#   If ATTRIBUTE is supported define HAVE_FUNC_ATTRIBUTE_<ATTRIBUTE>.
+> +#
+> +#   The macro caches its result in the ax_cv_have_func_attribute_<attribute>
+> +#   variable.
+> +#
+> +#   The macro currently supports the following function attributes:
+> +#
+> +#    alias
+> +#    aligned
+> +#    alloc_size
+> +#    always_inline
+> +#    artificial
+> +#    cold
+> +#    const
+> +#    constructor
+> +#    constructor_priority for constructor attribute with priority
+> +#    deprecated
+> +#    destructor
+> +#    dllexport
+> +#    dllimport
+> +#    error
+> +#    externally_visible
+> +#    fallthrough
+> +#    flatten
+> +#    format
+> +#    format_arg
+> +#    gnu_inline
+> +#    hot
+> +#    ifunc
+> +#    leaf
+> +#    malloc
+> +#    noclone
+> +#    noinline
+> +#    nonnull
+> +#    noreturn
+> +#    nothrow
+> +#    optimize
+> +#    pure
+> +#    sentinel
+> +#    sentinel_position
+> +#    unused
+> +#    used
+> +#    visibility
+> +#    warning
+> +#    warn_unused_result
+> +#    weak
+> +#    weakref
+> +#
+> +#   Unsupported function attributes will be tested with a prototype
+> +#   returning an int and not accepting any arguments and the result of the
+> +#   check might be wrong or meaningless so use with care.
+> +#
+> +# LICENSE
+> +#
+> +#   Copyright (c) 2013 Gabriele Svelto <gabriele.svelto@gmail.com>
+> +#
+> +#   Copying and distribution of this file, with or without modification, are
+> +#   permitted in any medium without royalty provided the copyright notice
+> +#   and this notice are preserved.  This file is offered as-is, without any
+> +#   warranty.
+> +
+> +#serial 9
+> +
+> +AC_DEFUN([AX_GCC_FUNC_ATTRIBUTE], [
+> +    AS_VAR_PUSHDEF([ac_var], [ax_cv_have_func_attribute_$1])
+> +
+> +    AC_CACHE_CHECK([for __attribute__(($1))], [ac_var], [
+> +        AC_LINK_IFELSE([AC_LANG_PROGRAM([
+> +            m4_case([$1],
+> +                [alias], [
+> +                    int foo( void ) { return 0; }
+> +                    int bar( void ) __attribute__(($1("foo")));
+> +                ],
+> +                [aligned], [
+> +                    int foo( void ) __attribute__(($1(32)));
+> +                ],
+> +                [alloc_size], [
+> +                    void *foo(int a) __attribute__(($1(1)));
+> +                ],
+> +                [always_inline], [
+> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [artificial], [
+> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [cold], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [const], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [constructor_priority], [
+> +                    int foo( void ) __attribute__((__constructor__(65535/2)));
+> +                ],
+> +                [constructor], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [deprecated], [
+> +                    int foo( void ) __attribute__(($1("")));
+> +                ],
+> +                [destructor], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [dllexport], [
+> +                    __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [dllimport], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [error], [
+> +                    int foo( void ) __attribute__(($1("")));
+> +                ],
+> +                [externally_visible], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [fallthrough], [
+> +                    int foo( void ) {switch (0) { case 1: __attribute__(($1)); case 2: break ; }};
+> +                ],
+> +                [flatten], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [format], [
+> +                    int foo(const char *p, ...) __attribute__(($1(printf, 1, 2)));
+> +                ],
+> +                [format_arg], [
+> +                    char *foo(const char *p) __attribute__(($1(1)));
+> +                ],
+> +                [gnu_inline], [
+> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [hot], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [ifunc], [
+> +                    int my_foo( void ) { return 0; }
+> +                    static int (*resolve_foo(void))(void) { return my_foo; }
+> +                    int foo( void ) __attribute__(($1("resolve_foo")));
+> +                ],
+> +                [leaf], [
+> +                    __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [malloc], [
+> +                    void *foo( void ) __attribute__(($1));
+> +                ],
+> +                [noclone], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [noinline], [
+> +                    __attribute__(($1)) int foo( void ) { return 0; }
+> +                ],
+> +                [nonnull], [
+> +                    int foo(char *p) __attribute__(($1(1)));
+> +                ],
+> +                [noreturn], [
+> +                    void foo( void ) __attribute__(($1));
+> +                ],
+> +                [nothrow], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [optimize], [
+> +                    __attribute__(($1(3))) int foo( void ) { return 0; }
+> +                ],
+> +                [pure], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [sentinel], [
+> +                    int foo(void *p, ...) __attribute__(($1));
+> +                ],
+> +                [sentinel_position], [
+> +                    int foo(void *p, ...) __attribute__(($1(1)));
+> +                ],
+> +                [returns_nonnull], [
+> +                    void *foo( void ) __attribute__(($1));
+> +                ],
+> +                [unused], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [used], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [visibility], [
+> +                    int foo_def( void ) __attribute__(($1("default")));
+> +                    int foo_hid( void ) __attribute__(($1("hidden")));
+> +                    int foo_int( void ) __attribute__(($1("internal")));
+> +                    int foo_pro( void ) __attribute__(($1("protected")));
+> +                ],
+> +                [warning], [
+> +                    int foo( void ) __attribute__(($1("")));
+> +                ],
+> +                [warn_unused_result], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [weak], [
+> +                    int foo( void ) __attribute__(($1));
+> +                ],
+> +                [weakref], [
+> +                    static int foo( void ) { return 0; }
+> +                    static int bar( void ) __attribute__(($1("foo")));
+> +                ],
+> +                [
+> +                 m4_warn([syntax], [Unsupported attribute $1, the test may fail])
+> +                 int foo( void ) __attribute__(($1));
+> +                ]
+> +            )], [])
+> +            ],
+> +            dnl GCC doesn't exit with an error if an unknown attribute is
+> +            dnl provided but only outputs a warning, so accept the attribute
+> +            dnl only if no warning were issued.
+> +            [AS_IF([test -s conftest.err],
+> +                [AS_VAR_SET([ac_var], [no])],
+> +                [AS_VAR_SET([ac_var], [yes])])],
+> +            [AS_VAR_SET([ac_var], [no])])
+> +    ])
+> +
+> +    AS_IF([test yes = AS_VAR_GET([ac_var])],
+> +        [AC_DEFINE_UNQUOTED(AS_TR_CPP(HAVE_FUNC_ATTRIBUTE_$1), 1,
+> +            [Define to 1 if the system has the `$1' function attribute])], [])
+> +
+> +    AS_VAR_POPDEF([ac_var])
+> +])
+> diff --git a/configure.ac b/configure.ac
+> index 37096944..639199a9 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -619,6 +619,7 @@ CHECK_CCSUPPORT([-Werror=format-overflow=2], [flg1])
+>   CHECK_CCSUPPORT([-Werror=int-conversion], [flg2])
+>   CHECK_CCSUPPORT([-Werror=incompatible-pointer-types], [flg3])
+>   CHECK_CCSUPPORT([-Werror=misleading-indentation], [flg4])
+> +AX_GCC_FUNC_ATTRIBUTE([format])
+>   
+>   AC_SUBST([AM_CFLAGS], ["$my_am_cflags $flg1 $flg2 $flg3 $flg4"])
+>   
+> diff --git a/support/include/xcommon.h b/support/include/xcommon.h
+> index 23c9a135..30b0403b 100644
+> --- a/support/include/xcommon.h
+> +++ b/support/include/xcommon.h
+> @@ -9,6 +9,10 @@
+>   #ifndef _XMALLOC_H
+>   #define _MALLOC_H
+>   
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>   #include <sys/types.h>
+>   #include <fcntl.h>
+>   #include <limits.h>
+> @@ -25,9 +29,15 @@
+>   
+>   #define streq(s, t)	(strcmp ((s), (t)) == 0)
+>   
+> -/* Functions in sundries.c that are used in mount.c and umount.c  */
+> +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
+> +#define X_FORMAT(_x) __attribute__((__format__ _x))
+> +#else
+> +#define X_FORMAT(_x)
+> +#endif
+> +
+> +/* Functions in sundries.c that are used in mount.c and umount.c  */
+>   char *canonicalize (const char *path);
+> -void nfs_error (const char *fmt, ...);
+> +void nfs_error (const char *fmt, ...) X_FORMAT((printf, 1, 2));
+>   void *xmalloc (size_t size);
+>   void *xrealloc(void *p, size_t size);
+>   void xfree(void *);
+> @@ -36,9 +46,9 @@ char *xstrndup (const char *s, int n);
+>   char *xstrconcat2 (const char *, const char *);
+>   char *xstrconcat3 (const char *, const char *, const char *);
+>   char *xstrconcat4 (const char *, const char *, const char *, const char *);
+> -void die (int errcode, const char *fmt, ...);
+> +void die (int errcode, const char *fmt, ...) X_FORMAT((printf, 2, 3));
+>   
+> -extern void die(int err, const char *fmt, ...);
+> +extern void die(int err, const char *fmt, ...) X_FORMAT((printf, 2, 3));
+>   extern void (*at_die)(void);
+>   
+>   /* exit status - bits below are ORed */
+> diff --git a/support/include/xlog.h b/support/include/xlog.h
+> index a11463ed..32ff5a1b 100644
+> --- a/support/include/xlog.h
+> +++ b/support/include/xlog.h
+> @@ -7,6 +7,10 @@
+>   #ifndef XLOG_H
+>   #define XLOG_H
+>   
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>   #include <stdarg.h>
+>   
+>   /* These are logged always. L_FATAL also does exit(1) */
+> @@ -35,6 +39,12 @@ struct xlog_debugfac {
+>   	int		df_fac;
+>   };
+>   
+> +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
+> +#define XLOG_FORMAT(_x) __attribute__((__format__ _x))
+> +#else
+> +#define XLOG_FORMAT(_x)
+> +#endif
+> +
+>   extern int export_errno;
+>   void			xlog_open(char *progname);
+>   void			xlog_stderr(int on);
+> @@ -43,10 +53,10 @@ void			xlog_config(int fac, int on);
+>   void			xlog_sconfig(char *, int on);
+>   void			xlog_from_conffile(char *);
+>   int			xlog_enabled(int fac);
+> -void			xlog(int fac, const char *fmt, ...);
+> -void			xlog_warn(const char *fmt, ...);
+> -void			xlog_err(const char *fmt, ...);
+> -void			xlog_errno(int err, const char *fmt, ...);
+> -void			xlog_backend(int fac, const char *fmt, va_list args);
+> +void			xlog(int fac, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
+> +void			xlog_warn(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
+> +void			xlog_err(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
+> +void			xlog_errno(int err, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
+> +void			xlog_backend(int fac, const char *fmt, va_list args) XLOG_FORMAT((printf, 2, 0));
+>   
+>   #endif /* XLOG_H */
+> diff --git a/support/nfs/svc_create.c b/support/nfs/svc_create.c
+> index 4e14430d..976c2d29 100644
+> --- a/support/nfs/svc_create.c
+> +++ b/support/nfs/svc_create.c
+> @@ -184,7 +184,7 @@ svc_create_sock(const struct sockaddr *sap, socklen_t salen,
+>   		type = SOCK_STREAM;
+>   		break;
+>   	default:
+> -		xlog(D_GENERAL, "%s: Unrecognized bind address semantics: %u",
+> +		xlog(D_GENERAL, "%s: Unrecognized bind address semantics: %lu",
+>   			__func__, nconf->nc_semantics);
+>   		return -1;
+>   	}
+> diff --git a/support/nsm/rpc.c b/support/nsm/rpc.c
+> index ae49006c..08b4746f 100644
+> --- a/support/nsm/rpc.c
+> +++ b/support/nsm/rpc.c
+> @@ -182,7 +182,7 @@ nsm_xmit_getport(const int sock, const struct sockaddr_in *sin,
+>   	uint32_t xid;
+>   	XDR xdr;
+>   
+> -	xlog(D_CALL, "Sending PMAP_GETPORT for %u, %u, udp", program, version);
+> +	xlog(D_CALL, "Sending PMAP_GETPORT for %lu, %lu, udp", program, version);
+>   
+>   	nsm_init_xdrmem(msgbuf, NSM_MAXMSGSIZE, &xdr);
+>   	xid = nsm_init_rpc_header(PMAPPROG, PMAPVERS,
+> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+> index 5cca4175..a04a7898 100644
+> --- a/utils/exportfs/exportfs.c
+> +++ b/utils/exportfs/exportfs.c
+> @@ -651,6 +651,9 @@ out:
+>   	return result;
+>   }
+>   
+> +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
+> +__attribute__((format (printf, 2, 3)))
+> +#endif
+>   static char
+>   dumpopt(char c, char *fmt, ...)
+>   {
+> diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+> index e25a4337..3861f84a 100644
+> --- a/utils/mountd/cache.c
+> +++ b/utils/mountd/cache.c
+> @@ -987,8 +987,7 @@ lookup_export(char *dom, char *path, struct addrinfo *ai)
+>   			} else if (found_type == i && found->m_warned == 0) {
+>   				xlog(L_WARNING, "%s exported to both %s and %s, "
+>   				     "arbitrarily choosing options from first",
+> -				     path, found->m_client->m_hostname, exp->m_client->m_hostname,
+> -				     dom);
+> +				     path, found->m_client->m_hostname, exp->m_client->m_hostname);
+>   				found->m_warned = 1;
+>   			}
+>   		}
+> diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+> index 33571ecb..66366434 100644
+> --- a/utils/mountd/mountd.c
+> +++ b/utils/mountd/mountd.c
+> @@ -210,10 +210,10 @@ killer (int sig)
+>   }
+>   
+>   static void
+> -sig_hup (int sig)
+> +sig_hup (int UNUSED(sig))
+>   {
+>   	/* don't exit on SIGHUP */
+> -	xlog (L_NOTICE, "Received SIGHUP... Ignoring.\n", sig);
+> +	xlog (L_NOTICE, "Received SIGHUP... Ignoring.\n");
+>   	return;
+>   }
+>   
+> diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
+> index cbf71fc6..7e894e49 100644
+> --- a/utils/nfsdcld/nfsdcld.c
+> +++ b/utils/nfsdcld/nfsdcld.c
+> @@ -212,7 +212,7 @@ cld_inotify_cb(int UNUSED(fd), short which, void *data)
+>   	default:
+>   		/* anything else is fatal */
+>   		xlog(L_FATAL, "%s: unable to open new pipe (%d). Aborting.",
+> -			ret, __func__);
+> +			__func__, ret);
+>   		exit(ret);
+>   	}
+>   
+> diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
+> index fa81df87..afa63499 100644
+> --- a/utils/nfsdcld/sqlite.c
+> +++ b/utils/nfsdcld/sqlite.c
+> @@ -473,7 +473,7 @@ sqlite_fix_table_name(const char *name)
+>   	}
+>   	ret = sqlite3_exec(dbh, (const char *)buf, NULL, NULL, &err);
+>   	if (ret != SQLITE_OK) {
+> -		xlog(L_ERROR, "Unable to fix table for epoch %d: %s",
+> +		xlog(L_ERROR, "Unable to fix table for epoch %"PRIu64": %s",
+>   		     val, err);
+>   		goto out;
+>   	}
+> diff --git a/utils/nfsidmap/nfsidmap.c b/utils/nfsidmap/nfsidmap.c
+> index fc00da7a..cf7f65e9 100644
+> --- a/utils/nfsidmap/nfsidmap.c
+> +++ b/utils/nfsidmap/nfsidmap.c
+> @@ -18,7 +18,7 @@
+>   #include "xcommon.h"
+>   
+>   int verbose = 0;
+> -char *usage = "Usage: %s [-vh] [-c || [-u|-g|-r key] || -d || -l || [-t timeout] key desc]";
+> +#define USAGE "Usage: %s [-vh] [-c || [-u|-g|-r key] || -d || -l || [-t timeout] key desc]"
+>   
+>   #define MAX_ID_LEN   11
+>   #define IDMAP_NAMESZ 128
+> @@ -403,7 +403,7 @@ int main(int argc, char **argv)
+>   			break;
+>   		case 'h':
+>   		default:
+> -			xlog_warn(usage, progname);
+> +			xlog_warn(USAGE, progname);
+>   			exit(opt == 'h' ? 0 : 1);
+>   		}
+>   	}
+> @@ -435,7 +435,7 @@ int main(int argc, char **argv)
+>   	xlog_stderr(verbose);
+>   	if ((argc - optind) != 2) {
+>   		xlog_warn("Bad arg count. Check /etc/request-key.conf");
+> -		xlog_warn(usage, progname);
+> +		xlog_warn(USAGE, progname);
+>   		return EXIT_FAILURE;
+>   	}
+>   
+> @@ -453,7 +453,7 @@ int main(int argc, char **argv)
+>   		return EXIT_FAILURE;
+>   	}
+>   	if (verbose) {
+> -		xlog_warn("key: 0x%lx type: %s value: %s timeout %ld",
+> +		xlog_warn("key: 0x%x type: %s value: %s timeout %d",
+>   			key, type, value, timeout);
+>   	}
+>   
+> diff --git a/utils/statd/rmtcall.c b/utils/statd/rmtcall.c
+> index c4f6364f..5b261480 100644
+> --- a/utils/statd/rmtcall.c
+> +++ b/utils/statd/rmtcall.c
+> @@ -247,7 +247,7 @@ process_reply(FD_SET_TYPE *rfds)
+>   		xlog_warn("%s: service %d not registered on localhost",
+>   			__func__, NL_MY_PROG(lp));
+>   	} else {
+> -		xlog(D_GENERAL, "%s: Callback to %s (for %d) succeeded",
+> +		xlog(D_GENERAL, "%s: Callback to %s (for %s) succeeded",
+>   			__func__, NL_MY_NAME(lp), NL_MON_NAME(lp));
+>   	}
+>   	nlist_free(&notify, lp);
+> diff --git a/utils/statd/statd.c b/utils/statd/statd.c
+> index 14673800..8eef2ff2 100644
+> --- a/utils/statd/statd.c
+> +++ b/utils/statd/statd.c
+> @@ -136,7 +136,7 @@ static void log_modes(void)
+>   	strcat(buf, "TI-RPC ");
+>   #endif
+>   
+> -	xlog_warn(buf);
+> +	xlog_warn("%s", buf);
+>   }
+>   
+>   /*
+> diff --git a/utils/statd/svc_run.c b/utils/statd/svc_run.c
+> index d1dbd74a..e343c768 100644
+> --- a/utils/statd/svc_run.c
+> +++ b/utils/statd/svc_run.c
+> @@ -53,6 +53,7 @@
+>   
+>   #include <errno.h>
+>   #include <time.h>
+> +#include <inttypes.h>
+>   #include "statd.h"
+>   #include "notlist.h"
+>   
+> @@ -104,8 +105,8 @@ my_svc_run(int sockfd)
+>   
+>   			tv.tv_sec  = NL_WHEN(notify) - now;
+>   			tv.tv_usec = 0;
+> -			xlog(D_GENERAL, "Waiting for reply... (timeo %d)",
+> -							tv.tv_sec);
+> +			xlog(D_GENERAL, "Waiting for reply... (timeo %jd)",
+> +							(intmax_t)tv.tv_sec);
+>   			selret = select(FD_SETSIZE, &readfds,
+>   				(void *) 0, (void *) 0, &tv);
+>   		} else {
