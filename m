@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E11B42C6
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 23:14:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B7ACB42C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 23:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391571AbfIPVOG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Sep 2019 17:14:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38655 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391553AbfIPVOG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 17:14:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id k5so2491258iol.5
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 14:14:05 -0700 (PDT)
+        id S2391615AbfIPVOH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Sep 2019 17:14:07 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33293 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391553AbfIPVOH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 17:14:07 -0400
+Received: by mail-io1-f68.google.com with SMTP id m11so2571147ioo.0
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 14:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xOmeAPOzWbIw5m5L6jFu4S4E7KzwKfjPqHcj37yrr3s=;
-        b=p5ta7e1quI8iF19PBnRx4OBluVx3q7gDUNNYWBhnZuX04vo5iF0BJxlvWjYFm1Edzo
-         OsAe2sf0J0PPpuhDgKBBUMuyFi0UyptF3sOoFlEbbKT03hBcnwS3VBo1liDWGjfAN5mF
-         7rjjBgs+74a8uIPqXTB1CAIJnjyi7RF7Y5q1+WjJY5c88PjE5w09pB1CncOZgGnVAiPV
-         6oij6bf3awvjgGXL552retaujP6KU4JauURmUInjd+Bu+VPi8SHn2dmA80ZntQHHjYNF
-         13ulZKyI0RHQB66WbCa4Hq7QGiKI8VVLaczV0lBdCf4ZXEaGlLAQbWljNSaAjs/1NKMr
-         Vwlw==
+        bh=oYFP7LnHnffo4j/n4viWpRrrs/1IS/MsGu8QY/P3UN4=;
+        b=WJWM3dvQcA2GyESkcyElRntWZsT+MqkeLdL+6WSL2iloesJeAzuDZlJ/cJEVe9lrMF
+         xxdX5taBiptyA0kbyQ5pJRyzcTBAhcQKVhTLl/ywoMlL6XQalXms9VFrJgRUj270HR1W
+         g9+v5IqNf67QY8Va0vG7K9TdPOk98wDWq+wsNUVkQprrM2MbqZPl5CKMS4HXwmyvBpO3
+         qP7nwLsHC0kQtYXby7G16YEkXB8OBQTFUEuRyODJWX8ua+6MsIWhfUDd7S1fWuoC835q
+         xI8nH9GmvbZ/MYBcBYrSBVouzsk0Ody15irVkSI+zhUXtqaNbManNaLint9GyrQ+/Pi+
+         AZpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xOmeAPOzWbIw5m5L6jFu4S4E7KzwKfjPqHcj37yrr3s=;
-        b=QGUkTA6f0JswzSYSta8iMwb/C72Ow2bvWf11Tlja00RziVj8ZhuhE76GUwXLdPcCOe
-         pceJvGK6cQd7J6ghSeDmlFhHsrxjBkjpQ45jCsbxg1DAqL68Y1/BMffbQLm+eBd2YMtp
-         vZwKp+beNzhLN3XeFk+2z7ntNX6Lg2KIk/VeuCF/0YWyraV2V7grrVJEFgmMSQhnfePG
-         gNZ75Qn3pgJ4xzeJBxdA6HADc2sIV3rSWPPHYp8aIhuwiaNtuYzKZf7akBuBXWHADgo8
-         lUqk/v/QNLSVivfiyGx38zTI1yccOB0UaqMGzC5XVGeC1F+2kyHkw8142TndCMTT1xgG
-         sLPA==
-X-Gm-Message-State: APjAAAV0eErwaIfE2xWXs6mMybc2H/AuUAIGbwrOteuP9vhPWDeDu4aP
-        /TmBquaAy4HsgTXaKt00rGs=
-X-Google-Smtp-Source: APXvYqxjn2Z/hBM3uHlvX4oRTw5/aKy8Db+hRogrryVzVbs21g9QDZ2kX2SEXNxRih99LY35GvvAAg==
-X-Received: by 2002:a02:c901:: with SMTP id t1mr21057jao.13.1568668445425;
-        Mon, 16 Sep 2019 14:14:05 -0700 (PDT)
+        bh=oYFP7LnHnffo4j/n4viWpRrrs/1IS/MsGu8QY/P3UN4=;
+        b=e1aTDqwxckJ9ZytTf46ziqzNScbfdTbfif3fafk2Gra6tAgH0gM4bTWdmth4tLqjHX
+         r88+C6TCP1nyQaVXOBzrJ9xEi898DOYXsIFAFxcPR4PVVZJ2EY4LW00I0NzUWaaqrWhd
+         k96emf3gl0zDcJEd8VSm2scgAswDEpyuCBuKImpe6BqPPFmmwPR/21EZ1Bg9tQ5zsz+3
+         EQznH3KkLHpL3WDTDCTJenVeyMJUWLsFA/b4gIUjHn0Qlcot5gYGMYo1D+KljTRth3dG
+         EgaueXJvwNFYjQJMAn6Gj1kVlGN4ZarwZOcXOZLn8uoJP56+PdQCbQo6w+fBpMNqfU7t
+         R1Kw==
+X-Gm-Message-State: APjAAAXywV1tsPspTtEX4aknrNkRFW5zqn07427k9ztbNqYeKBZL9cRp
+        mf4xsJ/XuWouay+8L3aCYB9Ii3LO
+X-Google-Smtp-Source: APXvYqztMnETTEpFOi4+BK8o8yR8N5DQPhN42BW+iBThEUpxOY0CtdsoDElXwUSfV1ET2m4iKvB/dQ==
+X-Received: by 2002:a5e:8219:: with SMTP id l25mr344831iom.177.1568668446409;
+        Mon, 16 Sep 2019 14:14:06 -0700 (PDT)
 Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id l186sm71853ioa.54.2019.09.16.14.14.04
+        by smtp.gmail.com with ESMTPSA id l186sm71853ioa.54.2019.09.16.14.14.05
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 16 Sep 2019 14:14:04 -0700 (PDT)
+        Mon, 16 Sep 2019 14:14:05 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v7 10/19] NFS: replace cross device check in copy_file_range
-Date:   Mon, 16 Sep 2019 17:13:44 -0400
-Message-Id: <20190916211353.18802-11-olga.kornievskaia@gmail.com>
+Subject: [PATCH v7 11/19] NFSD fill-in netloc4 structure
+Date:   Mon, 16 Sep 2019 17:13:45 -0400
+Message-Id: <20190916211353.18802-12-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 In-Reply-To: <20190916211353.18802-1-olga.kornievskaia@gmail.com>
 References: <20190916211353.18802-1-olga.kornievskaia@gmail.com>
@@ -60,29 +60,67 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Add a check to disallow cross file systems copy offload, both
-files are expected to be of NFS4.2+ type.
+nfs.4 defines nfs42_netaddr structure that represents netloc4.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
+Populate needed fields from the sockaddr structure.
+
+This will be used by flexfiles and 4.2 inter copy
+
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfs/nfs4file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfsd.h | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index d02b25d..bf70dee 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -140,7 +140,7 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 	ssize_t ret;
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index af29475..687f8e1 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -19,6 +19,7 @@
+ #include <linux/sunrpc/svc.h>
+ #include <linux/sunrpc/svc_xprt.h>
+ #include <linux/sunrpc/msg_prot.h>
++#include <linux/sunrpc/addr.h>
  
- 	/* Only offload copy if superblock is the same */
--	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
-+	if (file_in->f_op != &nfs4_file_operations)
- 		return -EXDEV;
- 	if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
- 		return -EOPNOTSUPP;
+ #include <uapi/linux/nfsd/debug.h>
+ 
+@@ -386,6 +387,37 @@ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
+ 
+ extern const u32 nfsd_suppattrs[3][3];
+ 
++static inline u32 nfsd4_set_netaddr(struct sockaddr *addr,
++				    struct nfs42_netaddr *netaddr)
++{
++	struct sockaddr_in *sin = (struct sockaddr_in *)addr;
++	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
++	unsigned int port;
++	size_t ret_addr, ret_port;
++
++	switch (addr->sa_family) {
++	case AF_INET:
++		port = ntohs(sin->sin_port);
++		sprintf(netaddr->netid, "tcp");
++		netaddr->netid_len = 3;
++		break;
++	case AF_INET6:
++		port = ntohs(sin6->sin6_port);
++		sprintf(netaddr->netid, "tcp6");
++		netaddr->netid_len = 4;
++		break;
++	default:
++		return nfserr_inval;
++	}
++	ret_addr = rpc_ntop(addr, netaddr->addr, sizeof(netaddr->addr));
++	ret_port = snprintf(netaddr->addr + ret_addr,
++			    RPCBIND_MAXUADDRLEN + 1 - ret_addr,
++			    ".%u.%u", port >> 8, port & 0xff);
++	WARN_ON(ret_port >= RPCBIND_MAXUADDRLEN + 1 - ret_addr);
++	netaddr->addr_len = ret_addr + ret_port;
++	return 0;
++}
++
+ static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
+ {
+ 	return !((bm1[0] & ~bm2[0]) ||
 -- 
 1.8.3.1
 
