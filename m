@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 929D4B4242
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 22:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08447B4243
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 22:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbfIPUqb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Sep 2019 16:46:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39176 "EHLO
+        id S2387596AbfIPUqc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Sep 2019 16:46:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39180 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387596AbfIPUqb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 16:46:31 -0400
-Received: by mail-io1-f65.google.com with SMTP id a1so2296852ioc.6
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 13:46:31 -0700 (PDT)
+        with ESMTP id S1733156AbfIPUqc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 16:46:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id a1so2296946ioc.6
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 13:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mT/Rzj/K1U6LEdiuCQ0lI11+dkVn7b9E0XXmRpME0Iw=;
-        b=ppE39HEEXYbaQ/RycPKzxYIsPFUvcZx03OP1d2jxgYKzBDh71zVuXf9nrAnIqrG0ZP
-         wsdnF/bosFRXssrP+MY22p52wpB3ut/t0zKalsfBVP3XvQfAPpWlNOidmsVKJj4HEN+c
-         89TIaRHGdFJHYw+0vKo0wsU78vhoYqQVQH1HDK309xTZvplS4xt/aesHJI0BiGfVyYzY
-         PhFrp4eNUzCJh8JM2WbGZN4Rl49RBYmI3gthXYjshHzuxlONjSgarO+gvVCCvPv/qTx8
-         qrGKfjf4qzwDVtsY7aE0vKRX6XseTpeIHlvfXSn2eK0BoXUwbNlaxfZOV4vmAe6TSzGU
-         e60A==
+        bh=owbPNNcxjT5XKu6v3G4mEstWx8051g6tPkh8ytztNTM=;
+        b=MyHmdb/n26VD6LgAUwgE/tpuztM2eJ8jOk9xRQ5awqpVNLVb1tAos7V+hO3s1DXLol
+         UhzRyhdLyOq7iT1buBndKffWNb2y1HmV07nNfrFqS9TF+xkDoRN77+9KTTY36q98RsFu
+         Jy42EKPJbUE5LxjCtycj5e3SrmmRSK1KSlUdI18B7UFC4OYi55kBANV08dcHe8MOq41n
+         UGQ+eKEqR+EgVJ784NvDlqooQOJIVvdw4GBUm9bChpuiZwHJeIo6PyNQvFzCJiGIGORC
+         FP0D37lSXxc8znysvwmCXcOOOj+J/82UaXqaf+6cbNAQNsQaObjZeMJh4nDpZ4ba9rWI
+         d4NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mT/Rzj/K1U6LEdiuCQ0lI11+dkVn7b9E0XXmRpME0Iw=;
-        b=je3smfDlvbUDiQlJ3OdQ/SjpgNaw7IhKpY8fmZ61q8p4/ae1ORj9XO28Ma4Gz/fM89
-         McdWJk+w7NrVLOPs10dYGeFHC5ITR9laY+pG2TnsEyH4HU8dvdSzxklAVkYJ/4ZaQm/i
-         7w+yFti1QmOzlFLMBwkV9mpGA8Wp+z00bhGFJ+42XpSSMFsX3Qhb7C3tBm5oT7VPcSJZ
-         JhXDxTb/mW0hTjUcurOPg/Y5OVp4279VtEZdS1iWasZ2ze/9ClFbHHlQHDe175gm3TtG
-         HOLAjySN5C5uOMogx84P3UBIOVxEPOgMsXHKBEk3+t6mQos/PJOEPcLf5L3LVWNyofh1
-         Z7Bg==
-X-Gm-Message-State: APjAAAWwFmlRnKod9PF9Tfrh/8qljuRufVFerPSKo5URtk5HdcBg03FO
-        YWDBd9ri1qGq1IPnhrsROA==
-X-Google-Smtp-Source: APXvYqwbuNRZHpigaByCk14TWw3JAvaYPfUWctBtVHiC64WR8YmKclVxECeUWMZYBgmL9ald3y/SjA==
-X-Received: by 2002:a5d:85da:: with SMTP id e26mr223223ios.101.1568666790358;
-        Mon, 16 Sep 2019 13:46:30 -0700 (PDT)
+        bh=owbPNNcxjT5XKu6v3G4mEstWx8051g6tPkh8ytztNTM=;
+        b=gyYb64X/yVkp7Ev3dusn8xsxuMROy9sEIYnaNbKVMEvhfQ0FR7Cgb2o61uqFy4THTc
+         geUNcxCCdfyRmYnpAAb6tgu1hfRhtldJ8bLcxEq/stPOyBPRtxShmdXZnRPcYKHFjz09
+         I6p83eUEJlqMLRlrCnPrp2isfnkG8L/f9wJlRiT8jyU8zQyN/OAB6YB1cebWUxDFR6P9
+         51SHsaJFrQhlNeUHBmuVNpBC+kBeU5+qKY+Z8eYNZJ2YTazq/esX2CP3/u/0hEgmi5QE
+         EooZEleJRlczMeY4cIaicVkl/tiDP618GeYSLiU0MwEU5Ik2TlHVqjk6Ia/CwGjrT3Rr
+         7WIQ==
+X-Gm-Message-State: APjAAAX3SfcQLhFu1YZBQ9+rL1ooFw7f5oYO4pfoSbixUjTtNGX4R6vW
+        g0+P36Etq8o0TMISJScioA==
+X-Google-Smtp-Source: APXvYqwCFaLI1q4hXtXBp94pCVD7+ywIvJooeTd/Sa/mFdhTRwhwjP6D0LZPGeBjuGT+pMsoqjnwBQ==
+X-Received: by 2002:a6b:4a01:: with SMTP id w1mr232275iob.222.1568666791419;
+        Mon, 16 Sep 2019 13:46:31 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id c6sm3528iom.34.2019.09.16.13.46.29
+        by smtp.gmail.com with ESMTPSA id c6sm3528iom.34.2019.09.16.13.46.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:46:29 -0700 (PDT)
+        Mon, 16 Sep 2019 13:46:30 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     Olga Kornievskaia <aglo@umich.edu>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 4/9] NFSv4: Handle RPC level errors in LAYOUTRETURN
-Date:   Mon, 16 Sep 2019 16:44:14 -0400
-Message-Id: <20190916204419.21717-5-trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 5/9] NFSv4: Add a helper to increment stateid seqids
+Date:   Mon, 16 Sep 2019 16:44:15 -0400
+Message-Id: <20190916204419.21717-6-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190916204419.21717-4-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190916204419.21717-5-trond.myklebust@hammerspace.com>
 References: <20190916204419.21717-1-trond.myklebust@hammerspace.com>
  <20190916204419.21717-2-trond.myklebust@hammerspace.com>
  <20190916204419.21717-3-trond.myklebust@hammerspace.com>
  <20190916204419.21717-4-trond.myklebust@hammerspace.com>
+ <20190916204419.21717-5-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -64,60 +65,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Handle RPC level errors by assuming that the RPC call was successful.
+Add a helper function to increment stateid seqids according to the
+rules specified in RFC5661 Section 8.2.2.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4proc.c |  9 +++++++++
- fs/nfs/pnfs.c     | 15 +++++++++++++++
- 2 files changed, 24 insertions(+)
+ fs/nfs/nfs4_fs.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index fcdfddfd3ab4..a5deb00b5ad1 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9057,6 +9057,15 @@ static void nfs4_layoutreturn_done(struct rpc_task *task, void *calldata)
- 	if (!nfs41_sequence_process(task, &lrp->res.seq_res))
- 		return;
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 3564da1ba8a1..e8f74ed98e42 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -574,6 +574,15 @@ static inline bool nfs4_stateid_is_newer(const nfs4_stateid *s1, const nfs4_stat
+ 	return (s32)(be32_to_cpu(s1->seqid) - be32_to_cpu(s2->seqid)) > 0;
+ }
  
-+	/*
-+	 * Was there an RPC level error? Assume the call succeeded,
-+	 * and that we need to release the layout
-+	 */
-+	if (task->tk_rpc_status != 0 && RPC_WAS_SENT(task)) {
-+		lrp->res.lrs_present = 0;
-+		return;
-+	}
++static inline void nfs4_stateid_seqid_inc(nfs4_stateid *s1)
++{
++	u32 seqid = be32_to_cpu(s1->seqid);
 +
- 	server = NFS_SERVER(lrp->args.inode);
- 	switch (task->tk_status) {
- 	case -NFS4ERR_OLD_STATEID:
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 6436047dc999..abc7188f1853 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1455,6 +1455,21 @@ int pnfs_roc_done(struct rpc_task *task, struct inode *inode,
- 	case 0:
- 		retval = 0;
- 		break;
-+	case -NFS4ERR_NOMATCHING_LAYOUT:
-+		/* Was there an RPC level error? If not, retry */
-+		if (task->tk_rpc_status == 0)
-+			break;
-+		/* If the call was not sent, let caller handle it */
-+		if (!RPC_WAS_SENT(task))
-+			return 0;
-+		/*
-+		 * Otherwise, assume the call succeeded and
-+		 * that we need to release the layout
-+		 */
-+		*ret = 0;
-+		(*respp)->lrs_present = 0;
-+		retval = 0;
-+		break;
- 	case -NFS4ERR_DELAY:
- 		/* Let the caller handle the retry */
- 		*ret = -NFS4ERR_NOMATCHING_LAYOUT;
++	if (++seqid == 0)
++		++seqid;
++	s1->seqid = cpu_to_be32(seqid);
++}
++
+ static inline bool nfs4_valid_open_stateid(const struct nfs4_state *state)
+ {
+ 	return test_bit(NFS_STATE_RECOVERY_FAILED, &state->flags) == 0;
 -- 
 2.21.0
 
