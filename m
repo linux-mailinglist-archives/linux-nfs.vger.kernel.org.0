@@ -2,185 +2,238 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AABB3CC8
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 16:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45A01B3D56
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2019 17:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfIPOnf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Sep 2019 10:43:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56808 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730509AbfIPOnf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 10:43:35 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GEdCJn076860;
-        Mon, 16 Sep 2019 14:43:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=Gn0P4yVxofkhsaZeT46suKXlHRyWOI2K1HFcegXJskg=;
- b=KviWZggd2JVJUglMz4ZibEQj5Q/hBDCxctXXI7Y7RPo3CDvzd1ikDo/Ztc2LJQjpjohk
- oB08AjKwjCofYxnSJ/AjaEi5iEIAk22T69WkVyHQfRu9yRdyncDEqyRh8ffgfEn89jvY
- Af1C5eGyvYl27QT9L4+Z7qQl8SDXzB91gYIz8fGpz00oQEzRZzC6CW69zN46RVNJTFcv
- dxRjn8PbZsJjaiu9JAFd4iDfCowDHeCavo7INOkrxuGsyJxlGrb4pqlrUQZKTnNntiFj
- C5SMd85PlmJbKd1x1rIhx69WnAobgMMfgLaO3wJXxpFqfahs3tC+jtxethJS3yzdSeHu Mw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2v2bx2r6hv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 14:43:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GEc5rb174488;
-        Mon, 16 Sep 2019 14:43:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v0qhpkrpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 14:43:15 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8GEh9wE030116;
-        Mon, 16 Sep 2019 14:43:12 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 16 Sep 2019 07:43:08 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH V3 1/2] SUNRPC: Fix buffer handling of GSS MIC without
- slack
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <dad661c66dcbfb67714253d55d826ff126e53f50.1568635163.git.bcodding@redhat.com>
-Date:   Mon, 16 Sep 2019 10:43:07 -0400
-Cc:     trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>, tibbs@math.uh.edu,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>, km@cm4all.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F8C53DD2-DB69-4660-943B-1AE059F69CFF@oracle.com>
-References: <dad661c66dcbfb67714253d55d826ff126e53f50.1568635163.git.bcodding@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9381 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909160151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9381 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909160151
+        id S1728300AbfIPPMl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Sep 2019 11:12:41 -0400
+Received: from esa12.utexas.iphmx.com ([216.71.154.221]:2830 "EHLO
+        esa12.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfIPPMl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 11:12:41 -0400
+IronPort-SDR: Gl9gQq6CUxTD52VtWqxFxTCmh8CIeTticY0rB7eH405gf7OCCmXzOczSOvjdOxUeOmQtWqo5cc
+ 1r4f0LfXYU5lUhY6ZFWpCzXCnxhjNgHQpkCZaF/KAbRW51l/+9I7ddRROGXKvH8c+/omu/3Vox
+ uVTMU0n3S5Gz6dmmIp9S2AVb4JbJWLp1kkbigZHlXysClko6Y5MZSAtWQPQKa7acxcKtsOs/SM
+ UUzwACob6v+F+WMD5ik+6RhTHSqlaAXRcpHoimhunAKqPOoqZPDUJfIbVzjCrJyfkmD+IkBPaU
+ ib0=
+X-Utexas-Sender-Group: RELAYLIST-O365
+X-IronPort-MID: 153032683
+IronPort-PHdr: =?us-ascii?q?9a23=3AWwgD3x0FTQ0F1by/smDT+zVfbzU7u7jyIg8e44?=
+ =?us-ascii?q?YmjLQLaKm44pD+JxKCt+51ggrPWoPWo7JfhuzavrqoeFRI4I3J8RVgOIdJSw?=
+ =?us-ascii?q?dDjMwXmwI6B8vQEUL8IeL4RykzAMQESUNo73igd0VZBZW2ag=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EoAAD1pX9dhzUlL2hmGgEBAQEBAgE?=
+ =?us-ascii?q?BAQEHAgEBAQGBZ4FFKSdwcwMECyoKhBeDRwOFMoU+glx+mUUDGDwBCAEBAQE?=
+ =?us-ascii?q?BAQEBAQcBHw4CAQEChD0CF4J8OBMCAwkBAQUBAQEBAQUEAgIQAQEBCA0JCCm?=
+ =?us-ascii?q?FNQyDRTkyAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQI?=
+ =?us-ascii?q?UJDkBAQEDEhEEDQwBATgPAgEIDgoCAiYCAgIwFRACBAE0gwABgWoDHQGgJD0?=
+ =?us-ascii?q?CIwE+AguBBCmIYAEBcn8zgn0BAQWCSIJIGEIJgUwDBoEMKIwKBoFBPoERJwy?=
+ =?us-ascii?q?CKjU+gQQBgVwFgRgmAQEIAgQQF4J0gliMVgmCb4dZlUcKgiKHBY11BhuCNYt?=
+ =?us-ascii?q?siniCBoIrgU6ICodwHJB2AgQCBAUCDgEBBYFpgXpyE4MngkIMDAIJFW8BAoJ?=
+ =?us-ascii?q?IaolpQQExgSmMeg4XgQsBgSIBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2EoAAD1pX9dhzUlL2hmGgEBAQEBAgEBAQEHAgEBAQGBZ?=
+ =?us-ascii?q?4FFKSdwcwMECyoKhBeDRwOFMoU+glx+mUUDGDwBCAEBAQEBAQEBAQcBHw4CA?=
+ =?us-ascii?q?QEChD0CF4J8OBMCAwkBAQUBAQEBAQUEAgIQAQEBCA0JCCmFNQyDRTkyAQEBA?=
+ =?us-ascii?q?QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQIUJDkBAQEDEhEED?=
+ =?us-ascii?q?QwBATgPAgEIDgoCAiYCAgIwFRACBAE0gwABgWoDHQGgJD0CIwE+AguBBCmIY?=
+ =?us-ascii?q?AEBcn8zgn0BAQWCSIJIGEIJgUwDBoEMKIwKBoFBPoERJwyCKjU+gQQBgVwFg?=
+ =?us-ascii?q?RgmAQEIAgQQF4J0gliMVgmCb4dZlUcKgiKHBY11BhuCNYtsiniCBoIrgU6IC?=
+ =?us-ascii?q?odwHJB2AgQCBAUCDgEBBYFpgXpyE4MngkIMDAIJFW8BAoJIaolpQQExgSmMe?=
+ =?us-ascii?q?g4XgQsBgSIBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,513,1559538000"; 
+   d="scan'208";a="153032683"
+X-Utexas-Seen-Outbound: true
+Received: from mail-cys01nam02lp2053.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.53])
+  by esa12.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 10:12:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P9sqEmXqi/NLNA3dWWH1vx4xY9uJUGvve6tKVoTo4/f5w6i3MgbTDqlCnHIpotwTiMStKH6P2/XN4EtWY0OycrMjA2xrl64J+XfUwdrQGqUmTM1SqPoADbqBWq7J4sJL54YBEc0hWkSfyilbVOwDK6uia9Cv7OnBt7i+uH4yGCQ44sTaIO+gpuduRgAyLdlTmCKsYwKPdTD/rfjypLAe2jvftgXzS613AGEVWATTMEGGXc/pFZWvc1jaQbW6czT+31zhabf/PfiJdMbznfRnu2Tpr2AC7zENogGPq0aeLr/PmB4UXeVHJ3zIp59/JWXMk2ymoUCockxjypT4jz3UrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oX9iikxPnI8pHT9B20hUIYuIjBPVdZeqiSL40Z44gVU=;
+ b=MZiryp3Pu74irpez5T3VuRsIlpBaYpVvmuIFHquHdFMO0j9nMdDl5WB/SEeqAhQxBpu+fHkmdeJfU7jFbAmCX5vPxc0rPDwsDFFza0EqpltZaOmZVYeVuAqhpbWKODghDdqoTBbrq5ZlwsPhPyXb2uFMYG3oknzMr7SDqn31X2RfXRMP8MgIIaNUsAHD9zq2XvJUan9D0KcUeMePHtcwj+2CU1tEAMeK+TzsSj75MZ4WqiluC/piaCvYeKP9BLVGm1MbbfP58YgNMIiWHC4lyStyCtJXrGyWDAnDwr3PTVdPLQlDzwrdmrKaeuJJ+GpavnL9bWECEBgjwAFpeyjbXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=math.utexas.edu; dmarc=pass action=none
+ header.from=math.utexas.edu; dkim=pass header.d=math.utexas.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=utexas.onmicrosoft.com; s=selector2-utexas-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oX9iikxPnI8pHT9B20hUIYuIjBPVdZeqiSL40Z44gVU=;
+ b=Qe+aZsG9BYPnfDBD7oQBAThq3jroXvNSQ2YSMttoRHdfltAer8ka58EZOlU+MEVXNgLxXnV6S0bhXYT0RHxexSZaFsoETetEaBAVFvMeXgo7GMJL33JzS/v7MdgoCNLdv7FDGCWtCz49LS7w4NiakRwzScGJFCngN4th0KmdrLU=
+Received: from DM5PR0601MB3606.namprd06.prod.outlook.com (10.167.108.144) by
+ DM5PR0601MB3637.namprd06.prod.outlook.com (10.167.108.151) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Mon, 16 Sep 2019 15:12:38 +0000
+Received: from DM5PR0601MB3606.namprd06.prod.outlook.com
+ ([fe80::d8c3:f0ba:974c:3085]) by DM5PR0601MB3606.namprd06.prod.outlook.com
+ ([fe80::d8c3:f0ba:974c:3085%7]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
+ 15:12:38 +0000
+From:   "Goetz, Patrick G" <pgoetz@math.utexas.edu>
+To:     Peter Eriksson <pen@lysator.liu.se>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: (Ubuntu 18.04) NFSv4+sec=krb5 client turns into a DoS device
+ after ticket expires?
+Thread-Topic: (Ubuntu 18.04) NFSv4+sec=krb5 client turns into a DoS device
+ after ticket expires?
+Thread-Index: AQHVbFoYE4jyTZnL4EWv78OKX+vWqacuaaKA
+Date:   Mon, 16 Sep 2019 15:12:38 +0000
+Message-ID: <77b99814-9253-e3cb-06f2-c57bc2c9b17d@math.utexas.edu>
+References: <213387E7-35EB-415C-989E-3148D9157D23@lysator.liu.se>
+In-Reply-To: <213387E7-35EB-415C-989E-3148D9157D23@lysator.liu.se>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0089.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::30) To DM5PR0601MB3606.namprd06.prod.outlook.com
+ (2603:10b6:4:7c::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pgoetz@math.utexas.edu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.198.113.142]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9e3c241e-a67c-49cb-d289-08d73ab84fb6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR0601MB3637;
+x-ms-traffictypediagnostic: DM5PR0601MB3637:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR0601MB3637A07F0C4EDC19A5DDBC1F838C0@DM5PR0601MB3637.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 0162ACCC24
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(786003)(476003)(11346002)(25786009)(2616005)(71200400001)(8936002)(486006)(446003)(66066001)(6116002)(3846002)(6246003)(75432002)(71190400001)(66476007)(66556008)(64756008)(66446008)(66946007)(256004)(8676002)(2501003)(14444005)(81166006)(81156014)(478600001)(31696002)(966005)(31686004)(316002)(88552002)(186003)(7736002)(305945005)(6306002)(5660300002)(6512007)(26005)(102836004)(86362001)(53546011)(6506007)(386003)(14454004)(99286004)(76176011)(229853002)(110136005)(53936002)(2906002)(52116002)(6486002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0601MB3637;H:DM5PR0601MB3606.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: math.utexas.edu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6oPIBW6u9xyE1C2exQvdngQnpTgkQ2Ji5kAJG5iOc/5SEb+MDWpVPmpoCxE3+YCepS1MnXIJDBXeMNDsQLezlS4tL58lLg23KdYaYRJWX1WoBB3dakLlXIsZOFpHsY+wQ/wRv9/PLrPS58WX9YYk38fD/Vyx7RTmomYZ8tQWL0MxIVpb9kwB+zghzvnIGPMjelV58HhHc823yqvSgf1DXjmHXwkC9gieUEIzDkmnwd3vE+TSvNHHAfZH32uoYNK23cp9ol5W+nbp5T5NnAiZlAcooSV2ldhFC8skLuKPY4iAwNAEp3YUNNmF0rezocCwbNbs9hOlrsDjGUKxAyzF24ss7BuQAfotWGuqxbJBgl/eUI8J9d9gwhWXYp7LkhZtTKcRKLFtd3k1SFcHodo2gTgBYYZUX6dJ12ngGj/xsGI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <75062418BFA041419331FFCB08EC9D85@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: math.utexas.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e3c241e-a67c-49cb-d289-08d73ab84fb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 15:12:38.5787
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CBIyZGDM41/dDlBa4VfIVLKYUVjygoOEOLNi9EcrjqNtoNtsLr/ULUuPQZrVshO6gH9IkOI1LD5nLqXd43LgMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0601MB3637
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Sep 16, 2019, at 7:59 AM, Benjamin Coddington <bcodding@redhat.com> =
-wrote:
->=20
-> The GSS Message Integrity Check data for krb5i may lie partially in =
-the XDR
-> reply buffer's pages and tail.  If so, we try to copy the entire MIC =
-into
-> free space in the tail.  But as the estimations of the slack space =
-required
-> for authentication and verification have improved there may be less =
-free
-> space in the tail to complete this copy -- see commit 2c94b8eca1a2
-> ("SUNRPC: Use au_rslack when computing reply buffer size").  In fact, =
-there
-> may only be room in the tail for a single copy of the MIC, and not =
-part of
-> the MIC and then another complete copy.
->=20
-> The real world failure reported is that `ls` of a directory on NFS may
-> sometimes return -EIO, which can be traced back to =
-xdr_buf_read_netobj()
-> failing to find available free space in the tail to copy the MIC.
->=20
-> Fix this by checking for the case of the MIC crossing the boundaries =
-of
-> head, pages, and tail. If so, shift the buffer until the MIC is =
-contained
-> completely within the pages or tail.  This allows the remainder of the
-> function to create a sub buffer that directly address the complete =
-MIC.
->=20
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> Cc: stable@vger.kernel.org # v5.1
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> ---
-> net/sunrpc/xdr.c | 27 ++++++++++++++++++---------
-> 1 file changed, 18 insertions(+), 9 deletions(-)
->=20
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 48c93b9e525e..b256806d69cd 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -1237,16 +1237,29 @@ xdr_encode_word(struct xdr_buf *buf, unsigned =
-int base, u32 obj)
-> EXPORT_SYMBOL_GPL(xdr_encode_word);
->=20
-> /* If the netobj starting offset bytes from the start of xdr_buf is =
-contained
-> - * entirely in the head or the tail, set object to point to it; =
-otherwise
-> - * try to find space for it at the end of the tail, copy it there, =
-and
-> - * set obj to point to it. */
-> + * entirely in the head, pages, or tail, set object to point to it; =
-otherwise
-> + * shift the buffer until it is contained entirely within the pages =
-or tail.
-> + */
-> int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, =
-unsigned int offset)
-> {
-> 	struct xdr_buf subbuf;
-> +	unsigned int boundary;
->=20
-> 	if (xdr_decode_word(buf, offset, &obj->len))
-> 		return -EFAULT;
-> -	if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
-> +	offset +=3D 4;
-> +
-> +	/* Is the obj partially in the head? */
-> +	boundary =3D buf->head[0].iov_len;
-> +	if (offset < boundary && (offset + obj->len) > boundary)
-> +		xdr_shift_buf(buf, boundary - offset);
-> +
-> +	/* Is the obj partially in the pages? */
-> +	boundary +=3D buf->page_len;
-> +	if (offset < boundary && (offset + obj->len) > boundary)
-> +		xdr_shrink_pagelen(buf, boundary - offset);
-> +
-> +	if (xdr_buf_subsegment(buf, &subbuf, offset, obj->len))
-> 		return -EFAULT;
->=20
-> 	/* Is the obj contained entirely in the head? */
-> @@ -1258,11 +1271,7 @@ int xdr_buf_read_netobj(struct xdr_buf *buf, =
-struct xdr_netobj *obj, unsigned in
-> 	if (subbuf.tail[0].iov_len =3D=3D obj->len)
-> 		return 0;
->=20
-> -	/* use end of tail as storage for obj:
-> -	 * (We don't copy to the beginning because then we'd have
-> -	 * to worry about doing a potentially overlapping copy.
-> -	 * This assumes the object is at most half the length of the
-> -	 * tail.) */
-> +	/* Find a contiguous area in @buf to hold all of @obj */
-> 	if (obj->len > buf->buflen - buf->len)
-> 		return -ENOMEM;
-> 	if (buf->tail[0].iov_len !=3D 0)
-> --=20
-> 2.20.1
->=20
-
---
-Chuck Lever
-
-
-
+VGhpcyBpcyBvZmYgdG9waWMsIGJ1dCBpdCBzb3VuZHMgbGlrZSB5b3UgbWlnaHQgYmUgYWNjZXNz
+aW5nIElNQVAgDQpmb2xkZXJzIG92ZXIgTkZTPyAgVGhpcyBpcyBhIGJhZCBpZGVhIGlmIHlvdSBh
+cmUgLS0ganVzdCB1c2UgdGhlIElNQVAgDQpwcm90b2NvbCBhbmQgdXNlIGxvY2FsIHN0b3JhZ2Ug
+b24gdGhlIElNQVAgc2VydmVyLiAgQW55dGhpbmcgZWxzZSBpcyBhIA0KcmVjaXBlIGZvciBsb3N0
+IG1haWwgYW5kIGVuZGxlc3MgaGVhZGFjaGVzLg0KDQpPbiA5LzE2LzE5IDE6MzMgQU0sIFBldGVy
+IEVyaWtzc29uIHdyb3RlOg0KPiBXZeKAmXJlIGludmVzdGlnYXRpbmcgYSBwcm9ibGVtIHdoZXJl
+IHdlIGFyZSBzZWVpbmcgYSBudW1iZXIgb2YgVWJ1bnR1IDE4LjA0IExpbnV4IGNsaWVudHMgdGhh
+dCBib21iYXJkcyBvdXIgTkZTIFNlcnZlcnMgd2l0aCBUQ1AgY29ubmVjdGlvbnMuIExpa2UgNDAw
+IHJlcXVlc3RzL3NlY29uZCBvZiBuZXcgVENQIGNvbm5lY3Rpb24gcmVxdWVzdHMgdG8gdGhlIE5G
+UyBzZXJ2ZXIgcG9ydCAod2l0aCB1bmlxdWUgc291cmNlIHBvcnQgbnVtYmVycykgd2hpY2ggY2F1
+c2VzIHRoZSBmaXJld2FsbCBzdGF0ZSB0cmFja2luZyB0YWJsZXMgb24gdGhlIHNlcnZlciB0byBn
+cm93IGxpa2UgY3JhenkuDQo+IA0KPiBUaGUgc3RyZWFtIG9mIElQIHBhY2tldHMgd2UgYXJlIHNl
+ZWluZyBsb29rIGxpa2UgdGhpcyAodGltZXMgaW4gc2Vjb25kcyk6DQo+IA0KPiAwLjAwMTI4MCBD
+bGllbnQgLT4gU2VydmVyIFNZTg0KPiAwLjAwMTI4OSBTZXJ2ZXIgLT4gQ2xpZW50IFNZTitBQ0sN
+Cj4gMC4wMDE1MTYgQ2xpZW50IC0+IFNlcnZlciBBQ0sNCj4gMC4wMDM2MDkgQ2xpZW50IC0+IFNl
+cnZlciBGSU4rQUNLDQo+IDAuMDAzNjE1IFNlcnZlciAtPiBDbGllbnQgQUNLDQo+IDAuMDAzNjIw
+IFNlcnZlciAtPiBDbGllbnQgRklOK0FDSw0KPiAwLjAwMzg0MSBDbGllbnQgLT4gU2VydmVyIEFD
+Sw0KPiA8cmVwZWF0IDIwMC00MDAgdGltZXMvcz4NCj4gDQo+IEllLCBpbml0aWF0ZSBhIG5ldyBj
+b25uZWN0aW9uIGFuZCB0aGVuIGltbWVkaWF0ZWx5IGRpc2Nvbm5lY3QgYWdhaW4uDQo+IA0KPiBP
+biB0aGUgY2xpZW50IHRoaXMgY29pbmNpZGVzIHdpdGggYSB1c2VyIHdoaWNoIGhhcyB0aGVpciBo
+b21lIGRpcmVjdG9yeSBtb3VudGVkIHZpYSBORlMgKHY0KSB3aXRoIHNlYz1rcmI1IGFuZCBhbiBl
+eHBpcmVkIEtlcmJlcm9zIHRpY2tldCBhbmQgaGF2aW5nIGFuIOKAnGV2b2x1dGlvbuKAnSBwcm9j
+ZXNzIHJ1bm5pbmcuIFRoaXMgc29tZWhvdyBjYXVzZXMgcnBjLmdzc2QgdG8gcnVuIGEgbG90Li4u
+DQo+IA0KPiBUaGUgcnBjLmdzc2Qgc2VlbXMgdG8gYmUgZG9pbmcgdGhpczoNCj4gDQo+PiBUYXNr
+czogMjY2IHRvdGFsLCAgIDEgcnVubmluZywgMTkzIHNsZWVwaW5nLCAgIDAgc3RvcHBlZCwgICAw
+IHpvbWJpZQ0KPj4gJUNwdShzKTogIDUuMCB1cywgIDEuNSBzeSwgIDAuMCBuaSwgOTMuMSBpZCwg
+IDAuMCB3YSwgIDAuMCBoaSwgIDAuNCBzaSwgIDAuMCBzdA0KPj4gS2lCIE1lbSA6IDE2MzAzMjY0
+IHRvdGFsLCAgIDk1NTg0NCBmcmVlLCAgMzkxMjgyMCB1c2VkLCAxMTQzNDYwMCBidWZmL2NhY2hl
+DQo+PiBLaUIgU3dhcDogIDc4MTIwOTIgdG90YWwsICA3ODExNTgwIGZyZWUsICAgICAgNTEyIHVz
+ZWQuIDExNDgxNzA4IGF2YWlsIE1lbQ0KPj4gICAgUElEIFVTRVIgICAgICBQUiAgTkkgICAgVklS
+VCAgICBSRVMgICAgU0hSIFMgICVDUFUgJU1FTSAgICAgVElNRSsgQ09NTUFORA0KPj4gICAgNzA1
+IHJvb3QgICAgICAyMCAgIDAgIDMyODg4OCAgIDQ5MjQgICAzNTY4IFMgIDIwLjggIDAuMCAgIDE1
+MjA6MjcgcnBjLmdzc2QNCj4gDQo+PiBlcG9sbF93YWl0KDQsIFt7RVBPTExJTiwge3UzMj05LCB1
+NjQ9OX19XSwgMzIsIC0xKSA9IDENCj4+IHJlYWQoOSwgIm1lY2g9a3JiNSB1aWQ9MTAzNjk4NSBl
+bmN0eXBlcz0xIi4uLiwgMzI3NjgpID0gNTANCj4+IGNsb25lKGNoaWxkX3N0YWNrPTB4N2Y0NzQ2
+ZjVmZmIwLCBmbGFncz1DTE9ORV9WTXxDTE9ORV9GU3xDTE9ORV9GSUxFU3xDTE9ORV9TSUdIQU5E
+fENMT05FX1RIUkVBRHxDTE9ORV9TWVNWU0VNfENMT05FX1NFVFRMU3xDTE9ORV9QQVJFTlRfU0VU
+VElEfENMT05FX0NISUxEX0NMRUFSVElELCBwYXJlbnRfdGlkcHRyPTB4N2Y0NzQ2ZjYwOWQwLCB0
+bHM9MHg3ZjQ3NDZmNjA3MDAsIGNoaWxkX3RpZHB0cj0weDdmNDc0NmY2MDlkMCkgPSAxMzEwDQo+
+PiBlcG9sbF93YWl0KDQsIFt7RVBPTExJTiwge3UzMj05LCB1NjQ9OX19XSwgMzIsIC0xKSA9IDEN
+Cj4gDQo+IA0KPiBFdm9sdXRpb24gaGFzIGEgbnVtYmVyIG9mIGZpbGUgZGVzY3JpcHRvcnMgb3Bl
+bjoNCj4gDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgY3dkICAgICAgIERJUiAgICAgICAg
+ICAgICAgIDAsNjggICAgICAgNDUgICAgICAgIDQgL2hvbWUvb2xhaGE5MyAoZmlsdXIwNC5pdC5s
+aXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgbWVtICAg
+ICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAyMjk5MDkgL2hvbWUvb2xhaGE5
+My8uY2FjaGUvbWVzYV9zaGFkZXJfY2FjaGUvaW5kZXggKGZpbHVyMDQuaXQubGl1LnNlOi9zdGFm
+Zi9vbGFoYTkzKSAoc3RhdDogUGVybWlzc2lvbiBkZW5pZWQpDQo+PiBldm9sdXRpb24gMjY5MTYg
+b2xhaGE5MyAgbWVtICAgICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAxNzU0
+MjkgL2hvbWUvb2xhaGE5My8uY29uZmlnL2Rjb25mL3VzZXIgKGZpbHVyMDQuaXQubGl1LnNlOi9z
+dGFmZi9vbGFoYTkzKSAoc3RhdDogUGVybWlzc2lvbiBkZW5pZWQpDQo+PiBldm9sdXRpb24gMjY5
+MTYgb2xhaGE5MyAgbWVtICAgICAgIFJFRyAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAx
+NzE3MzkgL2hvbWUvb2xhaGE5My8ubG9jYWwvc2hhcmUvZ3Zmcy1tZXRhZGF0YS8ubmZzMDAwMDAw
+MDAwMDAyOWVkYjAwMDAwMzMzIChmaWx1cjA0Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykgKHN0
+YXQ6IFBlcm1pc3Npb24gZGVuaWVkKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAxNXUg
+ICAgICBSRUcgICAgICAgICAgICAgICAwLDY4ICAgIDI4NjcyICAgMjMwNTM5IC9ob21lL29sYWhh
+OTMvLnBraS9uc3NkYi9jZXJ0OS5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMp
+DQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgIDE2dSAgICAgIFJFRyAgICAgICAgICAgICAg
+IDAsNjggICAgMjg2NzIgICAyMzA1NDEgL2hvbWUvb2xhaGE5My8ucGtpL25zc2RiL2tleTQuZGIg
+KGZpbHVyMDQuaXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9s
+YWhhOTMgICAxOHUgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAg
+IC9ob21lL29sYWhhOTMvLmNhY2hlL2V2b2x1dGlvbi9tYWlsL2UwMTNmYTU2ZmVjODY4NWU1Y2I3
+MTczM2I2NjIxNmI1MTQ5NWE5NDQvZm9sZGVycy5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZm
+L29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5MyAgIDE5dSAgdW5rbm93biAgICAg
+ICAgICAgICAgIDAsNjggICAgICAgICAgICAgICAgICAgL2hvbWUvb2xhaGE5My8uY2FjaGUvZXZv
+bHV0aW9uL21haWwvMWU0OWM0ZDUxYTEwMWE3NzUzNzNlNjQ1NWM0Y2U3NWIxYmNjODdhOS9mb2xk
+ZXJzLmRiIChmaWx1cjA0Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAy
+NjkxNiBvbGFoYTkzICAgMjF1ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAg
+ICAgICAgICAvaG9tZS9vbGFoYTkzLy5jYWNoZS9ldm9sdXRpb24vbWFpbC8xM2Y3MTBkODY1OWE3
+OWZkNDJlYTNhZmY1M2IxMTZmNmE2N2JiYmViL2ZvbGRlcnMuZGIgKGZpbHVyMDQuaXQubGl1LnNl
+Oi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAyMnUgIHVua25v
+d24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9ob21lL29sYWhhOTMvLmNh
+Y2hlL2V2b2x1dGlvbi9tYWlsLzk0ZTU1YmZkYmY2ZmU4ZjkzY2VlZGVmMWE3YWUyNDdmYjk3ZWEy
+ZmYvZm9sZGVycy5kYiAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9s
+dXRpb24gMjY5MTYgb2xhaGE5MyAgIDIzdSAgdW5rbm93biAgICAgICAgICAgICAgIDAsNjggICAg
+ICAgICAgICAgICAgICAgL2hvbWUvb2xhaGE5My8uY2FjaGUvZXZvbHV0aW9uL21haWwvMTZlMWQ1
+ZDRmY2YzYzI2ZTQ1YjM2Njc1OWZkZDA2ZGYxYjU1Yjk3OS9mb2xkZXJzLmRiIChmaWx1cjA0Lml0
+LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAyNjkxNiBvbGFoYTkzICAgMjR1
+ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAgICAgICAgICAvaG9tZS9vbGFo
+YTkzLy5sb2NhbC9zaGFyZS9ldm9sdXRpb24vbWFpbC9sb2NhbC9mb2xkZXJzLmRiIChmaWx1cjA0
+Lml0LmxpdS5zZTovc3RhZmYvb2xhaGE5MykNCj4+IGV2b2x1dGlvbiAyNjkxNiBvbGFoYTkzICAg
+MjV1ICB1bmtub3duICAgICAgICAgICAgICAgMCw2OCAgICAgICAgICAgICAgICAgICAvaG9tZS9v
+bGFoYTkzLy5sb2NhbC9zaGFyZS9ldm9sdXRpb24vbWFpbC92Zm9sZGVyL2ZvbGRlcnMuZGIgKGZp
+bHVyMDQuaXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhh
+OTMgICAyNnUgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9o
+b21lL29sYWhhOTMvLmNvbmZpZy9ldm9sdXRpb24vbWFpbC9yZW1vdGUtY29udGVudC5kYiAoZmls
+dXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+PiBldm9sdXRpb24gMjY5MTYgb2xhaGE5
+MyAgIDI3dSAgdW5rbm93biAgICAgICAgICAgICAgIDAsNjggICAgICAgICAgICAgICAgICAgL2hv
+bWUvb2xhaGE5My8uY29uZmlnL2V2b2x1dGlvbi9tYWlsL3Byb3BlcnRpZXMuZGIgKGZpbHVyMDQu
+aXQubGl1LnNlOi9zdGFmZi9vbGFoYTkzKQ0KPj4gZXZvbHV0aW9uIDI2OTE2IG9sYWhhOTMgICAy
+OXIgIHVua25vd24gICAgICAgICAgICAgICAwLDY4ICAgICAgICAgICAgICAgICAgIC9ob21lL29s
+YWhhOTMvLmxvY2FsL3NoYXJlL2d2ZnMtbWV0YWRhdGEvLm5mczAwMDAwMDAwMDAwMjllZGIwMDAw
+MDMzMyAoZmlsdXIwNC5pdC5saXUuc2U6L3N0YWZmL29sYWhhOTMpDQo+IA0KPiANCj4gUmVwZWF0
+ZWQgZXJyb3JzIGZyb20gZXZvbHV0aW9uIGluIHRoZSBsb2cgZmlsZXM6DQo+IA0KPj4gU2VwIDEz
+IDE2OjAxOjQ4IGxpbGxlNzEgZXZvbHV0aW9uWzI2OTE2XTogY2FtZWxfc3RvcmVfc3VtbWFyeV9k
+aXNjb25uZWN0X2ZvbGRlcl9zdW1tYXJ5OiBTdG9yZSBzdW1tYXJ5IDB4NTU5YjQ0MTk0MzkwIGlz
+IG5vdCBjb25uZWN0ZWQgdG8gZm9sZGVyIHN1bW1hcnkgMHg3ZmNhZjQwNDI4ZTANCj4+IFNlcCAx
+MyAxNjowMTo0OCBsaWxsZTcxIGV2b2x1dGlvblsyNjkxNl06IFVuYWJsZSB0byBsb2FkIHN1bW1h
+cnk6IGRpc2sgSS9PIGVycm9yDQo+PiBTZXAgMTMgMTY6MDE6NDggbGlsbGU3MSBldm9sdXRpb25b
+MjY5MTZdOiBHRXJyb3Igc2V0IG92ZXIgdGhlIHRvcCBvZiBhIHByZXZpb3VzIEdFcnJvciBvciB1
+bmluaXRpYWxpemVkIG1lbW9yeS4NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBUaGlzIGluZGljYXRlcyBhIGJ1ZyBpbiBzb21lb25lJ3MgY29kZS4gWW91IG11
+c3QgZW5zdXJlIGFuIGVycm9yIGlzIE5VTEwgYmVmb3JlIGl0J3Mgc2V0Lg0KPj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFRoZSBvdmVyd3JpdGluZyBlcnJvciBt
+ZXNzYWdlIHdhczogZGlzayBJL08gZXJyb3INCj4gDQo+IFJlc3RhcnRpbmcgcnBjLmdzc2QgZG9l
+c27igJl0IHNlZW0gdG8gaGVscC4gUmVtb3ZpbmcgdGhlIGV4cGlyZWQga2VyYmVyb3MgY2FjaGUg
+ZmlsZSBkb2VzbuKAmXQgaGVscC4gU28gbXkgZ3Vlc3MgaXMgdGhhdCBldm9sdXRpb24gc29tZWhv
+dyB0cmlnZ2VycyBuZXcgTkZTIHNlcnZlciBjb25uZWN0aW9ucyBidXQgdGhlbiB0aGUga2VybmVs
+IGltbWVkaWF0ZWx5IHRlcm1pbmF0ZXMgaXQgd2l0aG91dCBldmVyIHNlbmRpbmcgYW55IGRhdGEg
+dG8gdGhlIE5GUyBzZXJ2ZXIuDQo+IA0KPiAoUmVib290aW5nIHRoZSBjbGllbnQgd29ya3MgLSBi
+dXQuLiA6LSkNCj4gDQo+IA0KPiBJdCB3b3VsZCBoYXZlIGJlZW4gbmljZSBpZiBhbiBleHBpcmVk
+IGtlcmJlcm9zIGNhY2hlIGRpZG7igJl0IGNhdXNlIHRoaXMgYWdncmVzc2l2ZSBiZWhhdmlvdXLi
+gKYNCj4gDQo+IC0gUGV0ZXINCj4+PiBUaGlzIG1lc3NhZ2UgaXMgZnJvbSBhbiBleHRlcm5hbCBz
+ZW5kZXIuIExlYXJuIG1vcmUgYWJvdXQgd2h5IHRoaXMgPDwNCj4+PiBtYXR0ZXJzIGF0IGh0dHBz
+Oi8vbGlua3MudXRleGFzLmVkdS9ydHljbGYuICAgICAgICAgICAgICAgICAgICAgICAgPDwNCg==
