@@ -2,95 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F9A8B4CE3
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Sep 2019 13:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9648AB5026
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Sep 2019 16:16:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfIQL2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Sep 2019 07:28:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43620 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfIQL2q (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 17 Sep 2019 07:28:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB1E98980E1;
-        Tue, 17 Sep 2019 11:28:45 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79C445D70D;
-        Tue, 17 Sep 2019 11:28:44 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Leon Kyneur" <leonk@dug.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: troubleshooting LOCK FH and NFS4ERR_BAD_SEQID
-Date:   Tue, 17 Sep 2019 07:28:43 -0400
-Message-ID: <8217416C-F3E5-4BEE-BD01-2BE19952425E@redhat.com>
-In-Reply-To: <CAACwWuN6siyM9t+rCmzxYPCf777bvD_J1xQKwNb7ZzBdzvy42Q@mail.gmail.com>
-References: <CAACwWuN6siyM9t+rCmzxYPCf777bvD_J1xQKwNb7ZzBdzvy42Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 17 Sep 2019 11:28:46 +0000 (UTC)
+        id S1727092AbfIQOQ1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Sep 2019 10:16:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33134 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfIQOQ0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Sep 2019 10:16:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8HEEHD0045442;
+        Tue, 17 Sep 2019 14:16:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=6sq6UDKb/yYMAX9vCZmgG1J3rbo80CYwETuCoZvo678=;
+ b=QxqznBrM9rcbhNDzGzZpoRDFCfqHfW5N12GJfe7Ogkph8dm+Mj2KSrWZ6nNt+QU2uuBI
+ 2FJlzWdZAdSMK80o03uSgpHc1PgC6zXvw767KEkRCqVOHqt1Ngak3DgqmUNGlPgXFl33
+ netGY2gSzU9b8c07aMw2JRjuUAGY09jViJQ8ASKFur7NniLcwuaAwEfvDqitcYYVmeD0
+ LS2gNyLMpDv81jPsMDxD81qpw2YiH0fQy7UYhY/bit7l2tEvrtNw/z0rZ6LfNW6eeBMK
+ kSpO9PrTgyJNPk43/R8vFpXEQFPIEv3rty58h0SObr3Y77B2IMA9FL9F6XdSxnbDkIau WQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2v0r5pervx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 14:16:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8HEAqJl181528;
+        Tue, 17 Sep 2019 14:16:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2v2nmv6bha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 14:16:22 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8HEGL4N000962;
+        Tue, 17 Sep 2019 14:16:21 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Sep 2019 07:16:21 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC-PATCH] nfsd: provide a procfs entry to release stateids of a
+ particular local filesystem
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CANHi-ReAFifZwBrRniLBiRnQOWeJKu-EYp18LDHwtr50eifVMw@mail.gmail.com>
+Date:   Tue, 17 Sep 2019 10:16:20 -0400
+Cc:     alex@zadara.com, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <38D8C6AD-9550-415F-8A76-BC990810DAD1@oracle.com>
+References: <1567518908-1720-1-git-send-email-alex@zadara.com>
+ <CANHi-ReAFifZwBrRniLBiRnQOWeJKu-EYp18LDHwtr50eifVMw@mail.gmail.com>
+To:     John Gallagher <john.gallagher@delphix.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=754
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909170137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=834 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909170139
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 12 Sep 2019, at 4:27, Leon Kyneur wrote:
 
-> Hi
->
-> I'm experiencing an issue on NFS 4.0 + 4.1 where we cannot call fcntl
-> locks on any file on the share. The problem goes away if the share is
-> umount && mount (mount -o remount does not resolve the issue)
->
-> Client:
-> EL 7.4 3.10.0-693.5.2.el7.x86_64 nfs-utils-1.3.0-0.48.el7_4.x86_64
->
-> Server:
-> EL 7.4 3.10.0-693.5.2.el7.x86_64  nfs-utils-1.3.0-0.48.el7_4.x86_64
->
-> I can't figure this out but the client reports bad-sequence-id in
-> dupicate in the logs:
-> Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> sequence-id error on an unconfirmed sequence ffff881c52286220!
-> Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> sequence-id error on an unconfirmed sequence ffff881c52286220!
-> Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> Sep 12 02:17:44 client kernel: NFS: v4 server returned a bad
-> sequence-id error on an unconfirmed sequence ffff881b414b2620!
->
-> wireshark capture shows only 1 BAD_SEQID reply from the server:
-> $ tshark -r client_broken.pcap -z proto,colinfo,rpc.xid,rpc.xid -z
-> proto,colinfo,nfs.seqid,nfs.seqid -R 'rpc.xid == 0x9990c61d'
-> tshark: -R without -2 is deprecated. For single-pass filtering use -Y.
-> 141         93 172.27.30.129 -> 172.27.255.28 NFS 352 V4 Call LOCK FH:
-> 0x80589398 Offset: 0 Length: <End of File>  nfs.seqid == 0x0000004e
-> nfs.seqid == 0x00000002  rpc.xid == 0x9990c61d
-> 142         93 172.27.255.28 -> 172.27.30.129 NFS 124 V4 Reply (Call
-> In 141) LOCK Status: NFS4ERR_BAD_SEQID  rpc.xid == 0x9990c61d
->
-> system call I have identified as triggering it is:
-> fcntl(3, F_SETLK, {type=F_RDLCK, whence=SEEK_SET, start=1073741824,
-> len=1}) = -1 EIO (Input/output error)
 
-Can you simplify the trigger into something repeatable?  Can you determine
-if the client or the server has lost track of the sequence?
+> On Sep 16, 2019, at 6:28 PM, John Gallagher =
+<john.gallagher@delphix.com> wrote:
+>=20
+> On Tue, Sep 3, 2019 at 6:57 AM Alex Lyakas <alex@zadara.com> wrote:
+>> This patch allows user-space to tell nfsd to release stateids of a =
+particular local filesystem.
+>> After that, it is possible to unmount the local filesystem.
+>=20
+> We recently ran into this exact same issue. A solution along these
+> lines would be very useful to us as well. I am curious, though, is it
+> feasible to release all state related to a filesystem immediately when
+> it is unexported? It seems like that would be ideal from the
+> perspective of the administrator of the server, but perhaps there are
+> technical reasons why that isn't easy or even possible.
 
-> The server filesystem is ZFS though NFS sharing is turned off via ZFS
-> options and it's exported using /etc/exports / nfsd...
->
-> The BAD_SEQID error seems to be fairly random, we have over 2000
-> machines connected to the share and it's experienced frequently but
-> randomly accross our clients.
->
-> It's worth mentioning that the majority of the clients are mounting
-> 4.0 we did try 4.1 everywhere but hit this
-> https://access.redhat.com/solutions/3146191
+My two cents: I was surprised by Bruce's claim that simply unexporting a
+local filesystem does not reliably render it unmountable. IMO that =
+behavior
+would also be surprising (and possibly inconvenient) to server =
+administrators,
+especially in this era of elastic and automated system configuration.
 
-This was fixed in kernel-3.10.0-735.el7, FWIW..
 
-Ben
+--
+Chuck Lever
+
+
+
