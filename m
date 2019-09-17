@@ -2,64 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AAC7B43FA
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Sep 2019 00:29:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EBC2B4A02
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Sep 2019 11:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfIPW3D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Sep 2019 18:29:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36586 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfIPW3D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Sep 2019 18:29:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id b136so2919218iof.3
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2019 15:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=delphix.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=H0ZsSGTSv+cL7Oj6JGDCmKbMzERwb43OxPJbmdmv35w=;
-        b=eKql6OrYBZhI75WY3ioLSz5CP+VrQPQFvyCjHYWznrMHqyoBAkSpdSYRiOCY9JV0tg
-         0Q87iooqiRlmejo5h12KuF+pAbGZ1cVmE+T0Kw97L5P8bkQVVOSU3SCFmFtmsutNK/Os
-         Pkt3riTHzAp6/PfMB0VsFyQFkvdgOwGX2w3A8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=H0ZsSGTSv+cL7Oj6JGDCmKbMzERwb43OxPJbmdmv35w=;
-        b=OZuuKORqTVb+Pjtj6jBhQUYUGrUq6NjLiPY3dSpOtfsqS0oAwcaFDXjZcsinaOwjKK
-         M9PUsPVZa8PgtnTKGWRDr4e5XBBl63g3PsUAm5ftdDgc/CGUPr1GoGugLtM+Fqsp0pEm
-         0hhWUWZY4qo7Jbqe6SLIb8bU+Aa0OtoeqMC9r5WjK+0exFqlJHyw190rExgUzfDqkQxa
-         N8+A3YNWq51NwyXeH1wfNZmN36PP2Q/beIXUJD4IrrM0G44Jr2DrysfTf2SIOtC/iyzv
-         8QikY1RyBz1Tcrm771lYoEM8Ekq3zXpzCljUHT6aZvUL/evuo+lcWJ/GQE6kYgQxfkxo
-         PKbw==
-X-Gm-Message-State: APjAAAWkCuJABLd0WVnK5RKIsBfBT+JKeQKN3MHehFMyx3695z40b2Ug
-        GIswfVmt6scQIokMRI5VsLkCIS+hXpDfFzrNy0LjDvs9GLk=
-X-Google-Smtp-Source: APXvYqwqAg3UCvOQM14brsJRHqjPjGooBdYLlHbCcs1vJMzxUlhUpY/QkNGrLydGq11vFI1SndLVvVhT6Re59l1qWEE=
-X-Received: by 2002:a6b:400f:: with SMTP id k15mr129915ioa.153.1568672942506;
- Mon, 16 Sep 2019 15:29:02 -0700 (PDT)
+        id S1726084AbfIQJEl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 17 Sep 2019 05:04:41 -0400
+Received: from mail.11d03.mspz7.gob.ec ([190.214.23.250]:55608 "EHLO
+        mail.11d03.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfIQJEk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Sep 2019 05:04:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTP id B7C5340532183;
+        Mon, 16 Sep 2019 23:27:25 -0500 (-05)
+Received: from mail.11d03.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.11d03.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id cTu-vIGtZZL4; Mon, 16 Sep 2019 23:27:25 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTP id 34364405414E5;
+        Mon, 16 Sep 2019 23:27:24 -0500 (-05)
+X-Virus-Scanned: amavisd-new at 11d03.mspz7.gob.ec
+Received: from mail.11d03.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.11d03.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id xjJ5rMLj-YXs; Mon, 16 Sep 2019 23:27:23 -0500 (-05)
+Received: from [10.33.79.142] (unknown [105.4.0.133])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTPSA id 46619404CF48E;
+        Mon, 16 Sep 2019 23:27:12 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1567518908-1720-1-git-send-email-alex@zadara.com>
-In-Reply-To: <1567518908-1720-1-git-send-email-alex@zadara.com>
-From:   John Gallagher <john.gallagher@delphix.com>
-Date:   Mon, 16 Sep 2019 15:28:26 -0700
-Message-ID: <CANHi-ReAFifZwBrRniLBiRnQOWeJKu-EYp18LDHwtr50eifVMw@mail.gmail.com>
-Subject: Re: [RFC-PATCH] nfsd: provide a procfs entry to release stateids of a
- particular local filesystem
-To:     alex@zadara.com, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
+To:     Recipients <vicenta.sinche@11d03.mspz7.gob.ec>
+From:   ''Tayeb souami'' <vicenta.sinche@11d03.mspz7.gob.ec>
+Date:   Tue, 17 Sep 2019 06:27:03 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20190917042713.46619404CF48E@mail.11d03.mspz7.gob.ec>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 6:57 AM Alex Lyakas <alex@zadara.com> wrote:
-> This patch allows user-space to tell nfsd to release stateids of a particular local filesystem.
-> After that, it is possible to unmount the local filesystem.
+Lieber Freund,
 
-We recently ran into this exact same issue. A solution along these
-lines would be very useful to us as well. I am curious, though, is it
-feasible to release all state related to a filesystem immediately when
-it is unexported? It seems like that would be ideal from the
-perspective of the administrator of the server, but perhaps there are
-technical reasons why that isn't easy or even possible.
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite unten.
 
--John
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
+
+Das ist dein Spendencode: [TS530342018]
+
+Antworten Sie mit dem SPENDE-CODE an diese 
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Tayeb Souami
