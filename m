@@ -2,152 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2431FB6628
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 16:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6B4B68A0
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 19:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfIROcZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Sep 2019 10:32:25 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:33077 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727301AbfIROcZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Sep 2019 10:32:25 -0400
-Received: by mail-ua1-f67.google.com with SMTP id u31so2412734uah.0
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Sep 2019 07:32:24 -0700 (PDT)
+        id S1727570AbfIRRGV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Sep 2019 13:06:21 -0400
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:11087 "EHLO mtaw.cdmx.gob.mx"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726908AbfIRRGV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:06:21 -0400
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RaVAwtCASSEd7QPomlIIpQJEaEu/lRxVzzZy3ohNUAI=;
-        b=dFz2Zv/TTpBtcx56L7VAABZHiJVAKRAVfVJAVKCABMGImnPWShHKeZdiQkIOZTfK8N
-         SRypz5F9j00sJWaRzmIG5mIy5DLDToT8sDrUIpD2YKmzohR+kUtRHlls4wErtm57RGzt
-         hyubEoOdwxZhNSlScToNsT3GysCOvsIrl56kMGXHHmb7mt/sOJNDEvPF3PJKsAT6kkH6
-         Hu4UFoezXYQZaYq5mFYu3OobGMyb1RjoaHq5wGhEZtWq4kcWkkhbB93pOIfvBPTcnozl
-         0M0yE/RfsYRG68JTm44+/clzRke37pERMfivvi/kDRuY/A3tUEVAKmbThPze6kQZUz9c
-         SWVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RaVAwtCASSEd7QPomlIIpQJEaEu/lRxVzzZy3ohNUAI=;
-        b=MZRClM/or1OntJadRm1zZVwNf/1G8bEBkHMjtOj67yKSOV9V7dMPAEG/mrmJ2aCyiO
-         RgmAxWmFtTy85rRcDcdvyrupOjd34tq6yxkzgrZDNNqq+5DmIGWdgCeOxL6sb7fnl0Fo
-         jWnpdhW3x9KFLnBr25EAHEqYK1fZQ32XUORNJ89MqchmKyD6lzPvsy3tBe4mI3vf/YbU
-         YQGnoUHrROZTYMbR9VLeKynHh9HbwmwkJIJKUGZus4iTfnVEdafRzylbgxnbY6ZkjR7r
-         xrggJDcPn8RpeYQKaCVe+URB9FAgwcNK/Fy0kj9HKkqscWuFe/8hyKsVGedj6tqi8X7T
-         4xmA==
-X-Gm-Message-State: APjAAAXhUDREfkb8Tr/G4NUWXWnfajFhNPy+Ov9xI5WM3YTzCls04Xsj
-        hl6smYzCqYXkw4w3ayUHu2INaADPUNYGpT1fZCg=
-X-Google-Smtp-Source: APXvYqxBhudoGte8PkQ4YyofHCXKvH+3+5V8ndAvWNU6+oHYlTQ/ZadCXF5Bp1zSFltZgBbM6e1EcliJTqJfc/jwPk4=
-X-Received: by 2002:ab0:6355:: with SMTP id f21mr1479926uap.40.1568817144118;
- Wed, 18 Sep 2019 07:32:24 -0700 (PDT)
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1568825514; h=X-Virus-Scanned:Content-Type:
+         MIME-Version:Content-Transfer-Encoding:Content-Description:
+         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-SAAS-TrackingID:X-NAIMIME-Disclaimer:X-NAIMIME-Modified:
+         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
+         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=K
+        jij0GhOpdKSaBiEpb4h9F2ukULK7Zgku7ZRRhmMNN
+        U=; b=X3VPtq1oOBNw9u3NPd7sVlGWE/QWvUrGrciQO2ABmOFj
+        rljwotWaTYgzxcLPz9wop8P7HXkYrNORIQVJmFP2KdP7twE/0E
+        aAZBjcjk2cyY6XXb1XERKcME1/wa6QT6rUjh9RlSf4/Ramh7U0
+        LchOLfEASxgf8E9TAtqJp0TAvZI=
+Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
+         id 2377_149f_93f9a4e5_fa2c_459a_b699_30ddb832e8d1;
+        Wed, 18 Sep 2019 11:51:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 336FF36CB;
+        Wed, 18 Sep 2019 11:51:41 -0500 (CDT)
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 3zOTckb1uCpe; Wed, 18 Sep 2019 11:51:40 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id ED5AC343D;
+        Wed, 18 Sep 2019 11:49:56 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2ZmR520GB0-3; Wed, 18 Sep 2019 11:49:56 -0500 (CDT)
+Received: from [41.148.42.229] (8ta-148-42-229.telkomadsl.co.za [41.148.42.229])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id A7B253756;
+        Wed, 18 Sep 2019 11:45:57 -0500 (CDT)
+Content-Type: text/plain;
+  charset="utf-8"
 MIME-Version: 1.0
-References: <CAACwWuN6siyM9t+rCmzxYPCf777bvD_J1xQKwNb7ZzBdzvy42Q@mail.gmail.com>
- <8217416C-F3E5-4BEE-BD01-2BE19952425E@redhat.com> <CAACwWuMbB=zTaXW-fQmUYHLvx=YgE=68M96=hq201pqn2wKxBw@mail.gmail.com>
- <66D00B9D-16DC-4979-8400-457398DC4801@redhat.com>
-In-Reply-To: <66D00B9D-16DC-4979-8400-457398DC4801@redhat.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 18 Sep 2019 10:32:13 -0400
-Message-ID: <CAN-5tyERg5kwcD2iugwPVCLDSog0ufKoRRVbC-7pQW-hqLWncQ@mail.gmail.com>
-Subject: Re: troubleshooting LOCK FH and NFS4ERR_BAD_SEQID
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Leon Kyneur <leonk@dug.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Content-Description: Mail message body
+Subject: Spende von 5 Millionen Euro
+To:     Recipients <mramirezg@mexicocity.gob.mx>
+From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
+Date:   Wed, 18 Sep 2019 18:45:45 +0200
+Reply-To: shanemissler3@gmail.com
+Message-Id: <20190918164557.A7B253756@gdf-correo.df.gob.mx>
+X-AnalysisOut: [v=2.2 cv=crfrqxwi c=1 sm=1 tr=0 p=ELT1L0JgSr8A:10 p=09-KjH]
+X-AnalysisOut: [S_CW8A:10 p=bEr4i4eggGkA:10 p=emDABjehN2fqPHqc8RbT:22 p=Ly]
+X-AnalysisOut: [qu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUcQw==:117 a=oLf]
+X-AnalysisOut: [NtqljNgXPa7RrmTwnGA==:17 a=IkcTkHD0fZMA:10 a=x7bEGLp0ZPQA:]
+X-AnalysisOut: [10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7rT8hNlMSaUXRpxS]
+X-AnalysisOut: [gA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrRv:21 a=QEXdDO2]
+X-AnalysisOut: [ut3YA:10]
+X-SAAS-TrackingID: aa0628d5.0.82428420.00-2391.138561250.s12p02m015.mxlogic.net
+X-NAIMIME-Disclaimer: 1
+X-NAIMIME-Modified: 1
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6637> : inlines <7142> : streams
+ <1833130> : uri <2906059>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi folks,
-
-The bad_seqid error could have been the bug in 7.4
-https://access.redhat.com/solutions/3354251. It's been fixed in
-kernel-3.10.0-693.23.1.el7. Can you try to update and see if that
-helps? The bug was client was sending a double close throwing off the
-seqid use.
-
-On Wed, Sep 18, 2019 at 9:07 AM Benjamin Coddington <bcodding@redhat.com> wrote:
->
-> On 17 Sep 2019, at 22:20, Leon Kyneur wrote:
->
-> > On Tue, Sep 17, 2019 at 7:28 PM Benjamin Coddington
-> > <bcodding@redhat.com> wrote:
-> >>
-> >> On 12 Sep 2019, at 4:27, Leon Kyneur wrote:
-> >>
-> >>> Hi
-> >>>
-> >>> I'm experiencing an issue on NFS 4.0 + 4.1 where we cannot call
-> >>> fcntl
-> >>> locks on any file on the share. The problem goes away if the share
-> >>> is
-> >>> umount && mount (mount -o remount does not resolve the issue)
-> >>>
-> >>> Client:
-> >>> EL 7.4 3.10.0-693.5.2.el7.x86_64 nfs-utils-1.3.0-0.48.el7_4.x86_64
-> >>>
-> >>> Server:
-> >>> EL 7.4 3.10.0-693.5.2.el7.x86_64  nfs-utils-1.3.0-0.48.el7_4.x86_64
-> >>>
-> >>> I can't figure this out but the client reports bad-sequence-id in
-> >>> dupicate in the logs:
-> >>> Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> >>> sequence-id error on an unconfirmed sequence ffff881c52286220!
-> >>> Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> >>> sequence-id error on an unconfirmed sequence ffff881c52286220!
-> >>> Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> >>> sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> >>> Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> >>> sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> >>> Sep 12 02:17:44 client kernel: NFS: v4 server returned a bad
-> >>> sequence-id error on an unconfirmed sequence ffff881b414b2620!
-> >>>
-> >>> wireshark capture shows only 1 BAD_SEQID reply from the server:
-> >>> $ tshark -r client_broken.pcap -z proto,colinfo,rpc.xid,rpc.xid -z
-> >>> proto,colinfo,nfs.seqid,nfs.seqid -R 'rpc.xid == 0x9990c61d'
-> >>> tshark: -R without -2 is deprecated. For single-pass filtering use
-> >>> -Y.
-> >>> 141         93 172.27.30.129 -> 172.27.255.28 NFS 352 V4 Call LOCK
-> >>> FH:
-> >>> 0x80589398 Offset: 0 Length: <End of File>  nfs.seqid == 0x0000004e
-> >>> nfs.seqid == 0x00000002  rpc.xid == 0x9990c61d
-> >>> 142         93 172.27.255.28 -> 172.27.30.129 NFS 124 V4 Reply (Call
-> >>> In 141) LOCK Status: NFS4ERR_BAD_SEQID  rpc.xid == 0x9990c61d
-> >>>
-> >>> system call I have identified as triggering it is:
-> >>> fcntl(3, F_SETLK, {type=F_RDLCK, whence=SEEK_SET, start=1073741824,
-> >>> len=1}) = -1 EIO (Input/output error)
-> >>
-> >> Can you simplify the trigger into something repeatable?  Can you
-> >> determine
-> >> if the client or the server has lost track of the sequence?
-> >>
-> >
-> > I have tried, I wrote some code to perform the fcntl RDKLCK the same
-> > way and ran it accross
-> > thousands of machines without any success. I am quite sure this is a
-> > symptom of something
-> > not the cause.
-> >
-> > Is there a better way of tracking sequences other than monitoring the
-> > network traffic?
->
-> I think that's the best way, right now.  We do have tracepoints for
-> nfs4 open and close that show the sequence numbers on the client, but
-> I'm
-> not sure about how to get that from the server side.  I don't think we
-> have
-> seqid for locks in tracepoints.. I could be missing something.  Not only
-> that, but you might not get tracepoint output showing the sequence
-> numbers
-> if you're in an error-handling path.
->
-> If you have a wire capture of the event, you should be able to go
-> backwards
-> from the error and figure out what the sequence number on the state
-> should
-> be for the operation that received BAD_SEQID by finding the last
-> sequence-mutating (OPEN,CLOSE,LOCK) operation for that stateid that did
-> not
-> return an error.
->
-> Ben
+RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
+ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
+cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
+aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
+ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
+ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
+aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
+ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
+bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
+ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
+MEBnbWFpbC5jb20pCgoKQ2VjaSBlc3QgdW4gY291cnJpZXIgcGVyc29ubmVsIHF1ZSBqZSB2b3Vz
+IGFkcmVzc2UuIEplIHN1aXMgU0hBTkUgTUlTU0xFUiwgZGUgRmxvcmlkZSwgw4l0YXRzLVVuaXMu
+IENvbW1lIHZvdXMgbGUgc2F2ZXogZMOpasOgLCBqJ2FpIGdhZ27DqSA0NTEgbWlsbGlvbnMgZGUg
+ZG9sbGFycyAoTG90dG8gSmFja3BvdCkgZXQgbCdhcmdlbnQgYSBjaGFuZ8OpIG1hIHZpZSBldCBj
+ZWxsZSBkZSBtYSBmYW1pbGxlLCBtYWlzIGNlbGEgbmUgY2hhbmdlcmEgcGFzIG1vbiBjxZN1ciwg
+Y29tbWUgamUgbCdhaSBkaXQgbGUgam91ciBvw7kgaidhaSBtb24gYXJnZW50LCBqJ3V0aWxpc2Vy
+YWkgY2V0IGFyZ2VudCBwb3VyIGwnYWlkZSBkZSBsJ2h1bWFuaXTDqS5KJ2FpIGTDqWNpZMOpIGRl
+IHZvdXMgZG9ubmVyIGxhIHNvbW1lIGRlIDUgbWlsbGlvbnMgZCdldXJvcyDDoCB2b3VzIGV0IMOg
+IHZvdHJlIGNvbW11bmF1dMOpLCBwb3VyIHLDqWNsYW1lciBjZSBkb24sIGVtYWlsLSAoc2hhbmVt
+aXNzbGVyMEBnbWFpbC5jb20pCgoKCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4KCgpMYSBpbmZvcm1hY2lvbiBjb250ZW5pZGEgZW4gZXN0ZSBjb3JyZW8sIGFzaSBj
+b21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRvcyBhbmV4b3MsIHB1ZWRlIGNvbnRlbmVy
+IGRhdG9zIHBlcnNvbmFsZXMsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gZXMgcmVzcG9uc2FiaWxp
+ZGFkIGRlIHF1aWVuIGxvcyB0cmFuc21pdGUgeSBxdWllbiBsb3MgcmVjaWJlLCBlbiB0w6lybWlu
+b3MgZGUgbG8gZGlzcHVlc3RvIHBvciBsYXMgZnJhY2Npb25lcyBJSSB5IFZJSSBkZWwgYXJ0aWN1
+bG8gNCwgdWx0aW1vIHBhcnJhZm8gZGVsIGFydGljdWxvIDgsIGFydGljdWxvIDM2IHBhcnJhZm8g
+SUksIDM4IGZyYWNjaW9uIEkgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxhIExleSBkZSBUcmFuc3Bh
+cmVuY2lhIHkgQWNjZXNvIGEgbGEgSW5mb3JtYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVk
+ZXJhbC4NCkxvcyBEYXRvcyBQZXJzb25hbGVzIHNlIGVuY3VlbnRyYW4gcHJvdGVnaWRvcyBwb3Ig
+bGEgTGV5IGRlIFByb3RlY2Npb24gZGUgRGF0b3MgUGVyc29uYWxlcyBkZWwgRGlzdHJpdG8gRmVk
+ZXJhbCwgcG9yIGxvIHF1ZSBzdSBkaWZ1c2lvbiBzZSBlbmN1ZW50cmEgdHV0ZWxhZGEgZW4gc3Vz
+IGFydGljdWxvcyAyLCA1LCAxNiwgMjEsIDQxIHkgZGVtYXMgcmVsYXRpdm9zIHkgYXBsaWNhYmxl
+cywgZGViaWVuZG8gc3VqZXRhcnNlIGVuIHN1IGNhc28sIGEgbGFzIGRpc3Bvc2ljaW9uZXMgcmVs
+YXRpdmFzIGEgbGEgY3JlYWNpb24sIG1vZGlmaWNhY2lvbiBvIHN1cHJlc2lvbiBkZSBkYXRvcyBw
+ZXJzb25hbGVzIHByZXZpc3Rvcy4gQXNpbWlzbW8sIGRlYmVyYSBlc3RhcnNlIGEgbG8gc2XDsWFs
+YWRvIGVuIGxvcyBudW1lcmFsZXMgMSAsIDMsIDEyLCAxOCwgMTksIDIwLCAyMSwgMjMsIDI0LCAy
+OSwgMzUgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxvcyBMaW5lYW1pZW50b3MgcGFyYSBsYSBQcm90
+ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZW4gZWwgRGlzdHJpdG8gRmVkZXJhbC4NCkVuIGVs
+IHVzbyBkZSBsYXMgdGVjbm9sb2dpYXMgZGUgbGEgaW5mb3JtYWNpb24geSBjb211bmljYWNpb25l
+cyBkZWwgR29iaWVybm8gZGVsIERpc3RyaXRvIEZlZGVyYWwsIGRlYmVyYSBvYnNlcnZhcnNlIHB1
+bnR1YWxtZW50ZSBsbyBkaXNwdWVzdG8gcG9yIGxhIExleSBHb2JpZXJubyBFbGVjdHJvbmljbyBk
+ZWwgRGlzdHJpdG8gRmVkZXJhbCwgbGEgbGV5IHBhcmEgaGFjZXIgZGUgbGEgQ2l1ZGFkIGRlIE1l
+eGljbyB1bmEgQ2l1ZGFkIE1hcyBBYmllcnRhLCBlbCBhcGFydGFkbyAxMCBkZSBsYSBDaXJjdWxh
+ciBVbm8gdmlnZW50ZSB5IGxhcyBOb3JtYXMgR2VuZXJhbGVzIHF1ZSBkZWJlcmFuIG9ic2VydmFy
+c2UgZW4gbWF0ZXJpYSBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpb24gZW4gbGEgQWRtaW5p
+c3RyYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVkZXJhbC4K
