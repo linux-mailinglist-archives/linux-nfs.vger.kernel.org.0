@@ -2,132 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 476FDB59A3
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 04:21:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4231B5FCE
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 11:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbfIRCVH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Sep 2019 22:21:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39445 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIRCVH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Sep 2019 22:21:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so3067140pgi.6
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Sep 2019 19:21:05 -0700 (PDT)
+        id S1728427AbfIRJHh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Sep 2019 05:07:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55590 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728278AbfIRJHh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Sep 2019 05:07:37 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so1623583wma.5
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Sep 2019 02:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dug-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k6triC5Fu9zKeUNPmjyUPzlj72xemg5GZtiq+baga8Q=;
-        b=AnyYReiOyJXwfR/UzTENbGw7Xpl3mxpY9HEA9cYNfR5o5uWOGUrVInxHa5y3BqBF0G
-         ySoVHRZ9e1kksVAffLfc8lO7B/NfYQAGW9dvNe92s7w2plzXSsXs8p47166aspyONtfu
-         GVGCWpVJuEq/07yFqX+4sRJCi2IXGAUV1c6s29LETy/YcFntorV5LHZ/9G2Y80FPaRwm
-         Bl+nFxy0usl1jEuABpAWQ/Ay4VdXm8sci/TWqQh1UEfXpIERdM1sBJccmFS1mHSq7yOQ
-         x44ADXWGB9V6Av83O7jh0ASo0qFSzZeZMKKI6MpM1wz69PW/LpaKcljqRRFh0bNGup0a
-         vSYg==
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6G/whdxwOVG2qxmcsy9XC+pDIIKNhBXnDvwIF4K/VBs=;
+        b=kfWr8gWBYBcBGgcxeOud4gsGHHoCDZ+e2gVUoUqlrkYqpWgQKaJ78hHgXC3ilzVr0O
+         +8pkEG8kqn4PpvoHDlJhIdgZOtD96xrMJPf5rxoAvthocW4621d3D9Qh5trYnLS5SZ1C
+         BN08nY19kls8ugqtZhrEwO8LpHQ8mUyG2tZWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k6triC5Fu9zKeUNPmjyUPzlj72xemg5GZtiq+baga8Q=;
-        b=TmJ6X3oeksQWMzDJTMRTX5n+KzQHJUjqhGu6g0DOtWu4ewV7aOpkfuTpVUxCXqY1VS
-         HW36h2DAXwv/FJhUjIbRU0FfwSN6rzv40PykvIE/wktcczDkWCDMW1/ah/3F6wszTb1i
-         5oVR1VbccsdI2alzfjdFg9OyEw51+8wkknO3ZUV40QkMx0USZLMTRNzSRI27SthrVIAm
-         n3kJ1FrBdQiOkjQtgsnbm+GhvNgpCl0SICDl9za/b0F3+X81emNC4ketAQg+DU4dKzNm
-         40H2WK1KZwn9W7GITTipvajm+sS2gbphsKr+BmUEhbpTlUKp0GS0RurCaYEWfbazIhLL
-         0veg==
-X-Gm-Message-State: APjAAAV192T/R0kFPxCRNg/YklccOx5DWIf9Dj1LDMISC8oZJMsr/6fH
-        LpXsl3KFT45cBCIflWSOR3j/gmtmXvP5HqcLLZzWrw==
-X-Google-Smtp-Source: APXvYqw78CPET7HqsmbBkkydmypj5JpKSw4ol1KtQp49jZcYMH1WWSc7MZR7MrITO0z12EypCRcV4Lrw9rghPfLjIqg=
-X-Received: by 2002:a17:90a:a47:: with SMTP id o65mr1258794pjo.90.1568773265336;
- Tue, 17 Sep 2019 19:21:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6G/whdxwOVG2qxmcsy9XC+pDIIKNhBXnDvwIF4K/VBs=;
+        b=H6p9iWO11ld5v5o0cA1+YOPckUn0M6qWcoscALNELQWOCJQT4xxWNf8E1PNEnJIYQC
+         YGWeXTfhpJYxVnENV7AuvsIxwb4yalNFBMe9Fkij9lqgC497viVUt+wKu/5+A8v6gklF
+         kbZORSVT8lFLFkaFWGtj5+QfRp2kkELtp/niDTkXkTXg38vzQO/ozvX4gkon/fKqxIb5
+         XjtWbMYjjzfoEjbsSdo84ypYEJDyCWK4w9/GSuv9YnNrFF8eLfi98ljRO25VbbWSDCV3
+         qABCuXVVEk3FwCu42kg2Dc5A1uWN9EQGNsysKV3EXGzexoBN6AUcQeAtrTRumoTWQKWA
+         gZ5w==
+X-Gm-Message-State: APjAAAUAP5P74LAHz/eAmImByMd0PSoNALyh3cOZnRpgh+uqZzp10JW2
+        7X9QZQsDECnUKdN2KuPUfutufQ==
+X-Google-Smtp-Source: APXvYqxcHp0ur5Smn0yHXP17FwVKc+WjZmFyaf7NbEJ/4W74qLgNfNcp6RlqK0gpGfLkmsfzOB/N8g==
+X-Received: by 2002:a7b:c1cc:: with SMTP id a12mr1816647wmj.73.1568797655318;
+        Wed, 18 Sep 2019 02:07:35 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id q124sm2478546wma.5.2019.09.18.02.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 02:07:34 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 11:07:31 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     NeilBrown <neilb@suse.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lange <lange@informatik.uni-koeln.de>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Message-ID: <20190918090731.GB19549@miu.piliscsaba.redhat.com>
+References: <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
+ <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <20190503153531.GJ12608@fieldses.org>
+ <87woj3157p.fsf@notabene.neil.brown.name>
+ <20190510200941.GB5349@fieldses.org>
 MIME-Version: 1.0
-References: <CAACwWuN6siyM9t+rCmzxYPCf777bvD_J1xQKwNb7ZzBdzvy42Q@mail.gmail.com>
- <8217416C-F3E5-4BEE-BD01-2BE19952425E@redhat.com>
-In-Reply-To: <8217416C-F3E5-4BEE-BD01-2BE19952425E@redhat.com>
-From:   Leon Kyneur <leonk@dug.com>
-Date:   Wed, 18 Sep 2019 10:20:53 +0800
-Message-ID: <CAACwWuMbB=zTaXW-fQmUYHLvx=YgE=68M96=hq201pqn2wKxBw@mail.gmail.com>
-Subject: Re: troubleshooting LOCK FH and NFS4ERR_BAD_SEQID
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510200941.GB5349@fieldses.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 7:28 PM Benjamin Coddington <bcodding@redhat.com> wrote:
->
-> On 12 Sep 2019, at 4:27, Leon Kyneur wrote:
->
-> > Hi
-> >
-> > I'm experiencing an issue on NFS 4.0 + 4.1 where we cannot call fcntl
-> > locks on any file on the share. The problem goes away if the share is
-> > umount && mount (mount -o remount does not resolve the issue)
-> >
-> > Client:
-> > EL 7.4 3.10.0-693.5.2.el7.x86_64 nfs-utils-1.3.0-0.48.el7_4.x86_64
-> >
-> > Server:
-> > EL 7.4 3.10.0-693.5.2.el7.x86_64  nfs-utils-1.3.0-0.48.el7_4.x86_64
-> >
-> > I can't figure this out but the client reports bad-sequence-id in
-> > dupicate in the logs:
-> > Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> > sequence-id error on an unconfirmed sequence ffff881c52286220!
-> > Sep 12 02:16:59 client kernel: NFS: v4 server returned a bad
-> > sequence-id error on an unconfirmed sequence ffff881c52286220!
-> > Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> > sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> > Sep 12 02:17:39 client kernel: NFS: v4 server returned a bad
-> > sequence-id error on an unconfirmed sequence ffff8810889cb020!
-> > Sep 12 02:17:44 client kernel: NFS: v4 server returned a bad
-> > sequence-id error on an unconfirmed sequence ffff881b414b2620!
-> >
-> > wireshark capture shows only 1 BAD_SEQID reply from the server:
-> > $ tshark -r client_broken.pcap -z proto,colinfo,rpc.xid,rpc.xid -z
-> > proto,colinfo,nfs.seqid,nfs.seqid -R 'rpc.xid == 0x9990c61d'
-> > tshark: -R without -2 is deprecated. For single-pass filtering use -Y.
-> > 141         93 172.27.30.129 -> 172.27.255.28 NFS 352 V4 Call LOCK FH:
-> > 0x80589398 Offset: 0 Length: <End of File>  nfs.seqid == 0x0000004e
-> > nfs.seqid == 0x00000002  rpc.xid == 0x9990c61d
-> > 142         93 172.27.255.28 -> 172.27.30.129 NFS 124 V4 Reply (Call
-> > In 141) LOCK Status: NFS4ERR_BAD_SEQID  rpc.xid == 0x9990c61d
-> >
-> > system call I have identified as triggering it is:
-> > fcntl(3, F_SETLK, {type=F_RDLCK, whence=SEEK_SET, start=1073741824,
-> > len=1}) = -1 EIO (Input/output error)
->
-> Can you simplify the trigger into something repeatable?  Can you determine
-> if the client or the server has lost track of the sequence?
->
+On Fri, May 10, 2019 at 04:09:41PM -0400, J. Bruce Fields wrote:
+> On Tue, May 07, 2019 at 10:24:58AM +1000, NeilBrown wrote:
+> > Interesting perspective .... though doesn't NFSv4 explicitly allow
+> > client-side ACL enforcement in the case of delegations?
+> 
+> Not really.  What you're probably thinking of is the single ACE that the
+> server can return on granting a delegation, that tells the client it can
+> skip the ACCESS check for users matching that ACE.  It's unclear how
+> useful that is.  It's currently unused by the Linux client and server.
+> 
+> > Not sure how relevant that is....
+> > 
+> > It seems to me we have two options:
+> >  1/ declare the NFSv4 doesn't work as a lower layer for overlayfs and
+> >     recommend people use NFSv3, or
+> >  2/ Modify overlayfs to work with NFSv4 by ignoring nfsv4 ACLs either
+> >  2a/ always - and ignore all other acls and probably all system. xattrs,
+> >  or
+> >  2b/ based on a mount option that might be
+> >       2bi/ general "noacl" or might be
+> >       2bii/ explicit "noxattr=system.nfs4acl"
+> >  
+> > I think that continuing to discuss the miniature of the options isn't
+> > going to help.  No solution is perfect - we just need to clearly
+> > document the implications of whatever we come up with.
+> > 
+> > I lean towards 2a, but I be happy with with any '2' and '1' won't kill
+> > me.
+> 
+> I guess I'd also lean towards 2a.
+> 
+> I don't think it applies to posix acls, as overlayfs is capable of
+> copying those up and evaluating them on its own.
 
-I have tried, I wrote some code to perform the fcntl RDKLCK the same
-way and ran it accross
-thousands of machines without any success. I am quite sure this is a
-symptom of something
-not the cause.
+POSIX acls are evaluated and copied up.
 
-Is there a better way of tracking sequences other than monitoring the
-network traffic?
+I guess same goes for "security.*" attributes, that are evaluated on MAC checks.
 
-> > The server filesystem is ZFS though NFS sharing is turned off via ZFS
-> > options and it's exported using /etc/exports / nfsd...
-> >
-> > The BAD_SEQID error seems to be fairly random, we have over 2000
-> > machines connected to the share and it's experienced frequently but
-> > randomly accross our clients.
-> >
-> > It's worth mentioning that the majority of the clients are mounting
-> > 4.0 we did try 4.1 everywhere but hit this
-> > https://access.redhat.com/solutions/3146191
->
-> This was fixed in kernel-3.10.0-735.el7, FWIW..
->
-> Ben
+I think it would be safe to ignore failure to copy up anything else.  That seems
+a bit saner than just blacklisting nfs4_acl...
 
-Thanks good to know, am planning an update soon but have been stuck on
-3.10.0-693 for other reasons.
+Something like the following untested patch.
 
-Leon
+Thanks,
+Miklos
+
+---
+ fs/overlayfs/copy_up.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -36,6 +36,13 @@ static int ovl_ccup_get(char *buf, const
+ module_param_call(check_copy_up, ovl_ccup_set, ovl_ccup_get, NULL, 0644);
+ MODULE_PARM_DESC(check_copy_up, "Obsolete; does nothing");
+ 
++static bool ovl_must_copy_xattr(const char *name)
++{
++	return !strcmp(name, XATTR_POSIX_ACL_ACCESS) ||
++	       !strcmp(name, XATTR_POSIX_ACL_DEFAULT) ||
++	       !strncmp(name, XATTR_SECURITY_PREFIX, XATTR_SECURITY_PREFIX_LEN);
++}
++
+ int ovl_copy_xattr(struct dentry *old, struct dentry *new)
+ {
+ 	ssize_t list_size, size, value_size = 0;
+@@ -107,8 +114,13 @@ int ovl_copy_xattr(struct dentry *old, s
+ 			continue; /* Discard */
+ 		}
+ 		error = vfs_setxattr(new, name, value, size, 0);
+-		if (error)
+-			break;
++		if (error) {
++			if (ovl_must_copy_xattr(name))
++				break;
++
++			/* Ignore failure to copy unknown xattrs */
++			error = 0;
++		}
+ 	}
+ 	kfree(value);
+ out:
