@@ -2,111 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0B5DB6CBF
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 21:39:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6815BB6CEB
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 21:49:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfIRTjB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Sep 2019 15:39:01 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:37755 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbfIRTjB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Sep 2019 15:39:01 -0400
-Received: by mail-vk1-f196.google.com with SMTP id v78so288890vke.4
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Sep 2019 12:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FM6TopUxE1Rtc6tttT63BlLsMhhNsHt3UWMSnYgpWdY=;
-        b=NlRb0CMOb3VFC9J5MfHfgo5t1sDQG8KY1DNrNwCpV1y7e95Gu4hiFPt+t0kuyOFWEL
-         yltM6kNPRpxe+DYeGYFQTDMl3Wup1bm1RJx0ODaevRejHY+cWW3hyRbebfqRInn0IvV9
-         E4KW16rYVGEyZ2jcowymvu8OUwxT+fzyHn5g3GGGsO880ACUw//OenRAkg+3Y2SStWy0
-         /r7yFcGPwz+wSjDTFEbgUmWRqOUUz9wbPUNfaMUBAbSJcE9s/CM16fZbuYvd/ROZzJuE
-         hEOJKc7w91CG8XmClwca7T0UxMfeWL28w9ifIGLAWVPAMUhv9C4iT5RoXubUtAFTNoH4
-         bEnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FM6TopUxE1Rtc6tttT63BlLsMhhNsHt3UWMSnYgpWdY=;
-        b=m1PO3Vadd1dVVUwabwdWYjWzCrxz10UgzCSviaAF0FPe91nyjCsh/0J1pS9Hs4ciyc
-         PW7gn7aOQ9Kq3fliVCIuzhl6NGFvXRZwEuBlbcrOBYRLf6YLYsMf/YwsiF56xX0T12dU
-         Nt5cEIzHXzcDCNjtdpDIprToMPHKtK8Aq1eCjI6YpTI5wyjw4ekduU/hqhmZO7+jllhF
-         lg0nBzn41Yv7T4o2mUW7Dc+r0EQHY9RKynVoHWbHYDdq2g2HFSOaMJwBqcYe/vKQoxft
-         65Ry3yCQClalNHgJwiHM4LxLdRmp9NxCDx6toUSD5Y+T2GQmytq3tuxtHEj7nUavIR57
-         jRhQ==
-X-Gm-Message-State: APjAAAUboQ3ZYzwxBc1PdreyjzyErJptpbhf+pYNflXxKvf33/nsyoXM
-        4dOBPfQlyreTigr2EQQNprqpqwJrNyr38R6eOPQ=
-X-Google-Smtp-Source: APXvYqxa+QfBCnGmHhvnMAcVexbErXO9TRxeyGp78vn0w4265oILp+ROr9Ufaovcl85nb0IbnTyzvBRHV1scBM5IZfc=
-X-Received: by 2002:a1f:53c5:: with SMTP id h188mr2904187vkb.33.1568835539816;
- Wed, 18 Sep 2019 12:38:59 -0700 (PDT)
+        id S1731789AbfIRTtw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Sep 2019 15:49:52 -0400
+Received: from fieldses.org ([173.255.197.46]:50470 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731779AbfIRTtv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 18 Sep 2019 15:49:51 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C6CE11504; Wed, 18 Sep 2019 15:49:50 -0400 (EDT)
+Date:   Wed, 18 Sep 2019 15:49:50 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     NeilBrown <neilb@suse.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lange <lange@informatik.uni-koeln.de>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Message-ID: <20190918194950.GD4652@fieldses.org>
+References: <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <20190503153531.GJ12608@fieldses.org>
+ <87woj3157p.fsf@notabene.neil.brown.name>
+ <20190510200941.GB5349@fieldses.org>
+ <20190918090731.GB19549@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-References: <20190916204419.21717-1-trond.myklebust@hammerspace.com>
-In-Reply-To: <20190916204419.21717-1-trond.myklebust@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 18 Sep 2019 15:38:48 -0400
-Message-ID: <CAN-5tyF27z=+3tbU1De_wR0aosiczn67dNanBmBe4icj=uAYwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] Various NFSv4 state error handling fixes
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918090731.GB19549@miu.piliscsaba.redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+On Wed, Sep 18, 2019 at 11:07:31AM +0200, Miklos Szeredi wrote:
+> On Fri, May 10, 2019 at 04:09:41PM -0400, J. Bruce Fields wrote:
+> > On Tue, May 07, 2019 at 10:24:58AM +1000, NeilBrown wrote:
+> > > Interesting perspective .... though doesn't NFSv4 explicitly allow
+> > > client-side ACL enforcement in the case of delegations?
+> > 
+> > Not really.  What you're probably thinking of is the single ACE that the
+> > server can return on granting a delegation, that tells the client it can
+> > skip the ACCESS check for users matching that ACE.  It's unclear how
+> > useful that is.  It's currently unused by the Linux client and server.
+> > 
+> > > Not sure how relevant that is....
+> > > 
+> > > It seems to me we have two options:
+> > >  1/ declare the NFSv4 doesn't work as a lower layer for overlayfs and
+> > >     recommend people use NFSv3, or
+> > >  2/ Modify overlayfs to work with NFSv4 by ignoring nfsv4 ACLs either
+> > >  2a/ always - and ignore all other acls and probably all system. xattrs,
+> > >  or
+> > >  2b/ based on a mount option that might be
+> > >       2bi/ general "noacl" or might be
+> > >       2bii/ explicit "noxattr=system.nfs4acl"
+> > >  
+> > > I think that continuing to discuss the miniature of the options isn't
+> > > going to help.  No solution is perfect - we just need to clearly
+> > > document the implications of whatever we come up with.
+> > > 
+> > > I lean towards 2a, but I be happy with with any '2' and '1' won't kill
+> > > me.
+> > 
+> > I guess I'd also lean towards 2a.
+> > 
+> > I don't think it applies to posix acls, as overlayfs is capable of
+> > copying those up and evaluating them on its own.
+> 
+> POSIX acls are evaluated and copied up.
+> 
+> I guess same goes for "security.*" attributes, that are evaluated on MAC checks.
+> 
+> I think it would be safe to ignore failure to copy up anything else.  That seems
+> a bit saner than just blacklisting nfs4_acl...
+> 
+> Something like the following untested patch.
 
-These set of patches do not address the locking problem. It's actually
-not the locking patch (which I thought it was as I reverted it and
-still had the issue). Without the whole patch series the unlock works
-fine so something in these new patches. Something is up with the 2
-patches:
-NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
-NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
+It seems at least simple to implement and explain.
 
-If I remove either one separately, unlock fails but if I remove both
-unlock works.
+>  fs/overlayfs/copy_up.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> --- a/fs/overlayfs/copy_up.c
+> +++ b/fs/overlayfs/copy_up.c
+> @@ -36,6 +36,13 @@ static int ovl_ccup_get(char *buf, const
+>  module_param_call(check_copy_up, ovl_ccup_set, ovl_ccup_get, NULL, 0644);
+>  MODULE_PARM_DESC(check_copy_up, "Obsolete; does nothing");
+>  
+> +static bool ovl_must_copy_xattr(const char *name)
+> +{
+> +	return !strcmp(name, XATTR_POSIX_ACL_ACCESS) ||
+> +	       !strcmp(name, XATTR_POSIX_ACL_DEFAULT) ||
+> +	       !strncmp(name, XATTR_SECURITY_PREFIX, XATTR_SECURITY_PREFIX_LEN);
+> +}
+> +
+>  int ovl_copy_xattr(struct dentry *old, struct dentry *new)
+>  {
+>  	ssize_t list_size, size, value_size = 0;
+> @@ -107,8 +114,13 @@ int ovl_copy_xattr(struct dentry *old, s
+>  			continue; /* Discard */
+>  		}
+>  		error = vfs_setxattr(new, name, value, size, 0);
+> -		if (error)
+> -			break;
+> +		if (error) {
 
-On Mon, Sep 16, 2019 at 4:46 PM Trond Myklebust <trondmy@gmail.com> wrote:
->
-> Various NFSv4 fixes to ensure we handle state errors correctly. In
-> particular, we need to ensure that for COMPOUNDs like CLOSE and
-> DELEGRETURN, that may have an embedded LAYOUTRETURN, we handle the
-> layout state errors so that a retry of either the LAYOUTRETURN, or
-> the later CLOSE/DELEGRETURN does not corrupt the LAYOUTRETURN
-> reply.
->
-> Also ensure that if we get a NFS4ERR_OLD_STATEID, then we do our
-> best to still try to destroy the state on the server, in order to
-> avoid causing state leakage.
->
-> v2: Fix bug reports from Olga
->  - Try to avoid sending old stateids on CLOSE/OPEN_DOWNGRADE when
->    doing fully serialised NFSv4.0.
->  - Ensure LOCKU initialises the stateid correctly.
->
-> Trond Myklebust (9):
->   pNFS: Ensure we do clear the return-on-close layout stateid on fatal
->     errors
->   NFSv4: Clean up pNFS return-on-close error handling
->   NFSv4: Handle NFS4ERR_DELAY correctly in return-on-close
->   NFSv4: Handle RPC level errors in LAYOUTRETURN
->   NFSv4: Add a helper to increment stateid seqids
->   pNFS: Handle NFS4ERR_OLD_STATEID on layoutreturn by bumping the state
->     seqid
->   NFSv4: Fix OPEN_DOWNGRADE error handling
->   NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
->   NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
->
->  fs/nfs/nfs4_fs.h   |  11 ++-
->  fs/nfs/nfs4proc.c  | 204 ++++++++++++++++++++++++++++++---------------
->  fs/nfs/nfs4state.c |  16 ----
->  fs/nfs/pnfs.c      |  71 ++++++++++++++--
->  fs/nfs/pnfs.h      |  17 +++-
->  5 files changed, 229 insertions(+), 90 deletions(-)
->
-> --
-> 2.21.0
->
+Can we check for EOPNOTSUPP instead of any error?
+
+Maybe we're copying up a user xattr to a filesystem that's perfectly
+capable of supporting those.  And maybe there's a disk error or we run
+out of disk space or something.  Then I'd rather get EIO or ENOSPC than
+silently fail to copy some xattrs.
+
+--b.
+
+> +			if (ovl_must_copy_xattr(name))
+> +				break;
+> +
+> +			/* Ignore failure to copy unknown xattrs */
+> +			error = 0;
+> +		}
+>  	}
+>  	kfree(value);
+>  out:
