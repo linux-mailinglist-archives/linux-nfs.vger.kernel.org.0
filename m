@@ -2,129 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6B4B68A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 19:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B5DB6CBF
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Sep 2019 21:39:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfIRRGV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Sep 2019 13:06:21 -0400
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:11087 "EHLO mtaw.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726908AbfIRRGV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:06:21 -0400
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
+        id S1730159AbfIRTjB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Sep 2019 15:39:01 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:37755 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbfIRTjB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Sep 2019 15:39:01 -0400
+Received: by mail-vk1-f196.google.com with SMTP id v78so288890vke.4
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Sep 2019 12:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1568825514; h=X-Virus-Scanned:Content-Type:
-         MIME-Version:Content-Transfer-Encoding:Content-Description:
-         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-SAAS-TrackingID:X-NAIMIME-Disclaimer:X-NAIMIME-Modified:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=K
-        jij0GhOpdKSaBiEpb4h9F2ukULK7Zgku7ZRRhmMNN
-        U=; b=X3VPtq1oOBNw9u3NPd7sVlGWE/QWvUrGrciQO2ABmOFj
-        rljwotWaTYgzxcLPz9wop8P7HXkYrNORIQVJmFP2KdP7twE/0E
-        aAZBjcjk2cyY6XXb1XERKcME1/wa6QT6rUjh9RlSf4/Ramh7U0
-        LchOLfEASxgf8E9TAtqJp0TAvZI=
-Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
-         id 2377_149f_93f9a4e5_fa2c_459a_b699_30ddb832e8d1;
-        Wed, 18 Sep 2019 11:51:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 336FF36CB;
-        Wed, 18 Sep 2019 11:51:41 -0500 (CDT)
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 3zOTckb1uCpe; Wed, 18 Sep 2019 11:51:40 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id ED5AC343D;
-        Wed, 18 Sep 2019 11:49:56 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2ZmR520GB0-3; Wed, 18 Sep 2019 11:49:56 -0500 (CDT)
-Received: from [41.148.42.229] (8ta-148-42-229.telkomadsl.co.za [41.148.42.229])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id A7B253756;
-        Wed, 18 Sep 2019 11:45:57 -0500 (CDT)
-Content-Type: text/plain;
-  charset="utf-8"
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FM6TopUxE1Rtc6tttT63BlLsMhhNsHt3UWMSnYgpWdY=;
+        b=NlRb0CMOb3VFC9J5MfHfgo5t1sDQG8KY1DNrNwCpV1y7e95Gu4hiFPt+t0kuyOFWEL
+         yltM6kNPRpxe+DYeGYFQTDMl3Wup1bm1RJx0ODaevRejHY+cWW3hyRbebfqRInn0IvV9
+         E4KW16rYVGEyZ2jcowymvu8OUwxT+fzyHn5g3GGGsO880ACUw//OenRAkg+3Y2SStWy0
+         /r7yFcGPwz+wSjDTFEbgUmWRqOUUz9wbPUNfaMUBAbSJcE9s/CM16fZbuYvd/ROZzJuE
+         hEOJKc7w91CG8XmClwca7T0UxMfeWL28w9ifIGLAWVPAMUhv9C4iT5RoXubUtAFTNoH4
+         bEnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FM6TopUxE1Rtc6tttT63BlLsMhhNsHt3UWMSnYgpWdY=;
+        b=m1PO3Vadd1dVVUwabwdWYjWzCrxz10UgzCSviaAF0FPe91nyjCsh/0J1pS9Hs4ciyc
+         PW7gn7aOQ9Kq3fliVCIuzhl6NGFvXRZwEuBlbcrOBYRLf6YLYsMf/YwsiF56xX0T12dU
+         Nt5cEIzHXzcDCNjtdpDIprToMPHKtK8Aq1eCjI6YpTI5wyjw4ekduU/hqhmZO7+jllhF
+         lg0nBzn41Yv7T4o2mUW7Dc+r0EQHY9RKynVoHWbHYDdq2g2HFSOaMJwBqcYe/vKQoxft
+         65Ry3yCQClalNHgJwiHM4LxLdRmp9NxCDx6toUSD5Y+T2GQmytq3tuxtHEj7nUavIR57
+         jRhQ==
+X-Gm-Message-State: APjAAAUboQ3ZYzwxBc1PdreyjzyErJptpbhf+pYNflXxKvf33/nsyoXM
+        4dOBPfQlyreTigr2EQQNprqpqwJrNyr38R6eOPQ=
+X-Google-Smtp-Source: APXvYqxa+QfBCnGmHhvnMAcVexbErXO9TRxeyGp78vn0w4265oILp+ROr9Ufaovcl85nb0IbnTyzvBRHV1scBM5IZfc=
+X-Received: by 2002:a1f:53c5:: with SMTP id h188mr2904187vkb.33.1568835539816;
+ Wed, 18 Sep 2019 12:38:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Description: Mail message body
-Subject: Spende von 5 Millionen Euro
-To:     Recipients <mramirezg@mexicocity.gob.mx>
-From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
-Date:   Wed, 18 Sep 2019 18:45:45 +0200
-Reply-To: shanemissler3@gmail.com
-Message-Id: <20190918164557.A7B253756@gdf-correo.df.gob.mx>
-X-AnalysisOut: [v=2.2 cv=crfrqxwi c=1 sm=1 tr=0 p=ELT1L0JgSr8A:10 p=09-KjH]
-X-AnalysisOut: [S_CW8A:10 p=bEr4i4eggGkA:10 p=emDABjehN2fqPHqc8RbT:22 p=Ly]
-X-AnalysisOut: [qu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUcQw==:117 a=oLf]
-X-AnalysisOut: [NtqljNgXPa7RrmTwnGA==:17 a=IkcTkHD0fZMA:10 a=x7bEGLp0ZPQA:]
-X-AnalysisOut: [10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7rT8hNlMSaUXRpxS]
-X-AnalysisOut: [gA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrRv:21 a=QEXdDO2]
-X-AnalysisOut: [ut3YA:10]
-X-SAAS-TrackingID: aa0628d5.0.82428420.00-2391.138561250.s12p02m015.mxlogic.net
-X-NAIMIME-Disclaimer: 1
-X-NAIMIME-Modified: 1
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6637> : inlines <7142> : streams
- <1833130> : uri <2906059>
+References: <20190916204419.21717-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190916204419.21717-1-trond.myklebust@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 18 Sep 2019 15:38:48 -0400
+Message-ID: <CAN-5tyF27z=+3tbU1De_wR0aosiczn67dNanBmBe4icj=uAYwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] Various NFSv4 state error handling fixes
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
-ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
-cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
-aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
-ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
-ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
-aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
-ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
-bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
-ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
-MEBnbWFpbC5jb20pCgoKQ2VjaSBlc3QgdW4gY291cnJpZXIgcGVyc29ubmVsIHF1ZSBqZSB2b3Vz
-IGFkcmVzc2UuIEplIHN1aXMgU0hBTkUgTUlTU0xFUiwgZGUgRmxvcmlkZSwgw4l0YXRzLVVuaXMu
-IENvbW1lIHZvdXMgbGUgc2F2ZXogZMOpasOgLCBqJ2FpIGdhZ27DqSA0NTEgbWlsbGlvbnMgZGUg
-ZG9sbGFycyAoTG90dG8gSmFja3BvdCkgZXQgbCdhcmdlbnQgYSBjaGFuZ8OpIG1hIHZpZSBldCBj
-ZWxsZSBkZSBtYSBmYW1pbGxlLCBtYWlzIGNlbGEgbmUgY2hhbmdlcmEgcGFzIG1vbiBjxZN1ciwg
-Y29tbWUgamUgbCdhaSBkaXQgbGUgam91ciBvw7kgaidhaSBtb24gYXJnZW50LCBqJ3V0aWxpc2Vy
-YWkgY2V0IGFyZ2VudCBwb3VyIGwnYWlkZSBkZSBsJ2h1bWFuaXTDqS5KJ2FpIGTDqWNpZMOpIGRl
-IHZvdXMgZG9ubmVyIGxhIHNvbW1lIGRlIDUgbWlsbGlvbnMgZCdldXJvcyDDoCB2b3VzIGV0IMOg
-IHZvdHJlIGNvbW11bmF1dMOpLCBwb3VyIHLDqWNsYW1lciBjZSBkb24sIGVtYWlsLSAoc2hhbmVt
-aXNzbGVyMEBnbWFpbC5jb20pCgoKCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4KCgpMYSBpbmZvcm1hY2lvbiBjb250ZW5pZGEgZW4gZXN0ZSBjb3JyZW8sIGFzaSBj
-b21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRvcyBhbmV4b3MsIHB1ZWRlIGNvbnRlbmVy
-IGRhdG9zIHBlcnNvbmFsZXMsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gZXMgcmVzcG9uc2FiaWxp
-ZGFkIGRlIHF1aWVuIGxvcyB0cmFuc21pdGUgeSBxdWllbiBsb3MgcmVjaWJlLCBlbiB0w6lybWlu
-b3MgZGUgbG8gZGlzcHVlc3RvIHBvciBsYXMgZnJhY2Npb25lcyBJSSB5IFZJSSBkZWwgYXJ0aWN1
-bG8gNCwgdWx0aW1vIHBhcnJhZm8gZGVsIGFydGljdWxvIDgsIGFydGljdWxvIDM2IHBhcnJhZm8g
-SUksIDM4IGZyYWNjaW9uIEkgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxhIExleSBkZSBUcmFuc3Bh
-cmVuY2lhIHkgQWNjZXNvIGEgbGEgSW5mb3JtYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVk
-ZXJhbC4NCkxvcyBEYXRvcyBQZXJzb25hbGVzIHNlIGVuY3VlbnRyYW4gcHJvdGVnaWRvcyBwb3Ig
-bGEgTGV5IGRlIFByb3RlY2Npb24gZGUgRGF0b3MgUGVyc29uYWxlcyBkZWwgRGlzdHJpdG8gRmVk
-ZXJhbCwgcG9yIGxvIHF1ZSBzdSBkaWZ1c2lvbiBzZSBlbmN1ZW50cmEgdHV0ZWxhZGEgZW4gc3Vz
-IGFydGljdWxvcyAyLCA1LCAxNiwgMjEsIDQxIHkgZGVtYXMgcmVsYXRpdm9zIHkgYXBsaWNhYmxl
-cywgZGViaWVuZG8gc3VqZXRhcnNlIGVuIHN1IGNhc28sIGEgbGFzIGRpc3Bvc2ljaW9uZXMgcmVs
-YXRpdmFzIGEgbGEgY3JlYWNpb24sIG1vZGlmaWNhY2lvbiBvIHN1cHJlc2lvbiBkZSBkYXRvcyBw
-ZXJzb25hbGVzIHByZXZpc3Rvcy4gQXNpbWlzbW8sIGRlYmVyYSBlc3RhcnNlIGEgbG8gc2XDsWFs
-YWRvIGVuIGxvcyBudW1lcmFsZXMgMSAsIDMsIDEyLCAxOCwgMTksIDIwLCAyMSwgMjMsIDI0LCAy
-OSwgMzUgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxvcyBMaW5lYW1pZW50b3MgcGFyYSBsYSBQcm90
-ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZW4gZWwgRGlzdHJpdG8gRmVkZXJhbC4NCkVuIGVs
-IHVzbyBkZSBsYXMgdGVjbm9sb2dpYXMgZGUgbGEgaW5mb3JtYWNpb24geSBjb211bmljYWNpb25l
-cyBkZWwgR29iaWVybm8gZGVsIERpc3RyaXRvIEZlZGVyYWwsIGRlYmVyYSBvYnNlcnZhcnNlIHB1
-bnR1YWxtZW50ZSBsbyBkaXNwdWVzdG8gcG9yIGxhIExleSBHb2JpZXJubyBFbGVjdHJvbmljbyBk
-ZWwgRGlzdHJpdG8gRmVkZXJhbCwgbGEgbGV5IHBhcmEgaGFjZXIgZGUgbGEgQ2l1ZGFkIGRlIE1l
-eGljbyB1bmEgQ2l1ZGFkIE1hcyBBYmllcnRhLCBlbCBhcGFydGFkbyAxMCBkZSBsYSBDaXJjdWxh
-ciBVbm8gdmlnZW50ZSB5IGxhcyBOb3JtYXMgR2VuZXJhbGVzIHF1ZSBkZWJlcmFuIG9ic2VydmFy
-c2UgZW4gbWF0ZXJpYSBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpb24gZW4gbGEgQWRtaW5p
-c3RyYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVkZXJhbC4K
+Hi Trond,
+
+These set of patches do not address the locking problem. It's actually
+not the locking patch (which I thought it was as I reverted it and
+still had the issue). Without the whole patch series the unlock works
+fine so something in these new patches. Something is up with the 2
+patches:
+NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
+NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
+
+If I remove either one separately, unlock fails but if I remove both
+unlock works.
+
+On Mon, Sep 16, 2019 at 4:46 PM Trond Myklebust <trondmy@gmail.com> wrote:
+>
+> Various NFSv4 fixes to ensure we handle state errors correctly. In
+> particular, we need to ensure that for COMPOUNDs like CLOSE and
+> DELEGRETURN, that may have an embedded LAYOUTRETURN, we handle the
+> layout state errors so that a retry of either the LAYOUTRETURN, or
+> the later CLOSE/DELEGRETURN does not corrupt the LAYOUTRETURN
+> reply.
+>
+> Also ensure that if we get a NFS4ERR_OLD_STATEID, then we do our
+> best to still try to destroy the state on the server, in order to
+> avoid causing state leakage.
+>
+> v2: Fix bug reports from Olga
+>  - Try to avoid sending old stateids on CLOSE/OPEN_DOWNGRADE when
+>    doing fully serialised NFSv4.0.
+>  - Ensure LOCKU initialises the stateid correctly.
+>
+> Trond Myklebust (9):
+>   pNFS: Ensure we do clear the return-on-close layout stateid on fatal
+>     errors
+>   NFSv4: Clean up pNFS return-on-close error handling
+>   NFSv4: Handle NFS4ERR_DELAY correctly in return-on-close
+>   NFSv4: Handle RPC level errors in LAYOUTRETURN
+>   NFSv4: Add a helper to increment stateid seqids
+>   pNFS: Handle NFS4ERR_OLD_STATEID on layoutreturn by bumping the state
+>     seqid
+>   NFSv4: Fix OPEN_DOWNGRADE error handling
+>   NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
+>   NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
+>
+>  fs/nfs/nfs4_fs.h   |  11 ++-
+>  fs/nfs/nfs4proc.c  | 204 ++++++++++++++++++++++++++++++---------------
+>  fs/nfs/nfs4state.c |  16 ----
+>  fs/nfs/pnfs.c      |  71 ++++++++++++++--
+>  fs/nfs/pnfs.h      |  17 +++-
+>  5 files changed, 229 insertions(+), 90 deletions(-)
+>
+> --
+> 2.21.0
+>
