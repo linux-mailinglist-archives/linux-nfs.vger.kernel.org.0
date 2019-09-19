@@ -2,120 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 189C3B80F7
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 20:41:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A24CDB8153
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 21:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfISSlk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Sep 2019 14:41:40 -0400
-Received: from fieldses.org ([173.255.197.46]:52098 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732532AbfISSlj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 19 Sep 2019 14:41:39 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 790741506; Thu, 19 Sep 2019 14:41:39 -0400 (EDT)
-Date:   Thu, 19 Sep 2019 14:41:39 -0400
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     NeilBrown <neilb@suse.de>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] nfsd: give out fewer session slots as limit
- approaches
-Message-ID: <20190919184139.GG26654@fieldses.org>
-References: <1506345704-9486-1-git-send-email-bfields@redhat.com>
- <1506345704-9486-3-git-send-email-bfields@redhat.com>
- <87d0fx9jph.fsf@notabene.neil.brown.name>
- <20190919162211.GA333@pick.fieldses.org>
- <20190919171730.GB333@pick.fieldses.org>
+        id S2390262AbfISTVV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Sep 2019 15:21:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36580 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389902AbfISTVV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Sep 2019 15:21:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so4322044wrd.3
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2019 12:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=yx5c1eDpPIEUL85UUwQ2AAQSAYipNiEwUcjrgRxGjII=;
+        b=C1bLP/ONd/VKxOyuMZ49Ak1tLwfdxNlb8EoCD1TQ9wDyBd5MYGdplZVygwKGd9/zqF
+         mRyRT4u7Gc3ar9FPBlxjKYl1V5e9UqnHLCSHwaESe1MQBS8k60CyVstBG0beRojfYmAb
+         VdjMR3pTb4eDOrtbR8+KjGupdtwcQeQctTJwUQWCCHNlZ2KKKbNFIBxZXibcOESpf6JV
+         K5jAlGHpFJScMhtuk3ny+6VZnf67XCKY3l+/ONF53MAT5iK6JyAvdhFienvcTdFxk9Zi
+         iJO1olVdSl+rpvIDKDlaYLMo5Cz4UdAW13NiBmUIcCkPYC7Z/G2gIYqt/2sp8rlO3DAc
+         W/fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yx5c1eDpPIEUL85UUwQ2AAQSAYipNiEwUcjrgRxGjII=;
+        b=Z3TyAWAA9mSl5h/4PVmatjH/UXcOf/XKkEN3KpL7O4oGulyMa4pZERGkBkkbCw3RcS
+         JG7tbGJ7KsoF205PgFktAxgxCgRYDgenEj9nBznjHMwMxJa6QKQ3e/5MirwPzxuribxR
+         ME5YFe4OFH26QlMiVpwSaaaSVPQQuDLWhecykdD76fBNp26RlHN+gNHhTlbjtSuH3DJs
+         FbRsD9fmrrrf2Y7aMxEVxetBkJGxR7/0DnI7SBnqs0Os1Z5pXRwgZ9SDf0eVx/tHTQup
+         RUQOAnj7jXaqHtr6UH6ZtdNPbK1LXVGuAHlgdYiMl9Emt5bo65k6ROOJr4R13nDpuf2I
+         GHJA==
+X-Gm-Message-State: APjAAAUX9raWOcWGrWp2cP3ygE6q/WF8SRKB8+CJatCd94s2rIgknPh1
+        8IzH2z2upJgPH2u2ftEIvG19TCxg
+X-Google-Smtp-Source: APXvYqxbh5qJp+foMgCMLPbo5ZUshA8h8rbsyHAXid/eQPUTD0rEKAklznUyVnkVzI6VYnk1+KnmQQ==
+X-Received: by 2002:adf:ea88:: with SMTP id s8mr8453206wrm.114.1568920878763;
+        Thu, 19 Sep 2019 12:21:18 -0700 (PDT)
+Received: from [10.161.254.11] (srv1-dide.ioa.sch.gr. [81.186.20.0])
+        by smtp.googlemail.com with ESMTPSA id f3sm7628650wrq.53.2019.09.19.12.21.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 12:21:18 -0700 (PDT)
+Subject: Re: rsize,wsize=1M causes severe lags in 10/100 Mbps
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <80353d78-e3d9-0ee2-64a4-cd2f22272fbe@gmail.com>
+ <CAABAsM7XHjTC4311-XY04RSy_XJs+E+j+-3prYAarX_=k0259g@mail.gmail.com>
+ <ee758eaf-c02d-f669-bc31-f30e6b17d92a@gmail.com>
+ <3d00928cd3244697442a75b36b75cf47ef872657.camel@hammerspace.com>
+From:   Alkis Georgopoulos <alkisg@gmail.com>
+Message-ID: <7afc5770-abfa-99bb-dae9-7d11680875fd@gmail.com>
+Date:   Thu, 19 Sep 2019 22:21:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919171730.GB333@pick.fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <3d00928cd3244697442a75b36b75cf47ef872657.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 01:17:30PM -0400, J. Bruce Fields wrote:
-> 	- Maybe we should just keep allowing small sessions (1 slot?)
-> 	  even past the limit.  Worst case the subsequent kmalloc fails.
-
-So to be clear, I think that's what I'd do for now instead of trying to
-find a better error return.
-
-And probably put the 1/3->1/16 change in a separate patch.
-
---b.
-
+On 9/19/19 7:11 PM, Trond Myklebust wrote:
+> No. It is not a problem, because nfs-utils defaults to using TCP
+> mounts. Fragmentation is only a problem with UDP, and we stopped
+> defaulting to that almost 2 decades ago.
 > 
-> --b.
-> 
-> > 
-> > >  Also, I'd like to suggest that the '1/3' heuristic be change to 1/16.
-> > >  Assuming 30 slots get handed out normally (which my testing shows -
-> > >  about 2k each, with an upper limit of 64k):
-> > >    When 90 slots left, we hand out
-> > >     30 (now 60 left)
-> > >     20 (now 40 left)
-> > >     13 (now 27 left)
-> > >      9 (now 18 left)
-> > >      6 (now 12 left)
-> > >      4 (now 8 left)
-> > >      2 (now 6 left)
-> > >      2 (now 4 left)
-> > >      1
-> > >      1
-> > >      1
-> > >      1
-> > >  which is a rapid decline as clients are added.
-> > >  With 16, we hand out 30 at a time until 480 slots are left (30Meg)
-> > >  then: 30 28 26 24 23 21 20 19 18 6 15 15 14 13 12 11 10 10 9 9 8 8 7 7
-> > >     6 6 5 5 5 5 4 4 4 3 3 3 3 3 3 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1
-> > >     1 1
-> > >  slots per session
-> > > 
-> > >  Am I convincing?
-> > > 
-> > > To make it more concrete: this is what I'm thinking of.  Which bits do
-> > > you like?
-> > 
-> > Except for the error return, it looks good to me.
-> > 
-> > --b.
-> > 
-> > > 
-> > > Thanks,
-> > > NeilBrown
-> > > 
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 7857942c5ca6..5d11ceaee998 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -1573,11 +1573,15 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
-> > >  	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
-> > >  	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
-> > >  	/*
-> > > -	 * Never use more than a third of the remaining memory,
-> > > +	 * Never use more than a 1/16 of the remaining memory,
-> > >  	 * unless it's the only way to give this client a slot:
-> > >  	 */
-> > > -	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
-> > > +	avail = clamp_t(unsigned long, avail, slotsize, total_avail/16);
-> > >  	num = min_t(int, num, avail / slotsize);
-> > > +	if (nfsd_drc_mem_used + num * slotsize > nfsd_drc_max_mem)
-> > > +		/* Completely out of space - sorry */
-> > > +		num = 0;
-> > > +
-> > >  	nfsd_drc_mem_used += num * slotsize;
-> > >  	spin_unlock(&nfsd_drc_lock);
-> > >  
-> > > @@ -3172,7 +3176,7 @@ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfs
-> > >  	 */
-> > >  	ca->maxreqs = nfsd4_get_drc_mem(ca);
-> > >  	if (!ca->maxreqs)
-> > > -		return nfserr_jukebox;
-> > > +		return nfserr_resource;
-> > >  
-> > >  	return nfs_ok;
-> > >  }
-> > 
-> > 
+> However it may well be that klibc is still defaulting to using UDP, in
+> which case it should be fixed. There are major Linux distros out there
+> today that don't even compile in support for NFS over UDP any more.
+
+
+I haven't tested with UDP at all; the problem was with TCP.
+I saw the problem in klibc nfsmount with TCP + NFS 3,
+and in `mount -t nfs -o timeo=7 server:/share /mnt` with TCP + NFS 4.2.
+
+Steps to reproduce:
+1) Connect server <=> client at 10 or 100 Mbps.
+Gigabit is also "less snappy" but it's less obvious there.
+For reliable results, I made sure that server/client/network didn't have 
+any other load at all.
+
+2) Server:
+echo '/srv *(ro,async,no_subtree_check)' >> /etc/exports
+exportfs -ra
+truncate -s 10G /srv/10G.file
+The sparse file ensures that disk IO bandwidth isn't an issue.
+
+3) Client:
+mount -t nfs -o timeo=7 192.168.1.112:/srv /mnt
+dd if=/mnt/10G.file of=/dev/null status=progress
+
+4) Result:
+dd there starts with 11.2 MB/sec, which is fine/expected,
+and it slowly drops to 2 MB/sec after a while,
+it lags, omitting some seconds in its output line,
+e.g. 507510784 bytes (508 MB, 484 MiB) copied, 186 s, 2,7 MB/s^C,
+at which point "Ctrl+C" needs 30+ seconds to stop dd,
+because of IO waiting etc.
+
+In another terminal tab, `dmesg -w` is full of these:
+[  316.404250] nfs: server 192.168.1.112 not responding, still trying
+[  316.759512] nfs: server 192.168.1.112 OK
+
+5) Remarks:
+With timeo=600, there are no errors in dmesg.
+The fact that timeo=7 (the nfsmount default) causes errors, proves that 
+some packets need more than 0.7 secs to arrive.
+Which in turn explains why all the applications open extremely slowly 
+and feel sluggish on netroot = 100 Mbps, NFS, TCP.
+
+Lowering rsize,wsize from 1M to 32K solves all those issues without any 
+negative side effects that I can see. Even on gigabit, 32K makes 
+applications a lot more snappy so it's better even there.
+On 10 Mbps, rsize=1M is completely unusable.
+
+So I'm not sure where rsize=1M is a better default. Is it only for 10G+ 
+connections?
+
+Thank you very much,
+Alkis Georgopoulos
