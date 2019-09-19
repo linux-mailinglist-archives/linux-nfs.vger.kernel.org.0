@@ -2,108 +2,176 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 038C4B7ED4
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 18:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B553B7EF9
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 18:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391785AbfISQLE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Sep 2019 12:11:04 -0400
-Received: from mail-eopbgr700092.outbound.protection.outlook.com ([40.107.70.92]:30561
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391791AbfISQLE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 19 Sep 2019 12:11:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MMZqAVi7ytqyO6L7f0SrispD4rDJe50YtsvREYU6xxRNeP8MKgXQ7ei8mMvtHLbVIquFvo9Z9tuvNHdh5dzam5RD7+Wv78mIV/KHaPfQ7BzXkgvJUQ2Co8OQ0Bco0cjQn1rlpK8S6aMe8UHl3erMENAByhcVqlg/WbwN9QVOIY//Z+CH4eYb12QkfHmSD1RIH7NlVWXE/o7CkTiC01tjHM/z606OXK8lg3kWgHUNgZz+gOlfslfAOXwsphwFT3clyvBiZu0m6GWhNEixgtHhLeH+N0MAXuBaKJl/Rv+0aQpQMQ5sXZqUrTuLpaiqShJ2gi9E9vK/flwYXm2zGmqEvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RAePMrqEVOQjYytgpsQedh6Jl6wr6N8WF5sFgu9VXxY=;
- b=GuyyNfOsTIznHuJktEE4ooPLSRUTIKWSwBOYotoWBuPVR2vRxb9LYipRygBQkmoGwEuiYmCl8ebKwRijhceQJOriSVTRYNgOHtjKBvAzFX12XYEm0woTYvtDHNqa+HpzUSTQRu/6tr3KBG+qdmb//6dwE6OK8KVcqVK+AWwtubVIO2RsCSQX3CSpOcc30WDPPt0JlMz1nffghHrg7REUMrC1zfXkVMBfMxN0bMjPTOGtJDhpUbwMiZwA/PwVeEU1/CTmjdGPvh0Ht2ijlTIRMkN+VuiEHJfcicLlXWgrbMV1+smEkY6F6WWdWHSjFB2xV8YIqJxD5XBhgvOsqamp5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RAePMrqEVOQjYytgpsQedh6Jl6wr6N8WF5sFgu9VXxY=;
- b=feRb0Ho4jYRvRVt71X/oFW9wGqOgqggiouN7OGuAEwDZOHxiVgKbUP4XnQGtQ5qoXCHlITbfdhQp6rI7zQLjDFLTKO2HmJGzpaJ4lfeZTSsmJ7n/81L9Ej0QZSEWkwLSOSY1rCx2X7SYaxQOp29jTd41hPJP6tx24EPbfLzphbQ=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1402.namprd13.prod.outlook.com (10.175.110.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.17; Thu, 19 Sep 2019 16:11:00 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
- 16:11:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "alkisg@gmail.com" <alkisg@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: rsize,wsize=1M causes severe lags in 10/100 Mbps
-Thread-Topic: rsize,wsize=1M causes severe lags in 10/100 Mbps
-Thread-Index: AQHVbwMN/jYKfSJ+jEOCnZqjx88626czK6CA
-Date:   Thu, 19 Sep 2019 16:11:00 +0000
-Message-ID: <3d00928cd3244697442a75b36b75cf47ef872657.camel@hammerspace.com>
-References: <80353d78-e3d9-0ee2-64a4-cd2f22272fbe@gmail.com>
-         <CAABAsM7XHjTC4311-XY04RSy_XJs+E+j+-3prYAarX_=k0259g@mail.gmail.com>
-         <ee758eaf-c02d-f669-bc31-f30e6b17d92a@gmail.com>
-In-Reply-To: <ee758eaf-c02d-f669-bc31-f30e6b17d92a@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ce4ee4f1-08d6-4856-191b-08d73d1bf690
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR13MB1402;
-x-ms-traffictypediagnostic: DM5PR13MB1402:
-x-microsoft-antispam-prvs: <DM5PR13MB14025A1CEAFD914D7DE3ED01B8890@DM5PR13MB1402.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(39840400004)(376002)(366004)(396003)(189003)(199004)(66476007)(11346002)(446003)(25786009)(478600001)(64756008)(66446008)(66946007)(66556008)(476003)(2616005)(110136005)(71200400001)(316002)(71190400001)(86362001)(305945005)(81156014)(81166006)(8676002)(486006)(8936002)(5660300002)(14454004)(7736002)(6512007)(76176011)(66066001)(186003)(2501003)(102836004)(229853002)(2906002)(26005)(99286004)(6506007)(53546011)(256004)(6436002)(6486002)(6116002)(76116006)(3846002)(91956017)(6246003)(118296001)(36756003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1402;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HBZfFvM8/Q2fmg8HYAz0qw8gf2INmJOgUcC+Mx4wy+MxmR09NK7a/oxP18lwjpxP0QSSCFU2DKqd13BkS+VLSXkfxOpaajYVTx2NlbK0BExFbcDIrzapQW/3Bog1gAZ1JBuw7nwl7kFGjWxVU10hjs3yttYCY7iGh1cp0LE+ao4PwUZeoZrLSAr95v7jkaWgyvmPi2Kd1fw583dpyiD7rqQ6DKHQEwIx7AvZ/wDp0x8vD8KqfIdT71xBH4HXetZuplfm+oI3lpfkA3O5Kgixey4Pexb8GmGRqbaxVCNvGORjQz+Zqedvmr6gpqHUOCgrO7RynIEdf14RYTnyRyNXvwAkV1VgPOTN+R6A7mAeh7o+ZzNebhMjInlnJNxUvgXcw6pzyRFuySNaidK6obFktTIqKhvec93TGoKBukL0YZ4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EE68936628E6E9428E05F2757517ABB8@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2403840AbfISQWS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Sep 2019 12:22:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42628 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403833AbfISQWS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 19 Sep 2019 12:22:18 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F20A3082137;
+        Thu, 19 Sep 2019 16:22:17 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-116-173.phx2.redhat.com [10.3.116.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D9CBE5D9CC;
+        Thu, 19 Sep 2019 16:22:16 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 2955E1201F1; Thu, 19 Sep 2019 12:22:11 -0400 (EDT)
+Date:   Thu, 19 Sep 2019 12:22:11 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] nfsd: give out fewer session slots as limit
+ approaches
+Message-ID: <20190919162211.GA333@pick.fieldses.org>
+References: <1506345704-9486-1-git-send-email-bfields@redhat.com>
+ <1506345704-9486-3-git-send-email-bfields@redhat.com>
+ <87d0fx9jph.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce4ee4f1-08d6-4856-191b-08d73d1bf690
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 16:11:00.4655
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q6yfy4T62tP7REUxtmM0TFZFauh2T2yEczd2iyM/Yd/CBZWSqlITDYvBY4Ecf229aZ5eeN0UvK6IPxJ0EbRnDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1402
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d0fx9jph.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 19 Sep 2019 16:22:17 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA5LTE5IGF0IDE4OjU4ICswMzAwLCBBbGtpcyBHZW9yZ29wb3Vsb3Mgd3Jv
-dGU6DQo+IE9uIDkvMTkvMTkgNjowOCBQTSwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0KPiA+IFRo
-ZSBkZWZhdWx0IGNsaWVudCBiZWhhdmlvdXIgaXMganVzdCB0byBnbyB3aXRoIHdoYXRldmVyDQo+
-ID4gcmVjb21tZW5kZWQNCj4gPiB2YWx1ZSB0aGUgc2VydmVyIHNwZWNpZmllcy4gWW91IGNhbiBj
-aGFuZ2UgdGhhdCB2YWx1ZSB5b3Vyc2VsZiBvbg0KPiA+IHRoZQ0KPiA+IGtuZnNkIHNlcnZlciBi
-eSBlZGl0aW5nIHRoZSBwc2V1ZG8tZmlsZSBpbg0KPiA+IC9wcm9jL2ZzL25mc2QvbWF4X2Jsb2Nr
-X3NpemUuDQo+IA0KPiBUaGFuayB5b3UsIGFuZCBJIGd1ZXNzIEkgY2FuIGF1dG9tYXRlIHRoaXMs
-IGJ5IHJ1bm5pbmcNCj4gYHN5c3RlbWN0bCBlZGl0IG5mcy1rZXJuZWwtc2VydmVyYCwgYW5kIGFk
-ZGluZzoNCj4gW1NlcnZpY2VdDQo+IEV4ZWNTdGFydFByZT1zaCAtYyAnZWNobyAzMjc2OCA+IC9w
-cm9jL2ZzL25mc2QvbWF4X2Jsb2NrX3NpemUnDQo+IA0KPiBCdXQgaXNuJ3QgaXQgYSBwcm9ibGVt
-IHRoYXQgdGhlIGRlZmF1bHRzIGNhdXNlIGVycm9ycyBpbiBkbWVzZyBhbmQgDQo+IHNldmVyZSBs
-YWdzIGluIDEwLzEwMCBNYnBzLCBhbmQgZXZlbiBtYWtlIDEwMDAgTWJwcyBhIGxvdCBsZXNzDQo+
-IHNuYXBweSANCj4gdGhhbiB3aXRoIDMySz8NCj4gDQoNCk5vLiBJdCBpcyBub3QgYSBwcm9ibGVt
-LCBiZWNhdXNlIG5mcy11dGlscyBkZWZhdWx0cyB0byB1c2luZyBUQ1ANCm1vdW50cy4gRnJhZ21l
-bnRhdGlvbiBpcyBvbmx5IGEgcHJvYmxlbSB3aXRoIFVEUCwgYW5kIHdlIHN0b3BwZWQNCmRlZmF1
-bHRpbmcgdG8gdGhhdCBhbG1vc3QgMiBkZWNhZGVzIGFnby4NCg0KSG93ZXZlciBpdCBtYXkgd2Vs
-bCBiZSB0aGF0IGtsaWJjIGlzIHN0aWxsIGRlZmF1bHRpbmcgdG8gdXNpbmcgVURQLCBpbg0Kd2hp
-Y2ggY2FzZSBpdCBzaG91bGQgYmUgZml4ZWQuIFRoZXJlIGFyZSBtYWpvciBMaW51eCBkaXN0cm9z
-IG91dCB0aGVyZQ0KdG9kYXkgdGhhdCBkb24ndCBldmVuIGNvbXBpbGUgaW4gc3VwcG9ydCBmb3Ig
-TkZTIG92ZXIgVURQIGFueSBtb3JlLg0KDQpDaGVlcnMNCiAgVHJvbmQNCi0tIA0KVHJvbmQgTXlr
-bGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5t
-eWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Thu, Sep 19, 2019 at 11:08:10AM +1000, NeilBrown wrote:
+> On Mon, Sep 25 2017, J. Bruce Fields wrote:
+> 
+> > From: "J. Bruce Fields" <bfields@redhat.com>
+> >
+> > Instead of granting client's full requests until we hit our DRC size
+> > limit and then failing CREATE_SESSIONs (and hence mounts) completely,
+> > start granting clients smaller slot tables as we approach the limit.
+> >
+> > The factor chosen here is pretty much arbitrary.
+> 
+> Hi Bruce....
+>  I've been looking at this patch - and the various add-ons that fix it :-(
+
+It's got to be some kind of record.  Sorry....
+
+>  There seems to be another problem though.
+>  Prior to this patch, avail would never exceed
+>     nfsd_drc_max_mem - nfsd_drc_mem_used
+>  since this patch, avail will never be less than slotsize, so it could
+>  exceed the above.
+>  This means that 'num' will never be less than 1 (i.e. never zero).
+>  num * slotsize might exceed
+>     nfsd_drc_max_mem - nfsd_drc_mem_used
+>  and then nfsd_drc_mem_used would exceed nfsd_drc_max_mem
+> 
+>  When that happens, the next call to nfsd4_get_drc_mem() will evaluate
+> 
+> 	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+> 
+>  which will be very large (unsigned long) indeed.  Maybe not the intention.
+
+That all sounds correct.
+
+>  I would have sent a patch to fix this, except that it bothers me that
+>  nfsd4_get_drc_mem() could ever return 0 (it cannot at the moment, but
+>  would after a "fix").  That would result in check_forechannel_attrs()
+>  returning nfserr_jukebox, and the client retrying indefinitely (which
+>  is exactly the symptom I have reported by a customer with a 4.12
+>  kernel).
+>  This isn't nice behaviour.
+> 
+>  Given that the server makes no attempt to reclaim slot memory for
+>  clients, would NFS4ERR_RESOURCE be a better error here?
+
+NFSv4 is confusing here: RESOURCE seems like it should be the right
+error for this kind of thing, but it was actually just mean to be for
+compounds that are too complicated in some way.  And since NFSv4.1
+(which added negotiated limits on compounds), it's not supposed to be
+used at all.
+
+Looking....  Oh, I overlooked this before:
+
+	https://tools.ietf.org/html/rfc5661#page-522
+
+	The server creates the session by recording the parameter values
+	used (including whether the CREATE_SESSION4_FLAG_PERSIST flag is
+	set and has been accepted by the server) and allocating space
+	for the session reply cache (if there is not enough space, the
+	server returns NFS4ERR_NOSPC).
+
+So, slightly odd use of NOSPC, but that's the right error there.
+
+>  Also, I'd like to suggest that the '1/3' heuristic be change to 1/16.
+>  Assuming 30 slots get handed out normally (which my testing shows -
+>  about 2k each, with an upper limit of 64k):
+>    When 90 slots left, we hand out
+>     30 (now 60 left)
+>     20 (now 40 left)
+>     13 (now 27 left)
+>      9 (now 18 left)
+>      6 (now 12 left)
+>      4 (now 8 left)
+>      2 (now 6 left)
+>      2 (now 4 left)
+>      1
+>      1
+>      1
+>      1
+>  which is a rapid decline as clients are added.
+>  With 16, we hand out 30 at a time until 480 slots are left (30Meg)
+>  then: 30 28 26 24 23 21 20 19 18 6 15 15 14 13 12 11 10 10 9 9 8 8 7 7
+>     6 6 5 5 5 5 4 4 4 3 3 3 3 3 3 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1
+>     1 1
+>  slots per session
+> 
+>  Am I convincing?
+> 
+> To make it more concrete: this is what I'm thinking of.  Which bits do
+> you like?
+
+Except for the error return, it looks good to me.
+
+--b.
+
+> 
+> Thanks,
+> NeilBrown
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 7857942c5ca6..5d11ceaee998 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1573,11 +1573,15 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+>  	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+>  	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
+>  	/*
+> -	 * Never use more than a third of the remaining memory,
+> +	 * Never use more than a 1/16 of the remaining memory,
+>  	 * unless it's the only way to give this client a slot:
+>  	 */
+> -	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
+> +	avail = clamp_t(unsigned long, avail, slotsize, total_avail/16);
+>  	num = min_t(int, num, avail / slotsize);
+> +	if (nfsd_drc_mem_used + num * slotsize > nfsd_drc_max_mem)
+> +		/* Completely out of space - sorry */
+> +		num = 0;
+> +
+>  	nfsd_drc_mem_used += num * slotsize;
+>  	spin_unlock(&nfsd_drc_lock);
+>  
+> @@ -3172,7 +3176,7 @@ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfs
+>  	 */
+>  	ca->maxreqs = nfsd4_get_drc_mem(ca);
+>  	if (!ca->maxreqs)
+> -		return nfserr_jukebox;
+> +		return nfserr_resource;
+>  
+>  	return nfs_ok;
+>  }
+
+
