@@ -2,104 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2F89B7335
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 08:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBDEFB7412
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2019 09:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfISGgT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Sep 2019 02:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbfISGgS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:36:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 840D0218AF;
-        Thu, 19 Sep 2019 06:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568874978;
-        bh=kLqycoBe8uV8E2knqmFJ1o58JmJlygAiwWJwYCZe3u4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MBj1OhUSqRr3IZoLYSeHbj1Qf6DNpVP0GFMSepJmowWR/fpbYu+KDjGnM8GDDFTwT
-         C2wlqJBLS12ZilvPdqSYpw/TpurkUrYrG9oTs+V1gQ691DjUUdUPbQSBM+ZbNzA0NC
-         3jOV/vXTS9pdhd4wf6ILs7cuvS20g5fiiHPm20xw=
-Date:   Thu, 19 Sep 2019 08:36:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     akpm@linux-foundation.org, vvs@virtuozzo.com,
-        torvalds@linux-foundation.org, adobriyan@gmail.com,
-        anna.schumaker@netapp.com, arjan@linux.intel.com,
-        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
-        jlayton@kernel.org, luto@kernel.org, mingo@kernel.org,
-        Nadia.Derbey@bull.net, paulmck@linux.vnet.ibm.com,
-        semen.protsenko@linaro.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, trond.myklebust@hammerspace.com,
-        viresh.kumar@linaro.org, stable@kernel.org,
-        dylix.dailei@huawei.com, yuehaibing@huawei.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] kernel/notifier.c: intercepting duplicate
- registrations to avoid infinite loops
-Message-ID: <20190919063615.GA2069346@kroah.com>
-References: <1568861888-34045-1-git-send-email-nixiaoming@huawei.com>
- <1568861888-34045-2-git-send-email-nixiaoming@huawei.com>
+        id S2388584AbfISH3o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Sep 2019 03:29:44 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:52771 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388569AbfISH3o (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Sep 2019 03:29:44 -0400
+Received: by mail-wm1-f42.google.com with SMTP id x2so3065443wmj.2
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2019 00:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=o9h0H3zMuTjeSSkNTvkjhWYFv3e2Dj1eaXIiaQI12qc=;
+        b=R7M7lQoKlomJ1cbK1Tt61bfn37aTnkBvzKa3Bj+keGCqhdDywiLlaVzpFgapnLPz4D
+         WcDOPX5embPPYQAmXisHrw0hGz4vnKJMwcqEKzOcuS9TDlzYGwaYww0CIVwDeNjnttXg
+         lIXMdVhnxKGTdkIjVjFHSzjI5QxBfHHx1KLT+A9Q3vC8UpyQPoil21FAVSChtaulIDLt
+         PZUYXl47svSC0wDqKQGs1mGBya1MHdvdgzqYXANrEL6KdHUK/t6nCly8RJQEGTpR8Dy1
+         W443C13DXJWt8s1enF8OGcjQJWNFSA4dMbO8Xf0pjfwUY+4a1IQLObG4t2l4REOF+8rp
+         dyiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=o9h0H3zMuTjeSSkNTvkjhWYFv3e2Dj1eaXIiaQI12qc=;
+        b=VE5fwsko+R/hblklqg3R1ZS18HV6VdRnMoVyvU6H5d6CuCpt3SvCvJS83ZRrHCJhAs
+         73x+jGYbihbQIhw2X5y6cn7bJwgtxgPMcr/M81DNIv42YNCf4V+MhbR7F1GHfHjAylmf
+         gCk3bTwGVrlVxZhBLstme7+TSEQgREBGWuDH6MLi5VfxAJuc7XIlrV0IkI/Kcd8CSKLc
+         SW132dHxDX1o9xWZMYcHW3p0Ie+4Aw9gtiG/jj09Tg4NhXw4BYh9wBm6vdYOTkSMgpzA
+         XQfQ0fRVtrnxhUg3NS52Gw6CXaKD6tuMClVBfNadnIGaunsxU25SKTqPtuP3Q6z3dzrw
+         af0A==
+X-Gm-Message-State: APjAAAVK/v2GDEoHE+7oK3LK50E5pvJGxXiR5RwbNX/feWHU09iQZTdO
+        xR3+t6qo0Z/DC2bNX0raDhR71irt
+X-Google-Smtp-Source: APXvYqxsNKIWB7EoW4csxCf7cn+S82aCxY6JceiB7llD0Vwo3cWKuC/kiCS4hc/Ijpv3wZtKnpD4OQ==
+X-Received: by 2002:a05:600c:2290:: with SMTP id 16mr1406058wmf.161.1568878181575;
+        Thu, 19 Sep 2019 00:29:41 -0700 (PDT)
+Received: from [10.161.254.11] (srv1-dide.ioa.sch.gr. [81.186.20.0])
+        by smtp.googlemail.com with ESMTPSA id y186sm9295426wmb.41.2019.09.19.00.29.40
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2019 00:29:41 -0700 (PDT)
+To:     linux-nfs@vger.kernel.org
+From:   Alkis Georgopoulos <alkisg@gmail.com>
+Subject: rsize,wsize=1M causes severe lags in 10/100 Mbps, what sets those
+ defaults?
+Message-ID: <80353d78-e3d9-0ee2-64a4-cd2f22272fbe@gmail.com>
+Date:   Thu, 19 Sep 2019 10:29:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568861888-34045-2-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 10:58:06AM +0800, Xiaoming Ni wrote:
-> Registering the same notifier to a hook repeatedly can cause the hook
-> list to form a ring or lose other members of the list.
-> 
-> case1: An infinite loop in notifier_chain_register() can cause soft lockup
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test2);
-> 
-> case2: An infinite loop in notifier_chain_register() can cause soft lockup
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
-> 
-> case3: lose other hook test2
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test2);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
-> 
-> case4: Unregister returns 0, but the hook is still in the linked list,
->         and it is not really registered. If you call notifier_call_chain
->         after ko is unloaded, it will trigger oops.
-> 
-> If the system is configured with softlockup_panic and the same
-> hook is repeatedly registered on the panic_notifier_list, it
-> will cause a loop panic.
-> 
-> Add a check in notifier_chain_register(),
-> Intercepting duplicate registrations to avoid infinite loops
-> 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> Reviewed-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  kernel/notifier.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+Hi, in any recent distribution that I tried, the default NFS wsize/rsize 
+was 1 MB.
 
-<formletter>
+On 10/100 Mbps networks, this causes severe lags, timeouts, and dmesg 
+fills with messages like:
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+ > [  316.404250] nfs: server 192.168.1.112 not responding, still trying
+ > [  316.759512] nfs: server 192.168.1.112 OK
 
-</formletter>
+Forcing wsize/rsize to 32K makes all the problems disappear and NFS 
+access more snappy, without sacrificing any speed at least up to gigabit 
+networks that I tested with.
 
-Same thing goes for all of the patches in this series.
+I would like to request that the defaults be changed to 32K.
+But I didn't find out where these defaults come from, where to file the 
+issue and my test case / benchmarks to support it.
 
-thanks,
+I've initially reported it at the klibc nfsmount program that I was 
+using, but this is just using the NFS defaults, which are the ones that 
+should be amended. So initial test case / benchmarks there:
+https://lists.zytor.com/archives/klibc/2019-September/004234.html
 
-greg k-h
+Please Cc me as I'm not in the list.
+
+Thank you,
+Alkis Georgopoulos
