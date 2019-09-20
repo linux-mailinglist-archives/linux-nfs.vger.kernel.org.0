@@ -2,169 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E609DB97A2
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2019 21:12:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C899EB98BA
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2019 23:01:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406716AbfITTMm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Sep 2019 15:12:42 -0400
-Received: from mail-eopbgr700101.outbound.protection.outlook.com ([40.107.70.101]:7488
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406045AbfITTMm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 20 Sep 2019 15:12:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kG1a0fa34Jua1QFEWQhWgX/UAJKTmvyVEHqanzh3ewimqHsBU8miCg+f3ivdFIp5P5ZNUG12/m+O7KOPpr1bHxmSldNqwu2Nm7VUSFejwONPRBmFEoGGDBD9EkRS11M5QN4oZ4E8xgQ+7x11zGPMCEAteJOWgapjYdNx9HWqdKE0kWrKldqeqGkGHPOWw1itvBpRchSr0VbhO84n0H3JvCSs40fKp8CO23n943JjO0MjG+AOMeBL47J49+/MYy9+YQ31STJ1c1MYAYhOKsNUJXlPkn1WrGwImp0DaKRsItoshCMjclP3Sb6QgyTGuBbapRy4mYWUdLwEGxycaxeIJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rFYIOrFGlBAmYNwrLDPQ31hqXM1C4vnfj7A7GOUYxA=;
- b=CO3gs2TY8OVsG/EtlqDMvuTNsjzuOVPPwqEbK3PUWfJy95kvDNRfCAH9ToWbatPshcxzOckT3Qv1ZT21ig9qyV26mBpobZmqLbYYW9YvkjXDup0/JHLMMfxEEL3ZJ5eTNYN4m8YXkV8GMx3smaqF0TvfHYCyELNrn0KQuoHXjT2fAe1CslskBbWDER70yZVxmr27wwBQ8HBsw7In4YTw55VE276zIOSLY+kePJFGceTbN67msM5ugDYVegzQbozYCNVMRN0W6uTfgMvwW+JR8gcrSafjUg3PqUAW3ddnI+jfPgcUzuQc50H5JgL2Jk3hQhF5qU20oAeEd2b1HGY+Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rFYIOrFGlBAmYNwrLDPQ31hqXM1C4vnfj7A7GOUYxA=;
- b=aj9u+CUCn71fmKVwG0y+ROktoYx6mtckKY1Qth4acIjmALk3f2CwABE0F2XaB/ZSVabrV8HMaJlMczgA+IopIigwBOrNZpFF90GnXrN3WwWMinIwT4w+eTPC1H7JqaTSxQhdrdM0lwQE1lzTHAa1nXTv5G+vsfIg/H31uAT0brQ=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1305.namprd13.prod.outlook.com (10.168.113.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.10; Fri, 20 Sep 2019 19:12:38 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2284.009; Fri, 20 Sep 2019
- 19:12:38 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "nbowler@draconx.ca" <nbowler@draconx.ca>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: PROBLEM: nfs? crash in Linux 5.3 (possible regression)
-Thread-Topic: PROBLEM: nfs? crash in Linux 5.3 (possible regression)
-Thread-Index: AQHVb+B/N7SFZrrrJ0Oyihf+0LwQ3ac07vmA
-Date:   Fri, 20 Sep 2019 19:12:38 +0000
-Message-ID: <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
-References: <CADyTPExOnxS+FS6Uqoxu3jNWRy93SQri4Xo1+00aiiVru8XDkg@mail.gmail.com>
-In-Reply-To: <CADyTPExOnxS+FS6Uqoxu3jNWRy93SQri4Xo1+00aiiVru8XDkg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2bfe427d-46c7-4cef-2d4a-08d73dfe80cd
-x-ms-traffictypediagnostic: DM5PR13MB1305:
-x-microsoft-antispam-prvs: <DM5PR13MB1305CB93E4D462A45F5CEB3CB8880@DM5PR13MB1305.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0166B75B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(396003)(136003)(366004)(346002)(51234002)(53754006)(189003)(199004)(476003)(3846002)(2501003)(66556008)(66476007)(229853002)(36756003)(91956017)(76116006)(6246003)(305945005)(7736002)(66446008)(64756008)(66946007)(118296001)(86362001)(6436002)(2201001)(6512007)(25786009)(6486002)(2906002)(486006)(446003)(11346002)(6116002)(45080400002)(66066001)(478600001)(2616005)(256004)(5660300002)(14444005)(5024004)(71200400001)(71190400001)(76176011)(6506007)(81156014)(99286004)(81166006)(316002)(102836004)(186003)(26005)(8676002)(110136005)(14454004)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1305;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BXPCDZ0C29KLD/v8eYkJFi8YZFzDtXB0xOhed5Sk16RzRHuxcttRDqR5wrutZobQIlbIsubp0vby0NbAoaiZpLygw8l2K2YURNkCZlxM55nnFDXt4oyecDZ0meUXrNg8D4NE4ymMctMu85mEjiT3U0ECEPv7tYBgUQtmFy6ahiO+lGpx6pcqHaNuil1n21CXt5OUduhVzqc/0vlHWF6EgmTEWQKJk0AKNQ92rMlOb1fwithVLBOJbjdNIgo1ZXOFS1+OiH13WER4/2m44cLo6gtZ+YELAULDJWf54sHVmpdqgoDWTmQ/sTWCMi/0OuNXnkEqB63AylOhbifr/U8lNaS3vfC00p6lpfWypK2cMeR743wSs3M0eXGRL2e1icS5AMOCweadkVw2PcwAf9XnsArnC5SdKmJXX6898n8nsgA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A07ADF93A77B48438AE0BCD262AFEDC6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2387779AbfITVBQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Sep 2019 17:01:16 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:41905 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbfITVBP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Sep 2019 17:01:15 -0400
+Received: by mail-ua1-f65.google.com with SMTP id l13so2674755uap.8
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2019 14:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k50N6Kiq1ojxndfSm+kE0orwvTIqNyUBRJom6IVzck0=;
+        b=bQYYIWocnk6Hp6+DX7ngjtb6AgU7YmaFxSHBRGzjrQhYZWWPZolHclC8seR6lGLVMA
+         8Ed7v6F8m4qebKVXyLwosaEC+cUeZuuuXYQaROP+LUQUdFT2/vWGU6+QX3HiR42h2rwU
+         1LkOxhzAzss0keDnBRKUvue3ox4Ncg5LBbQS2aYxObQ/7n7JuyeiARCdf1oH/uCvR9Q6
+         XupeAD/nToeYN/NmhD6dAWr8GGKJCTUYXIlwmKqm3bJyHg4G4YdS9kRT09fRufCv3osf
+         WoJuikJfuWIRvgpHnbfM5VShrZLfcPobLtlT1S04SMG7MVNiodam5DKAKH++0sB+inUG
+         CYiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k50N6Kiq1ojxndfSm+kE0orwvTIqNyUBRJom6IVzck0=;
+        b=YiVe8Z027REDcC1B5ZzwvUMbm+46jpaO6z4raWGo6YKftJQvjY0DsoucoNa84qGxtG
+         ZM3QVfQ90T2bEP4YsgdUSIX71ISwbMFwmQSd+vFSc14Az+oXJQv9pjY0l02BX4JLfb8E
+         85WZQgezR02YSWM+9NXCg+BegtZkBg7BPA57NmDokAX92iDi2Br/o78ypJLLJp8CgDIC
+         Qc2hR0A35nIGm33vAkqCDKBEbd14/xlLVgKSvoTf7q88K3vcHg0tDNOWC8h3h2eSe0br
+         F3MxbdC+HOCWRK/poRy4bLSPRN26DdS4RJm/ZVbXszE/Va0icxjlhOxmypsF3N/zrwqv
+         9bqQ==
+X-Gm-Message-State: APjAAAUby6wU5ThcudW7GPaT3mE9GX38KoXV/8zoVZEkYkoSwVTqiu/J
+        OEvJ0e8mET18R9zfXDm9wxsPSt9seD4IgEIOA+w+uA==
+X-Google-Smtp-Source: APXvYqx3C1L2I5OMxf5cAiddcYipZ+eN8oRvGuby/XCs/tNDpgrt1/IRJv+AuW7aAfEZeZZ7cEJPu//9O6lST3bstVk=
+X-Received: by 2002:ab0:6355:: with SMTP id f21mr9528646uap.40.1569013274748;
+ Fri, 20 Sep 2019 14:01:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bfe427d-46c7-4cef-2d4a-08d73dfe80cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2019 19:12:38.3474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ANA8jpzzxDHi9AZKusb/zywy7GgtPRka4D1jx2YAUDZ6tDM0czE0OdoSg4h2uebgNm0DS93BFTNmHF97ZQxkwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1305
+References: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 20 Sep 2019 17:01:03 -0400
+Message-ID: <CAN-5tyGGtASKYC2a+Y01Qr-qBBOT+ybAEokxQdZAyASpEYO+4A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] Various NFSv4 state error handling fixes
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA5LTIwIGF0IDE0OjIzIC0wNDAwLCBOaWNrIEJvd2xlciB3cm90ZToNCj4g
-SGkgYWxsLA0KPiANCj4gSSBoaXQgdGhpcyBvb3BzIG9uIExpbnV4IDUuMyB5ZXN0ZXJkYXkuICBU
-aGUgY3Jhc2ggaXRzZWxmIG9jY3VycmVkDQo+IHdoaWxlDQo+IGNvbXBpbGluZyBMaW51eCAoc291
-cmNlIGFuZCBidWlsZCBkaXJzIG9uIE5GUykuICBBZnRlcndhcmRzLCB0aGUNCj4gc3lzdGVtDQo+
-IHJlbWFpbmVkIG1vc3RseSBhbGl2ZSBidXQgbXkgTkZTIG1vdW50cyBiZWNhbWUgdmVyeSBidXN0
-ZWQgd2l0aCBsb3RzDQo+IChidXQgbm90IGFsbCkgSS9PIG9wZXJhdGlvbnMgYXBwZWFyaW5nIHRv
-IGhhbmcgZm9yZXZlci4NCj4gDQo+IE5vdCBzdXJlIGhvdyByZXByb2R1Y2libGUgdGhpcyBpcy4g
-IFNpbmNlIEkndmUgbmV2ZXIgc2VlbiBhIGNyYXNoDQo+IGxpa2UgdGhpcyBiZWZvcmUgaXQgbWF5
-IGJlIGEgcmVncmVzc2lvbiBjb21wYXJlZCB0bywgc2F5LCBMaW51eCA0LjE5DQo+IGJ1dCBJIGFt
-IG5vdCBjZXJ0YWluIGJlY2F1c2UgdGhpcyBwYXJ0aWN1bGFyIG1hY2hpbmUgaXMgYnJhbmQgbmV3
-IHNvDQo+IEkgZG9uJ3QgaGF2ZSBleHBlcmllbmNlIHdpdGggb2xkZXIga2VybmVscyBvbiBpdC4u
-Lg0KPiANCj4gRnVsbCBkbWVzZyBpcyBhdHRhY2hlZCAoZ3ppcHBlZCkuDQo+IA0KPiBMZXQgbWUg
-a25vdyBpZiB5b3UgbmVlZCBhbnkgbW9yZSBpbmZvLg0KPiANCj4gWyAgNzk2LjA1MDAyNV0gQlVH
-OiBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRyZXNzOg0KPiAwMDAwMDAwMDAw
-MDAwMDE0DQo+IFsgIDc5Ni4wNTEyODBdICNQRjogc3VwZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBr
-ZXJuZWwgbW9kZQ0KPiBbICA3OTYuMDUzMDYzXSAjUEY6IGVycm9yX2NvZGUoMHgwMDAwKSAtIG5v
-dC1wcmVzZW50IHBhZ2UNCj4gWyAgNzk2LjA1NDYzNl0gUEdEIDAgUDREIDANCj4gWyAgNzk2LjA1
-NTY4OF0gT29wczogMDAwMCBbIzFdIFBSRUVNUFQgU01QDQo+IFsgIDc5Ni4wNTY3NjhdIENQVTog
-MiBQSUQ6IDE5MCBDb21tOiBrd29ya2VyLzI6MiBUYWludGVkOiBHICAgICAgICBXDQo+ICAgICAg
-IDUuMy4wICM2DQo+IFsgIDc5Ni4wNTc5NTNdIEhhcmR3YXJlIG5hbWU6IFRvIEJlIEZpbGxlZCBC
-eSBPLkUuTS4gVG8gQmUgRmlsbGVkIEJ5DQo+IE8uRS5NLi9CNDUwIEdhbWluZy1JVFgvYWMsIEJJ
-T1MgUDMuMzAgMDUvMTcvMjAxOQ0KPiBbICA3OTYuMDU5MzI5XSBXb3JrcXVldWU6IGV2ZW50cyBr
-ZXlfZ2FyYmFnZV9jb2xsZWN0b3INCj4gWyAgNzk2LjA2MDYyM10gUklQOiAwMDEwOmtleXJpbmdf
-Z2NfY2hlY2tfaXRlcmF0b3IrMHgyNy8weDMwDQoNClRoYXQgd291bGQgYmUgdGhlIGtleXJpbmcg
-Z2FyYmFnZSBjb2xsZWN0b3IsIG5vdCBORlMuDQoNCkNjZWQga2V5cmluZ3NAdmdlci5rZXJuZWwu
-b3JnDQoNCg0KPiBbICA3OTYuMDYxODQ1XSBDb2RlOiA0NCAwMCAwMCA0OCA4MyBlNyBmYyBiOCAw
-MSAwMCAwMCAwMCBmNiA4NyA4MCAwMA0KPiAwMCAwMCAyMSA3NSAxOSA0OCA4YiA1NyA1OCA0OCAz
-OSAxNiA3YyAwNSA0OCA4NSBkMiA3ZiAwYiA0OCA4YiA4NyBhMA0KPiAwMCAwMCAwMCA8MGY+IGI2
-IDQwIDE0IGMzIDBmIDFmIDQwIDAwIDQ4IDgzIGU3IGZjIGU5IDI3IGViIGZmIGZmIDBmDQo+IDFm
-DQo+IDgwIDAwDQo+IFsgIDc5Ni4wNjQ2MzhdIFJTUDogMDAxODpmZmZmYjQwZmMwNzU3ZGY4IEVG
-TEFHUzogMDAwMTAyODINCj4gWyAgNzk2LjA2NjA1OF0gUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJC
-WDogZmZmZmExNDMzOGNhZWQ4MCBSQ1g6DQo+IGZmZmZiNDBmYzA3NTdlNDANCj4gWyAgNzk2LjA2
-NzUzMV0gUkRYOiBmZmZmYTE0MzNhZTg1NTU4IFJTSTogZmZmZmI0MGZjMDc1N2U0MCBSREk6DQo+
-IGZmZmZhMTQzM2FlODU1MDANCj4gWyAgNzk2LjA2OTAxNF0gUkJQOiBmZmZmYjQwZmMwNzU3ZTQw
-IFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6DQo+IDAwMDAwMDAwMDAwMDAwMGYNCj4gWyAgNzk2
-LjA3MDUxM10gUjEwOiA4MDgwODA4MDgwODA4MDgwIFIxMTogMDAwMDAwMDAwMDAwMDAwMSBSMTI6
-DQo+IGZmZmZmZmZmYTRjZDYxODANCj4gWyAgNzk2LjA3MjAyNV0gUjEzOiBmZmZmYTE0MzM4Y2Fl
-ZTEwIFIxNDogZmZmZmExNDMzOGNhZWRmMCBSMTU6DQo+IGZmZmZhMTQzM2ZmZWZmMDANCj4gWyAg
-Nzk2LjA3MzU2N10gRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmZhMTQzNDA0ODAw
-MDAoMDAwMCkNCj4ga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPiBbICA3OTYuMDc1MTcxXSBDUzog
-IDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQo+IFsgIDc5Ni4w
-NzY3ODVdIENSMjogMDAwMDAwMDAwMDAwMDAxNCBDUjM6IDAwMDAwMDA3NDdjZTYwMDAgQ1I0Og0K
-PiAwMDAwMDAwMDAwMzQwNmUwDQo+IFsgIDc5Ni4wNzg0NDVdIENhbGwgVHJhY2U6DQo+IFsgIDc5
-Ni4wODAwOTFdICBhc3NvY19hcnJheV9zdWJ0cmVlX2l0ZXJhdGUrMHg1NS8weDEwMA0KPiBbICA3
-OTYuMDgxNzcwXSAga2V5cmluZ19nYysweDNmLzB4ODANCj4gWyAgNzk2LjA4MzQ0N10gIGtleV9n
-YXJiYWdlX2NvbGxlY3RvcisweDMzMC8weDNkMA0KPiBbICA3OTYuMDg1MTU1XSAgcHJvY2Vzc19v
-bmVfd29yaysweDFjYi8weDMyMA0KPiBbICA3OTYuMDg2ODY5XSAgd29ya2VyX3RocmVhZCsweDI4
-LzB4M2MwDQo+IFsgIDc5Ni4wODg2MDNdICA/IHByb2Nlc3Nfb25lX3dvcmsrMHgzMjAvMHgzMjAN
-Cj4gWyAgNzk2LjA5MDMzNV0gIGt0aHJlYWQrMHgxMDYvMHgxMjANCj4gWyAgNzk2LjA5MjA1M10g
-ID8ga3RocmVhZF9jcmVhdGVfb25fbm9kZSsweDQwLzB4NDANCj4gWyAgNzk2LjA5MzgxMF0gIHJl
-dF9mcm9tX2ZvcmsrMHgxZi8weDMwDQo+IFsgIDc5Ni4wOTU1NjldIE1vZHVsZXMgbGlua2VkIGlu
-OiBzaGExX3Nzc2UzIHNoYTFfZ2VuZXJpYyBjYmMgY3RzDQo+IHJwY3NlY19nc3Nfa3JiNSBhdXRo
-X3JwY2dzcyBuZnN2NCBuZnMgbG9ja2QgZ3JhY2UgZXh0NCBjcmMxNiBtYmNhY2hlDQo+IGpiZDIg
-aXdsbXZtIG1hYzgwMjExIGxpYmFyYzQgYW1kZ3B1IGl3bHdpZmkgc25kX2hkYV9jb2RlY19yZWFs
-dGVrDQo+IHNuZF9oZGFfY29kZWNfZ2VuZXJpYyBrdm1fYW1kIGdwdV9zY2hlZCBrdm0gc25kX2hk
-YV9jb2RlY19oZG1pDQo+IGRybV9rbXNfaGVscGVyIGlycWJ5cGFzcyBrMTB0ZW1wIHN5c2NvcHlh
-cmVhIHN5c2ZpbGxyZWN0IHN5c2ltZ2JsdA0KPiBmYl9zeXNfZm9wcyB2aWRlbyB0dG0gY2ZnODAy
-MTEgc25kX2hkYV9pbnRlbCBzbmRfaGRhX2NvZGVjIGRybQ0KPiBzbmRfaHdkZXAgcmZraWxsIHNu
-ZF9oZGFfY29yZSBiYWNrbGlnaHQgc25kX3BjbSBldmRldiBzbmRfdGltZXIgc25kDQo+IHNvdW5k
-Y29yZSBlZml2YXJmcyBkbV9jcnlwdCBoaWRfZ2VuZXJpYyBpZ2IgaHdtb24gaTJjX2FsZ29fYml0
-IHNyX21vZA0KPiBjZHJvbSBzdW5ycGMgZG1fbW9kDQo+IFsgIDc5Ni4xMDQwMzNdIENSMjogMDAw
-MDAwMDAwMDAwMDAxNA0KPiBbICA3OTYuMTA2MzA0XSAtLS1bIGVuZCB0cmFjZSA2OTVhZWUxMGY5
-MjAyMzQ3IF0tLS0NCj4gWyAgNzk2LjEwODU4NV0gUklQOiAwMDEwOmtleXJpbmdfZ2NfY2hlY2tf
-aXRlcmF0b3IrMHgyNy8weDMwDQo+IFsgIDc5Ni4xMTA4OTRdIENvZGU6IDQ0IDAwIDAwIDQ4IDgz
-IGU3IGZjIGI4IDAxIDAwIDAwIDAwIGY2IDg3IDgwIDAwDQo+IDAwIDAwIDIxIDc1IDE5IDQ4IDhi
-IDU3IDU4IDQ4IDM5IDE2IDdjIDA1IDQ4IDg1IGQyIDdmIDBiIDQ4IDhiIDg3IGEwDQo+IDAwIDAw
-IDAwIDwwZj4gYjYgNDAgMTQgYzMgMGYgMWYgNDAgMDAgNDggODMgZTcgZmMgZTkgMjcgZWIgZmYg
-ZmYgMGYNCj4gMWYNCj4gODAgMDANCj4gWyAgNzk2LjExNTc3M10gUlNQOiAwMDE4OmZmZmZiNDBm
-YzA3NTdkZjggRUZMQUdTOiAwMDAxMDI4Mg0KPiBbICA3OTYuMTE4MjA5XSBSQVg6IDAwMDAwMDAw
-MDAwMDAwMDAgUkJYOiBmZmZmYTE0MzM4Y2FlZDgwIFJDWDoNCj4gZmZmZmI0MGZjMDc1N2U0MA0K
-PiBbICA3OTYuMTIwNjgzXSBSRFg6IGZmZmZhMTQzM2FlODU1NTggUlNJOiBmZmZmYjQwZmMwNzU3
-ZTQwIFJESToNCj4gZmZmZmExNDMzYWU4NTUwMA0KPiBbICA3OTYuMTIzMTc2XSBSQlA6IGZmZmZi
-NDBmYzA3NTdlNDAgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOToNCj4gMDAwMDAwMDAwMDAwMDAw
-Zg0KPiBbICA3OTYuMTI1NjY4XSBSMTA6IDgwODA4MDgwODA4MDgwODAgUjExOiAwMDAwMDAwMDAw
-MDAwMDAxIFIxMjoNCj4gZmZmZmZmZmZhNGNkNjE4MA0KPiBbICA3OTYuMTI4MTA0XSBSMTM6IGZm
-ZmZhMTQzMzhjYWVlMTAgUjE0OiBmZmZmYTE0MzM4Y2FlZGYwIFIxNToNCj4gZmZmZmExNDMzZmZl
-ZmYwMA0KPiBbICA3OTYuMTMwNDkzXSBGUzogIDAwMDAwMDAwMDAwMDAwMDAoMDAwMCkgR1M6ZmZm
-ZmExNDM0MDQ4MDAwMCgwMDAwKQ0KPiBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQo+IFsgIDc5Ni4x
-MzI5MjNdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMN
-Cj4gWyAgNzk2LjEzNTI2Nl0gQ1IyOiAwMDAwMDAwMDAwMDAwMDE0IENSMzogMDAwMDAwMDc0N2Nl
-NjAwMCBDUjQ6DQo+IDAwMDAwMDAwMDAzNDA2ZTANCj4gDQo+IFRoYW5rcywNCj4gICBOaWNrDQot
-LSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJz
-cGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Hi Trond,
+
+This version works for me. I went back to v2 and verified that it
+didn't work so whatever you did here fixed it for me.
+
+On Fri, Sep 20, 2019 at 7:26 AM Trond Myklebust <trondmy@gmail.com> wrote:
+>
+> Various NFSv4 fixes to ensure we handle state errors correctly. In
+> particular, we need to ensure that for COMPOUNDs like CLOSE and
+> DELEGRETURN, that may have an embedded LAYOUTRETURN, we handle the
+> layout state errors so that a retry of either the LAYOUTRETURN, or
+> the later CLOSE/DELEGRETURN does not corrupt the LAYOUTRETURN
+> reply.
+>
+> Also ensure that if we get a NFS4ERR_OLD_STATEID, then we do our
+> best to still try to destroy the state on the server, in order to
+> avoid causing state leakage.
+>
+> v2: Fix bug reports from Olga
+>  - Try to avoid sending old stateids on CLOSE/OPEN_DOWNGRADE when
+>    doing fully serialised NFSv4.0.
+>  - Ensure LOCKU initialises the stateid correctly.
+> v3: Fix locking
+>  - Ensure the patch "Handle NFS4ERR_OLD_STATEID in LOCKU" locks the
+>    stateid when copying it in nfs4_alloc_unlockdata().
+>
+> Trond Myklebust (9):
+>   pNFS: Ensure we do clear the return-on-close layout stateid on fatal
+>     errors
+>   NFSv4: Clean up pNFS return-on-close error handling
+>   NFSv4: Handle NFS4ERR_DELAY correctly in return-on-close
+>   NFSv4: Handle RPC level errors in LAYOUTRETURN
+>   NFSv4: Add a helper to increment stateid seqids
+>   pNFS: Handle NFS4ERR_OLD_STATEID on layoutreturn by bumping the state
+>     seqid
+>   NFSv4: Fix OPEN_DOWNGRADE error handling
+>   NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
+>   NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
+>
+>  fs/nfs/nfs4_fs.h   |  11 ++-
+>  fs/nfs/nfs4proc.c  | 209 +++++++++++++++++++++++++++++++--------------
+>  fs/nfs/nfs4state.c |  16 ----
+>  fs/nfs/pnfs.c      |  71 +++++++++++++--
+>  fs/nfs/pnfs.h      |  17 +++-
+>  5 files changed, 233 insertions(+), 91 deletions(-)
+>
+> --
+> 2.21.0
+>
