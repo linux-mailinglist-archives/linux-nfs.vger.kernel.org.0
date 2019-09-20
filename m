@@ -2,96 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C417CB8E3A
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2019 12:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0488B8EF1
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2019 13:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389030AbfITKEs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Sep 2019 06:04:48 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:37294 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393385AbfITKEs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Sep 2019 06:04:48 -0400
-Received: by mail-wr1-f41.google.com with SMTP id i1so6125399wro.4
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2019 03:04:45 -0700 (PDT)
+        id S2438177AbfITLZ6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Sep 2019 07:25:58 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:40465 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438173AbfITLZ6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Sep 2019 07:25:58 -0400
+Received: by mail-io1-f43.google.com with SMTP id h144so15276018iof.7
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2019 04:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=uTZxGQ78P7KhZVbZZi6L74Ld9LI/dh/LCCq39qoJxh0=;
-        b=hJiXwCjx9WaO5eaSmUgVfe/UxEaWQR6/quY5o3xlQTKxGaCkOD+97Ts6OybgScXsL+
-         KB2e0v3EIxiEMmSHlw5f85mcP4yyyiIAnjsQhP9KqF92bu5bn+Xcmo2wp3Bwf0dmfv1o
-         vOHnm2bb5r9/uLXhF1fKylBEVER5y5UxwukWBTbGG2qcyiySa3rDi86hT4dtwu4wwJ7B
-         koh1BJSJTfgNi1fbyAWZa2K1B90RPfieRg9U3dcMuwxm9evnRC7mGp817VgTKDQfkTwK
-         kHqVBZEzsHHxxdsgdg/JAQNb8F0iZI53sQEny+zxgTIoAuv+5MLbSZSdtB+C3iR8W8iI
-         3VMg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VZrKbzdxU387h76wC3NwBRGveE+UFgnDwEMlzw/LMS0=;
+        b=tRDJi/OyZORWgjeBRKKm/vrNwFTIUQkOymaypR+qRpdC0KUrVVIswFeEkNd0ZyAaj8
+         DcbZE3cR6DD6oM2xh7OFf8As/01cUVhpGWuBGlPQEuoK2wsIn40zCciviQ9FErOiM2RF
+         se+NOI15wyBw7kLIs9rFxrFom+noKgnbnsKL5/wUbf9dCu52BoQWLdXJQUwH2xyysuWQ
+         8zyLr0ERz4LvUowNJKZQ1b1LKy59B58PmsJ57Vx2Sj8z2X/bLk7vewdGfxIg15AHMVqa
+         Efe9ggj8KG/a+c2Lg69JwY8M8VPgZtJ1Ve/dt+8hB9vkOq3HtdNVQPV8j3aoadnvnvYB
+         9mVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uTZxGQ78P7KhZVbZZi6L74Ld9LI/dh/LCCq39qoJxh0=;
-        b=Ka9jz3cbFcRQDw/Vq0N/COWH4TbdOHMVwiHuUojXhJXTFGCRgp6aUH9GbHz93Dr5rT
-         hh6s6Kemij3EA4qB/wregZKNyVKgBRY5sxiBKMGNA9FFW+OMuZBM4zSKs6ZJHKUOnXup
-         lb6qEdnnXXWDHuFPU8JTxtfJQ3YXSbF9FbcQXcte5eM0UR/sSVN7KvnfiSD7zvxotyQ4
-         ezYdGVc69cIK2PcISCx9xOGWS3ki3i7mMTV4a2p5YUqMwjvdW7ZtPZNFQ8kSKxVU5/S0
-         CnzPBHEJ3BMfZEul8NrHzVTLWmRS7WGhSO1Qi0G6tNKzMBy+Hf8OBXkzVf24LvSdnqn5
-         sYNQ==
-X-Gm-Message-State: APjAAAXqR+ikfvf/GJJEH+SKr78yHSxygHlxyhkmXLIItPT94RStBCvD
-        8qhS3o+Z+0zI7EQCzjjsEubJME5d
-X-Google-Smtp-Source: APXvYqztCRaBXnwo9Qky8VeZdyseh8w+f47j684QoZ5KczaVGfg6MMVgQ6M1INYyIwMKvi3OHI1B7Q==
-X-Received: by 2002:adf:ce86:: with SMTP id r6mr10907267wrn.57.1568973884807;
-        Fri, 20 Sep 2019 03:04:44 -0700 (PDT)
-Received: from [10.161.254.11] (srv1-dide.ioa.sch.gr. [81.186.20.0])
-        by smtp.googlemail.com with ESMTPSA id 189sm2263748wma.6.2019.09.20.03.04.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2019 03:04:44 -0700 (PDT)
-Subject: Re: rsize,wsize=1M causes severe lags in 10/100 Mbps
-From:   Alkis Georgopoulos <alkisg@gmail.com>
-To:     Trond Myklebust <trondmy@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <ee758eaf-c02d-f669-bc31-f30e6b17d92a@gmail.com>
- <3d00928cd3244697442a75b36b75cf47ef872657.camel@hammerspace.com>
- <7afc5770-abfa-99bb-dae9-7d11680875fd@gmail.com>
- <e51876b8c2540521c8141ba11b11556d22bde20b.camel@hammerspace.com>
- <915fa536-c992-3b77-505e-829c4d049b02@gmail.com>
- <1d5f6643330afd2c04350006ad2a60e83aebb59d.camel@hammerspace.com>
- <5601db40-ee2f-262d-7d01-5c589c9a07eb@gmail.com>
- <d7ea48b4cd665eced45783bf94d6b1ff1f211960.camel@hammerspace.com>
- <20190919211912.GA21865@cosmos.ssec.wisc.edu>
- <503c22ad34b3f3a15015b7384bcad469b2899cb4.camel@hammerspace.com>
- <20190919221601.GA30751@cosmos.ssec.wisc.edu>
- <0213704b-3930-5be6-bd3d-dbaabc24a270@gmail.com>
- <1e7c9896-eb1b-9d7c-fff0-6df2b3d96392@gmail.com>
-Message-ID: <6fa596e9-b154-310e-9685-7663731618ba@gmail.com>
-Date:   Fri, 20 Sep 2019 13:04:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=VZrKbzdxU387h76wC3NwBRGveE+UFgnDwEMlzw/LMS0=;
+        b=Df8kFrXN6yW3TOizZvqPQ3oZPQlLXJgfgMwxQ94v1oo1mohvW5LnDLXP2cKkeEwr7d
+         2cx2cLuYuqJM3XRqu6YbkGxW4b9cIKUu8TXUgSFEX32WePulXIhjmS/XeagWMPxRzBjb
+         5gbXfA3FoQZ49/0WaoayzElOO43hL9RnyGF9UVyvEg7w2vZguJWLJ74BVcNx4UCatnGo
+         gWLnrm8miaCbbSaAUuHNEIjuAAYxFbazr7/XtQQhwmTr2yvhny8G7bZj+pXtZfnue3bu
+         lrguia/pFQhsZJZWiIXXaQk5jdcMF7JuIy9jQMITfP2g7x0ZddLXqV58c5dMHuRmwBEU
+         X7Mw==
+X-Gm-Message-State: APjAAAXo6OB7ktm7QLoTeMVYui6BdT8PpkkU0+UrtUjNrc0Nou+V0Zyw
+        G3EpVMoCPaj4qZ47ktpggcTf9+QxNQ==
+X-Google-Smtp-Source: APXvYqzLhxQeIdio/mD6pMY5DglKkTpIeAhYhWqIg3rEb59UAcyx+/65ensOzQ6nVHhtKuxTcsrjvw==
+X-Received: by 2002:a6b:6013:: with SMTP id r19mr18277099iog.94.1568978757342;
+        Fri, 20 Sep 2019 04:25:57 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id q74sm1308736iod.72.2019.09.20.04.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2019 04:25:56 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     Olga Kornievskaia <aglo@umich.edu>, linux-nfs@vger.kernel.org
+Subject: [PATCH v3 0/9] Various NFSv4 state error handling fixes
+Date:   Fri, 20 Sep 2019 07:23:39 -0400
+Message-Id: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1e7c9896-eb1b-9d7c-fff0-6df2b3d96392@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 9/20/19 12:48 PM, Alkis Georgopoulos wrote:
-> I did test the boot bandwidth (I mean how many MB were transferred).
-> On ext4-over-NFS, with tmpfs-and-overlayfs to make root writable:
+Various NFSv4 fixes to ensure we handle state errors correctly. In
+particular, we need to ensure that for COMPOUNDs like CLOSE and
+DELEGRETURN, that may have an embedded LAYOUTRETURN, we handle the
+layout state errors so that a retry of either the LAYOUTRETURN, or
+the later CLOSE/DELEGRETURN does not corrupt the LAYOUTRETURN
+reply.
 
+Also ensure that if we get a NFS4ERR_OLD_STATEID, then we do our
+best to still try to destroy the state on the server, in order to
+avoid causing state leakage.
 
-I also tested with the kernel netbooting default of rsize=4K to compare.
-All on 100 Mbps, tcp,timeo=600:
+v2: Fix bug reports from Olga
+ - Try to avoid sending old stateids on CLOSE/OPEN_DOWNGRADE when
+   doing fully serialised NFSv4.0.
+ - Ensure LOCKU initialises the stateid correctly.
+v3: Fix locking
+ - Ensure the patch "Handle NFS4ERR_OLD_STATEID in LOCKU" locks the
+   stateid when copying it in nfs4_alloc_unlockdata().
 
-| rsize | MB to boot | sec to boot |
-|-------|------------|-------------|
-|   1M  |    1250    |     84      |
-|  32K  |     471    |     40      |
-|   4K  |     320    |     31      |
-|   2K  |     355    |     34      |
+Trond Myklebust (9):
+  pNFS: Ensure we do clear the return-on-close layout stateid on fatal
+    errors
+  NFSv4: Clean up pNFS return-on-close error handling
+  NFSv4: Handle NFS4ERR_DELAY correctly in return-on-close
+  NFSv4: Handle RPC level errors in LAYOUTRETURN
+  NFSv4: Add a helper to increment stateid seqids
+  pNFS: Handle NFS4ERR_OLD_STATEID on layoutreturn by bumping the state
+    seqid
+  NFSv4: Fix OPEN_DOWNGRADE error handling
+  NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
+  NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
 
-It appears matching rsize=cluster size=4K gives the best results.
+ fs/nfs/nfs4_fs.h   |  11 ++-
+ fs/nfs/nfs4proc.c  | 209 +++++++++++++++++++++++++++++++--------------
+ fs/nfs/nfs4state.c |  16 ----
+ fs/nfs/pnfs.c      |  71 +++++++++++++--
+ fs/nfs/pnfs.h      |  17 +++-
+ 5 files changed, 233 insertions(+), 91 deletions(-)
 
-Thank you,
-Alkis Georgopoulos
+-- 
+2.21.0
+
