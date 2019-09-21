@@ -2,106 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C899EB98BA
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2019 23:01:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A883FB9BE8
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Sep 2019 03:54:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387779AbfITVBQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Sep 2019 17:01:16 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:41905 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbfITVBP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Sep 2019 17:01:15 -0400
-Received: by mail-ua1-f65.google.com with SMTP id l13so2674755uap.8
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2019 14:01:15 -0700 (PDT)
+        id S2436997AbfIUBy3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Sep 2019 21:54:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40735 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436996AbfIUBy3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Sep 2019 21:54:29 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 7so8756280ljw.7
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2019 18:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
          :cc;
-        bh=k50N6Kiq1ojxndfSm+kE0orwvTIqNyUBRJom6IVzck0=;
-        b=bQYYIWocnk6Hp6+DX7ngjtb6AgU7YmaFxSHBRGzjrQhYZWWPZolHclC8seR6lGLVMA
-         8Ed7v6F8m4qebKVXyLwosaEC+cUeZuuuXYQaROP+LUQUdFT2/vWGU6+QX3HiR42h2rwU
-         1LkOxhzAzss0keDnBRKUvue3ox4Ncg5LBbQS2aYxObQ/7n7JuyeiARCdf1oH/uCvR9Q6
-         XupeAD/nToeYN/NmhD6dAWr8GGKJCTUYXIlwmKqm3bJyHg4G4YdS9kRT09fRufCv3osf
-         WoJuikJfuWIRvgpHnbfM5VShrZLfcPobLtlT1S04SMG7MVNiodam5DKAKH++0sB+inUG
-         CYiA==
+        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
+        b=SU6Xnngd2bMY4WuCnPThYobViQS/n90H3Y4wRz1VD7MnEZSh4dIoiArZHgVk0bwsop
+         g0D/18YIqKKYtfltsk1zhFeG94ov+vTZAXQD2xU0iZvEdsCu1G3isURpq/QGCbXwzk7r
+         6NJh01KDU96fiFppPgcf8ycm9e4wcTDq1eIuHEyAsjxrNldG4tWROh8jaNEiPje92Vd/
+         DPJTvH7HCnZRxLLoHQ6/nLPoqjBY/39blm0ERcZxcHOgoe/oPP9Pm8NFla13KJlEWSMc
+         A5TG6vwe1Ebh3BTf69/kIh4ZaaXSGot4qfqE3d0lTFjaEF4V0Nu6tr6jeoZea/f3awN9
+         Qqkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
          :message-id:subject:to:cc;
-        bh=k50N6Kiq1ojxndfSm+kE0orwvTIqNyUBRJom6IVzck0=;
-        b=YiVe8Z027REDcC1B5ZzwvUMbm+46jpaO6z4raWGo6YKftJQvjY0DsoucoNa84qGxtG
-         ZM3QVfQ90T2bEP4YsgdUSIX71ISwbMFwmQSd+vFSc14Az+oXJQv9pjY0l02BX4JLfb8E
-         85WZQgezR02YSWM+9NXCg+BegtZkBg7BPA57NmDokAX92iDi2Br/o78ypJLLJp8CgDIC
-         Qc2hR0A35nIGm33vAkqCDKBEbd14/xlLVgKSvoTf7q88K3vcHg0tDNOWC8h3h2eSe0br
-         F3MxbdC+HOCWRK/poRy4bLSPRN26DdS4RJm/ZVbXszE/Va0icxjlhOxmypsF3N/zrwqv
-         9bqQ==
-X-Gm-Message-State: APjAAAUby6wU5ThcudW7GPaT3mE9GX38KoXV/8zoVZEkYkoSwVTqiu/J
-        OEvJ0e8mET18R9zfXDm9wxsPSt9seD4IgEIOA+w+uA==
-X-Google-Smtp-Source: APXvYqx3C1L2I5OMxf5cAiddcYipZ+eN8oRvGuby/XCs/tNDpgrt1/IRJv+AuW7aAfEZeZZ7cEJPu//9O6lST3bstVk=
-X-Received: by 2002:ab0:6355:: with SMTP id f21mr9528646uap.40.1569013274748;
- Fri, 20 Sep 2019 14:01:14 -0700 (PDT)
+        bh=6FUJB9iC+bvrTtNriAO1ARI5RLS9whH28zugV601iio=;
+        b=kazLyPJFqXY7S4pclRZfbN7IFQP9Oo2wjbnAULE0PzEpYoqH8hjtmbf8VBwwM2uYAH
+         2tU8Qycw2UvFWS4asg64iEfOU3aBijKSvg356TKzbsgB5rTavClemql1XdBZuchSHNni
+         AzreKXf1QU1TSboXn3X90mpxqmyCtfEnhd5QxbEqN60Nkd/BzqJX9cI5u6sSEpAARLYc
+         hE8yrkxHFuCA87sD42tSqAl4DIO5481d6/GwdBfKtb6eWxjekSzi+rLXfVtYX/THeTBO
+         QUDGmJwa9YxsGkoE0WY8RiObAvspscg3RbChliPUvn4JDPVPVGP2rYgHMtf6oZmi0w1s
+         5v3A==
+X-Gm-Message-State: APjAAAXLOa8G0eRux6uREZ/grYFq2LHidrLK7PAj+cMRJOQpbCYAWVRk
+        T/K18BSh5SKvZqmyE+Dpgz1DLhOVfITV5hY6Dz6DWxCq5px0FA==
+X-Google-Smtp-Source: APXvYqz25ZajIAVDPYXMWHUWQHF0/Gr4jIqpIJTLb/owuzbh79A+y8hCPRgGr6UowJIGXA9mkPnDYMXmqoY7b32xwl8=
+X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr10711008lje.90.1569030866534;
+ Fri, 20 Sep 2019 18:54:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
-In-Reply-To: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 20 Sep 2019 17:01:03 -0400
-Message-ID: <CAN-5tyGGtASKYC2a+Y01Qr-qBBOT+ybAEokxQdZAyASpEYO+4A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] Various NFSv4 state error handling fixes
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
+Received: by 2002:a2e:534c:0:0:0:0:0 with HTTP; Fri, 20 Sep 2019 18:54:25
+ -0700 (PDT)
+X-Originating-IP: [24.53.243.131]
+In-Reply-To: <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
+References: <CADyTPExOnxS+FS6Uqoxu3jNWRy93SQri4Xo1+00aiiVru8XDkg@mail.gmail.com>
+ <c573ebd9d835e2bf2d2b2a4dcb682b6d913b0c5e.camel@hammerspace.com>
+From:   Nick Bowler <nbowler@draconx.ca>
+Date:   Fri, 20 Sep 2019 21:54:25 -0400
+Message-ID: <CADyTPEwUjbV3icj7YD1a5fgzE_t0fpF0Mj9v-fLKywPwKki+Mg@mail.gmail.com>
+Subject: Re: PROBLEM: nfs? crash in Linux 5.3 (possible regression)
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+On 9/20/19, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> On Fri, 2019-09-20 at 14:23 -0400, Nick Bowler wrote:
+>> Not sure how reproducible this is.  Since I've never seen a crash
+>> like this before it may be a regression compared to, say, Linux 4.19
+>> but I am not certain because this particular machine is brand new so
+>> I don't have experience with older kernels on it...
 
-This version works for me. I went back to v2 and verified that it
-didn't work so whatever you did here fixed it for me.
+So it actually seems pretty reliably reproducible, 4 attempts to compile
+Linux on Linux 5.3 and all four crash the same way, although there's
+definitely some randomness here...
 
-On Fri, Sep 20, 2019 at 7:26 AM Trond Myklebust <trondmy@gmail.com> wrote:
+On the other hand, I cannot reproduce if I install Linux 5.2 so it does
+seem like a regression in 5.3.  I will see how well bisecting goes...
+
+>> [  796.050025] BUG: kernel NULL pointer dereference, address:
+>> 0000000000000014
+>> [  796.051280] #PF: supervisor read access in kernel mode
+>> [  796.053063] #PF: error_code(0x0000) - not-present page
+>> [  796.054636] PGD 0 P4D 0
+>> [  796.055688] Oops: 0000 [#1] PREEMPT SMP
+>> [  796.056768] CPU: 2 PID: 190 Comm: kworker/2:2 Tainted: G        W
+>>       5.3.0 #6
+>> [  796.057953] Hardware name: To Be Filled By O.E.M. To Be Filled By
+>> O.E.M./B450 Gaming-ITX/ac, BIOS P3.30 05/17/2019
+>> [  796.059329] Workqueue: events key_garbage_collector
+>> [  796.060623] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
 >
-> Various NFSv4 fixes to ensure we handle state errors correctly. In
-> particular, we need to ensure that for COMPOUNDs like CLOSE and
-> DELEGRETURN, that may have an embedded LAYOUTRETURN, we handle the
-> layout state errors so that a retry of either the LAYOUTRETURN, or
-> the later CLOSE/DELEGRETURN does not corrupt the LAYOUTRETURN
-> reply.
+> That would be the keyring garbage collector, not NFS.
 >
-> Also ensure that if we get a NFS4ERR_OLD_STATEID, then we do our
-> best to still try to destroy the state on the server, in order to
-> avoid causing state leakage.
+> Cced keyrings@vger.kernel.org
 >
-> v2: Fix bug reports from Olga
->  - Try to avoid sending old stateids on CLOSE/OPEN_DOWNGRADE when
->    doing fully serialised NFSv4.0.
->  - Ensure LOCKU initialises the stateid correctly.
-> v3: Fix locking
->  - Ensure the patch "Handle NFS4ERR_OLD_STATEID in LOCKU" locks the
->    stateid when copying it in nfs4_alloc_unlockdata().
 >
-> Trond Myklebust (9):
->   pNFS: Ensure we do clear the return-on-close layout stateid on fatal
->     errors
->   NFSv4: Clean up pNFS return-on-close error handling
->   NFSv4: Handle NFS4ERR_DELAY correctly in return-on-close
->   NFSv4: Handle RPC level errors in LAYOUTRETURN
->   NFSv4: Add a helper to increment stateid seqids
->   pNFS: Handle NFS4ERR_OLD_STATEID on layoutreturn by bumping the state
->     seqid
->   NFSv4: Fix OPEN_DOWNGRADE error handling
->   NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
->   NFSv4: Handle NFS4ERR_OLD_STATEID in LOCKU
->
->  fs/nfs/nfs4_fs.h   |  11 ++-
->  fs/nfs/nfs4proc.c  | 209 +++++++++++++++++++++++++++++++--------------
->  fs/nfs/nfs4state.c |  16 ----
->  fs/nfs/pnfs.c      |  71 +++++++++++++--
->  fs/nfs/pnfs.h      |  17 +++-
->  5 files changed, 233 insertions(+), 91 deletions(-)
->
-> --
-> 2.21.0
+>> [  796.061845] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
+>> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
+>> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
+>> 1f
+>> 80 00
+>> [  796.064638] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
+>> [  796.066058] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
+>> ffffb40fc0757e40
+>> [  796.067531] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
+>> ffffa1433ae85500
+>> [  796.069014] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
+>> 000000000000000f
+>> [  796.070513] R10: 8080808080808080 R11: 0000000000000001 R12:
+>> ffffffffa4cd6180
+>> [  796.072025] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
+>> ffffa1433ffeff00
+>> [  796.073567] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
+>> knlGS:0000000000000000
+>> [  796.075171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  796.076785] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
+>> 00000000003406e0
+>> [  796.078445] Call Trace:
+>> [  796.080091]  assoc_array_subtree_iterate+0x55/0x100
+>> [  796.081770]  keyring_gc+0x3f/0x80
+>> [  796.083447]  key_garbage_collector+0x330/0x3d0
+>> [  796.085155]  process_one_work+0x1cb/0x320
+>> [  796.086869]  worker_thread+0x28/0x3c0
+>> [  796.088603]  ? process_one_work+0x320/0x320
+>> [  796.090335]  kthread+0x106/0x120
+>> [  796.092053]  ? kthread_create_on_node+0x40/0x40
+>> [  796.093810]  ret_from_fork+0x1f/0x30
+>> [  796.095569] Modules linked in: sha1_ssse3 sha1_generic cbc cts
+>> rpcsec_gss_krb5 auth_rpcgss nfsv4 nfs lockd grace ext4 crc16 mbcache
+>> jbd2 iwlmvm mac80211 libarc4 amdgpu iwlwifi snd_hda_codec_realtek
+>> snd_hda_codec_generic kvm_amd gpu_sched kvm snd_hda_codec_hdmi
+>> drm_kms_helper irqbypass k10temp syscopyarea sysfillrect sysimgblt
+>> fb_sys_fops video ttm cfg80211 snd_hda_intel snd_hda_codec drm
+>> snd_hwdep rfkill snd_hda_core backlight snd_pcm evdev snd_timer snd
+>> soundcore efivarfs dm_crypt hid_generic igb hwmon i2c_algo_bit sr_mod
+>> cdrom sunrpc dm_mod
+>> [  796.104033] CR2: 0000000000000014
+>> [  796.106304] ---[ end trace 695aee10f9202347 ]---
+>> [  796.108585] RIP: 0010:keyring_gc_check_iterator+0x27/0x30
+>> [  796.110894] Code: 44 00 00 48 83 e7 fc b8 01 00 00 00 f6 87 80 00
+>> 00 00 21 75 19 48 8b 57 58 48 39 16 7c 05 48 85 d2 7f 0b 48 8b 87 a0
+>> 00 00 00 <0f> b6 40 14 c3 0f 1f 40 00 48 83 e7 fc e9 27 eb ff ff 0f
+>> 1f
+>> 80 00
+>> [  796.115773] RSP: 0018:ffffb40fc0757df8 EFLAGS: 00010282
+>> [  796.118209] RAX: 0000000000000000 RBX: ffffa14338caed80 RCX:
+>> ffffb40fc0757e40
+>> [  796.120683] RDX: ffffa1433ae85558 RSI: ffffb40fc0757e40 RDI:
+>> ffffa1433ae85500
+>> [  796.123176] RBP: ffffb40fc0757e40 R08: 0000000000000000 R09:
+>> 000000000000000f
+>> [  796.125668] R10: 8080808080808080 R11: 0000000000000001 R12:
+>> ffffffffa4cd6180
+>> [  796.128104] R13: ffffa14338caee10 R14: ffffa14338caedf0 R15:
+>> ffffa1433ffeff00
+>> [  796.130493] FS:  0000000000000000(0000) GS:ffffa14340480000(0000)
+>> knlGS:0000000000000000
+>> [  796.132923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  796.135266] CR2: 0000000000000014 CR3: 0000000747ce6000 CR4:
+>> 00000000003406e0
 >
