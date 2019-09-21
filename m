@@ -2,130 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 046A2B9C19
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Sep 2019 06:12:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9587B9CFA
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Sep 2019 09:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfIUEL4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Sep 2019 00:11:56 -0400
-Received: from mail-eopbgr740113.outbound.protection.outlook.com ([40.107.74.113]:33056
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfIUELz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 21 Sep 2019 00:11:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BQRKalG0t0CtLSkO7p2OVAzQgUpWswQKcX7vl+bcrCpeu5SwQjEvkvaJa7JKs+LxXRLzYGaHo7RnGa0A35S6rGzMWPyji9NeyvysgOXBROihsBTUAPxyFrCKL2C5bmRnw1UdV4A+QI+LcptDBR3yXYrcTUa3pkCfp+HhdLerPkDQdXIM6RVXfRh+fgUIpX18tE+wwC/6bdWbgEAp3IvEY/Ma4grfMEOVEzxewa36QZDITcnvTaxek8UuYGrBinTAtE2k3SrcwdtmXSZYog/YdE/t0P+WbuDg1w8sWRNOHaIiWidfxuONiYnauP5azcNWS1efiNVB1MsagokTScWiXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yqlWxMMf/eGbsn3I7WjKVgq1R9dBHpKrPS4vw+alhkE=;
- b=Ih+ZThxXZfDKe5fvbAmP83jcQjVQVJ+A02k9RtZ6dBcxLO5aeXp+OGE87R7YTcTfCbn4stXr25XZBKreNLbkKbIcsTHXaXgpWPNmD9gN0la4ghPi/2fo410ZsuHosZicYH3RyJ0BxPMplE+DiyVab42OjDnioR5k1Wv23ZZXcnETDcjkssd689zzTmBPaAntIrETtRRw6IdgnyuS6EM3kcqPW3/MS7bGCQAEPWVVENvAKdSWZC9LJsk7X4DO3sJ9T0ydFTWH2o7Cq44PdxVxcOPiGeyWhLu2gfQRX9vFRIhoE87f+T7PRPzKNj+YZ8PCZ/TkoKb+33TWBdz+kqSJyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yqlWxMMf/eGbsn3I7WjKVgq1R9dBHpKrPS4vw+alhkE=;
- b=UIrpAe6J4FhQAO2XKwzmStAttmRDnBcaZalvvOjjNQUTPxfwaVQwujlZO6b6asZ0HftqqK2Jah31ZfUyiGRVQD6jH3N5PxuzXW5+qOOb9zJiUQCiuxzkyTlJPfSltQCghkuVhpSB/Y9qwsRLtKD6s+kfQk0FOnszdiS8TD/tujA=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1708.namprd13.prod.outlook.com (10.171.161.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.11; Sat, 21 Sep 2019 04:11:10 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2284.009; Sat, 21 Sep 2019
- 04:11:10 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-Subject: Re: [PATCH v3 0/9] Various NFSv4 state error handling fixes
-Thread-Topic: [PATCH v3 0/9] Various NFSv4 state error handling fixes
-Thread-Index: AQHVb6YvpqT+ZgMdj0WRh1yuUsKhk6c1DbmAgAB4LIA=
-Date:   Sat, 21 Sep 2019 04:11:10 +0000
-Message-ID: <a2395c752a9c711ecfc54aebbbf6cade790a53e3.camel@hammerspace.com>
-References: <20190920112348.69496-1-trond.myklebust@hammerspace.com>
-         <CAN-5tyGGtASKYC2a+Y01Qr-qBBOT+ybAEokxQdZAyASpEYO+4A@mail.gmail.com>
-In-Reply-To: <CAN-5tyGGtASKYC2a+Y01Qr-qBBOT+ybAEokxQdZAyASpEYO+4A@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3f42f350-b813-442e-3f35-08d73e49bc48
-x-ms-traffictypediagnostic: DM5PR13MB1708:
-x-microsoft-antispam-prvs: <DM5PR13MB1708EDCE42C37B6539754632B88B0@DM5PR13MB1708.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0167DB5752
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(376002)(39830400003)(396003)(136003)(51914003)(199004)(189003)(76176011)(4326008)(2501003)(229853002)(25786009)(102836004)(256004)(99286004)(54906003)(6246003)(2171002)(26005)(6916009)(2351001)(71200400001)(71190400001)(14454004)(5660300002)(14444005)(6506007)(53546011)(6116002)(3846002)(6486002)(478600001)(76116006)(7736002)(305945005)(66066001)(118296001)(66946007)(86362001)(186003)(6512007)(91956017)(316002)(6436002)(2906002)(2616005)(66446008)(5640700003)(446003)(66556008)(8936002)(11346002)(66476007)(36756003)(1730700003)(81166006)(476003)(8676002)(486006)(81156014)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1708;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w4l47NkGZN8eIjzwYlSufxk4SrBgzDOhJFsXkN2CFTzAIh7KFW0n+cvHJJaBDU6jTZdm02HS1t4DviGLPes8lPS9YodNE9GQJFQ3up+rgQt6E4A/yxWLBGtsew7bMfBDlFrb5mvQDgkN5lkAi/qvxyh/pBiazE67gVwZkxCvJR8dG4YZLYQbFsbpBnUBU0N03C5BLFRO8X9cGuTEqO9A5A/RqPGUk+EeEc71LWAXK1Olt13XEiSnYQbN8xbk0Q3TS5CWnHP+byD8n9rCWVWBKolmFhb97CQ0HuNLQVfJpHmFD3hB1xFvf/iaOZRaIce8/J3lEmowz4ca1sgg3TKbzncnic/DiM7DHEoAYXptgG+MsASxM1/nMXkg0vYgr4abQhKDQKQEwjqeZWIdizMHp7PROt5MzRXw87sqCt5lw40=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9D004FB5CABA714EBA6CF0D813FC148B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1731070AbfIUHwJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Sep 2019 03:52:09 -0400
+Received: from mail-wm1-f44.google.com ([209.85.128.44]:56112 "EHLO
+        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfIUHwJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Sep 2019 03:52:09 -0400
+Received: by mail-wm1-f44.google.com with SMTP id a6so4683550wma.5
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Sep 2019 00:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=pb1aOunaeiDAs7Pp/ZKpYPmWd7gVISMFOM6pRizj5rA=;
+        b=fFjBmexVYc8BqxiVa/Y7Bq+PVicPyB7am8pvIhYky2pxDfCOjfUHVy7exuwPJlHTzm
+         o3QfKu1KBJgVkeVgShBGthZwMCTtqSGdfOAvgHiqg/unnXc8iyyS63hPe2Z+IvdwhMZC
+         IjaEMcRmblyYibktD5JEOHExdcYv6r+4g235Qdg+PZ9Bhbd1os5TxGJLEhfdghyIy2M0
+         OlPy76nCGPrZ4ijZB6DDAdIv0t9hThOAIqSdLiOCxz+L1eaZ4hyZtGT6EtzzG0KpJWuf
+         TZaT9Bts7LKawlsA/tuHQ524eU17OtuaUQvcvfRTnf0z5EVMGsfw2AvEgCvxT70/kmvG
+         lsvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pb1aOunaeiDAs7Pp/ZKpYPmWd7gVISMFOM6pRizj5rA=;
+        b=slrZEzC8rXM/6UPVfQHNS8yF8AKVi3b8UGhtIQM9+sCRZOESCvzfAfJhUYmTEeKGxb
+         7rGqIwyk824vm6cZeyJawQ4BSx0fv0JTS9KjsJgtV5WDd1/LR3xypwfKNqyhW+2VquoB
+         PVCxKFR/lSUdE/wSRKP6IN42jjYZfS5F+mFP5dJ9x/fGQS4n+5DcuNbaEoVhm0phBA6Q
+         AtY62nYEGPBqe6Y+I4RUUYU+iPGU0tQlD3B8mHRiZQesDCWDj8uXZwZkmP3XH6oDFZ+0
+         vQpNYQrSxNBHeMUgWNeJpyR8P7Jmaset0jP8/HgZRZ4AQr7mBRjHWjHkmuHV/uTMPoHb
+         pbDQ==
+X-Gm-Message-State: APjAAAVZLu6g3NEIiQaDe2j51G0PkzGiqh6F5rP8iGUW89qv/nh/YkCL
+        0rICNQefITXbc+FDMLyXc67pp1wX
+X-Google-Smtp-Source: APXvYqxrH8CtC9T3jUp7u2oi93j5h1aTGYZeTxCYG5H2eCZWjZE1hpfJQ2NG55QTBU74Wx8vmXd89Q==
+X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr6604467wmg.50.1569052326836;
+        Sat, 21 Sep 2019 00:52:06 -0700 (PDT)
+Received: from [10.161.254.11] (srv1-dide.ioa.sch.gr. [81.186.20.0])
+        by smtp.googlemail.com with ESMTPSA id a3sm4826848wmc.3.2019.09.21.00.52.05
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 00:52:06 -0700 (PDT)
+Subject: Re: rsize,wsize=1M causes severe lags in 10/100 Mbps
+From:   Alkis Georgopoulos <alkisg@gmail.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <ee758eaf-c02d-f669-bc31-f30e6b17d92a@gmail.com>
+ <3d00928cd3244697442a75b36b75cf47ef872657.camel@hammerspace.com>
+ <7afc5770-abfa-99bb-dae9-7d11680875fd@gmail.com>
+ <e51876b8c2540521c8141ba11b11556d22bde20b.camel@hammerspace.com>
+ <915fa536-c992-3b77-505e-829c4d049b02@gmail.com>
+ <1d5f6643330afd2c04350006ad2a60e83aebb59d.camel@hammerspace.com>
+ <5601db40-ee2f-262d-7d01-5c589c9a07eb@gmail.com>
+ <d7ea48b4cd665eced45783bf94d6b1ff1f211960.camel@hammerspace.com>
+ <20190919211912.GA21865@cosmos.ssec.wisc.edu>
+ <503c22ad34b3f3a15015b7384bcad469b2899cb4.camel@hammerspace.com>
+ <20190919221601.GA30751@cosmos.ssec.wisc.edu>
+ <0213704b-3930-5be6-bd3d-dbaabc24a270@gmail.com>
+ <1e7c9896-eb1b-9d7c-fff0-6df2b3d96392@gmail.com>
+ <6fa596e9-b154-310e-9685-7663731618ba@gmail.com>
+Message-ID: <ddf47f3c-d27e-972b-fd38-1fdfeaa105a3@gmail.com>
+Date:   Sat, 21 Sep 2019 10:52:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f42f350-b813-442e-3f35-08d73e49bc48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2019 04:11:10.8060
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OMlJ8FCuLXmp6OVTh71zf60syHoE3Gi+KjiNjCvoKssp3K8vYDcf4tSmAYYz+yqUm2x58HKSPdstpZXEv+SNqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1708
+In-Reply-To: <6fa596e9-b154-310e-9685-7663731618ba@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgT2xnYQ0KDQpPbiBGcmksIDIwMTktMDktMjAgYXQgMTc6MDEgLTA0MDAsIE9sZ2EgS29ybmll
-dnNrYWlhIHdyb3RlOg0KPiBIaSBUcm9uZCwNCj4gDQo+IFRoaXMgdmVyc2lvbiB3b3JrcyBmb3Ig
-bWUuIEkgd2VudCBiYWNrIHRvIHYyIGFuZCB2ZXJpZmllZCB0aGF0IGl0DQo+IGRpZG4ndCB3b3Jr
-IHNvIHdoYXRldmVyIHlvdSBkaWQgaGVyZSBmaXhlZCBpdCBmb3IgbWUuDQo+IA0KDQpUaGF0IGhh
-cyBtZSBhIGxpdHRsZSBjb25mdXNlZCBiZWNhdXNlIEkgY2FuJ3QgcmVhbGx5IHNlZSBob3cgdGhl
-IGxhY2sNCm9mIHNwaW5sb2NrcyBjb3VsZCBjYXVzZSBpbmNvcnJlY3QgYmVoYXZpb3VyIHRoYXQg
-Y29uc2lzdGVudGx5LCBob3dldmVyDQpJJ20gZmluZSB3aXRoIHRoZSByZXN1bHQuIOKYug0KDQpU
-aGFua3MgZm9yIHRoZSBoZWxwIHdpdGggdGVzdGluZyENCg0KVHJvbmQNCg0KPiBPbiBGcmksIFNl
-cCAyMCwgMjAxOSBhdCA3OjI2IEFNIFRyb25kIE15a2xlYnVzdCA8dHJvbmRteUBnbWFpbC5jb20+
-DQo+IHdyb3RlOg0KPiA+IFZhcmlvdXMgTkZTdjQgZml4ZXMgdG8gZW5zdXJlIHdlIGhhbmRsZSBz
-dGF0ZSBlcnJvcnMgY29ycmVjdGx5LiBJbg0KPiA+IHBhcnRpY3VsYXIsIHdlIG5lZWQgdG8gZW5z
-dXJlIHRoYXQgZm9yIENPTVBPVU5EcyBsaWtlIENMT1NFIGFuZA0KPiA+IERFTEVHUkVUVVJOLCB0
-aGF0IG1heSBoYXZlIGFuIGVtYmVkZGVkIExBWU9VVFJFVFVSTiwgd2UgaGFuZGxlIHRoZQ0KPiA+
-IGxheW91dCBzdGF0ZSBlcnJvcnMgc28gdGhhdCBhIHJldHJ5IG9mIGVpdGhlciB0aGUgTEFZT1VU
-UkVUVVJOLCBvcg0KPiA+IHRoZSBsYXRlciBDTE9TRS9ERUxFR1JFVFVSTiBkb2VzIG5vdCBjb3Jy
-dXB0IHRoZSBMQVlPVVRSRVRVUk4NCj4gPiByZXBseS4NCj4gPiANCj4gPiBBbHNvIGVuc3VyZSB0
-aGF0IGlmIHdlIGdldCBhIE5GUzRFUlJfT0xEX1NUQVRFSUQsIHRoZW4gd2UgZG8gb3VyDQo+ID4g
-YmVzdCB0byBzdGlsbCB0cnkgdG8gZGVzdHJveSB0aGUgc3RhdGUgb24gdGhlIHNlcnZlciwgaW4g
-b3JkZXIgdG8NCj4gPiBhdm9pZCBjYXVzaW5nIHN0YXRlIGxlYWthZ2UuDQo+ID4gDQo+ID4gdjI6
-IEZpeCBidWcgcmVwb3J0cyBmcm9tIE9sZ2ENCj4gPiAgLSBUcnkgdG8gYXZvaWQgc2VuZGluZyBv
-bGQgc3RhdGVpZHMgb24gQ0xPU0UvT1BFTl9ET1dOR1JBREUgd2hlbg0KPiA+ICAgIGRvaW5nIGZ1
-bGx5IHNlcmlhbGlzZWQgTkZTdjQuMC4NCj4gPiAgLSBFbnN1cmUgTE9DS1UgaW5pdGlhbGlzZXMg
-dGhlIHN0YXRlaWQgY29ycmVjdGx5Lg0KPiA+IHYzOiBGaXggbG9ja2luZw0KPiA+ICAtIEVuc3Vy
-ZSB0aGUgcGF0Y2ggIkhhbmRsZSBORlM0RVJSX09MRF9TVEFURUlEIGluIExPQ0tVIiBsb2NrcyB0
-aGUNCj4gPiAgICBzdGF0ZWlkIHdoZW4gY29weWluZyBpdCBpbiBuZnM0X2FsbG9jX3VubG9ja2Rh
-dGEoKS4NCj4gPiANCj4gPiBUcm9uZCBNeWtsZWJ1c3QgKDkpOg0KPiA+ICAgcE5GUzogRW5zdXJl
-IHdlIGRvIGNsZWFyIHRoZSByZXR1cm4tb24tY2xvc2UgbGF5b3V0IHN0YXRlaWQgb24NCj4gPiBm
-YXRhbA0KPiA+ICAgICBlcnJvcnMNCj4gPiAgIE5GU3Y0OiBDbGVhbiB1cCBwTkZTIHJldHVybi1v
-bi1jbG9zZSBlcnJvciBoYW5kbGluZw0KPiA+ICAgTkZTdjQ6IEhhbmRsZSBORlM0RVJSX0RFTEFZ
-IGNvcnJlY3RseSBpbiByZXR1cm4tb24tY2xvc2UNCj4gPiAgIE5GU3Y0OiBIYW5kbGUgUlBDIGxl
-dmVsIGVycm9ycyBpbiBMQVlPVVRSRVRVUk4NCj4gPiAgIE5GU3Y0OiBBZGQgYSBoZWxwZXIgdG8g
-aW5jcmVtZW50IHN0YXRlaWQgc2VxaWRzDQo+ID4gICBwTkZTOiBIYW5kbGUgTkZTNEVSUl9PTERf
-U1RBVEVJRCBvbiBsYXlvdXRyZXR1cm4gYnkgYnVtcGluZyB0aGUNCj4gPiBzdGF0ZQ0KPiA+ICAg
-ICBzZXFpZA0KPiA+ICAgTkZTdjQ6IEZpeCBPUEVOX0RPV05HUkFERSBlcnJvciBoYW5kbGluZw0K
-PiA+ICAgTkZTdjQ6IEhhbmRsZSBORlM0RVJSX09MRF9TVEFURUlEIGluIENMT1NFL09QRU5fRE9X
-TkdSQURFDQo+ID4gICBORlN2NDogSGFuZGxlIE5GUzRFUlJfT0xEX1NUQVRFSUQgaW4gTE9DS1UN
-Cj4gPiANCj4gPiAgZnMvbmZzL25mczRfZnMuaCAgIHwgIDExICsrLQ0KPiA+ICBmcy9uZnMvbmZz
-NHByb2MuYyAgfCAyMDkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+
-ID4gLS0tLS0tDQo+ID4gIGZzL25mcy9uZnM0c3RhdGUuYyB8ICAxNiAtLS0tDQo+ID4gIGZzL25m
-cy9wbmZzLmMgICAgICB8ICA3MSArKysrKysrKysrKysrLS0NCj4gPiAgZnMvbmZzL3BuZnMuaCAg
-ICAgIHwgIDE3ICsrKy0NCj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCAyMzMgaW5zZXJ0aW9ucygrKSwg
-OTEgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gLS0NCj4gPiAyLjIxLjANCj4gPiANCi0tIA0KVHJv
-bmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0
-cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+I think it's caused by the kernel readahead, not glibc readahead.
+TL;DR: This solves the problem:
+echo 4 > /sys/devices/virtual/bdi/0:58/read_ahead_kb
+
+Question: how to configure NFS/kernel to automatically set that?
+
+Long version:
+Doing step (4) below results in tremendous speedup:
+
+1) mount -t nfs -o tcp,timeo=600,rsize=1048576,wsize=1048576 
+10.161.254.11:/srv/ltsp /mnt
+
+2) cat /proc/fs/nfsfs/volumes
+We see the DEV number from there, e.g. 0:58
+
+3) cat /sys/devices/virtual/bdi/0:58/read_ahead_kb
+15360
+I assume that this means the kernel will try to read ahead up to 15 MB 
+for each accessed file. *THIS IS THE PROBLEM*. For non-NFS devices, this 
+value is 128 (KB).
+
+4) echo 4 > /sys/devices/virtual/bdi/0:58/read_ahead_kb
+
+5) Test. Traffic now should be a *lot* less, and speed a *lot* more.
+E.g. my NFS booting tests:
+  - read_ahead_kb=15360 (the default) => 1160 MB traffic to boot
+  - read_ahead_kb=128 => 324MB traffic
+  - read_ahead_kb=4 => 223MB traffic
+
+So the question that remains, is how to properly configure either NFS or 
+the kernel, to use small readahead values for NFS.
+
+I'm currently doing it with this workaround:
+for f in $(awk '/^v[0-9]/ { print $4 }' < /proc/fs/nfsfs/volumes); do 
+echo 4 > /sys/devices/virtual/bdi/$f/read_ahead_kb; done
+
+Thanks,
+Alkis
