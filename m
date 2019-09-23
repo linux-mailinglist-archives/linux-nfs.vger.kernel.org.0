@@ -2,615 +2,218 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5A3BBB62A
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 16:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45479BB85D
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 17:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfIWOEk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Sep 2019 10:04:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44438 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729899AbfIWOEj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Sep 2019 10:04:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id j4so33612398iog.11
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2019 07:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=cOLlVV9JlP723kEs6UvCI5tBmhcudYCylfWKpLqPxEo=;
-        b=TqWyn1Ugj9K/L0LBB1hw+XADgYAtV2J6IRyRNQZwnqX3fj2pte+XQti1WZeL8ZvGLY
-         rpaSXKJjnUcH9qLsXB1Vwcp2xEuVl00iDTkZk58SidGodqqPL+owq7dOd4fM0F6DW04+
-         x8ktvrDgu+dJXXzQDhOG9AUVx23om29WDP/BggK0JWXd4VXxFDT9cGn8/Yk5cxBKhvGd
-         o6QfIa2kmLSiYy3mTsKNg06KaIIN92yCxSMHokyEVrkBNLByZEXt2Ai9syfrKQvVWOPP
-         uc9QNg5hAKUaWoeRWcCQ0TCgfiGW7a6eXPUTXgfKnHwMa72ltlvGRpna/yI5W3/urGkM
-         FNoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=cOLlVV9JlP723kEs6UvCI5tBmhcudYCylfWKpLqPxEo=;
-        b=rd7RyHjUT7+c2v/ISOq0w7FZh5vqgzcIkpeiACoGjXIF1SIu93rGEreaAEsOHs5PV+
-         8Z97QVy9topiLCudcT143k4xW5Pn/gtk2LAAb5+HQ+l/6Ky6DHijke3tGdEKbvbaHN0s
-         +FrxgftgHdEwwFlxRjDtn1iR0qg189JZ5ceQnDb1M0acGkLUlsp2YQlzsrNZAtCuJOx8
-         N/1JiWXWVO7MljBr09sc8An6u1QOut50s6G4a5/2Sr+DWeDgXLzQS7f8Bj/QNcsNry1Y
-         53OAEJHLRN6DqyKecOb5Jf+GOOO0hsg25Q+R6ujcoQ4V9anUPRAc8YSu/iwT6MC/7lVL
-         4xgQ==
-X-Gm-Message-State: APjAAAUUgrEmMXBpWBqr5nN7db1WL+3DJE2Z56fZgY/LNGIth7eFDk2E
-        TWA8TbpdnBm72xX4IrejnCt+Y5Wo
-X-Google-Smtp-Source: APXvYqzFjp+MfDpq+qehLtHB0uKlqlsHXr1wmADvgi4cnGCHObwEgbVdGvKkoA/fQdWgehqNTT8W9g==
-X-Received: by 2002:a5e:d70d:: with SMTP id v13mr226449iom.174.1569247477373;
-        Mon, 23 Sep 2019 07:04:37 -0700 (PDT)
-Received: from [10.30.197.57] ([204.77.163.55])
-        by smtp.gmail.com with ESMTPSA id 197sm21816127ioc.78.2019.09.23.07.04.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 07:04:31 -0700 (PDT)
-From:   Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Subject: Re: [nfs-utils PATCH v2] Add printf format checking
-To:     Steve Dickson <SteveD@RedHat.com>, linux-nfs@vger.kernel.org
-References: <20190906163351.22944-1-JPEWhacker@gmail.com>
- <20190906202425.15013-1-JPEWhacker@gmail.com>
- <4bafb8fa-4908-c66f-8f4c-6b4b65acdeba@gmail.com>
- <df44dc8e-470d-9ecc-e08b-54431bc66703@RedHat.com>
-Message-ID: <35f0887f-41a7-4410-2124-4cb75d21ca3d@gmail.com>
-Date:   Mon, 23 Sep 2019 09:04:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <df44dc8e-470d-9ecc-e08b-54431bc66703@RedHat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        id S1728665AbfIWPsQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Sep 2019 11:48:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfIWPsQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:48:16 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D62205F4;
+        Mon, 23 Sep 2019 15:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569253695;
+        bh=wzG2zl1ghSK1OwbPID3sQYVBbITXZvGHKVGtVFvr5hg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YIgQhg9rE+wtbnOrvjqg+Opx16xDRVZIbV3M5VveMd6+oKZU7f7RfoCuDqUMmrvSl
+         ynrLk3mRd9maPLBGNkxetKAgTFDA0dYyR326dK+AFH22SMEkQwSv1VyM4svaFUs6hS
+         1c4aEQxwi6iChTzbwrwWGpff9iXvBMFkv9slm3PQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Jiri Kosina <trivial@kernel.org>,
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH trivial] fs: Fix Kconfig indentation
+Date:   Mon, 23 Sep 2019 17:48:04 +0200
+Message-Id: <20190923154804.6696-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+    $ sed -e 's/^        /\t/' -i */Kconfig
 
-On 9/20/19 9:05 AM, Steve Dickson wrote:
->
-> On 9/16/19 2:33 PM, Joshua Watt wrote:
->> On 9/6/19 3:24 PM, Joshua Watt wrote:
->>> Adds a configure time check for __attribute__((format)) and then uses it
->>> to enforce checking the format of several printf-like functions. Several
->>> invalid uses of format codes that were discovered have now been fixed.
->>>
->>> V2: Fix use of "%jd" format code on an argument that wasn't intmax_t
->> ping?
->>
->>> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> Committed... Thanks for the ping!
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ fs/9p/Kconfig     | 20 ++++++++++----------
+ fs/Kconfig        |  4 ++--
+ fs/Kconfig.binfmt |  4 ++--
+ fs/fuse/Kconfig   |  4 ++--
+ fs/nfs/Kconfig    |  6 +++---
+ fs/proc/Kconfig   |  8 ++++----
+ fs/qnx6/Kconfig   |  2 +-
+ fs/ufs/Kconfig    |  4 ++--
+ 8 files changed, 26 insertions(+), 26 deletions(-)
 
-I haven't seen this commit land in the git repository 
-git.linux-nfs.org/projects/steved/nfs-utils.git yet. Is there a 
-different one I should be looking at?
+diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+index ac2ec4543fe1..09fd4a185fd2 100644
+--- a/fs/9p/Kconfig
++++ b/fs/9p/Kconfig
+@@ -32,13 +32,13 @@ endif
+ 
+ 
+ config 9P_FS_SECURITY
+-        bool "9P Security Labels"
+-        depends on 9P_FS
+-        help
+-          Security labels support alternative access control models
+-          implemented by security modules like SELinux.  This option
+-          enables an extended attribute handler for file security
+-          labels in the 9P filesystem.
+-
+-          If you are not using a security module that requires using
+-          extended attributes for file security labels, say N.
++	bool "9P Security Labels"
++	depends on 9P_FS
++	help
++	  Security labels support alternative access control models
++	  implemented by security modules like SELinux.  This option
++	  enables an extended attribute handler for file security
++	  labels in the 9P filesystem.
++
++	  If you are not using a security module that requires using
++	  extended attributes for file security labels, say N.
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 2501e6f1f965..e65289487732 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -97,8 +97,8 @@ config FILE_LOCKING
+ 	default y
+ 	help
+ 	  This option enables standard file locking support, required
+-          for filesystems like NFS and for the flock() system
+-          call. Disabling this option saves about 11k.
++	  for filesystems like NFS and for the flock() system
++	  call. Disabling this option saves about 11k.
+ 
+ config MANDATORY_FILE_LOCKING
+ 	bool "Enable Mandatory file locking"
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 62dc4f577ba1..8d0d16b90039 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -191,9 +191,9 @@ config BINFMT_MISC
+ 	  <file:Documentation/admin-guide/binfmt-misc.rst> to learn how to use this
+ 	  feature, <file:Documentation/admin-guide/java.rst> for information about how
+ 	  to include Java support. and <file:Documentation/admin-guide/mono.rst> for
+-          information about how to include Mono-based .NET support.
++	  information about how to include Mono-based .NET support.
+ 
+-          To use binfmt_misc, you will need to mount it:
++	  To use binfmt_misc, you will need to mount it:
+ 		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+ 
+ 	  You may say M here for module support and later load the module when
+diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
+index 0635cba19971..eb2a585572dc 100644
+--- a/fs/fuse/Kconfig
++++ b/fs/fuse/Kconfig
+@@ -34,7 +34,7 @@ config VIRTIO_FS
+ 	select VIRTIO
+ 	help
+ 	  The Virtio Filesystem allows guests to mount file systems from the
+-          host.
++	  host.
+ 
+ 	  If you want to share files between guests or with the host, answer Y
+-          or M.
++	  or M.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 295a7a21b774..3edf122b8044 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
+ 	default n
+ 	help
+ 	  This option makes the NFS client advertise to NFSv4.1 servers that
+-          it can support NFSv4 migration.
++	  it can support NFSv4 migration.
+ 
+-          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
+-          still experimental.  If you are not an NFSv4 developer, say N here.
++	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
++	  still experimental.  If you are not an NFSv4 developer, say N here.
+ 
+ config NFS_V4_SECURITY_LABEL
+ 	bool
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index cb5629bd5fff..af2c0af60269 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -42,8 +42,8 @@ config PROC_VMCORE
+ 	bool "/proc/vmcore support"
+ 	depends on PROC_FS && CRASH_DUMP
+ 	default y
+-        help
+-        Exports the dump image of crashed kernel in ELF format.
++	help
++	Exports the dump image of crashed kernel in ELF format.
+ 
+ config PROC_VMCORE_DEVICE_DUMP
+ 	bool "Device Hardware/Firmware Log Collection"
+@@ -72,7 +72,7 @@ config PROC_SYSCTL
+ 	  a recompile of the kernel or reboot of the system.  The primary
+ 	  interface is through /proc/sys.  If you say Y here a tree of
+ 	  modifiable sysctl entries will be generated beneath the
+-          /proc/sys directory. They are explained in the files
++	  /proc/sys directory. They are explained in the files
+ 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
+ 	  option will enlarge the kernel by at least 8 KB.
+ 
+@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
+ 	  Various /proc files exist to monitor process memory utilization:
+ 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
+ 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
+-          interfaces will reduce the size of the kernel by approximately 4kb.
++	  interfaces will reduce the size of the kernel by approximately 4kb.
+ 
+ config PROC_CHILDREN
+ 	bool "Include /proc/<pid>/task/<tid>/children file"
+diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
+index 6a9d6bce1586..5ef679e51ba1 100644
+--- a/fs/qnx6/Kconfig
++++ b/fs/qnx6/Kconfig
+@@ -7,7 +7,7 @@ config QNX6FS_FS
+ 	  QNX 6 (also called QNX RTP).
+ 	  Further information is available at <http://www.qnx.com/>.
+ 	  Say Y if you intend to mount QNX hard disks or floppies formatted
+-          with a mkqnx6fs.
++	  with a mkqnx6fs.
+ 	  However, keep in mind that this currently is a readonly driver!
+ 
+ 	  To compile this file system support as a module, choose M here: the
+diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
+index 6d30adb6b890..f1f725c5a28c 100644
+--- a/fs/ufs/Kconfig
++++ b/fs/ufs/Kconfig
+@@ -11,8 +11,8 @@ config UFS_FS
+ 	  experimental "UFS file system write support", below. Please read the
+ 	  file <file:Documentation/admin-guide/ufs.rst> for more information.
+ 
+-          The recently released UFS2 variant (used in FreeBSD 5.x) is
+-          READ-ONLY supported.
++	  The recently released UFS2 variant (used in FreeBSD 5.x) is
++	  READ-ONLY supported.
+ 
+ 	  Note that this option is generally not needed for floppies, since a
+ 	  good portable way to transport files and directories between unixes
+-- 
+2.17.1
 
-Thanks
-
->
-> steved.
->>> ---
->>>    aclocal/ax_gcc_func_attribute.m4 | 238 +++++++++++++++++++++++++++++++
->>>    configure.ac                     |   1 +
->>>    support/include/xcommon.h        |  18 ++-
->>>    support/include/xlog.h           |  20 ++-
->>>    support/nfs/svc_create.c         |   2 +-
->>>    support/nsm/rpc.c                |   2 +-
->>>    utils/exportfs/exportfs.c        |   3 +
->>>    utils/mountd/cache.c             |   3 +-
->>>    utils/mountd/mountd.c            |   4 +-
->>>    utils/nfsdcld/nfsdcld.c          |   2 +-
->>>    utils/nfsdcld/sqlite.c           |   2 +-
->>>    utils/nfsidmap/nfsidmap.c        |   8 +-
->>>    utils/statd/rmtcall.c            |   2 +-
->>>    utils/statd/statd.c              |   2 +-
->>>    utils/statd/svc_run.c            |   5 +-
->>>    15 files changed, 287 insertions(+), 25 deletions(-)
->>>    create mode 100644 aclocal/ax_gcc_func_attribute.m4
->>>
->>> diff --git a/aclocal/ax_gcc_func_attribute.m4 b/aclocal/ax_gcc_func_attribute.m4
->>> new file mode 100644
->>> index 00000000..098c9aad
->>> --- /dev/null
->>> +++ b/aclocal/ax_gcc_func_attribute.m4
->>> @@ -0,0 +1,238 @@
->>> +# ===========================================================================
->>> +#  https://www.gnu.org/software/autoconf-archive/ax_gcc_func_attribute.html
->>> +# ===========================================================================
->>> +#
->>> +# SYNOPSIS
->>> +#
->>> +#   AX_GCC_FUNC_ATTRIBUTE(ATTRIBUTE)
->>> +#
->>> +# DESCRIPTION
->>> +#
->>> +#   This macro checks if the compiler supports one of GCC's function
->>> +#   attributes; many other compilers also provide function attributes with
->>> +#   the same syntax. Compiler warnings are used to detect supported
->>> +#   attributes as unsupported ones are ignored by default so quieting
->>> +#   warnings when using this macro will yield false positives.
->>> +#
->>> +#   The ATTRIBUTE parameter holds the name of the attribute to be checked.
->>> +#
->>> +#   If ATTRIBUTE is supported define HAVE_FUNC_ATTRIBUTE_<ATTRIBUTE>.
->>> +#
->>> +#   The macro caches its result in the ax_cv_have_func_attribute_<attribute>
->>> +#   variable.
->>> +#
->>> +#   The macro currently supports the following function attributes:
->>> +#
->>> +#    alias
->>> +#    aligned
->>> +#    alloc_size
->>> +#    always_inline
->>> +#    artificial
->>> +#    cold
->>> +#    const
->>> +#    constructor
->>> +#    constructor_priority for constructor attribute with priority
->>> +#    deprecated
->>> +#    destructor
->>> +#    dllexport
->>> +#    dllimport
->>> +#    error
->>> +#    externally_visible
->>> +#    fallthrough
->>> +#    flatten
->>> +#    format
->>> +#    format_arg
->>> +#    gnu_inline
->>> +#    hot
->>> +#    ifunc
->>> +#    leaf
->>> +#    malloc
->>> +#    noclone
->>> +#    noinline
->>> +#    nonnull
->>> +#    noreturn
->>> +#    nothrow
->>> +#    optimize
->>> +#    pure
->>> +#    sentinel
->>> +#    sentinel_position
->>> +#    unused
->>> +#    used
->>> +#    visibility
->>> +#    warning
->>> +#    warn_unused_result
->>> +#    weak
->>> +#    weakref
->>> +#
->>> +#   Unsupported function attributes will be tested with a prototype
->>> +#   returning an int and not accepting any arguments and the result of the
->>> +#   check might be wrong or meaningless so use with care.
->>> +#
->>> +# LICENSE
->>> +#
->>> +#   Copyright (c) 2013 Gabriele Svelto <gabriele.svelto@gmail.com>
->>> +#
->>> +#   Copying and distribution of this file, with or without modification, are
->>> +#   permitted in any medium without royalty provided the copyright notice
->>> +#   and this notice are preserved.  This file is offered as-is, without any
->>> +#   warranty.
->>> +
->>> +#serial 9
->>> +
->>> +AC_DEFUN([AX_GCC_FUNC_ATTRIBUTE], [
->>> +    AS_VAR_PUSHDEF([ac_var], [ax_cv_have_func_attribute_$1])
->>> +
->>> +    AC_CACHE_CHECK([for __attribute__(($1))], [ac_var], [
->>> +        AC_LINK_IFELSE([AC_LANG_PROGRAM([
->>> +            m4_case([$1],
->>> +                [alias], [
->>> +                    int foo( void ) { return 0; }
->>> +                    int bar( void ) __attribute__(($1("foo")));
->>> +                ],
->>> +                [aligned], [
->>> +                    int foo( void ) __attribute__(($1(32)));
->>> +                ],
->>> +                [alloc_size], [
->>> +                    void *foo(int a) __attribute__(($1(1)));
->>> +                ],
->>> +                [always_inline], [
->>> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [artificial], [
->>> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [cold], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [const], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [constructor_priority], [
->>> +                    int foo( void ) __attribute__((__constructor__(65535/2)));
->>> +                ],
->>> +                [constructor], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [deprecated], [
->>> +                    int foo( void ) __attribute__(($1("")));
->>> +                ],
->>> +                [destructor], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [dllexport], [
->>> +                    __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [dllimport], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [error], [
->>> +                    int foo( void ) __attribute__(($1("")));
->>> +                ],
->>> +                [externally_visible], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [fallthrough], [
->>> +                    int foo( void ) {switch (0) { case 1: __attribute__(($1)); case 2: break ; }};
->>> +                ],
->>> +                [flatten], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [format], [
->>> +                    int foo(const char *p, ...) __attribute__(($1(printf, 1, 2)));
->>> +                ],
->>> +                [format_arg], [
->>> +                    char *foo(const char *p) __attribute__(($1(1)));
->>> +                ],
->>> +                [gnu_inline], [
->>> +                    inline __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [hot], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [ifunc], [
->>> +                    int my_foo( void ) { return 0; }
->>> +                    static int (*resolve_foo(void))(void) { return my_foo; }
->>> +                    int foo( void ) __attribute__(($1("resolve_foo")));
->>> +                ],
->>> +                [leaf], [
->>> +                    __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [malloc], [
->>> +                    void *foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [noclone], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [noinline], [
->>> +                    __attribute__(($1)) int foo( void ) { return 0; }
->>> +                ],
->>> +                [nonnull], [
->>> +                    int foo(char *p) __attribute__(($1(1)));
->>> +                ],
->>> +                [noreturn], [
->>> +                    void foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [nothrow], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [optimize], [
->>> +                    __attribute__(($1(3))) int foo( void ) { return 0; }
->>> +                ],
->>> +                [pure], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [sentinel], [
->>> +                    int foo(void *p, ...) __attribute__(($1));
->>> +                ],
->>> +                [sentinel_position], [
->>> +                    int foo(void *p, ...) __attribute__(($1(1)));
->>> +                ],
->>> +                [returns_nonnull], [
->>> +                    void *foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [unused], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [used], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [visibility], [
->>> +                    int foo_def( void ) __attribute__(($1("default")));
->>> +                    int foo_hid( void ) __attribute__(($1("hidden")));
->>> +                    int foo_int( void ) __attribute__(($1("internal")));
->>> +                    int foo_pro( void ) __attribute__(($1("protected")));
->>> +                ],
->>> +                [warning], [
->>> +                    int foo( void ) __attribute__(($1("")));
->>> +                ],
->>> +                [warn_unused_result], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [weak], [
->>> +                    int foo( void ) __attribute__(($1));
->>> +                ],
->>> +                [weakref], [
->>> +                    static int foo( void ) { return 0; }
->>> +                    static int bar( void ) __attribute__(($1("foo")));
->>> +                ],
->>> +                [
->>> +                 m4_warn([syntax], [Unsupported attribute $1, the test may fail])
->>> +                 int foo( void ) __attribute__(($1));
->>> +                ]
->>> +            )], [])
->>> +            ],
->>> +            dnl GCC doesn't exit with an error if an unknown attribute is
->>> +            dnl provided but only outputs a warning, so accept the attribute
->>> +            dnl only if no warning were issued.
->>> +            [AS_IF([test -s conftest.err],
->>> +                [AS_VAR_SET([ac_var], [no])],
->>> +                [AS_VAR_SET([ac_var], [yes])])],
->>> +            [AS_VAR_SET([ac_var], [no])])
->>> +    ])
->>> +
->>> +    AS_IF([test yes = AS_VAR_GET([ac_var])],
->>> +        [AC_DEFINE_UNQUOTED(AS_TR_CPP(HAVE_FUNC_ATTRIBUTE_$1), 1,
->>> +            [Define to 1 if the system has the `$1' function attribute])], [])
->>> +
->>> +    AS_VAR_POPDEF([ac_var])
->>> +])
->>> diff --git a/configure.ac b/configure.ac
->>> index 37096944..639199a9 100644
->>> --- a/configure.ac
->>> +++ b/configure.ac
->>> @@ -619,6 +619,7 @@ CHECK_CCSUPPORT([-Werror=format-overflow=2], [flg1])
->>>    CHECK_CCSUPPORT([-Werror=int-conversion], [flg2])
->>>    CHECK_CCSUPPORT([-Werror=incompatible-pointer-types], [flg3])
->>>    CHECK_CCSUPPORT([-Werror=misleading-indentation], [flg4])
->>> +AX_GCC_FUNC_ATTRIBUTE([format])
->>>      AC_SUBST([AM_CFLAGS], ["$my_am_cflags $flg1 $flg2 $flg3 $flg4"])
->>>    diff --git a/support/include/xcommon.h b/support/include/xcommon.h
->>> index 23c9a135..30b0403b 100644
->>> --- a/support/include/xcommon.h
->>> +++ b/support/include/xcommon.h
->>> @@ -9,6 +9,10 @@
->>>    #ifndef _XMALLOC_H
->>>    #define _MALLOC_H
->>>    +#ifdef HAVE_CONFIG_H
->>> +#include <config.h>
->>> +#endif
->>> +
->>>    #include <sys/types.h>
->>>    #include <fcntl.h>
->>>    #include <limits.h>
->>> @@ -25,9 +29,15 @@
->>>      #define streq(s, t)    (strcmp ((s), (t)) == 0)
->>>    -/* Functions in sundries.c that are used in mount.c and umount.c  */
->>> +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
->>> +#define X_FORMAT(_x) __attribute__((__format__ _x))
->>> +#else
->>> +#define X_FORMAT(_x)
->>> +#endif
->>> +
->>> +/* Functions in sundries.c that are used in mount.c and umount.c  */
->>>    char *canonicalize (const char *path);
->>> -void nfs_error (const char *fmt, ...);
->>> +void nfs_error (const char *fmt, ...) X_FORMAT((printf, 1, 2));
->>>    void *xmalloc (size_t size);
->>>    void *xrealloc(void *p, size_t size);
->>>    void xfree(void *);
->>> @@ -36,9 +46,9 @@ char *xstrndup (const char *s, int n);
->>>    char *xstrconcat2 (const char *, const char *);
->>>    char *xstrconcat3 (const char *, const char *, const char *);
->>>    char *xstrconcat4 (const char *, const char *, const char *, const char *);
->>> -void die (int errcode, const char *fmt, ...);
->>> +void die (int errcode, const char *fmt, ...) X_FORMAT((printf, 2, 3));
->>>    -extern void die(int err, const char *fmt, ...);
->>> +extern void die(int err, const char *fmt, ...) X_FORMAT((printf, 2, 3));
->>>    extern void (*at_die)(void);
->>>      /* exit status - bits below are ORed */
->>> diff --git a/support/include/xlog.h b/support/include/xlog.h
->>> index a11463ed..32ff5a1b 100644
->>> --- a/support/include/xlog.h
->>> +++ b/support/include/xlog.h
->>> @@ -7,6 +7,10 @@
->>>    #ifndef XLOG_H
->>>    #define XLOG_H
->>>    +#ifdef HAVE_CONFIG_H
->>> +#include <config.h>
->>> +#endif
->>> +
->>>    #include <stdarg.h>
->>>      /* These are logged always. L_FATAL also does exit(1) */
->>> @@ -35,6 +39,12 @@ struct xlog_debugfac {
->>>        int        df_fac;
->>>    };
->>>    +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
->>> +#define XLOG_FORMAT(_x) __attribute__((__format__ _x))
->>> +#else
->>> +#define XLOG_FORMAT(_x)
->>> +#endif
->>> +
->>>    extern int export_errno;
->>>    void            xlog_open(char *progname);
->>>    void            xlog_stderr(int on);
->>> @@ -43,10 +53,10 @@ void            xlog_config(int fac, int on);
->>>    void            xlog_sconfig(char *, int on);
->>>    void            xlog_from_conffile(char *);
->>>    int            xlog_enabled(int fac);
->>> -void            xlog(int fac, const char *fmt, ...);
->>> -void            xlog_warn(const char *fmt, ...);
->>> -void            xlog_err(const char *fmt, ...);
->>> -void            xlog_errno(int err, const char *fmt, ...);
->>> -void            xlog_backend(int fac, const char *fmt, va_list args);
->>> +void            xlog(int fac, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
->>> +void            xlog_warn(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
->>> +void            xlog_err(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
->>> +void            xlog_errno(int err, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
->>> +void            xlog_backend(int fac, const char *fmt, va_list args) XLOG_FORMAT((printf, 2, 0));
->>>      #endif /* XLOG_H */
->>> diff --git a/support/nfs/svc_create.c b/support/nfs/svc_create.c
->>> index 4e14430d..976c2d29 100644
->>> --- a/support/nfs/svc_create.c
->>> +++ b/support/nfs/svc_create.c
->>> @@ -184,7 +184,7 @@ svc_create_sock(const struct sockaddr *sap, socklen_t salen,
->>>            type = SOCK_STREAM;
->>>            break;
->>>        default:
->>> -        xlog(D_GENERAL, "%s: Unrecognized bind address semantics: %u",
->>> +        xlog(D_GENERAL, "%s: Unrecognized bind address semantics: %lu",
->>>                __func__, nconf->nc_semantics);
->>>            return -1;
->>>        }
->>> diff --git a/support/nsm/rpc.c b/support/nsm/rpc.c
->>> index ae49006c..08b4746f 100644
->>> --- a/support/nsm/rpc.c
->>> +++ b/support/nsm/rpc.c
->>> @@ -182,7 +182,7 @@ nsm_xmit_getport(const int sock, const struct sockaddr_in *sin,
->>>        uint32_t xid;
->>>        XDR xdr;
->>>    -    xlog(D_CALL, "Sending PMAP_GETPORT for %u, %u, udp", program, version);
->>> +    xlog(D_CALL, "Sending PMAP_GETPORT for %lu, %lu, udp", program, version);
->>>          nsm_init_xdrmem(msgbuf, NSM_MAXMSGSIZE, &xdr);
->>>        xid = nsm_init_rpc_header(PMAPPROG, PMAPVERS,
->>> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
->>> index 5cca4175..a04a7898 100644
->>> --- a/utils/exportfs/exportfs.c
->>> +++ b/utils/exportfs/exportfs.c
->>> @@ -651,6 +651,9 @@ out:
->>>        return result;
->>>    }
->>>    +#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
->>> +__attribute__((format (printf, 2, 3)))
->>> +#endif
->>>    static char
->>>    dumpopt(char c, char *fmt, ...)
->>>    {
->>> diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
->>> index e25a4337..3861f84a 100644
->>> --- a/utils/mountd/cache.c
->>> +++ b/utils/mountd/cache.c
->>> @@ -987,8 +987,7 @@ lookup_export(char *dom, char *path, struct addrinfo *ai)
->>>                } else if (found_type == i && found->m_warned == 0) {
->>>                    xlog(L_WARNING, "%s exported to both %s and %s, "
->>>                         "arbitrarily choosing options from first",
->>> -                     path, found->m_client->m_hostname, exp->m_client->m_hostname,
->>> -                     dom);
->>> +                     path, found->m_client->m_hostname, exp->m_client->m_hostname);
->>>                    found->m_warned = 1;
->>>                }
->>>            }
->>> diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
->>> index 33571ecb..66366434 100644
->>> --- a/utils/mountd/mountd.c
->>> +++ b/utils/mountd/mountd.c
->>> @@ -210,10 +210,10 @@ killer (int sig)
->>>    }
->>>      static void
->>> -sig_hup (int sig)
->>> +sig_hup (int UNUSED(sig))
->>>    {
->>>        /* don't exit on SIGHUP */
->>> -    xlog (L_NOTICE, "Received SIGHUP... Ignoring.\n", sig);
->>> +    xlog (L_NOTICE, "Received SIGHUP... Ignoring.\n");
->>>        return;
->>>    }
->>>    diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
->>> index cbf71fc6..7e894e49 100644
->>> --- a/utils/nfsdcld/nfsdcld.c
->>> +++ b/utils/nfsdcld/nfsdcld.c
->>> @@ -212,7 +212,7 @@ cld_inotify_cb(int UNUSED(fd), short which, void *data)
->>>        default:
->>>            /* anything else is fatal */
->>>            xlog(L_FATAL, "%s: unable to open new pipe (%d). Aborting.",
->>> -            ret, __func__);
->>> +            __func__, ret);
->>>            exit(ret);
->>>        }
->>>    diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
->>> index fa81df87..afa63499 100644
->>> --- a/utils/nfsdcld/sqlite.c
->>> +++ b/utils/nfsdcld/sqlite.c
->>> @@ -473,7 +473,7 @@ sqlite_fix_table_name(const char *name)
->>>        }
->>>        ret = sqlite3_exec(dbh, (const char *)buf, NULL, NULL, &err);
->>>        if (ret != SQLITE_OK) {
->>> -        xlog(L_ERROR, "Unable to fix table for epoch %d: %s",
->>> +        xlog(L_ERROR, "Unable to fix table for epoch %"PRIu64": %s",
->>>                 val, err);
->>>            goto out;
->>>        }
->>> diff --git a/utils/nfsidmap/nfsidmap.c b/utils/nfsidmap/nfsidmap.c
->>> index fc00da7a..cf7f65e9 100644
->>> --- a/utils/nfsidmap/nfsidmap.c
->>> +++ b/utils/nfsidmap/nfsidmap.c
->>> @@ -18,7 +18,7 @@
->>>    #include "xcommon.h"
->>>      int verbose = 0;
->>> -char *usage = "Usage: %s [-vh] [-c || [-u|-g|-r key] || -d || -l || [-t timeout] key desc]";
->>> +#define USAGE "Usage: %s [-vh] [-c || [-u|-g|-r key] || -d || -l || [-t timeout] key desc]"
->>>      #define MAX_ID_LEN   11
->>>    #define IDMAP_NAMESZ 128
->>> @@ -403,7 +403,7 @@ int main(int argc, char **argv)
->>>                break;
->>>            case 'h':
->>>            default:
->>> -            xlog_warn(usage, progname);
->>> +            xlog_warn(USAGE, progname);
->>>                exit(opt == 'h' ? 0 : 1);
->>>            }
->>>        }
->>> @@ -435,7 +435,7 @@ int main(int argc, char **argv)
->>>        xlog_stderr(verbose);
->>>        if ((argc - optind) != 2) {
->>>            xlog_warn("Bad arg count. Check /etc/request-key.conf");
->>> -        xlog_warn(usage, progname);
->>> +        xlog_warn(USAGE, progname);
->>>            return EXIT_FAILURE;
->>>        }
->>>    @@ -453,7 +453,7 @@ int main(int argc, char **argv)
->>>            return EXIT_FAILURE;
->>>        }
->>>        if (verbose) {
->>> -        xlog_warn("key: 0x%lx type: %s value: %s timeout %ld",
->>> +        xlog_warn("key: 0x%x type: %s value: %s timeout %d",
->>>                key, type, value, timeout);
->>>        }
->>>    diff --git a/utils/statd/rmtcall.c b/utils/statd/rmtcall.c
->>> index c4f6364f..5b261480 100644
->>> --- a/utils/statd/rmtcall.c
->>> +++ b/utils/statd/rmtcall.c
->>> @@ -247,7 +247,7 @@ process_reply(FD_SET_TYPE *rfds)
->>>            xlog_warn("%s: service %d not registered on localhost",
->>>                __func__, NL_MY_PROG(lp));
->>>        } else {
->>> -        xlog(D_GENERAL, "%s: Callback to %s (for %d) succeeded",
->>> +        xlog(D_GENERAL, "%s: Callback to %s (for %s) succeeded",
->>>                __func__, NL_MY_NAME(lp), NL_MON_NAME(lp));
->>>        }
->>>        nlist_free(&notify, lp);
->>> diff --git a/utils/statd/statd.c b/utils/statd/statd.c
->>> index 14673800..8eef2ff2 100644
->>> --- a/utils/statd/statd.c
->>> +++ b/utils/statd/statd.c
->>> @@ -136,7 +136,7 @@ static void log_modes(void)
->>>        strcat(buf, "TI-RPC ");
->>>    #endif
->>>    -    xlog_warn(buf);
->>> +    xlog_warn("%s", buf);
->>>    }
->>>      /*
->>> diff --git a/utils/statd/svc_run.c b/utils/statd/svc_run.c
->>> index d1dbd74a..e343c768 100644
->>> --- a/utils/statd/svc_run.c
->>> +++ b/utils/statd/svc_run.c
->>> @@ -53,6 +53,7 @@
->>>      #include <errno.h>
->>>    #include <time.h>
->>> +#include <inttypes.h>
->>>    #include "statd.h"
->>>    #include "notlist.h"
->>>    @@ -104,8 +105,8 @@ my_svc_run(int sockfd)
->>>                  tv.tv_sec  = NL_WHEN(notify) - now;
->>>                tv.tv_usec = 0;
->>> -            xlog(D_GENERAL, "Waiting for reply... (timeo %d)",
->>> -                            tv.tv_sec);
->>> +            xlog(D_GENERAL, "Waiting for reply... (timeo %jd)",
->>> +                            (intmax_t)tv.tv_sec);
->>>                selret = select(FD_SETSIZE, &readfds,
->>>                    (void *) 0, (void *) 0, &tv);
->>>            } else {
