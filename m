@@ -2,25 +2,27 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 465CCBAD47
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 06:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 805FDBAD48
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 06:27:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406612AbfIWE12 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Sep 2019 00:27:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47300 "EHLO mx1.suse.de"
+        id S2406614AbfIWE1e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Sep 2019 00:27:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47318 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405826AbfIWE12 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 23 Sep 2019 00:27:28 -0400
+        id S2405826AbfIWE1e (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 23 Sep 2019 00:27:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3A0BDAFA4;
-        Mon, 23 Sep 2019 04:27:27 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 0241DAFA4;
+        Mon, 23 Sep 2019 04:27:33 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <SteveD@RedHat.com>
-Date:   Mon, 23 Sep 2019 14:26:57 +1000
-Subject: [PATCH 0/3] some nfs-utils patches.
+Date:   Mon, 23 Sep 2019 14:26:58 +1000
+Subject: [PATCH 1/3] mountd: Initialize logging early.
 Cc:     linux-nfs@vger.kernel.org
-Message-ID: <156921267783.27519.2402857390317412450.stgit@noble.brown>
+Message-ID: <156921281804.27519.8558488144520627125.stgit@noble.brown>
+In-Reply-To: <156921267783.27519.2402857390317412450.stgit@noble.brown>
+References: <156921267783.27519.2402857390317412450.stgit@noble.brown>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -30,33 +32,63 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These free are largely unrelated.
-The only connection is that without the second, I get
-warnings because my /etc/nfs.conf includes /etc/nfs.conf.local - just
-in case.
-Then, without the first patch, the open fds get confused and
-rpc.mountd doesn't listen on all /proc/net/rpc/*/channel
-properly and nfs doesn't work.
+Reading the config file can generate log messages,
+so we should initialize logging before reading the
+config file.
 
-Thanks,
-NeilBrown
+If any log message are generated, syslog will leave
+a file descriptor open (a socket), so calling
+closeall(3) after this can cause problem.
+Before this we initialize login we don't know if
+Foreground (-F) has been selected, so closeall()
+cannot be conditional on that.
 
+closeall() isn't needed - daemon are almost always run
+from a management daemon like systemd, and they are given
+a clean environment.  It is really best if they just take
+what they are given.
+
+So remove the closeall() call.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ utils/mountd/mountd.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-NeilBrown (3):
-      mountd: Initialize logging early.
-      conffile: allow optional include files.
-      statd: take user-id from /var/lib/nfs/sm
+diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+index 33571ecbd401..5a12d0bcd19e 100644
+--- a/utils/mountd/mountd.c
++++ b/utils/mountd/mountd.c
+@@ -681,6 +681,9 @@ main(int argc, char **argv)
+ 	else
+ 		progname = argv[0];
+ 
++	/* Initialize logging. */
++	xlog_open(progname);
++
+ 	conf_init_file(NFS_CONFFILE);
+ 	xlog_from_conffile("mountd");
+ 	manage_gids = conf_get_bool("mountd", "manage-gids", manage_gids);
+@@ -820,9 +823,7 @@ main(int argc, char **argv)
+ 			}
+ 		}
+ 	}
+-	/* Initialize logging. */
+ 	if (!foreground) xlog_stderr(0);
+-	xlog_open(progname);
+ 
+ 	sa.sa_handler = SIG_IGN;
+ 	sa.sa_flags = 0;
+@@ -834,10 +835,6 @@ main(int argc, char **argv)
+ 	/* WARNING: the following works on Linux and SysV, but not BSD! */
+ 	sigaction(SIGCHLD, &sa, NULL);
+ 
+-	/* Daemons should close all extra filehandles ... *before* RPC init. */
+-	if (!foreground)
+-		closeall(3);
+-
+ 	unregister_services();
+ 	if (version2()) {
+ 		listeners += nfs_svc_create("mountd", MOUNTPROG,
 
-
- support/nfs/conffile.c    |   13 ++++++++++---
- support/nsm/file.c        |   16 +++++-----------
- systemd/nfs.conf.man      |    3 +++
- utils/mountd/mountd.c     |    9 +++------
- utils/statd/sm-notify.man |   10 +++++++++-
- utils/statd/statd.man     |   10 +++++++++-
- 6 files changed, 39 insertions(+), 22 deletions(-)
-
---
-Signature
 
