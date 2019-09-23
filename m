@@ -2,124 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48F74BAD4A
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 06:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A96CFBADA4
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2019 08:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406652AbfIWE1q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Sep 2019 00:27:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47352 "EHLO mx1.suse.de"
+        id S2392066AbfIWGD5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Sep 2019 02:03:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51446 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405826AbfIWE1q (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 23 Sep 2019 00:27:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A6E7B024;
-        Mon, 23 Sep 2019 04:27:44 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Steve Dickson <SteveD@RedHat.com>
-Date:   Mon, 23 Sep 2019 14:26:58 +1000
-Subject: [PATCH 3/3] statd: take user-id from /var/lib/nfs/sm
-Cc:     linux-nfs@vger.kernel.org
-Message-ID: <156921281809.27519.10997149063922425666.stgit@noble.brown>
-In-Reply-To: <156921267783.27519.2402857390317412450.stgit@noble.brown>
-References: <156921267783.27519.2402857390317412450.stgit@noble.brown>
-User-Agent: StGit/0.19
+        id S2387519AbfIWGD5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:03:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7EA74DD58FF8F5F3B84D;
+        Mon, 23 Sep 2019 14:03:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
+ 14:03:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] nfsd: Make nfsd_reset_boot_verifier_locked static
+Date:   Mon, 23 Sep 2019 13:58:59 +0800
+Message-ID: <20190923055859.5616-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Having /var/lib/nfs writeable by statd is not ideal
-as there are files in there that statd doesn't need
-to access.
-After dropping privs, statd and sm-notify only need to
-access files in the directories sm and sm.bak.
-So take the uid for these deamons from 'sm'.
+Fix sparse warning:
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+fs/nfsd/nfssvc.c:364:6: warning:
+ symbol 'nfsd_reset_boot_verifier_locked' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- support/nsm/file.c        |   16 +++++-----------
- utils/statd/sm-notify.man |   10 +++++++++-
- utils/statd/statd.man     |   10 +++++++++-
- 3 files changed, 23 insertions(+), 13 deletions(-)
+ fs/nfsd/nfssvc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/support/nsm/file.c b/support/nsm/file.c
-index 0b66f123165e..f5b448015751 100644
---- a/support/nsm/file.c
-+++ b/support/nsm/file.c
-@@ -388,23 +388,17 @@ nsm_drop_privileges(const int pidfd)
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 3caaf56..fdf7ed4 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -361,7 +361,7 @@ void nfsd_copy_boot_verifier(__be32 verf[2], struct nfsd_net *nn)
+ 	done_seqretry(&nn->boot_lock, seq);
+ }
  
- 	(void)umask(S_IRWXO);
- 
--	/*
--	 * XXX: If we can't stat dirname, or if dirname is owned by
--	 *      root, we should use "statduser" instead, which is set up
--	 *      by configure.ac.  Nothing in nfs-utils seems to use
--	 *      "statduser," though.
--	 */
--	if (lstat(nsm_base_dirname, &st) == -1) {
--		xlog(L_ERROR, "Failed to stat %s: %m", nsm_base_dirname);
--		return false;
--	}
--
- 	if (chdir(nsm_base_dirname) == -1) {
- 		xlog(L_ERROR, "Failed to change working directory to %s: %m",
- 				nsm_base_dirname);
- 		return false;
- 	}
- 
-+	if (lstat(NSM_MONITOR_DIR, &st) == -1) {
-+		xlog(L_ERROR, "Failed to stat %s/%s: %m", nsm_base_dirname, NSM_MONITOR_DIR);
-+		return false;
-+	}
-+
- 	if (!prune_bounding_set())
- 		return false;
- 
-diff --git a/utils/statd/sm-notify.man b/utils/statd/sm-notify.man
-index cfe1e4b1dac8..addf5d3c028e 100644
---- a/utils/statd/sm-notify.man
-+++ b/utils/statd/sm-notify.man
-@@ -190,7 +190,15 @@ by default.
- After starting,
- .B sm-notify
- attempts to set its effective UID and GID to the owner
--and group of this directory.
-+and group of the subdirectory
-+.B sm
-+of this directory.  After changing the effective ids,
-+.B sm-notify
-+only needs to access files in
-+.B sm
-+and
-+.B sm.bak
-+within the state-directory-path.
- .TP
- .BI -v " ipaddr " | " hostname
- Specifies the network address from which to send reboot notifications,
-diff --git a/utils/statd/statd.man b/utils/statd/statd.man
-index 71d58461b5ea..6222701e38a8 100644
---- a/utils/statd/statd.man
-+++ b/utils/statd/statd.man
-@@ -259,7 +259,15 @@ by default.
- After starting,
- .B rpc.statd
- attempts to set its effective UID and GID to the owner
--and group of this directory.
-+and group of the subdirectory
-+.B sm
-+of this directory.  After changing the effective ids,
-+.B rpc.statd
-+only needs to access files in
-+.B sm
-+and
-+.B sm.bak
-+within the state-directory-path.
- .TP
- .BR -v ", " -V ", " --version
- Causes
+-void nfsd_reset_boot_verifier_locked(struct nfsd_net *nn)
++static void nfsd_reset_boot_verifier_locked(struct nfsd_net *nn)
+ {
+ 	ktime_get_real_ts64(&nn->nfssvc_boot);
+ }
+-- 
+2.7.4
 
 
