@@ -2,192 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF8B5BF9E7
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2019 21:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76081BFA50
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2019 21:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfIZTNf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Sep 2019 15:13:35 -0400
-Received: from mail-eopbgr760077.outbound.protection.outlook.com ([40.107.76.77]:8755
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727707AbfIZTNf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:13:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fH93NVy43rUS8McgHUFpVolHQ2YozPUxXdruiI8NRfeLmEVghskgA/iZ7QpZWdmuJ8WxsUDSrXgsZw3NsR9RwMQ9JIA4RoPxEF01oAxisWOFQPspZP8nH8BcdZ775XB4G+In09KjkL7cfjUxJKiJ7xZXl6Xa158G+PN5B/Gg9MVg4qxYVe7djm9oZQM9eEDH6P2LMgJYB5ztklUhXipOS1LZqJUgnIJRKU+e5KOK/P9xkW1oPjFR3u0vklU3Uo5fiq5nD5rp9twYldpnq06RsGNF5BRixoATgpR32zm8m32XfiZV+zVH7vXnANK95A8tJqzO9+vFcmpOMGaoa2cJ7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6hh2Sm4XaahRh9kB0ApVbpzhT2Ziuv4c5vCxr5w6js0=;
- b=oYRH+2K2Q9OMrq9jPsgQ2ComG+vnoc7aAHCzyyd9UUSUGiWXzuabmOwOSlf5+DGtZcGNLqlhmy7lRBQc15tnFsnUxHKMxtkbqa7mt4ngtmc56IGEORQ77TEoNoKebBJeIVRL2Gs4sH0vTufdEti/RsCpVO7qo6cS+m8Haa6+AqNnKdIX2wwSOEiV9sa1OG7FCfZM5ARrz9iwajw/6jjfalqIwv0VUlIMiImI+wJOqHJrJbIfmBwcsgWAQhLBtVTj86lHtSkGJ7NxPen5s1jdTyGR4TGoIO4bdBZ5ODomgUkWudhMs2I9mS1hXJlwENmsu6EjcYY6gqGQV8zeiDuxDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6hh2Sm4XaahRh9kB0ApVbpzhT2Ziuv4c5vCxr5w6js0=;
- b=Jvz7EnfARN5nsEJHVRVKmGrUImkNH6X2oyqQ32kLOdYPLHdh/0TBZNVuWWQ4S2hIj0cbl43PixCyBbOBifqUZV4zb63pcvp1GzsAiT399WtAAx4/0u7nSMppGC8qtO1aQRsmqIsPoewaL/4eUASRAxcTu82sQ7QOq7QNk3Gjudk=
-Received: from DM6PR06MB6059.namprd06.prod.outlook.com (20.178.27.212) by
- DM6PR06MB5802.namprd06.prod.outlook.com (20.179.161.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Thu, 26 Sep 2019 19:13:31 +0000
-Received: from DM6PR06MB6059.namprd06.prod.outlook.com
- ([fe80::253b:ba8d:133c:6b88]) by DM6PR06MB6059.namprd06.prod.outlook.com
- ([fe80::253b:ba8d:133c:6b88%5]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
- 19:13:31 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS Client updates for Linux 5.4
-Thread-Topic: [GIT PULL] Please pull NFS Client updates for Linux 5.4
-Thread-Index: AQHVdJ5759zQbDxVq0qzZCixHBhXNw==
-Date:   Thu, 26 Sep 2019 19:13:30 +0000
-Message-ID: <8448ef6bd5fa881b3114ca30d2e71730ef357e4f.camel@netapp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.0 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [23.28.75.121]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30c597a4-966e-4549-e635-08d742b59e82
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR06MB5802;
-x-ms-traffictypediagnostic: DM6PR06MB5802:
-x-microsoft-antispam-prvs: <DM6PR06MB580270ADF498A000736A065DF8860@DM6PR06MB5802.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:311;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(199004)(189003)(6436002)(1730700003)(81166006)(58126008)(99286004)(26005)(5660300002)(186003)(4326008)(7736002)(25786009)(305945005)(6506007)(102836004)(478600001)(14444005)(86362001)(256004)(54906003)(6916009)(71190400001)(71200400001)(91956017)(76116006)(66556008)(66476007)(2616005)(66946007)(64756008)(15650500001)(6512007)(486006)(66066001)(2351001)(14454004)(6486002)(36756003)(8936002)(316002)(5640700003)(6116002)(476003)(66446008)(81156014)(2906002)(8676002)(118296001)(3846002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR06MB5802;H:DM6PR06MB6059.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QNL5cYdqo4njx9qLgPFq/gdOMwh5twvlNbQPDNSqLaQVPVhiZSAhbSr05hF+ZN6tYPznGZmlJg2JEvlpYqJK/h/2Aald7NwCd9GJ4S+kdX3qtqdQ1IOO+58A8ef8jqurkbSbYkBpxwh6to5VMdk8cvUtTkKEci5GkSfly3TGmG0h1hXe591mlVMfhoTHiMZgq/hPb7wSbwSbaGza2ML17aDhVxoPSrRQ9qJ9Ebcddzf0gOBf+iCE7a1R/7PRukl51UQY5RH0VdYTLz+kYFCATvB6Ta5reYgYQ9Cd9XC+Ktu5Up8kuIOQGzUWwf1zZsfGEePfCgHBt8PrLRx2Jdo5vT+ZpWP6UMkp6Y1rVpBPJpPzDotJFem2VXikXX3MyMKXaTaZX4vMrlZeKoF1rqk1o7Lp8vE6axzgC+SOdvLKCmk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <66234C1B24BB7547A9C5E58F2EB23C46@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1728747AbfIZTvA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Sep 2019 15:51:00 -0400
+Received: from fieldses.org ([173.255.197.46]:60848 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbfIZTvA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:51:00 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2BDCD150B; Thu, 26 Sep 2019 15:51:00 -0400 (EDT)
+Date:   Thu, 26 Sep 2019 15:51:00 -0400
+To:     James Harvey <jamespharvey20@gmail.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        bcodding@redhat.com
+Subject: Re: 5.3.0 Regression: rpc.nfsd v4 uninterruptible sleep for 5+
+ minutes w/o rpc-statd/etc
+Message-ID: <20190926195100.GB2849@fieldses.org>
+References: <CA+X5Wn60sGi+za48Lj-y1fcHHw7kdzEUsw8nj+Xc0U90mONz5w@mail.gmail.com>
+ <CA+X5Wn6Yj6752BMxpXB-wa92QQD7xv3uOp=rzJn5qP-_RxL41g@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30c597a4-966e-4549-e635-08d742b59e82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 19:13:31.0158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nwM0ku1jYh49Nwu114AYTvPB6IpYIYgk1JRvzG9BmLJmhpoynLGXBPFvPFqauD4csY7navLXPWcm5OwKe3yXdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB5802
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+X5Wn6Yj6752BMxpXB-wa92QQD7xv3uOp=rzJn5qP-_RxL41g@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgZDFhYmFlYjNi
-ZTdiNWZhNmQ3YTFmYmJkMmUxNGUzMzEwMDA1YzRjMToNCg0KICBMaW51eCA1LjMtcmM1ICgyMDE5
-LTA4LTE4IDE0OjMxOjA4IC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4
-LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNC0xDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1
-cCB0byBhOGZkMGZlZWNhMzVjYjhmOWRkZDk1MDE5MWY0YWViNzc3ZjUyZjg5Og0KDQogIHBORlMv
-ZmlsZWxheW91dDogZW5hYmxlIExBWU9VVEdFVCBvbiBPUEVOICgyMDE5LTA5LTI0IDE2OjI4OjM4
-IC0wNDAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQpTdGFibGUgYnVnZml4ZXM6DQotIERlcXVldWUgdGhlIHJlcXVl
-c3QgZnJvbSB0aGUgcmVjZWl2ZSBxdWV1ZSB3aGlsZSB3ZSdyZSByZS1lbmNvZGluZyAjIHY0LjIw
-Kw0KLSBGaXggYnVmZmVyIGhhbmRsaW5nIG9mIEdTUyBNSUMgd2l0aG91dCBzbGFjayAjIDUuMQ0K
-DQpGZWF0dXJlczoNCi0gSW5jcmVhc2UgeHBydHJkbWEgbWF4aW11bSB0cmFuc3BvcnQgaGVhZGVy
-IGFuZCBzbG90IHRhYmxlIHNpemVzDQotIEFkZCBzdXBwb3J0IGZvciBuZnM0X2NhbGxfc3luYygp
-IGNhbGxzIHVzaW5nIGEgY3VzdG9tIHJwY190YXNrX3N0cnVjdA0KLSBPcHRpbWl6ZSB0aGUgZGVm
-YXVsdCByZWFkYWhlYWQgc2l6ZQ0KLSBFbmFibGUgcE5GUyBmaWxlbGF5b3V0IExBWU9VVEdFVCBv
-biBPUEVODQoNCk90aGVyIGJ1Z2ZpeGVzIGFuZCBjbGVhbnVwczoNCi0gRml4IHBvc3NpYmxlIG51
-bGwtcG9pbnRlciBkZXJlZmVyZW5jZXMgYW5kIG1lbW9yeSBsZWFrcw0KLSBWYXJpb3VzIE5GUyBv
-dmVyIFJETUEgY2xlYW51cHMNCi0gVmFyaW91cyBORlMgb3ZlciBSRE1BIGNvbW1lbnQgdXBkYXRl
-cw0KLSBEb24ndCByZWNlaXZlIFRDUCBkYXRhIGludG8gYSByZXNldCByZXF1ZXN0IGJ1ZmZlcg0K
-LSBEb24ndCB0cnkgdG8gcGFyc2UgaW5jb21wbGV0ZSBSUEMgbWVzc2FnZXMNCi0gRml4IGNvbmdl
-c3Rpb24gd2luZG93IHJhY2Ugd2l0aCBkaXNjb25uZWN0DQotIENsZWFuIHVwIHBORlMgcmV0dXJu
-LW9uLWNsb3NlIGVycm9yIGhhbmRsaW5nDQotIEZpeGVzIGZvciBORlM0RVJSX09MRF9TVEFURUlE
-IGhhbmRsaW5nDQoNClRoYW5rcywNCkFubmENCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkFubmEgU2NodW1ha2VyICg2KToN
-CiAgICAgIE5GUzogQWRkIGFuIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpIGZ1bmN0aW9uDQogICAg
-ICBORlM6IEhhdmUgbmZzNF9wcm9jX3NldGNsaWVudGlkKCkgY2FsbCBuZnM0X2NhbGxfc3luY19j
-dXN0b20oKQ0KICAgICAgTkZTOiBIYXZlIF9uZnM0X3Byb2Nfc2VjaW5mbygpIGNhbGwgbmZzNF9j
-YWxsX3N5bmNfY3VzdG9tKCkNCiAgICAgIE5GUzogSGF2ZSBuZnM0MV9wcm9jX3JlY2xhaW1fY29t
-cGxldGUoKSBjYWxsIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpDQogICAgICBORlM6IEhhdmUgbmZz
-NDFfcHJvY19zZWNpbmZvX25vX25hbWUoKSBjYWxsIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpDQog
-ICAgICBORlM6IEhhdmUgbmZzNF9wcm9jX2dldF9sZWFzZV90aW1lKCkgY2FsbCBuZnM0X2NhbGxf
-c3luY19jdXN0b20oKQ0KDQpCZW5qYW1pbiBDb2RkaW5ndG9uICg1KToNCiAgICAgIFNVTlJQQzog
-Rml4IGJ1ZmZlciBoYW5kbGluZyBvZiBHU1MgTUlDIHdpdGhvdXQgc2xhY2sNCiAgICAgIFNVTlJQ
-QzogUmVuYW1lIHhkcl9idWZfcmVhZF9uZXRvYmogdG8geGRyX2J1Zl9yZWFkX21pYw0KICAgICAg
-TkZTOiBSZWZhY3RvciBuZnNfaW5zdGFudGlhdGUoKSBmb3IgZGVudHJ5IHJlZmVyZW5jaW5nIGNh
-bGxlcnMNCiAgICAgIE5GU3YzOiB1c2UgbmZzX2FkZF9vcl9vYnRhaW4oKSB0byBjcmVhdGUgYW5k
-IHJlZmVyZW5jZSBpbm9kZXMNCiAgICAgIE5GUzogcmVtb3ZlIHVudXNlZCBjaGVjayBmb3IgbmVn
-YXRpdmUgZGVudHJ5DQoNCkNodWNrIExldmVyICgyNSk6DQogICAgICBTVU5SUEM6IFJlbW92ZSBy
-cGNfd2FrZV91cF9xdWV1ZWRfdGFza19vbl93cSgpDQogICAgICBTVU5SUEM6IElubGluZSB4ZHJf
-Y29tbWl0X2VuY29kZQ0KICAgICAgeHBydHJkbWE6IFJlZnJlc2ggdGhlIGRvY3VtZW50aW5nIGNv
-bW1lbnQgaW4gZnJ3cl9vcHMuYw0KICAgICAgeHBydHJkbWE6IFVwZGF0ZSBvYnNvbGV0ZSBjb21t
-ZW50DQogICAgICB4cHJ0cmRtYTogRml4IGNhbGN1bGF0aW9uIG9mIHJpX21heF9zZWdzIGFnYWlu
-DQogICAgICB4cHJ0cmRtYTogQm9vc3QgbWF4aW11bSB0cmFuc3BvcnQgaGVhZGVyIHNpemUNCiAg
-ICAgIHhwcnRyZG1hOiBCb29zdCBjbGllbnQncyBtYXggc2xvdCB0YWJsZSBzaXplIHRvIG1hdGNo
-IExpbnV4IHNlcnZlcg0KICAgICAgeHBydHJkbWE6IFJlbmFtZSBDUUUgZmllbGQgaW4gUmVjZWl2
-ZSB0cmFjZSBwb2ludHMNCiAgICAgIHhwcnRyZG1hOiBSZW5hbWUgcnBjcmRtYV9idWZmZXI6OnJi
-X2FsbA0KICAgICAgeHBydHJkbWE6IFRvZ2dsZSBYUFJUX0NPTkdFU1RFRCBpbiB4cHJ0cmRtYSdz
-IHNsb3QgbWV0aG9kcw0KICAgICAgeHBydHJkbWE6IFNpbXBsaWZ5IHJwY3JkbWFfbXJfcG9wDQog
-ICAgICB4cHJ0cmRtYTogQ29tYmluZSBycGNyZG1hX21yX3B1dCBhbmQgcnBjcmRtYV9tcl91bm1h
-cF9hbmRfcHV0DQogICAgICB4cHJ0cmRtYTogTW92ZSBycGNyZG1hX21yX2dldCBvdXQgb2YgZnJ3
-cl9tYXANCiAgICAgIHhwcnRyZG1hOiBFbnN1cmUgY3JlYXRpbmcgYW4gTVIgZG9lcyBub3QgdHJp
-Z2dlciBGUyB3cml0ZWJhY2sNCiAgICAgIHhwcnRyZG1hOiBDYWNoZSBmcmVlIE1ScyBpbiBlYWNo
-IHJwY3JkbWFfcmVxDQogICAgICB4cHJ0cmRtYTogUmVtb3ZlIHJwY3JkbWFfYnVmZmVyOjpyYl9t
-cmxvY2sNCiAgICAgIHhwcnRyZG1hOiBVc2UgYW4gbGxpc3QgdG8gbWFuYWdlIGZyZWUgcnBjcmRt
-YV9yZXBzDQogICAgICB4cHJ0cmRtYTogQ2xlYW4gdXAgeHBydF9yZG1hX3NldF9jb25uZWN0X3Rp
-bWVvdXQoKQ0KICAgICAgeHBydHJkbWE6IEZpeCBiY19tYXhfc2xvdHMgcmV0dXJuIHZhbHVlDQog
-ICAgICB4cHJ0cmRtYTogSW5saW5lIFhEUiBjaHVuayBlbmNvZGVyIGZ1bmN0aW9ucw0KICAgICAg
-eHBydHJkbWE6IE9wdGltaXplIHJwY3JkbWFfcG9zdF9yZWN2cygpDQogICAgICB4cHJ0cmRtYTog
-UmVjeWNsZSBNUnMgYWZ0ZXIgZGlzY29ubmVjdA0KICAgICAgeHBydHJkbWE6IENsZWFyIHhwcnQt
-PnJlZXN0YWJsaXNoX3RpbWVvdXQgb24gY2xvc2UNCiAgICAgIHhwcnRyZG1hOiBTZW5kIFF1ZXVl
-IHNpemUgZ3Jvd3MgYWZ0ZXIgYSByZWNvbm5lY3QNCiAgICAgIFNVTlJQQzogRml4IGNvbmdlc3Rp
-b24gd2luZG93IHJhY2Ugd2l0aCBkaXNjb25uZWN0DQoNCkppYS1KdSBCYWkgKDEpOg0KICAgICAg
-ZnM6IG5mczogRml4IHBvc3NpYmxlIG51bGwtcG9pbnRlciBkZXJlZmVyZW5jZXMgaW4gZW5jb2Rl
-X2F0dHJzKCkNCg0KT2xnYSBLb3JuaWV2c2thaWEgKDEpOg0KICAgICAgcE5GUy9maWxlbGF5b3V0
-OiBlbmFibGUgTEFZT1VUR0VUIG9uIE9QRU4NCg0KVHJvbmQgTXlrbGVidXN0ICgxNCk6DQogICAg
-ICBTVU5SUEM6IERlcXVldWUgdGhlIHJlcXVlc3QgZnJvbSB0aGUgcmVjZWl2ZSBxdWV1ZSB3aGls
-ZSB3ZSdyZSByZS1lbmNvZGluZw0KICAgICAgU1VOUlBDOiBEb24ndCByZWNlaXZlIFRDUCBkYXRh
-IGludG8gYSByZXF1ZXN0IGJ1ZmZlciB0aGF0IGhhcyBiZWVuIHJlc2V0DQogICAgICBTVU5SUEM6
-IFJQQyBsZXZlbCBlcnJvcnMgc2hvdWxkIGFsd2F5cyBzZXQgdGFzay0+dGtfcnBjX3N0YXR1cw0K
-ICAgICAgU1VOUlBDOiBEb24ndCB0cnkgdG8gcGFyc2UgaW5jb21wbGV0ZSBSUEMgbWVzc2FnZXMN
-CiAgICAgIHBORlM6IEVuc3VyZSB3ZSBkbyBjbGVhciB0aGUgcmV0dXJuLW9uLWNsb3NlIGxheW91
-dCBzdGF0ZWlkIG9uIGZhdGFsIGVycm9ycw0KICAgICAgTkZTdjQ6IENsZWFuIHVwIHBORlMgcmV0
-dXJuLW9uLWNsb3NlIGVycm9yIGhhbmRsaW5nDQogICAgICBORlN2NDogSGFuZGxlIE5GUzRFUlJf
-REVMQVkgY29ycmVjdGx5IGluIHJldHVybi1vbi1jbG9zZQ0KICAgICAgTkZTdjQ6IEhhbmRsZSBS
-UEMgbGV2ZWwgZXJyb3JzIGluIExBWU9VVFJFVFVSTg0KICAgICAgTkZTdjQ6IEFkZCBhIGhlbHBl
-ciB0byBpbmNyZW1lbnQgc3RhdGVpZCBzZXFpZHMNCiAgICAgIHBORlM6IEhhbmRsZSBORlM0RVJS
-X09MRF9TVEFURUlEIG9uIGxheW91dHJldHVybiBieSBidW1waW5nIHRoZSBzdGF0ZSBzZXFpZA0K
-ICAgICAgTkZTdjQ6IEZpeCBPUEVOX0RPV05HUkFERSBlcnJvciBoYW5kbGluZw0KICAgICAgTkZT
-djQ6IEhhbmRsZSBORlM0RVJSX09MRF9TVEFURUlEIGluIENMT1NFL09QRU5fRE9XTkdSQURFDQog
-ICAgICBORlN2NDogSGFuZGxlIE5GUzRFUlJfT0xEX1NUQVRFSUQgaW4gTE9DS1UNCiAgICAgIE5G
-UzogT3B0aW1pc2UgdGhlIGRlZmF1bHQgcmVhZGFoZWFkIHNpemUNCg0KV2Vud2VuIFdhbmcgKDEp
-Og0KICAgICAgTkZTdjQ6IEZpeCBhIG1lbW9yeSBsZWFrIGJ1Zw0KDQogZnMvbmZzL2Rpci5jICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDQxICsrKy0tDQogZnMvbmZzL2ZpbGVsYXlvdXQvZmlsZWxh
-eW91dC5jICAgIHwgICAxICsNCiBmcy9uZnMvaW50ZXJuYWwuaCAgICAgICAgICAgICAgICAgfCAg
-IDggLQ0KIGZzL25mcy9uZnMzcHJvYy5jICAgICAgICAgICAgICAgICB8ICA0NSArKysrLS0NCiBm
-cy9uZnMvbmZzNF9mcy5oICAgICAgICAgICAgICAgICAgfCAgMTEgKy0NCiBmcy9uZnMvbmZzNHBy
-b2MuYyAgICAgICAgICAgICAgICAgfCAzMTUgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0tLS0NCiBmcy9uZnMvbmZzNHN0YXRlLmMgICAgICAgICAgICAgICAgfCAgMjIgKy0tDQog
-ZnMvbmZzL25mczR4ZHIuYyAgICAgICAgICAgICAgICAgIHwgICAyICstDQogZnMvbmZzL3BuZnMu
-YyAgICAgICAgICAgICAgICAgICAgIHwgIDcxICsrKysrKysrLQ0KIGZzL25mcy9wbmZzLmggICAg
-ICAgICAgICAgICAgICAgICB8ICAxNyArLQ0KIGZzL25mcy9zdXBlci5jICAgICAgICAgICAgICAg
-ICAgICB8ICAgOSArLQ0KIGluY2x1ZGUvbGludXgvbmZzX2ZzLmggICAgICAgICAgICB8ICAgMyAr
-DQogaW5jbHVkZS9saW51eC9zdW5ycGMvc2NoZWQuaCAgICAgIHwgICAzIC0NCiBpbmNsdWRlL2xp
-bnV4L3N1bnJwYy94ZHIuaCAgICAgICAgfCAgIDIgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy94
-cHJ0LmggICAgICAgfCAgIDEgKw0KIGluY2x1ZGUvbGludXgvc3VucnBjL3hwcnRyZG1hLmggICB8
-ICAgNCArLQ0KIGluY2x1ZGUvdHJhY2UvZXZlbnRzL3JwY3JkbWEuaCAgICB8ICA4OCArKysrKysr
-KystLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3MvYXV0aF9nc3MuYyAgICB8ICAgMiArLQ0KIG5ldC9z
-dW5ycGMvY2xudC5jICAgICAgICAgICAgICAgICB8ICAyNiArKystDQogbmV0L3N1bnJwYy9zY2hl
-ZC5jICAgICAgICAgICAgICAgIHwgIDMyICstLS0NCiBuZXQvc3VucnBjL3hkci5jICAgICAgICAg
-ICAgICAgICAgfCAgNjUgKysrKystLS0NCiBuZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgICAg
-ICAgfCAgNjEgKysrKystLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL2JhY2tjaGFubmVsLmMgfCAg
-IDQgKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL2Zyd3Jfb3BzLmMgICAgfCAxNjYgKysrKysrKysr
-LS0tLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3JwY19yZG1hLmMgICAgfCAgNzEgKysr
-KysrLS0tDQogbmV0L3N1bnJwYy94cHJ0cmRtYS90cmFuc3BvcnQuYyAgIHwgIDE1ICstDQogbmV0
-L3N1bnJwYy94cHJ0cmRtYS92ZXJicy5jICAgICAgIHwgMjYzICsrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3hwcnRfcmRtYS5oICAgfCAgNTkgKysr
-Ky0tLQ0KIG5ldC9zdW5ycGMveHBydHNvY2suYyAgICAgICAgICAgICB8ICAgOCArLQ0KIDI5IGZp
-bGVzIGNoYW5nZWQsIDgzNSBpbnNlcnRpb25zKCspLCA1ODAgZGVsZXRpb25zKC0pDQo=
+On Thu, Sep 19, 2019 at 09:17:03AM -0400, James Harvey wrote:
+> On Thu, Sep 19, 2019 at 9:00 AM James Harvey <jamespharvey20@gmail.com> wrote:
+> >
+> > For a really long time (years?) if you forced NFS v4 only, you could
+> > mask a lot of unnecessary services.
+> >
+> > In /etc/nfs.conf, in "[nfsd] I've been able to set "vers3=n", and then
+> > mask the following services:
+> > * gssproxy
+> > * nfs-blkmap
+> > * rpc-statd
+> > * rpcbind (service & socket)
+> >
+> > Upgrading from 5.2.14 to 5.3.0, nfs-server.service (rpc.nfsd) has
+> > exactly a 5 minute delay, and sometimes longer.
+> >
+> > ...
+> 
+> P.S.  During a few of the earlier boots where I was seeing strace show
+> the delay was reading "/proc/fs/nfsd/versions", I do have this in
+> journalctl, when I tried in another term cat'ing it during the
+> rpc.nfsd delay: (it repeats a few times during the 5 minute delay)
+
+It's waiting on the nfsd_mutex.
+
+So somebody else is sitting around blocking for five minutes while
+holding nfsd_mutex.  That lock covers a lot of stuff so that may not
+narrow down much who's blocking.
+
+An alt-sysrq-t dump might help.
+
+(So, hit alt-sysrq-t, or echo t to /proc/sysrq-trigger, then look in
+dmesg for tasks that are waiting.)
+
+There's not a whole ton of changes between 5.2 and 5.3, but I'm not
+seeing an obvious culprit.
+
+--b.
+
+> 
+> INFO: task cat:3400 blocked for more than 122 seconds.
+>       Not tainted 5.3.0-arch1-1-ARCH #1
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> cat             D    0  3400   3029 0x00000080
+> Call Trace:
+>  ? __schedule+0x27f/0x6d0
+>  schedule+0x43/0xd0
+>  schedule_preempt_disabled+0x14/0x20
+>  __mutex_lock.isra.0+0x27d/0x530
+>  write_versions+0x38/0x3c0 [nfsd]
+>  ? _copy_from_user+0x37/0x60
+>  ? write_ports+0x320/0x320 [nfsd]
+>  nfsctl_transaction_write+0x45/0x70 [nfsd]
+>  nfsctl_transaction_read+0x3b/0x60 [nfsd]
+>  vfs_read+0x9d/0x150
+>  ksys_read+0x67/0xe0
+>  do_syscall_64+0x5f/0x1c0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f47286fa155
+> Code: Bad RIP value.
+> RSP: 002b:00007ffcd2a74438 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f47286fa155
+> RDX: 0000000000020000 RSI: 00007f47282ba000 RDI: 0000000000000003
+> RBP: 00007f47282ba000 R08: 00007f47282b9010 R09: 0000000000000000
+> R10: 0000000000000022 R11: 0000000000000246 R12: 00007f47282ba000
+> R13: 0000000000000003 R14: 0000000000000fff R15: 0000000000020000
+> svc: failed to register lockdv1 RPC service (errno 110).
+> lockd_up: makesock failed, error=-110
