@@ -2,141 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3597BBEC8C
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2019 09:30:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27301BF64F
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2019 17:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfIZHaX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Sep 2019 03:30:23 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:37425 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfIZHaW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Sep 2019 03:30:22 -0400
-Received: by mail-wm1-f53.google.com with SMTP id f22so1356560wmc.2
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Sep 2019 00:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=puzzle-itc-de.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=B97CU+U4gCWkiPiGix3ZktM518TkhwXI+KNIuC9KGj4=;
-        b=YQ791X3d3rLVyFXfRuWfnED1PIP/vmaGUdT4p/h4wAWulp+5ynv4Pi4uBwLxQC7erG
-         NWq+/A4YHxapqHS97PdPkumceqpB1ssMDpYsAC61/G5Q2l2V8YlJ0TAE8iwn83LTEfOw
-         xUCrBPBl9ARUFn5JHXaFL4waLlu5gHgWg65VRnHTdkMOmh9GBOThgPbJUbxQDZbpIDFy
-         Ym9V001zIXIbn5WqFWyr+549EjsInpxuYsjXkZ709FwwnZ2lKR5gCXvc1BjddDYdQTYt
-         aEkngAN7KWwBRlcqdMSeZG5fr1vkQLzF9A7vzt906n5g8Vyn5SiiEX4eoQeGasc5YAjz
-         L33A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=B97CU+U4gCWkiPiGix3ZktM518TkhwXI+KNIuC9KGj4=;
-        b=s4FxHLMpzY2dxLayomgLJ6p3XyA/tA1taEnwaxFCerptcwSYYkpcZ7Wckh1e7jGnbg
-         I88XHDpxpU5Dih6dQs9MI5f63kdNTR+cJfN1SMTUYEeAv1Oc7bI9pYIxLM22SgK3j408
-         ICx+5cVqIAlUdbloh32np9WJ5Pctsa4yGz3m3DTc9nc054Humu0t5+5b5Mo01uNnmBl4
-         WiAe2+h/Cvwzresa93+LWE6F33Zo7Pd6oNq5PoxKx4aMV64Z51uuaXRBw38Fby92Y1sk
-         WG/CO2bFuE1ULIUSuTgQ50VHn1/OT+Dv47zqTVxvo7X2T0JZdFHtUBkVU8nZudMfY5az
-         0i7w==
-X-Gm-Message-State: APjAAAWwWME/9EPi+2cJbCFcUWZUvBkYc0RWtQIJk9U/PGekQHaX8hvC
-        8HbRVxQRsqSR9wxxbrqA+1rZzPJP/kFaAI2wVNYcJuGSkYAUP7cNlk7VH2gTYjHagPc4VIH7ojv
-        AtPgWuhGH4jPbewD16Ns=
-X-Google-Smtp-Source: APXvYqweFXQfVCM4V0keV1qO4fjyng3yTQqySW5SbjUTxBC2eRp1O/YPsBVgQUDh0taMyB3aD1Qf6w==
-X-Received: by 2002:a1c:8097:: with SMTP id b145mr1735685wmd.29.1569483019340;
-        Thu, 26 Sep 2019 00:30:19 -0700 (PDT)
-Received: from ?IPv6:2a02:8070:88af:ff00:e5fc:df11:42fa:8f89? ([2a02:8070:88af:ff00:e5fc:df11:42fa:8f89])
-        by smtp.gmail.com with ESMTPSA id z1sm2946943wre.40.2019.09.26.00.30.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 00:30:18 -0700 (PDT)
+        id S1727222AbfIZP5e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Sep 2019 11:57:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57974 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfIZP5e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Sep 2019 11:57:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QFsIrS166909;
+        Thu, 26 Sep 2019 15:57:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=2Hw/Sm09QHOEmZJdMnRZcVYoCA+8BqfdS8wPQI62ouo=;
+ b=shvcgf+i/gvm9/DsawF9NHRSlwiEP3n1IE1iu1BoCLjLJ3YarhwIccv9vNSDMXj0TsTk
+ g+1x6Pzt03p3DIyMcg9Filg0OY3bajg7o1PMKQZekOLVrancrdG6hNAkiP7zPma86XjT
+ TFXFBgd+bXYutHPSAnWpqTbjHXGuq2D93NUTCmiUYEPkqRGmRzf6z70mhCnMQ3W7wL76
+ BR84ljJT2rXwt13RBFyGo/p6ZpztGbkGy2/P7wi7WCTg6HdKrknCsCgFaQAMn6qL5eKg
+ Yg+88QK1U+2JukHJNNAZusnVgEoeS3XGPqurlDhwnerHA6pE/QJceavypCzcLU14WscY Ow== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v5cgrcqf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 15:57:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QFsUtE005259;
+        Thu, 26 Sep 2019 15:55:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2v8yjwubsw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 15:55:23 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8QFtIxN027981;
+        Thu, 26 Sep 2019 15:55:21 GMT
+Received: from [172.20.1.219] (/12.203.202.9)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Sep 2019 08:55:18 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: NFSv4 client locks up on larger writes with Kerberos enabled
-To:     Kevin Vasko <kvasko@gmail.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20190925200723.GA11954@fieldses.org>
+Date:   Thu, 26 Sep 2019 08:55:17 -0700
+Cc:     Kevin Vasko <kvasko@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1BC54D7A-073E-40FD-9AA3-552F1E1BD214@oracle.com>
 References: <CAMd28E-pJp4=kvp62FJqGLZo-jGA2rH2OT6-hK_N=TvMiJuT2A@mail.gmail.com>
  <20190925164831.GA9366@fieldses.org>
  <57192382-86BE-4878-9AE0-B22833D56367@oracle.com>
  <CAMd28E-zcjuCfVbDCra4Av3Ewsdd-Ai=E0j3tF2GKJ8P6nG8=w@mail.gmail.com>
-From:   Daniel Kobras <kobras@puzzle-itc.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kobras@puzzle-itc.de; keydata=
- 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
- p63U1j1sBdH4lyrWIu/HHjYDEL8+XTvqMCBEHuI=
-Organization: Puzzle ITC Deutschland GmbH
-Message-ID: <d999fc1a-dcc6-b3c3-c8e5-e07f9b5523c2@puzzle-itc.de>
-Date:   Thu, 26 Sep 2019 09:30:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAMd28E-zcjuCfVbDCra4Av3Ewsdd-Ai=E0j3tF2GKJ8P6nG8=w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+ <FCAD9EFD-26AD-41F0-BCCA-80E475219731@oracle.com>
+ <20190925200723.GA11954@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909260142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909260142
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi!
 
-Am 25.09.19 um 20:44 schrieb Kevin Vasko:
-> When should the NFS server be sending a packet to the Kerberos server
-> to validate the write? Or should it be? I did do packet capture on the
-> Unity box but I don=E2=80=99t see anything really useful regarding Kerber=
-os
-> authentication. What should I be looking for in the packet traces to
-> look for the authentication packets?
-You shouldn't see any direct communication between the NFS server and
-the KDC. All information is passed indirectly via the NFS client, and
-used to establish a GSS context during the initial handshake. In other
-words, in your setup, if you see encrypted packets on the wire, Kerberos
-has done its job already, and the errors you're seeing are unlikely to
-be intrinsic to Kerberos itself, but rather caused by side-effects.
 
-Kind regards,
+> On Sep 25, 2019, at 1:07 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> 
+> On Wed, Sep 25, 2019 at 11:49:14AM -0700, Chuck Lever wrote:
+>> Sounds like the NFS server is dropping the connection. With
+>> GSS enabled, that's usually a sign that the GSS window has
+>> overflowed.
+> 
+> Would that show up in the rpc statistics on the client somehow?
 
-Daniel
---=20
-Daniel Kobras
-Principal Architect
-Puzzle ITC Deutschland
-+49 7071 14316 0
-www.puzzle-itc.de
+More likely on the server. The client just sees a disconnect
+without any explanation attached.
 
---=20
-Puzzle ITC Deutschland GmbH
-Sitz der Gesellschaft: Jurastr. 27/1, 72072=20
-T=C3=BCbingen
+gss_verify_header is where the checking is done on the server.
+Disappointingly, I see some dprintk's in there, but no static
+trace events.
 
-Eingetragen am Amtsgericht Stuttgart HRB 765802
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Lukas Kallies, Daniel Kobras, Mark Pr=C3=B6hl
+
+> In that case--I seem to remember there's a way to configure the size of
+> the client's slot table, maybe lowering that (decreasing the number of
+> rpc's allowed to be outstanding at a time) would work around the
+> problem.
+
+> Should the client be doing something different to avoid or recover from
+> overflows of the gss window?
+
+The client attempts to meter the request stream so that it stays
+within the bounds of the GSS sequence number window. The stream
+of requests is typically unordered coming out of the transmit
+queue.
+
+There is some new code (since maybe v5.0?) that handles the
+metering: gss_xmit_need_reencode().
+
+
+--
+Chuck Lever
+
+
 
