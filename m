@@ -2,56 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE147C0F1B
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Sep 2019 03:15:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B60C0F95
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Sep 2019 06:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfI1BPF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Sep 2019 21:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfI1BPF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 27 Sep 2019 21:15:05 -0400
-Subject: Re: Re: [GIT PULL] nfsd changes for 5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569633305;
-        bh=whttUDvXk++JXhtu9Zyn3rpOPkvHHU7pdnLW7VdLX7M=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=SKIWikqsEGZSPiu30AFiSkrdcN52NxPIhp9wIAxFWw6ooun1BPY1YanHs8kiVwoys
-         0dICVuMmcGttocqAy2Eogssw41Kdu+eIhPVe15BceX8KaaRqYzyC+qkxgzbb/eeYF2
-         GSOPr2xaFhZE1aNihRJXuvL1FIG3gTif6ne1TYYc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190927235554.GA11051@fieldses.org>
-References: <20190927200838.GA2618@fieldses.org>
- <CAHk-=wj_bMxjz_T9Oa62Uyp8tKnKomtHKV9HTnuvMxrdwuTPOg@mail.gmail.com>
- <20190927235554.GA11051@fieldses.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190927235554.GA11051@fieldses.org>
-X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.4
-X-PR-Tracked-Commit-Id: e41f9efb85d38d95744b9f35b9903109032b93d4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 298fb76a5583900a155d387efaf37a8b39e5dea2
-Message-Id: <156963330509.27765.14952240842544717408.pr-tracker-bot@kernel.org>
-Date:   Sat, 28 Sep 2019 01:15:05 +0000
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
+        id S1725957AbfI1EXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 28 Sep 2019 00:23:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3229 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725263AbfI1EXe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 28 Sep 2019 00:23:34 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EA4987B802DAB0B9EB8C;
+        Sat, 28 Sep 2019 12:23:30 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Sep 2019
+ 12:23:24 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <trondmy@gmail.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] nfsd: remove set but not used variable 'len'
+Date:   Sat, 28 Sep 2019 12:21:56 +0800
+Message-ID: <20190928042156.43228-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 27 Sep 2019 19:55:54 -0400:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.4
+fs/nfsd/nfs4xdr.c: In function nfsd4_encode_splice_read:
+fs/nfsd/nfs4xdr.c:3464:7: warning: variable len set but not used [-Wunused-but-set-variable]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/298fb76a5583900a155d387efaf37a8b39e5dea2
+It is not used since commit 83a63072c815 ("nfsd: fix nfs read eof detection")
 
-Thank you!
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/nfsd/nfs4xdr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 533d0fc..1883370 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3461,7 +3461,6 @@ static __be32 nfsd4_encode_splice_read(
+ 	struct xdr_stream *xdr = &resp->xdr;
+ 	struct xdr_buf *buf = xdr->buf;
+ 	u32 eof;
+-	long len;
+ 	int space_left;
+ 	__be32 nfserr;
+ 	__be32 *p = xdr->p - 2;
+@@ -3470,7 +3469,6 @@ static __be32 nfsd4_encode_splice_read(
+ 	if (xdr->end - xdr->p < 1)
+ 		return nfserr_resource;
+ 
+-	len = maxcount;
+ 	nfserr = nfsd_splice_read(read->rd_rqstp, read->rd_fhp,
+ 				  file, read->rd_offset, &maxcount, &eof);
+ 	read->rd_length = maxcount;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
+
