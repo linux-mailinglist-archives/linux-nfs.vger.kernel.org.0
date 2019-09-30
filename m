@@ -2,73 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B60C0F95
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Sep 2019 06:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1600C1DB2
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2019 11:13:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfI1EXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 28 Sep 2019 00:23:34 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3229 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbfI1EXe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 28 Sep 2019 00:23:34 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EA4987B802DAB0B9EB8C;
-        Sat, 28 Sep 2019 12:23:30 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Sep 2019
- 12:23:24 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <trondmy@gmail.com>
+        id S1729404AbfI3JNz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Sep 2019 05:13:55 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:49177 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726121AbfI3JNz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Sep 2019 05:13:55 -0400
+X-IronPort-AV: E=Sophos;i="5.64,565,1559491200"; 
+   d="scan'208";a="76258074"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 30 Sep 2019 17:13:53 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 73F414CE14F9;
+        Mon, 30 Sep 2019 17:13:57 +0800 (CST)
+Received: from localhost.localdomain (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 30 Sep 2019 17:13:57 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <trond.myklebust@hammerspace.com>
 CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] nfsd: remove set but not used variable 'len'
-Date:   Sat, 28 Sep 2019 12:21:56 +0800
-Message-ID: <20190928042156.43228-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        <suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH] NFS: Fix O_DIRECT read problem when another write is going on
+Date:   Mon, 30 Sep 2019 17:11:18 +0800
+Message-ID: <1569834678-16117-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 73F414CE14F9.AFB38
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+In xfstests generic/465 tests failed. Because O_DIRECT r/w use
+async rpc calls, when r/w rpc calls are running concurrently we
+may read partial data which is wrong.
 
-fs/nfsd/nfs4xdr.c: In function nfsd4_encode_splice_read:
-fs/nfsd/nfs4xdr.c:3464:7: warning: variable len set but not used [-Wunused-but-set-variable]
+For example as follows.
+ user buffer
+/--------\
+|    |XXXX|
+ rpc0 rpc1
 
-It is not used since commit 83a63072c815 ("nfsd: fix nfs read eof detection")
+When rpc0 runs it encounters eof so return 0, then another writes
+something. When rpc1 runs it returns some data. The total data
+buffer contains wrong data.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+In this patch we check eof mark for each direct request. If encounters
+eof then set eof mark in the request, when we meet it again report
+-EAGAIN error. In nfs_direct_complete we convert -EAGAIN as if read
+nothing. When the reader issue another read it will read ok.
+
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
 ---
- fs/nfsd/nfs4xdr.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/nfs/direct.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 533d0fc..1883370 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3461,7 +3461,6 @@ static __be32 nfsd4_encode_splice_read(
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct xdr_buf *buf = xdr->buf;
- 	u32 eof;
--	long len;
- 	int space_left;
- 	__be32 nfserr;
- 	__be32 *p = xdr->p - 2;
-@@ -3470,7 +3469,6 @@ static __be32 nfsd4_encode_splice_read(
- 	if (xdr->end - xdr->p < 1)
- 		return nfserr_resource;
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 222d711..7f737a3 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -93,6 +93,7 @@ struct nfs_direct_req {
+ 				bytes_left,	/* bytes left to be sent */
+ 				error;		/* any reported error */
+ 	struct completion	completion;	/* wait for i/o completion */
++	int			eof;		/* eof mark in the req */
  
--	len = maxcount;
- 	nfserr = nfsd_splice_read(read->rd_rqstp, read->rd_fhp,
- 				  file, read->rd_offset, &maxcount, &eof);
- 	read->rd_length = maxcount;
+ 	/* commit state */
+ 	struct nfs_mds_commit_info mds_cinfo;	/* Storage for cinfo */
+@@ -380,6 +381,12 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
+ 
++	/* read partial data just as read nothing */
++	if (dreq->error == -EAGAIN) {
++		dreq->count = 0;
++		dreq->error = 0;
++	}
++
+ 	inode_dio_end(inode);
+ 
+ 	if (dreq->iocb) {
+@@ -413,8 +420,13 @@ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+ 	if (hdr->good_bytes != 0)
+ 		nfs_direct_good_bytes(dreq, hdr);
+ 
+-	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
++	if (dreq->eof)
++		dreq->error = -EAGAIN;
++
++	if (test_bit(NFS_IOHDR_EOF, &hdr->flags)) {
+ 		dreq->error = 0;
++		dreq->eof = 1;
++	}
+ 
+ 	spin_unlock(&dreq->lock);
+ 
 -- 
 2.7.4
+
 
 
