@@ -2,135 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B37CC268E
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2019 22:37:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C64BC26EB
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2019 22:45:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfI3UhI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Sep 2019 16:37:08 -0400
-Received: from mail-eopbgr800107.outbound.protection.outlook.com ([40.107.80.107]:23364
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726576AbfI3UhH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:37:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WWFIH4y7Cqkyl+X8cV1NJHzxozN/ltfpU+POhA2xTtS0Qp/7qWP4ZmEdkKMLB/V6ysgx1SzgCln6waGmeKvtR05J33LQ1+/yGXAAuzD1sJdsGsf1yeYiU6RNHdVLVzSusl+Yx51i/6ilbZ7srAcY85iuVIaHnUJSO5YIrbKMLbgHaogDFNzuCnQWm6HyDAyvirwhq3PWfnupqGfqPvlNImMTqZzo7WFqEb0KDEZe6DC8faF2dtiqzDfLGzu9Cro4ZXdBG7eaxY6RlkxhMApWrFaS/udOHDxZadTYDVYxaadhTKG4bEvXeanVJzpit/2oBvfjGoVWGPOBVqnlcdsEhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8sXJu5WT75ph2ATR9nAKtvThcBFxjsZzJELz7+qc6b0=;
- b=gRyxpmDgX6hlrz4YP1JWIlBdkxwh+lTopXlQ2SRy+3SLq0Lpew/tevxQOL5BNt6PUujw7iY76cknVM/3wxa7s7BDIBhYQByAfV0AvnUwsAKtgdjjGZmYCVPDXPXcnWHgBfezg6wcePtLC38PvrDq/QNL+zI6ZUX/uBzNAraBwOwWOjDFTUsE8PBEuDX3lezw1CpTAJiYbsCUj1HRj7/zq2BaLgy+T5rPncp307v2Dxps8nen1lFH0Z8SLccoTPgZh6kzQz1D+qhgJEHPreagS7szkqC3YEhOsJCAz9zzN2lBMlg/4GRRkZaSh+nwTxVvOpNcgDyHDk7mQk5jI4SyTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8sXJu5WT75ph2ATR9nAKtvThcBFxjsZzJELz7+qc6b0=;
- b=ek5K6wJ6uGyBIt8wpRNpNzF9GsTfvQGFdotMtmRUGZ75onaF41TS6H+IImPTyYh2F44LVg2gr/6fcmsNkm1WzxmOOk7G/87KpX3zWWAN8H2py5luCcIYzeFnEEVUwN0V9yQzWirpcZFzUB26xjEK+me5hbu6b6bDuL+38/qyNxQ=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1035.namprd13.prod.outlook.com (10.168.239.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.7; Mon, 30 Sep 2019 18:06:00 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e%10]) with mapi id 15.20.2305.017; Mon, 30 Sep
- 2019 18:06:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "suyj.fnst@cn.fujitsu.com" <suyj.fnst@cn.fujitsu.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] NFS: Fix O_DIRECT read problem when another write is
- going on
-Thread-Topic: [PATCH] NFS: Fix O_DIRECT read problem when another write is
- going on
-Thread-Index: AQHVd29ku8nD71E+VU+c3kukzbSbNqdEhIwA
-Date:   Mon, 30 Sep 2019 18:06:00 +0000
-Message-ID: <d7fee2b94f4af266054c6e975cdfd4d9adbf841b.camel@hammerspace.com>
+        id S1729960AbfI3Umn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Sep 2019 16:42:43 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:35767 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731413AbfI3Umn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Sep 2019 16:42:43 -0400
+Received: by mail-io1-f42.google.com with SMTP id q10so42042443iop.2
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2019 13:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XpaLJj8dxMw9Hs4m6/PFmPhbHeinqqV9Imo/JDxMe3Q=;
+        b=BHs5ZwAcOOMlnV/nZn8A9hgLJ/V8FHtX/lFsk3X+LMksVcyoSjfFllh/E/HZr5vYAZ
+         shTy1uYqdGWATS2SiBjPqL5oombAjQjScSKzpw7Hi6wJFNqYiLos0q4R8P8Gs6rBrNaG
+         8DCutn9Qnip5U7BeCBt14W3StLKWqy4hBLQLvbiQuc3KuQX8tGjMtTmyyr10IcHhhU2R
+         Fzs5w8BgHq2lf2BNPo5jFIkPog3tEEMmVTps0oCTkurctvJUQVI8l4aRqs1aKd9C9F/L
+         B6IuutkOA1AK3dVnNNlpH7Pox3I4lDC3QLAvTmC4Ss5CQkyov720SW5D7Xi+jZq66+pJ
+         j8cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XpaLJj8dxMw9Hs4m6/PFmPhbHeinqqV9Imo/JDxMe3Q=;
+        b=TS3T7elaM1OEDH0oPBTwcT4KsuSRft+IG7q2tH0iqJXotJS4TrgKvTXybGBsHH2GfT
+         fMnrlZgXpc1m9qElXXKybzZwkQ4q2xgH/iRLv7Gdu3OBTaq4oH4DMZguPnnmrondwGen
+         Y7ODjFFy4/S5H9AR8VOcDxJBajgeoOR2WDn2ccCzyk8bUkzO/LLNdeGk1YXuEaE+62Iv
+         wLZKEU/KgbRRd1WCz7Ce48Ox5EqLPTnKCJ5jjJxb7XEBYUh93ZsSQKAMS0HSgTZa2Nuy
+         KgGsN2WNcCR7PmbAazVl+9PTLsmlvIgZHg6nXGCxmPy83wL5BtX2u769b+mOEzMfSHmQ
+         cpvA==
+X-Gm-Message-State: APjAAAVb1KJ/+OZA+kGRa0XoS8x1bF+aXfIEJjmdudCAvEIGuZpppe/m
+        OoB4Z8+uawDj4cjg1TgwOb04dZ6mSg==
+X-Google-Smtp-Source: APXvYqwLkoKX9q8Q9bLTvhMkkE9wiNR5NEEJJcSCGxauU4HX/VybvPMs64Wnz9upYAG/rCm0PIs2Pw==
+X-Received: by 2002:a6b:7109:: with SMTP id q9mr20336738iog.229.1569866706450;
+        Mon, 30 Sep 2019 11:05:06 -0700 (PDT)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id g68sm5153123ilh.88.2019.09.30.11.05.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 11:05:06 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 2/2] NFS: Remove redundant mirror tracking in O_DIRECT
+Date:   Mon, 30 Sep 2019 14:02:57 -0400
+Message-Id: <20190930180257.23395-3-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190930180257.23395-2-trond.myklebust@hammerspace.com>
 References: <1569834678-16117-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-In-Reply-To: <1569834678-16117-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fc868fbd-3967-4606-93f7-08d745d0d99e
-X-MS-TrafficTypeDiagnostic: DM5PR13MB1035:|DM5PR13MB1035:|DM5PR13MB1035:|DM5PR13MB1035:|DM5PR13MB1035:|DM5PR13MB1035:|DM5PR13MB1035:
-x-microsoft-antispam-prvs: <DM5PR13MB10353C0C227E0270995E610CB8820@DM5PR13MB1035.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39830400003)(366004)(346002)(376002)(189003)(199004)(64756008)(66476007)(316002)(66946007)(71190400001)(91956017)(486006)(8676002)(305945005)(14444005)(256004)(8936002)(76116006)(54906003)(81166006)(81156014)(102836004)(6246003)(5640700003)(6512007)(476003)(66556008)(66446008)(86362001)(7736002)(36756003)(71200400001)(6436002)(6916009)(4326008)(76176011)(118296001)(5660300002)(11346002)(2906002)(2501003)(6116002)(446003)(66066001)(2616005)(229853002)(6506007)(186003)(25786009)(99286004)(3846002)(26005)(6486002)(14454004)(478600001)(2351001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1035;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K8HCzP/vug4UeVX5oyojimwMM6aLIqIPzwRgYVD3vMRzpGhizyUYBbVROIJB+wCJa0hYZRPAx2t2JYQPohPkFyv8vKl3zkcDlx1E1b87OcRLUXox2s2pNL9PKJZD4+rNuGV+d/gHjeApAZHyrOhiG34IDVfQi2jzvOs2qA7Vif0OfsQguuZlDXqCbhbFpCiNGIatYB7OpSuWbTYSbQLSF8bidOQVy4NLERTvzNwEaLYPlMXOWAOexJJpgHilDnZom8wG+6H9+AaeJk4maTbqPWTx/jbxD0jsAWhCmUQ/TCPrW1keDPO9mLk2dd7qaMCCirpfeKkhj/YDwPd/Ja0mwAjZnQAni+YwTeJgk/agWtljFaFWldIRy8ctMIWO2TJdhGPmflvo/lHBcIvylzdXEeC6DgYotgWhDvi0pRMMfhc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <234A4827A21D054D98DD20387A8E1B15@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <20190930180257.23395-1-trond.myklebust@hammerspace.com>
+ <20190930180257.23395-2-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc868fbd-3967-4606-93f7-08d745d0d99e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:06:00.1997
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jTjg3tyvGiPkUgSBV49V7MnaJohPoqaUvgf1Iq+12tb4ivBC2VcbDCaZBz8b/mkfqnSrUyYN5gW1+WfLymYPsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1035
-X-OriginatorOrg: hammerspace.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgU3UsDQoNCk9uIE1vbiwgMjAxOS0wOS0zMCBhdCAxNzoxMSArMDgwMCwgU3UgWWFuanVuIHdy
-b3RlOg0KPiBJbiB4ZnN0ZXN0cyBnZW5lcmljLzQ2NSB0ZXN0cyBmYWlsZWQuIEJlY2F1c2UgT19E
-SVJFQ1Qgci93IHVzZQ0KPiBhc3luYyBycGMgY2FsbHMsIHdoZW4gci93IHJwYyBjYWxscyBhcmUg
-cnVubmluZyBjb25jdXJyZW50bHkgd2UNCj4gbWF5IHJlYWQgcGFydGlhbCBkYXRhIHdoaWNoIGlz
-IHdyb25nLg0KPiANCj4gRm9yIGV4YW1wbGUgYXMgZm9sbG93cy4NCj4gIHVzZXIgYnVmZmVyDQo+
-IC8tLS0tLS0tLVwNCj4gPiAgICB8WFhYWHwNCj4gIHJwYzAgcnBjMQ0KPiANCj4gV2hlbiBycGMw
-IHJ1bnMgaXQgZW5jb3VudGVycyBlb2Ygc28gcmV0dXJuIDAsIHRoZW4gYW5vdGhlciB3cml0ZXMN
-Cj4gc29tZXRoaW5nLiBXaGVuIHJwYzEgcnVucyBpdCByZXR1cm5zIHNvbWUgZGF0YS4gVGhlIHRv
-dGFsIGRhdGENCj4gYnVmZmVyIGNvbnRhaW5zIHdyb25nIGRhdGEuDQo+IA0KPiBJbiB0aGlzIHBh
-dGNoIHdlIGNoZWNrIGVvZiBtYXJrIGZvciBlYWNoIGRpcmVjdCByZXF1ZXN0LiBJZg0KPiBlbmNv
-dW50ZXJzDQo+IGVvZiB0aGVuIHNldCBlb2YgbWFyayBpbiB0aGUgcmVxdWVzdCwgd2hlbiB3ZSBt
-ZWV0IGl0IGFnYWluIHJlcG9ydA0KPiAtRUFHQUlOIGVycm9yLiBJbiBuZnNfZGlyZWN0X2NvbXBs
-ZXRlIHdlIGNvbnZlcnQgLUVBR0FJTiBhcyBpZiByZWFkDQo+IG5vdGhpbmcuIFdoZW4gdGhlIHJl
-YWRlciBpc3N1ZSBhbm90aGVyIHJlYWQgaXQgd2lsbCByZWFkIG9rLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogU3UgWWFuanVuIDxzdXlqLmZuc3RAY24uZnVqaXRzdS5jb20+DQo+IC0tLQ0KPiAgZnMv
-bmZzL2RpcmVjdC5jIHwgMTQgKysrKysrKysrKysrKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2Rp
-cmVjdC5jIGIvZnMvbmZzL2RpcmVjdC5jDQo+IGluZGV4IDIyMmQ3MTEuLjdmNzM3YTMgMTAwNjQ0
-DQo+IC0tLSBhL2ZzL25mcy9kaXJlY3QuYw0KPiArKysgYi9mcy9uZnMvZGlyZWN0LmMNCj4gQEAg
-LTkzLDYgKzkzLDcgQEAgc3RydWN0IG5mc19kaXJlY3RfcmVxIHsNCj4gIAkJCQlieXRlc19sZWZ0
-LAkvKiBieXRlcyBsZWZ0IHRvIGJlDQo+IHNlbnQgKi8NCj4gIAkJCQllcnJvcjsJCS8qIGFueSBy
-ZXBvcnRlZCBlcnJvcg0KPiAqLw0KPiAgCXN0cnVjdCBjb21wbGV0aW9uCWNvbXBsZXRpb247CS8q
-IHdhaXQgZm9yIGkvbyBjb21wbGV0aW9uICovDQo+ICsJaW50CQkJZW9mOwkJLyogZW9mIG1hcmsg
-aW4gdGhlDQo+IHJlcSAqLw0KPiAgDQo+ICAJLyogY29tbWl0IHN0YXRlICovDQo+ICAJc3RydWN0
-IG5mc19tZHNfY29tbWl0X2luZm8gbWRzX2NpbmZvOwkvKiBTdG9yYWdlIGZvciBjaW5mbw0KPiAq
-Lw0KPiBAQCAtMzgwLDYgKzM4MSwxMiBAQCBzdGF0aWMgdm9pZCBuZnNfZGlyZWN0X2NvbXBsZXRl
-KHN0cnVjdA0KPiBuZnNfZGlyZWN0X3JlcSAqZHJlcSkNCj4gIHsNCj4gIAlzdHJ1Y3QgaW5vZGUg
-Kmlub2RlID0gZHJlcS0+aW5vZGU7DQo+ICANCj4gKwkvKiByZWFkIHBhcnRpYWwgZGF0YSBqdXN0
-IGFzIHJlYWQgbm90aGluZyAqLw0KPiArCWlmIChkcmVxLT5lcnJvciA9PSAtRUFHQUlOKSB7DQo+
-ICsJCWRyZXEtPmNvdW50ID0gMDsNCj4gKwkJZHJlcS0+ZXJyb3IgPSAwOw0KPiArCX0NCj4gKw0K
-PiAgCWlub2RlX2Rpb19lbmQoaW5vZGUpOw0KPiAgDQo+ICAJaWYgKGRyZXEtPmlvY2IpIHsNCj4g
-QEAgLTQxMyw4ICs0MjAsMTMgQEAgc3RhdGljIHZvaWQgbmZzX2RpcmVjdF9yZWFkX2NvbXBsZXRp
-b24oc3RydWN0DQo+IG5mc19wZ2lvX2hlYWRlciAqaGRyKQ0KPiAgCWlmIChoZHItPmdvb2RfYnl0
-ZXMgIT0gMCkNCj4gIAkJbmZzX2RpcmVjdF9nb29kX2J5dGVzKGRyZXEsIGhkcik7DQo+ICANCj4g
-LQlpZiAodGVzdF9iaXQoTkZTX0lPSERSX0VPRiwgJmhkci0+ZmxhZ3MpKQ0KPiArCWlmIChkcmVx
-LT5lb2YpDQo+ICsJCWRyZXEtPmVycm9yID0gLUVBR0FJTjsNCj4gKw0KPiArCWlmICh0ZXN0X2Jp
-dChORlNfSU9IRFJfRU9GLCAmaGRyLT5mbGFncykpIHsNCj4gIAkJZHJlcS0+ZXJyb3IgPSAwOw0K
-PiArCQlkcmVxLT5lb2YgPSAxOw0KPiArCX0NCj4gIA0KPiAgCXNwaW5fdW5sb2NrKCZkcmVxLT5s
-b2NrKTsNCj4gIA0KDQpUaGFua3MgZm9yIGxvb2tpbmcgaW50byB0aGlzIGlzc3VlLiBJIGFncmVl
-IHdpdGggeW91ciBhbmFseXNpcyBvZiB3aGF0DQppcyBnb2luZyB3cm9uZyBpbiBnZW5lcmljLzQ2
-NS4NCg0KSG93ZXZlciwgSSB0aGluayB0aGUgcHJvYmxlbSBpcyBncmVhdGVyIHRoYW4ganVzdCBF
-T0YuIEkgdGhpbmsgd2UgYWxzbw0KbmVlZCB0byBsb29rIGF0IHRoZSBnZW5lcmljIGVycm9yIGhh
-bmRsaW5nLCBhbmQgZW5zdXJlIHRoYXQgaXQgaGFuZGxlcw0KYSB0cnVuY2F0ZWQgUlBDIGNhbGwg
-aW4gdGhlIG1pZGRsZSBvZiBhIHNlcmllcyBvZiBjYWxscyBjb3JyZWN0bHkuDQoNClBsZWFzZSBz
-ZWUgdGhlIHR3byBwYXRjaGVzIEkgc2VudCB5b3UganVzdCBub3cgYW5kIGNoZWNrIGlmIHRoZXkg
-Zml4DQp0aGUgcHJvYmxlbSBmb3IgeW91Lg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXgg
-TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQoNCg==
+We no longer need the extra mirror length tracking in the O_DIRECT code,
+as we are able to track the maximum contiguous length in dreq->max_count.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/direct.c | 42 ------------------------------------------
+ 1 file changed, 42 deletions(-)
+
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 98a9a0bcdf38..040a50fd9bf3 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -64,13 +64,6 @@
+ 
+ static struct kmem_cache *nfs_direct_cachep;
+ 
+-/*
+- * This represents a set of asynchronous requests that we're waiting on
+- */
+-struct nfs_direct_mirror {
+-	ssize_t count;
+-};
+-
+ struct nfs_direct_req {
+ 	struct kref		kref;		/* release manager */
+ 
+@@ -84,9 +77,6 @@ struct nfs_direct_req {
+ 	atomic_t		io_count;	/* i/os we're waiting for */
+ 	spinlock_t		lock;		/* protect completion state */
+ 
+-	struct nfs_direct_mirror mirrors[NFS_PAGEIO_DESCRIPTOR_MIRROR_MAX];
+-	int			mirror_count;
+-
+ 	loff_t			io_start;	/* Start offset for I/O */
+ 	ssize_t			count,		/* bytes actually processed */
+ 				max_count,	/* max expected count */
+@@ -127,8 +117,6 @@ nfs_direct_handle_truncated(struct nfs_direct_req *dreq,
+ 			    const struct nfs_pgio_header *hdr,
+ 			    ssize_t dreq_len)
+ {
+-	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
+-
+ 	if (!(test_bit(NFS_IOHDR_ERROR, &hdr->flags) ||
+ 	      test_bit(NFS_IOHDR_EOF, &hdr->flags)))
+ 		return;
+@@ -142,15 +130,12 @@ nfs_direct_handle_truncated(struct nfs_direct_req *dreq,
+ 		else /* Clear outstanding error if this is EOF */
+ 			dreq->error = 0;
+ 	}
+-	if (mirror->count > dreq_len)
+-		mirror->count = dreq_len;
+ }
+ 
+ static void
+ nfs_direct_count_bytes(struct nfs_direct_req *dreq,
+ 		       const struct nfs_pgio_header *hdr)
+ {
+-	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
+ 	loff_t hdr_end = hdr->io_start + hdr->good_bytes;
+ 	ssize_t dreq_len = 0;
+ 
+@@ -162,8 +147,6 @@ nfs_direct_count_bytes(struct nfs_direct_req *dreq,
+ 	if (dreq_len > dreq->max_count)
+ 		dreq_len = dreq->max_count;
+ 
+-	if (mirror->count < dreq_len)
+-		mirror->count = dreq_len;
+ 	if (dreq->count < dreq_len)
+ 		dreq->count = dreq_len;
+ }
+@@ -310,18 +293,6 @@ void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinfo,
+ 	cinfo->completion_ops = &nfs_direct_commit_completion_ops;
+ }
+ 
+-static inline void nfs_direct_setup_mirroring(struct nfs_direct_req *dreq,
+-					     struct nfs_pageio_descriptor *pgio,
+-					     struct nfs_page *req)
+-{
+-	int mirror_count = 1;
+-
+-	if (pgio->pg_ops->pg_get_mirror_count)
+-		mirror_count = pgio->pg_ops->pg_get_mirror_count(pgio, req);
+-
+-	dreq->mirror_count = mirror_count;
+-}
+-
+ static inline struct nfs_direct_req *nfs_direct_req_alloc(void)
+ {
+ 	struct nfs_direct_req *dreq;
+@@ -336,7 +307,6 @@ static inline struct nfs_direct_req *nfs_direct_req_alloc(void)
+ 	INIT_LIST_HEAD(&dreq->mds_cinfo.list);
+ 	dreq->verf.committed = NFS_INVALID_STABLE_HOW;	/* not set yet */
+ 	INIT_WORK(&dreq->work, nfs_direct_write_schedule_work);
+-	dreq->mirror_count = 1;
+ 	spin_lock_init(&dreq->lock);
+ 
+ 	return dreq;
+@@ -655,7 +625,6 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ 	LIST_HEAD(reqs);
+ 	struct nfs_commit_info cinfo;
+ 	LIST_HEAD(failed);
+-	int i;
+ 
+ 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
+ 	nfs_direct_write_scan_commit_list(dreq->inode, &reqs, &cinfo);
+@@ -666,21 +635,12 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ 		dreq->max_count += req->wb_bytes;
+ 	dreq->verf.committed = NFS_INVALID_STABLE_HOW;
+ 	nfs_clear_pnfs_ds_commit_verifiers(&dreq->ds_cinfo);
+-	for (i = 0; i < dreq->mirror_count; i++)
+-		dreq->mirrors[i].count = 0;
+ 	get_dreq(dreq);
+ 
+ 	nfs_pageio_init_write(&desc, dreq->inode, FLUSH_STABLE, false,
+ 			      &nfs_direct_write_completion_ops);
+ 	desc.pg_dreq = dreq;
+ 
+-	req = nfs_list_entry(reqs.next);
+-	nfs_direct_setup_mirroring(dreq, &desc, req);
+-	if (desc.pg_error < 0) {
+-		list_splice_init(&reqs, &failed);
+-		goto out_failed;
+-	}
+-
+ 	list_for_each_entry_safe(req, tmp, &reqs, wb_list) {
+ 		/* Bump the transmission count */
+ 		req->wb_nio++;
+@@ -698,7 +658,6 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ 	}
+ 	nfs_pageio_complete(&desc);
+ 
+-out_failed:
+ 	while (!list_empty(&failed)) {
+ 		req = nfs_list_entry(failed.next);
+ 		nfs_list_remove_request(req);
+@@ -931,7 +890,6 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 				break;
+ 			}
+ 
+-			nfs_direct_setup_mirroring(dreq, &desc, req);
+ 			if (desc.pg_error < 0) {
+ 				nfs_free_request(req);
+ 				result = desc.pg_error;
+-- 
+2.21.0
+
