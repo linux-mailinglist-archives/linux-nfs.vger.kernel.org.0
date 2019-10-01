@@ -2,104 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 897A8C3DD0
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 19:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E04AEC3E52
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 19:14:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfJAQj6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 12:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
+        id S1729444AbfJARNz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 13:13:55 -0400
+Received: from fieldses.org ([173.255.197.46]:39648 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfJAQj6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:58 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79F25222C3;
-        Tue,  1 Oct 2019 16:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947997;
-        bh=hWFw/mm/IjB//DvfFJsOpdoICftIKYGQelaXG5osxR0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8sm2+wBGCvobQTuZNtL0uZokilV4a0A8eNwLY6FVOM3JanrYTNhi44DMfLut5l7j
-         rzwSyimhfP/3iWCqv8b4m/89tyOfUbVcNLAPCXyOfg+ragQglFrAXKBENM5Ke/JtCu
-         rPyytnaZ0pzThZhj+H5BzQOyETsFuiLbArl9pus4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/71] SUNRPC: Don't try to parse incomplete RPC messages
-Date:   Tue,  1 Oct 2019 12:38:33 -0400
-Message-Id: <20191001163922.14735-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
-References: <20191001163922.14735-1-sashal@kernel.org>
+        id S1729439AbfJARNz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:13:55 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 48F9A150D; Tue,  1 Oct 2019 13:13:55 -0400 (EDT)
+Date:   Tue, 1 Oct 2019 13:13:55 -0400
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <schumakeranna@gmail.com>
+Subject: Re: [PATCH v7 00/19] client and server support for "inter" SSC copy
+Message-ID: <20191001171355.GA2372@fieldses.org>
+References: <20190916211353.18802-1-olga.kornievskaia@gmail.com>
+ <CAN-5tyHGq=4AiMuST1kqkZWOfijvuR3bUNChL+KaNnUN900cdA@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN-5tyHGq=4AiMuST1kqkZWOfijvuR3bUNChL+KaNnUN900cdA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+On Mon, Sep 30, 2019 at 03:06:11PM -0400, Olga Kornievskaia wrote:
+> Have you had a chance to take a look at the new patch series and have
+> any more comments?
 
-[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
+Honestly, last time I checked I was having trouble finding things to
+complain about--it looked OK to me.
 
-If the copy of the RPC reply into our buffers did not complete, and
-we could end up with a truncated message. In that case, just resend
-the call.
+But I'm not sure I understood the management of copy id's, should I
+should give it one more read.  And then agree on how to merge it.
 
-Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/clnt.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+I was thinking maybe you could give us a git branch based on 5.5-rc1 or
+5.5-rc2, Trond (I think it's Trond this time?) could pull the client
+ones into his tree, and I could pull the rest into mine.
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 76e745ff78138..d8136b829804f 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2479,6 +2479,7 @@ call_decode(struct rpc_task *task)
- 	struct rpc_clnt	*clnt = task->tk_client;
- 	struct rpc_rqst	*req = task->tk_rqstp;
- 	struct xdr_stream xdr;
-+	int err;
- 
- 	dprint_status(task);
- 
-@@ -2501,6 +2502,15 @@ call_decode(struct rpc_task *task)
- 	 * before it changed req->rq_reply_bytes_recvd.
- 	 */
- 	smp_rmb();
-+
-+	/*
-+	 * Did we ever call xprt_complete_rqst()? If not, we should assume
-+	 * the message is incomplete.
-+	 */
-+	err = -EAGAIN;
-+	if (!req->rq_reply_bytes_recvd)
-+		goto out;
-+
- 	req->rq_rcv_buf.len = req->rq_private_buf.len;
- 
- 	/* Check that the softirq receive buffer is valid */
-@@ -2509,7 +2519,9 @@ call_decode(struct rpc_task *task)
- 
- 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
- 			req->rq_rcv_buf.head[0].iov_base, req);
--	switch (rpc_decode_header(task, &xdr)) {
-+	err = rpc_decode_header(task, &xdr);
-+out:
-+	switch (err) {
- 	case 0:
- 		task->tk_action = rpc_exit_task;
- 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
--- 
-2.20.1
+Trond/Anna?
 
+--b.
+
+> 
+> On Mon, Sep 16, 2019 at 5:13 PM Olga Kornievskaia
+> <olga.kornievskaia@gmail.com> wrote:
+> >
+> > v7:
+> > --- rebased patches ontop of Bruce's nfsd-next
+> >
+> > Olga Kornievskaia (19):
+> >   NFS NFSD: defining nl4_servers structure needed by both
+> >   NFS: add COPY_NOTIFY operation
+> >   NFS: add ca_source_server<> to COPY
+> >   NFS: also send OFFLOAD_CANCEL to source server
+> >   NFS: inter ssc open
+> >   NFS: skip recovery of copy open on dest server
+> >   NFS: for "inter" copy treat ESTALE as ENOTSUPP
+> >   NFS: COPY handle ERR_OFFLOAD_DENIED
+> >   NFS: handle source server reboot
+> >   NFS: replace cross device check in copy_file_range
+> >   NFSD fill-in netloc4 structure
+> >   NFSD add ca_source_server<> to COPY
+> >   NFSD return nfs4_stid in nfs4_preprocess_stateid_op
+> >   NFSD COPY_NOTIFY xdr
+> >   NFSD add COPY_NOTIFY operation
+> >   NFSD check stateids against copy stateids
+> >   NFSD generalize nfsd4_compound_state flag names
+> >   NFSD: allow inter server COPY to have a STALE source server fh
+> >   NFSD add nfs4 inter ssc to nfsd4_copy
+> >
+> >  fs/nfs/nfs42.h            |  15 +-
+> >  fs/nfs/nfs42proc.c        | 193 ++++++++++++++++----
+> >  fs/nfs/nfs42xdr.c         | 190 +++++++++++++++++++-
+> >  fs/nfs/nfs4_fs.h          |  11 ++
+> >  fs/nfs/nfs4client.c       |   2 +-
+> >  fs/nfs/nfs4file.c         | 125 ++++++++++++-
+> >  fs/nfs/nfs4proc.c         |   6 +-
+> >  fs/nfs/nfs4state.c        |  29 ++-
+> >  fs/nfs/nfs4xdr.c          |   1 +
+> >  fs/nfsd/Kconfig           |  10 ++
+> >  fs/nfsd/nfs4proc.c        | 436 +++++++++++++++++++++++++++++++++++++++++-----
+> >  fs/nfsd/nfs4state.c       | 215 ++++++++++++++++++++---
+> >  fs/nfsd/nfs4xdr.c         | 155 +++++++++++++++-
+> >  fs/nfsd/nfsd.h            |  32 ++++
+> >  fs/nfsd/nfsfh.h           |   5 +-
+> >  fs/nfsd/nfssvc.c          |   6 +
+> >  fs/nfsd/state.h           |  34 +++-
+> >  fs/nfsd/xdr4.h            |  39 ++++-
+> >  include/linux/nfs4.h      |  25 +++
+> >  include/linux/nfs_fs.h    |   3 +-
+> >  include/linux/nfs_fs_sb.h |   1 +
+> >  include/linux/nfs_xdr.h   |  17 ++
+> >  22 files changed, 1429 insertions(+), 121 deletions(-)
+> >
+> > --
+> > 1.8.3.1
+> >
