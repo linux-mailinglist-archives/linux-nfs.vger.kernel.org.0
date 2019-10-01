@@ -2,37 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4049C3D45
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CFFC3D25
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:58:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfJAQle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 12:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
+        id S1731304AbfJAQlp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 12:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731081AbfJAQle (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:34 -0400
+        id S1731294AbfJAQlp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A22B205C9;
-        Tue,  1 Oct 2019 16:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C94C2168B;
+        Tue,  1 Oct 2019 16:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948093;
-        bh=sKBF4xUU1taMr94G4Nliz9kPsX8hP2tQ7LlSgY+UwAo=;
+        s=default; t=1569948104;
+        bh=HB5pc3swrauJmegZZvrtgZE1nd70LmkXU0RIyYHGTLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7e8UVi8erCHhfuBEz/R5Zi4pjMOomVdn1VtRpFXON2SKXtQmwH6Y1flDbjwMDEU+
-         9+JfzWrEWRz0uauyHBe7tXYAjIQmhbartw3tJ2/1GjAmV8vmebMpVmT1nt3dBdMf7g
-         7VC+0V+9KBLUei9tuEQnHUS4tITDgm+ZmnrvkIL8=
+        b=Jq7WnIwqnvI6Scjb+6/bDI9vxvCopOYV0NyXGx5ajGRA/wQfR6k6trjvcm9g8Or6A
+         Ez63x2gJGj0tx0R6Uh1Tf6qATQqbEwuZAoYiKYdDA5mPeBmW+B9CPDfe3Fj6bh40J3
+         3rCTz5ExaBURlUj73l5WUmli2SqBAhD3tPKqsAXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Eli Dorfman <eli@vastdata.com>,
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 05/63] xprtrdma: Send Queue size grows after a reconnect
-Date:   Tue,  1 Oct 2019 12:40:27 -0400
-Message-Id: <20191001164125.15398-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 15/63] SUNRPC: RPC level errors should always set task->tk_rpc_status
+Date:   Tue,  1 Oct 2019 12:40:37 -0400
+Message-Id: <20191001164125.15398-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -45,120 +45,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 98ef77d1aaa7a2f4e1b2a721faa084222021fda7 ]
+[ Upstream commit 714fbc73888f59321854e7f6c2f224213923bcad ]
 
-Eli Dorfman reports that after a series of idle disconnects, an
-RPC/RDMA transport becomes unusable (rdma_create_qp returns
--ENOMEM). Problem was tracked down to increasing Send Queue size
-after each reconnect.
+Ensure that we set task->tk_rpc_status for all RPC level errors so that
+the caller can distinguish between those and server reply status errors.
 
-The rdma_create_qp() API does not promise to leave its @qp_init_attr
-parameter unaltered. In fact, some drivers do modify one or more of
-its fields. Thus our calls to rdma_create_qp must use a fresh copy
-of ib_qp_init_attr each time.
-
-This fix is appropriate for kernels dating back to late 2007, though
-it will have to be adapted, as the connect code has changed over the
-years.
-
-Reported-by: Eli Dorfman <eli@vastdata.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ net/sunrpc/clnt.c  | 6 +++---
+ net/sunrpc/sched.c | 5 ++++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 84bb379245406..3f67c395845df 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -607,10 +607,10 @@ void rpcrdma_ep_destroy(struct rpcrdma_xprt *r_xprt)
-  * Unlike a normal reconnection, a fresh PD and a new set
-  * of MRs and buffers is needed.
-  */
--static int
--rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
--			 struct rpcrdma_ep *ep, struct rpcrdma_ia *ia)
-+static int rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
-+				    struct ib_qp_init_attr *qp_init_attr)
- {
-+	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	int rc, err;
- 
- 	trace_xprtrdma_reinsert(r_xprt);
-@@ -627,7 +627,7 @@ rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index fbb85ea24ea0f..8f32f73614111 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1760,7 +1760,7 @@ call_allocate(struct rpc_task *task)
+ 		return;
  	}
  
- 	rc = -ENETUNREACH;
--	err = rdma_create_qp(ia->ri_id, ia->ri_pd, &ep->rep_attr);
-+	err = rdma_create_qp(ia->ri_id, ia->ri_pd, qp_init_attr);
- 	if (err) {
- 		pr_err("rpcrdma: rdma_create_qp returned %d\n", err);
- 		goto out3;
-@@ -644,16 +644,16 @@ rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
- 	return rc;
+-	rpc_exit(task, -ERESTARTSYS);
++	rpc_call_rpcerror(task, -ERESTARTSYS);
  }
  
--static int
--rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt, struct rpcrdma_ep *ep,
--		     struct rpcrdma_ia *ia)
-+static int rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt,
-+				struct ib_qp_init_attr *qp_init_attr)
- {
-+	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	struct rdma_cm_id *id, *old;
- 	int err, rc;
+ static int
+@@ -2480,7 +2480,7 @@ rpc_encode_header(struct rpc_task *task, struct xdr_stream *xdr)
+ 	return 0;
+ out_fail:
+ 	trace_rpc_bad_callhdr(task);
+-	rpc_exit(task, error);
++	rpc_call_rpcerror(task, error);
+ 	return error;
+ }
  
- 	trace_xprtrdma_reconnect(r_xprt);
- 
--	rpcrdma_ep_disconnect(ep, ia);
-+	rpcrdma_ep_disconnect(&r_xprt->rx_ep, ia);
- 
- 	rc = -EHOSTUNREACH;
- 	id = rpcrdma_create_id(r_xprt, ia);
-@@ -675,7 +675,7 @@ rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt, struct rpcrdma_ep *ep,
- 		goto out_destroy;
+@@ -2547,7 +2547,7 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
+ 		return -EAGAIN;
  	}
+ out_err:
+-	rpc_exit(task, error);
++	rpc_call_rpcerror(task, error);
+ 	return error;
  
--	err = rdma_create_qp(id, ia->ri_pd, &ep->rep_attr);
-+	err = rdma_create_qp(id, ia->ri_pd, qp_init_attr);
- 	if (err)
- 		goto out_destroy;
+ out_unparsable:
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index a2c1148127172..0b11971dec79b 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -914,8 +914,10 @@ static void __rpc_execute(struct rpc_task *task)
+ 		/*
+ 		 * Signalled tasks should exit rather than sleep.
+ 		 */
+-		if (RPC_SIGNALLED(task))
++		if (RPC_SIGNALLED(task)) {
++			task->tk_rpc_status = -ERESTARTSYS;
+ 			rpc_exit(task, -ERESTARTSYS);
++		}
  
-@@ -700,25 +700,27 @@ rpcrdma_ep_connect(struct rpcrdma_ep *ep, struct rpcrdma_ia *ia)
- 	struct rpcrdma_xprt *r_xprt = container_of(ia, struct rpcrdma_xprt,
- 						   rx_ia);
- 	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
-+	struct ib_qp_init_attr qp_init_attr;
- 	int rc;
- 
- retry:
-+	memcpy(&qp_init_attr, &ep->rep_attr, sizeof(qp_init_attr));
- 	switch (ep->rep_connected) {
- 	case 0:
- 		dprintk("RPC:       %s: connecting...\n", __func__);
--		rc = rdma_create_qp(ia->ri_id, ia->ri_pd, &ep->rep_attr);
-+		rc = rdma_create_qp(ia->ri_id, ia->ri_pd, &qp_init_attr);
- 		if (rc) {
- 			rc = -ENETUNREACH;
- 			goto out_noupdate;
+ 		/*
+ 		 * The queue->lock protects against races with
+@@ -951,6 +953,7 @@ static void __rpc_execute(struct rpc_task *task)
+ 			 */
+ 			dprintk("RPC: %5u got signal\n", task->tk_pid);
+ 			set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
++			task->tk_rpc_status = -ERESTARTSYS;
+ 			rpc_exit(task, -ERESTARTSYS);
  		}
- 		break;
- 	case -ENODEV:
--		rc = rpcrdma_ep_recreate_xprt(r_xprt, ep, ia);
-+		rc = rpcrdma_ep_recreate_xprt(r_xprt, &qp_init_attr);
- 		if (rc)
- 			goto out_noupdate;
- 		break;
- 	default:
--		rc = rpcrdma_ep_reconnect(r_xprt, ep, ia);
-+		rc = rpcrdma_ep_reconnect(r_xprt, &qp_init_attr);
- 		if (rc)
- 			goto out;
- 	}
+ 		dprintk("RPC: %5u sync task resuming\n", task->tk_pid);
 -- 
 2.20.1
 
