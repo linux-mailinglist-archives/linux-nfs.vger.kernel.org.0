@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94BF7C3BDA
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A93CC3BBC
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:46:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfJAQpK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 12:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57586 "EHLO mail.kernel.org"
+        id S2390346AbfJAQph (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 12:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387884AbfJAQpJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:09 -0400
+        id S2390339AbfJAQpg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7631521906;
-        Tue,  1 Oct 2019 16:45:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FB721A4A;
+        Tue,  1 Oct 2019 16:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948308;
-        bh=hZ0HwXvZLY2OjbIQp08AO4jHMdkynR0fd//Yhjwuk94=;
+        s=default; t=1569948336;
+        bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOi4vF25i+DcUWrwPjxBvJHBEF3cT8O9U+mQ3hzbO83kkAlgHlN4HMY3ZvOqPknYh
-         tiu5diECttHzOJg6ijiGsv6Ze6sMyU5cQbXwr5/AXDYoaprkd7ABlxs0OXahsoBMo3
-         AWIAhY2xr+f7zkvHYvPetXZFdadHZBCsLxvjFe/s=
+        b=pkBGI4nQ2DTsGNnA1jt/FdLHP73glOUfBGR0K+WHKhggBQrjpmLPBa/NhivxgdeQU
+         hwEnRijwfTptRH7JMk2BUchSMcWaeTiql5x0RfMZaGvEOVaUEYXp5czNjvvAYS8q+m
+         GsUJ5kYvhtVTZLAeMzClDbu56Cuj3Acp7q2/eBEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/19] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
-Date:   Tue,  1 Oct 2019 12:44:48 -0400
-Message-Id: <20191001164505.16708-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/15] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Tue,  1 Oct 2019 12:45:20 -0400
+Message-Id: <20191001164533.16915-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
-References: <20191001164505.16708-1-sashal@kernel.org>
+In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
+References: <20191001164533.16915-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 5e2724a928ed3..d7f8d5ce30e3e 100644
+index 1cb50bb898b01..15cd9db6d616d 100644
 --- a/fs/nfs/nfs4xdr.c
 +++ b/fs/nfs/nfs4xdr.c
 @@ -1123,7 +1123,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
