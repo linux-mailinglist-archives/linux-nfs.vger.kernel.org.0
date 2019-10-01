@@ -2,35 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7794C3C5F
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4A6C3C32
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 18:50:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfJAQuy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 12:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        id S2387796AbfJAQok (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 12:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387808AbfJAQo0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:26 -0400
+        id S2390012AbfJAQoi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8141F21906;
-        Tue,  1 Oct 2019 16:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C54C21906;
+        Tue,  1 Oct 2019 16:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948266;
-        bh=M/1L9r3hm2HcfToilF464yUmkijmVjpQx5kooM31p+Y=;
+        s=default; t=1569948278;
+        bh=bY2jc3nxBIDvZpaERL5o1qwHDvDvHBnQDEO6tckBch0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bak8BMtf5SW9tpwXA9B39X5au7JBA/iDAckyKeNZjXsEQ+SiOgRy3roI+AN/j3hxk
-         GtlpF6c0GwQ6LlTmEIrc5cBWmLJ+1BS2eOCb2FFAtim1QI+HCXx1MnudA2lzRyDdAK
-         RzVFbWjq7/319UmmcBJOI1EV7VWuYRUOsDcWIjdU=
+        b=EiE6TBqjpB/wr2mLbiR4dk7QWDZCI/Q6pzEkLl1Lu7HOY+VuQBjt4j9gwQ0IP+nB1
+         xxK3eB/hvz4A07XGSV4XtsHXb+vUlrhYrQJjmLSA21sg9yPciDmcFYfskH3sG4O+j5
+         BHvOhIi5ECk1dplOTy5vu7154JKWsNHMx4AqalEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/29] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
-Date:   Tue,  1 Oct 2019 12:43:56 -0400
-Message-Id: <20191001164423.16406-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/29] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
+Date:   Tue,  1 Oct 2019 12:44:05 -0400
+Message-Id: <20191001164423.16406-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -43,44 +44,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
+[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
 
-In encode_attrs(), there is an if statement on line 1145 to check
-whether label is NULL:
-    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
+IF the server rejected our layout return with a state error such as
+NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
+to clear out all the remaining layout segments and mark that stateid
+as invalid.
 
-When label is NULL, it is used on lines 1178-1181:
-    *p++ = cpu_to_be32(label->lfs);
-    *p++ = cpu_to_be32(label->pi);
-    *p++ = cpu_to_be32(label->len);
-    p = xdr_encode_opaque_fixed(p, label->label, label->len);
-
-To fix these bugs, label is checked before being used.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pnfs.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 549c916d28599..525684b0056fc 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -1132,7 +1132,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
- 		} else
- 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 96867fb159bf7..ec04cce31814b 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1319,10 +1319,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
+ 	const nfs4_stateid *res_stateid = NULL;
+ 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
+ 
+-	if (ret == 0) {
+-		arg_stateid = &args->stateid;
++	switch (ret) {
++	case -NFS4ERR_NOMATCHING_LAYOUT:
++		break;
++	case 0:
+ 		if (res->lrs_present)
+ 			res_stateid = &res->stateid;
++		/* Fallthrough */
++	default:
++		arg_stateid = &args->stateid;
  	}
--	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
-+	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
- 		*p++ = cpu_to_be32(label->lfs);
- 		*p++ = cpu_to_be32(label->pi);
- 		*p++ = cpu_to_be32(label->len);
+ 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
+ 			res_stateid);
 -- 
 2.20.1
 
