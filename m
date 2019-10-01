@@ -2,80 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D964C3F00
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 19:50:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8FC6C3FB8
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 20:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfJARud (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 13:50:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60040 "EHLO mx1.redhat.com"
+        id S1731261AbfJASV1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 14:21:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:3743 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfJARuc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:50:32 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726376AbfJASV1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 14:21:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62ED3316D8C4;
-        Tue,  1 Oct 2019 17:50:32 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-117-193.phx2.redhat.com [10.3.117.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 11F1860619;
-        Tue,  1 Oct 2019 17:50:32 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 2F0B412017D; Tue,  1 Oct 2019 13:50:31 -0400 (EDT)
-Date:   Tue, 1 Oct 2019 13:50:31 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>
-Subject: Re: [PATCH v7 00/19] client and server support for "inter" SSC copy
-Message-ID: <20191001175031.GA3099@pick.fieldses.org>
-References: <20190916211353.18802-1-olga.kornievskaia@gmail.com>
- <CAN-5tyHGq=4AiMuST1kqkZWOfijvuR3bUNChL+KaNnUN900cdA@mail.gmail.com>
- <20191001171355.GA2372@fieldses.org>
- <CAN-5tyHRKu-pYAvhW0f+t4SoDs1iMCuu4JiBaNFnZmUXso4wag@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1190130A04E3;
+        Tue,  1 Oct 2019 18:21:27 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 907AC5D6D0;
+        Tue,  1 Oct 2019 18:21:26 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "James Harvey" <jamespharvey20@gmail.com>,
+        "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: 5.3.0 Regression: rpc.nfsd v4 uninterruptible sleep for 5+
+ minutes w/o rpc-statd/etc
+Date:   Tue, 01 Oct 2019 14:21:26 -0400
+Message-ID: <720574D9-90C7-4A79-8DA6-9A683CFD98CB@redhat.com>
+In-Reply-To: <CA+X5Wn60sGi+za48Lj-y1fcHHw7kdzEUsw8nj+Xc0U90mONz5w@mail.gmail.com>
+References: <CA+X5Wn60sGi+za48Lj-y1fcHHw7kdzEUsw8nj+Xc0U90mONz5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyHRKu-pYAvhW0f+t4SoDs1iMCuu4JiBaNFnZmUXso4wag@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 01 Oct 2019 17:50:32 +0000 (UTC)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 01 Oct 2019 18:21:27 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:47:22PM -0400, Olga Kornievskaia wrote:
-> On Tue, Oct 1, 2019 at 1:13 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 03:06:11PM -0400, Olga Kornievskaia wrote:
-> > > Have you had a chance to take a look at the new patch series and have
-> > > any more comments?
-> >
-> > Honestly, last time I checked I was having trouble finding things to
-> > complain about--it looked OK to me.
-> >
-> > But I'm not sure I understood the management of copy id's, should I
-> > should give it one more read.  And then agree on how to merge it.
-> 
-> Let me know what you would like to discuss about how copy ids are
-> managed on the server. I thought that cover letter plus commit
-> descriptions talk about how copy stateids and copy_notify states are
-> managed. Do you want me to cut and paste that together here? Yes I did
-> skip putting the same summary in v7 as I did in earlier submissions.
+On 19 Sep 2019, at 9:00, James Harvey wrote:
 
-You did fine, I just need to read it carefully and make sure I
-understand.
+> For a really long time (years?) if you forced NFS v4 only, you could
+> mask a lot of unnecessary services.
+>
+> In /etc/nfs.conf, in "[nfsd] I've been able to set "vers3=n", and then
+> mask the following services:
+> * gssproxy
+> * nfs-blkmap
+> * rpc-statd
+> * rpcbind (service & socket)
+>
+> Upgrading from 5.2.14 to 5.3.0, nfs-server.service (rpc.nfsd) has
+> exactly a 5 minute delay, and sometimes longer.
 
-> > I was thinking maybe you could give us a git branch based on 5.5-rc1 or
-> > 5.5-rc2, Trond (I think it's Trond this time?) could pull the client
-> > ones into his tree, and I could pull the rest into mine.
-> 
-> I do have git space on linux-nfs so I could put my patches there.
-> However, I'm confused about the ask to be based on 5.5-rc1 as we are
-> still on 5.4-rc.
+A bisect ends on:
+4f8943f80883 SUNRPC: Replace direct task wakeups from softirq context
 
-Whoops, sorry, just a typo, I meant 5.4-rc.
+That commit changed the way we pull the error from the socket, previously
+we'd wake the task with whatever error is in sk_err from xs_error_report(),
+but now we use SO_ERROR - but that's only after possibly running through
+xs_wake_disconnect which forces a closure which can change sk_err.
 
---b.
+So, I think xs_error_report sees ECONNREFUSED, but we wake tasks with
+ENOTCONN, and the client machine spins us back around again to reconnect, we
+do this until things time out.
+
+I'll send a patch to revert to the previous behavior of waking tasks with
+the error as it was in xs_error_report by copying it over to the sock_xprt
+struct and waking the tasks with that value.
+
+There's another subtle change here besides that race: SO_ERROR can return
+the socket's soft error, not just what's in sk_err.  That can be fun things
+like EINVAL if routing lookups fail..
+
+Ben
