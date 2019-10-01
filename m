@@ -2,36 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 986AAC3DCC
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 19:03:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 897A8C3DD0
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2019 19:03:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfJAQj5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Oct 2019 12:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
+        id S1729042AbfJAQj6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Oct 2019 12:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfJAQj4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:56 -0400
+        id S1728879AbfJAQj6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6C62190F;
-        Tue,  1 Oct 2019 16:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F25222C3;
+        Tue,  1 Oct 2019 16:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947996;
-        bh=sYY95Hr5Vx7uYLpkaAUKFT7rsKYr+ZKBrBYfbzCeno0=;
+        s=default; t=1569947997;
+        bh=hWFw/mm/IjB//DvfFJsOpdoICftIKYGQelaXG5osxR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNajo/9/AtRBIt5z2NxJmrX/Ot9ufPNXCJMndxQO8Y7YE0CSXEUOaGmqlaIlU0CP4
-         AWNFw0gd+iOyN/fmGe2DI/gjY4Dkj8kVGqqrdCjrySbr2q7UkbORa0FVGP9qXl9Aui
-         /B32Haas3/LSBF1wGnHyMIb7gmkXoMJ1xGKYl6aM=
+        b=E8sm2+wBGCvobQTuZNtL0uZokilV4a0A8eNwLY6FVOM3JanrYTNhi44DMfLut5l7j
+         rzwSyimhfP/3iWCqv8b4m/89tyOfUbVcNLAPCXyOfg+ragQglFrAXKBENM5Ke/JtCu
+         rPyytnaZ0pzThZhj+H5BzQOyETsFuiLbArl9pus4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trondmy@gmail.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 22/71] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
-Date:   Tue,  1 Oct 2019 12:38:32 -0400
-Message-Id: <20191001163922.14735-22-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 23/71] SUNRPC: Don't try to parse incomplete RPC messages
+Date:   Tue,  1 Oct 2019 12:38:33 -0400
+Message-Id: <20191001163922.14735-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -46,43 +47,59 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
+[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
 
-IF the server rejected our layout return with a state error such as
-NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
-to clear out all the remaining layout segments and mark that stateid
-as invalid.
+If the copy of the RPC reply into our buffers did not complete, and
+we could end up with a truncated message. In that case, just resend
+the call.
 
-Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
+Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sunrpc/clnt.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 4525d5acae386..0418b198edd3e 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1449,10 +1449,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
- 	const nfs4_stateid *res_stateid = NULL;
- 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 76e745ff78138..d8136b829804f 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2479,6 +2479,7 @@ call_decode(struct rpc_task *task)
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 	struct rpc_rqst	*req = task->tk_rqstp;
+ 	struct xdr_stream xdr;
++	int err;
  
--	if (ret == 0) {
--		arg_stateid = &args->stateid;
-+	switch (ret) {
-+	case -NFS4ERR_NOMATCHING_LAYOUT:
-+		break;
-+	case 0:
- 		if (res->lrs_present)
- 			res_stateid = &res->stateid;
-+		/* Fallthrough */
-+	default:
-+		arg_stateid = &args->stateid;
- 	}
- 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
- 			res_stateid);
+ 	dprint_status(task);
+ 
+@@ -2501,6 +2502,15 @@ call_decode(struct rpc_task *task)
+ 	 * before it changed req->rq_reply_bytes_recvd.
+ 	 */
+ 	smp_rmb();
++
++	/*
++	 * Did we ever call xprt_complete_rqst()? If not, we should assume
++	 * the message is incomplete.
++	 */
++	err = -EAGAIN;
++	if (!req->rq_reply_bytes_recvd)
++		goto out;
++
+ 	req->rq_rcv_buf.len = req->rq_private_buf.len;
+ 
+ 	/* Check that the softirq receive buffer is valid */
+@@ -2509,7 +2519,9 @@ call_decode(struct rpc_task *task)
+ 
+ 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
+ 			req->rq_rcv_buf.head[0].iov_base, req);
+-	switch (rpc_decode_header(task, &xdr)) {
++	err = rpc_decode_header(task, &xdr);
++out:
++	switch (err) {
+ 	case 0:
+ 		task->tk_action = rpc_exit_task;
+ 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
 -- 
 2.20.1
 
