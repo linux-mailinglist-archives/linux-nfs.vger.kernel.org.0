@@ -2,75 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FCC8C9578
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2019 02:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DD90C95AE
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2019 02:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfJCAR3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Oct 2019 20:17:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55356 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfJCAR2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Oct 2019 20:17:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=r/4tKD7Z80pSB1NpFz6ktZvS4AeDOiTyO5tnMVQxFzE=; b=AwsNENxfH6r20XNC5bvoj5r3b
-        Y5AcfJMCXynID6UqP63WtmwV90T30fCdSabszN+9PUzwbZlH6/aZpUgka37ESsDymXtIYznDYj2/f
-        mKjK3MkNDZSaiycOyt1fLLeENAHMNxAYdstuQhaZBeIWEBfUc4yQyZcsJ2viXZoqvTLOsFPzHvwhS
-        RIzhjBR+CaGRwKmDp5jy8aTrhLfIG8eJAWGRVaBud6KPAcNQV8Lmj7PBtssntdwL7b2WdnRl3xzoY
-        2IWiVRKjrnMVlbr6UF3rzm2ox6m2chzLsEfACyMcPqVTdsLa+6Bp1B7HPAdQw/blBxXARYyBb2q05
-        3lNnwPLwQ==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFooC-0002SA-Bn; Thu, 03 Oct 2019 00:17:28 +0000
-To:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: fs/nfsd/nfs4state.c use of "\%s"
-Message-ID: <b76bde04-7970-c870-5af7-359141958c4f@infradead.org>
-Date:   Wed, 2 Oct 2019 17:17:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729880AbfJCA1a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Oct 2019 20:27:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50150 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729866AbfJCA1a (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:27:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1046CAF22;
+        Thu,  3 Oct 2019 00:27:28 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Date:   Thu, 03 Oct 2019 10:27:21 +1000
+Cc:     Neil F Brown <nfbrown@suse.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: remounting hard -> soft
+In-Reply-To: <489FAE7A-F9CC-46A9-84FC-127487ADC0B3@oracle.com>
+References: <489FAE7A-F9CC-46A9-84FC-127487ADC0B3@oracle.com>
+Message-ID: <87y2y265cm.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-In commit 78599c42ae3c70300a38b0d1271a85bc9f2d704a
-(nfsd4: add file to display list of client's opens), some of the %s printk
-specifiers are \-escaped:
+On Wed, Oct 02 2019, Chuck Lever wrote:
 
-+       seq_printf(s, "access: \%s\%s, ",
-+               access & NFS4_SHARE_ACCESS_READ ? "r" : "-",
-+               access & NFS4_SHARE_ACCESS_WRITE ? "w" : "-");
-+       seq_printf(s, "deny: \%s\%s, ",
-+               deny & NFS4_SHARE_ACCESS_READ ? "r" : "-",
-+               deny & NFS4_SHARE_ACCESS_WRITE ? "w" : "-");
+> Hi Trond-
+>
+> We (Oracle) had another (fairly rare) instance of a weekend maintenance
+> window where an NFS server's IP address changed while there were mounted
+> clients. It brought up the issue again of how we (the Linux NFS community)
+> would like to deal with cases where a client administrator has to deal
+> with a moribund mount (like that alliteration :-).
 
+What exactly is the problem that this caused?
 
-sparse complains about these, as does gcc when used with --pedantic.
-sparse says:
+As I understand it, a moribund mount can still be unmounted with "-l"
+and processes accessing it can still be killed ... except....
+There are some waits the VFS/MM which are not TASK_KILLABLE and
+probably should be.  I think that "we" definitely want "someone" to
+track them down and fix them.
 
-../fs/nfsd/nfs4state.c:2385:23: warning: unknown escape sequence: '\%'
-../fs/nfsd/nfs4state.c:2385:23: warning: unknown escape sequence: '\%'
-../fs/nfsd/nfs4state.c:2388:23: warning: unknown escape sequence: '\%'
-../fs/nfsd/nfs4state.c:2388:23: warning: unknown escape sequence: '\%'
+>
+> Does remounting with "soft" work today? That seems like the most direct
+> way to deal with this particular situation.
 
-Is this just a typo?
+I don't think this does work, and it would be non-trivial (but maybe not
+impossible) to mark all the outstanding RPCs as also "soft".
+If we wanted to follow a path like this (and I suspect we don't), I
+would hope that we could expose the server connection (shared among
+multiple mounts) in sysfs somewhere, and could then set "soft" (or
+"dead") on that connection, rather than having to do it on every mount
+from the particular server.
 
-Please just fix it.
+NeilBrown
 
-thanks,
--- 
-~Randy
+>
+>
+> --
+> Chuck Lever
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2VQGkACgkQOeye3VZi
+gbmTBhAAo+iXH6JqhgxPY5kpn+3XfeSy3pYC47KNU9EW27UZt6iNFrxrDNSTdzms
+ZuA2xpo5RuTwa/HyVgjYcOTv4qOd6NC/xCuByfQenD/Sw6gakU19+fElwmGf8oVA
+Zpd4h1EUAmrxXIYPrjd4LNrHTcIDaFghm3CklESS72S90E29uh1VrK3HA1haA7Yp
+re3LHLTWzhcbwbToHG2bEk679DaET26LNwolCh2FM8wGaVXdqDj4UECUEkdfAnV6
+42TeVifI7D/VQ+YmAk5eTSuK96sf+Ps5mztlxtKvMHYJl2d9Q24UNoN/TmDStAHZ
+yqdl/ogRVS0ihkWIb7lJ2ZJwE9vmCegLdD2Fi8ieqQGCf/T66ns255mTNpSNIWk5
+O59cDMsPtBs7KRDpxzE46XiEAIu8qfkucurJxsLuD0PV4Ics+gjsmvFlPMNe08SU
+hDfYYumJVIBYI/BwL4lMmvjCSfX6/6NWq71qZQgT+oLW2JULE3sTeAY0J7origB3
+63bofO5wJcqqa71tzavuEunuIwYh7yLr0Brii6gQ5biq3BzG+GSzskHNTZDO1GK/
+8FCMMC09BksPm7A0KGJCNo31bQ3KumzLEATxKxTNeqfjeiaBoazwv6CpbQydQ7qO
+M2HwQamfyiDfssD1PwKrGO6vz0t/Lrbc74U8jvcYDj2W6A+FGZU=
+=w+um
+-----END PGP SIGNATURE-----
+--=-=-=--
