@@ -2,182 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34873CBF16
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Oct 2019 17:25:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102FDCC744
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2019 03:51:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389539AbfJDPZU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Oct 2019 11:25:20 -0400
-Received: from mail-eopbgr800138.outbound.protection.outlook.com ([40.107.80.138]:64795
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        id S1726215AbfJEBv6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Oct 2019 21:51:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3204 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389224AbfJDPZU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:25:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MlD2PbnxjFmcl5mLyBQO7+AQmjgBR9nWdlKvN3ufyNY0RZfalWTHxrYwtgR2vyN0vtSLZrgeftyL+eIofjoPhqHsgiS0MNFXUad4kMKmnclWLrUp6a24F6BYGrAphutOEWvzrOHdAGLxG85iC+eLPNtaYlQ/JKu5XAhbb/0O7jqaf8gg6jLQ/Ak1H6Ym3lOybMSpDuMg2LwNBKUoX8fPc+ROlOugqdYxfQIVhwfIFe8tjCQAFhV5nK+cc1oLTRpGYINBGw/SuilKXolebSEJsHM+zsEFF7s5lyD72TCRqp/6WDvQp3EGebhj5mVmi+8q+FSTRMrat5FHM5Fbio/XZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M99qQroKb6c69OZsMrB6V9jnsK8ZC933V/7XTFWej50=;
- b=mxm3wEOKZj/sOOTLU8j/cmil2zK9eZmbZvdl3OGJdYchwFba9Rh6R3FyjTQ8efk00Xt/4Fy6CK2pP3u3o+HPXc438n5ARlc8xAlAr/qC9oC1PCcVWiCGZ0cY3Y+MTCDINzW7R/GbcmslewB1fuCCUCCEjzF/hOXA/OOx/mhIq20XMQxhmfVsVw7IevW8ThjW+cX1rTc3HTNI4UCQUA8e0TE0/dKQjarRUfzgcUVi1dtjmv+AmKKTttLQTOXpTrz66uuOWqEZq2AwawHQyPrc7eAZO2ED8DwAqIrdlzEiVhXMtWD9nQ12fkoB2bKl17Xv9CxfiAtKOp4YGTFTN5lhFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M99qQroKb6c69OZsMrB6V9jnsK8ZC933V/7XTFWej50=;
- b=f9H8uH3sF1NpXXwtiYVm2kdgC5eFbxSOcgOegXV37xzME1th/giQbmUNOOctW1KU1mVAkfwZ+roAcrvgdMnfR01D6GX9299aM6JItSE0XWCn2TAvdFHUqtwla3HNXVNzRpXHkeS70cF0B+X8y3+kciBZGVrVIxY0Xe3pgss8eJk=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5SPR00MB106.namprd13.prod.outlook.com (10.174.178.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.11; Fri, 4 Oct 2019 15:25:12 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e%10]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
- 15:25:12 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "neilb@suse.de" <neilb@suse.de>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "nfbrown@suse.com" <nfbrown@suse.com>
-Subject: Re: remounting hard -> soft
-Thread-Topic: remounting hard -> soft
-Thread-Index: AQHVeTG8yXcZC/RkKUmwz1tgBSH0BKdIEECAgADSygCAAbpkAA==
-Date:   Fri, 4 Oct 2019 15:25:12 +0000
-Message-ID: <8fa5b7e8a20c435b8bbf2130f2ade0c513b3631c.camel@hammerspace.com>
-References: <489FAE7A-F9CC-46A9-84FC-127487ADC0B3@oracle.com>
-         <87y2y265cm.fsf@notabene.neil.brown.name>
-         <4C8E9327-5B84-4EA7-B9D4-37183A1FEB3C@oracle.com>
-In-Reply-To: <4C8E9327-5B84-4EA7-B9D4-37183A1FEB3C@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d483c87-bf2f-4424-bf50-08d748df0cf3
-x-ms-traffictypediagnostic: DM5SPR00MB106:
-x-microsoft-antispam-prvs: <DM5SPR00MB10689AD6CCFE003FE2A249BB89E0@DM5SPR00MB106.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 018093A9B5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(396003)(346002)(39840400004)(76094002)(51444003)(199004)(189003)(64756008)(66556008)(316002)(66066001)(81156014)(81166006)(110136005)(54906003)(6512007)(3846002)(8936002)(6116002)(4326008)(76116006)(91956017)(6246003)(256004)(71190400001)(66446008)(66476007)(66946007)(14444005)(71200400001)(118296001)(8676002)(2906002)(86362001)(478600001)(2501003)(7736002)(25786009)(305945005)(5660300002)(229853002)(14454004)(446003)(11346002)(26005)(186003)(476003)(53546011)(6506007)(2616005)(102836004)(6486002)(99286004)(36756003)(76176011)(486006)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5SPR00MB106;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tdBn/zmUOKjdknPVCsvS4IFIXPZBkbb8LWSwRUMwCMbwhU6rlaYUhFvhBHEExSOAdelaffAh2UG1uQCK/jAEZn2Htc8dyF7OYsW6tJ+JU28DcfVHEPpdww/2ewYvkLEOk1nElh3qkOpBbiMDvksZmjS44lTIemcpaKY3vApslp/5CQDVTnQ/WVgBNirDbE5PiwJ5Rzt+IPzKk7Zx9DiddaWAYkm1Yw7sXbs0xs+LAqicxIw1VVfH0bll0kNamv7UjlvgflwQCxMoMMy2VpEbcZ3soMS45eeVtPqCGBpBV3pIStTYkhQtuwfjQZooNJcDiI6gduuVjDQRBGWXG9tC7CXE1M7vglbTjZG1NsXV2zuWviU5dzEIF8/rjLwrwQecguCYMwBwUvlOx29MOEgbgzyLgzodUpOgdfLXO5fb43U=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B1AF2C548D9AD84A8AB3C52EBD8CBE7D@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725887AbfJEBv5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 4 Oct 2019 21:51:57 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 67616907C4681D54F309;
+        Sat,  5 Oct 2019 09:51:55 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.145) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 5 Oct 2019
+ 09:51:53 +0800
+Subject: Re: [PATCH] nfs: Fix nfsi->nrequests count error on
+ nfs_inode_remove_request
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>
+References: <1569479378-128669-1-git-send-email-zhangxiaoxu5@huawei.com>
+From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
+Message-ID: <08ce0101-e8df-509a-f3e5-07063aa5492e@huawei.com>
+Date:   Sat, 5 Oct 2019 09:51:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d483c87-bf2f-4424-bf50-08d748df0cf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 15:25:12.7622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B6MlThgCZ4pkD4FAKuASXKsRxpIxoUGLDnANsuD04vx1h7z3+xckCJmIkqBqiD9QkQs+7x2apgH/dHIQRNV4mA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5SPR00MB106
+In-Reply-To: <1569479378-128669-1-git-send-email-zhangxiaoxu5@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.145]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEwLTAzIGF0IDA5OjAxIC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-PiBPbiBPY3QgMiwgMjAxOSwgYXQgODoyNyBQTSwgTmVpbEJyb3duIDxuZWlsYkBzdXNlLmRlPiB3
-cm90ZToNCj4gPiANCj4gPiBPbiBXZWQsIE9jdCAwMiAyMDE5LCBDaHVjayBMZXZlciB3cm90ZToN
-Cj4gPiANCj4gPiA+IEhpIFRyb25kLQ0KPiA+ID4gDQo+ID4gPiBXZSAoT3JhY2xlKSBoYWQgYW5v
-dGhlciAoZmFpcmx5IHJhcmUpIGluc3RhbmNlIG9mIGEgd2Vla2VuZA0KPiA+ID4gbWFpbnRlbmFu
-Y2UNCj4gPiA+IHdpbmRvdyB3aGVyZSBhbiBORlMgc2VydmVyJ3MgSVAgYWRkcmVzcyBjaGFuZ2Vk
-IHdoaWxlIHRoZXJlIHdlcmUNCj4gPiA+IG1vdW50ZWQNCj4gPiA+IGNsaWVudHMuIEl0IGJyb3Vn
-aHQgdXAgdGhlIGlzc3VlIGFnYWluIG9mIGhvdyB3ZSAodGhlIExpbnV4IE5GUw0KPiA+ID4gY29t
-bXVuaXR5KQ0KPiA+ID4gd291bGQgbGlrZSB0byBkZWFsIHdpdGggY2FzZXMgd2hlcmUgYSBjbGll
-bnQgYWRtaW5pc3RyYXRvciBoYXMgdG8NCj4gPiA+IGRlYWwNCj4gPiA+IHdpdGggYSBtb3JpYnVu
-ZCBtb3VudCAobGlrZSB0aGF0IGFsbGl0ZXJhdGlvbiA6LSkuDQo+ID4gDQo+ID4gV2hhdCBleGFj
-dGx5IGlzIHRoZSBwcm9ibGVtIHRoYXQgdGhpcyBjYXVzZWQ/DQo+ID4gDQo+ID4gQXMgSSB1bmRl
-cnN0YW5kIGl0LCBhIG1vcmlidW5kIG1vdW50IGNhbiBzdGlsbCBiZSB1bm1vdW50ZWQgd2l0aCAi
-LQ0KPiA+IGwiDQo+ID4gYW5kIHByb2Nlc3NlcyBhY2Nlc3NpbmcgaXQgY2FuIHN0aWxsIGJlIGtp
-bGxlZA0KPiANCj4gSSB3YXMgYXNraW5nIGFib3V0ICItbyByZW1vdW50LHNvZnQiIGJlY2F1c2Ug
-SSB3YXMgbm90IGNlcnRhaW4NCj4gYWJvdXQgdGhlIG91dGNvbWUgbGFzdCB0aW1lIHRoaXMgY29u
-dmVyc2F0aW9uIHdhcyBpbiBmdWxsIHN3aW5nLg0KPiBUaGUgZ2lzdCB0aGVuIGlzIHRoYXQgd2Ug
-d2FudCAidW1vdW50IC1sIiBhbmQgInVtb3VudCAtZiIgdG8NCj4gd29yayByZWxpYWJseSBhbmQg
-YXMgYWR2ZXJ0aXNlZD8NCg0KJ3Vtb3VudCAtbCcgYW5kICd1bW91bnQgLWYnIGFyZSBib3RoIGlu
-aGVyZW50bHkgZmxhd2VkLiBUaGUgZm9ybWVyDQpiZWNhdXNlIGl0IGp1c3QgaGlkZXMgdGhlIGhh
-bmdpbmcgUlBDIGNhbGxzIGluIHRoZSBrZXJuZWwgKGNhdXNpbmcNCnJlc291cmNlIGxlYWtzIGxl
-ZnQsIHJpZ2h0IGFuZCBjZW50ZXIpLCBhbmQgdGhlIGxhdHRlciBiZWNhdXNlIGl0IGlzIGENCnNp
-bmdsZSBwb2ludC1pbi10aW1lIG9wZXJhdGlvbi4gV2hlbiB5b3UgZG8gJ3Vtb3VudCAtZicsIGl0
-IHdpbGwgdHJ5IHRvDQpraWxsIGFsbCBwZW5kaW5nIFJQQyBjYWxscywgYnV0IGl0IGRvZXMgbm90
-aGluZyB0byBwcmV2ZW50IGZ1cnRoZXINCmNhbGxzIGZyb20gYmVpbmcgc2NoZWR1bGVkLg0KDQpT
-byB5ZXMsIGF0IHNvbWUgcG9pbnQgaXQgd291bGQgYmUgZ29vZCB0byBiZSBhYmxlIHRvIGtpbGwg
-cmVxdWVzdHMgZnJvbQ0KYSBwZXJtYW5lbnRseSBoYW5naW5nIHNlcnZlciB0aHJvdWdoIHNvbWUg
-b3RoZXIgbWVhbnMuDQoNCk9uZSBvZiB0aGUgaWRlYXMgdGhhdCBJIGRvIGxpa2UsIGlzIGJlaW5n
-IGFibGUgdG8gcmVtb3VudCBhcyAnc29mdCcgc28NCnRoYXQgdGhlIFJQQyBjYWxscyBzaW1wbHkg
-dGltZSBvdXQuIFRoYXQgc29sdmVzIHRoZSBwcm9ibGVtLCBhbmQgZG9lcw0Kbm90IGNvbXByb21p
-c2UgdGhlIGNhc2Ugd2hlcmUgdGhlIHNlcnZlciBjb21lcyBiYWNrIHVwLCBhbmQgd2UgcmVtb3Vu
-dA0KdGhlIHN1cGVyIGJsb2NrIGluIG9yZGVyIHRvIGNvbnRpbnVlIG9wZXJhdGlvbnMuDQpUaGF0
-IHNhaWQsIHRoZXJlIGFyZSBhIGZldyBpbXBlZGltZW50cyB0byBtYWtpbmcgdGhhdCB3b3JrLiBB
-cyBmYXIgYXMgSQ0KY2FuIHRlbGwsIG5vbmUgYXJlIGluc3VybW91bnRhYmxlLCBidXQgdGhleSBu
-ZWVkIHRvIGJlIHNvbHZlZC4NCg0KRm9yIGluc3RhbmNlLCBvbmUgc3VjaCBpbXBlZGltZW50IGlz
-IHRoZSBmYWN0IHRoYXQgdGhlIHdheSBzb2Z0IG1vdW50cw0Kd29yayB0aGVzZSBkYXlzIGlzIGJ5
-IHRhZ2dpbmcgZWFjaCBSUEMgdGFzayB3aXRoIHRoZSBmbGFnIFJQQ19UQVNLX1NPRlQNCihhbmQv
-b3IgUlBDX1RBU0tfVElNRU9VVCBkZXBlbmRpbmcgb24gd2hpY2ggZXJyb3IgdmFsdWUgeW91IHdh
-bnQgdGhlDQpjYWxsIHRvIHJldHVybikuIFRoaXMgdGFnIGlzIHNldCBpbiB0YXNrLT50a19mbGFn
-cywgd2hpY2ggaXMgYXNzdW1lZA0KY29uc3RhbnQgdGhyb3VnaG91dCB0aGUgbGlmZXRpbWUgb2Yg
-dGhlIFJQQyB0YXNrLiBUaGlzIGlzIHdoeSB3ZSBjYW4NCnRlc3QgUlBDX0lTX1NPRlQodGFzaykg
-YmVmb3JlIGRlY2lkaW5nIGhvdyB3ZSB3YW50IHRvIGNhbGwNCnJwY19zbGVlcF9vbigpLiBJZiBh
-IHRoaXJkIHBhcnR5IHdhbnRzIHRvIGNoYW5nZSB0aGF0IHRhZywgYW5kIHRoZSB3YWtlDQp1cCB0
-aGUgdGFzayBpbiBvcmRlciB0byBoYXZlIGl0IHRyeSB0byB0aW1lIG91dCwgdGhlbiBjb2RlIHNu
-aXBwZXRzDQpsaWtlIHRoZSBmb2xsb3dpbmcgaW4geHBydF9yZXNlcnZlX3hwcnQoKQ0KDQogICAg
-ICAgIGlmICAoUlBDX0lTX1NPRlQodGFzaykpDQogICAgICAgICAgICAgICAgcnBjX3NsZWVwX29u
-X3RpbWVvdXQoJnhwcnQtPnNlbmRpbmcsIHRhc2ssIE5VTEwsDQogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHhwcnRfcmVxdWVzdF90aW1lb3V0KHJlcSkpOw0KICAgICAgICBlbHNlDQog
-ICAgICAgICAgICAgICAgcnBjX3NsZWVwX29uKCZ4cHJ0LT5zZW5kaW5nLCB0YXNrLCBOVUxMKTsN
-Cg0Kd291bGQgbmVlZCB0byBiZSByZXBsYWNlZCBieSBzb21ldGhpbmcgdGhhdCBpcyBhdG9taWMu
-DQoNCj4gDQo+IA0KPiA+IC4uLiBleGNlcHQuLi4uDQo+ID4gVGhlcmUgYXJlIHNvbWUgd2FpdHMg
-dGhlIFZGUy9NTSB3aGljaCBhcmUgbm90IFRBU0tfS0lMTEFCTEUgYW5kDQo+ID4gcHJvYmFibHkg
-c2hvdWxkIGJlLiAgSSB0aGluayB0aGF0ICJ3ZSIgZGVmaW5pdGVseSB3YW50ICJzb21lb25lIiB0
-bw0KPiA+IHRyYWNrIHRoZW0gZG93biBhbmQgZml4IHRoZW0uDQo+IA0KPiBJIGFncmVlLi4uIGFu
-ZCAic29tZW9uZSIgY291bGQgbWVhbiBtZSBvciBzb21lb25lIGhlcmUgYXQgT3JhY2xlLg0KPiAN
-Cj4gDQo+ID4gPiBEb2VzIHJlbW91bnRpbmcgd2l0aCAic29mdCIgd29yayB0b2RheT8gVGhhdCBz
-ZWVtcyBsaWtlIHRoZSBtb3N0DQo+ID4gPiBkaXJlY3QNCj4gPiA+IHdheSB0byBkZWFsIHdpdGgg
-dGhpcyBwYXJ0aWN1bGFyIHNpdHVhdGlvbi4NCj4gPiANCj4gPiBJIGRvbid0IHRoaW5rIHRoaXMg
-ZG9lcyB3b3JrLCBhbmQgaXQgd291bGQgYmUgbm9uLXRyaXZpYWwgKGJ1dA0KPiA+IG1heWJlIG5v
-dA0KPiA+IGltcG9zc2libGUpIHRvIG1hcmsgYWxsIHRoZSBvdXRzdGFuZGluZyBSUENzIGFzIGFs
-c28gInNvZnQiLg0KPiANCj4gVGhlIHByb2JsZW0gSSd2ZSBvYnNlcnZlZCB3aXRoIHVtb3VudCBp
-cyB1bW91bnRfYmVnaW4gZG9lcyB0aGUNCj4ga2lsbGFsbF90YXNrcyBjYWxsLCB0aGVuIHRoZSBj
-bGllbnQgaXNzdWVzIHNvbWUgYWRkaXRpb25hbCByZXF1ZXN0cy4NCj4gVGhvc2UgYXJlIHRoZSBy
-ZXF1ZXN0cyB0aGF0IGdldCBzdHVjayBiZWZvcmUgdW1vdW50X2VuZCBjYW4gZmluYWxseQ0KPiBz
-aHV0ZG93biB0aGUgUlBDIGNsaWVudC4gdW1vdW50X2VuZCBpcyBuZXZlciBjYWxsZWQgYmVjYXVz
-ZSB0aG9zZQ0KPiByZXF1ZXN0cyBhcmUgImhhcmQiLg0KPiANCj4gV2UgaGF2ZSBycGNfa2lsbGFs
-bF90YXNrcyB3aGljaCBsb29wcyBvdmVyIGFsbCBvZiBhbiBycGNfY2xudCdzDQo+IG91dHN0YW5k
-aW5nIFJQQyB0YXNrcy4gbmZzX3Vtb3VudF9iZWdpbiBjb3VsZCBkbyBzb21ldGhpbmcgbGlrZQ0K
-PiANCj4gLSBzZXQgdGhlIHJwY19jbG50J3MgInNvZnQiIGZsYWcNCj4gLSBraWxsIGFsbCB0YXNr
-cw0KPiANCj4gVGhlbiBhbnkgbmV3IHRhc2tzIHdvdWxkIHRpbWVvdXQgZXZlbnR1YWxseS4gSnVz
-dCBhIHRob3VnaHQsIG1heWJlDQo+IG5vdCBhIGdvb2Qgb25lLg0KPiANCj4gVGhlcmUncyBhbHNv
-IHVzaW5nIFNPRlRDT05OIGZvciBhbGwgdGFza3MgYWZ0ZXIga2lsbGFsbCBpcyBjYWxsZWQ6DQo+
-IGlmIHRoZSBjbGllbnQgY2FuJ3QgcmVjb25uZWN0IHRvIHRoZSBzZXJ2ZXIsIHRoZXNlIHRhc2tz
-IHdvdWxkIGZhaWwNCj4gaW1tZWRpYXRlbHkuDQo+IA0KPiANCj4gPiBJZiB3ZSB3YW50ZWQgdG8g
-Zm9sbG93IGEgcGF0aCBsaWtlIHRoaXMgKGFuZCBJIHN1c3BlY3Qgd2UgZG9uJ3QpLCBJDQo+ID4g
-d291bGQgaG9wZSB0aGF0IHdlIGNvdWxkIGV4cG9zZSB0aGUgc2VydmVyIGNvbm5lY3Rpb24gKHNo
-YXJlZCBhbW9uZw0KPiA+IG11bHRpcGxlIG1vdW50cykgaW4gc3lzZnMgc29tZXdoZXJlLCBhbmQg
-Y291bGQgdGhlbiBzZXQgInNvZnQiIChvcg0KPiA+ICJkZWFkIikgb24gdGhhdCBjb25uZWN0aW9u
-LCByYXRoZXIgdGhhbiBoYXZpbmcgdG8gZG8gaXQgb24gZXZlcnkNCj4gPiBtb3VudA0KPiA+IGZy
-b20gdGhlIHBhcnRpY3VsYXIgc2VydmVyLg0KPiANCj4gSSB0aGluayBvZiB5b3VyIHVzZSBjYXNl
-IGZyb20gbGFzdCB0aW1lOiBjbGllbnQgc2h1dGRvd24gc2hvdWxkIGJlDQo+IHJlbGlhYmxlLiBT
-ZWVtcyBsaWtlIG1ha2luZyAidW1vdW50IC1mIiByZWxpYWJsZSB3b3VsZCBiZSBiZXR0ZXINCj4g
-Zm9yIHRoYXQgdXNlIGNhc2UsIGFuZCB3b3VsZCB3b3JrIGZvciB0aGUgIm1ha2UgY2xpZW50IG1v
-dW50IHBvaW50cw0KPiByZWNvdmVyYWJsZSBhZnRlciBzZXJ2ZXIgZGllcyIgY2FzZSB0b28uDQoN
-Cid1bW91bnQgLWYnIGlzIGludGVuZGVkIGFzIGEgcG9pbnQgaW4gdGltZSBvcGVyYXRpb24sIHdo
-aWNoIGlzIHdoeSBpdA0KaXMgaW1wbGVtZW50ZWQgYXMgJ3Vtb3VudF9iZWdpbicgaW4gY29uc3Qg
-c3RydWN0IHN1cGVyX29wZXJhdGlvbnMNCm5mc19zb3BzLiBJdCBpcyBub3QgaW50ZW5kZWQgdG8g
-YWN0IGFzIGEgc3RhdGUgY2hhbmdpbmcgb3BlcmF0aW9uIG9uDQp0aGUgc3VwZXIgYmxvY2suIElm
-IGl0IHdlcmUsIGl0IHdvdWxkIG5lZWQgdG8gZW5zdXJlIHRoYXQgd2UgYWxzbyBoaWRlDQpzdWNo
-IGEgc3VwZXIgYmxvY2sgZnJvbSBiZWluZyBmb3VuZCB3aGVuIHlvdSB0cnkgdG8gbW91bnQgYWdh
-aW4sIGFuZCBpdA0Kd291bGQgbmVlZCB0byBlbnN1cmUgdGhhdCB5b3UgZG9uJ3QgaW5hZHZlcnRl
-bnRseSBlbmQgdXAgd2l0aCBhDQpzdXJ2aXZpbmcgZHVwbGljYXRlLg0KDQotLSANClRyb25kIE15
-a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+ping.
+
+On 2019/9/26 14:29, ZhangXiaoxu wrote:
+> When xfstests testing, there are some WARNING as below:
+> 
+> WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
+> Modules linked in:
+> CPU: 0 PID: 6235 Comm: umount.nfs
+> Hardware name: linux,dummy-virt (DT)
+> pstate: 60000005 (nZCv daif -PAN -UAO)
+> pc : nfs_clear_inode+0x9c/0xd8
+> lr : nfs_evict_inode+0x60/0x78
+> sp : fffffc000f68fc00
+> x29: fffffc000f68fc00 x28: fffffe00c53155c0
+> x27: fffffe00c5315000 x26: fffffc0009a63748
+> x25: fffffc000f68fd18 x24: fffffc000bfaaf40
+> x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
+> x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
+> x19: fffffc000c056000 x18: 000000000000003c
+> x17: 0000000000000000 x16: 0000000000000000
+> x15: 0000000000000040 x14: 0000000000000228
+> x13: fffffc000c3a2000 x12: 0000000000000045
+> x11: 0000000000000000 x10: 0000000000000000
+> x9 : 0000000000000000 x8 : 0000000000000000
+> x7 : 0000000000000000 x6 : fffffc00084b027c
+> x5 : fffffc0009a64000 x4 : fffffe00c0e77400
+> x3 : fffffc000c0563a8 x2 : fffffffffffffffb
+> x1 : 000000000000764e x0 : 0000000000000001
+> Call trace:
+>   nfs_clear_inode+0x9c/0xd8
+>   nfs_evict_inode+0x60/0x78
+>   evict+0x108/0x380
+>   dispose_list+0x70/0xa0
+>   evict_inodes+0x194/0x210
+>   generic_shutdown_super+0xb0/0x220
+>   nfs_kill_super+0x40/0x88
+>   deactivate_locked_super+0xb4/0x120
+>   deactivate_super+0x144/0x160
+>   cleanup_mnt+0x98/0x148
+>   __cleanup_mnt+0x38/0x50
+>   task_work_run+0x114/0x160
+>   do_notify_resume+0x2f8/0x308
+>   work_pending+0x8/0x14
+> 
+> The nrequest should be increased/decreased only if PG_INODE_REF flag
+> was setted.
+> 
+> But in the nfs_inode_remove_request function, it maybe decrease when
+> no PG_INODE_REF flag, this maybe lead nrequests count error.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+> ---
+>   fs/nfs/write.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index 85ca495..52cab65 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -786,7 +786,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+>   	struct nfs_inode *nfsi = NFS_I(inode);
+>   	struct nfs_page *head;
+>   
+> -	atomic_long_dec(&nfsi->nrequests);
+>   	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+>   		head = req->wb_head;
+>   
+> @@ -799,8 +798,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+>   		spin_unlock(&mapping->private_lock);
+>   	}
+>   
+> -	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
+> +	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
+>   		nfs_release_request(req);
+> +		atomic_long_dec(&nfsi->nrequests);
+> +	}
+>   }
+>   
+>   static void
+> 
+
