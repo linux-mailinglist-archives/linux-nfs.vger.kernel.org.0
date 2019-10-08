@@ -2,147 +2,171 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1C79D01E2
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2019 22:03:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6801AD0210
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2019 22:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfJHUD6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Oct 2019 16:03:58 -0400
-Received: from fieldses.org ([173.255.197.46]:47282 "EHLO fieldses.org"
+        id S1730523AbfJHUXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Oct 2019 16:23:34 -0400
+Received: from fieldses.org ([173.255.197.46]:47314 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbfJHUD5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:03:57 -0400
+        id S1727835AbfJHUXe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:23:34 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id BEB7C1C21; Tue,  8 Oct 2019 16:03:56 -0400 (EDT)
-Date:   Tue, 8 Oct 2019 16:03:56 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] svcrdma: Improve DMA mapping trace points
-Message-ID: <20191008200356.GA9151@fieldses.org>
-References: <20191004135745.2510.93924.stgit@manet.1015granger.net>
+        id 02F8A2C0; Tue,  8 Oct 2019 16:23:33 -0400 (EDT)
+Date:   Tue, 8 Oct 2019 16:23:32 -0400
+From:   "J . Bruce Fields" <bfields@fieldses.org>
+To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Neil Brown <neilb@suse.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Vasiliy Averin <vvs@virtuozzo.com>
+Subject: Re: [PATCH] sunrpc: fix crash when cache_head become valid before
+ update
+Message-ID: <20191008202332.GB9151@fieldses.org>
+References: <20191001080359.6034-1-ptikhomirov@virtuozzo.com>
+ <3e455bb4-2a03-551e-6efb-1d41b5258327@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004135745.2510.93924.stgit@manet.1015granger.net>
+In-Reply-To: <3e455bb4-2a03-551e-6efb-1d41b5258327@virtuozzo.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:58:20AM -0400, Chuck Lever wrote:
-> Capture the total size of Sends, the size of DMA map and the
-> matching DMA unmap to ensure operation is correct.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  include/trace/events/rpcrdma.h        |   30 +++++++++++++++++++++++-------
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c |    8 ++++++--
->  2 files changed, 29 insertions(+), 9 deletions(-)
-> 
-> Hey Bruce-
-> 
-> Please consider this patch for v5.5. Thanks!
+On Tue, Oct 08, 2019 at 10:02:53AM +0000, Pavel Tikhomirov wrote:
+> Add Neil to CC, sorry, had lost it somehow...
 
-Applied, thanks!
+Always happy when we can fix a bug by deleting code, and your
+explanation makes sense to me, but I'll give Neil a chance to look it
+over if he wants.
 
 --b.
 
 > 
+> On 10/1/19 11:03 AM, Pavel Tikhomirov wrote:
+> > I was investigating a crash in our Virtuozzo7 kernel which happened in
+> > in svcauth_unix_set_client. I found out that we access m_client field
+> > in ip_map structure, which was received from sunrpc_cache_lookup (we
+> > have a bit older kernel, now the code is in sunrpc_cache_add_entry), and
+> > these field looks uninitialized (m_client == 0x74 don't look like a
+> > pointer) but in the cache_head in flags we see 0x1 which is CACHE_VALID.
+> > 
+> > It looks like the problem appeared from our previous fix to sunrpc (1):
+> > commit 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued
+> > request")
+> > 
+> > And we've also found a patch already fixing our patch (2):
+> > commit d58431eacb22 ("sunrpc: don't mark uninitialised items as VALID.")
+> > 
+> > Though the crash is eliminated, I think the core of the problem is not
+> > completely fixed:
+> > 
+> > Neil in the patch (2) makes cache_head CACHE_NEGATIVE, before
+> > cache_fresh_locked which was added in (1) to fix crash. These way
+> > cache_is_valid won't say the cache is valid anymore and in
+> > svcauth_unix_set_client the function cache_check will return error
+> > instead of 0, and we don't count entry as initialized.
+> > 
+> > But it looks like we need to remove cache_fresh_locked completely in
+> > sunrpc_cache_lookup:
+> > 
+> > In (1) we've only wanted to make cache_fresh_unlocked->cache_dequeue so
+> > that cache_requests with no readers also release corresponding
+> > cache_head, to fix their leak.  We with Vasily were not sure if
+> > cache_fresh_locked and cache_fresh_unlocked should be used in pair or
+> > not, so we've guessed to use them in pair.
+> > 
+> > Now we see that we don't want the CACHE_VALID bit set here by
+> > cache_fresh_locked, as "valid" means "initialized" and there is no
+> > initialization in sunrpc_cache_add_entry. Both expiry_time and
+> > last_refresh are not used in cache_fresh_unlocked code-path and also not
+> > required for the initial fix.
+> > 
+> > So to conclude cache_fresh_locked was called by mistake, and we can just
+> > safely remove it instead of crutching it with CACHE_NEGATIVE. It looks
+> > ideologically better for me. Hope I don't miss something here.
+> > 
+> > Here is our crash backtrace:
+> > [13108726.326291] BUG: unable to handle kernel NULL pointer dereference at 0000000000000074
+> > [13108726.326365] IP: [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
+> > [13108726.326448] PGD 0
+> > [13108726.326468] Oops: 0002 [#1] SMP
+> > [13108726.326497] Modules linked in: nbd isofs xfs loop kpatch_cumulative_81_0_r1(O) xt_physdev nfnetlink_queue bluetooth rfkill ip6table_nat nf_nat_ipv6 ip_vs_wrr ip_vs_wlc ip_vs_sh nf_conntrack_netlink ip_vs_sed ip_vs_pe_sip nf_conntrack_sip ip_vs_nq ip_vs_lc ip_vs_lblcr ip_vs_lblc ip_vs_ftp ip_vs_dh nf_nat_ftp nf_conntrack_ftp iptable_raw xt_recent nf_log_ipv6 xt_hl ip6t_rt nf_log_ipv4 nf_log_common xt_LOG xt_limit xt_TCPMSS xt_tcpmss vxlan ip6_udp_tunnel udp_tunnel xt_statistic xt_NFLOG nfnetlink_log dummy xt_mark xt_REDIRECT nf_nat_redirect raw_diag udp_diag tcp_diag inet_diag netlink_diag af_packet_diag unix_diag rpcsec_gss_krb5 xt_addrtype ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 ebtable_nat ebtable_broute nf_conntrack_ipv6 nf_defrag_ipv6 ip6table_mangle ip6table_raw nfsv4
+> > [13108726.327173]  dns_resolver cls_u32 binfmt_misc arptable_filter arp_tables ip6table_filter ip6_tables devlink fuse_kio_pcs ipt_MASQUERADE nf_nat_masquerade_ipv4 xt_nat iptable_nat nf_nat_ipv4 xt_comment nf_conntrack_ipv4 nf_defrag_ipv4 xt_wdog_tmo xt_multiport bonding xt_set xt_conntrack iptable_filter iptable_mangle kpatch(O) ebtable_filter ebt_among ebtables ip_set_hash_ip ip_set nfnetlink vfat fat skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass fuse pcspkr ses enclosure joydev sg mei_me hpwdt hpilo lpc_ich mei ipmi_si shpchp ipmi_devintf ipmi_msghandler xt_ipvs acpi_power_meter ip_vs_rr nfsv3 nfsd auth_rpcgss nfs_acl nfs lockd grace fscache nf_nat cls_fw sch_htb sch_cbq sch_sfq ip_vs em_u32 nf_conntrack tun br_netfilter veth overlay ip6_vzprivnet ip6_vznetstat ip_vznetstat
+> > [13108726.327817]  ip_vzprivnet vziolimit vzevent vzlist vzstat vznetstat vznetdev vzmon vzdev bridge pio_kaio pio_nfs pio_direct pfmt_raw pfmt_ploop1 ploop ip_tables ext4 mbcache jbd2 sd_mod crc_t10dif crct10dif_generic mgag200 i2c_algo_bit drm_kms_helper scsi_transport_iscsi 8021q syscopyarea sysfillrect garp sysimgblt fb_sys_fops mrp stp ttm llc bnx2x crct10dif_pclmul crct10dif_common crc32_pclmul crc32c_intel drm dm_multipath ghash_clmulni_intel uas aesni_intel lrw gf128mul glue_helper ablk_helper cryptd tg3 smartpqi scsi_transport_sas mdio libcrc32c i2c_core usb_storage ptp pps_core wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod [last unloaded: kpatch_cumulative_82_0_r1]
+> > [13108726.328403] CPU: 35 PID: 63742 Comm: nfsd ve: 51332 Kdump: loaded Tainted: G        W  O   ------------   3.10.0-862.20.2.vz7.73.29 #1 73.29
+> > [13108726.328491] Hardware name: HPE ProLiant DL360 Gen10/ProLiant DL360 Gen10, BIOS U32 10/02/2018
+> > [13108726.328554] task: ffffa0a6a41b1160 ti: ffffa0c2a74bc000 task.ti: ffffa0c2a74bc000
+> > [13108726.328610] RIP: 0010:[<ffffffffc01f79eb>]  [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
+> > [13108726.328706] RSP: 0018:ffffa0c2a74bfd80  EFLAGS: 00010246
+> > [13108726.328750] RAX: 0000000000000001 RBX: ffffa0a6183ae000 RCX: 0000000000000000
+> > [13108726.328811] RDX: 0000000000000074 RSI: 0000000000000286 RDI: ffffa0c2a74bfcf0
+> > [13108726.328864] RBP: ffffa0c2a74bfe00 R08: ffffa0bab8c22960 R09: 0000000000000001
+> > [13108726.328916] R10: 0000000000000001 R11: 0000000000000001 R12: ffffa0a32aa7f000
+> > [13108726.328969] R13: ffffa0a6183afac0 R14: ffffa0c233d88d00 R15: ffffa0c2a74bfdb4
+> > [13108726.329022] FS:  0000000000000000(0000) GS:ffffa0e17f9c0000(0000) knlGS:0000000000000000
+> > [13108726.329081] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [13108726.332311] CR2: 0000000000000074 CR3: 00000026a1b28000 CR4: 00000000007607e0
+> > [13108726.334606] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [13108726.336754] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [13108726.338908] PKRU: 00000000
+> > [13108726.341047] Call Trace:
+> > [13108726.343074]  [<ffffffff8a2c78b4>] ? groups_alloc+0x34/0x110
+> > [13108726.344837]  [<ffffffffc01f5eb4>] svc_set_client+0x24/0x30 [sunrpc]
+> > [13108726.346631]  [<ffffffffc01f2ac1>] svc_process_common+0x241/0x710 [sunrpc]
+> > [13108726.348332]  [<ffffffffc01f3093>] svc_process+0x103/0x190 [sunrpc]
+> > [13108726.350016]  [<ffffffffc07d605f>] nfsd+0xdf/0x150 [nfsd]
+> > [13108726.351735]  [<ffffffffc07d5f80>] ? nfsd_destroy+0x80/0x80 [nfsd]
+> > [13108726.353459]  [<ffffffff8a2bf741>] kthread+0xd1/0xe0
+> > [13108726.355195]  [<ffffffff8a2bf670>] ? create_kthread+0x60/0x60
+> > [13108726.356896]  [<ffffffff8a9556dd>] ret_from_fork_nospec_begin+0x7/0x21
+> > [13108726.358577]  [<ffffffff8a2bf670>] ? create_kthread+0x60/0x60
+> > [13108726.360240] Code: 4c 8b 45 98 0f 8e 2e 01 00 00 83 f8 fe 0f 84 76 fe ff ff 85 c0 0f 85 2b 01 00 00 49 8b 50 40 b8 01 00 00 00 48 89 93 d0 1a 00 00 <f0> 0f c1 02 83 c0 01 83 f8 01 0f 8e 53 02 00 00 49 8b 44 24 38
+> > [13108726.363769] RIP  [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
+> > [13108726.365530]  RSP <ffffa0c2a74bfd80>
+> > [13108726.367179] CR2: 0000000000000074
+> > 
+> > Fixes: d58431eacb22 ("sunrpc: don't mark uninitialised items as VALID.")
+> > Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+> > 
+> > ---
+> >   net/sunrpc/cache.c | 6 ------
+> >   1 file changed, 6 deletions(-)
+> > 
+> > diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> > index a349094f6fb7..f740cb51802a 100644
+> > --- a/net/sunrpc/cache.c
+> > +++ b/net/sunrpc/cache.c
+> > @@ -53,9 +53,6 @@ static void cache_init(struct cache_head *h, struct cache_detail *detail)
+> >   	h->last_refresh = now;
+> >   }
+> >   
+> > -static inline int cache_is_valid(struct cache_head *h);
+> > -static void cache_fresh_locked(struct cache_head *head, time_t expiry,
+> > -				struct cache_detail *detail);
+> >   static void cache_fresh_unlocked(struct cache_head *head,
+> >   				struct cache_detail *detail);
+> >   
+> > @@ -105,9 +102,6 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
+> >   			if (cache_is_expired(detail, tmp)) {
+> >   				hlist_del_init_rcu(&tmp->cache_list);
+> >   				detail->entries --;
+> > -				if (cache_is_valid(tmp) == -EAGAIN)
+> > -					set_bit(CACHE_NEGATIVE, &tmp->flags);
+> > -				cache_fresh_locked(tmp, 0, detail);
+> >   				freeme = tmp;
+> >   				break;
+> >   			}
+> > 
 > 
-> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-> index a138306..9dd7680 100644
-> --- a/include/trace/events/rpcrdma.h
-> +++ b/include/trace/events/rpcrdma.h
-> @@ -1498,31 +1498,47 @@
->   ** Server-side RDMA API events
->   **/
->  
-> -TRACE_EVENT(svcrdma_dma_map_page,
-> +DECLARE_EVENT_CLASS(svcrdma_dma_map_class,
->  	TP_PROTO(
->  		const struct svcxprt_rdma *rdma,
-> -		const void *page
-> +		u64 dma_addr,
-> +		u32 length
->  	),
->  
-> -	TP_ARGS(rdma, page),
-> +	TP_ARGS(rdma, dma_addr, length),
->  
->  	TP_STRUCT__entry(
-> -		__field(const void *, page);
-> +		__field(u64, dma_addr)
-> +		__field(u32, length)
->  		__string(device, rdma->sc_cm_id->device->name)
->  		__string(addr, rdma->sc_xprt.xpt_remotebuf)
->  	),
->  
->  	TP_fast_assign(
-> -		__entry->page = page;
-> +		__entry->dma_addr = dma_addr;
-> +		__entry->length = length;
->  		__assign_str(device, rdma->sc_cm_id->device->name);
->  		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
->  	),
->  
-> -	TP_printk("addr=%s device=%s page=%p",
-> -		__get_str(addr), __get_str(device), __entry->page
-> +	TP_printk("addr=%s device=%s dma_addr=%llu length=%u",
-> +		__get_str(addr), __get_str(device),
-> +		__entry->dma_addr, __entry->length
->  	)
->  );
->  
-> +#define DEFINE_SVC_DMA_EVENT(name)					\
-> +		DEFINE_EVENT(svcrdma_dma_map_class, svcrdma_##name,	\
-> +				TP_PROTO(				\
-> +					const struct svcxprt_rdma *rdma,\
-> +					u64 dma_addr,			\
-> +					u32 length			\
-> +				),					\
-> +				TP_ARGS(rdma, dma_addr, length))
-> +
-> +DEFINE_SVC_DMA_EVENT(dma_map_page);
-> +DEFINE_SVC_DMA_EVENT(dma_unmap_page);
-> +
->  TRACE_EVENT(svcrdma_dma_map_rwctx,
->  	TP_PROTO(
->  		const struct svcxprt_rdma *rdma,
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> index 6fdba72..f3f1080 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> @@ -233,11 +233,15 @@ void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
->  	/* The first SGE contains the transport header, which
->  	 * remains mapped until @ctxt is destroyed.
->  	 */
-> -	for (i = 1; i < ctxt->sc_send_wr.num_sge; i++)
-> +	for (i = 1; i < ctxt->sc_send_wr.num_sge; i++) {
->  		ib_dma_unmap_page(device,
->  				  ctxt->sc_sges[i].addr,
->  				  ctxt->sc_sges[i].length,
->  				  DMA_TO_DEVICE);
-> +		trace_svcrdma_dma_unmap_page(rdma,
-> +					     ctxt->sc_sges[i].addr,
-> +					     ctxt->sc_sges[i].length);
-> +	}
->  
->  	for (i = 0; i < ctxt->sc_page_count; ++i)
->  		put_page(ctxt->sc_pages[i]);
-> @@ -490,6 +494,7 @@ static int svc_rdma_dma_map_page(struct svcxprt_rdma *rdma,
->  	dma_addr_t dma_addr;
->  
->  	dma_addr = ib_dma_map_page(dev, page, offset, len, DMA_TO_DEVICE);
-> +	trace_svcrdma_dma_map_page(rdma, dma_addr, len);
->  	if (ib_dma_mapping_error(dev, dma_addr))
->  		goto out_maperr;
->  
-> @@ -499,7 +504,6 @@ static int svc_rdma_dma_map_page(struct svcxprt_rdma *rdma,
->  	return 0;
->  
->  out_maperr:
-> -	trace_svcrdma_dma_map_page(rdma, page);
->  	return -EIO;
->  }
->  
+> -- 
+> Best regards, Tikhomirov Pavel
+> Software Developer, Virtuozzo.
