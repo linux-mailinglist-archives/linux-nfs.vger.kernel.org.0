@@ -2,130 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FA2BD01AF
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2019 21:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C79D01E2
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2019 22:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfJHTzW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Oct 2019 15:55:22 -0400
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:43748 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730763AbfJHTzV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Oct 2019 15:55:21 -0400
-Received: by mail-ed1-f53.google.com with SMTP id r9so16818901edl.10
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Oct 2019 12:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=aMQQgi7dIXVBnmVMSSMCLgb3oXTzeafbZdgWl2Y7dgh9d3yilS1+9yTnvWoS7+GzUk
-         LWbTYKnbDzuBJ3/U6U4a0Txwis4unkVKDohWYyBjnKYrTLghN7laSYeGp1/FcmznDyEO
-         GS9pgiMN+uT0qCjbihaa5wuvtHOM98vqOW8UVjJ7Cv+EprgLSNS8LJdhrjnJyNqQEN56
-         5sfOyU15h4kpoOXNgzNljIz5N8IZnpl4XHLYJYLCwvTOpHMRDfM3ywlgrk+4Qs+isMtv
-         bwWMXB9P8rpPXCaQx70qpw2S2sG0Q07XznOIe3PPQ9uFVdh7+iWMtRM+rtyrWFblwrYM
-         wXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=XswknPaPFUf/HLADbpWYFnhD1dYipN2imMEB969Au1vKhgLrYs3Gxfq35N1HREgvMZ
-         Xc8etUFw6FDzyIlL0tu6FbEvvtP1w7tD/cEGZ9KrCUNkjc+j7sfF16v8AjFdP3KZlLxj
-         6OubQ3a1HUtdibSUfgIj1FLud5HwmeMzoKeQonDoT82Ho11vLv3+VBj0PsUHnbW08mCb
-         BI+mcDZ6Tw2ci6PLlF4RDhMCFkqvXOpeElEpUIaddP4SH2hekB5V0JZ2R86T5GbAJ8te
-         D3+M9EI1kRt/j3TA2mvUnG/QJ0Ny19VIVPwuGlLNsLKf1iM3Q1Cpf70oRPQCZCCPCQZC
-         4hZg==
-X-Gm-Message-State: APjAAAURnTg/RuJpFtixiYFPz3UrJldTh9PJsXlpqM+nIrkaF5ydposU
-        ZAEZ2gn7QHPDyj1KWAc+2JojBmKgCJWL4kRwJj4=
-X-Google-Smtp-Source: APXvYqxaZfvXk0/G1PfPN40JEbEfue6b7v2Lk/SQWmnUxoxmnZyxXwpPNC4UPIh9mJw4kQ9atMHeHG1Orcb22TWXOSk=
-X-Received: by 2002:a50:c306:: with SMTP id a6mr36339639edb.108.1570564517490;
- Tue, 08 Oct 2019 12:55:17 -0700 (PDT)
+        id S1730218AbfJHUD6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Oct 2019 16:03:58 -0400
+Received: from fieldses.org ([173.255.197.46]:47282 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730101AbfJHUD5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:03:57 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BEB7C1C21; Tue,  8 Oct 2019 16:03:56 -0400 (EDT)
+Date:   Tue, 8 Oct 2019 16:03:56 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] svcrdma: Improve DMA mapping trace points
+Message-ID: <20191008200356.GA9151@fieldses.org>
+References: <20191004135745.2510.93924.stgit@manet.1015granger.net>
 MIME-Version: 1.0
-Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:16
- -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   MONEY GRAM <currency1000000@gmail.com>
-Date:   Tue, 8 Oct 2019 20:55:16 +0100
-Message-ID: <CAPqfnSEO==O6BEtBbcMMZfh3qcY4Bz0qndhCqbcLqZx4DCs44A@mail.gmail.com>
-Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004135745.2510.93924.stgit@manet.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
-M.T.C.N:78393135
+On Fri, Oct 04, 2019 at 09:58:20AM -0400, Chuck Lever wrote:
+> Capture the total size of Sends, the size of DMA map and the
+> matching DMA unmap to ensure operation is correct.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/trace/events/rpcrdma.h        |   30 +++++++++++++++++++++++-------
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c |    8 ++++++--
+>  2 files changed, 29 insertions(+), 9 deletions(-)
+> 
+> Hey Bruce-
+> 
+> Please consider this patch for v5.5. Thanks!
 
-Attn: Beneficiary,
+Applied, thanks!
 
-This is to inform you that the America Embassy office was instructed
-to transfer your fund $980,000.00 U.S Dollars compensating all the
-SCAM VICTIMS and your email was found as one of the VICTIMS. by
-America security leading team and America representative officers so
-between today the 8th of October till 1ST Of December 2019 you will
-be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
-that we have already sent the $6,000 dollars this morning to avoid
-cancellation of your payment, remain the total sum of $980,000.00.
+--b.
 
-You have only six hours to call this office upon the receipt of this
-email the maximum amount you will be receiving per a day starting from
-today's $6,000 and the Money Transfer Control Number of today is
-below.
-
-NOTE; The sent $6,000 is on hold because of the instruction from IMF
-office, they asked us to place it on hold by requesting the (Clean
-Bill Record Certificate) which will cost you $25 in order to fulfill
-all the necessary obligation to avoid any hitches while sending you
-the payment through MONEY GRAM money transfer, the necessary
-obligation I mean here is to obtain the (Clean Bill Record
-Certificate)
-
-Below is the information of today track it in our
-
-websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
-to see is available to pick up by the receiver, but if we didn't here
-from you soon we'll pickup it up from line for security reason to
-avoid hackers stealing the money online.
-
-Money Transfer Control Number M.T.C.N)::78393135
-SENDERS FIRST NAME: John
-SENDERS LAST NAME: Chun
-SENDERS COUNTRY...BENIN REPUBLIC
-TEXT QUESTION: A
-ANSWER: B
-AMOUNT: $6,000
-
-We need the below details from you, to enable us place the payment to
-your name and transfer the fund to you.
-
-(Full Receivers name)...................
-(You're Country)................................
-(Address)......................................
-(Phone NuMBER-...............................
-(You're Age)............................
-(OCCUPATION)..REAL ESTATE..................
-(A Copy of Your ID CARD).SEE ATTACHMENTS.............
-
-HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
-AND THAT IS ALL YOU HAVE TO DO ASAP.
-
-The payment will be sending to below information, such as:
-
-Receiver.............. ALAN UDE
-Country................Benin Republic
-Amount: ....................$25
-Question: .....................A
-Answer:................... B
-Sender...............Name:
-MTCN :..............
-
-According to the instruction and order we received from IMF the their
-requested $25 must be made directly to the above info's.
-
-Furthermore you are advised to call us as the instruction was passed
-that within 6hours without hearing from you, Count your payment
-canceled. Number to call is below listed manager director office of
-release order:
-DR.ALAN UDE
-Director MONEY GRAM-Benin
+> 
+> 
+> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+> index a138306..9dd7680 100644
+> --- a/include/trace/events/rpcrdma.h
+> +++ b/include/trace/events/rpcrdma.h
+> @@ -1498,31 +1498,47 @@
+>   ** Server-side RDMA API events
+>   **/
+>  
+> -TRACE_EVENT(svcrdma_dma_map_page,
+> +DECLARE_EVENT_CLASS(svcrdma_dma_map_class,
+>  	TP_PROTO(
+>  		const struct svcxprt_rdma *rdma,
+> -		const void *page
+> +		u64 dma_addr,
+> +		u32 length
+>  	),
+>  
+> -	TP_ARGS(rdma, page),
+> +	TP_ARGS(rdma, dma_addr, length),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const void *, page);
+> +		__field(u64, dma_addr)
+> +		__field(u32, length)
+>  		__string(device, rdma->sc_cm_id->device->name)
+>  		__string(addr, rdma->sc_xprt.xpt_remotebuf)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->page = page;
+> +		__entry->dma_addr = dma_addr;
+> +		__entry->length = length;
+>  		__assign_str(device, rdma->sc_cm_id->device->name);
+>  		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
+>  	),
+>  
+> -	TP_printk("addr=%s device=%s page=%p",
+> -		__get_str(addr), __get_str(device), __entry->page
+> +	TP_printk("addr=%s device=%s dma_addr=%llu length=%u",
+> +		__get_str(addr), __get_str(device),
+> +		__entry->dma_addr, __entry->length
+>  	)
+>  );
+>  
+> +#define DEFINE_SVC_DMA_EVENT(name)					\
+> +		DEFINE_EVENT(svcrdma_dma_map_class, svcrdma_##name,	\
+> +				TP_PROTO(				\
+> +					const struct svcxprt_rdma *rdma,\
+> +					u64 dma_addr,			\
+> +					u32 length			\
+> +				),					\
+> +				TP_ARGS(rdma, dma_addr, length))
+> +
+> +DEFINE_SVC_DMA_EVENT(dma_map_page);
+> +DEFINE_SVC_DMA_EVENT(dma_unmap_page);
+> +
+>  TRACE_EVENT(svcrdma_dma_map_rwctx,
+>  	TP_PROTO(
+>  		const struct svcxprt_rdma *rdma,
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+> index 6fdba72..f3f1080 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+> @@ -233,11 +233,15 @@ void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
+>  	/* The first SGE contains the transport header, which
+>  	 * remains mapped until @ctxt is destroyed.
+>  	 */
+> -	for (i = 1; i < ctxt->sc_send_wr.num_sge; i++)
+> +	for (i = 1; i < ctxt->sc_send_wr.num_sge; i++) {
+>  		ib_dma_unmap_page(device,
+>  				  ctxt->sc_sges[i].addr,
+>  				  ctxt->sc_sges[i].length,
+>  				  DMA_TO_DEVICE);
+> +		trace_svcrdma_dma_unmap_page(rdma,
+> +					     ctxt->sc_sges[i].addr,
+> +					     ctxt->sc_sges[i].length);
+> +	}
+>  
+>  	for (i = 0; i < ctxt->sc_page_count; ++i)
+>  		put_page(ctxt->sc_pages[i]);
+> @@ -490,6 +494,7 @@ static int svc_rdma_dma_map_page(struct svcxprt_rdma *rdma,
+>  	dma_addr_t dma_addr;
+>  
+>  	dma_addr = ib_dma_map_page(dev, page, offset, len, DMA_TO_DEVICE);
+> +	trace_svcrdma_dma_map_page(rdma, dma_addr, len);
+>  	if (ib_dma_mapping_error(dev, dma_addr))
+>  		goto out_maperr;
+>  
+> @@ -499,7 +504,6 @@ static int svc_rdma_dma_map_page(struct svcxprt_rdma *rdma,
+>  	return 0;
+>  
+>  out_maperr:
+> -	trace_svcrdma_dma_map_page(rdma, page);
+>  	return -EIO;
+>  }
+>  
