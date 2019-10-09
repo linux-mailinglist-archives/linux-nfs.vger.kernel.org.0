@@ -2,37 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 530CCD0393
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2019 00:51:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65933D06D3
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2019 07:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbfJHWvh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Oct 2019 18:51:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58532 "EHLO mx1.suse.de"
+        id S1730117AbfJIFPM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Oct 2019 01:15:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36042 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfJHWvh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:51:37 -0400
+        id S1730107AbfJIFPM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 9 Oct 2019 01:15:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 58E5AAE8B;
-        Tue,  8 Oct 2019 22:51:35 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 77EF4AD35
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Oct 2019 05:15:10 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Date:   Wed, 09 Oct 2019 09:51:23 +1100
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil F Brown <nfbrown@suse.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Vasiliy Averin <vvs@virtuozzo.com>
-Subject: Re: [PATCH] sunrpc: fix crash when cache_head become valid before update
-In-Reply-To: <20191008202332.GB9151@fieldses.org>
-References: <20191001080359.6034-1-ptikhomirov@virtuozzo.com> <3e455bb4-2a03-551e-6efb-1d41b5258327@virtuozzo.com> <20191008202332.GB9151@fieldses.org>
-Message-ID: <87wodergus.fsf@notabene.neil.brown.name>
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Wed, 09 Oct 2019 16:15:04 +1100
+Subject: NFSv4.1 backchannel xprt problems.
+Message-ID: <87tv8iqz3b.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -43,41 +30,71 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 08 2019,  J . Bruce Fields  wrote:
 
-> On Tue, Oct 08, 2019 at 10:02:53AM +0000, Pavel Tikhomirov wrote:
->> Add Neil to CC, sorry, had lost it somehow...
->
-> Always happy when we can fix a bug by deleting code, and your
-> explanation makes sense to me, but I'll give Neil a chance to look it
-> over if he wants.
+Hi,
+ I have a customer with a 4.12-based kernel who is experiencing memory
+ exhaustion.
 
-Yes, it makes sense to me.  But I'm not sure that is worth much.  The
-original fix got a Reviewed-by from me but was wrong.
- Acked-by: NeilBrown <neilb@suse.de>
+ There are over 100,000 rpc_rqst structures queue on sv_cb_list for
+ handing by the NFSv4 callback, which is idle.
 
-'Acked' is weaker than 'reviewed' - isn't it? :-)
+ The rpc_rqst.rq_xprt pointer points to freed memory.
 
+ I notice that that server code calls svc_xprt_get() on the xprt
+ before storing it in rq_xprt, but the client/backchannel code doesn't.
+
+ I'm wondering if the following might be useful.
+
+ I plan to explore the code a bit more tomorrow and if this  still seems
+ likely I get the customer to test this change, but I thought I would
+ ask here as well incase someone more knowledgeable can give me any
+ pointers.
+
+Thanks,
 NeilBrown
+
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index 339e8c077c2d..c95ca39688b6 100644
+=2D-- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -61,6 +61,7 @@ static void xprt_free_allocation(struct rpc_rqst *req)
+ 	free_page((unsigned long)xbufp->head[0].iov_base);
+ 	xbufp =3D &req->rq_snd_buf;
+ 	free_page((unsigned long)xbufp->head[0].iov_base);
++	xprt_put(req->rq_xprt);
+ 	kfree(req);
+ }
+=20
+@@ -85,7 +86,7 @@ struct rpc_rqst *xprt_alloc_bc_req(struct rpc_xprt *xprt,=
+ gfp_t gfp_flags)
+ 	if (req =3D=3D NULL)
+ 		return NULL;
+=20
+=2D	req->rq_xprt =3D xprt;
++	req->rq_xprt =3D xprt_get(xprt);
+ 	INIT_LIST_HEAD(&req->rq_bc_list);
+=20
+ 	/* Preallocate one XDR receive buffer */
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2dEusACgkQOeye3VZi
-gbnopA//SlaMhjk5SD0KTN4tOa1phmLsB+AQGBNeBjJ7F7JVNoqphvHbWqdp8uYG
-Uy1NulqZGk2MKQ7vDdUDR82S5Y8y5s3bf9UJnpfLYdSEg21m2qTqDFYlt1ldvKsE
-mO0tL9Dz/tAMu+a4OUyEGL7j/3c6/R/U1PFFzNXJKKzlKdfZaWV979BKMoEq+pep
-c9Qiibl6GBIGzbfUZ/mZy77qM5Lrw/mj56P9amfiSL2DdCY4vukray/KTvE4Vbfq
-4WcZ9AgFRayGa7EHlcVObz6Ut3ab46IR+uPG7Sl5VdNaDQRzSmES1cOGl5pK8K4J
-YHdAucVq877MG+/PEzVVhLx5OO3TqV5I+rpuKYiwUD963erdmMa3MAlZJftURubA
-nCIle/g3ngLQnnuu4Ui+kOqJDcABdniuyegSl0fDD2e1Vh+Aj0CXovtu3u/ORsm+
-klK4ndDG2G0ORTuDKrFlqaIVJQ0NrtGkokNWHY3/CPPfguFewId23KwuXfrd4GLm
-fdcCPAvufoGosLA9K1bF+hzBKGhAIwVg1KDmFN4rM1pNF3GfAUg+gWWqQlF7aPy3
-egPYUmrts3RzmuDTinLZ0eEfwNGq4k1B7iJj+1L4ejuZ9XtF7l0wWmCBaWmsoWA7
-1MvBIKLWjBswO64nsIFzz5nBuJkMezQ4n1VjBs4DVJJILTdlryI=
-=5YfV
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2dbNgACgkQOeye3VZi
+gblpuQ/+Jh/tGxTLEiHJ6lp/+VCA43b2eYub+wit/+mfvIE8Z+AidYilQhWRPHZr
+OV6bLCNv/1pOFkGwsilg2x3ZvtO0kxuk0Rj+9NUWPZuBtYB7oeOFFCLnvr5vt3eY
+KVrQ5czw4IKuGXtssl60ewamyLfAAjcF7Drbigvxe52NkPX2WkGOKPYvITSvOAWz
+271wEai4HvPOI27xVgZOX/ZY4REVr1r0F3o3e3mMi34vn0vWeQtfQ73KftrLFSjq
+WfGs5DvVNpugrOaDJTvou7r6+C4d3KBSIIPOQK90qYeA2cvbatMFM8d9+FzSv/vi
+aFe/NofIfgkVgeadNcGH88HgEvZmuOby6mBXxTscdoO/mVq1Qs5/d6nXxpkp6GTR
+ArNZ1KMtsQD0hAWiRNxPb6yT+oyaatucnRZ8rLQzRHQHo1rUZzUOqo8/v5R0ET1U
+/4u7HD1qSI2i1Fu1FMOikTzF0Hb3AMdjqx2FcNiQh4mwSMmhS+J2+x3L2bQln8v/
+4iBBbLSqfpQCpcsDQSY/LNuVn0VLCXlWZRUsNG0nA7afhcjzh/w/ihgRtwvb860O
+PV9vsZTTBNo8S2cFjf5yYw45VYAVDdSyzARH4/yBtf5+NtVcNnYCKIIjVSBv8+P3
+ZpNuhYURdmTJ+U6YCQkrzItT9nB3xKBK6XMO1e3qri8F5QFyV+A=
+=4Eno
 -----END PGP SIGNATURE-----
 --=-=-=--
