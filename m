@@ -2,57 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA417D14E7
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2019 19:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 864F3D14EA
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2019 19:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbfJIRHg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Oct 2019 13:07:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41887 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731173AbfJIRHg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Oct 2019 13:07:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id n26so6621550ioj.8;
-        Wed, 09 Oct 2019 10:07:34 -0700 (PDT)
+        id S1731878AbfJIRHl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Oct 2019 13:07:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44723 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731173AbfJIRHk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Oct 2019 13:07:40 -0400
+Received: by mail-io1-f68.google.com with SMTP id w12so6585326iol.11;
+        Wed, 09 Oct 2019 10:07:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=+2MlgiRc3Dhzscg9dsXGedOrjDQX3x+rEItIK/b1K2s=;
-        b=b4giwvtU9Mo9btJMUW6pRnhvkcbABjDHiSZGPqPEa04GurvT0dauoRNUdRzS0R1xVn
-         S7/n0zQhYuSoXI6CnF8cl2tiA6ZS4aF4cMOWHgfI7vRc2489PmbKO6oyRm8WvHNfFd+j
-         bpmVYxXkX1vEBQK423BTOhppXPDKMfVjxATfeJdeM0DK8szWO92xnkvZVmX2OVLBfF/p
-         7WdQYXL0Ad4omFemXCQFRBMAuI2Jpq4w7QQzCI5D3qn3kEYxV/p9jk7w11kyw5VTNjss
-         n4NZet7iD0eotWumR51jfcCN3cAxNDGnbWCo/UC3P5PQqmGPMPX4wIvAwlSewqN9DsZj
-         CppQ==
+        bh=AMNLq7xDZcAcz1zxL24cAbXH24gbHtJzkdtcWX5wkwk=;
+        b=otVlT0Wgqh717GMZ3JzErGI7RZrbUFSC+JDy+PIwvQTz/TZzsxItXFkQPrYGjJtVxe
+         p4WTwbzbOQUj8dz/sAckqukzLCxZmplFvcYDwt1tuXkOfNJODeqyYlGmZW0W8bTQzvTg
+         qO0lmY54WVE0azEdS/g+YJd4UnOb7Bkx3x534Dz9DW2KiOoTxjjAJ/ttk1L5IJZuqCfc
+         mWrQHQu966gDr0lElDipGJPONwtkonr74mZFvtnUAFTjpEyzDKZOUKr5cBjqYkSpTcO7
+         dKKPFREJf1a1TOPXTf9S40hJED6j3hsuAD7N0aCB/miyv+106ZfnvNYaFK5QRN5ee6dB
+         9ETQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=+2MlgiRc3Dhzscg9dsXGedOrjDQX3x+rEItIK/b1K2s=;
-        b=AhnJInq3GR9yr/ivTHF7Ipd+3QwuM0ibtxoYWvYoLo9xY9T7DJxLDWk8RY+IXGl2IM
-         8trlaYM8RPsfdt1hehzgixmlzOmT8kONrUSxjwNY8FNPSfI7TO4w93GV+9QnsHnkxwCS
-         sZAYPSlIwn6YmOC6gEJZwxF4GmhIolJdtNhs3iXHjTpcTDGe8VpOVx5NEGubYrMFbBhy
-         U6OtKbmXuYfVuKJSWFucHmwyljJ0sJ1yPTNJ6xaVvaG6iBIVPnqTQU3qk43bNQ5X6bIE
-         MP6D27piXKMRke55bQKZ901VIY/JvrAhDB+kheGYyGxGrqnmeIfOtKzivZVQJmbiGDBh
-         2LOw==
-X-Gm-Message-State: APjAAAVfp64aogRaeWsV6U19ese1kpmE/Gipeg143AeQPeWEIGX22cia
-        qGIjUvLgJBUs4uFG3DAr3dFziy1z
-X-Google-Smtp-Source: APXvYqz0kCITGHU0cyilHwZ+C6iFwZQHpHZBOjN60Edtz8uPApSnqa9m+AxINW1qefu+V1bIrBMgjQ==
-X-Received: by 2002:a6b:b54c:: with SMTP id e73mr4594933iof.259.1570640853790;
-        Wed, 09 Oct 2019 10:07:33 -0700 (PDT)
+        bh=AMNLq7xDZcAcz1zxL24cAbXH24gbHtJzkdtcWX5wkwk=;
+        b=ZO+kN/nQuM0K/NGEBuFoVvFGU3J+4DJp9DoSQFTy3gixbvLOgYk0ZHMT1jd8AMzrKy
+         THVhk2o2lneddrV6ZEQRi4DdQxw/DzrWkRBNKAT6fhulJZDJzwBGRlJPEVVKccIdtcxy
+         DYKEF1DGHTboL9B0bWqj2wDUQglYOBNIuwc+H/JtJ/y5i0op81HamuBJs0MknPwUIWLh
+         K+5Y2Ftc3yiUcHjxfaTXOj8ojItC93doi6SU0plzrM6D883JAa5k6TWMCwwONHQH6K3V
+         k3jl4oM+dPOyo/QXqyXKtYmJRLCpUeq82Mkyim7o3ETD8Cq+fy+0cSofxxUiuiaBkMll
+         GuWg==
+X-Gm-Message-State: APjAAAWfI5PNYOydl/ytxbJbFmKNTjDfMPajoWU8pIYBjPGR1+gSbGPU
+        Qy/2CvUaByIt8PJxFexMjwT1+LHi
+X-Google-Smtp-Source: APXvYqwKfSl7HszFNYPsHuySKtiitMXcfbVEAasUUYIdpTzaPFOPTvBIqKR+72bgg6dtCP/NmMGcWQ==
+X-Received: by 2002:a5e:9410:: with SMTP id q16mr59429ioj.302.1570640859216;
+        Wed, 09 Oct 2019 10:07:39 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id a25sm1096357iod.62.2019.10.09.10.07.33
+        by smtp.gmail.com with ESMTPSA id q3sm1229051ioi.68.2019.10.09.10.07.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 10:07:33 -0700 (PDT)
+        Wed, 09 Oct 2019 10:07:38 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x99H7WE2001495;
-        Wed, 9 Oct 2019 17:07:32 GMT
-Subject: [PATCH v1 3/6] xprtrdma: Initialize rb_credits in one place
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x99H7ccM001498;
+        Wed, 9 Oct 2019 17:07:38 GMT
+Subject: [PATCH v1 4/6] xprtrdma: Close window between waking RPC senders
+ and posting Receives
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Wed, 09 Oct 2019 13:07:32 -0400
-Message-ID: <20191009170732.2978.21414.stgit@manet.1015granger.net>
+Date:   Wed, 09 Oct 2019 13:07:38 -0400
+Message-ID: <20191009170737.2978.4060.stgit@manet.1015granger.net>
 In-Reply-To: <20191009170721.2978.128.stgit@manet.1015granger.net>
 References: <20191009170721.2978.128.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -64,131 +65,88 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up/code de-duplication.
+A recent clean up attempted to separate Receive handling and RPC
+Reply processing, in the name of clean layering.
 
-Nit: RPC_CWNDSHIFT is incorrect as the initial value for xprt->cwnd.
-This mistake does not appear to have operational consequences, since
-the cwnd value is replaced with a valid value upon the first Receive
-completion.
+Unfortunately, we can't do this because the Receive Queue has to be
+refilled _after_ the most recent credit update from the responder
+is parsed from the transport header, but _before_ we wake up the
+next RPC sender. That is right in the middle of
+rpcrdma_reply_handler().
 
+Usually this isn't a problem because current responder
+implementations don't vary their credit grant. The one exception is
+when a connection is established: the grant goes from one to a much
+larger number on the first Receive. The requester MUST post enough
+Receives right then so that any outstanding requests can be sent
+without risking RNR and connection loss.
+
+Fixes: 6ceea36890a0 ("xprtrdma: Refactor Receive accounting")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c  |   42 +++++++++++++++++++++++++++++++++------
- net/sunrpc/xprtrdma/transport.c |    9 --------
- net/sunrpc/xprtrdma/verbs.c     |    2 +-
+ net/sunrpc/xprtrdma/rpc_rdma.c  |    1 +
+ net/sunrpc/xprtrdma/verbs.c     |   11 +++++++----
  net/sunrpc/xprtrdma/xprt_rdma.h |    1 +
- 4 files changed, 38 insertions(+), 16 deletions(-)
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index b86b5fd..f1e3639 100644
+index f1e3639..7c125e6 100644
 --- a/net/sunrpc/xprtrdma/rpc_rdma.c
 +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -916,6 +916,40 @@ static bool rpcrdma_prepare_msg_sges(struct rpcrdma_xprt *r_xprt,
- 	return ret;
- }
- 
-+static void __rpcrdma_update_cwnd_locked(struct rpc_xprt *xprt,
-+					 struct rpcrdma_buffer *buf,
-+					 u32 grant)
-+{
-+	buf->rb_credits = grant;
-+	xprt->cwnd = grant << RPC_CWNDSHIFT;
-+}
-+
-+static void rpcrdma_update_cwnd(struct rpcrdma_xprt *r_xprt, u32 grant)
-+{
-+	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
-+
-+	spin_lock(&xprt->transport_lock);
-+	__rpcrdma_update_cwnd_locked(xprt, &r_xprt->rx_buf, grant);
-+	spin_unlock(&xprt->transport_lock);
-+}
-+
-+/**
-+ * rpcrdma_reset_cwnd - Reset the xprt's congestion window
-+ * @r_xprt: controlling transport instance
-+ *
-+ * Prepare @r_xprt for the next connection by reinitializing
-+ * its credit grant to one (see RFC 8166, Section 3.3.3).
-+ */
-+void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt)
-+{
-+	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
-+
-+	spin_lock(&xprt->transport_lock);
-+	xprt->cong = 0;
-+	__rpcrdma_update_cwnd_locked(xprt, &r_xprt->rx_buf, 1);
-+	spin_unlock(&xprt->transport_lock);
-+}
-+
- /**
-  * rpcrdma_inline_fixup - Scatter inline received data into rqst's iovecs
-  * @rqst: controlling RPC request
-@@ -1356,12 +1390,8 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
- 		credits = 1;	/* don't deadlock */
- 	else if (credits > buf->rb_max_requests)
+@@ -1392,6 +1392,7 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
  		credits = buf->rb_max_requests;
--	if (buf->rb_credits != credits) {
--		spin_lock(&xprt->transport_lock);
--		buf->rb_credits = credits;
--		xprt->cwnd = credits << RPC_CWNDSHIFT;
--		spin_unlock(&xprt->transport_lock);
--	}
-+	if (buf->rb_credits != credits)
-+		rpcrdma_update_cwnd(r_xprt, credits);
+ 	if (buf->rb_credits != credits)
+ 		rpcrdma_update_cwnd(r_xprt, credits);
++	rpcrdma_post_recvs(r_xprt, false);
  
  	req = rpcr_to_rdmar(rqst);
  	if (req->rl_reply) {
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index c67d465..0711308 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -425,15 +425,6 @@ void xprt_rdma_close(struct rpc_xprt *xprt)
- 		return;
- 	rpcrdma_ep_disconnect(ep, ia);
- 
--	/* Prepare @xprt for the next connection by reinitializing
--	 * its credit grant to one (see RFC 8166, Section 3.3.3).
--	 */
--	spin_lock(&xprt->transport_lock);
--	r_xprt->rx_buf.rb_credits = 1;
--	xprt->cong = 0;
--	xprt->cwnd = RPC_CWNDSHIFT;
--	spin_unlock(&xprt->transport_lock);
--
- out:
- 	xprt->reestablish_timeout = 0;
- 	++xprt->connect_cookie;
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index f4b1365..97bc15e 100644
+index 97bc15e..3a1a31c 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -727,6 +727,7 @@ static int rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt,
- 	ep->rep_connected = 0;
- 	xprt_clear_connected(xprt);
+@@ -85,7 +85,6 @@
+ 		     gfp_t flags);
+ static void rpcrdma_regbuf_dma_unmap(struct rpcrdma_regbuf *rb);
+ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb);
+-static void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp);
  
-+	rpcrdma_reset_cwnd(r_xprt);
- 	rpcrdma_post_recvs(r_xprt, true);
+ /* Wait for outstanding transport work to finish. ib_drain_qp
+  * handles the drains in the wrong order for us, so open code
+@@ -171,7 +170,6 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
+ 				   rdmab_addr(rep->rr_rdmabuf),
+ 				   wc->byte_len, DMA_FROM_DEVICE);
  
- 	rc = rdma_connect(ia->ri_id, &ep->rep_remote_cma);
-@@ -1163,7 +1164,6 @@ int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
- 		list_add(&req->rl_list, &buf->rb_send_bufs);
- 	}
+-	rpcrdma_post_recvs(r_xprt, false);
+ 	rpcrdma_reply_handler(rep);
+ 	return;
  
--	buf->rb_credits = 1;
- 	init_llist_head(&buf->rb_free_reps);
+@@ -1477,8 +1475,13 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 	return 0;
+ }
  
- 	rc = rpcrdma_sendctxs_create(r_xprt);
+-static void
+-rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
++/**
++ * rpcrdma_post_recvs - Refill the Receive Queue
++ * @r_xprt: controlling transport instance
++ * @temp: mark Receive buffers to be deleted after use
++ *
++ */
++void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
+ {
+ 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
 diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 65e6b0e..b170cf5 100644
+index b170cf5..2f89cfc 100644
 --- a/net/sunrpc/xprtrdma/xprt_rdma.h
 +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -576,6 +576,7 @@ int rpcrdma_prepare_send_sges(struct rpcrdma_xprt *r_xprt,
- void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc);
- int rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst);
- void rpcrdma_set_max_header_sizes(struct rpcrdma_xprt *);
-+void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt);
- void rpcrdma_complete_rqst(struct rpcrdma_rep *rep);
- void rpcrdma_reply_handler(struct rpcrdma_rep *rep);
+@@ -474,6 +474,7 @@ struct rpcrdma_xprt {
  
+ int rpcrdma_ep_post(struct rpcrdma_ia *, struct rpcrdma_ep *,
+ 				struct rpcrdma_req *);
++void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp);
+ 
+ /*
+  * Buffer calls - xprtrdma/verbs.c
 
