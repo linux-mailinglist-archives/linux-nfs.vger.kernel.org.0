@@ -2,169 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 452C2D3C92
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 11:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFDCFD4289
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 16:16:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfJKJnC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Oct 2019 05:43:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44603 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJnC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Oct 2019 05:43:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q15so4205580pll.11
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2019 02:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5pr4A0aeEXs2QDx84SWPk1tfkOk1t+EeOP5HxeEIp/g=;
-        b=CagmAsG1uTrir6P0c9MCPGScKIHsTUvSPq5gjcuVs6hIUiBTftXVejrnUQxUabwLrM
-         pvQU2tS6+r9X6YWP+uadX/+xvnxfyMmbMbm769Cn214Z0E6TQGhg1vyS743eBktJnc67
-         C9W1nZNxPcjU/elfcjmOSpBQ9HQ2dvUYbecwmuG0NGbA47Zpg8tGdznY+MVADoqXEHQI
-         P7INVot7xe9S5PPds+7Tf3tmHh4qOwBsLE03lYt90RUfetrqDnkwfJmssfFEnD6L+30x
-         1v7znBO2ExbbRRuRGhysaPdfiFmE3SnUHJKDEu0j/ayTIEciOM80svYbdzxbpqKJNMzZ
-         Lumg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5pr4A0aeEXs2QDx84SWPk1tfkOk1t+EeOP5HxeEIp/g=;
-        b=SS4pFfyGDfbSa3ju5ByOAiOSHjDRtw6QAI7cv8ueJieh9WJcFlly0/t8wzm/972tRz
-         wW2fDTw1aimjus+C6SXANWeN199ali6ISz9KVkEzJ+0ZRMARujzgt/thwV/WOVgX0Sim
-         qPSWA3BxVXSsiVZjcsBXwFNLdW1/4qECUa12cgztWJfHUZ/9Rc8XdT4xM6Oc6Q/WKm6g
-         1BpC83Z8YKMeLo655CvBcHubLbO54YSRskGTIUu+P3EQizQT3WxY9wxSRLtUYEi6gcOE
-         Agn7Ta451O6ZNy1X2QER3+3tj9aE6uYlxmHbRqHyMI1XUvKg/7X1czrRpr0LVkkZIkLF
-         b1EA==
-X-Gm-Message-State: APjAAAU/657XQ+34VBiJzGZxBaFJTkmpC4ZiVE9VUGsLX3qlSRZQInHI
-        Rz3+S6eElKajL7MaRdZcCO8=
-X-Google-Smtp-Source: APXvYqxLPHI4uBqNFoQFDnsrzvFTIJOnB2p8B9xMXKwUy3NMOo/hjyquaBVFPY99dRTJbRcJOqwBjw==
-X-Received: by 2002:a17:902:76ca:: with SMTP id j10mr13386862plt.51.1570786981503;
-        Fri, 11 Oct 2019 02:43:01 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id c8sm12061586pfi.117.2019.10.11.02.43.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 02:43:00 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 17:42:53 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@gmail.com>
+        id S1728084AbfJKOQd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Oct 2019 10:16:33 -0400
+Received: from mail-eopbgr800115.outbound.protection.outlook.com ([40.107.80.115]:2669
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728151AbfJKOQd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:16:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hSwUawacGuHTI2L81pl+l6dtUZLptm69zB9qfkNFFkdiWmZdgC2D2InL95w26mBua4Zsy5GtfCJ79nyF6jDKTfTUCDrxSO4woNyDcC3DHPsE1D0w8zbN4AjXqbjHfM4Vdv5envjpfU8vYfN7MlCI+XB8ihn7XOqWubQKYrks/hkyQ0KSd0yi0oSbGQVWTmozCloM6OsTkgA/L+pZKtdIEicegwYB18cBn3IktDLyVFzEpbldBetrNeZAjAkz2MOsO96NZN+pViIYfAsiXB5lMCB9eHYjiYAwdbU+bI74l8OirsGvE04UiwIb2XeOtET8pfZEF6P5ByoWO7WhoIsPKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JBOOQnsTXCfENEtBDxQkNx+MR/0XHcS0TywGfbGO+Pk=;
+ b=no4rcuSPkCAMWEpfxEJt8tNMoj124ZKxozaemiIxRyF526X9KnDQiuBlHY0thOotcKOKANevIsvNr3Zqa7gGAdP2+FYMOyQU0GEhU8AH60wfPaoMzBUfL0A9JQVmKSZE+Qd2cQM6iB1cY69IyjBFNGm3RM9GXzgJtsFFoQuSyBKVjFarOL+dZ4tQ3pe1ZNI+/FW26zL+fxbGXfTfH+urPODE4PXebgbzxYy2rmC1WE8bAVaZFwaR9u+ADdAiWTaZsR5GD8Izgs3Nxu6FFcJ65E0AGEmW49SKLzS64dmt4Qkt0YUuhVZ8irfwXwC09bJCLLvUFgnI2f4/qrZQ5XP9IA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JBOOQnsTXCfENEtBDxQkNx+MR/0XHcS0TywGfbGO+Pk=;
+ b=APOw2f1ZtwfWnG1OFUwtouFePslbS1uIBRTrDD6gDJoi0+fkjS6ovOfxkeb06VPgOZOxAxvzC5wC2o9ny3UFKQnnHM5qDvo6srAU5a9QfFTHiuWGUZ4POnJl0607oeXbsxnI7I14Bd00VnznqVAs3vgi4aMcBsicibt9S5EhJuc=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB0971.namprd13.prod.outlook.com (10.168.238.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.10; Fri, 11 Oct 2019 14:14:49 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::d1be:764d:9347:764e]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::d1be:764d:9347:764e%10]) with mapi id 15.20.2347.021; Fri, 11 Oct
+ 2019 14:14:49 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
-Message-ID: <20191011094253.yjwncvqv4cnq7wpn@xzhoux.usersys.redhat.com>
+Thread-Topic: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with
+ OPEN
+Thread-Index: AQHVfz4Dej3IfeNfekKrfX0XpGLKm6dT9I4AgAEudQCAAFr6gA==
+Date:   Fri, 11 Oct 2019 14:14:49 +0000
+Message-ID: <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com>
 References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
- <CAN-5tyGKNFsxQHne4hFhON1VRZzCkUjwFMX3ZuzfLASgEN0pMw@mail.gmail.com>
+         <f81d80f09c59d78c32fddd535b5604bc05c2a2b5.camel@hammerspace.com>
+         <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
+In-Reply-To: <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 74f6cce6-430f-4787-4dbd-08d74e5560ae
+x-ms-traffictypediagnostic: DM5PR13MB0971:
+x-microsoft-antispam-prvs: <DM5PR13MB09710540EFF7CA48F40B08BEB8970@DM5PR13MB0971.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(376002)(39840400004)(396003)(346002)(51914003)(189003)(199004)(66066001)(86362001)(14454004)(478600001)(2351001)(2501003)(118296001)(6916009)(81166006)(81156014)(71190400001)(8936002)(4001150100001)(8676002)(305945005)(7736002)(2906002)(3846002)(6116002)(71200400001)(66946007)(66476007)(66556008)(64756008)(66446008)(25786009)(14444005)(102836004)(6506007)(6512007)(229853002)(36756003)(6246003)(6436002)(5640700003)(76116006)(99286004)(6486002)(4326008)(76176011)(5660300002)(91956017)(316002)(1361003)(446003)(26005)(186003)(11346002)(476003)(2616005)(256004)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB0971;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +2sjdtwcLe4IpGhDdY6DA/rTA7p8FwZB4xJGqPuyRy4osCronnKPHBT/ZcA1XUBOUwrFcIP9OXC+yGNDfm1v2mi7Aaa+JRlqpmaNS3yuSaoFSFVrVvzSU9Pk27It+geutJHrnN9MNR8XvhHqtP7lFHQbwbdr7EIdTwMHS3kcJqCsnHJzfIozAd5oi8YIHxX4THPso+ATdvimFFGzyjjBDcxbGvwulkffdc55L7RMmQN1pghfHmITpnZPSbdu/8ppuXVWbG8+tzOG+cJxeNRzbdHyOHrRuNEiUTJrthtW3daAqNaJFxQQYJRm4nWHkmD3DpeciKbXOY/1JM31vkaC2IdkLNusnNkWWaxFVDy1Y4If4ywyUp/psd3r3DPrAPa77mlmcMuRIgOWRTL+N99kdf8QLLC6HOGCSwfuxmxmhV4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9AED17F730CE3445945D1D220D89C9DF@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyGKNFsxQHne4hFhON1VRZzCkUjwFMX3ZuzfLASgEN0pMw@mail.gmail.com>
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74f6cce6-430f-4787-4dbd-08d74e5560ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 14:14:49.6187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B0HK6Oq59M3EPltTySd0SeZPiArzpE1Mh3nuiXhDfaxptN3jwplDgukJusQvl2JOp7ztwl+mSzAsR6x7fIZXJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB0971
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 01:32:50PM -0400, Olga Kornievskaia wrote:
-> On Thu, Oct 10, 2019 at 3:42 AM Murphy Zhou <jencce.kernel@gmail.com> wrote:
-> >
-> > Since commit:
-> >   [0e0cb35] NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE
-> >
-> > xfstests generic/168 on v4.2 starts to fail because reflink call gets:
-> >   +XFS_IOC_CLONE_RANGE: Resource temporarily unavailable
-> 
-> I don't believe this failure has to do with getting ERR_OLD_STATEID on
-> the CLOSE. What you see on the network trace is expected as the client
-> in parallel sends OPEN/CLOSE thus server will fail the CLOSE with the
-> ERR_OLD_STATEID since it already updated its stateid for the OPEN.
-> 
-> > In tshark output, NFS4ERR_OLD_STATEID stands out when comparing with
-> > good ones:
-> >
-> >  5210   NFS 406 V4 Reply (Call In 5209) OPEN StateID: 0xadb5
-> >  5211   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> >  5212   NFS 250 V4 Reply (Call In 5211) GETATTR
-> >  5213   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> >  5214   NFS 250 V4 Reply (Call In 5213) GETATTR
-> >  5216   NFS 422 V4 Call WRITE StateID: 0xa818 Offset: 851968 Len: 65536
-> >  5218   NFS 266 V4 Reply (Call In 5216) WRITE
-> >  5219   NFS 382 V4 Call OPEN DH: 0x8d44a6b1/
-> >  5220   NFS 338 V4 Call CLOSE StateID: 0xadb5
-> >  5222   NFS 406 V4 Reply (Call In 5219) OPEN StateID: 0xa342
-> >  5223   NFS 250 V4 Reply (Call In 5220) CLOSE Status: NFS4ERR_OLD_STATEID
-> >  5225   NFS 338 V4 Call CLOSE StateID: 0xa342
-> >  5226   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> >  5227   NFS 266 V4 Reply (Call In 5225) CLOSE
-> >  5228   NFS 250 V4 Reply (Call In 5226) GETATTR
-> 
-> "resource temporarily unavailable" is more likely to do with ulimit limits.
-> 
-> I also saw the same error. After I increased the ulimit for the stack
-> size, the problem went away. There might still be a problem somewhere
-> in the kernel.
-
-Do you mean ulimit -s ? I set it to 'unlimited' and still can reproduce
-this.
-
-Thanks,
-M
-> 
-> Trond, is it possible that we have too many CLOSE recovery on the
-> stack that's eating up stack space?
-> 
-> > It's easy to reproduce. By printing some logs, found that we are making
-> > CLOSE seqid larger then OPEN seqid when racing.
-> >
-> > Fix this by not bumping seqid when it's equal to OPEN seqid. Also
-> > put the whole changing process into seqlock read protection in case
-> > really bad luck, and this is the same locking behavior with the
-> > old deleted function.
-> >
-> > Fixes: 0e0cb35b417f ("NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE")
-> > Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 11eafcf..6db5a09 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -3334,12 +3334,13 @@ static void nfs4_sync_open_stateid(nfs4_stateid *dst,
-> >                         break;
-> >                 }
-> >                 seqid_open = state->open_stateid.seqid;
-> > -               if (read_seqretry(&state->seqlock, seq))
-> > -                       continue;
-> >
-> >                 dst_seqid = be32_to_cpu(dst->seqid);
-> >                 if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) < 0)
-> >                         dst->seqid = seqid_open;
-> > +
-> > +               if (read_seqretry(&state->seqlock, seq))
-> > +                       continue;
-> >                 break;
-> >         }
-> >  }
-> > @@ -3367,14 +3368,16 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
-> >                         break;
-> >                 }
-> >                 seqid_open = state->open_stateid.seqid;
-> > -               if (read_seqretry(&state->seqlock, seq))
-> > -                       continue;
-> >
-> >                 dst_seqid = be32_to_cpu(dst->seqid);
-> > -               if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) >= 0)
-> > +               if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) > 0)
-> >                         dst->seqid = cpu_to_be32(dst_seqid + 1);
-> >                 else
-> >                         dst->seqid = seqid_open;
-> > +
-> > +               if (read_seqretry(&state->seqlock, seq))
-> > +                       continue;
-> > +
-> >                 ret = true;
-> >                 break;
-> >         }
-> > --
-> > 1.8.3.1
-> >
+T24gRnJpLCAyMDE5LTEwLTExIGF0IDE2OjQ5ICswODAwLCBNdXJwaHkgWmhvdSB3cm90ZToNCj4g
+T24gVGh1LCBPY3QgMTAsIDIwMTkgYXQgMDI6NDY6NDBQTSArMDAwMCwgVHJvbmQgTXlrbGVidXN0
+IHdyb3RlOg0KPiA+IE9uIFRodSwgMjAxOS0xMC0xMCBhdCAxNTo0MCArMDgwMCwgTXVycGh5IFpo
+b3Ugd3JvdGU6DQo+ID4gPiBTaW5jZSBjb21taXQ6DQo+ID4gPiAgIFswZTBjYjM1XSBORlN2NDog
+SGFuZGxlIE5GUzRFUlJfT0xEX1NUQVRFSUQgaW4NCj4gPiA+IENMT1NFL09QRU5fRE9XTkdSQURF
+DQo+ID4gPiANCj4gPiA+IHhmc3Rlc3RzIGdlbmVyaWMvMTY4IG9uIHY0LjIgc3RhcnRzIHRvIGZh
+aWwgYmVjYXVzZSByZWZsaW5rIGNhbGwNCj4gPiA+IGdldHM6DQo+ID4gPiAgICtYRlNfSU9DX0NM
+T05FX1JBTkdFOiBSZXNvdXJjZSB0ZW1wb3JhcmlseSB1bmF2YWlsYWJsZQ0KPiA+ID4gDQo+ID4g
+PiBJbiB0c2hhcmsgb3V0cHV0LCBORlM0RVJSX09MRF9TVEFURUlEIHN0YW5kcyBvdXQgd2hlbiBj
+b21wYXJpbmcNCj4gPiA+IHdpdGgNCj4gPiA+IGdvb2Qgb25lczoNCj4gPiA+IA0KPiA+ID4gIDUy
+MTAgICBORlMgNDA2IFY0IFJlcGx5IChDYWxsIEluIDUyMDkpIE9QRU4gU3RhdGVJRDogMHhhZGI1
+DQo+ID4gPiAgNTIxMSAgIE5GUyAzMTQgVjQgQ2FsbCBHRVRBVFRSIEZIOiAweDhkNDRhNmIxDQo+
+ID4gPiAgNTIxMiAgIE5GUyAyNTAgVjQgUmVwbHkgKENhbGwgSW4gNTIxMSkgR0VUQVRUUg0KPiA+
+ID4gIDUyMTMgICBORlMgMzE0IFY0IENhbGwgR0VUQVRUUiBGSDogMHg4ZDQ0YTZiMQ0KPiA+ID4g
+IDUyMTQgICBORlMgMjUwIFY0IFJlcGx5IChDYWxsIEluIDUyMTMpIEdFVEFUVFINCj4gPiA+ICA1
+MjE2ICAgTkZTIDQyMiBWNCBDYWxsIFdSSVRFIFN0YXRlSUQ6IDB4YTgxOCBPZmZzZXQ6IDg1MTk2
+OCBMZW46DQo+ID4gPiA2NTUzNg0KPiA+ID4gIDUyMTggICBORlMgMjY2IFY0IFJlcGx5IChDYWxs
+IEluIDUyMTYpIFdSSVRFDQo+ID4gPiAgNTIxOSAgIE5GUyAzODIgVjQgQ2FsbCBPUEVOIERIOiAw
+eDhkNDRhNmIxLw0KPiA+ID4gIDUyMjAgICBORlMgMzM4IFY0IENhbGwgQ0xPU0UgU3RhdGVJRDog
+MHhhZGI1DQo+ID4gPiAgNTIyMiAgIE5GUyA0MDYgVjQgUmVwbHkgKENhbGwgSW4gNTIxOSkgT1BF
+TiBTdGF0ZUlEOiAweGEzNDINCj4gPiA+ICA1MjIzICAgTkZTIDI1MCBWNCBSZXBseSAoQ2FsbCBJ
+biA1MjIwKSBDTE9TRSBTdGF0dXM6DQo+ID4gPiBORlM0RVJSX09MRF9TVEFURUlEDQo+ID4gPiAg
+NTIyNSAgIE5GUyAzMzggVjQgQ2FsbCBDTE9TRSBTdGF0ZUlEOiAweGEzNDINCj4gPiA+ICA1MjI2
+ICAgTkZTIDMxNCBWNCBDYWxsIEdFVEFUVFIgRkg6IDB4OGQ0NGE2YjENCj4gPiA+ICA1MjI3ICAg
+TkZTIDI2NiBWNCBSZXBseSAoQ2FsbCBJbiA1MjI1KSBDTE9TRQ0KPiA+ID4gIDUyMjggICBORlMg
+MjUwIFY0IFJlcGx5IChDYWxsIEluIDUyMjYpIEdFVEFUVFINCj4gPiA+IA0KPiA+ID4gSXQncyBl
+YXN5IHRvIHJlcHJvZHVjZS4gQnkgcHJpbnRpbmcgc29tZSBsb2dzLCBmb3VuZCB0aGF0IHdlIGFy
+ZQ0KPiA+ID4gbWFraW5nDQo+ID4gPiBDTE9TRSBzZXFpZCBsYXJnZXIgdGhlbiBPUEVOIHNlcWlk
+IHdoZW4gcmFjaW5nLg0KPiA+ID4gDQo+ID4gPiBGaXggdGhpcyBieSBub3QgYnVtcGluZyBzZXFp
+ZCB3aGVuIGl0J3MgZXF1YWwgdG8gT1BFTiBzZXFpZC4gQWxzbw0KPiA+ID4gcHV0IHRoZSB3aG9s
+ZSBjaGFuZ2luZyBwcm9jZXNzIGludG8gc2VxbG9jayByZWFkIHByb3RlY3Rpb24gaW4NCj4gPiA+
+IGNhc2UNCj4gPiA+IHJlYWxseSBiYWQgbHVjaywgYW5kIHRoaXMgaXMgdGhlIHNhbWUgbG9ja2lu
+ZyBiZWhhdmlvciB3aXRoIHRoZQ0KPiA+ID4gb2xkIGRlbGV0ZWQgZnVuY3Rpb24uDQo+ID4gPiAN
+Cj4gPiA+IEZpeGVzOiAwZTBjYjM1YjQxN2YgKCJORlN2NDogSGFuZGxlIE5GUzRFUlJfT0xEX1NU
+QVRFSUQgaW4NCj4gPiA+IENMT1NFL09QRU5fRE9XTkdSQURFIikNCj4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IE11cnBoeSBaaG91IDxqZW5jY2Uua2VybmVsQGdtYWlsLmNvbT4NCj4gPiA+IC0tLQ0KPiA+
+ID4gIGZzL25mcy9uZnM0cHJvYy5jIHwgMTMgKysrKysrKystLS0tLQ0KPiA+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4gPiANCj4gPiA+IGRp
+ZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4gPiBp
+bmRleCAxMWVhZmNmLi42ZGI1YTA5IDEwMDY0NA0KPiA+ID4gLS0tIGEvZnMvbmZzL25mczRwcm9j
+LmMNCj4gPiA+ICsrKyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4gPiBAQCAtMzMzNCwxMiArMzMz
+NCwxMyBAQCBzdGF0aWMgdm9pZA0KPiA+ID4gbmZzNF9zeW5jX29wZW5fc3RhdGVpZChuZnM0X3N0
+YXRlaWQgKmRzdCwNCj4gPiA+ICAJCQlicmVhazsNCj4gPiA+ICAJCX0NCj4gPiA+ICAJCXNlcWlk
+X29wZW4gPSBzdGF0ZS0+b3Blbl9zdGF0ZWlkLnNlcWlkOw0KPiA+ID4gLQkJaWYgKHJlYWRfc2Vx
+cmV0cnkoJnN0YXRlLT5zZXFsb2NrLCBzZXEpKQ0KPiA+ID4gLQkJCWNvbnRpbnVlOw0KPiA+ID4g
+IA0KPiA+ID4gIAkJZHN0X3NlcWlkID0gYmUzMl90b19jcHUoZHN0LT5zZXFpZCk7DQo+ID4gPiAg
+CQlpZiAoKHMzMikoZHN0X3NlcWlkIC0gYmUzMl90b19jcHUoc2VxaWRfb3BlbikpIDwgMCkNCj4g
+PiA+ICAJCQlkc3QtPnNlcWlkID0gc2VxaWRfb3BlbjsNCj4gPiA+ICsNCj4gPiA+ICsJCWlmIChy
+ZWFkX3NlcXJldHJ5KCZzdGF0ZS0+c2VxbG9jaywgc2VxKSkNCj4gPiA+ICsJCQljb250aW51ZTsN
+Cj4gPiANCj4gPiBXaGF0J3MgdGhlIGludGVudGlvbiBvZiB0aGlzIGNoYW5nZT8gTmVpdGhlciBk
+c3Rfc2VxaWQgbm9yIGRzdC0NCj4gPiA+c2VxaWQNCj4gPiBhcmUgcHJvdGVjdGVkIGJ5IHRoZSBz
+dGF0ZS0+c2VxbG9jayBzbyB3aHkgbW92ZSB0aGlzIGNvZGUgdW5kZXIgdGhlDQo+ID4gbG9jay4N
+Cj4gDQo+IEJlY2F1c2Ugc2VxaWRfb3BlbiBjb3VsZCBoYXZlIGNoYW5nZWQgd2hlbiB3cml0aW5n
+IHRvIGRzdC0+c2VxaWQgPw0KPiANCj4gVGhlIG9sZCBuZnM0X3JlZnJlc2hfb3Blbl9zdGF0ZWlk
+IGZ1bmN0aW9uIHB1dCB0aGUgd3JpdGluZyB1bmRlciB0aGUNCj4gbG9jay4NCg0KVGhlIHZhbHVl
+IG9mIHN0YXRlLT5vcGVuX3N0YXRlaWQgY291bGQgY2hhbmdlIGJvdGggYmVmb3JlIGFuZCBhZnRl
+ciB3ZQ0Kd3JpdGUgdG8gZHN0LT5zZXFpZC4gSWYgd2UgaG9sZCBhIGxvY2ssIHRoZW4gaXQgY291
+bGQgY2hhbmdlIHRoZSBtb21lbnQNCndlIHJlbGVhc2UgdGhhdCBsb2NrLiBUaGF0J3Mgbm90IHNv
+bWV0aGluZyB3ZSdyZSBhYmxlIHRvIGNvbnRyb2wuDQoNClRoZSBvbmx5IHRoaW5nIHdlIHNob3Vs
+ZCBjYXJlIGFib3V0IGhlcmUgaXMgd2hldGhlciBvciBub3QgdGhlIGNhbGwgdG8NCm5mczRfc3Rh
+dGVfbWF0Y2hfb3Blbl9zdGF0ZWlkX290aGVyKHN0YXRlLCBkc3QpIGFuZCB0aGUgc3RvcmFnZSBv
+Zg0Kc3RhdGUtPm9wZW5fc3RhdGVpZC5zZXFpZCBpbiBzZXFpZF9vcGVuIGFyZSBiZWluZyBwZXJm
+b3JtZWQgd2l0aCB0aGUNCnNhbWUgaW5zdGFuY2Ugb2YgdGhlIGZ1bGwgc3RhdGUtPm9wZW5fc3Rh
+dGVpZC4NCg0KPiANCj4gPiA+ICAJCWJyZWFrOw0KPiA+ID4gIAl9DQo+ID4gPiAgfQ0KPiA+ID4g
+QEAgLTMzNjcsMTQgKzMzNjgsMTYgQEAgc3RhdGljIGJvb2wNCj4gPiA+IG5mczRfcmVmcmVzaF9v
+cGVuX29sZF9zdGF0ZWlkKG5mczRfc3RhdGVpZCAqZHN0LA0KPiA+ID4gIAkJCWJyZWFrOw0KPiA+
+ID4gIAkJfQ0KPiA+ID4gIAkJc2VxaWRfb3BlbiA9IHN0YXRlLT5vcGVuX3N0YXRlaWQuc2VxaWQ7
+DQo+ID4gPiAtCQlpZiAocmVhZF9zZXFyZXRyeSgmc3RhdGUtPnNlcWxvY2ssIHNlcSkpDQo+ID4g
+PiAtCQkJY29udGludWU7DQo+ID4gPiAgDQo+ID4gPiAgCQlkc3Rfc2VxaWQgPSBiZTMyX3RvX2Nw
+dShkc3QtPnNlcWlkKTsNCj4gPiA+IC0JCWlmICgoczMyKShkc3Rfc2VxaWQgLSBiZTMyX3RvX2Nw
+dShzZXFpZF9vcGVuKSkgPj0gMCkNCj4gPiA+ICsJCWlmICgoczMyKShkc3Rfc2VxaWQgLSBiZTMy
+X3RvX2NwdShzZXFpZF9vcGVuKSkgPiAwKQ0KPiA+ID4gIAkJCWRzdC0+c2VxaWQgPSBjcHVfdG9f
+YmUzMihkc3Rfc2VxaWQgKyAxKTsNCj4gPiANCj4gPiBUaGlzIG5lZ2F0ZXMgdGhlIHdob2xlIGlu
+dGVudGlvbiBvZiB0aGUgcGF0Y2ggeW91IHJlZmVyZW5jZSBpbiB0aGUNCj4gPiAnRml4ZXM6Jywg
+d2hpY2ggd2FzIHRvIGFsbG93IHVzIHRvIENMT1NFIGZpbGVzIGV2ZW4gaWYgc2VxaWQgYnVtcHMN
+Cj4gPiBoYXZlDQo+ID4gYmVlbiBsb3N0IGR1ZSB0byBpbnRlcnJ1cHRlZCBSUEMgY2FsbHMgZS5n
+LiB3aGVuIHVzaW5nICdzb2Z0JyBvcg0KPiA+ICdzb2Z0ZXJyJyBtb3VudHMuDQo+ID4gV2l0aCB0
+aGUgYWJvdmUgY2hhbmdlLCB0aGUgY2hlY2sgY291bGQganVzdCBiZSB0b3NzZWQgb3V0DQo+ID4g
+YWx0b2dldGhlciwNCj4gPiBiZWNhdXNlIGRzdF9zZXFpZCB3aWxsIG5ldmVyIGJlY29tZSBsYXJn
+ZXIgdGhhbiBzZXFpZF9vcGVuLg0KPiANCj4gSG1tLi4gSSBnb3QgaXQgd3JvbmcuIFRoYW5rcyBm
+b3IgdGhlIGV4cGxhbmF0aW9uLg0KDQpTbyB0byBiZSBjbGVhcjogSSdtIG5vdCBzYXlpbmcgdGhh
+dCB3aGF0IHlvdSBkZXNjcmliZSBpcyBub3QgYSBwcm9ibGVtLg0KSSdtIGp1c3Qgc2F5aW5nIHRo
+YXQgdGhlIGZpeCB5b3UgcHJvcG9zZSBpcyByZWFsbHkgbm8gYmV0dGVyIHRoYW4NCnJldmVydGlu
+ZyB0aGUgZW50aXJlIHBhdGNoLiBJJ2QgcHJlZmVyIG5vdCB0byBkbyB0aGF0LCBhbmQgd291bGQg
+cmF0aGVyDQpzZWUgdXMgbG9vayBmb3Igd2F5cyB0byBmaXggYm90aCBwcm9ibGVtcywgYnV0IGlm
+IHdlIGNhbid0IGZpbmQgc3VjaCBhcw0KZml4IHRoZW4gdGhhdCB3b3VsZCBiZSB0aGUgYmV0dGVy
+IHNvbHV0aW9uLg0KDQo+IA0KPiA+ID4gIAkJZWxzZQ0KPiA+ID4gIAkJCWRzdC0+c2VxaWQgPSBz
+ZXFpZF9vcGVuOw0KPiA+ID4gKw0KPiA+ID4gKwkJaWYgKHJlYWRfc2VxcmV0cnkoJnN0YXRlLT5z
+ZXFsb2NrLCBzZXEpKQ0KPiA+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ID4gKw0KPiA+IA0KPiA+IEFn
+YWluLCB3aHkgdGhpcyBjaGFuZ2UgdG8gY29kZSB0aGF0IGRvZXNuJ3QgYXBwZWFyIHRvIG5lZWQN
+Cj4gPiBwcm90ZWN0aW9uPw0KPiA+IElmIHRoZSBidW1wIGRvZXMgc3VjY2VlZCBhYm92ZSwgdGhl
+biBsb29waW5nIGJhY2sgd2lsbCBhY3R1YWxseQ0KPiA+IGNhdXNlDQo+ID4gdW5wcmVkaWN0YWJs
+ZSBiZWhhdmlvdXIuDQo+IA0KPiBTYW1lIGFzIGFib3ZlLiBUaGlzIGNoYW5nZSBoYXZlIG5vdGhp
+bmcgdG8gZG8gd2l0aCB0aGUgc3RhdGVpZCByYWNlLg0KPiBJDQo+IGp1c3QgZm91bmQgaXQgd2hl
+biByZWFkaW5nIHRoZSBwYXRjaC4NCj4gDQo+IFRoYW5rcywNCj4gTQ0KPiA+ID4gIAkJcmV0ID0g
+dHJ1ZTsNCj4gPiA+ICAJCWJyZWFrOw0KPiA+ID4gIAl9DQotLSANClRyb25kIE15a2xlYnVzdA0K
+TGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0
+QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
