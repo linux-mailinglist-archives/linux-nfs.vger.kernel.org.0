@@ -2,88 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C387D4634
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 19:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349CDD4663
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 19:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfJKRHK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Oct 2019 13:07:10 -0400
-Received: from fieldses.org ([173.255.197.46]:59064 "EHLO fieldses.org"
+        id S1728594AbfJKRPg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Oct 2019 13:15:36 -0400
+Received: from fieldses.org ([173.255.197.46]:59098 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbfJKRHK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:07:10 -0400
+        id S1727984AbfJKRPg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:15:36 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id EDD7C1C97; Fri, 11 Oct 2019 13:07:09 -0400 (EDT)
-Date:   Fri, 11 Oct 2019 13:07:09 -0400
-To:     Thomas Deutschmann <whissi@gentoo.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: nfs-utils: v3 mounts broken due to statx() returning EINVAL
-Message-ID: <20191011170709.GE19318@fieldses.org>
-References: <ef1023fa-25e4-8ce7-945e-bc210e635e10@gentoo.org>
+        id DF9B51C95; Fri, 11 Oct 2019 13:15:35 -0400 (EDT)
+Date:   Fri, 11 Oct 2019 13:15:35 -0400
+From:   "J . Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Neil F Brown <nfbrown@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Vasiliy Averin <vvs@virtuozzo.com>
+Subject: Re: [PATCH] sunrpc: fix crash when cache_head become valid before
+ update
+Message-ID: <20191011171535.GG19318@fieldses.org>
+References: <20191001080359.6034-1-ptikhomirov@virtuozzo.com>
+ <3e455bb4-2a03-551e-6efb-1d41b5258327@virtuozzo.com>
+ <20191008202332.GB9151@fieldses.org>
+ <87wodergus.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ef1023fa-25e4-8ce7-945e-bc210e635e10@gentoo.org>
+In-Reply-To: <87wodergus.fsf@notabene.neil.brown.name>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:23:56PM +0200, Thomas Deutschmann wrote:
-> Hi,
+On Wed, Oct 09, 2019 at 09:51:23AM +1100, NeilBrown wrote:
+> On Tue, Oct 08 2019,  J . Bruce Fields  wrote:
 > 
-> we have some user reporting that NFS v3 mounts are broken
-> when using glibc-2.29 and linux-4.9.x (4.9.128) because
-> statx() with mask=STATX_BASIC_STATS returns EINVAL. 
+> > On Tue, Oct 08, 2019 at 10:02:53AM +0000, Pavel Tikhomirov wrote:
+> >> Add Neil to CC, sorry, had lost it somehow...
+> >
+> > Always happy when we can fix a bug by deleting code, and your
+> > explanation makes sense to me, but I'll give Neil a chance to look it
+> > over if he wants.
 > 
-> Looks like this isn't happening with <nfs-utils-2.4.1 or
-> newer kernels.
+> Yes, it makes sense to me.  But I'm not sure that is worth much.  The
+> original fix got a Reviewed-by from me but was wrong.
+>  Acked-by: NeilBrown <neilb@suse.de>
 > 
-> The following workaround was confirmed to be working:
-> 
-> --- a/support/misc/xstat.c	2019-06-24 21:31:55.260371592 +0200
-> +++ b/support/misc/xstat.c	2019-06-24 21:32:29.098777436 +0200
-> @@ -47,6 +47,8 @@
->  			statx_copy(statbuf, &stxbuf);
->  			return 0;
->  		}
-> +		if (errno == EINVAL)
-> +			errno = ENOSYS;
->  		if (errno == ENOSYS)
->  			statx_supported = 0;
->  	} else
-> 
-> 
-> Bug: https://bugs.gentoo.org/688644
-> 
-> At the moment I have no clue whether this is kernel/glibc or
-> nfs-utils related; if the patch is safe to apply...
+> 'Acked' is weaker than 'reviewed' - isn't it? :-)
 
-Well, sounds like nfs-utils started using statx in 2.4.1.  And just the
-fact that varying the kernel version makes it sound like there was a
-kernel bug causing an EINVAL return in this case, and that bug got
-fixed.
+Hah--"Self-deprecatingly-reviewed-by:"?
 
-One way to confirm might be running mount under strace and looking for
-that EINVAL return.
-
-I might also try looking through the kernel logs for nfs or the stat
-code to see if there's a mention of this (didn't see it on a quick
-look.)  Or try bisecting kernel versions to find the one where this was
-fixed.
+Anyway, applied thanks.
 
 --b.
-
-> 
-> Any help is appreciated. Thanks!
-> 
-> 
-> -- 
-> Regards,
-> Thomas Deutschmann / Gentoo Linux Developer
-> C4DD 695F A713 8F24 2AA1 5638 5849 7EE5 1D5D 74A5
-> 
-
-
-
