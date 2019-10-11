@@ -2,75 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFAF4D45B6
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 18:49:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD95DD45E1
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2019 18:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfJKQt2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Oct 2019 12:49:28 -0400
-Received: from fieldses.org ([173.255.197.46]:59046 "EHLO fieldses.org"
+        id S1728374AbfJKQ4E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Oct 2019 12:56:04 -0400
+Received: from fieldses.org ([173.255.197.46]:59056 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbfJKQt2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:49:28 -0400
+        id S1728106AbfJKQ4E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:56:04 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 4A6351C97; Fri, 11 Oct 2019 12:49:28 -0400 (EDT)
-Date:   Fri, 11 Oct 2019 12:49:28 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1] nfsd: remove private bin2hex implementation
-Message-ID: <20191011164928.GC19318@fieldses.org>
-References: <20191011160258.8562-1-andriy.shevchenko@linux.intel.com>
+        id A543D1C97; Fri, 11 Oct 2019 12:56:03 -0400 (EDT)
+Date:   Fri, 11 Oct 2019 12:56:03 -0400
+To:     NeilBrown <neilb@suse.de>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFSv4.1 backchannel xprt problems.
+Message-ID: <20191011165603.GD19318@fieldses.org>
+References: <87tv8iqz3b.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011160258.8562-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <87tv8iqz3b.fsf@notabene.neil.brown.name>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks, applying.--b.
+On Wed, Oct 09, 2019 at 04:15:04PM +1100, NeilBrown wrote:
+>  I have a customer with a 4.12-based kernel who is experiencing memory
+>  exhaustion.
+> 
+>  There are over 100,000 rpc_rqst structures queue on sv_cb_list for
+>  handing by the NFSv4 callback, which is idle.
+> 
+>  The rpc_rqst.rq_xprt pointer points to freed memory.
+> 
+>  I notice that that server code calls svc_xprt_get() on the xprt
+>  before storing it in rq_xprt, but the client/backchannel code doesn't.
+> 
+>  I'm wondering if the following might be useful.
+> 
+>  I plan to explore the code a bit more tomorrow and if this  still seems
+>  likely I get the customer to test this change, but I thought I would
+>  ask here as well incase someone more knowledgeable can give me any
+>  pointers.
 
-On Fri, Oct 11, 2019 at 07:02:58PM +0300, Andy Shevchenko wrote:
-> Calling sprintf in a loop is not very efficient, and in any case,
-> we already have an implementation of bin-to-hex conversion in lib/
-> which we might as well use.
+Looks sensible.  But if I ever understood how this works, I've got no
+memory of it now....  Good luck.
+
 > 
-> Note that original code used to nul-terminate the destination while
-> bin2hex doesn't. That's why replace kmalloc() with kzalloc().
+> Thanks,
+> NeilBrown
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  fs/nfsd/nfs4recover.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index cdc75ad4438b..29dff4c6e752 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -1850,19 +1850,14 @@ nfsd4_umh_cltrack_upcall(char *cmd, char *arg, char *env0, char *env1)
->  static char *
->  bin_to_hex_dup(const unsigned char *src, int srclen)
->  {
-> -	int i;
-> -	char *buf, *hex;
-> +	char *buf;
->  
->  	/* +1 for terminating NULL */
-> -	buf = kmalloc((srclen * 2) + 1, GFP_KERNEL);
-> +	buf = kzalloc((srclen * 2) + 1, GFP_KERNEL);
->  	if (!buf)
->  		return buf;
->  
-> -	hex = buf;
-> -	for (i = 0; i < srclen; i++) {
-> -		sprintf(hex, "%2.2x", *src++);
-> -		hex += 2;
-> -	}
-> +	bin2hex(buf, src, srclen);
->  	return buf;
+> diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+> index 339e8c077c2d..c95ca39688b6 100644
+> --- a/net/sunrpc/backchannel_rqst.c
+> +++ b/net/sunrpc/backchannel_rqst.c
+> @@ -61,6 +61,7 @@ static void xprt_free_allocation(struct rpc_rqst *req)
+>  	free_page((unsigned long)xbufp->head[0].iov_base);
+>  	xbufp = &req->rq_snd_buf;
+>  	free_page((unsigned long)xbufp->head[0].iov_base);
+> +	xprt_put(req->rq_xprt);
+>  	kfree(req);
 >  }
 >  
-> -- 
-> 2.23.0
+> @@ -85,7 +86,7 @@ struct rpc_rqst *xprt_alloc_bc_req(struct rpc_xprt *xprt, gfp_t gfp_flags)
+>  	if (req == NULL)
+>  		return NULL;
+>  
+> -	req->rq_xprt = xprt;
+> +	req->rq_xprt = xprt_get(xprt);
+>  	INIT_LIST_HEAD(&req->rq_bc_list);
+>  
+>  	/* Preallocate one XDR receive buffer */
+
+
