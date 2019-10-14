@@ -2,27 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 519D0D6BB8
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2019 00:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04ED5D6C1C
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2019 01:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387595AbfJNWgS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Oct 2019 18:36:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42568 "EHLO mx1.suse.de"
+        id S1726440AbfJNXgh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Oct 2019 19:36:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60978 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387573AbfJNWgS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:36:18 -0400
+        id S1726497AbfJNXgg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:36:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A0CD8AD46;
-        Mon, 14 Oct 2019 22:36:16 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 040B1AE2A;
+        Mon, 14 Oct 2019 23:36:34 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     Steve Dickson <SteveD@RedHat.com>
-Date:   Tue, 15 Oct 2019 09:36:08 +1100
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 0/3] some nfs-utils patches.
-In-Reply-To: <0763ec95-15ff-b31a-8743-eaf5286ee0f1@RedHat.com>
-References: <156921267783.27519.2402857390317412450.stgit@noble.brown> <0763ec95-15ff-b31a-8743-eaf5286ee0f1@RedHat.com>
-Message-ID: <87lftnq7jb.fsf@notabene.neil.brown.name>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Tue, 15 Oct 2019 10:36:27 +1100
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [PATCH] SUNRPC: backchannel RPC request must reference XPRT
+In-Reply-To: <20191011165603.GD19318@fieldses.org>
+References: <87tv8iqz3b.fsf@notabene.neil.brown.name> <20191011165603.GD19318@fieldses.org>
+Message-ID: <87imoqrjb8.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -35,66 +37,80 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 14 2019, Steve Dickson wrote:
 
-> On 9/23/19 12:26 AM, NeilBrown wrote:
->> These free are largely unrelated.
->> The only connection is that without the second, I get
->> warnings because my /etc/nfs.conf includes /etc/nfs.conf.local - just
->> in case.
->> Then, without the first patch, the open fds get confused and
->> rpc.mountd doesn't listen on all /proc/net/rpc/*/channel
->> properly and nfs doesn't work.
->>=20
->> Thanks,
->> NeilBrown
->>=20
->> ---
->>=20
->> NeilBrown (3):
->>       mountd: Initialize logging early.
->>       conffile: allow optional include files.
->>       statd: take user-id from /var/lib/nfs/sm
-> Committed...=20
+The backchannel RPC requests - that are queued waiting
+for the reply to be sent by the "NFSv4 callback" thread -
+have a pointer to the xprt, but it is not reference counted.
+It is possible for the xprt to be freed while there are
+still queued requests.
 
-Thanks a lot Steve!
+I think this has been a problem since
+Commit fb7a0b9addbd ("nfs41: New backchannel helper routines")
+when the code was introduced, but I suspect it became more of
+a problem after
+Commit 80b14d5e61ca ("SUNRPC: Add a structure to track multiple transports")
+(or there abouts).
+Before this second patch, the nfs client would hold a reference to
+the xprt to keep it alive.  After multipath was introduced,
+a client holds a reference to a swtich, and the switch can have multiple
+xprts which can be added and removed.
 
-NeilBrown
+I'm not sure of all the causal issues, but this patch has
+fixed a customer problem were an NFSv4.1 client would run out
+of memory with tens of thousands of backchannel rpc requests
+queued for an xprt that had been freed.  This was a 64K-page
+machine so each rpc_rqst consumed more than 128K of memory.
 
+Fixes: 80b14d5e61ca ("SUNRPC: Add a structure to track multiple transports")
+cc: stable@vger.kernel.org (v4.6)
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ net/sunrpc/backchannel_rqst.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->
-> steved.
->>=20
->>=20
->>  support/nfs/conffile.c    |   13 ++++++++++---
->>  support/nsm/file.c        |   16 +++++-----------
->>  systemd/nfs.conf.man      |    3 +++
->>  utils/mountd/mountd.c     |    9 +++------
->>  utils/statd/sm-notify.man |   10 +++++++++-
->>  utils/statd/statd.man     |   10 +++++++++-
->>  6 files changed, 39 insertions(+), 22 deletions(-)
->>=20
->> --
->> Signature
->>=20
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index 339e8c077c2d..c95ca39688b6 100644
+=2D-- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -61,6 +61,7 @@ static void xprt_free_allocation(struct rpc_rqst *req)
+ 	free_page((unsigned long)xbufp->head[0].iov_base);
+ 	xbufp =3D &req->rq_snd_buf;
+ 	free_page((unsigned long)xbufp->head[0].iov_base);
++	xprt_put(req->rq_xprt);
+ 	kfree(req);
+ }
+=20
+@@ -85,7 +86,7 @@ struct rpc_rqst *xprt_alloc_bc_req(struct rpc_xprt *xprt,=
+ gfp_t gfp_flags)
+ 	if (req =3D=3D NULL)
+ 		return NULL;
+=20
+=2D	req->rq_xprt =3D xprt;
++	req->rq_xprt =3D xprt_get(xprt);
+ 	INIT_LIST_HEAD(&req->rq_bc_list);
+=20
+ 	/* Preallocate one XDR receive buffer */
+=2D-=20
+2.23.0
+
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2k+FkACgkQOeye3VZi
-gbmNuw/+IPh+LE5sTckDMG2hn7P3b68eu3FkC36rMOpZD6hZoV/whFMy7cYWUtW9
-BlPpZIjaihzlcm1nbjhYXgCT61xz8OYxb4KuwtgTeojQ7aTdcmSY+YmOc5XqVZPe
-Ib4bJk/gXnVkFIC9kt54W9WBUsxeXzWDpmBWQtm9D7/d5avTyLETmPOoHwf9GY8n
-LEbEImOnwPUBlTcf1ZOBEwUxvCy4lAdvRyZk0FC7w4aIm7gjT9272v8JIb0ZutkG
-a+CZZ0NXb2XeDeHdgMSR0mLqENzfcpjwMSKxrOvSBsDbcMNGvdClKYBfedOYyDgO
-klsSNDz69pWAKLe3VurAbnBBoG1laFiZzTM/vJ044lP5hAJmUF0aoUEFDLpJHNGV
-Rrc6ZpYmslAQznB7JoIE9OdMaKYNoIxtWrgPmSA8qic6uhJEZXfOLNBzl3A79bBG
-rDzLO26NGn6WMvmyCcGESJtQtE9mRuB82Ntt1GNFDjb3/pGijmdw3JeVwcWz/Qxc
-NtCCrjDYakPeHO4yBpW7MktvwwZJaJgV5psy2+00MpHGNTFO83edcDH9IlBQqET8
-ySnUViFwI49CSiLSlaIkREbhgHrLzy7rZ6PbbRhA0/87tBVpq/hM25/2Kxyf14fU
-4AwVdU/YN7rTUimKgpk0ytCo48Xyb5pM8F/w9MLRkCL6AVaJCW8=
-=SOOT
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2lBnsACgkQOeye3VZi
+gbkktg//T+OnehuZeD5J3/192d+8xpWsk0q9VIYiuO+O+plTOuNOF2GEfR7vOAZW
+5U23Kp/boE97HQXAachRv67FWqrlK3MtTiMv8wuOkqMaOXhbO/RSKSle7QExZvhP
+XWuFYCZ0QagUjnpvtEb29Imj7pupjxIlCxSokIqg6PJFh+iMljLxGhneC3c2xf0X
+CA4ClyhDV+MWaOtHb2fp9J8f8Ve+65lunW/EaJmR1XKoEpaqALqQbHtzcEc4QyIq
+yUH6DG+qIz5raK6i9yWMRRuHEMO+5CEMTrz4K97CCVTlu4tJ5ROb6SWLkwk3kayb
+/3+arMuHNDmsT2Jbv6PQ91n90zaF3CMMALgGl6R6Pn1oqYG4nA3zVQfbl5gAVOKA
+Q2ldPJmAWQiRgDR1nRsbXMakzEAaEBlAdZhbnKIcAnPEX4NgOCPgh00qtbj+I11L
+wPPI62+WBuSkBDyf13nLW00oGCnqInN9w6i/vdPCIHF6e7x8WxmcwEmrz8TYecEM
+oI2fNYC78caugclcaETpabTpenXI493rrYU3NCinSGM/GyGqokVRIdClDMYYIUdJ
+BEfyoY6bScx2zcs+jXhPWFoNUPIqvgr5Dl2AbmIrc/pXEh2N3XSsAXdGHMp0UjEU
+2wEIcRoPAznwBGoF6+1HAlb2K0CpMQRObwStPauhswIBPTBBet8=
+=4db9
 -----END PGP SIGNATURE-----
 --=-=-=--
