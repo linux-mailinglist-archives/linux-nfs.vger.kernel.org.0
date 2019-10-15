@@ -2,73 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 885D5D71FB
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2019 11:19:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89550D7654
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2019 14:20:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfJOJTP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Oct 2019 05:19:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15811 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbfJOJTP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:19:15 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 912F2309BDBC;
-        Tue, 15 Oct 2019 09:19:14 +0000 (UTC)
-Received: from ovpn-116-35.ams2.redhat.com (ovpn-116-35.ams2.redhat.com [10.36.116.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2647519C7F;
-        Tue, 15 Oct 2019 09:19:11 +0000 (UTC)
-Message-ID: <5ba8b82764c8b51744f9c77355c2c917e9206d19.camel@redhat.com>
-Subject: Re: [PATCH net] sunrpc: fix UDP memory accounting for v4.4 kernel
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     JABLONSKY Jan <Jan.JABLONSKY@thalesgroup.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     Trond Myklebust <trond.myklebust@primarydata.com>,
+        id S1726408AbfJOMUA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Oct 2019 08:20:00 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:45599 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfJOMUA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Oct 2019 08:20:00 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKLnu-0001Lj-2W; Tue, 15 Oct 2019 13:19:54 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKLnt-0003tA-L7; Tue, 15 Oct 2019 13:19:53 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Jan Stancek <jstancek@redhat.com>
-Date:   Tue, 15 Oct 2019 11:19:11 +0200
-In-Reply-To: <e5070c6d6157290c2a3f627a50d951ca141973b1.camel@thalesgroup.com>
-References: <e5070c6d6157290c2a3f627a50d951ca141973b1.camel@thalesgroup.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSv4: add declaration of current_stateid
+Date:   Tue, 15 Oct 2019 13:19:53 +0100
+Message-Id: <20191015121953.14905-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 15 Oct 2019 09:19:14 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+The current_stateid is exported from nfs4state.c but not
+declared in any of the headers. Add to nfs4_fs.h to
+remove the following warning:
 
-On Tue, 2019-10-15 at 07:21 +0000, JABLONSKY Jan wrote:
-> The same warnings reported by Jan Stancek may appear also on 4.4
-> Based on Paolo Abeni's work.
-> 
-> WARNING: at net/ipv4/af_inet.c:155
-> CPU: 1 PID: 214 Comm: kworker/1:1H Not tainted 4.4.166 #1
-> Workqueue: rpciod .xprt_autoclose
-> task: c0000000366f57c0 ti: c000000034134000 task.ti: c000000034134000
-> NIP [c000000000662268] .inet_sock_destruct+0x158/0x200
-> 
-> Based on: "[net] sunrpc: fix UDP memory accounting"
+fs/nfs/nfs4state.c:80:20: warning: symbol 'current_stateid' was not declared. Should it be static?
 
-Since your goal here is the inclusion into the 4.4.y stable tree, you
-should follow the instructions listed here:
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/nfs/nfs4_fs.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-
-elsewhere I guess your patch will not be processed properly. The
-relevant commit message is merged into Linus tree since some time and
-some minor modifications are needed, so you may likely follow option 3.
-
-Cheers,
-
-Paolo
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5cc3e94..330f45268060 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -445,6 +445,8 @@ extern void nfs4_set_lease_period(struct nfs_client *clp,
+ 
+ 
+ /* nfs4state.c */
++extern const nfs4_stateid current_stateid;
++
+ const struct cred *nfs4_get_clid_cred(struct nfs_client *clp);
+ const struct cred *nfs4_get_machine_cred(struct nfs_client *clp);
+ const struct cred *nfs4_get_renew_cred(struct nfs_client *clp);
+-- 
+2.23.0
 
