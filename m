@@ -2,85 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3453ED8265
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2019 23:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9ABCD8469
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2019 01:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfJOVr2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Oct 2019 17:47:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39942 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730502AbfJOVr2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Oct 2019 17:47:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FLi2D4102951;
-        Tue, 15 Oct 2019 21:47:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=LM5YlxAv7edP6JGIQstLDLPuXjKfybFDj2i0eQIKfJs=;
- b=oJHPbqRzGPe0fnbfbS1OmBl+KOHD95gw0WBc40XFce/+lDSNO6NoxsPZAQM9PJcac6c4
- 4+XVhJ+bGHImLeOZn3fzMvcv5Ezk/Pm+yauYeiwsjkwRbjnR0l26RhT/xiNs8av069pg
- jysSVEmB/8oe2/z3AesXodIT733ebd3ehxQCa+VZ9q62Y1Q0Lm4LWxdjR2X5aMtwl71u
- D6iUCf0krvBQPSMO/V7LUIWIsSiBtBqPuGTTibo0Y9Aq458An9sAciLpSumFSP7DUMLE
- KleJ+2lWfL5W25JqD4Gnxyy4mjFnGnv0gBIew+SvY/gTLbi/5ovWxSBef+349HA+UP5C 1Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vk68uk1d1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 21:47:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FLhHFo068097;
-        Tue, 15 Oct 2019 21:47:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vn7197199-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 21:47:18 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FLlBYj027424;
-        Tue, 15 Oct 2019 21:47:13 GMT
-Received: from dhcp-50.nfsv4bat.org (/66.187.232.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 14:47:11 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+        id S1727961AbfJOXXr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Oct 2019 19:23:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43228 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726990AbfJOXXr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Oct 2019 19:23:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B5585AF24;
+        Tue, 15 Oct 2019 23:23:44 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "bfields\@fieldses.org" <bfields@fieldses.org>,
+        "anna.schumaker\@netapp.com" <anna.schumaker@netapp.com>
+Date:   Wed, 16 Oct 2019 10:23:37 +1100
+Cc:     "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH] SUNRPC: backchannel RPC request must reference XPRT
-From:   Chuck Lever <chuck.lever@oracle.com>
 In-Reply-To: <711ebfa5340c6e29ff640e855db5ad8e41a09a60.camel@hammerspace.com>
-Date:   Tue, 15 Oct 2019 17:47:09 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>, Neil Brown <neilb@suse.de>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <94FD3327-AEE7-4160-87E4-4E7569FB8D18@oracle.com>
-References: <87tv8iqz3b.fsf@notabene.neil.brown.name>
- <20191011165603.GD19318@fieldses.org>
- <87imoqrjb8.fsf@notabene.neil.brown.name>
- <711ebfa5340c6e29ff640e855db5ad8e41a09a60.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=975
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150186
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150186
+References: <87tv8iqz3b.fsf@notabene.neil.brown.name> <20191011165603.GD19318@fieldses.org> <87imoqrjb8.fsf@notabene.neil.brown.name> <711ebfa5340c6e29ff640e855db5ad8e41a09a60.camel@hammerspace.com>
+Message-ID: <87a7a1r3t2.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Oct 15 2019, Trond Myklebust wrote:
 
-> On Oct 15, 2019, at 5:16 PM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
 > Hi Neil,
->=20
+>
 > On Tue, 2019-10-15 at 10:36 +1100, NeilBrown wrote:
 >> The backchannel RPC requests - that are queued waiting
 >> for the reply to be sent by the "NFSv4 callback" thread -
@@ -112,8 +72,8 @@ wrote:
 >> cc: stable@vger.kernel.org (v4.6)
 >> Signed-off-by: NeilBrown <neilb@suse.de>
 >> ---
->> net/sunrpc/backchannel_rqst.c | 3 ++-
->> 1 file changed, 2 insertions(+), 1 deletion(-)
+>>  net/sunrpc/backchannel_rqst.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
 >>=20
 >> diff --git a/net/sunrpc/backchannel_rqst.c
 >> b/net/sunrpc/backchannel_rqst.c
@@ -122,42 +82,92 @@ wrote:
 >> +++ b/net/sunrpc/backchannel_rqst.c
 >> @@ -61,6 +61,7 @@ static void xprt_free_allocation(struct rpc_rqst
 >> *req)
->> 	free_page((unsigned long)xbufp->head[0].iov_base);
->> 	xbufp =3D &req->rq_snd_buf;
->> 	free_page((unsigned long)xbufp->head[0].iov_base);
+>>  	free_page((unsigned long)xbufp->head[0].iov_base);
+>>  	xbufp =3D &req->rq_snd_buf;
+>>  	free_page((unsigned long)xbufp->head[0].iov_base);
 >> +	xprt_put(req->rq_xprt);
->> 	kfree(req);
->> }
->=20
+>>  	kfree(req);
+>>  }
+>
 > Would it perhaps make better sense to move the xprt_get() to
-> xprt_lookup_bc_request() and to release it in xprt_free_bc_rqst()?
+> xprt_lookup_bc_request() and to release it in xprt_free_bc_rqst()?=20
 
-/me wonders if the same problem exists for the RPC/RDMA backchannel....
+... maybe ...
 
-
+>
 > Otherwise as far as I can tell, we will have freed slots on the xprt-
->> bc_pa_list that hold a reference to the transport itself, meaning =
-that
+>>bc_pa_list that hold a reference to the transport itself, meaning that
 > the latter never gets released.
->=20
->>=20
+
+Apart from cleanup-on-error paths, xprt_free_allocation() is called:
+ - in xprt_destroy_bc() - at most 'max_reqs' times.
+ - in xprt_free_bc_rqst(), if the bc_alloc_count >=3D bc_alloc_max
+
+So when xprt_destroy_bc() is called (from nfs4_destroy_session, via
+xprt_destroy_backchannel()), bc_alloc_max() is reduced, and possibly
+the requests are freed and bc_alloc_count is reduced accordingly.
+If the requests were busy, they won't have been freed then, but will
+then be freed when xprt_free_bc_reqst is called - because bc_alloc_max
+has been reduced.
+
+Once nfs4_destroy_session() has been called on all session, and
+xprt_free_bc_rqst() has been called on all active requests, I think
+they should be no requests left to be holding a reference to
+the xprt.
+
+And if there were requests left, and if we change the refcount code
+(like you suggest) so that they weren't holding a reference, then they
+would never be freed. - freeing an xprt doesn't clean out the bc_pa_list.
+
+Though ... the connection from a session to an xprt isn't permanent (I
+guess, based on the rcu_read_lock in nfs4_destroy_session... which
+itself seems a bit odd as it doesn't inc a refcount while holding the
+lock).
+
+So maybe the counts can get out of balance.
+
+Conclusion: I'm not sure the ref counts are entirely correct, but I
+   cannot see a benefit from moving the xprt_get/put requests like you
+   suggest.
+
+Thanks,
+NeilBrown
+
+
+>
+>>=20=20
 >> @@ -85,7 +86,7 @@ struct rpc_rqst *xprt_alloc_bc_req(struct rpc_xprt
 >> *xprt, gfp_t gfp_flags)
->> 	if (req =3D=3D NULL)
->> 		return NULL;
->>=20
+>>  	if (req =3D=3D NULL)
+>>  		return NULL;
+>>=20=20
 >> -	req->rq_xprt =3D xprt;
 >> +	req->rq_xprt =3D xprt_get(xprt);
->> 	INIT_LIST_HEAD(&req->rq_bc_list);
->>=20
->> 	/* Preallocate one XDR receive buffer */
+>>  	INIT_LIST_HEAD(&req->rq_bc_list);
+>>=20=20
+>>  	/* Preallocate one XDR receive buffer */
 > --=20
 > Trond Myklebust
 > Linux NFS client maintainer, Hammerspace
 > trond.myklebust@hammerspace.com
 
---
-Chuck Lever
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2mVPoACgkQOeye3VZi
+gbkcIw//bukcQ6jKef7+zo1fj5ahCUp5jLK7ZFroERa8a8UhHEPe392o37dQrhiR
+DWMDV6giKQmWgwbM8zNQzJNniwdPd3q32k/rb8av2IM8Ba2jY+SKqvaENRcP+gVf
+eZxMTg798aRn1UPpslltLK/gDVnybvXAD4HPWSbcz7HWYAVnLR39U5WDfJNrmQ0s
+B6DvAUSpB7SYW7fD/5nt2GBv6FAzeooEnhrQ12oWZS2Dp9vn0dGauUSKpH9/Gz2f
+2FIR/CdInWl+bZyQnsnNdtIff18v/e+2pRQVQpPKdIdTjmIaStfAzYMfZyXmCAAO
+z+9ETAPE4cOvNyrEjFNLpV7cG1Rj+GdwI7s9qkdNjIDQqJH9yd2ZB7801GUxE7Xx
+R67QBDpW7+C9I3hhp4jzyeemN7kgLAMH2A2ud9yBWYXn9rCC9OOvpjeInPSa6sh3
+wTO737oFgcDLDqRO3o0eTbbHXpWDcxZste22gfdo1lzcnj4rHgo9YlNPDCQTQLwz
+h3feXfCWT21dRe/SbSN+ztCKaYz6KTWSvLwMsWnA5ZFVchw1/3ss2Luzgv4DWZ6e
+i8G/m2s1sq4NwBVoMMQ/wH6EE+WLS2L7rojgoi9dlCTYUPmJX4+CWV/wGBCOJsg8
+uHhai2YZrTw4J0k+F4uL07RgdSnD2Uobcd66xVhWG9TSZYovkSE=
+=18T+
+-----END PGP SIGNATURE-----
+--=-=-=--
