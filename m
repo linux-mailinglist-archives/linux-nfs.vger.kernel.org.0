@@ -2,201 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE39D878B
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2019 06:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7D69D888F
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2019 08:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfJPEi1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Oct 2019 00:38:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41924 "EHLO mx1.suse.de"
+        id S1728318AbfJPGWp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 16 Oct 2019 02:22:45 -0400
+Received: from mail-eopbgr670043.outbound.protection.outlook.com ([40.107.67.43]:10734
+        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726502AbfJPEi1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:38:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 637D8B1DB;
-        Wed, 16 Oct 2019 04:38:24 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@gmail.com>,
-        "bfields\@fieldses.org" <bfields@fieldses.org>,
-        "anna.schumaker\@netapp.com" <anna.schumaker@netapp.com>
-Date:   Wed, 16 Oct 2019 15:38:16 +1100
-Cc:     "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] SUNRPC: backchannel RPC request must reference XPRT
-In-Reply-To: <8ac0b07bd523e4a040b4dc5e53639e1ea3b68db6.camel@hammerspace.com>
-References: <87tv8iqz3b.fsf@notabene.neil.brown.name> <20191011165603.GD19318@fieldses.org> <87imoqrjb8.fsf@notabene.neil.brown.name> <711ebfa5340c6e29ff640e855db5ad8e41a09a60.camel@hammerspace.com> <87a7a1r3t2.fsf@notabene.neil.brown.name> <8ac0b07bd523e4a040b4dc5e53639e1ea3b68db6.camel@hammerspace.com>
-Message-ID: <874l09qp8n.fsf@notabene.neil.brown.name>
+        id S1727796AbfJPGWp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 16 Oct 2019 02:22:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mqkiVwnpiialhbx/JYhAKTw7JDdTwRnoW2RNASTKy/seaMsw/ufEQjpvV1PKFQK6XQJLloCC/8HLt5CgIbRMBMxEA7DF9OQzI8MPZmm3p61H+WQsTRpWJPeqz0MA/gTHrwe9ov5OcirzNGLVXIwWN6+sseA1TsJ9EirhWc7/IcHR417Mqns1blpKnhnNy/3wglYEr8UamHD1l5gEeCsE0HUEBMG05biRUXL6h0dQwSO5Mbwsj54RBh/mu4+QWsk2Yax6fNX/2Vf01ZtWpN3vFSsIRZf9Sw5GwbZ+ErKPwzHy+dy0r+ptUeIMz0IwCh/OpZhnmyeVh1vLX4aQyY6KLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tP5tdt+GdS9V8fu7uj1Fis001sllFHIOTds1KjaorIk=;
+ b=KfG/KS+85Z2c1MmVXPLhCQ7fOkTxMlnehqGXuNKQ3A3SstZVxLQ/HitCM/cHtNsbSRg6nMUwZLV8NMkZaVaY/2YhiQWPBXO3hA6kKx3SfLbKqB4VMrIxW1g1emmcJk7UF56SKK0kPxt8kWmFRUvOxYHk3F6RGQMzu/8nB6SRp8yOo8CiBEgYydIi/7D6dLK9OeoMuG6LEK3z2vY0JD5u6AYKaVX6XrObtDZkYie76XzuWIsIDDXI1zRU12+CviI2OeUb3e4IoKc6wYufWlvJzH9oMS3t3F0BpYiwpamFg1+hlFBTlQEN8rJsge9jRQcHWYYRByQN0Z+Iwqx3JOR0TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
+ dkim=pass header.d=uoguelph.ca; arc=none
+Received: from YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM (52.132.66.144) by
+ YQBPR0101MB1474.CANPRD01.PROD.OUTLOOK.COM (52.132.69.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Wed, 16 Oct 2019 06:22:42 +0000
+Received: from YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::9051:db7:40f3:2ba3]) by YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::9051:db7:40f3:2ba3%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 06:22:42 +0000
+From:   Rick Macklem <rmacklem@uoguelph.ca>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: NFSv4.2 server replies to Copy with length == 0
+Thread-Topic: NFSv4.2 server replies to Copy with length == 0
+Thread-Index: AQHVg8vy6XBow5lmmE6IMuCp/6tuzqdcytI+
+Date:   Wed, 16 Oct 2019 06:22:42 +0000
+Message-ID: <YQBPR0101MB1652DEF8AD7A6169D44D47C6DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
+References: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rmacklem@uoguelph.ca; 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f81e6548-0c13-4d27-0170-08d752014063
+x-ms-traffictypediagnostic: YQBPR0101MB1474:
+x-microsoft-antispam-prvs: <YQBPR0101MB1474EB9D49B1BB40FBB8DC69DD920@YQBPR0101MB1474.CANPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0192E812EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(5024004)(74316002)(14444005)(7696005)(316002)(305945005)(256004)(2501003)(33656002)(86362001)(786003)(102836004)(25786009)(229853002)(8676002)(2940100002)(81156014)(81166006)(6246003)(8936002)(186003)(5660300002)(5640700003)(6436002)(6506007)(66446008)(2906002)(76176011)(486006)(476003)(71190400001)(71200400001)(446003)(52536014)(2351001)(11346002)(99286004)(6916009)(53546011)(66556008)(66946007)(55016002)(46003)(66476007)(14454004)(64756008)(478600001)(76116006)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:YQBPR0101MB1474;H:YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: uoguelph.ca does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7emAHP9Bcr74IDvP8c1kzFA9owRFfEJVoq07BqbV16rHrcOJhA2TWIasRV+0tImqO0ostWtj2/t9xuQPAyTygE1Dp73y07/yoMgkg8ANbt8FEOx+78rd4Nvs/+Mlv8zaG6r4T03wA70BmNkkQ+X7sbVmTlsbIiIepf/VU9aExj72e93baeKgeQ1IivT0t7YFpSS8IM1G2yKwYZMbn+h51deM5xWOvhrHQSP2aKoDunq5xbSA07MjTRc56rMUrV66oDU/QHJdRsLocCmhNNGV5EzpA2usT8ji0uzww9XrqieQkYwGzPxsNwLeUXeJC9N3xtb5I8dj5/nxQYjN/lr5pUBQmuD1/8l164K7VmYssBWcytkexdMY9099i+odXBxzi2sh5LY6tCTL3T3nI5xHQ6o4hx7BFlW3Q/bwUNIZ71g=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-OriginatorOrg: uoguelph.ca
+X-MS-Exchange-CrossTenant-Network-Message-Id: f81e6548-0c13-4d27-0170-08d752014063
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 06:22:42.4360
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QXMh4s2nLDc839Hs+4Bc9MjH012Tv4licRjF3FUfJZZevvYiwZ7xcVXiN8zlMkChutxOggnwas8WrB7b76ygwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB1474
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+It seems that the Copy reply with wr_count == 0 occurs when the client
+sends a Copy request with ca_src_offset beyond EOF in the input file.
+(It happened because I was testing an old/broken version of my client,
+ but I can reproduce it, if you need a bugfix to be tested. I don't know if
+ the case of ca_src_offset+ca_count beyond EOF behaves the same?)
+--> The RFC seems to require a reply of NFS4ERR_INVAL for this case.
 
-On Tue, Oct 15 2019, Trond Myklebust wrote:
+rick
 
-> On Wed, 2019-10-16 at 10:23 +1100, NeilBrown wrote:
->> On Tue, Oct 15 2019, Trond Myklebust wrote:
->>=20
->> > Hi Neil,
->> >=20
->> > On Tue, 2019-10-15 at 10:36 +1100, NeilBrown wrote:
->> > > The backchannel RPC requests - that are queued waiting
->> > > for the reply to be sent by the "NFSv4 callback" thread -
->> > > have a pointer to the xprt, but it is not reference counted.
->> > > It is possible for the xprt to be freed while there are
->> > > still queued requests.
->> > >=20
->> > > I think this has been a problem since
->> > > Commit fb7a0b9addbd ("nfs41: New backchannel helper routines")
->> > > when the code was introduced, but I suspect it became more of
->> > > a problem after
->> > > Commit 80b14d5e61ca ("SUNRPC: Add a structure to track multiple
->> > > transports")
->> > > (or there abouts).
->> > > Before this second patch, the nfs client would hold a reference
->> > > to
->> > > the xprt to keep it alive.  After multipath was introduced,
->> > > a client holds a reference to a swtich, and the switch can have
->> > > multiple
->> > > xprts which can be added and removed.
->> > >=20
->> > > I'm not sure of all the causal issues, but this patch has
->> > > fixed a customer problem were an NFSv4.1 client would run out
->> > > of memory with tens of thousands of backchannel rpc requests
->> > > queued for an xprt that had been freed.  This was a 64K-page
->> > > machine so each rpc_rqst consumed more than 128K of memory.
->> > >=20
->> > > Fixes: 80b14d5e61ca ("SUNRPC: Add a structure to track multiple
->> > > transports")
->> > > cc: stable@vger.kernel.org (v4.6)
->> > > Signed-off-by: NeilBrown <neilb@suse.de>
->> > > ---
->> > >  net/sunrpc/backchannel_rqst.c | 3 ++-
->> > >  1 file changed, 2 insertions(+), 1 deletion(-)
->> > >=20
->> > > diff --git a/net/sunrpc/backchannel_rqst.c
->> > > b/net/sunrpc/backchannel_rqst.c
->> > > index 339e8c077c2d..c95ca39688b6 100644
->> > > --- a/net/sunrpc/backchannel_rqst.c
->> > > +++ b/net/sunrpc/backchannel_rqst.c
->> > > @@ -61,6 +61,7 @@ static void xprt_free_allocation(struct
->> > > rpc_rqst
->> > > *req)
->> > >  	free_page((unsigned long)xbufp->head[0].iov_base);
->> > >  	xbufp =3D &req->rq_snd_buf;
->> > >  	free_page((unsigned long)xbufp->head[0].iov_base);
->> > > +	xprt_put(req->rq_xprt);
->> > >  	kfree(req);
->> > >  }
->> >=20
->> > Would it perhaps make better sense to move the xprt_get() to
->> > xprt_lookup_bc_request() and to release it in xprt_free_bc_rqst()?=20
->>=20
->> ... maybe ...
->>=20
->> > Otherwise as far as I can tell, we will have freed slots on the
->> > xprt-
->> > > bc_pa_list that hold a reference to the transport itself, meaning
->> > > that
->> > the latter never gets released.
->>=20
->> Apart from cleanup-on-error paths, xprt_free_allocation() is called:
->>  - in xprt_destroy_bc() - at most 'max_reqs' times.
->>  - in xprt_free_bc_rqst(), if the bc_alloc_count >=3D bc_alloc_max
->>=20
->> So when xprt_destroy_bc() is called (from nfs4_destroy_session, via
->> xprt_destroy_backchannel()), bc_alloc_max() is reduced, and possibly
->> the requests are freed and bc_alloc_count is reduced accordingly.
->> If the requests were busy, they won't have been freed then, but will
->> then be freed when xprt_free_bc_reqst is called - because
->> bc_alloc_max
->> has been reduced.
->>=20
->> Once nfs4_destroy_session() has been called on all session, and
->> xprt_free_bc_rqst() has been called on all active requests, I think
->> they should be no requests left to be holding a reference to
->> the xprt.
->>=20
->> And if there were requests left, and if we change the refcount code
->> (like you suggest) so that they weren't holding a reference, then
->> they
->> would never be freed. - freeing an xprt doesn't clean out the
->> bc_pa_list.
->>=20
->> Though ... the connection from a session to an xprt isn't permanent
->> (I
->> guess, based on the rcu_read_lock in nfs4_destroy_session... which
->> itself seems a bit odd as it doesn't inc a refcount while holding the
->> lock).
->>=20
->> So maybe the counts can get out of balance.
->>=20
->> Conclusion: I'm not sure the ref counts are entirely correct, but I
->>    cannot see a benefit from moving the xprt_get/put requests like
->> you
->>    suggest.
->>=20
->
-> I don't buy that conclusion.
->
-> Nothing stops me from changing the value of NFS41_BC_MIN_CALLBACKS to
-> zero. Why should that affect the existence or not of the transport by
-> changing the number of references held? That parameter is supposed to
-> determine the number of pre-allocated requests and nothing else.
+________________________________________
+From: linux-nfs-owner@vger.kernel.org <linux-nfs-owner@vger.kernel.org> on behalf of Rick Macklem <rmacklem@uoguelph.ca>
+Sent: Tuesday, October 15, 2019 10:50 PM
+To: linux-nfs@vger.kernel.org
+Subject: NFSv4.2 server replies to Copy with length == 0
 
-If you reduce NFS41_BC_MIN_CALLBACKS to zero, bc_alloc_max won't be
-increased and will remain at zero.  So xprt_get_bc_request() will
-always need to allocate a new request (bc_pa_list will be empty),
-and xprt_free_bc_rqst() will always free the request - never putting it
-on the bc_pa_list.
+During interop testing (FreeBSD client->Linux server) of NFSv4.2, my
+client got into a loop. It was because the reply to Copy was NFS_OK,
+but the length in the reply is 0.
+(I'll fix the client to fail for this case so it doesn't loop, but...)
 
-Maybe it would make sense to do exactly that, get rid of bc_pa_list, and
-possibly use a mempool if there is any concern about delays when
-allocating.
+The server is Fedora 30 (5.2.18-200 kernel version).
+It you think this might be fixed in a newer kernel or you'd like me to do
+something with it to get more info, just let me know.
 
-I agree that it is a little odd for requests on the pa list to hold a
-reference to the xprt, and I don't object at all to changing that.
-My only point is that I think my patch as it stands is correct, that it
-doesn't introduce new problems (and so might be the simplest thing for
-=2Dstable).
+I've attached a snippet of the packet trace. (If the list strips it off, just email
+me and I'll send it to you.)
 
-Thanks,
-NeilBrown
-
-
->
-> I do agree with your assessment that destroying the xprt does not
-> currrently destroy the contents of xprt->bc_pa_list if they are non-
-> zero, but that would be a bug, and an easy one to fix.
->
->
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2mnrgACgkQOeye3VZi
-gbl5eQ/8Cu8lIlIWE99AhZwE3vQhNur2n61xZNa2hkqCTv9X5cPGnhC/qCxBO4mX
-ieoZWUkLmdeq8M3of9GdpoeCmj51h+PoWNeT1y3SHtbuxrkTcKLOYiw9qJBJX17x
-UJl5AoCe5eYMiUlJgHdb6X3svxlZvORGAXkVFl9kPT0GEcuYaNGgO90uKbnbZugn
-ufTPDNvQYaiKEUen5pyVIVBjnMfCixiUSmG76YQJxfxzRpUwePjtIWB+mv1V+ZDZ
-dfy/Y4cJzCPVlABVlC9c6XLjTTQV9NN2XjzN0YsjZ/czLh9i2V6Yq3+s3kZc0LV0
-EBJf1MetKhfbhkLSxNxyvhFfNQbAgQUfb48nZ4Jbcsa5ETKPY4TG74pE6X2fTljr
-m3flGEiBqsxo/wshWDEewD+WtNcI7b/sM0P1z/YUnBMVV/gan7zUb6Rr2u1NI6k/
-CzbtXtasiGkxjOyQa4cxZE4z/aEAmstieml35daBP0ru8jYEfj2+lrQHA6rU7Jfa
-XRkjoEUkrweFoWp+4fqZ6uJYZkp+grEMjKVsGWwgGVMJuVenxpbLdQ5u/UjYzn2/
-tVeq4aSctbxB8MLeyjSb79CGUqKjgyRyJIod4+rZk1rnpKZIK6JMk8RSmfdB5QJf
-ls4toPQoZh+5sfN/isyn8kiu4ZP2HYZXBLKxNjLubIRnzaSxTSg=
-=5huO
------END PGP SIGNATURE-----
---=-=-=--
+rick
