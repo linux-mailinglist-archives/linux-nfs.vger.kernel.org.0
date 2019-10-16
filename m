@@ -2,69 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D42CBD9BD8
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2019 22:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A1A1D9D94
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2019 23:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437166AbfJPUbv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Oct 2019 16:31:51 -0400
-Received: from fieldses.org ([173.255.197.46]:36544 "EHLO fieldses.org"
+        id S1730322AbfJPViO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Oct 2019 17:38:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42642 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728881AbfJPUbv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:31:51 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B2BCEBDB; Wed, 16 Oct 2019 16:31:50 -0400 (EDT)
-Date:   Wed, 16 Oct 2019 16:31:50 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
-Cc:     Rick Macklem <rmacklem@uoguelph.ca>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: NFSv4.2 server replies to Copy with length == 0
-Message-ID: <20191016203150.GC17543@fieldses.org>
-References: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <YQBPR0101MB1652DEF8AD7A6169D44D47C6DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <20191016155838.GA17543@fieldses.org>
- <31E6043B-090D-4E37-B66F-A45AC0CFC970@netapp.com>
+        id S1727447AbfJPViO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:38:14 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7AF2F30832C0;
+        Wed, 16 Oct 2019 21:38:14 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-120-208.rdu2.redhat.com [10.10.120.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4DC2060852;
+        Wed, 16 Oct 2019 21:38:14 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 6583F120272; Wed, 16 Oct 2019 17:38:13 -0400 (EDT)
+Date:   Wed, 16 Oct 2019 17:38:13 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>
+Subject: Re: [PATCH 1/3] SUNRPC: The TCP back channel mustn't disappear while
+ requests are outstanding
+Message-ID: <20191016213813.GB1987@pick.fieldses.org>
+References: <20191016141546.32277-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31E6043B-090D-4E37-B66F-A45AC0CFC970@netapp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191016141546.32277-1-trond.myklebust@hammerspace.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 16 Oct 2019 21:38:14 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 07:53:45PM +0000, Kornievskaia, Olga wrote:
-> On 10/16/19, 11:58 AM, "J. Bruce Fields" <bfields@fieldses.org> wrote:
->     On Wed, Oct 16, 2019 at 06:22:42AM +0000, Rick Macklem wrote:
->     > It seems that the Copy reply with wr_count == 0 occurs when the
->     > client sends a Copy request with ca_src_offset beyond EOF in the
->     > input file.  (It happened because I was testing an old/broken
->     > version of my client, but I can reproduce it, if you need a
->     > bugfix to be tested. I don't know if the case of
->     > ca_src_offset+ca_count beyond EOF behaves the same?) --> The RFC
->     > seems to require a reply of NFS4ERR_INVAL for this case.
->     
->     I've never understood that INVAL requirement.  But I know it's
->     been discussed before, maybe there was some justification for it
->     that I've forgotten.
-> 
-> Sigh, well, I don’t know if we should consider adding the check to the
-> NFS server to be NFS spec compliant. VFS layer didn't want the check
-> and instead the preference has been to keep read() semantics of
-> returning a short read (when the len was beyond the end of the file or
-> if the source) to something beyond the end of the file.
+These make sense to me.  (But I'll confess I haven't been following the
+back and forth with Neil.)
 
-I'm inclined to think the spec's just wrong.
+On Wed, Oct 16, 2019 at 10:15:44AM -0400, Trond Myklebust wrote:
+> If there are TCP back channel requests either being processed by the
 
-And how else could a client possibly interpret a 0 return?
-
-> On the client if VFS did read of len=0 then VFS itself we return 0,
-> thus this doesn't protect against other clients sending an NFS copy
-> with len=0.  And in NFS, receiving copy with len=0 means copy to the
-> end of the file. It's not implemented for any "intra" or "inter" code. 
-
-A call with len=0 sounds like a different case.
+In this patch and the next, is the "either" unnecessary, or was there
+some other condition you meant to mention?
 
 --b.
+
+> server threads, then we should hold a reference to the transport
+> to ensure it doesn't get freed from underneath us.
+> 
+> Reported-by: Neil Brown <neilb@suse.de>
+> Fixes: 2ea24497a1b3 ("SUNRPC: RPC callbacks may be split across several..")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  net/sunrpc/backchannel_rqst.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+> index 339e8c077c2d..7eb251372f94 100644
+> --- a/net/sunrpc/backchannel_rqst.c
+> +++ b/net/sunrpc/backchannel_rqst.c
+> @@ -307,8 +307,8 @@ void xprt_free_bc_rqst(struct rpc_rqst *req)
+>  		 */
+>  		dprintk("RPC:       Last session removed req=%p\n", req);
+>  		xprt_free_allocation(req);
+> -		return;
+>  	}
+> +	xprt_put(xprt);
+>  }
+>  
+>  /*
+> @@ -339,7 +339,7 @@ struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xprt *xprt, __be32 xid)
+>  		spin_unlock(&xprt->bc_pa_lock);
+>  		if (new) {
+>  			if (req != new)
+> -				xprt_free_bc_rqst(new);
+> +				xprt_free_allocation(new);
+>  			break;
+>  		} else if (req)
+>  			break;
+> @@ -368,6 +368,7 @@ void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied)
+>  	set_bit(RPC_BC_PA_IN_USE, &req->rq_bc_pa_state);
+>  
+>  	dprintk("RPC:       add callback request to list\n");
+> +	xprt_get(xprt);
+>  	spin_lock(&bc_serv->sv_cb_lock);
+>  	list_add(&req->rq_bc_list, &bc_serv->sv_cb_list);
+>  	wake_up(&bc_serv->sv_cb_waitq);
+> -- 
+> 2.21.0
+> 
