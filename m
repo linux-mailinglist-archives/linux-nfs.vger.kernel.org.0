@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A2BDA027
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 00:24:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE2C9DA17E
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 00:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392600AbfJPWIc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Oct 2019 18:08:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59808 "EHLO mx1.suse.de"
+        id S1732892AbfJPWZB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Oct 2019 18:25:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44120 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439085AbfJPWIb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:08:31 -0400
+        id S1730762AbfJPWZB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 16 Oct 2019 18:25:01 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 92831AF6A;
-        Wed, 16 Oct 2019 22:08:29 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CD857AD35;
+        Wed, 16 Oct 2019 22:24:59 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trondmy@gmail.com>, linux-nfs@vger.kernel.org
-Date:   Thu, 17 Oct 2019 09:08:22 +1100
+Date:   Thu, 17 Oct 2019 09:24:53 +1100
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Anna Schumaker <Anna.Schumaker@netapp.com>,
         "J. Bruce Fields" <bfields@redhat.com>
-Subject: Re: [PATCH 3/3] SUNRPC: Destroy the back channel when we destroy the host transport
-In-Reply-To: <20191016141546.32277-3-trond.myklebust@hammerspace.com>
-References: <20191016141546.32277-1-trond.myklebust@hammerspace.com> <20191016141546.32277-2-trond.myklebust@hammerspace.com> <20191016141546.32277-3-trond.myklebust@hammerspace.com>
-Message-ID: <87sgnspcmh.fsf@notabene.neil.brown.name>
+Subject: Re: [PATCH 1/3] SUNRPC: The TCP back channel mustn't disappear while requests are outstanding
+In-Reply-To: <20191016141546.32277-1-trond.myklebust@hammerspace.com>
+References: <20191016141546.32277-1-trond.myklebust@hammerspace.com>
+Message-ID: <87pniwpbuy.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -39,72 +39,87 @@ Content-Transfer-Encoding: quoted-printable
 
 On Wed, Oct 16 2019, Trond Myklebust wrote:
 
-> When we're destroying the host transport mechanism, we should ensure
-> that we do not leak memory by failing to release any back channel
-> slots that might still exist.
+> If there are TCP back channel requests either being processed by the
+> server threads, then we should hold a reference to the transport
+> to ensure it doesn't get freed from underneath us.
 >
 > Reported-by: Neil Brown <neilb@suse.de>
+> Fixes: 2ea24497a1b3 ("SUNRPC: RPC callbacks may be split across several..=
+")
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  net/sunrpc/xprt.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  net/sunrpc/backchannel_rqst.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-> index 8a45b3ccc313..41df4c507193 100644
-> --- a/net/sunrpc/xprt.c
-> +++ b/net/sunrpc/xprt.c
-> @@ -1942,6 +1942,11 @@ static void xprt_destroy_cb(struct work_struct *wo=
-rk)
->  	rpc_destroy_wait_queue(&xprt->sending);
->  	rpc_destroy_wait_queue(&xprt->backlog);
->  	kfree(xprt->servername);
-> +	/*
-> +	 * Destroy any existing back channel
-> +	 */
-> +	xprt_destroy_backchannel(xprt, UINT_MAX);
-> +
+> diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+> index 339e8c077c2d..7eb251372f94 100644
+> --- a/net/sunrpc/backchannel_rqst.c
+> +++ b/net/sunrpc/backchannel_rqst.c
+> @@ -307,8 +307,8 @@ void xprt_free_bc_rqst(struct rpc_rqst *req)
+>  		 */
+>  		dprintk("RPC:       Last session removed req=3D%p\n", req);
+>  		xprt_free_allocation(req);
+> -		return;
+>  	}
+> +	xprt_put(xprt);
+>  }
+>=20=20
+>  /*
+> @@ -339,7 +339,7 @@ struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xp=
+rt *xprt, __be32 xid)
+>  		spin_unlock(&xprt->bc_pa_lock);
+>  		if (new) {
+>  			if (req !=3D new)
+> -				xprt_free_bc_rqst(new);
+> +				xprt_free_allocation(new);
+>  			break;
+>  		} else if (req)
+>  			break;
+> @@ -368,6 +368,7 @@ void xprt_complete_bc_request(struct rpc_rqst *req, u=
+int32_t copied)
+>  	set_bit(RPC_BC_PA_IN_USE, &req->rq_bc_pa_state);
+>=20=20
+>  	dprintk("RPC:       add callback request to list\n");
+> +	xprt_get(xprt);
+>  	spin_lock(&bc_serv->sv_cb_lock);
+>  	list_add(&req->rq_bc_list, &bc_serv->sv_cb_list);
+>  	wake_up(&bc_serv->sv_cb_waitq);
+> --=20
+> 2.21.0
 
-This will cause xprt->bc_alloc_max to become meaningless.
-That isn't really a problem as the xprt is about to be freed, but it
-still seems a little untidy - fragile maybe.
-How about another line in the comment:
+Looks good.
+This and the next two:
+ Reviewed-by: NeilBrown <neilb@suse.de>
 
-   * Note: this corrupts ->bc_alloc_max, but it is too late for that to
-   * matter.
-??
+It would help me if you could add a Fixes: tag to at least the first
+two.
 
-Also, possibly add
- WARN_ON(atomic_read(&xprt->bc_slot_count);
-either before or after the xprt_destroy_backchannel - because there
-really shouldn't be any requests by this stage.
+BTW, while reviewing I notices that bc_alloc_count and bc_slot_count are
+almost identical.  The three places were that are changed separately are
+probably (minor) bugs.
+Do you recall why there were two different counters?  Has the reason
+disappeared?
 
 Thanks,
 NeilBrown
-
-
->  	/*
->  	 * Tear down transport state and free the rpc_xprt
->  	 */
-> --=20
-> 2.21.0
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2nlNcACgkQOeye3VZi
-gbk+Eg//ZQqXhWg0FBjoaDCiNvatLbCmR8H3rATecZU1mjJl3qxbf6kAyIPAwTnT
-UnC7ExvaiNFFpYj5nS3OBaLOQQLtt558C4V+KXYDTddemZ5IbRSCYje3fh1ASq+V
-LPzNxxcEfnbIOGHnhEpDccr8oua6V0drN10N6sYw/Zc+CeX7GQ9Xc0QanVuWMCbs
-z3spFOvYqIN+hQIPI1yDpBvqM/bd3yuus55qAp/Loti1+5iY7hRGXixfw/59dWwx
-IbOi+CWUzQ5gh0sMUM3GPZJg391l5zUXQP+TxPaVr6WRHykrvDKv00N2CJm0VIGW
-PXgzCcCXLizGnj+0DDDhL6ahqH186Sy0IU5VFAgtFxf2xQmsBM8f4MRqdjn1so/7
-XwP7VUzkPL32gW3zwGWF8+iQ3uZUNE0/PB5zsZcok5pEwE+O4SJzb+SFPtyMO8jI
-3mUtZFKHmrvUuiAURR4SS2SR+dWljDF8wG9jJvu35gAecJHSptVQK7NUNxbSuJMS
-c8opfZ2Gp+lFzWDCk9qRcO13eXLo4WpBxZdd0nVd0CnKSzYrptJH2mVtesPmS8fz
-XZuoADRGEWqURG/Nxq/wsm5LuTHXnDzlnsFvNuIszc3haZJJpU4VddMmQdJTb0pN
-KkTplKte2ytJZTAjxYwfLYtERuwudgV4PmLjVLNZuD2khyAj95Q=
-=ovy/
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2nmLUACgkQOeye3VZi
+gbm8zg/9Gtc6DroZ/eXpE1Bc8cCLjmtO530p+vPiulWHpfr0LFMDzD/h9kmdiuTS
+KEftKsiX7UVwjQmrPqR3fnc9MWTS4e1y1L0xYTET8TrbDNxOJa2Z3C/PhU1FoLRl
+zxPuhQOqxv+olkD/0UVzTT3RCIwka/YJSytmv1bcc7W/u8sAX1ILW9QmZdU8OT7R
+w1ykOqa60K/zVZZZh3DRXDR4vammbBuvHU9WTlTvCawy141Qr4NRjn9mJgSEUSZV
+YxEFeqK3yl61ONxVUOkWdA4JrL6muzbYgixzmdv48JhW8074P83joKFmEJrQPxvj
+SDHyUpSp0W7A4ap90VXgJ4fyZu2u2up+OdAS2KqwP9+l5N04i2wtajJT2kqGVVQu
+F4lHrSRyE4H1rqi1U5cQrchfNsuJieSubFdsVXTyOy7qOy4les8Sp1L2hmXNVIuK
+4/cysUkibfhjJeR6Yx9oXOgRJ2b7PphF1D6laqBpM8cQBy8dK+yD1Uq9Fx6Rplkl
+ea9rjrFg2u43f3aGV8F0YXWOBrpZJsSLUtbN3ohxci3OZdNUFgsAvehkhFyT33pP
+g5zsRcHi0yM0b8DlRwCMMLApBcKMICXbsPKY5U48Tc1iyIYy9xHqsnrrfSQ/fyr5
+fGvszUS19pr8SQ2BKHRiIy3iXvQrNRSxuIgkb0krJMZlJlI8YBQ=
+=hLNX
 -----END PGP SIGNATURE-----
 --=-=-=--
