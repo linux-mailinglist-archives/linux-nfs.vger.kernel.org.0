@@ -2,156 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF99DA4D1
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 06:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68367DAC8A
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 14:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfJQEoC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 17 Oct 2019 00:44:02 -0400
-Received: from mail-eopbgr670083.outbound.protection.outlook.com ([40.107.67.83]:34649
-        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
+        id S2387868AbfJQMnw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Oct 2019 08:43:52 -0400
+Received: from mail-eopbgr800127.outbound.protection.outlook.com ([40.107.80.127]:47910
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407756AbfJQEoC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 17 Oct 2019 00:44:02 -0400
+        id S1731530AbfJQMnw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:43:52 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PlG0aDZfZJJAn0eEQNNK9WgHllQAhHmMhEPeminaQ3sPt9OMNn0UJiJHo44aIm20DC7xHp7HN1hSuwNp6m7PPR5Zvh7Xc/ZMEDsinxNhdxC8u8btJsoCpq7bXj02ulESvwmZ0YddvIAoGywTPr+FM7lak/A5yCN5hVQv/Bzd4cIymBwUL69SpjA1Ay8DP4K5E7fp0b/soxXRR67eSyMkjDz85/n6KMrq7WTfMUT7ysmOX5LKfv03ghCJGe27bfp8KLyAK+eR6yB8Dqu45u+D7peCiQHjjtKfT7uZH8mnsj9Jx19J8bU3xktwap7KtLkC7ue/eERyYsB/DMbibvKLWw==
+ b=I4ljhxwzgF17KKn4NnQgvHJ862bf9zQctpo+5X8lGBM1+VrXzkEKxkGhtUWXKO7m+PNpYkuVwwbNegw+rMK2GJ25TwaY9mvWcJ64+A/F08SK3tJUoiYkhF3CKCyM12uolXqjz+N9czm4FUps/7mDnWSa4bVgSrjQLwLE0AqKSRPodbSf2dxfFOpciC4x4hFlIZDPENnsSElrspeR6B5M1ZjcJGL1I5ZkaQTgSBs8dSivnusTQNZJaZvknxkCKf5gWPyGPi3GKhI9x6brMzMgsFPpLBaVpdNC+UQpKhQOTE8Sx0Tw1rjA5epQ+j2kkjNRY+wJUpU74szPoatY+CZRRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OOBd75QQnB9K20lshF6uY8zcUawhMGb4W5rW3wtnRFQ=;
- b=VW1fwghsX7nnan5wWoafN8EtGc7zO6edEox9VIOwoZZTtzFfOW4vzSaOweCkK+rk6WPvzD3rN3dKneKtiz4UQ8QdCPRIcJ8IgpzffY+0mw9i6avrTVhuejRHcwguUa0DZq15gcR72THXAkdAih1rZ19hUcVkVIfO7prL7bhorArhdb9SnDsy1ZS70Zs1xBXL+Zxf6RC+7dm1CVroHJWiIasJ1CJM+gL3znbDQg5HkNViZrKniSee3ipCnARbBeNkZOTSgRUIxB3F4I7njcybjx8ezO7FRQAJzFpxlUavIzxGaKcCIqUrcL3FMADHr99FsGc5X7t4PxrVXw99oDzopA==
+ bh=frse0ZhwE3Rwwp+h6AloQE2hnYmPpBI1IvT0ZZfJeNM=;
+ b=AZjwfxcE4OrpnyTNZe4it9piYH3HxhlSsoS61QhF1CE7Gux0WVwAitNPtkkdFBmMWFHjhBGwF7qPqVz0yHOjFmNLPrUIP+/duucvqYEdD+62x33uwgZVbd7m4i0W/UZQYt82ERnfGVxWSPC5MxDbZfseJ+AdFA/x8GVjN96BFnqsSC3N3lcxvfiIDGXNgtQMNTTW7w7erz3Lp+o4rgsCa4b9yDXjn3xNKZwPX/x21n+MzZKL9LUgRKaaxFEdyACnfhgpZNZ76n2o8TuQXuF1Rao02v8rR25T6YIpcBwibE45tu5HHHnzB8ZcqVFKJd/DHkYFP/KMg6dVY6GrTD71rg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
- dkim=pass header.d=uoguelph.ca; arc=none
-Received: from YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM (52.132.66.144) by
- YQBPR0101MB0948.CANPRD01.PROD.OUTLOOK.COM (52.132.65.146) with Microsoft SMTP
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=frse0ZhwE3Rwwp+h6AloQE2hnYmPpBI1IvT0ZZfJeNM=;
+ b=ZSBT17Rqgqwghbv/MO4jc979mfy49a8LOOCkKikL1w881mye3IgtZ80NpxCbsSIAbsNwYeIUsQ2h0LPkgXM6Wm2pGuRz0vB4/puyowIKxdeWGnkJwuoAkuZ1Dl+F82rJHaTDozYd/qRuj8gCO3VxMhz6ymmbZUTMfQdTNZXVEg8=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1884.namprd13.prod.outlook.com (10.174.187.30) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Thu, 17 Oct 2019 04:43:59 +0000
-Received: from YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::9051:db7:40f3:2ba3]) by YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::9051:db7:40f3:2ba3%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 04:43:59 +0000
-From:   Rick Macklem <rmacklem@uoguelph.ca>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "nfsv4@ietf.org" <nfsv4@ietf.org>
-Subject: Re: NFSv4.2 server replies to Copy with length == 0
-Thread-Topic: NFSv4.2 server replies to Copy with length == 0
-Thread-Index: AQHVg8vy6XBow5lmmE6IMuCp/6tuzqdcytI+gACiuwCAAEGxgIAACqQAgABZSj+AAC45/Q==
-Date:   Thu, 17 Oct 2019 04:43:58 +0000
-Message-ID: <YQBPR0101MB16526D76EE6A574D31EDF9DBDD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-References: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <YQBPR0101MB1652DEF8AD7A6169D44D47C6DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <20191016155838.GA17543@fieldses.org>
- <31E6043B-090D-4E37-B66F-A45AC0CFC970@netapp.com>,<20191016203150.GC17543@fieldses.org>,<YQBPR0101MB16524CABD71AACBD2D9DC651DD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-In-Reply-To: <YQBPR0101MB16524CABD71AACBD2D9DC651DD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-Accept-Language: en-US
+ 15.20.2367.14; Thu, 17 Oct 2019 12:43:47 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::4c0b:3977:6b2d:6a8c]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::4c0b:3977:6b2d:6a8c%3]) with mapi id 15.20.2367.016; Thu, 17 Oct 2019
+ 12:43:47 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "neilb@suse.de" <neilb@suse.de>
+CC:     "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "bfields@redhat.com" <bfields@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH 1/3] SUNRPC: The TCP back channel mustn't disappear while
+ requests are outstanding
+Thread-Topic: [PATCH 1/3] SUNRPC: The TCP back channel mustn't disappear while
+ requests are outstanding
+Thread-Index: AQHVhCyEdkNBkaXjMUiLB8A5l/KGL6dd2LaAgADv94A=
+Date:   Thu, 17 Oct 2019 12:43:47 +0000
+Message-ID: <3a20dd4df760111365b381e1cc1fe778ef2dc141.camel@hammerspace.com>
+References: <20191016141546.32277-1-trond.myklebust@hammerspace.com>
+         <87pniwpbuy.fsf@notabene.neil.brown.name>
+In-Reply-To: <87pniwpbuy.fsf@notabene.neil.brown.name>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rmacklem@uoguelph.ca; 
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [66.187.232.65]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b532b86-b219-4ae1-3cde-08d752bca025
-x-ms-traffictypediagnostic: YQBPR0101MB0948:
-x-microsoft-antispam-prvs: <YQBPR0101MB0948583B9DA8A1928E5C23D3DD6D0@YQBPR0101MB0948.CANPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: 176b0297-40b7-4a3c-2e2b-08d752ffa78c
+x-ms-traffictypediagnostic: DM5PR1301MB1884:
+x-microsoft-antispam-prvs: <DM5PR1301MB1884D6816FDDADC82CBD8692B86D0@DM5PR1301MB1884.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(51444003)(199004)(189003)(66476007)(76116006)(478600001)(11346002)(74316002)(64756008)(86362001)(71200400001)(66946007)(71190400001)(476003)(8936002)(8676002)(186003)(66446008)(66556008)(81156014)(81166006)(102836004)(486006)(446003)(2906002)(33656002)(305945005)(5660300002)(54906003)(110136005)(99286004)(6506007)(14454004)(786003)(76176011)(6246003)(256004)(52536014)(46003)(316002)(53546011)(14444005)(9686003)(229853002)(25786009)(55016002)(4326008)(6436002)(2940100002)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:YQBPR0101MB0948;H:YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: uoguelph.ca does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(39840400004)(396003)(366004)(189003)(199004)(446003)(66946007)(99286004)(66446008)(478600001)(14454004)(8936002)(36756003)(2501003)(91956017)(76116006)(64756008)(66556008)(66476007)(102836004)(71190400001)(66066001)(76176011)(26005)(71200400001)(4326008)(4001150100001)(6506007)(14444005)(110136005)(7736002)(486006)(256004)(6512007)(81156014)(6436002)(81166006)(186003)(229853002)(86362001)(6116002)(3846002)(305945005)(11346002)(2616005)(54906003)(2906002)(5660300002)(6486002)(25786009)(8676002)(118296001)(6246003)(316002)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1884;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2RDZgT0Jwx04MwzFVArFHsF/CRV12EJ4sHnh2uZ5wc/4XZLCVwechUTjLjTyxSEoQrLCKpSDluoBUpzjJl+ZRtChoimdAXNLNpsrOCWBxjGRYXP2lt/QJBRbiT4yoLpk3eZP/aj5lECBoXHiHKehQpwBoY7RoT1xHUmwsz3f5EmX3RbABF7l+l14eZoNdgsbgD9HOFl3p5Uvate0Xkkin3+ucvR+RW0Jpfn87YIqIz+WMx0BzRTe9BTB+Qk4fHtJYE4QUvKIxeWdv4/cKZvUSPr0mFt4vCa36QaG780TG12wBb+TREYj3iu+M6zK4wTj+wsSlD6u6DFHTSPoPI/uoY4x9I2F9+1dZWHX6Lgr5XXrhRjEt+7cHca70UsoZWShGmS61bUYodVKTCxnwNiRe5tzqQM/o8IHKzSMVoK6pUE=
+x-microsoft-antispam-message-info: tMYFLXfGxtaWma3PVLAL7/PWvfoTyX1qQnj7VX3NIVcck/9wR0pE2EtCnrtiIZwukELaqRiVzJsDsGE2E5a8ctrUOGRlio5KBZL4y6EDZir/kXSPYh2Kb0BWUS8td8UegeuPETm2yaT5HZl55me2NYcJBw5MsM1ivsAUcYqjsELMf0Zs+LtFcKF9PntOUFQNB3JNWrV2MLO/V9SkTFb+gpa8TYq2m5BrKua9HZ8wYC1Fy53Wv1e1pGC7SJDt5vBv+R1rWBV7RF4bAR/joRnUmLpOPCCLmX4ZAK8OkWpntUAgYpv4TkMH8ERVTu1f//xOJqJ6jrF3+fMJqBxZ465N/5j3fm9WXNQY9KhkP5pV9vhvzuEJlXPVcM2OM2BhbCFl7/ModZW/T+pSiM+mX9uUGy2Y9Lk/X1szlETavRR7wak=
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0C144DE22CAA7948A23168BBAE442BAD@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: uoguelph.ca
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b532b86-b219-4ae1-3cde-08d752bca025
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 04:43:58.9629
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 176b0297-40b7-4a3c-2e2b-08d752ffa78c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 12:43:47.5965
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: stdXW7FiJNNYFTXWuCBc8Jd5hrliCYSdvb/eb0YA9uqdpGg2MjFlnNpD6TlFZQA3mZsz7OgVFd6ofqTckcBrLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB0948
+X-MS-Exchange-CrossTenant-userprincipalname: Ppy+UDTfDr8ig2GKCb1Duaeg/ZW2FcY8D4zMvCZwoSuTP7wSpEUkV44lttK96EJ4uFIYYJ+puuBKe7hesvJP9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1884
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Rick wrote:
->I have added nfsv4@ietf.org to the cc list, since I think it is important that
->everyone involved in NFSv4.2 be aware of this.
->
->>J. Bruce Fields wrote:
->>On Wed, Oct 16, 2019 at 07:53:45PM +0000, Kornievskaia, Olga wrote:
->>> On 10/16/19, 11:58 AM, "J. Bruce Fields" <bfields@fieldses.org> wrote:
->>>     On Wed, Oct 16, 2019 at 06:22:42AM +0000, Rick Macklem wrote:
->>>     > It seems that the Copy reply with wr_count == 0 occurs when the
->>>     > client sends a Copy request with ca_src_offset beyond EOF in the
->>>     > input file.  (It happened because I was testing an old/broken
->>>     > version of my client, but I can reproduce it, if you need a
->>>     > bugfix to be tested. I don't know if the case of
->>>     > ca_src_offset+ca_count beyond EOF behaves the same?) --> The RFC
->>>     > seems to require a reply of NFS4ERR_INVAL for this case.
->>>
->>>     I've never understood that INVAL requirement.  But I know it's
->>>     been discussed before, maybe there was some justification for it
->>>     that I've forgotten.
->No longer overly relevant, since the RFC is now a published spec.
->(It may have just been consistent with the old copy_file_range(2) semantics?)
->
->>>
->>> Sigh, well, I don’t know if we should consider adding the check to the
->>> NFS server to be NFS spec compliant. VFS layer didn't want the check
->>> and instead the preference has been to keep read() semantics of
->>> returning a short read (when the len was beyond the end of the file or
->>> if the source) to something beyond the end of the file.
->>
->>I'm inclined to think the spec's just wrong.
->The RFC is not wrong, although it might not be your preferred semantic.
->(It would only be wrong if it was unimplementable.)
->
->As for patching the server, I am not sure if that is a good idea now or not?
->- I would like to see the Linux NFSv4.2 server conform to the RFC, however
->   it has already shipped in its current form.
->--> I think that all extant clients need to handle both reply semantics and,
->       once that is the case, patching the server to conform to the RFC would
->       be nice.
->
->I have now found two cases where the Linux NFSv4.2 server does not conform
->to RFC-7862. One is as above and the other is a reply to Seek of NFS4ERR_NXIO
->when the sa_offset argument == file_size (instead of replying NFS_OK along
->with sr_eof == true).
->
->Since I now know about these two cases, I can code the client to handle
->both of them. Of course, I do worry about others that I have not found yet.
->
->>And how else could a client possibly interpret a 0 return?
->The FreeBSD client looped, because it does a Copy in a loop until all bytes
->were copied and, with a reply length == 0, it didn't make progress or
->recognize an error.
->
->Fortunately, this client is still under development (not yet released), so I can
->add code to handle wr_count == 0 in the same way as NFS4ERR_INVAL.
->
->>> On the client if VFS did read of len=0 then VFS itself we return 0,
->>> thus this doesn't protect against other clients sending an NFS copy
->>> with len=0.  And in NFS, receiving copy with len=0 means copy to the
->>> end of the file. It's not implemented for any "intra" or "inter" code.
->Are you saying that an NFSv4.2 Copy request with a ca_count == 0
->will not work for the Linux NFSv4.2 server?
->(I guess I'd better test this one, too.)
-Tested it and it does not work, at least for Fedora30.
-The server just returns 0 instead of doing a copy to EOF on the input file.
-I think you should implement this, although my client does not do this now.
-
->>A call with len=0 sounds like a different case.
-Yes, as above.
->>
->>--b.
-
-rick
-
+T24gVGh1LCAyMDE5LTEwLTE3IGF0IDA5OjI0ICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IE9u
+IFdlZCwgT2N0IDE2IDIwMTksIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gDQo+ID4gSWYgdGhl
+cmUgYXJlIFRDUCBiYWNrIGNoYW5uZWwgcmVxdWVzdHMgZWl0aGVyIGJlaW5nIHByb2Nlc3NlZCBi
+eQ0KPiA+IHRoZQ0KPiA+IHNlcnZlciB0aHJlYWRzLCB0aGVuIHdlIHNob3VsZCBob2xkIGEgcmVm
+ZXJlbmNlIHRvIHRoZSB0cmFuc3BvcnQNCj4gPiB0byBlbnN1cmUgaXQgZG9lc24ndCBnZXQgZnJl
+ZWQgZnJvbSB1bmRlcm5lYXRoIHVzLg0KPiA+IA0KPiA+IFJlcG9ydGVkLWJ5OiBOZWlsIEJyb3du
+IDxuZWlsYkBzdXNlLmRlPg0KPiA+IEZpeGVzOiAyZWEyNDQ5N2ExYjMgKCJTVU5SUEM6IFJQQyBj
+YWxsYmFja3MgbWF5IGJlIHNwbGl0IGFjcm9zcw0KPiA+IHNldmVyYWwuLiIpDQo+ID4gU2lnbmVk
+LW9mZi1ieTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBuZXQvc3VucnBjL2JhY2tjaGFubmVsX3Jxc3QuYyB8IDUgKysrLS0N
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4g
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy9iYWNrY2hhbm5lbF9ycXN0LmMNCj4gPiBi
+L25ldC9zdW5ycGMvYmFja2NoYW5uZWxfcnFzdC5jDQo+ID4gaW5kZXggMzM5ZThjMDc3YzJkLi43
+ZWIyNTEzNzJmOTQgMTAwNjQ0DQo+ID4gLS0tIGEvbmV0L3N1bnJwYy9iYWNrY2hhbm5lbF9ycXN0
+LmMNCj4gPiArKysgYi9uZXQvc3VucnBjL2JhY2tjaGFubmVsX3Jxc3QuYw0KPiA+IEBAIC0zMDcs
+OCArMzA3LDggQEAgdm9pZCB4cHJ0X2ZyZWVfYmNfcnFzdChzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSkN
+Cj4gPiAgCQkgKi8NCj4gPiAgCQlkcHJpbnRrKCJSUEM6ICAgICAgIExhc3Qgc2Vzc2lvbiByZW1v
+dmVkIHJlcT0lcFxuIiwNCj4gPiByZXEpOw0KPiA+ICAJCXhwcnRfZnJlZV9hbGxvY2F0aW9uKHJl
+cSk7DQo+ID4gLQkJcmV0dXJuOw0KPiA+ICAJfQ0KPiA+ICsJeHBydF9wdXQoeHBydCk7DQo+ID4g
+IH0NCj4gPiAgDQo+ID4gIC8qDQo+ID4gQEAgLTMzOSw3ICszMzksNyBAQCBzdHJ1Y3QgcnBjX3Jx
+c3QgKnhwcnRfbG9va3VwX2JjX3JlcXVlc3Qoc3RydWN0DQo+ID4gcnBjX3hwcnQgKnhwcnQsIF9f
+YmUzMiB4aWQpDQo+ID4gIAkJc3Bpbl91bmxvY2soJnhwcnQtPmJjX3BhX2xvY2spOw0KPiA+ICAJ
+CWlmIChuZXcpIHsNCj4gPiAgCQkJaWYgKHJlcSAhPSBuZXcpDQo+ID4gLQkJCQl4cHJ0X2ZyZWVf
+YmNfcnFzdChuZXcpOw0KPiA+ICsJCQkJeHBydF9mcmVlX2FsbG9jYXRpb24obmV3KTsNCj4gPiAg
+CQkJYnJlYWs7DQo+ID4gIAkJfSBlbHNlIGlmIChyZXEpDQo+ID4gIAkJCWJyZWFrOw0KPiA+IEBA
+IC0zNjgsNiArMzY4LDcgQEAgdm9pZCB4cHJ0X2NvbXBsZXRlX2JjX3JlcXVlc3Qoc3RydWN0IHJw
+Y19ycXN0DQo+ID4gKnJlcSwgdWludDMyX3QgY29waWVkKQ0KPiA+ICAJc2V0X2JpdChSUENfQkNf
+UEFfSU5fVVNFLCAmcmVxLT5ycV9iY19wYV9zdGF0ZSk7DQo+ID4gIA0KPiA+ICAJZHByaW50aygi
+UlBDOiAgICAgICBhZGQgY2FsbGJhY2sgcmVxdWVzdCB0byBsaXN0XG4iKTsNCj4gPiArCXhwcnRf
+Z2V0KHhwcnQpOw0KPiA+ICAJc3Bpbl9sb2NrKCZiY19zZXJ2LT5zdl9jYl9sb2NrKTsNCj4gPiAg
+CWxpc3RfYWRkKCZyZXEtPnJxX2JjX2xpc3QsICZiY19zZXJ2LT5zdl9jYl9saXN0KTsNCj4gPiAg
+CXdha2VfdXAoJmJjX3NlcnYtPnN2X2NiX3dhaXRxKTsNCj4gPiAtLSANCj4gPiAyLjIxLjANCj4g
+DQo+IExvb2tzIGdvb2QuDQo+IFRoaXMgYW5kIHRoZSBuZXh0IHR3bzoNCj4gIFJldmlld2VkLWJ5
+OiBOZWlsQnJvd24gPG5laWxiQHN1c2UuZGU+DQo+IA0KPiBJdCB3b3VsZCBoZWxwIG1lIGlmIHlv
+dSBjb3VsZCBhZGQgYSBGaXhlczogdGFnIHRvIGF0IGxlYXN0IHRoZSBmaXJzdA0KPiB0d28uDQoN
+Ck5laXRoZXIgaGF2ZSBDYzpzdGFibGUsIGJ1dCB0aGV5IGJvdGggYWxyZWFkeSBoYXZlIEZpeGVz
+OiB0YWdzLiBTZWUNCmFib3ZlLg0KDQo+IA0KPiBCVFcsIHdoaWxlIHJldmlld2luZyBJIG5vdGlj
+ZXMgdGhhdCBiY19hbGxvY19jb3VudCBhbmQgYmNfc2xvdF9jb3VudA0KPiBhcmUNCj4gYWxtb3N0
+IGlkZW50aWNhbC4gIFRoZSB0aHJlZSBwbGFjZXMgd2VyZSB0aGF0IGFyZSBjaGFuZ2VkIHNlcGFy
+YXRlbHkNCj4gYXJlDQo+IHByb2JhYmx5IChtaW5vcikgYnVncy4NCj4gRG8geW91IHJlY2FsbCB3
+aHkgdGhlcmUgd2VyZSB0d28gZGlmZmVyZW50IGNvdW50ZXJzPyAgSGFzIHRoZSByZWFzb24NCj4g
+ZGlzYXBwZWFyZWQ/DQoNCklJUkMsIHRoZSBmb3JtZXIgY29udGFpbnMgdGhlIGNvdW50IG9mIHBy
+ZWFsbG9jYXRlZCBzbG90cywgYW5kIHRoZQ0KbGF0dGVyIHRoZSBjb3VudCBvZiBwcmVhbGxvY2F0
+ZWQrZHluYW1pYyBzbG90cy4NCg0KVGhhbmtzDQogIFRyb25kDQotLSANClRyb25kIE15a2xlYnVz
+dA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVi
+dXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
