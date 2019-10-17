@@ -2,156 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B74CDB31D
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 19:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10CEEDB36A
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 19:38:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731791AbfJQRPv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Oct 2019 13:15:51 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41439 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbfJQRPv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Oct 2019 13:15:51 -0400
-Received: by mail-ua1-f67.google.com with SMTP id l13so900354uap.8
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2019 10:15:50 -0700 (PDT)
+        id S2503068AbfJQRiC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Oct 2019 13:38:02 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41630 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503066AbfJQRiB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Oct 2019 13:38:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p10so2644712qkg.8
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2019 10:38:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/aAlKcpqnLPShu+fN6LwWs6qFlJfzrRCNAdEqnFykI4=;
-        b=YWZMG5NZiUUssREGlx78ibupknX9AA8YRV/JZnBP2j3qerUnnuUQDuZj/Pa/oIo+l7
-         Cfdvgz9fNrb5aKHaXJR0rBUoiJ1sDmCagNN2Glv+cY81qBRR8Pn/w/b2fuFy9Qn96QBI
-         k+bQZJJsbILS8zVpS07vNmIkzSfo+krk7RfKyLmf43dvSVjgBxbUpKia5ecGI55BZV8V
-         f3RMndsIwuEXiljZxMJ7HQPGn2Q7eXE10Ub5sqvuNheqP/ZLjbZ5PdhjKEKEEjG9KYWc
-         e5Q7cOAozgRzBHmG+im2opCxAD9JfE8bfxeC4ufcArW9hc/vc5IHVKgYVrZr9WcTYjlj
-         IUJg==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KzDd/kJUTTdo9b021DqcVeh+HNqCV73bsFYcXsRARMs=;
+        b=XEMba55BuJu9UP9MZ+IfCVR1exBQAtiuZJReVEy5NurmLn4gZuX1pltEKMRcBOwNGj
+         s8EQevCagnyxKfrxOa66xF9vVeaSNX4dGeuxzqxTFTwDC3P9aXVEUh0Cm2m1E73sq+jG
+         WaYeVmVrhh42iHiVTp0m0QnRhLYnXZoZu6JLVSIUV878y8NexZjvOQFHPZLNwI1WbvdX
+         1P4YYlSTyS5ZmgUjjOAZBoMoNP2ufCtE80YQRNOuDxdmNi/6+b7+45+eH216vJfL/HVC
+         VNgYYueWebW3gH6hLBvE1Glui34SdDe9dgCvwlT2M/LLjGSTg2N45GpM+MxtTFgBO1uv
+         T8uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/aAlKcpqnLPShu+fN6LwWs6qFlJfzrRCNAdEqnFykI4=;
-        b=PaOYarCA/BYFLY6R6BSiITJ4XT8RuRa8nTu0vX5TZH4Poq5pXc5pHU2EWVubTN3Zre
-         rSy9Z1AIWD7oi44PM9c/eeo1BxwE/eu0uRXKWHjVPW53iYDYZP9/68X/Uub1hNalq3q9
-         MWr3f7hzIYndbZOI2d/0CMIWoYhqxhNH3yBHMh20KOo93HKJQVUeqY9Kq7sQEx68YA4Y
-         ZSooNKGHEKmrVNZZAbuq69rnil7SRQ6ePH58CSPeR+bz68bQakulYG17G31BWwU4oiif
-         BMwW/nbJSCZ8Aou+HA04Wi3GSV8AahO/89hbNWBQabEoJGbz5pj/34Fz7lRS1Aw+iFno
-         ilcw==
-X-Gm-Message-State: APjAAAXGfgxkyUdSmP5fPIPLsXQyGnV2gGna2pxBxSDqS+3zSpa1C+Ej
-        6OxuyouGte0hGE0eszRnVRCcncRQH8xTR0YudNw=
-X-Google-Smtp-Source: APXvYqznkHjeG5Y8ZOgKjIorXioFkPtrCFZUW6weLJ/HR/UvulYlmk9FA1mr93o1YRJZjSUQp8THlOJm+rNUjCIeY88=
-X-Received: by 2002:ab0:5949:: with SMTP id o9mr2880903uad.65.1571332549924;
- Thu, 17 Oct 2019 10:15:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KzDd/kJUTTdo9b021DqcVeh+HNqCV73bsFYcXsRARMs=;
+        b=WImhTUEGcuj8hbKCQLGBW5nDhQlttoiW49KjHoEUSwhgFz1ane+DgkR7g4kLde1k4z
+         sf5+ZShBPj8EvCbDhZwIWx+nA94xM6njxixkda+4Dx9GanUdlsUWeVrlCmWwLghTcqUm
+         t+OTwckZu+CjY048LRxPXdDCGaTyj3VZgPnmqy3f/UkUeqVngrPHHApCCP8gYFxrR6p/
+         ku3vDCakwSuam4W+DZKXARS58CS0NWbhsZO+97a/n3orFNGGs3142tDv+wZmBExovMaQ
+         E+XW49boX+rkWy8YjfCNq21JxZWAEKCqnAUWoWfXhe0l1UMN7T8aVFsIw7tlvUby3CFw
+         F44Q==
+X-Gm-Message-State: APjAAAXQkREdCM0PEWQW39loGt38pOZO+3QvtjHAzwgACB4iNEtU0Pcd
+        KmyZtI1y7uRXNWDZS7qQV7gjKsc=
+X-Google-Smtp-Source: APXvYqwW9lnITBJdZ8T/alis1aUWOcp4/t+HkR6BqKk2PEAEXhWu5nC94Lo+IkYJsFrNZZL5BnSz6Q==
+X-Received: by 2002:a37:68e:: with SMTP id 136mr4404009qkg.211.1571333879699;
+        Thu, 17 Oct 2019 10:37:59 -0700 (PDT)
+Received: from localhost.localdomain ([66.187.232.65])
+        by smtp.gmail.com with ESMTPSA id l185sm1768610qkd.20.2019.10.17.10.37.57
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 10:37:58 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/5] NFS: Use non-atomic bit ops when initialising struct nfs_client_initdata
+Date:   Thu, 17 Oct 2019 13:35:44 -0400
+Message-Id: <20191017173548.105111-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <YQBPR0101MB1652DEF8AD7A6169D44D47C6DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <20191016155838.GA17543@fieldses.org> <31E6043B-090D-4E37-B66F-A45AC0CFC970@netapp.com>
- <20191016203150.GC17543@fieldses.org> <YQBPR0101MB16524CABD71AACBD2D9DC651DD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <20191017152253.GG32141@fieldses.org> <6f98f9ab-bf81-3a4a-64e7-2abef60e20d4@talpey.com>
- <YQBPR0101MB16525B93EA77EC9F6937FFFADD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-In-Reply-To: <YQBPR0101MB16525B93EA77EC9F6937FFFADD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 17 Oct 2019 13:15:37 -0400
-Message-ID: <CAN-5tyET7boQ5hTkA7caPS5aWfXq6QaLnsDFx3taWPH_WFL6qQ@mail.gmail.com>
-Subject: Re: [nfsv4] NFSv4.2 server replies to Copy with length == 0
-To:     Rick Macklem <rmacklem@uoguelph.ca>
-Cc:     Tom Talpey <tom@talpey.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "nfsv4@ietf.org" <nfsv4@ietf.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:20 PM Rick Macklem <rmacklem@uoguelph.ca> wrote:
->
-> Tom Talpey wrote:
-> >On 10/17/2019 11:22 AM, J. Bruce Fields wrote:
-> >> On Thu, Oct 17, 2019 at 02:16:36AM +0000, Rick Macklem wrote:
-> >>> I have now found two cases where the Linux NFSv4.2 server does not
-> >>> conform to RFC-7862. One is as above and the other is a reply to Seek
-> >>> of NFS4ERR_NXIO when the sa_offset argument == file_size (instead of
-> >>> replying NFS_OK along with sr_eof == true).
-> >>
-> >> Huh.  Looks like that's documented behavior of Linux's seek.  (See the
-> >> ERRORS section of the lseek(2) man page.)  Looks like Solaris also
-> >> returns -ENXIO in this case:
-> >>
-> >>       https://docs.oracle.com/cd/E26502_01/html/E29032/lseek-2.html
-> >>
-> >> And freebsd too:
-> >>
-> >>       https://www.freebsd.org/cgi/man.cgi?query=lseek&sektion=2
-> >>
-> >> I wonder where that spec language came from?
-> >
-> >Those manpages look like ENXIO comes back only on sparse files. Perhaps
-> >this is boilerplate from v4.0 before this kind of thing was common.
-> As far as I know, a non-sparse file (no holes) behaves the same as a file with
-> holes in it. (I'm not sure if the POSIX draft is clear for the case where the
-> file system does not support holes, but I think most implementations handle
-> that the same way as a file with no holes on a file system that supports holes.)
->
-> >This should at least be discussed on nfsv4@ietf.org...
-> I think there needs to be a discussion on how to best deal with cases where
-> implementations have shipped to users with these glitches in them.
->
-> I think it might be better to document them, so that client coders can
-> implement work arounds (I am doing so for the three cases I've found)
-> instead of the server being patched to change its behaviour, causing
-> potentially more interoperability issues.
-> (That's why I re-posted this to nfsv4@ietf.org.)
->
-> >> Our NFS server could translate an -ENXIO return into 0 and sr_eof ==
-> >> true easily enough, assuming -ENXIO is really only ever returned in that
-> >> case.
-> >>
-> >> I haven't tested, but from a quick check of the Linux client code I
-> >> think that would require a matching fix on the client side to translate
-> >> sr_eof == 0 *back* to ENXIO.
-> >>
-> >> I don't know if it's worth it.
-> >
-> >What Bad Thing would happen for the difference?
-> Well, for a POSIX draft style client, the only effect is that a client may be
-> broken (not handle the sr_eof == true reply correctly) without the
-> implementors knowing that, since they tested against the Linux server.
-> (I believe this is the current status of the Linux client.)
->
-> For a server implementor (I get to wear both hats;-), the server can only
-> generate one reply or the other. I've implemented both with a tunable
-> that can be used to flip between them. I default to the NFS4ERR_NXIO
-> reply, since that is what the Linux client expects.
->
-> As for the Copy issues, the client can easily handle them, but the client
-> coder needs to know about them.
-> At this time the FreeBSD server code only implements what is in the RFC.
-> This seems sufficient for the testing I've done sofar.
-> The case that I think will break would be Linux code that does a
-> copy_file_range(infd, NULL, outfd, NULL, INT_MAX, 0) to copy an entire
-> file. I'll test this case to-day, but I'm think it will just get a NFS4ERR_INVAL
-> reply from the FreeBSD server.
+We don't need atomic bit ops when initialising a local structure on the
+stack.
 
-this might be problematic for the linux client because though there
-isn't an official use of it but the libc cp might implement this doing
-exactly what you say here copy_file_range(infd, NULL, outfd, NULL,
-INT_MAX, 0). It doesn't try to determine the size of the file before
-the copy and
-just copy max bytes assuming that it'll get a short read at some point.
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs3client.c | 2 +-
+ fs/nfs/nfs4client.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> (I can make this work for the Linux client, but it will take another "cheat"
->  enabled via a tunable.)
-> --> Part of the confusion here comes from the fact that the Linux syscall
->        semantics for copy_file_range() has changed. (I also where the
->        copy_file_range(2) hat for FreeBSD, so I've got some work to do there, too.)
->
-> In summary, I think that, since Linux has been shipping this for some time,
-> documenting workarounds is a practical approach.
->
-> rick
->
-> _______________________________________________
-> nfsv4 mailing list
-> nfsv4@ietf.org
-> https://www.ietf.org/mailman/listinfo/nfsv4
+diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+index 148ceb74d27c..178dc102442f 100644
+--- a/fs/nfs/nfs3client.c
++++ b/fs/nfs/nfs3client.c
+@@ -106,7 +106,7 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
+ 		cl_init.nconnect = mds_clp->cl_nconnect;
+ 
+ 	if (mds_srv->flags & NFS_MOUNT_NORESVPORT)
+-		set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
++		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
+ 
+ 	/* Use the MDS nfs_client cl_ipaddr. */
+ 	nfs_init_timeout_values(&ds_timeout, ds_proto, ds_timeo, ds_retrans);
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index da6204025a2d..ebc960dd89ff 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -882,11 +882,11 @@ static int nfs4_set_client(struct nfs_server *server,
+ 	if (minorversion > 0 && proto == XPRT_TRANSPORT_TCP)
+ 		cl_init.nconnect = nconnect;
+ 	if (server->flags & NFS_MOUNT_NORESVPORT)
+-		set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
++		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
+ 	if (server->options & NFS_OPTION_MIGRATION)
+-		set_bit(NFS_CS_MIGRATION, &cl_init.init_flags);
++		__set_bit(NFS_CS_MIGRATION, &cl_init.init_flags);
+ 	if (test_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status))
+-		set_bit(NFS_CS_TSM_POSSIBLE, &cl_init.init_flags);
++		__set_bit(NFS_CS_TSM_POSSIBLE, &cl_init.init_flags);
+ 	server->port = rpc_get_port(addr);
+ 
+ 	/* Allocate or find a client reference we can use */
+-- 
+2.21.0
+
