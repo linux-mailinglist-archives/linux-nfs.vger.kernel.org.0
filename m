@@ -2,55 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AB36DB06D
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 16:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 359C5DB0C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2019 17:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbfJQOtW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Oct 2019 10:49:22 -0400
-Received: from fieldses.org ([173.255.197.46]:37350 "EHLO fieldses.org"
+        id S2440392AbfJQPIo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Oct 2019 11:08:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45278 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfJQOtV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:49:21 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8BFE31C95; Thu, 17 Oct 2019 10:49:21 -0400 (EDT)
-Date:   Thu, 17 Oct 2019 10:49:21 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Rick Macklem <rmacklem@uoguelph.ca>
-Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "nfsv4@ietf.org" <nfsv4@ietf.org>
-Subject: Re: NFSv4.2 server replies to Copy with length == 0
-Message-ID: <20191017144921.GF32141@fieldses.org>
-References: <YQBPR0101MB1652856488503987CEB17738DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <YQBPR0101MB1652DEF8AD7A6169D44D47C6DD920@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <20191016155838.GA17543@fieldses.org>
- <31E6043B-090D-4E37-B66F-A45AC0CFC970@netapp.com>
- <20191016203150.GC17543@fieldses.org>
- <YQBPR0101MB16524CABD71AACBD2D9DC651DD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
- <YQBPR0101MB16526D76EE6A574D31EDF9DBDD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQBPR0101MB16526D76EE6A574D31EDF9DBDD6D0@YQBPR0101MB1652.CANPRD01.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S2440394AbfJQPIo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 17 Oct 2019 11:08:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82E8330860DA
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2019 15:08:44 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-120-158.rdu2.redhat.com [10.10.120.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6833719C77;
+        Thu, 17 Oct 2019 15:08:44 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 186D920836; Thu, 17 Oct 2019 11:08:44 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH v3] gssd: daemonize earlier
+Date:   Thu, 17 Oct 2019 11:08:44 -0400
+Message-Id: <20191017150844.21045-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 17 Oct 2019 15:08:44 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:43:58AM +0000, Rick Macklem wrote:
-> >>On Wed, Oct 16, 2019 at 07:53:45PM +0000, Kornievskaia, Olga wrote:
-> >>> On the client if VFS did read of len=0 then VFS itself we return 0,
-> >>> thus this doesn't protect against other clients sending an NFS copy
-> >>> with len=0.  And in NFS, receiving copy with len=0 means copy to the
-> >>> end of the file. It's not implemented for any "intra" or "inter" code.
-> >Are you saying that an NFSv4.2 Copy request with a ca_count == 0
-> >will not work for the Linux NFSv4.2 server?
-> >(I guess I'd better test this one, too.)
-> Tested it and it does not work, at least for Fedora30.
-> The server just returns 0 instead of doing a copy to EOF on the input file.
-> I think you should implement this, although my client does not do this now.
+daemon_init() calls closeall() which closes all fd's >= 4.  This causes
+rpc.gssd to fail when it's configured to use the gssproxy interposer
+plugin (via "use-gss-proxy=1" in nfs.conf or GSS_USE_PROXY="yes" in the
+environment) *and* libtirpc debugging is enabled (i.e. at least one
+"-r" on the command line):
 
-Agreed.
+1. During startup if rpc debugging is enabled then libtirpc_set_debug()
+   is called, which calls openlog() which consumes fd 3.
+2. If the gssproxy interposer plugin is enabled then when
+   gssd_check_mechs() is called, a socket is created (fd 4) and
+   connected to /var/lib/gssproxy/default.sock.  The fd is stored
+   internally in a struct gpm_ctx.
+3. daemon_init() runs and closes all fd's >= 4.
+4. event_init() runs which calls epoll_create() which returns an epoll
+   fd of 4.
+5. Later when handling an upcall, gssd calls gssd_acquire_krb5_cred()
+   which winds up closing the gpm_ctx->fd which was 4.
+6. event_dispatch() calls epoll_wait() with epfd=4, and -EBADF is
+   returned.  gssd logs the message ""ERROR: event_dispatch() returned!"
+   and exits.
 
---b.
+The solution is to call daemon_init() earlier.
+
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ utils/gssd/gssd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+index 19ad4da..c38dedb 100644
+--- a/utils/gssd/gssd.c
++++ b/utils/gssd/gssd.c
+@@ -1020,11 +1020,11 @@ main(int argc, char *argv[])
+ 			    "support setting debug levels\n");
+ #endif
+ 
++	daemon_init(fg);
++
+ 	if (gssd_check_mechs() != 0)
+ 		errx(1, "Problem with gssapi library");
+ 
+-	daemon_init(fg);
+-
+ 	event_init();
+ 
+ 	pipefs_dir = opendir(pipefs_path);
+-- 
+2.17.2
+
