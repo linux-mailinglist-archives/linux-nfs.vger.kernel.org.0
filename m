@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F3BADD355
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2019 00:17:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC8DDD234
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2019 00:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733275AbfJRWHu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Oct 2019 18:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        id S2388773AbfJRWJT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Oct 2019 18:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733196AbfJRWHt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:49 -0400
+        id S2388745AbfJRWJR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1FA205F4;
-        Fri, 18 Oct 2019 22:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53ED9205F4;
+        Fri, 18 Oct 2019 22:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436468;
-        bh=MZuGYQScevivPMbmdAXU2hcwXP6wafbv8lQFbJkSQsc=;
+        s=default; t=1571436557;
+        bh=NLWDYhQ7BlPtONutR4aCq9O3/nd9q7B7s6ExkFNCdB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBSMjf0osPUBOQEHaFxU29s8BJKP3CEYyPDzLvXinIB94VA8CX1GRfHOcscJoKQum
-         Cgot5WNRCvjLBkdQ+E9ExpF9VA3p29lAlws9WWGlF5FJKnTccHWJGdCN5E49WRMchn
-         HK1mlw6U6i6SfW2wpx9IwiWmGluqHxuqQz/XMlr8=
+        b=hsJZSeOdK5gHNNCAlDQYGm5/5yWZsNPcOzqR+3929wbrR+bC//hwZA5IeJHnuDErm
+         F73ftStbUhDsheZVQRhTwMYNzsWsIzZu8agmdmiIQZ98OTXChBNJ5V0eGC2dr2y9BP
+         YOWmG7INU8IRzS5oXq7ef9laWLR5gVccasoZTCFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 098/100] NFSv4: Fix leak of clp->cl_acceptor string
-Date:   Fri, 18 Oct 2019 18:05:23 -0400
-Message-Id: <20191018220525.9042-98-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 54/56] NFSv4: Fix leak of clp->cl_acceptor string
+Date:   Fri, 18 Oct 2019 18:07:51 -0400
+Message-Id: <20191018220753.10002-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
-References: <20191018220525.9042-1-sashal@kernel.org>
+In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
+References: <20191018220753.10002-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -84,10 +84,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 621e3cf90f4eb..75faef7af22d3 100644
+index 6409ff4876cb5..af062e9f45803 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -5943,6 +5943,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+@@ -5655,6 +5655,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
  	}
  	status = task->tk_status;
  	if (setclientid.sc_cred) {
