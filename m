@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC59ADD221
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2019 00:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99AA7DD398
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2019 00:19:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388142AbfJRWIp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Oct 2019 18:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41274 "EHLO mail.kernel.org"
+        id S1732466AbfJRWTA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Oct 2019 18:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388109AbfJRWIp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:45 -0400
+        id S1732409AbfJRWHG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A5522470;
-        Fri, 18 Oct 2019 22:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE318222D4;
+        Fri, 18 Oct 2019 22:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436523;
-        bh=Xcw/RNR9EXgHEbuvdCsh/HVA7ipQvPjNV0sKMexd29I=;
+        s=default; t=1571436425;
+        bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1q36PAmxVf9E+yxXLzJVxJqCeB1HwlGuxIFS3r9NeBif5YJPycLiVIy6qHdfR+7fh
-         rYKvornUVFwlAiOf2OqaOv+2RCy5N+sovm94/uod1LOnr1O4VJNh997vo+mdsSCHsC
-         Mga/ZPcIr/M53QeigD4m1wJQMZK1Mh3qr2o0SBEQ=
+        b=q3TxJDjM7EzRiWo1RgrR1XHtlzGK+KS+w2FYIezGNW/M2/cTrJ5T8IlmEbactIBHg
+         7Z3CZne1MG7zkwPKv+loc/0i6KNchRwFGF0/Fh2zSEgpdk2CiWnkF/5z3P+DOHWgyB
+         u1OApzPGyjmoxA5/FIooebDyy0PoB9YSZFp0bi4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         Hulk Robot <hulkci@huawei.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 30/56] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
-Date:   Fri, 18 Oct 2019 18:07:27 -0400
-Message-Id: <20191018220753.10002-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 067/100] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
+Date:   Fri, 18 Oct 2019 18:04:52 -0400
+Message-Id: <20191018220525.9042-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
-References: <20191018220753.10002-1-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -104,7 +104,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 3c1e46f4bce32..01b9d9341b541 100644
+index 5ab997912d8d5..117ffd90419e2 100644
 --- a/fs/nfs/write.c
 +++ b/fs/nfs/write.c
 @@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
