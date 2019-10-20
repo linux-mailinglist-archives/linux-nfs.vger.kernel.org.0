@@ -2,61 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6A0BDE96C
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 12:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEC0DDEA25
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 12:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfJUK0u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Oct 2019 06:26:50 -0400
-Received: from [185.116.42.18] ([185.116.42.18]:60418 "EHLO swnlsrv_1"
-        rhost-flags-FAIL-FAIL-FAIL-FAIL) by vger.kernel.org with ESMTP
-        id S1727433AbfJUK0u (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:26:50 -0400
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        by swnlsrv_1 (Postfix) with SMTP id ED0A9CA7A46;
-        Sat, 19 Oct 2019 01:44:41 +0200 (CEST)
-Received: from [254.172.121.130] by 127.0.0.1 with ESMTP id 54238806; Sat, 19 Oct 2019 03:38:56 +0400
-Message-ID: <e-l9z59m$3$--$50mwff@2loild>
-From:   "Mr Barrister Hans Erich" <Barrister_Hans@stationlibraryjhelum.com>
-Reply-To: "Mr Barrister Hans Erich" <Barrister_Hans@stationlibraryjhelum.com>
-To:     doe@example.com
-Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA
-Date:   Sat, 19 Oct 19 03:38:56 GMT
-X-Mailer: The Bat! (v1.52f) Business
+        id S1727831AbfJUK4L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Oct 2019 06:56:11 -0400
+Received: from [139.59.62.52] ([139.59.62.52]:57914 "EHLO mail.gatefjohn.tk"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbfJUK4L (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:56:11 -0400
+Received: by mail.gatefjohn.tk (Postfix, from userid 48)
+        id A9B343913A9; Sun, 20 Oct 2019 20:04:01 +0000 (UTC)
+To:     linux-nfs@vger.kernel.org
+Subject: Purchase Order
+X-PHP-Originating-Script: 0:ygehagea.php
+From:   Daniel Murray <sinara-group@bk.ru>
+Reply-To: sinara-group@list.ru
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="A.E06_996.B0E_B1B"
-X-Priority: 3
-X-MSMail-Priority: Normal
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Message-Id: <20191020223355.A9B343913A9@mail.gatefjohn.tk>
+Date:   Sun, 20 Oct 2019 20:04:01 +0000 (UTC)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi,friend,
 
---A.E06_996.B0E_B1B
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+This is Daniel Murray and i am purchasing manager from Sinara Group Co.,LTD in Russia.
+We are glad to know about your company from the web and we are interested in your products.
+Could you kindly send us your Latest catalog and price list for our trial order.
 
-Greetings
+Thanks and Best Regards,
 
-My name is Barrister Hans Erich.
+Daniel Murray
+Purchasing Manager
+Sinara Group Co.,LTD
 
-I have a client who is interested to invest in your country, she is a well=
- known politician in her country and deserve a lucrative investment partne=
-rship with you outside her country without any delay   Please can you mana=
-ge such investment please Kindly reply for further details.
-
-Your full names ---------
-
-
-Your urgent response will be appreciated
-
-Thank you and God bless you.
-
-Barrister Hans Erich
-
-Yours sincerely,
-Barrister Hans Erich
-
---A.E06_996.B0E_B1B--
 
