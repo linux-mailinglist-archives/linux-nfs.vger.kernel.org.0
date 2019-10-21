@@ -2,159 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1378DDF3F5
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 19:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4942DF43F
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 19:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfJURPO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Oct 2019 13:15:14 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44596 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJURPN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Oct 2019 13:15:13 -0400
-Received: by mail-ua1-f68.google.com with SMTP id n2so4030752ual.11
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2019 10:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xryTGCidibadXIGE+mCISTnyk18m6yL5yTfW8sibCNY=;
-        b=Yj95XOtPvHrrVg6g62FjdNg9GFKeRhbBZot1gxQcWPPCOFH8BBQowo3yTjqc96mHDC
-         uog+EXuJzEauiB47Bjb3ye2tUmeAvJWByiegwVu3sO2kH9+PBXOlHSyifbSo9XjG5qZA
-         lDuBceJRsFe6PlF0J/+tF3x0WISAtzQLuy3iAaOH2Wtq3Qqv6AOegdFUOMkCljz84c8a
-         1bah9BuuzPj25ATPhZjZ1zzpQLUkMDqKDoqlb/WUzHsuJIQejmTS/43Cp6gCKaj6tM7R
-         R00eLpjzRZcGjQZTmSt0YUx9CLQmIb9kDvXtfWS7koTeTM9QZvKCxS7w414mn258iAhv
-         2uHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xryTGCidibadXIGE+mCISTnyk18m6yL5yTfW8sibCNY=;
-        b=pt8mpC9Dhj25FXMnnyCcce5igkTMdqwftaw9Dw//yCYipjWtyWvsxIr2x2mVdP5HBi
-         cpgelVh6NojQ7KHjbi3hW9JrIiUzsdjkTQQo3acmEE+ebcxEnQjwHy5hXRVRheri0tdq
-         G5Yr4BfTTF8QstObKL3coBo54VVS+wBJO7j+OMTJWlchkXF6xNzdfXL15gn8vIhOr09r
-         Hi48RVCGdo9roilY3mSvfy79d5KJcE+I6G6EdOm7ihq07imbfJVJR3sv8caTxMBWRLW1
-         uN7CrbXsUghLYPm4mVetdrzTtdsw5m1FQzMSnME+4hg1jWfCtirMtfANlrSHOejIvYXt
-         S+fA==
-X-Gm-Message-State: APjAAAUvCPJpB1O8Udw+F4Tsu4lQ88Z8NeyOS3P/uP/9Ij8bDVGGNF5G
-        dd8nqiUhkItmNxEV0DUvgTWKEUPfIPGhvBq75hn1UkMk
-X-Google-Smtp-Source: APXvYqyQLLli8l1ygvZrdaKjr5T833+kH8S2ageB8SB068UxfDvs1XbzmAgtRH4N0lcUZvPM/m7L+pqChYhZFOoDTFo=
-X-Received: by 2002:a9f:31c5:: with SMTP id w5mr13668048uad.40.1571678112386;
- Mon, 21 Oct 2019 10:15:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
- <CAN-5tyGKNFsxQHne4hFhON1VRZzCkUjwFMX3ZuzfLASgEN0pMw@mail.gmail.com>
- <2597b15558e1195436db68f019899694c796fef6.camel@hammerspace.com>
- <CAN-5tyH8eRZh5rCwhY8mb7gFMj1QDXdXkRz+HzrZxVJb5Ta1xw@mail.gmail.com> <CAN-5tyEGO9MghXz3SKLFy_QCA7xyT+eq=pQOsVvZbhM=fonVbg@mail.gmail.com>
-In-Reply-To: <CAN-5tyEGO9MghXz3SKLFy_QCA7xyT+eq=pQOsVvZbhM=fonVbg@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 21 Oct 2019 13:15:01 -0400
-Message-ID: <CAN-5tyHSuhzGcx2R8w0hoAJEn3QuncptL4uQNVEy9-pJ=mhbow@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727344AbfJUR3o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Oct 2019 13:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfJUR3n (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:29:43 -0400
+Received: from localhost.localdomain (unknown [194.230.155.217])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FB72077C;
+        Mon, 21 Oct 2019 17:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571678982;
+        bh=wzG2zl1ghSK1OwbPID3sQYVBbITXZvGHKVGtVFvr5hg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jJieV8BynVlayAwwVwqWEA5iVljadUKeK2shzuAnqbqrRZT4JpQyFWVvlhV7NseRG
+         /bsylD3O1cLiXEGZKhO+Qd+WO9LNfTO4OhSHEHmoIGY2JQI7De6i6BNeKa8A1tMuFC
+         93t7u6rzcuVnbvV1UPbppd2s+aRsuGYc0d4BiBJ4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-janitors@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND trivial] fs: Fix Kconfig indentation
+Date:   Mon, 21 Oct 2019 19:29:30 +0200
+Message-Id: <20191021172930.27175-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 8:34 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->
-> On Fri, Oct 11, 2019 at 2:50 PM Olga Kornievskaia <aglo@umich.edu> wrote:
-> >
-> > On Fri, Oct 11, 2019 at 10:18 AM Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Thu, 2019-10-10 at 13:32 -0400, Olga Kornievskaia wrote:
-> > > > On Thu, Oct 10, 2019 at 3:42 AM Murphy Zhou <jencce.kernel@gmail.com>
-> > > > wrote:
-> > > > > Since commit:
-> > > > >   [0e0cb35] NFSv4: Handle NFS4ERR_OLD_STATEID in
-> > > > > CLOSE/OPEN_DOWNGRADE
-> > > > >
-> > > > > xfstests generic/168 on v4.2 starts to fail because reflink call
-> > > > > gets:
-> > > > >   +XFS_IOC_CLONE_RANGE: Resource temporarily unavailable
-> > > >
-> > > > I don't believe this failure has to do with getting ERR_OLD_STATEID
-> > > > on
-> > > > the CLOSE. What you see on the network trace is expected as the
-> > > > client
-> > > > in parallel sends OPEN/CLOSE thus server will fail the CLOSE with the
-> > > > ERR_OLD_STATEID since it already updated its stateid for the OPEN.
-> > > >
-> > > > > In tshark output, NFS4ERR_OLD_STATEID stands out when comparing
-> > > > > with
-> > > > > good ones:
-> > > > >
-> > > > >  5210   NFS 406 V4 Reply (Call In 5209) OPEN StateID: 0xadb5
-> > > > >  5211   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> > > > >  5212   NFS 250 V4 Reply (Call In 5211) GETATTR
-> > > > >  5213   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> > > > >  5214   NFS 250 V4 Reply (Call In 5213) GETATTR
-> > > > >  5216   NFS 422 V4 Call WRITE StateID: 0xa818 Offset: 851968 Len:
-> > > > > 65536
-> > > > >  5218   NFS 266 V4 Reply (Call In 5216) WRITE
-> > > > >  5219   NFS 382 V4 Call OPEN DH: 0x8d44a6b1/
-> > > > >  5220   NFS 338 V4 Call CLOSE StateID: 0xadb5
-> > > > >  5222   NFS 406 V4 Reply (Call In 5219) OPEN StateID: 0xa342
-> > > > >  5223   NFS 250 V4 Reply (Call In 5220) CLOSE Status:
-> > > > > NFS4ERR_OLD_STATEID
-> > > > >  5225   NFS 338 V4 Call CLOSE StateID: 0xa342
-> > > > >  5226   NFS 314 V4 Call GETATTR FH: 0x8d44a6b1
-> > > > >  5227   NFS 266 V4 Reply (Call In 5225) CLOSE
-> > > > >  5228   NFS 250 V4 Reply (Call In 5226) GETATTR
-> > > >
-> > > > "resource temporarily unavailable" is more likely to do with ulimit
-> > > > limits.
-> > > >
-> > > > I also saw the same error. After I increased the ulimit for the stack
-> > > > size, the problem went away. There might still be a problem somewhere
-> > > > in the kernel.
-> > > >
-> > > > Trond, is it possible that we have too many CLOSE recovery on the
-> > > > stack that's eating up stack space?
-> > >
-> > > That shouldn't normally happen. CLOSE runs as an asynchronous RPC call,
-> > > so its stack usage should be pretty minimal (limited to whatever each
-> > > callback function uses).
-> >
-> > Yeah, that wasn't it. I've straced generic/168 to catch
-> > ioctl(clone_file_range) returning EAGAIN.
-> >
-> > I've instrumented the kernel to see where we are returning an EAGAIN
-> > in nfs42_proc_clone(). nfs42_proc_clone is failing on
-> > nfs42_select_rw_context() because nfs4_copy_open_stateid() is failing
-> > to get the open state. Basically it looks like we are trying to do a
-> > clone on a file that's not opened. Still trying to understand
-> > things...
->
-> Trond,
->
-> Generic/168 fails in 2 ways (though only 1 leads to the failure in
-> xfs_io). Another way is having a file closed then client using the
-> stateid for the write and getting a bad_stateid which the client
-> recovers from (but the fact that client shouldn't have done that is a
-> problem). Another is the clone where again happens that file is
-> "closed" and clone is trying to use a stateid.
->
-> The problem comes from the following fact. We have a racing CLOSE and
-> OPEN. Where client did the CLOSE followed by the OPEN but the server
-> processed OPEN and then the CLOSE. Server returns OLD_STATEID to the
-> CLOSE. What the code does it bumps the sequence id and resends the
-> CLOSE which inadvertently is closing a file that was opened before.
-> While IO errors from this are recoverable, the clone error is visible
-> to the application (I think another case would be a copy).
->
-> I don't have a code solution yet. But it'll have to be something where
-> we need to ignore a CLOSE with OLD_STATEID when another OPEN happened.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+    $ sed -e 's/^        /\t/' -i */Kconfig
 
-Also besides the cases for the clone, copy, if the racing open got a
-delegation and that was used during the BAD_STATEID that's an
-automatic  EIO to the application.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ fs/9p/Kconfig     | 20 ++++++++++----------
+ fs/Kconfig        |  4 ++--
+ fs/Kconfig.binfmt |  4 ++--
+ fs/fuse/Kconfig   |  4 ++--
+ fs/nfs/Kconfig    |  6 +++---
+ fs/proc/Kconfig   |  8 ++++----
+ fs/qnx6/Kconfig   |  2 +-
+ fs/ufs/Kconfig    |  4 ++--
+ 8 files changed, 26 insertions(+), 26 deletions(-)
 
-I guess my proposal is to revert 12f275cdd1638. The same problem
-exists for the DELEGRETURN racing with the open and if we re-try we
-will return a delegation that was just given to us but client would
-think that we still have it.
+diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+index ac2ec4543fe1..09fd4a185fd2 100644
+--- a/fs/9p/Kconfig
++++ b/fs/9p/Kconfig
+@@ -32,13 +32,13 @@ endif
+ 
+ 
+ config 9P_FS_SECURITY
+-        bool "9P Security Labels"
+-        depends on 9P_FS
+-        help
+-          Security labels support alternative access control models
+-          implemented by security modules like SELinux.  This option
+-          enables an extended attribute handler for file security
+-          labels in the 9P filesystem.
+-
+-          If you are not using a security module that requires using
+-          extended attributes for file security labels, say N.
++	bool "9P Security Labels"
++	depends on 9P_FS
++	help
++	  Security labels support alternative access control models
++	  implemented by security modules like SELinux.  This option
++	  enables an extended attribute handler for file security
++	  labels in the 9P filesystem.
++
++	  If you are not using a security module that requires using
++	  extended attributes for file security labels, say N.
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 2501e6f1f965..e65289487732 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -97,8 +97,8 @@ config FILE_LOCKING
+ 	default y
+ 	help
+ 	  This option enables standard file locking support, required
+-          for filesystems like NFS and for the flock() system
+-          call. Disabling this option saves about 11k.
++	  for filesystems like NFS and for the flock() system
++	  call. Disabling this option saves about 11k.
+ 
+ config MANDATORY_FILE_LOCKING
+ 	bool "Enable Mandatory file locking"
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 62dc4f577ba1..8d0d16b90039 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -191,9 +191,9 @@ config BINFMT_MISC
+ 	  <file:Documentation/admin-guide/binfmt-misc.rst> to learn how to use this
+ 	  feature, <file:Documentation/admin-guide/java.rst> for information about how
+ 	  to include Java support. and <file:Documentation/admin-guide/mono.rst> for
+-          information about how to include Mono-based .NET support.
++	  information about how to include Mono-based .NET support.
+ 
+-          To use binfmt_misc, you will need to mount it:
++	  To use binfmt_misc, you will need to mount it:
+ 		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+ 
+ 	  You may say M here for module support and later load the module when
+diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
+index 0635cba19971..eb2a585572dc 100644
+--- a/fs/fuse/Kconfig
++++ b/fs/fuse/Kconfig
+@@ -34,7 +34,7 @@ config VIRTIO_FS
+ 	select VIRTIO
+ 	help
+ 	  The Virtio Filesystem allows guests to mount file systems from the
+-          host.
++	  host.
+ 
+ 	  If you want to share files between guests or with the host, answer Y
+-          or M.
++	  or M.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 295a7a21b774..3edf122b8044 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
+ 	default n
+ 	help
+ 	  This option makes the NFS client advertise to NFSv4.1 servers that
+-          it can support NFSv4 migration.
++	  it can support NFSv4 migration.
+ 
+-          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
+-          still experimental.  If you are not an NFSv4 developer, say N here.
++	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
++	  still experimental.  If you are not an NFSv4 developer, say N here.
+ 
+ config NFS_V4_SECURITY_LABEL
+ 	bool
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index cb5629bd5fff..af2c0af60269 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -42,8 +42,8 @@ config PROC_VMCORE
+ 	bool "/proc/vmcore support"
+ 	depends on PROC_FS && CRASH_DUMP
+ 	default y
+-        help
+-        Exports the dump image of crashed kernel in ELF format.
++	help
++	Exports the dump image of crashed kernel in ELF format.
+ 
+ config PROC_VMCORE_DEVICE_DUMP
+ 	bool "Device Hardware/Firmware Log Collection"
+@@ -72,7 +72,7 @@ config PROC_SYSCTL
+ 	  a recompile of the kernel or reboot of the system.  The primary
+ 	  interface is through /proc/sys.  If you say Y here a tree of
+ 	  modifiable sysctl entries will be generated beneath the
+-          /proc/sys directory. They are explained in the files
++	  /proc/sys directory. They are explained in the files
+ 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
+ 	  option will enlarge the kernel by at least 8 KB.
+ 
+@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
+ 	  Various /proc files exist to monitor process memory utilization:
+ 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
+ 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
+-          interfaces will reduce the size of the kernel by approximately 4kb.
++	  interfaces will reduce the size of the kernel by approximately 4kb.
+ 
+ config PROC_CHILDREN
+ 	bool "Include /proc/<pid>/task/<tid>/children file"
+diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
+index 6a9d6bce1586..5ef679e51ba1 100644
+--- a/fs/qnx6/Kconfig
++++ b/fs/qnx6/Kconfig
+@@ -7,7 +7,7 @@ config QNX6FS_FS
+ 	  QNX 6 (also called QNX RTP).
+ 	  Further information is available at <http://www.qnx.com/>.
+ 	  Say Y if you intend to mount QNX hard disks or floppies formatted
+-          with a mkqnx6fs.
++	  with a mkqnx6fs.
+ 	  However, keep in mind that this currently is a readonly driver!
+ 
+ 	  To compile this file system support as a module, choose M here: the
+diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
+index 6d30adb6b890..f1f725c5a28c 100644
+--- a/fs/ufs/Kconfig
++++ b/fs/ufs/Kconfig
+@@ -11,8 +11,8 @@ config UFS_FS
+ 	  experimental "UFS file system write support", below. Please read the
+ 	  file <file:Documentation/admin-guide/ufs.rst> for more information.
+ 
+-          The recently released UFS2 variant (used in FreeBSD 5.x) is
+-          READ-ONLY supported.
++	  The recently released UFS2 variant (used in FreeBSD 5.x) is
++	  READ-ONLY supported.
+ 
+ 	  Note that this option is generally not needed for floppies, since a
+ 	  good portable way to transport files and directories between unixes
+-- 
+2.17.1
+
