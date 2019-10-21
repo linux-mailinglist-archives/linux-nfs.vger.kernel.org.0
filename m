@@ -2,210 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4942DF43F
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 19:29:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 498A2DF6FF
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2019 22:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfJUR3o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Oct 2019 13:29:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        id S1730266AbfJUUsf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Oct 2019 16:48:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:37709 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfJUR3n (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:29:43 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728914AbfJUUsf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:48:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53FB72077C;
-        Mon, 21 Oct 2019 17:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571678982;
-        bh=wzG2zl1ghSK1OwbPID3sQYVBbITXZvGHKVGtVFvr5hg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jJieV8BynVlayAwwVwqWEA5iVljadUKeK2shzuAnqbqrRZT4JpQyFWVvlhV7NseRG
-         /bsylD3O1cLiXEGZKhO+Qd+WO9LNfTO4OhSHEHmoIGY2JQI7De6i6BNeKa8A1tMuFC
-         93t7u6rzcuVnbvV1UPbppd2s+aRsuGYc0d4BiBJ4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-janitors@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND trivial] fs: Fix Kconfig indentation
-Date:   Mon, 21 Oct 2019 19:29:30 +0200
-Message-Id: <20191021172930.27175-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xpdD5d8Nz9sPT;
+        Tue, 22 Oct 2019 07:48:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571690912;
+        bh=gDF4wkv+s1LYEMnsm7mri2PWEZnHrKXE3Mvc13xEw+M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vBHbGbM2zmKQUHpHGS8T2EFXEUSa1TZ/+r/zygDt0weJUnH2julWSx5DHsuWphIgM
+         8gXm19ZHfS/EbLNauCW2xxa5Yqy6nW7uFN0sPLdRVTmodvXdZ7c+7NkpgwG7RywS4m
+         6u8eTWEHektE7wgRvWSYgTZDAhk24oDyfI3foPiFH9ntQBkW9vKQS7WXuuszIXeKdh
+         POr1yW5JQKeBh5JQftIGzJ6WNbOPHrUYltn19AZ1qpH8ybT1vglfXIElmnfMbkejKn
+         /bNHRTYcHtMz/UkuxbyAFi0G2TH1M1BTYiFuqrP6rsbxcrd/mMwx3xSsJNpD7QBhY0
+         Bc2hRuGK9E7ng==
+Date:   Tue, 22 Oct 2019 07:48:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the nfs-anna tree
+Message-ID: <20191022074831.7224318f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/68gQG_2V2_2sR/4huGbTA.T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-    $ sed -e 's/^        /\t/' -i */Kconfig
+--Sig_/68gQG_2V2_2sR/4huGbTA.T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- fs/9p/Kconfig     | 20 ++++++++++----------
- fs/Kconfig        |  4 ++--
- fs/Kconfig.binfmt |  4 ++--
- fs/fuse/Kconfig   |  4 ++--
- fs/nfs/Kconfig    |  6 +++---
- fs/proc/Kconfig   |  8 ++++----
- fs/qnx6/Kconfig   |  2 +-
- fs/ufs/Kconfig    |  4 ++--
- 8 files changed, 26 insertions(+), 26 deletions(-)
+Hi all,
 
-diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
-index ac2ec4543fe1..09fd4a185fd2 100644
---- a/fs/9p/Kconfig
-+++ b/fs/9p/Kconfig
-@@ -32,13 +32,13 @@ endif
- 
- 
- config 9P_FS_SECURITY
--        bool "9P Security Labels"
--        depends on 9P_FS
--        help
--          Security labels support alternative access control models
--          implemented by security modules like SELinux.  This option
--          enables an extended attribute handler for file security
--          labels in the 9P filesystem.
--
--          If you are not using a security module that requires using
--          extended attributes for file security labels, say N.
-+	bool "9P Security Labels"
-+	depends on 9P_FS
-+	help
-+	  Security labels support alternative access control models
-+	  implemented by security modules like SELinux.  This option
-+	  enables an extended attribute handler for file security
-+	  labels in the 9P filesystem.
-+
-+	  If you are not using a security module that requires using
-+	  extended attributes for file security labels, say N.
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 2501e6f1f965..e65289487732 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -97,8 +97,8 @@ config FILE_LOCKING
- 	default y
- 	help
- 	  This option enables standard file locking support, required
--          for filesystems like NFS and for the flock() system
--          call. Disabling this option saves about 11k.
-+	  for filesystems like NFS and for the flock() system
-+	  call. Disabling this option saves about 11k.
- 
- config MANDATORY_FILE_LOCKING
- 	bool "Enable Mandatory file locking"
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 62dc4f577ba1..8d0d16b90039 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -191,9 +191,9 @@ config BINFMT_MISC
- 	  <file:Documentation/admin-guide/binfmt-misc.rst> to learn how to use this
- 	  feature, <file:Documentation/admin-guide/java.rst> for information about how
- 	  to include Java support. and <file:Documentation/admin-guide/mono.rst> for
--          information about how to include Mono-based .NET support.
-+	  information about how to include Mono-based .NET support.
- 
--          To use binfmt_misc, you will need to mount it:
-+	  To use binfmt_misc, you will need to mount it:
- 		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
- 
- 	  You may say M here for module support and later load the module when
-diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
-index 0635cba19971..eb2a585572dc 100644
---- a/fs/fuse/Kconfig
-+++ b/fs/fuse/Kconfig
-@@ -34,7 +34,7 @@ config VIRTIO_FS
- 	select VIRTIO
- 	help
- 	  The Virtio Filesystem allows guests to mount file systems from the
--          host.
-+	  host.
- 
- 	  If you want to share files between guests or with the host, answer Y
--          or M.
-+	  or M.
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a21b774..3edf122b8044 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
- 	default n
- 	help
- 	  This option makes the NFS client advertise to NFSv4.1 servers that
--          it can support NFSv4 migration.
-+	  it can support NFSv4 migration.
- 
--          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
--          still experimental.  If you are not an NFSv4 developer, say N here.
-+	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
-+	  still experimental.  If you are not an NFSv4 developer, say N here.
- 
- config NFS_V4_SECURITY_LABEL
- 	bool
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index cb5629bd5fff..af2c0af60269 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -42,8 +42,8 @@ config PROC_VMCORE
- 	bool "/proc/vmcore support"
- 	depends on PROC_FS && CRASH_DUMP
- 	default y
--        help
--        Exports the dump image of crashed kernel in ELF format.
-+	help
-+	Exports the dump image of crashed kernel in ELF format.
- 
- config PROC_VMCORE_DEVICE_DUMP
- 	bool "Device Hardware/Firmware Log Collection"
-@@ -72,7 +72,7 @@ config PROC_SYSCTL
- 	  a recompile of the kernel or reboot of the system.  The primary
- 	  interface is through /proc/sys.  If you say Y here a tree of
- 	  modifiable sysctl entries will be generated beneath the
--          /proc/sys directory. They are explained in the files
-+	  /proc/sys directory. They are explained in the files
- 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
- 	  option will enlarge the kernel by at least 8 KB.
- 
-@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
- 	  Various /proc files exist to monitor process memory utilization:
- 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
- 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
--          interfaces will reduce the size of the kernel by approximately 4kb.
-+	  interfaces will reduce the size of the kernel by approximately 4kb.
- 
- config PROC_CHILDREN
- 	bool "Include /proc/<pid>/task/<tid>/children file"
-diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
-index 6a9d6bce1586..5ef679e51ba1 100644
---- a/fs/qnx6/Kconfig
-+++ b/fs/qnx6/Kconfig
-@@ -7,7 +7,7 @@ config QNX6FS_FS
- 	  QNX 6 (also called QNX RTP).
- 	  Further information is available at <http://www.qnx.com/>.
- 	  Say Y if you intend to mount QNX hard disks or floppies formatted
--          with a mkqnx6fs.
-+	  with a mkqnx6fs.
- 	  However, keep in mind that this currently is a readonly driver!
- 
- 	  To compile this file system support as a module, choose M here: the
-diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
-index 6d30adb6b890..f1f725c5a28c 100644
---- a/fs/ufs/Kconfig
-+++ b/fs/ufs/Kconfig
-@@ -11,8 +11,8 @@ config UFS_FS
- 	  experimental "UFS file system write support", below. Please read the
- 	  file <file:Documentation/admin-guide/ufs.rst> for more information.
- 
--          The recently released UFS2 variant (used in FreeBSD 5.x) is
--          READ-ONLY supported.
-+	  The recently released UFS2 variant (used in FreeBSD 5.x) is
-+	  READ-ONLY supported.
- 
- 	  Note that this option is generally not needed for floppies, since a
- 	  good portable way to transport files and directories between unixes
--- 
-2.17.1
+In commit
 
+  4609f9894ead ("SUNRPC: The TCP back channel mustn't disappear while reque=
+sts are outstanding")
+
+Fixes tag
+
+  Fixes: 2ea24497a1b3 ("SUNRPC: RPC callbacks may be split across several..=
+")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/68gQG_2V2_2sR/4huGbTA.T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uGZ8ACgkQAVBC80lX
+0GxShwf9HZFLZL0ytbND2qlHxAXWEGH2mDgt6TU/q9XCIaQMqrENoyaerZhWgkXd
+vI3BqIsFB45N80yHcQW6XFyoOCY+fVimH0tso9nZfPHqC7ZuUS35wTG2ZZ1M3XaF
+UJ6w8mZop0nT5kx+A1VVEB8r2Sdl4WrTEmpPZGzapKZqtIets13Lg6jJqN6nmxK6
+fud3wS54fAoMPT9NBYuwZXDO5vhqHK80HTyTMHvDRImu3RpQU9mixmigiIl5mCzC
+Pejdih4VN0cssRLVN2vPgbix3MuqRo6C4uRAHe6Ez97dy+MrHO/H1mxaupeVLtWs
+O3KJrHHeETHXUm2//ednRroGQLMhvA==
+=Cjol
+-----END PGP SIGNATURE-----
+
+--Sig_/68gQG_2V2_2sR/4huGbTA.T--
