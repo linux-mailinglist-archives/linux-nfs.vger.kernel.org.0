@@ -2,44 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98752E2735
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 01:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77D13E2737
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 01:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392808AbfJWX6O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Oct 2019 19:58:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44608 "EHLO
+        id S1725852AbfJWX6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Oct 2019 19:58:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35601 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfJWX6O (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 19:58:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id w12so27189907iol.11
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2019 16:58:13 -0700 (PDT)
+        with ESMTP id S2392795AbfJWX6P (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 19:58:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id t18so23078094iog.2
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2019 16:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=qubh+bjzZm2oRJ17euw6moPDnTcR50x5U/G07rZbOqo=;
-        b=O7j6RCVEWiVX5K8REElseAOmx6JaFro0G19e/klH1BQQEhDkz7DPcndD7GdT2V2rfJ
-         v6WGyKPRnvpy9zN+uCUuzrjI1Z6bEIwQQVGt4xfn/Ez/y8Dnz5NP4i4tPzsAccOHsEl+
-         t1KW2Uh2VH2/pijbPt/h+C1gH4ugAmME/yZfd5bZxYL3ZZNbuyS09pXpwih4eHTrE2ht
-         CnMlApBCuoJa+7tMA4tfur0ghcsZ/0HvdBEkKk+TLHelbjErYB9LQH1MsQr4iooWMaP6
-         5a1IdgnGQrf28mH6crwYV0weyCL1YeS+BHKDA9QFlJ54abAxTdYxJH7PMj0qiSIBkod6
-         hrLw==
+        bh=nymVrAPiFMFWo6jqKaToF9wF79yeH0rY5WIe9SAR/I8=;
+        b=bfMFp1zEhzYmHDGwjI8NJ9gD3o46yqKvh0LDk3b7+nlyfVwLOPVbsWLG12beTr0xGG
+         z+oBuk7P9lZj6GL7rMg12nTlieP9jV6lTaUJvt4vOqlscJ71Orst9P3j9W4C/ViHyQVP
+         mVt6esTk99uTC2VpcO88naR8Qiqr55wBCg3qt9jTmKI8kP0mCGA3UoSNHJmHNvKqPxPP
+         M+aE6N5hdWhcW6eGcpcN+ACk0Saxuy22bdrOuoL21wfiJJD4LVlLWC2vgbt5FakZj6kF
+         28AAn94H9PJhXelekct397lwYCCsUkcerG2ie6aWWVyh8+7AapplJZGH/ZOUlrsR0UyJ
+         ljyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qubh+bjzZm2oRJ17euw6moPDnTcR50x5U/G07rZbOqo=;
-        b=dPE8JoOs6LK+B0JJZUue5Ysp+lMg6TEr1rOuoeOTkgysS6vDA5OVqJnxAeyg6KM61C
-         l7HTYim+wBiNeUdbxJce58w1PAt2ZiAYIfel5hjceYKsAbt/yBjwQXeo7A5bkH57axj8
-         D8z/erWVVwRa88S9m/CiARHFbI3bRtDSVNog62leCObWeYPTzZc+IyYo4Ya1IwsgiCeC
-         gtO/sx4OIEMSqtbWpChEN15AJglPddfAXUW2a2KjNS4GdMRuRJFiRB2L41DNBsK702Oi
-         t95mhBLyDvQ8yVlsv3XphTW6HIsAM/Ytmj0oIPRv/geVOYNLmmma35CBv/c+osoNteUq
-         tosg==
-X-Gm-Message-State: APjAAAUqN/c9kPpGlXCzGuCsAwW+TrfHxL+YLFLmtOQfPBQmQumVI7Ev
-        zpxZ6QWYSOnFqeDjLXtgnncGLRo=
-X-Google-Smtp-Source: APXvYqxlH+eHcaec5sdghlqns3z95I8e2+cp3dIUe6ByhHaxB05x1oOSeqcAeHFAqI3+X9Oizm02nQ==
-X-Received: by 2002:a6b:4405:: with SMTP id r5mr6315346ioa.177.1571875092591;
-        Wed, 23 Oct 2019 16:58:12 -0700 (PDT)
+        bh=nymVrAPiFMFWo6jqKaToF9wF79yeH0rY5WIe9SAR/I8=;
+        b=HWmVHAKaRQOpHM9SCOOzESD5coBdUDw/7ClAwdGe5ep6Rl9Ts6UD+k2dD9VOwcLPFO
+         +E3u5UVgnALyYGpG5DlXGl2nNzzS7UMzP6RfBgP+ox8MF3+VBtrEXG030oSZz4Blof4/
+         zP4NmfINLiwQaJ/YKwHJEhlNXF6UPIfT8ZJXe9SFqirYvmV2UOZKaAczbzEx1zmz8+tH
+         UC6l0xYVBMgcCKR/FYDjX/a8WXMhKu/4Ufhgd6RMF9iU85bK7GzP+CZDsWsAPfoO47mF
+         j+eQAmEbhJpZfpWTl5yUglUgbRb1cxh7A/OqJN0CfE2Vj+G+JcMj1zd2Jf8GQb3e32p9
+         eV/w==
+X-Gm-Message-State: APjAAAXh1fKVNKNyNGQXq2+GoVkGH7GM044HA8pi1iRK9TbWg1xAS377
+        p6MGLyt3Dsm0ozo6CwZ9bd/UNIk=
+X-Google-Smtp-Source: APXvYqzqvmxFPTUXRKTJTXEte3rCkk4c/ipWQMGu3tZGeSJQPAIvgEAEpEZZAt4duFuTfgzQBajUTg==
+X-Received: by 2002:a05:6602:1216:: with SMTP id y22mr6567877iot.16.1571875093387;
+        Wed, 23 Oct 2019 16:58:13 -0700 (PDT)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
         by smtp.gmail.com with ESMTPSA id z18sm2405409iob.47.2019.10.23.16.58.12
         for <linux-nfs@vger.kernel.org>
@@ -48,15 +48,16 @@ Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.4
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 04/14] NFSv4: Delegation recalls should not find revoked delegations
-Date:   Wed, 23 Oct 2019 19:55:50 -0400
-Message-Id: <20191023235600.10880-5-trond.myklebust@hammerspace.com>
+Subject: [PATCH 05/14] NFSv4: fail nfs4_refresh_delegation_stateid() when the delegation was revoked
+Date:   Wed, 23 Oct 2019 19:55:51 -0400
+Message-Id: <20191023235600.10880-6-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191023235600.10880-4-trond.myklebust@hammerspace.com>
+In-Reply-To: <20191023235600.10880-5-trond.myklebust@hammerspace.com>
 References: <20191023235600.10880-1-trond.myklebust@hammerspace.com>
  <20191023235600.10880-2-trond.myklebust@hammerspace.com>
  <20191023235600.10880-3-trond.myklebust@hammerspace.com>
  <20191023235600.10880-4-trond.myklebust@hammerspace.com>
+ <20191023235600.10880-5-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -64,35 +65,25 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If we're processsing a delegation recall, ignore the delegations that
-have already been revoked or returned.
+If the delegation was revoked, we don't want to retry the delegreturn.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/delegation.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/delegation.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 5f3eea926af5..4bc40c27141b 100644
+index 4bc40c27141b..f90c3cf82f8f 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -830,7 +830,7 @@ int nfs_async_inode_return_delegation(struct inode *inode,
- 
+@@ -1179,6 +1179,7 @@ bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode)
  	rcu_read_lock();
  	delegation = rcu_dereference(NFS_I(inode)->delegation);
--	if (delegation == NULL)
-+	if (!nfs4_is_valid_delegation(delegation, FMODE_READ))
- 		goto out_enoent;
- 	if (stateid != NULL &&
- 	    !clp->cl_mvops->match_stateid(&delegation->stateid, stateid))
-@@ -855,6 +855,7 @@ nfs_delegation_find_inode_server(struct nfs_server *server,
- 	list_for_each_entry_rcu(delegation, &server->delegations, super_list) {
- 		spin_lock(&delegation->lock);
- 		if (delegation->inode != NULL &&
-+		    !test_bit(NFS_DELEGATION_REVOKED, &delegation->flags) &&
- 		    nfs_compare_fh(fhandle, &NFS_I(delegation->inode)->fh) == 0) {
- 			freeme = igrab(delegation->inode);
- 			if (freeme && nfs_sb_active(freeme->i_sb))
+ 	if (delegation != NULL &&
++	    !test_bit(NFS_DELEGATION_REVOKED, &delegation->flags) &&
+ 	    nfs4_stateid_match_other(dst, &delegation->stateid)) {
+ 		dst->seqid = delegation->stateid.seqid;
+ 		return ret;
 -- 
 2.21.0
 
