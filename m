@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A833DE1D97
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 16:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0534E1D99
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 16:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406297AbfJWOCB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Oct 2019 10:02:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42187 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406291AbfJWOCA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 10:02:00 -0400
-Received: by mail-io1-f68.google.com with SMTP id i26so15723839iog.9;
-        Wed, 23 Oct 2019 07:02:00 -0700 (PDT)
+        id S1731531AbfJWOCH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Oct 2019 10:02:07 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45841 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406291AbfJWOCG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 10:02:06 -0400
+Received: by mail-il1-f194.google.com with SMTP id u1so18986755ilq.12;
+        Wed, 23 Oct 2019 07:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=W7UsRbq7aje9TPWgB472YV41+uwKYUwUlhGW9rS1hMo=;
-        b=ZSvcnLK/oRmbSwEc9rVHojYYa1uO689j9xvXKr/W9YqHfZqNniKOGiC8l/tcgBvzNQ
-         pncHKEtCpMe7DcZDfoi+13S1x+rHZbeSA7lb0WMKfjGTraU6tznC2N4bsSj5rKEkgjmY
-         /3Ras3iITwfOLxpcJ7qgQnp8n5brC462ucuDrEOL/pLcfs9LLpKm0zjlbYfo5igVDmDa
-         LkzsbujeqiMM1I5FMEDLZ1vQWN0wpMVhmyWCjzp0LePrOvEC+K19WMJkLlsm3LmQErdP
-         jzNXLsmc4Y3LS28E/kkGTYvtTRWRvjWBQvpNd/l+GEQC1YrbFXx1Zkaf0vcJDMcufP6E
-         NBhA==
+        bh=fe6PoQR4vzNs/NXT6G+Xd8x9a/ZGdlBluhjyqqcewDo=;
+        b=cR4ji3vy4xu/ivLJexOt64eoZjR2/wQf5YxjruQA50s7yOg5/4VpGBcv67VB2JLGWv
+         JL88SBIzcQomeQY9Cxbl07F6O0M9iqiO4/wYVY97pcCyllxb27k4iU8Cqno3UfDnsPFg
+         +PkmW0dlP212BrZXQv7BD5S5MtxwmLg2SAaga3ePGEGuyWF7Wnc74w97EpoaQYa4USPn
+         ff/rXWJgp1eehYj6xcPdu+AfMWT9jrKdCJ9+VHndDzm3DNnYLGNiCcvmw833JnYtmM1G
+         +kjHfibhj0e+aa7/M+4GHCwN6a8Dx79OnFfGtTN2WUKNuubmKkjm1Cxoe9pwG66VmS0o
+         0IxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=W7UsRbq7aje9TPWgB472YV41+uwKYUwUlhGW9rS1hMo=;
-        b=b0Ni6Ap8ZeR9vvQNdzKh8tTJPH/GxMXDljS27v9KEpgUIF4ImB8uB9qEw+gwthv5BO
-         Tkjy5B98xbTTUOspLtd9yHbwN50paHDtsIOtLw5cyJxaicMKnMi4iIYBQYaUlNDT+IHW
-         znfWFSrhgEd+7cMQdX47UUnPxPB+uuCzgAMTscTXF3Lp5j+br1q58WHub3omTPjUMMy4
-         z5U0nxaFWlwhIo6gOg1lC+KwZ+rWlpa2DIO8/kBqu3zXY0swAYSXdEZQ+i9Qnef9yC4F
-         j08fYYTxuwAfAyVQaV0O1uU321+hjeowfMaUUk1i/qIpZr3fxH9WPp1KdftitUTP6P5F
-         vgEQ==
-X-Gm-Message-State: APjAAAVifICe62xCDnANz9zgjEeaWUDC1v3qm0AJIjZnnipKfqhvFtdU
-        hpqTLSETWhdyqqS9NnonolLvLYTc
-X-Google-Smtp-Source: APXvYqw6Bay9O/S04iZN02xTzrWNjVdaN49qPzDtaGW3M7P0St7U0n43BoDoljL+HhQkwbdy4MZvpg==
-X-Received: by 2002:a5e:de43:: with SMTP id e3mr3380684ioq.23.1571839319497;
-        Wed, 23 Oct 2019 07:01:59 -0700 (PDT)
+        bh=fe6PoQR4vzNs/NXT6G+Xd8x9a/ZGdlBluhjyqqcewDo=;
+        b=FT/EdipGrRnwOxFHc7co69OqZ8eBXgakY/jKgUOm04DMWsYeyY9bR86t62HK21JLCa
+         0urSNEHrY4BQdI5YZrx1OwKUQAosjg3M2CZ6baLSyJF2zTp5slkLIt/lktBV+gGNbtxz
+         IpqIsz8sx/X4JVU61gcTIuFWRyUaKdK74o8xQIkzM7teJUnTuvkTuvu1IZGRSfAXiL4d
+         1MDSzIEG5vCNt6TjvOstM5eCoYJDQVsPlSALOJ9m0O1554pYueaKBh4mtKhIV1SN8kFV
+         C5dGD1rTfZDth+d0q013ruTnH9o5xvEJoIK1lSf5mevetgxgixG2jBtDG4n8pb4kiIoO
+         9qeA==
+X-Gm-Message-State: APjAAAVNaMSFm08FEmtW9sIRzUnzyY9375hphphdQQl96NirV28UZtaL
+        /FsW1shyB0VC8DQlvRfYN7jpVPWY
+X-Google-Smtp-Source: APXvYqwcPnI9rhtKtg2QZkizvq2pOIfa6wQTnTLq6bgxfJ/Ks/g3gH7ao28TtbUGxj6j3xlnS7Z23g==
+X-Received: by 2002:a92:d0a:: with SMTP id 10mr39527275iln.238.1571839325575;
+        Wed, 23 Oct 2019 07:02:05 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id d14sm7963750ilr.76.2019.10.23.07.01.58
+        by smtp.gmail.com with ESMTPSA id 26sm9038485ilx.47.2019.10.23.07.02.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 07:01:58 -0700 (PDT)
+        Wed, 23 Oct 2019 07:02:04 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x9NE1wsR012545;
-        Wed, 23 Oct 2019 14:01:58 GMT
-Subject: [PATCH v1 2/5] xprtrdma: Report the computed connect delay
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x9NE233B012548;
+        Wed, 23 Oct 2019 14:02:03 GMT
+Subject: [PATCH v1 3/5] xprtrdma: Refine trace_xprtrdma_fixup
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Wed, 23 Oct 2019 10:01:58 -0400
-Message-ID: <20191023140157.3992.30932.stgit@manet.1015granger.net>
+Date:   Wed, 23 Oct 2019 10:02:03 -0400
+Message-ID: <20191023140203.3992.946.stgit@manet.1015granger.net>
 In-Reply-To: <20191023135907.3992.69010.stgit@manet.1015granger.net>
 References: <20191023135907.3992.69010.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -64,206 +64,126 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-For debugging, the op_connect trace point should report the computed
-connect delay. We can then ensure that the delay is computed at the
-proper times, for example.
-
-As a further clean-up, remove a few low-value "heartbeat" trace
-points in the connect path.
+Slightly reduce overhead and display more useful information.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h  |   77 ++++++++++++++++++++++++++++-----------
- net/sunrpc/xprtrdma/transport.c |    3 +-
- net/sunrpc/xprtrdma/verbs.c     |   13 ++-----
- 3 files changed, 60 insertions(+), 33 deletions(-)
+ include/trace/events/rpcrdma.h |   60 +++++++++-------------------------------
+ net/sunrpc/xprtrdma/rpc_rdma.c |    5 +--
+ 2 files changed, 15 insertions(+), 50 deletions(-)
 
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 336a65d..201623c 100644
+index 201623c..465c1b0 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -85,6 +85,44 @@
- 				),					\
- 				TP_ARGS(r_xprt))
- 
-+DECLARE_EVENT_CLASS(xprtrdma_connect_class,
-+	TP_PROTO(
-+		const struct rpcrdma_xprt *r_xprt,
-+		int rc
-+	),
-+
-+	TP_ARGS(r_xprt, rc),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, r_xprt)
-+		__field(int, rc)
-+		__field(int, connect_status)
-+		__string(addr, rpcrdma_addrstr(r_xprt))
-+		__string(port, rpcrdma_portstr(r_xprt))
-+	),
-+
-+	TP_fast_assign(
-+		__entry->r_xprt = r_xprt;
-+		__entry->rc = rc;
-+		__entry->connect_status = r_xprt->rx_ep.rep_connected;
-+		__assign_str(addr, rpcrdma_addrstr(r_xprt));
-+		__assign_str(port, rpcrdma_portstr(r_xprt));
-+	),
-+
-+	TP_printk("peer=[%s]:%s r_xprt=%p: rc=%d connect status=%d",
-+		__get_str(addr), __get_str(port), __entry->r_xprt,
-+		__entry->rc, __entry->connect_status
-+	)
-+);
-+
-+#define DEFINE_CONN_EVENT(name)						\
-+		DEFINE_EVENT(xprtrdma_connect_class, xprtrdma_##name,	\
-+				TP_PROTO(				\
-+					const struct rpcrdma_xprt *r_xprt, \
-+					int rc				\
-+				),					\
-+				TP_ARGS(r_xprt, rc))
-+
- DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+@@ -1084,66 +1084,32 @@
+ TRACE_EVENT(xprtrdma_fixup,
  	TP_PROTO(
- 		const struct rpc_task *task,
-@@ -333,47 +371,44 @@
- 	)
- );
- 
--TRACE_EVENT(xprtrdma_disconnect,
-+DEFINE_CONN_EVENT(connect);
-+DEFINE_CONN_EVENT(disconnect);
-+
-+DEFINE_RXPRT_EVENT(xprtrdma_create);
-+DEFINE_RXPRT_EVENT(xprtrdma_op_destroy);
-+DEFINE_RXPRT_EVENT(xprtrdma_remove);
-+DEFINE_RXPRT_EVENT(xprtrdma_reinsert);
-+DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
-+DEFINE_RXPRT_EVENT(xprtrdma_op_close);
-+
-+TRACE_EVENT(xprtrdma_op_connect,
- 	TP_PROTO(
- 		const struct rpcrdma_xprt *r_xprt,
--		int status
-+		unsigned long delay
+ 		const struct rpc_rqst *rqst,
+-		int len,
+-		int hdrlen
++		unsigned long fixup
  	),
  
--	TP_ARGS(r_xprt, status),
-+	TP_ARGS(r_xprt, delay),
+-	TP_ARGS(rqst, len, hdrlen),
++	TP_ARGS(rqst, fixup),
  
  	TP_STRUCT__entry(
- 		__field(const void *, r_xprt)
--		__field(int, status)
--		__field(int, connected)
-+		__field(unsigned long, delay)
- 		__string(addr, rpcrdma_addrstr(r_xprt))
- 		__string(port, rpcrdma_portstr(r_xprt))
+ 		__field(unsigned int, task_id)
+ 		__field(unsigned int, client_id)
+-		__field(const void *, base)
+-		__field(int, len)
+-		__field(int, hdrlen)
+-	),
+-
+-	TP_fast_assign(
+-		__entry->task_id = rqst->rq_task->tk_pid;
+-		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
+-		__entry->base = rqst->rq_rcv_buf.head[0].iov_base;
+-		__entry->len = len;
+-		__entry->hdrlen = hdrlen;
+-	),
+-
+-	TP_printk("task:%u@%u base=%p len=%d hdrlen=%d",
+-		__entry->task_id, __entry->client_id,
+-		__entry->base, __entry->len, __entry->hdrlen
+-	)
+-);
+-
+-TRACE_EVENT(xprtrdma_fixup_pg,
+-	TP_PROTO(
+-		const struct rpc_rqst *rqst,
+-		int pageno,
+-		const void *pos,
+-		int len,
+-		int curlen
+-	),
+-
+-	TP_ARGS(rqst, pageno, pos, len, curlen),
+-
+-	TP_STRUCT__entry(
+-		__field(unsigned int, task_id)
+-		__field(unsigned int, client_id)
+-		__field(const void *, pos)
+-		__field(int, pageno)
+-		__field(int, len)
+-		__field(int, curlen)
++		__field(unsigned long, fixup)
++		__field(size_t, headlen)
++		__field(unsigned int, pagelen)
++		__field(size_t, taillen)
  	),
  
  	TP_fast_assign(
- 		__entry->r_xprt = r_xprt;
--		__entry->status = status;
--		__entry->connected = r_xprt->rx_ep.rep_connected;
-+		__entry->delay = delay;
- 		__assign_str(addr, rpcrdma_addrstr(r_xprt));
- 		__assign_str(port, rpcrdma_portstr(r_xprt));
+ 		__entry->task_id = rqst->rq_task->tk_pid;
+ 		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
+-		__entry->pos = pos;
+-		__entry->pageno = pageno;
+-		__entry->len = len;
+-		__entry->curlen = curlen;
++		__entry->fixup = fixup;
++		__entry->headlen = rqst->rq_rcv_buf.head[0].iov_len;
++		__entry->pagelen = rqst->rq_rcv_buf.page_len;
++		__entry->taillen = rqst->rq_rcv_buf.tail[0].iov_len;
  	),
  
--	TP_printk("peer=[%s]:%s r_xprt=%p: status=%d %sconnected",
--		__get_str(addr), __get_str(port),
--		__entry->r_xprt, __entry->status,
--		__entry->connected == 1 ? "still " : "dis"
-+	TP_printk("peer=[%s]:%s r_xprt=%p delay=%lu",
-+		__get_str(addr), __get_str(port), __entry->r_xprt,
-+		__entry->delay
+-	TP_printk("task:%u@%u pageno=%d pos=%p len=%d curlen=%d",
+-		__entry->task_id, __entry->client_id,
+-		__entry->pageno, __entry->pos, __entry->len, __entry->curlen
++	TP_printk("task:%u@%u fixup=%lu xdr=%zu/%u/%zu",
++		__entry->task_id, __entry->client_id, __entry->fixup,
++		__entry->headlen, __entry->pagelen, __entry->taillen
  	)
  );
  
--DEFINE_RXPRT_EVENT(xprtrdma_conn_start);
--DEFINE_RXPRT_EVENT(xprtrdma_conn_tout);
--DEFINE_RXPRT_EVENT(xprtrdma_create);
--DEFINE_RXPRT_EVENT(xprtrdma_op_destroy);
--DEFINE_RXPRT_EVENT(xprtrdma_remove);
--DEFINE_RXPRT_EVENT(xprtrdma_reinsert);
--DEFINE_RXPRT_EVENT(xprtrdma_reconnect);
--DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
--DEFINE_RXPRT_EVENT(xprtrdma_op_close);
--DEFINE_RXPRT_EVENT(xprtrdma_op_connect);
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index 4ad8889..26d334c 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -1086,7 +1086,6 @@ void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt)
+ 	curlen = rqst->rq_rcv_buf.head[0].iov_len;
+ 	if (curlen > copy_len)
+ 		curlen = copy_len;
+-	trace_xprtrdma_fixup(rqst, copy_len, curlen);
+ 	srcp += curlen;
+ 	copy_len -= curlen;
  
- TRACE_EVENT(xprtrdma_op_set_cto,
- 	TP_PROTO(
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 361e591..ce263e6 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -527,13 +527,12 @@ static void xprt_rdma_set_connect_timeout(struct rpc_xprt *xprt,
- 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(xprt);
- 	unsigned long delay;
+@@ -1106,8 +1105,6 @@ void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt)
+ 			if (curlen > pagelist_len)
+ 				curlen = pagelist_len;
  
--	trace_xprtrdma_op_connect(r_xprt);
--
- 	delay = 0;
- 	if (r_xprt->rx_ep.rep_connected != 0) {
- 		delay = xprt_reconnect_delay(xprt);
- 		xprt_reconnect_backoff(xprt, RPCRDMA_INIT_REEST_TO);
+-			trace_xprtrdma_fixup_pg(rqst, i, srcp,
+-						copy_len, curlen);
+ 			destp = kmap_atomic(ppages[i]);
+ 			memcpy(destp + page_base, srcp, curlen);
+ 			flush_dcache_page(ppages[i]);
+@@ -1139,6 +1136,8 @@ void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt)
+ 		rqst->rq_private_buf.tail[0].iov_base = srcp;
  	}
-+	trace_xprtrdma_op_connect(r_xprt, delay);
- 	queue_delayed_work(xprtiod_workqueue, &r_xprt->rx_connect_worker,
- 			   delay);
- }
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index a514e2c..92bdf05 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -297,8 +297,6 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- 	struct rdma_cm_id *id;
- 	int rc;
  
--	trace_xprtrdma_conn_start(xprt);
--
- 	init_completion(&ia->ri_done);
- 	init_completion(&ia->ri_remove_done);
- 
-@@ -314,10 +312,8 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- 	if (rc)
- 		goto out;
- 	rc = wait_for_completion_interruptible_timeout(&ia->ri_done, wtimeout);
--	if (rc < 0) {
--		trace_xprtrdma_conn_tout(xprt);
-+	if (rc < 0)
- 		goto out;
--	}
- 
- 	rc = ia->ri_async_rc;
- 	if (rc)
-@@ -328,10 +324,8 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- 	if (rc)
- 		goto out;
- 	rc = wait_for_completion_interruptible_timeout(&ia->ri_done, wtimeout);
--	if (rc < 0) {
--		trace_xprtrdma_conn_tout(xprt);
-+	if (rc < 0)
- 		goto out;
--	}
- 	rc = ia->ri_async_rc;
- 	if (rc)
- 		goto out;
-@@ -644,8 +638,6 @@ static int rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt,
- 	struct rdma_cm_id *id, *old;
- 	int err, rc;
- 
--	trace_xprtrdma_reconnect(r_xprt);
--
- 	rpcrdma_ep_disconnect(&r_xprt->rx_ep, ia);
- 
- 	rc = -EHOSTUNREACH;
-@@ -744,6 +736,7 @@ static int rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt,
- 		ep->rep_connected = rc;
- 
- out_noupdate:
-+	trace_xprtrdma_connect(r_xprt, rc);
- 	return rc;
++	if (fixup_copy_count)
++		trace_xprtrdma_fixup(rqst, fixup_copy_count);
+ 	return fixup_copy_count;
  }
  
 
