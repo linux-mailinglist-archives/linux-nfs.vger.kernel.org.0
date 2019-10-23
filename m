@@ -2,89 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9703E1979
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 13:57:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EED2E1D92
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 16:01:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405153AbfJWL4y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Oct 2019 07:56:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1121 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733169AbfJWL4x (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:56:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:56:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="201968405"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.121])
-  by orsmga006.jf.intel.com with ESMTP; 23 Oct 2019 04:56:37 -0700
-Date:   Wed, 23 Oct 2019 14:56:37 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        hersen wu <hersenxs.wu@amd.com>, Roman Li <Roman.Li@amd.com>,
-        Maxim Martynov <maxim@arista.com>,
-        David Ahern <dsahern@gmail.com>,
-        Francesco Ruggeri <fruggeri@arista.com>,
-        Linus =?iso-8859-1?Q?L=FCssing?= <linus.luessing@c0d3.blue>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Feng Tang <feng.tang@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rafael Aquini <aquini@redhat.com>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org
-Subject: Re: [PATCH] Cleanup: replace prefered with preferred
-Message-ID: <20191023115637.GA23733@linux.intel.com>
-References: <20191022214208.211448-1-salyzyn@android.com>
+        id S2406293AbfJWOBu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Oct 2019 10:01:50 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43236 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406291AbfJWOBu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 10:01:50 -0400
+Received: by mail-io1-f68.google.com with SMTP id c11so15949670iom.10;
+        Wed, 23 Oct 2019 07:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=i1onkp7tVbiousuoh/lKkPugrxCGZSa3fAT6ThfLs+M=;
+        b=TwcQb8Uxlfoe1qDM8UjrLSAHW2xTmVWWrLMJxPalhcsldntJ41pwdWKRFNBfYfXprU
+         V2v+cZOOCIs5hQs3qoLwFQd5Wx5h7uYacd+aqAIXQ34zoXR3b+A219tsZLZdfja3AxTJ
+         YFXgrZYFq3vrpHJsma5c92ygvz12KxA/trGeZmzjIqryw9EUQVxjryzTEWMu3xfgku0l
+         p0FKXuiUd6ROyJq9HapwiZcRL5wP+c4bji3uFhuHPnm/myQZhnivLMV8vXNW0NTzn53V
+         FFOslrI8Bhki8DxNxMGZ2oIq/2l0zJ7NiYHJmxqWMXQXoBS1V3c3/ErFQMUhjwyttIVp
+         1wXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=i1onkp7tVbiousuoh/lKkPugrxCGZSa3fAT6ThfLs+M=;
+        b=QLli1vtgc0ubeYFw7XCQxhlmhTtaCSTi1edb2ZoTuyPKtMVGwoQyazj9CdShEh0x51
+         qsp6nhzPAN6VRS/YCNuSj69zjgxIX7GVmCYyqImdaIG9zoBx9NH5vgeF2u1l9b2f11tj
+         HFRw0n6raYeY+uPocRb+XauoIufmmUfRHiD4fmZ08pHdb2R5U34kL6oJ1WgMmXsf9Pxd
+         iF746K34IXgSl4aXaU8FJE5SA7xG0JV4A2yPb9MobtQWZAeQP+UaXmdQbAPjrGjIUHkU
+         qJ7Xt1h3tVFZpVFSkJ3MFLzPmM3Y/DFG/ZUewRWyHBu6Nv/2JI6+xULS6VVuhR5pNxIU
+         OG/Q==
+X-Gm-Message-State: APjAAAUV/P8KxgvSnlaUWFjYcMAcuEJ7A4q+NP8forZG6pHET/Jftlsz
+        gCzTtvUvAZ/YAiu9y9LG/VAJXqAJ
+X-Google-Smtp-Source: APXvYqzUcoHsSLIlE3ex18X4hONq3ohOj6A/4Z9zQ+WGq9pT6j/xLH2YSEo3rHUy0gxbGEgPa8PSgQ==
+X-Received: by 2002:a6b:37c6:: with SMTP id e189mr3195173ioa.61.1571839309248;
+        Wed, 23 Oct 2019 07:01:49 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id 133sm5421899ila.25.2019.10.23.07.01.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 07:01:48 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id x9NE1kDO012538;
+        Wed, 23 Oct 2019 14:01:47 GMT
+Subject: [PATCH v1 0/5] RPC/RDMA client connect-related fixes
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Wed, 23 Oct 2019 10:01:46 -0400
+Message-ID: <20191023135907.3992.69010.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022214208.211448-1-salyzyn@android.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 02:41:45PM -0700, Mark Salyzyn wrote:
-> Replace all occurrences of prefered with preferred to make future
-> checkpatch.pl's happy.  A few places the incorrect spelling is
-> matched with the correct spelling to preserve existing user space API.
-> 
-> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+First patch fixes a problem with the logic that deals with failure
+to establish a connection. The others are trace point clean-ups that
+I found along the way to the fix.
 
-I'd fix such things when the code is otherwise change and scope this
-patch only to Documentation/. There is no pragmatic benefit of doing
-this for the code.
+This is the final set of client patches I currently have ready for
+the v5.5 merge window.
 
-/Jarkko
+---
+
+Chuck Lever (5):
+      xprtrdma: Wake tasks after connect worker fails
+      xprtrdma: Report the computed connect delay
+      xprtrdma: Refine trace_xprtrdma_fixup
+      xprtrdma: Replace dprintk() in rpcrdma_update_connect_private()
+      xprtrdma: Replace dprintk in xprt_rdma_set_port
+
+
+ include/trace/events/rpcrdma.h  |  164 ++++++++++++++++++++++++---------------
+ net/sunrpc/xprtrdma/rpc_rdma.c  |    9 --
+ net/sunrpc/xprtrdma/transport.c |   27 ++----
+ net/sunrpc/xprtrdma/verbs.c     |   34 +++-----
+ 4 files changed, 126 insertions(+), 108 deletions(-)
+
+--
+Chuck Lever
