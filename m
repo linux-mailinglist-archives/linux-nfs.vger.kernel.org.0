@@ -2,72 +2,171 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F55E0F46
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 02:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5825E17BE
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2019 12:22:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfJWAmV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Oct 2019 20:42:21 -0400
-Received: from mails1n1-route0.email.arizona.edu ([128.196.130.51]:34758 "EHLO
-        mails1n1-route0.email.arizona.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727403AbfJWAmV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Oct 2019 20:42:21 -0400
-X-Greylist: delayed 423 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Oct 2019 20:42:21 EDT
-IronPort-SDR: 4a4ONMkdgp0TUJfwi45iMqfxU5HIFSFcsSuR8FdBF8Qizsw6hA+9eOYk7V1y9Lg6MAEdQ6jiZo
- DC3MnS+J9ybg==
-IronPort-PHdr: =?us-ascii?q?9a23=3ACUmBgx/7zBM/Vf9uRHKM819IXTAuvvDOBiVQ1K?=
- =?us-ascii?q?B41+gcTK2v8tzYMVDF4r011RmVBN6du6IP0LGempujcFRI2YyGvnEGfc4EfD?=
- =?us-ascii?q?4+ouJSoTYdBtWYA1bwNv/gYn9yNs1DUFh44yPzahANS47xaFLIv3K98yMZFA?=
- =?us-ascii?q?nhOgppPOT1HZPZg9iq2+yo9JDffgtFiCC+bL5xIxm7owvcvdQKjIV/Lao81g?=
- =?us-ascii?q?HHqWZSdeRMwmNoK1OTnxLi6cq14ZVu7Sdete8/+sBZSan1cLg2QrJeDDQ9Lm?=
- =?us-ascii?q?A6/9brugXZTQuO/XQTTGMbmQdVDgff7RH6WpDxsjbmtud4xSKXM9H6QawyVD?=
- =?us-ascii?q?+/6apgVR3mhzodNzMh7m/ZitF+gqFVrh2uuxNxzJXZYJ2XOfdkYq/RYc8WSG?=
- =?us-ascii?q?hHU81MVyJBGIS8b44XAucfPeZXtY/9qEYKrRSgHwmnGeTixSVViX/z3K061f?=
- =?us-ascii?q?8sEQ7Y0wwmGNIOtWrboM/vO6cIUOC0za7IzTPZYP9Mxzjy9ZXIfwknrPqRXr?=
- =?us-ascii?q?xwadLcxVQxGw7GlFmctIjoMjKP2ugQvGWW6/BsWfyghmMmrQx6vyKhyd02io?=
- =?us-ascii?q?bTg4IY0lXE9SJkz4krPdC4U0t7YcK8EJtXqiGaK5N6QsM8TGFsvyY30rkJtY?=
- =?us-ascii?q?OlcCUJ0pgr2hrSZv2df4SV7R/uUPydLSl3iX9kfr2znxey8U6+xe3gTsS4zU?=
- =?us-ascii?q?hGoylfntXRsn0A1gbf5tWIR/Z55EutxzmC2gHL5uFBO080lK7bK5A7wr43k5?=
- =?us-ascii?q?oeqV7METLzmEX3iq+bbUok9fau6+TgZ7XpuIWQOJVuigH/M6Uuncq/Dv4iPg?=
- =?us-ascii?q?cQQmeb5Pyw1Kf/8k3hXLVKkvo2n7HdsJDbI8Qbu6G4DxZT0oYt8BayFCmm0N?=
- =?us-ascii?q?sGknkdNl5FewyIj5LvO17QJPD0F/C/g06jkGQj+/eTOrznH4WIKHbYuKnucK?=
- =?us-ascii?q?w76ENGzgc3i9dF6MF6ELYEddnzU0n9sNHCRkswPwm1xc7oBdN6045YUHiOEK?=
- =?us-ascii?q?ifOeXfvULetbFnGPWFeIJA4GW1EPMi/fO71XI=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CIDQAMoK9d//aVxIBlhiEgEoRQiQK?=
- =?us-ascii?q?EeoYLAYEZileMMQEIAQEBDhMZAQIBAYgQOBMCAwkBAQEEAQEBAQEFAgIBbIR?=
- =?us-ascii?q?rK4JnIoMZFVkQDQImAoENgweCUyWyC4EyGoU0gnYfCYFVgQ4ojCd4gQeBOAy?=
- =?us-ascii?q?HTGOCQ4JeBIE3iF+MHUSWZx+CD4EYBV6TJQYbhD6JagOLI6glgWkigVhNJRO?=
- =?us-ascii?q?BWYFPT4J+AQEBjw8hgTYIARUIEgEKAY5bAQE?=
-X-IPAS-Result: =?us-ascii?q?A2CIDQAMoK9d//aVxIBlhiEgEoRQiQKEeoYLAYEZileMM?=
- =?us-ascii?q?QEIAQEBDhMZAQIBAYgQOBMCAwkBAQEEAQEBAQEFAgIBbIRrK4JnIoMZFVkQD?=
- =?us-ascii?q?QImAoENgweCUyWyC4EyGoU0gnYfCYFVgQ4ojCd4gQeBOAyHTGOCQ4JeBIE3i?=
- =?us-ascii?q?F+MHUSWZx+CD4EYBV6TJQYbhD6JagOLI6glgWkigVhNJROBWYFPT4J+AQEBj?=
- =?us-ascii?q?w8hgTYIARUIEgEKAY5bAQE?=
-X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
-   d="scan'208";a="430003496"
-Received: from unknown (HELO [128.196.149.246]) ([128.196.149.246])
-  by mails1n1out.email.arizona.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 17:34:51 -0700
-To:     linux-nfs@vger.kernel.org
-From:   Chandler <admin@genome.arizona.edu>
-Subject: NFS hangs on one interface
-Message-ID: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
-Date:   Tue, 22 Oct 2019 17:34:51 -0700
+        id S2404201AbfJWKWS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Oct 2019 06:22:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36866 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403810AbfJWKWR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Oct 2019 06:22:17 -0400
+Received: from pendragon.ideasonboard.com (143.121.2.93.rev.sfr.net [93.2.121.143])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 613D5814;
+        Wed, 23 Oct 2019 12:22:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571826133;
+        bh=eGJOH1VGLoVHmq/1QUJrrmrQnHMBekaXv4x5beDzUns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hNt1lFgV/RYMyeFBPXTgQiKb3GwPw/Wa344JMMSZWnwFmLvL/ZwSc8yFopTSs7O3V
+         3BEcvANOutiE3Uqo9EUjLPvIH0XYH9JeysLU4k3odp1PfhlVV0P9EFVjba6AUVEZTx
+         Bg5kiEXBNGIQl2WjyNDPL8rSeOPgyZ4CMk60KXUs=
+Date:   Wed, 23 Oct 2019 13:22:07 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        hersen wu <hersenxs.wu@amd.com>, Roman Li <Roman.Li@amd.com>,
+        Maxim Martynov <maxim@arista.com>,
+        David Ahern <dsahern@gmail.com>,
+        Francesco Ruggeri <fruggeri@arista.com>,
+        Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Feng Tang <feng.tang@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org
+Subject: Re: [PATCH] Cleanup: replace prefered with preferred
+Message-ID: <20191023102207.GB4763@pendragon.ideasonboard.com>
+References: <20191022214208.211448-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191022214208.211448-1-salyzyn@android.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all, I'm sure you get this alot, but I couldn't figure out any solution.  We have a client/server pair with both 1Gb and 10Gb network interfaces.  I can mount the share on the client on the 1Gb interface just fine and interact with it normally.  If I unmount and try to mount the share on the 10Gb interface, it will mount but everything after that hangs (like ls or df).  The exports entry is the same on the server, i.e.:
+Hi Mark,
 
-#1Gb interface
-/data   10.10.10.0/24(rw,no_root_squash,async)
-#10Gb interface
-/data   128.196.X.X/28(rw,no_root_squash,async)
+Thank you for the patch.
 
-I turned off iptables for troubleshooting and checked with the NOC here.  Using NFSv4 by default and CentOS 6.10 2.6.32 kernel.  I had some strange results if i try vers=3 or vers=2, then i can "ls /data" but if I try to "ls /data/subdir" then it hangs again.  Now it doesn't even mount if i try with vers=3 or vers=2
+On Tue, Oct 22, 2019 at 02:41:45PM -0700, Mark Salyzyn wrote:
+> Replace all occurrences of prefered with preferred to make future
+> checkpatch.pl's happy.  A few places the incorrect spelling is
+> matched with the correct spelling to preserve existing user space API.
+> 
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> ---
+>  Documentation/networking/ip-sysctl.txt        |   2 +-
+>  .../firmware/efi/libstub/efi-stub-helper.c    |   2 +-
+>  .../gpu/drm/amd/display/dc/inc/compressor.h   |   4 +-
+>  drivers/gpu/drm/vmwgfx/vmwgfx_kms.c           |   2 +-
+>  drivers/gpu/drm/vmwgfx/vmwgfx_kms.h           |   2 +-
+>  drivers/media/usb/uvc/uvc_video.c             |   6 +-
+>  fs/nfs/nfs4xdr.c                              |   2 +-
+>  include/linux/ipv6.h                          |   2 +-
+>  include/net/addrconf.h                        |   4 +-
+>  include/net/if_inet6.h                        |   2 +-
+>  include/net/ndisc.h                           |   8 +-
+>  include/uapi/linux/if_addr.h                  |   5 +-
+>  include/uapi/linux/ipv6.h                     |   4 +-
+>  include/uapi/linux/sysctl.h                   |   4 +-
+>  include/uapi/linux/usb/video.h                |   5 +-
+>  kernel/sysctl_binary.c                        |   3 +-
+>  net/6lowpan/ndisc.c                           |   4 +-
+>  net/ipv4/devinet.c                            |  20 ++--
+>  net/ipv6/addrconf.c                           | 113 ++++++++++--------
+>  19 files changed, 112 insertions(+), 82 deletions(-)
 
+[snip]
 
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index 8fa77a81dd7f..0096e6aacdb4 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -276,13 +276,13 @@ static int uvc_get_video_ctrl(struct uvc_streaming *stream,
+>  	if (size >= 34) {
+>  		ctrl->dwClockFrequency = get_unaligned_le32(&data[26]);
+>  		ctrl->bmFramingInfo = data[30];
+> -		ctrl->bPreferedVersion = data[31];
+> +		ctrl->bPreferredVersion = data[31];
+>  		ctrl->bMinVersion = data[32];
+>  		ctrl->bMaxVersion = data[33];
+>  	} else {
+>  		ctrl->dwClockFrequency = stream->dev->clock_frequency;
+>  		ctrl->bmFramingInfo = 0;
+> -		ctrl->bPreferedVersion = 0;
+> +		ctrl->bPreferredVersion = 0;
+>  		ctrl->bMinVersion = 0;
+>  		ctrl->bMaxVersion = 0;
+>  	}
+> @@ -325,7 +325,7 @@ static int uvc_set_video_ctrl(struct uvc_streaming *stream,
+>  	if (size >= 34) {
+>  		put_unaligned_le32(ctrl->dwClockFrequency, &data[26]);
+>  		data[30] = ctrl->bmFramingInfo;
+> -		data[31] = ctrl->bPreferedVersion;
+> +		data[31] = ctrl->bPreferredVersion;
+>  		data[32] = ctrl->bMinVersion;
+>  		data[33] = ctrl->bMaxVersion;
+>  	}
+
+[snip]
+
+> diff --git a/include/uapi/linux/usb/video.h b/include/uapi/linux/usb/video.h
+> index d854cb19c42c..59167f0ed5c1 100644
+> --- a/include/uapi/linux/usb/video.h
+> +++ b/include/uapi/linux/usb/video.h
+> @@ -448,7 +448,10 @@ struct uvc_streaming_control {
+>  	__u32 dwMaxPayloadTransferSize;
+>  	__u32 dwClockFrequency;
+>  	__u8  bmFramingInfo;
+> -	__u8  bPreferedVersion;
+> +	union {
+> +		__u8 bPreferredVersion;
+> +		__u8 bPreferedVersion __attribute__((deprecated)); /* NOTYPO */
+> +	} __attribute__((__packed__));
+
+Quite interestingly this typo is part of the USB device class definition
+for video devices (UVC) specification. I thus think we should keep using
+the field name bPreferedVersion through the code, otherwise it wouldn't
+match the spec.
+
+>  	__u8  bMinVersion;
+>  	__u8  bMaxVersion;
+>  } __attribute__((__packed__));
+
+[snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
