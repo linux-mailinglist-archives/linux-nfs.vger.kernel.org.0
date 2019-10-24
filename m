@@ -2,249 +2,243 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2E06E3461
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 15:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E47E34F1
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 16:02:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393607AbfJXNgT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Oct 2019 09:36:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43362 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388255AbfJXNgT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Oct 2019 09:36:19 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ODYGGR124201;
-        Thu, 24 Oct 2019 13:36:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=MfLNZPiOOv0GyPmKyaIc0LUP61FSFodSyddnqOidMms=;
- b=Nk1BRXvkb2/KI9E3J5HsRIEKnm7HC0sWA2ATueJ6rSUs7Y1bZPo0rZL6d+xLTJ/9gLKF
- rA98TtjoOhjKTH4w6HJVRpAGLZ2EiyUGMWDdYTKgtZf7FNZ5LcRgGvFb1z9EegDdBF4i
- 7zEb5vLsNlIri/UARvNYxiCrB5AVNmmX7QtmfKcF0UCMf/lRK7L5CVdy+bAvvlICxNNq
- 1ipCvmpib0ZPKFwHS3pAElFrMUXBhBoz4Bl7kEb3zpS2QTrDIwrWLgODjWqSMl1fHfuO
- Zu0rlYQ5kgyRirTCU/LrNAdjhwSblxjojCkRhdg43Un55Z/zhyt7W2a4bfoypdPLGx0L qg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vqu4r3gvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 13:36:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ODX5OC097976;
-        Thu, 24 Oct 2019 13:36:01 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2vu0fpa7vq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 13:36:00 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9ODZxLn006060;
-        Thu, 24 Oct 2019 13:35:59 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 24 Oct 2019 06:35:59 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+        id S1731381AbfJXOCh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Oct 2019 10:02:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59421 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730547AbfJXOCh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Oct 2019 10:02:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571925754;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lEryrETcLbZNFJ7paT0e9BvhsVUmri037rg2Hh/6l1E=;
+        b=A1VyS9zHVW1XakUMfSePxGfoXG+TdNZtMA41Qug6Dilree1NaLcrK9mkE4dOcceN74qspg
+        cOCB041glb4tMNKRmBvTfoZAL/t2xprWEjJTsr+FyG1JR/pu3EX+/69V5291y4ESTz9qO/
+        y2JsOJYSa2RPPhHXP/1ghniBbuGWBJY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-AvkGbVv7MLmw4737OlzLbg-1; Thu, 24 Oct 2019 10:02:30 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9C4B5EC;
+        Thu, 24 Oct 2019 14:02:28 +0000 (UTC)
+Received: from ovpn-117-17.phx2.redhat.com (ovpn-117-17.phx2.redhat.com [10.3.117.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C2575D9D5;
+        Thu, 24 Oct 2019 14:02:28 +0000 (UTC)
+Message-ID: <59d0188a2195f7f8b2416179a7cc8813a147939f.camel@redhat.com>
 Subject: Re: [PATCH v1 2/2] SUNRPC: Fix svcauth_gss_proxy_init()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20191024133416.2148.96218.stgit@klimt.1015granger.net>
-Date:   Thu, 24 Oct 2019 09:35:58 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Simo Sorce <simo@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1DD83F8D-10A7-4273-A53F-3AB858EBE2D1@oracle.com>
-References: <20191024133410.2148.3456.stgit@klimt.1015granger.net>
- <20191024133416.2148.96218.stgit@klimt.1015granger.net>
+From:   Simo Sorce <simo@redhat.com>
 To:     Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9419 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910240131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9419 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910240131
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Thu, 24 Oct 2019 10:02:27 -0400
+In-Reply-To: <1DD83F8D-10A7-4273-A53F-3AB858EBE2D1@oracle.com>
+References: <20191024133410.2148.3456.stgit@klimt.1015granger.net>
+         <20191024133416.2148.96218.stgit@klimt.1015granger.net>
+         <1DD83F8D-10A7-4273-A53F-3AB858EBE2D1@oracle.com>
+Organization: Red Hat, Inc.
+Mime-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: AvkGbVv7MLmw4737OlzLbg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Whoops, was going to Cc: Simo on this one...
+On Thu, 2019-10-24 at 09:35 -0400, Chuck Lever wrote:
+> Whoops, was going to Cc: Simo on this one...
 
-> On Oct 24, 2019, at 9:34 AM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
+Doesn't look like it is changing any behavior wrt GSS, so fine with me.
+
+Simo.
+
+> > On Oct 24, 2019, at 9:34 AM, Chuck Lever <chuck.lever@oracle.com> wrote=
+:
+> >=20
+> > gss_read_proxy_verf() assumes things about the XDR buffer containing
+> > the RPC Call that are not true for buffers generated by
+> > svc_rdma_recv().
+> >=20
+> > RDMA's buffers look more like what the upper layer generates for
+> > sending: head is a kmalloc'd buffer; it does not point to a page
+> > whose contents are contiguous with the first page in the buffers'
+> > page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
+> > stopped working on Linux NFS servers that use gssproxy.
+> >=20
+> > This does not affect clients that use only TCP to send their
+> > ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
+> > clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
+> > same transport as they send all other NFS operations. Such clients
+> > can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
+> >=20
+> > I thought I had found every direct reference in the server RPC code
+> > to the rqstp->rq_pages field.
+> >=20
+> > Bug found at the 2019 Westford NFS bake-a-thon.
+> >=20
+> > Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > Tested-by: Bill Baker <bill.baker@oracle.com>
+> > ---
+> > net/sunrpc/auth_gss/svcauth_gss.c |   84 ++++++++++++++++++++++++++++--=
+-------
+> > 1 file changed, 63 insertions(+), 21 deletions(-)
+> >=20
+> > diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/sv=
+cauth_gss.c
+> > index f130990..c62d1f1 100644
+> > --- a/net/sunrpc/auth_gss/svcauth_gss.c
+> > +++ b/net/sunrpc/auth_gss/svcauth_gss.c
+> > @@ -1078,24 +1078,32 @@ struct gss_svc_data {
+> > =09return 0;
+> > }
+> >=20
+> > -/* Ok this is really heavily depending on a set of semantics in
+> > - * how rqstp is set up by svc_recv and pages laid down by the
+> > - * server when reading a request. We are basically guaranteed that
+> > - * the token lays all down linearly across a set of pages, starting
+> > - * at iov_base in rq_arg.head[0] which happens to be the first of a
+> > - * set of pages stored in rq_pages[].
+> > - * rq_arg.head[0].iov_base will provide us the page_base to pass
+> > - * to the upcall.
+> > - */
+> > -static inline int
+> > -gss_read_proxy_verf(struct svc_rqst *rqstp,
+> > -=09=09    struct rpc_gss_wire_cred *gc, __be32 *authp,
+> > -=09=09    struct xdr_netobj *in_handle,
+> > -=09=09    struct gssp_in_token *in_token)
+> > +static void gss_free_in_token_pages(struct gssp_in_token *in_token)
+> > {
+> > -=09struct kvec *argv =3D &rqstp->rq_arg.head[0];
+> > =09u32 inlen;
+> > -=09int res;
+> > +=09int i;
+> > +
+> > +=09i =3D 0;
+> > +=09inlen =3D in_token->page_len;
+> > +=09while (inlen) {
+> > +=09=09if (in_token->pages[i])
+> > +=09=09=09put_page(in_token->pages[i]);
+> > +=09=09inlen -=3D inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
+> > +=09}
+> > +
+> > +=09kfree(in_token->pages);
+> > +=09in_token->pages =3D NULL;
+> > +}
+> > +
+> > +static int gss_read_proxy_verf(struct svc_rqst *rqstp,
+> > +=09=09=09       struct rpc_gss_wire_cred *gc, __be32 *authp,
+> > +=09=09=09       struct xdr_netobj *in_handle,
+> > +=09=09=09       struct gssp_in_token *in_token)
+> > +{
+> > +=09struct kvec *argv =3D &rqstp->rq_arg.head[0];
+> > +=09unsigned int page_base, length;
+> > +=09int pages, i, res;
+> > +=09size_t inlen;
+> >=20
+> > =09res =3D gss_read_common_verf(gc, argv, authp, in_handle);
+> > =09if (res)
+> > @@ -1105,10 +1113,36 @@ struct gss_svc_data {
+> > =09if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
+> > =09=09return SVC_DENIED;
+> >=20
+> > -=09in_token->pages =3D rqstp->rq_pages;
+> > -=09in_token->page_base =3D (ulong)argv->iov_base & ~PAGE_MASK;
+> > +=09pages =3D DIV_ROUND_UP(inlen, PAGE_SIZE);
+> > +=09in_token->pages =3D kcalloc(pages, sizeof(struct page *), GFP_KERNE=
+L);
+> > +=09if (!in_token->pages)
+> > +=09=09return SVC_DENIED;
+> > +=09in_token->page_base =3D 0;
+> > =09in_token->page_len =3D inlen;
+> > +=09for (i =3D 0; i < pages; i++) {
+> > +=09=09in_token->pages[i] =3D alloc_page(GFP_KERNEL);
+> > +=09=09if (!in_token->pages[i]) {
+> > +=09=09=09gss_free_in_token_pages(in_token);
+> > +=09=09=09return SVC_DENIED;
+> > +=09=09}
+> > +=09}
+> >=20
+> > +=09length =3D min_t(unsigned int, inlen, argv->iov_len);
+> > +=09memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
+> > +=09inlen -=3D length;
+> > +
+> > +=09i =3D 1;
+> > +=09page_base =3D rqstp->rq_arg.page_base;
+> > +=09while (inlen) {
+> > +=09=09length =3D min_t(unsigned int, inlen, PAGE_SIZE);
+> > +=09=09memcpy(page_address(in_token->pages[i]),
+> > +=09=09       page_address(rqstp->rq_arg.pages[i]) + page_base,
+> > +=09=09       length);
+> > +
+> > +=09=09inlen -=3D length;
+> > +=09=09page_base =3D 0;
+> > +=09=09i++;
+> > +=09}
+> > =09return 0;
+> > }
+> >=20
+> > @@ -1282,8 +1316,11 @@ static int svcauth_gss_proxy_init(struct svc_rqs=
+t *rqstp,
+> > =09=09break;
+> > =09case GSS_S_COMPLETE:
+> > =09=09status =3D gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
+> > -=09=09if (status)
+> > +=09=09if (status) {
+> > +=09=09=09pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
+> > +=09=09=09=09__func__, status);
+> > =09=09=09goto out;
+> > +=09=09}
+> > =09=09cli_handle.data =3D (u8 *)&handle;
+> > =09=09cli_handle.len =3D sizeof(handle);
+> > =09=09break;
+> > @@ -1294,15 +1331,20 @@ static int svcauth_gss_proxy_init(struct svc_rq=
+st *rqstp,
+> >=20
+> > =09/* Got an answer to the upcall; use it: */
+> > =09if (gss_write_init_verf(sn->rsc_cache, rqstp,
+> > -=09=09=09=09&cli_handle, &ud.major_status))
+> > +=09=09=09=09&cli_handle, &ud.major_status)) {
+> > +=09=09pr_info("%s: gss_write_init_verf failed\n", __func__);
+> > =09=09goto out;
+> > +=09}
+> > =09if (gss_write_resv(resv, PAGE_SIZE,
+> > =09=09=09   &cli_handle, &ud.out_token,
+> > -=09=09=09   ud.major_status, ud.minor_status))
+> > +=09=09=09   ud.major_status, ud.minor_status)) {
+> > +=09=09pr_info("%s: gss_write_resv failed\n", __func__);
+> > =09=09goto out;
+> > +=09}
+> >=20
+> > =09ret =3D SVC_COMPLETE;
+> > out:
+> > +=09gss_free_in_token_pages(&ud.in_token);
+> > =09gssp_free_upcall_data(&ud);
+> > =09return ret;
+> > }
+> >=20
 >=20
-> gss_read_proxy_verf() assumes things about the XDR buffer containing
-> the RPC Call that are not true for buffers generated by
-> svc_rdma_recv().
+> --
+> Chuck Lever
 >=20
-> RDMA's buffers look more like what the upper layer generates for
-> sending: head is a kmalloc'd buffer; it does not point to a page
-> whose contents are contiguous with the first page in the buffers'
-> page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
-> stopped working on Linux NFS servers that use gssproxy.
 >=20
-> This does not affect clients that use only TCP to send their
-> ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
-> clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
-> same transport as they send all other NFS operations. Such clients
-> can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
->=20
-> I thought I had found every direct reference in the server RPC code
-> to the rqstp->rq_pages field.
->=20
-> Bug found at the 2019 Westford NFS bake-a-thon.
->=20
-> Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Tested-by: Bill Baker <bill.baker@oracle.com>
-> ---
-> net/sunrpc/auth_gss/svcauth_gss.c |   84 =
-++++++++++++++++++++++++++++---------
-> 1 file changed, 63 insertions(+), 21 deletions(-)
->=20
-> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c =
-b/net/sunrpc/auth_gss/svcauth_gss.c
-> index f130990..c62d1f1 100644
-> --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> @@ -1078,24 +1078,32 @@ struct gss_svc_data {
-> 	return 0;
-> }
->=20
-> -/* Ok this is really heavily depending on a set of semantics in
-> - * how rqstp is set up by svc_recv and pages laid down by the
-> - * server when reading a request. We are basically guaranteed that
-> - * the token lays all down linearly across a set of pages, starting
-> - * at iov_base in rq_arg.head[0] which happens to be the first of a
-> - * set of pages stored in rq_pages[].
-> - * rq_arg.head[0].iov_base will provide us the page_base to pass
-> - * to the upcall.
-> - */
-> -static inline int
-> -gss_read_proxy_verf(struct svc_rqst *rqstp,
-> -		    struct rpc_gss_wire_cred *gc, __be32 *authp,
-> -		    struct xdr_netobj *in_handle,
-> -		    struct gssp_in_token *in_token)
-> +static void gss_free_in_token_pages(struct gssp_in_token *in_token)
-> {
-> -	struct kvec *argv =3D &rqstp->rq_arg.head[0];
-> 	u32 inlen;
-> -	int res;
-> +	int i;
-> +
-> +	i =3D 0;
-> +	inlen =3D in_token->page_len;
-> +	while (inlen) {
-> +		if (in_token->pages[i])
-> +			put_page(in_token->pages[i]);
-> +		inlen -=3D inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
-> +	}
-> +
-> +	kfree(in_token->pages);
-> +	in_token->pages =3D NULL;
-> +}
-> +
-> +static int gss_read_proxy_verf(struct svc_rqst *rqstp,
-> +			       struct rpc_gss_wire_cred *gc, __be32 =
-*authp,
-> +			       struct xdr_netobj *in_handle,
-> +			       struct gssp_in_token *in_token)
-> +{
-> +	struct kvec *argv =3D &rqstp->rq_arg.head[0];
-> +	unsigned int page_base, length;
-> +	int pages, i, res;
-> +	size_t inlen;
->=20
-> 	res =3D gss_read_common_verf(gc, argv, authp, in_handle);
-> 	if (res)
-> @@ -1105,10 +1113,36 @@ struct gss_svc_data {
-> 	if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
-> 		return SVC_DENIED;
->=20
-> -	in_token->pages =3D rqstp->rq_pages;
-> -	in_token->page_base =3D (ulong)argv->iov_base & ~PAGE_MASK;
-> +	pages =3D DIV_ROUND_UP(inlen, PAGE_SIZE);
-> +	in_token->pages =3D kcalloc(pages, sizeof(struct page *), =
-GFP_KERNEL);
-> +	if (!in_token->pages)
-> +		return SVC_DENIED;
-> +	in_token->page_base =3D 0;
-> 	in_token->page_len =3D inlen;
-> +	for (i =3D 0; i < pages; i++) {
-> +		in_token->pages[i] =3D alloc_page(GFP_KERNEL);
-> +		if (!in_token->pages[i]) {
-> +			gss_free_in_token_pages(in_token);
-> +			return SVC_DENIED;
-> +		}
-> +	}
->=20
-> +	length =3D min_t(unsigned int, inlen, argv->iov_len);
-> +	memcpy(page_address(in_token->pages[0]), argv->iov_base, =
-length);
-> +	inlen -=3D length;
-> +
-> +	i =3D 1;
-> +	page_base =3D rqstp->rq_arg.page_base;
-> +	while (inlen) {
-> +		length =3D min_t(unsigned int, inlen, PAGE_SIZE);
-> +		memcpy(page_address(in_token->pages[i]),
-> +		       page_address(rqstp->rq_arg.pages[i]) + page_base,
-> +		       length);
-> +
-> +		inlen -=3D length;
-> +		page_base =3D 0;
-> +		i++;
-> +	}
-> 	return 0;
-> }
->=20
-> @@ -1282,8 +1316,11 @@ static int svcauth_gss_proxy_init(struct =
-svc_rqst *rqstp,
-> 		break;
-> 	case GSS_S_COMPLETE:
-> 		status =3D gss_proxy_save_rsc(sn->rsc_cache, &ud, =
-&handle);
-> -		if (status)
-> +		if (status) {
-> +			pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
-> +				__func__, status);
-> 			goto out;
-> +		}
-> 		cli_handle.data =3D (u8 *)&handle;
-> 		cli_handle.len =3D sizeof(handle);
-> 		break;
-> @@ -1294,15 +1331,20 @@ static int svcauth_gss_proxy_init(struct =
-svc_rqst *rqstp,
->=20
-> 	/* Got an answer to the upcall; use it: */
-> 	if (gss_write_init_verf(sn->rsc_cache, rqstp,
-> -				&cli_handle, &ud.major_status))
-> +				&cli_handle, &ud.major_status)) {
-> +		pr_info("%s: gss_write_init_verf failed\n", __func__);
-> 		goto out;
-> +	}
-> 	if (gss_write_resv(resv, PAGE_SIZE,
-> 			   &cli_handle, &ud.out_token,
-> -			   ud.major_status, ud.minor_status))
-> +			   ud.major_status, ud.minor_status)) {
-> +		pr_info("%s: gss_write_resv failed\n", __func__);
-> 		goto out;
-> +	}
->=20
-> 	ret =3D SVC_COMPLETE;
-> out:
-> +	gss_free_in_token_pages(&ud.in_token);
-> 	gssp_free_upcall_data(&ud);
-> 	return ret;
-> }
 >=20
 
---
-Chuck Lever
+--=20
+Simo Sorce
+RHEL Crypto Team
+Red Hat, Inc
+
 
 
 
