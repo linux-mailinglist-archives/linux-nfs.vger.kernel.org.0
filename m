@@ -2,243 +2,273 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E47E34F1
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 16:02:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38DEAE36D0
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2019 17:38:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfJXOCh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Oct 2019 10:02:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59421 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730547AbfJXOCh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Oct 2019 10:02:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571925754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lEryrETcLbZNFJ7paT0e9BvhsVUmri037rg2Hh/6l1E=;
-        b=A1VyS9zHVW1XakUMfSePxGfoXG+TdNZtMA41Qug6Dilree1NaLcrK9mkE4dOcceN74qspg
-        cOCB041glb4tMNKRmBvTfoZAL/t2xprWEjJTsr+FyG1JR/pu3EX+/69V5291y4ESTz9qO/
-        y2JsOJYSa2RPPhHXP/1ghniBbuGWBJY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-AvkGbVv7MLmw4737OlzLbg-1; Thu, 24 Oct 2019 10:02:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9C4B5EC;
-        Thu, 24 Oct 2019 14:02:28 +0000 (UTC)
-Received: from ovpn-117-17.phx2.redhat.com (ovpn-117-17.phx2.redhat.com [10.3.117.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C2575D9D5;
-        Thu, 24 Oct 2019 14:02:28 +0000 (UTC)
-Message-ID: <59d0188a2195f7f8b2416179a7cc8813a147939f.camel@redhat.com>
-Subject: Re: [PATCH v1 2/2] SUNRPC: Fix svcauth_gss_proxy_init()
-From:   Simo Sorce <simo@redhat.com>
+        id S2503332AbfJXPiH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Oct 2019 11:38:07 -0400
+Received: from fieldses.org ([173.255.197.46]:39604 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503151AbfJXPiG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 24 Oct 2019 11:38:06 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C1CA41C21; Thu, 24 Oct 2019 11:38:05 -0400 (EDT)
+Date:   Thu, 24 Oct 2019 11:38:05 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Thu, 24 Oct 2019 10:02:27 -0400
-In-Reply-To: <1DD83F8D-10A7-4273-A53F-3AB858EBE2D1@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] SUNRPC: Trace gssproxy upcall results
+Message-ID: <20191024153805.GA29859@fieldses.org>
 References: <20191024133410.2148.3456.stgit@klimt.1015granger.net>
-         <20191024133416.2148.96218.stgit@klimt.1015granger.net>
-         <1DD83F8D-10A7-4273-A53F-3AB858EBE2D1@oracle.com>
-Organization: Red Hat, Inc.
-Mime-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: AvkGbVv7MLmw4737OlzLbg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024133410.2148.3456.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2019-10-24 at 09:35 -0400, Chuck Lever wrote:
-> Whoops, was going to Cc: Simo on this one...
+On Thu, Oct 24, 2019 at 09:34:10AM -0400, Chuck Lever wrote:
+> Record results of a GSS proxy ACCEPT_SEC_CONTEXT upcall and the
+> svc_authenticate() function to make field debugging of NFS server
+> Kerberos issues easier.
 
-Doesn't look like it is changing any behavior wrt GSS, so fine with me.
+Inclined to apply.
 
-Simo.
+The only thing that bugs me a bit is that this is just summarizing
+information that's passing between the kernel and userspace--so it seems
+like a job for strace or wireshark or something.
 
-> > On Oct 24, 2019, at 9:34 AM, Chuck Lever <chuck.lever@oracle.com> wrote=
-:
-> >=20
-> > gss_read_proxy_verf() assumes things about the XDR buffer containing
-> > the RPC Call that are not true for buffers generated by
-> > svc_rdma_recv().
-> >=20
-> > RDMA's buffers look more like what the upper layer generates for
-> > sending: head is a kmalloc'd buffer; it does not point to a page
-> > whose contents are contiguous with the first page in the buffers'
-> > page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
-> > stopped working on Linux NFS servers that use gssproxy.
-> >=20
-> > This does not affect clients that use only TCP to send their
-> > ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
-> > clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
-> > same transport as they send all other NFS operations. Such clients
-> > can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
-> >=20
-> > I thought I had found every direct reference in the server RPC code
-> > to the rqstp->rq_pages field.
-> >=20
-> > Bug found at the 2019 Westford NFS bake-a-thon.
-> >=20
-> > Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > Tested-by: Bill Baker <bill.baker@oracle.com>
-> > ---
-> > net/sunrpc/auth_gss/svcauth_gss.c |   84 ++++++++++++++++++++++++++++--=
--------
-> > 1 file changed, 63 insertions(+), 21 deletions(-)
-> >=20
-> > diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/sv=
-cauth_gss.c
-> > index f130990..c62d1f1 100644
-> > --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> > +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> > @@ -1078,24 +1078,32 @@ struct gss_svc_data {
-> > =09return 0;
-> > }
-> >=20
-> > -/* Ok this is really heavily depending on a set of semantics in
-> > - * how rqstp is set up by svc_recv and pages laid down by the
-> > - * server when reading a request. We are basically guaranteed that
-> > - * the token lays all down linearly across a set of pages, starting
-> > - * at iov_base in rq_arg.head[0] which happens to be the first of a
-> > - * set of pages stored in rq_pages[].
-> > - * rq_arg.head[0].iov_base will provide us the page_base to pass
-> > - * to the upcall.
-> > - */
-> > -static inline int
-> > -gss_read_proxy_verf(struct svc_rqst *rqstp,
-> > -=09=09    struct rpc_gss_wire_cred *gc, __be32 *authp,
-> > -=09=09    struct xdr_netobj *in_handle,
-> > -=09=09    struct gssp_in_token *in_token)
-> > +static void gss_free_in_token_pages(struct gssp_in_token *in_token)
-> > {
-> > -=09struct kvec *argv =3D &rqstp->rq_arg.head[0];
-> > =09u32 inlen;
-> > -=09int res;
-> > +=09int i;
-> > +
-> > +=09i =3D 0;
-> > +=09inlen =3D in_token->page_len;
-> > +=09while (inlen) {
-> > +=09=09if (in_token->pages[i])
-> > +=09=09=09put_page(in_token->pages[i]);
-> > +=09=09inlen -=3D inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
-> > +=09}
-> > +
-> > +=09kfree(in_token->pages);
-> > +=09in_token->pages =3D NULL;
-> > +}
-> > +
-> > +static int gss_read_proxy_verf(struct svc_rqst *rqstp,
-> > +=09=09=09       struct rpc_gss_wire_cred *gc, __be32 *authp,
-> > +=09=09=09       struct xdr_netobj *in_handle,
-> > +=09=09=09       struct gssp_in_token *in_token)
-> > +{
-> > +=09struct kvec *argv =3D &rqstp->rq_arg.head[0];
-> > +=09unsigned int page_base, length;
-> > +=09int pages, i, res;
-> > +=09size_t inlen;
-> >=20
-> > =09res =3D gss_read_common_verf(gc, argv, authp, in_handle);
-> > =09if (res)
-> > @@ -1105,10 +1113,36 @@ struct gss_svc_data {
-> > =09if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
-> > =09=09return SVC_DENIED;
-> >=20
-> > -=09in_token->pages =3D rqstp->rq_pages;
-> > -=09in_token->page_base =3D (ulong)argv->iov_base & ~PAGE_MASK;
-> > +=09pages =3D DIV_ROUND_UP(inlen, PAGE_SIZE);
-> > +=09in_token->pages =3D kcalloc(pages, sizeof(struct page *), GFP_KERNE=
-L);
-> > +=09if (!in_token->pages)
-> > +=09=09return SVC_DENIED;
-> > +=09in_token->page_base =3D 0;
-> > =09in_token->page_len =3D inlen;
-> > +=09for (i =3D 0; i < pages; i++) {
-> > +=09=09in_token->pages[i] =3D alloc_page(GFP_KERNEL);
-> > +=09=09if (!in_token->pages[i]) {
-> > +=09=09=09gss_free_in_token_pages(in_token);
-> > +=09=09=09return SVC_DENIED;
-> > +=09=09}
-> > +=09}
-> >=20
-> > +=09length =3D min_t(unsigned int, inlen, argv->iov_len);
-> > +=09memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
-> > +=09inlen -=3D length;
-> > +
-> > +=09i =3D 1;
-> > +=09page_base =3D rqstp->rq_arg.page_base;
-> > +=09while (inlen) {
-> > +=09=09length =3D min_t(unsigned int, inlen, PAGE_SIZE);
-> > +=09=09memcpy(page_address(in_token->pages[i]),
-> > +=09=09       page_address(rqstp->rq_arg.pages[i]) + page_base,
-> > +=09=09       length);
-> > +
-> > +=09=09inlen -=3D length;
-> > +=09=09page_base =3D 0;
-> > +=09=09i++;
-> > +=09}
-> > =09return 0;
-> > }
-> >=20
-> > @@ -1282,8 +1316,11 @@ static int svcauth_gss_proxy_init(struct svc_rqs=
-t *rqstp,
-> > =09=09break;
-> > =09case GSS_S_COMPLETE:
-> > =09=09status =3D gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
-> > -=09=09if (status)
-> > +=09=09if (status) {
-> > +=09=09=09pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
-> > +=09=09=09=09__func__, status);
-> > =09=09=09goto out;
-> > +=09=09}
-> > =09=09cli_handle.data =3D (u8 *)&handle;
-> > =09=09cli_handle.len =3D sizeof(handle);
-> > =09=09break;
-> > @@ -1294,15 +1331,20 @@ static int svcauth_gss_proxy_init(struct svc_rq=
-st *rqstp,
-> >=20
-> > =09/* Got an answer to the upcall; use it: */
-> > =09if (gss_write_init_verf(sn->rsc_cache, rqstp,
-> > -=09=09=09=09&cli_handle, &ud.major_status))
-> > +=09=09=09=09&cli_handle, &ud.major_status)) {
-> > +=09=09pr_info("%s: gss_write_init_verf failed\n", __func__);
-> > =09=09goto out;
-> > +=09}
-> > =09if (gss_write_resv(resv, PAGE_SIZE,
-> > =09=09=09   &cli_handle, &ud.out_token,
-> > -=09=09=09   ud.major_status, ud.minor_status))
-> > +=09=09=09   ud.major_status, ud.minor_status)) {
-> > +=09=09pr_info("%s: gss_write_resv failed\n", __func__);
-> > =09=09goto out;
-> > +=09}
-> >=20
-> > =09ret =3D SVC_COMPLETE;
-> > out:
-> > +=09gss_free_in_token_pages(&ud.in_token);
-> > =09gssp_free_upcall_data(&ud);
-> > =09return ret;
-> > }
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
+--b.
 
---=20
-Simo Sorce
-RHEL Crypto Team
-Red Hat, Inc
-
-
-
-
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Reviewed-by: Bill Baker <bill.baker@oracle.com>
+> ---
+>  include/trace/events/rpcgss.h         |   45 +++++++++++++++++++++++++++
+>  include/trace/events/sunrpc.h         |   55 +++++++++++++++++++++++++++++++++
+>  net/sunrpc/auth_gss/gss_mech_switch.c |    4 ++
+>  net/sunrpc/auth_gss/svcauth_gss.c     |    8 +++--
+>  net/sunrpc/svc.c                      |    2 +
+>  net/sunrpc/svcauth.c                  |    2 +
+>  6 files changed, 112 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+> index d1f7fe1..9827f53 100644
+> --- a/include/trace/events/rpcgss.h
+> +++ b/include/trace/events/rpcgss.h
+> @@ -126,6 +126,34 @@
+>  DEFINE_GSSAPI_EVENT(wrap);
+>  DEFINE_GSSAPI_EVENT(unwrap);
+>  
+> +TRACE_EVENT(rpcgss_accept_upcall,
+> +	TP_PROTO(
+> +		__be32 xid,
+> +		u32 major_status,
+> +		u32 minor_status
+> +	),
+> +
+> +	TP_ARGS(xid, major_status, minor_status),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u32, xid)
+> +		__field(u32, minor_status)
+> +		__field(unsigned long, major_status)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->xid = be32_to_cpu(xid);
+> +		__entry->minor_status = minor_status;
+> +		__entry->major_status = major_status;
+> +	),
+> +
+> +	TP_printk("xid=0x%08x major_status=%s (0x%08lx) minor_status=%u",
+> +		__entry->xid, __entry->major_status == 0 ? "GSS_S_COMPLETE" :
+> +				show_gss_status(__entry->major_status),
+> +		__entry->major_status, __entry->minor_status
+> +	)
+> +);
+> +
+>  
+>  /**
+>   ** GSS auth unwrap failures
+> @@ -355,6 +383,23 @@
+>  		show_pseudoflavor(__entry->flavor), __entry->error)
+>  );
+>  
+> +TRACE_EVENT(rpcgss_oid_to_mech,
+> +	TP_PROTO(
+> +		const char *oid
+> +	),
+> +
+> +	TP_ARGS(oid),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(oid, oid)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(oid, oid);
+> +	),
+> +
+> +	TP_printk("mech for oid %s was not found", __get_str(oid))
+> +);
+>  
+>  #endif	/* _TRACE_RPCGSS_H */
+>  
+> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+> index ffa3c51..c358a0a 100644
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@ -14,6 +14,26 @@
+>  #include <linux/net.h>
+>  #include <linux/tracepoint.h>
+>  
+> +TRACE_DEFINE_ENUM(RPC_AUTH_OK);
+> +TRACE_DEFINE_ENUM(RPC_AUTH_BADCRED);
+> +TRACE_DEFINE_ENUM(RPC_AUTH_REJECTEDCRED);
+> +TRACE_DEFINE_ENUM(RPC_AUTH_BADVERF);
+> +TRACE_DEFINE_ENUM(RPC_AUTH_REJECTEDVERF);
+> +TRACE_DEFINE_ENUM(RPC_AUTH_TOOWEAK);
+> +TRACE_DEFINE_ENUM(RPCSEC_GSS_CREDPROBLEM);
+> +TRACE_DEFINE_ENUM(RPCSEC_GSS_CTXPROBLEM);
+> +
+> +#define rpc_show_auth_stat(status)					\
+> +	__print_symbolic(status,					\
+> +		{ RPC_AUTH_OK,			"AUTH_OK" },		\
+> +		{ RPC_AUTH_BADCRED,		"BADCRED" },		\
+> +		{ RPC_AUTH_REJECTEDCRED,	"REJECTEDCRED" },	\
+> +		{ RPC_AUTH_BADVERF,		"BADVERF" },		\
+> +		{ RPC_AUTH_REJECTEDVERF,	"REJECTEDVERF" },	\
+> +		{ RPC_AUTH_TOOWEAK,		"TOOWEAK" },		\
+> +		{ RPCSEC_GSS_CREDPROBLEM,	"GSS_CREDPROBLEM" },	\
+> +		{ RPCSEC_GSS_CTXPROBLEM,	"GSS_CTXPROBLEM" })	\
+> +
+>  DECLARE_EVENT_CLASS(rpc_task_status,
+>  
+>  	TP_PROTO(const struct rpc_task *task),
+> @@ -866,6 +886,41 @@
+>  			show_rqstp_flags(__entry->flags))
+>  );
+>  
+> +#define svc_show_status(status)				\
+> +	__print_symbolic(status,			\
+> +		{ SVC_GARBAGE,	"SVC_GARBAGE" },	\
+> +		{ SVC_SYSERR,	"SVC_SYSERR" },		\
+> +		{ SVC_VALID,	"SVC_VALID" },		\
+> +		{ SVC_NEGATIVE,	"SVC_NEGATIVE" },	\
+> +		{ SVC_OK,	"SVC_OK" },		\
+> +		{ SVC_DROP,	"SVC_DROP" },		\
+> +		{ SVC_CLOSE,	"SVC_CLOSE" },		\
+> +		{ SVC_DENIED,	"SVC_DENIED" },		\
+> +		{ SVC_PENDING,	"SVC_PENDING" },	\
+> +		{ SVC_COMPLETE,	"SVC_COMPLETE" })
+> +
+> +TRACE_EVENT(svc_authenticate,
+> +	TP_PROTO(const struct svc_rqst *rqst, int auth_res, __be32 auth_stat),
+> +
+> +	TP_ARGS(rqst, auth_res, auth_stat),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u32, xid)
+> +		__field(unsigned long, svc_status)
+> +		__field(unsigned long, auth_stat)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->xid = be32_to_cpu(rqst->rq_xid);
+> +		__entry->svc_status = auth_res;
+> +		__entry->auth_stat = be32_to_cpu(auth_stat);
+> +	),
+> +
+> +	TP_printk("xid=0x%08x auth_res=%s auth_stat=%s",
+> +			__entry->xid, svc_show_status(__entry->svc_status),
+> +			rpc_show_auth_stat(__entry->auth_stat))
+> +);
+> +
+>  TRACE_EVENT(svc_process,
+>  	TP_PROTO(const struct svc_rqst *rqst, const char *name),
+>  
+> diff --git a/net/sunrpc/auth_gss/gss_mech_switch.c b/net/sunrpc/auth_gss/gss_mech_switch.c
+> index 8206009..30b7de6 100644
+> --- a/net/sunrpc/auth_gss/gss_mech_switch.c
+> +++ b/net/sunrpc/auth_gss/gss_mech_switch.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/sunrpc/sched.h>
+>  #include <linux/sunrpc/gss_api.h>
+>  #include <linux/sunrpc/clnt.h>
+> +#include <trace/events/rpcgss.h>
+>  
+>  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>  # define RPCDBG_FACILITY        RPCDBG_AUTH
+> @@ -158,7 +159,6 @@ struct gss_api_mech *gss_mech_get_by_OID(struct rpcsec_gss_oid *obj)
+>  
+>  	if (sprint_oid(obj->data, obj->len, buf, sizeof(buf)) < 0)
+>  		return NULL;
+> -	dprintk("RPC:       %s(%s)\n", __func__, buf);
+>  	request_module("rpc-auth-gss-%s", buf);
+>  
+>  	rcu_read_lock();
+> @@ -172,6 +172,8 @@ struct gss_api_mech *gss_mech_get_by_OID(struct rpcsec_gss_oid *obj)
+>  		}
+>  	}
+>  	rcu_read_unlock();
+> +	if (!gm)
+> +		trace_rpcgss_oid_to_mech(buf);
+>  	return gm;
+>  }
+>  
+> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+> index 8be2f20..f130990 100644
+> --- a/net/sunrpc/auth_gss/svcauth_gss.c
+> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
+> @@ -49,6 +49,9 @@
+>  #include <linux/sunrpc/svcauth.h>
+>  #include <linux/sunrpc/svcauth_gss.h>
+>  #include <linux/sunrpc/cache.h>
+> +
+> +#include <trace/events/rpcgss.h>
+> +
+>  #include "gss_rpc_upcall.h"
+>  
+>  
+> @@ -1270,9 +1273,8 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
+>  	if (status)
+>  		goto out;
+>  
+> -	dprintk("RPC:       svcauth_gss: gss major status = %d "
+> -			"minor status = %d\n",
+> -			ud.major_status, ud.minor_status);
+> +	trace_rpcgss_accept_upcall(rqstp->rq_xid, ud.major_status,
+> +				   ud.minor_status);
+>  
+>  	switch (ud.major_status) {
+>  	case GSS_S_CONTINUE_NEEDED:
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index d11b705..187dd4e 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1337,6 +1337,8 @@ static __printf(2,3) void svc_printk(struct svc_rqst *rqstp, const char *fmt, ..
+>  		auth_stat = rpc_autherr_badcred;
+>  		auth_res = progp->pg_authenticate(rqstp);
+>  	}
+> +	if (auth_res != SVC_OK)
+> +		trace_svc_authenticate(rqstp, auth_res, auth_stat);
+>  	switch (auth_res) {
+>  	case SVC_OK:
+>  		break;
+> diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
+> index 550b214..552617e 100644
+> --- a/net/sunrpc/svcauth.c
+> +++ b/net/sunrpc/svcauth.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/err.h>
+>  #include <linux/hash.h>
+>  
+> +#include <trace/events/sunrpc.h>
+> +
+>  #define RPCDBG_FACILITY	RPCDBG_AUTH
+>  
+>  
