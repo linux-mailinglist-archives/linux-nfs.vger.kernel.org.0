@@ -2,50 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D1BE4FFA
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2019 17:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34CAE5000
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2019 17:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440610AbfJYPUx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Oct 2019 11:20:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51829 "EHLO
+        id S2440667AbfJYPVY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Oct 2019 11:21:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56020 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2440561AbfJYPUx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Oct 2019 11:20:53 -0400
+        with ESMTP id S2440666AbfJYPVY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Oct 2019 11:21:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572016851;
+        s=mimecast20190719; t=1572016883;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bXBncjgboz5u7Y9MyqruxUXQZXD7Adz3b/33SNwrgwA=;
-        b=cGdmQFCfYBe2omHVxHtQP7FWlr0GydgqqP1cOTjwwGiPao5zZ4OrfSn1xi69Qxb9u+qjCV
-        l5iTHOnemhAltXHSzHB8VVFEbsb1Ro3fA7oLD0Z/oHHy/6LsnM8UEgPk0/WLZVSHvc+UCP
-        X+HBolE9NUa313wwtMfRwCMeJIKeFzA=
+        bh=T1eqwyz7hgq81g0P0sHcjKsRSKfm45jstuxZCxUMt7s=;
+        b=W8eX3jADFPWT9rmGYNSgHQ9YeeJ1d4FwYOR9hmHg70d+PDfllt9+6k+T64Fk9570qSX2rd
+        ROWQVKveCmliBv0EOeErC3GKezCr3SLdQrx4rXa77E4hACtw9DusvoLQX/so7PMmQQZaf0
+        rIDA5xjF575jMxYMXApEuN/4phbCB+8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-HqYytm6pNBiCXWZfZJgp1Q-1; Fri, 25 Oct 2019 11:20:50 -0400
+ us-mta-335-NZ0bgblYMqmJZIwa-fLn5w-1; Fri, 25 Oct 2019 11:21:22 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 495CB8017D9;
-        Fri, 25 Oct 2019 15:20:49 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FE41107AD31;
+        Fri, 25 Oct 2019 15:21:21 +0000 (UTC)
 Received: from pick.fieldses.org (ovpn-126-116.rdu2.redhat.com [10.10.126.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1140D60BEC;
-        Fri, 25 Oct 2019 15:20:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E60B60BEC;
+        Fri, 25 Oct 2019 15:21:21 +0000 (UTC)
 Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id A9875120039; Fri, 25 Oct 2019 11:20:47 -0400 (EDT)
-Date:   Fri, 25 Oct 2019 11:20:47 -0400
+        id 9F74E120039; Fri, 25 Oct 2019 11:21:19 -0400 (EDT)
+Date:   Fri, 25 Oct 2019 11:21:19 -0400
 From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: uncollected nfsd open owners
-Message-ID: <20191025152047.GB16053@pick.fieldses.org>
-References: <87mudpfwkj.fsf@notabene.neil.brown.name>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
+ nfsd4_shutdown_callback()
+Message-ID: <20191025152119.GC16053@pick.fieldses.org>
+References: <20191023214318.9350-1-trond.myklebust@hammerspace.com>
+ <20191025145147.GA16053@pick.fieldses.org>
+ <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
 MIME-Version: 1.0
-In-Reply-To: <87mudpfwkj.fsf@notabene.neil.brown.name>
+In-Reply-To: <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: HqYytm6pNBiCXWZfZJgp1Q-1
+X-MC-Unique: NZ0bgblYMqmJZIwa-fLn5w-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -55,55 +58,278 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 12:22:36PM +1100, NeilBrown wrote:
->  I have a coredump from a machine that was running as an NFS server.
->  nfs4_laundromat was trying to expire a client, and in particular was
->  cleaning up the ->cl_openowners.
->  As there were 6.5 million of these, it took rather longer than the
->  softlockup timer thought was acceptable, and hence the core dump.
+On Fri, Oct 25, 2019 at 02:55:45PM +0000, Trond Myklebust wrote:
+> On Fri, 2019-10-25 at 10:51 -0400, J. Bruce Fields wrote:
+> > On Wed, Oct 23, 2019 at 05:43:18PM -0400, Trond Myklebust wrote:
+> > > When we're destroying the client lease, and we call
+> > > nfsd4_shutdown_callback(), we must ensure that we do not return
+> > > before all outstanding callbacks have terminated and have
+> > > released their payloads.
+> >=20
+> > This is great, thanks!  We've seen what I'm fairly sure is the same
+> > bug
+> > from Red Hat users.  I think my blind spot was an assumption that
+> > rpc tasks wouldn't outlive rpc_shutdown_client().
+> >=20
+> > However, it's causing xfstests runs to hang, and I haven't worked out
+> > why yet.
+> >=20
+> > I'll spend some time on it this afternoon and let you know what I
+> > figure
+> > out.
+> >=20
 >=20
->  Those open owners that I looked at had empty so_stateids lists, so I
->  would normally expect them to be on the close_lru and to be removed
->  fairly soon.  But they weren't (only 32 openowners on close_lru).
->=20
->  The only explanation I can think of for this is that maybe an OPEN
->  request successfully got through nfs4_process_open1(), thus creating an
->  open owner, but failed to get to or through nfs4_process_open2(), and
->  so didn't add a stateid.  I *think* this can leave an openowner that is
->  unused but will never be cleaned up (until the client is expired, which
->  might be too late).
->=20
->  Is this possible?  If so, how should we handle those openowners which
->  never had a stateid?
->  In 3.0 (which it the kernel were I saw this) I could probably just put
->  the openowner on the close_lru when it is created.
->  In more recent kernels, it seems to be assumed that openowners are only
->  on close_lru if they have a oo_last_closed_stid.  Would we need a
->  separate "never used lru", or should they just be destroyed as soon as
->  the open fails?
+> Is that happening with v2 or with v1? With v1 there is definitely a
+> hang in __destroy_client() due to the refcount leak that I believe I
+> fixed in v2.
 
-Hopefully we can just throw the new openowner away when the open fails.
-
-But it looks like the new openowner is visible on global data structures
-by then, so we need to be sure somebody else isn't about to use it.
-
->  Also, should we put a cond_resched() in some or all of those loops in
->  __destroy_client() ??
-
-Looks like it helped find a bug in this case....
-
-Destroying a client that has a ton of active state should be an unusual
-situation.
-
-I don't know, maybe?  I'm sure this isn't the only spinlock-protected
-kernel code where we don't have a strict bound on a loop, what's been
-the practice elsewhere?  Worst case, the realtime code allows preempting
-spinlocks, right?
-
-Might be nice to have some sort of limits on the number of objects (like
-stateowners) that can be created.  But it's a pain when we get one of
-those limits wrong. (See
-git log -L :nfsd4_get_drc_mem:fs/nfsd/nfs4state.c.)
+I thought I was running v2, let me double-check....
 
 --b.
+
+>=20
+> > --b.
+> >=20
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > > v2 - Fix a leak of clp->cl_cb_inflight when running null probes
+> > >=20
+> > >  fs/nfsd/nfs4callback.c | 97 +++++++++++++++++++++++++++++++++-----
+> > > ----
+> > >  fs/nfsd/state.h        |  1 +
+> > >  2 files changed, 79 insertions(+), 19 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > index 524111420b48..a3c9517bcc64 100644
+> > > --- a/fs/nfsd/nfs4callback.c
+> > > +++ b/fs/nfsd/nfs4callback.c
+> > > @@ -826,6 +826,31 @@ static int max_cb_time(struct net *net)
+> > >  =09return max(nn->nfsd4_lease/10, (time_t)1) * HZ;
+> > >  }
+> > > =20
+> > > +static struct workqueue_struct *callback_wq;
+> > > +
+> > > +static bool nfsd4_queue_cb(struct nfsd4_callback *cb)
+> > > +{
+> > > +=09return queue_work(callback_wq, &cb->cb_work);
+> > > +}
+> > > +
+> > > +static void nfsd41_cb_inflight_begin(struct nfs4_client *clp)
+> > > +{
+> > > +=09atomic_inc(&clp->cl_cb_inflight);
+> > > +}
+> > > +
+> > > +static void nfsd41_cb_inflight_end(struct nfs4_client *clp)
+> > > +{
+> > > +
+> > > +=09if (atomic_dec_and_test(&clp->cl_cb_inflight))
+> > > +=09=09wake_up_var(&clp->cl_cb_inflight);
+> > > +}
+> > > +
+> > > +static void nfsd41_cb_inflight_wait_complete(struct nfs4_client
+> > > *clp)
+> > > +{
+> > > +=09wait_var_event(&clp->cl_cb_inflight,
+> > > +=09=09=09!atomic_read(&clp->cl_cb_inflight));
+> > > +}
+> > > +
+> > >  static const struct cred *get_backchannel_cred(struct nfs4_client
+> > > *clp, struct rpc_clnt *client, struct nfsd4_session *ses)
+> > >  {
+> > >  =09if (clp->cl_minorversion =3D=3D 0) {
+> > > @@ -937,14 +962,21 @@ static void nfsd4_cb_probe_done(struct
+> > > rpc_task *task, void *calldata)
+> > >  =09=09clp->cl_cb_state =3D NFSD4_CB_UP;
+> > >  }
+> > > =20
+> > > +static void nfsd4_cb_probe_release(void *calldata)
+> > > +{
+> > > +=09struct nfs4_client *clp =3D container_of(calldata, struct
+> > > nfs4_client, cl_cb_null);
+> > > +
+> > > +=09nfsd41_cb_inflight_end(clp);
+> > > +
+> > > +}
+> > > +
+> > >  static const struct rpc_call_ops nfsd4_cb_probe_ops =3D {
+> > >  =09/* XXX: release method to ensure we set the cb channel down if
+> > >  =09 * necessary on early failure? */
+> > >  =09.rpc_call_done =3D nfsd4_cb_probe_done,
+> > > +=09.rpc_release =3D nfsd4_cb_probe_release,
+> > >  };
+> > > =20
+> > > -static struct workqueue_struct *callback_wq;
+> > > -
+> > >  /*
+> > >   * Poke the callback thread to process any updates to the callback
+> > >   * parameters, and send a null probe.
+> > > @@ -975,9 +1007,12 @@ void nfsd4_change_callback(struct nfs4_client
+> > > *clp, struct nfs4_cb_conn *conn)
+> > >   * If the slot is available, then mark it busy.  Otherwise, set
+> > > the
+> > >   * thread for sleeping on the callback RPC wait queue.
+> > >   */
+> > > -static bool nfsd41_cb_get_slot(struct nfs4_client *clp, struct
+> > > rpc_task *task)
+> > > +static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct
+> > > rpc_task *task)
+> > >  {
+> > > -=09if (test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D 0) {
+> > > +=09struct nfs4_client *clp =3D cb->cb_clp;
+> > > +
+> > > +=09if (!cb->cb_holds_slot &&
+> > > +=09    test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D 0) {
+> > >  =09=09rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
+> > >  =09=09/* Race breaker */
+> > >  =09=09if (test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D 0) {
+> > > @@ -985,10 +1020,32 @@ static bool nfsd41_cb_get_slot(struct
+> > > nfs4_client *clp, struct rpc_task *task)
+> > >  =09=09=09return false;
+> > >  =09=09}
+> > >  =09=09rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
+> > > +=09=09cb->cb_holds_slot =3D true;
+> > >  =09}
+> > >  =09return true;
+> > >  }
+> > > =20
+> > > +static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
+> > > +{
+> > > +=09struct nfs4_client *clp =3D cb->cb_clp;
+> > > +
+> > > +=09if (cb->cb_holds_slot) {
+> > > +=09=09cb->cb_holds_slot =3D false;
+> > > +=09=09clear_bit(0, &clp->cl_cb_slot_busy);
+> > > +=09=09rpc_wake_up_next(&clp->cl_cb_waitq);
+> > > +=09}
+> > > +}
+> > > +
+> > > +static void nfsd41_destroy_cb(struct nfsd4_callback *cb)
+> > > +{
+> > > +=09struct nfs4_client *clp =3D cb->cb_clp;
+> > > +
+> > > +=09nfsd41_cb_release_slot(cb);
+> > > +=09if (cb->cb_ops && cb->cb_ops->release)
+> > > +=09=09cb->cb_ops->release(cb);
+> > > +=09nfsd41_cb_inflight_end(clp);
+> > > +}
+> > > +
+> > >  /*
+> > >   * TODO: cb_sequence should support referring call lists,
+> > > cachethis, multiple
+> > >   * slots, and mark callback channel down on communication errors.
+> > > @@ -1005,11 +1062,8 @@ static void nfsd4_cb_prepare(struct rpc_task
+> > > *task, void *calldata)
+> > >  =09 */
+> > >  =09cb->cb_seq_status =3D 1;
+> > >  =09cb->cb_status =3D 0;
+> > > -=09if (minorversion) {
+> > > -=09=09if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp,
+> > > task))
+> > > -=09=09=09return;
+> > > -=09=09cb->cb_holds_slot =3D true;
+> > > -=09}
+> > > +=09if (minorversion && !nfsd41_cb_get_slot(cb, task))
+> > > +=09=09return;
+> > >  =09rpc_call_start(task);
+> > >  }
+> > > =20
+> > > @@ -1076,9 +1130,7 @@ static bool nfsd4_cb_sequence_done(struct
+> > > rpc_task *task, struct nfsd4_callback
+> > >  =09=09=09cb->cb_seq_status);
+> > >  =09}
+> > > =20
+> > > -=09cb->cb_holds_slot =3D false;
+> > > -=09clear_bit(0, &clp->cl_cb_slot_busy);
+> > > -=09rpc_wake_up_next(&clp->cl_cb_waitq);
+> > > +=09nfsd41_cb_release_slot(cb);
+> > >  =09dprintk("%s: freed slot, new seqid=3D%d\n", __func__,
+> > >  =09=09clp->cl_cb_session->se_cb_seq_nr);
+> > > =20
+> > > @@ -1091,8 +1143,10 @@ static bool nfsd4_cb_sequence_done(struct
+> > > rpc_task *task, struct nfsd4_callback
+> > >  =09=09ret =3D false;
+> > >  =09goto out;
+> > >  need_restart:
+> > > -=09task->tk_status =3D 0;
+> > > -=09cb->cb_need_restart =3D true;
+> > > +=09if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
+> > > +=09=09task->tk_status =3D 0;
+> > > +=09=09cb->cb_need_restart =3D true;
+> > > +=09}
+> > >  =09return false;
+> > >  }
+> > > =20
+> > > @@ -1134,9 +1188,9 @@ static void nfsd4_cb_release(void *calldata)
+> > >  =09struct nfsd4_callback *cb =3D calldata;
+> > > =20
+> > >  =09if (cb->cb_need_restart)
+> > > -=09=09nfsd4_run_cb(cb);
+> > > +=09=09nfsd4_queue_cb(cb);
+> > >  =09else
+> > > -=09=09cb->cb_ops->release(cb);
+> > > +=09=09nfsd41_destroy_cb(cb);
+> > > =20
+> > >  }
+> > > =20
+> > > @@ -1170,6 +1224,7 @@ void nfsd4_shutdown_callback(struct
+> > > nfs4_client *clp)
+> > >  =09 */
+> > >  =09nfsd4_run_cb(&clp->cl_cb_null);
+> > >  =09flush_workqueue(callback_wq);
+> > > +=09nfsd41_cb_inflight_wait_complete(clp);
+> > >  }
+> > > =20
+> > >  /* requires cl_lock: */
+> > > @@ -1255,8 +1310,7 @@ nfsd4_run_cb_work(struct work_struct *work)
+> > >  =09clnt =3D clp->cl_cb_client;
+> > >  =09if (!clnt) {
+> > >  =09=09/* Callback channel broken, or client killed; give up:
+> > > */
+> > > -=09=09if (cb->cb_ops && cb->cb_ops->release)
+> > > -=09=09=09cb->cb_ops->release(cb);
+> > > +=09=09nfsd41_destroy_cb(cb);
+> > >  =09=09return;
+> > >  =09}
+> > > =20
+> > > @@ -1265,6 +1319,7 @@ nfsd4_run_cb_work(struct work_struct *work)
+> > >  =09 */
+> > >  =09if (!cb->cb_ops && clp->cl_minorversion) {
+> > >  =09=09clp->cl_cb_state =3D NFSD4_CB_UP;
+> > > +=09=09nfsd41_destroy_cb(cb);
+> > >  =09=09return;
+> > >  =09}
+> > > =20
+> > > @@ -1290,5 +1345,9 @@ void nfsd4_init_cb(struct nfsd4_callback *cb,
+> > > struct nfs4_client *clp,
+> > > =20
+> > >  void nfsd4_run_cb(struct nfsd4_callback *cb)
+> > >  {
+> > > -=09queue_work(callback_wq, &cb->cb_work);
+> > > +=09struct nfs4_client *clp =3D cb->cb_clp;
+> > > +
+> > > +=09nfsd41_cb_inflight_begin(clp);
+> > > +=09if (!nfsd4_queue_cb(cb))
+> > > +=09=09nfsd41_cb_inflight_end(clp);
+> > >  }
+> > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > > index 46f56afb6cb8..d61b83b9654c 100644
+> > > --- a/fs/nfsd/state.h
+> > > +++ b/fs/nfsd/state.h
+> > > @@ -367,6 +367,7 @@ struct nfs4_client {
+> > >  =09struct net=09=09*net;
+> > >  =09struct list_head=09async_copies;=09/* list of async copies */
+> > >  =09spinlock_t=09=09async_lock;=09/* lock for async copies */
+> > > +=09atomic_t=09=09cl_cb_inflight;=09/* Outstanding callbacks */
+> > >  };
+> > > =20
+> > >  /* struct nfs4_client_reset
+> > > --=20
+> > > 2.21.0
+> > >=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>=20
+>=20
 
