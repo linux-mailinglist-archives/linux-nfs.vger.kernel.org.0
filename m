@@ -2,87 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3581EE40FD
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2019 03:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E15E4BE4
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2019 15:17:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388791AbfJYBWs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Oct 2019 21:22:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41630 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388701AbfJYBWs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:22:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82D1EB2DC;
-        Fri, 25 Oct 2019 01:22:46 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Date:   Fri, 25 Oct 2019 12:22:36 +1100
-Subject: uncollected nfsd open owners
-cc:     linux-nfs@vger.kernel.org
-Message-ID: <87mudpfwkj.fsf@notabene.neil.brown.name>
+        id S2394560AbfJYNRi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Oct 2019 09:17:38 -0400
+Received: from e2i250.smtp2go.com ([103.2.140.250]:35479 "EHLO
+        e2i250.smtp2go.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394559AbfJYNRi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Oct 2019 09:17:38 -0400
+X-Greylist: delayed 394 seconds by postgrey-1.27 at vger.kernel.org; Fri, 25 Oct 2019 09:17:37 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=smtpcorp.com; s=a1-4; h=Feedback-ID:X-Smtpcorp-Track:Date:Message-ID:
+        Subject:From:To:Reply-To:Sender:List-Unsubscribe;
+        bh=q4wjJf+5O9VgoE1JB/5VkJIJN+YBMHUGAoW59Onzt+Y=; b=aDdezvNFeE3d3BC3uBsgZ4zLVg
+        ePIRdO8ESOX3ESY+JOO9x49EYY/DjoYgrBR/MIiIV9KHdUTxX3DAJOrIkq7s52vDcwInvUDvvy8TT
+        l9Z+YoYRKgnZ6uk9JCBl9ljjxim3GJhrMv0xE64diRxmJjZwpKhk1ohECeAA0jlwLOzGJQx391d0a
+        rDBh/RH3Vhji9ntMwqCWtW9S9HXzcDvXgMth0jTNEuHu9K/y1H12ZmlVAgy0dplqi69RvkWBEa4Qk
+        ArePzTdUlhzLz9PLzB71BqmDc0a+SRgRQGLy0AeT3gvoS65S3mMhqVchB2c/AprgxFvRKQxsrLYSz
+        EwpWp+TQ==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linagora.com; 
+ i=@linagora.com; q=dns/txt; s=s266739; t=1572009457; 
+ h=from : subject : to : message-id : date; 
+ bh=q4wjJf+5O9VgoE1JB/5VkJIJN+YBMHUGAoW59Onzt+Y=; 
+ b=eAxsV7jnGep+ONSz1mG8xAJJF1RJO6sfdOUuNtVmMGDwT5oTNP6ysxb2
+ hs4QExB9/FqXa/RCOXc3H0CbVZxLyE5sBBakO5IsVBThYZqwnLq9p5MRX0
+ NSr9xvVOo4mBhTs1Dirg/9MbC0L9AT2jXTCipGtbvcJc+Lnn60dH1KV4w5
+ k90Qf3P4HKTFeENGeWN274eHEdzZ3SShwI7zEU70MXdn3Ik8uuPewTZVSh
+ BpWKj7fntbKfmurHVIOdU0k1Wcfv+yk64IsxpNGa8RnsW6immx9302/F6a
+ OcKe/y0S/iiPWSfdX3bZ4ce2xj3gWulx6bzUztbock8Tq6EuDbkqiw==
+Received: from [10.45.33.53] (helo=SmtpCorp)
+ by smtpcorp.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.92-S2G) (envelope-from <selbaz@linagora.com>)
+ id 1iNzMq-Y8PGr8-Ju
+ for linux-nfs@vger.kernel.org; Fri, 25 Oct 2019 13:11:00 +0000
+Received: from [10.54.36.8] (helo=smtp.linagora.com)
+ by smtpcorp.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.92-S2G) (envelope-from <selbaz@linagora.com>)
+ id 1iNzMo-rlZC02-PH
+ for linux-nfs@vger.kernel.org; Fri, 25 Oct 2019 13:10:58 +0000
+Received: from [10.75.71.198] (reverse.completel.net [92.103.166.6])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by smtp.linagora.com (Postfix) with ESMTPSA id D21BC4189E
+ for <linux-nfs@vger.kernel.org>; Fri, 25 Oct 2019 15:10:56 +0200 (CEST)
+To:     linux-nfs@vger.kernel.org
+X-LINAGORA-Copy-Delivery-Done: 1
+From:   Simon ELBAZ <selbaz@linagora.com>
+Subject: NFS - Permission denied error
+Message-ID: <cd936946-f328-b99c-0bdf-c498f569b4ca@linagora.com>
+Date:   Fri, 25 Oct 2019 15:10:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/mixed; boundary="------------A31F7FB2CA534E2230F50D21"
+Content-Language: en-US-large
+X-Smtpcorp-Track: 1iNzuor_ZC02eH.skRMPizfX
+Feedback-ID: 266739m:266739aja3LFS:266739so8b3k1y0r
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
+This is a multi-part message in MIME format.
+--------------A31F7FB2CA534E2230F50D21
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hi,
- I have a coredump from a machine that was running as an NFS server.
- nfs4_laundromat was trying to expire a client, and in particular was
- cleaning up the ->cl_openowners.
- As there were 6.5 million of these, it took rather longer than the
- softlockup timer thought was acceptable, and hence the core dump.
 
- Those open owners that I looked at had empty so_stateids lists, so I
- would normally expect them to be on the close_lru and to be removed
- fairly soon.  But they weren't (only 32 openowners on close_lru).
+A customer uses:
 
- The only explanation I can think of for this is that maybe an OPEN
- request successfully got through nfs4_process_open1(), thus creating an
- open owner, but failed to get to or through nfs4_process_open2(), and
- so didn't add a stateid.  I *think* this can leave an openowner that is
- unused but will never be cleaned up (until the client is expired, which
- might be too late).
+* RedHat 5.11,
+* autofs-5.0.1-0.rc2.184.el5
 
- Is this possible?  If so, how should we handle those openowners which
- never had a stateid?
- In 3.0 (which it the kernel were I saw this) I could probably just put
- the openowner on the close_lru when it is created.
- In more recent kernels, it seems to be assumed that openowners are only
- on close_lru if they have a oo_last_closed_stid.  Would we need a
- separate "never used lru", or should they just be destroyed as soon as
- the open fails?
+to intensively access a NFS server from two NFS clients behind an SSH 
+haproxy.
 
- Also, should we put a cond_resched() in some or all of those loops in
- __destroy_client() ??
+The error "Permission denied" happens a few hours later after NFS client 
+reboot.
+The NFS client is restarted to solve the issue (not the NFS server).
 
-Thanks for your help,
-NeilBrown
+[root@uysubsp06 ~]# su - svsi_tem
+su: warning: cannot change directory to /HOME/svsi_tem: Permission denied
+$
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+svsi_tem is an autofs mounted home.
 
------BEGIN PGP SIGNATURE-----
+This issue seems similar to http://nfs.sourceforge.net/#section_c, C5 
+but i don't know how to debug the eventual /etc/exports misconfiguration.
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2yTl0ACgkQOeye3VZi
-gbko8RAAj6AYx2imKdC+lalM0I5ee5bnEnEzyPeke5KrYAgf0D7sk4pjsMYfvPDk
-7XzQpTJiX5nq+MSdSa9Cg3fwvqmbG/3KYq4hTjI5Fuh8DOAqYs7jHBECjwRnxr/q
-njqxofOFJX55nNLPoudB2cWyqT9JVWb+/FUEMRxDhVW7Pj6D+anjTk0Tfn81Klkv
-KCYwG1Lj9NgcARyW+8NIx09ffNsrBNEZdJol94vWih8XK0mMQcZEyDuu5xXShoPa
-iKe92Ube91I5mRD4+MsXx2aWpTE0pUtF1JyOr31mTcl8GEs7iOsahASfXcgnPnAF
-kJdh3X/i5Ej8PsKluEHrhgEaFzRX682yvEZmW8sQilP/9FHDCjZu79MKYtyQtJvB
-V+NRW2AMtKHIKditMnZ0Lv8Wt9mcimG4+sI4C9+SVrpAILGTuQjU4WF98QOCrnMn
-Y+dfvs7tHlAuDXU2onRiwE0CVk8u2E5UOJhW6e/QP2SLo3oQsANPFm/FPlBpa74Z
-uO9fTKtMWaoTgCulgWUYBk7b0M1Nuq7F1qVHncYubniDSeC5X4KsBJx5lc3q0ddh
-+/dRGbcSdaoAQjQaKMTvziFVDUiHLYVgmqUvMbYXOcm/LxF9nt2xg2c7MgysIkZ4
-fbpUa+TcGp69Wqg0Wdc9O4Nhw18dCi31VOuogToCLsjXMkDObBA=
-=1bck
------END PGP SIGNATURE-----
---=-=-=--
+The exports file sample is attached to the mail. I am focused on the 
+following line:
+
+/export/homedirs/svsi                          @SVSI_NFS(rw,sync,insecure)
+
+SVSI_NFS is a map LDAP netgroup.
+
+I proposed the customer to try temporarily the following syntax:
+
+/export/homedirs/svsi 
+adresse_IP_host1(rw,sync,insecure) adresse_IP_host2(rw,sync,insecure)
+
+to validate the error diagnostic.
+
+Thanks for any help
+
+Simon
+
+--------------A31F7FB2CA534E2230F50D21
+Content-Type: text/plain; charset=UTF-8;
+ name="exports"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="exports"
+
+IwovZXhwb3J0L3ByaXZhdGVfZXhwCQkJCXV5c3Vic3AwMyhybyxzeW5jKSB1eXN1YnNwMDQo
+cm8sc3luYykKL2V4cG9ydC9wcml2YXRlX3ByagkJCQl1eXN1YnNwMDUocm8sc3luYykgdXlz
+dWJzcDA2KHJvLHN5bmMpCi9leHBvcnQvcHJpdmF0ZV9wdG4JCQkJdXlzdWJzcDA3KHJvLHN5
+bmMpIHV5c3Vic3AwOChybyxzeW5jKQojCi9leHBvcnQvaG9tZWRpcnMvdGVhbXhpc28vZXBy
+b2QJCQl1eXhwbXVyMDEocncsc3luYyxpbnNlY3VyZSkgdXl4cG11cDAxKHJ3LHN5bmMsaW5z
+ZWN1cmUpIHVlY3podGgwMShydyxzeW5jLGluc2VjdXJlKSB1ZWN6aHRoMDIocncsc3luYyxp
+bnNlY3VyZSkgQFNWU0lfTkZTKHJvLHN5bmMsaW5zZWN1cmUpIHUwMDBqdmkwMShydyxzeW5j
+LGluc2VjdXJlKQovZXhwb3J0L2hvbWVkaXJzL3RlYW14aXNvL2Vwcm9kL0xpdnJhYmxlcy9E
+ZXZ0CWh5ZHJhKHJ3LHN5bmMsaW5zZWN1cmUpIHUwMDBqdmkwMShydyxzeW5jLGluc2VjdXJl
+KQovZXhwb3J0L2hvbWVkaXJzL3RlYW14aXNvL2Vwcm9kX2xvZ3MJCXUwMDBqdmkwMShydyxz
+eW5jLGluc2VjdXJlKSBAU1ZTSV9ORlMocncsc3luYyxpbnNlY3VyZSkKL2V4cG9ydC9ob21l
+ZGlycy90ZWFteHBhZAkJCUBTVlNJX05GUyhydyxzeW5jLGluc2VjdXJlKQovZXhwb3J0L2hv
+bWVkaXJzL3RlYW1lbnZ1CQkJQFNWU0lfTkZTKHJ3LHN5bmMsaW5zZWN1cmUpCi9leHBvcnQv
+aG9tZWRpcnMvdGVhbWd0aWEgICAgICAgICAgICAgICAgICAgICAgIEBTVlNJX05GUyhydyxz
+eW5jLGluc2VjdXJlKQovZXhwb3J0L2hvbWVkaXJzL3N2c2kJCQkJQFNWU0lfTkZTKHJ3LHN5
+bmMsaW5zZWN1cmUpCi9leHBvcnQvaG9tZWRpcnMvdnNjdAkJCQlAU1ZTSV9ORlMocncsc3lu
+YyxpbnNlY3VyZSkK
+--------------A31F7FB2CA534E2230F50D21--
