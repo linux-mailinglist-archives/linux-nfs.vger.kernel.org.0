@@ -2,99 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD136E616C
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Oct 2019 08:25:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D385E6A3F
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Oct 2019 00:49:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfJ0HZF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 27 Oct 2019 03:25:05 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:44777 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfJ0HZE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Oct 2019 03:25:04 -0400
-Received: by mail-yb1-f195.google.com with SMTP id w5so2693365ybs.11;
-        Sun, 27 Oct 2019 00:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0++xSMUHY1b2ynJOJZbzscLl9Hvq7kC0p6PzVZGLpt8=;
-        b=O7JXupgbuixvTKzsH5NgxAZt1uCox/bzNuYd8FmjhOkZSEBiqrZP9TyI8XMRDHt4c7
-         KSUx8PND/3A/JrM78+k0s9EIqkx+svlB/VhbU7bfKQcQ2ZfMZk02v8RqvOn0mhMd8pBB
-         wEp/qHZWWlBFPBuHvsWi4DVOPWWh53lMxXAG1aHJPl6TnhvCag8NYO9qBm2VR4KMSjMc
-         st8PaeaJbLQyEZdWA7hvwZNQd/Lg9Xfs+kcVzxRR/nHjAoKwI3u7Oz1FBj0WXRqH1N76
-         WvFwl6tSakaOAV5D6g42Rtf+EDfFAvUFX7GO9ONyGpaROSEQZkgcIm2g5Ld5Wugx+ocA
-         CrQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0++xSMUHY1b2ynJOJZbzscLl9Hvq7kC0p6PzVZGLpt8=;
-        b=hhFetzG3xD7tpZQuw8Q6AETDtFCOsZO3XAyWWudIrgXrAyVj9z1qaG7wCdXb/Sg6++
-         U70QSR6+APHldMNDKERdEinvCnPYf7sbqIZdLABefE9K68YVJstvaEIoi0Dxd8BBmQGw
-         UytKn4JX9M1l2n1vgC67r3f6h+q1FrlF/9ObWuRAnC0LV1aciLDgQlqEWBHXrQrOmk30
-         2lu3urtHMYTDQyTiGN1hN8beJqpzlWdToVJdaIjWrkYmPDkhva/157DWw74j6MDyB5Iy
-         0bybfxBmkXx6Xwny0nZttokldvB6pOZvCVbY5pCtx0U/4KRhZipGtlygybb68uhH6Gox
-         NN6Q==
-X-Gm-Message-State: APjAAAWkOUnE+7VXvPFfyT76DgJRON9mIMxjqpw4gz0SJhW6Clssgmp5
-        sK7enp6hj3Y/GOhKGT2jouB4q2lxz+Qz7919s1U=
-X-Google-Smtp-Source: APXvYqyYhy4CH/Z7Nlg815OS/2z91s5DQvSZba10DJ00L5dfJlIE3NIpMH0a/LD0StWNrh9UDnpk8alGvxMvThdluKM=
-X-Received: by 2002:a25:1444:: with SMTP id 65mr9107267ybu.132.1572161103775;
- Sun, 27 Oct 2019 00:25:03 -0700 (PDT)
+        id S1727937AbfJ0Xte (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 27 Oct 2019 19:49:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43522 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727463AbfJ0Xte (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 27 Oct 2019 19:49:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 71D49AEAC;
+        Sun, 27 Oct 2019 23:49:32 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Date:   Mon, 28 Oct 2019 10:49:26 +1100
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: uncollected nfsd open owners
+In-Reply-To: <20191026213606.GA11394@fieldses.org>
+References: <87mudpfwkj.fsf@notabene.neil.brown.name> <20191025152047.GB16053@pick.fieldses.org> <20191026213606.GA11394@fieldses.org>
+Message-ID: <87h83tg35l.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20191022204453.97058-1-salyzyn@android.com> <20191022204453.97058-3-salyzyn@android.com>
- <CAJfpegsCzwXF5fD1oA+XMrPQ7u8URsXRGOOHkB=ON7fLnd_gFQ@mail.gmail.com>
-In-Reply-To: <CAJfpegsCzwXF5fD1oA+XMrPQ7u8URsXRGOOHkB=ON7fLnd_gFQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 27 Oct 2019 09:24:52 +0200
-Message-ID: <CAOQ4uxh_K=p7z+qbkjSf_+hhVsw9xBuNc61dYnpkHFVUfxJaCw@mail.gmail.com>
-Subject: Re: [PATCH v14 2/5] overlayfs: check CAP_DAC_READ_SEARCH before
- issuing exportfs_decode_fh
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Mark Salyzyn <salyzyn@android.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-+ ebiederm and nfsd folks
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2019 at 11:08 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
->
->
-> On Tue, Oct 22, 2019 at 10:46 PM Mark Salyzyn <salyzyn@android.com> wrote:
-> >
-> > Assumption never checked, should fail if the mounter creds are not
-> > sufficient.
->
-> A bit more explanation would be nice.  Like a pointer to the explanation given in the open_by_handle_at(2) code where this check was presumably taken from.
->
+On Sat, Oct 26 2019, J. Bruce Fields wrote:
 
-Well, it's not that simple (TM).
-If you are considering unprivileged overlay mounts, then this should be
-ns_capable() check, even though open_by_handle_at(2) does not
-currently allow userspace nfsd to decode file handles.
+> On Fri, Oct 25, 2019 at 11:20:47AM -0400, J. Bruce Fields wrote:
+>> On Fri, Oct 25, 2019 at 12:22:36PM +1100, NeilBrown wrote:
+>> >  I have a coredump from a machine that was running as an NFS server.
+>> >  nfs4_laundromat was trying to expire a client, and in particular was
+>> >  cleaning up the ->cl_openowners.
+>> >  As there were 6.5 million of these, it took rather longer than the
+>> >  softlockup timer thought was acceptable, and hence the core dump.
+>> >=20
+>> >  Those open owners that I looked at had empty so_stateids lists, so I
+>> >  would normally expect them to be on the close_lru and to be removed
+>> >  fairly soon.  But they weren't (only 32 openowners on close_lru).
+>> >=20
+>> >  The only explanation I can think of for this is that maybe an OPEN
+>> >  request successfully got through nfs4_process_open1(), thus creating =
+an
+>> >  open owner, but failed to get to or through nfs4_process_open2(), and
+>> >  so didn't add a stateid.  I *think* this can leave an openowner that =
+is
+>> >  unused but will never be cleaned up (until the client is expired, whi=
+ch
+>> >  might be too late).
+>> >=20
+>> >  Is this possible?  If so, how should we handle those openowners which
+>> >  never had a stateid?
+>> >  In 3.0 (which it the kernel were I saw this) I could probably just put
+>> >  the openowner on the close_lru when it is created.
+>> >  In more recent kernels, it seems to be assumed that openowners are on=
+ly
+>> >  on close_lru if they have a oo_last_closed_stid.  Would we need a
+>> >  separate "never used lru", or should they just be destroyed as soon as
+>> >  the open fails?
+>>=20
+>> Hopefully we can just throw the new openowner away when the open fails.
+>>=20
+>> But it looks like the new openowner is visible on global data structures
+>> by then, so we need to be sure somebody else isn't about to use it.
+>
+> But, also, if this has only been seen on 3.0, it may have been fixed
+> already.  It sounds like kind of a familiar problem, but I didn't spot a
+> relevant commit on a quick look through the logs.
+>
+I guess I shouldn't expect you to remember something from 8 years ago.
+This seems a perfect fit for what I see:
 
-Unlike open_by_handle_at(2), overlayfs (currently) never exposes file
-data via decoded origin fh. AFAIK, it only exposes the origin st_ino
-st_dev and some nlink related accounting.
+commit d29b20cd589128a599e5045d4effc2d7dbc388f5
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Thu Oct 13 15:12:59 2011 -0400
 
-I have been trying to understand from code if nfsd exports are allowed
-from non privileged containers and couldn't figure it out (?).
-If non privileged container is allowed to export nosubtreecheck export
-then non privileged container root can already decode file handles...
+    nfsd4: clean up open owners on OPEN failure
+=20=20=20=20
+    If process_open1() creates a new open owner, but the open later fails,
+    the current code will leave the open owner around.  It won't be on the
+    close_lru list, and the client isn't expected to send a CLOSE, so it
+    will hang around as long as the client does.
+=20=20=20=20
+    Similarly, if process_open1() removes an existing open owner from the
+    close lru, anticipating that an open owner that previously had no
+    associated stateid's now will, but the open subsequently fails, then
+    we'll again be left with the same leak.
+=20=20=20=20
+    Fix both problems.
+
+I wonder if this is safe to backport ... 3.2 is fairly close to 3.0, but
+there have been lots of changes to the code since then ... maybe there
+are more bug fixes.
+I'll work something out.
 
 Thanks,
-Amir.
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl22LQYACgkQOeye3VZi
+gbmiNw/+IMJFmxW197DzKRHNtMKS0TVPKrfaDGaPe0D47cMZpzKOewrPlsAmVc+b
+4PDlWiZMoeYOuan/Io1OfRa26li43f2hc9fapbY3PXFfxSXvt6pWzNSeEgTum+Wz
+U34yxBAEhzxprZ+me9b8Bd929ghzAjAcf9id9wJsLBXPngCm8A2mYtDXX+v6sXXx
+g8jFl2NhasOs3VnddsO5gMFEyEFUiAOmFbFb2/pTAj+qMKPwSn5JskSNCuBGfC3l
+uW6JiwXgef45onkYg0QROXm8WRoOs9mdLm4LDmD6/g7zGyjW9TyEcbxVx96lg4LA
+9u84CIAssjKDHjAC0f/99IMsiMsyu23A64cAZO6N0R5OcelCOBcSGqSdDTrt4dq9
+0GJZdsYWncBBRLJeItqzkgHiGgtx+yoFvXrpcv/u/S3cXHEfT1+ynGMR+5Ky/8Lr
+5aH//zjtfQjNNOXMlQLG3IXaWo9er+kzhidLb/m7waXGs6UaaAGX/3TYvI/mDGKJ
+lufx5TMklpXUlyVpKRgyuZLn8ye67qadq7xopzTo2xcdvmi18vlVbFRLfW5ngoev
+QD79hImLEArUF3jPRUQm9QY01r4A6HY1mHOHw+6wM8KwWi9GJQw/ZCnsIsU2MsJq
+llej+NkVfdwGO0PTUcoTwsqrXaT2FS05F1r9+t0wpbsvtMsOXZc=
+=wkIV
+-----END PGP SIGNATURE-----
+--=-=-=--
