@@ -2,47 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44473E87D4
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2019 13:13:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC814E9256
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2019 22:47:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732728AbfJ2MNx convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 29 Oct 2019 08:13:53 -0400
-Received: from s0090.ppsmtp.net ([91.90.154.91]:51478 "EHLO s0090.ppsmtp.net"
+        id S1728464AbfJ2VrF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Oct 2019 17:47:05 -0400
+Received: from fieldses.org ([173.255.197.46]:35912 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbfJ2MNx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:13:53 -0400
-X-Greylist: delayed 19136 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 08:13:51 EDT
-Received: from pps.filterd (s0090.ppsmtp.net [127.0.0.1])
-        by s0090.ppsmtp.net (8.16.0.27/8.16.0.27) with SMTP id x9T6h4GR016609;
-        Tue, 29 Oct 2019 07:54:21 +0100
-Received: from mail.schuetz.net ([212.185.169.233])
-        by s0090.ppsmtp.net with ESMTP id 2vx8bh8a08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 07:54:21 +0100
-Received: from julia02 (localhost [127.0.0.1])
-        by mail.schuetz.net (Postfix) with ESMTP id 917C820221A4;
-        Tue, 29 Oct 2019 07:52:54 +0100 (CET)
+        id S1726364AbfJ2VrF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:47:05 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4D1A01508; Tue, 29 Oct 2019 17:47:05 -0400 (EDT)
+Date:   Tue, 29 Oct 2019 17:47:05 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
+ nfsd4_shutdown_callback()
+Message-ID: <20191029214705.GA29280@fieldses.org>
+References: <20191023214318.9350-1-trond.myklebust@hammerspace.com>
+ <20191025145147.GA16053@pick.fieldses.org>
+ <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
+ <20191025152119.GC16053@pick.fieldses.org>
+ <20191025153336.GA20283@fieldses.org>
 MIME-Version: 1.0
-Subject: Dear Friend,
-To:     Recipients <infocarfer1@aim.com>
-From:   "Mr.R.C" <infocarfer1@aim.com>
-Date:   Tue, 29 Oct 2019 06:52:38 +0000
-Reply-To: infocarfer@aim.com
-X-TNEFEvaluated: 1
-Message-ID: <OFB6DE1564.0A7EAD44-ON882584A2.0025CD2E@schuetz.net>
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Description: Mail message body
-X-Proofpoint-ID: SID=2vx8bh8a08 QID=2vx8bh8a08-1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_03:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025153336.GA20283@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear Friend,
+On Fri, Oct 25, 2019 at 11:33:36AM -0400, bfields wrote:
+> On Fri, Oct 25, 2019 at 11:21:19AM -0400, J. Bruce Fields wrote:
+> > I thought I was running v2, let me double-check....
+> 
+> Yes, with v2 I'm getting a hang on generic/013.
+> 
+> I checked quickly and didn't see anything interesting in the logs,
+> otherwise I haven't done any digging.
 
-I am Vice Chairman of Hang Seng Bank, I have Important Matter to Discuss with you concerning my late client, Died without a NEXT OF KIN. Send me your private email for full details information. email me at (infocarfer@aim.com)
-Mail:
-Regards
+Reproduceable just with ./check -nfs generic/013.  The last thing I see
+in wireshark is an asynchronous COPY call and reply.  Which means it's
+probably trying to do a CB_OFFLOAD.  Hm.
+
+--b.
