@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E43C7EB9CD
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Oct 2019 23:43:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4023EB9CE
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Oct 2019 23:43:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfJaWnK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Oct 2019 18:43:10 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:38262 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaWnK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Oct 2019 18:43:10 -0400
-Received: by mail-yb1-f195.google.com with SMTP id w6so1529642ybj.5
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Oct 2019 15:43:08 -0700 (PDT)
+        id S1727482AbfJaWnN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Oct 2019 18:43:13 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:34737 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJaWnM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Oct 2019 18:43:12 -0400
+Received: by mail-yw1-f68.google.com with SMTP id z144so1170882ywd.1
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Oct 2019 15:43:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=wffmvJOuCjzexwiA9Y47Ehh0DUr7m1PyECllZf2CLXs=;
-        b=Rezvl+z5g9RsrKkdX0aP/qJYj3rGaxbOTitT6BkKJUllnOkXEDEUcBIa6bpL/0dxIA
-         Z5mPNrYVR68BH5onyRmGO1x+VMwQLwcNRNQkHT2UFybr+Bfzu5YSBxdeUwsqswTrQ+mW
-         dZwRz2tTEALPBzaCRAaWiOpwNOENd35fk11b/76Jqgdx8aA0Dz9zqVA9qDtXchsLUuOu
-         SmhQYCT97ZdxNbiCNoif424IfX2SYWFLd+G7zZEJjB7W2dM+PbVVnVVvoUvjsxG+CFxz
-         EZJVwjaN7Fr3ByuJ77AJyWtASPvyTX9xqxaqFKtdPAlmSVOQglRNOmzXvlxCQcQGxX1s
-         UG2A==
+        bh=TfZVcSzmWXLHAI2RilE5A2qvNvo3cZYOLKr7++TYasQ=;
+        b=Txih3q9XiNr9biu+aLby4Td6GNKkvEnwDzUfHs2UqPJOuVwrk1K4FTd6WLNfe57tgS
+         FD+bZDuz8psDixQlN8+31xykGWYBt2wrUyBYG8Ro+3QsyBkYOTmDWrpp69C7VgzSI0Yp
+         0thBM3k+3nwtmlNwv8GWT+RyQi9m+eaeWKcoHFOSBpaQucBu8mOqSvlABD+5pXBgNdnn
+         OQojRgN7Wx+BL+x1SKsLvyzgbhPtwNDB05aFtHwG9ZwIk0XJ6vTYdUIIiIpkIzUq7JDo
+         4gXIfI8Zo2jaSTOICobLQIwUjzGXWiQbCOX1X2MHNatkwKq3DvjzoN41M4X3yuPALjhT
+         dLhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wffmvJOuCjzexwiA9Y47Ehh0DUr7m1PyECllZf2CLXs=;
-        b=UBTX/ljxddfsnoIxpNaynLN11iaLuxl/N+EV1egpzhkODHPTHfkQpKfkzMivijkENJ
-         sgZwWm08zsTpjqSeFAe6G6M99xy6jG+kAkGfkEjBlR7efbfuNqh0XjoO9unam+qgD5L+
-         yjJQ7fzt3k0xrEx3b57ODNR9F6tWBYSIXHulQGh++e7QCERlSidnlCVeOyPHtdCO66bu
-         czUdqWZRpcxc8oUNrnOZgUoZHtM3/jDzkcUP1/J+Necnu2YyhE1zr1jnwTT6GFf+s/Wq
-         mFZHChZJGW3hcuu4qYn4X2p0B/biV7QavX+7mEy44oZB7sItXh/gY/VvC+u5Ge2xQJrR
-         pshw==
-X-Gm-Message-State: APjAAAVL0Plrbed7P0Ss5IIwiZPFXyTM6goQS0q6+PWBAVBMjoAE36Kl
-        RiNhc3g/vKVVa9muMxVep3FBLY0=
-X-Google-Smtp-Source: APXvYqz8f5ryy59RcyQXewajrc6Tt1pnWjS7aUjcO7NA7P1oVThDJo1KdZSr0ZTjB8UGCWJLObQwWQ==
-X-Received: by 2002:a25:4643:: with SMTP id t64mr6714427yba.498.1572561787432;
-        Thu, 31 Oct 2019 15:43:07 -0700 (PDT)
+        bh=TfZVcSzmWXLHAI2RilE5A2qvNvo3cZYOLKr7++TYasQ=;
+        b=jQz6aCey7y0PE+CBacIBiz+glNorPwa6dltEOcD9JA+VAlvZM0A+4g3cdICkxi7cQt
+         0zhE2ullZuBgEvLHFWHfeE+grdEdfURBcziuVmoYJ1R2E+DuaFD7aq1PJdITuU+Kd/uk
+         MFt3Q2CIimJhuh6nQouwQdYzu6alGmQGRfVA/XqQf2IOlSpvXKJeRlZdSrgjMnD7QnLD
+         WwsDRalAj08PCGUFwztWCS0R/qDvsF7jWvfotBo3HZM8V4z5sTl2pyeTbB16o1u9uUaF
+         9Sj/v3fWbD1NTal+kSA7T/KJbxLD5krf28ghBzCHzhCnHbZh+71hVvOweHALenOYqmt/
+         q2eA==
+X-Gm-Message-State: APjAAAWBRWP4zQCEaGzi44vNLkP9jfieAWRDUR2frkTEj9pqg7YcG2Wn
+        JVUxxg2F9ZsItgNEF0dpCpyTosw=
+X-Google-Smtp-Source: APXvYqyGc50kovm4JxkCO8pLB6CSq4/PjQP/FhaKxoDHXl+w0yAdRnnn5/CtMNAH0y9bzuya0aUQ9A==
+X-Received: by 2002:a81:2a08:: with SMTP id q8mr6343465ywq.195.1572561789342;
+        Thu, 31 Oct 2019 15:43:09 -0700 (PDT)
 Received: from localhost.localdomain ([50.105.87.1])
-        by smtp.gmail.com with ESMTPSA id d192sm1720287ywb.3.2019.10.31.15.43.06
+        by smtp.gmail.com with ESMTPSA id d192sm1720287ywb.3.2019.10.31.15.43.07
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 15:43:06 -0700 (PDT)
+        Thu, 31 Oct 2019 15:43:08 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 04/20] NFSv4: nfs4_callback_getattr() should ignore revoked delegations
-Date:   Thu, 31 Oct 2019 18:40:35 -0400
-Message-Id: <20191031224051.8923-5-trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 05/20] NFSv4: Delegation recalls should not find revoked delegations
+Date:   Thu, 31 Oct 2019 18:40:36 -0400
+Message-Id: <20191031224051.8923-6-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191031224051.8923-4-trond.myklebust@hammerspace.com>
+In-Reply-To: <20191031224051.8923-5-trond.myklebust@hammerspace.com>
 References: <20191031224051.8923-1-trond.myklebust@hammerspace.com>
  <20191031224051.8923-2-trond.myklebust@hammerspace.com>
  <20191031224051.8923-3-trond.myklebust@hammerspace.com>
  <20191031224051.8923-4-trond.myklebust@hammerspace.com>
+ <20191031224051.8923-5-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -64,36 +65,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the delegation has been revoked, ignore it.
+If we're processsing a delegation recall, ignore the delegations that
+have already been revoked or returned.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/callback_proc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/nfs/delegation.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index db3e7771e597..cd4c6bc81cae 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -26,7 +26,6 @@ __be32 nfs4_callback_getattr(void *argp, void *resp,
- 	struct cb_getattrargs *args = argp;
- 	struct cb_getattrres *res = resp;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index af549d70ec50..c34bb81d37e2 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -840,7 +840,7 @@ int nfs_async_inode_return_delegation(struct inode *inode,
  	struct nfs_delegation *delegation;
--	struct nfs_inode *nfsi;
- 	struct inode *inode;
  
- 	res->status = htonl(NFS4ERR_OP_NOT_IN_SESSION);
-@@ -47,9 +46,8 @@ __be32 nfs4_callback_getattr(void *argp, void *resp,
- 				-ntohl(res->status));
- 		goto out;
- 	}
--	nfsi = NFS_I(inode);
  	rcu_read_lock();
--	delegation = rcu_dereference(nfsi->delegation);
+-	delegation = rcu_dereference(NFS_I(inode)->delegation);
 +	delegation = nfs4_get_valid_delegation(inode);
- 	if (delegation == NULL || (delegation->type & FMODE_WRITE) == 0)
- 		goto out_iput;
- 	res->size = i_size_read(inode);
+ 	if (delegation == NULL)
+ 		goto out_enoent;
+ 	if (stateid != NULL &&
+@@ -866,6 +866,7 @@ nfs_delegation_find_inode_server(struct nfs_server *server,
+ 	list_for_each_entry_rcu(delegation, &server->delegations, super_list) {
+ 		spin_lock(&delegation->lock);
+ 		if (delegation->inode != NULL &&
++		    !test_bit(NFS_DELEGATION_REVOKED, &delegation->flags) &&
+ 		    nfs_compare_fh(fhandle, &NFS_I(delegation->inode)->fh) == 0) {
+ 			freeme = igrab(delegation->inode);
+ 			if (freeme && nfs_sb_active(freeme->i_sb))
 -- 
 2.23.0
 
