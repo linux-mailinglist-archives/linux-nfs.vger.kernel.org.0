@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70797EB9DA
+	by mail.lfdr.de (Postfix) with ESMTP id D8EEFEB9DB
 	for <lists+linux-nfs@lfdr.de>; Thu, 31 Oct 2019 23:43:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfJaWna (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1728076AbfJaWna (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Thu, 31 Oct 2019 18:43:30 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46168 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbfJaWn3 (ORCPT
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:34747 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbfJaWn3 (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Oct 2019 18:43:29 -0400
-Received: by mail-yw1-f68.google.com with SMTP id i2so2772947ywg.13
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Oct 2019 15:43:27 -0700 (PDT)
+Received: by mail-yw1-f67.google.com with SMTP id z144so1171198ywd.1
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Oct 2019 15:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Vf/ZxAx5Dtp9saPC/f/GAFEOjUKA7pZQZ1SUKquX5bI=;
-        b=XIyZw/iWiqNviYT/1J19/BvfSUlwIPT5l7XrcuRWNSBMG/UOkeDwJn7j/hi7S819h0
-         9TntILhvQJhOZx4axw9QWDL457a7zkIm1436ZY8JmghnKkpe39QwF5wSSKM4pGdYGp2c
-         njWZyewDggdLYqGlFinJlv0GPqnZe0IUW1KIeM+qHLhqttLLppdGQLSJyB6b+bhKmnuQ
-         ATHyE1pFOtvnUyZJUZ54994TXRYiEhcul/s8tX70CtywPrQLmkyf+auBk8DpMALvLI9x
-         UXFlBE6geVOZ+Pibwkg7P4S1Wym2pOf7OCOsSJNoYV6Gj6/DNNLcXEf+OiU9cXvDqCJP
-         zCyw==
+        bh=0w1x19jgGRQLmFP5d0KNhM8Dd0dSbZyA49/LiXX5964=;
+        b=Y1kWcyG/vHBOnOcTUrM0lq15Pv86FnZZL1sEVRRm/KQzo5lG4t7HaBk6H8yP/FMAqY
+         ElQE9yho2qwDjXf/bgmSPc33yBk1uWMyCIs5mjp1spQ9cfM5Olp1yvuwgXLLk9rlUCl/
+         rGKo6qdcXUWwfj26wbZSVz6cX6lkpWqSuUIqq/oPva8Tx6GfKAofavvUvz46gFejxOH5
+         elkiUaSBYb6FKdF0LcECMkUPLx5vX0wV0vtX2jO7p3hqtFgPWdnegrxZaQTnRVAlvtqS
+         NqaQAVDMCmRfKKMmURgfLVZHPyrmtw7Qa6LTIERLaC7tP6p2wHzKU8L5b34JkjEUVsRz
+         PhHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Vf/ZxAx5Dtp9saPC/f/GAFEOjUKA7pZQZ1SUKquX5bI=;
-        b=dvHgezIKhmf6dU8gIcPztwJfSChPNVjWZHKCIuAcoygZXDiZSftJgK1fX3hFQBuKif
-         MatN9vrAM85Bm/c/MX0FfXqbXkqEKhq5IMozC9SvjxvTpvcuU5E0XNcw7r0sB16z4tJE
-         YljFZMG0rvKALHjg9CQoDrdMQP4GX3zJSEXl4xjAdiA3i0Zzb2NlSmvHRrnizFU07cu+
-         yADZRAznUuHUYBpB0qJ7ht/5qYn4pCgqPgnkCL9DWvt3leirLo42U0PHVbOwW88Q06ID
-         lGLSSrEzm6ovQqoq2HCQceUBDbivhWwI3CO3VLngM75OpOzaWFCyj7LeHN06J4JoAhxV
-         Vuiw==
-X-Gm-Message-State: APjAAAUnlgeejZ8zDT1WnGOxuyFkKfgJtkgZyW1eedEsnBR9SQSsO27p
-        x/Kx1pWPNHNeqo6ZQW+dEbTNA8s=
-X-Google-Smtp-Source: APXvYqyZ9yrXgyOMcwcQYStny3WzM7jh6nPGjwqYPFzbYS33Rgmw5BWJrZwwo4Zbd+3vf7JTUufGGQ==
-X-Received: by 2002:a0d:ebd0:: with SMTP id u199mr6180913ywe.449.1572561806693;
-        Thu, 31 Oct 2019 15:43:26 -0700 (PDT)
+        bh=0w1x19jgGRQLmFP5d0KNhM8Dd0dSbZyA49/LiXX5964=;
+        b=BN4octkSzetnRZrEYFUiH8Ud1EJRa0k7L+Fm26jrsiMhO+b74phfGGXvaCQKL7mBpP
+         ULR779IJubAOnqnnEWxL/4SA0ufSpkjnatus/nPSygHEK/u5d4eM0Tv8h96MJRvSoK0u
+         AKw7kooHgZJ6Apa9td/XPiVWxe95J7TKyCNavuGmsigf2eFaW7nINILjTKZ8Ustcja2D
+         ruqYL5yS4xG7BASK2ZrFWeDtScQ0TlDOkfDMJ+MXObNgjS45u8lImYZxml7jgpfbcpBN
+         ahwDCzt/YE65cdJkPzAXoc5QCJix7wK0/1zWG7+ObYvFOH2UxdQ44Lv1UvwG9hMTefKV
+         //yQ==
+X-Gm-Message-State: APjAAAUx+KAZngRMg5l052BWHg8rERPW7aiU4NhhMNZn3oE5+sTYm41w
+        Ais1gAmUx55qRAn8gQgVunxn+Ds=
+X-Google-Smtp-Source: APXvYqypPeIcROQh49Q2lkbScU2+Rvs0Dde3VZsbwMQbsKLrZLfYpYQC68tTanOs+DHtVHT5IGBovw==
+X-Received: by 2002:a81:49c1:: with SMTP id w184mr6285788ywa.264.1572561808172;
+        Thu, 31 Oct 2019 15:43:28 -0700 (PDT)
 Received: from localhost.localdomain ([50.105.87.1])
-        by smtp.gmail.com with ESMTPSA id d192sm1720287ywb.3.2019.10.31.15.43.25
+        by smtp.gmail.com with ESMTPSA id d192sm1720287ywb.3.2019.10.31.15.43.27
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 15:43:25 -0700 (PDT)
+        Thu, 31 Oct 2019 15:43:27 -0700 (PDT)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 17/20] NFS: nfs_inode_find_state_and_recover() fix stateid matching
-Date:   Thu, 31 Oct 2019 18:40:48 -0400
-Message-Id: <20191031224051.8923-18-trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 18/20] NFSv4: Fix races between open and delegreturn
+Date:   Thu, 31 Oct 2019 18:40:49 -0400
+Message-Id: <20191031224051.8923-19-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191031224051.8923-17-trond.myklebust@hammerspace.com>
+In-Reply-To: <20191031224051.8923-18-trond.myklebust@hammerspace.com>
 References: <20191031224051.8923-1-trond.myklebust@hammerspace.com>
  <20191031224051.8923-2-trond.myklebust@hammerspace.com>
  <20191031224051.8923-3-trond.myklebust@hammerspace.com>
@@ -70,6 +70,7 @@ References: <20191031224051.8923-1-trond.myklebust@hammerspace.com>
  <20191031224051.8923-15-trond.myklebust@hammerspace.com>
  <20191031224051.8923-16-trond.myklebust@hammerspace.com>
  <20191031224051.8923-17-trond.myklebust@hammerspace.com>
+ <20191031224051.8923-18-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -77,77 +78,179 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In nfs_inode_find_state_and_recover() we want to mark for recovery
-only those stateids that match or are older than the supplied
-stateid parameter.
+If the server returns the same delegation in an open that we just used
+in a delegreturn, we need to ensure we don't apply that stateid if
+the delegreturn has freed it on the server.
+To do so, we ensure that we do not free the storage for the delegation
+until either it is replaced by a new one, or we throw the inode out of
+cache.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/delegation.c | 3 ++-
- fs/nfs/nfs4_fs.h    | 6 ++++++
- fs/nfs/nfs4state.c  | 7 ++++---
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ fs/nfs/delegation.c | 64 ++++++++++++++++++++-------------------------
+ 1 file changed, 29 insertions(+), 35 deletions(-)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index e3d8055f0c6d..902baea1ecc6 100644
+index 902baea1ecc6..48f3c6c9672f 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -1207,7 +1207,8 @@ void nfs_inode_find_delegation_state_and_recover(struct inode *inode,
- 	rcu_read_lock();
- 	delegation = rcu_dereference(NFS_I(inode)->delegation);
- 	if (delegation &&
--	    nfs4_stateid_match_other(&delegation->stateid, stateid)) {
-+	    nfs4_stateid_match_or_older(&delegation->stateid, stateid) &&
-+	    !test_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
- 		nfs_mark_test_expired_delegation(NFS_SERVER(inode), delegation);
- 		found = true;
- 	}
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 16b2e5cc3e94..40ab5540c2ae 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -572,6 +572,12 @@ static inline bool nfs4_stateid_is_newer(const nfs4_stateid *s1, const nfs4_stat
- 	return (s32)(be32_to_cpu(s1->seqid) - be32_to_cpu(s2->seqid)) > 0;
+@@ -229,7 +229,6 @@ static int nfs_do_return_delegation(struct inode *inode, struct nfs_delegation *
+ 				delegation->cred,
+ 				&delegation->stateid,
+ 				issync);
+-	nfs_free_delegation(delegation);
+ 	return res;
  }
  
-+static inline bool nfs4_stateid_match_or_older(const nfs4_stateid *dst, const nfs4_stateid *src)
-+{
-+	return nfs4_stateid_match_other(dst, src) &&
-+		!(src->seqid && nfs4_stateid_is_newer(dst, src));
-+}
-+
- static inline void nfs4_stateid_seqid_inc(nfs4_stateid *s1)
- {
- 	u32 seqid = be32_to_cpu(s1->seqid);
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 0c6d53dc3672..a66acb6573d4 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1407,7 +1407,7 @@ nfs_state_find_lock_state_by_stateid(struct nfs4_state *state,
- 	list_for_each_entry(pos, &state->lock_states, ls_locks) {
- 		if (!test_bit(NFS_LOCK_INITIALIZED, &pos->ls_flags))
- 			continue;
--		if (nfs4_stateid_match_other(&pos->ls_stateid, stateid))
-+		if (nfs4_stateid_match_or_older(&pos->ls_stateid, stateid))
- 			return pos;
+@@ -302,7 +301,6 @@ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
+ 		spin_unlock(&delegation->lock);
+ 		return NULL;
  	}
- 	return NULL;
-@@ -1441,12 +1441,13 @@ void nfs_inode_find_state_and_recover(struct inode *inode,
- 		state = ctx->state;
- 		if (state == NULL)
- 			continue;
--		if (nfs4_stateid_match_other(&state->stateid, stateid) &&
-+		if (nfs4_stateid_match_or_older(&state->stateid, stateid) &&
- 		    nfs4_state_mark_reclaim_nograce(clp, state)) {
- 			found = true;
- 			continue;
- 		}
--		if (nfs4_stateid_match_other(&state->open_stateid, stateid) &&
-+		if (test_bit(NFS_OPEN_STATE, &state->flags) &&
-+		    nfs4_stateid_match_or_older(&state->open_stateid, stateid) &&
- 		    nfs4_state_mark_reclaim_nograce(clp, state)) {
- 			found = true;
- 			continue;
+-	set_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+ 	list_del_rcu(&delegation->super_list);
+ 	delegation->inode = NULL;
+ 	rcu_assign_pointer(nfsi->delegation, NULL);
+@@ -329,10 +327,12 @@ nfs_inode_detach_delegation(struct inode *inode)
+ 	struct nfs_server *server = NFS_SERVER(inode);
+ 	struct nfs_delegation *delegation;
+ 
+-	delegation = nfs_start_delegation_return(nfsi);
+-	if (delegation == NULL)
+-		return NULL;
+-	return nfs_detach_delegation(nfsi, delegation, server);
++	rcu_read_lock();
++	delegation = rcu_dereference(nfsi->delegation);
++	if (delegation != NULL)
++		delegation = nfs_detach_delegation(nfsi, delegation, server);
++	rcu_read_unlock();
++	return delegation;
+ }
+ 
+ static void
+@@ -384,16 +384,18 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 	spin_lock(&clp->cl_lock);
+ 	old_delegation = rcu_dereference_protected(nfsi->delegation,
+ 					lockdep_is_held(&clp->cl_lock));
+-	if (old_delegation != NULL) {
+-		/* Is this an update of the existing delegation? */
+-		if (nfs4_stateid_match_other(&old_delegation->stateid,
+-					&delegation->stateid)) {
+-			spin_lock(&old_delegation->lock);
+-			nfs_update_inplace_delegation(old_delegation,
+-					delegation);
+-			spin_unlock(&old_delegation->lock);
+-			goto out;
+-		}
++	if (old_delegation == NULL)
++		goto add_new;
++	/* Is this an update of the existing delegation? */
++	if (nfs4_stateid_match_other(&old_delegation->stateid,
++				&delegation->stateid)) {
++		spin_lock(&old_delegation->lock);
++		nfs_update_inplace_delegation(old_delegation,
++				delegation);
++		spin_unlock(&old_delegation->lock);
++		goto out;
++	}
++	if (!test_bit(NFS_DELEGATION_REVOKED, &old_delegation->flags)) {
+ 		/*
+ 		 * Deal with broken servers that hand out two
+ 		 * delegations for the same file.
+@@ -412,11 +414,11 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 		if (test_and_set_bit(NFS_DELEGATION_RETURNING,
+ 					&old_delegation->flags))
+ 			goto out;
+-		freeme = nfs_detach_delegation_locked(nfsi,
+-				old_delegation, clp);
+-		if (freeme == NULL)
+-			goto out;
+ 	}
++	freeme = nfs_detach_delegation_locked(nfsi, old_delegation, clp);
++	if (freeme == NULL)
++		goto out;
++add_new:
+ 	list_add_tail_rcu(&delegation->super_list, &server->delegations);
+ 	rcu_assign_pointer(nfsi->delegation, delegation);
+ 	delegation = NULL;
+@@ -431,8 +433,10 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 	spin_unlock(&clp->cl_lock);
+ 	if (delegation != NULL)
+ 		nfs_free_delegation(delegation);
+-	if (freeme != NULL)
++	if (freeme != NULL) {
+ 		nfs_do_return_delegation(inode, freeme, 0);
++		nfs_free_delegation(freeme);
++	}
+ 	return status;
+ }
+ 
+@@ -442,7 +446,6 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ static int nfs_end_delegation_return(struct inode *inode, struct nfs_delegation *delegation, int issync)
+ {
+ 	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
+-	struct nfs_inode *nfsi = NFS_I(inode);
+ 	int err = 0;
+ 
+ 	if (delegation == NULL)
+@@ -464,8 +467,6 @@ static int nfs_end_delegation_return(struct inode *inode, struct nfs_delegation
+ 		nfs_abort_delegation_return(delegation, clp);
+ 		goto out;
+ 	}
+-	if (!nfs_detach_delegation(nfsi, delegation, NFS_SERVER(inode)))
+-		goto out;
+ 
+ 	err = nfs_do_return_delegation(inode, delegation, issync);
+ out:
+@@ -608,6 +609,7 @@ void nfs_inode_evict_delegation(struct inode *inode)
+ 	if (delegation != NULL) {
+ 		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+ 		nfs_do_return_delegation(inode, delegation, 1);
++		nfs_free_delegation(delegation);
+ 	}
+ }
+ 
+@@ -763,10 +765,9 @@ static void nfs_mark_delegation_revoked(struct nfs_server *server,
+ {
+ 	set_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
+ 	delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
+-	nfs_mark_return_delegation(server, delegation);
+ }
+ 
+-static bool nfs_revoke_delegation(struct inode *inode,
++static void nfs_revoke_delegation(struct inode *inode,
+ 		const nfs4_stateid *stateid)
+ {
+ 	struct nfs_delegation *delegation;
+@@ -799,19 +800,12 @@ static bool nfs_revoke_delegation(struct inode *inode,
+ 	rcu_read_unlock();
+ 	if (ret)
+ 		nfs_inode_find_state_and_recover(inode, stateid);
+-	return ret;
+ }
+ 
+ void nfs_remove_bad_delegation(struct inode *inode,
+ 		const nfs4_stateid *stateid)
+ {
+-	struct nfs_delegation *delegation;
+-
+-	if (!nfs_revoke_delegation(inode, stateid))
+-		return;
+-	delegation = nfs_inode_detach_delegation(inode);
+-	if (delegation)
+-		nfs_free_delegation(delegation);
++	nfs_revoke_delegation(inode, stateid);
+ }
+ EXPORT_SYMBOL_GPL(nfs_remove_bad_delegation);
+ 
+@@ -839,7 +833,7 @@ void nfs_delegation_mark_returned(struct inode *inode,
+ 			delegation->stateid.seqid = stateid->seqid;
+ 	}
+ 
+-	set_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
++	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
+ 
+ out_clear_returning:
+ 	clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
 -- 
 2.23.0
 
