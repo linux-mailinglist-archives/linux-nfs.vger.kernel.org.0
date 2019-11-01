@@ -2,186 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA28EBA0D
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Oct 2019 23:54:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04DA6EC178
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2019 12:00:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfJaWyv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Oct 2019 18:54:51 -0400
-Received: from mail-eopbgr750128.outbound.protection.outlook.com ([40.107.75.128]:55629
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728291AbfJaWyu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:54:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fU63M9k1BzqMW9dyuOwdu+hUO2p+Shx2KHimEk9WTVBhkm1+R1aE17cdih5N+/82x7O4D+It4vLjRlttxm0K82x02qXQbZbh1+qvUqsnAJH/dhwhC/XPcCnK+Do3hNLuEHdwZeCcmnN+xOA4Fkg7Hbt1lKsI4Rfw3aZyXsToqmtum6cAb/e2HA1bdamL+u4LX+x9nusu9AjljuPmRADjW1cxHSl3PutE1C8NBC6ZB1I0hIf+yLJ88fFgm6+FXbKHII3w7Olizvmz0G/4sxEqBkusq7jfo6FCSgAipPQ+7mweNIib4QMFovtj5SbQI3F01HSwPWZRXS/651xkvNJgJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DktfperAiUD6FwKEMH66so0XijwuiqzvetCipetRoAM=;
- b=A+eqnREmkX9oe+RBeY/SF87VoJ2BvBvAESbkG0ySy3RkIPBw2zOAAotv5mEzy0+rw7iqBhQ3T1HjO0ig4iynzd3lhlliMXg3c2yU6sJvf2ynDwJnebtF0nFkhldfX8iOSMgtBWb04a1b9ulfVpC9ylMcZKY9yIB6xTg+G6fK3hbm+v9GPkC+s95QBHUWpcNEvl65Ab7OHgbAG6/q6+VFZQnVswdlxpqKo9ZpYwQAejK1ULpETHoQ7Mh4PvNor3n5yD1HMG60xvlY2lxWX9l5v8OwDx0FcDHIZyGa3SSEsBt9X/f22aNT9i0gPnYQovue7qdAthszmiYvZzuHpGS7ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DktfperAiUD6FwKEMH66so0XijwuiqzvetCipetRoAM=;
- b=Hbf50aMJT2/gCJGynX5z2Z/nJR1IV+RMCIKA5hmPDrx02tkCL2JpEkZaFuNE9N4J1EBpWoJ6MPBAqRrRmsjcpdDTPwwX+9reX3Pgkr+k3zhVV0IzVGcWQXG1t6Nf7eWxEEMEm4si0KTsbkmlJL48VPgVVeRC37f3GRXF7P7uBw8=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2186.namprd13.prod.outlook.com (10.174.182.37) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.14; Thu, 31 Oct 2019 22:54:46 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::4c0b:3977:6b2d:6a8c]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::4c0b:3977:6b2d:6a8c%3]) with mapi id 15.20.2408.016; Thu, 31 Oct 2019
- 22:54:46 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 00/14] Delegation bugfixes
-Thread-Topic: [PATCH 00/14] Delegation bugfixes
-Thread-Index: AQHVif29SxbO00lndUqNTEmlT8aTn6d062SAgAAGNQCAAAdQAIAAb3mA
-Date:   Thu, 31 Oct 2019 22:54:46 +0000
-Message-ID: <21ffacd3bf6eabfb056afd9e01f35bd12a2ec516.camel@hammerspace.com>
-References: <20191023235600.10880-1-trond.myklebust@hammerspace.com>
-         <CAN-5tyF3hryyjdHjcoNHHPJUDZmgtgxQDureZ+3QQmiwh2CMsA@mail.gmail.com>
-         <CAN-5tyHLGVt4jHZNFSW_5tXFM74KGbaN=PLMb-sjq2+hbcH7YA@mail.gmail.com>
-         <CAN-5tyFPgvCqaw17Q5jP4+uiJWv6St7enoRJ0ZK98btcOO34kw@mail.gmail.com>
-In-Reply-To: <CAN-5tyFPgvCqaw17Q5jP4+uiJWv6St7enoRJ0ZK98btcOO34kw@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.105.87.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4c07f63-99be-4372-1b50-08d75e5553b3
-x-ms-traffictypediagnostic: DM5PR1301MB2186:
-x-microsoft-antispam-prvs: <DM5PR1301MB2186508612046DF0857EBB3BB8630@DM5PR1301MB2186.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(39840400004)(396003)(189003)(199004)(305945005)(316002)(6916009)(8676002)(2351001)(81166006)(1730700003)(446003)(6246003)(7736002)(2501003)(2171002)(66066001)(2906002)(486006)(11346002)(3846002)(4001150100001)(99286004)(476003)(4326008)(6506007)(102836004)(6116002)(76176011)(186003)(36756003)(2616005)(8936002)(26005)(53546011)(14454004)(5660300002)(81156014)(66946007)(6436002)(66476007)(91956017)(25786009)(229853002)(6486002)(118296001)(14444005)(6512007)(256004)(5640700003)(86362001)(64756008)(478600001)(66446008)(71190400001)(71200400001)(66556008)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2186;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WKf94bg74J9BJVZY0J750nd0HnC2P0aVsI5ZnmQRjPA/uOetXNHCZTstgpWKXfmYJ40cAHo7kB2jT+cX1SQpjFJdFijV/66usMICFgbpGKzrKtQvn8hvTk444zmBQdDhYwM1/Wc67njONx92hLcjn4zknkA3i5jkLhnm3PSOi9Pz8hDlFWMXy/kt7vIG5d0uxL191a2oU3QqFeNK6YEKRdbHxZ6dMTWNFM2XWCr5KOj2FoHDzWQ3xvSdBSnvzOJtjS9Lyi+EM3vdkayWkHDK9nwBX1yyZZZexVIp6EttkXRC0gdlgUQmjqKc9HcK2k03R0mwppP5ZhuwELjaOG9fZHQBgo6FRKgUKhWflVyxMEFYESuRlcaAL+zBHObf3H1kgbZjhCKqIPtRTXwG5eqFbT7LdFwYOpc3TwpFEzP+TXRMBGvUJ/DruYlI/VIvOEK6
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DA84FC6CF0FD2D41B78F531F4868B13E@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726710AbfKALAP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Nov 2019 07:00:15 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:58257 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726622AbfKALAP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Nov 2019 07:00:15 -0400
+Received: from icode.fritz.box ([IPv6:2001:888:4:50::1007])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id QUf0iktAtsBskQUf0iUIxC; Fri, 01 Nov 2019 12:00:06 +0100
+To:     linux-nfs@vger.kernel.org
+From:   Jan-Pieter Cornet <johnpc@xs4all.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=johnpc@xs4all.net; prefer-encrypt=mutual; keydata=
+ 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 RA==
+Subject: process hangs on kernel 4.19 and 5.2, not on 4.9
+Message-ID: <bea770e3-0c1f-edbb-28d9-2a730f9e58fc@xs4all.net>
+Date:   Fri, 1 Nov 2019 12:00:02 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4c07f63-99be-4372-1b50-08d75e5553b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 22:54:46.4113
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xOFujtvcHuJlHAI5uekcQCJjWFqHupEMkbaYmeGsnblHUAb3fJ9H4SdpwNTkvc0iSai36gjqiElvbRQAqLqdPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2186
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="M7vl22wKZxyEx3dQALOdELvUpHymDE8Mz"
+X-CMAE-Envelope: MS4wfOgviHn/BaSfd+t+/qmBALpCoRIR9jY9UDH1mUGhBmq+rtj+pnRFPKAMqnB0RisNbYC618M8N1TTI0DXvLIGnnmU5jjduVstytVoCrYpeLRLkG86wOgm
+ prmwuJ4bShT6lQHh0za9VVYL3mOqCjnULRIQWgmdasQq4YKpxUTu0nvtcTtVYsrGTEl3Qia+dsX0SQ==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgT2xnYQ0KDQpPbiBUaHUsIDIwMTktMTAtMzEgYXQgMTI6MTUgLTA0MDAsIE9sZ2EgS29ybmll
-dnNrYWlhIHdyb3RlOg0KPiBIaSBUcm9uZCwNCj4gDQo+IE5vdyB0aGF0IEkgcmVjYWxsIHRoZSBy
-ZWFzb24gdGhlIE9udGFwIHNlcnZlciBnaXZlcyBvdXQgdGhlIHNhbWUNCj4gZGVsZWdhdGlvbiB3
-YXMgdG8gZGVhbCB3aXRoIHRoZSBsaW51eCBjbGllbnQgYmVoYXZpb3VyIHdobyBzZW5kcyBhbg0K
-PiBvcGVuIGV2ZW4gdGhvdWdoIGl0IGhvbGRzIGEgZGVsZWdhdGlvbiAoYWNjb3JkaW5nIHRvIHRo
-ZSBzZXJ2ZXIncw0KPiB2aWV3KS4gU28gd2hhdCBzZXJ2ZXIgZG9lcyBpcyBpdCBnaXZlcyBvdXQg
-dGhlIHNhbWUgZGVsZWdhdGlvbi4gVGhpcw0KPiBwYXRjaCBzZXJpZXMgY2hhbmdlcyB0aGUgc2Vt
-YW50aWNzLiBDYW4geW91IGRlc2NyaWJlIHdoYXQgeW91IGV4cGVjdA0KPiB0aGUgc2VydmVyIGlz
-IHN1cHBvc2VkIHRvIGRvIGluIHRoaXMgY2FzZT8NCg0KSWYgdGhlIGNsaWVudCBzZW5kcyBvdXQg
-YSBzZWNvbmQgT1BFTiBmb3IgdGhlIHNhbWUgZmlsZSAocHJlc3VtYWJseQ0KYmVjYXVzZSBhbiBh
-cHBsaWNhdGlvbiByZXF1ZXN0IGNhdXNlZCB0aGUgZmlsZSB0byBiZSBvcGVuZWQgYWdhaW4NCmJl
-Zm9yZSB0aGUgY2xpZW50IGNvdWxkIHByb2Nlc3MgdGhlIHJlcGx5IHRvIHRoZSBmaXJzdCBvcGVu
-KSwgdGhlbiBJDQp0aGluayBpdCBzaG91bGQgYmUgT0sgZm9yIHRoZSBzZXJ2ZXIgdG8gc2VuZCB0
-aGUgZGVsZWdhdGlvbiBzdGF0ZWlkDQphZ2Fpbi4gSWYgdGhlIG5ldyBvcGVuIGNhdXNlZCBhIHN0
-YXRlIGNoYW5nZSAoZm9yIGluc3RhbmNlIHRoZQ0KZGVsZWdhdGlvbiB3YXMgdXBncmFkZWQgZnJv
-bSBSRUFEIHRvIFdSSVRFKSB0aGVuIHRoZSBzZXFpZCBmb3IgdGhlDQpkZWxlZ2F0aW9uIHN0YXRl
-aWQgc2hvdWxkIGJlIGJ1bXBlZC4gSWYgdGhlcmUgd2FzIG5vdCBzdGF0ZSBjaGFuZ2UsIGl0DQpy
-ZWFsbHkgc2hvdWxkIGJlIHVwIHRvIHRoZSBzZXJ2ZXIgd2hldGhlciBvciBub3QgaXQgYnVtcHMg
-dGhlIHNlcWlkLg0KDQpIb3dldmVyIG9uIHRoZSBjbGllbnQgc2lkZSwgd2Ugd2FudCB0byBiZSBh
-YmxlIHRvIGNvbnNpZGVyIHRoYXQgaWYgdGhlDQoyIG9wZW4gcmVwbGllcyByZXR1cm4gdGhlIGV4
-YWN0IHNhbWUgZGVsZWdhdGlvbiBzdGF0ZWlkLCB0aGVuIHdlDQpjb25zaWRlciB0aGUgc2Vjb25k
-IHJlcGx5IHRvIGJlIGEgbm8tb3AgYXMgZmFyIGFzIG91ciB1cGRhdGUgb2YgdGhlDQppbnRlcm5h
-bCBzdGF0ZSBpcyBjb25jZXJuZWQuIElmIHRoZSBzZXFpZCB3YXMgYnVtcGVkLCB0aGUgY2xpZW50
-IG5lZWRzDQp0byB1cGRhdGUgaXRzIGludGVybmFsIHN0YXRlLg0KDQpTbyBhbGwgdGhpcyBwYXRj
-aCBzZXJpZXMgaXMgZG9pbmcsIGlzIHNldHRpbmcgdXAgcnVsZXMgdG8gYWxsb3cgdXMgdG8NCmVu
-Zm9yY2UgdGhhdCBjYXNlLCBhbmQgaW4gcGFydGljdWxhciB0byBlbnN1cmUgdGhhdCBfaWZfIHdl
-IHNlbmQgYQ0KREVMRUdSRVRVUk4gYmVmb3JlIHdlIHByb2Nlc3MgdGhlIHJlcGx5IHRvIHRoZSBz
-ZWNvbmQgb3BlbiwgdGhlbiB3ZQ0KcmVjb2duaXNlIHRoYXQgYSBzdWNjZXNzZnVsIERFTEVHUkVU
-VVJOIG1lYW5zIHdlIG5vIGxvbmdlciBob2xkDQpkZWxlZ2F0aW9uIHN0YXRlLCBubyBtYXR0ZXIg
-d2hhdCB0aGUgY29udGVudHMgb2YgdGhlIHJlcGx5IHRvIHRoZQ0Kc2Vjb25kIG9wZW4gdGVsbHMg
-dXMuDQoNCj4gT24gVGh1LCBPY3QgMzEsIDIwMTkgYXQgMTE6NDkgQU0gT2xnYSBLb3JuaWV2c2th
-aWEgPGFnbG9AdW1pY2guZWR1Pg0KPiB3cm90ZToNCj4gPiBPbiBUaHUsIE9jdCAzMSwgMjAxOSBh
-dCAxMToyNyBBTSBPbGdhIEtvcm5pZXZza2FpYSA8YWdsb0B1bWljaC5lZHU+DQo+ID4gd3JvdGU6
-DQo+ID4gPiBIaSBUcm9uZCwNCj4gPiA+IA0KPiA+ID4gVGhpcyBwYXRjaCBzZXQgcHJvZHVjZXMg
-dGhlIGZvbGxvd2luZyBpbiBteSB0ZXN0aW5nLiBCYXNpY2FsbHkNCj4gPiA+IHdoYXQgSQ0KPiA+
-ID4gc2VlIHRoZSBjbGllbnQgaXMgcHJldmVudGVkIGZyb20gdXNpbmcgYSBkZWxlZ2F0aW9uIGF0
-IGFsbC4NCj4gPiA+IA0KPiA+ID4gQWZ0ZXIgSSBpbmR1Y2UgYSByYWNlIG9mIERFTEVHUkVUVVJO
-L09QRU4NCj4gPiA+IC0tLSB0aGUgcmFjaW5nIE9QRU4gZ2V0cyBhIGRlbGVnYXRpb24gKGl0IHJl
-dHVybnMgdGhlIHNhbWUgc2VxaWQNCj4gPiA+IGFuZA0KPiA+ID4gb3RoZXIgYXMgdGhlIGRlbGVn
-YXRpb24gYmVpbmcgcmV0dXJuZWQpIGJ1dCB0aGUgY2xpZW50IGRvZXNuJ3QNCj4gPiA+IHVzZSBp
-dC4NCj4gPiA+IC0tLSB0aGUgZm9sbG93aW5nIChuZXh0KSBPUEVOIHRoYXQgYWxzbyBnZXRzIGEg
-ZGVsZWdhdGlvbg0KPiA+ID4gaW1tZWRpYXRlbHkNCj4gPiA+IGhhcyB0aGUgY2xpZW50IHJldHVy
-bmluZyB0aGUgZ2l2ZW4gZGVsZWdhdGlvbi4NCj4gPiA+IA0KPiA+ID4gRGlzY2xhaW1lcjogaW4g
-bXkgdGVzdGluZyB0aGUgcmFjaW5nIERFTEVHUkVUVVJOIGRvZXNuJ3QgZmFpbA0KPiA+ID4gd2l0
-aA0KPiA+ID4gT0xEX1NUQVRFSUQsIE5ldEFwcCByZXR1cm5zIE9LLg0KPiA+IA0KPiA+IFRlc3Rp
-bmcgdGhlIHNhbWUgYWdhaW5zdCBMaW51eC4gSXQgcHJldmVudHMgdGhlIGNsaWVudCBmcm9tIHVz
-aW5nDQo+ID4gZnV0dXJlIGRlbGVnYXRpb24gc3RhdGVpZC4gT24gdGhlIGluZHVjZWQgREVMRUdS
-RVRVUk4vT1BFTiByYWNlLA0KPiA+IHRoZQ0KPiA+IGxpbnV4IHNlcnZlciBkb2Vzbid0IGdpdmUg
-YSBuZXcgcmVhZCBkZWxlZ2F0aW9uLiBUaGUgZm9sbG93aW5nIG9wZW4NCj4gPiBnZXRzIGEgcmVh
-ZCBkZWxlZ2F0aW9uIGFuZCByZXR1cm5zIGl0IHJpZ2h0IGF3YXkuDQo+ID4gDQo+ID4gDQo+ID4g
-PiBPbiBUaHUsIE9jdCAyNCwgMjAxOSBhdCA2OjU2IEFNIFRyb25kIE15a2xlYnVzdCA8DQo+ID4g
-PiB0cm9uZG15QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gPiA+IFRoZSBmb2xsb3dpbmcgcGF0Y2hz
-ZXQgZml4ZXMgdXAgYSBudW1iZXIgb2YgaXNzdWVzIHdpdGgNCj4gPiA+ID4gZGVsZWdhdGlvbnMs
-DQo+ID4gPiA+IGJ1dCBtYWlubHkgYXR0ZW1wdHMgdG8gZml4IGEgcmFjZSBjb25kaXRpb24gYmV0
-d2VlbiBvcGVuIGFuZA0KPiA+ID4gPiBkZWxlZ3JldHVybiwgd2hlcmUgdGhlIG9wZW4gYW5kIHRo
-ZSBkZWxlZ3JldHVybiBnZXQgcmUtb3JkZXJlZA0KPiA+ID4gPiBzbw0KPiA+ID4gPiB0aGF0IHRo
-ZSBkZWxlZ3JldHVybiBlbmRzIHVwIHJldm9raW5nIHRoZSBkZWxlZ2F0aW9uIHRoYXQgd2FzDQo+
-ID4gPiA+IHJldHVybmVkDQo+ID4gPiA+IGJ5IHRoZSBvcGVuLg0KPiA+ID4gPiBUaGUgcm9vdCBj
-YXVzZSBpcyB0aGF0IGluIGNlcnRhaW4gY2lyY3Vtc3RhbmNlcywgd2UgbWF5DQo+ID4gPiA+IGN1
-cnJlbnRseSBlbmQNCj4gPiA+ID4gdXAgZnJlZWluZyB0aGUgZGVsZWdhdGlvbiBmcm9tIGRlbGVn
-cmV0dXJuLCBzbyB3aGVuIHdlIGxhdGVyDQo+ID4gPiA+IHJlY2VpdmUNCj4gPiA+ID4gdGhlIHJl
-cGx5IHRvIHRoZSBvcGVuLCB3ZSd2ZSBsb3N0IHRyYWNrIG9mIHRoZSBmYWN0IHRoYXQgdGhlDQo+
-ID4gPiA+IHNlcWlkDQo+ID4gPiA+IHByZWRhdGVzIHRoZSBvbmUgdGhhdCB3YXMgcmV0dXJuZWQu
-DQo+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIHBhdGNoc2V0IGZpeGVzIHRoYXQgY2FzZSBieSBlbnN1
-cmluZyB0aGF0IHdlIGFsd2F5cyBrZWVwDQo+ID4gPiA+IHRyYWNrDQo+ID4gPiA+IG9mIHRoZSBs
-YXN0IGRlbGVnYXRpb24gc3RhdGVpZCB0aGF0IHdhcyByZXR1cm5lZCBmb3IgYW55IGdpdmVuDQo+
-ID4gPiA+IGlub2RlLg0KPiA+ID4gPiBUaGF0IHdheSwgaWYgd2UgbGF0ZXIgc2VlIGEgZGVsZWdh
-dGlvbiBzdGF0ZWlkIHdpdGggdGhlIHNhbWUNCj4gPiA+ID4gb3BhcXVlDQo+ID4gPiA+IGZpZWxk
-LCBidXQgYW4gb2xkZXIgc2VxaWQsIHdlIGtub3cgd2UgY2Fubm90IHRydXN0IGl0LCBhbmQgc28N
-Cj4gPiA+ID4gd2UNCj4gPiA+ID4gYXNrIHRvIHJlcGxheSB0aGUgT1BFTiBjb21wb3VuZC4NCj4g
-PiA+ID4gDQo+ID4gPiA+IFRyb25kIE15a2xlYnVzdCAoMTQpOg0KPiA+ID4gPiAgIE5GU3Y0OiBE
-b24ndCBhbGxvdyBhIGNhY2hlZCBvcGVuIHdpdGggYSByZXZva2VkIGRlbGVnYXRpb24NCj4gPiA+
-ID4gICBORlN2NDogRml4IGRlbGVnYXRpb24gaGFuZGxpbmcgaW4gdXBkYXRlX29wZW5fc3RhdGVp
-ZCgpDQo+ID4gPiA+ICAgTkZTdjQ6IG5mczRfY2FsbGJhY2tfZ2V0YXR0cigpIHNob3VsZCBpZ25v
-cmUgcmV2b2tlZA0KPiA+ID4gPiBkZWxlZ2F0aW9ucw0KPiA+ID4gPiAgIE5GU3Y0OiBEZWxlZ2F0
-aW9uIHJlY2FsbHMgc2hvdWxkIG5vdCBmaW5kIHJldm9rZWQgZGVsZWdhdGlvbnMNCj4gPiA+ID4g
-ICBORlN2NDogZmFpbCBuZnM0X3JlZnJlc2hfZGVsZWdhdGlvbl9zdGF0ZWlkKCkgd2hlbiB0aGUN
-Cj4gPiA+ID4gZGVsZWdhdGlvbiB3YXMNCj4gPiA+ID4gICAgIHJldm9rZWQNCj4gPiA+ID4gICBO
-RlM6IFJlbmFtZSBuZnNfaW5vZGVfcmV0dXJuX2RlbGVnYXRpb25fbm9yZWNsYWltKCkNCj4gPiA+
-ID4gICBORlN2NDogRG9uJ3QgcmVtb3ZlIHRoZSBkZWxlZ2F0aW9uIGZyb20gdGhlIHN1cGVyX2xp
-c3QgbW9yZQ0KPiA+ID4gPiB0aGFuIG9uY2UNCj4gPiA+ID4gICBORlN2NDogSG9sZCB0aGUgZGVs
-ZWdhdGlvbiBzcGlubG9jayB3aGVuIHVwZGF0aW5nIHRoZSBzZXFpZA0KPiA+ID4gPiAgIE5GU3Y0
-OiBDbGVhciB0aGUgTkZTX0RFTEVHQVRJT05fUkVWT0tFRCBmbGFnIGluDQo+ID4gPiA+ICAgICBu
-ZnNfdXBkYXRlX2lucGxhY2VfZGVsZWdhdGlvbigpDQo+ID4gPiA+ICAgTkZTdjQ6IFVwZGF0ZSB0
-aGUgc3RhdGVpZCBzZXFpZCBpbiBuZnNfcmV2b2tlX2RlbGVnYXRpb24oKQ0KPiA+ID4gPiAgIE5G
-U3Y0OiBSZXZva2UgdGhlIGRlbGVnYXRpb24gb24gc3VjY2VzcyBpbg0KPiA+ID4gPiBuZnM0X2Rl
-bGVncmV0dXJuX2RvbmUoKQ0KPiA+ID4gPiAgIE5GU3Y0OiBJZ25vcmUgcmVxdWVzdHMgdG8gcmV0
-dXJuIHRoZSBkZWxlZ2F0aW9uIGlmIGl0IHdhcw0KPiA+ID4gPiByZXZva2VkDQo+ID4gPiA+ICAg
-TkZTdjQ6IERvbid0IHJlY2xhaW0gZGVsZWdhdGlvbnMgdGhhdCBoYXZlIGJlZW4gcmV0dXJuZWQg
-b3INCj4gPiA+ID4gcmV2b2tlZA0KPiA+ID4gPiAgIE5GU3Y0OiBGaXggcmFjZXMgYmV0d2VlbiBv
-cGVuIGFuZCBkZWxlZ3JldHVybg0KPiA+ID4gPiANCj4gPiA+ID4gIGZzL25mcy9jYWxsYmFja19w
-cm9jLmMgfCAgIDIgKy0NCj4gPiA+ID4gIGZzL25mcy9kZWxlZ2F0aW9uLmMgICAgfCAxMDkgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiA+ID4gPiAtLS0tLS0tLS0tDQo+ID4gPiA+
-ICBmcy9uZnMvZGVsZWdhdGlvbi5oICAgIHwgICA0ICstDQo+ID4gPiA+ICBmcy9uZnMvbmZzNHBy
-b2MuYyAgICAgIHwgIDEzICsrLS0tDQo+ID4gPiA+ICBmcy9uZnMvbmZzNHN1cGVyLmMgICAgIHwg
-ICA0ICstDQo+ID4gPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDg4IGluc2VydGlvbnMoKyksIDQ0IGRl
-bGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+ID4gLS0NCj4gPiA+ID4gMi4yMS4wDQo+ID4gPiA+
-IA0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFt
-bWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--M7vl22wKZxyEx3dQALOdELvUpHymDE8Mz
+Content-Type: multipart/mixed; boundary="icLwONGfbQ7285hWnV7ZA3nbekw3DbCOf";
+ protected-headers="v1"
+From: Jan-Pieter Cornet <johnpc@xs4all.net>
+To: linux-nfs@vger.kernel.org
+Message-ID: <bea770e3-0c1f-edbb-28d9-2a730f9e58fc@xs4all.net>
+Subject: process hangs on kernel 4.19 and 5.2, not on 4.9
+
+--icLwONGfbQ7285hWnV7ZA3nbekw3DbCOf
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+We are running dovecot, with NFS mounted mail spools. After a recent roun=
+d of upgrades, we noticed that occasionally a process hangs in state "D",=
+ while accessing a file over NFS. This is on the default debian buster ke=
+rnel: 4.19.67-2+deb10u1. When we downgraded to the older default stretch =
+kernel, 4.9.189-3+deb9u1 (without changing anything else on the system), =
+the hangs do not occur. I've also reproduced the crash on the buster back=
+ports kernel, 5.2.17-1~bpo10+1.
+
+This is with dovecot 2.3.8 (latest), storing mails using mdbox. The NFS s=
+erver is a Netapp running OnTap 9.6P2 clustermode.
+
+With "hang" I mean that the process is unresponsive to anything but a kil=
+l -KILL signal. strace shows nothing (and after attaching, strace itself =
+cannot be killed except with a kill -KILL). The netapp shows that the cli=
+ent is holding 2 files locked with an fcntl byte-range lock (preventing a=
+ny other process from writing to the mailbox). There is only one process =
+that gets stuck (commonly lmtp, writing to the mailbox, but I've also see=
+n IMAP APPEND causing the problem on the production platform). After kill=
+ing the stuck process, the mdbox index files are damaged and need rebuild=
+ing using "doveadm force-resync" (but that's just because the writing pro=
+cess was rudely interrupted).
+
+/proc/$PID/stack of the hanging process contains, on the 4.19 kernel, wit=
+h every crash that I've reproduced:
+[<0>] nfs_iocounter_wait+0x74/0xa0 [nfs]
+[<0>] do_unlk+0x8c/0xe0 [nfs]
+[<0>] __x64_sys_flock+0xa4/0xf0
+[<0>] do_syscall_64+0x53/0x110
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[<0>] 0xffffffffffffffff
+
+On the 5.2 kernel, /proc/$PID/stack looks like this:
+[<0>] do_unlk+0x8e/0xe0 [nfs]
+[<0>] __x64_sys_flock+0xa7/0x100
+[<0>] do_syscall_64+0x53/0x130
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+I can reproduce the crash on a test system, but it takes anywhere from a =
+few minutes upto 30 minutes to hang. To trigger the bug, I start two "whi=
+le true; do swaks -s localhost --proto LMTP ...; done" endless loops that=
+ hammer a single destination mailbox with mail. Another thread goes in ev=
+ery minute and deletes the mails again. Running a single "swaks" hammerin=
+g loop does not trigger the hang. And as said, downgrading to 4.9 does no=
+t cause a hang either (so we're currently running the production cluster =
+on the older kernel).
+
+I'd appreciate any help in getting this resolved. I can also provide a de=
+tailed description of the test setup so someone can hopefully reproduce t=
+his, or I can try to dig deeper (I basically saved everything readable fr=
+om /proc/$PID for the reproduced crashes, don't know if anything else is =
+interesting in there). I could even try to make a tcpdump of the traffic =
+to the NFS server, if you think that helps, although that will likely pro=
+duce a pretty massive capture file. Or I can try with other kernel versio=
+ns. So far I only tried using the available (pre-packaged) debian kernels=
+=2E
+
+Thanks for any input,
+
+--=20
+Jan-Pieter Cornet <johnpc@xs4all.net>
+Systeembeheer XS4ALL Internet bv
+www.xs4all.nl
+
+
+--icLwONGfbQ7285hWnV7ZA3nbekw3DbCOf--
+
+--M7vl22wKZxyEx3dQALOdELvUpHymDE8Mz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQKTBAEBCgB9FiEERi08X+sQJ+Ye9TauIGpRrVHKNykFAl28EDJfFIAAAAAALgAo
+aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDQ2
+MkQzQzVGRUIxMDI3RTYxRUY1MzZBRTIwNkE1MUFENTFDQTM3MjkACgkQIGpRrVHK
+NymjIxAAwC50jSp3OwWRuHAT5MybnbTIqoSUZOfL0L3DMbNEWblWQvRfIPRr9ag2
+sO8jUlgBVO/MXNzI8uhciTBWq8y8rew3wxeZvAokxn6y3NZj+CvlGPf8Yik/e/13
+wEcng0E7BJmELG17KWARibZNZ1cJsm7X3qaWjb7VVCgZ88MQ9DPcrpoWuP4MCwEa
+AkuJH83pUnJHayHWBW9TZbs0TprOcpOl978cx9b3Jo7ZMxSD7mJk06xrFINRERnN
+p0ZG8yrGVbws525BJXUy+4BYSuIzArpqYu5APqPCYCnkZkWTM4ITreaBiAXrrmZV
+X0q3igWkdmXE4n8dEDBjX7QWubdcJrQo96A38ZPkgSz4kOEMNLJl6URqk7jtnsmH
+t+owgjTShFk0nz2UP/5eHIksJLXvxFaTc3nxSSU6/c0W5BiUs7At45rVokzUtHJY
+F+CB3wC3c7bKBJY/ClUw+wT6KLh8oL1VbETF9JEdOgIPGJAF8yLI88FjiLJckJKJ
+ihWciNBcQoUZt4Cv8rOZtapC89RuR67chPuwwvp4jAUb4r0ac8jo5gdJdGwsaK32
+b/M8df9inJ1LGBU/fyau/JiZb0mRoRm+LsmCDgwzuHFKHZuUDgiUL7NeptPB0yMF
+y+Y1fDXC8OLnP6ij76JfWb9uejGbrMKfNvgpWAqKni0FpRGRdKE=
+=Wkoi
+-----END PGP SIGNATURE-----
+
+--M7vl22wKZxyEx3dQALOdELvUpHymDE8Mz--
