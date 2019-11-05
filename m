@@ -2,72 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DECF1EF1F2
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 01:29:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13714EFFA0
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 15:23:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfKEA3B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Nov 2019 19:29:01 -0500
-Received: from mails1n1-route0.email.arizona.edu ([128.196.130.51]:29165 "EHLO
-        mails1n1-route0.email.arizona.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729137AbfKEA3A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Nov 2019 19:29:00 -0500
-IronPort-SDR: G3dfooumYZ4ise0pIpLXivRKFJwc9vMWCCaDFyTQfiqDC6y2j8aImBaItKQJ5SWl60XXJEYXsK
- PaCopOyoOARg==
-IronPort-PHdr: =?us-ascii?q?9a23=3AphfUsROE44wgzAkd/bMl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0LfvyrarrMEGX3/hxlliBBdydt6sfzbOP7+u6ASQp2tWoiDg6aptCVh?=
- =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
- =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+Ngi6oRjeu8UZn4duNrs6xw?=
- =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
- =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
- =?us-ascii?q?mu87tnRRn1gyoBKjU38nzYitZogaxGoByvuRJ/zY3abo6aNvVxYqzTcMgGRW?=
- =?us-ascii?q?dDRMtdSzBNDp++YoYJEuEPPfxYr474p1YWsxa+BROjBOXyxT9MmHD2x7Ax3u?=
- =?us-ascii?q?M7Hg7b2QwgHtQOvW/brNrrMqcSVuW1w7fSwTrZdfNW2Db86I/Och87u/2DQ6?=
- =?us-ascii?q?9/cdfIxEQpCgjLjU2QpJT4Mz+L1ekBqXWX4u5hWO61lmIqpAV8riKxysoihY?=
- =?us-ascii?q?TEgJ8exEre+iVj2ok1IMW1SEt8YdG5DpRdrzqaN45qQsM6RGFopTo6xqUGuZ?=
- =?us-ascii?q?GleCgKz4wqyBrCZ/CZcIWE+A/vWeKQLDtimX5od7ayiwys/UWuxeDzUNG40F?=
- =?us-ascii?q?dMriVbjtnBrm0B2wLQ58SdV/dw+kas1SyS2w3c7uxIO144mKTUJpI5x74/jJ?=
- =?us-ascii?q?sTsUDNHi/sn0X2ibebeV859eit6uTnZK7rppCCOI9yjQH+N7ohltalDuQiMw?=
- =?us-ascii?q?gPXm+b+eKm27H540L2XahKguUskqbFqJDaOdgbpqmhDg9R04Yj7Qu/Dji/3N?=
- =?us-ascii?q?Qek3kHN0lIeAyIj4f3IVHCOvP4Aumlg1Sqjjhrw+rKPrr7ApXCfTD/l+Kreb?=
- =?us-ascii?q?d79l4ZzgQo5c5Q6ogSCbwbJv/3HEjru5aQWhs4NRGkhuDpE/1j2Y4EH2GCGK?=
- =?us-ascii?q?mUNOXVq1Detcw1JOzZT48cvjr5JuJts/fiiH4/sVAQe66s0N0ecnGqGfJvZU?=
- =?us-ascii?q?iVfCy/0Z86DW4Ws19mH6TRg1qYXGsLag=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A5DAAvwcBd/+qVxIBmHgFDDIFXg18?=
- =?us-ascii?q?gEoRTiQOFGpJdg0yHbxIBCAEBAQ4TGQECAQGEQAKEMjgTAgMLAQEBBAEBAQE?=
- =?us-ascii?q?BBQICAWyEa01NARABgWcignUGGQoVUQgDDQ0CJgICVwaDNYJTJbBYgTIaiDo?=
- =?us-ascii?q?fCYFVgQ4oAYc5hHF4gQeBOAyCXz6HVYJeBIE5iGKMH0SWdB+CD4EYBV+TNAY?=
- =?us-ascii?q?bgiwBghKJdQOLLo5CmX+BaSKBWE0lE4FZgU9PkhEhgTUIARUIEgEKAYgDhSQ?=
- =?us-ascii?q?BAQ?=
-X-IPAS-Result: =?us-ascii?q?A2A5DAAvwcBd/+qVxIBmHgFDDIFXg18gEoRTiQOFGpJdg?=
- =?us-ascii?q?0yHbxIBCAEBAQ4TGQECAQGEQAKEMjgTAgMLAQEBBAEBAQEBBQICAWyEa01NA?=
- =?us-ascii?q?RABgWcignUGGQoVUQgDDQ0CJgICVwaDNYJTJbBYgTIaiDofCYFVgQ4oAYc5h?=
- =?us-ascii?q?HF4gQeBOAyCXz6HVYJeBIE5iGKMH0SWdB+CD4EYBV+TNAYbgiwBghKJdQOLL?=
- =?us-ascii?q?o5CmX+BaSKBWE0lE4FZgU9PkhEhgTUIARUIEgEKAYgDhSQBAQ?=
-X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
-   d="scan'208";a="433351748"
-Received: from unknown (HELO [128.196.149.234]) ([128.196.149.234])
-  by mails1n1out.email.arizona.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 17:28:59 -0700
-Subject: Re: NFS hangs on one interface
-From:   Chandler <admin@genome.arizona.edu>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
- <20191023171523.GA18802@fieldses.org>
- <b6248a82-1f1a-7329-5ee0-6e026f6db697@genome.arizona.edu>
- <YTBPR01MB2845B12E9C59F837FE35F40DDD650@YTBPR01MB2845.CANPRD01.PROD.OUTLOOK.COM>
- <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu>
-Openpgp: preference=signencrypt
-Message-ID: <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
-Date:   Mon, 4 Nov 2019 17:28:58 -0700
+        id S2389083AbfKEOXq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Nov 2019 09:23:46 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:45811 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389537AbfKEOXq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 09:23:46 -0500
+Received: by mail-yb1-f194.google.com with SMTP id x14so4231199ybq.12
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 06:23:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t8P/ijjP/27gesNs4X/cL6grouBRPOqOavueg0QY+uA=;
+        b=Oqnk3bqqzvTtqMWlvllI+8gpxuqUmADKMDhBPSgaSd7t5PnqYBp7Jjinz2lZtaw/Im
+         7XSQl3lXBsuOADUfR/0FdbGXpsApvbJ0m8niRfeEkQhEuJ37T1LI6UuawcQfuJQSRe9E
+         4rjg1/C1VbLBYKa0csdgSDoTnaeHuSK7/mlialDpYZf4X5YZJaF4zfplQykAhQLYhCHg
+         IQLQEv1qSmMKyIIzILE1iVwSOOcgyYu3rK90/V1313H/ldejN6YdYdWTXwbUu85l8fKH
+         OxfMreA+xewJDcZQb1cCu8H3VuKfajSO19auwSDPUMcmeSGOWCDRPFVCHW5Sg0M7RLXl
+         Su0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=t8P/ijjP/27gesNs4X/cL6grouBRPOqOavueg0QY+uA=;
+        b=DREFMrdRzwBVQm4t+NCrhohiO2qCGt62tz/6NhxeXFJ25inqKb7rgxHkTLaINDuCSG
+         /GDPB6tzcKUiMKSZoswihHN/Crx3P165DgfwpcyTGTUk2HO+qS6vj90nUz3rLhUawtQa
+         tcZllEuB06I6hm2cMxLwlwl/9c6wgMW4RjQOJcGldf03dKx0JT/owZ77C3ZIHu45cO+b
+         YpxymC/2EaVFTNny7Sb08k9w1H1leS+GVizw/lKK41TJX6WDmgrluw5dgN0jp4+c77no
+         VkPXefHPy7Zw0XoqWnTpzudAjYhqj7tI6IPzrPd7ipB7T1ZXpf6lg4IQCQtCTpdLzH1B
+         M7mw==
+X-Gm-Message-State: APjAAAXArxCpwADulwmY/vu062RMZLY9GyA2iS7g0XC5DdIrkvf+iIx/
+        BXio0iAk3OiKvyfeDsgumiWGn0g=
+X-Google-Smtp-Source: APXvYqy9iJugREx3f8goDLpmfNDtq9dJm8PBNSP6HABmLLinVV5tf0JMFMHZPL/5hLUbeakQXs978g==
+X-Received: by 2002:a25:7301:: with SMTP id o1mr26374154ybc.324.1572963824560;
+        Tue, 05 Nov 2019 06:23:44 -0800 (PST)
+Received: from localhost.localdomain (50-36-163-249.alma.mi.frontiernet.net. [50.36.163.249])
+        by smtp.gmail.com with ESMTPSA id i5sm6665784ywe.110.2019.11.05.06.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 06:23:43 -0800 (PST)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: Avoid RPC delays when exiting suspend
+Date:   Tue,  5 Nov 2019 09:21:33 -0500
+Message-Id: <20191105142133.28741-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
+References: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Any ideas what's going on here?
-Thanks
+Jon Hunter: "I have been tracking down another suspend/NFS related
+issue where again I am seeing random delays exiting suspend. The delays
+can be up to a couple minutes in the worst case and this is causing a
+suspend test we have to fail."
+
+Change the use of a deferrable work to a standard delayed one.
+
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ net/sunrpc/sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 360afe153193..987c4b1f0b17 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_queue(struct rpc_wait_queue *queue, const c
+ 	rpc_reset_waitqueue_priority(queue);
+ 	queue->qlen = 0;
+ 	queue->timer_list.expires = 0;
+-	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
++	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
+ 	INIT_LIST_HEAD(&queue->timer_list.list);
+ 	rpc_assign_waitqueue_name(queue, qname);
+ }
+-- 
+2.23.0
+
