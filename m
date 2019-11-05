@@ -2,92 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13714EFFA0
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 15:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68287F01C1
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 16:44:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389083AbfKEOXq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Nov 2019 09:23:46 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:45811 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389537AbfKEOXq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 09:23:46 -0500
-Received: by mail-yb1-f194.google.com with SMTP id x14so4231199ybq.12
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 06:23:45 -0800 (PST)
+        id S2389677AbfKEPoK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Nov 2019 10:44:10 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:35480 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389571AbfKEPoK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 10:44:10 -0500
+Received: by mail-yw1-f66.google.com with SMTP id r131so1874312ywh.2;
+        Tue, 05 Nov 2019 07:44:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t8P/ijjP/27gesNs4X/cL6grouBRPOqOavueg0QY+uA=;
-        b=Oqnk3bqqzvTtqMWlvllI+8gpxuqUmADKMDhBPSgaSd7t5PnqYBp7Jjinz2lZtaw/Im
-         7XSQl3lXBsuOADUfR/0FdbGXpsApvbJ0m8niRfeEkQhEuJ37T1LI6UuawcQfuJQSRe9E
-         4rjg1/C1VbLBYKa0csdgSDoTnaeHuSK7/mlialDpYZf4X5YZJaF4zfplQykAhQLYhCHg
-         IQLQEv1qSmMKyIIzILE1iVwSOOcgyYu3rK90/V1313H/ldejN6YdYdWTXwbUu85l8fKH
-         OxfMreA+xewJDcZQb1cCu8H3VuKfajSO19auwSDPUMcmeSGOWCDRPFVCHW5Sg0M7RLXl
-         Su0Q==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=08WVEbhNhtnwwFfAggXo5kHnsDkJykTkYyyFy8JZdPk=;
+        b=uIt8lSknzzVMvqUotzhN/2/WopvdWeA5IQfm9S53iFkNWcWJNIcvmftiX32B7RSPxC
+         K5Y9vAPYmjQWwYPyBKUu8U6aokIYM89zGaKi2UztGP+VFJCmWuRvltnddqfeY7nDLndg
+         l+2VnlKee0opYVWlyTXwDu+kBU9TVH3bcJGlqR2rzaQm69fOlQi4cyhpfcbMoLViLQGQ
+         G+4fJTE4w/jVn9PpNYxnYDescFRjMB0ni0X1N5IPZOv+gdfkTOTRHTdTAIzX9xqmX6kL
+         AN5oxZwsP+D3d8uaoCP5qEQQmOyy6qa9CbkSNYPkkI7Hz2DUwI37Eq2aO4uepMdfAVmk
+         Vwzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t8P/ijjP/27gesNs4X/cL6grouBRPOqOavueg0QY+uA=;
-        b=DREFMrdRzwBVQm4t+NCrhohiO2qCGt62tz/6NhxeXFJ25inqKb7rgxHkTLaINDuCSG
-         /GDPB6tzcKUiMKSZoswihHN/Crx3P165DgfwpcyTGTUk2HO+qS6vj90nUz3rLhUawtQa
-         tcZllEuB06I6hm2cMxLwlwl/9c6wgMW4RjQOJcGldf03dKx0JT/owZ77C3ZIHu45cO+b
-         YpxymC/2EaVFTNny7Sb08k9w1H1leS+GVizw/lKK41TJX6WDmgrluw5dgN0jp4+c77no
-         VkPXefHPy7Zw0XoqWnTpzudAjYhqj7tI6IPzrPd7ipB7T1ZXpf6lg4IQCQtCTpdLzH1B
-         M7mw==
-X-Gm-Message-State: APjAAAXArxCpwADulwmY/vu062RMZLY9GyA2iS7g0XC5DdIrkvf+iIx/
-        BXio0iAk3OiKvyfeDsgumiWGn0g=
-X-Google-Smtp-Source: APXvYqy9iJugREx3f8goDLpmfNDtq9dJm8PBNSP6HABmLLinVV5tf0JMFMHZPL/5hLUbeakQXs978g==
-X-Received: by 2002:a25:7301:: with SMTP id o1mr26374154ybc.324.1572963824560;
-        Tue, 05 Nov 2019 06:23:44 -0800 (PST)
-Received: from localhost.localdomain (50-36-163-249.alma.mi.frontiernet.net. [50.36.163.249])
-        by smtp.gmail.com with ESMTPSA id i5sm6665784ywe.110.2019.11.05.06.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 06:23:43 -0800 (PST)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: Avoid RPC delays when exiting suspend
-Date:   Tue,  5 Nov 2019 09:21:33 -0500
-Message-Id: <20191105142133.28741-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
-References: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=08WVEbhNhtnwwFfAggXo5kHnsDkJykTkYyyFy8JZdPk=;
+        b=d+Me0PV8exnUJw4BjjDrrYaS3F+/SSu5CpgOazSwm9uJOkodGjWpI+01AKUJYWcpI1
+         7CFVUgmMkANWxSh7h0edKDxCypdrmB0i+nSC0KjXdxdiCp2A30GCXaV8K3eEvzRbbUHT
+         g3woOKxb5nZs4KCeqRHpJVdX+orc5aRtSl+zlJEWsWaiiFXnfPFow5GrO7xyNq1KtLnr
+         Iy9jidhPY0i8sxYS80POIw1Ytz63zlh7FIyNIJgVsJw6zI4Tp4fjW18bjw8O3/+n9xzk
+         JHPoR0fbx5TikNV7Ffw8U2FBZTO8v3r+DKv/Ll5/I63NbcHV97yJFVmajOuRndr37DDu
+         vAkQ==
+X-Gm-Message-State: APjAAAUomorjkI2rCnbZKxhte8E8h0rJtyBD+U6QHRk5H9vc56B+a37M
+        cvIB+5Hk21l9mLzQ+0CVGNEoYy+Ry88=
+X-Google-Smtp-Source: APXvYqx+cJfy0zWrq4IIG9j90Og8qMN89GL+BvQ7qRX6dgP+VSFXrDPVIvtJZxdA64w2CRFhall4fA==
+X-Received: by 2002:a81:484d:: with SMTP id v74mr25233492ywa.448.1572968649266;
+        Tue, 05 Nov 2019 07:44:09 -0800 (PST)
+Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id l207sm13998897ywl.20.2019.11.05.07.44.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 07:44:08 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC PATCH 00/35] user xattr support (RFC8276)
+From:   Chuck Lever <chucklever@gmail.com>
+In-Reply-To: <20191104225846.GA13469@fieldses.org>
+Date:   Tue, 5 Nov 2019 10:44:06 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D1661F81-0232-4A35-B6BD-5857BF2D65A3@gmail.com>
+References: <cover.1568309119.git.fllinden@amazon.com>
+ <9CAEB69A-A92C-47D8-9871-BA6EA83E1881@gmail.com>
+ <20191024231547.GA16466@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <18D2845F-27FF-4EDF-AB8A-E6051FA03DF0@gmail.com>
+ <20191104030132.GD26578@fieldses.org>
+ <358420D8-596E-4D3B-A01C-DACB101F0017@gmail.com>
+ <20191104162147.GA31399@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <20191104225846.GA13469@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>,
+        Frank van der Linden <fllinden@amazon.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jon Hunter: "I have been tracking down another suspend/NFS related
-issue where again I am seeing random delays exiting suspend. The delays
-can be up to a couple minutes in the worst case and this is causing a
-suspend test we have to fail."
 
-Change the use of a deferrable work to a standard delayed one.
 
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- net/sunrpc/sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Nov 4, 2019, at 5:58 PM, Bruce Fields <bfields@fieldses.org> wrote:
+>=20
+> On Mon, Nov 04, 2019 at 04:21:47PM +0000, Frank van der Linden wrote:
+>> On Mon, Nov 04, 2019 at 10:36:03AM -0500, Chuck Lever wrote:
+>>>=20
+>>> Following the server's local file systems' mount options seems like =
+a
+>>> good way to go. In particular, is there a need to expose user xattrs
+>>> on the server host, but prevent NFS clients' access to them? I can't
+>>> think of one.
+>>=20
+>> Ok, that sounds fine to me - I'll remove the user_xattr export flag,
+>> and we had already agreed to do away with the CONFIGs.
+>>=20
+>> That leaves one last item with regard to enabling support: the client =
+side
+>> mount option. I assume the [no]user_xattr option should work the same =
+as
+>> with other filesystems. What about the default setting?
+>=20
+> Just checking code for other filesystems quickly; if I understand =
+right:
+>=20
+> 	- ext4 has user_xattr and nouser_xattr options, but you get a
+> 	  deprecation warning if you try to use the latter;
+> 	- xfs doesn't support either option;
+> 	- cifs supports both, with xattr support the default.
+>=20
+> Not necessarily my call, but just for simplicity's sake, I'd probably
+> leave out the option and see if anybody complains.
 
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 360afe153193..987c4b1f0b17 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_queue(struct rpc_wait_queue *queue, const c
- 	rpc_reset_waitqueue_priority(queue);
- 	queue->qlen = 0;
- 	queue->timer_list.expires = 0;
--	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
-+	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
- 	INIT_LIST_HEAD(&queue->timer_list.list);
- 	rpc_assign_waitqueue_name(queue, qname);
- }
--- 
-2.23.0
+Agree, I would leave it out to begin with. Anyone on linux-fsdevel,
+feel free to chime in here about why some other file systems have
+this mount option. History lessons welcome.
+
+
+>> Also, currently, my code does not fail the mount operation if user =
+xattrs
+>> are asked for, but the server does not support them. It just doesn't
+>> set NFS_CAP_XATTR for the server, and the xattr handler entry points
+>> eturn -EOPNOTSUPP, as they check for NFS_CAP_XATTR. What's the =
+preferred
+>> behavior there?
+>=20
+> getxattr(2) under ERRORS says:
+>=20
+> 	ENOTSUP
+> 	      Extended attributes are not supported by the filesystem,
+> 	      or  are disabled.
+>=20
+> so I'm guessing just erroring out is clearest.
+
+IMO on the client, we want getxattr failure behavior to be consistent =
+among:
+
+- A version of NFS that does not support xattrs at all (say, v3)
+
+- A version of NFS that can support them but doesn't (say, NFSv4.2 =
+before these patches)
+
+- A version of NFS that can support them, but the server doesn't
+
+- A version of NFS that can support them, a server that can support =
+them, but it's filesystem doesn't
+
+
+> I also see there's an EOPNOTSUPP return in the nouser_xattr case in
+> ext4_xattr_user_get.  (errno(3) says ENOTSUP and EOPNOTSUPP are the =
+same
+> value on Linux.)
+>=20
+> --b.
+
+--
+Chuck Lever
+chucklever@gmail.com
+
+
 
