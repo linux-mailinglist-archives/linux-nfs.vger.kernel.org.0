@@ -2,194 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD455F0232
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 17:04:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3FCF029B
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 17:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbfKEQES (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Nov 2019 11:04:18 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37868 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390117AbfKEQER (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 11:04:17 -0500
-Received: by mail-yb1-f196.google.com with SMTP id e13so2726166ybh.4
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 08:04:15 -0800 (PST)
+        id S2390116AbfKEQYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Nov 2019 11:24:14 -0500
+Received: from mail-ua1-f50.google.com ([209.85.222.50]:35510 "EHLO
+        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389934AbfKEQYN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 11:24:13 -0500
+Received: by mail-ua1-f50.google.com with SMTP id n41so6339278uae.2
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 08:24:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=CAZUPUsfMsbjmf+4MIGGOIiKXIVVntjW8JL88tNIZ5Q=;
-        b=mwwNnOJETaorHQcL4AUK6BroAVP8LpfwtIFPV7D6dDkVt4c9u0IinamlskWif8oR9R
-         odNvD7rTb6fORsaet1guB7PT+xsTeg2rP8EfquxsOgdusqqR1zSP3uOB8Ideodd/Y5oR
-         fysuYMEY6Y+DrUu3F+VI3Q4pwLruEgh+5iur7erjvCl+8FCTxwwTMCnp54AMQlWp3ene
-         h2dwpk/P+aIKgCysixbnkAVphPQb9AUpARhtGwIcS27rKKotwasN7t/k3b8+MKZZ9DMZ
-         KjbrtTmHgJqVYt1qSrPPIesltyF669QPHABS/iuvkhkdHdYWuVLU73aFFiPptK/0l1eU
-         ukKQ==
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=brKyWuiRSBbfzJIeK8v2lrMOJcTG33kGw9sssUReCKA=;
+        b=YDxIdLV1tYmRvwfwmmeVmwTI/+kx2wzydASeg+CyBHJ0/yH+zlodcW6R7mY4XgDUP1
+         2KdQkuQqPWfhIxgguN1fcYEoK0h7RE5jbVFV4a4QvMvxrq4eqBs7G88V8AuNBfHcVnnt
+         upm8gNvXY5O7ZDy51zL0Mbdxrp+MYvWkdYERi+bAG/5gp7EpmE1oDF2pZyX5GExKtOsA
+         B3oWBxWn7mAfTP0CTlbYARiAV3zSIMRPwH1cea1N5hvd81q1FMvogKiss0JYDlPbgOSV
+         5+g2sgiEmAay3xczkwpwOCiLresZBhKLd2IJZ+tp1kid+NCCp+z+yEHdO+6jtvTBMjhx
+         lpgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=CAZUPUsfMsbjmf+4MIGGOIiKXIVVntjW8JL88tNIZ5Q=;
-        b=F1p8174gd5GKai/gsY1XhXt4FESIYqCK3I8E0aorB/lcPc3qz/Bzb18Wop79baqoYG
-         BeMw0DRLvYYsDIhMUByKhmbr7xVj2XTn5ZS+zxSppLHB73iKtLBcVHsE0QXcxLvx3e/N
-         wGRD9M9jQ2UkSqbXr/d6TtC1sBM8gBzH3ayhQIVzriTi0YM+nb6ZnMxqMUDPGHw9q6af
-         ZL5w9iWYb45piFlYunKert1LpO+3z2GSblry1xLX2dH9v96P/ANVJWjgI0ty0Nmb5J0L
-         aMtMnJWDXccs9vUNzpWWfD7NG/tNbdHajZQa3PEErFcvPbZFERTL3wU4gp97CR1PW3mo
-         xMXQ==
-X-Gm-Message-State: APjAAAWpzLH4DAEIVvop9lbLIpxievv7fsjBcNotCr1fv8H3/65Mi6EM
-        2wpbihMhbBYsasgfIzWvbzvHoT6XpLU=
-X-Google-Smtp-Source: APXvYqyOGHlxsKzcedL/QaOOYbZZljoNsNRl7/2YqnhxAk/mAfbGlmheEVZseHsQjKi/3L3lQ+859A==
-X-Received: by 2002:a25:258a:: with SMTP id l132mr29180058ybl.227.1572969854681;
-        Tue, 05 Nov 2019 08:04:14 -0800 (PST)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id z196sm13378726ywz.30.2019.11.05.08.04.14
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 08:04:14 -0800 (PST)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xA5G4D1s016751
-        for <linux-nfs@vger.kernel.org>; Tue, 5 Nov 2019 16:04:13 GMT
-Subject: [PATCH RFC 2/2] NFS4: Trace lock reclaims
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Tue, 05 Nov 2019 11:04:13 -0500
-Message-ID: <20191105160413.26481.49011.stgit@manet.1015granger.net>
-In-Reply-To: <20191105160208.26481.97809.stgit@manet.1015granger.net>
-References: <20191105160208.26481.97809.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=brKyWuiRSBbfzJIeK8v2lrMOJcTG33kGw9sssUReCKA=;
+        b=Kp4p9wtBLFU8HlUVSH1vPvzAyHlPeLUv2MmqVY65HC8quXwvkgIS3RF/o7i9+BE4vq
+         dQHGZFzuI++ia1tcgPj7bjfnnYliggvcCx5UQbyd7ZTg8d66Qe2UTKn90IjubKA+uu5E
+         RH7vLV5141/PFFfuUeEHDizjwRQs5oHepDCGIVOTW9xaMM6NmM1e+EWcpv27gKqgV02T
+         QF3x0Kf/x7f3utV1Xie3if5lKasRIw1OaycO/rIwvrOnMzvZWYagE3RjO0Ft/Tw0jysI
+         mUe56Mee6lnT2b0j7fL4ymHQw2d1hL88VYyNP50BkbdfFX71r2aEbmyaGUTG/7pxUuzO
+         BzHg==
+X-Gm-Message-State: APjAAAVWDYmpP0s3dTL74WqvqyCkW8yN2MaRubT7xU1EqwBIjGD8Vk7S
+        85Cdo8MWj7jjD8PS5mjxopYAl9M37ohgdHbrYjQC3A==
+X-Google-Smtp-Source: APXvYqyV0ywNRVpowQpc8NpbO3A/B8gt6YsT2xi9Boy7+kslKT2y3LmHTyNccSpWanRc26L2iLOqoMrxt045Lbc7Rig=
+X-Received: by 2002:ab0:6044:: with SMTP id o4mr12710700ual.119.1572971052187;
+ Tue, 05 Nov 2019 08:24:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
+ <20191023171523.GA18802@fieldses.org> <b6248a82-1f1a-7329-5ee0-6e026f6db697@genome.arizona.edu>
+ <YTBPR01MB2845B12E9C59F837FE35F40DDD650@YTBPR01MB2845.CANPRD01.PROD.OUTLOOK.COM>
+ <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu> <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
+In-Reply-To: <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Tue, 5 Nov 2019 11:24:01 -0500
+Message-ID: <CAN-5tyExtO_HRGYrqq7UTObrHNsTp7UqwW=Kg4CFM3q-OnaUiQ@mail.gmail.com>
+Subject: Re: NFS hangs on one interface
+To:     Chandler <admin@genome.arizona.edu>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-One of the most frustrating messages our sustaining team sees is
-the "Lock reclaim failed!" message. Add some observability in the
-client's lock reclaim logic so we can capture better data the
-first time a problem occurs.
+It's too hard to read this tcpdump-style network trace with multiple
+nfs streams (a full .cap file would be much better) (internals of the
+packets are hidden).
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfs4_fs.h   |    2 -
- fs/nfs/nfs4state.c |    1 +
- fs/nfs/nfs4trace.h |   78 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 2 deletions(-)
+Some things that stick out. If you are doing a v4.0 mount, it
+typically would start with a SETCLIENTID. Yours starts with a
+PUTROOTFH which means you already have a 4.0 mount going to this
+server. "cat /proc/fs/nfsfs/server" would show you mounts to that
+server. If you are not expecting that you already had an existing 4.0
+mount (ie., your "mount" command doesn't show that server mounted),
+then things have gone wrong already and you have a stuck mount which
+might be interfering with further mounts.
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 16b2e5cc3e94..935bf335a3c2 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -166,9 +166,7 @@ enum {
- 	NFS_STATE_RECOVERY_FAILED,	/* OPEN stateid state recovery failed */
- 	NFS_STATE_MAY_NOTIFY_LOCK,	/* server may CB_NOTIFY_LOCK */
- 	NFS_STATE_CHANGE_WAIT,		/* A state changing operation is outstanding */
--#ifdef CONFIG_NFS_V4_2
- 	NFS_CLNT_DST_SSC_COPY_STATE,    /* dst server open state on client*/
--#endif /* CONFIG_NFS_V4_2 */
- };
- 
- struct nfs4_state {
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index b69c33c3600c..e72fbc842025 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1594,6 +1594,7 @@ static int __nfs4_reclaim_open_state(struct nfs4_state_owner *sp, struct nfs4_st
- 	if (!test_bit(NFS_DELEGATED_STATE, &state->flags)) {
- 		spin_lock(&state->state_lock);
- 		list_for_each_entry(lock, &state->lock_states, ls_locks) {
-+			trace_nfs4_state_lock_reclaim(state, lock);
- 			if (!test_bit(NFS_LOCK_INITIALIZED, &lock->ls_flags))
- 				pr_warn_ratelimited("NFS: %s: Lock reclaim failed!\n", __func__);
- 		}
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index a66af56c7eef..046ebc24ac9f 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -1057,6 +1057,84 @@
- 		)
- );
- 
-+TRACE_DEFINE_ENUM(LK_STATE_IN_USE);
-+TRACE_DEFINE_ENUM(NFS_DELEGATED_STATE);
-+TRACE_DEFINE_ENUM(NFS_OPEN_STATE);
-+TRACE_DEFINE_ENUM(NFS_O_RDONLY_STATE);
-+TRACE_DEFINE_ENUM(NFS_O_WRONLY_STATE);
-+TRACE_DEFINE_ENUM(NFS_O_RDWR_STATE);
-+TRACE_DEFINE_ENUM(NFS_STATE_RECLAIM_REBOOT);
-+TRACE_DEFINE_ENUM(NFS_STATE_RECLAIM_NOGRACE);
-+TRACE_DEFINE_ENUM(NFS_STATE_POSIX_LOCKS);
-+TRACE_DEFINE_ENUM(NFS_STATE_RECOVERY_FAILED);
-+TRACE_DEFINE_ENUM(NFS_STATE_MAY_NOTIFY_LOCK);
-+TRACE_DEFINE_ENUM(NFS_STATE_CHANGE_WAIT);
-+TRACE_DEFINE_ENUM(NFS_CLNT_DST_SSC_COPY_STATE);
-+
-+#define show_nfs4_state_flags(flags) \
-+	__print_flags(flags, "|", \
-+		{ LK_STATE_IN_USE,		"IN_USE" }, \
-+		{ NFS_DELEGATED_STATE,		"DELEGATED" }, \
-+		{ NFS_OPEN_STATE,		"OPEN" }, \
-+		{ NFS_O_RDONLY_STATE,		"O_RDONLY" }, \
-+		{ NFS_O_WRONLY_STATE,		"O_WRONLY" }, \
-+		{ NFS_O_RDWR_STATE,		"O_RDWR" }, \
-+		{ NFS_STATE_RECLAIM_REBOOT,	"RECLAIM_REBOOT" }, \
-+		{ NFS_STATE_RECLAIM_NOGRACE,	"RECLAIM_NOGRACE" }, \
-+		{ NFS_STATE_POSIX_LOCKS,	"POSIX_LOCKS" }, \
-+		{ NFS_STATE_RECOVERY_FAILED,	"RECOVERY_FAILED" }, \
-+		{ NFS_STATE_MAY_NOTIFY_LOCK,	"MAY_NOTIFY_LOCK" }, \
-+		{ NFS_STATE_CHANGE_WAIT,	"CHANGE_WAIT" }, \
-+		{ NFS_CLNT_DST_SSC_COPY_STATE,	"CLNT_DST_SSC_COPY" })
-+
-+#define show_nfs4_lock_flags(flags) \
-+	__print_flags(flags, "|", \
-+		{ BIT(NFS_LOCK_INITIALIZED),	"INITIALIZED" }, \
-+		{ BIT(NFS_LOCK_LOST),		"LOST" })
-+
-+TRACE_EVENT(nfs4_state_lock_reclaim,
-+		TP_PROTO(
-+			const struct nfs4_state *state,
-+			const struct nfs4_lock_state *lock
-+		),
-+
-+		TP_ARGS(state, lock),
-+
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(u64, fileid)
-+			__field(unsigned long, state_flags)
-+			__field(unsigned long, lock_flags)
-+			__field(int, stateid_seq)
-+			__field(u32, stateid_hash)
-+		),
-+
-+		TP_fast_assign(
-+			const struct inode *inode = state->inode;
-+
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = NFS_FILEID(inode);
-+			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-+			__entry->state_flags = state->flags;
-+			__entry->lock_flags = lock->ls_flags;
-+			__entry->stateid_seq =
-+				be32_to_cpu(state->stateid.seqid);
-+			__entry->stateid_hash =
-+				nfs_stateid_hash(&state->stateid);
-+		),
-+
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x "
-+			"stateid=%d:0x%08x state_flags=%s lock_flags=%s",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid, __entry->fhandle,
-+			__entry->stateid_seq, __entry->stateid_hash,
-+			show_nfs4_state_flags(__entry->state_flags),
-+			show_nfs4_lock_flags(__entry->lock_flags)
-+		)
-+)
-+
- DECLARE_EVENT_CLASS(nfs4_set_delegation_event,
- 		TP_PROTO(
- 			const struct inode *inode,
+Are you experiencing issues with a fresh boot ? do you have an
+ability/luxury to reboot the client machine?
 
+Your problem description is confusing. Your last network trace is
+about a failing v4.0 mount. Your initial description is talking about
+mounting with "vers=3" or "vers=2". So is the problem with a specific
+nfs version or is the problem with mounting over 10GB interface with
+any NFS versions?
+
+You can also turn on rpcdebug messages (if your client machine isn't
+getting a lot of NFS traffic) but given your trace I see multiple
+streams so you'll have to dig thru lots of output to follow your own
+NFS operations.
+
+On Mon, Nov 4, 2019 at 7:29 PM Chandler <admin@genome.arizona.edu> wrote:
+>
+> Any ideas what's going on here?
+> Thanks
