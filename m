@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85907F022E
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 17:04:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD455F0232
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 17:04:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390083AbfKEQEM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Nov 2019 11:04:12 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41091 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389934AbfKEQEM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 11:04:12 -0500
-Received: by mail-yb1-f193.google.com with SMTP id b2so9559710ybr.8
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 08:04:10 -0800 (PST)
+        id S2390116AbfKEQES (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Nov 2019 11:04:18 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37868 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390117AbfKEQER (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 11:04:17 -0500
+Received: by mail-yb1-f196.google.com with SMTP id e13so2726166ybh.4
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 08:04:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=sFkbpPlfmQs3dTxZIAP+NR8cTrWo+MNga0gaYtRnRhI=;
-        b=ntlJ2iwC8L3YYfEjXwG87AL9UCMqkS9Qn5Ad2bBfT9zTFdS5GgbGcNvF8a3X9Xae6T
-         4Ppq7k9u3OihFY7U2s7ApGViuDwP6gbuyy1muufY2flaO4eKTVf3hfYYnGTnK7ua9rhh
-         5nLKBZ/RX/p3Fj3zDdpVWP1QmR+6xGyG+2Xu2BxLbvBgzp5mvH2KEmm2OflHOhV9mP6X
-         cPOqjQbLBfagsi3OMplmuNE+dg6QBF3I0rP6ces7nGUy4PZ0EAhE3vBHYW3INjQWSb0H
-         UlhMJe/qUrnoc4NueCF3BIkRTFWZP+qJRvxzFXF0lGu9edReMX/odXj0TVywZGe08WUP
-         9sqA==
+        bh=CAZUPUsfMsbjmf+4MIGGOIiKXIVVntjW8JL88tNIZ5Q=;
+        b=mwwNnOJETaorHQcL4AUK6BroAVP8LpfwtIFPV7D6dDkVt4c9u0IinamlskWif8oR9R
+         odNvD7rTb6fORsaet1guB7PT+xsTeg2rP8EfquxsOgdusqqR1zSP3uOB8Ideodd/Y5oR
+         fysuYMEY6Y+DrUu3F+VI3Q4pwLruEgh+5iur7erjvCl+8FCTxwwTMCnp54AMQlWp3ene
+         h2dwpk/P+aIKgCysixbnkAVphPQb9AUpARhtGwIcS27rKKotwasN7t/k3b8+MKZZ9DMZ
+         KjbrtTmHgJqVYt1qSrPPIesltyF669QPHABS/iuvkhkdHdYWuVLU73aFFiPptK/0l1eU
+         ukKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=sFkbpPlfmQs3dTxZIAP+NR8cTrWo+MNga0gaYtRnRhI=;
-        b=ZLMvbyRiYiU7zUosi85s0arvVGlplxwaDTDws6eJYDrE9rxdW0h04wvzRWJ3JPJPNO
-         y8jBa/3BBict9HPyNSHPyueJvORNApgcpICiD++xtyW0DWzISqfZ5u1NceYzfu76Ixn/
-         Zgbxbw5G+ykYCsoSw5QM+AeqFdfqRaSiLAWlxmXQ+H8d2rmn+10/QJbgqguQyFmDWFym
-         QuiB/aoGf2kFh0eo811eHkpcqvnvlDWMC4zFdI6lZKz3Xi4Ou2YAmdVC6AXqS0uut7yb
-         i/zKIdMHawox9GBFkfD/VetMxBOT0aK4o47EqA9iN0ipUHQZy3zryn5S6ivL1Keuxt2/
-         pppA==
-X-Gm-Message-State: APjAAAVlmHXrpM8aTCEFgjQeMdR+YHA3NBdcdWKIETvptKibACtnidsj
-        9C6JtOdso7oFYDNd1bqucLbxVlmaVf8=
-X-Google-Smtp-Source: APXvYqzvNcZOMbrK6MDPZGL0D+6KDfmlv0UKXzsdwjtOceAFfT9g92cVlimfABNfkYSMs1gGwjbeYw==
-X-Received: by 2002:a25:ca0c:: with SMTP id a12mr27811499ybg.201.1572969849098;
-        Tue, 05 Nov 2019 08:04:09 -0800 (PST)
+        bh=CAZUPUsfMsbjmf+4MIGGOIiKXIVVntjW8JL88tNIZ5Q=;
+        b=F1p8174gd5GKai/gsY1XhXt4FESIYqCK3I8E0aorB/lcPc3qz/Bzb18Wop79baqoYG
+         BeMw0DRLvYYsDIhMUByKhmbr7xVj2XTn5ZS+zxSppLHB73iKtLBcVHsE0QXcxLvx3e/N
+         wGRD9M9jQ2UkSqbXr/d6TtC1sBM8gBzH3ayhQIVzriTi0YM+nb6ZnMxqMUDPGHw9q6af
+         ZL5w9iWYb45piFlYunKert1LpO+3z2GSblry1xLX2dH9v96P/ANVJWjgI0ty0Nmb5J0L
+         aMtMnJWDXccs9vUNzpWWfD7NG/tNbdHajZQa3PEErFcvPbZFERTL3wU4gp97CR1PW3mo
+         xMXQ==
+X-Gm-Message-State: APjAAAWpzLH4DAEIVvop9lbLIpxievv7fsjBcNotCr1fv8H3/65Mi6EM
+        2wpbihMhbBYsasgfIzWvbzvHoT6XpLU=
+X-Google-Smtp-Source: APXvYqyOGHlxsKzcedL/QaOOYbZZljoNsNRl7/2YqnhxAk/mAfbGlmheEVZseHsQjKi/3L3lQ+859A==
+X-Received: by 2002:a25:258a:: with SMTP id l132mr29180058ybl.227.1572969854681;
+        Tue, 05 Nov 2019 08:04:14 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id w133sm7930949ywa.25.2019.11.05.08.04.08
+        by smtp.gmail.com with ESMTPSA id z196sm13378726ywz.30.2019.11.05.08.04.14
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 08:04:08 -0800 (PST)
+        Tue, 05 Nov 2019 08:04:14 -0800 (PST)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xA5G47wR016748
-        for <linux-nfs@vger.kernel.org>; Tue, 5 Nov 2019 16:04:07 GMT
-Subject: [PATCH RFC 1/2] NFS4: Trace state recovery operation
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xA5G4D1s016751
+        for <linux-nfs@vger.kernel.org>; Tue, 5 Nov 2019 16:04:13 GMT
+Subject: [PATCH RFC 2/2] NFS4: Trace lock reclaims
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 05 Nov 2019 11:04:07 -0500
-Message-ID: <20191105160407.26481.79496.stgit@manet.1015granger.net>
+Date:   Tue, 05 Nov 2019 11:04:13 -0500
+Message-ID: <20191105160413.26481.49011.stgit@manet.1015granger.net>
 In-Reply-To: <20191105160208.26481.97809.stgit@manet.1015granger.net>
 References: <20191105160208.26481.97809.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -65,145 +65,131 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a trace point in the main state manager loop to observe state
-recovery operation. Help track down state recovery bugs.
+One of the most frustrating messages our sustaining team sees is
+the "Lock reclaim failed!" message. Add some observability in the
+client's lock reclaim logic so we can capture better data the
+first time a problem occurs.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfs4state.c |    3 ++
- fs/nfs/nfs4trace.h |   93 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+ fs/nfs/nfs4_fs.h   |    2 -
+ fs/nfs/nfs4state.c |    1 +
+ fs/nfs/nfs4trace.h |   78 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 79 insertions(+), 2 deletions(-)
 
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5cc3e94..935bf335a3c2 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -166,9 +166,7 @@ enum {
+ 	NFS_STATE_RECOVERY_FAILED,	/* OPEN stateid state recovery failed */
+ 	NFS_STATE_MAY_NOTIFY_LOCK,	/* server may CB_NOTIFY_LOCK */
+ 	NFS_STATE_CHANGE_WAIT,		/* A state changing operation is outstanding */
+-#ifdef CONFIG_NFS_V4_2
+ 	NFS_CLNT_DST_SSC_COPY_STATE,    /* dst server open state on client*/
+-#endif /* CONFIG_NFS_V4_2 */
+ };
+ 
+ struct nfs4_state {
 diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 0c6d53dc3672..b69c33c3600c 100644
+index b69c33c3600c..e72fbc842025 100644
 --- a/fs/nfs/nfs4state.c
 +++ b/fs/nfs/nfs4state.c
-@@ -60,6 +60,7 @@
- #include "nfs4session.h"
- #include "pnfs.h"
- #include "netns.h"
-+#include "nfs4trace.h"
- 
- #define NFSDBG_FACILITY		NFSDBG_STATE
- 
-@@ -2508,6 +2509,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 
- 	/* Ensure exclusive access to NFSv4 state */
- 	do {
-+		trace_nfs4_state_mgr(clp);
- 		clear_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
- 		if (test_bit(NFS4CLNT_PURGE_STATE, &clp->cl_state)) {
- 			section = "purge state";
-@@ -2621,6 +2623,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
- out_error:
- 	if (strlen(section))
- 		section_sep = ": ";
-+	trace_nfs4_state_mgr_failed(clp, section, status);
- 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
- 			" with error %d\n", section_sep, section,
- 			clp->cl_hostname, -status);
+@@ -1594,6 +1594,7 @@ static int __nfs4_reclaim_open_state(struct nfs4_state_owner *sp, struct nfs4_st
+ 	if (!test_bit(NFS_DELEGATED_STATE, &state->flags)) {
+ 		spin_lock(&state->state_lock);
+ 		list_for_each_entry(lock, &state->lock_states, ls_locks) {
++			trace_nfs4_state_lock_reclaim(state, lock);
+ 			if (!test_bit(NFS_LOCK_INITIALIZED, &lock->ls_flags))
+ 				pr_warn_ratelimited("NFS: %s: Lock reclaim failed!\n", __func__);
+ 		}
 diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index b86f3f567bd0..a66af56c7eef 100644
+index a66af56c7eef..046ebc24ac9f 100644
 --- a/fs/nfs/nfs4trace.h
 +++ b/fs/nfs/nfs4trace.h
-@@ -562,6 +562,99 @@
+@@ -1057,6 +1057,84 @@
  		)
  );
  
-+TRACE_DEFINE_ENUM(NFS4CLNT_MANAGER_RUNNING);
-+TRACE_DEFINE_ENUM(NFS4CLNT_CHECK_LEASE);
-+TRACE_DEFINE_ENUM(NFS4CLNT_LEASE_EXPIRED);
-+TRACE_DEFINE_ENUM(NFS4CLNT_RECLAIM_REBOOT);
-+TRACE_DEFINE_ENUM(NFS4CLNT_RECLAIM_NOGRACE);
-+TRACE_DEFINE_ENUM(NFS4CLNT_DELEGRETURN);
-+TRACE_DEFINE_ENUM(NFS4CLNT_SESSION_RESET);
-+TRACE_DEFINE_ENUM(NFS4CLNT_LEASE_CONFIRM);
-+TRACE_DEFINE_ENUM(NFS4CLNT_SERVER_SCOPE_MISMATCH);
-+TRACE_DEFINE_ENUM(NFS4CLNT_PURGE_STATE);
-+TRACE_DEFINE_ENUM(NFS4CLNT_BIND_CONN_TO_SESSION);
-+TRACE_DEFINE_ENUM(NFS4CLNT_MOVED);
-+TRACE_DEFINE_ENUM(NFS4CLNT_LEASE_MOVED);
-+TRACE_DEFINE_ENUM(NFS4CLNT_DELEGATION_EXPIRED);
-+TRACE_DEFINE_ENUM(NFS4CLNT_RUN_MANAGER);
-+TRACE_DEFINE_ENUM(NFS4CLNT_DELEGRETURN_RUNNING);
++TRACE_DEFINE_ENUM(LK_STATE_IN_USE);
++TRACE_DEFINE_ENUM(NFS_DELEGATED_STATE);
++TRACE_DEFINE_ENUM(NFS_OPEN_STATE);
++TRACE_DEFINE_ENUM(NFS_O_RDONLY_STATE);
++TRACE_DEFINE_ENUM(NFS_O_WRONLY_STATE);
++TRACE_DEFINE_ENUM(NFS_O_RDWR_STATE);
++TRACE_DEFINE_ENUM(NFS_STATE_RECLAIM_REBOOT);
++TRACE_DEFINE_ENUM(NFS_STATE_RECLAIM_NOGRACE);
++TRACE_DEFINE_ENUM(NFS_STATE_POSIX_LOCKS);
++TRACE_DEFINE_ENUM(NFS_STATE_RECOVERY_FAILED);
++TRACE_DEFINE_ENUM(NFS_STATE_MAY_NOTIFY_LOCK);
++TRACE_DEFINE_ENUM(NFS_STATE_CHANGE_WAIT);
++TRACE_DEFINE_ENUM(NFS_CLNT_DST_SSC_COPY_STATE);
 +
-+#define show_nfs4_clp_state(state) \
-+	__print_flags(state, "|", \
-+		{ NFS4CLNT_MANAGER_RUNNING,	"MANAGER_RUNNING" }, \
-+		{ NFS4CLNT_CHECK_LEASE,		"CHECK_LEASE" }, \
-+		{ NFS4CLNT_LEASE_EXPIRED,	"LEASE_EXPIRED" }, \
-+		{ NFS4CLNT_RECLAIM_REBOOT,	"RECLAIM_REBOOT" }, \
-+		{ NFS4CLNT_RECLAIM_NOGRACE,	"RECLAIM_NOGRACE" }, \
-+		{ NFS4CLNT_DELEGRETURN,		"DELEGRETURN" }, \
-+		{ NFS4CLNT_SESSION_RESET,	"SESSION_RESET" }, \
-+		{ NFS4CLNT_LEASE_CONFIRM,	"LEASE_CONFIRM" }, \
-+		{ NFS4CLNT_SERVER_SCOPE_MISMATCH, \
-+						"SERVER_SCOPE_MISMATCH" }, \
-+		{ NFS4CLNT_PURGE_STATE,		"PURGE_STATE" }, \
-+		{ NFS4CLNT_BIND_CONN_TO_SESSION, \
-+						"BIND_CONN_TO_SESSION" }, \
-+		{ NFS4CLNT_MOVED,		"MOVED" }, \
-+		{ NFS4CLNT_LEASE_MOVED,		"LEASE_MOVED" }, \
-+		{ NFS4CLNT_DELEGATION_EXPIRED,	"DELEGATION_EXPIRED" }, \
-+		{ NFS4CLNT_RUN_MANAGER,		"RUN_MANAGER" }, \
-+		{ NFS4CLNT_DELEGRETURN_RUNNING,	"DELEGRETURN_RUNNING" })
++#define show_nfs4_state_flags(flags) \
++	__print_flags(flags, "|", \
++		{ LK_STATE_IN_USE,		"IN_USE" }, \
++		{ NFS_DELEGATED_STATE,		"DELEGATED" }, \
++		{ NFS_OPEN_STATE,		"OPEN" }, \
++		{ NFS_O_RDONLY_STATE,		"O_RDONLY" }, \
++		{ NFS_O_WRONLY_STATE,		"O_WRONLY" }, \
++		{ NFS_O_RDWR_STATE,		"O_RDWR" }, \
++		{ NFS_STATE_RECLAIM_REBOOT,	"RECLAIM_REBOOT" }, \
++		{ NFS_STATE_RECLAIM_NOGRACE,	"RECLAIM_NOGRACE" }, \
++		{ NFS_STATE_POSIX_LOCKS,	"POSIX_LOCKS" }, \
++		{ NFS_STATE_RECOVERY_FAILED,	"RECOVERY_FAILED" }, \
++		{ NFS_STATE_MAY_NOTIFY_LOCK,	"MAY_NOTIFY_LOCK" }, \
++		{ NFS_STATE_CHANGE_WAIT,	"CHANGE_WAIT" }, \
++		{ NFS_CLNT_DST_SSC_COPY_STATE,	"CLNT_DST_SSC_COPY" })
 +
-+TRACE_EVENT(nfs4_state_mgr,
++#define show_nfs4_lock_flags(flags) \
++	__print_flags(flags, "|", \
++		{ BIT(NFS_LOCK_INITIALIZED),	"INITIALIZED" }, \
++		{ BIT(NFS_LOCK_LOST),		"LOST" })
++
++TRACE_EVENT(nfs4_state_lock_reclaim,
 +		TP_PROTO(
-+			const struct nfs_client *clp
++			const struct nfs4_state *state,
++			const struct nfs4_lock_state *lock
 +		),
 +
-+		TP_ARGS(clp),
++		TP_ARGS(state, lock),
 +
 +		TP_STRUCT__entry(
-+			__field(unsigned long, state)
-+			__string(hostname, clp->cl_hostname)
++			__field(dev_t, dev)
++			__field(u32, fhandle)
++			__field(u64, fileid)
++			__field(unsigned long, state_flags)
++			__field(unsigned long, lock_flags)
++			__field(int, stateid_seq)
++			__field(u32, stateid_hash)
 +		),
 +
 +		TP_fast_assign(
-+			__entry->state = clp->cl_state;
-+			__assign_str(hostname, clp->cl_hostname)
++			const struct inode *inode = state->inode;
++
++			__entry->dev = inode->i_sb->s_dev;
++			__entry->fileid = NFS_FILEID(inode);
++			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
++			__entry->state_flags = state->flags;
++			__entry->lock_flags = lock->ls_flags;
++			__entry->stateid_seq =
++				be32_to_cpu(state->stateid.seqid);
++			__entry->stateid_hash =
++				nfs_stateid_hash(&state->stateid);
 +		),
 +
 +		TP_printk(
-+			"hostname=%s clp state=%s", __get_str(hostname),
-+			show_nfs4_clp_state(__entry->state)
++			"fileid=%02x:%02x:%llu fhandle=0x%08x "
++			"stateid=%d:0x%08x state_flags=%s lock_flags=%s",
++			MAJOR(__entry->dev), MINOR(__entry->dev),
++			(unsigned long long)__entry->fileid, __entry->fhandle,
++			__entry->stateid_seq, __entry->stateid_hash,
++			show_nfs4_state_flags(__entry->state_flags),
++			show_nfs4_lock_flags(__entry->lock_flags)
 +		)
 +)
 +
-+TRACE_EVENT(nfs4_state_mgr_failed,
-+		TP_PROTO(
-+			const struct nfs_client *clp,
-+			const char *section,
-+			int status
-+		),
-+
-+		TP_ARGS(clp, section, status),
-+
-+		TP_STRUCT__entry(
-+			__field(unsigned long, error)
-+			__field(unsigned long, state)
-+			__string(hostname, clp->cl_hostname)
-+			__string(section, section)
-+		),
-+
-+		TP_fast_assign(
-+			__entry->error = status;
-+			__entry->state = clp->cl_state;
-+			__assign_str(hostname, clp->cl_hostname);
-+			__assign_str(section, section);
-+		),
-+
-+		TP_printk(
-+			"hostname=%s clp state=%s error=%ld (%s) section=%s",
-+			__get_str(hostname),
-+			show_nfs4_clp_state(__entry->state), -__entry->error,
-+			show_nfsv4_errors(__entry->error), __get_str(section)
-+
-+		)
-+)
-+
- TRACE_EVENT(nfs4_xdr_status,
+ DECLARE_EVENT_CLASS(nfs4_set_delegation_event,
  		TP_PROTO(
- 			const struct xdr_stream *xdr,
+ 			const struct inode *inode,
 
