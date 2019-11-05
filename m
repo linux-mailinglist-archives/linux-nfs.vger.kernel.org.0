@@ -2,113 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86208EF1A6
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 01:06:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DECF1EF1F2
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 01:29:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfKEAGY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Nov 2019 19:06:24 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:41368 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfKEAGX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Nov 2019 19:06:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1572912382; x=1604448382;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wHCb0DOmdBzYoKDMkMD9QuuVs7vQesj/JneQ/kip5P0=;
-  b=cJ3AIfAzMC61+Ffp4ks5MVXmYsrbl++/DFXL/TAcorACzR2wqwSM9VXx
-   NIyov8pEKZtrRtqN4bgP/yXwTJ7QfhKhuccbpY+W4Mob0jgWFEAVEOd4A
-   dUtIwOuJQbkrhHivFa7/Q+rfAUjKzoerBojmAu9091ZH/wvlyyWq08E5y
-   Y=;
-IronPort-SDR: QprfF84xfmk4eZzeW+mz6/8I8dCVQESW9VHPlMivnWoT6AiljdD092VXBuaIiFbW7mz7WoN9xV
- wDAktcRJ3Q0w==
-X-IronPort-AV: E=Sophos;i="5.68,268,1569283200"; 
-   d="scan'208";a="4107701"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Nov 2019 00:06:13 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 9DDD9A17C0;
-        Tue,  5 Nov 2019 00:06:12 +0000 (UTC)
-Received: from EX13D11UEE002.ant.amazon.com (10.43.62.113) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 5 Nov 2019 00:06:12 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
- EX13D11UEE002.ant.amazon.com (10.43.62.113) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 5 Nov 2019 00:06:11 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Tue, 5 Nov 2019 00:06:11 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id B0006C8354; Tue,  5 Nov 2019 00:06:11 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 00:06:11 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Chuck Lever <chucklever@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH 00/35] user xattr support (RFC8276)
-Message-ID: <20191105000352.GA24610@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <cover.1568309119.git.fllinden@amazon.com>
- <9CAEB69A-A92C-47D8-9871-BA6EA83E1881@gmail.com>
- <20191024231547.GA16466@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <18D2845F-27FF-4EDF-AB8A-E6051FA03DF0@gmail.com>
- <20191104030132.GD26578@fieldses.org>
- <358420D8-596E-4D3B-A01C-DACB101F0017@gmail.com>
- <20191104162147.GA31399@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <20191104225846.GA13469@fieldses.org>
+        id S1729368AbfKEA3B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Nov 2019 19:29:01 -0500
+Received: from mails1n1-route0.email.arizona.edu ([128.196.130.51]:29165 "EHLO
+        mails1n1-route0.email.arizona.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729137AbfKEA3A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Nov 2019 19:29:00 -0500
+IronPort-SDR: G3dfooumYZ4ise0pIpLXivRKFJwc9vMWCCaDFyTQfiqDC6y2j8aImBaItKQJ5SWl60XXJEYXsK
+ PaCopOyoOARg==
+IronPort-PHdr: =?us-ascii?q?9a23=3AphfUsROE44wgzAkd/bMl6mtUPXoX/o7sNwtQ0K?=
+ =?us-ascii?q?IMzox0LfvyrarrMEGX3/hxlliBBdydt6sfzbOP7+u6ASQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+Ngi6oRjeu8UZn4duNrs6xw?=
+ =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
+ =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
+ =?us-ascii?q?mu87tnRRn1gyoBKjU38nzYitZogaxGoByvuRJ/zY3abo6aNvVxYqzTcMgGRW?=
+ =?us-ascii?q?dDRMtdSzBNDp++YoYJEuEPPfxYr474p1YWsxa+BROjBOXyxT9MmHD2x7Ax3u?=
+ =?us-ascii?q?M7Hg7b2QwgHtQOvW/brNrrMqcSVuW1w7fSwTrZdfNW2Db86I/Och87u/2DQ6?=
+ =?us-ascii?q?9/cdfIxEQpCgjLjU2QpJT4Mz+L1ekBqXWX4u5hWO61lmIqpAV8riKxysoihY?=
+ =?us-ascii?q?TEgJ8exEre+iVj2ok1IMW1SEt8YdG5DpRdrzqaN45qQsM6RGFopTo6xqUGuZ?=
+ =?us-ascii?q?GleCgKz4wqyBrCZ/CZcIWE+A/vWeKQLDtimX5od7ayiwys/UWuxeDzUNG40F?=
+ =?us-ascii?q?dMriVbjtnBrm0B2wLQ58SdV/dw+kas1SyS2w3c7uxIO144mKTUJpI5x74/jJ?=
+ =?us-ascii?q?sTsUDNHi/sn0X2ibebeV859eit6uTnZK7rppCCOI9yjQH+N7ohltalDuQiMw?=
+ =?us-ascii?q?gPXm+b+eKm27H540L2XahKguUskqbFqJDaOdgbpqmhDg9R04Yj7Qu/Dji/3N?=
+ =?us-ascii?q?Qek3kHN0lIeAyIj4f3IVHCOvP4Aumlg1Sqjjhrw+rKPrr7ApXCfTD/l+Kreb?=
+ =?us-ascii?q?d79l4ZzgQo5c5Q6ogSCbwbJv/3HEjru5aQWhs4NRGkhuDpE/1j2Y4EH2GCGK?=
+ =?us-ascii?q?mUNOXVq1Detcw1JOzZT48cvjr5JuJts/fiiH4/sVAQe66s0N0ecnGqGfJvZU?=
+ =?us-ascii?q?iVfCy/0Z86DW4Ws19mH6TRg1qYXGsLag=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A5DAAvwcBd/+qVxIBmHgFDDIFXg18?=
+ =?us-ascii?q?gEoRTiQOFGpJdg0yHbxIBCAEBAQ4TGQECAQGEQAKEMjgTAgMLAQEBBAEBAQE?=
+ =?us-ascii?q?BBQICAWyEa01NARABgWcignUGGQoVUQgDDQ0CJgICVwaDNYJTJbBYgTIaiDo?=
+ =?us-ascii?q?fCYFVgQ4oAYc5hHF4gQeBOAyCXz6HVYJeBIE5iGKMH0SWdB+CD4EYBV+TNAY?=
+ =?us-ascii?q?bgiwBghKJdQOLLo5CmX+BaSKBWE0lE4FZgU9PkhEhgTUIARUIEgEKAYgDhSQ?=
+ =?us-ascii?q?BAQ?=
+X-IPAS-Result: =?us-ascii?q?A2A5DAAvwcBd/+qVxIBmHgFDDIFXg18gEoRTiQOFGpJdg?=
+ =?us-ascii?q?0yHbxIBCAEBAQ4TGQECAQGEQAKEMjgTAgMLAQEBBAEBAQEBBQICAWyEa01NA?=
+ =?us-ascii?q?RABgWcignUGGQoVUQgDDQ0CJgICVwaDNYJTJbBYgTIaiDofCYFVgQ4oAYc5h?=
+ =?us-ascii?q?HF4gQeBOAyCXz6HVYJeBIE5iGKMH0SWdB+CD4EYBV+TNAYbgiwBghKJdQOLL?=
+ =?us-ascii?q?o5CmX+BaSKBWE0lE4FZgU9PkhEhgTUIARUIEgEKAYgDhSQBAQ?=
+X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
+   d="scan'208";a="433351748"
+Received: from unknown (HELO [128.196.149.234]) ([128.196.149.234])
+  by mails1n1out.email.arizona.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 17:28:59 -0700
+Subject: Re: NFS hangs on one interface
+From:   Chandler <admin@genome.arizona.edu>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
+ <20191023171523.GA18802@fieldses.org>
+ <b6248a82-1f1a-7329-5ee0-6e026f6db697@genome.arizona.edu>
+ <YTBPR01MB2845B12E9C59F837FE35F40DDD650@YTBPR01MB2845.CANPRD01.PROD.OUTLOOK.COM>
+ <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu>
+Openpgp: preference=signencrypt
+Message-ID: <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
+Date:   Mon, 4 Nov 2019 17:28:58 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191104225846.GA13469@fieldses.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:58:46PM -0500, Bruce Fields wrote:
-> Just checking code for other filesystems quickly; if I understand right:
-> 
-> 	- ext4 has user_xattr and nouser_xattr options, but you get a
-> 	  deprecation warning if you try to use the latter;
-> 	- xfs doesn't support either option;
-> 	- cifs supports both, with xattr support the default.
-> 
-> Not necessarily my call, but just for simplicity's sake, I'd probably
-> leave out the option and see if anybody complains.
-
-Sounds good, I'll go with that.
-> 
-> > Also, currently, my code does not fail the mount operation if user xattrs
-> > are asked for, but the server does not support them. It just doesn't
-> > set NFS_CAP_XATTR for the server, and the xattr handler entry points
-> > eturn -EOPNOTSUPP, as they check for NFS_CAP_XATTR. What's the preferred
-> > behavior there?
-> 
-> getxattr(2) under ERRORS says:
-> 
-> 	ENOTSUP
-> 	      Extended attributes are not supported by the filesystem,
-> 	      or  are disabled.
-> 
-> so I'm guessing just erroring out is clearest.
-> 
-> I also see there's an EOPNOTSUPP return in the nouser_xattr case in
-> ext4_xattr_user_get.  (errno(3) says ENOTSUP and EOPNOTSUPP are the same
-> value on Linux.)
-
-Sure. So, to recap, here's what I'll do:
-
-* Remove the CONFIG options - enable the code by default.
-* Server side:
-	* Remove the export file option to not export extended attributes
-* Client side:
-	* Always probe user xattr support, and use it when available
-	  (returning EOPNOTSUPP, as expected, for all xattr syscalls if
-	   it is not available).
-
-Thanks for the feedback so far - much appreciated. I'll submit the separate
-client and server patch sets this week.
-
-- Frank
+Any ideas what's going on here?
+Thanks
