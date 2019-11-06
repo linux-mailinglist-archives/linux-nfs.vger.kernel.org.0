@@ -2,92 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE96F0E6B
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2019 06:37:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 823DFF14C4
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2019 12:15:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbfKFFhe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Nov 2019 00:37:34 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45413 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfKFFhe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Nov 2019 00:37:34 -0500
-Received: by mail-io1-f66.google.com with SMTP id s17so25597256iol.12;
-        Tue, 05 Nov 2019 21:37:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
-        b=eIhxf6+YBKxXXanCrpjy9m6LcWa7mOKSyqdsrTDJFCwvUSKKeqJU/L8V0n/6F3agP3
-         HqRUiotx5g/K6NiA2pddwtPSSeemhplxj00BKjVuVleZZWwL8ZRJJhuvQEXjqdyMfwa5
-         7rjxE996A5N2goi8Q5tFBNHeEvFnQF7XzzGqZonA2yNoSoKcPcCrblu8RdXbF1kGgji8
-         jyEPs0bNsGUCHolkdb67Levt7xX8tSBpcCSTS2ZLeK0qO1tivwUmFSZ9UTVLh7fA0vPp
-         RLxKcnvBff5fqT/fkDOQRhGYW9THwF0NMb+CN/ePAIV0zd7toKnAXpv2FghzW/U2WPPO
-         iaDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
-        b=IFV7bJoOFoWwyNxyosAd2Kg/gQrWvo0HCXE8MgdO1v78aPiO8KY0fCdtgvmhNvDaUF
-         w+sCPzXnlAn4uTBbrxd4Xeu7VR8DQNNCehrIjnNHn+6vbkG3oF1aGUqOiBVhljTSmH14
-         VfITP81lZt/4cltpn9XgHXf1u95SG3+bIYuGFjHK7VW+Ha85JAi9Q1hr/srTvkIoF946
-         E+k2W6X780N8ut33JglD0k4kH8O4u6jLJ7ZPPro0PjqEk2GoGVYdg8AbYPEq/ZixXfTg
-         STehUAXKQhCK1KwoyY2dgYeM6xDDE2bk/6YB/BCGvw6+UuvmhgkrLHCgYprYLgYRx7XW
-         WJLA==
-X-Gm-Message-State: APjAAAUos+hOwEK62sqg4tTuQAVZjrqSlKGevynT9MHaU5iRsObxTtBI
-        5bi1mLjmdU829Og23HsiplR+Njocmh0gpqXCENKL3g==
-X-Google-Smtp-Source: APXvYqzv1ZnOAK1rEr6ulQ1qi0lC4bdrx7fbrkHaMMOiwYG3QZDrvYhJvFAjURZg3OzoSr8i0tnquTbI5EU4fUTlqjg=
-X-Received: by 2002:a5e:9706:: with SMTP id w6mr2508377ioj.252.1573018652955;
- Tue, 05 Nov 2019 21:37:32 -0800 (PST)
+        id S1727391AbfKFLPF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Nov 2019 06:15:05 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18234 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfKFLPF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Nov 2019 06:15:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc2ab3b0000>; Wed, 06 Nov 2019 03:15:07 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 06 Nov 2019 03:15:05 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 06 Nov 2019 03:15:05 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Nov
+ 2019 11:15:03 +0000
+Subject: Re: [PATCH] SUNRPC: Avoid RPC delays when exiting suspend
+To:     Trond Myklebust <trondmy@gmail.com>
+CC:     <linux-nfs@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
+ <20191105142133.28741-1-trond.myklebust@hammerspace.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <3f536791-dbd1-cc9a-c88a-ddc26dd57c00@nvidia.com>
+Date:   Wed, 6 Nov 2019 11:15:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 5 Nov 2019 23:37:22 -0600
-Message-ID: <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191105142133.28741-1-trond.myklebust@hammerspace.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573038907; bh=aU4BFCTKtdYxbt1HsDsxLzOmT9xxsqov2Vc3M/YNja4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NjjXEVo6X7SZi8UgPF1ysH7veK4bLdMkCGKvKjya1AZ/Qu+oHZ8D1VgpHh0b81pgo
+         qu7JJGSaq47Y5NToVVDC0zZbWQwEJzmLCd6yuJLEUsgJ0MKcO+IjCU0yLbGKkxWLSs
+         Hv3zdCNuTcaGee/FmvF2ZIHmkAribiv0AUEjnrXmIo3tlhPF0d10OFErrCW2oqOVKG
+         Z7W7o3LkmdYwyhjB7Iian/Gr32u+Drsim9VxlDKPbcorSQICZFAR9T2fcLcEXq69Fr
+         9I5hUSdF4dxnQ4+/t0uVRb6/JuVKqtS2sGkl/nxgFBEmFBzoH42nDaX6IkLuSX8AJM
+         83vHncpJEdzgA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Would you please review this patch?
 
-On Thu, Sep 19, 2019 at 7:22 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> In nfs4_try_migration, if nfs4_begin_drain_session fails the allocated
-> memory should be released.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+On 05/11/2019 14:21, Trond Myklebust wrote:
+> Jon Hunter: "I have been tracking down another suspend/NFS related
+> issue where again I am seeing random delays exiting suspend. The delays
+> can be up to a couple minutes in the worst case and this is causing a
+> suspend test we have to fail."
+> 
+> Change the use of a deferrable work to a standard delayed one.
+> 
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/nfs4state.c | 2 +-
+>  net/sunrpc/sched.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index cad4e064b328..124649f12067 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -2096,7 +2096,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
->
->         status = nfs4_begin_drain_session(clp);
->         if (status != 0)
-> -               return status;
-> +               goto out;
->
->         status = nfs4_replace_transport(server, locations);
->         if (status != 0) {
-> --
-> 2.17.1
->
+> 
+> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+> index 360afe153193..987c4b1f0b17 100644
+> --- a/net/sunrpc/sched.c
+> +++ b/net/sunrpc/sched.c
+> @@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_queue(struct rpc_wait_queue *queue, const c
+>  	rpc_reset_waitqueue_priority(queue);
+>  	queue->qlen = 0;
+>  	queue->timer_list.expires = 0;
+> -	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
+> +	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
+>  	INIT_LIST_HEAD(&queue->timer_list.list);
+>  	rpc_assign_waitqueue_name(queue, qname);
+>  }
 
+Thanks!
+
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
 
 -- 
-Navid.
+nvpublic
