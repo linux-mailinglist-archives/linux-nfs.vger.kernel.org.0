@@ -2,90 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3FCF029B
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2019 17:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE96F0E6B
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2019 06:37:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbfKEQYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Nov 2019 11:24:14 -0500
-Received: from mail-ua1-f50.google.com ([209.85.222.50]:35510 "EHLO
-        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389934AbfKEQYN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Nov 2019 11:24:13 -0500
-Received: by mail-ua1-f50.google.com with SMTP id n41so6339278uae.2
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2019 08:24:13 -0800 (PST)
+        id S1725790AbfKFFhe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Nov 2019 00:37:34 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45413 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfKFFhe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Nov 2019 00:37:34 -0500
+Received: by mail-io1-f66.google.com with SMTP id s17so25597256iol.12;
+        Tue, 05 Nov 2019 21:37:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=brKyWuiRSBbfzJIeK8v2lrMOJcTG33kGw9sssUReCKA=;
-        b=YDxIdLV1tYmRvwfwmmeVmwTI/+kx2wzydASeg+CyBHJ0/yH+zlodcW6R7mY4XgDUP1
-         2KdQkuQqPWfhIxgguN1fcYEoK0h7RE5jbVFV4a4QvMvxrq4eqBs7G88V8AuNBfHcVnnt
-         upm8gNvXY5O7ZDy51zL0Mbdxrp+MYvWkdYERi+bAG/5gp7EpmE1oDF2pZyX5GExKtOsA
-         B3oWBxWn7mAfTP0CTlbYARiAV3zSIMRPwH1cea1N5hvd81q1FMvogKiss0JYDlPbgOSV
-         5+g2sgiEmAay3xczkwpwOCiLresZBhKLd2IJZ+tp1kid+NCCp+z+yEHdO+6jtvTBMjhx
-         lpgQ==
+        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
+        b=eIhxf6+YBKxXXanCrpjy9m6LcWa7mOKSyqdsrTDJFCwvUSKKeqJU/L8V0n/6F3agP3
+         HqRUiotx5g/K6NiA2pddwtPSSeemhplxj00BKjVuVleZZWwL8ZRJJhuvQEXjqdyMfwa5
+         7rjxE996A5N2goi8Q5tFBNHeEvFnQF7XzzGqZonA2yNoSoKcPcCrblu8RdXbF1kGgji8
+         jyEPs0bNsGUCHolkdb67Levt7xX8tSBpcCSTS2ZLeK0qO1tivwUmFSZ9UTVLh7fA0vPp
+         RLxKcnvBff5fqT/fkDOQRhGYW9THwF0NMb+CN/ePAIV0zd7toKnAXpv2FghzW/U2WPPO
+         iaDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=brKyWuiRSBbfzJIeK8v2lrMOJcTG33kGw9sssUReCKA=;
-        b=Kp4p9wtBLFU8HlUVSH1vPvzAyHlPeLUv2MmqVY65HC8quXwvkgIS3RF/o7i9+BE4vq
-         dQHGZFzuI++ia1tcgPj7bjfnnYliggvcCx5UQbyd7ZTg8d66Qe2UTKn90IjubKA+uu5E
-         RH7vLV5141/PFFfuUeEHDizjwRQs5oHepDCGIVOTW9xaMM6NmM1e+EWcpv27gKqgV02T
-         QF3x0Kf/x7f3utV1Xie3if5lKasRIw1OaycO/rIwvrOnMzvZWYagE3RjO0Ft/Tw0jysI
-         mUe56Mee6lnT2b0j7fL4ymHQw2d1hL88VYyNP50BkbdfFX71r2aEbmyaGUTG/7pxUuzO
-         BzHg==
-X-Gm-Message-State: APjAAAVWDYmpP0s3dTL74WqvqyCkW8yN2MaRubT7xU1EqwBIjGD8Vk7S
-        85Cdo8MWj7jjD8PS5mjxopYAl9M37ohgdHbrYjQC3A==
-X-Google-Smtp-Source: APXvYqyV0ywNRVpowQpc8NpbO3A/B8gt6YsT2xi9Boy7+kslKT2y3LmHTyNccSpWanRc26L2iLOqoMrxt045Lbc7Rig=
-X-Received: by 2002:ab0:6044:: with SMTP id o4mr12710700ual.119.1572971052187;
- Tue, 05 Nov 2019 08:24:12 -0800 (PST)
+        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
+        b=IFV7bJoOFoWwyNxyosAd2Kg/gQrWvo0HCXE8MgdO1v78aPiO8KY0fCdtgvmhNvDaUF
+         w+sCPzXnlAn4uTBbrxd4Xeu7VR8DQNNCehrIjnNHn+6vbkG3oF1aGUqOiBVhljTSmH14
+         VfITP81lZt/4cltpn9XgHXf1u95SG3+bIYuGFjHK7VW+Ha85JAi9Q1hr/srTvkIoF946
+         E+k2W6X780N8ut33JglD0k4kH8O4u6jLJ7ZPPro0PjqEk2GoGVYdg8AbYPEq/ZixXfTg
+         STehUAXKQhCK1KwoyY2dgYeM6xDDE2bk/6YB/BCGvw6+UuvmhgkrLHCgYprYLgYRx7XW
+         WJLA==
+X-Gm-Message-State: APjAAAUos+hOwEK62sqg4tTuQAVZjrqSlKGevynT9MHaU5iRsObxTtBI
+        5bi1mLjmdU829Og23HsiplR+Njocmh0gpqXCENKL3g==
+X-Google-Smtp-Source: APXvYqzv1ZnOAK1rEr6ulQ1qi0lC4bdrx7fbrkHaMMOiwYG3QZDrvYhJvFAjURZg3OzoSr8i0tnquTbI5EU4fUTlqjg=
+X-Received: by 2002:a5e:9706:: with SMTP id w6mr2508377ioj.252.1573018652955;
+ Tue, 05 Nov 2019 21:37:32 -0800 (PST)
 MIME-Version: 1.0
-References: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
- <20191023171523.GA18802@fieldses.org> <b6248a82-1f1a-7329-5ee0-6e026f6db697@genome.arizona.edu>
- <YTBPR01MB2845B12E9C59F837FE35F40DDD650@YTBPR01MB2845.CANPRD01.PROD.OUTLOOK.COM>
- <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu> <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
-In-Reply-To: <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 5 Nov 2019 11:24:01 -0500
-Message-ID: <CAN-5tyExtO_HRGYrqq7UTObrHNsTp7UqwW=Kg4CFM3q-OnaUiQ@mail.gmail.com>
-Subject: Re: NFS hangs on one interface
-To:     Chandler <admin@genome.arizona.edu>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20190920002232.27477-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190920002232.27477-1-navid.emamdoost@gmail.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Tue, 5 Nov 2019 23:37:22 -0600
+Message-ID: <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
+To:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-It's too hard to read this tcpdump-style network trace with multiple
-nfs streams (a full .cap file would be much better) (internals of the
-packets are hidden).
+Would you please review this patch?
 
-Some things that stick out. If you are doing a v4.0 mount, it
-typically would start with a SETCLIENTID. Yours starts with a
-PUTROOTFH which means you already have a 4.0 mount going to this
-server. "cat /proc/fs/nfsfs/server" would show you mounts to that
-server. If you are not expecting that you already had an existing 4.0
-mount (ie., your "mount" command doesn't show that server mounted),
-then things have gone wrong already and you have a stuck mount which
-might be interfering with further mounts.
-
-Are you experiencing issues with a fresh boot ? do you have an
-ability/luxury to reboot the client machine?
-
-Your problem description is confusing. Your last network trace is
-about a failing v4.0 mount. Your initial description is talking about
-mounting with "vers=3" or "vers=2". So is the problem with a specific
-nfs version or is the problem with mounting over 10GB interface with
-any NFS versions?
-
-You can also turn on rpcdebug messages (if your client machine isn't
-getting a lot of NFS traffic) but given your trace I see multiple
-streams so you'll have to dig thru lots of output to follow your own
-NFS operations.
-
-On Mon, Nov 4, 2019 at 7:29 PM Chandler <admin@genome.arizona.edu> wrote:
+On Thu, Sep 19, 2019 at 7:22 PM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
 >
-> Any ideas what's going on here?
-> Thanks
+> In nfs4_try_migration, if nfs4_begin_drain_session fails the allocated
+> memory should be released.
+>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  fs/nfs/nfs4state.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index cad4e064b328..124649f12067 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -2096,7 +2096,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+>
+>         status = nfs4_begin_drain_session(clp);
+>         if (status != 0)
+> -               return status;
+> +               goto out;
+>
+>         status = nfs4_replace_transport(server, locations);
+>         if (status != 0) {
+> --
+> 2.17.1
+>
+
+
+-- 
+Navid.
