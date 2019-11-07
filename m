@@ -2,144 +2,258 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42109F2794
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 07:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4303F27EB
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 08:12:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfKGGSM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Nov 2019 01:18:12 -0500
-Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:58769 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbfKGGSL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Nov 2019 01:18:11 -0500
-X-Greylist: delayed 408 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 01:18:11 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 962AC1802ED6D
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Nov 2019 06:11:24 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 459952471;
-        Thu,  7 Nov 2019 06:11:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::,RULES_HIT:41:355:379:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1437:1515:1516:1518:1534:1543:1593:1594:1711:1730:1747:1777:1792:1801:2393:2559:2562:2693:2828:2894:3138:3139:3140:3141:3142:3355:3865:3867:3868:3871:3874:4250:4321:4605:5007:7903:8603:10004:10400:10848:11026:11232:11473:11657:11658:11914:12043:12296:12297:12438:12555:12760:12986:13439:14096:14097:14181:14394:14659:14721:21067:21080:21627:21795:30045:30051:30054,0,RBL:47.151.135.224:@perches.com:.lbl8.mailshell.net-62.8.0.100 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:28,LUA_SUMMARY:none
-X-HE-Tag: paint27_bfd63cc44947
-X-Filterd-Recvd-Size: 4632
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  7 Nov 2019 06:11:22 +0000 (UTC)
-Message-ID: <1cc2ec36b5eedefc44826bb173a40528a4badca6.camel@perches.com>
-Subject: [PATCH] NFS: Correct comment tyops -> typos
-From:   Joe Perches <joe@perches.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 06 Nov 2019 22:11:09 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        id S1726618AbfKGHMO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Nov 2019 02:12:14 -0500
+Received: from mail-io1-f50.google.com ([209.85.166.50]:41489 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfKGHMO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Nov 2019 02:12:14 -0500
+Received: by mail-io1-f50.google.com with SMTP id r144so1133509iod.8
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Nov 2019 23:12:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=fjof70Q5BDDYr3u9yhKcASI0NWfEOpDeUrP//wejMLw=;
+        b=lguBpA8VLD2v3d7oKXZFm/YgagRu3D+sZtFWFmpEEFGs8UTvfN3MlVdvuWdTiFvZAI
+         SvaR5rqEeBuACyY2zdfL31HP4Ow4tjY3lBWWOc+cA4zHGIuQPxKjLFTUBIJdGZe1qyOn
+         80bmMfV/f+ScKz4ur9cYwy8cIogdKOysIEZn90+OSURh29yQ7J+p3shn+xZ2JI3oTesr
+         Nm/wS4+71YwHkJHzjBxvW+SSdwZSQ+UkgP5Owql+HmNBWg7jHZh9NgMqKYsVOEg6iz2y
+         5h3jh6BBG6x0P3oEo68yKqm1QpfpuDXd7liwPCgvZ/h8ynSjZFJche9Ke0x91bn222MJ
+         4ypw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=fjof70Q5BDDYr3u9yhKcASI0NWfEOpDeUrP//wejMLw=;
+        b=VwjAr0vahyVUBCV2YwDnR+6xaOpCiyJJFPRDyFcqXiahPTwXM/bYd+isP6JsreZGYO
+         We9QB0NUTG+3e9737RQeckSLUdGxx94eWFprNKap3ARkbLgA0nHqLFKi/F5jQk/AjgAx
+         NyWU6Sz1q/4t5daGtVS/gm1LSv4dvGe7B4av8sxum4ilngr32q+o6m23tyGZNkbINHq3
+         LUWzFVevPMeLLRmprPJrFe9aaHAQA+wxmaSb/fsx7kAK9MhBtqVWMuqJTbqb56Lj+hkw
+         if1caAtxBw1swSUZCPXjPtUh/3kvV61rjUyWbn/T3XadUzvtBjwkh69fyx361rmlMdDK
+         WXZw==
+X-Gm-Message-State: APjAAAW6O95u4Ig5TeAaBseuJtAx+mQV0qc10rDXVI7i6Hj3ER8q8w+A
+        4zmge5z/g7gzNRcpchFT6PFgV9WFYrv7iCZrZdO74gyzVls=
+X-Google-Smtp-Source: APXvYqyyxEHsZIhV4um2bsgLVVCTRDMJdNWswaeYtCDS+haWgOKliZ9eTzpegWRL9S6v6KjxwfiUaCSpvOHrnos8eFI=
+X-Received: by 2002:a6b:b486:: with SMTP id d128mr1949789iof.47.1573110732507;
+ Wed, 06 Nov 2019 23:12:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From:   Ashish Sangwan <ashishsangwan2@gmail.com>
+Date:   Thu, 7 Nov 2019 12:42:01 +0530
+Message-ID: <CAOiN93k1ixM4PZfgbe11qCa9RMuD-9RjPMXqDvkn4w=S4wCp6w@mail.gmail.com>
+Subject: nfsv4 client sending getattr RPC with filehandle length 0 to wrong
+ server node
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Just fix the typos checkpatch notices...
+client kernel version: Linux version 2.6.32-504.el6.x86_64 and CentOS
+release 6.6 (Final)
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- fs/nfs/export.c                        | 2 +-
- fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
- fs/nfs/nfs4_fs.h                       | 2 +-
- fs/nfs/nfs4proc.c                      | 4 ++--
- fs/nfs/nfs4xdr.c                       | 2 +-
- fs/nfs/pnfs.c                          | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+The following command failed: df /mnt/share_mount/nfsexport_2 -BG with
+bad handle error
+The pseudo root of the v4 tree is mounted at
+NewFs-bd7c39.child4.afs.minerva.com:/ on /mnt/share_mount type nfs
+(rw,vers=4,addr=10.53.86.99,clientaddr=10.46.187.210)
 
-diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-index deecb6..c54cc1d 100644
---- a/fs/nfs/export.c
-+++ b/fs/nfs/export.c
-@@ -18,7 +18,7 @@ enum {
- 	FILEID_HIGH_OFF = 0,	/* inode fileid high */
- 	FILEID_LOW_OFF,		/* inode fileid low */
- 	FILE_I_TYPE_OFF,	/* inode type */
--	EMBED_FH_OFF		/* embeded server fh */
-+	EMBED_FH_OFF		/* embedded server fh */
- };
- 
- 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 5657b7f..ca4cc6 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -123,7 +123,7 @@ static int decode_nfs_fh(struct xdr_stream *xdr, struct nfs_fh *fh)
-  * I.e., kerberos is not supported to the DSes, so no pricipals.
-  *
-  * That means that one common function will suffice, but when
-- * principals are added, this should be split to accomodate
-+ * principals are added, this should be split to accommodate
-  * calls to both nfs_map_name_to_uid() and nfs_map_group_to_gid().
-  */
- static int
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 16b2e5..25eebd 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -345,7 +345,7 @@ _nfs4_state_protect(struct nfs_client *clp, unsigned long sp4_mode,
- 	if (sp4_mode == NFS_SP4_MACH_CRED_CLEANUP ||
- 	    sp4_mode == NFS_SP4_MACH_CRED_PNFS_CLEANUP) {
- 		/* Using machine creds for cleanup operations
--		 * is only relevent if the client credentials
-+		 * is only relevant if the client credentials
- 		 * might expire. So don't bother for
- 		 * RPC_AUTH_UNIX.  If file was only exported to
- 		 * sec=sys, the PUTFH would fail anyway.
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index caacf5..420b3f 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7701,7 +7701,7 @@ int nfs4_proc_fsid_present(struct inode *inode, const struct cred *cred)
- }
- 
- /*
-- * If 'use_integrity' is true and the state managment nfs_client
-+ * If 'use_integrity' is true and the state management nfs_client
-  * cl_rpcclient is using krb5i/p, use the integrity protected cl_rpcclient
-  * and the machine credential as per RFC3530bis and RFC5661 Security
-  * Considerations sections. Otherwise, just use the user cred with the
-@@ -9411,7 +9411,7 @@ nfs4_proc_layoutcommit(struct nfs4_layoutcommit_data *data, bool sync)
- }
- 
- /*
-- * Use the state managment nfs_client cl_rpcclient, which uses krb5i (if
-+ * Use the state management nfs_client cl_rpcclient, which uses krb5i (if
-  * possible) as per RFC3530bis and RFC5661 Security Considerations sections
-  */
- static int
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index ab07db..4befb5a 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4768,7 +4768,7 @@ static int decode_attr_pnfstype(struct xdr_stream *xdr, uint32_t *bitmap,
- }
- 
- /*
-- * The prefered block size for layout directed io
-+ * The preferred block size for layout directed io
-  */
- static int decode_attr_layout_blksize(struct xdr_stream *xdr, uint32_t *bitmap,
- 				      uint32_t *res)
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index bb80034..378a672 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1873,7 +1873,7 @@ static void _add_to_server_list(struct pnfs_layout_hdr *lo,
- }
- 
- /*
-- * Layout segment is retreived from the server if not cached.
-+ * Layout segment is retrieved from the server if not cached.
-  * The appropriate layout segment is referenced and returned to the caller.
-  */
- struct pnfs_layout_segment *
+while nfsexport_2 is submounted:
+/mnt/share_mount/nfsexport_2 from
+NewFs-bd7c39.child4.afs.minerva.com:/nfsexport_2/
+ Flags: rw,relatime,vers=4,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=10.46.187.210,minorversion=0,local_lock=none,addr=10.53.86.94
+
+Looking at the network traces, there's a getattr request which wrongly
+went to addr 10.53.86.99 with filehandle length 0, while all the
+previous calls to nfsexport_2 were correctly sent to 10.53.86.94 after
+the referral had been established.
+
+Frame 11457: 182 bytes on wire (1456 bits), 182 bytes captured (1456 bits)
+Ethernet II, Src: Nutanix_dd:f9:f1 (50:6b:8d:dd:f9:f1), Dst:
+BigSwitc_08:5d:59 (5c:16:c7:08:5d:59)
+Internet Protocol Version 4, Src: 10.46.187.210, Dst: 10.53.86.99
+Transmission Control Protocol, Src Port: 852, Dst Port: 2049, Seq:
+4169, Ack: 2209, Len: 116
+Remote Procedure Call, Type:Call XID:0x547d9fd7
+Network File System, Ops(2): PUTFH, GETATTR
+    [Program Version: 4]
+    [V4 Procedure: COMPOUND (1)]
+    Tag: <EMPTY>
+    minorversion: 0
+    Operations (count: 2): PUTFH, GETATTR
+        Opcode: PUTFH (22)
+            FileHandle
+                length: 0
+        Opcode: GETATTR (9)
+            Attr mask[0]: 0x00e00000 (Files_Avail, Files_Free, Files_Total)
+            Attr mask[1]: 0x00001c00 (Space_Avail, Space_Free, Space_Total)
+    [Main Opcode: GETATTR (9)]
 
 
+Looking at the nfs client side debug logs, it changed the xprt *just*
+for doing the STATFS call.
+In the last successful call (18768) we can see the xprt as
+ffff88007ce98800 which is connected to 94 while the call which hit
+error has xprt ffff88007a74c800 which is connected to 99
+
+kernel: NFS: nfs_update_inode(0:16/562949953421312 fh_crc=0xeab37a6a
+ct=2 info=0x27e7f)
+kernel: NFS: permission(0:16/562949953421312), mask=0x24, res=0
+kernel: NFS: open dir(/)
+kernel: RPC:       looking up Generic cred
+kernel: NFS: revalidating (0:16/562949953421312)
+kernel: RPC:       new task initialized, procpid 4056
+kernel: RPC:       allocated task ffff88007b6aee80
+kernel: RPC: 18768 __rpc_execute flags=0x80
+kernel: RPC: 18768 call_start nfs4 proc GETATTR (sync)
+kernel: RPC: 18768 call_reserve (status 0)
+kernel: RPC: 18768 reserved req ffff88007a512a00 xid 87076d37
+kernel: RPC:       wake_up_first(ffff88007ce98990 "xprt_sending")
+kernel: RPC: 18768 call_reserveresult (status 0)
+kernel: RPC: 18768 call_refresh (status 0)
+kernel: RPC: 18768 looking up UNIX cred
+kernel: RPC:       looking up UNIX cred
+kernel: RPC: 18768 refreshing UNIX cred ffff880079e543c0
+kernel: RPC: 18768 call_refreshresult (status 0)
+kernel: RPC: 18768 call_allocate (status 0)
+kernel: RPC: 18768 allocated buffer of size 1060 at ffff88007cb68800
+kernel: RPC: 18768 call_bind (status 0)
+kernel: RPC: 18768 call_connect xprt ffff88007ce98800 is connected
+kernel: RPC: 18768 call_transmit (status 0)
+kernel: RPC: 18768 xprt_prepare_transmit
+kernel: RPC: 18768 rpc_xdr_encode (status 0)
+kernel: RPC: 18768 marshaling UNIX cred ffff880079e543c0
+kernel: RPC: 18768 using AUTH_UNIX cred ffff880079e543c0 to wrap rpc data
+kernel: encode_compound: tag=
+kernel: RPC: 18768 xprt_transmit(140)
+kernel: RPC:       xs_tcp_send_request(140) = 140
+kernel: RPC: 18768 xmit complete
+kernel: RPC: 18768 sleep_on(queue "xprt_pending" time 4298144477)
+kernel: RPC: 18768 added to queue ffff88007ce98a58 "xprt_pending"
+kernel: RPC: 18768 setting alarm for 60000 ms
+kernel: RPC:       wake_up_first(ffff88007ce98990 "xprt_sending")
+kernel: RPC: 18768 sync task going to sleep
+kernel: RPC:       xs_tcp_data_ready...
+kernel: RPC:       xs_tcp_data_recv started
+kernel: RPC:       reading TCP record fragment of length 188
+kernel: RPC:       reading XID (4 bytes)
+kernel: RPC:       reading reply for XID 87076d37
+kernel: RPC:       reading CALL/REPLY flag (4 bytes)
+kernel: RPC:       read reply XID 87076d37
+kernel: RPC:       XID 87076d37 read 180 bytes
+kernel: RPC:       xprt = ffff88007ce98800, tcp_copied = 188,
+tcp_offset = 188, tcp_reclen = 188
+kernel: RPC: 18768 xid 87076d37 complete (188 bytes received)
+kernel: RPC: 18768 __rpc_wake_up_task (now 4298144478)
+kernel: RPC: 18768 disabling timer
+kernel: RPC: 18768 removed from queue ffff88007ce98a58 "xprt_pending"
+kernel: RPC:       __rpc_wake_up_task done
+kernel: RPC:       xs_tcp_data_recv done
+kernel: RPC: 18768 sync task resuming
+kernel: RPC: 18768 call_status (status 188)
+kernel: RPC: 18768 call_decode (status 188)
+kernel: RPC: 18768 validating UNIX cred ffff880079e543c0
+kernel: RPC: 18768 using AUTH_UNIX cred ffff880079e543c0 to unwrap rpc data
+kernel: decode_attr_type: type=040000
+kernel: decode_attr_change: change attribute=1572863231723295000
+kernel: decode_attr_size: file size=5
+kernel: decode_attr_fsid: fsid=(0x564673e3cfd41261/0xe48e57b33609a6a7)
+kernel: decode_attr_fileid: fileid=562949953421312
+kernel: decode_attr_fs_locations: fs_locations done, error = 0
+kernel: decode_attr_mode: file mode=01777
+kernel: decode_attr_nlink: nlink=2
+kernel: decode_attr_owner: uid=0
+kernel: decode_attr_group: gid=0
+kernel: decode_attr_rdev: rdev=(0x0:0x0)
+kernel: decode_attr_space_used: space used=512
+kernel: decode_attr_time_access: atime=1572862994
+kernel: decode_attr_time_metadata: ctime=1572863231
+kernel: decode_attr_time_modify: mtime=1572863231
+kernel: decode_attr_mounted_on_fileid: fileid=0
+kernel: decode_getfattr_attrs: xdr returned 0
+kernel: decode_getfattr_generic: xdr returned 0
+kernel: RPC: 18768 call_decode result 0
+kernel: RPC: 18768 return 0, status 0
+kernel: RPC: 18768 release task
+kernel: RPC:       freeing buffer of size 1060 at ffff88007cb68800
+kernel: RPC: 18768 release request ffff88007a512a00
+kernel: RPC:       wake_up_first(ffff88007ce98b20 "xprt_backlog")
+kernel: RPC:       rpc_release_client(ffff880079cfce00)
+kernel: RPC: 18768 freeing task
+kernel: NFS: nfs_update_inode(0:16/562949953421312 fh_crc=0xeab37a6a
+ct=2 info=0x27e7f)
+kernel: NFS: (0:16/562949953421312) revalidation complete
+kernel: RPC:       looking up Generic cred
+kernel: NFS: permission(0:14/0), mask=0x1, res=0
+kernel: NFS: nfs_lookup_revalidate(/nfsexport_2) is valid
+kernel: RPC:       new task initialized, procpid 4056
+kernel: RPC:       allocated task ffff88007b6aee80
+kernel: RPC: 18769 __rpc_execute flags=0x80
+kernel: RPC: 18769 call_start nfs4 proc STATFS (sync)
+kernel: RPC: 18769 call_reserve (status 0)
+kernel: RPC: 18769 reserved req ffff88007ae15c00 xid 547d9fd7
+kernel: RPC:       wake_up_first(ffff88007a74c990 "xprt_sending")
+kernel: RPC: 18769 call_reserveresult (status 0)
+kernel: RPC: 18769 call_refresh (status 0)
+kernel: RPC: 18769 looking up UNIX cred
+kernel: RPC:       looking up UNIX cred
+kernel: RPC: 18769 refreshing UNIX cred ffff880079e543c0
+kernel: RPC: 18769 call_refreshresult (status 0)
+kernel: RPC: 18769 call_allocate (status 0)
+kernel: RPC: 18769 allocated buffer of size 1060 at ffff88007cb68800
+kernel: RPC: 18769 call_bind (status 0)
+kernel: RPC: 18769 call_connect xprt ffff88007a74c800 is connected
+kernel: RPC: 18769 call_transmit (status 0)
+kernel: RPC: 18769 xprt_prepare_transmit
+kernel: RPC: 18769 rpc_xdr_encode (status 0)
+kernel: RPC: 18769 marshaling UNIX cred ffff880079e543c0
+kernel: RPC: 18769 using AUTH_UNIX cred ffff880079e543c0 to wrap rpc data
+kernel: encode_compound: tag=
+kernel: RPC: 18769 xprt_transmit(116)
+kernel: RPC:       xs_tcp_send_request(116) = 116
+kernel: RPC: 18769 xmit complete
+kernel: RPC: 18769 sleep_on(queue "xprt_pending" time 4298144478)
+kernel: RPC: 18769 added to queue ffff88007a74ca58 "xprt_pending"
+kernel: RPC: 18769 setting alarm for 60000 ms
+kernel: RPC:       wake_up_first(ffff88007a74c990 "xprt_sending")
+kernel: RPC: 18769 sync task going to sleep
+kernel: RPC:       xs_tcp_data_ready...
+kernel: RPC:       xs_tcp_data_recv started
+kernel: RPC:       reading TCP record fragment of length 44
+kernel: RPC:       reading XID (4 bytes)
+kernel: RPC:       reading reply for XID 547d9fd7
+kernel: RPC:       reading CALL/REPLY flag (4 bytes)
+kernel: RPC:       read reply XID 547d9fd7
+kernel: RPC:       XID 547d9fd7 read 36 bytes
+kernel: RPC:       xprt = ffff88007a74c800, tcp_copied = 44,
+tcp_offset = 44, tcp_reclen = 44
+kernel: RPC: 18769 xid 547d9fd7 complete (44 bytes received)
+kernel: RPC: 18769 __rpc_wake_up_task (now 4298144478)
+kernel: RPC: 18769 disabling timer
+kernel: RPC: 18769 removed from queue ffff88007a74ca58 "xprt_pending"
+kernel: RPC:       __rpc_wake_up_task done
+kernel: RPC:       xs_tcp_data_recv done
+kernel: RPC: 18769 sync task resuming
+kernel: RPC: 18769 call_status (status 44)
+kernel: RPC: 18769 call_decode (status 44)
+kernel: RPC: 18769 validating UNIX cred ffff880079e543c0
+kernel: RPC: 18769 using AUTH_UNIX cred ffff880079e543c0 to unwrap rpc data
+kernel: RPC: 18769 call_decode result -521
+kernel: RPC: 18769 return 0, status -521
+kernel: RPC: 18769 release task
+kernel: RPC:       freeing buffer of size 1060 at ffff88007cb68800
+kernel: RPC: 18769 release request ffff88007ae15c00
+kernel: RPC:       wake_up_first(ffff88007a74cb20 "xprt_backlog")
+kernel: RPC:       rpc_release_client(ffff88007c994a00)
+kernel: RPC: 18769 freeing task
+kernel: nfs_statfs: statfs error = 521
+
+Any idea what could have went wrong here? Is this client issue which
+might have been fixed in later versions?
+BTW, this issue is not very frequent, we hit this randomly after few days.
+Also, if any other logs are required, please let me know.
+
+Thanks,
+Ashish
