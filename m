@@ -2,70 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3652F3B61
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 23:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1907CF3B8F
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 23:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfKGW1N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Nov 2019 17:27:13 -0500
-Received: from fieldses.org ([173.255.197.46]:35648 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfKGW1M (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:27:12 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 4FCBF3F5; Thu,  7 Nov 2019 17:27:12 -0500 (EST)
-Date:   Thu, 7 Nov 2019 17:27:12 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
- nfsd4_shutdown_callback()
-Message-ID: <20191107222712.GB10806@fieldses.org>
-References: <20191023214318.9350-1-trond.myklebust@hammerspace.com>
- <20191025145147.GA16053@pick.fieldses.org>
- <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
- <20191025152119.GC16053@pick.fieldses.org>
- <20191025153336.GA20283@fieldses.org>
- <20191029214705.GA29280@fieldses.org>
+        id S1726219AbfKGWkJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Nov 2019 17:40:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45942 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfKGWkJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Nov 2019 17:40:09 -0500
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iSqRg-0006cw-Mh; Thu, 07 Nov 2019 22:40:04 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org
+Subject: [PATCH] NFSv4: fix spelling mistake "requeueing" -> "requeuing"
+Date:   Thu,  7 Nov 2019 22:40:04 +0000
+Message-Id: <20191107224004.417163-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029214705.GA29280@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 05:47:05PM -0400, J. Bruce Fields wrote:
-> On Fri, Oct 25, 2019 at 11:33:36AM -0400, bfields wrote:
-> > On Fri, Oct 25, 2019 at 11:21:19AM -0400, J. Bruce Fields wrote:
-> > > I thought I was running v2, let me double-check....
-> > 
-> > Yes, with v2 I'm getting a hang on generic/013.
-> > 
-> > I checked quickly and didn't see anything interesting in the logs,
-> > otherwise I haven't done any digging.
-> 
-> Reproduceable just with ./check -nfs generic/013.  The last thing I see
-> in wireshark is an asynchronous COPY call and reply.  Which means it's
-> probably trying to do a CB_OFFLOAD.  Hm.
+From: Colin Ian King <colin.king@canonical.com>
 
-Oh, I think it just needs the following.
+There is a spelling mistake in a debug message. Fix it.
 
---b.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/nfs/nfs4renewd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index fb71e7f9d0d9..e49604701a71 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1026,8 +1026,8 @@ static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct rpc_task *task)
- 			return false;
- 		}
- 		rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
--		cb->cb_holds_slot = true;
- 	}
-+	cb->cb_holds_slot = true;
- 	return true;
- }
- 
+diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
+index 6ea431b067dd..396045633077 100644
+--- a/fs/nfs/nfs4renewd.c
++++ b/fs/nfs/nfs4renewd.c
+@@ -120,7 +120,7 @@ nfs4_schedule_state_renewal(struct nfs_client *clp)
+ 		- (long)jiffies;
+ 	if (timeout < 5 * HZ)
+ 		timeout = 5 * HZ;
+-	dprintk("%s: requeueing work. Lease period = %ld\n",
++	dprintk("%s: requeuing work. Lease period = %ld\n",
+ 			__func__, (timeout + HZ - 1) / HZ);
+ 	mod_delayed_work(system_wq, &clp->cl_renewd, timeout);
+ 	set_bit(NFS_CS_RENEWD, &clp->cl_res_state);
+-- 
+2.20.1
+
