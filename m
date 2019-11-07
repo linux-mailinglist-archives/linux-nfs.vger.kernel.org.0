@@ -2,42 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 125F1F3259
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 16:11:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3652F3B61
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2019 23:27:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfKGPLf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Nov 2019 10:11:35 -0500
-Received: from [211.53.128.215] ([211.53.128.215]:56209 "EHLO MAIL.isd.co.kr"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729724AbfKGPLf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:11:35 -0500
-Received: from 192.168.1.3 (217.217.179.17) by MAIL.isd.co.kr (10.10.10.22)
- with Microsoft SMTP Server id 14.3.123.3; Fri, 8 Nov 2019 00:08:41 +0900
-Date:   Thu, 7 Nov 2019 16:08:40 +0100
-From:   Peter Wong <choimj@isd.co.kr>
-Reply-To: Peter Wong <pw178483@protonmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Message-ID: <8576976.22575.1573139322164.JavaMail.cash@211.53.128.215>
-Subject: Investment opportunity
+        id S1725945AbfKGW1N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Nov 2019 17:27:13 -0500
+Received: from fieldses.org ([173.255.197.46]:35648 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfKGW1M (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:27:12 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4FCBF3F5; Thu,  7 Nov 2019 17:27:12 -0500 (EST)
+Date:   Thu, 7 Nov 2019 17:27:12 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
+ nfsd4_shutdown_callback()
+Message-ID: <20191107222712.GB10806@fieldses.org>
+References: <20191023214318.9350-1-trond.myklebust@hammerspace.com>
+ <20191025145147.GA16053@pick.fieldses.org>
+ <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
+ <20191025152119.GC16053@pick.fieldses.org>
+ <20191025153336.GA20283@fieldses.org>
+ <20191029214705.GA29280@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [217.217.179.17]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029214705.GA29280@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Greetings,
+On Tue, Oct 29, 2019 at 05:47:05PM -0400, J. Bruce Fields wrote:
+> On Fri, Oct 25, 2019 at 11:33:36AM -0400, bfields wrote:
+> > On Fri, Oct 25, 2019 at 11:21:19AM -0400, J. Bruce Fields wrote:
+> > > I thought I was running v2, let me double-check....
+> > 
+> > Yes, with v2 I'm getting a hang on generic/013.
+> > 
+> > I checked quickly and didn't see anything interesting in the logs,
+> > otherwise I haven't done any digging.
+> 
+> Reproduceable just with ./check -nfs generic/013.  The last thing I see
+> in wireshark is an asynchronous COPY call and reply.  Which means it's
+> probably trying to do a CB_OFFLOAD.  Hm.
 
-Find attached email very confidential. reply for more details
+Oh, I think it just needs the following.
 
-Thanks.
-Peter Wong
+--b.
 
-
-
-
-----------------------------------------------------
-This email was sent by the shareware version of Postman Professional.
-
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index fb71e7f9d0d9..e49604701a71 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1026,8 +1026,8 @@ static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct rpc_task *task)
+ 			return false;
+ 		}
+ 		rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
+-		cb->cb_holds_slot = true;
+ 	}
++	cb->cb_holds_slot = true;
+ 	return true;
+ }
+ 
