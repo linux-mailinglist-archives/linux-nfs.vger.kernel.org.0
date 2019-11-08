@@ -2,90 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD92FF5906
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2019 22:03:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8694DF59C8
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2019 22:25:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKHVC3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Nov 2019 16:02:29 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34046 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbfKHVC2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Nov 2019 16:02:28 -0500
-Received: by mail-yw1-f68.google.com with SMTP id y18so2688464ywk.1
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Nov 2019 13:02:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kUTQIBz1lo0h389F7WpocUOi4Y16RndkL1U5V7h4NfU=;
-        b=K7OyVudcsUR3x4+revehF3TEa8uQ+twUXieYexOuKXmHONlt/LxNPDySb8sHS/+0Oi
-         nojUtXRc3aM1/pG+XjPlVnYIQ3c0r6KtXFwyUS1bOFZjQdlI9w+SSzeRtquDaETK1XkP
-         X5J7rM0tgxoTYhyKKrxlg60dmMkOIA7q1qc95O77/B0PofZwj4GCaVx0iw0zavK1xzAV
-         s4vxWSxmgsPSaKDQ4OG1Oyb+0Q9NIrN4gg4i88ofcVjzZH95ZDRCxNoaO/7n1RsXeQX4
-         XdY0v4PY6SeGMDfl6fsHOGk6zdpvIFYbKVtj+j2AMLi+zd7+SH31QOey7fSZjlht5GI8
-         RN6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=kUTQIBz1lo0h389F7WpocUOi4Y16RndkL1U5V7h4NfU=;
-        b=cITkz0FCfP2cBJfVT9UczyPfannpAChEldnHQWiq/4EcJSOOSfGpGzS/5jDHVJHPQ5
-         QkJsezFFPju4i8gjN6qEbueB0+F12JQHI2I3K1Fl8Yr0FE3mJ60OqlznrRNXjg0s1r3z
-         8MuQTzvSix4L2ZhNfeDfsWOWRLndr043MSA7vhhZEI5SoXBeKXys8rT5+Sn8TWfL6NhK
-         02OfzIZ4ev5XFZgWsqPzlGdyNa4tOXSt/7GisW74rcJRQXry8qxgk94UU4cNOh2YQDzj
-         S70VidfEqNjlg68v7qj+dxuzftmzoAwYGYzbHzqb3/DuogQ0pI8MRfKP0tavSo+m0iQW
-         vPLw==
-X-Gm-Message-State: APjAAAW06eu5/mqZSrD6xASKZRYs/3ioVYp6icJEu6LxNOygr1DntDcR
-        iviYd85jMKNWAY5as228ABU=
-X-Google-Smtp-Source: APXvYqzt9UhbuRFTgGe7C1uPSt0zDkVAzW8J+tYw8ckrjXX5PR2zsA78NgKR2QkfTEjgNl+abbJGyw==
-X-Received: by 2002:a0d:d583:: with SMTP id x125mr8408656ywd.213.1573246947785;
-        Fri, 08 Nov 2019 13:02:27 -0800 (PST)
-Received: from localhost.localdomain (c-68-42-68-242.hsd1.mi.comcast.net. [68.42.68.242])
-        by smtp.gmail.com with ESMTPSA id p126sm1904033ywc.16.2019.11.08.13.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 13:02:27 -0800 (PST)
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 2/2] NFS: Return -ETXTBSY when attempting to write to a swapfile
-Date:   Fri,  8 Nov 2019 16:02:24 -0500
-Message-Id: <20191108210224.33645-2-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108210224.33645-1-Anna.Schumaker@Netapp.com>
+        id S1731754AbfKHVXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Nov 2019 16:23:00 -0500
+Received: from mail-eopbgr720093.outbound.protection.outlook.com ([40.107.72.93]:3040
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731637AbfKHVXA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:23:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J2+K2MF14jRMsiCBaahOv6uLGXnwTnh4KiWcdqyPzyYansRiNY20w7bRNgrVfAXlD3dZlg7ZUQaueHm0GG1gZmB/XUFHzchPNU4GFeSq9cyl0604m6sLajIAGT1bJvW0HWWtw+fJ6AynfPvjUkOvinLBfHZpJuvgSPG9L+VF4cZVGKvd5Hrck1FOQNwAc9vBafXlitppuhtQMZtLsqx4pXg4dgeLmoJr5xOgAsIbvntVGm144VvMHvubgGeGj76f4P8SxDjduCqIUPfmU+ShGcXoLYG6CModxAqMY5IES1nOUaSSxWJJG2yVgIa8E2hBjTWk/oiRV8WIiuB20j9WQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nxuwtcuzQUZfk9nmAMao7cWyXJRLZdgAqwnxRgvncQ4=;
+ b=kdaC3PbnamssBhocPYnJ8W7x/hQph+t9SeDETguF5NWY3A+S6335dECwrcOm7j4gmh0tWl95XaFEiyD8J1zGM8SBiMH2JtF1PY++RHXzH277LuO+dGeTlp8hv54TVnpkpRyPpJ3aCbjn8L89JDMcC70HnTIpp93Hr2YqgXoPC+KrXNCyyoe89h+hJ/eZaGEDq3Tiaf1rHEhuI+Kb2ToobVte5ARO2V2eqWMd4Iv80rRKIfZv8J2h4DIYd3ZY9MkjQvK83S1NNtF0itLwA0Kh/kGjCsVGYNulgpN3mypG6UPDGOSrmqLQgkU4/s2HBHznWPfYQQ6H1kl8jopm2PXlFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nxuwtcuzQUZfk9nmAMao7cWyXJRLZdgAqwnxRgvncQ4=;
+ b=SWM9MV5ZKQ/rXL0jL80ygxY5cPI/EmYBCtK4MlRscRPq0o6iAopOlQv9E17r4j4sUroQ9U/tEraV4FFsGOSTkAzOhc7H88G5IkWhuaQP2BYSM7IbYIi6nbfXi/fEHAOtuSYsxE2A8umwMFR9y+pahzEGjpOQa4W8n56PUTbornk=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1962.namprd13.prod.outlook.com (10.174.184.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.17; Fri, 8 Nov 2019 21:22:16 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::4c0b:3977:6b2d:6a8c]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::4c0b:3977:6b2d:6a8c%3]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
+ 21:22:16 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>
+CC:     "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>
+Subject: Re: [PATCH 1/2] NFS: Add FATTR4_WORD1_SPACE_USED to the
+ cache_consistency_bitmask
+Thread-Topic: [PATCH 1/2] NFS: Add FATTR4_WORD1_SPACE_USED to the
+ cache_consistency_bitmask
+Thread-Index: AQHVlnfV1GjDP4EQhEGK5WFMRtsa06eByD4A
+Date:   Fri, 8 Nov 2019 21:22:16 +0000
+Message-ID: <1296f01521c89e00a9c5f4aff3332829415333c5.camel@hammerspace.com>
 References: <20191108210224.33645-1-Anna.Schumaker@Netapp.com>
+In-Reply-To: <20191108210224.33645-1-Anna.Schumaker@Netapp.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.124.243.139]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87ae3291-607c-43aa-ce73-08d76491bb10
+x-ms-traffictypediagnostic: DM5PR1301MB1962:
+x-microsoft-antispam-prvs: <DM5PR1301MB19628B0BF88CA32182EFDF39B87B0@DM5PR1301MB1962.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(376002)(136003)(346002)(366004)(199004)(189003)(36756003)(26005)(71190400001)(99286004)(86362001)(66066001)(25786009)(71200400001)(6246003)(6486002)(6506007)(256004)(14444005)(2501003)(186003)(102836004)(76176011)(229853002)(2906002)(316002)(446003)(11346002)(2616005)(476003)(110136005)(486006)(14454004)(6116002)(3846002)(8936002)(8676002)(81166006)(81156014)(5660300002)(6436002)(6512007)(478600001)(305945005)(66946007)(64756008)(66476007)(76116006)(91956017)(66556008)(66446008)(4326008)(118296001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1962;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GifGC5EeXdLbnMpjh+fbkQaTBrgXQt6wrXLPiCPgbOJoI75dRA5xFnXKvdqv68qm+yVkEZtPnELX7HxArrnYQRBD9l+P12Cba0T2HyJmxIroS0j9txocQm43LaRFMlA8nKkfjeMuaaxgkloouI6XrMwfgpd1DInVyaLnxxbP/cZGA2cI2Fd8oaK4BzHs3LJLnBgr3LAk2M7C5unrko2or5sgdCpGbzGmLbKnHqpnvPs0xzMW+9phSfE2NyXP4VFxUtP6vsmS3NuriGNsMofroZ9fcOoxKGAIJ8kf8bE8LEve0WDSmldaqXK/IGOPiLjFcaTFurqPCheq9Tc2QwsKBEqTCWOt7ewrNk9weB1JzMA5tjn/bU8rwCSi4F02gfVnXa7xeQrCOoFgbRhavlgwofXEbx4/DbZdvuyB8H/uQ+JexCRNXJUFlyvlJTMVsly5
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A845AD68158E4B478524103DD04F0CC1@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87ae3291-607c-43aa-ce73-08d76491bb10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 21:22:16.6521
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jETjRuxe7cQU5MyoN6P4mkinjTjPajYt+PekJD4ZU9k96vQlvoVpY+wHvVuoz9DwASWvJX5mRAl7yKB+2YrQbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1962
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-
-My understanding is that -EBUSY refers to the underlying device, and
-that -ETXTBSY is used when attempting to access a file in use by the
-kernel (like a swapfile). Changing this return code helps us pass
-xfstests generic/569
-
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 95dc90570786..8eb731d9be3e 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -649,7 +649,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 
- out_swapfile:
- 	printk(KERN_INFO "NFS: attempt to write to active swap file!\n");
--	return -EBUSY;
-+	return -ETXTBSY;
- }
- EXPORT_SYMBOL_GPL(nfs_file_write);
- 
--- 
-2.24.0
-
+T24gRnJpLCAyMDE5LTExLTA4IGF0IDE2OjAyIC0wNTAwLCBzY2h1bWFrZXIuYW5uYUBnbWFpbC5j
+b20gd3JvdGU6DQo+IEZyb206IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtlckBOZXRhcHAu
+Y29tPg0KPiANCj4gQ2hhbmdpbmcgYSBzcGFyc2UgZmlsZSBjb3VsZCBoYXZlIGFuIGVmZmVjdCBu
+b3Qgb25seSBvbiB0aGUgZmlsZQ0KPiBzaXplLA0KPiBidXQgYWxzbyBvbiB0aGUgbnVtYmVyIG9m
+IGJsb2NrcyB1c2VkIGJ5IHRoZSBmaWxlIGluIHRoZSB1bmRlcmx5aW5nDQo+IGZpbGVzeXN0ZW0u
+IExldCdzIHVwZGF0ZSB0aGUgU1BBQ0VfVVNFRCBhdHRyaWJ1dGUgd2hlbmV2ZXIgd2UgdXBkYXRl
+DQo+IFNJWkUgdG8gYmUgYXMgYWNjdXJhdGUgYXMgcG9zc2libGUuDQo+IA0KPiBUaGlzIHBhdGNo
+IGZpeGVzIHhmc3Rlc3RzIGdlbmVyaWMvNTY4LCB3aGljaCB0ZXN0cyB0aGF0IGZhbGxvY2F0aW5n
+DQo+IGFuDQo+IHVuYWxpZ25lZCByYW5nZSBhbGxvY2F0ZXMgYWxsIGJsb2NrcyB0b3VjaGVkIGJ5
+IHRoYXQgcmFuZ2UuIFdpdGhvdXQNCj4gdGhpcw0KPiBwYXRjaCwgYHN0YXRgIHJlcG9ydHMgMCBi
+eXRlcyB1c2VkIGltbWVkaWF0ZWx5IGFmdGVyIHRoZSBmYWxsb2NhdGUuDQo+IEFkZGluZyBhIGBz
+bGVlcCA1YCB0byB0aGUgdGVzdCBhbHNvIGNhdGNoZXMgdGhlIHVwZGF0ZSwgYnV0IGl0J3MNCj4g
+YmV0dGVyDQo+IHRvIGp1c3QgZG8gaXQgd2hlbiB3ZSBrbm93IHNvbWV0aGluZyBoYXMgY2hhbmdl
+ZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtlckBO
+ZXRhcHAuY29tPg0KPiAtLS0NCj4gIGZzL25mcy9uZnM0cHJvYy5jIHwgMiArLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
+IGEvZnMvbmZzL25mczRwcm9jLmMgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBpbmRleCBhYzkwNjNj
+MDYyMDUuLjAwYTFmM2VjN2YyMiAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRwcm9jLmMNCj4g
+KysrIGIvZnMvbmZzL25mczRwcm9jLmMNCj4gQEAgLTM3NzUsNyArMzc3NSw3IEBAIHN0YXRpYyBp
+bnQgX25mczRfc2VydmVyX2NhcGFiaWxpdGllcyhzdHJ1Y3QNCj4gbmZzX3NlcnZlciAqc2VydmVy
+LCBzdHJ1Y3QgbmZzX2ZoICpmDQo+ICANCj4gIAkJbWVtY3B5KHNlcnZlci0+Y2FjaGVfY29uc2lz
+dGVuY3lfYml0bWFzaywNCj4gcmVzLmF0dHJfYml0bWFzaywgc2l6ZW9mKHNlcnZlci0+Y2FjaGVf
+Y29uc2lzdGVuY3lfYml0bWFzaykpOw0KPiAgCQlzZXJ2ZXItPmNhY2hlX2NvbnNpc3RlbmN5X2Jp
+dG1hc2tbMF0gJj0NCj4gRkFUVFI0X1dPUkQwX0NIQU5HRXxGQVRUUjRfV09SRDBfU0laRTsNCj4g
+LQkJc2VydmVyLT5jYWNoZV9jb25zaXN0ZW5jeV9iaXRtYXNrWzFdICY9DQo+IEZBVFRSNF9XT1JE
+MV9USU1FX01FVEFEQVRBfEZBVFRSNF9XT1JEMV9USU1FX01PRElGWTsNCj4gKwkJc2VydmVyLT5j
+YWNoZV9jb25zaXN0ZW5jeV9iaXRtYXNrWzFdICY9DQo+IEZBVFRSNF9XT1JEMV9USU1FX01FVEFE
+QVRBfEZBVFRSNF9XT1JEMV9USU1FX01PRElGWXxGQVRUUjRfV09SRDFfU1BBQw0KPiBFX1VTRUQ7
+DQoNCkknZCByYXRoZXIgbm90IGRvIHRoaXMuIFNwYWNlIHVzZWQgaXMgbm90IGEgY2FjaGUgY29u
+c2lzdGVuY3kgYXR0cmlidXRlDQosIGFzIHdlIGRvIG5vdCB1c2UgaXQgdG8gcmV2YWxpZGF0ZSB0
+aGUgY2FjaGUgYW5kIGl0IGNhbiBiZSByYXRoZXINCmV4cGVuc2l2ZSB0byByZXRyaWV2ZSBvbiBz
+b21lIHBsYXRmb3Jtcy4NCg0KSSdkIHRoZXJlZm9yZSBwcmVmZXIgdGhhdCB3ZSBqdXN0IG1ha2Ug
+c3VyZSB3ZSBtYXJrIHRoZSBjYWNoZSB2YWxpZGl0eQ0Kd2l0aCBORlNfSU5PX0lOVkFMSURfT1RI
+RVIgd2hlbiB3ZSBoYXZlIGEgd3JpdGUgc3VjY2VlZCBvbiBhIHNwYXJzZQ0KZmlsZS4NCg0KPiAg
+CQlzZXJ2ZXItPmNhY2hlX2NvbnNpc3RlbmN5X2JpdG1hc2tbMl0gPSAwOw0KPiAgDQo+ICAJCS8q
+IEF2b2lkIGEgcmVncmVzc2lvbiBkdWUgdG8gYnVnZ3kgc2VydmVyICovDQotLSANClRyb25kIE15
+a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
+bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
