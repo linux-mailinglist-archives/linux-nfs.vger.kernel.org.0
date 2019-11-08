@@ -2,117 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2117CF53B1
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2019 19:44:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F1CEF5905
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2019 22:03:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfKHSox (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Nov 2019 13:44:53 -0500
-Received: from mail-eopbgr750103.outbound.protection.outlook.com ([40.107.75.103]:27527
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726394AbfKHSox (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:44:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JdIxnjohUcvuU62qujw39ynvSeXzQ/HXdx0aaEEI5POYX16d9ElKEL2Z47Kb6WsEBceLwQXFZow9ZdQNeYpDXt0mDxncRkc33WuHPFUO5yMM34vseVlb7jP+rCa5zyRtlkFPvwsI3LD1tLXqfspmBu6wJdyEIz/86lh5WHaZukSbMiouOUQhh2IIakMNZ4UQLog8gVZMLnw6DFswIofgsYJbcz69Ibuo0y3/F70quKqhfPfYUtUx3prAFr4/pzvvqSa6pX0fcBI0LCTP7h9tlR6zeFo4kXQ3iIO6GjBthhYrf0ZP6MCgxUiPmRhEsrTNBVwjd+AQdTO5v97vyJiiFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Th89LRXdQ5jankurvdXgXALqHNNWYIVFOkiJMBYPF5Y=;
- b=dT6Deq+P0xlAsfPP3P6dtdCoOxx7UGw7JKhGC+jQcnSzDXEKKDCZwYIZQQ2oqQLDpt+I+u0+BFx9nCrBsI/OoqBcXy+dMbHJyBOUhtHTd/2LU5cCSbsrk9lDVMIgnNERp8g0ov99XXjzq0HQQ4tkcbCc4Jf61MlHynm/K8XUl3BXJ2NtTyR19qqk8slwqd8qHO8kLqouRiWrTMi3zo+RotIxOj1eVvllCNRMaf9SNOY6mX3pOrZw0LYmet7WYAwoeH2SOz5FBfvIJyw4lvbE4iu4/TRZE0WJQ0CibG/9Oca0XVGfBA7UIMf7UIP3S4jFKm680W9SPGpmveBmudUYaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Th89LRXdQ5jankurvdXgXALqHNNWYIVFOkiJMBYPF5Y=;
- b=AAuPm+5yl21m844kVqJ3mRnaYbrz8B6vq3NN7AsPD7Mv4QkktUcYZEs0R4Dr7D/kOAbLrHEiX/cpV++9heHSjA0wWEvE4Cz/+TTR20nOrkMbr58tphMSvU1eOIgUX5idTKsROVYQC6sJhOoU6fnTyW1yZpgMytnaGBgcsKU39o4=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1945.namprd13.prod.outlook.com (10.174.184.155) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.15; Fri, 8 Nov 2019 18:44:50 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::4c0b:3977:6b2d:6a8c]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::4c0b:3977:6b2d:6a8c%3]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
- 18:44:50 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "bfields@redhat.com" <bfields@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
- nfsd4_shutdown_callback()
-Thread-Topic: [PATCH v2] nfsd: Fix races between nfsd4_cb_release() and
- nfsd4_shutdown_callback()
-Thread-Index: AQHVies2JdHABN5ZLkasQ9xpK5TdU6drc5yAgAABGoCAAAcngIAAA24AgAaxrYCADjAxAIABVDCA
-Date:   Fri, 8 Nov 2019 18:44:50 +0000
-Message-ID: <b92c829eaea3ab1ebf045103ab9dd8ec57d5e859.camel@hammerspace.com>
-References: <20191023214318.9350-1-trond.myklebust@hammerspace.com>
-         <20191025145147.GA16053@pick.fieldses.org>
-         <97f56de86f0aeafb56998023d0561bb4a6233eb8.camel@hammerspace.com>
-         <20191025152119.GC16053@pick.fieldses.org>
-         <20191025153336.GA20283@fieldses.org> <20191029214705.GA29280@fieldses.org>
-         <20191107222712.GB10806@fieldses.org>
-In-Reply-To: <20191107222712.GB10806@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.124.243.139]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af4c92f0-fa52-4f90-c90a-08d7647bbc99
-x-ms-traffictypediagnostic: DM5PR1301MB1945:
-x-microsoft-antispam-prvs: <DM5PR1301MB1945AF361FA2130396ABACCEB87B0@DM5PR1301MB1945.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(39830400003)(396003)(376002)(189003)(199004)(6246003)(71200400001)(71190400001)(66946007)(5660300002)(36756003)(6436002)(6486002)(14454004)(8936002)(2906002)(229853002)(66066001)(76176011)(316002)(486006)(3846002)(446003)(11346002)(91956017)(2616005)(305945005)(118296001)(476003)(110136005)(26005)(7736002)(99286004)(6506007)(8676002)(25786009)(66446008)(256004)(478600001)(81156014)(81166006)(76116006)(86362001)(66476007)(66556008)(4326008)(64756008)(102836004)(2501003)(6116002)(186003)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1945;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xr2cNiuIJLOWC6au5ShfdD61rvkun/Qa1dgelN2szaLRspiBkPtJuYaGnRtORtGcKrN8mrsw4D7ed9Ph5FzZd8selXM3YeGleujOnjv5+Hg1ZUzzCfoXb9FYkcnwTJL2FPaWFUr7UYCdZ+ZYGp+8ZN6dJQEezSpWSBuTX65WjROftE7N2FcriqJgLMFg2Y8J0woL9BgVxtA8zZiDYxCQeSL1P/YB4HTyyMNeAzWNAjxqf5Y6cBc0ZVTCFNjTLfJQZdVzzTau1DOtPyjAv3eOXz6BHiIKVWX7gApqcDvkzkR3+0doLuTF+o0eV7YJMWo5l3RVcBu/iXdS4yChFV2m3UU9DB7wIG1ojs1Ecm/ANfv/FpYMkEW9F/4Xdre34jl1K2FdImMW9iaXFI+gg6KERZmUVnuO/TwUd390w7xwCZNtLw8uCxm046x2/fCNKAqe
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ED0615567C4174459E696E730C1B2BC3@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726227AbfKHVC2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Nov 2019 16:02:28 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37643 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727210AbfKHVC2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Nov 2019 16:02:28 -0500
+Received: by mail-yb1-f193.google.com with SMTP id q7so271237ybk.4
+        for <linux-nfs@vger.kernel.org>; Fri, 08 Nov 2019 13:02:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z8ebJKohpb1s42CAw3G5otQLMnl5+nXFKve/m40i4Zc=;
+        b=AsM6tvjqHXIWSExDWPRDmO5iTab7iaqhKOsSy4lr6JveVWHMHJYlDpa0ngyFQ0LalA
+         qE9RH5w0+VqleGWu1Hh1/qs7dK0gshsuf4J6SbdUGjIUDerDTOngw7IoRWFsM9o08fTJ
+         FceZRFizemMQu32fEfjzmX9WRg2BXZhCHWUH/2wsvUkALuDX68GxqKJn3227GJzbfvqJ
+         0w1EFCEX2xuVBNtklmxR39bnSlHWBXhBLmMp75m66R/SI3XaqDOvIYdGQwTNWpyO8NUf
+         h+AWRP7Xw3VolALEPyjkpTK4PdZ3KbL9LIZg5vaLPhxpOzbFNzNqsPn2lMrjaqwjdLIe
+         cP0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Z8ebJKohpb1s42CAw3G5otQLMnl5+nXFKve/m40i4Zc=;
+        b=N12WC/TG5p8fNKP0MsvIAIc3cghK8vT0tT2cruLVOFc/Ifve2xhA0dsB/xTJf/W+F4
+         99Xz+zaUTq2Qm8Bpit0k6B09FI92hOxzlURrLnNpQ8ZXqF1I6PpqiK3IBKavQSQ4T5aD
+         gm1iauPYRUqjoFp1xFDyMEYkGY37wRjkutgY/KzeDU+7D8Qc/YtlAqiXQhFHzNVgDhdu
+         9di8r48HXdZ4jVSlP93U8wHdj+qTMjsjMYlgc5ij+6EU9NqXxYXwsAYk1X1fyeCx50jG
+         pQrJAuGtc76SYQ+aGPLZHCrbQwQmEyEPS7AL0aI2/aaYLHEXfORSwhefLN+3kekvSPe6
+         6M1g==
+X-Gm-Message-State: APjAAAU84Prb9amOZqP5TSyts5jb8fL9evrpLpdYFO4YESbnKLfnTJRo
+        Lo51a+IZamcxQpAG6NNhMO5kD3QL
+X-Google-Smtp-Source: APXvYqycGWcmeX+AeB8+zeoOrznt8NdEaNzPG9JhTwX6vvHE2svioAWmzUerQWn3kpkwCwmmLyPBQQ==
+X-Received: by 2002:a25:ca07:: with SMTP id a7mr10872148ybg.340.1573246946597;
+        Fri, 08 Nov 2019 13:02:26 -0800 (PST)
+Received: from localhost.localdomain (c-68-42-68-242.hsd1.mi.comcast.net. [68.42.68.242])
+        by smtp.gmail.com with ESMTPSA id p126sm1904033ywc.16.2019.11.08.13.02.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 13:02:25 -0800 (PST)
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH 1/2] NFS: Add FATTR4_WORD1_SPACE_USED to the cache_consistency_bitmask
+Date:   Fri,  8 Nov 2019 16:02:23 -0500
+Message-Id: <20191108210224.33645-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af4c92f0-fa52-4f90-c90a-08d7647bbc99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 18:44:50.2515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MSH/N7JLcsbMqN6BNiQtrbyF8IjdRSow/WmYhR8/5oN+yiRmdy2O5d5Rj9FG1Ka6x4PpAOaW6EuqOMNsDKoI4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1945
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTA3IGF0IDE3OjI3IC0wNTAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
-DQo+IE9uIFR1ZSwgT2N0IDI5LCAyMDE5IGF0IDA1OjQ3OjA1UE0gLTA0MDAsIEouIEJydWNlIEZp
-ZWxkcyB3cm90ZToNCj4gPiBPbiBGcmksIE9jdCAyNSwgMjAxOSBhdCAxMTozMzozNkFNIC0wNDAw
-LCBiZmllbGRzIHdyb3RlOg0KPiA+ID4gT24gRnJpLCBPY3QgMjUsIDIwMTkgYXQgMTE6MjE6MTlB
-TSAtMDQwMCwgSi4gQnJ1Y2UgRmllbGRzIHdyb3RlOg0KPiA+ID4gPiBJIHRob3VnaHQgSSB3YXMg
-cnVubmluZyB2MiwgbGV0IG1lIGRvdWJsZS1jaGVjay4uLi4NCj4gPiA+IA0KPiA+ID4gWWVzLCB3
-aXRoIHYyIEknbSBnZXR0aW5nIGEgaGFuZyBvbiBnZW5lcmljLzAxMy4NCj4gPiA+IA0KPiA+ID4g
-SSBjaGVja2VkIHF1aWNrbHkgYW5kIGRpZG4ndCBzZWUgYW55dGhpbmcgaW50ZXJlc3RpbmcgaW4g
-dGhlDQo+ID4gPiBsb2dzLA0KPiA+ID4gb3RoZXJ3aXNlIEkgaGF2ZW4ndCBkb25lIGFueSBkaWdn
-aW5nLg0KPiA+IA0KPiA+IFJlcHJvZHVjZWFibGUganVzdCB3aXRoIC4vY2hlY2sgLW5mcyBnZW5l
-cmljLzAxMy4gIFRoZSBsYXN0IHRoaW5nIEkNCj4gPiBzZWUNCj4gPiBpbiB3aXJlc2hhcmsgaXMg
-YW4gYXN5bmNocm9ub3VzIENPUFkgY2FsbCBhbmQgcmVwbHkuICBXaGljaCBtZWFucw0KPiA+IGl0
-J3MNCj4gPiBwcm9iYWJseSB0cnlpbmcgdG8gZG8gYSBDQl9PRkZMT0FELiAgSG0uDQo+IA0KPiBP
-aCwgSSB0aGluayBpdCBqdXN0IG5lZWRzIHRoZSBmb2xsb3dpbmcuDQo+IA0KPiAtLWIuDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvZnMvbmZzZC9uZnM0Y2FsbGJhY2suYyBiL2ZzL25mc2QvbmZzNGNhbGxi
-YWNrLmMNCj4gaW5kZXggZmI3MWU3ZjlkMGQ5Li5lNDk2MDQ3MDFhNzEgMTAwNjQ0DQo+IC0tLSBh
-L2ZzL25mc2QvbmZzNGNhbGxiYWNrLmMNCj4gKysrIGIvZnMvbmZzZC9uZnM0Y2FsbGJhY2suYw0K
-PiBAQCAtMTAyNiw4ICsxMDI2LDggQEAgc3RhdGljIGJvb2wgbmZzZDQxX2NiX2dldF9zbG90KHN0
-cnVjdA0KPiBuZnNkNF9jYWxsYmFjayAqY2IsIHN0cnVjdCBycGNfdGFzayAqdGFzaykNCj4gIAkJ
-CXJldHVybiBmYWxzZTsNCj4gIAkJfQ0KPiAgCQlycGNfd2FrZV91cF9xdWV1ZWRfdGFzaygmY2xw
-LT5jbF9jYl93YWl0cSwgdGFzayk7DQo+IC0JCWNiLT5jYl9ob2xkc19zbG90ID0gdHJ1ZTsNCj4g
-IAl9DQo+ICsJY2ItPmNiX2hvbGRzX3Nsb3QgPSB0cnVlOw0KPiAgCXJldHVybiB0cnVlOw0KPiAg
-fQ0KPiAgDQoNCkRvaCEgVGhhbmtzIGZvciBzcG90dGluZyB0aGF0Lg0KDQotLSANClRyb25kIE15
-a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+
+Changing a sparse file could have an effect not only on the file size,
+but also on the number of blocks used by the file in the underlying
+filesystem. Let's update the SPACE_USED attribute whenever we update
+SIZE to be as accurate as possible.
+
+This patch fixes xfstests generic/568, which tests that fallocating an
+unaligned range allocates all blocks touched by that range. Without this
+patch, `stat` reports 0 bytes used immediately after the fallocate.
+Adding a `sleep 5` to the test also catches the update, but it's better
+to just do it when we know something has changed.
+
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index ac9063c06205..00a1f3ec7f22 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3775,7 +3775,7 @@ static int _nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *f
+ 
+ 		memcpy(server->cache_consistency_bitmask, res.attr_bitmask, sizeof(server->cache_consistency_bitmask));
+ 		server->cache_consistency_bitmask[0] &= FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE;
+-		server->cache_consistency_bitmask[1] &= FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY;
++		server->cache_consistency_bitmask[1] &= FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY|FATTR4_WORD1_SPACE_USED;
+ 		server->cache_consistency_bitmask[2] = 0;
+ 
+ 		/* Avoid a regression due to buggy server */
+-- 
+2.24.0
+
