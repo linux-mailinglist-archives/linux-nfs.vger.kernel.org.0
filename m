@@ -2,140 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B44CF78AC
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2019 17:25:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 552FEF8107
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2019 21:22:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKQY7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Nov 2019 11:24:59 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46856 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfKKQY7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Nov 2019 11:24:59 -0500
-Received: by mail-io1-f67.google.com with SMTP id c6so15162999ioo.13
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2019 08:24:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:message-id:subject:from:to:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=OOtJ23XNA5DrBFcFfVCYFuRj1lnoUVTAd8cHNXwkL54=;
-        b=FTmikBzm/dgw1aOcK561r+LirNAhKAfON5BaUKJPUY4Erf9QgY1dEuTypGBtlCw3qd
-         4M6MPoOjZSqkdkhQzHBl7Y8BxHMl1o+MDgVdWDuieJDgU6xUMrxewTF3EW290x7CjtLU
-         Ztl1ALl9q0xJWwgY0ydrovCybecavhDU1MlKwn2GgZA5of6k5A5VbqbythsiWUZOmZRl
-         nzB9AbYTTSXgx46lL84kaos6nKMAb6EoSmwRzeukrRq5TKXzRtuzvMO6SdWtBqLEIEZB
-         o9t6MC4ev2QPRXLP0P1Exy6V4QRRNCMv3HnSnEH1sGWvqdCL1kpx89BoukNVk7/bcWkH
-         V2gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:message-id:subject:from:to:date
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=OOtJ23XNA5DrBFcFfVCYFuRj1lnoUVTAd8cHNXwkL54=;
-        b=gSjtzCknVLVR1+Ta+UKYrF+P88qk88K5ekL3xR6YYGWLXEj49joYNrxbaj8jb0hj7K
-         MjUyaCTxGY7OlIDDx03Ip0f1YxhMa6L2du7bkdrnnKgiPAxE3CitJwzaj9854OO/6YEW
-         MAAXVb9klDVDyh4xL37aG/HHic1x/FJmqdvazovthN8eOsclF+g3kpsKXCGEhj9VQrP1
-         9zDFucq0kBS0iTbYJgk0XZuj/aaUf4+VyOVo7qf1l6L8TrTerbrTrWli3pqVaHcJyh85
-         MxVA8AcJol+3QoKQXAqvN9RX5oUdllATU6P8150ZTcR/4DORTcXp3j1c1BuUmSbvb7pu
-         Gp1w==
-X-Gm-Message-State: APjAAAUXWVU4UlGh3rLcib043wofXyCKftOvfPdwhhN4Xuncc/ZTCUu0
-        axwzXnUOoMGwz/13/+8ISgmwtePL
-X-Google-Smtp-Source: APXvYqzNYEcIWRLdPzyGFDhf94XnJ+PWdF99JR2ZwH6R+VNMvnlvWNzOOOiAV4mNQde8mRnVzg86lA==
-X-Received: by 2002:a02:4e84:: with SMTP id r126mr1355872jaa.119.1573489497070;
-        Mon, 11 Nov 2019 08:24:57 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.googlemail.com with ESMTPSA id d8sm1337734ioq.84.2019.11.11.08.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 08:24:56 -0800 (PST)
-Message-ID: <fa4438011d861431d7c1bf4343527ec9099381fd.camel@gmail.com>
-Subject: Re: [PATCH 1/2] NFS: Add FATTR4_WORD1_SPACE_USED to the
- cache_consistency_bitmask
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date:   Mon, 11 Nov 2019 11:24:55 -0500
-In-Reply-To: <1296f01521c89e00a9c5f4aff3332829415333c5.camel@hammerspace.com>
-References: <20191108210224.33645-1-Anna.Schumaker@Netapp.com>
-         <1296f01521c89e00a9c5f4aff3332829415333c5.camel@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 
+        id S1727409AbfKKUV7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Nov 2019 15:21:59 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:40225 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbfKKUV7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Nov 2019 15:21:59 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M8yoa-1iaKeu0fEE-0063PN; Mon, 11 Nov 2019 21:16:46 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-nfs@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 00/19] nfs, nfsd: avoid 32-bit time_t
+Date:   Mon, 11 Nov 2019 21:16:20 +0100
+Message-Id: <20191111201639.2240623-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:JN3hpuFv/t2CfnZyt61MtRx0CiB1Qt5nIaW4ZS3du16NUH8dMu4
+ YzUQ3f6jQFhZwc/rSf6LciJS668cjuruv6UXtXMppewy+Zn4V39yi0GN92e2VmGblaGAITV
+ h0mJEZAO+IcXFKtZhdOWZZp/YUmpSC+HzcKZD6qECC93LLDUy5px+4sV3po6zUxaBuu9Bgm
+ yi4t9xYBfPDqzvmY2Uffw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:29bmaPZVYZ4=:3/cSUbtTGBhkrYm1WF+G8n
+ DZXhZSzdsRFBvSxzdPySopCDmZLeptnfFbV6F05/lmVN/2nSHbhskeq4HPAONDCZpyx1ucvIw
+ q67hshswo1euuPXMNk8a/lD1eBY2EEF5zA1eOvDjl7f89wyC59kem23VtX4w5JWK2YZAO4p7L
+ wRxKikw01WJKLcOCPeoRG/RqQF3QEXggeJ2XYhku8rDWm3nUDDNWkaZABw0tlyGWm2NLfrTFs
+ v4fAA0CAur7ySQZBbIL/Se4loN1bDsfNvVDINrA/HG94xyJgVcYMckaXqKf7nn/NHqAmtRlYQ
+ OuMzjTpEE7GAYCN6FjbyMadO/emufUYeSfD+KSc+ByGJrPDkQC2qjkPYkb7yAedbHceacBlv8
+ OEZ/kNI7EYh0MQJhBFELdkiFAjAuudk5HAXOphYeSVzXYyDbhBpha3k+PhpD3PnDuLnymMOhs
+ atpU6dvJGJAX8/McGWerLBEU651uZOa565q3tha6iygqnxBk3GSj7ZOuTFLbAVNc/TD6qVIjN
+ ++/duQKPiatSbhBpLTqhlA4B8RMjHBUzZSFsAm+henl5rfhWaDckPBDnLi7q31KsC+BwoSEch
+ QsnkszmQ8zEHxb6OOu6I3ANhEOLLVQjhMIySxVUg9cLFRLj1vylKHN4kVOGC9FtH380YpcdpS
+ JDEkGdIoeMhNwJxAUI7j8tDO7ZH2YC20ETjvUCkEPGBbVAW7Cya4+RnWay5/vEVwOv0F6Mz6p
+ ZQZSPfn95sds/UtHAEtaPdLsCDG4xipBm1aLNLd0iasSvW6pG2JTXWvjG0BBKy+vk6CCd+YhV
+ e/wXOp3iLyuNA82bcuYvzmsoDXVCn5/ZkyMk2EuMgDRw82JKKCt2XPr8I3WvAPHLP2LgNw7Lh
+ ZEzP5nFG3rhJEMOXHpqA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+I have finally found the time to convert all of NFS away from
+using time_t derived data structures to (mostly) time64_t,
+unifying the behavior between 32-bit and 64-bit architectures
+and paving the way to removing the old time_t definition from
+the kernel.
 
-On Fri, 2019-11-08 at 21:22 +0000, Trond Myklebust wrote:
-> On Fri, 2019-11-08 at 16:02 -0500, schumaker.anna@gmail.com wrote:
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > 
-> > Changing a sparse file could have an effect not only on the file
-> > size,
-> > but also on the number of blocks used by the file in the underlying
-> > filesystem. Let's update the SPACE_USED attribute whenever we update
-> > SIZE to be as accurate as possible.
-> > 
-> > This patch fixes xfstests generic/568, which tests that fallocating
-> > an
-> > unaligned range allocates all blocks touched by that range. Without
-> > this
-> > patch, `stat` reports 0 bytes used immediately after the fallocate.
-> > Adding a `sleep 5` to the test also catches the update, but it's
-> > better
-> > to just do it when we know something has changed.
-> > 
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index ac9063c06205..00a1f3ec7f22 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -3775,7 +3775,7 @@ static int _nfs4_server_capabilities(struct
-> > nfs_server *server, struct nfs_fh *f
-> >  
-> >  		memcpy(server->cache_consistency_bitmask,
-> > res.attr_bitmask, sizeof(server->cache_consistency_bitmask));
-> >  		server->cache_consistency_bitmask[0] &=
-> > FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE;
-> > -		server->cache_consistency_bitmask[1] &=
-> > FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY;
-> > +		server->cache_consistency_bitmask[1] &=
-> > FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY|FATTR4_WORD1_SPAC
-> > E_USED;
-> 
-> I'd rather not do this. Space used is not a cache consistency attribute
-> , as we do not use it to revalidate the cache and it can be rather
-> expensive to retrieve on some platforms.
+Please review and test. This may be a little late for linux-5.5,
+but I hope to get it all into linux-5.6 once all review comments
+are addressed.
 
-Okay, that makes sense.
+     Arnd
 
-> 
-> I'd therefore prefer that we just make sure we mark the cache validity
-> with NFS_INO_INVALID_OTHER when we have a write succeed on a sparse
-> file.
+Arnd Bergmann (19):
+  sunrpc: convert to time64_t for expiry
+  nfs: use time64_t internally
+  nfs: use timespec64 in nfs_fattr
+  nfs: callback: use timespec64 in cb_getattrres
+  nfs: fscache: use timespec64 in inode auxdata
+  nfs: remove timespec from xdr_encode_nfstime
+  nfs: encode nfsv4 timestamps as 64-bit
+  nfsd: use ktime_get_seconds() for timestamps
+  nfsd: print 64-bit timestamps in client_info_show
+  nfsd: handle nfs3 timestamps as unsigned
+  nfsd: use timespec64 in encode_time_delta
+  nfsd: make 'boot_time' 64-bit wide
+  nfsd: pass a 64-bit guardtime to nfsd_setattr()
+  nfsd: use time64_t in nfsd_proc_setattr() check
+  nfsd: fix delay timer on 32-bit architectures
+  nfsd: fix jiffies/time_t mixup in LRU list
+  nfsd: use boottime for lease expiry alculation
+  nfsd: use ktime_get_real_seconds() in nfs4_verifier
+  nfsd: remove nfs4_reset_lease() declarations
 
-It looks like setting falloc_bitmask to use the standard nfs4_fattr_bitmap
-instead of the cache_consistency_bitmask will also update the SPACE_USED
-attribute after a fallocate call.
+ fs/nfs/callback.h                     |  4 +-
+ fs/nfs/callback_proc.c                |  4 +-
+ fs/nfs/callback_xdr.c                 |  6 +--
+ fs/nfs/fscache-index.c                |  6 ++-
+ fs/nfs/fscache.c                      | 18 ++++---
+ fs/nfs/fscache.h                      |  8 ++--
+ fs/nfs/inode.c                        | 54 ++++++++++-----------
+ fs/nfs/internal.h                     |  6 +--
+ fs/nfs/nfs2xdr.c                      | 33 ++++++-------
+ fs/nfs/nfs3xdr.c                      | 14 ++----
+ fs/nfs/nfs4xdr.c                      | 35 +++++++-------
+ fs/nfsd/netns.h                       |  6 +--
+ fs/nfsd/nfs3xdr.c                     | 20 ++++----
+ fs/nfsd/nfs4callback.c                |  7 ++-
+ fs/nfsd/nfs4layouts.c                 |  2 +-
+ fs/nfsd/nfs4proc.c                    |  2 +-
+ fs/nfsd/nfs4recover.c                 |  8 ++--
+ fs/nfsd/nfs4state.c                   | 68 +++++++++++++--------------
+ fs/nfsd/nfs4xdr.c                     |  4 +-
+ fs/nfsd/nfsctl.c                      |  6 +--
+ fs/nfsd/nfsd.h                        |  2 -
+ fs/nfsd/nfsfh.h                       |  4 +-
+ fs/nfsd/nfsproc.c                     |  6 +--
+ fs/nfsd/state.h                       | 10 ++--
+ fs/nfsd/vfs.c                         |  4 +-
+ fs/nfsd/vfs.h                         |  2 +-
+ fs/nfsd/xdr3.h                        |  2 +-
+ include/linux/nfs_fs_sb.h             |  2 +-
+ include/linux/nfs_xdr.h               | 14 +++---
+ include/linux/sunrpc/cache.h          | 42 +++++++++--------
+ include/linux/sunrpc/gss_api.h        |  4 +-
+ include/linux/sunrpc/gss_krb5.h       |  2 +-
+ net/sunrpc/auth_gss/gss_krb5_mech.c   | 12 +++--
+ net/sunrpc/auth_gss/gss_krb5_seal.c   |  8 ++--
+ net/sunrpc/auth_gss/gss_krb5_unseal.c |  6 +--
+ net/sunrpc/auth_gss/gss_krb5_wrap.c   | 16 +++----
+ net/sunrpc/auth_gss/gss_mech_switch.c |  2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c     |  6 +--
+ net/sunrpc/cache.c                    | 18 +++----
+ net/sunrpc/svcauth_unix.c             | 10 ++--
+ 40 files changed, 243 insertions(+), 240 deletions(-)
 
-I'll play around with NFS_INO_INVALID_OTHER next, but making use of the trailing
-getattr that ALLOCATE and DEALLOCATE already have seems more straightforward to
-me.
-
-Anna
-
-> 
-> >  		server->cache_consistency_bitmask[2] = 0;
-> >  
-> >  		/* Avoid a regression due to buggy server */
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+-- 
+2.20.0
 
