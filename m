@@ -2,105 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C83FBF8CAB
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 11:20:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45DACF8F1C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 13:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKLKU0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 05:20:26 -0500
-Received: from audible.transient.net ([24.143.126.66]:39266 "HELO
-        audible.transient.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726924AbfKLKU0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 05:20:26 -0500
-Received: (qmail 30547 invoked from network); 12 Nov 2019 10:13:44 -0000
-Received: from cucamonga.audible.transient.net (192.168.2.5)
-  by canarsie.audible.transient.net with QMQP; 12 Nov 2019 10:13:44 -0000
-Received: (nullmailer pid 3784 invoked by uid 1000);
-        Tue, 12 Nov 2019 10:13:43 -0000
-Date:   Tue, 12 Nov 2019 10:13:43 +0000
-From:   Jamie Heilman <jamie@audible.transient.net>
-To:     "J. Bruce Fields" <bfields@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: PROBLEM: NULL pointer dereference; nfsd4_remove_cld_pipe
-Message-ID: <20191112101343.GA2806@audible.transient.net>
-Mail-Followup-To: "J. Bruce Fields" <bfields@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        id S1727104AbfKLMA5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 07:00:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41488 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbfKLMA4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:00:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8DD9AF9F;
+        Tue, 12 Nov 2019 12:00:53 +0000 (UTC)
+Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+To:     Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+ <20191112003452.4756-3-ira.weiny@intel.com>
+ <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4fc3c3cf-fa23-db8c-f236-026716f77913@suse.com>
+Date:   Tue, 12 Nov 2019 14:00:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Giving 5.4.0-rc7 a spin I hit a NULL pointer dereference and bisected
-it to:
-
-commit 6ee95d1c899186c0798cafd25998d436bcdb9618
-Author: Scott Mayhew <smayhew@redhat.com>
-Date:   Mon Sep 9 16:10:31 2019 -0400
-
-    nfsd: add support for upcall version 2
 
 
-The splat against 5.3.0-rc2-00034-g6ee95d1c8991:
+On 12.11.19 г. 2:43 ч., Andrew Morton wrote:
+> On Mon, 11 Nov 2019 16:34:52 -0800 ira.weiny@intel.com wrote:
+> 
+>> From: Ira Weiny <ira.weiny@intel.com>
+>>
+>> swap_activate() and swap_deactivate() have nothing to do with
+>> address spaces.  We want to eventually make the address space operations
+>> dynamic to switch inode flags on the fly.
+> 
+> What does this mean?
+> 
+>>  So to simplify this code as
+>> well as properly track these operations we move these functions to the
+>> file_operations vector.
+>>
+>> This has been tested with XFS but not NFS, f2fs, or btrfs.
+>>
+>> Also note f2fs and xfs have simple moves of their functions to
+>> facilitate compilation.  No functional changes are contained within
+>> those functions.
+>>
+>> ...
+>>
+>> --- a/fs/btrfs/inode.c
+>> +++ b/fs/btrfs/inode.c
+>> @@ -11002,6 +11002,8 @@ static const struct file_operations btrfs_dir_file_operations = {
+>>  #endif
+>>  	.release        = btrfs_release_file,
+>>  	.fsync		= btrfs_sync_file,
+>> +	.swap_activate	= btrfs_swap_activate,
+>> +	.swap_deactivate = btrfs_swap_deactivate,
+>>  };
+> 
+> Shouldn't this be btrfs_file_operations?
 
-BUG: kernel NULL pointer dereference, address: 0000000000000036
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0 
-Oops: 0000 [#1] PREEMPT SMP PTI
-CPU: 0 PID: 2936 Comm: rpc.nfsd Not tainted 5.3.0-rc2-00034-g6ee95d1c8991 #1
-Hardware name: Dell Inc. Precision WorkStation T3400  /0TP412, BIOS A14 04/30/2012
-RIP: 0010:crypto_destroy_tfm+0x5/0x4d
-Code: 78 01 00 00 48 85 c0 74 05 e9 05 05 66 00 c3 55 48 8b af 80 01 00 00 e8 d5 ff ff ff 48 89 ef 5d e9 12 f9 ef ff 48 85 ff 74 47 <48> 83 7e 30 00 41 55 4c 8b 6e 38 41 54 49 89 fc 55 48 89 f5 75 14
-RSP: 0018:ffffc90000b7bd68 EFLAGS: 00010282
-RAX: ffffffffa0402841 RBX: ffff888230484400 RCX: 0000000000002cd0
-RDX: 0000000000002cce RSI: 0000000000000006 RDI: fffffffffffffffe
-RBP: ffffffff81e68440 R08: ffff888232801800 R09: ffffffffa0402841
-R10: 0000000000000200 R11: ffff88823048ae40 R12: ffff888231585100
-R13: ffff88823048ae40 R14: 000000000000000b R15: ffff888230484400
-FS:  00007f02102c3740(0000) GS:ffff888233a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000036 CR3: 0000000230f94000 CR4: 00000000000406f0
-Call Trace:
- nfsd4_remove_cld_pipe+0x6d/0x83 [nfsd]
- nfsd4_cld_tracking_init+0x1cf/0x295 [nfsd]
- nfsd4_client_tracking_init+0x72/0x13e [nfsd]
- nfs4_state_start_net+0x22a/0x2cf [nfsd]
- nfsd_svc+0x1c6/0x292 [nfsd]
- write_threads+0x68/0xb0 [nfsd]
- ? write_versions+0x333/0x333 [nfsd]
- nfsctl_transaction_write+0x4a/0x62 [nfsd]
- vfs_write+0xa0/0xdd
- ksys_write+0x71/0xba
- do_syscall_64+0x48/0x55
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f021056c904
-Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 48 8d 05 d9 3a 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 48 83 ec 28 48 89 54 24 18 48
-RSP: 002b:00007ffdc76ec618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000055b534955560 RCX: 00007f021056c904
-RDX: 0000000000000002 RSI: 000055b534955560 RDI: 0000000000000003
-RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffdc76ec4b0
-R10: 00007ffdc76ec367 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000008 R14: 0000000000000000 R15: 000055b534b8a2a0
-Modules linked in: cpufreq_userspace cpufreq_powersave cpufreq_ondemand cpufreq_conservative autofs4 fan nfsd auth_rpcgss nfs lockd grace fscache sunrpc bridge stp llc nhpoly1305_sse2 nhpoly1305 aes_generic chacha_x86_64 chacha_generic adiantum poly1305_generic vhost_net tun vhost tap dm_crypt snd_hda_codec_analog snd_hda_codec_generic usb_storage snd_hda_intel kvm_intel snd_hda_codec kvm snd_hwdep snd_hda_core snd_pcm dcdbas snd_timer irqbypass snd soundcore sr_mod cdrom tg3 sg floppy evdev xfs dm_mod raid1 md_mod psmouse
-CR2: 0000000000000036
----[ end trace bc12bbe4cdd6319f ]---
-...
-NFS: Registering the id_resolver key type
-Key type id_resolver registered
-Key type id_legacy registered
+INdeed, having swap activate on a directory doesn't make much sense.
 
-
-My kernel config is at
-http://audible.transient.net/~jamie/k/upcallv2.config-5.3.0-rc2-00034-g6ee95d1c8991
-
-I don't think there's anything terribly interesting about my nfs
-server setup, this happens reliably on boot up, idle network, no
-active clients; let me know what else you need, happy to debug.
-
--- 
-Jamie Heilman                     http://audible.transient.net/~jamie/
+> 
+> 
