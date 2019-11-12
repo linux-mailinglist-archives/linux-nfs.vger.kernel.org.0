@@ -2,207 +2,290 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14EDDF9575
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 17:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E347F964D
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 17:56:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKLQUy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 11:20:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48836 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726008AbfKLQUy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 11:20:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573575653;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qKqGW9afIIYeA+1yNvmdf7FniJrl7g1Mug3IjO2rfus=;
-        b=dE0R/GUPPrPFZihvOWw/Aj0xDeAnyARHEKXlO8xpUIAVJjbn/wp4X3S6WCxvkSukl8MdMN
-        T3eCR1EYMw7hmJCf9uyRClrbu1E9aHkaoJzvGdEGA3qUa7ej5KnKcxADsbegDIIS1j8Je+
-        o6z7vBiz8I+Lqe4kG7Mp2jM3qSS9LGk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-yhYPCXbgM1ey_6WWY-KlwA-1; Tue, 12 Nov 2019 11:20:49 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBB7D81A334;
-        Tue, 12 Nov 2019 16:20:48 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-210.rdu2.redhat.com [10.10.122.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E4F210027B3;
-        Tue, 12 Nov 2019 16:20:48 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 979C0208EC; Tue, 12 Nov 2019 11:20:47 -0500 (EST)
-Date:   Tue, 12 Nov 2019 11:20:47 -0500
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Jamie Heilman <jamie@audible.transient.net>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: PROBLEM: NULL pointer dereference; nfsd4_remove_cld_pipe
-Message-ID: <20191112162047.GF4276@coeurl.usersys.redhat.com>
-References: <20191112101343.GA2806@audible.transient.net>
+        id S1726991AbfKLQz2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 11:55:28 -0500
+Received: from fieldses.org ([173.255.197.46]:41100 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727486AbfKLQxb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:31 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 29AC41C23; Tue, 12 Nov 2019 11:53:30 -0500 (EST)
+Date:   Tue, 12 Nov 2019 11:53:30 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <schumakeranna@gmail.com>
+Subject: Re: [PATCH 1/2] sunrpc: remove __KERNEL__ ifdefs
+Message-ID: <20191112165330.GD8905@fieldses.org>
+References: <20191112153423.27337-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191112101343.GA2806@audible.transient.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: yhYPCXbgM1ey_6WWY-KlwA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/mixed; boundary="0lnxQi9hkpPO77W3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191112153423.27337-1-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied both, but if there turn out to be any conflicts I'm also
+OK with it going through the client side or splitting it up somehow.
 
-Hi Jamie,
+--b.
 
-On Tue, 12 Nov 2019, Jamie Heilman wrote:
-
-> Giving 5.4.0-rc7 a spin I hit a NULL pointer dereference and bisected
-> it to:
->=20
-> commit 6ee95d1c899186c0798cafd25998d436bcdb9618
-> Author: Scott Mayhew <smayhew@redhat.com>
-> Date:   Mon Sep 9 16:10:31 2019 -0400
->=20
->     nfsd: add support for upcall version 2
->=20
->=20
-> The splat against 5.3.0-rc2-00034-g6ee95d1c8991:
->=20
-> BUG: kernel NULL pointer dereference, address: 0000000000000036
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0=20
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 0 PID: 2936 Comm: rpc.nfsd Not tainted 5.3.0-rc2-00034-g6ee95d1c8991=
- #1
-> Hardware name: Dell Inc. Precision WorkStation T3400  /0TP412, BIOS A14 0=
-4/30/2012
-> RIP: 0010:crypto_destroy_tfm+0x5/0x4d
-> Code: 78 01 00 00 48 85 c0 74 05 e9 05 05 66 00 c3 55 48 8b af 80 01 00 0=
-0 e8 d5 ff ff ff 48 89 ef 5d e9 12 f9 ef ff 48 85 ff 74 47 <48> 83 7e 30 00=
- 41 55 4c 8b 6e 38 41 54 49 89 fc 55 48 89 f5 75 14
-> RSP: 0018:ffffc90000b7bd68 EFLAGS: 00010282
-> RAX: ffffffffa0402841 RBX: ffff888230484400 RCX: 0000000000002cd0
-> RDX: 0000000000002cce RSI: 0000000000000006 RDI: fffffffffffffffe
-> RBP: ffffffff81e68440 R08: ffff888232801800 R09: ffffffffa0402841
-> R10: 0000000000000200 R11: ffff88823048ae40 R12: ffff888231585100
-> R13: ffff88823048ae40 R14: 000000000000000b R15: ffff888230484400
-> FS:  00007f02102c3740(0000) GS:ffff888233a00000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000036 CR3: 0000000230f94000 CR4: 00000000000406f0
-> Call Trace:
->  nfsd4_remove_cld_pipe+0x6d/0x83 [nfsd]
->  nfsd4_cld_tracking_init+0x1cf/0x295 [nfsd]
->  nfsd4_client_tracking_init+0x72/0x13e [nfsd]
->  nfs4_state_start_net+0x22a/0x2cf [nfsd]
->  nfsd_svc+0x1c6/0x292 [nfsd]
->  write_threads+0x68/0xb0 [nfsd]
->  ? write_versions+0x333/0x333 [nfsd]
->  nfsctl_transaction_write+0x4a/0x62 [nfsd]
->  vfs_write+0xa0/0xdd
->  ksys_write+0x71/0xba
->  do_syscall_64+0x48/0x55
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7f021056c904
-> Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 4=
-8 8d 05 d9 3a 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff=
- ff 77 54 c3 0f 1f 00 48 83 ec 28 48 89 54 24 18 48
-> RSP: 002b:00007ffdc76ec618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 000055b534955560 RCX: 00007f021056c904
-> RDX: 0000000000000002 RSI: 000055b534955560 RDI: 0000000000000003
-> RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffdc76ec4b0
-> R10: 00007ffdc76ec367 R11: 0000000000000246 R12: 0000000000000000
-> R13: 0000000000000008 R14: 0000000000000000 R15: 000055b534b8a2a0
-> Modules linked in: cpufreq_userspace cpufreq_powersave cpufreq_ondemand c=
-pufreq_conservative autofs4 fan nfsd auth_rpcgss nfs lockd grace fscache su=
-nrpc bridge stp llc nhpoly1305_sse2 nhpoly1305 aes_generic chacha_x86_64 ch=
-acha_generic adiantum poly1305_generic vhost_net tun vhost tap dm_crypt snd=
-_hda_codec_analog snd_hda_codec_generic usb_storage snd_hda_intel kvm_intel=
- snd_hda_codec kvm snd_hwdep snd_hda_core snd_pcm dcdbas snd_timer irqbypas=
-s snd soundcore sr_mod cdrom tg3 sg floppy evdev xfs dm_mod raid1 md_mod ps=
-mouse
-> CR2: 0000000000000036
-> ---[ end trace bc12bbe4cdd6319f ]---
-> ...
-> NFS: Registering the id_resolver key type
-> Key type id_resolver registered
-> Key type id_legacy registered
->=20
->=20
-> My kernel config is at
-> http://audible.transient.net/~jamie/k/upcallv2.config-5.3.0-rc2-00034-g6e=
-e95d1c8991
->=20
-> I don't think there's anything terribly interesting about my nfs
-> server setup, this happens reliably on boot up, idle network, no
-> active clients; let me know what else you need, happy to debug.
->=20
-> --=20
-> Jamie Heilman                     http://audible.transient.net/~jamie/
->=20
-Please try this patch (v2 because I messed up the first one).
-
--Scott
-
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="0001-nfsd-Fix-cld_net-cn_tfm-initialization.patch"
-Content-Transfer-Encoding: quoted-printable
-
-From 34ae6455abfd81b47ab34b66ca88a29ff33c7d98 Mon Sep 17 00:00:00 2001
-From: Scott Mayhew <smayhew@redhat.com>
-Date: Tue, 12 Nov 2019 10:10:00 -0500
-Subject: [PATCH v2] nfsd: Fix cld_net->cn_tfm initialization
-
-Don't assign an error pointer to cn->cn_tfm, otherwise
-an oops will occur in nfsd4_remove_cld_pipe().
-
-Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
-Reported-by: Jamie Heilman <jamie@audible.transient.net>
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfsd/nfs4recover.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index cdc75ad4438b..d1bc56b2e861 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -1578,6 +1578,7 @@ nfsd4_cld_tracking_init(struct net *net)
- =09struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
- =09bool running;
- =09int retries =3D 10;
-+=09struct crypto_shash *tfm;
-=20
- =09status =3D nfs4_cld_state_init(net);
- =09if (status)
-@@ -1586,11 +1587,12 @@ nfsd4_cld_tracking_init(struct net *net)
- =09status =3D __nfsd4_init_cld_pipe(net);
- =09if (status)
- =09=09goto err_shutdown;
--=09nn->cld_net->cn_tfm =3D crypto_alloc_shash("sha256", 0, 0);
--=09if (IS_ERR(nn->cld_net->cn_tfm)) {
--=09=09status =3D PTR_ERR(nn->cld_net->cn_tfm);
-+=09tfm =3D crypto_alloc_shash("sha256", 0, 0);
-+=09if (IS_ERR(tfm)) {
-+=09=09status =3D PTR_ERR(tfm);
- =09=09goto err_remove;
- =09}
-+=09nn->cld_net->cn_tfm =3D tfm;
-=20
- =09/*
- =09 * rpc pipe upcalls take 30 seconds to time out, so we don't want to
---=20
-2.17.2
-
-
---0lnxQi9hkpPO77W3--
-
+On Tue, Nov 12, 2019 at 04:34:22PM +0100, Christoph Hellwig wrote:
+> Remove the __KERNEL__ ifdefs from the non-UAPI sunrpc headers,
+> as those can't be included from user space programs.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/sunrpc/auth.h        | 3 ---
+>  include/linux/sunrpc/auth_gss.h    | 2 --
+>  include/linux/sunrpc/clnt.h        | 3 ---
+>  include/linux/sunrpc/gss_api.h     | 2 --
+>  include/linux/sunrpc/gss_err.h     | 3 ---
+>  include/linux/sunrpc/msg_prot.h    | 3 ---
+>  include/linux/sunrpc/rpc_pipe_fs.h | 3 ---
+>  include/linux/sunrpc/svcauth.h     | 4 ----
+>  include/linux/sunrpc/svcauth_gss.h | 2 --
+>  include/linux/sunrpc/xdr.h         | 3 ---
+>  include/linux/sunrpc/xprt.h        | 4 ----
+>  include/linux/sunrpc/xprtsock.h    | 4 ----
+>  12 files changed, 36 deletions(-)
+> 
+> diff --git a/include/linux/sunrpc/auth.h b/include/linux/sunrpc/auth.h
+> index 5f9076fdb090..e9ec742796e7 100644
+> --- a/include/linux/sunrpc/auth.h
+> +++ b/include/linux/sunrpc/auth.h
+> @@ -10,8 +10,6 @@
+>  #ifndef _LINUX_SUNRPC_AUTH_H
+>  #define _LINUX_SUNRPC_AUTH_H
+>  
+> -#ifdef __KERNEL__
+> -
+>  #include <linux/sunrpc/sched.h>
+>  #include <linux/sunrpc/msg_prot.h>
+>  #include <linux/sunrpc/xdr.h>
+> @@ -194,5 +192,4 @@ struct rpc_cred *get_rpccred(struct rpc_cred *cred)
+>  	return NULL;
+>  }
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_AUTH_H */
+> diff --git a/include/linux/sunrpc/auth_gss.h b/include/linux/sunrpc/auth_gss.h
+> index 30427b729070..43e481aa347a 100644
+> --- a/include/linux/sunrpc/auth_gss.h
+> +++ b/include/linux/sunrpc/auth_gss.h
+> @@ -13,7 +13,6 @@
+>  #ifndef _LINUX_SUNRPC_AUTH_GSS_H
+>  #define _LINUX_SUNRPC_AUTH_GSS_H
+>  
+> -#ifdef __KERNEL__
+>  #include <linux/refcount.h>
+>  #include <linux/sunrpc/auth.h>
+>  #include <linux/sunrpc/svc.h>
+> @@ -90,6 +89,5 @@ struct gss_cred {
+>  	unsigned long		gc_upcall_timestamp;
+>  };
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_AUTH_GSS_H */
+>  
+> diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+> index abc63bd1be2b..64bffcb7142b 100644
+> --- a/include/linux/sunrpc/clnt.h
+> +++ b/include/linux/sunrpc/clnt.h
+> @@ -109,8 +109,6 @@ struct rpc_procinfo {
+>  	const char *		p_name;		/* name of procedure */
+>  };
+>  
+> -#ifdef __KERNEL__
+> -
+>  struct rpc_create_args {
+>  	struct net		*net;
+>  	int			protocol;
+> @@ -237,5 +235,4 @@ static inline int rpc_reply_expected(struct rpc_task *task)
+>  		(task->tk_msg.rpc_proc->p_decode != NULL);
+>  }
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_CLNT_H */
+> diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
+> index 5ac5db4d295f..bd691e08be3b 100644
+> --- a/include/linux/sunrpc/gss_api.h
+> +++ b/include/linux/sunrpc/gss_api.h
+> @@ -13,7 +13,6 @@
+>  #ifndef _LINUX_SUNRPC_GSS_API_H
+>  #define _LINUX_SUNRPC_GSS_API_H
+>  
+> -#ifdef __KERNEL__
+>  #include <linux/sunrpc/xdr.h>
+>  #include <linux/sunrpc/msg_prot.h>
+>  #include <linux/uio.h>
+> @@ -160,6 +159,5 @@ struct gss_api_mech * gss_mech_get(struct gss_api_mech *);
+>   * corresponding call to gss_mech_put. */
+>  void gss_mech_put(struct gss_api_mech *);
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_GSS_API_H */
+>  
+> diff --git a/include/linux/sunrpc/gss_err.h b/include/linux/sunrpc/gss_err.h
+> index a6807867bd21..b73c329c83f2 100644
+> --- a/include/linux/sunrpc/gss_err.h
+> +++ b/include/linux/sunrpc/gss_err.h
+> @@ -34,8 +34,6 @@
+>  #ifndef _LINUX_SUNRPC_GSS_ERR_H
+>  #define _LINUX_SUNRPC_GSS_ERR_H
+>  
+> -#ifdef __KERNEL__
+> -
+>  typedef unsigned int OM_uint32;
+>  
+>  /*
+> @@ -163,5 +161,4 @@ typedef unsigned int OM_uint32;
+>  /* XXXX This is a necessary evil until the spec is fixed */
+>  #define GSS_S_CRED_UNAVAIL GSS_S_FAILURE
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* __LINUX_SUNRPC_GSS_ERR_H */
+> diff --git a/include/linux/sunrpc/msg_prot.h b/include/linux/sunrpc/msg_prot.h
+> index 4722b28ec36a..bea40d9f03a1 100644
+> --- a/include/linux/sunrpc/msg_prot.h
+> +++ b/include/linux/sunrpc/msg_prot.h
+> @@ -8,8 +8,6 @@
+>  #ifndef _LINUX_SUNRPC_MSGPROT_H_
+>  #define _LINUX_SUNRPC_MSGPROT_H_
+>  
+> -#ifdef __KERNEL__ /* user programs should get these from the rpc header files */
+> -
+>  #define RPC_VERSION 2
+>  
+>  /* size of an XDR encoding unit in bytes, i.e. 32bit */
+> @@ -217,5 +215,4 @@ typedef __be32	rpc_fraghdr;
+>  /* Assume INET6_ADDRSTRLEN will always be larger than INET_ADDRSTRLEN... */
+>  #define RPCBIND_MAXUADDRLEN	RPCBIND_MAXUADDR6LEN
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_MSGPROT_H_ */
+> diff --git a/include/linux/sunrpc/rpc_pipe_fs.h b/include/linux/sunrpc/rpc_pipe_fs.h
+> index e90b9bd99ded..cd188a527d16 100644
+> --- a/include/linux/sunrpc/rpc_pipe_fs.h
+> +++ b/include/linux/sunrpc/rpc_pipe_fs.h
+> @@ -2,8 +2,6 @@
+>  #ifndef _LINUX_SUNRPC_RPC_PIPE_FS_H
+>  #define _LINUX_SUNRPC_RPC_PIPE_FS_H
+>  
+> -#ifdef __KERNEL__
+> -
+>  #include <linux/workqueue.h>
+>  
+>  struct rpc_pipe_dir_head {
+> @@ -133,4 +131,3 @@ extern void unregister_rpc_pipefs(void);
+>  extern bool gssd_running(struct net *net);
+>  
+>  #endif
+> -#endif
+> diff --git a/include/linux/sunrpc/svcauth.h b/include/linux/sunrpc/svcauth.h
+> index 3e53a6e2ada7..b0003866a249 100644
+> --- a/include/linux/sunrpc/svcauth.h
+> +++ b/include/linux/sunrpc/svcauth.h
+> @@ -10,8 +10,6 @@
+>  #ifndef _LINUX_SUNRPC_SVCAUTH_H_
+>  #define _LINUX_SUNRPC_SVCAUTH_H_
+>  
+> -#ifdef __KERNEL__
+> -
+>  #include <linux/string.h>
+>  #include <linux/sunrpc/msg_prot.h>
+>  #include <linux/sunrpc/cache.h>
+> @@ -185,6 +183,4 @@ static inline unsigned long hash_mem(char const *buf, int length, int bits)
+>  	return full_name_hash(NULL, buf, length) >> (32 - bits);
+>  }
+>  
+> -#endif /* __KERNEL__ */
+> -
+>  #endif /* _LINUX_SUNRPC_SVCAUTH_H_ */
+> diff --git a/include/linux/sunrpc/svcauth_gss.h b/include/linux/sunrpc/svcauth_gss.h
+> index a4528b26c8aa..ca39a388dc22 100644
+> --- a/include/linux/sunrpc/svcauth_gss.h
+> +++ b/include/linux/sunrpc/svcauth_gss.h
+> @@ -9,7 +9,6 @@
+>  #ifndef _LINUX_SUNRPC_SVCAUTH_GSS_H
+>  #define _LINUX_SUNRPC_SVCAUTH_GSS_H
+>  
+> -#ifdef __KERNEL__
+>  #include <linux/sched.h>
+>  #include <linux/sunrpc/types.h>
+>  #include <linux/sunrpc/xdr.h>
+> @@ -24,5 +23,4 @@ void gss_svc_shutdown_net(struct net *net);
+>  int svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name);
+>  u32 svcauth_gss_flavor(struct auth_domain *dom);
+>  
+> -#endif /* __KERNEL__ */
+>  #endif /* _LINUX_SUNRPC_SVCAUTH_GSS_H */
+> diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+> index f33e5013bdfb..b41f34977995 100644
+> --- a/include/linux/sunrpc/xdr.h
+> +++ b/include/linux/sunrpc/xdr.h
+> @@ -11,8 +11,6 @@
+>  #ifndef _SUNRPC_XDR_H_
+>  #define _SUNRPC_XDR_H_
+>  
+> -#ifdef __KERNEL__
+> -
+>  #include <linux/uio.h>
+>  #include <asm/byteorder.h>
+>  #include <asm/unaligned.h>
+> @@ -552,6 +550,5 @@ xdr_stream_decode_uint32_array(struct xdr_stream *xdr,
+>  		*array = be32_to_cpup(p);
+>  	return retval;
+>  }
+> -#endif /* __KERNEL__ */
+>  
+>  #endif /* _SUNRPC_XDR_H_ */
+> diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+> index d783e15ba898..874205227778 100644
+> --- a/include/linux/sunrpc/xprt.h
+> +++ b/include/linux/sunrpc/xprt.h
+> @@ -19,8 +19,6 @@
+>  #include <linux/sunrpc/xdr.h>
+>  #include <linux/sunrpc/msg_prot.h>
+>  
+> -#ifdef __KERNEL__
+> -
+>  #define RPC_MIN_SLOT_TABLE	(2U)
+>  #define RPC_DEF_SLOT_TABLE	(16U)
+>  #define RPC_MAX_SLOT_TABLE_LIMIT	(65536U)
+> @@ -505,6 +503,4 @@ static inline void xprt_inject_disconnect(struct rpc_xprt *xprt)
+>  }
+>  #endif
+>  
+> -#endif /* __KERNEL__*/
+> -
+>  #endif /* _LINUX_SUNRPC_XPRT_H */
+> diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
+> index a940de03808d..3c1423ee74b4 100644
+> --- a/include/linux/sunrpc/xprtsock.h
+> +++ b/include/linux/sunrpc/xprtsock.h
+> @@ -8,8 +8,6 @@
+>  #ifndef _LINUX_SUNRPC_XPRTSOCK_H
+>  #define _LINUX_SUNRPC_XPRTSOCK_H
+>  
+> -#ifdef __KERNEL__
+> -
+>  int		init_socket_xprt(void);
+>  void		cleanup_socket_xprt(void);
+>  
+> @@ -91,6 +89,4 @@ struct sock_xprt {
+>  #define XPRT_SOCK_WAKE_PENDING	(6)
+>  #define XPRT_SOCK_WAKE_DISCONNECT	(7)
+>  
+> -#endif /* __KERNEL__ */
+> -
+>  #endif /* _LINUX_SUNRPC_XPRTSOCK_H */
+> -- 
+> 2.20.1
