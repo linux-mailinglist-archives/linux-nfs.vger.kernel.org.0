@@ -2,90 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A47ECF9C64
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 22:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A818F9CCC
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 23:14:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKLVha (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 16:37:30 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34050 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLVha (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 16:37:30 -0500
-Received: by mail-yw1-f66.google.com with SMTP id y18so6999480ywk.1
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2019 13:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kUTQIBz1lo0h389F7WpocUOi4Y16RndkL1U5V7h4NfU=;
-        b=lwNB8SPy31L+0JKnv1Rl1lmpV48Nc0BIBOstj2STpUXpFWRgAJzNt5mrbNDy8g7tRu
-         ZB912ZVVGQOaNs7qIQxCR6mN8dnLde64IFsak7x1KwJA0g9002noYWS5Z7OMFPI+h6vq
-         Wl4pxulD6bGQ03yAw0Qsu3YEqDrt94ulTzU+SN35M1RQ7xyQgwAnmmFECXtDVpZ357As
-         b3cMA+5lJrjxDRflcvEEJ1Mp/F18kU1HbXP8DTb4F4AVMJIAD1qozfgvVl4qNYRcrbwe
-         Q3IxMrhJ1T69bsi9XMKh5HtiC08/uZNYh1UylUt706D+suSt9R2xKIQfpOSjGiSH5eyK
-         gdSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=kUTQIBz1lo0h389F7WpocUOi4Y16RndkL1U5V7h4NfU=;
-        b=AXEJm74kQCeh4bKDRcQdDh7AA3HOE36v5o0r4owHDtkE3M8hodORtTritRioG593sw
-         T/LMKkbwwYQNUn8+EpBOx7CFab8lqvDC4SiDZ6v/U3/kR7Ecw+iVWaU+qmmqOSF/5j0V
-         FEfVFHg2YPdwdufkzDF2zCIVJshn9qsNOp1rvJ+QoRSbt4AaKSMJspMWkev9KnwU0cLq
-         bARKV8rfDbnH4UHWceMRINchrhO2O4w+QdlPKYlcIYEM0kfC80s3WZ9iutZvHw8Y4w7F
-         Yb/9Lkvmv7lFVXE1DelQ5ViCw7uv0uBtoWZ5v7onkLsmhAvNDZu9QtzTVPD2bXy6yDvJ
-         sjiA==
-X-Gm-Message-State: APjAAAURU6FqP6QR+jO9GzCuEsHuyTzlqV52hpvv3rDd5Z3lZc5QFwdi
-        6OTHKg9FIjEJORbeu2kHtwU=
-X-Google-Smtp-Source: APXvYqz3IdP2gS9UXj3YvWcxQ4JfyXOzOOocq6z2Yt1jMwvHuBVEMsC4DF5sGNpv0UA/1UneAM4srw==
-X-Received: by 2002:a81:58c6:: with SMTP id m189mr98123ywb.25.1573594648605;
-        Tue, 12 Nov 2019 13:37:28 -0800 (PST)
-Received: from localhost.localdomain (c-68-42-68-242.hsd1.mi.comcast.net. [68.42.68.242])
-        by smtp.gmail.com with ESMTPSA id 137sm14233490ywu.84.2019.11.12.13.37.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:37:28 -0800 (PST)
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 2/2] NFS: Return -ETXTBSY when attempting to write to a swapfile
-Date:   Tue, 12 Nov 2019 16:37:25 -0500
-Message-Id: <20191112213725.414154-2-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191112213725.414154-1-Anna.Schumaker@Netapp.com>
-References: <20191112213725.414154-1-Anna.Schumaker@Netapp.com>
+        id S1726906AbfKLWOl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 17:14:41 -0500
+Received: from mails1n2-route0.email.arizona.edu ([128.196.130.79]:7126 "EHLO
+        mails1n2-route0.email.arizona.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbfKLWOl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 17:14:41 -0500
+IronPort-SDR: S/iBOUKaGLB569LQZe7XQ2XG7hZGGvF9ys0rSPyJW4+mT1BkO9rMycFKBcUiSmFq/K01jLQtVU
+ dMhC5qQhiRIA==
+IronPort-PHdr: =?us-ascii?q?9a23=3AdWbiGRyO0jXhg6vXCy+O+j09IxM/srCxBDY+r6?=
+ =?us-ascii?q?Qd2+oTIJqq85mqBkHD//Il1AaPAdyArase2qGP7fiocFdDyK7JiGoFfp1IWk?=
+ =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
+ =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmTSwbalvIBmoqQjdudQajIp+Jq0s1h?=
+ =?us-ascii?q?bHv3xEdvhMy2h1P1yThRH85smx/J5n7Stdvu8q+tBDX6vnYak2VKRUAzs6PW?=
+ =?us-ascii?q?874s3rrgTDQhCU5nQASGUWkwFHDBbD4RrnQ5r+qCr6tu562CmHIc37SK0/VD?=
+ =?us-ascii?q?q+46t3ThLjlSEKPCM7/m7KkMx9lL9VrgyvpxJ/wIDabo6aO/hica3SZt4aWW?=
+ =?us-ascii?q?hMU9xNWyBdHo+xbY0CBPcBM+ZCqIn9okMDoAW+BQa2AuPg1ztIiWHs3aYn1O?=
+ =?us-ascii?q?kuCxzJ3AkhH9IIq3nUo8v6NKEVUeCw0qbE1y/Mb+lX2Tb874jIdAoureuSUr?=
+ =?us-ascii?q?1tbMrc0E8iHB7GgFWIsYHpIi2Z2+cXv2SG6+dtVPijh3Mopgx1uDSj2Mghh4?=
+ =?us-ascii?q?nPi4kI0F7L7z95z5wwJdCgTU57ZsOrH4VIuiGBMot2XtsiQ2Z1uCYm0rEGuY?=
+ =?us-ascii?q?C0fCwNyJk/wxHTduKLfouS7h7+UOucIC10iG9qdb+7nRq+70etx+36WcWs0V?=
+ =?us-ascii?q?ZKqDRKksXUu3wQyRDe6dKLRuZ580qgwzqDyg/e5+VeLUwqmqfWK4YtwrsqmZ?=
+ =?us-ascii?q?oStUTDEDX2mELzjKKObEor5+2o6+XhYrj9qZ+TKYl0igb7MqswgMCwG/44Mg?=
+ =?us-ascii?q?kPXmic/+Szzqfv8lPkT7VXlvE2iLXWsIjGJcQHoa60GwtV0ocl6xaiADaqyd?=
+ =?us-ascii?q?IYnXccLF9eZhKHgJbmO0vULPD7E/i/mVKsnylvx/zcOb3hGJrNJGDZkLj9Zb?=
+ =?us-ascii?q?Z991JcyA0rwN9F6JJUDrYBLenuWk/0tdzXEh85PxaqzOn6FdUunr8ZDEWLDa?=
+ =?us-ascii?q?bRE6TIt16F+PksKuiFLNsctzL6A+Ug5vXuy3I1hAlOU7Ou2M48aHm+EvBrOQ?=
+ =?us-ascii?q?3NaHbpg9EpHmoMuQ8zCuXwiU+FVzcVanqvCfFvrgonAZ6rWN+QDrumh6aMiX?=
+ =?us-ascii?q?+2?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A+BQDGLctd//WVxIBmDhABCxyFXyA?=
+ =?us-ascii?q?ShFOJA5cLhDKIAgEIAQEBDhMZAQIBAYRAAoJBOBMCAwsBAQEEAQEBAQEFAgI?=
+ =?us-ascii?q?BbIRrgxMignUGIxVBEAgDDQEMAhIBEwICVwaDNYJTJa9ugTIahTSDBh8JgVW?=
+ =?us-ascii?q?BDiiMLHiBB4E4gms+hC9eAoJGgl4EgTmIbIwrRZZ7H4IQgRsFX45GhHkGG4I?=
+ =?us-ascii?q?tAYITiX8DizaoZYFpIoFYTSUTgVmBT0+fSlshgTUIARUIEgEKAY1NDReCGgE?=
+ =?us-ascii?q?B?=
+X-IPAS-Result: =?us-ascii?q?A2A+BQDGLctd//WVxIBmDhABCxyFXyAShFOJA5cLhDKIA?=
+ =?us-ascii?q?gEIAQEBDhMZAQIBAYRAAoJBOBMCAwsBAQEEAQEBAQEFAgIBbIRrgxMignUGI?=
+ =?us-ascii?q?xVBEAgDDQEMAhIBEwICVwaDNYJTJa9ugTIahTSDBh8JgVWBDiiMLHiBB4E4g?=
+ =?us-ascii?q?ms+hC9eAoJGgl4EgTmIbIwrRZZ7H4IQgRsFX45GhHkGG4ItAYITiX8DizaoZ?=
+ =?us-ascii?q?YFpIoFYTSUTgVmBT0+fSlshgTUIARUIEgEKAY1NDReCGgEB?=
+X-IronPort-AV: E=Sophos;i="5.68,297,1569308400"; 
+   d="scan'208";a="434089651"
+Received: from unknown (HELO [128.196.149.245]) ([128.196.149.245])
+  by mails1n2out.email.arizona.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 15:14:40 -0700
+Subject: Re: NFS hangs on one interface
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <3447df77-1b2f-6d36-0516-3ae7267ab509@genome.arizona.edu>
+ <20191023171523.GA18802@fieldses.org>
+ <b6248a82-1f1a-7329-5ee0-6e026f6db697@genome.arizona.edu>
+ <YTBPR01MB2845B12E9C59F837FE35F40DDD650@YTBPR01MB2845.CANPRD01.PROD.OUTLOOK.COM>
+ <82ee292f-f126-9e9f-d023-deb72d1a3971@genome.arizona.edu>
+ <1079a074-7580-e257-8b52-6e48f8822176@genome.arizona.edu>
+ <CAN-5tyExtO_HRGYrqq7UTObrHNsTp7UqwW=Kg4CFM3q-OnaUiQ@mail.gmail.com>
+ <49472814-8dcd-4594-d48e-be4c1d9a8d8f@genome.arizona.edu>
+ <CAN-5tyGD3hNcG7=+xdB4Bs1OCCUoLzZ5ocsJusuxd3n3+x=7gw@mail.gmail.com>
+From:   Chandler <admin@genome.arizona.edu>
+Message-ID: <f3b837d5-d767-959d-f274-28d4e4507539@genome.arizona.edu>
+Date:   Tue, 12 Nov 2019 15:14:39 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAN-5tyGD3hNcG7=+xdB4Bs1OCCUoLzZ5ocsJusuxd3n3+x=7gw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-
-My understanding is that -EBUSY refers to the underlying device, and
-that -ETXTBSY is used when attempting to access a file in use by the
-kernel (like a swapfile). Changing this return code helps us pass
-xfstests generic/569
-
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 95dc90570786..8eb731d9be3e 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -649,7 +649,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 
- out_swapfile:
- 	printk(KERN_INFO "NFS: attempt to write to active swap file!\n");
--	return -EBUSY;
-+	return -ETXTBSY;
- }
- EXPORT_SYMBOL_GPL(nfs_file_write);
- 
--- 
-2.24.0
+Yes I don't understand what's going on with the network.  I can ssh to the server from the client over the 10G interfaces, login and get to a prompt.  I can even run some commands, but as soon as I try "top" then the session freezes, top works just fine if I ssh from my workstation to the server over the 10G interface, and top works fine if i ssh from the client to the server over the 1G interface..... maybe post on LinuxQuestions or something??
 
