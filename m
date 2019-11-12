@@ -2,90 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32207F80FE
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2019 21:17:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D56F8572
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 01:35:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfKKURl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Nov 2019 15:17:41 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:42367 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfKKURD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Nov 2019 15:17:03 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MiJdI-1i0zpq2YCs-00fOE5; Mon, 11 Nov 2019 21:16:52 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        id S1726962AbfKLAe6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Nov 2019 19:34:58 -0500
+Received: from mga07.intel.com ([134.134.136.100]:45567 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbfKLAe6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:34:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:34:57 -0800
+X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
+   d="scan'208";a="229127871"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:34:56 -0800
+From:   ira.weiny@intel.com
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 19/19] nfsd: remove nfs4_reset_lease() declarations
-Date:   Mon, 11 Nov 2019 21:16:39 +0100
-Message-Id: <20191111201639.2240623-20-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
-References: <20191111201639.2240623-1-arnd@arndb.de>
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 0/2] Move swap functions out of address space operations
+Date:   Mon, 11 Nov 2019 16:34:50 -0800
+Message-Id: <20191112003452.4756-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iafSuqH4Bp5e/AWz4sqAojsBIoYJnl02pkxascDjDPERrJsK5XY
- LuEVM2fqvh7m8JQnJKf732b2ymBeNnsygXViheIEE3f6FrCguecj23HqhwZRfpUdu80LURB
- gckupp9jrTa2thabVPppYnnMb8tsb6lU4wvWKhYMJg5DALwIuE3EC/1jiQkFqODqYrE958R
- YtJs0Lv6+joejC+leu3ZQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xGriYet1jFg=:/7jxH/nP273V1JjwioFy5f
- weSwzG82+77qaVH+KI7EcZrjwsUGhIVamdtpqMdnbCs36cuBxpsagITBnkyJngB6ZGKtZ/1kk
- lXrvwbV4AXeKGg1GnNOXhTM0GP4rP7rfBY7mEfeqiu9upppe0mKPZTlIVcip841Qcqx3Ma0nn
- vePqUtm2Y7a2NU1NHIeBQemiMDkQfV/Z+tCobAE2xfIsTLpi99QRU0FZnGbg7fldgd2XWy8V0
- JpwSqlZKos7f1wWwb7VgMYAHaLisxIzb3JX81eFVmTLbX0uNKMD0voZNZ+cWheh3i+HJaqbsF
- tKIOQ0ll6Y+Q6hndX7mZWCQdVFUeLAMDBSBgoLUs1nbH5a0xdOX7a6gz6ItLyU+BqP4KXH2DV
- rDFIpKRqnZqWvvYTdVqLx23v++HLYTnOu8E7My6GxofEUC3ePXcYWIRR8hp65uR15AdFRV/MS
- CLPyY0OiYkmJh7SU8TaQNza5iokt60ZZfr/rVVCv827HunPlTwtGV/AuAxLsMV2WYFGAg48P7
- Qb69Dlyva9zd4MpPR06pUmR5em8CsMZRDsmynkKANk1Xu6ZpJeQ/388Shfw8bo9PhTVlWZ2n7
- QAJx6wb8JPs7O0Wr12Hw2Ia0MvWpv1iA2vrcuoqlQ83cQLkywWKHRy0Lbrer7uG5YE+NuZByH
- SbTt0S3526fDNdnV8L9Yy2AAdw33Uz61+oC37Rx68D2Oc9JVDqrXcE66K1MIx/I5q2aVTcsPv
- c3SQzwHmdgY8Ub3y3w4m/EicJHOWEJZtHHr/RQiDBOa7uxazVPKTyk+onqlmKdEX+pFXM1jdX
- i754BZt1xhazqH80w7YY2OHBa7aaZ4CMa4ltQuuH/DfirTbR/AAZy3V6/VagRnhk31J7oFSZ4
- 7GX3Mi2TvHQhTkiGcQZw==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The function was removed a long time ago, but the declaration
-and a dummy implementation are still there, referencing the
-deprecated time_t type.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Remove both.
+As suggested by Jan Kara, move swap_[de]activate to file_operations to simplify
+address space operations for coming changes.
 
-Fixes: f958a1320ff7 ("nfsd4: remove unnecessary lease-setting function")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfsd/nfsd.h | 2 --
- 1 file changed, 2 deletions(-)
+I'm not sure if this should go through Al Viro or Andrew Morton so I'm sending
+it to both of you.  Sorry if this is a problem.  Let me know if there is
+something else I should do.
 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index af2947551e9c..e74979b5849e 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -142,7 +142,6 @@ int nfs4_state_start(void);
- int nfs4_state_start_net(struct net *net);
- void nfs4_state_shutdown(void);
- void nfs4_state_shutdown_net(struct net *net);
--void nfs4_reset_lease(time_t leasetime);
- int nfs4_reset_recoverydir(char *recdir);
- char * nfs4_recoverydir(void);
- bool nfsd4_spo_must_allow(struct svc_rqst *rqstp);
-@@ -153,7 +152,6 @@ static inline int nfs4_state_start(void) { return 0; }
- static inline int nfs4_state_start_net(struct net *net) { return 0; }
- static inline void nfs4_state_shutdown(void) { }
- static inline void nfs4_state_shutdown_net(struct net *net) { }
--static inline void nfs4_reset_lease(time_t leasetime) { }
- static inline int nfs4_reset_recoverydir(char *recdir) { return 0; }
- static inline char * nfs4_recoverydir(void) {return NULL; }
- static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
+Ira Weiny (2):
+  fs: Clean up mapping variable
+  fs: Move swap_[de]activate to file_operations
+
+ fs/btrfs/inode.c    |   4 +-
+ fs/f2fs/data.c      | 123 --------------------------------------------
+ fs/f2fs/file.c      | 122 +++++++++++++++++++++++++++++++++++++++++++
+ fs/iomap/swapfile.c |   3 +-
+ fs/nfs/file.c       |   4 +-
+ fs/xfs/xfs_aops.c   |  13 -----
+ fs/xfs/xfs_file.c   |  12 +++++
+ include/linux/fs.h  |  10 ++--
+ mm/swapfile.c       |  12 ++---
+ 9 files changed, 149 insertions(+), 154 deletions(-)
+
 -- 
-2.20.0
+2.20.1
 
