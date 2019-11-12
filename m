@@ -2,58 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE207F951A
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 17:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14EDDF9575
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2019 17:20:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfKLQHC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 11:07:02 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26879 "EHLO
+        id S1727053AbfKLQUy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 11:20:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48836 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725954AbfKLQHB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 11:07:01 -0500
+        by vger.kernel.org with ESMTP id S1726008AbfKLQUy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Nov 2019 11:20:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573574820;
+        s=mimecast20190719; t=1573575653;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=xuAg3OFPzXAlbLI/jeUY6+qGuF0hH25vcKaiI2ZO8C8=;
-        b=O5hPDkBtNi5hs4hCd1ZK0XC7ikgDsdILI+AIYy6zk4SXig/1zAxczl2OTriDWIP27k7sTw
-        IjIcodW2Qu1s/gTaAs/YuCcLK8VMy695n2/oxkiYd9H7+4C3baxnsxX/CaObDhGJeERQ5m
-        valE1bCcBBNPXC+FBb1liFOb9gqC59Y=
+        bh=qKqGW9afIIYeA+1yNvmdf7FniJrl7g1Mug3IjO2rfus=;
+        b=dE0R/GUPPrPFZihvOWw/Aj0xDeAnyARHEKXlO8xpUIAVJjbn/wp4X3S6WCxvkSukl8MdMN
+        T3eCR1EYMw7hmJCf9uyRClrbu1E9aHkaoJzvGdEGA3qUa7ej5KnKcxADsbegDIIS1j8Je+
+        o6z7vBiz8I+Lqe4kG7Mp2jM3qSS9LGk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283--t8ePJb3MhWM3p6M0h6lqQ-1; Tue, 12 Nov 2019 11:06:57 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-102-yhYPCXbgM1ey_6WWY-KlwA-1; Tue, 12 Nov 2019 11:20:49 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B0A1107ACFA;
-        Tue, 12 Nov 2019 16:06:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBB7D81A334;
+        Tue, 12 Nov 2019 16:20:48 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-122-210.rdu2.redhat.com [10.10.122.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B9C663BA9;
-        Tue, 12 Nov 2019 16:06:56 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E4F210027B3;
+        Tue, 12 Nov 2019 16:20:48 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id EBBB1208EC; Tue, 12 Nov 2019 11:06:55 -0500 (EST)
-Date:   Tue, 12 Nov 2019 11:06:55 -0500
+        id 979C0208EC; Tue, 12 Nov 2019 11:20:47 -0500 (EST)
+Date:   Tue, 12 Nov 2019 11:20:47 -0500
 From:   Scott Mayhew <smayhew@redhat.com>
-To:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+To:     Jamie Heilman <jamie@audible.transient.net>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: PROBLEM: NULL pointer dereference; nfsd4_remove_cld_pipe
-Message-ID: <20191112160655.GE4276@coeurl.usersys.redhat.com>
+Message-ID: <20191112162047.GF4276@coeurl.usersys.redhat.com>
 References: <20191112101343.GA2806@audible.transient.net>
 MIME-Version: 1.0
 In-Reply-To: <20191112101343.GA2806@audible.transient.net>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: -t8ePJb3MhWM3p6M0h6lqQ-1
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: yhYPCXbgM1ey_6WWY-KlwA-1
 X-Mimecast-Spam-Score: 0
-Content-Type: multipart/mixed; boundary="nFreZHaLTZJo0R7j"
+Content-Type: multipart/mixed; boundary="0lnxQi9hkpPO77W3"
 Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---nFreZHaLTZJo0R7j
+--0lnxQi9hkpPO77W3
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -147,19 +148,19 @@ e95d1c8991
 > --=20
 > Jamie Heilman                     http://audible.transient.net/~jamie/
 >=20
-Does this patch help?
+Please try this patch (v2 because I messed up the first one).
 
 -Scott
 
---nFreZHaLTZJo0R7j
+--0lnxQi9hkpPO77W3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename="0001-nfsd-Fix-cld_net-cn_tfm-initialization.patch"
 Content-Transfer-Encoding: quoted-printable
 
-From e46430ef6ee045ec447a0796b419b8cdeee4f25f Mon Sep 17 00:00:00 2001
+From 34ae6455abfd81b47ab34b66ca88a29ff33c7d98 Mon Sep 17 00:00:00 2001
 From: Scott Mayhew <smayhew@redhat.com>
 Date: Tue, 12 Nov 2019 10:10:00 -0500
-Subject: [PATCH] nfsd: Fix cld_net->cn_tfm initialization
+Subject: [PATCH v2] nfsd: Fix cld_net->cn_tfm initialization
 
 Don't assign an error pointer to cn->cn_tfm, otherwise
 an oops will occur in nfsd4_remove_cld_pipe().
@@ -168,11 +169,11 @@ Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
 Reported-by: Jamie Heilman <jamie@audible.transient.net>
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- fs/nfsd/nfs4recover.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4recover.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index cdc75ad4438b..af07d0f55fe3 100644
+index cdc75ad4438b..d1bc56b2e861 100644
 --- a/fs/nfsd/nfs4recover.c
 +++ b/fs/nfsd/nfs4recover.c
 @@ -1578,6 +1578,7 @@ nfsd4_cld_tracking_init(struct net *net)
@@ -183,14 +184,14 @@ index cdc75ad4438b..af07d0f55fe3 100644
 =20
  =09status =3D nfs4_cld_state_init(net);
  =09if (status)
-@@ -1586,11 +1587,13 @@ nfsd4_cld_tracking_init(struct net *net)
+@@ -1586,11 +1587,12 @@ nfsd4_cld_tracking_init(struct net *net)
  =09status =3D __nfsd4_init_cld_pipe(net);
  =09if (status)
  =09=09goto err_shutdown;
-+=09tfm =3D crypto_alloc_shash("sha256", 0, 0);
- =09nn->cld_net->cn_tfm =3D crypto_alloc_shash("sha256", 0, 0);
+-=09nn->cld_net->cn_tfm =3D crypto_alloc_shash("sha256", 0, 0);
 -=09if (IS_ERR(nn->cld_net->cn_tfm)) {
 -=09=09status =3D PTR_ERR(nn->cld_net->cn_tfm);
++=09tfm =3D crypto_alloc_shash("sha256", 0, 0);
 +=09if (IS_ERR(tfm)) {
 +=09=09status =3D PTR_ERR(tfm);
  =09=09goto err_remove;
@@ -203,5 +204,5 @@ index cdc75ad4438b..af07d0f55fe3 100644
 2.17.2
 
 
---nFreZHaLTZJo0R7j--
+--0lnxQi9hkpPO77W3--
 
