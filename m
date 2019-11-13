@@ -2,39 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED72CFA5E4
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 03:25:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3217EFA455
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 03:17:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfKMBvg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 20:51:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
+        id S1729463AbfKMB4g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 20:56:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfKMBvg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:36 -0500
+        id S1729527AbfKMB4f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB02D2246A;
-        Wed, 13 Nov 2019 01:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6728222D3;
+        Wed, 13 Nov 2019 01:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609894;
-        bh=W7M7we8yAzERJNCZacQf7ww3N5kJLza7S+Uvn99TDEI=;
+        s=default; t=1573610194;
+        bh=yEwg5eq9AJUgDswCxH1W7TOiH2oQz7hZu2VUsre4Ml0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYyebX1cj7+R/FOGwSdSmHuuviZctpjTqPnHrb5uSGbAl8CUfAiBNNZvEnpmeZmaR
-         1g7Jovm2zWQpCPIFA8t8sOiJRV40V5saGnO5CDTvb5lSUUzjOWqu6W70QT9w69IR7o
-         zTwbuhhpFQGYqFbRjwnCznFgOMunPhBxOR6ltfcc=
+        b=j3Y6EM/3L5y3AudnPXVvts9wj/dx6z2r/1U/BOlzJuhhXu34rGVYJHNANfeQHdjB4
+         0Xj9hur5dexhQtZP6ZF6Utv/Vsgeuggf3IAg4aEP9mK8rA16EFNQokb7NF9UB/Dd4I
+         PTZCY680J06oqN/SjyFeN3vLTDUVkYh0qQMqn4cw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 050/209] sunrpc: Fix connect metrics
-Date:   Tue, 12 Nov 2019 20:47:46 -0500
-Message-Id: <20191113015025.9685-50-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 008/115] SUNRPC: Fix priority queue fairness
+Date:   Tue, 12 Nov 2019 20:54:35 -0500
+Message-Id: <20191113015622.11592-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,121 +43,224 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3968a8a5310404c2f0b9e4d9f28cab13a12bc4fd ]
+[ Upstream commit f42f7c283078ce3c1e8368b140e270755b1ae313 ]
 
-For TCP, the logic in xprt_connect_status is currently never invoked
-to record a successful connection. Commit 2a4919919a97 ("SUNRPC:
-Return EAGAIN instead of ENOTCONN when waking up xprt->pending")
-changed the way TCP xprt's are awoken after a connect succeeds.
+Fix up the priority queue to not batch by owner, but by queue, so that
+we allow '1 << priority' elements to be dequeued before switching to
+the next priority queue.
+The owner field is still used to wake up requests in round robin order
+by owner to avoid single processes hogging the RPC layer by loading the
+queues.
 
-Instead, change connection-oriented transports to bump connect_count
-and compute connect_time the moment that XPRT_CONNECTED is set.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprt.c               | 14 ++++----------
- net/sunrpc/xprtrdma/transport.c |  6 +++++-
- net/sunrpc/xprtsock.c           | 10 ++++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ include/linux/sunrpc/sched.h |   2 -
+ net/sunrpc/sched.c           | 109 +++++++++++++++++------------------
+ 2 files changed, 54 insertions(+), 57 deletions(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 3581168e6b99b..5e7c13aa66d0d 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -796,17 +796,11 @@ void xprt_connect(struct rpc_task *task)
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index d96e74e114c06..c9548a63d09bb 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -188,7 +188,6 @@ struct rpc_timer {
+ struct rpc_wait_queue {
+ 	spinlock_t		lock;
+ 	struct list_head	tasks[RPC_NR_PRIORITY];	/* task queue for each priority level */
+-	pid_t			owner;			/* process id of last task serviced */
+ 	unsigned char		maxpriority;		/* maximum priority (0 if queue is not a priority queue) */
+ 	unsigned char		priority;		/* current priority */
+ 	unsigned char		nr;			/* # tasks remaining for cookie */
+@@ -204,7 +203,6 @@ struct rpc_wait_queue {
+  * from a single cookie.  The aim is to improve
+  * performance of NFS operations such as read/write.
+  */
+-#define RPC_BATCH_COUNT			16
+ #define RPC_IS_PRIORITY(q)		((q)->maxpriority > 0)
  
- static void xprt_connect_status(struct rpc_task *task)
- {
--	struct rpc_xprt	*xprt = task->tk_rqstp->rq_xprt;
+ /*
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index f9db5fe52d367..aff76fb434300 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -99,64 +99,78 @@ __rpc_add_timer(struct rpc_wait_queue *queue, struct rpc_task *task)
+ 	list_add(&task->u.tk_wait.timer_list, &queue->timer_list.list);
+ }
+ 
+-static void rpc_rotate_queue_owner(struct rpc_wait_queue *queue)
+-{
+-	struct list_head *q = &queue->tasks[queue->priority];
+-	struct rpc_task *task;
 -
--	if (task->tk_status == 0) {
--		xprt->stat.connect_count++;
--		xprt->stat.connect_time += (long)jiffies - xprt->stat.connect_start;
-+	switch (task->tk_status) {
-+	case 0:
- 		dprintk("RPC: %5u xprt_connect_status: connection established\n",
- 				task->tk_pid);
--		return;
+-	if (!list_empty(q)) {
+-		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+-		if (task->tk_owner == queue->owner)
+-			list_move_tail(&task->u.tk_wait.list, q);
 -	}
+-}
 -
--	switch (task->tk_status) {
-+		break;
- 	case -ECONNREFUSED:
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
-@@ -823,7 +817,7 @@ static void xprt_connect_status(struct rpc_task *task)
- 	default:
- 		dprintk("RPC: %5u xprt_connect_status: error %d connecting to "
- 				"server %s\n", task->tk_pid, -task->tk_status,
--				xprt->servername);
-+				task->tk_rqstp->rq_xprt->servername);
- 		task->tk_status = -EIO;
+ static void rpc_set_waitqueue_priority(struct rpc_wait_queue *queue, int priority)
+ {
+ 	if (queue->priority != priority) {
+-		/* Fairness: rotate the list when changing priority */
+-		rpc_rotate_queue_owner(queue);
+ 		queue->priority = priority;
++		queue->nr = 1U << priority;
  	}
  }
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 98cbc7b060bad..f56f36b4d742d 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -242,8 +242,12 @@ rpcrdma_connect_worker(struct work_struct *work)
  
- 	spin_lock_bh(&xprt->transport_lock);
- 	if (ep->rep_connected > 0) {
--		if (!xprt_test_and_set_connected(xprt))
-+		if (!xprt_test_and_set_connected(xprt)) {
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, 0);
-+		}
- 	} else {
- 		if (xprt_test_and_clear_connected(xprt))
- 			xprt_wake_pending_tasks(xprt, -ENOTCONN);
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 7d8cce1dfcad3..c0d7875a64ffc 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1611,6 +1611,9 @@ static void xs_tcp_state_change(struct sock *sk)
- 			clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 			xprt_clear_connecting(xprt);
+-static void rpc_set_waitqueue_owner(struct rpc_wait_queue *queue, pid_t pid)
+-{
+-	queue->owner = pid;
+-	queue->nr = RPC_BATCH_COUNT;
+-}
+-
+ static void rpc_reset_waitqueue_priority(struct rpc_wait_queue *queue)
+ {
+ 	rpc_set_waitqueue_priority(queue, queue->maxpriority);
+-	rpc_set_waitqueue_owner(queue, 0);
+ }
  
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, -EAGAIN);
+ /*
+- * Add new request to a priority queue.
++ * Add a request to a queue list
+  */
+-static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
+-		struct rpc_task *task,
+-		unsigned char queue_priority)
++static void
++__rpc_list_enqueue_task(struct list_head *q, struct rpc_task *task)
+ {
+-	struct list_head *q;
+ 	struct rpc_task *t;
+ 
+-	INIT_LIST_HEAD(&task->u.tk_wait.links);
+-	if (unlikely(queue_priority > queue->maxpriority))
+-		queue_priority = queue->maxpriority;
+-	if (queue_priority > queue->priority)
+-		rpc_set_waitqueue_priority(queue, queue_priority);
+-	q = &queue->tasks[queue_priority];
+ 	list_for_each_entry(t, q, u.tk_wait.list) {
+ 		if (t->tk_owner == task->tk_owner) {
+-			list_add_tail(&task->u.tk_wait.list, &t->u.tk_wait.links);
++			list_add_tail(&task->u.tk_wait.links,
++					&t->u.tk_wait.links);
++			/* Cache the queue head in task->u.tk_wait.list */
++			task->u.tk_wait.list.next = q;
++			task->u.tk_wait.list.prev = NULL;
+ 			return;
  		}
- 		spin_unlock(&xprt->transport_lock);
-@@ -2029,8 +2032,6 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
  	}
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	return kernel_connect(sock, xs_addr(xprt), xprt->addrlen, 0);
++	INIT_LIST_HEAD(&task->u.tk_wait.links);
+ 	list_add_tail(&task->u.tk_wait.list, q);
  }
  
-@@ -2062,6 +2063,9 @@ static int xs_local_setup_socket(struct sock_xprt *transport)
- 	case 0:
- 		dprintk("RPC:       xprt %p connected to %s\n",
- 				xprt, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+		xprt->stat.connect_count++;
-+		xprt->stat.connect_time += (long)jiffies -
-+					   xprt->stat.connect_start;
- 		xprt_set_connected(xprt);
- 	case -ENOBUFS:
- 		break;
-@@ -2387,8 +2391,6 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	xs_set_memalloc(xprt);
++/*
++ * Remove request from a queue list
++ */
++static void
++__rpc_list_dequeue_task(struct rpc_task *task)
++{
++	struct list_head *q;
++	struct rpc_task *t;
++
++	if (task->u.tk_wait.list.prev == NULL) {
++		list_del(&task->u.tk_wait.links);
++		return;
++	}
++	if (!list_empty(&task->u.tk_wait.links)) {
++		t = list_first_entry(&task->u.tk_wait.links,
++				struct rpc_task,
++				u.tk_wait.links);
++		/* Assume __rpc_list_enqueue_task() cached the queue head */
++		q = t->u.tk_wait.list.next;
++		list_add_tail(&t->u.tk_wait.list, q);
++		list_del(&task->u.tk_wait.links);
++	}
++	list_del(&task->u.tk_wait.list);
++}
++
++/*
++ * Add new request to a priority queue.
++ */
++static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
++		struct rpc_task *task,
++		unsigned char queue_priority)
++{
++	if (unlikely(queue_priority > queue->maxpriority))
++		queue_priority = queue->maxpriority;
++	__rpc_list_enqueue_task(&queue->tasks[queue_priority], task);
++}
++
+ /*
+  * Add new request to wait queue.
+  *
+@@ -194,13 +208,7 @@ static void __rpc_add_wait_queue(struct rpc_wait_queue *queue,
+  */
+ static void __rpc_remove_wait_queue_priority(struct rpc_task *task)
+ {
+-	struct rpc_task *t;
+-
+-	if (!list_empty(&task->u.tk_wait.links)) {
+-		t = list_entry(task->u.tk_wait.links.next, struct rpc_task, u.tk_wait.list);
+-		list_move(&t->u.tk_wait.list, &task->u.tk_wait.list);
+-		list_splice_init(&task->u.tk_wait.links, &t->u.tk_wait.links);
+-	}
++	__rpc_list_dequeue_task(task);
+ }
  
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	set_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 	ret = kernel_connect(sock, xs_addr(xprt), xprt->addrlen, O_NONBLOCK);
- 	switch (ret) {
+ /*
+@@ -212,7 +220,8 @@ static void __rpc_remove_wait_queue(struct rpc_wait_queue *queue, struct rpc_tas
+ 	__rpc_disable_timer(queue, task);
+ 	if (RPC_IS_PRIORITY(queue))
+ 		__rpc_remove_wait_queue_priority(task);
+-	list_del(&task->u.tk_wait.list);
++	else
++		list_del(&task->u.tk_wait.list);
+ 	queue->qlen--;
+ 	dprintk("RPC: %5u removed from queue %p \"%s\"\n",
+ 			task->tk_pid, queue, rpc_qname(queue));
+@@ -481,17 +490,9 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 	 * Service a batch of tasks from a single owner.
+ 	 */
+ 	q = &queue->tasks[queue->priority];
+-	if (!list_empty(q)) {
+-		task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
+-		if (queue->owner == task->tk_owner) {
+-			if (--queue->nr)
+-				goto out;
+-			list_move_tail(&task->u.tk_wait.list, q);
+-		}
+-		/*
+-		 * Check if we need to switch queues.
+-		 */
+-		goto new_owner;
++	if (!list_empty(q) && --queue->nr) {
++		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
++		goto out;
+ 	}
+ 
+ 	/*
+@@ -503,7 +504,7 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 		else
+ 			q = q - 1;
+ 		if (!list_empty(q)) {
+-			task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
++			task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+ 			goto new_queue;
+ 		}
+ 	} while (q != &queue->tasks[queue->priority]);
+@@ -513,8 +514,6 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 
+ new_queue:
+ 	rpc_set_waitqueue_priority(queue, (unsigned int)(q - &queue->tasks[0]));
+-new_owner:
+-	rpc_set_waitqueue_owner(queue, task->tk_owner);
+ out:
+ 	return task;
+ }
 -- 
 2.20.1
 
