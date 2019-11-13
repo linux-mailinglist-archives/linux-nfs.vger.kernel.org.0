@@ -2,96 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E8D1FA28A
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 03:04:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 680C8FB3A8
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 16:25:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbfKMCCO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 21:02:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728476AbfKMCCO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:14 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E630020674;
-        Wed, 13 Nov 2019 02:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610533;
-        bh=x//JVYHQ0COcKM6/JgBuXGLK9QcQhuUoh6LRbs9bhKw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKsh6n6AqAErSlC8e+xaJXIKPCfJ9JNAoBV/graFc/CstsmCjwMQmt0P3M7K5D6yE
-         wqA4Mjb6HmZg7R5LC7WpquSkkLHFoiIwf6WeXqEzk0IHaW3G9v71Y+EK9u7qK6vr6p
-         4ELE7NTxqbMLC+FCHUVkq3GtrcbaxKCqWU8CfsaQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        id S1728035AbfKMPZY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Nov 2019 10:25:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53214 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727721AbfKMPZY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:25:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A799B483;
+        Wed, 13 Nov 2019 15:25:21 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 966E7DA7E8; Wed, 13 Nov 2019 16:25:22 +0100 (CET)
+Date:   Wed, 13 Nov 2019 16:25:22 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 25/48] NFSv4.x: fix lock recovery during delegation recall
-Date:   Tue, 12 Nov 2019 21:01:08 -0500
-Message-Id: <20191113020131.13356-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
-References: <20191113020131.13356-1-sashal@kernel.org>
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH V2 2/2] fs: Move swap_[de]activate to file_operations
+Message-ID: <20191113152522.GF3001@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, ira.weiny@intel.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+References: <20191113004244.9981-1-ira.weiny@intel.com>
+ <20191113004244.9981-3-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113004244.9981-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Tue, Nov 12, 2019 at 04:42:44PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> swap_activate() and swap_deactivate() have nothing to do with address
+> spaces.  We want to be able to change the address space operations on
+> the fly to allow changing inode flags dynamically.
+> 
+> Switching address space operations can be difficult to do reliably.[1]
+> Therefore, to simplify switching address space operations we reduce the
+> number of functions in those operations by moving swap_activate() and
+> swap_deactivate() out of the address space operations.
+> 
+> No functionality is changed with this patch.
+> 
+> This has been tested with XFS but not NFS, f2fs, or btrfs.
+> 
+> Also note we move some functions to facilitate compilation.  But there
+> are no functional changes are contained within those diffs.
+> 
+> [1] https://lkml.org/lkml/2019/11/11/572
+> 
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V0:
+> 	Update cover letter.
+> 	fix btrfs as per Andrew's comments
+> 	change xfs_iomap_swapfile_activate() to xfs_file_swap_activate()
+> 
+> Changes from V1:
+> 	Update recipients list
+> 
+> 
+>  fs/btrfs/file.c    | 341 +++++++++++++++++++++++++++++++++++++++++++++
+>  fs/btrfs/inode.c   | 340 --------------------------------------------
 
-[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
+For the btrfs part
 
-Running "./nfstest_delegation --runtest recall26" uncovers that
-client doesn't recover the lock when we have an appending open,
-where the initial open got a write delegation.
+Acked-by: David Sterba <dsterba@suse.com>
 
-Instead of checking for the passed in open context against
-the file lock's open context. Check that the state is the same.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/delegation.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 7af5eeabc80e1..ee51e6f6c5d6e 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
- 	return nfs4_do_check_delegation(inode, flags, false);
- }
- 
--static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
-+static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
- {
- 	struct inode *inode = state->inode;
- 	struct file_lock *fl;
-@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
- 	spin_lock(&flctx->flc_lock);
- restart:
- 	list_for_each_entry(fl, list, fl_list) {
--		if (nfs_file_open_context(fl->fl_file) != ctx)
-+		if (nfs_file_open_context(fl->fl_file)->state != state)
- 			continue;
- 		spin_unlock(&flctx->flc_lock);
- 		status = nfs4_lock_delegation_recall(fl, state, stateid);
-@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
- 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
- 		if (!err)
--			err = nfs_delegation_claim_locks(ctx, state, stateid);
-+			err = nfs_delegation_claim_locks(state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
- 			err = -EAGAIN;
- 		mutex_unlock(&sp->so_delegreturn_mutex);
--- 
-2.20.1
-
+There's going to be a minor conflict with current 5.5 queue, the
+resolution is simple rename of btrfs_block_group_cache to btrfs_block_group.
