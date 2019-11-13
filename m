@@ -2,36 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB5BFA431
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 03:17:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45FE4FA3D4
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2019 03:13:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKMCO7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Nov 2019 21:14:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49944 "EHLO mail.kernel.org"
+        id S1729963AbfKMB6L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Nov 2019 20:58:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfKMB5D (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:03 -0500
+        id S1729960AbfKMB6L (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C58C222D4;
-        Wed, 13 Nov 2019 01:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 419C5222D4;
+        Wed, 13 Nov 2019 01:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610222;
-        bh=Suk00SgfBhbrNb/3ynvFXyR8ZpUSM4dQi1HdmAwqQ+4=;
+        s=default; t=1573610290;
+        bh=PterWFPnUPkV9UOQb8yiRvykr89TFGx0cLH8pyMYIdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W43LY7aaSswr7v8WT37vWBUMYQNavlCDPEnFbUdr53uBDZwB/5a6JvIBKUMJtMNBr
-         dvm1nqrV8y7hs0UpbgZKCvvYx8tfeeBgqYyFPsoz6Ii46hk527YwJJSJuO0gVQsaGV
-         A5jocQNSSVmsEMkSXkN7PWwQOBy9vQ5r3+2xG+Rs=
+        b=czsW0R/Tr57DpW8kQpn209PxjgF80Da+x/AB7YjkMGttPt7cXMBhUZxuLq7JSvVln
+         zcU/1C1lTPByLJLVNG23dq59+yqb9hdXETj5bI/8Wwg8KUECjE50mVTUazncRcWI33
+         86OqnVf27bRPptbp4ePGYoz7ZZccu0L9s5eJOK0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 027/115] sunrpc: Fix connect metrics
-Date:   Tue, 12 Nov 2019 20:54:54 -0500
-Message-Id: <20191113015622.11592-27-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 066/115] NFSv4.x: fix lock recovery during delegation recall
+Date:   Tue, 12 Nov 2019 20:55:33 -0500
+Message-Id: <20191113015622.11592-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -44,121 +43,55 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 3968a8a5310404c2f0b9e4d9f28cab13a12bc4fd ]
+[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
 
-For TCP, the logic in xprt_connect_status is currently never invoked
-to record a successful connection. Commit 2a4919919a97 ("SUNRPC:
-Return EAGAIN instead of ENOTCONN when waking up xprt->pending")
-changed the way TCP xprt's are awoken after a connect succeeds.
+Running "./nfstest_delegation --runtest recall26" uncovers that
+client doesn't recover the lock when we have an appending open,
+where the initial open got a write delegation.
 
-Instead, change connection-oriented transports to bump connect_count
-and compute connect_time the moment that XPRT_CONNECTED is set.
+Instead of checking for the passed in open context against
+the file lock's open context. Check that the state is the same.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprt.c               | 14 ++++----------
- net/sunrpc/xprtrdma/transport.c |  6 +++++-
- net/sunrpc/xprtsock.c           | 10 ++++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ fs/nfs/delegation.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index d0282cc88b145..b852c34bb6373 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -795,17 +795,11 @@ void xprt_connect(struct rpc_task *task)
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 606dd3871f66b..17acad7d13160 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
+ 	return nfs4_do_check_delegation(inode, flags, false);
+ }
  
- static void xprt_connect_status(struct rpc_task *task)
+-static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
++static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
  {
--	struct rpc_xprt	*xprt = task->tk_rqstp->rq_xprt;
--
--	if (task->tk_status == 0) {
--		xprt->stat.connect_count++;
--		xprt->stat.connect_time += (long)jiffies - xprt->stat.connect_start;
-+	switch (task->tk_status) {
-+	case 0:
- 		dprintk("RPC: %5u xprt_connect_status: connection established\n",
- 				task->tk_pid);
--		return;
--	}
--
--	switch (task->tk_status) {
-+		break;
- 	case -ECONNREFUSED:
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
-@@ -822,7 +816,7 @@ static void xprt_connect_status(struct rpc_task *task)
- 	default:
- 		dprintk("RPC: %5u xprt_connect_status: error %d connecting to "
- 				"server %s\n", task->tk_pid, -task->tk_status,
--				xprt->servername);
-+				task->tk_rqstp->rq_xprt->servername);
- 		task->tk_status = -EIO;
- 	}
- }
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 8cf5ccfe180d3..b1b40a1be8c57 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -238,8 +238,12 @@ rpcrdma_connect_worker(struct work_struct *work)
- 	if (++xprt->connect_cookie == 0)	/* maintain a reserved value */
- 		++xprt->connect_cookie;
- 	if (ep->rep_connected > 0) {
--		if (!xprt_test_and_set_connected(xprt))
-+		if (!xprt_test_and_set_connected(xprt)) {
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, 0);
-+		}
- 	} else {
- 		if (xprt_test_and_clear_connected(xprt))
- 			xprt_wake_pending_tasks(xprt, -ENOTCONN);
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 05a58cc1b0cdb..a42871a59f3b9 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1592,6 +1592,9 @@ static void xs_tcp_state_change(struct sock *sk)
- 			clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 			xprt_clear_connecting(xprt);
- 
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, -EAGAIN);
- 		}
- 		spin_unlock(&xprt->transport_lock);
-@@ -2008,8 +2011,6 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
- 	}
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	return kernel_connect(sock, xs_addr(xprt), xprt->addrlen, 0);
- }
- 
-@@ -2041,6 +2042,9 @@ static int xs_local_setup_socket(struct sock_xprt *transport)
- 	case 0:
- 		dprintk("RPC:       xprt %p connected to %s\n",
- 				xprt, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+		xprt->stat.connect_count++;
-+		xprt->stat.connect_time += (long)jiffies -
-+					   xprt->stat.connect_start;
- 		xprt_set_connected(xprt);
- 	case -ENOBUFS:
- 		break;
-@@ -2361,8 +2365,6 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	xs_set_memalloc(xprt);
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	set_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 	ret = kernel_connect(sock, xs_addr(xprt), xprt->addrlen, O_NONBLOCK);
- 	switch (ret) {
+ 	struct inode *inode = state->inode;
+ 	struct file_lock *fl;
+@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
+ 	spin_lock(&flctx->flc_lock);
+ restart:
+ 	list_for_each_entry(fl, list, fl_list) {
+-		if (nfs_file_open_context(fl->fl_file) != ctx)
++		if (nfs_file_open_context(fl->fl_file)->state != state)
+ 			continue;
+ 		spin_unlock(&flctx->flc_lock);
+ 		status = nfs4_lock_delegation_recall(fl, state, stateid);
+@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
+ 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
+ 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
+ 		if (!err)
+-			err = nfs_delegation_claim_locks(ctx, state, stateid);
++			err = nfs_delegation_claim_locks(state, stateid);
+ 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
+ 			err = -EAGAIN;
+ 		mutex_unlock(&sp->so_delegreturn_mutex);
 -- 
 2.20.1
 
