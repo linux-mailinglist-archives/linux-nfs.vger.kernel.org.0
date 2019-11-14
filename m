@@ -2,102 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F870FC800
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2019 14:40:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F372AFC856
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2019 15:03:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKNNkx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Nov 2019 08:40:53 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50145 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726179AbfKNNkw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Nov 2019 08:40:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573738851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M2J7Gf6SuzKWX47g7qh2y1AT+N7TUFXmW/HwIIlq/BU=;
-        b=aXMZEQifHO/KlUv2Xj7nCo7CYLxtHzb0vEC+E2w5cnTAJA+FUW7A0KriGg7e8XIJgdA/S3
-        qubLDvmR8tkumBlWQ/MmskQA3k1hVYFwMEWt8s9Fs7ygukXA/7qXMn0pluzBQ5bI4897ib
-        dbWlgWILRNcj35c9vYaG//kXs2+fDCE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-uy07ckELPtiy0UFAGms6Ow-1; Thu, 14 Nov 2019 08:40:46 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA83D800C77;
-        Thu, 14 Nov 2019 13:40:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3751A60BD7;
-        Thu, 14 Nov 2019 13:40:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <24942.1573667720@warthog.procyon.org.uk>
-References: <24942.1573667720@warthog.procyon.org.uk>
-To:     Christoph Hellwig <hch@lst.de>, Dave Chinner <dchinner@redhat.com>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        linux-cachefs@redhat.com, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: How to avoid using bmap in cachefiles -- FS-Cache/CacheFiles rewrite
+        id S1726674AbfKNODJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Nov 2019 09:03:09 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6667 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbfKNODI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:03:08 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1EF462163F473CA96966;
+        Thu, 14 Nov 2019 22:02:58 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 22:02:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <kolga@netapp.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] NFSv4: Make _nfs42_proc_copy_notify() static
+Date:   Thu, 14 Nov 2019 22:01:41 +0800
+Message-ID: <20191114140141.30612-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-ID: <30126.1573738838.1@warthog.procyon.org.uk>
-Date:   Thu, 14 Nov 2019 13:40:38 +0000
-Message-ID: <30127.1573738838@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: uy07ckELPtiy0UFAGms6Ow-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Christoph,
+Fix sparse warning:
 
-I've been rewriting cachefiles in the kernel and it now uses kiocbs to do
-async direct I/O to/from the cache files - which seems to make a 40-48% spe=
-ed
-improvement.
+fs/nfs/nfs42proc.c:527:5: warning:
+ symbol '_nfs42_proc_copy_notify' was not declared. Should it be static?
 
-However, I've replaced the use of bmap internally to detect whether data is
-present or not - which is dodgy for a number of reasons, not least that
-extent-based filesystems might insert or remove blocks of zeros to shape th=
-e
-extents better, thereby rendering the metadata information useless for
-cachefiles.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/nfs/nfs42proc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-But using a separate map has a couple of problems:
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index aab6b7b..639aff8 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -524,9 +524,9 @@ static int nfs42_do_offload_cancel_async(struct file *dst,
+ 	return status;
+ }
+ 
+-int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
+-			    struct nfs42_copy_notify_args *args,
+-			    struct nfs42_copy_notify_res *res)
++static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
++				   struct nfs42_copy_notify_args *args,
++				   struct nfs42_copy_notify_res *res)
+ {
+ 	struct nfs_server *src_server = NFS_SERVER(file_inode(src));
+ 	struct rpc_message msg = {
+-- 
+2.7.4
 
- (1) The map is metadata kept outside of the filesystem journal, so coheren=
-cy
-     management is necessary
-
- (2) The map gets hard to manage for very large files (I'm using 256KiB
-     granules, so 1 bit per granule means a 512-byte map block can span 1Gi=
-B)
-     and xattrs can be of limited capacity.
-
-I seem to remember you said something along the lines of it being possible =
-to
-tell the filesystem not to do discarding and insertion of blocks of zeros. =
- Is
-there a generic way to do that?
-
-Also, is it possible to make it so that I can tell an O_DIRECT read to fail
-partially or, better, completely if there's no data to be had in part of th=
-e
-range?  I can see DIO_SKIP_HOLES, but that only seems to affect writes
-
-Thanks,
-David
 
