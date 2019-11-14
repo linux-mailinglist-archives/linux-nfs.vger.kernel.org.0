@@ -2,1323 +2,336 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50E13FD014
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2019 22:05:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA2BFD15D
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 00:13:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfKNVFe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Nov 2019 16:05:34 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:36576 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfKNVFe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Nov 2019 16:05:34 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEKxDvN029797;
-        Thu, 14 Nov 2019 21:03:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=yH3v4myjtT58YhyfIq8RKQHnw6RtZ5IwYA5oiR1aIZE=;
- b=ZNb/3vU0/wd0ePlViBkr9vGTUiXHzZvkHYddYID0gBnmPGKOrv440BSpzSPg34Lmvczq
- OmplyU3q1lwWiavRfhqeNJH5xU9sxDmHjUdzPPXT9svt1ofiqD9SL54YucX76WNuc9eD
- hL9AFjHFZqxc9jGO8DQTguQ0jgVBYkRR/8dOLu0cGNV4izF5X1ynUZr3HLWmEGkr8S8t
- jj2Q0LLO/H/zA6meylm6+Vbb1RAP6LQaK+sMa7bD1Fv5omNrK0z0xiPYmfmJoWQqi9S6
- f0/BPm3TvR4Ek5UZbRiMUHTGc7hivyZuc41Dndg5CeZWel6HI9Lzf3/5yokJEe8i+72J gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w5ndqntc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 21:03:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEL3Wvn127871;
-        Thu, 14 Nov 2019 21:03:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2w8v36dh1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 21:03:52 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAEL3ows027881;
-        Thu, 14 Nov 2019 21:03:50 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Nov 2019 13:03:49 -0800
-Date:   Thu, 14 Nov 2019 13:03:47 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH V2 2/2] fs: Move swap_[de]activate to file_operations
-Message-ID: <20191114210347.GI6211@magnolia>
-References: <20191113004244.9981-1-ira.weiny@intel.com>
- <20191113004244.9981-3-ira.weiny@intel.com>
+        id S1726910AbfKNXN3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Nov 2019 18:13:29 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:46074 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfKNXN2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Nov 2019 18:13:28 -0500
+Received: by mail-yw1-f65.google.com with SMTP id j137so2477324ywa.12;
+        Thu, 14 Nov 2019 15:13:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Q+FepMvsRG+t7K1BcGEqx0RL4pRRtZKmeaIcFN9Jdg=;
+        b=QyKpUl008lohlZr+RidcngmsoVQtJWxs1XKdE9UUdtBX//Io4r2gsyPYWdkUwa1Bqj
+         GnsGsnzML6OnoTRQ8ny/fs2zZ3bl5zGfS2uhNA4RmR1SPVkHJ4GxzV8R8mJre14M9nY4
+         mONadmDIRQ7UPwLHFfgrRCziDhH3VTgNrJiOl3ThDEWtn9F1S3P6EpaJT4Pt3g8Z9O1g
+         PSJg5sSi/lhxl9klkpSp9OxJ50HjNPABfXnI4aDp7fcCcazwh8I1rOfBgtwEjnmAcuxz
+         Og1dPJlx7x64uQApe0L2RexVfGaGhv4jyzYG3aESgOdIKG1TGLB7KQvwShBPOq9iRxPx
+         1SoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Q+FepMvsRG+t7K1BcGEqx0RL4pRRtZKmeaIcFN9Jdg=;
+        b=Al78qJXGFOqpGctiI8QOL6IuZv0A3OAU7Z/4zg3EuB7p2EeCF1CpeCzS0jo0Pli13b
+         gF/cj783hOFyuw7JfDfa10lAWmt5//VHUaR37Vy0ZYL3zlnULypPiGAUBeOFeamVxKPB
+         msi3jmqF1Jas4QKyjzyYaLVxY1/ugrBs/UVjAkrz4uD8fFyBYkt6Y/webpugjCncB0WZ
+         /N/zPXnzWRD3T3UBjzQ3Z7YxH+3Qx9FWlQCdrleyYaOlHPwcnS69BT6b5fJjtvQr8am2
+         +F3jvm5O+xpOH3nkcxytYQ/T64X5NaKK5QmUVVj7jRWWxqnqpnl/8rPxRqcfvBuWkzEo
+         Xogw==
+X-Gm-Message-State: APjAAAV8R1qg0fjkRm0hAo/cbsDFscZBr35jJFQS28nb+y0RcK022+zj
+        dhUqRV6XhAKEkUgHAwLquIbt7g78UiezGZIW5u294Q==
+X-Google-Smtp-Source: APXvYqwD7PCD9QSpiK4dOl3PPgm0LPTzJfNBgJCyxFFb53frBcNL7doDzEZ+ezcyzyNgy1pJWeFG+zhn3YfnT5c/m1k=
+X-Received: by 2002:a81:2f0f:: with SMTP id v15mr7593246ywv.183.1573773207074;
+ Thu, 14 Nov 2019 15:13:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113004244.9981-3-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911140174
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911140174
+References: <20191114154723.GJ26530@ZenIV.linux.org.uk> <20191114195544.GB5569@miu.piliscsaba.redhat.com>
+ <CAOQ4uxhjAwU_V0cUF+VkQbAwXKTJKsZuyysNXMecuM9Y1iuUsw@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhjAwU_V0cUF+VkQbAwXKTJKsZuyysNXMecuM9Y1iuUsw@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 15 Nov 2019 01:13:15 +0200
+Message-ID: <CAOQ4uxhaw_H0ScTvehHqZVkp5KgBtd_bgcf-0bo_GnUrT8Rwqg@mail.gmail.com>
+Subject: Re: [RFC] is ovl_fh->fid really intended to be misaligned?
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000f76412059756a05f"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:42:44PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> swap_activate() and swap_deactivate() have nothing to do with address
-> spaces.  We want to be able to change the address space operations on
-> the fly to allow changing inode flags dynamically.
-> 
-> Switching address space operations can be difficult to do reliably.[1]
-> Therefore, to simplify switching address space operations we reduce the
-> number of functions in those operations by moving swap_activate() and
-> swap_deactivate() out of the address space operations.
-> 
-> No functionality is changed with this patch.
-> 
-> This has been tested with XFS but not NFS, f2fs, or btrfs.
-> 
-> Also note we move some functions to facilitate compilation.  But there
-> are no functional changes are contained within those diffs.
-> 
-> [1] https://lkml.org/lkml/2019/11/11/572
-> 
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+--000000000000f76412059756a05f
+Content-Type: text/plain; charset="UTF-8"
 
-Replace previous ack with:
+On Thu, Nov 14, 2019 at 10:07 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Thu, Nov 14, 2019 at 9:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > On Thu, Nov 14, 2019 at 03:47:23PM +0000, Al Viro wrote:
+> > > AFAICS, this
+> > >         bytes = (fh->len - offsetof(struct ovl_fh, fid));
+> > >         real = exportfs_decode_fh(mnt, (struct fid *)fh->fid,
+> > >                                   bytes >> 2, (int)fh->type,
+> > >                                   connected ? ovl_acceptable : NULL, mnt);
+> > > in ovl_decode_real_fh() combined with
+> > >                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
+> > >                                             connected);
+> > > in ovl_check_origin_fh(),
+> > >         /* First lookup overlay inode in inode cache by origin fh */
+> > >         err = ovl_check_origin_fh(ofs, fh, false, NULL, &stack);
+> > > in ovl_lower_fh_to_d() and
+> > >         struct ovl_fh *fh = (struct ovl_fh *) fid;
+> > > ...
+> > >                  ovl_lower_fh_to_d(sb, fh);
+> > > in ovl_fh_to_dentry() leads to the pointer to struct fid passed to
+> > > exportfs_decode_fh() being 21 bytes ahead of that passed to
+> > > ovl_fh_to_dentry().
+> > >
+> > > However, alignment of struct fid pointers is 32 bits and quite a few
+> > > places dealing with those (including ->fh_to_dentry() instances)
+> > > do access them directly.  Argument of ->fh_to_dentry() is supposed
+> > > to be 32bit-aligned, and callers generally guarantee that.  Your
+> > > code, OTOH, violates the alignment systematically there - what
+> > > it passes to layers' ->fh_to_dentry() (by way of exportfs_decode_fh())
+> > > always has two lower bits different from what it got itself.
+> > >
+> > > What do we do with that?  One solution would be to insert sane padding
+> > > in ovl_fh, but the damn thing appears to be stored as-is in xattrs on
+> > > disk, so that would require rather unpleasant operations reinserting
+> > > the padding on the fly ;-/
+> >
+> > Something like this?  Totally untested...
+> >
+>
+> I was going to suggest something similar using
+>
+> struct ovl_fhv1 {
+>         u8 pad[3];
+>         struct ovl_fh fhv0;
+> } __packed;
+>
+> New overlayfs exported file handles on-wire could be ovl_fhv1,
+> but we can easily convert old ovl_fhv to ovl_fhv1
+> on-the-fly on decode (if we care about those few users at all)
+>
+> xattrs would still be stored and read as ovl_fh v0.
+>
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+See attached.
+IMHO it looks much easier to verify that these changes are correct
+compared to your open coded offset shifting all over the place.
 
---D
+It even passed the exportfs tests first try.
+Only some index tests are failing.
 
-> 
-> ---
-> Changes from V0:
-> 	Update cover letter.
-> 	fix btrfs as per Andrew's comments
-> 	change xfs_iomap_swapfile_activate() to xfs_file_swap_activate()
-> 
-> Changes from V1:
-> 	Update recipients list
-> 
-> 
->  fs/btrfs/file.c    | 341 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/btrfs/inode.c   | 340 --------------------------------------------
->  fs/f2fs/data.c     | 122 ----------------
->  fs/f2fs/file.c     | 122 ++++++++++++++++
->  fs/nfs/file.c      |   4 +-
->  fs/xfs/xfs_aops.c  |  13 --
->  fs/xfs/xfs_file.c  |  12 ++
->  include/linux/fs.h |  10 +-
->  mm/swapfile.c      |  12 +-
->  9 files changed, 487 insertions(+), 489 deletions(-)
-> 
-> diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-> index 0cb43b682789..117502311fe0 100644
-> --- a/fs/btrfs/file.c
-> +++ b/fs/btrfs/file.c
-> @@ -16,6 +16,7 @@
->  #include <linux/btrfs.h>
->  #include <linux/uio.h>
->  #include <linux/iversion.h>
-> +#include <linux/swap.h>
->  #include "ctree.h"
->  #include "disk-io.h"
->  #include "transaction.h"
-> @@ -27,6 +28,7 @@
->  #include "qgroup.h"
->  #include "compression.h"
->  #include "delalloc-space.h"
-> +#include "block-group.h"
->  
->  static struct kmem_cache *btrfs_inode_defrag_cachep;
->  /*
-> @@ -3444,6 +3446,343 @@ static int btrfs_file_open(struct inode *inode, struct file *filp)
->  	return generic_file_open(inode, filp);
->  }
->  
-> +#ifdef CONFIG_SWAP
-> +/*
-> + * Add an entry indicating a block group or device which is pinned by a
-> + * swapfile. Returns 0 on success, 1 if there is already an entry for it, or a
-> + * negative errno on failure.
-> + */
-> +static int btrfs_add_swapfile_pin(struct inode *inode, void *ptr,
-> +				  bool is_block_group)
-> +{
-> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> +	struct btrfs_swapfile_pin *sp, *entry;
-> +	struct rb_node **p;
-> +	struct rb_node *parent = NULL;
-> +
-> +	sp = kmalloc(sizeof(*sp), GFP_NOFS);
-> +	if (!sp)
-> +		return -ENOMEM;
-> +	sp->ptr = ptr;
-> +	sp->inode = inode;
-> +	sp->is_block_group = is_block_group;
-> +
-> +	spin_lock(&fs_info->swapfile_pins_lock);
-> +	p = &fs_info->swapfile_pins.rb_node;
-> +	while (*p) {
-> +		parent = *p;
-> +		entry = rb_entry(parent, struct btrfs_swapfile_pin, node);
-> +		if (sp->ptr < entry->ptr ||
-> +		    (sp->ptr == entry->ptr && sp->inode < entry->inode)) {
-> +			p = &(*p)->rb_left;
-> +		} else if (sp->ptr > entry->ptr ||
-> +			   (sp->ptr == entry->ptr && sp->inode > entry->inode)) {
-> +			p = &(*p)->rb_right;
-> +		} else {
-> +			spin_unlock(&fs_info->swapfile_pins_lock);
-> +			kfree(sp);
-> +			return 1;
-> +		}
-> +	}
-> +	rb_link_node(&sp->node, parent, p);
-> +	rb_insert_color(&sp->node, &fs_info->swapfile_pins);
-> +	spin_unlock(&fs_info->swapfile_pins_lock);
-> +	return 0;
-> +}
-> +
-> +/* Free all of the entries pinned by this swapfile. */
-> +static void btrfs_free_swapfile_pins(struct inode *inode)
-> +{
-> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> +	struct btrfs_swapfile_pin *sp;
-> +	struct rb_node *node, *next;
-> +
-> +	spin_lock(&fs_info->swapfile_pins_lock);
-> +	node = rb_first(&fs_info->swapfile_pins);
-> +	while (node) {
-> +		next = rb_next(node);
-> +		sp = rb_entry(node, struct btrfs_swapfile_pin, node);
-> +		if (sp->inode == inode) {
-> +			rb_erase(&sp->node, &fs_info->swapfile_pins);
-> +			if (sp->is_block_group)
-> +				btrfs_put_block_group(sp->ptr);
-> +			kfree(sp);
-> +		}
-> +		node = next;
-> +	}
-> +	spin_unlock(&fs_info->swapfile_pins_lock);
-> +}
-> +
-> +struct btrfs_swap_info {
-> +	u64 start;
-> +	u64 block_start;
-> +	u64 block_len;
-> +	u64 lowest_ppage;
-> +	u64 highest_ppage;
-> +	unsigned long nr_pages;
-> +	int nr_extents;
-> +};
-> +
-> +static int btrfs_add_swap_extent(struct swap_info_struct *sis,
-> +				 struct btrfs_swap_info *bsi)
-> +{
-> +	unsigned long nr_pages;
-> +	u64 first_ppage, first_ppage_reported, next_ppage;
-> +	int ret;
-> +
-> +	first_ppage = ALIGN(bsi->block_start, PAGE_SIZE) >> PAGE_SHIFT;
-> +	next_ppage = ALIGN_DOWN(bsi->block_start + bsi->block_len,
-> +				PAGE_SIZE) >> PAGE_SHIFT;
-> +
-> +	if (first_ppage >= next_ppage)
-> +		return 0;
-> +	nr_pages = next_ppage - first_ppage;
-> +
-> +	first_ppage_reported = first_ppage;
-> +	if (bsi->start == 0)
-> +		first_ppage_reported++;
-> +	if (bsi->lowest_ppage > first_ppage_reported)
-> +		bsi->lowest_ppage = first_ppage_reported;
-> +	if (bsi->highest_ppage < (next_ppage - 1))
-> +		bsi->highest_ppage = next_ppage - 1;
-> +
-> +	ret = add_swap_extent(sis, bsi->nr_pages, nr_pages, first_ppage);
-> +	if (ret < 0)
-> +		return ret;
-> +	bsi->nr_extents += ret;
-> +	bsi->nr_pages += nr_pages;
-> +	return 0;
-> +}
-> +
-> +static void btrfs_swap_deactivate(struct file *file)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +
-> +	btrfs_free_swapfile_pins(inode);
-> +	atomic_dec(&BTRFS_I(inode)->root->nr_swapfiles);
-> +}
-> +
-> +static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> +			       sector_t *span)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> +	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
-> +	struct extent_state *cached_state = NULL;
-> +	struct extent_map *em = NULL;
-> +	struct btrfs_device *device = NULL;
-> +	struct btrfs_swap_info bsi = {
-> +		.lowest_ppage = (sector_t)-1ULL,
-> +	};
-> +	int ret = 0;
-> +	u64 isize;
-> +	u64 start;
-> +
-> +	/*
-> +	 * If the swap file was just created, make sure delalloc is done. If the
-> +	 * file changes again after this, the user is doing something stupid and
-> +	 * we don't really care.
-> +	 */
-> +	ret = btrfs_wait_ordered_range(inode, 0, (u64)-1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The inode is locked, so these flags won't change after we check them.
-> +	 */
-> +	if (BTRFS_I(inode)->flags & BTRFS_INODE_COMPRESS) {
-> +		btrfs_warn(fs_info, "swapfile must not be compressed");
-> +		return -EINVAL;
-> +	}
-> +	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW)) {
-> +		btrfs_warn(fs_info, "swapfile must not be copy-on-write");
-> +		return -EINVAL;
-> +	}
-> +	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)) {
-> +		btrfs_warn(fs_info, "swapfile must not be checksummed");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * Balance or device remove/replace/resize can move stuff around from
-> +	 * under us. The EXCL_OP flag makes sure they aren't running/won't run
-> +	 * concurrently while we are mapping the swap extents, and
-> +	 * fs_info->swapfile_pins prevents them from running while the swap file
-> +	 * is active and moving the extents. Note that this also prevents a
-> +	 * concurrent device add which isn't actually necessary, but it's not
-> +	 * really worth the trouble to allow it.
-> +	 */
-> +	if (test_and_set_bit(BTRFS_FS_EXCL_OP, &fs_info->flags)) {
-> +		btrfs_warn(fs_info,
-> +	   "cannot activate swapfile while exclusive operation is running");
-> +		return -EBUSY;
-> +	}
-> +	/*
-> +	 * Snapshots can create extents which require COW even if NODATACOW is
-> +	 * set. We use this counter to prevent snapshots. We must increment it
-> +	 * before walking the extents because we don't want a concurrent
-> +	 * snapshot to run after we've already checked the extents.
-> +	 */
-> +	atomic_inc(&BTRFS_I(inode)->root->nr_swapfiles);
-> +
-> +	isize = ALIGN_DOWN(inode->i_size, fs_info->sectorsize);
-> +
-> +	lock_extent_bits(io_tree, 0, isize - 1, &cached_state);
-> +	start = 0;
-> +	while (start < isize) {
-> +		u64 logical_block_start, physical_block_start;
-> +		struct btrfs_block_group_cache *bg;
-> +		u64 len = isize - start;
-> +
-> +		em = btrfs_get_extent(BTRFS_I(inode), NULL, 0, start, len, 0);
-> +		if (IS_ERR(em)) {
-> +			ret = PTR_ERR(em);
-> +			goto out;
-> +		}
-> +
-> +		if (em->block_start == EXTENT_MAP_HOLE) {
-> +			btrfs_warn(fs_info, "swapfile must not have holes");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +		if (em->block_start == EXTENT_MAP_INLINE) {
-> +			/*
-> +			 * It's unlikely we'll ever actually find ourselves
-> +			 * here, as a file small enough to fit inline won't be
-> +			 * big enough to store more than the swap header, but in
-> +			 * case something changes in the future, let's catch it
-> +			 * here rather than later.
-> +			 */
-> +			btrfs_warn(fs_info, "swapfile must not be inline");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags)) {
-> +			btrfs_warn(fs_info, "swapfile must not be compressed");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		logical_block_start = em->block_start + (start - em->start);
-> +		len = min(len, em->len - (start - em->start));
-> +		free_extent_map(em);
-> +		em = NULL;
-> +
-> +		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
-> +		if (ret < 0) {
-> +			goto out;
-> +		} else if (ret) {
-> +			ret = 0;
-> +		} else {
-> +			btrfs_warn(fs_info,
-> +				   "swapfile must not be copy-on-write");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		em = btrfs_get_chunk_map(fs_info, logical_block_start, len);
-> +		if (IS_ERR(em)) {
-> +			ret = PTR_ERR(em);
-> +			goto out;
-> +		}
-> +
-> +		if (em->map_lookup->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
-> +			btrfs_warn(fs_info,
-> +				   "swapfile must have single data profile");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		if (device == NULL) {
-> +			device = em->map_lookup->stripes[0].dev;
-> +			ret = btrfs_add_swapfile_pin(inode, device, false);
-> +			if (ret == 1)
-> +				ret = 0;
-> +			else if (ret)
-> +				goto out;
-> +		} else if (device != em->map_lookup->stripes[0].dev) {
-> +			btrfs_warn(fs_info, "swapfile must be on one device");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		physical_block_start = (em->map_lookup->stripes[0].physical +
-> +					(logical_block_start - em->start));
-> +		len = min(len, em->len - (logical_block_start - em->start));
-> +		free_extent_map(em);
-> +		em = NULL;
-> +
-> +		bg = btrfs_lookup_block_group(fs_info, logical_block_start);
-> +		if (!bg) {
-> +			btrfs_warn(fs_info,
-> +			   "could not find block group containing swapfile");
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		ret = btrfs_add_swapfile_pin(inode, bg, true);
-> +		if (ret) {
-> +			btrfs_put_block_group(bg);
-> +			if (ret == 1)
-> +				ret = 0;
-> +			else
-> +				goto out;
-> +		}
-> +
-> +		if (bsi.block_len &&
-> +		    bsi.block_start + bsi.block_len == physical_block_start) {
-> +			bsi.block_len += len;
-> +		} else {
-> +			if (bsi.block_len) {
-> +				ret = btrfs_add_swap_extent(sis, &bsi);
-> +				if (ret)
-> +					goto out;
-> +			}
-> +			bsi.start = start;
-> +			bsi.block_start = physical_block_start;
-> +			bsi.block_len = len;
-> +		}
-> +
-> +		start += len;
-> +	}
-> +
-> +	if (bsi.block_len)
-> +		ret = btrfs_add_swap_extent(sis, &bsi);
-> +
-> +out:
-> +	if (!IS_ERR_OR_NULL(em))
-> +		free_extent_map(em);
-> +
-> +	unlock_extent_cached(io_tree, 0, isize - 1, &cached_state);
-> +
-> +	if (ret)
-> +		btrfs_swap_deactivate(file);
-> +
-> +	clear_bit(BTRFS_FS_EXCL_OP, &fs_info->flags);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (device)
-> +		sis->bdev = device->bdev;
-> +	*span = bsi.highest_ppage - bsi.lowest_ppage + 1;
-> +	sis->max = bsi.nr_pages;
-> +	sis->pages = bsi.nr_pages - 1;
-> +	sis->highest_bit = bsi.nr_pages - 1;
-> +	return bsi.nr_extents;
-> +}
-> +#else
-> +static void btrfs_swap_deactivate(struct file *file)
-> +{
-> +}
-> +
-> +static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> +			       sector_t *span)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif
-> +
->  const struct file_operations btrfs_file_operations = {
->  	.llseek		= btrfs_file_llseek,
->  	.read_iter      = generic_file_read_iter,
-> @@ -3459,6 +3798,8 @@ const struct file_operations btrfs_file_operations = {
->  	.compat_ioctl	= btrfs_compat_ioctl,
->  #endif
->  	.remap_file_range = btrfs_remap_file_range,
-> +	.swap_activate	= btrfs_swap_activate,
-> +	.swap_deactivate = btrfs_swap_deactivate,
->  };
->  
->  void __cold btrfs_auto_defrag_exit(void)
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 6d159df7b536..c11b86f2bf24 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -27,7 +27,6 @@
->  #include <linux/uio.h>
->  #include <linux/magic.h>
->  #include <linux/iversion.h>
-> -#include <linux/swap.h>
->  #include <linux/sched/mm.h>
->  #include <asm/unaligned.h>
->  #include "misc.h"
-> @@ -10629,343 +10628,6 @@ void btrfs_set_range_writeback(struct extent_io_tree *tree, u64 start, u64 end)
->  	}
->  }
->  
-> -#ifdef CONFIG_SWAP
-> -/*
-> - * Add an entry indicating a block group or device which is pinned by a
-> - * swapfile. Returns 0 on success, 1 if there is already an entry for it, or a
-> - * negative errno on failure.
-> - */
-> -static int btrfs_add_swapfile_pin(struct inode *inode, void *ptr,
-> -				  bool is_block_group)
-> -{
-> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> -	struct btrfs_swapfile_pin *sp, *entry;
-> -	struct rb_node **p;
-> -	struct rb_node *parent = NULL;
-> -
-> -	sp = kmalloc(sizeof(*sp), GFP_NOFS);
-> -	if (!sp)
-> -		return -ENOMEM;
-> -	sp->ptr = ptr;
-> -	sp->inode = inode;
-> -	sp->is_block_group = is_block_group;
-> -
-> -	spin_lock(&fs_info->swapfile_pins_lock);
-> -	p = &fs_info->swapfile_pins.rb_node;
-> -	while (*p) {
-> -		parent = *p;
-> -		entry = rb_entry(parent, struct btrfs_swapfile_pin, node);
-> -		if (sp->ptr < entry->ptr ||
-> -		    (sp->ptr == entry->ptr && sp->inode < entry->inode)) {
-> -			p = &(*p)->rb_left;
-> -		} else if (sp->ptr > entry->ptr ||
-> -			   (sp->ptr == entry->ptr && sp->inode > entry->inode)) {
-> -			p = &(*p)->rb_right;
-> -		} else {
-> -			spin_unlock(&fs_info->swapfile_pins_lock);
-> -			kfree(sp);
-> -			return 1;
-> -		}
-> -	}
-> -	rb_link_node(&sp->node, parent, p);
-> -	rb_insert_color(&sp->node, &fs_info->swapfile_pins);
-> -	spin_unlock(&fs_info->swapfile_pins_lock);
-> -	return 0;
-> -}
-> -
-> -/* Free all of the entries pinned by this swapfile. */
-> -static void btrfs_free_swapfile_pins(struct inode *inode)
-> -{
-> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> -	struct btrfs_swapfile_pin *sp;
-> -	struct rb_node *node, *next;
-> -
-> -	spin_lock(&fs_info->swapfile_pins_lock);
-> -	node = rb_first(&fs_info->swapfile_pins);
-> -	while (node) {
-> -		next = rb_next(node);
-> -		sp = rb_entry(node, struct btrfs_swapfile_pin, node);
-> -		if (sp->inode == inode) {
-> -			rb_erase(&sp->node, &fs_info->swapfile_pins);
-> -			if (sp->is_block_group)
-> -				btrfs_put_block_group(sp->ptr);
-> -			kfree(sp);
-> -		}
-> -		node = next;
-> -	}
-> -	spin_unlock(&fs_info->swapfile_pins_lock);
-> -}
-> -
-> -struct btrfs_swap_info {
-> -	u64 start;
-> -	u64 block_start;
-> -	u64 block_len;
-> -	u64 lowest_ppage;
-> -	u64 highest_ppage;
-> -	unsigned long nr_pages;
-> -	int nr_extents;
-> -};
-> -
-> -static int btrfs_add_swap_extent(struct swap_info_struct *sis,
-> -				 struct btrfs_swap_info *bsi)
-> -{
-> -	unsigned long nr_pages;
-> -	u64 first_ppage, first_ppage_reported, next_ppage;
-> -	int ret;
-> -
-> -	first_ppage = ALIGN(bsi->block_start, PAGE_SIZE) >> PAGE_SHIFT;
-> -	next_ppage = ALIGN_DOWN(bsi->block_start + bsi->block_len,
-> -				PAGE_SIZE) >> PAGE_SHIFT;
-> -
-> -	if (first_ppage >= next_ppage)
-> -		return 0;
-> -	nr_pages = next_ppage - first_ppage;
-> -
-> -	first_ppage_reported = first_ppage;
-> -	if (bsi->start == 0)
-> -		first_ppage_reported++;
-> -	if (bsi->lowest_ppage > first_ppage_reported)
-> -		bsi->lowest_ppage = first_ppage_reported;
-> -	if (bsi->highest_ppage < (next_ppage - 1))
-> -		bsi->highest_ppage = next_ppage - 1;
-> -
-> -	ret = add_swap_extent(sis, bsi->nr_pages, nr_pages, first_ppage);
-> -	if (ret < 0)
-> -		return ret;
-> -	bsi->nr_extents += ret;
-> -	bsi->nr_pages += nr_pages;
-> -	return 0;
-> -}
-> -
-> -static void btrfs_swap_deactivate(struct file *file)
-> -{
-> -	struct inode *inode = file_inode(file);
-> -
-> -	btrfs_free_swapfile_pins(inode);
-> -	atomic_dec(&BTRFS_I(inode)->root->nr_swapfiles);
-> -}
-> -
-> -static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> -			       sector_t *span)
-> -{
-> -	struct inode *inode = file_inode(file);
-> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
-> -	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
-> -	struct extent_state *cached_state = NULL;
-> -	struct extent_map *em = NULL;
-> -	struct btrfs_device *device = NULL;
-> -	struct btrfs_swap_info bsi = {
-> -		.lowest_ppage = (sector_t)-1ULL,
-> -	};
-> -	int ret = 0;
-> -	u64 isize;
-> -	u64 start;
-> -
-> -	/*
-> -	 * If the swap file was just created, make sure delalloc is done. If the
-> -	 * file changes again after this, the user is doing something stupid and
-> -	 * we don't really care.
-> -	 */
-> -	ret = btrfs_wait_ordered_range(inode, 0, (u64)-1);
-> -	if (ret)
-> -		return ret;
-> -
-> -	/*
-> -	 * The inode is locked, so these flags won't change after we check them.
-> -	 */
-> -	if (BTRFS_I(inode)->flags & BTRFS_INODE_COMPRESS) {
-> -		btrfs_warn(fs_info, "swapfile must not be compressed");
-> -		return -EINVAL;
-> -	}
-> -	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW)) {
-> -		btrfs_warn(fs_info, "swapfile must not be copy-on-write");
-> -		return -EINVAL;
-> -	}
-> -	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)) {
-> -		btrfs_warn(fs_info, "swapfile must not be checksummed");
-> -		return -EINVAL;
-> -	}
-> -
-> -	/*
-> -	 * Balance or device remove/replace/resize can move stuff around from
-> -	 * under us. The EXCL_OP flag makes sure they aren't running/won't run
-> -	 * concurrently while we are mapping the swap extents, and
-> -	 * fs_info->swapfile_pins prevents them from running while the swap file
-> -	 * is active and moving the extents. Note that this also prevents a
-> -	 * concurrent device add which isn't actually necessary, but it's not
-> -	 * really worth the trouble to allow it.
-> -	 */
-> -	if (test_and_set_bit(BTRFS_FS_EXCL_OP, &fs_info->flags)) {
-> -		btrfs_warn(fs_info,
-> -	   "cannot activate swapfile while exclusive operation is running");
-> -		return -EBUSY;
-> -	}
-> -	/*
-> -	 * Snapshots can create extents which require COW even if NODATACOW is
-> -	 * set. We use this counter to prevent snapshots. We must increment it
-> -	 * before walking the extents because we don't want a concurrent
-> -	 * snapshot to run after we've already checked the extents.
-> -	 */
-> -	atomic_inc(&BTRFS_I(inode)->root->nr_swapfiles);
-> -
-> -	isize = ALIGN_DOWN(inode->i_size, fs_info->sectorsize);
-> -
-> -	lock_extent_bits(io_tree, 0, isize - 1, &cached_state);
-> -	start = 0;
-> -	while (start < isize) {
-> -		u64 logical_block_start, physical_block_start;
-> -		struct btrfs_block_group_cache *bg;
-> -		u64 len = isize - start;
-> -
-> -		em = btrfs_get_extent(BTRFS_I(inode), NULL, 0, start, len, 0);
-> -		if (IS_ERR(em)) {
-> -			ret = PTR_ERR(em);
-> -			goto out;
-> -		}
-> -
-> -		if (em->block_start == EXTENT_MAP_HOLE) {
-> -			btrfs_warn(fs_info, "swapfile must not have holes");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -		if (em->block_start == EXTENT_MAP_INLINE) {
-> -			/*
-> -			 * It's unlikely we'll ever actually find ourselves
-> -			 * here, as a file small enough to fit inline won't be
-> -			 * big enough to store more than the swap header, but in
-> -			 * case something changes in the future, let's catch it
-> -			 * here rather than later.
-> -			 */
-> -			btrfs_warn(fs_info, "swapfile must not be inline");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags)) {
-> -			btrfs_warn(fs_info, "swapfile must not be compressed");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -
-> -		logical_block_start = em->block_start + (start - em->start);
-> -		len = min(len, em->len - (start - em->start));
-> -		free_extent_map(em);
-> -		em = NULL;
-> -
-> -		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
-> -		if (ret < 0) {
-> -			goto out;
-> -		} else if (ret) {
-> -			ret = 0;
-> -		} else {
-> -			btrfs_warn(fs_info,
-> -				   "swapfile must not be copy-on-write");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -
-> -		em = btrfs_get_chunk_map(fs_info, logical_block_start, len);
-> -		if (IS_ERR(em)) {
-> -			ret = PTR_ERR(em);
-> -			goto out;
-> -		}
-> -
-> -		if (em->map_lookup->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
-> -			btrfs_warn(fs_info,
-> -				   "swapfile must have single data profile");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -
-> -		if (device == NULL) {
-> -			device = em->map_lookup->stripes[0].dev;
-> -			ret = btrfs_add_swapfile_pin(inode, device, false);
-> -			if (ret == 1)
-> -				ret = 0;
-> -			else if (ret)
-> -				goto out;
-> -		} else if (device != em->map_lookup->stripes[0].dev) {
-> -			btrfs_warn(fs_info, "swapfile must be on one device");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -
-> -		physical_block_start = (em->map_lookup->stripes[0].physical +
-> -					(logical_block_start - em->start));
-> -		len = min(len, em->len - (logical_block_start - em->start));
-> -		free_extent_map(em);
-> -		em = NULL;
-> -
-> -		bg = btrfs_lookup_block_group(fs_info, logical_block_start);
-> -		if (!bg) {
-> -			btrfs_warn(fs_info,
-> -			   "could not find block group containing swapfile");
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> -
-> -		ret = btrfs_add_swapfile_pin(inode, bg, true);
-> -		if (ret) {
-> -			btrfs_put_block_group(bg);
-> -			if (ret == 1)
-> -				ret = 0;
-> -			else
-> -				goto out;
-> -		}
-> -
-> -		if (bsi.block_len &&
-> -		    bsi.block_start + bsi.block_len == physical_block_start) {
-> -			bsi.block_len += len;
-> -		} else {
-> -			if (bsi.block_len) {
-> -				ret = btrfs_add_swap_extent(sis, &bsi);
-> -				if (ret)
-> -					goto out;
-> -			}
-> -			bsi.start = start;
-> -			bsi.block_start = physical_block_start;
-> -			bsi.block_len = len;
-> -		}
-> -
-> -		start += len;
-> -	}
-> -
-> -	if (bsi.block_len)
-> -		ret = btrfs_add_swap_extent(sis, &bsi);
-> -
-> -out:
-> -	if (!IS_ERR_OR_NULL(em))
-> -		free_extent_map(em);
-> -
-> -	unlock_extent_cached(io_tree, 0, isize - 1, &cached_state);
-> -
-> -	if (ret)
-> -		btrfs_swap_deactivate(file);
-> -
-> -	clear_bit(BTRFS_FS_EXCL_OP, &fs_info->flags);
-> -
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (device)
-> -		sis->bdev = device->bdev;
-> -	*span = bsi.highest_ppage - bsi.lowest_ppage + 1;
-> -	sis->max = bsi.nr_pages;
-> -	sis->pages = bsi.nr_pages - 1;
-> -	sis->highest_bit = bsi.nr_pages - 1;
-> -	return bsi.nr_extents;
-> -}
-> -#else
-> -static void btrfs_swap_deactivate(struct file *file)
-> -{
-> -}
-> -
-> -static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> -			       sector_t *span)
-> -{
-> -	return -EOPNOTSUPP;
-> -}
-> -#endif
-> -
->  static const struct inode_operations btrfs_dir_inode_operations = {
->  	.getattr	= btrfs_getattr,
->  	.lookup		= btrfs_lookup,
-> @@ -11032,8 +10694,6 @@ static const struct address_space_operations btrfs_aops = {
->  	.releasepage	= btrfs_releasepage,
->  	.set_page_dirty	= btrfs_set_page_dirty,
->  	.error_remove_page = generic_error_remove_page,
-> -	.swap_activate	= btrfs_swap_activate,
-> -	.swap_deactivate = btrfs_swap_deactivate,
->  };
->  
->  static const struct inode_operations btrfs_file_inode_operations = {
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 3c7777bfae17..04b2a8f44fa9 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -14,7 +14,6 @@
->  #include <linux/pagevec.h>
->  #include <linux/blkdev.h>
->  #include <linux/bio.h>
-> -#include <linux/swap.h>
->  #include <linux/prefetch.h>
->  #include <linux/uio.h>
->  #include <linux/cleancache.h>
-> @@ -3142,125 +3141,6 @@ int f2fs_migrate_page(struct address_space *mapping,
->  }
->  #endif
->  
-> -#ifdef CONFIG_SWAP
-> -/* Copied from generic_swapfile_activate() to check any holes */
-> -static int check_swap_activate(struct file *swap_file, unsigned int max)
-> -{
-> -	struct inode *inode = swap_file->f_mapping->host;
-> -	unsigned blocks_per_page;
-> -	unsigned long page_no;
-> -	unsigned blkbits;
-> -	sector_t probe_block;
-> -	sector_t last_block;
-> -	sector_t lowest_block = -1;
-> -	sector_t highest_block = 0;
-> -
-> -	blkbits = inode->i_blkbits;
-> -	blocks_per_page = PAGE_SIZE >> blkbits;
-> -
-> -	/*
-> -	 * Map all the blocks into the extent list.  This code doesn't try
-> -	 * to be very smart.
-> -	 */
-> -	probe_block = 0;
-> -	page_no = 0;
-> -	last_block = i_size_read(inode) >> blkbits;
-> -	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
-> -		unsigned block_in_page;
-> -		sector_t first_block;
-> -
-> -		cond_resched();
-> -
-> -		first_block = bmap(inode, probe_block);
-> -		if (first_block == 0)
-> -			goto bad_bmap;
-> -
-> -		/*
-> -		 * It must be PAGE_SIZE aligned on-disk
-> -		 */
-> -		if (first_block & (blocks_per_page - 1)) {
-> -			probe_block++;
-> -			goto reprobe;
-> -		}
-> -
-> -		for (block_in_page = 1; block_in_page < blocks_per_page;
-> -					block_in_page++) {
-> -			sector_t block;
-> -
-> -			block = bmap(inode, probe_block + block_in_page);
-> -			if (block == 0)
-> -				goto bad_bmap;
-> -			if (block != first_block + block_in_page) {
-> -				/* Discontiguity */
-> -				probe_block++;
-> -				goto reprobe;
-> -			}
-> -		}
-> -
-> -		first_block >>= (PAGE_SHIFT - blkbits);
-> -		if (page_no) {	/* exclude the header page */
-> -			if (first_block < lowest_block)
-> -				lowest_block = first_block;
-> -			if (first_block > highest_block)
-> -				highest_block = first_block;
-> -		}
-> -
-> -		page_no++;
-> -		probe_block += blocks_per_page;
-> -reprobe:
-> -		continue;
-> -	}
-> -	return 0;
-> -
-> -bad_bmap:
-> -	pr_err("swapon: swapfile has holes\n");
-> -	return -EINVAL;
-> -}
-> -
-> -static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> -				sector_t *span)
-> -{
-> -	struct inode *inode = file_inode(file);
-> -	int ret;
-> -
-> -	if (!S_ISREG(inode->i_mode))
-> -		return -EINVAL;
-> -
-> -	if (f2fs_readonly(F2FS_I_SB(inode)->sb))
-> -		return -EROFS;
-> -
-> -	ret = f2fs_convert_inline_inode(inode);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = check_swap_activate(file, sis->max);
-> -	if (ret)
-> -		return ret;
-> -
-> -	set_inode_flag(inode, FI_PIN_FILE);
-> -	f2fs_precache_extents(inode);
-> -	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
-> -	return 0;
-> -}
-> -
-> -static void f2fs_swap_deactivate(struct file *file)
-> -{
-> -	struct inode *inode = file_inode(file);
-> -
-> -	clear_inode_flag(inode, FI_PIN_FILE);
-> -}
-> -#else
-> -static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> -				sector_t *span)
-> -{
-> -	return -EOPNOTSUPP;
-> -}
-> -
-> -static void f2fs_swap_deactivate(struct file *file)
-> -{
-> -}
-> -#endif
-> -
->  const struct address_space_operations f2fs_dblock_aops = {
->  	.readpage	= f2fs_read_data_page,
->  	.readpages	= f2fs_read_data_pages,
-> @@ -3273,8 +3153,6 @@ const struct address_space_operations f2fs_dblock_aops = {
->  	.releasepage	= f2fs_release_page,
->  	.direct_IO	= f2fs_direct_IO,
->  	.bmap		= f2fs_bmap,
-> -	.swap_activate  = f2fs_swap_activate,
-> -	.swap_deactivate = f2fs_swap_deactivate,
->  #ifdef CONFIG_MIGRATION
->  	.migratepage    = f2fs_migrate_page,
->  #endif
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 483ad22a0946..de7f9cf36689 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -21,6 +21,7 @@
->  #include <linux/uuid.h>
->  #include <linux/file.h>
->  #include <linux/nls.h>
-> +#include <linux/swap.h>
->  
->  #include "f2fs.h"
->  #include "node.h"
-> @@ -3466,6 +3467,125 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  }
->  #endif
->  
-> +#ifdef CONFIG_SWAP
-> +/* Copied from generic_swapfile_activate() to check any holes */
-> +static int check_swap_activate(struct file *swap_file, unsigned int max)
-> +{
-> +	struct inode *inode = swap_file->f_mapping->host;
-> +	unsigned blocks_per_page;
-> +	unsigned long page_no;
-> +	unsigned blkbits;
-> +	sector_t probe_block;
-> +	sector_t last_block;
-> +	sector_t lowest_block = -1;
-> +	sector_t highest_block = 0;
-> +
-> +	blkbits = inode->i_blkbits;
-> +	blocks_per_page = PAGE_SIZE >> blkbits;
-> +
-> +	/*
-> +	 * Map all the blocks into the extent list.  This code doesn't try
-> +	 * to be very smart.
-> +	 */
-> +	probe_block = 0;
-> +	page_no = 0;
-> +	last_block = i_size_read(inode) >> blkbits;
-> +	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
-> +		unsigned block_in_page;
-> +		sector_t first_block;
-> +
-> +		cond_resched();
-> +
-> +		first_block = bmap(inode, probe_block);
-> +		if (first_block == 0)
-> +			goto bad_bmap;
-> +
-> +		/*
-> +		 * It must be PAGE_SIZE aligned on-disk
-> +		 */
-> +		if (first_block & (blocks_per_page - 1)) {
-> +			probe_block++;
-> +			goto reprobe;
-> +		}
-> +
-> +		for (block_in_page = 1; block_in_page < blocks_per_page;
-> +					block_in_page++) {
-> +			sector_t block;
-> +
-> +			block = bmap(inode, probe_block + block_in_page);
-> +			if (block == 0)
-> +				goto bad_bmap;
-> +			if (block != first_block + block_in_page) {
-> +				/* Discontiguity */
-> +				probe_block++;
-> +				goto reprobe;
-> +			}
-> +		}
-> +
-> +		first_block >>= (PAGE_SHIFT - blkbits);
-> +		if (page_no) {	/* exclude the header page */
-> +			if (first_block < lowest_block)
-> +				lowest_block = first_block;
-> +			if (first_block > highest_block)
-> +				highest_block = first_block;
-> +		}
-> +
-> +		page_no++;
-> +		probe_block += blocks_per_page;
-> +reprobe:
-> +		continue;
-> +	}
-> +	return 0;
-> +
-> +bad_bmap:
-> +	pr_err("swapon: swapfile has holes\n");
-> +	return -EINVAL;
-> +}
-> +
-> +static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> +				sector_t *span)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	int ret;
-> +
-> +	if (!S_ISREG(inode->i_mode))
-> +		return -EINVAL;
-> +
-> +	if (f2fs_readonly(F2FS_I_SB(inode)->sb))
-> +		return -EROFS;
-> +
-> +	ret = f2fs_convert_inline_inode(inode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = check_swap_activate(file, sis->max);
-> +	if (ret)
-> +		return ret;
-> +
-> +	set_inode_flag(inode, FI_PIN_FILE);
-> +	f2fs_precache_extents(inode);
-> +	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
-> +	return 0;
-> +}
-> +
-> +static void f2fs_swap_deactivate(struct file *file)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +
-> +	clear_inode_flag(inode, FI_PIN_FILE);
-> +}
-> +#else
-> +static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
-> +				sector_t *span)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static void f2fs_swap_deactivate(struct file *file)
-> +{
-> +}
-> +#endif
-> +
->  const struct file_operations f2fs_file_operations = {
->  	.llseek		= f2fs_llseek,
->  	.read_iter	= generic_file_read_iter,
-> @@ -3482,4 +3602,6 @@ const struct file_operations f2fs_file_operations = {
->  #endif
->  	.splice_read	= generic_file_splice_read,
->  	.splice_write	= iter_file_splice_write,
-> +	.swap_activate  = f2fs_swap_activate,
-> +	.swap_deactivate = f2fs_swap_deactivate,
->  };
-> diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-> index 95dc90570786..1f82f92185d6 100644
-> --- a/fs/nfs/file.c
-> +++ b/fs/nfs/file.c
-> @@ -520,8 +520,6 @@ const struct address_space_operations nfs_file_aops = {
->  	.launder_page = nfs_launder_page,
->  	.is_dirty_writeback = nfs_check_dirty_writeback,
->  	.error_remove_page = generic_error_remove_page,
-> -	.swap_activate = nfs_swap_activate,
-> -	.swap_deactivate = nfs_swap_deactivate,
->  };
->  
->  /*
-> @@ -847,5 +845,7 @@ const struct file_operations nfs_file_operations = {
->  	.splice_write	= iter_file_splice_write,
->  	.check_flags	= nfs_check_flags,
->  	.setlease	= simple_nosetlease,
-> +	.swap_activate = nfs_swap_activate,
-> +	.swap_deactivate = nfs_swap_deactivate,
->  };
->  EXPORT_SYMBOL_GPL(nfs_file_operations);
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 3a688eb5c5ae..99f578a9ed90 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -631,17 +631,6 @@ xfs_vm_readpages(
->  	return iomap_readpages(mapping, pages, nr_pages, &xfs_read_iomap_ops);
->  }
->  
-> -static int
-> -xfs_iomap_swapfile_activate(
-> -	struct swap_info_struct		*sis,
-> -	struct file			*swap_file,
-> -	sector_t			*span)
-> -{
-> -	sis->bdev = xfs_inode_buftarg(XFS_I(file_inode(swap_file)))->bt_bdev;
-> -	return iomap_swapfile_activate(sis, swap_file, span,
-> -			&xfs_read_iomap_ops);
-> -}
-> -
->  const struct address_space_operations xfs_address_space_operations = {
->  	.readpage		= xfs_vm_readpage,
->  	.readpages		= xfs_vm_readpages,
-> @@ -655,7 +644,6 @@ const struct address_space_operations xfs_address_space_operations = {
->  	.migratepage		= iomap_migrate_page,
->  	.is_partially_uptodate  = iomap_is_partially_uptodate,
->  	.error_remove_page	= generic_error_remove_page,
-> -	.swap_activate		= xfs_iomap_swapfile_activate,
->  };
->  
->  const struct address_space_operations xfs_dax_aops = {
-> @@ -663,5 +651,4 @@ const struct address_space_operations xfs_dax_aops = {
->  	.direct_IO		= noop_direct_IO,
->  	.set_page_dirty		= noop_set_page_dirty,
->  	.invalidatepage		= noop_invalidatepage,
-> -	.swap_activate		= xfs_iomap_swapfile_activate,
->  };
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 865543e41fb4..225f58561f06 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1294,6 +1294,17 @@ xfs_file_mmap(
->  	return 0;
->  }
->  
-> +static int
-> +xfs_file_swap_activate(
-> +	struct swap_info_struct		*sis,
-> +	struct file			*swap_file,
-> +	sector_t			*span)
-> +{
-> +	sis->bdev = xfs_inode_buftarg(XFS_I(file_inode(swap_file)))->bt_bdev;
-> +	return iomap_swapfile_activate(sis, swap_file, span,
-> +			&xfs_read_iomap_ops);
-> +}
-> +
->  const struct file_operations xfs_file_operations = {
->  	.llseek		= xfs_file_llseek,
->  	.read_iter	= xfs_file_read_iter,
-> @@ -1314,6 +1325,7 @@ const struct file_operations xfs_file_operations = {
->  	.fallocate	= xfs_file_fallocate,
->  	.fadvise	= xfs_file_fadvise,
->  	.remap_file_range = xfs_file_remap_range,
-> +	.swap_activate	= xfs_file_swap_activate,
->  };
->  
->  const struct file_operations xfs_dir_file_operations = {
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 83e011e0df7f..1175815da3df 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -402,11 +402,6 @@ struct address_space_operations {
->  					unsigned long);
->  	void (*is_dirty_writeback) (struct page *, bool *, bool *);
->  	int (*error_remove_page)(struct address_space *, struct page *);
-> -
-> -	/* swapfile support */
-> -	int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
-> -				sector_t *span);
-> -	void (*swap_deactivate)(struct file *file);
->  };
->  
->  extern const struct address_space_operations empty_aops;
-> @@ -1858,6 +1853,11 @@ struct file_operations {
->  				   struct file *file_out, loff_t pos_out,
->  				   loff_t len, unsigned int remap_flags);
->  	int (*fadvise)(struct file *, loff_t, loff_t, int);
-> +
-> +	/* swapfile support */
-> +	int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
-> +				sector_t *span);
-> +	void (*swap_deactivate)(struct file *file);
->  } __randomize_layout;
->  
->  struct inode_operations {
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index bb3261d45b6a..d2de8d668708 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -2293,11 +2293,10 @@ static void destroy_swap_extents(struct swap_info_struct *sis)
->  
->  	if (sis->flags & SWP_ACTIVATED) {
->  		struct file *swap_file = sis->swap_file;
-> -		struct address_space *mapping = swap_file->f_mapping;
->  
->  		sis->flags &= ~SWP_ACTIVATED;
-> -		if (mapping->a_ops->swap_deactivate)
-> -			mapping->a_ops->swap_deactivate(swap_file);
-> +		if (swap_file->f_op->swap_deactivate)
-> +			swap_file->f_op->swap_deactivate(swap_file);
->  	}
->  }
->  
-> @@ -2381,8 +2380,7 @@ EXPORT_SYMBOL_GPL(add_swap_extent);
->  static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
->  {
->  	struct file *swap_file = sis->swap_file;
-> -	struct address_space *mapping = swap_file->f_mapping;
-> -	struct inode *inode = mapping->host;
-> +	struct inode *inode = swap_file->f_mapping->host;
->  	int ret;
->  
->  	if (S_ISBLK(inode->i_mode)) {
-> @@ -2391,8 +2389,8 @@ static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
->  		return ret;
->  	}
->  
-> -	if (mapping->a_ops->swap_activate) {
-> -		ret = mapping->a_ops->swap_activate(sis, swap_file, span);
-> +	if (swap_file->f_op->swap_activate) {
-> +		ret = swap_file->f_op->swap_activate(sis, swap_file, span);
->  		if (ret >= 0)
->  			sis->flags |= SWP_ACTIVATED;
->  		if (!ret) {
-> -- 
-> 2.21.0
-> 
+If you like this version, I can fix up the failures and add Al's
+suggestions to simplify code with OVL_FH_MAX_SIZE
+memory allocations.
+
+Thanks,
+Amir.
+
+--000000000000f76412059756a05f
+Content-Type: text/plain; charset="US-ASCII"; 
+	name="0001-ovl-make-sure-real-file-handle-is-32bit-aligned-in-m.patch.txt"
+Content-Disposition: attachment; 
+	filename="0001-ovl-make-sure-real-file-handle-is-32bit-aligned-in-m.patch.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k2zbo4aq0>
+X-Attachment-Id: f_k2zbo4aq0
+
+RnJvbSBhZjViOTU0ZjE3YTIxOWU5YTAwZWViYmFjNjA1ZjBjZGZmYWYxNzlkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBGcmksIDE1IE5vdiAyMDE5IDAwOjU0OjMzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gb3Zs
+OiBtYWtlIHN1cmUgcmVhbCBmaWxlIGhhbmRsZSBpcyAzMmJpdCBhbGlnbmVkIGluIG1lbW9yeQoK
+V0lQCgpTZXByYXRlIG9uLWRpc2sgZW5jb2RpbmcgZnJvbSBpbi1tZW1vcnkgYW5kIG9uLXdpcmUg
+cmVzcmVzZW50YXRpb24Kb2Ygb3ZlcmxheSBmaWxlIGhhbmRsZS4KCkluLW1lbW9yeSBhbmQgb24t
+d2lyZSB3ZSBvbmx5IGV2ZXIgcGFzcyBhcm91bmQgcG9pbnRlcnMgdG8gc3RydWN0Cm92bF9maCwg
+d2hpY2ggZW5jYXBzdWxhdGVzIGF0IG9mZnNldCAzIHRoZSBvbi1kaXNrIGZvcm1hdCBzdHJ1Y3QK
+b3ZsX2ZiLiBzdHJ1Y3Qgb3ZsX2ZiIGVuY2Fwc3VsYXRlcyBhdCBvZmZzZXQgMjEgdGhlIHJlYWwg
+ZmlsZSBoYW5kbGUuClRoYXQgbWFrZXMgc3VyZSB0aGF0IHRoZSByZWFsIGZpbGUgaGFuZGxlIGlz
+IGFsd2F5cyAzMmJpdCBhbGlnbmVkCmluLW1lbW9yeSB3aGVuIHBhc3NlZCBkb3duIHRvIHRoZSB1
+bmRlcmx5aW5nIGZpbGVzeXN0ZW0uCgpSZXBvcnRlZC1ieTogQWwgVmlybyA8dmlyb0B6ZW5pdi5s
+aW51eC5vcmcudWs+ClNpZ25lZC1vZmYtYnk6IEFtaXIgR29sZHN0ZWluIDxhbWlyNzNpbEBnbWFp
+bC5jb20+Ci0tLQogZnMvb3ZlcmxheWZzL2NvcHlfdXAuYyAgIHwgMjggKysrKysrKysrKysrKyst
+LS0tLS0tLS0tLS0tCiBmcy9vdmVybGF5ZnMvZXhwb3J0LmMgICAgfCAyMiArKysrKysrKysrLS0t
+LS0tLS0tLS0KIGZzL292ZXJsYXlmcy9uYW1laS5jICAgICB8IDQyICsrKysrKysrKysrKysrKysr
+KysrLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGZzL292ZXJsYXlmcy9vdmVybGF5ZnMuaCB8IDI5ICsr
+KysrKysrKysrKysrKysrKysrKystLS0tLQogNCBmaWxlcyBjaGFuZ2VkLCA3MCBpbnNlcnRpb25z
+KCspLCA1MSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvY29weV91cC5j
+IGIvZnMvb3ZlcmxheWZzL2NvcHlfdXAuYwppbmRleCBiODAxYzYzNTMxMDAuLjdmOTRmMzIyMzcx
+MCAxMDA2NDQKLS0tIGEvZnMvb3ZlcmxheWZzL2NvcHlfdXAuYworKysgYi9mcy9vdmVybGF5ZnMv
+Y29weV91cC5jCkBAIC0yNTEsMTggKzI1MSwyMCBAQCBzdHJ1Y3Qgb3ZsX2ZoICpvdmxfZW5jb2Rl
+X3JlYWxfZmgoc3RydWN0IGRlbnRyeSAqcmVhbCwgYm9vbCBpc191cHBlcikKIAkgICAgV0FSTl9P
+TihmaF90eXBlID09IEZJTEVJRF9JTlZBTElEKSkKIAkJZ290byBvdXQ7CiAKLQlCVUlMRF9CVUdf
+T04oTUFYX0hBTkRMRV9TWiArIG9mZnNldG9mKHN0cnVjdCBvdmxfZmgsIGZpZCkgPiAyNTUpOwot
+CWZoX2xlbiA9IG9mZnNldG9mKHN0cnVjdCBvdmxfZmgsIGZpZCkgKyBidWZsZW47CisJLyogTWFr
+ZSBzdXJlIHRoZSByZWFsIGZpZCBzdGF5cyAzMmJpdCBhbGlnbmVkICovCisJQlVJTERfQlVHX09O
+KE9WTF9GSF9GSURfT0ZGU0VUICUgNCk7CisJQlVJTERfQlVHX09OKE1BWF9IQU5ETEVfU1ogKyBP
+VkxfRkhfRklEX09GRlNFVCA+IDI1NSk7CisJZmhfbGVuID0gT1ZMX0ZIX0ZJRF9PRkZTRVQgKyBi
+dWZsZW47CiAJZmggPSBrbWFsbG9jKGZoX2xlbiwgR0ZQX0tFUk5FTCk7CiAJaWYgKCFmaCkgewog
+CQlmaCA9IEVSUl9QVFIoLUVOT01FTSk7CiAJCWdvdG8gb3V0OwogCX0KIAotCWZoLT52ZXJzaW9u
+ID0gT1ZMX0ZIX1ZFUlNJT047Ci0JZmgtPm1hZ2ljID0gT1ZMX0ZIX01BR0lDOwotCWZoLT50eXBl
+ID0gZmhfdHlwZTsKLQlmaC0+ZmxhZ3MgPSBPVkxfRkhfRkxBR19DUFVfRU5ESUFOOworCWZoLT5m
+Yi52ZXJzaW9uID0gT1ZMX0ZIX1ZFUlNJT047CisJZmgtPmZiLm1hZ2ljID0gT1ZMX0ZIX01BR0lD
+OworCWZoLT5mYi50eXBlID0gZmhfdHlwZTsKKwlmaC0+ZmIuZmxhZ3MgPSBPVkxfRkhfRkxBR19D
+UFVfRU5ESUFOOwogCS8qCiAJICogV2hlbiB3ZSB3aWxsIHdhbnQgdG8gZGVjb2RlIGFuIG92ZXJs
+YXkgZGVudHJ5IGZyb20gdGhpcyBoYW5kbGUKIAkgKiBhbmQgYWxsIGxheWVycyBhcmUgb24gdGhl
+IHNhbWUgZnMsIGlmIHdlIGdldCBhIGRpc2Nvbm5jdGVkIHJlYWwKQEAgLTI3MCwxMCArMjcyLDEw
+IEBAIHN0cnVjdCBvdmxfZmggKm92bF9lbmNvZGVfcmVhbF9maChzdHJ1Y3QgZGVudHJ5ICpyZWFs
+LCBib29sIGlzX3VwcGVyKQogCSAqIGl0IHRvIHVwcGVyZGVudHJ5IG9yIHRvIGxvd2Vyc3RhY2sg
+aXMgYnkgY2hlY2tpbmcgdGhpcyBmbGFnLgogCSAqLwogCWlmIChpc191cHBlcikKLQkJZmgtPmZs
+YWdzIHw9IE9WTF9GSF9GTEFHX1BBVEhfVVBQRVI7Ci0JZmgtPmxlbiA9IGZoX2xlbjsKLQlmaC0+
+dXVpZCA9ICp1dWlkOwotCW1lbWNweShmaC0+ZmlkLCBidWYsIGJ1Zmxlbik7CisJCWZoLT5mYi5m
+bGFncyB8PSBPVkxfRkhfRkxBR19QQVRIX1VQUEVSOworCWZoLT5mYi5sZW4gPSBmaF9sZW4gLSBP
+VkxfRkhfV0lSRV9PRkZTRVQ7CisJZmgtPmZiLnV1aWQgPSAqdXVpZDsKKwltZW1jcHkoZmgtPmZi
+LmZpZCwgYnVmLCBidWZsZW4pOwogCiBvdXQ6CiAJa2ZyZWUoYnVmKTsKQEAgLTMwMCw4ICszMDIs
+OCBAQCBpbnQgb3ZsX3NldF9vcmlnaW4oc3RydWN0IGRlbnRyeSAqZGVudHJ5LCBzdHJ1Y3QgZGVu
+dHJ5ICpsb3dlciwKIAkvKgogCSAqIERvIG5vdCBmYWlsIHdoZW4gdXBwZXIgZG9lc24ndCBzdXBw
+b3J0IHhhdHRycy4KIAkgKi8KLQllcnIgPSBvdmxfY2hlY2tfc2V0eGF0dHIoZGVudHJ5LCB1cHBl
+ciwgT1ZMX1hBVFRSX09SSUdJTiwgZmgsCi0JCQkJIGZoID8gZmgtPmxlbiA6IDAsIDApOworCWVy
+ciA9IG92bF9jaGVja19zZXR4YXR0cihkZW50cnksIHVwcGVyLCBPVkxfWEFUVFJfT1JJR0lOLCBm
+aC0+YnVmLAorCQkJCSBmaCA/IGZoLT5mYi5sZW4gOiAwLCAwKTsKIAlrZnJlZShmaCk7CiAKIAly
+ZXR1cm4gZXJyOwpAQCAtMzE3LDcgKzMxOSw3IEBAIHN0YXRpYyBpbnQgb3ZsX3NldF91cHBlcl9m
+aChzdHJ1Y3QgZGVudHJ5ICp1cHBlciwgc3RydWN0IGRlbnRyeSAqaW5kZXgpCiAJaWYgKElTX0VS
+UihmaCkpCiAJCXJldHVybiBQVFJfRVJSKGZoKTsKIAotCWVyciA9IG92bF9kb19zZXR4YXR0cihp
+bmRleCwgT1ZMX1hBVFRSX1VQUEVSLCBmaCwgZmgtPmxlbiwgMCk7CisJZXJyID0gb3ZsX2RvX3Nl
+dHhhdHRyKGluZGV4LCBPVkxfWEFUVFJfVVBQRVIsIGZoLT5idWYsIGZoLT5mYi5sZW4sIDApOwog
+CiAJa2ZyZWUoZmgpOwogCXJldHVybiBlcnI7CmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvZXhw
+b3J0LmMgYi9mcy9vdmVybGF5ZnMvZXhwb3J0LmMKaW5kZXggNzNjOTc3NTIxNWIzLi43NDA4YWMy
+ZjNhMDQgMTAwNjQ0Ci0tLSBhL2ZzL292ZXJsYXlmcy9leHBvcnQuYworKysgYi9mcy9vdmVybGF5
+ZnMvZXhwb3J0LmMKQEAgLTIzMSwxMSArMjMxLDEyIEBAIHN0YXRpYyBpbnQgb3ZsX2RfdG9fZmgo
+c3RydWN0IGRlbnRyeSAqZGVudHJ5LCBjaGFyICpidWYsIGludCBidWZsZW4pCiAJCXJldHVybiBQ
+VFJfRVJSKGZoKTsKIAogCWVyciA9IC1FT1ZFUkZMT1c7Ci0JaWYgKGZoLT5sZW4gPiBidWZsZW4p
+CisJaWYgKGZoLT5mYi5sZW4gKyBPVkxfRkhfV0lSRV9PRkZTRVQgPiBidWZsZW4pCiAJCWdvdG8g
+ZmFpbDsKIAotCW1lbWNweShidWYsIChjaGFyICopZmgsIGZoLT5sZW4pOwotCWVyciA9IGZoLT5s
+ZW47CisJYnVmbGVuID0gZmgtPmZiLmxlbiArIE9WTF9GSF9XSVJFX09GRlNFVDsKKwltZW1jcHko
+YnVmLCBmaCwgYnVmbGVuKTsKKwllcnIgPSBidWZsZW47CiAKIG91dDoKIAlrZnJlZShmaCk7CkBA
+IC0yNDMsOCArMjQ0LDggQEAgc3RhdGljIGludCBvdmxfZF90b19maChzdHJ1Y3QgZGVudHJ5ICpk
+ZW50cnksIGNoYXIgKmJ1ZiwgaW50IGJ1ZmxlbikKIAogZmFpbDoKIAlwcl93YXJuX3JhdGVsaW1p
+dGVkKCJvdmVybGF5ZnM6IGZhaWxlZCB0byBlbmNvZGUgZmlsZSBoYW5kbGUgKCVwZDIsIGVycj0l
+aSwgYnVmbGVuPSVkLCBsZW49JWQsIHR5cGU9JWQpXG4iLAotCQkJICAgIGRlbnRyeSwgZXJyLCBi
+dWZsZW4sIGZoID8gKGludClmaC0+bGVuIDogMCwKLQkJCSAgICBmaCA/IGZoLT50eXBlIDogMCk7
+CisJCQkgICAgZGVudHJ5LCBlcnIsIGJ1ZmxlbiwgZmggPyAoaW50KWZoLT5mYi5sZW4gOiAwLAor
+CQkJICAgIGZoID8gZmgtPmZiLnR5cGUgOiAwKTsKIAlnb3RvIG91dDsKIH0KIApAQCAtMjU2LDEx
+ICsyNTcsOCBAQCBzdGF0aWMgaW50IG92bF9kZW50cnlfdG9fZmgoc3RydWN0IGRlbnRyeSAqZGVu
+dHJ5LCB1MzIgKmZpZCwgaW50ICptYXhfbGVuKQogCWlmIChyZXMgPD0gMCkKIAkJcmV0dXJuIEZJ
+TEVJRF9JTlZBTElEOwogCi0JbGVuID0gcmVzOwotCi0JLyogUm91bmQgdXAgdG8gZHdvcmRzICov
+Ci0JKm1heF9sZW4gPSAobGVuICsgMykgPj4gMjsKLQlyZXR1cm4gT1ZMX0ZJTEVJRDsKKwkqbWF4
+X2xlbiA9IHJlcyA+PiAyOworCXJldHVybiBPVkxfRklMRUlEX1YxOwogfQogCiBzdGF0aWMgaW50
+IG92bF9lbmNvZGVfZmgoc3RydWN0IGlub2RlICppbm9kZSwgdTMyICpmaWQsIGludCAqbWF4X2xl
+biwKQEAgLTc4NywxNCArNzg1LDE0IEBAIHN0YXRpYyBzdHJ1Y3QgZGVudHJ5ICpvdmxfZmhfdG9f
+ZGVudHJ5KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIHN0cnVjdCBmaWQgKmZpZCwKIAlpbnQgZXJy
+OwogCiAJZXJyID0gLUVJTlZBTDsKLQlpZiAoZmhfdHlwZSAhPSBPVkxfRklMRUlEKQorCWlmIChm
+aF90eXBlICE9IE9WTF9GSUxFSURfVjEpCiAJCWdvdG8gb3V0X2VycjsKIAogCWVyciA9IG92bF9j
+aGVja19maF9sZW4oZmgsIGxlbik7CiAJaWYgKGVycikKIAkJZ290byBvdXRfZXJyOwogCi0JZmxh
+Z3MgPSBmaC0+ZmxhZ3M7CisJZmxhZ3MgPSBmaC0+ZmIuZmxhZ3M7CiAJZGVudHJ5ID0gKGZsYWdz
+ICYgT1ZMX0ZIX0ZMQUdfUEFUSF9VUFBFUikgPwogCQkgb3ZsX3VwcGVyX2ZoX3RvX2Qoc2IsIGZo
+KSA6CiAJCSBvdmxfbG93ZXJfZmhfdG9fZChzYiwgZmgpOwpkaWZmIC0tZ2l0IGEvZnMvb3Zlcmxh
+eWZzL25hbWVpLmMgYi9mcy9vdmVybGF5ZnMvbmFtZWkuYwppbmRleCBmNDdjNTkxNDAyZDcuLjBk
+MTkzZmFhNzQwYyAxMDA2NDQKLS0tIGEvZnMvb3ZlcmxheWZzL25hbWVpLmMKKysrIGIvZnMvb3Zl
+cmxheWZzL25hbWVpLmMKQEAgLTg0LDIxICs4NCwyMSBAQCBzdGF0aWMgaW50IG92bF9hY2NlcHRh
+YmxlKHZvaWQgKmN0eCwgc3RydWN0IGRlbnRyeSAqZGVudHJ5KQogICogUmV0dXJuIC1FTk9EQVRB
+IGZvciAib3JpZ2luIHVua25vd24iLgogICogUmV0dXJuIDwwIGZvciBhbiBpbnZhbGlkIGZpbGUg
+aGFuZGxlLgogICovCi1pbnQgb3ZsX2NoZWNrX2ZoX2xlbihzdHJ1Y3Qgb3ZsX2ZoICpmaCwgaW50
+IGZoX2xlbikKK2ludCBvdmxfY2hlY2tfZmJfbGVuKHN0cnVjdCBvdmxfZmIgKmZiLCBpbnQgZmJf
+bGVuKQogewotCWlmIChmaF9sZW4gPCBzaXplb2Yoc3RydWN0IG92bF9maCkgfHwgZmhfbGVuIDwg
+ZmgtPmxlbikKKwlpZiAoZmJfbGVuIDwgc2l6ZW9mKHN0cnVjdCBvdmxfZmIpIHx8IGZiX2xlbiA8
+IGZiLT5sZW4pCiAJCXJldHVybiAtRUlOVkFMOwogCi0JaWYgKGZoLT5tYWdpYyAhPSBPVkxfRkhf
+TUFHSUMpCisJaWYgKGZiLT5tYWdpYyAhPSBPVkxfRkhfTUFHSUMpCiAJCXJldHVybiAtRUlOVkFM
+OwogCiAJLyogVHJlYXQgbGFyZ2VyIHZlcnNpb24gYW5kIHVua25vd24gZmxhZ3MgYXMgIm9yaWdp
+biB1bmtub3duIiAqLwotCWlmIChmaC0+dmVyc2lvbiA+IE9WTF9GSF9WRVJTSU9OIHx8IGZoLT5m
+bGFncyAmIH5PVkxfRkhfRkxBR19BTEwpCisJaWYgKGZiLT52ZXJzaW9uID4gT1ZMX0ZIX1ZFUlNJ
+T04gfHwgZmItPmZsYWdzICYgfk9WTF9GSF9GTEFHX0FMTCkKIAkJcmV0dXJuIC1FTk9EQVRBOwog
+CiAJLyogVHJlYXQgZW5kaWFubmVzcyBtaXNtYXRjaCBhcyAib3JpZ2luIHVua25vd24iICovCi0J
+aWYgKCEoZmgtPmZsYWdzICYgT1ZMX0ZIX0ZMQUdfQU5ZX0VORElBTikgJiYKLQkgICAgKGZoLT5m
+bGFncyAmIE9WTF9GSF9GTEFHX0JJR19FTkRJQU4pICE9IE9WTF9GSF9GTEFHX0NQVV9FTkRJQU4p
+CisJaWYgKCEoZmItPmZsYWdzICYgT1ZMX0ZIX0ZMQUdfQU5ZX0VORElBTikgJiYKKwkgICAgKGZi
+LT5mbGFncyAmIE9WTF9GSF9GTEFHX0JJR19FTkRJQU4pICE9IE9WTF9GSF9GTEFHX0NQVV9FTkRJ
+QU4pCiAJCXJldHVybiAtRU5PREFUQTsKIAogCXJldHVybiAwOwpAQCAtMTE5LDE1ICsxMTksMTUg
+QEAgc3RhdGljIHN0cnVjdCBvdmxfZmggKm92bF9nZXRfZmgoc3RydWN0IGRlbnRyeSAqZGVudHJ5
+LCBjb25zdCBjaGFyICpuYW1lKQogCWlmIChyZXMgPT0gMCkKIAkJcmV0dXJuIE5VTEw7CiAKLQlm
+aCA9IGt6YWxsb2MocmVzLCBHRlBfS0VSTkVMKTsKKwlmaCA9IGt6YWxsb2MocmVzICsgT1ZMX0ZI
+X1dJUkVfT0ZGU0VULCBHRlBfS0VSTkVMKTsKIAlpZiAoIWZoKQogCQlyZXR1cm4gRVJSX1BUUigt
+RU5PTUVNKTsKIAotCXJlcyA9IHZmc19nZXR4YXR0cihkZW50cnksIG5hbWUsIGZoLCByZXMpOwor
+CXJlcyA9IHZmc19nZXR4YXR0cihkZW50cnksIG5hbWUsIGZoLT5idWYsIHJlcyk7CiAJaWYgKHJl
+cyA8IDApCiAJCWdvdG8gZmFpbDsKIAotCWVyciA9IG92bF9jaGVja19maF9sZW4oZmgsIHJlcyk7
+CisJZXJyID0gb3ZsX2NoZWNrX2ZiX2xlbigmZmgtPmZiLCByZXMpOwogCWlmIChlcnIgPCAwKSB7
+CiAJCWlmIChlcnIgPT0gLUVOT0RBVEEpCiAJCQlnb3RvIG91dDsKQEAgLTE1OCwxMiArMTU4LDEy
+IEBAIHN0cnVjdCBkZW50cnkgKm92bF9kZWNvZGVfcmVhbF9maChzdHJ1Y3Qgb3ZsX2ZoICpmaCwg
+c3RydWN0IHZmc21vdW50ICptbnQsCiAJICogTWFrZSBzdXJlIHRoYXQgdGhlIHN0b3JlZCB1dWlk
+IG1hdGNoZXMgdGhlIHV1aWQgb2YgdGhlIGxvd2VyCiAJICogbGF5ZXIgd2hlcmUgZmlsZSBoYW5k
+bGUgd2lsbCBiZSBkZWNvZGVkLgogCSAqLwotCWlmICghdXVpZF9lcXVhbCgmZmgtPnV1aWQsICZt
+bnQtPm1udF9zYi0+c191dWlkKSkKKwlpZiAoIXV1aWRfZXF1YWwoJmZoLT5mYi51dWlkLCAmbW50
+LT5tbnRfc2ItPnNfdXVpZCkpCiAJCXJldHVybiBOVUxMOwogCi0JYnl0ZXMgPSAoZmgtPmxlbiAt
+IG9mZnNldG9mKHN0cnVjdCBvdmxfZmgsIGZpZCkpOwotCXJlYWwgPSBleHBvcnRmc19kZWNvZGVf
+ZmgobW50LCAoc3RydWN0IGZpZCAqKWZoLT5maWQsCi0JCQkJICBieXRlcyA+PiAyLCAoaW50KWZo
+LT50eXBlLAorCWJ5dGVzID0gKGZoLT5mYi5sZW4gLSBvZmZzZXRvZihzdHJ1Y3Qgb3ZsX2ZiLCBm
+aWQpKTsKKwlyZWFsID0gZXhwb3J0ZnNfZGVjb2RlX2ZoKG1udCwgKHN0cnVjdCBmaWQgKilmaC0+
+ZmIuZmlkLAorCQkJCSAgYnl0ZXMgPj4gMiwgKGludClmaC0+ZmIudHlwZSwKIAkJCQkgIGNvbm5l
+Y3RlZCA/IG92bF9hY2NlcHRhYmxlIDogTlVMTCwgbW50KTsKIAlpZiAoSVNfRVJSKHJlYWwpKSB7
+CiAJCS8qCkBAIC0xNzMsNyArMTczLDcgQEAgc3RydWN0IGRlbnRyeSAqb3ZsX2RlY29kZV9yZWFs
+X2ZoKHN0cnVjdCBvdmxfZmggKmZoLCBzdHJ1Y3QgdmZzbW91bnQgKm1udCwKIAkJICogaW5kZXgg
+ZW50cmllcyBjb3JyZWN0bHkuCiAJCSAqLwogCQlpZiAocmVhbCA9PSBFUlJfUFRSKC1FU1RBTEUp
+ICYmCi0JCSAgICAhKGZoLT5mbGFncyAmIE9WTF9GSF9GTEFHX1BBVEhfVVBQRVIpKQorCQkgICAg
+IShmaC0+ZmIuZmxhZ3MgJiBPVkxfRkhfRkxBR19QQVRIX1VQUEVSKSkKIAkJCXJlYWwgPSBOVUxM
+OwogCQlyZXR1cm4gcmVhbDsKIAl9CkBAIC00MTAsNyArNDEwLDcgQEAgc3RhdGljIGludCBvdmxf
+dmVyaWZ5X2ZoKHN0cnVjdCBkZW50cnkgKmRlbnRyeSwgY29uc3QgY2hhciAqbmFtZSwKIAlpZiAo
+SVNfRVJSKG9maCkpCiAJCXJldHVybiBQVFJfRVJSKG9maCk7CiAKLQlpZiAoZmgtPmxlbiAhPSBv
+ZmgtPmxlbiB8fCBtZW1jbXAoZmgsIG9maCwgZmgtPmxlbikpCisJaWYgKGZoLT5mYi5sZW4gIT0g
+b2ZoLT5mYi5sZW4gfHwgbWVtY21wKGZoLT5idWYsIG9maC0+YnVmLCBmaC0+ZmIubGVuKSkKIAkJ
+ZXJyID0gLUVTVEFMRTsKIAogCWtmcmVlKG9maCk7CkBAIC00NDEsNyArNDQxLDcgQEAgaW50IG92
+bF92ZXJpZnlfc2V0X2ZoKHN0cnVjdCBkZW50cnkgKmRlbnRyeSwgY29uc3QgY2hhciAqbmFtZSwK
+IAogCWVyciA9IG92bF92ZXJpZnlfZmgoZGVudHJ5LCBuYW1lLCBmaCk7CiAJaWYgKHNldCAmJiBl
+cnIgPT0gLUVOT0RBVEEpCi0JCWVyciA9IG92bF9kb19zZXR4YXR0cihkZW50cnksIG5hbWUsIGZo
+LCBmaC0+bGVuLCAwKTsKKwkJZXJyID0gb3ZsX2RvX3NldHhhdHRyKGRlbnRyeSwgbmFtZSwgZmgt
+PmJ1ZiwgZmgtPmZiLmxlbiwgMCk7CiAJaWYgKGVycikKIAkJZ290byBmYWlsOwogCkBAIC01MTUs
+MTcgKzUxNSwxNyBAQCBpbnQgb3ZsX3ZlcmlmeV9pbmRleChzdHJ1Y3Qgb3ZsX2ZzICpvZnMsIHN0
+cnVjdCBkZW50cnkgKmluZGV4KQogCQlnb3RvIGZhaWw7CiAKIAllcnIgPSAtRUlOVkFMOwotCWlm
+IChpbmRleC0+ZF9uYW1lLmxlbiA8IHNpemVvZihzdHJ1Y3Qgb3ZsX2ZoKSoyKQorCWlmIChpbmRl
+eC0+ZF9uYW1lLmxlbiA8IHNpemVvZihzdHJ1Y3Qgb3ZsX2ZiKSoyKQogCQlnb3RvIGZhaWw7CiAK
+IAllcnIgPSAtRU5PTUVNOwogCWxlbiA9IGluZGV4LT5kX25hbWUubGVuIC8gMjsKLQlmaCA9IGt6
+YWxsb2MobGVuLCBHRlBfS0VSTkVMKTsKKwlmaCA9IGt6YWxsb2MobGVuICsgT1ZMX0ZIX1dJUkVf
+T0ZGU0VULCBHRlBfS0VSTkVMKTsKIAlpZiAoIWZoKQogCQlnb3RvIGZhaWw7CiAKIAllcnIgPSAt
+RUlOVkFMOwotCWlmIChoZXgyYmluKCh1OCAqKWZoLCBpbmRleC0+ZF9uYW1lLm5hbWUsIGxlbikp
+CisJaWYgKGhleDJiaW4oZmgtPmJ1ZiwgaW5kZXgtPmRfbmFtZS5uYW1lLCBsZW4pKQogCQlnb3Rv
+IGZhaWw7CiAKIAllcnIgPSBvdmxfY2hlY2tfZmhfbGVuKGZoLCBsZW4pOwpAQCAtNjA3LDExICs2
+MDcsMTEgQEAgc3RhdGljIGludCBvdmxfZ2V0X2luZGV4X25hbWVfZmgoc3RydWN0IG92bF9maCAq
+ZmgsIHN0cnVjdCBxc3RyICpuYW1lKQogewogCWNoYXIgKm4sICpzOwogCi0JbiA9IGtjYWxsb2Mo
+ZmgtPmxlbiwgMiwgR0ZQX0tFUk5FTCk7CisJbiA9IGtjYWxsb2MoZmgtPmZiLmxlbiwgMiwgR0ZQ
+X0tFUk5FTCk7CiAJaWYgKCFuKQogCQlyZXR1cm4gLUVOT01FTTsKIAotCXMgID0gYmluMmhleChu
+LCBmaCwgZmgtPmxlbik7CisJcyAgPSBiaW4yaGV4KG4sIGZoLT5idWYsIGZoLT5mYi5sZW4pOwog
+CSpuYW1lID0gKHN0cnVjdCBxc3RyKSBRU1RSX0lOSVQobiwgcyAtIG4pOwogCiAJcmV0dXJuIDA7
+CmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvb3ZlcmxheWZzLmggYi9mcy9vdmVybGF5ZnMvb3Zl
+cmxheWZzLmgKaW5kZXggNjkzNGJjZjAzMGYwLi5hMWNjZmJlOTliNTAgMTAwNjQ0Ci0tLSBhL2Zz
+L292ZXJsYXlmcy9vdmVybGF5ZnMuaAorKysgYi9mcy9vdmVybGF5ZnMvb3ZlcmxheWZzLmgKQEAg
+LTcxLDExICs3MSwxMiBAQCBlbnVtIG92bF9lbnRyeV9mbGFnIHsKICNlcnJvciBFbmRpYW5uZXNz
+IG5vdCBkZWZpbmVkCiAjZW5kaWYKIAotLyogVGhlIHR5cGUgcmV0dXJuZWQgYnkgb3ZlcmxheSBl
+eHBvcnRmcyBvcHMgd2hlbiBlbmNvZGluZyBhbiBvdmxfZmggaGFuZGxlICovCi0jZGVmaW5lIE9W
+TF9GSUxFSUQJMHhmYgorLyogVGhlIHR5cGUgcmV0dXJuZWQgYnkgb3ZlcmxheSBleHBvcnRmcyBv
+cHMgd2hlbiBlbmNvZGluZyBvdmxfZmggaGFuZGxlcyAqLworI2RlZmluZSBPVkxfRklMRUlEX1Yw
+CTB4ZmIKKyNkZWZpbmUgT1ZMX0ZJTEVJRF9WMQkweGZhCiAKLS8qIE9uLWRpc2sgYW5kIGluLW1l
+bWVvcnkgZm9ybWF0IGZvciByZWRpcmVjdCBieSBmaWxlIGhhbmRsZSAqLwotc3RydWN0IG92bF9m
+aCB7CisvKiBPbi1kaXNrIGZvcm1hdCBmb3IgIm9yaWdpbiIgZmlsZSBoYW5kbGUgKi8KK3N0cnVj
+dCBvdmxfZmIgewogCXU4IHZlcnNpb247CS8qIDAgKi8KIAl1OCBtYWdpYzsJLyogMHhmYiAqLwog
+CXU4IGxlbjsJCS8qIHNpemUgb2YgdGhpcyBoZWFkZXIgKyBzaXplIG9mIGZpZCAqLwpAQCAtODUs
+NiArODYsMTggQEAgc3RydWN0IG92bF9maCB7CiAJdTggZmlkWzBdOwkvKiBmaWxlIGlkZW50aWZp
+ZXIgKi8KIH0gX19wYWNrZWQ7CiAKKy8qIEluLW1lbW9yeSBhbmQgb24td2lyZSBmb3JtYXQgZm9y
+IG92ZXJsYXkgZmlsZSBoYW5kbGUgKi8KK3N0cnVjdCBvdmxfZmggeworCXU4IHBhZGRpbmdbM107
+CS8qIG1ha2Ugc3VyZSBmYi5maWQgaXMgMzJiaXQgYWxpZ25lZCAqLworCXVuaW9uIHsKKwkJc3Ry
+dWN0IG92bF9mYiBmYjsKKwkJY2hhciBidWZbMF07CisJfTsKK30gX19wYWNrZWQ7CisKKyNkZWZp
+bmUgT1ZMX0ZIX1dJUkVfT0ZGU0VUIG9mZnNldG9mKHN0cnVjdCBvdmxfZmgsIGZiKQorI2RlZmlu
+ZSBPVkxfRkhfRklEX09GRlNFVCAoT1ZMX0ZIX1dJUkVfT0ZGU0VUICsgb2Zmc2V0b2Yoc3RydWN0
+IG92bF9mYiwgZmlkKSkKKwogc3RhdGljIGlubGluZSBpbnQgb3ZsX2RvX3JtZGlyKHN0cnVjdCBp
+bm9kZSAqZGlyLCBzdHJ1Y3QgZGVudHJ5ICpkZW50cnkpCiB7CiAJaW50IGVyciA9IHZmc19ybWRp
+cihkaXIsIGRlbnRyeSk7CkBAIC0zMDIsNyArMzE1LDEzIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBv
+dmxfaW5vZGVfdW5sb2NrKHN0cnVjdCBpbm9kZSAqaW5vZGUpCiAKIAogLyogbmFtZWkuYyAqLwot
+aW50IG92bF9jaGVja19maF9sZW4oc3RydWN0IG92bF9maCAqZmgsIGludCBmaF9sZW4pOworaW50
+IG92bF9jaGVja19mYl9sZW4oc3RydWN0IG92bF9mYiAqZmIsIGludCBmYl9sZW4pOworCitzdGF0
+aWMgaW5saW5lIGludCBvdmxfY2hlY2tfZmhfbGVuKHN0cnVjdCBvdmxfZmggKmZoLCBpbnQgZmhf
+bGVuKQoreworCXJldHVybiBvdmxfY2hlY2tfZmJfbGVuKCZmaC0+ZmIsIGZoX2xlbiAtIE9WTF9G
+SF9XSVJFX09GRlNFVCk7Cit9CisKIHN0cnVjdCBkZW50cnkgKm92bF9kZWNvZGVfcmVhbF9maChz
+dHJ1Y3Qgb3ZsX2ZoICpmaCwgc3RydWN0IHZmc21vdW50ICptbnQsCiAJCQkJICBib29sIGNvbm5l
+Y3RlZCk7CiBpbnQgb3ZsX2NoZWNrX29yaWdpbl9maChzdHJ1Y3Qgb3ZsX2ZzICpvZnMsIHN0cnVj
+dCBvdmxfZmggKmZoLCBib29sIGNvbm5lY3RlZCwKLS0gCjIuMTcuMQoK
+--000000000000f76412059756a05f--
