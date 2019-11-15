@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EA19FE606
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 20:51:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5411FE608
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 20:52:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfKOTvw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Nov 2019 14:51:52 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:34677 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfKOTvw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Nov 2019 14:51:52 -0500
-Received: by mail-vk1-f196.google.com with SMTP id t184so2641152vka.1;
-        Fri, 15 Nov 2019 11:51:50 -0800 (PST)
+        id S1726894AbfKOTwH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Nov 2019 14:52:07 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45495 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfKOTwH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Nov 2019 14:52:07 -0500
+Received: by mail-ua1-f65.google.com with SMTP id w10so906321uar.12;
+        Fri, 15 Nov 2019 11:52:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umich.edu; s=google-2016-06-03;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4KiNBsxHheXZNqI4na4gQR3m+5fIhGvAvoCZcEU0Sm4=;
-        b=cORSA9FAQ3ZzCjQ3hKNHeY1eWEyzAlRpCRoCTVh531q+T4NEKPvfOh6VFp6WGlEr/0
-         CiRMwvF+uAVmPVRSV+Df/th3fQdRT5boEO+MoBjTShJGrGuvzaTermT/wh5oIYfIex7b
-         OhBWY2tSWgBRzge7CDapjaasSpTm4KzCvElHefbjcnH3UJW61to7Ktg7vcnR+iS0cQHF
-         +hfcfWJCSKUXKNMkZQzoN1PBE3ju5E602kpCkgCCzfJcWEA8anATi74BPJZB6YEvbZ/B
-         lb3pcW8S1ZK6fHXO/tl54EOYwZvLwzchqdJ1TBVd7iriKBSGMLEA8w9/YPhymNSqW9R1
-         tiEA==
+        bh=HHbI26fz+zQpABS0zqXiY8c4KjnBwCq3pE9F7Wnb8fY=;
+        b=J2q0LIOq9UNr8vaWrhFjK3y7keJnCFExHpkVvk1zXXQkwtbojNxqPueOGrFo+4lQfP
+         Ob2upH2NnhOl8e3FxPoLV0SjuA3Txr9caDvzDsJ5ljV6kQIFoNJYKRbjoo5fFy+Y0oax
+         9hYgpJU54IFLr2pKqbjFyycL265BkrtHoxfuMjrgVMtvi//MC7IctsbWYF+V8xwwhD2i
+         CtDxHGWDoiNpPGUPwDJm6e0wajE/DblDMTbw89gVaeBcSzbRWqsWt/XZbHWJ0d3UF9yg
+         E6ucy09GLMjWYkp1bFQQMWNQTMw1qq/ftSt/CuLwiHb0VB8LY6GZHTPqaJ/WO1/7nsgP
+         srXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4KiNBsxHheXZNqI4na4gQR3m+5fIhGvAvoCZcEU0Sm4=;
-        b=MvgjWR3jiTxHzeMcF79ytdT1HDZvHtqTmkDNmqDlAjaEd/h2GkJZQT6UvgQtGLxOXA
-         dcjxYvEgGc4wsPIJ6Vf+5hN1IZ7dIIcuIDJxq9K4Md78zUyGSir841moVFfTxDad+3lr
-         SjndRzGHoUqThsCny/Fp7WNb5ThkHViP+axTkco68OHSmLDOUuyouUmhaoxnhC+kP6OL
-         iKBZXWIWv7J35nFFeQxVwRs8y9rhOKttdH/oj734ZgsmLvJbCNPYS2sVwgX40mIXpMb1
-         /j+c7fRzqWEO31XpvIWeTDzJpZpyCIZINwMqBdw3w9ddBzqR9dtsIL0fQ/eMVsnxLq+2
-         v8rA==
-X-Gm-Message-State: APjAAAVRsgZpi6HStmaSXoI0K7wJ3dO8RhAeqzM0ZtymopBo3OjwpFrh
-        OqsCRtzuQ+ODXrnhmLF6WE3Mb2ZnOu7ntCkZy7cpEA==
-X-Google-Smtp-Source: APXvYqyGNmlj/uh6phuzp+3XatuNCJhbV9TT/NtbLTJ8WC93meU/M4AIXSEpPNRd6PjBxTNcD6+O3ABKs+wZXWwAxt8=
-X-Received: by 2002:a1f:5042:: with SMTP id e63mr9737804vkb.98.1573847509090;
- Fri, 15 Nov 2019 11:51:49 -0800 (PST)
+        bh=HHbI26fz+zQpABS0zqXiY8c4KjnBwCq3pE9F7Wnb8fY=;
+        b=FLIKwIAZq3QlD0Em0UBkGe4Qz6JfPQrzWAAD97w0ManS7hu8aLeVSDyKetCIv5lfis
+         8WlVmyj+SjmoTZXfcIZz1xjMemxI6jVE+qjNvoyjDF0hnZSpi0CUfhufabdldlAKQTkx
+         0Dbxj0axmUFqTwsMYupLvbikhKzdNVul+7aJNIEHwDHDBX1geYq/oUgOsJSMTcaCKIz/
+         w+U4eLKtTDOty9OQOA7kLORTaMEPgklcYnq2bWhRuhYXlvB0q/kTqe8ZaS66Q50u6hS0
+         4iqyhqHSxyrUpj+SpoLBYXyteOqyiTr88D0M4Se4g2JVnlichQe2oryrbS6/myZcnbVK
+         V50g==
+X-Gm-Message-State: APjAAAWpvlL3wvT91V2JvcvCRWC9258uKe26IRdEDjqUfL/oxUe3ia+Y
+        zl+8UDgbvdZCtzDO+zHfX2VJ8nan/JGwkFL2Fy7Jtg==
+X-Google-Smtp-Source: APXvYqx+/nT4BADAMxeuRrzcjMfxVjvDdGp8/th+yZsYwloAo8QW5U97u4z3d7xWU/7ck/2px+YjHaoLWmjXtJR8Sk8=
+X-Received: by 2002:ab0:1c06:: with SMTP id a6mr9926650uaj.93.1573847526571;
+ Fri, 15 Nov 2019 11:52:06 -0800 (PST)
 MIME-Version: 1.0
-References: <c64dfc7b-0c0b-e571-5a49-f32034eccaa5@canonical.com>
-In-Reply-To: <c64dfc7b-0c0b-e571-5a49-f32034eccaa5@canonical.com>
+References: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
+In-Reply-To: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
 From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 15 Nov 2019 14:51:38 -0500
-Message-ID: <CAN-5tyHsUDJW5r5n84sG-xgUwhp_8psprah1Q1DMdXPT9TxZmA@mail.gmail.com>
-Subject: Re: NFS: handle source server reboot
+Date:   Fri, 15 Nov 2019 14:51:55 -0500
+Message-ID: <CAN-5tyEgufUvN_FeLNnwdpGM0Yw1Jag8HQMAzti8Tg_xaOoOjg@mail.gmail.com>
+Subject: Re: NFS: inter ssc open (memory leak detected)
 To:     Colin Ian King <colin.king@canonical.com>
 Cc:     Olga Kornievskaia <kolga@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
@@ -59,87 +59,93 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 5:06 AM Colin Ian King <colin.king@canonical.com> wrote:
+On Fri, Nov 15, 2019 at 4:24 AM Colin Ian King <colin.king@canonical.com> wrote:
 >
 > Hi,
 >
 > Static analysis with Coverity has detected a memory leak in the
 > following commit:
 >
-> commit 0e65a32c8a569db363048e17a708b1a0913adbef
+> commit ec4b0925089826af45e99cdf78a8ac84c1d005f1
 > Author: Olga Kornievskaia <kolga@netapp.com>
-> Date:   Fri Jun 14 14:38:40 2019 -0400
+> Date:   Tue Oct 8 16:33:53 2019 -0400
 >
->     NFS: handle source server reboot
->
-> In function __nfs4_copy_file_range() in fs/nfs/nfs4file.c, analysis is
-> as follows:
+>     NFS: inter ssc open
 >
 >
-> 155retry:
->    5. Condition !nfs42_files_from_same_server(file_in, file_out), taking
-> false branch.
->    9. Condition !nfs42_files_from_same_server(file_in, file_out), taking
-> false branch.
+> In function nfs42_ssc_open(), fs/nfs/nfs4file.c, analysis is as follows:
 >
-> 156        if (!nfs42_files_from_same_server(file_in, file_out)) {
-> 157                /* for inter copy, if copy size if smaller than 12 RPC
-> 158                 * payloads, fallback to traditional copy. There are
-> 159                 * 14 RPCs during an NFSv4.x mount between source/dest
-> 160                 * servers.
-> 161                 */
-> 162                if (sync ||
-> 163                        count <= 14 *
-> NFS_SERVER(file_inode(file_in))->rsize)
-> 164                        return -EOPNOTSUPP;
-> 165                cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
-> 166                                GFP_NOFS);
-> 167                if (unlikely(cn_resp == NULL))
-> 168                        return -ENOMEM;
-> 169
-> 170                ret = nfs42_proc_copy_notify(file_in, file_out, cn_resp);
-> 171                if (ret) {
-> 172                        ret = -EOPNOTSUPP;
-> 173                        goto out;
-> 174                }
-> 175                nss = &cn_resp->cnr_src;
-> 176                cnrs = &cn_resp->cnr_stateid;
-> 177        }
-> 178        ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
-> 179                                nss, cnrs, sync);
-> 180out:
->    6. freed_arg: kfree frees cn_resp.
+>    3. alloc_fn: Storage is returned from allocation function kzalloc.
+>    4. var_assign: Assigning: read_name = storage returned from
+> kzalloc(len, 3136U).
+> 336        read_name = kzalloc(len, GFP_NOFS);
 >
->    CID 91571 (#1 of 1): Double free (USE_AFTER_FREE)10. double_free:
-> Calling kfree frees pointer cn_resp which has already been freed.
+>    5. Condition read_name == NULL, taking false branch.
+> 337        if (read_name == NULL)
+> 338                goto out;
 >
-> 181        kfree(cn_resp);
+>    6. noescape: Resource read_name is not freed or pointed-to in snprintf.
+> 339        snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
+> 340
+> 341        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh,
+> &fattr,
+> 342                        NULL);
 >
->    7. Condition ret == -11, taking true branch.
+>    7. Condition IS_ERR(r_ino), taking true branch.
+> 343        if (IS_ERR(r_ino)) {
+> 344                res = ERR_CAST(r_ino);
 >
-> 182        if (ret == -EAGAIN)
->    8. Jumping to label retry.
+>    8. Jumping to label out.
+> 345                goto out;
+> 346        }
+> 347
+> 348        filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
+> 349                                     r_ino->i_fop);
+> 350        if (IS_ERR(filep)) {
+> 351                res = ERR_CAST(filep);
+> 352                goto out;
+> 353        }
+> 354        filep->f_mode |= FMODE_READ;
+> 355
+> 356        ctx = alloc_nfs_open_context(filep->f_path.dentry, filep->f_mode,
+> 357                                        filep);
+> 358        if (IS_ERR(ctx)) {
+> 359                res = ERR_CAST(ctx);
+> 360                goto out_filep;
+> 361        }
+> 362
+> 363        res = ERR_PTR(-EINVAL);
+> 364        sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
+> 365        if (sp == NULL)
+> 366                goto out_ctx;
+> 367
+> 368        ctx->state = nfs4_get_open_state(r_ino, sp);
+> 369        if (ctx->state == NULL)
+> 370                goto out_stateowner;
+> 371
+> 372        set_bit(NFS_SRV_SSC_COPY_STATE, &ctx->state->flags);
+> 373        set_bit(NFS_OPEN_STATE, &ctx->state->flags);
+> 374        memcpy(&ctx->state->open_stateid.other, &stateid->other,
+> 375               NFS4_STATEID_OTHER_SIZE);
+> 376        update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
+> 377
+> 378        nfs_file_set_open_context(filep, ctx);
+> 379        put_nfs_open_context(ctx);
+> 380
+> 381        file_ra_state_init(&filep->f_ra,
+> filep->f_mapping->host->i_mapping);
+> 382        res = filep;
+> 383out:
 >
-> 183                goto retry;
-> 184        return ret;
-> 185}
-> 186
+>    CID 91575 (#1-2 of 2): Resource leak (RESOURCE_LEAK)
 >
-> On the 2nd iteration of the retry loop, cn_resp is being free'd twice if
-> the call to nfs42_files_from_same_server() returns zero since cn_resp is
-> not kalloc'd in the 2nd iteration. A naive fix would be to set cn_resp
-> to NULL after the kfree on line 181, but I'm not sure if there is a
-> better way to resolve this.
+> 9. leaked_storage: Variable read_name going out of scope leaks the
+> storage it points to.
 >
+> 384        return res;
+>
+>
+> Looks like there are several return paths to out: that leak the
+> allocation of read_name.
 
-If a definition of double free include freeing a null pointer twice,
-then I agree this is a valid catch. Cases are when servers are the
-same kfree(cn_resp) is called with a null argument and if retried will
-be called with a null argument again (since kfree doesn't care about
-null it shouldn't be a problem). If servers are not the same, then
-memory is allocated then freed then allocated again. When code is
-re-executed (on retry), it's not possible for condition to change from
-servers being same or different.
-
-I'll send a patch that conditions the kfree() to only when it was
-allocated. Hopefully, it won't trip the analysis that way.
+Thanks will fix.
