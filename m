@@ -2,117 +2,338 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11AAEFE63C
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 21:13:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C259BFE76E
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 23:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfKOUNW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Nov 2019 15:13:22 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:45519 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfKOUNW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Nov 2019 15:13:22 -0500
-Received: by mail-yb1-f193.google.com with SMTP id i7so4499291ybk.12
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2019 12:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jD/NF07l8lxYHOg36HptUa0lQuCyZX439GjlrktAx+E=;
-        b=YZHDrdvFdIUHqXDOQfI/Xo4y9A1zXOYUw7B3LOa49azHRkMc4R5I3ePT5trLYo5S5X
-         KeXqs0jJa41fEsGOtY4Ty16l4QD5mtRr7O2ROIJ4wpH98uftXD+eUF4KdSRmDnl4heYQ
-         gShmjhRbbAiIC6YtAKDj/+B31/yk/3sKTbdielFRwck2U4AZ/AivC71Vr9dJ7dRvH1gY
-         +zk7BJfQ6CMjO8z9FoMwiHhTKWb5J2fi3ZypdTRQxukk6kJ4bBpHZxrPKFeGctnXlaCG
-         xNnFiY+AuZ5QI+u1cH3or5K5eIcR/x5SPC1wabsK5ANFvFbx4vWEf+SwYM5kPQbdbqqg
-         yD0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jD/NF07l8lxYHOg36HptUa0lQuCyZX439GjlrktAx+E=;
-        b=YcZdbUHu0Qjb4dYlesCw+tCPLKGI+zOn5DvqyNPprYyB3aejAdeJK/U0y3veD1xspa
-         Xaz/f6t1jz520bmRvwhFdOT7CxbOWISOM5+i5XK50jy6rsL61RvWc/lqgWZcbvzn6I4N
-         LJp6r2ndyR1p0lJ/RweQKi2W15cLOdKan5/PGcb9/vEHaL2+nV91S297gxqejzQcZAgy
-         kSF4rCmigFIWkPp+QfQUOddjitTWFtCfwjdKU8vtjsO9jLYabZq37FZZwwZ33x3/GvZg
-         VkcoAFno8mflCpafPCrbrwGXHvdQhF0okFEUIKIOs0dmmHCQQ7fwXESRjTUpglRh2vdN
-         ycoA==
-X-Gm-Message-State: APjAAAVN/M45jBaENtx8UXwUM/47nsCl8HuVDl5WmkJtHf3bSJeElgAq
-        1z1H/A37xGXS6xFpR8+bMpE=
-X-Google-Smtp-Source: APXvYqwX7kmDghRf0Whr0poucHAvdJOp0Lt9pbiNn5+azlNpxGSeRSzt5S6AxSvWUO3umZTYFazJFQ==
-X-Received: by 2002:a25:76d0:: with SMTP id r199mr12991683ybc.267.1573848800687;
-        Fri, 15 Nov 2019 12:13:20 -0800 (PST)
-Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id j66sm4050154ywb.101.2019.11.15.12.13.19
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 15 Nov 2019 12:13:20 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.2 fix memory leak in nfs42_ssc_open
-Date:   Fri, 15 Nov 2019 15:13:19 -0500
-Message-Id: <20191115201319.3746-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+        id S1726996AbfKOWLB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Nov 2019 17:11:01 -0500
+Received: from fieldses.org ([173.255.197.46]:46202 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbfKOWLB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:11:01 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9987A1C84; Fri, 15 Nov 2019 17:10:59 -0500 (EST)
+Date:   Fri, 15 Nov 2019 17:10:59 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/19] sunrpc: convert to time64_t for expiry
+Message-ID: <20191115221059.GA13596@fieldses.org>
+References: <20191111201639.2240623-1-arnd@arndb.de>
+ <20191111201639.2240623-2-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111201639.2240623-2-arnd@arndb.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Mon, Nov 11, 2019 at 09:16:21PM +0100, Arnd Bergmann wrote:
+> Using signed 32-bit types for UTC time leads to the y2038 overflow,
+> which is what happens in the sunrpc code at the moment.
+> 
+> This changes the sunrpc code over to use time64_t where possible.
+> The one exception is the gss_import_v{1,2}_context() function for
+> kerberos5, which uses 32-bit timestamps in the protocol. Here,
+> we can at least treat the numbers as 'unsigned', which extends the
+> range from 2038 to 2106.
 
-Static analysis with Coverity detected a memory leak
+Looking at nfs-utils.... looks like this number is opaque to nfs-utils
+code, generated by gss_inquire_context, which actually defines it as
+uint32_t, so this makes sense.
 
-Reported-by: Colin King <colin.king@canonical.com>
-Fixes: ec4b09250898 ("NFS: inter ssc open")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs4file.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+--b.
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index e97813b15e23..396ed52c23a5 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -318,7 +318,7 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- 	struct inode *r_ino = NULL;
- 	struct nfs_open_context *ctx;
- 	struct nfs4_state_owner *sp;
--	char *read_name;
-+	char *read_name = NULL;
- 	int len, status = 0;
- 
- 	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
-@@ -342,14 +342,14 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- 			NULL);
- 	if (IS_ERR(r_ino)) {
- 		res = ERR_CAST(r_ino);
--		goto out;
-+		goto out_free_name;
- 	}
- 
- 	filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
- 				     r_ino->i_fop);
- 	if (IS_ERR(filep)) {
- 		res = ERR_CAST(filep);
--		goto out;
-+		goto out_free_name;
- 	}
- 	filep->f_mode |= FMODE_READ;
- 
-@@ -380,6 +380,8 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- 
- 	file_ra_state_init(&filep->f_ra, filep->f_mapping->host->i_mapping);
- 	res = filep;
-+out_free_name:
-+	kfree(read_name);
- out:
- 	return res;
- out_stateowner:
-@@ -388,7 +390,7 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- 	put_nfs_open_context(ctx);
- out_filep:
- 	fput(filep);
--	goto out;
-+	goto out_free_name;
- }
- EXPORT_SYMBOL_GPL(nfs42_ssc_open);
- void nfs42_ssc_close(struct file *filep)
--- 
-2.18.1
-
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/sunrpc/gss_api.h        |  4 ++--
+>  include/linux/sunrpc/gss_krb5.h       |  2 +-
+>  net/sunrpc/auth_gss/gss_krb5_mech.c   | 12 +++++++++---
+>  net/sunrpc/auth_gss/gss_krb5_seal.c   |  8 ++++----
+>  net/sunrpc/auth_gss/gss_krb5_unseal.c |  6 +++---
+>  net/sunrpc/auth_gss/gss_krb5_wrap.c   | 16 ++++++++--------
+>  net/sunrpc/auth_gss/gss_mech_switch.c |  2 +-
+>  net/sunrpc/auth_gss/svcauth_gss.c     |  4 ++--
+>  8 files changed, 30 insertions(+), 24 deletions(-)
+> 
+> diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
+> index 5ac5db4d295f..68c871924ebf 100644
+> --- a/include/linux/sunrpc/gss_api.h
+> +++ b/include/linux/sunrpc/gss_api.h
+> @@ -49,7 +49,7 @@ int gss_import_sec_context(
+>  		size_t			bufsize,
+>  		struct gss_api_mech	*mech,
+>  		struct gss_ctx		**ctx_id,
+> -		time_t			*endtime,
+> +		time64_t		*endtime,
+>  		gfp_t			gfp_mask);
+>  u32 gss_get_mic(
+>  		struct gss_ctx		*ctx_id,
+> @@ -109,7 +109,7 @@ struct gss_api_ops {
+>  			const void		*input_token,
+>  			size_t			bufsize,
+>  			struct gss_ctx		*ctx_id,
+> -			time_t			*endtime,
+> +			time64_t		*endtime,
+>  			gfp_t			gfp_mask);
+>  	u32 (*gss_get_mic)(
+>  			struct gss_ctx		*ctx_id,
+> diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
+> index 02c0412e368c..c1d77dd8ed41 100644
+> --- a/include/linux/sunrpc/gss_krb5.h
+> +++ b/include/linux/sunrpc/gss_krb5.h
+> @@ -106,9 +106,9 @@ struct krb5_ctx {
+>  	struct crypto_sync_skcipher *initiator_enc_aux;
+>  	u8			Ksess[GSS_KRB5_MAX_KEYLEN]; /* session key */
+>  	u8			cksum[GSS_KRB5_MAX_KEYLEN];
+> -	s32			endtime;
+>  	atomic_t		seq_send;
+>  	atomic64_t		seq_send64;
+> +	time64_t		endtime;
+>  	struct xdr_netobj	mech_used;
+>  	u8			initiator_sign[GSS_KRB5_MAX_KEYLEN];
+>  	u8			acceptor_sign[GSS_KRB5_MAX_KEYLEN];
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> index 6e5d6d240215..75b3c2e9e8f8 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> @@ -253,6 +253,7 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
+>  {
+>  	u32 seq_send;
+>  	int tmp;
+> +	u32 time32;
+>  
+>  	p = simple_get_bytes(p, end, &ctx->initiate, sizeof(ctx->initiate));
+>  	if (IS_ERR(p))
+> @@ -290,9 +291,11 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
+>  		p = ERR_PTR(-ENOSYS);
+>  		goto out_err;
+>  	}
+> -	p = simple_get_bytes(p, end, &ctx->endtime, sizeof(ctx->endtime));
+> +	p = simple_get_bytes(p, end, &time32, sizeof(time32));
+>  	if (IS_ERR(p))
+>  		goto out_err;
+> +	/* unsigned 32-bit time overflows in year 2106 */
+> +	ctx->endtime = (time64_t)time32;
+>  	p = simple_get_bytes(p, end, &seq_send, sizeof(seq_send));
+>  	if (IS_ERR(p))
+>  		goto out_err;
+> @@ -587,15 +590,18 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+>  {
+>  	u64 seq_send64;
+>  	int keylen;
+> +	u32 time32;
+>  
+>  	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
+>  	if (IS_ERR(p))
+>  		goto out_err;
+>  	ctx->initiate = ctx->flags & KRB5_CTX_FLAG_INITIATOR;
+>  
+> -	p = simple_get_bytes(p, end, &ctx->endtime, sizeof(ctx->endtime));
+> +	p = simple_get_bytes(p, end, &time32, sizeof(time32));
+>  	if (IS_ERR(p))
+>  		goto out_err;
+> +	/* unsigned 32-bit time overflows in year 2106 */
+> +	ctx->endtime = (time64_t)time32;
+>  	p = simple_get_bytes(p, end, &seq_send64, sizeof(seq_send64));
+>  	if (IS_ERR(p))
+>  		goto out_err;
+> @@ -659,7 +665,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+>  static int
+>  gss_import_sec_context_kerberos(const void *p, size_t len,
+>  				struct gss_ctx *ctx_id,
+> -				time_t *endtime,
+> +				time64_t *endtime,
+>  				gfp_t gfp_mask)
+>  {
+>  	const void *end = (const void *)((const char *)p + len);
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
+> index 48fe4a591b54..f1d280accf43 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_seal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+> @@ -131,14 +131,14 @@ gss_get_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *text,
+>  	struct xdr_netobj	md5cksum = {.len = sizeof(cksumdata),
+>  					    .data = cksumdata};
+>  	void			*ptr;
+> -	s32			now;
+> +	time64_t		now;
+>  	u32			seq_send;
+>  	u8			*cksumkey;
+>  
+>  	dprintk("RPC:       %s\n", __func__);
+>  	BUG_ON(ctx == NULL);
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  
+>  	ptr = setup_token(ctx, token);
+>  
+> @@ -170,7 +170,7 @@ gss_get_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *text,
+>  	struct xdr_netobj cksumobj = { .len = sizeof(cksumdata),
+>  				       .data = cksumdata};
+>  	void *krb5_hdr;
+> -	s32 now;
+> +	time64_t now;
+>  	u8 *cksumkey;
+>  	unsigned int cksum_usage;
+>  	__be64 seq_send_be64;
+> @@ -198,7 +198,7 @@ gss_get_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *text,
+>  
+>  	memcpy(krb5_hdr + GSS_KRB5_TOK_HDR_LEN, cksumobj.data, cksumobj.len);
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  
+>  	return (ctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
+>  }
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> index ef2b25b86d2f..aaab91cf24c8 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> @@ -124,7 +124,7 @@ gss_verify_mic_v1(struct krb5_ctx *ctx,
+>  
+>  	/* it got through unscathed.  Make sure the context is unexpired */
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  
+>  	if (now > ctx->endtime)
+>  		return GSS_S_CONTEXT_EXPIRED;
+> @@ -149,7 +149,7 @@ gss_verify_mic_v2(struct krb5_ctx *ctx,
+>  	char cksumdata[GSS_KRB5_MAX_CKSUM_LEN];
+>  	struct xdr_netobj cksumobj = {.len = sizeof(cksumdata),
+>  				      .data = cksumdata};
+> -	s32 now;
+> +	time64_t now;
+>  	u8 *ptr = read_token->data;
+>  	u8 *cksumkey;
+>  	u8 flags;
+> @@ -194,7 +194,7 @@ gss_verify_mic_v2(struct krb5_ctx *ctx,
+>  		return GSS_S_BAD_SIG;
+>  
+>  	/* it got through unscathed.  Make sure the context is unexpired */
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  	if (now > ctx->endtime)
+>  		return GSS_S_CONTEXT_EXPIRED;
+>  
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> index 14a0aff0cd84..6c1920eed771 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> @@ -163,7 +163,7 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
+>  					    .data = cksumdata};
+>  	int			blocksize = 0, plainlen;
+>  	unsigned char		*ptr, *msg_start;
+> -	s32			now;
+> +	time64_t		now;
+>  	int			headlen;
+>  	struct page		**tmp_pages;
+>  	u32			seq_send;
+> @@ -172,7 +172,7 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
+>  
+>  	dprintk("RPC:       %s\n", __func__);
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  
+>  	blocksize = crypto_sync_skcipher_blocksize(kctx->enc);
+>  	gss_krb5_add_padding(buf, offset, blocksize);
+> @@ -268,7 +268,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
+>  	char			cksumdata[GSS_KRB5_MAX_CKSUM_LEN];
+>  	struct xdr_netobj	md5cksum = {.len = sizeof(cksumdata),
+>  					    .data = cksumdata};
+> -	s32			now;
+> +	time64_t		now;
+>  	int			direction;
+>  	s32			seqnum;
+>  	unsigned char		*ptr;
+> @@ -359,7 +359,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
+>  
+>  	/* it got through unscathed.  Make sure the context is unexpired */
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  
+>  	if (now > kctx->endtime)
+>  		return GSS_S_CONTEXT_EXPIRED;
+> @@ -439,7 +439,7 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
+>  		     struct xdr_buf *buf, struct page **pages)
+>  {
+>  	u8		*ptr, *plainhdr;
+> -	s32		now;
+> +	time64_t	now;
+>  	u8		flags = 0x00;
+>  	__be16		*be16ptr;
+>  	__be64		*be64ptr;
+> @@ -481,14 +481,14 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
+>  	if (err)
+>  		return err;
+>  
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  	return (kctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
+>  }
+>  
+>  static u32
+>  gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
+>  {
+> -	s32		now;
+> +	time64_t	now;
+>  	u8		*ptr;
+>  	u8		flags = 0x00;
+>  	u16		ec, rrc;
+> @@ -557,7 +557,7 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
+>  	/* do sequencing checks */
+>  
+>  	/* it got through unscathed.  Make sure the context is unexpired */
+> -	now = get_seconds();
+> +	now = ktime_get_real_seconds();
+>  	if (now > kctx->endtime)
+>  		return GSS_S_CONTEXT_EXPIRED;
+>  
+> diff --git a/net/sunrpc/auth_gss/gss_mech_switch.c b/net/sunrpc/auth_gss/gss_mech_switch.c
+> index 82060099a429..94fddce7f224 100644
+> --- a/net/sunrpc/auth_gss/gss_mech_switch.c
+> +++ b/net/sunrpc/auth_gss/gss_mech_switch.c
+> @@ -374,7 +374,7 @@ int
+>  gss_import_sec_context(const void *input_token, size_t bufsize,
+>  		       struct gss_api_mech	*mech,
+>  		       struct gss_ctx		**ctx_id,
+> -		       time_t			*endtime,
+> +		       time64_t			*endtime,
+>  		       gfp_t gfp_mask)
+>  {
+>  	if (!(*ctx_id = kzalloc(sizeof(**ctx_id), gfp_mask)))
+> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+> index 8be2f209982b..30ed5585a42a 100644
+> --- a/net/sunrpc/auth_gss/svcauth_gss.c
+> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
+> @@ -433,7 +433,7 @@ static int rsc_parse(struct cache_detail *cd,
+>  	int id;
+>  	int len, rv;
+>  	struct rsc rsci, *rscp = NULL;
+> -	time_t expiry;
+> +	time64_t expiry;
+>  	int status = -EINVAL;
+>  	struct gss_api_mech *gm = NULL;
+>  
+> @@ -1184,7 +1184,7 @@ static int gss_proxy_save_rsc(struct cache_detail *cd,
+>  	static atomic64_t ctxhctr;
+>  	long long ctxh;
+>  	struct gss_api_mech *gm = NULL;
+> -	time_t expiry;
+> +	time64_t expiry;
+>  	int status = -EINVAL;
+>  
+>  	memset(&rsci, 0, sizeof(rsci));
+> -- 
+> 2.20.0
