@@ -2,20 +2,20 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D2CFD8A8
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 10:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D93FFDA79
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2019 11:05:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfKOJV3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Nov 2019 04:21:29 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:40484 "EHLO
+        id S1727004AbfKOKFW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Nov 2019 05:05:22 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41526 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKOJV3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Nov 2019 04:21:29 -0500
+        with ESMTP id S1727603AbfKOKFW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Nov 2019 05:05:22 -0500
 Received: from 1.general.cking.uk.vpn ([10.172.193.212])
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <colin.king@canonical.com>)
-        id 1iVXnC-00019r-Ne; Fri, 15 Nov 2019 09:21:26 +0000
+        id 1iVYTf-0003WY-Is; Fri, 15 Nov 2019 10:05:19 +0000
 To:     Olga Kornievskaia <kolga@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -64,9 +64,9 @@ Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
  WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
  QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
  GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Subject: re: NFS: inter ssc open (memory leak detected)
-Message-ID: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
-Date:   Fri, 15 Nov 2019 09:21:26 +0000
+Subject: re: NFS: handle source server reboot
+Message-ID: <c64dfc7b-0c0b-e571-5a49-f32034eccaa5@canonical.com>
+Date:   Fri, 15 Nov 2019 10:05:19 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
@@ -83,84 +83,69 @@ Hi,
 Static analysis with Coverity has detected a memory leak in the
 following commit:
 
-commit ec4b0925089826af45e99cdf78a8ac84c1d005f1
+commit 0e65a32c8a569db363048e17a708b1a0913adbef
 Author: Olga Kornievskaia <kolga@netapp.com>
-Date:   Tue Oct 8 16:33:53 2019 -0400
+Date:   Fri Jun 14 14:38:40 2019 -0400
 
-    NFS: inter ssc open
+    NFS: handle source server reboot
 
-
-In function nfs42_ssc_open(), fs/nfs/nfs4file.c, analysis is as follows:
-
-   3. alloc_fn: Storage is returned from allocation function kzalloc.
-   4. var_assign: Assigning: read_name = storage returned from
-kzalloc(len, 3136U).
-336        read_name = kzalloc(len, GFP_NOFS);
-
-   5. Condition read_name == NULL, taking false branch.
-337        if (read_name == NULL)
-338                goto out;
-
-   6. noescape: Resource read_name is not freed or pointed-to in snprintf.
-339        snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
-340
-341        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh,
-&fattr,
-342                        NULL);
-
-   7. Condition IS_ERR(r_ino), taking true branch.
-343        if (IS_ERR(r_ino)) {
-344                res = ERR_CAST(r_ino);
-
-   8. Jumping to label out.
-345                goto out;
-346        }
-347
-348        filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
-349                                     r_ino->i_fop);
-350        if (IS_ERR(filep)) {
-351                res = ERR_CAST(filep);
-352                goto out;
-353        }
-354        filep->f_mode |= FMODE_READ;
-355
-356        ctx = alloc_nfs_open_context(filep->f_path.dentry, filep->f_mode,
-357                                        filep);
-358        if (IS_ERR(ctx)) {
-359                res = ERR_CAST(ctx);
-360                goto out_filep;
-361        }
-362
-363        res = ERR_PTR(-EINVAL);
-364        sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
-365        if (sp == NULL)
-366                goto out_ctx;
-367
-368        ctx->state = nfs4_get_open_state(r_ino, sp);
-369        if (ctx->state == NULL)
-370                goto out_stateowner;
-371
-372        set_bit(NFS_SRV_SSC_COPY_STATE, &ctx->state->flags);
-373        set_bit(NFS_OPEN_STATE, &ctx->state->flags);
-374        memcpy(&ctx->state->open_stateid.other, &stateid->other,
-375               NFS4_STATEID_OTHER_SIZE);
-376        update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
-377
-378        nfs_file_set_open_context(filep, ctx);
-379        put_nfs_open_context(ctx);
-380
-381        file_ra_state_init(&filep->f_ra,
-filep->f_mapping->host->i_mapping);
-382        res = filep;
-383out:
-
-   CID 91575 (#1-2 of 2): Resource leak (RESOURCE_LEAK)
-
-9. leaked_storage: Variable read_name going out of scope leaks the
-storage it points to.
-
-384        return res;
+In function __nfs4_copy_file_range() in fs/nfs/nfs4file.c, analysis is
+as follows:
 
 
-Looks like there are several return paths to out: that leak the
-allocation of read_name.
+155retry:
+   5. Condition !nfs42_files_from_same_server(file_in, file_out), taking
+false branch.
+   9. Condition !nfs42_files_from_same_server(file_in, file_out), taking
+false branch.
+
+156        if (!nfs42_files_from_same_server(file_in, file_out)) {
+157                /* for inter copy, if copy size if smaller than 12 RPC
+158                 * payloads, fallback to traditional copy. There are
+159                 * 14 RPCs during an NFSv4.x mount between source/dest
+160                 * servers.
+161                 */
+162                if (sync ||
+163                        count <= 14 *
+NFS_SERVER(file_inode(file_in))->rsize)
+164                        return -EOPNOTSUPP;
+165                cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
+166                                GFP_NOFS);
+167                if (unlikely(cn_resp == NULL))
+168                        return -ENOMEM;
+169
+170                ret = nfs42_proc_copy_notify(file_in, file_out, cn_resp);
+171                if (ret) {
+172                        ret = -EOPNOTSUPP;
+173                        goto out;
+174                }
+175                nss = &cn_resp->cnr_src;
+176                cnrs = &cn_resp->cnr_stateid;
+177        }
+178        ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
+179                                nss, cnrs, sync);
+180out:
+   6. freed_arg: kfree frees cn_resp.
+
+   CID 91571 (#1 of 1): Double free (USE_AFTER_FREE)10. double_free:
+Calling kfree frees pointer cn_resp which has already been freed.
+
+181        kfree(cn_resp);
+
+   7. Condition ret == -11, taking true branch.
+
+182        if (ret == -EAGAIN)
+   8. Jumping to label retry.
+
+183                goto retry;
+184        return ret;
+185}
+186
+
+On the 2nd iteration of the retry loop, cn_resp is being free'd twice if
+the call to nfs42_files_from_same_server() returns zero since cn_resp is
+not kalloc'd in the 2nd iteration. A naive fix would be to set cn_resp
+to NULL after the kfree on line 181, but I'm not sure if there is a
+better way to resolve this.
+
+Colin
