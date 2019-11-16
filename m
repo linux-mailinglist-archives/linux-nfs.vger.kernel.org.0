@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09536FEF6E
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2019 16:58:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA8B9FF324
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2019 17:24:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfKPPyP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 16 Nov 2019 10:54:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
+        id S1729265AbfKPQXs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 Nov 2019 11:23:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731405AbfKPPyO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:14 -0500
+        id S1728368AbfKPPmr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:47 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C162186D;
-        Sat, 16 Nov 2019 15:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 879BA20733;
+        Sat, 16 Nov 2019 15:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919653;
-        bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
+        s=default; t=1573918966;
+        bh=4z89RHmeFDHuAuKOgDLQ9eeVOAGtPmlhUw8to3NyyBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1kQhy2zZkJPGCkx3oDbliHrL0l/KdDM1Q5AK5RoV0UGsCLnyxefR8Eqk+72ITBhY
-         bRSK90zzCl2C2s1I71NHjsHQlodb0nJK5ZqehhnSj2TV4H0V6obsmuxRWJR7I6kSEl
-         AtvxQQP1TVaHcw+RqD2EuOwfjhs4MasydY1T/LbM=
+        b=1GWyPftyLb0670JiQ14QydhWsp385Oubz63xSlqTVY//yDumsdO6UfmsaTj3Bz+M7
+         6jrYD7amz6eu4kUcjH96tSekNc/tkFTBDjYn2TxCEhUwzsUvjac9MKuFDks1RLo/TI
+         wmOfev9KC7kn6vSfaArlhwAzZaYn6bTHDOpDv8uo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/77] SUNRPC: Fix a compile warning for cmpxchg64()
-Date:   Sat, 16 Nov 2019 10:52:49 -0500
-Message-Id: <20191116155339.11909-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 082/237] SUNRPC: Fix a compile warning for cmpxchg64()
+Date:   Sat, 16 Nov 2019 10:38:37 -0500
+Message-Id: <20191116154113.7417-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
-References: <20191116155339.11909-1-sashal@kernel.org>
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -54,7 +54,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
-index 1d74d653e6c05..ad0dcb69395d7 100644
+index eaad9bc7a0bdc..e1f0571843c8c 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_seal.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
 @@ -63,6 +63,7 @@
