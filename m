@@ -2,94 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25DAFFFB7E
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2019 20:40:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55E6BFFBE5
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2019 23:15:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfKQTkW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 17 Nov 2019 14:40:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43895 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726070AbfKQTkV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Nov 2019 14:40:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574019620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iKbDlHwnVqgNvTQKKHL++w1APdZeeY5yMgE34pChvEU=;
-        b=iEe3sjQXSJ6BwyfhpDVcZN2tPRcwNaMx6i91q+cS69XuYI51Nj6f3DYqwjaEMrqlHxn4wc
-        K/gwcECtdSsqhk5DLEtVmw9qk5XtCgojkYVrfD2xeybK54xWl1y3a6J7W//JqVyTYBdelb
-        u7eS9bpglXM0JRnWYMPK+X1YoLRO6tI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-GkoTLqBHMuqM6UYgNqmt2w-1; Sun, 17 Nov 2019 14:40:18 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4712D2EDA;
-        Sun, 17 Nov 2019 19:40:17 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-206.phx2.redhat.com [10.3.116.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F384F600CE;
-        Sun, 17 Nov 2019 19:40:16 +0000 (UTC)
-Subject: Re: ANNOUNCE: nfs-utils-2.4.2 released.
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <04f375d6-e50a-0b5e-7095-dbc3907bfe23@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <fd6a75d4-9b52-9c8f-9ad5-d01340fdb89e@RedHat.com>
-Date:   Sun, 17 Nov 2019 14:40:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726814AbfKQWPW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 17 Nov 2019 17:15:22 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35481 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKQWPW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Nov 2019 17:15:22 -0500
+Received: by mail-wr1-f68.google.com with SMTP id s5so17233416wrw.2
+        for <linux-nfs@vger.kernel.org>; Sun, 17 Nov 2019 14:15:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uerFL31jjYFZFwF2Yn4Ol5lMqXHtUOh4W1BX0+Oh8Xo=;
+        b=RlIOTDji/oAZb24OubKUw6qBI2cYvttwlHY9TZzaXvr6hSRFdqc2eQ7vone8i6qPk8
+         jMDtAp5t6TEvoKgux+MKfcTJCu0AB6/XWMAn+eOLZRiE11DdQQM7u0y6IiOcL1zALJBR
+         OTKFL5L2O9pHIYM12/9abPfgYtKkXVNAUnyaaCM65JbXWdWblusGeLzNHDXTS2Sdk2WS
+         AlnjLBOgLNavyb0oG1rf3SKM2Y/MfNsvbP1QqNVw5v/ocOf3Gh/ltVh/tO260iw7MqYO
+         kgM/iUD5KZrZgmRQgTFCVZ3+O8Wqio97U69bVeZn/w7rWPXi5DWKw49dJF5LX9jpMAg2
+         wWLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uerFL31jjYFZFwF2Yn4Ol5lMqXHtUOh4W1BX0+Oh8Xo=;
+        b=QiGxlMwl0asCnh1gXCQcxnUCC6WU6yYPrzRHAU9dqVxFfcX3N3KmdMiLbpjFpSmxfZ
+         3nFFhDm5Ykkqzz46BPbNr2hWc1UHn9TCKF3f0HN4F23aP2pkZqnxnloCWrl0U5qvSjW8
+         m+yIxKkR/VlE4XHqoWux1tTfTHy2VW+lreWm7LSYHlHOIGGQprFBS2VcCljzTNktZkb1
+         MhkIXy4iy3Dt1oQ+ziToPhGktzt2cQkXFmHsk0KGRQRVFsfb5AQ4lpJr3ECg1hZTd1vU
+         q6SBwuwP+PaWzFRQHWRV+Hc8RK1xcP7x14UGsL/50bEeOOmW2oGBeIFj823MU/YbVys6
+         KGwA==
+X-Gm-Message-State: APjAAAX9C1P8TqFqMr7wugym9C9AfaSShuojAOX8PbX8EYhzGFymgiDw
+        kywbNNOvrYtfbYFlZX1ho+uDVOyd
+X-Google-Smtp-Source: APXvYqy0g3A9ZTsbkdk1quToBh2fgPRFUYMUhJXeg1y2iWNhgk46DbVOExtnRhKOUYdGknEmv+kygQ==
+X-Received: by 2002:a5d:458d:: with SMTP id p13mr26668429wrq.181.1574028918938;
+        Sun, 17 Nov 2019 14:15:18 -0800 (PST)
+Received: from localhost.localdomain ([62.201.25.198])
+        by smtp.gmail.com with ESMTPSA id z8sm20111641wrp.49.2019.11.17.14.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 14:15:18 -0800 (PST)
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Maxime Hadjinlian <maxime.hadjinlian@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Petr Vorel <petr.vorel@gmail.com>
+Subject: [nfs-utils PATCH 1/1] mountd: Add check for 'struct file_handle'
+Date:   Sun, 17 Nov 2019 23:15:06 +0100
+Message-Id: <20191117221506.32084-1-petr.vorel@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <04f375d6-e50a-0b5e-7095-dbc3907bfe23@nazar.ca>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: GkoTLqBHMuqM6UYgNqmt2w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey,
+From: Maxime Hadjinlian <maxime.hadjinlian@gmail.com>
 
-On 11/17/19 12:47 PM, Doug Nazar wrote:
-> This still causes crashes in mountd on 32bit systems without https://marc=
-.info/?l=3Dlinux-nfs&m=3D157250894818731&w=3D2
->=20
-> mountd: Version 2.4.2 starting
-> mountd: auth_unix_ip: inbuf 'nfsd fde2:2b6c:2d24:0021:0000:0000:0000:0050=
-'
-> mountd: auth_unix_ip: client 0x13cd900 '*'
-> mountd: nfsd_fh: inbuf '* 6 \xd1fb45ab77b345d99b09b3217dcdf2ec'
-> *** stack smashing detected ***: <unknown> terminated
-> Aborted
->=20
-> Call chain looks like:
->=20
-> get_rootfh=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=
-=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 utils/mountd/mountd.c
-> =C2=A0=C2=A0=C2=A0 check_is_mountpoint=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 sup=
-port/misc/mountpoint.c
-> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 nfsd_path_lstat=C2=A0=C2=A0 =C2=A0=
-=C2=A0=C2=A0 support/misc/nfsd_path.c=C2=A0=C2=A0=C2=A0 *
-> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 xlstat=C2=A0=C2=
-=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 support/misc/xstat.c=C2=A0=
-=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 *
->=20
-> where two struct stats are declared on the stack in mountpoint.c without =
-including config.h and getting the __USE_FILE_OFFSET64 define, however the =
-following two files in the call chain include config.h and get a different =
-size struct stat.
->=20
-> Also attached are a few printf formating fixes for 32 bit.
-My apologies... I did miss this patch in the last release, but the
-patch is now committed...=20
+The code to check if name_to_handle_at() is implemented generates only a
+warning but with some toolchain it doesn't fail to link (the function must be
+implemented somewhere).
+However the "struct file_handle" type is not available.
 
-I blame the American Halloween... the day the patch was posted! :-)=20
-Those darn spooks and goblins of getting in the way!! 8-)=20
+So, this patch adds a check for this struct.
 
-steved.
+Patch taken from buildroot distribution.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+[ pvorel: rebased from nfs-utils-1-3-4 ]
+Signed-off-by: Petr Vorel <petr.vorel@gmail.com>
+Signed-off-by: Maxime Hadjinlian <maxime.hadjinlian@gmail.com>
+---
+ configure.ac         | 1 +
+ utils/mountd/cache.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 9ba9d4b5..949ff9fc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -510,6 +510,7 @@ AC_TYPE_PID_T
+ AC_TYPE_SIZE_T
+ AC_HEADER_TIME
+ AC_STRUCT_TM
++AC_CHECK_TYPES([struct file_handle])
+ 
+ dnl *************************************************************
+ dnl Check for functions
+diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+index 3861f84a..31e9507d 100644
+--- a/utils/mountd/cache.c
++++ b/utils/mountd/cache.c
+@@ -446,7 +446,7 @@ static int same_path(char *child, char *parent, int len)
+ 	if (count_slashes(p) != count_slashes(parent))
+ 		return 0;
+ 
+-#if HAVE_NAME_TO_HANDLE_AT
++#if defined(HAVE_NAME_TO_HANDLE_AT) && defined(HAVE_STRUCT_FILE_HANDLE)
+ 	struct {
+ 		struct file_handle fh;
+ 		unsigned char handle[128];
+-- 
+2.24.0
 
