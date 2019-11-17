@@ -2,85 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 603FFFFB5E
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2019 19:30:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 222A0FFB7C
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2019 20:33:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfKQSam (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 17 Nov 2019 13:30:42 -0500
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:52116 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfKQSam (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Nov 2019 13:30:42 -0500
-Received: by mail-wm1-f54.google.com with SMTP id q70so15024001wme.1
-        for <linux-nfs@vger.kernel.org>; Sun, 17 Nov 2019 10:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AI5PjNNVo+nWuGHXuUR9Z81f2NSybgwLdP4c6Dg9K18=;
-        b=jYUjBUmFq8f+DhhSBI8/YYMIxqMJ3DMsR1aNf2ayL4doKJVDgLNU7qL4hRU3vbGe4G
-         sA+TCHhxuPpL4Ws0Zxo8++tN73m3wBvHHYHPeKScpaKNkOSQrxfiU+lopV2SkSQK5gwX
-         n5LrpJGr9yo/1A1N4yHzHZb+uCg6N79pgmNGJs6/jSEUGbxSDve9TyQttT+xwXJtfm9B
-         ugn1W0HaPMwH884H3XmfZ8eGvLj/DpOB4dan8zQ2h4nmdUA+8PQGD4quiyyFebGJI9pK
-         1FGYrSi0sJMGebsFZ34dKL4lc5TnEV0DThvtRhWuniDiOEQo2CeLDpYMy3vkhT5KGBhU
-         4zYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AI5PjNNVo+nWuGHXuUR9Z81f2NSybgwLdP4c6Dg9K18=;
-        b=Ku+8o48DuI48OMoKaw5en2IW9RVzfxcYJSOMFQX2LxbGSN6JXpaUjy/Uh3o0VemDav
-         Awh47o3vYXY3u7qi5lJEzEl3fUaqLCsDpy8mUm5YrldB4INSE6sevwRxeUdMjoIGlpo8
-         PwrH0IYz5TctUobqMIDWXiaCxlwPxeJvR85IU9g25jOTDnF81ih20nluds6Yy2H7dr0J
-         jpFxqpRIvIeenLI5m8IgbmqhPfJHHaIGcMtUMNqeFQBf8aqi6I0Nq+CxF/SXxxsbyqnA
-         xHl+pLJzLzWU45rW/pmnKP4Dotw7yIVoJwIY11MYb55pY6UhQsr7+BZey0q3v80FqJNy
-         se7A==
-X-Gm-Message-State: APjAAAU3ZZluokL0jvwNuP0fpp9JXXHDU8efvWUxz+VAajA/ThnoKki+
-        gc/Zts0cm2cXtZNQHHS0ZvcLhygd
-X-Google-Smtp-Source: APXvYqy1seZ+UKteyygeRKeqwWhA9693+9AFr6gELI2o7BFzLuGYBYLBSb8/afNSeUj4KncRW64LFQ==
-X-Received: by 2002:a1c:453:: with SMTP id 80mr25892464wme.5.1574015440255;
-        Sun, 17 Nov 2019 10:30:40 -0800 (PST)
-Received: from localhost.localdomain ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id o81sm18137949wmb.38.2019.11.17.10.30.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 10:30:39 -0800 (PST)
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Petr Vorel <petr.vorel@gmail.com>
-Subject: [nfs-utils PATCH 1/1] autoconf: Add Debian paths for Kerberos v5 with GSS
-Date:   Sun, 17 Nov 2019 19:30:33 +0100
-Message-Id: <20191117183033.11382-1-petr.vorel@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726091AbfKQTdz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 17 Nov 2019 14:33:55 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50737 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726089AbfKQTdz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Nov 2019 14:33:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574019233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0wV9syliaGhjm+v5v5X2Ua0YgFmXpBiUP3Mze8zna/U=;
+        b=g9C5BFFlm+5jE3Cjy3Z99MW6IkcB+Keg/y04DeOL5cR2y2oD/CemxlrbTwgs3RRSCdduVV
+        ye8vezowSRW3KP40AapxrTWP4NibTvkwzc5ZbMIBrTU9vYl4k/9qLDiAzcX+A9Ys7PqIQ7
+        aO1pJ0Y/VfOeNgcFgMTVPbVoluytoYY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-iBqv_diWO9S0g7U8xsM6Tw-1; Sun, 17 Nov 2019 14:33:51 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6EF0800EBA;
+        Sun, 17 Nov 2019 19:33:50 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-206.phx2.redhat.com [10.3.116.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 856756016E;
+        Sun, 17 Nov 2019 19:33:50 +0000 (UTC)
+Subject: Re: [PATCH] Ensure consistent struct stat definition
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20191031070355.26471-1-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <fb4ee698-164c-df5c-5efe-fe59de1a0177@RedHat.com>
+Date:   Sun, 17 Nov 2019 14:33:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191031070355.26471-1-nazard@nazar.ca>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: iBqv_diWO9S0g7U8xsM6Tw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Debian stores it's shared libraries in
-/usr/lib/$(uname -m)-linux-gnu
 
-Signed-off-by: Petr Vorel <petr.vorel@gmail.com>
----
- aclocal/kerberos5.m4 | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/aclocal/kerberos5.m4 b/aclocal/kerberos5.m4
-index faa58049..bf0e88bc 100644
---- a/aclocal/kerberos5.m4
-+++ b/aclocal/kerberos5.m4
-@@ -42,7 +42,9 @@ AC_DEFUN([AC_KERBEROS_V5],[
-                    -f $dir/lib32/libgssapi_krb5.a -o \
-                    -f $dir/lib32/libgssapi_krb5.so -o \
-                    -f $dir/lib64/libgssapi_krb5.a -o \
--                   -f $dir/lib64/libgssapi_krb5.so \) ; then
-+                   -f $dir/lib64/libgssapi_krb5.so -o \
-+                   -f $dir/lib/$(uname -m)-linux-gnu/libgssapi_krb5.a -o \
-+                   -f $dir/lib/$(uname -m)-linux-gnu/libgssapi_krb5.so \) ; then
-          AC_DEFINE(HAVE_KRB5, 1, [Define this if you have MIT Kerberos libraries])
-          KRBDIR="$dir"
-          gssapi_lib=gssapi_krb5
--- 
-2.24.0
+On 10/31/19 3:03 AM, Doug Nazar wrote:
+> Although 2fbc62e2a13fc ("Fix include order between config.h and stat.h")
+> reorganized those files that were already including config.h, not all
+> files were including config.h.
+>=20
+> Fixes at least stack smashing crashes in mountd on 32-bit systems.
+>=20
+> Signed-off-by: Doug Nazar <nazard@nazar.ca>
+> ---
+>  support/junction/junction.c | 4 ++++
+>  support/misc/file.c         | 4 ++++
+>  support/misc/mountpoint.c   | 4 ++++
+>  support/nfs/cacheio.c       | 4 ++++
+>  utils/mount/fstab.c         | 4 ++++
+>  utils/nfsdcld/legacy.c      | 4 ++++
+>  6 files changed, 24 insertions(+)
+Committed!=20
+
+steved.
+>=20
+> diff --git a/support/junction/junction.c b/support/junction/junction.c
+> index ab6caa61..41cce261 100644
+> --- a/support/junction/junction.c
+> +++ b/support/junction/junction.c
+> @@ -23,6 +23,10 @@
+>   *=09http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> =20
+> diff --git a/support/misc/file.c b/support/misc/file.c
+> index e7c38190..06f6bb2b 100644
+> --- a/support/misc/file.c
+> +++ b/support/misc/file.c
+> @@ -18,6 +18,10 @@
+>   * along with nfs-utils.  If not, see <http://www.gnu.org/licenses/>.
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <sys/stat.h>
+> =20
+>  #include <string.h>
+> diff --git a/support/misc/mountpoint.c b/support/misc/mountpoint.c
+> index c6217f24..14d6731d 100644
+> --- a/support/misc/mountpoint.c
+> +++ b/support/misc/mountpoint.c
+> @@ -3,6 +3,10 @@
+>   * check if a given path is a mountpoint=20
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <string.h>
+>  #include "xcommon.h"
+>  #include <sys/stat.h>
+> diff --git a/support/nfs/cacheio.c b/support/nfs/cacheio.c
+> index 9dc4cf1c..7c4cf373 100644
+> --- a/support/nfs/cacheio.c
+> +++ b/support/nfs/cacheio.c
+> @@ -15,6 +15,10 @@
+>   *
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <nfslib.h>
+>  #include <stdio.h>
+>  #include <stdio_ext.h>
+> diff --git a/utils/mount/fstab.c b/utils/mount/fstab.c
+> index eedbddab..8b0aaf1a 100644
+> --- a/utils/mount/fstab.c
+> +++ b/utils/mount/fstab.c
+> @@ -7,6 +7,10 @@
+>   * - Moved code to nfs-utils/support/nfs from util-linux/mount.
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <errno.h>
+>  #include <stdio.h>
+>  #include <fcntl.h>
+> diff --git a/utils/nfsdcld/legacy.c b/utils/nfsdcld/legacy.c
+> index 07f477ab..3c6bea6c 100644
+> --- a/utils/nfsdcld/legacy.c
+> +++ b/utils/nfsdcld/legacy.c
+> @@ -15,6 +15,10 @@
+>   * Boston, MA 02110-1301, USA.
+>   */
+> =20
+> +#ifdef HAVE_CONFIG_H
+> +#include <config.h>
+> +#endif
+> +
+>  #include <stdio.h>
+>  #include <dirent.h>
+>  #include <string.h>
+>=20
 
