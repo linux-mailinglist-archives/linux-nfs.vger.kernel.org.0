@@ -2,104 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87561100248
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2019 11:21:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F15A01006F1
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2019 15:02:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfKRKVv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Nov 2019 05:21:51 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1686 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKRKVv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Nov 2019 05:21:51 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd270bf0000>; Mon, 18 Nov 2019 02:21:51 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 18 Nov 2019 02:21:50 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 18 Nov 2019 02:21:50 -0800
-Received: from [10.26.11.241] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov
- 2019 10:21:49 +0000
-Subject: Re: [PATCH] SUNRPC: Avoid RPC delays when exiting suspend
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Trond Myklebust <trondmy@gmail.com>
-CC:     <linux-nfs@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <329228f8-e194-a021-9226-69a9b6a403ce@nvidia.com>
- <20191105142133.28741-1-trond.myklebust@hammerspace.com>
- <3f536791-dbd1-cc9a-c88a-ddc26dd57c00@nvidia.com>
-Message-ID: <2e0bdb35-a033-55e4-464e-97f3fbb2090c@nvidia.com>
-Date:   Mon, 18 Nov 2019 10:21:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727004AbfKROCn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Nov 2019 09:02:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29778 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726627AbfKROCm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Nov 2019 09:02:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574085761;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cFDTNzSmncWoiXrtDV5MkFPjzmN8qwHSjYQsF6etTkk=;
+        b=PMqvkPOaJt8mnKx+3SDil9hGHJevEUNyNy4GYx9VvYUiwi+pmkc2knpMiv0AEvLKwrgnC1
+        u1hycd1u2s1uYN1fy09itTnyi5bWT1IeVUZhvadjerDsl9pdZ7RW2jLJcwRhr1FYKYtSm3
+        9gnf9mrToDDgxib2l1XB4tteJn/TXKs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-s6lhjt34Nn-RWzeq7p9UhA-1; Mon, 18 Nov 2019 09:02:38 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83F8A1883546;
+        Mon, 18 Nov 2019 14:02:36 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-206.phx2.redhat.com [10.3.116.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10F6961071;
+        Mon, 18 Nov 2019 14:02:35 +0000 (UTC)
+Subject: Re: [nfs-utils PATCH 1/1] mountd: Add check for 'struct file_handle'
+To:     Petr Vorel <petr.vorel@gmail.com>, linux-nfs@vger.kernel.org
+Cc:     Maxime Hadjinlian <maxime.hadjinlian@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20191117221506.32084-1-petr.vorel@gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <61828832-a5ef-7aaf-07ac-e9bbf279e104@RedHat.com>
+Date:   Mon, 18 Nov 2019 09:02:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <3f536791-dbd1-cc9a-c88a-ddc26dd57c00@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191117221506.32084-1-petr.vorel@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574072511; bh=mlJ+00JNu6t9wqpwYKUVITU7CEF2Q12woYSyqRytaFc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EVBcB8wXkWvgcsv1Osh1ZQq4yh1TJNHkRlYBWHR8JG3bOA47s2Kj7OUXUFn5FdqVX
-         KWzhPq2slFXotno/7MckEQ0cNo5sOEI/8l+B68HDz2h4Ky2Oi/MybaCu0bl0P37FN8
-         rp6ag8EcPvnqlDTw2x1mLho0AgJPIC7IO1QsbsdX/Di+8uP51IdkXzYA29H/7mRSf9
-         Ei5kZQ3qY5xKAxmUt4mKCUVst4Yfs7YcYP9DrJgwuLTZhAhQUmg1caZuXX/X8TNM/a
-         4InzCM0WTBzHlhQR77gPCO7MaSgR2Whb7PX8ncYAotNuWXOeU66JobJDvscIT8So0k
-         XvIXn2AqZL3Cg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: s6lhjt34Nn-RWzeq7p9UhA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
 
-On 06/11/2019 11:15, Jon Hunter wrote:
-> 
-> On 05/11/2019 14:21, Trond Myklebust wrote:
->> Jon Hunter: "I have been tracking down another suspend/NFS related
->> issue where again I am seeing random delays exiting suspend. The delays
->> can be up to a couple minutes in the worst case and this is causing a
->> suspend test we have to fail."
->>
->> Change the use of a deferrable work to a standard delayed one.
->>
->> Reported-by: Jon Hunter <jonathanh@nvidia.com>
->> Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
->> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->> ---
->>  net/sunrpc/sched.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
->> index 360afe153193..987c4b1f0b17 100644
->> --- a/net/sunrpc/sched.c
->> +++ b/net/sunrpc/sched.c
->> @@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_queue(struct rpc_wait_queue *queue, const c
->>  	rpc_reset_waitqueue_priority(queue);
->>  	queue->qlen = 0;
->>  	queue->timer_list.expires = 0;
->> -	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
->> +	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
->>  	INIT_LIST_HEAD(&queue->timer_list.list);
->>  	rpc_assign_waitqueue_name(queue, qname);
->>  }
-> 
-> Thanks!
-> 
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-I see this is now applied in -next, but I am seeing the failures on
-mainline. Any chance we could still get this into v5.4?
+On 11/17/19 5:15 PM, Petr Vorel wrote:
+> From: Maxime Hadjinlian <maxime.hadjinlian@gmail.com>
+>=20
+> The code to check if name_to_handle_at() is implemented generates only a
+> warning but with some toolchain it doesn't fail to link (the function mus=
+t be
+> implemented somewhere).
+> However the "struct file_handle" type is not available.
+>=20
+> So, this patch adds a check for this struct.
+>=20
+> Patch taken from buildroot distribution.
+>=20
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> [ pvorel: rebased from nfs-utils-1-3-4 ]
+> Signed-off-by: Petr Vorel <petr.vorel@gmail.com>
+> Signed-off-by: Maxime Hadjinlian <maxime.hadjinlian@gmail.com>
+Committed... (tag: nfs-utils-2-4-3-rc1)
 
-Cheers
-Jon
+steved.
+> ---
+>  configure.ac         | 1 +
+>  utils/mountd/cache.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/configure.ac b/configure.ac
+> index 9ba9d4b5..949ff9fc 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -510,6 +510,7 @@ AC_TYPE_PID_T
+>  AC_TYPE_SIZE_T
+>  AC_HEADER_TIME
+>  AC_STRUCT_TM
+> +AC_CHECK_TYPES([struct file_handle])
+> =20
+>  dnl *************************************************************
+>  dnl Check for functions
+> diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+> index 3861f84a..31e9507d 100644
+> --- a/utils/mountd/cache.c
+> +++ b/utils/mountd/cache.c
+> @@ -446,7 +446,7 @@ static int same_path(char *child, char *parent, int l=
+en)
+>  =09if (count_slashes(p) !=3D count_slashes(parent))
+>  =09=09return 0;
+> =20
+> -#if HAVE_NAME_TO_HANDLE_AT
+> +#if defined(HAVE_NAME_TO_HANDLE_AT) && defined(HAVE_STRUCT_FILE_HANDLE)
+>  =09struct {
+>  =09=09struct file_handle fh;
+>  =09=09unsigned char handle[128];
+>=20
 
--- 
-nvpublic
