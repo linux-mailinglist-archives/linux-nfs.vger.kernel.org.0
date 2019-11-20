@@ -2,59 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F27F1030A3
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2019 01:20:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D67C0103C64
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2019 14:43:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKTAUu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Nov 2019 19:20:50 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:50212 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbfKTAUu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Nov 2019 19:20:50 -0500
-X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Nov 2019 19:20:49 EST
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1iXDeU-0006sP-00; Wed, 20 Nov 2019 00:15:22 +0000
-Date:   Tue, 19 Nov 2019 19:15:22 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     musl@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: getdents64 lost direntries with SMB/NFS and buffer size < unknown
- threshold
-Message-ID: <20191120001522.GA25139@brightrain.aerifal.cx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1730677AbfKTNnc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Nov 2019 08:43:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730358AbfKTNnc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:43:32 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C8722528;
+        Wed, 20 Nov 2019 13:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574257411;
+        bh=Py4LIxOYIGUpBCC1UaHD/YjPJ7FIC1KP3vrfomorWQ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uZ2j/2yP5YKrzqRAi0SKT0cOMOxFqg18x8GrUXE2shBcd39pZq47f6yVYUchlQN7R
+         W6U8mF5D+RMEmDyCUMcc1owRjIBf9Lngyq7581b0BauJDM8622I+YY0N/45VRPhQPu
+         M4XO2LNN5T0G/2nJqfbdvExXvpscW2ku5clXgpms=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:43:27 +0800
+Message-Id: <20191120134327.16582-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-An issue was reported today on the Alpine Linux tracker at
-https://gitlab.alpinelinux.org/alpine/aports/issues/10960 regarding
-readdir results from SMB/NFS shares with musl libc.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-After a good deal of analysis, we determined the root cause to be that
-the second and subsequent calls to getdents64 are dropping/skipping
-direntries (that have not yet been deleted) when some entries were
-deleted following the previous call. The issue appears to happen only
-when the buffer size passed to getdents64 is below some threshold
-greater than 2k (the size musl uses) but less than 32k (the size glibc
-uses, with which we were unable to reproduce the issue).
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ fs/nfs/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-My guess at the mechanism of failure is that the kernel has cached
-some entries which it obtained from the FS server based on whatever
-its preferred transfer size is, but didn't yet pass them to userspace
-due to limited buffer space, and then purged the buffer when resuming
-getdents64 after some entries were deleted for reasons related to the
-changes made way back in 0c0308066ca5 (NFS: Fix spurious readdir
-cookie loop messages). If so, any such purge likely needs to be
-delayed until already-buffered results are read, and there may be
-related buggy interactions with seeking that need to be examined.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 295a7a21b774..3edf122b8044 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
+ 	default n
+ 	help
+ 	  This option makes the NFS client advertise to NFSv4.1 servers that
+-          it can support NFSv4 migration.
++	  it can support NFSv4 migration.
+ 
+-          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
+-          still experimental.  If you are not an NFSv4 developer, say N here.
++	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
++	  still experimental.  If you are not an NFSv4 developer, say N here.
+ 
+ config NFS_V4_SECURITY_LABEL
+ 	bool
+-- 
+2.17.1
 
-The to/cc for this message are just my best guesses. Please cc anyone
-I missed who should be included when replying, and keep me on cc since
-I'm not subscribed to any of these lists but the musl one.
-
-Rich
