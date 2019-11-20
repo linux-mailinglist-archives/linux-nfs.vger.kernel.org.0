@@ -2,50 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDF7103E82
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2019 16:29:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87F6D103E4C
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2019 16:27:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfKTP3K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Nov 2019 10:29:10 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20449 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730441AbfKTP2B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Nov 2019 10:28:01 -0500
+        id S1728554AbfKTP1z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Nov 2019 10:27:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42186 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728202AbfKTP1z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Nov 2019 10:27:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574263680;
+        s=mimecast20190719; t=1574263674;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6xdjuh9UwKlbeZ9lDsPQn86DlegG8JD+v/Ho6v8aPsc=;
-        b=J3COtvD5B5DnerWpTw1FJsRFh7pz6WPuJzZOGniwekps51lkoO+JwWaLMqQE8sZk43TU0m
-        sZVmiASwuYznHHzlX5RWKXfJwGSNzwwpKQ9eSljBxykkMPfTNnifqJRAaDq4YWgav5Ht3G
-        nUe/w4stZRs009UN1WdRliRLmagn+zs=
+        bh=bimceprUZXtgJwJ3r+uNah68s5oKbHDn9kJlulQ0RL0=;
+        b=ir7N0f31WFQppZem22qXKeUjilzlcUSl79ltYn9t/JA1AqJ4FRSs7jfQprAxkOExpT+TE9
+        mSbkWE/5JLYyn18MkDzcvjPMjedqUCba7JDeXEel2Dmb6H36jFWyIajzk96+n3SHp593m0
+        NUQwhlUgblxlN03OJcE60bdStWJm+Bs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-3u-yhCmMNwS6xKd_NMptNQ-1; Wed, 20 Nov 2019 10:27:57 -0500
+ us-mta-215-0lhVNJB-Na6Zu_SXt0PRAQ-1; Wed, 20 Nov 2019 10:27:52 -0500
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E20DA80268A;
-        Wed, 20 Nov 2019 15:27:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15515DBAA;
+        Wed, 20 Nov 2019 15:27:51 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A88705ED31;
-        Wed, 20 Nov 2019 15:27:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A4E425E271;
+        Wed, 20 Nov 2019 15:27:50 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 2D331208EC; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
+        id 343142093D; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/27] nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
-Date:   Wed, 20 Nov 2019 10:27:26 -0500
-Message-Id: <20191120152750.6880-4-smayhew@redhat.com>
+Subject: [PATCH v5 04/27] nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+Date:   Wed, 20 Nov 2019 10:27:27 -0500
+Message-Id: <20191120152750.6880-5-smayhew@redhat.com>
 In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
 References: <20191120152750.6880-1-smayhew@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 3u-yhCmMNwS6xKd_NMptNQ-1
+X-MC-Unique: 0lhVNJB-Na6Zu_SXt0PRAQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -56,160 +56,104 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Do that (fhandle allocation, setting struct server up) in
-nfs4_referral_mount() and nfs4_try_mount() resp. and pass the
-server and pointer to mount_info into nfs_do_root_mount() so that
-nfs4_remote_referral_mount()/nfs_remote_mount() could be merged.
-
-Since we are moving stuff from ->mount() instances to the points
-prior to vfs_kern_mount() that would trigger those, we need to
-make sure that do_nfs_root_mount() will do the corresponding
-cleanup itself if it doesn't trigger those ->mount() instances.
+They are identical now.
 
 Reviewed-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nfs/nfs4super.c | 67 ++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 32 deletions(-)
+ fs/nfs/nfs4super.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
 diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 4591d6618efa..773c347df3ab 100644
+index 773c347df3ab..d0237d8ffa2b 100644
 --- a/fs/nfs/nfs4super.c
 +++ b/fs/nfs/nfs4super.c
-@@ -108,32 +108,37 @@ static struct dentry *
- nfs4_remote_mount(struct file_system_type *fs_type, int flags,
- =09=09  const char *dev_name, void *info)
- {
--=09struct nfs_mount_info *mount_info =3D info;
+@@ -22,8 +22,6 @@ static struct dentry *nfs4_remote_mount(struct file_syste=
+m_type *fs_type,
+ =09int flags, const char *dev_name, void *raw_data);
+ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type=
+,
+ =09int flags, const char *dev_name, void *raw_data);
+-static struct dentry *nfs4_remote_referral_mount(struct file_system_type *=
+fs_type,
+-=09int flags, const char *dev_name, void *raw_data);
+=20
+ static struct file_system_type nfs4_remote_fs_type =3D {
+ =09.owner=09=09=3D THIS_MODULE,
+@@ -33,14 +31,6 @@ static struct file_system_type nfs4_remote_fs_type =3D {
+ =09.fs_flags=09=3D FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+ };
+=20
+-static struct file_system_type nfs4_remote_referral_fs_type =3D {
+-=09.owner=09=09=3D THIS_MODULE,
+-=09.name=09=09=3D "nfs4",
+-=09.mount=09=09=3D nfs4_remote_referral_mount,
+-=09.kill_sb=09=3D nfs_kill_super,
+-=09.fs_flags=09=3D FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+-};
 -
--=09mount_info->set_security =3D nfs_set_sb_security;
--
--=09/* Get a volume representation */
--=09mount_info->server =3D nfs4_create_server(mount_info, &nfs_v4);
--=09return nfs_fs_mount_common(flags, dev_name, mount_info, &nfs_v4);
-+=09return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
+ struct file_system_type nfs4_referral_fs_type =3D {
+ =09.owner=09=09=3D THIS_MODULE,
+ =09.name=09=09=3D "nfs4",
+@@ -111,8 +101,7 @@ nfs4_remote_mount(struct file_system_type *fs_type, int=
+ flags,
+ =09return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
  }
 =20
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type=
+-static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type=
 ,
--=09=09int flags, void *data, const char *hostname)
-+=09=09=09=09=09  struct nfs_server *server, int flags,
-+=09=09=09=09=09  struct nfs_mount_info *info,
-+=09=09=09=09=09  const char *hostname)
+-=09=09=09=09=09  struct nfs_server *server, int flags,
++static struct vfsmount *nfs_do_root_mount(struct nfs_server *server, int f=
+lags,
+ =09=09=09=09=09  struct nfs_mount_info *info,
+ =09=09=09=09=09  const char *hostname)
  {
- =09struct vfsmount *root_mnt;
- =09char *root_devname;
- =09size_t len;
-=20
-+=09if (IS_ERR(server))
-+=09=09return ERR_CAST(server);
-+
- =09len =3D strlen(hostname) + 5;
- =09root_devname =3D kmalloc(len, GFP_KERNEL);
--=09if (root_devname =3D=3D NULL)
-+=09if (root_devname =3D=3D NULL) {
-+=09=09nfs_free_server(server);
- =09=09return ERR_PTR(-ENOMEM);
-+=09}
- =09/* Does hostname needs to be enclosed in brackets? */
- =09if (strchr(hostname, ':'))
- =09=09snprintf(root_devname, len, "[%s]:/", hostname);
+@@ -135,7 +124,7 @@ static struct vfsmount *nfs_do_root_mount(struct file_s=
+ystem_type *fs_type,
  =09else
  =09=09snprintf(root_devname, len, "%s:/", hostname);
--=09root_mnt =3D vfs_kern_mount(fs_type, flags, root_devname, data);
-+=09info->server =3D server;
-+=09root_mnt =3D vfs_kern_mount(fs_type, flags, root_devname, info);
-+=09if (info->server)
-+=09=09nfs_free_server(info->server);
-+=09info->server =3D NULL;
- =09kfree(root_devname);
- =09return root_mnt;
- }
-@@ -234,11 +239,15 @@ struct dentry *nfs4_try_mount(int flags, const char *=
-dev_name,
- =09struct dentry *res;
- =09struct nfs_parsed_mount_data *data =3D mount_info->parsed;
-=20
-+=09mount_info->set_security =3D nfs_set_sb_security;
-+
- =09dfprintk(MOUNT, "--> nfs4_try_mount()\n");
+ =09info->server =3D server;
+-=09root_mnt =3D vfs_kern_mount(fs_type, flags, root_devname, info);
++=09root_mnt =3D vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, =
+info);
+ =09if (info->server)
+ =09=09nfs_free_server(info->server);
+ =09info->server =3D NULL;
+@@ -245,7 +234,7 @@ struct dentry *nfs4_try_mount(int flags, const char *de=
+v_name,
 =20
  =09export_path =3D data->nfs_server.export_path;
  =09data->nfs_server.export_path =3D "/";
--=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_fs_type, flags, mount_info,
-+=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_fs_type,
-+=09=09=09nfs4_create_server(mount_info, &nfs_v4),
-+=09=09=09flags, mount_info,
+-=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_fs_type,
++=09root_mnt =3D nfs_do_root_mount(
+ =09=09=09nfs4_create_server(mount_info, &nfs_v4),
+ =09=09=09flags, mount_info,
  =09=09=09data->nfs_server.hostname);
- =09data->nfs_server.export_path =3D export_path;
-=20
-@@ -254,25 +263,7 @@ static struct dentry *
- nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
- =09=09=09   const char *dev_name, void *raw_data)
- {
--=09struct nfs_mount_info mount_info =3D {
--=09=09.fill_super =3D nfs_fill_super,
--=09=09.set_security =3D nfs_clone_sb_security,
--=09=09.cloned =3D raw_data,
--=09};
--=09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
--
--=09dprintk("--> nfs4_referral_get_sb()\n");
--
--=09mount_info.mntfh =3D nfs_alloc_fhandle();
--=09if (mount_info.cloned =3D=3D NULL || mount_info.mntfh =3D=3D NULL)
--=09=09goto out;
--
--=09/* create a new volume representation */
--=09mount_info.server =3D nfs4_create_referral_server(mount_info.cloned, mo=
-unt_info.mntfh);
--=09mntroot =3D nfs_fs_mount_common(flags, dev_name, &mount_info, &nfs_v4);
--out:
--=09nfs_free_fhandle(mount_info.mntfh);
--=09return mntroot;
-+=09return nfs_fs_mount_common(flags, dev_name, raw_data, &nfs_v4);
- }
-=20
- /*
-@@ -282,23 +273,35 @@ static struct dentry *nfs4_referral_mount(struct file=
-_system_type *fs_type,
- =09=09int flags, const char *dev_name, void *raw_data)
- {
- =09struct nfs_clone_mount *data =3D raw_data;
-+=09struct nfs_mount_info mount_info =3D {
-+=09=09.fill_super =3D nfs_fill_super,
-+=09=09.set_security =3D nfs_clone_sb_security,
-+=09=09.cloned =3D data,
-+=09};
- =09char *export_path;
- =09struct vfsmount *root_mnt;
- =09struct dentry *res;
-=20
- =09dprintk("--> nfs4_referral_mount()\n");
-=20
-+=09mount_info.mntfh =3D nfs_alloc_fhandle();
-+=09if (!mount_info.mntfh)
-+=09=09return ERR_PTR(-ENOMEM);
-+
- =09export_path =3D data->mnt_path;
- =09data->mnt_path =3D "/";
--
- =09root_mnt =3D nfs_do_root_mount(&nfs4_remote_referral_fs_type,
--=09=09=09flags, data, data->hostname);
-+=09=09=09nfs4_create_referral_server(mount_info.cloned,
-+=09=09=09=09=09=09    mount_info.mntfh),
-+=09=09=09flags, &mount_info, data->hostname);
- =09data->mnt_path =3D export_path;
-=20
- =09res =3D nfs_follow_remote_path(root_mnt, export_path);
- =09dprintk("<-- nfs4_referral_mount() =3D %d%s\n",
- =09=09PTR_ERR_OR_ZERO(res),
- =09=09IS_ERR(res) ? " [error]" : "");
-+
-+=09nfs_free_fhandle(mount_info.mntfh);
+@@ -259,13 +248,6 @@ struct dentry *nfs4_try_mount(int flags, const char *d=
+ev_name,
  =09return res;
  }
 =20
+-static struct dentry *
+-nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
+-=09=09=09   const char *dev_name, void *raw_data)
+-{
+-=09return nfs_fs_mount_common(flags, dev_name, raw_data, &nfs_v4);
+-}
+-
+ /*
+  * Create an NFS4 server record on referral traversal
+  */
+@@ -290,7 +272,7 @@ static struct dentry *nfs4_referral_mount(struct file_s=
+ystem_type *fs_type,
+=20
+ =09export_path =3D data->mnt_path;
+ =09data->mnt_path =3D "/";
+-=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_referral_fs_type,
++=09root_mnt =3D nfs_do_root_mount(
+ =09=09=09nfs4_create_referral_server(mount_info.cloned,
+ =09=09=09=09=09=09    mount_info.mntfh),
+ =09=09=09flags, &mount_info, data->hostname);
 --=20
 2.17.2
 
