@@ -2,134 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B6E10567E
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2019 17:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42ABA1058DA
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2019 18:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKUQGz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Nov 2019 11:06:55 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36776 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKUQGy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Nov 2019 11:06:54 -0500
-Received: by mail-il1-f196.google.com with SMTP id s75so3814771ilc.3
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Nov 2019 08:06:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7OlZLVlc3SucUWuwfNvUJikaY8FSZWyWSWTZJnxy6OY=;
-        b=oIfetlAgfHNgLwk8oo7R5ie8FoGzdL53QfvpKJEAZmGPaAHdN+MmSu73racsJj4zqt
-         GQYF9tWAVNIwBTF0AuF1jxbAlAhypsHAu4tJpPujibeBK02AP/XzQekNIgWDN0p/yNNG
-         tpYObpdbsYVcbzEAXlLxNhaI10w56X5LLYCKpmKwvgnlxxk/uKMg/l7iS8fknTmTQBdk
-         rn4PwUXpH9URQGl1UsPrJq8O8/FxBs+Tx7wE/P0JWJ/a8zmGORyz/u1BJR1GoOMv3Kg4
-         nP11X/BUAMSNgTW8HJkhnkk2UYeadKiYbcqBRVwfqZvb+6Vz8gG8VOFRl3NeL3aewcRb
-         ZEUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7OlZLVlc3SucUWuwfNvUJikaY8FSZWyWSWTZJnxy6OY=;
-        b=ZbaZv7jw94oGPpg0qLcr9na45kj3jE/QR8AdLGtAmsuGIozICOetRS3zSlp1FyRU/T
-         By5khHC06kHzJpHmy+Ht9vz9S1qkYAcGjMb4QyRvL577jSnMcsbUXxPQD+lk4MGpX/2B
-         zAU/AxZdKBIsA/hTZG/ul/N+QVfK8v4AAvmo2TuE6f9odU1EOfjiTgQp3FG6BV+ka5uR
-         14c/0YuH2tqvcLKG09CFj0BhZW1DoQAQ0B3t1fn4YK0w7EkX1md2K4a/WfmbIO9+jRb+
-         Bc9Xs/rzUXvAcLy+TfGSo9qYfUK6LoKiuN3sKsEcz82wGu2cYELoFMos1j/WVObp/3EY
-         +New==
-X-Gm-Message-State: APjAAAXLOGQsev/Gdg7Tv+EvKzfgblXb5tWMuapGvekjGGoctbWW6X7+
-        xLPJtNElbB9x3rEI+C3xAiBwkqkQ
-X-Google-Smtp-Source: APXvYqxPh2XpBzFAdFOsOUHVIN5gYR1T2dy7db7g/aZsNut5rVS6vD2oYSAB+YSKE8j43GS0eQ3dJQ==
-X-Received: by 2002:a92:cb0d:: with SMTP id s13mr10822090ilo.195.1574352413795;
-        Thu, 21 Nov 2019 08:06:53 -0800 (PST)
-Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id z10sm1349654ill.73.2019.11.21.08.06.52
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Thu, 21 Nov 2019 08:06:53 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2] NFS: allow deprecation of NFS UDP protocol
-Date:   Thu, 21 Nov 2019 11:06:51 -0500
-Message-Id: <20191121160651.5317-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+        id S1726568AbfKURyl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Nov 2019 12:54:41 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38798 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726293AbfKURyl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Nov 2019 12:54:41 -0500
+Received: from callcc.thunk.org (guestnat-104-133-8-103.corp.google.com [104.133.8.103] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xALHsJ6a011724
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 12:54:21 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id CA5FF4202FD; Thu, 21 Nov 2019 12:54:18 -0500 (EST)
+Date:   Thu, 21 Nov 2019 12:54:18 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Florian Weimer <fw@deneb.enyo.de>, linux-fsdevel@vger.kernel.org,
+        musl@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [musl] getdents64 lost direntries with SMB/NFS and buffer size <
+ unknown threshold
+Message-ID: <20191121175418.GI4262@mit.edu>
+References: <20191120001522.GA25139@brightrain.aerifal.cx>
+ <8736eiqq1f.fsf@mid.deneb.enyo.de>
+ <20191120205913.GD16318@brightrain.aerifal.cx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120205913.GD16318@brightrain.aerifal.cx>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Wed, Nov 20, 2019 at 03:59:13PM -0500, Rich Felker wrote:
+> 
+> POSIX only allows both behaviors (showing or not showing) the entry
+> that was deleted. It does not allow deletion of one entry to cause
+> other entries not to be seen.
 
-Add a kernel config CONFIG_NFS_DISABLE_UDP_SUPPORT to disallow NFS
-UDP mounts and enable it by default.
+Agreed, but POSIX requires this of *readdir*.  POSIX says nothing
+about getdents64(2), which is Linux's internal implementation which is
+exposed to a libc.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/Kconfig  | 10 ++++++++++
- fs/nfs/client.c |  4 ++++
- fs/nfs/super.c  |  4 ++++
- 3 files changed, 18 insertions(+)
+So we would need to see what is exactly going on at the interfaces
+between the VFS and libc, the nfs client code and the VFS, the nfs
+client code and the nfs server, and possibly the behavior of the nfs
+server.
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a2..ba5a681 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -196,3 +196,13 @@ config NFS_DEBUG
- 	depends on NFS_FS && SUNRPC_DEBUG
- 	select CRC32
- 	default y
-+
-+config NFS_DISABLE_UDP_SUPPORT
-+	bool "NFS: Disable NFS UDP protocol support"
-+	depends on NFS_FS
-+	default y
-+	help
-+	  Choose Y here to disable the use of NFS over UDP. NFS over UDP
-+	  on modern networks (1Gb+) can lead to data corruption caused by
-+	  fragmentation during high loads.
-+	  The default is N because many deployments still use UDP.
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 02110a3..24ca314 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -474,6 +474,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
- 			to->to_maxval = to->to_initval;
- 		to->to_exponential = 0;
- 		break;
-+#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
- 	case XPRT_TRANSPORT_UDP:
- 		if (retrans == NFS_UNSPEC_RETRANS)
- 			to->to_retries = NFS_DEF_UDP_RETRANS;
-@@ -484,6 +485,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
- 		to->to_maxval = NFS_MAX_UDP_TIMEOUT;
- 		to->to_exponential = 1;
- 		break;
-+#endif
- 	default:
- 		BUG();
- 	}
-@@ -580,8 +582,10 @@ static int nfs_start_lockd(struct nfs_server *server)
- 		default:
- 			nlm_init.protocol = IPPROTO_TCP;
- 			break;
-+#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
- 		case XPRT_TRANSPORT_UDP:
- 			nlm_init.protocol = IPPROTO_UDP;
-+#endif
- 	}
- 
- 	host = nlmclnt_init(&nlm_init);
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index a84df7d6..f68346d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2204,6 +2204,10 @@ static int nfs_validate_text_mount_data(void *options,
- #endif /* CONFIG_NFS_V4 */
- 	} else {
- 		nfs_set_mount_transport_protocol(args);
-+#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
-+		if (args->nfs_server.protocol == XPRT_TRANSPORT_UDP)
-+			goto out_invalid_transport_udp;
-+#endif
- 		if (args->nfs_server.protocol == XPRT_TRANSPORT_RDMA)
- 			port = NFS_RDMA_PORT;
- 	}
--- 
-1.8.3.1
+First of all.... you can't reproduce this on anything other than with
+NFS, correct?  That is, does it show up if you are using ext4, xfs,
+btrfs, etc.?
 
+Secondly, have you tried this on more than one NFS server
+implementation?
+
+Finally, can you capture strace logs and tcpdump logs of the
+communication between the NFS client and server code?
+
+> > But many file systems simply provide not the necessary on-disk data
+> > structures which are need to ensure stable iteration in the face of
+> > modification of the directory.  There are hacks, of course, such as
+> > compacting the on-disk directory only on file creation, which solves
+> > the file removal case.
+
+Oh, that's not the worst of it.  You have to do a lot more if the file
+system needs to support telldir/seekdir, and if you want to export the
+file system over NFS.  If you are using anything other than a linear
+linked list implementation for your directory, you have to really turn
+sommersaults to make sure things work (and work efficiently) in the
+face of, say, node splits of you are using some kind of tree structure
+for your directory.
+
+Most file systems do get this right, at least if they hope to be
+safely able to be exportable via NFS, or via CIFS using Samba.
+
+       	       	  	     	      	 - Ted
