@@ -2,216 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA0A105CED
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2019 23:59:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFCBF105D1B
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2019 00:17:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfKUW7r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Nov 2019 17:59:47 -0500
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:40375 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfKUW7r (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Nov 2019 17:59:47 -0500
-Received: by mail-wr1-f46.google.com with SMTP id 4so3109679wro.7
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Nov 2019 14:59:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=rzeSICxLoPAd1vV48i7uar+sl3/GzKFuv/3pZCGplxM=;
-        b=Q5NlYBV0Tv3k0Vftf+S6/WzhuoZI/vUbsxirNQIjR3ShQ3LF4fTz3IOAgK4exTYC/i
-         w3gX1fxQu/umZGbg4G2OS/kG7bDcH7wleyNxosXyA68j2Qwo8Uuq0YYLp5DrVoa8ah0h
-         mQionoZ2rHFu9AtxMJUtKSa1GpQqbddIUdYC3pJbgqmoMCDrNnEBWqy2KVJqnAoZnTdT
-         6TEG4PI/0c81wjNHaundKe59XxDkj4XweEl/uOcCwd7eBaKQxPuaiZwpOCLWTnZ2BSTt
-         aN6jpWIf6abqHBRkqYSm6oop6uPrL1t6jvKkBh4pS/Nw1KitkHrrKfAoqcWnSnI/5Sxq
-         yqYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=rzeSICxLoPAd1vV48i7uar+sl3/GzKFuv/3pZCGplxM=;
-        b=Ur+wCXYUjPgu/GyqFr8/cQW7DDD8NvI7O/VrlfaOxcq+B5kAA4ubrbQlU5+dAhgv1l
-         xYjaaw+EXUzFAUtZSKfV9CHxGAWcQYdMFfuT8sBlYnIeDnCF/3Pl5zjACCkrLDLDMCDz
-         PqMHyxQ4yl7idIjT78Fem2R6vfZadQpoz4SKRMCJwjTySBPnAfCKjpNzI1LEJnTACf22
-         83fC767DC3HOKJ8lJAm5Ea7K//oGSF1grhwJWjBFCYHEKxO+l8HiMa/B8Dw7zcuttHAZ
-         LVdKH7s93ymLjAdEADMqPAs1/9rUzQjpWdV/wpBJuaCtTj8/ZGSiZBQruvBi/EayXIg3
-         91xA==
-X-Gm-Message-State: APjAAAX25JgCTmwhj/mDCjWAM+sG1xkTcCtM0KWM03NswUULdFsGHayc
-        84IKsJUEKAeFvlZHNN7EjFjJI++A
-X-Google-Smtp-Source: APXvYqz/zOEyY40mhOUTkTOzZ34rLep1eO5GwlurACgz6U6Y7U3mpUPeRufYc//FnIF5XoPS6O9BNg==
-X-Received: by 2002:adf:ed49:: with SMTP id u9mr12965135wro.259.1574377184420;
-        Thu, 21 Nov 2019 14:59:44 -0800 (PST)
-Received: from beria.zarb.org ([2a01:e34:ec77:3c10:d494:2021:7d1b:e24])
-        by smtp.gmail.com with ESMTPSA id v9sm4754806wrs.95.2019.11.21.14.59.43
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 14:59:43 -0800 (PST)
-To:     linux-nfs@vger.kernel.org
-From:   Guillaume Rousse <guillomovitch@gmail.com>
-Subject: [patch] fix compilation with -Werror=format on i586
-Message-ID: <d21f152d-1d9d-01c2-900e-39c67eb2cef3@gmail.com>
-Date:   Thu, 21 Nov 2019 23:59:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726038AbfKUXRK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Nov 2019 18:17:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:37698 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKUXRK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Nov 2019 18:17:10 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALNGF0O005369;
+        Thu, 21 Nov 2019 23:17:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc : subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=wfr7ItcBNgtwNJToIckvHIPorNbplzfnWMpLbpPdOZA=;
+ b=KNziCNPg8KW7ihA2+bNMOehNQh8j98ZuAcv1VPujNOjqBoHCKPZ7HCg3N0ux95h8iBA8
+ qqBv9DBBkkXl3+ruEPAWytWG9aO6P0sSFjL2Mb7PaVO0LQ1OykCqya84cqOp0rrqIoxX
+ hajjMfe6sE378rr/TB6VrlbIg/cvM3yL9FHE/Fi9H2K2/dtBMGU93lR/K+aJY2gr57Ep
+ 5HDkV76jj+2tLNpERu+IL0JRvuLuBOpzoJi5msXptTgnClHzASsm4bFvrRPlhbvUv0pD
+ hcv8Z9wA3YaFyRrXJ7FkR+TMJjKFuc8OoeNN0W2LtsZ5SOeqfvMd9wjLWAQf4vp2Zy5K Tg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2wa9rqycmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 23:17:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALNAvgk116424;
+        Thu, 21 Nov 2019 23:17:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2wd47xu1gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 23:17:02 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xALNGudH021375;
+        Thu, 21 Nov 2019 23:16:56 GMT
+Received: from mbp2018.cdmnet.org (/82.27.120.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 15:16:56 -0800
+Cc:     Calum Mackay <calum.mackay@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] NFS: allow deprecation of NFS UDP protocol
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+References: <20191121160651.5317-1-olga.kornievskaia@gmail.com>
+From:   Calum Mackay <calum.mackay@oracle.com>
+Organization: Oracle
+Message-ID: <ce430173-8fc0-564a-eb51-f79698920436@oracle.com>
+Date:   Thu, 21 Nov 2019 23:16:52 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:72.0)
+ Gecko/20100101 Thunderbird/72.0a1
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------C87B67B5FB2D5847333557BA"
-Content-Language: fr-FR
+In-Reply-To: <20191121160651.5317-1-olga.kornievskaia@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911210195
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911210196
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------C87B67B5FB2D5847333557BA
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+hi Olga,
+
+On 21/11/2019 4:06 pm, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
+> 
+> Add a kernel config CONFIG_NFS_DISABLE_UDP_SUPPORT to disallow NFS
+> UDP mounts and enable it by default.
+> 
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>   fs/nfs/Kconfig  | 10 ++++++++++
+>   fs/nfs/client.c |  4 ++++
+>   fs/nfs/super.c  |  4 ++++
+>   3 files changed, 18 insertions(+)
+> 
+> diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+> index 295a7a2..ba5a681 100644
+> --- a/fs/nfs/Kconfig
+> +++ b/fs/nfs/Kconfig
+> @@ -196,3 +196,13 @@ config NFS_DEBUG
+>   	depends on NFS_FS && SUNRPC_DEBUG
+>   	select CRC32
+>   	default y
+> +
+> +config NFS_DISABLE_UDP_SUPPORT
+> +	bool "NFS: Disable NFS UDP protocol support"
+> +	depends on NFS_FS
+> +	default y
+> +	help
+> +	  Choose Y here to disable the use of NFS over UDP. NFS over UDP
+> +	  on modern networks (1Gb+) can lead to data corruption caused by
+> +	  fragmentation during high loads.
+> +	  The default is N because many deployments still use UDP.
+
+You've changed the default to 'y' for v2, but you've left in the 'N' 
+comment.
 
 
---------------C87B67B5FB2D5847333557BA
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-fix-compilation-with-Werror-format-on-i586.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-fix-compilation-with-Werror-format-on-i586.patch"
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 02110a3..24ca314 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -474,6 +474,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+>   			to->to_maxval = to->to_initval;
+>   		to->to_exponential = 0;
+>   		break;
+> +#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
+>   	case XPRT_TRANSPORT_UDP:
+>   		if (retrans == NFS_UNSPEC_RETRANS)
+>   			to->to_retries = NFS_DEF_UDP_RETRANS;
+> @@ -484,6 +485,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+>   		to->to_maxval = NFS_MAX_UDP_TIMEOUT;
+>   		to->to_exponential = 1;
+>   		break;
+> +#endif
 
-From 571884617231dc4bc70caafd69a62c86e2bca445 Mon Sep 17 00:00:00 2001
-From: Guillaume Rousse <guillomovitch@gmail.com>
-Date: Thu, 21 Nov 2019 23:58:57 +0100
-Subject: [PATCH] fix compilation with  -Werror=format on i586
+Should the first two of your added ifdefs be ifndefs?
 
----
- support/junction/xml.c  |  2 +-
- tools/locktest/testlk.c |  2 +-
- utils/nfsdcld/nfsdcld.c | 14 +++++++-------
- utils/nfsdcld/sqlite.c  |  6 +++---
- 4 files changed, 12 insertions(+), 12 deletions(-)
+cheers,
+calum.
 
-diff --git a/support/junction/xml.c b/support/junction/xml.c
-index 7005e95e..813110b4 100644
---- a/support/junction/xml.c
-+++ b/support/junction/xml.c
-@@ -327,7 +327,7 @@ junction_parse_xml_read(const char *pathname, int fd, const char *name,
- 	if (retval != FEDFS_OK)
- 		return retval;
- 
--	xlog(D_CALL, "%s: XML document contained in junction:\n%ld.%s",
-+	xlog(D_CALL, "%s: XML document contained in junction:\n%zu.%s",
- 		__func__, len, (char *)buf);
- 
- 	retval = junction_parse_xml_buf(pathname, name, buf, len, doc);
-diff --git a/tools/locktest/testlk.c b/tools/locktest/testlk.c
-index b392f711..ea51f788 100644
---- a/tools/locktest/testlk.c
-+++ b/tools/locktest/testlk.c
-@@ -81,7 +81,7 @@ main(int argc, char **argv)
- 		if (fl.l_type == F_UNLCK) {
- 			printf("%s: no conflicting lock\n", fname);
- 		} else {
--			printf("%s: conflicting lock by %d on (%ld;%ld)\n",
-+			printf("%s: conflicting lock by %d on (%zd;%zd)\n",
- 				fname, fl.l_pid, fl.l_start, fl.l_len);
- 		}
- 		return 0;
-diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-index b064336d..9297df51 100644
---- a/utils/nfsdcld/nfsdcld.c
-+++ b/utils/nfsdcld/nfsdcld.c
-@@ -378,7 +378,7 @@ cld_not_implemented(struct cld_client *clnt)
- 	bsize = cld_message_size(cmsg);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize)
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 
- 	/* reopen pipe, just to be sure */
-@@ -409,7 +409,7 @@ cld_get_version(struct cld_client *clnt)
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-@@ -459,7 +459,7 @@ reply:
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-@@ -498,7 +498,7 @@ reply:
- 			cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-@@ -548,7 +548,7 @@ reply:
- 			cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-@@ -607,7 +607,7 @@ reply:
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-@@ -667,7 +667,7 @@ reply:
- 	xlog(D_GENERAL, "Doing downcall with status %d", cmsg->cm_status);
- 	wsize = atomicio((void *)write, clnt->cl_fd, cmsg, bsize);
- 	if (wsize != bsize) {
--		xlog(L_ERROR, "%s: problem writing to cld pipe (%ld): %m",
-+		xlog(L_ERROR, "%s: problem writing to cld pipe (%zd): %m",
- 			 __func__, wsize);
- 		ret = cld_pipe_open(clnt);
- 		if (ret) {
-diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
-index 23be7971..09518e22 100644
---- a/utils/nfsdcld/sqlite.c
-+++ b/utils/nfsdcld/sqlite.c
-@@ -512,7 +512,7 @@ sqlite_startup_query_grace(void)
- 	current_epoch = tcur;
- 	recovery_epoch = trec;
- 	ret = 0;
--	xlog(D_GENERAL, "%s: current_epoch=%lu recovery_epoch=%lu",
-+	xlog(D_GENERAL, "%s: current_epoch=%"PRIu64" recovery_epoch=%"PRIu64,
- 		__func__, current_epoch, recovery_epoch);
- out:
- 	sqlite3_finalize(stmt);
-@@ -1223,7 +1223,7 @@ sqlite_grace_start(void)
- 
- 	current_epoch = tcur;
- 	recovery_epoch = trec;
--	xlog(D_GENERAL, "%s: current_epoch=%lu recovery_epoch=%lu",
-+	xlog(D_GENERAL, "%s: current_epoch=%"PRIu64" recovery_epoch=%"PRIu64,
- 		__func__, current_epoch, recovery_epoch);
- 
- out:
-@@ -1282,7 +1282,7 @@ sqlite_grace_done(void)
- 	}
- 
- 	recovery_epoch = 0;
--	xlog(D_GENERAL, "%s: current_epoch=%lu recovery_epoch=%lu",
-+	xlog(D_GENERAL, "%s: current_epoch=%"PRIu64" recovery_epoch=%"PRIu64,
- 		__func__, current_epoch, recovery_epoch);
- 
- out:
--- 
-2.23.0
-
-
---------------C87B67B5FB2D5847333557BA--
+>   	default:
+>   		BUG();
+>   	}
+> @@ -580,8 +582,10 @@ static int nfs_start_lockd(struct nfs_server *server)
+>   		default:
+>   			nlm_init.protocol = IPPROTO_TCP;
+>   			break;
+> +#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
+>   		case XPRT_TRANSPORT_UDP:
+>   			nlm_init.protocol = IPPROTO_UDP;
+> +#endif
+>   	}
+>   
+>   	host = nlmclnt_init(&nlm_init);
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index a84df7d6..f68346d 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -2204,6 +2204,10 @@ static int nfs_validate_text_mount_data(void *options,
+>   #endif /* CONFIG_NFS_V4 */
+>   	} else {
+>   		nfs_set_mount_transport_protocol(args);
+> +#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
+> +		if (args->nfs_server.protocol == XPRT_TRANSPORT_UDP)
+> +			goto out_invalid_transport_udp;
+> +#endif
+>   		if (args->nfs_server.protocol == XPRT_TRANSPORT_RDMA)
+>   			port = NFS_RDMA_PORT;
+>   	}
+> 
