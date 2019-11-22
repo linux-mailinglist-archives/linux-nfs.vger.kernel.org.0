@@ -2,126 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 280DB10650F
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2019 07:21:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB36106B19
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2019 11:42:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfKVFwP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Nov 2019 00:52:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfKVFwO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:14 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB0CC20840;
-        Fri, 22 Nov 2019 05:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401933;
-        bh=ZJ8gpXQBhU0zBIqGfk5Yz47S/EoXgQRH3InZOl3iSCY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2//HfNDYqFq6F0GtGfl0Z90FcwwwEBXA51zs/haC3jUp+moASvIJvY+5mfywPiWa
-         MDKF2e7g1iCMb8zvdqGAqK1tMR5ybvTcxu6IRE+0m49cesRtDo7mgMTJoKPcvO6iV4
-         kOShzVfQu8XXDK/pUqqIl/P2CB2MDqs0bUjKzLGs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 159/219] xprtrdma: Prevent leak of rpcrdma_rep objects
-Date:   Fri, 22 Nov 2019 00:48:11 -0500
-Message-Id: <20191122054911.1750-152-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
-References: <20191122054911.1750-1-sashal@kernel.org>
+        id S1728991AbfKVKlR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Nov 2019 05:41:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60100 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728988AbfKVKlQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:16 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3A854B3F4;
+        Fri, 22 Nov 2019 10:41:15 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 11:41:12 +0100
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Calum Mackay <calum.mackay@oracle.com>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] NFS: allow deprecation of NFS UDP protocol
+Message-ID: <20191122104112.GB24235@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20191121160651.5317-1-olga.kornievskaia@gmail.com>
+ <ce430173-8fc0-564a-eb51-f79698920436@oracle.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce430173-8fc0-564a-eb51-f79698920436@oracle.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Olga, Calum,
 
-[ Upstream commit 07e10308ee5da8e6132e0b737ece1c99dd651fb6 ]
+...
+> > +config NFS_DISABLE_UDP_SUPPORT
+> > +	bool "NFS: Disable NFS UDP protocol support"
+> > +	depends on NFS_FS
+> > +	default y
+> > +	help
+> > +	  Choose Y here to disable the use of NFS over UDP. NFS over UDP
+> > +	  on modern networks (1Gb+) can lead to data corruption caused by
+> > +	  fragmentation during high loads.
+> > +	  The default is N because many deployments still use UDP.
 
-If a reply has been processed but the RPC is later retransmitted
-anyway, the req->rl_reply field still contains the only pointer to
-the old rpcrdma rep. When the next reply comes in, the reply handler
-will stomp on the rl_reply field, leaking the old rep.
+> You've changed the default to 'y' for v2, but you've left in the 'N'
+> comment.
++1
 
-A trace event is added to capture such leaks.
+> > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> > index 02110a3..24ca314 100644
+> > --- a/fs/nfs/client.c
+> > +++ b/fs/nfs/client.c
+> > @@ -474,6 +474,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+> >   			to->to_maxval = to->to_initval;
+> >   		to->to_exponential = 0;
+> >   		break;
+> > +#ifdef CONFIG_NFS_DISABLE_UDP_SUPPORT
+> >   	case XPRT_TRANSPORT_UDP:
+> >   		if (retrans == NFS_UNSPEC_RETRANS)
+> >   			to->to_retries = NFS_DEF_UDP_RETRANS;
+> > @@ -484,6 +485,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+> >   		to->to_maxval = NFS_MAX_UDP_TIMEOUT;
+> >   		to->to_exponential = 1;
+> >   		break;
+> > +#endif
 
-This problem seems to be worsened by the restructuring of the RPC
-Call path in v4.20. Fully addressing this issue will require at
-least a re-architecture of the disconnect logic, which is not
-appropriate during -rc.
+> Should the first two of your added ifdefs be ifndefs?
++1
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/trace/events/rpcrdma.h | 28 ++++++++++++++++++++++++++++
- net/sunrpc/xprtrdma/rpc_rdma.c |  4 ++++
- 2 files changed, 32 insertions(+)
+...
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 53df203b8057a..4c91cadd1871d 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -917,6 +917,34 @@ TRACE_EVENT(xprtrdma_cb_setup,
- DEFINE_CB_EVENT(xprtrdma_cb_call);
- DEFINE_CB_EVENT(xprtrdma_cb_reply);
- 
-+TRACE_EVENT(xprtrdma_leaked_rep,
-+	TP_PROTO(
-+		const struct rpc_rqst *rqst,
-+		const struct rpcrdma_rep *rep
-+	),
-+
-+	TP_ARGS(rqst, rep),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, task_id)
-+		__field(unsigned int, client_id)
-+		__field(u32, xid)
-+		__field(const void *, rep)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->task_id = rqst->rq_task->tk_pid;
-+		__entry->client_id = rqst->rq_task->tk_client->cl_clid;
-+		__entry->xid = be32_to_cpu(rqst->rq_xid);
-+		__entry->rep = rep;
-+	),
-+
-+	TP_printk("task:%u@%u xid=0x%08x rep=%p",
-+		__entry->task_id, __entry->client_id, __entry->xid,
-+		__entry->rep
-+	)
-+);
-+
- /**
-  ** Server-side RPC/RDMA events
-  **/
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index c8ae983c6cc01..f2eaf264726be 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1360,6 +1360,10 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
- 	spin_unlock(&xprt->recv_lock);
- 
- 	req = rpcr_to_rdmar(rqst);
-+	if (req->rl_reply) {
-+		trace_xprtrdma_leaked_rep(rqst, req->rl_reply);
-+		rpcrdma_recv_buffer_put(req->rl_reply);
-+	}
- 	req->rl_reply = rep;
- 	rep->rr_rqst = rqst;
- 	clear_bit(RPCRDMA_REQ_F_PENDING, &req->rl_flags);
--- 
-2.20.1
+Other changes LGTM.
 
+Kind regards,
+Petr
