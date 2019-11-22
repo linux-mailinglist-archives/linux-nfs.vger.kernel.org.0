@@ -2,78 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55AE3107553
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2019 17:01:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F8F1075BD
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2019 17:25:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfKVQBV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Nov 2019 11:01:21 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37606 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfKVQBV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Nov 2019 11:01:21 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w47so4251469qtk.4;
-        Fri, 22 Nov 2019 08:01:20 -0800 (PST)
+        id S1726666AbfKVQZh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Nov 2019 11:25:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51543 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbfKVQZh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Nov 2019 11:25:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g206so7803666wme.1
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Nov 2019 08:25:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
-        b=VBSZIm/NitEgFgAiYMVXY43lq5XjFUUTjaYCUvPZMFM3pP+4Wn/Ra81LvNCG2B/dqJ
-         O6+C4i5V5lsX27m/EGX/IIARNSgTmUZiXI5PQoF97enNrvv6/mJebzS5Yj5OAR21DDoX
-         s4zlKfGVcczc06smz2ulDrS/Zl297SC6dcC64rH1OZ+gai2JvhSrKRBitBBnrTvQMaQg
-         H+pzisp2xLarzHpVCLA2fOqxxjrKKkgP66m1mHkoy0m5a431z/fWNSOG/vzQ15Hs2ESN
-         fXgp914i6/lDpaaL4j27zwbYHltwdJIRFp1dKQkcR6jleKZgd7L9hxRDjngn325S4xzk
-         woCQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Pr8VdSbWS95Rs0+0v9E82ktDe81kht7cwjNgTU38tI=;
+        b=mK2IYdqCoq62YZrIgbWds77wHTlI++qMxzdY/51mJmaBTrWAvNJKg9kjwGsHdhcG++
+         DhD1XjAJPgSfHyNhF2am28Qrr8m3CmLmLgPG513awO5KZR0fqUp6n6l+lrTT/Ez1M6ey
+         VV8L479MGxd6jkeRN3ioDInxq8xKsxrDpFSbx5wx7LWEwI4nnu2xWhQ4JQzETcSHYRoZ
+         skkkHjGRkI5nGJ325VjEcqDKaxpVczlFvH/sFb7L8NomSlRijQSKiqDFbXb4MxgJVkcw
+         dDgiSbX3d86Bb1AUCmxS5KObbQPumZMmeyYBAU6Ue/WPwfmZ1BnBwFHfe+FsiTKSHmpw
+         U2wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
-        b=mRzhnBuqbjcrG48mEUpz1t54cXbTGjjIFQsr9kYhRRHL99DUNvn67LNFWNvKwayxav
-         +U1eXMv3C9Kh4g4hDiMB1ZrveUf9lf/oQb1alZbE4AEJTF4WcNnQ/KqkK01GVL05GgRG
-         Jj4Br20wVbYM2LgiOd4GevD8xXexUY+nll3LPBmBx3ImxBr5Qr4lD1WNWo8Tes/4EOos
-         CBWhdQ1oDQm+SMFH7wDBF/ukBf2+9MBShwRwiZflzsw12ihRK7j5TOn0/0IsxMEim/0k
-         9pKuhHUVotOxWm1Sfkrtxw9ZCSC5b5SB3em8ZGacPkYNyaENvvc+gVlxMXPV7pGKXKFB
-         2vrQ==
-X-Gm-Message-State: APjAAAWwlBR/BYOStCtQ8RZuUENEeFZo14gbLanQSE3ZU7LbaF2RO03V
-        91zEx5pBQZsUzj1TaUPlMWNQJt2AgTJA4w==
-X-Google-Smtp-Source: APXvYqxWtITWMvEHpWI203D+raKApDrbUfvSAVn8EvwssACZseFHVbt5V5RSqvf9csq4q2LiWohHOQ==
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr4959630qtj.80.1574438477243;
-        Fri, 22 Nov 2019 08:01:17 -0800 (PST)
-Received: from [192.168.1.164] (pool-108-20-37-130.bstnma.fios.verizon.net. [108.20.37.130])
-        by smtp.gmail.com with ESMTPSA id m27sm2196315qta.21.2019.11.22.08.01.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Nov 2019 08:01:15 -0800 (PST)
-From:   Ric Wheeler <ricwheeler@gmail.com>
-Subject: USENIX Vault - open source storage call for talks - CFP deadline
- extended
-To:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Cc:     Vault '20 Program Co-Chairs <vault20chairs@usenix.org>
-Message-ID: <727e2a7a-eab7-9ba7-e1b8-d75eb853245a@gmail.com>
-Date:   Fri, 22 Nov 2019 11:01:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Pr8VdSbWS95Rs0+0v9E82ktDe81kht7cwjNgTU38tI=;
+        b=ouItQ1ETHWclDm/sqacr29kkRMqOHcCoCEHvMe2Ie8ykjkOLHZfc/p9oxW1rap80l+
+         wnjD9gQX5LR1VW3U6xE0hhl/kTfnvDL4gkkA0mpIf77AP8PXcOldC9V7clFqig8MDIB7
+         kuNkE1GhUnjqwRd168n7tKdP1qpPsaeaw2me3NnuOkNGFYunDFU+167ggpTBDsIHps/F
+         sa5Le0hn/xT9cSM+17RWycnXbYDsOwH/Gdi6A1bIcJIocHm1KJrcbSiC6XyqKjj7DXjr
+         Id7WWBGv5pN7wCldxpxbIUwM6d64qayaqSMicp+VESw34oFiK7yH80JI8OpSx8qJ5k4x
+         puHw==
+X-Gm-Message-State: APjAAAUFbtuxNEubGV01wTaHBnYL3LBczE1720TcMwQHdXF3qDfDv7Vd
+        6939e2gyjrkvELMgLgtAoljt/wNS
+X-Google-Smtp-Source: APXvYqw20JAK2vUjrCzyNc4flwBe5ZN1CKH5Il7ijFBCmc25iWLP0t28DbVjmBTb16OJtG4afCMuuQ==
+X-Received: by 2002:a7b:c8c2:: with SMTP id f2mr16440411wml.99.1574439934865;
+        Fri, 22 Nov 2019 08:25:34 -0800 (PST)
+Received: from dell5510.arch.suse.de ([178.21.189.11])
+        by smtp.gmail.com with ESMTPSA id f19sm9072961wrf.23.2019.11.22.08.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 08:25:34 -0800 (PST)
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Petr Vorel <petr.vorel@gmail.com>,
+        Steve Dickson <steved@redhat.com>
+Subject: [nfs-utils PATCH 1/1] mount: Fix return 0 from void function
+Date:   Fri, 22 Nov 2019 17:25:28 +0100
+Message-Id: <20191122162528.18199-1-petr.vorel@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
+Fixes: d5e30346 ("mount: Do not overwrite /etc/mtab if it's symlink")
 
-We decided to push the CFP deadline for USENIX Vault back until Dec 3rd given 
-the holiday and some slowness we had in opening the CFP site. We already have a 
-good set of submissions, so please do submit any talk ideas as soon as possible.
+Signed-off-by: Petr Vorel <petr.vorel@gmail.com>
+---
+Hi Steve,
 
-See here for more information on how to submit your talk proposals:
+sorry for introducing a regression.
 
-https://www.usenix.org/conference/vault20
+Kind regards,
+Petr
 
-Hope to see you all there!
+ utils/mount/mount.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/utils/mount/mount.c b/utils/mount/mount.c
+index 92a0dfe4..2be3dc2f 100644
+--- a/utils/mount/mount.c
++++ b/utils/mount/mount.c
+@@ -208,7 +208,7 @@ create_mtab (void) {
+ 	   that would create a file /proc/mounts in case the proc filesystem
+ 	   is not mounted, and the fchmod below would also fail. */
+ 	if (mtab_is_a_symlink()) {
+-		return EX_SUCCESS;
++		return;
+ 	}
+ 
+ 	lock_mtab();
+-- 
+2.24.0
 
