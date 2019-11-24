@@ -2,69 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 415BA108483
-	for <lists+linux-nfs@lfdr.de>; Sun, 24 Nov 2019 19:37:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 317B31084C5
+	for <lists+linux-nfs@lfdr.de>; Sun, 24 Nov 2019 20:31:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfKXSg5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 24 Nov 2019 13:36:57 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40061 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfKXSg5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Nov 2019 13:36:57 -0500
-Received: by mail-il1-f194.google.com with SMTP id v17so8205964ilg.7
-        for <linux-nfs@vger.kernel.org>; Sun, 24 Nov 2019 10:36:57 -0800 (PST)
+        id S1726945AbfKXTb5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Nov 2019 14:31:57 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44301 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfKXTb4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Nov 2019 14:31:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i12so14861233wrn.11;
+        Sun, 24 Nov 2019 11:31:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=LalpRjCzklUHb+d8yg6StCgBYUgFeAOrmf1VN5Ahg2g=;
-        b=Bp4XWue3FZRZ8aGEo8d7LdT+ghqC9zGj/gczb2hhniOkKHR9imldYvM6paLRGGMCZP
-         aagxdEqdhmQOxitfpZF015vfT575pHngcRE9/nYU8NB30e44G9k54QIDaqKuKFTYaZTb
-         qT8pHGFvT0joOqEt7drX+F12lrdGlCR3Ui1U1flh1kv0ot2I9zsz4MJMXGswOEmnBJpB
-         X8CNJBPKOrL2n6oRdIjZU8qLpd4+jd+BufoKLXCj/9+uqxWw0B8adpphlJ48VQLmyBcP
-         gyFTAfaqZvsvKvFKGEiQ+qx895kZQ7n2t9D7VHDxMIFEIF6f2shxfIX3TS1XoxXcKx7+
-         8+Pw==
+        h=from:to:cc:subject:date:message-id;
+        bh=QG4oMalSJITPl5dzJwFkwS3vwL8ty266LKmX5/+8iyw=;
+        b=kH4v/6aEMLaSjEpnVO6zzCLcos7qYMUk+aXF57w/oZ6reKoyCFxVYEIinY8ejNhAmV
+         fybNjxT1BY0jWqLemx0FzzrJALVOmCSdmARTUz7rF8q/YGXAHDWPRoJa6znCHux+UiIb
+         xjuDYt1Uq2GIo978hvVvjJI/C74QPdY+Dt0O3wlYoxscLlLGYReGXIPrLgWCTF4CuLyC
+         VIuKZt+vDCUyZuV9K7Xmib4kxWE4ib7Wxrj9bHf0AoNbFeNvCu0Ub7gicZWjirMKUIof
+         nn0myP/sVdCCXtlg4fQ7SbxPoeCIiAU2kGQmD5A25NsxQSxAUCZWyzdBaAHIQNBZKJZi
+         sxog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=LalpRjCzklUHb+d8yg6StCgBYUgFeAOrmf1VN5Ahg2g=;
-        b=KsUDDKNNLt0VxBZYV5nXwwMJ+VxA48d9MHjM7ILSzX1ASaCyXPrBjzOOEcCJKT3Bs/
-         iQvPp85JbLISod2InGTSk5N/Y5BQrU/fY5weczVpgT8nJUtmjqPFLCFFrI4BrH6z5IGr
-         A8PeWLH6qx+ryY0yb9dcizfv1lNp/f1YhJ7gxHG7MQA97+paXI9+610RBvJ27ldthw56
-         7wj71bpegR9zNN9w2BoRTOqW7OgctEKLY/FDb4U5G+P1EXrDDUkZpHYylMGBNirviYRh
-         gFEFhqqfYnJ8msX41nAnzu75joRxLkRgqEO99VGunCj5BbCAuh64feJWx2/tfQH/eXEc
-         3FQQ==
-X-Gm-Message-State: APjAAAXq76yA68+2YZ75eMWIXqUet4sY/urQiwudhzm4/a+JUwrsqs1I
-        vuCbl0+ekl/p0DBUcoIdIeI1HmGRyMd8oOyDYXY=
-X-Google-Smtp-Source: APXvYqy83bmVXYxVjQsg52rd/jx2GRUbsy4+DSLqa7hj3tlBq9gucxGNIkYG8R0eQEZYkrqfXhRlnJX7Y9FInfGzlRs=
-X-Received: by 2002:a92:5c5d:: with SMTP id q90mr30123888ilb.22.1574620616805;
- Sun, 24 Nov 2019 10:36:56 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a92:afd7:0:0:0:0:0 with HTTP; Sun, 24 Nov 2019 10:36:56
- -0800 (PST)
-From:   Ernest Groth <bpatrick799@gmail.com>
-Date:   Sun, 24 Nov 2019 10:36:56 -0800
-Message-ID: <CADUzNO=C+ay7+5syYnkQEe9rCrwbMBk7iT8JF=HxH=bveMFegw@mail.gmail.com>
-Subject: Good day Psyborg,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QG4oMalSJITPl5dzJwFkwS3vwL8ty266LKmX5/+8iyw=;
+        b=IU3EBtlpRneBRV57/iJ6VwFRWfrW4m6b/PeKXDzEvEkJWxxBt+69FxelBEvJwJ1iwV
+         XJE0kQIEknY4Hd0Bk4lBAwO2GVs2llGk1eiL0jKYS6M2UZ9qBR1ajFH1Caij3haIVt25
+         USCP3DmXnLxqrS2adWVTLBejAEbAXFSUEN9BrtAXzF/tuOlkJABl/ILLk8SuaemCTZuk
+         B94WdxxcsHmmLJw3LlTaUaU+NZIE/dNMZGCcnG7eAV/1w8fSAVHbEgWMvE401RS0Ps3I
+         P30yl8Ycnlg7qEWQgd8z6VWA6xe07bb9jLBTKakrd+H3mEAfEWO8YdQBAjQCCt8hR2QS
+         QzjA==
+X-Gm-Message-State: APjAAAUzkVWT11c+jJxPUFIPcF4YepYdXydgSpd3/svR6q4rUqEWwd/v
+        xT4vMBj8eLBcn9rtXliW7x4=
+X-Google-Smtp-Source: APXvYqyliheZUhfJLstF6Mzl+u5ftSUoN8G+LIaVYsc6nxehrTAiuB5+DOIuz8eKSdR58snkjkVbIQ==
+X-Received: by 2002:a5d:438c:: with SMTP id i12mr5703540wrq.196.1574623914141;
+        Sun, 24 Nov 2019 11:31:54 -0800 (PST)
+Received: from localhost.localdomain ([94.230.83.228])
+        by smtp.gmail.com with ESMTPSA id p9sm7314317wrs.55.2019.11.24.11.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 11:31:53 -0800 (PST)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, y2038@lists.linaro.org
+Subject: [PATCH] utimes: Clamp the timestamps in notify_change()
+Date:   Sun, 24 Nov 2019 21:31:45 +0200
+Message-Id: <20191124193145.22945-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Good day Psyborg,
+Push clamping timestamps down the call stack into notify_change(), so
+in-kernel callers like nfsd and overlayfs will get similar timestamp
+set behavior as utimes.
 
-I am Mr. Ernest F.Groth from United States of America and a lawyer by
-profession.i want to use this opportunity to inform you about my late
-client whom have the same surname with you died in auto accident here
-in United States with his entire family dated 24th of June 2018 and
-this my client deposited the sum of Eighty Eight Million, Six Hundred
-Thousand Dollars (88,600,000.00 USD) in one of the bank in USA since
-his demise, none of his family members are come to claim this funds
-and i searched his relatives through CNN, VOA and other international
-media and no avail.
+Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 42e729b9ddbb ("utimes: Clamp the timestamps before update")
+Cc: stable@vger.kernel.org # v5.4
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
 
-I will like you to claims this fund and will back you up with the
-documents. Contact me now for more details.
+Arnd,
 
-Barrister Ernest.
+This fixes xfstest generic/402 when run with -overlay setup.
+Note that running the test requires latest xfstests with:
+ acb2ba78 - overlay: support timestamp range check
+
+I had previously posted a fix specific for overlayfs [1],
+but Miklos suggested this more generic fix, which should also
+serve nfsd and other in-kernel users.
+
+I tested this change with test generic/402 on ext4/xfs/btrfs
+and overlayfs, but not with nfsd.
+
+Jeff, could you ack this change is good for nfsd as well?
+
+Thanks,
+Amir.
+
+[1] https://lore.kernel.org/linux-fsdevel/20191111073000.2957-1-amir73il@gmail.com/
+
+ fs/attr.c   | 5 +++++
+ fs/utimes.c | 4 ++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/fs/attr.c b/fs/attr.c
+index df28035aa23e..e8de5e636e66 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -268,8 +268,13 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
+ 	attr->ia_ctime = now;
+ 	if (!(ia_valid & ATTR_ATIME_SET))
+ 		attr->ia_atime = now;
++	else
++		attr->ia_atime = timestamp_truncate(attr->ia_atime, inode);
+ 	if (!(ia_valid & ATTR_MTIME_SET))
+ 		attr->ia_mtime = now;
++	else
++		attr->ia_mtime = timestamp_truncate(attr->ia_mtime, inode);
++
+ 	if (ia_valid & ATTR_KILL_PRIV) {
+ 		error = security_inode_need_killpriv(dentry);
+ 		if (error < 0)
+diff --git a/fs/utimes.c b/fs/utimes.c
+index 1ba3f7883870..090739322463 100644
+--- a/fs/utimes.c
++++ b/fs/utimes.c
+@@ -36,14 +36,14 @@ static int utimes_common(const struct path *path, struct timespec64 *times)
+ 		if (times[0].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_ATIME;
+ 		else if (times[0].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_atime = timestamp_truncate(times[0], inode);
++			newattrs.ia_atime = times[0];
+ 			newattrs.ia_valid |= ATTR_ATIME_SET;
+ 		}
+ 
+ 		if (times[1].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_MTIME;
+ 		else if (times[1].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_mtime = timestamp_truncate(times[1], inode);
++			newattrs.ia_mtime = times[1];
+ 			newattrs.ia_valid |= ATTR_MTIME_SET;
+ 		}
+ 		/*
+-- 
+2.17.1
+
