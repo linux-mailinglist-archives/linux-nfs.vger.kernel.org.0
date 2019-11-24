@@ -2,75 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15D671084F9
-	for <lists+linux-nfs@lfdr.de>; Sun, 24 Nov 2019 21:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B20E71084F6
+	for <lists+linux-nfs@lfdr.de>; Sun, 24 Nov 2019 21:50:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKXUvQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Sun, 24 Nov 2019 15:51:16 -0500
-Received: from [123.232.28.61] ([123.232.28.61]:59626 "HELO eyou.net"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1726840AbfKXUvQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 24 Nov 2019 15:51:16 -0500
-X-Greylist: delayed 421 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 Nov 2019 15:51:15 EST
-X-EYOU-SPAMVALUE: 0
-X-EMDG-ORIGINAL-FROM: <suncl@12365.sd.cn>
-X-EMDG-ORIGINAL-TO: <linux-nfs@vger.kernel.org>
-X-EMDG-ORIGINAL-IP: 10.100.28.42
-X-EMDG-VER: 4.1.1
-X-EMDG-ABROAD: no
-Received: (eyou anti_spam gateway 4.1.0); Mon, 25 Nov 2019 04:41:44 +0800
-X-EMDG-MID: <774628104.32599@eyou.net>
-X-EMDG-SMTPAUTH: suncl@12365.sd.cn
-Received: from 10.100.28.42 by 10.1.180.51 with SMTP; Mon, 25 Nov 2019 04:41:43 +0800
-Date:   Sun, 24 Nov 2019 15:43:32 -0500
-Subject: Hackers know password from your account. Password must be changed now.
+        id S1726855AbfKXUuh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Nov 2019 15:50:37 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:37194 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfKXUuh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Nov 2019 15:50:37 -0500
+Received: by mail-yw1-f67.google.com with SMTP id 4so4289856ywx.4;
+        Sun, 24 Nov 2019 12:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M4Jt5yrKDU8F2fIaLcOguP/vgGp0gQsaGqz7ufIEi6I=;
+        b=B92UTXX4Hw1rzeudiYXCoNOuQZgp3UVkc9TtbiHLeSGlLVCFuslndr3L21sCWJNUZR
+         g/QWNw5pmDRxoK4VUeNsGmwJEZchiOrkVuCCC/gJM3vtUqhCHwUls5oknpZeqTh0uatw
+         UAlaSgHkiA8JHnP5zraksKljDfcwWsJG8lBHfN4OxyTfZTbDVhh49GPA5mPthgn3ByNu
+         kqlh+6zT+qlz8vVTCc9O4geXC/XcxGZpKKrpHBfixBJCGr38/XE+/fqDDCH0OjNitW3n
+         O3s86E4xilXD1gqif+ybEUbaxyXbKmfaw5dzD7k69l72soqSmq+t6K/lEyYyc7C9dAmp
+         81Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M4Jt5yrKDU8F2fIaLcOguP/vgGp0gQsaGqz7ufIEi6I=;
+        b=sFbw2WQKkQj4oWXnoUEiWojCxz3ffpA/+Iy2wU9iSUwaBqCqX7P1XxwDY2+YaOQO3e
+         38bMe7hPkdmnwQftDVXqaXJUT72pJzq7Ujr0ofyun0+DBZKCGazOmFHI6Pk/DN/rts5D
+         uEDWDfengJpTM3cNGfB2VxQju2jRxnLdeXKZaFuBge8INyMJFaFRPLYEbonyGhEDA6d/
+         NqTHpIBgXEv2uLF3U9KPlvdS8JmH+o9LVFALwh05g8lmbASBv1Ml8xBSmZIq40/s9Xfa
+         h5u1rPUbkUvfrtfRbe+FRycP6OF3trjtnxDMbeJsLozFle17y5sdaqbikjo3bHHinAXy
+         UM8A==
+X-Gm-Message-State: APjAAAWCuoUAHKoNHmXhlGmyroWPw9Y7mYZBB56JfAZQzuFOdpkpqzDp
+        iEmCAjREQmrP4Ilcwlfn7rKymnD/HLNc6WxEYZTOBQ==
+X-Google-Smtp-Source: APXvYqzLJipFAx0UYrDJ6Rm3/eyR3F9HzM7XHto0QkxHwcBc+WR9GbJhyiKDY7qRGKmt3yc+OD2/6mcxoCOWXLYsnzU=
+X-Received: by 2002:a81:58c6:: with SMTP id m189mr17689201ywb.25.1574628634187;
+ Sun, 24 Nov 2019 12:50:34 -0800 (PST)
 MIME-Version: 1.0
-To:     linux-nfs@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-From:   Abigail Collier <suncl@12365.sd.cn>
-Message-ID: <Collier351317611.801973.1661411861046.JavaMail.support@12365.sd.cn>
-X-EMarSys-Identify: 8::7::14266169::9406310390
-X-Report-Abuse: abuse@12365.sd.cn
+References: <20191124193145.22945-1-amir73il@gmail.com> <20191124194934.GB4203@ZenIV.linux.org.uk>
+In-Reply-To: <20191124194934.GB4203@ZenIV.linux.org.uk>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sun, 24 Nov 2019 22:50:23 +0200
+Message-ID: <CAOQ4uxjsOM+th1f4=wss4SCrwueUYuVT0FKX0GxtmHBG2juw+A@mail.gmail.com>
+Subject: Re: [PATCH] utimes: Clamp the timestamps in notify_change()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        y2038@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello!
+On Sun, Nov 24, 2019 at 9:49 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Sun, Nov 24, 2019 at 09:31:45PM +0200, Amir Goldstein wrote:
+> > Push clamping timestamps down the call stack into notify_change(), so
+> > in-kernel callers like nfsd and overlayfs will get similar timestamp
+> > set behavior as utimes.
+>
+> Makes sense; said that, shouldn't we go through ->setattr() instances and
+> get rid of that there, now that notify_change() is made to do it?
+>
 
-I am a hacker who has access to your operating system.
-I also have full access to your account.
+Sounds reasonable. But I'd rather leave this cleanup to Deepa,
+who did all this work.
 
-I've been watching you for a few months now.
-The fact is that you were infected with malware through an adult site that you visited.
-
-If you are not familiar with this, I will explain.
-Trojan Virus gives me full access and control over a computer or other device.
-This means that I can see everything on your screen, turn on the camera and microphone, but you do not know about it.
-
-I also have access to all your contacts and all your correspondence.
-
-Why your antivirus did not detect malware?
-Answer: My malware uses the driver, I update its signatures every 4 hours so that your antivirus is silent.
-
-I made a video showing how you satisfy yourself in the left half of the screen, and in the right half you see the video that you watched.
-With one click of the mouse, I can send this video to all your emails and contacts on social networks.
-I can also post access to all your e-mail correspondence and messengers that you use.
-
-If you want to prevent this,
-transfer the amount of $500 to my bitcoin address (if you do not know how to do this, write to Google: "Buy Bitcoin").
-
-My bitcoin address (BTC Wallet) is:  1Hs6NgiPLw5Ne4iFJG2PJ4yPvfAVrGLLuW
-
-After receiving the payment, I will delete the video and you will never hear me again.
-I give you 50 hours (more than 2 days) to pay.
-I have a notice reading this letter, and the timer will work when you see this letter.
-
-Filing a complaint somewhere does not make sense because this email cannot be tracked like my bitcoin address.
-I do not make any mistakes.
-
-If I find that you have shared this message with someone else, the video will be immediately distributed.
-
-Best regards!
-
+Thanks,
+Amir.
