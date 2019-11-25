@@ -2,126 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0E5410921A
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2019 17:46:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC1A41092E5
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2019 18:35:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfKYQq0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Nov 2019 11:46:26 -0500
-Received: from fieldses.org ([173.255.197.46]:40400 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfKYQq0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:46:26 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 63B9D1CE6; Mon, 25 Nov 2019 11:46:25 -0500 (EST)
-Date:   Mon, 25 Nov 2019 11:46:25 -0500
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Amir Goldstein <amir73il@gmail.com>
+        id S1727300AbfKYRfZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Nov 2019 12:35:25 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36246 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfKYRfZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Nov 2019 12:35:25 -0500
+Received: by mail-yw1-f67.google.com with SMTP id y64so5724265ywe.3;
+        Mon, 25 Nov 2019 09:35:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=REnPPHm5jZGnzNLlbfrOQnjR6ZbZNQbd6anV5/rTAAU=;
+        b=fYI29aePnlZqOJmQFA+OGrkeIIRZSL5YUOa4ySimAihbzo7BzPxXQAegCfGxNviRTW
+         QHJPyD+gnMmdKwQXucCQcQ9l31xmtIbTM2VKquV3rHv9C/SD+XHRqKy6i3qv9g2om/wb
+         ppF/qcO/9D4cQDMdEH9KMymInuQ5I0WP37nSpMkbOX5TSAuWSrmoHncSF+mlMVZr0cWj
+         SBv74OD2ha5hpnZyVbJbxrhy22QlHbYN9NZxMUL2AmdV7men/+VUzt8do6+1IkIHg3xz
+         uk5oj53g88Qq0UK+UO1aQ8C4Sfru1klFS/x2bniSAvrNId2XgFhozWkdTOCz6nAA0HGf
+         ap9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=REnPPHm5jZGnzNLlbfrOQnjR6ZbZNQbd6anV5/rTAAU=;
+        b=grNwTvAmsiHN7jlUxB1bm8IpKGZn4R89H8mp0zyjOaZHw6+fH8jRWp85u+70EVJAjG
+         svzW10QvlnCIB7dRo00VPYUBdzEQ7zGeeKFFcrq/M1m1odA7XudTnfki9kWHuea1tETO
+         hbVVPEohstiqoTrMFCob8TjB5S4RW3KrWnV3Nx+DJrPSNwjgEABJILf2/OPEyWrKEwzZ
+         5XsQCIgUzyp7bMFrpr9Sh9zyzEoBjUXl86ZzlwvkGumpDYYX/CpSXstvwmcydcx0OISu
+         c4PcmOkjgndoXkHAXsz4OJDYT4gpEaFaZjmX6VGgOWcQP9Sm4ZA4Hwkgq5TYuSayxj7l
+         Io1g==
+X-Gm-Message-State: APjAAAWgs7EzeDm3tzg7GmQR2ty1r5+WKvGI7IKD+1x8I44xAhYE0g78
+        WdqgymVCLMvxZDJmhWPWJpuyGtU1RB/s80j/hO4=
+X-Google-Smtp-Source: APXvYqzA+jU4aGFJxSFPBv3uXbd1KqyX5nO72aHrawF0mnP9hbqnLtylCOaL9j5irvWA22AtOsQxjM1468y2o6Kg5W8=
+X-Received: by 2002:a81:ae07:: with SMTP id m7mr14026428ywh.294.1574703323971;
+ Mon, 25 Nov 2019 09:35:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20191124193145.22945-1-amir73il@gmail.com> <20191125164625.GB28608@fieldses.org>
+In-Reply-To: <20191125164625.GB28608@fieldses.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 25 Nov 2019 19:35:12 +0200
+Message-ID: <CAOQ4uxh3OMmVotx-v9Lnvwcs7zxeBs9Ag9Q0uUK6f2v2Yqto5Q@mail.gmail.com>
+Subject: Re: [PATCH] utimes: Clamp the timestamps in notify_change()
+To:     "J . Bruce Fields" <bfields@fieldses.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Deepa Dinamani <deepa.kernel@gmail.com>,
         Jeff Layton <jlayton@kernel.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, y2038@lists.linaro.org
-Subject: Re: [PATCH] utimes: Clamp the timestamps in notify_change()
-Message-ID: <20191125164625.GB28608@fieldses.org>
-References: <20191124193145.22945-1-amir73il@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191124193145.22945-1-amir73il@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        y2038@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 09:31:45PM +0200, Amir Goldstein wrote:
-> Push clamping timestamps down the call stack into notify_change(), so
-> in-kernel callers like nfsd and overlayfs will get similar timestamp
-> set behavior as utimes.
+On Mon, Nov 25, 2019 at 6:46 PM J . Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Sun, Nov 24, 2019 at 09:31:45PM +0200, Amir Goldstein wrote:
+> > Push clamping timestamps down the call stack into notify_change(), so
+> > in-kernel callers like nfsd and overlayfs will get similar timestamp
+> > set behavior as utimes.
+>
+> So, nfsd has always bypassed timestamp_truncate() and we've never
+> noticed till now?  What are the symptoms?  (Do timestamps go backwards
+> after cache eviction on filesystems with large time granularity?)
 
-So, nfsd has always bypassed timestamp_truncate() and we've never
-noticed till now?  What are the symptoms?  (Do timestamps go backwards
-after cache eviction on filesystems with large time granularity?)
+Clamping seems to be new behavior since v5.4-rc1.
+Before that clamping was done implicitly when hitting the disk IIUC,
+so it was observed mostly after cache eviction.
 
-Looks like generic/402 has never run in my tests:
+>
+> Looks like generic/402 has never run in my tests:
+>
+>         generic/402     [not run] no kernel support for y2038 sysfs switch
+>
 
-	generic/402     [not run] no kernel support for y2038 sysfs switch
+The test in its current form is quite recent as well or at the _require
+has changed recently.
+See acb2ba78 - overlay: support timestamp range check
 
---b.
+You'd probably need something similar for nfs (?)
 
-> 
-> Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
-> Fixes: 42e729b9ddbb ("utimes: Clamp the timestamps before update")
-> Cc: stable@vger.kernel.org # v5.4
-> Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> ---
-> 
-> Arnd,
-> 
-> This fixes xfstest generic/402 when run with -overlay setup.
-> Note that running the test requires latest xfstests with:
->  acb2ba78 - overlay: support timestamp range check
-> 
-> I had previously posted a fix specific for overlayfs [1],
-> but Miklos suggested this more generic fix, which should also
-> serve nfsd and other in-kernel users.
-> 
-> I tested this change with test generic/402 on ext4/xfs/btrfs
-> and overlayfs, but not with nfsd.
-> 
-> Jeff, could you ack this change is good for nfsd as well?
-> 
-> Thanks,
-> Amir.
-> 
-> [1] https://lore.kernel.org/linux-fsdevel/20191111073000.2957-1-amir73il@gmail.com/
-> 
->  fs/attr.c   | 5 +++++
->  fs/utimes.c | 4 ++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/attr.c b/fs/attr.c
-> index df28035aa23e..e8de5e636e66 100644
-> --- a/fs/attr.c
-> +++ b/fs/attr.c
-> @@ -268,8 +268,13 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
->  	attr->ia_ctime = now;
->  	if (!(ia_valid & ATTR_ATIME_SET))
->  		attr->ia_atime = now;
-> +	else
-> +		attr->ia_atime = timestamp_truncate(attr->ia_atime, inode);
->  	if (!(ia_valid & ATTR_MTIME_SET))
->  		attr->ia_mtime = now;
-> +	else
-> +		attr->ia_mtime = timestamp_truncate(attr->ia_mtime, inode);
-> +
->  	if (ia_valid & ATTR_KILL_PRIV) {
->  		error = security_inode_need_killpriv(dentry);
->  		if (error < 0)
-> diff --git a/fs/utimes.c b/fs/utimes.c
-> index 1ba3f7883870..090739322463 100644
-> --- a/fs/utimes.c
-> +++ b/fs/utimes.c
-> @@ -36,14 +36,14 @@ static int utimes_common(const struct path *path, struct timespec64 *times)
->  		if (times[0].tv_nsec == UTIME_OMIT)
->  			newattrs.ia_valid &= ~ATTR_ATIME;
->  		else if (times[0].tv_nsec != UTIME_NOW) {
-> -			newattrs.ia_atime = timestamp_truncate(times[0], inode);
-> +			newattrs.ia_atime = times[0];
->  			newattrs.ia_valid |= ATTR_ATIME_SET;
->  		}
->  
->  		if (times[1].tv_nsec == UTIME_OMIT)
->  			newattrs.ia_valid &= ~ATTR_MTIME;
->  		else if (times[1].tv_nsec != UTIME_NOW) {
-> -			newattrs.ia_mtime = timestamp_truncate(times[1], inode);
-> +			newattrs.ia_mtime = times[1];
->  			newattrs.ia_valid |= ATTR_MTIME_SET;
->  		}
->  		/*
-> -- 
-> 2.17.1
+Thanks,
+Amir.
