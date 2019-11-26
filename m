@@ -2,77 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8B3410A16A
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2019 16:47:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9683110A24C
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2019 17:38:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKZPrW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Nov 2019 10:47:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38701 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728620AbfKZPrW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Nov 2019 10:47:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574783241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VRQrRgYBZsPKfq68KFpJ+l9WP997s45cG28WLAZ1K9Q=;
-        b=WqPX4ml5PWg0snDYfItJ7h4dQr4a6u5G9/30HO4Xu5Y/Y/QXlyJfeKJyVGSzCVWRr2OZ4Q
-        fUJP9FS7cW3pKjtdSEqyHO+EPjpIlE6s1J7mjGoSpO/iQ20Aiwk2q+NC5lPz6GUE7/6g24
-        UOfk7ODzEbNEXuL8xUrIrzGr1cSdhO4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-_ZK_r-7ZPkOqqwwc7ga8kQ-1; Tue, 26 Nov 2019 10:47:20 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6988E18B9FCB
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Nov 2019 15:47:19 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EBB31001281;
-        Tue, 26 Nov 2019 15:47:19 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id E76A020844; Tue, 26 Nov 2019 10:47:18 -0500 (EST)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH 3/3] nfsdcld: getopt_long() returns an int, not a char
-Date:   Tue, 26 Nov 2019 10:47:18 -0500
-Message-Id: <20191126154718.22645-4-smayhew@redhat.com>
-In-Reply-To: <20191126154718.22645-1-smayhew@redhat.com>
-References: <20191126154718.22645-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: _ZK_r-7ZPkOqqwwc7ga8kQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        id S1728521AbfKZQix (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Nov 2019 11:38:53 -0500
+Received: from smtprelay0181.hostedemail.com ([216.40.44.181]:41130 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725995AbfKZQix (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Nov 2019 11:38:53 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 6652118028E8F;
+        Tue, 26 Nov 2019 16:38:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2559:2562:2828:3138:3139:3140:3141:3142:3351:3622:3865:3867:4250:4321:5007:6119:7903:10004:10400:10848:11026:11232:11658:11914:12296:12297:12438:12740:12760:12895:13069:13311:13357:13439:14659:14721:21080:21433:21627:21972:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:9,LUA_SUMMARY:none
+X-HE-Tag: order07_302b770f34016
+X-Filterd-Recvd-Size: 1486
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 26 Nov 2019 16:38:50 +0000 (UTC)
+Message-ID: <99648842d1cfaaabd7178fe55e8f287a87e18a6a.camel@perches.com>
+Subject: Re: [PATCH] net: sunrpc:  replace 0 with NULL
+From:   Joe Perches <joe@perches.com>
+To:     Jules Irenge <jbi.octave@gmail.com>,
+        trond.myklebust@hammerspace.com
+Cc:     anna.schumaker@netapp.com, davem@davemloft.net,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 26 Nov 2019 08:38:24 -0800
+In-Reply-To: <20191125225239.384343-1-jbi.octave@gmail.com>
+References: <20191125225239.384343-1-jbi.octave@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This was causing nfsdcld to spit out a usage message instead of starting
-up on non-x86_64 arches.
+On Mon, 2019-11-25 at 22:52 +0000, Jules Irenge wrote:
+> Replace 0 with NULL to fix warning detected by sparse tool.
+> warning: Using plain integer as NULL pointer
+[]
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+[]
+> @@ -614,7 +614,7 @@ xs_read_stream_reply(struct sock_xprt *transport, struct msghdr *msg, int flags)
+>  static ssize_t
+>  xs_read_stream(struct sock_xprt *transport, int flags)
+>  {
+> -	struct msghdr msg = { 0 };
+> +	struct msghdr msg = { NULL };
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- utils/nfsdcld/nfsdcld.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Rather than depending on the first member to be a pointer
+perhaps better to use the equivalent
 
-diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-index 9297df5..2ad1001 100644
---- a/utils/nfsdcld/nfsdcld.c
-+++ b/utils/nfsdcld/nfsdcld.c
-@@ -737,7 +737,7 @@ out:
- int
- main(int argc, char **argv)
- {
--=09char arg;
-+=09int arg;
- =09int rc =3D 0;
- =09bool foreground =3D false;
- =09char *progname;
---=20
-2.17.2
+	struct msghdr msg = {};
+
 
