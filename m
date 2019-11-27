@@ -2,112 +2,132 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7674010B75A
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2019 21:21:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AAA10C003
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2019 23:08:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfK0UVr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Nov 2019 15:21:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41582 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfK0UVr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Nov 2019 15:21:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xARKJvRU126170;
-        Wed, 27 Nov 2019 20:21:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=95mfLhm4vghNr8cf39wWPNrlxfRQ9+/3VOjVBZT7JzY=;
- b=NCD166AcV9/rhzIIX/QgAs4CIE3Fs1OMwo7tJh/SjzDS1WAtlhtJE9m65MDMb34cKlhT
- RVkU4uMN/eNSbFiPZo/4uZnkX9W+h7ncRgcCmK8CkzMhHY9KSAAzPZgaHnyrV5mn7Eiy
- Lo0EPDpooUidRqfZbnTRQBaSIiONTJtLJmcHdS7aIp5DsXjDJRqekgnbghQLnxyUX25V
- 7qty/MGC3b2TV5bRte5bXZP/rWs25C7EyNz20gUl5Ly1Jh2kv8SpgeyNzrWEP1MnzQ+x
- elDpRrnXQ2RBBavtDpU6Z/6D0BCDRgqHHUwBxZWAj8ul99HVXN3hBv+RSzKgj8RjVe9V nQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2wev6uftg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 20:21:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xARKJ4Fa092823;
-        Wed, 27 Nov 2019 20:21:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2whx5r556n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 20:21:42 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xARKLcMZ028437;
-        Wed, 27 Nov 2019 20:21:40 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 Nov 2019 12:21:38 -0800
-Date:   Wed, 27 Nov 2019 12:21:36 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Question about clone_range() metadata stability
-Message-ID: <20191127202136.GV6211@magnolia>
-References: <f063089fb62c219ea6453c7b9b0aaafd50946dae.camel@hammerspace.com>
+        id S1727105AbfK0WID (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Nov 2019 17:08:03 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41620 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfK0WIC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Nov 2019 17:08:02 -0500
+Received: by mail-yw1-f68.google.com with SMTP id j190so8985566ywf.8
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Nov 2019 14:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iDR7Yf2JpouK3zT+2zSWb+MjhVS7162OUhlKbuj0WDE=;
+        b=iGYcc7gcCU3hkPYGZHUTAeluZbeWJROq57sZ9UhvlrA7m8RtfKRg31iKeWXONnVKUz
+         P4ARhRTzAHmFkFplkKS2drNAD4VDtQGzFXJ19viV4rGuMRopJfbrO/GST02+TVsIv+Fc
+         tK6QY+hjHLkkPvRKPWkT9rxWvCeX43DvzMfNS87RQ2SK/916P4xSD47RFg9fjVeazeLr
+         POmIQuadJIvJ8GE/BRa9ygZyHpGmrfeFSmhdPhv/9c7JRsklYkNM/I9k0sFJyTDu9BDz
+         V0pLSgKX1X06wbTT3WLuYOFgta0jDnm5Qo+EDoqsymcf4URV4tV3FE9HoyeQuVtOXL3t
+         r75w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iDR7Yf2JpouK3zT+2zSWb+MjhVS7162OUhlKbuj0WDE=;
+        b=anXaaYSsAxaXsZZUF5B1/axmE14/FHdBHeNolzB+Dd3/n8BVEl0EESiudCV7cnNRrI
+         7SDCCr1EXtPMsq4DyJj7u+b5FGNkjUTGnjKUSX7Odi/y0oIricAK0zQdFfQkwtBABnJI
+         6zt0FT+RtSVb3d4NUf7aQ3msnevbFBCmv2u49yUj1Xta/o9Sv1CsgX8mOjHxboJVqoZ5
+         y6BXpSYcWzzQz1X1r5V/xYQigfkBgBunlVQF71N6lKeu8nmFXpteEzluFLmUmF4lte1G
+         xj7vxJdpZ/NJ82ONZ4sKFxjV97V0pGabtr7CxAUONEkNeIdHnbPfQ1x5kiHJhVuWm/iO
+         rdqA==
+X-Gm-Message-State: APjAAAVE2c8j0eVWAUhETRlTArGu9rcPurSQBFr+85mMTT1wkQgk3EEL
+        J1Vxc9/B1CM4Qd/ek9PNkg==
+X-Google-Smtp-Source: APXvYqwDeyw7ViowTQQFqY24XCWCikjfTvIXOZf/HCpaaNA10clZN4mTmPE7xhZ4Gq6fIzSoMEESCA==
+X-Received: by 2002:a81:2708:: with SMTP id n8mr4456869ywn.437.1574892481347;
+        Wed, 27 Nov 2019 14:08:01 -0800 (PST)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id e82sm7561211ywb.87.2019.11.27.14.07.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 14:08:00 -0800 (PST)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: Ensure CLONE persists data and metadata changes to the target file
+Date:   Wed, 27 Nov 2019 17:05:51 -0500
+Message-Id: <20191127220551.36159-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f063089fb62c219ea6453c7b9b0aaafd50946dae.camel@hammerspace.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9454 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911270163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9454 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911270163
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:38:46PM +0000, Trond Myklebust wrote:
-> Hi all
-> 
-> A quick question about clone_range() and guarantees around metadata
-> stability.
-> 
-> Are users required to call fsync/fsync_range() after calling
-> clone_range() in order to guarantee that the cloned range metadata is
-> persisted?
+The NFSv4.2 CLONE operation has implicit persistence requirements on the
+target file, since there is no protocol requirement that the client issue
+a separate operation to persist data.
+For that reason, we should call vfs_fsync_range() on the destination file
+after a successful call to vfs_clone_file_range().
 
-Yes.
+Fixes: ffa0160a1039 ("nfsd: implement the NFSv4.2 CLONE operation")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.5+
+---
+ fs/nfsd/nfs4proc.c | 3 ++-
+ fs/nfsd/vfs.c      | 9 ++++++++-
+ fs/nfsd/vfs.h      | 2 +-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-> I'm assuming that it is required in order to guarantee that
-> data is persisted.
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4e3e77b76411..38c0aeda500e 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1077,7 +1077,8 @@ nfsd4_clone(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto out;
+ 
+ 	status = nfsd4_clone_file_range(src->nf_file, clone->cl_src_pos,
+-			dst->nf_file, clone->cl_dst_pos, clone->cl_count);
++			dst->nf_file, clone->cl_dst_pos, clone->cl_count,
++			EX_ISSYNC(cstate->current_fh.fh_export));
+ 
+ 	nfsd_file_put(dst);
+ 	nfsd_file_put(src);
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index bd0a385df3fc..9d66c4719067 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -525,7 +525,7 @@ __be32 nfsd4_set_nfs4_label(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ #endif
+ 
+ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
+-		u64 dst_pos, u64 count)
++		u64 dst_pos, u64 count, bool sync)
+ {
+ 	loff_t cloned;
+ 
+@@ -534,6 +534,13 @@ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
+ 		return nfserrno(cloned);
+ 	if (count && cloned != count)
+ 		return nfserrno(-EINVAL);
++	if (sync) {
++		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
++		int status = vfs_fsync_range(dst, dst_pos, dst_end,
++				commit_is_datasync);
++		if (status < 0)
++			return nfserrno(status);
++	}
+ 	return 0;
+ }
+ 
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index a13fd9d7e1f5..cc110a10bfe8 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -56,7 +56,7 @@ __be32          nfsd4_set_nfs4_label(struct svc_rqst *, struct svc_fh *,
+ __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
+ 				    struct file *, loff_t, loff_t, int);
+ __be32		nfsd4_clone_file_range(struct file *, u64, struct file *,
+-			u64, u64);
++				       u64, u64, bool);
+ #endif /* CONFIG_NFSD_V4 */
+ __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
+ 				char *name, int len, struct iattr *attrs,
+-- 
+2.23.0
 
-Data and metadata.  XFS and ocfs2's reflink implementations will flush
-the page cache before starting the remap, but they both require fsync to
-force the log/journal to disk.
-
-(AFAICT the same reasoning applies to btrfs, but don't trust my word for
-it.)
-
-> I'm asking because knfsd currently just does a call to
-> vfs_clone_file_range() when parsing a NFSv4.2 CLONE operation. It does
-> not call fsync()/fsync_range() on the destination file, and since the
-> NFSv4.2 protocol does not require you to perform any other operation in
-> order to persist data/metadata, I'm worried that we may be corrupting
-> the cloned file if the NFS server crashes at the wrong moment after the
-> client has been told the clone completed.
-
-That analysis seems correct.
-
---D
-
-> Cheers
->   Trond
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
