@@ -2,89 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EF4A10E2F7
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Dec 2019 19:18:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AE3910E384
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Dec 2019 22:05:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLASSq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 1 Dec 2019 13:18:46 -0500
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8348 "EHLO mtax.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfLASSq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 1 Dec 2019 13:18:46 -0500
-X-Greylist: delayed 6509 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:18:45 EST
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1575217608; h=DKIM-Filter:X-Virus-Scanned:
-         Content-Type:MIME-Version:Content-Transfer-Encoding:
-         Content-Description:Subject:To:From:Date:Message-Id:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
-        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
-        8=; b=QnQk9sPlE8WZWNgococPXrLXLFB8OExWTTY8klMZ/7q9
-        U+5h4GhA+7SKKtJ9hhLBOykxpEeJ9c4z338YBl1h8Y/gZjGzcc
-        jLZrcRopjAMgjrq24gTzQdSQIl2XP74P411hkcFyGnHaaaUZTa
-        QAMqMpMIPlHZGKgw/2DCWzjGn40=
-Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
-        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
-         id 1dee_6374_98a7e1ae_fc48_4834_8541_f4c590a6c23a;
-        Sun, 01 Dec 2019 10:26:47 -0600
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 329161E2716;
-        Sun,  1 Dec 2019 10:18:26 -0600 (CST)
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id aOHimLRADtmh; Sun,  1 Dec 2019 10:18:26 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 0358A1E1FEB;
-        Sun,  1 Dec 2019 10:13:11 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx 0358A1E1FEB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
-        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216791;
-        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Message-Id;
-        b=CcSo4A82TUUKuo3IEotco2nHKqX2uHCVEOebSOAsIW6hRWxgNIWZEJhLReibDmN/Q
-         UMHEEE4hi1ni/+MjRmnP3uBadJvAAMzY6CiFX+9gwZeZ951ybv71Q15lbbjbct0RBx
-         8+Ijgha2a3R8Xv78h6k+kDJOzwUbrOBu4ET1zwpM=
-X-Virus-Scanned: amavisd-new at cdmx.gob.mx
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id n7RcNhrM-eCp; Sun,  1 Dec 2019 10:13:10 -0600 (CST)
-Received: from [192.168.0.104] (unknown [188.125.168.160])
-        by cdmx.gob.mx (Postfix) with ESMTPSA id 037A51E306A;
-        Sun,  1 Dec 2019 10:04:40 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1727040AbfLAVFZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 Dec 2019 16:05:25 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57952 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726965AbfLAVFZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Dec 2019 16:05:25 -0500
+Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 759FA3A0A97;
+        Mon,  2 Dec 2019 08:05:20 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ibWP9-00056e-SX; Mon, 02 Dec 2019 08:05:19 +1100
+Date:   Mon, 2 Dec 2019 08:05:19 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: Question about clone_range() metadata stability
+Message-ID: <20191201210519.GB2418@dread.disaster.area>
+References: <f063089fb62c219ea6453c7b9b0aaafd50946dae.camel@hammerspace.com>
+ <20191127202136.GV6211@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Congratulations
-To:     Recipients <aac-styfe@cdmx.gob.mx>
-From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
-Date:   Sun, 01 Dec 2019 17:04:33 +0100
-Message-Id: <20191201160441.037A51E306A@cdmx.gob.mx>
-X-AnalysisOut: [v=2.2 cv=aPKAkf1m c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
-X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
-X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
-X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
-X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
-X-SAAS-TrackingID: 6c9e3ed5.0.105116311.00-2294.176706157.s12p02m016.mxlogic.net
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
- <1840193> : uri <2949749>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127202136.GV6211@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=7-415B0cAAAA:8 a=y7B9AfDEBtBswh77-68A:9 a=Sca554UL9fLBSYta:21
+        a=MLJJ3OMF_MbDVCWc:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
- them with this email for more information =
+On Wed, Nov 27, 2019 at 12:21:36PM -0800, Darrick J. Wong wrote:
+> On Wed, Nov 27, 2019 at 06:38:46PM +0000, Trond Myklebust wrote:
+> > Hi all
+> > 
+> > A quick question about clone_range() and guarantees around metadata
+> > stability.
+> > 
+> > Are users required to call fsync/fsync_range() after calling
+> > clone_range() in order to guarantee that the cloned range metadata is
+> > persisted?
+> 
+> Yes.
+> 
+> > I'm assuming that it is required in order to guarantee that
+> > data is persisted.
+> 
+> Data and metadata.  XFS and ocfs2's reflink implementations will flush
+> the page cache before starting the remap, but they both require fsync to
+> force the log/journal to disk.
 
+So we need to call xfs_fs_nfs_commit_metadata() to get that done
+post vfs_clone_file_range() completion on the server side, yes?
 
-EMail: allenandvioletlargeaward@gmail.com
+> 
+> (AFAICT the same reasoning applies to btrfs, but don't trust my word for
+> it.)
+> 
+> > I'm asking because knfsd currently just does a call to
+> > vfs_clone_file_range() when parsing a NFSv4.2 CLONE operation. It does
+> > not call fsync()/fsync_range() on the destination file, and since the
+> > NFSv4.2 protocol does not require you to perform any other operation in
+> > order to persist data/metadata, I'm worried that we may be corrupting
+> > the cloned file if the NFS server crashes at the wrong moment after the
+> > client has been told the clone completed.
+
+Yup, that's exactly what server side calls to commit_metadata() are
+supposed to address.
+
+I suspect to be correct, this might require commit_metadata() to be
+called on both the source and destination inodes, as both of them
+may have modified metadata as a result of the clone operation. For
+XFS one of them will be a no-op, but for other filesystems that
+don't implement ->commit_metadata, we'll need to call
+sync_inode_metadata() on both inodes...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
