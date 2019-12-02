@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2550A10ED26
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Dec 2019 17:28:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C78BD10ED28
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Dec 2019 17:28:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfLBQ2m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Dec 2019 11:28:42 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:44904 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbfLBQ2m (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Dec 2019 11:28:42 -0500
-Received: by mail-yw1-f67.google.com with SMTP id t141so1466890ywc.11;
-        Mon, 02 Dec 2019 08:28:41 -0800 (PST)
+        id S1727487AbfLBQ2t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Dec 2019 11:28:49 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45145 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbfLBQ2t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Dec 2019 11:28:49 -0500
+Received: by mail-yw1-f68.google.com with SMTP id d12so1093431ywl.12;
+        Mon, 02 Dec 2019 08:28:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=lx2ByXRb2E6HSft0879G0aUxzQETJaxyjGgs2Ax3D8Y=;
-        b=ZbuXnmgkzdbEsTQ7AMRSky6WRhbyvBp7A9IG/pDEPyPDw3t5FSI7PUoNll1MzvxDN0
-         PzBxCzGLQx5F4k7JZjYJjWGzxrxhE/TDSud4cGmtqk0Qk8Azegx7wlc8+OMpKDm2AJiJ
-         U32RSFMsIuBcgf2bEfT3ShXuznK8DA8iZ8TCkEcjONqK/Tj/UuMy3b3k/TZqpy+/kcrp
-         Q0ig6yIMSJebby4mgGrPJNeLZbwvAp2C9O8+FodNueosUS9+2/AurlKU+qITZWCLM5+R
-         2xFdA4t7NBSH/6RI7aGMyi6iYKOIVJ8K1ocf0nBwtxucyOvkpQWSBnM37Q4tb55OQ0nP
-         i3OQ==
+        bh=1KMF89ftAC0pRgaGlDtXn05bQOnIkD3TExE/eWsb9wc=;
+        b=e25RtPl3HW25pK8+g3gg1ukJIsvLP6akRp0ao9tjWVVWlSKXlxOLstsnd76Tocrdnf
+         hksXYtpweOWt11ZchBVRzDbu/u/NyqwNNzZjCDJxBGSJ86SLjKVwp/iCoipLX9J0jM5E
+         bwgcx+4DU4oU3QNSj4t6qE+kjGIliQOqYAJT2JseUq38OIsaCJ6NVA1X1ZauCuOS2P+x
+         x404KUdVbTDk27Q5b7h6cl0Cs43aW6hcePNFhxdMUgWX3LY7lxxRUmf+pQO4muSi4DYN
+         F4DBPJm0yilrgIY97dGE6pJAMcydO8sRsOn9eNVFWRJbJ/wsxnvoU1GfBWuMuhHRY2UG
+         q7Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=lx2ByXRb2E6HSft0879G0aUxzQETJaxyjGgs2Ax3D8Y=;
-        b=CLBNKDSG9uIomqFmwfkvnY4jumgHC+ClRlLqzQ8Os51Q5bMDdKmiyqfjk+yJgfj1VL
-         jCQvN+/SrATjbQZAYuXSvJ7RrNTrAlQgD/B7weEFq+C5hdIOlMJbQEqg/Kc3n1t1mjeC
-         Q+Em+vVPYvZfgNbXttlKzdCDn5k6elsE9+JvZjjdxr2rijSpABwUf6ICIsFJm+nrzHo7
-         LiBwQfbb1Pi6ttDxf+yFCG60EgEMdvpmzc+EvCmyewhuDZyMWV60yGWbFf7RrHJ6bNi4
-         Q2keI2LsWznNGKs39PV+PCwIlXhOFpThiZW6mApsS/2SCbEt0z2AvGZdHlMbLbeaGfGF
-         jK9w==
-X-Gm-Message-State: APjAAAWggEwj01lSKx3NsRUOrEEneML/6LtyhndQ1PAIu3xmwX+V48bR
-        sCtC7NJkAfwqdB8xwQSEebA=
-X-Google-Smtp-Source: APXvYqyOirV4Xfl65Q0mRFxwmS6HGwskGAy4LruWI2PuQXNyWPAvhx76zoJHLAnhO4AxrkOMyYxNgQ==
-X-Received: by 2002:a81:3c88:: with SMTP id j130mr2355783ywa.113.1575304121372;
-        Mon, 02 Dec 2019 08:28:41 -0800 (PST)
+        bh=1KMF89ftAC0pRgaGlDtXn05bQOnIkD3TExE/eWsb9wc=;
+        b=nhnnIVg5dq6SAoQ7Z5FRb1zlI9OnB8wif6yOjiXgK7uCkHxZQriC1vE9qpMz3+puCO
+         ZeZJjPhNyZMlOrAeQY38pT4QYcHmTvjPo2g34mPi9+PK0+OJh+WVtvurSUPVRcRnsCIl
+         j4pFNIaXXC2YxGHubXym5Ig3wIZaxvm3wa+F2fBeMe4bX4HdM+kbtSqqGLpilZgpYM+b
+         OefA7C3LEycjU3nd3z3ZmCvNRWFWzUGxtU70J/g2ycj2cfINdc9Sgj/puyxUuadatYMe
+         Ll+2vUVnTVqsUyWSU6fzXOyJRcKqhOsapelr0VG8rM/O28hLCaCcD5EZ4FQNzu0ANEoe
+         n5CQ==
+X-Gm-Message-State: APjAAAWZSRzOg0l5fdBoo1DtXw5QQi7hKdI/coKFHG3nwexzzOt18kYQ
+        UvraS6fNYZQa5AXF7fBxvwTsfBwf
+X-Google-Smtp-Source: APXvYqxYqeQmFdx5f0sk2cZnfBtQRF7EmhBh0LI5ZgGN4rzjDGARfoT+yVhVzVdadrczbOvkCWMogw==
+X-Received: by 2002:a0d:e107:: with SMTP id k7mr23717024ywe.399.1575304126754;
+        Mon, 02 Dec 2019 08:28:46 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id n129sm34724ywb.75.2019.12.02.08.28.40
+        by smtp.gmail.com with ESMTPSA id c188sm40326ywb.56.2019.12.02.08.28.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Dec 2019 08:28:40 -0800 (PST)
+        Mon, 02 Dec 2019 08:28:46 -0800 (PST)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xB2GSdeq014261;
-        Mon, 2 Dec 2019 16:28:39 GMT
-Subject: [PATCH 1/2] xprtrdma: Fix create_qp crash on device unload
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xB2GSiJS014264;
+        Mon, 2 Dec 2019 16:28:44 GMT
+Subject: [PATCH 2/2] xprtrdma: Fix completion wait during device removal
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 02 Dec 2019 11:28:39 -0500
-Message-ID: <20191202162839.4115.10995.stgit@manet.1015granger.net>
+Date:   Mon, 02 Dec 2019 11:28:44 -0500
+Message-ID: <20191202162844.4115.30993.stgit@manet.1015granger.net>
 In-Reply-To: <20191202162242.4115.94732.stgit@manet.1015granger.net>
 References: <20191202162242.4115.94732.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -65,63 +65,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On device re-insertion, the RDMA device driver crashes trying to set
-up a new QP:
+I've found that on occasion, "rmmod <dev>" will hang while if an NFS
+is under load.
 
-Nov 27 16:32:06 manet kernel: BUG: kernel NULL pointer dereference, address: 00000000000001c0
-Nov 27 16:32:06 manet kernel: #PF: supervisor write access in kernel mode
-Nov 27 16:32:06 manet kernel: #PF: error_code(0x0002) - not-present page
-Nov 27 16:32:06 manet kernel: PGD 0 P4D 0
-Nov 27 16:32:06 manet kernel: Oops: 0002 [#1] SMP
-Nov 27 16:32:06 manet kernel: CPU: 1 PID: 345 Comm: kworker/u28:0 Tainted: G        W         5.4.0 #852
-Nov 27 16:32:06 manet kernel: Hardware name: Supermicro SYS-6028R-T/X10DRi, BIOS 1.1a 10/16/2015
-Nov 27 16:32:06 manet kernel: Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
-Nov 27 16:32:06 manet kernel: RIP: 0010:atomic_try_cmpxchg+0x2/0x12
-Nov 27 16:32:06 manet kernel: Code: ff ff 48 8b 04 24 5a c3 c6 07 00 0f 1f 40 00 c3 31 c0 48 81 ff 08 09 68 81 72 0c 31 c0 48 81 ff 83 0c 68 81 0f 92 c0 c3 8b 06 <f0> 0f b1 17 0f 94 c2 84 d2 75 02 89 06 88 d0 c3 53 ba 01 00 00 00
-Nov 27 16:32:06 manet kernel: RSP: 0018:ffffc900035abbf0 EFLAGS: 00010046
-Nov 27 16:32:06 manet kernel: RAX: 0000000000000000 RBX: 00000000000001c0 RCX: 0000000000000000
-Nov 27 16:32:06 manet kernel: RDX: 0000000000000001 RSI: ffffc900035abbfc RDI: 00000000000001c0
-Nov 27 16:32:06 manet kernel: RBP: ffffc900035abde0 R08: 000000000000000e R09: ffffffffffffc000
-Nov 27 16:32:06 manet kernel: R10: 0000000000000000 R11: 000000000002e800 R12: ffff88886169d9f8
-Nov 27 16:32:06 manet kernel: R13: ffff88886169d9f4 R14: 0000000000000246 R15: 0000000000000000
-Nov 27 16:32:06 manet kernel: FS:  0000000000000000(0000) GS:ffff88846fa40000(0000) knlGS:0000000000000000
-Nov 27 16:32:06 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Nov 27 16:32:06 manet kernel: CR2: 00000000000001c0 CR3: 0000000002009006 CR4: 00000000001606e0
-Nov 27 16:32:06 manet kernel: Call Trace:
-Nov 27 16:32:06 manet kernel: do_raw_spin_lock+0x2f/0x5a
-Nov 27 16:32:06 manet kernel: create_qp_common.isra.47+0x856/0xadf [mlx4_ib]
-Nov 27 16:32:06 manet kernel: ? slab_post_alloc_hook.isra.60+0xa/0x1a
-Nov 27 16:32:06 manet kernel: ? __kmalloc+0x125/0x139
-Nov 27 16:32:06 manet kernel: mlx4_ib_create_qp+0x57f/0x972 [mlx4_ib]
+Ensure that ri_remove_done is initialized only just before the
+transport is woken up to force a close. This avoids the completion
+possibly getting initialized again while the CM event handler is
+waiting for a wake-up.
 
-The fix is to copy the qp_init_attr struct that was just created by
-rpcrdma_ep_create() instead of using the one from the previous
-connection instance.
-
-Fixes: 98ef77d1aaa7 ("xprtrdma: Send Queue size grows after a reconnect")
+Fixes: bebd031866ca ("xprtrdma: Support unplugging an HCA from under an NFS mount")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sunrpc/xprtrdma/verbs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 77c7dd7f05e8..3a56458e8c05 100644
+index 3a56458e8c05..2c40465a19e1 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -599,6 +599,7 @@ static int rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
- 				    struct ib_qp_init_attr *qp_init_attr)
- {
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
-+	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
- 	int rc, err;
+@@ -244,6 +244,7 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+ 			ia->ri_id->device->name,
+ 			rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt));
+ #endif
++		init_completion(&ia->ri_remove_done);
+ 		set_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags);
+ 		ep->rep_connected = -ENODEV;
+ 		xprt_force_disconnect(xprt);
+@@ -297,7 +298,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+ 	int rc;
  
- 	trace_xprtrdma_reinsert(r_xprt);
-@@ -613,6 +614,7 @@ static int rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
- 		pr_err("rpcrdma: rpcrdma_ep_create returned %d\n", err);
- 		goto out2;
- 	}
-+	memcpy(qp_init_attr, &ep->rep_attr, sizeof(*qp_init_attr));
+ 	init_completion(&ia->ri_done);
+-	init_completion(&ia->ri_remove_done);
  
- 	rc = -ENETUNREACH;
- 	err = rdma_create_qp(ia->ri_id, ia->ri_pd, qp_init_attr);
+ 	id = rdma_create_id(xprt->rx_xprt.xprt_net, rpcrdma_cm_event_handler,
+ 			    xprt, RDMA_PS_TCP, IB_QPT_RC);
 
