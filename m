@@ -2,95 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AE3910E384
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Dec 2019 22:05:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75F4910ED25
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Dec 2019 17:28:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfLAVFZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 1 Dec 2019 16:05:25 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57952 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726965AbfLAVFZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Dec 2019 16:05:25 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 759FA3A0A97;
-        Mon,  2 Dec 2019 08:05:20 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ibWP9-00056e-SX; Mon, 02 Dec 2019 08:05:19 +1100
-Date:   Mon, 2 Dec 2019 08:05:19 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Question about clone_range() metadata stability
-Message-ID: <20191201210519.GB2418@dread.disaster.area>
-References: <f063089fb62c219ea6453c7b9b0aaafd50946dae.camel@hammerspace.com>
- <20191127202136.GV6211@magnolia>
+        id S1727502AbfLBQ2i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Dec 2019 11:28:38 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37025 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbfLBQ2i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Dec 2019 11:28:38 -0500
+Received: by mail-yb1-f196.google.com with SMTP id q7so201412ybk.4;
+        Mon, 02 Dec 2019 08:28:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ZC6q5PpJ6oSFEW9OHKUUuEJBGKigyt0hHZFI10zE8SY=;
+        b=Fmq/1qA1JvgI3UQtKps1LBbY+dxTntvmvL7Hj9FuYQUxrDIcPIEBBqfX1EVRJWCYDk
+         C6JS/OC0XOQrTPLt8ZVlNvRHUrsg5LZM3lL7DHBZLCFxBSTUA6ndWXTXarC1KsjEA5/F
+         ckx5eKqIsdnK/2WSB3Jk3UHVifXnuJBAitHomr0VsQAJmv50htQhHJPUfsZH8GzssjI6
+         /T5Df+hRvCJq00m+BZviO2wn+apkKzzBLmtuOVt9Z9bl89/zl959RwRg1ncl66KG00a+
+         5309ylhfmXDB84LcDHduX/zxNmqC5iPQY97XZ3PLu/tTpgTrs/8fuzUbTBuo/x6HuMLW
+         0pwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ZC6q5PpJ6oSFEW9OHKUUuEJBGKigyt0hHZFI10zE8SY=;
+        b=nU4P+5vaUgH0Rx2RDXazSkCXXYdQuQE3lNFOdyyUW0UhZmxQqVyXdNp4THOAV/Rb/F
+         sIE149lXVNexB+z27FTo7S+qJnWENygIAxJvAdfpLXZYyZeX+MLUHq3vfQbCOPPSqcnb
+         hkqstkHNNP5Ul0uy8As0M9OL0RgsQu0m+agTSyNIlGQdH9w3Dy/oKa6m9cEP7zHqw2rx
+         jJOk1hMBIHyPxWwGeyqPQt2NBkrXHDCirBx+X3nImG6UUbYTs9WEwYLrRImbpRIq8CJl
+         E6nJOXdKBdT4orSk/mHGP3Xd36Rx4s9Xi2H9PB99KwYsFNLDEJqfwrQk8EXcZ9iBvuYt
+         3SDA==
+X-Gm-Message-State: APjAAAVKjQsMaEqcJwrG469uQFLYwn3knRknFmQ6ixfAy0kvvSP6Ks8g
+        GGFF2e2DM5XiaB/r4MfGm28=
+X-Google-Smtp-Source: APXvYqwmj5NHxKjID7WYZMXnP9mxgel23eAbxA/6c1U5qXZESRK2f6I4MSWh9QqgC7HpKtEudSM2yQ==
+X-Received: by 2002:a25:7752:: with SMTP id s79mr164725ybc.161.1575304116600;
+        Mon, 02 Dec 2019 08:28:36 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id u2sm35403ywi.61.2019.12.02.08.28.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Dec 2019 08:28:35 -0800 (PST)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xB2GSXwM014258;
+        Mon, 2 Dec 2019 16:28:33 GMT
+Subject: [PATCH 0/2] xprtrdma device removal bug fixes
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     anna.schumaker@netapp.com
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Mon, 02 Dec 2019 11:28:33 -0500
+Message-ID: <20191202162242.4115.94732.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127202136.GV6211@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=y7B9AfDEBtBswh77-68A:9 a=Sca554UL9fLBSYta:21
-        a=MLJJ3OMF_MbDVCWc:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:21:36PM -0800, Darrick J. Wong wrote:
-> On Wed, Nov 27, 2019 at 06:38:46PM +0000, Trond Myklebust wrote:
-> > Hi all
-> > 
-> > A quick question about clone_range() and guarantees around metadata
-> > stability.
-> > 
-> > Are users required to call fsync/fsync_range() after calling
-> > clone_range() in order to guarantee that the cloned range metadata is
-> > persisted?
-> 
-> Yes.
-> 
-> > I'm assuming that it is required in order to guarantee that
-> > data is persisted.
-> 
-> Data and metadata.  XFS and ocfs2's reflink implementations will flush
-> the page cache before starting the remap, but they both require fsync to
-> force the log/journal to disk.
+Hi Anna-
 
-So we need to call xfs_fs_nfs_commit_metadata() to get that done
-post vfs_clone_file_range() completion on the server side, yes?
+Here are two bug fixes related to DEVICE_REMOVAL support in the
+RPC/RDMA client. Can these go in 5.5-rc ?
 
-> 
-> (AFAICT the same reasoning applies to btrfs, but don't trust my word for
-> it.)
-> 
-> > I'm asking because knfsd currently just does a call to
-> > vfs_clone_file_range() when parsing a NFSv4.2 CLONE operation. It does
-> > not call fsync()/fsync_range() on the destination file, and since the
-> > NFSv4.2 protocol does not require you to perform any other operation in
-> > order to persist data/metadata, I'm worried that we may be corrupting
-> > the cloned file if the NFS server crashes at the wrong moment after the
-> > client has been told the clone completed.
+Both of these deserve a stable tag, IMHO, as does 572c4b40a394
+("xprtrdma: Fix MR list handling") which I've already sent as
+part of for-5.5.
 
-Yup, that's exactly what server side calls to commit_metadata() are
-supposed to address.
+There's one remaining crasher that I hit when removing a device
+while there are active NFS mounts. I should have a fix for that
+one soon.
 
-I suspect to be correct, this might require commit_metadata() to be
-called on both the source and destination inodes, as both of them
-may have modified metadata as a result of the clone operation. For
-XFS one of them will be a no-op, but for other filesystems that
-don't implement ->commit_metadata, we'll need to call
-sync_inode_metadata() on both inodes...
+---
 
-Cheers,
+Chuck Lever (2):
+      xprtrdma: Fix create_qp crash on device unload
+      xprtrdma: Fix completion wait during device removal
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+
+ net/sunrpc/xprtrdma/verbs.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--
+Chuck Lever
