@@ -2,198 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 666D410F3D6
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2019 01:14:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EE4C10F81C
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2019 07:52:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbfLCAOK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Dec 2019 19:14:10 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34585 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLCAOJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Dec 2019 19:14:09 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so1603527oig.1
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Dec 2019 16:14:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jU8zQM7dQsl7j+C2HShiZHxrCqA16lgqBbZmIQjuFsE=;
-        b=UdtIHWXsgA1cgpVIddyD/Sekot8kmzIvm9AkSrHSOZneyL3PfXwLCGrfd2C7oZrezJ
-         e8qaDNGxII/RljQThXGhEK53xQlKGoHxvaU6wwSyag3/jkfaemJH/tfN/uNdLN94XfOL
-         aVFVvIau+de3pcuRbNR7xT4Zu8AUADkU1oGkw1GizVGGrbAZB7rMydqYyNTn5c5au9iu
-         YF28TyNBvvlTW+2V6dmrnMmGITVDsNi6ylMGS8G0Ym7Rx20w4FJf7W18LzPkd4ix1ubm
-         lTY6XBoQjMu5H2nB1yRLjVmVwFFJbQN437b5r37RMCynvnUwjOF/bmGTunHUMdy83uvP
-         3eeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jU8zQM7dQsl7j+C2HShiZHxrCqA16lgqBbZmIQjuFsE=;
-        b=cA0c7NuZWP1/BVOhETVPLN7t4D7+fGpfXKrJF1T4mo++e0xZeT+V8xEOKMwCojo4Fm
-         7iwysn7AKPD3+aOMJ/idHbKVDLljdrZXk58PRwNUCiyKm8bQls957pd6NibKEZcW3QoZ
-         +o3D5axphzrnN1lNaoojvXy6NH+SOB7jD84Be87T0qcuDDRg+HFGQ6nGTUVwAd3IpJ6j
-         Bra6dpy1gNXadWoRQl02BPJfHDZf1ZqbDzAuBHDNBYjjWwSoMDBiD5v+JbYhGpX3GFXT
-         FzbpNTgqthhjxbi1RWFmayoaUDt8fnZRx9s0EGgG0faU5Y7SBD57tE1wIw9Wtz2jj/rU
-         HtLQ==
-X-Gm-Message-State: APjAAAWRTkhGPfeIoBu6Xpgt/uZ6QIhjZ/CIoWyc0XBxs4kaz8OCfUUu
-        W3D9FfC6nLIb8BqGKY2lXakJi9p2bezA8OitJGMK8Q==
-X-Google-Smtp-Source: APXvYqxHMoMNJtSea2KbnT6kI5KkGt3Sur+DvCkMAz+DyiTipaX++WIG/yH7EvjF/HQkpI5hCJ3YCuHSS9BQklKkN6Y=
-X-Received: by 2002:aca:670b:: with SMTP id z11mr1401696oix.79.1575332047908;
- Mon, 02 Dec 2019 16:14:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com> <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
-In-Reply-To: <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 2 Dec 2019 16:13:56 -0800
-Message-ID: <CALvZod7rhaOBUNR=Pt5a1vAEPimrwN=41dmDD9dekCGztAe=NQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long do_shrink_slab
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
+        id S1727244AbfLCGwQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Dec 2019 01:52:16 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42653 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727156AbfLCGwQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Dec 2019 01:52:16 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1A83222A99;
+        Tue,  3 Dec 2019 01:52:15 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 03 Dec 2019 01:52:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=YibBEiiph7kWPE9JD0Cp6skuUW
+        6tEyozUdQEeL8yUnU=; b=vVv1iYOS72OBcc6Uuo0w9AIJlE/WFKWfU4A0D3p+vE
+        hI3mS85ZFEGlSx9ShpkubHFHRpvLnXx9vP/sz4/hLmj7mxyeJLyh5wyHVWNMGTQh
+        7VmiYIDsqaTFyfYqyqIOhPxaGg8HDY6BzThcg+SaRxSPO3Ms6nKYs+DUCg+0N6oN
+        3iEQv6Y+JvbW8+auYrB91D6sM7/6zVdSJnFG4jC3duZcPTkdOy8foL74JMQCQ2jt
+        WX66IcDQmBTa+8vgP5ExEDy0opKSrUInJ4yzaZLXjD1ulzh2cA544z3zjoN0T/nV
+        x0mRBZgb2J160Ba77aMFHqCui7c04nZx6hKFPSfRCBRQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=YibBEiiph7kWPE9JD
+        0Cp6skuUW6tEyozUdQEeL8yUnU=; b=R2N7Hus6uBJwkor6+uBn3HO9bRwqm+RtE
+        pTce7ZLQDKKSHkM0WJD03hbQjHj/ofxgmgZp38NUcw9VM5Zar8jmwQlBDDofa72o
+        CZwkXBEDQOURmYyooQFDIM7pPyyvjdTEWIFnL4Wd3vS4YiFDqjnz9Raz6KCSESKq
+        5Q65XJccnwGVceyoP/m51MGl1/t0DTlHAyJNI6D4a1wS+qCymd7eBBWE0lwRqigh
+        KPsMRR68DhalzpDLtDHhqny7JCb4d/h0L52Emr/rVEvqdmmeUvqBhQOIfYD4FQzk
+        TSnwuTcJ5FQQhM0Qga5fJWi1/oLaJoHQyNsESm/eWbowtCW02hyTw==
+X-ME-Sender: <xms:HgbmXYdTXMmeDGfINLA5mlVzOlSkRcJlvBc4DbVnXASt_3ZE_R3ZMA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejiedgleekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefrrghtrhhitghk
+    ucfuthgvihhnhhgrrhguthcuoehpshesphhkshdrihhmqeenucfkphepjeekrdehgedrud
+    eftddrvddtjeenucfrrghrrghmpehmrghilhhfrhhomhepphhssehpkhhsrdhimhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:HgbmXYIiCBiqfpabttODftSB-A4JIllLnrTKwjVk8bzB8c49o9FfbQ>
+    <xmx:HgbmXb2-wA01_-ReB-LYlFnxZ2sQZBbOikGgYBFmRHeTytBF0EJWJg>
+    <xmx:HgbmXShfbguaP70tmyZwAzk1aOeHGyGnca2SkgDmcFM5mnmkkDRhAA>
+    <xmx:HwbmXZNJ_lF8HJ931M_QSLoaxYaY7JztWxcqfnYNk__NKA4DoKjkGw>
+Received: from vm-mail (x4e3682cf.dyn.telefonica.de [78.54.130.207])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DC20B3060158;
+        Tue,  3 Dec 2019 01:52:13 -0500 (EST)
+Received: from localhost (<unknown> [10.192.0.11])
+        by vm-mail (OpenSMTPD) with ESMTPSA id 76b25207 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 3 Dec 2019 06:52:11 +0000 (UTC)
+From:   Patrick Steinhardt <ps@pks.im>
+To:     linux-nfs@vger.kernel.org
+Cc:     Patrick Steinhardt <ps@pks.im>,
         Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "J. Bruce Fields" <bfields@fieldses.org>
+Subject: [PATCH] nfsd: depend on CRYPTO_MD5 for legacy client tracking
+Date:   Tue,  3 Dec 2019 07:52:09 +0100
+Message-Id: <d411d31bcde3e0221d54ee8bb5af80772a277cad.1575355896.git.ps@pks.im>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 8:37 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
->
->
-> On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
-> > We have a problem that shrinker_rwsem can be held for a long time for
-> > read in shrink_slab, at the same time any process which is trying to
-> > manage shrinkers hangs.
-> >
-> > The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-> > It tries to shrink something on nfs (hard) but nfs server is dead at
-> > these moment already and rpc will never succeed. Generally any shrinker
-> > can take significant time to do_shrink_slab, so it's a bad idea to hold
-> > the list lock here.
-> >
-> > We have a similar problem in shrink_slab_memcg, except that we are
-> > traversing shrinker_map+shrinker_idr there.
-> >
-> > The idea of the patch is to inc a refcount to the chosen shrinker so it
-> > won't disappear and release shrinker_rwsem while we are in
-> > do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
-> > the refcount and continue the traversal.
-> >
-> > We also need a wait_queue so that unregister_shrinker can wait for the
-> > refcnt to become zero. Only after these we can safely remove the
-> > shrinker from list and idr, and free the shrinker.
-> >
-> > I've reproduced the nfs hang in do_shrink_slab with the patch applied on
-> > ms kernel, all other mount/unmount pass fine without any hang.
-> >
-> > Here is a reproduction on kernel without patch:
-> >
-> > 1) Setup nfs on server node with some files in it (e.g. 200)
-> >
-> > [server]# cat /etc/exports
-> > /vz/nfs2 *(ro,no_root_squash,no_subtree_check,async)
-> >
-> > 2) Hard mount it on client node
-> >
-> > [client]# mount -ohard 10.94.3.40:/vz/nfs2 /mnt
-> >
-> > 3) Open some (e.g. 200) files on the mount
-> >
-> > [client]# for i in $(find /mnt/ -type f | head -n 200); \
-> >   do setsid sleep 1000 &>/dev/null <$i & done
-> >
-> > 4) Kill all openers
-> >
-> > [client]# killall sleep -9
-> >
-> > 5) Put your network cable out on client node
-> >
-> > 6) Drop caches on the client, it will hang on nfs while holding
-> >   shrinker_rwsem lock for read
-> >
-> > [client]# echo 3 > /proc/sys/vm/drop_caches
-> >
-> >   crash> bt ...
-> >   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
-> >    #0 [...] __schedule at ...
-> >    #1 [...] schedule at ...
-> >    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
-> >    #3 [...] __wait_on_bit at ...
-> >    #4 [...] out_of_line_wait_on_bit at ...
-> >    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
-> >    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
-> >    #7 [...] nfs_do_return_delegation at ... [nfsv4]
-> >    #8 [...] nfs4_evict_inode at ... [nfsv4]
-> >    #9 [...] evict at ...
-> >   #10 [...] dispose_list at ...
-> >   #11 [...] prune_icache_sb at ...
-> >   #12 [...] super_cache_scan at ...
-> >   #13 [...] do_shrink_slab at ...
-> >   #14 [...] shrink_slab at ...
-> >   #15 [...] drop_slab_node at ...
-> >   #16 [...] drop_slab at ...
-> >   #17 [...] drop_caches_sysctl_handler at ...
-> >   #18 [...] proc_sys_call_handler at ...
-> >   #19 [...] vfs_write at ...
-> >   #20 [...] ksys_write at ...
-> >   #21 [...] do_syscall_64 at ...
-> >   #22 [...] entry_SYSCALL_64_after_hwframe at ...
-> >
-> > 7) All other mount/umount activity now hangs with no luck to take
-> >   shrinker_rwsem for write.
-> >
-> > [client]# mount -t tmpfs tmpfs /tmp
-> >
-> >   crash> bt ...
-> >   PID: 5464   TASK: ...  CPU: 3   COMMAND: "mount"
-> >    #0 [...] __schedule at ...
-> >    #1 [...] schedule at ...
-> >    #2 [...] rwsem_down_write_slowpath at ...
-> >    #3 [...] prealloc_shrinker at ...
-> >    #4 [...] alloc_super at ...
-> >    #5 [...] sget at ...
-> >    #6 [...] mount_nodev at ...
-> >    #7 [...] legacy_get_tree at ...
-> >    #8 [...] vfs_get_tree at ...
-> >    #9 [...] do_mount at ...
-> >   #10 [...] ksys_mount at ...
-> >   #11 [...] __x64_sys_mount at ...
-> >   #12 [...] do_syscall_64 at ...
-> >   #13 [...] entry_SYSCALL_64_after_hwframe at ...
-> >
->
->
-> I don't think this patch solves the problem, it only fixes one minor symptom of it.
-> The actual problem here the reclaim hang in the nfs.
-> It means that any process, including kswapd, may go into nfs inode reclaim and stuck there.
->
-> Even mount() itself has GFP_KERNEL allocations in its path, so it still might stuck there even with your patch.
->
-> I think this should be handled on nfs/vfs level by making  inode eviction during reclaim more asynchronous.
+The legacy client tracking infrastructure of nfsd makes use of MD5 to
+derive a client's recovery directory name. As the nfsd module doesn't
+declare any dependency on CRYPTO_MD5, though, it may fail to allocate
+the hash if the kernel was compiled without it. As a result, generation
+of client recovery directories will fail with the following error:
 
-Though I agree that we should be fixing shrinkers to not get stuck
-(and be more async), I still think the problem this patch is solving
-is worth fixing. On machines running multiple workloads, one job stuck
-in slab shrinker and blocking all other unrelated jobs wanting
-shrinker_rwsem, breaks the isolation and causes DoS.
+    NFSD: unable to generate recoverydir name
 
-Shakeel
+The dependency was removed as a seemingly redundant dependency back in
+6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig
+2008-02-11). But in fact, even then the MD5 module was pulled in only
+when RPCSEC_GSS_KRB5 or RPCSEC_GSS_KRB5 was selected.
+
+Fix the issue by adding back an explicit dependency on CRYPTO_MD5.
+
+Fixes: 6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig)
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
+---
+ fs/nfsd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index c4b1a89b8845..f2f81561ebb6 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -73,6 +73,7 @@ config NFSD_V4
+ 	select NFSD_V3
+ 	select FS_POSIX_ACL
+ 	select SUNRPC_GSS
++	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
+ 	help
+-- 
+2.24.0
+
