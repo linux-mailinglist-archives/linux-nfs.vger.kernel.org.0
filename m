@@ -2,184 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86BAF10FC26
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2019 12:04:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B40ED10FCB8
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2019 12:48:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfLCLEW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Dec 2019 06:04:22 -0500
-Received: from relay.sw.ru ([185.231.240.75]:53806 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfLCLEV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:04:21 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ic5y8-0005ik-KU; Tue, 03 Dec 2019 14:03:48 +0300
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-To:     Shakeel Butt <shakeelb@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
- <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
- <CALvZod7rhaOBUNR=Pt5a1vAEPimrwN=41dmDD9dekCGztAe=NQ@mail.gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <01bdd7bd-3730-71f7-725c-42779ead9a12@virtuozzo.com>
-Date:   Tue, 3 Dec 2019 14:03:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726114AbfLCLrx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Dec 2019 06:47:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49394 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbfLCLrw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:47:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6C137B183;
+        Tue,  3 Dec 2019 11:47:49 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     andrew.murray@arm.com, maz@kernel.org, linux-kernel@vger.kernel.org
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        kexec@lists.infradead.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/8] Raspberry Pi 4 PCIe support
+Date:   Tue,  3 Dec 2019 12:47:33 +0100
+Message-Id: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <CALvZod7rhaOBUNR=Pt5a1vAEPimrwN=41dmDD9dekCGztAe=NQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 03.12.2019 03:13, Shakeel Butt wrote:
-> On Mon, Dec 2, 2019 at 8:37 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
->>
->>
->> On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
->>> We have a problem that shrinker_rwsem can be held for a long time for
->>> read in shrink_slab, at the same time any process which is trying to
->>> manage shrinkers hangs.
->>>
->>> The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
->>> It tries to shrink something on nfs (hard) but nfs server is dead at
->>> these moment already and rpc will never succeed. Generally any shrinker
->>> can take significant time to do_shrink_slab, so it's a bad idea to hold
->>> the list lock here.
->>>
->>> We have a similar problem in shrink_slab_memcg, except that we are
->>> traversing shrinker_map+shrinker_idr there.
->>>
->>> The idea of the patch is to inc a refcount to the chosen shrinker so it
->>> won't disappear and release shrinker_rwsem while we are in
->>> do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
->>> the refcount and continue the traversal.
->>>
->>> We also need a wait_queue so that unregister_shrinker can wait for the
->>> refcnt to become zero. Only after these we can safely remove the
->>> shrinker from list and idr, and free the shrinker.
->>>
->>> I've reproduced the nfs hang in do_shrink_slab with the patch applied on
->>> ms kernel, all other mount/unmount pass fine without any hang.
->>>
->>> Here is a reproduction on kernel without patch:
->>>
->>> 1) Setup nfs on server node with some files in it (e.g. 200)
->>>
->>> [server]# cat /etc/exports
->>> /vz/nfs2 *(ro,no_root_squash,no_subtree_check,async)
->>>
->>> 2) Hard mount it on client node
->>>
->>> [client]# mount -ohard 10.94.3.40:/vz/nfs2 /mnt
->>>
->>> 3) Open some (e.g. 200) files on the mount
->>>
->>> [client]# for i in $(find /mnt/ -type f | head -n 200); \
->>>   do setsid sleep 1000 &>/dev/null <$i & done
->>>
->>> 4) Kill all openers
->>>
->>> [client]# killall sleep -9
->>>
->>> 5) Put your network cable out on client node
->>>
->>> 6) Drop caches on the client, it will hang on nfs while holding
->>>   shrinker_rwsem lock for read
->>>
->>> [client]# echo 3 > /proc/sys/vm/drop_caches
->>>
->>>   crash> bt ...
->>>   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
->>>    #0 [...] __schedule at ...
->>>    #1 [...] schedule at ...
->>>    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
->>>    #3 [...] __wait_on_bit at ...
->>>    #4 [...] out_of_line_wait_on_bit at ...
->>>    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
->>>    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
->>>    #7 [...] nfs_do_return_delegation at ... [nfsv4]
->>>    #8 [...] nfs4_evict_inode at ... [nfsv4]
->>>    #9 [...] evict at ...
->>>   #10 [...] dispose_list at ...
->>>   #11 [...] prune_icache_sb at ...
->>>   #12 [...] super_cache_scan at ...
->>>   #13 [...] do_shrink_slab at ...
->>>   #14 [...] shrink_slab at ...
->>>   #15 [...] drop_slab_node at ...
->>>   #16 [...] drop_slab at ...
->>>   #17 [...] drop_caches_sysctl_handler at ...
->>>   #18 [...] proc_sys_call_handler at ...
->>>   #19 [...] vfs_write at ...
->>>   #20 [...] ksys_write at ...
->>>   #21 [...] do_syscall_64 at ...
->>>   #22 [...] entry_SYSCALL_64_after_hwframe at ...
->>>
->>> 7) All other mount/umount activity now hangs with no luck to take
->>>   shrinker_rwsem for write.
->>>
->>> [client]# mount -t tmpfs tmpfs /tmp
->>>
->>>   crash> bt ...
->>>   PID: 5464   TASK: ...  CPU: 3   COMMAND: "mount"
->>>    #0 [...] __schedule at ...
->>>    #1 [...] schedule at ...
->>>    #2 [...] rwsem_down_write_slowpath at ...
->>>    #3 [...] prealloc_shrinker at ...
->>>    #4 [...] alloc_super at ...
->>>    #5 [...] sget at ...
->>>    #6 [...] mount_nodev at ...
->>>    #7 [...] legacy_get_tree at ...
->>>    #8 [...] vfs_get_tree at ...
->>>    #9 [...] do_mount at ...
->>>   #10 [...] ksys_mount at ...
->>>   #11 [...] __x64_sys_mount at ...
->>>   #12 [...] do_syscall_64 at ...
->>>   #13 [...] entry_SYSCALL_64_after_hwframe at ...
->>>
->>
->>
->> I don't think this patch solves the problem, it only fixes one minor symptom of it.
->> The actual problem here the reclaim hang in the nfs.
->> It means that any process, including kswapd, may go into nfs inode reclaim and stuck there.
->>
->> Even mount() itself has GFP_KERNEL allocations in its path, so it still might stuck there even with your patch.
->>
->> I think this should be handled on nfs/vfs level by making  inode eviction during reclaim more asynchronous.
-> 
-> Though I agree that we should be fixing shrinkers to not get stuck
-> (and be more async), I still think the problem this patch is solving
-> is worth fixing. On machines running multiple workloads, one job stuck
-> in slab shrinker and blocking all other unrelated jobs wanting
-> shrinker_rwsem, breaks the isolation and causes DoS.
+This series aims at providing support for Raspberry Pi 4's PCIe
+controller, which is also shared with the Broadcom STB family of
+devices.
 
-This makes jobs isolated till global reclaim occurs. In that case any process
-(including kswapd) become stuck, and nothing will help. But (as it was spoken
-in this list some time ago) many people configure their workload in the way
-they don't have global reclaim, and they may get some profit from this.
+There was a previous attempt to upstream this some years ago[1] but was
+blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
+is something currently not supported by the kernel.  Luckily this is not
+the case for the Raspberry Pi 4.
+
+Note that the driver code is to be based on top of Rob Herring's series
+simplifying inbound and outbound range parsing.
+
+[1] https://patchwork.kernel.org/cover/10605933/
+[2] https://patchwork.kernel.org/patch/10605957/
+
+---
+
+Changes since v3:
+  - Moved all the log2.h related changes at the end of the series, as I
+    presume they will be contentious and I don't want the PCIe patches
+    to depend on them. Ultimately I think I'll respin them on their own
+    series but wanted to keep them in for this submission just for the
+    sake of continuity.
+  - Addressed small nits here and there.
+
+Changes since v2:
+  - Redo register access in driver avoiding indirection while keeping
+    the naming intact
+  - Add patch editing ARM64's config
+  - Last MSI cleanups, notably removing MSIX flag
+  - Got rid of all _RB writes
+  - Got rid of all of_data
+  - Overall churn removal
+  - Address the rest of Andrew's comments
+
+Changes since v1:
+  - add generic rounddown/roundup_pow_two64() patch
+  - Add MAINTAINERS patch
+  - Fix Kconfig
+  - Cleanup probe, use up to date APIs, exit on MSI failure
+  - Get rid of linux,pci-domain and other unused constructs
+  - Use edge triggered setup for MSI
+  - Cleanup MSI implementation
+  - Fix multiple cosmetic issues
+  - Remove supend/resume code
+
+Jim Quinlan (3):
+  dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+  PCI: brcmstb: Add Broadcom STB PCIe host controller driver
+  PCI: brcmstb: Add MSI support
+
+Nicolas Saenz Julienne (5):
+  ARM: dts: bcm2711: Enable PCIe controller
+  MAINTAINERS: Add brcmstb PCIe controller
+  arm64: defconfig: Enable Broadcom's STB PCIe controller
+  linux/log2.h: Fix 64bit calculations in roundup/down_pow_two()
+  linux/log2.h: Use roundup/dow_pow_two() on 64bit calculations
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
+ MAINTAINERS                                   |    4 +
+ arch/arm/boot/dts/bcm2711.dtsi                |   37 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/acpi/arm64/iort.c                     |    2 +-
+ drivers/clk/clk-divider.c                     |    8 +-
+ drivers/clk/sunxi/clk-sunxi.c                 |    2 +-
+ drivers/infiniband/hw/hfi1/chip.c             |    4 +-
+ drivers/infiniband/hw/hfi1/init.c             |    4 +-
+ drivers/infiniband/hw/mlx4/srq.c              |    2 +-
+ drivers/infiniband/hw/mthca/mthca_srq.c       |    2 +-
+ drivers/infiniband/sw/rxe/rxe_qp.c            |    4 +-
+ drivers/iommu/intel-iommu.c                   |    4 +-
+ drivers/iommu/intel-svm.c                     |    4 +-
+ drivers/iommu/intel_irq_remapping.c           |    2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  |    4 +-
+ drivers/net/ethernet/marvell/sky2.c           |    2 +-
+ drivers/net/ethernet/mellanox/mlx4/en_clock.c |    3 +-
+ drivers/net/ethernet/rocker/rocker_hw.h       |    4 +-
+ drivers/net/ethernet/sfc/ef10.c               |    2 +-
+ drivers/net/ethernet/sfc/efx.h                |    2 +-
+ drivers/net/ethernet/sfc/falcon/efx.h         |    2 +-
+ drivers/of/device.c                           |    3 +-
+ drivers/pci/controller/Kconfig                |    9 +
+ drivers/pci/controller/Makefile               |    1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    3 +-
+ drivers/pci/controller/cadence/pcie-cadence.c |    3 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 1008 +++++++++++++++++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    5 +-
+ drivers/pci/msi.c                             |    2 +-
+ include/linux/log2.h                          |   44 +-
+ kernel/dma/direct.c                           |    2 +-
+ kernel/kexec_core.c                           |    3 +-
+ lib/rhashtable.c                              |    2 +-
+ net/sunrpc/xprtrdma/verbs.c                   |    2 +-
+ 35 files changed, 1211 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+
+-- 
+2.24.0
+
