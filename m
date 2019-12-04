@@ -2,125 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBF58113577
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2019 20:09:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9BF211362C
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2019 21:11:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfLDTJy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Dec 2019 14:09:54 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:38857 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbfLDTJy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Dec 2019 14:09:54 -0500
-Received: by mail-vk1-f196.google.com with SMTP id m128so299813vkb.5
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Dec 2019 11:09:54 -0800 (PST)
+        id S1727989AbfLDULO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Dec 2019 15:11:14 -0500
+Received: from mail-ua1-f43.google.com ([209.85.222.43]:32968 "EHLO
+        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfLDULN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Dec 2019 15:11:13 -0500
+Received: by mail-ua1-f43.google.com with SMTP id a13so306776uaq.0
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Dec 2019 12:11:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XkOJcPHjGzItPhmaOdrfOBp4UY1Nn9cG74yreNltDAQ=;
-        b=Albq0okO3AqnXxfbrd9FdiG18poW8hqRdGpeT7VaeF5LmJ/Hu4PNhkKrQ+samrP1iS
-         TQ+1KpQveiDgiUWDyeAUWJd7ruHywHKyoY8JMCh8YObMqY+8gNl2R5F7iahtiBQGOKH4
-         UDvmxX9I94BudGaad+SUVgoR+L4Hptg+TNq9XrgAIqhL4dydQTNzH5J7ugeMvP4/uLIr
-         JOoa/BAHfYw+FjiTaPugdnrPcV+MMG8pr/GcJYWMF7Bif21uFJL7yO9YSSoeO8SUWyP/
-         y5e/RLTfXLZSVhEseRn0AVfc1ZQsInGoRI6cCkuhoBdUhb6HFf7OaAIeYwEzeW2v4J8m
-         WzZw==
+        bh=8M5KPf6gzqhwGyQGFlpeC/pbw6q1e8aVo9w/9Axac20=;
+        b=kscMIwhC8gFdyce9/tOvOLfjmTi9RaSQH6auKbR1DcsSmCP2ub5XF6s0PfAqvfeHap
+         xbXwrR3iCEwlm/zrsOVRFXrAdvzc+Gb5IP5EaLQNB6ZDYpX0+Nvm9/7G3RCn/0HWaRFJ
+         VsFY1PSxngzLM0LDZxLIhaNNfwIEeHmnf/Phnuls3Y1grZ6/u0p2stE2k/iaUkTaasIK
+         fE+IRFZYh1F3BBWU24CIa7Gtff/oK8XJrlhBh4FBVUEqGKnbVsZm3aI/PTJqV0sKVPt4
+         TLqJ9Y10R2/TFFW5eSe9h2i3FL+P4RPeASfdgcsl4fGPf0eDQnCzrTg0fCCGbvTZ6ef7
+         jGBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XkOJcPHjGzItPhmaOdrfOBp4UY1Nn9cG74yreNltDAQ=;
-        b=HvVmj1Jc66CMuadsChuuognTmtG3ohwxsh05Y6VyTmCMgZkMhmXHODHDQtuJC0Lojz
-         gFWrDcmIh0e3tqF2Jxa+EPbxTcaV5/SUdOAvPSdxrJ7Mf5XNJDv0PtN0O0qHQgEoT6KQ
-         HJiLyjnj1fhhxIPy4Z0vpbHpGq0Si5HU+etsV11nYWiEz/8bookwSM1XVbYov9qm+Vli
-         WMVDwTKqDeWYwEqCM1Zi45Xodi2zE4EVQLrtO2n4eUggu+m9E2M4RS1bp0e0hBvuyjSG
-         nl60U3QmRtWxBJzPBc30QL4jguap8f8LaRbhO1RifXYl5RIkZ9T1DIOcmhugv5Vy5/72
-         tHLA==
-X-Gm-Message-State: APjAAAWO0bdWpxE2DfOdlqH7Gm6fc4qBHkYbjeAFNMvLOBHfYW6c/l+p
-        sf25UEtFRFqTaPPNe3RlEvN5YyD3aujpUfLwX4GOeQ==
-X-Google-Smtp-Source: APXvYqxBDPaO1DYxF57JMghLjZKlIPwjw6C8PXep8Wn6uAY8LFuuJAXS8EdTPU5j70T0coEdetBUKp044zi96Uomikw=
-X-Received: by 2002:a1f:f283:: with SMTP id q125mr3338777vkh.69.1575486593389;
- Wed, 04 Dec 2019 11:09:53 -0800 (PST)
+        bh=8M5KPf6gzqhwGyQGFlpeC/pbw6q1e8aVo9w/9Axac20=;
+        b=S+GcVuhop+/c3wCj5XFa9ADbFNt5pacXnKaLRCidlSsGOR60Hyv6KN6unx9HolGjFq
+         rg43URUWSjDF6LLQijCTSVxGugmurLpysGtOkAcc22OMy+UXnPsaGzUzdjCJqFbXfu40
+         E+We4cWPbeAStHS1CxooaUCGYUoHClRUDcR9V6aHARrvdSx2ddxe67N5EKEPf7rEIKQ8
+         hY0qSTk4dG5T1Hcx0965GEKyx2Aq6FHXgyjyLQZkwwMwHdwSTICt3NDacztr5k31pdBn
+         iIKc8lZZuA/wjtDyTHgkQ9GLVDkuE5AokyE04uoKlJC0b3FXEROwboMVAvqu/iY5Bt0k
+         jyxA==
+X-Gm-Message-State: APjAAAV/U03UPeEWmFqS3KhDQe/VRRE5gliRqN5lW47z1rnELY8HT7p1
+        RIGOu5eS6jputt/IZPlWi09CEb088LexVRW0F4Q=
+X-Google-Smtp-Source: APXvYqwdBJuwBc8lpfWL7ZVZ3K/Pp2LssXaToRG7FAnM+zWFVcgrMpNqnpbct3F2a4sc56eZzhwGEAK5NJ0IImX4jt8=
+X-Received: by 2002:ab0:3381:: with SMTP id y1mr736117uap.93.1575490272616;
+ Wed, 04 Dec 2019 12:11:12 -0800 (PST)
 MIME-Version: 1.0
-References: <CAN-5tyHR8RKtsVNdg6vrSN50Sf9x9XWn-VX0pXBPetAY4Mj7nA@mail.gmail.com>
- <5E198AD1-41F7-4211-83CA-85680D8FB115@oracle.com> <CAN-5tyEPhcE6NBktsqRKySyAUi6EeC_saWFH8A7tKFZ+Sb0jMg@mail.gmail.com>
- <7D6BD48C-E6B3-43D4-8A31-99F0B387EF77@oracle.com>
-In-Reply-To: <7D6BD48C-E6B3-43D4-8A31-99F0B387EF77@oracle.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 4 Dec 2019 14:09:41 -0500
-Message-ID: <CAN-5tyHmqs2ZWZHKBbockHX_kEcXbnqB=kAfVqtkv-BLhpZHTg@mail.gmail.com>
-Subject: Re: rdma compile error
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20191204080039.ixjqetefkzzlldyt@kili.mountain>
+In-Reply-To: <20191204080039.ixjqetefkzzlldyt@kili.mountain>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 4 Dec 2019 15:11:01 -0500
+Message-ID: <CAN-5tyEG3C_Ebdr6dpMJ+gQ1pEAMNqbTv76dKu=KK9rspREr1A@mail.gmail.com>
+Subject: Re: [bug report] NFSD: allow inter server COPY to have a STALE source
+ server fh
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 1:25 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+On Wed, Dec 4, 2019 at 3:00 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
+> Hello Olga Kornievskaia,
 >
+> This is a semi-automatic email about new static checker warnings.
 >
-> > On Dec 4, 2019, at 1:12 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >
-> > On Wed, Dec 4, 2019 at 1:02 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>
-> >> Hi Olga-
-> >>
-> >>> On Dec 4, 2019, at 11:15 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >>>
-> >>> Hi Chuck,
-> >>>
-> >>> I git cloned your origin/cel-testing, it's on the following commit.
-> >>> commit 37e235c0128566e9d97741ad1e546b44f324f108
-> >>> Author: Chuck Lever <chuck.lever@oracle.com>
-> >>> Date:   Fri Nov 29 12:06:00 2019 -0500
-> >>>
-> >>>   xprtrdma: Invoke rpcrdma_ep_create() in the connect worker
-> >>>
-> >>> And I'm getting the following compile error.
-> >>>
-> >>> CC [M]  drivers/infiniband/core/cma_trace.o
-> >>> In file included from drivers/infiniband/core/cma_trace.h:302:0,
-> >>>                from drivers/infiniband/core/cma_trace.c:16:
-> >>> ./include/trace/define_trace.h:95:43: fatal error: ./cma_trace.h: No
-> >>> such file or directory
-> >>> #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-> >>>                                          ^
-> >>> Is this known?
-> >>
-> >> I haven't had any complaints from lkp.
-> >>
-> >> f73179592745 ("RDMA/cma: Add trace points in RDMA Connection Manager")
-> >>
-> >> should have added drivers/infiniband/core/cma_trace.h .
-> >>
-> >
-> > The file "cma_trace.h" is there in the "core" directory. But for some
-> > reason my compile expects it to be in include/trace directory (if I
-> > were to copy it there I can compile).
+> The patch 4e48f1cccab3: "NFSD: allow inter server COPY to have a
+> STALE source server fh" from Oct 7, 2019, leads to the following
+> Smatch complaint:
 >
-> The end of cma_trace.h should have:
+>     fs/nfsd/nfs4proc.c:2371 nfsd4_proc_compound()
+>      error: we previously assumed 'current_fh->fh_export' could be null (see line 2325)
 >
-> #undef TRACE_INCLUDE_PATH
-> #define TRACE_INCLUDE_PATH .
-> #define TRACE_INCLUDE_FILE cma_trace
+> fs/nfsd/nfs4proc.c
+>   2324                          }
+>   2325                  } else if (current_fh->fh_export &&
+>                                    ^^^^^^^^^^^^^^^^^^^^^
+> The patch adds a check for NULL
+>
+>   2326                             current_fh->fh_export->ex_fslocs.migrated &&
+>   2327                            !(op->opdesc->op_flags & ALLOWED_ON_ABSENT_FS)) {
+>   2328                          op->status = nfserr_moved;
+>   2329                          goto encode_op;
+>   2330                  }
+>   2331
+>   2332                  fh_clear_wcc(current_fh);
+>   2333
+>   2334                  /* If op is non-idempotent */
+>   2335                  if (op->opdesc->op_flags & OP_MODIFIES_SOMETHING) {
+>   2336                          /*
+>   2337                           * Don't execute this op if we couldn't encode a
+>   2338                           * succesful reply:
+>   2339                           */
+>   2340                          u32 plen = op->opdesc->op_rsize_bop(rqstp, op);
+>   2341                          /*
+>   2342                           * Plus if there's another operation, make sure
+>   2343                           * we'll have space to at least encode an error:
+>   2344                           */
+>   2345                          if (resp->opcnt < args->opcnt)
+>   2346                                  plen += COMPOUND_ERR_SLACK_SPACE;
+>   2347                          op->status = nfsd4_check_resp_size(resp, plen);
+>   2348                  }
+>   2349
+>   2350                  if (op->status)
+>   2351                          goto encode_op;
+>   2352
+>   2353                  if (op->opdesc->op_get_currentstateid)
+>   2354                          op->opdesc->op_get_currentstateid(cstate, &op->u);
+>   2355                  op->status = op->opdesc->op_func(rqstp, cstate, &op->u);
+>   2356
+>   2357                  /* Only from SEQUENCE */
+>   2358                  if (cstate->status == nfserr_replay_cache) {
+>   2359                          dprintk("%s NFS4.1 replay from cache\n", __func__);
+>   2360                          status = op->status;
+>   2361                          goto out;
+>   2362                  }
+>   2363                  if (!op->status) {
+>   2364                          if (op->opdesc->op_set_currentstateid)
+>   2365                                  op->opdesc->op_set_currentstateid(cstate, &op->u);
+>   2366
+>   2367                          if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+>   2368                                  clear_current_stateid(cstate);
+>   2369
+>   2370                          if (need_wrongsec_check(rqstp))
+>   2371                                  op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+>                                                                        ^^^^^^^^^^^^^^^^^^^^^
+> Is it required here as well?
 
-It does have it.
-
-> That is supposed to steer the compiler to the cma_trace.h in core/ .
->
-> Does a "make mrproper; git clean -d -f -x" help? Feels like there's
-> a stale generated file somewhere that's breaking things.
-
-I probably do have something uncleaned. I have tried what you
-suggested but it's not helping. This build is a tar of a git clone
-tree then copied into an internal lab (with rdma hardware).
+Bruce, correct me if I'm wrong but I think we are ok here. Because for
+the COPY operation for which the current_fh->fh_export can be null,
+need_wrongsec_check() would be false.
 
 >
+>   2372                  }
+>   2373  encode_op:
 >
-> --
-> Chuck Lever
->
->
->
+> regards,
+> dan carpenter
