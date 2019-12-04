@@ -2,117 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B851122D1
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2019 07:13:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6F0112401
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2019 08:59:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbfLDGNb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Dec 2019 01:13:31 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:42961 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbfLDGNb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Dec 2019 01:13:31 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 8387F9D0;
-        Wed,  4 Dec 2019 01:13:30 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 04 Dec 2019 01:13:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=D9GMc4lk4p1vl
-        W1R/dETqnGkGgAzApGh9izz/ZsfcXQ=; b=hYc7qVAU23A0DlMFm4MijXKkPZlbb
-        nAgV89aXDwbfByQLZutgJC9gCeKEqneUBNFAUmmEyh03MG6+eRglj0xX84Imq7Y8
-        5GGO185Qw+Vw+4f6fliQ60rePxNMEDH5TE7nmze+OtpAQeCAlxLAlMCCRnBGJ3ir
-        +/MrkHXP3TFGP+KdNXRUcPiRQzFHDih5jJiKI85r4n3qFEOGvnz+w/PIRZJryrEE
-        We4VR6/7BmEWlKnzqYFb1VE67hKOhz76lOKVjOj8UW6PZcWUJ6ejHvdcccZF4BfL
-        /wCJnAL+kwL0jBz/9F+r3BG8eLfhds5wYpBP6OQc/F40jTOoKpeqKYotg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=D9GMc4lk4p1vlW1R/dETqnGkGgAzApGh9izz/ZsfcXQ=; b=wVCIJ3x7
-        +7KsuO5NLWFKiz5t1Z0yq2uvYAa1JrBs1juFadIr4As0i2dANuJa1Gg0KlF9i2ik
-        qqcXuMmjtDGPh5xzQSzcTR6Yn4ikJ/ONu9izg6IAJiMloGv2rpq2XyVG6icUGpGi
-        RzU6VsaImdQxY0kvKoCCMezUdeA43jV5H9rJ5EQX5b/CLru35n4GxACFYIot14XI
-        xsNQucHQCcSfyfKXXBzqLe4sORcXxKW7eFDuHEUDXA/8/wiOVJBogmbyWw736Csa
-        UTWpg3rZArzBnr/IcT6YeD1jF+rrhw7ZK8m9zn0wbiji5TsjCc1f9WS62xzYDJBA
-        H7Kj2ZKosZpm9g==
-X-ME-Sender: <xms:iU7nXUNnf28hJ_XcIrlxKYkb0ewhNCaUS7kmEfeqQEdK-Ra06OQaKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejkedgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefrrghtrhhi
-    tghkucfuthgvihhnhhgrrhguthcuoehpshesphhkshdrihhmqeenucfkphepjeekrdehge
-    drhedtrddvheegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpshesphhkshdrihhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:iU7nXTltFzM4IWCV5VWOGVolq457yhwKt0pG7Ij52VBO1P6acRe0aw>
-    <xmx:iU7nXSuKi-JHs1DdWF6ZngNSMlkJZJBy_xk_Xj6i3DwW9uM48IhGOw>
-    <xmx:iU7nXWqR-0w7vx8EHAuKbaWalVDEnihUXineVpMprphegoM-RLpcGQ>
-    <xmx:ik7nXZ9Nm1lTUJYTakSATosw-PNCE9hE8AIRWDrpDfF1qfFKW2O6vw>
-Received: from vm-mail (x4e3632fe.dyn.telefonica.de [78.54.50.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2737480060;
-        Wed,  4 Dec 2019 01:13:29 -0500 (EST)
-Received: from localhost (<unknown> [10.192.0.11])
-        by vm-mail (OpenSMTPD) with ESMTPSA id f862a361 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 4 Dec 2019 06:13:27 +0000 (UTC)
-From:   Patrick Steinhardt <ps@pks.im>
-To:     linux-nfs@vger.kernel.org
-Cc:     Patrick Steinhardt <ps@pks.im>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Subject: [PATCH v2] nfsd: depend on CRYPTO_MD5 for legacy client tracking
-Date:   Wed,  4 Dec 2019 07:13:22 +0100
-Message-Id: <7af3028bd374451f35e36a6c289c44d9c932ee71.1575439669.git.ps@pks.im>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <d411d31bcde3e0221d54ee8bb5af80772a277cad.1575355896.git.ps@pks.im>
-References: <d411d31bcde3e0221d54ee8bb5af80772a277cad.1575355896.git.ps@pks.im>
+        id S1726679AbfLDH7y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Dec 2019 02:59:54 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34506 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDH7x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Dec 2019 02:59:53 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB47sr8q117706;
+        Wed, 4 Dec 2019 07:59:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=S+a60UhzqPZZ9k0O1/DfrG9ejLDvOQnagDFsObBPjag=;
+ b=OvTU3F8FzIlNz7ikZCdfMRejlTqq0PzNhdTOghkO/Ts7ZyOkmxSkg7oUdbicu9k7x170
+ v8Gk7fcv6qlunP/AyTumcIgroPGS4BSiPQAb4+wel2Il3g2joZ0iTdWQpptcQonhN3HF
+ b3E5GrDIzRfc3LUafA6yV/RsKwvaOokdO4dWCe3pH0G782TbrX0monBZhalIwKgCp2PI
+ jm8shve+cWq/AMzkU+G9vltoKDcUVP8EkUkUi650gPrOmKL3e8aBt2TyNuDqPrdcV2NM
+ rB/Bc2wGUATNpkYB7Tc8+CAUuI1WbriDun+5W5hlwZAjY/oDilGQiZINMoGDAU3IqK84 qQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2wkh2rcj5y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 07:59:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB47wawv106584;
+        Wed, 4 Dec 2019 07:59:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wp209n134-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 07:59:49 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB47xhQ7006197;
+        Wed, 4 Dec 2019 07:59:44 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Dec 2019 23:59:43 -0800
+Date:   Wed, 4 Dec 2019 10:59:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] nfsd: unlock on error in manage_cpntf_state()
+Message-ID: <20191204075935.sgdcxib4jahd5blr@kili.mountain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040058
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040058
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The legacy client tracking infrastructure of nfsd makes use of MD5 to
-derive a client's recovery directory name. As the nfsd module doesn't
-declare any dependency on CRYPTO_MD5, though, it may fail to allocate
-the hash if the kernel was compiled without it. As a result, generation
-of client recovery directories will fail with the following error:
+We are holding the "nn->s2s_cp_lock" so we can't return directly
+without unlocking first.
 
-    NFSD: unable to generate recoverydir name
-
-The explicit dependency on CRYPTO_MD5 was removed as redundant back in
-6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig
-2008-02-11) as it was already implicitly selected via RPCSEC_GSS_KRB5.
-This broke when RPCSEC_GSS_KRB5 was made optional for NFSv4 in commit
-df486a25900f (NFS: Fix the selection of security flavours in Kconfig) at
-a later point.
-
-Fix the issue by adding back an explicit dependency on CRYPTO_MD5.
-
-Fixes: df486a25900f (NFS: Fix the selection of security flavours in Kconfig)
-Signed-off-by: Patrick Steinhardt <ps@pks.im>
+Fixes: f3dee17721a0 ("NFSD check stateids against copy stateids")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
+ fs/nfsd/nfs4state.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The only change compared to v1 is in the commit message. As
-pointed out by Chuck, it wasn't actually commit 6aaa67b5f3b9
-which broke it, but the later df486a25900f. I've reworded the
-commit message and fixed the Fixes tag to account for that.
-
- fs/nfsd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index c4b1a89b8845..f2f81561ebb6 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -73,6 +73,7 @@ config NFSD_V4
- 	select NFSD_V3
- 	select FS_POSIX_ACL
- 	select SUNRPC_GSS
-+	select CRYPTO_MD5
- 	select CRYPTO_SHA256
- 	select GRACE_PERIOD
- 	help
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 296765e693d0..390ad454a229 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5695,13 +5695,16 @@ __be32 manage_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+ 	if (cps_t) {
+ 		state = container_of(cps_t, struct nfs4_cpntf_state,
+ 				     cp_stateid);
+-		if (state->cp_stateid.sc_type != NFS4_COPYNOTIFY_STID)
+-			return nfserr_bad_stateid;
++		if (state->cp_stateid.sc_type != NFS4_COPYNOTIFY_STID) {
++			state = NULL;
++			goto unlock;
++		}
+ 		if (!clp)
+ 			refcount_inc(&state->cp_stateid.sc_count);
+ 		else
+ 			_free_cpntf_state_locked(nn, state);
+ 	}
++unlock:
+ 	spin_unlock(&nn->s2s_cp_lock);
+ 	if (!state)
+ 		return nfserr_bad_stateid;
 -- 
-2.24.0
+2.11.0
 
