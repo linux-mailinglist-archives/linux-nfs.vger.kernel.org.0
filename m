@@ -2,90 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91AA71148C8
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 22:43:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 745AD11494C
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 23:30:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfLEVnT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Dec 2019 16:43:19 -0500
-Received: from fieldses.org ([173.255.197.46]:53376 "EHLO fieldses.org"
+        id S1727893AbfLEWas (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Dec 2019 17:30:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbfLEVnS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:43:18 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8B1F4BC3; Thu,  5 Dec 2019 16:43:18 -0500 (EST)
-Date:   Thu, 5 Dec 2019 16:43:18 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] NFSD fix nfserro errno mismatch
-Message-ID: <20191205214318.GC29765@fieldses.org>
-References: <20191204201354.17557-1-olga.kornievskaia@gmail.com>
- <20191204201354.17557-3-olga.kornievskaia@gmail.com>
- <20191205213930.GB29765@fieldses.org>
+        id S1727595AbfLEWas (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Dec 2019 17:30:48 -0500
+Received: from localhost (mobile-166-170-221-197.mycingular.net [166.170.221.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F6520707;
+        Thu,  5 Dec 2019 22:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575585047;
+        bh=rwc2W/J/V58JZoKOWg2doRruK6KWPbQgM5Sb2F/Ai60=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cliOZcUxDWzGZ1UQTKJkPsD++s/EPrjyE7H/snJuA3uqE7NURH520sOnVje6nd0Ts
+         Td38CmfeZyMBlRyr+Rypsepv/EG8hoAOa7B7sJiJzOVgMDkiBquX3yxdZnHzKOkS/c
+         BBv+wew7DxEj2QDNBsIebdp/nYnu0CS5l8OPwMaM=
+Date:   Thu, 5 Dec 2019 16:30:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+Message-ID: <20191205223044.GA250573@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205213930.GB29765@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 04:39:30PM -0500, bfields wrote:
-> On Wed, Dec 04, 2019 at 03:13:53PM -0500, Olga Kornievskaia wrote:
-> > There is mismatch between __be32 and u32 in nfserr and errno.
-> > 
-> ...
-> > @@ -1280,7 +1279,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
-> >  
-> >  	copy->c_fh.size = s_fh->fh_handle.fh_size;
-> >  	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
-> > -	copy->stateid.seqid = s_stid->si_generation;
-> > +	copy->stateid.seqid = cpu_to_be32(s_stid->si_generation);
-> 
-> This one isn't an errno, and should really be its own patch.  I've split
-> it out as follows.--b.
+You got the "n" on "down" in the subject, but still missing "of" ;)
 
-(And applied the others, thanks.)
+On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> out ilog2() already handles 32/64bit calculations properly, and being
+> the building block to the round functions we can rework them as a
+> wrapper around it.
 
-> 
-> commit a1f3cb8bb088
-> Author: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-> Date:   Wed Dec 4 15:13:53 2019 -0500
-> 
->     NFSD: fix seqid in copy stateid
->     
->     s_stid->si_generation is a u32, copy->stateid.seqid is a __be32, so we
->     should be byte-swapping here if necessary.
->     
->     This effectively undoes the byte-swap performed when reading
->     s_stid->s_generation in nfsd4_decode_copy().  Without this second swap,
->     the stateid we sent to the source in READ could be different from the
->     one the client provided us in the COPY.  We didn't spot this in testing
->     since our implementation always uses a 0 in the seqid field.  But other
->     implementations might not do that.
->     
->     You'd think we should just skip the byte-swapping entirely, but the
->     s_stid field can be used for either our own stateids (in the
->     intra-server case) or foreign stateids (in the inter-server case), and
->     the former are interpreted by us and need byte-swapping.
->     
->     Reported-by: kbuild test robot <lkp@intel.com>
->     Fixes: d5e54eeb0e3d ("NFSD add nfs4 inter ssc to nfsd4_copy")
->     Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
->     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> 
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index ec4f79c8f71e..9a8debc0d725 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1280,7 +1280,7 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
->  
->  	copy->c_fh.size = s_fh->fh_handle.fh_size;
->  	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
-> -	copy->stateid.seqid = s_stid->si_generation;
-> +	copy->stateid.seqid = cpu_to_be32(s_stid->si_generation);
->  	memcpy(copy->stateid.other, (void *)&s_stid->si_opaque,
->  	       sizeof(stateid_opaque_t));
->  
+Missing "of" in the function names here.
+s/a wrapper/wrappers/
+
+IIUC the point of this is that roundup_pow_of_two() returned
+"unsigned long", which can be either 32 or 64 bits (worth pointing
+out, I think), and many callers need something that returns
+"unsigned long long" (always 64 bits).
+
+It's a nice simplification to remove the "__" variants.  Just as a
+casual reader of this commit message, I'd like to know why we had both
+the roundup and the __roundup versions in the first place, and why we
+no longer need both.
+
+> -#define roundup_pow_of_two(n)			\
+> -(						\
+> -	__builtin_constant_p(n) ? (		\
+> -		(n == 1) ? 1 :			\
+> -		(1UL << (ilog2((n) - 1) + 1))	\
+> -				   ) :		\
+> -	__roundup_pow_of_two(n)			\
+> - )
+> +#define roundup_pow_of_two(n)			  \
+> +(						  \
+> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
+> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> +)
+
+Should the resulting type of this expression always be a ULL, even
+when n==1, i.e., should it be this?
+
+  1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
+
+Or maybe there's no case where that makes a difference?
+
+Bjorn
