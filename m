@@ -2,97 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95240113F58
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 11:27:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C17F113F86
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 11:39:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfLEK14 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Dec 2019 05:27:56 -0500
-Received: from ny018.relay.arandomserver.com ([172.96.188.180]:59801 "EHLO
-        ny018.relay.arandomserver.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728707AbfLEK14 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Dec 2019 05:27:56 -0500
-Received: from nyc006.hawkhost.com ([172.96.186.142])
-        by se004.arandomserver.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <nazard@nazar.ca>)
-        id 1icoMS-0004o0-Ic; Thu, 05 Dec 2019 04:27:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nazar.ca;
-         s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
-        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=g5FvqhTL8V5YUUfVklHRmdVlmQ1Wud1mD6SZT9y6qeE=; b=BcQQ78w5urjTY1uf/qKc1tABzJ
-        a+ss4nHABEQSvdXHql8MKQb0zfK2FvlY0LOd5FV+nos7Nkrb/fFGOoyH0ZITU+MBzbi84b1doHpes
-        DnqcfZa3lE6MUGYia/LHfKcFZ5daxgWIwKGZpnBzRit+HulTckyVl0u79nWOP2zEYeuAQDdkwVhnZ
-        YCYwp6btEwuoSx8vmj6s3kd77F0bE1AaZLmLFNrb7QEvugU2CiDJfasMBoi0lrwZ7VzAbRiMma+zB
-        vaHfAPV+0BNHYMUVB1QwoxMeF4cDfiUBls5zTdYurcCJ3D+b9AW9DOhIUDqZ0djv5dSyyW2KGUJU0
-        Lpa5wdOA==;
-Received: from [24.114.72.155] (port=37390 helo=wraith.dragoninc.ca)
-        by nyc006.hawkhost.com with esmtpa (Exim 4.92)
-        (envelope-from <nazard@nazar.ca>)
-        id 1icoMS-00075x-4y; Thu, 05 Dec 2019 05:27:52 -0500
-From:   Doug Nazar <nazard@nazar.ca>
-To:     linux-nfs@vger.kernel.org
-Cc:     Steve Dickson <steved@redhat.com>, Doug Nazar <nazard@nazar.ca>
-Subject: [PATCH] Disable statx if using glibc emulation
-Date:   Thu,  5 Dec 2019 05:27:36 -0500
-Message-Id: <20191205102736.24314-1-nazard@nazar.ca>
-X-Mailer: git-send-email 2.24.0
+        id S1729213AbfLEKjQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Dec 2019 05:39:16 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25236 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728735AbfLEKjQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Dec 2019 05:39:16 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5AbcVH087278
+        for <linux-nfs@vger.kernel.org>; Thu, 5 Dec 2019 05:39:14 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkm4a8erh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Dec 2019 05:39:13 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-nfs@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Thu, 5 Dec 2019 10:39:10 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Dec 2019 10:39:07 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5Ad6JO65732634
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 10:39:06 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67382A405C;
+        Thu,  5 Dec 2019 10:39:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D686A4054;
+        Thu,  5 Dec 2019 10:39:04 +0000 (GMT)
+Received: from dhcp-9-199-159-163.in.ibm.com (unknown [9.199.159.163])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 10:39:04 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     willy@infradead.org, linux-fsdevel@vger.kernel.org,
+        jlayton@kernel.org, viro@zeniv.linux.org.uk
+Cc:     ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [PATCH 0/1] Use inode_lock/unlock class of provided APIs in filesystems
+Date:   Thu,  5 Dec 2019 16:09:01 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AuthUser: nazard@nazar.ca
-X-Originating-IP: 172.96.186.142
-X-SpamExperts-Domain: nyc006.hawkhost.com
-X-SpamExperts-Username: relay
-Authentication-Results: arandomserver.com; auth=pass (login) smtp.auth=relay@nyc006.hawkhost.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.01)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhV5Yahflob5aAg
- zgTTBMBoMkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K5r8HtW+i+zOSEp4G6/nKTh5H
- bSAV/Mx/EYvM1H4+en0AxUtRo2eo7JXmMD/kBY54TX+DNB8zzxX/4FjqtJmb5HrHOgryQr3fhcqf
- yPnK+XABzS5fPHINUJxVzZg1ZLp9gmsYntIZvASFzmmwEK8xkpmNQB3hWTYq/vzakcc65ZBQkiNC
- 3M7Pj/MY9gGLjh/nwB5YOcnLTEWr5QFxf29u2b0ZFs7AIGlqJcSMQo9hh7aOmrbMWhZFkvyjvYIF
- be8tdb9BwqvSI91oKEKHszPrHLIoTCzQ7XvYo5qydvprZHcSCR22vShmebXILNDFNYkR6LCtYz5o
- yWoRpE2M2XALSMDT9ZG0CmXc0v4tKHsUSjuO8OL3MKmWpyx7GTPK+LOWY5R6BpcvGp3jcY/qUcse
- gxHyS9oTCOMgg0kq/x8Q8jegKor5vGLGjUegAaOB9ePyJLFZV2VsWrEXxYzPJvIeyCEnVSsgPP/M
- gqSGMx92qX+/Ib/3gD1xdv4OjYexFN7ik4oYRgdX/aeSLw4ZD+8uTG/yF5Sslr7rjwGaoPhs3lRX
- yXnXny2JA4iXRtmvwJUPkDzLsegeIf5jR5PNTlF6ReCprMAKLZ9Vvl2XZc6+7+zUzX99k5ROK7DU
- 2cuVvM4pN2jrzuqNLgr3QpfT+A5/9mbzroJXjH7wQNY/kO3yis9UoFIvD3sIcP1fhJPM6B/8NA/2
- WRcsjpniTU5VYMta6tks3e/xYSLn+HJoEjOfExoxcfxmM3wdGChc6hHRfRowObH2LW6BIAQW76wb
- eBOhgzcKVNeVJ9BXyu9+ceCqThQaHAwskslMOiSjwnYcoQfxx57gE89ByJNnvoZD/j4xXaiZ9OGv
- SyF6jGxmwlE+D33NBz6C+Mu+hGpwr7PBqmKnubcolFl/rX+2ReQklqJDAdqlKemfur/8qYsUn20e
- BeH3y8h6dUrDs43Vm7LtiRHY
-X-Report-Abuse-To: spam@se001.arandomserver.com
+X-TM-AS-GCONF: 00
+x-cbid: 19120510-0020-0000-0000-0000039440D3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120510-0021-0000-0000-000021EB6D6B
+Message-Id: <20191205103902.23618-1-riteshh@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_02:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 suspectscore=0 mlxlogscore=361 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050087
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On older kernels without statx, glibc with statx support will attempt
-to emulate the call. However it doesn't support AT_STATX_DONT_SYNC and
-will return EINVAL. This causes all xstat/xlstat calls to fail.
+Matthew Wilcox in [1] suggested that it will be a good idea
+to define some missing API instead of directly using i_rwsem in
+filesystems drivers for lock/unlock/downgrade purposes.
 
-Signed-off-by: Doug Nazar <nazard@nazar.ca>
----
- support/misc/xstat.c | 3 +++
- 1 file changed, 3 insertions(+)
+This patch does that work. No functionality change in this patch.
 
-diff --git a/support/misc/xstat.c b/support/misc/xstat.c
-index 661e29e4..a438fbcc 100644
---- a/support/misc/xstat.c
-+++ b/support/misc/xstat.c
-@@ -51,6 +51,9 @@ statx_do_stat(int fd, const char *pathname, struct stat *statbuf, int flags)
- 			statx_copy(statbuf, &stxbuf);
- 			return 0;
- 		}
-+		/* glibc emulation doesn't support AT_STATX_DONT_SYNC */
-+		if (errno == EINVAL)
-+			errno = ENOSYS;
- 		if (errno == ENOSYS)
- 			statx_supported = 0;
- 	} else
+After this there are only lockdep class of APIs at certain places
+in filesystems which are directly using i_rwsem and second is XFS,
+but it seems to be anyway defining it's own xfs_ilock/iunlock set
+of APIs and 'iolock' naming convention for this lock.
+
+[1]: https://www.spinics.net/lists/linux-ext4/msg68689.html
+
+Ritesh Harjani (1):
+  fs: Use inode_lock/unlock class of provided APIs in filesystems
+
+ fs/btrfs/delayed-inode.c |  2 +-
+ fs/btrfs/ioctl.c         |  4 ++--
+ fs/ceph/io.c             | 24 ++++++++++++------------
+ fs/nfs/io.c              | 24 ++++++++++++------------
+ fs/orangefs/file.c       |  4 ++--
+ fs/overlayfs/readdir.c   |  2 +-
+ fs/readdir.c             |  4 ++--
+ include/linux/fs.h       | 21 +++++++++++++++++++++
+ 8 files changed, 53 insertions(+), 32 deletions(-)
+
 -- 
-2.24.0
+2.20.1
 
