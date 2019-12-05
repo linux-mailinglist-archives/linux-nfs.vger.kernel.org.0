@@ -2,62 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD681141C1
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 14:42:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 276A0114338
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 16:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbfLENm3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Dec 2019 08:42:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:32800 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729165AbfLENm2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Dec 2019 08:42:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 880E7B1A3;
-        Thu,  5 Dec 2019 13:42:26 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id A1255DA733; Thu,  5 Dec 2019 14:42:20 +0100 (CET)
-Date:   Thu, 5 Dec 2019 14:42:20 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     willy@infradead.org, linux-fsdevel@vger.kernel.org,
-        jlayton@kernel.org, viro@zeniv.linux.org.uk,
-        ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] fs: Use inode_lock/unlock class of provided APIs in
- filesystems
-Message-ID: <20191205134220.GM2734@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Ritesh Harjani <riteshh@linux.ibm.com>,
-        willy@infradead.org, linux-fsdevel@vger.kernel.org,
-        jlayton@kernel.org, viro@zeniv.linux.org.uk,
-        ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org
-References: <20191205103902.23618-1-riteshh@linux.ibm.com>
- <20191205103902.23618-2-riteshh@linux.ibm.com>
+        id S1729698AbfLEPDp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Dec 2019 10:03:45 -0500
+Received: from fieldses.org ([173.255.197.46]:53076 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729187AbfLEPDo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Dec 2019 10:03:44 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9AB51BC3; Thu,  5 Dec 2019 10:03:44 -0500 (EST)
+Date:   Thu, 5 Dec 2019 10:03:44 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Alex Lyakas <alex@zadara.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [RFC-PATCH] nfsd: provide a procfs entry to release stateids of
+ a particular local filesystem
+Message-ID: <20191205150344.GB22402@fieldses.org>
+References: <1567518908-1720-1-git-send-email-alex@zadara.com>
+ <20190906161236.GF17204@fieldses.org>
+ <CAOcd+r0GRaXP3bes2xw6CFJmPJDTfAAMB7j6G3gzCVKDTC8Sgw@mail.gmail.com>
+ <20190910202533.GC26695@fieldses.org>
+ <1D90658865CE4379A951E464008D872E@alyakaslap>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205103902.23618-2-riteshh@linux.ibm.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <1D90658865CE4379A951E464008D872E@alyakaslap>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 04:09:02PM +0530, Ritesh Harjani wrote:
-> This defines 4 more APIs which some of the filesystem needs
-> and reduces the direct use of i_rwsem in filesystem drivers.
-> Instead those are replaced with inode_lock/unlock_** APIs.
+On Thu, Dec 05, 2019 at 01:47:09PM +0200, Alex Lyakas wrote:
+> Hi Bruce,
 > 
-> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-> ---
+> Have you had a chance to review the V2 of the patch?
 
-For the btrfs part
+I'll take a quick look.--b.
 
->  fs/btrfs/delayed-inode.c |  2 +-
->  fs/btrfs/ioctl.c         |  4 ++--
-
-Acked-by: David Sterba <dsterba@suse.com>
+> 
+> Thanks,
+> Alex.
+> 
+> 
+> -----Original Message----- From: J. Bruce Fields
+> Sent: Tuesday, September 10, 2019 11:25 PM
+> To: Alex Lyakas
+> Cc: linux-nfs@vger.kernel.org ; Shyam Kaushik
+> Subject: Re: [RFC-PATCH] nfsd: provide a procfs entry to release
+> stateids of a particular local filesystem
+> 
+> On Tue, Sep 10, 2019 at 10:00:24PM +0300, Alex Lyakas wrote:
+> >I addressed your comments, and ran the patch through checkpatch.pl.
+> >Patch v2 is on its way.
+> 
+> Thanks for the revision!  I need to spend the next week or so catching
+> up on some other review and then I'll get back to this.
+> 
+> For now:
+> 
+> >On Fri, Sep 6, 2019 at 7:12 PM J. Bruce Fields
+> ><bfields@fieldses.org> wrote:
+> >> You'll want to cover delegations as well.  And probably pNFS layouts.
+> >> It'd be OK to do that incrementally in followup patches.
+> >Unfortunately, I don't have much understanding of what these are, and
+> >how to cover them)
+> 
+> Delegations are give the client the right to cache files across opens.
+> I'm a little surprised your patches are working for you without handling
+> delegations.  There may be something about your environment that's
+> preventing delegations from being given out.  In the NFSv4.0 case they
+> require the server to make a tcp connection back the client, which is
+> easy blocked by firewalls or NAT.  Might be worth testing with v4.1 or
+> 4.2.
+> 
+> Anyway, so we probably also want to walk the client's dl_perclnt list
+> and look for matching files.
+> 
+> --b.
