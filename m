@@ -2,230 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F16701147D2
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 20:46:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 633CE1148C3
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 22:39:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbfLETqs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Dec 2019 14:46:48 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43274 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbfLETqr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Dec 2019 14:46:47 -0500
-Received: by mail-yw1-f65.google.com with SMTP id s187so1687009ywe.10;
-        Thu, 05 Dec 2019 11:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=ID+WgpQbemipC4nB1OMRUAGYoAfNxs0rXv34346QFJo=;
-        b=By8TO7cbKcxMqv1fiyofccgizYVnBjBtut3RZ8lk+Hfm30+ykCwEkHxpm9vKKhFe7a
-         1dBoNnugoZV55oSjkep2M3O4bKdtJwasKbkW6EM1U9msgCsov03u1M4cG2kpIJvoT7cG
-         iO41Z1ZtQEeeTliUN4eWATe2N92sOQptDnmNnSdoigWWZwwLLfDFIvZ7ZO1eRpD75dKb
-         7P2kP+4JVpFIWkCPE4Q+xeTRl0ldoJI2ZyRvxIsoS85u1VokxVa0X0uJLrjBFJUdhEYA
-         +4Ez5KOaw2OOmE+xcnAmFPJTbcjB08OfRQmr3Ox63L3sbT6APCCxesbk3dzG6ilqGxby
-         LmqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=ID+WgpQbemipC4nB1OMRUAGYoAfNxs0rXv34346QFJo=;
-        b=OEp2m38bok/B0LGp9bVJ2j0y6KrIef/dfHXhsqRTpzpSieK4T7JhfIPQ5A+rZsBz8f
-         qiOV0DvZSjifGhXbOwhykMhegxaW2eBsP6I3TKdf49J0lj4OPUFyyEC3mygaMrpBrJrc
-         fkhGj5Jc4/zrVLwAME4TwED9Lv0NkH/o8SGVs3KJsMaIXWHYKVeG9D0/Ji0B9PIGFvrQ
-         +VZLOV3TWybUqaSbJMFB7R7a9Sb1GJLy5GYcqVU5Kg9A0eJswvw9/w1AaKxjH9XYZGIs
-         4m5XqfORDoed4xNchDyJK4rhEclyd6aHahU3JgwO0QKngZ/cBqpKXtXsmEBbl21pAuWH
-         W53A==
-X-Gm-Message-State: APjAAAXGGtM8MhCArGxQkpp4cQqjvAk3EFSuqFkUbEtDj8E92WemD6SZ
-        RbRJBC1a9AU1EvfXojsF7d98qhH6
-X-Google-Smtp-Source: APXvYqzZdOiKNZWvUo9wF50djrrXtfGjvtGPD+y1bV2b9EZ9oDNY1DPb/vi4qNBgUh86r/UMFfBWrw==
-X-Received: by 2002:a0d:cd44:: with SMTP id p65mr7574328ywd.118.1575575205655;
-        Thu, 05 Dec 2019 11:46:45 -0800 (PST)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id e198sm5403416ywa.51.2019.12.05.11.46.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 11:46:44 -0800 (PST)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xB5Jkhoa003647;
-        Thu, 5 Dec 2019 19:46:43 GMT
-Subject: [PATCH] xprtrdma: Fix oops in Receive handler after device removal
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Thu, 05 Dec 2019 14:46:43 -0500
-Message-ID: <20191205194518.4319.92892.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        id S1729900AbfLEVja (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Dec 2019 16:39:30 -0500
+Received: from fieldses.org ([173.255.197.46]:53370 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729396AbfLEVja (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Dec 2019 16:39:30 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 243511511; Thu,  5 Dec 2019 16:39:30 -0500 (EST)
+Date:   Thu, 5 Dec 2019 16:39:30 -0500
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 2/3] NFSD fix nfserro errno mismatch
+Message-ID: <20191205213930.GB29765@fieldses.org>
+References: <20191204201354.17557-1-olga.kornievskaia@gmail.com>
+ <20191204201354.17557-3-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204201354.17557-3-olga.kornievskaia@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since v5.4, a device removal occasionally triggered this oops:
+On Wed, Dec 04, 2019 at 03:13:53PM -0500, Olga Kornievskaia wrote:
+> There is mismatch between __be32 and u32 in nfserr and errno.
+> 
+...
+> @@ -1280,7 +1279,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+>  
+>  	copy->c_fh.size = s_fh->fh_handle.fh_size;
+>  	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
+> -	copy->stateid.seqid = s_stid->si_generation;
+> +	copy->stateid.seqid = cpu_to_be32(s_stid->si_generation);
 
-Dec  2 17:13:53 manet kernel: BUG: unable to handle page fault for address: 0000000c00000219
-Dec  2 17:13:53 manet kernel: #PF: supervisor read access in kernel mode
-Dec  2 17:13:53 manet kernel: #PF: error_code(0x0000) - not-present page
-Dec  2 17:13:53 manet kernel: PGD 0 P4D 0
-Dec  2 17:13:53 manet kernel: Oops: 0000 [#1] SMP
-Dec  2 17:13:53 manet kernel: CPU: 2 PID: 468 Comm: kworker/2:1H Tainted: G        W         5.4.0-00050-g53717e43af61 #883
-Dec  2 17:13:53 manet kernel: Hardware name: Supermicro SYS-6028R-T/X10DRi, BIOS 1.1a 10/16/2015
-Dec  2 17:13:53 manet kernel: Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
-Dec  2 17:13:53 manet kernel: RIP: 0010:rpcrdma_wc_receive+0x7c/0xf6 [rpcrdma]
-Dec  2 17:13:53 manet kernel: Code: 6d 8b 43 14 89 c1 89 45 78 48 89 4d 40 8b 43 2c 89 45 14 8b 43 20 89 45 18 48 8b 45 20 8b 53 14 48 8b 30 48 8b 40 10 48 8b 38 <48> 8b 87 18 02 00 00 48 85 c0 75 18 48 8b 05 1e 24 c4 e1 48 85 c0
-Dec  2 17:13:53 manet kernel: RSP: 0018:ffffc900035dfe00 EFLAGS: 00010246
-Dec  2 17:13:53 manet kernel: RAX: ffff888467290000 RBX: ffff88846c638400 RCX: 0000000000000048
-Dec  2 17:13:53 manet kernel: RDX: 0000000000000048 RSI: 00000000f942e000 RDI: 0000000c00000001
-Dec  2 17:13:53 manet kernel: RBP: ffff888467611b00 R08: ffff888464e4a3c4 R09: 0000000000000000
-Dec  2 17:13:53 manet kernel: R10: ffffc900035dfc88 R11: fefefefefefefeff R12: ffff888865af4428
-Dec  2 17:13:53 manet kernel: R13: ffff888466023000 R14: ffff88846c63f000 R15: 0000000000000010
-Dec  2 17:13:53 manet kernel: FS:  0000000000000000(0000) GS:ffff88846fa80000(0000) knlGS:0000000000000000
-Dec  2 17:13:53 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Dec  2 17:13:53 manet kernel: CR2: 0000000c00000219 CR3: 0000000002009002 CR4: 00000000001606e0
-Dec  2 17:13:53 manet kernel: Call Trace:
-Dec  2 17:13:53 manet kernel: __ib_process_cq+0x5c/0x14e [ib_core]
-Dec  2 17:13:53 manet kernel: ib_cq_poll_work+0x26/0x70 [ib_core]
-Dec  2 17:13:53 manet kernel: process_one_work+0x19d/0x2cd
-Dec  2 17:13:53 manet kernel: ? cancel_delayed_work_sync+0xf/0xf
-Dec  2 17:13:53 manet kernel: worker_thread+0x1a6/0x25a
-Dec  2 17:13:53 manet kernel: ? cancel_delayed_work_sync+0xf/0xf
-Dec  2 17:13:53 manet kernel: kthread+0xf4/0xf9
-Dec  2 17:13:53 manet kernel: ? kthread_queue_delayed_work+0x74/0x74
-Dec  2 17:13:53 manet kernel: ret_from_fork+0x24/0x30
+This one isn't an errno, and should really be its own patch.  I've split
+it out as follows.--b.
 
-The proximal cause is that this rpcrdma_rep has a rr_rdmabuf that
-is still pointing to the old ib_device, which has been freed. The
-only way that is possible is if this rpcrdma_rep was not destroyed
-by rpcrdma_ia_remove.
+commit a1f3cb8bb088
+Author: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed Dec 4 15:13:53 2019 -0500
 
-Debugging showed that was indeed the case: this rpcrdma_rep was
-still in use by a completing RPC at the time of the device removal,
-and thus wasn't on the rep free list. So, it was not found by
-rpcrdma_reps_destroy().
+    NFSD: fix seqid in copy stateid
+    
+    s_stid->si_generation is a u32, copy->stateid.seqid is a __be32, so we
+    should be byte-swapping here if necessary.
+    
+    This effectively undoes the byte-swap performed when reading
+    s_stid->s_generation in nfsd4_decode_copy().  Without this second swap,
+    the stateid we sent to the source in READ could be different from the
+    one the client provided us in the COPY.  We didn't spot this in testing
+    since our implementation always uses a 0 in the seqid field.  But other
+    implementations might not do that.
+    
+    You'd think we should just skip the byte-swapping entirely, but the
+    s_stid field can be used for either our own stateids (in the
+    intra-server case) or foreign stateids (in the inter-server case), and
+    the former are interpreted by us and need byte-swapping.
+    
+    Reported-by: kbuild test robot <lkp@intel.com>
+    Fixes: d5e54eeb0e3d ("NFSD add nfs4 inter ssc to nfsd4_copy")
+    Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 
-The fix is to introduce a list of all rpcrdma_reps so that they all
-can be found when a device is removed. That list is used to perform
-only regbuf DMA unmapping, replacing that call to
-rpcrdma_reps_destroy().
-
-Meanwhile, to prevent corruption of this list, I've moved the
-destruction of temp rpcrdma_rep objects to rpcrdma_post_recvs().
-rpcrdma_xprt_drain() ensures that post_recvs (and thus rep_destroy) is
-not invoked while rpcrdma_reps_unmap is walking rb_all_reps, thus
-protecting the rb_all_reps list.
-
-Fixes: b0b227f071a0 ("xprtrdma: Use an llist to manage free rpcrdma_reps")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/verbs.c     |   25 +++++++++++++++++++------
- net/sunrpc/xprtrdma/xprt_rdma.h |    2 ++
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-Hi Anna-
-
-Here's the third RPC/RDMA fix that I mentioned in the earlier
-e-mail. Please review, and consider this one for v5.5-rc.
-
-Thanks!
-
-
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 2c40465a19e1..fda3889993cb 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -77,7 +77,7 @@
- static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
- 				       struct rpcrdma_sendctx *sc);
- static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
--static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf);
-+static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
- static struct rpcrdma_regbuf *
-@@ -421,7 +421,7 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
- 	/* The ULP is responsible for ensuring all DMA
- 	 * mappings and MRs are gone.
- 	 */
--	rpcrdma_reps_destroy(buf);
-+	rpcrdma_reps_unmap(r_xprt);
- 	list_for_each_entry(req, &buf->rb_allreqs, rl_all) {
- 		rpcrdma_regbuf_dma_unmap(req->rl_rdmabuf);
- 		rpcrdma_regbuf_dma_unmap(req->rl_sendbuf);
-@@ -1092,6 +1092,7 @@ static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
- 	rep->rr_recv_wr.sg_list = &rep->rr_rdmabuf->rg_iov;
- 	rep->rr_recv_wr.num_sge = 1;
- 	rep->rr_temp = temp;
-+	list_add(&rep->rr_all, &r_xprt->rx_buf.rb_all_reps);
- 	return rep;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index ec4f79c8f71e..9a8debc0d725 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1280,7 +1280,7 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
  
- out_free:
-@@ -1102,6 +1103,7 @@ static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
+ 	copy->c_fh.size = s_fh->fh_handle.fh_size;
+ 	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
+-	copy->stateid.seqid = s_stid->si_generation;
++	copy->stateid.seqid = cpu_to_be32(s_stid->si_generation);
+ 	memcpy(copy->stateid.other, (void *)&s_stid->si_opaque,
+ 	       sizeof(stateid_opaque_t));
  
- static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep)
- {
-+	list_del(&rep->rr_all);
- 	rpcrdma_regbuf_free(rep->rr_rdmabuf);
- 	kfree(rep);
- }
-@@ -1120,10 +1122,16 @@ static struct rpcrdma_rep *rpcrdma_rep_get_locked(struct rpcrdma_buffer *buf)
- static void rpcrdma_rep_put(struct rpcrdma_buffer *buf,
- 			    struct rpcrdma_rep *rep)
- {
--	if (!rep->rr_temp)
--		llist_add(&rep->rr_node, &buf->rb_free_reps);
--	else
--		rpcrdma_rep_destroy(rep);
-+	llist_add(&rep->rr_node, &buf->rb_free_reps);
-+}
-+
-+static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt)
-+{
-+	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-+	struct rpcrdma_rep *rep;
-+
-+	list_for_each_entry(rep, &buf->rb_all_reps, rr_all)
-+		rpcrdma_regbuf_dma_unmap(rep->rr_rdmabuf);
- }
- 
- static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf)
-@@ -1154,6 +1162,7 @@ int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
- 
- 	INIT_LIST_HEAD(&buf->rb_send_bufs);
- 	INIT_LIST_HEAD(&buf->rb_allreqs);
-+	INIT_LIST_HEAD(&buf->rb_all_reps);
- 
- 	rc = -ENOMEM;
- 	for (i = 0; i < buf->rb_max_requests; i++) {
-@@ -1506,6 +1515,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- 	wr = NULL;
- 	while (needed) {
- 		rep = rpcrdma_rep_get_locked(buf);
-+		if (rep && rep->rr_temp) {
-+			rpcrdma_rep_destroy(rep);
-+			continue;
-+		}
- 		if (!rep)
- 			rep = rpcrdma_rep_create(r_xprt, temp);
- 		if (!rep)
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 5d15140a0266..d796d68609ed 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -203,6 +203,7 @@ struct rpcrdma_rep {
- 	struct xdr_stream	rr_stream;
- 	struct llist_node	rr_node;
- 	struct ib_recv_wr	rr_recv_wr;
-+	struct list_head	rr_all;
- };
- 
- /* To reduce the rate at which a transport invokes ib_post_recv
-@@ -368,6 +369,7 @@ struct rpcrdma_buffer {
- 
- 	struct list_head	rb_allreqs;
- 	struct list_head	rb_all_mrs;
-+	struct list_head	rb_all_reps;
- 
- 	struct llist_head	rb_free_reps;
- 
-
