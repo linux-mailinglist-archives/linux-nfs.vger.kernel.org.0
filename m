@@ -2,310 +2,337 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A93C11443E
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 17:00:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11270114479
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2019 17:08:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfLEQAR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Dec 2019 11:00:17 -0500
-Received: from fieldses.org ([173.255.197.46]:53114 "EHLO fieldses.org"
+        id S1730047AbfLEQIX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Dec 2019 11:08:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLEQAR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:00:17 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id DE1711511; Thu,  5 Dec 2019 11:00:15 -0500 (EST)
-Date:   Thu, 5 Dec 2019 11:00:15 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Alex Lyakas <alex@zadara.com>
-Cc:     linux-nfs@vger.kernel.org, shyam@zadara.com
-Subject: Re: [PATCH v2] nfsd: provide a procfs entry to release stateids of a
- particular local filesystem
-Message-ID: <20191205160015.GC22402@fieldses.org>
-References: <1568142147-21974-1-git-send-email-alex@zadara.com>
+        id S1730020AbfLEQIX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Dec 2019 11:08:23 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFA624249;
+        Thu,  5 Dec 2019 16:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575562101;
+        bh=4BBbM4w57ZUGYAZen6Z4sS7m2spu0jjZRJ7n/AxkzNQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dO9ySgKuhd+dTs2uIHnmBXmTkx0+ZaIVZNTu8iWwCnF73ueH7IvQFP4butiJMIPWF
+         DrHILJMHUlFjMuOZuIePpNG09ojuE33AD3P3sEdbn/qU8mR8Kn5MD046didGRRAJv4
+         rfh3B8BnmLPWjGlyroSsRsXW6d5MmvBprLYDPcEY=
+Message-ID: <388342be7cd03e34bcccb1287d790cac04376e85.camel@kernel.org>
+Subject: Re: [PATCH 1/1] fs: Use inode_lock/unlock class of provided APIs in
+ filesystems
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>, willy@infradead.org,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
+Cc:     ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org
+Date:   Thu, 05 Dec 2019 11:08:19 -0500
+In-Reply-To: <20191205103902.23618-2-riteshh@linux.ibm.com>
+References: <20191205103902.23618-1-riteshh@linux.ibm.com>
+         <20191205103902.23618-2-riteshh@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568142147-21974-1-git-send-email-alex@zadara.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:02:27PM +0300, Alex Lyakas wrote:
-> This patch addresses the following issue:
-> - Create two local file systems FS1 and FS2 on the server machine S.
-> - Export both FS1 and FS2 through nfsd to the same nfs client,
->   running on client machine C.
-> - On C, mount both exported file systems and start writing files
->   to both of them.
-> - After few minutes, on server machine S, un-export FS1 only.
-> - Do not unmount FS1 on the client machine C prior to un-exporting.
-> - Also, FS2 remains exported to C.
-> - Now we want to unmount FS1 on the server machine S, but we fail,
->   because there are still open files on FS1 held by nfsd.
+On Thu, 2019-12-05 at 16:09 +0530, Ritesh Harjani wrote:
+> This defines 4 more APIs which some of the filesystem needs
+> and reduces the direct use of i_rwsem in filesystem drivers.
+> Instead those are replaced with inode_lock/unlock_** APIs.
 > 
-> Debugging this issue showed the following root cause:
-> there is a nfs4_client entry for the client C.
-> This entry has two nfs4_openowners, for FS1 and FS2,
-> although FS1 was un-exported. Looking at the stateids of both openowners,
-> we see that they have stateids of kind NFS4_OPEN_STID,
-> and each stateid is holding a nfs4_file. The reason we cannot unmount FS1,
-> is because we still have an openowner for FS1,
-> holding open-stateids, which hold open files on FS1.
-> 
-> The laundromat doesn't help in this case,
-> because it can only decide per-nfs4_client that it should be purged.
-> But in this case, since FS2 is still exported to C,
-> there is no reason to purge the nfs4_client.
-> 
-> This situation remains until we un-export FS2 as well.
-> Then the whole nfs4_client is purged, and all the files get closed,
-> and we can unmount both FS1 and FS2.
-> 
-> This patch allows user-space to tell nfsd to release stateids
-> of a particular local filesystem. After that, it is possible
-> to unmount the local filesystem.
-> 
-> This patch is based on kernel 4.14.99, which we currently use.
-> 
-> Signed-off-by: Alex Lyakas <alex@zadara.com>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
 > ---
->  fs/nfsd/nfs4state.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->  fs/nfsd/nfsctl.c    |   1 +
->  fs/nfsd/state.h     |   2 +
->  3 files changed, 147 insertions(+), 1 deletion(-)
+>  fs/btrfs/delayed-inode.c |  2 +-
+>  fs/btrfs/ioctl.c         |  4 ++--
+>  fs/ceph/io.c             | 24 ++++++++++++------------
+>  fs/nfs/io.c              | 24 ++++++++++++------------
+>  fs/orangefs/file.c       |  4 ++--
+>  fs/overlayfs/readdir.c   |  2 +-
+>  fs/readdir.c             |  4 ++--
+>  include/linux/fs.h       | 21 +++++++++++++++++++++
+>  8 files changed, 53 insertions(+), 32 deletions(-)
 > 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 3cf0b2e..6bd593d5 100755
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6481,13 +6481,13 @@ struct nfs4_client_reclaim *
->  	return nfs_ok;
->  }
->  
-> -#ifdef CONFIG_NFSD_FAULT_INJECTION
->  static inline void
->  put_client(struct nfs4_client *clp)
->  {
->  	atomic_dec(&clp->cl_refcount);
-
-Note the client reference counting has changed upstream, renaming this
-refcount to cl_rpc_users and introducing a second cl_ref.  I'm not sure
-the fault injection code's use of this reference count was ever really
-completely correct, this will need a closer review.
-
->  }
->  
-> +#ifdef CONFIG_NFSD_FAULT_INJECTION
->  static struct nfs4_client *
->  nfsd_find_client(struct sockaddr_storage *addr, size_t addr_size)
->  {
-> @@ -6811,6 +6811,7 @@ static u64 nfsd_foreach_client_lock(struct nfs4_client *clp, u64 max,
->  
->  	return count;
->  }
-> +#endif /* CONFIG_NFSD_FAULT_INJECTION */
->  
->  static void
->  nfsd_reap_openowners(struct list_head *reaplist)
-> @@ -6826,6 +6827,7 @@ static u64 nfsd_foreach_client_lock(struct nfs4_client *clp, u64 max,
->  	}
->  }
->  
-> +#ifdef CONFIG_NFSD_FAULT_INJECTION
->  u64
->  nfsd_inject_forget_client_openowners(struct sockaddr_storage *addr,
->  				     size_t addr_size)
-> @@ -7071,6 +7073,147 @@ static u64 nfsd_find_all_delegations(struct nfs4_client *clp, u64 max,
->  }
->  #endif /* CONFIG_NFSD_FAULT_INJECTION */
->  
-> +
-> +/*
-> + * For a particular nfs4_client attempts to release the stateids
-> + * that have open files on the specified superblock.
-> + */
-> +static void
-> +nfs4_release_client_stateids(struct super_block *sb,
-> +				struct nfs4_client *clp, const char *cl_addr,
-> +				struct list_head *oo_reaplist,
-> +				unsigned int *n_openowners)
-> +{
-> +	struct nfs4_openowner *oo = NULL, *oo_next = NULL;
-> +
-> +	spin_lock(&clp->cl_lock);
-> +	list_for_each_entry_safe(oo, oo_next, &clp->cl_openowners,
-> +							oo_perclient) {
-> +		struct nfs4_ol_stateid *stp = NULL;
-> +		bool found_my_sb = false, found_other_sb = false;
-> +		struct super_block *other_sb = NULL;
-> +
-> +		pr_debug(" Openowner %p %.*s\n", oo, oo->oo_owner.so_owner.len,
-> +			     oo->oo_owner.so_owner.data);
-> +		pr_debug(" oo_close_lru=%s oo_last_closed_stid=%p refcnt=%d so_is_open_owner=%u\n",
-> +			     list_empty(&oo->oo_close_lru) ? "N" : "Y",
-> +			     oo->oo_last_closed_stid,
-> +			     atomic_read(&oo->oo_owner.so_count),
-> +			     oo->oo_owner.so_is_open_owner);
-
-There's a ton of debugging printk's, understandable for development code
-but when posting it'd be helpful to pare this down to the ones that you
-think will be most useful in the field.
-
-> +
-> +		list_for_each_entry(stp, &oo->oo_owner.so_stateids,
-> +							st_perstateowner) {
-> +			struct nfs4_file *fp = NULL;
-> +			struct file *filp = NULL;
-> +			struct super_block *f_sb = NULL;
-> +
-> +			if (stp->st_stid.sc_file == NULL)
-> +				continue;
-> +
-> +			fp = stp->st_stid.sc_file;
-> +			filp = find_any_file(fp);
-> +			if (filp != NULL)
-> +				f_sb = file_inode(filp)->i_sb;
-> +			pr_debug("   filp=%p sb=%p my_sb=%p\n", filp, f_sb, sb);
-> +			if (f_sb == sb) {
-> +				found_my_sb = true;
-> +			} else {
-> +				found_other_sb = true;
-> +				other_sb = f_sb;
-> +			}
-> +			if (filp != NULL)
-> +				fput(filp);
-> +		}
-> +
-> +		/* openowner does not have files from needed fs, skip it */
-> +		if (!found_my_sb)
-> +			continue;
-> +
-> +		/*
-> +		 * we do not expect same openowhner having open files
-> +		 * from more than one fs. but if it happens, we cannot
-> +		 * release this openowner.
-> +		 */
-
-The linux client may not do that, but I don't see any requirement in the
-protocol that openowners be per-filesystem, so I think we have to handle
-this case.  Is there a reason you think it's not safe to free individual
-stateids?
-
-> +		if (found_other_sb) {
-> +			pr_warn(" client=%p/%s openowner %p %.*s has files from sb=%p but also from sb=%p, skipping it!\n",
-> +				    clp, cl_addr, oo, oo->oo_owner.so_owner.len,
-> +				    oo->oo_owner.so_owner.data, sb, other_sb);
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * Each OPEN stateid holds a refcnt on the openowner
-> +		 * (and LOCK stateid holds a refcnt on the lockowner).
-> +		 * This refcnt is dropped when nfs4_free_ol_stateid is called,
-> +		 * which calls nfs4_put_stateowner. The last refcnt drop
-> +		 * unhashes and frees the openowner. As a result,
-> +		 * after we free the last stateid, the openowner will
-> +		 * be also be freed. But we still need the openowner to be
-> +		 * around, because we need to call
-> +		 * release_last_closed_stateid(), which is what
-> +		 * release_openowner() does.
-> +		 * So we need to grab an extra refcnt for the openowner here.
-> +		 */
-> +		nfs4_get_stateowner(&oo->oo_owner);
-> +
-> +		/*
-> +		 * see: nfsd_collect_client_openowners(),
-> +		 * nfsd_foreach_client_openowner()
-> +		 */
-> +		unhash_openowner_locked(oo);
-> +		/*
-> +		 * By incrementing cl_refcount under "nn->client_lock" we,
-> +		 * hopefully, protect that client from being killed via
-> +		 * mark_client_expired_locked().
-> +		 * We increment cl_refcount once per each openowner.
-> +		 */
-> +		atomic_inc(&clp->cl_refcount);
-> +		list_add(&oo->oo_perclient, oo_reaplist);
-> +		++(*n_openowners);
-> +	}
-> +	spin_unlock(&clp->cl_lock);
-> +}
-> +
-> +/*
-> + * Attempts to release the stateids that have open files
-> + * on the specified superblock.
-> + */
-> +void
-> +nfs4_release_stateids(struct super_block *sb)
-> +{
-> +	struct nfsd_net *nn = net_generic(current->nsproxy->net_ns,
-> +								nfsd_net_id);
-> +	struct nfs4_client *clp = NULL;
-> +	LIST_HEAD(openowner_reaplist);
-> +	unsigned int n_openowners = 0;
-> +
-> +	if (!nfsd_netns_ready(nn))
-> +		return;
-> +
-> +	pr_info("=== Release stateids for sb=%p ===\n", sb);
-> +
-> +	spin_lock(&nn->client_lock);
-
-I wonder how long it make to walk all the state of every client on a
-large server, and if it's going to cause problems to hold this lock that
-long.
-
---b.
-
-> +	list_for_each_entry(clp, &nn->client_lru, cl_lru) {
-> +		char cl_addr[INET6_ADDRSTRLEN] = {'\0'};
-> +
-> +		rpc_ntop((struct sockaddr *)&clp->cl_addr,
-> +			     cl_addr, sizeof(cl_addr));
-> +		pr_debug("Checking client=%p/%s cl_clientid=%u:%u refcnt=%d\n",
-> +			     clp, cl_addr, clp->cl_clientid.cl_boot,
-> +			     clp->cl_clientid.cl_id,
-> +			     atomic_read(&clp->cl_refcount));
-> +
-> +		nfs4_release_client_stateids(sb, clp, cl_addr,
-> +					&openowner_reaplist, &n_openowners);
-> +	}
-> +	spin_unlock(&nn->client_lock);
-> +
-> +	pr_info("Collected %u openowners for removal (sb=%p)\n",
-> +		    n_openowners, sb);
-> +
-> +	nfsd_reap_openowners(&openowner_reaplist);
-> +}
-> +
->  /*
->   * Since the lifetime of a delegation isn't limited to that of an open, a
->   * client may quite reasonably hang on to a delegation as long as it has
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 4824363..5514184 100755
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -322,6 +322,7 @@ static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
->  	 * 3.  Is that directory the root of an exported file system?
+> diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
+> index d3e15e1d4a91..c3e92f2fd915 100644
+> --- a/fs/btrfs/delayed-inode.c
+> +++ b/fs/btrfs/delayed-inode.c
+> @@ -1644,7 +1644,7 @@ void btrfs_readdir_put_delayed_items(struct inode *inode,
+>  	 * The VFS is going to do up_read(), so we need to downgrade back to a
+>  	 * read lock.
 >  	 */
->  	error = nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
-> +	nfs4_release_stateids(path.dentry->d_sb);
+> -	downgrade_write(&inode->i_rwsem);
+> +	inode_lock_downgrade(inode);
+>  }
 >  
->  	path_put(&path);
->  	return error;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 86aa92d..acee094 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -632,6 +632,8 @@ extern struct nfs4_client_reclaim *nfs4_client_to_reclaim(const char *name,
->  							struct nfsd_net *nn);
->  extern bool nfs4_has_reclaimed_state(const char *name, struct nfsd_net *nn);
+>  int btrfs_should_delete_dir_index(struct list_head *del_list,
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index a1ee0b775e65..1cbd763a46d8 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -955,7 +955,7 @@ static noinline int btrfs_mksubvol(const struct path *parent,
+>  	struct dentry *dentry;
+>  	int error;
 >  
-> +extern void nfs4_release_stateids(struct super_block *sb);
+> -	error = down_write_killable_nested(&dir->i_rwsem, I_MUTEX_PARENT);
+> +	error = inode_lock_killable_nested(dir, I_MUTEX_PARENT);
+>  	if (error == -EINTR)
+>  		return error;
+>  
+> @@ -2863,7 +2863,7 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
+>  		goto out;
+>  
+>  
+> -	err = down_write_killable_nested(&dir->i_rwsem, I_MUTEX_PARENT);
+> +	err = inode_lock_killable_nested(dir, I_MUTEX_PARENT);
+>  	if (err == -EINTR)
+>  		goto out_drop_write;
+>  	dentry = lookup_one_len(vol_args->name, parent, namelen);
+> diff --git a/fs/ceph/io.c b/fs/ceph/io.c
+> index 97602ea92ff4..e94186259c2e 100644
+> --- a/fs/ceph/io.c
+> +++ b/fs/ceph/io.c
+> @@ -53,14 +53,14 @@ ceph_start_io_read(struct inode *inode)
+>  	struct ceph_inode_info *ci = ceph_inode(inode);
+>  
+>  	/* Be an optimist! */
+> -	down_read(&inode->i_rwsem);
+> +	inode_lock_shared(inode);
+>  	if (!(READ_ONCE(ci->i_ceph_flags) & CEPH_I_ODIRECT))
+>  		return;
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  	/* Slow path.... */
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	ceph_block_o_direct(ci, inode);
+> -	downgrade_write(&inode->i_rwsem);
+> +	inode_lock_downgrade(inode);
+>  }
+>  
+>  /**
+> @@ -73,7 +73,7 @@ ceph_start_io_read(struct inode *inode)
+>  void
+>  ceph_end_io_read(struct inode *inode)
+>  {
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  }
+>  
+>  /**
+> @@ -86,7 +86,7 @@ ceph_end_io_read(struct inode *inode)
+>  void
+>  ceph_start_io_write(struct inode *inode)
+>  {
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	ceph_block_o_direct(ceph_inode(inode), inode);
+>  }
+>  
+> @@ -100,7 +100,7 @@ ceph_start_io_write(struct inode *inode)
+>  void
+>  ceph_end_io_write(struct inode *inode)
+>  {
+> -	up_write(&inode->i_rwsem);
+> +	inode_unlock(inode);
+>  }
+>  
+>  /* Call with exclusively locked inode->i_rwsem */
+> @@ -139,14 +139,14 @@ ceph_start_io_direct(struct inode *inode)
+>  	struct ceph_inode_info *ci = ceph_inode(inode);
+>  
+>  	/* Be an optimist! */
+> -	down_read(&inode->i_rwsem);
+> +	inode_lock_shared(inode);
+>  	if (READ_ONCE(ci->i_ceph_flags) & CEPH_I_ODIRECT)
+>  		return;
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  	/* Slow path.... */
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	ceph_block_buffered(ci, inode);
+> -	downgrade_write(&inode->i_rwsem);
+> +	inode_lock_downgrade(inode);
+>  }
+>  
+>  /**
+> @@ -159,5 +159,5 @@ ceph_start_io_direct(struct inode *inode)
+>  void
+>  ceph_end_io_direct(struct inode *inode)
+>  {
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  }
+> diff --git a/fs/nfs/io.c b/fs/nfs/io.c
+> index 5088fda9b453..bf5ed7bea59d 100644
+> --- a/fs/nfs/io.c
+> +++ b/fs/nfs/io.c
+> @@ -44,14 +44,14 @@ nfs_start_io_read(struct inode *inode)
+>  {
+>  	struct nfs_inode *nfsi = NFS_I(inode);
+>  	/* Be an optimist! */
+> -	down_read(&inode->i_rwsem);
+> +	inode_lock_shared(inode);
+>  	if (test_bit(NFS_INO_ODIRECT, &nfsi->flags) == 0)
+>  		return;
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  	/* Slow path.... */
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	nfs_block_o_direct(nfsi, inode);
+> -	downgrade_write(&inode->i_rwsem);
+> +	inode_lock_downgrade(inode);
+>  }
+>  
+>  /**
+> @@ -64,7 +64,7 @@ nfs_start_io_read(struct inode *inode)
+>  void
+>  nfs_end_io_read(struct inode *inode)
+>  {
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  }
+>  
+>  /**
+> @@ -77,7 +77,7 @@ nfs_end_io_read(struct inode *inode)
+>  void
+>  nfs_start_io_write(struct inode *inode)
+>  {
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	nfs_block_o_direct(NFS_I(inode), inode);
+>  }
+>  
+> @@ -91,7 +91,7 @@ nfs_start_io_write(struct inode *inode)
+>  void
+>  nfs_end_io_write(struct inode *inode)
+>  {
+> -	up_write(&inode->i_rwsem);
+> +	inode_unlock(inode);
+>  }
+>  
+>  /* Call with exclusively locked inode->i_rwsem */
+> @@ -124,14 +124,14 @@ nfs_start_io_direct(struct inode *inode)
+>  {
+>  	struct nfs_inode *nfsi = NFS_I(inode);
+>  	/* Be an optimist! */
+> -	down_read(&inode->i_rwsem);
+> +	inode_lock_shared(inode);
+>  	if (test_bit(NFS_INO_ODIRECT, &nfsi->flags) != 0)
+>  		return;
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  	/* Slow path.... */
+> -	down_write(&inode->i_rwsem);
+> +	inode_lock(inode);
+>  	nfs_block_buffered(nfsi, inode);
+> -	downgrade_write(&inode->i_rwsem);
+> +	inode_lock_downgrade(inode);
+>  }
+>  
+>  /**
+> @@ -144,5 +144,5 @@ nfs_start_io_direct(struct inode *inode)
+>  void
+>  nfs_end_io_direct(struct inode *inode)
+>  {
+> -	up_read(&inode->i_rwsem);
+> +	inode_unlock_shared(inode);
+>  }
+> diff --git a/fs/orangefs/file.c b/fs/orangefs/file.c
+> index a5612abc0936..6420503e1275 100644
+> --- a/fs/orangefs/file.c
+> +++ b/fs/orangefs/file.c
+> @@ -328,14 +328,14 @@ static ssize_t orangefs_file_read_iter(struct kiocb *iocb,
+>  		ro->blksiz = iter->count;
+>  	}
+>  
+> -	down_read(&file_inode(iocb->ki_filp)->i_rwsem);
+> +	inode_lock_shared(file_inode(iocb->ki_filp));
+>  	ret = orangefs_revalidate_mapping(file_inode(iocb->ki_filp));
+>  	if (ret)
+>  		goto out;
+>  
+>  	ret = generic_file_read_iter(iocb, iter);
+>  out:
+> -	up_read(&file_inode(iocb->ki_filp)->i_rwsem);
+> +	inode_unlock_shared(file_inode(iocb->ki_filp));
+>  	return ret;
+>  }
+>  
+> diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
+> index 47a91c9733a5..c203e73160b0 100644
+> --- a/fs/overlayfs/readdir.c
+> +++ b/fs/overlayfs/readdir.c
+> @@ -273,7 +273,7 @@ static int ovl_check_whiteouts(struct dentry *dir, struct ovl_readdir_data *rdd)
+>  
+>  	old_cred = ovl_override_creds(rdd->dentry->d_sb);
+>  
+> -	err = down_write_killable(&dir->d_inode->i_rwsem);
+> +	err = inode_lock_killable(dir->d_inode);
+>  	if (!err) {
+>  		while (rdd->first_maybe_whiteout) {
+>  			p = rdd->first_maybe_whiteout;
+> diff --git a/fs/readdir.c b/fs/readdir.c
+> index d26d5ea4de7b..10a34efa0af0 100644
+> --- a/fs/readdir.c
+> +++ b/fs/readdir.c
+> @@ -52,9 +52,9 @@ int iterate_dir(struct file *file, struct dir_context *ctx)
+>  		goto out;
+>  
+>  	if (shared)
+> -		res = down_read_killable(&inode->i_rwsem);
+> +		res = inode_lock_shared_killable(inode);
+>  	else
+> -		res = down_write_killable(&inode->i_rwsem);
+> +		res = inode_lock_killable(inode);
+>  	if (res)
+>  		goto out;
+>  
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 98e0349adb52..2b407464fac1 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -831,6 +831,27 @@ static inline void inode_lock_shared_nested(struct inode *inode, unsigned subcla
+>  	down_read_nested(&inode->i_rwsem, subclass);
+>  }
+>  
+> +static inline void inode_lock_downgrade(struct inode *inode)
+> +{
+> +	downgrade_write(&inode->i_rwsem);
+> +}
 > +
->  struct nfs4_file *find_file(struct knfsd_fh *fh);
->  void put_nfs4_file(struct nfs4_file *fi);
->  static inline void get_nfs4_file(struct nfs4_file *fi)
-> -- 
-> 1.9.1
+> +static inline int inode_lock_killable(struct inode *inode)
+> +{
+> +	return down_write_killable(&inode->i_rwsem);
+> +}
+> +
+> +static inline int inode_lock_shared_killable(struct inode *inode)
+> +{
+> +	return down_read_killable(&inode->i_rwsem);
+> +}
+> +
+> +static inline int inode_lock_killable_nested(struct inode *inode,
+> +					     unsigned subclass)
+> +{
+> +	return down_write_killable_nested(&inode->i_rwsem, subclass);
+> +}
+> +
+>  void lock_two_nondirectories(struct inode *, struct inode*);
+>  void unlock_two_nondirectories(struct inode *, struct inode*);
+>  
+
+Nice little cleanup.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
