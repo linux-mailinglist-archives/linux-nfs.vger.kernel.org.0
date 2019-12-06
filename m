@@ -2,93 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 999B81154E1
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2019 17:12:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3800115635
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2019 18:11:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfLFQMC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Dec 2019 11:12:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfLFQMC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:12:02 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63349206DF;
-        Fri,  6 Dec 2019 16:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575648721;
-        bh=3R+PC8Ff3M5yx19vaH341IDsCcc0jMlrqtmK1IJiZAc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=2KY561JwdQ6U0gtI10EgrHS/V+IZj3bshbV5dB/HBR3ySMGIm6HWbbvYTEuBx8dFI
-         x/GqAF17JWtwmewJ76R82AKu0jZ1gLyLhcSaHc0BHvEqXJ7hG7orMrs3JovQys3+gc
-         0EHwNmuiae58NPAYHd88l9LkQszbRRUhjUjzywRM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3768835206AB; Fri,  6 Dec 2019 08:12:01 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:12:01 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
-        rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191206161201.GF2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
- <20191206160002.GB15547@google.com>
+        id S1726464AbfLFRLj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Dec 2019 12:11:39 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37703 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfLFRLj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Dec 2019 12:11:39 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k14so6423957otn.4
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Dec 2019 09:11:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jD0+Lu/50umCcnFk47baEBnRzer/9Wr3R9ZTFDVWkyo=;
+        b=BtnQMvEbwtt6/VLxRAoWXkpfefD3gvNVveWwFIJ55OWOS4sCdvULYIKLAAkPQ38NUQ
+         VSuDsqRZFzSJjfwQrNCfJzPZ62NIdVWvCXTynbU8nKxDGJfCvMJ+2yH5YwDwxaNCtQb0
+         vTkiHzOWn+n5Bcu7n7lYX8QMuS97lWhR9SPmFVwP0lKo+bs8nvgpRSrlUoa3FPbJvRIW
+         ykxfTtJYA3V5WqjWRJ4xznqgTPEP2j9SIo3DHyN4AjhJjcKbQtVyORXp1JlkNAl/Mt36
+         at7IPpKDE2UV+UCesHN7YzVUdIuaDZVqTf8//UOw6emtqxahLvhaFcXbno6Pb4z7HEc5
+         Hing==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jD0+Lu/50umCcnFk47baEBnRzer/9Wr3R9ZTFDVWkyo=;
+        b=rLUa1u5FhDOVZMVtAqToh2wdJcRtScNcYPGWPFmW77vBDXz6D9JmM7ttpRO+7TvHSP
+         bua+mvFeauS2dKuWCcshfNgWRHAHc7+YXRK0BFON2LU6cOnPNrm1CT7Bey56fxB+bfjE
+         zQ7pruXy/RbFGTy7bLi4A9Icr89iRpD3DNo4ujnTfxkJAWtj0dKsGsA1bv0DGYCcV/d0
+         m+eXBkt/zH2Yjm7oASbggfbPSw8r2PxbI9Al9/3ezzsQ7hkhHt6JenpB1Uk1mezeJ0/0
+         rsjkxSd/+CqohlkYduaF2kwBq1bqb+53/dKljEt4cw9pv8yzKeHM5vtApVuxAw2gzM+Z
+         5w4w==
+X-Gm-Message-State: APjAAAWEtHHpPQqyHO5enV7PH/q7bUCt30lb5/2cW1PFdEXCLcsxo4s3
+        5t0v0RZ5KOiRvli8zDS33sbHOy8Br+d3zV4uaJa4Sg==
+X-Google-Smtp-Source: APXvYqxrRvzqID3gKuXZMGxfhtP1lPTktAwM4vu1LXlhqcCXWhlKJvZjVzGRTN55vA+hR8OvP8EWCvSLQ8pzb/W32Ak=
+X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr12202292oto.30.1575652297469;
+ Fri, 06 Dec 2019 09:11:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206160002.GB15547@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
+ <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com> <20191206020953.GS2695@dread.disaster.area>
+In-Reply-To: <20191206020953.GS2695@dread.disaster.area>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 6 Dec 2019 09:11:25 -0800
+Message-ID: <CALvZod4YrnLLbaqTrZR92Y45rd4G+UzcqrkwAptJGJ2Kc8i6Og@mail.gmail.com>
+Subject: Re: [PATCH] mm: fix hanging shrinker management on long do_shrink_slab
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:00:02AM -0500, Joel Fernandes wrote:
-> +Paul, here is the dependent patch for the list_prev_rcu() patch Madhuparna
-> posted.
+On Thu, Dec 5, 2019 at 6:10 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> [please cc me on future shrinker infrastructure modifications]
+>
+> On Mon, Dec 02, 2019 at 07:36:03PM +0300, Andrey Ryabinin wrote:
+> >
+> > On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
+> > > We have a problem that shrinker_rwsem can be held for a long time for
+> > > read in shrink_slab, at the same time any process which is trying to
+> > > manage shrinkers hangs.
+> > >
+> > > The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
+> > > It tries to shrink something on nfs (hard) but nfs server is dead at
+> > > these moment already and rpc will never succeed. Generally any shrinker
+> > > can take significant time to do_shrink_slab, so it's a bad idea to hold
+> > > the list lock here.
+>
+> registering/unregistering a shrinker is not a performance critical
+> task.
 
-Got it, thank you!
+Yes, not performance critical but it can cause isolation issues.
 
-And however this turns out, it does illustrate the value of the sparse
-address-space checks!
+> If a shrinker is blocking for a long time, then we need to
+> work to fix the shrinker implementation because blocking is a much
+> bigger problem than just register/unregister.
+>
 
-							Thanx, Paul
+Yes, we should be fixing the implementations of all shrinkers and yes
+it is bigger issue but we can also fix register/unregister isolation
+issue in parallel. Fixing all shrinkers would a tedious and long task
+and we should not block fixing isolation issue on it.
 
-> On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > 
-> > This patch fixes the following errors:
-> > fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-> > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> > fs/nfs/dir.c:2353:14:    struct list_head *
-> > 
-> > caused due to directly accessing the prev pointer of
-> > a RCU protected list.
-> > Accessing the pointer using the macro list_prev_rcu() fixes this error.
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > ---
-> >  fs/nfs/dir.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index e180033e35cf..2035254cc283 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
-> >  	rcu_read_lock();
-> >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
-> >  		goto out;
-> > -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-> > +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
-> >  	cache = list_entry(lh, struct nfs_access_entry, lru);
-> >  	if (lh == &nfsi->access_cache_entry_lru ||
-> >  	    cred != cache->cred)
-> > -- 
-> > 2.17.1
-> > 
+> > > The idea of the patch is to inc a refcount to the chosen shrinker so it
+> > > won't disappear and release shrinker_rwsem while we are in
+> > > do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
+> > > the refcount and continue the traversal.
+>
+> This is going to cause a *lot* of traffic on the shrinker rwsem.
+> It's already a pretty hot lock on large machines under memory
+> pressure (think thousands of tasks all doing direct reclaim across
+> hundreds of CPUs), and so changing them to cycle the rwsem on every
+> shrinker that will only make this worse. Esepcially when we consider
+> that there may be hundreds to thousands of registered shrinker
+> instances on large machines.
+>
+> As an example of how frequent cycling of a global lock in shrinker
+> instances causes issues, we used to take references to superblock
+> shrinker count invocations to guarantee existence. This was found to
+> be a scalability limitation when lots of near-empty superblocks were
+> present in a system (see commit d23da150a37c ("fs/superblock: avoid
+> locking counting inodes and dentries before reclaiming them")).
+>
+> This alleviated the problem for a while, but soon we had problems
+> with just taking a reference to the superblock in the callbacks that
+> did actual work. Hence we changed it to just take a per-superblock
+> rwsem to get rid of the global sb_lock spinlock in this path. See
+> commit eb6ef3df4faa ("trylock_super(): replacement for
+> grab_super_passive()". Now we don't have a scalability problem.
+>
+> IOWs, we already know that cycling a global rwsem on every
+> individual shrinker invocation is going to cause noticable
+> scalability problems. Hence I don't think that this sort of "cycle
+> the global rwsem faster to reduce [un]register latency" solution is
+> going to fly because of the runtime performance regressions it will
+> introduce....
+>
+
+I agree with your scalability concern (though others would argue to
+first demonstrate the issue before adding more sophisticated scalable
+code). Most memory reclaim code is written without the performance or
+scalability concern, maybe we should switch our thinking.
+
+> > I don't think this patch solves the problem, it only fixes one minor symptom of it.
+> > The actual problem here the reclaim hang in the nfs.
+>
+> The nfs client is waiting on the NFS server to respond. It may
+> actually be that the server has hung, not the client...
+>
+> > It means that any process, including kswapd, may go into nfs inode reclaim and stuck there.
+>
+> *nod*
+>
+> > I think this should be handled on nfs/vfs level by making  inode eviction during reclaim more asynchronous.
+>
+> That's what we are trying to do with similar blocking based issues
+> in XFS inode reclaim. It's not simple, though, because these days
+> memory reclaim is like a bowl full of spaghetti covered with a
+> delicious sauce of non-obvious heuristics and broken
+> functionality....
+>
+> Cheers,
+>
+> Dave.
+> --
+> Dave Chinner
+> david@fromorbit.com
