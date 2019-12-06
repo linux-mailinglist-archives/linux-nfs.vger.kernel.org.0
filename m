@@ -2,113 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2480C11572B
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2019 19:29:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6449115747
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2019 19:46:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfLFS3b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Dec 2019 13:29:31 -0500
-Received: from mail-ua1-f43.google.com ([209.85.222.43]:44658 "EHLO
-        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfLFS3b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Dec 2019 13:29:31 -0500
-Received: by mail-ua1-f43.google.com with SMTP id d6so3205407uam.11
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Dec 2019 10:29:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=sYT+ovaTSSagWO1yvrcdGm8CLAJh34XedQbfm1wHlWI=;
-        b=gekcsW347N3xjQtMe/MVIaU6dFJnnUenPwVgJyUIj5+oSc0ni0dMGl0AhqOTHOsdOh
-         QI92pHzWFjZvgca/RpmYgFRGkbL7BIVQQb0cq1Qg+a0SpJjDhpozFXk+E0eZmyaaQrN8
-         vHJb1W5NYJTs/aWAbq4/UgqFtUPJOc2AAp71eWdE2vOtHzh3W4qY8Lozegd9GhDJYKkB
-         XovAaCtZlueZ4OiykYimglUYufIgMK0+5zafdqKIYwous/zZbd0QALlALr8IMJOZSuOC
-         Hh+KeQd5nhfRW0Ps59C2BlRn7XJnfhxvFXZ0issFea+ZIjqwAatGTofAZs1Zi0HgwZ4K
-         j2Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=sYT+ovaTSSagWO1yvrcdGm8CLAJh34XedQbfm1wHlWI=;
-        b=oMPNs4pdzS68rYQmo9s7te1WXc+mb951hlWxp4bWRdqtfdcxjs0obtx1sKBpM4ukpO
-         zPlhYsCt8f96EhGo+btQ9nVHb6/jn/JeecSydFph6lFzpMK+v1bCng/WlLUDQtCx+jIE
-         T4SsAkrsyHFmDb11rLyEPlIx+bCKIfvHYEy86UKW/SPwyMQbIGLJBlCdxQyCLKWQDFjM
-         /onK6WHEGZC3hJ4G//Jk0fqGxOp8VHyIdgCe8tmQxHGbL1TMHUaz8teT4spRHIsslF7l
-         qVuax7JATf5AiVIKLhkEY4HQBRi8pp5+ZDF+ZFCmyOG2Ay2/9U1BhL182ap+wfRWf0YN
-         dnHw==
-X-Gm-Message-State: APjAAAVlsFy2cA5kc9afANbCYdzZTa6qHXLoUt54Cs2m/A2D/9t2qZfH
-        oP6jKHfY2lSm491B4ZxpI83c5V3s7sm2QeTY0aWFK3th
-X-Google-Smtp-Source: APXvYqw16sm7rA8e7wEAJ2AgHSdM+1PIcP4wLLOosNYiE+F+eDFm1M3VYa35VVG8spuLet7RBGRYMe2j6z1qZI0vpnU=
-X-Received: by 2002:ab0:285a:: with SMTP id c26mr13204346uaq.81.1575656969740;
- Fri, 06 Dec 2019 10:29:29 -0800 (PST)
+        id S1726370AbfLFSpz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Dec 2019 13:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfLFSpy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:45:54 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3622024670;
+        Fri,  6 Dec 2019 18:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575657953;
+        bh=uI9EKANieQp4/2Z6MB2ZAs2MMN7vumj93kZAcBBUEt0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=1wiQHNi35PaEkG8c+sJQrPmvIkrOI/hWxm7imrIqmIQHlt1NZuKXhss6iRwGFU39D
+         bpjt5/DslssYZVyMiM8JtFzAxn6dtHXeIMXZ0Ir9xeC9GRGBAfnSA1UijLPVHmAkBm
+         g3CNDUixy30L8My/oZEi+y4wch3I/jeCaNGlu36g=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0E73635206AB; Fri,  6 Dec 2019 10:45:53 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:45:53 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206184553.GI2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160238.GE2889@paulmck-ThinkPad-P72>
+ <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
+ <20191206182414.GH2889@paulmck-ThinkPad-P72>
+ <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
 MIME-Version: 1.0
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 6 Dec 2019 13:29:18 -0500
-Message-ID: <CAN-5tyHJg4C5j72_CrCJhZ8hyzDe71Q9zw1USgmyxePg+3juZw@mail.gmail.com>
-Subject: gssd question/patch
-To:     Steve Dickson <SteveD@redhat.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
+On Fri, Dec 06, 2019 at 06:28:14PM +0000, Trond Myklebust wrote:
+> On Fri, 2019-12-06 at 10:24 -0800, Paul E. McKenney wrote:
+> > On Fri, Dec 06, 2019 at 05:52:10PM +0000, Trond Myklebust wrote:
+> > > Hi Paul,
+> > > 
+> > > On Fri, 2019-12-06 at 08:02 -0800, Paul E. McKenney wrote:
+> > > > On Fri, Dec 06, 2019 at 08:46:40PM +0530, 
+> > > > madhuparnabhowmik04@gmail.com wrote:
+> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > > > 
+> > > > > This patch fixes the following errors:
+> > > > > fs/nfs/dir.c:2353:14: error: incompatible types in comparison
+> > > > > expression (different address spaces):
+> > > > > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> > > > > fs/nfs/dir.c:2353:14:    struct list_head *
+> > > > > 
+> > > > > caused due to directly accessing the prev pointer of
+> > > > > a RCU protected list.
+> > > > > Accessing the pointer using the macro list_prev_rcu() fixes
+> > > > > this
+> > > > > error.
+> > > > > 
+> > > > > Signed-off-by: Madhuparna Bhowmik <
+> > > > > madhuparnabhowmik04@gmail.com>
+> > > > > ---
+> > > > >  fs/nfs/dir.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > > > > index e180033e35cf..2035254cc283 100644
+> > > > > --- a/fs/nfs/dir.c
+> > > > > +++ b/fs/nfs/dir.c
+> > > > > @@ -2350,7 +2350,7 @@ static int
+> > > > > nfs_access_get_cached_rcu(struct
+> > > > > inode *inode, const struct cred *cre
+> > > > >  	rcu_read_lock();
+> > > > >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+> > > > >  		goto out;
+> > > > > -	lh = rcu_dereference(nfsi-
+> > > > > >access_cache_entry_lru.prev);
+> > > > > +	lh = rcu_dereference(list_prev_rcu(&nfsi-
+> > > > > > access_cache_entry_lru));
+> > > > 
+> > > > And as noted in the earlier email, what is preventing concurrent
+> > > > insertions into  and deletions from this list?
+> > > > 
+> > > > o	This use of list_move_tail() is OK because it does not poison.
+> > > > 	Though it isn't being all that friendly to lockless access to
+> > > > 	->prev -- no WRITE_ONCE() in list_move_tail().
+> > > > 
+> > > > o	The use of list_add_tail() is not safe with RCU readers, though
+> > > > 	they do at least partially compensate via use of smp_wmb()
+> > > > 	in nfs_access_add_cache() before calling
+> > > > nfs_access_add_rbtree().
+> > > > 
+> > > > o	The list_del() near the end of nfs_access_add_rbtree() will
+> > > > 	poison the ->prev pointer.  I don't see how this is safe given
+> > > > the
+> > > > 	possibility of a concurrent call to
+> > > > nfs_access_get_cached_rcu().
+> > > 
+> > > The pointer nfsi->access_cache_entry_lru is the head of the list,
+> > > so it
+> > > won't get poisoned. Furthermore, the objects it points to are freed
+> > > using kfree_rcu(), so they will survive as long as we hold the rcu
+> > > read
+> > > lock. The object's cred pointers also points to something that is
+> > > freed
+> > > in an rcu-safe manner.
+> > > 
+> > > The problem here is rather that a racing list_del() can cause nfsi-
+> > > > access_cache_entry_lru to be empty, which is presumably why Neil
+> > > > added
+> > > that check plus the empty cred pointer check in the following line.
+> > > 
+> > > The barrier semantics may be suspect, although the spin unlock
+> > > after
+> > > list_del() should presumably guarantee release semantics?
+> > 
+> > Ah, OK, so you are only ever using ->prev only from the head of the
+> > list,
+> > and presumably never do list_del() on the head itself.  (Don't laugh,
+> > this does really happen as a way to remove the entire list, though
+> > perhaps with list_del_init() rather than list_del().)
+> 
+> Correct.
+> 
+> > Maybe we should have a list_tail_rcu() that is only expected to work
+> > on the head of the list?
+> 
+> That might be the best way to resolve this, yes.
 
-Question: Is this an interesting failure scenario (bug) that should be
-fixed: client did a mount which acquired gss creds and stored in the
-credential cache. Then say it umounts at some point. Then for some
-reason the Kerberos cache is deleted (rm -f /tmp/krb5cc*). Now client
-mounts again. This currently fails. Because gssd uses internal cache
-to store creds lifetimes and thinks that tgt is still valid but then
-trying to acquire a service ticket it fails (since there is no tgt).
+Madhuparna, would you be willing to do a patch series along these lines?
 
-Here's my proposed fix (I can send as a patch if this agreed upon).
-
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index 0474783..3678524 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -121,6 +121,9 @@
- #include <krb5.h>
- #include <rpc/auth_gss.h>
-
-+#include <sys/types.h>
-+#include <fcntl.h>
-+
- #include "nfslib.h"
- #include "gssd.h"
- #include "err_util.h"
-@@ -314,6 +317,25 @@ gssd_find_existing_krb5_ccache(uid_t uid, char *dirname,
-        return err;
- }
-
-+/* check if the ticket cache exists, if not set nocache=1 so that new
-+ * tgt is gotten
-+ */
-+static int
-+gssd_check_if_cc_exists(struct gssd_k5_kt_princ *ple)
-+{
-+       int fd;
-+       char cc_name[BUFSIZ];
-+
-+       snprintf(cc_name, sizeof(cc_name), "%s/%s%s_%s",
-+               ccachesearch[0], GSSD_DEFAULT_CRED_PREFIX,
-+               GSSD_DEFAULT_MACHINE_CRED_SUFFIX, ple->realm);
-+       fd = open(cc_name, O_RDONLY);
-+       if (fd < 0)
-+               return 1;
-+       close(fd);
-+       return 0;
-+}
-+
- /*
-  * Obtain credentials via a key in the keytab given
-  * a keytab handle and a gssd_k5_kt_princ structure.
-@@ -348,6 +370,8 @@ gssd_get_single_krb5_cred(krb5_context context,
-
-        memset(&my_creds, 0, sizeof(my_creds));
-
-+       if (!nocache && !use_memcache)
-+               nocache = gssd_check_if_cc_exists(ple);
-        /*
-         * Workaround for clock skew among NFS server, NFS client and KDC
-         * 300 because clock skew must be within 300sec for kerberos
+							Thanx, Paul
