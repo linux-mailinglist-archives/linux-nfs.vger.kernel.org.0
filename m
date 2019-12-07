@@ -2,89 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 541C511589D
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2019 22:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97904115DB3
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Dec 2019 18:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfLFV1g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Dec 2019 16:27:36 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38786 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfLFV1g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Dec 2019 16:27:36 -0500
-Received: by mail-ua1-f68.google.com with SMTP id z17so3459033uac.5
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Dec 2019 13:27:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cs7g9VJVPwmEyuFJS1ZM7Ruc9x7OMrsvL7hfbuQqpys=;
-        b=XAChXNBb4DN47H5DUBusaZdMbeGRGlrTdYQ+MuHM9pkx18Y/NbmXGcw5and3nCE4Pp
-         h63Ud8fBztwAav2JppmcSwSnjV0CF/faUiFpTgTF5DeTAgvlP05hsm23Yie+X8n7YOrW
-         2jkfnb+lUCiqJ/T5sO4G5BM2kz+XAe732UkUZLa+mNANsT0gHalA88LeViwmdW4pBRJy
-         TKq9WYF24D/Wnq5W52yGvTESqNUwS7iB2DUVg1M2e2kDQXwSMEGnX28upnIbtBbuW1yl
-         DlbL5leWAmuv0ZJHXBwT6DeV6pqrnaiEPZ9AMFQLW0QFOgsfuO7myiarpiRNwmNT4CNP
-         XWbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cs7g9VJVPwmEyuFJS1ZM7Ruc9x7OMrsvL7hfbuQqpys=;
-        b=RrHrdBLjruoS6J7TfnRvJoAKYDZ8bwrbOY5GcnLg0xhE5ZLYi+jlbE8Vu/ArWZtbg9
-         w2AlyAWVSsWpNJDCqgYA6eBG1yVknxNGPQIfI/NNkqzlwbT1wVdXDr+vFKY9GLBtgkjr
-         WFdCth4V+D7QK2XRt8hyicg6abAUca+CJFvdsC3XBdfcG0qe8UYkALYrGsa94M2/pZRU
-         EjZFwj5onkUoUWMKzj/1drbZF0PfnJtHwhcyM0XZyQM2+Q3iVz3A9gt+/Qdv7C6NlZ7h
-         A4yVaQygam1zCtWabEwYHihi3hasco+6RAMvO1E6wirdX5L3hfwq4RINOGh/NGwII7AM
-         3mQw==
-X-Gm-Message-State: APjAAAWol3OaOAzDSOBJ6lY5bZ5Apa55eVhyByuQImphG/qCIMaH7DHJ
-        qKLnALIovjspMKwuHRO8hWgTeh5tFYfCfrXldU8=
-X-Google-Smtp-Source: APXvYqzpVoOetx+6QCueBXM8EVlD/fe3Pm2ZlXivJwvI/00KI2wj86hHDltjdv2GE1SvfuXD0isyYL1HMa+hES7RWI0=
-X-Received: by 2002:ab0:6418:: with SMTP id x24mr14943439uao.40.1575667655065;
- Fri, 06 Dec 2019 13:27:35 -0800 (PST)
+        id S1726562AbfLGROC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 7 Dec 2019 12:14:02 -0500
+Received: from fieldses.org ([173.255.197.46]:55108 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbfLGROC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 7 Dec 2019 12:14:02 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 3C8001510; Sat,  7 Dec 2019 12:14:02 -0500 (EST)
+Date:   Sat, 7 Dec 2019 12:14:02 -0500
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [GIT PULL] nfsd change for 5.5
+Message-ID: <20191207171402.GA24017@fieldses.org>
 MIME-Version: 1.0
-References: <20191204080039.ixjqetefkzzlldyt@kili.mountain>
- <CAN-5tyEG3C_Ebdr6dpMJ+gQ1pEAMNqbTv76dKu=KK9rspREr1A@mail.gmail.com>
- <20191204220435.GG40361@pick.fieldses.org> <20191205023826.GA43279@pick.fieldses.org>
- <20191206211442.GB17524@fieldses.org> <20191206211538.GC17524@fieldses.org>
-In-Reply-To: <20191206211538.GC17524@fieldses.org>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 6 Dec 2019 16:27:24 -0500
-Message-ID: <CAN-5tyFO0jXdxpRJewe83kSGWytWfODO20-a7rEd6rS5oP4fmw@mail.gmail.com>
-Subject: Re: [bug report] NFSD: allow inter server COPY to have a STALE source
- server fh
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 4:15 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Fri, Dec 06, 2019 at 04:14:42PM -0500, bfields wrote:
-> > On Wed, Dec 04, 2019 at 09:38:26PM -0500, J. Bruce Fields wrote:
-> > > So, stuff we could do:
-> > >
-> > >     - add an extra check of fh_export or something here.
-> >
-> > So, I'm applying the following for now.
-> > +                     if (current->fh->fh_export &&
->                                    ^^^
->
-> Um, maybe with a typo or two fixed.
->
->
-> > +                                     need_wrongsec_check(rqstp))
-> >                               op->status = check_nfsd_access(current_fh->fh_export, rqstp);
-> >               }
-> >  encode_op:
+Please pull
 
-Sure thing. But I just finished up and have hacked up the client to
-send a GETATTR after the 1st PUTFH in the COPY compound of the inter
-copy. The server doesn't croak but returns an ERR_STALE on the 1st
-PUTFH (I believe this is due to the logic that it's not a valid inter
-COPY compound.. so logic works).
+  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.5
 
-but I have nothing against adding the check.
+for nfsd changes for 5.5.
+
+This is a relatively quiet cycle for nfsd, mainly various bugfixes.
+
+Possibly most interesting is Trond's fixes for some callback races that
+were due to my incomplete understanding of rpc client shutdown.
+Unfortunately at the last minute I've started noticing a new
+intermittent failure to send callbacks.  As the logic seems basically
+correct, I'm leaving Trond's patches in for now, and hope to find a fix
+in the next week so I don't have to revert those patches.
+
+--b.
+
+Al Viro (1):
+      race in exportfs_decode_fh()
+
+Andy Shevchenko (1):
+      nfsd: remove private bin2hex implementation
+
+Christoph Hellwig (2):
+      sunrpc: remove __KERNEL__ ifdefs
+      lockd: remove __KERNEL__ ifdefs
+
+Chuck Lever (4):
+      svcrdma: Improve DMA mapping trace points
+      SUNRPC: Trace gssproxy upcall results
+      SUNRPC: Fix svcauth_gss_proxy_init()
+      SUNRPC: Fix backchannel latency metrics
+
+J. Bruce Fields (4):
+      nfsd: "\%s" should be "%s"
+      nfsd: mark cb path down on unknown errors
+      nfsd: document callback_wq serialization of callback code
+      nfsd: restore NFSv3 ACL support
+
+Mao Wenan (1):
+      nfsd: Drop LIST_HEAD where the variable it declares is never used.
+
+NeilBrown (1):
+      nfsd: check for EBUSY from vfs_rmdir/vfs_unink.
+
+Olga Kornievskaia (1):
+      NFSD fixing possible null pointer derefering in copy offload
+
+Patrick Steinhardt (1):
+      nfsd: depend on CRYPTO_MD5 for legacy client tracking
+
+Pavel Tikhomirov (1):
+      sunrpc: fix crash when cache_head become valid before update
+
+Scott Mayhew (3):
+      nfsd4: fix up replay_matches_cache()
+      nfsd: Fix cld_net->cn_tfm initialization
+      nfsd: v4 support requires CRYPTO_SHA256
+
+Trond Myklebust (3):
+      nfsd: minor 4.1 callback cleanup
+      nfsd: Fix races between nfsd4_cb_release() and nfsd4_shutdown_callback()
+      nfsd: Ensure CLONE persists data and metadata changes to the target file
+
+YueHaibing (1):
+      nfsd: remove set but not used variable 'len'
+
+ fs/exportfs/expfs.c                        |  31 +++++----
+ fs/nfsd/Kconfig                            |   3 +-
+ fs/nfsd/filecache.c                        |   2 -
+ fs/nfsd/nfs4callback.c                     | 104 +++++++++++++++++++++++------
+ fs/nfsd/nfs4proc.c                         |   6 +-
+ fs/nfsd/nfs4recover.c                      |  23 +++----
+ fs/nfsd/nfs4state.c                        |  19 ++++--
+ fs/nfsd/nfs4xdr.c                          |   2 -
+ fs/nfsd/nfsd.h                             |   3 +-
+ fs/nfsd/nfssvc.c                           |   3 +-
+ fs/nfsd/state.h                            |   1 +
+ fs/nfsd/vfs.c                              |  20 +++++-
+ fs/nfsd/vfs.h                              |   2 +-
+ include/linux/lockd/debug.h                |   4 --
+ include/linux/lockd/lockd.h                |   4 --
+ include/linux/sunrpc/auth.h                |   3 -
+ include/linux/sunrpc/auth_gss.h            |   2 -
+ include/linux/sunrpc/clnt.h                |   3 -
+ include/linux/sunrpc/gss_api.h             |   2 -
+ include/linux/sunrpc/gss_err.h             |   3 -
+ include/linux/sunrpc/msg_prot.h            |   3 -
+ include/linux/sunrpc/rpc_pipe_fs.h         |   3 -
+ include/linux/sunrpc/svcauth.h             |   4 --
+ include/linux/sunrpc/svcauth_gss.h         |   2 -
+ include/linux/sunrpc/xdr.h                 |   3 -
+ include/linux/sunrpc/xprt.h                |   4 --
+ include/linux/sunrpc/xprtsock.h            |   4 --
+ include/trace/events/rpcgss.h              |  45 +++++++++++++
+ include/trace/events/rpcrdma.h             |  30 +++++++--
+ include/trace/events/sunrpc.h              |  55 +++++++++++++++
+ net/sunrpc/auth_gss/gss_mech_switch.c      |   4 +-
+ net/sunrpc/auth_gss/svcauth_gss.c          |  92 ++++++++++++++++++-------
+ net/sunrpc/cache.c                         |   6 --
+ net/sunrpc/svc.c                           |   2 +
+ net/sunrpc/svcauth.c                       |   2 +
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   1 +
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   8 ++-
+ net/sunrpc/xprtsock.c                      |   3 +-
+ 38 files changed, 362 insertions(+), 149 deletions(-)
