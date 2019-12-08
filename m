@@ -2,78 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 102F6116004
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Dec 2019 01:58:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44F68116009
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Dec 2019 02:10:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbfLHA6L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 7 Dec 2019 19:58:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43863 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfLHA6L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Dec 2019 19:58:11 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so11619841ljm.10
-        for <linux-nfs@vger.kernel.org>; Sat, 07 Dec 2019 16:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pjInLVbNXJAcoeCkZ2UVa8n0Yvnc+/klAZS5TAwHv4s=;
-        b=h6ddV75ipxBKXFOA9CDG/DsvE2JTK3HbVomfQE6untuDafGb0uM3UTD+kBuTeURAJr
-         YaLxU9OJ6BU0yKYe4O/Q1IYMqIaS6oyUAb7OTpsABdji+FCn80FeRKA9nWv9YeQerxr2
-         Ixb3YlsXil8s4tHITSEfWE+Fn1dKsFgLFg/0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pjInLVbNXJAcoeCkZ2UVa8n0Yvnc+/klAZS5TAwHv4s=;
-        b=YwywrzDQSfvK6cBl/sccNadVJ1AAVBH/RL4aQol5BuEeR3oxWEAX4SwqEmFlC/1NzV
-         gzi/8jF720UOlXkt3acr4BRSxJ+y3/4b5KqmjNH6V7FjAU7fSx3pCw96aOZSLdPbVlqy
-         ipf+GU5+acpPy293YL+WTdnq+O72wDVwZ+V9cUzBj7FoQatHPZ0ansygXtncECLAXkom
-         iWu2zzZFAaDDQJM3pl6WBEVRwrCKcbeyYKdgyzE77ixRhv5IGmfcOFRe3xf8eQ3Rd9s0
-         LbMgBWNbHpMc6xf34Qph/haSaYcBQoJKsd7NuEaB8hf2HYjp2lpJ5Im50xM9SszU3H/J
-         PuMA==
-X-Gm-Message-State: APjAAAXTgAWjTvqig3eJ0+fC7PV1VUpWMU9yPBoFqu2a2CYxar66PGaN
-        215X2FzscATZJIKsoh3uksQsrlHLsXo=
-X-Google-Smtp-Source: APXvYqw4ftLjEi05dyypMW/ZfsEjicMTH2FRUUjT2Rk1uCkAzuNwTe+GygwHA2enNMHAK0HiD8VGjQ==
-X-Received: by 2002:a2e:898f:: with SMTP id c15mr2931069lji.41.1575766688959;
-        Sat, 07 Dec 2019 16:58:08 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id c8sm8644897lfm.65.2019.12.07.16.58.07
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2019 16:58:08 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id s22so11642675ljs.7
-        for <linux-nfs@vger.kernel.org>; Sat, 07 Dec 2019 16:58:07 -0800 (PST)
-X-Received: by 2002:a2e:241a:: with SMTP id k26mr12682848ljk.26.1575766687450;
- Sat, 07 Dec 2019 16:58:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20191207171402.GA24017@fieldses.org> <20191207171832.GB24017@fieldses.org>
-In-Reply-To: <20191207171832.GB24017@fieldses.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 7 Dec 2019 16:57:51 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgiQO7PCgQ5YKbJ86TLEs8G_M6k2OtFBY5m2AcNOCcJ0g@mail.gmail.com>
-Message-ID: <CAHk-=wgiQO7PCgQ5YKbJ86TLEs8G_M6k2OtFBY5m2AcNOCcJ0g@mail.gmail.com>
-Subject: Re: [GIT PULL] nfsd change for 5.5
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725865AbfLHBKE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 7 Dec 2019 20:10:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfLHBKE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 7 Dec 2019 20:10:04 -0500
+Subject: Re: [GIT PULL] Please pull NFS client changes for Linux 5.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575767403;
+        bh=2h7clWFiCRfAkjiVhopDaAGV3evdxGbSsY0iJjMtIuQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=LXH9PrKleFZ+NHLjy2TqTUNpWWCCtXsSIxIzOkT4i/memfpWK4lEYAxFp/Lo7jF22
+         Ox5DYBkx0+TkCepcyY8ORYXuqKjCdn441+/6SaeYDm2e1FmR5QIEsUif9pngGeClTy
+         qQ2WQhn80GBasb/wNZPTyWEdLzFZJfF6mZPmQsf4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <71a579b2d8e4225902b37f4ac12d074d8a0d71c3.camel@hammerspace.com>
+References: <71a579b2d8e4225902b37f4ac12d074d8a0d71c3.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <71a579b2d8e4225902b37f4ac12d074d8a0d71c3.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
+ tags/nfs-for-5.5-1
+X-PR-Tracked-Commit-Id: a264abad51d8ecb7954a2f6d9f1885b38daffc74
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fb9bf40cf028ebbe7d5bdf8f7e93abe8e30bed0d
+Message-Id: <157576740385.7292.2441886593175349222.pr-tracker-bot@kernel.org>
+Date:   Sun, 08 Dec 2019 01:10:03 +0000
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Dec 7, 2019 at 9:18 AM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> Oh, also, not included: server-to-server copy offload.  I think it's
-> more or less ready, but due to some miscommunication (at least partly my
-> fault), I didn't get them in my nfsd-next branch till this week.  And
-> the client side (which it builds on) isn't merged yet last I checked.
-> So, it seemed more prudent to back them out and wait till next time.
+The pull request you sent on Fri, 6 Dec 2019 19:14:01 +0000:
 
-The cline side part should have just got merged (Trond and you both
-waited until the end of the merge window for your pull requests), but
-it's just as well to have the server side be done next release..
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.5-1
 
-               Linus
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fb9bf40cf028ebbe7d5bdf8f7e93abe8e30bed0d
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
