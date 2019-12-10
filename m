@@ -2,428 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C89F118834
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2019 13:32:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA55E118D95
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2019 17:27:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLJMcD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Dec 2019 07:32:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37101 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727566AbfLJMb0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Dec 2019 07:31:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575981083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D25Ozj0ALmNADVKeQRJ1+nc3ACJQ8kWT2CuWkURI0eU=;
-        b=b+QVcYyetY8DyjZcdeqRTW/fSCKO6xA6nmokV897fQvdX5YDjdYWIUDEEq9X93c0p7BDA8
-        xPOHnyr2MlvB53SZMbFJ1Npu6KKHUB3IY5CKHY6AkOOG9bwV4FljUpplAfbrT1/sOQiVQo
-        9+xDEOf+aZ2iXe/3Yb2DKZIIOGp8cVc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-Ogqxv0upOeub1VAJt1w6oA-1; Tue, 10 Dec 2019 07:31:19 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0810D189DF40;
-        Tue, 10 Dec 2019 12:31:18 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC4A35DA2C;
-        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 1F15820C5A; Tue, 10 Dec 2019 07:31:16 -0500 (EST)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: [PATCH v6 27/27] NFS: Attach supplementary error information to fs_context.
-Date:   Tue, 10 Dec 2019 07:31:15 -0500
-Message-Id: <20191210123115.1655-28-smayhew@redhat.com>
-In-Reply-To: <20191210123115.1655-1-smayhew@redhat.com>
-References: <20191210123115.1655-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: Ogqxv0upOeub1VAJt1w6oA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
+        id S1727178AbfLJQ1X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Dec 2019 11:27:23 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60482 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJQ1X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Dec 2019 11:27:23 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAGOQqc026976;
+        Tue, 10 Dec 2019 16:27:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2019-08-05;
+ bh=zwUDAJqbmNBFUJmgqRPCyKOhizsZwq41Wad7HbySJtw=;
+ b=MVLShwdOB8pUEwJ5Iaus92GMxNDHBG3utjMsDWdHauRe9zRS4OIoTR/H2VioKNFz1gHY
+ OzgTFsYtMBHvToXdDem5BuhVDfBKRo0HBACl4AYiBPtVsgdA6YOnENe2H+8J8o/vH4hO
+ dhuvUXR3k5j9E3QXy3tVLwrnIaXBqys1Lg1BeOVENIEguew1HI5/qBi7s0vGTc6u+ESR
+ XobeWwzsq/ygyZfQ8I2H7eycre3ylYxtm0ZCpAMJwpd0dKLBV23wJTaDqPraCx1ut5oL
+ Q0I8AsEcGy+CO5/Hh9TViFQOUONEK4S+Oq2fgAbHJSodb+4yVssb3tqQcUrClSPz2UcR uA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2wr41q7apj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 16:27:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAGPHHr185540;
+        Tue, 10 Dec 2019 16:27:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wt13dc32n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 16:27:17 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBAGRG4H013220;
+        Tue, 10 Dec 2019 16:27:16 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Dec 2019 08:27:16 -0800
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: CPU lockup in or near new filecache code
+Message-Id: <9977648B-7D14-42EB-BD4A-CBD041A0C21A@oracle.com>
+Date:   Tue, 10 Dec 2019 11:27:15 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912100141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912100141
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Split out from commit "NFS: Add fs_context support."
+Under stress, I'm seeing BUGs similar to this quite a bit on my v5.5-rc1 =
+NFS server.
+As near as I can tell, the nfsd thread is looping under =
+nfsd_file_acquire somewhere.
 
-Add wrappers nfs_errorf(), nfs_invalf(), and nfs_warnf() which log error
-information to the fs_context.  Convert some printk's to use these new
-wrappers instead.
+Dec  9 13:22:52 klimt kernel: watchdog: BUG: soft lockup - CPU#0 stuck =
+for 22s! [nfsd:2002]
+Dec  9 13:22:52 klimt kernel: Modules linked in: rpcsec_gss_krb5 =
+ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue =
+ib_umad ib_ipoib mlx4_ib sb_edac x86_pkg_temp_thermal coretemp kvm_intel =
+kvm irqbypass ext4 crct10dif_pclmul crc32_pclmul ghash_clmulni_intel =
+mbcache jbd2 iTCO_wdt iTCO_vendor_support aesni_intel glue_helper =
+crypto_simd cryptd pcspkr rpcrdma i2c_i801 lpc_ich rdma_ucm mfd_core =
+ib_iser rdma_cm mei_me mei iw_cm raid0 ib_cm libiscsi sg =
+scsi_transport_iscsi ioatdma wmi ipmi_si ipmi_devintf ipmi_msghandler =
+acpi_power_meter nfsd nfs_acl lockd auth_rpcgss grace sunrpc ip_tables =
+xfs libcrc32c mlx4_en sr_mod cdrom sd_mod qedr ast drm_vram_helper =
+drm_ttm_helper ttm drm_kms_helper crc32c_intel syscopyarea sysfillrect =
+sysimgblt fb_sys_fops drm ahci libahci libata igb mlx4_core dca =
+i2c_algo_bit i2c_core nvme nvme_core qede qed dm_mirror dm_region_hash =
+dm_log dm_mod crc8 ib_uverbs dax ib_core
+Dec  9 13:22:52 klimt kernel: CPU: 0 PID: 2002 Comm: nfsd Tainted: G     =
+        L    5.5.0-rc1-00002-gc56d8b96a170 #1400
+Dec  9 13:22:52 klimt kernel: Hardware name: Supermicro Super =
+Server/X10SRL-F, BIOS 1.0c 09/09/2015
+Dec  9 13:22:52 klimt kernel: RIP: 0010:put_task_struct+0xc/0x28
+Dec  9 13:22:52 klimt kernel: Code: 05 11 01 00 75 17 48 c7 c7 b1 b4 eb =
+81 31 c0 c6 05 4f 05 11 01 01 e8 a7 ad fd ff 0f 0b c3 48 8d 57 20 83 c8 =
+ff f0 0f c1 47 20 <83> f8 01 75 05 e9 cf 7e fd ff 85 c0 7f 0d be 03 00 =
+00 00 48 89 d7
+Dec  9 13:22:52 klimt kernel: RSP: 0018:ffffc90000f7bb88 EFLAGS: =
+00000213 ORIG_RAX: ffffffffffffff13
+Dec  9 13:22:52 klimt kernel: RAX: 0000000000000002 RBX: =
+ffff888844120000 RCX: 0000000000000000
+Dec  9 13:22:52 klimt kernel: RDX: ffff888844120020 RSI: =
+0000000000000000 RDI: ffff888844120000
+Dec  9 13:22:52 klimt kernel: RBP: 0000000000000001 R08: =
+ffff888817527b00 R09: ffffffff8121d707
+Dec  9 13:22:52 klimt kernel: R10: ffffc90000f7bbc8 R11: =
+000000008e6571d9 R12: ffff888855055750
+Dec  9 13:22:52 klimt kernel: R13: 0000000000000000 R14: =
+ffff88882dcd9320 R15: ffff88881741a8c0
+Dec  9 13:22:52 klimt kernel: FS:  0000000000000000(0000) =
+GS:ffff88885fc00000(0000) knlGS:0000000000000000
+Dec  9 13:22:52 klimt kernel: CS:  0010 DS: 0000 ES: 0000 CR0: =
+0000000080050033
+Dec  9 13:22:52 klimt kernel: CR2: 00007f816a386000 CR3: =
+0000000855686003 CR4: 00000000001606f0
+Dec  9 13:22:52 klimt kernel: Call Trace:
+Dec  9 13:22:52 klimt kernel: wake_up_q+0x34/0x40
+Dec  9 13:22:52 klimt kernel: __mutex_unlock_slowpath.isra.14+0x9d/0xeb
+Dec  9 13:22:52 klimt kernel: fsnotify_add_mark+0x53/0x5d
+Dec  9 13:22:52 klimt kernel: nfsd_file_acquire+0x423/0x576 [nfsd]
+Dec  9 13:22:52 klimt kernel: nfs4_get_vfs_file+0x14c/0x20f [nfsd]
+Dec  9 13:22:52 klimt kernel: nfsd4_process_open2+0xcd6/0xd98 [nfsd]
+Dec  9 13:22:52 klimt kernel: ? fh_verify+0x42e/0x4ef [nfsd]
+Dec  9 13:22:52 klimt kernel: ? nfsd4_process_open1+0x233/0x29d [nfsd]
+Dec  9 13:22:52 klimt kernel: nfsd4_open+0x500/0x5cb [nfsd]
+Dec  9 13:22:52 klimt kernel: nfsd4_proc_compound+0x32a/0x5c7 [nfsd]
+Dec  9 13:22:52 klimt kernel: nfsd_dispatch+0x102/0x1e2 [nfsd]
+Dec  9 13:22:52 klimt kernel: svc_process_common+0x3b3/0x65d [sunrpc]
+Dec  9 13:22:52 klimt kernel: ? svc_xprt_put+0x12/0x21 [sunrpc]
+Dec  9 13:22:52 klimt kernel: ? nfsd_svc+0x2be/0x2be [nfsd]
+Dec  9 13:22:52 klimt kernel: ? nfsd_destroy+0x51/0x51 [nfsd]
+Dec  9 13:22:52 klimt kernel: svc_process+0xf6/0x115 [sunrpc]
+Dec  9 13:22:52 klimt kernel: nfsd+0xf2/0x149 [nfsd]
+Dec  9 13:22:52 klimt kernel: kthread+0xf6/0xfb
+Dec  9 13:22:52 klimt kernel: ? kthread_queue_delayed_work+0x74/0x74
+Dec  9 13:22:52 klimt kernel: ret_from_fork+0x3a/0x50
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfs/fs_context.c | 105 +++++++++++++++-----------------------------
- fs/nfs/getroot.c    |   3 ++
- fs/nfs/internal.h   |   4 ++
- fs/nfs/namespace.c  |   2 +-
- fs/nfs/nfs4super.c  |   2 +
- fs/nfs/super.c      |   4 +-
- 6 files changed, 48 insertions(+), 72 deletions(-)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index e472334b978d..429315c011ae 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -318,10 +318,8 @@ static int nfs_auth_info_add(struct fs_context *fc,
- =09=09=09return 0;
- =09}
-=20
--=09if (auth_info->flavor_len + 1 >=3D max_flavor_len) {
--=09=09dfprintk(MOUNT, "NFS: too many sec=3D flavors\n");
--=09=09return -EINVAL;
--=09}
-+=09if (auth_info->flavor_len + 1 >=3D max_flavor_len)
-+=09=09return nfs_invalf(fc, "NFS: too many sec=3D flavors");
-=20
- =09auth_info->flavors[auth_info->flavor_len++] =3D flavor;
- =09return 0;
-@@ -378,9 +376,7 @@ static int nfs_parse_security_flavors(struct fs_context=
- *fc,
- =09=09=09pseudoflavor =3D RPC_AUTH_GSS_SPKMP;
- =09=09=09break;
- =09=09default:
--=09=09=09dfprintk(MOUNT,
--=09=09=09=09 "NFS: sec=3D option '%s' not recognized\n", p);
--=09=09=09return -EINVAL;
-+=09=09=09return nfs_invalf(fc, "NFS: sec=3D%s option not recognized", p);
- =09=09}
-=20
- =09=09ret =3D nfs_auth_info_add(fc, &ctx->auth_info, pseudoflavor);
-@@ -425,8 +421,7 @@ static int nfs_parse_version_string(struct fs_context *=
-fc,
- =09=09ctx->minorversion =3D 2;
- =09=09break;
- =09default:
--=09=09dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
--=09=09return -EINVAL;
-+=09=09return nfs_invalf(fc, "NFS: Unsupported NFS version");
- =09}
- =09return 0;
- }
-@@ -451,10 +446,8 @@ static int nfs_fs_context_parse_param(struct fs_contex=
-t *fc,
-=20
- =09switch (opt) {
- =09case Opt_source:
--=09=09if (fc->source) {
--=09=09=09dfprintk(MOUNT, "NFS: Multiple sources not supported\n");
--=09=09=09return -EINVAL;
--=09=09}
-+=09=09if (fc->source)
-+=09=09=09return nfs_invalf(fc, "NFS: Multiple sources not supported");
- =09=09fc->source =3D param->string;
- =09=09param->string =3D NULL;
- =09=09break;
-@@ -664,8 +657,7 @@ static int nfs_fs_context_parse_param(struct fs_context=
- *fc,
- =09=09=09xprt_load_transport(param->string);
- =09=09=09break;
- =09=09default:
--=09=09=09dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
--=09=09=09return -EINVAL;
-+=09=09=09return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
- =09=09}
-=20
- =09=09ctx->protofamily =3D protofamily;
-@@ -688,8 +680,7 @@ static int nfs_fs_context_parse_param(struct fs_context=
- *fc,
- =09=09=09break;
- =09=09case Opt_xprt_rdma: /* not used for side protocols */
- =09=09default:
--=09=09=09dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
--=09=09=09return -EINVAL;
-+=09=09=09return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
- =09=09}
- =09=09ctx->mountfamily =3D mountfamily;
- =09=09break;
-@@ -774,13 +765,11 @@ static int nfs_fs_context_parse_param(struct fs_conte=
-xt *fc,
- =09return 0;
-=20
- out_invalid_value:
--=09printk(KERN_INFO "NFS: Bad mount option value specified\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Bad mount option value specified");
- out_invalid_address:
--=09printk(KERN_INFO "NFS: Bad IP address specified\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Bad IP address specified");
- out_of_bounds:
--=09printk(KERN_INFO "NFS: Value for '%s' out of range\n", param->key);
-+=09nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
- =09return -ERANGE;
- }
-=20
-@@ -846,19 +835,15 @@ static int nfs_parse_source(struct fs_context *fc,
- =09return 0;
-=20
- out_bad_devname:
--=09dfprintk(MOUNT, "NFS: device name not in host:path format\n");
--=09return -EINVAL;
--
-+=09return nfs_invalf(fc, "NFS: device name not in host:path format");
- out_nomem:
--=09dfprintk(MOUNT, "NFS: not enough memory to parse device name\n");
-+=09nfs_errorf(fc, "NFS: not enough memory to parse device name");
- =09return -ENOMEM;
--
- out_hostname:
--=09dfprintk(MOUNT, "NFS: server hostname too long\n");
-+=09nfs_errorf(fc, "NFS: server hostname too long");
- =09return -ENAMETOOLONG;
--
- out_path:
--=09dfprintk(MOUNT, "NFS: export pathname too long\n");
-+=09nfs_errorf(fc, "NFS: export pathname too long");
- =09return -ENAMETOOLONG;
- }
-=20
-@@ -1015,29 +1000,23 @@ static int nfs23_parse_monolithic(struct fs_context=
- *fc,
- =09=09ctx->skip_reconfig_option_check =3D true;
- =09=09return 0;
- =09}
--=09dfprintk(MOUNT, "NFS: mount program didn't pass any mount data\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: mount program didn't pass any mount data");
-=20
- out_no_v3:
--=09dfprintk(MOUNT, "NFS: nfs_mount_data version %d does not support v3\n",
--=09=09 data->version);
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: nfs_mount_data version does not support v3"=
-);
-=20
- out_no_sec:
--=09dfprintk(MOUNT, "NFS: nfs_mount_data version supports only AUTH_SYS\n")=
-;
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: nfs_mount_data version supports only AUTH_S=
-YS");
-=20
- out_nomem:
--=09dfprintk(MOUNT, "NFS: not enough memory to handle mount options\n");
-+=09dfprintk(MOUNT, "NFS: not enough memory to handle mount options");
- =09return -ENOMEM;
-=20
- out_no_address:
--=09dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
-=20
- out_invalid_fh:
--=09dfprintk(MOUNT, "NFS: invalid root filehandle\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: invalid root filehandle");
- }
-=20
- #if IS_ENABLED(CONFIG_NFS_V4)
-@@ -1132,21 +1111,17 @@ static int nfs4_parse_monolithic(struct fs_context =
-*fc,
- =09=09ctx->skip_reconfig_option_check =3D true;
- =09=09return 0;
- =09}
--=09dfprintk(MOUNT, "NFS4: mount program didn't pass any mount data\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS4: mount program didn't pass any mount data")=
-;
-=20
- out_inval_auth:
--=09dfprintk(MOUNT, "NFS4: Invalid number of RPC auth flavours %d\n",
--=09=09 data->auth_flavourlen);
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS4: Invalid number of RPC auth flavours %d",
-+=09=09      data->auth_flavourlen);
-=20
- out_no_address:
--=09dfprintk(MOUNT, "NFS4: mount program didn't pass remote address\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS4: mount program didn't pass remote address")=
-;
-=20
- out_invalid_transport_udp:
--=09dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
- }
- #endif
-=20
-@@ -1164,8 +1139,7 @@ static int nfs_fs_context_parse_monolithic(struct fs_=
-context *fc,
- =09=09return nfs4_parse_monolithic(fc, data);
- #endif
-=20
--=09dfprintk(MOUNT, "NFS: Unsupported monolithic data version\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Unsupported monolithic data version");
- }
-=20
- /*
-@@ -1253,32 +1227,25 @@ static int nfs_fs_context_validate(struct fs_contex=
-t *fc)
- =09return 0;
-=20
- out_no_device_name:
--=09dfprintk(MOUNT, "NFS: Device name not specified\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Device name not specified");
- out_v4_not_compiled:
--=09dfprintk(MOUNT, "NFS: NFSv4 is not compiled into kernel\n");
-+=09nfs_errorf(fc, "NFS: NFSv4 is not compiled into kernel");
- =09return -EPROTONOSUPPORT;
- out_invalid_transport_udp:
--=09dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
- out_no_address:
--=09dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
- out_mountproto_mismatch:
--=09dfprintk(MOUNT, "NFS: Mount server address does not match mountproto=3D=
- option\n");
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Mount server address does not match mountpr=
-oto=3D option");
- out_proto_mismatch:
--=09dfprintk(MOUNT, "NFS: Server address does not match proto=3D option\n")=
-;
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: Server address does not match proto=3D opti=
-on");
- out_minorversion_mismatch:
--=09dfprintk(MOUNT, "NFS: Mount option vers=3D%u does not support minorvers=
-ion=3D%u\n",
-+=09return nfs_invalf(fc, "NFS: Mount option vers=3D%u does not support min=
-orversion=3D%u",
- =09=09=09  ctx->version, ctx->minorversion);
--=09return -EINVAL;
- out_migration_misuse:
--=09dfprintk(MOUNT, "NFS: 'Migration' not supported for this NFS version\n"=
-);
--=09return -EINVAL;
-+=09return nfs_invalf(fc, "NFS: 'Migration' not supported for this NFS vers=
-ion");
- out_version_unavailable:
--=09dfprintk(MOUNT, "NFS: Version unavailable\n");
-+=09nfs_errorf(fc, "NFS: Version unavailable");
- =09return ret;
- }
-=20
-diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
-index ab45496d23a6..b012c2668a1f 100644
---- a/fs/nfs/getroot.c
-+++ b/fs/nfs/getroot.c
-@@ -86,6 +86,7 @@ int nfs_get_root(struct super_block *s, struct fs_context=
- *fc)
- =09error =3D server->nfs_client->rpc_ops->getroot(server, ctx->mntfh, &fsi=
-nfo);
- =09if (error < 0) {
- =09=09dprintk("nfs_get_root: getattr error =3D %d\n", -error);
-+=09=09nfs_errorf(fc, "NFS: Couldn't getattr on root");
- =09=09goto out_fattr;
- =09}
-=20
-@@ -93,6 +94,7 @@ int nfs_get_root(struct super_block *s, struct fs_context=
- *fc)
- =09if (IS_ERR(inode)) {
- =09=09dprintk("nfs_get_root: get root inode failed\n");
- =09=09error =3D PTR_ERR(inode);
-+=09=09nfs_errorf(fc, "NFS: Couldn't get root inode");
- =09=09goto out_fattr;
- =09}
-=20
-@@ -108,6 +110,7 @@ int nfs_get_root(struct super_block *s, struct fs_conte=
-xt *fc)
- =09if (IS_ERR(root)) {
- =09=09dprintk("nfs_get_root: get root dentry failed\n");
- =09=09error =3D PTR_ERR(root);
-+=09=09nfs_errorf(fc, "NFS: Couldn't get root dentry");
- =09=09goto out_fattr;
- =09}
-=20
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index a1fd4c3ebc4e..c0257411e158 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -133,6 +133,10 @@ struct nfs_fs_context {
- =09} clone_data;
- };
-=20
-+#define nfs_errorf(fc, fmt, ...) errorf(fc, fmt, ## __VA_ARGS__)
-+#define nfs_invalf(fc, fmt, ...) invalf(fc, fmt, ## __VA_ARGS__)
-+#define nfs_warnf(fc, fmt, ...) warnf(fc, fmt, ## __VA_ARGS__)
-+
- static inline struct nfs_fs_context *nfs_fc2context(const struct fs_contex=
-t *fc)
- {
- =09return fc->fs_private;
-diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index d537350c1fb7..4fd22c0d730c 100644
---- a/fs/nfs/namespace.c
-+++ b/fs/nfs/namespace.c
-@@ -281,7 +281,7 @@ int nfs_do_submount(struct fs_context *fc)
-=20
- =09p =3D nfs_devname(dentry, buffer, 4096);
- =09if (IS_ERR(p)) {
--=09=09dprintk("NFS: Couldn't determine submount pathname\n");
-+=09=09nfs_errorf(fc, "NFS: Couldn't determine submount pathname");
- =09=09ret =3D PTR_ERR(p);
- =09} else {
- =09=09ret =3D vfs_parse_fs_string(fc, "source", p, buffer + 4096 - p);
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 7d5ed37633d8..1475f932d7da 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -225,6 +225,7 @@ int nfs4_try_get_tree(struct fs_context *fc)
- =09=09=09   fc, ctx->nfs_server.hostname,
- =09=09=09   ctx->nfs_server.export_path);
- =09if (err) {
-+=09=09nfs_errorf(fc, "NFS4: Couldn't follow remote path");
- =09=09dfprintk(MOUNT, "<-- nfs4_try_get_tree() =3D %d [error]\n", err);
- =09} else {
- =09=09dfprintk(MOUNT, "<-- nfs4_try_get_tree() =3D 0\n");
-@@ -247,6 +248,7 @@ int nfs4_get_referral_tree(struct fs_context *fc)
- =09=09=09    fc, ctx->nfs_server.hostname,
- =09=09=09    ctx->nfs_server.export_path);
- =09if (err) {
-+=09=09nfs_errorf(fc, "NFS4: Couldn't follow remote path");
- =09=09dfprintk(MOUNT, "<-- nfs4_get_referral_tree() =3D %d [error]\n", err=
-);
- =09} else {
- =09=09dfprintk(MOUNT, "<-- nfs4_get_referral_tree() =3D 0\n");
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index ed0290d5ebf3..76e0198adcfa 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1205,7 +1205,7 @@ int nfs_get_tree_common(struct fs_context *fc)
- =09fc->s_fs_info =3D NULL;
- =09if (IS_ERR(s)) {
- =09=09error =3D PTR_ERR(s);
--=09=09dfprintk(MOUNT, "NFS: Couldn't get superblock\n");
-+=09=09nfs_errorf(fc, "NFS: Couldn't get superblock");
- =09=09goto out_err_nosb;
- =09}
-=20
-@@ -1234,7 +1234,7 @@ int nfs_get_tree_common(struct fs_context *fc)
-=20
- =09error =3D nfs_get_root(s, fc);
- =09if (error < 0) {
--=09=09dfprintk(MOUNT, "NFS: Couldn't get root dentry\n");
-+=09=09nfs_errorf(fc, "NFS: Couldn't get root dentry");
- =09=09goto error_splat_super;
- =09}
-=20
---=20
-2.17.2
+--
+Chuck Lever
+
+
 
