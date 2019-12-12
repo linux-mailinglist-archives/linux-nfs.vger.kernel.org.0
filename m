@@ -2,194 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8433B11D4FD
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Dec 2019 19:14:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C02F11D70F
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Dec 2019 20:31:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfLLSOD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Dec 2019 13:14:03 -0500
-Received: from mail-vs1-f45.google.com ([209.85.217.45]:45664 "EHLO
-        mail-vs1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730080AbfLLSOD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Dec 2019 13:14:03 -0500
-Received: by mail-vs1-f45.google.com with SMTP id l24so2210031vsr.12
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Dec 2019 10:14:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=owHRP4mLOSvGJ90z613PfpKSOLZmnx/czAEbiKDwBv8=;
-        b=f53Ixxwb/N7qeZ4csHxMvI3Bt8hHfvCINB4XjQVdrVq0Vs8kkZqvjhpkcZya3/rvZn
-         ExHhDsb4V8GmEI1BySBzP3SgyLo9w7Rfhw8ADFXjB2479FnT3vrKzKtfjIWBShy1fpkI
-         PNjos7VG8sPg32mO+deu7/LydR7rhmt/932tmV+2eUWvoaABrx71BbLDKrbbdfZgoTCv
-         YItQvarC3DUQOJKzdanesq0XnlvREK/cOG9JwIdPSWmgs88hXkCcSq4edMgzIPElQh7a
-         4LdTe/sloSkiXRtKzjilltIyKeFy9QRYJ7CO/Cg9Y5MCh4d6//iONQSss0XLgwvHiI77
-         pHYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=owHRP4mLOSvGJ90z613PfpKSOLZmnx/czAEbiKDwBv8=;
-        b=iqwAU6a3QcjN1DfIQKdNwfZOD5/GycbLayXMJVL++zck4BeKiGrIvZyv62C5lLQC2k
-         r5p89rueypJaeqCiwFn1TfRcSRxdZ3ZqWxD9VxBpQ4lsOVqc3rfXJUlYOKxVtMk3QBK+
-         pSyW0j3Qt/s08ZRrRbW2TKJ1iaSiQqNfwWqLlk4ekc3lElEjUmZJnF13IguiuxmhHHGx
-         OV9XNg8rWc6BXqj+MeSLloQAZNxN9I7HOHYrzT9bBxU5YPmROofiAPzgLgFXxgmuriS8
-         chKZ+bO2erYBTJ7C2lO1dmAcaL1vqBNjVtFKZU5NzRsC5oOBQACzf6QgTUFn2qmN9u31
-         Em6A==
-X-Gm-Message-State: APjAAAXUxdDO6KuYYajeyrCpWJGBmBunTttIeFQ1tvKF50mndvI8wmrm
-        MPjI+41dkAGzVc2WbvEEFk7bJT095ovfSpFJrmHDvg==
-X-Google-Smtp-Source: APXvYqy8CnEaAnBZI3vdEl/BGup1pOBvJBGA+aetRUBiN2QgwxpxA6PXSC1OUTGmgk2YRaImCL46h32FotXW9ESYLsw=
-X-Received: by 2002:a67:f055:: with SMTP id q21mr8227920vsm.215.1576174442160;
- Thu, 12 Dec 2019 10:14:02 -0800 (PST)
-MIME-Version: 1.0
-References: <CAN-5tyH_+OZJ+eUGvqvo+-EuG1OdaoFYERNKi=k=CDxpOFVoCQ@mail.gmail.com>
- <e2541b5d08b823aaec01195178e87ba39526aa92.camel@hammerspace.com>
- <CAN-5tyFVb_jqt+jknn2+o6_Cu=7cKw4qt9B_e2pd0azu2-7zaQ@mail.gmail.com>
- <CAN-5tyHm+aG9GmM1EWFDLeKfLxJWvGSGbRP5QwN4=phwaNQkyQ@mail.gmail.com> <b90ab1ae883db0109e3a0b390fa5cc599268819c.camel@hammerspace.com>
-In-Reply-To: <b90ab1ae883db0109e3a0b390fa5cc599268819c.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 12 Dec 2019 13:13:50 -0500
-Message-ID: <CAN-5tyGi3PzoV4YwBiQyPZ=8njCe8bBfS5baverQvbch7LJQpw@mail.gmail.com>
+        id S1730365AbfLLTbZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Dec 2019 14:31:25 -0500
+Received: from mail-bn8nam11on2105.outbound.protection.outlook.com ([40.107.236.105]:26081
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730349AbfLLTbZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:31:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QcCBYot3PhT5n2asiqOQ8yoE1NYqbvsP41chc7mK8X9XlBUw9oE4Q+bicgh3I6XP3pVETaxSJIHIy6aJ+Wmf5i7BSE7qDZdXgDpWMBmE+jMKtw+0tE64ij7qO4mrX3Us5o5S9poDO5dIGbh+0vaDF/KDsnWL2lZ3fhsFK/Is70HA/Oy5PTqMa7wnNe/FcRWbZeoUcWl7+ekruspdpBxaW/+litdTiHfBu6VR6PNYMM0qSew/WiPSr8XQyP0l34sq+C47Zd99/tITYAINbFGM/fbkj3DKFLzwSau0KP+rhAYi65mHunh/aKkEBmpUN1Xm2eVKq8QXZHO51SJCcEgnhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBas0ELc603/LQlYrLVbNage7Aa7AciS9HMXbBzxtZ0=;
+ b=KApU4U4R00i7jBgsdBftbzGNipZHzmQIHgAtsmoEt7JJXZBvsSzIOthGMrfWVVmtNaHGIsOA11kjeHHq+O7DJQGeogcwOkXLEp4IJvO+gzJacpEfcgXjna8sFu0VpDGobMpdMq5cTsoPiN8WxQ/raFQuHwr3qIIUIrrMGu7LTWr3Ll6SG4u2OJTXjEhtYYJ4WfZDa6SOC9GK+m0JbNckECzPzwXkojLnT1hpd5y8aR23lLO4GA4WbEZBGLtDMHKcZ5A3HrIE9czQsFUj94WU5upsgUH3R00VkU5D7lpHwiXfkIyHHwtI6plGMY+V7i2bG1O8S6z2bclCbf7WoiUEkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBas0ELc603/LQlYrLVbNage7Aa7AciS9HMXbBzxtZ0=;
+ b=Np84ylG+2tgMuu81JdhlqFoDubsuPNCk2hVu8zLbhMqohfiplvBRwk02DgfRLapUVYp2+XvCRk3AH71S/xUjI7IDd9KPKNQ+nvIKSA6s+Pl/yzTjmgKsCwwMMOpc2g+k2SgpmcJFtCu5fOMkNOrq9VHskjOyyIlYxcqWcD4jLVU=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1914.namprd13.prod.outlook.com (10.174.186.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.6; Thu, 12 Dec 2019 19:31:16 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2538.012; Thu, 12 Dec 2019
+ 19:31:16 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: NFS/TCP timeouts
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: NFS/TCP timeouts
+Thread-Index: AQHUW0dNKoxhP3zTWk27MD4kbuUnMqUN3AmAgAAFqICCqizyAIABUpmAgAAYAwCAABWigA==
+Date:   Thu, 12 Dec 2019 19:31:16 +0000
+Message-ID: <ab3d30b661c82f598bfe853ee2c9690bc11886bc.camel@hammerspace.com>
+References: <CAN-5tyH_+OZJ+eUGvqvo+-EuG1OdaoFYERNKi=k=CDxpOFVoCQ@mail.gmail.com>
+         <e2541b5d08b823aaec01195178e87ba39526aa92.camel@hammerspace.com>
+         <CAN-5tyFVb_jqt+jknn2+o6_Cu=7cKw4qt9B_e2pd0azu2-7zaQ@mail.gmail.com>
+         <CAN-5tyHm+aG9GmM1EWFDLeKfLxJWvGSGbRP5QwN4=phwaNQkyQ@mail.gmail.com>
+         <b90ab1ae883db0109e3a0b390fa5cc599268819c.camel@hammerspace.com>
+         <CAN-5tyGi3PzoV4YwBiQyPZ=8njCe8bBfS5baverQvbch7LJQpw@mail.gmail.com>
+In-Reply-To: <CAN-5tyGi3PzoV4YwBiQyPZ=8njCe8bBfS5baverQvbch7LJQpw@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 67106039-2e2c-4318-f922-08d77f39db65
+x-ms-traffictypediagnostic: DM5PR1301MB1914:
+x-microsoft-antispam-prvs: <DM5PR1301MB191481AFA4C7656CC8E323BCB8550@DM5PR1301MB1914.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(346002)(366004)(376002)(39830400003)(189003)(199004)(4326008)(8676002)(91956017)(81166006)(2906002)(4001150100001)(81156014)(316002)(186003)(76116006)(71200400001)(8936002)(64756008)(36756003)(6512007)(508600001)(66556008)(66476007)(66446008)(66946007)(53546011)(2616005)(3480700005)(6916009)(26005)(86362001)(6486002)(6506007)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1914;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qMXNzuSzBb9yaXRvqZNkD6pQk6Ik62CDQQvx3jzDJ+vSb65nNU53AAvi7PsydoipOjywJ1xHh8vhfvTY1U3vBU8y5HM5xLaQ92RMEnfeMxWr3Vr2orBdGZw8Ra1/SrdqZwQwMHXqBmfu/5zc8T+CRoX3HGmlEuoTmaTW+v/GAGVE2Wc3AT7l0Y+FQGSPF7Yx1bcQDFdB35E9aqG09ODfLeHRnaCi/1Su+pkvFdRH2bNi+jkzw4uWCSUtUqZ9HeAnn+XwzktunHk3+xSamdz+xuZuSpQd81bfDNYKs44fKgz09F16+VFnGrogB3sy0AMhbhSk+eewZs5ZTv7+kI/AaAxiG9e49aU25orJeJQb3NChXC1Nsn1yRW+o8ZP30/QAqqH7NrTSkSUFzEWmbqk4dnqfJHIuf45BNQSjL9ek/tocTcXB4Owb7DCLTLFykdwd
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9298B23988D3C648BD6579565F6A2BD7@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67106039-2e2c-4318-f922-08d77f39db65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 19:31:16.5761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uq8tnqxHcT1BRk/1q9c/O8RhoWqReEo6hBODTLi+eoLWa1Xo67DxEybjtsM0Sd4+Qoc/HkR7ZP6rHDGICJvGQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1914
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:47 AM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> Hi Olga,
->
-> On Wed, 2019-12-11 at 15:36 -0500, Olga Kornievskaia wrote:
-> > Hi Trond,
-> >
-> > I'd like to raise this once again. Is this true that setting a
-> > timeout
-> > limit (TCP_USER_TIMEOUT) is not user configurable (rather I'm pretty
-> > sure it is not) but my question is why shouldn't it be tied to the
-> > "timeo" mount option? Right now, only the sesson/lease manager thread
-> > sets it via rpc_set_connect_timeout() to be lease period related.
-> >
-> > Is it the fact that we don't want to allow user to control TCP
-> > settings via the mount options? But somehow folks are expecting to be
-> > able to set low "timeo" value and have the (dead) connection to be
-> > considered dead earlier than for a rather long timeout period which
-> > is
-> > happening now.
->
-> In my mind, the two are correlated, but are not equivalent.
->
-> The 'timeo' value is basically a timeout for how long it takes for the
-> whole process of "send RPC call", "have it processed by the server" and
-> "receive reply".
-> IOW: 'timeo' is about how long it takes for an RPC call to execute end-
-> to-end.
-
-Ok, but what happens is there are no actions (connection wise) are
-taken when this timeout goes off and that' a problem for detecting bad
-connections.
-
-> The TCP_USER_TIMEOUT, is essentially a timeout for how long it takes
-> the server to ACK receipt of the RPC call once we've placed it in the
-> TCP socket.
-> IOW: it is a timeout for the networking part of an RPC call
-> transmission.
-
-But why isn't TCP time out (1) not user configurable and/or (2) not
-tied to the "timeo" ?
-
-> So, as I said, the two are correlated: if the server is down, then your
-> timeout is dominated by the fact that the network transmission never
-> completes. However if the server is up and congested, then the
-> "processing by the server" is likely to dominate.
->
-> The other thing to note is that if the TCP connection is unresponsive,
-> we may want to fail that much faster in order to give ourselves a
-> chance to close the connection, open a new one and retransmit the
-> requests from the old connection before the 'timeo' is triggered (since
-> in the case of a soft timeout, that could be a fatal error).
-
-"we may want to fail" doesn't happen and that's exactly what I would
-like to happen. Also, TCP timeout is set to the a lease time (let's
-take linux server which sets 90s timeout) and that's larger than the
-default "timeo" which is 60s. That goes against your intention to
-recover in time.
-
-> Does that make sense?
-
-It's the last case I'm interested in. The issue I'm having is that
-after a "timeout" (which should be a lease period), the client doesn't
-sent a SYN trying to establish a new connection.
--
-Here's a current problem. In the cloud environment, a server node goes
-down. It's spun up again in a different VM (but with the same IP) and
-server is ready to be receiving requests and continue with the IO. The
-problem is the client doesn't try to send a new SYN until the old
-connection timeout. This timeout is 3mins for v3 and can't be shorted
-because TCP_USER_TIMEOUT isn't user configurable or tied into the
-timeo. But user expects that connections times out after 60s (as
-default timeo) (or whatever value timeo is specified during mount).
-Current linux client doesn't do that.
-
-Even in v4, in my testing ,the client doesn't send the new SYN after
-the lease period (but I believe that's a bug). The only time it does
-do it if I change rpc_set_connect_time() to something low so that
-default of 18000 is set.
-
-(1) I could be wrong but I think there is a bug that doesn't
-re-establish connection (unless some low value is set).
-(2) I think there should be ability (at least for v3) to set the
-timeout for lower than 3mins. Perhaps we can add a new mount option,
-either have a totally separate tcp timeout value or something like
-"sync_nfstcp_timeouts" and use timeo to govern both NFS and TCP
-timeout.
-
-
->
-> >
-> > Thanks.
-> >
-> > On Wed, Oct 3, 2018 at 3:06 PM Olga Kornievskaia <aglo@umich.edu>
-> > wrote:
-> > > On Wed, Oct 3, 2018 at 2:45 PM Trond Myklebust <
-> > > trondmy@hammerspace.com> wrote:
-> > > > On Wed, 2018-10-03 at 14:31 -0400, Olga Kornievskaia wrote:
-> > > > > Hi folks,
-> > > > >
-> > > > > Is it true that NFS mount option "timeo" has nothing to do with
-> > > > > the
-> > > > > socket's setting of the user-specified timeout
-> > > > > TCP_USER_TIMEOUT.
-> > > > > Instead, when creating a TCP socket NFS uses either
-> > > > > default/hard
-> > > > > coded
-> > > > > value of 60s for v3 or for v4.x it's lease based. Is there no
-> > > > > value
-> > > > > is
-> > > > > having an adjustable TCP timeout value?
-> > > > >
-> > > >
-> > > > It is adjusted. Please see the calculation in
-> > > > xs_tcp_set_socket_timeouts().
-> > >
-> > > but it's not user configurable, is it? I don't see a way to modify
-> > > v3's default 60s TCP timeout. and also in v4, the timeouts are set
-> > > from xs_tcp_set_connect_timeout() for the lease period but again
-> > > not
-> > > user configurable, as far as i can tell.
-> > >
-> > > > --
-> > > > Trond Myklebust
-> > > > Linux NFS client maintainer, Hammerspace
-> > > > trond.myklebust@hammerspace.com
-> > > >
-> > > >
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVGh1LCAyMDE5LTEyLTEyIGF0IDEzOjEzIC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVGh1LCBEZWMgMTIsIDIwMTkgYXQgMTE6NDcgQU0gVHJvbmQgTXlrbGVidXN0DQo+
+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gSGkgT2xnYSwNCj4gPiANCj4g
+PiBPbiBXZWQsIDIwMTktMTItMTEgYXQgMTU6MzYgLTA1MDAsIE9sZ2EgS29ybmlldnNrYWlhIHdy
+b3RlOg0KPiA+ID4gSGkgVHJvbmQsDQo+ID4gPiANCj4gPiA+IEknZCBsaWtlIHRvIHJhaXNlIHRo
+aXMgb25jZSBhZ2Fpbi4gSXMgdGhpcyB0cnVlIHRoYXQgc2V0dGluZyBhDQo+ID4gPiB0aW1lb3V0
+DQo+ID4gPiBsaW1pdCAoVENQX1VTRVJfVElNRU9VVCkgaXMgbm90IHVzZXIgY29uZmlndXJhYmxl
+IChyYXRoZXIgSSdtDQo+ID4gPiBwcmV0dHkNCj4gPiA+IHN1cmUgaXQgaXMgbm90KSBidXQgbXkg
+cXVlc3Rpb24gaXMgd2h5IHNob3VsZG4ndCBpdCBiZSB0aWVkIHRvDQo+ID4gPiB0aGUNCj4gPiA+
+ICJ0aW1lbyIgbW91bnQgb3B0aW9uPyBSaWdodCBub3csIG9ubHkgdGhlIHNlc3Nvbi9sZWFzZSBt
+YW5hZ2VyDQo+ID4gPiB0aHJlYWQNCj4gPiA+IHNldHMgaXQgdmlhIHJwY19zZXRfY29ubmVjdF90
+aW1lb3V0KCkgdG8gYmUgbGVhc2UgcGVyaW9kIHJlbGF0ZWQuDQo+ID4gPiANCj4gPiA+IElzIGl0
+IHRoZSBmYWN0IHRoYXQgd2UgZG9uJ3Qgd2FudCB0byBhbGxvdyB1c2VyIHRvIGNvbnRyb2wgVENQ
+DQo+ID4gPiBzZXR0aW5ncyB2aWEgdGhlIG1vdW50IG9wdGlvbnM/IEJ1dCBzb21laG93IGZvbGtz
+IGFyZSBleHBlY3RpbmcNCj4gPiA+IHRvIGJlDQo+ID4gPiBhYmxlIHRvIHNldCBsb3cgInRpbWVv
+IiB2YWx1ZSBhbmQgaGF2ZSB0aGUgKGRlYWQpIGNvbm5lY3Rpb24gdG8NCj4gPiA+IGJlDQo+ID4g
+PiBjb25zaWRlcmVkIGRlYWQgZWFybGllciB0aGFuIGZvciBhIHJhdGhlciBsb25nIHRpbWVvdXQg
+cGVyaW9kDQo+ID4gPiB3aGljaA0KPiA+ID4gaXMNCj4gPiA+IGhhcHBlbmluZyBub3cuDQo+ID4g
+DQo+ID4gSW4gbXkgbWluZCwgdGhlIHR3byBhcmUgY29ycmVsYXRlZCwgYnV0IGFyZSBub3QgZXF1
+aXZhbGVudC4NCj4gPiANCj4gPiBUaGUgJ3RpbWVvJyB2YWx1ZSBpcyBiYXNpY2FsbHkgYSB0aW1l
+b3V0IGZvciBob3cgbG9uZyBpdCB0YWtlcyBmb3INCj4gPiB0aGUNCj4gPiB3aG9sZSBwcm9jZXNz
+IG9mICJzZW5kIFJQQyBjYWxsIiwgImhhdmUgaXQgcHJvY2Vzc2VkIGJ5IHRoZSBzZXJ2ZXIiDQo+
+ID4gYW5kDQo+ID4gInJlY2VpdmUgcmVwbHkiLg0KPiA+IElPVzogJ3RpbWVvJyBpcyBhYm91dCBo
+b3cgbG9uZyBpdCB0YWtlcyBmb3IgYW4gUlBDIGNhbGwgdG8gZXhlY3V0ZQ0KPiA+IGVuZC0NCj4g
+PiB0by1lbmQuDQo+IA0KPiBPaywgYnV0IHdoYXQgaGFwcGVucyBpcyB0aGVyZSBhcmUgbm8gYWN0
+aW9ucyAoY29ubmVjdGlvbiB3aXNlKSBhcmUNCj4gdGFrZW4gd2hlbiB0aGlzIHRpbWVvdXQgZ29l
+cyBvZmYgYW5kIHRoYXQnIGEgcHJvYmxlbSBmb3IgZGV0ZWN0aW5nDQo+IGJhZA0KPiBjb25uZWN0
+aW9ucy4NCg0KSSdtIG5vdCBzdXJlIEkgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFuLiBUaGUgcG9p
+bnQgb2YgVENQX1VTRVJfVElNRU9VVA0KaXMgdGhhdCB0aGUgVENQIGxheWVyIGlzIHRvbGQgd2hl
+biB0byB0aW1lIG91dCBhbmQgYnJlYWsgdGhlDQpjb25uZWN0aW9uLiBGdXJ0aGVybW9yZSwgdGhl
+IG90aGVyIHNpZGUgKGkuZS4gdGhlIHNlcnZlcikgaXMgdG9sZCBhYm91dA0KdGhlIGV4aXN0ZW5j
+ZSBvZiB0aGlzIHRpbWVvdXQsIGFuZCBoZW5jZSBrbm93cyB3aGF0IHRvIGV4cGVjdC4NCg0KSU9X
+OiB0aGVyZSBhcmUgbm8gYWN0aW9ucyBhdCB0aGUgUlBDIGxheWVyIGJlY2F1c2UgdGhpcyBpcyBh
+IFRDUCBsYXllcg0KdGhpbmcuDQoNCj4gDQo+ID4gVGhlIFRDUF9VU0VSX1RJTUVPVVQsIGlzIGVz
+c2VudGlhbGx5IGEgdGltZW91dCBmb3IgaG93IGxvbmcgaXQNCj4gPiB0YWtlcw0KPiA+IHRoZSBz
+ZXJ2ZXIgdG8gQUNLIHJlY2VpcHQgb2YgdGhlIFJQQyBjYWxsIG9uY2Ugd2UndmUgcGxhY2VkIGl0
+IGluDQo+ID4gdGhlDQo+ID4gVENQIHNvY2tldC4NCj4gPiBJT1c6IGl0IGlzIGEgdGltZW91dCBm
+b3IgdGhlIG5ldHdvcmtpbmcgcGFydCBvZiBhbiBSUEMgY2FsbA0KPiA+IHRyYW5zbWlzc2lvbi4N
+Cj4gDQo+IEJ1dCB3aHkgaXNuJ3QgVENQIHRpbWUgb3V0ICgxKSBub3QgdXNlciBjb25maWd1cmFi
+bGUgYW5kL29yICgyKSBub3QNCj4gdGllZCB0byB0aGUgInRpbWVvIiA/DQo+IA0KPiA+IFNvLCBh
+cyBJIHNhaWQsIHRoZSB0d28gYXJlIGNvcnJlbGF0ZWQ6IGlmIHRoZSBzZXJ2ZXIgaXMgZG93biwg
+dGhlbg0KPiA+IHlvdXINCj4gPiB0aW1lb3V0IGlzIGRvbWluYXRlZCBieSB0aGUgZmFjdCB0aGF0
+IHRoZSBuZXR3b3JrIHRyYW5zbWlzc2lvbg0KPiA+IG5ldmVyDQo+ID4gY29tcGxldGVzLiBIb3dl
+dmVyIGlmIHRoZSBzZXJ2ZXIgaXMgdXAgYW5kIGNvbmdlc3RlZCwgdGhlbiB0aGUNCj4gPiAicHJv
+Y2Vzc2luZyBieSB0aGUgc2VydmVyIiBpcyBsaWtlbHkgdG8gZG9taW5hdGUuDQo+ID4gDQo+ID4g
+VGhlIG90aGVyIHRoaW5nIHRvIG5vdGUgaXMgdGhhdCBpZiB0aGUgVENQIGNvbm5lY3Rpb24gaXMN
+Cj4gPiB1bnJlc3BvbnNpdmUsDQo+ID4gd2UgbWF5IHdhbnQgdG8gZmFpbCB0aGF0IG11Y2ggZmFz
+dGVyIGluIG9yZGVyIHRvIGdpdmUgb3Vyc2VsdmVzIGENCj4gPiBjaGFuY2UgdG8gY2xvc2UgdGhl
+IGNvbm5lY3Rpb24sIG9wZW4gYSBuZXcgb25lIGFuZCByZXRyYW5zbWl0IHRoZQ0KPiA+IHJlcXVl
+c3RzIGZyb20gdGhlIG9sZCBjb25uZWN0aW9uIGJlZm9yZSB0aGUgJ3RpbWVvJyBpcyB0cmlnZ2Vy
+ZWQNCj4gPiAoc2luY2UNCj4gPiBpbiB0aGUgY2FzZSBvZiBhIHNvZnQgdGltZW91dCwgdGhhdCBj
+b3VsZCBiZSBhIGZhdGFsIGVycm9yKS4NCj4gDQo+ICJ3ZSBtYXkgd2FudCB0byBmYWlsIiBkb2Vz
+bid0IGhhcHBlbiBhbmQgdGhhdCdzIGV4YWN0bHkgd2hhdCBJIHdvdWxkDQo+IGxpa2UgdG8gaGFw
+cGVuLiBBbHNvLCBUQ1AgdGltZW91dCBpcyBzZXQgdG8gdGhlIGEgbGVhc2UgdGltZSAobGV0J3MN
+Cj4gdGFrZSBsaW51eCBzZXJ2ZXIgd2hpY2ggc2V0cyA5MHMgdGltZW91dCkgYW5kIHRoYXQncyBs
+YXJnZXIgdGhhbiB0aGUNCj4gZGVmYXVsdCAidGltZW8iIHdoaWNoIGlzIDYwcy4gVGhhdCBnb2Vz
+IGFnYWluc3QgeW91ciBpbnRlbnRpb24gdG8NCj4gcmVjb3ZlciBpbiB0aW1lLg0KPiANCj4gPiBE
+b2VzIHRoYXQgbWFrZSBzZW5zZT8NCj4gDQo+IEl0J3MgdGhlIGxhc3QgY2FzZSBJJ20gaW50ZXJl
+c3RlZCBpbi4gVGhlIGlzc3VlIEknbSBoYXZpbmcgaXMgdGhhdA0KPiBhZnRlciBhICJ0aW1lb3V0
+IiAod2hpY2ggc2hvdWxkIGJlIGEgbGVhc2UgcGVyaW9kKSwgdGhlIGNsaWVudA0KPiBkb2Vzbid0
+DQo+IHNlbnQgYSBTWU4gdHJ5aW5nIHRvIGVzdGFibGlzaCBhIG5ldyBjb25uZWN0aW9uLg0KDQpU
+Q1BfVVNFUl9USU1FT1VUIHNob3VsZCBub3QgYWZmZWN0IHRoZSBoYW5kc2hha2UgcGFydCBvZiB0
+aGUgVENQDQpjb25uZWN0aW9uIChzZWUgJ21hbiA3IHRjcCcpLiBJdCBjYW4ndCBzb2x2ZSBhIHBy
+b2JsZW0gd2l0aCB0aGUgU1lODQpzdGF0ZXMuDQoNCj4gLQ0KPiBIZXJlJ3MgYSBjdXJyZW50IHBy
+b2JsZW0uIEluIHRoZSBjbG91ZCBlbnZpcm9ubWVudCwgYSBzZXJ2ZXIgbm9kZQ0KPiBnb2VzDQo+
+IGRvd24uIEl0J3Mgc3B1biB1cCBhZ2FpbiBpbiBhIGRpZmZlcmVudCBWTSAoYnV0IHdpdGggdGhl
+IHNhbWUgSVApIGFuZA0KPiBzZXJ2ZXIgaXMgcmVhZHkgdG8gYmUgcmVjZWl2aW5nIHJlcXVlc3Rz
+IGFuZCBjb250aW51ZSB3aXRoIHRoZSBJTy4NCj4gVGhlDQo+IHByb2JsZW0gaXMgdGhlIGNsaWVu
+dCBkb2Vzbid0IHRyeSB0byBzZW5kIGEgbmV3IFNZTiB1bnRpbCB0aGUgb2xkDQo+IGNvbm5lY3Rp
+b24gdGltZW91dC4gVGhpcyB0aW1lb3V0IGlzIDNtaW5zIGZvciB2MyBhbmQgY2FuJ3QgYmUgc2hv
+cnRlZA0KPiBiZWNhdXNlIFRDUF9VU0VSX1RJTUVPVVQgaXNuJ3QgdXNlciBjb25maWd1cmFibGUg
+b3IgdGllZCBpbnRvIHRoZQ0KPiB0aW1lby4gQnV0IHVzZXIgZXhwZWN0cyB0aGF0IGNvbm5lY3Rp
+b25zIHRpbWVzIG91dCBhZnRlciA2MHMgKGFzDQo+IGRlZmF1bHQgdGltZW8pIChvciB3aGF0ZXZl
+ciB2YWx1ZSB0aW1lbyBpcyBzcGVjaWZpZWQgZHVyaW5nIG1vdW50KS4NCj4gQ3VycmVudCBsaW51
+eCBjbGllbnQgZG9lc24ndCBkbyB0aGF0Lg0KPiANCj4gRXZlbiBpbiB2NCwgaW4gbXkgdGVzdGlu
+ZyAsdGhlIGNsaWVudCBkb2Vzbid0IHNlbmQgdGhlIG5ldyBTWU4gYWZ0ZXINCj4gdGhlIGxlYXNl
+IHBlcmlvZCAoYnV0IEkgYmVsaWV2ZSB0aGF0J3MgYSBidWcpLiBUaGUgb25seSB0aW1lIGl0IGRv
+ZXMNCj4gZG8gaXQgaWYgSSBjaGFuZ2UgcnBjX3NldF9jb25uZWN0X3RpbWUoKSB0byBzb21ldGhp
+bmcgbG93IHNvIHRoYXQNCj4gZGVmYXVsdCBvZiAxODAwMCBpcyBzZXQuDQo+IA0KPiAoMSkgSSBj
+b3VsZCBiZSB3cm9uZyBidXQgSSB0aGluayB0aGVyZSBpcyBhIGJ1ZyB0aGF0IGRvZXNuJ3QNCj4g
+cmUtZXN0YWJsaXNoIGNvbm5lY3Rpb24gKHVubGVzcyBzb21lIGxvdyB2YWx1ZSBpcyBzZXQpLg0K
+PiAoMikgSSB0aGluayB0aGVyZSBzaG91bGQgYmUgYWJpbGl0eSAoYXQgbGVhc3QgZm9yIHYzKSB0
+byBzZXQgdGhlDQo+IHRpbWVvdXQgZm9yIGxvd2VyIHRoYW4gM21pbnMuIFBlcmhhcHMgd2UgY2Fu
+IGFkZCBhIG5ldyBtb3VudCBvcHRpb24sDQo+IGVpdGhlciBoYXZlIGEgdG90YWxseSBzZXBhcmF0
+ZSB0Y3AgdGltZW91dCB2YWx1ZSBvciBzb21ldGhpbmcgbGlrZQ0KPiAic3luY19uZnN0Y3BfdGlt
+ZW91dHMiIGFuZCB1c2UgdGltZW8gdG8gZ292ZXJuIGJvdGggTkZTIGFuZCBUQ1ANCj4gdGltZW91
+dC4NCg0KVGhpcyBuZWVkcyB0byBiZSByZXNvbHZlZCB1c2luZyBzb21ldGhpbmcgZGlmZmVyZW50
+LiBJJ20gbm90IHN1cmUgd2hhdA0KdG8gdXNlIGZvciB0aW1pbmcgdGhlIGhhbmRzaGFrZSBvdXQg
+bW9yZSBxdWlja2x5Lg0KDQo+IA0KPiA+ID4gVGhhbmtzLg0KPiA+ID4gDQo+ID4gPiBPbiBXZWQs
+IE9jdCAzLCAyMDE4IGF0IDM6MDYgUE0gT2xnYSBLb3JuaWV2c2thaWEgPGFnbG9AdW1pY2guZWR1
+Pg0KPiA+ID4gd3JvdGU6DQo+ID4gPiA+IE9uIFdlZCwgT2N0IDMsIDIwMTggYXQgMjo0NSBQTSBU
+cm9uZCBNeWtsZWJ1c3QgPA0KPiA+ID4gPiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6
+DQo+ID4gPiA+ID4gT24gV2VkLCAyMDE4LTEwLTAzIGF0IDE0OjMxIC0wNDAwLCBPbGdhIEtvcm5p
+ZXZza2FpYSB3cm90ZToNCj4gPiA+ID4gPiA+IEhpIGZvbGtzLA0KPiA+ID4gPiA+ID4gDQo+ID4g
+PiA+ID4gPiBJcyBpdCB0cnVlIHRoYXQgTkZTIG1vdW50IG9wdGlvbiAidGltZW8iIGhhcyBub3Ro
+aW5nIHRvIGRvDQo+ID4gPiA+ID4gPiB3aXRoDQo+ID4gPiA+ID4gPiB0aGUNCj4gPiA+ID4gPiA+
+IHNvY2tldCdzIHNldHRpbmcgb2YgdGhlIHVzZXItc3BlY2lmaWVkIHRpbWVvdXQNCj4gPiA+ID4g
+PiA+IFRDUF9VU0VSX1RJTUVPVVQuDQo+ID4gPiA+ID4gPiBJbnN0ZWFkLCB3aGVuIGNyZWF0aW5n
+IGEgVENQIHNvY2tldCBORlMgdXNlcyBlaXRoZXINCj4gPiA+ID4gPiA+IGRlZmF1bHQvaGFyZA0K
+PiA+ID4gPiA+ID4gY29kZWQNCj4gPiA+ID4gPiA+IHZhbHVlIG9mIDYwcyBmb3IgdjMgb3IgZm9y
+IHY0LnggaXQncyBsZWFzZSBiYXNlZC4gSXMgdGhlcmUNCj4gPiA+ID4gPiA+IG5vDQo+ID4gPiA+
+ID4gPiB2YWx1ZQ0KPiA+ID4gPiA+ID4gaXMNCj4gPiA+ID4gPiA+IGhhdmluZyBhbiBhZGp1c3Rh
+YmxlIFRDUCB0aW1lb3V0IHZhbHVlPw0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gDQo+ID4gPiA+
+ID4gSXQgaXMgYWRqdXN0ZWQuIFBsZWFzZSBzZWUgdGhlIGNhbGN1bGF0aW9uIGluDQo+ID4gPiA+
+ID4geHNfdGNwX3NldF9zb2NrZXRfdGltZW91dHMoKS4NCj4gPiA+ID4gDQo+ID4gPiA+IGJ1dCBp
+dCdzIG5vdCB1c2VyIGNvbmZpZ3VyYWJsZSwgaXMgaXQ/IEkgZG9uJ3Qgc2VlIGEgd2F5IHRvDQo+
+ID4gPiA+IG1vZGlmeQ0KPiA+ID4gPiB2MydzIGRlZmF1bHQgNjBzIFRDUCB0aW1lb3V0LiBhbmQg
+YWxzbyBpbiB2NCwgdGhlIHRpbWVvdXRzIGFyZQ0KPiA+ID4gPiBzZXQNCj4gPiA+ID4gZnJvbSB4
+c190Y3Bfc2V0X2Nvbm5lY3RfdGltZW91dCgpIGZvciB0aGUgbGVhc2UgcGVyaW9kIGJ1dA0KPiA+
+ID4gPiBhZ2Fpbg0KPiA+ID4gPiBub3QNCj4gPiA+ID4gdXNlciBjb25maWd1cmFibGUsIGFzIGZh
+ciBhcyBpIGNhbiB0ZWxsLg0KPiA+ID4gPiANCj4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+IFRyb25k
+IE15a2xlYnVzdA0KPiA+ID4gPiA+IExpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVy
+c3BhY2UNCj4gPiA+ID4gPiB0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQo+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gDQo+ID4gLS0NCj4gPiBUcm9uZCBNeWtsZWJ1c3QNCj4gPiBMaW51eCBO
+RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQo+ID4gdHJvbmQubXlrbGVidXN0QGhh
+bW1lcnNwYWNlLmNvbQ0KPiA+IA0KPiA+IA0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5G
+UyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJz
+cGFjZS5jb20NCg0KDQo=
