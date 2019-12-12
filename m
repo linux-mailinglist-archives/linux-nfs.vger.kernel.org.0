@@ -2,104 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EBD611BE02
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Dec 2019 21:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 591B611C4BA
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Dec 2019 05:15:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLKUgN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Dec 2019 15:36:13 -0500
-Received: from mail-vs1-f48.google.com ([209.85.217.48]:45437 "EHLO
-        mail-vs1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfLKUgN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Dec 2019 15:36:13 -0500
-Received: by mail-vs1-f48.google.com with SMTP id l24so16791089vsr.12
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Dec 2019 12:36:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xGrBdxSZoGPiFZJu2qSwSXu2ncRXSi1pVjKU6q9XQ4E=;
-        b=IPCSe0J0xK0GtU4QHS1OFxSoSL8tWw5EZAQhUaGprOEz7MTfnc6Oo5e+7GXPIinHv+
-         H/dVk1BPbhdMj9BQmVTwg7fEpdj5r2FxiypadzIgQTGt/wT0kAa0OQ+lHN8Sx2wxgc7D
-         rmlbO/n+XI/Z3QE6fEgCtHKwqCpVJFsu2ZwJUUZARt6jOzGu/tUBO5RqbpnSr7IxzVNg
-         rm04hAkJPXsrcacIFaH1vzw1Vf1s66EoQctsPCy802EbOV4+MP+PFKwrWOxV9YpoFO5b
-         uMbsUWSoUGTTCHRBiyd5ubi2cD1Mu/62CBZx/NGNLjtkkr68SkES7dbdwsXUAukQvsmp
-         zTAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xGrBdxSZoGPiFZJu2qSwSXu2ncRXSi1pVjKU6q9XQ4E=;
-        b=A8ennouH4YV6YNsK3+AYBvbSz+n2GS5+Gh93dS2Vc8PGFkM2pWthwIjHijCV1wy0pt
-         YxaM14Mwt1ynxrQhGctAS0m+UYceXXCiYQ7gjzRPveLdNQXZE+aUVIzQL5d1Kg/ZEFT1
-         qQnr8a3a31GXtTdNb5N39e0ElN1c7jCTDVsh+AuGGeZe/UtkC4N9LlviC7GG0mnRZpbr
-         fQT1K86axhhvnWf7WntcD82bvArzYsg0R8KsZNV/z+azXLMVxi+Pxi04MGnsMHB2PU0v
-         3GzR9M4fcrCNDGvoGJVKFQNfFKzN4IaQznGTyX51QWFmfwzFwng3Y1xAA/N+8s+i7Bkp
-         s+SA==
-X-Gm-Message-State: APjAAAWDJgQ9fpq3Y83Y/kPG82hk1Di63eEhGcWUnvIE69p6wK5J/E76
-        IWAqrgqksQ7Rmr1Yg1Ubf8DYk4BAmDinRw2sfLa+nw==
-X-Google-Smtp-Source: APXvYqwYU0l0I5z8NzOuGV5y+OR7DJ0m1X2z9Wn2jVIPoM3BzdyGRRx5pGhTPwMwM/bvSII9yB0lUavTggr0uHwOh0M=
-X-Received: by 2002:a67:c097:: with SMTP id x23mr4546889vsi.164.1576096571900;
- Wed, 11 Dec 2019 12:36:11 -0800 (PST)
+        id S1727802AbfLLEOI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Dec 2019 23:14:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbfLLEOI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 11 Dec 2019 23:14:08 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BEF7222C4;
+        Thu, 12 Dec 2019 04:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576124047;
+        bh=0mpDmJeRph5V4WCjDlSYPIPApLhVkthD1RCkFHUF3VA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=mozfCL26QoAKfeRTZyfTvbvLMpiHZ1vFRCq7AxvyzrYYpkR/kLRjWkFpdpH4Q1SLq
+         S9zmBnTpnmxEWEdukHa37XDxvNxDqXT9hC7edVpvBe/PYUCHC9dTSFZqOqpwBhsSbl
+         7+uYC9+AMMgeimI/nPQiSstsmQ+TMLvtMI9fxCkc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DEEE5352035F; Wed, 11 Dec 2019 20:14:06 -0800 (PST)
+Date:   Wed, 11 Dec 2019 20:14:06 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     kbuild-all@lists.01.org, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, joel@joelfernandes.org,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191212041406.GT2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <201912110621.WJ6oENgf%lkp@intel.com>
+ <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-References: <CAN-5tyH_+OZJ+eUGvqvo+-EuG1OdaoFYERNKi=k=CDxpOFVoCQ@mail.gmail.com>
- <e2541b5d08b823aaec01195178e87ba39526aa92.camel@hammerspace.com> <CAN-5tyFVb_jqt+jknn2+o6_Cu=7cKw4qt9B_e2pd0azu2-7zaQ@mail.gmail.com>
-In-Reply-To: <CAN-5tyFVb_jqt+jknn2+o6_Cu=7cKw4qt9B_e2pd0azu2-7zaQ@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 11 Dec 2019 15:36:00 -0500
-Message-ID: <CAN-5tyHm+aG9GmM1EWFDLeKfLxJWvGSGbRP5QwN4=phwaNQkyQ@mail.gmail.com>
-Subject: Re: NFS/TCP timeouts
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+On Wed, Dec 11, 2019 at 01:18:42PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> This build error is because the macro list_tail_rcu() is
+> not yet present in the mainline kernel.
+> 
+> This patch is dependent on the patch : https://lore.kernel.org/linux-kernel-mentees/CAF65HP2SC89k9HJZfcLgeOMRPBKRyasCMiLo2gZgBKycjHuU6A@mail.gmail.com/T/#t
 
-I'd like to raise this once again. Is this true that setting a timeout
-limit (TCP_USER_TIMEOUT) is not user configurable (rather I'm pretty
-sure it is not) but my question is why shouldn't it be tied to the
-"timeo" mount option? Right now, only the sesson/lease manager thread
-sets it via rpc_set_connect_timeout() to be lease period related.
+If the NFS folks are OK with it, I would be happy to take it in -rcu,
+where the list_tail_rcu() patch is currently located.
 
-Is it the fact that we don't want to allow user to control TCP
-settings via the mount options? But somehow folks are expecting to be
-able to set low "timeo" value and have the (dead) connection to be
-considered dead earlier than for a rather long timeout period which is
-happening now.
-
-Thanks.
-
-On Wed, Oct 3, 2018 at 3:06 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->
-> On Wed, Oct 3, 2018 at 2:45 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
-> >
-> > On Wed, 2018-10-03 at 14:31 -0400, Olga Kornievskaia wrote:
-> > > Hi folks,
-> > >
-> > > Is it true that NFS mount option "timeo" has nothing to do with the
-> > > socket's setting of the user-specified timeout TCP_USER_TIMEOUT.
-> > > Instead, when creating a TCP socket NFS uses either default/hard
-> > > coded
-> > > value of 60s for v3 or for v4.x it's lease based. Is there no value
-> > > is
-> > > having an adjustable TCP timeout value?
-> > >
-> >
-> > It is adjusted. Please see the calculation in
-> > xs_tcp_set_socket_timeouts().
->
-> but it's not user configurable, is it? I don't see a way to modify
-> v3's default 60s TCP timeout. and also in v4, the timeouts are set
-> from xs_tcp_set_connect_timeout() for the lease period but again not
-> user configurable, as far as i can tell.
->
-> >
-> > --
-> > Trond Myklebust
-> > Linux NFS client maintainer, Hammerspace
-> > trond.myklebust@hammerspace.com
-> >
-> >
+							Thanx, Paul
