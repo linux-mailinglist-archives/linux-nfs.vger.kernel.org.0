@@ -2,108 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A615B11E54C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 15:11:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5314611E542
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 15:11:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfLMOLL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Dec 2019 09:11:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:43697 "EHLO
+        id S1727609AbfLMOLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Dec 2019 09:11:02 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:51747 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfLMOLD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 09:11:03 -0500
+        with ESMTP id S1727507AbfLMOLC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 09:11:02 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MqatE-1htFYF0ymW-00mcAo; Fri, 13 Dec 2019 15:10:55 +0100
+ 1Macaw-1i84Sj1p7K-00cCpo; Fri, 13 Dec 2019 15:10:55 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 00/12] nfsd: avoid 32-bit time_t
-Date:   Fri, 13 Dec 2019 15:10:34 +0100
-Message-Id: <20191213141046.1770441-1-arnd@arndb.de>
+Subject: [PATCH v2 01/12] nfsd: use ktime_get_seconds() for timestamps
+Date:   Fri, 13 Dec 2019 15:10:35 +0100
+Message-Id: <20191213141046.1770441-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+0lf7quhBTwr1hQIQfFsZXCeV8kC+cPWtTWgqbymNABPk3abhSO
- NGcTswDiRg6NEXlWr/qKPkMTB+BZ7N4mAys245gZU6NRMDRj02KaTEN5pmlfFTWrKjNH8oh
- OEHu5iwTenlUX1zqeFlO/jJ/Xwa+puWPcoKC475ZvukPVgMfsCarKZg8fQ1xgh7oaXBYEZb
- 53++FXmqE/BaaFQgZ637w==
+X-Provags-ID: V03:K1:UIf61Zh2SX1jsmuKNONn62q4e8CIE4uEXBXf6f109VVpmdYXULw
+ 3DDB1afIxbPSigzPGj4zKy84ctp9G2LWRCnmiNkIqoV6z5Zbzp4ZaEjYXMvt/KdlcGScd85
+ CvkPLmDDRNSKusXQV1jFQnVyNcrmpdXyPhhO1iLZNoX7r3RHZmLXwh42dFUClt6jlfW3gB+
+ 5LDOGbPnVIvJ/6UhqWWXg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kl2yuRnl85w=:Q5K7j2VJHzNXxSbQSrNSby
- SGlvYHGPH1AgusfKY+VgepU4tOw3M3/Oj1kAwlqsexgzKkg0jJDwuaeVKr2G+5pCvhMBfBD9E
- Qzp8AI6zUehUMF7Eho3xPRPO22b08fIamGIYuT5QgjLyyy8p7OxEfqL5becxXLQzTJDJsNPST
- aSBaX4fBHwG83S+YQQgxZf9LltmaJCZ1IRz4cJU41jQ2ZbXmgcA+/NcJ4qG6l7a0HoGvnPulS
- YIz2rOhwuAxsP0WkoHbeNVxmR0Qk6PFoFvaJ2J9Y52UcEn1CJKi14DnhIfhODEypw1qHvY08t
- TiooS8HXj8pNvTxCx39/FUrZrrhNSq80LVhiJ/O6bqz+zkT50HFzOJEfigDhfIf0sBSknmK3w
- QBmHUyarHOWV/0zH6TOrXBoOvGw9HiSTNbg7f8m8TX+yfyMBr98t2NPhhzH45YLjXHeQT4xGS
- ltbc3XHUOPj4Bw/2C9qy1ShSr1T/LbtgW4RukKODymSOWCuT1DnlHlM1LW0XFBf28qrDQbQhK
- ZI8n3cEjulBu8rxip7ASwXmz44EH60PwhZydyntuyO63WWV6wdzRFTFyMEH4x/zB6CyL4Dm3q
- jZAIBqIFtBrlpS0W0Zq6NTemkm9Qza3DPBoH7pByB+1J35IfKnIFA6wjrWk2+sluEW63xetgZ
- sXv2TbOPS/b1rsbJUUyiykH5v1tsFXdXj6O1yDt+l/yCy5/3GD/xdVTZ6nGkwVE64pvq4+53t
- tU/oHaTE4M7IV64zrd5PPIHgFQyfyIDzEVvlVhDTYvE7JjTClHBzt2rrqqfD4SsYPgZ4XE/HJ
- DUdUaBaU385Omvxnx5AU63RnxIuYIeLFN5kWO0zGYJbcBVVNzG2vjs6XWFzpnf+r8W8DHEd5j
- pFV7EuP33kJdIphbN33Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Hp6SY27GsDo=:roxwhEgFNjaSqv9qD56rYs
+ aKJi8HwFgh2nqNbgz5XSZIExntsuKjtyQV+V3MTihNeQCpjp7o6Q3uLQlU4QxgXUoQlzEH6Hl
+ xdCdnZbd6z/CSE+NEA1fax+01ClDVcAVCX2KK/ITYYl9A22DQsZTooCPJ5uURpq6nVgYjoT5T
+ oWamxoH9qYQKdMoX0Gb8/LL/HbEot/xISWlkhaK2D5AmUTmpdrHL1MPp9bnFgL/P2JgNzzGRN
+ R+6Fy7d5axn77UC/DPyufnXcDXljXR+GSe28AmWxFbvZZwmNY3WP23O0FmEP4M2+kj4hx5jhn
+ O0e38IzmBWN492S5t5jfyRSWQk7Uaj9lbYh2tOPK+q1i5aFHAY2clTtEFY+798kvSkuCvzOy0
+ DayV7c8o2tLzxKV7Sko6HAZ6EHE9kIJJwnT6tnPPLA7Mtza873EHnIFrHBDJ4UD49vTpNUCNS
+ rFbLRdo9u4N+xk3PImvMw/5WzjFV1ejMQ3OqSboFF6SLl+9v0fIu9yH433WDyxX61flR5hsr2
+ iz4TIaLPctcgTKC7nSiENvssIXEGbbRsC6StTNtwNC7Q39A2WZJwm6Nt2kn+HpkFbvBZnWGEN
+ F0apOSYVE6Aib+6kx+2vTl8k7Go7hmQYhvDs3KZLsCV60i3BmykzAMGPUDzN65IM9jYu9djxb
+ h+m0PpeJTeQqIo8i5m1U0f8hsuiIyrMjU3JLsDz40z81LL1dt8Ena7vorRoWKTbTU4Li9Eu7o
+ aKqSlY6f5QnHdMiFro7PsgvqmvyzgSRz2q9EVhC0AJbZ+acBeieEWf0XIkp7eiayxYPK89mbr
+ L9LP0NJAi0/Spg0XZCgRYgCCk8KjPO1ovkUILkg41wtdDR47/EuSvphRALTvCMQgPUDbINiHZ
+ v8K4a5MueHJWbKn6X0kg==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce, Chuck,
+The delegation logic in nfsd uses the somewhat inefficient
+seconds_since_boot() function to record time intervals.
 
-NFSd is one of the last areas of the kernel that is not y2038 safe
-yet, this series addresses the remaining issues here.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs4state.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I did not get any comments for the first version I posted [1], and
-I hope this just means that everything was fine and you plan to
-merge this soon ;-)
-
-I uploaded a git branch to [2] for testing.
-
-Please review and merge for linux-5.6 so we can remove the 32-bit
-time handling from that release.
-
-      Arnd
-
-Changes from v1:
-- separate nfs and nfsd, as most of the nfs changes are merged now
-- rebase to v5.5
-
-[1] https://lore.kernel.org/lkml/20191111201639.2240623-1-arnd@arndb.de/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-nfsd
-
-Arnd Bergmann (12):
-  nfsd: use ktime_get_seconds() for timestamps
-  nfsd: print 64-bit timestamps in client_info_show
-  nfsd: handle nfs3 timestamps as unsigned
-  nfsd: use timespec64 in encode_time_delta
-  nfsd: make 'boot_time' 64-bit wide
-  nfsd: pass a 64-bit guardtime to nfsd_setattr()
-  nfsd: use time64_t in nfsd_proc_setattr() check
-  nfsd: fix delay timer on 32-bit architectures
-  nfsd: fix jiffies/time_t mixup in LRU list
-  nfsd: use boottime for lease expiry alculation
-  nfsd: use ktime_get_real_seconds() in nfs4_verifier
-  nfsd: remove nfs4_reset_lease() declarations
-
- fs/nfsd/netns.h        |  6 ++--
- fs/nfsd/nfs3xdr.c      | 20 +++++--------
- fs/nfsd/nfs4callback.c |  7 ++++-
- fs/nfsd/nfs4layouts.c  |  2 +-
- fs/nfsd/nfs4proc.c     |  2 +-
- fs/nfsd/nfs4recover.c  |  8 ++---
- fs/nfsd/nfs4state.c    | 68 ++++++++++++++++++++----------------------
- fs/nfsd/nfs4xdr.c      |  4 +--
- fs/nfsd/nfsctl.c       |  6 ++--
- fs/nfsd/nfsd.h         |  2 --
- fs/nfsd/nfsfh.h        |  4 +--
- fs/nfsd/nfsproc.c      |  6 ++--
- fs/nfsd/state.h        | 10 +++----
- fs/nfsd/vfs.c          |  4 +--
- fs/nfsd/vfs.h          |  2 +-
- fs/nfsd/xdr3.h         |  2 +-
- 16 files changed, 74 insertions(+), 79 deletions(-)
-
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 369e574c5092..bfdb3366239c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -806,7 +806,7 @@ static void nfs4_free_deleg(struct nfs4_stid *stid)
+ static DEFINE_SPINLOCK(blocked_delegations_lock);
+ static struct bloom_pair {
+ 	int	entries, old_entries;
+-	time_t	swap_time;
++	time64_t swap_time;
+ 	int	new; /* index into 'set' */
+ 	DECLARE_BITMAP(set[2], 256);
+ } blocked_delegations;
+@@ -818,15 +818,15 @@ static int delegation_blocked(struct knfsd_fh *fh)
+ 
+ 	if (bd->entries == 0)
+ 		return 0;
+-	if (seconds_since_boot() - bd->swap_time > 30) {
++	if (ktime_get_seconds() - bd->swap_time > 30) {
+ 		spin_lock(&blocked_delegations_lock);
+-		if (seconds_since_boot() - bd->swap_time > 30) {
++		if (ktime_get_seconds() - bd->swap_time > 30) {
+ 			bd->entries -= bd->old_entries;
+ 			bd->old_entries = bd->entries;
+ 			memset(bd->set[bd->new], 0,
+ 			       sizeof(bd->set[0]));
+ 			bd->new = 1-bd->new;
+-			bd->swap_time = seconds_since_boot();
++			bd->swap_time = ktime_get_seconds();
+ 		}
+ 		spin_unlock(&blocked_delegations_lock);
+ 	}
+@@ -856,7 +856,7 @@ static void block_delegations(struct knfsd_fh *fh)
+ 	__set_bit((hash>>8)&255, bd->set[bd->new]);
+ 	__set_bit((hash>>16)&255, bd->set[bd->new]);
+ 	if (bd->entries == 0)
+-		bd->swap_time = seconds_since_boot();
++		bd->swap_time = ktime_get_seconds();
+ 	bd->entries += 1;
+ 	spin_unlock(&blocked_delegations_lock);
+ }
 -- 
 2.20.0
 
