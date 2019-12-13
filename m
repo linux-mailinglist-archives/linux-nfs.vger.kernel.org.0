@@ -2,207 +2,221 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C9311EBD5
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 21:26:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84E6A11EC1E
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 21:53:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfLMU0k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Dec 2019 15:26:40 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38586 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbfLMU0k (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 15:26:40 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKJRHu065373;
-        Fri, 13 Dec 2019 20:26:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=4QxWWhfzkeeg/sj/lRZm77rHhBFZZB7dyoW1bA8QM34=;
- b=k5TC2QgdEH/G1ODuvCAQO2/KjcINSU6NjwZApWC1Nn+NhnCbYxGAIW88Ekvtc6U0clwH
- /WuaOgKNoYujEiaVrmieeMuSx0joMTT1LqiSCSc8mWpZT7t1JEcojOm1aM49ziHvz5cT
- WO9bXB6eWGrdjEW/tNsQPqfBgK2/gbe5m3ekv8C58BT9HCkv2e+du7NZCWx09zqdUpaW
- E/uq59n7uF1l+zNOFkf3831UwRu5qZfyn8+bpjgdjxebO5s7M0Tuk49hKKcf7QSdcpfW
- PBru3brkBCRxNNAS8tQYNnqTtRAlc06pK9qZfbqcccqjKbjWlZ7ZHyZNWkKaaezZ/63u QA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wr41qu6m9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 20:26:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKIaFo029237;
-        Fri, 13 Dec 2019 20:26:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2wvdwqqskf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 20:26:30 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBDKQUBQ014080;
-        Fri, 13 Dec 2019 20:26:30 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Dec 2019 12:26:30 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: CPU lockup in or near new filecache code
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
-Date:   Fri, 13 Dec 2019 15:26:28 -0500
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <74C1EB52-06D7-4FB5-BA1C-BB1EC2F325CA@oracle.com>
-References: <9977648B-7D14-42EB-BD4A-CBD041A0C21A@oracle.com>
- <3af633a4016a183a930a44e3287f9da230711629.camel@hammerspace.com>
- <BDCA1236-A90A-48F6-9329-DE4818298D83@oracle.com>
- <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
- <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912130149
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912130149
+        id S1726263AbfLMUvv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Dec 2019 15:51:51 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:52823 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMUvv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 15:51:51 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MvbO4-1hpQC52QtS-00scVY; Fri, 13 Dec 2019 21:50:19 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, jdike@addtoit.com, richard@nod.at,
+        jcmvbkbc@gmail.com, stefanr@s5r6.in-berlin.de,
+        l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
+        christian.gmeiner@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        robdclark@gmail.com, sean@poorly.run, valdis.kletnieks@vt.edu,
+        gregkh@linuxfoundation.org, ccaulfie@redhat.com,
+        teigland@redhat.com, hirofumi@mail.parknet.co.jp, jack@suse.com,
+        davem@davemloft.net, fw@strlen.de, viro@zeniv.linux.org.uk,
+        rfontana@redhat.com, tglx@linutronix.de,
+        linux-um@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        devel@driverdev.osuosl.org, cluster-devel@redhat.com,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        darrick.wong@oracle.com, sparclinux@vger.kernel.org
+Subject: [PATCH v2 00/24] drivers, fs: y2038 updates
+Date:   Fri, 13 Dec 2019 21:49:09 +0100
+Message-Id: <20191213204936.3643476-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:uP+kiANpOGJCAXUng4IDyXrHx7+oq5wNuUSCR2Raiw5aTIDdJGg
+ 5j4AA9RZwtRFpSlQJZR8HotU54Xfp+erI4gckXGaucpRhzYx4dcdDnO9RE7chr7C+S6QsS1
+ hz8jSvfht0kOIuwI+U39is0hUz6MZ6pZnETpaFRYUgmMegCz9cluYoQw5GzMKND6Vlt+MoP
+ vuRLets3Xp1M/VHl6bYkg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kP6IKflIR3w=:FkB32fEkAgwus2sZyvbWHj
+ gR1XadNmIQfTKvjDx+NHX537KVRwu9adI8C1WG7Uvu2xqdyhi6NbGnzLLS3erKQVoi1q2bcZJ
+ fRUG1d36ibEvFjwqysbPbwC5u4DHiftBkUdZ02IxQaCgRmMake1padTMioHJ5VK44dQCw0Wgi
+ l9FfLjhcz0ZpYw+KmnFwnCxdaEQ4rrmqMmI9qQZLKGibtvLox0uwJBt2f1iziiy+EV55optWx
+ eHVAl6FcsIhDR1hGIagPTt0pygd3l5tg/E0N5N3r8mcI/qaniqvi6KMSXngpuISEjztZUFIKj
+ E4vl7qLyA/xxvBi57YzPutpomt5K21wonhWSM7aFqvVNnIjTmvlIhulMkCwyDac28R/Z4Dp0g
+ KMewi00ymEE1euw319FGcrDlXrYDszeK+FvG14u8GD9wvnlwoLF7R9G2nx97kdApqLxfkXQly
+ B+hANhQzcIaPqD3Mj4IbgJQGI17ypNCagD8+FwqTZDb0OBqInzQnwij7FBHUOWFHF3Qs/EI7o
+ 1nrINilaeyXksJoTUhiuzSirhvGWBkbMzW5k02tP0uTz7sxrCz/FxXHDE522PcCDuQTBlyv+I
+ QJ9z1iVT5Xg/jxkC7PWxkiiqjSgCEiTCIb6V84/lzwlgwaR4VDO+WH8ZX/gzqVNe9o9vQ3KSE
+ 8vilfRFPAZi1Or+AvWmTgxeRFkLvobJdMhGGlGJUFAh0XHUkVTF0t8WkeZWhW85ocAbJ5g94z
+ t07OthlwQEZNuwc5Z06FKMmP8bFmSpWpMf3TMpq6QCKO+gB6xZa0zdZgyTvgHlhAZckFpPNzt
+ SLryaKF3jS+MB5IeJX7dR8/nMWgS5LTwsezZchNIkyBiQLIxvP9ZVqFsGf6QbesMAbCjQWssu
+ Ok7QMsSa208ewWk2bxEw==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+These are updates to devidce drivers and file systems that for some
+reason or another were not included in the kernel in the previous
+y2038 series.
 
+I've gone through all users of time_t again to make sure the
+kernel is in a long-term maintainable state.
 
-> On Dec 13, 2019, at 3:12 PM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Wed, 2019-12-11 at 15:01 -0500, Chuck Lever wrote:
->> OK, I finally got a hit. It took a long time. I've seen this
->> particular
->> stack trace before, several times.
->>=20
->> Dec 11 14:58:34 klimt kernel: watchdog: BUG: soft lockup - CPU#0
->> stuck for 22s! [nfsd:2005]
->> Dec 11 14:58:34 klimt kernel: Modules linked in: rpcsec_gss_krb5
->> ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager
->> ocfs2_stackglue ib_umad ib_ipoib mlx4_ib sb_edac x86_pkg_temp_thermal
->> kvm_intel coretemp kvm irqbypass crct10dif_pclmul crc32_pclmul
->> ghash_clmulni_intel iTCO_wdt ext4 iTCO_vendor_support aesni_intel
->> mbcache jbd2 glue_helper rpcrdma crypto_simd cryptd rdma_ucm ib_iser
->> rdma_cm pcspkr iw_cm ib_cm mei_me raid0 libiscsi lpc_ich mei sg
->> scsi_transport_iscsi i2c_i801 mfd_core wmi ipmi_si ipmi_devintf
->> ipmi_msghandler ioatdma acpi_power_meter nfsd nfs_acl lockd
->> auth_rpcgss grace sunrpc ip_tables xfs libcrc32c mlx4_en sr_mod
->> sd_mod cdrom qedr ast drm_vram_helper drm_ttm_helper ttm crc32c_intel
->> drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm igb
->> dca i2c_algo_bit i2c_core mlx4_core ahci libahci libata nvme
->> nvme_core qede qed dm_mirror dm_region_hash dm_log dm_mod crc8
->> ib_uverbs dax ib_core
->> Dec 11 14:58:34 klimt kernel: CPU: 0 PID: 2005 Comm: nfsd Tainted:
->> G        W         5.5.0-rc1-00003-g170e7adc2317 #1401
->> Dec 11 14:58:34 klimt kernel: Hardware name: Supermicro Super
->> Server/X10SRL-F, BIOS 1.0c 09/09/2015
->> Dec 11 14:58:34 klimt kernel: RIP: 0010:__srcu_read_lock+0x23/0x24
->> Dec 11 14:58:34 klimt kernel: Code: 07 00 0f 1f 40 00 c3 0f 1f 44 00
->> 00 8b 87 c8 c3 00 00 48 8b 97 f0 c3 00 00 83 e0 01 48 63 c8 65 48 ff
->> 04 ca f0 83 44 24 fc 00 <c3> 0f 1f 44 00 00 f0 83 44 24 fc 00 48 63
->> f6 48 8b 87 f0 c3 00 00
->> Dec 11 14:58:34 klimt kernel: RSP: 0018:ffffc90001d97bd0 EFLAGS:
->> 00000246 ORIG_RAX: ffffffffffffff13
->> Dec 11 14:58:34 klimt kernel: RAX: 0000000000000001 RBX:
->> ffff888830d0eb78 RCX: 0000000000000001
->> Dec 11 14:58:34 klimt kernel: RDX: 0000000000030f00 RSI:
->> ffff888853f4da00 RDI: ffffffff82815a40
->> Dec 11 14:58:34 klimt kernel: RBP: ffff88883112d828 R08:
->> ffff888843540000 R09: ffffffff8121d707
->> Dec 11 14:58:34 klimt kernel: R10: ffffc90001d97bf0 R11:
->> 0000000000001b84 R12: ffff888853f4da00
->> Dec 11 14:58:34 klimt kernel: R13: ffff8888132a1410 R14:
->> ffff88883112d7e0 R15: 00000000ffffffef
->> Dec 11 14:58:34 klimt kernel: FS:  0000000000000000(0000)
->> GS:ffff88885fc00000(0000) knlGS:0000000000000000
->> Dec 11 14:58:34 klimt kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
->> 0000000080050033
->> Dec 11 14:58:34 klimt kernel: CR2: 00007f2d6a2d8000 CR3:
->> 0000000859b38004 CR4: 00000000001606f0
->> Dec 11 14:58:34 klimt kernel: Call Trace:
->> Dec 11 14:58:34 klimt kernel: fsnotify_grab_connector+0x16/0x4f
->> Dec 11 14:58:34 klimt kernel: fsnotify_find_mark+0x11/0x6a
->> Dec 11 14:58:34 klimt kernel: nfsd_file_acquire+0x3a9/0x5b2 [nfsd]
->> Dec 11 14:58:34 klimt kernel: nfs4_get_vfs_file+0x14c/0x20f [nfsd]
->> Dec 11 14:58:34 klimt kernel: nfsd4_process_open2+0xcd6/0xd98 [nfsd]
->> Dec 11 14:58:34 klimt kernel: ? fh_verify+0x42e/0x4ef [nfsd]
->> Dec 11 14:58:34 klimt kernel: ? nfsd4_process_open1+0x233/0x29d
->> [nfsd]
->> Dec 11 14:58:34 klimt kernel: nfsd4_open+0x500/0x5cb [nfsd]
->> Dec 11 14:58:34 klimt kernel: nfsd4_proc_compound+0x32a/0x5c7 [nfsd]
->> Dec 11 14:58:34 klimt kernel: nfsd_dispatch+0x102/0x1e2 [nfsd]
->> Dec 11 14:58:34 klimt kernel: svc_process_common+0x3b3/0x65d [sunrpc]
->> Dec 11 14:58:34 klimt kernel: ? svc_xprt_put+0x12/0x21 [sunrpc]
->> Dec 11 14:58:34 klimt kernel: ? nfsd_svc+0x2be/0x2be [nfsd]
->> Dec 11 14:58:34 klimt kernel: ? nfsd_destroy+0x51/0x51 [nfsd]
->> Dec 11 14:58:34 klimt kernel: svc_process+0xf6/0x115 [sunrpc]
->> Dec 11 14:58:34 klimt kernel: nfsd+0xf2/0x149 [nfsd]
->> Dec 11 14:58:34 klimt kernel: kthread+0xf6/0xfb
->> Dec 11 14:58:34 klimt kernel: ? kthread_queue_delayed_work+0x74/0x74
->> Dec 11 14:58:34 klimt kernel: ret_from_fork+0x3a/0x50
->>=20
->=20
-> Does something like the following help?
->=20
-> 8<---------------------------------------------------
-> =46rom caf515c82ed572e4f92ac8293e5da4818da0c6ce Mon Sep 17 00:00:00 =
-2001
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Date: Fri, 13 Dec 2019 15:07:33 -0500
-> Subject: [PATCH] nfsd: Fix a soft lockup race in
-> nfsd_file_mark_find_or_create()
->=20
-> If nfsd_file_mark_find_or_create() keeps winning the race for the
-> nfsd_file_fsnotify_group->mark_mutex against nfsd_file_mark_put()
-> then it can soft lock up, since fsnotify_add_inode_mark() ends
-> up always finding an existing entry.
->=20
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
-> fs/nfsd/filecache.c | 8 ++++++--
-> 1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 9c2b29e07975..f275c11c4e28 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -132,9 +132,13 @@ nfsd_file_mark_find_or_create(struct nfsd_file =
-*nf)
-> 						 struct nfsd_file_mark,
-> 						 nfm_mark));
-> 			=
-mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
-> -			fsnotify_put_mark(mark);
-> -			if (likely(nfm))
-> +			if (nfm) {
-> +				fsnotify_put_mark(mark);
-> 				break;
-> +			}
-> +			/* Avoid soft lockup race with =
-nfsd_file_mark_put() */
-> +			fsnotify_destroy_mark(mark, =
-nfsd_file_fsnotify_group);
-> +			fsnotify_put_mark(mark);
-> 		} else
-> 			=
-mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
->=20
+Posting these as a series for better organization, but each change
+here is applicable standalone.
 
-Received. I'll have some time over the weekend or on Monday to test it.
+Please merge, review, ack/nack etc as you see fit. I will
+add these to my y2038 branch [1] for linux-next, but can keep
+rebasing for feedback and to remove any patches that get
+picked up by a maintainer.
 
+Changes since v1 [2]:
 
---
-Chuck Lever
+- Add Acks I received
+- Rebase to v5.5-rc1, droping patches that got merged already
+- Add NFS, XFS and the final three patches from another series
+- Rewrite etnaviv patches
 
+      Arnd
 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038
+[2] https://lore.kernel.org/lkml/20191108213257.3097633-1-arnd@arndb.de/
 
+Arnd Bergmann (24):
+  Input: input_event: fix struct padding on sparc64
+  fat: use prandom_u32() for i_generation
+  dlm: use SO_SNDTIMEO_NEW instead of SO_SNDTIMEO_OLD
+  xtensa: ISS: avoid struct timeval
+  um: ubd: use 64-bit time_t where possible
+  acct: stop using get_seconds()
+  tsacct: add 64-bit btime field
+  packet: clarify timestamp overflow
+  quota: avoid time_t in v1_disk_dqblk definition
+  hostfs: pass 64-bit timestamps to/from user space
+  hfs/hfsplus: use 64-bit inode timestamps
+  drm/msm: avoid using 'timespec'
+  drm/etnaviv: reject timeouts with tv_nsec >= NSEC_PER_SEC
+  drm/etnaviv: avoid deprecated timespec
+  sunrpc: convert to time64_t for expiry
+  nfs: use time64_t internally
+  nfs: fix timstamp debug prints
+  nfs: fscache: use timespec64 in inode auxdata
+  xfs: rename compat_time_t to old_time32_t
+  xfs: disallow broken ioctls without compat-32-bit-time
+  xfs: quota: move to time64_t interfaces
+  y2038: remove obsolete jiffies conversion functions
+  y2038: rename itimerval to __kernel_old_itimerval
+  y2038: sparc: remove use of struct timex
+
+ arch/sparc/kernel/sys_sparc_64.c              | 29 +++++-----
+ arch/um/drivers/cow.h                         |  2 +-
+ arch/um/drivers/cow_user.c                    |  7 ++-
+ arch/um/drivers/ubd_kern.c                    | 10 ++--
+ arch/um/include/shared/os.h                   |  2 +-
+ arch/um/os-Linux/file.c                       |  2 +-
+ .../platforms/iss/include/platform/simcall.h  |  4 +-
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c         | 20 ++++---
+ drivers/gpu/drm/etnaviv/etnaviv_drv.h         | 11 ++--
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c         |  4 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gem.h         |  2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c         |  5 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h         |  5 +-
+ drivers/gpu/drm/msm/msm_drv.h                 |  3 +-
+ drivers/input/evdev.c                         | 14 ++---
+ drivers/input/misc/uinput.c                   | 14 +++--
+ fs/dlm/lowcomms.c                             |  6 +-
+ fs/fat/inode.c                                |  3 +-
+ fs/hfs/hfs_fs.h                               | 28 +++++++--
+ fs/hfs/inode.c                                |  4 +-
+ fs/hfsplus/hfsplus_fs.h                       | 28 +++++++--
+ fs/hfsplus/inode.c                            | 12 ++--
+ fs/hostfs/hostfs.h                            | 22 ++++---
+ fs/hostfs/hostfs_kern.c                       | 15 +++--
+ fs/nfs/fscache-index.c                        |  6 +-
+ fs/nfs/fscache.c                              | 18 ++++--
+ fs/nfs/fscache.h                              |  8 ++-
+ fs/nfs/nfs4xdr.c                              | 10 ++--
+ fs/quota/quotaio_v1.h                         |  6 +-
+ fs/xfs/xfs_dquot.c                            |  6 +-
+ fs/xfs/xfs_ioctl.c                            | 26 +++++++++
+ fs/xfs/xfs_ioctl32.c                          |  2 +-
+ fs/xfs/xfs_ioctl32.h                          |  2 +-
+ fs/xfs/xfs_qm.h                               |  6 +-
+ fs/xfs/xfs_quotaops.c                         |  6 +-
+ fs/xfs/xfs_trans_dquot.c                      |  8 ++-
+ include/linux/jiffies.h                       | 20 -------
+ include/linux/sunrpc/cache.h                  | 42 ++++++++------
+ include/linux/sunrpc/gss_api.h                |  4 +-
+ include/linux/sunrpc/gss_krb5.h               |  2 +-
+ include/linux/syscalls.h                      |  9 ++-
+ include/uapi/linux/acct.h                     |  2 +
+ include/uapi/linux/input.h                    |  1 +
+ include/uapi/linux/taskstats.h                |  6 +-
+ include/uapi/linux/time_types.h               |  5 ++
+ include/uapi/linux/timex.h                    |  2 +
+ kernel/acct.c                                 |  4 +-
+ kernel/time/itimer.c                          | 18 +++---
+ kernel/time/time.c                            | 58 ++-----------------
+ kernel/tsacct.c                               |  9 ++-
+ net/packet/af_packet.c                        | 27 +++++----
+ net/sunrpc/auth_gss/gss_krb5_mech.c           | 12 +++-
+ net/sunrpc/auth_gss/gss_krb5_seal.c           |  8 +--
+ net/sunrpc/auth_gss/gss_krb5_unseal.c         |  6 +-
+ net/sunrpc/auth_gss/gss_krb5_wrap.c           | 16 ++---
+ net/sunrpc/auth_gss/gss_mech_switch.c         |  2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c             |  6 +-
+ net/sunrpc/cache.c                            | 16 ++---
+ net/sunrpc/svcauth_unix.c                     | 10 ++--
+ 59 files changed, 351 insertions(+), 290 deletions(-)
+
+-- 
+2.20.0
+
+Cc: jdike@addtoit.com
+Cc: richard@nod.at
+Cc: jcmvbkbc@gmail.com
+Cc: stefanr@s5r6.in-berlin.de
+Cc: l.stach@pengutronix.de
+Cc: linux+etnaviv@armlinux.org.uk
+Cc: christian.gmeiner@gmail.com
+Cc: airlied@linux.ie
+Cc: daniel@ffwll.ch
+Cc: robdclark@gmail.com
+Cc: sean@poorly.run
+Cc: valdis.kletnieks@vt.edu
+Cc: gregkh@linuxfoundation.org
+Cc: ccaulfie@redhat.com
+Cc: teigland@redhat.com
+Cc: hirofumi@mail.parknet.co.jp
+Cc: jack@suse.com
+Cc: davem@davemloft.net
+Cc: fw@strlen.de
+Cc: viro@zeniv.linux.org.uk
+Cc: rfontana@redhat.com
+Cc: tglx@linutronix.de
+Cc: linux-um@lists.infradead.org
+Cc: linux1394-devel@lists.sourceforge.net
+Cc: etnaviv@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: freedreno@lists.freedesktop.org
+Cc: devel@driverdev.osuosl.org
+Cc: cluster-devel@redhat.com
+Cc: linux-fsdevel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: trond.myklebust@hammerspace.com
+Cc: anna.schumaker@netapp.com
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: darrick.wong@oracle.com
+Cc: sparclinux@vger.kernel.org
