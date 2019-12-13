@@ -2,187 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF28C11EBB9
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 21:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C9311EBD5
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 21:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfLMUON (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Dec 2019 15:14:13 -0500
-Received: from mail-dm6nam12on2115.outbound.protection.outlook.com ([40.107.243.115]:60640
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728696AbfLMUOM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:14:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gbMTQnK+4Y72SOLyQIOEArT5zNH7hckLZyluMyXuUnOPp5V8NxC50ZkGW0TKHaVDnhr7tzrBmkNeANnxQw0IH8ziqNxb/vLtC6ecqcT2axYK2npM2ygjGwBcKnIor9736OaAuUcka+ZbnW+pbvIeApRb6q9Ycmkak8Np1Tlhab8BV4jKFLQYcC4CsID1vfXFb39vqc3Wd8UxQ9JKp64jau0IWXxS4n+t1h5tWnUDfXgfjK3x6ReusoCigjCacHUMJPGlQMm6cwrI4auxczQNT0aSoqzmN/JVA+NUvi5TarLkmfOigdmZM0SLUuWkgPc0rRcQ5pQRlz7F9FdPh8UxBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oTqdfU19t3AhWqLEwutMUvhg6BEki8TglFmREhCjHO0=;
- b=S+KPZyn4nOcywS7JJMGTnsmQaNuBNZEwXp0QIBlH7vp2bfpynfqBd69LdiGnM6DgIvDqcKY/GKe5EPrd9kiAcA8TRgJiJ60EJ19xbtDidbIFWW8UC1FvLqjqsoctSI+JnmdgcnCYI6It3hXfVr2/cP+JUNAukBirMj5ksOfLW6i4Ln526mCBmvMvp6gCuYo7ycjiVzrJK5WyBZmjOLKplsnL42fXYWMEaRYD/VCZdb5sHyoPYnwaffnALT2zvKyNF/4U7sSrbTkdR3BjXSfTnh/laImPzFjHHkfnR7QjHhWZACLJsKBSfyMpxniV6N1GjySv6uCTpvch5AnZxi/pCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oTqdfU19t3AhWqLEwutMUvhg6BEki8TglFmREhCjHO0=;
- b=T5gMETm55J+IgS5UF4qZ+8glFnDRZ+V2WTt/roEnh7JY+YyIavt6IARI/d1KeKd46l7UB9GEcw/sKDfPTD2ghCVwezQEPD8DXF/SKmTTrIWXQFWTjQSY3xUZYGhH1WaAlE4kfiKcecqDdAkaUd8HrywCNretIGpZ1iAMglHjPiU=
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com (10.174.87.14) by
- BN6PR1301MB1924.namprd13.prod.outlook.com (10.174.89.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.9; Fri, 13 Dec 2019 20:12:26 +0000
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf]) by BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf%5]) with mapi id 15.20.2538.012; Fri, 13 Dec 2019
- 20:12:26 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1728731AbfLMU0k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Dec 2019 15:26:40 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38586 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728696AbfLMU0k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 15:26:40 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKJRHu065373;
+        Fri, 13 Dec 2019 20:26:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=4QxWWhfzkeeg/sj/lRZm77rHhBFZZB7dyoW1bA8QM34=;
+ b=k5TC2QgdEH/G1ODuvCAQO2/KjcINSU6NjwZApWC1Nn+NhnCbYxGAIW88Ekvtc6U0clwH
+ /WuaOgKNoYujEiaVrmieeMuSx0joMTT1LqiSCSc8mWpZT7t1JEcojOm1aM49ziHvz5cT
+ WO9bXB6eWGrdjEW/tNsQPqfBgK2/gbe5m3ekv8C58BT9HCkv2e+du7NZCWx09zqdUpaW
+ E/uq59n7uF1l+zNOFkf3831UwRu5qZfyn8+bpjgdjxebO5s7M0Tuk49hKKcf7QSdcpfW
+ PBru3brkBCRxNNAS8tQYNnqTtRAlc06pK9qZfbqcccqjKbjWlZ7ZHyZNWkKaaezZ/63u QA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wr41qu6m9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 20:26:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKIaFo029237;
+        Fri, 13 Dec 2019 20:26:30 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2wvdwqqskf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 20:26:30 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBDKQUBQ014080;
+        Fri, 13 Dec 2019 20:26:30 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Dec 2019 12:26:30 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: CPU lockup in or near new filecache code
-Thread-Topic: CPU lockup in or near new filecache code
-Thread-Index: AQHVr3a22tGQ3WjzQkKmN7EsuF72/Kez1qgAgAFoF4CAAB3RAIADJ8YA
-Date:   Fri, 13 Dec 2019 20:12:25 +0000
-Message-ID: <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+Date:   Fri, 13 Dec 2019 15:26:28 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <74C1EB52-06D7-4FB5-BA1C-BB1EC2F325CA@oracle.com>
 References: <9977648B-7D14-42EB-BD4A-CBD041A0C21A@oracle.com>
-         <3af633a4016a183a930a44e3287f9da230711629.camel@hammerspace.com>
-         <BDCA1236-A90A-48F6-9329-DE4818298D83@oracle.com>
-         <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
-In-Reply-To: <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c19d69ce-bed1-408f-0662-08d78008c5db
-x-ms-traffictypediagnostic: BN6PR1301MB1924:
-x-microsoft-antispam-prvs: <BN6PR1301MB19249B5346A21F73F1B90607B8540@BN6PR1301MB1924.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:328;
-x-forefront-prvs: 0250B840C1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(396003)(376002)(346002)(366004)(189003)(199004)(81166006)(5660300002)(6486002)(8676002)(8936002)(26005)(54906003)(316002)(4001150100001)(71200400001)(86362001)(81156014)(186003)(66446008)(64756008)(2906002)(45080400002)(76116006)(66946007)(508600001)(6506007)(6916009)(6512007)(4326008)(66556008)(66476007)(2616005)(36756003)(53546011)(91956017);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB1924;H:BN6PR1301MB2097.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Pw1/bV2GawwfSS85rA747DvOBiKxs50w7/JbcuO5+dRPbUhNrTq/EEokJcYDV7fRlJWhaPXY045QpQMI0p28Uyeg/SeHXzL4vG4YaZmeG0cYoJJIZ0vTwLr37vgfJsj15CFVgzzJP/cp7kc4/Fm0Uho/DD57pWKUxU7pgqsF00AQDRSbTthleDqEpXie39Di7W4EXwmFQsCMfKQnjTyR3hi3b+jEIXXUQmuaMNU9wNxKdRlmVWu/XEhjVfKPAvHNT++pOIGvrXBuL+UV8Qt5DD6maopW7N8I5LyNynQ/PWo1sMvvMP7LnmnMGF3fkt1aU/f26AksXPZn3VTjr4RrMDzrFVBPRQPLGKADDn9NS7mHHKkqht5N796hQGMskAPlDOzrUdSnudombGL67FWLr4BBRXow2ipgWto3Mj79Ifh2lXtwDaxdyfAToerz4t11
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A5EA95213D9FE544A790DC72DB98589F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c19d69ce-bed1-408f-0662-08d78008c5db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 20:12:26.0485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Tw04V1Jg1UK4y7t9FhOsRWCq1hjcDLQsYAtznvcs0xuMOEBtRJLXeWKvHyUtQg46AdwKfIu+dxD2rqLZwCrV4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB1924
+ <3af633a4016a183a930a44e3287f9da230711629.camel@hammerspace.com>
+ <BDCA1236-A90A-48F6-9329-DE4818298D83@oracle.com>
+ <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
+ <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912130149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912130149
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTExIGF0IDE1OjAxIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-T0ssIEkgZmluYWxseSBnb3QgYSBoaXQuIEl0IHRvb2sgYSBsb25nIHRpbWUuIEkndmUgc2VlbiB0
-aGlzDQo+IHBhcnRpY3VsYXINCj4gc3RhY2sgdHJhY2UgYmVmb3JlLCBzZXZlcmFsIHRpbWVzLg0K
-PiANCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDogd2F0Y2hkb2c6IEJVRzogc29mdCBs
-b2NrdXAgLSBDUFUjMA0KPiBzdHVjayBmb3IgMjJzISBbbmZzZDoyMDA1XQ0KPiBEZWMgMTEgMTQ6
-NTg6MzQga2xpbXQga2VybmVsOiBNb2R1bGVzIGxpbmtlZCBpbjogcnBjc2VjX2dzc19rcmI1DQo+
-IG9jZnMyX2RsbWZzIG9jZnMyX3N0YWNrX28yY2Igb2NmczJfZGxtIG9jZnMyX25vZGVtYW5hZ2Vy
-DQo+IG9jZnMyX3N0YWNrZ2x1ZSBpYl91bWFkIGliX2lwb2liIG1seDRfaWIgc2JfZWRhYyB4ODZf
-cGtnX3RlbXBfdGhlcm1hbA0KPiBrdm1faW50ZWwgY29yZXRlbXAga3ZtIGlycWJ5cGFzcyBjcmN0
-MTBkaWZfcGNsbXVsIGNyYzMyX3BjbG11bA0KPiBnaGFzaF9jbG11bG5pX2ludGVsIGlUQ09fd2R0
-IGV4dDQgaVRDT192ZW5kb3Jfc3VwcG9ydCBhZXNuaV9pbnRlbA0KPiBtYmNhY2hlIGpiZDIgZ2x1
-ZV9oZWxwZXIgcnBjcmRtYSBjcnlwdG9fc2ltZCBjcnlwdGQgcmRtYV91Y20gaWJfaXNlcg0KPiBy
-ZG1hX2NtIHBjc3BrciBpd19jbSBpYl9jbSBtZWlfbWUgcmFpZDAgbGliaXNjc2kgbHBjX2ljaCBt
-ZWkgc2cNCj4gc2NzaV90cmFuc3BvcnRfaXNjc2kgaTJjX2k4MDEgbWZkX2NvcmUgd21pIGlwbWlf
-c2kgaXBtaV9kZXZpbnRmDQo+IGlwbWlfbXNnaGFuZGxlciBpb2F0ZG1hIGFjcGlfcG93ZXJfbWV0
-ZXIgbmZzZCBuZnNfYWNsIGxvY2tkDQo+IGF1dGhfcnBjZ3NzIGdyYWNlIHN1bnJwYyBpcF90YWJs
-ZXMgeGZzIGxpYmNyYzMyYyBtbHg0X2VuIHNyX21vZA0KPiBzZF9tb2QgY2Ryb20gcWVkciBhc3Qg
-ZHJtX3ZyYW1faGVscGVyIGRybV90dG1faGVscGVyIHR0bSBjcmMzMmNfaW50ZWwNCj4gZHJtX2tt
-c19oZWxwZXIgc3lzY29weWFyZWEgc3lzZmlsbHJlY3Qgc3lzaW1nYmx0IGZiX3N5c19mb3BzIGRy
-bSBpZ2INCj4gZGNhIGkyY19hbGdvX2JpdCBpMmNfY29yZSBtbHg0X2NvcmUgYWhjaSBsaWJhaGNp
-IGxpYmF0YSBudm1lDQo+IG52bWVfY29yZSBxZWRlIHFlZCBkbV9taXJyb3IgZG1fcmVnaW9uX2hh
-c2ggZG1fbG9nIGRtX21vZCBjcmM4DQo+IGliX3V2ZXJicyBkYXggaWJfY29yZQ0KPiBEZWMgMTEg
-MTQ6NTg6MzQga2xpbXQga2VybmVsOiBDUFU6IDAgUElEOiAyMDA1IENvbW06IG5mc2QgVGFpbnRl
-ZDoNCj4gRyAgICAgICAgVyAgICAgICAgIDUuNS4wLXJjMS0wMDAwMy1nMTcwZTdhZGMyMzE3ICMx
-NDAxDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IEhhcmR3YXJlIG5hbWU6IFN1cGVy
-bWljcm8gU3VwZXINCj4gU2VydmVyL1gxMFNSTC1GLCBCSU9TIDEuMGMgMDkvMDkvMjAxNQ0KPiBE
-ZWMgMTEgMTQ6NTg6MzQga2xpbXQga2VybmVsOiBSSVA6IDAwMTA6X19zcmN1X3JlYWRfbG9jaysw
-eDIzLzB4MjQNCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDogQ29kZTogMDcgMDAgMGYg
-MWYgNDAgMDAgYzMgMGYgMWYgNDQgMDANCj4gMDAgOGIgODcgYzggYzMgMDAgMDAgNDggOGIgOTcg
-ZjAgYzMgMDAgMDAgODMgZTAgMDEgNDggNjMgYzggNjUgNDggZmYNCj4gMDQgY2EgZjAgODMgNDQg
-MjQgZmMgMDAgPGMzPiAwZiAxZiA0NCAwMCAwMCBmMCA4MyA0NCAyNCBmYyAwMCA0OCA2Mw0KPiBm
-NiA0OCA4YiA4NyBmMCBjMyAwMCAwMA0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQga2VybmVsOiBS
-U1A6IDAwMTg6ZmZmZmM5MDAwMWQ5N2JkMCBFRkxBR1M6DQo+IDAwMDAwMjQ2IE9SSUdfUkFYOiBm
-ZmZmZmZmZmZmZmZmZjEzDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IFJBWDogMDAw
-MDAwMDAwMDAwMDAwMSBSQlg6DQo+IGZmZmY4ODg4MzBkMGViNzggUkNYOiAwMDAwMDAwMDAwMDAw
-MDAxDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAzMGYw
-MCBSU0k6DQo+IGZmZmY4ODg4NTNmNGRhMDAgUkRJOiBmZmZmZmZmZjgyODE1YTQwDQo+IERlYyAx
-MSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IFJCUDogZmZmZjg4ODgzMTEyZDgyOCBSMDg6DQo+IGZm
-ZmY4ODg4NDM1NDAwMDAgUjA5OiBmZmZmZmZmZjgxMjFkNzA3DQo+IERlYyAxMSAxNDo1ODozNCBr
-bGltdCBrZXJuZWw6IFIxMDogZmZmZmM5MDAwMWQ5N2JmMCBSMTE6DQo+IDAwMDAwMDAwMDAwMDFi
-ODQgUjEyOiBmZmZmODg4ODUzZjRkYTAwDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6
-IFIxMzogZmZmZjg4ODgxMzJhMTQxMCBSMTQ6DQo+IGZmZmY4ODg4MzExMmQ3ZTAgUjE1OiAwMDAw
-MDAwMGZmZmZmZmVmDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IEZTOiAgMDAwMDAw
-MDAwMDAwMDAwMCgwMDAwKQ0KPiBHUzpmZmZmODg4ODVmYzAwMDAwKDAwMDApIGtubEdTOjAwMDAw
-MDAwMDAwMDAwMDANCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDogQ1M6ICAwMDEwIERT
-OiAwMDAwIEVTOiAwMDAwIENSMDoNCj4gMDAwMDAwMDA4MDA1MDAzMw0KPiBEZWMgMTEgMTQ6NTg6
-MzQga2xpbXQga2VybmVsOiBDUjI6IDAwMDA3ZjJkNmEyZDgwMDAgQ1IzOg0KPiAwMDAwMDAwODU5
-YjM4MDA0IENSNDogMDAwMDAwMDAwMDE2MDZmMA0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQga2Vy
-bmVsOiBDYWxsIFRyYWNlOg0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQga2VybmVsOiBmc25vdGlm
-eV9ncmFiX2Nvbm5lY3RvcisweDE2LzB4NGYNCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5l
-bDogZnNub3RpZnlfZmluZF9tYXJrKzB4MTEvMHg2YQ0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQg
-a2VybmVsOiBuZnNkX2ZpbGVfYWNxdWlyZSsweDNhOS8weDViMiBbbmZzZF0NCj4gRGVjIDExIDE0
-OjU4OjM0IGtsaW10IGtlcm5lbDogbmZzNF9nZXRfdmZzX2ZpbGUrMHgxNGMvMHgyMGYgW25mc2Rd
-DQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IG5mc2Q0X3Byb2Nlc3Nfb3BlbjIrMHhj
-ZDYvMHhkOTggW25mc2RdDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6ID8gZmhfdmVy
-aWZ5KzB4NDJlLzB4NGVmIFtuZnNkXQ0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQga2VybmVsOiA/
-IG5mc2Q0X3Byb2Nlc3Nfb3BlbjErMHgyMzMvMHgyOWQNCj4gW25mc2RdDQo+IERlYyAxMSAxNDo1
-ODozNCBrbGltdCBrZXJuZWw6IG5mc2Q0X29wZW4rMHg1MDAvMHg1Y2IgW25mc2RdDQo+IERlYyAx
-MSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IG5mc2Q0X3Byb2NfY29tcG91bmQrMHgzMmEvMHg1Yzcg
-W25mc2RdDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IG5mc2RfZGlzcGF0Y2grMHgx
-MDIvMHgxZTIgW25mc2RdDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IHN2Y19wcm9j
-ZXNzX2NvbW1vbisweDNiMy8weDY1ZCBbc3VucnBjXQ0KPiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQg
-a2VybmVsOiA/IHN2Y194cHJ0X3B1dCsweDEyLzB4MjEgW3N1bnJwY10NCj4gRGVjIDExIDE0OjU4
-OjM0IGtsaW10IGtlcm5lbDogPyBuZnNkX3N2YysweDJiZS8weDJiZSBbbmZzZF0NCj4gRGVjIDEx
-IDE0OjU4OjM0IGtsaW10IGtlcm5lbDogPyBuZnNkX2Rlc3Ryb3krMHg1MS8weDUxIFtuZnNkXQ0K
-PiBEZWMgMTEgMTQ6NTg6MzQga2xpbXQga2VybmVsOiBzdmNfcHJvY2VzcysweGY2LzB4MTE1IFtz
-dW5ycGNdDQo+IERlYyAxMSAxNDo1ODozNCBrbGltdCBrZXJuZWw6IG5mc2QrMHhmMi8weDE0OSBb
-bmZzZF0NCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDoga3RocmVhZCsweGY2LzB4ZmIN
-Cj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDogPyBrdGhyZWFkX3F1ZXVlX2RlbGF5ZWRf
-d29yaysweDc0LzB4NzQNCj4gRGVjIDExIDE0OjU4OjM0IGtsaW10IGtlcm5lbDogcmV0X2Zyb21f
-Zm9yaysweDNhLzB4NTANCj4gDQoNCkRvZXMgc29tZXRoaW5nIGxpa2UgdGhlIGZvbGxvd2luZyBo
-ZWxwPw0KDQo4PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQ0KRnJvbSBjYWY1MTVjODJlZDU3MmU0ZjkyYWM4MjkzZTVkYTQ4MThkYTBjNmNlIE1vbiBT
-ZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tPg0KRGF0ZTogRnJpLCAxMyBEZWMgMjAxOSAxNTowNzozMyAtMDUw
-MA0KU3ViamVjdDogW1BBVENIXSBuZnNkOiBGaXggYSBzb2Z0IGxvY2t1cCByYWNlIGluDQogbmZz
-ZF9maWxlX21hcmtfZmluZF9vcl9jcmVhdGUoKQ0KDQpJZiBuZnNkX2ZpbGVfbWFya19maW5kX29y
-X2NyZWF0ZSgpIGtlZXBzIHdpbm5pbmcgdGhlIHJhY2UgZm9yIHRoZQ0KbmZzZF9maWxlX2Zzbm90
-aWZ5X2dyb3VwLT5tYXJrX211dGV4IGFnYWluc3QgbmZzZF9maWxlX21hcmtfcHV0KCkNCnRoZW4g
-aXQgY2FuIHNvZnQgbG9jayB1cCwgc2luY2UgZnNub3RpZnlfYWRkX2lub2RlX21hcmsoKSBlbmRz
-DQp1cCBhbHdheXMgZmluZGluZyBhbiBleGlzdGluZyBlbnRyeS4NCg0KU2lnbmVkLW9mZi1ieTog
-VHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KLS0tDQog
-ZnMvbmZzZC9maWxlY2FjaGUuYyB8IDggKysrKysrLS0NCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZnMvbmZzZC9maWxlY2Fj
-aGUuYyBiL2ZzL25mc2QvZmlsZWNhY2hlLmMNCmluZGV4IDljMmIyOWUwNzk3NS4uZjI3NWMxMWM0
-ZTI4IDEwMDY0NA0KLS0tIGEvZnMvbmZzZC9maWxlY2FjaGUuYw0KKysrIGIvZnMvbmZzZC9maWxl
-Y2FjaGUuYw0KQEAgLTEzMiw5ICsxMzIsMTMgQEAgbmZzZF9maWxlX21hcmtfZmluZF9vcl9jcmVh
-dGUoc3RydWN0IG5mc2RfZmlsZSAqbmYpDQogCQkJCQkJIHN0cnVjdCBuZnNkX2ZpbGVfbWFyaywN
-CiAJCQkJCQkgbmZtX21hcmspKTsNCiAJCQltdXRleF91bmxvY2soJm5mc2RfZmlsZV9mc25vdGlm
-eV9ncm91cC0+bWFya19tdXRleCk7DQotCQkJZnNub3RpZnlfcHV0X21hcmsobWFyayk7DQotCQkJ
-aWYgKGxpa2VseShuZm0pKQ0KKwkJCWlmIChuZm0pIHsNCisJCQkJZnNub3RpZnlfcHV0X21hcmso
-bWFyayk7DQogCQkJCWJyZWFrOw0KKwkJCX0NCisJCQkvKiBBdm9pZCBzb2Z0IGxvY2t1cCByYWNl
-IHdpdGggbmZzZF9maWxlX21hcmtfcHV0KCkgKi8NCisJCQlmc25vdGlmeV9kZXN0cm95X21hcmso
-bWFyaywgbmZzZF9maWxlX2Zzbm90aWZ5X2dyb3VwKTsNCisJCQlmc25vdGlmeV9wdXRfbWFyayht
-YXJrKTsNCiAJCX0gZWxzZQ0KIAkJCW11dGV4X3VubG9jaygmbmZzZF9maWxlX2Zzbm90aWZ5X2dy
-b3VwLT5tYXJrX211dGV4KTsNCiANCi0tIA0KMi4yMy4wDQoNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1
-c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xl
-YnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+
+
+> On Dec 13, 2019, at 3:12 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Wed, 2019-12-11 at 15:01 -0500, Chuck Lever wrote:
+>> OK, I finally got a hit. It took a long time. I've seen this
+>> particular
+>> stack trace before, several times.
+>>=20
+>> Dec 11 14:58:34 klimt kernel: watchdog: BUG: soft lockup - CPU#0
+>> stuck for 22s! [nfsd:2005]
+>> Dec 11 14:58:34 klimt kernel: Modules linked in: rpcsec_gss_krb5
+>> ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager
+>> ocfs2_stackglue ib_umad ib_ipoib mlx4_ib sb_edac x86_pkg_temp_thermal
+>> kvm_intel coretemp kvm irqbypass crct10dif_pclmul crc32_pclmul
+>> ghash_clmulni_intel iTCO_wdt ext4 iTCO_vendor_support aesni_intel
+>> mbcache jbd2 glue_helper rpcrdma crypto_simd cryptd rdma_ucm ib_iser
+>> rdma_cm pcspkr iw_cm ib_cm mei_me raid0 libiscsi lpc_ich mei sg
+>> scsi_transport_iscsi i2c_i801 mfd_core wmi ipmi_si ipmi_devintf
+>> ipmi_msghandler ioatdma acpi_power_meter nfsd nfs_acl lockd
+>> auth_rpcgss grace sunrpc ip_tables xfs libcrc32c mlx4_en sr_mod
+>> sd_mod cdrom qedr ast drm_vram_helper drm_ttm_helper ttm crc32c_intel
+>> drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm igb
+>> dca i2c_algo_bit i2c_core mlx4_core ahci libahci libata nvme
+>> nvme_core qede qed dm_mirror dm_region_hash dm_log dm_mod crc8
+>> ib_uverbs dax ib_core
+>> Dec 11 14:58:34 klimt kernel: CPU: 0 PID: 2005 Comm: nfsd Tainted:
+>> G        W         5.5.0-rc1-00003-g170e7adc2317 #1401
+>> Dec 11 14:58:34 klimt kernel: Hardware name: Supermicro Super
+>> Server/X10SRL-F, BIOS 1.0c 09/09/2015
+>> Dec 11 14:58:34 klimt kernel: RIP: 0010:__srcu_read_lock+0x23/0x24
+>> Dec 11 14:58:34 klimt kernel: Code: 07 00 0f 1f 40 00 c3 0f 1f 44 00
+>> 00 8b 87 c8 c3 00 00 48 8b 97 f0 c3 00 00 83 e0 01 48 63 c8 65 48 ff
+>> 04 ca f0 83 44 24 fc 00 <c3> 0f 1f 44 00 00 f0 83 44 24 fc 00 48 63
+>> f6 48 8b 87 f0 c3 00 00
+>> Dec 11 14:58:34 klimt kernel: RSP: 0018:ffffc90001d97bd0 EFLAGS:
+>> 00000246 ORIG_RAX: ffffffffffffff13
+>> Dec 11 14:58:34 klimt kernel: RAX: 0000000000000001 RBX:
+>> ffff888830d0eb78 RCX: 0000000000000001
+>> Dec 11 14:58:34 klimt kernel: RDX: 0000000000030f00 RSI:
+>> ffff888853f4da00 RDI: ffffffff82815a40
+>> Dec 11 14:58:34 klimt kernel: RBP: ffff88883112d828 R08:
+>> ffff888843540000 R09: ffffffff8121d707
+>> Dec 11 14:58:34 klimt kernel: R10: ffffc90001d97bf0 R11:
+>> 0000000000001b84 R12: ffff888853f4da00
+>> Dec 11 14:58:34 klimt kernel: R13: ffff8888132a1410 R14:
+>> ffff88883112d7e0 R15: 00000000ffffffef
+>> Dec 11 14:58:34 klimt kernel: FS:  0000000000000000(0000)
+>> GS:ffff88885fc00000(0000) knlGS:0000000000000000
+>> Dec 11 14:58:34 klimt kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+>> 0000000080050033
+>> Dec 11 14:58:34 klimt kernel: CR2: 00007f2d6a2d8000 CR3:
+>> 0000000859b38004 CR4: 00000000001606f0
+>> Dec 11 14:58:34 klimt kernel: Call Trace:
+>> Dec 11 14:58:34 klimt kernel: fsnotify_grab_connector+0x16/0x4f
+>> Dec 11 14:58:34 klimt kernel: fsnotify_find_mark+0x11/0x6a
+>> Dec 11 14:58:34 klimt kernel: nfsd_file_acquire+0x3a9/0x5b2 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfs4_get_vfs_file+0x14c/0x20f [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_process_open2+0xcd6/0xd98 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? fh_verify+0x42e/0x4ef [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd4_process_open1+0x233/0x29d
+>> [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_open+0x500/0x5cb [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_proc_compound+0x32a/0x5c7 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd_dispatch+0x102/0x1e2 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: svc_process_common+0x3b3/0x65d [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: ? svc_xprt_put+0x12/0x21 [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd_svc+0x2be/0x2be [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd_destroy+0x51/0x51 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: svc_process+0xf6/0x115 [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: nfsd+0xf2/0x149 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: kthread+0xf6/0xfb
+>> Dec 11 14:58:34 klimt kernel: ? kthread_queue_delayed_work+0x74/0x74
+>> Dec 11 14:58:34 klimt kernel: ret_from_fork+0x3a/0x50
+>>=20
+>=20
+> Does something like the following help?
+>=20
+> 8<---------------------------------------------------
+> =46rom caf515c82ed572e4f92ac8293e5da4818da0c6ce Mon Sep 17 00:00:00 =
+2001
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Fri, 13 Dec 2019 15:07:33 -0500
+> Subject: [PATCH] nfsd: Fix a soft lockup race in
+> nfsd_file_mark_find_or_create()
+>=20
+> If nfsd_file_mark_find_or_create() keeps winning the race for the
+> nfsd_file_fsnotify_group->mark_mutex against nfsd_file_mark_put()
+> then it can soft lock up, since fsnotify_add_inode_mark() ends
+> up always finding an existing entry.
+>=20
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+> fs/nfsd/filecache.c | 8 ++++++--
+> 1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 9c2b29e07975..f275c11c4e28 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -132,9 +132,13 @@ nfsd_file_mark_find_or_create(struct nfsd_file =
+*nf)
+> 						 struct nfsd_file_mark,
+> 						 nfm_mark));
+> 			=
+mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+> -			fsnotify_put_mark(mark);
+> -			if (likely(nfm))
+> +			if (nfm) {
+> +				fsnotify_put_mark(mark);
+> 				break;
+> +			}
+> +			/* Avoid soft lockup race with =
+nfsd_file_mark_put() */
+> +			fsnotify_destroy_mark(mark, =
+nfsd_file_fsnotify_group);
+> +			fsnotify_put_mark(mark);
+> 		} else
+> 			=
+mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+>=20
+
+Received. I'll have some time over the weekend or on Monday to test it.
+
+
+--
+Chuck Lever
+
+
+
