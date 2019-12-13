@@ -2,96 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F04C11ECBD
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 22:19:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D8B111ED0A
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 22:41:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfLMVTt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Dec 2019 16:19:49 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:56469 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMVTt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 16:19:49 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MkpjD-1hzzY438Zj-00mLph; Fri, 13 Dec 2019 22:19:47 +0100
-Received: by mail-qt1-f180.google.com with SMTP id 38so202656qtb.13;
-        Fri, 13 Dec 2019 13:19:47 -0800 (PST)
-X-Gm-Message-State: APjAAAW0NoVylss35sFlxcdskVlkOogJY/m4KO8Xamz3TLcOUPLXB7TS
-        WWJIVDnIrYsmI2IolfUiHHWDG9T4q7b+knC26PQ=
-X-Google-Smtp-Source: APXvYqzRCmxSJ5M4TsF2GHTgNgs6xrFc14QenaNUrN3AwXjC24FO2Yu4D8N4fTZTe3LQsHdWTiNakaEj9qN7BIHzOuE=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr14136712qte.204.1576271986613;
- Fri, 13 Dec 2019 13:19:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213141046.1770441-1-arnd@arndb.de> <20191213141046.1770441-11-arnd@arndb.de>
- <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com> <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
- <BBB37836-D835-4EB7-8593-080BF60BDA38@oracle.com> <20191213211311.GA12391@fieldses.org>
-In-Reply-To: <20191213211311.GA12391@fieldses.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Dec 2019 22:19:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1E5pKJ2zbR8auBS5BUDg8LYbEEEJ7L1go7LC0djoxuKg@mail.gmail.com>
-Message-ID: <CAK8P3a1E5pKJ2zbR8auBS5BUDg8LYbEEEJ7L1go7LC0djoxuKg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
-To:     Bruce Fields <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        id S1726427AbfLMVkE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Dec 2019 16:40:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53073 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725554AbfLMVkE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 16:40:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576273202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WgOXIag/oVgErX13K0wlqJ230VPf+71NlCt27NFhOC8=;
+        b=NdHPvU+bnW5MHq5eA8zcYJAuFea4aAwGpwxGq3F2Gyo31pgEcf1MDSKV15Q4clm+EV+8n/
+        /FZrLK7DqhDJd7DHlnmlfgLC5Efv4cixmfLCbGRsVdVh+jzIVOqVVieAx9Z9jtLQB6XMR4
+        g5O4smk2r4EtHzjHhzqf7mtA/z5Obd4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-j09TGu7gOzS_Le1gjjpMpA-1; Fri, 13 Dec 2019 16:40:01 -0500
+X-MC-Unique: j09TGu7gOzS_Le1gjjpMpA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68993593A4;
+        Fri, 13 Dec 2019 21:39:59 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB63C5D9CA;
+        Fri, 13 Dec 2019 21:39:58 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 6505E20694; Fri, 13 Dec 2019 16:39:58 -0500 (EST)
+Date:   Fri, 13 Dec 2019 16:39:58 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JZ7nF3P96OXpKiBUNNwd0xMUJxZuz+Fh2eeyX5X+ZSw+b1gf+ci
- aW9Q2fPirsgOcs+7gfg8REPBUAH17cYQIsyQ5y3Xgf+WKxQr4Xpn24GeWLRa2Z7tqmMhMEG
- sbmlus23/ftfiF7DrjZbNugNlP0vQS7JZo4nVjUKzOxn1pF+jJIN0jf3TpcBuuXKyR1ABEr
- MlPfTB9KQvNr8SDU6F4Lw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Avq3HQGv51I=:KEnA+tswol0qWOKxKkWmyN
- VeMI8rB2wkA7+Iq4bNazJ1keOZ3uqvewIMW2uMz9rBrg+U6W5R6wE2xDI+z3Mn3gg7a6kfJzp
- DqPQThUX/PZpe3AOHbdkBriRQ32Y5I6dzhhy2wxW4vS/fUV0VDISd0PWuyArkDldePQfC+Dkv
- rrh2yjn78y4Bk61lQPW1YGt6mhA5QRsCBwopzSbFtvSWkLd5QDv1fkCccC5iX4DBesRzJvQnT
- 2TrPm8O1b6Ji6d9CRGoBrlUVj+JAmbod9GspYrigARECxtlph44whcc4U5nU8qaWiVEFsjcNk
- 9f8GxJkQmbATZZ8oMV8ZCpgLsXepJxkDrVFGOsrZuQ2wBpxUHruJtFj7R3QIGJjixuAJHvvN0
- lwx0nqBR8lg8a18LjF2o196l/CR9M3D+4/M9k89eqQsqJJzCSN7fiVUIQbmQYU/w3YYlZqGiz
- RbCDRZEs38/6tzseVc9/OEnKBRJUUw0YZFTZN3kuNAjcRdRPabB7/YaqBLuIl5vhp8As8T+t/
- Qycy0FegbMuk0gKWco/kKcwuHa4ivKuYXLgAWlq6kZtgRYdlaRboh8eDFyZOML3hrcZhAdiNG
- F/qyFKFXgszfg7URGx0ikO5r+GUT+ztyfCkgZvmJYUwl9X3UA6/EnCoYvbkpPrw56YSU4zOay
- rne3ieWbg0iZHYC8rpTqGAeBAmBRnOa70RXXXUKZQTzffRGf21zTsYo7+1y4eKZIQ/ApPxq12
- oUXtlf5MFhuTZ12EpiVx6kcZEvuIgCrPJ4WqYV8/QveMZv6FCnj4AsdIVgCOJaqfi0CNLCiGH
- 5yH+LhzblIOXvODUoXcg+anfYl9l/K2Zqul7elRPXSu/GSJ6fZUPjQJKkRt9aLMRT/Cod+6ml
- VpZSBdIhWCkrct46JUPw==
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Subject: Re: [PATCH v6 00/27] nfs: Mount API conversion
+Message-ID: <20191213213958.GY4276@coeurl.usersys.redhat.com>
+References: <20191210123115.1655-1-smayhew@redhat.com>
+ <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:13 PM Bruce Fields <bfields@fieldses.org> wrote:
-> On Fri, Dec 13, 2019 at 01:23:08PM -0500, Chuck Lever wrote:
-> > > On Dec 13, 2019, at 11:40 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> > >>> +
-> > >>> +     /* nfsd4_lease is set to at most one hour */
-> > >>> +     if (WARN_ON_ONCE(nn->nfsd4_lease > 3600))
-> > >>> +             return 360 * HZ;
-> > >>
-> > >> Why is the WARN_ON_ONCE added here? Is it really necessary?
-> > >
-> > > This is to ensure the kernel doesn't change to a larger limit that
-> > > requires a 64-bit division on a 32-bit architecture.
-> > >
-> > > With the old code, dividing by 10 was always fast as
-> > > nn->nfsd4_lease was the size of an integer register. Now it
-> > > is 64 bit wide, and I check that truncating it to 32 bit again
-> > > is safe.
-> >
-> > OK. That comment should state this reason rather than just repeating
-> > what the code does. ;-)
->
-> Note that __nfsd4_write_time() already limits nfsd4_lease to 3600.
->
-> We could just use a smaller type for nfsd4_lease if that'd help.
+On Tue, 10 Dec 2019, Schumaker, Anna wrote:
 
-I think it's generally clearer to have only one type to store the lease
-time, and time64_t is the most sensible one, even if the range is a
-bit excessive.
+> Hi Scott,
+> 
+> On Tue, 2019-12-10 at 07:30 -0500, Scott Mayhew wrote:
+> > Hi Anna, Trond,
+> > 
+> > Here's a set of patches that converts NFS to use the mount API.  Note that
+> > there are a lot of preliminary patches, some from David and some from Al.
+> > The final patch (the one that does the actual conversion) from the David's
+> > initial posting has been split into 5 separate patches, and the entire set
+> > has been rebased on top of v5.5-rc1.
+> 
+> Thanks for the updated patches! Everything looks okay to me, but I've only
+> tested with the legacy mount command. I'm curious if you've tested it using the
+> new system?
 
-I've seen too many time related bugs from mixing integer types
-incorrectly.
+I've hacked up mount.nfs for testing the new syscalls (for mounting... I
+haven't quite figured out remounting yet) here:
+https://github.com/scottmayhew/nfs-utils/tree/fscontext
 
-       Arnd
+It seems to be working okay, with one exception.  If I mount the same
+NFS export with the same mount options multiple times, then I get
+multiple mounts:
+
+[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
+[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
+[root@fedora30 ~]# grep /mnt/t /proc/mounts
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+
+That doesn't happen with the mount() syscall:
+
+[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
+[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
+[root@fedora30 ~]# grep /mnt/t /proc/mounts
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+
+-Scott
+
+> 
+> Thanks,
+> Anna
+> 
+> > 
+> > Changes since v5:
+> > - fixed possible derefence of error pointer in nfs4_validate_fspath()
+> >   reported by Dan Carpenter
+> > - rebased on top of v5.5-rc1
+> > Changes since v4:
+> > - further split the original "NFS: Add fs_context support" patch (new
+> >   patch is about 25% smaller than the v4 patch)
+> > - fixed NFSv4 referral mounts (broken in the original patch)
+> > - fixed leak of nfs_fattr when fs_context is freed
+> > Changes since v3:
+> > - changed license and copyright text in fs/nfs/fs_context.c
+> > Changes since v2:
+> > - fixed the conversion of the nconnect= option
+> > - added '#if IS_ENABLED(CONFIG_NFS_V4)' around nfs4_parse_monolithic()
+> >   to avoid unused-function warning when compiling with v4 disabled
+> > Chagnes since v1:
+> > - split up patch 23 into 4 separate patches
+> > 
+> > -Scott
+> > 
+> > Al Viro (15):
+> >   saner calling conventions for nfs_fs_mount_common()
+> >   nfs: stash server into struct nfs_mount_info
+> >   nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+> >   nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+> >   nfs: don't bother setting/restoring export_path around
+> >     do_nfs_root_mount()
+> >   nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+> >   nfs: lift setting mount_info from nfs_xdev_mount()
+> >   nfs: stash nfs_subversion reference into nfs_mount_info
+> >   nfs: don't bother passing nfs_subversion to ->try_mount() and
+> >     nfs_fs_mount_common()
+> >   nfs: merge xdev and remote file_system_type
+> >   nfs: unexport nfs_fs_mount_common()
+> >   nfs: don't pass nfs_subversion to ->create_server()
+> >   nfs: get rid of mount_info ->fill_super()
+> >   nfs_clone_sb_security(): simplify the check for server bogosity
+> >   nfs: get rid of ->set_security()
+> > 
+> > David Howells (8):
+> >   NFS: Move mount parameterisation bits into their own file
+> >   NFS: Constify mount argument match tables
+> >   NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+> >   NFS: Split nfs_parse_mount_options()
+> >   NFS: Deindent nfs_fs_context_parse_option()
+> >   NFS: Add a small buffer in nfs_fs_context to avoid string dup
+> >   NFS: Do some tidying of the parsing code
+> >   NFS: Add fs_context support.
+> > 
+> > Scott Mayhew (4):
+> >   NFS: rename nfs_fs_context pointer arg in a few functions
+> >   NFS: Convert mount option parsing to use functionality from
+> >     fs_parser.h
+> >   NFS: Additional refactoring for fs_context conversion
+> >   NFS: Attach supplementary error information to fs_context.
+> > 
+> >  fs/nfs/Makefile         |    2 +-
+> >  fs/nfs/client.c         |   80 +-
+> >  fs/nfs/fs_context.c     | 1424 +++++++++++++++++++++++++
+> >  fs/nfs/fscache.c        |    2 +-
+> >  fs/nfs/getroot.c        |   73 +-
+> >  fs/nfs/internal.h       |  132 +--
+> >  fs/nfs/namespace.c      |  146 ++-
+> >  fs/nfs/nfs3_fs.h        |    2 +-
+> >  fs/nfs/nfs3client.c     |    6 +-
+> >  fs/nfs/nfs3proc.c       |    2 +-
+> >  fs/nfs/nfs4_fs.h        |    9 +-
+> >  fs/nfs/nfs4client.c     |   99 +-
+> >  fs/nfs/nfs4file.c       |    1 +
+> >  fs/nfs/nfs4namespace.c  |  292 +++---
+> >  fs/nfs/nfs4proc.c       |    2 +-
+> >  fs/nfs/nfs4super.c      |  257 ++---
+> >  fs/nfs/proc.c           |    2 +-
+> >  fs/nfs/super.c          | 2217 +++++----------------------------------
+> >  include/linux/nfs_xdr.h |    9 +-
+> >  19 files changed, 2287 insertions(+), 2470 deletions(-)
+> >  create mode 100644 fs/nfs/fs_context.c
+> > 
+
