@@ -2,85 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF35E11E553
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 15:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CCE211E545
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2019 15:11:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfLMOL3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Dec 2019 09:11:29 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:34069 "EHLO
+        id S1727680AbfLMOLD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Dec 2019 09:11:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:45803 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfLMOLD (ORCPT
+        with ESMTP id S1727595AbfLMOLD (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Dec 2019 09:11:03 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mwfj0-1hm7jP0CVe-00y7RM; Fri, 13 Dec 2019 15:10:57 +0100
+ 1MO9qz-1iLjfE1Is5-00OVdn; Fri, 13 Dec 2019 15:10:57 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 08/12] nfsd: fix delay timer on 32-bit architectures
-Date:   Fri, 13 Dec 2019 15:10:42 +0100
-Message-Id: <20191213141046.1770441-9-arnd@arndb.de>
+Subject: [PATCH v2 09/12] nfsd: fix jiffies/time_t mixup in LRU list
+Date:   Fri, 13 Dec 2019 15:10:43 +0100
+Message-Id: <20191213141046.1770441-10-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
 References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Ozu4/pW+qCLxecDh3MKrULZcF90m6hSpu021bvKefFoHkHEq9Ku
- shomPCLvJLy6Epoe1gwNj87M2yyVRlRTjcE1uGBY+fBu2xOkTAcJaqkxClVYajDllbEEsEE
- UznBhgfNHcVaIuEGBOuzRVu/h3WdhTHRdqa37WSuvJ8k+AA3Hla25u2Im4zr7eNRk5M96/C
- XW4TFyNNfbucorssE6dmg==
+X-Provags-ID: V03:K1:RFuOm2jAOCBiUoXlcDVvCUpmtQ/EOsE27v8hWd2SPEDQBW1MVji
+ F20sBMDqnoDPPoQR3UwHCy/qExcLtPGSC0zhgPPoacYANfEO0BM+cFNtUO39R+nniEFCvBZ
+ 0vLjHqwoptxwnSOyc8O+ofFbLlZuGdwVfar9RmTj5Jqr9NXtOr7H0ORBwlnxhkqpm+i5vBc
+ V2a+eqY0MgrkZ3mjf4+Zg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xuhYPSf0wgU=:io1itl3p42GbQW92RFBuA+
- 4gnILpuRAdX4u2bzsTAQA5ODcN6kOT6oOj8/AHpZFWau6BZmM/U2pAiKFn/gvqG9qhcO8ix89
- cbA0m9fDlvBgA9g6GcjxNyzvIZ6kFEOHWwf/sfqxYeysdRE234R2v4W4DKI6zBNWKR2tMxF8y
- aObBRkAoK3lTRNznjEf5vLWGIkLeznTEEME26UMN/OlWkdCtPKmvVAdV8Q8VMFPkjAOP7a+lt
- M+ddORi4ccutIEtU7ZJmIJKZz9ho1RJapgll/ls3piNBe//DFulDSSKAos5+SdOB53NE6/yxO
- HHKXsvMJf2budQ8AVP1jOlbCW0tEgk/PAnNQ//yg1n/DfeoUxqmhheXAIgsHBd+7gdIrE0yvy
- l91HRZorgdAhUlCPonat0PN9M7HCOnWtKyWES60ZfvZ5YaPGFcRCSS/ATCkL5QZfQ/K0pxkn9
- A1A7P/hBV8V4PO7q45DulM1C8lDGo+TI4Mb5KD7RxP53/yZ7X/iAY222useB8phaDcTf5sReN
- nwcE2SQjgZb4hezlKnspbCpl8RgdetnHrjK+FoRNj0TXviClHW4IosW+gakeBGUJoEQLATPHH
- /60w7BbuqArdaxd3+M09XNBkGujPDjMvdfLCPQtzHuhNHoocndClfoHoxRPW4AWj49PfcQ2PN
- 9MU88JRvfU/+A8fupAnUlXs1pJE56vyLELZCyPxKVLeksTmsrpKEdrE1pkjOSVrOiKY7kzQ+S
- oMhgwJcoWKibcSyhgRZds1GI+yFEIzJX8gI7oZNgE0l50q6miGjcJ0e7FlIRW0RJsI4ABHfS9
- PcucIbOr6HcyeslBNCzwUyaJHW/0rZZtKLelcrz6wYnz4MQn/IeeE4g6eGtTcuN7JmGyE2psx
- cMgxXcmxZ6OnldX6+30A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/UJVsafxFSg=:Y4ga6FSx7qvpwzE042pdFW
+ nHzm568/bjSOtNM3soyeFV02GfMcErPlxHw0/MfcTiKPwvjl2kkgspCHFVFXg+7/Je1S/H4mM
+ rPYIKoouGVczC+4S56Et4qsP8WXxfzlipZ4SJkiELqDl6eb6+El8v1Uko5qek/npGIRsdSnt6
+ IrHYw1AinWZMoGf/rDw6Ngnu5CYJTeApgfuwA5wEiLDDzuZuptGI3ILthuJpWbxaTfqKtl9kC
+ LTh45DFhs/FM0dtsQhevr8V9rGrplekeI1/Qc33aRGHbd8s3ecyUaHjEMNtR6aed9ob9GQunC
+ y1w9XFb3DBEDfcEFqgLdy8AVRMxStRgS2I3fzDILpo5BeDEyhXDZo+XFu1dfcbATh66+DTC4t
+ k3I8XEAeiibrm7GHdwxMYrGAKjb6wjkLX2WswG+US/bJWrq+WdBZgWcMXbu9mHUjaHCa5+mf9
+ bPYQiSYIEr3VQr4G9qSXjWY1el9D8qTAti3zaV2Io3t44t0RbLFGL36NWieKADpKha6fv7aia
+ l94qnerKOBVrbZRX8dfHxTIhMcmLwTitNJnt/0bqniD/dPddUefOzvhwPrKKBzOy73G/6Gf8W
+ xK5+NwoNua0R4f0uh5LAVA7EgUeAFgej6hdX8xuwqSQ6lxH6Amy5BpS8vNjJbsFYByG0Noii2
+ VniQCnoU/q+bnfa6qV4t0mOJ4neo1rxcaJgpheb51U2Gml0pmw+2w3e2YdMQvxP9F8zj6IquR
+ CKZFWDn2aUFJPcDu9GfN0yZn2sXyVqFyuGgCBILMFwyOJhltZ18h+ANJxR34iIplBFk96ZV1z
+ lsvol/QnE9t88BLt/vNZmiBEXFG9BSTw0kfgL5TNdRSza69lkUOqjZTql50g4+qCjpm2o5TH3
+ 1YrHNuuBy5tUvhDoJYuA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The nfsd4_cb_layout_done() function takes a 'time_t' value,
-multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
+The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
+but then compared to a CLOCK_REALTIME timestamp later on, which makes
+no sense.
 
-This works fine on 64-bit architectures, but on 32-bit, any
-value over 1 second results in a signed integer overflow
-with unexpected results.
+For consistency with the other timestamps, change this to use a time_t.
 
-Cast one input to a 64-bit type in order to produce the
-same result that we have on 64-bit architectures, regarless
-of the type of nfsd4_lease.
+This is a change in behavior, which may cause regressions, but the
+current code is not sensible. On a system with CONFIG_HZ=1000,
+the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
+check is false for roughly the first 18 days of uptime and then true
+for the next 49 days.
 
-Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
+Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4layouts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 2 +-
+ fs/nfsd/state.h     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 2681c70283ce..e12409eca7cc 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -675,7 +675,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 5cb0f774218a..9a063c4b4460 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6549,7 +6549,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	}
  
- 		/* Client gets 2 lease periods to return it */
- 		cutoff = ktime_add_ns(task->tk_start,
--					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
-+					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
- 
- 		if (ktime_before(now, cutoff)) {
- 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
+ 	if (fl_flags & FL_SLEEP) {
+-		nbl->nbl_time = jiffies;
++		nbl->nbl_time = get_seconds();
+ 		spin_lock(&nn->blocked_locks_lock);
+ 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+ 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 2b4165cd1d3e..03fc7b4380f9 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
+ struct nfsd4_blocked_lock {
+ 	struct list_head	nbl_list;
+ 	struct list_head	nbl_lru;
+-	unsigned long		nbl_time;
++	time_t			nbl_time;
+ 	struct file_lock	nbl_lock;
+ 	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
 -- 
 2.20.0
 
