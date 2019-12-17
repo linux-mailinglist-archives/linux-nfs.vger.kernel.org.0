@@ -2,106 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2AE112384D
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2019 22:05:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C2612386F
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2019 22:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfLQVEj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Dec 2019 16:04:39 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23494 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728755AbfLQVEj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Dec 2019 16:04:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576616677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qai9DaOAor/itYYMvzNz7y7vR7XhxmKcShtEkcQvUqs=;
-        b=hOuQRupUlE6U1dgcMOlEc4wA57tAguOEYurP8Obg499IF93Tx+k0uZv3XpUm04jJYkeDeG
-        FZw2qo9Tcobb6ReH4Z2jJ09Lbjt37E+stzjFvO14oOvxfqDyhDxgXX4xka+eNPy+6pNvXp
-        /juyDpx14wNKi9JIy9U8yiPhphDjITI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-yI_GtZgtMWi_E4VNh0xXjA-1; Tue, 17 Dec 2019 16:04:34 -0500
-X-MC-Unique: yI_GtZgtMWi_E4VNh0xXjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35F528017DF;
-        Tue, 17 Dec 2019 21:04:33 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-117-255.phx2.redhat.com [10.3.117.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0652B1000322;
-        Tue, 17 Dec 2019 21:04:32 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 1A839120197; Tue, 17 Dec 2019 16:04:31 -0500 (EST)
-Date:   Tue, 17 Dec 2019 16:04:31 -0500
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1726891AbfLQVJ0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Dec 2019 16:09:26 -0500
+Received: from mail-mw2nam10on2093.outbound.protection.outlook.com ([40.107.94.93]:28209
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726634AbfLQVJZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:09:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nKWpmxPhpDYwX+7t0oQXCLFrSQGGEN+v1F7JiQrIhJ7fp5sa0pPsPsgNnx34hy1ipJuWJQmUpoYIemihlLdEUSzWxddQyCxmkSb6U2IevinnasYVa5qBLOb/hgiIk3yNoCJfjOfS2OMIjctgD/v5JORpXLpXk6BCQ85mzGU0Drrer3cqpr7dX8io6izHRe7mRgxfkHQsoHgX8xzXOzS+k5cUunDTHmaqmrf1KCXSgsFimGh+X+sTIZORCyRCZJN7SWK9jxzCfAbwsKFDkok6Qu+j8BYuxP1ku/NBk7zTYs87Xd9VjYZEQk5qn2PScBAvDXqYJ4AbwV1JqH/gmcGHKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wUUGKazw3ryI9HatbUHLhjevobfzJima0ybONQ8sWfM=;
+ b=KSsxImZK7azYWmLGS8yhrifJgt9ksz9KS6tqnPogbS7Wbpaa7m0imI+8kcvhwShQS/s9+1QI9l6vdxcjA/5ZTF12EmYeWaTiATN8XKsPj3QFAV9SL1bzixywsoXIh1b7M4VfIWlqTPQJWIaxr7jYVxXfwV0IJiOBZCo+Lt2Yn1oXG2p2S0Q5S21VOifPhr5qZ9BZC0jte9HEzm+SgBNXWqHHzfQ/9VCamDCK1V7qSXi3MBal7mcrbfFoJWUJQGKwCq2F0YkaHqxDKpsq8Abiod6/BvxZX4TM23P8iBUZyNCQjwoKTDhixXkK/b2Rey3Sewd0wMRE+nJblxWu/9AqjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wUUGKazw3ryI9HatbUHLhjevobfzJima0ybONQ8sWfM=;
+ b=aVzgmrR4SwaRZyBHZYwX4d5Oc100oJSeo/yITNU8iOGNl1OaHMLX4+7EykPBHyYoIGRmSAQrOgXF08mYcT86k9r5GtgqkHF+apxxWY3z7zN9rpFMbCN4qGwIj6zuCsr0dyk8NUUlSQTu1GtkJvqJCgvL/5ev0P/GrOnPMeQaQkY=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB2089.namprd13.prod.outlook.com (10.174.185.37) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.12; Tue, 17 Dec 2019 21:09:22 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2559.012; Tue, 17 Dec 2019
+ 21:09:22 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@redhat.com" <bfields@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH] nfsd: Return the correct number of bytes written to the
  file
-Message-ID: <20191217210431.GE13504@pick.fieldses.org>
+Thread-Topic: [PATCH] nfsd: Return the correct number of bytes written to the
+ file
+Thread-Index: AQHVtQCYoZZ0pUm0fkGoKdsByYbV3qe+tsCAgAAWtACAAAOxgIAAAVkA
+Date:   Tue, 17 Dec 2019 21:09:22 +0000
+Message-ID: <79e2e673e544588767db43b20c40d3529722befb.camel@hammerspace.com>
 References: <20191217173333.105547-1-trond.myklebust@hammerspace.com>
- <20191217193003.GA13504@pick.fieldses.org>
- <558a7031d413ffe2b16ef38c374a2bbc8bccec79.camel@hammerspace.com>
+         <20191217193003.GA13504@pick.fieldses.org>
+         <558a7031d413ffe2b16ef38c374a2bbc8bccec79.camel@hammerspace.com>
+         <20191217210431.GE13504@pick.fieldses.org>
+In-Reply-To: <20191217210431.GE13504@pick.fieldses.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1795cc21-9eee-4483-3bac-08d78335638c
+x-ms-traffictypediagnostic: DM5PR1301MB2089:
+x-microsoft-antispam-prvs: <DM5PR1301MB2089C7DCF259B532F46070D2B8500@DM5PR1301MB2089.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(136003)(346002)(376002)(366004)(396003)(51444003)(189003)(199004)(26005)(6506007)(2906002)(6512007)(4001150100001)(6486002)(5660300002)(36756003)(81166006)(4326008)(8676002)(316002)(81156014)(6916009)(4744005)(8936002)(71200400001)(86362001)(76116006)(64756008)(66556008)(91956017)(66476007)(66946007)(66446008)(508600001)(2616005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2089;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DOG4O3cvgegcLoRjigoUHw0BdCsdGC011prSV3DwHTvjFybXMn0ntefKZrTx3SZ52vPQxAm/ntVwzLxyEzWJC8UC5/T64C4vHTh0KMj8lXUqGIgCzVQQm0uQOKxhg9TnjRwvZeG1cxhefYGpPRA4dt5wOMCyegTWFcrKM3ecrW/wvIWHR8pFxJe0uxuBpbAYJe6j37JDXo1EjvQRo9J38laOVRhGbj2V+cV0kJUTS9+3LwJj702+2ErW0Dp9FAcNQ6jSsJT9be6LuHFq+AANr57Uqts4n9f3knR6vYFcfgwGdHWMyKEdpUuYxfUtNqTXBP4GfpfwCskRcKTs7O4IVAGdsHh0bW+52+X0Nu38ITgX8QD873qAS1Taqw2LEwkiAx67mU+vY/X2zvKVYi7Xbzf1rrvhaJhTW9Heolx+57GrIYUIkweBqtgtbadBXhH9+SRNcXf+tvLlcPeHdYq5tSaUBEKe1JDXs9F1X8PVOAsXseshf7pFUbADzJlFLJv6
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F5AFC4DCCD8814DBE3DF035E001CCB0@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <558a7031d413ffe2b16ef38c374a2bbc8bccec79.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1795cc21-9eee-4483-3bac-08d78335638c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 21:09:22.0965
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ECvgGa9JcTItfx1SAZXj6gvddPv3JB2GKaYGPE+HejHGQolSwuyYbdIs6H0nholMDZWDXcHJtZRAQV3sfat90Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2089
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 08:51:20PM +0000, Trond Myklebust wrote:
-> On Tue, 2019-12-17 at 14:30 -0500, J. Bruce Fields wrote:
-> > On Tue, Dec 17, 2019 at 12:33:33PM -0500, Trond Myklebust wrote:
-> > > We must allow for the fact that iov_iter_write() could have
-> > > returned
-> > > a short write (e.g. if there was an ENOSPC issue).
-> > 
-> > Thanks!  Just a nit:
-> > 
-> > > Fixes: 73da852e3831 ("nfsd: use vfs_iter_read/write")
-> > 
-> > I think that should be d890be159a71 "nfsd: Add I/O trace points in
-> > the
-> > NFSv4 write path".
-> 
-> Fair enough. Do you want to fix that up?
-
-I've taken care of it.--b.
-
-> 
-> > 
-> > --b.
-> > 
-> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > ---
-> > >  fs/nfsd/vfs.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > > index c0dc491537a6..f0bca0e87d0c 100644
-> > > --- a/fs/nfsd/vfs.c
-> > > +++ b/fs/nfsd/vfs.c
-> > > @@ -975,6 +975,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct
-> > > svc_fh *fhp, struct file *file,
-> > >  	host_err = vfs_iter_write(file, &iter, &pos, flags);
-> > >  	if (host_err < 0)
-> > >  		goto out_nfserr;
-> > > +	*cnt = host_err;
-> > >  	nfsdstats.io_write += *cnt;
-> > >  	fsnotify_modify(file);
-> > >  
-> > > -- 
-> > > 2.23.0
-> > > 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
-
+T24gVHVlLCAyMDE5LTEyLTE3IGF0IDE2OjA0IC0wNTAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIFR1ZSwgRGVjIDE3LCAyMDE5IGF0IDA4OjUxOjIwUE0gKzAwMDAsIFRyb25kIE15a2xl
+YnVzdCB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMTktMTItMTcgYXQgMTQ6MzAgLTA1MDAsIEouIEJy
+dWNlIEZpZWxkcyB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgRGVjIDE3LCAyMDE5IGF0IDEyOjMzOjMz
+UE0gLTA1MDAsIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gPiA+ID4gV2UgbXVzdCBhbGxvdyBm
+b3IgdGhlIGZhY3QgdGhhdCBpb3ZfaXRlcl93cml0ZSgpIGNvdWxkIGhhdmUNCj4gPiA+ID4gcmV0
+dXJuZWQNCj4gPiA+ID4gYSBzaG9ydCB3cml0ZSAoZS5nLiBpZiB0aGVyZSB3YXMgYW4gRU5PU1BD
+IGlzc3VlKS4NCj4gPiA+IA0KPiA+ID4gVGhhbmtzISAgSnVzdCBhIG5pdDoNCj4gPiA+IA0KPiA+
+ID4gPiBGaXhlczogNzNkYTg1MmUzODMxICgibmZzZDogdXNlIHZmc19pdGVyX3JlYWQvd3JpdGUi
+KQ0KPiA+ID4gDQo+ID4gPiBJIHRoaW5rIHRoYXQgc2hvdWxkIGJlIGQ4OTBiZTE1OWE3MSAibmZz
+ZDogQWRkIEkvTyB0cmFjZSBwb2ludHMNCj4gPiA+IGluDQo+ID4gPiB0aGUNCj4gPiA+IE5GU3Y0
+IHdyaXRlIHBhdGgiLg0KPiA+IA0KPiA+IEZhaXIgZW5vdWdoLiBEbyB5b3Ugd2FudCB0byBmaXgg
+dGhhdCB1cD8NCj4gDQo+IEkndmUgdGFrZW4gY2FyZSBvZiBpdC4tLWIuDQoNClRoYW5rIHlvdSEN
+Cg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFt
+bWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
