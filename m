@@ -2,84 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84CB11233AC
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2019 18:37:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F3C12347C
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2019 19:12:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfLQRhC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Dec 2019 12:37:02 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:39588 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfLQRhB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Dec 2019 12:37:01 -0500
-Received: by mail-yw1-f65.google.com with SMTP id h126so4265380ywc.6
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2019 09:37:01 -0800 (PST)
+        id S1727778AbfLQSM2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Dec 2019 13:12:28 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34230 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbfLQSM2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Dec 2019 13:12:28 -0500
+Received: by mail-qk1-f194.google.com with SMTP id j9so8086008qkk.1;
+        Tue, 17 Dec 2019 10:12:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uZkdtC5dKZEcUknr17nE9QRsza4xKXhhyCDCqIkKgEQ=;
-        b=C5JGcT26z39uKM6306gfdPEEFdAKj2vy4TTs6jPMK29jnpYuotmBqRldAonG0gVTiL
-         wqrRdxW0j8DwuRUbNmbhP3V8ojoezCLlnfGKrJeGqlZuNVpNPOg50hjzma0RcBpj1HDB
-         kJ41S9Lhh/jVrRqAQsnzfzPZO4IuJ3coORLTZB1u+OZ5nM598Gru8WdQu7BP9CTCoX5T
-         ITkFOi7HxXtNFotV/KNSPdTRjV74jwGmQAT5TwpLeYQBmPoCmWRsKQ21vTGpRqROa2g3
-         jftbrGeTGrkbIvEJsStiRUplCD768QK9VoOMUZGFhpLe+xabbUFI8EBfi/bXz7R2pvxM
-         dNKw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=94WcDwyswmJ+xZ6oQZ+EBBfqZNKwF38tRDgKQsxSOP8=;
+        b=KwFnS9QSEv9LyokZomttACcmx6y4KqxsdPNANWGey9uKIUNfsof9hFIGFTRC9Gfy+Y
+         cnd8Dm5yrC1ntADbk8l8Z+LcB91W41sUUYz3r53dm4k/6xhpA66WJCQkkeygyqvnD4q1
+         4n81ah1szCmtBZTRCLlwoBa1IkQzwX2yUNG3kbpA1/XxBcbKcM+xNYtnLYrzg3rkIscT
+         PpZEEun1Fh4hk/EBlJ0FlN+Uch/oW6M72jt+S+ChnUkk0HEiKgDDTY29cDaZX/T8gE/g
+         JW2TF8xQwUEW5KUV6knwLB1W7PhY/vSllRQa5FVMEQ0yjvXqWoMfefhB7D3S9DTPD5Ba
+         NLEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uZkdtC5dKZEcUknr17nE9QRsza4xKXhhyCDCqIkKgEQ=;
-        b=Xifi82PeMCP9CaquN+S4vsAi9Swy/WG0LS66ne4TjtaglP2EHn02dJqTBOhsepu0lv
-         9gmRh2hafIRgz7j4pYmq22IaX36Mnhl312Kno0jb4H65aXs6jD7+q59mMArHBvwU4Vhc
-         FBnl6kFjyVAMBVDEoYd2NS2YMRMEfeVkh7BeCjzz9GTbcDilgYVHkIBQjKwCwmqP37qv
-         UNtp2qTwYbHsta9HLwAgUelZ0uTImSEhE/2UQ5r1Athof0lfF4VSxY/Ai79dBj6sTcd5
-         dIU1AB9TSXwO0ZBcmpvaefsJ18ODxI9Arj+P/WHjGsgfzR0/7sr7wvAIRu2Wt9CKhvAd
-         MH1g==
-X-Gm-Message-State: APjAAAXaRiRuzMeEjgSCe+31z+MeZ9/hXe2fZXowXDIIPV+7/xiBHDwg
-        5m9Q8vyMoJ9A2t3UzqdoRQ==
-X-Google-Smtp-Source: APXvYqwsvZewB77OhWa6ZkeRIpcU8GScaUgOxsGu2j5iWuq2J+2KubFjzxIMAdFacgqYjq5OyY1AlQ==
-X-Received: by 2002:a0d:dac6:: with SMTP id c189mr13047601ywe.256.1576604220435;
-        Tue, 17 Dec 2019 09:37:00 -0800 (PST)
-Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id d13sm10155200ywj.91.2019.12.17.09.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 09:37:00 -0800 (PST)
-From:   Trond Myklebust <trondmy@gmail.com>
-X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: Return the correct number of bytes written to the file
-Date:   Tue, 17 Dec 2019 12:33:33 -0500
-Message-Id: <20191217173333.105547-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=94WcDwyswmJ+xZ6oQZ+EBBfqZNKwF38tRDgKQsxSOP8=;
+        b=ALg86n9as8j0r+xAgJ0KBCjNJ6Vijpw1adjVJbpT1OWXKynjImkWZuyG7CsGWn7+D6
+         NvUDYGp21jAYe7YQAsRS0cl4i/8XfmGvWhDHH4Aqt9fLmEZrbTMVZdAqm02YyfmC3cxQ
+         fPUoC2wddAmck4y2zv0vPcxT7qEtCsio1eyI3uyIYIqEvqE5JV2o8YF9UTIf2sMgt7z8
+         5e+58AqceIdlOm0aixLDIoncymDG5mQixRsDoGoEpz2fR2tsNz4e0xuTSvIutGoMFYb5
+         KBidYpIfkUZhokTjhrlwTajwXaZhpr/qI6miaDbE6MF6JKVjuVt0FLkJ7GzM16b60MYK
+         a8bQ==
+X-Gm-Message-State: APjAAAUuay48qvJTL1GLmOKiglKFR7Pi1YHimARb0hzusM/A8pJXcj+K
+        Ga0Q6ifG+W2syIKyVw+sHEnHQKZxy8yJqSSWx4A=
+X-Google-Smtp-Source: APXvYqxokIyQB2bMqD8wFppcI0RegO2Y2reD8DeoM3KJDcVm8CV1EP6T+DJcgKPlB40YGBxIkiBPJwxdgxPR5QmEflQ=
+X-Received: by 2002:a05:620a:1401:: with SMTP id d1mr5798512qkj.79.1576606347113;
+ Tue, 17 Dec 2019 10:12:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
+ <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com> <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+In-Reply-To: <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Tue, 17 Dec 2019 18:12:16 +0000
+Message-ID: <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We must allow for the fact that iov_iter_write() could have returned
-a short write (e.g. if there was an ENOSPC issue).
+On Mon, 16 Dec 2019 at 18:58, Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> -On Mon, 2019-12-16 at 18:43 +0000, Robert Milkowski wrote:
+> > > From: Trond Myklebust <trondmy@hammerspace.com>
+> > ...
+> > > NACK. The above argument only applies to legacy minor version 0
+> > > setups, and does not apply to NFSv4.1 or newer.
+> >
+> > Correct. However many sites still use v4.0.
+> >
+>
+> That's not a good reason to break code that works just fine for
+> NFSv4.1.
+>
 
-Fixes: 73da852e3831 ("nfsd: use vfs_iter_read/write")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfsd/vfs.c | 1 +
- 1 file changed, 1 insertion(+)
+Of course not, that's not what I meant and I misunderstood your nack too.
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index c0dc491537a6..f0bca0e87d0c 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -975,6 +975,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file *file,
- 	host_err = vfs_iter_write(file, &iter, &pos, flags);
- 	if (host_err < 0)
- 		goto out_nfserr;
-+	*cnt = host_err;
- 	nfsdstats.io_write += *cnt;
- 	fsnotify_modify(file);
- 
--- 
-2.23.0
+> It would be better to move the initialisation of clp->cl_last_renewal
+> into nfs4_init_clientid() and nfs41_init_clientid() (after the calls to
+> nfs4_proc_setclientid_confirm() and nfs4_proc_create_session()
+> respectively).
+>
 
+This could be done but this is potentially a separate change, as in
+nfs4_do_fsinfo() we still need to
+make sure we do not implicitly renew lease for v4.0, so I think the
+patch needs to be modified as:
+
+...
++                       /* no implicit lease renewal allowed here for v4.0 */
++                       if (server->nfs_client->cl_minorversion == 0
+&& server->nfs_client->cl_last_renewal != 0)
++                               last_renewal =
+server->nfs_client->cl_last_renewal;
+                        nfs4_set_lease_period(server->nfs_client,
+                                        fsinfo->lease_time * HZ,
+-                                       now);
++                                       last_renewal);
+...
+
+This way it won't affect newer nfs versions (I don't think it affected
+them in any bad way, still it was unintended and not correct).
+Agree with the above change?
+
+btw: Chuck, thanks for the hint regarding the SEQUENCE op on v4.1+
