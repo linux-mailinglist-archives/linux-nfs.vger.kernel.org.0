@@ -2,93 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4FD9124B0C
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 16:13:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C155A124F02
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 18:21:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLRPNz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Dec 2019 10:13:55 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33366 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbfLRPNz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 10:13:55 -0500
-Received: by mail-il1-f196.google.com with SMTP id v15so2006566iln.0
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 07:13:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=Q3vp2fJ40VWpq9rX2ikiWTUrhuiQJXzCeUu43e1oIIOk8rzGCPMljco+W3g3Sdt7mK
-         0zMp27lNXT81ott0dYeyE6wCdI4c1wfi5qCqRmoGIMvdtgle/6NMWI0GJrkD30CBojRq
-         hZbdgtbn9F/6uhvfSLkMdN7NhUpQoMVScRn9uDFKZJxofy0MWDF6kZw53YXeVt8sjWjA
-         Dd9TBzj4Ogplv/txGap2r0I252pQP7l7XSY4YOVhZ7qL539zlqhtO9W4mad505PIZ9Xp
-         yYy+XyL34oyC2pvEIWTDP8EMj+Gj6Cu0eHyc7GTPTD7Enq1rjLHU3JyAyX8LQzaLW/WP
-         +a+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=dIpU9khzRLBuPBfgP8fnELfdxyG7dEVB6rQ1E4qi3vArTcwwp9Ef2kOrXq3EZO3FCv
-         1CSal5Tr6QKIYv/p85eTUa6EfkE8cz3uLZRi8zLOqUMJsYN7zjy02xOVU+l5LHWuPMDG
-         m/+DvDSDxcyzRTxMuXLA7Jzfk9v7bndCDQNHL+rETcMpIE4k8EdLul90+TC6MTzfqx9y
-         s1p//oEHf3811QRtrj4Of/5LLeHju5UUSNZCYImv5kPAC05TV+ebzz1PLnTrjf3xVGPk
-         kQNmX+Hev/JdwT7abgsU/ZVXLazDmxgjyhiVBXPRE/FHRTymRtOdrbB52xR2l4/I659M
-         fCxw==
-X-Gm-Message-State: APjAAAVJLftkC2P8gq8jiSy3IE0sgIUUwcWO5p7ZZbPqSZ/XqUTFZGe1
-        AZNXDFI/VD6fvlwMYUDBI7Ym9yj+rF8tXyRlng==
-X-Google-Smtp-Source: APXvYqzpDMY1kfzvQTGFYFDuSf5Wkv4RFsY3uCP+mpqq6wLn7kqjCTzLCYufYBbbmMCBsVo5PHwr9dpQEEDI7K8RY00=
-X-Received: by 2002:a92:cc90:: with SMTP id x16mr2363556ilo.269.1576682033220;
- Wed, 18 Dec 2019 07:13:53 -0800 (PST)
+        id S1727256AbfLRRVZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Dec 2019 12:21:25 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:52361 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLRRVY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 12:21:24 -0500
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MAxPb-1iWsaA174T-00BPI1; Wed, 18 Dec 2019 18:21:23 +0100
+Received: by mail-qt1-f177.google.com with SMTP id k40so2543612qtk.8;
+        Wed, 18 Dec 2019 09:21:23 -0800 (PST)
+X-Gm-Message-State: APjAAAX71HKNzIizOuvrXOxQNAbB5+bBUkh+oSzj9kc+tRFYid68Jsib
+        wHtokhwhpJr8F4GkEQR8xtS5aPmXwvhH62somh8=
+X-Google-Smtp-Source: APXvYqznHDIvsOsFi4e8w9aoxbL/RPtggV4tE5pA9VKKphGs791HZuLvv9iC58VLi9vjYFWdsRYK26eOQpCPgD46U/w=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr3096663qte.204.1576689682103;
+ Wed, 18 Dec 2019 09:21:22 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:13:52
- -0800 (PST)
-Reply-To: dhl.expresscourier102156@outlook.fr
-From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
-Date:   Wed, 18 Dec 2019 16:13:52 +0100
-Message-ID: <CABHzvrnY8Lhdw4Y2q97jvAVrRpM9CVLFkw=Ved7y1GhGqHiAdw@mail.gmail.com>
-Subject: I WANT TO YOU TO TREAT THIS EMAIL VERY URGENT
-To:     undisclosed-recipients:;
+References: <20191213141046.1770441-1-arnd@arndb.de>
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 18 Dec 2019 18:21:06 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a11e1OsP+KR5rYPyYo_nMz=y2_fqb6ZCmaQ_RUFcoEkrQ@mail.gmail.com>
+Message-ID: <CAK8P3a11e1OsP+KR5rYPyYo_nMz=y2_fqb6ZCmaQ_RUFcoEkrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] nfsd: avoid 32-bit time_t
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3ejHaJCvJhrUxjTvdpSmPFwCIgHxmJ1AzDZM3xjfg5cCLVAl4DI
+ mPorb03spSOhSn29YE3ndn0kxRJt1NS5Z7iZMMORBByPOEj+nyGC5ZGfXmzAxxaitVIYjDN
+ C1YlhuQG3sE6+/l6g0lA75uVcOhOLSZofBhJoSQEBxMGXYarW7B23okIBGcmTtboXgYYE3M
+ zwKaHPF489/2/uqtNU4kw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:POvJ5XGNovA=:d0SD4nNOgoWRJtUu4T0v46
+ KmXi34+a02pKGC+pi5dOhIxIizgVOqKKNrQ0rzaSROuqHhMmjIi4HzSQuUXSvXKGv0d4URStJ
+ +nKmJh/YNTjdT1+6vQV28oJMnpYc3slb1u12+bESihh+L2iemGFlDv/XdOFyI3T3yrMiSlCFF
+ g153WnPsrgTyioQJdh+p9KNasFAp6Y5tSfmwirlLVTEpYylr9/fYWmJpPmjYCZHQORKikbq7m
+ hreEdj3HG45LSCuVfD/70vxUd/6FuDzFIJs2/+ui8sEllL0xcDLXYj+WEfG3fIPcqo7xrbzI9
+ sFPm5HPJ0u4KQtenfwi1jI7kp72v9vDZUAteZxMaiGupb6oos6BQtB2KcROhmUSlFaMZG/7wv
+ 6UsACTwhyFkDEz9lyZKXHXFW/WYpuFOotVFLsv/vrB/Yw9kke9+ALznhMcXxExgLrEqtVQpxx
+ AghdGXMS7OQmRTc3B43jX68wkUtJ/Xv8rdSmkwVqnkJNMKBl3RwiSZZY0E8tgfZBM4cubnLBU
+ I1Mem1SQWEyy0DHdl18Rx3dgk7lS8L8RAuT5GFqoqyaSJlJ/EDqbE+pZbTBEgNcnmaXl0T0zl
+ avRWuqTtJkZLsXV71jPNecu5wv/or5IXXspEkasE7naO7HvJm/YzwsgnMPKL5YBGb0l1YARsY
+ 7ff6WU6p+hMRaNst0ACcYXwiYJrzvU4f1vj4foHTzCxD01uTMZoMgfljkotkvlfv7AOSEWdEz
+ 6giClqb5go0JU7OtIsd1SVM0d1bp3m81iqwQeP20qrOttuGJzxh8eLtNIKxmSdoxNwOV0kRCF
+ J3GVSas6VLQR0iJOXqFSgb2i0DakhBnbsu6/4VJYb8sjjMkCHmrE4TgWVIgnhsHWnyM5RJofM
+ JtnMYhM6zaUDFN9vbteQ==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Attn Dear.
+On Fri, Dec 13, 2019 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Hi Bruce, Chuck,
+>
+> NFSd is one of the last areas of the kernel that is not y2038 safe
+> yet, this series addresses the remaining issues here.
+>
+> I did not get any comments for the first version I posted [1], and
+> I hope this just means that everything was fine and you plan to
+> merge this soon ;-)
+>
+> I uploaded a git branch to [2] for testing.
+>
+> Please review and merge for linux-5.6 so we can remove the 32-bit
+> time handling from that release.
 
-Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
-ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
-=9900, as
-approved this morning, Date, 18/12/2019. Through the Intruction from
-INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
+I've included the update y2038 nfsd branch from
 
-REGISTRATION NO :EG58945
-PARCEL NUMBER: 140479
-Delivery Schuleded now,
-Finally all we required from you is your ATM Card Proccessing Delivery
-fees $19.00 only which you must send to this DHL service to enable us
-dispatch the parcel to your destination today.
+git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-nfsd-v2
 
-Here is our receiving payment details.
-You are advised to send it Via Money Gram Service.
+in my y2038 branch now, so it should be part of linux-next from the coming
+snapshot. My plan is to send a linux-5.6 pull request to the nfsd
+maintainers for
+this branch unless we find bugs in linux-next or I get more review comments.
 
-Receiver's Name--------Alan Ude
-Country-------Benin Republic.
-City/ Address--------Cotonou
-Test Question--------In God
-Answer-------We Trust
-Amount------------$US19.00 only
-Mtcn-------------
-Sender's Name-------
-
-Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
-Is Due for delivery to your address today upon confirmation of
-required fee from you asap.
-
-Call us on this phone number for any inquiry. +229 62819378
-Awaiting your urgent response.
-
-MS. MARYANNA B. THOMASON, Shipment director, DHL Express
-Courier Company-Benin
+        Arnd
