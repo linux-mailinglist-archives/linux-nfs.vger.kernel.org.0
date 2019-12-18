@@ -2,102 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F18A0123A5A
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2019 23:58:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 262D2123BA4
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 01:34:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLQW6i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Dec 2019 17:58:38 -0500
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:40386 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfLQW6i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Dec 2019 17:58:38 -0500
-X-Greylist: delayed 464 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Dec 2019 17:58:37 EST
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47ctf52kb7z9vYwC
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2019 22:50:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vq_wT4rWr0ik for <linux-nfs@vger.kernel.org>;
-        Tue, 17 Dec 2019 16:50:53 -0600 (CST)
-Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47ctf51bDVz9vYw1
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2019 16:50:52 -0600 (CST)
-Received: by mail-yw1-f69.google.com with SMTP id a190so6413938ywe.15
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2019 14:50:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WQI/3o46QTkpBu3QKMA5BleVhXZfhU7Xm3Wn0FysZY8=;
-        b=ftYRHw2iSFBHJUU538asJywbx36G+pFGYfFVcK7r1aZ0bpi9oWu19KGOSNibZm4HgV
-         eUFdEqVmriCVgmFK3wBwHnMkDHSW5SL9DKBz5YJS5wdzok2WwSunIHhYV0blLgbNZ8Sl
-         00L5ZzydanXqYkYq17yH1nE61gMimzYCgsROikcNLQ39Jy6go8Q8nXV0VMQrD5RnSrxA
-         rpK6Of24PFGXgH5VYzcbcQvBxX5pnJj1qozaaYZEx1Q3Bog6nwT2QoZOA+0OMrNwwbj7
-         mlOQABHdojh2+Fg2WHUECH7K9IfE9m2rLC8K5x5F0Mam0YXfNCY+X9TiBGDDzCjsauX7
-         Gm2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WQI/3o46QTkpBu3QKMA5BleVhXZfhU7Xm3Wn0FysZY8=;
-        b=Xmkcp+fxkBecgOADnEt0Bx2Yi2h6Tb4+KelOmFa4Dvd69Z2k0g8KzGrplruqkmVh1i
-         gc64vZ7QZxSvDpO6luQdGiBw6eGR9ToyXmm5LRqYTH8IoV0PM8CtDI596BbfRfHuvpEl
-         Zd1Rp2ldJ9X+HP2flT2xhMvLau/BL3xEFZukTpttoJAiki8d1SdR6LS8lKpkOsmuDaep
-         oIbfldUIv7TjnfL//nuVQ/7OBN6Rux/YdNfo+9POXS1Ts4oAfuDMToJL0z4/W4RSBKHF
-         wkG0G8n0+d6JJCAAhvXMoo3dw0pYoBzjavJ68RhMSms4FxXITET+xockj7ZOZ/DwkY1l
-         ycOA==
-X-Gm-Message-State: APjAAAU0NpEhKys/v+iQjNzMoQ1Ad0Do4e6dNumr5YTPiKgynSuEsTho
-        qmUjYbbPas3QWQ6jRFqgEaN3wp+momHirLv+fusPSOkB1qasKmoCUDNGfwdalGrgb2LKqKfT5qY
-        JcIN5Vp0AvO89xeG4oxT0+Hz6
-X-Received: by 2002:a25:7451:: with SMTP id p78mr472595ybc.22.1576623052025;
-        Tue, 17 Dec 2019 14:50:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxcdfKJfOCr5lNQA1daYm5XnEIRWKbkgY77t7JSl9qjnnSLaxc3Sj0TtYDq+OzJoTelJ+SaBg==
-X-Received: by 2002:a25:7451:: with SMTP id p78mr472586ybc.22.1576623051796;
-        Tue, 17 Dec 2019 14:50:51 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id p191sm114665ywp.86.2019.12.17.14.50.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:50:51 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nfsd: remove unnecessary assertion in nfsd4_encode_replay
-Date:   Tue, 17 Dec 2019 16:50:47 -0600
-Message-Id: <20191217225048.3411-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        id S1726141AbfLRAeM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Dec 2019 19:34:12 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35802 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLRAeM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Dec 2019 19:34:12 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBI0JZev189724
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 00:34:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : from : subject :
+ message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=oBFhrgPPKrQ1c8LZtsNVAx6L0TsskOalFHhuYAlczRA=;
+ b=HPZMHj3XuKOGps3/qlBbuyB8gzwWt061w6W6SDyp9Mv7cPUui23VfZZGeFnQzrBXKut/
+ DCNwq4B1DxBXH5pqEsGT2UhVBZwP4r+TmM47nA7V8/vPUft+ekhVQp+dXdkecqY0KHNH
+ 9JZw5ugS6yLu/Mnvi4wvb+We2PKs80hSe34EF25oT58KNbV32PJkoZf4He8T6S1V57m3
+ Rk6RIhcbFcLPVF6G+r8Nb0PpWyQV5HSuXRP/AUIIGC6yJ/WliDyI4XbdNw5bNMeMWAxw
+ PYHmuhSbaFThR/LZZbv7QclLgWIdWGvNUL3T9ttjdF4VsXaNoODoevlNPuZNKdbtPY3K 1w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wvq5uj9uh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 00:34:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBI0JETb086029
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 00:34:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wxm4wj8hd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 00:34:09 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBI0Y8EJ003393
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 00:34:08 GMT
+Received: from Macbooks-MacBook-Pro.local (/10.39.208.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Dec 2019 16:34:08 -0800
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Subject: 'ls -lrt' performance issue on large dir while dir is being modified
+Message-ID: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
+Date:   Tue, 17 Dec 2019 16:34:06 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912180001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912180001
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The replay variable is set in the only caller of nfsd4_encode_replay.
-The assertion is unnecessary and the patch removes this check.
+Hi,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- fs/nfsd/nfs4xdr.c | 2 --
- 1 file changed, 2 deletions(-)
+I'd like to report an issue with 'ls -lrt' on NFSv3 client takes
+a very long time to display the content of a large directory
+(100k - 200k files) while the directory is being modified by
+another NFSv3 client.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index d2dc4c0e22e8..fb2433676376 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4500,8 +4500,6 @@ nfsd4_encode_replay(struct xdr_stream *xdr, struct nfsd4_op *op)
- 	__be32 *p;
- 	struct nfs4_replay *rp = op->replay;
- 
--	BUG_ON(!rp);
--
- 	p = xdr_reserve_space(xdr, 8 + rp->rp_buflen);
- 	if (!p) {
- 		WARN_ON_ONCE(1);
--- 
-2.20.1
+The problem can be reproduced using 3 systems. One system serves
+as the NFS server, one system runs as the client that doing the
+'ls -lrt' and another system runs the client that creates files
+on the server.
+     
+Client1 creates files using this simple script:
+
+> #!/bin/sh
+>
+> if [ $# -lt 2 ]; then
+>         echo "Usage: $0 number_of_files base_filename"
+>         exit
+> fi    
+> nfiles=$1
+> fname=$2
+> echo "creating $nfiles files using filename[$fname]..."
+> i=0   
+>       
+> while [ i -lt $nfiles ] ;
+> do    
+>         i=`expr $i + 1`
+>         echo "xyz" > $fname$i
+>         echo "$fname$i" 
+> done
+
+Client2 runs 'time ls -lrt /tmp/mnt/bd1 |wc -l' in a loop.
+
+The network traces and dtrace probes showed numerous READDIRPLUS3
+requests restarting  from cookie 0 which seemed to indicate the
+cached pages of the directory were invalidated causing the pages
+to be refilled starting from cookie 0 until the current requested
+cookie.  The cached page invalidation were tracked to
+nfs_force_use_readdirplus().  To verify, I made the below
+modification, ran the test for various kernel versions and
+captured the results shown below.
+
+The modification is:
+
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index a73e2f8bd8ec..5d4a64555fa7 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -444,7 +444,7 @@ void nfs_force_use_readdirplus(struct inode *dir)
+>      if (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
+>          !list_empty(&nfsi->open_files)) {
+>          set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags);
+> -        invalidate_mapping_pages(dir->i_mapping, 0, -1);
+> +        nfs_zap_mapping(dir, dir->i_mapping);
+>      }
+>  }
+
+Note that after this change, I did not see READDIRPLUS3 restarting
+with cookie 0 anymore.
+
+Below are the summary results of 'ls -lrt'.  For each kernel version
+to be compared, one row for the original kernel and one row for the
+kernel with the above modification.
+
+I cloned dtrace-linux from here:
+github.com/oracle/dtrace-linux-kernel
+
+dtrace-linux 5.1.0-rc4 [ORI] 89191: 2m59.32s   193071: 6m7.810s
+dtrace-linux 5.1.0-rc4 [MOD] 98771: 1m55.900s  191322: 3m48.668s
+
+I cloned upstream Linux from here:
+git.kernel.org/pub/scm/linux/kernel/git/tovards/linux.git
+
+Upstream Linux 5.5.0-rc1 [ORI] 87891: 5m11.089s  160974: 14m4.384s
+Upstream Linux 5.5.0-rc1 [MOD] 87075: 5m2.057s   161421: 14m33.615s
+
+Please note that these are relative performance numbers and are used
+to illustrate the issue only.
+
+For reference, on the original dtrace-linux it takes about 9s for
+'ls -ltr' to complete on a directory with 200k files if the directory
+is not modified while 'ls' is running.
+
+The number of the original Upstream Linux is *really* bad, and the
+modification did not seem to have any effect, not sure why...
+it could be something else is going on here.
+
+The cache invalidation in nfs_force_use_readdirplus seems too
+drastic and might need to be reviewed. Even though this change
+helps but it did not get the 'ls' performance to where it's
+expected to be. I think even though READDIRPLUS3 was used, the
+attribute cache was invalidated due to the directory modification,
+causing attribute cache misses resulting in the calls to
+nfs_force_use_readdirplus as shown in this stack trace:
+
+   0  17586     page_cache_tree_delete:entry
+               vmlinux`remove_mapping+0x14
+               vmlinux`invalidate_inode_page+0x7c
+               vmlinux`invalidate_mapping_pages+0x1dd
+               nfs`nfs_force_use_readdirplus+0x47
+               nfs`__dta_nfs_lookup_revalidate_478+0x5dd
+               vmlinux`d_revalidate.part.24+0x10
+               vmlinux`lookup_fast+0x254
+               vmlinux`walk_component+0x49
+               vmlinux`path_lookupat+0x79
+               vmlinux`filename_lookup+0xaf
+               vmlinux`user_path_at_empty+0x36
+               vmlinux`vfs_statx+0x77
+               vmlinux`SYSC_newlstat+0x3d
+               vmlinux`SyS_newlstat+0xe
+               vmlinux`do_syscall_64+0x79
+               vmlinux`entry_SYSCALL_64+0x18d
+
+Besides the overhead of refilling the page caches from cookie 0,
+I think the reason 'ls' still takes so long to compete because the
+client has to send a bunch of additional LOOKUP/ACCESS requests
+over the wire to service the stat(2) calls from 'ls' due to the
+attribute cache misses.
+
+Please let me know you what you think and if there is any addition
+information is needed.
+
+Thanks,
+-Dai
+
 
