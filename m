@@ -2,98 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E9C12572D
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 23:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FCB91257A8
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2019 00:21:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLRWrd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Dec 2019 17:47:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53908 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfLRWrd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:47:33 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2041CAC45;
-        Wed, 18 Dec 2019 22:47:30 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Thu, 19 Dec 2019 09:47:23 +1100
-Subject: [PATCH/RFC] NFS: handle NFSv4.1 server that doesn't support NFS4_OPEN_CLAIM_DELEG_CUR_FH
-cc:     linux-nfs@vger.kernel.org
-Message-ID: <87y2v9fdz8.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        id S1726518AbfLRXVM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Dec 2019 18:21:12 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:60792 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLRXVM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 18:21:12 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIN9p3n113284;
+        Wed, 18 Dec 2019 23:20:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=8hazM7CeF4K47Rh8XmW2jWUImNMg1yZHhsjs63LcOEE=;
+ b=b7nwrLtMcykLAuGtxi7o2zlSED3gSlOVzYgyTPCCuzSFY/eMoIi32LmcYLx1IoKt6GIP
+ nmGldQQTOVqI3pGbWepJxjwrHOngEuCNcE89sCmb5x5Xtb5HQmSoRYyUxfaCMdTbXZ+Y
+ tsFh64EKthIV/prru/p1Sg8iK0TuXia6eQ8RfUlCsDfMTmyoCZjQGXr/eHGz3uiSpHr7
+ oaKer3eLo7JTj0+l1RCDbNeK48RxNJPXnvj1f9uc+heUT8uXaTtk0nE6+VQ2SqGxumQj
+ /S9ZpUCcEm77V/pA508SA8Ws+deIWeAW1uQkTids6MbHqf5++RKZn+0RPS6Ioaxh1tSk Qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wvq5urs6u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 23:20:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIN9nQo108431;
+        Wed, 18 Dec 2019 23:20:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2wyk3by1cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 23:20:59 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBINKwtL024557;
+        Wed, 18 Dec 2019 23:20:58 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Dec 2019 15:20:57 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: CPU lockup in or near new filecache code
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+Date:   Wed, 18 Dec 2019 18:20:56 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <980CB8E4-0E7F-4F1D-B223-81176BE15A39@oracle.com>
+References: <9977648B-7D14-42EB-BD4A-CBD041A0C21A@oracle.com>
+ <3af633a4016a183a930a44e3287f9da230711629.camel@hammerspace.com>
+ <BDCA1236-A90A-48F6-9329-DE4818298D83@oracle.com>
+ <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
+ <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912180173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912180173
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
 
-If an NFSv4.1 server doesn't support NFS4_OPEN_CLAIM_DELEG_CUR_FH
-(e.g. Linux 3.0), and a newer NFS client tries to use it to claim
-an open before returning a delegation, the server might return
-NFS4ERR_BADXDR.
-That is what Linux 3.0 does, though the RFC doesn't seem to be explicit
-on which flags must be supported, and what error can be returned for
-unsupported flags.
+> On Dec 13, 2019, at 3:12 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Wed, 2019-12-11 at 15:01 -0500, Chuck Lever wrote:
+>> OK, I finally got a hit. It took a long time. I've seen this
+>> particular
+>> stack trace before, several times.
+>>=20
+>> Dec 11 14:58:34 klimt kernel: watchdog: BUG: soft lockup - CPU#0
+>> stuck for 22s! [nfsd:2005]
+>> Dec 11 14:58:34 klimt kernel: Modules linked in: rpcsec_gss_krb5
+>> ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager
+>> ocfs2_stackglue ib_umad ib_ipoib mlx4_ib sb_edac x86_pkg_temp_thermal
+>> kvm_intel coretemp kvm irqbypass crct10dif_pclmul crc32_pclmul
+>> ghash_clmulni_intel iTCO_wdt ext4 iTCO_vendor_support aesni_intel
+>> mbcache jbd2 glue_helper rpcrdma crypto_simd cryptd rdma_ucm ib_iser
+>> rdma_cm pcspkr iw_cm ib_cm mei_me raid0 libiscsi lpc_ich mei sg
+>> scsi_transport_iscsi i2c_i801 mfd_core wmi ipmi_si ipmi_devintf
+>> ipmi_msghandler ioatdma acpi_power_meter nfsd nfs_acl lockd
+>> auth_rpcgss grace sunrpc ip_tables xfs libcrc32c mlx4_en sr_mod
+>> sd_mod cdrom qedr ast drm_vram_helper drm_ttm_helper ttm crc32c_intel
+>> drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm igb
+>> dca i2c_algo_bit i2c_core mlx4_core ahci libahci libata nvme
+>> nvme_core qede qed dm_mirror dm_region_hash dm_log dm_mod crc8
+>> ib_uverbs dax ib_core
+>> Dec 11 14:58:34 klimt kernel: CPU: 0 PID: 2005 Comm: nfsd Tainted:
+>> G        W         5.5.0-rc1-00003-g170e7adc2317 #1401
+>> Dec 11 14:58:34 klimt kernel: Hardware name: Supermicro Super
+>> Server/X10SRL-F, BIOS 1.0c 09/09/2015
+>> Dec 11 14:58:34 klimt kernel: RIP: 0010:__srcu_read_lock+0x23/0x24
+>> Dec 11 14:58:34 klimt kernel: Code: 07 00 0f 1f 40 00 c3 0f 1f 44 00
+>> 00 8b 87 c8 c3 00 00 48 8b 97 f0 c3 00 00 83 e0 01 48 63 c8 65 48 ff
+>> 04 ca f0 83 44 24 fc 00 <c3> 0f 1f 44 00 00 f0 83 44 24 fc 00 48 63
+>> f6 48 8b 87 f0 c3 00 00
+>> Dec 11 14:58:34 klimt kernel: RSP: 0018:ffffc90001d97bd0 EFLAGS:
+>> 00000246 ORIG_RAX: ffffffffffffff13
+>> Dec 11 14:58:34 klimt kernel: RAX: 0000000000000001 RBX:
+>> ffff888830d0eb78 RCX: 0000000000000001
+>> Dec 11 14:58:34 klimt kernel: RDX: 0000000000030f00 RSI:
+>> ffff888853f4da00 RDI: ffffffff82815a40
+>> Dec 11 14:58:34 klimt kernel: RBP: ffff88883112d828 R08:
+>> ffff888843540000 R09: ffffffff8121d707
+>> Dec 11 14:58:34 klimt kernel: R10: ffffc90001d97bf0 R11:
+>> 0000000000001b84 R12: ffff888853f4da00
+>> Dec 11 14:58:34 klimt kernel: R13: ffff8888132a1410 R14:
+>> ffff88883112d7e0 R15: 00000000ffffffef
+>> Dec 11 14:58:34 klimt kernel: FS:  0000000000000000(0000)
+>> GS:ffff88885fc00000(0000) knlGS:0000000000000000
+>> Dec 11 14:58:34 klimt kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+>> 0000000080050033
+>> Dec 11 14:58:34 klimt kernel: CR2: 00007f2d6a2d8000 CR3:
+>> 0000000859b38004 CR4: 00000000001606f0
+>> Dec 11 14:58:34 klimt kernel: Call Trace:
+>> Dec 11 14:58:34 klimt kernel: fsnotify_grab_connector+0x16/0x4f
+>> Dec 11 14:58:34 klimt kernel: fsnotify_find_mark+0x11/0x6a
+>> Dec 11 14:58:34 klimt kernel: nfsd_file_acquire+0x3a9/0x5b2 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfs4_get_vfs_file+0x14c/0x20f [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_process_open2+0xcd6/0xd98 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? fh_verify+0x42e/0x4ef [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd4_process_open1+0x233/0x29d
+>> [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_open+0x500/0x5cb [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd4_proc_compound+0x32a/0x5c7 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: nfsd_dispatch+0x102/0x1e2 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: svc_process_common+0x3b3/0x65d [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: ? svc_xprt_put+0x12/0x21 [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd_svc+0x2be/0x2be [nfsd]
+>> Dec 11 14:58:34 klimt kernel: ? nfsd_destroy+0x51/0x51 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: svc_process+0xf6/0x115 [sunrpc]
+>> Dec 11 14:58:34 klimt kernel: nfsd+0xf2/0x149 [nfsd]
+>> Dec 11 14:58:34 klimt kernel: kthread+0xf6/0xfb
+>> Dec 11 14:58:34 klimt kernel: ? kthread_queue_delayed_work+0x74/0x74
+>> Dec 11 14:58:34 klimt kernel: ret_from_fork+0x3a/0x50
+>>=20
+>=20
+> Does something like the following help?
+>=20
+> 8<---------------------------------------------------
+> =46rom caf515c82ed572e4f92ac8293e5da4818da0c6ce Mon Sep 17 00:00:00 =
+2001
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Fri, 13 Dec 2019 15:07:33 -0500
+> Subject: [PATCH] nfsd: Fix a soft lockup race in
+> nfsd_file_mark_find_or_create()
+>=20
+> If nfsd_file_mark_find_or_create() keeps winning the race for the
+> nfsd_file_fsnotify_group->mark_mutex against nfsd_file_mark_put()
+> then it can soft lock up, since fsnotify_add_inode_mark() ends
+> up always finding an existing entry.
+>=20
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+> fs/nfsd/filecache.c | 8 ++++++--
+> 1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 9c2b29e07975..f275c11c4e28 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -132,9 +132,13 @@ nfsd_file_mark_find_or_create(struct nfsd_file =
+*nf)
+> 						 struct nfsd_file_mark,
+> 						 nfm_mark));
+> 			=
+mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+> -			fsnotify_put_mark(mark);
+> -			if (likely(nfm))
+> +			if (nfm) {
+> +				fsnotify_put_mark(mark);
+> 				break;
+> +			}
+> +			/* Avoid soft lockup race with =
+nfsd_file_mark_put() */
+> +			fsnotify_destroy_mark(mark, =
+nfsd_file_fsnotify_group);
+> +			fsnotify_put_mark(mark);
+> 		} else
+> 			=
+mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+>=20
 
-When NFS_CAP_ATOMIC_OPEN_V1 support was added in Commit 49f9a0fafd84
-("NFSv4.1: Enable open-by-filehandle"), fall-back for non-supporting
-servers was added for various open types, but not for delegation recall.
+I've tried to reproduce the lockup for three days with this patch
+applied to my server. No lockup.
 
-The code pattern for delegation recall is a little different to the
-other open types, so I cannot simply copy the same approach.
+Tested-by: Chuck Lever <chuck.lever@oracle.com>
 
-I think the below patch should do the right thing, but I haven't tested
-yet.
 
-Does this look reasonable?  Is there a cleaner way to do it?  Should
-we check other errors?
+--
+Chuck Lever
 
-Thanks,
-NeilBrown
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index caacf5e7f5e1..14f958d16648 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2174,6 +2174,13 @@ static int nfs4_open_reclaim(struct nfs4_state_owner *sp, struct nfs4_state *sta
- static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct nfs4_state *state, const nfs4_stateid *stateid, struct file_lock *fl, int err)
- {
- 	switch (err) {
-+		case -NFS4ERR_BADXDR: {
-+			struct nfs4_exception exception;
-+			if (nfs4_clear_cap_atomic_open_v1(server, -EINVAL,
-+							  &exception))
-+				return -EAGAIN;
-+		}
-+			/* fallthrough */
- 		default:
- 			printk(KERN_ERR "NFS: %s: unhandled error "
- 					"%d.\n", __func__, err);
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl36rHsACgkQOeye3VZi
-gblFgxAAhZuE6cimSKhoB2nrCMUjdAKa8E//LcZI8pWh5rzw1M4CNhwxPIlRz3P5
-9kS7DcHWck3puQQwSr4C0kIXQ3rGLHQvCBPfMLAm1h1LYsi5bmegD2xViE6KNG8/
-fBazsE9+R+F9UP7SSPSyA+Rl8vnJmzW0ibFUMqVsaxqKJ0RI5N76/EIWB4HV45lr
-Y+e0VSFncC/h45Uxr4cuVyaQgv9SoepmfC4sbwOCycAnNCVdhqKrJc95C9Gci6An
-BnCe/NQOIbNnhflOSodDKGU5SXp7PMY4t0ZFSLh8QXg58VOpreMwePCJiLIdD47z
-fG7g/LNoNTtjHBdL1mefD8znuzXeOO2osG1C1PyYoPPtDp8Bpy/BS8VrSQGHpzXV
-9yW4DWpqeoAsx/nDrGTHiIeH293L293/zvhlNiKes5Vv0PYfj+CFG3JXe8B81Nr9
-SKd/IOgzYf0V50Gv9+YGXMSjTAuDsgwq2yeMWlWOMprYmsawZriQpOK7MjQZ/ZHi
-siFPWWe+InhH47VfXGS7aqVX+dfEgCWVoD7pB8spp7800+iuWJpVY/Uqf877FQUp
-OspBRNbIKf/4iVj+o/Z9C4QtD73q71DnVgwunkJ9e3u1GM3p+kTslqCxWz7xPzEV
-jDZOQql/JUmfwgx/pmFkYvRbZ1wyAg9oXJTHJCDzY1KtAGS4+fA=
-=aFhz
------END PGP SIGNATURE-----
---=-=-=--
