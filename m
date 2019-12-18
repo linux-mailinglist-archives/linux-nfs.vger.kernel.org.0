@@ -2,94 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E27D125142
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 20:05:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96F481251E6
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 20:32:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLRTF3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Dec 2019 14:05:29 -0500
-Received: from mail-eopbgr680094.outbound.protection.outlook.com ([40.107.68.94]:33251
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727391AbfLRTF3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:05:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EHDfmVkNN4HXSUvRI2fkgXu3DLP+CqUNd/AMxg3/XjE+8iuYYUlm3OuXX1v8v+gJviIMiR3beI/tBdAidADQdIlLHB3939lUYPePL4llYJ8UubY94yDbc/fKgRYwjyZ9VKa0CSCmaiZtuSLTXuQIxX44d+KG5+KC6H32ySu2WHHB3mZTcap04yZ8+P+PuZMyGy9P1YwL2XS9IT+BkP+jrPImJwpMpDLDTfaS22JCLBjrpBVP4rVek9i/0BltFm9kzbEoRFs0aIj4nIZj0Agn38XAd38uWfYhTuK9tm6KmZNyiECabzgD/iPGhRxC080R5kxGNwk/LygSgxt4WFNchA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Lk2t2Nmk7SN46gBK9e9G9LHs2h/tuCayYDpZrr/xeI=;
- b=A0Bso/j+Ks0xCL1Puj7WEraycv/SXonu+w2Ho5mlgIZh+LQzX5LEK0KApM+CHPFrKprl90oSG7wgu4xH3VaDyrXSgx95Jj2TZAg+jD6WhEBHFDLLNhDppkttfYiYYmmp5dLBw4I8Mx/EGyeMvyrHeLlq6p3QMr6d0DoyhmxUD8qity5tpRiRhlHl4EDg/uQuxiB1oV+RxODGsAU9Ab0cYkbtD7HAUwII/dlWyNGW88cj1kuVEHFE/cF5LHhzHiD1ggJxEj3JdnfinBMHymW/Kk2ldp1Yuw7nce8CWpZCCOfTnzYpKpeUE/osfg2xDCva0QVEO0EY42yhnQ86u2BueQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Lk2t2Nmk7SN46gBK9e9G9LHs2h/tuCayYDpZrr/xeI=;
- b=ZfAsGLzXec5oRd3Vmi/2Ep+DBgCL+rnoL8oVJ2BcesT6SOjW9oRJcxzkCI0zFh3iMqAXvwnHhXgyQbfyb7shDMyAG/Xx0L9dHJLit1D7+BtXiMdo26i4mUpe3trTukrjDET/gSL3meKo/8a4sx4fIy8Gqg8wNa6794cur2vrdYk=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2041.namprd13.prod.outlook.com (10.174.185.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Wed, 18 Dec 2019 19:05:24 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
- 19:05:24 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "aglo@umich.edu" <aglo@umich.edu>
-Subject: Re: acls+kerberos (limitation)
-Thread-Topic: acls+kerberos (limitation)
-Thread-Index: AQHVtcs3TpSTmrgSq0KGQIdkoW6kVKfAQJsA
-Date:   Wed, 18 Dec 2019 19:05:24 +0000
-Message-ID: <f4595e80487d9ace332e2ae69bc0c539a5c029bb.camel@hammerspace.com>
-References: <CAN-5tyHJLh8+htpb47Uz+ojo5EfrpP=zyE-Vfk=HjvBgK591=g@mail.gmail.com>
-In-Reply-To: <CAN-5tyHJLh8+htpb47Uz+ojo5EfrpP=zyE-Vfk=HjvBgK591=g@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2bad8746-1425-4145-b656-08d783ed3ca0
-x-ms-traffictypediagnostic: DM5PR1301MB2041:
-x-microsoft-antispam-prvs: <DM5PR1301MB204167F3D4E7303B342B363CB8530@DM5PR1301MB2041.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(136003)(39830400003)(189003)(199004)(316002)(110136005)(8936002)(86362001)(8676002)(81156014)(71200400001)(508600001)(4001150100001)(66556008)(64756008)(66446008)(2906002)(66476007)(6506007)(6486002)(81166006)(76116006)(91956017)(2616005)(26005)(36756003)(186003)(5660300002)(66946007)(4744005)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2041;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nwVM67sbce+ch4eJjxfed2hVxUMY9BPFTJPlyo8vz3QMOY4h6Wr7Hf+qZxW2cTbN6t6DhMGYuCwZhGV3b1D4YE7V6EAiApEM20CMhRPy0Se3V7tuol8X2iDOvirO5PIf4WbCg58qMJDsRyAtFOhauOpXeRGd94Szf+NYBZG5cFElY8l/N8b7W0LuXix0dockGJFC8EyIghpysaaS0DXCeVscW+Au/AbqkZNynMXr8ohyxhLFPOUBpUJSBSpDVAXiOt8H6cKq9PPCRjuaq0nKrWysxD7NCD+9f7u3pqp+ViYnNL0ksZKf+JFVkGYc610d7jzvqbtoD8F4N2I3oqpNjSwKGW7Z20st7cFWkGSkXuXb2+1IeOjJJ56vEvwMMsAh91nb4I6RasgHSOfdwA40F/O68wR+VDTBQKwMQNJl5jkU36c8lnfc95piKuJTkU8l
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D68E92F05703F446B94025D7B5A53BA7@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726824AbfLRTcF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Dec 2019 14:32:05 -0500
+Received: from mail-vs1-f52.google.com ([209.85.217.52]:37362 "EHLO
+        mail-vs1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfLRTcF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 14:32:05 -0500
+Received: by mail-vs1-f52.google.com with SMTP id x18so2171256vsq.4
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2019 11:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffW+fMDsvQTf+KkJ/1o6lvUICgqwjx6Ck6Xjq8VPv6Y=;
+        b=k5I4begdCA/JToQGOCGogVRv8kHwq8GfBWCxgPywIK9nOS1IjsWbJVazyAFnCw3OXI
+         6TvX8IOY450vAxZXHoEPT/KSTo56Z+Y4AcI1+nz3hMEj6Jd/gUNnfNe3cnTBZt1ZimbZ
+         GbxrsMyvNjVqTc4z7XaJSDedtRDrX1YPu/y4yQvrMTykg+JL1HBAM1jJsRGrQoc3MhWy
+         z606zzHKmYODbV4JK9nAmk8fVRhD9SencOebgvcFaeBgysqt+G2pI65ANByV4cKiBwD9
+         q4a+ULSnBxV7Gyxf6QRTN2dQ2zca/Ls1CTxgw247p61oKZ7DN99bh4zPd1RwA4PiME/M
+         ZN+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ffW+fMDsvQTf+KkJ/1o6lvUICgqwjx6Ck6Xjq8VPv6Y=;
+        b=a9gBG6ut9iKQgoq1VmaqimQDSWOFs3vAaIDyhKrwu4zvUbHyFWSh9REZw2UUCxg/f/
+         KHI1vekb1P7HgxfhiY3sWvJSc2uL7zZrYMtz55BWglD7ZEps1khNZP5zmPN/9V++IthX
+         +5jnilm4/SnwPupe2NY5E5OhfBqdX25wnI2/sRXMste1jZghEpNKyI/rIE4l2mzDK87N
+         zY72Y+W0JpFanYoeRKsFeEiFwXqHSu8qA5Jocq/xtjkUiZjlSS4ctG4nlxPz/8Hp2m3b
+         1myM/E3XrkpXxWMQ7d3fi1ASVZqbimStxI7Ix9SCYH8REsk/T5UokhQJoCkrbiZPQV8d
+         yYrw==
+X-Gm-Message-State: APjAAAXFxcfXYs8JvfstNKGX9t2MtKLzrZkOwi6BeqSsyBl2gtTr/C5j
+        0P2siJimz9ra4tC/TDsafLnW8akxFc4P/V9y6urCJg==
+X-Google-Smtp-Source: APXvYqyEdlcrnrC+mk1/o0BTM7RzvUUAGGypUzc1KalpKVs0Y9mxIAGEILq9PICiYDKRd1e3khBX8sJe67AMIjq50ic=
+X-Received: by 2002:a67:c90d:: with SMTP id w13mr2663124vsk.164.1576697524199;
+ Wed, 18 Dec 2019 11:32:04 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bad8746-1425-4145-b656-08d783ed3ca0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 19:05:24.2728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1L4BCSmPpaOGXABlaJolbihwTMRUkCloeEvaSwc9Idq4e0N5K5/Rik6T1v23dczYtC6ZKMtBUboG/4XUPhH2Dw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2041
+References: <CAN-5tyHJLh8+htpb47Uz+ojo5EfrpP=zyE-Vfk=HjvBgK591=g@mail.gmail.com>
+ <f4595e80487d9ace332e2ae69bc0c539a5c029bb.camel@hammerspace.com>
+In-Reply-To: <f4595e80487d9ace332e2ae69bc0c539a5c029bb.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 18 Dec 2019 14:31:52 -0500
+Message-ID: <CAN-5tyGXUhhZVkrBxTwGP-Y2FXoMdN9kYtc9r0wS8P8EQuxyoQ@mail.gmail.com>
+Subject: Re: acls+kerberos (limitation)
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTE4IGF0IDEyOjQ3IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gSGkgZm9sa3MsDQo+IA0KPiBJcyB0aGlzIGEgd2VsbCBrbm93IGJ1dCB1bmRvY3VtZW50
-ZWQgZmFjdCB0aGF0IHlvdSBjYW4ndCBzZXQgbGFyZ2UNCj4gYW1vdW50IG9mIGFjbHMgKG92ZXIg
-NDA5NmJ5dGVzLCB+OTBhY2xzKSB3aGlsZSBtb3VudGVkIHVzaW5nDQo+IGtyYjVpL2tyYjVwPyBU
-aGF0IGlmIHlvdSB3YW50IHRvIGdldC9zZXQgbGFyZ2UgYWNscywgaXQgbXVzdCBiZSBkb25lDQo+
-IG92ZXIgYXV0aF9zeXMva3JiNT8NCj4gDQoNCkl0J3MgY2VydGFpbmx5IG5vdCBzb21ldGhpbmcg
-dGhhdCBJIHdhcyBhd2FyZSBvZi4gRG8geW91IHNlZSB3aGVyZSB0aGF0DQpsaW1pdGF0aW9uIGlz
-IGNvbWluZyBmcm9tPw0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBt
-YWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0K
-DQoNCg==
+On Wed, Dec 18, 2019 at 2:05 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2019-12-18 at 12:47 -0500, Olga Kornievskaia wrote:
+> > Hi folks,
+> >
+> > Is this a well know but undocumented fact that you can't set large
+> > amount of acls (over 4096bytes, ~90acls) while mounted using
+> > krb5i/krb5p? That if you want to get/set large acls, it must be done
+> > over auth_sys/krb5?
+> >
+>
+> It's certainly not something that I was aware of. Do you see where that
+> limitation is coming from?
+
+I haven't figure it exactly but gss_unwrap_resp_integ() is failing in
+if (mic_offset > rcv_buf->len). I'm just not sure who sets up the
+buffer (or why  rvc_buf->len is (4280) larger than a page can a
+page-limit might make sense to for me but it's not). So you think it
+should have been working.
+
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
