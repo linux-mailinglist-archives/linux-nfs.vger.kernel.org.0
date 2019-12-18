@@ -2,127 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FDA61249C0
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 15:33:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5180D124A17
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 15:48:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLROd2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Dec 2019 09:33:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726856AbfLROd2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 09:33:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576679607;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JBs7P6wjwVnP2AOYMkRrSgc31xigV8cxGOiShYOJ2qI=;
-        b=MX5HeX2F/j41yNUW1E7fdCXawj7fcJCvntyTVn1xRywwoXH6ogqWxti6eo/V0WSoPOM+/j
-        WdtYfZmqsSU4GDU7gBAmgEM9TImxmSkTiM7RjCcq1hjO6Ho8iLdrPWodZpR2ViLs0tDvzK
-        RXCZE7mhMTyKcgRuVgaWbr+I6yliS6Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-DSsRKWZUP9ir5Zda2C6IyA-1; Wed, 18 Dec 2019 09:33:25 -0500
-X-MC-Unique: DSsRKWZUP9ir5Zda2C6IyA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD9CF13084C;
-        Wed, 18 Dec 2019 14:33:24 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-81.phx2.redhat.com [10.3.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 65E1C2B943;
-        Wed, 18 Dec 2019 14:33:24 +0000 (UTC)
-Subject: Re: [nfs-utils PATCH] gssd: force getting tgt if ticket cache was
- removed
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-References: <20191212160000.22320-1-olga.kornievskaia@gmail.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <c3de459c-e7a1-094a-f026-f3198588dd13@RedHat.com>
-Date:   Wed, 18 Dec 2019 09:33:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727173AbfLROst (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Dec 2019 09:48:49 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41145 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLROst (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 09:48:49 -0500
+Received: by mail-qv1-f65.google.com with SMTP id x1so829972qvr.8;
+        Wed, 18 Dec 2019 06:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=03LZZ1Q88h/Vi7kuW4/G+tMxZypv0uuxA868U5NI5Kg=;
+        b=rCSqdHkHdw7MyQM6V2wX4E41GW4G2/vwDR0auAmquMnDYrF6mEkBvcgOCXd6CzirIS
+         nevXw2d3ZwNWgS/vRbR65z56h7yfn6oqBPnz2Q9+qeS05WA8y6nNnnSc+CT1klQNHRp7
+         3u8v6YHI03PicsQ3UgXl6DHgn8VOldhF8JVNLDXHwQ4Z0Lj8W5hKj/w60g/jBA+Thgwj
+         0+dVqmYcBodrOPSc2Way2rzaDjH7P8VG6udeYL01JNOC1wxCjtcUHwfCDBRZk1Bzi2gG
+         SZHrg8FmdrWwaug1s28phPtgapdy3eSLtOMgGTCr7SeUrtwgRroMWSXg0HPgjXi356S/
+         cI3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=03LZZ1Q88h/Vi7kuW4/G+tMxZypv0uuxA868U5NI5Kg=;
+        b=FRwCZMW9J1mtB89PzntwwCbGVeCYn4K0Pq6G3e9C4GtRaVTENlaUzwQcFK37Qg4xxI
+         Pia+SHxuApCz2cQn/ja3kTjQ5eDOYt4Dn2CeHyCQ9N34sSLsTX0v4rhM7PzggdxujLAw
+         qiVuuog/hA1QoZkUIsuh+F+eMLok8PiKRLWWo4jvb3UzsVqptKQ8ueZzTQMT0VFeAqNg
+         XMLmaGm1Dc0zoAG/dQQ/rkqLUvug2SQTsQDnlNIyj5rijvWdTgt6bt5VeYA/p/1+KjgL
+         zkWNpG5fGtJ7WZfSo/w+C5DMbveX84UWN1zcDE+7Xh/d1BuQUwhbvTv4OV+8QHvJYxrs
+         03yQ==
+X-Gm-Message-State: APjAAAVtkFMMq79KEVvfF9t0hQunAGd3BukJOQe2bYRwn9lzflazdJOF
+        6YG/3wITXvVxqrOo7X6lzCCsKu60OCtoMrkFGIwTUw7YFEg=
+X-Google-Smtp-Source: APXvYqyedeACk3XMykTt78aYIgOyHUys2yyKMAdabZPSCX7yCyBFKjkFUrlGmDMEkRU5DIovnwOh4ZgaqOg9FwEf3jI=
+X-Received: by 2002:ad4:46e4:: with SMTP id h4mr2690617qvw.181.1576680528099;
+ Wed, 18 Dec 2019 06:48:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212160000.22320-1-olga.kornievskaia@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
+ <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com> <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+ <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
+In-Reply-To: <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Wed, 18 Dec 2019 14:48:37 +0000
+Message-ID: <CALbTx=HUA6PdBufwmyYaN3J1pETUzRk=5HM7BKCDv8+PM2Qm9Q@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, 17 Dec 2019 at 18:12, Robert Milkowski <rmilkowski@gmail.com> wrote:
+>
+> On Mon, 16 Dec 2019 at 18:58, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> >
+> > It would be better to move the initialisation of clp->cl_last_renewal
+> > into nfs4_init_clientid() and nfs41_init_clientid() (after the calls to
+> > nfs4_proc_setclientid_confirm() and nfs4_proc_create_session()
+> > respectively).
+> >
+>
+> This could be done but this is potentially a separate change, as in
+> nfs4_do_fsinfo() we still need to
+> make sure we do not implicitly renew lease for v4.0, so I think the
+> patch needs to be modified as:
 
+I took a look at the client initialization and the
+nfs4_init_clientid() already calls nfs4_setup_state_renewal(),
+which in turn calls nfs4_proc_get_lease_time(), however that might
+return with an error in which case it won't set the cl_last_renewal,
+the code is:
 
-On 12/12/19 11:00 AM, Olga Kornievskaia wrote:
-> From: Olga Kornievskaia <kolga@netapp.com>
-> 
-> If ticket cache was removed manually, but gssd thinks it has a valid
-> credentials it will fail mount creation as it can't get a service
-> ticket (due to lack of the tgt).
-> 
-> Check if file-based ticket cache is not there and set the "nocache"
-> to 1 forcing the client to get a new tgt.
-> 
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Committed... (tag: nfs-utils-2-4-3-rc3)
+static int nfs4_setup_state_renewal(struct nfs_client *clp)
+...
+        status = nfs4_proc_get_lease_time(clp, &fsinfo);
+        if (status == 0) {
+                nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
+...
 
-steved.
+In my environment with nfsv4+krb the nfs4_proc_get_lease_time()
+returns with -10016 (NFS4ERR_WRONGSEC) during initial mount (which
+after a quick scan of the rfc seems that might be ok initially).
+Also for v4.1 do_renew_lease() is called by nfs41_sequence_process()
+multiple times during mount before we even reach nfs4_do_fsinfo() so
+for 4.1+ it never gets cl_last_renewal==0, at least not under this
+circumstances.
 
-> ---
->  utils/gssd/krb5_util.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index 0474783..bff759f 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -121,6 +121,9 @@
->  #include <krb5.h>
->  #include <rpc/auth_gss.h>
->  
-> +#include <sys/types.h>
-> +#include <fcntl.h>
-> +
->  #include "nfslib.h"
->  #include "gssd.h"
->  #include "err_util.h"
-> @@ -314,6 +317,25 @@ gssd_find_existing_krb5_ccache(uid_t uid, char *dirname,
->  	return err;
->  }
->  
-> +/* check if the ticket cache exists, if not set nocache=1 so that new
-> + * tgt is gotten
-> + */
-> +static int
-> +gssd_check_if_cc_exists(struct gssd_k5_kt_princ *ple)
-> +{
-> +	int fd;
-> +	char cc_name[BUFSIZ];
-> +
-> +	snprintf(cc_name, sizeof(cc_name), "%s/%s%s_%s",
-> +		ccachesearch[0], GSSD_DEFAULT_CRED_PREFIX,
-> +		GSSD_DEFAULT_MACHINE_CRED_SUFFIX, ple->realm);
-> +	fd = open(cc_name, O_RDONLY);
-> +	if (fd < 0)
-> +		return 1;
-> +	close(fd);
-> +	return 0;
-> +}
-> +
->  /*
->   * Obtain credentials via a key in the keytab given
->   * a keytab handle and a gssd_k5_kt_princ structure.
-> @@ -348,6 +370,8 @@ gssd_get_single_krb5_cred(krb5_context context,
->  
->  	memset(&my_creds, 0, sizeof(my_creds));
->  
-> +	if (!nocache && !use_memcache)
-> +		nocache = gssd_check_if_cc_exists(ple);
->  	/*
->  	 * Workaround for clock skew among NFS server, NFS client and KDC
->  	 * 300 because clock skew must be within 300sec for kerberos
-> 
+There might be other cases where nfs4_do_fsinfo() will get
+clp->cl_last_renewal=0 for nfsv4.0, and since the nfs4_do_fsinfo()
+already initializes the cl_last_renewal record, plus as Chuck pointed
+out in case of v4.1+
+it is expected to implicitly renew the lease anyway, I would rather
+focus on fixing only the reported issue here for now, which is the
+incorrect implicit renewal in fsinfo for v4.0, and leave improvements
+to client initialization for another day.
 
+I will send an updated patch shortly which doesn't impact v4.1+.
