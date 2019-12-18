@@ -2,108 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 740501251F0
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 20:34:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90BC5125248
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2019 20:49:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLRTe1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Dec 2019 14:34:27 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41356 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRTe1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 14:34:27 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJYJaD123914;
-        Wed, 18 Dec 2019 19:34:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=wb5gq3lBkT9Ke6WiNq1ipF5TrRiWCV7lJ5Aq+Cc+qZg=;
- b=V5hf1G8jSmm6AiiQJQ275x2ygsOJjxVlspXloXZ0wvv1kbG+sDg74ZypSXwQwXZvDlQm
- rj3Z3JkpALFnQJlR9arDZRB9OkMRgCHUIGrAYiS5B2sfy554JeJz0HTOr2J3bv7EpoIJ
- 4KTO7LvpTb2cmoTlME1HLbXus5IPQFGoaU1qspGEWpzOnSBKyR7eje68Lvf89pwKAqD/
- BrQEezFpg+WBJvTCXqYXF/UhopHBvvR0/KNiJvpJM/YdxxAQHCLjOzP30Ky43e2fSZhe
- jZ2BOTLUfWCsuXnH14WeC5j2jTycnx5VoFM8+lnLrvYR/6KyPJYmzO5IFlMfdcxEUj9l iQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wvqpqfrf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 19:34:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJYA3w155916;
-        Wed, 18 Dec 2019 19:34:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2wyedph9re-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 19:34:12 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBIJY7Y6017978;
-        Wed, 18 Dec 2019 19:34:07 GMT
-Received: from dhcp-10-76-202-105.usdhcp.oraclecorp.com (/10.76.202.105)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Dec 2019 11:34:07 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: acls+kerberos (limitation)
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyGXUhhZVkrBxTwGP-Y2FXoMdN9kYtc9r0wS8P8EQuxyoQ@mail.gmail.com>
-Date:   Wed, 18 Dec 2019 14:34:54 -0500
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C5067A0A-5FA4-4FC0-B5B6-828EB3E83373@oracle.com>
-References: <CAN-5tyHJLh8+htpb47Uz+ojo5EfrpP=zyE-Vfk=HjvBgK591=g@mail.gmail.com>
- <f4595e80487d9ace332e2ae69bc0c539a5c029bb.camel@hammerspace.com>
- <CAN-5tyGXUhhZVkrBxTwGP-Y2FXoMdN9kYtc9r0wS8P8EQuxyoQ@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912180152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912180152
+        id S1727395AbfLRTtK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Dec 2019 14:49:10 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42760 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726984AbfLRTtJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Dec 2019 14:49:09 -0500
+Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DA9AA7EAAA1;
+        Thu, 19 Dec 2019 06:49:06 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ihfJh-0004eL-Bb; Thu, 19 Dec 2019 06:49:05 +1100
+Date:   Thu, 19 Dec 2019 06:49:05 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Clone should commit src file metadata too
+Message-ID: <20191218194905.GW19213@dread.disaster.area>
+References: <20191218173752.81645-1-trond.myklebust@hammerspace.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218173752.81645-1-trond.myklebust@hammerspace.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=7-415B0cAAAA:8 a=SEtKQCMJAAAA:8 a=YjQstw7mB-IPi5IG-P4A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22 a=kyTSok1ft720jgMXX5-3:22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 12:37:52PM -0500, Trond Myklebust wrote:
+> vfs_clone_file_range() can modify the metadata on the source file too,
+> so we need to commit that to stable storage as well.
+> 
+> Reported-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfsd/vfs.c | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f0bca0e87d0c..bc7f330c2a79 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -280,19 +280,25 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
+>   * Commit metadata changes to stable storage.
+>   */
+>  static int
+> -commit_metadata(struct svc_fh *fhp)
+> +commit_inode_metadata(struct inode *inode)
+>  {
+> -	struct inode *inode = d_inode(fhp->fh_dentry);
+>  	const struct export_operations *export_ops = inode->i_sb->s_export_op;
+>  
+> -	if (!EX_ISSYNC(fhp->fh_export))
+> -		return 0;
+> -
+>  	if (export_ops->commit_metadata)
+>  		return export_ops->commit_metadata(inode);
+>  	return sync_inode_metadata(inode, 1);
+>  }
+>  
+> +static int
+> +commit_metadata(struct svc_fh *fhp)
+> +{
+> +	struct inode *inode = d_inode(fhp->fh_dentry);
+> +
+> +	if (!EX_ISSYNC(fhp->fh_export))
+> +		return 0;
+> +	return commit_inode_metadata(inode);
+> +}
+> +
+>  /*
+>   * Go over the attributes and take care of the small differences between
+>   * NFS semantics and what Linux expects.
+> @@ -536,7 +542,10 @@ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
+>  		return nfserrno(-EINVAL);
+>  	if (sync) {
+>  		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
+> -		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
+> +		int status = commit_inode_metadata(file_inode(src));
+> +
+> +		if (!status)
+> +			status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
 
+Hmmm.  Seeing as the source and destination inode were modified in
+the same transaction on XFS, we only need one journal write to flush
+them both. However, commit+fsync ends up doing:
 
-> On Dec 18, 2019, at 2:31 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Wed, Dec 18, 2019 at 2:05 PM Trond Myklebust =
-<trondmy@hammerspace.com> wrote:
->>=20
->> On Wed, 2019-12-18 at 12:47 -0500, Olga Kornievskaia wrote:
->>> Hi folks,
->>>=20
->>> Is this a well know but undocumented fact that you can't set large
->>> amount of acls (over 4096bytes, ~90acls) while mounted using
->>> krb5i/krb5p? That if you want to get/set large acls, it must be done
->>> over auth_sys/krb5?
->>>=20
->>=20
->> It's certainly not something that I was aware of. Do you see where =
-that
->> limitation is coming from?
->=20
-> I haven't figure it exactly but gss_unwrap_resp_integ() is failing in
-> if (mic_offset > rcv_buf->len). I'm just not sure who sets up the
-> buffer (or why  rvc_buf->len is (4280) larger than a page can a
-> page-limit might make sense to for me but it's not). So you think it
-> should have been working.
+	journal write (src+dst metadata)
+	writeback data (dst data)
+	  -> can dirty dst metadata
+	journal write (dst metadata) or device cache flush (dst data)
 
-The buffer is set up in the XDR encoder. But pages can be added
-by the transport... I guess rcv_buf->len isn't updated when that
-happens.
+So either way, we end up having to do multiple device cache flushes
+and possibly multiple journal writes.
 
---
-Chuck Lever
+IOWs, This would be much more efficient as:
 
+	fsync(dst)
+	commit_inode_metadata(src)
 
+as it would end up as:
 
+	writeback data (dst data)
+	journal write(src+dst metadata)
+
+and the call to commit_inode_metadata(src) ends up being a no-op
+with almost no overhead...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
