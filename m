@@ -2,137 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C94412666B
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2019 17:10:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0D9E12687A
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2019 18:54:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLSQKx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Dec 2019 11:10:53 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37653 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfLSQKx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Dec 2019 11:10:53 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x18so4102550vsq.4
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2019 08:10:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h+w1O1Iv1YuzQGcXqLi8lD0BcqU9/RjSG4ZGqCxZTxY=;
-        b=FKbsxG5+3qD059hYDxiBwyFoi0jLtcDrb25yPNK/tnj+9TquKhuHPNW6Hc0BsP07CW
-         cifh8llfMEypiYO4nR8MSpnyuX2jOjxJYQTl4s1+5Oxt4qvf36bty9wEueJQdE+z8jRL
-         rTMNc+ej9W1gYICCZxi86tNAJmf+u8ybuvgYwTVs3FdO2AhaKgdmq0qjgmU/11lPn/ZR
-         xcSwtbhIpGJ9vTphh+qoyyPBLnU2XkLWGEnRtotbjq/bALkfvou/jWlIlUSyoeQL40qC
-         Od/DdhFLOHaB83fzlrj00JgJpdUg4nT4bl6yqlffn467jtavRZQLpnsNkKym67xjBqBe
-         NJXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h+w1O1Iv1YuzQGcXqLi8lD0BcqU9/RjSG4ZGqCxZTxY=;
-        b=Ke28kJRrDYvwj4FdzdGTRaK+uFFRtRI4rICas6gpqmPOQ+ui1Fi7e+XonzdLVMw9eY
-         NVpn/LDP/pmLIAbJwr5IFPO62j7aUw/LxgJuM+CIpjvFt3VUkHSb2M+VtSqZR5hSlo5r
-         1o5i7NzLLpVdgDpaXi97QveQyHwNIC/+OVjJPxlmUogCZtQzWa2umPSfsp18OCst7o8s
-         8kAe3Rgfc/fXm3dVlEEJm1zWAyKFoTSFYaqKXJsTsMaB2H4o9/cXTvJ8/o4i/yTHlia9
-         PYcW/+4nKRu6Fq9EJtdtO0HS7GTrWTZETaNXjacsMVZ467dT19JL778Eivk5wpDp1Th/
-         6Nvw==
-X-Gm-Message-State: APjAAAXtguxWdoEOTxkmSr/kBLsHWfY8sE6tGRuvFX6AOXY9ynhePZIv
-        OGcjYO57wQkrgxADaV/SKIA6xxxlgHkjcjiS9mk=
-X-Google-Smtp-Source: APXvYqxAr5eIfZNzFErS4vhq9wCaXuMeP8vRJ23K8dkF+SjHqZioVGjooCu3/l8zWZwU1NASWGp/DIL1Gqx4ZKJeLrI=
-X-Received: by 2002:a67:f81a:: with SMTP id l26mr5373760vso.194.1576771849503;
- Thu, 19 Dec 2019 08:10:49 -0800 (PST)
+        id S1726818AbfLSRy6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Dec 2019 12:54:58 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35326 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726797AbfLSRy6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Dec 2019 12:54:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576778097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/JhP8Uvlx3YYeeNrsS5JaFsMByNLWx35JcNbthSfVC8=;
+        b=WpT4OJfA8dpsPlJid/1W0SPrN0a3oO+XsNbjcodyJChpH5j+ztECI8ksxelhATUk6jd+Yj
+        ywVIZNSwJFzy1rDaV5wVAHWsgh/Xp0mmSc+HUDU99LDtRlz5ZtS18p7g4FE0D3QNDp469M
+        Qvp2QBg42vpBSWp/t5sDKOos/m6YrIE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-sKCbQ6KZPoO8r2ez8w70Ug-1; Thu, 19 Dec 2019 12:54:56 -0500
+X-MC-Unique: sKCbQ6KZPoO8r2ez8w70Ug-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F6A394EEE
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2019 17:54:55 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-116-81.phx2.redhat.com [10.3.116.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06BF47D97C
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2019 17:54:54 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] libnfsidmap: Turn off default verbosity
+Date:   Thu, 19 Dec 2019 12:54:52 -0500
+Message-Id: <20191219175452.14317-1-steved@redhat.com>
 MIME-Version: 1.0
-References: <CAN-5tyHR8RKtsVNdg6vrSN50Sf9x9XWn-VX0pXBPetAY4Mj7nA@mail.gmail.com>
- <5E198AD1-41F7-4211-83CA-85680D8FB115@oracle.com> <CAN-5tyEPhcE6NBktsqRKySyAUi6EeC_saWFH8A7tKFZ+Sb0jMg@mail.gmail.com>
- <7D6BD48C-E6B3-43D4-8A31-99F0B387EF77@oracle.com> <CAN-5tyHmqs2ZWZHKBbockHX_kEcXbnqB=kAfVqtkv-BLhpZHTg@mail.gmail.com>
- <44C74BBB-3181-4F00-BFD8-784555C80F23@oracle.com>
-In-Reply-To: <44C74BBB-3181-4F00-BFD8-784555C80F23@oracle.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 19 Dec 2019 11:10:38 -0500
-Message-ID: <CAN-5tyEh9AxGusTg1VoQ195wds43bBEQhRnojLTSiQgecm3bpQ@mail.gmail.com>
-Subject: Re: rdma compile error
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 10:57 AM Chuck Lever <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Dec 4, 2019, at 2:09 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >
-> > On Wed, Dec 4, 2019 at 1:25 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Dec 4, 2019, at 1:12 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >>>
-> >>> On Wed, Dec 4, 2019 at 1:02 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>>>
-> >>>> Hi Olga-
-> >>>>
-> >>>>> On Dec 4, 2019, at 11:15 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >>>>>
-> >>>>> Hi Chuck,
-> >>>>>
-> >>>>> I git cloned your origin/cel-testing, it's on the following commit.
-> >>>>> commit 37e235c0128566e9d97741ad1e546b44f324f108
-> >>>>> Author: Chuck Lever <chuck.lever@oracle.com>
-> >>>>> Date:   Fri Nov 29 12:06:00 2019 -0500
-> >>>>>
-> >>>>>  xprtrdma: Invoke rpcrdma_ep_create() in the connect worker
-> >>>>>
-> >>>>> And I'm getting the following compile error.
-> >>>>>
-> >>>>> CC [M]  drivers/infiniband/core/cma_trace.o
-> >>>>> In file included from drivers/infiniband/core/cma_trace.h:302:0,
-> >>>>>               from drivers/infiniband/core/cma_trace.c:16:
-> >>>>> ./include/trace/define_trace.h:95:43: fatal error: ./cma_trace.h: No
-> >>>>> such file or directory
-> >>>>> #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-> >>>>>                                         ^
-> >>>>> Is this known?
-> >>>>
-> >>>> I haven't had any complaints from lkp.
-> >>>>
-> >>>> f73179592745 ("RDMA/cma: Add trace points in RDMA Connection Manager")
-> >>>>
-> >>>> should have added drivers/infiniband/core/cma_trace.h .
-> >>>>
-> >>>
-> >>> The file "cma_trace.h" is there in the "core" directory. But for some
-> >>> reason my compile expects it to be in include/trace directory (if I
-> >>> were to copy it there I can compile).
-> >>
-> >> The end of cma_trace.h should have:
-> >>
-> >> #undef TRACE_INCLUDE_PATH
-> >> #define TRACE_INCLUDE_PATH .
-> >> #define TRACE_INCLUDE_FILE cma_trace
-> >
-> > It does have it.
-> >
-> >> That is supposed to steer the compiler to the cma_trace.h in core/ .
-> >>
-> >> Does a "make mrproper; git clean -d -f -x" help? Feels like there's
-> >> a stale generated file somewhere that's breaking things.
-> >
-> > I probably do have something uncleaned. I have tried what you
-> > suggested but it's not helping. This build is a tar of a git clone
-> > tree then copied into an internal lab (with rdma hardware).
->
-> I found a very similar compile issue yesterday. The fix is in the
-> current cel-testing topic branch, if you are interested.
+Commit f080188e changed the library's verbosity
+to be on by default. The patch turns it off by
+default
 
-Thanks. I'll give it a try!
+Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=3D1774787
 
->
->
-> --
-> Chuck Lever
->
->
->
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ support/nfsidmap/libnfsidmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidma=
+p.c
+index 9299e65..d11710f 100644
+--- a/support/nfsidmap/libnfsidmap.c
++++ b/support/nfsidmap/libnfsidmap.c
+@@ -101,7 +101,7 @@ static void default_logger(const char *fmt, ...)
+=20
+ #pragma GCC visibility pop
+ nfs4_idmap_log_function_t idmap_log_func =3D default_logger;
+-int idmap_verbosity =3D 2;
++int idmap_verbosity =3D 0;
+ #pragma GCC visibility push(hidden)
+=20
+ static int id_as_chars(char *name, uid_t *id)
+--=20
+2.21.0
+
