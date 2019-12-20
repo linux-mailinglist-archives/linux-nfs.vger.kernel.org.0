@@ -2,214 +2,190 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E16B12746B
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2019 05:01:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BAC2127519
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2019 06:20:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfLTEBZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Dec 2019 23:01:25 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:57364 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfLTEBZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Dec 2019 23:01:25 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK40EdK075613
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- references : message-id : date : mime-version : in-reply-to : content-type
- : content-transfer-encoding; s=corp-2019-08-05;
- bh=hruZpeVd6jBbeNjBCylObWSldrTsXJJLa81F8j2XPME=;
- b=qWA/RHayRgDSgNF+0zBtAaGp1bEKcjOURa84DyK01kpFpfsDGrVCyL0/hKFPPI2pzZgB
- kQXZMVGzTc/mNGCOuOCVQU3l1rjMngCVAyS+PBsnBZDMP/Qvh+ZZiZohYXCN88/7SOIl
- veaaB6Z1d0dk1cmSYQ/SV7lapE56z9FzjGXXtMok8zd3peA7KjQM4BTk24PktBRJWjlI
- Ffy3O2CUUWqu1+I/IE1+DaaNDBDLpmYl1IE6sZyKxwhbZ2rTgwFmfMAX8xyRHpa0mHpj
- 4OFO7417NrJx9Uj1W44UrrdBJ3uHewP5XbCSuKT2pxozvvJuOp5aWocdRXNYATVsu413 EQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2x01jaefcn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK3rT5T139545
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2x0pcb8xsq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:21 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBK41KGh002167
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:20 GMT
-Received: from Macbooks-MacBook-Pro.local (/10.39.251.100)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 20:01:20 -0800
-Subject: Re: 'ls -lrt' performance issue on large dir while dir is being
- modified
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
-Message-ID: <a41af3d6-8280-e315-fb65-a9285bad50ec@oracle.com>
-Date:   Thu, 19 Dec 2019 20:01:16 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        id S1725914AbfLTFUI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Dec 2019 00:20:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46356 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbfLTFUI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 20 Dec 2019 00:20:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A9F49AE19;
+        Fri, 20 Dec 2019 05:20:05 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "anna.schumaker\@netapp.com" <anna.schumaker@netapp.com>
+Date:   Fri, 20 Dec 2019 16:19:56 +1100
+Cc:     "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH/RFC] NFS: handle NFSv4.1 server that doesn't support NFS4_OPEN_CLAIM_DELEG_CUR_FH
+In-Reply-To: <9f5f220e64245d7f1b0359149876b5dc056dcf12.camel@hammerspace.com>
+References: <87y2v9fdz8.fsf@notabene.neil.brown.name> <3afd2d5c631d8e3429e025e204a7b1c95b3c1415.camel@hammerspace.com> <87v9qdf2gh.fsf@notabene.neil.brown.name> <d3299fefa94d6959d848b765ce60e2467ce1b253.camel@hammerspace.com> <87pngkg9ga.fsf@notabene.neil.brown.name> <9f5f220e64245d7f1b0359149876b5dc056dcf12.camel@hammerspace.com>
+Message-ID: <87lfr7fu9v.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912200027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912200028
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Anna, Trond,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I made a mistake with the 5.5 numbers. The VM that runs 5.5 has some
-problems. There is no regression with 5.5, here are the new numbers:
+On Thu, Dec 19 2019, Trond Myklebust wrote:
 
-Upstream Linux 5.5.0-rc1 [ORI] 93296: 3m10.917s  197891:  10m35.789s
-Upstream Linux 5.5.0-rc1 [MOD] 98614: 1m59.649s  192801:  3m55.003s
+> On Thu, 2019-12-19 at 16:39 +1100, NeilBrown wrote:
+>> On Thu, Dec 19 2019, Trond Myklebust wrote:
+>>=20
+>> > On Thu, 2019-12-19 at 13:56 +1100, NeilBrown wrote:
+>> > > On Wed, Dec 18 2019, Trond Myklebust wrote:
+>> > >=20
+>> > > > On Thu, 2019-12-19 at 09:47 +1100, NeilBrown wrote:
+>> > > > > If an NFSv4.1 server doesn't support
+>> > > > > NFS4_OPEN_CLAIM_DELEG_CUR_FH
+>> > > > > (e.g. Linux 3.0), and a newer NFS client tries to use it to
+>> > > > > claim
+>> > > > > an open before returning a delegation, the server might
+>> > > > > return
+>> > > > > NFS4ERR_BADXDR.
+>> > > > > That is what Linux 3.0 does, though the RFC doesn't seem to
+>> > > > > be
+>> > > > > explicit
+>> > > > > on which flags must be supported, and what error can be
+>> > > > > returned
+>> > > > > for
+>> > > > > unsupported flags.
+>> > > >=20
+>> > > > NFS4ERR_BADXDR is defined in RFC5661, section 15.1.1.1 as
+>> > > > meaning
+>> > > >=20
+>> > > > "The arguments for this operation do not match those specified
+>> > > > in
+>> > > > the
+>> > > > XDR definition."
+>> > > >=20
+>> > > > That's clearly not the case here, so I'd chalk this down to a
+>> > > > fairly
+>> > > > blatant server bug, at which point it makes no sense to fix it
+>> > > > in
+>> > > > the
+>> > > > client.
+>> > >=20
+>> > > Ok, but the RFC seems to suggest it is OK to not support this
+>> > > flag,
+>> > > so
+>> > > suppose I fixed the server to return NFS4ERR_NOTSUPP instead.
+>> > > The client still wouldn't handle this response gracefully.
+>> > >=20
+>> >=20
+>> > NFS4ERR_NOTSUPP is wrong too as the OPEN operation is clearly
+>> > supported. The only error that might make sense is NFS4ERR_INVAL:
+>> >=20
+>> > "15.1.1.4.  NFS4ERR_INVAL (Error Code 22)
+>> >=20
+>> >    The arguments for this operation are not valid for some reason,
+>> > even
+>> >    though they do match those specified in the XDR definition for
+>> > the
+>> >    request."
+>> >=20
+>> > That said, why do we care about supporting NFSv4.1 on this server?
+>> > It
+>> > is clearly broken.
+>>=20
+>> I care about it because a customer has a support contract, but that
+>> isn't your problem.
+>>=20
+>> I would think "we" care about it because we want to support the spec,
+>> and the spec (RFC 5661 section 2.4) says:
+>>=20
+>>                                                         where the
+>> server
+>>    supports neither the CLAIM_DELEGATE_PREV nor CLAIM_DELEG_CUR_FH
+>> claim
+>>    types
+>
+> Given the context, I think that is actually a typo. It looks to me like
+> it is talking about CLAIM_DELEGATE_PREV and CLAIM_DELEG_PREV_FH, since
+> otherwise the talk about releasing delegation state when establishing a
+> new lease makes no sense.
 
-My apologies for the mistake.
-  
-Now there is no regression with 5.5, I'd like to get your opinion
-regarding the change to revert the call from invalidate_mapping_pages
-to nfs_zap_mapping in nfs_force_use_readdirplus to prevent the
-current 'ls' from restarting the READDIRPLUS3 from cookie 0. I'm
-not quite sure about the intention of the prior change from
-nfs_zap_mapping to invalidate_mapping_pages so that is why I'm
-seeking advise. Or do you have any suggestions to achieve the same?
+Hmmm.. Yes, that's believable.
 
-Thanks,
--Dai
+>
+>
+>> Also you have code in the client to handle the possibility that an
+>> NFSv4.1 or later server might not handle some features of OPEN.
+>> Three separate features are grouped under "NFS_CAP_ATOMIC_OPEN_V1":
+>> If this isn't set, we fall back:
+>>=20
+>>         case NFS4_OPEN_CLAIM_FH:
+>>                 return NFS4_OPEN_CLAIM_NULL;
+>>         case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+>>                 return NFS4_OPEN_CLAIM_DELEGATE_CUR;
+>>         case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
+>>                 return NFS4_OPEN_CLAIM_DELEGATE_PREV;
+>>=20
+>
+> Right. That's a convenience for downgrading NFSv4.1 service to what is
+> supported by NFSv4.0.
+>
+>> However nfs4_map_atomic_open_claim() is not called when
+>> NFS4_OPEN_CLAIM_DELEG_CUR_FH is tried, and fails.  This appears
+>> to be an omission in the code.
+>>=20
+>
+> It is deliberate. There really isn't anything that describes what is
+> and isn't mandatory to implement in NFSv4.1, but if we have to make
+> everything optional, then we're going to have to add a lot of mostly
+> unnecessary complexity to the client.
+> At what point do we then stop? Do we support a NFSv4.1 server that
+> implements no NFSv4.1 features? Why not just let the client downgrade
+> to NFSv4.0 in that case?
 
-On 12/17/19 4:34 PM, Dai Ngo wrote:
-> Hi,
->
-> I'd like to report an issue with 'ls -lrt' on NFSv3 client takes
-> a very long time to display the content of a large directory
-> (100k - 200k files) while the directory is being modified by
-> another NFSv3 client.
->
-> The problem can be reproduced using 3 systems. One system serves
-> as the NFS server, one system runs as the client that doing the
-> 'ls -lrt' and another system runs the client that creates files
-> on the server.
->     Client1 creates files using this simple script:
->
->> #!/bin/sh
->>
->> if [ $# -lt 2 ]; then
->>         echo "Usage: $0 number_of_files base_filename"
->>         exit
->> fi    nfiles=$1
->> fname=$2
->> echo "creating $nfiles files using filename[$fname]..."
->> i=0         while [ i -lt $nfiles ] ;
->> do            i=`expr $i + 1`
->>         echo "xyz" > $fname$i
->>         echo "$fname$i" done
->
-> Client2 runs 'time ls -lrt /tmp/mnt/bd1 |wc -l' in a loop.
->
-> The network traces and dtrace probes showed numerous READDIRPLUS3
-> requests restarting  from cookie 0 which seemed to indicate the
-> cached pages of the directory were invalidated causing the pages
-> to be refilled starting from cookie 0 until the current requested
-> cookie.  The cached page invalidation were tracked to
-> nfs_force_use_readdirplus().  To verify, I made the below
-> modification, ran the test for various kernel versions and
-> captured the results shown below.
->
-> The modification is:
->
->> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->> index a73e2f8bd8ec..5d4a64555fa7 100644
->> --- a/fs/nfs/dir.c
->> +++ b/fs/nfs/dir.c
->> @@ -444,7 +444,7 @@ void nfs_force_use_readdirplus(struct inode *dir)
->>      if (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
->>          !list_empty(&nfsi->open_files)) {
->>          set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags);
->> -        invalidate_mapping_pages(dir->i_mapping, 0, -1);
->> +        nfs_zap_mapping(dir, dir->i_mapping);
->>      }
->>  }
->
-> Note that after this change, I did not see READDIRPLUS3 restarting
-> with cookie 0 anymore.
->
-> Below are the summary results of 'ls -lrt'.  For each kernel version
-> to be compared, one row for the original kernel and one row for the
-> kernel with the above modification.
->
-> I cloned dtrace-linux from here:
-> github.com/oracle/dtrace-linux-kernel
->
-> dtrace-linux 5.1.0-rc4 [ORI] 89191: 2m59.32s   193071: 6m7.810s
-> dtrace-linux 5.1.0-rc4 [MOD] 98771: 1m55.900s  191322: 3m48.668s
->
-> I cloned upstream Linux from here:
-> git.kernel.org/pub/scm/linux/kernel/git/tovards/linux.git
->
-> Upstream Linux 5.5.0-rc1 [ORI] 87891: 5m11.089s  160974: 14m4.384s
-> Upstream Linux 5.5.0-rc1 [MOD] 87075: 5m2.057s   161421: 14m33.615s
->
-> Please note that these are relative performance numbers and are used
-> to illustrate the issue only.
->
-> For reference, on the original dtrace-linux it takes about 9s for
-> 'ls -ltr' to complete on a directory with 200k files if the directory
-> is not modified while 'ls' is running.
->
-> The number of the original Upstream Linux is *really* bad, and the
-> modification did not seem to have any effect, not sure why...
-> it could be something else is going on here.
->
-> The cache invalidation in nfs_force_use_readdirplus seems too
-> drastic and might need to be reviewed. Even though this change
-> helps but it did not get the 'ls' performance to where it's
-> expected to be. I think even though READDIRPLUS3 was used, the
-> attribute cache was invalidated due to the directory modification,
-> causing attribute cache misses resulting in the calls to
-> nfs_force_use_readdirplus as shown in this stack trace:
->
->   0  17586     page_cache_tree_delete:entry
->               vmlinux`remove_mapping+0x14
->               vmlinux`invalidate_inode_page+0x7c
->               vmlinux`invalidate_mapping_pages+0x1dd
->               nfs`nfs_force_use_readdirplus+0x47
->               nfs`__dta_nfs_lookup_revalidate_478+0x5dd
->               vmlinux`d_revalidate.part.24+0x10
->               vmlinux`lookup_fast+0x254
->               vmlinux`walk_component+0x49
->               vmlinux`path_lookupat+0x79
->               vmlinux`filename_lookup+0xaf
->               vmlinux`user_path_at_empty+0x36
->               vmlinux`vfs_statx+0x77
->               vmlinux`SYSC_newlstat+0x3d
->               vmlinux`SyS_newlstat+0xe
->               vmlinux`do_syscall_64+0x79
->               vmlinux`entry_SYSCALL_64+0x18d
->
-> Besides the overhead of refilling the page caches from cookie 0,
-> I think the reason 'ls' still takes so long to compete because the
-> client has to send a bunch of additional LOOKUP/ACCESS requests
-> over the wire to service the stat(2) calls from 'ls' due to the
-> attribute cache misses.
->
-> Please let me know you what you think and if there is any addition
-> information is needed.
->
-> Thanks,
-> -Dai
+I was a bit surprised that nfs4_map_atomic_open_claim() exists at all,
+but given that it did, I assumed it would be used more uniformly.
+
+So this all implies that Linux NFS server claimed to support NFSv4.1
+before it actually did - which seems odd.  This is just a bug (which are
+expected), but a clear ommission.
+
+Oh well, it probably won't be too hard to backport the
+NFS4_OPEN_CLAIM_DELEG_CUR_FH support if it turns out to be really
+needed.
+
+Thanks a lot for your time,
+NeilBrown
+
+
 >
 >
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl38Wf0ACgkQOeye3VZi
+gbmVeA//SnWdP75+5RR7F5pRSaMB5ZVEMGh15g3vpq2UWPCqPtCHiZmQ/I7aZ/1h
+DPbj3+UG/b3PfGC6UedYoVjhtllGyMpb7KKgEv+PO/BKFGY5jy7EZ5ILsd01yPYA
+5HkKaWoTMAAg976w88cha7jxHpFpOWR8av9jv5sgYCHb8Z7COE+CbTsHJ+JHyOks
+ahvWDeVTR5dB5muT+HeGcS51BPdj38fX/UfbsvQgzcXpOgn7O5lK6g4F0erJvPlc
+eoRfUSUo384Z2kgXr08ZX7kU33PGbxJAhQoJbmukBWj9Zm4S3L5c8Frh3w8XQq20
++7N52iUtvdEHQKZ3ROod9bLqCCVDcsqBnzOjPPRORZOtESlqe159Wa6qxsHBNegZ
+8VvGMps/iCpb2vvm2QgJ9SkXR8tDy7SJd+nCWRpPxGGzugDxJ5S5e7ylDlj8mDC1
+ovvEalEYyqamtxi7hXFnKQ9PHgSXMppB2bNAEvP3I7KobfEBWn+SlPiGHCnbUC0L
+NME8GVagNLk102K7A27v1tms/Vk5pzB/+xfe/09Fudwwkgo0D28jIHUsbi0sFeYz
+RTDDLDQ0CMrVnIR2WHTbIXWncC1qSqMFJszebJUHKmIVbT4OU1sRolxroJnZO763
+RWvQl9vaUMVScoES6IfiUurFV55//655x+Qy9lPRv78V+B+dGKI=
+=+XAi
+-----END PGP SIGNATURE-----
+--=-=-=--
