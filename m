@@ -2,203 +2,214 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 034661273A6
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2019 03:57:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E16B12746B
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2019 05:01:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfLTC5I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Dec 2019 21:57:08 -0500
-Received: from fieldses.org ([173.255.197.46]:38956 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfLTC5I (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:57:08 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BCC801BE3; Thu, 19 Dec 2019 21:57:07 -0500 (EST)
-Date:   Thu, 19 Dec 2019 21:57:07 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, y2038@lists.linaro.org
-Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
-Message-ID: <20191220025707.GH12026@fieldses.org>
-References: <20191213141046.1770441-1-arnd@arndb.de>
- <20191213141046.1770441-11-arnd@arndb.de>
+        id S1727148AbfLTEBZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Dec 2019 23:01:25 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:57364 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfLTEBZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Dec 2019 23:01:25 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK40EdK075613
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ references : message-id : date : mime-version : in-reply-to : content-type
+ : content-transfer-encoding; s=corp-2019-08-05;
+ bh=hruZpeVd6jBbeNjBCylObWSldrTsXJJLa81F8j2XPME=;
+ b=qWA/RHayRgDSgNF+0zBtAaGp1bEKcjOURa84DyK01kpFpfsDGrVCyL0/hKFPPI2pzZgB
+ kQXZMVGzTc/mNGCOuOCVQU3l1rjMngCVAyS+PBsnBZDMP/Qvh+ZZiZohYXCN88/7SOIl
+ veaaB6Z1d0dk1cmSYQ/SV7lapE56z9FzjGXXtMok8zd3peA7KjQM4BTk24PktBRJWjlI
+ Ffy3O2CUUWqu1+I/IE1+DaaNDBDLpmYl1IE6sZyKxwhbZ2rTgwFmfMAX8xyRHpa0mHpj
+ 4OFO7417NrJx9Uj1W44UrrdBJ3uHewP5XbCSuKT2pxozvvJuOp5aWocdRXNYATVsu413 EQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2x01jaefcn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK3rT5T139545
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2x0pcb8xsq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:21 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBK41KGh002167
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2019 04:01:20 GMT
+Received: from Macbooks-MacBook-Pro.local (/10.39.251.100)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 20:01:20 -0800
+Subject: Re: 'ls -lrt' performance issue on large dir while dir is being
+ modified
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
+Message-ID: <a41af3d6-8280-e315-fb65-a9285bad50ec@oracle.com>
+Date:   Thu, 19 Dec 2019 20:01:16 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213141046.1770441-11-arnd@arndb.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912200027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912200028
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 03:10:44PM +0100, Arnd Bergmann wrote:
-> @@ -5212,8 +5211,8 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	struct nfs4_ol_stateid *stp;
->  	struct nfsd4_blocked_lock *nbl;
->  	struct list_head *pos, *next, reaplist;
-> -	time_t cutoff = get_seconds() - nn->nfsd4_lease;
-> -	time_t t, new_timeo = nn->nfsd4_lease;
-> +	time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
+Hi Anna, Trond,
 
-For some reason the version I was testing still had this as
-get_seconds(), which was what was causing test failures.  I'm not quite
-sure what happened--I may have just typo'd something while fixing up a
-conflict.
+I made a mistake with the 5.5 numbers. The VM that runs 5.5 has some
+problems. There is no regression with 5.5, here are the new numbers:
 
---b.
+Upstream Linux 5.5.0-rc1 [ORI] 93296: 3m10.917s  197891:  10m35.789s
+Upstream Linux 5.5.0-rc1 [MOD] 98614: 1m59.649s  192801:  3m55.003s
 
-> +	time64_t t, new_timeo = nn->nfsd4_lease;
->  
->  	dprintk("NFSD: laundromat service - starting\n");
->  
-> @@ -5227,7 +5226,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	spin_lock(&nn->client_lock);
->  	list_for_each_safe(pos, next, &nn->client_lru) {
->  		clp = list_entry(pos, struct nfs4_client, cl_lru);
-> -		if (time_after((unsigned long)clp->cl_time, (unsigned long)cutoff)) {
-> +		if (clp->cl_time > cutoff) {
->  			t = clp->cl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5250,7 +5249,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	spin_lock(&state_lock);
->  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
->  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> -		if (time_after((unsigned long)dp->dl_time, (unsigned long)cutoff)) {
-> +		if (dp->dl_time > cutoff) {
->  			t = dp->dl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5270,8 +5269,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	while (!list_empty(&nn->close_lru)) {
->  		oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
->  					oo_close_lru);
-> -		if (time_after((unsigned long)oo->oo_time,
-> -			       (unsigned long)cutoff)) {
-> +		if (oo->oo_time > cutoff) {
->  			t = oo->oo_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5301,8 +5299,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	while (!list_empty(&nn->blocked_locks_lru)) {
->  		nbl = list_first_entry(&nn->blocked_locks_lru,
->  					struct nfsd4_blocked_lock, nbl_lru);
-> -		if (time_after((unsigned long)nbl->nbl_time,
-> -			       (unsigned long)cutoff)) {
-> +		if (nbl->nbl_time > cutoff) {
->  			t = nbl->nbl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5319,7 +5316,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		free_blocked_lock(nbl);
->  	}
->  out:
-> -	new_timeo = max_t(time_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> +	new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
->  	return new_timeo;
->  }
->  
-> @@ -5329,13 +5326,13 @@ static void laundromat_main(struct work_struct *);
->  static void
->  laundromat_main(struct work_struct *laundry)
->  {
-> -	time_t t;
-> +	time64_t t;
->  	struct delayed_work *dwork = to_delayed_work(laundry);
->  	struct nfsd_net *nn = container_of(dwork, struct nfsd_net,
->  					   laundromat_work);
->  
->  	t = nfs4_laundromat(nn);
-> -	dprintk("NFSD: laundromat_main - sleeping for %ld seconds\n", t);
-> +	dprintk("NFSD: laundromat_main - sleeping for %lld seconds\n", t);
->  	queue_delayed_work(laundry_wq, &nn->laundromat_work, t*HZ);
->  }
->  
-> @@ -6549,7 +6546,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	}
->  
->  	if (fl_flags & FL_SLEEP) {
-> -		nbl->nbl_time = get_seconds();
-> +		nbl->nbl_time = ktime_get_boottime_seconds();
->  		spin_lock(&nn->blocked_locks_lock);
->  		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
->  		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
-> @@ -7709,7 +7706,7 @@ nfs4_state_start_net(struct net *net)
->  	nfsd4_client_tracking_init(net);
->  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
->  		goto skip_grace;
-> -	printk(KERN_INFO "NFSD: starting %ld-second grace period (net %x)\n",
-> +	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
->  	       nn->nfsd4_grace, net->ns.inum);
->  	queue_delayed_work(laundry_wq, &nn->laundromat_work, nn->nfsd4_grace * HZ);
->  	return 0;
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 11b42c523f04..aace740d5a92 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -956,7 +956,7 @@ static ssize_t write_maxconn(struct file *file, char *buf, size_t size)
->  
->  #ifdef CONFIG_NFSD_V4
->  static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
-> -				  time_t *time, struct nfsd_net *nn)
-> +				  time64_t *time, struct nfsd_net *nn)
->  {
->  	char *mesg = buf;
->  	int rv, i;
-> @@ -984,11 +984,11 @@ static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
->  		*time = i;
->  	}
->  
-> -	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%ld\n", *time);
-> +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%lld\n", *time);
->  }
->  
->  static ssize_t nfsd4_write_time(struct file *file, char *buf, size_t size,
-> -				time_t *time, struct nfsd_net *nn)
-> +				time64_t *time, struct nfsd_net *nn)
->  {
->  	ssize_t rv;
->  
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 03fc7b4380f9..e426b22b5028 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -132,7 +132,7 @@ struct nfs4_delegation {
->  	struct list_head	dl_recall_lru;  /* delegation recalled */
->  	struct nfs4_clnt_odstate *dl_clnt_odstate;
->  	u32			dl_type;
-> -	time_t			dl_time;
-> +	time64_t		dl_time;
->  /* For recall: */
->  	int			dl_retries;
->  	struct nfsd4_callback	dl_recall;
-> @@ -310,7 +310,7 @@ struct nfs4_client {
->  #endif
->  	struct xdr_netobj	cl_name; 	/* id generated by client */
->  	nfs4_verifier		cl_verifier; 	/* generated by client */
-> -	time_t                  cl_time;        /* time of last lease renewal */
-> +	time64_t		cl_time;	/* time of last lease renewal */
->  	struct sockaddr_storage	cl_addr; 	/* client ipaddress */
->  	bool			cl_mach_cred;	/* SP4_MACH_CRED in force */
->  	struct svc_cred		cl_cred; 	/* setclientid principal */
-> @@ -449,7 +449,7 @@ struct nfs4_openowner {
->  	 */
->  	struct list_head	oo_close_lru;
->  	struct nfs4_ol_stateid *oo_last_closed_stid;
-> -	time_t			oo_time; /* time of placement on so_close_lru */
-> +	time64_t		oo_time; /* time of placement on so_close_lru */
->  #define NFS4_OO_CONFIRMED   1
->  	unsigned char		oo_flags;
->  };
-> @@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
->  struct nfsd4_blocked_lock {
->  	struct list_head	nbl_list;
->  	struct list_head	nbl_lru;
-> -	time_t			nbl_time;
-> +	time64_t		nbl_time;
->  	struct file_lock	nbl_lock;
->  	struct knfsd_fh		nbl_fh;
->  	struct nfsd4_callback	nbl_cb;
-> -- 
-> 2.20.0
+My apologies for the mistake.
+  
+Now there is no regression with 5.5, I'd like to get your opinion
+regarding the change to revert the call from invalidate_mapping_pages
+to nfs_zap_mapping in nfs_force_use_readdirplus to prevent the
+current 'ls' from restarting the READDIRPLUS3 from cookie 0. I'm
+not quite sure about the intention of the prior change from
+nfs_zap_mapping to invalidate_mapping_pages so that is why I'm
+seeking advise. Or do you have any suggestions to achieve the same?
+
+Thanks,
+-Dai
+
+On 12/17/19 4:34 PM, Dai Ngo wrote:
+> Hi,
+>
+> I'd like to report an issue with 'ls -lrt' on NFSv3 client takes
+> a very long time to display the content of a large directory
+> (100k - 200k files) while the directory is being modified by
+> another NFSv3 client.
+>
+> The problem can be reproduced using 3 systems. One system serves
+> as the NFS server, one system runs as the client that doing the
+> 'ls -lrt' and another system runs the client that creates files
+> on the server.
+>     Client1 creates files using this simple script:
+>
+>> #!/bin/sh
+>>
+>> if [ $# -lt 2 ]; then
+>>         echo "Usage: $0 number_of_files base_filename"
+>>         exit
+>> fi    nfiles=$1
+>> fname=$2
+>> echo "creating $nfiles files using filename[$fname]..."
+>> i=0         while [ i -lt $nfiles ] ;
+>> do            i=`expr $i + 1`
+>>         echo "xyz" > $fname$i
+>>         echo "$fname$i" done
+>
+> Client2 runs 'time ls -lrt /tmp/mnt/bd1 |wc -l' in a loop.
+>
+> The network traces and dtrace probes showed numerous READDIRPLUS3
+> requests restarting  from cookie 0 which seemed to indicate the
+> cached pages of the directory were invalidated causing the pages
+> to be refilled starting from cookie 0 until the current requested
+> cookie.  The cached page invalidation were tracked to
+> nfs_force_use_readdirplus().  To verify, I made the below
+> modification, ran the test for various kernel versions and
+> captured the results shown below.
+>
+> The modification is:
+>
+>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>> index a73e2f8bd8ec..5d4a64555fa7 100644
+>> --- a/fs/nfs/dir.c
+>> +++ b/fs/nfs/dir.c
+>> @@ -444,7 +444,7 @@ void nfs_force_use_readdirplus(struct inode *dir)
+>>      if (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
+>>          !list_empty(&nfsi->open_files)) {
+>>          set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags);
+>> -        invalidate_mapping_pages(dir->i_mapping, 0, -1);
+>> +        nfs_zap_mapping(dir, dir->i_mapping);
+>>      }
+>>  }
+>
+> Note that after this change, I did not see READDIRPLUS3 restarting
+> with cookie 0 anymore.
+>
+> Below are the summary results of 'ls -lrt'.  For each kernel version
+> to be compared, one row for the original kernel and one row for the
+> kernel with the above modification.
+>
+> I cloned dtrace-linux from here:
+> github.com/oracle/dtrace-linux-kernel
+>
+> dtrace-linux 5.1.0-rc4 [ORI] 89191: 2m59.32s   193071: 6m7.810s
+> dtrace-linux 5.1.0-rc4 [MOD] 98771: 1m55.900s  191322: 3m48.668s
+>
+> I cloned upstream Linux from here:
+> git.kernel.org/pub/scm/linux/kernel/git/tovards/linux.git
+>
+> Upstream Linux 5.5.0-rc1 [ORI] 87891: 5m11.089s  160974: 14m4.384s
+> Upstream Linux 5.5.0-rc1 [MOD] 87075: 5m2.057s   161421: 14m33.615s
+>
+> Please note that these are relative performance numbers and are used
+> to illustrate the issue only.
+>
+> For reference, on the original dtrace-linux it takes about 9s for
+> 'ls -ltr' to complete on a directory with 200k files if the directory
+> is not modified while 'ls' is running.
+>
+> The number of the original Upstream Linux is *really* bad, and the
+> modification did not seem to have any effect, not sure why...
+> it could be something else is going on here.
+>
+> The cache invalidation in nfs_force_use_readdirplus seems too
+> drastic and might need to be reviewed. Even though this change
+> helps but it did not get the 'ls' performance to where it's
+> expected to be. I think even though READDIRPLUS3 was used, the
+> attribute cache was invalidated due to the directory modification,
+> causing attribute cache misses resulting in the calls to
+> nfs_force_use_readdirplus as shown in this stack trace:
+>
+>   0  17586     page_cache_tree_delete:entry
+>               vmlinux`remove_mapping+0x14
+>               vmlinux`invalidate_inode_page+0x7c
+>               vmlinux`invalidate_mapping_pages+0x1dd
+>               nfs`nfs_force_use_readdirplus+0x47
+>               nfs`__dta_nfs_lookup_revalidate_478+0x5dd
+>               vmlinux`d_revalidate.part.24+0x10
+>               vmlinux`lookup_fast+0x254
+>               vmlinux`walk_component+0x49
+>               vmlinux`path_lookupat+0x79
+>               vmlinux`filename_lookup+0xaf
+>               vmlinux`user_path_at_empty+0x36
+>               vmlinux`vfs_statx+0x77
+>               vmlinux`SYSC_newlstat+0x3d
+>               vmlinux`SyS_newlstat+0xe
+>               vmlinux`do_syscall_64+0x79
+>               vmlinux`entry_SYSCALL_64+0x18d
+>
+> Besides the overhead of refilling the page caches from cookie 0,
+> I think the reason 'ls' still takes so long to compete because the
+> client has to send a bunch of additional LOOKUP/ACCESS requests
+> over the wire to service the stat(2) calls from 'ls' due to the
+> attribute cache misses.
+>
+> Please let me know you what you think and if there is any addition
+> information is needed.
+>
+> Thanks,
+> -Dai
+>
+>
