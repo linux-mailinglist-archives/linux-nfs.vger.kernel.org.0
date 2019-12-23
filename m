@@ -2,59 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B86C6129839
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2019 16:28:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A188212983A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2019 16:28:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLWP2g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Dec 2019 10:28:36 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:47097 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfLWP2g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Dec 2019 10:28:36 -0500
-Received: by mail-yw1-f66.google.com with SMTP id u139so7170707ywf.13
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Dec 2019 07:28:35 -0800 (PST)
+        id S1726860AbfLWP2l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Dec 2019 10:28:41 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:33088 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfLWP2l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Dec 2019 10:28:41 -0500
+Received: by mail-yb1-f193.google.com with SMTP id n66so7171372ybg.0
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Dec 2019 07:28:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=D4MFfx4MRc6PEgOrVL9+aKGce5wogpXJh2qY+trArWE=;
-        b=AAwnr1YyhzO48OJt0OeZVjV6AF7jXwE7mQcsrg0WFlVLwXiTXXWVROf0nNdqJmel7W
-         Z5hUIrdt+tpcD4LDKRajfGCJjqWc9GPsoFqG4l0APNnuuo6Ke1c3mVz6ivYILAccmqYk
-         bHKlxiTiekVeD0wwr+bKvBJlbMjznEBMkSx+BXysWjmZJueN6fu9S8XaUmecoj+nbOO9
-         cAUUq4/90VNYmlwBXDdrcGz1j8JE0x6fcxCM8wGBzxy8VRGgF3ILlQeuMWZ/BUxS97wp
-         xczzKhNq/Kbke7mcr6d03Lqd+Z/SP2T+ixxXBaVDKyJIGtkka1RuA5C/tUpzSAKpSC45
-         95vw==
+        bh=WQftTBLNl0M4X4HXciAPQ457ib26AN31HI/060U2OEE=;
+        b=jqpLdGyfKsB51pLeTu3gEzFNMSC7lnjyzyZb4YNvRj95WVxU6pdjWqp3X/PKHaodQb
+         R8k8MyHoJ7e4X+88pruFkv3OMU8GAs67UqwZVo+i70ur/gKgMqlLF+3uoXgRQkyb+BgZ
+         /uo9rDrDvPCR7I8XVid134nj2wLPQ/+vOj5gszhwnimq9i+PihTu5K2+KE5lz9jGh6fk
+         BbsZWTmPbhI83XB7zhHm+eXGECQyCiyXnrTcxJIoUXLfOgc0Pr0J09gUd5hApilhSIns
+         75P1rfL31mfLXQzqpmx0WYqnmplyn4u5dOrdicmXS9S/4DcdrhR5pcIArIyllPcnewST
+         /O+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=D4MFfx4MRc6PEgOrVL9+aKGce5wogpXJh2qY+trArWE=;
-        b=lCUkonGpj19pZ823TVA8xKAXX2UTJb65/vU6V65xmnizU/tFHE9PYDMDE7Su7d7yys
-         IeEgmpiZ0JH2hwMFQse8y76V+pv5YyVd+kX5Hb459jKNHU9lfDdgB1/picNS2Q1vrs5p
-         aKfP9Pdx+QA5EJsG3FQNEb9X0vyz03PdvVN6L3QGC1I+tO57bx/Sz68ycXYaghutyHqM
-         5Y65T2HqYNcvQrPCk+NVztlt72WIM9BC3Q1YNP5wOVkUnUjozqN/vr5Y8K63XYCTkAm/
-         DOVDc0mFdajsJf8IDI3IYEBSpdCAuT0DRd68t3lp+ZKvTJEbpLXbrzhBD6xXgBoazU2+
-         GZxQ==
-X-Gm-Message-State: APjAAAUIeZ9uSM2Aqgk5MPS8sXGCFXrxrL51x1ycRLKc4DPYWRHb3g4a
-        jN6SVETepfzMZBDLG05+m4I=
-X-Google-Smtp-Source: APXvYqyI6wuPsB1lpOPdZ7qr7pAj4OrwSLI3x6QJ0fKLrcxQIuMwC8QTN3bSUHYBJFIMmJF9QLuiSg==
-X-Received: by 2002:a81:50c3:: with SMTP id e186mr21667538ywb.160.1577114914919;
-        Mon, 23 Dec 2019 07:28:34 -0800 (PST)
+        bh=WQftTBLNl0M4X4HXciAPQ457ib26AN31HI/060U2OEE=;
+        b=qkeov8Q5gC16SXFngN4IX/G7uPTBuBQ0ff6MUIIReQmtSqvyXQk97L/kNo6dJ2uxJ0
+         3jPitrdBOM6LwBsIKCAXNhilGHIdwNJoTOTJcnr8gg5N9yJJ5MK4Uf7VyauDaXE5v4JD
+         95YZbstA/l4dj9jQwAz6M+yZdi7+k0kJ6mmo05SBZY+vi/KMz7shQv+1RzGTNgBoANaw
+         l71b4YIZQ8E0LR9jEbA3a8iqHycDFlrKEX1MMuQYnPEbI5379OptFJYG0ra5jooeaHVB
+         RB79v3NfNwYtKkeHssuR/DK0QicopL/wUc3jFfNkrrt+a0aCXKkbWDPtvkZ62fNRQtkD
+         xiQA==
+X-Gm-Message-State: APjAAAWrkgZoGMDanhsjWixus3n51oJxYZt/aR3aUrHLQ4RSe2KkFnRs
+        cvENwtC0XGV16yuakaEpXEoiameZ
+X-Google-Smtp-Source: APXvYqz86vc9iPk5dL3dex9WrL/p7umtvTtKSJpk/vF8SMP8RGapC/5JUTWDeIQKiMFU7yq1s5XyFw==
+X-Received: by 2002:a25:7b44:: with SMTP id w65mr14248431ybc.77.1577114920251;
+        Mon, 23 Dec 2019 07:28:40 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id w142sm8105165ywa.87.2019.12.23.07.28.34
+        by smtp.gmail.com with ESMTPSA id c66sm8060591ywf.96.2019.12.23.07.28.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Dec 2019 07:28:34 -0800 (PST)
+        Mon, 23 Dec 2019 07:28:39 -0800 (PST)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xBNFSX2N008880;
-        Mon, 23 Dec 2019 15:28:33 GMT
-Subject: [PATCH v1 2/4] NFS: Introduce trace events triggered by page
- writeback errors
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id xBNFScTR008884;
+        Mon, 23 Dec 2019 15:28:38 GMT
+Subject: [PATCH v1 3/4] NFS4: Report callback authentication errors
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 23 Dec 2019 10:28:33 -0500
-Message-ID: <20191223152833.17724.93664.stgit@manet.1015granger.net>
+Date:   Mon, 23 Dec 2019 10:28:38 -0500
+Message-ID: <20191223152838.17724.37546.stgit@manet.1015granger.net>
 In-Reply-To: <20191223152539.17724.52438.stgit@manet.1015granger.net>
 References: <20191223152539.17724.52438.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -66,97 +65,88 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Try to capture the reason for the writeback path tagging an error on
-a page.
+This seems to be a somewhat common issue with Kerberos NFSv4.0
+set-ups.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfstrace.h |   45 +++++++++++++++++++++++++++++++++++++++++++++
- fs/nfs/write.c    |    3 +++
- 2 files changed, 48 insertions(+)
+ fs/nfs/callback_xdr.c |   11 ++++++++---
+ fs/nfs/nfs4trace.h    |   35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index f64a33d2a1d1..4d6eb1703943 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -989,6 +989,51 @@
+diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+index 03a20f5716c7..79ff172eb1c8 100644
+--- a/fs/nfs/callback_xdr.c
++++ b/fs/nfs/callback_xdr.c
+@@ -18,6 +18,7 @@
+ #include "callback.h"
+ #include "internal.h"
+ #include "nfs4session.h"
++#include "nfs4trace.h"
+ 
+ #define CB_OP_TAGLEN_MAXSZ		(512)
+ #define CB_OP_HDR_RES_MAXSZ		(2 * 4) // opcode, status
+@@ -946,9 +947,13 @@ static __be32 nfs4_callback_compound(struct svc_rqst *rqstp)
+ 
+ 	if (hdr_arg.minorversion == 0) {
+ 		cps.clp = nfs4_find_client_ident(SVC_NET(rqstp), hdr_arg.cb_ident);
+-		if (!cps.clp || !check_gss_callback_principal(cps.clp, rqstp)) {
+-			if (cps.clp)
+-				nfs_put_client(cps.clp);
++		if (!cps.clp) {
++			trace_nfs_cb_no_clp(rqstp->rq_xid, hdr_arg.cb_ident);
++			goto out_invalidcred;
++		}
++		if (!check_gss_callback_principal(cps.clp, rqstp)) {
++			trace_nfs_cb_badprinc(rqstp->rq_xid, hdr_arg.cb_ident);
++			nfs_put_client(cps.clp);
+ 			goto out_invalidcred;
+ 		}
+ 	}
+diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+index e60b6fbd5ada..e3586c16ef59 100644
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -691,6 +691,41 @@
  		)
  );
  
-+DECLARE_EVENT_CLASS(nfs_page_error_class,
++DECLARE_EVENT_CLASS(nfs4_cb_error_class,
 +		TP_PROTO(
-+			const struct nfs_page *req,
-+			int error
++			__be32 xid,
++			u32 cb_ident
 +		),
 +
-+		TP_ARGS(req, error),
++		TP_ARGS(xid, cb_ident),
 +
 +		TP_STRUCT__entry(
-+			__field(const void *, req)
-+			__field(pgoff_t, index)
-+			__field(unsigned int, offset)
-+			__field(unsigned int, pgbase)
-+			__field(unsigned int, bytes)
-+			__field(int, error)
++			__field(u32, xid)
++			__field(u32, cbident)
 +		),
 +
 +		TP_fast_assign(
-+			__entry->req = req;
-+			__entry->index = req->wb_index;
-+			__entry->offset = req->wb_offset;
-+			__entry->pgbase = req->wb_pgbase;
-+			__entry->bytes = req->wb_bytes;
-+			__entry->error = error;
++			__entry->xid = be32_to_cpu(xid);
++			__entry->cbident = cb_ident;
 +		),
 +
 +		TP_printk(
-+			"req=%p index=%lu offset=%u pgbase=%u bytes=%u error=%d",
-+			__entry->req, __entry->index, __entry->offset,
-+			__entry->pgbase, __entry->bytes, __entry->error
++			"xid=0x%08x cb_ident=0x%08x",
++			__entry->xid, __entry->cbident
 +		)
 +);
 +
-+#define DEFINE_NFS_PAGEERR_EVENT(name) \
-+	DEFINE_EVENT(nfs_page_error_class, name, \
++#define DEFINE_CB_ERROR_EVENT(name) \
++	DEFINE_EVENT(nfs4_cb_error_class, nfs_cb_##name, \
 +			TP_PROTO( \
-+				const struct nfs_page *req, \
-+				int error \
++				__be32 xid, \
++				u32 cb_ident \
 +			), \
-+			TP_ARGS(req, error))
++			TP_ARGS(xid, cb_ident))
 +
-+DEFINE_NFS_PAGEERR_EVENT(nfs_write_error);
-+DEFINE_NFS_PAGEERR_EVENT(nfs_comp_error);
-+DEFINE_NFS_PAGEERR_EVENT(nfs_commit_error);
++DEFINE_CB_ERROR_EVENT(no_clp);
++DEFINE_CB_ERROR_EVENT(badprinc);
 +
- TRACE_EVENT(nfs_initiate_commit,
+ DECLARE_EVENT_CLASS(nfs4_open_event,
  		TP_PROTO(
- 			const struct nfs_commit_data *data
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 52cab65f91cf..21787711e352 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -593,6 +593,7 @@ static void nfs_end_page_writeback(struct nfs_page *req)
- static void nfs_write_error(struct nfs_page *req, int error)
- {
- 	nfs_set_pageerror(page_file_mapping(req->wb_page));
-+	trace_nfs_write_error(req, error);
- 	nfs_mapping_set_error(req->wb_page, error);
- 	nfs_inode_remove_request(req);
- 	nfs_end_page_writeback(req);
-@@ -999,6 +1000,7 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
- 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) &&
- 		    (hdr->good_bytes < bytes)) {
- 			nfs_set_pageerror(page_file_mapping(req->wb_page));
-+			trace_nfs_comp_error(req, hdr->error);
- 			nfs_mapping_set_error(req->wb_page, hdr->error);
- 			goto remove_req;
- 		}
-@@ -1847,6 +1849,7 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 			(long long)req_offset(req));
- 		if (status < 0) {
- 			if (req->wb_page) {
-+				trace_nfs_commit_error(req, status);
- 				nfs_mapping_set_error(req->wb_page, status);
- 				nfs_inode_remove_request(req);
- 			}
+ 			const struct nfs_open_context *ctx,
 
