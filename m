@@ -2,55 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE9312AA1B
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2019 04:56:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDAA712AE8C
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2019 21:37:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLZD4a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Dec 2019 22:56:30 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41836 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726741AbfLZD43 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Dec 2019 22:56:29 -0500
-Received: from callcc.thunk.org (96-72-84-49-static.hfc.comcastbusiness.net [96.72.84.49] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBQ3u6FI016271
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Dec 2019 22:56:08 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 50146420485; Wed, 25 Dec 2019 22:56:06 -0500 (EST)
-Date:   Wed, 25 Dec 2019 22:56:06 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Rich Felker <dalias@libc.org>, linux-fsdevel@vger.kernel.org,
-        musl@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [musl] getdents64 lost direntries with SMB/NFS and buffer size <
- unknown threshold
-Message-ID: <20191226035606.GB10794@mit.edu>
-References: <20191120001522.GA25139@brightrain.aerifal.cx>
- <8736eiqq1f.fsf@mid.deneb.enyo.de>
- <20191120205913.GD16318@brightrain.aerifal.cx>
- <20191121175418.GI4262@mit.edu>
- <87a77g2o2o.fsf@mid.deneb.enyo.de>
+        id S1727071AbfLZUhi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Dec 2019 15:37:38 -0500
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:47794 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfLZUhi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Dec 2019 15:37:38 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47kMG90FBdz9wK06
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2019 20:37:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0WuygrQ9pH0q for <linux-nfs@vger.kernel.org>;
+        Thu, 26 Dec 2019 14:37:36 -0600 (CST)
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47kMG86NhQz9wK02
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2019 14:37:36 -0600 (CST)
+Received: by mail-yb1-f199.google.com with SMTP id d131so19799379ybb.9
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2019 12:37:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HImTIUDKCkz90/mVqDadf//lbgFZThYHx2fxEWAm4HE=;
+        b=ntRYZFTwgt+z1MZhyPlGfNMPLcxw29JgS0WhPgImNkqaBbFTC1vOGk7K1oK669JK7+
+         RM5f0Ij/xY/9H40Bz+uHIC9x3IU8wAB6weVq9ayqxNWVeOoEMTGBb9Bzo4ukPCNXGYtX
+         2nBwS+0PmrB0Y58rQrQzr0mnQTDSqySqmfx5wrqy0Nfn7a3NZu9v+4a+DRbR1HBU+tjY
+         k5HyTZ6umwEaA0Yjrkqal4bqG0pmNPL70+batjcNnnCHq+MB+1e+9cRveq6aO3Jme/Bv
+         oM6uP2mcJn3qMyEWDFcYDxBBBdSnGxJqg9fJAyoqWgrAXSPR1tP7adiPTb6Voa6D7kw2
+         S2sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HImTIUDKCkz90/mVqDadf//lbgFZThYHx2fxEWAm4HE=;
+        b=QbCXC02kqfdCbyZ+d3/WRKkj+2jCVTMINLoGuY46Q7z7oVbqsn1eFYH22DKWp8bATT
+         7SjPWAJKr59GJlxrVCOgDhhgvFJPmhyEpXLdTe+AqSBFxui2KaNhDEVK3KkhXkKZRHNc
+         6ETDhNpnq6Gg9tTyYRwcfu9ErVhly1hzxZsUicAZKTdXzgszBF+FvhLRaG8E9nULHNRj
+         IcfNhrpGSPNcjsRvIqpSfyQZybRZlzMROmfveult2c5sHBlPrEBlUpg4wlHNsp7fzifO
+         dgifb+Yf4poIP5ZjHdaSHgHAJIGRy10dMX6MgnGbjbDrCgyJ13uGHv7lJxwnjvcQbEJM
+         FfXA==
+X-Gm-Message-State: APjAAAXZaL0NLZIAA8zY0GNm1YKveKyvby595htGEspub409cuUt9nco
+        19KmcRAIFgSjGw5yrcKhencOnJaPILlHzzjSaaVCydtrP5cCDQb8MBoInaYak/ZOYdlQtFDb2mO
+        rKtLOVVXrQYrJQ6D+exVIxAHE
+X-Received: by 2002:a81:6fd4:: with SMTP id k203mr34295347ywc.370.1577392656417;
+        Thu, 26 Dec 2019 12:37:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx0nn/4FSfZJVjPBvPs8yj+Byn1PGJYTHXNh9kAPj7PGWn9gUqx3rxnw6ePhGqE1GZBTI4thQ==
+X-Received: by 2002:a81:6fd4:: with SMTP id k203mr34295336ywc.370.1577392656189;
+        Thu, 26 Dec 2019 12:37:36 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w74sm12621083ywa.71.2019.12.26.12.37.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 12:37:35 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: remove unnecessary assertion in nfsd4_layout_setlease
+Date:   Thu, 26 Dec 2019 14:37:33 -0600
+Message-Id: <20191226203733.27808-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a77g2o2o.fsf@mid.deneb.enyo.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 08:38:07PM +0100, Florian Weimer wrote:
-> 32 bits are simply not enough storage space for the cookie.  Hashing
-> just masks the presence of these bugs, but does not eliminate them
-> completely.
+In nfsd4_layout_setlease, checking for a valid file lock is
+redundant and can be removed. This patch eliminates such a
+BUG_ON check.
 
-Arguably 64 bits is not enough space for the cookie.  I'd be a lot
-happier if it was 128 or 256 bits.  This is just one of those places
-where POSIX is Really Broken(tm).  Unfortunately, NFS only gives us 64
-bits for the readdir/readdirplus cookie, so we're kind of stuck with
-it.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ fs/nfsd/nfs4layouts.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-					- Ted
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 2681c70283ce..ef5f8e645f4f 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -204,7 +204,6 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
+ 		locks_free_lock(fl);
+ 		return status;
+ 	}
+-	BUG_ON(fl != NULL);
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
