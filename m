@@ -2,60 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62E7812DE30
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jan 2020 09:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5C2412DE92
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jan 2020 11:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgAAIUo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Jan 2020 03:20:44 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56955 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727194AbgAAIUR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jan 2020 03:20:17 -0500
-X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
-   d="scan'208";a="429578762"
-Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 09:20:08 +0100
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     kernel-janitors@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/16] SUNRPC: constify copied structure
-Date:   Wed,  1 Jan 2020 08:43:30 +0100
-Message-Id: <1577864614-5543-13-git-send-email-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
+        id S1725884AbgAAKxC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Jan 2020 05:53:02 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20916 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725895AbgAAKxA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jan 2020 05:53:00 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 001ApYD3118759
+        for <linux-nfs@vger.kernel.org>; Wed, 1 Jan 2020 05:52:59 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x87ms4187-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Jan 2020 05:52:59 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-nfs@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Wed, 1 Jan 2020 10:52:57 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Jan 2020 10:52:53 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 001AqqXU48103666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jan 2020 10:52:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 680755204F;
+        Wed,  1 Jan 2020 10:52:52 +0000 (GMT)
+Received: from dhcp-9-199-159-72.in.ibm.com (unknown [9.199.159.72])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3A8C952054;
+        Wed,  1 Jan 2020 10:52:49 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
+Cc:     willy@infradead.org, jlayton@kernel.org,
+        ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, dsterba@suse.cz,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [RESEND PATCH 0/1] Use inode_lock/unlock class of provided APIs in filesystems
+Date:   Wed,  1 Jan 2020 16:22:47 +0530
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010110-0012-0000-0000-00000379A8D2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010110-0013-0000-0000-000021B5B68A
+Message-Id: <20200101105248.25304-1-riteshh@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-01_03:2019-12-30,2020-01-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ clxscore=1015 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=384 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001010101
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The empty_iov structure is only copied into another structure,
-so make it const.
+Al, any comments?
+Resending this after adding Reviewed-by/Acked-by tags.
 
-The opportunity for this change was found using Coccinelle.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+From previous version:-
+Matthew Wilcox in [1] suggested that it will be a good idea
+to define some missing API instead of directly using i_rwsem in
+filesystems drivers for lock/unlock/downgrade purposes.
 
----
- net/sunrpc/xdr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch does that work. No functionality change in this patch.
 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index f3104be8ff5d..e5497dc2475b 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1079,7 +1079,7 @@ void xdr_enter_page(struct xdr_stream *xdr, unsigned int len)
- }
- EXPORT_SYMBOL_GPL(xdr_enter_page);
- 
--static struct kvec empty_iov = {.iov_base = NULL, .iov_len = 0};
-+static const struct kvec empty_iov = {.iov_base = NULL, .iov_len = 0};
- 
- void
- xdr_buf_from_iov(struct kvec *iov, struct xdr_buf *buf)
+After this there are only lockdep class of APIs at certain places
+in filesystems which are directly using i_rwsem and second is XFS,
+but it seems to be anyway defining it's own xfs_ilock/iunlock set
+of APIs and 'iolock' naming convention for this lock.
+
+[1]: https://www.spinics.net/lists/linux-ext4/msg68689.html
+
+Ritesh Harjani (1):
+  fs: Use inode_lock/unlock class of provided APIs in filesystems
+
+ fs/btrfs/delayed-inode.c |  2 +-
+ fs/btrfs/ioctl.c         |  4 ++--
+ fs/ceph/io.c             | 24 ++++++++++++------------
+ fs/nfs/io.c              | 24 ++++++++++++------------
+ fs/orangefs/file.c       |  4 ++--
+ fs/overlayfs/readdir.c   |  2 +-
+ fs/readdir.c             |  4 ++--
+ include/linux/fs.h       | 21 +++++++++++++++++++++
+ 8 files changed, 53 insertions(+), 32 deletions(-)
+
+-- 
+2.21.0
 
