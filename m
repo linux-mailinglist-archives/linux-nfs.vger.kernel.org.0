@@ -2,116 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90CEF12EBA9
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2020 23:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC3EE12EBAA
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2020 23:09:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgABWJA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Jan 2020 17:09:00 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45641 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgABWJA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jan 2020 17:09:00 -0500
-Received: by mail-vs1-f68.google.com with SMTP id b4so25814471vsa.12
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Jan 2020 14:09:00 -0800 (PST)
+        id S1725883AbgABWJ7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jan 2020 17:09:59 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:45512 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgABWJ7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jan 2020 17:09:59 -0500
+Received: by mail-yb1-f193.google.com with SMTP id y67so8248424yba.12
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Jan 2020 14:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oVzVBelWzaF8I8jnLlZp2V6RKqMtCITlWFSIbKDAaTg=;
-        b=igi0s8GNg4Sin5UV+Vl4fyzkVIUz6a9Af3QNYFkuKVZURzyPK2UhNCCHpKK55XcVZP
-         CTRTQ9z0+fdMuMzQn4cMUoR8l0Q543wy+tX1E3dua7eC9ZNwwruexx1UiGa8I9kVS4r3
-         hFY7ZFxBHDKATP7wVTGRXsIlP/+o08UDMQZVbqEX4I261YaGhlEVA4JwQZPAISVCYzN7
-         cVAFrMvF0pPmjDN+7RX8oIvtaL4L9X2qLWNtHYOUOzOiIh6M0lRxCuri+fQ+jUq5yc7B
-         XE4VyUli0Nk/03DdsJC7HNpOQr4CHNAMEULDc4o9nBPV0rDO//EakmBrAxium4zPJbzB
-         OwYw==
+        h=from:to:cc:subject:date:message-id;
+        bh=rWf4fk1jVxeEBXQG/lJHz/ZyAUspHCQxaV1/N8RU+To=;
+        b=Thcz8U7Ifi6SVkRe0BHXZQewfcdMknwnuwcSKN9rJG7AQmJ78ApaJCoqcejmku6Ibl
+         3feors4e83u0uyQccAlYPR/i3atuOxPU/ApCQoxuEEvIjQw+JX1ZAgf8VEMsw+k4vLwu
+         cML2pqe0rSzMoR/1+6qxZPD6GdoqzIM+MT8IcjHW3u+awEIq/ssCl6tgV3bN3uu4U9Nu
+         zqUWlbo1yx9+7Qtx7GBq0bsSHK0JervushpfjIafFXcqruE4SxyN5IcFIT7xTIZdqpgV
+         bIfkRkTctrPT2HO80pkBnvFRLRUjQ5be73mcSN6PNWnSUwBUhUfUF3XIiO8BPjzoJHdp
+         LdSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oVzVBelWzaF8I8jnLlZp2V6RKqMtCITlWFSIbKDAaTg=;
-        b=ElEyK8Q1k8vEf8gCuchWzWNW7g2in2+ErLQe7NiginzzfibnacqHNIjlg/VXWe9L3e
-         DrhQakVH/Pvt5PkPD0hADG8MPziNKODhrO8uXCaV1H73EyfeBMxRSCQBl1Twblo3fBS+
-         tHGT1dCbySIVrcKG0efvhSaOnItKGjs9y3knny5+6CSSPmC1/wE8PrpnTZCGRRcXinAH
-         nX5byC0yVDMX8fJP40zl5xQcWrls2UgjnQ4b2TEcNLXpys1IjoI5mI1X8WNZn7+eHFLA
-         etHV+XIHuBYyvcaKCQ1nK2TxFUNYh1uTBB1p5sOth2KABEnBQgjjoc7FccN56fMYjRFV
-         S4gQ==
-X-Gm-Message-State: APjAAAWjYAM9u6Qsy0FhT0uSVOgqDCqYOy3SVKl7BUuVBDX4mGJcf9sf
-        7MMX9sUq00AoVRTtSjRJaGyXNGQ+9tf+UWJqm+w=
-X-Google-Smtp-Source: APXvYqxfJjr5I23j8McQ9WqlusREMki2SjVxUrFDGfgsjIlgPnKiBFmYyF2aSuO5ZBybsNod5VZizTv56M+vQU+gZ2M=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr42922441vsq.215.1578002939662;
- Thu, 02 Jan 2020 14:08:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102212827.11597-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20200102212827.11597-1-olga.kornievskaia@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rWf4fk1jVxeEBXQG/lJHz/ZyAUspHCQxaV1/N8RU+To=;
+        b=unxfhgsOuAoWlQjthNKQ6x3TSK9de4DNSUcA2oX80ZrIxGggSNmmGsqzq0RugCxnQn
+         X/9/gV5ks+6duOECFTiXGpqnnNC7SpAC18NaxezBgQLONS1n+E6DNqSg1r+istWLON1H
+         nW9jXAoe5d58f+nGuDe5Lztba5Ra08VcYX3XEzlvQiQ/mFBEf+HXOSyF90p+L5oGsTOU
+         N8HVjP0ySY/OV74esBzy2Z79vHx9WlkM1ypS2bUTMq7w5aEeXgTMDhaAHFEH8uVYRc/l
+         Y6vqaqNIa1OmtiwhwT9hL2wqzdfFguJdk/otUlzgYjvnrDJRG2JrQXcRylWACW2TilPY
+         5y/A==
+X-Gm-Message-State: APjAAAUMD6bLiy9ivAWyZRRFM3bLsfRtQXcbCNLkOKHkKpobZ7th243o
+        KJ7fVO68iOvVRMsMdFiPxDw=
+X-Google-Smtp-Source: APXvYqyq+xV4Rxd1FVhKTAfxa4xMvoRZDkUpV2Nm4UgXOchYDlfySAcmdJVAGu4CoDWD2cD6KZvJyA==
+X-Received: by 2002:a25:768b:: with SMTP id r133mr60964084ybc.262.1578002998163;
+        Thu, 02 Jan 2020 14:09:58 -0800 (PST)
+Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id t142sm23177745ywf.53.2020.01.02.14.09.57
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Thu, 02 Jan 2020 14:09:57 -0800 (PST)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Thu, 2 Jan 2020 17:08:48 -0500
-Message-ID: <CAN-5tyEpr1rz1V1fVZKXLz=9uOOaDrEyUrzTHUEJ+6EfmAPZ1A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] NFSv4.1 fix incorrect return value in copy_file_range
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/1] NFSv4 fix acl retrieval over krb5i/krb5p mounts
+Date:   Thu,  2 Jan 2020 17:09:54 -0500
+Message-Id: <20200102220954.11763-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Apologizes please ignore this was trying to submit v2 of the ACL patch
-and sent the wrong file.
+From: Olga Kornievskaia <kolga@netapp.com>
 
-On Thu, Jan 2, 2020 at 4:28 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> According to the NFSv4.2 spec if the input and output file is the
-> same file, operation should fail with EINVAL. However, linux
-> copy_file_range() system call has no such restrictions. Therefore,
-> in such case let's return EOPNOTSUPP and allow VFS to fallback
-> to doing do_splice_direct(). Also when copy_file_range is called
-> on an NFSv4.0 or 4.1 mount (ie., a server that doesn't support
-> COPY functionality), we also need to return EOPNOTSUPP and
-> fallback to a regular copy.
->
-> Fixes xfstest generic/075, generic/091, generic/112, generic/263
-> for all NFSv4.x versions.
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs42proc.c | 3 ---
->  fs/nfs/nfs4file.c  | 4 +++-
->  2 files changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> index ff6f85f..5196bfa 100644
-> --- a/fs/nfs/nfs42proc.c
-> +++ b/fs/nfs/nfs42proc.c
-> @@ -329,9 +329,6 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
->         };
->         ssize_t err, err2;
->
-> -       if (!nfs_server_capable(file_inode(dst), NFS_CAP_COPY))
-> -               return -EOPNOTSUPP;
-> -
->         src_lock = nfs_get_lock_context(nfs_file_open_context(src));
->         if (IS_ERR(src_lock))
->                 return PTR_ERR(src_lock);
-> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-> index 45b2322..00d1719 100644
-> --- a/fs/nfs/nfs4file.c
-> +++ b/fs/nfs/nfs4file.c
-> @@ -133,8 +133,10 @@ static ssize_t nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
->                                     struct file *file_out, loff_t pos_out,
->                                     size_t count, unsigned int flags)
->  {
-> +       if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
-> +               return -EOPNOTSUPP;
->         if (file_inode(file_in) == file_inode(file_out))
-> -               return -EINVAL;
-> +               return -EOPNOTSUPP;
->         return nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count);
->  }
->
-> --
-> 1.8.3.1
->
+For the krb5i and krb5p mount, it was problematic to truncate the
+received ACL to the provided buffer because an integrity check
+could not be preformed.
+
+Instead, provide enough pages to accommodate the largest buffer
+bounded by the largest RPC receive buffer size.
+
+Note: I don't think it's possible for the ACL to be truncated now.
+Thus NFS4_ACL_TRUNC flag and related code could be possibly
+removed but since I'm unsure, I'm leaving it.
+
+v2: needs +1 page.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/nfs4proc.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 76d3716..543e81b 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5582,10 +5582,9 @@ static void nfs4_write_cached_acl(struct inode *inode, struct page **pages, size
+  */
+ static ssize_t __nfs4_get_acl_uncached(struct inode *inode, void *buf, size_t buflen)
+ {
+-	struct page *pages[NFS4ACL_MAXPAGES + 1] = {NULL, };
++	struct page **pages;
+ 	struct nfs_getaclargs args = {
+ 		.fh = NFS_FH(inode),
+-		.acl_pages = pages,
+ 		.acl_len = buflen,
+ 	};
+ 	struct nfs_getaclres res = {
+@@ -5596,11 +5595,19 @@ static ssize_t __nfs4_get_acl_uncached(struct inode *inode, void *buf, size_t bu
+ 		.rpc_argp = &args,
+ 		.rpc_resp = &res,
+ 	};
+-	unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE) + 1;
++	unsigned int npages;
+ 	int ret = -ENOMEM, i;
++	struct nfs_server *server = NFS_SERVER(inode);
+ 
+-	if (npages > ARRAY_SIZE(pages))
+-		return -ERANGE;
++	if (buflen == 0)
++		buflen = server->rsize;
++
++	npages = DIV_ROUND_UP(buflen, PAGE_SIZE) + 1;
++	pages = kmalloc_array(npages, sizeof(struct page *), GFP_NOFS);
++	if (!pages)
++		return -ENOMEM;
++
++	args.acl_pages = pages;
+ 
+ 	for (i = 0; i < npages; i++) {
+ 		pages[i] = alloc_page(GFP_KERNEL);
+@@ -5646,6 +5653,7 @@ static ssize_t __nfs4_get_acl_uncached(struct inode *inode, void *buf, size_t bu
+ 			__free_page(pages[i]);
+ 	if (res.acl_scratch)
+ 		__free_page(res.acl_scratch);
++	kfree(pages);
+ 	return ret;
+ }
+ 
+-- 
+1.8.3.1
+
