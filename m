@@ -2,92 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8747312DFE7
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jan 2020 19:14:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99C5F12E39E
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2020 09:04:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgAASOu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Jan 2020 13:14:50 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39731 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbgAASOu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jan 2020 13:14:50 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so37404263wrt.6
-        for <linux-nfs@vger.kernel.org>; Wed, 01 Jan 2020 10:14:49 -0800 (PST)
+        id S1727722AbgABIEf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jan 2020 03:04:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33438 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbgABIEf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jan 2020 03:04:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z16so21723504pfk.0
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Jan 2020 00:04:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PobSemmR93siQmdDnhfWz+/vg7RIBvXh2h8Oo8LL070=;
-        b=VKYjNnTRSE8+xWzCsgQrhHaMzYI4LEQ+NmvhRtULxuIc3tuYAIzlgV1KG4iFuinRGB
-         vwLgk9dyUpajVvlH2aZbkvM2BjAAvzHeDHapuqBou7Rt4nJuoa2shUB7dr9iudW/rZYc
-         +GbwBWcpAMrIwPlQ5Cl/WhRvVsc2iolfjcXPBJXRT+osOH0kkPkK6nHw0e9YrCX8KNB/
-         Tu1ruYt1pod0gAWmSz+ctaIbl6T1T6m41Bj834U7d43G1uQ/U6Pr5GzU9bkQox3bActy
-         eDD8AmJf/ZFptJneCmbo3OZoSngtsRZRxeHfae2wlQK1Qefp6wdzvLpVwuPwX1gobVxh
-         4lQg==
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=j2iODv6cj8h3jFOpQ8/xB7IGAL0+9R1SoQHtryU9yXo=;
+        b=epRw1uocfyEc+KMqx0CEH/rsumELdKMhpsRRtxhJH6+jEPspfzBVvkvuuqLZCRYi96
+         l7wf84pP6jm42a7l3IkdirOhiYIfskmS234Ub+DIJGg556MOR1AD2Ye4/VWzKanDWh9i
+         EAwNvMubyJC+CTTMnGQjEsWzvs0f2+yvprNn09XdVOEOgOCyhlfA5IhDo1AscnTaRM6Z
+         oS7uBdC4VxOv+ajNFdCQIGl6PrQ0osq+k3nIC6h6ygr5gv3+E6QaXqHRa0NH/JjaEPvE
+         OP9WR3Hiaz5fuZ95srT210N3FQB35U8O+V4FzNo3S1aRipkfJXTK86yUm6yavjqSDvqU
+         KJDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PobSemmR93siQmdDnhfWz+/vg7RIBvXh2h8Oo8LL070=;
-        b=TxPsjf+l5B/AOYyoxZ+nhEM5HF5M+AfYWEH6WDdM3M+NUmGOevoeSth8t0gZFGEGjy
-         atA4xtNcVvzE9Vs7qbGF6iQUKQRBVE+jo/0DNc34OahzgfDJkGYkasLCw5bV6k4FRc4a
-         pdXnmOlwwVzp/utdSPlFvX49mGOzOjv1Iwii8uxyhdoof8rIk7iNWwOQRDIqEwN++2Xc
-         OnOC0ea46p/o84LshMGmcgva+EDHn+Z6QVyp2pPNSst6BjXFy2pZ/IgOuub+9OXIppOx
-         /UOVQGZccSjjSLXuVl/KP00w35FekT+pSH/hPwORG2oL5v/WY7J8Z/WemMGpuSGilf7V
-         mymQ==
-X-Gm-Message-State: APjAAAVhHXcVnlzTqWEoPLA9LINVNdbTfzorJ+HqOPBXf9hhQ/bDPScZ
-        a0daGcz0Fi1H2CnH7WZUxRdhduL3
-X-Google-Smtp-Source: APXvYqzQJF0O05NgS55jRlYogTgw+gurw6bVPMEzHQYc8SoHsZSj2uQcgY0DMu32scNr1SUisotrbQ==
-X-Received: by 2002:a5d:448c:: with SMTP id j12mr2010369wrq.125.1577902488104;
-        Wed, 01 Jan 2020 10:14:48 -0800 (PST)
-Received: from yuna.elaboris.de (hadar.elaboris.de. [37.24.161.46])
-        by smtp.gmail.com with ESMTPSA id e16sm52481180wrs.73.2020.01.01.10.14.47
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=j2iODv6cj8h3jFOpQ8/xB7IGAL0+9R1SoQHtryU9yXo=;
+        b=s4yiqgEIYMTZmXHq88XMH+voA6Y0Uebz56LU+ZcImMrTe1/TUzEx2ht3sXTZ4cCC32
+         aw4kRuvjFDK/T/9cmIgHFsrWGemoDdLRJgeKKrURehEpz4KTtcRr5WI/Nvwy3/EOIs6A
+         /pKH8KUebnkINPCGsKPK7JsudEr9A+0Qq8N4YWmvTwWNQM6WpBXhW63g6r3vDC8CX4f+
+         SFOhBxrQ1hZCENDp4n9dAh9dB2avCVbYqS4d1gyqWstdnsQyJIBT/c8JnSJoPC2WtFQj
+         HOd2uJijbw/QmTAxauTKWQplcWLP4vI0I2MqenPkevw2ay5ZnTUq+RnDioM3a9YdUul5
+         pzYw==
+X-Gm-Message-State: APjAAAW0tzryVK+xAqpbFwZBI63DYufjO/GyqbdxZXZQdfLkLNRNSjpi
+        c+CNXiydbWPUonkvdXwekOODTX6p
+X-Google-Smtp-Source: APXvYqxIJyvfPRyew79UG4si6/eaUqDyOxRfEF0aoES1nKGGcggHLPTFwfmrF18ZAtQzls1XKzdrdg==
+X-Received: by 2002:a63:6d0e:: with SMTP id i14mr90853844pgc.12.1577952274702;
+        Thu, 02 Jan 2020 00:04:34 -0800 (PST)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id 20sm41820877pfn.175.2020.01.02.00.04.33
+        for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 10:14:47 -0800 (PST)
-From:   Markus Schaaf <markuschaaf@gmail.com>
+        Thu, 02 Jan 2020 00:04:34 -0800 (PST)
+Date:   Thu, 2 Jan 2020 16:04:26 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
 To:     linux-nfs@vger.kernel.org
-Cc:     Markus Schaaf <markuschaaf@gmail.com>
-Subject: [PATCH] gssd: Use setgroups32 syscall, if available. BUG:FIXED:340
-Date:   Wed,  1 Jan 2020 19:13:49 +0100
-Message-Id: <20200101181349.12248-1-markuschaaf@gmail.com>
-X-Mailer: git-send-email 2.24.1
+Subject: [PATCH] fs/nfs, swapon: check holes in swapfile
+Message-ID: <20200102080426.byzq4rrdilr2qxx6@xzhoux.usersys.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This closes a bug on older 32-bit platforms, where the 16-bit setgroups
-syscall has been replaced by setgroups32 and is not available anymore.
+swapon over NFS does not go through generic_swapfile_activate
+code path when setting up extents. This makes holes in NFS
+swapfiles possible which is not expected for swapon.
 
-Signed-off-by: Markus Schaaf <markuschaaf@gmail.com>
-
-(Personal note: Reporting a trivial bug and getting a fix upstream in
-nfs-utils is like running the gauntlet, for the uninitiated average user.)
-
-BR
-
+Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
 ---
- utils/gssd/gssd_proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/nfs/file.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-index bfcf3f09..9ba16af0 100644
---- a/utils/gssd/gssd_proc.c
-+++ b/utils/gssd/gssd_proc.c
-@@ -437,7 +437,11 @@ change_identity(uid_t uid)
- 	int res;
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 8eb731d..ccd9bc0 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -489,7 +489,19 @@ static int nfs_launder_page(struct page *page)
+ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+ 						sector_t *span)
+ {
++	unsigned long blocks;
++	long long isize;
+ 	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
++	struct inode *inode = file->f_mapping->host;
++
++	spin_lock(&inode->i_lock);
++	blocks = inode->i_blocks;
++	isize = inode->i_size;
++	spin_unlock(&inode->i_lock);
++	if (blocks*512 < isize) {
++		pr_warn("swap activate: swapfile has holes\n");
++		return -EINVAL;
++	}
  
- 	/* drop list of supplimentary groups first */
-+#ifdef __NR_setgroups32
-+	if (syscall(SYS_setgroups32, 0, 0) != 0) {
-+#else
- 	if (syscall(SYS_setgroups, 0, 0) != 0) {
-+#endif
- 		printerr(0, "WARNING: unable to drop supplimentary groups!");
- 		return errno;
- 	}
+ 	*span = sis->pages;
+ 
 -- 
-2.24.1
+1.8.3.1
 
