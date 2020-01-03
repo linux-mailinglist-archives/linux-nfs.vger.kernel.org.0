@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D2D12FAE6
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2020 17:56:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C978712FAE8
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2020 17:56:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgACQ4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Jan 2020 11:56:46 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41110 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgACQ4q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Jan 2020 11:56:46 -0500
-Received: by mail-yw1-f65.google.com with SMTP id l22so18749088ywc.8;
-        Fri, 03 Jan 2020 08:56:45 -0800 (PST)
+        id S1728088AbgACQ4v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Jan 2020 11:56:51 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41117 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbgACQ4v (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Jan 2020 11:56:51 -0500
+Received: by mail-yw1-f68.google.com with SMTP id l22so18749225ywc.8;
+        Fri, 03 Jan 2020 08:56:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=cRJRoQcIJ5xui/uZWNETubw9otNoq/moRTgYVs7gtO8=;
-        b=upmqYuB4wOOjD8PxywTnCZKWCpLmHJnw/3Ht0iF/sspncxazSITgbg8eJPBr//eiiv
-         rFqHauvmnnlfvk9dZsrcK4v+TwLe8eOoKVj2MzaFPAYQvVkKNCjqY6cJ4uyW53TwyK46
-         WVkIiH84zp0yEka9DHRYWmdqmrwJpBw46fFM0SJOzwX65yrgjguF4/rXi70quW8sCZkC
-         QS68dfIqEKPTae2rjpBmX2QygeahC/j/7Us762C7av3E/gZV6zlWrMHWxsCelqZozpCW
-         l/zB0ap4JmnxbUBrz2s6cmJbzeeslyKixkJhcS8w+AD8tMApA8DM5w8Bl1KnqwDL3Dg8
-         RPoA==
+        bh=tCZVxSAnaTTodNkIrs6d0LpkpyWPH5ZzAla3zGsgHkU=;
+        b=Q1HIICC46YeH3jzrPdeseIemA4f5HPZ/M8Hhmi/KkuaQdQPD23YGPM9AVHA5Ito+oE
+         spJEXqgcHR183nu9j96DA20VPjkzYSJ1mI8rPenhvmnia+C5MMhxT+ebytB9hEP/4SoI
+         b5d7+hMbyEmX1rEVMPiQ5ofKuFRZlTxQgd24RoLh8mhAMXQY04jpKOOcTZSx6nOCVFOg
+         BibQqPkrsiBXEgzUoSrzQk2ZTCEjNThpMnwbkCbkK7KMJVMawCzG2e6YaAhyM3UnR4+0
+         RcJlSCWWTswmDuyXo9c00SBG5+ZFaVll6L4eM/0M24sF9i/ImU618GBnWxnTPkN6sYBn
+         18aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=cRJRoQcIJ5xui/uZWNETubw9otNoq/moRTgYVs7gtO8=;
-        b=aybRq7GiZKoSZR06t1lBi9eN7hEIkuxQlbeUFYMa78zMZAm4Q0iwZXXDq1OwC7p2Dl
-         1xZSSAb8BX+KoXuKfNn+8OUFZ67NzavE02hK2GsqW4n3fScSrmnoT6Bs7i3gCxBRZPJp
-         d8e2Ry+CBqr5BsMdpBoq1spZMTHh9w/MVuydCI4XSWrlNGhKLWNSi+vp9Ds1HHCzvnSl
-         vKOOk3jPyyh0RM2qFzNjqEYKtQKFxCoAx4UMuC17Xwq+DqhxRR4XENF/9rhnl62sugpB
-         erPizhkjd3ggl7PDoYCG2R1jmeCrvf3V5TL0e4fVJoPk7pib0IWZJf0JL1Lv2Vl/GwPY
-         xvfA==
-X-Gm-Message-State: APjAAAUN0+n0MHqI+uA9WTeg6rRTvYrf2D72lS/MdN6Eupz1O7PkRQhL
-        IoLQn1E6mxWxx5e843xI3IuBHXmV
-X-Google-Smtp-Source: APXvYqy5u48wmQ0t4muthCLxzMLBVL2DpyZZ6/FB2IecIY/GukRXhGssgAQOGHZAYf+J3auUnBDpeA==
-X-Received: by 2002:a81:de53:: with SMTP id o19mr68676539ywl.62.1578070604348;
-        Fri, 03 Jan 2020 08:56:44 -0800 (PST)
+        bh=tCZVxSAnaTTodNkIrs6d0LpkpyWPH5ZzAla3zGsgHkU=;
+        b=oZdl/kOhNo/vKn02uFFJkBfwBGgTxLNv2MpjvXpNAUOIa9NRJ8WbgTdj1xl/LsU3Rm
+         gWqIahkB3rlTtD64kFsCBjau43fFB7d/rEsH3iXZsVslklhnxTJo67ZOs0z0rcGfF1U8
+         GDX8oNgLDdMtsemQZH7bCqgK5LhByG+U81EBYpS7dg2mJZe30Jzb6xkLfhmVcHzk4tA0
+         Y3osRcdpwJfavN+fBpX+3PxGC2BYETEXfBe4ztrPyHG7J8MTFhqD5/tf+zYIcJk5vEak
+         qdJGNu1oLBQlWrpckTLR5GvGr+NHLtEOa8vQ3a6/dlU0B7idWQCTWY2EXurDuIojp8FK
+         HtDQ==
+X-Gm-Message-State: APjAAAVp1Wob8OLcvLaqy52XeBnX1txvZv30j4LCRl0sdcQfSUhbKug6
+        v7Kv6RHT+LQ9tyjGtRYVX0FGW47R
+X-Google-Smtp-Source: APXvYqxdBkM0PZOHm01LJvEUjEuLei6FG97nU5xn8UC5bQTvPG0dUDaDo8oTBr38ta1An0MRMSbsbA==
+X-Received: by 2002:a81:39d7:: with SMTP id g206mr66333288ywa.484.1578070609757;
+        Fri, 03 Jan 2020 08:56:49 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g5sm23627694ywk.46.2020.01.03.08.56.43
+        by smtp.gmail.com with ESMTPSA id g29sm23955290ywk.31.2020.01.03.08.56.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jan 2020 08:56:44 -0800 (PST)
+        Fri, 03 Jan 2020 08:56:49 -0800 (PST)
 Received: from morisot.1015granger.net (morisot.1015granger.net [192.168.1.67])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 003GuhfZ016392;
-        Fri, 3 Jan 2020 16:56:43 GMT
-Subject: [PATCH v1 4/9] xprtrdma: Eliminate per-transport "max pages"
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 003GumKD016395;
+        Fri, 3 Jan 2020 16:56:48 GMT
+Subject: [PATCH v1 5/9] xprtrdma: Refactor frwr_is_supported
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Fri, 03 Jan 2020 11:56:43 -0500
-Message-ID: <157807060307.4606.13026227190289178598.stgit@morisot.1015granger.net>
+Date:   Fri, 03 Jan 2020 11:56:48 -0500
+Message-ID: <157807060839.4606.7268843859672908333.stgit@morisot.1015granger.net>
 In-Reply-To: <157807044515.4606.732915438702066797.stgit@morisot.1015granger.net>
 References: <157807044515.4606.732915438702066797.stgit@morisot.1015granger.net>
 User-Agent: StGit/0.19
@@ -64,180 +64,168 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To support device hotplug and migrating a connection between devices
-of different capabilities, we have to guarantee that all in-kernel
-devices can support the same max NFS payload size (1 megabyte).
+Refactor: Perform the "is supported" check in rpcrdma_ep_create()
+instead of in rpcrdma_ia_open(). frwr_open() is where most of the
+logic to query device attributes is already located.
 
-This means that possibly one or two in-tree devices are no longer
-supported for NFS/RDMA because they cannot support 1MB rsize/wsize.
-The only one I confirmed was cxgb3, but it has already been removed
-from the kernel.
+The current code displays a redundant error message when the device
+does not support FRWR. As an additional clean-up, this patch removes
+the extra message.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/frwr_ops.c  |   40 +++++++++++++++------------------------
- net/sunrpc/xprtrdma/rpc_rdma.c  |    2 +-
- net/sunrpc/xprtrdma/transport.c |   14 ++++----------
- net/sunrpc/xprtrdma/verbs.c     |    4 ++--
- net/sunrpc/xprtrdma/xprt_rdma.h |    3 +--
- 5 files changed, 23 insertions(+), 40 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c  |   54 ++++++++++++++++-----------------------
+ net/sunrpc/xprtrdma/verbs.c     |   14 +---------
+ net/sunrpc/xprtrdma/xprt_rdma.h |    4 +--
+ 3 files changed, 25 insertions(+), 47 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 24b8b75d0d49..f31ff54bb266 100644
+index f31ff54bb266..b22a9d7f9c8d 100644
 --- a/net/sunrpc/xprtrdma/frwr_ops.c
 +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -171,7 +171,7 @@ int frwr_init_mr(struct rpcrdma_ia *ia, struct rpcrdma_mr *mr)
-  *	ep->rep_attr.cap.max_send_wr
-  *	ep->rep_attr.cap.max_recv_wr
-  *	ep->rep_max_requests
-- *	ia->ri_max_segs
-+ *	ia->ri_max_rdma_segs
-  *
-  * And these FRWR-related fields:
-  *	ia->ri_max_frwr_depth
-@@ -202,14 +202,12 @@ int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep)
- 	 * capability, but perform optimally when the MRs are not larger
- 	 * than a page.
- 	 */
--	if (attrs->max_sge_rd > 1)
-+	if (attrs->max_sge_rd > RPCRDMA_MAX_HDR_SEGS)
- 		ia->ri_max_frwr_depth = attrs->max_sge_rd;
- 	else
- 		ia->ri_max_frwr_depth = attrs->max_fast_reg_page_list_len;
- 	if (ia->ri_max_frwr_depth > RPCRDMA_MAX_DATA_SEGS)
- 		ia->ri_max_frwr_depth = RPCRDMA_MAX_DATA_SEGS;
--	dprintk("RPC:       %s: max FR page list depth = %u\n",
--		__func__, ia->ri_max_frwr_depth);
+@@ -50,28 +50,6 @@
+ # define RPCDBG_FACILITY	RPCDBG_TRANS
+ #endif
  
- 	/* Add room for frwr register and invalidate WRs.
- 	 * 1. FRWR reg WR for head
-@@ -253,30 +251,22 @@ int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep)
- 	ep->rep_attr.cap.max_recv_wr += RPCRDMA_BACKWARD_WRS;
- 	ep->rep_attr.cap.max_recv_wr += 1; /* for ib_drain_rq */
- 
--	ia->ri_max_segs =
-+	ia->ri_max_rdma_segs =
- 		DIV_ROUND_UP(RPCRDMA_MAX_DATA_SEGS, ia->ri_max_frwr_depth);
- 	/* Reply chunks require segments for head and tail buffers */
--	ia->ri_max_segs += 2;
--	if (ia->ri_max_segs > RPCRDMA_MAX_HDR_SEGS)
--		ia->ri_max_segs = RPCRDMA_MAX_HDR_SEGS;
--	return 0;
+-/**
+- * frwr_is_supported - Check if device supports FRWR
+- * @device: interface adapter to check
+- *
+- * Returns true if device supports FRWR, otherwise false
+- */
+-bool frwr_is_supported(struct ib_device *device)
+-{
+-	struct ib_device_attr *attrs = &device->attrs;
+-
+-	if (!(attrs->device_cap_flags & IB_DEVICE_MEM_MGT_EXTENSIONS))
+-		goto out_not_supported;
+-	if (attrs->max_fast_reg_page_list_len == 0)
+-		goto out_not_supported;
+-	return true;
+-
+-out_not_supported:
+-	pr_info("rpcrdma: 'frwr' mode is not supported by device %s\n",
+-		device->name);
+-	return false;
 -}
 -
--/**
-- * frwr_maxpages - Compute size of largest payload
-- * @r_xprt: transport
-- *
-- * Returns maximum size of an RPC message, in pages.
-- *
-- * FRWR mode conveys a list of pages per chunk segment. The
-- * maximum length of that list is the FRWR page list depth.
-- */
--size_t frwr_maxpages(struct rpcrdma_xprt *r_xprt)
--{
--	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
-+	ia->ri_max_rdma_segs += 2;
-+	if (ia->ri_max_rdma_segs > RPCRDMA_MAX_HDR_SEGS)
-+		ia->ri_max_rdma_segs = RPCRDMA_MAX_HDR_SEGS;
-+
-+	/* Ensure the underlying device is capable of conveying the
-+	 * largest r/wsize NFS will ask for. This guarantees that
-+	 * failing over from one RDMA device to another will not
-+	 * break NFS I/O.
-+	 */
-+	if ((ia->ri_max_rdma_segs * ia->ri_max_frwr_depth) < RPCRDMA_MAX_SEGS)
-+		return -ENOMEM;
- 
--	return min_t(unsigned int, RPCRDMA_MAX_DATA_SEGS,
--		     (ia->ri_max_segs - 2) * ia->ri_max_frwr_depth);
-+	return 0;
+ /**
+  * frwr_release_mr - Destroy one MR
+  * @mr: MR allocated by frwr_init_mr
+@@ -163,13 +141,12 @@ int frwr_init_mr(struct rpcrdma_ia *ia, struct rpcrdma_mr *mr)
  }
  
  /**
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 520323ddc930..c6dcea06c754 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -111,7 +111,7 @@ static unsigned int rpcrdma_max_reply_header_size(unsigned int maxsegs)
+- * frwr_open - Prepare an endpoint for use with FRWR
+- * @ia: interface adapter this endpoint will use
+- * @ep: endpoint to prepare
++ * frwr_query_device - Prepare a transport for use with FRWR
++ * @r_xprt: controlling transport instance
++ * @device: RDMA device to query
+  *
+  * On success, sets:
+- *	ep->rep_attr.cap.max_send_wr
+- *	ep->rep_attr.cap.max_recv_wr
++ *	ep->rep_attr
+  *	ep->rep_max_requests
+  *	ia->ri_max_rdma_segs
+  *
+@@ -177,14 +154,27 @@ int frwr_init_mr(struct rpcrdma_ia *ia, struct rpcrdma_mr *mr)
+  *	ia->ri_max_frwr_depth
+  *	ia->ri_mrtype
+  *
+- * On failure, a negative errno is returned.
++ * Return values:
++ *   On success, returns zero.
++ *   %-EINVAL - the device does not support FRWR memory registration
++ *   %-ENOMEM - the device is not sufficiently capable for NFS/RDMA
   */
- void rpcrdma_set_max_header_sizes(struct rpcrdma_xprt *r_xprt)
+-int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep)
++int frwr_query_device(struct rpcrdma_xprt *r_xprt,
++		      const struct ib_device *device)
  {
--	unsigned int maxsegs = r_xprt->rx_ia.ri_max_segs;
-+	unsigned int maxsegs = r_xprt->rx_ia.ri_max_rdma_segs;
- 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+-	struct ib_device_attr *attrs = &ia->ri_id->device->attrs;
++	const struct ib_device_attr *attrs = &device->attrs;
++	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
++	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+ 	int max_qp_wr, depth, delta;
+ 	unsigned int max_sge;
  
- 	ep->rep_max_inline_send =
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index f868a75057ad..3cfeba68ee9a 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -359,19 +359,13 @@ xprt_setup_rdma(struct xprt_create *args)
- 	if (rc)
- 		goto out3;
- 
--	INIT_DELAYED_WORK(&new_xprt->rx_connect_worker,
--			  xprt_rdma_connect_worker);
--
--	xprt->max_payload = frwr_maxpages(new_xprt);
--	if (xprt->max_payload == 0)
--		goto out4;
--	xprt->max_payload <<= PAGE_SHIFT;
--	dprintk("RPC:       %s: transport data payload maximum: %zu bytes\n",
--		__func__, xprt->max_payload);
--
- 	if (!try_module_get(THIS_MODULE))
- 		goto out4;
- 
-+	INIT_DELAYED_WORK(&new_xprt->rx_connect_worker,
-+			  xprt_rdma_connect_worker);
-+	xprt->max_payload = RPCRDMA_MAX_DATA_SEGS << PAGE_SHIFT;
++	if (!(attrs->device_cap_flags & IB_DEVICE_MEM_MGT_EXTENSIONS) ||
++	    attrs->max_fast_reg_page_list_len == 0) {
++		pr_err("rpcrdma: 'frwr' mode is not supported by device %s\n",
++		       device->name);
++		return -EINVAL;
++	}
 +
- 	dprintk("RPC:       %s: %s:%s\n", __func__,
- 		xprt->address_strings[RPC_DISPLAY_ADDR],
- 		xprt->address_strings[RPC_DISPLAY_PORT]);
+ 	max_sge = min_t(unsigned int, attrs->max_send_sge,
+ 			RPCRDMA_MAX_SEND_SGES);
+ 	if (max_sge < RPCRDMA_MIN_SEND_SGES) {
+@@ -231,7 +221,7 @@ int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep)
+ 		} while (delta > 0);
+ 	}
+ 
+-	max_qp_wr = ia->ri_id->device->attrs.max_qp_wr;
++	max_qp_wr = attrs->max_qp_wr;
+ 	max_qp_wr -= RPCRDMA_BACKWARD_WRS;
+ 	max_qp_wr -= 1;
+ 	if (max_qp_wr < RPCRDMA_MIN_SLOT_TABLE)
+@@ -242,7 +232,7 @@ int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep)
+ 	if (ep->rep_attr.cap.max_send_wr > max_qp_wr) {
+ 		ep->rep_max_requests = max_qp_wr / depth;
+ 		if (!ep->rep_max_requests)
+-			return -EINVAL;
++			return -ENOMEM;
+ 		ep->rep_attr.cap.max_send_wr = ep->rep_max_requests * depth;
+ 	}
+ 	ep->rep_attr.cap.max_send_wr += RPCRDMA_BACKWARD_WRS;
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 4f9595b72888..601a1bd56260 100644
+index 601a1bd56260..92a52934b622 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -935,7 +935,7 @@ rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt)
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	unsigned int count;
+@@ -367,18 +367,6 @@ rpcrdma_ia_open(struct rpcrdma_xprt *xprt)
+ 		goto out_err;
+ 	}
  
--	for (count = 0; count < ia->ri_max_segs; count++) {
-+	for (count = 0; count < ia->ri_max_rdma_segs; count++) {
- 		struct rpcrdma_mr *mr;
- 		int rc;
+-	switch (xprt_rdma_memreg_strategy) {
+-	case RPCRDMA_FRWR:
+-		if (frwr_is_supported(ia->ri_id->device))
+-			break;
+-		/*FALLTHROUGH*/
+-	default:
+-		pr_err("rpcrdma: Device %s does not support memreg mode %d\n",
+-		       ia->ri_id->device->name, xprt_rdma_memreg_strategy);
+-		rc = -EINVAL;
+-		goto out_err;
+-	}
+-
+ 	return 0;
  
-@@ -1017,7 +1017,7 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+ out_err:
+@@ -478,7 +466,7 @@ int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 	ep->rep_inline_send = xprt_rdma_max_inline_write;
+ 	ep->rep_inline_recv = xprt_rdma_max_inline_read;
  
- 	/* Compute maximum header buffer size in bytes */
- 	maxhdrsize = rpcrdma_fixed_maxsz + 3 +
--		     r_xprt->rx_ia.ri_max_segs * rpcrdma_readchunk_maxsz;
-+		     r_xprt->rx_ia.ri_max_rdma_segs * rpcrdma_readchunk_maxsz;
- 	maxhdrsize *= sizeof(__be32);
- 	rb = rpcrdma_regbuf_alloc(__roundup_pow_of_two(maxhdrsize),
- 				  DMA_TO_DEVICE, flags);
+-	rc = frwr_open(ia, ep);
++	rc = frwr_query_device(r_xprt, ia->ri_id->device);
+ 	if (rc)
+ 		return rc;
+ 	r_xprt->rx_buf.rb_max_requests = cpu_to_be32(ep->rep_max_requests);
 diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 0fde694144f5..aac4cf959c3a 100644
+index aac4cf959c3a..0aed1e98f2bf 100644
 --- a/net/sunrpc/xprtrdma/xprt_rdma.h
 +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -71,7 +71,7 @@ struct rpcrdma_ia {
- 	struct rdma_cm_id 	*ri_id;
- 	struct ib_pd		*ri_pd;
- 	int			ri_async_rc;
--	unsigned int		ri_max_segs;
-+	unsigned int		ri_max_rdma_segs;
- 	unsigned int		ri_max_frwr_depth;
- 	bool			ri_implicit_roundup;
- 	enum ib_mr_type		ri_mrtype;
-@@ -539,7 +539,6 @@ void frwr_reset(struct rpcrdma_req *req);
- int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep);
+@@ -534,9 +534,9 @@ rpcrdma_data_dir(bool writing)
+ 
+ /* Memory registration calls xprtrdma/frwr_ops.c
+  */
+-bool frwr_is_supported(struct ib_device *device);
+ void frwr_reset(struct rpcrdma_req *req);
+-int frwr_open(struct rpcrdma_ia *ia, struct rpcrdma_ep *ep);
++int frwr_query_device(struct rpcrdma_xprt *r_xprt,
++		      const struct ib_device *device);
  int frwr_init_mr(struct rpcrdma_ia *ia, struct rpcrdma_mr *mr);
  void frwr_release_mr(struct rpcrdma_mr *mr);
--size_t frwr_maxpages(struct rpcrdma_xprt *r_xprt);
  struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
- 				struct rpcrdma_mr_seg *seg,
- 				int nsegs, bool writing, __be32 xid,
 
 
