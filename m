@@ -2,99 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69C0012FA54
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2020 17:28:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C4212FABF
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2020 17:47:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgACQ2s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Jan 2020 11:28:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53218 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727905AbgACQ2s (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Jan 2020 11:28:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578068926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lbsCbTWT7cQqOFjkC5R7xK8kdJ5is+4HSv6VjK+CUcc=;
-        b=Btkpvo8AaAzj+zNowgIzV2GgCF7ordt9+8MooEVVWYw5oAjBExKxzteBdln6dcjvg4e/Ai
-        flMQ3WVzgUWzlq9JdvDcgg/M4A3vHCV4X3u2xHOcnuSj3YR62CF2IFOa/AzUzpv7wQn37R
-        M4vRVFbqBAM12hleG4Q0jL5sclO2QFE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-Da8rCZHMOXaoAKIp52nUqA-1; Fri, 03 Jan 2020 11:28:42 -0500
-X-MC-Unique: Da8rCZHMOXaoAKIp52nUqA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A09088A20A0;
-        Fri,  3 Jan 2020 16:28:41 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-116-81.phx2.redhat.com [10.3.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5949A60BF7;
-        Fri,  3 Jan 2020 16:28:41 +0000 (UTC)
-Subject: Re: [PATCH] gssd: Use setgroups32 syscall, if available.
- BUG:FIXED:340
-To:     Markus Schaaf <markuschaaf@gmail.com>, linux-nfs@vger.kernel.org
-References: <20200101181349.12248-1-markuschaaf@gmail.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <2209f259-c018-c407-8c12-4faccbd08219@RedHat.com>
-Date:   Fri, 3 Jan 2020 11:28:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727974AbgACQrM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Jan 2020 11:47:12 -0500
+Received: from fieldses.org ([173.255.197.46]:50554 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727912AbgACQrM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:47:12 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id B7D8D1CB4; Fri,  3 Jan 2020 11:47:11 -0500 (EST)
+Date:   Fri, 3 Jan 2020 11:47:11 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: CPU lockup in or near new filecache code
+Message-ID: <20200103164711.GB24306@fieldses.org>
+References: <9977648B-7D14-42EB-BD4A-CBD041A0C21A@oracle.com>
+ <3af633a4016a183a930a44e3287f9da230711629.camel@hammerspace.com>
+ <BDCA1236-A90A-48F6-9329-DE4818298D83@oracle.com>
+ <A7C348BD-2543-492A-B768-7E3666734A57@oracle.com>
+ <aa7857e4a9ac535e78353db53448efb1b58a57f9.camel@hammerspace.com>
+ <980CB8E4-0E7F-4F1D-B223-81176BE15A39@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200101181349.12248-1-markuschaaf@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <980CB8E4-0E7F-4F1D-B223-81176BE15A39@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 1/1/20 1:13 PM, Markus Schaaf wrote:
-> This closes a bug on older 32-bit platforms, where the 16-bit setgroups
-> syscall has been replaced by setgroups32 and is not available anymore.
+On Wed, Dec 18, 2019 at 06:20:56PM -0500, Chuck Lever wrote:
+> > On Dec 13, 2019, at 3:12 PM, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> > Does something like the following help?
+> > 
+> > 8<---------------------------------------------------
+> > From caf515c82ed572e4f92ac8293e5da4818da0c6ce Mon Sep 17 00:00:00 2001
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > Date: Fri, 13 Dec 2019 15:07:33 -0500
+> > Subject: [PATCH] nfsd: Fix a soft lockup race in
+> > nfsd_file_mark_find_or_create()
+> > 
+> > If nfsd_file_mark_find_or_create() keeps winning the race for the
+> > nfsd_file_fsnotify_group->mark_mutex against nfsd_file_mark_put()
+> > then it can soft lock up, since fsnotify_add_inode_mark() ends
+> > up always finding an existing entry.
+> > 
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> > fs/nfsd/filecache.c | 8 ++++++--
+> > 1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 9c2b29e07975..f275c11c4e28 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -132,9 +132,13 @@ nfsd_file_mark_find_or_create(struct nfsd_file *nf)
+> > 						 struct nfsd_file_mark,
+> > 						 nfm_mark));
+> > 			mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+> > -			fsnotify_put_mark(mark);
+> > -			if (likely(nfm))
+> > +			if (nfm) {
+> > +				fsnotify_put_mark(mark);
+> > 				break;
+> > +			}
+> > +			/* Avoid soft lockup race with nfsd_file_mark_put() */
+> > +			fsnotify_destroy_mark(mark, nfsd_file_fsnotify_group);
+> > +			fsnotify_put_mark(mark);
+> > 		} else
+> > 			mutex_unlock(&nfsd_file_fsnotify_group->mark_mutex);
+> > 
 > 
-> Signed-off-by: Markus Schaaf <markuschaaf@gmail.com>
-Committed... (tag nfs-utils-2-4-3-rc4)
-
+> I've tried to reproduce the lockup for three days with this patch
+> applied to my server. No lockup.
 > 
-> (Personal note: Reporting a trivial bug and getting a fix upstream in
-> nfs-utils is like running the gauntlet, for the uninitiated average user.)
-I'm sorry this was a "gauntlet"... but I simply can not take patches that
-are only posted in the bz... More eyes are better than my eyes! :-) 
+> Tested-by: Chuck Lever <chuck.lever@oracle.com>
 
-Please feel free to ping me privately if the process is becoming a 
-pain... I'll more that willing to work with you to smooth things out.
+I'm applying this for 5.5 with Chuck's tested-by and:
 
-steved.
+    Fixes: 65294c1f2c5e "nfsd: add a new struct file caching facility to nfsd"
 
-> 
-> BR
-> 
-> ---
->  utils/gssd/gssd_proc.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-> index bfcf3f09..9ba16af0 100644
-> --- a/utils/gssd/gssd_proc.c
-> +++ b/utils/gssd/gssd_proc.c
-> @@ -437,7 +437,11 @@ change_identity(uid_t uid)
->  	int res;
->  
->  	/* drop list of supplimentary groups first */
-> +#ifdef __NR_setgroups32
-> +	if (syscall(SYS_setgroups32, 0, 0) != 0) {
-> +#else
->  	if (syscall(SYS_setgroups, 0, 0) != 0) {
-> +#endif
->  		printerr(0, "WARNING: unable to drop supplimentary groups!");
->  		return errno;
->  	}
-> 
-
+--b.
