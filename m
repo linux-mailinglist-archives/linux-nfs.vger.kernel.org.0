@@ -2,66 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA501312B2
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 14:17:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 308B6131609
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 17:29:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgAFNRl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jan 2020 08:17:41 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44831 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgAFNRl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 08:17:41 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ioSGE-0006Gv-IX; Mon, 06 Jan 2020 13:17:34 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Scott Mayhew <smayhew@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-nfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] NFS: Add missing null check for failed allocation
-Date:   Mon,  6 Jan 2020 13:17:34 +0000
-Message-Id: <20200106131734.51759-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726695AbgAFQ3C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jan 2020 11:29:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41833 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726677AbgAFQ3C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 11:29:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578328141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dWZzCo0dL1t3oBL+mRxnfhduXRW4GvQOIUYTk1rT7zk=;
+        b=aOWkfbIQ9dFuGvqkhyEJq2KM69wp1i4rCcXL5XuxsLlnwhy6/KKrJ2UaYkQNlKhMrOBACo
+        FUqCPH0KdBP1ZX9pvk1OKQ8Ep2Y9M3QKAxeu7BQ1hEMmbKBYTWmOMrMkrF0T86GguW6o0d
+        Ay/Cyhg8zWhEMgkGUQzN3WzjfHE7ytQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-5o_xm6yvM4OHFzWq3DrMOQ-1; Mon, 06 Jan 2020 11:28:58 -0500
+X-MC-Unique: 5o_xm6yvM4OHFzWq3DrMOQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E3F218552DF;
+        Mon,  6 Jan 2020 16:28:57 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-126-209.rdu2.redhat.com [10.10.126.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7B1E10840F5;
+        Mon,  6 Jan 2020 16:28:56 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 9E8D7120198; Mon,  6 Jan 2020 11:28:54 -0500 (EST)
+Date:   Mon, 6 Jan 2020 11:28:54 -0500
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     "J. R. Okajima" <hooanon05g@gmail.com>
+Cc:     trond.myklebust@hammerspace.com, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH]: nfs acl: bugfix, don't use static nfsd_acl_versions[]
+Message-ID: <20200106162854.GA25029@pick.fieldses.org>
+References: <29104.1578242282@jrobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29104.1578242282@jrobl>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Thanks, but, see 7c149057d044 "nfsd: restore NFSv3 ACL support", in
+5.5-rc1; looks like you and I both stumbled on the identical fix?--b.
 
-Currently the allocation of buf is not being null checked and
-a null pointer dereference can occur when the memory allocation fails.
-Fix this by adding a check and returning -ENOMEM.
-
-Addresses-Coverity: ("Dereference null return")
-Fixes: 6d972518b821 ("NFS: Add fs_context support.")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/nfs/nfs4namespace.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index 10e9e1887841..de6875a9b391 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -137,6 +137,9 @@ static int nfs4_validate_fspath(struct dentry *dentry,
- 	int n;
- 
- 	buf = kmalloc(4096, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
- 	path = nfs4_path(dentry, buf, 4096);
- 	if (IS_ERR(path)) {
- 		kfree(buf);
--- 
-2.24.0
+On Mon, Jan 06, 2020 at 01:38:02AM +0900, J. R. Okajima wrote:
+> Here is a patch to fix nfs acl.
+> 
+> J. R. Okajima
+> 
+> ----------------------------------------
+> commit 8684b9a7c55e9283e8b21112fbdf19b4d27f36b7
+> Author: J. R. Okajima <hooanon05g@gmail.com>
+> Date:   Mon Jan 6 01:31:20 2020 +0900
+> 
+>     nfs acl: bugfix, don't use static nfsd_acl_versions[]
+>     
+>     By the commit for v5.2-rc1,
+>     e333f3bbefe3 2019-04-24 nfsd: Allow containers to set supported nfs versions
+>     the line to copy a value from nfsd_acl_version[] to static
+>     nfsd_acl_versions[] was removed.  It is OK, but nfsd_acl_versions[] is
+>     still set to nfsd_acl_program.pg_vers which means pg_vers has NULLs for
+>     its all entires and nfsacl stops working entirely.
+>     I am afraid the removal of static nfsd_acl_versions[] was just
+>     forgotten.
+>     
+>     Signed-off-by: J. R. Okajima <hooanon05g@gmail.com>
+> 
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 18d94ea984ba..7f938bcb927d 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -94,12 +94,11 @@ static const struct svc_version *nfsd_acl_version[] = {
+>  
+>  #define NFSD_ACL_MINVERS            2
+>  #define NFSD_ACL_NRVERS		ARRAY_SIZE(nfsd_acl_version)
+> -static const struct svc_version *nfsd_acl_versions[NFSD_ACL_NRVERS];
+>  
+>  static struct svc_program	nfsd_acl_program = {
+>  	.pg_prog		= NFS_ACL_PROGRAM,
+>  	.pg_nvers		= NFSD_ACL_NRVERS,
+> -	.pg_vers		= nfsd_acl_versions,
+> +	.pg_vers		= nfsd_acl_version,
+>  	.pg_name		= "nfsacl",
+>  	.pg_class		= "nfsd",
+>  	.pg_stats		= &nfsd_acl_svcstats,
+> 
 
