@@ -2,72 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B71C131960
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 21:27:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5425D131982
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 21:41:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgAFU1q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jan 2020 15:27:46 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36343 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgAFU1q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 15:27:46 -0500
-Received: by mail-yb1-f195.google.com with SMTP id w126so20729422yba.3
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 12:27:45 -0800 (PST)
+        id S1726683AbgAFUls (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jan 2020 15:41:48 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46744 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgAFUls (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 15:41:48 -0500
+Received: by mail-yw1-f68.google.com with SMTP id u139so22418925ywf.13
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 12:41:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q3RZF081h0n2EOEc31Pc7IloAelAP8r+igP5Mlubtyk=;
-        b=Y4O/7kynJ063IwPSbStbiygP6oEh7CgCjbWr3yWYwFKuxj3Sn1idlYPKWSbthgJgcV
-         UIV74+uSGJe/tVqZdKalEZodcd4X/sNu1WVWSnKsSihbWXIhOegbGuC8b9yIj2Nv63B1
-         RzJfOIzHHaLf55QSgyf3PSgjGRdPq5jFmiYLbImLt64lNUStAmzr9RgyG1HgXZGMiCT+
-         HCsEORW3NEoLWgxzMqQo40Fga6zOETk9U79WGT1hKR8/AmQolb01h3yP3y6GRyL3/6RO
-         XHVR+LkbpfAVbtwFoR8YLTAXzMkg7LuMLmoH+wBacFUh9Vqhpy5ftFMVy2chyRl0u0qy
-         OQ1A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XD/nFvl0EmT9VHX+ajn/VD0AXctQfh9Nz2WBcta+GJo=;
+        b=iHwM0QXI4s1pApXRc1I4vVAjm6rusn3Hir2IqUdhZXC0+4+LNjvMaqUU5zDXPQWTdZ
+         892gNQZ2D4yHZsxuylZyp15OP6i3gEwylK22EqwyfQ9GxcMsRLkaJjJ6QvCZ2l6fSa7y
+         x/0IfeqDNQjJ8xWqPgtQCWPzqjHaujlv1Prh0lHF/y5aiGuAN8JpT+8/ENqOnoASmkP/
+         pyMRG9WjDMPEfJWp/czJMlFzSiQCJGq9a1etuOcrNL8RR6+wtvjFxYnXMCqRrhUqgTMv
+         iTE0ymV6heCbwJk8jFpWkA290RV7tnMSxb9garHRN8+jcqwSCNkJJgk9XVB6+m7SXltO
+         rckg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q3RZF081h0n2EOEc31Pc7IloAelAP8r+igP5Mlubtyk=;
-        b=GpaLqUTX/5wGWzJUBz0s7YbjVBm3QQop3gxruToMcXws++FH4yTr6BetmxRAnO5R1X
-         SKViY+7teSqzlG49gmwin2nVEqVe+qt6kUnUVINqln/BcPrr6VXJuyd75ulDoxO3Wf0d
-         0qM2KOEfTX8dDD5Q2Stx2XIqKknTcEVcsZtca7E6zBoavRMb4b14KDDGzKgSpzEloAoN
-         sbvZrbja/GwoijJ799OiZIjJOjBBNCBGElfdrpcVTzW6m2OmHnua0VTtFTdTNbFNpOPB
-         NcvMD4fXuILt4YkCqW+gD1fZ2LSeAfuV5Cr2WFIV+qjDOA3UHAvaCPIRoi+em4UrDrbv
-         kiLw==
-X-Gm-Message-State: APjAAAXfIJVFnBX4BoY6xSnd6AQIR7gs3io8WDgnJO+Fj5gElFDpYgVi
-        hEOtAMuFR3oM97CzlfmzgA==
-X-Google-Smtp-Source: APXvYqziXtPi/zqJTg2fwzwiQAzPT6tO6hW3aVN5mqO1XMXAhpgJ12gnzuNLT6nhUC54eXJOw0bkRA==
-X-Received: by 2002:a25:7ac2:: with SMTP id v185mr44063564ybc.331.1578342465028;
-        Mon, 06 Jan 2020 12:27:45 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XD/nFvl0EmT9VHX+ajn/VD0AXctQfh9Nz2WBcta+GJo=;
+        b=ei/O5zS9WbQtSVjucf2uYO/OILyElfg8U9tMVofkbwX36By8W+2NWNVx/5kQP8Y0R9
+         3ZHMKbppdx2D7GmS7ve7RppBAWtvVS7fM5Scn3N+uUeWwngRkYTf7dEM0ojLHPIkORcm
+         sJGQaMzAtxxWnRq3ci/zHATPOU96IRmYWLkDJTWC/Oci4Gs88MhFdXLwRGm4cKbVtpU4
+         wM89/lrryw8yDsF5BLEp/DEF3ylY+uZ7ZU08nZcZlEvFv2VZpHloa+cCLaCautZ7IJnx
+         iVf6Hw6yhd4jcRc3R+EZPQ/f2BqVpDBF1/MRnYKR8H5Tpc889PaDRuNatZlwzzFgtVVT
+         twMQ==
+X-Gm-Message-State: APjAAAXhHZPapSBWEsaYFF2j6XvxE8AB8DlutlZsceQFbD5Q9D2VCtoO
+        ll2ODq+u/pcW2fwa/NgiQk+ze8mpQA==
+X-Google-Smtp-Source: APXvYqz0veEWUXylfzlCJ1Vd103S2uRSS+GrBdWn6NkeWkR5eS/+Mdruu5XKLBhMrYp/030IuN4dwA==
+X-Received: by 2002:a0d:dd4a:: with SMTP id g71mr75975006ywe.248.1578343306859;
+        Mon, 06 Jan 2020 12:41:46 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id l200sm28723579ywl.106.2020.01.06.12.27.43
+        by smtp.gmail.com with ESMTPSA id 207sm28082405ywq.100.2020.01.06.12.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 12:27:44 -0800 (PST)
+        Mon, 06 Jan 2020 12:41:46 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 15/15] NFS: Fix nfs_direct_write_reschedule_io()
-Date:   Mon,  6 Jan 2020 15:25:14 -0500
-Message-Id: <20200106202514.785483-16-trond.myklebust@hammerspace.com>
+Subject: [PATCH 0/2] Optionally default to cached info when server is down
+Date:   Mon,  6 Jan 2020 15:39:35 -0500
+Message-Id: <20200106203937.785805-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200106202514.785483-15-trond.myklebust@hammerspace.com>
-References: <20200106202514.785483-1-trond.myklebust@hammerspace.com>
- <20200106202514.785483-2-trond.myklebust@hammerspace.com>
- <20200106202514.785483-3-trond.myklebust@hammerspace.com>
- <20200106202514.785483-4-trond.myklebust@hammerspace.com>
- <20200106202514.785483-5-trond.myklebust@hammerspace.com>
- <20200106202514.785483-6-trond.myklebust@hammerspace.com>
- <20200106202514.785483-7-trond.myklebust@hammerspace.com>
- <20200106202514.785483-8-trond.myklebust@hammerspace.com>
- <20200106202514.785483-9-trond.myklebust@hammerspace.com>
- <20200106202514.785483-10-trond.myklebust@hammerspace.com>
- <20200106202514.785483-11-trond.myklebust@hammerspace.com>
- <20200106202514.785483-12-trond.myklebust@hammerspace.com>
- <20200106202514.785483-13-trond.myklebust@hammerspace.com>
- <20200106202514.785483-14-trond.myklebust@hammerspace.com>
- <20200106202514.785483-15-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -75,31 +59,23 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The 'hdr->good_bytes' is defined as the number of bytes we expect to
-read or write starting at offset hdr->io_start. In the case of a partial
-read/write we may end up adjusting hdr->args.offset and hdr->args.count
-to skip I/O for data that was already read/written, and so we must ensure
-the calculation takes that into account.
+Add a mount option that allows the NFS client to default to using
+cached information (attributes, permissions, data, etc) if the NFS
+server is down.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/direct.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Trond Myklebust (2):
+  NFS: Trust cached access if we've already revalidated the inode once
+  NFS: Add mount option 'softreval'
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 29f00da8a0b7..b768a0b42e82 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -824,7 +824,8 @@ static void nfs_direct_write_reschedule_io(struct nfs_pgio_header *hdr)
- 		dreq->flags = NFS_ODIRECT_RESCHED_WRITES;
- 		/* fake unstable write to let common nfs resend pages */
- 		hdr->verf.committed = NFS_UNSTABLE;
--		hdr->good_bytes = hdr->args.count;
-+		hdr->good_bytes = hdr->args.offset + hdr->args.count -
-+			hdr->io_start;
- 	}
- 	spin_unlock(&dreq->lock);
- }
+ fs/nfs/dir.c              |  4 ++--
+ fs/nfs/inode.c            |  8 +++++++-
+ fs/nfs/nfs3proc.c         |  7 ++++++-
+ fs/nfs/nfs4proc.c         | 33 ++++++++++++++++++++++++++-------
+ fs/nfs/proc.c             |  7 ++++++-
+ fs/nfs/super.c            | 16 ++++++++++++++--
+ include/linux/nfs_fs_sb.h |  1 +
+ 7 files changed, 62 insertions(+), 14 deletions(-)
+
 -- 
 2.24.1
 
