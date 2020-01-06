@@ -2,72 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA648131655
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 17:55:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E196131761
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 19:20:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgAFQzb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jan 2020 11:55:31 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38132 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQzb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 11:55:31 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so27127171pgm.5;
-        Mon, 06 Jan 2020 08:55:31 -0800 (PST)
+        id S1726612AbgAFSUY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jan 2020 13:20:24 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:45490 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFSUX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 13:20:23 -0500
+Received: by mail-yb1-f196.google.com with SMTP id y67so12770510yba.12
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 10:20:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:in-reply-to:references:mime-version:content-id
-         :date:message-id;
-        bh=df4YyZUV+IM4Z+keZd+LizEQHBEDhQXQEtITNJle4CQ=;
-        b=TJuh/iNi/KJipm6QDUvLTl2Kwonqc0io/2eFiUHK8uQCw2Nj1QW37n3hjBaJy6t22X
-         RXrblHvEuy5DLUZabM6m8wFxq49UzcECYaoioVML2RB5kwhzVXEN/+CYDyz/dZmMQvmA
-         a5ruOVlyER+7u59xhwa0sYRHc0QPxA0GyioAd8Sj6quzKYtQ5aLJXPJRCNujLBekjWRL
-         PLIoWc7PPFH+0wEEtDtSKS8x+Qg0CHc2vF1HuNmwiKJbrOxs5Sv3M8tnKvlr3LHisZ44
-         q2vEp4/pZvXr+MOysfMzfG/FSmPhl7brgMlyBbYKlW5w+cWCQAmD5m3B6yhc9k7DoDSU
-         0Jnw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b+xTjyKzwQACWyT3C/3CNIHOhiIHoL2LFf21qMaJHHE=;
+        b=M89g1lDAT6T9mGzbVb2KVjuPvVOBeuldwPnZxO3eAoyGviupz5JzQt4cxAoMG2WJF3
+         MxOAI2jmgth+johJ0yBKZS8R79+OYHBytOx49ue+1KicbTTaV1LO2aygM3nXAlENhvhq
+         zQfFJgsEk7gGr6go/glNNtzgWdDALheWyV7DeyM5ZUnJMzvDc3BgV0vPIvWYRUPYzqfz
+         6cZ8JW6eOvAOLA5z1ApahGB/clpoOySwdd4MZpDW1GzzpZW3LYMgCV3IaPvmplasCIwk
+         LxEqScMLnoZHBQ+k6JakALP8gGw/SPklJscjlCqyZN0GZmuzLCbgvuwFZmRMtNAd2JvK
+         7AQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:in-reply-to:references
-         :mime-version:content-id:date:message-id;
-        bh=df4YyZUV+IM4Z+keZd+LizEQHBEDhQXQEtITNJle4CQ=;
-        b=bPYvF7N0iGJ+pjUTq/+Y6dCT/oOFlj5nINn9E0eS3QBQvzNqQXa9uCZzRxBUjx+N1i
-         iorsRzE8HnhCmEuVenTarJuLdJdfT8HYA8XafvJnrjA6Bphf38931voQ3Ag+MjjYZ5wr
-         RSs8CU3LZmn11AsOjMsfvFvip19WFeMiuXS1xxoD9bHHn71LRR3GiWc5C6E+iFGw9iJs
-         ybb0nORYoFmgT1eVl+USXQbopuVdgTPmzmQP4FJa87DqgZlah8NFQGUOoNKSb/DgfsL2
-         tYd+DQ7Ei3TbFMEcS89+KhmvRYPkB8POEwe0vgqr01iIBJXqiA+NSHb/U8gD2MHc8q9u
-         NaOQ==
-X-Gm-Message-State: APjAAAWzhGe8XnnPZIFk1mHH2edlhawV0pNfhUyh5rmEu9aLYHmbJDYI
-        wL1j/W/98c0P684nsABNbEYWuuER
-X-Google-Smtp-Source: APXvYqyRlTWbuwzIqqsoGt251vhrqOnu1djUONsK+NgOJb3LrrW5m1N+igc9ajp1Ht1lEyesBXjYWw==
-X-Received: by 2002:aa7:86d4:: with SMTP id h20mr103820168pfo.232.1578329731055;
-        Mon, 06 Jan 2020 08:55:31 -0800 (PST)
-Received: from jromail.nowhere (h219-110-240-103.catv02.itscom.jp. [219.110.240.103])
-        by smtp.gmail.com with ESMTPSA id a19sm24848895pju.11.2020.01.06.08.55.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jan 2020 08:55:30 -0800 (PST)
-Received: from localhost ([127.0.0.1] helo=jrobl) by jrobl id 1ioVf7-0003c8-6A ; Tue, 07 Jan 2020 01:55:29 +0900
-From:   "J. R. Okajima" <hooanon05g@gmail.com>
-Subject: Re: [PATCH]: nfs acl: bugfix, don't use static nfsd_acl_versions[]
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b+xTjyKzwQACWyT3C/3CNIHOhiIHoL2LFf21qMaJHHE=;
+        b=cQOoVLaZ5oky9miJnn25tnqftERAdzNztR59NeethbJtdRpuI+ywvAHqdVGPtXGiKV
+         eDHL721lxXx++eNewfA6CyjhjU6bk2XopPq71hhcqewc0n2wKvEoB/Qq0BHHaOEipHZt
+         7iKfHrlMZsgoUqryEkhUZo5ygtzdFo8VKqG7sdRhvDlqr0oPQlY5KPAEwITEp6vhWuda
+         Olq6+HTj3Adt9joOl0fkSI8MfofeUTtjcH8hyE3a49jdibr3t4Pxt06BNd4tIQ1z97Il
+         uu/hqT+cnmbhUDW1MC+veldQjui9gbm3+yiOCD1K0UJl238ebgyklAJmKxduBClzdDoW
+         jeSw==
+X-Gm-Message-State: APjAAAUzOwPC2ggnFbxd9uEnBJVs5YeL4Fkk6HbFK/WaHCcSsUyv9WVW
+        3kRFnOXsFx+9yJlfhuzzlK9cYfHJIA==
+X-Google-Smtp-Source: APXvYqyB7P9gxDMh6g1LMmKynEHyvlOPEd38XriHtGmkg3zykAa6DstumS42Odn1N2bLOYE51Q2V6g==
+X-Received: by 2002:a25:dcc3:: with SMTP id y186mr66303426ybe.351.1578334822593;
+        Mon, 06 Jan 2020 10:20:22 -0800 (PST)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id r31sm24800524ywa.82.2020.01.06.10.20.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 10:20:22 -0800 (PST)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     trond.myklebust@hammerspace.com, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-In-Reply-To: <20200106162854.GA25029@pick.fieldses.org>
-References: <29104.1578242282@jrobl> <20200106162854.GA25029@pick.fieldses.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH RESEND 0/6] Improve performance of containerised knfsd
+Date:   Mon,  6 Jan 2020 13:18:02 -0500
+Message-Id: <20200106181808.562969-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <13894.1578329729.1@jrobl>
-Date:   Tue, 07 Jan 2020 01:55:29 +0900
-Message-ID: <13895.1578329729@jrobl>
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-"J. Bruce Fields":
-> Thanks, but, see 7c149057d044 "nfsd: restore NFSv3 ACL support", in
-> 5.5-rc1; looks like you and I both stumbled on the identical fix?--b.
+The following patches fix up the garbage collection for the knfsd file
+cache, to make the behaviour under load be more predictable.
+It also separates out the garbage collectors for knfsd instances running
+under different containers to ensure that a close() or fput() of a file
+in one container that hangs or is slow won't gum up the system for
+all the other containers.
 
-Ah, you already fixed.  I didn't notice since I am still in v5.4.
-Sorry for the noise.
+Trond Myklebust (6):
+  nfsd: fix filecache lookup
+  nfsd: cleanup nfsd_file_lru_dispose()
+  nfsd: Containerise filecache laundrette
+  nfsd: Remove unused constant NFSD_FILE_LRU_RESCAN
+  nfsd: Schedule the laundrette regularly irrespective of file errors
+  nfsd: Reduce the number of calls to nfsd_file_gc()
 
+ fs/nfsd/filecache.c | 285 ++++++++++++++++++++++++++++++++++----------
+ fs/nfsd/filecache.h |   2 +
+ fs/nfsd/nfssvc.c    |   9 +-
+ 3 files changed, 230 insertions(+), 66 deletions(-)
 
-J. R. Okajima
+-- 
+2.24.1
+
