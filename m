@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E4EF131959
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 21:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5460213195A
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 21:27:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgAFU1h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jan 2020 15:27:37 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:39441 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgAFU1g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 15:27:36 -0500
-Received: by mail-yb1-f193.google.com with SMTP id b12so286048ybg.6
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 12:27:35 -0800 (PST)
+        id S1726751AbgAFU1i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jan 2020 15:27:38 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35137 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgAFU1h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 15:27:37 -0500
+Received: by mail-yb1-f196.google.com with SMTP id a124so22628914ybg.2
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 12:27:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XwK2+X71Ax+UMgRwJ/UWo/h1i3e43wnDp+/h+mUQKxk=;
-        b=t6me65tSkZQw+v1jxJW6CaE/AUP2b22EdESpejENumKdwQuPDRxTSzGzNyBfau1RdK
-         op2UvEvlp6l52R6k+CTljhifWvvQh88Fdrz5mVv+xLhvTZkF9PpXypovcOdLgLOAMHxY
-         Bd3uryeggEvcfrCYWDj10u+tWticRkV7gZH1DO/9X4dzn/qATVwtcG+CE9m8/UAdCMfZ
-         6P/I5FccNw5eASp9uTS9vonKvGrMJTvnJ5K40j8FZBUO2tmOnZkI6bo+F3cFLBg50ZYv
-         XpsK4cSz8OU5lDILEvYhxWqgaYkKUy5OUcPQVBDZtbMJRONRIY3qs4c8QRhw8/qxPotN
-         VzPw==
+        bh=wcZPSAaV+lXbnJO92q7MX1Hbs9Frrjeym3R6iqB+2CM=;
+        b=aegktrfzz6S5Ccmwm8mjYyoc9Jy/oulwL22GZW2xvH1G5b2coKD3UdBndYOt41SJZD
+         Kct8XtBmQX2m9j4Uk00SIqF1BchJYbs0YwfwEt04adR7g1ctHBKZpa55VC4N8AvEDHaQ
+         U54ZUaYo68YRTJ7JtxNTFfCnk2GjEwxmj9xDVilmIdoTjKekeCMJM/0xB2YET6wKaZlp
+         UH3ckVDagg56oPnCCjHCrtcFtqD4KJahXy9gDqOIloOo+I90ZfpJmsgSo3i5PBZe0+W2
+         2B/c9yYwJwYVKcs3u1MD9vtGlP7DL18Pz2P/63u+j12+Y5cP9mSJ5ebAkJ73yGwIn0LH
+         1b8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XwK2+X71Ax+UMgRwJ/UWo/h1i3e43wnDp+/h+mUQKxk=;
-        b=QZ7RRNKcJOVanMbty66IV4QwQm9obWtjnDpf5nyiec1/LhDcjYiSSmahOQHo7MVdS0
-         Qv2F4Y6OQ4SZSlCVCa7k8uFJffp7v1XVEBy4/ImM55P3oHk7+pS03wQZZWjpN5Wjco20
-         pD0zySBTU+DkHk6wQtLzg6mSBDjSrX8m/djusMbFWVM8yQMKcFiCLgeszIr1VMI73ZVd
-         FG6Vm6vrzB0W/eNm49Xd6zp6bhHkULBSPOJn7upmwtc6R6p0sE02w6pvnpbx6w4iUutj
-         kGifGFtkft2gEqqyAG3sbaJbjWMEPio5yLtEKxs/uq1pyfkHwHcxK+bOPsJhS7ZW2e2C
-         7eOQ==
-X-Gm-Message-State: APjAAAXAABq4WfgNIYx4DQg7iuvYctp3doCa2CQuJvpQk373i1gLY+GQ
-        bamHYuLVE4s+470XNH54LA==
-X-Google-Smtp-Source: APXvYqzPJHFBO7EVT1d3jkyW3ebV9iI3+XIpfwIz7Ryw6NYP+mzkLdvtzwVjM8C04LLQf0G428P1tQ==
-X-Received: by 2002:a25:6cd6:: with SMTP id h205mr41352448ybc.301.1578342455187;
-        Mon, 06 Jan 2020 12:27:35 -0800 (PST)
+        bh=wcZPSAaV+lXbnJO92q7MX1Hbs9Frrjeym3R6iqB+2CM=;
+        b=hvgyzgFFSizFekUrtFVBQbROT/f332JDqo0xtXmiJNdYx/CVWS6k2ElXEV9RpWhz9h
+         pEc9okT3TJwT6NNCSMAYByfMp7IVKYHVxpXn2gSJLU+4FZc4Vvhrw/o/JVuH5MZCyL1m
+         3ElGPc0fsxN6J2dXJ52IidLCOiZAYqnRZPdKdfOPv1NLjS0RKSat+VnFRY3TT6tsyPsJ
+         G/MeXN9HmD6no6jhhEOB88fupCvUQWDhDGejH08Rvt40NBj1Z9InT5FG7mEKsrXqOHuc
+         PXBbsGb+Li7EHoBfDf4b2ABNd37wvbMk5pXVIyI9cid/7S9iLEGurRXbn5r64FqNUS8p
+         rh/w==
+X-Gm-Message-State: APjAAAXIgDKg4Ryzvn0ckg99cih8RpmTa8X5gsZtDJSMdvCKJvSrmfZW
+        Tb0dhkiKp0JnRmEmBMv54Q==
+X-Google-Smtp-Source: APXvYqxUMN3NJ2q7WWGqoQTJIMbUNkDa/Dvqx/e3/MluhE/YWYJkF7itTaXyhyQubQnZ9OkZ4wq0lQ==
+X-Received: by 2002:a25:7ac2:: with SMTP id v185mr44063169ybc.331.1578342456408;
+        Mon, 06 Jan 2020 12:27:36 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id l200sm28723579ywl.106.2020.01.06.12.27.34
+        by smtp.gmail.com with ESMTPSA id l200sm28723579ywl.106.2020.01.06.12.27.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 12:27:34 -0800 (PST)
+        Mon, 06 Jan 2020 12:27:36 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 08/15] pNFS/flexfiles: Record resend attempts on I/O failure
-Date:   Mon,  6 Jan 2020 15:25:07 -0500
-Message-Id: <20200106202514.785483-9-trond.myklebust@hammerspace.com>
+Subject: [PATCH 09/15] NFS: Clean up generic file read tracepoints
+Date:   Mon,  6 Jan 2020 15:25:08 -0500
+Message-Id: <20200106202514.785483-10-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200106202514.785483-8-trond.myklebust@hammerspace.com>
+In-Reply-To: <20200106202514.785483-9-trond.myklebust@hammerspace.com>
 References: <20200106202514.785483-1-trond.myklebust@hammerspace.com>
  <20200106202514.785483-2-trond.myklebust@hammerspace.com>
  <20200106202514.785483-3-trond.myklebust@hammerspace.com>
@@ -61,6 +61,7 @@ References: <20200106202514.785483-1-trond.myklebust@hammerspace.com>
  <20200106202514.785483-6-trond.myklebust@hammerspace.com>
  <20200106202514.785483-7-trond.myklebust@hammerspace.com>
  <20200106202514.785483-8-trond.myklebust@hammerspace.com>
+ <20200106202514.785483-9-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -68,120 +69,152 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the attempt to do pNFS fails, then record what action we
-take to recover (resend, reset to pnfs or reset to mds).
+Clean up the generic file read tracepoints so they do pass the
+full structures as arguments. Also ensure we report the number
+of bytes actually read.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 6 +++---
- fs/nfs/nfs4trace.h                     | 8 +++++++-
- fs/nfs/pnfs.h                          | 8 ++++----
- 3 files changed, 14 insertions(+), 8 deletions(-)
+ fs/nfs/nfstrace.h | 56 ++++++++++++++++++++++++++++-------------------
+ fs/nfs/read.c     |  5 ++---
+ 2 files changed, 35 insertions(+), 26 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 5657b7f2611f..3163b78b1d2c 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -1321,7 +1321,6 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
- 	int new_idx = hdr->pgio_mirror_idx;
- 	int err;
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index f64a33d2a1d1..f0e869d21368 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -820,75 +820,85 @@ TRACE_EVENT(nfs_sillyrename_unlink,
  
--	trace_nfs4_pnfs_read(hdr, task->tk_status);
- 	if (task->tk_status < 0)
- 		ff_layout_io_track_ds_error(hdr->lseg, hdr->pgio_mirror_idx,
- 					    hdr->args.offset, hdr->args.count,
-@@ -1331,6 +1330,7 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
- 					   hdr->ds_clp, hdr->lseg,
- 					   hdr->pgio_mirror_idx);
+ TRACE_EVENT(nfs_initiate_read,
+ 		TP_PROTO(
+-			const struct inode *inode,
+-			loff_t offset, unsigned long count
++			const struct nfs_pgio_header *hdr
+ 		),
  
-+	trace_nfs4_pnfs_read(hdr, err);
- 	clear_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags);
- 	clear_bit(NFS_IOHDR_RESEND_MDS, &hdr->flags);
- 	switch (err) {
-@@ -1494,7 +1494,6 @@ static int ff_layout_write_done_cb(struct rpc_task *task,
- 	loff_t end_offs = 0;
- 	int err;
+-		TP_ARGS(inode, offset, count),
++		TP_ARGS(hdr),
  
--	trace_nfs4_pnfs_write(hdr, task->tk_status);
- 	if (task->tk_status < 0)
- 		ff_layout_io_track_ds_error(hdr->lseg, hdr->pgio_mirror_idx,
- 					    hdr->args.offset, hdr->args.count,
-@@ -1504,6 +1503,7 @@ static int ff_layout_write_done_cb(struct rpc_task *task,
- 					   hdr->ds_clp, hdr->lseg,
- 					   hdr->pgio_mirror_idx);
+ 		TP_STRUCT__entry(
+-			__field(loff_t, offset)
+-			__field(unsigned long, count)
+ 			__field(dev_t, dev)
+ 			__field(u32, fhandle)
+ 			__field(u64, fileid)
++			__field(loff_t, offset)
++			__field(u32, count)
+ 		),
  
-+	trace_nfs4_pnfs_write(hdr, err);
- 	clear_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags);
- 	clear_bit(NFS_IOHDR_RESEND_MDS, &hdr->flags);
- 	switch (err) {
-@@ -1537,7 +1537,6 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
- {
- 	int err;
+ 		TP_fast_assign(
++			const struct inode *inode = hdr->inode;
+ 			const struct nfs_inode *nfsi = NFS_I(inode);
++			const struct nfs_fh *fh = hdr->args.fh ?
++						  hdr->args.fh : &nfsi->fh;
  
--	trace_nfs4_pnfs_commit_ds(data, task->tk_status);
- 	if (task->tk_status < 0)
- 		ff_layout_io_track_ds_error(data->lseg, data->ds_commit_index,
- 					    data->args.offset, data->args.count,
-@@ -1546,6 +1545,7 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
- 	err = ff_layout_async_handle_error(task, NULL, data->ds_clp,
- 					   data->lseg, data->ds_commit_index);
+-			__entry->offset = offset;
+-			__entry->count = count;
++			__entry->offset = hdr->args.offset;
++			__entry->count = hdr->args.count;
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = nfsi->fileid;
+-			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
++			__entry->fhandle = nfs_fhandle_hash(fh);
+ 		),
  
-+	trace_nfs4_pnfs_commit_ds(data, err);
- 	switch (err) {
- 	case -NFS4ERR_RESET_TO_PNFS:
- 		pnfs_generic_prepare_to_resend_writes(data);
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index a291877c0c32..a467f49989f2 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -155,6 +155,9 @@ TRACE_DEFINE_ENUM(NFS4ERR_WRONG_CRED);
- TRACE_DEFINE_ENUM(NFS4ERR_WRONG_TYPE);
- TRACE_DEFINE_ENUM(NFS4ERR_XDEV);
+ 		TP_printk(
+ 			"fileid=%02x:%02x:%llu fhandle=0x%08x "
+-			"offset=%lld count=%lu",
++			"offset=%lld count=%u",
+ 			MAJOR(__entry->dev), MINOR(__entry->dev),
+ 			(unsigned long long)__entry->fileid,
+ 			__entry->fhandle,
+-			__entry->offset, __entry->count
++			(long long)__entry->offset, __entry->count
+ 		)
+ );
  
-+TRACE_DEFINE_ENUM(NFS4ERR_RESET_TO_MDS);
-+TRACE_DEFINE_ENUM(NFS4ERR_RESET_TO_PNFS);
-+
- #define show_nfsv4_errors(error) \
- 	__print_symbolic(error, \
- 		{ NFS4_OK, "OK" }, \
-@@ -305,7 +308,10 @@ TRACE_DEFINE_ENUM(NFS4ERR_XDEV);
- 		{ NFS4ERR_WRONGSEC, "WRONGSEC" }, \
- 		{ NFS4ERR_WRONG_CRED, "WRONG_CRED" }, \
- 		{ NFS4ERR_WRONG_TYPE, "WRONG_TYPE" }, \
--		{ NFS4ERR_XDEV, "XDEV" })
-+		{ NFS4ERR_XDEV, "XDEV" }, \
-+		/* ***** Internal to Linux NFS client ***** */ \
-+		{ NFS4ERR_RESET_TO_MDS, "RESET_TO_MDS" }, \
-+		{ NFS4ERR_RESET_TO_PNFS, "RESET_TO_PNFS" })
+ TRACE_EVENT(nfs_readpage_done,
+ 		TP_PROTO(
+-			const struct inode *inode,
+-			int status, loff_t offset, bool eof
++			const struct rpc_task *task,
++			const struct nfs_pgio_header *hdr
+ 		),
  
- #define show_open_flags(flags) \
- 	__print_flags(flags, "|", \
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index f8a38065c7e4..0fafdadc9c8d 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -79,6 +79,10 @@ enum pnfs_try_status {
- 	PNFS_TRY_AGAIN     = 2,
- };
+-		TP_ARGS(inode, status, offset, eof),
++		TP_ARGS(task, hdr),
  
-+/* error codes for internal use */
-+#define NFS4ERR_RESET_TO_MDS   12001
-+#define NFS4ERR_RESET_TO_PNFS  12002
-+
- #ifdef CONFIG_NFS_V4_1
+ 		TP_STRUCT__entry(
+-			__field(int, status)
+-			__field(loff_t, offset)
+-			__field(bool, eof)
+ 			__field(dev_t, dev)
+ 			__field(u32, fhandle)
+ 			__field(u64, fileid)
++			__field(loff_t, offset)
++			__field(u32, arg_count)
++			__field(u32, res_count)
++			__field(bool, eof)
++			__field(int, status)
+ 		),
  
- #define LAYOUT_NFSV4_1_MODULE_PREFIX "nfs-layouttype4"
-@@ -91,10 +95,6 @@ enum pnfs_try_status {
- #define NFS4_DEF_DS_RETRANS 5
- #define PNFS_DEVICE_RETRY_TIMEOUT (120*HZ)
- 
--/* error codes for internal use */
--#define NFS4ERR_RESET_TO_MDS   12001
--#define NFS4ERR_RESET_TO_PNFS  12002
+ 		TP_fast_assign(
++			const struct inode *inode = hdr->inode;
+ 			const struct nfs_inode *nfsi = NFS_I(inode);
 -
- enum {
- 	NFS_LAYOUT_RO_FAILED = 0,	/* get ro layout failed stop trying */
- 	NFS_LAYOUT_RW_FAILED,		/* get rw layout failed stop trying */
+-			__entry->status = status;
+-			__entry->offset = offset;
+-			__entry->eof = eof;
++			const struct nfs_fh *fh = hdr->args.fh ?
++						  hdr->args.fh : &nfsi->fh;
++
++			__entry->status = task->tk_status;
++			__entry->offset = hdr->args.offset;
++			__entry->arg_count = hdr->args.count;
++			__entry->res_count = hdr->res.count;
++			__entry->eof = hdr->res.eof;
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = nfsi->fileid;
+-			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
++			__entry->fhandle = nfs_fhandle_hash(fh);
+ 		),
+ 
+ 		TP_printk(
+ 			"fileid=%02x:%02x:%llu fhandle=0x%08x "
+-			"offset=%lld status=%d%s",
++			"offset=%lld count=%u res=%u status=%d%s",
+ 			MAJOR(__entry->dev), MINOR(__entry->dev),
+ 			(unsigned long long)__entry->fileid,
+ 			__entry->fhandle,
+-			__entry->offset, __entry->status,
++			(long long)__entry->offset, __entry->arg_count,
++			__entry->res_count, __entry->status,
+ 			__entry->eof ? " eof" : ""
+ 		)
+ );
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index cfe0b586eadd..12deb3bdb2a0 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -214,7 +214,7 @@ static void nfs_initiate_read(struct nfs_pgio_header *hdr,
+ 
+ 	task_setup_data->flags |= swap_flags;
+ 	rpc_ops->read_setup(hdr, msg);
+-	trace_nfs_initiate_read(inode, hdr->io_start, hdr->good_bytes);
++	trace_nfs_initiate_read(hdr);
+ }
+ 
+ static void
+@@ -247,8 +247,7 @@ static int nfs_readpage_done(struct rpc_task *task,
+ 		return status;
+ 
+ 	nfs_add_stats(inode, NFSIOS_SERVERREADBYTES, hdr->res.count);
+-	trace_nfs_readpage_done(inode, task->tk_status,
+-				hdr->args.offset, hdr->res.eof);
++	trace_nfs_readpage_done(task, hdr);
+ 
+ 	if (task->tk_status == -ESTALE) {
+ 		set_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
 -- 
 2.24.1
 
