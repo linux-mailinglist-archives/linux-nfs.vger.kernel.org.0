@@ -2,56 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 392DA1317A7
+	by mail.lfdr.de (Postfix) with ESMTP id AC0781317A8
 	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2020 19:42:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgAFSms (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jan 2020 13:42:48 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42216 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgAFSmr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 13:42:47 -0500
-Received: by mail-yw1-f68.google.com with SMTP id x138so22275020ywd.9
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 10:42:47 -0800 (PST)
+        id S1726722AbgAFSmt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jan 2020 13:42:49 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:39235 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgAFSms (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jan 2020 13:42:48 -0500
+Received: by mail-yb1-f195.google.com with SMTP id b12so137613ybg.6
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2020 10:42:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxVr+e5p70pKs41NRCMlls0hfGIjuOVxkMNNPVIgkmo=;
-        b=aIPG3D8lfurLkQaALAsFYcEYReIgDlMlvuMlw4tsmiGkOOmk0JRBk4gbQLAhErkWaD
-         XgS7FhFqGTy5K8kchl7lpOZDVb2GhcOg+Yq+rPwYorFOVGc7IZDcPOMmB4bQ98tXccWx
-         ub9spCLREGjGypFabsZer4jOOGfu4cxRiNMFO1MYLoFVQ3Apl9arDnmQR8FDfQDcmDRP
-         9EimOa4k/n9u1EcFNET9WpYIwpl+oLqGkrZjMxmjhnW0Z9ViEegSWn1z/PXRj+LSTAEy
-         sbkf2jTwbBJmxUAHJjagYknyu1bZE1++kZxfMVqlcIzUfcUIVPp91YhWodaLIEKvJKbO
-         sQRw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kBM4GM4ScWgAI2ERG7Edy0voI9DiPcQQJ6qVFwzJ0jQ=;
+        b=VzzY4qIPFi3m+IhfX0DE9QA/iIcZJN7jPWvU+v/IMOf0ZbwFpbS3Z/xa2tGzaMvDHq
+         E2BCKYmjhhqkfb/Z58OWwtynUktJF0MTbS8bbCzq6S0KpvyW7ZekjPwjj9jP0qoa2aqz
+         zcz7Llk3PhsV9dh6LGkpdgIdZ6N2riK2t3Js7ElaZ0scBVuY/TDSnffo/Kb6+YUPz7Cu
+         MS1ihBAOrsAWFCzNSAUzYEyormazMR9vl0GG5UMBzzZvnx9Zjv1fs+z2gKYy+uyot/9Y
+         w1id2k7oZFozqxx5iYJQhlo4uKChWisW8DodykVtGffssP/5ma7xirc9xuLGu/GFPjG+
+         jHnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxVr+e5p70pKs41NRCMlls0hfGIjuOVxkMNNPVIgkmo=;
-        b=mTrbajv8ll92mwtuHvzwN1wu9pJ+Loqx5FwTaZzlw+BDzPL1Pum9veJDQI6l+3znoJ
-         QNlo3fF8LD5nf1YSzw+HavGRrdQrV0Eaa8H56VkYOvIvEYI1p8iYQO45BPnu+qWrpxqG
-         83s38VAeyCpDj0lCRP0i2qmzR46RmrnQpkDs6tagJh1qCwb9j4beV9/Mg6u+i63eJ+PT
-         FQgm6N1HIWP3k1T5S20IDpgMB0AGPmN+6dLwRbkkuFr2RVplRvgyeyW1wAMze6+sRMM5
-         /SjGKgPkHenIAdL+/3QZnHczoNnMke1JNc3mo2tD6ViXlLI85Ot7g+4Zu3Saa0XJvsGP
-         HZbw==
-X-Gm-Message-State: APjAAAUC3M7WGZIYVvHBJEp9TWDv8iveSta+FIGXhYD+30qD9cUSYChV
-        d6H92p+HDnl+MbcEkyalwH/zKku5Gw==
-X-Google-Smtp-Source: APXvYqxJ4Rw07uf/kK4TobtnYYHk4IjR+H/TnWfwWBqlire7ksipOGHN45ONvbvmXpJN6ODRIex5BA==
-X-Received: by 2002:a0d:ca14:: with SMTP id m20mr76713543ywd.251.1578336166593;
-        Mon, 06 Jan 2020 10:42:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kBM4GM4ScWgAI2ERG7Edy0voI9DiPcQQJ6qVFwzJ0jQ=;
+        b=j8c5ApEJqFwr5W4bE9V9GF0DRdMNeaFJMzn7iUtLAB+qt6cqSnTaviUBCAXu9w4lpP
+         WMO2ektew+TaokjNybA5EaFp2dMo2bwcqS4vPUDAjJTzG0mJA8zCKNPrg6AkrH1pD25t
+         GkNWuT3WaG8YPj/5jDtFkzL/Tr+tG3ABDjT/Rkv0c7zUrUn1nVat0F5lkTBqjKHfLeDG
+         qPV0v8XN0SNODdTU6vcQTDy9jN6h93uQ3vPdIP02IN49Dv85YeyUMk1h/x0zireFtdhc
+         VJ/Po4GPo6Ie3d/OmOTE+ih5buDHAhtSPdyqmoh4DMT8fQzwNumIvgkvCtzrqjZqduEO
+         WAPA==
+X-Gm-Message-State: APjAAAVCoMIw5UQrnM1DpwHxhj7GHBjhJml6axabaqo5yVMCmiYmpKhX
+        Y/+4jxjxu6yxRgS0f/cBPw==
+X-Google-Smtp-Source: APXvYqzb32iJtzoYK09EP1dekwqjnbpiZHupSI9I5YjYDiPfSiVK5nF75tCJLvgXlKkMLphOHPOEkg==
+X-Received: by 2002:a5b:bc2:: with SMTP id c2mr50625876ybr.372.1578336167632;
+        Mon, 06 Jan 2020 10:42:47 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id u136sm28223497ywf.101.2020.01.06.10.42.45
+        by smtp.gmail.com with ESMTPSA id u136sm28223497ywf.101.2020.01.06.10.42.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 10:42:46 -0800 (PST)
+        Mon, 06 Jan 2020 10:42:47 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     "J. Bruce Fields" <bfields@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 0/9] Fix error reporting for NFS writes
-Date:   Mon,  6 Jan 2020 13:40:28 -0500
-Message-Id: <20200106184037.563557-1-trond.myklebust@hammerspace.com>
+Subject: [PATCH 1/9] nfsd: Allow nfsd_vfs_write() to take the nfsd_file as an argument
+Date:   Mon,  6 Jan 2020 13:40:29 -0500
+Message-Id: <20200106184037.563557-2-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200106184037.563557-1-trond.myklebust@hammerspace.com>
+References: <20200106184037.563557-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -59,58 +61,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In cases where we have transient errors, such as ENOSPC, it is important
-to ensure that errors are reported on all writes that may be affected.
+Needed in order to fix stable writes.
 
-The problem we have is that not all errors are guaranteed to be reported
-at write time. Some are reported only when we call fsync(). In
-particular, this can be a problem for stable NFS writes. Since most
-filesystems protect the write to the page cache with the inode lock,
-but do not protect the subsequent call to generic_write_sync(), this
-means that if we have parallel writes to the same file, we can end up
-assigning the error to the wrong stable write call. If the application
-expects to be able to fix the transient errors, it may end up replaying
-the wrong write. One area where we have seen this happen is in flexfiles
-writes, where the server is capable of freeing up space on the DS in
-case of ENOSPC.
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfsd/nfs4proc.c | 2 +-
+ fs/nfsd/vfs.c      | 5 +++--
+ fs/nfsd/vfs.h      | 4 +++-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-The other area where we have seen a similar problem is when we have
-unstable writes, and the client sends a backgrounded commit in order
-to free up memory. If there are outstanding writes while the commit
-gets a transient error and bumps the write verifier, then we want to
-ensure that those writes get the approprite write verifier depending
-on whether they were affected by the fsync() or not. Right now,
-because the NFSv3 verifier is set in the XDR encoder well after the
-write is done, there is fairly large window for a race with a
-background commit.
-
-This patch series deals with both issues by adding per-file-descriptor
-locking that ensures that writes, fsync error handling, and write verifier
-updates are appropriately serialised.
-
-Trond Myklebust (9):
-  nfsd: Allow nfsd_vfs_write() to take the nfsd_file as an argument
-  nfsd: Fix stable writes
-  nfsd: Update the boot verifier on stable writes too.
-  nfsd: Pass the nfsd_file as arguments to nfsd4_clone_file_range()
-  nfsd: Ensure exclusion between CLONE and WRITE errors
-  sunrpc: Fix potential leaks in sunrpc_cache_unhash()
-  sunrpc: clean up cache entry add/remove from hashtable
-  nfsd: Ensure sampling of the commit verifier is atomic with the commit
-  nfsd: Ensure sampling of the write verifier is atomic with the write
-
- fs/nfsd/filecache.c |  1 +
- fs/nfsd/filecache.h |  1 +
- fs/nfsd/nfs3proc.c  |  5 +--
- fs/nfsd/nfs3xdr.c   | 16 +++------
- fs/nfsd/nfs4proc.c  | 14 ++++----
- fs/nfsd/nfsproc.c   |  2 +-
- fs/nfsd/vfs.c       | 79 ++++++++++++++++++++++++++++++++++-----------
- fs/nfsd/vfs.h       | 16 +++++----
- fs/nfsd/xdr3.h      |  2 ++
- net/sunrpc/cache.c  | 48 ++++++++++++++-------------
- 10 files changed, 115 insertions(+), 69 deletions(-)
-
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647..3d4e78118e53 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1012,7 +1012,7 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 				      &write->wr_head, write->wr_buflen);
+ 	WARN_ON_ONCE(nvecs > ARRAY_SIZE(rqstp->rq_vec));
+ 
+-	status = nfsd_vfs_write(rqstp, &cstate->current_fh, nf->nf_file,
++	status = nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+ 				write->wr_offset, rqstp->rq_vec, nvecs, &cnt,
+ 				write->wr_how_written);
+ 	nfsd_file_put(nf);
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 82cf80dde5c7..69cbdb62b262 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -947,10 +947,11 @@ static int wait_for_concurrent_writes(struct file *file)
+ }
+ 
+ __be32
+-nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file *file,
++nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+ 				loff_t offset, struct kvec *vec, int vlen,
+ 				unsigned long *cnt, int stable)
+ {
++	struct file		*file = nf->nf_file;
+ 	struct svc_export	*exp;
+ 	struct iov_iter		iter;
+ 	__be32			nfserr;
+@@ -1057,7 +1058,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+ 	if (err)
+ 		goto out;
+ 
+-	err = nfsd_vfs_write(rqstp, fhp, nf->nf_file, offset, vec,
++	err = nfsd_vfs_write(rqstp, fhp, nf, offset, vec,
+ 			vlen, cnt, stable);
+ 	nfsd_file_put(nf);
+ out:
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index cc110a10bfe8..fd779c3bb35b 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -34,6 +34,8 @@
+ #define NFSD_MAY_CREATE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE)
+ #define NFSD_MAY_REMOVE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE|NFSD_MAY_TRUNC)
+ 
++struct nfsd_file;
++
+ /*
+  * Callback function for readdir
+  */
+@@ -93,7 +95,7 @@ __be32 		nfsd_read(struct svc_rqst *, struct svc_fh *,
+ __be32 		nfsd_write(struct svc_rqst *, struct svc_fh *, loff_t,
+ 				struct kvec *, int, unsigned long *, int);
+ __be32		nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+-				struct file *file, loff_t offset,
++				struct nfsd_file *nf, loff_t offset,
+ 				struct kvec *vec, int vlen, unsigned long *cnt,
+ 				int stable);
+ __be32		nfsd_readlink(struct svc_rqst *, struct svc_fh *,
 -- 
 2.24.1
 
