@@ -2,91 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95271132512
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2020 12:42:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46DE1132ADF
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2020 17:15:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAGLl7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jan 2020 06:41:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39611 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726937AbgAGLl7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jan 2020 06:41:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578397318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/WO9qiPku6vZN0YiO+Pnb8FzJOqs+ZBTxjQFgMA2mJI=;
-        b=db/ycZN9v2jTm+lalT0FygtaHBPWTSxh9rIyQdjtKWSgJK+HKZO85itNNhlmxV9QZDh49m
-        59CcY2vlr6+nVOzs0lMfWAERyIumz9uWDIW9whdTQ/oTgDVsXQ/TIDcl5gxDN7WvcKtkaa
-        hEG5MTMuPolS8Cyrl1l8+FRblhmMllA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-I-viOXfOOGaC2rnx7DBEMg-1; Tue, 07 Jan 2020 06:41:55 -0500
-X-MC-Unique: I-viOXfOOGaC2rnx7DBEMg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C8C1801E76;
-        Tue,  7 Jan 2020 11:41:53 +0000 (UTC)
-Received: from localhost (dhcp-12-196.nay.redhat.com [10.66.12.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 154EF7FB53;
-        Tue,  7 Jan 2020 11:41:52 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 19:41:51 +0800
-From:   Murphy Zhou <xzhou@redhat.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] generic/529: use an ACL that doesn't confuse NFS
-Message-ID: <20200107114151.lqk2dkqq2rc2aqgc@xzhoux.usersys.redhat.com>
-References: <20191219223336.GC12026@fieldses.org>
+        id S1728361AbgAGQPh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jan 2020 11:15:37 -0500
+Received: from fieldses.org ([173.255.197.46]:53600 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728020AbgAGQPh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:15:37 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6F49C153E; Tue,  7 Jan 2020 11:15:36 -0500 (EST)
+Date:   Tue, 7 Jan 2020 11:15:36 -0500
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH/RFC] NFS: handle NFSv4.1 server that doesn't support
+ NFS4_OPEN_CLAIM_DELEG_CUR_FH
+Message-ID: <20200107161536.GA944@fieldses.org>
+References: <87y2v9fdz8.fsf@notabene.neil.brown.name>
+ <3afd2d5c631d8e3429e025e204a7b1c95b3c1415.camel@hammerspace.com>
+ <87v9qdf2gh.fsf@notabene.neil.brown.name>
+ <d3299fefa94d6959d848b765ce60e2467ce1b253.camel@hammerspace.com>
+ <87pngkg9ga.fsf@notabene.neil.brown.name>
+ <9f5f220e64245d7f1b0359149876b5dc056dcf12.camel@hammerspace.com>
+ <87lfr7fu9v.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219223336.GC12026@fieldses.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <87lfr7fu9v.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:33:36PM -0500, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
+On Fri, Dec 20, 2019 at 04:19:56PM +1100, NeilBrown wrote:
+> I was a bit surprised that nfs4_map_atomic_open_claim() exists at all,
+> but given that it did, I assumed it would be used more uniformly.
 > 
-> For historical reasons having to do with Solaris ACL behavior, the Linux
-> client treats an ACL like the one used as an example here as equivalent
-> to a mode, causing listxattr to report that no ACL is set on the file.
-> 
-> (See the comment at the top of fs/nfs_common/nfsacl.c in the kernel
-> source for details, and the "bogus ACL_MASK entry" comment in the same
-> source file.)  This causes a spurious generic/529 failure on NFS.
+> So this all implies that Linux NFS server claimed to support NFSv4.1
+> before it actually did - which seems odd.  This is just a bug (which are
+> expected), but a clear ommission.
 
-Thanks Bruce very much for the fix!
+For what it's worth, I did make some attempt to keep 4.1 by default
+until 3.11 (see d109148111cd "nfsd4: support minorversion 1 by default")
+but probably could have communicated that better.  This isn't the only
+blatant known issue in older code.
 
-Murphy
-
-> 
-> As far as I can tell any ACL should trigger the original XFS problem.
-> So, modify it so as not to hit this odd NFS corner case.
-> 
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> ---
->  src/t_attr_corruption.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/src/t_attr_corruption.c b/src/t_attr_corruption.c
-> index e7d435b1791f..b5513d44a288 100644
-> --- a/src/t_attr_corruption.c
-> +++ b/src/t_attr_corruption.c
-> @@ -59,7 +59,7 @@ int main(int argc, char *argv[])
->  		.e = {
->  			{htole16(1), 0, 0},
->  			{htole16(4), 0, 0},
-> -			{htole16(0x10), 0, 0},
-> +			{htole16(0x10), htole16(4), 0},
->  			{htole16(0x20), 0, 0},
->  		},
->  	};
-> -- 
-> 2.24.1
-> 
-
+--b.
