@@ -2,78 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F099413300F
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2020 20:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE40C1334D0
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2020 22:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgAGT4m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jan 2020 14:56:42 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36532 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgAGT4j (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jan 2020 14:56:39 -0500
-Received: by mail-ed1-f68.google.com with SMTP id j17so647047edp.3
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2020 11:56:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=lUsTd9lJYwK928kai9reachpHe0HC9Hv8/gDLGwtaBI=;
-        b=m/Udengj3famfT4AeeQ1IRW+yMW7VasUnASahB37i/PoeHrkRBk2CGyFKYNukmjW7S
-         L8SRka5Jakx3oOkJPsG2IofN9vOqI+MJeZI3Q0YE0hhIfxJgla/Mvi4GlBIJ0+PXKJyR
-         fGhtIsUmeS9lphgKJPwASTV0Wis5x+akjvA6FztTMBR/K8fgi7sOjdtLa1OeTeeGw/oC
-         WuhGv+1qsxod0shrSr56iRhzuujf6ypC8mQV8JosjFfNeYtuq3xDGNFupimiXFOQL0SO
-         8SxYRsEAywqZcf7WmcQRmN/Qkf20W+/a6rRSJl252WjsQoa/SZxLvQ4mGRJVkfZ3ex9s
-         ABpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=lUsTd9lJYwK928kai9reachpHe0HC9Hv8/gDLGwtaBI=;
-        b=m9g8Q6YtBAXKB/Pcvb0yuMsf+yQItWbpvyfS+WQvAXDj2RL1NnF++9a6sox26/0Det
-         BA1GN8RiNZWtv4JbeH6pQrDLvDRRmBMFU4HtCCi+h4Y/hZepga3gKxw/oKpGz1fcLtXl
-         qHDgEZmI38hz9xT1dKFexa4CbGWSG8zYTa/EXKm9MJ6/AOq6bE1/UqeD+TkPZFgA5Wxj
-         5y1itUuuBkIw5masNZdCGqUpeTVj+Dd/HEAadV4ZUhcxIXCVMs6XO6yU2vuz32OCnUQQ
-         uksq+IkWvCSo4HV+2yhs+Nd0XzNsyYVQgkT9MDjhrKi8fMTriPnhw/DoEvFupWwqODPf
-         K3Ug==
-X-Gm-Message-State: APjAAAVD7DooTbWKU0xyTD0uNTBiX8zxKSYruJAxPhk4ieaaRQCfJUKI
-        vYXoK949kRaAgoUV2ETIe6K1lQJqGKf+3QsqCQ4=
-X-Google-Smtp-Source: APXvYqzNbcT08PcgNHBR6CjdjGMonF1aREtl3FixKkalZzLFfyP3YZsjOtPyVn2SjFoUiZ8TzNVIEuitC7fnDU0d3Kk=
-X-Received: by 2002:a17:907:20ef:: with SMTP id rh15mr1111482ejb.325.1578426995176;
- Tue, 07 Jan 2020 11:56:35 -0800 (PST)
+        id S1727166AbgAGV2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jan 2020 16:28:46 -0500
+Received: from mail.aglaz.de ([136.243.236.236]:60517 "EHLO mail.aglaz.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbgAGV2p (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:28:45 -0500
+X-Greylist: delayed 567 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 16:28:44 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.aglaz.de (Postfix) with ESMTP id 2A98D22B23
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2020 22:19:16 +0100 (CET)
+X-Virus-Scanned: SPAM and virus check at tabarz165.aglaz.de
+Received: from mail.aglaz.de ([127.0.0.1])
+        by localhost (tabarz165.aglaz.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id k6-AYtRYJdUq; Tue,  7 Jan 2020 22:19:15 +0100 (CET)
+Received: from cus (unknown [79.140.114.186])
+        (Authenticated sender: christian.bartolomaeus@aglaz.de)
+        by mail.aglaz.de (Postfix) with ESMTPSA;
+        Tue,  7 Jan 2020 22:19:15 +0100 (CET)
+Received: from christian by cus with local (Exim 4.80)
+        (envelope-from <use_v6@aglaz.de>)
+        id 1iowFu-0001ie-Uc; Tue, 07 Jan 2020 22:19:14 +0100
+Date:   Tue, 7 Jan 2020 22:19:14 +0100
+From:   Christian =?utf-8?Q?Bartolom=C3=A4us?= <use_v6@aglaz.de>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] mountd: Remove outdated/misleading comment
+Message-ID: <20200107211914.GE4452@cus>
 MIME-Version: 1.0
-Received: by 2002:a17:906:72c6:0:0:0:0 with HTTP; Tue, 7 Jan 2020 11:56:34
- -0800 (PST)
-Reply-To: dhlexpresscouriercompany.nyusa@gmail.com
-From:   "Dr. William Johnson" <currency1000000@gmail.com>
-Date:   Tue, 7 Jan 2020 20:56:34 +0100
-Message-ID: <CAPqfnSEyU1pBR_7HT2g1KK7i8caLMBQ8yPA8KRDVm+MN-K_Z4w@mail.gmail.com>
-Subject: contact Dhl office New York to receive your Prepaid ATM Master Card
- worth $15.8Million US DOLLARS now.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-ATTN Dear Beneficiary.
-Goodnews
-I have Registered your Prepaid ATM Master Card
-worth $15.800,000.00 US DOLLARS with Courier company
-asigned to deliver it to you today.
-So contact Dhl office New York to receive your Prepaid ATM Master Card
-worth $15.8Million US DOLLARS now.
-Contact Person: Mrs. Mary Michael, Director, DHL Courier Company-NY USA. 10218
-Email. dhlexpresscouriercompany.nyusa@gmail.com
-Call the office +(202) 890-8752
-Rec-Confirmed your mailing address to the office as I listed below.
-Your Full Name--------------
-House Address-----------
-Your working Phone Number----------------
-ID copy-------------------------
-Sex-----------------------------
-Note,delivery fee to your address is only $25.00. send it to this
-company urgent on itunes card today so that DHL will deliver this
-Prepaid ATM Master Card to you today according to our finally
-agreement.
-Thanks for coperations,
-Dr. William Johnson
+It became wrong when commit 78240c41be17bd20d5fb5b70b6f470d8e779adee
+("mountd: fix mount issue due to comparison with uninitialized uuid") was
+applied back in 2015. The final case of the switch statement no longer ends
+with a 'return true' and the final 'return false' is relevant now.
+
+Signed-off-by: Christian Bartolomäus <use_v6@aglaz.de>
+---
+ utils/mountd/cache.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+index e5186c7..8f54e37 100644
+--- a/utils/mountd/cache.c
++++ b/utils/mountd/cache.c
+@@ -672,7 +672,6 @@ static bool match_fsid(struct parsed_fsid *parsed, nfs_export *exp, char *path)
+ 				if (memcmp(u, parsed->fhuuid, parsed->uuidlen) == 0)
+ 					return true;
+ 	}
+-	/* Well, unreachable, actually: */
+ 	return false;
+ }
+
