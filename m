@@ -2,209 +2,187 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F14891379CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 469D11379D3
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:44:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgAJWle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jan 2020 17:41:34 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:46272 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbgAJWle (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:41:34 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AMc8Dt066837;
-        Fri, 10 Jan 2020 22:41:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=6mjsn2IsZ7KxhmyGJzhUtGC5i1SK/hanT6H6jSBoQQg=;
- b=MjoeQYtMj6+/RSiyTLwGg0Vk7mRfcmyjMiDA8018eOT1ekb/SIXr59a63tnr7+x1O+O6
- 2n6yVr8V3AxjNzXRATAxpixhiJhg02W/+gkm/INCzz9OZ+HQvuyr1djtC+BC1nUEWz+y
- 07IonXe+43lrmb/N1sClfGtJOF1bRlPq6GAgyTPx0kFr/PbnK5BB/fddce1dRl6oWcWx
- jmkvMdRSrmZvcoWnvbzOI1wSD8Vnsq9j93iIBDHq7hTTder36MW0je2Qb1BBRjA6EKVh
- 1LfxSzSAdUTEVTvt8y09JqM3KieqRs23VVFuVZ3YOckFcLKYtNjzWXsuovugQOp1MHhU Cw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xajnqmyr3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 22:41:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AMcsOx055738;
-        Fri, 10 Jan 2020 22:41:29 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xedj01jkd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 22:41:29 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00AMfQ70023604;
-        Fri, 10 Jan 2020 22:41:28 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jan 2020 14:41:25 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+        id S1727369AbgAJWoD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jan 2020 17:44:03 -0500
+Received: from mail-eopbgr700051.outbound.protection.outlook.com ([40.107.70.51]:60480
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727299AbgAJWoD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:44:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GD0bQh269+6K6k9ZbBQilTzMY5aKvpekVKECTaW3C5y62iZ7glOThGdxqq1q9b2TQYdtXRJEUn+s+D9xkS91HkF32LNhXQJXOxBasWDhTXQgxFiqTaX4BlOfcgFavmVYn63asxwCIvUwMFRSuVwPjCCC/xJ8DGbAGAnkWcIk2z7R3d/uwv0hqXkwZmuC6dn1o9PsP26ZTkSt1d7coA221DLGyZ2xeqp8pVjfcVsVcSqKAY4T4nlNBmTNgRNqF4f/H+sELRoJKvmbOy5wNwd+7EGiRjLgCrcuv1p+ggV/vfDGC8XrzZPmzcJAR/v0EqVY2dMWDiq8Ssg7KBNTEuMQQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q+M0o/uufoaazxRspOHYxiixO7IOPSHKZQLsOCeLpZU=;
+ b=D+tT7iJLsAKzuYGlnfY+o8yaEO69+HsL2rKhPQgX9nM/BKt+J1pOr9j+F93rxYtZIyS5+wP31+EoAt+248od6hgCEstJHVe9lC3VBptd8YR7C/ZOu+ZBEWhqAxSA2G3oYF331ijnsskridn+KcvZG55W3msIvwGRBCsXjCpmwsbhCdXIKiklE5F+KCTAVmgTZeYVf2U+sYM6oMxUf+mWHDLLwQWOr8b6Yv89hcAPMwDw/ywJNNdQRc8p+UvV7Qa1MsbdJf2g25JN4czhxXBGxMQHbxj13Y7ht5sruJslYrbmD8nlXNt2pqdLz3tK1njwITTGG2v8jNe4wdolXJqCXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q+M0o/uufoaazxRspOHYxiixO7IOPSHKZQLsOCeLpZU=;
+ b=oiE/YV2DDZ7e+o1NYxMtNIRlGH/TtC/t7ymqcj8PeDewkbrKmFope/pyLF3tDzTDgT+p4nlGe59F+babohu352zcFPu6D9YbLJ75Yk38U0d/oD6jNhdW5/aAkq+GachnlJS785BQiT2j1oKxsArZ88mfNO5knXAa9lxKI/fifTQ=
+Received: from BL0PR06MB4370.namprd06.prod.outlook.com (10.167.241.142) by
+ BL0PR06MB4660.namprd06.prod.outlook.com (52.132.15.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Fri, 10 Jan 2020 22:44:00 +0000
+Received: from BL0PR06MB4370.namprd06.prod.outlook.com
+ ([fe80::dd54:50fb:1e98:46a1]) by BL0PR06MB4370.namprd06.prod.outlook.com
+ ([fe80::dd54:50fb:1e98:46a1%6]) with mapi id 15.20.2623.008; Fri, 10 Jan 2020
+ 22:43:59 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Trond.Myklebust@hammerspace.com" <Trond.Myklebust@hammerspace.com>
 Subject: Re: [PATCH 7/7] NFS: Add a mount option for READ_PLUS
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
-Date:   Fri, 10 Jan 2020 17:41:24 -0500
-Cc:     Trond.Myklebust@hammerspace.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <41391995-F61E-4CA4-80C5-542A8B2A3947@oracle.com>
+Thread-Topic: [PATCH 7/7] NFS: Add a mount option for READ_PLUS
+Thread-Index: AQHVyAY3kNMJdqZF6E2UmnIf7jrul6fkfh8AgAAAuYA=
+Date:   Fri, 10 Jan 2020 22:43:59 +0000
+Message-ID: <1e12cb6b0f5176263fe52fd624947a6e76f414d2.camel@netapp.com>
 References: <20200110223455.528471-1-Anna.Schumaker@Netapp.com>
- <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001100188
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001100188
+         <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
+         <41391995-F61E-4CA4-80C5-542A8B2A3947@oracle.com>
+In-Reply-To: <41391995-F61E-4CA4-80C5-542A8B2A3947@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.3 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [68.32.74.190]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 720cbcf3-1bfa-49fa-b14a-08d7961e959f
+x-ms-traffictypediagnostic: BL0PR06MB4660:
+x-microsoft-antispam-prvs: <BL0PR06MB46602752D82D5020D9A0A79AF8380@BL0PR06MB4660.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(189003)(199004)(66556008)(66446008)(6512007)(66946007)(54906003)(6916009)(66476007)(186003)(64756008)(4326008)(76116006)(5660300002)(6486002)(91956017)(478600001)(53546011)(71200400001)(36756003)(2616005)(6506007)(26005)(2906002)(8936002)(81156014)(316002)(81166006)(8676002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR06MB4660;H:BL0PR06MB4370.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Iq/PS3wMEhWgcl/zBHwfMQGT310dDVZ6pO1bboyqrVmCn24VVhV3yPFxin2hs8AgqjqatWXRTUaaoiZguZmr3xL7KJ5Dhrze4jwK8MKeH26HMxnKau7+tfTFNKh3mFg9N7Hjm2m2f/rSFfQMnnmr6fPUMJ6pzz2RRH8OIybpcqVR+tIsPe8r/qrnX1ICp6ZZ+RIvXlhyQ0oIeoVskCbSGYVsaMRLumjGplihu7Kl+mQtT7a3ofJmlkkIBCdhK2TRc5ssLP6Rf2dizxVouZB70BdVAWNC5Hz4iTaaB8xfFtfbN1fIdaPhjYb1amDyAeqGI+L/xm+/qnRa77UO3p/6ChUb36t45gFifJFUPy3lEHB3f4zz4pO1epFhELHg4qFK3cfbtvTIInRFy3fbrXmk6P1zhxvfPDEYbvuosJ3OncjhtjSD1KXvO/mJos639/Ox
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3C3FDBC83BF9DF44BACC671A6E2E01D1@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 720cbcf3-1bfa-49fa-b14a-08d7961e959f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 22:43:59.8471
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RD1lpWvpgxKg0A59UhN11RNQ9XIiKUM1w8PIWak7URn3aH/wRRKUEtiRl6qOBxpEHW2Lu7/iD0Ipel6lO0YVjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR06MB4660
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Anna-
-
-> On Jan 10, 2020, at 5:34 PM, schumaker.anna@gmail.com wrote:
->=20
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->=20
-> There are some workloads where READ_PLUS might end up hurting
-> performance,
-
-Can you say more about this? Have you seen workloads that are
-hurt by READ_PLUS? Nothing jumps out at me from the tables in
-the cover letter.
-
-
-> so let's be nice to users and provide a way to disable this
-> operation similar to how READDIR_PLUS can be disabled.
-
-Does it make sense to hold off on a mount option until there
-is evidence that there is no other way to work around such a
-performance regression?
-
-- Attempt to address the regression directly
-- Improve the heuristics about when READ_PLUS is used
-- Document that dropping back to vers=3D4.1 will disable it
-
-Any experience with NFS/RDMA?
-
-
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
-> fs/nfs/fs_context.c       | 14 ++++++++++++++
-> fs/nfs/nfs4client.c       |  3 +++
-> include/linux/nfs_fs_sb.h |  1 +
-> 3 files changed, 18 insertions(+)
->=20
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index 0247dcb7b316..82ba07c7c1ce 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -64,6 +64,7 @@ enum nfs_param {
-> 	Opt_proto,
-> 	Opt_rdirplus,
-> 	Opt_rdma,
-> +	Opt_readplus,
-> 	Opt_resvport,
-> 	Opt_retrans,
-> 	Opt_retry,
-> @@ -120,6 +121,7 @@ static const struct fs_parameter_spec =
-nfs_param_specs[] =3D {
-> 	fsparam_string("proto",		Opt_proto),
-> 	fsparam_flag_no("rdirplus",	Opt_rdirplus),
-> 	fsparam_flag  ("rdma",		Opt_rdma),
-> +	fsparam_flag_no("readplus",	Opt_readplus),
-> 	fsparam_flag_no("resvport",	Opt_resvport),
-> 	fsparam_u32   ("retrans",	Opt_retrans),
-> 	fsparam_string("retry",		Opt_retry),
-> @@ -555,6 +557,12 @@ static int nfs_fs_context_parse_param(struct =
-fs_context *fc,
-> 		else
-> 			ctx->options |=3D NFS_OPTION_MIGRATION;
-> 		break;
-> +	case Opt_readplus:
-> +		if (result.negated)
-> +			ctx->options |=3D NFS_OPTION_NO_READ_PLUS;
-> +		else
-> +			ctx->options &=3D ~NFS_OPTION_NO_READ_PLUS;
-> +		break;
->=20
-> 		/*
-> 		 * options that take numeric values
-> @@ -1176,6 +1184,10 @@ static int nfs_fs_context_validate(struct =
-fs_context *fc)
-> 	    (ctx->version !=3D 4 || ctx->minorversion !=3D 0))
-> 		goto out_migration_misuse;
->=20
-> +	if (ctx->options & NFS_OPTION_NO_READ_PLUS &&
-> +	    (ctx->version !=3D 4 || ctx->minorversion < 2))
-> +		goto out_noreadplus_misuse;
-> +
-> 	/* Verify that any proto=3D/mountproto=3D options match the =
-address
-> 	 * families in the addr=3D/mountaddr=3D options.
-> 	 */
-> @@ -1254,6 +1266,8 @@ static int nfs_fs_context_validate(struct =
-fs_context *fc)
-> 			  ctx->version, ctx->minorversion);
-> out_migration_misuse:
-> 	return nfs_invalf(fc, "NFS: 'Migration' not supported for this =
-NFS version");
-> +out_noreadplus_misuse:
-> +	return nfs_invalf(fc, "NFS: 'noreadplus' not supported for this =
-NFS version\n");
-> out_version_unavailable:
-> 	nfs_errorf(fc, "NFS: Version unavailable");
-> 	return ret;
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index 0cd767e5c977..868dc3c36ba1 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -1016,6 +1016,9 @@ static int nfs4_server_common_setup(struct =
-nfs_server *server,
-> 	server->caps |=3D server->nfs_client->cl_mvops->init_caps;
-> 	if (server->flags & NFS_MOUNT_NORDIRPLUS)
-> 			server->caps &=3D ~NFS_CAP_READDIRPLUS;
-> +	if (server->options & NFS_OPTION_NO_READ_PLUS)
-> +		server->caps &=3D ~NFS_CAP_READ_PLUS;
-> +
-> 	/*
-> 	 * Don't use NFS uid/gid mapping if we're using AUTH_SYS or =
-lower
-> 	 * authentication.
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index 11248c5a7b24..360e70c7bbb6 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -172,6 +172,7 @@ struct nfs_server {
-> 	unsigned int		clone_blksize;	/* granularity of a =
-CLONE operation */
-> #define NFS_OPTION_FSCACHE	0x00000001	/* - local caching =
-enabled */
-> #define NFS_OPTION_MIGRATION	0x00000002	/* - NFSv4 migration =
-enabled */
-> +#define NFS_OPTION_NO_READ_PLUS	0x00000004	/* - NFSv4.2 =
-READ_PLUS enabled */
->=20
-> 	struct nfs_fsid		fsid;
-> 	__u64			maxfilesize;	/* maximum file size */
-> --=20
-> 2.24.1
->=20
-
---
-Chuck Lever
-
-
-
+SGkgQ2h1Y2ssDQoNCk9uIEZyaSwgMjAyMC0wMS0xMCBhdCAxNzo0MSAtMDUwMCwgQ2h1Y2sgTGV2
+ZXIgd3JvdGU6DQo+IE5ldEFwcCBTZWN1cml0eSBXQVJOSU5HOiBUaGlzIGlzIGFuIGV4dGVybmFs
+IGVtYWlsLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3Blbg0KPiBhdHRhY2htZW50cyB1bmxlc3Mg
+eW91IHJlY29nbml6ZSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQo+
+IA0KPiANCj4gDQo+IA0KPiBIaSBBbm5hLQ0KPiANCj4gPiBPbiBKYW4gMTAsIDIwMjAsIGF0IDU6
+MzQgUE0sIHNjaHVtYWtlci5hbm5hQGdtYWlsLmNvbSB3cm90ZToNCj4gPiANCj4gPiBGcm9tOiBB
+bm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBwLmNvbT4NCj4gPiANCj4gPiBUaGVy
+ZSBhcmUgc29tZSB3b3JrbG9hZHMgd2hlcmUgUkVBRF9QTFVTIG1pZ2h0IGVuZCB1cCBodXJ0aW5n
+DQo+ID4gcGVyZm9ybWFuY2UsDQo+IA0KPiBDYW4geW91IHNheSBtb3JlIGFib3V0IHRoaXM/IEhh
+dmUgeW91IHNlZW4gd29ya2xvYWRzIHRoYXQgYXJlDQo+IGh1cnQgYnkgUkVBRF9QTFVTPyBOb3Ro
+aW5nIGp1bXBzIG91dCBhdCBtZSBmcm9tIHRoZSB0YWJsZXMgaW4NCj4gdGhlIGNvdmVyIGxldHRl
+ci4NCg0KSXQncyBtb3N0bHkgc29tZXRoaW5nIEkndmUgc2VlbiB3aGVuIHVzaW5nIGJ0cmZzIGlu
+IGEgdmlydHVhbCBtYWNoaW5lIChzbw0KcHJvYmFibHkgbm90IGEgd2lkZSB1c2UgY2FzZSwgYW5k
+IGl0J3MgcG9zc2libGUgSSBuZWVkIHRvIGNoYW5nZSBzb21ldGhpbmcgaW4gbXkNCnNldHVwIHRv
+IGdldCBpdCB3b3JraW5nIGJldHRlcikuDQoNCj4gDQo+IA0KPiA+IHNvIGxldCdzIGJlIG5pY2Ug
+dG8gdXNlcnMgYW5kIHByb3ZpZGUgYSB3YXkgdG8gZGlzYWJsZSB0aGlzDQo+ID4gb3BlcmF0aW9u
+IHNpbWlsYXIgdG8gaG93IFJFQURESVJfUExVUyBjYW4gYmUgZGlzYWJsZWQuDQo+IA0KPiBEb2Vz
+IGl0IG1ha2Ugc2Vuc2UgdG8gaG9sZCBvZmYgb24gYSBtb3VudCBvcHRpb24gdW50aWwgdGhlcmUN
+Cj4gaXMgZXZpZGVuY2UgdGhhdCB0aGVyZSBpcyBubyBvdGhlciB3YXkgdG8gd29yayBhcm91bmQg
+c3VjaCBhDQo+IHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24/DQo+IA0KPiAtIEF0dGVtcHQgdG8gYWRk
+cmVzcyB0aGUgcmVncmVzc2lvbiBkaXJlY3RseQ0KPiAtIEltcHJvdmUgdGhlIGhldXJpc3RpY3Mg
+YWJvdXQgd2hlbiBSRUFEX1BMVVMgaXMgdXNlZA0KPiAtIERvY3VtZW50IHRoYXQgZHJvcHBpbmcg
+YmFjayB0byB2ZXJzPTQuMSB3aWxsIGRpc2FibGUgaXQNCg0KWWVhaCwgd2UgY291bGQgaG9sZCBv
+ZmYgb24gdGhlIHBhdGNoIGZvciBub3cgYW5kIHNlZSBpZiBhbnlib2R5IGhhcyBhbnkgaXNzdWVz
+DQpmaXJzdC4NCg0KPiANCj4gQW55IGV4cGVyaWVuY2Ugd2l0aCBORlMvUkRNQT8NCg0KTm90IHll
+dCwgYnV0IEkgY2FuIHRyeSB0byB0ZXN0IHRoYXQgbmV4dCB3ZWVrLg0KDQpBbm5hDQoNCj4gDQo+
+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtlckBOZXRh
+cHAuY29tPg0KPiA+IC0tLQ0KPiA+IGZzL25mcy9mc19jb250ZXh0LmMgICAgICAgfCAxNCArKysr
+KysrKysrKysrKw0KPiA+IGZzL25mcy9uZnM0Y2xpZW50LmMgICAgICAgfCAgMyArKysNCj4gPiBp
+bmNsdWRlL2xpbnV4L25mc19mc19zYi5oIHwgIDEgKw0KPiA+IDMgZmlsZXMgY2hhbmdlZCwgMTgg
+aW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMvZnNfY29udGV4dC5j
+IGIvZnMvbmZzL2ZzX2NvbnRleHQuYw0KPiA+IGluZGV4IDAyNDdkY2I3YjMxNi4uODJiYTA3Yzdj
+MWNlIDEwMDY0NA0KPiA+IC0tLSBhL2ZzL25mcy9mc19jb250ZXh0LmMNCj4gPiArKysgYi9mcy9u
+ZnMvZnNfY29udGV4dC5jDQo+ID4gQEAgLTY0LDYgKzY0LDcgQEAgZW51bSBuZnNfcGFyYW0gew0K
+PiA+ICAgICAgIE9wdF9wcm90bywNCj4gPiAgICAgICBPcHRfcmRpcnBsdXMsDQo+ID4gICAgICAg
+T3B0X3JkbWEsDQo+ID4gKyAgICAgT3B0X3JlYWRwbHVzLA0KPiA+ICAgICAgIE9wdF9yZXN2cG9y
+dCwNCj4gPiAgICAgICBPcHRfcmV0cmFucywNCj4gPiAgICAgICBPcHRfcmV0cnksDQo+ID4gQEAg
+LTEyMCw2ICsxMjEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGZzX3BhcmFtZXRlcl9zcGVjIG5m
+c19wYXJhbV9zcGVjc1tdDQo+ID4gPSB7DQo+ID4gICAgICAgZnNwYXJhbV9zdHJpbmcoInByb3Rv
+IiwgICAgICAgICBPcHRfcHJvdG8pLA0KPiA+ICAgICAgIGZzcGFyYW1fZmxhZ19ubygicmRpcnBs
+dXMiLCAgICAgT3B0X3JkaXJwbHVzKSwNCj4gPiAgICAgICBmc3BhcmFtX2ZsYWcgICgicmRtYSIs
+ICAgICAgICAgIE9wdF9yZG1hKSwNCj4gPiArICAgICBmc3BhcmFtX2ZsYWdfbm8oInJlYWRwbHVz
+IiwgICAgIE9wdF9yZWFkcGx1cyksDQo+ID4gICAgICAgZnNwYXJhbV9mbGFnX25vKCJyZXN2cG9y
+dCIsICAgICBPcHRfcmVzdnBvcnQpLA0KPiA+ICAgICAgIGZzcGFyYW1fdTMyICAgKCJyZXRyYW5z
+IiwgICAgICAgT3B0X3JldHJhbnMpLA0KPiA+ICAgICAgIGZzcGFyYW1fc3RyaW5nKCJyZXRyeSIs
+ICAgICAgICAgT3B0X3JldHJ5KSwNCj4gPiBAQCAtNTU1LDYgKzU1NywxMiBAQCBzdGF0aWMgaW50
+IG5mc19mc19jb250ZXh0X3BhcnNlX3BhcmFtKHN0cnVjdCBmc19jb250ZXh0DQo+ID4gKmZjLA0K
+PiA+ICAgICAgICAgICAgICAgZWxzZQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICBjdHgtPm9w
+dGlvbnMgfD0gTkZTX09QVElPTl9NSUdSQVRJT047DQo+ID4gICAgICAgICAgICAgICBicmVhazsN
+Cj4gPiArICAgICBjYXNlIE9wdF9yZWFkcGx1czoNCj4gPiArICAgICAgICAgICAgIGlmIChyZXN1
+bHQubmVnYXRlZCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY3R4LT5vcHRpb25zIHw9IE5G
+U19PUFRJT05fTk9fUkVBRF9QTFVTOw0KPiA+ICsgICAgICAgICAgICAgZWxzZQ0KPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICBjdHgtPm9wdGlvbnMgJj0gfk5GU19PUFRJT05fTk9fUkVBRF9QTFVT
+Ow0KPiA+ICsgICAgICAgICAgICAgYnJlYWs7DQo+ID4gDQo+ID4gICAgICAgICAgICAgICAvKg0K
+PiA+ICAgICAgICAgICAgICAgICogb3B0aW9ucyB0aGF0IHRha2UgbnVtZXJpYyB2YWx1ZXMNCj4g
+PiBAQCAtMTE3Niw2ICsxMTg0LDEwIEBAIHN0YXRpYyBpbnQgbmZzX2ZzX2NvbnRleHRfdmFsaWRh
+dGUoc3RydWN0IGZzX2NvbnRleHQNCj4gPiAqZmMpDQo+ID4gICAgICAgICAgIChjdHgtPnZlcnNp
+b24gIT0gNCB8fCBjdHgtPm1pbm9ydmVyc2lvbiAhPSAwKSkNCj4gPiAgICAgICAgICAgICAgIGdv
+dG8gb3V0X21pZ3JhdGlvbl9taXN1c2U7DQo+ID4gDQo+ID4gKyAgICAgaWYgKGN0eC0+b3B0aW9u
+cyAmIE5GU19PUFRJT05fTk9fUkVBRF9QTFVTICYmDQo+ID4gKyAgICAgICAgIChjdHgtPnZlcnNp
+b24gIT0gNCB8fCBjdHgtPm1pbm9ydmVyc2lvbiA8IDIpKQ0KPiA+ICsgICAgICAgICAgICAgZ290
+byBvdXRfbm9yZWFkcGx1c19taXN1c2U7DQo+ID4gKw0KPiA+ICAgICAgIC8qIFZlcmlmeSB0aGF0
+IGFueSBwcm90bz0vbW91bnRwcm90bz0gb3B0aW9ucyBtYXRjaCB0aGUgYWRkcmVzcw0KPiA+ICAg
+ICAgICAqIGZhbWlsaWVzIGluIHRoZSBhZGRyPS9tb3VudGFkZHI9IG9wdGlvbnMuDQo+ID4gICAg
+ICAgICovDQo+ID4gQEAgLTEyNTQsNiArMTI2Niw4IEBAIHN0YXRpYyBpbnQgbmZzX2ZzX2NvbnRl
+eHRfdmFsaWRhdGUoc3RydWN0IGZzX2NvbnRleHQNCj4gPiAqZmMpDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgY3R4LT52ZXJzaW9uLCBjdHgtPm1pbm9ydmVyc2lvbik7DQo+ID4gb3V0X21p
+Z3JhdGlvbl9taXN1c2U6DQo+ID4gICAgICAgcmV0dXJuIG5mc19pbnZhbGYoZmMsICJORlM6ICdN
+aWdyYXRpb24nIG5vdCBzdXBwb3J0ZWQgZm9yIHRoaXMgTkZTDQo+ID4gdmVyc2lvbiIpOw0KPiA+
+ICtvdXRfbm9yZWFkcGx1c19taXN1c2U6DQo+ID4gKyAgICAgcmV0dXJuIG5mc19pbnZhbGYoZmMs
+ICJORlM6ICdub3JlYWRwbHVzJyBub3Qgc3VwcG9ydGVkIGZvciB0aGlzIE5GUw0KPiA+IHZlcnNp
+b25cbiIpOw0KPiA+IG91dF92ZXJzaW9uX3VuYXZhaWxhYmxlOg0KPiA+ICAgICAgIG5mc19lcnJv
+cmYoZmMsICJORlM6IFZlcnNpb24gdW5hdmFpbGFibGUiKTsNCj4gPiAgICAgICByZXR1cm4gcmV0
+Ow0KPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNGNsaWVudC5jIGIvZnMvbmZzL25mczRjbGll
+bnQuYw0KPiA+IGluZGV4IDBjZDc2N2U1Yzk3Ny4uODY4ZGMzYzM2YmExIDEwMDY0NA0KPiA+IC0t
+LSBhL2ZzL25mcy9uZnM0Y2xpZW50LmMNCj4gPiArKysgYi9mcy9uZnMvbmZzNGNsaWVudC5jDQo+
+ID4gQEAgLTEwMTYsNiArMTAxNiw5IEBAIHN0YXRpYyBpbnQgbmZzNF9zZXJ2ZXJfY29tbW9uX3Nl
+dHVwKHN0cnVjdCBuZnNfc2VydmVyDQo+ID4gKnNlcnZlciwNCj4gPiAgICAgICBzZXJ2ZXItPmNh
+cHMgfD0gc2VydmVyLT5uZnNfY2xpZW50LT5jbF9tdm9wcy0+aW5pdF9jYXBzOw0KPiA+ICAgICAg
+IGlmIChzZXJ2ZXItPmZsYWdzICYgTkZTX01PVU5UX05PUkRJUlBMVVMpDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgIHNlcnZlci0+Y2FwcyAmPSB+TkZTX0NBUF9SRUFERElSUExVUzsNCj4gPiAr
+ICAgICBpZiAoc2VydmVyLT5vcHRpb25zICYgTkZTX09QVElPTl9OT19SRUFEX1BMVVMpDQo+ID4g
+KyAgICAgICAgICAgICBzZXJ2ZXItPmNhcHMgJj0gfk5GU19DQVBfUkVBRF9QTFVTOw0KPiA+ICsN
+Cj4gPiAgICAgICAvKg0KPiA+ICAgICAgICAqIERvbid0IHVzZSBORlMgdWlkL2dpZCBtYXBwaW5n
+IGlmIHdlJ3JlIHVzaW5nIEFVVEhfU1lTIG9yIGxvd2VyDQo+ID4gICAgICAgICogYXV0aGVudGlj
+YXRpb24uDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbmZzX2ZzX3NiLmggYi9pbmNs
+dWRlL2xpbnV4L25mc19mc19zYi5oDQo+ID4gaW5kZXggMTEyNDhjNWE3YjI0Li4zNjBlNzBjN2Ji
+YjYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9uZnNfZnNfc2IuaA0KPiA+ICsrKyBi
+L2luY2x1ZGUvbGludXgvbmZzX2ZzX3NiLmgNCj4gPiBAQCAtMTcyLDYgKzE3Miw3IEBAIHN0cnVj
+dCBuZnNfc2VydmVyIHsNCj4gPiAgICAgICB1bnNpZ25lZCBpbnQgICAgICAgICAgICBjbG9uZV9i
+bGtzaXplOyAgLyogZ3JhbnVsYXJpdHkgb2YgYSBDTE9ORQ0KPiA+IG9wZXJhdGlvbiAqLw0KPiA+
+ICNkZWZpbmUgTkZTX09QVElPTl9GU0NBQ0hFICAgIDB4MDAwMDAwMDEgICAgICAvKiAtIGxvY2Fs
+IGNhY2hpbmcgZW5hYmxlZCAqLw0KPiA+ICNkZWZpbmUgTkZTX09QVElPTl9NSUdSQVRJT04gIDB4
+MDAwMDAwMDIgICAgICAvKiAtIE5GU3Y0IG1pZ3JhdGlvbiBlbmFibGVkDQo+ID4gKi8NCj4gPiAr
+I2RlZmluZSBORlNfT1BUSU9OX05PX1JFQURfUExVUyAgICAgIDB4MDAwMDAwMDQgICAgICAvKiAt
+IE5GU3Y0LjIgUkVBRF9QTFVTDQo+ID4gZW5hYmxlZCAqLw0KPiA+IA0KPiA+ICAgICAgIHN0cnVj
+dCBuZnNfZnNpZCAgICAgICAgIGZzaWQ7DQo+ID4gICAgICAgX191NjQgICAgICAgICAgICAgICAg
+ICAgbWF4ZmlsZXNpemU7ICAgIC8qIG1heGltdW0gZmlsZSBzaXplICovDQo+ID4gLS0NCj4gPiAy
+LjI0LjENCj4gPiANCj4gDQo+IC0tDQo+IENodWNrIExldmVyDQo+IA0KPiANCj4gDQo=
