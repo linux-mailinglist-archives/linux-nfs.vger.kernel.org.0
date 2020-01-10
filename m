@@ -2,143 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F50A137840
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 22:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 049331379BD
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:35:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgAJVDk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jan 2020 16:03:40 -0500
-Received: from mail-bn8nam12on2116.outbound.protection.outlook.com ([40.107.237.116]:8160
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726948AbgAJVDk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:03:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wd++eCIiSBsneV8FiGKYQwwhGKYF3jCOhuD0OKwIkwCVtU5dcXugpo091qDtRZpZ3fEWGuWu9H/xJvPzR2HVoJuDyc7jZhvedkfJOQQCK4MNSItM5EQqCZOSgwaRIkmsAh5JN8pfWmsVUr0Xq41ng+s7b2U6KkzmBZ5Mt0QN3lpqpwTiU61WKNadGM85W/mwYn2HOnD5lZi8FtCfmyM+789nG0mnlJyddgiKxywUntzE96KmKpa/z5dBm17KRJQFHmbXrM/6i/xCAc5e/Z+3os6b4Jkl0DFmCoIBmdzX6VEmXRhzuTin/Rcn9x5YIIkhs0T8W9OVBD1uu2Y/9Umrkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9C6T7LmST+eujcLSo3jte7rPWzLvEKuTPI7AEvnguv0=;
- b=P+FcsY3Qz+5Uoz/RApIf6dkxkrNeyTZdQu+0OEIkTAf/TfWzRDsN/4UbYD0QlqOUgL4nhu1St1iMqFCkbRSGi4176+8ohp5cL9ngAOuk1hHJwwHsdf2iwRfQEv/0yJRIyLF482G6TjcyNexYKcHVo+OCro7ed9D/1dI/yDVdvtn1JsE8Ilg10GfL7KzCFpLHEsOELwdm6wA+fkG3AfW8oniC2HBxH3f6aOiLvMfiiydVXl3CC4idFhB2wgvnaCEPq+1a7KssoBAVQexAp6BQL/tFusdJbqm9TZgLk7G4fXZawPKGbAyd+puaGO/yNlZQpHp8c4E1K5xVSAU55BHzQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9C6T7LmST+eujcLSo3jte7rPWzLvEKuTPI7AEvnguv0=;
- b=D6HUGunVZglYXLyX7frPOoVU5vPkTFKS298hpGymBbsLqr+DNov/YmMB0nPnuWqGegq0H9Uh6KaE7g9tXDpuktmp7IMn29fQF4JMPaUTzE0Jo9WvE6WSKiBLpcMUoj7i2WdiudBAXz27PJiIXUEnvOKAZL66IO/T0oxIhJbPCDU=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2060.namprd13.prod.outlook.com (10.174.186.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.4; Fri, 10 Jan 2020 21:03:36 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2623.008; Fri, 10 Jan 2020
- 21:03:36 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "aglo@umich.edu" <aglo@umich.edu>
-Subject: Re: interrupted rpcs problem
-Thread-Topic: interrupted rpcs problem
-Thread-Index: AQHVx+xAF9geEgvaYEKYoTth6kuH4qfkYv+A
-Date:   Fri, 10 Jan 2020 21:03:36 +0000
-Message-ID: <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
-References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
-In-Reply-To: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9861236d-2502-4f74-589e-08d796108f91
-x-ms-traffictypediagnostic: DM5PR1301MB2060:
-x-microsoft-antispam-prvs: <DM5PR1301MB206051DD24C3C45A3D353DF2B8380@DM5PR1301MB2060.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39830400003)(346002)(376002)(396003)(136003)(189003)(199004)(2906002)(186003)(6512007)(66556008)(110136005)(66476007)(91956017)(26005)(81156014)(8676002)(3480700007)(8936002)(7116003)(81166006)(2616005)(66446008)(64756008)(6506007)(66946007)(316002)(71200400001)(76116006)(6486002)(86362001)(5660300002)(36756003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2060;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4F5X3y9JGc7XgFpvY1/n+wS/ou6jhb2SvU12/jlXRUcyhYSfc8qeLmHsiJ3sUK7KoN4pQb/jRNOf0UC2RRtbROtWGJGTj8tOmw83MRBLJphGRLUOPfBcZ12IfDR+5IO5PPSAteCxc0Nmr+6jWsnwjQ9M1qcqIloF6nKfNyzsolv6X4VoA5PQg4b1bqotgRgPHg3L2lu6N0Y9aK3uQuq0sE+Ua54b1OLa/g3GNZ4lfK9QauDSYPNjIR2rHknW4z4ISi+AZwK8xv8bmhcQNvOyI7sCndB/NnrrxDuCJJDEj0wz4Gv8VqEPTZqCt5G+BJr4Evf5fDFREtltYhmFX9N42R484vs8o+uYaDWC6qtFPI0dN2qF1W15ugROn19PLV0URuBMkqRZOCt2OIGh9b1hRcgCRVwhDir7sVJouRDk734k0TDAEfdb/PVkAHmer9sl
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0DC3203A8D5092478D3AA1BFBEF3F08B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727477AbgAJWe7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jan 2020 17:34:59 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:35197 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbgAJWe6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:34:58 -0500
+Received: by mail-yw1-f66.google.com with SMTP id i190so1327734ywc.2
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2020 14:34:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iqUR+C/d+RykTDqAkWYDvMDWcezrCrCm5h4JvDBhWNA=;
+        b=aRvP0glczzC6DEYOaOEpRGh0fjaJi/PhXknvnwpMF2oDSSJ/N0etZ7RVKxFYM8hrQ5
+         QdxH8pWxRxei/qwNuFetFWPgYJcVomSh/tQZF1eQ7aEs++GZQAw8N+qvRPub07Sv1HYl
+         mRMQOcEe9t4SiPaOepy61mWWDuTRiwiFw9AfRmv3gIpqPDRUoyytcj+oEu0bLUxyUc9b
+         8l1cRQX8Jvan+8YYiDTPTWZtSPGUdE/3S5tHyD3p57yOSvVstfZfx+JZDEVBVkBvKuVv
+         jSfbnlF9cM5gdO7+Ve6xlEwBiYDwrlzS4vaBY36QW2j4Pj15znf46lleHcOiy4/k8u13
+         SIlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iqUR+C/d+RykTDqAkWYDvMDWcezrCrCm5h4JvDBhWNA=;
+        b=Kq2TgzfYmfkEvru7WRAAr1m8vC3C9A8oIstU9U7/L6G42lqCjPYLOPTm9gy9RvI28b
+         HqscdAfhaH/0Htnb1sLZCc/ADoAJWio3SEgwknTueSUFlYngweuasTTLLeq7ZHpqGmML
+         zzLpb6E/YKekAL6z2pgsuZby5wkfy3e2kaIEVyvDdU9d6daEIJ/Bw9Iujwj5VC/DEPax
+         6P5aEQzNB+Sqb2ZOASbIpFBKxuLRG0C1EmyudrndsLbq6LUWkRwZ2G0eCKOj99FSFzJT
+         hPTfZ/fidoKf5iBvIuOegjq4EqyPw8DgJRD8opVd2vvatjGaRX4ZSQRnMwqwspjDGKXn
+         rVLQ==
+X-Gm-Message-State: APjAAAUrG/lY3Cw3mkozDkZX5bkINSrV17fUYkjIJcIpd6+4Itc5j7jm
+        dB9GcKnIrcdtqGlm38A7SvA=
+X-Google-Smtp-Source: APXvYqxdev+bOHvVQmqeYYLruZWGthK5awZBPSiY9tjBEYmSfsOrekzehBj1YvffmjvImh2vTaMynQ==
+X-Received: by 2002:a81:af0b:: with SMTP id n11mr4598453ywh.203.1578695697522;
+        Fri, 10 Jan 2020 14:34:57 -0800 (PST)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.gmail.com with ESMTPSA id e186sm1554060ywb.73.2020.01.10.14.34.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 14:34:56 -0800 (PST)
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH 0/7] NFS: Add support for the v4.2 READ_PLUS operation
+Date:   Fri, 10 Jan 2020 17:34:48 -0500
+Message-Id: <20200110223455.528471-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9861236d-2502-4f74-589e-08d796108f91
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 21:03:36.6775
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BmRXEgnLcyxLY9iAlM7XZ3EaoSVF0ZnJy37Tp3feSHP+zrQRqL6EUMyauDVWAir/4eZGaauA5hKH6h4DOm/22g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2060
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTEwIGF0IDE0OjI5IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gSGkgZm9sa3MsDQo+IA0KPiBXZSBhcmUgaGF2aW5nIGFuIGlzc3VlIHdpdGggYW4gaW50
-ZXJydXB0ZWQgUlBDcyBhZ2Fpbi4gSGVyZSdzIHdoYXQgSQ0KPiBzZWUgd2hlbiB4ZnN0ZXN0cyB3
-ZXJlIGN0cmwtYy1lZC4NCj4gDQo+IGZyYW1lIDMzMiBTRVRBVFRSIGNhbGwgc2xvdD0wIHNlcWlk
-PTB4MDAwMDEzY2EgKEknbSBhc3N1bWluZyB0aGlzIGlzDQo+IGludGVycnVwdGVkIGFuZCByZWxl
-YXNlZCkNCj4gZnJhbWUgMzMzIENMT1NFIGNhbGwgc2xvdD0wIHNlcWlkPTB4MDAwMDEzY2IgIChv
-bmx5IHdheSB0aGUgc2xvdA0KPiBjb3VsZA0KPiBiZSBmcmVlIGJlZm9yZSB0aGUgcmVwbHkgaWYg
-aXQgd2FzIGludGVycnVwdGVkLCByaWdodD8gT3RoZXJ3aXNlIHdlDQo+IHNob3VsZCBuZXZlciBo
-YXZlIHRoZSBzbG90IHVzZWQgYnkgbW9yZSB0aGFuIG9uZSBvdXRzdGFuZGluZyBSUEMpDQo+IGZy
-YW1lIDMzNCByZXBseSB0byAzMzMgd2l0aCBTRVFfTUlTX09SREVSRUQgKEknbSBhc3N1bWluZyBz
-ZXJ2ZXINCj4gcmVjZWl2ZWQgZnJhbWUgMzMzIGJlZm9yZSAzMzIpDQo+IGZyYW1lIDMzNiBDTE9T
-RSBjYWxsIHNsb3Q9MCBzZXFpZD0weDAwMDAxM2NhICg/Pz8gd2h5IGRpZCB3ZQ0KPiBkZWNyZW1l
-bnRlZCBpdC4gSSBtZWFuIEkga25vdyB3aHkgaXQncyBpbiB0aGUgY3VycmVudCBjb2RlIDotLyAp
-DQo+IGZyYW1lIDMzNyByZXBseSB0byAzMzYgU0VRVUVOQ0Ugd2l0aCBFUlJfREVMQVkNCj4gZnJh
-bWUgMzM5IHJlcGx5IHRvIDMzMiBTRVRBVFRSIHdoaWNoIG5vYm9keSBpcyB3YWl0aW5nIGZvcg0K
-PiBmcmFtZSA1NDMgQ0xPU0UgY2FsbCBzbG90PTAgc2VxaWQ9MHgwMDAwMTNjYSAocmV0cnkgYWZ0
-ZXIgd2FpdGluZyBmb3INCj4gZXJyX2RlbGF5KQ0KPiBmcmFtZSA1NDQgcmVwbHkgdG8gNTQzIHdp
-dGggU0VUQVRUUiAob3V0IG9mIHRoZSBjYWNoZSkuDQo+IA0KPiBXaGF0IHRoaXMgbGVhZHMgdG8g
-aXM6IGZpbGUgaXMgbmV2ZXIgY2xvc2VkIG9uIHRoZSBzZXJ2ZXIuIENhbid0DQo+IHJlbW92ZSBp
-dC4gVW5tb3VudCBmYWlscyB3aXRoIENMSURfQlVTWS4NCj4gDQo+IEkgYmVsaWV2ZSB0aGF0J3Mg
-dGhlIHJlc3VsdCBvZiBjb21taXQNCj4gMzQ1M2Q1NzA4YjMzZWZlNzZmNDBlY2ExYzBlZDYwOTIz
-MDk0Yjk3MS4NCj4gV2UgdXNlZCB0byBoYXZlIGNvZGUgdGhhdCBidW1wZWQgdGhlIHNlcXVlbmNl
-IHVwIHdoZW4gdGhlIHNsb3Qgd2FzDQo+IGludGVycnVwdGVkIGJ1dCBhZnRlciB0aGUgY29tbWl0
-ICJORlN2NC4xOiBBdm9pZCBmYWxzZSByZXRyaWVzIHdoZW4NCj4gUlBDIGNhbGxzIGFyZSBpbnRl
-cnJ1cHRlZCIuDQo+IA0KPiBDb21taXQgaGFzIHRoaXMgIlRoZSBvYnZpb3VzIGZpeCBpcyB0byBi
-dW1wIHRoZSBzZXF1ZW5jZSBudW1iZXINCj4gcHJlLWVtcHRpdmVseSBpZiBhbg0KPiAgICAgUlBD
-IGNhbGwgaXMgaW50ZXJydXB0ZWQsIGJ1dCBpbiBvcmRlciB0byBkZWFsIHdpdGggdGhlIGNvcm5l
-cg0KPiBjYXNlcw0KPiAgICAgd2hlcmUgdGhlIGludGVycnVwdGVkIGNhbGwgaXMgbm90IGFjdHVh
-bGx5IHJlY2VpdmVkIGFuZCBwcm9jZXNzZWQNCj4gYnkNCj4gICAgIHRoZSBzZXJ2ZXIsIHdlIG5l
-ZWQgdG8gaW50ZXJwcmV0IHRoZSBlcnJvciBORlM0RVJSX1NFUV9NSVNPUkRFUkVEDQo+ICAgICBh
-cyBhIHNpZ24gdGhhdCB3ZSBuZWVkIHRvIGVpdGhlciB3YWl0IG9yIGxvY2F0ZSBhIGNvcnJlY3QN
-Cj4gc2VxdWVuY2UNCj4gICAgIG51bWJlciB0aGF0IGxpZXMgYmV0d2VlbiB0aGUgdmFsdWUgd2Ug
-c2VudCwgYW5kIHRoZSBsYXN0IHZhbHVlDQo+IHRoYXQNCj4gICAgIHdhcyBhY2tlZCBieSBhIFNF
-UVVFTkNFIGNhbGwgb24gdGhhdCBzbG90LiINCj4gDQo+IElmIHdlIGNhbid0IG5vIGxvbmdlciBq
-dXN0IGJ1bXAgdGhlIHNlcXVlbmNlIHVwLCBJIGRvbid0IHRoaW5rIHRoZQ0KPiBjb3JyZWN0IGFj
-dGlvbiBpcyB0byBhdXRvbWF0aWNhbGx5IGJ1bXAgaXQgZG93biAoYXMgcGVyIGV4YW1wbGUNCj4g
-aGVyZSk/DQo+IFRoZSBjb21taXQgZG9lc24ndCBkZXNjcmliZSB0aGUgY29ybmVyIGNhc2Ugd2hl
-cmUgaXQgd2FzIG5lY2Vzc2FyeSB0bw0KPiBidW1wIHRoZSBzZXF1ZW5jZSB1cC4gSSB3b25kZXIg
-aWYgd2UgY2FuIHJldHVybiB0aGUga25vd2xlZGdlIG9mIHRoZQ0KPiBpbnRlcnJ1cHRlZCBzbG90
-IGFuZCBtYWtlIGEgZGVjaXNpb24gYmFzZWQgb24gdGhhdCBhcyB3ZWxsIGFzDQo+IHdoYXRldmVy
-DQo+IHRoZSBvdGhlciBjb3JuZXIgY2FzZSBpcy4NCj4gDQo+IEkgZ3Vlc3Mgd2hhdCBJJ20gZ2V0
-dGluZyBpcywgY2FuIHNvbWVib2R5IChUcm9uZCkgcHJvdmlkZSB0aGUgaW5mbw0KPiBmb3INCj4g
-dGhlIGNvcm5lciBjYXNlIGZvciB0aGlzIHRoYXQgcGF0Y2ggd2FzIGNyZWF0ZWQuIEkgY2FuIHNl
-ZSBpZiBJIGNhbg0KPiBmaXggdGhlICJjb21tb24iIGNhc2Ugd2hpY2ggaXMgbm93IGJyb2tlbiBh
-bmQgbm90IGJyZWFrIHRoZSBjb3JuZXINCj4gY2FzZS4uLi4NCj4gDQoNClRoZXJlIGlzIG5vIHB1
-cmUgY2xpZW50IHNpZGUgc29sdXRpb24gZm9yIHRoaXMgcHJvYmxlbS4NCg0KVGhlIGNoYW5nZSB3
-YXMgbWFkZSBiZWNhdXNlIGlmIHlvdSBoYXZlIG11bHRpcGxlIGludGVycnVwdGlvbnMgb2YgdGhl
-DQpSUEMgY2FsbCwgdGhlbiB0aGUgY2xpZW50IGhhcyB0byBzb21laG93IGZpZ3VyZSBvdXQgd2hh
-dCB0aGUgY29ycmVjdA0Kc2xvdCBudW1iZXIgaXMuIElmIGl0IHN0YXJ0cyBsb3csIGFuZCB0aGVu
-IGdvZXMgaGlnaCwgYW5kIHRoZSBzZXJ2ZXIgaXMNCm5vdCBjYWNoaW5nIHRoZSBhcmd1bWVudHMg
-Zm9yIHRoZSBSUEMgY2FsbCB0aGF0IGlzIGluIHRoZSBzZXNzaW9uDQpjYWNoZSwgdGhlbiB3ZSB3
-aWxsIF9hbHdheXNfIGhpdCB0aGlzIGJ1ZyBiZWNhdXNlIHdlIHdpbGwgYWx3YXlzIGhpdA0KdGhl
-IHJlcGxheSBvZiB0aGUgbGFzdCBlbnRyeS4NCg0KQXQgbGVhc3QgaWYgd2Ugc3RhcnQgaGlnaCwg
-YW5kIGl0ZXJhdGUgYnkgbG93LCB0aGVuIHdlIHJlZHVjZSB0aGUNCnByb2JsZW0gdG8gYmVpbmcg
-YSByYWNlIHdpdGggdGhlIHByb2Nlc3Npbmcgb2YgdGhlIGludGVycnVwdGVkIHJlcXVlc3QNCmFz
-IGl0IGlzIGluIHRoaXMgY2FzZS4NCg0KSG93ZXZlciwgYXMgSSBzYWlkLCB0aGUgcmVhbCBzb2x1
-dGlvbiBoZXJlIGhhcyB0byBpbnZvbHZlIHRoZSBzZXJ2ZXIuDQoNCi0tIA0KVHJvbmQgTXlrbGVi
-dXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+
+These patches add client support for the READ_PLUS operation, which
+breaks read requests into several "data" and "hole" segments when
+replying to the client. I also add a "noreadplus" mount option to allow
+users to disable the new operation if it becomes a problem, similar to
+the "nordirplus" mount option that we already have.
+
+Here are the results of some performance tests I ran on Netapp lab
+machines. I tested by reading various 2G files from a few different
+undelying filesystems and across several NFS versions. I used the
+`vmtouch` utility to make sure files were only cached when we wanted
+them to be. In addition to 100% data and 100% hole cases, I also tested
+with files that alternate between data and hole segments. These files
+have either 4K, 8K, 16K, or 32K segment sizes and start with either data
+or hole segments. So the file mixed-4d has a 4K segment size beginning
+with a data segment, but mixed-32h hase 32K segments beginning with a
+hole. The units are in seconds, with the first number for each NFS
+version being the uncached read time and the second number is for when
+the file is cached on the server.
+
+ext4      |        v3       |       v4.0      |       v4.1      |       v4.2      |
+----------|-----------------|-----------------|-----------------|-----------------|
+data      | 22.909 : 18.253 | 22.934 : 18.252 | 22.902 : 18.253 | 23.485 : 18.253 |
+hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.708 :  0.709 |
+mixed-4d  | 28.261 : 18.253 | 29.616 : 18.252 | 28.341 : 18.252 | 24.508 :  9.150 |
+mixed-8d  | 27.956 : 18.253 | 28.404 : 18.252 | 28.320 : 18.252 | 23.967 :  9.140 |
+mixed-16d | 28.172 : 18.253 | 27.946 : 18.252 | 27.627 : 18.252 | 23.043 :  9.134 |
+mixed-32d | 25.350 : 18.253 | 24.406 : 18.252 | 24.384 : 18.253 | 20.698 :  9.132 |
+mixed-4h  | 28.913 : 18.253 | 28.564 : 18.252 | 27.996 : 18.252 | 21.837 :  9.150 |
+mixed-8h  | 28.625 : 18.253 | 27.833 : 18.252 | 27.798 : 18.253 | 21.710 :  9.140 |
+mixed-16h | 27.975 : 18.253 | 27.662 : 18.252 | 27.795 : 18.253 | 20.585 :  9.134 |
+mixed-32h | 25.958 : 18.253 | 25.491 : 18.252 | 24.856 : 18.252 | 21.018 :  9.132 |
+
+xfs       |        v3       |       v4.0      |       v4.1      |       v4.2      |
+----------|-----------------|-----------------|-----------------|-----------------|
+data      | 22.041 : 18.253 | 22.618 : 18.252 | 23.067 : 18.253 | 23.496 : 18.253 |
+hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.723 :  0.708 |
+mixed-4d  | 29.417 : 18.253 | 28.503 : 18.252 | 28.671 : 18.253 | 24.957 :  9.150 |
+mixed-8d  | 29.080 : 18.253 | 29.401 : 18.252 | 29.251 : 18.252 | 24.625 :  9.140 |
+mixed-16d | 27.638 : 18.253 | 28.606 : 18.252 | 27.871 : 18.253 | 25.511 :  9.135 |
+mixed-32d | 24.967 : 18.253 | 25.239 : 18.252 | 25.434 : 18.252 | 21.728 :  9.132 |
+mixed-4h  | 34.816 : 18.253 | 36.243 : 18.252 | 35.837 : 18.252 | 32.332 :  9.150 |
+mixed-8h  | 43.469 : 18.253 | 44.009 : 18.252 | 43.810 : 18.253 | 37.962 :  9.140 |
+mixed-16h | 29.280 : 18.253 | 28.563 : 18.252 | 28.241 : 18.252 | 22.116 :  9.134 |
+mixed-32h | 29.428 : 18.253 | 29.378 : 18.252 | 28.808 : 18.253 | 27.378 :  9.134 |
+
+btrfs     |        v3       |       v4.0      |       v4.1      |       v4.2      |
+----------|-----------------|-----------------|-----------------|-----------------|
+data      | 25.547 : 18.253 | 25.053 : 18.252 | 24.209 : 18.253 | 32.121 : 18.253 |
+hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.252 |  0.702 :  0.724 |
+mixed-4d  | 19.016 : 18.253 | 18.822 : 18.252 | 18.955 : 18.253 | 18.697 :  9.150 |
+mixed-8d  | 19.186 : 18.253 | 19.444 : 18.252 | 18.841 : 18.253 | 18.452 :  9.140 |
+mixed-16d | 18.480 : 18.253 | 19.010 : 18.252 | 19.167 : 18.252 | 16.000 :  9.134 |
+mixed-32d | 18.635 : 18.253 | 18.565 : 18.252 | 18.550 : 18.252 | 15.930 :  9.132 |
+mixed-4h  | 19.079 : 18.253 | 18.990 : 18.252 | 19.157 : 18.253 | 27.834 :  9.150 |
+mixed-8h  | 18.613 : 18.253 | 19.234 : 18.252 | 18.616 : 18.253 | 20.177 :  9.140 |
+mixed-16h | 18.590 : 18.253 | 19.221 : 18.252 | 19.654 : 18.253 | 17.273 :  9.135 |
+mixed-32h | 18.768 : 18.253 | 19.122 : 18.252 | 18.535 : 18.252 | 15.791 :  9.132 |
+
+ext3      |        v3       |       v4.0      |       v4.1      |       v4.2      |
+----------|-----------------|-----------------|-----------------|-----------------|
+data      | 34.292 : 18.253 | 33.810 : 18.252 | 33.450 : 18.253 | 33.390 : 18.254 |
+hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.718 :  0.728 |
+mixed-4d  | 46.818 : 18.253 | 47.140 : 18.252 | 48.385 : 18.253 | 42.887 :  9.150 |
+mixed-8d  | 58.554 : 18.253 | 59.277 : 18.252 | 59.673 : 18.253 | 56.760 :  9.140 |
+mixed-16d | 44.631 : 18.253 | 44.291 : 18.252 | 44.729 : 18.253 | 40.237 :  9.135 |
+mixed-32d | 39.110 : 18.253 | 38.735 : 18.252 | 38.902 : 18.252 | 35.270 :  9.132 |
+mixed-4h  | 56.396 : 18.253 | 56.387 : 18.252 | 56.573 : 18.253 | 67.661 :  9.150 |
+mixed-8h  | 58.483 : 18.253 | 58.484 : 18.252 | 59.099 : 18.253 | 77.958 :  9.140 |
+mixed-16h | 42.511 : 18.253 | 42.338 : 18.252 | 42.356 : 18.252 | 51.805 :  9.135 |
+mixed-32h | 38.419 : 18.253 | 38.504 : 18.252 | 38.643 : 18.252 | 40.411 :  9.132 |
+
+Any questions?
+Anna
+
+Anna Schumaker (7):
+  SUNRPC: Split out a function for setting current page
+  SUNRPC: Add the ability to expand holes in data pages
+  SUNRPC: Add the ability to shift data to a specific offset
+  NFS: Add READ_PLUS data segment support
+  NFS: Add READ_PLUS hole segment decoding
+  NFS: Decode multiple READ_PLUS segments
+  NFS: Add a mount option for READ_PLUS
+
+ fs/nfs/fs_context.c        |  14 +++
+ fs/nfs/nfs42xdr.c          | 169 +++++++++++++++++++++++++
+ fs/nfs/nfs4client.c        |   3 +
+ fs/nfs/nfs4proc.c          |  32 ++++-
+ fs/nfs/nfs4xdr.c           |   1 +
+ include/linux/nfs4.h       |   2 +-
+ include/linux/nfs_fs_sb.h  |   2 +
+ include/linux/nfs_xdr.h    |   2 +-
+ include/linux/sunrpc/xdr.h |   2 +
+ net/sunrpc/xdr.c           | 244 ++++++++++++++++++++++++++++++++++++-
+ 10 files changed, 464 insertions(+), 7 deletions(-)
+
+-- 
+2.24.1
+
