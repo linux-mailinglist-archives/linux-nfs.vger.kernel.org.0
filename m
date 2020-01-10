@@ -2,87 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C73135CE3
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2020 16:36:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2601D137700
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 20:29:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAIPgt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Jan 2020 10:36:49 -0500
-Received: from fieldses.org ([173.255.197.46]:54982 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgAIPgs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:36:48 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 4D276AAD; Thu,  9 Jan 2020 10:36:48 -0500 (EST)
-Date:   Thu, 9 Jan 2020 10:36:48 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "mora@netapp.com" <mora@netapp.com>
-Subject: Re: [PATCH] CACHE: Fix test script as delegation being introduced
-Message-ID: <20200109153648.GA20670@fieldses.org>
-References: <890610570fcd48d8b28b30e89f1f0038@G08CNEXMBPEKD05.g08.fujitsu.local>
+        id S1728492AbgAJT3P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jan 2020 14:29:15 -0500
+Received: from mail-vs1-f53.google.com ([209.85.217.53]:36815 "EHLO
+        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgAJT3O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 14:29:14 -0500
+Received: by mail-vs1-f53.google.com with SMTP id u14so1967713vsu.3
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2020 11:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=E8OpVKp6QaKf4QhVUGIW43Zlg74ANcKIdcgj47PoCyQ=;
+        b=i3lYIs0c0zRjq1FE+FsXa3hL3bm9GiGT0HbfEJRZqCA7bHXBlT+44fVkpbAGFJOmub
+         49I+AgObyzPie+Brh+8U+1d+xBOvNaQl6uZLUF1LaZBR2kHPOZV5h/vfB5si2JB41DYv
+         YM+h6Ge1p41cUE47o6FaPcn8jG+h8o7xmf6+ybZEeErHsVIZfrb5GEjKIS66cdasQ+Bv
+         GBNjjKKq9+4SbENxX40e8szLIX5SC1NO4l3OS3+iyBRkTxa+tXgOUpn2kveC0KD6weyN
+         X2ePiErx7G0y+PGm3jdpX6v+KHJ3Y5Rgy9ep/9wZJ63BaCu5KTITDelsEls+UdLR4nUl
+         QLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=E8OpVKp6QaKf4QhVUGIW43Zlg74ANcKIdcgj47PoCyQ=;
+        b=f9Vpoh+ckMcHEzCuxdyRuKBZnR7MDp6YynW9beSQee6MV31mbyIKrHi8sOXrNVaCxw
+         8KZkeoru975iGiww3mYwpy9yE49qBfTeatUqtVk4kHsnOb0XEAWd1O8dgBQ7MU/wxsUf
+         +eJmMrwfAEM2OjkuAFFsg+4hWeLPMK1zUMyn3KfuQdtWfQO4qFRajycislZmEuCuOkHQ
+         EAKX3vuf0viteSytP0PMCHdNTYQ8j6I7WGeNcztiCiSm8ZxeapgOsaNKJaVwflhm4iPg
+         n00UWFo11TSN8UwXs8c+7JSA+rC5vMthuHkKqLFh5KrdrIIs2eC2cHeflRBPv8wSp1G2
+         qYZg==
+X-Gm-Message-State: APjAAAUTW53TT9015bxDZtw82XObdkqs5FP5eGU2XGaFjBtO0uXTAWPU
+        MJCTyTpQIVLJE32ELsqA+QWFSGIdHU7kCgreuE0pfOxu
+X-Google-Smtp-Source: APXvYqz+ka85hDBKtn441kAW7M8SO5f6ZweDdVZVvxLylhbrBZ9+okMeDHjbg3hiIWJ6b14+N+mU6QBFuADl8y7Rcyw=
+X-Received: by 2002:a05:6102:7a4:: with SMTP id x4mr127457vsg.85.1578684553496;
+ Fri, 10 Jan 2020 11:29:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <890610570fcd48d8b28b30e89f1f0038@G08CNEXMBPEKD05.g08.fujitsu.local>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 10 Jan 2020 14:29:02 -0500
+Message-ID: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
+Subject: interrupted rpcs problem
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 01:54:51AM +0000, Su, Yanjun wrote:
-> Any ping about the 1 year old problem?
-> Cc mora:
-> Did you test nfs cache with nfs version 4?
-> Or maybe the test case is not suitable for v4?
+Hi folks,
 
-I don't run it personally.  Jorge, is it expected to fail in the
-presence of delegations?
+We are having an issue with an interrupted RPCs again. Here's what I
+see when xfstests were ctrl-c-ed.
 
-> Sorry for my late reply. Our mail system has some problem that ignores your reply.
-> 
-> I Get the reply by google seach.
-> 
-> We tested the option "clientaddr=0.0.0.0" and the test case also fails.
-> 
-> Thanks
-> 
-> On Mon, Apr 08, 2019 at 10:47:56AM +0800, Su Yanjun<suyj.fnst@cn.fujitsu.com>  wrote:
-> 
-> When we run nfstest_cache with nfsversion=4, it fails.
-> As i know nfsv4 introduces delegation, so nfstest_cache runs fail
-> since nfsv4.
-> 
-> The test commandline is as below:
-> ./nfstest_cache --nfsversion=4 -e /nfsroot --server 192.168.102.143
-> --client 192.168.102.142 --runtest acregmax_data --verbose all
-> 
-> This patch adds compatible code for nfsv3 and nfsv4.
-> When we test nfsv4, just use 'chmod' to recall delegation, then
-> run the test. As 'chmod' will modify atime, so use 'noatime' mount option.
-> 
-> I don't think a chmod is a reliable way to recall delegations.
+frame 332 SETATTR call slot=0 seqid=0x000013ca (I'm assuming this is
+interrupted and released)
+frame 333 CLOSE call slot=0 seqid=0x000013cb  (only way the slot could
+be free before the reply if it was interrupted, right? Otherwise we
+should never have the slot used by more than one outstanding RPC)
+frame 334 reply to 333 with SEQ_MIS_ORDERED (I'm assuming server
+received frame 333 before 332)
+frame 336 CLOSE call slot=0 seqid=0x000013ca (??? why did we
+decremented it. I mean I know why it's in the current code :-/ )
+frame 337 reply to 336 SEQUENCE with ERR_DELAY
+frame 339 reply to 332 SETATTR which nobody is waiting for
+frame 543 CLOSE call slot=0 seqid=0x000013ca (retry after waiting for err_delay)
+frame 544 reply to 543 with SETATTR (out of the cache).
 
-If you run the chmod from the same client, it won't necessarily revoke
-the delegation.
+What this leads to is: file is never closed on the server. Can't
+remove it. Unmount fails with CLID_BUSY.
 
-If you run it from another client or run it directly on the server, it
-should.
+I believe that's the result of commit 3453d5708b33efe76f40eca1c0ed60923094b971.
+We used to have code that bumped the sequence up when the slot was
+interrupted but after the commit "NFSv4.1: Avoid false retries when
+RPC calls are interrupted".
 
-> Maybe mount with "clientaddr=0.0.0.0"?  From the nfs man page:
-> 
->     Can  specify a value of IPv4_ANY (0.0.0.0) or equivalent IPv6
->     any address  which will  signal to the NFS server that this NFS
->     client does not want delegations.
-> 
-> (I wonder if that documentation's still accurate for versions >= 4.1?)
+Commit has this "The obvious fix is to bump the sequence number
+pre-emptively if an
+    RPC call is interrupted, but in order to deal with the corner cases
+    where the interrupted call is not actually received and processed by
+    the server, we need to interpret the error NFS4ERR_SEQ_MISORDERED
+    as a sign that we need to either wait or locate a correct sequence
+    number that lies between the value we sent, and the last value that
+    was acked by a SEQUENCE call on that slot."
 
-Probably not.  I don't think there's a way to turn off delegations from
-the linux client.
+If we can't no longer just bump the sequence up, I don't think the
+correct action is to automatically bump it down (as per example here)?
+The commit doesn't describe the corner case where it was necessary to
+bump the sequence up. I wonder if we can return the knowledge of the
+interrupted slot and make a decision based on that as well as whatever
+the other corner case is.
 
-The server may have a way to turn off delegations.  E.g. on a linux
-server "echo 0>/proc/sys/fs/leases-enable" before starting knfsd should
-do it.
+I guess what I'm getting is, can somebody (Trond) provide the info for
+the corner case for this that patch was created. I can see if I can
+fix the "common" case which is now broken and not break the corner
+case....
 
---b.
+Thank you
