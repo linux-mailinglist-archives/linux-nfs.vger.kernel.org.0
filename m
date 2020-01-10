@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4912E1379C3
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 141C51379C4
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:35:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgAJWfH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jan 2020 17:35:07 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38896 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbgAJWfG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:35:06 -0500
-Received: by mail-yb1-f194.google.com with SMTP id c13so1374033ybq.5
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2020 14:35:06 -0800 (PST)
+        id S1727499AbgAJWfI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jan 2020 17:35:08 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40049 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbgAJWfI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:35:08 -0500
+Received: by mail-yb1-f193.google.com with SMTP id a2so1370053ybr.7
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2020 14:35:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XxZxDJC1OGNPkdu6FTqfNdzC3MlEzliAiWbAbPd4MXM=;
-        b=VgWzjS5KULN0A+3KyOgbU1q/PLC51PO4DKwwQIX8v8IoatwtoJeNaiD0ntCUF+Lj1d
-         zdaTZWE8KHsMYeZCwIsooFM+4/CephsnQeKDABU7jGPa8i4pNhrnfOaQsjQla4PhpJQz
-         ckLblEo9gm1x8rkPJbjWtH3xofZTx5FhcIGFPS9LeILZmxr72CEj4TFd8ZR93C6fdity
-         7W1MiscreUz0ohkCeJioPCf4Uf5LIjyMPzDuKNeFNDBuk8UbtYn5wxPkvktzsOsuHDBN
-         ppuKQ6OSwuK68UiiX/1E6bLA0Ghzf2qNoY+xHM9a2U/p7RP3jR1m8dJRC3IWPCiNO+aG
-         Cu1Q==
+        bh=EX9to2JgKDzoS0UYtuWj3O69P1cekZ+X0dJX6EOInOw=;
+        b=QlblZCL8QdAGwlf3j2K92tekYdfbueuiZBKJR4kLcrvi9hyrFpVWysNVThQrOtQWzN
+         2Ej3uTe0/Km9CnCryqAScIMlBOgOrzeTJeVq/tKzYTcndMVjmN5iJcgycis4KKIkcJIe
+         7ygPnq1DfgBzHrcwE/aZuHw4uHRAUUJfuO/uQNMyZpzSyC+u5GljIc/YxgwvgQGmloVs
+         Usd5zjyENOOyRGPfzIXzn1OZcAbNX/a/wEEMdC0nMbsb0FhxSV1LjrsAuxGfKyVkmSf1
+         GbS25vQijlYd0To2+abE1WcjWcmBveImYDBPcsyAwY7+z0Fp6CT4w9fqec9ta77upr5k
+         Pyug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=XxZxDJC1OGNPkdu6FTqfNdzC3MlEzliAiWbAbPd4MXM=;
-        b=KEMQ6+/NCvdAY7bETL77eAWI0MWwJRT7juz2RUnjetiUd7tS+nO7Z2F9gP6fGq/f0O
-         ieBmFk2tBh/sELBcbDhk0F9JPn7MjUtEoyL2mJR1oxqdWONLG2VZgGSLahNM7gJIRf8v
-         e9NtpO70svAwEQnUtaYFWRrJVlfOUcLTkejQRG2LsJ4mnKJAhJENnaLUsJG887VdnyPp
-         MMtgGS9TwjVBCCtOVADa3gxhzrP0DWzN0TpLWbbpKy0bJ68Xf8MxkXV85yQ3PH/U0rBd
-         fBIHHQYSXzpNVpQpp5fxj24uJXtlY9NZAHhf8N/ODNCfFL2OObL3QmCRXfN4rnk3gNmg
-         PqEQ==
-X-Gm-Message-State: APjAAAXt3cfPslilhHxhIFZZ8doquHP5GHJfBzMRPIPLYZ6+DNynmFYr
-        EloXC1k6yNLXKh2K6nwM0oU=
-X-Google-Smtp-Source: APXvYqxlwCXWyjj5tqumtCIL+ajfYqastA8LfFP767LQrHojK9u8LUnMf9/xImqEOIgtKqtDMbdlgw==
-X-Received: by 2002:a25:50c6:: with SMTP id e189mr4572624ybb.472.1578695705880;
-        Fri, 10 Jan 2020 14:35:05 -0800 (PST)
+        bh=EX9to2JgKDzoS0UYtuWj3O69P1cekZ+X0dJX6EOInOw=;
+        b=WN/ji1b8K8bSfflH15zGtLVODRKQcEX3/Nv+TpIimA6M2rRnO61tS1KK9CA6N4ipSY
+         UUmjrej6+uqIcRjqRrWXYlBSpKzFxBNaAKj/kQyTWJuEOposQymlC4Cvjn7wFCwP1EOe
+         4BARAG5TyQxzPTsygjXmSvQOIydpGpjNJWDto9jlBn4Ol/eK+Ssn5UdJ8h9grXfclSbF
+         3Kjf1yiHyRWEfX8/8T0dslsfmXdILSICrF7jdK6E10ZYSGuKKuQPjktGAtWCcgvi1q+y
+         632W6HvlEA7pOXU7y+ysYNDbnuKXnKgPY0NJiDJkkD7EBYKB64Vfrh5LFhY1EK4Hp86V
+         1cNw==
+X-Gm-Message-State: APjAAAUyGY9+FfRRgbRk3jzZXnBODirE5ozCWKWIf/R47orwjum0+5Py
+        Tk7F5C1zmObx5wn7PUkvdKw=
+X-Google-Smtp-Source: APXvYqy3MrI3rrWEnBqHikudN+nGfTibJFgf+yFf6z/Vw+RjYYk1HzclgTSnpPgBsEsOf7OW9KZa3g==
+X-Received: by 2002:a5b:782:: with SMTP id b2mr4130150ybq.25.1578695707274;
+        Fri, 10 Jan 2020 14:35:07 -0800 (PST)
 Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id e186sm1554060ywb.73.2020.01.10.14.35.04
+        by smtp.gmail.com with ESMTPSA id e186sm1554060ywb.73.2020.01.10.14.35.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 14:35:05 -0800 (PST)
+        Fri, 10 Jan 2020 14:35:06 -0800 (PST)
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 6/7] NFS: Decode multiple READ_PLUS segments
-Date:   Fri, 10 Jan 2020 17:34:54 -0500
-Message-Id: <20200110223455.528471-7-Anna.Schumaker@Netapp.com>
+Subject: [PATCH 7/7] NFS: Add a mount option for READ_PLUS
+Date:   Fri, 10 Jan 2020 17:34:55 -0500
+Message-Id: <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200110223455.528471-1-Anna.Schumaker@Netapp.com>
 References: <20200110223455.528471-1-Anna.Schumaker@Netapp.com>
@@ -63,118 +63,96 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-We now have everything we need to read holes and shift data to where
-it's supposed to be. I switch over to using xdr_align_data() to put data
-segments in the proper place.
+There are some workloads where READ_PLUS might end up hurting
+performance, so let's be nice to users and provide a way to disable this
+operation similar to how READDIR_PLUS can be disabled.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- fs/nfs/nfs42xdr.c | 43 +++++++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+ fs/nfs/fs_context.c       | 14 ++++++++++++++
+ fs/nfs/nfs4client.c       |  3 +++
+ include/linux/nfs_fs_sb.h |  1 +
+ 3 files changed, 18 insertions(+)
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 3407a3cf2e13..b5c638bcab66 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -53,7 +53,7 @@
- #define decode_read_plus_maxsz		(op_decode_hdr_maxsz + \
- 					 1 /* rpr_eof */ + \
- 					 1 /* rpr_contents count */ + \
--					 NFS42_READ_PLUS_SEGMENT_SIZE)
-+					 (2 * NFS42_READ_PLUS_SEGMENT_SIZE))
- #define encode_seek_maxsz		(op_encode_hdr_maxsz + \
- 					 encode_stateid_maxsz + \
- 					 2 /* offset */ + \
-@@ -745,7 +745,7 @@ static int decode_deallocate(struct xdr_stream *xdr, struct nfs42_falloc_res *re
- }
- 
- static uint32_t decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_res *res,
--				      uint32_t *eof)
-+				      uint32_t *eof, uint64_t total)
- {
- 	__be32 *p;
- 	uint32_t count, recvd;
-@@ -760,7 +760,7 @@ static uint32_t decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_re
- 	if (count == 0)
- 		return 0;
- 
--	recvd = xdr_read_pages(xdr, count);
-+	recvd = xdr_align_data(xdr, total, count);
- 	if (count > recvd) {
- 		dprintk("NFS: server cheating in read reply: "
- 				"count %u > recvd %u\n", count, recvd);
-@@ -772,7 +772,7 @@ static uint32_t decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_re
- }
- 
- static uint32_t decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_res *res,
--				      uint32_t *eof)
-+				     uint32_t *eof, uint64_t total)
- {
- 	__be32 *p;
- 	uint64_t offset, length;
-@@ -787,7 +787,7 @@ static uint32_t decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_re
- 	if (length == 0)
- 		return 0;
- 
--	recvd = xdr_expand_hole(xdr, 0, length);
-+	recvd = xdr_expand_hole(xdr, total, length);
- 	if (recvd < length) {
- 		*eof = 0;
- 		length = recvd;
-@@ -799,8 +799,9 @@ static uint32_t decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_re
- static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- {
- 	__be32 *p;
--	uint32_t count, eof, segments, type;
--	int status;
-+	uint32_t eof, segments, type, total;
-+	int32_t count;
-+	int status, i;
- 
- 	status = decode_op_hdr(xdr, OP_READ_PLUS);
- 	if (status)
-@@ -810,26 +811,28 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- 	if (unlikely(!p))
- 		return -EIO;
- 
-+	total = 0;
- 	eof = be32_to_cpup(p++);
- 	segments = be32_to_cpup(p++);
--	if (segments == 0)
--		return 0;
- 
--	p = xdr_inline_decode(xdr, 4);
--	if (unlikely(!p))
--		return -EIO;
-+	for (i = 0; i < segments; i++) {
-+		p = xdr_inline_decode(xdr, 4);
-+		if (unlikely(!p))
-+			return -EIO;
- 
--	type = be32_to_cpup(p++);
--	if (type == NFS4_CONTENT_DATA)
--		count = decode_read_plus_data(xdr, res, &eof);
--	else
--		count = decode_read_plus_hole(xdr, res, &eof);
-+		type = be32_to_cpup(p);
-+		if (type == NFS4_CONTENT_DATA)
-+			count = decode_read_plus_data(xdr, res, &eof, total);
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 0247dcb7b316..82ba07c7c1ce 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -64,6 +64,7 @@ enum nfs_param {
+ 	Opt_proto,
+ 	Opt_rdirplus,
+ 	Opt_rdma,
++	Opt_readplus,
+ 	Opt_resvport,
+ 	Opt_retrans,
+ 	Opt_retry,
+@@ -120,6 +121,7 @@ static const struct fs_parameter_spec nfs_param_specs[] = {
+ 	fsparam_string("proto",		Opt_proto),
+ 	fsparam_flag_no("rdirplus",	Opt_rdirplus),
+ 	fsparam_flag  ("rdma",		Opt_rdma),
++	fsparam_flag_no("readplus",	Opt_readplus),
+ 	fsparam_flag_no("resvport",	Opt_resvport),
+ 	fsparam_u32   ("retrans",	Opt_retrans),
+ 	fsparam_string("retry",		Opt_retry),
+@@ -555,6 +557,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		else
+ 			ctx->options |= NFS_OPTION_MIGRATION;
+ 		break;
++	case Opt_readplus:
++		if (result.negated)
++			ctx->options |= NFS_OPTION_NO_READ_PLUS;
 +		else
-+			count = decode_read_plus_hole(xdr, res, &eof, total);
++			ctx->options &= ~NFS_OPTION_NO_READ_PLUS;
++		break;
  
--	if (segments > 1)
--		eof = 0;
-+		if (count < 0)
-+			return count;
-+		total += count;
-+	}
+ 		/*
+ 		 * options that take numeric values
+@@ -1176,6 +1184,10 @@ static int nfs_fs_context_validate(struct fs_context *fc)
+ 	    (ctx->version != 4 || ctx->minorversion != 0))
+ 		goto out_migration_misuse;
  
- 	res->eof = eof;
--	res->count = count;
-+	res->count = total;
- 	return 0;
- }
++	if (ctx->options & NFS_OPTION_NO_READ_PLUS &&
++	    (ctx->version != 4 || ctx->minorversion < 2))
++		goto out_noreadplus_misuse;
++
+ 	/* Verify that any proto=/mountproto= options match the address
+ 	 * families in the addr=/mountaddr= options.
+ 	 */
+@@ -1254,6 +1266,8 @@ static int nfs_fs_context_validate(struct fs_context *fc)
+ 			  ctx->version, ctx->minorversion);
+ out_migration_misuse:
+ 	return nfs_invalf(fc, "NFS: 'Migration' not supported for this NFS version");
++out_noreadplus_misuse:
++	return nfs_invalf(fc, "NFS: 'noreadplus' not supported for this NFS version\n");
+ out_version_unavailable:
+ 	nfs_errorf(fc, "NFS: Version unavailable");
+ 	return ret;
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 0cd767e5c977..868dc3c36ba1 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -1016,6 +1016,9 @@ static int nfs4_server_common_setup(struct nfs_server *server,
+ 	server->caps |= server->nfs_client->cl_mvops->init_caps;
+ 	if (server->flags & NFS_MOUNT_NORDIRPLUS)
+ 			server->caps &= ~NFS_CAP_READDIRPLUS;
++	if (server->options & NFS_OPTION_NO_READ_PLUS)
++		server->caps &= ~NFS_CAP_READ_PLUS;
++
+ 	/*
+ 	 * Don't use NFS uid/gid mapping if we're using AUTH_SYS or lower
+ 	 * authentication.
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 11248c5a7b24..360e70c7bbb6 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -172,6 +172,7 @@ struct nfs_server {
+ 	unsigned int		clone_blksize;	/* granularity of a CLONE operation */
+ #define NFS_OPTION_FSCACHE	0x00000001	/* - local caching enabled */
+ #define NFS_OPTION_MIGRATION	0x00000002	/* - NFSv4 migration enabled */
++#define NFS_OPTION_NO_READ_PLUS	0x00000004	/* - NFSv4.2 READ_PLUS enabled */
  
+ 	struct nfs_fsid		fsid;
+ 	__u64			maxfilesize;	/* maximum file size */
 -- 
 2.24.1
 
