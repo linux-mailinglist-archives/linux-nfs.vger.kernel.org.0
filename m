@@ -2,179 +2,209 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F22D1379C9
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F14891379CC
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2020 23:41:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbgAJWfr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jan 2020 17:35:47 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37918 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbgAJWfq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:35:46 -0500
-Received: by mail-yb1-f196.google.com with SMTP id c13so1374799ybq.5
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2020 14:35:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=al9AW7PiGeGwKTiknMMI9dpHunApjGN++EYzlNVZUeo=;
-        b=ENlQHWr5oGDrIu3dG1XpZeKDB+CSEjb/PljFnWqbCFHYNdYyD55nNschtI+6Edztu4
-         XdcmruT+o0AU4fT+o9sBomlFdNFfL1xMZDaGVkuLJsySxQ4I43HB1SswNsiorWPL5tsa
-         EzwFWgsZCKWAdjDkR40wf18sz3ES0Gk9irGAhnWuyQroWjXbkSBwZbvjk8piKOoCWDuE
-         z6hDaVBy6RZmjdC0cmwLdSFWH7jFvin8v1HlvWwQqBxaS3s4q8ysLlaeUNUoMSKZEwp4
-         hUzO6pQIcD31zDxUUcjManG4o5VHDRAXcX5yXXIaXiGAmfLQTngw3hQBXWNgibtFMDhd
-         14rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=al9AW7PiGeGwKTiknMMI9dpHunApjGN++EYzlNVZUeo=;
-        b=ixkLq/iBNeL/BlghmsBeFco+uc0LY0+wQvEdy9nLWa06raBQ8brS6tmkHN1Oo8lPil
-         2+D9qwA013mJ+D52aKoQxVcM7+fyp+WEavGE66qCE/JN6S/RHIToh8HIsW7SCi2sKojt
-         RcrceMllOlAruql4xR6P7WY0wRDjc4jzM7vbu6eNNOdezO3FA8B3ts9dTB4foBmTgaE+
-         vgDbhOZImcF/eS0aVpYhnsGa9eZcSegxNcDbG/P2rH9eGXJhxcJ7DVaM1KqREPchVpMr
-         DSKHZ3sL8AwNNv7cATLvM2lCnxYSRu5tVTZt9haSFWa6//plOZ3Cg7xpH6CcSskUUcHu
-         kgqA==
-X-Gm-Message-State: APjAAAUajzZdmNyCGKVbr8c7HN7pPH9sK2ohxXkZzKfH9nNBHBMydJCe
-        R1LOprH4P7TBB1C7wcmltHs=
-X-Google-Smtp-Source: APXvYqzSKRZRIKQMbdQFn6woC4zwMMsWdE7h4uQaXcNJ5fiW7SHtZZBsNbwQCePX4xX/pJUmMfm5cw==
-X-Received: by 2002:a25:d4d6:: with SMTP id m205mr645326ybf.285.1578695745266;
-        Fri, 10 Jan 2020 14:35:45 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id h23sm1607735ywc.105.2020.01.10.14.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 14:35:44 -0800 (PST)
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     bfields@redhat.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 4/4] NFSD: Encode a full READ_PLUS reply
-Date:   Fri, 10 Jan 2020 17:35:38 -0500
-Message-Id: <20200110223538.528560-5-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200110223538.528560-1-Anna.Schumaker@Netapp.com>
-References: <20200110223538.528560-1-Anna.Schumaker@Netapp.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727361AbgAJWle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jan 2020 17:41:34 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46272 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbgAJWle (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jan 2020 17:41:34 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AMc8Dt066837;
+        Fri, 10 Jan 2020 22:41:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=6mjsn2IsZ7KxhmyGJzhUtGC5i1SK/hanT6H6jSBoQQg=;
+ b=MjoeQYtMj6+/RSiyTLwGg0Vk7mRfcmyjMiDA8018eOT1ekb/SIXr59a63tnr7+x1O+O6
+ 2n6yVr8V3AxjNzXRATAxpixhiJhg02W/+gkm/INCzz9OZ+HQvuyr1djtC+BC1nUEWz+y
+ 07IonXe+43lrmb/N1sClfGtJOF1bRlPq6GAgyTPx0kFr/PbnK5BB/fddce1dRl6oWcWx
+ jmkvMdRSrmZvcoWnvbzOI1wSD8Vnsq9j93iIBDHq7hTTder36MW0je2Qb1BBRjA6EKVh
+ 1LfxSzSAdUTEVTvt8y09JqM3KieqRs23VVFuVZ3YOckFcLKYtNjzWXsuovugQOp1MHhU Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnqmyr3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 22:41:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AMcsOx055738;
+        Fri, 10 Jan 2020 22:41:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xedj01jkd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 22:41:29 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00AMfQ70023604;
+        Fri, 10 Jan 2020 22:41:28 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 Jan 2020 14:41:25 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 7/7] NFS: Add a mount option for READ_PLUS
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
+Date:   Fri, 10 Jan 2020 17:41:24 -0500
+Cc:     Trond.Myklebust@hammerspace.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <41391995-F61E-4CA4-80C5-542A8B2A3947@oracle.com>
+References: <20200110223455.528471-1-Anna.Schumaker@Netapp.com>
+ <20200110223455.528471-8-Anna.Schumaker@Netapp.com>
+To:     Anna Schumaker <schumaker.anna@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001100188
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001100188
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Hi Anna-
 
-Reply to the client with multiple hole and data segments. This might
-have performance issues due to the number of calls to vfs_llseek(),
-depending on the underlying filesystem used on the server.
+> On Jan 10, 2020, at 5:34 PM, schumaker.anna@gmail.com wrote:
+>=20
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>=20
+> There are some workloads where READ_PLUS might end up hurting
+> performance,
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfsd/nfs4xdr.c | 41 +++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+Can you say more about this? Have you seen workloads that are
+hurt by READ_PLUS? Nothing jumps out at me from the tables in
+the cover letter.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 552972b35547..c63846729d0b 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4270,14 +4270,18 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
- 
- static __be32
- nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
--			    struct nfsd4_read *read,
--			    unsigned long maxcount,  u32 *eof)
-+			    struct nfsd4_read *read, u32 *eof)
- {
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct file *file = read->rd_nf->nf_file;
-+	unsigned long maxcount = read->rd_length;
-+	loff_t hole_pos = vfs_llseek(file, read->rd_offset, SEEK_HOLE);
- 	__be32 nfserr;
- 	__be32 *p;
- 
-+	if (hole_pos > read->rd_offset)
-+		maxcount = min_t(unsigned long, maxcount, hole_pos - read->rd_offset);
-+
- 	/* Content type, offset, byte count */
- 	p = xdr_reserve_space(xdr, 4 + 8 + 4);
- 	if (!p)
-@@ -4289,6 +4293,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, &maxcount, eof);
- 	else
- 		nfserr = nfsd4_encode_readv(resp, read, file, &maxcount, eof);
-+	clear_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
- 
- 	if (nfserr)
- 		return nfserr;
-@@ -4303,18 +4308,24 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- }
- 
- static __be32
--nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp, struct nfsd4_read *read,
--			    unsigned long maxcount, u32 *eof)
-+nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
-+			    struct nfsd4_read *read, u32 *eof, loff_t data_pos)
- {
- 	struct file *file = read->rd_nf->nf_file;
-+	unsigned long maxcount = read->rd_length;
- 	__be32 *p;
- 
-+	if (data_pos == 0)
-+		data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
-+	if (data_pos == -ENXIO)
-+		data_pos = i_size_read(file_inode(file));
-+
- 	/* Content type, offset, byte count */
- 	p = xdr_reserve_space(&resp->xdr, 4 + 8 + 8);
- 	if (!p)
- 		return nfserr_resource;
- 
--	maxcount = min_t(unsigned long, maxcount, read->rd_length);
-+	maxcount = min_t(unsigned long, maxcount, data_pos - read->rd_offset);
- 
- 	*p++ = cpu_to_be32(NFS4_CONTENT_HOLE);
- 	 p   = xdr_encode_hyper(p, read->rd_offset);
-@@ -4338,6 +4349,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	int starting_len = xdr->buf->len;
- 	unsigned int segments = 0;
- 	loff_t data_pos;
-+	bool is_data;
- 	__be32 *p;
- 
- 	if (nfserr)
-@@ -4361,21 +4373,26 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	maxcount = min_t(unsigned long, maxcount,
- 			 (xdr->buf->buflen - xdr->buf->len));
- 	maxcount = min_t(unsigned long, maxcount, read->rd_length);
-+	read->rd_length = maxcount;
- 
- 	data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
- 	if (data_pos == -ENXIO)
- 		data_pos = i_size_read(file_inode(file));
- 	else if (data_pos < 0)
- 		data_pos = read->rd_offset;
-+	is_data = (data_pos == read->rd_offset);
-+	eof = read->rd_offset > i_size_read(file_inode(file));
- 
--	if (data_pos > read->rd_offset) {
--		nfserr = nfsd4_encode_read_plus_hole(resp, read,
--						     data_pos - read->rd_offset, &eof);
--		segments++;
--	}
-+	while (read->rd_length > 0 && !eof) {
-+		if (is_data)
-+			nfserr = nfsd4_encode_read_plus_data(resp, read, &eof);
-+		else
-+			nfserr = nfsd4_encode_read_plus_hole(resp, read, &eof, data_pos);
- 
--	if (!nfserr && !eof && read->rd_length > 0) {
--		nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
-+		if (nfserr)
-+			break;
-+		is_data = !is_data;
-+		data_pos = 0;
- 		segments++;
- 	}
- 
--- 
-2.24.1
+
+> so let's be nice to users and provide a way to disable this
+> operation similar to how READDIR_PLUS can be disabled.
+
+Does it make sense to hold off on a mount option until there
+is evidence that there is no other way to work around such a
+performance regression?
+
+- Attempt to address the regression directly
+- Improve the heuristics about when READ_PLUS is used
+- Document that dropping back to vers=3D4.1 will disable it
+
+Any experience with NFS/RDMA?
+
+
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> ---
+> fs/nfs/fs_context.c       | 14 ++++++++++++++
+> fs/nfs/nfs4client.c       |  3 +++
+> include/linux/nfs_fs_sb.h |  1 +
+> 3 files changed, 18 insertions(+)
+>=20
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 0247dcb7b316..82ba07c7c1ce 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -64,6 +64,7 @@ enum nfs_param {
+> 	Opt_proto,
+> 	Opt_rdirplus,
+> 	Opt_rdma,
+> +	Opt_readplus,
+> 	Opt_resvport,
+> 	Opt_retrans,
+> 	Opt_retry,
+> @@ -120,6 +121,7 @@ static const struct fs_parameter_spec =
+nfs_param_specs[] =3D {
+> 	fsparam_string("proto",		Opt_proto),
+> 	fsparam_flag_no("rdirplus",	Opt_rdirplus),
+> 	fsparam_flag  ("rdma",		Opt_rdma),
+> +	fsparam_flag_no("readplus",	Opt_readplus),
+> 	fsparam_flag_no("resvport",	Opt_resvport),
+> 	fsparam_u32   ("retrans",	Opt_retrans),
+> 	fsparam_string("retry",		Opt_retry),
+> @@ -555,6 +557,12 @@ static int nfs_fs_context_parse_param(struct =
+fs_context *fc,
+> 		else
+> 			ctx->options |=3D NFS_OPTION_MIGRATION;
+> 		break;
+> +	case Opt_readplus:
+> +		if (result.negated)
+> +			ctx->options |=3D NFS_OPTION_NO_READ_PLUS;
+> +		else
+> +			ctx->options &=3D ~NFS_OPTION_NO_READ_PLUS;
+> +		break;
+>=20
+> 		/*
+> 		 * options that take numeric values
+> @@ -1176,6 +1184,10 @@ static int nfs_fs_context_validate(struct =
+fs_context *fc)
+> 	    (ctx->version !=3D 4 || ctx->minorversion !=3D 0))
+> 		goto out_migration_misuse;
+>=20
+> +	if (ctx->options & NFS_OPTION_NO_READ_PLUS &&
+> +	    (ctx->version !=3D 4 || ctx->minorversion < 2))
+> +		goto out_noreadplus_misuse;
+> +
+> 	/* Verify that any proto=3D/mountproto=3D options match the =
+address
+> 	 * families in the addr=3D/mountaddr=3D options.
+> 	 */
+> @@ -1254,6 +1266,8 @@ static int nfs_fs_context_validate(struct =
+fs_context *fc)
+> 			  ctx->version, ctx->minorversion);
+> out_migration_misuse:
+> 	return nfs_invalf(fc, "NFS: 'Migration' not supported for this =
+NFS version");
+> +out_noreadplus_misuse:
+> +	return nfs_invalf(fc, "NFS: 'noreadplus' not supported for this =
+NFS version\n");
+> out_version_unavailable:
+> 	nfs_errorf(fc, "NFS: Version unavailable");
+> 	return ret;
+> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+> index 0cd767e5c977..868dc3c36ba1 100644
+> --- a/fs/nfs/nfs4client.c
+> +++ b/fs/nfs/nfs4client.c
+> @@ -1016,6 +1016,9 @@ static int nfs4_server_common_setup(struct =
+nfs_server *server,
+> 	server->caps |=3D server->nfs_client->cl_mvops->init_caps;
+> 	if (server->flags & NFS_MOUNT_NORDIRPLUS)
+> 			server->caps &=3D ~NFS_CAP_READDIRPLUS;
+> +	if (server->options & NFS_OPTION_NO_READ_PLUS)
+> +		server->caps &=3D ~NFS_CAP_READ_PLUS;
+> +
+> 	/*
+> 	 * Don't use NFS uid/gid mapping if we're using AUTH_SYS or =
+lower
+> 	 * authentication.
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index 11248c5a7b24..360e70c7bbb6 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -172,6 +172,7 @@ struct nfs_server {
+> 	unsigned int		clone_blksize;	/* granularity of a =
+CLONE operation */
+> #define NFS_OPTION_FSCACHE	0x00000001	/* - local caching =
+enabled */
+> #define NFS_OPTION_MIGRATION	0x00000002	/* - NFSv4 migration =
+enabled */
+> +#define NFS_OPTION_NO_READ_PLUS	0x00000004	/* - NFSv4.2 =
+READ_PLUS enabled */
+>=20
+> 	struct nfs_fsid		fsid;
+> 	__u64			maxfilesize;	/* maximum file size */
+> --=20
+> 2.24.1
+>=20
+
+--
+Chuck Lever
+
+
 
