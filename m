@@ -2,189 +2,233 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3957F1396BF
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 17:49:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5795413985B
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 19:09:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgAMQtp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jan 2020 11:49:45 -0500
-Received: from mail-eopbgr690128.outbound.protection.outlook.com ([40.107.69.128]:21766
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726567AbgAMQto (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:49:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZwR1jcZ+6FvW2wsLu6JnVzfccORr1gSsKdoG85/QDffjlnQV5DUtCVFkP5wVmOEoEfRBADYp0LI3WJ8jWqzhR93cBe63ROXEYgag+3s1lNsl40i+m97G2mttmY11vkpClQsybols8P/bzrI5WAzQ8wlCOwYPwPz8wc1wJBiNA1HcHxPXrVi/Y626cO1KZVyZVwE+cIXAHwS6/ESrGxg4p9RvUots48BvEyOXubVcCDzihulaVnmV0DLKp685yBjYFcXE7gNEmxfX4sJTBqe6+SciyO9eGnCzBqAX4sc81WpMiQPCQywXK+7A3FCmNpORfmhUDPZfyfUu/DHgeHl2Vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HCEFFeBZEbzwj5ZoWCSbjiExrviVdW+SQvkbDhcoEVo=;
- b=NwK1Tw2qTqznTgXPcqXBggEmPmLaqkNUlHCQcQSuysNGqA+KLXw8LPO+vGAv7/VTafJCNmlzkndcpG0WKxPqkJ/Pj+Ut5/1FRgeDtH4a7RqcM2jeKDRGYJxItE3UlO5jgutteY380s0oHmVHMHj8V2m8otGnS3WrbeZc6fQF7lXVp6AMGzSRIEbma5Hdr4kBwpRh/gYFsbvfCICm2QrXeZOWt99CeTPE+qdLwXCXxLOZ2xtxImwMSRbAQRtcCdrz74RC/m0U6rl4xP8EBIHFc3Qv5+G0vek/6j4npvE0Sw/gFq4/omRCtSy8D85h8EZ7xTVR7Afcsro2poNwF1TPhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HCEFFeBZEbzwj5ZoWCSbjiExrviVdW+SQvkbDhcoEVo=;
- b=RwXY+Oe+BI/ExLCOnaS7iF+ihTqYFbGFdZVgvqacsTs4GPYHslV50GjKow4iAWKEY5ea+2fElURm8NRv9601AQGSt6s2XuYhwkEtU8lJ4ONsXPi9FVgLQzTfe1kro5Wpe7dEnC1LHrH37RERSfrSnzkV7VQpaQOgxQQyJejA6i0=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1931.namprd13.prod.outlook.com (10.174.184.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.12; Mon, 13 Jan 2020 16:49:28 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
- 16:49:28 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: interrupted rpcs problem
-Thread-Topic: interrupted rpcs problem
-Thread-Index: AQHVx+xAF9geEgvaYEKYoTth6kuH4qfkYv+AgARkqICAAAtUAA==
-Date:   Mon, 13 Jan 2020 16:49:28 +0000
-Message-ID: <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
-References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
-         <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
-         <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com>
-In-Reply-To: <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a448528d-f9f9-478b-1a64-08d798488dfc
-x-ms-traffictypediagnostic: DM5PR1301MB1931:
-x-microsoft-antispam-prvs: <DM5PR1301MB19312738FBEEA2F1E6C2686FB8350@DM5PR1301MB1931.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(346002)(396003)(39830400003)(189003)(199004)(6486002)(3480700007)(71200400001)(186003)(2906002)(53546011)(2616005)(8676002)(8936002)(7116003)(81156014)(6506007)(81166006)(66946007)(6916009)(66476007)(76116006)(316002)(64756008)(36756003)(86362001)(478600001)(4326008)(26005)(66556008)(5660300002)(6512007)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1931;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wCy8Y+GOAVyNX5RBnnNeTYVUjMoOAp0TgrjpyohGejQUjkexKgQj8Za43cUn4FFQ683XVFjKhniDOlsA/q5qNBcZJOphub+dIpgOY3tUIazqfvUSggMJivlVvq17dBlgLIc8fn1/jQ8G9TVKLFlblW2jPxPqscM5WMFEmAB59Lz6X8/RFv1BIcNuphmwlhUjW+wc0xikubY8kamolGIiUHRY1AxjK6cVDYlj37ZeBxMxe+HlGuD0yGOZEofBlKFbLGx7gmGe0+BLdcnNzhCfl39XLK/X/y0EM5jh41Sl8ciR/yJu+QUD+aWGxvsntw4ACaYtw9tyMW91/zXJ4GAr8q8nsKneBL8H5u7sNmVum5cfrP7oBKdw/rRg2bvDQac1nmDAz/3FF6X5idtONYyVW16kbpaCKKVvy9TT8P7a4OXq7761VmVUD1RLT+FmAUg5
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3EDE1B443737B745B5E18D8249ADD5F6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1728516AbgAMSJc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jan 2020 13:09:32 -0500
+Received: from mail-vs1-f42.google.com ([209.85.217.42]:37446 "EHLO
+        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMSJc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jan 2020 13:09:32 -0500
+Received: by mail-vs1-f42.google.com with SMTP id x18so6456488vsq.4
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2020 10:09:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k+DnO7FHdgL41dXw11V94X4BHeNEoH2NPIF/v83MFuo=;
+        b=lGzg5AqFWCbwjLON9nYU84f2a82B4H6DppAomwjRxL+YuFRhj+/L4/S5o76hOzL/MN
+         qXxNHxTbLlPp5n6GllO8AcXNXEZO3Pjq70LxwEWuhgj9kcR7CdQCiaLK49cYYNbYn27Z
+         c4ByYxsIhse5tVHA7Id1+Ph7D3ZCNMQ6LpozkxbSa2xxWeJGY5oF0IKEKbankib60a8I
+         xovP7NfiGOXLLwabw6YFozO4VHXWB3WDeJ9CX3rEZ93nqb0vPVY0FIcMQYehv1djBuLX
+         5kHNccHzJc6DY4geoxa+0xw0L8/TfpZ4G8qnGqhEB2d+MSKZ0giVtuvjtDHOrT73xiOC
+         R9xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k+DnO7FHdgL41dXw11V94X4BHeNEoH2NPIF/v83MFuo=;
+        b=idqGH+XLbn/QdGqI5rEN48U1hxnkIEWec3JyNl9B7d83xdT2L+K4W7447jvDTj8QJ4
+         jXU8I+Y9Dhr72+FfjftqJZpf9QmQhTFKXw/IhIKDsSQIoU77jw51Ig/oJc/uT13Ex5cU
+         FaTCN5I95zRKPbhPdNv1IglOaVG21LUEUztb74L2WPaCU/+7XxLBW+j06foo0gqtdE0E
+         ZOJiO7/s5E2Iuh/sSOsjWQn6QPsF0744TCxu6RE3aptZRotC9UPKcvB8X3ioV8oygGx6
+         QVDSrqVdHYcvVodyE/O5HtI6/6wXWNGI/xpN8cufoPxxgQA4lWlNkmCbc03G8CP1r9ZD
+         Fsww==
+X-Gm-Message-State: APjAAAWj9w9Wz9sN75s4Va4qxPYczJidwdjgX+BDVnIzyOW8bJQPYSwP
+        7VuvytkYNadAy8AsWGEJamm5+GzwMl0BC+hNAPGIEg==
+X-Google-Smtp-Source: APXvYqx90ZBtgcUe5IQdLjlAoRcqa1EZNKKNO4/OZkmr3foztck3bP4rnhtcUlNRg/FvNplVT0dqd2B3fGy8v3+nB9M=
+X-Received: by 2002:a67:f81a:: with SMTP id l26mr6998099vso.194.1578938970100;
+ Mon, 13 Jan 2020 10:09:30 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a448528d-f9f9-478b-1a64-08d798488dfc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 16:49:28.2401
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yEivPQEb7i7z8uLqbK718Kf+Yud+I+iaXZYnLIydB0bBPYCAdKodGGS3orxdengbt/XoZE2hvNSMaULtuPsIdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1931
+References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
+ <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
+ <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com> <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
+In-Reply-To: <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 13 Jan 2020 13:09:19 -0500
+Message-ID: <CAN-5tyHdaKhUiBJW_+waSG6mXqW4nsaLY9uKugen4=haYLcR4w@mail.gmail.com>
+Subject: Re: interrupted rpcs problem
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTEzIGF0IDExOjA4IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gT24gRnJpLCBKYW4gMTAsIDIwMjAgYXQgNDowMyBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
-PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gRnJpLCAyMDIwLTAxLTEw
-IGF0IDE0OjI5IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IEhpIGZvbGtz
-LA0KPiA+ID4gDQo+ID4gPiBXZSBhcmUgaGF2aW5nIGFuIGlzc3VlIHdpdGggYW4gaW50ZXJydXB0
-ZWQgUlBDcyBhZ2Fpbi4gSGVyZSdzDQo+ID4gPiB3aGF0IEkNCj4gPiA+IHNlZSB3aGVuIHhmc3Rl
-c3RzIHdlcmUgY3RybC1jLWVkLg0KPiA+ID4gDQo+ID4gPiBmcmFtZSAzMzIgU0VUQVRUUiBjYWxs
-IHNsb3Q9MCBzZXFpZD0weDAwMDAxM2NhIChJJ20gYXNzdW1pbmcgdGhpcw0KPiA+ID4gaXMNCj4g
-PiA+IGludGVycnVwdGVkIGFuZCByZWxlYXNlZCkNCj4gPiA+IGZyYW1lIDMzMyBDTE9TRSBjYWxs
-IHNsb3Q9MCBzZXFpZD0weDAwMDAxM2NiICAob25seSB3YXkgdGhlIHNsb3QNCj4gPiA+IGNvdWxk
-DQo+ID4gPiBiZSBmcmVlIGJlZm9yZSB0aGUgcmVwbHkgaWYgaXQgd2FzIGludGVycnVwdGVkLCBy
-aWdodD8gT3RoZXJ3aXNlDQo+ID4gPiB3ZQ0KPiA+ID4gc2hvdWxkIG5ldmVyIGhhdmUgdGhlIHNs
-b3QgdXNlZCBieSBtb3JlIHRoYW4gb25lIG91dHN0YW5kaW5nIFJQQykNCj4gPiA+IGZyYW1lIDMz
-NCByZXBseSB0byAzMzMgd2l0aCBTRVFfTUlTX09SREVSRUQgKEknbSBhc3N1bWluZyBzZXJ2ZXIN
-Cj4gPiA+IHJlY2VpdmVkIGZyYW1lIDMzMyBiZWZvcmUgMzMyKQ0KPiA+ID4gZnJhbWUgMzM2IENM
-T1NFIGNhbGwgc2xvdD0wIHNlcWlkPTB4MDAwMDEzY2EgKD8/PyB3aHkgZGlkIHdlDQo+ID4gPiBk
-ZWNyZW1lbnRlZCBpdC4gSSBtZWFuIEkga25vdyB3aHkgaXQncyBpbiB0aGUgY3VycmVudCBjb2Rl
-IDotLyApDQo+ID4gPiBmcmFtZSAzMzcgcmVwbHkgdG8gMzM2IFNFUVVFTkNFIHdpdGggRVJSX0RF
-TEFZDQo+ID4gPiBmcmFtZSAzMzkgcmVwbHkgdG8gMzMyIFNFVEFUVFIgd2hpY2ggbm9ib2R5IGlz
-IHdhaXRpbmcgZm9yDQo+ID4gPiBmcmFtZSA1NDMgQ0xPU0UgY2FsbCBzbG90PTAgc2VxaWQ9MHgw
-MDAwMTNjYSAocmV0cnkgYWZ0ZXIgd2FpdGluZw0KPiA+ID4gZm9yDQo+ID4gPiBlcnJfZGVsYXkp
-DQo+ID4gPiBmcmFtZSA1NDQgcmVwbHkgdG8gNTQzIHdpdGggU0VUQVRUUiAob3V0IG9mIHRoZSBj
-YWNoZSkuDQo+ID4gPiANCj4gPiA+IFdoYXQgdGhpcyBsZWFkcyB0byBpczogZmlsZSBpcyBuZXZl
-ciBjbG9zZWQgb24gdGhlIHNlcnZlci4gQ2FuJ3QNCj4gPiA+IHJlbW92ZSBpdC4gVW5tb3VudCBm
-YWlscyB3aXRoIENMSURfQlVTWS4NCj4gPiA+IA0KPiA+ID4gSSBiZWxpZXZlIHRoYXQncyB0aGUg
-cmVzdWx0IG9mIGNvbW1pdA0KPiA+ID4gMzQ1M2Q1NzA4YjMzZWZlNzZmNDBlY2ExYzBlZDYwOTIz
-MDk0Yjk3MS4NCj4gPiA+IFdlIHVzZWQgdG8gaGF2ZSBjb2RlIHRoYXQgYnVtcGVkIHRoZSBzZXF1
-ZW5jZSB1cCB3aGVuIHRoZSBzbG90DQo+ID4gPiB3YXMNCj4gPiA+IGludGVycnVwdGVkIGJ1dCBh
-ZnRlciB0aGUgY29tbWl0ICJORlN2NC4xOiBBdm9pZCBmYWxzZSByZXRyaWVzDQo+ID4gPiB3aGVu
-DQo+ID4gPiBSUEMgY2FsbHMgYXJlIGludGVycnVwdGVkIi4NCj4gPiA+IA0KPiA+ID4gQ29tbWl0
-IGhhcyB0aGlzICJUaGUgb2J2aW91cyBmaXggaXMgdG8gYnVtcCB0aGUgc2VxdWVuY2UgbnVtYmVy
-DQo+ID4gPiBwcmUtZW1wdGl2ZWx5IGlmIGFuDQo+ID4gPiAgICAgUlBDIGNhbGwgaXMgaW50ZXJy
-dXB0ZWQsIGJ1dCBpbiBvcmRlciB0byBkZWFsIHdpdGggdGhlIGNvcm5lcg0KPiA+ID4gY2FzZXMN
-Cj4gPiA+ICAgICB3aGVyZSB0aGUgaW50ZXJydXB0ZWQgY2FsbCBpcyBub3QgYWN0dWFsbHkgcmVj
-ZWl2ZWQgYW5kDQo+ID4gPiBwcm9jZXNzZWQNCj4gPiA+IGJ5DQo+ID4gPiAgICAgdGhlIHNlcnZl
-ciwgd2UgbmVlZCB0byBpbnRlcnByZXQgdGhlIGVycm9yDQo+ID4gPiBORlM0RVJSX1NFUV9NSVNP
-UkRFUkVEDQo+ID4gPiAgICAgYXMgYSBzaWduIHRoYXQgd2UgbmVlZCB0byBlaXRoZXIgd2FpdCBv
-ciBsb2NhdGUgYSBjb3JyZWN0DQo+ID4gPiBzZXF1ZW5jZQ0KPiA+ID4gICAgIG51bWJlciB0aGF0
-IGxpZXMgYmV0d2VlbiB0aGUgdmFsdWUgd2Ugc2VudCwgYW5kIHRoZSBsYXN0DQo+ID4gPiB2YWx1
-ZQ0KPiA+ID4gdGhhdA0KPiA+ID4gICAgIHdhcyBhY2tlZCBieSBhIFNFUVVFTkNFIGNhbGwgb24g
-dGhhdCBzbG90LiINCj4gPiA+IA0KPiA+ID4gSWYgd2UgY2FuJ3Qgbm8gbG9uZ2VyIGp1c3QgYnVt
-cCB0aGUgc2VxdWVuY2UgdXAsIEkgZG9uJ3QgdGhpbmsNCj4gPiA+IHRoZQ0KPiA+ID4gY29ycmVj
-dCBhY3Rpb24gaXMgdG8gYXV0b21hdGljYWxseSBidW1wIGl0IGRvd24gKGFzIHBlciBleGFtcGxl
-DQo+ID4gPiBoZXJlKT8NCj4gPiA+IFRoZSBjb21taXQgZG9lc24ndCBkZXNjcmliZSB0aGUgY29y
-bmVyIGNhc2Ugd2hlcmUgaXQgd2FzDQo+ID4gPiBuZWNlc3NhcnkgdG8NCj4gPiA+IGJ1bXAgdGhl
-IHNlcXVlbmNlIHVwLiBJIHdvbmRlciBpZiB3ZSBjYW4gcmV0dXJuIHRoZSBrbm93bGVkZ2Ugb2YN
-Cj4gPiA+IHRoZQ0KPiA+ID4gaW50ZXJydXB0ZWQgc2xvdCBhbmQgbWFrZSBhIGRlY2lzaW9uIGJh
-c2VkIG9uIHRoYXQgYXMgd2VsbCBhcw0KPiA+ID4gd2hhdGV2ZXINCj4gPiA+IHRoZSBvdGhlciBj
-b3JuZXIgY2FzZSBpcy4NCj4gPiA+IA0KPiA+ID4gSSBndWVzcyB3aGF0IEknbSBnZXR0aW5nIGlz
-LCBjYW4gc29tZWJvZHkgKFRyb25kKSBwcm92aWRlIHRoZQ0KPiA+ID4gaW5mbw0KPiA+ID4gZm9y
-DQo+ID4gPiB0aGUgY29ybmVyIGNhc2UgZm9yIHRoaXMgdGhhdCBwYXRjaCB3YXMgY3JlYXRlZC4g
-SSBjYW4gc2VlIGlmIEkNCj4gPiA+IGNhbg0KPiA+ID4gZml4IHRoZSAiY29tbW9uIiBjYXNlIHdo
-aWNoIGlzIG5vdyBicm9rZW4gYW5kIG5vdCBicmVhayB0aGUNCj4gPiA+IGNvcm5lcg0KPiA+ID4g
-Y2FzZS4uLi4NCj4gPiA+IA0KPiA+IA0KPiA+IFRoZXJlIGlzIG5vIHB1cmUgY2xpZW50IHNpZGUg
-c29sdXRpb24gZm9yIHRoaXMgcHJvYmxlbS4NCj4gPiANCj4gPiBUaGUgY2hhbmdlIHdhcyBtYWRl
-IGJlY2F1c2UgaWYgeW91IGhhdmUgbXVsdGlwbGUgaW50ZXJydXB0aW9ucyBvZg0KPiA+IHRoZQ0K
-PiA+IFJQQyBjYWxsLCB0aGVuIHRoZSBjbGllbnQgaGFzIHRvIHNvbWVob3cgZmlndXJlIG91dCB3
-aGF0IHRoZQ0KPiA+IGNvcnJlY3QNCj4gPiBzbG90IG51bWJlciBpcy4gSWYgaXQgc3RhcnRzIGxv
-dywgYW5kIHRoZW4gZ29lcyBoaWdoLCBhbmQgdGhlDQo+ID4gc2VydmVyIGlzDQo+ID4gbm90IGNh
-Y2hpbmcgdGhlIGFyZ3VtZW50cyBmb3IgdGhlIFJQQyBjYWxsIHRoYXQgaXMgaW4gdGhlIHNlc3Np
-b24NCj4gPiBjYWNoZSwgdGhlbiB3ZSB3aWxsIF9hbHdheXNfIGhpdCB0aGlzIGJ1ZyBiZWNhdXNl
-IHdlIHdpbGwgYWx3YXlzDQo+ID4gaGl0DQo+ID4gdGhlIHJlcGxheSBvZiB0aGUgbGFzdCBlbnRy
-eS4NCj4gPiANCj4gPiBBdCBsZWFzdCBpZiB3ZSBzdGFydCBoaWdoLCBhbmQgaXRlcmF0ZSBieSBs
-b3csIHRoZW4gd2UgcmVkdWNlIHRoZQ0KPiA+IHByb2JsZW0gdG8gYmVpbmcgYSByYWNlIHdpdGgg
-dGhlIHByb2Nlc3Npbmcgb2YgdGhlIGludGVycnVwdGVkDQo+ID4gcmVxdWVzdA0KPiA+IGFzIGl0
-IGlzIGluIHRoaXMgY2FzZS4NCj4gPiANCj4gPiBIb3dldmVyLCBhcyBJIHNhaWQsIHRoZSByZWFs
-IHNvbHV0aW9uIGhlcmUgaGFzIHRvIGludm9sdmUgdGhlDQo+ID4gc2VydmVyLg0KPiANCj4gT2sg
-SSBzZWUgeW91ciBwb2ludCB0aGF0IGlmIHRoZSBzZXJ2ZXIgY2FjaGVkIHRoZSBhcmd1bWVudHMs
-IHRoZW4gdGhlDQo+IHNlcnZlciB3b3VsZCB0ZWxsIHRoYXQgMm5kIHJwYyB1c2luZyB0aGUgc2Ft
-ZSBzbG90K3NlcWlkIGhhcw0KPiBkaWZmZXJlbnQNCj4gYXJncyBhbmQgd291bGQgbm90IHVzZSB0
-aGUgcmVwbGF5IGNhY2hlLg0KPiANCj4gSG93ZXZlciwgSSB3b25kZXIgaWYgdGhlIGNsaWVudCBj
-YW4gZG8gYmV0dGVyLiBDYW4ndCB3ZSBiZSBtb3JlIGF3YXJlDQo+IG9mIHdoZW4gd2UgYXJlIGlu
-dGVycnVwdGluZyB0aGUgcnBjPyBGb3IgaW5zdGFuY2UsIGlmIHdlIGFyZQ0KPiBpbnRlcnJ1cHRl
-ZCBhZnRlciB3ZSBzdGFydGVkIHRvIHdhaXQgb24gdGhlIFJQQywgZG9lc24ndCBpdCBtZWFuIHRo
-ZQ0KPiBycGMgaXMgc2VudCBvbiB0aGUgbmV0d29yayBhbmQgc2luY2UgbmV0d29yayBpcyByZWxp
-YWJsZSB0aGVuIHNlcnZlcg0KPiBtdXN0IGhhdmUgY29uc3VtZWQgdGhlIHNlcWlkIGZvciB0aGF0
-IHNsb3QgKGluIHRoaXMgY2FzZSBpbmNyZW1lbnQNCj4gc2VxaWQpPyBUaGF0J3MgdGhlIGNhc2Ug
-dGhhdCdzIGZhaWxpbmcgbm93Lg0KPiANCg0KIlJlbGlhYmxlIHRyYW5zcG9ydCIgZG9lcyBub3Qg
-bWVhbiB0aGF0IGEgY2xpZW50IGtub3dzIHdoYXQgZ290DQpyZWNlaXZlZCBhbmQgcHJvY2Vzc2Vk
-IGJ5IHRoZSBzZXJ2ZXIgYW5kIHdoYXQgZGlkbid0LiBBbGwgdGhlIGNsaWVudA0Ka25vd3MgaXMg
-dGhhdCBpZiB0aGUgY29ubmVjdGlvbiBpcyBzdGlsbCB1cCwgdGhlbiB0aGUgVENQIGxheWVyIHdp
-bGwNCmtlZXAgcmV0cnlpbmcgdHJhbnNtaXNzaW9uIG9mIHRoZSByZXF1ZXN0LiBUaGVyZSBhcmUg
-cGxlbnR5IG9mIGVycm9yDQpzY2VuYXJpb3Mgd2hlcmUgdGhlIGNsaWVudCBnZXRzIG5vIGluZm9y
-bWF0aW9uIGJhY2sgYXMgdG8gd2hldGhlciBvcg0Kbm90IHRoZSBkYXRhIHdhcyByZWNlaXZlZCBi
-eSB0aGUgc2VydmVyIChlLmcuIGR1ZSB0byBsb3N0IEFDS3MpLg0KDQpGdXJ0aGVybW9yZSwgaWYg
-YSBSUEMgY2FsbCBpcyBpbnRlcnJ1cHRlZCBvbiB0aGUgY2xpZW50LCBlaXRoZXIgZHVlIHRvDQph
-IHRpbWVvdXQgb3IgYSBzaWduYWwsIHRoZW4gaXQgYWxtb3N0IGFsd2F5cyBlbmRzIHVwIGJyZWFr
-aW5nIHRoZQ0KY29ubmVjdGlvbiBpbiBvcmRlciB0byBhdm9pZCBjb3JydXB0aW9uIG9mIHRoZSBk
-YXRhIHN0cmVhbSAoYnkNCmludGVycnVwdGluZyB0aGUgdHJhbnNtaXNzaW9uIGJlZm9yZSB0aGUg
-ZW50aXJlIFJQQyBjYWxsIGhhcyBiZWVuDQpzZW50KS4gWW91IGdlbmVyYWxseSBoYXZlIHRvIGJl
-IGx1Y2t5IHRvIHNlZSB0aGUgdGltZW91dC9zaWduYWwgb2NjdXINCm9ubHkgd2hlbiBhbGwgdGhl
-IFJQQyBjYWxscyBiZWluZyBjYW5jZWxsZWQgaGF2ZSBleGFjdGx5IGZpdCBpbnRvIHRoZQ0Kc29j
-a2V0IGJ1ZmZlci4NCg0KRmluYWxseSwganVzdCBiZWNhdXNlIHRoZSBzZXJ2ZXIncyBUQ1AgbGF5
-ZXIgQUNLZWQgcmVjZWlwdCBvZiB0aGUgUlBDDQpjYWxsIGRhdGEsIHRoYXQgZG9lcyBub3QgbWVh
-biB0aGF0IGl0IHdpbGwgcHJvY2VzcyB0aGF0IGNhbGwuIFRoZQ0KY29ubmVjdGlvbiBjb3VsZCBi
-cmVhayBiZWZvcmUgdGhlIGNhbGwgaXMgcmVhZCBvdXQgb2YgdGhlIHJlY2VpdmluZw0Kc29ja2V0
-LCBvciB0aGUgc2VydmVyIG1heSBsYXRlciBkZWNpZGUgdG8gZHJvcCBpdCBvbiB0aGUgZmxvb3Ig
-YW5kDQpicmVhayB0aGUgY29ubmVjdGlvbi4NCg0KSU9XOiB0aGUgUlBDIHByb3RvY29sIGhlcmUg
-aXMgbm90IHRoYXQgInJlbGlhYmxlIHRyYW5zcG9ydCBpbXBsaWVzDQpwcm9jZXNzaW5nIGlzIGd1
-YXJhbnRlZWQiLiBJdCBpcyByYXRoZXIgdGhhdCAiY29ubmVjdGlvbiBpcyBzdGlsbCB1cA0KaW1w
-bGllcyBwcm9jZXNzaW5nIG1heSBldmVudHVhbGx5IG9jY3VyIi4NCg0KLS0gDQpUcm9uZCBNeWts
-ZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15
-a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Mon, Jan 13, 2020 at 11:49 AM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Mon, 2020-01-13 at 11:08 -0500, Olga Kornievskaia wrote:
+> > On Fri, Jan 10, 2020 at 4:03 PM Trond Myklebust <
+> > trondmy@hammerspace.com> wrote:
+> > > On Fri, 2020-01-10 at 14:29 -0500, Olga Kornievskaia wrote:
+> > > > Hi folks,
+> > > >
+> > > > We are having an issue with an interrupted RPCs again. Here's
+> > > > what I
+> > > > see when xfstests were ctrl-c-ed.
+> > > >
+> > > > frame 332 SETATTR call slot=0 seqid=0x000013ca (I'm assuming this
+> > > > is
+> > > > interrupted and released)
+> > > > frame 333 CLOSE call slot=0 seqid=0x000013cb  (only way the slot
+> > > > could
+> > > > be free before the reply if it was interrupted, right? Otherwise
+> > > > we
+> > > > should never have the slot used by more than one outstanding RPC)
+> > > > frame 334 reply to 333 with SEQ_MIS_ORDERED (I'm assuming server
+> > > > received frame 333 before 332)
+> > > > frame 336 CLOSE call slot=0 seqid=0x000013ca (??? why did we
+> > > > decremented it. I mean I know why it's in the current code :-/ )
+> > > > frame 337 reply to 336 SEQUENCE with ERR_DELAY
+> > > > frame 339 reply to 332 SETATTR which nobody is waiting for
+> > > > frame 543 CLOSE call slot=0 seqid=0x000013ca (retry after waiting
+> > > > for
+> > > > err_delay)
+> > > > frame 544 reply to 543 with SETATTR (out of the cache).
+> > > >
+> > > > What this leads to is: file is never closed on the server. Can't
+> > > > remove it. Unmount fails with CLID_BUSY.
+> > > >
+> > > > I believe that's the result of commit
+> > > > 3453d5708b33efe76f40eca1c0ed60923094b971.
+> > > > We used to have code that bumped the sequence up when the slot
+> > > > was
+> > > > interrupted but after the commit "NFSv4.1: Avoid false retries
+> > > > when
+> > > > RPC calls are interrupted".
+> > > >
+> > > > Commit has this "The obvious fix is to bump the sequence number
+> > > > pre-emptively if an
+> > > >     RPC call is interrupted, but in order to deal with the corner
+> > > > cases
+> > > >     where the interrupted call is not actually received and
+> > > > processed
+> > > > by
+> > > >     the server, we need to interpret the error
+> > > > NFS4ERR_SEQ_MISORDERED
+> > > >     as a sign that we need to either wait or locate a correct
+> > > > sequence
+> > > >     number that lies between the value we sent, and the last
+> > > > value
+> > > > that
+> > > >     was acked by a SEQUENCE call on that slot."
+> > > >
+> > > > If we can't no longer just bump the sequence up, I don't think
+> > > > the
+> > > > correct action is to automatically bump it down (as per example
+> > > > here)?
+> > > > The commit doesn't describe the corner case where it was
+> > > > necessary to
+> > > > bump the sequence up. I wonder if we can return the knowledge of
+> > > > the
+> > > > interrupted slot and make a decision based on that as well as
+> > > > whatever
+> > > > the other corner case is.
+> > > >
+> > > > I guess what I'm getting is, can somebody (Trond) provide the
+> > > > info
+> > > > for
+> > > > the corner case for this that patch was created. I can see if I
+> > > > can
+> > > > fix the "common" case which is now broken and not break the
+> > > > corner
+> > > > case....
+> > > >
+> > >
+> > > There is no pure client side solution for this problem.
+> > >
+> > > The change was made because if you have multiple interruptions of
+> > > the
+> > > RPC call, then the client has to somehow figure out what the
+> > > correct
+> > > slot number is. If it starts low, and then goes high, and the
+> > > server is
+> > > not caching the arguments for the RPC call that is in the session
+> > > cache, then we will _always_ hit this bug because we will always
+> > > hit
+> > > the replay of the last entry.
+> > >
+> > > At least if we start high, and iterate by low, then we reduce the
+> > > problem to being a race with the processing of the interrupted
+> > > request
+> > > as it is in this case.
+> > >
+> > > However, as I said, the real solution here has to involve the
+> > > server.
+> >
+> > Ok I see your point that if the server cached the arguments, then the
+> > server would tell that 2nd rpc using the same slot+seqid has
+> > different
+> > args and would not use the replay cache.
+> >
+> > However, I wonder if the client can do better. Can't we be more aware
+> > of when we are interrupting the rpc? For instance, if we are
+> > interrupted after we started to wait on the RPC, doesn't it mean the
+> > rpc is sent on the network and since network is reliable then server
+> > must have consumed the seqid for that slot (in this case increment
+> > seqid)? That's the case that's failing now.
+> >
+>
+> "Reliable transport" does not mean that a client knows what got
+> received and processed by the server and what didn't. All the client
+> knows is that if the connection is still up, then the TCP layer will
+> keep retrying transmission of the request. There are plenty of error
+> scenarios where the client gets no information back as to whether or
+> not the data was received by the server (e.g. due to lost ACKs).
+>
+> Furthermore, if a RPC call is interrupted on the client, either due to
+> a timeout or a signal,
+
+What timeout are you referring to here since 4.1 rcp can't timeout. I
+think it only leaves a signal.
+
+> then it almost always ends up breaking the
+> connection in order to avoid corruption of the data stream (by
+> interrupting the transmission before the entire RPC call has been
+> sent). You generally have to be lucky to see the timeout/signal occur
+> only when all the RPC calls being cancelled have exactly fit into the
+> socket buffer.
+
+Wouldn't a retransmission (due to a connection reset for whatever
+reason) be different and doesn't involve reprocessing of the slot.
+
+> Finally, just because the server's TCP layer ACKed receipt of the RPC
+> call data, that does not mean that it will process that call. The
+> connection could break before the call is read out of the receiving
+> socket, or the server may later decide to drop it on the floor and
+> break the connection.
+>
+> IOW: the RPC protocol here is not that "reliable transport implies
+> processing is guaranteed". It is rather that "connection is still up
+> implies processing may eventually occur".
+
+"eventually occur" means that its process of the rpc is guaranteed "in
+time". Again unless the client is broken, we can't have more than an
+interrupted rpc (that has nothing waiting) and the next rpc (both of
+which will be re-transmitted if connection is dropped) going to the
+server.
+
+Can we distinguish between interrupted due to re-transmission and
+interrupted due to ctrl-c of the thread? If we can't, then I'll stop
+arguing that client can do better.
+
+But right now we are left in a bad state. Client leaves opened state
+on the server and will not allow for files to be deleted. I think in
+case the "next rpc" is the write that will never be completed it would
+leave the machine in a hung state. I just don't see how can you
+justify that having the current code is any better than having the
+solution that was there before.
+
+
+
+
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
