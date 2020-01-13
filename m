@@ -2,233 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5795413985B
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 19:09:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 737331398D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 19:25:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMSJc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jan 2020 13:09:32 -0500
-Received: from mail-vs1-f42.google.com ([209.85.217.42]:37446 "EHLO
-        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgAMSJc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jan 2020 13:09:32 -0500
-Received: by mail-vs1-f42.google.com with SMTP id x18so6456488vsq.4
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2020 10:09:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k+DnO7FHdgL41dXw11V94X4BHeNEoH2NPIF/v83MFuo=;
-        b=lGzg5AqFWCbwjLON9nYU84f2a82B4H6DppAomwjRxL+YuFRhj+/L4/S5o76hOzL/MN
-         qXxNHxTbLlPp5n6GllO8AcXNXEZO3Pjq70LxwEWuhgj9kcR7CdQCiaLK49cYYNbYn27Z
-         c4ByYxsIhse5tVHA7Id1+Ph7D3ZCNMQ6LpozkxbSa2xxWeJGY5oF0IKEKbankib60a8I
-         xovP7NfiGOXLLwabw6YFozO4VHXWB3WDeJ9CX3rEZ93nqb0vPVY0FIcMQYehv1djBuLX
-         5kHNccHzJc6DY4geoxa+0xw0L8/TfpZ4G8qnGqhEB2d+MSKZ0giVtuvjtDHOrT73xiOC
-         R9xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k+DnO7FHdgL41dXw11V94X4BHeNEoH2NPIF/v83MFuo=;
-        b=idqGH+XLbn/QdGqI5rEN48U1hxnkIEWec3JyNl9B7d83xdT2L+K4W7447jvDTj8QJ4
-         jXU8I+Y9Dhr72+FfjftqJZpf9QmQhTFKXw/IhIKDsSQIoU77jw51Ig/oJc/uT13Ex5cU
-         FaTCN5I95zRKPbhPdNv1IglOaVG21LUEUztb74L2WPaCU/+7XxLBW+j06foo0gqtdE0E
-         ZOJiO7/s5E2Iuh/sSOsjWQn6QPsF0744TCxu6RE3aptZRotC9UPKcvB8X3ioV8oygGx6
-         QVDSrqVdHYcvVodyE/O5HtI6/6wXWNGI/xpN8cufoPxxgQA4lWlNkmCbc03G8CP1r9ZD
-         Fsww==
-X-Gm-Message-State: APjAAAWj9w9Wz9sN75s4Va4qxPYczJidwdjgX+BDVnIzyOW8bJQPYSwP
-        7VuvytkYNadAy8AsWGEJamm5+GzwMl0BC+hNAPGIEg==
-X-Google-Smtp-Source: APXvYqx90ZBtgcUe5IQdLjlAoRcqa1EZNKKNO4/OZkmr3foztck3bP4rnhtcUlNRg/FvNplVT0dqd2B3fGy8v3+nB9M=
-X-Received: by 2002:a67:f81a:: with SMTP id l26mr6998099vso.194.1578938970100;
- Mon, 13 Jan 2020 10:09:30 -0800 (PST)
-MIME-Version: 1.0
-References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
- <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
- <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com> <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
-In-Reply-To: <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 13 Jan 2020 13:09:19 -0500
-Message-ID: <CAN-5tyHdaKhUiBJW_+waSG6mXqW4nsaLY9uKugen4=haYLcR4w@mail.gmail.com>
+        id S1728741AbgAMSZB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jan 2020 13:25:01 -0500
+Received: from mail-eopbgr750124.outbound.protection.outlook.com ([40.107.75.124]:18605
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726878AbgAMSZB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:25:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dj4aWTDtOS8gStCZeKPcw9GoZNxsbPGXeuuJh+JR/Q/Z2vGt9aDCDUR1rO1ON8f6ZtsdWnADtvWxPCe/9SsL2bwDMtWx2lPZHSn9xf38P2LTHptx8IV4MvX+ZGdWI/yyzCQUbQ+3Y4QIS3GMO48cdFm1D+nxxKx1K9v4F9yuRqv9y9g3sBSVc9j2lmbunUVYCK2U8tTm8BHQxnjRA56wSyaz+3BPbzCY9KUKtCeo+ZpvbmE9GMNACrO+3UTQcHumM11lCuXfZ3qpqUKYlHdxbo5yIz6yj7XKeIcPhS8jUnHemMptTQN5WshUwAAEDc0zdFi0jGkXFofb3ae9bKBW/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXG/ck/7mACfnN6EcaDkLDO7hAugJuKS6TVMPXnxNI0=;
+ b=BRIeBL5dZVD4YQdY3Kte3naosDX8hp4RgNL+8pjT7iNTSxvG3r0i1dUv1XDDdRbRgkBeVbj5GSAKF9xu6J3qhuvDCuZm18JUkrIfx1xDAtJxpa/mtmb6C4mFPd6w0cXKHtIGGm4Kl9wX1gOYbazwfSmFn5TOKqroNl2Xaal76nxww6JWsaUxqLdOA+CfYWam954l7pBqkAoWU66mHcU6to6hxIyarJdKbgh0leYqfnnz7rgDtlDy/E9GZ80FF5LXTCa7dg5Zly+hnRVniWmmkCwWz1MPZqSvPBTD92+vVZMn5TDMZDuYFO1/d5kRza4LmW2kjNNzBjPnjhWsRnCpzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXG/ck/7mACfnN6EcaDkLDO7hAugJuKS6TVMPXnxNI0=;
+ b=cDluKQTgYFz4a/50FFJDwkHZCbP/dGqV4/MnBnillepJ7dTv5sHb6Cm0t1fsiwn21iKoqP0Wx1LW2HwwWXRU3fQoY7x9DyxLD6VB8KuzlJ3MYLp0z8wldr9iFWzDOxYm/llGYcFXNH8fIGPN3/Fu2+pV+LubrDZc8Jj5kNbxZlQ=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1897.namprd13.prod.outlook.com (10.174.185.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.16; Mon, 13 Jan 2020 18:24:53 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
+ 18:24:53 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: interrupted rpcs problem
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: interrupted rpcs problem
+Thread-Index: AQHVx+xAF9geEgvaYEKYoTth6kuH4qfkYv+AgARkqICAAAtUAIAAFlKAgAAEV4A=
+Date:   Mon, 13 Jan 2020 18:24:53 +0000
+Message-ID: <1538116fa0b35674da7242e9fadf19ddeca5e2c2.camel@hammerspace.com>
+References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
+         <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
+         <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com>
+         <185a1505f75a36d852df7a9351d6bb776103c506.camel@hammerspace.com>
+         <CAN-5tyHdaKhUiBJW_+waSG6mXqW4nsaLY9uKugen4=haYLcR4w@mail.gmail.com>
+In-Reply-To: <CAN-5tyHdaKhUiBJW_+waSG6mXqW4nsaLY9uKugen4=haYLcR4w@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b344685-6f58-4f2f-5355-08d79855e25a
+x-ms-traffictypediagnostic: DM5PR1301MB1897:
+x-microsoft-antispam-prvs: <DM5PR1301MB189759F78B0C295070DC9081B8350@DM5PR1301MB1897.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(366004)(396003)(39830400003)(376002)(189003)(199004)(2906002)(8936002)(91956017)(76116006)(86362001)(6916009)(6512007)(6486002)(26005)(2616005)(81166006)(81156014)(8676002)(71200400001)(316002)(186003)(3480700007)(5660300002)(7116003)(66556008)(4326008)(36756003)(66946007)(53546011)(478600001)(6506007)(64756008)(66476007)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1897;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7SSiTtfWjl8H4YK+kAHc4bPOGRdmDbsRguR1U8/MU9JJw6n8DKW7HAaX5BBEDlr+Cc1nygNhMw/3egKK+6EtLHYaPK9pznLGTtmrMhP2zyvP9/33XwPH07yHkxYrI/JKZI5GB+3xHWnrJ8ag2y7+LKMTvE0JFW3L+e8UEiXHCVby/7iPHCM2+OmFhBPxkVZnXTlQ7Ev8DJDx4sKw1qxOZ5EcConbKopBP7D0NuHr9Z0qGjYylNI4oWYRKJ0QrrDRf/wqxkX02Dp3II0qx7QXGSaPzrPWTCX8J7CbJor2Pqfr5220QKCKOLf7AcEiAuRClypOWjaKunPSgHQNyYJl9YxJ7rohYxKjMrqlQjmAyKBhfpZCeNVJfOMrKQ4rBibUbMH1deXTibvNJA/zjvCljcCudVXXoFx1j5RgkdDIYggbIe7+/R2hI95oqXNkLlsl
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <929A5F2490E3204AA0008C4EF035014D@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b344685-6f58-4f2f-5355-08d79855e25a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 18:24:53.1428
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yhuH4zvKjJxMB8mz2NDa8tuz8tsW2+oK3wrSSlOBgA7N7DRrjOkTB520yCBLuD4xaCIIgLBKsKOjVe5POVDJFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1897
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:49 AM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> On Mon, 2020-01-13 at 11:08 -0500, Olga Kornievskaia wrote:
-> > On Fri, Jan 10, 2020 at 4:03 PM Trond Myklebust <
-> > trondmy@hammerspace.com> wrote:
-> > > On Fri, 2020-01-10 at 14:29 -0500, Olga Kornievskaia wrote:
-> > > > Hi folks,
-> > > >
-> > > > We are having an issue with an interrupted RPCs again. Here's
-> > > > what I
-> > > > see when xfstests were ctrl-c-ed.
-> > > >
-> > > > frame 332 SETATTR call slot=0 seqid=0x000013ca (I'm assuming this
-> > > > is
-> > > > interrupted and released)
-> > > > frame 333 CLOSE call slot=0 seqid=0x000013cb  (only way the slot
-> > > > could
-> > > > be free before the reply if it was interrupted, right? Otherwise
-> > > > we
-> > > > should never have the slot used by more than one outstanding RPC)
-> > > > frame 334 reply to 333 with SEQ_MIS_ORDERED (I'm assuming server
-> > > > received frame 333 before 332)
-> > > > frame 336 CLOSE call slot=0 seqid=0x000013ca (??? why did we
-> > > > decremented it. I mean I know why it's in the current code :-/ )
-> > > > frame 337 reply to 336 SEQUENCE with ERR_DELAY
-> > > > frame 339 reply to 332 SETATTR which nobody is waiting for
-> > > > frame 543 CLOSE call slot=0 seqid=0x000013ca (retry after waiting
-> > > > for
-> > > > err_delay)
-> > > > frame 544 reply to 543 with SETATTR (out of the cache).
-> > > >
-> > > > What this leads to is: file is never closed on the server. Can't
-> > > > remove it. Unmount fails with CLID_BUSY.
-> > > >
-> > > > I believe that's the result of commit
-> > > > 3453d5708b33efe76f40eca1c0ed60923094b971.
-> > > > We used to have code that bumped the sequence up when the slot
-> > > > was
-> > > > interrupted but after the commit "NFSv4.1: Avoid false retries
-> > > > when
-> > > > RPC calls are interrupted".
-> > > >
-> > > > Commit has this "The obvious fix is to bump the sequence number
-> > > > pre-emptively if an
-> > > >     RPC call is interrupted, but in order to deal with the corner
-> > > > cases
-> > > >     where the interrupted call is not actually received and
-> > > > processed
-> > > > by
-> > > >     the server, we need to interpret the error
-> > > > NFS4ERR_SEQ_MISORDERED
-> > > >     as a sign that we need to either wait or locate a correct
-> > > > sequence
-> > > >     number that lies between the value we sent, and the last
-> > > > value
-> > > > that
-> > > >     was acked by a SEQUENCE call on that slot."
-> > > >
-> > > > If we can't no longer just bump the sequence up, I don't think
-> > > > the
-> > > > correct action is to automatically bump it down (as per example
-> > > > here)?
-> > > > The commit doesn't describe the corner case where it was
-> > > > necessary to
-> > > > bump the sequence up. I wonder if we can return the knowledge of
-> > > > the
-> > > > interrupted slot and make a decision based on that as well as
-> > > > whatever
-> > > > the other corner case is.
-> > > >
-> > > > I guess what I'm getting is, can somebody (Trond) provide the
-> > > > info
-> > > > for
-> > > > the corner case for this that patch was created. I can see if I
-> > > > can
-> > > > fix the "common" case which is now broken and not break the
-> > > > corner
-> > > > case....
-> > > >
-> > >
-> > > There is no pure client side solution for this problem.
-> > >
-> > > The change was made because if you have multiple interruptions of
-> > > the
-> > > RPC call, then the client has to somehow figure out what the
-> > > correct
-> > > slot number is. If it starts low, and then goes high, and the
-> > > server is
-> > > not caching the arguments for the RPC call that is in the session
-> > > cache, then we will _always_ hit this bug because we will always
-> > > hit
-> > > the replay of the last entry.
-> > >
-> > > At least if we start high, and iterate by low, then we reduce the
-> > > problem to being a race with the processing of the interrupted
-> > > request
-> > > as it is in this case.
-> > >
-> > > However, as I said, the real solution here has to involve the
-> > > server.
-> >
-> > Ok I see your point that if the server cached the arguments, then the
-> > server would tell that 2nd rpc using the same slot+seqid has
-> > different
-> > args and would not use the replay cache.
-> >
-> > However, I wonder if the client can do better. Can't we be more aware
-> > of when we are interrupting the rpc? For instance, if we are
-> > interrupted after we started to wait on the RPC, doesn't it mean the
-> > rpc is sent on the network and since network is reliable then server
-> > must have consumed the seqid for that slot (in this case increment
-> > seqid)? That's the case that's failing now.
-> >
->
-> "Reliable transport" does not mean that a client knows what got
-> received and processed by the server and what didn't. All the client
-> knows is that if the connection is still up, then the TCP layer will
-> keep retrying transmission of the request. There are plenty of error
-> scenarios where the client gets no information back as to whether or
-> not the data was received by the server (e.g. due to lost ACKs).
->
-> Furthermore, if a RPC call is interrupted on the client, either due to
-> a timeout or a signal,
-
-What timeout are you referring to here since 4.1 rcp can't timeout. I
-think it only leaves a signal.
-
-> then it almost always ends up breaking the
-> connection in order to avoid corruption of the data stream (by
-> interrupting the transmission before the entire RPC call has been
-> sent). You generally have to be lucky to see the timeout/signal occur
-> only when all the RPC calls being cancelled have exactly fit into the
-> socket buffer.
-
-Wouldn't a retransmission (due to a connection reset for whatever
-reason) be different and doesn't involve reprocessing of the slot.
-
-> Finally, just because the server's TCP layer ACKed receipt of the RPC
-> call data, that does not mean that it will process that call. The
-> connection could break before the call is read out of the receiving
-> socket, or the server may later decide to drop it on the floor and
-> break the connection.
->
-> IOW: the RPC protocol here is not that "reliable transport implies
-> processing is guaranteed". It is rather that "connection is still up
-> implies processing may eventually occur".
-
-"eventually occur" means that its process of the rpc is guaranteed "in
-time". Again unless the client is broken, we can't have more than an
-interrupted rpc (that has nothing waiting) and the next rpc (both of
-which will be re-transmitted if connection is dropped) going to the
-server.
-
-Can we distinguish between interrupted due to re-transmission and
-interrupted due to ctrl-c of the thread? If we can't, then I'll stop
-arguing that client can do better.
-
-But right now we are left in a bad state. Client leaves opened state
-on the server and will not allow for files to be deleted. I think in
-case the "next rpc" is the write that will never be completed it would
-leave the machine in a hung state. I just don't see how can you
-justify that having the current code is any better than having the
-solution that was there before.
-
-
-
-
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gTW9uLCAyMDIwLTAxLTEzIGF0IDEzOjA5IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gTW9uLCBKYW4gMTMsIDIwMjAgYXQgMTE6NDkgQU0gVHJvbmQgTXlrbGVidXN0DQo+
+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDIwLTAxLTEz
+IGF0IDExOjA4IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9uIEZyaSwg
+SmFuIDEwLCAyMDIwIGF0IDQ6MDMgUE0gVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+IHRyb25kbXlA
+aGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gT24gRnJpLCAyMDIwLTAxLTEwIGF0IDE0
+OjI5IC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+ID4gPiBIaSBmb2xrcywN
+Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiBXZSBhcmUgaGF2aW5nIGFuIGlzc3VlIHdpdGggYW4gaW50
+ZXJydXB0ZWQgUlBDcyBhZ2Fpbi4gSGVyZSdzDQo+ID4gPiA+ID4gd2hhdCBJDQo+ID4gPiA+ID4g
+c2VlIHdoZW4geGZzdGVzdHMgd2VyZSBjdHJsLWMtZWQuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
+ZnJhbWUgMzMyIFNFVEFUVFIgY2FsbCBzbG90PTAgc2VxaWQ9MHgwMDAwMTNjYSAoSSdtIGFzc3Vt
+aW5nDQo+ID4gPiA+ID4gdGhpcw0KPiA+ID4gPiA+IGlzDQo+ID4gPiA+ID4gaW50ZXJydXB0ZWQg
+YW5kIHJlbGVhc2VkKQ0KPiA+ID4gPiA+IGZyYW1lIDMzMyBDTE9TRSBjYWxsIHNsb3Q9MCBzZXFp
+ZD0weDAwMDAxM2NiICAob25seSB3YXkgdGhlDQo+ID4gPiA+ID4gc2xvdA0KPiA+ID4gPiA+IGNv
+dWxkDQo+ID4gPiA+ID4gYmUgZnJlZSBiZWZvcmUgdGhlIHJlcGx5IGlmIGl0IHdhcyBpbnRlcnJ1
+cHRlZCwgcmlnaHQ/DQo+ID4gPiA+ID4gT3RoZXJ3aXNlDQo+ID4gPiA+ID4gd2UNCj4gPiA+ID4g
+PiBzaG91bGQgbmV2ZXIgaGF2ZSB0aGUgc2xvdCB1c2VkIGJ5IG1vcmUgdGhhbiBvbmUgb3V0c3Rh
+bmRpbmcNCj4gPiA+ID4gPiBSUEMpDQo+ID4gPiA+ID4gZnJhbWUgMzM0IHJlcGx5IHRvIDMzMyB3
+aXRoIFNFUV9NSVNfT1JERVJFRCAoSSdtIGFzc3VtaW5nDQo+ID4gPiA+ID4gc2VydmVyDQo+ID4g
+PiA+ID4gcmVjZWl2ZWQgZnJhbWUgMzMzIGJlZm9yZSAzMzIpDQo+ID4gPiA+ID4gZnJhbWUgMzM2
+IENMT1NFIGNhbGwgc2xvdD0wIHNlcWlkPTB4MDAwMDEzY2EgKD8/PyB3aHkgZGlkIHdlDQo+ID4g
+PiA+ID4gZGVjcmVtZW50ZWQgaXQuIEkgbWVhbiBJIGtub3cgd2h5IGl0J3MgaW4gdGhlIGN1cnJl
+bnQgY29kZSA6LQ0KPiA+ID4gPiA+IC8gKQ0KPiA+ID4gPiA+IGZyYW1lIDMzNyByZXBseSB0byAz
+MzYgU0VRVUVOQ0Ugd2l0aCBFUlJfREVMQVkNCj4gPiA+ID4gPiBmcmFtZSAzMzkgcmVwbHkgdG8g
+MzMyIFNFVEFUVFIgd2hpY2ggbm9ib2R5IGlzIHdhaXRpbmcgZm9yDQo+ID4gPiA+ID4gZnJhbWUg
+NTQzIENMT1NFIGNhbGwgc2xvdD0wIHNlcWlkPTB4MDAwMDEzY2EgKHJldHJ5IGFmdGVyDQo+ID4g
+PiA+ID4gd2FpdGluZw0KPiA+ID4gPiA+IGZvcg0KPiA+ID4gPiA+IGVycl9kZWxheSkNCj4gPiA+
+ID4gPiBmcmFtZSA1NDQgcmVwbHkgdG8gNTQzIHdpdGggU0VUQVRUUiAob3V0IG9mIHRoZSBjYWNo
+ZSkuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2hhdCB0aGlzIGxlYWRzIHRvIGlzOiBmaWxlIGlz
+IG5ldmVyIGNsb3NlZCBvbiB0aGUgc2VydmVyLg0KPiA+ID4gPiA+IENhbid0DQo+ID4gPiA+ID4g
+cmVtb3ZlIGl0LiBVbm1vdW50IGZhaWxzIHdpdGggQ0xJRF9CVVNZLg0KPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+IEkgYmVsaWV2ZSB0aGF0J3MgdGhlIHJlc3VsdCBvZiBjb21taXQNCj4gPiA+ID4gPiAz
+NDUzZDU3MDhiMzNlZmU3NmY0MGVjYTFjMGVkNjA5MjMwOTRiOTcxLg0KPiA+ID4gPiA+IFdlIHVz
+ZWQgdG8gaGF2ZSBjb2RlIHRoYXQgYnVtcGVkIHRoZSBzZXF1ZW5jZSB1cCB3aGVuIHRoZQ0KPiA+
+ID4gPiA+IHNsb3QNCj4gPiA+ID4gPiB3YXMNCj4gPiA+ID4gPiBpbnRlcnJ1cHRlZCBidXQgYWZ0
+ZXIgdGhlIGNvbW1pdCAiTkZTdjQuMTogQXZvaWQgZmFsc2UNCj4gPiA+ID4gPiByZXRyaWVzDQo+
+ID4gPiA+ID4gd2hlbg0KPiA+ID4gPiA+IFJQQyBjYWxscyBhcmUgaW50ZXJydXB0ZWQiLg0KPiA+
+ID4gPiA+IA0KPiA+ID4gPiA+IENvbW1pdCBoYXMgdGhpcyAiVGhlIG9idmlvdXMgZml4IGlzIHRv
+IGJ1bXAgdGhlIHNlcXVlbmNlDQo+ID4gPiA+ID4gbnVtYmVyDQo+ID4gPiA+ID4gcHJlLWVtcHRp
+dmVseSBpZiBhbg0KPiA+ID4gPiA+ICAgICBSUEMgY2FsbCBpcyBpbnRlcnJ1cHRlZCwgYnV0IGlu
+IG9yZGVyIHRvIGRlYWwgd2l0aCB0aGUNCj4gPiA+ID4gPiBjb3JuZXINCj4gPiA+ID4gPiBjYXNl
+cw0KPiA+ID4gPiA+ICAgICB3aGVyZSB0aGUgaW50ZXJydXB0ZWQgY2FsbCBpcyBub3QgYWN0dWFs
+bHkgcmVjZWl2ZWQgYW5kDQo+ID4gPiA+ID4gcHJvY2Vzc2VkDQo+ID4gPiA+ID4gYnkNCj4gPiA+
+ID4gPiAgICAgdGhlIHNlcnZlciwgd2UgbmVlZCB0byBpbnRlcnByZXQgdGhlIGVycm9yDQo+ID4g
+PiA+ID4gTkZTNEVSUl9TRVFfTUlTT1JERVJFRA0KPiA+ID4gPiA+ICAgICBhcyBhIHNpZ24gdGhh
+dCB3ZSBuZWVkIHRvIGVpdGhlciB3YWl0IG9yIGxvY2F0ZSBhIGNvcnJlY3QNCj4gPiA+ID4gPiBz
+ZXF1ZW5jZQ0KPiA+ID4gPiA+ICAgICBudW1iZXIgdGhhdCBsaWVzIGJldHdlZW4gdGhlIHZhbHVl
+IHdlIHNlbnQsIGFuZCB0aGUgbGFzdA0KPiA+ID4gPiA+IHZhbHVlDQo+ID4gPiA+ID4gdGhhdA0K
+PiA+ID4gPiA+ICAgICB3YXMgYWNrZWQgYnkgYSBTRVFVRU5DRSBjYWxsIG9uIHRoYXQgc2xvdC4i
+DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYgd2UgY2FuJ3Qgbm8gbG9uZ2VyIGp1c3QgYnVtcCB0
+aGUgc2VxdWVuY2UgdXAsIEkgZG9uJ3QNCj4gPiA+ID4gPiB0aGluaw0KPiA+ID4gPiA+IHRoZQ0K
+PiA+ID4gPiA+IGNvcnJlY3QgYWN0aW9uIGlzIHRvIGF1dG9tYXRpY2FsbHkgYnVtcCBpdCBkb3du
+IChhcyBwZXINCj4gPiA+ID4gPiBleGFtcGxlDQo+ID4gPiA+ID4gaGVyZSk/DQo+ID4gPiA+ID4g
+VGhlIGNvbW1pdCBkb2Vzbid0IGRlc2NyaWJlIHRoZSBjb3JuZXIgY2FzZSB3aGVyZSBpdCB3YXMN
+Cj4gPiA+ID4gPiBuZWNlc3NhcnkgdG8NCj4gPiA+ID4gPiBidW1wIHRoZSBzZXF1ZW5jZSB1cC4g
+SSB3b25kZXIgaWYgd2UgY2FuIHJldHVybiB0aGUga25vd2xlZGdlDQo+ID4gPiA+ID4gb2YNCj4g
+PiA+ID4gPiB0aGUNCj4gPiA+ID4gPiBpbnRlcnJ1cHRlZCBzbG90IGFuZCBtYWtlIGEgZGVjaXNp
+b24gYmFzZWQgb24gdGhhdCBhcyB3ZWxsIGFzDQo+ID4gPiA+ID4gd2hhdGV2ZXINCj4gPiA+ID4g
+PiB0aGUgb3RoZXIgY29ybmVyIGNhc2UgaXMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSSBndWVz
+cyB3aGF0IEknbSBnZXR0aW5nIGlzLCBjYW4gc29tZWJvZHkgKFRyb25kKSBwcm92aWRlIHRoZQ0K
+PiA+ID4gPiA+IGluZm8NCj4gPiA+ID4gPiBmb3INCj4gPiA+ID4gPiB0aGUgY29ybmVyIGNhc2Ug
+Zm9yIHRoaXMgdGhhdCBwYXRjaCB3YXMgY3JlYXRlZC4gSSBjYW4gc2VlIGlmDQo+ID4gPiA+ID4g
+SQ0KPiA+ID4gPiA+IGNhbg0KPiA+ID4gPiA+IGZpeCB0aGUgImNvbW1vbiIgY2FzZSB3aGljaCBp
+cyBub3cgYnJva2VuIGFuZCBub3QgYnJlYWsgdGhlDQo+ID4gPiA+ID4gY29ybmVyDQo+ID4gPiA+
+ID4gY2FzZS4uLi4NCj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IFRoZXJlIGlzIG5vIHB1
+cmUgY2xpZW50IHNpZGUgc29sdXRpb24gZm9yIHRoaXMgcHJvYmxlbS4NCj4gPiA+ID4gDQo+ID4g
+PiA+IFRoZSBjaGFuZ2Ugd2FzIG1hZGUgYmVjYXVzZSBpZiB5b3UgaGF2ZSBtdWx0aXBsZSBpbnRl
+cnJ1cHRpb25zDQo+ID4gPiA+IG9mDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBSUEMgY2FsbCwgdGhl
+biB0aGUgY2xpZW50IGhhcyB0byBzb21laG93IGZpZ3VyZSBvdXQgd2hhdCB0aGUNCj4gPiA+ID4g
+Y29ycmVjdA0KPiA+ID4gPiBzbG90IG51bWJlciBpcy4gSWYgaXQgc3RhcnRzIGxvdywgYW5kIHRo
+ZW4gZ29lcyBoaWdoLCBhbmQgdGhlDQo+ID4gPiA+IHNlcnZlciBpcw0KPiA+ID4gPiBub3QgY2Fj
+aGluZyB0aGUgYXJndW1lbnRzIGZvciB0aGUgUlBDIGNhbGwgdGhhdCBpcyBpbiB0aGUNCj4gPiA+
+ID4gc2Vzc2lvbg0KPiA+ID4gPiBjYWNoZSwgdGhlbiB3ZSB3aWxsIF9hbHdheXNfIGhpdCB0aGlz
+IGJ1ZyBiZWNhdXNlIHdlIHdpbGwNCj4gPiA+ID4gYWx3YXlzDQo+ID4gPiA+IGhpdA0KPiA+ID4g
+PiB0aGUgcmVwbGF5IG9mIHRoZSBsYXN0IGVudHJ5Lg0KPiA+ID4gPiANCj4gPiA+ID4gQXQgbGVh
+c3QgaWYgd2Ugc3RhcnQgaGlnaCwgYW5kIGl0ZXJhdGUgYnkgbG93LCB0aGVuIHdlIHJlZHVjZQ0K
+PiA+ID4gPiB0aGUNCj4gPiA+ID4gcHJvYmxlbSB0byBiZWluZyBhIHJhY2Ugd2l0aCB0aGUgcHJv
+Y2Vzc2luZyBvZiB0aGUgaW50ZXJydXB0ZWQNCj4gPiA+ID4gcmVxdWVzdA0KPiA+ID4gPiBhcyBp
+dCBpcyBpbiB0aGlzIGNhc2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBIb3dldmVyLCBhcyBJIHNhaWQs
+IHRoZSByZWFsIHNvbHV0aW9uIGhlcmUgaGFzIHRvIGludm9sdmUgdGhlDQo+ID4gPiA+IHNlcnZl
+ci4NCj4gPiA+IA0KPiA+ID4gT2sgSSBzZWUgeW91ciBwb2ludCB0aGF0IGlmIHRoZSBzZXJ2ZXIg
+Y2FjaGVkIHRoZSBhcmd1bWVudHMsIHRoZW4NCj4gPiA+IHRoZQ0KPiA+ID4gc2VydmVyIHdvdWxk
+IHRlbGwgdGhhdCAybmQgcnBjIHVzaW5nIHRoZSBzYW1lIHNsb3Qrc2VxaWQgaGFzDQo+ID4gPiBk
+aWZmZXJlbnQNCj4gPiA+IGFyZ3MgYW5kIHdvdWxkIG5vdCB1c2UgdGhlIHJlcGxheSBjYWNoZS4N
+Cj4gPiA+IA0KPiA+ID4gSG93ZXZlciwgSSB3b25kZXIgaWYgdGhlIGNsaWVudCBjYW4gZG8gYmV0
+dGVyLiBDYW4ndCB3ZSBiZSBtb3JlDQo+ID4gPiBhd2FyZQ0KPiA+ID4gb2Ygd2hlbiB3ZSBhcmUg
+aW50ZXJydXB0aW5nIHRoZSBycGM/IEZvciBpbnN0YW5jZSwgaWYgd2UgYXJlDQo+ID4gPiBpbnRl
+cnJ1cHRlZCBhZnRlciB3ZSBzdGFydGVkIHRvIHdhaXQgb24gdGhlIFJQQywgZG9lc24ndCBpdCBt
+ZWFuDQo+ID4gPiB0aGUNCj4gPiA+IHJwYyBpcyBzZW50IG9uIHRoZSBuZXR3b3JrIGFuZCBzaW5j
+ZSBuZXR3b3JrIGlzIHJlbGlhYmxlIHRoZW4NCj4gPiA+IHNlcnZlcg0KPiA+ID4gbXVzdCBoYXZl
+IGNvbnN1bWVkIHRoZSBzZXFpZCBmb3IgdGhhdCBzbG90IChpbiB0aGlzIGNhc2UNCj4gPiA+IGlu
+Y3JlbWVudA0KPiA+ID4gc2VxaWQpPyBUaGF0J3MgdGhlIGNhc2UgdGhhdCdzIGZhaWxpbmcgbm93
+Lg0KPiA+ID4gDQo+ID4gDQo+ID4gIlJlbGlhYmxlIHRyYW5zcG9ydCIgZG9lcyBub3QgbWVhbiB0
+aGF0IGEgY2xpZW50IGtub3dzIHdoYXQgZ290DQo+ID4gcmVjZWl2ZWQgYW5kIHByb2Nlc3NlZCBi
+eSB0aGUgc2VydmVyIGFuZCB3aGF0IGRpZG4ndC4gQWxsIHRoZQ0KPiA+IGNsaWVudA0KPiA+IGtu
+b3dzIGlzIHRoYXQgaWYgdGhlIGNvbm5lY3Rpb24gaXMgc3RpbGwgdXAsIHRoZW4gdGhlIFRDUCBs
+YXllcg0KPiA+IHdpbGwNCj4gPiBrZWVwIHJldHJ5aW5nIHRyYW5zbWlzc2lvbiBvZiB0aGUgcmVx
+dWVzdC4gVGhlcmUgYXJlIHBsZW50eSBvZg0KPiA+IGVycm9yDQo+ID4gc2NlbmFyaW9zIHdoZXJl
+IHRoZSBjbGllbnQgZ2V0cyBubyBpbmZvcm1hdGlvbiBiYWNrIGFzIHRvIHdoZXRoZXINCj4gPiBv
+cg0KPiA+IG5vdCB0aGUgZGF0YSB3YXMgcmVjZWl2ZWQgYnkgdGhlIHNlcnZlciAoZS5nLiBkdWUg
+dG8gbG9zdCBBQ0tzKS4NCj4gPiANCj4gPiBGdXJ0aGVybW9yZSwgaWYgYSBSUEMgY2FsbCBpcyBp
+bnRlcnJ1cHRlZCBvbiB0aGUgY2xpZW50LCBlaXRoZXIgZHVlDQo+ID4gdG8NCj4gPiBhIHRpbWVv
+dXQgb3IgYSBzaWduYWwsDQo+IA0KPiBXaGF0IHRpbWVvdXQgYXJlIHlvdSByZWZlcnJpbmcgdG8g
+aGVyZSBzaW5jZSA0LjEgcmNwIGNhbid0IHRpbWVvdXQuIEkNCj4gdGhpbmsgaXQgb25seSBsZWF2
+ZXMgYSBzaWduYWwuDQoNCklmIHlvdSB1c2UgJ3NvZnQnIG9yICdzb2Z0ZXJyJyBtb3VudCBvcHRp
+b25zLCB0aGVuIE5GU3Y0LjEgd2lsbCB0aW1lDQpvdXQgd2hlbiB0aGUgc2VydmVyIGlzIGJlaW5n
+IHVucmVzcG9uc2l2ZS4gVGhhdCBiZWhhdmlvdXIgaXMgZGlmZmVyZW50DQp0byB0aGUgYmVoYXZp
+b3VyIHVuZGVyIGEgc2lnbmFsLCBidXQgaGFzIHRoZSBzYW1lIGVmZmVjdCBvZg0KaW50ZXJydXB0
+aW5nIHRoZSBSUEMgY2FsbCB3aXRob3V0IHVzIGJlaW5nIGFibGUgdG8ga25vdyBpZiB0aGUgc2Vy
+dmVyDQpyZWNlaXZlZCB0aGUgZGF0YS4NCg0KPiA+IHRoZW4gaXQgYWxtb3N0IGFsd2F5cyBlbmRz
+IHVwIGJyZWFraW5nIHRoZQ0KPiA+IGNvbm5lY3Rpb24gaW4gb3JkZXIgdG8gYXZvaWQgY29ycnVw
+dGlvbiBvZiB0aGUgZGF0YSBzdHJlYW0gKGJ5DQo+ID4gaW50ZXJydXB0aW5nIHRoZSB0cmFuc21p
+c3Npb24gYmVmb3JlIHRoZSBlbnRpcmUgUlBDIGNhbGwgaGFzIGJlZW4NCj4gPiBzZW50KS4gWW91
+IGdlbmVyYWxseSBoYXZlIHRvIGJlIGx1Y2t5IHRvIHNlZSB0aGUgdGltZW91dC9zaWduYWwNCj4g
+PiBvY2N1cg0KPiA+IG9ubHkgd2hlbiBhbGwgdGhlIFJQQyBjYWxscyBiZWluZyBjYW5jZWxsZWQg
+aGF2ZSBleGFjdGx5IGZpdCBpbnRvDQo+ID4gdGhlDQo+ID4gc29ja2V0IGJ1ZmZlci4NCj4gDQo+
+IFdvdWxkbid0IGEgcmV0cmFuc21pc3Npb24gKGR1ZSB0byBhIGNvbm5lY3Rpb24gcmVzZXQgZm9y
+IHdoYXRldmVyDQo+IHJlYXNvbikgYmUgZGlmZmVyZW50IGFuZCBkb2Vzbid0IGludm9sdmUgcmVw
+cm9jZXNzaW5nIG9mIHRoZSBzbG90Lg0KDQpJJ20gbm90IHRhbGtpbmcgYWJvdXQgcmV0cmFuc21p
+c3Npb25zIGhlcmUuIEknbSB0YWxraW5nIG9ubHkgYWJvdXQNCk5GU3Y0LnggUlBDIGNhbGxzIHRo
+YXQgc3VmZmVyIGEgZmF0YWwgaW50ZXJydXB0aW9uIChpLmUuIG5vDQpyZXRyYW5zbWlzc2lvbiku
+DQoNCj4gPiBGaW5hbGx5LCBqdXN0IGJlY2F1c2UgdGhlIHNlcnZlcidzIFRDUCBsYXllciBBQ0tl
+ZCByZWNlaXB0IG9mIHRoZQ0KPiA+IFJQQw0KPiA+IGNhbGwgZGF0YSwgdGhhdCBkb2VzIG5vdCBt
+ZWFuIHRoYXQgaXQgd2lsbCBwcm9jZXNzIHRoYXQgY2FsbC4gVGhlDQo+ID4gY29ubmVjdGlvbiBj
+b3VsZCBicmVhayBiZWZvcmUgdGhlIGNhbGwgaXMgcmVhZCBvdXQgb2YgdGhlIHJlY2VpdmluZw0K
+PiA+IHNvY2tldCwgb3IgdGhlIHNlcnZlciBtYXkgbGF0ZXIgZGVjaWRlIHRvIGRyb3AgaXQgb24g
+dGhlIGZsb29yIGFuZA0KPiA+IGJyZWFrIHRoZSBjb25uZWN0aW9uLg0KPiA+IA0KPiA+IElPVzog
+dGhlIFJQQyBwcm90b2NvbCBoZXJlIGlzIG5vdCB0aGF0ICJyZWxpYWJsZSB0cmFuc3BvcnQgaW1w
+bGllcw0KPiA+IHByb2Nlc3NpbmcgaXMgZ3VhcmFudGVlZCIuIEl0IGlzIHJhdGhlciB0aGF0ICJj
+b25uZWN0aW9uIGlzIHN0aWxsDQo+ID4gdXANCj4gPiBpbXBsaWVzIHByb2Nlc3NpbmcgbWF5IGV2
+ZW50dWFsbHkgb2NjdXIiLg0KPiANCj4gImV2ZW50dWFsbHkgb2NjdXIiIG1lYW5zIHRoYXQgaXRz
+IHByb2Nlc3Mgb2YgdGhlIHJwYyBpcyBndWFyYW50ZWVkDQo+ICJpbg0KPiB0aW1lIi4gQWdhaW4g
+dW5sZXNzIHRoZSBjbGllbnQgaXMgYnJva2VuLCB3ZSBjYW4ndCBoYXZlIG1vcmUgdGhhbiBhbg0K
+PiBpbnRlcnJ1cHRlZCBycGMgKHRoYXQgaGFzIG5vdGhpbmcgd2FpdGluZykgYW5kIHRoZSBuZXh0
+IHJwYyAoYm90aCBvZg0KPiB3aGljaCB3aWxsIGJlIHJlLXRyYW5zbWl0dGVkIGlmIGNvbm5lY3Rp
+b24gaXMgZHJvcHBlZCkgZ29pbmcgdG8gdGhlDQo+IHNlcnZlci4NCj4gDQo+IENhbiB3ZSBkaXN0
+aW5ndWlzaCBiZXR3ZWVuIGludGVycnVwdGVkIGR1ZSB0byByZS10cmFuc21pc3Npb24gYW5kDQo+
+IGludGVycnVwdGVkIGR1ZSB0byBjdHJsLWMgb2YgdGhlIHRocmVhZD8gSWYgd2UgY2FuJ3QsIHRo
+ZW4gSSdsbCBzdG9wDQo+IGFyZ3VpbmcgdGhhdCBjbGllbnQgY2FuIGRvIGJldHRlci4NCg0KVGhl
+cmUgaXMgbm8gImludGVycnVwdGVkIGR1ZSB0byByZS10cmFuc21pc3Npb24iIGNhc2UuIFdlIG9u
+bHkNCnJldHJhbnNtaXQgTkZTdjQgcmVxdWVzdHMgaWYgdGhlIFRDUCBjb25uZWN0aW9uIGJyZWFr
+cy4NCg0KQXMgZmFyIGFzIEknbSBjb25jZXJuZWQsIHRoaXMgZGlzY3Vzc2lvbiBpcyBvbmx5IGFi
+b3V0IGludGVycnVwdGlvbnMNCnRoYXQgY2F1c2UgdGhlIFJQQyBjYWxsIHRvIGJlIGFiYW5kb25l
+ZCAoaS5lLiBmYXRhbCB0aW1lb3V0cyBhbmQNCnNpZ25hbHMpLg0KDQo+IEJ1dCByaWdodCBub3cg
+d2UgYXJlIGxlZnQgaW4gYSBiYWQgc3RhdGUuIENsaWVudCBsZWF2ZXMgb3BlbmVkIHN0YXRlDQo+
+IG9uIHRoZSBzZXJ2ZXIgYW5kIHdpbGwgbm90IGFsbG93IGZvciBmaWxlcyB0byBiZSBkZWxldGVk
+LiBJIHRoaW5rIGluDQo+IGNhc2UgdGhlICJuZXh0IHJwYyIgaXMgdGhlIHdyaXRlIHRoYXQgd2ls
+bCBuZXZlciBiZSBjb21wbGV0ZWQgaXQNCj4gd291bGQNCj4gbGVhdmUgdGhlIG1hY2hpbmUgaW4g
+YSBodW5nIHN0YXRlLiBJIGp1c3QgZG9uJ3Qgc2VlIGhvdyBjYW4geW91DQo+IGp1c3RpZnkgdGhh
+dCBoYXZpbmcgdGhlIGN1cnJlbnQgY29kZSBpcyBhbnkgYmV0dGVyIHRoYW4gaGF2aW5nIHRoZQ0K
+PiBzb2x1dGlvbiB0aGF0IHdhcyB0aGVyZSBiZWZvcmUuDQoNClRoYXQncyBhIGdlbmVyYWwgcHJv
+YmxlbSB3aXRoIGFsbG93aW5nIGludGVycnVwdGlvbnMgdGhhdCBpcyBsYXJnZWx5DQpvcnRob2dv
+bmFsIHRvIHRoZSBxdWVzdGlvbiBvZiB3aGljaCBzdHJhdGVneSB3ZSBjaG9vc2Ugd2hlbg0KcmVz
+eW5jaHJvbmlzaW5nIHRoZSBzbG90IG51bWJlcnMgYWZ0ZXIgYW4gaW50ZXJydXB0aW9uIGhhcyBv
+Y2N1cnJlZC4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRh
+aW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
