@@ -2,92 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51B56139219
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 14:23:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 943D3139579
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2020 17:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgAMNXz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jan 2020 08:23:55 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:39564 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMNXz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jan 2020 08:23:55 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DDMe1h091442;
-        Mon, 13 Jan 2020 13:23:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=8OZxeanEuptXF8CJ0FdPIwRdmEuBYU+V1UcaAab/WP4=;
- b=alF88qWnhtZBwRxjsDU+LhxfvFBhR8wdyI+nL8HIQYD7YOU859JkAYSrHQFjj3fsenhd
- XvPaAPm2M7lQmDJKzhHQtmJcZzU8HvquwNQFO6ASTQea2tmtMERPad/lnnUnovDK0SVW
- neiRQhgdgYq8tMOQ3YH32A8NztpVVb+TyB4xooUMO/CcaRXMZm/G9hQjxPzAQ5q8K389
- 4RRFtevsA63LWAKWJDgaRdYI02HNCkTkroVM9aVRul7jC9LEGlzeVDtqAbFzuZUJA1cZ
- H/85nOqumdRDi9bX1Jhj9Bjh8aN0decsUWpzmsS9aUw1Svn+k8sXnnlgfaR0HT89oRdE AQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xf73y6vnb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 13:23:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DDNnvl154646;
-        Mon, 13 Jan 2020 13:23:49 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xfqu4hufy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 13:23:49 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DDNEGb024717;
-        Mon, 13 Jan 2020 13:23:14 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 05:23:14 -0800
-Date:   Mon, 13 Jan 2020 16:23:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] nfsd4: fix double free in nfsd4_do_async_copy()
-Message-ID: <20200113132307.frp6ur5zhzolu5ys@kili.mountain>
+        id S1727726AbgAMQJG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jan 2020 11:09:06 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36486 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMQJF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jan 2020 11:09:05 -0500
+Received: by mail-vs1-f68.google.com with SMTP id u14so6158453vsu.3
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2020 08:09:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jObQMn9gSwz3ebaw8I2BAqpZVOyyemNKGFqgfXY71+8=;
+        b=QysXKqXbP6iAqnxljpZVx+40pBdK2NYkc0unODXQPO8X3KXjinTm3KCiXxW8B+7AYk
+         Tp4vYv+YrHe99Dg243LTK0HjXZHrZ4Bj3aISw7wZpV+jbBMe6+dJlenetKSMkXCx2Cjv
+         i2sMvhGqU2l+1EcAkZ2XbMK+0EF5YRc7qFQ1qykNd6Ve8/tF2jjmjwXAaJ/mhn/AukB6
+         WP3GR3aTZV8s7idiMXv6xadIUX3qiu2eEhksZcGVbO7V38vRinXzBn6ZD43PTInxsJ7M
+         YvMuwExwAkZCOHqI1yMzRNumpkXvhoqLS87Z0lKCfj7w5eRuLZAPc4Lxiqxg/u/Uj4RZ
+         G2HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jObQMn9gSwz3ebaw8I2BAqpZVOyyemNKGFqgfXY71+8=;
+        b=S+/zHMo6+q3yf9u697TJU4KDDQizbag6xpLIWGPd363UJ6spjDCln52B62rbR8VFvY
+         MGxZPiJ+MmC+UV0ysGI1kk5JNZZxfuNiRcFYBnAp5eUQGvF0GiBCtJ6aKgsYKlsp8YGo
+         050TWgU5FMbWUvcMmKA7qoVEcAGqJ3V9BVj08vedZM0/iWLQVxhCzPPPXw5/wEGQoEFv
+         Su6AXLc95S4l7w3vFtssSN5ETKnWrD+7WbEJpNRCSEsouOHXVacBxUQwW8jOuwtW4vUb
+         6ap0IVIkcU7z/UXpSvpU9JSGe9RVmFhWypz3dJVgmwGstBGw18cPW+iRyV4fQWWTdEhS
+         STPQ==
+X-Gm-Message-State: APjAAAVu6QWbgHBbjJ2l2mt96x/G+DDv90SW9FoBwQBG+/M5uTF/KZnG
+        GNCxPNEkXFDxaZnRDOJWGCbq93HSNjNkL9h1OhUyrA==
+X-Google-Smtp-Source: APXvYqwn/T2ytWCWnWa2iCY9L6rRBJKsfQ0stYAUHbX3KcaaB1ULDpoCoXdhXXyfU59nIScV/rbXLKrG5l6yoXRUQuY=
+X-Received: by 2002:a67:c90d:: with SMTP id w13mr6494769vsk.164.1578931744232;
+ Mon, 13 Jan 2020 08:09:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130112
+References: <CAN-5tyFY3XpteXw-fnpj0PQa3M81QGb6VnoxMaJukOZgJZ8ZOg@mail.gmail.com>
+ <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
+In-Reply-To: <3b89b01911b5149533e45478fdcec941a4f915ba.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 13 Jan 2020 11:08:53 -0500
+Message-ID: <CAN-5tyEc+yhWbUcO2snbT8kSAMo3wmEwYh3LPgd4tbNWC_838g@mail.gmail.com>
+Subject: Re: interrupted rpcs problem
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This frees "copy->nf_src" before and again after the goto.
+On Fri, Jan 10, 2020 at 4:03 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Fri, 2020-01-10 at 14:29 -0500, Olga Kornievskaia wrote:
+> > Hi folks,
+> >
+> > We are having an issue with an interrupted RPCs again. Here's what I
+> > see when xfstests were ctrl-c-ed.
+> >
+> > frame 332 SETATTR call slot=0 seqid=0x000013ca (I'm assuming this is
+> > interrupted and released)
+> > frame 333 CLOSE call slot=0 seqid=0x000013cb  (only way the slot
+> > could
+> > be free before the reply if it was interrupted, right? Otherwise we
+> > should never have the slot used by more than one outstanding RPC)
+> > frame 334 reply to 333 with SEQ_MIS_ORDERED (I'm assuming server
+> > received frame 333 before 332)
+> > frame 336 CLOSE call slot=0 seqid=0x000013ca (??? why did we
+> > decremented it. I mean I know why it's in the current code :-/ )
+> > frame 337 reply to 336 SEQUENCE with ERR_DELAY
+> > frame 339 reply to 332 SETATTR which nobody is waiting for
+> > frame 543 CLOSE call slot=0 seqid=0x000013ca (retry after waiting for
+> > err_delay)
+> > frame 544 reply to 543 with SETATTR (out of the cache).
+> >
+> > What this leads to is: file is never closed on the server. Can't
+> > remove it. Unmount fails with CLID_BUSY.
+> >
+> > I believe that's the result of commit
+> > 3453d5708b33efe76f40eca1c0ed60923094b971.
+> > We used to have code that bumped the sequence up when the slot was
+> > interrupted but after the commit "NFSv4.1: Avoid false retries when
+> > RPC calls are interrupted".
+> >
+> > Commit has this "The obvious fix is to bump the sequence number
+> > pre-emptively if an
+> >     RPC call is interrupted, but in order to deal with the corner
+> > cases
+> >     where the interrupted call is not actually received and processed
+> > by
+> >     the server, we need to interpret the error NFS4ERR_SEQ_MISORDERED
+> >     as a sign that we need to either wait or locate a correct
+> > sequence
+> >     number that lies between the value we sent, and the last value
+> > that
+> >     was acked by a SEQUENCE call on that slot."
+> >
+> > If we can't no longer just bump the sequence up, I don't think the
+> > correct action is to automatically bump it down (as per example
+> > here)?
+> > The commit doesn't describe the corner case where it was necessary to
+> > bump the sequence up. I wonder if we can return the knowledge of the
+> > interrupted slot and make a decision based on that as well as
+> > whatever
+> > the other corner case is.
+> >
+> > I guess what I'm getting is, can somebody (Trond) provide the info
+> > for
+> > the corner case for this that patch was created. I can see if I can
+> > fix the "common" case which is now broken and not break the corner
+> > case....
+> >
+>
+> There is no pure client side solution for this problem.
+>
+> The change was made because if you have multiple interruptions of the
+> RPC call, then the client has to somehow figure out what the correct
+> slot number is. If it starts low, and then goes high, and the server is
+> not caching the arguments for the RPC call that is in the session
+> cache, then we will _always_ hit this bug because we will always hit
+> the replay of the last entry.
+>
+> At least if we start high, and iterate by low, then we reduce the
+> problem to being a race with the processing of the interrupted request
+> as it is in this case.
+>
+> However, as I said, the real solution here has to involve the server.
 
-Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- fs/nfsd/nfs4proc.c | 1 -
- 1 file changed, 1 deletion(-)
+Ok I see your point that if the server cached the arguments, then the
+server would tell that 2nd rpc using the same slot+seqid has different
+args and would not use the replay cache.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 1e14b3ed5674..c90c24c35b2e 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1469,7 +1469,6 @@ static int nfsd4_do_async_copy(void *data)
- 		copy->nf_src->nf_file = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
- 					      &copy->stateid);
- 		if (IS_ERR(copy->nf_src->nf_file)) {
--			kfree(copy->nf_src);
- 			copy->nfserr = nfserr_offload_denied;
- 			nfsd4_interssc_disconnect(copy->ss_mnt);
- 			goto do_callback;
--- 
-2.11.0
+However, I wonder if the client can do better. Can't we be more aware
+of when we are interrupting the rpc? For instance, if we are
+interrupted after we started to wait on the RPC, doesn't it mean the
+rpc is sent on the network and since network is reliable then server
+must have consumed the seqid for that slot (in this case increment
+seqid)? That's the case that's failing now.
 
+I really don't understand where the process is interrupted so that the
+client consumes the seqid but the rpc never gets on the network. I see
+the only other place is in call_allocate(). If that's the case, then
+we can distinguish those two places and treat them differently (in
+this case decrement seqid)?
+
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
