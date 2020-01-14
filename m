@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4594513B028
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2020 17:59:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8724413B02F
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2020 18:02:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgANQ7s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jan 2020 11:59:48 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37378 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANQ7s (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jan 2020 11:59:48 -0500
-Received: by mail-yw1-f67.google.com with SMTP id z7so9599422ywd.4
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2020 08:59:47 -0800 (PST)
+        id S1726195AbgANRCc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jan 2020 12:02:32 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:43450 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANRCc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jan 2020 12:02:32 -0500
+Received: by mail-yw1-f66.google.com with SMTP id v126so9599785ywc.10
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2020 09:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hWDqkthXpxmKt51JcSaY6XUF1ytD3dBBeBwK1WWW3ng=;
-        b=i1jIGrfCcss5yJL2W14+OsqPAV8UgyB24NwVoHLPfKntZiKEvzDTD8PqhGMF4/CQF8
-         wFStHG6320Yz0y0SUrarRCIOSqJCIl5nWSZJm2K3RgSZ1rjKH48tD9nQylBV4D7ylTs8
-         VD9d+1c8DPjMXbcHe/Xm+eJb/3sz9bv4c6N8CgAN5a2PfKBTYK/+BGrcRSTmNv0KtI7C
-         2l3cCMZV3ppgoaJQqMcTONj3Hq8p7UcmVhQeMLxPMApoN+dWLsNNIr0RBfJOEP+hXzZ4
-         0GLQS/nJd5fhl1avATwhrlBCOciFI4tUWSsqBrmri/oh9mnDNcJVf8cC+aFVRz77zY2O
-         MvjQ==
+        bh=0XJzOwwa46IxUxZN6OzSr2hsV41A8UOkH+Mu7jcmN8k=;
+        b=NsBSr6t7SuaaitiXPz2uPSbUjbBAc+r/BhomyX8jaleYN+xJCQRrC4mTIUWWqVPljq
+         5/Xx22TmsgzlEG/fPG3Lbr/zAm10mi1oSY9c9M9cd/62dH8dmkfNaFsMQW9v1Og9xT8W
+         ZsK7LZgDthE8EwpZ6Pw2oUCIZN8ZWN9RoDZUf9atqlsoTSlUNbQe7Bx56InC1rEJ6beN
+         yS7eOq/7/cKrwUmj+yly89TwI/QxL5e7n0xTR3y78c0OOCGTHYNmJkzB+zp0IbR2k3LB
+         AcBNBzJQ+J0FRKlfQOdqYhbBh5yQx4gNo+Qjk9+FyiqC0lXQlfXTsZ+3Bj7GKXOeWhbT
+         3Bmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hWDqkthXpxmKt51JcSaY6XUF1ytD3dBBeBwK1WWW3ng=;
-        b=Zjm0lfVkh4kKJqch+5UMl0zynEsvgsKK6hU3SY+BaAMt6+TTpiw2XBLii1McSfXJOK
-         0rpR3A8Vb70C81IE6uSbZEYPYThRn+HBVwobyRsh4FmRFkbiNNZcUsunZfLmF73eHtc1
-         xY4ETInMZZuLGkKaO91xhot3oKB8uO7Q2B1lRWFNDR8bvy4PIclwhl7kQGV9v220WV31
-         OSqbXSp6IGCHnBI2RPp/dY8g//AmaHwPIhv4evfaLgbEqpp2NOfc+Sn1OsCQ7c8Sc0hC
-         +CAeXZVe3HMbteBBxN4bdXc/DlCoAKCvzvcm+BB2DgKeqI8jW+uPqwjQLAk4qjLINCII
-         n5Bw==
-X-Gm-Message-State: APjAAAX7jHJG+3PeIHH4evb4phGgrsIGqga9qsTqh9N5o9K5WMwHDWNV
-        +iTypiPpaFsWF9w4dRh0Zd5res4=
-X-Google-Smtp-Source: APXvYqz4opxZYGQITrvG/3qPtQToNvyC/n3lNswt9BPKEIhT626l2LY8DkwOIJaHdz6YQjSzF689jQ==
-X-Received: by 2002:a0d:cd45:: with SMTP id p66mr17907840ywd.156.1579021187349;
-        Tue, 14 Jan 2020 08:59:47 -0800 (PST)
+        bh=0XJzOwwa46IxUxZN6OzSr2hsV41A8UOkH+Mu7jcmN8k=;
+        b=tiEMaVEUosr1oW+8C9dr8n5mjb8jFTSayiEsfRCTSLcE45G4KgDFcAv0gYtqIcT3st
+         ChLd4kGa5szmtw+eUCWlHnORgRltP0Swk7h7fcoNPV23guPvGsiyZtiTECLovcE5Se5S
+         yWim4gKKlwOgN8VqE3rEvkd5OT7mYGyKxOKljYc4fX9DKlOsv3BRYulxw7jLBi+rihmf
+         apYDbxFft9nJm/vXwgqozZlsnvwb+7TTyhlCdsOO2r44pPiHMJxM09rXz1lQ4bj1jdxq
+         fcqauW6wyzb7Em9n4g55oSrW9odnMMQN8GJPl5dkbB5BFJTTMs0MtOtEuCJ6TwufhIvQ
+         mFLw==
+X-Gm-Message-State: APjAAAVeDJUaPReJGMxyEoPLPxtQvLbZFAUO19MWwuOM7aket8cpTv7p
+        tcu1oCXPu3bSk2yExKE8xRDsKfk=
+X-Google-Smtp-Source: APXvYqx8M9Wzvs2DQ8wEFblWmIOW9spp//VgiPskb+BA36XjrYa6vfA1M2G4Y4nFKe+JcP2v7niVUg==
+X-Received: by 2002:a81:b1c3:: with SMTP id p186mr13943258ywh.398.1579021351626;
+        Tue, 14 Jan 2020 09:02:31 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id s31sm7109660ywa.30.2020.01.14.08.59.46
+        by smtp.gmail.com with ESMTPSA id q185sm6926930ywh.61.2020.01.14.09.02.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 08:59:46 -0800 (PST)
+        Tue, 14 Jan 2020 09:02:31 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     "J. Bruce Fields" <bfields@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC/cache: Allow garbage collection of invalid cache entries
-Date:   Tue, 14 Jan 2020 11:57:38 -0500
-Message-Id: <20200114165738.922961-1-trond.myklebust@hammerspace.com>
+Subject: [PATCH 1/2] nfsd: Fix a perf warning
+Date:   Tue, 14 Jan 2020 12:00:21 -0500
+Message-Id: <20200114170022.923083-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,86 +59,61 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the cache entry never gets initialised, we want the garbage
-collector to be able to evict it. Otherwise if the upcall daemon
-fails to initialise the entry, we end up never expiring it.
+perf does not know how to deal with a __builtin_bswap32() call, and
+complains. All other functions just store the xid etc in host endian
+form, so let's do that in the tracepoint for nfsd_file_acquire too.
 
-Fixes: d6fc8821c2d2 ("SUNRPC/Cache: Always treat the invalid cache as unexpired")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- include/linux/sunrpc/cache.h |  3 ---
- net/sunrpc/cache.c           | 36 +++++++++++++++++++-----------------
- 2 files changed, 19 insertions(+), 20 deletions(-)
+ fs/nfsd/trace.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
-index f8603724fbee..0428dd23fd79 100644
---- a/include/linux/sunrpc/cache.h
-+++ b/include/linux/sunrpc/cache.h
-@@ -202,9 +202,6 @@ static inline void cache_put(struct cache_head *h, struct cache_detail *cd)
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index ffc78a0e28b2..b073bdc2e6e8 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -228,7 +228,7 @@ TRACE_EVENT(nfsd_file_acquire,
+ 	TP_ARGS(rqstp, hash, inode, may_flags, nf, status),
  
- static inline bool cache_is_expired(struct cache_detail *detail, struct cache_head *h)
- {
--	if (!test_bit(CACHE_VALID, &h->flags))
--		return false;
--
- 	return  (h->expiry_time < seconds_since_boot()) ||
- 		(detail->flush_time >= h->last_refresh);
- }
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 52d927210d32..99d630150af6 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -65,13 +65,14 @@ static struct cache_head *sunrpc_cache_find_rcu(struct cache_detail *detail,
+ 	TP_STRUCT__entry(
+-		__field(__be32, xid)
++		__field(u32, xid)
+ 		__field(unsigned int, hash)
+ 		__field(void *, inode)
+ 		__field(unsigned int, may_flags)
+@@ -236,11 +236,11 @@ TRACE_EVENT(nfsd_file_acquire,
+ 		__field(unsigned long, nf_flags)
+ 		__field(unsigned char, nf_may)
+ 		__field(struct file *, nf_file)
+-		__field(__be32, status)
++		__field(u32, status)
+ 	),
  
- 	rcu_read_lock();
- 	hlist_for_each_entry_rcu(tmp, head, cache_list) {
--		if (detail->match(tmp, key)) {
--			if (cache_is_expired(detail, tmp))
--				continue;
--			tmp = cache_get_rcu(tmp);
--			rcu_read_unlock();
--			return tmp;
--		}
-+		if (!detail->match(tmp, key))
-+			continue;
-+		if (test_bit(CACHE_VALID, &tmp->flags) &&
-+		    cache_is_expired(detail, tmp))
-+			continue;
-+		tmp = cache_get_rcu(tmp);
-+		rcu_read_unlock();
-+		return tmp;
- 	}
- 	rcu_read_unlock();
- 	return NULL;
-@@ -114,17 +115,18 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
+ 	TP_fast_assign(
+-		__entry->xid = rqstp->rq_xid;
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
+ 		__entry->hash = hash;
+ 		__entry->inode = inode;
+ 		__entry->may_flags = may_flags;
+@@ -248,15 +248,15 @@ TRACE_EVENT(nfsd_file_acquire,
+ 		__entry->nf_flags = nf ? nf->nf_flags : 0;
+ 		__entry->nf_may = nf ? nf->nf_may : 0;
+ 		__entry->nf_file = nf ? nf->nf_file : NULL;
+-		__entry->status = status;
++		__entry->status = be32_to_cpu(status);
+ 	),
  
- 	/* check if entry appeared while we slept */
- 	hlist_for_each_entry_rcu(tmp, head, cache_list) {
--		if (detail->match(tmp, key)) {
--			if (cache_is_expired(detail, tmp)) {
--				sunrpc_begin_cache_remove_entry(tmp, detail);
--				freeme = tmp;
--				break;
--			}
--			cache_get(tmp);
--			spin_unlock(&detail->hash_lock);
--			cache_put(new, detail);
--			return tmp;
-+		if (!detail->match(tmp, key))
-+			continue;
-+		if (test_bit(CACHE_VALID, &tmp->flags) &&
-+		    cache_is_expired(detail, tmp)) {
-+			sunrpc_begin_cache_remove_entry(tmp, detail);
-+			freeme = tmp;
-+			break;
- 		}
-+		cache_get(tmp);
-+		spin_unlock(&detail->hash_lock);
-+		cache_put(new, detail);
-+		return tmp;
- 	}
+ 	TP_printk("xid=0x%x hash=0x%x inode=0x%p may_flags=%s ref=%d nf_flags=%s nf_may=%s nf_file=0x%p status=%u",
+-			be32_to_cpu(__entry->xid), __entry->hash, __entry->inode,
++			__entry->xid, __entry->hash, __entry->inode,
+ 			show_nf_may(__entry->may_flags), __entry->nf_ref,
+ 			show_nf_flags(__entry->nf_flags),
+ 			show_nf_may(__entry->nf_may), __entry->nf_file,
+-			be32_to_cpu(__entry->status))
++			__entry->status)
+ );
  
- 	hlist_add_head_rcu(&new->cache_list, head);
+ DECLARE_EVENT_CLASS(nfsd_file_search_class,
 -- 
 2.24.1
 
