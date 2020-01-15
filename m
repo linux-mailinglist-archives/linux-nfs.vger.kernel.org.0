@@ -2,193 +2,221 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C67013CCC4
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 20:06:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D40F613CD1A
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 20:29:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAOTGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jan 2020 14:06:20 -0500
-Received: from mail-co1nam11on2124.outbound.protection.outlook.com ([40.107.220.124]:44161
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728986AbgAOTGU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:06:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PeU1CiJv9HNu+aa7WTy6Xj7jQLlj2vJ9VG854Ngo0T3OqOng2TPkKUw8pWtbsS8eOLGrkkXZGIz9n5sJall4wRqSBeKY8O3F+9fzwN4XdV1QXlbuctqlPJiPjjlrIQfZ6NgqNekQMag0CdGJgMLNT7plurYuEMXndFnZwReRzuFSytpkkX3BX2dkhHPWHhcshFXecv8s1wwhcMjj7qzC8nNxc0cDj8LUOCIOeBZBsuXoo0ECp0lUFPQC9w3jPhtrqWL3y7b+Is4hyjvdAUmZgTNsfn07Dd2nz9KqT+t92zdIn6DqlQMkXAmXUFqinRK4Kbyq+CfsoIW8h9MZH8LrQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lD6icZMEN30j6H9mLMUW5SnlPmMEJPvaVuJLrVqiOjM=;
- b=XtxRWPIh1p+2FUnSAPzWj+u1wxyMXA2EzFhcosaYIpQDpYFqkguMRr1GXeCSmJFAmt/wdnbRvi0rI/c3TGrtkyd+YFKQJoIm/KFyfx2DKaBgSQqRP/gmpfFh/9Nk452IaJz5kiYi8x9GmRyL28lNijNLUY7L7kDBRrdt23DA+HsnqiMy39TlV47S3tSIvvX5RU4uadMrFttSkiF6FXLb/9CsV1RYt1SGmE/kpkOn8T/BQ+srf899y3IrqaGZYr2vcBL/VW9SUDdWBIsU2K4ZFPcoEtY/hjx7G8UMxGcuRXyaQLJCcpNBSCwXk14cm13m33BuWMBQ/C6lZ8QpwAZDvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lD6icZMEN30j6H9mLMUW5SnlPmMEJPvaVuJLrVqiOjM=;
- b=bFzljE68co8mhA3ZwxMctztqfyfMJQUunSV/REoQYD/0EZr4Yp67H3/Kc4jSEawQ6v0GEid5Mwt7UKyJVoZ/Ta0bmVb/kZF5jy0JtfqK8Tj9XQoehydPTNECMUFkuAXzT9r7yH6s0htDB6cq4xSiWENYWvOvADxkauOfW+Kkzm0=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1883.namprd13.prod.outlook.com (10.174.182.160) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.15; Wed, 15 Jan 2020 19:06:15 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.015; Wed, 15 Jan 2020
- 19:06:15 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dai.ngo@oracle.com" <dai.ngo@oracle.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1728928AbgAOT34 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jan 2020 14:29:56 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41250 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgAOT34 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jan 2020 14:29:56 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJS3pZ176217;
+        Wed, 15 Jan 2020 19:29:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=BEJENXdV2A+/FGc/y4aR7MLksTMX99BwOP/NccHtgRY=;
+ b=iQ9CfwKn/bPyl6pzcyJPT+WlynJb8Ow3BTv3eWArgs18nUFe2rk/jl3ohMUk1M+wrf7X
+ UpW/eq2QvW0vorMv3gnPwAAjjr+TpzWdTJwzH0Z7w4h8LpVI9mPAIikVu+NU/v4Itys2
+ HMSGgkM5WXI5c5hC8eE/CfDnvNxnIoxf1vmYCjkeVrLySQAUHiJeoLuonFO6e5W0ro+t
+ S0od2ShR/wQugWPCjvEWTymLYgGtgDIJdKNoU42FPObziD/Z0fygSHOdVgUDxIQGMOsr
+ Y7AfnkG2L0yrF6YL8AvfqmgO+/l+C26CVLFIHmw9R57t3kBWoVgSLPACcJ4Ax7XSP50t ow== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74se89e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 19:29:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJTcF4170059;
+        Wed, 15 Jan 2020 19:29:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xj61k9rs9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 19:29:46 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FJSf0j012442;
+        Wed, 15 Jan 2020 19:28:41 GMT
+Received: from Macbooks-MacBook-Pro.local (/68.4.198.220)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 11:28:40 -0800
 Subject: Re: 'ls -lrt' performance issue on large dir while dir is being
  modified
-Thread-Topic: 'ls -lrt' performance issue on large dir while dir is being
- modified
-Thread-Index: AQHVtTrg9UEu5xyd+UCr2UuPhZ9qAafCacsAgCnKFQCAAAwFgIAAA1sA
-Date:   Wed, 15 Jan 2020 19:06:15 +0000
-Message-ID: <49bfa6104b6a65311594efd47592b5c2b25d905a.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 References: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
-         <a41af3d6-8280-e315-fb65-a9285bad50ec@oracle.com>
-         <770937d3-9439-db4a-1f6e-59a59f2c08b9@oracle.com>
-         <9fdf37ffe4b3f7016a60e3a61c2087a825348b28.camel@hammerspace.com>
-In-Reply-To: <9fdf37ffe4b3f7016a60e3a61c2087a825348b28.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0b99a87-4491-4136-62c8-08d799edfea6
-x-ms-traffictypediagnostic: DM5PR1301MB1883:
-x-microsoft-antispam-prvs: <DM5PR1301MB188395B63C8665F6D6AA928AB8370@DM5PR1301MB1883.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(396003)(39830400003)(376002)(189003)(199004)(81156014)(8936002)(81166006)(71200400001)(110136005)(26005)(8676002)(6512007)(4326008)(186003)(6486002)(86362001)(2616005)(5660300002)(91956017)(66476007)(66446008)(66556008)(66946007)(53546011)(36756003)(64756008)(6506007)(316002)(478600001)(2906002)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1883;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fubRn213F3FVYifCWeLD7PV3AxyJO6xCS7I+5yNYyMaSkAkDwYwEMUw+qfuj4kUo9PQT2wK+sMJlqur9kdvpA3VqqdAOIxY7MGJzirm7QrOHUY1xJ/F0h0Svv/sJj4WYD9FvY/SR30wcLHMPxTgY0cg2IcoOc64GfkuzS0u7tGspeIpjybOnmqUK99LBUrDsplsfrr3swRUBXnavLBvhb6/xgajpQmvaLQOZ+E97+tgbVlk6Z1M0KWrC5wpzss4gCI4FFhp+dYUytA3Jgg5gd0QjkaI03jsZgSE1DV2M50Xo54AsnR8IKgz8mjjD3mRBbIs+qswlAO0Ccv0Pbg62n6UjzYbKF+uMwMYtiY9m8gWUNQHH2uHEOrCv1EZYeqBxkfRNqKZBRCoz1rNB0yXw+KDPVVMJWLWseylqzZeUY3GDFjMe/vC8FAkOVUzZHORJ
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EAE8A8C8BE8E024CBD2A3576577DA525@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <a41af3d6-8280-e315-fb65-a9285bad50ec@oracle.com>
+ <770937d3-9439-db4a-1f6e-59a59f2c08b9@oracle.com>
+ <9fdf37ffe4b3f7016a60e3a61c2087a825348b28.camel@hammerspace.com>
+ <49bfa6104b6a65311594efd47592b5c2b25d905a.camel@hammerspace.com>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Message-ID: <d39d4a6b-165b-7fe3-5e9f-896e1c787438@oracle.com>
+Date:   Wed, 15 Jan 2020 11:28:39 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0b99a87-4491-4136-62c8-08d799edfea6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 19:06:15.3631
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FYshnGCqONbh9bBa7WIZXaYB3BlUwXfL/LZ6j/nNzbXFs6bGKpCu7KQ9JoVMG3fYGRnOpONIL6zlDpmPsKyGzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1883
+In-Reply-To: <49bfa6104b6a65311594efd47592b5c2b25d905a.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150149
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTE1IGF0IDE4OjU0ICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
-DQo+IE9uIFdlZCwgMjAyMC0wMS0xNSBhdCAxMDoxMSAtMDgwMCwgRGFpIE5nbyB3cm90ZToNCj4g
-PiBIaSBBbm5hLCBUcm9uZCwNCj4gPiANCj4gPiBXb3VsZCB5b3UgcGxlYXNlIGxldCBtZSBrbm93
-IHlvdXIgb3BpbmlvbiByZWdhcmRpbmcgcmV2ZXJ0aW5nIHRoZQ0KPiA+IGNoYW5nZSBpbg0KPiA+
-IG5mc19mb3JjZV91c2VfcmVhZGRpcnBsdXMgdG8gY2FsbCBuZnNfemFwX21hcHBpbmcgaW5zdGVh
-ZCBvZg0KPiA+IGludmFsaWRhdGVfbWFwcGluZ19wYWdlcy4NCj4gPiBUaGlzIGNoYW5nZSBpcyB0
-byBwcmV2ZW50IHRoZSBjb29raWUgb2YgdGhlIFJFQURESVJQTFVTIHRvIGJlIHJlc2V0DQo+ID4g
-dG8gMCB3aGlsZQ0KPiA+IGFuIGluc3RhbmNlIG9mICdscycgaXMgcnVubmluZyBhbmQgdGhlIGRp
-cmVjdG9yeSBpcyBiZWluZyBtb2RpZmllZC4NCj4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9mcy9u
-ZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMgaW5kZXggDQo+ID4gPiBhNzNlMmY4YmQ4ZWMuLjVkNGE2
-NDU1NWZhNyAxMDA2NDQgLS0tIGEvZnMvbmZzL2Rpci5jICsrKyANCj4gPiA+IGIvZnMvbmZzL2Rp
-ci5jIEBAIC00NDQsNyArNDQ0LDcgQEAgdm9pZCANCj4gPiA+IG5mc19mb3JjZV91c2VfcmVhZGRp
-cnBsdXMoc3RydWN0IGlub2RlICpkaXIpICAgICAgaWYgDQo+ID4gPiAobmZzX3NlcnZlcl9jYXBh
-YmxlKGRpciwgTkZTX0NBUF9SRUFERElSUExVUykgJiYgICAgICAgICAgDQo+ID4gPiAhbGlzdF9l
-bXB0eSgmbmZzaS0+b3Blbl9maWxlcykpIHsgICAgICAgICAgDQo+ID4gPiBzZXRfYml0KE5GU19J
-Tk9fQURWSVNFX1JEUExVUywgJm5mc2ktPmZsYWdzKTsgLSAgICAgICAgDQo+ID4gPiBpbnZhbGlk
-YXRlX21hcHBpbmdfcGFnZXMoZGlyLT5pX21hcHBpbmcsIDAsIC0xKTsgKyAgICAgICAgDQo+ID4g
-PiBuZnNfemFwX21hcHBpbmcoZGlyLCBkaXItPmlfbWFwcGluZyk7ICAgICAgfSAgfSANCj4gPiAN
-Cj4gPiBUaGFua3MsDQo+ID4gLURhaQ0KPiA+IA0KPiA+IE9uIDEyLzE5LzE5IDg6MDEgUE0sIERh
-aSBOZ28gd3JvdGU6DQo+ID4gPiBIaSBBbm5hLCBUcm9uZCwNCj4gPiA+IA0KPiA+ID4gSSBtYWRl
-IGEgbWlzdGFrZSB3aXRoIHRoZSA1LjUgbnVtYmVycy4gVGhlIFZNIHRoYXQgcnVucyA1LjUgaGFz
-DQo+ID4gPiBzb21lDQo+ID4gPiBwcm9ibGVtcy4gVGhlcmUgaXMgbm8gcmVncmVzc2lvbiB3aXRo
-IDUuNSwgaGVyZSBhcmUgdGhlIG5ldw0KPiA+ID4gbnVtYmVyczoNCj4gPiA+IA0KPiA+ID4gVXBz
-dHJlYW0gTGludXggNS41LjAtcmMxIFtPUkldIDkzMjk2OiAzbTEwLjkxN3MgIDE5Nzg5MToNCj4g
-PiA+IDEwbTM1Ljc4OXMNCj4gPiA+IFVwc3RyZWFtIExpbnV4IDUuNS4wLXJjMSBbTU9EXSA5ODYx
-NDogMW01OS42NDlzICAxOTI4MDE6DQo+ID4gPiAzbTU1LjAwM3MNCj4gPiA+IA0KPiA+ID4gTXkg
-YXBvbG9naWVzIGZvciB0aGUgbWlzdGFrZS4NCj4gPiA+IA0KPiA+ID4gTm93IHRoZXJlIGlzIG5v
-IHJlZ3Jlc3Npb24gd2l0aCA1LjUsIEknZCBsaWtlIHRvIGdldCB5b3VyIG9waW5pb24NCj4gPiA+
-IHJlZ2FyZGluZyB0aGUgY2hhbmdlIHRvIHJldmVydCB0aGUgY2FsbCBmcm9tDQo+ID4gPiBpbnZh
-bGlkYXRlX21hcHBpbmdfcGFnZXMNCj4gPiA+IHRvIG5mc196YXBfbWFwcGluZyBpbiBuZnNfZm9y
-Y2VfdXNlX3JlYWRkaXJwbHVzIHRvIHByZXZlbnQgdGhlDQo+ID4gPiBjdXJyZW50ICdscycgZnJv
-bSByZXN0YXJ0aW5nIHRoZSBSRUFERElSUExVUzMgZnJvbSBjb29raWUgMC4gSSdtDQo+ID4gPiBu
-b3QgcXVpdGUgc3VyZSBhYm91dCB0aGUgaW50ZW50aW9uIG9mIHRoZSBwcmlvciBjaGFuZ2UgZnJv
-bQ0KPiA+ID4gbmZzX3phcF9tYXBwaW5nIHRvIGludmFsaWRhdGVfbWFwcGluZ19wYWdlcyBzbyB0
-aGF0IGlzIHdoeSBJJ20NCj4gPiA+IHNlZWtpbmcgYWR2aXNlLiBPciBkbyB5b3UgaGF2ZSBhbnkg
-c3VnZ2VzdGlvbnMgdG8gYWNoaWV2ZSB0aGUNCj4gPiA+IHNhbWU/DQo+ID4gPiANCj4gPiA+IFRo
-YW5rcywNCj4gPiA+IC1EYWkNCj4gPiA+IA0KPiA+ID4gT24gMTIvMTcvMTkgNDozNCBQTSwgRGFp
-IE5nbyB3cm90ZToNCj4gPiA+ID4gSGksDQo+ID4gPiA+IA0KPiA+ID4gPiBJJ2QgbGlrZSB0byBy
-ZXBvcnQgYW4gaXNzdWUgd2l0aCAnbHMgLWxydCcgb24gTkZTdjMgY2xpZW50DQo+ID4gPiA+IHRh
-a2VzDQo+ID4gPiA+IGEgdmVyeSBsb25nIHRpbWUgdG8gZGlzcGxheSB0aGUgY29udGVudCBvZiBh
-IGxhcmdlIGRpcmVjdG9yeQ0KPiA+ID4gPiAoMTAwayAtIDIwMGsgZmlsZXMpIHdoaWxlIHRoZSBk
-aXJlY3RvcnkgaXMgYmVpbmcgbW9kaWZpZWQgYnkNCj4gPiA+ID4gYW5vdGhlciBORlN2MyBjbGll
-bnQuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGUgcHJvYmxlbSBjYW4gYmUgcmVwcm9kdWNlZCB1c2lu
-ZyAzIHN5c3RlbXMuIE9uZSBzeXN0ZW0NCj4gPiA+ID4gc2VydmVzDQo+ID4gPiA+IGFzIHRoZSBO
-RlMgc2VydmVyLCBvbmUgc3lzdGVtIHJ1bnMgYXMgdGhlIGNsaWVudCB0aGF0IGRvaW5nIHRoZQ0K
-PiA+ID4gPiAnbHMgLWxydCcgYW5kIGFub3RoZXIgc3lzdGVtIHJ1bnMgdGhlIGNsaWVudCB0aGF0
-IGNyZWF0ZXMgZmlsZXMNCj4gPiA+ID4gb24gdGhlIHNlcnZlci4NCj4gPiA+ID4gICAgIENsaWVu
-dDEgY3JlYXRlcyBmaWxlcyB1c2luZyB0aGlzIHNpbXBsZSBzY3JpcHQ6DQo+ID4gPiA+IA0KPiA+
-ID4gPiA+ICMhL2Jpbi9zaA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IGlmIFsgJCMgLWx0IDIgXTsg
-dGhlbg0KPiA+ID4gPiA+ICAgICAgICAgZWNobyAiVXNhZ2U6ICQwIG51bWJlcl9vZl9maWxlcyBi
-YXNlX2ZpbGVuYW1lIg0KPiA+ID4gPiA+ICAgICAgICAgZXhpdA0KPiA+ID4gPiA+IGZpICAgIG5m
-aWxlcz0kMQ0KPiA+ID4gPiA+IGZuYW1lPSQyDQo+ID4gPiA+ID4gZWNobyAiY3JlYXRpbmcgJG5m
-aWxlcyBmaWxlcyB1c2luZyBmaWxlbmFtZVskZm5hbWVdLi4uIg0KPiA+ID4gPiA+IGk9MCAgICAg
-ICAgIHdoaWxlIFsgaSAtbHQgJG5maWxlcyBdIDsNCj4gPiA+ID4gPiBkbyAgICAgICAgICAgIGk9
-YGV4cHIgJGkgKyAxYA0KPiA+ID4gPiA+ICAgICAgICAgZWNobyAieHl6IiA+ICRmbmFtZSRpDQo+
-ID4gPiA+ID4gICAgICAgICBlY2hvICIkZm5hbWUkaSIgZG9uZQ0KPiA+ID4gPiANCj4gPiA+ID4g
-Q2xpZW50MiBydW5zICd0aW1lIGxzIC1scnQgL3RtcC9tbnQvYmQxIHx3YyAtbCcgaW4gYSBsb29w
-Lg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIG5ldHdvcmsgdHJhY2VzIGFuZCBkdHJhY2UgcHJvYmVz
-IHNob3dlZCBudW1lcm91cw0KPiA+ID4gPiBSRUFERElSUExVUzMNCj4gPiA+ID4gcmVxdWVzdHMg
-cmVzdGFydGluZyAgZnJvbSBjb29raWUgMCB3aGljaCBzZWVtZWQgdG8gaW5kaWNhdGUgdGhlDQo+
-ID4gPiA+IGNhY2hlZCBwYWdlcyBvZiB0aGUgZGlyZWN0b3J5IHdlcmUgaW52YWxpZGF0ZWQgY2F1
-c2luZyB0aGUNCj4gPiA+ID4gcGFnZXMNCj4gPiA+ID4gdG8gYmUgcmVmaWxsZWQgc3RhcnRpbmcg
-ZnJvbSBjb29raWUgMCB1bnRpbCB0aGUgY3VycmVudA0KPiA+ID4gPiByZXF1ZXN0ZWQNCj4gPiA+
-ID4gY29va2llLiAgVGhlIGNhY2hlZCBwYWdlIGludmFsaWRhdGlvbiB3ZXJlIHRyYWNrZWQgdG8N
-Cj4gPiA+ID4gbmZzX2ZvcmNlX3VzZV9yZWFkZGlycGx1cygpLiAgVG8gdmVyaWZ5LCBJIG1hZGUg
-dGhlIGJlbG93DQo+ID4gPiA+IG1vZGlmaWNhdGlvbiwgcmFuIHRoZSB0ZXN0IGZvciB2YXJpb3Vz
-IGtlcm5lbCB2ZXJzaW9ucyBhbmQNCj4gPiA+ID4gY2FwdHVyZWQgdGhlIHJlc3VsdHMgc2hvd24g
-YmVsb3cuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGUgbW9kaWZpY2F0aW9uIGlzOg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2Rpci5jIGIvZnMvbmZzL2Rpci5jDQo+ID4g
-PiA+ID4gaW5kZXggYTczZTJmOGJkOGVjLi41ZDRhNjQ1NTVmYTcgMTAwNjQ0DQo+ID4gPiA+ID4g
-LS0tIGEvZnMvbmZzL2Rpci5jDQo+ID4gPiA+ID4gKysrIGIvZnMvbmZzL2Rpci5jDQo+ID4gPiA+
-ID4gQEAgLTQ0NCw3ICs0NDQsNyBAQCB2b2lkIG5mc19mb3JjZV91c2VfcmVhZGRpcnBsdXMoc3Ry
-dWN0DQo+ID4gPiA+ID4gaW5vZGUNCj4gPiA+ID4gPiAqZGlyKQ0KPiA+ID4gPiA+ICAgICAgaWYg
-KG5mc19zZXJ2ZXJfY2FwYWJsZShkaXIsIE5GU19DQVBfUkVBRERJUlBMVVMpICYmDQo+ID4gPiA+
-ID4gICAgICAgICAgIWxpc3RfZW1wdHkoJm5mc2ktPm9wZW5fZmlsZXMpKSB7DQo+ID4gPiA+ID4g
-ICAgICAgICAgc2V0X2JpdChORlNfSU5PX0FEVklTRV9SRFBMVVMsICZuZnNpLT5mbGFncyk7DQo+
-ID4gPiA+ID4gLSAgICAgICAgaW52YWxpZGF0ZV9tYXBwaW5nX3BhZ2VzKGRpci0+aV9tYXBwaW5n
-LCAwLCAtMSk7DQo+ID4gPiA+ID4gKyAgICAgICAgbmZzX3phcF9tYXBwaW5nKGRpciwgZGlyLT5p
-X21hcHBpbmcpOw0KPiA+ID4gPiA+ICAgICAgfQ0KPiA+ID4gPiA+ICB9DQo+IA0KPiBUaGlzIGNo
-YW5nZSBpcyBvbmx5IHJldmVydGluZyBwYXJ0IG9mIGNvbW1pdCA3OWY2ODdhM2RlOWUuIE15IHBy
-b2JsZW0NCj4gd2l0aCB0aGF0IGlzIGFzIGZvbGxvd3M6DQo+IA0KPiBSRkMxODEzIHN0YXRlcyB0
-aGF0IE5GU3YzIFJFQURESVJQTFVTIGNvb2tpZXMgYW5kIHZlcmlmaWVycyBtdXN0DQo+IG1hdGNo
-DQo+IHRob3NlIHJldHVybmVkIGJ5IHByZXZpb3VzIFJFQURESVJQTFVTIGNhbGxzLCBhbmQgUkVB
-RERJUiBjb29raWVzIGFuZA0KPiB2ZXJpZmllcnMgbXVzdCBtYXRjaCB0aG9zZSByZXR1cm5lZCBi
-eSBwcmV2aW91cyBSRUFERElSIGNhbGxzLiBJdA0KPiBzYXlzDQo+IG5vdGhpbmcgYWJvdXQgYmVp
-bmcgYWJsZSB0byBhc3N1bWUgY29va2llcyBmcm9tIFJFQURESVIgYW5kDQo+IFJFQURESVJQTFVT
-DQo+IGNhbGxzIGFyZSBpbnRlcmNoYW5nZWFibGUuIFNvIHRoZSBvbmx5IHJlYXNvbiBJIGNhbiBz
-ZWUgZm9yIHRoZQ0KPiBpbnZhbGlkYXRlX21hcHBpbmdfcGFnZXMoKSBpcyB0byBlbnN1cmUgdGhh
-dCB3ZSBkbyBzZXBhcmF0ZSB0aGUgdHdvDQo+IGNvb2tpZSBjYWNoZXMuDQo+IA0KPiBPVE9ILCBm
-b3IgTkZTdjQsIHRoZXJlIGlzIG5vIHNlcGFyYXRlIFJFQURESVJQTFVTIGZ1bmN0aW9uLCBzbyB0
-aGVyZQ0KPiByZWFsbHkgZG9lcyBub3QgYXBwZWFyIHRvIGJlIGFueSByZWFzb24gdG8gY2xlYXIg
-dGhlIHBhZ2UgY2FjaGUgYXQNCj4gYWxsDQo+IGFzIHdlJ3JlIHN3aXRjaGluZyBiZXR3ZWVuIHJl
-cXVlc3RpbmcgYXR0cmlidXRlcyBvciBub3QuDQo+IA0KDQpTb3JyeS4uLiBUbyBzcGVsbCBvdXQg
-bXkgb2JqZWN0aW9uIHRvIHRoaXMgY2hhbmdlIG1vcmUgY2xlYXJseTogVGhlDQpjYWxsIHRvIG5m
-c196YXBfbWFwcGluZygpIG1ha2VzIG5vIHNlbnNlIGluIGVpdGhlciBjYXNlLg0KICogSXQgZGVm
-ZXJzIHRoZSBjYWNoZSBpbnZhbGlkYXRpb24gdW50aWwgdGhlIG5leHQgY2FsbCB0bw0KICAgcmV3
-aW5kZGlyKCkvb3BlbmRpcigpLCBzbyBpdCBkb2VzIG5vdCBhZGRyZXNzIHRoZSBORlN2MyBjb25j
-ZXJuLg0KICogSXQgd291bGQgYXBwZWFyIHRvIGJlIGVudGlyZWx5IHN1cGVyZmx1b3VzIGZvciB0
-aGUgTkZTdjQgY2FzZS4NCg0KU28gYSBjaGFuZ2UgdGhhdCBtaWdodCBiZSBhY2NlcHRhYmxlIHdv
-dWxkIGJlIHRvIGtlZXAgdGhlIGV4aXN0aW5nIGNhbGwNCnRvIGludmFsaWRhdGVfbWFwcGluZ19w
-YWdlcygpIGZvciBORlN2MywgYnV0IHRvIHJlbW92ZSBpdCBmb3IgTkZTdjQuDQoNCi0tIA0KVHJv
-bmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0
-cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On 1/15/20 11:06 AM, Trond Myklebust wrote:
+> On Wed, 2020-01-15 at 18:54 +0000, Trond Myklebust wrote:
+>> On Wed, 2020-01-15 at 10:11 -0800, Dai Ngo wrote:
+>>> Hi Anna, Trond,
+>>>
+>>> Would you please let me know your opinion regarding reverting the
+>>> change in
+>>> nfs_force_use_readdirplus to call nfs_zap_mapping instead of
+>>> invalidate_mapping_pages.
+>>> This change is to prevent the cookie of the READDIRPLUS to be reset
+>>> to 0 while
+>>> an instance of 'ls' is running and the directory is being modified.
+>>>
+>>>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c index
+>>>> a73e2f8bd8ec..5d4a64555fa7 100644 --- a/fs/nfs/dir.c +++
+>>>> b/fs/nfs/dir.c @@ -444,7 +444,7 @@ void
+>>>> nfs_force_use_readdirplus(struct inode *dir)      if
+>>>> (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
+>>>> !list_empty(&nfsi->open_files)) {
+>>>> set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags); -
+>>>> invalidate_mapping_pages(dir->i_mapping, 0, -1); +
+>>>> nfs_zap_mapping(dir, dir->i_mapping);      }  }
+>>> Thanks,
+>>> -Dai
+>>>
+>>> On 12/19/19 8:01 PM, Dai Ngo wrote:
+>>>> Hi Anna, Trond,
+>>>>
+>>>> I made a mistake with the 5.5 numbers. The VM that runs 5.5 has
+>>>> some
+>>>> problems. There is no regression with 5.5, here are the new
+>>>> numbers:
+>>>>
+>>>> Upstream Linux 5.5.0-rc1 [ORI] 93296: 3m10.917s  197891:
+>>>> 10m35.789s
+>>>> Upstream Linux 5.5.0-rc1 [MOD] 98614: 1m59.649s  192801:
+>>>> 3m55.003s
+>>>>
+>>>> My apologies for the mistake.
+>>>>
+>>>> Now there is no regression with 5.5, I'd like to get your opinion
+>>>> regarding the change to revert the call from
+>>>> invalidate_mapping_pages
+>>>> to nfs_zap_mapping in nfs_force_use_readdirplus to prevent the
+>>>> current 'ls' from restarting the READDIRPLUS3 from cookie 0. I'm
+>>>> not quite sure about the intention of the prior change from
+>>>> nfs_zap_mapping to invalidate_mapping_pages so that is why I'm
+>>>> seeking advise. Or do you have any suggestions to achieve the
+>>>> same?
+>>>>
+>>>> Thanks,
+>>>> -Dai
+>>>>
+>>>> On 12/17/19 4:34 PM, Dai Ngo wrote:
+>>>>> Hi,
+>>>>>
+>>>>> I'd like to report an issue with 'ls -lrt' on NFSv3 client
+>>>>> takes
+>>>>> a very long time to display the content of a large directory
+>>>>> (100k - 200k files) while the directory is being modified by
+>>>>> another NFSv3 client.
+>>>>>
+>>>>> The problem can be reproduced using 3 systems. One system
+>>>>> serves
+>>>>> as the NFS server, one system runs as the client that doing the
+>>>>> 'ls -lrt' and another system runs the client that creates files
+>>>>> on the server.
+>>>>>      Client1 creates files using this simple script:
+>>>>>
+>>>>>> #!/bin/sh
+>>>>>>
+>>>>>> if [ $# -lt 2 ]; then
+>>>>>>          echo "Usage: $0 number_of_files base_filename"
+>>>>>>          exit
+>>>>>> fi    nfiles=$1
+>>>>>> fname=$2
+>>>>>> echo "creating $nfiles files using filename[$fname]..."
+>>>>>> i=0         while [ i -lt $nfiles ] ;
+>>>>>> do            i=`expr $i + 1`
+>>>>>>          echo "xyz" > $fname$i
+>>>>>>          echo "$fname$i" done
+>>>>> Client2 runs 'time ls -lrt /tmp/mnt/bd1 |wc -l' in a loop.
+>>>>>
+>>>>> The network traces and dtrace probes showed numerous
+>>>>> READDIRPLUS3
+>>>>> requests restarting  from cookie 0 which seemed to indicate the
+>>>>> cached pages of the directory were invalidated causing the
+>>>>> pages
+>>>>> to be refilled starting from cookie 0 until the current
+>>>>> requested
+>>>>> cookie.  The cached page invalidation were tracked to
+>>>>> nfs_force_use_readdirplus().  To verify, I made the below
+>>>>> modification, ran the test for various kernel versions and
+>>>>> captured the results shown below.
+>>>>>
+>>>>> The modification is:
+>>>>>
+>>>>>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>>>>>> index a73e2f8bd8ec..5d4a64555fa7 100644
+>>>>>> --- a/fs/nfs/dir.c
+>>>>>> +++ b/fs/nfs/dir.c
+>>>>>> @@ -444,7 +444,7 @@ void nfs_force_use_readdirplus(struct
+>>>>>> inode
+>>>>>> *dir)
+>>>>>>       if (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
+>>>>>>           !list_empty(&nfsi->open_files)) {
+>>>>>>           set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags);
+>>>>>> -        invalidate_mapping_pages(dir->i_mapping, 0, -1);
+>>>>>> +        nfs_zap_mapping(dir, dir->i_mapping);
+>>>>>>       }
+>>>>>>   }
+>> This change is only reverting part of commit 79f687a3de9e. My problem
+>> with that is as follows:
+>>
+>> RFC1813 states that NFSv3 READDIRPLUS cookies and verifiers must
+>> match
+>> those returned by previous READDIRPLUS calls, and READDIR cookies and
+>> verifiers must match those returned by previous READDIR calls. It
+>> says
+>> nothing about being able to assume cookies from READDIR and
+>> READDIRPLUS
+>> calls are interchangeable. So the only reason I can see for the
+>> invalidate_mapping_pages() is to ensure that we do separate the two
+>> cookie caches.
+>>
+>> OTOH, for NFSv4, there is no separate READDIRPLUS function, so there
+>> really does not appear to be any reason to clear the page cache at
+>> all
+>> as we're switching between requesting attributes or not.
+>>
+> Sorry... To spell out my objection to this change more clearly: The
+> call to nfs_zap_mapping() makes no sense in either case.
+>   * It defers the cache invalidation until the next call to
+>     rewinddir()/opendir(), so it does not address the NFSv3 concern.
+>   * It would appear to be entirely superfluous for the NFSv4 case.
+>
+> So a change that might be acceptable would be to keep the existing call
+> to invalidate_mapping_pages() for NFSv3, but to remove it for NFSv4.
+
+Thank you Trond, I'll make your suggested change, test it and resubmit.
+     
+-Dai
+
+>
