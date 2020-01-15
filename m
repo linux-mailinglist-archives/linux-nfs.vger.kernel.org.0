@@ -2,101 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8CE213B8B7
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 05:49:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB60413C8F3
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 17:15:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgAOEti (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jan 2020 23:49:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36574 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgAOEti (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jan 2020 23:49:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so7912483pfb.3
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2020 20:49:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nfdKnESFviVs3npGYhxM5GQYn0tzBty92mgk6HF1buU=;
-        b=eVS4M3ptWJB5zCaTErK3amE7ne7qaEQrIVFgSg64S+nmTdJBItI5HCvrBuQfywjjAo
-         sGd266LHmqOBA/Ov8Bg6GQefTF76MyNmBtAOBCl5Dwx1mhdjtatp/erFr/49Bd8UYbz+
-         jFjmBMU5LbnSRvJeD/jxAVA7+LAvHzfxsILL0fGNzeXiMz3gMWY9iOj+a9Cqzmfom47h
-         iBH76O0ThhV10acjnyw/BtV+E4NuOF/Q2Tu3ZSD8PRfrPkhwkpf+uWKD1EFWXVivgHFa
-         SisPSgv2oBiZFxsVuYvOeu/G9jPUYQRktRZrqhrzsYJifFh7VmPw3q7/5nW5vEMlq4I1
-         QgkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nfdKnESFviVs3npGYhxM5GQYn0tzBty92mgk6HF1buU=;
-        b=PTmVJsNb0/q3b7YmnuHiCGw2LGrlZOtN6rFKrQJWhyFCrl8dXRvX1F0c9QOf5bz+gZ
-         X/hv2aJOay+NdWcJsq8cjAjDxrTeDC6qq2+ZjaDNoALeqcU4RnRC3l0M0y526MDNkt8L
-         gtH7/WaySwLMZdyEvQJFmpjI6fk+b1VKMgsSB2oLozKIvw1DFleaMTMHtoU+l0xiMnmO
-         Zl0CTY/UpjWgaIc8nwoUNemTymDlHVsgtVcz0ARdeoM4OX/84/fKVhBeZdDbyjVTSb9w
-         lPypB8V0Wg2rdoL7y/lK8snWMS7eI3DwCgzwIuqIzvOTlIZIpTHAQOiNpdaB/Q0EtUGx
-         bPgA==
-X-Gm-Message-State: APjAAAXAFuktbutaTB7yFfY7Pg+eHVnD5rG9SBD9FBDnzJMPVCkiscLy
-        AYU1FO6GKX0L6LPLhpd8Vc10frYs
-X-Google-Smtp-Source: APXvYqycm+Zj/6Ae4MXst8Cu/shk8yR3z6bdP+d1AEQdsHQhHl112zrIJ7nXszgBn6owkOAtv132UQ==
-X-Received: by 2002:a62:14c4:: with SMTP id 187mr29131890pfu.96.1579063777836;
-        Tue, 14 Jan 2020 20:49:37 -0800 (PST)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id 189sm20615693pfw.73.2020.01.14.20.49.36
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 20:49:37 -0800 (PST)
-Date:   Wed, 15 Jan 2020 12:49:30 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
+        id S1726566AbgAOQPY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jan 2020 11:15:24 -0500
+Received: from smtpcmd03116.aruba.it ([62.149.158.116]:44973 "EHLO
+        smtpcmd03116.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgAOQPY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jan 2020 11:15:24 -0500
+X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 11:15:23 EST
+Received: from ubuntu.localdomain ([212.103.203.10])
+        by smtpcmd03.ad.aruba.it with bizsmtp
+        id qg872100b0DySFo01g88go; Wed, 15 Jan 2020 17:08:08 +0100
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
 To:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] fs/nfs, swapon: check holes in swapfile
-Message-ID: <20200115044930.mx4477ogjsbrn6hg@xzhoux.usersys.redhat.com>
-References: <20200102080426.byzq4rrdilr2qxx6@xzhoux.usersys.redhat.com>
+Cc:     Steve Dickson <SteveD@RedHat.com>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>
+Subject: [nfs-utils PATCH] locktest: Makefile.am: remove host compiler costraint
+Date:   Wed, 15 Jan 2020 17:08:06 +0100
+Message-Id: <20200115160806.99991-1-giulio.benetti@benettiengineering.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102080426.byzq4rrdilr2qxx6@xzhoux.usersys.redhat.com>
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1579104488; bh=iAzp4QmcT/ZpmpX8U0+GyLtP6UBJOxtzoI3C5tgYU4E=;
+        h=From:To:Subject:Date:MIME-Version;
+        b=WhLecIkEoNH3k3j4EtEYJI3JwODq9RRYLWVjMgUYINZQxncALuMG9BrY6spg6BqgK
+         vCm23x00NQsVHZpsByk+TfsFFNFb0xW+I7Fd1KEy+Z5LyN+ijKq6SZH81I9QaPOnmZ
+         +aaSmaWDPATgftMBTH3y74lAJSUD0ghsHN6d7qJ6jZw7ND6oTVV0eD41/co7bdL66u
+         ApSTBvocuvfMzZA8Mcajzo9PjgnnirzBK2Dmdkxby0HwnRPp1Wf702WM84OvwNzutL
+         defMMqvjrrnyOmkVj9wnTieLpRqGQ3mvDPBs3svlFzPLEE18GhSvklZ5j27yX3qEZp
+         Qsc4BkKS+2Yug==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 04:04:26PM +0800, Murphy Zhou wrote:
-> swapon over NFS does not go through generic_swapfile_activate
-> code path when setting up extents. This makes holes in NFS
-> swapfiles possible which is not expected for swapon.
+Currently locktest can be built only for host because CC_FOR_BUILD is
+specified as CC, but this leads to build failure when passing CFLAGS not
+available on host gcc(i.e. -mlongcalls) and most of all locktest would
+be available on target systems the same way as rpcgen etc. So remove CC
+and LIBTOOL assignments.
 
-Any review?
+Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+---
+ tools/locktest/Makefile.am | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> 
-> Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-> ---
->  fs/nfs/file.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-> index 8eb731d..ccd9bc0 100644
-> --- a/fs/nfs/file.c
-> +++ b/fs/nfs/file.c
-> @@ -489,7 +489,19 @@ static int nfs_launder_page(struct page *page)
->  static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
->  						sector_t *span)
->  {
-> +	unsigned long blocks;
-> +	long long isize;
->  	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
-> +	struct inode *inode = file->f_mapping->host;
-> +
-> +	spin_lock(&inode->i_lock);
-> +	blocks = inode->i_blocks;
-> +	isize = inode->i_size;
-> +	spin_unlock(&inode->i_lock);
-> +	if (blocks*512 < isize) {
-> +		pr_warn("swap activate: swapfile has holes\n");
-> +		return -EINVAL;
-> +	}
->  
->  	*span = sis->pages;
->  
-> -- 
-> 1.8.3.1
-> 
+diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
+index 3156815d..e8914655 100644
+--- a/tools/locktest/Makefile.am
++++ b/tools/locktest/Makefile.am
+@@ -1,8 +1,5 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-CC=$(CC_FOR_BUILD)
+-LIBTOOL = @LIBTOOL@ --tag=CC
+-
+ noinst_PROGRAMS = testlk
+ testlk_SOURCES = testlk.c
+ testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
+-- 
+2.20.1
+
