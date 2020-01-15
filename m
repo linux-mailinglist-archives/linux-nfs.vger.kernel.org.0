@@ -2,67 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB60413C8F3
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 17:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E402813C956
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2020 17:30:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgAOQPY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jan 2020 11:15:24 -0500
-Received: from smtpcmd03116.aruba.it ([62.149.158.116]:44973 "EHLO
+        id S1726418AbgAOQ3i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jan 2020 11:29:38 -0500
+Received: from smtpcmd03116.aruba.it ([62.149.158.116]:48777 "EHLO
         smtpcmd03116.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgAOQPY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jan 2020 11:15:24 -0500
-X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 11:15:23 EST
-Received: from ubuntu.localdomain ([212.103.203.10])
+        with ESMTP id S1728899AbgAOQ3h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jan 2020 11:29:37 -0500
+Received: from [192.168.159.128] ([212.103.203.10])
         by smtpcmd03.ad.aruba.it with bizsmtp
-        id qg872100b0DySFo01g88go; Wed, 15 Jan 2020 17:08:08 +0100
+        id qgVZ2100Y0DySFo01gVao9; Wed, 15 Jan 2020 17:29:34 +0100
+Subject: Re: [nfs-utils PATCH 5/7] rpcgen: rpc_cout: fix potential
+ -Wformat-nonliteral warning
+To:     linux-nfs@vger.kernel.org, Steve Dickson <SteveD@RedHat.com>
+References: <20200103215039.27471-1-giulio.benetti@benettiengineering.com>
+ <20200103215039.27471-6-giulio.benetti@benettiengineering.com>
 From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Steve Dickson <SteveD@RedHat.com>,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>
-Subject: [nfs-utils PATCH] locktest: Makefile.am: remove host compiler costraint
-Date:   Wed, 15 Jan 2020 17:08:06 +0100
-Message-Id: <20200115160806.99991-1-giulio.benetti@benettiengineering.com>
-X-Mailer: git-send-email 2.20.1
+Message-ID: <dd75fa26-a07a-49fb-ed22-1e60da31c8da@benettiengineering.com>
+Date:   Wed, 15 Jan 2020 17:29:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103215039.27471-6-giulio.benetti@benettiengineering.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1579104488; bh=iAzp4QmcT/ZpmpX8U0+GyLtP6UBJOxtzoI3C5tgYU4E=;
-        h=From:To:Subject:Date:MIME-Version;
-        b=WhLecIkEoNH3k3j4EtEYJI3JwODq9RRYLWVjMgUYINZQxncALuMG9BrY6spg6BqgK
-         vCm23x00NQsVHZpsByk+TfsFFNFb0xW+I7Fd1KEy+Z5LyN+ijKq6SZH81I9QaPOnmZ
-         +aaSmaWDPATgftMBTH3y74lAJSUD0ghsHN6d7qJ6jZw7ND6oTVV0eD41/co7bdL66u
-         ApSTBvocuvfMzZA8Mcajzo9PjgnnirzBK2Dmdkxby0HwnRPp1Wf702WM84OvwNzutL
-         defMMqvjrrnyOmkVj9wnTieLpRqGQ3mvDPBs3svlFzPLEE18GhSvklZ5j27yX3qEZp
-         Qsc4BkKS+2Yug==
+        t=1579105774; bh=oFCzMse9LoX8UOQcqQZ2Ox2vrp+f92Of5Z80w6VAk8w=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=mrXMPqKx/cJfHZKpy4+oTiBM6Vz8tLA8ee7VQhXKPwVGk0m8sbV0PbC8Xgi3JGApb
+         bG7VcEQnLyoLsEp0tZgjSd4yXjmX8AqJ8Z85y1VcJlq5muQGEM9yFCWVQqDTle7W8L
+         xYWGZ/fh7BtorRS+psFghfbx2DjIgsnzFWIqVPHrfwLW8nkW8u4hlF+gdD6TtYjsuo
+         6D7iSTJx1255XPop5Fmy0ZWtOalFtqyFyS/5hVIwSZGTR0WFIE6ngzuf/mB11aBGOb
+         u/j6iIlES5UuSe5rseIufnsQAQ7LyJfnet1zOBYUD5MjoTvFOgMFojEAiUJyIYjcN6
+         3hQ4q9cWz0K7w==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently locktest can be built only for host because CC_FOR_BUILD is
-specified as CC, but this leads to build failure when passing CFLAGS not
-available on host gcc(i.e. -mlongcalls) and most of all locktest would
-be available on target systems the same way as rpcgen etc. So remove CC
-and LIBTOOL assignments.
+Hi Steve,
 
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
----
- tools/locktest/Makefile.am | 3 ---
- 1 file changed, 3 deletions(-)
+you've missed this patch while applying the series. Can you please 
+commit it?
 
-diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
-index 3156815d..e8914655 100644
---- a/tools/locktest/Makefile.am
-+++ b/tools/locktest/Makefile.am
-@@ -1,8 +1,5 @@
- ## Process this file with automake to produce Makefile.in
- 
--CC=$(CC_FOR_BUILD)
--LIBTOOL = @LIBTOOL@ --tag=CC
--
- noinst_PROGRAMS = testlk
- testlk_SOURCES = testlk.c
- testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
+Thank you
+Kind regards
 -- 
-2.20.1
+Giulio Benetti
+Benetti Engineering sas
+
+On 1/3/20 10:50 PM, Giulio Benetti wrote:
+> format and vecformat must be declared as "char * const" to be really
+> treated as constant when building with -Werror=format-nonliteral,
+> otherwise compiler will consider them subject to change throughout the
+> function.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> ---
+>   tools/rpcgen/rpc_cout.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/rpcgen/rpc_cout.c b/tools/rpcgen/rpc_cout.c
+> index f806a86a..df2609c4 100644
+> --- a/tools/rpcgen/rpc_cout.c
+> +++ b/tools/rpcgen/rpc_cout.c
+> @@ -319,8 +319,8 @@ emit_union(definition *def)
+>     case_list *cl;
+>     declaration *cs;
+>     char *object;
+> -  char *vecformat = "objp->%s_u.%s";
+> -  char *format = "&objp->%s_u.%s";
+> +  char * const vecformat = "objp->%s_u.%s";
+> +  char * const format = "&objp->%s_u.%s";
+>   
+>     print_stat(1,&def->def.un.enum_decl);
+>     f_print(fout, "\tswitch (objp->%s) {\n", def->def.un.enum_decl.name);
+> 
 
