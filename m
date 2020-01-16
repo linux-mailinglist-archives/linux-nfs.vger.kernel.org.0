@@ -2,39 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF94613F45E
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:49:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4149E13F1D8
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:31:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389684AbgAPRJ2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 12:09:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        id S2391151AbgAPSbY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 13:31:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389283AbgAPRJ1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:27 -0500
+        id S2403852AbgAPRZQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCDE52467A;
-        Thu, 16 Jan 2020 17:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F20CE246A3;
+        Thu, 16 Jan 2020 17:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194566;
-        bh=PEm+bMJbk/ztRxGX3pMP4loztHjfCNeyUsny1mCgJ7c=;
+        s=default; t=1579195515;
+        bh=EjSU1VBN4a3nKNpFnQqYFUsBFAOysEmUWNOgC3P+YQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDwmW6kiU/bcq2j1fmxZohvs888Ylny+MNgxnLQNAuOVFPzCpKBeLylL4IZphC+Oi
-         Vwo1tnRDXTRYECLGlnuwzFRZVIIPZhteHeCR5vr8B0FeiDQ8KCq7GsbF/OX7NrVXtT
-         q+GbgcHgL25BzPK3yKpXpk2e6PKgILffOp3WLU68=
+        b=WOFn3TQCZQzP06MiiVNv5xh5GwNxbG5TkQgOtW8KbaqYIyaOeTdoJBELRdsmRpKa3
+         wKxxL+47sx27eD/qOdhtMoykh4gL5SeEiow0fYMro67QGxwaoN4x+unWaMnz4DWeZu
+         1uLsoSqZCA2AyImY5ymPG4SrdpVzRXiKexLj4Hb0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 445/671] xprtrdma: Fix use-after-free in rpcrdma_post_recvs
-Date:   Thu, 16 Jan 2020 12:01:23 -0500
-Message-Id: <20200116170509.12787-182-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 114/371] fs/nfs: Fix nfs_parse_devname to not modify it's argument
+Date:   Thu, 16 Jan 2020 12:19:46 -0500
+Message-Id: <20200116172403.18149-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,40 +43,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit 2d0abe36cf13fb7b577949fd1539326adddcc9bc ]
+[ Upstream commit 40cc394be1aa18848b8757e03bd8ed23281f572e ]
 
-Dereference wr->next /before/ the memory backing wr has been
-released. This issue was found by code inspection. It is not
-expected to be a significant problem because it is in an error
-path that is almost never executed.
+In the rare and unsupported case of a hostname list nfs_parse_devname
+will modify dev_name.  There is no need to modify dev_name as the all
+that is being computed is the length of the hostname, so the computed
+length can just be shorted.
 
-Fixes: 7c8d9e7c8863 ("xprtrdma: Move Receive posting to ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: dc04589827f7 ("NFS: Use common device name parsing logic for NFSv4 and NFSv2/v3")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 5ddbf227e7c6..2a1d8ec7f706 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1558,10 +1558,11 @@ rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
- 			  (const struct ib_recv_wr **)&bad_wr);
- 	if (rc) {
--		for (wr = bad_wr; wr; wr = wr->next) {
-+		for (wr = bad_wr; wr;) {
- 			struct rpcrdma_rep *rep;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index f464f8d9060c..470b761839a5 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1925,7 +1925,7 @@ static int nfs_parse_devname(const char *dev_name,
+ 		/* kill possible hostname list: not supported */
+ 		comma = strchr(dev_name, ',');
+ 		if (comma != NULL && comma < end)
+-			*comma = 0;
++			len = comma - dev_name;
+ 	}
  
- 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
-+			wr = wr->next;
- 			rpcrdma_recv_buffer_put(rep);
- 			--count;
- 		}
+ 	if (len > maxnamlen)
 -- 
 2.20.1
 
