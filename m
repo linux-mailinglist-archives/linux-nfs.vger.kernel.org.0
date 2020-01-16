@@ -2,34 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A855613F687
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:05:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 699F913F667
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:04:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbgAPTFG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 14:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
+        id S2388363AbgAPRC0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 12:02:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbgAPRCG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:06 -0500
+        id S2388353AbgAPRC0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCC424685;
-        Thu, 16 Jan 2020 17:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045592077B;
+        Thu, 16 Jan 2020 17:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194125;
-        bh=sGT4U/EuUFpxYX6PNmsr5Up6MeN1x5KpmDS/cSuuv8U=;
+        s=default; t=1579194145;
+        bh=2djee2Mzdhm5LjrME6B+HCK/qdkDAaWAQQU7n/IZMzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHqHbnPx9nc+b0nSIz6C8HVYp6Py/yrL4rkPXinym7Adygd2REDVle80ceJNgmMLA
-         36fgFcx1IbF2dVPJbWzCdZBvMbEga3EJjP7UQFVCF6fa0shv8g43RKwOWBkaiPIbrX
-         Qj6ovrlQxBG4bFgU+iqvTGHXFD6ItYuV9x0iqJ7k=
+        b=ytHJ5U/FLurZzjsO/TBTD0rQ/0WDy8q5b+HpZS0GqeYgecUqp6Be2t1PaoFdP+neu
+         SMcJnm8a7sVUdu8IMT3vG11zidDPQP4NorZrXQ89zgpVr2HSRTzOLy79OeLTaU/a2E
+         2C+tr67UtiD4O6rFF3EPa/aIQZR6f/X9RYLRJUqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 217/671] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
-Date:   Thu, 16 Jan 2020 11:52:06 -0500
-Message-Id: <20200116165940.10720-100-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 230/671] NFS: Add missing encode / decode sequence_maxsz to v4.2 operations
+Date:   Thu, 16 Jan 2020 11:52:19 -0500
+Message-Id: <20200116165940.10720-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -42,92 +43,86 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
+[ Upstream commit 1a3466aed3a17eed41cd9411f89eb637f58349b0 ]
 
-If a bulk layout recall or a metadata server reboot coincides with a
-umount, then holding a reference to an inode is unsafe unless we
-also hold a reference to the super block.
+These really should have been there from the beginning, but we never
+noticed because there was enough slack in the RPC request for the extra
+bytes. Chuck's recent patch to use au_cslack and au_rslack to compute
+buffer size shrunk the buffer enough that this was now a problem for
+SEEK operations on my test client.
 
-Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
+Fixes: f4ac1674f5da4 ("nfs: Add ALLOCATE support")
+Fixes: 2e72448b07dc3 ("NFS: Add COPY nfs operation")
+Fixes: cb95deea0b4aa ("NFS OFFLOAD_CANCEL xdr")
+Fixes: 624bd5b7b683c ("nfs: Add DEALLOCATE support")
+Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
- fs/nfs/pnfs.h |  1 +
- 2 files changed, 24 insertions(+), 10 deletions(-)
+ fs/nfs/nfs42xdr.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index c818f9886f61..66f699e18755 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -758,22 +758,35 @@ static int
- pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
- 		struct nfs_server *server,
- 		struct list_head *layout_list)
-+	__must_hold(&clp->cl_lock)
-+	__must_hold(RCU)
- {
- 	struct pnfs_layout_hdr *lo, *next;
- 	struct inode *inode;
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 69f72ed2bf87..ec9803088f6b 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -59,43 +59,53 @@
+ #define decode_clone_maxsz		(op_decode_hdr_maxsz)
  
- 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
--		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
-+		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
-+		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
-+		    !list_empty(&lo->plh_bulk_destroy))
- 			continue;
-+		/* If the sb is being destroyed, just bail */
-+		if (!nfs_sb_active(server->super))
-+			break;
- 		inode = igrab(lo->plh_inode);
--		if (inode == NULL)
--			continue;
--		list_del_init(&lo->plh_layouts);
--		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
--			continue;
--		rcu_read_unlock();
--		spin_unlock(&clp->cl_lock);
--		iput(inode);
-+		if (inode != NULL) {
-+			list_del_init(&lo->plh_layouts);
-+			if (pnfs_layout_add_bulk_destroy_list(inode,
-+						layout_list))
-+				continue;
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			iput(inode);
-+		} else {
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
-+		}
-+		nfs_sb_deactive(server->super);
- 		spin_lock(&clp->cl_lock);
- 		rcu_read_lock();
- 		return -EAGAIN;
-@@ -811,7 +824,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
- 		/* Free all lsegs that are attached to commit buckets */
- 		nfs_commit_inode(inode, 0);
- 		pnfs_put_layout_hdr(lo);
--		iput(inode);
-+		nfs_iput_and_deactive(inode);
- 	}
- 	return ret;
- }
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index ece367ebde69..3ba44819a88a 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -104,6 +104,7 @@ enum {
- 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
- 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
- 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
-+	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
- };
- 
- enum layoutdriver_policy_flags {
+ #define NFS4_enc_allocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_allocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_allocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_allocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_copy_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_savefh_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_copy_maxsz + \
+ 					 encode_commit_maxsz)
+ #define NFS4_dec_copy_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_savefh_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_copy_maxsz + \
+ 					 decode_commit_maxsz)
+ #define NFS4_enc_offload_cancel_sz	(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_offload_cancel_maxsz)
+ #define NFS4_dec_offload_cancel_sz	(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_offload_cancel_maxsz)
+ #define NFS4_enc_deallocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_deallocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_deallocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_deallocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_seek_maxsz)
+ #define NFS4_dec_seek_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_seek_maxsz)
+ #define NFS4_enc_layoutstats_sz		(compound_encode_hdr_maxsz + \
 -- 
 2.20.1
 
