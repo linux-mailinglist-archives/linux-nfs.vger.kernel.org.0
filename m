@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4DA813F872
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:18:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D4C13F694
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732267AbgAPQyf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 11:54:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        id S2387944AbgAPTFd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 14:05:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbgAPQyf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:35 -0500
+        id S2388205AbgAPRBw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E308E20730;
-        Thu, 16 Jan 2020 16:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4D572077B;
+        Thu, 16 Jan 2020 17:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193674;
-        bh=KwjDVFbYw+rVNx+dp2OcqyOgdPW3JmecrfBX7PlNNsA=;
+        s=default; t=1579194112;
+        bh=Z2cuzGhZiehtPD1idTVQTGEo+8cKbQOQw5EZSqU/6p8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KF/bgcjUQ6fGDGbGXgCFC0sOBU85OD+e6lk9JAy8++Rz7MEWP2iXne2rkREFyc1kD
-         hTTqV8SPfUzgAseu1GJLVv8nuDx336Ig1jD+ZOJl7O/OKRKPCnHtRm4GKRriP4m1UY
-         0MBseTMhv0GCmQNoDuBXaCePifxZL4dLpmc3n5Q8=
+        b=Cvkf8g/Jf9nahiWs20GCq8XhmNpUal342cHqsHNNudCqL7E8j2QJojaI/7NOgKua/
+         0ckbGBtr2/G4i0h6MPKiIZyHETqbXo1hxuSGsAVyKYXwSBs/dJ6ASNWJS3ntzewmpw
+         AWmEmweFzcTRrJZwrUsIVylPxqMXUN6Gl+vl7oL8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Steinhardt <ps@pks.im>,
-        "J . Bruce Fields" <bfields@redhat.com>,
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 199/205] nfsd: depend on CRYPTO_MD5 for legacy client tracking
-Date:   Thu, 16 Jan 2020 11:42:54 -0500
-Message-Id: <20200116164300.6705-199-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 208/671] fs/nfs: Fix nfs_parse_devname to not modify it's argument
+Date:   Thu, 16 Jan 2020 11:51:57 -0500
+Message-Id: <20200116165940.10720-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,47 +43,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Patrick Steinhardt <ps@pks.im>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit 38a2204f5298620e8a1c3b1dc7b831425106dbc0 ]
+[ Upstream commit 40cc394be1aa18848b8757e03bd8ed23281f572e ]
 
-The legacy client tracking infrastructure of nfsd makes use of MD5 to
-derive a client's recovery directory name. As the nfsd module doesn't
-declare any dependency on CRYPTO_MD5, though, it may fail to allocate
-the hash if the kernel was compiled without it. As a result, generation
-of client recovery directories will fail with the following error:
+In the rare and unsupported case of a hostname list nfs_parse_devname
+will modify dev_name.  There is no need to modify dev_name as the all
+that is being computed is the length of the hostname, so the computed
+length can just be shorted.
 
-    NFSD: unable to generate recoverydir name
-
-The explicit dependency on CRYPTO_MD5 was removed as redundant back in
-6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig
-2008-02-11) as it was already implicitly selected via RPCSEC_GSS_KRB5.
-This broke when RPCSEC_GSS_KRB5 was made optional for NFSv4 in commit
-df486a25900f (NFS: Fix the selection of security flavours in Kconfig) at
-a later point.
-
-Fix the issue by adding back an explicit dependency on CRYPTO_MD5.
-
-Fixes: df486a25900f (NFS: Fix the selection of security flavours in Kconfig)
-Signed-off-by: Patrick Steinhardt <ps@pks.im>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: dc04589827f7 ("NFS: Use common device name parsing logic for NFSv4 and NFSv2/v3")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index c4b1a89b8845..f2f81561ebb6 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -73,6 +73,7 @@ config NFSD_V4
- 	select NFSD_V3
- 	select FS_POSIX_ACL
- 	select SUNRPC_GSS
-+	select CRYPTO_MD5
- 	select CRYPTO_SHA256
- 	select GRACE_PERIOD
- 	help
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index d90efdea9fbd..5db7aceb4190 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1930,7 +1930,7 @@ static int nfs_parse_devname(const char *dev_name,
+ 		/* kill possible hostname list: not supported */
+ 		comma = strchr(dev_name, ',');
+ 		if (comma != NULL && comma < end)
+-			*comma = 0;
++			len = comma - dev_name;
+ 	}
+ 
+ 	if (len > maxnamlen)
 -- 
 2.20.1
 
