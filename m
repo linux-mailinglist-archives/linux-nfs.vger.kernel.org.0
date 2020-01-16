@@ -2,37 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C077B13F870
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:18:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DA813F872
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:18:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgAPQye (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 11:54:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
+        id S1732267AbgAPQyf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 11:54:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732209AbgAPQye (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:34 -0500
+        id S1729225AbgAPQyf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A85BB214AF;
-        Thu, 16 Jan 2020 16:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E308E20730;
+        Thu, 16 Jan 2020 16:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193673;
-        bh=6RmZS8R/qbLmC24LIgFWQHrkZAi6i9WyA++AiikMsrg=;
+        s=default; t=1579193674;
+        bh=KwjDVFbYw+rVNx+dp2OcqyOgdPW3JmecrfBX7PlNNsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTcUpVKza25MiwqTSTjwhfdAkU+2RfQELH7urw2KhcLnTPaxwGu61F10l7J9TjPe9
-         Wl/FVCw9FHDZuBTU/cVOi8jZm2fofbzy9U6mqIjs4ipxFhtN7aPvtdF8pX9YOH9oVq
-         AAQuZwiUm7RFrlLPSDYt+MRuGklbpjjKp0K1gG4c=
+        b=KF/bgcjUQ6fGDGbGXgCFC0sOBU85OD+e6lk9JAy8++Rz7MEWP2iXne2rkREFyc1kD
+         hTTqV8SPfUzgAseu1GJLVv8nuDx336Ig1jD+ZOJl7O/OKRKPCnHtRm4GKRriP4m1UY
+         0MBseTMhv0GCmQNoDuBXaCePifxZL4dLpmc3n5Q8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
+Cc:     Patrick Steinhardt <ps@pks.im>,
         "J . Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 198/205] NFSD fixing possible null pointer derefering in copy offload
-Date:   Thu, 16 Jan 2020 11:42:53 -0500
-Message-Id: <20200116164300.6705-198-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 199/205] nfsd: depend on CRYPTO_MD5 for legacy client tracking
+Date:   Thu, 16 Jan 2020 11:42:54 -0500
+Message-Id: <20200116164300.6705-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -45,36 +43,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Patrick Steinhardt <ps@pks.im>
 
-[ Upstream commit 18f428d4e2f7eff162d80b2b21689496c4e82afd ]
+[ Upstream commit 38a2204f5298620e8a1c3b1dc7b831425106dbc0 ]
 
-Static checker revealed possible error path leading to possible
-NULL pointer dereferencing.
+The legacy client tracking infrastructure of nfsd makes use of MD5 to
+derive a client's recovery directory name. As the nfsd module doesn't
+declare any dependency on CRYPTO_MD5, though, it may fail to allocate
+the hash if the kernel was compiled without it. As a result, generation
+of client recovery directories will fail with the following error:
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: e0639dc5805a: ("NFSD introduce async copy feature")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+    NFSD: unable to generate recoverydir name
+
+The explicit dependency on CRYPTO_MD5 was removed as redundant back in
+6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig
+2008-02-11) as it was already implicitly selected via RPCSEC_GSS_KRB5.
+This broke when RPCSEC_GSS_KRB5 was made optional for NFSv4 in commit
+df486a25900f (NFS: Fix the selection of security flavours in Kconfig) at
+a later point.
+
+Fix the issue by adding back an explicit dependency on CRYPTO_MD5.
+
+Fixes: df486a25900f (NFS: Fix the selection of security flavours in Kconfig)
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfsd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 38c0aeda500e..4798667af647 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1298,7 +1298,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- out:
- 	return status;
- out_err:
--	cleanup_async_copy(async_copy);
-+	if (async_copy)
-+		cleanup_async_copy(async_copy);
- 	goto out;
- }
- 
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index c4b1a89b8845..f2f81561ebb6 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -73,6 +73,7 @@ config NFSD_V4
+ 	select NFSD_V3
+ 	select FS_POSIX_ACL
+ 	select SUNRPC_GSS
++	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
+ 	help
 -- 
 2.20.1
 
