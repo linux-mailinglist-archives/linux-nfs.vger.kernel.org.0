@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57B7913F1CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:31:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F80713F1C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:31:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391920AbgAPRZV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 12:25:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
+        id S2392176AbgAPSbC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 13:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391910AbgAPRZU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:20 -0500
+        id S2391940AbgAPRZZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D34D3246C2;
-        Thu, 16 Jan 2020 17:25:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88BBB246CE;
+        Thu, 16 Jan 2020 17:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195519;
-        bh=h53+j/01JZX1bOOeMLrpac4PzNOjahGiNC9oFjDcpo0=;
+        s=default; t=1579195524;
+        bh=mLDp92O2C3qsOQkY4HX4KZejpeluTzoGMiIMT5MAAvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTPYY/ViuYISSHbPi4Y4ebxfHZQQDQfiv54fmBghXQbAYmWP31KylWjpGwKk44gOC
-         qHcGCUbGo7gShRd3cYfqSBpFeUzHj4azZezZBGcE72xuo8T5e1vTkoy0j1r1JeMuMx
-         NHSJ8dCH/F/pVnWuBH1tYQVgDtsN2ilBZBWeg3L4=
+        b=bDNn2xxOTvSDUXpng/IxLk7xA98FZmuR1/poBbvF5ONqMwIZS/I4PEtGCOlnFIBvj
+         4TOJen7BIWU4O4FY7kNY9JF3cji8xlNVj5e+6HSvgqmQ7tRP/9alinnm104Z28Dbzl
+         LzRFmlifFPv3sPnFmEhqDrBRjzKYw25uFBRewGRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 117/371] NFS: Fix a soft lockup in the delegation recovery code
-Date:   Thu, 16 Jan 2020 12:19:49 -0500
-Message-Id: <20200116172403.18149-60-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 121/371] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
+Date:   Thu, 16 Jan 2020 12:19:53 -0500
+Message-Id: <20200116172403.18149-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -44,79 +44,90 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
+[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
 
-Fix a soft lockup when NFS client delegation recovery is attempted
-but the inode is in the process of being freed. When the
-igrab(inode) call fails, and we have to restart the recovery process,
-we need to ensure that we won't attempt to recover the same delegation
-again.
+If a bulk layout recall or a metadata server reboot coincides with a
+umount, then holding a reference to an inode is unsafe unless we
+also hold a reference to the super block.
 
-Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 20 ++++++++++++--------
- fs/nfs/delegation.h |  1 +
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
+ fs/nfs/pnfs.h |  1 +
+ 2 files changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 04d57e11577e..09b3bcb86d32 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -234,6 +234,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
- 	spin_lock(&delegation->lock);
- 	if (delegation->inode != NULL)
- 		inode = igrab(delegation->inode);
-+	if (!inode)
-+		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
- 	spin_unlock(&delegation->lock);
- 	return inode;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index ec04cce31814..83abf3dd7351 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -725,22 +725,35 @@ static int
+ pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
+ 		struct nfs_server *server,
+ 		struct list_head *layout_list)
++	__must_hold(&clp->cl_lock)
++	__must_hold(RCU)
+ {
+ 	struct pnfs_layout_hdr *lo, *next;
+ 	struct inode *inode;
+ 
+ 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
+-		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
++		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
++		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
++		    !list_empty(&lo->plh_bulk_destroy))
+ 			continue;
++		/* If the sb is being destroyed, just bail */
++		if (!nfs_sb_active(server->super))
++			break;
+ 		inode = igrab(lo->plh_inode);
+-		if (inode == NULL)
+-			continue;
+-		list_del_init(&lo->plh_layouts);
+-		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
+-			continue;
+-		rcu_read_unlock();
+-		spin_unlock(&clp->cl_lock);
+-		iput(inode);
++		if (inode != NULL) {
++			list_del_init(&lo->plh_layouts);
++			if (pnfs_layout_add_bulk_destroy_list(inode,
++						layout_list))
++				continue;
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			iput(inode);
++		} else {
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
++		}
++		nfs_sb_deactive(server->super);
+ 		spin_lock(&clp->cl_lock);
+ 		rcu_read_lock();
+ 		return -EAGAIN;
+@@ -778,7 +791,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
+ 		/* Free all lsegs that are attached to commit buckets */
+ 		nfs_commit_inode(inode, 0);
+ 		pnfs_put_layout_hdr(lo);
+-		iput(inode);
++		nfs_iput_and_deactive(inode);
+ 	}
+ 	return ret;
  }
-@@ -863,10 +865,11 @@ void nfs_delegation_reap_unclaimed(struct nfs_client *clp)
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-@@ -971,10 +974,11 @@ void nfs_reap_expired_delegations(struct nfs_client *clp)
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index df41d16dc6ab..510c9edcc712 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -34,6 +34,7 @@ enum {
- 	NFS_DELEGATION_RETURNING,
- 	NFS_DELEGATION_REVOKED,
- 	NFS_DELEGATION_TEST_EXPIRED,
-+	NFS_DELEGATION_INODE_FREEING,
+diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
+index 87f144f14d1e..965d657086c8 100644
+--- a/fs/nfs/pnfs.h
++++ b/fs/nfs/pnfs.h
+@@ -99,6 +99,7 @@ enum {
+ 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
+ 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
+ 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
++	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
  };
  
- int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred, struct nfs_openres *res);
+ enum layoutdriver_policy_flags {
 -- 
 2.20.1
 
