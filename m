@@ -2,37 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 804D113F18D
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:31:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BF5613F92A
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:23:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389121AbgAPRZf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 12:25:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
+        id S1730705AbgAPQxO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 11:53:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392039AbgAPRZd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:33 -0500
+        id S1729830AbgAPQxO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 632BB246CA;
-        Thu, 16 Jan 2020 17:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E855021D56;
+        Thu, 16 Jan 2020 16:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195532;
-        bh=rDly9D/e2MKcATx3KbDgv+EbQlDIJgBWs1wyKJxdJKI=;
+        s=default; t=1579193593;
+        bh=s7LTG2wB0wzmYFRwfx/x9FXxgBvnEO74YT1d8UFo9bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUmaK5A7uPGqrJhr1CPr+ORlc38a+iHwMinBUtqHN6M01vM7RT/cGoosxD/+IMH8Q
-         byMFb7xNL0urX7V1YkaQQ36lgKr40aCYzNTuPkOxd5Xz9bea1gM25xqAJnzoTBqDxG
-         pEEEYB6VODpQays6/ngSytZKSW7X0z/QksO1Y9bU=
+        b=j6IF1mqxZ4hfQw7AgoNlDBAGHlnz2MQAKyX9oKfso/HGATIGJsQoOpjb6cFwdRHYy
+         tLrrHCjRQyAWX08oCyogjewU1AVBafF0U2zyxC3FFO6mA0Tn5OAQDAic6KDBR5tHnd
+         w5+RVEDWHJG1JbxiyczL22zOlpG82dqZVzMcQuE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        Jamie Heilman <jamie@audible.transient.net>,
+        "J . Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 127/371] NFSv4/flexfiles: Fix invalid deref in FF_LAYOUT_DEVID_NODE()
-Date:   Thu, 16 Jan 2020 12:19:59 -0500
-Message-Id: <20200116172403.18149-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 133/205] nfsd: Fix cld_net->cn_tfm initialization
+Date:   Thu, 16 Jan 2020 11:41:48 -0500
+Message-Id: <20200116164300.6705-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -42,71 +44,64 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit 108bb4afd351d65826648a47f11fa3104e250d9b ]
+[ Upstream commit 18b9a895e652979b70f9c20565394a69354dfebc ]
 
-If the attempt to instantiate the mirror's layout DS pointer failed,
-then that pointer may hold a value of type ERR_PTR(), so we need
-to check that before we dereference it.
+Don't assign an error pointer to cld_net->cn_tfm, otherwise an oops will
+occur in nfsd4_remove_cld_pipe().
 
-Fixes: 65990d1afbd2d ("pNFS/flexfiles: Fix a deadlock on LAYOUTGET")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Also, move the initialization of cld_net->cn_tfm so that it occurs after
+the check to see if nfsdcld is running.  This is necessary because
+nfsd4_client_tracking_init() looks for -ETIMEDOUT to determine whether
+to use the "old" nfsdcld tracking ops.
+
+Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
+Reported-by: Jamie Heilman <jamie@audible.transient.net>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.h | 32 +++++++++++++++-----------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ fs/nfsd/nfs4recover.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index d6515f1584f3..d78ec99b6c4c 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -131,16 +131,6 @@ FF_LAYOUT_LSEG(struct pnfs_layout_segment *lseg)
- 			    generic_hdr);
- }
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index cdc75ad4438b..c35c0ebaf722 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1578,6 +1578,7 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	bool running;
+ 	int retries = 10;
++	struct crypto_shash *tfm;
  
--static inline struct nfs4_deviceid_node *
--FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
--{
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx] == NULL ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds == NULL)
--		return NULL;
--	return &FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds->id_node;
--}
--
- static inline struct nfs4_ff_layout_ds *
- FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- {
-@@ -150,9 +140,25 @@ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- static inline struct nfs4_ff_layout_mirror *
- FF_LAYOUT_COMP(struct pnfs_layout_segment *lseg, u32 idx)
- {
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt)
--		return NULL;
--	return FF_LAYOUT_LSEG(lseg)->mirror_array[idx];
-+	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
-+
-+	if (idx < fls->mirror_array_cnt)
-+		return fls->mirror_array[idx];
-+	return NULL;
-+}
-+
-+static inline struct nfs4_deviceid_node *
-+FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
-+{
-+	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, idx);
-+
-+	if (mirror != NULL) {
-+		struct nfs4_ff_layout_ds *mirror_ds = mirror->mirror_ds;
-+
-+		if (!IS_ERR_OR_NULL(mirror_ds))
-+			return &mirror_ds->id_node;
+ 	status = nfs4_cld_state_init(net);
+ 	if (status)
+@@ -1586,11 +1587,6 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	status = __nfsd4_init_cld_pipe(net);
+ 	if (status)
+ 		goto err_shutdown;
+-	nn->cld_net->cn_tfm = crypto_alloc_shash("sha256", 0, 0);
+-	if (IS_ERR(nn->cld_net->cn_tfm)) {
+-		status = PTR_ERR(nn->cld_net->cn_tfm);
+-		goto err_remove;
+-	}
+ 
+ 	/*
+ 	 * rpc pipe upcalls take 30 seconds to time out, so we don't want to
+@@ -1607,6 +1603,12 @@ nfsd4_cld_tracking_init(struct net *net)
+ 		status = -ETIMEDOUT;
+ 		goto err_remove;
+ 	}
++	tfm = crypto_alloc_shash("sha256", 0, 0);
++	if (IS_ERR(tfm)) {
++		status = PTR_ERR(tfm);
++		goto err_remove;
 +	}
-+	return NULL;
- }
++	nn->cld_net->cn_tfm = tfm;
  
- static inline u32
+ 	status = nfsd4_cld_get_version(nn);
+ 	if (status == -EOPNOTSUPP)
 -- 
 2.20.1
 
