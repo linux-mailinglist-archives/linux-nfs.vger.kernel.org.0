@@ -2,65 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 111D313E027
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 17:33:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F283713E19B
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 17:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgAPQcJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 11:32:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52334 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726370AbgAPQcI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 11:32:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579192327;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q60n1VZsESu3zhrmHy6lpyB2sF3Ad29tA2SxUDw1vL4=;
-        b=HTkrF/h5OXXhv1HZgbvcOBIPbG0ytGJFrCT7tHjBJdkVocX4jaQ3oAJXBBdx2fLoCpn7zW
-        9B8Ae4pGCO0Xmr6SPEvqzBAf3iw8mO4B2UYMCGLbcd7Wwgz2JoawBb01+QElcvCtLo4jQA
-        HGWzj3CE6GGmLDGyb+pWP0/bR7UfSH4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-6waNMwwPPuqApST3VfPhEQ-1; Thu, 16 Jan 2020 11:32:04 -0500
-X-MC-Unique: 6waNMwwPPuqApST3VfPhEQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729668AbgAPQrn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 11:47:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729613AbgAPQrl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08CB6107ACC5;
-        Thu, 16 Jan 2020 16:32:03 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81A7489D02;
-        Thu, 16 Jan 2020 16:32:02 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     anna.schumaker@netapp.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] NFS: Don't skip lookup when holding a delegation
-Date:   Thu, 16 Jan 2020 11:32:01 -0500
-Message-ID: <C5892E37-4731-4AD5-97FE-D8151C289CE9@redhat.com>
-In-Reply-To: <d8639ad40df3b0a814e7396e1e824220c4d21a55.camel@hammerspace.com>
-References: <77be993185fa7f114f6856f74f2f7affb5bd411d.1568904510.git.bcodding@redhat.com>
- <6399DBA2-DA9D-40C3-80BC-6DCE94BB9C49@redhat.com>
- <d8639ad40df3b0a814e7396e1e824220c4d21a55.camel@hammerspace.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DC83821582;
+        Thu, 16 Jan 2020 16:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193261;
+        bh=UvBSdpWu94Cr/vu/swFwEY05gb5S7dZpvtQ4ZH8wg9Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gp3hh562FFufViCb7wQkEBNZAnn6v/3KTBRiBUX95XSgFlpQVNY+5hsDUc18mUdIH
+         gHtvhmjw43U4v6uKRieq0RqujkcW2LzYvkGqZQvjaNwda0z+W8HHmfe2DPdsNAefSK
+         MCi2ZtsF42iV/AoD6dyqzKNIbujVw4V8neZ1HbFs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 5.4 058/205] xprtrdma: Connection becomes unstable after a reconnect
+Date:   Thu, 16 Jan 2020 11:40:33 -0500
+Message-Id: <20200116164300.6705-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 16 Jan 2020, at 11:02, Trond Myklebust wrote:
-> We should need to perform this revalidation once, and only once for
-> that directory, and only if we opened the file using a CLAIM_FH open,
-> or if we opened it through a different hard linked name (and did not
-> create this hard link after we got the delegation).
->
-> Perhaps we could define a magic value for dentry->d_time that causes us
-> to skip revalidation if and only if we hold a delegation?
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Can we put the delegation's change_attr in d_time for dentries that have
-been revalided while holding a delegation?
+[ Upstream commit a31b2f939219dd9bffdf01a45bd91f209f8cc369 ]
 
-Ben
+This is because xprt_request_get_cong() is allowing more than one
+RPC Call to be transmitted before the first Receive on the new
+connection. The first Receive fills the Receive Queue based on the
+server's credit grant. Before that Receive, there is only a single
+Receive WR posted because the client doesn't know the server's
+credit grant.
+
+Solution is to clear rq_cong on all outstanding rpc_rqsts when the
+the cwnd is reset. This is because an RPC/RDMA credit is good for
+one connection instance only.
+
+Fixes: 75891f502f5f ("SUNRPC: Support for congestion control ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/sunrpc/xprtrdma/transport.c |  3 +++
+ net/sunrpc/xprtrdma/verbs.c     | 22 ++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 160558b4135e..c67d465dc062 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -428,8 +428,11 @@ void xprt_rdma_close(struct rpc_xprt *xprt)
+ 	/* Prepare @xprt for the next connection by reinitializing
+ 	 * its credit grant to one (see RFC 8166, Section 3.3.3).
+ 	 */
++	spin_lock(&xprt->transport_lock);
+ 	r_xprt->rx_buf.rb_credits = 1;
++	xprt->cong = 0;
+ 	xprt->cwnd = RPC_CWNDSHIFT;
++	spin_unlock(&xprt->transport_lock);
+ 
+ out:
+ 	xprt->reestablish_timeout = 0;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 3a907537e2cf..f4b136504e96 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -75,6 +75,7 @@
+  * internal functions
+  */
+ static void rpcrdma_sendctx_put_locked(struct rpcrdma_sendctx *sc);
++static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf);
+ static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_destroy(struct rpcrdma_buffer *buf);
+@@ -780,6 +781,7 @@ rpcrdma_ep_disconnect(struct rpcrdma_ep *ep, struct rpcrdma_ia *ia)
+ 	trace_xprtrdma_disconnect(r_xprt, rc);
+ 
+ 	rpcrdma_xprt_drain(r_xprt);
++	rpcrdma_reqs_reset(r_xprt);
+ }
+ 
+ /* Fixed-size circular FIFO queue. This implementation is wait-free and
+@@ -1042,6 +1044,26 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+ 	return NULL;
+ }
+ 
++/**
++ * rpcrdma_reqs_reset - Reset all reqs owned by a transport
++ * @r_xprt: controlling transport instance
++ *
++ * ASSUMPTION: the rb_allreqs list is stable for the duration,
++ * and thus can be walked without holding rb_lock. Eg. the
++ * caller is holding the transport send lock to exclude
++ * device removal or disconnection.
++ */
++static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt)
++{
++	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
++	struct rpcrdma_req *req;
++
++	list_for_each_entry(req, &buf->rb_allreqs, rl_all) {
++		/* Credits are valid only for one connection */
++		req->rl_slot.rq_cong = 0;
++	}
++}
++
+ static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
+ 					      bool temp)
+ {
+-- 
+2.20.1
 
