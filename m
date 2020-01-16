@@ -2,34 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A903F13F916
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3A013F902
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 20:22:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbgAPTWw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 14:22:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37204 "EHLO mail.kernel.org"
+        id S2390615AbgAPTWG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 14:22:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgAPQxW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:22 -0500
+        id S1731005AbgAPQxc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 180C721582;
-        Thu, 16 Jan 2020 16:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5874214AF;
+        Thu, 16 Jan 2020 16:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193601;
-        bh=N/YR52bu4YthFVAa+5FgcQ9s5xNLJKWMWEoOcKzJk1I=;
+        s=default; t=1579193611;
+        bh=Ct7epx5Ce1DJ/Hup0WnjGmC1dF6IYb33R8xHw35puVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2pwyp/HQWyer/lVeItJwC/TINEI4T5Cd9QPyTaamsKkesN3WXv6L36+yMzQPktAy
-         q2Ee9wR654qwsgw1CJ6T0aFNNlFxxME0EgUhbx42FlL+1jk4BVzNEblWGaFVQnM9qK
-         RN6n1kB5w55b7FCaCK9/00bO0MC32hV9OMpUVFB8=
+        b=edy9qZXJY2wL2ZtzTXYrDXXEpqnlHKpq05lC7uCIMBhWgfZZkWSCrWgBOskphPQ+L
+         GU9ndiMRZZGh018Df6RSmCxqqZtOwUOAamgpuHY/WImwWCoBRHaFEUwUf/L6Ib60Hi
+         j2Dn9O4I8w4yxUTr0IIHgPRGcgVmUmZpUU+hItKQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 140/205] NFSv4.x: Handle bad/dead sessions correctly in nfs41_sequence_process()
-Date:   Thu, 16 Jan 2020 11:41:55 -0500
-Message-Id: <20200116164300.6705-140-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 149/205] SUNRPC: Fix another issue with MIC buffer space
+Date:   Thu, 16 Jan 2020 11:42:04 -0500
+Message-Id: <20200116164300.6705-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -42,118 +45,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 5c441544f045e679afd6c3c6d9f7aaf5fa5f37b0 ]
+[ Upstream commit e8d70b321ecc9b23d09b8df63e38a2f73160c209 ]
 
-If the server returns a bad or dead session error, the we don't want
-to update the session slot number, but just immediately schedule
-recovery and allow it to proceed.
+xdr_shrink_pagelen() BUG's when @len is larger than buf->page_len.
+This can happen when xdr_buf_read_mic() is given an xdr_buf with
+a small page array (like, only a few bytes).
 
-We can/should then remove handling in other places
+Instead, just cap the number of bytes that xdr_shrink_pagelen()
+will move.
 
-Fixes: 3453d5708b33 ("NFSv4.1: Avoid false retries when RPC calls are interrupted")
+Fixes: 5f1bc39979d ("SUNRPC: Fix buffer handling of GSS MIC ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ net/sunrpc/xdr.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index caacf5e7f5e1..a591aaf31071 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -521,9 +521,7 @@ static int nfs4_do_handle_exception(struct nfs_server *server,
- 		case -NFS4ERR_DEADSESSION:
- 		case -NFS4ERR_SEQ_FALSE_RETRY:
- 		case -NFS4ERR_SEQ_MISORDERED:
--			dprintk("%s ERROR: %d Reset session\n", __func__,
--				errorcode);
--			nfs4_schedule_session_recovery(clp->cl_session, errorcode);
-+			/* Handled in nfs41_sequence_process() */
- 			goto wait_on_recovery;
- #endif /* defined(CONFIG_NFS_V4_1) */
- 		case -NFS4ERR_FILE_OPEN:
-@@ -782,6 +780,7 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 	struct nfs4_session *session;
- 	struct nfs4_slot *slot = res->sr_slot;
- 	struct nfs_client *clp;
-+	int status;
- 	int ret = 1;
- 
- 	if (slot == NULL)
-@@ -793,8 +792,13 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 	session = slot->table->session;
- 
- 	trace_nfs4_sequence_done(session, res);
-+
-+	status = res->sr_status;
-+	if (task->tk_status == -NFS4ERR_DEADSESSION)
-+		status = -NFS4ERR_DEADSESSION;
-+
- 	/* Check the SEQUENCE operation status */
--	switch (res->sr_status) {
-+	switch (status) {
- 	case 0:
- 		/* Mark this sequence number as having been acked */
- 		nfs4_slot_sequence_acked(slot, slot->seq_nr);
-@@ -866,6 +870,10 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 		 */
- 		slot->seq_nr = slot->seq_nr_highest_sent;
- 		goto out_retry;
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-+		goto session_recover;
- 	default:
- 		/* Just update the slot sequence no. */
- 		slot->seq_done = 1;
-@@ -876,8 +884,10 @@ static int nfs41_sequence_process(struct rpc_task *task,
- out_noaction:
- 	return ret;
- session_recover:
--	nfs4_schedule_session_recovery(session, res->sr_status);
--	goto retry_nowait;
-+	nfs4_schedule_session_recovery(session, status);
-+	dprintk("%s ERROR: %d Reset session\n", __func__, status);
-+	nfs41_sequence_free_slot(res);
-+	goto out;
- retry_new_seq:
- 	++slot->seq_nr;
- retry_nowait:
-@@ -2188,7 +2198,6 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
- 		case -NFS4ERR_DEADSESSION:
--			nfs4_schedule_session_recovery(server->nfs_client->cl_session, err);
- 			return -EAGAIN;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
-@@ -7820,6 +7829,15 @@ nfs41_same_server_scope(struct nfs41_server_scope *a,
- static void
- nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
- {
-+	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
-+	struct nfs_client *clp = args->client;
-+
-+	switch (task->tk_status) {
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+		nfs4_schedule_session_recovery(clp->cl_session,
-+				task->tk_status);
-+	}
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 14ba9e72a204..f3104be8ff5d 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -436,13 +436,12 @@ xdr_shrink_bufhead(struct xdr_buf *buf, size_t len)
  }
  
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
-@@ -8867,8 +8885,6 @@ static int nfs41_reclaim_complete_handle_errors(struct rpc_task *task, struct nf
- 	case -NFS4ERR_BADSESSION:
- 	case -NFS4ERR_DEADSESSION:
- 	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
--		nfs4_schedule_session_recovery(clp->cl_session,
--				task->tk_status);
- 		break;
- 	default:
- 		nfs4_schedule_lease_recovery(clp);
+ /**
+- * xdr_shrink_pagelen
++ * xdr_shrink_pagelen - shrinks buf->pages by up to @len bytes
+  * @buf: xdr_buf
+  * @len: bytes to remove from buf->pages
+  *
+- * Shrinks XDR buffer's page array buf->pages by
+- * 'len' bytes. The extra data is not lost, but is instead
+- * moved into the tail.
++ * The extra data is not lost, but is instead moved into buf->tail.
++ * Returns the actual number of bytes moved.
+  */
+ static unsigned int
+ xdr_shrink_pagelen(struct xdr_buf *buf, size_t len)
+@@ -455,8 +454,8 @@ xdr_shrink_pagelen(struct xdr_buf *buf, size_t len)
+ 
+ 	result = 0;
+ 	tail = buf->tail;
+-	BUG_ON (len > pglen);
+-
++	if (len > buf->page_len)
++		len = buf-> page_len;
+ 	tailbuf_len = buf->buflen - buf->head->iov_len - buf->page_len;
+ 
+ 	/* Shift the tail first */
 -- 
 2.20.1
 
