@@ -2,144 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 070C813DD89
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 15:35:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCDEC13DE5C
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 16:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgAPOf3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 09:35:29 -0500
-Received: from mail-eopbgr760135.outbound.protection.outlook.com ([40.107.76.135]:46148
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726084AbgAPOf2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:35:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XN2OYaaarmCSgx98gx4cYdsQgVI5IUw48/zIuIfQpCzMXO26S4gOvJRzvsiMK2aEvVa+UANv8t6ZzD4fGtj9jHtUBvCVdB12uBj76Z/4uwa2m33+xNqeccvtMDGMQPMmJ3RBR6WKOmIRiGzEk8FW7tX6Ftkanm+ycntTao+IqVXzu7CgCdhqHDl30Ih29kVvCLHubWwBKmWcDk3ni9Ko2qEdkLpdlLqbqskrcdTzHqDgdg6pjYxKWf4WV7GkFVVMSWXngbb4pORpZiusV4zZBcoN9DzL7U6ti6pfz8LjCO/F7ApF/MwBCxcPkJdajyDgsIyfJGJSOeXqT0XeZWqCqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXRN0a8/zJMASfYBuh4hqzbErZQMPCOQCPfmWSy3uno=;
- b=oYX9O0wjJ6HTDPu49r/EbnZtvGuZwGLyK6x4XVp/2kIggpsPVe2YuJ9PSvswv645YwsnSHuQ8H3vk4Puk19YnCWFZCLXxHlXcL/qhzoVx6AzfXYA/X7/n1dOL1m+6JJaVBBlVcWSy7CNKl5ze5q6+uGvETZQVxBUm9axkKR4hnaPz8W+InDdUz4i6jMz/kXDD4uIdr2R3qMBAitTlgxfpQ6kc2hKDE08UMTm4NfAKbEqSdCWDJZxBZh9ExRmBp2oshkoYLLMZtt8T1JvLd7rGGDvtQkOrD7phA/Xsv4pvSY+6ARhX10wb28ZvWya6A30KJDHAm6JIhctgF4VADJv0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXRN0a8/zJMASfYBuh4hqzbErZQMPCOQCPfmWSy3uno=;
- b=RZuoY9Td2ywDMJcGsosXtziiSPMKGTvzF9lcTlPar+bcZ59Dr3lZvpXjm1wf3s6n/O1/1GCSFQ4tZRaKaF2qItOzO5HaWm8i+Iu0zYjpyj+s67Y0dhmB8sbcT51Vc24aohNJLGJjm5GxjVgBJm62zkMHRHFWW/zOvtVztbR+5UE=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1930.namprd13.prod.outlook.com (10.174.187.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.12; Thu, 16 Jan 2020 14:35:25 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.021; Thu, 16 Jan 2020
- 14:35:25 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1726189AbgAPPNz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 10:13:55 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58176 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726160AbgAPPNy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 10:13:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579187633;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DUcwveTOiooHWqdbWNDViWn/M8o8oi8gjp+XFqmlu3Q=;
+        b=AqgOXEOdych4imjNeYZUy0eafGWoiiG2s/SLoBLYyB1o4Smdn7e4cvDUhUX7/+NlCJ+9KN
+        PcMPYN2btGLGb6LFWqZW4PlLROPd/SHu75QyRZc0TxMXHgyWDqMmLHH4FV543TAC53cUpw
+        YocVrYNLB8tSYxrOvQQZOEQKCpK/3o4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-e19STbyzPZyRYBeN4LCcNw-1; Thu, 16 Jan 2020 10:13:49 -0500
+X-MC-Unique: e19STbyzPZyRYBeN4LCcNw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D72EB1005502;
+        Thu, 16 Jan 2020 15:13:48 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 86489811FF;
+        Thu, 16 Jan 2020 15:13:48 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
 Subject: Re: Lookup revalidation for OPEN_CLAIM_FH
-Thread-Topic: Lookup revalidation for OPEN_CLAIM_FH
-Thread-Index: AQHVzHQOQmnjbX8Fb0WPSO1cRvS5YaftW3aA
-Date:   Thu, 16 Jan 2020 14:35:25 +0000
-Message-ID: <7eae4162d7c8a85bbb7fddab3a818472ec2ebc54.camel@hammerspace.com>
+Date:   Thu, 16 Jan 2020 10:13:47 -0500
+Message-ID: <C69931E7-7465-4662-91AC-C74609A4CDB2@redhat.com>
+In-Reply-To: <7eae4162d7c8a85bbb7fddab3a818472ec2ebc54.camel@hammerspace.com>
 References: <31B20BC3-A089-47F9-9821-7A3543FF7413@redhat.com>
-In-Reply-To: <31B20BC3-A089-47F9-9821-7A3543FF7413@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f873ae6-a4ea-490d-afff-08d79a915360
-x-ms-traffictypediagnostic: DM5PR1301MB1930:
-x-microsoft-antispam-prvs: <DM5PR1301MB1930FC16923C09A1A2D22229B8360@DM5PR1301MB1930.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(376002)(136003)(396003)(366004)(199004)(189003)(6506007)(86362001)(36756003)(316002)(6916009)(8936002)(4326008)(64756008)(66946007)(81166006)(66446008)(186003)(2616005)(478600001)(66556008)(8676002)(6486002)(91956017)(26005)(5660300002)(2906002)(76116006)(71200400001)(6512007)(66476007)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1930;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y11LLoQpNDn7Bxstu8pAaL6W/FIhOVhfAyIWjyRTyNtbZUEFkTNY7dp+vkQZL31J/Vql+uq+PkZzwcQaDRrXQdM61mXaaZGVcSLVc8QESyWgSztWw0BsATtTzXKr+YYSkeuyiEEsuaNQhW2Pz2lHeexfKiMouborWr8YPItpwqYkTcyjJRWOf3mHm7S+Rg6FsyrEP9ivECjGuUgIUs9NNA3Ffe1nGkl5ZBYQGFbmOETCpiil8484gQqxVZyxoWGaOE2giDC0GgkOzrpFm1Gf627WEsVn8Cmx10nNnbT2KIztMtvqZChr4j3xg58d3Xsmn7mtHLAgiu2+vV457SPGNw/CoU9HDTsRZCtIsnyHodvpRJP1LvmMZnXWAoxx7copp3vwifvVN0bqunOf3YGkzPOV1eLzwTu4K808XnrRodoZh1uS4Gw+Mjgf8OxkSxy2
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F02FBB3902214E478FC21AB2B1BFCB3F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <7eae4162d7c8a85bbb7fddab3a818472ec2ebc54.camel@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f873ae6-a4ea-490d-afff-08d79a915360
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 14:35:25.4506
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vC4WWgd4XYuQnJVI5pBfelgB5Y2OcAh0RVmLiNkuZcWgfIl5tkK87UMd4Xa3K3E5mawrkf9+Y0rY14FZUiFtIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1930
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTE2IGF0IDA4OjUxIC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBIaSBUcm9uZCwNCj4gDQo+IEknZCBsaWtlIHRvIGZpeCB1cCBsb29rdXAgcmV2YWxp
-ZGF0aW9uIGZvciB2NC4xKyB3aGVuIHRoZSBjbGllbnQgaXMNCj4gdXNpbmcNCj4gT1BFTl9DTEFJ
-TV9GSC4gIFRoZSBmaXhlcyBhIHdoaWxlIGJhY2sgZm9yIFN0YW4gSHUncyBjYXNlIGRvIG5vdCBz
-ZWVtDQo+IHRvDQo+IGltcHJvdmUgdGhpbmdzIGZvciB2NC4xLCBhbmQgYWN0dWFsbHkgbWFrZSB0
-aGUgYmVoYXZpb3IgYSBiaXQgd29yc2UNCj4gc2luY2Ugd2UNCj4gbm8gbG9uZ2VyIHBhc3MgdGhy
-b3VnaCBuZnNfbG9va3VwX3ZlcmlmeV9pbm9kZSgpLCB3aGljaCB3b3VsZCBjYXRjaA0KPiB0aGUN
-Cj4gY2FzZXMgd2hlcmUgbmxpbmsgPT0gMC4NCj4gDQo+IFdvdWxkIHlvdSBhY2NlcHQgd29yayB0
-byBfYWx3YXlzXyByZXZhbGlkYXRlIHRoZSBkZW50cnkncyBwYXJlbnQgZm9yDQo+IENMQUlNX0ZI
-PyAgQWx0ZXJuYXRpdmVseSwgaXQgc2VlbXMgdGhhdCBDTEFJTV9OVUxMIHdvdWxkIGJlDQo+IHBy
-ZWZlcmFibGUgZm9yDQo+IHRoaXMgY2FzZSwgdGhvdWdoIEkgZG9uJ3Qga25vdyBob3cgdGhlIGNs
-aWVudCB3b3VsZCBrbm93IHdoZW4gdG8NCj4gZGVjaWRlDQo+IGJldHdlZW4gdGhlbS4NCj4NCj4g
-SGVyZSdzIGEgc2ltcGxlIHJlcHJvZHVjZXIgZm9yIGNvbnZlbmllbmNlLCBJIHRoaW5rIHdlJ3Zl
-IGFscmVhZHkgYWxsDQo+IGFncmVlZA0KPiB0aGF0IHRoZSBiZWhhdmlvciB3ZSB3YW50IGlzIGZv
-ciB0aGUgc2Vjb25kIG9wZW4gYnkgYGNhdGAgdG8gcmVmbGVjdA0KPiB0aGUNCj4gcmVzdWx0cyBv
-ZiB0aGUgbW92ZSBvbiB0aGUgc2VydmVyLCBvciBhdCBsZWFzdCBldmVudHVhbGx5IGxhdGVyIG9w
-ZW5zDQo+IHdvdWxkDQo+IHJldmFsaWRhdGUgdGhlIGRlbnRyeToNCj4NCj4gIyEvYmluL2Jhc2gN
-Cj4gDQo+IHNldCAtbyB4dHJhY2UNCj4gdmVycz00LjENCj4gDQo+IGV4cG9ydGZzIC11YQ0KPiBl
-eHBvcnRmcyAtbyBydyxzZWM9c3lzLG5vX3Jvb3Rfc3F1YXNoICo6L2V4cG9ydHMNCj4gDQo+IG1r
-ZGlyIC9tbnQvbG9jYWxob3N0IHx8IHRydWUNCj4gDQo+IHJtIC1mIC9leHBvcnRzL2ZpbGV7MSwy
-fQ0KPiANCj4gZWNobyB0aGlzIGlzIGZpbGUgMSA+IC9leHBvcnRzL2ZpbGUxDQo+IGVjaG8gdGhp
-cyBpcyBmaWxlIDIgPiAvZXhwb3J0cy9maWxlMg0KPiANCj4gbW91bnQgLXQgbmZzIC1vdiR2ZXJz
-LHNlYz1zeXMgbG9jYWxob3N0Oi9leHBvcnRzIC9tbnQvbG9jYWxob3N0DQo+IA0KPiB0YWlsIC1m
-IC9tbnQvbG9jYWxob3N0L2ZpbGUxICYNCj4gc2xlZXAgMQ0KPiANCj4gIyB0aGlzIGlzIGZpbGUg
-MQ0KPiBjYXQgL21udC9sb2NhbGhvc3QvZmlsZTENCj4gDQo+ICMgb3ZlcndyaXRlIHRoZSBmaWxl
-IG9uIHRoZSBzZXJ2ZXI6DQo+IG12IC1mIC9leHBvcnRzL2ZpbGUyIC9leHBvcnRzL2ZpbGUxDQo+
-IA0KPiAjIHRoaXMgaXMgZmlsZSAyDQo+IGNhdCAvbW50L2xvY2FsaG9zdC9maWxlMQ0KPiANCj4g
-a2lsbGFsbCB0YWlsDQo+ICMgdGhpcyBpcyBmaWxlIDINCj4gY2F0IC9tbnQvbG9jYWxob3N0L2Zp
-bGUxDQo+IHVtb3VudCAvbW50L2xvY2FsaG9zdA0KPiANCj4gDQo+IFN3aXRjaGluZyB0aGUgJHZl
-cnMgdmFyaWFibGUgYmV0d2VlbiB2NC4wIGFuZCB2NC4xIGluIHRoaXMgc2NyaXB0DQo+IHNob3dz
-IHRoZQ0KPiBkaWZmZXJlbmNlIGluIGJlaGF2aW9yLg0KPiANCg0KSWYgc29tZWJvZHkgbmVlZHMg
-c3Ryb25nZXIgbG9va3VwIGNhY2hlIHJldmFsaWRhdGlvbiwgdGhlbiB0aGF0J3Mgd2hhdA0KdGhl
-eSBoYXZlIHRoZSAnbG9va3VwY2FjaGU9bm9uZScgbW91bnQgb3B0aW9uIGZvci4gV2UgaGF2ZSB0
-aGVzZQ0KJ2xvb2t1cGNhY2hlJyBtb3VudCBvcHRpb25zIGluIG9yZGVyIHRvIGFsbG93IHVzZXJz
-IHRvIHRhaWxvciB0aGUNCmNhY2hpbmcgYmVoYXZpb3VyIChvbiBhIHBlci1tb3VudCBiYXNpcykg
-c2hvdWxkIHRoZSBkZWZhdWx0IGJlaGF2aW91cg0KYmUgaW5zdWZmaWNpZW50bHkgc3RyaWN0Lg0K
-DQpTaW5jZSB5b3VyIHRlc3RjYXNlIGRvZXNuJ3QgdXNlIHRoYXQgbW91bnQgb3B0aW9uLCBJIGRv
-bid0IHNlZSB3aGF0IGl0DQppcyBwcm92aW5nIG90aGVyIHRoYW4gd2hhdCB3ZSBhbHJlYWR5IGtu
-b3cgYWJvdXQgdGhlIGRlZmF1bHQgbG9va3VwDQpjYWNoaW5nOiBuYW1lbHkgdGhhdCBpdCBzYWNy
-aWZpY2VzIHNvbWUgYWNjdXJhY3kgaW4gdGhlIGludGVyZXN0IG9mDQpmaWxlIG9wZW4gcGVyZm9y
-bWFuY2UuDQoNCkJ5IHRoZSB3YXksIE5GU3Y0LjEgd2lsbCBhY3R1YWxseSBoYW5kbGUgdGhpcyBz
-aXR1YXRpb24gYmV0dGVyIHRoYW4NCk5GU3YzLCBzaW5jZSB0aGUgc3RhdGVmdWwgb3BlbiBlbnN1
-cmVzIHRoYXQgZXZlbiBpZiB0aGUgZmlsZSB0aGF0IHdvbg0KdGhlIHJhY2Ugd2FzIGRlbGV0ZWQg
-YnkgdGhlIG90aGVyIGNsaWVudCwgdGhlbiB0aGUgc2VydmVyIHdpbGwgcHJlc2VydmUNCnRoYXQg
-ZmlsZSBhbmQgaXRzIGNvbnRlbnRzIHVudGlsIG91ciBjbGllbnQgY2FsbHMgY2xvc2UoKS4NCg0K
-SW4gY29uY2x1c2lvbjoNCg0KICogV2l0aCBhIGRlZmF1bHQgbW91bnQgb3B0aW9uIG9mICdsb29r
-dXBjYWNoZT1hbGwnLCB3ZSBkb24ndCBwcm9taXNlDQogICAxMDAlIGFjY3VyYWN5IGluIHRoZSBm
-YWNlIG9mIDNyZCBwYXJ0eSBjbGllbnQgY2hhbmdlcyB0byB0aGUNCiAgIG5hbWVzcGFjZS4gV2Ug
-b25seSBwcm9taXNlIHRoYXQgd2Ugd2lsbCBldmVudHVhbGx5IHBpY2sgdXAgdGhlDQogICBjaGFu
-Z2VzLiBJZiB3ZSdyZSBmYWlsaW5nIHRvIGRvIHRoYXQsIHRoZW4gbGV0J3MgbG9vayBhdCB3aHks
-IGJ1dA0KICAgJ2xvb2t1cGNhY2hlPWFsbCcgaXMgbm90IGd1YXJhbnRlZWQgdG8gaW1tZWRpYXRl
-bHkgZmluZCBuYW1lc3BhY2UNCiAgIGNoYW5nZXMuDQoNCiAqIFdpdGggJ2xvb2t1cGNhY2hlPXBv
-cycsIHdlIHByb21pc2UgdGhhdCB0aGUgY2xpZW50IHdpbGwgaWdub3JlDQogICBuZWdhdGl2ZSAg
-Y2FjaGVkIGRlbnRyaWVzLCBhbmQgaGVuY2Ugd2lsbCBhbHdheXMgZmluZCBhIGZpbGUgdGhhdA0K
-ICAgd2FzIGNyZWF0ZWQgdXNpbmcgZXhjbHVzaXZlIGNyZWF0ZSBvbiB0aGUgc2VydmVyLiBIb3dl
-dmVyIEknZCBleHBlY3QNCiAgIHRoYXQgdG9vIHRvIGZhaWwgeW91ciB0ZXN0IGFib3ZlLg0KDQog
-KiBJZiBpdCBmYWlscyB3aXRoICdsb29rdXBjYWNoZT1ub25lJywgdGhlbiBJIHdvdWxkIGFncmVl
-IHRoYXQgd2UgaGF2ZQ0KICAgYSBwcm9ibGVtLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGlu
-dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On 16 Jan 2020, at 9:35, Trond Myklebust wrote:
+
+> On Thu, 2020-01-16 at 08:51 -0500, Benjamin Coddington wrote:
+>> Hi Trond,
+>>
+>> I'd like to fix up lookup revalidation for v4.1+ when the client is
+>> using
+>> OPEN_CLAIM_FH.  The fixes a while back for Stan Hu's case do not seem
+>> to
+>> improve things for v4.1, and actually make the behavior a bit worse
+>> since we
+>> no longer pass through nfs_lookup_verify_inode(), which would catch
+>> the
+>> cases where nlink == 0.
+>>
+>> Would you accept work to _always_ revalidate the dentry's parent for
+>> CLAIM_FH?  Alternatively, it seems that CLAIM_NULL would be
+>> preferable for
+>> this case, though I don't know how the client would know when to
+>> decide
+>> between them.
+>>
+>> Here's a simple reproducer for convenience, I think we've already all
+>> agreed
+>> that the behavior we want is for the second open by `cat` to reflect
+>> the
+>> results of the move on the server, or at least eventually later opens
+>> would
+>> revalidate the dentry:
+>>
+>> #!/bin/bash
+>>
+>> set -o xtrace
+>> vers=4.1
+>>
+>> exportfs -ua
+>> exportfs -o rw,sec=sys,no_root_squash *:/exports
+>>
+>> mkdir /mnt/localhost || true
+>>
+>> rm -f /exports/file{1,2}
+>>
+>> echo this is file 1 > /exports/file1
+>> echo this is file 2 > /exports/file2
+>>
+>> mount -t nfs -ov$vers,sec=sys localhost:/exports /mnt/localhost
+>>
+>> tail -f /mnt/localhost/file1 &
+>> sleep 1
+>>
+>> # this is file 1
+>> cat /mnt/localhost/file1
+>>
+>> # overwrite the file on the server:
+>> mv -f /exports/file2 /exports/file1
+>>
+>> # this is file 2
+>> cat /mnt/localhost/file1
+>>
+>> killall tail
+>> # this is file 2
+>> cat /mnt/localhost/file1
+>> umount /mnt/localhost
+>>
+>>
+>> Switching the $vers variable between v4.0 and v4.1 in this script
+>> shows the
+>> difference in behavior.
+>>
+>
+> If somebody needs stronger lookup cache revalidation, then that's what
+> they have the 'lookupcache=none' mount option for. We have these
+> 'lookupcache' mount options in order to allow users to tailor the
+> caching behaviour (on a per-mount basis) should the default behaviour
+> be insufficiently strict.
+>
+> Since your testcase doesn't use that mount option, I don't see what it
+> is proving other than what we already know about the default lookup
+> caching: namely that it sacrifices some accuracy in the interest of
+> file open performance.
+
+Thanks for the look.  The testcase only provides a comparison of different
+behavior between v4.0 and v4.1, which is due to our use of CLAIM_NULL vs
+CLAIM_FH.
+
+Indeed, setting lookupcache=none give real-time updates.  With default
+lookupcache, after the directory attributes time out, the client will
+likewise get the namespace right.  So, this isn't a major problem, but we do
+have some  QE folks that are unhappy about it.
+
+Can we improve things a bit for v4.1 without sacrificing performance?  I
+can't think of a reason to not go back to CLAIM_NULL in nfs4_file_open().
+Maybe it is a bit more work on the server to have to do one extra lookup per
+open, but we'll end up with the right file each time.
+
+It makes sense to keep CLAIM_FH for recovery, but why keep it for regular
+opens?
+
+Ben
+
