@@ -2,39 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7576F13F125
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:27:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 601F013EEBA
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 19:11:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387397AbgAPS0u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 13:26:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35520 "EHLO mail.kernel.org"
+        id S2405428AbgAPRhj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 12:37:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403977AbgAPR0f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:35 -0500
+        id S2405422AbgAPRhi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A59246D4;
-        Thu, 16 Jan 2020 17:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1145246C3;
+        Thu, 16 Jan 2020 17:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195594;
-        bh=pZ1XnrvHf1IPiLRXxbEExVOtWong9/zjiiEtZtGOJzg=;
+        s=default; t=1579196258;
+        bh=bFpgvpIsX7xYt7AEP1O4Mz3AHiaUEeRaeY8XZmOCVNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHp7uJeKLVal196D/wg9MFkl4NFIMGa9M4yAzTjrYWczaTku3OWF/uCi+Jgnme3Xi
-         NxFYlA1KVJBm2Hu/igjyD/fgI4KfmvqXeLPesJ3ntm5fFu6Z87k/E9pjgqqfR4AYLm
-         UK2v7SAJb04ZONOlny3+xsqJQPnUoVyiO1Sh4z68=
+        b=UcqONqGQtp7eHAZtDNiPZwRaidNWbYNNdeYuI0hFf0tW6rMYMk+sue+45OTBcAnMJ
+         cqZbznNj0IG3oKHhh0/PGeuyiZoJgjug1UftpFTsRM85sdSAWGEF/0457+swCPxS8k
+         YFNru5XjVQWzVEbh68gCJYuQ4VwjtCreznfMLY8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 172/371] NFS: Don't interrupt file writeout due to fatal errors
-Date:   Thu, 16 Jan 2020 12:20:44 -0500
-Message-Id: <20200116172403.18149-115-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 083/251] fs/nfs: Fix nfs_parse_devname to not modify it's argument
+Date:   Thu, 16 Jan 2020 12:33:52 -0500
+Message-Id: <20200116173641.22137-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,35 +43,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit 14bebe3c90b326d2a0df78aed5e9de090c71d878 ]
+[ Upstream commit 40cc394be1aa18848b8757e03bd8ed23281f572e ]
 
-When flushing out dirty pages, the fact that we may hit fatal errors
-is not a reason to stop writeback. Those errors are reported through
-fsync(), not through the flush mechanism.
+In the rare and unsupported case of a hostname list nfs_parse_devname
+will modify dev_name.  There is no need to modify dev_name as the all
+that is being computed is the length of the hostname, so the computed
+length can just be shorted.
 
-Fixes: a6598813a4c5b ("NFS: Don't write back further requests if there...")
+Fixes: dc04589827f7 ("NFS: Use common device name parsing logic for NFSv4 and NFSv2/v3")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 2 +-
+ fs/nfs/super.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 01b9d9341b54..ed3f5afc4ff7 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -643,7 +643,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 	return ret;
- out_launder:
- 	nfs_write_error_remove_page(req);
--	return ret;
-+	return 0;
- }
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 42c31587a936..4c21e572f2d9 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1928,7 +1928,7 @@ static int nfs_parse_devname(const char *dev_name,
+ 		/* kill possible hostname list: not supported */
+ 		comma = strchr(dev_name, ',');
+ 		if (comma != NULL && comma < end)
+-			*comma = 0;
++			len = comma - dev_name;
+ 	}
  
- static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
+ 	if (len > maxnamlen)
 -- 
 2.20.1
 
