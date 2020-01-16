@@ -2,82 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF0F13FABE
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 21:38:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7E313FAC3
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 21:41:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgAPUis (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 15:38:48 -0500
+        id S1729067AbgAPUlJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jan 2020 15:41:09 -0500
 Received: from smtpcmd03116.aruba.it ([62.149.158.116]:40873 "EHLO
         smtpcmd03116.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729067AbgAPUis (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 15:38:48 -0500
+        with ESMTP id S1729473AbgAPUlJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 15:41:09 -0500
 Received: from [192.168.126.128] ([146.241.70.103])
         by smtpcmd03.ad.aruba.it with bizsmtp
-        id r8el2100W2DhmGq018elLR; Thu, 16 Jan 2020 21:38:46 +0100
-Subject: Re: [nfs-utils PATCH 5/7] rpcgen: rpc_cout: fix potential
- -Wformat-nonliteral warning
-To:     Steve Dickson <SteveD@RedHat.com>, linux-nfs@vger.kernel.org
-References: <20200103215039.27471-1-giulio.benetti@benettiengineering.com>
- <20200103215039.27471-6-giulio.benetti@benettiengineering.com>
- <dd75fa26-a07a-49fb-ed22-1e60da31c8da@benettiengineering.com>
- <a9f351c6-22e5-35ef-7119-d261ef8d0159@RedHat.com>
+        id r8h72100S2DhmGq018h7mN; Thu, 16 Jan 2020 21:41:08 +0100
+Subject: Re: [nfs-utils PATCH 0/3] bump rpcgen version and silence some
+ warning
+To:     Steve Dickson <SteveD@RedHat.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20200113162918.77144-1-giulio.benetti@benettiengineering.com>
+ <30b28d4e-71a5-f412-23e7-877a4eff17bd@RedHat.com>
 From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <4950679e-f8d0-c9ce-b08d-62801acd2c12@benettiengineering.com>
-Date:   Thu, 16 Jan 2020 21:38:45 +0100
+Message-ID: <fdbade7a-f8f6-16b1-1a18-e9742b9a0aa0@benettiengineering.com>
+Date:   Thu, 16 Jan 2020 21:41:07 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <a9f351c6-22e5-35ef-7119-d261ef8d0159@RedHat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <30b28d4e-71a5-f412-23e7-877a4eff17bd@RedHat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1579207126; bh=IevB3bRWRDA0rsx9q5k3ijwq1srfB6HBdsvujoFDmFU=;
+        t=1579207268; bh=aRsOXxpOsBYJlJp85E8OrjFaGlwIeos7jMzC8ZOkXvs=;
         h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=Tu6dItiPAnDww7fko6N9LTSvZjkFEbNg5T+Dv9McnYKbst7OIIHqFYy9RsJQanfnC
-         4e2T6PJkAu86o5xIsvjXcE3Yt3Hv6E32g18Mj7IHKBPbtJs3ceo5m0rpznRk7ZRGXg
-         luvR0MAxz3KFyQxhfCEocAO297MpYqLsfx/D/o8DnsMVcjYjRWPWq00fL65n7I8MBP
-         nY6lcPgwA2AvZYSjMkH5Qb0ONWls/9sBFEZo71hF7lWEJtjp2u4n1aLn9GUwOabvX1
-         tNRV7CEL3TiDU5BuNtACd1paSWzMQAKYFXVKUtYlHJNlGTU7plr/+xxgmT5uMxicgt
-         3NN7pjcxOe00Q==
+        b=M+IJX48q/OWqrNyyqDbN4frVP1Qgl+SB6ONorgKKCfLtVh/1g3SDLXbDXueOER/9u
+         hqavduz9vpndrC+gviMXgUefn94dDt1/S8kc7XF9+/A2TbU5aRL0JwlQCH1hNTGllv
+         civlUNbm/8eqqk+hfNhK7c1xVCodJ00/4DqUfGwZ2ATKn2P7QOopvdSaLzToTvGEM8
+         d6/sxfZX8A3VAVaTBxlN25B9vRMdqve54JpMHXkG7e2ORTireG8EeHFrGkMnCNcOR/
+         D5wt58xcZ5whVSR9wB8q4wVWoF42v6ufBm+XtLKYQuThrERvrfR4iknaN08NRpnbwA
+         mdgZslRBCM2gA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 1/16/20 9:07 PM, Steve Dickson wrote:
+On 1/16/20 9:37 PM, Steve Dickson wrote:
 > 
 > 
-> On 1/15/20 11:29 AM, Giulio Benetti wrote:
->> Hi Steve,
+> On 1/13/20 11:29 AM, Giulio Benetti wrote:
+>> Giulio Benetti (3):
+>>    rpcgen: bump to latest version
+>>    rpcgen: rpc_cout: silence format-nonliteral
+>>    support: nfs: rpc_socket: silence unused parameter warning on salen
 >>
->> you've missed this patch while applying the series. Can you please commit it?
-> It is in...
-> 
-> commit 6f4568f1f7395f967cc03995dcfb79a1ac5c11cd
-> Author: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Date:   Mon Jan 6 14:23:04 2020 -0500
-> 
->      rpcgen: rpc_hout: fix potential -Wformat-security warning
->      
->      f_print()'s argument "separator" is not known because it's passed as an
->      argument and with -Wformat-security will cause a useless warning. Let's
->      ignore by adding "#pragma GCC diagnostic ignored/warning" before and
->      after f_print().
->      
->      Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
->      Signed-off-by: Steve Dickson <steved@redhat.com>
-> 
-> what am I missing?
+>>   support/nfs/rpc_socket.c   |    2 +
+>>   tools/rpcgen/Makefile.am   |   24 +-
+>>   tools/rpcgen/proto.h       |   65 ++
+>>   tools/rpcgen/rpc_clntout.c |  458 +++++---
+>>   tools/rpcgen/rpc_cout.c    | 1269 ++++++++++++----------
+>>   tools/rpcgen/rpc_hout.c    |  915 +++++++++-------
+>>   tools/rpcgen/rpc_main.c    | 2083 +++++++++++++++++++++---------------
+>>   tools/rpcgen/rpc_parse.c   | 1055 +++++++++---------
+>>   tools/rpcgen/rpc_parse.h   |  103 +-
+>>   tools/rpcgen/rpc_sample.c  |  465 ++++----
+>>   tools/rpcgen/rpc_scan.c    |  812 +++++++-------
+>>   tools/rpcgen/rpc_scan.h    |   91 +-
+>>   tools/rpcgen/rpc_svcout.c  | 1647 +++++++++++++++-------------
+>>   tools/rpcgen/rpc_tblout.c  |  265 ++---
+>>   tools/rpcgen/rpc_util.c    |  656 ++++++------
+>>   tools/rpcgen/rpc_util.h    |  170 ++-
+>>   tools/rpcgen/rpcgen.1      |  442 ++++++++
+>>   17 files changed, 6123 insertions(+), 4399 deletions(-)
+>>   create mode 100644 tools/rpcgen/proto.h
+>>   create mode 100644 tools/rpcgen/rpcgen.1
+>>
+> Committed... (tag nfs-utils-2-4-3-rc5)... Nice work!!!
 
-Ah you've merged them together, now I see:
-[5/7] https://patchwork.kernel.org/patch/11317493/
-[6/7] https://patchwork.kernel.org/patch/11317489/
+Wooho! Thank you :-)
 
-I didn't notice it while pull rebasing from upstream, because I have 
-another patch similar to that after bumping to latest version of rpcgen.
+As soon as you release version 2.4.3 I'm going to bump version in 
+Buildroot too, at the moment it's still 1.3.4.
 
-Sorry for the noise and thank you!
 Best regards
 -- 
 Giulio Benetti
