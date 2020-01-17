@@ -2,114 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86C3C140EB3
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 17:12:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C393140F51
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 17:51:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAQQMV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jan 2020 11:12:21 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54738 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQMV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jan 2020 11:12:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so7955506wmj.4;
-        Fri, 17 Jan 2020 08:12:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=87Y8vkRNzKb0ASfAWCTOo+g4i0PTErziTAjnA81V/50=;
-        b=mfrQZlcQcxWm461vn7Pt8/vwp1SAQ7XomvOWfq6a5tj0XZOlNBTD1IjGSxDD/zUh4I
-         hSZFNq5Nadxj3vVH80OUvRM7G14nnSIJ7kdoQTNad1MJYrPDZ5mJxi6ZXVZKve4UzmcN
-         ytQlgakS/nmzKPZZUuQbb3mbQupzySL2IxkuBaqmQTLqJDP8fhtKY2undDFl8S69VveB
-         u809iNgTl4+ynCRU0aDUajZjvKdaAUYwol0YMctQ6OvBWI/Lap9XxGYjjNpt93I1eQWJ
-         WVCoFiDYJpS2m/8TEI+7Io0jpctcv+vUt+K8We8OYl4P3b3cQimjWGggG/ff2wZ+NiyH
-         d2KA==
+        id S1726554AbgAQQvj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jan 2020 11:51:39 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37769 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgAQQvj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jan 2020 11:51:39 -0500
+Received: by mail-ed1-f66.google.com with SMTP id cy15so22896006edb.4;
+        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=87Y8vkRNzKb0ASfAWCTOo+g4i0PTErziTAjnA81V/50=;
-        b=Pr99DE1xo7S5Kp+w88cX0PkTr1W0wzMv0W3AGoOaNiB1BkainrJ2Ei+7HIUjVGH/VT
-         NoQaMHSkjzYyeuJUohshMGz+7lmztwsDj8osFrUTYg57ReFNGcXEBxddDYIjTvzlGBrE
-         7vIy3VbeDza54TBkaaHxSNTKzDaXLUjKENk6JSnQX02+pXJF7W26KE+QHO+ms1dqr+ID
-         Mlx239anFtxeoh55nk8cWQuykmFBoUuJnBVjRVkN+pG7V25gPvbX6eYAE52+TBx4kI70
-         uDjamu9o6fM/nMcvL1/I7on+1z30h6WSfFGhHgYhDZ8iFzLyJ/PTvI7yt66/IJ5bK2rp
-         XAaQ==
-X-Gm-Message-State: APjAAAXjDOOordRDNCKEveLzhHNJByC6/g0C+WQxRNho5kmbq45MZ7KT
-        PjzbuP2m+j93ePUrv6cf+YumADL3zKQ=
-X-Google-Smtp-Source: APXvYqwKmQzUUW2YmhGe897OEvvoDWB7pzekwfxNYJd91bNINrY8kSfJYyN5wNtB8Gn+zLxpsrqOBw==
-X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr5423712wme.151.1579277538784;
-        Fri, 17 Jan 2020 08:12:18 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id i5sm10267480wml.31.2020.01.17.08.12.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jan 2020 08:12:17 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-In-Reply-To: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-Subject: RE: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Fri, 17 Jan 2020 16:12:16 -0000
-Message-ID: <041101d5cd50$e398d720$aaca8560$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=96LG0GPidFH54SiCM0XDiVcbAovvK6mGYnlDshgyFRk=;
+        b=ZACNq0PBZx1aF+u30AEqD6OLmz3Cgnz4hm6rVpXBMoY62n1XVOMuvGT/SsmI3TeYQj
+         3b/N6T4ayIBXyp7kf1Uv341uIrU47z8OMkqQ/dkxkwqNFY5LI6yFOPBD/BjeBCu7K2X1
+         7Bf6FzbWsuPG7RfbJ5T6RfKSYYfUl+7zadkw0u15kAXS4p6zFmpHbB5McW4BK3mOpg/t
+         THikL7n5kZmSV8VxtCDg6eDu5H4y7UWCW4WDyl6srkGI3iT2vGN9kW4NFXKZAzf+GHH+
+         kSiOL0Mfr8sidjdeTp3EnDCZ1VA8D8A2145tL8/IVxtV6ojRnabbmg5oHFKew626nI7f
+         iWXw==
+X-Gm-Message-State: APjAAAV8vq1RBRhqTM0Bd52IdDA3cPX4RiBS3B+BXMQFLjxFPgAs7wir
+        E6AH4nFtSMBkq0AkZvUnqwM=
+X-Google-Smtp-Source: APXvYqyaZsIauOpq1X0POCeTjXRUEXNVExY8r79MwcWm5a05h47iWdsrJnU/Lpd7ANMzUquKS+XFLQ==
+X-Received: by 2002:a17:906:2db1:: with SMTP id g17mr8848463eji.240.1579279897085;
+        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id z22sm1015705edq.79.2020.01.17.08.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 08:51:36 -0800 (PST)
+Date:   Fri, 17 Jan 2020 17:51:33 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse
+ errors
+Message-ID: <20200117165133.GA5762@pi3>
+References: <464519.1579276102@warthog.procyon.org.uk>
+ <20200117144055.GB3215@pi3>
+ <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <433863.1579270803@warthog.procyon.org.uk>
+ <465149.1579276509@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLAInB1/y2S+pDlHaM8/Hn+WlDXpKYaXLNw
-Content-Language: en-gb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <465149.1579276509@warthog.procyon.org.uk>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Anyone please?
+On Fri, Jan 17, 2020 at 03:55:09PM +0000, David Howells wrote:
+> commit b9423c912b770e5b9e4228d90da92b6a69693d8e
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Fri Jan 17 15:37:46 2020 +0000
+> 
+>     nfs: Return EINVAL rather than ERANGE for mount parse errors
+>     
+>     Return EINVAL rather than ERANGE for mount parse errors as the userspace
+>     mount command doesn't necessarily understand what to do with anything other
+>     than EINVAL.
+>     
+>     The old code returned -ERANGE as an intermediate error that then get
+>     converted to -EINVAL, whereas the new code returns -ERANGE.
+>     
+>     This was induced by passing minorversion=1 to a v4 mount where
+>     CONFIG_NFS_V4_1 was disabled in the kernel build.
+>     
+>     Fixes: 68f65ef40e1e ("NFS: Convert mount option parsing to use functionality from fs_parser.h")
+>     Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+>     Signed-off-by: David Howells <dhowells@redhat.com>
+> 
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 429315c011ae..74508ed9aeec 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -769,8 +769,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+>  out_invalid_address:
+>  	return nfs_invalf(fc, "NFS: Bad IP address specified");
+>  out_of_bounds:
+> -	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+> -	return -ERANGE;
+> +	return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+>  }
+>  
+>  /*
 
+Yes, the boards boots up, thanks!
 
------Original Message-----
-From: Robert Milkowski <rmilkowski@gmail.com> 
-Sent: 08 January 2020 21:48
-To: linux-nfs@vger.kernel.org
-Cc: 'Trond Myklebust' <trondmy@hammerspace.com>; 'Chuck Lever'
-<chuck.lever@oracle.com>; 'Anna Schumaker' <anna.schumaker@netapp.com>;
-linux-kernel@vger.kernel.org
-Subject: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+I did not run extensive tests but few boots show also 2-3 seconds faster
+mount of NFS root (faster switch from initramfs to proper user-space
+from NFS).
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(), etc.
-we return EIO to applications without even trying to recover.
-
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry
-of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
----
- fs/nfs/nfs4proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c index 76d3716..2478405
-100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct nfs_server
-*server,
- 						stateid);
- 				goto wait_on_recovery;
- 			}
-+			if (state == NULL) {
-+				nfs4_schedule_lease_recovery(clp);
-+				goto wait_on_recovery;
-+			}
- 			/* Fall through */
- 		case -NFS4ERR_OPENMODE:
- 			if (inode) {
---
-1.8.3.1
-
+Best regards,
+Krzysztof
 
