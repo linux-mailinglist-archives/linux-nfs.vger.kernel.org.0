@@ -2,125 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4C0140FC9
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 18:24:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42C341410ED
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 19:39:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgAQRYa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jan 2020 12:24:30 -0500
-Received: from mail-bn7nam10on2114.outbound.protection.outlook.com ([40.107.92.114]:6080
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726603AbgAQRYa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:24:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=frnuG48LlBhLXHY4LoLOvifgu6y7yXto91fLwu2q54NoI+PU3J/qEGOYS1IPEduuANOqrmsCpzVz5grjJUT6GmRwbfwtE5lUI/XFiCT6viqSosj9Bb2mlwQ3qdjg7mOnpgTEmT5YKVP8/kX3C/eRlgAqjmXZqMttrf7LvRt4KAZ2SzY/sDKaLaX+vPDHOVhWZ+nfc9hmNsFKHGsGFWBAeXNXYQkwI6tHkHTnLz/CZcZHKjDUyxt+OLN/kTdGZhNSDj5Iy5eCF2w2jR+d/8iOENcnO5VCsrPPIdwhPJmqwKkb0psxjJHCCsqq89oPfC43Eco8JVVqtuaS1Kn+FV3q4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4W5bpHMFtKh9x6qJNtYLkj8yngGfj7cSpL9RMpqkRGo=;
- b=AmvXL80UtKkTgNaNbqKCME2o3YbB+p2FoJyrEaaWoZVkcCF1zJJH6EqCI72m0zIW77OkssXcVgsYZ6wypp0lenBJaQFK6omZK8//wHLv5OBE12xfO0Mmv11vRTzhlxgicRN5TeMV3aqEGjD0ehW1s2zSokYlQS2ZM3VPo6hQ2llB4d8+a8UmjsgMccR3ilTG/xeExlF0C2ExiWjJ19rdfoXe3i8rkuNlWMqm5edZEDNai3rcR3Ln06OR0czEorw1f7hQ/fn46AwUr4V8jewJJkxxdXaYKJ8pKvx167BlLYGj0vCT9xJRhTdlXPSkmal0xMlDe82EfFSvC5kUxidM5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4W5bpHMFtKh9x6qJNtYLkj8yngGfj7cSpL9RMpqkRGo=;
- b=SHDcYYIc9k9XXqKnm4ewxpEp9a2v7QsdK2slWoSHe9WgkOozXPob7c+wckfMygAthLxaOtaeFXasNAA6ME/jALUQ2KvHx58kZtRGbyvcIC3aaxgTJ5bcBnrAhDp7M2qMYqdm4VQf+UQRbkmnwSk+edOEb6tVJJKJrgwSOPX85Rs=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2057.namprd13.prod.outlook.com (10.174.182.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Fri, 17 Jan 2020 17:24:26 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 17:24:26 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
-CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Topic: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Index: AdXGbKgtqm1QJU8yQtKfQBn7K7s7ZQG5DpoAAAKE7AA=
-Date:   Fri, 17 Jan 2020 17:24:26 +0000
-Message-ID: <962370db9ae3ba5a17ba390afe7f9de6cea571d4.camel@hammerspace.com>
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-         <041101d5cd50$e398d720$aaca8560$@gmail.com>
-In-Reply-To: <041101d5cd50$e398d720$aaca8560$@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0875d8c8-cd4f-4ded-f0cc-08d79b721a26
-x-ms-traffictypediagnostic: DM5PR1301MB2057:
-x-microsoft-antispam-prvs: <DM5PR1301MB2057077C040FFCA929380B52B8310@DM5PR1301MB2057.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39830400003)(346002)(136003)(199004)(189003)(478600001)(6512007)(36756003)(186003)(6486002)(8936002)(8676002)(54906003)(110136005)(81156014)(81166006)(2906002)(66946007)(91956017)(26005)(4326008)(76116006)(6506007)(53546011)(66476007)(71200400001)(64756008)(66556008)(5660300002)(66446008)(316002)(86362001)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2057;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3eS47LRlZumfQDi9eCLkepJSS1XUgxEkviFNCBT/4SsuJi7ovYqragR9TSvz1ygWs3ttPN1JIVjBO1WzQtdSy4ibdeJ74s69Yfhty4o7fvYYIgC4iprkwEyLZRyloDtV0po/7AMf70uFDAG+JX5XMkP0o8XpYDrdzXWgnW2aY2F6UfmmCQSJN0lXgwCLKsJyn10IWVnk8tc+8r3uwFogIxJTMfeM387naFEUCBWtfAo02MrhkmKkP86QBo0Za4jIA7YOGSCBdT0tzsFdBh1k2K/RpFlVPefq1ZLMSqevFLjFj4OF6QejlHEXwR4h1SU9Y/LjViM2QY8P+j8WulXGi6B+JzecANrKPw18E6JwUFdit6POKRI557gVud0mXqKwyq2/DDCvEWxnT5B12YQbeWbSmcQ2CKZ4UnQyENcyH+EelI/zqQOn0ECM5NenRkCd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2374AB5434DB7545BFA655E0F5C6D271@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0875d8c8-cd4f-4ded-f0cc-08d79b721a26
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 17:24:26.2161
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UiR1BAcQy16yWXZUtWvI2eSKcKgbZHz9dX1tLJ4cy9SHdxp9+Lna1ax1BoDPyEjZY3WtO9xaj+tTSoYgQ+RSDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2057
+        id S1728992AbgAQSjn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jan 2020 13:39:43 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:40622 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQSjm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jan 2020 13:39:42 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HISiWC163311;
+        Fri, 17 Jan 2020 18:39:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=mOHzRcMbrSRJmgt+SxKo3jl2NGzlXvmapW9P2uD6vK8=;
+ b=HoMYL2LV2n3+1Ddsr3dwpMiEPTZjE/aL8fIKZTdyhaIM+gokQGKsUvdzNj400Zw14APh
+ VDo5O6D0MLrQjKkuxVgMrhCRCrF+tKniiRaUCsQC1d4aoj+uaJh877HyPQzUdO7XCaG0
+ AxF6ddYe2c9Mux2FBD18p5Wc4BNSASGsUxoPV4KL4ee7mqs4AG6GzyoPw9f+NDhrJZhL
+ lZnUda815qc548ll1a1KulyEHLGdDNG8lSNz0oKE883Mm7Sti66dWQtEYctonq3KU1ZK
+ oHUrsOxN2JHvfGqSy4jco6jmbP2rfoIigFt45IrEfIQ86/rubtNK9/Ytkc0HaHRO4Rp4 Sg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73uaa28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 18:39:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HITeG4091824;
+        Fri, 17 Jan 2020 18:39:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xjxm9d3ub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 18:39:35 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00HIdX9q003012;
+        Fri, 17 Jan 2020 18:39:34 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jan 2020 10:39:33 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH RFC] nfsd: Fix NFSv4 READ on RDMA when using readv
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200115202647.2172.666.stgit@bazille.1015granger.net>
+Date:   Fri, 17 Jan 2020 13:39:32 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EC3ADAF8-A08F-46E4-B610-D4AA3D96A27C@oracle.com>
+References: <20200115202647.2172.666.stgit@bazille.1015granger.net>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170143
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTE3IGF0IDE2OjEyICswMDAwLCBSb2JlcnQgTWlsa293c2tpIHdyb3Rl
-Og0KPiBBbnlvbmUgcGxlYXNlPw0KPiANCj4gDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+IEZyb206IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dza2lAZ21haWwuY29tPiANCj4gU2Vu
-dDogMDggSmFudWFyeSAyMDIwIDIxOjQ4DQo+IFRvOiBsaW51eC1uZnNAdmdlci5rZXJuZWwub3Jn
-DQo+IENjOiAnVHJvbmQgTXlrbGVidXN0JyA8dHJvbmRteUBoYW1tZXJzcGFjZS5jb20+OyAnQ2h1
-Y2sgTGV2ZXInDQo+IDxjaHVjay5sZXZlckBvcmFjbGUuY29tPjsgJ0FubmEgU2NodW1ha2VyJyA8
-YW5uYS5zY2h1bWFrZXJAbmV0YXBwLmNvbQ0KPiA+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCB2Ml0gTkZTdjQ6IHRyeSBsZWFzZSByZWNvdmVyeSBv
-biBORlM0RVJSX0VYUElSRUQNCj4gDQo+IEZyb206IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dz
-a2lAZ21haWwuY29tPg0KPiANCj4gQ3VycmVudGx5LCBpZiBhbiBuZnMgc2VydmVyIHJldHVybnMg
-TkZTNEVSUl9FWFBJUkVEIHRvIG9wZW4oKSwgZXRjLg0KPiB3ZSByZXR1cm4gRUlPIHRvIGFwcGxp
-Y2F0aW9ucyB3aXRob3V0IGV2ZW4gdHJ5aW5nIHRvIHJlY292ZXIuDQo+IA0KPiBGaXhlczogMjcy
-Mjg5YTNkZjcyICgiTkZTdjQ6IG5mczRfZG9faGFuZGxlX2V4Y2VwdGlvbigpIGhhbmRsZQ0KPiBy
-ZXZva2UvZXhwaXJ5DQo+IG9mIGEgc2luZ2xlIHN0YXRlaWQiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBS
-b2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBmcy9uZnMv
-bmZzNHByb2MuYyB8IDQgKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9jLmMg
-aW5kZXgNCj4gNzZkMzcxNi4uMjQ3ODQwNQ0KPiAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRw
-cm9jLmMNCj4gKysrIGIvZnMvbmZzL25mczRwcm9jLmMNCj4gQEAgLTQ4MSw2ICs0ODEsMTAgQEAg
-c3RhdGljIGludCBuZnM0X2RvX2hhbmRsZV9leGNlcHRpb24oc3RydWN0DQo+IG5mc19zZXJ2ZXIN
-Cj4gKnNlcnZlciwNCj4gIAkJCQkJCXN0YXRlaWQpOw0KPiAgCQkJCWdvdG8gd2FpdF9vbl9yZWNv
-dmVyeTsNCj4gIAkJCX0NCj4gKwkJCWlmIChzdGF0ZSA9PSBOVUxMKSB7DQo+ICsJCQkJbmZzNF9z
-Y2hlZHVsZV9sZWFzZV9yZWNvdmVyeShjbHApOw0KPiArCQkJCWdvdG8gd2FpdF9vbl9yZWNvdmVy
-eTsNCj4gKwkJCX0NCj4gIAkJCS8qIEZhbGwgdGhyb3VnaCAqLw0KPiAgCQljYXNlIC1ORlM0RVJS
-X09QRU5NT0RFOg0KPiAgCQkJaWYgKGlub2RlKSB7DQo+IC0tDQo+IDEuOC4zLjENCj4gDQo+IA0K
-DQpEb2VzIHRoaXMgYXBwbHkgdG8gYW55IGNhc2Ugb3RoZXIgdGhhbiBORlM0RVJSX0VYUElSRUQg
-aW4gdGhlIHNwZWNpZmljDQpjYXNlIG9mIG5mczRfZG9fb3BlbigpPyBJIGNhbid0IHNlZSB0aGF0
-IGl0IGRvZXMuIEl0IGxvb2tzIHRvIG1lIGFzIGlmDQp0aGUgb3BlbiByZWNvdmVyeSByb3V0aW5l
-cyBhbHJlYWR5IGhhdmUgdGhlaXIgb3duIGhhbmRsaW5nIG9mIHRoaXMNCmNhc2UuDQoNCklmIHNv
-LCB3aHkgbm90IGp1c3QgYWRkIGl0IGFzIGEgc3BlY2lhbCBjYXNlIGluIHRoZSBuZnM0X2RvX29w
-ZW4oKQ0KZXJyb3IgaGFuZGxpbmc/IE90aGVyd2lzZSB0aGlzIHBhdGNoIHdpbGwgZW5kIHVwIG92
-ZXJyaWRpbmcgb3RoZXINCmdlbmVyaWMgY2FzZXMgd2hlcmUgd2UgaGF2ZSBhbiBpbm9kZSwgYnV0
-IG5vIG9wZW4gc3RhdGUuDQoNCk5vdGUgdGhhdCBfbmZzNF9kb19vcGVuKCkgYWxyZWFkeSB3YWl0
-cyBmb3IgbGVhc2UgcmVjb3ZlcnksIHNvIHdlIG9ubHkNCm5lZWQgdGhlIGNhbGwgdG8gbmZzX3Nj
-aGVkdWxlX2xlYXNlX3JlY292ZXJ5KCkuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBO
-RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVy
-c3BhY2UuY29tDQoNCg0K
+
+
+> On Jan 15, 2020, at 3:37 PM, Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>=20
+> svcrdma expects that the READ payload falls precisely into the
+> xdr_buf's page vector. Adding "xdr->iov =3D NULL" forces
+> xdr_reserve_space() to always use pages from xdr->buf->pages when
+> calling nfsd_readv.
+>=20
+> Also, the XDR padding is problematic. For NFS/RDMA Write chunks,
+> the padding needs to be in xdr->buf->tail so that the transport can
+> skip over it. However for NFS/TCP and the NFS/RDMA Reply chunks,
+> the padding has to be retained. Not yet sure how to add this.
+>=20
+> Fixes: b04209806384 ("nfsd4: allow exotic read compounds")
+> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D198053
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+> Howdy Bruce-
+>=20
+> I'm struggling with nfsd4_encode_readv().
+>=20
+> - for NFS/RDMA Write chunks, the READ payload has to be in
+>  buf->pages. I've fixed that.
+>=20
+> - xdr_reserve_space() calls don't need to explicitly align the
+>  @nbytes argument: xdr_reserve_space() already does this?
+>=20
+> - the while loop probably won't work if a later READ in the COMPOUND
+>  doesn't start on a page boundary. This isn't a problem until we
+>  run into a Solaris client in forcedirectio mode.
+>=20
+> - the XDR padding doesn't work for NFS/RDMA Write chunks, which are
+>  supposed to skip padding altogether.
+>=20
+> Do you have suggestions? Thanks in advance.
+
+I'm experimenting with an idea I think has been mentioned on list
+a few times:
+
+Having the RPC layer and transports deal with the padding of the
+xdr_buf->pages vector, and moving that responsibility out of the
+NFSD Reply encoder functions. xdr_buf->tail[0] then always begins
+on an XDR-aligned boundary.
+
+This should be straightforward for NFSv3. The only two Reply
+encoders that are updated are READ and READLINK. I'm starting
+with that.
+
+Not quite sure yet how krb5i/krb5p will deal with this. Obviously
+the page list pad needs to be inserted before each Reply is
+wrapped.
+
+I'll post more as experimentation progresses.
+
+
+> fs/nfsd/nfs4xdr.c |   17 +++++++----------
+> 1 file changed, 7 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index d2dc4c0e22e8..14c68a136b4e 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3519,17 +3519,14 @@ static __be32 nfsd4_encode_readv(struct =
+nfsd4_compoundres *resp,
+> 	u32 zzz =3D 0;
+> 	int pad;
+>=20
+> +	/* Ensure xdr_reserve_space behaves itself */
+> +	if (xdr->iov =3D=3D xdr->buf->head) {
+> +		xdr->iov =3D NULL;
+> +		xdr->end =3D xdr->p;
+> +	}
+> +
+> 	len =3D maxcount;
+> 	v =3D 0;
+> -
+> -	thislen =3D min_t(long, len, ((void *)xdr->end - (void =
+*)xdr->p));
+> -	p =3D xdr_reserve_space(xdr, (thislen+3)&~3);
+> -	WARN_ON_ONCE(!p);
+> -	resp->rqstp->rq_vec[v].iov_base =3D p;
+> -	resp->rqstp->rq_vec[v].iov_len =3D thislen;
+> -	v++;
+> -	len -=3D thislen;
+> -
+> 	while (len) {
+> 		thislen =3D min_t(long, len, PAGE_SIZE);
+> 		p =3D xdr_reserve_space(xdr, (thislen+3)&~3);
+> @@ -3548,7 +3545,7 @@ static __be32 nfsd4_encode_readv(struct =
+nfsd4_compoundres *resp,
+> 	read->rd_length =3D maxcount;
+> 	if (nfserr)
+> 		return nfserr;
+> -	xdr_truncate_encode(xdr, starting_len + 8 + ((maxcount+3)&~3));
+> +	xdr_truncate_encode(xdr, starting_len + 8 + maxcount);
+>=20
+> 	tmp =3D htonl(eof);
+> 	write_bytes_to_xdr_buf(xdr->buf, starting_len    , &tmp, 4);
+>=20
+
+--
+Chuck Lever
+
+
+
