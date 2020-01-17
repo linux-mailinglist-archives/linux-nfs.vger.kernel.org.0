@@ -2,169 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A66E13FB9F
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2020 22:36:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0D0C14011C
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 01:49:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgAPVe4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jan 2020 16:34:56 -0500
-Received: from smtpcmd03116.aruba.it ([62.149.158.116]:56089 "EHLO
-        smtpcmd03116.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgAPVez (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 16:34:55 -0500
-Received: from [192.168.126.128] ([146.241.70.103])
-        by smtpcmd03.ad.aruba.it with bizsmtp
-        id r9as2100Z2DhmGq019atWq; Thu, 16 Jan 2020 22:34:53 +0100
-Subject: Re: [nfs-utils RESENT PATCH 1/1] locktes/rpcgen: tweak how we
- override compiler settings
-To:     Steve Dickson <SteveD@RedHat.com>,
-        Petr Vorel <petr.vorel@gmail.com>
-Cc:     linux-nfs@vger.kernel.org, Mike Frysinger <vapier@gentoo.org>
-References: <20200105120502.765426-1-petr.vorel@gmail.com>
- <fb4dd073-856a-7807-eb71-f594e58732cb@RedHat.com>
- <bda9e61c-1a06-5ab3-339f-c38e9a68fb73@RedHat.com>
- <20200114183603.GA24556@dell5510>
- <db2c8006-5520-e34e-b759-42783f965d1c@RedHat.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <5149cf4e-7d78-2cbd-99e4-a4cb66822308@benettiengineering.com>
-Date:   Thu, 16 Jan 2020 22:34:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1729388AbgAQAtW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 16 Jan 2020 19:49:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28546 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729235AbgAQAtW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jan 2020 19:49:22 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-KhgvyvhuP5WGglsW0BZP2w-1; Thu, 16 Jan 2020 19:49:18 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8887C800D41;
+        Fri, 17 Jan 2020 00:49:16 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-126-23.rdu2.redhat.com [10.10.126.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7C8481200;
+        Fri, 17 Jan 2020 00:49:15 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 278561A006B; Thu, 16 Jan 2020 19:49:15 -0500 (EST)
+Date:   Thu, 16 Jan 2020 19:49:15 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117004915.GA3111@aion.usersys.redhat.com>
+References: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <db2c8006-5520-e34e-b759-42783f965d1c@RedHat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1579210493; bh=RyBCpy9qg4lAZICuIeHfVC8piRyCIXIU8o9f8qaTrRk=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=kNaShwDX2JigRp6g+wPt0po/YDtNIKChUek6DpYSlKFWlMBrGnAVOkmmMLGGbuv6l
-         avAs9j0WVvPM3etEiiX9dEvbKMstRH7h29tFnBeNWRXhCC7p9owOBHhBhuEO+JBiGF
-         FisCRFoYot1WOaQY7V2Xf8tKIY5/Ojk0xp6N5n3oZynMtXXNVc7HNCxl44/lSx6VEb
-         +lIaa7XG5v+UUCwmaIE72JlPthVrUH+G4WgjwdQTnVqaLE6EM0G1rxxqDuhQ6chCCl
-         KgcVZys7JXWREqlWNNvyxrCjUKW7U23BCPMe6sZ43yHyhwA3BH530+y9bbkUCkBy7F
-         emXANdilbmSDg==
+In-Reply-To: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: KhgvyvhuP5WGglsW0BZP2w-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve, Petr,
+On Thu, 16 Jan 2020, Krzysztof Kozlowski wrote:
 
-On 1/16/20 10:22 PM, Steve Dickson wrote:
+> Hi all,
 > 
+> Bisect pointed to 6d972518b821 ("NFS: Add fs_context support.") for
+> failures of mounting NFS v4 root on my boards:
+> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+> [ 24.980839] NFS4: Couldn't follow remote path
+> [ 24.986201] NFS: Value for 'minorversion' out of range
+> mount.nfs4: Numerical result out of range
 > 
-> On 1/14/20 1:36 PM, Petr Vorel wrote:
->> Hi Steve,
->>
->>> Actually try this one... the one that works! ;-)
->>
->>> diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
->>> index 3156815..d5cf8da 100644
->>> --- a/tools/locktest/Makefile.am
->>> +++ b/tools/locktest/Makefile.am
->>> @@ -1,12 +1,11 @@
->>>   ## Process this file with automake to produce Makefile.in
->>
->>>   CC=$(CC_FOR_BUILD)
->>> -LIBTOOL = @LIBTOOL@ --tag=CC
->>> +AM_CFLAGS=$(CFLAGS_FOR_BUILD)
->>> +AM_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
->>> +AM_LDFLAGS=$(LDFLAGS_FOR_BUILD)
->>
->>>   noinst_PROGRAMS = testlk
->>>   testlk_SOURCES = testlk.c
->>> -testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
->>> -testlk_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
->>> -testlk_LDFLAGS=$(LDFLAGS_FOR_BUILD)
->>
->>>   MAINTAINERCLEANFILES = Makefile.in
->>> diff --git a/tools/rpcgen/Makefile.am b/tools/rpcgen/Makefile.am
->>> index 8a9ec89..84cafb2 100644
->>> --- a/tools/rpcgen/Makefile.am
->>> +++ b/tools/rpcgen/Makefile.am
->>> @@ -1,7 +1,9 @@
->>>   ## Process this file with automake to produce Makefile.in
->>
->>>   CC=$(CC_FOR_BUILD)
->>> -LIBTOOL = @LIBTOOL@ --tag=CC
->>> +AM_CFLAGS=$(CFLAGS_FOR_BUILD) ${TIRPC_CFLAGS}
->>> +AM_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
->>> +AM_LDFLAGS=$(LDFLAGS_FOR_BUILD)
->>
->>>   noinst_PROGRAMS = rpcgen
->>>   rpcgen_SOURCES = rpc_clntout.c rpc_cout.c rpc_hout.c rpc_main.c \
->>> @@ -9,11 +11,6 @@ rpcgen_SOURCES = rpc_clntout.c rpc_cout.c rpc_hout.c rpc_main.c \
->>>                   rpc_util.c rpc_sample.c rpc_output.h rpc_parse.h \
->>>                   rpc_scan.h rpc_util.h
->>
->>> -rpcgen_CFLAGS=$(CFLAGS_FOR_BUILD)
->>> -rpcgen_CPPLAGS=$(CPPFLAGS_FOR_BUILD)
->>> -rpcgen_LDFLAGS=$(LDFLAGS_FOR_BUILD)
->>> -rpcgen_LDADD=$(LIBTIRPC)
->>> -
->>>   MAINTAINERCLEANFILES = Makefile.in
->>
->>>   EXTRA_DIST = rpcgen.new.1
->>
->> IMHO this one don't work for cross-compilation, tested on buildroot:
->>
->> PATH="/br-test-pkg/br-arm-full-static/host/bin:/br-test-pkg/br-arm-full-static/host/sbin:/.common/bin/suse:/.local/bin:/.gem/ruby/2.2.0/bin:/bin/:~/.local/bin/:/.common/bin/:~/.vim/bin/:/usr/sbin/:/sbin/:/home/pevik/.common/bin/suse:/home/pevik/bin/:~/.local/bin/:/home/pevik/.common/bin/:~/.vim/bin/:/usr/sbin/:/sbin/:/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/usr/X11R6/bin"  /usr/bin/make -j9  -C /br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/
->> make[1]: Entering directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4'
->> Making all in tools
->> make[2]: Entering directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/tools'
->> Making all in locktest
->> make[3]: Entering directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/tools/locktest'
->> /usr/bin/gcc -DHAVE_CONFIG_H -I. -I../../support/include  -I/br-test-pkg/br-arm-full-static/host/include -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -O2 -I/br-test-pkg/br-arm-full-static/host/include -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -Os   -static -c -o testlk.o testlk.c
->> /bin/sh ../../libtool --tag=CC  --tag=CC   --mode=link /usr/bin/gcc -O2 -I/br-test-pkg/br-arm-full-static/host/include -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -Os   -static -L/br-test-pkg/br-arm-full-static/host/lib -Wl,-rpath,/br-test-pkg/br-arm-full-static/host/lib -static -o testlk testlk.o
->> libtool: link: /usr/bin/gcc -O2 -I/br-test-pkg/br-arm-full-static/host/include -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Os -static -Wl,-rpath -Wl,/br-test-pkg/br-arm-full-static/host/lib -static -o testlk testlk.o  -L/br-test-pkg/br-arm-full-static/host/lib
->> /usr/lib64/gcc/x86_64-suse-linux/9/../../../../x86_64-suse-linux/bin/ld: cannot find -lc
-> Who/how is -lc getting specified? Maybe the problem is how $(LDFLAGS_FOR_BUILD) is being set?
+> https://krzk.eu/#/builders/21/builds/1692
+> Full console log:
+> https://krzk.eu/#/builders/21/builds/1692/steps/14/logs/serial0
 > 
-> Note... Giulio's patch is doing something similar
-> https://lore.kernel.org/linux-nfs/20200115160806.99991-1-giulio.benetti@benettiengineering.com/T/#u
+> Enabling NFS v4.1 in defconfig seems to help. I can send patches for
+> this (for defconfigs) but probably the root cause should be fixed as
+> well.
 > 
-> Does something like that as well as setting the AM_XXX help the your cross-compile?
-
-IMHO tools/* utility must be built with cross-compiler too, not with 
-/usr/bin/gcc. Buildroot provide host-nfs-utils for that, especially for 
-rpcgen.
-
-Please take a look at my WIP patch for bumping nfs-utils to latest in 
-Buildroot:
-https://github.com/giuliobenetti/buildroot/commit/12671eb21d62a5474dc476381015069382775668
-
-and please note this line:
---with-rpcgen=$(HOST_DIR)/bin/rpcgen
-
-that means that nfs-utils must use already host-nfs-utils/rpcgen instead 
-of internal one to generate rpcs. This is why tools/* is not needed as 
-host to build target. Indeed host-nfs-utils is built when nfs-utils is 
-built. At least I understand this.
-
-Can you Petr confirm that?
-Because at this point the patch you're pointing is not needed.
-
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
-
-> steved.
+> Environment:
+> 1. Arch ARM Linux
+> 2. exynos_defconfig
+> 3. Exynos boards (Odroid XU3, etc), ARMv7, octa-core (Cortex-A7+A15),
+> Exynos5422 SoC
+> 4. systemd, boot up with static IP set in kernel command line
+> 5. No swap
+> 6. Kernel, DTB and initramfs are downloaded with TFTP
+> 7. NFS root from NFSv4 server
 > 
+> Let me know if you need more details.
+
+I haven't had much luck reproducing this.  I disabled v4.1 in my .config
+and I can still boot a VM with NFS root (granted, I don't really use NFS
+root so this setup is brand new and pretty basic):
+
+[root@localhost ~]# cat /proc/cmdline
+BOOT_IMAGE=mountapi/vmlinuz initrd=mountapi/initrd.img ip=dhcp selinux=0 console=tty0 console=ttyS0,115200 root=nfs4:192.168.122.3:/export/nfsroot/fedora31
+
+[root@localhost ~]# grep nfs /proc/mounts
+192.168.122.3:/export/nfsroot/fedora31 / nfs rw,relatime,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.69,local_lock=none,addr=192.168.122.3 0 0
+
+Just out of curiousity, what version of the mount.nfs program do you
+have in your initramfs?  I'm wondering if it's maybe passing the mount
+options differently than mine.  FWIW I'm using version 2.4.2:
+
+[smayhew@aion tmp]$ lsinitrd /var/lib/tftpboot/mountapi/initrd.img|grep mount.nfs
+-rwsr-xr-x   1 root     root       208600 Feb 14  2019 usr/sbin/mount.nfs
+lrwxrwxrwx   1 root     root            9 Feb 14  2019 usr/sbin/mount.nfs4 -> mount.nfs
+[smayhew@aion tmp]$ /usr/lib/dracut/skipcpio /var/lib/tftpboot/mountapi/initrd.img|zcat|cpio -id usr/sbin/mount.nfs
+256163 blocks
+[smayhew@aion tmp]$ ./usr/sbin/mount.nfs -V
+mount.nfs: (linux nfs-utils 2.4.2)
+[smayhew@aion tmp]$
+
+-Scott
+
 > 
->> collect2: error: ld returned 1 exit status
->> make[3]: *** [Makefile:417: testlk] Error 1
->> make[3]: Leaving directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/tools/locktest'
->> make[2]: *** [Makefile:429: all-recursive] Error 1
->> make[2]: Leaving directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/tools'
->> make[1]: *** [Makefile:469: all-recursive] Error 1
->> make[1]: Leaving directory '/br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4'
->> make: *** [package/pkg-generic.mk:260: /br-test-pkg/br-arm-full-static/build/nfs-utils-1.3.4/.stamp_built] Error 2
->>
->> I can send you more debug info, but IMHO Mike's patch is really needed.
->>
->> Kind regards,
->> Petr
->>
+> Best regards,
+> Krzysztof
 > 
 
