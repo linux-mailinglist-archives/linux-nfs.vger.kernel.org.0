@@ -2,79 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31433140C8A
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 15:32:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAF0140CA2
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2020 15:36:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgAQOcR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jan 2020 09:32:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22609 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726827AbgAQOcR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jan 2020 09:32:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579271535;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+JsmTh26idCccXQ/oYTZjUrAi/FkH1cHDjHi1212igI=;
-        b=OQ/lbRNhRge0pzpFzhuwSKuFK32dlgErjargGXL/713/RqOwvcd50UxOwExiljlKAQCr+6
-        k+jUD6WpbF5ZuEK+lW3XhCZOb92qlUk7nFmYUkz9HZwBjF5/JE2vQcdTTzgSLRLED4fY8e
-        8vnABFEXbFMOv/ackFC4XDDKS7Nej1Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-zFXVokCgOTWIIR5AUL7Q_g-1; Fri, 17 Jan 2020 09:32:11 -0500
-X-MC-Unique: zFXVokCgOTWIIR5AUL7Q_g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57643107ACC7;
-        Fri, 17 Jan 2020 14:32:10 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC9FD1001901;
-        Fri, 17 Jan 2020 14:32:09 +0000 (UTC)
-Subject: Re: [nfs-utils PATCH 0/3] bump rpcgen version and silence some
- warning
-To:     Petr Vorel <petr.vorel@gmail.com>
-Cc:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        linux-nfs@vger.kernel.org, Mike Frysinger <vapier@gentoo.org>
-References: <20200113162918.77144-1-giulio.benetti@benettiengineering.com>
- <30b28d4e-71a5-f412-23e7-877a4eff17bd@RedHat.com>
- <fdbade7a-f8f6-16b1-1a18-e9742b9a0aa0@benettiengineering.com>
- <6fdcbba5-e965-fe69-569b-7f32005ce1bf@benettiengineering.com>
- <c1e96762-0f3a-b465-da1b-f7bc7a687948@RedHat.com>
- <20200117063032.GA6351@dell5510>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <818c66c5-6f8b-927f-229e-52a00f50c682@RedHat.com>
-Date:   Fri, 17 Jan 2020 09:32:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726974AbgAQOgd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jan 2020 09:36:33 -0500
+Received: from mail-ed1-f41.google.com ([209.85.208.41]:38010 "EHLO
+        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgAQOgd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jan 2020 09:36:33 -0500
+Received: by mail-ed1-f41.google.com with SMTP id i16so22446722edr.5;
+        Fri, 17 Jan 2020 06:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H4aYYP5AqFJ3Bp+q4OGVka8zI0UJFy5rbCnPHZ0rHek=;
+        b=SOk7gZypapa5fJcaGJwMWB9MkSwEn3xhy3XG8XagUdWDSXt9WLNyIQEkCPGh53rwy6
+         i47bOsVvLssc660dIBAEbAvXvYKtBJYvFQ1m2wvxm79TY2WYCwoHsXvpNJCosUa8TEgR
+         C3Z0F+UG+ymEmwiP1xIBIv+6Hapyj4EmVsamLO7RQqU01buSuLqrt8HuZcd8zIM0qEiQ
+         HjyGXBEWGQUxvdMdv+5tiI9YUmMppZpUYWmrL4kTvNGdabiC5jIhA9Qqu1t05q4SjE2E
+         p59NHnnqFH2VRXSl4cudW2IX1bADS4V1hmQz6FTyIWBQWt4zspkNYtL00cVclW61FW3b
+         UtAw==
+X-Gm-Message-State: APjAAAWv3266GEXzwak7k8ONA4ijNQWUnFqGoDrHRFYFgp3RKoX4tduk
+        tlNksFztNxcFJKxt479fQ8o=
+X-Google-Smtp-Source: APXvYqylfmjgftirP/3R0/bK+q/MT/hT7xjBH4da12u3eRqY+0MPaSabIAFYhwsLRMUWoEM45fNrJg==
+X-Received: by 2002:aa7:c591:: with SMTP id g17mr4142644edq.341.1579271791174;
+        Fri, 17 Jan 2020 06:36:31 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id p24sm978321eds.17.2020.01.17.06.36.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 06:36:30 -0800 (PST)
+Date:   Fri, 17 Jan 2020 15:36:28 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117143628.GA3215@pi3>
+References: <20200117131649.GA12406@pi3>
+ <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <365390.1579265674@warthog.procyon.org.uk>
+ <432921.1579270135@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200117063032.GA6351@dell5510>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <432921.1579270135@warthog.procyon.org.uk>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey Petr,
+On Fri, Jan 17, 2020 at 02:08:55PM +0000, David Howells wrote:
+> Can you do:
+> 
+> 	grep NFS .config
+> 
+> for your kernel config?
 
-On 1/17/20 1:30 AM, Petr Vorel wrote:
->>> If you have the chance to commit before releasing version it would be great!
->> Your patch on my radar... but... conflicts  with Petr's cross-compilation patch
->> https://lore.kernel.org/linux-nfs/20200114183603.GA24556@dell5510/T/#t
-> 
->> That patch causes an automake warnings which is something I'm trying to avoid.
-> 
->> No worries... I will not do a release w/out your patch.... or something close to it. 
-> 
-> Giulio, thanks for your patch. I'll have a look on it over a weekend.
-> Maybe Mike's cross-compilation patch is really not needed.
-> 
-Thanks... for taking a second look!!
+It is a regular exynos_defconfig from the same tree (so linux-next).
 
-steved.
+Best regards,
+Krzysztof
 
