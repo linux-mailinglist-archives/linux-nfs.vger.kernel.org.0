@@ -2,103 +2,149 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F256142617
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 09:48:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80463142ED2
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 16:35:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgATIsZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jan 2020 03:48:25 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33594 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgATIsZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 03:48:25 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so28599124wrq.0
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2020 00:48:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bG7XSdsDdgwbOIQVD92zkZhZY2mXOFcU4dCmCM9SQPk=;
-        b=OvTImxenhYwLnE8W1xcFwNUhHkvu8pBw/ExcYW6IAcxHpaa4xfzv4NFu+IxaphK5d8
-         DSb9ksvG8m3VdQ7b1dNt+6MMPcHF+Ls4/PfLKIL+pLmzZaE3g9etNDMqEEllX89vh4hr
-         /PF34kY5bGBBMeltep7geN7yTuq5PZYqGDKgiXHDeDUNlUGxIygZI77e8w5dSpWyG8hN
-         kTz7r4jlLoMFy93Hf6+JbQIWrWPEdln6fRatFLsLgKYJu2+/1UcygStSDBMGeFuDsrJc
-         ayDks0xC/sX7Aqb0aEiEjj0ZHYrxBQkCJ+vEEx7KxGCT/YBdWyQvR5ZohY0ZfhMCS0Uh
-         YZ3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bG7XSdsDdgwbOIQVD92zkZhZY2mXOFcU4dCmCM9SQPk=;
-        b=SW+njnr8I10Iv6EoBJmeQMBbrPkPKexlVRuHV49igwzCNuENkbZiPdvw6Jqmo4w06p
-         wSilJoC1VDF1y0N5SnQ0N/Z0AvnD1bm9KsrWsd1RdQaunlIZJOEBX8VewsSZxveMw5D8
-         AYHRrBaps69GhhvPMydgVUiYbrQMhpagexay27xCSFjJSQqWeXopR+Mm0W4sWkyYpgiA
-         1Kx/79Suk893IeEAaVGwIZQ+2aKlbwRecKEl7P/k4sBFmszVDEKKhpCQgHowpIWXJ1fF
-         9M2peGqylOS72yoSt0Lhdk9wlQ7tynZH89a4xIDlkzKweKpCZtB+VDezvyAuyChZNq1s
-         PjwQ==
-X-Gm-Message-State: APjAAAULVkJroWvKR/WOrV77lCQ2X1to1JZ8Edi2RTfUzhfxSku/nW2e
-        TLbFN95drNiw72mLsjmjAJEC7qE3bBI=
-X-Google-Smtp-Source: APXvYqwVK99SbraUwb9YAfBT77mDorz+wrzY96iqdA/AYJpq+WHlmPRwvc9yF4kG7EX6GAluIjMXOA==
-X-Received: by 2002:adf:a41c:: with SMTP id d28mr17742440wra.410.1579510103163;
-        Mon, 20 Jan 2020 00:48:23 -0800 (PST)
-Received: from dell5510 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id z4sm21791472wma.2.2020.01.20.00.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:48:22 -0800 (PST)
-Date:   Mon, 20 Jan 2020 09:48:20 +0100
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     Steve Dickson <SteveD@redhat.com>, linux-nfs@vger.kernel.org,
-        Mike Frysinger <vapier@gentoo.org>
-Subject: Re: [nfs-utils RESENT PATCH 1/1] locktes/rpcgen: tweak how we
- override compiler settings
-Message-ID: <20200120084820.GB31890@dell5510>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20200105120502.765426-1-petr.vorel@gmail.com>
- <fb4dd073-856a-7807-eb71-f594e58732cb@RedHat.com>
- <bda9e61c-1a06-5ab3-339f-c38e9a68fb73@RedHat.com>
- <20200114183603.GA24556@dell5510>
- <db2c8006-5520-e34e-b759-42783f965d1c@RedHat.com>
- <5149cf4e-7d78-2cbd-99e4-a4cb66822308@benettiengineering.com>
+        id S1726819AbgATPfl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jan 2020 10:35:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52668 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726876AbgATPfl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 10:35:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579534539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q2V6aPXYbZq02qwGUdx0n+iG7vEqKtgW18a5h4f6Xsk=;
+        b=NOrz98MFlU5iPOaYj/FFy5TctwSlqSlKJuwMmbg8fG7hQ/WRzQMKfC2aRQ9eHNFgDjSdL1
+        Nk8QBQBRtf+SF0snx3qqOEorMiN1VMjuFfSsBjdimICnPYk+P897+TrCSoxtSPtA64Xt/z
+        8DNnp65DqWD/3APjhFStSTKHOOtD72Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-YZNZj5AINeSI0cT_0er-RA-1; Mon, 20 Jan 2020 10:35:33 -0500
+X-MC-Unique: YZNZj5AINeSI0cT_0er-RA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 871A7DB22;
+        Mon, 20 Jan 2020 15:35:32 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-117-35.phx2.redhat.com [10.3.117.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C00E384DB6;
+        Mon, 20 Jan 2020 15:35:31 +0000 (UTC)
+Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <81b8fd1b-6882-5edf-fcab-1a7d4c9d4d47@RedHat.com>
+Date:   Mon, 20 Jan 2020 10:35:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5149cf4e-7d78-2cbd-99e4-a4cb66822308@benettiengineering.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Giulio, Steve,
+Hello,
 
-> > Note... Giulio's patch is doing something similar
-> > https://lore.kernel.org/linux-nfs/20200115160806.99991-1-giulio.benetti@benettiengineering.com/T/#u
+On 1/16/20 2:08 PM, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
+> 
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfs/nfs4client.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+> index 460d625..4df3fb0 100644
+> --- a/fs/nfs/nfs4client.c
+> +++ b/fs/nfs/nfs4client.c
+> @@ -881,7 +881,7 @@ static int nfs4_set_client(struct nfs_server *server,
+>  
+>  	if (minorversion == 0)
+>  		__set_bit(NFS_CS_REUSEPORT, &cl_init.init_flags);
+> -	else if (proto == XPRT_TRANSPORT_TCP)
+> +	if (proto == XPRT_TRANSPORT_TCP)
+>  		cl_init.nconnect = nconnect;
+>  
+>  	if (server->flags & NFS_MOUNT_NORESVPORT)
+> 
+Tested-by: Steve Dickson <steved@redhat.com>
 
-> > Does something like that as well as setting the AM_XXX help the your cross-compile?
+With this patch v4.0 mounts act just like v4.1/v4.2 mounts
+But is that a good thing. :-)  
 
-> IMHO tools/* utility must be built with cross-compiler too, not with
-> /usr/bin/gcc. Buildroot provide host-nfs-utils for that, especially for
-> rpcgen.
+Here is what I've found in my testing...
 
-> Please take a look at my WIP patch for bumping nfs-utils to latest in
-> Buildroot:
-> https://github.com/giuliobenetti/buildroot/commit/12671eb21d62a5474dc476381015069382775668
+mount -onconnect=12 172.31.1.54:/home/tmp /mnt/tmp
 
-> and please note this line:
-> --with-rpcgen=$(HOST_DIR)/bin/rpcgen
+Will create 12 TCP connections and maintain those 12 
+connections until the umount happens. By maintain I mean 
+if the connection times out, it is reconnected 
+to maintain the 12 connections 
 
-> that means that nfs-utils must use already host-nfs-utils/rpcgen instead of
-> internal one to generate rpcs. This is why tools/* is not needed as host to
-> build target. Indeed host-nfs-utils is built when nfs-utils is built. At
-> least I understand this.
+# mount -onconnect=12 172.31.1.54:/home/tmp /mnt/tmp
+# netstat -an | grep 172.31.1.54 | wc -l
+12
+# netstat -an | grep 172.31.1.54        
+tcp        0      0 172.31.1.24:901         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:667         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:746         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:672         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:832         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:895         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:673         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:732         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:795         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:918         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:674         172.31.1.54:2049        ESTABLISHED
+tcp        0      0 172.31.1.24:953         172.31.1.54:2049        ESTABLISHED
 
-> Can you Petr confirm that?
-> Because at this point the patch you're pointing is not needed.
+# umount /mnt/tmp
+# netstat -an | grep 172.31.1.54 | wc -l
+12
+# netstat -an | grep 172.31.1.54
+tcp        0      0 172.31.1.24:901         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:667         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:746         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:672         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:832         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:895         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:673         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:732         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:795         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:918         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:674         172.31.1.54:2049        TIME_WAIT  
+tcp        0      0 172.31.1.24:953         172.31.1.54:2049        TIME_WAIT 
 
-Sorry, I overlooked this mail. Ack, it's correct for buildroot, as I already
-wrote yesterday.
-But not sure if the patch isn't needed for Gentoo packaging.
-I guess if needed, it still can be rebased and applied later.
+Is this the expected behavior? 
 
-Kind regards,
-Petr
+If so I have a few concerns...
+
+* The connections walk all over the /etc/services namespace. Meaning
+using ports that are reserved for registered services, something
+we've tried to avoid in userland by not binding to privilege ports and
+use of backlist ports via /etc/bindresvport.blacklist
+
+* When the unmount happens, all those connections go into TIME_WAIT on 
+privilege ports and there are only so many of those. Not good during mount 
+storms (when a server reboots and thousand of home dirs are remounted).
+
+* No man page describing the new feature.
+
+I realize there is not much we can do about some of these
+(aka umount==>TIME_WAIT) but I think we need to document 
+what we are doing to people's connection namespace when 
+they use this feature. 
+
+steved.
+
