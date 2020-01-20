@@ -2,83 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D1C142F0A
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 16:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C782143121
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 18:55:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgATPwd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jan 2020 10:52:33 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27126 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726626AbgATPwd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 10:52:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579535552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1FaMYkSx/3KkELVaNoOiDXv8BsOhyl+zQGF10fBlEdE=;
-        b=h8STAr/vmnnSU98A+FvQValUwi7xBFmLd1xwsQQwCJd9LIwIyJ+yCWMgkeOCLPYCel2Kai
-        uS0qtetvz8qnsgwPjLZgiC/gdzc9L9ITx4LRaU7A8lEa/2/Tho0jCoLN+piPVNIUjBvONK
-        hsK1ol6tOUFQ+dsl2sWVPF0yC8unkZw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-KsB_SO6tN8OBFpTu3-n_oQ-1; Mon, 20 Jan 2020 10:52:30 -0500
-X-MC-Unique: KsB_SO6tN8OBFpTu3-n_oQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6BF5107ACCC;
-        Mon, 20 Jan 2020 15:52:29 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BC7960C05;
-        Mon, 20 Jan 2020 15:52:29 +0000 (UTC)
-Subject: Re: nfs-utils tag
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <d64033ad7277ce26e328d1b5c7b85050c201beb7.camel@hammerspace.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <1e71f70c-5ce1-9ba7-d3bc-8e96a30f2aa8@RedHat.com>
-Date:   Mon, 20 Jan 2020 10:52:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726897AbgATRzF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jan 2020 12:55:05 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:44381 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATRzE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 12:55:04 -0500
+Received: by mail-wr1-f51.google.com with SMTP id q10so355331wrm.11;
+        Mon, 20 Jan 2020 09:55:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
+        b=Shm/O2tzG6ppkV1MKlYA5MYSsidRt5iztNG0N6I2Svc+1rC4msjb9YaWaYzpmuPvAU
+         YlsTGL7oxYVZnlhCdX7jrWzcjusIgsV++ZOfUPYD0CH6BGamlgaiyNtWJbNJCQFGsZ6l
+         Y4TFl0/5T891OwLnaHKPVWYDfL1glj4jkDZYfcXAeupnaSZAB3mHEIXVV0KtTVHU3nJW
+         8JM+tzmklvYpGtdRmW1aQEqO2u0dNtekmNR1K+hjdfz+CCDwJ8fSAxWy0dNangOtBxsy
+         kgReO03g5AoY+TuZBiMd0r7b1V+DAQ5pO7l/Jf0mRrluliYC5gL9nPw9Fv3hSAKNnZj6
+         sV/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
+        b=D9absaOm9Ee01SezQOByQ6wX7NKRLkmbnZ99RKoFAnrUw9LYWl7zZq7UdQEHu+COP/
+         Bpt7k18OzwP+IL6CMZM3qrN1CXSCjz7uojEPMNkesxf9RCE/0oq9KL73/hIxxofU4rJ/
+         8E692t7B8Fq1yl7YUL6OFAF862c3cBeDIxdaM3VPHjpWeXLVq8ToYVEHLduHkk0s4aOE
+         3f2+aLl/JrplKIyudQGoq+EH/7ugZfXXvwJOxpY/BhDVQf7QoR5H+rI8t6meRI2cb8Mc
+         0rd/SWG7O/5eZfHsNhOoMZMLcZeo2XCdvzQWHWPRfUsj0eHnNTUmEgB7Vl9c02dVPcIO
+         fdLg==
+X-Gm-Message-State: APjAAAWe/1aWIQs7j5UH5rju5KBvjOW8rVwO5RpcwScTmG7rdxPQTtuc
+        syLPhlK+U9zNSnUW86yZSU9Zzr9apo8=
+X-Google-Smtp-Source: APXvYqz7YXkQZ8dyRvLAFJO9vJHbPgvQyXxoKIByuPaAUfRMI2IYRQC4sHXqDvhH4AYunqNhrfKviw==
+X-Received: by 2002:a5d:49cc:: with SMTP id t12mr668846wrs.363.1579542902577;
+        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
+Received: from WINDOWSSS5SP16 ([82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id r15sm185321wmh.21.2020.01.20.09.55.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     "'Chuck Lever'" <chuck.lever@oracle.com>,
+        "'Trond Myklebust'" <trondmy@hammerspace.com>
+Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
+        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+In-Reply-To: <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Mon, 20 Jan 2020 17:55:00 -0000
+Message-ID: <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d64033ad7277ce26e328d1b5c7b85050c201beb7.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWqOZaxJA=
+Content-Language: en-gb
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey!
 
-On 1/17/20 9:43 AM, Trond Myklebust wrote:
-> Hi Steve
-> 
-> It looks like the nfs-utils-2-4-3-rc5 tag was modified after it was
-> pushed out:
-> 
-> Fetching origin
-> From git://git.linux-nfs.org/projects/steved/nfs-utils
->  ! [rejected]                  nfs-utils-2-4-3-rc5 -> nfs-utils-2-4-3-rc5  (would clobber existing tag)
-> error: Could not fetch origin
-> 
-> 
-> Was that intentional? I don't usually do a force-pull of the tags (and
-> I suspect most other people do not either) so it is easy to miss that
-> tag change.
-Yes... I did update the tag... I was wondering if that would cause any problems. :-)
 
-I'm always pushed out tags but I never publish them, like I've started.
-I'll try to be a bit more careful in the future... 
-
-steved.
-
+> -----Original Message-----
+> From: Chuck Lever <chuck.lever@oracle.com>
+> Sent: 30 December 2019 15:37
+> To: Robert Milkowski <rmilkowski@gmail.com>
+> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond Myklebust
+> <trond.myklebust@hammerspace.com>; Anna Schumaker
+> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
+> lease renewals
 > 
-> Cheers
->   Trond
 > 
+> 
+> > On Dec 30, 2019, at 10:20 AM, Robert Milkowski <rmilkowski@gmail.com>
+> wrote:
+> >
+> > From: Robert Milkowski <rmilkowski@gmail.com>
+> >
+> > Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+> > NFS4 lease renewal, which is not compliant with the NFS4
+> specification.
+> > This can result in a lease being expired by an NFS server.
+> >
+> > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > introduced implicit client lease renewal in nfs4_do_fsinfo(), which
+> > can result in the NFSv4.0 lease to expire on a server side, and
+> > servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+> >
+> > This can easily be reproduced by frequently unmounting a sub-mount,
+> > then stat'ing it to get it mounted again, which will delay or even
+> > completely prevent client from sending RENEW operations if no other
+> > NFS operations are issued. Eventually nfs server will expire client's
+> > lease and return an error on file access or next RENEW.
+> >
+> > This can also happen when a sub-mount is automatically unmounted due
+> > to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+> > mounted again via stat(). This can result in a short window during
+> > which client's lease will expire on a server but not on a client.
+> > This specific case was observed on production systems.
+> >
+> > This patch makes an explicit lease renewal instead of an implicit one,
+> > by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
+> > similarly to NFSv4.1 which adds SEQUENCE operation.
+> >
+> > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> 
+> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> 
+> 
+
+How do we progress it further?
+
+-- 
+Robert Milkowski
+
+
 
