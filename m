@@ -2,130 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C782143121
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 18:55:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB106143314
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 21:52:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgATRzF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jan 2020 12:55:05 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44381 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATRzE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 12:55:04 -0500
-Received: by mail-wr1-f51.google.com with SMTP id q10so355331wrm.11;
-        Mon, 20 Jan 2020 09:55:03 -0800 (PST)
+        id S1727665AbgATUwl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jan 2020 15:52:41 -0500
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:45931 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728587AbgATUwl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 15:52:41 -0500
+Received: by mail-pg1-f172.google.com with SMTP id b9so234841pgk.12
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2020 12:52:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
-        b=Shm/O2tzG6ppkV1MKlYA5MYSsidRt5iztNG0N6I2Svc+1rC4msjb9YaWaYzpmuPvAU
-         YlsTGL7oxYVZnlhCdX7jrWzcjusIgsV++ZOfUPYD0CH6BGamlgaiyNtWJbNJCQFGsZ6l
-         Y4TFl0/5T891OwLnaHKPVWYDfL1glj4jkDZYfcXAeupnaSZAB3mHEIXVV0KtTVHU3nJW
-         8JM+tzmklvYpGtdRmW1aQEqO2u0dNtekmNR1K+hjdfz+CCDwJ8fSAxWy0dNangOtBxsy
-         kgReO03g5AoY+TuZBiMd0r7b1V+DAQ5pO7l/Jf0mRrluliYC5gL9nPw9Fv3hSAKNnZj6
-         sV/g==
+        h=from:message-id:subject:to:cc:in-reply-to:references:organization
+         :mime-version:date:user-agent:content-transfer-encoding;
+        bh=oT/PEKHTDAEu4Wui9vP14UawSG7Ju8CU4hlVQn4lc1o=;
+        b=Wz8jTlNEafex2bJJrdN/eZ+AajqrUlo6ohnviz7TX8kqn7QFZiija4Nbu1gBIkApy8
+         GHvTHsKWJVbWRQhNHLYsg3e4ic7HOtnYY2MXyy1WKL2wNV4oWwhKjKTd8NO2qY1NgnTC
+         sDMAtByusflI3kkNRoRGTv3TTOfyPcep2SUKBQq+PcCJy9/6ME6qMlPjkrgtdFX4tgxp
+         xWmCs0JmOF2T05EzVonhR4D57OV4dHNCaJw52ShUbZ7u2XNVIyyzeotYOqZ06sROz3rQ
+         f59pxJ7uO1YeFFsLK8idEV9KsldHwfKSEZTPnj1aVvvOaKkXGnPnxFhBZnDSA78bbzab
+         mu4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
-        b=D9absaOm9Ee01SezQOByQ6wX7NKRLkmbnZ99RKoFAnrUw9LYWl7zZq7UdQEHu+COP/
-         Bpt7k18OzwP+IL6CMZM3qrN1CXSCjz7uojEPMNkesxf9RCE/0oq9KL73/hIxxofU4rJ/
-         8E692t7B8Fq1yl7YUL6OFAF862c3cBeDIxdaM3VPHjpWeXLVq8ToYVEHLduHkk0s4aOE
-         3f2+aLl/JrplKIyudQGoq+EH/7ugZfXXvwJOxpY/BhDVQf7QoR5H+rI8t6meRI2cb8Mc
-         0rd/SWG7O/5eZfHsNhOoMZMLcZeo2XCdvzQWHWPRfUsj0eHnNTUmEgB7Vl9c02dVPcIO
-         fdLg==
-X-Gm-Message-State: APjAAAWe/1aWIQs7j5UH5rju5KBvjOW8rVwO5RpcwScTmG7rdxPQTtuc
-        syLPhlK+U9zNSnUW86yZSU9Zzr9apo8=
-X-Google-Smtp-Source: APXvYqz7YXkQZ8dyRvLAFJO9vJHbPgvQyXxoKIByuPaAUfRMI2IYRQC4sHXqDvhH4AYunqNhrfKviw==
-X-Received: by 2002:a5d:49cc:: with SMTP id t12mr668846wrs.363.1579542902577;
-        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id r15sm185321wmh.21.2020.01.20.09.55.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-In-Reply-To: <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Mon, 20 Jan 2020 17:55:00 -0000
-Message-ID: <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
+        h=x-gm-message-state:from:message-id:subject:to:cc:in-reply-to
+         :references:organization:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=oT/PEKHTDAEu4Wui9vP14UawSG7Ju8CU4hlVQn4lc1o=;
+        b=WJwLE/beylwXTnUgz5H4CT1wEh2p0xEID+UEtxD4uJDuKmTfeGKilSv2z4LLEX9bYK
+         d1knTiL2WQsyv/MXNX80omASJt/vabYQKl6p0DOJuIcXKXszqz6c7qJUhfcvuHEkeaJd
+         5RCstChhjw9WhrycaVeR9a0U387Y2guEavGfQx4Cx6guZFzlbq3wFiE09t57w59YEFJk
+         oDCNE7MTf2nUfzK2QL25kL2Fq9YQ0CvTBBJsy489O9Qm5kfDqPNeDO8D8MFMbjWkhYmm
+         Xocvm0TlNDLyuyY/XsDlEJO4RjVNN3jnoHVaPUNhqBHoRBTozb8RbX5WV8Hf9GV+D7e9
+         EGrA==
+X-Gm-Message-State: APjAAAVGoUTUWfzoL632bwZxvnK6n0dWvy62Vo4UVOJ9aSAKF9TA/jhh
+        Yyg+QESBOK6ce370+sSt4A==
+X-Google-Smtp-Source: APXvYqy2npV2Lzsdw8p4hhzNp+FbCrfOzHS6d8ttkHvZNaV+I/t+dhP9ONzQoX2bTnb8zlnZxtMgnQ==
+X-Received: by 2002:a63:8c48:: with SMTP id q8mr1623390pgn.213.1579553560383;
+        Mon, 20 Jan 2020 12:52:40 -0800 (PST)
+Received: from leira (63-235-104-78.dia.static.qwest.net. [63.235.104.78])
+        by smtp.gmail.com with ESMTPSA id c17sm39575851pfi.104.2020.01.20.12.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 12:52:39 -0800 (PST)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trondmy@hammerspace.com>
+Message-ID: <388ff8a1abebdf0eab8e696cb09148c0704dd766.camel@hammerspace.com>
+Subject: Re: 'ls -lrt' performance issue on large dir while dir is being
+ modified
+To:     Dai Ngo <dai.ngo@oracle.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+In-Reply-To: <52079beb-1f27-35d8-c92a-6a6b430c7c8f@oracle.com>
+References: <e04baa28-2460-4ced-e387-618ea32d827c@oracle.com>
+         <a41af3d6-8280-e315-fb65-a9285bad50ec@oracle.com>
+         <770937d3-9439-db4a-1f6e-59a59f2c08b9@oracle.com>
+         <9fdf37ffe4b3f7016a60e3a61c2087a825348b28.camel@hammerspace.com>
+         <49bfa6104b6a65311594efd47592b5c2b25d905a.camel@hammerspace.com>
+         <8439e738-6c90-29d9-efc8-300420b096b1@oracle.com>
+         <43fae563e93052f9dc9584ddd800770a7b3b10d2.camel@hammerspace.com>
+         <9327BCC2-6B75-47E3-8056-30499E090E18@oracle.com>
+         <3456dea05ac1a2d82c077146e8638130e313edca.camel@hammerspace.com>
+         <52079beb-1f27-35d8-c92a-6a6b430c7c8f@oracle.com>
+Organization: Hammerspace Inc
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+Date:   Mon, 20 Jan 2020 12:52:13 -0800
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWqOZaxJA=
-Content-Language: en-gb
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Chuck Lever <chuck.lever@oracle.com>
-> Sent: 30 December 2019 15:37
-> To: Robert Milkowski <rmilkowski@gmail.com>
-> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond Myklebust
-> <trond.myklebust@hammerspace.com>; Anna Schumaker
-> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
-> lease renewals
+On Sat, 2020-01-18 at 10:03 -0800, Dai Ngo wrote:
 > 
+> I think this is the contention point: the spec did not explicitly
+> mention anything regarding mixing of cookies from READDIR &
+> READDIRPLUS.
 > 
+> However, as I mentioned, the current client implementation already
+> mixing
+> cookies between READDIRPLUS and READDIR, everytime the user does a
+> simple
+> 'ls' on a large directory, without invalidating any mapping.
 > 
-> > On Dec 30, 2019, at 10:20 AM, Robert Milkowski <rmilkowski@gmail.com>
-> wrote:
-> >
-> > From: Robert Milkowski <rmilkowski@gmail.com>
-> >
-> > Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-> > NFS4 lease renewal, which is not compliant with the NFS4
-> specification.
-> > This can result in a lease being expired by an NFS server.
-> >
-> > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > introduced implicit client lease renewal in nfs4_do_fsinfo(), which
-> > can result in the NFSv4.0 lease to expire on a server side, and
-> > servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-> >
-> > This can easily be reproduced by frequently unmounting a sub-mount,
-> > then stat'ing it to get it mounted again, which will delay or even
-> > completely prevent client from sending RENEW operations if no other
-> > NFS operations are issued. Eventually nfs server will expire client's
-> > lease and return an error on file access or next RENEW.
-> >
-> > This can also happen when a sub-mount is automatically unmounted due
-> > to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-> > mounted again via stat(). This can result in a short window during
-> > which client's lease will expire on a server but not on a client.
-> > This specific case was observed on production systems.
-> >
-> > This patch makes an explicit lease renewal instead of an implicit one,
-> > by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
-> > similarly to NFSv4.1 which adds SEQUENCE operation.
-> >
-> > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> 
-> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> 
+> Also, as Chuck mentioned, we're not aware of any server
+> implementation
+> that has problems with this mixing of cookies.
 > 
 
-How do we progress it further?
+OK I did a little time warp and went back to the original emails around
+this behaviour:
+
+https://linux-nfs.vger.kernel.narkive.com/O0Xhnqxe/readdir-vs-getattr
+
+
+Part of the problem that needed solving at the time was that even when
+the directory and its contents were not changing, people were still
+needing to do reams of GETATTR calls in order to typically satisfy an
+'ls -l' or even 'ls --color'. When we see that pattern, we want to
+switch from using GETATTR on all these files to using READDIRPLUS.
+
+The cache invalidation was introduced in order to force the NFS client
+to do these READDIRPLUS calls so we avoid the GETATTRs.
+
+So one optimisation we could definitely do is try to track the index of
+the last page our descriptor accessed on readdir(), and truncate only
+the remaining pages. That way we don't keep re-reading the beginning of
+the directory.
 
 -- 
-Robert Milkowski
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
 
 
