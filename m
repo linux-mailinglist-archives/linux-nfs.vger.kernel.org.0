@@ -2,87 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 766CF1421F8
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 04:27:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1A3A1423D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2020 07:49:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgATD1e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Jan 2020 22:27:34 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:56352 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729011AbgATD1e (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Jan 2020 22:27:34 -0500
-X-IronPort-AV: E=Sophos;i="5.70,340,1574092800"; 
-   d="scan'208";a="82292460"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 20 Jan 2020 11:27:32 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 84431406AB15;
-        Mon, 20 Jan 2020 11:18:18 +0800 (CST)
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Mon, 20 Jan 2020 11:27:28 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local ([fe80::4049:4fec:8ba2:a0e4])
- by G08CNEXMBPEKD05.g08.fujitsu.local ([fe80::4049:4fec:8ba2:a0e4%14]) with
- mapi id 15.00.1395.000; Mon, 20 Jan 2020 11:27:30 +0800
-From:   "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
-To:     "ffilzlnx@mindspring.com" <ffilzlnx@mindspring.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "dang@redhat.com" <dang@redhat.com>,
-        "calum.mackay@oracle.com" <calum.mackay@oracle.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>
-Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
-Thread-Topic: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
-Thread-Index: AdXJsIQXuaZ2SnxFRGWSi1yoPcHO9wFkDDSQ
-Date:   Mon, 20 Jan 2020 03:27:30 +0000
-Message-ID: <bf92e0f0d4cb42d3803a95a513426d00@G08CNEXMBPEKD05.g08.fujitsu.local>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.167.226.33]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1725872AbgATGtm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jan 2020 01:49:42 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37367 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgATGtl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jan 2020 01:49:41 -0500
+Received: by mail-pj1-f68.google.com with SMTP id m13so6690320pjb.2
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Jan 2020 22:49:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cNh/lULg8tHapS3+LHqA/9nuVyvhOKvLIiv6PMf6Jto=;
+        b=MgcqXoQeD4Wfh7r6LoM3hLZFRlwLZx0BeWf4mBZaU9YlnKnekVOPzdvwDuEzKRN4n0
+         1m79kDBQg7SjY7ZIMVPGqH8C5Xq3KSZQuLuMcMeTmfsFOtBVK4pNm/Zr/33Hpq4SPvIH
+         YbJKS5mZbarMFahYjToOLwXRusb2ZB3Xvxs93ZxpBwVwk0H5I3vBsJ2eKd2wP7gxfKly
+         Ta7kcacbqp+MD7E1uVbSGaWc0nrvn2m8ivBt5SEeey2QQwk+U61ljbFXbghtqYG0ehYF
+         Oh3bhdPOl/HC7kTcrj378a73hxA3DvwKD8+qSV/cgfGfqUQAt49Jc176nU8sEoGzMyvU
+         /hZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cNh/lULg8tHapS3+LHqA/9nuVyvhOKvLIiv6PMf6Jto=;
+        b=pyMW1FVhqlHCRLRdG73lZe5sKk2a8q8AAzpXxXbyPhet2gXAy/zjKJy3P1dvOF1AZe
+         CYZWZquBLl7bKgu0US0UdXgh4/RVy4CNN8K6nt2kD1vAg7vTLaJQVPKGyJalTfwEQDgM
+         LRYpgEeuhqwVwWFOlh7WNYY58CaWVBbSRRUehdOcg0WPF1H6qVd1eG6DWs+5ys6DhWZ1
+         KPIEblHB2y3sQ3xPgpvioCy1w3f/ZHDa/dkRwvGUw5dYzoK9oFKEti1dsvHl/atxxP/Q
+         KwZVh/9XK0KRmnA0cWtBuxWi/zjY75ZpCfJ0cHriM7BjzUxapJVc+13C5/yyqmCnWvcD
+         kwDQ==
+X-Gm-Message-State: APjAAAXP226ymYhGIEzjKADYiH0caafl9hFhGzGyXoNg9F3Vh7d2Tbbo
+        2zhww6FfCFksoLIkYa2Oa+J8YG9w
+X-Google-Smtp-Source: APXvYqz8LZD54II+zGR/g5VjUW4ohzdYGU8XV4AQ0KqmKLZumnZWoOJ3YgRYIoIPWTsBWhNCEQk1dA==
+X-Received: by 2002:a17:902:7006:: with SMTP id y6mr13780931plk.84.1579502981094;
+        Sun, 19 Jan 2020 22:49:41 -0800 (PST)
+Received: from localhost.localdomain ([69.42.0.214])
+        by smtp.gmail.com with ESMTPSA id r28sm35489479pgk.39.2020.01.19.22.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 22:49:40 -0800 (PST)
+From:   Rosen Penev <rosenp@gmail.com>
+To:     libtirpc-devel@lists.sourceforge.net
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] xdr_float: do not include bits/endian.h
+Date:   Sun, 19 Jan 2020 22:49:37 -0800
+Message-Id: <20200120064937.1867256-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-yoursite-MailScanner-ID: 84431406AB15.A9407
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
-X-Spam-Status: No
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgRnJhbmsNCg0KV2UgaGF2ZW4ndCBjb250YWN0ZWQgZm9yIGEgbG9uZyB0
-aW1lLiBMZXQncyBzb3J0IG91dCB0aGUgcHJvYmxlbS4gVGhlIGRldGFpbHMg
-YXJlIGFzIGZvbGxvd3M6DQoNCldlIHRlc3RlZCB0aGUgcHluZnMgb2YgTkZT
-djQuMCBvbiB0aGUgbGF0ZXN0IHZlcnNpb24gb2YgdGhlIGtlcm5lbCg1LjIu
-MC1yYzcpLg0KSSBlbmNvdW50ZXJlZCBhIHByb2JsZW0gd2hpbGUgdGVzdGlu
-ZyBzdF9sb2NrLnRlc3RPcGVuVXBncmFkZUxvY2suDQpUaGUgcHJvYmxlbSBp
-cyBub3cgYXMgZm9sbG93czoNCioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqDQpMT0NLMjQgc3RfbG9jay50ZXN0
-T3BlblVwZ3JhZGVMb2NrIDogRkFJTFVSRQ0KICAgICAgICAgICAgT1BfTE9D
-SyBzaG91bGQgcmV0dXJuIE5GUzRfT0ssIGluc3RlYWQgZ290DQogICAgICAg
-ICAgICBORlM0RVJSX0JBRF9TRVFJRA0KKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioNCg0KVGhlIGNhc2UgaXMg
-YXMgZm9sbG93czoNCkRlZiB0ZXN0T3BlblVwZ3JhZGVMb2NrKHQsIGVudik6
-DQogICAgICIiIlRyeSBvcGVuLCBsb2NrLCBvcGVuLCBkb3duZ3JhZGUsIGNs
-b3NlDQoNCiAgICAgRkxBR1M6IGFsbCBsb2NrDQogICAgIENPREU6IExPQ0sy
-NA0KICAgICAiIiINCiAgICAgYz0gZW52LmMxDQogICAgIEMuaW5pdF9jb25u
-ZWN0aW9uKCkNCiAgICAgT3MgPSBvcGVuX3NlcXVlbmNlKGMsIHQuY29kZSwg
-bG9ja293bmVyPSJsb2Nrb3duZXJfTE9DSzI0IikNCiAgICAgT3Mub3BlbihP
-UEVONF9TSEFSRV9BQ0NFU1NfUkVBRCkNCiAgICAgT3MubG9jayhSRUFEX0xU
-KQ0KICAgICBPcy5vcGVuKE9QRU40X1NIQVJFX0FDQ0VTU19XUklURSkNCiAg
-ICAgT3MudW5sb2NrKCkNCiAgICAgT3MuZG93bmdyYWRlKE9QRU40X1NIQVJF
-X0FDQ0VTU19XUklURSkNCiAgICAgT3MubG9jayhXUklURV9MVCkNCiAgICAg
-T3MuY2xvc2UoKQ0KDQpBZnRlciBpbnZlc3RpZ2F0aW9uLCB0aGVyZSB3YXMg
-YW4gZXJyb3IgaW4gdW5sb2NrLT5sb2NrLiBXaGVuDQp1bmxvY2tpbmcsIHRo
-ZSBsb2Nrb3duZXIgb2YgdGhlIGZpbGUgd2FzIG5vdCByZWxlYXNlZCwgY2F1
-c2luZyBhbg0KZXJyb3Igd2hlbiBsb2NraW5nIGFnYWluLg0KDQpXZSBtb2Rp
-ZmllZCB0aGUgY2FzZSBhY2NvcmRpbmcgdG8gQ2FsdW0gTWFja2F5J3Mgc3Vn
-Z2VzdGlvbiAoc2V0IHRoZSBwYXJhbWV0ZXIgbGtfaXNfbmV3IGluIHRoZSBz
-ZWNvbmQgbG9jayB0byBGQUxTRSkNCmFuZCB0aGUgdGVzdCByZXN1bHQgcGFz
-c2VkLg0KQ2FuIHlvdSB0ZWxsIG1lIGlmIHRoaXMgbW9kaWZpY2F0aW9uIGlz
-IGNvcnJlY3Sjvw0KDQpBbmQgdGhlIHByZXZpb3VzIGRpc2N1c3Npb24gaXMg
-aGVyZS4NCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LW5m
-cy9tc2c3NjA2MS5odG1sDQoNCgoK
+bits/endian.h is an internal header. endian.h should be included.
+
+Fixes compilation with recent musl.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ src/xdr_float.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/xdr_float.c b/src/xdr_float.c
+index 26bc865..349d48f 100644
+--- a/src/xdr_float.c
++++ b/src/xdr_float.c
+@@ -83,7 +83,7 @@ static struct sgl_limits {
+ };
+ #else
+ 
+-#include <bits/endian.h>
++#include <endian.h>
+ #define IEEEFP
+ 
+ #endif /* vax */
+-- 
+2.24.1
+
