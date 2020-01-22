@@ -2,151 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8A7145CC0
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 20:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45CAE145D1D
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 21:27:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgAVT4A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Jan 2020 14:56:00 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:36691 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVT4A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 14:56:00 -0500
-Received: by mail-wr1-f47.google.com with SMTP id z3so435810wru.3;
-        Wed, 22 Jan 2020 11:55:59 -0800 (PST)
+        id S1725827AbgAVU1x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Jan 2020 15:27:53 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:38417 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgAVU1x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 15:27:53 -0500
+Received: by mail-vk1-f194.google.com with SMTP id d17so324603vke.5
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2020 12:27:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
-        b=MuF7EqjBMQ0XogfEQUpg7R3avQdsPvV2ZWUxljYl1l2VyOrXumex84/84DQCajzMHM
-         8TFimuACiPqBNgB6eQYmxW6beTcJ37ane7Y9AgQmMsJAzt9ulNK3Mb8pqAzAETNG8Bgp
-         og1aFAvxCkx1XnxZlf7jRN91kNSEAyHZOKUIRq9TdxY3u59w1X2NCMGMuNksLktgdYnK
-         e0ZOwmAXOq+Ql9juIcYCkfKsoDeK1y5NZP4q0tvtu41HhN3CCltI+ydcLdqDVRO3yqyp
-         jSkdlibmsSkSZtI8CcLMUfpdGdDT+QO5R6DgCrsQfKlOHVy5wy9FU9mq+mLXuvYrSwbL
-         tPfw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oTgKz3Kzmekn9WvT22VUjbRSY6TIq5egaZrumexuFXM=;
+        b=bj3fX+WpTdcqcaFsuddBKEwPYWXucCAwfaDDodzpztWlA55BfnPtNVg6A8wKMI+rKv
+         hDXAN/U5b6suW00Dflg2gtPbjGYcCoQSs96xPOIvaKVT++0lzKsrtcF4iZoXMCY2lIGX
+         BwoQiCcCpQIPZ0N38cajtQP8lxZ4wCDdYN+M27axcr16U2bj9zhcDOPeZ3KEyhmTvosW
+         LwYRHspyZ7YYhC096tNJ3xi6nl7AIGf6AylxK7Nex3pEJftjD7D/34IxrhI1oAcwKMt0
+         uHpptWyZwN3NNJubbkqWcX34WxIWEyCEtrwJyUGkbtLr5tuXPjGoi80KLuOc0znDjFNm
+         8geA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
-        b=rlYIdkzGDRvQiwjoBHN5mI2NKpOEXk43+eVW2wWDPWF6WD7KUkWivV9eABHgZMXJIN
-         jrMjA9HfUQ8xd92KM4xACbFWK56m9Y5mKCTMy6LWvlS5m3d4rA41aYjVRdNp0Cn1gdQA
-         vimRIIDtuxNAXQq5QeTHvdJfO9N9N6aO4i1o5c/Yv8DgmSh2PpTkjjDDGzL8xlO+1ir4
-         gSj6ByYtQ0nsuH8ZE1DoPi0IwbK6FbK+8owPLJhffmRF5N4plS/giVRhyycZpPuM5lqV
-         qKMA2RihH5N/9R+fsY2ptuilFnY48J3q/YUKKjfZCWSIjqnTcI5w5OEkgGvrWa6ZPbSG
-         q9Lg==
-X-Gm-Message-State: APjAAAUJQ/cghhyG42GTasUA0j443aveiobbfaIWVBK8TKZmUDUnkNPl
-        d4eAWovf8a58cde/LMyfHGel13Rk2Dz8bw==
-X-Google-Smtp-Source: APXvYqxOlEeOMaZIf+53PwNJXSTonqAVv0oP6QDxngI0ciaN9F/jg66fFmjTQrXdX1Oi0ToeOy2KQA==
-X-Received: by 2002:a5d:6ac2:: with SMTP id u2mr12317905wrw.233.1579722958365;
-        Wed, 22 Jan 2020 11:55:58 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id q3sm5226956wmj.38.2020.01.22.11.55.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 11:55:57 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Schumaker, Anna'" <Anna.Schumaker@netapp.com>,
-        <chuck.lever@oracle.com>, <trondmy@hammerspace.com>
-Cc:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <trond.myklebust@hammerspace.com>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>  <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>       <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-In-Reply-To: <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Wed, 22 Jan 2020 19:55:57 -0000
-Message-ID: <075401d5d15d$f6d0cb20$e4726160$@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oTgKz3Kzmekn9WvT22VUjbRSY6TIq5egaZrumexuFXM=;
+        b=nP2+Q2QxFgoS8yjoMPzr7c7cfdfWajrrF3GXrxuIfx3t1pbjcbj6h9sOfCYxJwPMsd
+         KdCgbP/HE6KwRXZcq3iWb0dKU3Uwr/nMLWww+Temfk29agAKWNRd9PiD/tg0zEFsl7y7
+         4kBpKHMnrtDuF0aKBWeprjiV0Aa+yySswG8sWM8XyDytSj+OUfFOkVQYAgClnnDSXNTZ
+         ocU/MUtEgSozQEt2Li8nF1gVv6ayknuy3nVLPDwxatUPnOOL86NJYfsJKM3S/owz039A
+         DsOZY0ANBBdUQExoYgEBLTvC7NiAXVet0cNKWxeyHM2QOEy3ZRG8F3rsGFVBQPocBeOC
+         CREg==
+X-Gm-Message-State: APjAAAXO+vCqwHw5/IjpYOjv2xCR6oNFXuLKZXpHto1q9HWGekXXMiWR
+        zCM3nnbmZXVgIS2YgMyBuSCDNDmuzUgj8A1QlMBuww==
+X-Google-Smtp-Source: APXvYqyCO++SbkxppBuREBi2kLLc18idDq+TMoF2eWvZtXcmO8k5UFaSa+54fH+L2Y4nY/m+nfJRYTp++SWqezV3MgI=
+X-Received: by 2002:ac5:cb0b:: with SMTP id r11mr7908292vkl.72.1579724871720;
+ Wed, 22 Jan 2020 12:27:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWAfB5jHQAou/4BajVBKRQ
+References: <20200121221441.29521-1-olga.kornievskaia@gmail.com> <a4b08f6ae6cd6edd62a0d26448d6082c35dd5049.camel@netapp.com>
+In-Reply-To: <a4b08f6ae6cd6edd62a0d26448d6082c35dd5049.camel@netapp.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 22 Jan 2020 15:27:40 -0500
+Message-ID: <CAN-5tyH1KXWGRfgmAibVJ0kFpHX3FZpGDdhYBFVS7EBAXLu99w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4.2 re-initialize cn_resp in case of a retry
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Schumaker, Anna <Anna.Schumaker@netapp.com>
-> Sent: 22 January 2020 19:11
-> To: rmilkowski@gmail.com; chuck.lever@oracle.com; trondmy@hammerspace.com
-> Cc: linux-nfs@vger.kernel.org; linux-kernel@vger.kernel.org;
-> trond.myklebust@hammerspace.com
-> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
-> lease renewals
-> 
-> Hi Robert,
-> 
-> On Mon, 2020-01-20 at 17:55 +0000, Robert Milkowski wrote:
-> > > -----Original Message-----
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > > Sent: 30 December 2019 15:37
-> > > To: Robert Milkowski <rmilkowski@gmail.com>
-> > > Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond
-> > > Myklebust <trond.myklebust@hammerspace.com>; Anna Schumaker
-> > > <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do
-> > > implicit lease renewals
-> > >
-> > >
-> > >
-> > > > On Dec 30, 2019, at 10:20 AM, Robert Milkowski
-> > > > <rmilkowski@gmail.com>
-> > > wrote:
-> > > > From: Robert Milkowski <rmilkowski@gmail.com>
-> > > >
-> > > > Currently, each time nfs4_do_fsinfo() is called it will do an
-> > > > implicit
-> > > > NFS4 lease renewal, which is not compliant with the NFS4
-> > > specification.
-> > > > This can result in a lease being expired by an NFS server.
-> > > >
-> > > > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > > > introduced implicit client lease renewal in nfs4_do_fsinfo(),
-> > > > which can result in the NFSv4.0 lease to expire on a server side,
-> > > > and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-> > > >
-> > > > This can easily be reproduced by frequently unmounting a
-> > > > sub-mount, then stat'ing it to get it mounted again, which will
-> > > > delay or even completely prevent client from sending RENEW
-> > > > operations if no other NFS operations are issued. Eventually nfs
-> > > > server will expire client's lease and return an error on file access
-> or next RENEW.
-> > > >
-> > > > This can also happen when a sub-mount is automatically unmounted
-> > > > due to inactivity (after nfs_mountpoint_expiry_timeout), then it
-> > > > is mounted again via stat(). This can result in a short window
-> > > > during which client's lease will expire on a server but not on a
-> client.
-> > > > This specific case was observed on production systems.
-> > > >
-> > > > This patch makes an explicit lease renewal instead of an implicit
-> > > > one, by adding RENEW to a compound operation issued by
-> > > > nfs4_do_fsinfo(), similarly to NFSv4.1 which adds SEQUENCE
-> operation.
-> > > >
-> > > > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > > > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> > >
-> > > Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> > >
-> > >
+On Wed, Jan 22, 2020 at 1:40 PM Schumaker, Anna
+<Anna.Schumaker@netapp.com> wrote:
+>
+> Hi Olga,
+>
+> On Tue, 2020-01-21 at 17:14 -0500, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
 > >
-> > How do we progress it further?
-> 
-> Thanks for following up! I have the patch included in my linux-next branch
-> for the next merge window.
-> 
-> Anna
+> > If nfs42_proc_copy returned a EAGAIN, we need to re-initialize the
+> > memory in case memory allocation fails.
+>
+> I guess I'm not sure how we would hit this. Doesn't kzalloc() return NULL if the
+> memory allocation fails?
 
-Nice. Thanks!
+You are right kzalloc would always return NULL so forget about this patch.
 
-
--- 
-Robert Milkowski
-
-
+>
+> >
+> > Fixes: 66588abe2 ("NFSv4.2 fix kfree in __nfs42_copy_file_range")
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  fs/nfs/nfs4file.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> > index 620de90..9f72efe 100644
+> > --- a/fs/nfs/nfs4file.c
+> > +++ b/fs/nfs/nfs4file.c
+> > @@ -177,8 +177,10 @@ static ssize_t __nfs4_copy_file_range(struct file
+> > *file_in, loff_t pos_in,
+> >       ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
+> >                               nss, cnrs, sync);
+> >  out:
+> > -     if (!nfs42_files_from_same_server(file_in, file_out))
+> > +     if (!nfs42_files_from_same_server(file_in, file_out)) {
+> >               kfree(cn_resp);
+> > +             cn_resp = NULL;
+> > +     }
+> >       if (ret == -EAGAIN)
+> >               goto retry;
+> >       return ret;
