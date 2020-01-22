@@ -2,88 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFBB145B61
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 19:11:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A800145B9A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 19:30:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgAVSLE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Jan 2020 13:11:04 -0500
-Received: from smtpcmd13146.aruba.it ([62.149.156.146]:39816 "EHLO
-        smtpcmd13146.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVSLE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 13:11:04 -0500
-Received: from [192.168.126.128] ([146.241.70.103])
-        by smtpcmd13.ad.aruba.it with bizsmtp
-        id tWB12100L2DhmGq01WB18z; Wed, 22 Jan 2020 19:11:02 +0100
-Subject: Re: [nfs-utils PATCH] locktest: Makefile.am: remove host compiler
- costraint
-To:     Steve Dickson <SteveD@RedHat.com>, linux-nfs@vger.kernel.org
-References: <20200115160806.99991-1-giulio.benetti@benettiengineering.com>
- <ae36c91f-bed4-3839-bdd5-fffdcca9bf40@RedHat.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <92111fa0-a808-84da-19b8-823ad6a26a99@benettiengineering.com>
-Date:   Wed, 22 Jan 2020 19:11:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726081AbgAVSaq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Jan 2020 13:30:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39905 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725836AbgAVSaq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 13:30:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579717844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T0c3KW1Gf/rOv5QLeyTsSgXdAWXcQuFxduG35kz3RGo=;
+        b=bXpu8K1b2sIM+yz6o/NW9PeK5dQvOA7LF7fpPpWj3FU14VKXm5lKUVlQ552nk3dhRNwBrA
+        NSKhVNiKeKVjaiEpUWN58R6/JBo9D59evVeFlgpeIA0KzS2wwRJTfW942k/8N6fsJpS4w0
+        3QFd74GnkozrkfPBCRGzJ1Q7Bod0L+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-AvxvDFfpO4yvKVjxztzWoA-1; Wed, 22 Jan 2020 13:30:26 -0500
+X-MC-Unique: AvxvDFfpO4yvKVjxztzWoA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1A7210054E3;
+        Wed, 22 Jan 2020 18:30:25 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94C0319C5B;
+        Wed, 22 Jan 2020 18:30:25 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Felix Rubio" <felix@kngnt.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: kerberized NFSv4 client reporting operation not permitted when
+ mounting with sec=sys
+Date:   Wed, 22 Jan 2020 13:30:24 -0500
+Message-ID: <724CB91C-76AC-425B-BAE3-04887ED5DE73@redhat.com>
+In-Reply-To: <0593b4af8ca3fafbec59655bbb39d2b4@kngnt.org>
+References: <0593b4af8ca3fafbec59655bbb39d2b4@kngnt.org>
 MIME-Version: 1.0
-In-Reply-To: <ae36c91f-bed4-3839-bdd5-fffdcca9bf40@RedHat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1579716662; bh=XuzferKvhJRQbdzX/ZyncMRiKDGd/asKgcs1DeSTtQU=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=Ykhz+uewnewj7iLuKhz3ojAnvHzO0DsFHlmM2IJq4NsZSNAhaUg1DaiA+gioJHTtb
-         +kl0ZXvOkWcot8lIiRxyaB2pWIJV04hIu4FxFnaLyhGsoZ2qKPDXzJ9cSUAWU0ZORw
-         ZE6SPfctHZ/4yUOMc37i43xA+p8MVn2d2XlzLCFPwzGwMjhh3c7tCTS9u8ZzVn5n/O
-         /V40sJAOxiRQJTt/zgZ3GKKNGx+5gx3+Bde8ZNVelf/EqNyl6HRBvtVqcZgW2eg/oi
-         ogFuh51/YTaGZVRFMVksP5we/7jl4LGTnhwrZlFZt4MAQT6RHRmH8IB2mF/f8RuzjE
-         3PfbziF/+AfHA==
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
+On 22 Jan 2020, at 4:22, Felix Rubio wrote:
 
-On 1/22/20 6:56 PM, Steve Dickson wrote:
-> 
-> 
-> On 1/15/20 11:08 AM, Giulio Benetti wrote:
->> Currently locktest can be built only for host because CC_FOR_BUILD is
->> specified as CC, but this leads to build failure when passing CFLAGS not
->> available on host gcc(i.e. -mlongcalls) and most of all locktest would
->> be available on target systems the same way as rpcgen etc. So remove CC
->> and LIBTOOL assignments.
->>
->> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Committed... (tag: nfs-utils-2-4-3-rc6)
+> Hi everybody,
+>
+> I have a kerberized NFSv4 server that is exporting a mountpoint:
+>
+>     /home 10.0.0.0/8(rw,no_subtree_check,sec=krb5:krb5i:krb5p)
+>
+> if I mount that export with this command on the client, it works as 
+> expected:
+>
+>     /sbin/mount.nfs4 NFS.domain:/home /network/home -o 
+> _netdev,noatime,hard,sec=krb5
+>
+> However, if I modify the export to be
+>
+>     /home 10.0.0.0/8(rw,no_subtree_check,sec=sys:krb5:krb5i:krb5p)
+>
+> and I mount that export with sec=sys, as
+>
+>     /sbin/mount.nfs4 NFS.domain:/home /network/home -o 
+> _netdev,noatime,hard,sec=sys
+>
+> I get the following error:
+>
+>     mount.nfs4: timeout set for Fri Jan 17 14:11:32 2020
+>     mount.nfs4: trying text-based options 
+> 'hard,sec=sys,vers=4.1,addr=10.2.2.9,clientaddr=10.2.0.12'
+>     mount.nfs4: mount(2): Operation not permitted
+>     mount.nfs4: Operation not permitted
+>
+> What might be the reason for this behavior?
 
-I've just setup up a Gentoo to try building nfs-utils, I give a try 
-anyway by now, so we should be sure.
+Hi Felix,
 
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
+I don't know.  Can you get more information?  Try again after `rpcdebug 
+-m
+nfs -s mount`.  That will turn up debugging for messages labeled for 
+mount,
+and the output will be in the kernel log.  There are other facilities 
+there,
+see rpcdebug(8).
 
-> steved.
->> ---
->>   tools/locktest/Makefile.am | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
->> index 3156815d..e8914655 100644
->> --- a/tools/locktest/Makefile.am
->> +++ b/tools/locktest/Makefile.am
->> @@ -1,8 +1,5 @@
->>   ## Process this file with automake to produce Makefile.in
->>   
->> -CC=$(CC_FOR_BUILD)
->> -LIBTOOL = @LIBTOOL@ --tag=CC
->> -
->>   noinst_PROGRAMS = testlk
->>   testlk_SOURCES = testlk.c
->>   testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
->>
-> 
+Another good option is getting a network capture of the mount attempt 
+and
+trying to figure out if the server is returning an error, or the client 
+is
+generating the error.
+
+There are also a lot of "nfs", "nfs4", and "rpc" tracepoints you can 
+enable
+to get more information.
+
+Ben
 
