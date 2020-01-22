@@ -2,100 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45CAE145D1D
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 21:27:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 039C8145E4B
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 22:56:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbgAVU1x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Jan 2020 15:27:53 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:38417 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgAVU1x (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 15:27:53 -0500
-Received: by mail-vk1-f194.google.com with SMTP id d17so324603vke.5
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2020 12:27:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oTgKz3Kzmekn9WvT22VUjbRSY6TIq5egaZrumexuFXM=;
-        b=bj3fX+WpTdcqcaFsuddBKEwPYWXucCAwfaDDodzpztWlA55BfnPtNVg6A8wKMI+rKv
-         hDXAN/U5b6suW00Dflg2gtPbjGYcCoQSs96xPOIvaKVT++0lzKsrtcF4iZoXMCY2lIGX
-         BwoQiCcCpQIPZ0N38cajtQP8lxZ4wCDdYN+M27axcr16U2bj9zhcDOPeZ3KEyhmTvosW
-         LwYRHspyZ7YYhC096tNJ3xi6nl7AIGf6AylxK7Nex3pEJftjD7D/34IxrhI1oAcwKMt0
-         uHpptWyZwN3NNJubbkqWcX34WxIWEyCEtrwJyUGkbtLr5tuXPjGoi80KLuOc0znDjFNm
-         8geA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oTgKz3Kzmekn9WvT22VUjbRSY6TIq5egaZrumexuFXM=;
-        b=nP2+Q2QxFgoS8yjoMPzr7c7cfdfWajrrF3GXrxuIfx3t1pbjcbj6h9sOfCYxJwPMsd
-         KdCgbP/HE6KwRXZcq3iWb0dKU3Uwr/nMLWww+Temfk29agAKWNRd9PiD/tg0zEFsl7y7
-         4kBpKHMnrtDuF0aKBWeprjiV0Aa+yySswG8sWM8XyDytSj+OUfFOkVQYAgClnnDSXNTZ
-         ocU/MUtEgSozQEt2Li8nF1gVv6ayknuy3nVLPDwxatUPnOOL86NJYfsJKM3S/owz039A
-         DsOZY0ANBBdUQExoYgEBLTvC7NiAXVet0cNKWxeyHM2QOEy3ZRG8F3rsGFVBQPocBeOC
-         CREg==
-X-Gm-Message-State: APjAAAXO+vCqwHw5/IjpYOjv2xCR6oNFXuLKZXpHto1q9HWGekXXMiWR
-        zCM3nnbmZXVgIS2YgMyBuSCDNDmuzUgj8A1QlMBuww==
-X-Google-Smtp-Source: APXvYqyCO++SbkxppBuREBi2kLLc18idDq+TMoF2eWvZtXcmO8k5UFaSa+54fH+L2Y4nY/m+nfJRYTp++SWqezV3MgI=
-X-Received: by 2002:ac5:cb0b:: with SMTP id r11mr7908292vkl.72.1579724871720;
- Wed, 22 Jan 2020 12:27:51 -0800 (PST)
+        id S1725911AbgAVV4B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Jan 2020 16:56:01 -0500
+Received: from smtpcmd0641.aruba.it ([62.149.156.41]:60998 "EHLO
+        smtpcmd0641.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVV4B (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 16:56:01 -0500
+Received: from [192.168.126.128] ([146.241.70.103])
+        by smtpcmd06.ad.aruba.it with bizsmtp
+        id tZvy2100m2DhmGq01ZvzGn; Wed, 22 Jan 2020 22:56:00 +0100
+Subject: Re: [nfs-utils PATCH] locktest: Makefile.am: remove host compiler
+ costraint
+To:     Steve Dickson <SteveD@RedHat.com>, linux-nfs@vger.kernel.org
+Cc:     Petr Vorel <petr.vorel@gmail.com>
+References: <20200115160806.99991-1-giulio.benetti@benettiengineering.com>
+ <ae36c91f-bed4-3839-bdd5-fffdcca9bf40@RedHat.com>
+ <92111fa0-a808-84da-19b8-823ad6a26a99@benettiengineering.com>
+ <3857d0ce-ba29-d92e-3e24-9dfc33cfc7f9@benettiengineering.com>
+ <b98b367b-3fbb-99d4-b1af-e7e7f6a1728c@RedHat.com>
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+Message-ID: <cc7f2ae5-99a7-57ca-5913-7df6a85e08ba@benettiengineering.com>
+Date:   Wed, 22 Jan 2020 22:55:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200121221441.29521-1-olga.kornievskaia@gmail.com> <a4b08f6ae6cd6edd62a0d26448d6082c35dd5049.camel@netapp.com>
-In-Reply-To: <a4b08f6ae6cd6edd62a0d26448d6082c35dd5049.camel@netapp.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Wed, 22 Jan 2020 15:27:40 -0500
-Message-ID: <CAN-5tyH1KXWGRfgmAibVJ0kFpHX3FZpGDdhYBFVS7EBAXLu99w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.2 re-initialize cn_resp in case of a retry
-To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b98b367b-3fbb-99d4-b1af-e7e7f6a1728c@RedHat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1579730160; bh=9Aa6DmijMjx/IqtggBDSyC26trFL6MNztt/fTRzr87U=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=b4Y81ToJQx1ghNS3+2NZXnLF6zXjNv4xgUMbMzW37jo53D2RFlkqYAGSBVIjajHR4
+         +Klh/2uvh3cx9LV0RH7b2IT9+vKyiFqcKQ2JbyWLKJzh2tZ9u1sBz38kVvIWfP23+x
+         hYy8NlkFY7WIU3yn3uIhT3hiO9+BUTTEHvzhizRqbjH8M1ix/x2G7+C+qqqb6XMQS0
+         F7vRPn82mCTLl3JJx0mKnFtKuTf+2IM4zRv7ePaK+Jf8WcguLFQQ0r9m5jor1oeBHP
+         AcZKjF8Ofcg4AarllVaBALiOUgje3g9ickktguzzoPF+I8Yp3k0evPnhcxQK8SXWcU
+         mwKG7qo7ND6pA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 1:40 PM Schumaker, Anna
-<Anna.Schumaker@netapp.com> wrote:
->
-> Hi Olga,
->
-> On Tue, 2020-01-21 at 17:14 -0500, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > If nfs42_proc_copy returned a EAGAIN, we need to re-initialize the
-> > memory in case memory allocation fails.
->
-> I guess I'm not sure how we would hit this. Doesn't kzalloc() return NULL if the
-> memory allocation fails?
+On 1/22/20 8:30 PM, Steve Dickson wrote:
+> 
+> 
+> On 1/22/20 1:54 PM, Giulio Benetti wrote:
+>> Hi Steve, Petr,
+>>
+>> On 1/22/20 7:11 PM, Giulio Benetti wrote:
+>>> Hi Steve,
+>>>
+>>> On 1/22/20 6:56 PM, Steve Dickson wrote:
+>>>>
+>>>>
+>>>> On 1/15/20 11:08 AM, Giulio Benetti wrote:
+>>>>> Currently locktest can be built only for host because CC_FOR_BUILD is
+>>>>> specified as CC, but this leads to build failure when passing CFLAGS not
+>>>>> available on host gcc(i.e. -mlongcalls) and most of all locktest would
+>>>>> be available on target systems the same way as rpcgen etc. So remove CC
+>>>>> and LIBTOOL assignments.
+>>>>>
+>>>>> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+>>>> Committed... (tag: nfs-utils-2-4-3-rc6)
+>>>
+>>> I've just setup up a Gentoo to try building nfs-utils, I give a try
+>>> anyway by now, so we should be sure.
+>>
+>> Just tried, it builds correctly on latest Gentoo.
+> Good to hear... Thank you for your effort!!!!
 
-You are right kzalloc would always return NULL so forget about this patch.
+It's a pleasure. Btw, when do you plan to release version 2.4.3?
+I have Buildroot patch ready to be sent.
 
->
-> >
-> > Fixes: 66588abe2 ("NFSv4.2 fix kfree in __nfs42_copy_file_range")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  fs/nfs/nfs4file.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-> > index 620de90..9f72efe 100644
-> > --- a/fs/nfs/nfs4file.c
-> > +++ b/fs/nfs/nfs4file.c
-> > @@ -177,8 +177,10 @@ static ssize_t __nfs4_copy_file_range(struct file
-> > *file_in, loff_t pos_in,
-> >       ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
-> >                               nss, cnrs, sync);
-> >  out:
-> > -     if (!nfs42_files_from_same_server(file_in, file_out))
-> > +     if (!nfs42_files_from_same_server(file_in, file_out)) {
-> >               kfree(cn_resp);
-> > +             cn_resp = NULL;
-> > +     }
-> >       if (ret == -EAGAIN)
-> >               goto retry;
-> >       return ret;
+Kinds regards
+-- 
+Giulio Benetti
+Benetti Engineering sas
