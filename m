@@ -2,57 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25771145C74
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 20:30:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD8A7145CC0
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2020 20:56:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgAVTab (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Jan 2020 14:30:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22983 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725928AbgAVTaa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 14:30:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579721430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PKIvzidHkvLkFli+nfNYyacg+K2SLk8ng+fZqIAg/CA=;
-        b=F4HMt8uD78gkgYA8s1Nf53kXS1leh/zPo/2mYL2IQRs2aDBMPeqtmSWYJeItNSdV2tSE6c
-        JbXnbgJaBdOKDXwbV7JPvdSvgG7A2gzyqJu9B1w8sPAZdgDD5Xm9GM6wiobpxDghDE3j4H
-        90MXHEDBnm2oeClIlWQ9lcBTnLd4aUY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-cpekKac5Pxed3v_yIL82eg-1; Wed, 22 Jan 2020 14:30:26 -0500
-X-MC-Unique: cpekKac5Pxed3v_yIL82eg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 811B610120A0;
-        Wed, 22 Jan 2020 19:30:25 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-118-49.phx2.redhat.com [10.3.118.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26DBF5C28D;
-        Wed, 22 Jan 2020 19:30:25 +0000 (UTC)
-Subject: Re: [nfs-utils PATCH] locktest: Makefile.am: remove host compiler
- costraint
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        linux-nfs@vger.kernel.org
-Cc:     Petr Vorel <petr.vorel@gmail.com>
-References: <20200115160806.99991-1-giulio.benetti@benettiengineering.com>
- <ae36c91f-bed4-3839-bdd5-fffdcca9bf40@RedHat.com>
- <92111fa0-a808-84da-19b8-823ad6a26a99@benettiengineering.com>
- <3857d0ce-ba29-d92e-3e24-9dfc33cfc7f9@benettiengineering.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <b98b367b-3fbb-99d4-b1af-e7e7f6a1728c@RedHat.com>
-Date:   Wed, 22 Jan 2020 14:30:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1725928AbgAVT4A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Jan 2020 14:56:00 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:36691 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVT4A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 14:56:00 -0500
+Received: by mail-wr1-f47.google.com with SMTP id z3so435810wru.3;
+        Wed, 22 Jan 2020 11:55:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
+        b=MuF7EqjBMQ0XogfEQUpg7R3avQdsPvV2ZWUxljYl1l2VyOrXumex84/84DQCajzMHM
+         8TFimuACiPqBNgB6eQYmxW6beTcJ37ane7Y9AgQmMsJAzt9ulNK3Mb8pqAzAETNG8Bgp
+         og1aFAvxCkx1XnxZlf7jRN91kNSEAyHZOKUIRq9TdxY3u59w1X2NCMGMuNksLktgdYnK
+         e0ZOwmAXOq+Ql9juIcYCkfKsoDeK1y5NZP4q0tvtu41HhN3CCltI+ydcLdqDVRO3yqyp
+         jSkdlibmsSkSZtI8CcLMUfpdGdDT+QO5R6DgCrsQfKlOHVy5wy9FU9mq+mLXuvYrSwbL
+         tPfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
+        b=rlYIdkzGDRvQiwjoBHN5mI2NKpOEXk43+eVW2wWDPWF6WD7KUkWivV9eABHgZMXJIN
+         jrMjA9HfUQ8xd92KM4xACbFWK56m9Y5mKCTMy6LWvlS5m3d4rA41aYjVRdNp0Cn1gdQA
+         vimRIIDtuxNAXQq5QeTHvdJfO9N9N6aO4i1o5c/Yv8DgmSh2PpTkjjDDGzL8xlO+1ir4
+         gSj6ByYtQ0nsuH8ZE1DoPi0IwbK6FbK+8owPLJhffmRF5N4plS/giVRhyycZpPuM5lqV
+         qKMA2RihH5N/9R+fsY2ptuilFnY48J3q/YUKKjfZCWSIjqnTcI5w5OEkgGvrWa6ZPbSG
+         q9Lg==
+X-Gm-Message-State: APjAAAUJQ/cghhyG42GTasUA0j443aveiobbfaIWVBK8TKZmUDUnkNPl
+        d4eAWovf8a58cde/LMyfHGel13Rk2Dz8bw==
+X-Google-Smtp-Source: APXvYqxOlEeOMaZIf+53PwNJXSTonqAVv0oP6QDxngI0ciaN9F/jg66fFmjTQrXdX1Oi0ToeOy2KQA==
+X-Received: by 2002:a5d:6ac2:: with SMTP id u2mr12317905wrw.233.1579722958365;
+        Wed, 22 Jan 2020 11:55:58 -0800 (PST)
+Received: from WINDOWSSS5SP16 ([82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id q3sm5226956wmj.38.2020.01.22.11.55.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 11:55:57 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     "'Schumaker, Anna'" <Anna.Schumaker@netapp.com>,
+        <chuck.lever@oracle.com>, <trondmy@hammerspace.com>
+Cc:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <trond.myklebust@hammerspace.com>
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>  <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>       <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+In-Reply-To: <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Wed, 22 Jan 2020 19:55:57 -0000
+Message-ID: <075401d5d15d$f6d0cb20$e4726160$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3857d0ce-ba29-d92e-3e24-9dfc33cfc7f9@benettiengineering.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-gb
+Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWAfB5jHQAou/4BajVBKRQ
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -60,30 +70,83 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 1/22/20 1:54 PM, Giulio Benetti wrote:
-> Hi Steve, Petr,
+> -----Original Message-----
+> From: Schumaker, Anna <Anna.Schumaker@netapp.com>
+> Sent: 22 January 2020 19:11
+> To: rmilkowski@gmail.com; chuck.lever@oracle.com; trondmy@hammerspace.com
+> Cc: linux-nfs@vger.kernel.org; linux-kernel@vger.kernel.org;
+> trond.myklebust@hammerspace.com
+> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
+> lease renewals
 > 
-> On 1/22/20 7:11 PM, Giulio Benetti wrote:
->> Hi Steve,
->>
->> On 1/22/20 6:56 PM, Steve Dickson wrote:
->>>
->>>
->>> On 1/15/20 11:08 AM, Giulio Benetti wrote:
->>>> Currently locktest can be built only for host because CC_FOR_BUILD is
->>>> specified as CC, but this leads to build failure when passing CFLAGS not
->>>> available on host gcc(i.e. -mlongcalls) and most of all locktest would
->>>> be available on target systems the same way as rpcgen etc. So remove CC
->>>> and LIBTOOL assignments.
->>>>
->>>> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
->>> Committed... (tag: nfs-utils-2-4-3-rc6)
->>
->> I've just setup up a Gentoo to try building nfs-utils, I give a try
->> anyway by now, so we should be sure.
+> Hi Robert,
 > 
-> Just tried, it builds correctly on latest Gentoo.
-Good to hear... Thank you for your effort!!!!
+> On Mon, 2020-01-20 at 17:55 +0000, Robert Milkowski wrote:
+> > > -----Original Message-----
+> > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > Sent: 30 December 2019 15:37
+> > > To: Robert Milkowski <rmilkowski@gmail.com>
+> > > Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond
+> > > Myklebust <trond.myklebust@hammerspace.com>; Anna Schumaker
+> > > <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do
+> > > implicit lease renewals
+> > >
+> > >
+> > >
+> > > > On Dec 30, 2019, at 10:20 AM, Robert Milkowski
+> > > > <rmilkowski@gmail.com>
+> > > wrote:
+> > > > From: Robert Milkowski <rmilkowski@gmail.com>
+> > > >
+> > > > Currently, each time nfs4_do_fsinfo() is called it will do an
+> > > > implicit
+> > > > NFS4 lease renewal, which is not compliant with the NFS4
+> > > specification.
+> > > > This can result in a lease being expired by an NFS server.
+> > > >
+> > > > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > > > introduced implicit client lease renewal in nfs4_do_fsinfo(),
+> > > > which can result in the NFSv4.0 lease to expire on a server side,
+> > > > and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+> > > >
+> > > > This can easily be reproduced by frequently unmounting a
+> > > > sub-mount, then stat'ing it to get it mounted again, which will
+> > > > delay or even completely prevent client from sending RENEW
+> > > > operations if no other NFS operations are issued. Eventually nfs
+> > > > server will expire client's lease and return an error on file access
+> or next RENEW.
+> > > >
+> > > > This can also happen when a sub-mount is automatically unmounted
+> > > > due to inactivity (after nfs_mountpoint_expiry_timeout), then it
+> > > > is mounted again via stat(). This can result in a short window
+> > > > during which client's lease will expire on a server but not on a
+> client.
+> > > > This specific case was observed on production systems.
+> > > >
+> > > > This patch makes an explicit lease renewal instead of an implicit
+> > > > one, by adding RENEW to a compound operation issued by
+> > > > nfs4_do_fsinfo(), similarly to NFSv4.1 which adds SEQUENCE
+> operation.
+> > > >
+> > > > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > > > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> > >
+> > > Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> > >
+> > >
+> >
+> > How do we progress it further?
+> 
+> Thanks for following up! I have the patch included in my linux-next branch
+> for the next merge window.
+> 
+> Anna
 
-steved.
+Nice. Thanks!
+
+
+-- 
+Robert Milkowski
+
 
