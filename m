@@ -2,174 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FC14145FE2
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2020 01:25:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E1D814608A
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2020 02:45:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725911AbgAWAZD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Jan 2020 19:25:03 -0500
-Received: from mail-eopbgr700136.outbound.protection.outlook.com ([40.107.70.136]:51808
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726004AbgAWAZD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 22 Jan 2020 19:25:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lJvgYr7/dbii6RQb5wwUmpHH+gZbEOSNyf67JJRdXdCXoGSo8mP+8AactsL7KemmKrbgF5TAO9981u2hIL1o+IqJ9SAs+aO4s1Wp+kcbCX1bIx1lQeZbGutz/x0U2htwYH6reYOT4wKvgzFZHlLJN/TTW3MwCNNMDXZi36F4uBHu6BuzXDZWg7zzo9TQiJsjpQlx/TLY24k1sZNcaAinjBLCXaifi8L1X8M1Sv+VfxedpzKSZgimk0UFpDq+j7P5gcaHDal7qU0D7dirXstgLsSmM9z2Eh2f4WN1v9LRbnZ8uzoywzeSkMaSp8TmxI2fTDtMqMSA1X7l1VeANVV64g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hDuq1M9kiPg3qeiUD6WQLnfzAIjYiuiMYqMTSozhlk4=;
- b=lprA6qPTrNJ0vj45REMfaLoU0TsJ6m+uo3DHBGtwbqJlpyTPNHNQLEzHy1e82+IkZs2oCQu8dsFGWRzTv37HiZj6LfJzW/XU1TrBGepGyUvJ2/laSzNZB/I9qbTUzwSHr84/Q5ysQvLK724zidlYmb/NI9mbI2S4D839jCBnamFDd5x3iwWp2g0QNQsaoUdZ5gHW7eFpge4swjKMVLGq+riWRE4aKtxddWoAB8c7msbqblUyE0QrNbMNbOz2WiJdfPuCvkIxPBW4Z4JPE690/0oakJdtoJiBLXAaRSszo4z1pQXE3Q+djEdNzXpOEpwt1bNngzjehIlklxYOr5OuYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hDuq1M9kiPg3qeiUD6WQLnfzAIjYiuiMYqMTSozhlk4=;
- b=LVIYF0/dLj0xmSDlcuzYJNR3uTM4xQd8Y/TvEMt5Xe/EmOUKZIX1YH6ZtDj0fbAN03uA/VK91gPRVpGe9LqWympSwHHScviS1BMvAdgQSc7CyTRbppSJ+2AJGgqnyvUqh2KAVZcVY7RACP35FtnLh1m4PkIHAsnm3pVBfvW1EXk=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2188.namprd13.prod.outlook.com (10.174.186.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.17; Thu, 23 Jan 2020 00:23:21 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
- 00:23:20 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "SteveD@RedHat.com" <SteveD@RedHat.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
-Thread-Topic: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
-Thread-Index: AQHVzKBvmJSkTy1U+UqmLnQQjeZOL6fztT6AgAO4IYA=
-Date:   Thu, 23 Jan 2020 00:23:20 +0000
-Message-ID: <bd7f5ace305738f37b657fe86761339956bf66c3.camel@hammerspace.com>
-References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
-         <81b8fd1b-6882-5edf-fcab-1a7d4c9d4d47@RedHat.com>
-In-Reply-To: <81b8fd1b-6882-5edf-fcab-1a7d4c9d4d47@RedHat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [63.235.104.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04fd186b-2d45-466d-4e2e-08d79f9a73a0
-x-ms-traffictypediagnostic: DM5PR1301MB2188:
-x-microsoft-antispam-prvs: <DM5PR1301MB2188960927E82A7A77BD5AC0B80F0@DM5PR1301MB2188.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(39830400003)(396003)(376002)(136003)(199004)(189003)(81156014)(8676002)(76116006)(6486002)(91956017)(81166006)(2616005)(66556008)(64756008)(66446008)(66476007)(8936002)(86362001)(66946007)(478600001)(4326008)(53546011)(26005)(110136005)(6512007)(6506007)(71200400001)(316002)(5660300002)(36756003)(2906002)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2188;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2VW/pD5N45DBnOAo8RTxrksZnAK0q+izKsYGBpoOhv/xnnR3fqxW4nIrW89VhCihQUo0wV0rGvFwkFG2Y3G/ez8nczrF/MHt8vyjijDLtUTaL2d/hZoIilLdH7+IzUWMpPzefHyRtSWngrESzvFEqOwipDMJn4FJRCmWBWrcwAFd4zGTmchrlaQ/wjj3wPXmie3agEi4A5yEsU6iY2jYDgir/jvsmDN90tVm1rHF0oVx59/T3e2ulN6W8lrxvDZqAejVlBNAqU1MOX6C7ZzOdusJUtR4c082AyosbYJe50gM2aVgncj8xU1WTPqmpCEqhdwGHlY7MTDg2tmV9cU4AV5btlNDSHcn4nmLs3DwL00Zg5r3QLV4HJnTPWfvqR5teYmLZ7hAtevvqkkiviR7w84aJz53x3cBzT+DHV6NP9rIeUaXQnEmsZE5psnplQTe
-x-ms-exchange-antispam-messagedata: iZMDMZuT/lIh2wYPSf10pPES6cp644BCjWQny8++NKDM9IWyiu7iFNasGQVyI4IOLO9DfNc/9pwRCyPmL37G7xJFsbsUyaGhWB+af7AGauYtl8l0nr+/Xp9+lnonwXOCpE5NeIDzq999Y55wnur4+A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2868A9CF0CB0E14B9697AA7D1917294C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725933AbgAWBpt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Jan 2020 20:45:49 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35842 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWBpt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Jan 2020 20:45:49 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N1gwx0122681;
+        Thu, 23 Jan 2020 01:45:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=/nezUOM6YzB9RZ8fZQbuDG+lEkhhFVDIxYy6fgGWYKU=;
+ b=OY84nF9ffuv7P05TSIDkfOKz7PQS1IdVl0KIbm/+L3pvgu3M5Bpa8//f+d1D/yOwBq5z
+ glOR3zqautBPUs9Z0CrpOXRgzBltoaKfDTc6C0qirm+OeRVbYL46t3lM4rIeRCKr9yRZ
+ 3TAA92Fj2gVd3PrW5FydsAhAs+6+zRudVgQoUTlpI5N/vQvJyPrSnG/E9fDu2a77JW3o
+ IXfID4dlNPVMMzNBBt3vxhqnHBSr6bdI/tMF28HNfgKhP9pfs5LDiLyAvnz3HGYL0Q5t
+ 6JZZp+QVrYuRasVoZPPCYOW0ynkmOXj5DkEgLnPwAjT9nEA7cHtMKUtCrKhKlrjuDxw6 GQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xkseuqhkk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 01:45:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N1iC16160753;
+        Thu, 23 Jan 2020 01:45:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2xpt6n4pbe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jan 2020 01:45:42 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id 00N1jgVu164128;
+        Thu, 23 Jan 2020 01:45:42 GMT
+Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3020.oracle.com with ESMTP id 2xpt6n4pas-1;
+        Thu, 23 Jan 2020 01:45:42 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH v2] nfs: optimise readdir cache page invalidation
+Date:   Wed, 22 Jan 2020 20:45:39 -0500
+Message-Id: <20200123014539.13991-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04fd186b-2d45-466d-4e2e-08d79f9a73a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 00:23:20.8950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OFg3ZzW7A/P7wFySGJHDeB5+8PCPAtp3BfwGtvwRL196n+3hhYROd65ITY7P4JdcEuY7nQRNHKXQCBC4EDEt+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2188
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230012
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTIwIGF0IDEwOjM1IC0wNTAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0K
-PiBIZWxsbywNCj4gDQo+IE9uIDEvMTYvMjAgMjowOCBQTSwgT2xnYSBLb3JuaWV2c2thaWEgd3Jv
-dGU6DQo+ID4gRnJvbTogT2xnYSBLb3JuaWV2c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+DQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3JuaWV2c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+
-DQo+ID4gLS0tDQo+ID4gIGZzL25mcy9uZnM0Y2xpZW50LmMgfCAyICstDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1n
-aXQgYS9mcy9uZnMvbmZzNGNsaWVudC5jIGIvZnMvbmZzL25mczRjbGllbnQuYw0KPiA+IGluZGV4
-IDQ2MGQ2MjUuLjRkZjNmYjAgMTAwNjQ0DQo+ID4gLS0tIGEvZnMvbmZzL25mczRjbGllbnQuYw0K
-PiA+ICsrKyBiL2ZzL25mcy9uZnM0Y2xpZW50LmMNCj4gPiBAQCAtODgxLDcgKzg4MSw3IEBAIHN0
-YXRpYyBpbnQgbmZzNF9zZXRfY2xpZW50KHN0cnVjdCBuZnNfc2VydmVyDQo+ID4gKnNlcnZlciwN
-Cj4gPiAgDQo+ID4gIAlpZiAobWlub3J2ZXJzaW9uID09IDApDQo+ID4gIAkJX19zZXRfYml0KE5G
-U19DU19SRVVTRVBPUlQsICZjbF9pbml0LmluaXRfZmxhZ3MpOw0KPiA+IC0JZWxzZSBpZiAocHJv
-dG8gPT0gWFBSVF9UUkFOU1BPUlRfVENQKQ0KPiA+ICsJaWYgKHByb3RvID09IFhQUlRfVFJBTlNQ
-T1JUX1RDUCkNCj4gPiAgCQljbF9pbml0Lm5jb25uZWN0ID0gbmNvbm5lY3Q7DQo+ID4gIA0KPiA+
-ICAJaWYgKHNlcnZlci0+ZmxhZ3MgJiBORlNfTU9VTlRfTk9SRVNWUE9SVCkNCj4gPiANCj4gVGVz
-dGVkLWJ5OiBTdGV2ZSBEaWNrc29uIDxzdGV2ZWRAcmVkaGF0LmNvbT4NCj4gDQo+IFdpdGggdGhp
-cyBwYXRjaCB2NC4wIG1vdW50cyBhY3QganVzdCBsaWtlIHY0LjEvdjQuMiBtb3VudHMNCj4gQnV0
-IGlzIHRoYXQgYSBnb29kIHRoaW5nLiA6LSkgIA0KPiANCj4gSGVyZSBpcyB3aGF0IEkndmUgZm91
-bmQgaW4gbXkgdGVzdGluZy4uLg0KPiANCj4gbW91bnQgLW9uY29ubmVjdD0xMiAxNzIuMzEuMS41
-NDovaG9tZS90bXAgL21udC90bXANCj4gDQo+IFdpbGwgY3JlYXRlIDEyIFRDUCBjb25uZWN0aW9u
-cyBhbmQgbWFpbnRhaW4gdGhvc2UgMTIgDQo+IGNvbm5lY3Rpb25zIHVudGlsIHRoZSB1bW91bnQg
-aGFwcGVucy4gQnkgbWFpbnRhaW4gSSBtZWFuIA0KPiBpZiB0aGUgY29ubmVjdGlvbiB0aW1lcyBv
-dXQsIGl0IGlzIHJlY29ubmVjdGVkIA0KPiB0byBtYWludGFpbiB0aGUgMTIgY29ubmVjdGlvbnMg
-DQo+IA0KPiAjIG1vdW50IC1vbmNvbm5lY3Q9MTIgMTcyLjMxLjEuNTQ6L2hvbWUvdG1wIC9tbnQv
-dG1wDQo+ICMgbmV0c3RhdCAtYW4gfCBncmVwIDE3Mi4zMS4xLjU0IHwgd2MgLWwNCj4gMTINCj4g
-IyBuZXRzdGF0IC1hbiB8IGdyZXAgMTcyLjMxLjEuNTQgICAgICAgIA0KPiB0Y3AgICAgICAgIDAg
-ICAgICAwDQo+IDE3Mi4zMS4xLjI0OjkwMSAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAg
-IEVTVEFCTElTSEVEDQo+IHRjcCAgICAgICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6NjY3ICAg
-ICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4gdGNwICAgICAgICAw
-ICAgICAgMA0KPiAxNzIuMzEuMS4yNDo3NDYgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAg
-ICBFU1RBQkxJU0hFRA0KPiB0Y3AgICAgICAgIDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0OjY3MiAg
-ICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+IHRjcCAgICAgICAg
-MCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6ODMyICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAg
-ICAgRVNUQUJMSVNIRUQNCj4gdGNwICAgICAgICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo4OTUg
-ICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBFU1RBQkxJU0hFRA0KPiB0Y3AgICAgICAg
-IDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0OjY3MyAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAg
-ICAgIEVTVEFCTElTSEVEDQo+IHRjcCAgICAgICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6NzMy
-ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4gdGNwICAgICAg
-ICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo3OTUgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAg
-ICAgICBFU1RBQkxJU0hFRA0KPiB0Y3AgICAgICAgIDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0Ojkx
-OCAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+IHRjcCAgICAg
-ICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6Njc0ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAg
-ICAgICAgRVNUQUJMSVNIRUQNCj4gdGNwICAgICAgICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo5
-NTMgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBFU1RBQkxJU0hFRA0KPiANCj4gIyB1
-bW91bnQgL21udC90bXANCj4gIyBuZXRzdGF0IC1hbiB8IGdyZXAgMTcyLjMxLjEuNTQgfCB3YyAt
-bA0KPiAxMg0KPiAjIG5ldHN0YXQgLWFuIHwgZ3JlcCAxNzIuMzEuMS41NA0KPiB0Y3AgICAgICAg
-IDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0OjkwMSAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAg
-ICAgIFRJTUVfV0FJVCAgDQo+IHRjcCAgICAgICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6NjY3
-ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gdGNwICAgICAg
-ICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo3NDYgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAg
-ICAgICBUSU1FX1dBSVQgIA0KPiB0Y3AgICAgICAgIDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0OjY3
-MiAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAgIFRJTUVfV0FJVCAgDQo+IHRjcCAgICAg
-ICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6ODMyICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAg
-ICAgICAgVElNRV9XQUlUICANCj4gdGNwICAgICAgICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo4
-OTUgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQgIA0KPiB0Y3AgICAg
-ICAgIDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0OjY3MyAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkg
-ICAgICAgIFRJTUVfV0FJVCAgDQo+IHRjcCAgICAgICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6
-NzMyICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gdGNwICAg
-ICAgICAwICAgICAgMA0KPiAxNzIuMzEuMS4yNDo3OTUgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5
-ICAgICAgICBUSU1FX1dBSVQgIA0KPiB0Y3AgICAgICAgIDAgICAgICAwDQo+IDE3Mi4zMS4xLjI0
-OjkxOCAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAgIFRJTUVfV0FJVCAgDQo+IHRjcCAg
-ICAgICAgMCAgICAgIDANCj4gMTcyLjMxLjEuMjQ6Njc0ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0
-OSAgICAgICAgVElNRV9XQUlUICANCj4gdGNwICAgICAgICAwICAgICAgMA0KPiAxNzIuMzEuMS4y
-NDo5NTMgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQgDQo+IA0KPiBJ
-cyB0aGlzIHRoZSBleHBlY3RlZCBiZWhhdmlvcj8gDQo+IA0KPiBJZiBzbyBJIGhhdmUgYSBmZXcg
-Y29uY2VybnMuLi4NCj4gDQo+ICogVGhlIGNvbm5lY3Rpb25zIHdhbGsgYWxsIG92ZXIgdGhlIC9l
-dGMvc2VydmljZXMgbmFtZXNwYWNlLiBNZWFuaW5nDQo+IHVzaW5nIHBvcnRzIHRoYXQgYXJlIHJl
-c2VydmVkIGZvciByZWdpc3RlcmVkIHNlcnZpY2VzLCBzb21ldGhpbmcNCj4gd2UndmUgdHJpZWQg
-dG8gYXZvaWQgaW4gdXNlcmxhbmQgYnkgbm90IGJpbmRpbmcgdG8gcHJpdmlsZWdlIHBvcnRzDQo+
-IGFuZA0KPiB1c2Ugb2YgYmFja2xpc3QgcG9ydHMgdmlhIC9ldGMvYmluZHJlc3Zwb3J0LmJsYWNr
-bGlzdA0KPiANCj4gKiBXaGVuIHRoZSB1bm1vdW50IGhhcHBlbnMsIGFsbCB0aG9zZSBjb25uZWN0
-aW9ucyBnbyBpbnRvIFRJTUVfV0FJVA0KPiBvbiANCj4gcHJpdmlsZWdlIHBvcnRzIGFuZCB0aGVy
-ZSBhcmUgb25seSBzbyBtYW55IG9mIHRob3NlLiBOb3QgZ29vZCBkdXJpbmcNCj4gbW91bnQgDQo+
-IHN0b3JtcyAod2hlbiBhIHNlcnZlciByZWJvb3RzIGFuZCB0aG91c2FuZCBvZiBob21lIGRpcnMg
-YXJlDQo+IHJlbW91bnRlZCkuDQo+IA0KPiAqIE5vIG1hbiBwYWdlIGRlc2NyaWJpbmcgdGhlIG5l
-dyBmZWF0dXJlLg0KPiANCj4gSSByZWFsaXplIHRoZXJlIGlzIG5vdCBtdWNoIHdlIGNhbiBkbyBh
-Ym91dCBzb21lIG9mIHRoZXNlDQo+IChha2EgdW1vdW50PT0+VElNRV9XQUlUKSBidXQgSSB0aGlu
-ayB3ZSBuZWVkIHRvIGRvY3VtZW50IA0KPiB3aGF0IHdlIGFyZSBkb2luZyB0byBwZW9wbGUncyBj
-b25uZWN0aW9uIG5hbWVzcGFjZSB3aGVuIA0KPiB0aGV5IHVzZSB0aGlzIGZlYXR1cmUuIA0KDQpJ
-J20gbm90IHN1cmUgdGhhdCBJIHVuZGVyc3RhbmQgdGhlIGNvbmNlcm4uIFRoZSBjb25uZWN0aW9u
-cyBhcmUgbGltaXRlZA0KdG8gYSBzcGVjaWZpYyB3aW5kb3cgb2YgcG9ydHMgYnkgdGhlIG1pbl9y
-ZXN2cG9ydC9tYXhfcmVzdnBvcnQgc3VucnBjDQptb2R1bGUgcGFyYW1ldGVycyBqdXN0IGFzIHRo
-ZXkgd2VyZSBiZWZvcmUgd2UgYWRkZWQgJ25jb25uZWN0Jy4gTm90aGluZw0KaGFzIGNoYW5nZWQg
-aW4gdGhlIHdheSB3ZSBjaG9vc2UgcG9ydHMuLi4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxp
-bnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBo
-YW1tZXJzcGFjZS5jb20NCg0KDQo=
+When the directory is large and it's being modified by one client
+while another client is doing the 'ls -l' on the same directory then
+the cache page invalidation from nfs_force_use_readdirplus causes
+the reading client to keep restarting READDIRPLUS from cookie 0
+which causes the 'ls -l' to take a very long time to complete,
+possibly never completing.
+
+Currently when nfs_force_use_readdirplus is called to switch from
+READDIR to READDIRPLUS, it invalidates all the cached pages of the
+directory. This cache page invalidation causes the next nfs_readdir
+to re-read the directory content from cookie 0.
+
+This patch is to optimise the cache invalidation in
+nfs_force_use_readdirplus by only truncating the cached pages from
+last page index accessed to the end the file. It also marks the
+inode to delay invalidating all the cached page of the directory
+until the next initial nfs_readdir of the next 'ls' instance.
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+
+---
+ fs/nfs/dir.c           | 13 ++++++++++++-
+ include/linux/nfs_fs.h |  3 +++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index e180033e35cf..16e3208c27d6 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -437,7 +437,9 @@ void nfs_force_use_readdirplus(struct inode *dir)
+ 	if (nfs_server_capable(dir, NFS_CAP_READDIRPLUS) &&
+ 	    !list_empty(&nfsi->open_files)) {
+ 		set_bit(NFS_INO_ADVISE_RDPLUS, &nfsi->flags);
+-		invalidate_mapping_pages(dir->i_mapping, 0, -1);
++		nfs_zap_mapping(dir, dir->i_mapping);
++		invalidate_mapping_pages(dir->i_mapping,
++			nfsi->page_index + 1, -1);
+ 	}
+ }
+ 
+@@ -709,6 +711,9 @@ struct page *get_cache_page(nfs_readdir_descriptor_t *desc)
+ int find_cache_page(nfs_readdir_descriptor_t *desc)
+ {
+ 	int res;
++	struct inode *inode;
++	struct nfs_inode *nfsi;
++	struct dentry *dentry;
+ 
+ 	desc->page = get_cache_page(desc);
+ 	if (IS_ERR(desc->page))
+@@ -717,6 +722,12 @@ int find_cache_page(nfs_readdir_descriptor_t *desc)
+ 	res = nfs_readdir_search_array(desc);
+ 	if (res != 0)
+ 		cache_page_release(desc);
++
++	dentry = file_dentry(desc->file);
++	inode = d_inode(dentry);
++	nfsi = NFS_I(inode);
++	nfsi->page_index = desc->page_index;
++
+ 	return res;
+ }
+ 
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index c06b1fd130f3..a5f8f03ecd59 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -168,6 +168,9 @@ struct nfs_inode {
+ 	struct rw_semaphore	rmdir_sem;
+ 	struct mutex		commit_mutex;
+ 
++	/* track last access to cached pages */
++	unsigned long		page_index;
++
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	struct nfs4_cached_acl	*nfs4_acl;
+         /* NFSv4 state */
+-- 
+1.8.3.1
+
