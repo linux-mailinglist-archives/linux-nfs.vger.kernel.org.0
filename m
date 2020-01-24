@@ -2,127 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B70831475E9
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2020 02:10:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 638D4147E89
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2020 11:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgAXBK0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Jan 2020 20:10:26 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57596 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729471AbgAXBK0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jan 2020 20:10:26 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O13EgG031004;
-        Fri, 24 Jan 2020 01:10:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=x1mzMLcC+Uu2MaYf4VG/oRc7oCropfa+Q2fhaSfdPyk=;
- b=r75BjgCeDSnnq6sJFWEwPaPpR0VEDT82SwrrkoErDxcUFhrXiqqBZCjvHGaysGE9mJmW
- 3Yc0WX0eLYmm6KkF91MLtgKVri19w8nx/4RJPind105dWwSKRgCaheBqs41rO488L5M3
- X/UZbESe5BEHJ6aKxIKzr5Jbk2Re7n3StcVT5hIpg+xGgapAR0oOvV9wh4qMV94PH0tl
- njkoezyjaGdKeYIzKBa+4O4/0Cg30kgmuyG2AZSRetLxm10nkZCL0XwIDlpGGbX8CAN7
- kwRu9gE3yWYTociMhovRIf+QpG++3Lmd2OCzYFmTGdHAwyNvnmIokGJPRSeM6YdgAgtL XA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xksyqp1h5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 01:10:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O13JrY087737;
-        Fri, 24 Jan 2020 01:10:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xqnrs31n1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 01:10:22 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00O1ALhd020929;
-        Fri, 24 Jan 2020 01:10:22 GMT
-Received: from localhost (/10.145.179.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 17:10:21 -0800
-Date:   Thu, 23 Jan 2020 17:10:19 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: A NFS, xfs, reflink and rmapbt story
-Message-ID: <20200124011019.GA8247@magnolia>
-References: <20200123083217.flkl6tkyr4b7zwuk@xzhoux.usersys.redhat.com>
+        id S2389081AbgAXKMB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Jan 2020 05:12:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29410 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387509AbgAXKMA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jan 2020 05:12:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579860720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pMjOSZK58N7M6Rhz2Q0zLJbK9wOAIHwivc/jQo31Ecg=;
+        b=ejlzaLX68r6XqyXu1e3sjK36xew6tEE7/kN4FUasqClhzhOjjRW1UxCAlfODLG+9qIh7hZ
+        z/WKEplZWVq8K0XTQsHmrBnmdJAopeOG6m73olus4+bL4W1PpZ4olRck1nPVbgdpRw40vX
+        AeRXrVU0wmGbbs/VrujK1Egtdw7c7ZE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42-8SFVgEeCM9OIiyyyXZdlaQ-1; Fri, 24 Jan 2020 05:11:58 -0500
+X-MC-Unique: 8SFVgEeCM9OIiyyyXZdlaQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E13A18A8C86;
+        Fri, 24 Jan 2020 10:11:57 +0000 (UTC)
+Received: from idlethread.redhat.com (ovpn-116-72.ams2.redhat.com [10.36.116.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1F99A4B60;
+        Fri, 24 Jan 2020 10:11:55 +0000 (UTC)
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+To:     bfields@fieldses.org
+Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] sunrpc: expiry_time should be seconds not timeval
+Date:   Fri, 24 Jan 2020 11:11:54 +0100
+Message-Id: <20200124101154.22760-1-rbergant@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123083217.flkl6tkyr4b7zwuk@xzhoux.usersys.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001240006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001240006
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:32:17PM +0800, Murphy Zhou wrote:
-> Hi,
-> 
-> Deleting the files left by generic/175 costs too much time when testing
-> on NFSv4.2 exporting xfs with rmapbt=1.
-> 
-> "./check -nfs generic/175 generic/176" should reproduce it.
-> 
-> My test bed is a 16c8G vm.
+When upcalling gssproxy, cache_head.expiry_time is set as a
+timeval, not seconds since boot. As such, RPC cache expiry
+logic will not clean expired objects created under
+auth.rpcsec.context cache.
 
-What kind of storage?
+This has proven to cause kernel memory leaks on field.
 
-> NFSv4.2  rmapbt=1   24h+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+---
+ net/sunrpc/auth_gss/svcauth_gss.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-<URK> Wow.  I wonder what about NFS makes us so slow now?  Synchronous
-transactions on the inactivation?  (speculates wildly at the end of the
-workday)
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
+uth_gss.c
+index 8be2f209982b..725cf5b5ae40 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1211,6 +1211,7 @@ static int gss_proxy_save_rsc(struct cache_detail *=
+cd,
+ 		dprintk("RPC:       No creds found!\n");
+ 		goto out;
+ 	} else {
++		struct timespec boot;
+=20
+ 		/* steal creds */
+ 		rsci.cred =3D ud->creds;
+@@ -1231,6 +1232,9 @@ static int gss_proxy_save_rsc(struct cache_detail *=
+cd,
+ 						&expiry, GFP_KERNEL);
+ 		if (status)
+ 			goto out;
++
++		getboottime(&boot);
++		expiry -=3D boot.tv_sec;
+ 	}
+=20
+ 	rsci.h.expiry_time =3D expiry;
+--=20
+2.21.0
 
-I'll have a look in the morning.  It might take me a while to remember
-how to set up NFS42 :)
-
---D
-
-> NFSv4.2  rmapbt=0   1h-2h
-> xfs      rmapbt=1   10m+
-> 
-> At first I thought it hung, turns out it was just slow when deleting
-> 2 massive reflined files.
-> 
-> It's reproducible using latest Linus tree, and Darrick's deferred-inactivation
-> branch. Run latest for-next branch xfsprogs.
-> 
-> I'm not sure it's something wrong, just sharing with you guys. I don't
-> remember I have identified this as a regression. It should be there for
-> a long time.
-> 
-> Sending to xfs and nfs because it looks like all related. :)
-> 
-> This almost gets lost in my list. Not much information recorded, some
-> trace-cmd outputs for your info. It's easy to reproduce. If it's
-> interesting to you and need any info, feel free to ask.
-> 
-> Thanks,
-> 
-> 
-> 7)   0.279 us    |  xfs_btree_get_block [xfs]();
-> 7)   0.303 us    |  xfs_btree_rec_offset [xfs]();
-> 7)   0.301 us    |  xfs_rmapbt_init_high_key_from_rec [xfs]();
-> 7)   0.356 us    |  xfs_rmapbt_diff_two_keys [xfs]();
-> 7)   0.305 us    |  xfs_rmapbt_init_key_from_rec [xfs]();
-> 7)   0.306 us    |  xfs_rmapbt_diff_two_keys [xfs]();
-> 7)               |  xfs_rmap_query_range_helper [xfs]() {
-> 7)   0.279 us    |    xfs_rmap_btrec_to_irec [xfs]();
-> 7)               |    xfs_rmap_lookup_le_range_helper [xfs]() {
-> 1)   0.786 us    |  _raw_spin_lock_irqsave();
-> 7)               |      /* xfs_rmap_lookup_le_range_candidate: dev 8:34 agno 2 agbno 6416 len 256 owner 67160161 offset 99284480 flags 0x0 */
-> 7)   0.506 us    |    }
-> 7)   1.680 us    |  }
