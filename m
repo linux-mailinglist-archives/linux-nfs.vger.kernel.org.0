@@ -2,199 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C5314869A
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2020 15:13:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE755148A3E
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2020 15:46:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbgAXONP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Jan 2020 09:13:15 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44264 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387846AbgAXONP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jan 2020 09:13:15 -0500
-Received: by mail-il1-f196.google.com with SMTP id f16so1683127ilk.11;
-        Fri, 24 Jan 2020 06:13:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OB10ZZUnLvANYACtUQc8/4YA+sn7LlgmSN6HKCiGQ6M=;
-        b=Pn+I8Xq41BYpBqVdsWmiOhei6UG0NvwX+wV2OFNsVsyMuB3YoeEDczR3EtfgvFrgHo
-         82PX+tr4KXLYn6wE/eOKuKCMiDULa2ftJQSLT2y7mHX2XEjzMS6uqnMpJc9fd6z4fYne
-         aMLcMphFk0PRtvozTEw97qdCG6xHYqYfCsxmwbdpFYuxaqTRVNAhzex5U2pwqkJOzNAC
-         8WNcd2KVY0/1wDPVtn91+VS9ZhZooG8rRyytT5j2Tx/eqFz+wjFxIT0EKLxZgFjqg4LQ
-         meIYniDCY/vS8fPt+nOGL4mLptPmUEREnKRCtf8UL/tXWTV43TY1lAJN4vDJzzoZBdip
-         RJ0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OB10ZZUnLvANYACtUQc8/4YA+sn7LlgmSN6HKCiGQ6M=;
-        b=TVnknyLgwoohV/XncYFyKPomYi8Jnd+lTPDx96rwCx99Tyfle4wtGwSwCCa0v2qhWB
-         33yh6lav8D/CNINqIlX1CJNRGzrUi2Gy8LlKcSCIXRrEY0RNR0PqtWZbgaHe5LJzzbp4
-         lI+i6ao5hIg0BQBNI1aD6e+vLf+ESQne6lfMhrdi13nWm6tJQMatcA9vE/b1kxWBbkza
-         MwnfaB62iK7PwUz0Sdm2lUGmzJiwsG5mtVMfftWrY+4iBJzkYdxKb+JUU0VoMxacO0Hg
-         9K9kkSzoPc8bF9x33w3Aeq9awJPYMf0pm2tmdSOzWAPJk48HSKftnjeANke+aelvG6jk
-         +jlg==
-X-Gm-Message-State: APjAAAW/Kk5YCUgiWw84dPC2Fu21aJTT8K47iYtZx9AqOokYePUxnM+m
-        fMk1gQfqq10JfCuCGxBfnjrlbEEg9IOCcXQZj8M=
-X-Google-Smtp-Source: APXvYqwOn4X0Jn8qWFnH0A345GGiE2LkBFBhptKaDSs2hdLlqosjpR1c25ghcbRjL8VlMHofmAokyAT8Ax4oyDrSLKQ=
-X-Received: by 2002:a92:9f1a:: with SMTP id u26mr3391684ili.72.1579875194363;
- Fri, 24 Jan 2020 06:13:14 -0800 (PST)
+        id S2388026AbgAXOqL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Jan 2020 09:46:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43451 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387979AbgAXOqL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jan 2020 09:46:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579877170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TCYA4RqKXXiZ0BgSyr8Pg/He8GsP88bu6iEBffQkeJo=;
+        b=UkBwcCDbwxyLX42CI22stZ1zyoQqXRzgYzW2nJfRKwPbi1mINeWn310BNjLOi6elvuuaaX
+        fH9GvGkYz/W3HN4UplkTsiRNsvKnuGPfMfCX0rUTcRC5UDnSPzs9Qk0R2LxQeHNmlV48n9
+        TX8Hl1cVX49fv+Tvzp+w8gxl+PrrQjE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-Mj79fOKMPo6iq0dFI6ny-Q-1; Fri, 24 Jan 2020 09:46:05 -0500
+X-MC-Unique: Mj79fOKMPo6iq0dFI6ny-Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9ACE18A8CA7;
+        Fri, 24 Jan 2020 14:45:54 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A5D560BEC;
+        Fri, 24 Jan 2020 14:45:53 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Felix Rubio" <felix@kngnt.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: kerberized NFSv4 client reporting operation not permitted when
+ mounting with sec=sys
+Date:   Fri, 24 Jan 2020 09:45:52 -0500
+Message-ID: <87BD58D0-7A14-42BB-BA8F-54E6C78B2755@redhat.com>
+In-Reply-To: <6d998611c9205d6a0a8bf3806c297011@kngnt.org>
+References: <0593b4af8ca3fafbec59655bbb39d2b4@kngnt.org>
+ <724CB91C-76AC-425B-BAE3-04887ED5DE73@redhat.com>
+ <6d998611c9205d6a0a8bf3806c297011@kngnt.org>
 MIME-Version: 1.0
-References: <14196.1575902815@warthog.procyon.org.uk> <CAOQ4uxj7RhrBnWb3Lqi3hHLuXNkVXrKio398_PAEczxfyW7HsA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxj7RhrBnWb3Lqi3hHLuXNkVXrKio398_PAEczxfyW7HsA@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 24 Jan 2020 16:13:02 +0200
-Message-ID: <CAOQ4uxicFmiFKz7ZkHYuzduuTDaCTDqo26fo02-VjTMmQaaf+A@mail.gmail.com>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] How to make disconnected operation work?
-To:     David Howells <dhowells@redhat.com>
-Cc:     lsf-pc@lists.linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 7:33 PM Amir Goldstein <amir73il@gmail.com> wrote:
+Hi Felix - now see if you can turn up the nfsd debug messages on the =
+
+server
+during that mount.  It does seem odd.  Its also hard to see from your
+capture what security the client is trying to use for that GETATTR.  You =
+
+can
+use `tshark -r/path/to/pcap` to get a nicer summary, then `tshark -V
+-r/path/to/pcap frame.number=3D=3D<frame of interest> to get very verbose=
+
+results..
+
+Ben
+
+On 23 Jan 2020, at 4:03, Felix Rubio wrote:
+
+> Hi Ben,
 >
-> On Mon, Dec 9, 2019 at 4:47 PM David Howells <dhowells@redhat.com> wrote:
-> >
-> > I've been rewriting fscache and cachefiles to massively simplify it and make
-> > use of the kiocb interface to do direct-I/O to/from the netfs's pages which
-> > didn't exist when I first did this.
-> >
-> >         https://lore.kernel.org/lkml/24942.1573667720@warthog.procyon.org.uk/
-> >         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
-> >
-> > I'm getting towards the point where it's working and able to do basic caching
-> > once again.  So now I've been thinking about what it'd take to support
-> > disconnected operation.  Here's a list of things that I think need to be
-> > considered or dealt with:
-> >
-> >  (1) Making sure the working set is present in the cache.
-> >
-> >      - Userspace (find/cat/tar)
-> >      - Splice netfs -> cache
-> >      - Metadata storage (e.g. directories)
-> >      - Permissions caching
-> >
-> >  (2) Making sure the working set doesn't get culled.
-> >
-> >      - Pinning API (cachectl() syscall?)
-> >      - Allow culling to be disabled entirely on a cache
-> >      - Per-fs/per-dir config
-> >
-> >  (3) Switching into/out of disconnected mode.
-> >
-> >      - Manual, automatic
-> >      - On what granularity?
-> >        - Entirety of fs (eg. all nfs)
-> >        - By logical unit (server, volume, cell, share)
-> >
-> >  (4) Local changes in disconnected mode.
-> >
-> >      - Journal
-> >      - File identifier allocation
-> >      - statx flag to indicate provisional nature of info
-> >      - New error codes
-> >         - EDISCONNECTED - Op not available in disconnected mode
-> >         - EDISCONDATA - Data not available in disconnected mode
-> >         - EDISCONPERM - Permission cannot be checked in disconnected mode
-> >         - EDISCONFULL - Disconnected mode cache full
-> >      - SIGIO support?
-> >
-> >  (5) Reconnection.
-> >
-> >      - Proactive or JIT synchronisation
-> >        - Authentication
-> >      - Conflict detection and resolution
-> >          - ECONFLICTED - Disconnected mode resolution failed
-> >      - Journal replay
-> >      - Directory 'diffing' to find remote deletions
-> >      - Symlink and other non-regular file comparison
-> >
-> >  (6) Conflict resolution.
-> >
-> >      - Automatic where possible
-> >        - Just create/remove new non-regular files if possible
-> >        - How to handle permission differences?
-> >      - How to let userspace access conflicts?
-> >        - Move local copy to 'lost+found'-like directory
-> >          - Might not have been completely downloaded
-> >        - New open() flags?
-> >          - O_SERVER_VARIANT, O_CLIENT_VARIANT, O_RESOLVED_VARIANT
-> >        - fcntl() to switch variants?
-> >
-> >  (7) GUI integration.
-> >
-> >      - Entering/exiting disconnected mode notification/switches.
-> >      - Resolution required notification.
-> >      - Cache getting full notification.
-> >
-> > Can anyone think of any more considerations?  What do you think of the
-> > proposed error codes and open flags?  Is that the best way to do this?
-> >
+>     Thank your for trying to help. Indeed, I can get as much =
+
+> information as you might need (I am the administrator of those =
+
+> machines). After enabling rpcdebug -m nfs -s mount on the client this =
+
+> is what I get:
 >
-> Hi David,
+>     [  461.238568] NFS: nfs mount =
+
+> opts=3D'hard,sec=3Dsys,vers=3D4.1,addr=3D10.0.2.9,clientaddr=3D10.1.0.1=
+2'
+>     [  461.243621] NFS:   parsing nfs mount option 'hard'
+>     [  461.246573] NFS:   parsing nfs mount option 'sec=3Dsys'
+>     [  461.249809] NFS: parsing sec=3Dsys option
+>     [  461.252364] NFS:   parsing nfs mount option 'vers=3D4.1'
+>     [  461.255472] NFS:   parsing nfs mount option 'addr=3D10.0.2.9'
+>     [  461.258864] NFS:   parsing nfs mount option =
+
+> 'clientaddr=3D10.1.0.12'
+>     [  461.262610] NFS: MNTPATH: '/home'
+>     [  461.264757] --> nfs4_try_mount()
+>     [  461.273063] <-- nfs4_try_mount() =3D -1 [error]
 >
-> I am very interested in this topic.
-> I can share (some) information from experience with a "Caching Gateway"
-> implementation in userspace shipped in products of my employer, CTERA.
+> when running tcpdump on the nfs server (tcpdump -i eth0 host 10.1.0.12 =
+
+> and port nfs -n -s 0 -vvv), and mounting on the client, this is what I =
+
+> get:
 >
-> I have come across several attempts to implement a network fs cache
-> using overlayfs. I don't remember by whom, but they were asking
-> questions on overlayfs list about online modification to lower layer.
+>     tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture =
+
+> size 262144 bytes
+>     09:55:01.603947 IP (tos 0x0, ttl 64, id 15242, offset 0, flags =
+
+> [DF], proto TCP (6), length 188)
+>         10.1.0.12.epp > 10.0.2.9.nfs: Flags [P.], cksum 0x1fdf =
+
+> (correct), seq 1347340908:1347341056, ack 1722815553, win 1919, length =
+
+> 148: NFS request xid 3760933574 144 getattr fh 0,1/53
+>     09:55:01.604325 IP (tos 0x0, ttl 64, id 38336, offset 0, flags =
+
+> [DF], proto TCP (6), length 132)
+>         10.0.2.9.nfs > 10.1.0.12.epp: Flags [P.], cksum 0x168c =
+
+> (incorrect -> 0x08f4), seq 1:93, ack 148, win 1432, length 92: NFS =
+
+> reply xid 3760933574 reply ok 88 getattr ERROR: unk 10016
+>     09:55:01.604717 IP (tos 0x0, ttl 64, id 15243, offset 0, flags =
+
+> [DF], proto TCP (6), length 40)
+>         10.1.0.12.epp > 10.0.2.9.nfs: Flags [.], cksum 0xf0e6 =
+
+> (correct), seq 148, ack 93, win 1919, length 0
+>     09:55:01.612334 IP (tos 0x0, ttl 64, id 15244, offset 0, flags =
+
+> [DF], proto TCP (6), length 252)
+>         10.1.0.12.epp > 10.0.2.9.nfs: Flags [P.], cksum 0xe9ed =
+
+> (correct), seq 148:360, ack 93, win 1919, length 212: NFS request xid =
+
+> 3777710790 208 getattr fh 0,1/53
+>     09:55:01.612495 IP (tos 0x0, ttl 64, id 38337, offset 0, flags =
+
+> [DF], proto TCP (6), length 240)
+>         10.0.2.9.nfs > 10.1.0.12.epp: Flags [P.], cksum 0x16f8 =
+
+> (incorrect -> 0x417f), seq 93:293, ack 360, win 1432, length 200: NFS =
+
+> reply xid 3777710790 reply ok 196 getattr NON 4 ids 0/47982174 sz =
+
+> -1769090185
+>     09:55:01.652270 IP (tos 0x0, ttl 64, id 15245, offset 0, flags =
+
+> [DF], proto TCP (6), length 40)
+>         10.1.0.12.epp > 10.0.2.9.nfs: Flags [.], cksum 0xef34 =
+
+> (correct), seq 360, ack 293, win 1941, length 0
 >
-> It is not so far fetched, as you get many of the requirements for metadata
-> caching out-of-the-box, especially with recent addition of metacopy feature.
-> Also, if you consider the plans to implement overlayfs page cache [1][2],
-> then at least the read side of fscache sounds like it has some things in
-> common with overlayfs.
+> I have noticed there is this error 10016, that in nfs4.h translates to =
+
+> NFS4ERR_WRONGSEC, suggesting that the server does not allow 'sys', but =
+
+> I have checked again my /etc/exports file and contains
 >
-> Anyway, you should know plenty about overlayfs to say if you think
-> there is any room for collaboration between the two projects.
+>     /home 10.0.0.0/8(rw,no_subtree_check,sec=3Dsys:krb5:krb5i:krb5p)
+>
+> and also is reported by the operating system:
+>
+>     # cat /proc/fs/nfsd/exports
+>     /export/home    =
+
+> 10.0.0.0/8(rw,root_squash,sync,wdelay,no_subtree_check,uuid=3D0743ce63:=
+00c1185a:00000000:00000000,sec=3D1:390003:390004:390005)
+>
+> Any ideas?
+>
+> Thank you!
+> Felix
 >
 >
-> [1] https://marc.info/?l=linux-unionfs&m=154995746503505&w=2
-> [2] https://github.com/amir73il/linux/commits/ovl-aops-wip
+> ---
+> Felix Rubio
+> "Don't believe what you're told. Double check."
+>
+> On 2020-01-22 19:30, Benjamin Coddington wrote:
+>> On 22 Jan 2020, at 4:22, Felix Rubio wrote:
+>>
+>>> Hi everybody,
+>>>
+>>> I have a kerberized NFSv4 server that is exporting a mountpoint:
+>>>
+>>>     /home 10.0.0.0/8(rw,no_subtree_check,sec=3Dkrb5:krb5i:krb5p)
+>>>
+>>> if I mount that export with this command on the client, it works as =
 
-David,
+>>> expected:
+>>>
+>>>     /sbin/mount.nfs4 NFS.domain:/home /network/home -o =
 
-I have been reading through the fscache APIs and tried to answer this
-(maybe stupid) question:
+>>> _netdev,noatime,hard,sec=3Dkrb5
+>>>
+>>> However, if I modify the export to be
+>>>
+>>>     /home 10.0.0.0/8(rw,no_subtree_check,sec=3Dsys:krb5:krb5i:krb5p)
+>>>
+>>> and I mount that export with sec=3Dsys, as
+>>>
+>>>     /sbin/mount.nfs4 NFS.domain:/home /network/home -o =
 
-Why does every netfs need to implement fscache support on its own?
-fscache support as it is today is extremely intrusive to filesystem code
-and your re-write doesn't make it any less intrusive.
+>>> _netdev,noatime,hard,sec=3Dsys
+>>>
+>>> I get the following error:
+>>>
+>>>     mount.nfs4: timeout set for Fri Jan 17 14:11:32 2020
+>>>     mount.nfs4: trying text-based options =
 
-My thinking is: Can't we implement a stackable cachefs which interfaces
-with fscache and whose API to the netfs is pure vfs APIs, just like
-overlayfs interfaces with lower fs?
+>>> 'hard,sec=3Dsys,vers=3D4.1,addr=3D10.2.2.9,clientaddr=3D10.2.0.12'
+>>>     mount.nfs4: mount(2): Operation not permitted
+>>>     mount.nfs4: Operation not permitted
+>>>
+>>> What might be the reason for this behavior?
+>>
+>> Hi Felix,
+>>
+>> I don't know.  Can you get more information?  Try again after =
 
-The only fscache API I could find that really needs to be called from
-netfs code is fscache_invalidate() and many of those calls are invoked
-from vfs ops anyway, so maybe they could also be hoisted to this cachefs.
+>> `rpcdebug -m
+>> nfs -s mount`.  That will turn up debugging for messages labeled for =
 
-As long as netfs supports direct_IO() (all except afs do) then the active page
-cache could be that of the stackable cachefs and network IO is always
-direct from/to cachefs pages.
+>> mount,
+>> and the output will be in the kernel log.  There are other facilities =
 
-If netfs supports export_operations (all except afs do), then indexing
-the cache objects could be done in a generic manner using fsid and
-file handle, just like overlayfs index feature works today.
+>> there,
+>> see rpcdebug(8).
+>>
+>> Another good option is getting a network capture of the mount attempt =
 
-Would it not be a maintenance win if all (or most of) the fscache logic
-was yanked out of all the specific netfs's?
+>> and
+>> trying to figure out if the server is returning an error, or the =
 
-Can you think of reasons why the stackable cachefs model cannot work
-or why it is inferior to the current fscache integration model with netfs's?
+>> client is
+>> generating the error.
+>>
+>> There are also a lot of "nfs", "nfs4", and "rpc" tracepoints you can =
 
-Thanks,
-Amir.
+>> enable
+>> to get more information.
+>>
+>> Ben
+
