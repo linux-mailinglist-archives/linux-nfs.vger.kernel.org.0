@@ -2,60 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C23414A6B8
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 16:00:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B16514A6B9
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 16:00:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgA0PAd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jan 2020 10:00:33 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:46137 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgA0PAd (ORCPT
+        id S1729268AbgA0PAe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jan 2020 10:00:34 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40547 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbgA0PAd (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 10:00:33 -0500
-Received: by mail-yb1-f196.google.com with SMTP id p129so4997679ybc.13
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2020 07:00:32 -0800 (PST)
+Received: by mail-yw1-f67.google.com with SMTP id i126so4828325ywe.7
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2020 07:00:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6B3yGDOcSaTD9sQQXvABaRU4hdv2XxmWkW+LyfP79EU=;
-        b=S6txtl/dEEooNQpTtI9LONvOprXrh9udxqgQLeXxjYKSvZLcP/zdrjQ8ytIo5bjKl5
-         40iXvJJD+9XHNIzhuolFLhNg7E+ev6AAUHOssXMUz9g506l6rXvP72lWbEJx4ZcTh6D3
-         Lr1yyllnLBF6ZCe0n1kgMTElt9Cporzr1oO8f5E1wz2HZWVzUwGBoUaZ+HU94+aUH/0s
-         NvCpewmt8+Di86JNdbQMETX2tWy+To3jNFvLXZ+nkdNE9DNZUzupsQr51X9MBN+K6rDT
-         xqT7ZWlhqM51ASB+nuLyCntkj2kWqksdOChprZ617wwgCZwP+HMQiZGpJATjoR6YU7rd
-         e6zg==
+        bh=tCP7XDbwqynjsMWfGGEVx8n6y4Sbr/5RTCXLxam2NFw=;
+        b=ORV6J7YZs4kFr2STL8OHs7qRchkdN4A/BOSJcFnFAcVZHTUVcyDk/TXm2o3tzDf8Tr
+         NNky3kUXm+6EUecSl3PVQHj1BVBUnC8Y3MPyQ5/vCkSsRjJf9oVPQ9eYZH0JuaAizOoh
+         2l+fpGcebznabty90nuOyVtYY0XdVETtqPtmWPQp5vEY38xQgaRfl0ZPowFFpofER3DG
+         9GjbHbn+LbioVnRPI8eoQdEUnSAC7xnEWL8oB9ay7Vnh1MNmGiezuPlfWhIzTBjMi5A6
+         tcYnvevPQoFwqN/B2iKcMC0I8OFp9Y0xxsGAXO916UTlNaq1Llm2JxVCNIPuh09mtZ3U
+         XnkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6B3yGDOcSaTD9sQQXvABaRU4hdv2XxmWkW+LyfP79EU=;
-        b=NsmOe1kgtRg+O2Hh2a5vCYdZiwPvlK3RqrXYrn53saF83R55OfzxeFxotSMC81gfj/
-         fZ9620Jk4Qio1dNJD3mBk1msEaJGI3UAYX97I+j/nssc1Y3sRMZDNKhdH0M0DbIu1CZU
-         z1idICcHeSYzU3Vo9k9FfF9N9XFen9DCXfFtflia9SKRrCoplrxalMdvPj4vfV0HInEV
-         lhIyfHYY/cLQVuTar74MvTtwXb2Ai+uLeVJc89AhsHc0h3Jpbg1yv4zDem0CEnYqL1+k
-         /vCJWnO1s+HUogmO1r+0ThOzXmxhpDEAPj4dPUd2/xkRc422FfSHp/PFv1uQFLmLKmQ+
-         vgSg==
-X-Gm-Message-State: APjAAAUKngvMPMj54sBQwvdCBGdHXyf7/o+YeEuEftES+gXxgFWvm4Vp
-        M3pYPT+kr2PbTN+h/KC/Z0O0mtsw+g==
-X-Google-Smtp-Source: APXvYqwd4RUDxRRSGXxZlwJ1O1wdPlEx8PxMg+hOZgsOrwgDhp2JSmYnNvRIXIdabHkDRqUC2xuM/g==
-X-Received: by 2002:a25:cf49:: with SMTP id f70mr13693495ybg.11.1580137231727;
-        Mon, 27 Jan 2020 07:00:31 -0800 (PST)
+        bh=tCP7XDbwqynjsMWfGGEVx8n6y4Sbr/5RTCXLxam2NFw=;
+        b=XdjVUclagiPs5XOnE/UFOW8hSxj+h6mI54nREfJmGIDH/cQy3AYZAa0G6sPadUjLaA
+         TZfXLgiLZLcUx4hrQY6UKNuLbOyrOzT2uTTikSDRWDFw4/TofCsIz++IxQa8xCffNOLr
+         ZbKOF1tM6s9RqaxaRjLmGlOLciEZXOgY5+ofZR5n3GDiWLLTgwfQRr3VKe2YOmqofYO6
+         sEYHVjWDv/HUcLMYZX3fOAXnriDBqwAAz1LsB3H68IZWJAAZofiDVy0TSyy1P9JU0zSp
+         eWb0TKclyUvDZF7QIauTjylq49VU970T8ItQbqxG+bY2SB1wG6Lfh5kQQ/FX1uvsXhuY
+         2WlA==
+X-Gm-Message-State: APjAAAURBksCqdRngFLUpUaA1Z1OT0VSgjDzoB35+lJtlZQwc8wdCIUq
+        0CPD+V3eJn6NHZDrRUhqInrBBnaq6w==
+X-Google-Smtp-Source: APXvYqztY34f0SpXByhmZVcRk5UjZ6iPgSQFV1VPCtNsxUBqN0p8LXorGnaWCtP36L7nVfTwGB0jag==
+X-Received: by 2002:a81:5dc1:: with SMTP id r184mr13157421ywb.433.1580137232840;
+        Mon, 27 Jan 2020 07:00:32 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id d186sm6809096ywe.0.2020.01.27.07.00.30
+        by smtp.gmail.com with ESMTPSA id d186sm6809096ywe.0.2020.01.27.07.00.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 07:00:31 -0800 (PST)
+        Mon, 27 Jan 2020 07:00:32 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/5] NFSv4: Try to return the delegation immediately when marked for return on close
-Date:   Mon, 27 Jan 2020 09:58:17 -0500
-Message-Id: <20200127145819.350982-4-trond.myklebust@hammerspace.com>
+Subject: [PATCH 4/5] NFSv4: Add accounting for the number of active delegations held
+Date:   Mon, 27 Jan 2020 09:58:18 -0500
+Message-Id: <20200127145819.350982-5-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200127145819.350982-3-trond.myklebust@hammerspace.com>
+In-Reply-To: <20200127145819.350982-4-trond.myklebust@hammerspace.com>
 References: <20200127145819.350982-1-trond.myklebust@hammerspace.com>
  <20200127145819.350982-2-trond.myklebust@hammerspace.com>
  <20200127145819.350982-3-trond.myklebust@hammerspace.com>
+ <20200127145819.350982-4-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -63,84 +64,109 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a routine to return the delegation immediately upon close of the
-file if it was marked for return-on-close.
+In order to better manage our delegation caching, add a counter
+to track the number of active delegations.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/delegation.c | 33 +++++++++++++++++++++++++++++++++
- fs/nfs/delegation.h |  1 +
- fs/nfs/nfs4state.c  |  1 +
- 3 files changed, 35 insertions(+)
+ fs/nfs/delegation.c | 36 ++++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index b5b14618b73e..90e50f32f3e0 100644
+index 90e50f32f3e0..a777b3d0e720 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -639,6 +639,39 @@ int nfs4_inode_return_delegation(struct inode *inode)
- 	return err;
+@@ -25,13 +25,29 @@
+ #include "internal.h"
+ #include "nfs4trace.h"
+ 
+-static void nfs_free_delegation(struct nfs_delegation *delegation)
++static atomic_long_t nfs_active_delegations;
++
++static void __nfs_free_delegation(struct nfs_delegation *delegation)
+ {
+ 	put_cred(delegation->cred);
+ 	delegation->cred = NULL;
+ 	kfree_rcu(delegation, rcu);
  }
  
-+/**
-+ * nfs_inode_return_delegation_on_close - asynchronously return a delegation
-+ * @inode: inode to process
-+ *
-+ * This routine is called on file close in order to determine if the
-+ * inode delegation needs to be returned immediately.
-+ */
-+void nfs4_inode_return_delegation_on_close(struct inode *inode)
++static void nfs_mark_delegation_revoked(struct nfs_delegation *delegation)
 +{
-+	struct nfs_delegation *delegation;
-+	struct nfs_delegation *ret = NULL;
-+
-+	if (!inode)
-+		return;
-+	rcu_read_lock();
-+	delegation = nfs4_get_valid_delegation(inode);
-+	if (!delegation)
-+		goto out;
-+	if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags)) {
-+		spin_lock(&delegation->lock);
-+		if (delegation->inode &&
-+		    list_empty(&NFS_I(inode)->open_files) &&
-+		    !test_and_set_bit(NFS_DELEGATION_RETURNING, &delegation->flags)) {
-+			clear_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags);
-+			ret = delegation;
-+		}
-+		spin_unlock(&delegation->lock);
++	if (!test_and_set_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
++		delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
++		atomic_long_dec(&nfs_active_delegations);
 +	}
-+out:
-+	rcu_read_unlock();
-+	nfs_end_delegation_return(inode, ret, 0);
++}
++
++static void nfs_free_delegation(struct nfs_delegation *delegation)
++{
++	nfs_mark_delegation_revoked(delegation);
++	__nfs_free_delegation(delegation);
 +}
 +
  /**
-  * nfs4_inode_make_writeable
-  * @inode: pointer to inode
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index 15d3484be028..31b84604d383 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -42,6 +42,7 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
- void nfs_inode_reclaim_delegation(struct inode *inode, const struct cred *cred,
- 		fmode_t type, const nfs4_stateid *stateid, unsigned long pagemod_limit);
- int nfs4_inode_return_delegation(struct inode *inode);
-+void nfs4_inode_return_delegation_on_close(struct inode *inode);
- int nfs_async_inode_return_delegation(struct inode *inode, const nfs4_stateid *stateid);
- void nfs_inode_evict_delegation(struct inode *inode);
+  * nfs_mark_delegation_referenced - set delegation's REFERENCED flag
+  * @delegation: delegation to process
+@@ -343,7 +359,8 @@ nfs_update_inplace_delegation(struct nfs_delegation *delegation,
+ 		delegation->stateid.seqid = update->stateid.seqid;
+ 		smp_wmb();
+ 		delegation->type = update->type;
+-		clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
++		if (test_and_clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
++			atomic_long_inc(&nfs_active_delegations);
+ 	}
+ }
  
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 34552329233d..958ed4e4cde2 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -766,6 +766,7 @@ void nfs4_put_open_state(struct nfs4_state *state)
- 	list_del(&state->open_states);
- 	spin_unlock(&inode->i_lock);
- 	spin_unlock(&owner->so_lock);
-+	nfs4_inode_return_delegation_on_close(inode);
- 	iput(inode);
- 	nfs4_free_open_state(state);
- 	nfs4_put_state_owner(owner);
+@@ -423,6 +440,8 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 	rcu_assign_pointer(nfsi->delegation, delegation);
+ 	delegation = NULL;
+ 
++	atomic_long_inc(&nfs_active_delegations);
++
+ 	trace_nfs4_set_delegation(inode, type);
+ 
+ 	spin_lock(&inode->i_lock);
+@@ -432,7 +451,7 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ out:
+ 	spin_unlock(&clp->cl_lock);
+ 	if (delegation != NULL)
+-		nfs_free_delegation(delegation);
++		__nfs_free_delegation(delegation);
+ 	if (freeme != NULL) {
+ 		nfs_do_return_delegation(inode, freeme, 0);
+ 		nfs_free_delegation(freeme);
+@@ -796,13 +815,6 @@ static void nfs_client_mark_return_unused_delegation_types(struct nfs_client *cl
+ 	rcu_read_unlock();
+ }
+ 
+-static void nfs_mark_delegation_revoked(struct nfs_server *server,
+-		struct nfs_delegation *delegation)
+-{
+-	set_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
+-	delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
+-}
+-
+ static void nfs_revoke_delegation(struct inode *inode,
+ 		const nfs4_stateid *stateid)
+ {
+@@ -830,7 +842,7 @@ static void nfs_revoke_delegation(struct inode *inode,
+ 		}
+ 		spin_unlock(&delegation->lock);
+ 	}
+-	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
++	nfs_mark_delegation_revoked(delegation);
+ 	ret = true;
+ out:
+ 	rcu_read_unlock();
+@@ -869,7 +881,7 @@ void nfs_delegation_mark_returned(struct inode *inode,
+ 			delegation->stateid.seqid = stateid->seqid;
+ 	}
+ 
+-	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
++	nfs_mark_delegation_revoked(delegation);
+ 
+ out_clear_returning:
+ 	clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
 -- 
 2.24.1
 
