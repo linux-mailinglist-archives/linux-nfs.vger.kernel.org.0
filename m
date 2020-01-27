@@ -2,195 +2,219 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23FEF14AA55
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 20:18:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFCA814AA8B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 20:35:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgA0TSj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jan 2020 14:18:39 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35847 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgA0TSi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 14:18:38 -0500
-Received: by mail-il1-f193.google.com with SMTP id b15so8457458iln.3;
-        Mon, 27 Jan 2020 11:18:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sFmur+uid90vbSF2gCus6MutCACZFozAfACbQ1Tjcc8=;
-        b=qjBm+C77Dw+j2maWQDNfdtxyFbcNx8rdXCDWEInJHmNoBzJHCKjAkh2R+NwrAolQjU
-         SmH6c6J6fGKG1VNDveBd2ayT4p75VdsuemhQb1P/k7DltGTWlWXau9lmBWT1CVeZwM5S
-         GD8s7Di4BYmTFiRfnE4u5L8epknicPap2TgXsZzMyQssj0re4dCKpgDtXfw0Rqc7es4g
-         FcS8K36tUdLFlayFIT8JC4c7a3t2DsmGOxrZvFJmNFxWyZ/MDwDVYj4SWlUb37m+C0Su
-         XSSuCSNyGyHl7c2aCKxCQTBlzrjalCd1pkO4tdEF5hE86S2HtcKqZqnE68r6Qz3LSFsO
-         y/iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sFmur+uid90vbSF2gCus6MutCACZFozAfACbQ1Tjcc8=;
-        b=qilMYxUg0FAj0+f9Wr5jvCn3oN67Usum8Oz2OJAyPMuSkjjcaWylAsE9fSZEKoY0vr
-         70ctzC5+wGcIuXp6DYIOta1gJcmQmHz1/13/p3lqIE7wGkRRNyQwuTSVZPXtrPeFiZlE
-         To0fby6/8Fh9jzqwDBHScWDOOQSm5y7wINk/r4UXOionYECwBOBPviTZa6JFF0yTrKWn
-         vznIUG+TjBt5j/Dp6ZRRsD65ksy4rhieofNuZaTC+6ugt4c1o5JtWpm1nywxvg/ilzME
-         FLjOcnv/bnYYuOSv61YqVOZ1kXWjaWZHy0LqbQNRCdsrzb7XtTlbUV78q9LAJrWOhvZA
-         MJ2w==
-X-Gm-Message-State: APjAAAW5+j6/vMouoIiHbH5AOPghBhuVbHiduYntHVPNtdkWsCR1nM9k
-        qgEp05HGSeSUJ4ekHomXafEMEKa9X7AdNaT6wLrEiAxz
-X-Google-Smtp-Source: APXvYqxkMFNi7BVyvRFktf+qZaybDHCEKC7xOgdnuytEFsqPqR/VSkklis5UAjXDipJ0+N5rewgdvpF0jDNkSDqbY9Q=
-X-Received: by 2002:a92:d5c3:: with SMTP id d3mr16186713ilq.250.1580152717809;
- Mon, 27 Jan 2020 11:18:37 -0800 (PST)
+        id S1725975AbgA0TfJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jan 2020 14:35:09 -0500
+Received: from mail-dm6nam11on2093.outbound.protection.outlook.com ([40.107.223.93]:45761
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbgA0TfI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 27 Jan 2020 14:35:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bDDNv5r6krJrr/4M8hhLMRcBO+3hGymLaRRxxvZqx1ELDkrxG++VfEB87wfpejuXHBJCTPD5Bg8jTwI9QFhG75EYwI+EvnLXn+m18ihrtJgDoYRWlf18KRGdmt9U37YMxSy8gzAv6zKvxGKbv3zAWj1yRqZrmQ9vYpLNWTrb76+iMzc+5abVihD543kOzgTbOHNKowjYavd/CDHjsTxfRBVz0Eo2fSlk4BS4g06ItmQS0lEJHTYZvW4Ja0cHPlr5sCYw72fv62rduSY0GxokzXkLnC8kumXd+luPzDzsdmflcPx3UR+UL2Gnw4nIP1NPOUpf9/0597jxUSykKja2ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cAhG+FdS2hejZXH728RG6EMpkWCoFEl2d1pLscnvF6U=;
+ b=ET0d8J4nSgItJmjBxDlnNZzBv6eIjJf1FND8MSA9A4l1XoZZNkefgVNJu45A96Prh3fXaaK3aMvgyoVfK3a5LA+bxlyiWHt+S0WyzoTYS/EUSDAnyrI2N4JE2ojZQelyXCqbMTUtJqnDdGCR256IIG0/3y2o+CMlHqg6yrtJB9Hi+kV//KfhpLIzvIrx9OUtqH46ZSKtVIciTk5aYkkAScUccMpq6O7jwX6Ckrw+Jz+hmWTXutce5PGA58luu0X6z3F3Hv0fZj13rqZRUGpxY6C6iS7LPksIIaxRzF4i9I8xl+jPnzeCLVXEJpMkHB25vVN5B7zVs/Mf7Dl48oizzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cAhG+FdS2hejZXH728RG6EMpkWCoFEl2d1pLscnvF6U=;
+ b=bZbh7Z2AhWdmJXXcZ/QZErK4Eo/r3khidhy9FxCwp8fz8Bf4hg8EM0Xx2OhCeWYcIisfNkm3ZPdm3DhetJtgN4kt26h4SLXQ7sc6ckhfTNy/2u/fFAOnDmi+pShq3gTgENDoYtQBYmR9qqBWg1M0GggWrQceslBqsKBUngZc18I=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB2009.namprd13.prod.outlook.com (10.174.186.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.21; Mon, 27 Jan 2020 19:35:04 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2686.019; Mon, 27 Jan 2020
+ 19:35:04 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "SteveD@RedHat.com" <SteveD@RedHat.com>,
+        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
+Thread-Topic: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
+Thread-Index: AQHVzKBvmJSkTy1U+UqmLnQQjeZOL6fztT6AgAO4IYCAB3t4gIAAD6WA
+Date:   Mon, 27 Jan 2020 19:35:04 +0000
+Message-ID: <ba661bbfe1c87c7b347841bf973511e396665ee3.camel@hammerspace.com>
+References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
+         <81b8fd1b-6882-5edf-fcab-1a7d4c9d4d47@RedHat.com>
+         <bd7f5ace305738f37b657fe86761339956bf66c3.camel@hammerspace.com>
+         <3e85d5f8-bcdc-b8ee-3ea4-b918f084fd19@RedHat.com>
+In-Reply-To: <3e85d5f8-bcdc-b8ee-3ea4-b918f084fd19@RedHat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f30d4b0-1d1b-43ac-29ef-08d7a3600230
+x-ms-traffictypediagnostic: DM5PR1301MB2009:
+x-microsoft-antispam-prvs: <DM5PR1301MB2009630620E091F698479560B80B0@DM5PR1301MB2009.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02951C14DC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(366004)(136003)(396003)(346002)(199004)(189003)(8936002)(64756008)(66446008)(6486002)(66946007)(66556008)(91956017)(66476007)(76116006)(316002)(186003)(26005)(110136005)(81166006)(2906002)(8676002)(2616005)(81156014)(86362001)(478600001)(5660300002)(6512007)(71200400001)(6506007)(4326008)(53546011)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2009;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xxK//5JXpP9MwCy3DLw3/2ywXrl1cB4sTzR40uJ1hePscupl2+/ynTcIL9YLKEbrreGTBJ9e4uv+0SbR03eR47jyT0FKLDs/fIDmF4xgnsjOdldzhdLyd1fMJWc3NXwcCYELR8Q0WKF6/PMWD6vDTyNrl0sExe1X+ZNCth0xxAGNb/+3fP+X2As9RJ2uMUqBoHAfSEHDXkov0pjQgJh5jmulrotenYKwTdw/C+Zv8gqCMH3GyC1h97loF2CncAabBN7cWQRY0vwF44EPFMlrSnWJKTL8OQhRnI/qjwf93X3UPVQvhLscG1Y43Jj/Ax610KWcOtyKy8N146snhaffTnkypSJIwwzEaa7SQS0kkXj+0LhvDtCO9+9zkHT0sozsNDdiLV3zR5y34XArVoacXsn+88TdXaU4JVZzQEGfb+/eiUsWJQGn6Clkfv/ZiFAL
+x-ms-exchange-antispam-messagedata: 6cyHuLJtfhDU9AYttp3UKkHCekc3zPkcZp7KeyfFaYohQv8qtt/fLCE8+yWnbbxTWXFjHIEyRKtWmm0Qs5ZXZo/ND6CsYju54cE2HKsBnNfu8eb0tb7Aec3jU+IFg5qNi9srembPb+uT4/xdEa7+/g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <16DC1F2928A28D40AB138B70C5EE111A@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <14196.1575902815@warthog.procyon.org.uk> <CAOQ4uxj7RhrBnWb3Lqi3hHLuXNkVXrKio398_PAEczxfyW7HsA@mail.gmail.com>
- <CAOQ4uxicFmiFKz7ZkHYuzduuTDaCTDqo26fo02-VjTMmQaaf+A@mail.gmail.com> <1477632.1580142761@warthog.procyon.org.uk>
-In-Reply-To: <1477632.1580142761@warthog.procyon.org.uk>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 27 Jan 2020 21:18:26 +0200
-Message-ID: <CAOQ4uxgQzOsa-34aTcL7Tm68uMxq1anyC7qL+dHq3+yXAceeEA@mail.gmail.com>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] How to make disconnected operation work?
-To:     David Howells <dhowells@redhat.com>
-Cc:     lsf-pc@lists.linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f30d4b0-1d1b-43ac-29ef-08d7a3600230
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 19:35:04.4653
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 80OKnps60ym3OCMvJHCMNXGeKmrg+rLyS8+uHdp5UPpC0WLEryhvvxY/w4CM9ix57zjOTsWq6wdv+PZU3z3Hlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2009
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 6:32 PM David Howells <dhowells@redhat.com> wrote:
->
-> Amir Goldstein <amir73il@gmail.com> wrote:
->
-> > My thinking is: Can't we implement a stackable cachefs which interfaces
-> > with fscache and whose API to the netfs is pure vfs APIs, just like
-> > overlayfs interfaces with lower fs?
->
-> In short, no - doing it with pure the VFS APIs that we have is not that simple
-> (yes, Solaris does it with a stacking filesystem, and I don't know anything
-> about the API details, but there must be an auxiliary API).  You need to
-[...]
->
-> > As long as netfs supports direct_IO() (all except afs do) then the active page
-> > cache could be that of the stackable cachefs and network IO is always
-> > direct from/to cachefs pages.
->
-> What about objects that don't support DIO?  Directories, symbolic links and
-> automount points?  All of these things are cacheable objects with AFS.
->
-
-direct_IO is for not duplicating page cache.
-Not relevant for those objects.
-I guess that for those objects the invalidation callbacks is what matters.
-
-> And speaking of automount points - how would you deal with those beyond simply
-> caching the contents?  Create a new stacked instance over it?  How do you see
-> the automount point itself?
->
-
-I didn't get this far ;-)
-
-> I see that the NFS FH encoder doesn't handle automount points.
->
-> > If netfs supports export_operations (all except afs do), then indexing
-> > the cache objects could be done in a generic manner using fsid and
-> > file handle, just like overlayfs index feature works today.
->
-> FSID isn't unique and doesn't exist for all filesystems.  Two NFS servers, for
-> example, can give you the same FSID, but referring to different things.  AFS
-> has a textual cell name and a volume ID that you need to combine; it doesn't
-> have an FSID.
->
-> This may work for overlayfs as the FSID can be confined to a particular
-> overlay.  However, that's not what we're dealing with.  We would be talking
-> about an index that potentially covers *all* the mounted netfs.
->
-> Also, from your description that sounds like a bug in overlayfs.  If the
-> overlain NFS tree does a referral to a different server, you no longer have a
-> unique FSID or a unique FH within that FSID so your index is broken.
->
-
-I misspoke. Overlayfs uses s_uuid for index not fsid.
-If s_uuid is null or no export ops, then index cannot be used.
-So yeh, it's a challenge to auto index the netfs' objects.
-
-> > Would it not be a maintenance win if all (or most of) the fscache logic
-> > was yanked out of all the specific netfs's?
->
-> Actually, it may not help enormously with disconnected operation.  A certain
-> amount of the logic probably has to be implemented in the netfs as each netfs
-> provides different facilities for managing this.
->
-> Yes, it gets some of the I/O stuff out - but I want to move some of that down
-> into the VM if I can and librarifying the rest should take care of that.
->
-> > Can you think of reasons why the stackable cachefs model cannot work
-> > or why it is inferior to the current fscache integration model with netfs's?
->
-> Yes.  It's a lot more operationally expensive and it's harder to use.  The
-> cache driver would also have to get a lot bigger, but that would be
-> reasonable.
->
-> Firstly, the expense: you have to double up all the inodes and dentries that
-> are in use - and that's not counting the resources used inside the cache
-> itself.
-
-Good point.
-
->
-> Secondly, the administration: I'm assuming you're suggesting the way I think
-> Solaris does it and that you have to make two mounts: firstly you mount the
-> netfs and then you mount the cache over it.  It's much simpler if you just
-> need make the netfs mount only and then that goes and uses the cache if it's
-> available - it's also simple to bring the cache online after the fact meaning
-> you can even cache applied retroactively to a root filesystem.
->
-
-All of the above is true is you mount the stacked cachefs to begin with.
-You can add/remove the caches later.
-
-> You also have the issue of what happens if someone bind-mounts the netfs mount
-> and mounts the cache over only one of the views.  Now you have a coherency
-> management problem that the cache cannot see.  It's only visible to the netfs,
-> but the netfs doesn't know about the cache.
->
-
-The shotgun to shoot the foot you mean - yap.
-
-> There's also file locking.  Overlayfs doesn't support file locking that I can
-> see, but NFS, AFS and CIFS all do.
->
-
-Not sure which locks you mean. flock and leases do work on overlayfs AFAIK.
-But yes, every one of those things is a challenge with stacked fs, but overlayfs
-has already made a lot of progress.
-
->
-> Anyway, you might be able to guess that I'm really against using stackable
-> filesystems for things like this and like UID shifting.  I think it adds more
-> expense and complexity than it's necessarily worth.
->
-
-Yes, I figured as much :)
-
-> I was more inclined to go with unionfs than overlayfs and do the filesystem
-> union in the VFS as it ought to be cheaper if you're using it (whereas
-> overlayfs is cheaper if you're not).
->
-
-I guess competition is good.
-
-Anyway, I am brewing a topic about filesystem APIs for
-Hierarchic Storage Managers, such as https://vfsforgit.org/.
-There are similarities between the requirements for HSM and for
-disconnected operations for netfs - you might even say they are
-not two different things. So we may want to bring them up together
-in the same session or two adjacent sessions - we'll see.
-
-Thanks,
-Amir.
+T24gTW9uLCAyMDIwLTAxLTI3IGF0IDEzOjM5IC0wNTAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0K
+PiANCj4gT24gMS8yMi8yMCA3OjIzIFBNLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gT24g
+TW9uLCAyMDIwLTAxLTIwIGF0IDEwOjM1IC0wNTAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0KPiA+
+ID4gSGVsbG8sDQo+ID4gPiANCj4gPiA+IE9uIDEvMTYvMjAgMjowOCBQTSwgT2xnYSBLb3JuaWV2
+c2thaWEgd3JvdGU6DQo+ID4gPiA+IEZyb206IE9sZ2EgS29ybmlldnNrYWlhIDxrb2xnYUBuZXRh
+cHAuY29tPg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3JuaWV2c2th
+aWEgPGtvbGdhQG5ldGFwcC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZnMvbmZzL25mczRj
+bGllbnQuYyB8IDIgKy0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KPiA+ID4gPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0
+Y2xpZW50LmMgYi9mcy9uZnMvbmZzNGNsaWVudC5jDQo+ID4gPiA+IGluZGV4IDQ2MGQ2MjUuLjRk
+ZjNmYjAgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2ZzL25mcy9uZnM0Y2xpZW50LmMNCj4gPiA+ID4g
+KysrIGIvZnMvbmZzL25mczRjbGllbnQuYw0KPiA+ID4gPiBAQCAtODgxLDcgKzg4MSw3IEBAIHN0
+YXRpYyBpbnQgbmZzNF9zZXRfY2xpZW50KHN0cnVjdA0KPiA+ID4gPiBuZnNfc2VydmVyDQo+ID4g
+PiA+ICpzZXJ2ZXIsDQo+ID4gPiA+ICANCj4gPiA+ID4gIAlpZiAobWlub3J2ZXJzaW9uID09IDAp
+DQo+ID4gPiA+ICAJCV9fc2V0X2JpdChORlNfQ1NfUkVVU0VQT1JULA0KPiA+ID4gPiAmY2xfaW5p
+dC5pbml0X2ZsYWdzKTsNCj4gPiA+ID4gLQllbHNlIGlmIChwcm90byA9PSBYUFJUX1RSQU5TUE9S
+VF9UQ1ApDQo+ID4gPiA+ICsJaWYgKHByb3RvID09IFhQUlRfVFJBTlNQT1JUX1RDUCkNCj4gPiA+
+ID4gIAkJY2xfaW5pdC5uY29ubmVjdCA9IG5jb25uZWN0Ow0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJ
+aWYgKHNlcnZlci0+ZmxhZ3MgJiBORlNfTU9VTlRfTk9SRVNWUE9SVCkNCj4gPiA+ID4gDQo+ID4g
+PiBUZXN0ZWQtYnk6IFN0ZXZlIERpY2tzb24gPHN0ZXZlZEByZWRoYXQuY29tPg0KPiA+ID4gDQo+
+ID4gPiBXaXRoIHRoaXMgcGF0Y2ggdjQuMCBtb3VudHMgYWN0IGp1c3QgbGlrZSB2NC4xL3Y0LjIg
+bW91bnRzDQo+ID4gPiBCdXQgaXMgdGhhdCBhIGdvb2QgdGhpbmcuIDotKSAgDQo+ID4gPiANCj4g
+PiA+IEhlcmUgaXMgd2hhdCBJJ3ZlIGZvdW5kIGluIG15IHRlc3RpbmcuLi4NCj4gPiA+IA0KPiA+
+ID4gbW91bnQgLW9uY29ubmVjdD0xMiAxNzIuMzEuMS41NDovaG9tZS90bXAgL21udC90bXANCj4g
+PiA+IA0KPiA+ID4gV2lsbCBjcmVhdGUgMTIgVENQIGNvbm5lY3Rpb25zIGFuZCBtYWludGFpbiB0
+aG9zZSAxMiANCj4gPiA+IGNvbm5lY3Rpb25zIHVudGlsIHRoZSB1bW91bnQgaGFwcGVucy4gQnkg
+bWFpbnRhaW4gSSBtZWFuIA0KPiA+ID4gaWYgdGhlIGNvbm5lY3Rpb24gdGltZXMgb3V0LCBpdCBp
+cyByZWNvbm5lY3RlZCANCj4gPiA+IHRvIG1haW50YWluIHRoZSAxMiBjb25uZWN0aW9ucyANCj4g
+PiA+IA0KPiA+ID4gIyBtb3VudCAtb25jb25uZWN0PTEyIDE3Mi4zMS4xLjU0Oi9ob21lL3RtcCAv
+bW50L3RtcA0KPiA+ID4gIyBuZXRzdGF0IC1hbiB8IGdyZXAgMTcyLjMxLjEuNTQgfCB3YyAtbA0K
+PiA+ID4gMTINCj4gPiA+ICMgbmV0c3RhdCAtYW4gfCBncmVwIDE3Mi4zMS4xLjU0ICAgICAgICAN
+Cj4gPiA+IHRjcCAgICAgICAgMCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjkwMSAgICAgICAg
+IDE3Mi4zMS4xLjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+ID4gPiB0Y3AgICAgICAgIDAg
+ICAgICAwDQo+ID4gPiAxNzIuMzEuMS4yNDo2NjcgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAg
+ICAgICBFU1RBQkxJU0hFRA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMx
+LjEuMjQ6NzQ2ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4g
+PiA+IHRjcCAgICAgICAgMCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjY3MiAgICAgICAgIDE3
+Mi4zMS4xLjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+ID4gPiB0Y3AgICAgICAgIDAgICAg
+ICAwDQo+ID4gPiAxNzIuMzEuMS4yNDo4MzIgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAg
+ICBFU1RBQkxJU0hFRA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEu
+MjQ6ODk1ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4gPiA+
+IHRjcCAgICAgICAgMCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjY3MyAgICAgICAgIDE3Mi4z
+MS4xLjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAw
+DQo+ID4gPiAxNzIuMzEuMS4yNDo3MzIgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBF
+U1RBQkxJU0hFRA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6
+Nzk1ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4gPiA+IHRj
+cCAgICAgICAgMCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjkxOCAgICAgICAgIDE3Mi4zMS4x
+LjU0OjIwNDkgICAgICAgIEVTVEFCTElTSEVEDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAwDQo+
+ID4gPiAxNzIuMzEuMS4yNDo2NzQgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBFU1RB
+QkxJU0hFRA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6OTUz
+ICAgICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgRVNUQUJMSVNIRUQNCj4gPiA+IA0KPiA+
+ID4gIyB1bW91bnQgL21udC90bXANCj4gPiA+ICMgbmV0c3RhdCAtYW4gfCBncmVwIDE3Mi4zMS4x
+LjU0IHwgd2MgLWwNCj4gPiA+IDEyDQo+ID4gPiAjIG5ldHN0YXQgLWFuIHwgZ3JlcCAxNzIuMzEu
+MS41NA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6OTAxICAg
+ICAgICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gPiA+IHRjcCAgICAg
+ICAgMCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjY2NyAgICAgICAgIDE3Mi4zMS4xLjU0OjIw
+NDkgICAgICAgIFRJTUVfV0FJVCAgDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAwDQo+ID4gPiAx
+NzIuMzEuMS4yNDo3NDYgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQg
+IA0KPiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6NjcyICAgICAg
+ICAgMTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gPiA+IHRjcCAgICAgICAg
+MCAgICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjgzMiAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkg
+ICAgICAgIFRJTUVfV0FJVCAgDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAwDQo+ID4gPiAxNzIu
+MzEuMS4yNDo4OTUgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQgIA0K
+PiA+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6NjczICAgICAgICAg
+MTcyLjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gPiA+IHRjcCAgICAgICAgMCAg
+ICAgIDANCj4gPiA+IDE3Mi4zMS4xLjI0OjczMiAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAg
+ICAgIFRJTUVfV0FJVCAgDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAwDQo+ID4gPiAxNzIuMzEu
+MS4yNDo3OTUgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQgIA0KPiA+
+ID4gdGNwICAgICAgICAwICAgICAgMA0KPiA+ID4gMTcyLjMxLjEuMjQ6OTE4ICAgICAgICAgMTcy
+LjMxLjEuNTQ6MjA0OSAgICAgICAgVElNRV9XQUlUICANCj4gPiA+IHRjcCAgICAgICAgMCAgICAg
+IDANCj4gPiA+IDE3Mi4zMS4xLjI0OjY3NCAgICAgICAgIDE3Mi4zMS4xLjU0OjIwNDkgICAgICAg
+IFRJTUVfV0FJVCAgDQo+ID4gPiB0Y3AgICAgICAgIDAgICAgICAwDQo+ID4gPiAxNzIuMzEuMS4y
+NDo5NTMgICAgICAgICAxNzIuMzEuMS41NDoyMDQ5ICAgICAgICBUSU1FX1dBSVQgDQo+ID4gPiAN
+Cj4gPiA+IElzIHRoaXMgdGhlIGV4cGVjdGVkIGJlaGF2aW9yPyANCj4gPiA+IA0KPiA+ID4gSWYg
+c28gSSBoYXZlIGEgZmV3IGNvbmNlcm5zLi4uDQo+ID4gPiANCj4gPiA+ICogVGhlIGNvbm5lY3Rp
+b25zIHdhbGsgYWxsIG92ZXIgdGhlIC9ldGMvc2VydmljZXMgbmFtZXNwYWNlLg0KPiA+ID4gTWVh
+bmluZw0KPiA+ID4gdXNpbmcgcG9ydHMgdGhhdCBhcmUgcmVzZXJ2ZWQgZm9yIHJlZ2lzdGVyZWQg
+c2VydmljZXMsIHNvbWV0aGluZw0KPiA+ID4gd2UndmUgdHJpZWQgdG8gYXZvaWQgaW4gdXNlcmxh
+bmQgYnkgbm90IGJpbmRpbmcgdG8gcHJpdmlsZWdlDQo+ID4gPiBwb3J0cw0KPiA+ID4gYW5kDQo+
+ID4gPiB1c2Ugb2YgYmFja2xpc3QgcG9ydHMgdmlhIC9ldGMvYmluZHJlc3Zwb3J0LmJsYWNrbGlz
+dA0KPiA+ID4gDQo+ID4gPiAqIFdoZW4gdGhlIHVubW91bnQgaGFwcGVucywgYWxsIHRob3NlIGNv
+bm5lY3Rpb25zIGdvIGludG8NCj4gPiA+IFRJTUVfV0FJVA0KPiA+ID4gb24gDQo+ID4gPiBwcml2
+aWxlZ2UgcG9ydHMgYW5kIHRoZXJlIGFyZSBvbmx5IHNvIG1hbnkgb2YgdGhvc2UuIE5vdCBnb29k
+DQo+ID4gPiBkdXJpbmcNCj4gPiA+IG1vdW50IA0KPiA+ID4gc3Rvcm1zICh3aGVuIGEgc2VydmVy
+IHJlYm9vdHMgYW5kIHRob3VzYW5kIG9mIGhvbWUgZGlycyBhcmUNCj4gPiA+IHJlbW91bnRlZCku
+DQo+ID4gPiANCj4gPiA+ICogTm8gbWFuIHBhZ2UgZGVzY3JpYmluZyB0aGUgbmV3IGZlYXR1cmUu
+DQo+ID4gPiANCj4gPiA+IEkgcmVhbGl6ZSB0aGVyZSBpcyBub3QgbXVjaCB3ZSBjYW4gZG8gYWJv
+dXQgc29tZSBvZiB0aGVzZQ0KPiA+ID4gKGFrYSB1bW91bnQ9PT5USU1FX1dBSVQpIGJ1dCBJIHRo
+aW5rIHdlIG5lZWQgdG8gZG9jdW1lbnQgDQo+ID4gPiB3aGF0IHdlIGFyZSBkb2luZyB0byBwZW9w
+bGUncyBjb25uZWN0aW9uIG5hbWVzcGFjZSB3aGVuIA0KPiA+ID4gdGhleSB1c2UgdGhpcyBmZWF0
+dXJlLiANCj4gPiANCj4gPiBJJ20gbm90IHN1cmUgdGhhdCBJIHVuZGVyc3RhbmQgdGhlIGNvbmNl
+cm4uIFRoZSBjb25uZWN0aW9ucyBhcmUNCj4gPiBsaW1pdGVkDQo+ID4gdG8gYSBzcGVjaWZpYyB3
+aW5kb3cgb2YgcG9ydHMgYnkgdGhlIG1pbl9yZXN2cG9ydC9tYXhfcmVzdnBvcnQNCj4gPiBzdW5y
+cGMNCj4gPiBtb2R1bGUgcGFyYW1ldGVycyBqdXN0IGFzIHRoZXkgd2VyZSBiZWZvcmUgd2UgYWRk
+ZWQgJ25jb25uZWN0Jy4NCj4gPiBOb3RoaW5nDQo+ID4gaGFzIGNoYW5nZWQgaW4gdGhlIHdheSB3
+ZSBjaG9vc2UgcG9ydHMuLi4NCj4gPiANCj4gTWF5YmUgdGhpcyBwcm9ibGVtIGhhcyBleGlzdGVk
+IGZvciBhIHdoaWxlLi4uIA0KPiANCj4gSGVyZSBhcmUgdGhlIG1pbnMvbWF4IHBvcnRzDQo+IFJQ
+Q19ERUZfTUlOX1JFU1ZQT1JUICAgICg2NjVVKQ0KPiBSUENfREVGX01BWF9SRVNWUE9SVCAgICAo
+MTAyM1UpDQo+IA0KPiBGcm9tIC9ldGMvc2VydmljZXMgdGhlcmUgYXJlIHRoZSBzZXJ2aWNlcyBp
+biB0aGF0IHJhbmdlDQo+IGFjcCg2NzQpLCBoYS1jbHVzdGVyKDY5NCksIGtlcmJlcm9zLWFkbSg3
+NDkpLCBrZXJiZXJvcy1pdig3NTApDQo+IHdlYnN0ZXIoNzY1KSwgcGhvbmVib29rKDc2NyksIHJz
+eW5jKDg3MyksIHJxdW90YWQoODc1KSwgDQo+IHRlbG5ldHMoOTkyKSwgaW1hcHMoOTkzKSwgcG9w
+M3MoOTk1KQ0KPiANCj4gR3JhbnRlZCBhIGxvdCBvZiB0aGVzZSBhcmUgdW51c2VkL2xlZ2FjeSBz
+ZXJ2aWNlcywgYnV0IHNvbWUgb2YNCj4gdGhlbSwgbGlrZSBpbWFwcyBhbmQgcnN5bmMsIGFyZSBz
+dGlsbCB1c2VkLiANCj4gDQo+IE15IHBvaW50IGlzIHNpbmNlIHRoZSBuY29ubmVjdCBjb25uZWN0
+aW9ucyBhcmUgcGVyc2lzdGVudCwgZm9yDQo+IHRoZSBsaWZlIG9mIHRoZSBtb3VudCwgd2UgY291
+bGQgZW5kIHVwIHNxdWF0dGluZyBvbiBwb3J0cyBvdGhlcg0KPiBzZXJ2aWNlcyB3aWxsIG5lZWRl
+ZC4NCj4gDQo+IE1heWJlIHRoZXJlIGlzIG5vdCBtdWNoIHdlIGNhbiBkbyBhYm91dCB0aGlzLi4u
+IEJ1dCB3ZSBzaG91bGQgZXhwbGFpbg0KPiBzb21ld2hlcmUsIGxpa2UgdGhlIG1hbiBwYWdlLCB0
+aGF0IG5jb25uZWN0IHdpbGwgY3JlYXRlIHVwIHRvIDE2DQo+IHBlcnNpc3RlbnQgY29ubmVjdGlv
+biBvbiByZWdpc3RlciBwcml2aWxlZ2UgcG9ydHMuDQoNCg0KSWYgdXNlcnMgaGF2ZSBhIG5lZWQg
+dG8gcnVuIHNlcnZlcnMgb24gYSBwb3J0IHRoYXQgbWlnaHQgY2hvc2VuIGJ5IGENCmtlcm5lbCBu
+ZnMsIGxvY2tkIG9yIHJwY2JpbmQgY2xpZW50LCB0aGVuIHRoZXkgY2FuIGd1YXJhbnRlZSBubw0K
+Y29sbGlzaW9ucyBieSByZWRlZmluaW5nIHRoZSAncHJpdmlsZWdlZCBwb3J0cycgYXZhaWxhYmxl
+IHRvIHN1bnJwYyB0bw0KYW55IGFyYml0cmFyeSByYW5nZSA8cG9ydG5yMT4gLSA8cG9ydG5yMj46
+DQoNCkVpdGhlcg0KDQogKiBSZXNlcnZlIHRoZSBwb3J0cyBhdCBtb2R1bGUgbG9hZCB0aW1lLCBi
+eSBhZGRpbmcgYSBsaW5lIHRvIGEgY29uZmlnDQogICBmaWxlIC9ldGMvbW9kcHJvYmUuZC9mb28u
+Y29uZiBvZiB0aGUgZm9ybQ0KICAgICAgb3B0aW9ucyBzdW5ycGMgbWluX3Jlc3Zwb3J0PTxwb3J0
+bnIxPiBtYXhfcmVzdnBvcnQ9PHBvcnRucjI+DQoNCm9yDQoNCiAqIENoYW5nZSB0aGUgcG9ydCBy
+ZXNlcnZhdGlvbiBhZnRlciBtb2R1bGUgbG9hZCAoYnV0IGJlZm9yZSBtb3VudGluZw0KICAgeW91
+ciBmaXJzdCBORlMgZmlsZXN5c3RlbSkgdXNpbmcNCiAgICAgIGVjaG8gJzxwb3J0bnIxPicgPiAv
+c3lzL21vZHVsZS9zdW5ycGMvcGFyYW1ldGVycy9taW5fcmVzdnBvcnQNCiAgICAgIGVjaG8gJzxw
+b3J0bnIyPicgPiAvc3lzL21vZHVsZS9zdW5ycGMvcGFyYW1ldGVycy9tYXhfcmVzdnBvcnQNCg0K
+VGhpcyBpcyBzb21ldGhpbmcgdXNlcnMgb3VnaHQgdG8gYmUgZG9pbmcgYWxyZWFkeSBpZiB0aGV5
+IG5lZWQNCmd1YXJhbnRlZWQgYXZhaWxhYmlsaXR5IG9mIHNwZWNpZmljIHBvcnRzIGluIHRoZSBy
+YW5nZSA2NjUtMTAyMyB3aGlsZQ0KdXNpbmcgdGhlIE5GUyBjbGllbnQuIFRoYXQgaXMgZW50aXJl
+bHkgaW5kZXBlbmRlbnQgb2Ygd2hldGhlciBvciBub3QNCnRoZXkgYXJlIHVzaW5nIG5jb25uZWN0
+Lg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBI
+YW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
