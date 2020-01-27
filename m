@@ -2,72 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D0D614A935
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 18:46:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A2A514A9EC
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 19:39:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgA0RqF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jan 2020 12:46:05 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37506 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0RqF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 12:46:05 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RHilem146617;
-        Mon, 27 Jan 2020 17:46:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=A5fzn1EhXA1dOHrIrxCMqV9yX8BBlYktBgUqM0CWTVE=;
- b=l8NRKzksQeXj3oxqMJLqI1Mmnds+Y743Wqcr97Z37aHmwPwFI0AzzLyGP5ss0aY7Sj6v
- 4fTxiixpvAjPjqb7NUQ/R4OcnmS58UbQFyZeu9al+Sr8r2BXs03cTDPzLQKRwrcy8hIJ
- K3/nCl9+6HEieCRH4eLL5Mt9m79kFQVM4yikiBW6DX0MnWBizQN24vtpYce8l1eY354S
- ayO5exrDTK4dD37hVkNsJHb+JcRAroFbtWjO0KVr/MZDG1fjNHJse/DLr1AjZ8EE3Zfy
- VKEXPBZ8JUFamasdQBonk9AA//RWWJXukOuTFOYYSAo32dBrfQKiYKjBM56h76NlMaV5 VQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xrd3u10cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 17:46:02 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RHikZY188844;
-        Mon, 27 Jan 2020 17:46:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xryu9v68q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 17:46:01 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00RHk0F2011785;
-        Mon, 27 Jan 2020 17:46:00 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jan 2020 09:46:00 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Remove single NFS client performance bottleneck: Only 4 nfsd
- active
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <0474b0f7-ec6d-9a02-2cd0-a69339e7cae5@excelero.com>
-Date:   Mon, 27 Jan 2020 12:45:59 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DE46C289-9655-4E45-B89F-110E62F9F82D@oracle.com>
-References: <a8a528c7-80bd-befc-59f8-00135d85a2bf@excelero.com>
- <F82F3FA8-4E2A-4014-A052-A0367562A956@oracle.com>
- <2D125E5E-F97D-4F52-89A9-C499CC7E7A5D@oracle.com>
- <0474b0f7-ec6d-9a02-2cd0-a69339e7cae5@excelero.com>
-To:     Sven Breuner <sven@excelero.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001270144
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001270144
+        id S1725958AbgA0SjZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jan 2020 13:39:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30409 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725845AbgA0SjZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 13:39:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580150363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZMCked3fUhSZVEHK8Y2siL8oP+ldvZyJQqiXbxWzWXo=;
+        b=Go84ZcM5IwlD5KES9hjZplPDTgTtug5kxdPoZu2xJ/lLrF9I+OiVLuu91nQzZMIpmlH77g
+        e+0xWZt3sqJKlZhyeHDCwcRmNwE4hsIuS/iDGQFH4HMRlUiFBzLkXJKviQa3c7DoIkmtjz
+        DZW06LHOpjhCWZvNBLn9oSzYWuvAw6Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-gIG0zUF7N1ahPcOeopTFBQ-1; Mon, 27 Jan 2020 13:39:05 -0500
+X-MC-Unique: gIG0zUF7N1ahPcOeopTFBQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BFDF13FF;
+        Mon, 27 Jan 2020 18:39:04 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-117-75.phx2.redhat.com [10.3.117.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 760693B7;
+        Mon, 27 Jan 2020 18:39:03 +0000 (UTC)
+Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
+ <81b8fd1b-6882-5edf-fcab-1a7d4c9d4d47@RedHat.com>
+ <bd7f5ace305738f37b657fe86761339956bf66c3.camel@hammerspace.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <3e85d5f8-bcdc-b8ee-3ea4-b918f084fd19@RedHat.com>
+Date:   Mon, 27 Jan 2020 13:39:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <bd7f5ace305738f37b657fe86761339956bf66c3.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -75,144 +59,155 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Jan 27, 2020, at 12:27 PM, Sven Breuner <sven@excelero.com> wrote:
->=20
-> Hi Chuck,
->=20
-> thanks for looking into this. (Answers inline...)
->=20
-> Chuck Lever wrote on 27.01.2020 15:12:
->>=20
->>> On Jan 27, 2020, at 9:06 AM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>=20
->>> Hi Sven-
->>>=20
->>>> On Jan 26, 2020, at 6:41 PM, Sven Breuner <sven@excelero.com> =
-wrote:
->>>>=20
->>>> Hi,
->>>>=20
->>>> I'm using the kernel NFS client/server and am trying to read as =
-many small files per second as possible from a single NFS client, but =
-seem to run into a bottleneck.
->>>>=20
->>>> Maybe this is just a tunable that I am missing, because the CPUs on =
-client and server side are mostly idle, the 100Gbit (RoCE) network links =
-between client and server are also mostly idle and the NVMe drives in =
-the server are also mostly idle (and the server has enough RAM to easily =
-fit my test data set in the ext4/xfs page cache, but also a 2nd read of =
-the data set from the RAM cache doesn't change the result much).
->>>>=20
->>>> This is my test case:
->>>> # Create 1.6M 10KB files through 128 mdtest processes in different =
-directories...
->>>> $ mpirun -hosts localhost -np 128 /path/to/mdtest -F -d =
-/mnt/nfs/mdtest -i 1 -I 100 -z 1 -b 128 -L -u -w 10240 -e 10240 -C
->>>>=20
->>>> # Read all the files through 128 mdtest processes (the case that =
-matters primarily for my test)...
->>>> $ mpirun -hosts localhost -np 128 /path/to/mdtest -F -d =
-/mnt/nfs/mdtest -i 1 -I 100 -z 1 -b 128 -L -u -w 10240 -e 10240 -E
->>>>=20
->>>> The result is about 20,000 file reads per sec, so only ~200MB/s =
-network throughput.
->>> What is the typical size of the NFS READ I/Os on the wire?
-> The application is fetching each full 10KB file in a single read op =
-(so "read(fd, buf, 10240)" ) and NFS wsize/rsize is 512KB.
+On 1/22/20 7:23 PM, Trond Myklebust wrote:
+> On Mon, 2020-01-20 at 10:35 -0500, Steve Dickson wrote:
+>> Hello,
+>>
+>> On 1/16/20 2:08 PM, Olga Kornievskaia wrote:
+>>> From: Olga Kornievskaia <kolga@netapp.com>
+>>>
+>>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+>>> ---
+>>>  fs/nfs/nfs4client.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+>>> index 460d625..4df3fb0 100644
+>>> --- a/fs/nfs/nfs4client.c
+>>> +++ b/fs/nfs/nfs4client.c
+>>> @@ -881,7 +881,7 @@ static int nfs4_set_client(struct nfs_server
+>>> *server,
+>>>  
+>>>  	if (minorversion == 0)
+>>>  		__set_bit(NFS_CS_REUSEPORT, &cl_init.init_flags);
+>>> -	else if (proto == XPRT_TRANSPORT_TCP)
+>>> +	if (proto == XPRT_TRANSPORT_TCP)
+>>>  		cl_init.nconnect = nconnect;
+>>>  
+>>>  	if (server->flags & NFS_MOUNT_NORESVPORT)
+>>>
+>> Tested-by: Steve Dickson <steved@redhat.com>
+>>
+>> With this patch v4.0 mounts act just like v4.1/v4.2 mounts
+>> But is that a good thing. :-)  
+>>
+>> Here is what I've found in my testing...
+>>
+>> mount -onconnect=12 172.31.1.54:/home/tmp /mnt/tmp
+>>
+>> Will create 12 TCP connections and maintain those 12 
+>> connections until the umount happens. By maintain I mean 
+>> if the connection times out, it is reconnected 
+>> to maintain the 12 connections 
+>>
+>> # mount -onconnect=12 172.31.1.54:/home/tmp /mnt/tmp
+>> # netstat -an | grep 172.31.1.54 | wc -l
+>> 12
+>> # netstat -an | grep 172.31.1.54        
+>> tcp        0      0
+>> 172.31.1.24:901         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:667         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:746         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:672         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:832         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:895         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:673         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:732         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:795         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:918         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:674         172.31.1.54:2049        ESTABLISHED
+>> tcp        0      0
+>> 172.31.1.24:953         172.31.1.54:2049        ESTABLISHED
+>>
+>> # umount /mnt/tmp
+>> # netstat -an | grep 172.31.1.54 | wc -l
+>> 12
+>> # netstat -an | grep 172.31.1.54
+>> tcp        0      0
+>> 172.31.1.24:901         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:667         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:746         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:672         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:832         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:895         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:673         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:732         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:795         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:918         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:674         172.31.1.54:2049        TIME_WAIT  
+>> tcp        0      0
+>> 172.31.1.24:953         172.31.1.54:2049        TIME_WAIT 
+>>
+>> Is this the expected behavior? 
+>>
+>> If so I have a few concerns...
+>>
+>> * The connections walk all over the /etc/services namespace. Meaning
+>> using ports that are reserved for registered services, something
+>> we've tried to avoid in userland by not binding to privilege ports
+>> and
+>> use of backlist ports via /etc/bindresvport.blacklist
+>>
+>> * When the unmount happens, all those connections go into TIME_WAIT
+>> on 
+>> privilege ports and there are only so many of those. Not good during
+>> mount 
+>> storms (when a server reboots and thousand of home dirs are
+>> remounted).
+>>
+>> * No man page describing the new feature.
+>>
+>> I realize there is not much we can do about some of these
+>> (aka umount==>TIME_WAIT) but I think we need to document 
+>> what we are doing to people's connection namespace when 
+>> they use this feature. 
+> 
+> I'm not sure that I understand the concern. The connections are limited
+> to a specific window of ports by the min_resvport/max_resvport sunrpc
+> module parameters just as they were before we added 'nconnect'. Nothing
+> has changed in the way we choose ports...
+> 
+Maybe this problem has existed for a while... 
 
-512KB is not going to matter if every file contains only 10KB.
-This means 10KB READs. The I/O size is going to limit data
-throughput. 20KIOPS seems low for RDMA, but is about right for
-TCP.
+Here are the mins/max ports
+RPC_DEF_MIN_RESVPORT    (665U)
+RPC_DEF_MAX_RESVPORT    (1023U)
 
-If you see wire operations, then the client's page cache is not
-being used at all?
+From /etc/services there are the services in that range
+acp(674), ha-cluster(694), kerberos-adm(749), kerberos-iv(750)
+webster(765), phonebook(767), rsync(873), rquotad(875), 
+telnets(992), imaps(993), pop3s(995)
 
+Granted a lot of these are unused/legacy services, but some of
+them, like imaps and rsync, are still used. 
 
->>> Are you sure your mpirun workload is generating enough parallelism?
-> Yes, MPI is only used to start the 128 processes and aggregate the =
-performance results in the end. For the actual file read phase, all 128 =
-processes run completely independent without any =
-communication/synchronization. Each process is working in its own subdir =
-with its own set of 10KB files.
-> (Running the same test directly on the local xfs of the NFS server box =
-results in ~350,000 10KB file reads per sec after cache drop and >1 mio =
-10KB file reads per sec from page cache. Just mentioning this for the =
-sake of completeness to show that this is not hitting a limit on the =
-server side.)
->> A couple of other thoughts:
->>=20
->> What's the client hardware like? NUMA? Fast memory? CPU count?
->=20
-> Client and server are dual socket Intel Xeon E5-2690 v4 @ 2.60GHz (14 =
-cores per socket plus hyper threading), all 4 memory channels per socket =
-populated with fastest possible DIMMs (DDR4 2400).
+My point is since the nconnect connections are persistent, for
+the life of the mount, we could end up squatting on ports other
+services will needed.
 
-One recommendation: Disable HT in the BIOS.
+Maybe there is not much we can do about this... But we should explain
+somewhere, like the man page, that nconnect will create up to 16
+persistent connection on register privilege ports.
 
-
-> Also tried pool_mode auto/global/pernode on server side.
-
-NUMA seems to matter more on the client than on the server.
-
-
->> Have you configured device interrupt affinity and used tuned
->> to disable CPU sleep states, etc?
->=20
-> Yes, CPU power saving (frequency scaling) disabled. Tried tuned =
-profiles latency-performance and and throughput-performance. Also tried =
-irqbalance and mlnx_affinity.
->=20
-> All without any significant effect unfortunately.
-
-And lspci -vvv confirms you are getting the right PCIe link
-settings on both systems?
-
-
->> Have you properly configured your 100GbE switch and cards?
->>=20
->> I have a Mellanox SN2100 here and two hosts with CX-5 Ethernet.
->> The configuration of the cards and switch is critical to good
->> performance.
-> Yes, I can absolutely confirm that having this part of the config =
-correct is critical for great performance :-) All configured with PFC =
-and ECN and double-checked for packets to be tagged correctly and =
-lossless in the RoCE case. The topology is simple: Client and server =
-connected to same Mellanox switch, nothing else happening on the switch.
->>=20
->>=20
->>>> I noticed in "top" that only 4 nfsd processes are active, so I'm =
-wondering why the load is not spread across more of my 64 =
-/proc/fs/nfsd/threads, but even the few nfsd processes that are active =
-use less than 50% of their core each. The CPUs are shown as >90% idle in =
-"top" on client and server during the read phase.
->>>>=20
->>>> I've tried:
->>>> * CentOS 7.5 and 7.6 kernels (3.10.0-...) on client and server; and =
-Ubuntu 18 with 4.18 kernel on server side
->>>> * TCP & RDMA
->>>> * Mounted as NFSv3/v4.1/v4.2
->>>> * Increased tcp_slot_table_entries to 1024
->>>>=20
->>>> ...but all that didn't change the fact that only 4 nfsd processes =
-are active on the server and thus I'm getting the same result already if =
-/proc/fs/nfsd/threads is set to only 4 instead of 64.
->>>>=20
->>>> Any pointer to how I can overcome this limit will be greatly =
-appreciated.
->>>>=20
->>>> Thanks in advance
->>>>=20
->>>> Sven
->>>>=20
->>> --
->>> Chuck Lever
->> --
->> Chuck Lever
-
---
-Chuck Lever
-
-
+steved.
 
