@@ -2,212 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED4A214A821
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 17:32:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7B014A8E2
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2020 18:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgA0Qcy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jan 2020 11:32:54 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41859 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbgA0Qcu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 11:32:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580142768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=acerTmkt9MrRw3hrdmoRuF2JZHiXd5F9RUaO+9oi+NM=;
-        b=JLE84qwj2VfTcmLXSLV/40sJJmlaKyHHkPnfjZwXg5LHPWkXPtirvMGV2hrjK0+bC6WXrF
-        TSPPROG0SWYJepolIOxRJSwe3kstgDxq73xhtglIKUIAvAsAzz8EV04J9a9XpQKGixLnyM
-        XMuuS7s67v+VQddYN/4+tc4ie6bYhYo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-m-TBYEO8MYSG4Dy6f6lWHg-1; Mon, 27 Jan 2020 11:32:46 -0500
-X-MC-Unique: m-TBYEO8MYSG4Dy6f6lWHg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02F908010EC;
-        Mon, 27 Jan 2020 16:32:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-99.rdu2.redhat.com [10.10.120.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9425886433;
-        Mon, 27 Jan 2020 16:32:42 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAOQ4uxicFmiFKz7ZkHYuzduuTDaCTDqo26fo02-VjTMmQaaf+A@mail.gmail.com>
-References: <CAOQ4uxicFmiFKz7ZkHYuzduuTDaCTDqo26fo02-VjTMmQaaf+A@mail.gmail.com> <14196.1575902815@warthog.procyon.org.uk> <CAOQ4uxj7RhrBnWb3Lqi3hHLuXNkVXrKio398_PAEczxfyW7HsA@mail.gmail.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     dhowells@redhat.com, lsf-pc@lists.linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] How to make disconnected operation work?
+        id S1725845AbgA0R03 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jan 2020 12:26:29 -0500
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:41138 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0R03 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 12:26:29 -0500
+Received: by mail-qk1-f177.google.com with SMTP id s187so10396159qke.8;
+        Mon, 27 Jan 2020 09:26:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
+        b=K5cRyYfAGJg49+k4NPcUlUtuPQo2ckeAhTzgYeX+0cOluS/SHNz7C++gaNn06jOaC7
+         dh2q8dcz16E2AB7zc+/cntD0ETNl8qxZZWF4YZqnlgUU+VySOZ6R5yp6lXLQmOoMWM5L
+         /n4cNa4DQAMcqbFzjtr1EigbhqHtWUwI34hLInhTIu3v1zjVFvQKIisS8B22c8Lxd5A8
+         ubgzLIl1HLm6alyMWpdqJKTK40k5ZxUvFJfdGVhKHNeLdZYSRt1UbnLjzGYXsYFEDe19
+         H80gYbhCRYdhD+KEwEUVdb0Qu84sV6GXmnl0hGg6vQ9CAN2piOebNgSGRgsvs50mAksU
+         QITQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
+        b=DYVtDXPTg29QEW1gFwTCoBRw/AxeiP4aAR94Sf7bbOBf9eMVlWXCiWQ126TRtNLy5K
+         2d7wIWCjfSmI2RQzBWRDP0OUUtXw2nJVZxNaiiQ1CHKSfL5FMgT7iBZnOeUMczrLQ5op
+         pVN4XGywpjpGCIxPzW/E2xtmYwI7e8jY9v862bKdVhCLuta1ysuzojFYNTAd3qRs+C2u
+         8c+4vVf3xGPAUFXjY4WLGHEU8BkVrzPifD+Drpk8EfObg8Fw2u75EhksYlORP0WyppmF
+         MdM1r6ignayWZ72/ziCx34AJMaF8Itut0Gdi7a9kfii0Zjy05hAgGnMPPIu3t8yRmC1s
+         DhYQ==
+X-Gm-Message-State: APjAAAUg0CO5mZg74UovlEOSaW1fZ43SGW1vqZX0ORH9ayg9Z35V6M+u
+        1kvQqGujyBBxzkqLN5ci3iGgt/DNZcdINjxw1+Y=
+X-Google-Smtp-Source: APXvYqy0XhigD/SKPQ3G9sFERZqGihKttc4IFVvnazIK9f9RlMbKcNwXPBZgTwa7qrr1/4wXy5hX5IaYFYwU7foDN/M=
+X-Received: by 2002:a37:4047:: with SMTP id n68mr17831482qka.258.1580145988471;
+ Mon, 27 Jan 2020 09:26:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1477631.1580142761.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 27 Jan 2020 16:32:41 +0000
-Message-ID: <1477632.1580142761@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+ <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+ <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
+ <CALbTx=GxuUmWu9Og_pv8TPbB0ZnOCA3vMqtyG4e18-4+zkY8=A@mail.gmail.com> <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
+In-Reply-To: <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Mon, 27 Jan 2020 17:26:16 +0000
+Message-ID: <CALbTx=E7Hk4bVtSehjo4TPykTZsP+fSR0zeHFWyqd4XtHDyL4g@mail.gmail.com>
+Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > > All that needs to be done here is to move the setting of clp-
+> > > > cl_last_renewal _out_ of nfs4_set_lease_period(), and just have
+> > > nfs4_proc_setclientid_confirm() and nfs4_update_session() call
+> > > do_renew_lease().
+> > >
+> >
+> > This would also require nfs4_setup_state_renewal() to call
+> > do_renew_lease() I think - at least it currently calls
+> > nfs4_set_lease_period().
+>
+> This is the mechanism we're replacing. There is no need for a call to
+> do_renew_lease() in nfs4_setup_state_renewal().
 
-> My thinking is: Can't we implement a stackable cachefs which interfaces
-> with fscache and whose API to the netfs is pure vfs APIs, just like
-> overlayfs interfaces with lower fs?
+ok
 
-In short, no - doing it with pure the VFS APIs that we have is not that si=
-mple
-(yes, Solaris does it with a stacking filesystem, and I don't know anythin=
-g
-about the API details, but there must be an auxiliary API).  You need to
-handle:
+>
+> > Also, iirc fsinfo() not setting cl_last_renewal leads to
+> > cl_last_renewal initialization issues under some circumstances.
+> >
+> > Then the RFC 7530 in section 16.34.5 states:
+> > "SETCLIENTID_CONFIRM does not establish or renew a lease.", so
+> > calling
+> > do_renew_lease() from nfs4_setclientid_confirm() doesn't seem to be
+> > ok.
+>
+> So just move the do_renew_lease() to nfs4_proc_setclientid(). The
+> successful combination SETCLIENTID+SETCLIENTID_CONFIRM definitely
+> _does_ establish a lease.
+>
 
- (1) Remote invalidation.  The netfs needs to tell the cache layer
-     asynchronously about remote modifications - where the modification ca=
-n
-     modify not just file content but also directory structure, and even f=
-ile
-     data invalidation may be partial.
+ok
 
- (2) Unique file group matching.  The info required to match a group of fi=
-les
-     (e.g. an NFS server, an AFS volume, a CIFS share) is not necessarily
-     available through the VFS API - I'm not sure even the export API make=
-s
-     this available since it's built on the assumption that it's exporting
-     local files.
+> > I'm not sure if is is valid to do implicit lease renewal in
+> > nfs4_update_session() either...
+>
+> Ditto. Move to the exchange_id call.
+>
 
- (3) File matching.  The info required to match a file to the cache is not
-     necessarily available through the VFS API.  NFS has file handles, for
-     example; the YFS variant of AFS has 96-bit 'inode numbers'.  (This mi=
-ght
-     be done with the export API - it that's counted so).  Further, the fi=
-le
-     identifier may not be unique outside the file group.
+ok
 
- (4) Coherency management.  The netfs must tell the cache whether or not t=
-he
-     data contained in the cache is valid.  This information is not
-     necessarily available through the VFS APIs (NFS change IDs, AFS data
-     version, AFS volume sync info).  It's also highly filesystem specific=
-.
+> >
+> > Anyway, the patch would be something like (haven't tested it yet):
+> >
+...
+> > @@ -6146,6 +6143,10 @@ int nfs4_proc_setclientid_confirm(struct
+> > nfs_client *clp,
+> >                 clp->cl_clientid);
+> >         status = rpc_call_sync(clp->cl_rpcclient, &msg,
+> >                                RPC_TASK_TIMEOUT |
+> > RPC_TASK_NO_ROUND_ROBIN);
+> > +       if(status == 0) {
+> > +               unsigned long now = jiffies;
+>
+> The variable 'now' needs to be set before the RPC call in order to
+> avoid overestimating the remaining lease period.
+>
 
-It might also have security implications for netfs's that handle their own
-security (such as AFS does), but that might fall out naturally.
+yes, thx.
 
-> As long as netfs supports direct_IO() (all except afs do) then the activ=
-e page
-> cache could be that of the stackable cachefs and network IO is always
-> direct from/to cachefs pages.
+I will get a new patch tested and submitted here this week.
 
-What about objects that don't support DIO?  Directories, symbolic links an=
-d
-automount points?  All of these things are cacheable objects with AFS.
-
-And speaking of automount points - how would you deal with those beyond si=
-mply
-caching the contents?  Create a new stacked instance over it?  How do you =
-see
-the automount point itself?
-
-I see that the NFS FH encoder doesn't handle automount points.
-
-> If netfs supports export_operations (all except afs do), then indexing
-> the cache objects could be done in a generic manner using fsid and
-> file handle, just like overlayfs index feature works today.
-
-FSID isn't unique and doesn't exist for all filesystems.  Two NFS servers,=
- for
-example, can give you the same FSID, but referring to different things.  A=
-FS
-has a textual cell name and a volume ID that you need to combine; it doesn=
-'t
-have an FSID.
-
-This may work for overlayfs as the FSID can be confined to a particular
-overlay.  However, that's not what we're dealing with.  We would be talkin=
-g
-about an index that potentially covers *all* the mounted netfs.
-
-Also, from your description that sounds like a bug in overlayfs.  If the
-overlain NFS tree does a referral to a different server, you no longer hav=
-e a
-unique FSID or a unique FH within that FSID so your index is broken.
-
-> Would it not be a maintenance win if all (or most of) the fscache logic
-> was yanked out of all the specific netfs's?
-
-Actually, it may not help enormously with disconnected operation.  A certa=
-in
-amount of the logic probably has to be implemented in the netfs as each ne=
-tfs
-provides different facilities for managing this.
-
-Yes, it gets some of the I/O stuff out - but I want to move some of that d=
-own
-into the VM if I can and librarifying the rest should take care of that.
-
-> Can you think of reasons why the stackable cachefs model cannot work
-> or why it is inferior to the current fscache integration model with netf=
-s's?
-
-Yes.  It's a lot more operationally expensive and it's harder to use.  The
-cache driver would also have to get a lot bigger, but that would be
-reasonable.
-
-Firstly, the expense: you have to double up all the inodes and dentries th=
-at
-are in use - and that's not counting the resources used inside the cache
-itself.
-
-Secondly, the administration: I'm assuming you're suggesting the way I thi=
-nk
-Solaris does it and that you have to make two mounts: firstly you mount th=
-e
-netfs and then you mount the cache over it.  It's much simpler if you just
-need make the netfs mount only and then that goes and uses the cache if it=
-'s
-available - it's also simple to bring the cache online after the fact mean=
-ing
-you can even cache applied retroactively to a root filesystem.
-
-You also have the issue of what happens if someone bind-mounts the netfs m=
-ount
-and mounts the cache over only one of the views.  Now you have a coherency
-management problem that the cache cannot see.  It's only visible to the ne=
-tfs,
-but the netfs doesn't know about the cache.
-
-There's also file locking.  Overlayfs doesn't support file locking that I =
-can
-see, but NFS, AFS and CIFS all do.
-
-
-Anyway, you might be able to guess that I'm really against using stackable
-filesystems for things like this and like UID shifting.  I think it adds m=
-ore
-expense and complexity than it's necessarily worth.
-
-I was more inclined to go with unionfs than overlayfs and do the filesyste=
-m
-union in the VFS as it ought to be cheaper if you're using it (whereas
-overlayfs is cheaper if you're not).
-
-One final thing - even if we did want to switch to an stacked approach, we
-might still have to maintain the current way as people use it.
-
-David
-
+-- 
+Robert Milkowski
