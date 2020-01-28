@@ -2,191 +2,200 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C084214C254
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2020 22:46:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1299614C381
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 00:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgA1Vqo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Jan 2020 16:46:44 -0500
-Received: from mail-mw2nam12on2104.outbound.protection.outlook.com ([40.107.244.104]:25440
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbgA1Vqo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:46:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iau5BeNpXM3RLpqE/Er2wU51GyF1q7ApQ2VUDYxh4SYMSHjTv8Go1slF/nvlbESQ15wJICv3/7dhVa8c/Rf8puazxa8y/jHZc9cXKOBenmInzmeEHh9KgxXurM3Q6RCahDpTN2/l2jMiP8Ppr1Tc6Za7sNRa6ikk2W+rj1Ah5Fyg2f7buhfr6tdpEssjtoGq0XrX/TYMFxgUh8wCh7WEVsCAldOoxRs1S8gH49KaG9aBpD+oi92RVEt9xz+Zj4JWyk0d+uEDT7bWzpahrAOfcP015U5OZRvFqoD3v8nHt1Euo/qt2Oje7ZSiU/b904fngHoVfPU9YNsEjQu8HjRGOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=df40m1XhdhN1o6DaQNMZjmcmLbSqs686nMOk5JZ0+sM=;
- b=PSUJg6uB0VyGe0g3GU8zpetoJejWoGvSsXPPt+dbHALIT90lYZumISBcwcqf1yEUkqPTieDMlzfy1x+xq1reL64DURq+RveRE6rqySeBO7PNiqx10DrDGIOcL4G53Iy6ElYJ8gBfrYZcXYKDtM1ilCqCoAD2Nro3kvjeLtWzxZLdTI2+C2n8cCSV88zgKDJaoOPeRNyTCZNyzzI41dGTclOitO/mWxzaMBw/ZSGtl+BKxUN0PMp/MYd+kjdvXh0W/nvoE0/nQAXJbv5Knan5VLKeRAoH+3ZYl20Ej2NtUU+bNFN3BN8Bt6pAcy1j7oVcPPnywINiw6iZ+h+SwdVqXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=df40m1XhdhN1o6DaQNMZjmcmLbSqs686nMOk5JZ0+sM=;
- b=L2VGeCOt0xX1ZwXOl/yn2xK7cru23Bjy6/Kc0Uh0lKU0o0LhSaxi9tpNSrnmM8oUBiy3mltcalebvIVjGo3r2ZJlFepdchg1+cMWgAvMwD1fpzJ64znTSl0qtV6Uqxs2T1tE3zNYqzggcTYyorio4dIh521ZLSml3rvzhEwnfvk=
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com (10.174.87.14) by
- BN6PR1301MB2001.namprd13.prod.outlook.com (10.174.89.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.18; Tue, 28 Jan 2020 21:46:39 +0000
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf]) by BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf%5]) with mapi id 15.20.2686.019; Tue, 28 Jan 2020
- 21:46:39 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] NFS: Revalidate once when holding a delegation
-Thread-Topic: [PATCH v2] NFS: Revalidate once when holding a delegation
-Thread-Index: AQHV1e9om4L2YbskUEmxr8p6E5Q5GagAOwsAgABKJQCAABCKAIAAApwAgAAEoIA=
-Date:   Tue, 28 Jan 2020 21:46:39 +0000
-Message-ID: <3deb5458d142529c0f23669a1b9edaaf4ad032a5.camel@hammerspace.com>
-References: <bcb5ffd399c4434730e6d100a5b7cae5e207244e.1580225161.git.bcodding@redhat.com>
-         <9e28aaaff4eae411e0a9d6b94b3d69f7514454cb.camel@hammerspace.com>
-         <be1a465a0cf52ddae6d2ba26069dff0500b0ea4b.camel@hammerspace.com>
-         <d1600385a53358aa69f6f839987a1b11fa2dd5e8.camel@hammerspace.com>
-         <5e157e8a6298ecb640414591988c1e76e8a6fd40.camel@hammerspace.com>
-In-Reply-To: <5e157e8a6298ecb640414591988c1e76e8a6fd40.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: afa82437-0be0-4248-3b6a-08d7a43b8e3a
-x-ms-traffictypediagnostic: BN6PR1301MB2001:
-x-microsoft-antispam-prvs: <BN6PR1301MB20017E1067AA073B748F26EFB80A0@BN6PR1301MB2001.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(366004)(39840400004)(376002)(189003)(199004)(2906002)(66476007)(316002)(110136005)(66556008)(64756008)(66446008)(76116006)(66946007)(91956017)(478600001)(5660300002)(81166006)(81156014)(8676002)(71200400001)(6486002)(8936002)(36756003)(6506007)(86362001)(2616005)(26005)(186003)(4326008)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB2001;H:BN6PR1301MB2097.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1sQMRxUmyRovHKsWK3dkHjWFT/sNriBNxl2ODAzjtQ/Lg0G3QYDeSkYl9U4IrO30aEUKi1ZigzAbxN+WvCPwHsY9focXtKvAYGrB8nu8z+EbAmeDTCyMx6FutLns+qr3E3XQxTJphVrfrB4H+ks7izQ/Z8RYzlmTUT/nceUZcKd4TskD0+d42vLF5Tq9iGu4beZCn9o2xUngnu+shZi3ZqEOQlDqEkyh6noMLEzfBP2GEGkNyz6EjQtkN4Q04QJxMhEnwonwWBM25Cx+elDl7+Juay0ExzKAo8t3U7zyZwiArEEBNfjfbKQe7njfyrR0B0r4iKEX5R6JqH67ot8mbPGb5azrINqfkKz8Sgg14QqQNpDzGD15uYxqIxMel3iIWr8jZJcBWyU4Fk55jFyEcgo642JAcmfuBp9an8RRnuED5+jQaYCq6GKrhRbxo9nO
-x-ms-exchange-antispam-messagedata: WQtWrfgDEn07gzcdJ042xx99XOBWL8I+Kqx91r4KPWfh/ML0KXbtE54VkgYvmWNfT4pUncoXqjVaRMpQnbILdWT+fgMewp5oa17YYIEA345vAUtQfbl2dc/0SDyRh4o1rLcgINI3U5C4jlyTTKcL1g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DEFE961D88EA8F4BBFC8658D3C5097F2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726303AbgA1XWw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Jan 2020 18:22:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42364 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgA1XWw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Jan 2020 18:22:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id k11so3389376wrd.9
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Jan 2020 15:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=excelero-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Flfvi1+bc4vLm57L8n/UMzIMQBHzjC7w6ndup3yZaUw=;
+        b=pH4ENdqup69z7dopOiizgvvNxTRfn5+jU0ZVMYrGK+Yh112mak8Y0A6f0wuR1/ZFE4
+         VfuNARnXmea1hBePTkdgWK+d/xIM5dx0jY0G1YU2FIPK9KD/OPZw1nfQuiPbtbRkcXNu
+         yllDul87gUhvqLrubsFYLsyHSf2OgiWbo7+4XfFZRZE0IpnW5lAIw9lqgOwczSxK+7N5
+         SFOgYsqYDM+G9/WwWvHVsOOYlgvIQ2YnRVwJw8Mah81Q3dX6ZsmcUfj6qg3VFV8CowUF
+         OfwRZnWCIS4jS9wDXcRVHMd1aP4OrkqgrI67QKbCCj3D86TovEE6+1sbQ+JW5SuBM3BY
+         Zeaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Flfvi1+bc4vLm57L8n/UMzIMQBHzjC7w6ndup3yZaUw=;
+        b=in2ofHXcUpD06uJ9rn+ifZ3OXYcs2B7r3IEA5y3m6GL1WY/qDzlxz5YXet3Gey/ddD
+         O4XEoLCKNf1r317pHalF5/hQ0iexS1FVONl/UbbBBFtAz7+8OGZFf/op3Z8QIrNeb9pm
+         5z8qxI3nsWKUYJ2izxZ117wEBEF09Vljx6ExxNcwE/JKYOV5nfYJAj2+amGHRA1fjBpZ
+         Ykn+H5WQeqSa20vn1qxayN3Y8VawssQ22Fz2AmghFhFn1jnH/OTbTu7Z+f0DiTeRMOu2
+         ojPrxJi36yBWsu542HNR07kWthhXDAG5uPXAnImOdMCTv0JH50y8fTYnplGMsR4Qlmze
+         Cxow==
+X-Gm-Message-State: APjAAAUBGKXJk4XBdOAqWnR/ABkplcpA6iBEI+lgRWcJ5MxxMvD26a4J
+        /pf4gkP2kg0D8VFrL5gOUoFnC9/RU0Q=
+X-Google-Smtp-Source: APXvYqzR6aPLjrbNe9Bf7sy9x5ocw3+i3fTFnlLYfWXkJBhqzdqI0OGMPdnYRLsvVZKoYjh32sZo4g==
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr31198908wru.294.1580253768377;
+        Tue, 28 Jan 2020 15:22:48 -0800 (PST)
+Received: from [192.168.0.41] (dslb-088-078-158-079.088.078.pools.vodafone-ip.de. [88.78.158.79])
+        by smtp.gmail.com with ESMTPSA id i11sm351592wrs.10.2020.01.28.15.22.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 15:22:47 -0800 (PST)
+Subject: Re: Remove single NFS client performance bottleneck: Only 4 nfsd
+ active
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <a8a528c7-80bd-befc-59f8-00135d85a2bf@excelero.com>
+ <F82F3FA8-4E2A-4014-A052-A0367562A956@oracle.com>
+ <2D125E5E-F97D-4F52-89A9-C499CC7E7A5D@oracle.com>
+ <0474b0f7-ec6d-9a02-2cd0-a69339e7cae5@excelero.com>
+ <DE46C289-9655-4E45-B89F-110E62F9F82D@oracle.com>
+From:   Sven Breuner <sven@excelero.com>
+Message-ID: <3b63a0ea-cf3a-fcea-72e6-8d604b16455f@excelero.com>
+Date:   Wed, 29 Jan 2020 00:22:47 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afa82437-0be0-4248-3b6a-08d7a43b8e3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 21:46:39.1012
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JsMu874zLskk7ijb4uAsgUTKBq1ii+giPq46uZe4YK1Y8HgPTkAwAc2DCSI+xgydgFsJ773mPeKmKnTonf9dLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB2001
+In-Reply-To: <DE46C289-9655-4E45-B89F-110E62F9F82D@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAxLTI4IGF0IDIxOjMwICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
-DQo+IE9uIFR1ZSwgMjAyMC0wMS0yOCBhdCAxNjoyMCAtMDUwMCwgVHJvbmQgTXlrbGVidXN0IHdy
-b3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0wMS0yOCBhdCAxNToyMSAtMDUwMCwgVHJvbmQgTXlrbGVi
-dXN0IHdyb3RlOg0KPiA+ID4gT24gVHVlLCAyMDIwLTAxLTI4IGF0IDEwOjU2IC0wNTAwLCBUcm9u
-ZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiA+IE9uIFR1ZSwgMjAyMC0wMS0yOCBhdCAxMDoyNiAt
-MDUwMCwgQmVuamFtaW4gQ29kZGluZ3RvbiB3cm90ZToNCj4gPiA+ID4gPiBJZiB3ZSBza2lwIGxv
-b2t1cCByZXZhbGlkYXRhaW9uIHdoaWxlIGhvbGRpbmcgYSBkZWxlZ2F0aW9uLA0KPiA+ID4gPiA+
-IHdlDQo+ID4gPiA+ID4gbWlnaHQNCj4gPiA+ID4gPiBtaXNzDQo+ID4gPiA+ID4gdGhhdCB0aGUg
-ZmlsZSBoYXMgY2hhbmdlZCBkaXJlY3RvcmllcyBvbiB0aGUgc2VydmVyLiAgVGhpcw0KPiA+ID4g
-PiA+IGNhbg0KPiA+ID4gPiA+IGhhcHBlbg0KPiA+ID4gPiA+IGlmDQo+ID4gPiA+ID4gdGhlIGZp
-bGUgaXMgbW92ZWQgaW4gYmV0d2VlbiB0aGUgY2xpZW50IGNhY2hpbmcgYSBkZW50cnkgYW5kDQo+
-ID4gPiA+ID4gb2J0YWluaW5nIGENCj4gPiA+ID4gPiBkZWxlZ2F0aW9uLiAgVGhhdCBjYW4gYmUg
-cmVwcm9kdWNlZCBvbiBhIHNpbmdsZSBzeXN0ZW0gd2l0aA0KPiA+ID4gPiA+IHRoaXMNCj4gPiA+
-ID4gPiBiYXNoOg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IG1rZGlyIC1wIC9leHBvcnRzL2Rpcnsx
-LDJ9DQo+ID4gPiA+ID4gZXhwb3J0ZnMgLW8gcncgbG9jYWxob3N0Oi9leHBvcnRzDQo+ID4gPiA+
-ID4gbW91bnQgLXQgbmZzIC1vdjQuMSxub2FjIGxvY2FsaG9zdDovZXhwb3J0cyAvbW50L2xvY2Fs
-aG9zdA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IHRvdWNoIC9leHBvcnRzL2RpcjEvZnViYXINCj4g
-PiA+ID4gPiANCj4gPiA+ID4gPiBjYXQgL21udC9sb2NhbGhvc3QvZGlyMS9mdWJhcg0KPiA+ID4g
-PiA+IG12IC9tbnQvbG9jYWxob3N0L2RpcnsxLDJ9L2Z1YmFyDQo+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gbXYgL2V4cG9ydHMvZGlyezIsMX0vZnViYXINCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBjYXQg
-L21udC9sb2NhbGhvc3QvZGlyMS9mdWJhcg0KPiA+ID4gPiA+IG12IC9tbnQvbG9jYWxob3N0L2Rp
-cnsxLDJ9L2Z1YmFyDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSW4gdGhpcyBleGFtcGxlLCB0aGUg
-ZmluYWwgYG12YCB3aWxsIHN0YXQgc291cmNlIGFuZA0KPiA+ID4gPiA+IGRlc3RpbmF0aW9uDQo+
-ID4gPiA+ID4gYW5kDQo+ID4gPiA+ID4gZmluZA0KPiA+ID4gPiA+IHRoZXkgYXJlIHRoZSBzYW1l
-IGRlbnRyeS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUbyBmaXggdGhpcyB3aXRob3V0IGdpdmlu
-ZyB1cCB0aGUgaW5jcmVhc2VkIGxvb2t1cA0KPiA+ID4gPiA+IHBlcmZvcm1hbmNlDQo+ID4gPiA+
-ID4gdGhhdA0KPiA+ID4gPiA+IGhvbGRpbmcNCj4gPiA+ID4gPiBhIGRlbGVnYXRpb24gcHJvdmlk
-ZXMsIGxldCdzIHJldmFsaWRhdGUgdGhlIGRlbnRyeSBvbmx5IG9uY2UNCj4gPiA+ID4gPiBhZnRl
-cg0KPiA+ID4gPiA+IG9idGFpbmluZyBhIGRlbGVnYXRpb24gYnkgcGxhY2luZyBhIG1hZ2ljIHZh
-bHVlIGluIHRoZQ0KPiA+ID4gPiA+IGRlbnRyeSdzDQo+ID4gPiA+ID4gdmVyaWZpZXIuDQo+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gU3VnZ2VzdGVkLWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPA0KPiA+ID4g
-PiA+IHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogQmVuamFtaW4gQ29kZGluZ3RvbiA8YmNvZGRpbmdAcmVkaGF0LmNvbT4NCj4gPiA+ID4g
-PiAtLS0NCj4gPiA+ID4gPiAgZnMvbmZzL2Rpci5jIHwgMjIgKysrKysrKysrKysrKysrKysrKyst
-LQ0KPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2Rpci5jIGIv
-ZnMvbmZzL2Rpci5jDQo+ID4gPiA+ID4gaW5kZXggZTE4MDAzM2UzNWNmLi5lOWQwN2RjZDZkNmYg
-MTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvZnMvbmZzL2Rpci5jDQo+ID4gPiA+ID4gKysrIGIvZnMv
-bmZzL2Rpci5jDQo+ID4gPiA+ID4gQEAgLTk0OSw2ICs5NDksNyBAQCBzdGF0aWMgaW50IG5mc19m
-c3luY19kaXIoc3RydWN0IGZpbGUNCj4gPiA+ID4gPiAqZmlscCwNCj4gPiA+ID4gPiBsb2ZmX3Qg
-c3RhcnQsIGxvZmZfdCBlbmQsDQo+ID4gPiA+ID4gIAlyZXR1cm4gMDsNCj4gPiA+ID4gPiAgfQ0K
-PiA+ID4gPiA+ICANCj4gPiA+ID4gPiArI2RlZmluZSBORlNfREVMRUdBVElPTl9WRVJGIDB4ZmVl
-ZGRlYWYNCj4gPiA+ID4gPiAgLyoqDQo+ID4gPiA+ID4gICAqIG5mc19mb3JjZV9sb29rdXBfcmV2
-YWxpZGF0ZSAtIE1hcmsgdGhlIGRpcmVjdG9yeSBhcw0KPiA+ID4gPiA+IGhhdmluZw0KPiA+ID4g
-PiA+IGNoYW5nZWQNCj4gPiA+ID4gPiAgICogQGRpcjogcG9pbnRlciB0byBkaXJlY3RvcnkgaW5v
-ZGUNCj4gPiA+ID4gPiBAQCAtOTYyLDYgKzk2Myw4IEBAIHN0YXRpYyBpbnQgbmZzX2ZzeW5jX2Rp
-cihzdHJ1Y3QgZmlsZQ0KPiA+ID4gPiA+ICpmaWxwLA0KPiA+ID4gPiA+IGxvZmZfdCBzdGFydCwg
-bG9mZl90IGVuZCwNCj4gPiA+ID4gPiAgdm9pZCBuZnNfZm9yY2VfbG9va3VwX3JldmFsaWRhdGUo
-c3RydWN0IGlub2RlICpkaXIpDQo+ID4gPiA+ID4gIHsNCj4gPiA+ID4gPiAgCU5GU19JKGRpcikt
-PmNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUrKzsNCj4gPiA+ID4gPiArCWlmIChORlNfSShkaXIpLT5j
-YWNoZV9jaGFuZ2VfYXR0cmlidXRlID09DQo+ID4gPiA+ID4gTkZTX0RFTEVHQVRJT05fVkVSRikN
-Cj4gPiA+ID4gPiArCQlORlNfSShkaXIpLT5jYWNoZV9jaGFuZ2VfYXR0cmlidXRlKys7DQo+ID4g
-PiA+IA0KPiA+ID4gPiBBY3R1YWxseSwgSSB0aGluayBhIHNsaWdodCBtb2RpZmljYXRpb24gdG8g
-dGhpcyBjYW4gbWlnaHQgYmUNCj4gPiA+ID4gYmVuZWZpY2lhbC4gSWYgd2UgY2hhbmdlIHRvIHRo
-ZSBmb2xsb3dpbmc6DQo+ID4gPiA+IA0KPiA+ID4gPiAJaWYgKHVubGlrZWx5KE5GU19JKGRpcikt
-PmNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUgPT0NCj4gPiA+ID4gTkZTX0RFTEVHQVRJT05fVkVSRiAt
-IDEpKQ0KPiA+ID4gPiAJCU5GU19JKGRpciktPmNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUgPQ0KPiA+
-ID4gPiBORlNfREVMRUdBVElPTl9WRVJGICsgMTsNCj4gPiA+ID4gIAllbHNlDQo+ID4gPiA+IAkJ
-TkZTX0koZGlyKS0+Y2FjaGVfY2hhbmdlX2F0dHJpYnV0ZSsrOw0KPiA+ID4gPiANCj4gPiA+IA0K
-PiA+ID4gLi4uYWN0dWFsbHksIGl0IHdvdWxkIGJlIG5pY2UgdG8gY2xlYW4gdGhhdCB1cCB0b28g
-dXNpbmcgYQ0KPiA+ID4gZGVjbGFyYXRpb24NCj4gPiA+IG9mICdzdHJ1Y3QgbmZzX2lub2RlICpu
-ZnNpID0gTkZTX0koZGlyKSk7Jw0KPiA+ID4gDQo+ID4gPiA+IHRoZW4gdGhhdCBzaG91bGQgZW5z
-dXJlIHRob3NlIHJlYWRlcnMgb2YgY2FjaGVfY2hhbmdlX2F0dHJpYnV0ZQ0KPiA+ID4gPiB0aGF0
-DQo+ID4gPiA+IGRvDQo+ID4gPiA+IG5vdCB1c2UgbG9ja2luZyB3aWxsIGFsc28gbmV2ZXIgc2Vl
-IHRoZSB2YWx1ZQ0KPiA+ID4gPiBORlNfREVMRUdBVElPTl9WRVJGDQo+ID4gPiA+IChhc3N1bWlu
-ZyB0aGF0IGdjYyBkb2Vzbid0IG9wdGltaXNlIHRoZSBhYm92ZSB0byBzb21ldGhpbmcNCj4gPiA+
-ID4gd2VpcmQpLg0KPiA+ID4gPiANCj4gPiA+ID4gPiAgfQ0KPiA+ID4gPiA+ICBFWFBPUlRfU1lN
-Qk9MX0dQTChuZnNfZm9yY2VfbG9va3VwX3JldmFsaWRhdGUpOw0KPiA+ID4gPiA+ICANCj4gPiA+
-ID4gPiBAQCAtMTEzMyw2ICsxMTM2LDcgQEAgbmZzX2xvb2t1cF9yZXZhbGlkYXRlX2RlbnRyeShz
-dHJ1Y3QNCj4gPiA+ID4gPiBpbm9kZQ0KPiA+ID4gPiA+ICpkaXIsDQo+ID4gPiA+ID4gc3RydWN0
-IGRlbnRyeSAqZGVudHJ5LA0KPiA+ID4gPiA+ICAJc3RydWN0IG5mc19maCAqZmhhbmRsZTsNCj4g
-PiA+ID4gPiAgCXN0cnVjdCBuZnNfZmF0dHIgKmZhdHRyOw0KPiA+ID4gPiA+ICAJc3RydWN0IG5m
-czRfbGFiZWwgKmxhYmVsOw0KPiA+ID4gPiA+ICsJdW5zaWduZWQgbG9uZyB2ZXJpZmllcjsNCj4g
-PiA+ID4gPiAgCWludCByZXQ7DQo+ID4gPiA+ID4gIA0KPiA+ID4gPiA+ICAJcmV0ID0gLUVOT01F
-TTsNCj4gPiA+ID4gPiBAQCAtMTE1NCw2ICsxMTU4LDExIEBAIG5mc19sb29rdXBfcmV2YWxpZGF0
-ZV9kZW50cnkoc3RydWN0DQo+ID4gPiA+ID4gaW5vZGUNCj4gPiA+ID4gPiAqZGlyLCBzdHJ1Y3Qg
-ZGVudHJ5ICpkZW50cnksDQo+ID4gPiA+ID4gIAlpZiAobmZzX3JlZnJlc2hfaW5vZGUoaW5vZGUs
-IGZhdHRyKSA8IDApDQo+ID4gPiA+ID4gIAkJZ290byBvdXQ7DQo+ID4gPiA+ID4gIA0KPiA+ID4g
-PiA+ICsJaWYgKE5GU19QUk9UTyhkaXIpLT5oYXZlX2RlbGVnYXRpb24oaW5vZGUsIEZNT0RFX1JF
-QUQpKQ0KPiA+ID4gPiA+ICsJCXZlcmlmaWVyID0gTkZTX0RFTEVHQVRJT05fVkVSRjsNCj4gPiA+
-ID4gPiArCWVsc2UNCj4gPiA+ID4gPiArCQl2ZXJpZmllciA9IG5mc19zYXZlX2NoYW5nZV9hdHRy
-aWJ1dGUoZGlyKTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gIAluZnNfc2V0c2VjdXJpdHkoaW5v
-ZGUsIGZhdHRyLCBsYWJlbCk7DQo+ID4gPiA+ID4gIAluZnNfc2V0X3ZlcmlmaWVyKGRlbnRyeSwN
-Cj4gPiA+ID4gPiBuZnNfc2F2ZV9jaGFuZ2VfYXR0cmlidXRlKGRpcikpOw0KPiA+ID4gDQo+ID4g
-PiBPb3BzISBXaGVuIHJldmlld2luZywgSSBtaXNzZWQgdGhpcy4gU2hvdWxkbid0IHRoZSBhYm92
-ZSBiZQ0KPiA+ID4gY2hhbmdlZA0KPiA+ID4gdG8NCj4gPiA+IG5mc19zZXRfdmVyaWZpZXIoZGVu
-dHJ5LCB2ZXJpZmllcikgPw0KPiA+IA0KPiA+IC4uLmFuZCBvbiBhIHNpbWlsYXIgdmVpbjogbmZz
-X2xvb2t1cF9yZXZhbGlkYXRlX2RlbGVnYXRlZCgpIG5lZWRzDQo+ID4gdG8NCj4gPiBjaGFuZ2Ug
-c28gYXMgdG8gbm90IHJlc2V0IHRoZSB2ZXJpZmllci4uLg0KPiA+IA0KPiA+IFNvcnJ5IGZvciBu
-b3QgY2F0Y2hpbmcgdGhhdCBvbmUgZWl0aGVyLg0KPiANCj4gTm90IG15IGRheS4uLg0KPiANCj4g
-bmZzX3ByaW1lX2RjYWNoZSgpIHdpbGwgY2xvYmJlciB0aGUgdmVyaWZpZXIgdG9vIGluIHRoZQ0K
-PiBuZnNfc2FtZV9maWxlKCkNCj4gY2FzZS4gVGhhdCBvbmUgYWxzbyBuZWVkcyB0byBzZXQgTkZT
-X0RFTEVHQVRJT05fVkVSRiBpZiB0aGVyZSBpcyBhDQo+IGRlbGVnYXRpb24uDQo+IA0KPiBQZXJo
-YXBzIGFkZCBhIGhlbHBlciBmdW5jdGlvbiBmb3IgdGhhdCArDQo+IG5mc19sb29rdXBfcmV2YWxp
-ZGF0ZV9kZW50cnkoKT8NCg0KLi4uLmFuZCBmaW5hbGx5LCB3ZSBzaG91bGQgcmVtb3ZlIHRoZSBj
-YWxsIHRvIG5mc19zZXRfdmVyaWZpZXIoKSBmcm9tDQpuZnM0X2ZpbGVfb3BlbigpLiBBc2lkZSBm
-cm9tIGJlaW5nIGluY29ycmVjdCBpbiB0aGUgY2FzZSB3aGVyZSB3ZSB1c2VkDQphbiBvcGVuLWJ5
-LWZpbGVoYW5kbGUsIHRoYXQgY2FzZSBpcyB0YWtlbiBjYXJlIG9mIGluIHRoZSBwcmVjZWRpbmcN
-CmRlbnRyeSByZXZhbGlkYXRpb24uDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMg
-Y2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3Bh
-Y2UuY29tDQoNCg0K
+
+Chuck Lever wrote on 27.01.2020 18:45:
+>
+>> On Jan 27, 2020, at 12:27 PM, Sven Breuner <sven@excelero.com> wrote:
+>>
+>> Hi Chuck,
+>>
+>> thanks for looking into this. (Answers inline...)
+>>
+>> Chuck Lever wrote on 27.01.2020 15:12:
+>>>> On Jan 27, 2020, at 9:06 AM, Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> Hi Sven-
+>>>>
+>>>>> On Jan 26, 2020, at 6:41 PM, Sven Breuner <sven@excelero.com> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> I'm using the kernel NFS client/server and am trying to read as many small files per second as possible from a single NFS client, but seem to run into a bottleneck.
+>>>>>
+>>>>> Maybe this is just a tunable that I am missing, because the CPUs on client and server side are mostly idle, the 100Gbit (RoCE) network links between client and server are also mostly idle and the NVMe drives in the server are also mostly idle (and the server has enough RAM to easily fit my test data set in the ext4/xfs page cache, but also a 2nd read of the data set from the RAM cache doesn't change the result much).
+>>>>>
+>>>>> This is my test case:
+>>>>> # Create 1.6M 10KB files through 128 mdtest processes in different directories...
+>>>>> $ mpirun -hosts localhost -np 128 /path/to/mdtest -F -d /mnt/nfs/mdtest -i 1 -I 100 -z 1 -b 128 -L -u -w 10240 -e 10240 -C
+>>>>>
+>>>>> # Read all the files through 128 mdtest processes (the case that matters primarily for my test)...
+>>>>> $ mpirun -hosts localhost -np 128 /path/to/mdtest -F -d /mnt/nfs/mdtest -i 1 -I 100 -z 1 -b 128 -L -u -w 10240 -e 10240 -E
+>>>>>
+>>>>> The result is about 20,000 file reads per sec, so only ~200MB/s network throughput.
+>>>> What is the typical size of the NFS READ I/Os on the wire?
+>> The application is fetching each full 10KB file in a single read op (so "read(fd, buf, 10240)" ) and NFS wsize/rsize is 512KB.
+> 512KB is not going to matter if every file contains only 10KB.
+> This means 10KB READs. The I/O size is going to limit data
+> throughput. 20KIOPS seems low for RDMA, but is about right for
+> TCP.
+RDMA is about 30% faster (26K file reads per sec), but I'm more hoping for an 
+order of magnitude increase.
+By the way: Is there an NFSoRDMA equivalent for tcp_slot_table_entries to 
+increase or is there no such limit in case of RDMA transport?
+> If you see wire operations, then the client's page cache is not
+> being used at all?
+I'm usually benchmarking after fresh client mount or "echo 3 > 
+/proc/sys/vm/drop_caches", because the actual production data set will have many 
+more files (multiple Terabytes) and thus won't fit in RAM.
+>
+>
+>>>> Are you sure your mpirun workload is generating enough parallelism?
+>> Yes, MPI is only used to start the 128 processes and aggregate the performance results in the end. For the actual file read phase, all 128 processes run completely independent without any communication/synchronization. Each process is working in its own subdir with its own set of 10KB files.
+>> (Running the same test directly on the local xfs of the NFS server box results in ~350,000 10KB file reads per sec after cache drop and >1 mio 10KB file reads per sec from page cache. Just mentioning this for the sake of completeness to show that this is not hitting a limit on the server side.)
+>>> A couple of other thoughts:
+>>>
+>>> What's the client hardware like? NUMA? Fast memory? CPU count?
+>> Client and server are dual socket Intel Xeon E5-2690 v4 @ 2.60GHz (14 cores per socket plus hyper threading), all 4 memory channels per socket populated with fastest possible DIMMs (DDR4 2400).
+> One recommendation: Disable HT in the BIOS.
+Thanks for the recommendation. Tried, but no significant difference.
+>> Also tried pool_mode auto/global/pernode on server side.
+> NUMA seems to matter more on the client than on the server.
+mpirun can also bind the mdtest processes to NUMA zones, but also no significant 
+difference for that.
+>
+>
+>>> Have you configured device interrupt affinity and used tuned
+>>> to disable CPU sleep states, etc?
+>> Yes, CPU power saving (frequency scaling) disabled. Tried tuned profiles latency-performance and and throughput-performance. Also tried irqbalance and mlnx_affinity.
+>>
+>> All without any significant effect unfortunately.
+> And lspci -vvv confirms you are getting the right PCIe link
+> settings on both systems?
+
+Yes. I can also see >11GB/s network throughput between client and server through 
+e.g. ib_send_bw.
+
+Actually, the client and server each have two 100Gbit RoCE NICs, but it seems 
+like there isn't a way currently to get the NFS client to spread the 
+communication across two RDMA interfaces for a single mountpoint.
+
+Assuming the hardware is not the limit, is there any software limit for 
+parallelism in the NFS client? So if an application on an NFS client can 
+generates 128 concurrent open/read/close (from 128 threads) to 128 different 
+files in the NFS mountpoint, will the NFS client then actually send 128 
+concurrent open/read/close over the wire or will it e.g. limit for some reason 
+to only 4 or 8 concurrent requests and the rest will be queued until one of the 
+first 4/8/... requests has received a reply - e.g. because there is only 1 
+pending reply allowed per connection and a client does not establish more than 
+4/8/... connections to the same server?
+And same question on the NFS server side: If a client sends 128 concurrent reads 
+over the wire and the knfsd has 128 threads, will it actually work on all those 
+128 reads in parallel or is there a limit in the server that e.g. maps requests 
+from the same client to a maximum of 4/8/... threads, no matter how many more 
+threads the knfsd has available?
+
+Thanks a lot for your help
+
+Sven
+
+>
+>
+>>> Have you properly configured your 100GbE switch and cards?
+>>>
+>>> I have a Mellanox SN2100 here and two hosts with CX-5 Ethernet.
+>>> The configuration of the cards and switch is critical to good
+>>> performance.
+>> Yes, I can absolutely confirm that having this part of the config correct is critical for great performance :-) All configured with PFC and ECN and double-checked for packets to be tagged correctly and lossless in the RoCE case. The topology is simple: Client and server connected to same Mellanox switch, nothing else happening on the switch.
+>>>
+>>>>> I noticed in "top" that only 4 nfsd processes are active, so I'm wondering why the load is not spread across more of my 64 /proc/fs/nfsd/threads, but even the few nfsd processes that are active use less than 50% of their core each. The CPUs are shown as >90% idle in "top" on client and server during the read phase.
+>>>>>
+>>>>> I've tried:
+>>>>> * CentOS 7.5 and 7.6 kernels (3.10.0-...) on client and server; and Ubuntu 18 with 4.18 kernel on server side
+>>>>> * TCP & RDMA
+>>>>> * Mounted as NFSv3/v4.1/v4.2
+>>>>> * Increased tcp_slot_table_entries to 1024
+>>>>>
+>>>>> ...but all that didn't change the fact that only 4 nfsd processes are active on the server and thus I'm getting the same result already if /proc/fs/nfsd/threads is set to only 4 instead of 64.
+>>>>>
+>>>>> Any pointer to how I can overcome this limit will be greatly appreciated.
+>>>>>
+>>>>> Thanks in advance
+>>>>>
+>>>>> Sven
+>>>>>
+>>>> --
+>>>> Chuck Lever
+>>> --
+>>> Chuck Lever
+> --
+> Chuck Lever
+>
+>
+>
