@@ -2,260 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 796CB14BD6B
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2020 17:02:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B391014C18D
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2020 21:21:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgA1QCQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Jan 2020 11:02:16 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgA1QCP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Jan 2020 11:02:15 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SFrCr9178260;
-        Tue, 28 Jan 2020 16:02:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=6oL2FWs+cZqFFPLSowaKPi65xXvujr8BHs+SMq4JyD8=;
- b=KWX/GTBEuBuwSVkCgS5O9Mmyh7mgXl+nrl6rnsIM3E7LQA/Kh/mozinmgpijEolU4Iqd
- 1QNzC3SDN6UMX+RekccqVESD1VJKvjrkWYRQDVTNjG3orcIKNKUvt7HRjZFh5/nQ9qCi
- 5bNJiwMNAN+AZzq0IBGlq2xijEiBKOkiq/Ekjf60fszMPtxNZy6hqihOslFBytlv0YYL
- /3200LVwg8H76+jJM1BMrFl2YoPZK+DjsZSloKYf8ihc6b7KLcC8qabXg9QtmoX7EMsb
- Ok6NcBt2lR1aaTZrKzgszuawIDSc9fzheYMlxVOQyJHibIeAXPfadcjT29LVakB8ni9M Qw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xrdmqf9yr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 16:02:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SFsfhq007998;
-        Tue, 28 Jan 2020 16:02:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xtmr2rc40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 16:02:07 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00SG24jf026111;
-        Tue, 28 Jan 2020 16:02:05 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Jan 2020 08:02:04 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
- renewals
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
-Date:   Tue, 28 Jan 2020 11:02:02 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-kernel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F4BC4DA3-B120-436B-B473-4F1A0CFEE639@oracle.com>
-References: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
-To:     Robert Milkowski <rmilkowski@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001280124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001280124
+        id S1726141AbgA1UVn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Jan 2020 15:21:43 -0500
+Received: from mail-bn8nam12on2106.outbound.protection.outlook.com ([40.107.237.106]:28257
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726007AbgA1UVm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 Jan 2020 15:21:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nX8RGjfIJzW3abchZs5qAaP2o9amzQLmubHi6vYd+YqDsIRZ9OZ6b7uGipaebhOjbow1vVRuYifYpl5hiJqQI2Sdgk0EmATPh1hfdcFcCNJJISR7NRLw/R3qpGgXctNXaL0IbxGvFa5TaehYYP4MrZlozFF9W5qXOsOJmnmVo9109Iafw72pDFt2apFCM+ZuDnBqWnu96vq3xVvOn/827TdvFm7emmFv6a2Hrc/ZbCwHmQ52vUM9inlc7/YMmApGk7i3tbFxvu+Nx555/QBu4PPWtzNgMDpKo7CKKb8b2DiigHT7mU0IWB4tuxIwVpcWMVowdkd/opdjBfyoRQqYgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTf2mgN6cFQG+opE3rdGE6KP82VVwSh9WUPuGCIg4+c=;
+ b=FvnMdrealgAWZIzcJXE6T2XKJfJ89OTXiErf/WNer8+DxHQKa8jZw6t5EY3LWFqQx5MDOwV0fYRI2+NJoPDZsFPgcbqHzL9xOwe9lJcT7vTMnJUJtOORA/9ICpjPa/SEZQyFO3EFaITx1zfggLswGPONS8QpU3nw3pkgtpNty4XovoV+9AzmZxL02wqfTX4LOmE2Yp3+TSB6iolzGrYq5C8CtQttZGthTmXl5GcCF3Hp5+t+HKxpGs+66QMz6bm5lgN7h75Q/kVWkBhE2WUBBPLfaiwGGNj6Lh7XMHvCyOOTB3LI2Vrh22Rdxdl2g7e6L1C2y6q/0rgxycJ9zPiSwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTf2mgN6cFQG+opE3rdGE6KP82VVwSh9WUPuGCIg4+c=;
+ b=F5ECd+g1HTonYYuoIzlQFfp+hQWVA4OSQ+sWg0W9DIltHQz7C8swYhRgBaZyBhI/hcpaHcXP3tHAUU/hljcl4j+zakcx9H0aWxmCobyR92XYJatWmDTo1MbN4cG5rW7q5PDAY53Y9aF8X5++0bcGD0GA1B4W0N1gue6f8+wwbjw=
+Received: from BN6PR1301MB2097.namprd13.prod.outlook.com (10.174.87.14) by
+ BN6PR1301MB1971.namprd13.prod.outlook.com (10.174.89.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.18; Tue, 28 Jan 2020 20:21:34 +0000
+Received: from BN6PR1301MB2097.namprd13.prod.outlook.com
+ ([fe80::40e1:9ff5:2b8c:38bf]) by BN6PR1301MB2097.namprd13.prod.outlook.com
+ ([fe80::40e1:9ff5:2b8c:38bf%5]) with mapi id 15.20.2686.019; Tue, 28 Jan 2020
+ 20:21:34 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bcodding@redhat.com" <bcodding@redhat.com>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] NFS: Revalidate once when holding a delegation
+Thread-Topic: [PATCH v2] NFS: Revalidate once when holding a delegation
+Thread-Index: AQHV1e9om4L2YbskUEmxr8p6E5Q5GagAOwsAgABKJQA=
+Date:   Tue, 28 Jan 2020 20:21:34 +0000
+Message-ID: <be1a465a0cf52ddae6d2ba26069dff0500b0ea4b.camel@hammerspace.com>
+References: <bcb5ffd399c4434730e6d100a5b7cae5e207244e.1580225161.git.bcodding@redhat.com>
+         <9e28aaaff4eae411e0a9d6b94b3d69f7514454cb.camel@hammerspace.com>
+In-Reply-To: <9e28aaaff4eae411e0a9d6b94b3d69f7514454cb.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 17e4ad1d-7a15-47b5-9ea5-08d7a42fab94
+x-ms-traffictypediagnostic: BN6PR1301MB1971:
+x-microsoft-antispam-prvs: <BN6PR1301MB1971BD233DB5732D313C7B36B80A0@BN6PR1301MB1971.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 029651C7A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(136003)(39830400003)(189003)(199004)(81156014)(8676002)(81166006)(186003)(316002)(26005)(36756003)(5660300002)(110136005)(8936002)(2616005)(86362001)(4326008)(71200400001)(66946007)(6486002)(6512007)(91956017)(6506007)(76116006)(66476007)(478600001)(2906002)(66446008)(64756008)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB1971;H:BN6PR1301MB2097.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bmLvAlgL0hDXhhB8k6AbiHCRWJIo1HstunmmSvQ9xHPLt+FsFzZseKRKvgm2Hfe45UQYMR5rNmQ7QAn8UYVEXYjWd+qoLVkKEs9duSPn3I2cNNawEpoGbwKpuB1CpDVvXUEBM8rk+LNjPd3DpJLJjp1YMiWzrnfofHSQ54w0nWWoCDPnUp8gBFoPmhgGQqD0KIU11a94CSR7WRK7q/nAmObSbcDwjFHNn59bDtxW1SvzIQxab7IP/BVygk7ItjgO1HNSBRxrC0Q+rCFMyb9aAcM9UUhaP6c6nLxQsiXDpGO5ifHveO0nOBVDwFIuKiMTuO5PN6TE9HwigHN8Jyj34in7/xtiSZUNOe+qejWFV+bPz/G3PwbvlHTfXINdwjm+GNFpdZQC1nQiKuZ/3+Mt/eicjaDe/2WQZxBLSWHSffPg3eLpARdOZ6ja78nJVpE7
+x-ms-exchange-antispam-messagedata: 4Cd8lIQDx4s5eeDyFlLenZVjfR565rhOLo1vtA1aVAhhfGv/LXIPPMSVcAIsK07KeZ5+t9hxwx1bd+izI2/OF0NklUoJ0d4cq0KRzX2aPXy1EKNG3TzJ9+GHcZfKA9UxpcozmAxjqOdA6L9xAZ9mzA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4F5D25EA6B5E6E43BB97A3541D0FA953@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17e4ad1d-7a15-47b5-9ea5-08d7a42fab94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 20:21:34.2418
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uttnuMzi4gXQHMdIenFkPAK47AND4MQwyuVd+UpdgImodtBspZ9Ggi4G3qzYuybJznC6Yxa5qzNKVy6rXmIUbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB1971
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Jan 28, 2020, at 10:12 AM, Robert Milkowski <rmilkowski@gmail.com> =
-wrote:
->=20
-> From: Robert Milkowski <rmilkowski@gmail.com>
->=20
-> Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-> NFS4 lease renewal, which is not compliant with the NFS4 =
-specification.
-> This can result in a lease being expired by an NFS server.
->=20
-> Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> introduced implicit client lease renewal in nfs4_do_fsinfo(),
-> which can result in the NFSv4.0 lease to expire on a server side,
-> and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
->=20
-> This can easily be reproduced by frequently unmounting a sub-mount,
-> then stat'ing it to get it mounted again, which will delay or even
-> completely prevent client from sending RENEW operations if no other
-> NFS operations are issued. Eventually nfs server will expire client's
-> lease and return an error on file access or next RENEW.
->=20
-> This can also happen when a sub-mount is automatically unmounted
-> due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-> mounted again via stat(). This can result in a short window during
-> which client's lease will expire on a server but not on a client.
-> This specific case was observed on production systems.
->=20
-> This patch removes the implicit lease renewal from nfs4_do_fsinfo().
-
-I'm OK with this approach.
-
-And, we've seen sporadic lease expirations in the field and in
-test environments as well. I'm optimistic that this patch will
-address those situations.
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> ---
-> fs/nfs/nfs4_fs.h    |  4 +---
-> fs/nfs/nfs4proc.c   | 12 ++++++++----
-> fs/nfs/nfs4renewd.c |  5 +----
-> fs/nfs/nfs4state.c  |  4 +---
-> 4 files changed, 11 insertions(+), 14 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-> index a7a73b1..a5db055 100644
-> --- a/fs/nfs/nfs4_fs.h
-> +++ b/fs/nfs/nfs4_fs.h
-> @@ -446,9 +446,7 @@ extern int nfs4_detect_session_trunking(struct =
-nfs_client *clp,
-> extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
-> extern void nfs4_kill_renewd(struct nfs_client *);
-> extern void nfs4_renew_state(struct work_struct *);
-> -extern void nfs4_set_lease_period(struct nfs_client *clp,
-> -		unsigned long lease,
-> -		unsigned long lastrenewed);
-> +extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned =
-long lease);
->=20
->=20
-> /* nfs4state.c */
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 76d3716..7b2d88b 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5019,16 +5019,13 @@ static int nfs4_do_fsinfo(struct nfs_server =
-*server, struct nfs_fh *fhandle, str
-> 	struct nfs4_exception exception =3D {
-> 		.interruptible =3D true,
-> 	};
-> -	unsigned long now =3D jiffies;
-> 	int err;
->=20
-> 	do {
-> 		err =3D _nfs4_do_fsinfo(server, fhandle, fsinfo);
-> 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
-> 		if (err =3D=3D 0) {
-> -			nfs4_set_lease_period(server->nfs_client,
-> -					fsinfo->lease_time * HZ,
-> -					now);
-> +			nfs4_set_lease_period(server->nfs_client, =
-fsinfo->lease_time * HZ);
-> 			break;
-> 		}
-> 		err =3D nfs4_handle_exception(server, err, &exception);
-> @@ -6084,6 +6081,7 @@ int nfs4_proc_setclientid(struct nfs_client =
-*clp, u32 program,
-> 		.callback_data =3D &setclientid,
-> 		.flags =3D RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
-> 	};
-> +	unsigned long now =3D jiffies;
-> 	int status;
->=20
-> 	/* nfs_client_id4 */
-> @@ -6116,6 +6114,9 @@ int nfs4_proc_setclientid(struct nfs_client =
-*clp, u32 program,
-> 		clp->cl_acceptor =3D =
-rpcauth_stringify_acceptor(setclientid.sc_cred);
-> 		put_rpccred(setclientid.sc_cred);
-> 	}
-> +
-> +	if(status =3D=3D 0)
-> +		do_renew_lease(clp, now);
-> out:
-> 	trace_nfs4_setclientid(clp, status);
-> 	dprintk("NFS reply setclientid: %d\n", status);
-> @@ -8203,6 +8204,7 @@ static int _nfs4_proc_exchange_id(struct =
-nfs_client *clp, const struct cred *cre
-> 	struct rpc_task *task;
-> 	struct nfs41_exchange_id_args *argp;
-> 	struct nfs41_exchange_id_res *resp;
-> +	unsigned long now =3D jiffies;
-> 	int status;
->=20
-> 	task =3D nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
-> @@ -8223,6 +8225,8 @@ static int _nfs4_proc_exchange_id(struct =
-nfs_client *clp, const struct cred *cre
-> 	if (status !=3D 0)
-> 		goto out;
->=20
-> +	do_renew_lease(clp, now);
-> +
-> 	clp->cl_clientid =3D resp->clientid;
-> 	clp->cl_exchange_flags =3D resp->flags;
-> 	clp->cl_seqid =3D resp->seqid;
-> diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
-> index 6ea431b..ff876dd 100644
-> --- a/fs/nfs/nfs4renewd.c
-> +++ b/fs/nfs/nfs4renewd.c
-> @@ -138,15 +138,12 @@
->  *
->  * @clp: pointer to nfs_client
->  * @lease: new value for lease period
-> - * @lastrenewed: time at which lease was last renewed
->  */
-> void nfs4_set_lease_period(struct nfs_client *clp,
-> -		unsigned long lease,
-> -		unsigned long lastrenewed)
-> +		unsigned long lease)
-> {
-> 	spin_lock(&clp->cl_lock);
-> 	clp->cl_lease_time =3D lease;
-> -	clp->cl_last_renewal =3D lastrenewed;
-> 	spin_unlock(&clp->cl_lock);
->=20
-> 	/* Cap maximum reconnect timeout at 1/2 lease period */
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 3455232..f0b0027 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -92,17 +92,15 @@ static int nfs4_setup_state_renewal(struct =
-nfs_client *clp)
-> {
-> 	int status;
-> 	struct nfs_fsinfo fsinfo;
-> -	unsigned long now;
->=20
-> 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
-> 		nfs4_schedule_state_renewal(clp);
-> 		return 0;
-> 	}
->=20
-> -	now =3D jiffies;
-> 	status =3D nfs4_proc_get_lease_time(clp, &fsinfo);
-> 	if (status =3D=3D 0) {
-> -		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
-> +		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
-> 		nfs4_schedule_state_renewal(clp);
-> 	}
->=20
-> --=20
-> 1.8.3.1
->=20
->=20
-
---
-Chuck Lever
-
-
-
+T24gVHVlLCAyMDIwLTAxLTI4IGF0IDEwOjU2IC0wNTAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
+DQo+IE9uIFR1ZSwgMjAyMC0wMS0yOCBhdCAxMDoyNiAtMDUwMCwgQmVuamFtaW4gQ29kZGluZ3Rv
+biB3cm90ZToNCj4gPiBJZiB3ZSBza2lwIGxvb2t1cCByZXZhbGlkYXRhaW9uIHdoaWxlIGhvbGRp
+bmcgYSBkZWxlZ2F0aW9uLCB3ZQ0KPiA+IG1pZ2h0DQo+ID4gbWlzcw0KPiA+IHRoYXQgdGhlIGZp
+bGUgaGFzIGNoYW5nZWQgZGlyZWN0b3JpZXMgb24gdGhlIHNlcnZlci4gIFRoaXMgY2FuDQo+ID4g
+aGFwcGVuDQo+ID4gaWYNCj4gPiB0aGUgZmlsZSBpcyBtb3ZlZCBpbiBiZXR3ZWVuIHRoZSBjbGll
+bnQgY2FjaGluZyBhIGRlbnRyeSBhbmQNCj4gPiBvYnRhaW5pbmcgYQ0KPiA+IGRlbGVnYXRpb24u
+ICBUaGF0IGNhbiBiZSByZXByb2R1Y2VkIG9uIGEgc2luZ2xlIHN5c3RlbSB3aXRoIHRoaXMNCj4g
+PiBiYXNoOg0KPiA+IA0KPiA+IG1rZGlyIC1wIC9leHBvcnRzL2RpcnsxLDJ9DQo+ID4gZXhwb3J0
+ZnMgLW8gcncgbG9jYWxob3N0Oi9leHBvcnRzDQo+ID4gbW91bnQgLXQgbmZzIC1vdjQuMSxub2Fj
+IGxvY2FsaG9zdDovZXhwb3J0cyAvbW50L2xvY2FsaG9zdA0KPiA+IA0KPiA+IHRvdWNoIC9leHBv
+cnRzL2RpcjEvZnViYXINCj4gPiANCj4gPiBjYXQgL21udC9sb2NhbGhvc3QvZGlyMS9mdWJhcg0K
+PiA+IG12IC9tbnQvbG9jYWxob3N0L2RpcnsxLDJ9L2Z1YmFyDQo+ID4gDQo+ID4gbXYgL2V4cG9y
+dHMvZGlyezIsMX0vZnViYXINCj4gPiANCj4gPiBjYXQgL21udC9sb2NhbGhvc3QvZGlyMS9mdWJh
+cg0KPiA+IG12IC9tbnQvbG9jYWxob3N0L2RpcnsxLDJ9L2Z1YmFyDQo+ID4gDQo+ID4gSW4gdGhp
+cyBleGFtcGxlLCB0aGUgZmluYWwgYG12YCB3aWxsIHN0YXQgc291cmNlIGFuZCBkZXN0aW5hdGlv
+bg0KPiA+IGFuZA0KPiA+IGZpbmQNCj4gPiB0aGV5IGFyZSB0aGUgc2FtZSBkZW50cnkuDQo+ID4g
+DQo+ID4gVG8gZml4IHRoaXMgd2l0aG91dCBnaXZpbmcgdXAgdGhlIGluY3JlYXNlZCBsb29rdXAg
+cGVyZm9ybWFuY2UgdGhhdA0KPiA+IGhvbGRpbmcNCj4gPiBhIGRlbGVnYXRpb24gcHJvdmlkZXMs
+IGxldCdzIHJldmFsaWRhdGUgdGhlIGRlbnRyeSBvbmx5IG9uY2UgYWZ0ZXINCj4gPiBvYnRhaW5p
+bmcgYSBkZWxlZ2F0aW9uIGJ5IHBsYWNpbmcgYSBtYWdpYyB2YWx1ZSBpbiB0aGUgZGVudHJ5J3MN
+Cj4gPiB2ZXJpZmllci4NCj4gPiANCj4gPiBTdWdnZXN0ZWQtYnk6IFRyb25kIE15a2xlYnVzdCA8
+dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCZW5q
+YW1pbiBDb2RkaW5ndG9uIDxiY29kZGluZ0ByZWRoYXQuY29tPg0KPiA+IC0tLQ0KPiA+ICBmcy9u
+ZnMvZGlyLmMgfCAyMiArKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAyMCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQg
+YS9mcy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMNCj4gPiBpbmRleCBlMTgwMDMzZTM1Y2YuLmU5
+ZDA3ZGNkNmQ2ZiAxMDA2NDQNCj4gPiAtLS0gYS9mcy9uZnMvZGlyLmMNCj4gPiArKysgYi9mcy9u
+ZnMvZGlyLmMNCj4gPiBAQCAtOTQ5LDYgKzk0OSw3IEBAIHN0YXRpYyBpbnQgbmZzX2ZzeW5jX2Rp
+cihzdHJ1Y3QgZmlsZSAqZmlscCwNCj4gPiBsb2ZmX3Qgc3RhcnQsIGxvZmZfdCBlbmQsDQo+ID4g
+IAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4gPiArI2RlZmluZSBORlNfREVMRUdBVElPTl9W
+RVJGIDB4ZmVlZGRlYWYNCj4gPiAgLyoqDQo+ID4gICAqIG5mc19mb3JjZV9sb29rdXBfcmV2YWxp
+ZGF0ZSAtIE1hcmsgdGhlIGRpcmVjdG9yeSBhcyBoYXZpbmcNCj4gPiBjaGFuZ2VkDQo+ID4gICAq
+IEBkaXI6IHBvaW50ZXIgdG8gZGlyZWN0b3J5IGlub2RlDQo+ID4gQEAgLTk2Miw2ICs5NjMsOCBA
+QCBzdGF0aWMgaW50IG5mc19mc3luY19kaXIoc3RydWN0IGZpbGUgKmZpbHAsDQo+ID4gbG9mZl90
+IHN0YXJ0LCBsb2ZmX3QgZW5kLA0KPiA+ICB2b2lkIG5mc19mb3JjZV9sb29rdXBfcmV2YWxpZGF0
+ZShzdHJ1Y3QgaW5vZGUgKmRpcikNCj4gPiAgew0KPiA+ICAJTkZTX0koZGlyKS0+Y2FjaGVfY2hh
+bmdlX2F0dHJpYnV0ZSsrOw0KPiA+ICsJaWYgKE5GU19JKGRpciktPmNhY2hlX2NoYW5nZV9hdHRy
+aWJ1dGUgPT0gTkZTX0RFTEVHQVRJT05fVkVSRikNCj4gPiArCQlORlNfSShkaXIpLT5jYWNoZV9j
+aGFuZ2VfYXR0cmlidXRlKys7DQo+IA0KPiBBY3R1YWxseSwgSSB0aGluayBhIHNsaWdodCBtb2Rp
+ZmljYXRpb24gdG8gdGhpcyBjYW4gbWlnaHQgYmUNCj4gYmVuZWZpY2lhbC4gSWYgd2UgY2hhbmdl
+IHRvIHRoZSBmb2xsb3dpbmc6DQo+IA0KPiAJaWYgKHVubGlrZWx5KE5GU19JKGRpciktPmNhY2hl
+X2NoYW5nZV9hdHRyaWJ1dGUgPT0NCj4gTkZTX0RFTEVHQVRJT05fVkVSRiAtIDEpKQ0KPiAJCU5G
+U19JKGRpciktPmNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUgPQ0KPiBORlNfREVMRUdBVElPTl9WRVJG
+ICsgMTsNCj4gIAllbHNlDQo+IAkJTkZTX0koZGlyKS0+Y2FjaGVfY2hhbmdlX2F0dHJpYnV0ZSsr
+Ow0KPiANCg0KLi4uYWN0dWFsbHksIGl0IHdvdWxkIGJlIG5pY2UgdG8gY2xlYW4gdGhhdCB1cCB0
+b28gdXNpbmcgYSBkZWNsYXJhdGlvbg0Kb2YgJ3N0cnVjdCBuZnNfaW5vZGUgKm5mc2kgPSBORlNf
+SShkaXIpKTsnDQoNCj4gdGhlbiB0aGF0IHNob3VsZCBlbnN1cmUgdGhvc2UgcmVhZGVycyBvZiBj
+YWNoZV9jaGFuZ2VfYXR0cmlidXRlIHRoYXQNCj4gZG8NCj4gbm90IHVzZSBsb2NraW5nIHdpbGwg
+YWxzbyBuZXZlciBzZWUgdGhlIHZhbHVlIE5GU19ERUxFR0FUSU9OX1ZFUkYNCj4gKGFzc3VtaW5n
+IHRoYXQgZ2NjIGRvZXNuJ3Qgb3B0aW1pc2UgdGhlIGFib3ZlIHRvIHNvbWV0aGluZyB3ZWlyZCku
+DQo+IA0KPiA+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0xfR1BMKG5mc19mb3JjZV9sb29rdXBfcmV2
+YWxpZGF0ZSk7DQo+ID4gIA0KPiA+IEBAIC0xMTMzLDYgKzExMzYsNyBAQCBuZnNfbG9va3VwX3Jl
+dmFsaWRhdGVfZGVudHJ5KHN0cnVjdCBpbm9kZQ0KPiA+ICpkaXIsDQo+ID4gc3RydWN0IGRlbnRy
+eSAqZGVudHJ5LA0KPiA+ICAJc3RydWN0IG5mc19maCAqZmhhbmRsZTsNCj4gPiAgCXN0cnVjdCBu
+ZnNfZmF0dHIgKmZhdHRyOw0KPiA+ICAJc3RydWN0IG5mczRfbGFiZWwgKmxhYmVsOw0KPiA+ICsJ
+dW5zaWduZWQgbG9uZyB2ZXJpZmllcjsNCj4gPiAgCWludCByZXQ7DQo+ID4gIA0KPiA+ICAJcmV0
+ID0gLUVOT01FTTsNCj4gPiBAQCAtMTE1NCw2ICsxMTU4LDExIEBAIG5mc19sb29rdXBfcmV2YWxp
+ZGF0ZV9kZW50cnkoc3RydWN0IGlub2RlDQo+ID4gKmRpciwgc3RydWN0IGRlbnRyeSAqZGVudHJ5
+LA0KPiA+ICAJaWYgKG5mc19yZWZyZXNoX2lub2RlKGlub2RlLCBmYXR0cikgPCAwKQ0KPiA+ICAJ
+CWdvdG8gb3V0Ow0KPiA+ICANCj4gPiArCWlmIChORlNfUFJPVE8oZGlyKS0+aGF2ZV9kZWxlZ2F0
+aW9uKGlub2RlLCBGTU9ERV9SRUFEKSkNCj4gPiArCQl2ZXJpZmllciA9IE5GU19ERUxFR0FUSU9O
+X1ZFUkY7DQo+ID4gKwllbHNlDQo+ID4gKwkJdmVyaWZpZXIgPSBuZnNfc2F2ZV9jaGFuZ2VfYXR0
+cmlidXRlKGRpcik7DQo+ID4gKw0KPiA+ICAJbmZzX3NldHNlY3VyaXR5KGlub2RlLCBmYXR0ciwg
+bGFiZWwpOw0KPiA+ICAJbmZzX3NldF92ZXJpZmllcihkZW50cnksIG5mc19zYXZlX2NoYW5nZV9h
+dHRyaWJ1dGUoZGlyKSk7DQoNCk9vcHMhIFdoZW4gcmV2aWV3aW5nLCBJIG1pc3NlZCB0aGlzLiBT
+aG91bGRuJ3QgdGhlIGFib3ZlIGJlIGNoYW5nZWQgdG8NCm5mc19zZXRfdmVyaWZpZXIoZGVudHJ5
+LCB2ZXJpZmllcikgPw0KDQo+ID4gIA0KPiA+IEBAIC0xMTY3LDYgKzExNzYsMTUgQEAgbmZzX2xv
+b2t1cF9yZXZhbGlkYXRlX2RlbnRyeShzdHJ1Y3QgaW5vZGUNCj4gPiAqZGlyLCBzdHJ1Y3QgZGVu
+dHJ5ICpkZW50cnksDQo+ID4gIAlyZXR1cm4gbmZzX2xvb2t1cF9yZXZhbGlkYXRlX2RvbmUoZGly
+LCBkZW50cnksIGlub2RlLCByZXQpOw0KPiA+ICB9DQo+ID4gIA0KPiA+ICtzdGF0aWMgaW50IG5m
+c19kZWxlZ2F0aW9uX21hdGNoZXNfZGVudHJ5KHN0cnVjdCBpbm9kZSAqZGlyLA0KPiA+ICsJCQlz
+dHJ1Y3QgZGVudHJ5ICpkZW50cnksIHN0cnVjdCBpbm9kZSAqaW5vZGUpDQo+ID4gK3sNCj4gPiAr
+CWlmIChORlNfUFJPVE8oZGlyKS0+aGF2ZV9kZWxlZ2F0aW9uKGlub2RlLCBGTU9ERV9SRUFEKSAm
+Jg0KPiA+ICsJCWRlbnRyeS0+ZF90aW1lID09IE5GU19ERUxFR0FUSU9OX1ZFUkYpDQo+ID4gKwkJ
+cmV0dXJuIDE7DQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgLyoNCj4gPiAg
+ICogVGhpcyBpcyBjYWxsZWQgZXZlcnkgdGltZSB0aGUgZGNhY2hlIGhhcyBhIGxvb2t1cCBoaXQs
+DQo+ID4gICAqIGFuZCB3ZSBzaG91bGQgY2hlY2sgd2hldGhlciB3ZSBjYW4gcmVhbGx5IHRydXN0
+IHRoYXQNCj4gPiBAQCAtMTE5Nyw3ICsxMjE1LDcgQEAgbmZzX2RvX2xvb2t1cF9yZXZhbGlkYXRl
+KHN0cnVjdCBpbm9kZSAqZGlyLA0KPiA+IHN0cnVjdCBkZW50cnkgKmRlbnRyeSwNCj4gPiAgCQln
+b3RvIG91dF9iYWQ7DQo+ID4gIAl9DQo+ID4gIA0KPiA+IC0JaWYgKE5GU19QUk9UTyhkaXIpLT5o
+YXZlX2RlbGVnYXRpb24oaW5vZGUsIEZNT0RFX1JFQUQpKQ0KPiA+ICsJaWYgKG5mc19kZWxlZ2F0
+aW9uX21hdGNoZXNfZGVudHJ5KGRpciwgZGVudHJ5LCBpbm9kZSkpDQo+ID4gIAkJcmV0dXJuIG5m
+c19sb29rdXBfcmV2YWxpZGF0ZV9kZWxlZ2F0ZWQoZGlyLCBkZW50cnksDQo+ID4gaW5vZGUpOw0K
+PiA+ICANCj4gPiAgCS8qIEZvcmNlIGEgZnVsbCBsb29rIHVwIGlmZiB0aGUgcGFyZW50IGRpcmVj
+dG9yeSBoYXMgY2hhbmdlZCAqLw0KPiA+IEBAIC0xNjM1LDcgKzE2NTMsNyBAQCBuZnM0X2RvX2xv
+b2t1cF9yZXZhbGlkYXRlKHN0cnVjdCBpbm9kZSAqZGlyLA0KPiA+IHN0cnVjdCBkZW50cnkgKmRl
+bnRyeSwNCj4gPiAgCWlmIChpbm9kZSA9PSBOVUxMKQ0KPiA+ICAJCWdvdG8gZnVsbF9yZXZhbDsN
+Cj4gPiAgDQo+ID4gLQlpZiAoTkZTX1BST1RPKGRpciktPmhhdmVfZGVsZWdhdGlvbihpbm9kZSwg
+Rk1PREVfUkVBRCkpDQo+ID4gKwlpZiAobmZzX2RlbGVnYXRpb25fbWF0Y2hlc19kZW50cnkoZGly
+LCBkZW50cnksIGlub2RlKSkNCj4gPiAgCQlyZXR1cm4gbmZzX2xvb2t1cF9yZXZhbGlkYXRlX2Rl
+bGVnYXRlZChkaXIsIGRlbnRyeSwNCj4gPiBpbm9kZSk7DQo+ID4gIA0KPiA+ICAJLyogTkZTIG9u
+bHkgc3VwcG9ydHMgT1BFTiBvbiByZWd1bGFyIGZpbGVzICovDQotLSANClRyb25kIE15a2xlYnVz
+dA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVi
+dXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
