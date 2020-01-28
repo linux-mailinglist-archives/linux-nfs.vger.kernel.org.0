@@ -2,107 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49C5514ACDA
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2020 00:58:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9C614B0FC
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2020 09:37:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgA0X4V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jan 2020 18:56:21 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38122 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgA0X4V (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jan 2020 18:56:21 -0500
-Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 245C13A1F01;
-        Tue, 28 Jan 2020 10:56:19 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iwEEr-0005bi-9v; Tue, 28 Jan 2020 10:56:17 +1100
-Date:   Tue, 28 Jan 2020 10:56:17 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Murphy Zhou <jencce.kernel@gmail.com>, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: A NFS, xfs, reflink and rmapbt story
-Message-ID: <20200127235617.GB18610@dread.disaster.area>
-References: <20200123083217.flkl6tkyr4b7zwuk@xzhoux.usersys.redhat.com>
- <20200124011019.GA8247@magnolia>
+        id S1725905AbgA1Ihi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Jan 2020 03:37:38 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37343 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgA1Ihi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Jan 2020 03:37:38 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so1529094wmf.2;
+        Tue, 28 Jan 2020 00:37:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=/vUdKDhZSRY/UX+VRyOW826eNHk7nxM2Wg/skywcxoM=;
+        b=lEC55NoZfcBco9gkCKx9wq6xyDjud7Fv5F+wTOH/qxIvC3/nWVYq6qluFTaZx3Aydg
+         htnOIuXNCqPksfDPijgue8RzGkn6AwD1xSnZCwpzMBFJDEmdKi4htAFmsbMDOaS8huDP
+         GBmv1UXVRganOrijeu0oOw61JSP9+JV8F12zamQy3z7XvRZfIIdZ5LijihcZwe5FaHvF
+         hidAbBblBul/CpWHUCM6ZDUBT8LMV0NOJZ5o4Rw55f8LdB77VwaEK+qL4aP/QKnTlCPJ
+         Cusyt4wvmvPNQ1hriHLZWoOFrIn0UjK1fJqxcxtdFehJfXjLJ7SiO/AvgU24M6U5qEl/
+         8DjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=/vUdKDhZSRY/UX+VRyOW826eNHk7nxM2Wg/skywcxoM=;
+        b=H4c/ThXcfeuq4sNoaTxl33ldssvlJAhv85KKeHddkTavHMMbToXZlDPWJYxMNZG1v7
+         Q9dHsoUvEh65jWbt2BXIsskCF/J2YSt//J4lbyjvLinb+b2fzMcqj6z69VNnBKpELgMW
+         EGS0G8OzKIcgMb6DS8/zeFyKT4dCzpLvB2uWHg6CQzj8Uq0DyeI6nafaX3u2VK/2tlud
+         drlSMSqIduzkg8mGRsNx8zZjuh60LlK1llXwC0y3wLKze2PXQKRABdJBhJjJ3xVkN1og
+         VG6xEW4BGSAdkoVOoa8A+2AnrlwlkRVEq2Qto3RSy174dGAvlJltrxile4SvTlr1OO+n
+         5DWA==
+X-Gm-Message-State: APjAAAVGUP3z9LMfrAYTyVevgzGm5iPFHmjZobJgFxHm28rAmWTArZ9x
+        UH0N893cT3q15fTW4rOXsbaLmJThfKY=
+X-Google-Smtp-Source: APXvYqwVBs4AOejmU9P7vielmKkhFW1daLUZrJZ2sePoawnjBbf01RD6w1UJWec7tr0TcLJTqqPLXw==
+X-Received: by 2002:a1c:6408:: with SMTP id y8mr3560022wmb.130.1580200656136;
+        Tue, 28 Jan 2020 00:37:36 -0800 (PST)
+Received: from loulrmilkow1 ([213.52.196.70])
+        by smtp.gmail.com with ESMTPSA id z11sm24999782wrt.82.2020.01.28.00.37.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jan 2020 00:37:35 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>,
+        "'Trond Myklebust'" <trondmy@hammerspace.com>
+Cc:     "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        "'Chuck Lever'" <chuck.lever@oracle.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Tue, 28 Jan 2020 08:37:47 -0000
+Message-ID: <000601d5d5b6$39065c60$ab131520$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124011019.GA8247@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=DKXhrarefucG-zT5zuIA:9 a=VFtz45cXcEUkXO3f:21
-        a=2Tythr-q2aEXjZyO:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdXVs9KkXsilGD6+RnONAb8nbCW6uA==
+Content-Language: en-gb
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 05:10:19PM -0800, Darrick J. Wong wrote:
-> On Thu, Jan 23, 2020 at 04:32:17PM +0800, Murphy Zhou wrote:
-> > Hi,
-> > 
-> > Deleting the files left by generic/175 costs too much time when testing
-> > on NFSv4.2 exporting xfs with rmapbt=1.
-> > 
-> > "./check -nfs generic/175 generic/176" should reproduce it.
-> > 
-> > My test bed is a 16c8G vm.
-> 
-> What kind of storage?
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-Is the NFS server the same machine as what the local XFS tests were
-run on?
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
-> > NFSv4.2  rmapbt=1   24h+
-> 
-> <URK> Wow.  I wonder what about NFS makes us so slow now?  Synchronous
-> transactions on the inactivation?  (speculates wildly at the end of the
-> workday)
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+---
+ fs/nfs/nfs4proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Doubt it - NFS server uses ->commit_metadata after the async
-operation to ensure that it is completed and on stable storage, so
-the truncate on inactivation should run at pretty much the same
-speed as on a local filesystem as it's still all async commits. i.e.
-the only difference on the NFS server is the log force that follows
-the inode inactivation...
-
-> I'll have a look in the morning.  It might take me a while to remember
-> how to set up NFS42 :)
-> 
-> --D
-> 
-> > NFSv4.2  rmapbt=0   1h-2h
-> > xfs      rmapbt=1   10m+
-> > 
-> > At first I thought it hung, turns out it was just slow when deleting
-> > 2 massive reflined files.
-
-Both tests run on the scratch device, so I don't see where there is
-a large file unlink in either of these tests.
-
-In which case, I'd expect that all the time is consumed in
-generic/176 running punch_alternating to create a million extents
-as that will effectively run a synchronous server-side hole punch
-half a million times.
-
-However, I'm guessing that the server side filesystem has a very
-small log and is on spinning rust, hence the ->commit_metadata log
-forces are preventing in-memory aggregation of modifications. This
-results in the working set of metadata not fitting in the log and so
-each new hole punch transaction ends up waiting on log tail pushing
-(i.e. metadata writeback IO).  i.e. it's thrashing the disk, and
-that's why it is slow.....
-
-Storage details, please!
-
-Cheers,
-
-Dave.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 76d3716..b7c4044 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 -- 
-Dave Chinner
-david@fromorbit.com
+1.8.3.1
+
+
