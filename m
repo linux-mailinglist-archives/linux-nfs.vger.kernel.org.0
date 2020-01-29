@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 480F714CDFA
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 17:09:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57FC814CDFB
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 17:09:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgA2QJs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Jan 2020 11:09:48 -0500
-Received: from mail-yw1-f47.google.com ([209.85.161.47]:36259 "EHLO
-        mail-yw1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2QJs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Jan 2020 11:09:48 -0500
-Received: by mail-yw1-f47.google.com with SMTP id n184so80900ywc.3
-        for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2020 08:09:47 -0800 (PST)
+        id S1726959AbgA2QJy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Jan 2020 11:09:54 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43170 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2QJy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Jan 2020 11:09:54 -0500
+Received: by mail-yw1-f68.google.com with SMTP id v126so54943ywc.10
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2020 08:09:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=WkKvIfJrTQeGZW7yCw+WL84e1ZK0VONjBHhyJOTwwMc=;
-        b=MXWailiGENaEtGej4aV6KDeGxeRbk8UtJLGFd32zq9rCSP+hjkpspDcXaj1dpfY2q9
-         Kym6Y0x594hBb4JEMaqolSEDUoVL2lEwfppoCrBEcPOpKP9rD78FIn6S7JhPdbQ0nX8w
-         6JBlRz7aeI+FKwfpXewSFzF8+m50NVB8iY3l1eeVYnBUT9a4CPxf8k6Uro85TfvDSNH3
-         aNFBCBIvvUqWwBJP/jZJNF1/m/UsI63JlG4wP4zgNsrTysdPau6q1qxFGCa1Vk4b1IdF
-         voxTei0wuIOmg3f9yoLkthgDD42O3DJyMPCHOPxpQyaOX0/PI6f4AuU00NSjBgzeasWk
-         DztQ==
+        bh=ZThcUy2zV3P2cAwdY3NUiX8vOGUC+wN33NQGZpDoLek=;
+        b=mZ0jEqnMuHh8+HMDMXIYo+f6v4AzMgi6dKMQglFMlae3869o0UVygtxR+Mceyke0qi
+         b8s4i9iL8r88ednusMvg5ZdUJF35qNAlwRA6a8hEEc0L9oEJCKKE6TM0J+Kh4MKDaFCr
+         0O2/BuPu90qMcEzwT9hrEyO6QfslI1vSnzgs0gm38pk+JYfN8BehdrNnlguEorIU6hxA
+         gOzzi5os6ltLPvnU4TXTSULz9CeJLqcurl23+H3N+1QWkaijC8MD8V27ei/Tjz+7+U9A
+         KXLNiPk+Bmv9g7iwvf79P5ocvGKAFMeXSQnyHunbUaVPNwrvim/Idr/8kv212VEK2Cp3
+         u0lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=WkKvIfJrTQeGZW7yCw+WL84e1ZK0VONjBHhyJOTwwMc=;
-        b=qpx6+LvpdVKZ94MYRb+46Q6+MRC50K4o6ZVBfkCH5mBLh1iI7tSK1Jg04MboRErXKE
-         ZFOoDOFsG29Jw0yQ5CS9bLqO+lbgvc9kTmbQ4v7HtcIK7winxaDsHNs45nbbcLfMtQXd
-         KwFBpmhKBEMscsIjZJ03IB5zCW7UpHvakf78AVqczw+WK+13Eu6oDJPR76n77NvwWQWP
-         GmuGvW8ETCuVWywzsNYuHc9XFcYNCxT9Wqt3Ub/6nwNt+K33KqKJAYEM5+Zo+tNHaRjb
-         AyeRIdQ0EPCkRWnLN/QUVcyfRnSB1i1nAjjHdjpF9kgQzKx0/xWAE82irVIIyLGiaqQF
-         N71A==
-X-Gm-Message-State: APjAAAWxwt2sP7AH6IVGTg0UvmyYtrkDR3p4L3NV7kZXu2cO2MCm3q/c
-        oTYX+uz2LbkEqOOe8xNV46E=
-X-Google-Smtp-Source: APXvYqyzkNQ1RKmfKV97FjhVlUgkMwiIomofroHWIpya1zqPF8wOADMT5yJ+ggpOfw6YnEzBoyuZvw==
-X-Received: by 2002:a81:2e16:: with SMTP id u22mr20761128ywu.422.1580314187429;
-        Wed, 29 Jan 2020 08:09:47 -0800 (PST)
+        bh=ZThcUy2zV3P2cAwdY3NUiX8vOGUC+wN33NQGZpDoLek=;
+        b=bRNpbLKZ3/pwgnKMcXX9rTaqjAyJcLe4GRZGuNZRGoaT8IGyijFLAM/A1BvYKtIeyQ
+         aVrvZlcSOyv0KKOXjgIViExrkXxBzzT1Vcd0ibCuMUq2+oJ4sHFFDRMiWgx3aAttBZ1+
+         Sy1jR6eFQRufvRQd/DEkEvN3IXW5dtUcPVqozBwzFOreXGPQZxDU+iYEnFhQ6gSQhXHi
+         w6lKvJ3EI4Grxdj+GW1bygL7vLhladkGKaT/kdm/g58HksoRuUQF4TwKKh6Hnsjt9Tcm
+         3euJfpNHbs/P0209qNignfswTh+ntQqPHzW8fjDPG7L4f3InpaQHmvqkl7s9BSRnPO1X
+         P3TA==
+X-Gm-Message-State: APjAAAWkZr65lrR+c0pSLXScWgNfcQIGAUZ/JDiuo5LhVxeMPyvKVzn0
+        gBHoQ6ptA8A3ta+bg18ZudQ=
+X-Google-Smtp-Source: APXvYqyRi2+LCTRkdc2rCp5MH+8AzdC5C879NxhSTHhhzw28V142wQDEmHSKsARSpG/IRTiQen4x6Q==
+X-Received: by 2002:a81:a0c3:: with SMTP id x186mr20126179ywg.344.1580314193675;
+        Wed, 29 Jan 2020 08:09:53 -0800 (PST)
 Received: from bazille.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id m138sm1109683ywd.56.2020.01.29.08.09.46
+        by smtp.gmail.com with ESMTPSA id z12sm1136629ywl.27.2020.01.29.08.09.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 08:09:47 -0800 (PST)
-Subject: [PATCH RFC 4/8] svcrdma: RDMA transport support for automated
- padding of xdr_buf::pages
+        Wed, 29 Jan 2020 08:09:53 -0800 (PST)
+Subject: [PATCH RFC 5/8] NFSD: NFSv2 support for automated padding of
+ xdr_buf::pages
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Wed, 29 Jan 2020 11:09:46 -0500
-Message-ID: <20200129160946.3024.22245.stgit@bazille.1015granger.net>
+Date:   Wed, 29 Jan 2020 11:09:52 -0500
+Message-ID: <20200129160952.3024.44348.stgit@bazille.1015granger.net>
 In-Reply-To: <20200129155516.3024.56575.stgit@bazille.1015granger.net>
 References: <20200129155516.3024.56575.stgit@bazille.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -63,133 +63,54 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_rw.c     |   13 +++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |   27 +++++++++++++++++++--------
- 2 files changed, 32 insertions(+), 8 deletions(-)
+ fs/nfsd/nfsxdr.c |   20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 467d40a1dffa..a7fb886ea136 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -14,6 +14,8 @@
- #include "xprt_rdma.h"
- #include <trace/events/rpcrdma.h>
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index b51fe515f06f..06e3a021b87a 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -455,13 +455,7 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
  
-+static const __be32 xdr_padding = xdr_zero;
-+
- static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc);
- static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
- 
-@@ -559,6 +561,9 @@ int svc_rdma_send_reply_chunk(struct svcxprt_rdma *rdma, __be32 *rp_ch,
- {
- 	struct svc_rdma_write_info *info;
- 	int consumed, ret;
-+	struct kvec pad = {
-+		.iov_base = (void *)&xdr_padding,
-+	};
- 
- 	info = svc_rdma_write_info_alloc(rdma, rp_ch);
- 	if (!info)
-@@ -577,6 +582,14 @@ int svc_rdma_send_reply_chunk(struct svcxprt_rdma *rdma, __be32 *rp_ch,
- 		if (ret < 0)
- 			goto out_err;
- 		consumed += xdr->page_len;
-+
-+		if (xdr->page_pad) {
-+			pad.iov_len = xdr->page_pad;
-+			ret = svc_rdma_send_xdr_kvec(info, &pad);
-+			if (ret < 0)
-+				goto out_err;
-+			consumed += pad.iov_len;
-+		}
- 	}
- 
- 	if (xdr->tail[0].iov_len) {
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 33f817519964..d0f9acfe60a6 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -112,6 +112,8 @@
- #include "xprt_rdma.h"
- #include <trace/events/rpcrdma.h>
- 
-+static const __be32 xdr_padding = xdr_zero;
-+
- static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc);
- 
- static inline struct svc_rdma_send_ctxt *
-@@ -320,11 +322,6 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
- 	return ret;
+ 	*p++ = htonl(resp->len);
+ 	xdr_ressize_check(rqstp, p);
+-	rqstp->rq_res.page_len = resp->len;
+-	if (resp->len & 3) {
+-		/* need to pad the tail */
+-		rqstp->rq_res.tail[0].iov_base = p;
+-		*p = 0;
+-		rqstp->rq_res.tail[0].iov_len = 4 - (resp->len&3);
+-	}
++	xdr_buf_set_pagelen(&rqstp->rq_res, resp->len);
+ 	return 1;
  }
  
--static u32 xdr_padsize(u32 len)
--{
--	return (len & 3) ? (4 - (len & 3)) : 0;
--}
+@@ -475,13 +469,7 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
+ 	xdr_ressize_check(rqstp, p);
+ 
+ 	/* now update rqstp->rq_res to reflect data as well */
+-	rqstp->rq_res.page_len = resp->count;
+-	if (resp->count & 3) {
+-		/* need to pad the tail */
+-		rqstp->rq_res.tail[0].iov_base = p;
+-		*p = 0;
+-		rqstp->rq_res.tail[0].iov_len = 4 - (resp->count&3);
+-	}
++	xdr_buf_set_pagelen(&rqstp->rq_res, resp->count);
+ 	return 1;
+ }
+ 
+@@ -494,8 +482,8 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
+ 	p = resp->buffer;
+ 	*p++ = 0;			/* no more entries */
+ 	*p++ = htonl((resp->common.err == nfserr_eof));
+-	rqstp->rq_res.page_len = (((unsigned long)p-1) & ~PAGE_MASK)+1;
 -
- /* Returns length of transport header, in bytes.
-  */
- static unsigned int svc_rdma_reply_hdr_len(__be32 *rdma_resp)
-@@ -561,6 +558,8 @@ static bool svc_rdma_pull_up_needed(struct svcxprt_rdma *rdma,
- 					   remaining);
- 			pageoff = 0;
- 		}
-+		if (xdr->page_pad)
-+			++elements;
- 	}
++	xdr_buf_set_pagelen(&rqstp->rq_res,
++			    (((unsigned long)p - 1) & ~PAGE_MASK) + 1);
+ 	return 1;
+ }
  
- 	/* xdr->tail */
-@@ -593,7 +592,7 @@ static int svc_rdma_pull_up_reply_msg(struct svcxprt_rdma *rdma,
- 	if (wr_lst) {
- 		u32 xdrpad;
- 
--		xdrpad = xdr_padsize(xdr->page_len);
-+		xdrpad = xdr_pad_size(xdr->page_len);
- 		if (taillen && xdrpad) {
- 			tailbase += xdrpad;
- 			taillen -= xdrpad;
-@@ -614,12 +613,16 @@ static int svc_rdma_pull_up_reply_msg(struct svcxprt_rdma *rdma,
- 			dst += len;
- 			pageoff = 0;
- 		}
-+		if (xdr->page_pad) {
-+			memcpy(dst, &xdr_padding, xdr->page_pad);
-+			dst += xdr->page_pad;
-+		}
- 	}
- 
- 	if (taillen)
- 		memcpy(dst, tailbase, taillen);
- 
--	ctxt->sc_sges[0].length += xdr->len;
-+	ctxt->sc_sges[0].length += xdr_buf_msglen(xdr);
- 	ib_dma_sync_single_for_device(rdma->sc_pd->device,
- 				      ctxt->sc_sges[0].addr,
- 				      ctxt->sc_sges[0].length,
-@@ -668,7 +671,7 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 	if (wr_lst) {
- 		base = xdr->tail[0].iov_base;
- 		len = xdr->tail[0].iov_len;
--		xdr_pad = xdr_padsize(xdr->page_len);
-+		xdr_pad = xdr_pad_size(xdr->page_len);
- 
- 		if (len && xdr_pad) {
- 			base += xdr_pad;
-@@ -693,6 +696,14 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 		remaining -= len;
- 		page_off = 0;
- 	}
-+	if (xdr->page_pad) {
-+		++ctxt->sc_cur_sge_no;
-+		ret = svc_rdma_dma_map_buf(rdma, ctxt,
-+					   (unsigned char *)&xdr_padding,
-+					   xdr->page_pad);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
- 	base = xdr->tail[0].iov_base;
- 	len = xdr->tail[0].iov_len;
 
