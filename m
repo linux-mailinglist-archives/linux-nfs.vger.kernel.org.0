@@ -2,223 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C789714CDCF
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 16:52:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D849E14CDF5
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 17:09:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgA2Pw0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Jan 2020 10:52:26 -0500
-Received: from mail-eopbgr680128.outbound.protection.outlook.com ([40.107.68.128]:53390
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726551AbgA2PwZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:52:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HGlDqwAwSf9iDQNecXc4i024++Avjsgx/B2QT+YeQvFB/2acsWODbWqx1cLz5zPG8PigvWp6kpm6SOgoDCwK0rpdBO1tqhl9EDP8M/SO0Tvc23rEj76vbuEm3ynFZLkgx2exwnxeCDIaK7ZDXaGbI38AWf5MX3Jj8xPPMn+2b0mMM2/32jZclKiVf+LTV7Lvp9D0Y/T3jDqczQZbzIfvXeLr0RJRjkTc6RncbDHuSE5qBlFh2tvVMJQ1t6Dkbar626K8GjXc63qq/3+toOg70Zqy+divjcxKFlolCYvS1euPzCGhD5HLF9lfWchTvK+VmRm/5c53+Q5nt6q1CVx9Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgq/g0KkKYSMDR8RsWxOpJfULrgpJmgTiQ71T7CYIsQ=;
- b=XJ0+/kVljNHIbK8Y3mkqUmXdP/Ftm5CZWzrBX+xyAdyq2Nxc/zw7z7pmwbNj++A2ukBnZ5QcwpjvC371LarfmIhX3oTGdAlq0s+QAkvgqxfqYn5tGHNrZaWHeY67Bs7RgydZ+sZ/KaGhMwy/PzIKNu3Rckd118mHGLIv9MOv+zZ9A4Uw6ZnNa0E0iXOIvS3yYRMq1haSrT7akQd+PtXdX/QWNZsieQaJtJvgM+zNwnWBpSeoMo3xs89xdrmEW9PZ9PQ//jk/Pc9GpuKkGV7Ywe2rlKxQ8/Zbh0HBH0OTP4aaixw4bpnut0xdvS22QAFw/ylF5CbGy7XwyEA7iqqsFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgq/g0KkKYSMDR8RsWxOpJfULrgpJmgTiQ71T7CYIsQ=;
- b=ejJdwOYHw5jR8xF1GTSjfCkGqKOgfk3gsS3GkMVwcDgnt67ZB7JjaVkt+H7rlud4gDL/3JJ9TmpvSxkNmjO1gICTj/5MKcOqDLtSylEezBWET7sZKUktqcjeDHxFXkefxauNGUz9/fYOMrpVbn/CuCdpoTQkz1IHCL7IvrWXar8=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1881.namprd13.prod.outlook.com (10.174.184.34) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.10; Wed, 29 Jan 2020 15:52:17 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2686.019; Wed, 29 Jan 2020
- 15:52:17 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-Subject: Re: [PATCH v2] NFS: Revalidate once when holding a delegation
-Thread-Topic: [PATCH v2] NFS: Revalidate once when holding a delegation
-Thread-Index: AQHV1e9om4L2YbskUEmxr8p6E5Q5GagAOwsAgABKJQCAABCKAIAAApwAgAAEoICAART/AIAADQaAgAAIxICAAASKAA==
-Date:   Wed, 29 Jan 2020 15:52:17 +0000
-Message-ID: <0636364a049ca88b1160e62915d2ce12565e82b8.camel@hammerspace.com>
-References: <bcb5ffd399c4434730e6d100a5b7cae5e207244e.1580225161.git.bcodding@redhat.com>
-         <9e28aaaff4eae411e0a9d6b94b3d69f7514454cb.camel@hammerspace.com>
-         <be1a465a0cf52ddae6d2ba26069dff0500b0ea4b.camel@hammerspace.com>
-         <d1600385a53358aa69f6f839987a1b11fa2dd5e8.camel@hammerspace.com>
-         <5e157e8a6298ecb640414591988c1e76e8a6fd40.camel@hammerspace.com>
-         <3deb5458d142529c0f23669a1b9edaaf4ad032a5.camel@hammerspace.com>
-         <A95E0924-D2E8-4D02-951C-36D33070D0CD@redhat.com>
-         <7d83d09f968394646424c61e9fa28b7b2a6d9b1a.camel@hammerspace.com>
-         <BCC4E2F5-605A-4C26-B87D-1AD3A6512646@redhat.com>
-In-Reply-To: <BCC4E2F5-605A-4C26-B87D-1AD3A6512646@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46ef2561-2cd2-4eb2-c8eb-08d7a4d337b3
-x-ms-traffictypediagnostic: DM5PR1301MB1881:
-x-microsoft-antispam-prvs: <DM5PR1301MB18817E17CCD2F1665D8BCCF3B8050@DM5PR1301MB1881.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02973C87BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(136003)(366004)(346002)(39830400003)(189003)(199004)(66446008)(64756008)(86362001)(66476007)(66556008)(53546011)(66946007)(8936002)(76116006)(54906003)(91956017)(2906002)(2616005)(15974865002)(316002)(478600001)(6506007)(6916009)(186003)(4326008)(8676002)(71200400001)(6512007)(6486002)(81156014)(26005)(81166006)(5660300002)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1881;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Mtyz/bc3fbjJTo0filuW+hiOE03QqkEE7dGvyL/tp1xwEWxHmWC6magZeD7J8ChwkjBg4g6ypzphcgPFNx4du4fq8KyiQx7Vt+qNuuu5H/KLHm97xJOVbtlTxOfhNjwo9IWnnxMT573gPJsyh6LBsIPSQfesslGfCof1X1Q8V0nkczGCV8WdgbEKHwDdZ72y47hayQREaYL0P6PqWpu4RL5a3gOzvfsYCDi8oizhuikc6JFZ78jFScwLAlS3Ein4s11JVcOlrKA26jJnDJrAtZvfb25gvvllAWR5vTT8SsmPUCUUg58DgHRA+maO2bmrAt1cwzeg0lXut6C0AGc97xJtHNHxkbmG46LeQIEiGARI3xm7tM0ZEvzMUxI3HF4qy+85tJIFRVYVIe9jyuDodEVmH7cu/jnaDyaqnbJZmYUI6w7fbcG64HOWqPwqSf5g4Gqboi3lNiEHrNSer+Vja2QSxVAbaU/qPgqqMUlj9YLrdabqdwoavTUI/fvs23BeSiZobJuq+QVet1uw1Wfdig==
-x-ms-exchange-antispam-messagedata: IFHvZiVBKxivpmNedP5PkJTe5ooBPWI7jyP64/dQdtrjzK9DOipx+nlhh5xyhrPcMykUMYCWXgmjaB+LoLdbllrBwOSnhnFOzqY5YBuuGpByoGsPOmFffM9blUpu2A9S/mHQrUdZbm9fy9uZKJGUZA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3A486B853D0EC4888A2463917EEA492@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726842AbgA2QJX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Jan 2020 11:09:23 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:38730 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2QJX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Jan 2020 11:09:23 -0500
+Received: by mail-yw1-f68.google.com with SMTP id 10so73421ywv.5
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2020 08:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=QIEHDuYLdKvWAzp2TmHCvVsw2oPejC3jP9HcIjnFGOM=;
+        b=rZJ+Rv7RFOUZhJi0tMt48KHhDCcTIAAwrIIudwDtH7mwXrbheAhMkc5cwG4KJffi7/
+         43+BnurQEPTKNmJ/K4w/RHPrZO+9oCg3jk11DrXQdWB6tpx7IGhBYZN3C9bjULacUg/+
+         OJAQeb3I/UPz7rcQyZXNRz39I9qz+J394ek1zGo/KZaUshRXrWKUM4a18nTZgjJVuk2u
+         DNDamOTMud+Y2hAybnKvk7BteI5SFtaqJl1Jll2JJ4ASHrNZu3AhzwjTTWE69tOModuX
+         vMcw49mL8cgJJ5wlkilDRHFTic6jfp0MBjkw2IkhenHJlwffLjK8mw8rJ55ls1W7btPK
+         MIog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=QIEHDuYLdKvWAzp2TmHCvVsw2oPejC3jP9HcIjnFGOM=;
+        b=kIpjtB6bI/Lt5L00Api5ofwqBQF8V0WQhMsJ5O/f6egGghkPw88I0S1cOnTEvc3LTC
+         XgC9owbvXNgVs1OUV5M+pQZaH+IS3/nUXRcSIgADqpQIhe+ZWY/jnN27dD0ZCQCMQTHG
+         ubdEuiOBbQPBhpcyet7t6bS0I7pks1z/ESTMd71P/BfPMmNL2PuP69q8efMDJSHnQyyr
+         UaJ9iXEuDLk3Y5Ecs03Cjq4VomLhsYg67ls4GNdwRhpPQwuEWSJ9IkhO7wH4k0jgokfH
+         wzFO9V2+A7PQDFOaA87vWYXNJ1MyWUbTZj5Mzm4CCskiPyFOHzlndIE1wDMSrxRtLfVc
+         8Fug==
+X-Gm-Message-State: APjAAAWy/vCyP2R9Rwrm5s7ROyBDtug8f3thKflrE8qjEjVpLh4PAtAj
+        /xK9caCA9WATVGY2dkhi8jDLYBwf
+X-Google-Smtp-Source: APXvYqx+YKUzAgdQ3NsFYMH6z0eL2j0Jjk0Dh0tuI4hufxNZ02T8zVAcaW7edumRKpeKm/0THZlC8w==
+X-Received: by 2002:a81:af56:: with SMTP id x22mr22001913ywj.153.1580314162302;
+        Wed, 29 Jan 2020 08:09:22 -0800 (PST)
+Received: from bazille.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id o126sm1182152ywb.24.2020.01.29.08.09.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 08:09:21 -0800 (PST)
+Subject: [PATCH RFC 0/8] For discussion of bug 198053
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Wed, 29 Jan 2020 11:09:20 -0500
+Message-ID: <20200129155516.3024.56575.stgit@bazille.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46ef2561-2cd2-4eb2-c8eb-08d7a4d337b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2020 15:52:17.4619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tYSB0yx5Hq1A8pdMPGhsKWUBw0zjE554RtAq4tzb117Z2af01l4hbbYhpK5wvIfR22EE89rWsjZrc1X4Wa3UiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1881
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTI5IGF0IDEwOjM2IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAyOSBKYW4gMjAyMCwgYXQgMTA6MDQsIFRyb25kIE15a2xlYnVzdCB3cm90ZToN
-Cj4gDQo+ID4gT24gV2VkLCAyMDIwLTAxLTI5IGF0IDA5OjE4IC0wNTAwLCBCZW5qYW1pbiBDb2Rk
-aW5ndG9uIHdyb3RlOg0KPiA+ID4gT24gMjggSmFuIDIwMjAsIGF0IDE2OjQ2LCBUcm9uZCBNeWts
-ZWJ1c3Qgd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4gT24gVHVlLCAyMDIwLTAxLTI4IGF0IDIxOjMw
-ICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiA+ID4gT24gVHVlLCAyMDIwLTAx
-LTI4IGF0IDE2OjIwIC0wNTAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiA+ID4gPiBP
-biBUdWUsIDIwMjAtMDEtMjggYXQgMTU6MjEgLTA1MDAsIFRyb25kIE15a2xlYnVzdCB3cm90ZToN
-Cj4gPiA+ID4gPiA+ID4gT24gVHVlLCAyMDIwLTAxLTI4IGF0IDEwOjU2IC0wNTAwLCBUcm9uZCBN
-eWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gT24gVHVlLCAyMDIwLTAxLTI4IGF0IDEw
-OjI2IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uDQo+ID4gPiA+ID4gPiA+ID4gd3JvdGU6DQo+
-ID4gPiAuLi4NCj4gPiA+ID4gPiA+ID4gPiA+ICsJaWYgKE5GU19QUk9UTyhkaXIpLT5oYXZlX2Rl
-bGVnYXRpb24oaW5vZGUsDQo+ID4gPiA+ID4gPiA+ID4gPiBGTU9ERV9SRUFEKSkNCj4gPiA+ID4g
-PiA+ID4gPiA+ICsJCXZlcmlmaWVyID0gTkZTX0RFTEVHQVRJT05fVkVSRjsNCj4gPiA+ID4gPiA+
-ID4gPiA+ICsJZWxzZQ0KPiA+ID4gPiA+ID4gPiA+ID4gKwkJdmVyaWZpZXIgPQ0KPiA+ID4gPiA+
-ID4gPiA+ID4gbmZzX3NhdmVfY2hhbmdlX2F0dHJpYnV0ZShkaXIpOw0KPiA+ID4gPiA+ID4gPiA+
-ID4gKw0KPiA+ID4gPiA+ID4gPiA+ID4gIAluZnNfc2V0c2VjdXJpdHkoaW5vZGUsIGZhdHRyLCBs
-YWJlbCk7DQo+ID4gPiA+ID4gPiA+ID4gPiAgCW5mc19zZXRfdmVyaWZpZXIoZGVudHJ5LA0KPiA+
-ID4gPiA+ID4gPiA+ID4gbmZzX3NhdmVfY2hhbmdlX2F0dHJpYnV0ZShkaXIpKTsNCj4gPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiA+IE9vcHMhIFdoZW4gcmV2aWV3aW5nLCBJIG1pc3NlZCB0aGlz
-LiBTaG91bGRuJ3QgdGhlIGFib3ZlDQo+ID4gPiA+ID4gPiA+IGJlDQo+ID4gPiA+ID4gPiA+IGNo
-YW5nZWQNCj4gPiA+ID4gPiA+ID4gdG8NCj4gPiA+ID4gPiA+ID4gbmZzX3NldF92ZXJpZmllcihk
-ZW50cnksIHZlcmlmaWVyKSA/DQo+ID4gPiANCj4gPiA+IFVnaCwgeWVwLg0KPiA+ID4gDQo+ID4g
-PiA+ID4gPiAuLi5hbmQgb24gYSBzaW1pbGFyIHZlaW46IG5mc19sb29rdXBfcmV2YWxpZGF0ZV9k
-ZWxlZ2F0ZWQoKQ0KPiA+ID4gPiA+ID4gbmVlZHMNCj4gPiA+ID4gPiA+IHRvDQo+ID4gPiA+ID4g
-PiBjaGFuZ2Ugc28gYXMgdG8gbm90IHJlc2V0IHRoZSB2ZXJpZmllci4uLg0KPiA+ID4gPiA+ID4g
-DQo+ID4gPiA+ID4gPiBTb3JyeSBmb3Igbm90IGNhdGNoaW5nIHRoYXQgb25lIGVpdGhlci4NCj4g
-PiA+ID4gPiANCj4gPiA+ID4gPiBOb3QgbXkgZGF5Li4uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-bmZzX3ByaW1lX2RjYWNoZSgpIHdpbGwgY2xvYmJlciB0aGUgdmVyaWZpZXIgdG9vIGluIHRoZQ0K
-PiA+ID4gPiA+IG5mc19zYW1lX2ZpbGUoKQ0KPiA+ID4gPiA+IGNhc2UuIFRoYXQgb25lIGFsc28g
-bmVlZHMgdG8gc2V0IE5GU19ERUxFR0FUSU9OX1ZFUkYgaWYgdGhlcmUNCj4gPiA+ID4gPiBpcw0K
-PiA+ID4gPiA+IGENCj4gPiA+ID4gPiBkZWxlZ2F0aW9uLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-IFBlcmhhcHMgYWRkIGEgaGVscGVyIGZ1bmN0aW9uIGZvciB0aGF0ICsNCj4gPiA+ID4gPiBuZnNf
-bG9va3VwX3JldmFsaWRhdGVfZGVudHJ5KCk/DQo+ID4gPiA+IA0KPiA+ID4gPiAuLi4uYW5kIGZp
-bmFsbHksIHdlIHNob3VsZCByZW1vdmUgdGhlIGNhbGwgdG8NCj4gPiA+ID4gbmZzX3NldF92ZXJp
-ZmllcigpDQo+ID4gPiA+IGZyb20NCj4gPiA+ID4gbmZzNF9maWxlX29wZW4oKS4gQXNpZGUgZnJv
-bSBiZWluZyBpbmNvcnJlY3QgaW4gdGhlIGNhc2Ugd2hlcmUNCj4gPiA+ID4gd2UNCj4gPiA+ID4g
-dXNlZA0KPiA+ID4gPiBhbiBvcGVuLWJ5LWZpbGVoYW5kbGUsIHRoYXQgY2FzZSBpcyB0YWtlbiBj
-YXJlIG9mIGluIHRoZQ0KPiA+ID4gPiBwcmVjZWRpbmcNCj4gPiA+ID4gZGVudHJ5IHJldmFsaWRh
-dGlvbi4NCj4gPiA+IA0KPiA+ID4gT2ssIEknbGwgZ2V0IHRoZXNlIGRvbmUuICBUaGlzIGRvZXNu
-J3QgbWFrZSB0aGUgcmV2YWxpZGF0aW9uIGNvZGUNCj4gPiA+IGFueSBzaW1wbGVyLiBJIGFtIGlt
-cHJlc3NlZCB0aGF0IHlvdSBjYW4gc3BvdCB0aGVzZSBwcm9ibGVtcyBqdXN0DQo+ID4gPiBkb2lu
-Zw0KPiA+ID4gcmV2aWV3LiAgSSBkbyB3aXNoIHdlIGNvdWxkIHVzZSBkX2ZzZGF0YSwgc2VlbXMg
-bGlrZSBleGFjdGx5IHRoZQ0KPiA+ID4ga2luZA0KPiA+ID4gb2YgdGhpbmcgd2UgbmVlZCBpdCBm
-b3IsIGJ1dCBpcyBpdCB3b3J0aCBpdCB0byBkbyBhbm90aGVyDQo+ID4gPiBhbGxvY2F0aW9uDQo+
-ID4gPiBldmVyeQ0KPiA+ID4gdGltZSB3ZSBuZWVkIGEgZGVudHJ5LiAgSSB3b25kZXIgaWYgd2Un
-cmUgZ29pbmcgdG8gZW5kIHVwIGhhdmluZw0KPiA+ID4gbW9yZQ0KPiA+ID4gY2FzZXMgbGlrZSB0
-aGlzLCBvciB3YW50IHRvIGhhdmUgbW9yZSBwcml2YXRlIGluZm9ybWF0aW9uIHBlci0NCj4gPiA+
-IGRlbnRyeS4NCj4gPiA+IA0KPiA+ID4gUmlnaHQgbm93IGRfZnNkYXRhIGhvbGRzIHRoZSBkZXZp
-Y2VuYW1lIGZvciBJU19ST09ULCBhbmQgY2FjaGVzDQo+ID4gPiB0aGUNCj4gPiA+IGFwcHJvcHJp
-YXRlIGluZm8gZm9yIGEgZGVsYXllZCByZW1vdmFsIG9mIHNpbGx5LXJlbmFtZWQgZmlsZXMuDQo+
-ID4gPiANCj4gPiA+IFByb2JsZW0gaXMgdGhhdCB3ZSBkb24ndCBkcm9wIHRoZSBkZWxlZ2F0aW9u
-IHVudGlsIGFmdGVyIGNhY2hpbmcNCj4gPiA+IHRoZQ0KPiA+ID4gc2lsbHktcmVuYW1lIGRhdGEs
-IGFuZCB0aGVuIHdlJ3JlIHN0aWxsIGRvaW5nIHRoZSBzYW1lIHNvcnRzIG9mDQo+ID4gPiB0aGlu
-Z3MNCj4gPiA+IHRyeWluZyB0byBmaWd1cmUgb3V0IHdoYXQgZGF0YSBpcyBpbiB3aGljaCBkZW50
-cnkuDQo+ID4gPiANCj4gPiA+IE1heWJlIEFsIHdvdWxkIGJlIHdpbGxpbmcgdG8gcmVzZXJ2ZSBz
-b21lIG9mIHRoZSB0b3Agb2YgZF9mbGFncw0KPiA+ID4gZm9yDQo+ID4gPiBmaWxlc3lzdGVtcyB0
-byB1c2UgcHJpdmF0ZWx5Pw0KPiA+ID4gDQo+ID4gPiBBbCwgY2FuIHdlIGhhdmUgc3VjaD8gIE5G
-UyBhbHJlYWR5IGhhcyBEQ0FDSEVfTkZTRlNfUkVOQU1FRCwgdGhhdA0KPiA+ID4gY291bGQgbW92
-ZQ0KPiA+ID4gdXAgYWJvdmUgdGhlIGNvcmUgZF9mbGFncz8NCj4gPiANCj4gPiBJIGRpZCBsb29r
-IGludG8gdGhpcyBhIGZldyB3ZWVrcyBhZ28sIGFuZCBpdCBzZWVtZWQgdG8gbWUgdGhhdA0KPiA+
-IHdlJ3JlDQo+ID4gYWxyZWFkeSBsb3cgb24gZnJlZSBiaXRzIGluIGRfZmxhZ3MuDQo+ID4gDQo+
-ID4gQW4gYWx0ZXJuYXRpdmUgbWlnaHQganVzdCBiZSB0byByZXNlcnZlIGEgd2hvbGUgYml0IGlu
-IGRfdGltZSBhcw0KPiA+IGJlaW5nDQo+ID4gdGhlICdkZWxlZ2F0ZWQgZGVudHJ5IHJldmFsaWRh
-dGVkJyBiaXQuIGUuZy4gcmVzZXJ2ZSBiaXQNCj4gPiAnQklUU19QRVJfTE9ORw0KPiA+IC0gMScg
-KG9yIGp1c3QgYml0ICcwJykgZm9yIHRoYXQgcHVycG9zZS4NCj4gDQo+IEkgZGlkIGxvb2sgYXQg
-ZG9pbmcgdGhpcyBhbHJlYWR5IGZvciB0aGUgcHVycG9zZXMgb2YgbWFraW5nDQo+IG5mc19mb3Jj
-ZV9kaXJfcmV2YWxpZGF0ZSgpIGZhc3RlciB0aGFuIGhhdmluZyBhbiBpZiBzdGF0ZW1lbnQgaW4g
-aXQsDQo+IGFuZCB0aGUNCj4gbmVhdCB0aGluZyBpcyB0aGF0IHRoZSBpZiBzdGF0ZW1lbnQgaXMg
-YWx3YXlzIGZhc3RlciB0aGFuIGFueSBiaXQNCj4gc2hpZnRpbmcNCj4gd29yayBJIGNhbWUgdXAg
-d2l0aCAtIGhvd2V2ZXIgSSB3YXMgcGxheWluZyB3aXRoIG1vc3Qtc2lnbmlmaWNhbnQNCj4gYml0
-cy4NCj4gDQo+IE1heWJlIHVzaW5nIHRoZSBsZWFzdC1zaWduaWZpY2FudCB3b3VsZCBiZSBmYXN0
-ZXIsIHRoZW4gd2UganVzdCBkbzoNCj4gDQo+IG5mc19mb3JjZV9sb29rdXBfcmV2YWxpZGF0ZSgp
-IHsNCj4gCW5mc2ktPmNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUgKz0gMjsNCj4gfQ0KDQpFaXRoZXIg
-dGhhdCwgb3IganVzdCBkbyAnIDw8IDEnIGluIG5mc19zZXRfdmVyaWZpZXIoKS4gRWl0aGVyIHdh
-eQ0KYXZvaWRzIHRoZSBjb25kaXRpb25hbC4NCg0KPiANCj4gQnV0LCBhZ2FpbiAtIHdoYXQgaGFw
-cGVucyB3aGVuIHdlIG5lZWQgYW5vdGhlciBiaXQ/ICBJcyBpdCBPSyB0byBrZWVwDQo+IGNob3Bw
-aW5nIGRfdGltZSBpbiBoYWxmPw0KDQpJdCBzaG91bGRuJ3QgYmUgYSBwcm9ibGVtIGZvciA2NC1i
-aXQgYXJjaGl0ZWN0dXJlcy4gSXQncyBnb2luZyB0byB0YWtlDQpxdWl0ZSBhIHdoaWxlIHRvIG92
-ZXJmbG93IGEgMl42MyB2YWx1ZWQgZmllbGQuDQoNCkV2ZW4gZm9yIDMyLWJpdCwgSSdkIHNheSB3
-ZSdyZSB1bmxpa2VseSB0byBzZWUgMiBiaWxsaW9uIHVwZGF0ZXMgb2YgdGhlDQpkaXJlY3Rvcnkg
-d2l0aG91dCBhIHNpbmdsZSByZXZhbGlkYXRpb24gb2YgdGhlIGRlbnRyeS4gSXQgd291bGQgaGF2
-ZSB0bw0KYmUgYSB2ZXJ5IHBlY3VsaWFyIDMyLWJpdCBjbGllbnQgd2l0aCBzb21lIHNlcmlvdXMg
-aGlnaC1lbmQgbmV0d29ya2luZw0KaGFyZHdhcmUuLi4NCg0KPiBXaGF0IGFib3V0IGNvbWluZyB1
-cCB3aXRoIGEgc3RydWN0IGZvciBkX2ZzZGF0YSB0aGF0IHVuaW9uaXplcyB0aGUNCj4gZGV2aWNl
-bmFtZSBhbmQgdGhlIHVubGluayBkYXRhLCBhbmQgaG9sZHMgb3VyIHByaXZhdGUgZmxhZ3M/ICBU
-aGUNCj4gY2FzZSBJIGFtDQo+IHRyeWluZyB0byBmaXggaXMgc28gcmFyZSB0aGF0IHdlIGNvdWxk
-IGp1c3QgZG8gdGhlIGFsbG9jYXRpb24gd2hlbiBpdA0KPiBvY2N1cnMsIGFuZCB0aGF0IHdheSB3
-ZSBkb24ndCBoYXZlIHRvIG1vZGlmeSB0b28gbXVjaCBvZiB0aGUNCj4gcmV2YWxpZGF0aW9uDQo+
-IGNvZGUganVzdCB0byBoYW5kbGUgaXQuICBJdCBhbHNvIHdvdWxkIGdpdmUgdXMgbW9yZSBmbGFn
-cyBhbmQgcHJpdmF0ZQ0KPiBkZW50cnkNCj4gZGF0YSBpZiB3ZSBuZWVkIGl0IGxhdGVyLg0KDQpJ
-J20gbm90IHN1cmUgdGhpcyBjYXNlIHdhcnJhbnRzIGl0LiBNYXliZSBsYXRlciBpZiB3ZSBmaW5k
-IHdlIG5lZWQgbW9yZQ0KZmxhZ3MgYW5kIGFyZSB3b3JyaWVkIGFib3V0IHRoZSAzMi1iaXQgYXJj
-aCBjYXNlLg0KDQpJJ2QgYWxzbyBkaXNwdXRlIHRoYXQgcmV2YWxpZGF0aW5nIGEgZGVsZWdhdGlv
-biBpcyBhIHJhcmUgZXZlbnQuIFRoZQ0KSGFtbWVyc3BhY2Ugc2VydmVyIHdpbGwgdXN1YWxseSBw
-cmVmZXIgdG8gaGFuZCBvdXQgYSBkZWxlZ2F0aW9uIHdoZW4NCnBvc3NpYmxlIG9uIGZpbGUgb3Bl
-biwgc28gdGhvc2UgY2FzZXMgaGFwcGVuIHZlcnkgZnJlcXVlbnRseS4gSGF2aW5nIHRvDQphbGxv
-Y2F0ZSBhIGRfZnNkYXRhIGlzIGxpa2VseSB0byBiZSBhIG1lYXN1cmFibGUgb3ZlcmhlYWQuDQoN
-Cj4gQW5vdGhlciBvcHRpb24gLSBhbGxvdyBmaWxlc3lzdGVtcyB0byBkbyBkX2FsbG9jLCB0aGVu
-IHdlIGNvdWxkIGp1c3QNCj4gYWNjb3VudA0KPiBmb3IgdGhlIHNwYWNlIHdlIG1pZ2h0IG5lZWQg
-cHJpdmF0ZWx5LiAgTkZTIHdvdWxkIGhhdmUgbGFyZ2VyDQo+IGRlbnRyaWVzLCBidXQNCj4gVkZT
-IGNvdWxkIHByb2JhYmx5IGRyb3AgZF90aW1lLiAgTWF5YmUgdG9vIGJpZyBhIGJ1cmRlbiB0byBn
-cm93DQo+IGFub3RoZXIgYXBpDQo+IGZvciBWRlMuDQo+IA0KPiBJIHRoaW5rIEkgbGlrZSB0aGUg
-ImFsbG9jYXRlIGl0IGlmIHlvdSBuZWVkIGl0IiBvcHRpb24gZm9yIGRfZnNkYXRhDQo+IGJlc3Qg
-c28NCj4gZmFyLg0KDQpBZ2FpbiwgSSdkIGFyZ3VlIHRoYXQgaXMgb3ZlcmtpbGwgZm9yIHRoaXMg
-cGFydGljdWxhciBwcm9ibGVtLCBidXQgeWVzLA0KaXQgd291bGQgYmUgYSBtb3JlIGVmZmljaWVu
-dCBzb2x1dGlvbiB0aGFuIGV4dGVuZGluZyBkX2ZzZGF0YS4NCg0KPiBCZW4NCj4gDQo+ID4gV2Ug
-d291bGQgdGhlbiB3YW50IHRvIGNoYW5nZSBuZnNfc2V0X3ZlcmlmaWVyKCkgdG8gc2V0IHRoZSB2
-ZXJpZmllcg0KPiA+IGluDQo+ID4gdGhlIHJlbWFpbmluZyBiaXRzLCBhbmQgaGF2ZSBpdCBzZXQg
-dGhlIGRlbGVnYXRlZCBkZW50cnkNCj4gPiByZXZhbGlkYXRlZA0KPiA+IGJpdCBkZXBlbmRpbmcg
-b24gd2hldGhlciB0aGVyZSBpcyBhIGRlbGVnYXRpb24gZm9yIHRoZSBpbm9kZSBhdCB0aGUNCj4g
-PiB0aW1lIG9mIHJldmFsaWRhdGlvbi4NCj4gPiBXZSBtYXkgYWxzbyB3YW50IHRvIGRvIHRoZSBz
-YW1lIHNldHRpbmcgb2YgdGhlIGRlbGVnYXRpb24gYml0IGluDQo+ID4gbmZzX3ZlcmlmeV9jaGFu
-Z2VfYXR0cmlidXRlKCkgd2hlbiB0aGVyZSBpcyBhIHN1Y2Nlc3NmdWwgbWF0Y2ggb2YNCj4gPiB0
-aGUNCj4gPiByZW1haW5pbmcgdmVyaWZpZXIuDQo+ID4gDQo+ID4gRmluYWxseSwgd2Ugc2hvdWxk
-IGhhdmUgbmZzX21hcmtfZGVsZWdhdGlvbl9yZXZva2VkKCkgYW5kDQo+ID4gbmZzX3N0YXJ0X2Rl
-bGVnYXRpb25fcmV0dXJuX2xvY2tlZCgpIGNsZWFyIHRoYXQgZGVsZWdhdGVkIGRlbnRyeQ0KPiA+
-IHJldmFsaWRhdGVkIGJpdCwgcGVyaGFwcyBieSBpdGVyYXRpbmcgb3ZlciB0aGUgaW5vZGUtPmlf
-ZGVudHJ5DQo+ID4gbGlzdD8NCj4gPiANCj4gPiBOb3RlIHRoYXQgdGhpcyBoYXMgdGhlIGFkdmFu
-dGFnZSB0aGF0IHNpbmNlIHRoZSBhY3R1YWwgdmVyaWZpZXINCj4gPiBwYXJ0IG9mDQo+ID4gZGVu
-dHJ5LT5kX3RpbWUgY2FuIGJlIGtlcHQgdXAgdG8gZGF0ZSB3aGlsZSB3ZSBob2xkIHRoZSBkZWxl
-Z2F0aW9uLA0KPiA+IHdlDQo+ID4gZG9uJ3QgaGF2ZSB0byB3b3JyeSBhYm91dCB0aGUgZGVudHJ5
-IGdldHRpbmcgcmV2YWxpZGF0ZWQgZm9yIG5vDQo+ID4gcmVhc29uDQo+ID4gYWZ0ZXIgdGhlIGRl
-bGVnYXRpb24gaXMgcmV0dXJuZWQuDQo+ID4gDQo+ID4gLS0gDQo+ID4gVHJvbmQgTXlrbGVidXN0
-DQo+ID4gTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KPiA+IHRyb25k
-Lm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpDVE8sIEhh
-bW1lcnNwYWNlIEluYw0KNDMwMCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUgMTA1DQpMb3MgQWx0b3Ms
-IENBIDk0MDIyDQp3d3cuaGFtbWVyLnNwYWNlDQoNCg0K
+Hi Bruce-
+
+These are a proof-of-concept, not for merge.
+
+This set of patches addresses the NFS/RDMA bug reported here:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=198053
+
+However, applying them results in a regression of support for NFSv4
+COMPOUNDs with multiple READ operations on TCP.
+
+I think a different approach might be needed? I could introduce a
+new transport method that would be called for READ/READLINK that
+would enable the transport to determine how it wants to convey
+the Reply payload. The TCP method would behave exactly as it does
+today. The RDMA method would utilize a Write chunk if one is
+available, otherwise, it would also behave as it does today.
+
+If I can get that approach to work, it would both address 198053
+and enable support for multiple READ operations in a COMPOUND for
+both TCP and RDMA. Thoughts?
+
+Sidebar: while working on this patch set, it occurred to me it
+would be a good clean up if svc_alloc_arg could always set up a
+page for rq_res->tail. Then there wouldn't have to be all the
+duplicate logic for checking whether a tail exists, or if it's
+large enough, etc. etc. Can you think of an easy way to grab
+one of the rpc_rqst's rq_pages for this purpose?
+
+
+---
+
+Chuck Lever (8):
+      nfsd: Fix NFSv4 READ on RDMA when using readv
+      SUNRPC: Add XDR infrastructure for automatically padding xdr_buf::pages
+      SUNRPC: TCP transport support for automated padding of xdr_buf::pages
+      svcrdma: RDMA transport support for automated padding of xdr_buf::pages
+      NFSD: NFSv2 support for automated padding of xdr_buf::pages
+      NFSD: NFSv3 support for automated padding of xdr_buf::pages
+      sunrpc: Add new contractual constraint on xdr_buf API
+      SUNRPC: GSS support for automated padding of xdr_buf::pages
+
+
+ fs/nfsd/nfs3xdr.c                     |   19 +-------
+ fs/nfsd/nfs4xdr.c                     |   70 ++++++++-----------------------
+ fs/nfsd/nfsxdr.c                      |   20 ++-------
+ include/linux/sunrpc/xdr.h            |   74 +++++++++++++++++++++++++--------
+ net/sunrpc/auth_gss/gss_krb5_crypto.c |   13 +++---
+ net/sunrpc/auth_gss/gss_krb5_wrap.c   |   11 +++--
+ net/sunrpc/auth_gss/svcauth_gss.c     |   51 +++++++++++++----------
+ net/sunrpc/svc.c                      |    2 -
+ net/sunrpc/svc_xprt.c                 |   14 ++++--
+ net/sunrpc/svcsock.c                  |   39 +++++++++++------
+ net/sunrpc/xdr.c                      |   15 ++++---
+ net/sunrpc/xprtrdma/svc_rdma_rw.c     |   13 ++++++
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |   27 ++++++++----
+ 13 files changed, 200 insertions(+), 168 deletions(-)
+
+--
+Chuck Lever
