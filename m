@@ -2,107 +2,229 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B3714CFF4
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2020 18:56:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 104A814D85F
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2020 10:43:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgA2R4C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Jan 2020 12:56:02 -0500
-Received: from mail-mw2nam12on2127.outbound.protection.outlook.com ([40.107.244.127]:21243
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726742AbgA2R4C (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:56:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C5wm3tBU5IHzhr3t9nrCHfiYq5Ifs05Ndmd4DzKrr/qJnykF0EpvHDUqjGiH6Qtgiak/o6thYT17xMM2sReTgyCZzQa5ICAy6wRufkvPPqKbpTc9qub2yH7qNAA5vylBbfHlMEihKZ8eHfEmj8m/+0nn2KhWgtyZvMFnGayzg/S4/j4UYLLiMTUvButPIAMzcwCPivsdqSOU7yvGSgO9J9zHxnPdxbr6piHT6KTYc1NExM0STxmNqPP6bNeXy0AVc9GyWU0s3YFmykFcYA/qmoTufi06KxX52H0uGOTxAvxK8hHnJ9eEDdpaR1WOzfPvA1LuUlBNIFccdeOYFB9eCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lzl8ZcvRmnWHBR0QYggAjdTxi0X4oRbq7y98Gc5JVqk=;
- b=YbqEjA/wIJymxtmL/Tz4832dqd2Edoev840Gyy3/8MrjF0u7k5bIJcWqqIoo0O9aPHtKLBDW2Wn9zYlbhxhx70n558J26DyMWd+d5r/vWzJAo8CNI5kxX9P7bINrc+nMLpYrx2q8scudY5f36596tPnd5SNBjhgtuRpuBYF+84N1yoJ1bhtq639tWtNXeINhAA+HAxXV4cfNxmYjssR1f1NPhdHnFpjzwgxzigvB2DAcn4C1WuCTwKpK0lgzZI/6BQP0CPTRF3N7G/1Ta5SONIZeJrs+M9dsFmCnyRyXTQIjz4SmQedjs/PKCA6xWluzPlUD3l4TEodwzd7NkjUCzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lzl8ZcvRmnWHBR0QYggAjdTxi0X4oRbq7y98Gc5JVqk=;
- b=LdkHkaRyNNwmtopSVxHKn8v7dgn58AjqyrJc2u0e1PephHT9MBhDcGunSLaekP/amnsKB+Fr7IpSoYmXNU+VxdsAVOlphjPOHp3GpJGHG+haITpc1Bez/5DtYRbyoZF1NK6VtGvOJeHfIpB/zA9+071+IT/PvsyX6EH2GcnTn88=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1978.namprd13.prod.outlook.com (10.174.184.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.10; Wed, 29 Jan 2020 17:55:57 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2686.019; Wed, 29 Jan 2020
- 17:55:57 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "aglo@umich.edu" <aglo@umich.edu>
-Subject: Re: question about nconnect implementation
-Thread-Topic: question about nconnect implementation
-Thread-Index: AQHV1sdJiuGC/HdPKESiM+O4uyf5N6gB7ScA
-Date:   Wed, 29 Jan 2020 17:55:57 +0000
-Message-ID: <5a923d18a740e0bc161a0a3bf689cd14416f8c21.camel@hammerspace.com>
-References: <CAN-5tyGoKOQzPHjTikO4ScPGe7eyob5pLOH7JM3MfgFG1W7eDQ@mail.gmail.com>
-In-Reply-To: <CAN-5tyGoKOQzPHjTikO4ScPGe7eyob5pLOH7JM3MfgFG1W7eDQ@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2a20f266-fd9a-4eab-6469-08d7a4e47e5b
-x-ms-traffictypediagnostic: DM5PR1301MB1978:
-x-microsoft-antispam-prvs: <DM5PR1301MB1978F669D7EBB3B403595433B8050@DM5PR1301MB1978.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02973C87BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(5660300002)(6506007)(110136005)(316002)(86362001)(8936002)(36756003)(6486002)(76116006)(66476007)(66556008)(64756008)(66446008)(2906002)(66946007)(6512007)(8676002)(81166006)(81156014)(478600001)(26005)(3480700007)(186003)(2616005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1978;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J6uA/x8kT2GuZLFDUrgSRZH5fmoqag6/gB3fs0hy2JJ6BueyirhUhpW5ZZO5Fcu/Gf6O4uFcquwKH0LSGiBzLj0NMlrnrPY7ogKynKP9vSZ2+R97kUo0PP5l3+jdjVSMXIL5eogVcg3PlID0T1sFTzirVdoNG2tjDtoGdSHTD+u5GYtes4MNJO6RAY7jdzaDq6APJx2vkjAZOTk5y9Ep+Oprxn+Vfhos71uC7N39RDVDDGHNBAx7HGZ7F/GAJv51aAmS1j/8iXchSoSt6OFScZuny+MYThejHrCEzS4Ss8InABdzgdvTtlo40AnmNVWAvYDSzfwAW4OWBpJUYSlyAot1fGm9VLShPm6o3RAkwEJLbpefm1WjbaM3bWFmliwApFeK08L5QeK7YhPrrc0nbbOQ2+IcYX5u33ukpKBFvahSO8nwQJwZ9hmhvdmVQcDb
-x-ms-exchange-antispam-messagedata: N7vDLz5gSCuIjOuvDIC4/mINRyWKS5O6m+KTTL4UsPqBXgcwYH9hiBdoKltZ57Hkoz+0AKY+B+gR2u7gpodzDRhkAjBb4M6eU6qEDhMMGXm1v/QNNEeJbpUuk6TFMbrHeXhxcKbXXBb0dDAtwXvrYw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2F6C05FDB2B4A5438E91766BDED3B7E2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726949AbgA3Jna (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Jan 2020 04:43:30 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39452 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbgA3Jna (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jan 2020 04:43:30 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so3182856wrt.6
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Jan 2020 01:43:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=QgJOQHhmjkavyIGLdjt9HqiKD1XvGmDtbqJA2LK5nkY=;
+        b=gBCRw5EHKRM0ZL02VcP6SZaFqZ9nEO4D6q/I8ljsIk96cKYyIXyWQBw7zIINcnwy0p
+         kvmgvQlvMoplcTdtJ0jIxht6F5jrA+g7QqkejFJ712yl3U6ugeJMs517U+ceu1VO/mql
+         Kg6qWD43fc7wUtLiVVjZZh+IFlTPpAfzQJc2ncKI1Z2H1sevJ3qj0ANHfxJ2j3aIT0lq
+         yrBrq4QvrttZrlrm1dUxoY6Im80OTC0L2IyXy3iW9dueA0B0M6hf4QkTbEgtOqFpn0hi
+         p9voonFOQFFWpse43jES/hp+JYvpxvEoWlkk/zPEh8lX28wi05Rlo91kyssKoJvoDx3I
+         Lteg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=QgJOQHhmjkavyIGLdjt9HqiKD1XvGmDtbqJA2LK5nkY=;
+        b=QxgQvcqyY8aybc0+0IiTmogGdl5t7PxtZOZGPYs3vjNdYJlgagSoFX5eeATs0aJQ8n
+         6AXOMCkV4kkHhw5TQ+U8mGlOyAJfo7vH/bgoexIbflUkX0Dc4yuMr2M/tRbPFzMgC21o
+         JhWb82ivq8QO/ee6AMMjMD0r5vIxMofYETDHQFZCTRYCI0frLkcbvCbQvdOKWenPtubq
+         xb7ufQx3iRzbUJt2RZ4cz1slKpD+G9KCckjCbt6d/1Q7ndvqFCOkIPtCg0w96q2LXCM0
+         Oq1NFUC2Fol69ETAP0NWAEN3RGbuqhs2j7t2HRZ+rcuqpElDnJF1wziReQisD1v8duaZ
+         gBtw==
+X-Gm-Message-State: APjAAAX+yOmOUbWrU+6JSC/M+jxcB4rhZ3aBs3Thy3aRFpoaG+a9MoMB
+        yVtf7NTObx/9gVOsUiWxaIkoIBx8SiYuzQ==
+X-Google-Smtp-Source: APXvYqx2/PvPhTphOfNfD3Dwd6nL2p9Q3z7u2A/+/rVHQ+8W12rEhfJJOpqMdOgnMMsuhlm1vGJRgw==
+X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr4437277wrx.304.1580377407540;
+        Thu, 30 Jan 2020 01:43:27 -0800 (PST)
+Received: from WINDOWSSS5SP16 ([82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id p26sm5372155wmc.24.2020.01.30.01.43.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jan 2020 01:43:27 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>, <trondmy@hammerspace.com>
+Cc:     "'Schumaker, Anna'" <Anna.Schumaker@netapp.com>,
+        <chuck.lever@oracle.com>, <trond.myklebust@hammerspace.com>,
+        "'David Laight'" <David.Laight@ACULAB.COM>
+Subject: [PATCH v5] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Thu, 30 Jan 2020 09:43:25 -0000
+Message-ID: <030001d5d751$b834d290$289e77b0$@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a20f266-fd9a-4eab-6469-08d7a4e47e5b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2020 17:55:57.4882
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qFz9RU5f3z99fQvz5XihOCu8e4L/BTx7N5kiotZEByHLIQjKGj8WLmrNUbibR15edNxITsavdDimSkMR816w6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1978
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdXXUWTAvVUbuUN2Sj6HbyyCYI4aQg==
+Content-Language: en-gb
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTI5IGF0IDEyOjEyIC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gSGkgVHJvbmQsDQo+IA0KPiBDb3JyZWN0IG1lIGlmIEknbSB3cm9uZyBidXQgSSBiZWxp
-ZXZlIGN1cnJlbnRseSB0aGUgY2xpZW50IHdpbGwgbmV2ZXINCj4gYmluZCBuZXcgKG5jb25uZWN0
-KSBjb25uZWN0aW9ucyB0byBhbiBleGlzdGluZyBzZXNzaW9uIHVudGlsIGl0IGdldHMNCj4gYW4g
-ZXJyb3IgQ09OTl9OT1RfQk9VTkRfVE9fU0VTU0lPTiwgaXMgdGhhdCBjb3JyZWN0Pw0KPiBuZnM0
-X3Byb2NfYmluZF9jb25uX3RvX3Nlc3Npb24oKSB0aGF0IGl0ZXJhdGVzIG92ZXIgdGhlIHRyYW5z
-cG9ydHMgaXMNCj4gb25seSBjYWxsZWQgbmZzNHN0YXRlJ3MgbmZzNF9iaW5kX2Nvbm5fdG9fc2Vz
-c2lvbiB3aGVuIGNsX3N0YXQncyBmbGFnDQo+IG9mIEJJTkRfQ09OTl9UT19TRVNTSU9OIGlzIHNl
-dCBhbmQgaXQncyBzZXQgb24gZXJyb3IgaGFuZGxpbmcgb2YNCj4gQ09OTl9OT1RfQk9VTkQuDQo+
-IA0KPiBJcyB0aGUgcmVhc29uIGNsaWVudCBub3QgZXhwbGljaXRseSBzZW5kaW5nIEJJTkRfQ09O
-Tl9UT19TRVNTSU9ODQo+IGJlZm9yZSBzZW5kaW5nIG90aGVyIG9wZXJhdGlvbnMgaXMgYmVjYXVz
-ZSBjbGllbnQgKGltcGxlbWVudHMpDQo+IHNwZWNpZmllcyAibm8gc3RhdGUgcHJvdGVjdGlvbiIg
-Zm9yIHRoZSBjbGllbnQ/IEFuZCBhY2NvcmRpbmcgdG8gdGhlDQo+IHNwZWMgaWYgbm8gc3RhdGUg
-cHJvdGVjdGlvbiBpcyB1c2VkIHRoZW4ganVzdCBzZW5kaW5nIGEgU0VRVUVOQ0Ugb24gYQ0KPiBu
-ZXcgY29ubmVjdGlvbiBpcyBzdWZmaWNpZW50IHRvIGNyZWF0ZSBhbiBhc3NvY2lhdGlvbiBiZXR3
-ZWVuIHRoYXQNCj4gY29ubmVjdGlvbiBhbmQgdGhlIHNlc3Npb24/DQo+IA0KPiBUaGFuayB5b3Uu
-DQoNCkl0IGlzIHRoYXQsIGFuZCBpdCBpcyBhbHNvIGJlY2F1c2UgZGVzcGl0ZSBhbGwgdGhlIHZl
-cmJpYWdlIGluIHRoZQ0KUkZDcywgbW9zdCBwZW9wbGUgYXJlIHVzaW5nIE5GU3Y0Lnggd2l0aCBB
-VVRIX1NZUywgZm9yIHdoaWNoIHdlIHVzZQ0KU1A0X05PTkUgcHJvdGVjdGlvbi4gVGhhdCBkb2Vz
-IG5vdCByZXF1aXJlIHVzZSBvZiBCSU5EX0NPTk5fVE9fU0VTU0lPTg0Kd2l0aCBuZXcgY29ubmVj
-dGlvbnMuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWlu
-ZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+From: Robert Milkowski <rmilkowski@gmail.com>
+
+Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+NFS4 lease renewal, which is not compliant with the NFS4 specification.
+This can result in a lease being expired by an NFS server.
+
+Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+introduced implicit client lease renewal in nfs4_do_fsinfo(),
+which can result in the NFSv4.0 lease to expire on a server side,
+and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+
+This can easily be reproduced by frequently unmounting a sub-mount,
+then stat'ing it to get it mounted again, which will delay or even
+completely prevent client from sending RENEW operations if no other
+NFS operations are issued. Eventually nfs server will expire client's
+lease and return an error on file access or next RENEW.
+
+This can also happen when a sub-mount is automatically unmounted
+due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+mounted again via stat(). This can result in a short window during
+which client's lease will expire on a server but not on a client.
+This specific case was observed on production systems.
+
+This patch removes the implicit lease renewal from nfs4_do_fsinfo().
+
+Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+---
+ fs/nfs/nfs4_fs.h    |  4 +---
+ fs/nfs/nfs4proc.c   | 12 ++++++++----
+ fs/nfs/nfs4renewd.c |  5 +----
+ fs/nfs/nfs4state.c  |  4 +---
+ 4 files changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index a7a73b1..a5db055 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -446,9 +446,7 @@ extern int nfs4_detect_session_trunking(struct
+nfs_client *clp,
+ extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed);
++extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long
+lease);
+ 
+ 
+ /* nfs4state.c */
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 76d3716..affc150 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5019,16 +5019,13 @@ static int nfs4_do_fsinfo(struct nfs_server *server,
+struct nfs_fh *fhandle, str
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
+ 	};
+-	unsigned long now = jiffies;
+ 	int err;
+ 
+ 	do {
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client,
+-					fsinfo->lease_time * HZ,
+-					now);
++			nfs4_set_lease_period(server->nfs_client,
+fsinfo->lease_time * HZ);
+ 			break;
+ 		}
+ 		err = nfs4_handle_exception(server, err, &exception);
+@@ -6084,6 +6081,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32
+program,
+ 		.callback_data = &setclientid,
+ 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+ 	};
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	/* nfs_client_id4 */
+@@ -6116,6 +6114,9 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32
+program,
+ 		clp->cl_acceptor =
+rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
+ 	}
++
++	if (status == 0)
++		do_renew_lease(clp, now);
+ out:
+ 	trace_nfs4_setclientid(clp, status);
+ 	dprintk("NFS reply setclientid: %d\n", status);
+@@ -8203,6 +8204,7 @@ static int _nfs4_proc_exchange_id(struct nfs_client
+*clp, const struct cred *cre
+ 	struct rpc_task *task;
+ 	struct nfs41_exchange_id_args *argp;
+ 	struct nfs41_exchange_id_res *resp;
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
+@@ -8223,6 +8225,8 @@ static int _nfs4_proc_exchange_id(struct nfs_client
+*clp, const struct cred *cre
+ 	if (status != 0)
+ 		goto out;
+ 
++	do_renew_lease(clp, now);
++
+ 	clp->cl_clientid = resp->clientid;
+ 	clp->cl_exchange_flags = resp->flags;
+ 	clp->cl_seqid = resp->seqid;
+diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
+index 6ea431b..ff876dd 100644
+--- a/fs/nfs/nfs4renewd.c
++++ b/fs/nfs/nfs4renewd.c
+@@ -138,15 +138,12 @@
+  *
+  * @clp: pointer to nfs_client
+  * @lease: new value for lease period
+- * @lastrenewed: time at which lease was last renewed
+  */
+ void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed)
++		unsigned long lease)
+ {
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+-	clp->cl_last_renewal = lastrenewed;
+ 	spin_unlock(&clp->cl_lock);
+ 
+ 	/* Cap maximum reconnect timeout at 1/2 lease period */
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 3455232..f0b0027 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -92,17 +92,15 @@ static int nfs4_setup_state_renewal(struct nfs_client
+*clp)
+ {
+ 	int status;
+ 	struct nfs_fsinfo fsinfo;
+-	unsigned long now;
+ 
+ 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
+ 		nfs4_schedule_state_renewal(clp);
+ 		return 0;
+ 	}
+ 
+-	now = jiffies;
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
++		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
+-- 
+1.8.3.1
+
+
