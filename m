@@ -2,92 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A31D214F2F8
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2020 20:56:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4A014F343
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2020 21:41:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgAaT4k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 31 Jan 2020 14:56:40 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39882 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgAaT4k (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Jan 2020 14:56:40 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so10073772wrt.6
-        for <linux-nfs@vger.kernel.org>; Fri, 31 Jan 2020 11:56:39 -0800 (PST)
+        id S1727063AbgAaUln (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 31 Jan 2020 15:41:43 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:44245 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbgAaUln (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Jan 2020 15:41:43 -0500
+Received: by mail-yw1-f68.google.com with SMTP id t141so6048914ywc.11;
+        Fri, 31 Jan 2020 12:41:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DUj4ab2DfB29eIwo9xVRwyvp566jZIzjyPmVFO8N0sg=;
-        b=nKpVch2s5SoUvwEFvY2dvlbJqu3IqkmNRnQhIxQU7V4t9qtR+quz695eLtMtcVwJ3o
-         BtwPMsIO/YTGV2WCJyA/Kg13vN2wXVFwdw1uhhTaaiqO4kLGL+X5YYfu4FEcm78QOItK
-         JVUbPxRpoCYYJ4+jU5mq7YVgeSjmhmyiCUXyGdFAn7o4HO2qGU3L680XmxUb/U7nCaQw
-         1nzVy3XguDtNcNgvNEXIt3uq9iYFWMn3OxLqezo/SaqQMgGYOQMBj5/G2hXIY4aS+MqI
-         wOuLfDrTfeWrcE3zcqkdzX+27+uz86R2/LlIsQZ2hETi0aaFcf75PzsRKUM2Y0dc2KTD
-         t4kA==
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=rg+onKFknsLvLX9JqukVFDouz4qGqvSfOybfNJoTEnA=;
+        b=oIaeoBRndoeufPqxZtJHTOvh4EvynFLT2xliExksn3XcGLJ2cmcawaVn5c5Udv0nW3
+         laGAgujY0BoGA2Pzfe6A5JrxhnoebOpds39NlLqzVRpo5dh4sfhHUIIblgrMggKTL8kC
+         tb5JXbgzvB7dCzPjW/QzVvDs6GkK4oNoH6qQLV3ZgSIKro+hr/4GOcqHPopdKsSSr48s
+         SztoJDH9iYEnNVUkdy0nwGTzfTOrB0g6SZ8gLCus7kAuhnx4uTpkD97FhROZOJ/6kMMV
+         JkTrk7UUXHjbUX1JhcVQGjt0uXU0dICe6A3/xsufC7IcW8PHjL5fly1z8zo6pWwqBq28
+         +00A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DUj4ab2DfB29eIwo9xVRwyvp566jZIzjyPmVFO8N0sg=;
-        b=Vl1vKHafeQ/tAvT4QmC6Yp2HrDDtaAg3U6pwXRQ6veYbXsO9UOyelgptgD6l7raHhi
-         wBj9rh5MJ8YO4A2aBSZP8sSjxrMy7EYAeyNjeGlua+oBet6ALfJVjZT2QA7h4VuhEqVw
-         cv77uPQlV+uwpRD16Ml8TyWxOtdxa8L5Ig27lzGXonJY2kMuG/NgLe5GfvDVG364HGRq
-         zKxJetRc9KFzJm9iudBG+FU/w6vA+w3wahOzm4AUMfhXtgcbhIXhUnTxVHGxEpjhpUDk
-         BqjdDXAPYAcMV3crtJZPkZcdKnKIa4Pw0mYTrR3+LSM4XPZ8SwJaB7lPPaa+8ozRQ3Xz
-         Ce6w==
-X-Gm-Message-State: APjAAAUVFOqALL0tRWA5U7h+8zbPUfx4F0RBDzCmkbtMzxtqLWPB9mt0
-        czA9YRIxBJBpER+nP6TVNHw7P8O5PR68NjArIRYMFw==
-X-Google-Smtp-Source: APXvYqxw8aF78EK/0Jw4ld/Dp+NY6sMBGGBgWyA//AZxwzZzdzQ4/9DrSE40qZh52PFiKnPCgZOp17Fx/ztT5S17ORs=
-X-Received: by 2002:a5d:53c4:: with SMTP id a4mr41120wrw.403.1580500598947;
- Fri, 31 Jan 2020 11:56:38 -0800 (PST)
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=rg+onKFknsLvLX9JqukVFDouz4qGqvSfOybfNJoTEnA=;
+        b=dUOTWwiTIldrfYdlUVsqfAuMfya64NmsdtL+YhXzcPRgBD8lU9dJmtO7moT8Qi0h8g
+         EnZ/qvHCi/5oCxZJXsZSn4k2l7EKGNibCmUzh/bUeZHW61MffVz7rrlx0UcKrmeZxr+O
+         72allJ9ceBiZPl8ZMuof0uH4T0lEZFWQAlgz2cFpBMVaY0guIjSpb0JM12QX0QYNC6KK
+         yzmwctBqgEU4ngZw40CJN6be7ZZIRKydibK5qPdOiq9R+ma5FwVGIj8hDMm1LSo68FRS
+         c7+OWJV9pYO+26Fn/+3XgxHPVkIu+VwGrrsq/AE4hKkgqvenp7XeHYdqXs179fbFUYQO
+         qxaw==
+X-Gm-Message-State: APjAAAUmoolqigLXvOBcwDBnV4BL7GwZu4deEp4Io3SuQ0qfsiBPvupc
+        mlltycndvrTC+Kaz3WjgQngXToSO
+X-Google-Smtp-Source: APXvYqxKokVJRLL6F/Cu1xgwGRc6KzKdl+YHnHe2aN7AS54DPXW+/Cgq98GddK8u6Wr15MAIJViFEg==
+X-Received: by 2002:a25:8484:: with SMTP id v4mr586086ybk.13.1580503301030;
+        Fri, 31 Jan 2020 12:41:41 -0800 (PST)
+Received: from bazille.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id x131sm4938278ywd.54.2020.01.31.12.41.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 Jan 2020 12:41:40 -0800 (PST)
+Subject: [PATCH RFC2 0/3] Follow-up discussion of bug 198053
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Fri, 31 Jan 2020 15:41:39 -0500
+Message-ID: <20200131203727.31409.63652.stgit@bazille.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 31 Jan 2020 14:56:28 -0500
-Message-ID: <CAN-5tyEy52P6yvQGoV1sTQoWPQu3pZn+3QcYrF5jray4JaOnOw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond, Anna,
+Hi Bruce-
 
-If it's not too late then I'd like to re-tract this patch. I
-understand if somebody else would really like to have this
-functionality in then please speak up. If it's too late to pull I also
-understand but I need to at least try.
+These are a proof-of-concept, not for merge.
 
-Thank you.
+This set of patches addresses the NFS/RDMA bug reported here:
 
-On Thu, Jan 16, 2020 at 2:09 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs4client.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index 460d625..4df3fb0 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -881,7 +881,7 @@ static int nfs4_set_client(struct nfs_server *server,
->
->         if (minorversion == 0)
->                 __set_bit(NFS_CS_REUSEPORT, &cl_init.init_flags);
-> -       else if (proto == XPRT_TRANSPORT_TCP)
-> +       if (proto == XPRT_TRANSPORT_TCP)
->                 cl_init.nconnect = nconnect;
->
->         if (server->flags & NFS_MOUNT_NORESVPORT)
-> --
-> 1.8.3.1
->
+https://bugzilla.kernel.org/show_bug.cgi?id=198053
+
+This approach does not cause any regression of support for NFSv4
+COMPOUNDs with multiple READ operations over TCP. It is also far
+less invasive than my first try.
+
+Thoughts, opinions?
+
+
+---
+
+Chuck Lever (3):
+      nfsd: Fix NFSv4 READ on RDMA when using readv
+      SUNRPC: Track current encode position in struct xdr_stream
+      NFSD: Enable nfsd4_encode_readv() for NFS/RDMA
+
+
+ fs/nfsd/nfs4proc.c                       |    1 +
+ fs/nfsd/nfs4xdr.c                        |   16 +++++++---------
+ include/linux/sunrpc/svc.h               |    3 +++
+ include/linux/sunrpc/svc_rdma.h          |    6 +++++-
+ include/linux/sunrpc/svc_xprt.h          |    2 ++
+ include/linux/sunrpc/xdr.h               |    1 +
+ net/sunrpc/svc.c                         |   14 ++++++++++++++
+ net/sunrpc/svcsock.c                     |    7 +++++++
+ net/sunrpc/xdr.c                         |    2 ++
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |    1 +
+ net/sunrpc/xprtrdma/svc_rdma_rw.c        |   29 +++++++++++++++++++----------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c    |   26 +++++++++++++++++++++++++-
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    1 +
+ 13 files changed, 88 insertions(+), 21 deletions(-)
+
+--
+Chuck Lever
