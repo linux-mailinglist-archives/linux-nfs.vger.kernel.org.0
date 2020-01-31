@@ -2,55 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D8F14F345
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2020 21:41:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90E8E14F347
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2020 21:41:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgAaUlt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 31 Jan 2020 15:41:49 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45081 "EHLO
+        id S1726319AbgAaUl4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 31 Jan 2020 15:41:56 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42778 "EHLO
         mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgAaUlt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Jan 2020 15:41:49 -0500
-Received: by mail-yw1-f68.google.com with SMTP id a125so6054430ywe.12;
-        Fri, 31 Jan 2020 12:41:47 -0800 (PST)
+        with ESMTP id S1726139AbgAaUlz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Jan 2020 15:41:55 -0500
+Received: by mail-yw1-f68.google.com with SMTP id b81so6058899ywe.9;
+        Fri, 31 Jan 2020 12:41:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=LTMvTQVA4iVgG4sSgvmo3F/nyb4ms19PmRgM8uHui8o=;
-        b=bAdbc+13mfXVgvCbbEZv37eGftafAh3gSklBW3gEvAB3VzC8nR7Vt29yA8+XR1g7Vp
-         JkX3E0uHNrn9m4Ipa6ngr7VDu8jBtPhA9hzsRWK+AV32W/CDlXfQ009MPIxu+vgYPWyw
-         L/38wgxV2gW/nXD9pUroUHRY9C4nEPzf9ucDgGqikMMgY1BGCT08vXwb0YybfswoxFFY
-         vpPckNi+nhhK/ryOEQNio0GkLmOyj2IVtCLBobWguXFXNLi7ihibPNzFVk7wl64toILr
-         EV3+FeYrF1YDnirwKERcfacP9p2avW2GhxIOSdSX1IoK4Ohqy8eS9sf6jBbbDFlfxRLE
-         RIog==
+        bh=ChAqFwypT96xxLsIvs9dj825z+OPVY1aE7NWj1QcivA=;
+        b=qJj6t2q6QQgwYYiZiXWUekXWJC4BL6J/YtCXCMcpUjFjKnhLcxQqA5mUd6TNLQSASM
+         bwxhQc1Rk2cJh7DiV+JKh+L2u81D1+X1pYkEER+pctZ855GjqzqBL1247I7FGZni4Pq7
+         Kdmo+r2kHLd6zsT+mDjEpsSWNW64E9a6ovK2nHgZ7qqobaTJ3OmsKtctYKhmrzpjYFJE
+         Ajd3deSbRjEZdHF2ZH2Go9J8jNgJhIoyOmmySKO2X+b9TVifoaycvpxyuqnEYUabyNdo
+         MfrsyRx9zEZ41/9AhaltaVhs9RhZk0bwhZYDIG2lPUiLGvnd8YlrpCDgYLRe9R86eHYg
+         WKbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=LTMvTQVA4iVgG4sSgvmo3F/nyb4ms19PmRgM8uHui8o=;
-        b=uFagff6ZJHjP1sZFuggaMa9kvspzrX2zKsTHwJzNbG/FUEddkLx+vfwijTA1DqQT2u
-         Rbqlv9fgnxh7VekBBbcvY1XKA4S5fcehlZ0CCRhxl0LXTEaAnKVPnVBtkhaqaQQctgCv
-         t2T0X4EDeSeVi/m9Y761yT+kBDnyQrvyJRWWIWhUZqzxGLw++jNITEeNh9fAhcdyzC0d
-         iFHOb4RK7/2CbNSG+GsO8M9wqu/OrJphQc5APKT02bHD9pEa1xrRiLBYW4l8LwIrPLbT
-         kdi5XwyDyhMhrqeT9b7Ie5ANl3u5SPULekO04WB0I0uoqNHTxhJ5vmtXJyf3C7YfVEpz
-         W1Gg==
-X-Gm-Message-State: APjAAAXlabk7gocta5o3yOOm71XSPL4SsnmtWpcq6gYaK9itBPaMB7wi
-        3xJKsBD2ywWMF3B0BvayabZaO/CJ
-X-Google-Smtp-Source: APXvYqxGcmgL4gUNE+3CdfRvQ7MupnWElUOExC8cu4/uyTEvRpNhg7frOrPgwJAlOSBOJFynD6PsxQ==
-X-Received: by 2002:a25:808d:: with SMTP id n13mr10428385ybk.483.1580503307360;
-        Fri, 31 Jan 2020 12:41:47 -0800 (PST)
+        bh=ChAqFwypT96xxLsIvs9dj825z+OPVY1aE7NWj1QcivA=;
+        b=r3Ucibw0vw2pIBL0zrqB9B2qtM8AS5a243oA4kX5j6UlSSzrwEu4SHn0tw6ogxwkgn
+         n3QvwGN+BjxR56SFf7qXGsI1vM3p0FNdaAgH+dnb7W7gNFrCCIsZlPHDsb7QzfzE6RZs
+         6YjIgaxYA4o/c6s0e45oikwrRbZ/JLMssaSWzTXNRVzDs8IBSbb2VGW1S3/tM88ojeXD
+         anoKrkMMCYjgovOrHiK026E0JvJhxcX/Tqff+NGqXucJI7tY9f2hhdFjdj1nT8U8G36u
+         +gKyW7uguakiuiymPjfS1+T8fp0MVCIuDld9llxsgT+tL/T0I/zOw3JQxbOuQCdUHFZZ
+         3eFg==
+X-Gm-Message-State: APjAAAXOmKxG15HNLAkYV5t2OiAyDARnXmgef0/HqgoEMJhwXTaa3qNw
+        +Ymwyw6Ys6qBuBVrTddXHRo=
+X-Google-Smtp-Source: APXvYqyhBcOPOQNFlpviJ94Wc6jgbFh2VgWHQFZhYLUV2tv7Tpzd1PM4TfycR34OvYYZIUOpWogLlw==
+X-Received: by 2002:a25:2311:: with SMTP id j17mr10098621ybj.31.1580503313651;
+        Fri, 31 Jan 2020 12:41:53 -0800 (PST)
 Received: from bazille.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id u136sm4316945ywf.101.2020.01.31.12.41.46
+        by smtp.gmail.com with ESMTPSA id p1sm4795779ywh.74.2020.01.31.12.41.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jan 2020 12:41:46 -0800 (PST)
-Subject: [PATCH RFC2 1/3] nfsd: Fix NFSv4 READ on RDMA when using readv
+        Fri, 31 Jan 2020 12:41:53 -0800 (PST)
+Subject: [PATCH RFC2 2/3] SUNRPC: Track current encode position in struct
+ xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 31 Jan 2020 15:41:46 -0500
-Message-ID: <20200131204146.31409.29902.stgit@bazille.1015granger.net>
+Date:   Fri, 31 Jan 2020 15:41:52 -0500
+Message-ID: <20200131204152.31409.48018.stgit@bazille.1015granger.net>
 In-Reply-To: <20200131203727.31409.63652.stgit@bazille.1015granger.net>
 References: <20200131203727.31409.63652.stgit@bazille.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -62,47 +63,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-svcrdma expects that the payload falls precisely into the xdr_buf
-page vector. Adding "xdr->iov = NULL" forces xdr_reserve_space to
-always use pages from xdr->buf->pages when calling nfsd_readv.
+Maintain a byte-offset cursor in struct xdr_stream. This will be
+used in a subsequent patch.
 
-This code is called only when fops->splice_read is missing or when
-RQ_SPLICE_OK is clear, so it's not a noticeable problem in many
-common cases.
-
-Fixes: b04209806384 ("nfsd4: allow exotic read compounds")
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=198053
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ fs/nfsd/nfs4proc.c         |    1 +
+ include/linux/sunrpc/xdr.h |    1 +
+ net/sunrpc/xdr.c           |    2 ++
+ 3 files changed, 4 insertions(+)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 75d1fc13a9c9..92a6ada60932 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3521,17 +3521,14 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 	u32 zzz = 0;
- 	int pad;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647..9cd610485f7d 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1904,6 +1904,7 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 	xdr->iov = head;
+ 	xdr->p   = head->iov_base + head->iov_len;
+ 	xdr->end = head->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
++	xdr->pos = head->iov_len;
+ 	/* Tail and page_len should be zero at this point: */
+ 	buf->len = buf->head[0].iov_len;
+ 	xdr->scratch.iov_len = 0;
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index b41f34977995..2ca479b0708e 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -232,6 +232,7 @@ struct xdr_stream {
+ 	struct kvec *iov;	/* pointer to the current kvec */
+ 	struct kvec scratch;	/* Scratch buffer */
+ 	struct page **page_ptr;	/* pointer to the current page */
++	unsigned int pos;	/* current encode position */
+ 	unsigned int nwords;	/* Remaining decode buffer length */
  
-+	/* Ensure xdr_reserve_space behaves itself */
-+	if (xdr->iov == xdr->buf->head) {
-+		xdr->iov = NULL;
-+		xdr->end = xdr->p;
-+	}
-+
- 	len = maxcount;
- 	v = 0;
--
--	thislen = min_t(long, len, ((void *)xdr->end - (void *)xdr->p));
--	p = xdr_reserve_space(xdr, (thislen+3)&~3);
--	WARN_ON_ONCE(!p);
--	resp->rqstp->rq_vec[v].iov_base = p;
--	resp->rqstp->rq_vec[v].iov_len = thislen;
--	v++;
--	len -= thislen;
--
- 	while (len) {
- 		thislen = min_t(long, len, PAGE_SIZE);
- 		p = xdr_reserve_space(xdr, (thislen+3)&~3);
+ 	struct rpc_rqst *rqst;	/* For debugging */
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index f3104be8ff5d..b8b78876a9bd 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -542,6 +542,7 @@ void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
+ 		buf->len += len;
+ 		iov->iov_len += len;
+ 	}
++	xdr->pos = iov->iov_len;
+ 	xdr->rqst = rqst;
+ }
+ EXPORT_SYMBOL_GPL(xdr_init_encode);
+@@ -644,6 +645,7 @@ __be32 * xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes)
+ 	else
+ 		xdr->buf->page_len += nbytes;
+ 	xdr->buf->len += nbytes;
++	xdr->pos += nbytes;
+ 	return p;
+ }
+ EXPORT_SYMBOL_GPL(xdr_reserve_space);
 
