@@ -2,88 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9E111518DA
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2020 11:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F19151E6A
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2020 17:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgBDKdE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Feb 2020 05:33:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43729 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726631AbgBDKdE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Feb 2020 05:33:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580812383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=w81XveLRIk07zYgCspgiGg6WMrOtuh9MOpXguHaH4po=;
-        b=DePJKMfgVS5+p+8oCG7LhNTLIxwPAa4t6fwr1vLGRafT3F/+3NtumiKvfyaz74It+LRIah
-        hNteX3nZ6BhU2r04BKb6vAkK/zzXfcpygpH7rnLcTtlPVe7wMCdz2MmnoE4FuUI3Hu9iNt
-        YiFxshIarOAaYT6ZLu+CuifO7Eng6DU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283-GiT5QarXPL-pHKIcdz25VA-1; Tue, 04 Feb 2020 05:33:01 -0500
-X-MC-Unique: GiT5QarXPL-pHKIcdz25VA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04CCB1083E80;
-        Tue,  4 Feb 2020 10:32:59 +0000 (UTC)
-Received: from idlethread.redhat.com (ovpn-116-72.ams2.redhat.com [10.36.116.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5992171EB;
-        Tue,  4 Feb 2020 10:32:57 +0000 (UTC)
-From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
-To:     bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org, arnd@arndb.de
-Subject: [PATCH] sunrpc: expiry_time should be seconds not timeval
-Date:   Tue,  4 Feb 2020 11:32:56 +0100
-Message-Id: <20200204103256.16131-1-rbergant@redhat.com>
+        id S1727317AbgBDQkw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Feb 2020 11:40:52 -0500
+Received: from fieldses.org ([173.255.197.46]:37498 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727297AbgBDQkw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 4 Feb 2020 11:40:52 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CD7FBABE; Tue,  4 Feb 2020 11:40:51 -0500 (EST)
+Date:   Tue, 4 Feb 2020 11:40:51 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yaohongbo@huawei.com
+Subject: Re: [PATCH -next] nfsd: make nfsd_filecache_wq variable static
+Message-ID: <20200204164051.GA8763@fieldses.org>
+References: <20200203014357.114717-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203014357.114717-1-chenzhou10@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When upcalling gssproxy, cache_head.expiry_time is set as a
-timeval, not seconds since boot. As such, RPC cache expiry
-logic will not clean expired objects created under
-auth.rpcsec.context cache.
+Thanks, applying.--b.
 
-This has proven to cause kernel memory leaks on field. Using
-64 bit variants of getboottime/timespec
-
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
----
- net/sunrpc/auth_gss/svcauth_gss.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
-uth_gss.c
-index 7511a68aadf0..65b67b257302 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1248,6 +1248,7 @@ static int gss_proxy_save_rsc(struct cache_detail *=
-cd,
- 		dprintk("RPC:       No creds found!\n");
- 		goto out;
- 	} else {
-+		struct timespec64 boot;
-=20
- 		/* steal creds */
- 		rsci.cred =3D ud->creds;
-@@ -1268,6 +1269,9 @@ static int gss_proxy_save_rsc(struct cache_detail *=
-cd,
- 						&expiry, GFP_KERNEL);
- 		if (status)
- 			goto out;
-+
-+		getboottime64(&boot);
-+		expiry -=3D boot.tv_sec;
- 	}
-=20
- 	rsci.h.expiry_time =3D expiry;
---=20
-2.21.0
-
+On Mon, Feb 03, 2020 at 09:43:57AM +0800, Chen Zhou wrote:
+> Fix sparse warning:
+> 
+> fs/nfsd/filecache.c:55:25: warning:
+> 	symbol 'nfsd_filecache_wq' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  fs/nfsd/filecache.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 23c1fa5..22e77ed 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -52,7 +52,7 @@ struct nfsd_fcache_disposal {
+>  	struct rcu_head rcu;
+>  };
+>  
+> -struct workqueue_struct *nfsd_filecache_wq __read_mostly;
+> +static struct workqueue_struct *nfsd_filecache_wq __read_mostly;
+>  
+>  static struct kmem_cache		*nfsd_file_slab;
+>  static struct kmem_cache		*nfsd_file_mark_slab;
+> -- 
+> 2.7.4
