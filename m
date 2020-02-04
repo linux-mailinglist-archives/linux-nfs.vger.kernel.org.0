@@ -2,143 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBEE151F4F
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2020 18:22:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B606D151F89
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2020 18:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgBDRWq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Feb 2020 12:22:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45306 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbgBDRWq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Feb 2020 12:22:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a6so24072607wrx.12
-        for <linux-nfs@vger.kernel.org>; Tue, 04 Feb 2020 09:22:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V/VK+zP5C8anFqB7Lc7Z+d1HALkRTXK5L40JznzLx9g=;
-        b=IpP0VcYQoQb6NhK9r6e9gxMpRm/aeKhrdwzdAi4Wp+nI01iM4DTrQhZ6TpJW4aH9yJ
-         EKSC2zRWfIlt86Eqgo81NmUpk7Z3BlDTfwqFD0Qf90F6Rog+mY5k8aiQ9tZRqzXeo4iR
-         Y71pE95WTJmLaOXLKK5h1FRbNdz71jVbxl730R90r3mmiTVCHL1iKcEPaVn780vx3nhw
-         3OEUg/SXqEbslQ3w05erL1N0yixvJbsKHkT642+z72CKrT3wffVy3G7w6eRA7aJjeD4j
-         S1noWL/IkhDRkM7AwoGccOssx84G4lWX7lWjv8wRFqL4Ia0QJgMim1lUmW08/zHpciHp
-         3b4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V/VK+zP5C8anFqB7Lc7Z+d1HALkRTXK5L40JznzLx9g=;
-        b=bpT8ZRo7ubGM4lOjT3Mg1AIHXFTlHc6WoCckE0sBXjePTEmlcT5367xanaYkVTz6mD
-         wa1UqRzJcVQ4dbww0GONm48MTagDPSDjUa7OM+ijGKiXcZAo80nzb42Muti+CtUgj9pm
-         N/KCmYb1NraKrl1VJ5S761sI4yR31X+v5CfTvJWcntjC7Ms8O7zTpih7ukgOTWQNf2T4
-         R7ZnH391cduhs7tIg475tJw5kLMNR5wtoal3Pv3FWBPCVcDjR4rZjd7dk7Np4xoHnpYX
-         PkDM1FcLaigL001kccPKwQ+nOq3X9VqBgP95bbr0zhqNyFfJPGvRWw13Wp5i1WDUIQDy
-         fZRg==
-X-Gm-Message-State: APjAAAXYtO/J6/NAm9U3eITXYB/tmMvUxu15WAMERteQHdEuFU5C/+DX
-        MY609+9s8GNwzt42/M4dUPert/zKoHyK1+c6ryRKbQ==
-X-Google-Smtp-Source: APXvYqyQtnCejUCvfKFgvJkS54NArU0eecoRDmFg3/jOZQ6LwBNbd2HLpOrUEQAtfWpQa5ltiWjybJDT0j6R1U/Q6zg=
-X-Received: by 2002:adf:806c:: with SMTP id 99mr22025080wrk.328.1580836964192;
- Tue, 04 Feb 2020 09:22:44 -0800 (PST)
+        id S1727415AbgBDRgl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Feb 2020 12:36:41 -0500
+Received: from mail-eopbgr700112.outbound.protection.outlook.com ([40.107.70.112]:30433
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727310AbgBDRgl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:36:41 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ezk28dHLx4eh4BlJulzOnf55eKwpSqbQdKzDCumRfeBv4qZU38aWYMKq7YcfI0tB6vFa0ZMn8VHK7PgIozbZJzcL+1YchQNfJ7ykQ8xeYPWsqvtL6MkVI+U4LoBfkk25oUR3dHjTQV2mRCjnYHp8Njdo3L06rq9oCoTzaikUmNoyYgwQPVsYNN5T8cfHz3KpvsSLDVvqSkm5ISkcnEM4IVaqu5ZpX4pz3BAdREvuLFS42y7wNfOV8Dp+sx6OBIDacteriKMYKCRR3DEaj2H9pSaOVhPcBBbHrNspHPWE5KT9MQNuXcpU0agga+yAJ5d8bFWaDgQF3YPu8MX73aG+0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dn7ILmYQCCfBiKhiFaAVGRVUqSxzBXDO3wPBpAYVwq0=;
+ b=IFqhBrCM8DA3fDCn9AgvXKEZdd9/BJMf2K68uh/HPgHjH+pyfXyRWz9twfFLBDnDdmYJzN6eD5ZFzFsail0nbajpXtUYWxicPb0qGkajoACgauj5JSJkw/IMrLus8t5rZX7aPclneo4nTUWtPh3URovoeGuF0jm88Wv+7dj1j2/3yqxGeBs1xCb62qHSDFHP8vkUqsPtbm0D/Ce/v3k5Vxfn5bq/JQvpjGSpiZBwLJMVaZmWaWaFuwW+sAD+ufj/8XA8CfbnxQ/nK2BTK9BRUEkG+lUKdbOxhtJ+5l9B3Bk7nOT3laRWuAm3Oll8N9wTfj5iHCfXDVxK2N2T/FCsFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dn7ILmYQCCfBiKhiFaAVGRVUqSxzBXDO3wPBpAYVwq0=;
+ b=axBw6sF0W3wnbKE5n1Lm9GI8E6/IiSW1WzbWUu4jroDob62VQd59vM7SeoGNLjQjxvh1EfAcNrHOW+vR5LsADjPYJxdO6HOg1D5QkT0fuWLLK7yR6PIlxS/k07DfpEEaMAAMHTzhNYX72S8iHMaxG5+RLbEE4XWriBbzdx/tCio=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1915.namprd13.prod.outlook.com (10.174.187.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.12; Tue, 4 Feb 2020 17:36:37 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2707.018; Tue, 4 Feb 2020
+ 17:36:37 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "SteveD@redhat.com" <SteveD@redhat.com>
+Subject: Re: [PATCH 1/2] manpage: Add a description of the 'nconnect' mount
+ option
+Thread-Topic: [PATCH 1/2] manpage: Add a description of the 'nconnect' mount
+ option
+Thread-Index: AQHV1rtiY+PbLnmEZUOEKWD862nBgqgJm/2AgAGr2wCAAAeTgIAAAn2AgAAD7IA=
+Date:   Tue, 4 Feb 2020 17:36:37 +0000
+Message-ID: <f4833c297ff2253c932543be231462fce8971dce.camel@hammerspace.com>
+References: <20200129154703.6204-1-steved@redhat.com>
+         <CAN-5tyF1NUt2emuPGYF+-3s9cJPwox1uoh0uVzxArRJtzPXMTA@mail.gmail.com>
+         <4c48901d-3e37-31fc-a032-0326bda51b25@RedHat.com>
+         <e96d7688a52b4f7d54e492b5f2dc9e4070cf240d.camel@hammerspace.com>
+         <CAN-5tyFmfDxUjvf2dnUGsVVW7DFt3vvKVYcCzwCjBVY5qxbV6w@mail.gmail.com>
+In-Reply-To: <CAN-5tyFmfDxUjvf2dnUGsVVW7DFt3vvKVYcCzwCjBVY5qxbV6w@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4023f2ea-c993-4e65-cc16-08d7a998c947
+x-ms-traffictypediagnostic: DM5PR1301MB1915:
+x-microsoft-antispam-prvs: <DM5PR1301MB191510929A3E31C3AC3149C1B8030@DM5PR1301MB1915.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03030B9493
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(396003)(376002)(39850400004)(189003)(199004)(66556008)(66446008)(64756008)(76116006)(4326008)(66946007)(66476007)(6916009)(2616005)(6506007)(316002)(2906002)(86362001)(53546011)(26005)(186003)(36756003)(8936002)(81166006)(81156014)(6486002)(8676002)(478600001)(6512007)(5660300002)(54906003)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1915;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FBMCjEOdEtdzCfwmDeglLEmEKMj4C74eZa3sl+gm3QIp1c9rfxv9MaPA2f1KRETEwVP5nHV00qxv5jDGMuGK8Ee24WzuJqK3rmZlv8L0OFUHY76G6i2mAFQkiF6C9vJ7acd+aaZbcfmKIGumIGSL5kw3adL6mATfR2KEqMVjWdxEzpX+OwKy9988yd/oKRJixXp74QG6jn60sDl+TKvYqEOo9FlQbShfxr5adwo/5TkrF5SYv4K+8LUkVQZN40air5PMNl8Q1MX3r9H6eyHgPOj+Er1W7cflcgqqBZgj7VdaLxJqi+6fSQm65+hAcc37mEPF4/+4AaveSKx0puUiLZPSs7gIQLgTZheeI4fbS5kI+83ftqopEZvQD4IaTq/k9cd9C6Z8dQZX7/yab6KxINEYtYEvmfeEgIlPk8uUkJlQTekL89o8S1kd0hk7spxG
+x-ms-exchange-antispam-messagedata: P8jzGWvphA/UAq9h439eHzlT5zM1/UcQidjhL5D53DbmN6kGqV+3tY3OLtmNzuHbNYaupi8xA/Pj5xv2cXqLLBeg/K7ugyI32qhr53IT1MTDV9F+V0O5xQmcf4IBhOF2VbObt+u+lf3/Ac+myXY2Ig==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2B11D8665E08CA428C87ACB13A87C373@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200129154703.6204-1-steved@redhat.com> <CAN-5tyF1NUt2emuPGYF+-3s9cJPwox1uoh0uVzxArRJtzPXMTA@mail.gmail.com>
- <4c48901d-3e37-31fc-a032-0326bda51b25@RedHat.com> <e96d7688a52b4f7d54e492b5f2dc9e4070cf240d.camel@hammerspace.com>
-In-Reply-To: <e96d7688a52b4f7d54e492b5f2dc9e4070cf240d.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 4 Feb 2020 12:22:33 -0500
-Message-ID: <CAN-5tyFmfDxUjvf2dnUGsVVW7DFt3vvKVYcCzwCjBVY5qxbV6w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] manpage: Add a description of the 'nconnect' mount option
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "SteveD@RedHat.com" <SteveD@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4023f2ea-c993-4e65-cc16-08d7a998c947
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2020 17:36:37.1834
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Bi/l2eEF947mSImCmEDbiUcS2MsjAutG9zV8kwzfGnjYeXwXDSctku0vlcJETLjBn5o0JzJEfJO//XZeAXGFiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1915
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 12:13 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2020-02-04 at 11:46 -0500, Steve Dickson wrote:
-> > Trond,
-> >
-> > On 2/3/20 10:15 AM, Olga Kornievskaia wrote:
-> > > Looks good but can we add clarification that nconnect is supported
-> > > for
-> > > 3.0 and 4.1+?
-> > Do you have an opinion on this? Should we document the protocols that
-> > are supported?
->
-> Unless there is an actual protocol reason for doing so, I'd rather not
-> that we be on the record as saying that NFSv4.0 will remain
-> unsupported.
-> In other words, I'd like us to keep open the possibility that we might
-> add NFSv4.0 support in the future, should someone need it.
-
-I see your point and I like the vagueness of the nconnect description
-but is the man page written in stone, can't we say that now support is
-for v3 and v4.1+ but in the future it might change? It might be
-confusing for the users to do a 4.0 mount, specify nconnect and wonder
-why it's not working?
-
->
-> Cheers
->   Trond
->
->
-> > steved.
-> >
-> > > On Wed, Jan 29, 2020 at 10:47 AM Steve Dickson <steved@redhat.com>
-> > > wrote:
-> > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > >
-> > > > Add a description of the 'nconnect' mount option on the 'nfs'
-> > > > generic
-> > > > manpage.
-> > > >
-> > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > Signed-off-by: Steve Dickson <steved@redhat.com>
-> > > > ---
-> > > >  utils/mount/nfs.man | 17 +++++++++++++++++
-> > > >  1 file changed, 17 insertions(+)
-> > > >
-> > > > diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> > > > index 6ba9cef..84462cd 100644
-> > > > --- a/utils/mount/nfs.man
-> > > > +++ b/utils/mount/nfs.man
-> > > > @@ -369,6 +369,23 @@ using an automounter (refer to
-> > > >  .BR automount (8)
-> > > >  for details).
-> > > >  .TP 1.5i
-> > > > +.BR nconnect= n
-> > > > +When using a connection oriented protocol such as TCP, it may
-> > > > +sometimes be advantageous to set up multiple connections between
-> > > > +the client and server. For instance, if your clients and/or
-> > > > servers
-> > > > +are equipped with multiple network interface cards (NICs), using
-> > > > multiple
-> > > > +connections to spread the load may improve overall performance.
-> > > > +In such cases, the
-> > > > +.BR nconnect
-> > > > +option allows the user to specify the number of connections
-> > > > +that should be established between the client and server up to
-> > > > +a limit of 16.
-> > > > +.IP
-> > > > +Note that the
-> > > > +.BR nconnect
-> > > > +option may also be used by some pNFS drivers to decide how many
-> > > > +connections to set up to the data servers.
-> > > > +.TP 1.5i
-> > > >  .BR rdirplus " / " nordirplus
-> > > >  Selects whether to use NFS v3 or v4 READDIRPLUS requests.
-> > > >  If this option is not specified, the NFS client uses READDIRPLUS
-> > > > requests
-> > > > --
-> > > > 2.21.1
-> > > >
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVHVlLCAyMDIwLTAyLTA0IGF0IDEyOjIyIC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVHVlLCBGZWIgNCwgMjAyMCBhdCAxMjoxMyBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
+PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTAyLTA0
+IGF0IDExOjQ2IC0wNTAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0KPiA+ID4gVHJvbmQsDQo+ID4g
+PiANCj4gPiA+IE9uIDIvMy8yMCAxMDoxNSBBTSwgT2xnYSBLb3JuaWV2c2thaWEgd3JvdGU6DQo+
+ID4gPiA+IExvb2tzIGdvb2QgYnV0IGNhbiB3ZSBhZGQgY2xhcmlmaWNhdGlvbiB0aGF0IG5jb25u
+ZWN0IGlzDQo+ID4gPiA+IHN1cHBvcnRlZA0KPiA+ID4gPiBmb3INCj4gPiA+ID4gMy4wIGFuZCA0
+LjErPw0KPiA+ID4gRG8geW91IGhhdmUgYW4gb3BpbmlvbiBvbiB0aGlzPyBTaG91bGQgd2UgZG9j
+dW1lbnQgdGhlIHByb3RvY29scw0KPiA+ID4gdGhhdA0KPiA+ID4gYXJlIHN1cHBvcnRlZD8NCj4g
+PiANCj4gPiBVbmxlc3MgdGhlcmUgaXMgYW4gYWN0dWFsIHByb3RvY29sIHJlYXNvbiBmb3IgZG9p
+bmcgc28sIEknZCByYXRoZXINCj4gPiBub3QNCj4gPiB0aGF0IHdlIGJlIG9uIHRoZSByZWNvcmQg
+YXMgc2F5aW5nIHRoYXQgTkZTdjQuMCB3aWxsIHJlbWFpbg0KPiA+IHVuc3VwcG9ydGVkLg0KPiA+
+IEluIG90aGVyIHdvcmRzLCBJJ2QgbGlrZSB1cyB0byBrZWVwIG9wZW4gdGhlIHBvc3NpYmlsaXR5
+IHRoYXQgd2UNCj4gPiBtaWdodA0KPiA+IGFkZCBORlN2NC4wIHN1cHBvcnQgaW4gdGhlIGZ1dHVy
+ZSwgc2hvdWxkIHNvbWVvbmUgbmVlZCBpdC4NCj4gDQo+IEkgc2VlIHlvdXIgcG9pbnQgYW5kIEkg
+bGlrZSB0aGUgdmFndWVuZXNzIG9mIHRoZSBuY29ubmVjdCBkZXNjcmlwdGlvbg0KPiBidXQgaXMg
+dGhlIG1hbiBwYWdlIHdyaXR0ZW4gaW4gc3RvbmUsIGNhbid0IHdlIHNheSB0aGF0IG5vdyBzdXBw
+b3J0DQo+IGlzDQo+IGZvciB2MyBhbmQgdjQuMSsgYnV0IGluIHRoZSBmdXR1cmUgaXQgbWlnaHQg
+Y2hhbmdlPyBJdCBtaWdodCBiZQ0KPiBjb25mdXNpbmcgZm9yIHRoZSB1c2VycyB0byBkbyBhIDQu
+MCBtb3VudCwgc3BlY2lmeSBuY29ubmVjdCBhbmQNCj4gd29uZGVyDQo+IHdoeSBpdCdzIG5vdCB3
+b3JraW5nPw0KDQpXZWxsLi4uIEdpdmVuIHRoYXQgaXQgaXMgcmVhbGx5IGEgYnVnIChpLmUuIG5v
+dCBpbnRlbnRpb25hbCkgdGhhdA0KTkZTdjQuMCBkb2VzIG5vdCB3b3JrLCBJJ2QgYXJndWUgdGhv
+c2UgdXNlcnMgc2hvdWxkIGJlIGFsbG93ZWQgdGhlDQpvcHRpb24gdG8gY29tcGxhaW4uDQoNCj4g
+DQo+ID4gQ2hlZXJzDQo+ID4gICBUcm9uZA0KPiA+IA0KPiA+IA0KPiA+ID4gc3RldmVkLg0KPiA+
+ID4gDQo+ID4gPiA+IE9uIFdlZCwgSmFuIDI5LCAyMDIwIGF0IDEwOjQ3IEFNIFN0ZXZlIERpY2tz
+b24gPA0KPiA+ID4gPiBzdGV2ZWRAcmVkaGF0LmNvbT4NCj4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+
+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29t
+Pg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IEFkZCBhIGRlc2NyaXB0aW9uIG9mIHRoZSAnbmNvbm5l
+Y3QnIG1vdW50IG9wdGlvbiBvbiB0aGUgJ25mcycNCj4gPiA+ID4gPiBnZW5lcmljDQo+ID4gPiA+
+ID4gbWFucGFnZS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUcm9uZCBN
+eWtsZWJ1c3QgPA0KPiA+ID4gPiA+IHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+
+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogU3RldmUgRGlja3NvbiA8c3RldmVkQHJlZGhhdC5jb20+
+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gIHV0aWxzL21vdW50L25mcy5tYW4gfCAxNyArKysr
+KysrKysrKysrKysrKw0KPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygr
+KQ0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS91dGlscy9tb3VudC9uZnMubWFu
+IGIvdXRpbHMvbW91bnQvbmZzLm1hbg0KPiA+ID4gPiA+IGluZGV4IDZiYTljZWYuLjg0NDYyY2Qg
+MTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvdXRpbHMvbW91bnQvbmZzLm1hbg0KPiA+ID4gPiA+ICsr
+KyBiL3V0aWxzL21vdW50L25mcy5tYW4NCj4gPiA+ID4gPiBAQCAtMzY5LDYgKzM2OSwyMyBAQCB1
+c2luZyBhbiBhdXRvbW91bnRlciAocmVmZXIgdG8NCj4gPiA+ID4gPiAgLkJSIGF1dG9tb3VudCAo
+OCkNCj4gPiA+ID4gPiAgZm9yIGRldGFpbHMpLg0KPiA+ID4gPiA+ICAuVFAgMS41aQ0KPiA+ID4g
+PiA+ICsuQlIgbmNvbm5lY3Q9IG4NCj4gPiA+ID4gPiArV2hlbiB1c2luZyBhIGNvbm5lY3Rpb24g
+b3JpZW50ZWQgcHJvdG9jb2wgc3VjaCBhcyBUQ1AsIGl0DQo+ID4gPiA+ID4gbWF5DQo+ID4gPiA+
+ID4gK3NvbWV0aW1lcyBiZSBhZHZhbnRhZ2VvdXMgdG8gc2V0IHVwIG11bHRpcGxlIGNvbm5lY3Rp
+b25zDQo+ID4gPiA+ID4gYmV0d2Vlbg0KPiA+ID4gPiA+ICt0aGUgY2xpZW50IGFuZCBzZXJ2ZXIu
+IEZvciBpbnN0YW5jZSwgaWYgeW91ciBjbGllbnRzIGFuZC9vcg0KPiA+ID4gPiA+IHNlcnZlcnMN
+Cj4gPiA+ID4gPiArYXJlIGVxdWlwcGVkIHdpdGggbXVsdGlwbGUgbmV0d29yayBpbnRlcmZhY2Ug
+Y2FyZHMgKE5JQ3MpLA0KPiA+ID4gPiA+IHVzaW5nDQo+ID4gPiA+ID4gbXVsdGlwbGUNCj4gPiA+
+ID4gPiArY29ubmVjdGlvbnMgdG8gc3ByZWFkIHRoZSBsb2FkIG1heSBpbXByb3ZlIG92ZXJhbGwN
+Cj4gPiA+ID4gPiBwZXJmb3JtYW5jZS4NCj4gPiA+ID4gPiArSW4gc3VjaCBjYXNlcywgdGhlDQo+
+ID4gPiA+ID4gKy5CUiBuY29ubmVjdA0KPiA+ID4gPiA+ICtvcHRpb24gYWxsb3dzIHRoZSB1c2Vy
+IHRvIHNwZWNpZnkgdGhlIG51bWJlciBvZiBjb25uZWN0aW9ucw0KPiA+ID4gPiA+ICt0aGF0IHNo
+b3VsZCBiZSBlc3RhYmxpc2hlZCBiZXR3ZWVuIHRoZSBjbGllbnQgYW5kIHNlcnZlciB1cA0KPiA+
+ID4gPiA+IHRvDQo+ID4gPiA+ID4gK2EgbGltaXQgb2YgMTYuDQo+ID4gPiA+ID4gKy5JUA0KPiA+
+ID4gPiA+ICtOb3RlIHRoYXQgdGhlDQo+ID4gPiA+ID4gKy5CUiBuY29ubmVjdA0KPiA+ID4gPiA+
+ICtvcHRpb24gbWF5IGFsc28gYmUgdXNlZCBieSBzb21lIHBORlMgZHJpdmVycyB0byBkZWNpZGUg
+aG93DQo+ID4gPiA+ID4gbWFueQ0KPiA+ID4gPiA+ICtjb25uZWN0aW9ucyB0byBzZXQgdXAgdG8g
+dGhlIGRhdGEgc2VydmVycy4NCj4gPiA+ID4gPiArLlRQIDEuNWkNCj4gPiA+ID4gPiAgLkJSIHJk
+aXJwbHVzICIgLyAiIG5vcmRpcnBsdXMNCj4gPiA+ID4gPiAgU2VsZWN0cyB3aGV0aGVyIHRvIHVz
+ZSBORlMgdjMgb3IgdjQgUkVBRERJUlBMVVMgcmVxdWVzdHMuDQo+ID4gPiA+ID4gIElmIHRoaXMg
+b3B0aW9uIGlzIG5vdCBzcGVjaWZpZWQsIHRoZSBORlMgY2xpZW50IHVzZXMNCj4gPiA+ID4gPiBS
+RUFERElSUExVUw0KPiA+ID4gPiA+IHJlcXVlc3RzDQo+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiAy
+LjIxLjENCj4gPiA+ID4gPiANCj4gPiANCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMg
+Y2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3Bh
+Y2UuY29tDQoNCg0K
