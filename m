@@ -2,295 +2,277 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 124BF152675
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2020 07:52:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BCE41529AB
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2020 12:09:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgBEGwd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Feb 2020 01:52:33 -0500
-Received: from mail-pj1-f50.google.com ([209.85.216.50]:40133 "EHLO
-        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgBEGwd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Feb 2020 01:52:33 -0500
-Received: by mail-pj1-f50.google.com with SMTP id 12so561449pjb.5;
-        Tue, 04 Feb 2020 22:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6PJHyHSz05S8+8S3GVaSFvF3XnJ43EL/bKHV993LL5w=;
-        b=QEJT3j1riOMafr7jFCTWJyNtCjqWdJsiZqfjmmjYJvgF7xwlgagHsB0CriMBprmzSl
-         tlNt9k7ehjzz9TpM0s3sxzhef2sVHEMaR/nACctgDQFn4SjfFaTlt/viAnXOXpQPLcKZ
-         jhxiUemoSaapg5O1lScWQ+artD410k2z6Ol8k7cRKelubUFchxXKqAlFcZQE7vQ8QO3Y
-         YClrnWEOrwzlU+UPmO3rLUVT4H/9dOJqwMot8dfnqy0Klwx1m0JURiw9dPfdmss50GOG
-         PsBlUYInWFUdNIMwoT6RG5Iw6UHGULlgM4w5DlZV1G1A9IkQ5dY43CXIW2k2wmJVNb+q
-         YCEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6PJHyHSz05S8+8S3GVaSFvF3XnJ43EL/bKHV993LL5w=;
-        b=iQUgLwjpp4XKPG4PEeWbdER+cQi2FPw1+QxnhgA9pVLQqrC2kjmfNUOEA4ndWzaBEV
-         EDQmqdvrmT7CLt4+rFuhRZX6D08q3U0as/7ITE20H6XAazipR14Q+zlrgMqoQ/Ocqzph
-         AA8Wg4jJ94JAufRIIoXW67xuGJC8JNqYnQ0fR/seq0xNfxz/FicniysGMJ+bhsjVGOXB
-         UmhEvakp8yRRcYRlweqMn8iH1YqBDSdWQ7sXaZbp+xB0ZklMXwecPPZObrUWbhPfvZfa
-         FEfuMG/Hh3Qo7juhKR7ww5QB6R0ADUNkNcMBQC9Yw9z8dQtq3O+0c0WpI+twTDC6p/S0
-         QYwA==
-X-Gm-Message-State: APjAAAWYaVhBV+ykS/3x+a3i0UvPYz9OtY4UGZIjF1noxD3wGtf3c8WY
-        RkFTtxLzLYBnKptR1UIdOfo=
-X-Google-Smtp-Source: APXvYqy+lSHkOEXRWAr3Fw/1tiK4y+gg9TVwymj7RLzvqbDNuSSrNlLytW0PSiCLqT7XkRaEr1pyMA==
-X-Received: by 2002:a17:902:ac88:: with SMTP id h8mr33297833plr.131.1580885552075;
-        Tue, 04 Feb 2020 22:52:32 -0800 (PST)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id a13sm27901022pfg.65.2020.02.04.22.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 22:52:31 -0800 (PST)
-Date:   Wed, 5 Feb 2020 14:52:24 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: A NFS, xfs, reflink and rmapbt story
-Message-ID: <20200205065224.slfdmnka7avcyzrl@xzhoux.usersys.redhat.com>
-References: <20200123083217.flkl6tkyr4b7zwuk@xzhoux.usersys.redhat.com>
- <20200124011019.GA8247@magnolia>
- <20200127235617.GB18610@dread.disaster.area>
+        id S1727522AbgBELJ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Feb 2020 06:09:57 -0500
+Received: from smtpq4.tb.mail.iss.as9143.net ([212.54.42.167]:50770 "EHLO
+        smtpq4.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727170AbgBELJ5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Feb 2020 06:09:57 -0500
+Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
+        by smtpq4.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <felix@kngnt.org>)
+        id 1izIZ6-0001iK-JJ; Wed, 05 Feb 2020 12:09:52 +0100
+Received: from 94-209-183-118.cable.dynamic.v4.ziggo.nl ([94.209.183.118] helo=mail.kngnt.org)
+        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <felix@kngnt.org>)
+        id 1izIZ6-0006ju-Fd; Wed, 05 Feb 2020 12:09:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kngnt.org; s=mail;
+        t=1580900991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g2+iWvIXRJ6853htMEkC1UUd1bViu0TjGbQodHKtgbU=;
+        b=BgLMs8RKNA12pjs7no2JEfP3nyX04p25DDVLoERlPOBUZlPNzDJRyGl740IiOm6V4HnCFu
+        xNyHEYa5lNuNwRZWIxKgHNXvGK+Zq3AXJ0P/1E0fhTi8QRmwPynYAqqrJvR6GRoqI7tREG
+        RP1wa5ddp889/MyE99quWDEgMYGwTeqQ0BNL/Ud4JIDG3U+S5kusCfi2sr1cyd5EcZH07K
+        uDQMqxK2UH9fMUQUWifAAfj5Hlj6kDWVOaRXah2XsuIambKEftI6BmqsslzMb11umSGREg
+        k1Rw4U1SEnIqS1F/Fqhm0mD3Ala1Ei2h8A8tiZhYV8iXIHy6EgQezwvkBN3zbg==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200127235617.GB18610@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 12:09:51 +0100
+From:   Felix Rubio <felix@kngnt.org>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: kerberized NFSv4 client reporting operation not permitted when
+ mounting with sec=sys
+In-Reply-To: <9B0320D2-CA0A-4EA1-BAAD-6CB30A56C7C7@redhat.com>
+References: <0593b4af8ca3fafbec59655bbb39d2b4@kngnt.org>
+ <724CB91C-76AC-425B-BAE3-04887ED5DE73@redhat.com>
+ <6d998611c9205d6a0a8bf3806c297011@kngnt.org>
+ <87BD58D0-7A14-42BB-BA8F-54E6C78B2755@redhat.com>
+ <b93eadb0240439b8ca8286deb708a517@kngnt.org>
+ <9B0320D2-CA0A-4EA1-BAAD-6CB30A56C7C7@redhat.com>
+Message-ID: <9c84ea206c562d00eed526d6b8539404@kngnt.org>
+X-Sender: felix@kngnt.org
+X-SourceIP: 94.209.183.118
+X-Authenticated-Sender: f.rubiodalmau@ziggo.nl (via SMTP)
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=W/FGqiek c=1 sm=1 tr=0 a=KDOoBKh8T/kja8HrlTi2+A==:17 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10 a=D7LYSQ-zpW_tMKFIR4wA:9 a=CEo8RZIc0JqJ824J:21 a=bc4ac6GGH6fjpXs9:21 a=QEXdDO2ut3YA:10
+X-Ziggo-Spam-Status: No
+X-Spam-Status: No
+X-Spam-Flag: No
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 10:56:17AM +1100, Dave Chinner wrote:
-> On Thu, Jan 23, 2020 at 05:10:19PM -0800, Darrick J. Wong wrote:
-> > On Thu, Jan 23, 2020 at 04:32:17PM +0800, Murphy Zhou wrote:
-> > > Hi,
-> > > 
-> > > Deleting the files left by generic/175 costs too much time when testing
-> > > on NFSv4.2 exporting xfs with rmapbt=1.
-> > > 
-> > > "./check -nfs generic/175 generic/176" should reproduce it.
-> > > 
-> > > My test bed is a 16c8G vm.
-> > 
-> > What kind of storage?
+Hi Ben,
 
-Loop device in guest.
+exportfs -v returns the following output:
 
-# Host:
+/export/home    
+10.0.0.0/8(sync,wdelay,hide,no_subtree_check,sec=sys:krb5:krb5i:krb5p,rw,secure,root_squash,no_all_squash)
 
-[root@ibm-x3850x5-03]$ lsblk
-NAME                            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                               8:0    0  2.7T  0 disk
-├─sda1                            8:1    0    1M  0 part
-├─sda2                            8:2    0    1G  0 part /boot
-└─sda3                            8:3    0  2.7T  0 part
-  ├─rhel_ibm--x3850x5--03-root  253:0    0  550G  0 lvm  /
-  ├─rhel_ibm--x3850x5--03-swap  253:1    0 27.6G  0 lvm  [SWAP]
-  ├─rhel_ibm--x3850x5--03-home  253:2    0  1.7T  0 lvm  /home
-  ├─rhel_ibm--x3850x5--03-test1 253:3    0   10G  0 lvm
-  └─rhel_ibm--x3850x5--03-test2 253:4    0   10G  0 lvm
-loop0                             7:0    0    1G  0 loop
-loop1                             7:1    0    1G  0 loop
-[root@ibm-x3850x5-03]$ smartctl -a /dev/sda
-smartctl 7.0 2018-12-30 r4883 [x86_64-linux-3.10.0-1115.el7.x86_64]
-(local build)
-Copyright (C) 2002-18, Bruce Allen, Christian Franke,
-www.smartmontools.org
+Maybe helps to know that I am using a CentOS 7.7.1908, SELinux enabled, 
+kernel (provided by CentOS) 3.10.0-1062.9.1.el7.x86_64.
 
-=== START OF INFORMATION SECTION ===
-Vendor:               IBM
-Product:              ServeRAID M5015
-Revision:             2.13
-Compliance:           SPC-3
-User Capacity:        2,996,997,980,160 bytes [2.99 TB]
-Logical block size:   512 bytes
-Logical Unit id:      0x600605b001665aa019cb17be1e9ce991
-Serial number:        0091e99c1ebe17cb19a05a6601b00506
-Device type:          disk
-Local Time is:        Wed Feb  5 14:35:57 2020 CST
-SMART support is:     Unavailable - device lacks SMART capability.
+Thank you for your help!
+Felix
 
-=== START OF READ SMART DATA SECTION ===
-Current Drive Temperature:     0 C
-Drive Trip Temperature:        0 C
+---
+Felix Rubio
+"Don't believe what you're told. Double check."
 
-Error Counter logging not supported
-
-Device does not support Self Test logging
-[root@ibm-x3850x5-03]$ virsh domblklist 8u
-Target     Source
-------------------------------------------------
-hda        /home/8u.qcow2
-hdb        /home/8ut.qcow2
-hdc        /home/8ut1.qcow2
-
-[root@ibm-x3850x5-03]$
-
-# Guest:
-
-[root@8u]$ lsblk
-NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda             8:0    0  800G  0 disk
-├─sda1          8:1    0    2G  0 part
-│ └─rhel-swap 253:0    0    2G  0 lvm  [SWAP]
-└─sda2          8:2    0  798G  0 part /
-sdb             8:16   0  200G  0 disk /home
-sdc             8:32   0  100G  0 disk
-├─sdc1          8:33   0   50G  0 part
-└─sdc2          8:34   0   50G  0 part
-pmem0         259:0    0    5G  0 disk
-[root@8u]$ smartctl -a /dev/sdb
-smartctl 6.6 2017-11-05 r4594 [x86_64-linux-5.5.0-v5.5-9386-g33b4013]
-(local build)
-Copyright (C) 2002-17, Bruce Allen, Christian Franke,
-www.smartmontools.org
-
-=== START OF INFORMATION SECTION ===
-Device Model:     QEMU HARDDISK
-Serial Number:    QM00003
-Firmware Version: 1.5.3
-User Capacity:    214,748,364,800 bytes [214 GB]
-Sector Size:      512 bytes logical/physical
-Device is:        Not in smartctl database [for details use: -P showall]
-ATA Version is:   ATA/ATAPI-7, ATA/ATAPI-5 published, ANSI NCITS
-340-2000
-Local Time is:    Wed Feb  5 14:39:18 2020 CST
-SMART support is: Available - device has SMART capability.
-SMART support is: Enabled
-
-=== START OF READ SMART DATA SECTION ===
-SMART overall-health self-assessment test result: PASSED
-
-General SMART Values:
-Offline data collection status:  (0x82)	Offline data collection activity
-					was completed without error.
-					Auto Offline Data Collection:
-Enabled.
-Self-test execution status:      (   0)	The previous self-test routine
-completed
-					without error or no self-test
-has ever
-					been run.
-Total time to complete Offline
-data collection: 		(  288) seconds.
-Offline data collection
-capabilities: 			 (0x19) SMART execute Offline immediate.
-					No Auto Offline data collection
-support.
-					Suspend Offline collection upon
-new
-					command.
-					Offline surface scan supported.
-					Self-test supported.
-					No Conveyance Self-test
-supported.
-					No Selective Self-test
-supported.
-SMART capabilities:            (0x0003)	Saves SMART data before entering
-					power-saving mode.
-					Supports SMART auto save timer.
-Error logging capability:        (0x01)	Error logging supported.
-					No General Purpose Logging
-support.
-Short self-test routine
-recommended polling time: 	 (   2) minutes.
-Extended self-test routine
-recommended polling time: 	 (  54) minutes.
-
-SMART Attributes Data Structure revision number: 1
-Vendor Specific SMART Attributes with Thresholds:
-ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE
-UPDATED  WHEN_FAILED RAW_VALUE
-  1 Raw_Read_Error_Rate     0x0003   100   100   006    Pre-fail  Always
--       0
-  3 Spin_Up_Time            0x0003   100   100   000    Pre-fail  Always
--       16
-  4 Start_Stop_Count        0x0002   100   100   020    Old_age   Always
--       100
-  5 Reallocated_Sector_Ct   0x0003   100   100   036    Pre-fail  Always
--       0
-  9 Power_On_Hours          0x0003   100   100   000    Pre-fail  Always
--       1
- 12 Power_Cycle_Count       0x0003   100   100   000    Pre-fail  Always
--       0
-190 Airflow_Temperature_Cel 0x0003   069   069   050    Pre-fail  Always
--       31 (Min/Max 31/31)
-
-SMART Error Log Version: 1
-No Errors Logged
-
-SMART Self-test log structure revision number 1
-No self-tests have been logged.  [To run self-tests, use: smartctl -t]
-
-Selective Self-tests/Logging not supported
-
-[root@8u]$
-
+On 2020-02-04 20:14, Benjamin Coddington wrote:
+> On 24 Jan 2020, at 11:49, Felix Rubio wrote:
 > 
-> Is the NFS server the same machine as what the local XFS tests were
-> run on?
-
-Yes. It's also reproducible whening testing on remote NFS mounts.
-
+>> Hi Benjamin,
+>> 
+>>     I have enabled the debug logging on nfsd by running
+>> 
+>>     When mounting from the client, this is what I get:
+>> 
+>> [629588.647849] nfsd_dispatch: vers 4 proc 1
+>> [629588.655615] nfsv4 compound op #1/1: 53 (OP_SEQUENCE)
+>> [629588.663926] __find_in_sessionid_hashtbl: 
+>> 1579604994:2010353049:95:0
+>> [629588.675361] nfsd4_sequence: slotid 0
+>> [629588.679065] check_slot_seqid enter. seqid 644 slot_seqid 643
+>> [629588.684589] nfsv4 compound op ffff882839705080 opcnt 1 #1: 53: 
+>> status 0
+>> [629588.691545] nfsv4 compound returned 0
+>> [629588.695292] --> nfsd4_store_cache_entry slot ffff882806e83000
+>> [629588.701933] renewing client (clientid 5e26dc02/77d38d99)
+>> [629591.804857] nfsd_dispatch: vers 4 proc 1
+>> [629591.809364] nfsv4 compound op #1/4: 53 (OP_SEQUENCE)
+>> [629591.814944] __find_in_sessionid_hashtbl: 
+>> 1579604994:2010353053:99:0
+>> [629591.822163] nfsd4_sequence: slotid 0
+>> [629591.826670] check_slot_seqid enter. seqid 155 slot_seqid 154
+>> [629591.832771] nfsv4 compound op ffff882839705080 opcnt 4 #1: 53: 
+>> status 0
+>> [629591.839864] nfsv4 compound op #2/4: 24 (OP_PUTROOTFH)
+>> [629591.845161] nfsd: fh_compose(exp 08:02/17468677 /export, 
+>> ino=17468677)
+>> [629591.851706] nfsv4 compound op ffff882839705080 opcnt 4 #2: 24: 
+>> status 10016
+>> [629591.859660] nfsv4 compound returned 10016
 > 
-> > > NFSv4.2  rmapbt=1   24h+
-> > 
-> > <URK> Wow.  I wonder what about NFS makes us so slow now?  Synchronous
-> > transactions on the inactivation?  (speculates wildly at the end of the
-> > workday)
+> So this is definitely the server returning NFS4ERR_WRONGSEC..
 > 
-> Doubt it - NFS server uses ->commit_metadata after the async
-> operation to ensure that it is completed and on stable storage, so
-> the truncate on inactivation should run at pretty much the same
-> speed as on a local filesystem as it's still all async commits. i.e.
-> the only difference on the NFS server is the log force that follows
-> the inode inactivation...
+>> [629591.864797] --> nfsd4_store_cache_entry slot ffff882838b9e000
+>> [629591.872968] renewing client (clientid 5e26dc02/77d38d9d)
+>> [629591.889085] nfsd_dispatch: vers 4 proc 1
+>> [629591.893713] nfsv4 compound op #1/4: 53 (OP_SEQUENCE)
+>> [629591.899703] __find_in_sessionid_hashtbl: 
+>> 1579604994:2010353053:99:0
+>> [629591.906687] nfsd4_sequence: slotid 0
+>> [629591.912695] check_slot_seqid enter. seqid 156 slot_seqid 155
+>> [629591.918261] nfsv4 compound op ffff882839705080 opcnt 4 #1: 53: 
+>> status 0
+>> [629591.924866] nfsv4 compound op #2/4: 22 (OP_PUTFH)
+>> [629591.931075] nfsd: fh_verify(32: 01060001 63ce4307 5a18c100 
+>> 00000000 00000000 1fba000a)
+>> [629591.940556] nfsv4 compound op ffff882839705080 opcnt 4 #2: 22: 
+>> status 0
+>> [629591.948776] nfsv4 compound op #3/4: 3 (OP_ACCESS)
+>> [629591.954607] nfsd: fh_verify(32: 01060001 63ce4307 5a18c100 
+>> 00000000 00000000 1fba000a)
+>> [629591.967117] nfsv4 compound op ffff882839705080 opcnt 4 #3: 3: 
+>> status 0
+>> [629591.975364] nfsv4 compound op #4/4: 9 (OP_GETATTR)
+>> [629591.980854] nfsd: fh_verify(32: 01060001 63ce4307 5a18c100 
+>> 00000000 00000000 1fba000a)
+>> [629591.990257] nfsv4 compound op ffff882839705080 opcnt 4 #4: 9: 
+>> status 0
+>> [629591.996796] nfsv4 compound returned 0
+>> [629592.001758] --> nfsd4_store_cache_entry slot ffff882838b9e000
+>> [629592.008061] renewing client (clientid 5e26dc02/77d38d9d)
+>> 
+>> Using wireshark, this is the log of the packages from/to that ip 
+>> address:
+>> 
+>> # tshark -i eth0 -p -w /tmp/nfs_mount.cap host 10.1.0.12 and port nfs
+>> # tshark -r /tmp/nfs_mount.cap
+>>   1 0.000000000    10.1.0.12 -> 10.0.2.9     NFS 202 V4 Call PUTROOTFH 
+>> | GETATTR
 > 
-> > I'll have a look in the morning.  It might take me a while to remember
-> > how to set up NFS42 :)
-> > 
-> > --D
-> > 
-> > > NFSv4.2  rmapbt=0   1h-2h
-> > > xfs      rmapbt=1   10m+
-> > > 
-> > > At first I thought it hung, turns out it was just slow when deleting
-> > > 2 massive reflined files.
+> ..to this call ^^ ..
 > 
-> Both tests run on the scratch device, so I don't see where there is
-> a large file unlink in either of these tests.
+>>   2 0.000058001     10.0.2.9 -> 10.1.0.12    TCP 54 nfs > rndc [ACK] 
+>> Seq=1 Ack=149 Win=1432 Len=0
+>>   3 0.074041118     10.0.2.9 -> 10.1.0.12    NFS 146 V4 Reply (Call In 
+>> 1) PUTROOTFH Status: NFS4ERR_WRONGSEC
+>>   4 0.074927630    10.1.0.12 -> 10.0.2.9     TCP 54 rndc > nfs [ACK] 
+>> Seq=149 Ack=93 Win=1476 Len=0
+>>   5 0.084223658    10.1.0.12 -> 10.0.2.9     NFS 266 V4 Call ACCESS 
+>> FH: 0xea1b01ae, [Check: RD LU MD XT DL]
+>>   6 0.084270458     10.0.2.9 -> 10.1.0.12    TCP 54 nfs > rndc [ACK] 
+>> Seq=93 Ack=361 Win=1432 Len=0
+>>   7 0.208635667     10.0.2.9 -> 10.1.0.12    NFS 254 V4 Reply (Call In 
+>> 5) ACCESS, [Access Denied: RD MD XT DL], [Allowed: LU]
+>>   8 0.248855020    10.1.0.12 -> 10.0.2.9     TCP 54 rndc > nfs [ACK] 
+>> Seq=361 Ack=293 Win=1498 Len=0
+>> 
+>> I think the frame of interest is #1, so this is its contents:
+>> Frame 1: 202 bytes on wire (1616 bits), 202 bytes captured (1616 bits) 
+>> on interface 0
+>>     Interface id: 0
+>>     Encapsulation type: Ethernet (1)
+>>     Arrival Time: Jan 24, 2020 17:39:05.721360043 CET
+>>     [Time shift for this packet: 0.000000000 seconds]
+>>     Epoch Time: 1579883945.721360043 seconds
+>>     [Time delta from previous captured frame: 0.000000000 seconds]
+>>     [Time delta from previous displayed frame: 0.000000000 seconds]
+>>     [Time since reference or first frame: 0.000000000 seconds]
+>>     Frame Number: 1
+>>     Frame Length: 202 bytes (1616 bits)
+>>     Capture Length: 202 bytes (1616 bits)
+>>     [Frame is marked: False]
+>>     [Frame is ignored: False]
+>>     [Protocols in frame: eth:ip:tcp:rpc]
+>> Ethernet II, Src: 00:81:c4:c1:50:7f (00:81:c4:c1:50:7f), Dst: 
+>> Microsof_44:24:d3 (00:0d:3a:44:24:d3)
+>>     Destination: Microsof_44:24:d3 (00:0d:3a:44:24:d3)
+>>         Address: Microsof_44:24:d3 (00:0d:3a:44:24:d3)
+>>         .... ..0. .... .... .... .... = LG bit: Globally unique 
+>> address (factory default)
+>>         .... ...0 .... .... .... .... = IG bit: Individual address 
+>> (unicast)
+>>     Source: 00:81:c4:c1:50:7f (00:81:c4:c1:50:7f)
+>>         Address: 00:81:c4:c1:50:7f (00:81:c4:c1:50:7f)
+>>         .... ..0. .... .... .... .... = LG bit: Globally unique 
+>> address (factory default)
+>>         .... ...0 .... .... .... .... = IG bit: Individual address 
+>> (unicast)
+>>     Type: IP (0x0800)
+>> Internet Protocol Version 4, Src: 10.1.0.12 (10.1.0.12), Dst: 10.0.2.9 
+>> (10.0.2.9)
+>>     Version: 4
+>>     Header length: 20 bytes
+>>     Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 
+>> 0x00: Not-ECT (Not ECN-Capable Transport))
+>>         0000 00.. = Differentiated Services Codepoint: Default (0x00)
+>>         .... ..00 = Explicit Congestion Notification: Not-ECT (Not 
+>> ECN-Capable Transport) (0x00)
+>>     Total Length: 188
+>>     Identification: 0xa3e0 (41952)
+>>     Flags: 0x02 (Don't Fragment)
+>>         0... .... = Reserved bit: Not set
+>>         .1.. .... = Don't fragment: Set
+>>         ..0. .... = More fragments: Not set
+>>     Fragment offset: 0
+>>     Time to live: 64
+>>     Protocol: TCP (6)
+>>     Header checksum: 0x8046 [validation disabled]
+>>         [Good: False]
+>>         [Bad: False]
+>>     Source: 10.1.0.12 (10.1.0.12)
+>>     Destination: 10.0.2.9 (10.0.2.9)
+>> Transmission Control Protocol, Src Port: rndc (953), Dst Port: nfs 
+>> (2049), Seq: 1, Ack: 1, Len: 148
+>>     Source port: rndc (953)
+>>     Destination port: nfs (2049)
+>>     [Stream index: 0]
+>>     Sequence number: 1    (relative sequence number)
+>>     [Next sequence number: 149    (relative sequence number)]
+>>     Acknowledgment number: 1    (relative ack number)
+>>     Header length: 20 bytes
+>>     Flags: 0x018 (PSH, ACK)
+>>         000. .... .... = Reserved: Not set
+>>         ...0 .... .... = Nonce: Not set
+>>         .... 0... .... = Congestion Window Reduced (CWR): Not set
+>>         .... .0.. .... = ECN-Echo: Not set
+>>         .... ..0. .... = Urgent: Not set
+>>         .... ...1 .... = Acknowledgment: Set
+>>         .... .... 1... = Push: Set
+>>         .... .... .0.. = Reset: Not set
+>>         .... .... ..0. = Syn: Not set
+>>         .... .... ...0 = Fin: Not set
+>>     Window size value: 1476
+>>     [Calculated window size: 1476]
+>>     [Window size scaling factor: -1 (unknown)]
+>>     Checksum: 0x4455 [validation disabled]
+>>         [Good Checksum: False]
+>>         [Bad Checksum: False]
+>>     [SEQ/ACK analysis]
+>>         [Bytes in flight: 148]
+>> Remote Procedure Call, Type:Call XID:0xd17c6210
+>>     Fragment header: Last fragment, 144 bytes
+>>         1... .... .... .... .... .... .... .... = Last Fragment: Yes
+>>         .000 0000 0000 0000 0000 0000 1001 0000 = Fragment Length: 144
+>>     XID: 0xd17c6210 (3514589712)
+>>     Message Type: Call (0)
+>>     RPC Version: 2
+>>     Program: NFS (100003)
+>>     Program Version: 4
+>>     Procedure: COMPOUND (1)
+>>     Credentials
+>>         Flavor: AUTH_UNIX (1)
 > 
-> In which case, I'd expect that all the time is consumed in
-> generic/176 running punch_alternating to create a million extents
-> as that will effectively run a synchronous server-side hole punch
-> half a million times.
-
-I've tracked this down. Time was consumed in "rm -rf" in _scratch_mkfs
-of generic/176. Thread https://www.spinics.net/lists/fstests/msg13316.html
-
-Thanks,
-Murphy
-
+> .. and the client is using AUTH_UNIX, or sec=sys.  Seems your server 
+> isn't
+> picking up the change to the export for the root for some reason.
 > 
-> However, I'm guessing that the server side filesystem has a very
-> small log and is on spinning rust, hence the ->commit_metadata log
-> forces are preventing in-memory aggregation of modifications. This
-> results in the working set of metadata not fitting in the log and so
-> each new hole punch transaction ends up waiting on log tail pushing
-> (i.e. metadata writeback IO).  i.e. it's thrashing the disk, and
-> that's why it is slow.....
+> How are you modifying the export?  What does `exportfs -v` say?
 > 
-> Storage details, please!
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> Ben
