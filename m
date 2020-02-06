@@ -2,312 +2,285 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6454A154EF2
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2020 23:32:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E669A154EFB
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2020 23:36:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgBFWcK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Feb 2020 17:32:10 -0500
-Received: from mail-il1-f172.google.com ([209.85.166.172]:38703 "EHLO
-        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgBFWcK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Feb 2020 17:32:10 -0500
-Received: by mail-il1-f172.google.com with SMTP id f5so73246ilq.5;
-        Thu, 06 Feb 2020 14:32:09 -0800 (PST)
+        id S1726673AbgBFWgy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Feb 2020 17:36:54 -0500
+Received: from mail-mw2nam12on2069.outbound.protection.outlook.com ([40.107.244.69]:6120
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726536AbgBFWgx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 6 Feb 2020 17:36:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Et45rtCxwcA5gIOIwItQsIwU5BfGJJfsgqagsMPikrN/gjY+ZUDxPJVXK0u3Z+AYMlFi8ztLPSA+AxA7T8ou52y4dk4yCLCZxuP2e3E2HJeiIlcEgjsxVqv7e9trXQBzNDE5BSDOFdZViEGFtfRmjxrpRcAdl/6Mz/zA7PCNfPJoT2OtVrjyuE7qLt6Nnct2yenpoCJ9khzzCo1wU3eOC+GafNrBGdQOpGHSN2QthnF6zi/5zFSEGy4ffFxOE4fWTA7ZXrP8SgNZhoyuziSSSye6orZdrF2IM6SFspMgYfqRF8WqRqVYR7mCiMsrdzztEvAMkKRYuAxhECyKw2dJGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hzwle0zvK6hKyyyxBhKSjNufGWLyHYW+6G8wXCJQjac=;
+ b=kRJNls5viS4LMMjWGo2kXph6WHUpMV5jVqdN1X6zMX0D6QCpezRvxZlBqEoNEJ5TIrG80N2sSkP6f2k9o4FHnjqnt3lApucHnojY4fb7B/eUV3FzFW37+bKlW0aHMX5d7KYGh3o3hCKbClprxOKiZ+pCks6Vodn8bIpJ+xGowIjKM3XU6fnQzdv+qifaCme3Pl4gc2pDJYW7YYIYzY84KP0Ltz2rbpJ4ZYACGdW+CzDhmjw3HfglAt2IldBO3xNr3RSJQ24BIAhwRaKd3bGU/Zqv/67Nn9ebELAP6NnMhaMe+SwzaU+EdnK8qpHOA8LB7RfaJJl92FjwJtYhkrueMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:message-id:subject:from:to:cc:mime-version:date:user-agent
-         :content-transfer-encoding;
-        bh=7/Bes3cNLricskFz3U4XIFBnsvX6Y4giyFoJ+2MLEl4=;
-        b=txaA0eVKTJ4u1/q5ac5IeqCgAw7iDg7J+iKTAGUJ+DbpFHipV2QDYvk45NsbcgTzWe
-         3HCquQPM+LCuU4fKY5A50RWGtabOxk706MHwKa5uW+ux0I32FJimeBza4caTS973ctaF
-         1N3w2rqqB3c+Kid/oNk7a2QjxbkWXvLno6OiyNBd3h5fGtUCJZyetGaO9+98HkVmgnbt
-         ivSRRBr/beH+tr2Dg2BzJawPenR7MEVqH3WCyHqwWQ4BIwoMVFjFHgtsg2n5EB/VBDHF
-         XQX40psldoU1PfSAM4qxQuokIMC9wrBMmALmcd0bnFGXb3VvskwvAdusNKgJ9FGqoli+
-         qXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:message-id:subject:from:to:cc
-         :mime-version:date:user-agent:content-transfer-encoding;
-        bh=7/Bes3cNLricskFz3U4XIFBnsvX6Y4giyFoJ+2MLEl4=;
-        b=OEBes/UBzvycvAxplg/sG6yArXa+7GWIqJKCs9nBfIVsyrwUsmOtubPZ1q9ACnbUh4
-         d5w5DWauPCAkqd4Teyn7qQLKM4TpV22A2HpQb6DUqSozCz8QC/NxNlkfSQpG99Y/52Xu
-         0ngRio0Q6MFZ04rHzuvU2802DYoJ9wpQsXiKz2DXc+DcMfogQ1/bovzZFJLi+2IulBql
-         y02Gogv8RNDdLBeDgJGqH4lsz1zHNOJlulzZanIzeVq1WIVYhMbRt0pLHn/+XfUqggcJ
-         699Ulft189gYv3uxUzKl6L67RUKwK0p7a9J3OQgtRtTU6cw3pgMrCqY7hgRtLMDwEinp
-         mEUQ==
-X-Gm-Message-State: APjAAAVf/IhIbh+WalBOzUr/RDZZJ2BsaSILdjSJKUd7D9NUxUySlsu3
-        C/FC8r2Xhfye/x1aO1Gb3nGEydv9
-X-Google-Smtp-Source: APXvYqwxWFbGcB0yvpWUrB3Z5mLGf6wsHrn/xhdIZzEaz6Pmi4/Mk5r1403nZ+tmKX4C6oU+2u6jBQ==
-X-Received: by 2002:a92:990d:: with SMTP id p13mr6063659ili.129.1581028329085;
-        Thu, 06 Feb 2020 14:32:09 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.googlemail.com with ESMTPSA id e23sm433303ild.37.2020.02.06.14.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 14:32:08 -0800 (PST)
-Message-ID: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hzwle0zvK6hKyyyxBhKSjNufGWLyHYW+6G8wXCJQjac=;
+ b=FdOhZ4XCnvOK3kSSza0q+TW61aUt1Xy2XlH33+Vt3wBaFL94wORf2hvkOD6mRxcPk+YXunXVRZwoBMXpfJyqKLdk7diCQla7jXXI61Zfz/qaYHHP8GPUbgID+d3TUpWmDIVPIpL84dbVULqxJWjEBWUuu+PSw4JNBGsvZTn4vLU=
+Received: from DM6PR06MB6091.namprd06.prod.outlook.com (20.179.161.77) by
+ DM6PR06MB6076.namprd06.prod.outlook.com (20.178.25.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Thu, 6 Feb 2020 22:36:47 +0000
+Received: from DM6PR06MB6091.namprd06.prod.outlook.com
+ ([fe80::f1f3:b30c:a1bc:ad26]) by DM6PR06MB6091.namprd06.prod.outlook.com
+ ([fe80::f1f3:b30c:a1bc:ad26%6]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
+ 22:36:47 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: [GIT PULL] Please pull NFS client updates for Linux 5.6
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: [GIT PULL] Please pull NFS client updates for Linux 5.6
+Thread-Index: AQHV3T3qU64ArVIp8E6CkEvf5hpsJw==
+Date:   Thu, 6 Feb 2020 22:36:47 +0000
+Message-ID: <1fc9f9e7e1e2253e6fe6ce940bbb421ba84f7299.camel@netapp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.3 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [68.32.74.190]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e4f7e46a-754b-44eb-308b-08d7ab550cf1
+x-ms-traffictypediagnostic: DM6PR06MB6076:
+x-microsoft-antispam-prvs: <DM6PR06MB6076260664BCAADEF430DC75F81D0@DM6PR06MB6076.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(199004)(189003)(8936002)(36756003)(2906002)(86362001)(71200400001)(6916009)(8676002)(5660300002)(4326008)(81166006)(81156014)(186003)(26005)(6506007)(2616005)(91956017)(66446008)(66556008)(66476007)(64756008)(66946007)(76116006)(15650500001)(6486002)(54906003)(478600001)(316002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR06MB6076;H:DM6PR06MB6091.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rOPky19W/hxJdA8KjE50ESNyDhTOkpJ3XQJWd4dEielW8ByMolZfbgFqbrlndpN+f3mZHEun9uCtz2EmQ1TPk0wzeBcx9RcgCGKpm8EKZCuCa2lWfdgiKb8PbreJOg2ie1xErMa3Fkgjx5jIuAxATkdQfZa2ubfI0rK6dcaHFXxUuLEomkggFCYyzlYKqpyETJCzVhcnlRUHSZb5cQNXTIYiBWGUCeVD2KtrHAjfPzHxg/6UCz9LHmtBZjxhzXt6CR5tRIceWwQdHMuVuc9A3lv7LGvG1+OX2qhnoRvN8RkrvZlf6gFXKn68Pd66K2DhvHuanCGw6d7i87OQi35QtgNLJzyC+xlti8Q/2+p/h5zEmAeP0eCzIFv3NMm2UmeH1IRxx/mYwzv43AJWfJHKHm+wrAiJW1Hcob5ikH1fk0pLWCq7Ocgl4djKSyWGDUoM
+x-ms-exchange-antispam-messagedata: nNvAbmyHbQLGFsu0FzQzpBzc3LQoeKoJHdIvIoKmFf21BK2tzCamXJk9zefNrhp2A++IpXyIpKCNRpAuxcwvCwfN7V7UP+QpZGORMcCbPaHgXAokyl/MXqeR3eY49bdgUQa1BXawZxuKemLzzZiy9Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <64D8F6FB8619C64B80D0B0A3681E2E85@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Date:   Thu, 06 Feb 2020 17:31:18 -0500
-User-Agent: Evolution 3.34.3 
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4f7e46a-754b-44eb-308b-08d7ab550cf1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 22:36:47.2978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HITIljeatVZEF2p6KItY0RRUA8FTrTbR6GKcIAjvhsRm4soqIE1YmLrgK66ns0qLhewpFrgcxv24bIjyHkH5yg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB6076
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
-
-The following changes since commit 95e20af9fb9ce572129b930967dcb762a318c588:
-
-  Merge tag 'nfs-for-5.5-2' of git://git.linux-nfs.org/projects/anna/linux-nfs
-(2020-01-14 13:33:14 -0800)
-
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.6-1
-
-for you to fetch changes up to 7dc2993a9e51dd2eee955944efec65bef90265b7:
-
-  NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals (2020-02-04
-12:27:55 -0500)
-
-----------------------------------------------------------------
-Stable bugfixes:
-- Fix memory leaks and corruption in readdir # v2.6.37+
-- Directory page cache needs to be locked when read # v2.6.37+
-
-New features:
-- Convert NFS to use the new mount API
-- Add "softreval" mount option to let clients use cache if server goes down
-- Add a config option to compile without UDP support
-- Limit the number of inactive delegations the client can cache at once
-- Improved readdir concurrency using iterate_shared()
-
-Other bugfixes and cleanups:
-- More 64-bit time conversions
-- Add additional diagnostic tracepoints
-- Check for holes in swapfiles, and add dependency on CONFIG_SWAP
-- Various xprtrdma cleanups to prepare for 5.7's changes
-- Several fixes for NFS writeback and commit handling
-- Fix acls over krb5i/krb5p mounts
-- Recover from premature loss of openstateids
-- Fix NFS v3 chacl and chmod bug
-- Compare creds using cred_fscmp()
-- Use kmemdup_nul() in more places
-- Optimize readdir cache page invalidation
-- Lease renewal and recovery fixes
-
-Thanks,
-Anna
-
-----------------------------------------------------------------
-Al Viro (15):
-      saner calling conventions for nfs_fs_mount_common()
-      nfs: stash server into struct nfs_mount_info
-      nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
-      nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
-      nfs: don't bother setting/restoring export_path around do_nfs_root_mount()
-      nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
-      nfs: lift setting mount_info from nfs_xdev_mount()
-      nfs: stash nfs_subversion reference into nfs_mount_info
-      nfs: don't bother passing nfs_subversion to ->try_mount() and
-nfs_fs_mount_common()
-      nfs: merge xdev and remote file_system_type
-      nfs: unexport nfs_fs_mount_common()
-      nfs: don't pass nfs_subversion to ->create_server()
-      nfs: get rid of mount_info ->fill_super()
-      nfs_clone_sb_security(): simplify the check for server bogosity
-      nfs: get rid of ->set_security()
-
-Alex Shi (1):
-      NFS: remove unused macros
-
-Arnd Bergmann (5):
-      sunrpc: convert to time64_t for expiry
-      nfs: use timespec64 in nfs_fattr
-      nfs: fscache: use timespec64 in inode auxdata
-      nfs: remove timespec from xdr_encode_nfstime
-      nfs: encode nfsv4 timestamps as 64-bit
-
-Chuck Lever (13):
-      SUNRPC: Capture signalled RPC tasks
-      NFS: Introduce trace events triggered by page writeback errors
-      NFS4: Report callback authentication errors
-      SUNRPC: call_connect_status should handle -EPROTO
-      xprtrdma: Eliminate ri_max_send_sges
-      xprtrdma: Make sendctx queue lifetime the same as connection lifetime
-      xprtrdma: Refactor initialization of ep->rep_max_requests
-      xprtrdma: Eliminate per-transport "max pages"
-      xprtrdma: Refactor frwr_is_supported
-      xprtrdma: Allocate and map transport header buffers at connect time
-      xprtrdma: Destroy rpcrdma_rep when Receive is flushed
-      xprtrdma: Destroy reps from previous connection instance
-      xprtrdma: DMA map rr_rdma_buf as each rpcrdma_rep is created
-
-Colin Ian King (1):
-      NFS: Add missing null check for failed allocation
-
-Dai Ngo (1):
-      nfs: optimise readdir cache page invalidation
-
-David Howells (9):
-      NFS: Move mount parameterisation bits into their own file
-      NFS: Constify mount argument match tables
-      NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
-      NFS: Split nfs_parse_mount_options()
-      NFS: Deindent nfs_fs_context_parse_option()
-      NFS: Add a small buffer in nfs_fs_context to avoid string dup
-      NFS: Do some tidying of the parsing code
-      NFS: Add fs_context support.
-      nfs: Return EINVAL rather than ERANGE for mount parse errors
-
-Geert Uytterhoeven (1):
-      nfs: NFS_SWAP should depend on SWAP
-
-Julia Lawall (1):
-      SUNRPC: constify copied structure
-
-Murphy Zhou (1):
-      fs/nfs, swapon: check holes in swapfile
-
-Olga Kornievskaia (3):
-      NFSv4 fix acl retrieval over krb5i/krb5p mounts
-      NFSv4.x recover from pre-mature loss of openstateid
-      NFS: allow deprecation of NFS UDP protocol
-
-Robert Milkowski (2):
-      NFSv4: try lease recovery on NFS4ERR_EXPIRED
-      NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-
-Scott Mayhew (4):
-      NFS: rename nfs_fs_context pointer arg in a few functions
-      NFS: Convert mount option parsing to use functionality from fs_parser.h
-      NFS: Additional refactoring for fs_context conversion
-      NFS: Attach supplementary error information to fs_context.
-
-Su Yanjun (1):
-      NFSv3: FIx bug when using chacl and chmod to change acl
-
-Trond Myklebust (32):
-      NFS: Revalidate the file size on a fatal write error
-      NFS: Revalidate the file mapping on all fatal writeback errors
-      SUNRPC: Remove broken gss_mech_list_pseudoflavors()
-      NFS: Fix up fsync() when the server rebooted
-      NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
-      NFSv4: Improve read/write/commit tracing
-      NFS: Fix fix of show_nfs_errors
-      pNFS/flexfiles: Record resend attempts on I/O failure
-      NFS: Clean up generic file read tracepoints
-      NFS: Clean up generic writeback tracepoints
-      NFS: Clean up generic file commit tracepoint
-      pNFS/flexfiles: Add tracing for layout errors
-      NFS: Improve tracing of permission calls
-      NFS: When resending after a short write, reset the reply count to zero
-      NFS: Fix nfs_direct_write_reschedule_io()
-      NFS: Trust cached access if we've already revalidated the inode once
-      NFS: Add mount option 'softreval'
-      NFS: Add softreval behaviour to nfs_lookup_revalidate()
-      NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
-      NFS: nfs_access_get_cached_rcu() should use cred_fscmp()
-      NFS: nfs_find_open_context() should use cred_fscmp()
-      NFSv4: nfs_inode_evict_delegation() should set NFS_DELEGATION_RETURNING
-      NFS: Clear NFS_DELEGATION_RETURN_IF_CLOSED when the delegation is returned
-      NFSv4: Try to return the delegation immediately when marked for return on
-close
-      NFSv4: Add accounting for the number of active delegations held
-      NFSv4: Limit the total number of cached delegations
-      NFS: Replace various occurrences of kstrndup() with kmemdup_nul()
-      SUNRPC: Use kmemdup_nul() in rpc_parse_scope_id()
-      NFS: Fix memory leaks and corruption in readdir
-      NFS: Directory page cache pages need to be locked when read
-      NFS: Use kmemdup_nul() in nfs_readdir_make_qstr()
-      NFS: Switch readdir to using iterate_shared()
-
-Wenwen Wang (1):
-      NFS: Fix memory leaks
-
-zhengbin (2):
-      NFS4: Remove unneeded semicolon
-      NFS: move dprintk after nfs_alloc_fattr in nfs3_proc_lookup
-
- fs/nfs/Kconfig                         |   11 +-
- fs/nfs/Makefile                        |    2 +-
- fs/nfs/callback_xdr.c                  |   11 +-
- fs/nfs/client.c                        |   84 ++--
- fs/nfs/delegation.c                    |   80 +++-
- fs/nfs/delegation.h                    |    1 +
- fs/nfs/dir.c                           |   83 ++--
- fs/nfs/direct.c                        |    7 +-
- fs/nfs/dns_resolve.c                   |    2 +-
- fs/nfs/file.c                          |   49 ++-
- fs/nfs/flexfilelayout/flexfilelayout.c |   34 +-
- fs/nfs/fs_context.c                    | 1437
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfs/fscache-index.c                 |    6 +-
- fs/nfs/fscache.c                       |   20 +-
- fs/nfs/fscache.h                       |    8 +-
- fs/nfs/getroot.c                       |   73 +--
- fs/nfs/inode.c                         |   10 +-
- fs/nfs/internal.h                      |  143 +++---
- fs/nfs/mount_clnt.c                    |    2 -
- fs/nfs/namespace.c                     |  146 +++---
- fs/nfs/nfs2xdr.c                       |   12 +-
- fs/nfs/nfs3_fs.h                       |    2 +-
- fs/nfs/nfs3client.c                    |    6 +-
- fs/nfs/nfs3proc.c                      |   28 +-
- fs/nfs/nfs3xdr.c                       |    5 +-
- fs/nfs/nfs42proc.c                     |   40 +-
- fs/nfs/nfs4_fs.h                       |   19 +-
- fs/nfs/nfs4client.c                    |   99 ++---
- fs/nfs/nfs4file.c                      |    1 +
- fs/nfs/nfs4namespace.c                 |  298 +++++++------
- fs/nfs/nfs4proc.c                      |  104 +++--
- fs/nfs/nfs4renewd.c                    |    5 +-
- fs/nfs/nfs4state.c                     |    7 +-
- fs/nfs/nfs4super.c                     |  257 ++++-------
- fs/nfs/nfs4trace.c                     |    4 +
- fs/nfs/nfs4trace.h                     |  237 ++++++++--
- fs/nfs/nfs4xdr.c                       |   17 +-
- fs/nfs/nfstrace.h                      |  279 +++++++++---
- fs/nfs/pnfs.c                          |    4 +-
- fs/nfs/pnfs.h                          |    8 +-
- fs/nfs/pnfs_nfs.c                      |    7 +-
- fs/nfs/proc.c                          |   24 +-
- fs/nfs/read.c                          |    7 +-
- fs/nfs/super.c                         | 2218 ++++++++++++---------------------
------------------------------------------------------------
- fs/nfs/write.c                         |   32 +-
- include/linux/nfs_fs.h                 |    3 +
- include/linux/nfs_fs_sb.h              |    1 +
- include/linux/nfs_xdr.h                |   11 +-
- include/linux/sunrpc/auth.h            |    2 -
- include/linux/sunrpc/gss_api.h         |    7 +-
- include/linux/sunrpc/gss_krb5.h        |    2 +-
- include/trace/events/rpcrdma.h         |   12 +-
- include/trace/events/sunrpc.h          |    1 +
- net/sunrpc/addr.c                      |    2 +-
- net/sunrpc/auth.c                      |   49 ---
- net/sunrpc/auth_gss/auth_gss.c         |    1 -
- net/sunrpc/auth_gss/gss_krb5_mech.c    |   12 +-
- net/sunrpc/auth_gss/gss_krb5_seal.c    |    8 +-
- net/sunrpc/auth_gss/gss_krb5_unseal.c  |    6 +-
- net/sunrpc/auth_gss/gss_krb5_wrap.c    |   16 +-
- net/sunrpc/auth_gss/gss_mech_switch.c  |   31 +-
- net/sunrpc/auth_gss/svcauth_gss.c      |    4 +-
- net/sunrpc/clnt.c                      |    1 +
- net/sunrpc/sched.c                     |    4 +-
- net/sunrpc/xdr.c                       |    2 +-
- net/sunrpc/xprtrdma/backchannel.c      |    4 +
- net/sunrpc/xprtrdma/frwr_ops.c         |  104 ++---
- net/sunrpc/xprtrdma/rpc_rdma.c         |   20 +-
- net/sunrpc/xprtrdma/transport.c        |   17 +-
- net/sunrpc/xprtrdma/verbs.c            |  213 +++++----
- net/sunrpc/xprtrdma/xprt_rdma.h        |   14 +-
- 71 files changed, 3404 insertions(+), 3072 deletions(-)
- create mode 100644 fs/nfs/fs_context.c
-
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgOTVlMjBhZjlm
+YjljZTU3MjEyOWI5MzA5NjdkY2I3NjJhMzE4YzU4ODoNCg0KICBNZXJnZSB0YWcgJ25mcy1mb3It
+NS41LTInIG9mIGdpdDovL2dpdC5saW51eC1uZnMub3JnL3Byb2plY3RzL2FubmEvbGludXgtbmZz
+DQooMjAyMC0wMS0xNCAxMzozMzoxNCAtMDgwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0
+IHJlcG9zaXRvcnkgYXQ6DQoNCiAgZ2l0Oi8vZ2l0LmxpbnV4LW5mcy5vcmcvcHJvamVjdHMvYW5u
+YS9saW51eC1uZnMuZ2l0IHRhZ3MvbmZzLWZvci01LjYtMQ0KDQpmb3IgeW91IHRvIGZldGNoIGNo
+YW5nZXMgdXAgdG8gN2RjMjk5M2E5ZTUxZGQyZWVlOTU1OTQ0ZWZlYzY1YmVmOTAyNjViNzoNCg0K
+ICBORlN2NC4wOiBuZnM0X2RvX2ZzaW5mbygpIHNob3VsZCBub3QgZG8gaW1wbGljaXQgbGVhc2Ug
+cmVuZXdhbHMgKDIwMjAtMDItMDQNCjEyOjI3OjU1IC0wNTAwKQ0KDQotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTdGFibGUg
+YnVnZml4ZXM6DQotIEZpeCBtZW1vcnkgbGVha3MgYW5kIGNvcnJ1cHRpb24gaW4gcmVhZGRpciAj
+IHYyLjYuMzcrDQotIERpcmVjdG9yeSBwYWdlIGNhY2hlIG5lZWRzIHRvIGJlIGxvY2tlZCB3aGVu
+IHJlYWQgIyB2Mi42LjM3Kw0KDQpOZXcgZmVhdHVyZXM6DQotIENvbnZlcnQgTkZTIHRvIHVzZSB0
+aGUgbmV3IG1vdW50IEFQSQ0KLSBBZGQgInNvZnRyZXZhbCIgbW91bnQgb3B0aW9uIHRvIGxldCBj
+bGllbnRzIHVzZSBjYWNoZSBpZiBzZXJ2ZXIgZ29lcyBkb3duDQotIEFkZCBhIGNvbmZpZyBvcHRp
+b24gdG8gY29tcGlsZSB3aXRob3V0IFVEUCBzdXBwb3J0DQotIExpbWl0IHRoZSBudW1iZXIgb2Yg
+aW5hY3RpdmUgZGVsZWdhdGlvbnMgdGhlIGNsaWVudCBjYW4gY2FjaGUgYXQgb25jZQ0KLSBJbXBy
+b3ZlZCByZWFkZGlyIGNvbmN1cnJlbmN5IHVzaW5nIGl0ZXJhdGVfc2hhcmVkKCkNCg0KT3RoZXIg
+YnVnZml4ZXMgYW5kIGNsZWFudXBzOg0KLSBNb3JlIDY0LWJpdCB0aW1lIGNvbnZlcnNpb25zDQot
+IEFkZCBhZGRpdGlvbmFsIGRpYWdub3N0aWMgdHJhY2Vwb2ludHMNCi0gQ2hlY2sgZm9yIGhvbGVz
+IGluIHN3YXBmaWxlcywgYW5kIGFkZCBkZXBlbmRlbmN5IG9uIENPTkZJR19TV0FQDQotIFZhcmlv
+dXMgeHBydHJkbWEgY2xlYW51cHMgdG8gcHJlcGFyZSBmb3IgNS43J3MgY2hhbmdlcw0KLSBTZXZl
+cmFsIGZpeGVzIGZvciBORlMgd3JpdGViYWNrIGFuZCBjb21taXQgaGFuZGxpbmcNCi0gRml4IGFj
+bHMgb3ZlciBrcmI1aS9rcmI1cCBtb3VudHMNCi0gUmVjb3ZlciBmcm9tIHByZW1hdHVyZSBsb3Nz
+IG9mIG9wZW5zdGF0ZWlkcw0KLSBGaXggTkZTIHYzIGNoYWNsIGFuZCBjaG1vZCBidWcNCi0gQ29t
+cGFyZSBjcmVkcyB1c2luZyBjcmVkX2ZzY21wKCkNCi0gVXNlIGttZW1kdXBfbnVsKCkgaW4gbW9y
+ZSBwbGFjZXMNCi0gT3B0aW1pemUgcmVhZGRpciBjYWNoZSBwYWdlIGludmFsaWRhdGlvbg0KLSBM
+ZWFzZSByZW5ld2FsIGFuZCByZWNvdmVyeSBmaXhlcw0KDQpUaGFua3MsDQpBbm5hDQotLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+DQpBbCBWaXJvICgxNSk6DQogICAgICBzYW5lciBjYWxsaW5nIGNvbnZlbnRpb25zIGZvciBuZnNf
+ZnNfbW91bnRfY29tbW9uKCkNCiAgICAgIG5mczogc3Rhc2ggc2VydmVyIGludG8gc3RydWN0IG5m
+c19tb3VudF9pbmZvDQogICAgICBuZnM6IGxpZnQgc2V0dGluZyBtb3VudF9pbmZvIGZyb20gbmZz
+NF9yZW1vdGV7LF9yZWZlcnJhbH1fbW91bnQNCiAgICAgIG5mczogZm9sZCBuZnM0X3JlbW90ZV9m
+c190eXBlIGFuZCBuZnM0X3JlbW90ZV9yZWZlcnJhbF9mc190eXBlDQogICAgICBuZnM6IGRvbid0
+IGJvdGhlciBzZXR0aW5nL3Jlc3RvcmluZyBleHBvcnRfcGF0aCBhcm91bmQgZG9fbmZzX3Jvb3Rf
+bW91bnQoKQ0KICAgICAgbmZzNDogZm9sZCBuZnNfZG9fcm9vdF9tb3VudC9uZnNfZm9sbG93X3Jl
+bW90ZV9wYXRoDQogICAgICBuZnM6IGxpZnQgc2V0dGluZyBtb3VudF9pbmZvIGZyb20gbmZzX3hk
+ZXZfbW91bnQoKQ0KICAgICAgbmZzOiBzdGFzaCBuZnNfc3VidmVyc2lvbiByZWZlcmVuY2UgaW50
+byBuZnNfbW91bnRfaW5mbw0KICAgICAgbmZzOiBkb24ndCBib3RoZXIgcGFzc2luZyBuZnNfc3Vi
+dmVyc2lvbiB0byAtPnRyeV9tb3VudCgpIGFuZA0KbmZzX2ZzX21vdW50X2NvbW1vbigpDQogICAg
+ICBuZnM6IG1lcmdlIHhkZXYgYW5kIHJlbW90ZSBmaWxlX3N5c3RlbV90eXBlDQogICAgICBuZnM6
+IHVuZXhwb3J0IG5mc19mc19tb3VudF9jb21tb24oKQ0KICAgICAgbmZzOiBkb24ndCBwYXNzIG5m
+c19zdWJ2ZXJzaW9uIHRvIC0+Y3JlYXRlX3NlcnZlcigpDQogICAgICBuZnM6IGdldCByaWQgb2Yg
+bW91bnRfaW5mbyAtPmZpbGxfc3VwZXIoKQ0KICAgICAgbmZzX2Nsb25lX3NiX3NlY3VyaXR5KCk6
+IHNpbXBsaWZ5IHRoZSBjaGVjayBmb3Igc2VydmVyIGJvZ29zaXR5DQogICAgICBuZnM6IGdldCBy
+aWQgb2YgLT5zZXRfc2VjdXJpdHkoKQ0KDQpBbGV4IFNoaSAoMSk6DQogICAgICBORlM6IHJlbW92
+ZSB1bnVzZWQgbWFjcm9zDQoNCkFybmQgQmVyZ21hbm4gKDUpOg0KICAgICAgc3VucnBjOiBjb252
+ZXJ0IHRvIHRpbWU2NF90IGZvciBleHBpcnkNCiAgICAgIG5mczogdXNlIHRpbWVzcGVjNjQgaW4g
+bmZzX2ZhdHRyDQogICAgICBuZnM6IGZzY2FjaGU6IHVzZSB0aW1lc3BlYzY0IGluIGlub2RlIGF1
+eGRhdGENCiAgICAgIG5mczogcmVtb3ZlIHRpbWVzcGVjIGZyb20geGRyX2VuY29kZV9uZnN0aW1l
+DQogICAgICBuZnM6IGVuY29kZSBuZnN2NCB0aW1lc3RhbXBzIGFzIDY0LWJpdA0KDQpDaHVjayBM
+ZXZlciAoMTMpOg0KICAgICAgU1VOUlBDOiBDYXB0dXJlIHNpZ25hbGxlZCBSUEMgdGFza3MNCiAg
+ICAgIE5GUzogSW50cm9kdWNlIHRyYWNlIGV2ZW50cyB0cmlnZ2VyZWQgYnkgcGFnZSB3cml0ZWJh
+Y2sgZXJyb3JzDQogICAgICBORlM0OiBSZXBvcnQgY2FsbGJhY2sgYXV0aGVudGljYXRpb24gZXJy
+b3JzDQogICAgICBTVU5SUEM6IGNhbGxfY29ubmVjdF9zdGF0dXMgc2hvdWxkIGhhbmRsZSAtRVBS
+T1RPDQogICAgICB4cHJ0cmRtYTogRWxpbWluYXRlIHJpX21heF9zZW5kX3NnZXMNCiAgICAgIHhw
+cnRyZG1hOiBNYWtlIHNlbmRjdHggcXVldWUgbGlmZXRpbWUgdGhlIHNhbWUgYXMgY29ubmVjdGlv
+biBsaWZldGltZQ0KICAgICAgeHBydHJkbWE6IFJlZmFjdG9yIGluaXRpYWxpemF0aW9uIG9mIGVw
+LT5yZXBfbWF4X3JlcXVlc3RzDQogICAgICB4cHJ0cmRtYTogRWxpbWluYXRlIHBlci10cmFuc3Bv
+cnQgIm1heCBwYWdlcyINCiAgICAgIHhwcnRyZG1hOiBSZWZhY3RvciBmcndyX2lzX3N1cHBvcnRl
+ZA0KICAgICAgeHBydHJkbWE6IEFsbG9jYXRlIGFuZCBtYXAgdHJhbnNwb3J0IGhlYWRlciBidWZm
+ZXJzIGF0IGNvbm5lY3QgdGltZQ0KICAgICAgeHBydHJkbWE6IERlc3Ryb3kgcnBjcmRtYV9yZXAg
+d2hlbiBSZWNlaXZlIGlzIGZsdXNoZWQNCiAgICAgIHhwcnRyZG1hOiBEZXN0cm95IHJlcHMgZnJv
+bSBwcmV2aW91cyBjb25uZWN0aW9uIGluc3RhbmNlDQogICAgICB4cHJ0cmRtYTogRE1BIG1hcCBy
+cl9yZG1hX2J1ZiBhcyBlYWNoIHJwY3JkbWFfcmVwIGlzIGNyZWF0ZWQNCg0KQ29saW4gSWFuIEtp
+bmcgKDEpOg0KICAgICAgTkZTOiBBZGQgbWlzc2luZyBudWxsIGNoZWNrIGZvciBmYWlsZWQgYWxs
+b2NhdGlvbg0KDQpEYWkgTmdvICgxKToNCiAgICAgIG5mczogb3B0aW1pc2UgcmVhZGRpciBjYWNo
+ZSBwYWdlIGludmFsaWRhdGlvbg0KDQpEYXZpZCBIb3dlbGxzICg5KToNCiAgICAgIE5GUzogTW92
+ZSBtb3VudCBwYXJhbWV0ZXJpc2F0aW9uIGJpdHMgaW50byB0aGVpciBvd24gZmlsZQ0KICAgICAg
+TkZTOiBDb25zdGlmeSBtb3VudCBhcmd1bWVudCBtYXRjaCB0YWJsZXMNCiAgICAgIE5GUzogUmVu
+YW1lIHN0cnVjdCBuZnNfcGFyc2VkX21vdW50X2RhdGEgdG8gc3RydWN0IG5mc19mc19jb250ZXh0
+DQogICAgICBORlM6IFNwbGl0IG5mc19wYXJzZV9tb3VudF9vcHRpb25zKCkNCiAgICAgIE5GUzog
+RGVpbmRlbnQgbmZzX2ZzX2NvbnRleHRfcGFyc2Vfb3B0aW9uKCkNCiAgICAgIE5GUzogQWRkIGEg
+c21hbGwgYnVmZmVyIGluIG5mc19mc19jb250ZXh0IHRvIGF2b2lkIHN0cmluZyBkdXANCiAgICAg
+IE5GUzogRG8gc29tZSB0aWR5aW5nIG9mIHRoZSBwYXJzaW5nIGNvZGUNCiAgICAgIE5GUzogQWRk
+IGZzX2NvbnRleHQgc3VwcG9ydC4NCiAgICAgIG5mczogUmV0dXJuIEVJTlZBTCByYXRoZXIgdGhh
+biBFUkFOR0UgZm9yIG1vdW50IHBhcnNlIGVycm9ycw0KDQpHZWVydCBVeXR0ZXJob2V2ZW4gKDEp
+Og0KICAgICAgbmZzOiBORlNfU1dBUCBzaG91bGQgZGVwZW5kIG9uIFNXQVANCg0KSnVsaWEgTGF3
+YWxsICgxKToNCiAgICAgIFNVTlJQQzogY29uc3RpZnkgY29waWVkIHN0cnVjdHVyZQ0KDQpNdXJw
+aHkgWmhvdSAoMSk6DQogICAgICBmcy9uZnMsIHN3YXBvbjogY2hlY2sgaG9sZXMgaW4gc3dhcGZp
+bGUNCg0KT2xnYSBLb3JuaWV2c2thaWEgKDMpOg0KICAgICAgTkZTdjQgZml4IGFjbCByZXRyaWV2
+YWwgb3ZlciBrcmI1aS9rcmI1cCBtb3VudHMNCiAgICAgIE5GU3Y0LnggcmVjb3ZlciBmcm9tIHBy
+ZS1tYXR1cmUgbG9zcyBvZiBvcGVuc3RhdGVpZA0KICAgICAgTkZTOiBhbGxvdyBkZXByZWNhdGlv
+biBvZiBORlMgVURQIHByb3RvY29sDQoNClJvYmVydCBNaWxrb3dza2kgKDIpOg0KICAgICAgTkZT
+djQ6IHRyeSBsZWFzZSByZWNvdmVyeSBvbiBORlM0RVJSX0VYUElSRUQNCiAgICAgIE5GU3Y0LjA6
+IG5mczRfZG9fZnNpbmZvKCkgc2hvdWxkIG5vdCBkbyBpbXBsaWNpdCBsZWFzZSByZW5ld2Fscw0K
+DQpTY290dCBNYXloZXcgKDQpOg0KICAgICAgTkZTOiByZW5hbWUgbmZzX2ZzX2NvbnRleHQgcG9p
+bnRlciBhcmcgaW4gYSBmZXcgZnVuY3Rpb25zDQogICAgICBORlM6IENvbnZlcnQgbW91bnQgb3B0
+aW9uIHBhcnNpbmcgdG8gdXNlIGZ1bmN0aW9uYWxpdHkgZnJvbSBmc19wYXJzZXIuaA0KICAgICAg
+TkZTOiBBZGRpdGlvbmFsIHJlZmFjdG9yaW5nIGZvciBmc19jb250ZXh0IGNvbnZlcnNpb24NCiAg
+ICAgIE5GUzogQXR0YWNoIHN1cHBsZW1lbnRhcnkgZXJyb3IgaW5mb3JtYXRpb24gdG8gZnNfY29u
+dGV4dC4NCg0KU3UgWWFuanVuICgxKToNCiAgICAgIE5GU3YzOiBGSXggYnVnIHdoZW4gdXNpbmcg
+Y2hhY2wgYW5kIGNobW9kIHRvIGNoYW5nZSBhY2wNCg0KVHJvbmQgTXlrbGVidXN0ICgzMik6DQog
+ICAgICBORlM6IFJldmFsaWRhdGUgdGhlIGZpbGUgc2l6ZSBvbiBhIGZhdGFsIHdyaXRlIGVycm9y
+DQogICAgICBORlM6IFJldmFsaWRhdGUgdGhlIGZpbGUgbWFwcGluZyBvbiBhbGwgZmF0YWwgd3Jp
+dGViYWNrIGVycm9ycw0KICAgICAgU1VOUlBDOiBSZW1vdmUgYnJva2VuIGdzc19tZWNoX2xpc3Rf
+cHNldWRvZmxhdm9ycygpDQogICAgICBORlM6IEZpeCB1cCBmc3luYygpIHdoZW4gdGhlIHNlcnZl
+ciByZWJvb3RlZA0KICAgICAgTkZTL3BuZnM6IEZpeCBwbmZzX2dlbmVyaWNfcHJlcGFyZV90b19y
+ZXNlbmRfd3JpdGVzKCkNCiAgICAgIE5GU3Y0OiBJbXByb3ZlIHJlYWQvd3JpdGUvY29tbWl0IHRy
+YWNpbmcNCiAgICAgIE5GUzogRml4IGZpeCBvZiBzaG93X25mc19lcnJvcnMNCiAgICAgIHBORlMv
+ZmxleGZpbGVzOiBSZWNvcmQgcmVzZW5kIGF0dGVtcHRzIG9uIEkvTyBmYWlsdXJlDQogICAgICBO
+RlM6IENsZWFuIHVwIGdlbmVyaWMgZmlsZSByZWFkIHRyYWNlcG9pbnRzDQogICAgICBORlM6IENs
+ZWFuIHVwIGdlbmVyaWMgd3JpdGViYWNrIHRyYWNlcG9pbnRzDQogICAgICBORlM6IENsZWFuIHVw
+IGdlbmVyaWMgZmlsZSBjb21taXQgdHJhY2Vwb2ludA0KICAgICAgcE5GUy9mbGV4ZmlsZXM6IEFk
+ZCB0cmFjaW5nIGZvciBsYXlvdXQgZXJyb3JzDQogICAgICBORlM6IEltcHJvdmUgdHJhY2luZyBv
+ZiBwZXJtaXNzaW9uIGNhbGxzDQogICAgICBORlM6IFdoZW4gcmVzZW5kaW5nIGFmdGVyIGEgc2hv
+cnQgd3JpdGUsIHJlc2V0IHRoZSByZXBseSBjb3VudCB0byB6ZXJvDQogICAgICBORlM6IEZpeCBu
+ZnNfZGlyZWN0X3dyaXRlX3Jlc2NoZWR1bGVfaW8oKQ0KICAgICAgTkZTOiBUcnVzdCBjYWNoZWQg
+YWNjZXNzIGlmIHdlJ3ZlIGFscmVhZHkgcmV2YWxpZGF0ZWQgdGhlIGlub2RlIG9uY2UNCiAgICAg
+IE5GUzogQWRkIG1vdW50IG9wdGlvbiAnc29mdHJldmFsJw0KICAgICAgTkZTOiBBZGQgc29mdHJl
+dmFsIGJlaGF2aW91ciB0byBuZnNfbG9va3VwX3JldmFsaWRhdGUoKQ0KICAgICAgTkZTdjQ6IHBu
+ZnNfcm9jKCkgbXVzdCB1c2UgY3JlZF9mc2NtcCgpIHRvIGNvbXBhcmUgY3JlZHMNCiAgICAgIE5G
+UzogbmZzX2FjY2Vzc19nZXRfY2FjaGVkX3JjdSgpIHNob3VsZCB1c2UgY3JlZF9mc2NtcCgpDQog
+ICAgICBORlM6IG5mc19maW5kX29wZW5fY29udGV4dCgpIHNob3VsZCB1c2UgY3JlZF9mc2NtcCgp
+DQogICAgICBORlN2NDogbmZzX2lub2RlX2V2aWN0X2RlbGVnYXRpb24oKSBzaG91bGQgc2V0IE5G
+U19ERUxFR0FUSU9OX1JFVFVSTklORw0KICAgICAgTkZTOiBDbGVhciBORlNfREVMRUdBVElPTl9S
+RVRVUk5fSUZfQ0xPU0VEIHdoZW4gdGhlIGRlbGVnYXRpb24gaXMgcmV0dXJuZWQNCiAgICAgIE5G
+U3Y0OiBUcnkgdG8gcmV0dXJuIHRoZSBkZWxlZ2F0aW9uIGltbWVkaWF0ZWx5IHdoZW4gbWFya2Vk
+IGZvciByZXR1cm4gb24NCmNsb3NlDQogICAgICBORlN2NDogQWRkIGFjY291bnRpbmcgZm9yIHRo
+ZSBudW1iZXIgb2YgYWN0aXZlIGRlbGVnYXRpb25zIGhlbGQNCiAgICAgIE5GU3Y0OiBMaW1pdCB0
+aGUgdG90YWwgbnVtYmVyIG9mIGNhY2hlZCBkZWxlZ2F0aW9ucw0KICAgICAgTkZTOiBSZXBsYWNl
+IHZhcmlvdXMgb2NjdXJyZW5jZXMgb2Yga3N0cm5kdXAoKSB3aXRoIGttZW1kdXBfbnVsKCkNCiAg
+ICAgIFNVTlJQQzogVXNlIGttZW1kdXBfbnVsKCkgaW4gcnBjX3BhcnNlX3Njb3BlX2lkKCkNCiAg
+ICAgIE5GUzogRml4IG1lbW9yeSBsZWFrcyBhbmQgY29ycnVwdGlvbiBpbiByZWFkZGlyDQogICAg
+ICBORlM6IERpcmVjdG9yeSBwYWdlIGNhY2hlIHBhZ2VzIG5lZWQgdG8gYmUgbG9ja2VkIHdoZW4g
+cmVhZA0KICAgICAgTkZTOiBVc2Uga21lbWR1cF9udWwoKSBpbiBuZnNfcmVhZGRpcl9tYWtlX3Fz
+dHIoKQ0KICAgICAgTkZTOiBTd2l0Y2ggcmVhZGRpciB0byB1c2luZyBpdGVyYXRlX3NoYXJlZCgp
+DQoNCldlbndlbiBXYW5nICgxKToNCiAgICAgIE5GUzogRml4IG1lbW9yeSBsZWFrcw0KDQp6aGVu
+Z2JpbiAoMik6DQogICAgICBORlM0OiBSZW1vdmUgdW5uZWVkZWQgc2VtaWNvbG9uDQogICAgICBO
+RlM6IG1vdmUgZHByaW50ayBhZnRlciBuZnNfYWxsb2NfZmF0dHIgaW4gbmZzM19wcm9jX2xvb2t1
+cA0KDQogZnMvbmZzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDExICstDQog
+ZnMvbmZzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICstDQogZnMvbmZz
+L2NhbGxiYWNrX3hkci5jICAgICAgICAgICAgICAgICAgfCAgIDExICstDQogZnMvbmZzL2NsaWVu
+dC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDg0ICsrLS0NCiBmcy9uZnMvZGVsZWdhdGlv
+bi5jICAgICAgICAgICAgICAgICAgICB8ICAgODAgKysrLQ0KIGZzL25mcy9kZWxlZ2F0aW9uLmgg
+ICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQogZnMvbmZzL2Rpci5jICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDgzICsrLS0NCiBmcy9uZnMvZGlyZWN0LmMgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgIDcgKy0NCiBmcy9uZnMvZG5zX3Jlc29sdmUuYyAgICAgICAgICAgICAgICAg
+ICB8ICAgIDIgKy0NCiBmcy9uZnMvZmlsZS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+NDkgKystDQogZnMvbmZzL2ZsZXhmaWxlbGF5b3V0L2ZsZXhmaWxlbGF5b3V0LmMgfCAgIDM0ICst
+DQogZnMvbmZzL2ZzX2NvbnRleHQuYyAgICAgICAgICAgICAgICAgICAgfCAxNDM3DQorKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIGZz
+L25mcy9mc2NhY2hlLWluZGV4LmMgICAgICAgICAgICAgICAgIHwgICAgNiArLQ0KIGZzL25mcy9m
+c2NhY2hlLmMgICAgICAgICAgICAgICAgICAgICAgIHwgICAyMCArLQ0KIGZzL25mcy9mc2NhY2hl
+LmggICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArLQ0KIGZzL25mcy9nZXRyb290LmMgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICA3MyArLS0NCiBmcy9uZnMvaW5vZGUuYyAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMTAgKy0NCiBmcy9uZnMvaW50ZXJuYWwuaCAgICAgICAgICAgICAg
+ICAgICAgICB8ICAxNDMgKysrLS0tDQogZnMvbmZzL21vdW50X2NsbnQuYyAgICAgICAgICAgICAg
+ICAgICAgfCAgICAyIC0NCiBmcy9uZnMvbmFtZXNwYWNlLmMgICAgICAgICAgICAgICAgICAgICB8
+ICAxNDYgKysrLS0tDQogZnMvbmZzL25mczJ4ZHIuYyAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDEyICstDQogZnMvbmZzL25mczNfZnMuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICst
+DQogZnMvbmZzL25mczNjbGllbnQuYyAgICAgICAgICAgICAgICAgICAgfCAgICA2ICstDQogZnMv
+bmZzL25mczNwcm9jLmMgICAgICAgICAgICAgICAgICAgICAgfCAgIDI4ICstDQogZnMvbmZzL25m
+czN4ZHIuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICstDQogZnMvbmZzL25mczQycHJv
+Yy5jICAgICAgICAgICAgICAgICAgICAgfCAgIDQwICstDQogZnMvbmZzL25mczRfZnMuaCAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDE5ICstDQogZnMvbmZzL25mczRjbGllbnQuYyAgICAgICAg
+ICAgICAgICAgICAgfCAgIDk5ICsrLS0tDQogZnMvbmZzL25mczRmaWxlLmMgICAgICAgICAgICAg
+ICAgICAgICAgfCAgICAxICsNCiBmcy9uZnMvbmZzNG5hbWVzcGFjZS5jICAgICAgICAgICAgICAg
+ICB8ICAyOTggKysrKysrKy0tLS0tLQ0KIGZzL25mcy9uZnM0cHJvYy5jICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDEwNCArKystLQ0KIGZzL25mcy9uZnM0cmVuZXdkLmMgICAgICAgICAgICAgICAg
+ICAgIHwgICAgNSArLQ0KIGZzL25mcy9uZnM0c3RhdGUuYyAgICAgICAgICAgICAgICAgICAgIHwg
+ICAgNyArLQ0KIGZzL25mcy9uZnM0c3VwZXIuYyAgICAgICAgICAgICAgICAgICAgIHwgIDI1NyAr
+KysrLS0tLS0tLQ0KIGZzL25mcy9uZnM0dHJhY2UuYyAgICAgICAgICAgICAgICAgICAgIHwgICAg
+NCArDQogZnMvbmZzL25mczR0cmFjZS5oICAgICAgICAgICAgICAgICAgICAgfCAgMjM3ICsrKysr
+KysrLS0NCiBmcy9uZnMvbmZzNHhkci5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTcgKy0N
+CiBmcy9uZnMvbmZzdHJhY2UuaCAgICAgICAgICAgICAgICAgICAgICB8ICAyNzkgKysrKysrKysr
+LS0tDQogZnMvbmZzL3BuZnMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA0ICstDQog
+ZnMvbmZzL3BuZnMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA4ICstDQogZnMvbmZz
+L3BuZnNfbmZzLmMgICAgICAgICAgICAgICAgICAgICAgfCAgICA3ICstDQogZnMvbmZzL3Byb2Mu
+YyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDI0ICstDQogZnMvbmZzL3JlYWQuYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgICA3ICstDQogZnMvbmZzL3N1cGVyLmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAyMjE4ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0NCiBmcy9uZnMvd3JpdGUuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMzIgKy0NCiBp
+bmNsdWRlL2xpbnV4L25mc19mcy5oICAgICAgICAgICAgICAgICB8ICAgIDMgKw0KIGluY2x1ZGUv
+bGludXgvbmZzX2ZzX3NiLmggICAgICAgICAgICAgIHwgICAgMSArDQogaW5jbHVkZS9saW51eC9u
+ZnNfeGRyLmggICAgICAgICAgICAgICAgfCAgIDExICstDQogaW5jbHVkZS9saW51eC9zdW5ycGMv
+YXV0aC5oICAgICAgICAgICAgfCAgICAyIC0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy9nc3NfYXBp
+LmggICAgICAgICB8ICAgIDcgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy9nc3Nfa3JiNS5oICAg
+ICAgICB8ICAgIDIgKy0NCiBpbmNsdWRlL3RyYWNlL2V2ZW50cy9ycGNyZG1hLmggICAgICAgICB8
+ICAgMTIgKy0NCiBpbmNsdWRlL3RyYWNlL2V2ZW50cy9zdW5ycGMuaCAgICAgICAgICB8ICAgIDEg
+Kw0KIG5ldC9zdW5ycGMvYWRkci5jICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQ0KIG5l
+dC9zdW5ycGMvYXV0aC5jICAgICAgICAgICAgICAgICAgICAgIHwgICA0OSAtLS0NCiBuZXQvc3Vu
+cnBjL2F1dGhfZ3NzL2F1dGhfZ3NzLmMgICAgICAgICB8ICAgIDEgLQ0KIG5ldC9zdW5ycGMvYXV0
+aF9nc3MvZ3NzX2tyYjVfbWVjaC5jICAgIHwgICAxMiArLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3Mv
+Z3NzX2tyYjVfc2VhbC5jICAgIHwgICAgOCArLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3MvZ3NzX2ty
+YjVfdW5zZWFsLmMgIHwgICAgNiArLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3MvZ3NzX2tyYjVfd3Jh
+cC5jICAgIHwgICAxNiArLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3MvZ3NzX21lY2hfc3dpdGNoLmMg
+IHwgICAzMSArLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3Mvc3ZjYXV0aF9nc3MuYyAgICAgIHwgICAg
+NCArLQ0KIG5ldC9zdW5ycGMvY2xudC5jICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQog
+bmV0L3N1bnJwYy9zY2hlZC5jICAgICAgICAgICAgICAgICAgICAgfCAgICA0ICstDQogbmV0L3N1
+bnJwYy94ZHIuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICstDQogbmV0L3N1bnJwYy94
+cHJ0cmRtYS9iYWNrY2hhbm5lbC5jICAgICAgfCAgICA0ICsNCiBuZXQvc3VucnBjL3hwcnRyZG1h
+L2Zyd3Jfb3BzLmMgICAgICAgICB8ICAxMDQgKystLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3Jw
+Y19yZG1hLmMgICAgICAgICB8ICAgMjAgKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3RyYW5zcG9y
+dC5jICAgICAgICB8ICAgMTcgKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3ZlcmJzLmMgICAgICAg
+ICAgICB8ICAyMTMgKysrKystLS0tDQogbmV0L3N1bnJwYy94cHJ0cmRtYS94cHJ0X3JkbWEuaCAg
+ICAgICAgfCAgIDE0ICstDQogNzEgZmlsZXMgY2hhbmdlZCwgMzQwNCBpbnNlcnRpb25zKCspLCAz
+MDcyIGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBmcy9uZnMvZnNfY29udGV4dC5j
+DQo=
