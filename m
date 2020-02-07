@@ -2,89 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6066C155CC6
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2020 18:25:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C84155DC0
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2020 19:18:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgBGRZg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Feb 2020 12:25:36 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34264 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgBGRZg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Feb 2020 12:25:36 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so3631468wrr.1
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Feb 2020 09:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QEYwY92w3eojCZcKMTYkTT+Vdn96E6l3fxaUSRKkhPM=;
-        b=GWoMycD61Lp5CvK7vjWxvqBsxj2cBAJTqtBnIZDrm17jGwvhAiomw6U7UOzAYiY936
-         yowpXxQ6oVN9nr/3LQyoCxK+No/RL/WAzAnc7zoNq3UGRmj1x+0H9n3dPv841FgNKCt4
-         9W/W/wNRX3Ix+s4gCGCHTKKgo2bLkqgrHOz4l2qkcv7IMpils6TYTG5le3IUIVojJgpZ
-         VsnXq682Kgm8txaz12JOWbmHrf0nvywmFcSj+ITHGrTUlEuAyIQ4fI2VknFbdiyDuLWP
-         yyfId609Uk6d/XIdrQOCrl5ocLljL0NMBlUHRnksNKei/41A7YZ2iykiBtGbYQLAJLmM
-         0a4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QEYwY92w3eojCZcKMTYkTT+Vdn96E6l3fxaUSRKkhPM=;
-        b=kLSDWwlcav4OoShhJc3x3SsA7D6+4VnK/TN1VYb7bmMnEzJpx9i0t/KFE65e+Mxa0K
-         yBkQlyqy/BCCj5Vdl7dCa+3KYQLXfpcG0LsKQGeW4xfbRW+wa/eTgFN0Xrmzp4715LLF
-         dFyQC8VrlJHUyJdK1uM3ppsMbVqXDTjMRkvhGjYVjuIpvep6JrnCBqvCPu/g0ZmjLx2R
-         WlXCFQcJPl4hHNM4TzIql9k8TUxWMgvfNxE1wHPyy9jHv2J4xUkjBhLgLCdVzU8LaYMf
-         sWcp22tsLN6IzYWRbEEcAx0QTQ+5MFxAxvMul6xTyPypdhS0yJTAr9tpByCb2hy/EtGy
-         PY6g==
-X-Gm-Message-State: APjAAAWVp+FCg8TnggQyrfggrFPZqNH9vZisOHXBeVV65AVIjIuFp6GU
-        bGptuchiP2BBNr5t/dwqs199zJp76GCPOfWTiREe/A==
-X-Google-Smtp-Source: APXvYqya7CxZ/zRp8WWXGhZ35bslzQ5sXQWN3E7anDEw8AP9K5nMDNIcbYvy+fcGp7cCRD8olB/DXYHJ4jLkV7x0/7I=
-X-Received: by 2002:adf:806c:: with SMTP id 99mr68254wrk.328.1581096334286;
- Fri, 07 Feb 2020 09:25:34 -0800 (PST)
+        id S1727563AbgBGSSS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Feb 2020 13:18:18 -0500
+Received: from fieldses.org ([173.255.197.46]:56544 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgBGSSS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:18:18 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 698F1709; Fri,  7 Feb 2020 13:18:17 -0500 (EST)
+Date:   Fri, 7 Feb 2020 13:18:17 -0500
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bfields@redhat.com" <bfields@redhat.com>
+Subject: Re: [PATCH] SUNRPC/cache: Allow garbage collection of invalid cache
+ entries
+Message-ID: <20200207181817.GC17036@fieldses.org>
+References: <20200114165738.922961-1-trond.myklebust@hammerspace.com>
+ <20200206163322.GB2244@fieldses.org>
+ <8dc1ed17de98e4b59fb9e408692c152456863a20.camel@hammerspace.com>
 MIME-Version: 1.0
-References: <20200207152109.20855-1-steved@redhat.com>
-In-Reply-To: <20200207152109.20855-1-steved@redhat.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 7 Feb 2020 12:25:23 -0500
-Message-ID: <CAN-5tyHatMk_xsBW5MHpv7-HyiCMPS9qrz3_O6-XN5KpH_RWtA@mail.gmail.com>
-Subject: Re: [PATCH] query_krb5_ccache: Removed dead code that was flagged by
- a covscan
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8dc1ed17de98e4b59fb9e408692c152456863a20.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 10:22 AM Steve Dickson <steved@redhat.com> wrote:
->
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-> ---
->  utils/gssd/krb5_util.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index bff759f..a1c43d2 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -1066,8 +1066,6 @@ query_krb5_ccache(const char* cred_cache, char **ret_princname,
->                             *ret_realm = strdup(str+1);
->                     }
->                     k5_free_unparsed_name(context, princstring);
-> -               } else {
-> -                       found = 0;
->                 }
+On Fri, Feb 07, 2020 at 02:25:27PM +0000, Trond Myklebust wrote:
+> On Thu, 2020-02-06 at 11:33 -0500, J. Bruce Fields wrote:
+> > On Tue, Jan 14, 2020 at 11:57:38AM -0500, Trond Myklebust wrote:
+> > > If the cache entry never gets initialised, we want the garbage
+> > > collector to be able to evict it. Otherwise if the upcall daemon
+> > > fails to initialise the entry, we end up never expiring it.
+> > 
+> > Could you tell us more about what motivated this?
+> > 
+> > It's causing failures on pynfs server-reboot tests.  I haven't pinned
+> > down the cause yet, but it looks like it could be a regression to the
+> > behavior Kinglong Mee describes in detail in his original patch.
+> > 
+> 
+> Can you point me to the tests that are failing?
 
-Uhm, sorry wasn't fast enough for you commit decision but I don't see
-that this a dead code? krb5_unparse_string() could return an error so
-"else" is a valid condition. I mean it's probably unlikely that
-check_for_tgt() returns found and they you can't parse the principal
-name out of it. But things like memory errors could still be valid
-error conditions?
+I'm basically doing
 
+	./nfs4.1/testserver.py myserver:/path reboot
+			--serverhelper=examples/server_helper.sh
+			--serverhelperarg=myserver
 
->         }
->         krb5_free_principal(context, principal);
-> --
-> 2.24.1
->
+For all I know at this point, the change could be exposing a pynfs-side
+bug.
+
+> The motivation here is to allow the garbage collector to do its job of
+> evicting cache entries after they are supposed to have timed out.
+
+Understood.  I was curious whether this was found by code inspection or
+because you'd run across a case where the leak was causing a practical
+problem.
+
+--b.
+
+> The fact that uninitialised cache entries are given an infinite
+> lifetime, and are never evicted is a de facto memory leak if, for
+> instance, the mountd daemon ignores the cache request, or the downcall
+> in expkey_parse() or svc_export_parse() fails without being able to
+> update the request.
+> 
+> The threads that are waiting for the cache replies already have a
+> mechanism for dealing with timeouts (with cache_wait_req() and
+> deferred requests), so the question is what is so special about
+> uninitialised requests that we have to leak them in order to avoid a
+> problem with reboot?
