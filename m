@@ -2,51 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92EE915629E
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2020 03:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E4981562A5
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2020 03:05:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgBHCFD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Feb 2020 21:05:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        id S1727789AbgBHCFF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Feb 2020 21:05:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbgBHCFD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 7 Feb 2020 21:05:03 -0500
-Subject: Re: [GIT PULL] Please pull NFS client updates for Linux 5.6
+        id S1727118AbgBHCFF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 7 Feb 2020 21:05:05 -0500
+Subject: Re: [GIT PULL] nfsd changes for 5.6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581127502;
-        bh=eDC7bDWZfRSLGx49tX2WezqUO5rMQQNGQ5ug0XVOteU=;
+        s=default; t=1581127504;
+        bh=ANc267yKWJN+Eqx4gw41Or2/pDqDx0YxOLyD1p/SkzY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1bw1BEiyxXKD12PoezhuE5/d0hiW+ewPWrZZk5il+inhNaf73R1hyGa2HJqGnbEgZ
-         ibjMFsFf2XYXXtnDJB3ZKG3IRZhDCcEO16LOSfQ6yf31z2kzHFJXGu71VSaq3t9yKe
-         puo29SxPZ9xfrWu2w8m4Tv1iYiFshDiu5z3KAt7g=
+        b=svUWkqZJz8oArI3sbju9ZXC7NajLVlxx5WG4OSfreYu9IFhjDV+39oUeRiu2GofC6
+         uoa3ikgAF8XQVE/J7x+X8nfF2owftDvlPJQm2WECAOQYjBgrZ7vJ+XpIVgYEU+PRH8
+         4AfG61JgC+E9IkOr0bPe8tz83QiXKAz5AjTAxusg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
-References: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+In-Reply-To: <20200207211255.GA17715@fieldses.org>
+References: <20200207211255.GA17715@fieldses.org>
 X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git
- tags/nfs-for-5.6-1
-X-PR-Tracked-Commit-Id: 7dc2993a9e51dd2eee955944efec65bef90265b7
+X-PR-Tracked-Message-Id: <20200207211255.GA17715@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.6
+X-PR-Tracked-Commit-Id: 3d96208c30f84d6edf9ab4fac813306ac0d20c10
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f43574d0ac80d76537e265548a13b1bc46aa751b
-Message-Id: <158112750282.31333.4017631717324710986.pr-tracker-bot@kernel.org>
-Date:   Sat, 08 Feb 2020 02:05:02 +0000
-To:     Anna Schumaker <anna.schumaker@netapp.com>
+X-PR-Merge-Commit-Id: 08dffcc7d94b7751663f1b0d66b45ff3a98375a2
+Message-Id: <158112750484.31333.484768800606756517.pr-tracker-bot@kernel.org>
+Date:   Sat, 08 Feb 2020 02:05:04 +0000
+To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Thu, 06 Feb 2020 17:31:18 -0500:
+The pull request you sent on Fri, 7 Feb 2020 16:12:55 -0500:
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.6-1
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f43574d0ac80d76537e265548a13b1bc46aa751b
+https://git.kernel.org/torvalds/c/08dffcc7d94b7751663f1b0d66b45ff3a98375a2
 
 Thank you!
 
