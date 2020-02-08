@@ -2,58 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FA40156198
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2020 00:40:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92EE915629E
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2020 03:05:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBGXjr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Feb 2020 18:39:47 -0500
-Received: from sv7434.xserver.jp ([202.254.239.115]:33050 "EHLO
-        sv7434.xserver.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgBGXjr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Feb 2020 18:39:47 -0500
-X-Greylist: delayed 541 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Feb 2020 18:39:46 EST
-Received: from virusgw7003.xserver.jp (virusgw7003.xserver.jp [202.254.239.243])
-        by sv7434.xserver.jp (Postfix) with ESMTP id 5F5B51E0C96C28;
-        Sat,  8 Feb 2020 08:30:16 +0900 (JST)
-Received: from sv7434.xserver.jp (202.254.239.115)
- by virusgw7003.xserver.jp (F-Secure/fsigk_smtp/521/virusgw7003.xserver.jp);
- Sat, 08 Feb 2020 08:30:16 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/521/virusgw7003.xserver.jp)
-Received: from webmail.xserver.ne.jp (webmail.xserver.ne.jp [210.188.201.183])
-        by sv7434.xserver.jp (Postfix) with ESMTPA id ED4391E0C96C1B;
-        Sat,  8 Feb 2020 08:30:14 +0900 (JST)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 07 Feb 2020 15:30:14 -0800
-From:   "Barr.Hassan Jallow Esq" <barrhassanjallow7@gmail.com>
-To:     undisclosed-recipients:;
-Subject: Hello
-Reply-To: barr.hassanjallow@gmail.com
-Mail-Reply-To: barr.hassanjallow@gmail.com
-Message-ID: <d6c7d426bd9bbf3f2b1da84b32926279@e-pcs.co.jp>
-X-Sender: barrhassanjallow7@gmail.com
-User-Agent: Roundcube Webmail/1.2.0
+        id S1727403AbgBHCFD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Feb 2020 21:05:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727118AbgBHCFD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 7 Feb 2020 21:05:03 -0500
+Subject: Re: [GIT PULL] Please pull NFS client updates for Linux 5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581127502;
+        bh=eDC7bDWZfRSLGx49tX2WezqUO5rMQQNGQ5ug0XVOteU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1bw1BEiyxXKD12PoezhuE5/d0hiW+ewPWrZZk5il+inhNaf73R1hyGa2HJqGnbEgZ
+         ibjMFsFf2XYXXtnDJB3ZKG3IRZhDCcEO16LOSfQ6yf31z2kzHFJXGu71VSaq3t9yKe
+         puo29SxPZ9xfrWu2w8m4Tv1iYiFshDiu5z3KAt7g=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+References: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <6a5ac820658697e7460006ddf08d10caeb7b33dd.camel@netapp.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git
+ tags/nfs-for-5.6-1
+X-PR-Tracked-Commit-Id: 7dc2993a9e51dd2eee955944efec65bef90265b7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f43574d0ac80d76537e265548a13b1bc46aa751b
+Message-Id: <158112750282.31333.4017631717324710986.pr-tracker-bot@kernel.org>
+Date:   Sat, 08 Feb 2020 02:05:02 +0000
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+The pull request you sent on Thu, 06 Feb 2020 17:31:18 -0500:
 
+> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.6-1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f43574d0ac80d76537e265548a13b1bc46aa751b
+
+Thank you!
 
 -- 
-God dag, jeg er advokat Hassan Jallow. Jeg trenger ditt samtykke i
-Transaksjon av seks millioner fire hundre tusen amerikanske dollar 
-(6.400.000.00 USD), i kodikilen og det siste testamentet til en avdød 
-som tilfeldigvis er min klient. en borger i landet ditt, som har samme 
-lignende etternavn med deg. Fordi IMF har startet sin årlige revisjon og 
-kan konfiskere kontoen hvis de finner ut at kontoen ikke har vært aktiv 
-på lenge, var det derfor jeg kontaktet deg. Jeg vil gi ytterligere 
-avklaring om emnet når jeg har fått svar. Nedenfor er også 
-telefonnummeret mitt for videre diskusjon om saken.
-
-Med vennlig hilsen,
-Hassan Jallow Esq
-Kontakt +228 97 54 18 97
-.
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
