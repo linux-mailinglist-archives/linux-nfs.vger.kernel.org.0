@@ -2,58 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F63C15834A
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2020 20:09:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F009158353
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2020 20:12:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgBJTJL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Feb 2020 14:09:11 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40729 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJTJK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Feb 2020 14:09:10 -0500
-Received: by mail-yw1-f67.google.com with SMTP id i126so3930299ywe.7
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2020 11:09:10 -0800 (PST)
+        id S1727056AbgBJTMF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Feb 2020 14:12:05 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:33323 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgBJTME (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Feb 2020 14:12:04 -0500
+Received: by mail-yb1-f193.google.com with SMTP id s35so4107652ybi.0
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2020 11:12:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WaM9tXI/bDvfjpAb3YSRIykH3fCTybrKKtQzVxNXnec=;
-        b=FDvtfJTMYovLZGA4Ncs0zsZ2+htV3ZzPTELMSiGVhRQhjO75MyxNabhG5JZsF2lJ6G
-         kVsydBGxnYP2vsrKSe2A+Uh+LerMsLa8/UykHdr4JZiMLgPxeYZWMmnaT6pfOytNT/Ly
-         iUm+X/xrQADnTELmN8cOgPOqZ/gTGbA0xLQHza397tLhyZ89ofhLKRdcWnVvx6mEBAoe
-         oXMTAPJSUX2ytw9UCEwDx5L1SBqJ4BpS/B8HA5Vj+RWdngrxIj58a+50R86+RtrYAWX6
-         u6u9TTT2UUPFvYpQSjcIknH09yftLY3jpE9da7FkcmrXOA5vkRGe/Hjbh13kLUhlGtcG
-         xMPQ==
+        bh=LbxxAbVV/Wuz/oyM+A4FJGzJfjXiwMKYJs3eJDFX1EY=;
+        b=f60t6V7W9TABh/nABgn3Zz6lNf2FG3QaBnL9v2JQbkKVla7dvHkfbx1nmfPDicces0
+         FrQAhMP46m+HL+xgo3HjhZxNx2liZAeNyVb9K2gHGUFz/AicwNQbTpLWq11hWUJHuRsa
+         vB3tvdy36PtY+rkMDvdHUJSKA3Iyk+xu1AEG6gTI8NdYAG2Z+r2H8LMhQvjl3WPerS7V
+         m7c0xUBDc0ElmpBHcwhOxCxgEaxqSrgx5/R5mp7uilbAqtoneYWr5+2vd5j3wk9OJxQA
+         T4tOeDoX6XVOJ/4Uin5vi892guOEgRxWRfXww5U6icEeqGITv1VVMAUvnIMDzjzll+fE
+         fjQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WaM9tXI/bDvfjpAb3YSRIykH3fCTybrKKtQzVxNXnec=;
-        b=s05iobvTiMj7hBopIQ6aa+YHwh/j4zHNumwBneoducGpMX36J6AkaBgdZqbz2OrQm0
-         i4bDad3CK7arNtgHRXVP37EePkFCNJqVk3tm/IPR/2RfY1/cipGJGyOOlrYYrc4TwP/e
-         QePrZ2QM/RotxCqHRhoragVyC9QBM4UE1JD9vqZXictWEpq1ZQ5wtQVMGhCcUuTa3WMI
-         g9w7e40d/SR6G/R5Hh+Ch3HUWFaIQI+XKlFx1khqikRMDE6QHxwTY5LS9iyaTRVuEDHX
-         6mhuIEQO5lUJSI4wFScHs3T/hzYDbB1/tkmKbm1WlDkvBTW5UfQosbIQCWoGMlwqfmPv
-         Abgg==
-X-Gm-Message-State: APjAAAW+SZzQOfYFbgRKiSgxU7dyuK1pEnDE090MwBrZsDdwgUxEwvD9
-        qwtrAufmAjw3MuhbpLu/Us6zR+QRGA==
-X-Google-Smtp-Source: APXvYqznVOwf+i0icW1mnGNTGICcMfbf1B4ko/YhIWCmV51UwvNLDB+t4Da7DKQ+76LjcimAilp8Mg==
-X-Received: by 2002:a81:9304:: with SMTP id k4mr2314763ywg.323.1581361749214;
-        Mon, 10 Feb 2020 11:09:09 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LbxxAbVV/Wuz/oyM+A4FJGzJfjXiwMKYJs3eJDFX1EY=;
+        b=ZiuN9Wksrfmw2ldP0m18509RnUPKhvQgRrvE6eWCKPMogTJG1yyhQssjDaR/iuojGm
+         ZxvPua4GfjARAfac6WpD51k+OqB4wkTR7AhWvPyVj575aMT4ZIxKQiiZyA9/3ijh3bh/
+         mkDtqVK98lDGXvrQV8HbB0CjKqDih2b4RV595qBomAfY/VuYxbu2ndVgb5EYPwxjeM8P
+         aDSAUhqIfLCXMXJwufTolQIPQTE8AJg3Y/RgSNXlQvKUQlZqXg7R3MQ17NRQsiwtpyJ5
+         x2rLBWpLz8ufdCNfe2qmwjt2BxZmJ6EJw/F3mxFdrb13DwUUNj4CVExnwJnnlPtXBMIx
+         bdBg==
+X-Gm-Message-State: APjAAAX9WxLW13In9UDX6K7bwNe07RzBwnKQfg9AeeuWOWIimLo4eEVk
+        xwx375bDyVpg5XtRVO3PChMS/xQKfg==
+X-Google-Smtp-Source: APXvYqybhO+1g4UayGsFUwT59I5nw1QnKl3Oc9d7eQJDmorZQ58E3CwBrDKMrtq4tBhF+P91/Qzu2Q==
+X-Received: by 2002:a25:9d84:: with SMTP id v4mr2777474ybp.40.1581361923547;
+        Mon, 10 Feb 2020 11:12:03 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id i127sm639892ywe.65.2020.02.10.11.09.08
+        by smtp.gmail.com with ESMTPSA id v133sm658860ywb.86.2020.02.10.11.12.02
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:09:08 -0800 (PST)
+        Mon, 10 Feb 2020 11:12:03 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFSv4/pnfs: pnfs_set_layout_stateid() should update the layout cred
-Date:   Mon, 10 Feb 2020 14:06:59 -0500
-Message-Id: <20200210190659.557270-2-trond.myklebust@hammerspace.com>
+Subject: [PATCH] NFS: Ensure we time out if a delegreturn does not complete
+Date:   Mon, 10 Feb 2020 14:09:54 -0500
+Message-Id: <20200210190954.557351-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200210190659.557270-1-trond.myklebust@hammerspace.com>
-References: <20200210190659.557270-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -61,103 +59,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the cred assigned to the layout that we're updating differs from
-the one used to retrieve the new layout segment, then we need to
-update the layout plh_lc_cred field.
+We can't allow delegreturn to hold up nfs4_evict_inode() forever,
+since that can cause the memory shrinkers to block. This patch
+therefore ensures that we eventually time out, and complete the
+reclaim of the inode.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/callback_proc.c |  2 +-
- fs/nfs/pnfs.c          | 20 ++++++++++++++++----
- fs/nfs/pnfs.h          |  1 +
- 3 files changed, 18 insertions(+), 5 deletions(-)
+ fs/nfs/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index cd4c6bc81cae..b6ffac9963c8 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -280,7 +280,7 @@ static u32 initiate_file_draining(struct nfs_client *clp,
- 		goto unlock;
- 	}
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6616a575711e..00fe674c8a49 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6259,6 +6259,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
+ 		/* Fallthrough */
+ 	case -NFS4ERR_BAD_STATEID:
+ 	case -NFS4ERR_STALE_STATEID:
++	case -ETIMEDOUT:
+ 		task->tk_status = 0;
+ 		break;
+ 	case -NFS4ERR_OLD_STATEID:
+@@ -6349,7 +6350,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 		.rpc_client = server->client,
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs4_delegreturn_ops,
+-		.flags = RPC_TASK_ASYNC,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT,
+ 	};
+ 	int status = 0;
  
--	pnfs_set_layout_stateid(lo, &args->cbl_stateid, true);
-+	pnfs_set_layout_stateid(lo, &args->cbl_stateid, NULL, true);
- 	switch (pnfs_mark_matching_lsegs_return(lo, &free_me_list,
- 				&args->cbl_range,
- 				be32_to_cpu(args->cbl_stateid.seqid))) {
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 542ea8dfd1bc..b21eb4882846 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -903,10 +903,21 @@ pnfs_destroy_all_layouts(struct nfs_client *clp)
- 	pnfs_destroy_layouts_byclid(clp, false);
- }
- 
-+static void
-+pnfs_set_layout_cred(struct pnfs_layout_hdr *lo, const struct cred *cred)
-+{
-+	const struct cred *old;
-+
-+	if (cred && cred_fscmp(lo->plh_lc_cred, cred) != 0) {
-+		old = xchg(&lo->plh_lc_cred, get_cred(cred));
-+		put_cred(old);
-+	}
-+}
-+
- /* update lo->plh_stateid with new if is more recent */
- void
- pnfs_set_layout_stateid(struct pnfs_layout_hdr *lo, const nfs4_stateid *new,
--			bool update_barrier)
-+			const struct cred *cred, bool update_barrier)
- {
- 	u32 oldseq, newseq, new_barrier = 0;
- 
-@@ -914,6 +925,7 @@ pnfs_set_layout_stateid(struct pnfs_layout_hdr *lo, const nfs4_stateid *new,
- 	newseq = be32_to_cpu(new->seqid);
- 
- 	if (!pnfs_layout_is_valid(lo)) {
-+		pnfs_set_layout_cred(lo, cred);
- 		nfs4_stateid_copy(&lo->plh_stateid, new);
- 		lo->plh_barrier = newseq;
- 		pnfs_clear_layoutreturn_info(lo);
-@@ -1109,7 +1121,7 @@ void pnfs_layoutreturn_free_lsegs(struct pnfs_layout_hdr *lo,
- 
- 		pnfs_mark_matching_lsegs_invalid(lo, &freeme, range, seq);
- 		pnfs_free_returned_lsegs(lo, &freeme, range, seq);
--		pnfs_set_layout_stateid(lo, stateid, true);
-+		pnfs_set_layout_stateid(lo, stateid, NULL, true);
- 	} else
- 		pnfs_mark_layout_stateid_invalid(lo, &freeme);
- out_unlock:
-@@ -2323,14 +2335,14 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 
- 	if (!pnfs_layout_is_valid(lo)) {
- 		/* We have a completely new layout */
--		pnfs_set_layout_stateid(lo, &res->stateid, true);
-+		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, true);
- 	} else if (nfs4_stateid_match_other(&lo->plh_stateid, &res->stateid)) {
- 		/* existing state ID, make sure the sequence number matches. */
- 		if (pnfs_layout_stateid_blocked(lo, &res->stateid)) {
- 			dprintk("%s forget reply due to sequence\n", __func__);
- 			goto out_forget;
- 		}
--		pnfs_set_layout_stateid(lo, &res->stateid, false);
-+		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, false);
- 	} else {
- 		/*
- 		 * We got an entirely new state ID.  Mark all segments for the
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 0fafdadc9c8d..cfb89d47c79d 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -267,6 +267,7 @@ bool nfs4_layout_refresh_old_stateid(nfs4_stateid *dst,
- void pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo);
- void pnfs_set_layout_stateid(struct pnfs_layout_hdr *lo,
- 			     const nfs4_stateid *new,
-+			     const struct cred *cred,
- 			     bool update_barrier);
- int pnfs_mark_matching_lsegs_invalid(struct pnfs_layout_hdr *lo,
- 				struct list_head *tmp_list,
 -- 
 2.24.1
 
