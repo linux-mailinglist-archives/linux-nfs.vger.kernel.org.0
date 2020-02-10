@@ -2,56 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BDBE15835B
+	by mail.lfdr.de (Postfix) with ESMTP id D158E15835C
 	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2020 20:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgBJTQG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Feb 2020 14:16:06 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:35397 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        id S1727538AbgBJTQH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Feb 2020 14:16:07 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:36054 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S1727029AbgBJTQG (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Feb 2020 14:16:06 -0500
-Received: by mail-yw1-f67.google.com with SMTP id i190so3953266ywc.2
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2020 11:16:05 -0800 (PST)
+Received: by mail-yb1-f195.google.com with SMTP id q190so1109437ybg.3
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2020 11:16:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=HUrbzVVPw2PlYbq6OFl5j4vhxCcf3oVP9BeBFQDIHLs=;
-        b=BIIn33ePbWNlFjNi8hVcs6cR8/OGEx6sZudp2A1D73MfP8tVWGBpk1iVxDpTTIEddd
-         /3cLrblPBXIkiklPIjf+RQOzlG0HFwj72Ed7rVAi81uKPlr4GzrswKOzOR1ZDf3o5+MT
-         ZzSOKArJjdaR0N6wpG55dUq4hRYE2SGSIZAUpVSxUgC6lrp5dvFv6mbF6wa5Gw9M3UAt
-         LrECL+DkcF/va0sJY4RibPQykA/qT8LMpRQxs7eWjbVkM7eC5/41EM3P5N73GckIT79A
-         h4rfIGYWpqAzqVBtGvwNpN7fmi6RqkXYXSZeYCsr+hNA0dn4gocglAd61tX/Ws3D03/U
-         Ez5g==
+        bh=FgobD3V7uuOy4LVGAx9rHhnWTaPqCxK05Vocd+6bvMM=;
+        b=fcApY0O2/E2Jfj+xceGJmVwXJ+4x+C6qxz9vcSb2EPwUJfz7bbsS7ojqVLfklGfHss
+         qyanx1f17n9q5CKjoFdjk/A0PgiG+rDaTVSUgBanZUYSKmui9TSFJtmK4r3ojvDoCnnm
+         1qdIqW3gaCXTbGJE/uVe94DvlG6w8HOzaIrc3H7SrXW9YCK7hkQw3L0RMhMEmQ85x8WM
+         B6r1Hnwhay9EEZkn29iAH2/FzLDzfipIuLNZtxQUiGW3OtomlujnZXoTb8soneL/7/7E
+         8WUGs8vPWl3wxBaQJjTLZHl4gHjh85Y8Lm5lZ/gXwqGth9enk36Lt0eQTgXyP+xkgBmj
+         mg2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HUrbzVVPw2PlYbq6OFl5j4vhxCcf3oVP9BeBFQDIHLs=;
-        b=FoBRvVSui/PiquQObun3Ud2og3tlAb7K7qxOOK5WRmnBntT6dtl8HG5M1BQohun6KF
-         OCVkqD8dOiF0rMPQp9GYafcAf1IBzdupVU2V10cabeVaqgWt4/oOn46Ghi2En8UagOXh
-         ou1Jt1PSb1YIvq5bBIYvPvCeF+keo2j9CbBPfQpoICgwoH7prXlvr1KZlycCFSaFQ6D1
-         OMlxWOvgGKkK1peiYbOH5nA3caH5VlpwsnyDmbYvUPVQgSP6IeBzfo7GZaz08TmZU/A2
-         tjbnO9+a5tqhBxKBs7GDNJlJB/wb+fls7xan/IvgCihFr9aWayn66kc1XrdfrwBtqF87
-         g9jg==
-X-Gm-Message-State: APjAAAVd2FYM3rcReZOrolUXX/cooC2dPrKqafTUg7b7RCq8Y095vLoO
-        Y+rdIKrITFYpSURGY8VumvhqiICxcQ==
-X-Google-Smtp-Source: APXvYqwYwslFRIVaVo2elbmS0h9qd6f/uiJAg4AJYbQtiRrZpEGMA0KuxDtUlUuVvqNDqn6dr3pkyg==
-X-Received: by 2002:a0d:e84d:: with SMTP id r74mr2365498ywe.147.1581362164840;
-        Mon, 10 Feb 2020 11:16:04 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FgobD3V7uuOy4LVGAx9rHhnWTaPqCxK05Vocd+6bvMM=;
+        b=S+cwcHqqTIbZCOQuvg+FyQBMbb6SyoEdPbNtrAxdLPBzFFsJJRsQgbbHd1viIWJGPv
+         RZ6IX1fTM6OKqWtkkPuWRQcbzVAoHqZ9IDS7uKX+sAX8ECeqDAr1Kd5cvaPpwUlT+23z
+         aUR6Y5je0y7jgT3Im4/U4B6+FbjdW+Hr2fzLHpKZK1dV2zQTE6hlInQ0fIibBMNwv7UB
+         m92hZlbFllokt9q8gywx3Ka3Xsew89Ipd2fwsrRuKOOviU+BrvnGlgN8SVjnfuq2gw6a
+         5LydWg9N8VUIemuQHA0uaWsOLUpvpNVE1dF2V5sGFZeno2tiaIiyeghiEqyk+/TiUT8V
+         i/qw==
+X-Gm-Message-State: APjAAAVp1AL0k6mLsj6hFM8gfoWT5ZHBmw9J5lTV8pg+MNFMr0eCcVFm
+        2cLXD7oQB3s+rgedGo+exUtV8+N/gA==
+X-Google-Smtp-Source: APXvYqwzfADJ5Fb/IXrQIk9hQDciNw15sFD5Y2925VsEhzNrcgXyekrTHKpHnX6yXvG1VU4/5nXgTQ==
+X-Received: by 2002:a5b:384:: with SMTP id k4mr2833453ybp.305.1581362165736;
+        Mon, 10 Feb 2020 11:16:05 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id o4sm660222ywd.5.2020.02.10.11.16.03
+        by smtp.gmail.com with ESMTPSA id o4sm660222ywd.5.2020.02.10.11.16.04
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:16:04 -0800 (PST)
+        Mon, 10 Feb 2020 11:16:05 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 0/8] Reduce the refcount pressure of NFS on struct cred
-Date:   Mon, 10 Feb 2020 14:13:37 -0500
-Message-Id: <20200210191345.557460-1-trond.myklebust@hammerspace.com>
+Subject: [PATCH 1/8] NFS: alloc_nfs_open_context() must use the file cred when available
+Date:   Mon, 10 Feb 2020 14:13:38 -0500
+Message-Id: <20200210191345.557460-2-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200210191345.557460-1-trond.myklebust@hammerspace.com>
+References: <20200210191345.557460-1-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -59,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFS and RPC layer currently always takes a reference to the
-credential passed by the user, even in the case where the RPC call
-is synchronous, or the cred is also being pinned by file pointers
-and open contexts.
-In addition, the access cache will take a reference for each cache entry
-on each file that we've looked up.
+If we're creating a nfs_open_context() for a specific file pointer,
+we must use the cred assigned to that file.
 
-This patch set attempts to reduce the amount of references that the NFS
-layer holds, by optimising away a few cases where we're taking the
-refcount unnecessarily. It also sets a more stringent limit on the
-number of access cache entries that the NFS layer holds.
+Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/inode.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Trond Myklebust (8):
-  NFS: alloc_nfs_open_context() must use the file cred when available
-  SUNRPC: Add a flag to avoid reference counts on credentials
-  SUNRPC: Don't take a reference to the cred on synchronous tasks
-  NFS: Assume cred is pinned by open context in I/O requests
-  NFSv4: Avoid referencing the cred unnecessarily during NFSv4 I/O
-  NFSv4: Avoid unnecessary credential references in layoutget
-  NFS: Avoid referencing the cred twice in async rename/unlink
-  NFS: Limit the size of the access cache by default
-
- fs/nfs/dir.c                 |  2 +-
- fs/nfs/inode.c               | 10 +++++-----
- fs/nfs/nfs4proc.c            | 12 ++++++------
- fs/nfs/pagelist.c            |  2 +-
- fs/nfs/pnfs.c                |  3 +--
- fs/nfs/unlink.c              |  4 ++--
- fs/nfs/write.c               |  2 +-
- include/linux/sunrpc/sched.h |  1 +
- net/sunrpc/clnt.c            |  8 ++++++--
- net/sunrpc/sched.c           |  3 ++-
- 10 files changed, 26 insertions(+), 21 deletions(-)
-
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 11bf15800ac9..a10fb87c6ac3 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -959,16 +959,16 @@ struct nfs_open_context *alloc_nfs_open_context(struct dentry *dentry,
+ 						struct file *filp)
+ {
+ 	struct nfs_open_context *ctx;
+-	const struct cred *cred = get_current_cred();
+ 
+ 	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx) {
+-		put_cred(cred);
++	if (!ctx)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 	nfs_sb_active(dentry->d_sb);
+ 	ctx->dentry = dget(dentry);
+-	ctx->cred = cred;
++	if (filp)
++		ctx->cred = get_cred(filp->f_cred);
++	else
++		ctx->cred = get_current_cred();
+ 	ctx->ll_cred = NULL;
+ 	ctx->state = NULL;
+ 	ctx->mode = f_mode;
 -- 
 2.24.1
 
