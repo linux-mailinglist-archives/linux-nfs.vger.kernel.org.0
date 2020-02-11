@@ -2,92 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27312159745
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Feb 2020 18:53:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA5E159A1A
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Feb 2020 20:58:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgBKRxd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Feb 2020 12:53:33 -0500
-Received: from mail1.ugh.no ([178.79.162.34]:45520 "EHLO mail1.ugh.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbgBKRxd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:53:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail1.ugh.no (Postfix) with ESMTP id ACA8924EA8B;
-        Tue, 11 Feb 2020 18:53:31 +0100 (CET)
-Received: from mail1.ugh.no ([127.0.0.1])
-        by localhost (catastrophix.ugh.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mBelwyQ0Zr-a; Tue, 11 Feb 2020 18:53:31 +0100 (CET)
-Received: from [10.255.64.11] (unknown [185.176.245.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: andre@tomt.net)
-        by mail.ugh.no (Postfix) with ESMTPSA id 3319D24EA6B;
-        Tue, 11 Feb 2020 18:53:31 +0100 (CET)
-Subject: Re: AMD IOMMU stops RDMA NFS from working since kernel 5.5 (bisected)
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Tom Murphy <tmurphy@arista.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
+        id S1730551AbgBKT6f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Feb 2020 14:58:35 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37267 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgBKT6e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Feb 2020 14:58:34 -0500
+Received: by mail-yb1-f193.google.com with SMTP id k69so5996411ybk.4
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Feb 2020 11:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=2VAKAcpr2MBf9aCgMT8aEt9dlXUjbR7WNAT7b1h4DfU=;
+        b=IGKGQ8U3cBDlzKSlnhA0V67hzzRvIfMmkGn/ymxAOM3RjjQ5hiKnTkLVzEqdqnshQC
+         /gHwaglw3UPDhyVEq20oiMw/6LVdy0adv3jkfjp5FSm3b53gny6KJpmCq0ySKIEL4dM+
+         hFkIHQbQkXkwgjHuSg7Pec039lilWf+RX6nk/C0jqDzWplGreBV9XzkSEcObogDsrFaq
+         l/XjbrP1AcBuLIzZO1anB9qhgezK3xMIoAAjlr709CASR/ppdU+nN/mi1AEk2QmjgV05
+         EagoDGylukfGmBHqBlf6y0irlPLjOxZMAKJ7W1pZJuxoxhdU9RXplbHLeFvEg/paHSy8
+         00Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=2VAKAcpr2MBf9aCgMT8aEt9dlXUjbR7WNAT7b1h4DfU=;
+        b=repzw9uCq2WE9nDOlCsqfLgRFxuLU5JhC8Na8w5NlgDBkI2kXX6FhrxRE+l5JqFOi2
+         BsdZqxPH4GmJE3WMR7kq91tBwc1pdyWZM3/QhuLvjoYv1BPSr2965rxephUKOPECvCr/
+         aiDc7yhOLtK/qr0xGuchQMHq2xS2H5A5hPRf2jcVjuzNJ9OH0xMRod6azESbEzWw14qj
+         lmJvdtlVaK2T3PVq9KfYxZQEGqYEoEgabpzod6H4BEPNcs4uPi4BgyhYZ2w2jhgWl1q6
+         cBE8vK61hODBeeqAPyfFgn0QztHeHwZzy7TgNJ3SabshWbQmdutDeyxyU184d1ekerrj
+         8+oQ==
+X-Gm-Message-State: APjAAAWli/gw/IgZ/aR0GIOBWBACSpHplkuhddL7KXRVChWeWLulXDF6
+        Fs6LWfRQNpYsHw3ZOz/14Y4=
+X-Google-Smtp-Source: APXvYqyR6tQBxznLio5WOdQRmoOf2A1BZj5rBYROoLsitL5AXXNMcSjYGvkkUATssKixsl6iBp178A==
+X-Received: by 2002:a5b:88e:: with SMTP id e14mr7583149ybq.338.1581451113808;
+        Tue, 11 Feb 2020 11:58:33 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id y17sm2424561ywd.23.2020.02.11.11.58.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 11:58:33 -0800 (PST)
+Received: from morisot.1015granger.net (morisot.1015granger.net [192.168.1.67])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01BJwUkL018987;
+        Tue, 11 Feb 2020 19:58:31 GMT
+Subject: [PATCH v1] xprtrdma: Fix DMA scatter-gather list mapping imbalance
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     andre@tomt.net
+Cc:     robin.murphy@arm.com, linux-nfs@vger.kernel.org,
         iommu@lists.linux-foundation.org
-References: <7ee099af-e6bb-18fe-eb93-2a8abd401570@tomt.net>
- <20200211072537.GD23114@suse.de>
- <2CE039F4-3519-4481-B0E2-840D24EE4428@oracle.com>
- <ac758665-9127-9a52-4f03-49fecc5289a2@arm.com>
- <3507674A-F860-4B65-BD46-93431DD268AC@oracle.com>
- <21c801a6-9a8b-1ebb-7e41-76e8385116ea@arm.com>
- <A411A8A6-ECEF-4EAD-84A1-99A30A213D8E@oracle.com>
- <35961bac-2f1e-3fbc-9661-031b9d5acee3@arm.com>
-From:   Andre Tomt <andre@tomt.net>
-Message-ID: <55784ee1-f221-85e2-d811-b0c5821161a5@tomt.net>
-Date:   Tue, 11 Feb 2020 18:53:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Date:   Tue, 11 Feb 2020 14:58:30 -0500
+Message-ID: <158145102079.515252.3226617475691911684.stgit@morisot.1015granger.net>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-In-Reply-To: <35961bac-2f1e-3fbc-9661-031b9d5acee3@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 11.02.2020 17:36, Robin Murphy wrote:
-> On 11/02/2020 4:03 pm, Chuck Lever wrote:
->> Robin, your explanation makes sense to me. I can post a fix for this 
->> imbalance later today for Andre to try.
-> 
-> FWIW here's a quick hack which *should* suppress the concatenation 
-> behaviour - if it makes Andre's system any happier then that would 
-> indeed point towards dma_map_sg() handling being the culprit.
-> 
-> Robin.
+The @nents value that was passed to ib_dma_map_sg() has to be passed
+to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
+concatenate sg entries, it will return a different nents value than
+it was passed.
 
-This hack do indeed make things work again.
+The bug was exposed by recent changes to the AMD IOMMU driver.
 
-> ----->8-----
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index a2e96a5fd9a7..a6b71bad518e 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -779,7 +779,7 @@ static int __finalise_sg(struct device *dev, struct 
-> scatterlist *sg, int nents,
->            * - but doesn't fall at a segment boundary
->            * - and wouldn't make the resulting output segment too long
->            */
-> -        if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
-> +        if (0 && cur_len && !s_iova_off && (dma_addr & seg_mask) &&
->               (max_len - cur_len >= s_length)) {
->               /* ...then concatenate it with the previous one */
->               cur_len += s_length;
-> @@ -799,6 +799,7 @@ static int __finalise_sg(struct device *dev, struct 
-> scatterlist *sg, int nents,
->           if (s_length + s_iova_off < s_iova_len)
->               cur_len = 0;
->       }
-> +    WARN_ON(count < nents);
->       return count;
->   }
-> 
+Reported-by: Andre Tomt <andre@tomt.net>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: 1f541895dae9 ("xprtrdma: Don't defer MR recovery if ro_map fails")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/frwr_ops.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+Hey Andre, please try this out. It just reverts the bit of brokenness that
+Robin observed this morning. I've done basic testing here with Intel
+IOMMU systems, no change in behavior (ie, all good to go).
+
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 095be887753e..449bb51e4fe8 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -313,10 +313,9 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
+ 			break;
+ 	}
+ 	mr->mr_dir = rpcrdma_data_dir(writing);
++	mr->mr_nents = i;
+ 
+-	mr->mr_nents =
+-		ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir);
+-	if (!mr->mr_nents)
++	if (!ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir))
+ 		goto out_dmamap_err;
+ 
+ 	ibmr = mr->frwr.fr_mr;
+
 
