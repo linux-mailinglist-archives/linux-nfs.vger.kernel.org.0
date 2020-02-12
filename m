@@ -2,116 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1467315B001
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 19:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84C0615B070
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 20:05:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgBLSjF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Feb 2020 13:39:05 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50094 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLSjE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 13:39:04 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CIcwPD151146;
-        Wed, 12 Feb 2020 18:39:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=BweQOyuw4lAI6QOL+dq2bZ9WmNPlU41QUHb0XGgqOUs=;
- b=cFmPttuwsX7KyyGJ0mYbNzuS3gLlNRZOwJShj52gBiLW0sSWgq+33rARMsXUKFgKZ/fK
- dYaD56uQjnOnmpPAdOF5zq2F2/oN9gRAzVnPImYzo/Hs1OPmQf2nfAPSEpOoF906O40P
- ZwgvlLItWRtJy8qWI0Et3azCdI/dmhNcwLvYv3B4dxlF8VkJDGJQCZp2qcGF5iBNSFCY
- Pl8QgpmJjQ24s8kKdDajSUSMuNZ32pBOYcGaAO9aE4nl6/pNlliY6JRekEUJUyEBYajs
- 6BRvplNnsXmamST2waA4cKi3+Wm4YoLh8JG5VAwkCDXP+AReWP9kBKd5Mb518ZqGV4wp Gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2y2jx6d3bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 18:39:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CIb2gH005747;
-        Wed, 12 Feb 2020 18:39:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y4kagph5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 18:39:01 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01CId0SB019931;
-        Wed, 12 Feb 2020 18:39:00 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Feb 2020 10:39:00 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3 1/2] xprtrdma: Fix DMA scatter-gather list mapping
- imbalance
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200212182638.GA31668@ziepe.ca>
-Date:   Wed, 12 Feb 2020 13:38:59 -0500
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma@vger.kernel.org
+        id S1727264AbgBLTFV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Feb 2020 14:05:21 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44094 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727279AbgBLTFV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 14:05:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581534320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=W/eQ3uj0GsQPg4RRr9RL70X+k5xo9D46GRy0E7hWr4w=;
+        b=JghAvjeeQ4id/w5t8HJZRZq0hfqtIC/FcBzg0ObgdFS7HzRYtZChy+bEyuR4154WagM7gS
+        Q2wqVm3LL/6kwvSZDWjlmP7ETDSLZW8joAfzTj0dX+SzD7TEBjhIQrHXrAVeogdOW9dImk
+        cEDHRYxkg7OXZ90zSSLcTNJf1mDmwq0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-q25vGg5sOj2u_uPeT3vzxg-1; Wed, 12 Feb 2020 14:05:18 -0500
+X-MC-Unique: q25vGg5sOj2u_uPeT3vzxg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C9308017CC
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2020 19:05:17 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA99860BF4
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2020 19:05:16 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] gssd: Closed a memory leak in find_keytab_entry()
+Date:   Wed, 12 Feb 2020 14:05:15 -0500
+Message-Id: <20200212190515.7443-1-steved@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <F7B6A553-0355-41BF-A209-E8D73D15A6A9@oracle.com>
-References: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
- <158152394998.433502.5623790463334839091.stgit@morisot.1015granger.net>
- <20200212182638.GA31668@ziepe.ca>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002120133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002120133
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+When 'adhostoverride' is "not set", which
+is most of the time, adhostoverride is not freed.
 
-> On Feb 12, 2020, at 1:26 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
->=20
-> On Wed, Feb 12, 2020 at 11:12:30AM -0500, Chuck Lever wrote:
->> The @nents value that was passed to ib_dma_map_sg() has to be passed
->> to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
->> concatenate sg entries, it will return a different nents value than
->> it was passed.
->>=20
->> The bug was exposed by recent changes to the AMD IOMMU driver, which
->> enabled sg entry concatenation.
->>=20
->> Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
->> new memory registration API") and reviewing other kernel ULPs, it's
->> not clear that the frwr_map() logic was ever correct for this case.
->>=20
->> Reported-by: Andre Tomt <andre@tomt.net>
->> Suggested-by: Robin Murphy <robin.murphy@arm.com>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> Cc: stable@vger.kernel.org # v5.5
->> ---
->> net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
->> 1 file changed, 7 insertions(+), 6 deletions(-)
->=20
-> Yep
->=20
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ utils/gssd/krb5_util.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Thanks.
-
-Wondering if it makes sense to add a Fixes tag for the AMD IOMMU commit
-where NFS/RDMA stopped working, rather than the "Cc: stable # v5.5".
-
-Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the =
-dma-iommu api")
-
---
-Chuck Lever
-
-
+diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+index a1c43d2..85f60ae 100644
+--- a/utils/gssd/krb5_util.c
++++ b/utils/gssd/krb5_util.c
+@@ -799,7 +799,7 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
+t,
+ 	int tried_all =3D 0, tried_default =3D 0, tried_upper =3D 0;
+ 	krb5_principal princ;
+ 	const char *notsetstr =3D "not set";
+-	char *adhostoverride;
++	char *adhostoverride =3D NULL;
+=20
+=20
+ 	/* Get full target hostname */
+@@ -827,7 +827,6 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
+t,
+ 				adhostoverride);
+ 	        /* No overflow: Windows cannot handle strings longer than 19 ch=
+ars */
+ 	        strcpy(myhostad, adhostoverride);
+-		free(adhostoverride);
+ 	} else {
+ 	        strcpy(myhostad, myhostname);
+ 	        for (i =3D 0; myhostad[i] !=3D 0; ++i) {
+@@ -836,6 +835,8 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
+t,
+ 	        myhostad[i] =3D '$';
+ 	        myhostad[i+1] =3D 0;
+ 	}
++	if (adhostoverride)
++		krb5_free_string(context, adhostoverride);
+=20
+ 	if (!srchost) {
+ 		retval =3D get_full_hostname(myhostname, myhostname, sizeof(myhostname=
+));
+--=20
+2.24.1
 
