@@ -2,119 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0CA0159DDB
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 01:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3A00159E34
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 01:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBLAQi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Feb 2020 19:16:38 -0500
-Received: from mail1.ugh.no ([178.79.162.34]:46522 "EHLO mail1.ugh.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbgBLAQi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:16:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail1.ugh.no (Postfix) with ESMTP id 987DF24EA99;
-        Wed, 12 Feb 2020 01:16:36 +0100 (CET)
-Received: from mail1.ugh.no ([127.0.0.1])
-        by localhost (catastrophix.ugh.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8BqjRa5j_czg; Wed, 12 Feb 2020 01:16:35 +0100 (CET)
-Received: from [10.255.64.11] (unknown [185.176.245.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: andre@tomt.net)
-        by mail.ugh.no (Postfix) with ESMTPSA id 7E26F24EA64;
-        Wed, 12 Feb 2020 01:16:35 +0100 (CET)
-Subject: Re: [PATCH v1] xprtrdma: Fix DMA scatter-gather list mapping
- imbalance
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     robin.murphy@arm.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        iommu@lists.linux-foundation.org
-References: <158145102079.515252.3226617475691911684.stgit@morisot.1015granger.net>
- <8781b043-74a6-4ee0-d1c9-46f797b4aec2@tomt.net>
- <DC2EEB01-5C19-4FB5-B103-D9ADF09E07FA@oracle.com>
-From:   Andre Tomt <andre@tomt.net>
-Message-ID: <a8789f8a-9574-b032-3f6c-8d2d2ee74b34@tomt.net>
-Date:   Wed, 12 Feb 2020 01:16:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728070AbgBLAmb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Feb 2020 19:42:31 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36186 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgBLAmb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Feb 2020 19:42:31 -0500
+Received: by mail-yw1-f67.google.com with SMTP id n184so291177ywc.3
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Feb 2020 16:42:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=iMSjYhzXzueiRRiZRJ0/K7wWQ1ju/m8cEmLVXYoj/Iw=;
+        b=cRGcB3oEfoOdkJ4MW9so9HIBislv/Vq8XT3VaQ4b1vOvjdNmY5XknL3vxxLN6KOEmj
+         JOddMznRD9F0ItaeotAl2MwTreaH/6SS25BDDjLyGymtHGFWkEIhteSKt3GaEQNwVJxz
+         NNyZ4bZRFM/gdRMJj2OymHwcq1Nk4q3of6BsSYTvH6OYQInKqChW3OhaAemoFCOp496w
+         0G8epSpSBtCFlWiWJTkb9+zaV/rSXTQZ0Cr3cPNm2MdpY/7PZuIyOLQ+lhXRgP9Koncg
+         WJIBeh82gzRjCPhRlm3hp3dxtCxF2FCylZdzB2csK/AmySvkbgnu/2RuVI5qSR8QufPL
+         udGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=iMSjYhzXzueiRRiZRJ0/K7wWQ1ju/m8cEmLVXYoj/Iw=;
+        b=Uk6/VJ7JGk8OMUaOwW1bhMTZ/eyfXoRTxVNMCcmbdO4RJzHYmD+eeeCIR+L6Z4Wazj
+         nHraGpM1p+JCexG53eUEFVFxDyUogXGkw8cavK/gGBFzI+OHsOsCrTrl7BpkEvsrhGR0
+         NaI4HGi1oE0Gv0RmLrHroVdxTTpf79hzALTsOYjxvW46RRg6HSo4JVgtamQJrl+g3Woo
+         vuVeL3qN67Y+iP7DdPRu9U+8P+M8lDQXb635RUAt6RQBnDzd6SIA1Hy/iF3IukvGWXB4
+         6Pzc9iKmQX/9WFjERzckNf9PcK6qWPdi6KS5qzps9GD7PP8IOk5IT7mTJ7NIunOORK5J
+         GOBw==
+X-Gm-Message-State: APjAAAXKjGN8/vXHktBAGJafnCkKFCCEl8A4JzpJULe787OgG8xs1nnM
+        dCRBJaDwkazYJGq2HLUe8zwDyoj4
+X-Google-Smtp-Source: APXvYqzycxJOQ2WBIXSkJ1cC5Dt2Hf6xQ2C107sKKg8wyxMR1MkhavdknUx3x4i0Md32Qib+sbE2zQ==
+X-Received: by 2002:a0d:caca:: with SMTP id m193mr7608677ywd.135.1581468150497;
+        Tue, 11 Feb 2020 16:42:30 -0800 (PST)
+Received: from bazille.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id g190sm2599708ywd.85.2020.02.11.16.42.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 16:42:29 -0800 (PST)
+Subject: [PATCH RFC 0/3] Prepare NFS server for RPC-on-TLS
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 11 Feb 2020 19:42:28 -0500
+Message-ID: <20200212003607.2305.38250.stgit@bazille.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <DC2EEB01-5C19-4FB5-B103-D9ADF09E07FA@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 11.02.2020 23:00, Chuck Lever wrote:
-> Hi Andre, thanks for trying this out.
-> 
->> On Feb 11, 2020, at 3:50 PM, Andre Tomt <andre@tomt.net> wrote:
->>
->> On 11.02.2020 20:58, Chuck Lever wrote:
->>> The @nents value that was passed to ib_dma_map_sg() has to be passed
->>> to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
->>> concatenate sg entries, it will return a different nents value than
->>> it was passed.
->>> The bug was exposed by recent changes to the AMD IOMMU driver.
->>
->> This seems to fail differently on my system; mount fails with:
->> mount.nfs: mount system call failed
->>
->> and the kernel log reports:
->> [   38.890344] NFS: Registering the id_resolver key type
->> [   38.890351] Key type id_resolver registered
->> [   38.890352] Key type id_legacy registered
->> [   38.901799] NFS: nfs4_discover_server_trunking unhandled error -5. Exiting with error EIO
->> [   38.901817] NFS4: Couldn't follow remote path
->>
->> amd_iommu=off still works
->>
->> One detail I accidentally left out of the original report is that the server (intel system) is running Ubuntu 20.04 ("beta") userspace, and AMD clients are Ubuntu 19.10 userspace. Although I dont believe this to matter at this point.
-> 
-> Next thing to try:
-> 
-> # trace-cmd record -e sunrpc -e rpcrdma
-> 
-> then issue the mount command. Once it completes, ^C the trace-cmd and send me trace.dat.
-> 
-> Try this with both the v5.4 kernel and the v5.5 kernel (and note that trace-cmd overwrites trace.dat, so copy it out between tests).
+The following series implements changes to the Linux NFS server's
+socket transport that are pre-requisite to supporting RPC on TLS.
+The socket transport is made to use the iov_iter-based kernel
+socket APIs. These changes are modeled after similar changes made
+to the NFS client-side socket transport.
 
-I've uploaded them to https://tomt.net/temp/rdmaiommubug/
-I'll probably do a 5.5.3 with the v1 fix as well, should show up 
-momentarily.
+This is a draft patch series. I have tried it out and it is working,
+but as it has changed only the Reply-send side, it is incomplete.
+This posting is a request for comments -- show your work.
 
->>> Reported-by: Andre Tomt <andre@tomt.net>
->>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
->>> Fixes: 1f541895dae9 ("xprtrdma: Don't defer MR recovery if ro_map fails")
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> ---
->>>   net/sunrpc/xprtrdma/frwr_ops.c |    5 ++---
->>>   1 file changed, 2 insertions(+), 3 deletions(-)
->>> Hey Andre, please try this out. It just reverts the bit of brokenness that
->>> Robin observed this morning. I've done basic testing here with Intel
->>> IOMMU systems, no change in behavior (ie, all good to go).
->>> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
->>> index 095be887753e..449bb51e4fe8 100644
->>> --- a/net/sunrpc/xprtrdma/frwr_ops.c
->>> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
->>> @@ -313,10 +313,9 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
->>>   			break;
->>>   	}
->>>   	mr->mr_dir = rpcrdma_data_dir(writing);
->>> +	mr->mr_nents = i;
->>>   -	mr->mr_nents =
->>> -		ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir);
->>> -	if (!mr->mr_nents)
->>> +	if (!ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir))
->>>   		goto out_dmamap_err;
->>>     	ibmr = mr->frwr.fr_mr;
->>
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
+One additional change I might make in this series is moving the
+xpt_mutex into the socket sendto methods. This is because the
+RDMA sendto method doesn't appear to require serialization. That
+is still down the road.
 
+
+---
+
+Chuck Lever (3):
+      SUNRPC: Move xs_stream_record_marker
+      SUNRPC: Refactor xs_sendpages()
+      SUNRPC: Teach server to use xprt_sock_sendmsg for socket sends
+
+
+ include/linux/sunrpc/msg_prot.h |   13 ++
+ include/linux/sunrpc/svcauth.h  |    1 
+ include/linux/sunrpc/xdr.h      |   14 ---
+ net/sunrpc/socklib.c            |  136 ++++++++++++++++++++++++++
+ net/sunrpc/socklib.h            |   15 +++
+ net/sunrpc/sunrpc.h             |    4 -
+ net/sunrpc/svc.c                |    4 -
+ net/sunrpc/svcsock.c            |  203 +++++++++++++--------------------------
+ net/sunrpc/xprtsock.c           |  203 ++++++---------------------------------
+ 9 files changed, 261 insertions(+), 332 deletions(-)
+ create mode 100644 net/sunrpc/socklib.h
+
+--
+Chuck Lever
