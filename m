@@ -2,92 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84C0615B070
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 20:05:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF75E15B074
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 20:05:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgBLTFV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Feb 2020 14:05:21 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44094 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbgBLTFV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 14:05:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581534320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=W/eQ3uj0GsQPg4RRr9RL70X+k5xo9D46GRy0E7hWr4w=;
-        b=JghAvjeeQ4id/w5t8HJZRZq0hfqtIC/FcBzg0ObgdFS7HzRYtZChy+bEyuR4154WagM7gS
-        Q2wqVm3LL/6kwvSZDWjlmP7ETDSLZW8joAfzTj0dX+SzD7TEBjhIQrHXrAVeogdOW9dImk
-        cEDHRYxkg7OXZ90zSSLcTNJf1mDmwq0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-q25vGg5sOj2u_uPeT3vzxg-1; Wed, 12 Feb 2020 14:05:18 -0500
-X-MC-Unique: q25vGg5sOj2u_uPeT3vzxg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C9308017CC
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2020 19:05:17 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA99860BF4
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2020 19:05:16 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] gssd: Closed a memory leak in find_keytab_entry()
-Date:   Wed, 12 Feb 2020 14:05:15 -0500
-Message-Id: <20200212190515.7443-1-steved@redhat.com>
+        id S1728912AbgBLTFr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Feb 2020 14:05:47 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43921 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLTFr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 14:05:47 -0500
+Received: by mail-qk1-f195.google.com with SMTP id p7so3128554qkh.10
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2020 11:05:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w4G1fGaYP4+ma5X8EybpeonMeudVB3EgYSs9cW8S8CY=;
+        b=K7KZ/fmPhvM5osH9s/RrtnnBbNJWU2qkR1QKVMqB+pqbw+bvkl/YBmD1uGOFYIWVwR
+         9rrZ2QiHUgGN1BOSoXyczqrkAAsqRs0bY1k6jZuonRFUkgrn7wY8iWcdqY4JekYNMYSK
+         RCavA7MGaYa646AcltF8x16LC196y9bGHepNUzl7CX7eMoZwg1Y77sAVGaIvtznO9nTn
+         FMTqhbVEZ/dLgonr42it9labFt2OnKo7epIhsuTc8GiIWap+HV5nYuCIKvsZgVP9Yyg/
+         7Q72OY11LQUEEQt4PQVD1Ys0KLA4sGqMkRzKOquhTKOivR7eGJnm/6xDHZ2gVnfinh3U
+         +kzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w4G1fGaYP4+ma5X8EybpeonMeudVB3EgYSs9cW8S8CY=;
+        b=rhr0NT9aRVouZv/EwfPG81DAPPW4Li4HUZUMYyMhyKERg5l1uHWJWwUzuhMOcB475q
+         w/UpfjrzlAnGDGKI/MS/E043TQ3w9Q9Lt94N2QhhUSiQ8V/4OhNB75l8Qvsa1jIT1Ahc
+         amI5LUEu9uBXvnes0uR/cQprwSLgGtPxvn60vF5g/OqvRHKF1ZAmjppltGq+LkUHwU+O
+         W525b3kfOTKRdK7gWJbct5vYaU2vyp3ZyfaOQePMTBVLVpn9UM+DXDPWcV5y2yi6Ucl5
+         OmeJkuMSRZ7WW2rZD8vDXqSce1GB/t4SvNVjthyVFqaDL2GeU0moMbGe91K1EFrh6df7
+         SasA==
+X-Gm-Message-State: APjAAAVj8lMuUga2mMBpjnBKYWzly4Mtjv226nISMSeJ2+QlJ4aP2TlD
+        Claf2C9LnyT3zOqAZ+j0p+/SEg==
+X-Google-Smtp-Source: APXvYqzHZm01/57tV3hpprip6LOvRIlZu7Abneb1XxI6C4oE6DeZbAfG00uE2/OXnVQpB6O57a549w==
+X-Received: by 2002:a37:bfc5:: with SMTP id p188mr11128492qkf.283.1581534346638;
+        Wed, 12 Feb 2020 11:05:46 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id q5sm712746qkf.14.2020.02.12.11.05.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 11:05:46 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j1xKT-0001K6-M5; Wed, 12 Feb 2020 15:05:45 -0400
+Date:   Wed, 12 Feb 2020 15:05:45 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] xprtrdma: Fix DMA scatter-gather list mapping
+ imbalance
+Message-ID: <20200212190545.GB31668@ziepe.ca>
+References: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
+ <158152394998.433502.5623790463334839091.stgit@morisot.1015granger.net>
+ <20200212182638.GA31668@ziepe.ca>
+ <F7B6A553-0355-41BF-A209-E8D73D15A6A9@oracle.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F7B6A553-0355-41BF-A209-E8D73D15A6A9@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When 'adhostoverride' is "not set", which
-is most of the time, adhostoverride is not freed.
+On Wed, Feb 12, 2020 at 01:38:59PM -0500, Chuck Lever wrote:
+> 
+> > On Feb 12, 2020, at 1:26 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > 
+> > On Wed, Feb 12, 2020 at 11:12:30AM -0500, Chuck Lever wrote:
+> >> The @nents value that was passed to ib_dma_map_sg() has to be passed
+> >> to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
+> >> concatenate sg entries, it will return a different nents value than
+> >> it was passed.
+> >> 
+> >> The bug was exposed by recent changes to the AMD IOMMU driver, which
+> >> enabled sg entry concatenation.
+> >> 
+> >> Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
+> >> new memory registration API") and reviewing other kernel ULPs, it's
+> >> not clear that the frwr_map() logic was ever correct for this case.
+> >> 
+> >> Reported-by: Andre Tomt <andre@tomt.net>
+> >> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> >> Cc: stable@vger.kernel.org # v5.5
+> >> net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
+> >> 1 file changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > Yep
+> > 
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> Thanks.
+> 
+> Wondering if it makes sense to add a Fixes tag for the AMD IOMMU commit
+> where NFS/RDMA stopped working, rather than the "Cc: stable # v5.5".
+> 
+> Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api")
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- utils/gssd/krb5_util.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Not really, this was broken for other configurations besides AMD
 
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index a1c43d2..85f60ae 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -799,7 +799,7 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
-t,
- 	int tried_all =3D 0, tried_default =3D 0, tried_upper =3D 0;
- 	krb5_principal princ;
- 	const char *notsetstr =3D "not set";
--	char *adhostoverride;
-+	char *adhostoverride =3D NULL;
-=20
-=20
- 	/* Get full target hostname */
-@@ -827,7 +827,6 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
-t,
- 				adhostoverride);
- 	        /* No overflow: Windows cannot handle strings longer than 19 ch=
-ars */
- 	        strcpy(myhostad, adhostoverride);
--		free(adhostoverride);
- 	} else {
- 	        strcpy(myhostad, myhostname);
- 	        for (i =3D 0; myhostad[i] !=3D 0; ++i) {
-@@ -836,6 +835,8 @@ find_keytab_entry(krb5_context context, krb5_keytab k=
-t,
- 	        myhostad[i] =3D '$';
- 	        myhostad[i+1] =3D 0;
- 	}
-+	if (adhostoverride)
-+		krb5_free_string(context, adhostoverride);
-=20
- 	if (!srchost) {
- 		retval =3D get_full_hostname(myhostname, myhostname, sizeof(myhostname=
-));
---=20
-2.24.1
-
+Jason 
