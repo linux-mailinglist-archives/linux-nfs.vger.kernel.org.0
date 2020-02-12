@@ -2,59 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3591215ACE7
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 17:12:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9109015ACEA
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2020 17:12:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBLQMe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Feb 2020 11:12:34 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43334 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLQMe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 11:12:34 -0500
-Received: by mail-yw1-f67.google.com with SMTP id f204so1079408ywc.10;
-        Wed, 12 Feb 2020 08:12:33 -0800 (PST)
+        id S1727429AbgBLQMk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Feb 2020 11:12:40 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:45440 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLQMj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Feb 2020 11:12:39 -0500
+Received: by mail-yw1-f65.google.com with SMTP id a125so1076067ywe.12;
+        Wed, 12 Feb 2020 08:12:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=jkVD74TOI8uxcLB4a4v8Z5S2OlpN0NYU3g2ZixiN5wg=;
-        b=oSvknZ1nCr42GGZ80TatTRSOJ3k+W4kt+GuUFTzPwDAckqRbFw5ghJ+jbyYnKRSzSk
-         SVTFErrNHjVYlCYY4f4sFpV8nVga/dQzSpAFqv76Mxex2w9YQX2YS5Gp0A+nS3oHirjy
-         G/kg/oh+iidtrZZBYrJF6222wMPeRZpEf5ZL1XKBofBPt+EUMIF6t5Ie2+3J2f15JGL6
-         PNfDV9dcSTC5nhZHKD0M4BuXrsacIWSNopgOS0pSyD2N/kHLznXhTRVA0TsLZqs7JSzq
-         W+t8lU5s9KtvcGlJGG29ssVllIFU8kOx9ZP/kSGr67dECNI3S3ryv+i2TFeHcIFjfK/Z
-         Rubg==
+        bh=vdwBZ4Z61PIBVXZVwRCtKpuVjna7R7fsVMIFx193trk=;
+        b=RyNrF+geaRYORX7ys/8N+WU0UzaNRJFK5KYzpLaWS/mxs0sajVNkmIXYdb55budWdE
+         uLC4X5qul5UPL+jG+NWv48mNLiLQqQeAkn3An3oOPiQibLRUCcrC2CtHCYoQD6SymVfA
+         8OPsERjSC5ltoCTGKYtrlhuzbLBzu4ZrmSBudXHCGI6VQ6pQdBIwqcLyjrE6Wf+WQ4rL
+         hIYZ+4/k6Xb3zirZOq0+3XI/v+DfrlLauQYc3al2YYeflnAkFTeRLQQCBOa/7zVbD+Jw
+         nfPN/AgTwAgF+HfzLbzIwO9GColz4tJ+CeuU/SvUC8sDlBQQt/OKrvYI4DXX7zD7ACXX
+         2Cog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=jkVD74TOI8uxcLB4a4v8Z5S2OlpN0NYU3g2ZixiN5wg=;
-        b=EO3QAl2LI2idcl39AfC7R+0GVgUezx6a7BtOZ9C0sQg1L5Do3JXWmgRI9dmPGs1uF9
-         KuAEZcqEfu7uN1wMM/QWu9KaMpzmabj15yiNeW7zpzI/70yZoT2JfnP8yUmIisXTYeI1
-         yUuJPwuh7QNjxoVsDOAFvLmbv4tWkBRZt9DdmIRuo4QyIIqu5N8assC5aOCyMWXTewwX
-         PjpJcJ21YgcvWYZ0/WxXyHyeAC7qQ5auJVMLzalZIu4QDZIWMnalFTYA7Ewcffim0sgR
-         y7XjXU+4rHOMkkg7LkFrojTSPMm2FG76MPtXTYnjGsgZqXK4k789Y1Ad3BfguTYCszHO
-         N81A==
-X-Gm-Message-State: APjAAAXpZlU7ucXDrH+b+9mXh9oSIRjmfdaBQjap8UONNefRmyBp/dNj
-        Zj4VBFdXGFjGBh1p5fJ+GCnT/H9V
-X-Google-Smtp-Source: APXvYqzzYAbqK66kHxLemlbcOn3i8z89g4zHix7n7lxgNXexbnsBdg5Y3cUXXxmx36VX08rpBvy/cw==
-X-Received: by 2002:a81:6c04:: with SMTP id h4mr11175385ywc.431.1581523953280;
-        Wed, 12 Feb 2020 08:12:33 -0800 (PST)
+        bh=vdwBZ4Z61PIBVXZVwRCtKpuVjna7R7fsVMIFx193trk=;
+        b=Nw0ciXftqOXV5q+0wEKUPA7xBSMvJRN7DamU+rGoJaf1AwKnQDjCz/CIhlr7uHO4g5
+         IkuP1jpXRYQqXIuBRPTqHwMXw0s6MdKdERLaIHYux72C6ikV8+RJBDpwLgX4yOpR2g7B
+         bgD1X+a34D66jvGHqW12bJYbNyIYVd9/vUJ7AJV1l9MqcNjgG1DCN5u2Sod0aZ9mY7NQ
+         GrPKzDB5YkycmBjCgSnqwd7+abycl3wkuraN2KZl0TTLCE25Vg207xUncPPF4q8fg63u
+         hCTFAWkb3tr4NsD+9Xv9EcruSie2RcRmg0hPS702pzDxBpYDYF3ZHxv9nDR7sGYuVWbe
+         i9WA==
+X-Gm-Message-State: APjAAAW53sUuFkseYqHTNgfawBUc+wCYRGspoNSNJS2xjUzBwEkBwx4I
+        PGU0ZPFbrWo1RK6N0x/fNdNQPp10
+X-Google-Smtp-Source: APXvYqzGjVScRHOodUyAHQzqeVxypWtOUzQ4Y13WGOSYSBTwqhUHbu1tZ/JtBvaR6Lh67L5zPmunRg==
+X-Received: by 2002:a81:6d17:: with SMTP id i23mr10983519ywc.58.1581523958216;
+        Wed, 12 Feb 2020 08:12:38 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id q62sm355660ywg.76.2020.02.12.08.12.30
+        by smtp.gmail.com with ESMTPSA id s3sm401856ywf.22.2020.02.12.08.12.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Feb 2020 08:12:30 -0800 (PST)
+        Wed, 12 Feb 2020 08:12:36 -0800 (PST)
 Received: from morisot.1015granger.net (morisot.1015granger.net [192.168.1.67])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01CGCUdb022126;
-        Wed, 12 Feb 2020 16:12:30 GMT
-Subject: [PATCH v3 1/2] xprtrdma: Fix DMA scatter-gather list mapping
- imbalance
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01CGCZnM022129;
+        Wed, 12 Feb 2020 16:12:35 GMT
+Subject: [PATCH v3 2/2] xprtrdma: Enhance MR-related trace points
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Wed, 12 Feb 2020 11:12:30 -0500
-Message-ID: <158152394998.433502.5623790463334839091.stgit@morisot.1015granger.net>
+Date:   Wed, 12 Feb 2020 11:12:35 -0500
+Message-ID: <158152395507.433502.11812960451539625240.stgit@morisot.1015granger.net>
 In-Reply-To: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
 References: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
 User-Agent: StGit/0.19
@@ -66,61 +65,207 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The @nents value that was passed to ib_dma_map_sg() has to be passed
-to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
-concatenate sg entries, it will return a different nents value than
-it was passed.
+Two changes:
+- Show the number of SG entries that were mapped. This helps debug
+  DMA-related problems.
+- Record the MR's resource ID instead of its memory address. This
+  groups each MR with its associated rdma-tool output, and reduces
+  needless exposure of memory addresses.
 
-The bug was exposed by recent changes to the AMD IOMMU driver, which
-enabled sg entry concatenation.
-
-Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
-new memory registration API") and reviewing other kernel ULPs, it's
-not clear that the frwr_map() logic was ever correct for this case.
-
-Reported-by: Andre Tomt <andre@tomt.net>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org # v5.5
 ---
- net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ include/trace/events/rpcrdma.h |   56 +++++++++++++++++++++-------------------
+ net/sunrpc/xprtrdma/frwr_ops.c |    2 +
+ 2 files changed, 31 insertions(+), 27 deletions(-)
 
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index c0e4c93324f5..87f4461ab108 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -228,20 +228,20 @@ DECLARE_EVENT_CLASS(xprtrdma_frwr_done,
+ 	TP_ARGS(wc, frwr),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
+ 		__field(unsigned int, status)
+ 		__field(unsigned int, vendor_err)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = container_of(frwr, struct rpcrdma_mr, frwr);
++		__entry->mr_id = frwr->fr_mr->res.id;
+ 		__entry->status = wc->status;
+ 		__entry->vendor_err = __entry->status ? wc->vendor_err : 0;
+ 	),
+ 
+ 	TP_printk(
+-		"mr=%p: %s (%u/0x%x)",
+-		__entry->mr, rdma_show_wc_status(__entry->status),
++		"mr.id=%u: %s (%u/0x%x)",
++		__entry->mr_id, rdma_show_wc_status(__entry->status),
+ 		__entry->status, __entry->vendor_err
+ 	)
+ );
+@@ -274,7 +274,8 @@ DECLARE_EVENT_CLASS(xprtrdma_mr,
+ 	TP_ARGS(mr),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
++		__field(int, nents)
+ 		__field(u32, handle)
+ 		__field(u32, length)
+ 		__field(u64, offset)
+@@ -282,15 +283,16 @@ DECLARE_EVENT_CLASS(xprtrdma_mr,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = mr;
++		__entry->mr_id  = mr->frwr.fr_mr->res.id;
++		__entry->nents  = mr->mr_nents;
+ 		__entry->handle = mr->mr_handle;
+ 		__entry->length = mr->mr_length;
+ 		__entry->offset = mr->mr_offset;
+ 		__entry->dir    = mr->mr_dir;
+ 	),
+ 
+-	TP_printk("mr=%p %u@0x%016llx:0x%08x (%s)",
+-		__entry->mr, __entry->length,
++	TP_printk("mr.id=%u nents=%d %u@0x%016llx:0x%08x (%s)",
++		__entry->mr_id, __entry->nents, __entry->length,
+ 		(unsigned long long)__entry->offset, __entry->handle,
+ 		xprtrdma_show_direction(__entry->dir)
+ 	)
+@@ -920,17 +922,17 @@ TRACE_EVENT(xprtrdma_frwr_alloc,
+ 	TP_ARGS(mr, rc),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
+ 		__field(int, rc)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = mr;
+-		__entry->rc	= rc;
++		__entry->mr_id = mr->frwr.fr_mr->res.id;
++		__entry->rc = rc;
+ 	),
+ 
+-	TP_printk("mr=%p: rc=%d",
+-		__entry->mr, __entry->rc
++	TP_printk("mr.id=%u: rc=%d",
++		__entry->mr_id, __entry->rc
+ 	)
+ );
+ 
+@@ -943,7 +945,8 @@ TRACE_EVENT(xprtrdma_frwr_dereg,
+ 	TP_ARGS(mr, rc),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
++		__field(int, nents)
+ 		__field(u32, handle)
+ 		__field(u32, length)
+ 		__field(u64, offset)
+@@ -952,7 +955,8 @@ TRACE_EVENT(xprtrdma_frwr_dereg,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = mr;
++		__entry->mr_id  = mr->frwr.fr_mr->res.id;
++		__entry->nents  = mr->mr_nents;
+ 		__entry->handle = mr->mr_handle;
+ 		__entry->length = mr->mr_length;
+ 		__entry->offset = mr->mr_offset;
+@@ -960,8 +964,8 @@ TRACE_EVENT(xprtrdma_frwr_dereg,
+ 		__entry->rc	= rc;
+ 	),
+ 
+-	TP_printk("mr=%p %u@0x%016llx:0x%08x (%s): rc=%d",
+-		__entry->mr, __entry->length,
++	TP_printk("mr.id=%u nents=%d %u@0x%016llx:0x%08x (%s): rc=%d",
++		__entry->mr_id, __entry->nents, __entry->length,
+ 		(unsigned long long)__entry->offset, __entry->handle,
+ 		xprtrdma_show_direction(__entry->dir),
+ 		__entry->rc
+@@ -977,21 +981,21 @@ TRACE_EVENT(xprtrdma_frwr_sgerr,
+ 	TP_ARGS(mr, sg_nents),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
+ 		__field(u64, addr)
+ 		__field(u32, dir)
+ 		__field(int, nents)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = mr;
++		__entry->mr_id = mr->frwr.fr_mr->res.id;
+ 		__entry->addr = mr->mr_sg->dma_address;
+ 		__entry->dir = mr->mr_dir;
+ 		__entry->nents = sg_nents;
+ 	),
+ 
+-	TP_printk("mr=%p dma addr=0x%llx (%s) sg_nents=%d",
+-		__entry->mr, __entry->addr,
++	TP_printk("mr.id=%u DMA addr=0x%llx (%s) sg_nents=%d",
++		__entry->mr_id, __entry->addr,
+ 		xprtrdma_show_direction(__entry->dir),
+ 		__entry->nents
+ 	)
+@@ -1006,7 +1010,7 @@ TRACE_EVENT(xprtrdma_frwr_maperr,
+ 	TP_ARGS(mr, num_mapped),
+ 
+ 	TP_STRUCT__entry(
+-		__field(const void *, mr)
++		__field(u32, mr_id)
+ 		__field(u64, addr)
+ 		__field(u32, dir)
+ 		__field(int, num_mapped)
+@@ -1014,15 +1018,15 @@ TRACE_EVENT(xprtrdma_frwr_maperr,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->mr = mr;
++		__entry->mr_id = mr->frwr.fr_mr->res.id;
+ 		__entry->addr = mr->mr_sg->dma_address;
+ 		__entry->dir = mr->mr_dir;
+ 		__entry->num_mapped = num_mapped;
+ 		__entry->nents = mr->mr_nents;
+ 	),
+ 
+-	TP_printk("mr=%p dma addr=0x%llx (%s) nents=%d of %d",
+-		__entry->mr, __entry->addr,
++	TP_printk("mr.id=%u DMA addr=0x%llx (%s) nents=%d of %d",
++		__entry->mr_id, __entry->addr,
+ 		xprtrdma_show_direction(__entry->dir),
+ 		__entry->num_mapped, __entry->nents
+ 	)
+@@ -1031,7 +1035,7 @@ TRACE_EVENT(xprtrdma_frwr_maperr,
+ DEFINE_MR_EVENT(localinv);
+ DEFINE_MR_EVENT(map);
+ DEFINE_MR_EVENT(unmap);
+-DEFINE_MR_EVENT(remoteinv);
++DEFINE_MR_EVENT(reminv);
+ DEFINE_MR_EVENT(recycle);
+ 
+ TRACE_EVENT(xprtrdma_dma_maperr,
 diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 095be887753e..125297c9aa3e 100644
+index 125297c9aa3e..0dc799553a08 100644
 --- a/net/sunrpc/xprtrdma/frwr_ops.c
 +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -288,8 +288,8 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
- {
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	struct ib_reg_wr *reg_wr;
-+	int i, n, dma_nents;
- 	struct ib_mr *ibmr;
--	int i, n;
- 	u8 key;
- 
- 	if (nsegs > ia->ri_max_frwr_depth)
-@@ -313,15 +313,16 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
- 			break;
- 	}
- 	mr->mr_dir = rpcrdma_data_dir(writing);
-+	mr->mr_nents = i;
- 
--	mr->mr_nents =
--		ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir);
--	if (!mr->mr_nents)
-+	dma_nents = ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, mr->mr_nents,
-+				  mr->mr_dir);
-+	if (!dma_nents)
- 		goto out_dmamap_err;
- 
- 	ibmr = mr->frwr.fr_mr;
--	n = ib_map_mr_sg(ibmr, mr->mr_sg, mr->mr_nents, NULL, PAGE_SIZE);
--	if (unlikely(n != mr->mr_nents))
-+	n = ib_map_mr_sg(ibmr, mr->mr_sg, dma_nents, NULL, PAGE_SIZE);
-+	if (n != dma_nents)
- 		goto out_mapmr_err;
- 
- 	ibmr->iova &= 0x00000000ffffffff;
+@@ -419,7 +419,7 @@ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs)
+ 	list_for_each_entry(mr, mrs, mr_list)
+ 		if (mr->mr_handle == rep->rr_inv_rkey) {
+ 			list_del_init(&mr->mr_list);
+-			trace_xprtrdma_mr_remoteinv(mr);
++			trace_xprtrdma_mr_reminv(mr);
+ 			rpcrdma_mr_put(mr);
+ 			break;	/* only one invalidated MR per RPC */
+ 		}
 
 
