@@ -2,107 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5689715B691
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2020 02:20:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 822CF15C067
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2020 15:33:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgBMBUX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Feb 2020 20:20:23 -0500
-Received: from mail-co1nam11on2118.outbound.protection.outlook.com ([40.107.220.118]:62399
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729285AbgBMBUX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:20:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VvAhEuKrvRKtEgKIyWsZ31qMr2DR4sv38PuxaN9MqFslcLz6RkFs+EWYylxF6aSSafFfJNNfHBcnXUyfltsk56VaJV+M+Mj+JX5hz53YZ18oFpgbMvoqn2iijYjP8ZjzNGr/9IILd1HhRCsMo+bBDU7qiuZi5xREQTUNZ9GR7jSxHkFXB23fEr/MuiGt3GmDsMPsxciukpkDZSgElMCoH+CQsNgoqUwKCIpt14upVzRtW6JEtdcJHPx9z3S7OE893G/F3lJYgZPO5KRnz2oHHrUUQBX2gJ/OUcB5Q6j1jrJeok1m3QXczec3YWRKa45mK64KsYDU0vQxFzUqfwRBvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8v9/LMGk1FVhVqiWy9dqiPjqGU8J8BVEYs0MlWZs8dk=;
- b=YCRy9tWWi/dsYomOsDXMdYo10ScuoAnHi1/khwfo9wbEO74HPQMGN/6ze9IP8UZNslF0buqkmdfhvq5niQH0g1z51pLF3g8p0rOAa7SjaZE/9rq4ucZzrIRqufw20xFsn3v5qvHnf0w6kGOx79sNe9s+5uFtFaNaDb+ZSgu15UR2u/J7Idg0sUQv7QVBVn1hl1ixQiy2yRgW8eBrK0D1bXXElHRHlxr42dBKlD4vqEwGrIOCax7lnjnMm1AxEnWsPkkCpn/+ZpAyJrPcMZRIvj3B3QJF1ETsliOa47ocsBH+S6N7BWHOpxKc/FCbyqAF69Ub7ALrQNidPEc86YBGTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8v9/LMGk1FVhVqiWy9dqiPjqGU8J8BVEYs0MlWZs8dk=;
- b=MnJAI2RCkacLTCLcAF39kbwC9MM1hb+iT2dXQVwJVkcXXoqe91M/k/c+eSZNMM1F1ebyqUQALcyc+xffNaxiB6DeHdWh1+Ki9brbdSS+UGrUO7jE4MUYQ3mcIN5uDMRlKiXFR8EZLd7OTiGdUTVRUkXKAFgmwdodswJTz9YV2A8=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB1916.namprd13.prod.outlook.com (10.174.184.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.19; Thu, 13 Feb 2020 01:20:19 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2729.021; Thu, 13 Feb 2020
- 01:20:18 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] NFSv4.1 make cachethis=no for writes
-Thread-Topic: [PATCH 1/1] NFSv4.1 make cachethis=no for writes
-Thread-Index: AQHV4fRHVsJ+k0cOdk+k1i7+jS/KCKgYU5eA
-Date:   Thu, 13 Feb 2020 01:20:18 +0000
-Message-ID: <bc76215b9d72ebb6c9571f27c7ba79fbaa753c6a.camel@hammerspace.com>
-References: <20200212223212.14638-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20200212223212.14638-1-olga.kornievskaia@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7d0a9f5-469e-4364-3518-08d7b022e398
-x-ms-traffictypediagnostic: DM5PR1301MB1916:
-x-microsoft-antispam-prvs: <DM5PR1301MB1916DAA498015358B7E3553AB81A0@DM5PR1301MB1916.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(396003)(366004)(346002)(376002)(189003)(199004)(478600001)(71200400001)(2616005)(81166006)(8676002)(6506007)(26005)(8936002)(81156014)(5660300002)(86362001)(66446008)(64756008)(66556008)(66476007)(186003)(76116006)(91956017)(4326008)(66946007)(2906002)(6512007)(110136005)(36756003)(6486002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1916;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fiaMO2+J7OMzaJlRK+h+7hsUvHsanO4bX/Wikqy7cXLplPJUKHPOkEIlEi5Zq2K5hZwwUNFnnPMZa/asiwYHTTmaB8Q1c1CCFaf4+6CXly7DoFY6DtTLmv4jn8s7Fh4KbgYRwg6VZitDe3rhDVSQpWyMecyk3LsoBqvPFncOezB83bNhs3NpuoqY2HXnlBNkpZzpLP7Xk3R34JNUQbeaJP2gZO0CWer5IBUWp2groziEqe6oORmmmqoLB0gPuzJaABFTV9r+a9991/7AQuJAExZrzfiYvbwaWVeSnMUyhKdmshIkFOskVMztVFGK6yQ5M/dH2Px2G5hQaYI7qKTYf8t43PVr8NuFA+hvC3AlnPv/DUFbDFDQBPnSwje5eDSOwHtwNGKkCQLP8xeOVwp8nrmOsmtJGoKUPKfymCNj9iDDjWFWU7ASd6vcJN43jXtk
-x-ms-exchange-antispam-messagedata: uSDzPOhlg8EhKvA/2TNZLzY2cRl1DhjI5u7avdUmsj5NgjjdY/llZvL4wYw5LMPUpcgicwqix+6zENQIV7HV5fbwNbiPLw4F1zuEea9vvz+lrpq6PyDvHUVW6YH9mf9gDHtL+woN+VizogRLxhFzVA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BBFB09A1127B6042A26A7629DC862590@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7d0a9f5-469e-4364-3518-08d7b022e398
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 01:20:18.8025
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J/ENEg0sgkINbdp3tpqJa7Jt4C3u1PNaTx5HcHb3WlNsQDPiRTYzYJpkZbI8ZgnYrMDcbzvCEGOQ7FiGCXOh1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1916
+        id S1727575AbgBMOdb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Feb 2020 09:33:31 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38316 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbgBMOdb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Feb 2020 09:33:31 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DEUlRR186046;
+        Thu, 13 Feb 2020 14:33:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=nuyPBpjAVYT7HQZeVv//RC7Ou3xrZdtOJkagIPP9KQA=;
+ b=b8Qw0L1tO5gHd1dkyDnrk5JDzT9YDjAvK1zbffQbeNqbofcWmZ9GOjYpGvTXWYSDsuS9
+ FVvfMBprSsds/0/cYOW50wVtboulaHPIhIX19e9v6mRBdj7i5SbXxy0LrijtPb1GnY+n
+ UR8ex1Tw3x7WnyffGfI0bN0CCMXXt/YJ4FPR5gjc9S0iHbTJbiwNna8kOGWCXKX1j0j6
+ eVH0smzL02+c/+/hJRdX5Q0seApmDs3voHnhLTedSzB3H45R5TbIDCq/sG8ShSLeRV3+
+ r77oLR1fTabxnwxA6oj2T7RpnYDZqX6qJRLxQKCIxLZo1BooDH0Lrz47U9t0138SpS/V yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2y2jx6jgt9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 14:33:27 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DERWA8116377;
+        Thu, 13 Feb 2020 14:33:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y4k36k72a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 14:33:26 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01DEXOlR021115;
+        Thu, 13 Feb 2020 14:33:24 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Feb 2020 06:33:24 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v3 1/2] xprtrdma: Fix DMA scatter-gather list mapping
+ imbalance
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200212193036.GD31668@ziepe.ca>
+Date:   Thu, 13 Feb 2020 09:33:23 -0500
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <595DB50E-F65A-4F52-BFDB-79161151ECDD@oracle.com>
+References: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
+ <158152394998.433502.5623790463334839091.stgit@morisot.1015granger.net>
+ <20200212182638.GA31668@ziepe.ca>
+ <F7B6A553-0355-41BF-A209-E8D73D15A6A9@oracle.com>
+ <20200212190545.GB31668@ziepe.ca>
+ <B9D0EE52-469B-4CC4-A944-C3421DBB68B6@oracle.com>
+ <20200212193036.GD31668@ziepe.ca>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002130115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002130115
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTEyIGF0IDE3OjMyIC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gRnJvbTogT2xnYSBLb3JuaWV2c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+DQo+IA0KPiBU
-dXJuaW5nIGNhY2hpbmcgb2ZmIGZvciB3cml0ZXMgb24gdGhlIHNlcnZlciBzaG91bGQgaW1wcm92
-ZQ0KPiBwZXJmb3JtYW5jZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZ2EgS29ybmlldnNrYWlh
-IDxrb2xnYUBuZXRhcHAuY29tPg0KPiAtLS0NCj4gIGZzL25mcy9uZnM0cHJvYy5jIHwgMiArLQ0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZnMvbmZzL25mczRwcm9jLmMgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBpbmRl
-eCA3ZjU4MDJiLi4yMmRjYTQ5IDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNHByb2MuYw0KPiAr
-KysgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBAQCAtNTMzNiw3ICs1MzM2LDcgQEAgc3RhdGljIHZv
-aWQgbmZzNF9wcm9jX3dyaXRlX3NldHVwKHN0cnVjdA0KPiBuZnNfcGdpb19oZWFkZXIgKmhkciwN
-Cj4gIAloZHItPnRpbWVzdGFtcCAgID0gamlmZmllczsNCj4gIA0KPiAgCW1zZy0+cnBjX3Byb2Mg
-PSAmbmZzNF9wcm9jZWR1cmVzW05GU1BST0M0X0NMTlRfV1JJVEVdOw0KPiAtCW5mczRfaW5pdF9z
-ZXF1ZW5jZSgmaGRyLT5hcmdzLnNlcV9hcmdzLCAmaGRyLT5yZXMuc2VxX3JlcywgMSwNCj4gMCk7
-DQo+ICsJbmZzNF9pbml0X3NlcXVlbmNlKCZoZHItPmFyZ3Muc2VxX2FyZ3MsICZoZHItPnJlcy5z
-ZXFfcmVzLCAwLA0KPiAwKTsNCj4gIAluZnM0X3N0YXRlX3Byb3RlY3Rfd3JpdGUoc2VydmVyLT5u
-ZnNfY2xpZW50LCBjbG50LCBtc2csIGhkcik7DQo+ICB9DQo+ICANCg0KUmV2aWV3ZWQtYnk6IFRy
-b25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCg0KDQpBbm5h
-LCB3ZSBjYW4gcHJvYmFibHkgYWxzbyBhZGQgYQ0KDQpGaXhlczogZmJhODNmMzQxMTlhICgiTkZT
-OiBQYXNzICJwcml2aWxlZ2VkIiB2YWx1ZSB0byBuZnM0X2luaXRfc2VxdWVuY2UoKSIpDQoNCi0t
-IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
-YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+
+
+> On Feb 12, 2020, at 2:30 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>=20
+> On Wed, Feb 12, 2020 at 02:09:03PM -0500, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Feb 12, 2020, at 2:05 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>>>=20
+>>> On Wed, Feb 12, 2020 at 01:38:59PM -0500, Chuck Lever wrote:
+>>>>=20
+>>>>> On Feb 12, 2020, at 1:26 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>>>>>=20
+>>>>> On Wed, Feb 12, 2020 at 11:12:30AM -0500, Chuck Lever wrote:
+>>>>>> The @nents value that was passed to ib_dma_map_sg() has to be =
+passed
+>>>>>> to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses =
+to
+>>>>>> concatenate sg entries, it will return a different nents value =
+than
+>>>>>> it was passed.
+>>>>>>=20
+>>>>>> The bug was exposed by recent changes to the AMD IOMMU driver, =
+which
+>>>>>> enabled sg entry concatenation.
+>>>>>>=20
+>>>>>> Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port =
+to
+>>>>>> new memory registration API") and reviewing other kernel ULPs, =
+it's
+>>>>>> not clear that the frwr_map() logic was ever correct for this =
+case.
+>>>>>>=20
+>>>>>> Reported-by: Andre Tomt <andre@tomt.net>
+>>>>>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>>>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>>>>> Cc: stable@vger.kernel.org # v5.5
+>>>>>> net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
+>>>>>> 1 file changed, 7 insertions(+), 6 deletions(-)
+>>>>>=20
+>>>>> Yep
+>>>>>=20
+>>>>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>>>>=20
+>>>> Thanks.
+>>>>=20
+>>>> Wondering if it makes sense to add a Fixes tag for the AMD IOMMU =
+commit
+>>>> where NFS/RDMA stopped working, rather than the "Cc: stable # =
+v5.5".
+>>>>=20
+>>>> Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the =
+dma-iommu api")
+>>>=20
+>>> Not really, this was broken for other configurations besides AMD
+>>=20
+>> Agreed, but the bug seems to have been inconsequential until now?
+>=20
+> I imagine it would get you on ARM or other archs, IIRC.
+
+That's certainly plausible, but I haven't received explicit bug reports
+in this area. (I'm not at all saying that such bugs categorically do
+not exist).
+
+In any event, practical matters: the posted patch applies back to v5.4,
+but fails to apply starting with v5.3.
+
+I think we can leave the "Cc: stable # v5.5"; and I'm open to requests
+to backport this simple fix onto earlier stable kernels (back to v4.4),
+which can be handled case-by-case. 'Salright?
+
+--
+Chuck Lever
+
+
+
