@@ -2,145 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A61A215C0C0
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2020 15:56:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA2F15C0EB
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2020 16:03:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgBMO4Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 Feb 2020 09:56:24 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38331 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMO4Y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Feb 2020 09:56:24 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z19so5906430qkj.5
-        for <linux-nfs@vger.kernel.org>; Thu, 13 Feb 2020 06:56:22 -0800 (PST)
+        id S1727436AbgBMPDv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Feb 2020 10:03:51 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46772 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbgBMPDv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Feb 2020 10:03:51 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so3190454pfp.13;
+        Thu, 13 Feb 2020 07:03:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L1yqwsepRWzermGFjsYu3VrzLZwg/ltH+9eaqXJdLvs=;
-        b=QwNRXL4LNXzlXI1njln3t0egXOEh06OzvNqzOitrpSEzl/ld2pBc1CG+JN3/xTGY8M
-         RPJB9D2zWNhHMhAv/KYmKUck2IXkJvqTNQAHMso1aH6l7f2bOksz3DYLAXW+xhTi0ygR
-         hDlA2d8eslEpY+DVEe7wgVikBYr4jG/fcg98k15QEgGVEF4i7+6fNqO+lkJY/T+jTEgP
-         Yw6+N3cn74qMmMnSS26UraGpB8gADP4Lru7e4r+EvjKgrWAcH4eKlJxIm3obOlfMU59e
-         2mXAe34lfW5HOf2+xrSnjzFtdZ7c+r5oKCDJStsX4iwCj8V0yFVvrH74iYsQLeqVRNcE
-         sAeg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G1URVlj7Itamof72U88sCTyKrE2tsgoZIU1g2MQTLT4=;
+        b=eEunzPMSbxFG4bweZ0Ndj/87P833Ic9MFPnCSzj55NPcR0ymQ82wsiZqYSb1nk4y8n
+         vnpDpP/RPoawFH2lKT+fH4LIqVcY3vw+XZ6VCFYWIxChO/zfnraDY1s+K2Vu8WxYmGaf
+         p6kt/jZUcpj6P7ZpJdtxdBMtpgOT126Vr4mY5DboJ08lKnkcs7yEah2L6qRnLy2HAFmn
+         pSdCkkgmCIlMOHbVYd62VqCTkmnmn1rTPlIW36YpxbBZMLjgQ2Wqpvfx1S8tGhno5wx4
+         UsaeR6bH6DWuuSJJfZxvFgJ53tyZO1tbQs3rnpCGEKCKyJ36BSJBdlZtxA4O0oLBVawd
+         /bpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L1yqwsepRWzermGFjsYu3VrzLZwg/ltH+9eaqXJdLvs=;
-        b=ml3G+P+7HK4m/yAD+BffdfOV5VaebMIuo4F5LOlKEqm80LLUhLqHkvXa9xVuAe1niC
-         gAsIjAtnKipZ0c2mefe8a2Tv350iKkMsGduGi6ktX26RGe+cv0wPDR2+MdFxOYKlnL1L
-         vD/bBvrQaYiMlISvmmKo9oyAW3J79bOos7EvjTX8APD1q1/l7gsyKowQhhrdbwcvQ9Dl
-         iycPGmc+LY9fJoC37ltQUmimk6iQwNr5kjtUyv/cPwXlDkH2TORH5StJmG2/4Of/AZ58
-         SLzBqTypNGS4xP2E/DUUkMMNtDIwJAskNAxAn1LflqpK5RfR1HBjQ0/TJHM77CJVUYTm
-         mzxg==
-X-Gm-Message-State: APjAAAUtKyPNKfCBtrkI6JXtnivKXNUACDfiZ1M6eS6ohlQEnRMcmywl
-        WtZea8dyjxrvPTKaZF9bO5lpKw==
-X-Google-Smtp-Source: APXvYqykyR1HAYL8n+6smDT90HiVdC1pj0px9bgMvjOPNJIwgjltOg85yhljkhOxLwYJ+wM5cdKuMw==
-X-Received: by 2002:a37:7b43:: with SMTP id w64mr16039493qkc.203.1581605778823;
-        Thu, 13 Feb 2020 06:56:18 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id d9sm1512875qtw.32.2020.02.13.06.56.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 06:56:18 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2Fub-0004w3-Gs; Thu, 13 Feb 2020 10:56:17 -0400
-Date:   Thu, 13 Feb 2020 10:56:17 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] xprtrdma: Fix DMA scatter-gather list mapping
- imbalance
-Message-ID: <20200213145617.GI31668@ziepe.ca>
-References: <158152363458.433502.7428050218198466755.stgit@morisot.1015granger.net>
- <158152394998.433502.5623790463334839091.stgit@morisot.1015granger.net>
- <20200212182638.GA31668@ziepe.ca>
- <F7B6A553-0355-41BF-A209-E8D73D15A6A9@oracle.com>
- <20200212190545.GB31668@ziepe.ca>
- <B9D0EE52-469B-4CC4-A944-C3421DBB68B6@oracle.com>
- <20200212193036.GD31668@ziepe.ca>
- <595DB50E-F65A-4F52-BFDB-79161151ECDD@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <595DB50E-F65A-4F52-BFDB-79161151ECDD@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G1URVlj7Itamof72U88sCTyKrE2tsgoZIU1g2MQTLT4=;
+        b=mqQ96r49+noN21pbjWWxswiEzHKtRJyhb0y7WXcriuIhDlDQjPGP7l8KXLnxqWsuX/
+         hTG6nJpiHwTMPYFBrRtLzj8GfdLef+d2H4UzxqrSGQs9aa6jFb7RCIkPCmaVVsJEfVwc
+         +V36GJRr55qvX7DXMKLpW6F5Pf0kVFO5wz1Yiu0nBKi0eI6gl76oeukixY3cN1z9RIor
+         JUCOK7PcrHzXXJ01Rmkmk4Z9z/T744D5zV4U09xCNWpU1EAiIM5Hvb8cL6LGSSvNX2GU
+         kgHVyIBU6bAIjOZW+jKECNLF2j5mrkNx16QDjYfteFK1kCh4dxOnWKzuOi4Ah5tTJfKb
+         +uUA==
+X-Gm-Message-State: APjAAAWOOzcYTNx/pSAG64x9PtcsrNUp9sV52Aa4dgD88Yg6LgztmmrL
+        PoKZJbsvpJ1AQpnV1wGD/w==
+X-Google-Smtp-Source: APXvYqy80BcDGxTwmn1WGkdzrAgompUbMy/tI6GtsozghL2Dy+wTbFwgE9Ja9AVRnkewKVx01aOEMQ==
+X-Received: by 2002:a65:4c82:: with SMTP id m2mr17868613pgt.432.1581606229256;
+        Thu, 13 Feb 2020 07:03:49 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee8:f65a:fc5b:5bfd:1ab4:4848])
+        by smtp.gmail.com with ESMTPSA id 11sm3625726pfz.25.2020.02.13.07.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:03:48 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     bfields@fieldses.org, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] fs: nfsd: nfs4state.c: Use built-in RCU list checking
+Date:   Thu, 13 Feb 2020 20:33:31 +0530
+Message-Id: <20200213150331.5727-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:33:23AM -0500, Chuck Lever wrote:
-> 
-> 
-> > On Feb 12, 2020, at 2:30 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > 
-> > On Wed, Feb 12, 2020 at 02:09:03PM -0500, Chuck Lever wrote:
-> >> 
-> >> 
-> >>> On Feb 12, 2020, at 2:05 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >>> 
-> >>> On Wed, Feb 12, 2020 at 01:38:59PM -0500, Chuck Lever wrote:
-> >>>> 
-> >>>>> On Feb 12, 2020, at 1:26 PM, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >>>>> 
-> >>>>> On Wed, Feb 12, 2020 at 11:12:30AM -0500, Chuck Lever wrote:
-> >>>>>> The @nents value that was passed to ib_dma_map_sg() has to be passed
-> >>>>>> to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
-> >>>>>> concatenate sg entries, it will return a different nents value than
-> >>>>>> it was passed.
-> >>>>>> 
-> >>>>>> The bug was exposed by recent changes to the AMD IOMMU driver, which
-> >>>>>> enabled sg entry concatenation.
-> >>>>>> 
-> >>>>>> Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
-> >>>>>> new memory registration API") and reviewing other kernel ULPs, it's
-> >>>>>> not clear that the frwr_map() logic was ever correct for this case.
-> >>>>>> 
-> >>>>>> Reported-by: Andre Tomt <andre@tomt.net>
-> >>>>>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> >>>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >>>>>> Cc: stable@vger.kernel.org # v5.5
-> >>>>>> net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
-> >>>>>> 1 file changed, 7 insertions(+), 6 deletions(-)
-> >>>>> 
-> >>>>> Yep
-> >>>>> 
-> >>>>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> >>>> 
-> >>>> Thanks.
-> >>>> 
-> >>>> Wondering if it makes sense to add a Fixes tag for the AMD IOMMU commit
-> >>>> where NFS/RDMA stopped working, rather than the "Cc: stable # v5.5".
-> >>>> 
-> >>>> Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api")
-> >>> 
-> >>> Not really, this was broken for other configurations besides AMD
-> >> 
-> >> Agreed, but the bug seems to have been inconsequential until now?
-> > 
-> > I imagine it would get you on ARM or other archs, IIRC.
-> 
-> That's certainly plausible, but I haven't received explicit bug reports
-> in this area. (I'm not at all saying that such bugs categorically do
-> not exist).
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Usually I encourage people to put the fixes line to the commit that is
-being fixed, pointing at some other commit that happens to expose the
-bug is not the best. 
+list_for_each_entry_rcu() has built-in RCU and lock checking.
+
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
+by default.
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ fs/nfsd/nfs4state.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 369e574c5092..3a80721fe53d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -4295,7 +4295,8 @@ find_file_locked(struct knfsd_fh *fh, unsigned int hashval)
+ {
+ 	struct nfs4_file *fp;
  
-> In any event, practical matters: the posted patch applies back to v5.4,
-> but fails to apply starting with v5.3.
-> 
-> I think we can leave the "Cc: stable # v5.5"; and I'm open to requests
-> to backport this simple fix onto earlier stable kernels (back to v4.4),
-> which can be handled case-by-case. 'Salright?
+-	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash) {
++	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
++				lockdep_is_held(&state_lock)) {
+ 		if (fh_match(&fp->fi_fhandle, fh)) {
+ 			if (refcount_inc_not_zero(&fp->fi_ref))
+ 				return fp;
+-- 
+2.17.1
 
-I'd just put Cc: stable, the stable folks will reject it on earlier
-versions because of conflicts and we can leave it.
-
-Jason
