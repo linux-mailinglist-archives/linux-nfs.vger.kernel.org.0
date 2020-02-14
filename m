@@ -2,35 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D281F15EEBD
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:42:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F0815ED5C
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:33:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390735AbgBNRml (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 12:42:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50386 "EHLO mail.kernel.org"
+        id S2390203AbgBNQGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 11:06:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388977AbgBNQDW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:22 -0500
+        id S2390386AbgBNQGU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E7E2067D;
-        Fri, 14 Feb 2020 16:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B64042187F;
+        Fri, 14 Feb 2020 16:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696202;
-        bh=MJ2uyHPzkXeagzrBI1E8WUEzNGc86rzpa+3s1n5VZTU=;
+        s=default; t=1581696379;
+        bh=yBlDfK0Mudw/4zVvE2Xj4NPpTKUWG5OSwDqj4f9zWs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e72QCDWZRB/3Ayxdcv0okWathEA1HQ65VTYUvU12IcEaGD3nKKK0Auyv77zOaGc1a
-         9ANSTy78g5ZInje6yUfQS7M72Yx6cIOiyeq9xrdden0OKksJ7ibrBmCcaRKIhCBPwQ
-         yXdaTujn/wrdfKwnAzRGCNHzmz5+jkxPj08ibK2I=
+        b=XVLofO0E5D9EVGi3knAChFC/mcSIHtDDMSg62n3WjO6gikX2m23BmuonRpYpZv8iG
+         be5CG4fx+8X7RYZFmZ0PyHlMdTuugPT09AKuAC9sBNbfTqNqktJ52DideX399RY+YY
+         BuUPgFR4Vc6mDtbRAHnnljy7NKn+NLA6oX5ck3YI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 068/459] nfs: NFS_SWAP should depend on SWAP
-Date:   Fri, 14 Feb 2020 10:55:18 -0500
-Message-Id: <20200214160149.11681-68-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 207/459] nfsd: Clone should commit src file metadata too
+Date:   Fri, 14 Feb 2020 10:57:37 -0500
+Message-Id: <20200214160149.11681-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -43,40 +45,67 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
+[ Upstream commit 57f64034966fb945fc958f95f0c51e47af590344 ]
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+vfs_clone_file_range() can modify the metadata on the source file too,
+so we need to commit that to stable storage as well.
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
-
-Fix this by adding a dependency on CONFIG_SWAP.
-
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Acked-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/vfs.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a21b7744..e7dd07f478259 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -90,7 +90,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index fc38b9fe45495..005d1802ab40e 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -280,19 +280,25 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
+  * Commit metadata changes to stable storage.
+  */
+ static int
+-commit_metadata(struct svc_fh *fhp)
++commit_inode_metadata(struct inode *inode)
+ {
+-	struct inode *inode = d_inode(fhp->fh_dentry);
+ 	const struct export_operations *export_ops = inode->i_sb->s_export_op;
+ 
+-	if (!EX_ISSYNC(fhp->fh_export))
+-		return 0;
+-
+ 	if (export_ops->commit_metadata)
+ 		return export_ops->commit_metadata(inode);
+ 	return sync_inode_metadata(inode, 1);
+ }
+ 
++static int
++commit_metadata(struct svc_fh *fhp)
++{
++	struct inode *inode = d_inode(fhp->fh_dentry);
++
++	if (!EX_ISSYNC(fhp->fh_export))
++		return 0;
++	return commit_inode_metadata(inode);
++}
++
+ /*
+  * Go over the attributes and take care of the small differences between
+  * NFS semantics and what Linux expects.
+@@ -537,6 +543,9 @@ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
+ 	if (sync) {
+ 		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
+ 		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
++
++		if (!status)
++			status = commit_inode_metadata(file_inode(src));
+ 		if (status < 0)
+ 			return nfserrno(status);
+ 	}
 -- 
 2.20.1
 
