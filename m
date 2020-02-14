@@ -2,58 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A186815F459
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:23:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CDEF15F44F
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgBNPuB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 10:50:01 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38944 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbgBNPuA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 10:50:00 -0500
-Received: by mail-yw1-f66.google.com with SMTP id h126so4434676ywc.6;
-        Fri, 14 Feb 2020 07:50:00 -0800 (PST)
+        id S1730346AbgBNPuH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 10:50:07 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:33279 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730359AbgBNPuG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 10:50:06 -0500
+Received: by mail-yb1-f193.google.com with SMTP id b6so4973590ybr.0;
+        Fri, 14 Feb 2020 07:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=C2EzsUQ6sOwcPkm43mfsKiml3ytIXdXhTWnUMmgpa+c=;
-        b=kVwo744nPYAWu0G0gULhQX9WQ0OAfafy+dvtv8naun4SbZkTOWBFNKT4piAmAEdCs8
-         nwa9NXDrDC0r4Pnb79h8HzVoog2/KnH0WhQU+Lrs/MjN1sqZb/PiCoC5WlvcTW8J/P3x
-         5FrmB4NmG6roII37dzK5/LXK/6f1xByiQmScvsfXpFkG5nA1zrv2fB//0X+w/6cs5wCA
-         6FPwQqO1CHlCsKQIvN0vJHgStqfZxLV+hlgpyVdujWk+Bz9MfdtJCLC1UG7uJFSt/lwX
-         hcS8dBHiALGST0fSLwcPQ8fRF6m0my2SR91zpAdk4nU5CWNuX8rtf3JYbRMz2qSKbDz5
-         KuqA==
+        bh=jwD0yJAXKb6aNGl1dFtvN1rJFxGMRVHOHNoorWVyGAc=;
+        b=V37hCgX9nes1YzhwO6Z/or5d0Yo4egTb21I173GJXMVjmlAkFsAW16uMvaKfvs9txI
+         /i9vxqOchC3llvzabnDkfP7yrFxkN1tPLiGUE+HKhaDqwcWiQkUGH1YmZTd+2CRz8gzk
+         bQ8+X+Fs4MBqn1U3Ve7BBCg97jpoHDkC1o0LyGlZ8fOlZ+PpCUQ8QzLAq9CC1AseIGb0
+         N1P2fJfQZwwP3Je3boexOKJO6Iq36ETOibXaRVj1Cliu3yQV0Bs2tuDxASyJRi4F34Db
+         p1TRO0d0Ds5UXx/1S+rT4xRXG3XYjZCFcsG+7X4qIzF9P2KCaV/IsJaHyazGavbnaLNz
+         ZbqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=C2EzsUQ6sOwcPkm43mfsKiml3ytIXdXhTWnUMmgpa+c=;
-        b=orjgsb9PrqC4TwkduPMlVAe/aoulh6vR54ybbFXywSSvT2PlSn27TeIGQPqVEacxRr
-         lT/cJW+iXm2MXHrtrNFI2wSWuLHLKJFHAhH6+iBMKi1Nl6PyvKHwSGRyycr4w17gjS2l
-         uU/kI1jcJjj+WwJ9vMQSH4MwbzAaOSbRs8HsKhgDl0Ho9y/zYJkl6IGbtBBi0a3L7pWZ
-         zdSRHTns08mQlPE0CIbWRgU6/rlGecYNaamrDW9W8twqrAYkSX3SOoTbn7mOag9iYmUC
-         i/bTrVt2DBpxtQf0XU1nbAeEMZnlctAvZ7IyS6Z04oT+YYC4iBmnvMF7E5+G4FrVprdY
-         /qEA==
-X-Gm-Message-State: APjAAAXULAwKouEZvGHX8r48yHEG1lSLP6HuL7J72pX8+Ajb9sSGDzNY
-        tpRm/zXwIhtKS+iJujPxONZVyezS
-X-Google-Smtp-Source: APXvYqyDCF3kj3exLcfgFAOhduvbo+vwHE3R+q1H8zZ6u/81FRkv2zC0pCGwYGKInPny6dFBmAd/nw==
-X-Received: by 2002:a81:34a:: with SMTP id 71mr2829050ywd.221.1581695399700;
-        Fri, 14 Feb 2020 07:49:59 -0800 (PST)
+        bh=jwD0yJAXKb6aNGl1dFtvN1rJFxGMRVHOHNoorWVyGAc=;
+        b=PaDX/RCqlaW0xXRAAx27PWUpfBGNgx4qXcqB0Qvd7by+rpipzHBVc9XFezkFaU6mx1
+         H2Z7rw5DCashJPprzX5gcBqpeE8aYhwq1caVM4qYlEnBHXwp+HwiLT8OtWfWl02qs/9/
+         H2hQCKnk4bDM1gErLF06i5lt1FfER7Zd7ziGAjzMiJeKZ6nKg+5kPUw3gI+2eBYwLUY5
+         AsL75/BHXjpjlQKHVaDgaPOfb4dRXgIrUf2LBzctMkmaZ83/a4ds+g2lDpXZ4mhQO8yf
+         A51DLo7/cWcS/U0ZVpzIGAbHTs6WPr/xpX5bgR70nV3G6XJShVm9gFYA5305Bncvqsw/
+         IFgA==
+X-Gm-Message-State: APjAAAVHBqWpNK1Tsf2PIylYgwOHKB2YZRpALBSOwEpJ1XQrxfos+rCe
+        Stourj56IkxKeqXDDXj6ThLjJZRw
+X-Google-Smtp-Source: APXvYqxZv2gV+4bJllDK70UW7Zt5C9H2eYKWzwoo/Qk4hRCg1n1AQ8f8aNlpwogctxku36TekO9FRQ==
+X-Received: by 2002:a25:80c5:: with SMTP id c5mr3100155ybm.364.1581695404940;
+        Fri, 14 Feb 2020 07:50:04 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id d66sm2574526ywc.16.2020.02.14.07.49.59
+        by smtp.gmail.com with ESMTPSA id r64sm2657589ywg.84.2020.02.14.07.50.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Feb 2020 07:49:59 -0800 (PST)
+        Fri, 14 Feb 2020 07:50:04 -0800 (PST)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01EFnweU029156;
-        Fri, 14 Feb 2020 15:49:58 GMT
-Subject: [PATCH RFC 3/9] svcrdma: Avoid DMA mapping small RPC Replies
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01EFo3Ml029168;
+        Fri, 14 Feb 2020 15:50:03 GMT
+Subject: [PATCH RFC 4/9] NFSD: Invoke svc_encode_read_payload in "read" NFSD
+ encoders
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 14 Feb 2020 10:49:58 -0500
-Message-ID: <20200214154958.3848.99445.stgit@klimt.1015granger.net>
+Date:   Fri, 14 Feb 2020 10:50:03 -0500
+Message-ID: <20200214155003.3848.37713.stgit@klimt.1015granger.net>
 In-Reply-To: <20200214151427.3848.49739.stgit@klimt.1015granger.net>
 References: <20200214151427.3848.49739.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -65,136 +66,112 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On some platforms, DMA mapping part of a page is more costly than
-copying bytes. Indeed, not involving the I/O MMU can help the
-RPC/RDMA transport scale better for tiny I/Os across more RDMA
-devices. This is because interaction with the I/O MMU is eliminated
-for each of these small I/Os. Without the explicit unmapping, the
-NIC no longer needs to do a costly internal TLB shoot down for
-buffers that are just a handful of bytes.
+Have the NFSD encoders annotate the boundaries of every
+direct-data-placement eligible READ data payload. Then change
+svcrdma to use that annotation instead of the xdr->page_len
+when handling Write chunks.
 
-The heuristic for now is to pull-up when the size of the RPC message
-body is smaller than half the minimum Send buffer size.
+For NFSv4 on RDMA, that enables the ability to recognize multiple
+READ payloads per compound. Next step is to support multiple Write
+chunks.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h        |   40 +++++++++++++++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |   25 +++++++++++++++++----
- 2 files changed, 61 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs3xdr.c                     |    4 ++++
+ fs/nfsd/nfs4xdr.c                     |    3 +++
+ fs/nfsd/nfsxdr.c                      |    4 ++++
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |   15 +++------------
+ 4 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index c0e4c93324f5..6f0d3e8ce95c 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -336,6 +336,44 @@
- 				),					\
- 				TP_ARGS(rqst))
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index aae514d40b64..8c272efbc94e 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -712,6 +712,8 @@ void fill_post_wcc(struct svc_fh *fhp)
+ 			*p = 0;
+ 			rqstp->rq_res.tail[0].iov_len = 4 - (resp->len&3);
+ 		}
++		svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
++					resp->len);
+ 		return 1;
+ 	} else
+ 		return xdr_ressize_check(rqstp, p);
+@@ -737,6 +739,8 @@ void fill_post_wcc(struct svc_fh *fhp)
+ 			*p = 0;
+ 			rqstp->rq_res.tail[0].iov_len = 4 - (resp->count & 3);
+ 		}
++		svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
++					resp->count);
+ 		return 1;
+ 	} else
+ 		return xdr_ressize_check(rqstp, p);
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 262f9fc76e4e..a8d3f8f035a0 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3547,6 +3547,8 @@ static __be32 nfsd4_encode_splice_read(
+ 		buf->page_len = 0;
+ 		return nfserr;
+ 	}
++	svc_encode_read_payload(read->rd_rqstp, buf->head[0].iov_len,
++				maxcount);
  
-+DECLARE_EVENT_CLASS(xdr_buf_class,
-+	TP_PROTO(
-+		const struct xdr_buf *xdr
-+	),
-+
-+	TP_ARGS(xdr),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, head_base)
-+		__field(size_t, head_len)
-+		__field(const void *, tail_base)
-+		__field(size_t, tail_len)
-+		__field(unsigned int, page_len)
-+		__field(unsigned int, msg_len)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->head_base = xdr->head[0].iov_base;
-+		__entry->head_len = xdr->head[0].iov_len;
-+		__entry->tail_base = xdr->tail[0].iov_base;
-+		__entry->tail_len = xdr->tail[0].iov_len;
-+		__entry->page_len = xdr->page_len;
-+		__entry->msg_len = xdr->len;
-+	),
-+
-+	TP_printk("head=[%p,%zu] page=%u tail=[%p,%zu] len=%u",
-+		__entry->head_base, __entry->head_len, __entry->page_len,
-+		__entry->tail_base, __entry->tail_len, __entry->msg_len
-+	)
-+);
-+
-+#define DEFINE_XDRBUF_EVENT(name)					\
-+		DEFINE_EVENT(xdr_buf_class, name,			\
-+				TP_PROTO(				\
-+					const struct xdr_buf *xdr	\
-+				),					\
-+				TP_ARGS(xdr))
-+
- /**
-  ** Connection events
-  **/
-@@ -1634,6 +1672,8 @@
- 	)
- );
+ 	*(p++) = htonl(eof);
+ 	*(p++) = htonl(maxcount);
+@@ -3713,6 +3715,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 		xdr_truncate_encode(xdr, length_offset);
+ 		return nfserr;
+ 	}
++	svc_encode_read_payload(readlink->rl_rqstp, length_offset, maxcount);
  
-+DEFINE_XDRBUF_EVENT(svcrdma_send_pullup);
-+
- TRACE_EVENT(svcrdma_send_failed,
- 	TP_PROTO(
- 		const struct svc_rqst *rqst,
+ 	wire_count = htonl(maxcount);
+ 	write_bytes_to_xdr_buf(xdr->buf, length_offset, &wire_count, 4);
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index b51fe515f06f..98ea417042a6 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -462,6 +462,8 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
+ 		*p = 0;
+ 		rqstp->rq_res.tail[0].iov_len = 4 - (resp->len&3);
+ 	}
++	svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
++				resp->len);
+ 	return 1;
+ }
+ 
+@@ -482,6 +484,8 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
+ 		*p = 0;
+ 		rqstp->rq_res.tail[0].iov_len = 4 - (resp->count&3);
+ 	}
++	svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
++				resp->count);
+ 	return 1;
+ }
+ 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index a11983c2056f..8ea21ca351e2 100644
+index 8ea21ca351e2..40b4843be869 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -537,16 +537,32 @@ void svc_rdma_sync_reply_hdr(struct svcxprt_rdma *rdma,
- 				      DMA_TO_DEVICE);
- }
+@@ -875,18 +875,9 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
  
--/* If the xdr_buf has more elements than the device can
-- * transmit in a single RDMA Send, then the reply will
-- * have to be copied into a bounce buffer.
-+/**
-+ * svc_rdma_pull_up_needed - Determine whether to use pull-up
-+ * @rdma: controlling transport
-+ * @ctxt: I/O resources for an RDMA Send
-+ * @xdr: xdr_buf containing RPC message to transmit
-+ * @wr_lst: pointer to start of Write chunk list
-+ *
-+ * Returns:
-+ *	%true if pull-up should be used
-+ *	%false otherwise
-  */
- static bool svc_rdma_pull_up_needed(struct svcxprt_rdma *rdma,
-+				    struct svc_rdma_send_ctxt *ctxt,
- 				    struct xdr_buf *xdr,
- 				    __be32 *wr_lst)
- {
- 	int elements;
- 
-+	/* Avoid the overhead of DMA mapping for small messages.
-+	 */
-+	if (xdr->len < RPCRDMA_V1_DEF_INLINE_SIZE >> 1)
-+		return true;
-+
-+	/* Check whether the xdr_buf has more elements than can
-+	 * fit in a single RDMA Send.
-+	 */
- 	/* xdr->head */
- 	elements = 1;
- 
-@@ -627,6 +643,7 @@ static int svc_rdma_pull_up_reply_msg(struct svcxprt_rdma *rdma,
- 				      ctxt->sc_sges[0].length,
- 				      DMA_TO_DEVICE);
- 
-+	trace_svcrdma_send_pullup(xdr);
- 	return 0;
- }
- 
-@@ -652,7 +669,7 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 	u32 xdr_pad;
- 	int ret;
- 
--	if (svc_rdma_pull_up_needed(rdma, xdr, wr_lst))
-+	if (svc_rdma_pull_up_needed(rdma, ctxt, xdr, wr_lst))
- 		return svc_rdma_pull_up_reply_msg(rdma, ctxt, xdr, wr_lst);
- 
- 	++ctxt->sc_cur_sge_no;
+ 	if (wr_lst) {
+ 		/* XXX: Presume the client sent only one Write chunk */
+-		unsigned long offset;
+-		unsigned int length;
+-
+-		if (rctxt->rc_read_payload_length) {
+-			offset = rctxt->rc_read_payload_offset;
+-			length = rctxt->rc_read_payload_length;
+-		} else {
+-			offset = xdr->head[0].iov_len;
+-			length = xdr->page_len;
+-		}
+-		ret = svc_rdma_send_write_chunk(rdma, wr_lst, xdr, offset,
+-						length);
++		ret = svc_rdma_send_write_chunk(rdma, wr_lst, xdr,
++						rctxt->rc_read_payload_offset,
++						rctxt->rc_read_payload_length);
+ 		if (ret < 0)
+ 			goto err2;
+ 		svc_rdma_xdr_encode_write_list(rdma_resp, wr_lst, ret);
 
