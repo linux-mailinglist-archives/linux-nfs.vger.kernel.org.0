@@ -2,39 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E9CE15EF67
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:48:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C42B615EF51
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:47:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbgBNRr3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 12:47:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
+        id S1728741AbgBNRrI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 12:47:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388778AbgBNQAC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:00:02 -0500
+        id S2389182AbgBNQB6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:01:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157622187F;
-        Fri, 14 Feb 2020 16:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E522067D;
+        Fri, 14 Feb 2020 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696001;
-        bh=LW51BosMbPwtKSdDEUrwZXmbL2W7qvtemK9FcFViVr4=;
+        s=default; t=1581696118;
+        bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m50XhmqF1I54Zp6JCkcgkbakzwZ6aGx7b6a5iSww3e9uwesb0QCMm39Me36fip6AQ
-         72w79Y0f92gCTONWziqzSdqF0h4D40GzsD0zAWYygzZReNjoK6nEXwcrqLUY3H1PPj
-         QGur5EC+jYOMcZ6FavaysOxwbSyb/WiW19fG/RI4=
+        b=G7sekgYG8gQSwARRkxVMsNTnWDZ5cmLmY8LQmp35GgIHbBB5EsLXNCrjJ2umxHxOe
+         hHESRSpzwCMcSZUU03yLdfa2BLRdgzcDZ1PS22KeraJ+Yv5/QK4qMNMGbcgq5tQW5h
+         gpSXWJFvZd5YcVeHjmnhonT55+8jMjORXNbKAvbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 520/542] NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
-Date:   Fri, 14 Feb 2020 10:48:32 -0500
-Message-Id: <20200214154854.6746-520-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 006/459] nfsd4: avoid NULL deference on strange COPY compounds
+Date:   Fri, 14 Feb 2020 10:54:16 -0500
+Message-Id: <20200214160149.11681-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,34 +43,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 387122478775be5d9816c34aa29de53d0b926835 ]
+[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
 
-When comparing two 'struct cred' for equality w.r.t. behaviour under
-filesystem access, we need to use cred_fscmp().
+With cross-server COPY we've introduced the possibility that the current
+or saved filehandle might not have fh_dentry/fh_export filled in, but we
+missed a place that assumed it was.  I think this could be triggered by
+a compound like:
 
-Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+	PUTFH(foreign filehandle)
+	GETATTR
+	SAVEFH
+	COPY
+
+First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
+Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
+need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
+set and GETATTR does not have OP_HANDLES_WRONGSEC set.
+
+We should probably also consider tightening the checks in
+check_if_stalefh_allowed and double-checking that we don't assume the
+filehandle is verified elsewhere in the compound.  But I think this
+fixes the immediate issue.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 3ac6b4dea72d3..542ea8dfd1bc7 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1425,7 +1425,7 @@ bool pnfs_roc(struct inode *ino,
- 	/* lo ref dropped in pnfs_roc_release() */
- 	layoutreturn = pnfs_prepare_layoutreturn(lo, &stateid, &iomode);
- 	/* If the creds don't match, we can't compound the layoutreturn */
--	if (!layoutreturn || cred != lo->plh_lc_cred)
-+	if (!layoutreturn || cred_fscmp(cred, lo->plh_lc_cred) != 0)
- 		goto out_noroc;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647c..4d1d0bf8e385f 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+ 				clear_current_stateid(cstate);
  
- 	roc = layoutreturn;
+-			if (need_wrongsec_check(rqstp))
++			if (current_fh->fh_export &&
++					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+ 		}
+ encode_op:
 -- 
 2.20.1
 
