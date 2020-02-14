@@ -2,93 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7BB615F539
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:39:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 171AF15F7ED
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 21:45:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394988AbgBNSZv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 13:25:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51566 "EHLO mail.kernel.org"
+        id S1730260AbgBNUpp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 15:45:45 -0500
+Received: from fieldses.org ([173.255.197.46]:34848 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgBNPtH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:07 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E9124650;
-        Fri, 14 Feb 2020 15:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695346;
-        bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdL70xUuHSyCi7jG7AzLsuMgd6dJbU4TYlAzTN2HLTS2121YN+4HgNspboZ5m6+k1
-         ufyRu4ReUxihjDZxGZ34sefn6vkeMMVSd+b4Ava8SiXtx5E5KGWcPRuiFo+hmfuTRF
-         e+eRqtmgL5Mq0sBna3lr6x1IIk1jIRIDzQSHJCks=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 009/542] nfsd4: avoid NULL deference on strange COPY compounds
-Date:   Fri, 14 Feb 2020 10:40:01 -0500
-Message-Id: <20200214154854.6746-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S1727742AbgBNUpo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:45:44 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1146988A; Fri, 14 Feb 2020 15:45:44 -0500 (EST)
+Date:   Fri, 14 Feb 2020 15:45:44 -0500
+To:     linux-nfs@vger.kernel.org
+Subject: pynfs python 3 flag day
+Message-ID: <20200214204544.GA30533@fieldses.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+I'm hearing more noise about deprecating Python 2, so decided I can't
+keep ignoring Python 3.
 
-[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
+Getting pynfs working on Python 3 is a bigger project than I expected.
+Keeping it working under Python 2 looks like another project.  So, I'm
+planning a flag day after which pynfs will require Python 3.
 
-With cross-server COPY we've introduced the possibility that the current
-or saved filehandle might not have fh_dentry/fh_export filled in, but we
-missed a place that assumed it was.  I think this could be triggered by
-a compound like:
+That isn't the way I'd prefer to do it, but there's only so much time I
+want to spend on this.
 
-	PUTFH(foreign filehandle)
-	GETATTR
-	SAVEFH
-	COPY
+I've mostly got the 4.0 server tests working under python 3.  I hope a
+few more days will be enough to get the 4.1 tests working as well.
 
-First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
-Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
-need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
-set and GETATTR does not have OP_HANDLES_WRONGSEC set.
+When I switch over, I'm afraid a few things will be left broken: any
+tests that I don't personally run may still have minor python 3 bugs,
+and I haven't touched the python server code that's used for client
+testing.
 
-We should probably also consider tightening the checks in
-check_if_stalefh_allowed and double-checking that we don't assume the
-filehandle is verified elsewhere in the compound.  But I think this
-fixes the immediate issue.
+If you stumble across something broken, and you can give me a simple
+reproducer, feel free to share it with me and I'll take a look.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+But for anything complicated, I'll probably need patches.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 4798667af647c..4d1d0bf8e385f 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
- 				clear_current_stateid(cstate);
- 
--			if (need_wrongsec_check(rqstp))
-+			if (current_fh->fh_export &&
-+					need_wrongsec_check(rqstp))
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
- 		}
- encode_op:
--- 
-2.20.1
+Again, I apologize for any extra work that creates for anyone, but for
+now this seems like the best compromise to keep things mostly working
+without it becoming a bigger time sink for me.
 
+Work so far is in the "python3" branch at
+
+	git://linux-nfs.org/~bfields/pynfs.git
+
+The history will probably be cleaned up an rewritten before it's done.
+I'm hoping that'll be in the next week.
+
+It's mostly just a matter of separating out unicode strings and byte
+arrays.  Protocol data is all the latter (even if the protocol prefers
+some field to be UTF8, pynfs still needs to be able to handle non-UTF8).
+But some things have to be unicode strings.
+
+--b.
