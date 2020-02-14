@@ -2,36 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2400015EAED
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63DB215EAE7
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:17:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389068AbgBNRRT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 12:17:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38106 "EHLO mail.kernel.org"
+        id S2391790AbgBNQL2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 11:11:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391070AbgBNQLZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:25 -0500
+        id S2391781AbgBNQL1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15404246A2;
-        Fri, 14 Feb 2020 16:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7577F24684;
+        Fri, 14 Feb 2020 16:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696684;
-        bh=HX1sH3xP4I5yGM42z+4OP78uM3vNefqII84YLQA3uZs=;
+        s=default; t=1581696686;
+        bh=7SERtw8OK82XTQ5ufmS4hqri0I5TFHdgVzia8a+AzFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2+zzoVh0mzD0aZZn2/VnkI9uFarGU7cINP4Zt89XA4LNN7eQoI1aP1dJ76jrMGKE
-         jo/oMBHfW5Cs+L/9SY5oAu/YmR+uGgMFIO2ULrFD2NNTE64Og6IRY2Vs3r7yYnnce0
-         /rqkG0xbUqMMHHlAa0cIBBQNikwMiyn337vNmdaM=
+        b=obxuLzsHtV1KXLfT0JXzijdueGxdNh5mhTSEnep9HgdXaSA6UdJe2bFb74mt2umPR
+         w7DuLgKGuiyqdwiN/xvW8q0PF1nD6gaPUTSv5PXzk2qaprW2JNllcYPCzAmdci6DgI
+         TCBRFzHKoJX1ar0dI8gfrYpMkiYXbURhmnqQYZbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Robert Milkowski <rmilkowski@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 452/459] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Fri, 14 Feb 2020 11:01:42 -0500
-Message-Id: <20200214160149.11681-452-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 453/459] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Fri, 14 Feb 2020 11:01:43 -0500
+Message-Id: <20200214160149.11681-453-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -46,36 +45,158 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Robert Milkowski <rmilkowski@gmail.com>
 
-[ Upstream commit 924491f2e476f7234d722b24171a4daff61bbe13 ]
+[ Upstream commit 7dc2993a9e51dd2eee955944efec65bef90265b7 ]
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+NFS4 lease renewal, which is not compliant with the NFS4 specification.
+This can result in a lease being expired by an NFS server.
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+introduced implicit client lease renewal in nfs4_do_fsinfo(),
+which can result in the NFSv4.0 lease to expire on a server side,
+and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+
+This can easily be reproduced by frequently unmounting a sub-mount,
+then stat'ing it to get it mounted again, which will delay or even
+completely prevent client from sending RENEW operations if no other
+NFS operations are issued. Eventually nfs server will expire client's
+lease and return an error on file access or next RENEW.
+
+This can also happen when a sub-mount is automatically unmounted
+due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+mounted again via stat(). This can result in a short window during
+which client's lease will expire on a server but not on a client.
+This specific case was observed on production systems.
+
+This patch removes the implicit lease renewal from nfs4_do_fsinfo().
+
+Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
 Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfs/nfs4_fs.h    |  4 +---
+ fs/nfs/nfs4proc.c   | 12 ++++++++----
+ fs/nfs/nfs4renewd.c |  5 +----
+ fs/nfs/nfs4state.c  |  4 +---
+ 4 files changed, 11 insertions(+), 14 deletions(-)
 
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5cc3e94a..bb322d9de313b 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -439,9 +439,7 @@ extern void nfs4_schedule_state_renewal(struct nfs_client *);
+ extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed);
++extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
+ 
+ 
+ /* nfs4state.c */
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index f26d714f9f28a..5abb3195658a9 100644
+index 5abb3195658a9..423960d480f10 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
- 			exception.retry = 1;
- 			continue;
+@@ -5024,16 +5024,13 @@ static int nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh *fhandle, str
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
+ 	};
+-	unsigned long now = jiffies;
+ 	int err;
+ 
+ 	do {
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client,
+-					fsinfo->lease_time * HZ,
+-					now);
++			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
+ 			break;
  		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+ 		err = nfs4_handle_exception(server, err, &exception);
+@@ -6089,6 +6086,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+ 		.callback_data = &setclientid,
+ 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+ 	};
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	/* nfs_client_id4 */
+@@ -6121,6 +6119,9 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
+ 	}
++
++	if (status == 0)
++		do_renew_lease(clp, now);
+ out:
+ 	trace_nfs4_setclientid(clp, status);
+ 	dprintk("NFS reply setclientid: %d\n", status);
+@@ -8204,6 +8205,7 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	struct rpc_task *task;
+ 	struct nfs41_exchange_id_args *argp;
+ 	struct nfs41_exchange_id_res *resp;
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
+@@ -8224,6 +8226,8 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	if (status != 0)
+ 		goto out;
+ 
++	do_renew_lease(clp, now);
++
+ 	clp->cl_clientid = resp->clientid;
+ 	clp->cl_exchange_flags = resp->flags;
+ 	clp->cl_seqid = resp->seqid;
+diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
+index 6ea431b067dd6..ff876dda7f063 100644
+--- a/fs/nfs/nfs4renewd.c
++++ b/fs/nfs/nfs4renewd.c
+@@ -138,15 +138,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
+  *
+  * @clp: pointer to nfs_client
+  * @lease: new value for lease period
+- * @lastrenewed: time at which lease was last renewed
+  */
+ void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed)
++		unsigned long lease)
+ {
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+-	clp->cl_last_renewal = lastrenewed;
+ 	spin_unlock(&clp->cl_lock);
+ 
+ 	/* Cap maximum reconnect timeout at 1/2 lease period */
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 0c6d53dc3672a..b53bcf40e2a77 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -91,17 +91,15 @@ static int nfs4_setup_state_renewal(struct nfs_client *clp)
+ {
+ 	int status;
+ 	struct nfs_fsinfo fsinfo;
+-	unsigned long now;
+ 
+ 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
+ 		nfs4_schedule_state_renewal(clp);
+ 		return 0;
+ 	}
+ 
+-	now = jiffies;
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
++		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
 -- 
 2.20.1
 
