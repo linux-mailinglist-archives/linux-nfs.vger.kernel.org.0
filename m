@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C31C815F87B
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 22:12:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3902D15F87C
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 22:12:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbgBNVMK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 16:12:10 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41891 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388611AbgBNVMK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 16:12:10 -0500
-Received: by mail-yw1-f65.google.com with SMTP id l22so4864737ywc.8
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Feb 2020 13:12:09 -0800 (PST)
+        id S2388663AbgBNVML (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 16:12:11 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:45665 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388661AbgBNVML (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 16:12:11 -0500
+Received: by mail-yb1-f196.google.com with SMTP id j78so2023395ybg.12
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Feb 2020 13:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JBINryEt5KKoVgjkRtc1//2JVS4TLtwlkx/Yzht0EW4=;
-        b=KGG75ecxVEW4kymWq7oPdjLDqLjZtQw/aUPrmnGCscgNemvkhDDjac11fjq3lAFq2S
-         VOnLfwcimSPaSfdKJOGIneuqdCIIxZALbmbuqRp09FvLNOlQcsU7aG1PVcbOnxKqsfFa
-         A502+bdWw7YXuatcLZ4r2EDdjXYH7KxdolC0YVkW9oJG5tEQPYOZ0nrsaBuf9j73j6hc
-         O/dIIb2ZTNc9RbJtvnBAEIwCjQyQPW1G7E0ibbJMABR8Luk3DwbU8XW+4KAxM2WA16Z4
-         BXN6LihoX7dnOYSyApzUkS6ny9m6VyMkic53rz0nP8RDY0DMJWa0o5DwETQgcRsENRnb
-         IQrQ==
+        bh=Y6ONWApcIATjJKTONWxSb2Z3biFUOMeWsS0lbfEG3AU=;
+        b=Ot2x/EEC3xzw6epuP3uXBab2dLaWQhmSOvR4j6kHk38xhGhPU0yMJ5rQtdgYiFfryq
+         Kg010z6KQ1L+XteYMKHs3JQYeKAxJaTGAj/NAUg1czyvk3NVvc8UHWye+q/0v2k61eWC
+         kj1tQsBGer3oMR/rAjDkC994VT4MQZ4tmKxduyXechaZTq0X8X1hgptEdxwC6B2l5H0Y
+         XNeXPLKI1mt4AnUc14ANNfO1G61MNEu4TvKQPMcyF3kql+62dTcRpR2ObtgBK26LDnit
+         UPLYDR2pS7mfNVc9dZpxm1Tz/hD6NHL0re6B2zh3DPaBGaPTh8CT5wiYKkYCUcPG+v5f
+         AKTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=JBINryEt5KKoVgjkRtc1//2JVS4TLtwlkx/Yzht0EW4=;
-        b=VIVjOfk1IyQekR2Gbx0cA5ijFMSYI4jUCXCxokkhCfyKXBOOW1LbefXm8ou5m21RlF
-         6riv/3zIHM6Hoftr1MDMzG7uHrMxeVShIoamGkVghhNc3eazQDcceGZAEHguhgO2quMi
-         7gPde1kATtu+9g67iJZ41gxarnfXWA5jtH+kQFeV7PNaS15XktpkZRsoMR9OogWqw1u7
-         BqrLnwH/MffDtAJkp19wK0izrA47zJyKwX3mIBDu1/NJbxBytgE03m979+jwS9j7AsdN
-         mxniLHwjgNwUynfKM/A8boKlGb3/ACW1JRn1P9xTDpZSyvZypi9nB7/ZSzwZ2NqbYe9h
-         jggQ==
-X-Gm-Message-State: APjAAAV2HIZdVgzXh4AVMLh6dbMYEdCHXMk4F0b8UVZLYhh8Q3eFAcoY
-        /zF42CdEQg2Gi9/QfdrAfo4=
-X-Google-Smtp-Source: APXvYqwMY9W1y3/x/3MeEbVhTygSyTdg/EQw+9y9TqaulDHCLVEtwSI8yzvr+PSDLFNQWKNq6G/jvQ==
-X-Received: by 2002:a81:98c7:: with SMTP id p190mr4168393ywg.200.1581714729075;
-        Fri, 14 Feb 2020 13:12:09 -0800 (PST)
+        bh=Y6ONWApcIATjJKTONWxSb2Z3biFUOMeWsS0lbfEG3AU=;
+        b=CnD+4OdUYs7D43+5iHqDYpR3bmdIR6q9shjYbOcwWZdUZc71Nk8b7RG14SfIXJ86H+
+         wE+DaLAsa2yWe5wf7jFBS1lmL/cYkdzrBRNLgDwxsKuWdHEwsSv4hznYz/s075e6oITQ
+         NfTn6mKUj1kI+iWm4M7ZnZRLaDLrXxYu39RVaOaUxTODXJ2hpafDlUTlXhaZB0kDvRlV
+         ZnwyuqpuLB8zm/SLqjtbyYYX2jYR76B8k+46qzsCH1FdGWhWKU4KH0GsFY0G5ta8TDRo
+         9tGVsFKQn0CPSe3KtZZNkXLKXL3QOqX+RNHgOSceeGqLi+2y0ls4Cvpz+3zV6Xev0rtY
+         TwRA==
+X-Gm-Message-State: APjAAAWKXuZdqEjtdXlOWlBjYC13/UeK8ODAB0GJ3YQwOwV7Pa5zasKo
+        2TMuirffSG5D6q+KqdjeDtg=
+X-Google-Smtp-Source: APXvYqw5YLQgqqSE85Nc39jHwWDJodCLKIy/s91+K0uo2HtaUr2gyQGIdpZ+7AFU350VkoZKDiGp/Q==
+X-Received: by 2002:a5b:5cf:: with SMTP id w15mr4926942ybp.490.1581714730164;
+        Fri, 14 Feb 2020 13:12:10 -0800 (PST)
 Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id t3sm3360985ywi.18.2020.02.14.13.12.08
+        by smtp.gmail.com with ESMTPSA id t3sm3360985ywi.18.2020.02.14.13.12.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 13:12:08 -0800 (PST)
+        Fri, 14 Feb 2020 13:12:09 -0800 (PST)
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     bfields@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 1/4] NFSD: Return eof and maxcount to nfsd4_encode_read()
-Date:   Fri, 14 Feb 2020 16:12:03 -0500
-Message-Id: <20200214211206.407725-2-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v2 2/4] NFSD: Add READ_PLUS data support
+Date:   Fri, 14 Feb 2020 16:12:04 -0500
+Message-Id: <20200214211206.407725-3-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200214211206.407725-1-Anna.Schumaker@Netapp.com>
 References: <20200214211206.407725-1-Anna.Schumaker@Netapp.com>
@@ -63,163 +63,179 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-I want to reuse nfsd4_encode_readv() and nfsd4_encode_splice_read() in
-READ_PLUS rather than reimplementing them. READ_PLUS returns a single
-eof flag for the entire call and a separate maxcount for each data
-segment, so we need to have the READ call encode these values in a
-different place.
+This patch adds READ_PLUS support for returning a single
+NFS4_CONTENT_DATA segment to the client. This is basically the same as
+the READ operation, only with the extra information about data segments.
+
+Note that Wireshark 3.0 will report "malformed packed" when trying to
+decode NFS4_CONTENT_DATA segments. This is because the actual data is
+encoded as a variable length array, which RFC 4506 says should start
+with a 32-bit length value. Wireshark incorrectly expects length to be a
+64-bit value instead.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- fs/nfsd/nfs4xdr.c | 60 ++++++++++++++++++++---------------------------
- 1 file changed, 26 insertions(+), 34 deletions(-)
+ fs/nfsd/nfs4proc.c | 17 +++++++++
+ fs/nfsd/nfs4xdr.c  | 90 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 101 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 9761512674a0..45f0623f6488 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3521,23 +3521,22 @@ nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr, struc
- 
- static __be32 nfsd4_encode_splice_read(
- 				struct nfsd4_compoundres *resp,
--				struct nfsd4_read *read,
--				struct file *file, unsigned long maxcount)
-+				struct nfsd4_read *read, struct file *file,
-+				unsigned long *maxcount, u32 *eof)
- {
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct xdr_buf *buf = xdr->buf;
--	u32 eof;
-+	long len;
- 	int space_left;
- 	__be32 nfserr;
--	__be32 *p = xdr->p - 2;
- 
- 	/* Make sure there will be room for padding if needed */
- 	if (xdr->end - xdr->p < 1)
- 		return nfserr_resource;
- 
-+	len = *maxcount;
- 	nfserr = nfsd_splice_read(read->rd_rqstp, read->rd_fhp,
--				  file, read->rd_offset, &maxcount, &eof);
--	read->rd_length = maxcount;
-+				  file, read->rd_offset, maxcount, eof);
- 	if (nfserr) {
- 		/*
- 		 * nfsd_splice_actor may have already messed with the
-@@ -3548,24 +3547,21 @@ static __be32 nfsd4_encode_splice_read(
- 		return nfserr;
- 	}
- 
--	*(p++) = htonl(eof);
--	*(p++) = htonl(maxcount);
--
--	buf->page_len = maxcount;
--	buf->len += maxcount;
--	xdr->page_ptr += (buf->page_base + maxcount + PAGE_SIZE - 1)
-+	buf->page_len = *maxcount;
-+	buf->len += *maxcount;
-+	xdr->page_ptr += (buf->page_base + *maxcount + PAGE_SIZE - 1)
- 							/ PAGE_SIZE;
- 
- 	/* Use rest of head for padding and remaining ops: */
- 	buf->tail[0].iov_base = xdr->p;
- 	buf->tail[0].iov_len = 0;
- 	xdr->iov = buf->tail;
--	if (maxcount&3) {
--		int pad = 4 - (maxcount&3);
-+	if (*maxcount&3) {
-+		int pad = 4 - (*maxcount&3);
- 
- 		*(xdr->p++) = 0;
- 
--		buf->tail[0].iov_base += maxcount&3;
-+		buf->tail[0].iov_base += *maxcount&3;
- 		buf->tail[0].iov_len = pad;
- 		buf->len += pad;
- 	}
-@@ -3579,22 +3575,20 @@ static __be32 nfsd4_encode_splice_read(
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 0e75f7fb5fec..9643181591e3 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2522,6 +2522,16 @@ static inline u32 nfsd4_read_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
+ 	return (op_encode_hdr_size + 2 + XDR_QUADLEN(rlen)) * sizeof(__be32);
  }
  
- static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
--				 struct nfsd4_read *read,
--				 struct file *file, unsigned long maxcount)
-+				 struct nfsd4_read *read, struct file *file,
-+				 unsigned long *maxcount, u32 *eof)
++static inline u32 nfsd4_read_plus_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
++{
++	u32 maxcount = svc_max_payload(rqstp);
++	u32 rlen = min(op->u.read.rd_length, maxcount);
++	/* enough extra xdr space for encoding either a hole or data segment. */
++	u32 segments = 1 + 2 + 2;
++
++	return (op_encode_hdr_size + 2 + segments + XDR_QUADLEN(rlen)) * sizeof(__be32);
++}
++
+ static inline u32 nfsd4_readdir_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
  {
- 	struct xdr_stream *xdr = &resp->xdr;
--	u32 eof;
- 	int v;
- 	int starting_len = xdr->buf->len - 8;
- 	long len;
- 	int thislen;
- 	__be32 nfserr;
--	__be32 tmp;
- 	__be32 *p;
- 	u32 zzz = 0;
- 	int pad;
- 
--	len = maxcount;
-+	len = *maxcount;
- 	v = 0;
- 
- 	thislen = min_t(long, len, ((void *)xdr->end - (void *)xdr->p));
-@@ -3616,22 +3610,15 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 	}
- 	read->rd_vlen = v;
- 
--	len = maxcount;
-+	len = *maxcount;
- 	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
--			    resp->rqstp->rq_vec, read->rd_vlen, &maxcount,
--			    &eof);
--	read->rd_length = maxcount;
-+			    resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
- 	if (nfserr)
- 		return nfserr;
--	xdr_truncate_encode(xdr, starting_len + 8 + ((maxcount+3)&~3));
-+	xdr_truncate_encode(xdr, starting_len + 8 + ((*maxcount+3)&~3));
- 
--	tmp = htonl(eof);
--	write_bytes_to_xdr_buf(xdr->buf, starting_len    , &tmp, 4);
--	tmp = htonl(maxcount);
--	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
--
--	pad = (maxcount&3) ? 4 - (maxcount&3) : 0;
--	write_bytes_to_xdr_buf(xdr->buf, starting_len + 8 + maxcount,
-+	pad = (*maxcount&3) ? 4 - (*maxcount&3) : 0;
-+	write_bytes_to_xdr_buf(xdr->buf, starting_len + 8 + *maxcount,
- 								&zzz, pad);
- 	return 0;
- 
-@@ -3642,6 +3629,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		  struct nfsd4_read *read)
- {
- 	unsigned long maxcount;
-+	u32 eof;
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct file *file;
- 	int starting_len = xdr->buf->len;
-@@ -3670,13 +3658,17 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 
- 	if (file->f_op->splice_read &&
- 	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags))
--		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_splice_read(resp, read, file, &maxcount, &eof);
- 	else
--		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_readv(resp, read, file, &maxcount, &eof);
+ 	u32 maxcount = 0, rlen = 0;
+@@ -3058,6 +3068,13 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+ 		.op_name = "OP_COPY",
+ 		.op_rsize_bop = nfsd4_copy_rsize,
+ 	},
++	[OP_READ_PLUS] = {
++		.op_func = nfsd4_read,
++		.op_release = nfsd4_read_release,
++		.op_name = "OP_READ_PLUS",
++		.op_rsize_bop = nfsd4_read_plus_rsize,
++		.op_get_currentstateid = nfsd4_get_readstateid,
++	},
+ 	[OP_SEEK] = {
+ 		.op_func = nfsd4_seek,
+ 		.op_name = "OP_SEEK",
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 45f0623f6488..8efb59d4fda4 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -1957,7 +1957,7 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
+ 	[OP_LAYOUTSTATS]	= (nfsd4_dec)nfsd4_decode_notsupp,
+ 	[OP_OFFLOAD_CANCEL]	= (nfsd4_dec)nfsd4_decode_offload_status,
+ 	[OP_OFFLOAD_STATUS]	= (nfsd4_dec)nfsd4_decode_offload_status,
+-	[OP_READ_PLUS]		= (nfsd4_dec)nfsd4_decode_notsupp,
++	[OP_READ_PLUS]		= (nfsd4_dec)nfsd4_decode_read,
+ 	[OP_SEEK]		= (nfsd4_dec)nfsd4_decode_seek,
+ 	[OP_WRITE_SAME]		= (nfsd4_dec)nfsd4_decode_notsupp,
+ 	[OP_CLONE]		= (nfsd4_dec)nfsd4_decode_clone,
+@@ -3664,10 +3664,11 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
  
  	if (nfserr)
  		xdr_truncate_encode(xdr, starting_len);
+-
+-	read->rd_length = maxcount;
+-	*p++ = htonl(eof);
+-	*p++ = htonl(maxcount);
++	else {
++		read->rd_length = maxcount;
++		*p++ = htonl(eof);
++		*p++ = htonl(maxcount);
++	}
  
-+	read->rd_length = maxcount;
-+	*p++ = htonl(eof);
-+	*p++ = htonl(maxcount);
-+
  	return nfserr;
  }
+@@ -4379,6 +4380,83 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		return nfserr_resource;
+ 	p = xdr_encode_hyper(p, os->count);
+ 	*p++ = cpu_to_be32(0);
++	return nfserr;
++}
++
++static __be32
++nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
++			    struct nfsd4_read *read,
++			    unsigned long maxcount,  u32 *eof)
++{
++	struct xdr_stream *xdr = &resp->xdr;
++	struct file *file = read->rd_nf->nf_file;
++	__be32 nfserr;
++	__be32 *p;
++
++	/* Content type, offset, byte count */
++	p = xdr_reserve_space(xdr, 4 + 8 + 4);
++	if (!p)
++		return nfserr_resource;
++	xdr_commit_encode(xdr);
++
++	if (file->f_op->splice_read &&
++	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags))
++		nfserr = nfsd4_encode_splice_read(resp, read, file, &maxcount, eof);
++	else
++		nfserr = nfsd4_encode_readv(resp, read, file, &maxcount, eof);
++
++	if (nfserr)
++		return nfserr;
++
++	*p++ = htonl(NFS4_CONTENT_DATA);
++	 p   = xdr_encode_hyper(p, read->rd_offset);
++	*p++ = htonl(maxcount);
++
++	read->rd_offset += maxcount;
++	read->rd_length  = (maxcount > 0) ? read->rd_length - maxcount : 0;
++	return nfserr;
++}
++
++static __be32
++nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
++		       struct nfsd4_read *read)
++{
++	unsigned long maxcount;
++	u32 eof;
++	struct xdr_stream *xdr = &resp->xdr;
++	struct file *file;
++	int starting_len = xdr->buf->len;
++	__be32 *p;
++
++	if (nfserr)
++		return nfserr;
++	file = read->rd_nf->nf_file;
++
++	/* eof flag, segment count */
++	p = xdr_reserve_space(xdr, 4 + 4);
++	if (!p) {
++		WARN_ON_ONCE(test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags));
++		return nfserr_resource;
++	}
++	if (resp->xdr.buf->page_len &&
++	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags)) {
++		WARN_ON_ONCE(1);
++		return nfserr_resource;
++	}
++	xdr_commit_encode(xdr);
++
++	maxcount = svc_max_payload(resp->rqstp);
++	maxcount = min_t(unsigned long, maxcount,
++			 (xdr->buf->buflen - xdr->buf->len));
++	maxcount = min_t(unsigned long, maxcount, read->rd_length);
++
++	nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
++	if (nfserr)
++		xdr_truncate_encode(xdr, starting_len);
++	else {
++		*p++ = htonl(eof);
++		*p++ = htonl(1);
++	}
  
+ 	return nfserr;
+ }
+@@ -4521,7 +4599,7 @@ static const nfsd4_enc nfsd4_enc_ops[] = {
+ 	[OP_LAYOUTSTATS]	= (nfsd4_enc)nfsd4_encode_noop,
+ 	[OP_OFFLOAD_CANCEL]	= (nfsd4_enc)nfsd4_encode_noop,
+ 	[OP_OFFLOAD_STATUS]	= (nfsd4_enc)nfsd4_encode_offload_status,
+-	[OP_READ_PLUS]		= (nfsd4_enc)nfsd4_encode_noop,
++	[OP_READ_PLUS]		= (nfsd4_enc)nfsd4_encode_read_plus,
+ 	[OP_SEEK]		= (nfsd4_enc)nfsd4_encode_seek,
+ 	[OP_WRITE_SAME]		= (nfsd4_enc)nfsd4_encode_noop,
+ 	[OP_CLONE]		= (nfsd4_enc)nfsd4_encode_noop,
 -- 
 2.25.0
 
