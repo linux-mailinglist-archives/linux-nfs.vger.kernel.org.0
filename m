@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CDEF15F44F
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:23:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AACC515F449
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:23:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgBNPuH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 10:50:07 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:33279 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730359AbgBNPuG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 10:50:06 -0500
-Received: by mail-yb1-f193.google.com with SMTP id b6so4973590ybr.0;
-        Fri, 14 Feb 2020 07:50:05 -0800 (PST)
+        id S2394813AbgBNSUN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 13:20:13 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37121 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729617AbgBNPuL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 10:50:11 -0500
+Received: by mail-yw1-f66.google.com with SMTP id l5so4451764ywd.4;
+        Fri, 14 Feb 2020 07:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=jwD0yJAXKb6aNGl1dFtvN1rJFxGMRVHOHNoorWVyGAc=;
-        b=V37hCgX9nes1YzhwO6Z/or5d0Yo4egTb21I173GJXMVjmlAkFsAW16uMvaKfvs9txI
-         /i9vxqOchC3llvzabnDkfP7yrFxkN1tPLiGUE+HKhaDqwcWiQkUGH1YmZTd+2CRz8gzk
-         bQ8+X+Fs4MBqn1U3Ve7BBCg97jpoHDkC1o0LyGlZ8fOlZ+PpCUQ8QzLAq9CC1AseIGb0
-         N1P2fJfQZwwP3Je3boexOKJO6Iq36ETOibXaRVj1Cliu3yQV0Bs2tuDxASyJRi4F34Db
-         p1TRO0d0Ds5UXx/1S+rT4xRXG3XYjZCFcsG+7X4qIzF9P2KCaV/IsJaHyazGavbnaLNz
-         ZbqA==
+        bh=jr8hTaKS8MrCYauE49IsR6qQ2XT9e1L6kQQ5nLMAksA=;
+        b=bSjN8hkzZjErTsGxrTF6XrgH/YSuO7ZMhFtxqrT7PZb1lR4kSFS0Bw+N00Z96ma/EX
+         kBx8zdPxgIU7PRnzZamc4q9zVdlMZeNoCWoo09kGJPCV1MnHRTCZro8KPsWgZnmSV5Dv
+         SB0ZMlYrqE+WF8VGOihllrMpNiycwZKKKDTkPILAzcorJqDsAqBs3kwLTqzvjMfPGry6
+         TR86EzDBMIr+Wkx14vSfYoDGPQrUt3hUiQQ0wNVW2Av3/9uvWL9/Na3VNBVc0CiKJ0Mt
+         n1PaPSgEWveSMGYi61D8fewJSUbv4bWtQlrPE9HLGMzRUDCy5xudSvR/mF3mosnQ0yHx
+         mnlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=jwD0yJAXKb6aNGl1dFtvN1rJFxGMRVHOHNoorWVyGAc=;
-        b=PaDX/RCqlaW0xXRAAx27PWUpfBGNgx4qXcqB0Qvd7by+rpipzHBVc9XFezkFaU6mx1
-         H2Z7rw5DCashJPprzX5gcBqpeE8aYhwq1caVM4qYlEnBHXwp+HwiLT8OtWfWl02qs/9/
-         H2hQCKnk4bDM1gErLF06i5lt1FfER7Zd7ziGAjzMiJeKZ6nKg+5kPUw3gI+2eBYwLUY5
-         AsL75/BHXjpjlQKHVaDgaPOfb4dRXgIrUf2LBzctMkmaZ83/a4ds+g2lDpXZ4mhQO8yf
-         A51DLo7/cWcS/U0ZVpzIGAbHTs6WPr/xpX5bgR70nV3G6XJShVm9gFYA5305Bncvqsw/
-         IFgA==
-X-Gm-Message-State: APjAAAVHBqWpNK1Tsf2PIylYgwOHKB2YZRpALBSOwEpJ1XQrxfos+rCe
-        Stourj56IkxKeqXDDXj6ThLjJZRw
-X-Google-Smtp-Source: APXvYqxZv2gV+4bJllDK70UW7Zt5C9H2eYKWzwoo/Qk4hRCg1n1AQ8f8aNlpwogctxku36TekO9FRQ==
-X-Received: by 2002:a25:80c5:: with SMTP id c5mr3100155ybm.364.1581695404940;
-        Fri, 14 Feb 2020 07:50:04 -0800 (PST)
+        bh=jr8hTaKS8MrCYauE49IsR6qQ2XT9e1L6kQQ5nLMAksA=;
+        b=derL+jgjpliDCfaF6U3TOzJz7AGgw5feJoL4Zu5Uzol2a3dVbtKlRcfjvHdWDlRTFN
+         C4JmkGGfojRa86rBp4in2579F4Ppykdlc3Q9Ytkpv5xwd80oJLv66vyMBH3vwMd1PeH/
+         CYHgeOZR426Mzu+feJkBks6l7EsZVbTDfby2Ujc3cSd0zhnRRmnxNocRBT17Xmp/5VKR
+         fYaSIDcRBJXnSJYmVAjDB1WQjyY09wpf4XEcu4FRfz2EUZEDiMF1sYSyO8K9wBNFASBh
+         YRdA1AE/uLPy6BCrHeE/jms7TNZ26mmX6NqDY3Rv/can0wLrKdFoxJ8DyiwdbhVarx2c
+         4jjw==
+X-Gm-Message-State: APjAAAXToSwaGzTtgPSmhnNXGJD21NCO4Cq418RpPPQ1YclLzOLlgbnH
+        WfIzL3OHu7c2XVY60tNK2FKuH2Ux
+X-Google-Smtp-Source: APXvYqw4JMw99kpxsD07PE+Ap6VM8t7P6R3KqTxt6h2eXglty/7anuENT1znT4NywsVj7VQv04VCQw==
+X-Received: by 2002:a81:6389:: with SMTP id x131mr2809045ywb.270.1581695410150;
+        Fri, 14 Feb 2020 07:50:10 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id r64sm2657589ywg.84.2020.02.14.07.50.04
+        by smtp.gmail.com with ESMTPSA id d66sm2574758ywc.16.2020.02.14.07.50.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Feb 2020 07:50:04 -0800 (PST)
+        Fri, 14 Feb 2020 07:50:09 -0800 (PST)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01EFo3Ml029168;
-        Fri, 14 Feb 2020 15:50:03 GMT
-Subject: [PATCH RFC 4/9] NFSD: Invoke svc_encode_read_payload in "read" NFSD
- encoders
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01EFo8jo029171;
+        Fri, 14 Feb 2020 15:50:08 GMT
+Subject: [PATCH RFC 5/9] svcrdma: Add trace point to examine client-provided
+ write segment
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 14 Feb 2020 10:50:03 -0500
-Message-ID: <20200214155003.3848.37713.stgit@klimt.1015granger.net>
+Date:   Fri, 14 Feb 2020 10:50:08 -0500
+Message-ID: <20200214155008.3848.6982.stgit@klimt.1015granger.net>
 In-Reply-To: <20200214151427.3848.49739.stgit@klimt.1015granger.net>
 References: <20200214151427.3848.49739.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -66,112 +66,64 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Have the NFSD encoders annotate the boundaries of every
-direct-data-placement eligible READ data payload. Then change
-svcrdma to use that annotation instead of the xdr->page_len
-when handling Write chunks.
-
-For NFSv4 on RDMA, that enables the ability to recognize multiple
-READ payloads per compound. Next step is to support multiple Write
-chunks.
+Ensure clients send large enough Write chunks.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c                     |    4 ++++
- fs/nfsd/nfs4xdr.c                     |    3 +++
- fs/nfsd/nfsxdr.c                      |    4 ++++
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |   15 +++------------
- 4 files changed, 14 insertions(+), 12 deletions(-)
+ include/trace/events/rpcrdma.h          |    7 ++++---
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   12 +++++++++---
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index aae514d40b64..8c272efbc94e 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -712,6 +712,8 @@ void fill_post_wcc(struct svc_fh *fhp)
- 			*p = 0;
- 			rqstp->rq_res.tail[0].iov_len = 4 - (resp->len&3);
- 		}
-+		svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
-+					resp->len);
- 		return 1;
- 	} else
- 		return xdr_ressize_check(rqstp, p);
-@@ -737,6 +739,8 @@ void fill_post_wcc(struct svc_fh *fhp)
- 			*p = 0;
- 			rqstp->rq_res.tail[0].iov_len = 4 - (resp->count & 3);
- 		}
-+		svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
-+					resp->count);
- 		return 1;
- 	} else
- 		return xdr_ressize_check(rqstp, p);
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 262f9fc76e4e..a8d3f8f035a0 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3547,6 +3547,8 @@ static __be32 nfsd4_encode_splice_read(
- 		buf->page_len = 0;
- 		return nfserr;
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index 6f0d3e8ce95c..773f6d9fd800 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -1507,7 +1507,7 @@
+ );
+ 
+ #define DEFINE_SEGMENT_EVENT(name)					\
+-		DEFINE_EVENT(svcrdma_segment_event, svcrdma_encode_##name,\
++		DEFINE_EVENT(svcrdma_segment_event, svcrdma_##name,\
+ 				TP_PROTO(				\
+ 					u32 handle,			\
+ 					u32 length,			\
+@@ -1515,8 +1515,9 @@
+ 				),					\
+ 				TP_ARGS(handle, length, offset))
+ 
+-DEFINE_SEGMENT_EVENT(rseg);
+-DEFINE_SEGMENT_EVENT(wseg);
++DEFINE_SEGMENT_EVENT(decode_wseg);
++DEFINE_SEGMENT_EVENT(encode_rseg);
++DEFINE_SEGMENT_EVENT(encode_wseg);
+ 
+ DECLARE_EVENT_CLASS(svcrdma_chunk_event,
+ 	TP_PROTO(
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 71127d898562..2f16c0625226 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -420,13 +420,19 @@ static __be32 *xdr_check_write_chunk(__be32 *p, const __be32 *end,
+ 
+ 	segcount = be32_to_cpup(p++);
+ 	for (i = 0; i < segcount; i++) {
+-		p++;	/* handle */
+-		if (be32_to_cpup(p++) > maxlen)
++		u32 handle, length;
++		u64 offset;
++
++		handle = be32_to_cpup(p++);
++		length = be32_to_cpup(p++);
++		if (length > maxlen)
+ 			return NULL;
+-		p += 2;	/* offset */
++		p = xdr_decode_hyper(p, &offset);
+ 
+ 		if (p > end)
+ 			return NULL;
++
++		trace_svcrdma_decode_wseg(handle, length, offset);
  	}
-+	svc_encode_read_payload(read->rd_rqstp, buf->head[0].iov_len,
-+				maxcount);
  
- 	*(p++) = htonl(eof);
- 	*(p++) = htonl(maxcount);
-@@ -3713,6 +3715,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 		xdr_truncate_encode(xdr, length_offset);
- 		return nfserr;
- 	}
-+	svc_encode_read_payload(readlink->rl_rqstp, length_offset, maxcount);
- 
- 	wire_count = htonl(maxcount);
- 	write_bytes_to_xdr_buf(xdr->buf, length_offset, &wire_count, 4);
-diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-index b51fe515f06f..98ea417042a6 100644
---- a/fs/nfsd/nfsxdr.c
-+++ b/fs/nfsd/nfsxdr.c
-@@ -462,6 +462,8 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
- 		*p = 0;
- 		rqstp->rq_res.tail[0].iov_len = 4 - (resp->len&3);
- 	}
-+	svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
-+				resp->len);
- 	return 1;
- }
- 
-@@ -482,6 +484,8 @@ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *f
- 		*p = 0;
- 		rqstp->rq_res.tail[0].iov_len = 4 - (resp->count&3);
- 	}
-+	svc_encode_read_payload(rqstp, rqstp->rq_res.head[0].iov_len,
-+				resp->count);
- 	return 1;
- }
- 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 8ea21ca351e2..40b4843be869 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -875,18 +875,9 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 
- 	if (wr_lst) {
- 		/* XXX: Presume the client sent only one Write chunk */
--		unsigned long offset;
--		unsigned int length;
--
--		if (rctxt->rc_read_payload_length) {
--			offset = rctxt->rc_read_payload_offset;
--			length = rctxt->rc_read_payload_length;
--		} else {
--			offset = xdr->head[0].iov_len;
--			length = xdr->page_len;
--		}
--		ret = svc_rdma_send_write_chunk(rdma, wr_lst, xdr, offset,
--						length);
-+		ret = svc_rdma_send_write_chunk(rdma, wr_lst, xdr,
-+						rctxt->rc_read_payload_offset,
-+						rctxt->rc_read_payload_length);
- 		if (ret < 0)
- 			goto err2;
- 		svc_rdma_xdr_encode_write_list(rdma_resp, wr_lst, ret);
+ 	return p;
 
