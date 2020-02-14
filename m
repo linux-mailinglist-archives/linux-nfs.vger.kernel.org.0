@@ -2,97 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE20115EDF7
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:37:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5379715F2BD
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 19:20:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390335AbgBNRhQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 12:37:16 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:51568 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390294AbgBNRhP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Feb 2020 12:37:15 -0500
-Received: by mail-io1-f69.google.com with SMTP id c7so7174538ioq.18
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Feb 2020 09:37:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5F+xFY1+W/Hlac79V6ZobQB/3n68BJuYvhyjKZywEuE=;
-        b=skfRWV0psUl2TFaFHXuLqXHr2DTt+be37Q6bnCycxdyI3lT8/VhSta1iKMPfnPN7sG
-         TaKSypvZTHCwlaJtgK4CpIij5vd1lna20q7yzQD+BzOP9I+Krc/AmyOJsfUbp1brVsLz
-         +mMU0LvX3cOV8IhCE85Gt1mg/ogGn/mNadi2SaYEPuXNvRxC4WJcII6QPih6/5mQZiIz
-         ckeu67EoM5kqja4h/75ZRU5wuf9/R/5ocOBtu+uz1GFhLp8BzSzlxphQ+GUWDg2bJgaQ
-         Gd3inKJAfiQL40hYlWqK3Jq8nvY7xNMg4AxVSUJXxQVaRA9PoerXxOsXeqYfu0T6rHol
-         w6yw==
-X-Gm-Message-State: APjAAAWA+56YwB33Mo6igOY5JoCrhAaApyLXOMe6QFvYSJVCvKkL3+z9
-        5lmzB32SM7MW5gTJwpF1xPKvOtJjJ3HiN93Ea2DqTk/LJfjK
-X-Google-Smtp-Source: APXvYqzbsVvDyxQKl/xehVX2UF3KhAqgullVm/2J57JdImUF93XtDZ+eMr3+hVL6v2CdR9bVBWDbK4C1e7Qgu2QNh0RvlyELRwjj
+        id S1730529AbgBNPug (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 10:50:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730525AbgBNPuf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:35 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A7E24684;
+        Fri, 14 Feb 2020 15:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695435;
+        bh=MJ2uyHPzkXeagzrBI1E8WUEzNGc86rzpa+3s1n5VZTU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nHI15F61p/r+o/BeUCVkElqSr1Pa3EKhTS+Cb9+OEnCewFGYea4eU7jeaEcuIIHAV
+         WNgreGhAD+wmacqAUMCU8Fu0l8J5Tzysu5l03GOaui3AzUcl0dETRe6STJFqFDXEpP
+         iixCnmpolNbnKZ88FPc549BWZbb5eBTfIFKaBeX4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 077/542] nfs: NFS_SWAP should depend on SWAP
+Date:   Fri, 14 Feb 2020 10:41:09 -0500
+Message-Id: <20200214154854.6746-77-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:8587:: with SMTP id d7mr3471135jai.39.1581701834636;
- Fri, 14 Feb 2020 09:37:14 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:37:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fe87be059e8ca7bc@google.com>
-Subject: memory leak in nfs_fs_context_parse_monolithic
-From:   syzbot <syzbot+193c375dcddb4f345091@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-syzbot found the following crash on:
+[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
 
-HEAD commit:    0bf999f9 linux/pipe_fs_i.h: fix kernel-doc warnings after ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1589bd4ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2802e33434f4f863
-dashboard link: https://syzkaller.appspot.com/bug?extid=193c375dcddb4f345091
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13dec65ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c05311e00000
+If CONFIG_SWAP=n, it does not make much sense to offer the user the
+option to enable support for swapping over NFS, as that will still fail
+at run time:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+193c375dcddb4f345091@syzkaller.appspotmail.com
+    # swapon /swap
+    swapon: /swap: swapon failed: Function not implemented
 
-executing program
-BUG: memory leak
-unreferenced object 0xffff8881166b3ac0 (size 32):
-  comm "syz-executor191", pid 7127, jiffies 4294946216 (age 12.850s)
-  hex dump (first 32 bytes):
-    00 66 73 00 00 00 00 00 00 00 00 00 00 00 00 00  .fs.............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000006202a794>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000006202a794>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<000000006202a794>] slab_alloc mm/slab.c:3320 [inline]
-    [<000000006202a794>] __do_kmalloc mm/slab.c:3654 [inline]
-    [<000000006202a794>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-    [<000000007e324303>] kstrdup+0x3a/0x70 mm/util.c:60
-    [<000000002835aac3>] nfs23_parse_monolithic fs/nfs/fs_context.c:958 [inline]
-    [<000000002835aac3>] nfs_fs_context_parse_monolithic+0x5cf/0x8f0 fs/nfs/fs_context.c:1147
-    [<000000004fe3f934>] parse_monolithic_mount_data+0x37/0x40 fs/fs_context.c:679
-    [<00000000dccb779f>] do_new_mount fs/namespace.c:2818 [inline]
-    [<00000000dccb779f>] do_mount+0x945/0xc80 fs/namespace.c:3107
-    [<000000006234487e>] __do_sys_mount fs/namespace.c:3316 [inline]
-    [<000000006234487e>] __se_sys_mount fs/namespace.c:3293 [inline]
-    [<000000006234487e>] __x64_sys_mount+0xc0/0x140 fs/namespace.c:3293
-    [<00000000d2937fdd>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000fa6ba8f3>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Fix this by adding a dependency on CONFIG_SWAP.
 
-
-
+Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/nfs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 295a7a21b7744..e7dd07f478259 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -90,7 +90,7 @@ config NFS_V4
+ config NFS_SWAP
+ 	bool "Provide swap over NFS support"
+ 	default n
+-	depends on NFS_FS
++	depends on NFS_FS && SWAP
+ 	select SUNRPC_SWAP
+ 	help
+ 	  This option enables swapon to work on files located on NFS mounts.
+-- 
+2.20.1
+
