@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0628415E460
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 17:35:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BED4015EC3A
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2020 18:26:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391544AbgBNQfl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Feb 2020 11:35:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
+        id S2391170AbgBNRZz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Feb 2020 12:25:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405944AbgBNQYl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:41 -0500
+        id S2391020AbgBNQIk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C58F247A4;
-        Fri, 14 Feb 2020 16:24:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28EA2467E;
+        Fri, 14 Feb 2020 16:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697480;
-        bh=yi9QOP/il3GJcu7Kn35kfDf8jWGVv+A/VKq1CrPmysg=;
+        s=default; t=1581696519;
+        bh=nV2rG360gPkk6R2U9iXdSMSM4aIx3EOLH+KRbqeh7XI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I4gBLwY3MtKSupFrPd7USH03hkkRtovZc2DGDuLBgRWB8zG2JP+8w3/IEf/Hq/p70
-         vfMUlNNS4/+ZdTkMkGPIOwdVW/YXdbBc7KfCD+TIcQQVrsD23aenG3sqKm4RjpakYy
-         mJE8pqjESYKFsvXVlsgof71ndUeT6qQP4gLlDygY=
+        b=ULIjdQ1xi5K0PjogMcoqK5peCcxxcxsdrjZTnu2smpKxXspoAhzGf6oqc+XLlOWs7
+         sXYBsAMGaZqkS7equucEporgkI1Cw/OjZKJI04MnhWEsDmYu6m9tZm9kfhfotL1cHl
+         A7yY9qem19Ht3+vreJT4cQnyxyHwQhbu2gMvqzMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 012/100] nfs: NFS_SWAP should depend on SWAP
-Date:   Fri, 14 Feb 2020 11:22:56 -0500
-Message-Id: <20200214162425.21071-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 320/459] NFS: Revalidate the file size on a fatal write error
+Date:   Fri, 14 Feb 2020 10:59:30 -0500
+Message-Id: <20200214160149.11681-320-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,40 +44,42 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
+[ Upstream commit 0df68ced55443243951d02cc497be31fadf28173 ]
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+If we suffer a fatal error upon writing a file, which causes us to
+need to revalidate the entire mapping, then we should also revalidate
+the file size.
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
-
-Fix this by adding a dependency on CONFIG_SWAP.
-
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: d2ceb7e57086 ("NFS: Don't use page_file_mapping after removing the page")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/write.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index b1daeafbea920..c3428767332c2 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -89,7 +89,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 52cab65f91cf0..f5170bc839aa2 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -243,7 +243,15 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
+ /* A writeback failed: mark the page as bad, and invalidate the page cache */
+ static void nfs_set_pageerror(struct address_space *mapping)
+ {
++	struct inode *inode = mapping->host;
++
+ 	nfs_zap_mapping(mapping->host, mapping);
++	/* Force file size revalidation */
++	spin_lock(&inode->i_lock);
++	NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED |
++					NFS_INO_REVAL_PAGECACHE |
++					NFS_INO_INVALID_SIZE;
++	spin_unlock(&inode->i_lock);
+ }
+ 
+ static void nfs_mapping_set_error(struct page *page, int error)
 -- 
 2.20.1
 
