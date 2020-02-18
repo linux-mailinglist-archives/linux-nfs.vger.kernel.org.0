@@ -2,183 +2,566 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 401C9162A6A
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2020 17:27:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DDD2162DFC
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2020 19:13:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgBRQ1H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Feb 2020 11:27:07 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50323 "EHLO
+        id S1726751AbgBRSNL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Feb 2020 13:13:11 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38391 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbgBRQ1H (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Feb 2020 11:27:07 -0500
+        by vger.kernel.org with ESMTP id S1726882AbgBRSNL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Feb 2020 13:13:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582043224;
+        s=mimecast20190719; t=1582049590;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=e7Gy6kyRg764t2i05x2b1pZsbO4jYcyB8CJ2Ik9JSBs=;
-        b=PIr/KSqY3LyGaOe+Xqzc08SFqwOGzzY5wdNl9SZY3ECyzvbjkpbWuIC4W3DOW4PR+lIbZO
-        gkWAwm0rmEans5vmHt1wjNh/8I8YqCmXMaWYcbJ2MLcH+dYL1RDZwkayMBvhMD/lTwDZHE
-        QnBbRmhzAJQep+MOLtLrcabfpD7K800=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-SX1bNGiRM8iJezIbgdMjHQ-1; Tue, 18 Feb 2020 11:26:58 -0500
-X-MC-Unique: SX1bNGiRM8iJezIbgdMjHQ-1
-Received: by mail-qv1-f70.google.com with SMTP id j15so12670108qvp.21
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2020 08:26:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e7Gy6kyRg764t2i05x2b1pZsbO4jYcyB8CJ2Ik9JSBs=;
-        b=bH8qyDhopqqd0FWwx6ALqcwrWjc1Y5PVrKxLvo3UZgmqoUlO9K9875DfP2exazV48q
-         q319XFB+5z529k/V1u3QDSV3nlQR2mcByWM0+uC9afdAIoMmRyNrHfgZ4W8ncO7uS6mH
-         xOpHHbIDgFTxslkjMGKmuR99+QxT8LRwVPMJnxhTgEvMeD26TWuRC8iPXdLM3Mn/CBV6
-         k6bLNSffc89b+x8YYK7pNibHn7+XE+5D7866vzCwJdmJX7p9f2Taik63oLovQ1SfrLF0
-         R2OckFXxztdP7ZIx3xyZXQd0F8ineMeOXH5cWLGZOadkibKH5kjLFX+VrbeGxZ6wi6/m
-         SPEg==
-X-Gm-Message-State: APjAAAXEWAzVWfsZWuAFGJz3aOIS6wJ5lyREB68sBwcAg2kA5HtB4QpS
-        XvkiHyb8xN2STVbMSuU+FxA4yvNY0yN1AiU/7mkWO7UIzw+3PHfCHu1qFjMkZPsrmTKomWjMT/t
-        IZMWmzrnj881Qus31DyAfuE+iCtd+D9+Egq1K
-X-Received: by 2002:ac8:b43:: with SMTP id m3mr17789453qti.191.1582043217545;
-        Tue, 18 Feb 2020 08:26:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzw+QVozAqkV+CXAIPkY1uJwuDA5i60Q3KqgccC5+g3tDqtmOMHYTJtlnHEhyWMPhK/rMlLOyJhFeJBPI9z6D0=
-X-Received: by 2002:ac8:b43:: with SMTP id m3mr17789407qti.191.1582043216895;
- Tue, 18 Feb 2020 08:26:56 -0800 (PST)
+        bh=4eE3N1CdVZF/ZVYXzz5xUNy+xrY3tmF2z/vaSgzdeZo=;
+        b=IDQIlGEmZbpOkW1kDHtWildhbVctqlpLHM/UKjNTg28KRaWoI7zGmgSLLGOqtk+MiURL37
+        yvwwjfsl+w6V8mOqO4yQDocPcDzc9Ix+TWwIQjg9un8CVKHV9Kwst71Uk/ZX9VjOf5y8e5
+        vbzQ4lfayDS3ehqINLg0YR4C2Rdx3bA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-140-QnVHHboXNuCk_6620iqIVw-1; Tue, 18 Feb 2020 13:13:04 -0500
+X-MC-Unique: QnVHHboXNuCk_6620iqIVw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DD5A107ACC7;
+        Tue, 18 Feb 2020 18:13:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 447E790526;
+        Tue, 18 Feb 2020 18:13:00 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <158204564600.3299825.1942403408111770890.stgit@warthog.procyon.org.uk>
+References: <158204564600.3299825.1942403408111770890.stgit@warthog.procyon.org.uk> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 19/19] nfs: Add example filesystem information [ver #16]
 MIME-Version: 1.0
-References: <CALF+zOm77MCP1QbLihn0hB65SB9JxkHEVSy8=-QgwW9H9E1Hng@mail.gmail.com>
- <d6986ea7f91e3c792792299a568ccc9f32d2945d.camel@hammerspace.com>
-In-Reply-To: <d6986ea7f91e3c792792299a568ccc9f32d2945d.camel@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Tue, 18 Feb 2020 11:26:21 -0500
-Message-ID: <CALF+zOkdu26vO5HQf9U6_yt1ct78_L9W=SVP2HpvFtvMvj9P2g@mail.gmail.com>
-Subject: Re: NFSv4.x behavior of 'soft' in unresponsive server cases - bounded
- time for application to wait on NFS?
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3306458.1582049579.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 18 Feb 2020 18:12:59 +0000
+Message-ID: <3306459.1582049579@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:16 PM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> Hi Dave,
->
-> On Thu, 2020-02-13 at 09:44 -0500, David Wysochanski wrote:
-> > Hi Trond,
-> >
-> > I'm getting up to speed on your patchset from last year titled "Fix
-> > up soft mounts for NFSv4.x"
-> > https://spinics.net/lists/linux-nfs/msg72467.html
-> >
-> > Specifically I have concerns about this patch because after it, so
-> > far I cannot find any way that an application can achieve a bounded
-> > wait on an NFS4 operation:
-> > e4ec48d3cc61 SUNRPC: Make "no retrans timeout" soft tasks behave like
-> > softconn for timeouts
-> >
-> > The patchset changed 'soft' semantics and I want to be sure I
-> > understand this and what the intended behavior is in the case of an
-> > unresponsive server.  Specifically I am investigating TCP and two
-> > cases:
-> > a) server is responsive at the TCP level but not at the NFS level to
-> > some operations (slow IO - read or a write)
->
-> This is the case that the NFSv4 protocol covers in RFC7530 Section
-> 3.1.1. ("Client Retransmission Behavior") and RFC5661 Section 2.9.2.
-> The behaviour we are adopting here for 'soft' is specifically designed
-> to be compliant with those two sections.
->
-Thank you for pointing those out.  It makes sense that retries are not allowed
-from RFC7530, unless there is a disconnect.  However I do not understand
-the decision to make the client wait for a time depending on external
-conditions, especially since this has been the soft semantics for so long,
-we have a mount option 'timeo' that is explained as a timer on an NFS
-operation, and especially if 'retrans=0'.
+Oops.  I forgot to add a couple of files before committing.  Here's the
+corrected patch.
 
-The above and other sections also states the client may close the
-connection and it does not have to wait for an indeterminate amount
-of time for a reply.  I see you explain the downsides of a client
-disconnecting or giving up below.  Before I respond to that, the
-bottomline for me is:
+David
+---
+nfs: Add example filesystem information
 
-1. If we can show some customers need a true 'timeo=N,retrans=0' -
-i.e. a defined time before erroring out, as defined by previous soft
-semantics, are you willing to revisit at least that part of the decision,
-or is it not something that's possible or you're likely to do?
+Add the ability to list NFS server addresses and hostname, timestamp
+information and capabilities as an example.
 
-2. If these new 'soft' semantics are not in flux anymore, can you suggest
-an update to the 'nfs' man page for 'soft', 'retrans' and 'timeo' for NFSv4?
-I have some ideas of what we could say but if you have a few bullets at least
-it will help define how deep to go.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-nfs@vger.kernel.org
 
-> > b) server is not responsive at the TCP level (network partition)
-> >
-> > Primarily I am testing kernel v5.5 with 'a' since I think 'b' is
-> > covered by a reset of the connection after it looks like 2 minutes.
-> > I realize the NFS4 client cannot retransmit an RPC per the NFS4 RFC.
-> > However, is there some way to achieve a bounded wait of say 'T' an
-> > application after this patch in both of those instances, basically
-> > something like "soft,retrans=0,timeo=T"?  Is there an option to force
-> > a reset of the TCP connection in case 'a' after a specified time, or
-> > is this impossible for some reason?  Or is the minimum timeout not
-> > bounded by anything specified on the mount options but by other
-> > factors such as server responsiveness to an operation (case 'a') or
-> > TCP connection timeout / reset (case 'b')?
-> >
-> > Thanks.
->
-> Yes, there is the option of closing the TCP socket on the client.
-> However that breaks replay semantics on NFSv4.0 and it just forces us
-> into a livelock situation in the case where the server is responsive,
-> but slow/congested. This is particularly true of NFSv4.x (x>0), where
-> the session semantics mean that we cannot send a new request on the
-> slot before the old one has completed being processed by the server.
->
-How can disconnect and reconnect then re-sending break replay?
-Is it due to port re-use or something else?  If it's port re-use, that problem
-has always been there as far as I understand, and with 'soft' the user
-has chosen to prioritize response time over data integrity.
+---
+ fs/nfs/Makefile              |    1 =
 
-Can you give me a hint on how the livelock happens?  I could see that
-if there was no backoff, but the original definition of 'retrans' and 'timeo'
-had a back-off built into it so it's something else?
+ fs/nfs/fsinfo.c              |  225 +++++++++++++++++++++++++++++++++++++=
+++++++
+ fs/nfs/internal.h            |    8 +
+ fs/nfs/nfs4super.c           |    1 =
 
-Sure you cannot re-use a slot if a request is still outstanding, but the slot is
-tied up in any case.  That does not mean the requestor wants to continue to
-wait for the reply.  Is there no way for the client to signal to the server
-they have given up on the request? As far as sending a new request on a
-slot, rfc7530#section-3.1.1 talks about the client could wait or break the
-connection.  Prior to that it talks about the server "MUST NOT silently
-drop ... unless the transport connection has been broken".  My read of that
-is that this dropping of the connection could signal to the server that any
-prior request on a slot that has not been successfully delivered to the client
-may have been abandoned.  Am I reading that wrong?  Would a server continue
-with a prior request under these circumstances?  It seems a little strange that
-these RFCs have been there for many years but just now this change on the
-client side where the wait time is less defined.
+ fs/nfs/super.c               |    1 =
 
-I'm more concerned about scenario 'a' because I think scenario 'b' should work,
-though I'm not clear exactly we don't have some issues there with certain
-complex networks.  It's just harder to say now since the timer on the client
-is not honored, so we're dependent on external conditions bounding the wait.
+ include/uapi/linux/fsinfo.h  |   29 +++++
+ include/uapi/linux/windows.h |   35 ++++++
+ samples/vfs/test-fsinfo.c    |   40 +++++++
+ 8 files changed, 340 insertions(+)
 
-> So yes, the new semantics are a compromise, but they are designed to
-> address the situations where the server really is gone away, and are
-> designed to avoid overloading the server further in situations where it
-> is already congested.
->
-As usual, clearly you've done a lot of work here to address many issues trying
-to balance the many trade-offs.  It sounds like NFS4.x may box in the client
-implementation in some instances.  I'm only raising it because my _gut_ (which
-could be wrong) tells me at least some customers will care, since many will
-probably only see we're taking an option away that some rely on for
-responsiveness.  I'm a bit unsure how to present this other than to
-point at this
-thread, but maybe we at least we can clarify with a man page update the new
-limitations of these mount options, if indeed we're beyond the point
-of no return.
+diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
+index 2433c3e03cfa..20fbc9596833 100644
+--- a/fs/nfs/Makefile
++++ b/fs/nfs/Makefile
+@@ -13,6 +13,7 @@ nfs-y 			:=3D client.o dir.o file.o getroot.o inode.o su=
+per.o \
+ nfs-$(CONFIG_ROOT_NFS)	+=3D nfsroot.o
+ nfs-$(CONFIG_SYSCTL)	+=3D sysctl.o
+ nfs-$(CONFIG_NFS_FSCACHE) +=3D fscache.o fscache-index.o
++nfs-$(CONFIG_FSINFO)	+=3D fsinfo.o
+ =
+
+ obj-$(CONFIG_NFS_V2) +=3D nfsv2.o
+ nfsv2-y :=3D nfs2super.o proc.o nfs2xdr.o
+diff --git a/fs/nfs/fsinfo.c b/fs/nfs/fsinfo.c
+new file mode 100644
+index 000000000000..22f7e6a16cb4
+--- /dev/null
++++ b/fs/nfs/fsinfo.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Filesystem information for NFS
++ *
++ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ */
++
++#include <linux/nfs_fs.h>
++#include <linux/windows.h>
++#include "internal.h"
++
++static const struct fsinfo_timestamp_info nfs_timestamp_info =3D {
++	.atime =3D {
++		.minimum	=3D 0,
++		.maximum	=3D UINT_MAX,
++		.gran_mantissa	=3D 1,
++		.gran_exponent	=3D 0,
++	},
++	.mtime =3D {
++		.minimum	=3D 0,
++		.maximum	=3D UINT_MAX,
++		.gran_mantissa	=3D 1,
++		.gran_exponent	=3D 0,
++	},
++	.ctime =3D {
++		.minimum	=3D 0,
++		.maximum	=3D UINT_MAX,
++		.gran_mantissa	=3D 1,
++		.gran_exponent	=3D 0,
++	},
++	.btime =3D {
++		.minimum	=3D 0,
++		.maximum	=3D UINT_MAX,
++		.gran_mantissa	=3D 1,
++		.gran_exponent	=3D 0,
++	},
++};
++
++static int nfs_fsinfo_get_timestamp_info(struct path *path, struct fsinfo=
+_context *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	struct fsinfo_timestamp_info *r =3D ctx->buffer;
++	unsigned long long nsec;
++	unsigned int rem, mant;
++	int exp =3D -9;
++
++	*r =3D nfs_timestamp_info;
++
++	nsec =3D server->time_delta.tv_nsec;
++	nsec +=3D server->time_delta.tv_sec * 1000000000ULL;
++	if (nsec =3D=3D 0)
++		goto out;
++
++	do {
++		mant =3D nsec;
++		rem =3D do_div(nsec, 10);
++		if (rem)
++			break;
++		exp++;
++	} while (nsec);
++
++	r->atime.gran_mantissa =3D mant;
++	r->atime.gran_exponent =3D exp;
++	r->btime.gran_mantissa =3D mant;
++	r->btime.gran_exponent =3D exp;
++	r->ctime.gran_mantissa =3D mant;
++	r->ctime.gran_exponent =3D exp;
++	r->mtime.gran_mantissa =3D mant;
++	r->mtime.gran_exponent =3D exp;
++
++out:
++	return sizeof(*r);
++}
++
++static int nfs_fsinfo_get_info(struct path *path, struct fsinfo_context *=
+ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	const struct nfs_client *clp =3D server->nfs_client;
++	struct fsinfo_nfs_info *r =3D ctx->buffer;
++
++	r->version		=3D clp->rpc_ops->version;
++	r->minor_version	=3D clp->cl_minorversion;
++	r->transport_proto	=3D clp->cl_proto;
++	return sizeof(*r);
++}
++
++static int nfs_fsinfo_get_server_name(struct path *path, struct fsinfo_co=
+ntext *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	const struct nfs_client *clp =3D server->nfs_client;
++
++	return fsinfo_string(clp->cl_hostname, ctx);
++}
++
++static int nfs_fsinfo_get_server_addresses(struct path *path, struct fsin=
+fo_context *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	const struct nfs_client *clp =3D server->nfs_client;
++	struct fsinfo_nfs_server_address *addr =3D ctx->buffer;
++	int ret;
++
++	ret =3D 1 * sizeof(*addr);
++	if (ret <=3D ctx->buf_size)
++		memcpy(&addr[0].address, &clp->cl_addr, clp->cl_addrlen);
++	return ret;
++
++}
++
++static int nfs_fsinfo_get_gssapi_name(struct path *path, struct fsinfo_co=
+ntext *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	const struct nfs_client *clp =3D server->nfs_client;
++
++	return fsinfo_string(clp->cl_acceptor, ctx);
++}
++
++static int nfs_fsinfo_get_limits(struct path *path, struct fsinfo_context=
+ *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	struct fsinfo_limits *lim =3D ctx->buffer;
++
++	lim->max_file_size.hi	=3D 0;
++	lim->max_file_size.lo	=3D server->maxfilesize;
++	lim->max_ino.hi		=3D 0;
++	lim->max_ino.lo		=3D U64_MAX;
++	lim->max_hard_links	=3D UINT_MAX;
++	lim->max_uid		=3D UINT_MAX;
++	lim->max_gid		=3D UINT_MAX;
++	lim->max_filename_len	=3D NAME_MAX - 1;
++	lim->max_symlink_len	=3D PATH_MAX - 1;
++	return sizeof(*lim);
++}
++
++static int nfs_fsinfo_get_supports(struct path *path, struct fsinfo_conte=
+xt *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	struct fsinfo_supports *sup =3D ctx->buffer;
++
++	/* Don't set STATX_INO as i_ino is fabricated and may not be unique. */
++
++	if (!(server->caps & NFS_CAP_MODE))
++		sup->stx_mask |=3D STATX_TYPE | STATX_MODE;
++	if (server->caps & NFS_CAP_OWNER)
++		sup->stx_mask |=3D STATX_UID;
++	if (server->caps & NFS_CAP_OWNER_GROUP)
++		sup->stx_mask |=3D STATX_GID;
++	if (server->caps & NFS_CAP_ATIME)
++		sup->stx_mask |=3D STATX_ATIME;
++	if (server->caps & NFS_CAP_CTIME)
++		sup->stx_mask |=3D STATX_CTIME;
++	if (server->caps & NFS_CAP_MTIME)
++		sup->stx_mask |=3D STATX_MTIME;
++	if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
++		sup->stx_mask |=3D STATX_SIZE;
++	if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
++		sup->stx_mask |=3D STATX_NLINK;
++
++	if (server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE)
++		sup->win_file_attrs |=3D ATTR_ARCHIVE;
++	if (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN)
++		sup->win_file_attrs |=3D ATTR_HIDDEN;
++	if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
++		sup->win_file_attrs |=3D ATTR_SYSTEM;
++
++	sup->stx_attributes =3D STATX_ATTR_AUTOMOUNT;
++	return sizeof(*sup);
++}
++
++static int nfs_fsinfo_get_features(struct path *path, struct fsinfo_conte=
+xt *ctx)
++{
++	const struct nfs_server *server =3D NFS_SB(path->dentry->d_sb);
++	struct fsinfo_features *ft =3D ctx->buffer;
++
++	fsinfo_set_feature(ft, FSINFO_FEAT_IS_NETWORK_FS);
++	fsinfo_set_feature(ft, FSINFO_FEAT_AUTOMOUNTS);
++	fsinfo_set_feature(ft, FSINFO_FEAT_O_SYNC);
++	fsinfo_set_feature(ft, FSINFO_FEAT_O_DIRECT);
++	fsinfo_set_feature(ft, FSINFO_FEAT_ADV_LOCKS);
++	fsinfo_set_feature(ft, FSINFO_FEAT_DEVICE_FILES);
++	fsinfo_set_feature(ft, FSINFO_FEAT_UNIX_SPECIALS);
++	if (server->nfs_client->rpc_ops->version =3D=3D 4) {
++		fsinfo_set_feature(ft, FSINFO_FEAT_LEASES);
++		fsinfo_set_feature(ft, FSINFO_FEAT_IVER_ALL_CHANGE);
++	}
++
++	if (server->caps & NFS_CAP_OWNER)
++		fsinfo_set_feature(ft, FSINFO_FEAT_UIDS);
++	if (server->caps & NFS_CAP_OWNER_GROUP)
++		fsinfo_set_feature(ft, FSINFO_FEAT_GIDS);
++	if (!(server->caps & NFS_CAP_MODE))
++		fsinfo_set_feature(ft, FSINFO_FEAT_NO_UNIX_MODE);
++	if (server->caps & NFS_CAP_ACLS)
++		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_ACL);
++	if (server->caps & NFS_CAP_SYMLINKS)
++		fsinfo_set_feature(ft, FSINFO_FEAT_SYMLINKS);
++	if (server->caps & NFS_CAP_HARDLINKS)
++		fsinfo_set_feature(ft, FSINFO_FEAT_HARD_LINKS);
++	if (server->caps & NFS_CAP_ATIME)
++		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_ATIME);
++	if (server->caps & NFS_CAP_CTIME)
++		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_CTIME);
++	if (server->caps & NFS_CAP_MTIME)
++		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_MTIME);
++
++	if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
++		fsinfo_set_feature(ft, FSINFO_FEAT_NAME_CASE_INDEP);
++	if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
++	    (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
++	    (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
++		fsinfo_set_feature(ft, FSINFO_FEAT_WINDOWS_ATTRS);
++
++	return sizeof(*ft);
++}
++
++const struct fsinfo_attribute nfs_fsinfo_attributes[] =3D {
++	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	nfs_fsinfo_get_timestamp_inf=
+o),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_LIMITS,		nfs_fsinfo_get_limits),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_SUPPORTS,		nfs_fsinfo_get_supports),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		nfs_fsinfo_get_features),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_NFS_INFO,		nfs_fsinfo_get_info),
++	FSINFO_STRING	(FSINFO_ATTR_NFS_SERVER_NAME,	nfs_fsinfo_get_server_name),
++	FSINFO_LIST	(FSINFO_ATTR_NFS_SERVER_ADDRESSES, nfs_fsinfo_get_server_add=
+resses),
++	FSINFO_STRING	(FSINFO_ATTR_NFS_GSSAPI_NAME,	nfs_fsinfo_get_gssapi_name),
++	{}
++};
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index f80c47d5ff27..4ddf0da25740 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -10,6 +10,7 @@
+ #include <linux/sunrpc/addr.h>
+ #include <linux/nfs_page.h>
+ #include <linux/wait_bit.h>
++#include <linux/fsinfo.h>
+ =
+
+ #define NFS_SB_MASK (SB_RDONLY|SB_NOSUID|SB_NODEV|SB_NOEXEC|SB_SYNCHRONOU=
+S)
+ =
+
+@@ -247,6 +248,13 @@ extern const struct svc_version nfs4_callback_version=
+4;
+ /* fs_context.c */
+ extern struct file_system_type nfs_fs_type;
+ =
+
++/* fsinfo.c */
++#ifdef CONFIG_FSINFO
++extern const struct fsinfo_attribute nfs_fsinfo_attributes[];
++#else
++#define nfs_fsinfo_attributes NULL
++#endif
++
+ /* pagelist.c */
+ extern int __init nfs_init_nfspagecache(void);
+ extern void nfs_destroy_nfspagecache(void);
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 1475f932d7da..1b75144e24f4 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -26,6 +26,7 @@ static const struct super_operations nfs4_sops =3D {
+ 	.write_inode	=3D nfs4_write_inode,
+ 	.drop_inode	=3D nfs_drop_inode,
+ 	.statfs		=3D nfs_statfs,
++	.fsinfo_attributes =3D nfs_fsinfo_attributes,
+ 	.evict_inode	=3D nfs4_evict_inode,
+ 	.umount_begin	=3D nfs_umount_begin,
+ 	.show_options	=3D nfs_show_options,
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index dada09b391c6..fbc2cf5f803b 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -76,6 +76,7 @@ const struct super_operations nfs_sops =3D {
+ 	.write_inode	=3D nfs_write_inode,
+ 	.drop_inode	=3D nfs_drop_inode,
+ 	.statfs		=3D nfs_statfs,
++	.fsinfo_attributes =3D nfs_fsinfo_attributes,
+ 	.evict_inode	=3D nfs_evict_inode,
+ 	.umount_begin	=3D nfs_umount_begin,
+ 	.show_options	=3D nfs_show_options,
+diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+index da9a6f48ec5b..7c97d65333ec 100644
+--- a/include/uapi/linux/fsinfo.h
++++ b/include/uapi/linux/fsinfo.h
+@@ -40,6 +40,11 @@
+ =
+
+ #define FSINFO_ATTR_EXT4_TIMESTAMPS	0x400	/* Ext4 superblock timestamps *=
+/
+ =
+
++#define FSINFO_ATTR_NFS_INFO		0x500	/* Information about an NFS mount */
++#define FSINFO_ATTR_NFS_SERVER_NAME	0x501	/* Name of the server (string) =
+*/
++#define FSINFO_ATTR_NFS_SERVER_ADDRESSES 0x502	/* List of addresses of th=
+e server */
++#define FSINFO_ATTR_NFS_GSSAPI_NAME	0x503	/* GSSAPI acceptor name */
++
+ /*
+  * Optional fsinfo() parameter structure.
+  *
+@@ -339,4 +344,28 @@ struct fsinfo_ext4_timestamps {
+ =
+
+ #define FSINFO_ATTR_EXT4_TIMESTAMPS__STRUCT struct fsinfo_ext4_timestamps
+ =
+
++/*
++ * Information struct for fsinfo(FSINFO_ATTR_NFS_INFO).
++ *
++ * Get information about an NFS mount.
++ */
++struct fsinfo_nfs_info {
++	__u32		version;
++	__u32		minor_version;
++	__u32		transport_proto;
++};
++
++#define FSINFO_ATTR_NFS_INFO__STRUCT struct fsinfo_nfs_info
++
++/*
++ * Information struct for fsinfo(FSINFO_ATTR_NFS_SERVER_ADDRESSES).
++ *
++ * Get the addresses of the server for an NFS mount.
++ */
++struct fsinfo_nfs_server_address {
++	struct __kernel_sockaddr_storage address;
++};
++
++#define FSINFO_ATTR_NFS_SERVER_ADDRESSES__STRUCT struct fsinfo_nfs_server=
+_address
++
+ #endif /* _UAPI_LINUX_FSINFO_H */
+diff --git a/include/uapi/linux/windows.h b/include/uapi/linux/windows.h
+new file mode 100644
+index 000000000000..17efb9a40529
+--- /dev/null
++++ b/include/uapi/linux/windows.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Common windows attributes
++ */
++#ifndef _UAPI_LINUX_WINDOWS_H
++#define _UAPI_LINUX_WINDOWS_H
++
++/*
++ * File Attribute flags
++ */
++#define ATTR_READONLY		0x0001
++#define ATTR_HIDDEN		0x0002
++#define ATTR_SYSTEM		0x0004
++#define ATTR_VOLUME		0x0008
++#define ATTR_DIRECTORY		0x0010
++#define ATTR_ARCHIVE		0x0020
++#define ATTR_DEVICE		0x0040
++#define ATTR_NORMAL		0x0080
++#define ATTR_TEMPORARY		0x0100
++#define ATTR_SPARSE		0x0200
++#define ATTR_REPARSE		0x0400
++#define ATTR_COMPRESSED		0x0800
++#define ATTR_OFFLINE		0x1000	/* ie file not immediately available -
++					   on offline storage */
++#define ATTR_NOT_CONTENT_INDEXED 0x2000
++#define ATTR_ENCRYPTED		0x4000
++#define ATTR_POSIX_SEMANTICS	0x01000000
++#define ATTR_BACKUP_SEMANTICS	0x02000000
++#define ATTR_DELETE_ON_CLOSE	0x04000000
++#define ATTR_SEQUENTIAL_SCAN	0x08000000
++#define ATTR_RANDOM_ACCESS	0x10000000
++#define ATTR_NO_BUFFERING	0x20000000
++#define ATTR_WRITE_THROUGH	0x80000000
++
++#endif /* _UAPI_LINUX_WINDOWS_H */
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index 53251ee98d1c..68652db686e8 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -393,6 +393,40 @@ static void dump_ext4_fsinfo_timestamps(void *reply, =
+unsigned int size)
+ 	printf("\tlast-err: %s\n", dump_ext4_time(buffer, r->last_error_time));
+ }
+ =
+
++static void dump_nfs_fsinfo_info(void *reply, unsigned int size)
++{
++	struct fsinfo_nfs_info *r =3D reply;
++
++	printf("ver=3D%u.%u proto=3D%u\n", r->version, r->minor_version, r->tran=
+sport_proto);
++}
++
++static void dump_nfs_fsinfo_server_addresses(void *reply, unsigned int si=
+ze)
++{
++	struct fsinfo_nfs_server_address *r =3D reply;
++	struct sockaddr_storage *ss =3D (struct sockaddr_storage *)&r->address;
++	struct sockaddr_in6 *sin6;
++	struct sockaddr_in *sin;
++	char buf[1024];
++
++	switch (ss->ss_family) {
++	case AF_INET:
++		sin =3D (struct sockaddr_in *)ss;
++		if (!inet_ntop(AF_INET, &sin->sin_addr, buf, sizeof(buf)))
++			break;
++		printf("%5u %s\n", ntohs(sin->sin_port), buf);
++		return;
++	case AF_INET6:
++		sin6 =3D (struct sockaddr_in6 *)ss;
++		if (!inet_ntop(AF_INET6, &sin6->sin6_addr, buf, sizeof(buf)))
++			break;
++		printf("%5u %s\n", ntohs(sin6->sin6_port), buf);
++		return;
++	default:
++		printf("family=3D%u\n", ss->ss_family);
++		return;
++	}
++}
++
+ static void dump_string(void *reply, unsigned int size)
+ {
+ 	char *s =3D reply, *p;
+@@ -424,6 +458,8 @@ static void dump_string(void *reply, unsigned int size=
+)
+ #define dump_fsinfo_generic_mount_point		dump_string
+ #define dump_afs_cell_name			dump_string
+ #define dump_afs_server_name			dump_string
++#define dump_nfs_fsinfo_server_name		dump_string
++#define dump_nfs_fsinfo_gssapi_name		dump_string
+ =
+
+ /*
+  *
+@@ -468,6 +504,10 @@ static const struct fsinfo_attribute fsinfo_attribute=
+s[] =3D {
+ 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	afs_server_name),
+ 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_addre=
+ss),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_timestamps),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_NFS_INFO,		nfs_fsinfo_info),
++	FSINFO_STRING	(FSINFO_ATTR_NFS_SERVER_NAME,	nfs_fsinfo_server_name),
++	FSINFO_LIST	(FSINFO_ATTR_NFS_SERVER_ADDRESSES, nfs_fsinfo_server_address=
+es),
++	FSINFO_STRING	(FSINFO_ATTR_NFS_GSSAPI_NAME,	nfs_fsinfo_gssapi_name),
+ 	{}
+ };
+ =
 
