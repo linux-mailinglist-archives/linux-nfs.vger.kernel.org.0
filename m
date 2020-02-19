@@ -2,123 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29283164FA5
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 21:13:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D31A165045
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 21:52:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgBSUNT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Feb 2020 15:13:19 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40111 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSUNT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 15:13:19 -0500
-Received: by mail-lf1-f68.google.com with SMTP id c23so1145406lfi.7
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Feb 2020 12:13:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
-        b=L1xcjpv9tg4ovUYUrEvMleJYYGnxMSzUIGeTIEI8pb3Dp4HZy1mT2JTLUJYr+nQrPs
-         RkPEHZFY1/xrXLf8wYx0g7zYXtc/srkM5eYLE0fb8urwD0Hu/6f09qRJUwi9vY+uxkbK
-         MkE8Vg3sCpw9CxMHOqUIpxk4GiRP39hrEEF6A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
-        b=D6Szaf3YHS1CKWZVe62zZZmZFJxWUvDSrVkWi5zkHaGIs2cgpNFnKMzc2jVpFAFnvm
-         6ZvnWXiNo5L/GGKXrHQ9GbFZtTR0XB6vFtjBF1kjBC2RlTeR4vpdEJdc7WXqVxNt4sjB
-         ZJU+znvX2BTmusk5W5H2YymXCbJ52Vect6oURnaGdw/sK3/awvY/ulHniC4XMGUhAkaJ
-         gJQ0aIEMWW/EMLl4Tk/vSbq13m/kxEvFNgkAFI06GRrs2z3ofPeTxlX21ucl/iIOpPdB
-         cPO/9bwVFGEcsS5rr2ORX/4hLKpG73Apz0BErUBhwx5yKCpmBDRxL07Kp4q3kuZ0IZdf
-         3B9w==
-X-Gm-Message-State: APjAAAW7ijHU/TY/VA1ZNKH6lUT0WNCrE1MsotKwR1fJENeAnpyY1+KZ
-        NqNT8PZloLJ2cqGNiweVMag0D0+Ud+A=
-X-Google-Smtp-Source: APXvYqyS4G/cyUvxWV8a8OcncBmP0G0AX+2Q62K6HHWt0T+SuD3cEEUovDcElc2ljJDWF7BwQ2sUGQ==
-X-Received: by 2002:ac2:44bc:: with SMTP id c28mr13991813lfm.72.1582143196490;
-        Wed, 19 Feb 2020 12:13:16 -0800 (PST)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id u9sm397819lji.49.2020.02.19.12.13.15
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 12:13:15 -0800 (PST)
-Received: by mail-lj1-f182.google.com with SMTP id o15so1729174ljg.6
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Feb 2020 12:13:15 -0800 (PST)
-X-Received: by 2002:a2e:9d92:: with SMTP id c18mr17708042ljj.265.1582143194731;
- Wed, 19 Feb 2020 12:13:14 -0800 (PST)
+        id S1726980AbgBSUwU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Feb 2020 15:52:20 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51028 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726713AbgBSUwU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 15:52:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582145539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wrkiBu0h5uAOt+If2s2SgxKOtzeWd4zR2AHvODxt2Rw=;
+        b=Ov2bdGKTig80yAf/OIBCYMUbgkW/AqCLuD4ZHBmnFPhaJfH6zwqnzj5VsywC2202efODP4
+        1b1LUmKol86/9Wn3NQzOyXx/CZvMFv8eQmlq+fZUNY9/FttuTsRC1gLbD0YDYPC8Phwa8T
+        FMbtEmJqZO3vfk9Ppi8LcJgPxPN08Lw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-q9cm9U08NACdf6wawAXWOA-1; Wed, 19 Feb 2020 15:52:17 -0500
+X-MC-Unique: q9cm9U08NACdf6wawAXWOA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5707D1005510;
+        Wed, 19 Feb 2020 20:52:16 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-124-62.rdu2.redhat.com [10.10.124.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D4A15C13C;
+        Wed, 19 Feb 2020 20:52:16 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 4DCCE1A2C35; Wed, 19 Feb 2020 15:52:15 -0500 (EST)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: set the server_scope during service startup
+Date:   Wed, 19 Feb 2020 15:52:15 -0500
+Message-Id: <20200219205215.3429408-1-smayhew@redhat.com>
 MIME-Version: 1.0
-References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
- <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
- <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
- <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
- <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <252465.1582142281@warthog.procyon.org.uk>
-In-Reply-To: <252465.1582142281@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 19 Feb 2020 12:12:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
-Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:58 AM David Howells <dhowells@redhat.com> wrote:
->
-> Actually, in many ways, they're more akin to symlinks (and are implemented as
-> symlinks with funny attributes).  It's a shame that symlinkat() doesn't have
-> an at_flags parameter.
+Currently, nfsd4_encode_exchange_id() encodes the utsname nodename
+string in the server_scope field.  In a multi-host container
+environemnt, if an nfsd container is restarted on a different host than
+it was originally running on, clients will see a server_scope mismatch
+and will not attempt to reclaim opens.
 
-Interesting. Then you'd get the metadata as the symlink data. Is the
-size of the available buffer (PATH_MAX) sufficient?
+Instead, set the server_scope while we're in a process context during
+service startup, so we get the utsname nodename of the current process
+and store that in nfsd_net.
 
-In fact, would PATH_MAX-2 be sufficient?
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ fs/nfsd/netns.h   | 1 +
+ fs/nfsd/nfs4xdr.c | 3 ++-
+ fs/nfsd/nfssvc.c  | 3 +++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-Because POSIX actually says that a double slash at the beginning of a
-filename is special:
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 2baf32311e00..c6d95700105e 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -172,6 +172,7 @@ struct nfsd_net {
+ 	unsigned int             longest_chain_cachesize;
+=20
+ 	struct shrinker		nfsd_reply_cache_shrinker;
++	char			server_scope[UNX_MAXNODENAME+1];
+ };
+=20
+ /* Simple check to find out if a given net was properly initialized */
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 9761512674a0..209174ee431a 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4005,10 +4005,11 @@ nfsd4_encode_exchange_id(struct nfsd4_compoundres=
+ *resp, __be32 nfserr,
+ 	int major_id_sz;
+ 	int server_scope_sz;
+ 	uint64_t minor_id =3D 0;
++	struct nfsd_net *nn =3D net_generic(SVC_NET(resp->rqstp), nfsd_net_id);
+=20
+ 	major_id =3D utsname()->nodename;
+ 	major_id_sz =3D strlen(major_id);
+-	server_scope =3D utsname()->nodename;
++	server_scope =3D nn->server_scope;
+ 	server_scope_sz =3D strlen(server_scope);
+=20
+ 	p =3D xdr_reserve_space(xdr,
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 3b77b904212d..c4e00979aca4 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -749,6 +749,9 @@ nfsd_svc(int nrservs, struct net *net, const struct c=
+red *cred)
+ 	if (nrservs =3D=3D 0 && nn->nfsd_serv =3D=3D NULL)
+ 		goto out;
+=20
++	strlcpy(nn->server_scope, utsname()->nodename,
++		sizeof(nn->server_scope));
++
+ 	error =3D nfsd_create_serv(net);
+ 	if (error)
+ 		goto out;
+--=20
+2.24.1
 
- "A pathname consisting of a single slash shall resolve to the root
-directory of the process. A null pathname shall not be successfully
-resolved. A pathname that begins with two successive slashes may be
-interpreted in an implementation-defined manner, although more than
-two leading slashes shall be treated as a single slash"
-
-so you _could_ actually just make the rule be something simple like
-
-   symlink(target, "//datagoeshere")
-
-being the "create magic autolink directory using "datagoeshere".
-
-The advantage of that interface is that now you can do things from
-simple perl/shell scripts etc, instead of using any magic at all.
-
-> mknod() isn't otherwise supported on AFS as there aren't any UNIX special
-> files.
-
-Well, arguably that's a feature. You _could_ decide that a S_IFCHR
-mknod (with a special number pattern too, just as a special check)
-becomes that special node that you can then write the data to to
-create it.
-
-So then you could again script things with
-
-   mknod dirname c X Y
-   echo "datagoeshere" > dirname
-
-if that's what it takes.
-
-But the symlink thing strikes me as not unreasonable. It's POSIXy,
-even if Linux hasn't really traditionally treated two slashes
-specially (we've discussed it, and there may be _tools_ that already
-do, though)
-
-         Linus
