@@ -2,89 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2CFB164F5B
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 20:58:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29283164FA5
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 21:13:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgBST6N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Feb 2020 14:58:13 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33580 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726820AbgBST6N (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 14:58:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582142292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t0EjaOj44ktsI0o8dM8MlcrbPgSXHBFyya3QCm27HcQ=;
-        b=hrG9+jQfZjSnMaz2iFOP87UP8GLsVCLTSxxe5u2NE2kpJ8TF1sMqf9XjY8ZYxY4AEXrTnF
-        un9XKMDOUoD0+vQRVpF6WaOhjMvkhL50UZm3z2rfWszzhHeUvfzzQ+oJ61rl/wbg9Muymj
-        Q7XIjT06Cye7IgY3HBG6G8nxzlIzWpI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-rGSX7ZLMP8eOL5O_lYVaJA-1; Wed, 19 Feb 2020 14:58:08 -0500
-X-MC-Unique: rGSX7ZLMP8eOL5O_lYVaJA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81DC71800D42;
-        Wed, 19 Feb 2020 19:58:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EDC75DA82;
-        Wed, 19 Feb 2020 19:58:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com>
-References: <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk> <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com> <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com> <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S1726734AbgBSUNT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Feb 2020 15:13:19 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40111 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSUNT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 15:13:19 -0500
+Received: by mail-lf1-f68.google.com with SMTP id c23so1145406lfi.7
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Feb 2020 12:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
+        b=L1xcjpv9tg4ovUYUrEvMleJYYGnxMSzUIGeTIEI8pb3Dp4HZy1mT2JTLUJYr+nQrPs
+         RkPEHZFY1/xrXLf8wYx0g7zYXtc/srkM5eYLE0fb8urwD0Hu/6f09qRJUwi9vY+uxkbK
+         MkE8Vg3sCpw9CxMHOqUIpxk4GiRP39hrEEF6A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
+        b=D6Szaf3YHS1CKWZVe62zZZmZFJxWUvDSrVkWi5zkHaGIs2cgpNFnKMzc2jVpFAFnvm
+         6ZvnWXiNo5L/GGKXrHQ9GbFZtTR0XB6vFtjBF1kjBC2RlTeR4vpdEJdc7WXqVxNt4sjB
+         ZJU+znvX2BTmusk5W5H2YymXCbJ52Vect6oURnaGdw/sK3/awvY/ulHniC4XMGUhAkaJ
+         gJQ0aIEMWW/EMLl4Tk/vSbq13m/kxEvFNgkAFI06GRrs2z3ofPeTxlX21ucl/iIOpPdB
+         cPO/9bwVFGEcsS5rr2ORX/4hLKpG73Apz0BErUBhwx5yKCpmBDRxL07Kp4q3kuZ0IZdf
+         3B9w==
+X-Gm-Message-State: APjAAAW7ijHU/TY/VA1ZNKH6lUT0WNCrE1MsotKwR1fJENeAnpyY1+KZ
+        NqNT8PZloLJ2cqGNiweVMag0D0+Ud+A=
+X-Google-Smtp-Source: APXvYqyS4G/cyUvxWV8a8OcncBmP0G0AX+2Q62K6HHWt0T+SuD3cEEUovDcElc2ljJDWF7BwQ2sUGQ==
+X-Received: by 2002:ac2:44bc:: with SMTP id c28mr13991813lfm.72.1582143196490;
+        Wed, 19 Feb 2020 12:13:16 -0800 (PST)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id u9sm397819lji.49.2020.02.19.12.13.15
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 12:13:15 -0800 (PST)
+Received: by mail-lj1-f182.google.com with SMTP id o15so1729174ljg.6
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Feb 2020 12:13:15 -0800 (PST)
+X-Received: by 2002:a2e:9d92:: with SMTP id c18mr17708042ljj.265.1582143194731;
+ Wed, 19 Feb 2020 12:13:14 -0800 (PST)
+MIME-Version: 1.0
+References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+ <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
+ <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
+ <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+ <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <252465.1582142281@warthog.procyon.org.uk>
+In-Reply-To: <252465.1582142281@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Feb 2020 12:12:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
+Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
         linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
         "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
         linux-btrfs <linux-btrfs@vger.kernel.org>,
         Linux FS Devel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <252464.1582142281.1@warthog.procyon.org.uk>
-Date:   Wed, 19 Feb 2020 19:58:01 +0000
-Message-ID: <252465.1582142281@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, Feb 19, 2020 at 11:58 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Actually, in many ways, they're more akin to symlinks (and are implemented as
+> symlinks with funny attributes).  It's a shame that symlinkat() doesn't have
+> an at_flags parameter.
 
-> > Why don't you just use mkdir with S_ISVTX set, or something like that?
-> 
-> Actually, since this is apparently a different filetype, the _logical_
-> thing to do is to use "mknod()".
+Interesting. Then you'd get the metadata as the symlink data. Is the
+size of the available buffer (PATH_MAX) sufficient?
 
-Actually, in many ways, they're more akin to symlinks (and are implemented as
-symlinks with funny attributes).  It's a shame that symlinkat() doesn't have
-an at_flags parameter.
+In fact, would PATH_MAX-2 be sufficient?
 
-mknod() isn't otherwise supported on AFS as there aren't any UNIX special
-files.
+Because POSIX actually says that a double slash at the beginning of a
+filename is special:
 
-> You presumably need a new type _anyway_ for stat() and/or the filldir
-> d_type field. Or do you always want to make it look exactly like a
-> directory to all user space?
+ "A pathname consisting of a single slash shall resolve to the root
+directory of the process. A null pathname shall not be successfully
+resolved. A pathname that begins with two successive slashes may be
+interpreted in an implementation-defined manner, although more than
+two leading slashes shall be treated as a single slash"
 
-That's already dealt with.  They're presented as directories with
-STATX_ATTR_AUTOMOUNT showing when you call statx() on them.  You can also use
-readlink() to extract the target if they haven't been mounted over yet.
+so you _could_ actually just make the rule be something simple like
 
-Inside the kernel, they have no ->lookup() op, so DCACHE_AUTODIR_TYPE is set
-on the dentry and there's a ->d_automount() op.  The inode has S_AUTOMOUNT
-set.  That's all taken care of when the inode is created and the dentry is
-instantiated.
+   symlink(target, "//datagoeshere")
 
-Davod
+being the "create magic autolink directory using "datagoeshere".
 
+The advantage of that interface is that now you can do things from
+simple perl/shell scripts etc, instead of using any magic at all.
+
+> mknod() isn't otherwise supported on AFS as there aren't any UNIX special
+> files.
+
+Well, arguably that's a feature. You _could_ decide that a S_IFCHR
+mknod (with a special number pattern too, just as a special check)
+becomes that special node that you can then write the data to to
+create it.
+
+So then you could again script things with
+
+   mknod dirname c X Y
+   echo "datagoeshere" > dirname
+
+if that's what it takes.
+
+But the symlink thing strikes me as not unreasonable. It's POSIXy,
+even if Linux hasn't really traditionally treated two slashes
+specially (we've discussed it, and there may be _tools_ that already
+do, though)
+
+         Linus
