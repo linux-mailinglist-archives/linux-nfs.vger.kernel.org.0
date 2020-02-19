@@ -2,101 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99861165197
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 22:32:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD25F1651C5
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 22:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgBSVcb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Feb 2020 16:32:31 -0500
-Received: from fieldses.org ([173.255.197.46]:43902 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgBSVcb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:32:31 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id D1C0B1C95; Wed, 19 Feb 2020 16:32:30 -0500 (EST)
-Date:   Wed, 19 Feb 2020 16:32:30 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: set the server_scope during service startup
-Message-ID: <20200219213230.GC23275@fieldses.org>
-References: <20200219205215.3429408-1-smayhew@redhat.com>
+        id S1727082AbgBSVkD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Feb 2020 16:40:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59394 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726703AbgBSVkC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 16:40:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582148401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Akm5nZ5Nk5RDJvPlHXdmc1pTXqzcrHwStmylDtS4kdo=;
+        b=cD6CMwlQM0OJsp1JzhHuJqeXtPLT8H5zzEaBUHr9zrSzhBYMLXmCX3hDGJzdk9IQf+st5k
+        roXzrl0WHzh++ouGdsFuLES3giEAh3DIaPf0AFhvpXa1QNN+sjktyy62yUiDrLK1tb8xfX
+        g246lyvm0qj0566do/CAAGbmF+kHr50=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-lYV3sqb5NxSus3qboGNwYQ-1; Wed, 19 Feb 2020 16:39:58 -0500
+X-MC-Unique: lYV3sqb5NxSus3qboGNwYQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF399800D50;
+        Wed, 19 Feb 2020 21:39:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A04215C1B0;
+        Wed, 19 Feb 2020 21:39:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
+References: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com> <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk> <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com> <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com> <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com> <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <252465.1582142281@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, jaltman@auristor.com,
+        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219205215.3429408-1-smayhew@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <260917.1582148393.1@warthog.procyon.org.uk>
+Date:   Wed, 19 Feb 2020 21:39:53 +0000
+Message-ID: <260918.1582148393@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:52:15PM -0500, Scott Mayhew wrote:
-> Currently, nfsd4_encode_exchange_id() encodes the utsname nodename
-> string in the server_scope field.  In a multi-host container
-> environemnt, if an nfsd container is restarted on a different host than
-> it was originally running on, clients will see a server_scope mismatch
-> and will not attempt to reclaim opens.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> so you _could_ actually just make the rule be something simple like
 > 
-> Instead, set the server_scope while we're in a process context during
-> service startup, so we get the utsname nodename of the current process
-> and store that in nfsd_net.
-
-Thanks!  Just one nit:
-
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  fs/nfsd/netns.h   | 1 +
->  fs/nfsd/nfs4xdr.c | 3 ++-
->  fs/nfsd/nfssvc.c  | 3 +++
->  3 files changed, 6 insertions(+), 1 deletion(-)
+>    symlink(target, "//datagoeshere")
 > 
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 2baf32311e00..c6d95700105e 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -172,6 +172,7 @@ struct nfsd_net {
->  	unsigned int             longest_chain_cachesize;
->  
->  	struct shrinker		nfsd_reply_cache_shrinker;
-> +	char			server_scope[UNX_MAXNODENAME+1];
->  };
->  
->  /* Simple check to find out if a given net was properly initialized */
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 9761512674a0..209174ee431a 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4005,10 +4005,11 @@ nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	int major_id_sz;
->  	int server_scope_sz;
->  	uint64_t minor_id = 0;
-> +	struct nfsd_net *nn = net_generic(SVC_NET(resp->rqstp), nfsd_net_id);
->  
->  	major_id = utsname()->nodename;
->  	major_id_sz = strlen(major_id);
+> being the "create magic autolink directory using "datagoeshere".
 
-We should do this one too.  I'll fix that up and apply if that's OK.
+Interesting.  I'll ask around to see if this is feasible.  Some applications
+(emacs being one maybe) sometimes appear to store information in symlink
+bodies - I'm not sure if any of those could be a problem.
 
---b.
+Since the mountpoint body is formulaic:
 
-> -	server_scope = utsname()->nodename;
-> +	server_scope = nn->server_scope;
->  	server_scope_sz = strlen(server_scope);
->  
->  	p = xdr_reserve_space(xdr,
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 3b77b904212d..c4e00979aca4 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -749,6 +749,9 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
->  	if (nrservs == 0 && nn->nfsd_serv == NULL)
->  		goto out;
->  
-> +	strlcpy(nn->server_scope, utsname()->nodename,
-> +		sizeof(nn->server_scope));
-> +
->  	error = nfsd_create_serv(net);
->  	if (error)
->  		goto out;
-> -- 
-> 2.24.1
+	[%#](<cellname>:)?<volumename>(.readonly|.backup)?.
+
+maybe I can use that pattern.
+
+symlink() would be returning a dentry that appears to be a directory, but it
+doesn't look like that should be a problem.
+
+> So then you could again script things with
+> 
+>    mknod dirname c X Y
+>    echo "datagoeshere" > dirname
+
+This would be tricky to get right as it's not atomic and the second part could
+fail to happen.  For extra fun, another client could interfere between the
+steps (setxattr would be safer than write here).
+
+David
+
