@@ -2,77 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ABE4163CA9
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 06:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7EE6164080
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2020 10:36:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgBSF3h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Feb 2020 00:29:37 -0500
-Received: from zmail.nuczu.edu.ua ([91.234.43.158]:38585 "EHLO
-        zmail.nuczu.edu.ua" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgBSF3h (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 00:29:37 -0500
-X-Greylist: delayed 4779 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 00:29:37 EST
-Received: from localhost (localhost [127.0.0.1])
-        by zmail.nuczu.edu.ua (Postfix) with ESMTP id 9897A6C609C;
-        Wed, 19 Feb 2020 05:02:20 +0200 (EET)
-Received: from zmail.nuczu.edu.ua ([127.0.0.1])
-        by localhost (zmail.nuczu.edu.ua [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PMr0wPvOeSVU; Wed, 19 Feb 2020 05:02:20 +0200 (EET)
-Received: from localhost (localhost [127.0.0.1])
-        by zmail.nuczu.edu.ua (Postfix) with ESMTP id 937C3740655;
-        Wed, 19 Feb 2020 00:33:28 +0200 (EET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zmail.nuczu.edu.ua 937C3740655
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuczu.edu.ua;
-        s=A52E72AE-E4EF-11E9-9906-53CE3145A657; t=1582065209;
-        bh=o+H3O7n1+zJcXo0FhJs7spyf8HmE4ClnBa/Y2Gk0DL0=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=OfZN+4z2n/YdNl9w89CF5Nr5ZjEqKxZ1GyipmxPKROIAsdCsfuJzQRz6Alr9wMvzZ
-         EHy7FzZzezpnPjug7facK+1v9EYrUHXui4r8tnWECgsHM6yGXbPbH+RCQczLQQyKk5
-         m7L4MbT0yOc+f63mn3MKeh3+M3IoHCpleVnes5akpILUJv+/1dRxNN0Xc1JImZiTve
-         Yocpbf6vPQpbTTPcKt7dcLZs3/bKi7TCRTe1B8uVHkxRvx8o4PX6ofHmDjb0Pew8kX
-         Rep5jiwaZHIenYQ1jnYe8owQct+2KSt4Zr3GTabx0Lm+pI+dlPmYL1BGgU+YPWAc4L
-         nq/sm0L8Qs7Qw==
-X-Virus-Scanned: amavisd-new at nuczu.edu.ua
-Received: from zmail.nuczu.edu.ua ([127.0.0.1])
-        by localhost (zmail.nuczu.edu.ua [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VtFDK9HqEh0A; Wed, 19 Feb 2020 00:33:28 +0200 (EET)
-Received: from [10.109.183.140] (unknown [105.12.3.161])
-        by zmail.nuczu.edu.ua (Postfix) with ESMTPSA id 6F7164FEC8B;
-        Tue, 18 Feb 2020 22:10:09 +0200 (EET)
-Content-Type: text/plain; charset="utf-8"
+        id S1726551AbgBSJgJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Feb 2020 04:36:09 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43665 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSJgJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Feb 2020 04:36:09 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p11so9318959plq.10;
+        Wed, 19 Feb 2020 01:36:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=USv22fMY4lRbm7kdOlrco6KeUFWgxCIZrYv0NUecR8k=;
+        b=mFl+Rpghcx4xs9gygrl7xbkfupYFtIeXXg7A2VrlMXSkKuMQsWKeCG26GbJDCiOieA
+         OjvFeZpZfmYjIpBwwOBC9csCzviJo3jbxes07OuwfMKnYxJUcVKvyfaQepkrHlLQx9es
+         OV7Iu2BxOSRlY1uWn0azWWlBlxhrfAL1rnIEVUnSViqd4vKaKk30ZnHvziLZcbICXXdJ
+         rLShTFl9eQRoiKGW0P2xPeeBunLdmhwGgSpuuQMZFkTJMTClvncjNGMTqkyzJhTPZ7l7
+         bVuNYv9kA+TX8kwieNjO4JqyjO3IVcfqL78VqmZ1CUZaxtive881yHsaUaEmaKDPtOo0
+         yKTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=USv22fMY4lRbm7kdOlrco6KeUFWgxCIZrYv0NUecR8k=;
+        b=BnqxSqgb2PCsdaQaiqsFx6PyJxYz4A8QlguJcIIK6LB6qseV1pRAe9qC/opNUtm1/Z
+         q2kTuAS1gmtlSj2KUBi2npYm/ys6/JvmZ7NUcjc9xk74+S5A4A7hXxwGpY+HEzjbOdXU
+         hVpa5xxZ+PwoYXsJOar9WFMD7nIGFDkxLopYce2iXGl7IbJrFEqq8LTe++FQVnz8ltpL
+         XFbveUc9719dJSVdDnIdYe6b7fL7GeVPKbtt0xmamfoSMCDmVCV8l3LWSGX3SWDCw2k6
+         OEsOgjkf8Fyyc6I4WByIQAnXT2hwcmaajRqP94bct8GfUzEK6+X/QPiXoGJyhVeumOXi
+         EyZQ==
+X-Gm-Message-State: APjAAAUMbtOMaR3X4PdQv3XPBrbLxvQYFqeT2wgZeNDX2PO0vOqHDZ73
+        i/zFEE4z/nfH3RIHD1KkySQ=
+X-Google-Smtp-Source: APXvYqyK7T17usTuMnhZLEVXZVGy6SV0GxYbz6ukrtcwQEV2x5dPjBIC/2rZ3TlaqMsCMFAuKp/yxQ==
+X-Received: by 2002:a17:902:9a09:: with SMTP id v9mr24385277plp.341.1582104968248;
+        Wed, 19 Feb 2020 01:36:08 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.220])
+        by smtp.googlemail.com with ESMTPSA id x197sm2119217pfc.1.2020.02.19.01.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 01:36:07 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] sunrpc: Pass lockdep expression to RCU lists
+Date:   Wed, 19 Feb 2020 15:05:05 +0530
+Message-Id: <20200219093504.16290-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Euro?=
-To:     Recipients <dushkin@nuczu.edu.ua>
-From:   ''Michael weirsky'' <dushkin@nuczu.edu.ua>
-Date:   Tue, 18 Feb 2020 22:10:01 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20200218201009.6F7164FEC8B@zmail.nuczu.edu.ua>
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Lieber Freund,
+detail->hash_table[] is traversed using hlist_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of detail->hash_lock.
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
-Das ist dein Spendencode: [MW530342019]
-www.youtube.com/watch?v=3Dun8yRTmrYMY
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
 
-Antworten Sie mit dem SPENDE-CODE an diese =
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/sunrpc/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index f740cb51802a..5db5f5b94726 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -97,7 +97,8 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
+ 	spin_lock(&detail->hash_lock);
+ 
+ 	/* check if entry appeared while we slept */
+-	hlist_for_each_entry_rcu(tmp, head, cache_list) {
++	hlist_for_each_entry_rcu(tmp, head, cache_list,
++				 lockdep_is_held(&detail->hash_lock)) {
+ 		if (detail->match(tmp, key)) {
+ 			if (cache_is_expired(detail, tmp)) {
+ 				hlist_del_init_rcu(&tmp->cache_list);
+-- 
+2.24.1
 
-E-Mail:mikeweirskyspende@gmail.com
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Mike Weirsky
