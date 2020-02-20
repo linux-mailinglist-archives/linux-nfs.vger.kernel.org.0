@@ -2,64 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B48D516664E
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2020 19:29:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A13C4166655
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2020 19:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBTS3X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Feb 2020 13:29:23 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34065 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBTS3X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Feb 2020 13:29:23 -0500
-Received: by mail-yb1-f193.google.com with SMTP id u47so1659357ybi.1
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Feb 2020 10:29:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5hOl3q3a/KXxJBmb7+BrgP+cKLmwrT4eT9aFSnCTvuo=;
-        b=Vjhd5Zu1caSBL7ywxd3BNQR54jNorSHy9bnQ2u4X3U5zNYarLi6wPHDOhscsWuktvm
-         2+PbLOWqTPaTkLz3o1WNN9K0uvrQbyTy5B7RLWtLHuyckwCTSGhD7K78XRPbJYxH6g1p
-         FU93geX/+ifzbhtBithrqGAYvzurkPbob1AooD9tA1Wb2NM77KEJKv/1k5fOnb2UpgwN
-         TJNUoFWYMCWJX32cTS2jIdHrQMUEh07F6q+A9ZpdHONP0WlaW9xN8YFA8SzuO01jFrqe
-         GnVt37/Q38fNUCbu662jDhBsfe2g01gg9KV/OXppxtHBts05t+whsARA3dns0ivMq5jT
-         EsXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5hOl3q3a/KXxJBmb7+BrgP+cKLmwrT4eT9aFSnCTvuo=;
-        b=a6z6M4NQoXK02zKWDAqxXxvOQJYDGjvT5KkXrOmrhNtvlXsn8Ea5IDhsBZgk919Btt
-         z6UjZObMfXXuWJt8502Oip447wbxVh08gFZIX9fAOu7wkl1TwAb/dirGFzFtaJBohK1B
-         fnRIL396mzlGIu8UXDq0LcyICuuPiSPNYiK6leuCm/FZPsNFrPZB7+xXKEVXReQZbRan
-         RYny6ChVc/ZniBqmds3KEBpZegnkPJ/jY6B51IQW6/lGBF1iuNaRZB2yoseYN/tc9sE8
-         lfurwwyFtak5Ad2vMPtj1fFqq8VcT/XgKhnAI8XoSdB4CYLms46qRX8SukVCTmsJudnr
-         ZMGA==
-X-Gm-Message-State: APjAAAXPy9KtxhNjITyemaeujXvpRc4zuDoaK0FIwp7Siws2dQgIf2/h
-        npRUgHBDADwAsLuBPY1+hQ7Nya1P
-X-Google-Smtp-Source: APXvYqxDoWS6n9OtnAsRCeVUQc9QMmDW9dfKOTMGZCSsPOAJ/fj+qaWzb2ws/JlZ4KuuGeJ5idGBgA==
-X-Received: by 2002:a25:c945:: with SMTP id z66mr30769655ybf.206.1582223362280;
-        Thu, 20 Feb 2020 10:29:22 -0800 (PST)
-Received: from anon-dhcp-153.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id b195sm204648ywh.80.2020.02.20.10.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 10:29:21 -0800 (PST)
+        id S1728111AbgBTSbE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Feb 2020 13:31:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:32854 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgBTSbD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Feb 2020 13:31:03 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIRNOh171519;
+        Thu, 20 Feb 2020 18:30:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=HPMTPrlzxuePQNHkJApc24LTsV8QV+cJm9y+1ag6Kkk=;
+ b=BT7CSxXN6EvJJCMlOn1UnpNIVRtkuzKuvLDXHRd/IqID0q/K6jPfeKk3KROHSwCS/JEi
+ X+tnMHlE8Cl9KeUrLqsg1kFXmHR9HMg2DXWpkcdqqR/76RW83+uLlOSlKtjvxBWE7KgI
+ MRb6fYYRElBz5cpH2fGUbPgOXyIURqtZfRXEtDUk1a5TRIFGjbln/YCYx5IbX7arfOp9
+ uAUFCB60ODSG+zxS5AsjeMME7EiIffpTPS9g4tWpQ3B6rZI38Uc4pb6urjLLNqkem7k5
+ mBV50Njh42HI70IOkdIHsQ4HpYpRwjH/b+lthMaeElwLf+4BVBRxqE5xkzolYRcCnqQr nA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2y8udkknaw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 18:30:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIS8fY110699;
+        Thu, 20 Feb 2020 18:30:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2y8udenrc1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 18:30:57 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KIUuKT031009;
+        Thu, 20 Feb 2020 18:30:56 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 10:30:56 -0800
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 0/6] NFS: Add support for the v4.2 READ_PLUS operation
-From:   Chuck Lever <chucklever@gmail.com>
-In-Reply-To: <c20cd5a113d19b8287bcc3db9c1b594ecb0e61e4.camel@gmail.com>
-Date:   Thu, 20 Feb 2020 13:29:20 -0500
+Subject: Re: [PATCH v2 4/6] NFS: Add READ_PLUS data segment support
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <cbff77a5175b448e955fafc45b5c80b3dcff0f5b.camel@gmail.com>
+Date:   Thu, 20 Feb 2020 13:30:55 -0500
 Cc:     Trond.Myklebust@hammerspace.com,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <8FC02B3F-76F4-4490-B63B-3FA4254D4B0B@gmail.com>
+Message-Id: <93E71BBA-029B-44AE-B580-0332E157D0A2@oracle.com>
 References: <20200214211227.407836-1-Anna.Schumaker@Netapp.com>
- <34F6A8B4-3BC0-4C29-A6C1-176D3A866BFD@gmail.com>
- <c20cd5a113d19b8287bcc3db9c1b594ecb0e61e4.camel@gmail.com>
+ <20200214211227.407836-5-Anna.Schumaker@Netapp.com>
+ <AAF85957-285A-42BF-993D-7EB4843E2ED2@oracle.com>
+ <7621b7d84295dd3086e2036f8cb389ceb47cbbc2.camel@gmail.com>
+ <CD23428B-4105-4A52-864D-73CFA64E4551@oracle.com>
+ <cbff77a5175b448e955fafc45b5c80b3dcff0f5b.camel@gmail.com>
 To:     Anna Schumaker <schumaker.anna@gmail.com>
 X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200136
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -67,262 +77,472 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Feb 20, 2020, at 1:25 PM, Anna Schumaker <schumaker.anna@gmail.com> =
+> On Feb 20, 2020, at 1:28 PM, Anna Schumaker <schumaker.anna@gmail.com> =
 wrote:
 >=20
-> On Thu, 2020-02-20 at 12:40 -0500, Chuck Lever wrote:
->> Hi Anna-
->>=20
->>> On Feb 14, 2020, at 4:12 PM, schumaker.anna@gmail.com wrote:
+> On Thu, 2020-02-20 at 09:55 -0500, Chuck Lever wrote:
+>>> On Feb 20, 2020, at 9:42 AM, Anna Schumaker =
+<schumaker.anna@gmail.com>
+>>> wrote:
 >>>=20
->>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>>> On Fri, 2020-02-14 at 17:28 -0500, Chuck Lever wrote:
+>>>>> On Feb 14, 2020, at 4:12 PM, schumaker.anna@gmail.com wrote:
+>>>>>=20
+>>>>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>>>>>=20
+>>>>> This patch adds client support for decoding a single =
+NFS4_CONTENT_DATA
+>>>>> segment returned by the server. This is the simplest =
+implementation
+>>>>> possible, since it does not account for any hole segments in the =
+reply.
+>>>>>=20
+>>>>> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>>>>> ---
+>>>>> fs/nfs/nfs42xdr.c         | 138 =
+++++++++++++++++++++++++++++++++++++++
+>>>>> fs/nfs/nfs4proc.c         |  43 +++++++++++-
+>>>>> fs/nfs/nfs4xdr.c          |   1 +
+>>>>> include/linux/nfs4.h      |   2 +-
+>>>>> include/linux/nfs_fs_sb.h |   1 +
+>>>>> include/linux/nfs_xdr.h   |   2 +-
+>>>>> 6 files changed, 182 insertions(+), 5 deletions(-)
+>>>>>=20
+>>>>> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+>>>>> index c03f3246d6c5..bf118ecabe2c 100644
+>>>>> --- a/fs/nfs/nfs42xdr.c
+>>>>> +++ b/fs/nfs/nfs42xdr.c
+>>>>> @@ -45,6 +45,15 @@
+>>>>> #define encode_deallocate_maxsz		(op_encode_hdr_maxsz + \
+>>>>> 					encode_fallocate_maxsz)
+>>>>> #define decode_deallocate_maxsz		(op_decode_hdr_maxsz)
+>>>>> +#define encode_read_plus_maxsz		(op_encode_hdr_maxsz + \
+>>>>> +					encode_stateid_maxsz + 3)
+>>>>> +#define NFS42_READ_PLUS_SEGMENT_SIZE	(1 /* data_content4 */ + =
+\
+>>>>> +					 2 /* data_info4.di_offset */ +
+>>>>> \
+>>>>> +					 2 /* data_info4.di_length */)
+>>>>> +#define decode_read_plus_maxsz		(op_decode_hdr_maxsz + \
+>>>>> +					 1 /* rpr_eof */ + \
+>>>>> +					 1 /* rpr_contents count */ + \
+>>>>> +					NFS42_READ_PLUS_SEGMENT_SIZE)
+>>>>> #define encode_seek_maxsz		(op_encode_hdr_maxsz + \
+>>>>> 					encode_stateid_maxsz + \
+>>>>> 					 2 /* offset */ + \
+>>>>> @@ -128,6 +137,14 @@
+>>>>> 					decode_putfh_maxsz + \
+>>>>> 					decode_deallocate_maxsz + \
+>>>>> 					decode_getattr_maxsz)
+>>>>> +#define NFS4_enc_read_plus_sz		=
+(compound_encode_hdr_maxsz + \
+>>>>> +					encode_sequence_maxsz + \
+>>>>> +					encode_putfh_maxsz + \
+>>>>> +					encode_read_plus_maxsz)
+>>>>> +#define NFS4_dec_read_plus_sz		=
+(compound_decode_hdr_maxsz + \
+>>>>> +					decode_sequence_maxsz + \
+>>>>> +					decode_putfh_maxsz + \
+>>>>> +					decode_read_plus_maxsz)
+>>>>> #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
+>>>>> 					encode_sequence_maxsz + \
+>>>>> 					encode_putfh_maxsz + \
+>>>>> @@ -252,6 +269,16 @@ static void encode_deallocate(struct =
+xdr_stream
+>>>>> *xdr,
+>>>>> 	encode_fallocate(xdr, args);
+>>>>> }
+>>>>>=20
+>>>>> +static void encode_read_plus(struct xdr_stream *xdr,
+>>>>> +			     const struct nfs_pgio_args *args,
+>>>>> +			     struct compound_hdr *hdr)
+>>>>> +{
+>>>>> +	encode_op_hdr(xdr, OP_READ_PLUS, decode_read_plus_maxsz, hdr);
+>>>>> +	encode_nfs4_stateid(xdr, &args->stateid);
+>>>>> +	encode_uint64(xdr, args->offset);
+>>>>> +	encode_uint32(xdr, args->count);
+>>>>> +}
+>>>>> +
+>>>>> static void encode_seek(struct xdr_stream *xdr,
+>>>>> 			const struct nfs42_seek_args *args,
+>>>>> 			struct compound_hdr *hdr)
+>>>>> @@ -446,6 +473,29 @@ static void nfs4_xdr_enc_deallocate(struct =
+rpc_rqst
+>>>>> *req,
+>>>>> 	encode_nops(&hdr);
+>>>>> }
+>>>>>=20
+>>>>> +/*
+>>>>> + * Encode READ_PLUS request
+>>>>> + */
+>>>>> +static void nfs4_xdr_enc_read_plus(struct rpc_rqst *req,
+>>>>> +				   struct xdr_stream *xdr,
+>>>>> +				   const void *data)
+>>>>> +{
+>>>>> +	const struct nfs_pgio_args *args =3D data;
+>>>>> +	struct compound_hdr hdr =3D {
+>>>>> +		.minorversion =3D =
+nfs4_xdr_minorversion(&args->seq_args),
+>>>>> +	};
+>>>>> +
+>>>>> +	encode_compound_hdr(xdr, req, &hdr);
+>>>>> +	encode_sequence(xdr, &args->seq_args, &hdr);
+>>>>> +	encode_putfh(xdr, args->fh, &hdr);
+>>>>> +	encode_read_plus(xdr, args, &hdr);
+>>>>> +
+>>>>> +	rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+>>>>> +				args->count, hdr.replen);
+>>>>> +	req->rq_rcv_buf.flags |=3D XDRBUF_READ;
+>>>>=20
+>>>> IMO this line is incorrect.
 >>>=20
->>> These patches add client support for the READ_PLUS operation, which
->>> breaks read requests into several "data" and "hole" segments when
->>> replying to the client. I also add a "noreadplus" mount option to =
-allow
->>> users to disable the new operation if it becomes a problem, similar =
-to
->>> the "nordirplus" mount option that we already have.
+>>> You're right, this line causes problems for RDMA with READ_PLUS. I =
+added it
+>>> to
+>>> match how the other xdr read encoders were set up
 >>=20
->> Hrm, I went looking for the patch that adds "noreadplus", but I
->> don't see it in this series?
+>> Ja, I think just removing that line should be sufficient.
+>> Better would be replacing it with a comment explaining
+>> why this encoder does not set XDRBUF_READ. :-)
+>>=20
+>>=20
+>>>> RFC 8267 Section 6.1 does not list any part of the result of =
+READ_PLUS
+>>>> as DDP-eligible. There's no way for a client to know how to set up
+>>>> Write chunks, unless it knows exactly where the file's holes are in
+>>>> advance. Even then... racy.
+>>>>=20
+>>>> Just curious, have you tried READ_PLUS with proto=3Drdma ?
+>>>=20
+>>> I haven't done in-depth performance testing, but I have been able to =
+run it.
+>>=20
+>> We should figure out whether that will have a regressive
+>> impact on NFS/RDMA workloads. I expect that it will, but
+>> the client can always set up the Reply chunk so that the
+>> READ payload fits precisely in an RDMA segment that lines
+>> up with page cache pages. That mitigates some impact.
+>>=20
+>> If your patch set already changes NFSv4.2 mounts to always
+>> use READ_PLUS in place of READ, it might be prudent for the
+>> "proto=3Drdma" mount option to also set "noreadplus", at least
+>> for the time being.
 >=20
-> You suggested dropping that patch in the v1 posting and waiting to see =
-if
-> anybody asks for it.
-
-Yes, recalling that now.
-
-I requested that because I don't like to add administrative interfaces
-if there isn't a clear need. I think we might have one now!
-
-
->> Wondering if, to start off, the default should be "noreadplus"
->> until our feet are under us. Just a thought.
+> I can make this change.
 >=20
-> I could re-add the patch with this as the default if that's the way =
-everybody
-> wants to go.
+>>=20
+>> The down-side here is that would make NFSv4.2 on RDMA
+>> unable to recognize holes in files the same way as it
+>> does on TCP, and that's a pretty significant variation
+>> in behavior. Does "noreadplus" even deal with that?
+>=20
+> Setting "noreadplus" just causes the client to use the READ operation =
+instead,
+> so there should be no difference between v4.1 and v4.2 if the option =
+is set.
 
-Yep, I'm interested in other opinions too.
+My concern is the difference between NFSv4.2 with noreadplus
+and NFSv4.2 with readplus. The former is not able to detect
+holes in files on the server, but the latter is.
+
+Is that worth mentioning in the man page, or in release notes
+when NFSv4.2 becomes the default?
 
 
 > Anna
 >=20
 >>=20
 >>=20
->>> Here are the results of some performance tests I ran on Netapp lab
->>> machines. I tested by reading various 2G files from a few different
->>> undelying filesystems and across several NFS versions. I used the
->>> `vmtouch` utility to make sure files were only cached when we wanted
->>> them to be. In addition to 100% data and 100% hole cases, I also =
-tested
->>> with files that alternate between data and hole segments. These =
-files
->>> have either 4K, 8K, 16K, or 32K segment sizes and start with either =
-data
->>> or hole segments. So the file mixed-4d has a 4K segment size =
-beginning
->>> with a data segment, but mixed-32h hase 32K segments beginning with =
-a
->>> hole. The units are in seconds, with the first number for each NFS
->>> version being the uncached read time and the second number is for =
-when
->>> the file is cached on the server.
->>>=20
->>> ext4      |        v3       |       v4.0      |       v4.1      |    =
-   v4.2
->>>      |
->>> =
-----------|-----------------|-----------------|-----------------|---------=
---
->>> ------|
->>> data      | 22.909 : 18.253 | 22.934 : 18.252 | 22.902 : 18.253 | =
-23.485 :
->>> 18.253 |
->>> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  =
-0.708
->>> :  0.709 |
->>> mixed-4d  | 28.261 : 18.253 | 29.616 : 18.252 | 28.341 : 18.252 | =
-24.508
->>> :  9.150 |
->>> mixed-8d  | 27.956 : 18.253 | 28.404 : 18.252 | 28.320 : 18.252 | =
-23.967
->>> :  9.140 |
->>> mixed-16d | 28.172 : 18.253 | 27.946 : 18.252 | 27.627 : 18.252 | =
-23.043
->>> :  9.134 |
->>> mixed-32d | 25.350 : 18.253 | 24.406 : 18.252 | 24.384 : 18.253 | =
-20.698
->>> :  9.132 |
->>> mixed-4h  | 28.913 : 18.253 | 28.564 : 18.252 | 27.996 : 18.252 | =
-21.837
->>> :  9.150 |
->>> mixed-8h  | 28.625 : 18.253 | 27.833 : 18.252 | 27.798 : 18.253 | =
-21.710
->>> :  9.140 |
->>> mixed-16h | 27.975 : 18.253 | 27.662 : 18.252 | 27.795 : 18.253 | =
-20.585
->>> :  9.134 |
->>> mixed-32h | 25.958 : 18.253 | 25.491 : 18.252 | 24.856 : 18.252 | =
-21.018
->>> :  9.132 |
->>>=20
->>> xfs       |        v3       |       v4.0      |       v4.1      |    =
-   v4.2
->>>      |
->>> =
-----------|-----------------|-----------------|-----------------|---------=
---
->>> ------|
->>> data      | 22.041 : 18.253 | 22.618 : 18.252 | 23.067 : 18.253 | =
-23.496 :
->>> 18.253 |
->>> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  =
-0.723
->>> :  0.708 |
->>> mixed-4d  | 29.417 : 18.253 | 28.503 : 18.252 | 28.671 : 18.253 | =
-24.957
->>> :  9.150 |
->>> mixed-8d  | 29.080 : 18.253 | 29.401 : 18.252 | 29.251 : 18.252 | =
-24.625
->>> :  9.140 |
->>> mixed-16d | 27.638 : 18.253 | 28.606 : 18.252 | 27.871 : 18.253 | =
-25.511
->>> :  9.135 |
->>> mixed-32d | 24.967 : 18.253 | 25.239 : 18.252 | 25.434 : 18.252 | =
-21.728
->>> :  9.132 |
->>> mixed-4h  | 34.816 : 18.253 | 36.243 : 18.252 | 35.837 : 18.252 | =
-32.332
->>> :  9.150 |
->>> mixed-8h  | 43.469 : 18.253 | 44.009 : 18.252 | 43.810 : 18.253 | =
-37.962
->>> :  9.140 |
->>> mixed-16h | 29.280 : 18.253 | 28.563 : 18.252 | 28.241 : 18.252 | =
-22.116
->>> :  9.134 |
->>> mixed-32h | 29.428 : 18.253 | 29.378 : 18.252 | 28.808 : 18.253 | =
-27.378
->>> :  9.134 |
->>>=20
->>> btrfs     |        v3       |       v4.0      |       v4.1      |    =
-   v4.2
->>>      |
->>> =
-----------|-----------------|-----------------|-----------------|---------=
---
->>> ------|
->>> data      | 25.547 : 18.253 | 25.053 : 18.252 | 24.209 : 18.253 | =
-32.121 :
->>> 18.253 |
->>> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.252 |  =
-0.702
->>> :  0.724 |
->>> mixed-4d  | 19.016 : 18.253 | 18.822 : 18.252 | 18.955 : 18.253 | =
-18.697
->>> :  9.150 |
->>> mixed-8d  | 19.186 : 18.253 | 19.444 : 18.252 | 18.841 : 18.253 | =
-18.452
->>> :  9.140 |
->>> mixed-16d | 18.480 : 18.253 | 19.010 : 18.252 | 19.167 : 18.252 | =
-16.000
->>> :  9.134 |
->>> mixed-32d | 18.635 : 18.253 | 18.565 : 18.252 | 18.550 : 18.252 | =
-15.930
->>> :  9.132 |
->>> mixed-4h  | 19.079 : 18.253 | 18.990 : 18.252 | 19.157 : 18.253 | =
-27.834
->>> :  9.150 |
->>> mixed-8h  | 18.613 : 18.253 | 19.234 : 18.252 | 18.616 : 18.253 | =
-20.177
->>> :  9.140 |
->>> mixed-16h | 18.590 : 18.253 | 19.221 : 18.252 | 19.654 : 18.253 | =
-17.273
->>> :  9.135 |
->>> mixed-32h | 18.768 : 18.253 | 19.122 : 18.252 | 18.535 : 18.252 | =
-15.791
->>> :  9.132 |
->>>=20
->>> ext3      |        v3       |       v4.0      |       v4.1      |    =
-   v4.2
->>>      |
->>> =
-----------|-----------------|-----------------|-----------------|---------=
---
->>> ------|
->>> data      | 34.292 : 18.253 | 33.810 : 18.252 | 33.450 : 18.253 | =
-33.390 :
->>> 18.254 |
->>> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  =
-0.718
->>> :  0.728 |
->>> mixed-4d  | 46.818 : 18.253 | 47.140 : 18.252 | 48.385 : 18.253 | =
-42.887
->>> :  9.150 |
->>> mixed-8d  | 58.554 : 18.253 | 59.277 : 18.252 | 59.673 : 18.253 | =
-56.760
->>> :  9.140 |
->>> mixed-16d | 44.631 : 18.253 | 44.291 : 18.252 | 44.729 : 18.253 | =
-40.237
->>> :  9.135 |
->>> mixed-32d | 39.110 : 18.253 | 38.735 : 18.252 | 38.902 : 18.252 | =
-35.270
->>> :  9.132 |
->>> mixed-4h  | 56.396 : 18.253 | 56.387 : 18.252 | 56.573 : 18.253 | =
-67.661
->>> :  9.150 |
->>> mixed-8h  | 58.483 : 18.253 | 58.484 : 18.252 | 59.099 : 18.253 | =
-77.958
->>> :  9.140 |
->>> mixed-16h | 42.511 : 18.253 | 42.338 : 18.252 | 42.356 : 18.252 | =
-51.805
->>> :  9.135 |
->>> mixed-32h | 38.419 : 18.253 | 38.504 : 18.252 | 38.643 : 18.252 | =
-40.411
->>> :  9.132 |
->>>=20
->>>=20
->>> Changes since v1:
->>> - Rebase to 5.6-rc1
->>> - Drop the mount option patch for now
->>> - Fix fallback to READ when the server doesn't support READ_PLUS
->>>=20
->>> Any questions?
 >>> Anna
 >>>=20
->>>=20
->>> Anna Schumaker (6):
->>> SUNRPC: Split out a function for setting current page
->>> SUNRPC: Add the ability to expand holes in data pages
->>> SUNRPC: Add the ability to shift data to a specific offset
->>> NFS: Add READ_PLUS data segment support
->>> NFS: Add READ_PLUS hole segment decoding
->>> NFS: Decode multiple READ_PLUS segments
->>>=20
->>> fs/nfs/nfs42xdr.c          | 169 +++++++++++++++++++++++++
->>> fs/nfs/nfs4proc.c          |  43 ++++++-
->>> fs/nfs/nfs4xdr.c           |   1 +
->>> include/linux/nfs4.h       |   2 +-
->>> include/linux/nfs_fs_sb.h  |   1 +
->>> include/linux/nfs_xdr.h    |   2 +-
->>> include/linux/sunrpc/xdr.h |   2 +
->>> net/sunrpc/xdr.c           | 244 =
-++++++++++++++++++++++++++++++++++++-
->>> 8 files changed, 457 insertions(+), 7 deletions(-)
->>>=20
->>> --=20
->>> 2.25.0
->>>=20
+>>>>=20
+>>>>> +	encode_nops(&hdr);
+>>>>> +}
+>>>>> +
+>>>>> /*
+>>>>> * Encode SEEK request
+>>>>> */
+>>>>> @@ -694,6 +744,67 @@ static int decode_deallocate(struct =
+xdr_stream
+>>>>> *xdr,
+>>>>> struct nfs42_falloc_res *re
+>>>>> 	return decode_op_hdr(xdr, OP_DEALLOCATE);
+>>>>> }
+>>>>>=20
+>>>>> +static uint32_t decode_read_plus_data(struct xdr_stream *xdr, =
+struct
+>>>>> nfs_pgio_res *res,
+>>>>> +				      uint32_t *eof)
+>>>>> +{
+>>>>> +	__be32 *p;
+>>>>> +	uint32_t count, recvd;
+>>>>> +	uint64_t offset;
+>>>>> +
+>>>>> +	p =3D xdr_inline_decode(xdr, 8 + 4);
+>>>>> +	if (unlikely(!p))
+>>>>> +		return -EIO;
+>>>>> +
+>>>>> +	p =3D xdr_decode_hyper(p, &offset);
+>>>>> +	count =3D be32_to_cpup(p);
+>>>>> +	if (count =3D=3D 0)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	recvd =3D xdr_read_pages(xdr, count);
+>>>>> +	if (count > recvd) {
+>>>>> +		dprintk("NFS: server cheating in read reply: "
+>>>>> +				"count %u > recvd %u\n", count, recvd);
+>>>>> +		count =3D recvd;
+>>>>> +		*eof =3D 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	return count;
+>>>>> +}
+>>>>> +
+>>>>> +static int decode_read_plus(struct xdr_stream *xdr, struct =
+nfs_pgio_res
+>>>>> *res)
+>>>>> +{
+>>>>> +	__be32 *p;
+>>>>> +	uint32_t count, eof, segments, type;
+>>>>> +	int status;
+>>>>> +
+>>>>> +	status =3D decode_op_hdr(xdr, OP_READ_PLUS);
+>>>>> +	if (status)
+>>>>> +		return status;
+>>>>> +
+>>>>> +	p =3D xdr_inline_decode(xdr, 4 + 4);
+>>>>> +	if (unlikely(!p))
+>>>>> +		return -EIO;
+>>>>> +
+>>>>> +	eof =3D be32_to_cpup(p++);
+>>>>> +	segments =3D be32_to_cpup(p++);
+>>>>> +	if (segments =3D=3D 0)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	p =3D xdr_inline_decode(xdr, 4);
+>>>>> +	if (unlikely(!p))
+>>>>> +		return -EIO;
+>>>>> +
+>>>>> +	type =3D be32_to_cpup(p++);
+>>>>> +	if (type =3D=3D NFS4_CONTENT_DATA)
+>>>>> +		count =3D decode_read_plus_data(xdr, res, &eof);
+>>>>> +	else
+>>>>> +		return -EINVAL;
+>>>>> +
+>>>>> +	res->eof =3D eof;
+>>>>> +	res->count =3D count;
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> static int decode_seek(struct xdr_stream *xdr, struct =
+nfs42_seek_res
+>>>>> *res)
+>>>>> {
+>>>>> 	int status;
+>>>>> @@ -870,6 +981,33 @@ static int nfs4_xdr_dec_deallocate(struct =
+rpc_rqst
+>>>>> *rqstp,
+>>>>> 	return status;
+>>>>> }
+>>>>>=20
+>>>>> +/*
+>>>>> + * Decode READ_PLUS request
+>>>>> + */
+>>>>> +static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
+>>>>> +				  struct xdr_stream *xdr,
+>>>>> +				  void *data)
+>>>>> +{
+>>>>> +	struct nfs_pgio_res *res =3D data;
+>>>>> +	struct compound_hdr hdr;
+>>>>> +	int status;
+>>>>> +
+>>>>> +	status =3D decode_compound_hdr(xdr, &hdr);
+>>>>> +	if (status)
+>>>>> +		goto out;
+>>>>> +	status =3D decode_sequence(xdr, &res->seq_res, rqstp);
+>>>>> +	if (status)
+>>>>> +		goto out;
+>>>>> +	status =3D decode_putfh(xdr);
+>>>>> +	if (status)
+>>>>> +		goto out;
+>>>>> +	status =3D decode_read_plus(xdr, res);
+>>>>> +	if (!status)
+>>>>> +		status =3D res->count;
+>>>>> +out:
+>>>>> +	return status;
+>>>>> +}
+>>>>> +
+>>>>> /*
+>>>>> * Decode SEEK request
+>>>>> */
+>>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>>>> index 95d07a3dc5d1..ed3ec8c36273 100644
+>>>>> --- a/fs/nfs/nfs4proc.c
+>>>>> +++ b/fs/nfs/nfs4proc.c
+>>>>> @@ -69,6 +69,10 @@
+>>>>>=20
+>>>>> #include "nfs4trace.h"
+>>>>>=20
+>>>>> +#ifdef CONFIG_NFS_V4_2
+>>>>> +#include "nfs42.h"
+>>>>> +#endif /* CONFIG_NFS_V4_2 */
+>>>>> +
+>>>>> #define NFSDBG_FACILITY		NFSDBG_PROC
+>>>>>=20
+>>>>> #define NFS4_BITMASK_SZ		3
+>>>>> @@ -5199,28 +5203,60 @@ static bool =
+nfs4_read_stateid_changed(struct
+>>>>> rpc_task *task,
+>>>>> 	return true;
+>>>>> }
+>>>>>=20
+>>>>> +static bool nfs4_read_plus_not_supported(struct rpc_task *task,
+>>>>> +					struct nfs_pgio_header *hdr)
+>>>>> +{
+>>>>> +	struct nfs_server *server =3D NFS_SERVER(hdr->inode);
+>>>>> +	struct rpc_message *msg =3D &task->tk_msg;
+>>>>> +
+>>>>> +	if (msg->rpc_proc =3D=3D =
+&nfs4_procedures[NFSPROC4_CLNT_READ_PLUS]
+>>>>> &&
+>>>>> +	    server->caps & NFS_CAP_READ_PLUS && task->tk_status =3D=3D
+>>>>> -ENOTSUPP) {
+>>>>> +		server->caps &=3D ~NFS_CAP_READ_PLUS;
+>>>>> +		msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
+>>>>> +		rpc_restart_call_prepare(task);
+>>>>> +		return true;
+>>>>> +	}
+>>>>> +	return false;
+>>>>> +}
+>>>>> +
+>>>>> static int nfs4_read_done(struct rpc_task *task, struct =
+nfs_pgio_header
+>>>>> *hdr)
+>>>>> {
+>>>>> -
+>>>>> 	dprintk("--> %s\n", __func__);
+>>>>>=20
+>>>>> 	if (!nfs4_sequence_done(task, &hdr->res.seq_res))
+>>>>> 		return -EAGAIN;
+>>>>> 	if (nfs4_read_stateid_changed(task, &hdr->args))
+>>>>> 		return -EAGAIN;
+>>>>> +	if (nfs4_read_plus_not_supported(task, hdr))
+>>>>> +		return -EAGAIN;
+>>>>> 	if (task->tk_status > 0)
+>>>>> 		nfs_invalidate_atime(hdr->inode);
+>>>>> 	return hdr->pgio_done_cb ? hdr->pgio_done_cb(task, hdr) :
+>>>>> 				    nfs4_read_done_cb(task, hdr);
+>>>>> }
+>>>>>=20
+>>>>> +#ifdef CONFIG_NFS_V4_2
+>>>>> +static void nfs42_read_plus_support(struct nfs_server *server, =
+struct
+>>>>> rpc_message *msg)
+>>>>> +{
+>>>>> +	if (server->caps & NFS_CAP_READ_PLUS)
+>>>>> +		msg->rpc_proc =3D
+>>>>> &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS];
+>>>>> +	else
+>>>>> +		msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
+>>>>> +}
+>>>>> +#else
+>>>>> +static void nfs42_read_plus_support(struct nfs_server *server, =
+struct
+>>>>> rpc_message *msg)
+>>>>> +{
+>>>>> +	msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
+>>>>> +}
+>>>>> +#endif /* CONFIG_NFS_V4_2 */
+>>>>> +
+>>>>> static void nfs4_proc_read_setup(struct nfs_pgio_header *hdr,
+>>>>> 				 struct rpc_message *msg)
+>>>>> {
+>>>>> 	hdr->timestamp   =3D jiffies;
+>>>>> 	if (!hdr->pgio_done_cb)
+>>>>> 		hdr->pgio_done_cb =3D nfs4_read_done_cb;
+>>>>> -	msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
+>>>>> +	nfs42_read_plus_support(NFS_SERVER(hdr->inode), msg);
+>>>>> 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0,
+>>>>> 0);
+>>>>> }
+>>>>>=20
+>>>>> @@ -9970,7 +10006,8 @@ static const struct nfs4_minor_version_ops
+>>>>> nfs_v4_2_minor_ops =3D {
+>>>>> 		| NFS_CAP_SEEK
+>>>>> 		| NFS_CAP_LAYOUTSTATS
+>>>>> 		| NFS_CAP_CLONE
+>>>>> -		| NFS_CAP_LAYOUTERROR,
+>>>>> +		| NFS_CAP_LAYOUTERROR
+>>>>> +		| NFS_CAP_READ_PLUS,
+>>>>> 	.init_client =3D nfs41_init_client,
+>>>>> 	.shutdown_client =3D nfs41_shutdown_client,
+>>>>> 	.match_stateid =3D nfs41_match_stateid,
+>>>>> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+>>>>> index 47817ef0aadb..68b2917d0537 100644
+>>>>> --- a/fs/nfs/nfs4xdr.c
+>>>>> +++ b/fs/nfs/nfs4xdr.c
+>>>>> @@ -7584,6 +7584,7 @@ const struct rpc_procinfo nfs4_procedures[] =
+=3D {
+>>>>> 	PROC42(COPY_NOTIFY,	enc_copy_notify,	dec_copy_notify)
+>>>>> ,
+>>>>> 	PROC(LOOKUPP,		enc_lookupp,		dec_lookupp),
+>>>>> 	PROC42(LAYOUTERROR,	enc_layouterror,	dec_layouterror)
+>>>>> ,
+>>>>> +	PROC42(READ_PLUS,	enc_read_plus,		dec_read_plus),
+>>>>> };
+>>>>>=20
+>>>>> static unsigned int =
+nfs_version4_counts[ARRAY_SIZE(nfs4_procedures)];
+>>>>> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+>>>>> index 82d8fb422092..c1eeef52545c 100644
+>>>>> --- a/include/linux/nfs4.h
+>>>>> +++ b/include/linux/nfs4.h
+>>>>> @@ -540,8 +540,8 @@ enum {
+>>>>>=20
+>>>>> 	NFSPROC4_CLNT_LOOKUPP,
+>>>>> 	NFSPROC4_CLNT_LAYOUTERROR,
+>>>>> -
+>>>>> 	NFSPROC4_CLNT_COPY_NOTIFY,
+>>>>> +	NFSPROC4_CLNT_READ_PLUS,
+>>>>> };
+>>>>>=20
+>>>>> /* nfs41 types */
+>>>>> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+>>>>> index 465fa98258a3..11248c5a7b24 100644
+>>>>> --- a/include/linux/nfs_fs_sb.h
+>>>>> +++ b/include/linux/nfs_fs_sb.h
+>>>>> @@ -281,5 +281,6 @@ struct nfs_server {
+>>>>> #define NFS_CAP_OFFLOAD_CANCEL	(1U << 25)
+>>>>> #define NFS_CAP_LAYOUTERROR	(1U << 26)
+>>>>> #define NFS_CAP_COPY_NOTIFY	(1U << 27)
+>>>>> +#define NFS_CAP_READ_PLUS	(1U << 28)
+>>>>>=20
+>>>>> #endif
+>>>>> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+>>>>> index 94c77ed55ce1..8efbf3d8b263 100644
+>>>>> --- a/include/linux/nfs_xdr.h
+>>>>> +++ b/include/linux/nfs_xdr.h
+>>>>> @@ -655,7 +655,7 @@ struct nfs_pgio_args {
+>>>>> struct nfs_pgio_res {
+>>>>> 	struct nfs4_sequence_res	seq_res;
+>>>>> 	struct nfs_fattr *	fattr;
+>>>>> -	__u32			count;
+>>>>> +	__u64			count;
+>>>>> 	__u32			op_status;
+>>>>> 	union {
+>>>>> 		struct {
+>>>>> --=20
+>>>>> 2.25.0
+>>>>>=20
+>>>>=20
+>>>> --
+>>>> Chuck Lever
 >>=20
 >> --
 >> Chuck Lever
->> chucklever@gmail.com
 
 --
 Chuck Lever
-chucklever@gmail.com
 
 
 
