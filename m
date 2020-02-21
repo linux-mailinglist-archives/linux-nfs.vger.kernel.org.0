@@ -2,130 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B95F1666AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2020 19:54:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9669F16883A
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2020 21:21:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbgBTSyX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Feb 2020 13:54:23 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60058 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSyX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Feb 2020 13:54:23 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIsHTP098466;
-        Thu, 20 Feb 2020 18:54:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ThRYS2C5vHBGjTpUMAxDQphFIc9sy41pR4nuyX6tIOo=;
- b=mm4rrxs67DRU7kNPmL/SOZlNkOgSIjtnTzdG4Rp5QYZv7BB4ATuv+/q+DSD30XatKHlH
- m/+Vv0C/0VuCBOF5EBKMbvm4md5U1Lj9t4k8ZnwCu46Bau5xcLD2nGVIWazS6DgGn/W5
- WPo1x6RLpRELOfb8J4PjgHMTgfcV6pakiYtpUs73J03cJSw7Bhc10EeD4xaxFZqq084I
- Bf2rODqyVyOWfzx8ZEAnysrxtdjzX5sDp+2Ti3aqRGHZG5obgfLD1/MpUoqe40r/CJ3g
- BHFVEohGWBtK+SX7onlOXc83j6mLqAAWvM2KuSeMx3lgpQuwNWiKQ13IGG0w455i0oQ0 cw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y8ud1bs9v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 18:54:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIri6d142762;
-        Thu, 20 Feb 2020 18:54:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y8ud4fpgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 18:54:17 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01KIsHDV024427;
-        Thu, 20 Feb 2020 18:54:17 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 10:54:16 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 4/6] NFS: Add READ_PLUS data segment support
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <2c46295c6a6e748947af226dc470f7e35a2c6e82.camel@gmail.com>
-Date:   Thu, 20 Feb 2020 13:54:15 -0500
-Cc:     Trond.Myklebust@hammerspace.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F1B830F5-882A-468A-88C4-6015DB557376@oracle.com>
-References: <20200214211227.407836-1-Anna.Schumaker@Netapp.com>
- <20200214211227.407836-5-Anna.Schumaker@Netapp.com>
- <AAF85957-285A-42BF-993D-7EB4843E2ED2@oracle.com>
- <7621b7d84295dd3086e2036f8cb389ceb47cbbc2.camel@gmail.com>
- <CD23428B-4105-4A52-864D-73CFA64E4551@oracle.com>
- <cbff77a5175b448e955fafc45b5c80b3dcff0f5b.camel@gmail.com>
- <93E71BBA-029B-44AE-B580-0332E157D0A2@oracle.com>
- <2c46295c6a6e748947af226dc470f7e35a2c6e82.camel@gmail.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200137
+        id S1726747AbgBUUVM convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 21 Feb 2020 15:21:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47798 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726483AbgBUUVM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Feb 2020 15:21:12 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-MTjdiAeLMqaUO7dM2OcG-g-1; Fri, 21 Feb 2020 15:21:08 -0500
+X-MC-Unique: MTjdiAeLMqaUO7dM2OcG-g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14F70477;
+        Fri, 21 Feb 2020 20:21:07 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-123-59.rdu2.redhat.com [10.10.123.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC7805D9E2;
+        Fri, 21 Feb 2020 20:21:06 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 0821A1A00A4; Fri, 21 Feb 2020 15:21:06 -0500 (EST)
+Date:   Fri, 21 Feb 2020 15:21:05 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Patrick Steinhardt <ps@pks.im>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        dhowells@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFS: Don't hard-code the fs_type when submounting
+Message-ID: <20200221202105.GA3175@aion.usersys.redhat.com>
+References: <20200220130620.3547817-1-smayhew@redhat.com>
+ <20200220134618.GA4641@ncase>
+MIME-Version: 1.0
+In-Reply-To: <20200220134618.GA4641@ncase>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, 20 Feb 2020, Patrick Steinhardt wrote:
 
-> On Feb 20, 2020, at 1:35 PM, Anna Schumaker <schumaker.anna@gmail.com> =
-wrote:
->=20
-> On Thu, 2020-02-20 at 13:30 -0500, Chuck Lever wrote:
->>> On Feb 20, 2020, at 1:28 PM, Anna Schumaker =
-<schumaker.anna@gmail.com>
->>> wrote:
->>>=20
->>> On Thu, 2020-02-20 at 09:55 -0500, Chuck Lever wrote:
->>>=20
->>>> The down-side here is that would make NFSv4.2 on RDMA
->>>> unable to recognize holes in files the same way as it
->>>> does on TCP, and that's a pretty significant variation
->>>> in behavior. Does "noreadplus" even deal with that?
->>>=20
->>> Setting "noreadplus" just causes the client to use the READ =
-operation
->>> instead,
->>> so there should be no difference between v4.1 and v4.2 if the option =
-is set.
->>=20
->> My concern is the difference between NFSv4.2 with noreadplus
->> and NFSv4.2 with readplus. The former is not able to detect
->> holes in files on the server, but the latter is.
->=20
-> The client could still use lseek to detect holes. The client throws =
-away the
-> hole information after xdr decoding, and zeroes out the corresponding =
-pages for
-> the page cache.
+> On Thu, Feb 20, 2020 at 08:06:20AM -0500, Scott Mayhew wrote:
+> > Hard-coding the fstype causes "nfs4" mounts to appear as "nfs",
+> > which breaks scripts that do "umount -at nfs4".
+> > 
+> > Reported-by: Patrick Steinhardt <ps@pks.im>
+> > Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  fs/nfs/namespace.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+> > index ad6077404947..f3ece8ed3203 100644
+> > --- a/fs/nfs/namespace.c
+> > +++ b/fs/nfs/namespace.c
+> > @@ -153,7 +153,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
+> >  	/* Open a new filesystem context, transferring parameters from the
+> >  	 * parent superblock, including the network namespace.
+> >  	 */
+> > -	fc = fs_context_for_submount(&nfs_fs_type, path->dentry);
+> > +	fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, path->dentry);
+> >  	if (IS_ERR(fc))
+> >  		return ERR_CAST(fc);
+> 
+> Thanks for your fix! While this fixes the fstype with mount.nfs4(8),
+> it still doesn't work when using mount(8):
+> 
+>      $ sudo mount server:/mnt /mnt && findmnt -n -ofstype /mnt
+>      nfs
+>      $ sudo umount /mnt
+>      $ sudo mount.nfs4 server:/mnt /mnt && findmnt -n -ofstype /mnt
+>      nfs4
+> 
+> I guess the issue is that the kernel doesn't yet know which NFS version
+> the server provides at the point where `fs_context_for_submount()` is
+> called.
 
-Then maybe that's an optimization for another day. The READ_PLUS
-reply can have hole information. The client could save itself some
-SEEK_HOLE operations if it cached that hole information somehow.
+Thanks for testing.  Actually the problem is that the super_block's
+s_type is now based on the fs_context->fs_type field, which is set when
+the fs_context is created (way before the mount options are parsed).
+When you use mount(8) without specifying '-t nfs4', it defaults to
+using the mount.nfs helper, which calls mount(2) with 'nfs' as the
+fstype.  I'm sending a second patch that double-checks the
+fs_context->fs_type after the mount options have been parsed.  We still
+shouldn't be hard-coding the fstype in fs_context_for_submount() though
+(i.e. both patches are needed).
 
-But if "readplus" and "noreadplus" result in exactly the same hole
-retention behavior on our client, I guess there's no harm in using
-"noreadplus" instead, except for possible performance regression.
-
-An alternative to making "noreadplus" the default would be to
-temporarily add "noreadplus" semantics to the "proto=3Drdma" mount
-option, as a separate patch; maybe after some performance results
-show that it is necessary. That would keep the mount interface a
-little less complicated.
-
-
---
-Chuck Lever
-
+-Scott
+> 
+> Patrick
 
 
