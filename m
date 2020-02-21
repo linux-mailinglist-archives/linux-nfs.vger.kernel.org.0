@@ -2,58 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C57B31689B5
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2020 23:00:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB9B71689B7
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2020 23:00:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgBUWAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Feb 2020 17:00:44 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:32835 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgBUWAo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Feb 2020 17:00:44 -0500
-Received: by mail-yw1-f65.google.com with SMTP id 192so1816319ywy.0;
-        Fri, 21 Feb 2020 14:00:42 -0800 (PST)
+        id S1728624AbgBUWAt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Feb 2020 17:00:49 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:40826 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728384AbgBUWAt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Feb 2020 17:00:49 -0500
+Received: by mail-yb1-f196.google.com with SMTP id f130so1866703ybc.7;
+        Fri, 21 Feb 2020 14:00:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=eZZVK4Lqf0ODb+7KsK4tYDJHuDk0tILL3tKyxc+4HRk=;
-        b=Humdro8meZ4gPQ7+MHBQi0hJr0eFRI3669KURPmBauhTzdQHypNe0MsmkumX5br9eJ
-         2Bvbv4pYQUsKymB4m+3o9zlEKGD2pHgzoCkyc13y5YamW3t/jKK5z87HRmiS/vqdvFS6
-         KN3WdcF/kLxAO4UgT+JzyXtkWHysAcmgQHL9l/pmYQ3B8cuz4SgyLJMHuHs03B1KnAan
-         qjNeiC4uX4jcx0KafPg4RTUa4FqxFOSJ9a/as4p8SZ/CA8YB6zU7zR3nU101xmwypQKn
-         CJu5b25gl5Im+O3JjHplxiA3jkn5oc6HbtVSsrfkfLdN7uwPzpHFxrskFwXsNdpN+cq2
-         KFNg==
+        bh=iuQVFceq/fLlB/8RxgnVO5wb/LHs7ibuJv82J21q8ms=;
+        b=gUNrGd7tqwOKa4O8aIyw0E9UozUStqNxwCdikWk/Xlp8TuFOCyluWMzDkK93dDwiRo
+         vRoVcDSi55fPx0j7ZdbGktuYAAhXW+sHHqnw7zY6bZeX/oyky2FgZGuGX9aqjVNqXHlY
+         p+4mxknNeoXGl3ZLE9JRZw442ax6ubigqBTL5X6a1HUjlCb9IU6xoS1NqiSfX6QtYe8a
+         wlop9mZyddVUEPTcolMqtHYFTEmQ1fBcZSoofQto+3wNznJH/9ZK7q+K4l5SXFxB5fLh
+         H1HcE2RfbXqCjrYrSslZ/2QVnyMp0sfcDcOwO+MN+sdljtAF63zy8uBMqBKnIL+1PWg/
+         wh3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=eZZVK4Lqf0ODb+7KsK4tYDJHuDk0tILL3tKyxc+4HRk=;
-        b=IC5A1EMgg199vJHLDDJvX+vPYPK9AUcqfY4mngm6tems72btjnNuoWxD5yxNdhbvZ7
-         j66LXLli/kzFlRThELKcSbsyje3wiIj1wuUc0antYVDbvwSKLURsJjwmY2/kr1+Mr6/l
-         a+21U4oxNhGu6mNVq/L2K7qNaKADOjaU2idogq7BZjZfkmQ8u6MteEMxO+3rXOkwA3uo
-         G5KeYh8azlu+fOEa9kt35/9fFnD74JZH7GztQZ6pDRw0g2lnQfJGQQ33T+gQ6LNz5X1v
-         jL7i0e/N9O5ab8PSkjaOBXIdd3jwZhN6PuJohBdRkvJMVbcAD9oTodEvQm4yupL14TjL
-         Wkaw==
-X-Gm-Message-State: APjAAAUCttIP+uwnjM+SPJLJncxr7kzZsj78X+4gIaPrklHkcnMfvO90
-        bySIo/ktkgafSpefSMH0e73G1LNq
-X-Google-Smtp-Source: APXvYqxdtQWQayBRrF+PCyb9XRoSRAFnopsk8SHpDG0gnBGEWQlEd+t9hu6s/z8LgOyyCsSjPV0UFQ==
-X-Received: by 2002:a0d:c345:: with SMTP id f66mr33083657ywd.388.1582322440166;
-        Fri, 21 Feb 2020 14:00:40 -0800 (PST)
+        bh=iuQVFceq/fLlB/8RxgnVO5wb/LHs7ibuJv82J21q8ms=;
+        b=sAtlq/vWnk6WAr+gb/2/73+n2UcQLLu2neSi8Ur+uMMhi2bEsCq29ctFPxJzft/WdX
+         eA4Sn7gFiujIsxBO/inzMKJiZYp4sfQDZwwOvuXzQrU7pF3C/lzx/IcsoBo8sQofl8dr
+         cNZqH0zfapmKFMBTQaYptegf25fFEYM1fR38DThSZZnmASMlDB1u7iDAMQUzSBJg9UbL
+         Bei3lgXMKL2GNLHha9TLt67tv0h4r9k0osue2iuITAHeYLYUtu/00mWl6JHbZEPJKk4S
+         OdfyKOq58YNtq169QKyUYV/0DLuQmrC7sVPYRbBY0y3iPlWVMZjE/cH/B934hYp/A4gk
+         5n0Q==
+X-Gm-Message-State: APjAAAU3jWdJFr/1PhKSDhNkg6A/pWi1UGE7k2qgo3zlePJwAbgsqvvE
+        DtzIdPiRALYlyaFij+zBH6AjLRHh
+X-Google-Smtp-Source: APXvYqxmS+ZAha8csh0UWlf4dlK6kc4fhXA/vF0n14zYJk97sqNs3KDR/gxQh4v5wToYvoWX6ua+cA==
+X-Received: by 2002:a25:2541:: with SMTP id l62mr5267666ybl.294.1582322446360;
+        Fri, 21 Feb 2020 14:00:46 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id m62sm1811313ywb.107.2020.02.21.14.00.39
+        by smtp.gmail.com with ESMTPSA id x84sm1849817ywg.47.2020.02.21.14.00.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 14:00:39 -0800 (PST)
+        Fri, 21 Feb 2020 14:00:45 -0800 (PST)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01LM0c32018994;
-        Fri, 21 Feb 2020 22:00:38 GMT
-Subject: [PATCH v1 06/11] xprtrdma: Invoke rpcrdma_ia_open in the connect
- worker
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 01LM0i0X018997;
+        Fri, 21 Feb 2020 22:00:44 GMT
+Subject: [PATCH v1 07/11] xprtrdma: Remove rpcrdma_ia::ri_flags
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 21 Feb 2020 17:00:38 -0500
-Message-ID: <20200221220038.2072.45482.stgit@manet.1015granger.net>
+Date:   Fri, 21 Feb 2020 17:00:44 -0500
+Message-ID: <20200221220044.2072.37658.stgit@manet.1015granger.net>
 In-Reply-To: <20200221214906.2072.32572.stgit@manet.1015granger.net>
 References: <20200221214906.2072.32572.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -65,297 +64,189 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Move rdma_cm_id creation into rpcrdma_ep_create() so that it is now
-responsible for allocating all per-connection hardware resources.
+Clean up:
+The upper layer serializes calls to xprt_rdma_close, so there is no
+need for an atomic bit operation, saving 8 bytes in rpcrdma_ia.
 
-With this clean-up, all three arms of the switch statement in
-rpcrdma_ep_connect are exactly the same now, thus the switch can be
-removed.
-
-Because device removal behaves a little differently than
-disconnection, there is a little more work to be done before
-rpcrdma_ep_destroy() can release the connection's rdma_cm_id. So
-it is not quite symmetrical with rpcrdma_ep_create() yet.
+This enables merging rpcrdma_ia_remove directly into the disconnect
+logic.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h  |    1 
- net/sunrpc/xprtrdma/transport.c |    7 --
- net/sunrpc/xprtrdma/verbs.c     |  153 +++++----------------------------------
- net/sunrpc/xprtrdma/xprt_rdma.h |    2 -
- 4 files changed, 20 insertions(+), 143 deletions(-)
+ net/sunrpc/xprtrdma/transport.c |   15 -----------
+ net/sunrpc/xprtrdma/verbs.c     |   55 +++++++++------------------------------
+ net/sunrpc/xprtrdma/xprt_rdma.h |   10 -------
+ 3 files changed, 13 insertions(+), 67 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index c0e4c93324f5..ce2126a90806 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -413,7 +413,6 @@
- DEFINE_RXPRT_EVENT(xprtrdma_create);
- DEFINE_RXPRT_EVENT(xprtrdma_op_destroy);
- DEFINE_RXPRT_EVENT(xprtrdma_remove);
--DEFINE_RXPRT_EVENT(xprtrdma_reinsert);
- DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
- DEFINE_RXPRT_EVENT(xprtrdma_op_close);
- DEFINE_RXPRT_EVENT(xprtrdma_op_setport);
 diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 6349e6c98b57..745dfd149637 100644
+index 745dfd149637..d7b7dab0aeb6 100644
 --- a/net/sunrpc/xprtrdma/transport.c
 +++ b/net/sunrpc/xprtrdma/transport.c
-@@ -286,7 +286,6 @@
- 
- 	rpcrdma_xprt_disconnect(r_xprt);
- 	rpcrdma_buffer_destroy(&r_xprt->rx_buf);
--	rpcrdma_ia_close(&r_xprt->rx_ia);
- 
- 	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
-@@ -347,10 +346,6 @@
- 	xprt_rdma_format_addresses(xprt, sap);
- 
- 	new_xprt = rpcx_to_rdmax(xprt);
--	rc = rpcrdma_ia_open(new_xprt);
--	if (rc)
--		goto out1;
+@@ -385,26 +385,11 @@
+ void xprt_rdma_close(struct rpc_xprt *xprt)
+ {
+ 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(xprt);
+-	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+-	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
 -
- 	rc = rpcrdma_buffer_create(new_xprt);
- 	if (rc)
- 		goto out2;
-@@ -372,8 +367,6 @@
- 	rpcrdma_buffer_destroy(&new_xprt->rx_buf);
- 	rc = -ENODEV;
- out2:
--	rpcrdma_ia_close(&new_xprt->rx_ia);
--out1:
- 	trace_xprtrdma_op_destroy(new_xprt);
- 	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
+-	might_sleep();
+ 
+ 	trace_xprtrdma_op_close(r_xprt);
+ 
+-	/* Prevent marshaling and sending of new requests */
+-	xprt_clear_connected(xprt);
+-
+-	if (test_and_clear_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags)) {
+-		rpcrdma_ia_remove(ia);
+-		goto out;
+-	}
+-
+-	if (ep->rep_connected == -ENODEV)
+-		return;
+ 	rpcrdma_xprt_disconnect(r_xprt);
+ 
+-out:
+ 	xprt->reestablish_timeout = 0;
+ 	++xprt->connect_cookie;
+ 	xprt_disconnect_done(xprt);
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 36fe7baea014..3df20f355579 100644
+index 3df20f355579..a7f46bbbf017 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -346,31 +346,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+@@ -250,12 +250,11 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+ 			rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt));
+ #endif
+ 		init_completion(&ia->ri_remove_done);
+-		set_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags);
+ 		ep->rep_connected = -ENODEV;
+ 		xprt_force_disconnect(xprt);
+ 		wait_for_completion(&ia->ri_remove_done);
++		trace_xprtrdma_remove(r_xprt);
+ 
+-		ia->ri_id = NULL;
+ 		/* Return 1 to ensure the core destroys the id. */
+ 		return 1;
+ 	case RDMA_CM_EVENT_ESTABLISHED:
+@@ -345,37 +344,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+  * Exported functions.
   */
  
- /**
-- * rpcrdma_ia_open - Open and initialize an Interface Adapter.
-- * @xprt: transport with IA to (re)initialize
-- *
-- * Returns 0 on success, negative errno if an appropriate
-- * Interface Adapter could not be found and opened.
-- */
--int
--rpcrdma_ia_open(struct rpcrdma_xprt *xprt)
--{
--	struct rpcrdma_ia *ia = &xprt->rx_ia;
--	int rc;
--
--	ia->ri_id = rpcrdma_create_id(xprt, ia);
--	if (IS_ERR(ia->ri_id)) {
--		rc = PTR_ERR(ia->ri_id);
--		goto out_err;
--	}
--	return 0;
--
--out_err:
--	rpcrdma_ia_close(ia);
--	return rc;
--}
--
 -/**
-  * rpcrdma_ia_remove - Handle device driver unload
-  * @ia: interface adapter being removed
-  *
-@@ -401,34 +376,26 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
- 	trace_xprtrdma_remove(r_xprt);
- }
- 
--/**
-- * rpcrdma_ia_close - Clean up/close an IA.
-- * @ia: interface adapter to close
+- * rpcrdma_ia_remove - Handle device driver unload
+- * @ia: interface adapter being removed
 - *
+- * Divest transport H/W resources associated with this adapter,
+- * but allow it to be restored later.
+- *
+- * Caller must hold the transport send lock.
 - */
 -void
--rpcrdma_ia_close(struct rpcrdma_ia *ia)
+-rpcrdma_ia_remove(struct rpcrdma_ia *ia)
 -{
--	if (ia->ri_id && !IS_ERR(ia->ri_id))
--		rdma_destroy_id(ia->ri_id);
--	ia->ri_id = NULL;
+-	struct rpcrdma_xprt *r_xprt = container_of(ia, struct rpcrdma_xprt,
+-						   rx_ia);
+-
+-	if (ia->ri_id->qp)
+-		rpcrdma_xprt_drain(r_xprt);
+-
+-	rpcrdma_reps_unmap(r_xprt);
+-	rpcrdma_reqs_reset(r_xprt);
+-	rpcrdma_mrs_destroy(r_xprt);
+-	rpcrdma_sendctxs_destroy(r_xprt);
+-
+-	rpcrdma_ep_destroy(r_xprt);
+-
+-	/* Allow waiters to continue */
+-	complete(&ia->ri_remove_done);
+-
+-	trace_xprtrdma_remove(r_xprt);
 -}
 -
--static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt,
--			     struct rdma_cm_id *id)
-+static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
  {
  	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+@@ -573,12 +541,13 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
  	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	struct rpcrdma_connect_private *pmsg = &ep->rep_cm_private;
-+	struct rdma_cm_id *id;
- 	int rc;
- 
-+	id = rpcrdma_create_id(r_xprt, ia);
-+	if (IS_ERR(id))
-+		return PTR_ERR(id);
+ 	struct rdma_cm_id *id = ia->ri_id;
+-	int rc;
++	int rc, status = ep->rep_connected;
 +
- 	ep->rep_max_requests = r_xprt->rx_xprt.max_reqs;
- 	ep->rep_inline_send = xprt_rdma_max_inline_write;
- 	ep->rep_inline_recv = xprt_rdma_max_inline_read;
++	might_sleep();
  
- 	rc = frwr_query_device(r_xprt, id->device);
- 	if (rc)
--		return rc;
-+		goto out_destroy;
-+
- 	r_xprt->rx_buf.rb_max_requests = cpu_to_be32(ep->rep_max_requests);
- 
- 	ep->rep_attr.event_handler = rpcrdma_qp_event_handler;
-@@ -507,10 +474,12 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt,
- 	rc = rdma_create_qp(id, ia->ri_pd, &ep->rep_attr);
- 	if (rc)
- 		goto out_destroy;
-+	ia->ri_id = id;
- 	return 0;
- 
- out_destroy:
- 	rpcrdma_ep_destroy(r_xprt);
-+	rdma_destroy_id(id);
- 	return rc;
- }
- 
-@@ -536,79 +505,8 @@ static void rpcrdma_ep_destroy(struct rpcrdma_xprt *r_xprt)
- 	ia->ri_pd = NULL;
- }
- 
--/* Re-establish a connection after a device removal event.
-- * Unlike a normal reconnection, a fresh PD and a new set
-- * of MRs and buffers is needed.
-- */
--static int rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt)
--{
--	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
--	int rc, err;
--
--	trace_xprtrdma_reinsert(r_xprt);
--
--	rc = -EHOSTUNREACH;
--	if (rpcrdma_ia_open(r_xprt))
--		goto out1;
--
--	rc = -ENETUNREACH;
--	err = rpcrdma_ep_create(r_xprt, ia->ri_id);
--	if (err)
--		goto out2;
--	return 0;
--
--out2:
--	rpcrdma_ia_close(ia);
--out1:
--	return rc;
--}
--
--static int rpcrdma_ep_reconnect(struct rpcrdma_xprt *r_xprt)
--{
--	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
--	struct rdma_cm_id *id, *old;
--	int err, rc;
--
--	rc = -EHOSTUNREACH;
--	id = rpcrdma_create_id(r_xprt, ia);
--	if (IS_ERR(id))
+ 	if (!id)
 -		goto out;
--
--	/* As long as the new ID points to the same device as the
--	 * old ID, we can reuse the transport's existing PD and all
--	 * previously allocated MRs. Also, the same device means
--	 * the transport's previous DMA mappings are still valid.
--	 *
--	 * This is a sanity check only. There should be no way these
--	 * point to two different devices here.
--	 */
--	old = id;
--	rc = -ENETUNREACH;
--	if (ia->ri_id->device != id->device) {
--		pr_err("rpcrdma: can't reconnect on different device!\n");
--		goto out_destroy;
--	}
--
--	err = rpcrdma_ep_create(r_xprt, id);
--	if (err)
--		goto out_destroy;
--
--	/* Atomically replace the transport's ID. */
--	rc = 0;
--	old = ia->ri_id;
--	ia->ri_id = id;
--
--out_destroy:
--	rdma_destroy_id(old);
++		return;
+ 
+-	/* returns without wait if ID is not connected */
+ 	rc = rdma_disconnect(id);
+ 	if (!rc)
+ 		wait_event_interruptible(ep->rep_connect_wait,
+@@ -589,15 +558,17 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ 
+ 	if (id->qp)
+ 		rpcrdma_xprt_drain(r_xprt);
 -out:
--	return rc;
--}
--
--/**
-- * rpcrdma_xprt_connect - Connect an unconnected transport
-- * @r_xprt: controlling transport instance
-- *
-- * Returns 0 on success or a negative errno.
-+/*
-+ * Connect unconnected endpoint.
-  */
- int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- {
-@@ -618,25 +516,10 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 	int rc;
- 
- retry:
--	switch (ep->rep_connected) {
--	case 0:
--		rc = -ENETUNREACH;
--		if (rpcrdma_ep_create(r_xprt, ia->ri_id))
--			goto out_noupdate;
--		break;
--	case -ENODEV:
--		rc = rpcrdma_ep_recreate_xprt(r_xprt);
--		if (rc)
--			goto out_noupdate;
--		break;
--	case 1:
--		rpcrdma_xprt_disconnect(r_xprt);
--		/* fall through */
--	default:
--		rc = rpcrdma_ep_reconnect(r_xprt);
--		if (rc)
--			goto out;
--	}
-+	rpcrdma_xprt_disconnect(r_xprt);
-+	rc = rpcrdma_ep_create(r_xprt);
-+	if (rc)
-+		goto out_noupdate;
- 
- 	ep->rep_connected = 0;
- 	xprt_clear_connected(xprt);
-@@ -712,6 +595,10 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
++	rpcrdma_reps_unmap(r_xprt);
+ 	rpcrdma_reqs_reset(r_xprt);
+ 	rpcrdma_mrs_destroy(r_xprt);
  	rpcrdma_sendctxs_destroy(r_xprt);
  
  	rpcrdma_ep_destroy(r_xprt);
-+
-+	if (ia->ri_id)
-+		rdma_destroy_id(ia->ri_id);
-+	ia->ri_id = NULL;
+ 
+-	if (ia->ri_id)
+-		rdma_destroy_id(ia->ri_id);
++	if (status == -ENODEV)
++		complete(&ia->ri_remove_done);
++	else
++		rdma_destroy_id(id);
+ 	ia->ri_id = NULL;
  }
  
- /* Fixed-size circular FIFO queue. This implementation is wait-free and
+@@ -815,10 +786,10 @@ void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
+ 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+ 
+-	/* If there is no underlying device, it's no use to
+-	 * wake the refresh worker.
++	/* If there is no underlying connection, it's no use
++	 * to wake the refresh worker.
+ 	 */
+-	if (ep->rep_connected != -ENODEV) {
++	if (ep->rep_connected == 1) {
+ 		/* The work is scheduled on a WQ_MEM_RECLAIM
+ 		 * workqueue in order to prevent MR allocation
+ 		 * from recursing into NFS during direct reclaim.
 diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 9ead06b1d8a4..8be1b70b71a2 100644
+index 8be1b70b71a2..d2a0f125f7a8 100644
 --- a/net/sunrpc/xprtrdma/xprt_rdma.h
 +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -457,9 +457,7 @@ struct rpcrdma_xprt {
+@@ -75,15 +75,10 @@ struct rpcrdma_ia {
+ 	unsigned int		ri_max_frwr_depth;
+ 	bool			ri_implicit_roundup;
+ 	enum ib_mr_type		ri_mrtype;
+-	unsigned long		ri_flags;
+ 	struct completion	ri_done;
+ 	struct completion	ri_remove_done;
+ };
+ 
+-enum {
+-	RPCRDMA_IAF_REMOVING = 0,
+-};
+-
  /*
-  * Interface Adapter calls - xprtrdma/verbs.c
+  * RDMA Endpoint -- one per transport instance
   */
--int rpcrdma_ia_open(struct rpcrdma_xprt *xprt);
- void rpcrdma_ia_remove(struct rpcrdma_ia *ia);
--void rpcrdma_ia_close(struct rpcrdma_ia *);
+@@ -455,11 +450,6 @@ struct rpcrdma_xprt {
+ extern unsigned int xprt_rdma_memreg_strategy;
  
  /*
+- * Interface Adapter calls - xprtrdma/verbs.c
+- */
+-void rpcrdma_ia_remove(struct rpcrdma_ia *ia);
+-
+-/*
   * Endpoint calls - xprtrdma/verbs.c
+  */
+ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt);
 
