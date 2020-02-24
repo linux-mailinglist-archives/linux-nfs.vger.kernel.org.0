@@ -2,136 +2,331 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE12616A238
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Feb 2020 10:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4166016AB1D
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Feb 2020 17:15:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgBXJ0r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Feb 2020 04:26:47 -0500
-Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:16580
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727240AbgBXJ0r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:26:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLhB7iH5YDJQd/UPqkLrfmxKIxhuOEeRo6o8Gcea5ND0iEi6k7xi2hbTiBGcZD6y9L8ZIeZ7GxgbKqzuCARa7/dxorkh2FV0tXrKJ8Ra3ueH2QOrhQR2BVB9ND61nTS6hiqe52Hw857jN0gmuASJvbtl52mlJGUcpB2VhpnKZ3Dqw7UEFFnx46aiueqYaDFc9MbpOdSY7X8GibnhUFK14SWvLTiaNrgW0TRlPxoyU6EH2PvLqam6QUHSR+kw1fqJbcKG+OWGwxp35cemaWPZDxuu4U7JyGfSybZXsBGdp7BbXCLhaHHQ+/HKYILfLsUnsj5/tYpZ96zDQo9S5zqmXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tmGwAKElI2u+A0z/EETBIou5ic5kIe13D9NL0wb7U2M=;
- b=CGZrT9/zeWLslICwnV47CvnyCi4tEwQUvjqq4frvluTbtOh5IsXbUWZuRHjfuSArjnFQ7V8qGqVtI2g+xSErDkkqpOSMvLUpueUfM/Y9a9cvMUxhhRbsXuIIRghZMWr0aoiTyBh0F+ZkCM8+Y3hBx6wkGKIKjlk/4z7TKSRnyf7C+/w9hY+f31izRZKM57PBovCQDJhle01mAgeJWMacphqeZc477gRYs6vLNoJsWtMM5xovPP/PM0OZc9LqnyZrXo8PTjlcKfMmfh2jHrdSdSA+MTMjrhYqLuJajloIZjDMLL7d3s9hytgzdiyLTjnyRxL1AizGgpggJZlBlsKWag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 188.184.36.50) smtp.rcpttodomain=kernel.org smtp.mailfrom=cern.ch;
- dmarc=bestguesspass action=none header.from=cern.ch; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
- s=selector2-cern-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tmGwAKElI2u+A0z/EETBIou5ic5kIe13D9NL0wb7U2M=;
- b=treHLM/wuTE3F8KbK3ygj/ORGGmbE9HBEQqYgWyAmRwvSPW5jnP+JZ60wkplYx3/8FOYO8MRW3svCyvPlLsPYQKPlKNIaLUHO55uV6xCD9MQs9BFPL7WD+jRjhSKWoD25d/Kj3n/1EbzSGqtTHjsNsdj0qDL4wKrkQGEOj305CA=
-Received: from AM0PR06CA0026.eurprd06.prod.outlook.com (2603:10a6:208:ab::39)
- by HE1PR0601MB2617.eurprd06.prod.outlook.com (2603:10a6:3:4c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Mon, 24 Feb
- 2020 09:26:42 +0000
-Received: from VE1EUR02FT030.eop-EUR02.prod.protection.outlook.com
- (2a01:111:f400:7e06::205) by AM0PR06CA0026.outlook.office365.com
- (2603:10a6:208:ab::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
- Transport; Mon, 24 Feb 2020 09:26:42 +0000
-Authentication-Results: spf=pass (sender IP is 188.184.36.50)
- smtp.mailfrom=cern.ch; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=cern.ch;
-Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
- 188.184.36.50 as permitted sender) receiver=protection.outlook.com;
- client-ip=188.184.36.50; helo=cernmxgwlb4.cern.ch;
-Received: from cernmxgwlb4.cern.ch (188.184.36.50) by
- VE1EUR02FT030.mail.protection.outlook.com (10.152.12.127) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 09:26:41 +0000
-Received: from cernfe04.cern.ch (188.184.36.41) by cernmxgwlb4.cern.ch
- (188.184.36.50) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 24 Feb
- 2020 10:26:40 +0100
-Received: from pcbe13614.localnet (2001:1458:202:121::100:40) by smtp.cern.ch
- (2001:1458:201:66::100:14) with Microsoft SMTP Server (TLS) id 14.3.487.0;
- Mon, 24 Feb 2020 10:26:38 +0100
-From:   Federico Vaga <federico.vaga@cern.ch>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reply-To: <federico.vaga@cern.ch>
-CC:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-arch@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <kvm-ppc@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-        <linux-unionfs@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>
-Subject: Re: [PATCH 3/7] docs: fix broken references to text files
-Date:   Mon, 24 Feb 2020 10:26:39 +0100
-Message-ID: <3929512.qvrp2sLpzG@pcbe13614>
-In-Reply-To: <5cfeed6df208b74913312a1c97235ee615180f91.1582361737.git.mchehab+huawei@kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org> <5cfeed6df208b74913312a1c97235ee615180f91.1582361737.git.mchehab+huawei@kernel.org>
+        id S1727797AbgBXQPM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Feb 2020 11:15:12 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45756 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbgBXQPM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Feb 2020 11:15:12 -0500
+Received: by mail-io1-f65.google.com with SMTP id i11so10773840ioi.12;
+        Mon, 24 Feb 2020 08:15:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:message-id:subject:from:to:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=49KkQtE+PMPYrBnD5B3WEr2NU+9hgZB7snC3utxnBpI=;
+        b=rfhMSl/N7yIwOiUgHMz4acYE/jVIg5rYEZ5EsiH3hRNuKZRC5C6M1XCekFuVg8xyRW
+         7Xk8U2BmhACxPfQAkYK2C/KUCiNx8sMBo25SIUBGWZymb7NDgo3S6EoEhWr5bFUvkjlb
+         QcypLG/JQlWPdOLQYU24mhUh/eDQLccGTQ6gaWpKq+hjs5aYBYu7jWnN2x60U7y6bB7a
+         ZSdo8mbwz6wmh5yjvi73a6W55naLywfgFJbHnqdyaRoVoBdL7MLloF0Urcasqqhj4C8S
+         iQ1Go506qXEr7+F3AIv/ZT87Q2Uuo0MC5ZpWkSf0mvnjz59yvRBj8I+oh9q/su9iKSC+
+         nIhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:message-id:subject:from:to:date
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=49KkQtE+PMPYrBnD5B3WEr2NU+9hgZB7snC3utxnBpI=;
+        b=C2i5T1twVm4sm+aaAOsKjku8eukK9tjNV9ko/hsvJgfPb5Stk1RX7biHBJxfMD3K/o
+         05DKeG6tf36Od61q3G/gA4jxRsPg2CB8L2zM13ZqPqQNUCGRDYGB+7esRJjoe3mVK5yG
+         WMokbnPXQt+btQlmXhuNUXw+/PUKF4tDpMK8jeDQaKPCMziNuSK4aVkVyHcyQbRqDJNH
+         UghsKauhw+MMnRmktA8AlAiMqPwmjISgJQTYEilnQj8eK1px3lBERj38lB/TZkbkhtth
+         CBJkig4W8bL252GN3TSAYIaCTrVTzyw5/UiSxSogd/6UP6AjHh9x5tAmv5/zF1ngeNol
+         IRDw==
+X-Gm-Message-State: APjAAAV5etrfCY+tjg8DWNqIk4acqY3Cf9vleaARkRGDDXkgLOtzvfnZ
+        3thO5VOiR+5i+NO0VZQFE5o=
+X-Google-Smtp-Source: APXvYqyqri5YdQMSF5pppjqyW9Q3r4+DKMwV7cXI8o0AxO6aL9d4gNRkNitZTiKWJdge7EPtlfp8Ig==
+X-Received: by 2002:a02:cf0e:: with SMTP id q14mr52577746jar.82.1582560911211;
+        Mon, 24 Feb 2020 08:15:11 -0800 (PST)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.googlemail.com with ESMTPSA id w79sm4437799ill.70.2020.02.24.08.15.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 08:15:10 -0800 (PST)
+Message-ID: <57e16538f7a711d7671056d19abc38a09afc451d.camel@gmail.com>
+Subject: Re: [PATCH v1 10/11] xprtrdma: Extract sockaddr from struct
+ rdma_cm_id
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Date:   Mon, 24 Feb 2020 11:15:09 -0500
+In-Reply-To: <20200221220100.2072.45609.stgit@manet.1015granger.net>
+References: <20200221214906.2072.32572.stgit@manet.1015granger.net>
+         <20200221220100.2072.45609.stgit@manet.1015granger.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Originating-IP: [2001:1458:202:121::100:40]
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:188.184.36.50;IPV:;CTRY:CH;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(346002)(396003)(199004)(189003)(186003)(9686003)(16526019)(33716001)(26005)(2906002)(478600001)(9576002)(426003)(8676002)(44832011)(3450700001)(336012)(246002)(53546011)(8936002)(7416002)(4326008)(86362001)(7636002)(356004)(70206006)(316002)(54906003)(70586007)(5660300002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0601MB2617;H:cernmxgwlb4.cern.ch;FPR:;SPF:Pass;LANG:en;PTR:cernmx11.cern.ch;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 07a24c03-738e-4624-7506-08d7b90ba88c
-X-MS-TrafficTypeDiagnostic: HE1PR0601MB2617:
-X-Microsoft-Antispam-PRVS: <HE1PR0601MB2617DD6A6BADE420AB7F4408EFEC0@HE1PR0601MB2617.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-Forefront-PRVS: 032334F434
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0qIX6XFVupoujn6tnMIXACZrhD5q3UXodzvYwqyh0hsK1Lsu+/pJ+LkIjl/NeexA/acueRAQl6tWpe3CFd900UWE/3Dp2zl9mkWVMfYl1qYpVkPmqLAGWnMEDEKi64JQPs3cOzEfTL3WjHbAxZ5gqNC3mLax0dvKusUdgcmqXKLya466pUHPmvk05PkmAw4VpLa35W1pVnc1avg4zQD+W+XccjzAi6cB/jeg95xVwyZEdY7wigcHbjHbZjeUw5bGbym667i307aOvjm5Vli7k+a11ZX1tZ2pjiiBWvLEYzJaJJQ2pSEH9ApQf6ZUYQ5f7TlyJmnEtMyipzP+fXgRIINxHtYghfwKLsQ7Fb2NPkqtE2mY/QN0LGNAE519BJMKJ2V6htEDDIZVXfSjSq9NkQg4un3jbv63EjF6kc6RkQ3fn2TRPhmkbiqtoHaEDIQdUEz7oStS5w1dmTB8Bw7vHuPaRBQq1lv0uJabtpvDjKCWQdNtDjiBIr3Z5wRpVLzv
-X-OriginatorOrg: cern.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 09:26:41.7248
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07a24c03-738e-4624-7506-08d7b90ba88c
-X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.50];Helo=[cernmxgwlb4.cern.ch]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0601MB2617
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Saturday, February 22, 2020 10:00:03 AM CET Mauro Carvalho Chehab wrote:
-> Several references got broken due to txt to ReST conversion.
->=20
-> Several of them can be automatically fixed with:
->=20
-> 	scripts/documentation-file-ref-check --fix
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Hi Chuck,
+
+On Fri, 2020-02-21 at 17:01 -0500, Chuck Lever wrote:
+> rpcrdma_cm_event_handler() is always passed an @id pointer that is
+> valid. However, in a subsequent patch, we won't be able to extract
+> an r_xprt in every case. So instead of using the r_xprt's
+> presentation address strings, extract them from struct rdma_cm_id.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
+>  include/trace/events/rpcrdma.h |   78 +++++++++++++++++++++++++++----------
+> ---
+>  net/sunrpc/xprtrdma/verbs.c    |   33 +++++++----------
+>  2 files changed, 67 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+> index bebc45f7c570..a6d3a2122e9b 100644
+> --- a/include/trace/events/rpcrdma.h
+> +++ b/include/trace/events/rpcrdma.h
+> @@ -373,47 +373,74 @@
+>  
+>  TRACE_EVENT(xprtrdma_inline_thresh,
+>  	TP_PROTO(
+> -		const struct rpcrdma_xprt *r_xprt
+> +		const struct rpcrdma_ep *ep
+>  	),
+>  
+> -	TP_ARGS(r_xprt),
+> +	TP_ARGS(ep),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const void *, r_xprt)
+>  		__field(unsigned int, inline_send)
+>  		__field(unsigned int, inline_recv)
+>  		__field(unsigned int, max_send)
+>  		__field(unsigned int, max_recv)
+> -		__string(addr, rpcrdma_addrstr(r_xprt))
+> -		__string(port, rpcrdma_portstr(r_xprt))
+> +		__array(unsigned char, srcaddr, sizeof(struct sockaddr_in6))
+> +		__array(unsigned char, dstaddr, sizeof(struct sockaddr_in6))
+>  	),
+>  
+>  	TP_fast_assign(
+> -		const struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+> +		const struct rdma_cm_id *id = ep->re_id;
+>  
+> -		__entry->r_xprt = r_xprt;
+>  		__entry->inline_send = ep->re_inline_send;
+>  		__entry->inline_recv = ep->re_inline_recv;
+>  		__entry->max_send = ep->re_max_inline_send;
+>  		__entry->max_recv = ep->re_max_inline_recv;
+> -		__assign_str(addr, rpcrdma_addrstr(r_xprt));
+> -		__assign_str(port, rpcrdma_portstr(r_xprt));
+> +		memcpy(__entry->srcaddr, &id->route.addr.src_addr,
+> +		       sizeof(struct sockaddr_in6));
+> +		memcpy(__entry->dstaddr, &id->route.addr.dst_addr,
+> +		       sizeof(struct sockaddr_in6));
+>  	),
+>  
+> -	TP_printk("peer=[%s]:%s r_xprt=%p neg send/recv=%u/%u, calc
+> send/recv=%u/%u",
+> -		__get_str(addr), __get_str(port), __entry->r_xprt,
+> +	TP_printk("%pISpc -> %pISpc neg send/recv=%u/%u, calc send/recv=%u/%u",
+> +		__entry->srcaddr, __entry->dstaddr,
+>  		__entry->inline_send, __entry->inline_recv,
+>  		__entry->max_send, __entry->max_recv
+>  	)
+>  );
+>  
+> +TRACE_EVENT(xprtrdma_remove,
+> +	TP_PROTO(
+> +		const struct rpcrdma_ep *ep
+> +	),
+> +
+> +	TP_ARGS(ep),
+> +
+> +	TP_STRUCT__entry(
+> +		__array(unsigned char, srcaddr, sizeof(struct sockaddr_in6))
+> +		__array(unsigned char, dstaddr, sizeof(struct sockaddr_in6))
+> +		__string(name, ep->re_id->device->name)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		const struct rdma_cm_id *id = ep->re_id;
+> +
+> +		memcpy(__entry->srcaddr, &id->route.addr.src_addr,
+> +		       sizeof(struct sockaddr_in6));
+> +		memcpy(__entry->dstaddr, &id->route.addr.dst_addr,
+> +		       sizeof(struct sockaddr_in6));
+> +		__assign_str(name, id->device->name);
+> +	),
+> +
+> +	TP_printk("%pISpc -> %pISpc device=%s",
+> +		__entry->srcaddr, __entry->dstaddr, __get_str(name)
+> +	)
+> +);
+> +
+>  DEFINE_CONN_EVENT(connect);
+>  DEFINE_CONN_EVENT(disconnect);
+>  DEFINE_CONN_EVENT(flush_dct);
+>  
+>  DEFINE_RXPRT_EVENT(xprtrdma_create);
+>  DEFINE_RXPRT_EVENT(xprtrdma_op_destroy);
+> -DEFINE_RXPRT_EVENT(xprtrdma_remove);
+>  DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
+>  DEFINE_RXPRT_EVENT(xprtrdma_op_close);
+>  DEFINE_RXPRT_EVENT(xprtrdma_op_setport);
+> @@ -480,32 +507,33 @@
+>  
+>  TRACE_EVENT(xprtrdma_qp_event,
+>  	TP_PROTO(
+> -		const struct rpcrdma_xprt *r_xprt,
+> +		const struct rpcrdma_ep *ep,
+>  		const struct ib_event *event
+>  	),
+>  
+> -	TP_ARGS(r_xprt, event),
+> +	TP_ARGS(ep, event),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const void *, r_xprt)
+> -		__field(unsigned int, event)
+> +		__field(unsigned long, event)
+>  		__string(name, event->device->name)
+> -		__string(addr, rpcrdma_addrstr(r_xprt))
+> -		__string(port, rpcrdma_portstr(r_xprt))
+> +		__array(unsigned char, srcaddr, sizeof(struct sockaddr_in6))
+> +		__array(unsigned char, dstaddr, sizeof(struct sockaddr_in6))
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->r_xprt = r_xprt;
+> +		const struct rdma_cm_id *id = ep->re_id;
+> +
+>  		__entry->event = event->event;
+>  		__assign_str(name, event->device->name);
+> -		__assign_str(addr, rpcrdma_addrstr(r_xprt));
+> -		__assign_str(port, rpcrdma_portstr(r_xprt));
+> +		memcpy(__entry->srcaddr, &id->route.addr.src_addr,
+> +		       sizeof(struct sockaddr_in6));
+> +		memcpy(__entry->dstaddr, &id->route.addr.dst_addr,
+> +		       sizeof(struct sockaddr_in6));
+>  	),
+>  
+> -	TP_printk("peer=[%s]:%s r_xprt=%p: dev %s: %s (%u)",
+> -		__get_str(addr), __get_str(port), __entry->r_xprt,
+> -		__get_str(name), rdma_show_ib_event(__entry->event),
+> -		__entry->event
+> +	TP_printk("%pISpc -> %pISpc device=%s %s (%lu)",
+> +		__entry->srcaddr, __entry->dstaddr, __get_str(name),
+> +		rdma_show_ib_event(__entry->event), __entry->event
+>  	)
+>  );
+>  
+> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> index 10826982ddf8..5cb308fb4f0f 100644
+> --- a/net/sunrpc/xprtrdma/verbs.c
+> +++ b/net/sunrpc/xprtrdma/verbs.c
+> @@ -116,16 +116,14 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt
+> *r_xprt)
+>   * @context: ep that owns QP where event occurred
+>   *
+>   * Called from the RDMA provider (device driver) possibly in an interrupt
+> - * context.
+> + * context. The QP is always destroyed before the ID, so the ID will be
+> + * reliably available when this handler is invoked.
+>   */
+> -static void
+> -rpcrdma_qp_event_handler(struct ib_event *event, void *context)
+> +static void rpcrdma_qp_event_handler(struct ib_event *event, void *context)
+>  {
+>  	struct rpcrdma_ep *ep = context;
+> -	struct rpcrdma_xprt *r_xprt = container_of(ep, struct rpcrdma_xprt,
+> -						   rx_ep);
+>  
+> -	trace_xprtrdma_qp_event(r_xprt, event);
+> +	trace_xprtrdma_qp_event(ep, event);
+>  }
+>  
+>  /**
+> @@ -202,11 +200,10 @@ static void rpcrdma_wc_receive(struct ib_cq *cq, struct
+> ib_wc *wc)
+>  	rpcrdma_rep_destroy(rep);
+>  }
+>  
+> -static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
+> +static void rpcrdma_update_cm_private(struct rpcrdma_ep *ep,
+>  				      struct rdma_conn_param *param)
+>  {
+>  	const struct rpcrdma_connect_private *pmsg = param->private_data;
+> -	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+>  	unsigned int rsize, wsize;
+>  
+>  	/* Default settings for RPC-over-RDMA Version One */
+> @@ -241,6 +238,7 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt
+> *r_xprt,
+>  static int
+>  rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+>  {
+> +	struct sockaddr *sap = (struct sockaddr *)&id->route.addr.dst_addr;
 
+Is there an clean way to put this inside the CONFIG_SUNRPC_DEBUG lines below?
+I'm getting an "unused variable 'sap'" warning when CONFIG_SUNRPC_DEBUG=n.
 
->  26) If any ioctl's are added by the patch, then also update
-> -    ``Documentation/ioctl/ioctl-number.rst``.
-> +    ``Documentation/userspace-api/ioctl/ioctl-number.rst``.
->=20
->  27) If your modified source code depends on or uses any of the kernel
->      APIs or features that are related to the following ``Kconfig`` symbo=
-ls,
-> diff --git a/Documentation/translations/it_IT/process/submit-checklist.rst
-> b/Documentation/translations/it_IT/process/submit-checklist.rst index
-> 995ee69fab11..3e575502690f 100644
-> --- a/Documentation/translations/it_IT/process/submit-checklist.rst
-> +++ b/Documentation/translations/it_IT/process/submit-checklist.rst
-> @@ -117,7 +117,7 @@ sottomissione delle patch, in particolare
->      sorgenti che ne spieghi la logica: cosa fanno e perch=E9.
->=20
->  25) Se la patch aggiunge nuove chiamate ioctl, allora aggiornate
-> -    ``Documentation/ioctl/ioctl-number.rst``.
-> +    ``Documentation/userspace-api/ioctl/ioctl-number.rst``.
+Thanks,
+Anna
 
-
-Acked-By: Federico Vaga <federico.vaga@vaga.pv.it>
-
-
+>  	struct rpcrdma_xprt *r_xprt = id->context;
+>  	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+>  	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
+> @@ -264,23 +262,22 @@ static void rpcrdma_update_cm_private(struct
+> rpcrdma_xprt *r_xprt,
+>  		return 0;
+>  	case RDMA_CM_EVENT_DEVICE_REMOVAL:
+>  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+> -		pr_info("rpcrdma: removing device %s for %s:%s\n",
+> -			ep->re_id->device->name,
+> -			rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt));
+> +		pr_info("rpcrdma: removing device %s for %pISpc\n",
+> +			ep->re_id->device->name, sap);
+>  #endif
+>  		init_completion(&ep->re_remove_done);
+>  		ep->re_connect_status = -ENODEV;
+>  		xprt_force_disconnect(xprt);
+>  		wait_for_completion(&ep->re_remove_done);
+> -		trace_xprtrdma_remove(r_xprt);
+> +		trace_xprtrdma_remove(ep);
+>  
+>  		/* Return 1 to ensure the core destroys the id. */
+>  		return 1;
+>  	case RDMA_CM_EVENT_ESTABLISHED:
+>  		++xprt->connect_cookie;
+>  		ep->re_connect_status = 1;
+> -		rpcrdma_update_cm_private(r_xprt, &event->param.conn);
+> -		trace_xprtrdma_inline_thresh(r_xprt);
+> +		rpcrdma_update_cm_private(ep, &event->param.conn);
+> +		trace_xprtrdma_inline_thresh(ep);
+>  		wake_up_all(&ep->re_connect_wait);
+>  		break;
+>  	case RDMA_CM_EVENT_CONNECT_ERROR:
+> @@ -290,9 +287,8 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt
+> *r_xprt,
+>  		ep->re_connect_status = -ENETUNREACH;
+>  		goto disconnected;
+>  	case RDMA_CM_EVENT_REJECTED:
+> -		dprintk("rpcrdma: connection to %s:%s rejected: %s\n",
+> -			rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt),
+> -			rdma_reject_msg(id, event->status));
+> +		dprintk("rpcrdma: connection to %pISpc rejected: %s\n",
+> +			sap, rdma_reject_msg(id, event->status));
+>  		ep->re_connect_status = -ECONNREFUSED;
+>  		if (event->status == IB_CM_REJ_STALE_CONN)
+>  			ep->re_connect_status = -EAGAIN;
+> @@ -307,8 +303,7 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt
+> *r_xprt,
+>  		break;
+>  	}
+>  
+> -	dprintk("RPC:       %s: %s:%s on %s/frwr: %s\n", __func__,
+> -		rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt),
+> +	dprintk("RPC:       %s: %pISpc on %s/frwr: %s\n", __func__, sap,
+>  		ep->re_id->device->name, rdma_event_msg(event->event));
+>  	return 0;
+>  }
+> 
 
