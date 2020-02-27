@@ -2,52 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A183172269
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Feb 2020 16:41:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 996C4172277
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Feb 2020 16:45:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgB0PlR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Feb 2020 10:41:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60578 "EHLO
+        id S1729155AbgB0Ppl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Feb 2020 10:45:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25800 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729207AbgB0PlQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Feb 2020 10:41:16 -0500
+        with ESMTP id S1729110AbgB0Ppk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Feb 2020 10:45:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582818075;
+        s=mimecast20190719; t=1582818339;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rXec1HYr9UtZqYek6mkk07qHK6eUSuJSbPE/pvfkRi4=;
-        b=U5HcZiErc5Mfg7Ts0JtEaKiCWCYE+/7g1VDBRJtyMOE2f+cRz6EHP9BuBWwhFXM4mhRBu7
-        oZM+6BL+3wEJ+e61v4jCoJwTP2HSwHvsYV7l82s5dw7uT8eIDWk3LNiwVQngrblL7qqvfi
-        fM0OWSt8XFFT4En7LiWul/0ehFiRTAs=
+        bh=iQRewOOpk5gRN85dGQBl7ENRTNaeuSa+c+TXEzzggqk=;
+        b=Rw/n+GRw0eaQQnTZkwB9wEGPfbYjRLuuED4Mru4jyBRCdmCCVT8kwXGfF5qNcPf2Og4OyS
+        HXefNIv+ajCDGB+S7lMUgPq2AUxGzJ0a4WIJi4TcOXUAU907xR2RL86F5FUrkZi9cndYKX
+        unhUsrqXxqAiEyTBwWqWd/NB+a5XcwE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-Z_d7K2B9MN68H9IReM3llw-1; Thu, 27 Feb 2020 10:41:11 -0500
-X-MC-Unique: Z_d7K2B9MN68H9IReM3llw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-307-rsd_FpV7NwylNRIkZWvlZA-1; Thu, 27 Feb 2020 10:45:37 -0500
+X-MC-Unique: rsd_FpV7NwylNRIkZWvlZA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A35AE18B5FBB;
-        Thu, 27 Feb 2020 15:41:10 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F1B018C35A0
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Feb 2020 15:45:36 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A1EC92999;
-        Thu, 27 Feb 2020 15:41:08 +0000 (UTC)
-Subject: Re: [PATCH] [nfs-utils] utils/mount/mount.c: fix args parse error
-To:     "Jianhong.Yin" <yin-jianhong@163.com>
-Cc:     linux-nfs@vger.kernel.org, jiyin@redhat.com
-References: <20200224034336.9667-1-yin-jianhong@163.com>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C9B3101E811
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Feb 2020 15:45:36 +0000 (UTC)
+Subject: Re: [PATCH] gssd: Use krb5_free_string() instead of free()
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20200226190221.24885-1-steved@redhat.com>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <bd7cd204-64db-40e9-d646-74e5b26b94de@RedHat.com>
-Date:   Thu, 27 Feb 2020 10:41:08 -0500
+Message-ID: <82ff2690-3b7c-85be-3182-d35024936d48@RedHat.com>
+Date:   Thu, 27 Feb 2020 10:45:35 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200224034336.9667-1-yin-jianhong@163.com>
+In-Reply-To: <20200226190221.24885-1-steved@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -55,68 +54,111 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 2/23/20 10:43 PM, Jianhong.Yin wrote:
-> From: Jianhong Yin <yin-jianhong@163.com>
+On 2/26/20 2:02 PM, Steve Dickson wrote:
+> Commit ae9e9760 plugged up some memory leaks
+> by freeing memory via free(2). The proper
+> way to free memory that has been allocated by
+> krb5 functions is with krb5_free_string()
 > 
-> argc number checking should be after getopt_long(), otherwise
-> we'll get follow result:
-> '''
-> ~]# mount.nfs -V
-> usage: mount.nfs remotetarget dir [-rvVwfnsh] [-o nfsoptions]
-> options:
->         -r              Mount file system readonly
->         -v              Verbose
->         -V              Print version
->         -w              Mount file system read-write
->         -f              Fake mount, do not actually mount
->         -n              Do not update /etc/mtab
->         -s              Tolerate sloppy mount options rather than fail
->         -h              Print this help
->         nfsoptions      Refer to mount.nfs(8) or nfs(5)
-> '''
-> 
-> after fix:
-> '''
-> ~]# mount.nfs -V
-> mount.nfs: (linux nfs-utils 2.4.3)
-> '''
-> 
-> Signed-off-by: Jianhong Yin <yin-jianhong@163.com>
-Committed... 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed... (tag: nfs-utils-2-4-4-rc1)
 
 steved.
-
 > ---
->  utils/mount/mount.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  utils/gssd/krb5_util.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/utils/mount/mount.c b/utils/mount/mount.c
-> index 2be3dc2f..b98f9e00 100644
-> --- a/utils/mount/mount.c
-> +++ b/utils/mount/mount.c
-> @@ -393,11 +393,6 @@ int main(int argc, char *argv[])
->  	if(!strncmp(progname, "umount", strlen("umount")))
->  		exit(nfsumount(argc, argv));
+> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+> index 85f60ae..8c73748 100644
+> --- a/utils/gssd/krb5_util.c
+> +++ b/utils/gssd/krb5_util.c
+> @@ -484,7 +484,7 @@ gssd_get_single_krb5_cred(krb5_context context,
+>  	if (ccache)
+>  		krb5_cc_close(context, ccache);
+>  	krb5_free_cred_contents(context, &my_creds);
+> -	free(k5err);
+> +	krb5_free_string(context, k5err);
+>  	return (code);
+>  }
 >  
-> -	if ((argc < 3)) {
-> -		mount_usage();
-> -		exit(EX_USAGE);
-> -	}
-> -
->  	mount_config_init(progname);
+> @@ -723,7 +723,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
+>  				 "we failed to unparse principal name: %s\n",
+>  				 k5err);
+>  			k5_free_kt_entry(context, kte);
+> -			free(k5err);
+> +			krb5_free_string(context, k5err);
+>  			k5err = NULL;
+>  			continue;
+>  		}
+> @@ -770,7 +770,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
+>  	if (retval < 0)
+>  		retval = 0;
+>    out:
+> -	free(k5err);
+> +	krb5_free_string(context, k5err);
+>  	return retval;
+>  }
 >  
->  	while ((c = getopt_long(argc, argv, "rvVwfno:hs",
-> @@ -437,6 +432,11 @@ int main(int argc, char *argv[])
+> @@ -927,7 +927,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
+>  				k5err = gssd_k5_err_msg(context, code);
+>  				printerr(1, "%s while building principal for '%s'\n",
+>  					 k5err, spn);
+> -				free(k5err);
+> +				krb5_free_string(context, k5err);
+>  				k5err = NULL;
+>  				continue;
+>  			}
+> @@ -937,7 +937,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
+>  				k5err = gssd_k5_err_msg(context, code);
+>  				printerr(3, "%s while getting keytab entry for '%s'\n",
+>  					 k5err, spn);
+> -				free(k5err);
+> +				krb5_free_string(context, k5err);
+>  				k5err = NULL;
+>  				/*
+>  				 * We tried the active directory machine account
+> @@ -986,7 +986,7 @@ out:
+>  		k5_free_default_realm(context, default_realm);
+>  	if (realmnames)
+>  		krb5_free_host_realm(context, realmnames);
+> -	free(k5err);
+> +	krb5_free_string(context, k5err);
+>  	return retval;
+>  }
+>  
+> @@ -1249,7 +1249,7 @@ gssd_destroy_krb5_machine_creds(void)
+>  			printerr(0, "WARNING: %s while resolving credential "
+>  				    "cache '%s' for destruction\n", k5err,
+>  				    ple->ccname);
+> -			free(k5err);
+> +			krb5_free_string(context, k5err);
+>  			k5err = NULL;
+>  			continue;
+>  		}
+> @@ -1258,13 +1258,13 @@ gssd_destroy_krb5_machine_creds(void)
+>  			k5err = gssd_k5_err_msg(context, code);
+>  			printerr(0, "WARNING: %s while destroying credential "
+>  				    "cache '%s'\n", k5err, ple->ccname);
+> -			free(k5err);
+> +			krb5_free_string(context, k5err);
+>  			k5err = NULL;
 >  		}
 >  	}
+>  	krb5_free_context(context);
+>    out:
+> -	free(k5err);
+> +	krb5_free_string(context, k5err);
+>  }
 >  
-> +	if ((argc < 3)) {
-> +		mount_usage();
-> +		exit(EX_USAGE);
-> +	}
-> +
->  	/*
->  	 * Extra non-option words at the end are bogus...
->  	 */
+>  /*
+> @@ -1347,7 +1347,7 @@ out_free_kt:
+>  out_free_context:
+>  	krb5_free_context(context);
+>  out:
+> -	free(k5err);
+> +	krb5_free_string(context, k5err);
+>  	return retval;
+>  }
+>  
 > 
 
