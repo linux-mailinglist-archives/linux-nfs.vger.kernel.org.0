@@ -2,181 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B30FA171FA0
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Feb 2020 15:38:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A183172269
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Feb 2020 16:41:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732269AbgB0OgQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Feb 2020 09:36:16 -0500
-Received: from fieldses.org ([173.255.197.46]:57842 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732596AbgB0N70 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:26 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 84DE0201A; Thu, 27 Feb 2020 08:59:25 -0500 (EST)
-Date:   Thu, 27 Feb 2020 08:59:25 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     linux-nfs@vger.kernel.org
-Subject: Re: pynfs python 3 flag day
-Message-ID: <20200227135925.GA11561@fieldses.org>
-References: <20200214204544.GA30533@fieldses.org>
+        id S1729661AbgB0PlR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Feb 2020 10:41:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60578 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729207AbgB0PlQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Feb 2020 10:41:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582818075;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rXec1HYr9UtZqYek6mkk07qHK6eUSuJSbPE/pvfkRi4=;
+        b=U5HcZiErc5Mfg7Ts0JtEaKiCWCYE+/7g1VDBRJtyMOE2f+cRz6EHP9BuBWwhFXM4mhRBu7
+        oZM+6BL+3wEJ+e61v4jCoJwTP2HSwHvsYV7l82s5dw7uT8eIDWk3LNiwVQngrblL7qqvfi
+        fM0OWSt8XFFT4En7LiWul/0ehFiRTAs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-Z_d7K2B9MN68H9IReM3llw-1; Thu, 27 Feb 2020 10:41:11 -0500
+X-MC-Unique: Z_d7K2B9MN68H9IReM3llw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A35AE18B5FBB;
+        Thu, 27 Feb 2020 15:41:10 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A1EC92999;
+        Thu, 27 Feb 2020 15:41:08 +0000 (UTC)
+Subject: Re: [PATCH] [nfs-utils] utils/mount/mount.c: fix args parse error
+To:     "Jianhong.Yin" <yin-jianhong@163.com>
+Cc:     linux-nfs@vger.kernel.org, jiyin@redhat.com
+References: <20200224034336.9667-1-yin-jianhong@163.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <bd7cd204-64db-40e9-d646-74e5b26b94de@RedHat.com>
+Date:   Thu, 27 Feb 2020 10:41:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214204544.GA30533@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200224034336.9667-1-yin-jianhong@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I've pushed the python 3 changes to the master branch, so pynfs now
-*only* works with python 3:
-
-	git://linux-nfs.org/~bfields/pynfs.git
-
-This works for me, but, as I've said, some of the functionality that I
-don't use is probably broken.  Apologies--let me know if you run across
-anything.
-
-The last hold-up was the gssapi code.  But it turns out pynfs gssapi has
-been broken for a while.  So, I'm still working on it, but I couldn't
-see any reason to hold back the python 3 changes for it.
-
---b.
 
 
-J. Bruce Fields (21):
-      st_delegations: don't reimplement join()
-      Fix module imports for python 3
-      python 3 has no long type
-      python3: exception scope
-      python3: open results file in binary mode
-      python3: / no longer does integer division
-      showresults: remove unnecessary import code
-      python3: StandardError no longer defined
-      python3: the socket structure has changed
-      python3: machinename should be bytes, not string
-      python 3 map returns iterator not list
-      python3: sort works differently
-      python3: make "path" commandline argument a byte array
-      python3: RPCClient.ipaddress should be bytes
-      python3: tag should be bytes
-      NFS4Client.create_obj() should expect bytes
-      python3: need binary array instead of t.code string
-      python3: make a lot of strings byte arrays
-      python3 has no xrange()
-      python3: loop over dict while removing entries
-      use_obj: expect bytes, not string
+On 2/23/20 10:43 PM, Jianhong.Yin wrote:
+> From: Jianhong Yin <yin-jianhong@163.com>
+> 
+> argc number checking should be after getopt_long(), otherwise
+> we'll get follow result:
+> '''
+> ~]# mount.nfs -V
+> usage: mount.nfs remotetarget dir [-rvVwfnsh] [-o nfsoptions]
+> options:
+>         -r              Mount file system readonly
+>         -v              Verbose
+>         -V              Print version
+>         -w              Mount file system read-write
+>         -f              Fake mount, do not actually mount
+>         -n              Do not update /etc/mtab
+>         -s              Tolerate sloppy mount options rather than fail
+>         -h              Print this help
+>         nfsoptions      Refer to mount.nfs(8) or nfs(5)
+> '''
+> 
+> after fix:
+> '''
+> ~]# mount.nfs -V
+> mount.nfs: (linux nfs-utils 2.4.3)
+> '''
+> 
+> Signed-off-by: Jianhong Yin <yin-jianhong@163.com>
+Committed... 
 
- nfs4.0/TODO                                 |   2 +-
- nfs4.0/lib/rpc/rpc.py                       |  35 ++--
- nfs4.0/lib/rpc/rpcsec/base.py               |   2 +-
- nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py       |   7 +-
- nfs4.0/nfs4lib.py                           |  70 ++++----
- nfs4.0/servertests/environment.py           | 121 ++++++-------
- nfs4.0/servertests/st_acl.py                |   8 +-
- nfs4.0/servertests/st_close.py              |  74 ++++----
- nfs4.0/servertests/st_commit.py             |   6 +-
- nfs4.0/servertests/st_compound.py           |   2 +-
- nfs4.0/servertests/st_create.py             |  38 ++--
- nfs4.0/servertests/st_delegation.py         | 159 ++++++++---------
- nfs4.0/servertests/st_fslocations.py        |   2 +-
- nfs4.0/servertests/st_link.py               |  40 ++---
- nfs4.0/servertests/st_lock.py               | 262 ++++++++++++++--------------
- nfs4.0/servertests/st_lockt.py              |  30 ++--
- nfs4.0/servertests/st_locku.py              |  78 ++++-----
- nfs4.0/servertests/st_lookup.py             |  68 ++++----
- nfs4.0/servertests/st_lookupp.py            |   4 +-
- nfs4.0/servertests/st_nverify.py            |   2 +-
- nfs4.0/servertests/st_open.py               | 184 +++++++++----------
- nfs4.0/servertests/st_openconfirm.py        |  16 +-
- nfs4.0/servertests/st_opendowngrade.py      |  44 ++---
- nfs4.0/servertests/st_putfh.py              |   8 +-
- nfs4.0/servertests/st_read.py               |  36 ++--
- nfs4.0/servertests/st_readdir.py            |  48 ++---
- nfs4.0/servertests/st_reboot.py             |  92 +++++-----
- nfs4.0/servertests/st_releaselockowner.py   |   6 +-
- nfs4.0/servertests/st_remove.py             |  78 ++++-----
- nfs4.0/servertests/st_rename.py             | 209 +++++++++++-----------
- nfs4.0/servertests/st_renew.py              |   4 +-
- nfs4.0/servertests/st_replay.py             |  66 +++----
- nfs4.0/servertests/st_secinfo.py            |  16 +-
- nfs4.0/servertests/st_setattr.py            | 122 ++++++-------
- nfs4.0/servertests/st_setclientid.py        |  74 ++++----
- nfs4.0/servertests/st_setclientidconfirm.py |  12 +-
- nfs4.0/servertests/st_spoof.py              |   8 +-
- nfs4.0/servertests/st_verify.py             |   2 +-
- nfs4.0/servertests/st_write.py              |  94 +++++-----
- nfs4.0/testserver.py                        |  22 ++-
- nfs4.1/client41tests/environment.py         |  10 +-
- nfs4.1/nfs4client.py                        |  16 +-
- nfs4.1/nfs4commoncode.py                    |   4 +-
- nfs4.1/nfs4lib.py                           |  44 ++---
- nfs4.1/nfs4server.py                        |   4 +-
- nfs4.1/server41tests/environment.py         | 103 +++++------
- nfs4.1/server41tests/st_compound.py         |   4 +-
- nfs4.1/server41tests/st_create_session.py   |  24 +--
- nfs4.1/server41tests/st_current_stateid.py  |  12 +-
- nfs4.1/server41tests/st_debug.py            |   2 +-
- nfs4.1/server41tests/st_delegation.py       |  24 +--
- nfs4.1/server41tests/st_destroy_clientid.py |   6 +-
- nfs4.1/server41tests/st_destroy_session.py  |   2 +-
- nfs4.1/server41tests/st_exchange_id.py      |  16 +-
- nfs4.1/server41tests/st_open.py             |  24 +--
- nfs4.1/server41tests/st_putfh.py            |   2 +-
- nfs4.1/server41tests/st_reboot.py           |  24 +--
- nfs4.1/server41tests/st_reclaim_complete.py |   6 +-
- nfs4.1/server41tests/st_rename.py           |  92 +++++-----
- nfs4.1/server41tests/st_secinfo.py          |   6 +-
- nfs4.1/server41tests/st_secinfo_no_name.py  |   2 +-
- nfs4.1/server41tests/st_sequence.py         |  32 ++--
- nfs4.1/server41tests/st_sparse.py           |   2 +-
- nfs4.1/testmod.py                           |  14 +-
- nfs4.1/testserver.py                        |  13 +-
- rpc/rpc.py                                  |  30 ++--
- rpc/rpclib.py                               |  12 +-
- rpc/security.py                             |  10 +-
- showresults.py                              |  19 +-
- 69 files changed, 1357 insertions(+), 1353 deletions(-)
+steved.
 
-On Fri, Feb 14, 2020 at 03:45:44PM -0500, bfields wrote:
-> I'm hearing more noise about deprecating Python 2, so decided I can't
-> keep ignoring Python 3.
+> ---
+>  utils/mount/mount.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Getting pynfs working on Python 3 is a bigger project than I expected.
-> Keeping it working under Python 2 looks like another project.  So, I'm
-> planning a flag day after which pynfs will require Python 3.
+> diff --git a/utils/mount/mount.c b/utils/mount/mount.c
+> index 2be3dc2f..b98f9e00 100644
+> --- a/utils/mount/mount.c
+> +++ b/utils/mount/mount.c
+> @@ -393,11 +393,6 @@ int main(int argc, char *argv[])
+>  	if(!strncmp(progname, "umount", strlen("umount")))
+>  		exit(nfsumount(argc, argv));
+>  
+> -	if ((argc < 3)) {
+> -		mount_usage();
+> -		exit(EX_USAGE);
+> -	}
+> -
+>  	mount_config_init(progname);
+>  
+>  	while ((c = getopt_long(argc, argv, "rvVwfno:hs",
+> @@ -437,6 +432,11 @@ int main(int argc, char *argv[])
+>  		}
+>  	}
+>  
+> +	if ((argc < 3)) {
+> +		mount_usage();
+> +		exit(EX_USAGE);
+> +	}
+> +
+>  	/*
+>  	 * Extra non-option words at the end are bogus...
+>  	 */
 > 
-> That isn't the way I'd prefer to do it, but there's only so much time I
-> want to spend on this.
-> 
-> I've mostly got the 4.0 server tests working under python 3.  I hope a
-> few more days will be enough to get the 4.1 tests working as well.
-> 
-> When I switch over, I'm afraid a few things will be left broken: any
-> tests that I don't personally run may still have minor python 3 bugs,
-> and I haven't touched the python server code that's used for client
-> testing.
-> 
-> If you stumble across something broken, and you can give me a simple
-> reproducer, feel free to share it with me and I'll take a look.
-> 
-> But for anything complicated, I'll probably need patches.
-> 
-> Again, I apologize for any extra work that creates for anyone, but for
-> now this seems like the best compromise to keep things mostly working
-> without it becoming a bigger time sink for me.
-> 
-> Work so far is in the "python3" branch at
-> 
-> 	git://linux-nfs.org/~bfields/pynfs.git
-> 
-> The history will probably be cleaned up an rewritten before it's done.
-> I'm hoping that'll be in the next week.
-> 
-> It's mostly just a matter of separating out unicode strings and byte
-> arrays.  Protocol data is all the latter (even if the protocol prefers
-> some field to be UTF8, pynfs still needs to be able to handle non-UTF8).
-> But some things have to be unicode strings.
-> 
-> --b.
+
