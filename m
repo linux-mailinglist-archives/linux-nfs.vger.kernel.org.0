@@ -2,59 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 391061750EE
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2020 00:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D6B1750EF
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2020 00:25:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgCAXZR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 1 Mar 2020 18:25:17 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43719 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAXZQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 18:25:16 -0500
-Received: by mail-yw1-f67.google.com with SMTP id u78so4672619ywf.10
-        for <linux-nfs@vger.kernel.org>; Sun, 01 Mar 2020 15:25:16 -0800 (PST)
+        id S1726621AbgCAXZS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 Mar 2020 18:25:18 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:42398 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgCAXZS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 18:25:18 -0500
+Received: by mail-yw1-f66.google.com with SMTP id n127so9454620ywd.9
+        for <linux-nfs@vger.kernel.org>; Sun, 01 Mar 2020 15:25:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ds3vP0pr/vApQsOppNkATvBSjNkIOcY6j7wOViIDBOE=;
-        b=H26CeLc0sUsga0syMXZMYXJ92gaZFBIxooXue+sTXJvM5DSd8YLkpmU3qvU2nxU+2e
-         KHwfdmv1EMPdfYMUUX78a0kDxkuHI6XOtNlzJz8ZotM3FcDtMSk9d+JDI4HPj2b6mMpI
-         eBh2+P9wWHo/iTyZ0Cglmn2ZT8C7eTp1SluvLL0O+iiopipTfpXcUlWFYgiKbm02CIu0
-         M1vrMhalgdRaZ8TA/f1XEVL+KBUb6MEtRIJ+Q/XaF4pMwwz4j+Hd/2RKtrp9Kyr5zPyd
-         KSA+xqRFcnnMMDsKUlVtTvRJkatg9FeIV6LUA55qiKmLKhNx84BA/oikh9X1pvig/N+D
-         yw+w==
+        bh=p9LwGjWOmssh6gQXkXnUBTSYCwZetwFOik6mpoK+NvY=;
+        b=g84hdTyVdEJdVrU7A+7QU8J9vLzWRX/p9A61pNRmvPJC5uWZ0ezkw5eoDSUyzTtqdc
+         nn8qqOw5Kps1A5AntdAANlByv/AEItj9F0niXS7fczW10JvTawYJxYYvlRYslTHX4reb
+         2gcyGo0j7+C9SFoIgfjJlrFxMguY/e4GR0+n5yxcu9sA4AU3oRyPYqp3GV/bdTE2wCGB
+         maGH3B2x5oOaIyDvqxnAsrhulJDu0VuGKApaDa0xF+Ii4S43C+dmXMLHM//GfTrUqlgR
+         w7/zRynPuW0qE5NqtrcfQtIARcrGADJCrSUG+i7ndvipnk+8du+oVQz5HXK/MOp7EXBx
+         bwnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ds3vP0pr/vApQsOppNkATvBSjNkIOcY6j7wOViIDBOE=;
-        b=PskLJIqy/IcBsElVCaPclJwWKbJxsh1BsSu9tIxhUZonxmZeb5/7qXFlqwmovewfRf
-         o2UG8b9yFFPfQWV+v7l3SRwDlgdIzFoOZGBqPFBPsg2jWZFcXoGJVQw89QFlo1Y+0Bf8
-         DhsAe6KcmwgBv5wVOGzZ+a2RkHAAbhkgTOJzFbup5G6IBimliR3VFn6LV0chVNM/59nD
-         OTRqzgKx/6FDAeE38LnELYFDfA5F6X39A/wBWGxI7zoG4NTblaoxkX6lQexN4ztnz1sF
-         uvwkRJqvyoXVpeP7O/MCbjZKogXo6mTXJUq94XWrhc1IgUJXVxpTQxB8aJHegNG0Iqty
-         5r4A==
-X-Gm-Message-State: APjAAAUt7pHqNkBJiB5GM7qwfoZkDjTFVCYdhf0K/5Est7hfm9wsKTub
-        J55MygE6odkXepaTYZfPnQ==
-X-Google-Smtp-Source: APXvYqzl39T8JSRAq1wQN06caINNSaqI71oUCCi5AFECRHz0e/06XWd7l5PeIKI7RpeqkWjEvjKAug==
-X-Received: by 2002:a0d:ebc9:: with SMTP id u192mr14379842ywe.360.1583105115924;
-        Sun, 01 Mar 2020 15:25:15 -0800 (PST)
+        bh=p9LwGjWOmssh6gQXkXnUBTSYCwZetwFOik6mpoK+NvY=;
+        b=hRD86ScRjWL3eJHFSmtFld9D2dkAN7gJeYHQqzz1yAdfUxWFsZ6lqQHWPyUoBY1C23
+         uwN3VtbMVNhEEeWRbOsBWKkfjGDDpnDBXoVMqpYOpY9fYJFiPVf0rECWOi4HfIMe1eG+
+         HwYPcymw054RGHT5N5TOQ5gdBGDQJNjHvbnYvqdfUyrvqdJvSOROzr85HpORlyNGE36/
+         BsT5OPh/naQ9kHZShbFjQ3pkKyk/VM77MCasZ5Nq4NPElS867NOG+6+Nb0fokuiHcBwS
+         PkDYiw4/223PX6bWJRiA9rRNQoI2G2LHjglt7mXAys/zYG7bolgPfRDn8pBt7fjlgceO
+         hOtA==
+X-Gm-Message-State: APjAAAVdsIHua+BMWw1mYcj0Ju92WbFNsXhShooFqfrtQNtxrCP97Za/
+        jP3ly92oS1lqpmVmyUodFEVnxYUgVA==
+X-Google-Smtp-Source: APXvYqyviRdG8PiOkecFwVw0wHEbrxJ10k3QXNOGBOoROx8w7C7arjH4IkCO7hlIKVg5pkPzQ3oJ6g==
+X-Received: by 2002:a81:4603:: with SMTP id t3mr14219487ywa.97.1583105116864;
+        Sun, 01 Mar 2020 15:25:16 -0800 (PST)
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
-        by smtp.gmail.com with ESMTPSA id u4sm7167301ywu.26.2020.03.01.15.25.14
+        by smtp.gmail.com with ESMTPSA id u4sm7167301ywu.26.2020.03.01.15.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 15:25:15 -0800 (PST)
+        Sun, 01 Mar 2020 15:25:16 -0800 (PST)
 From:   Trond Myklebust <trondmy@gmail.com>
 X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 To:     "J. Bruce Fields" <bfields@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/8] nfsd: Add tracing to nfsd_set_fh_dentry()
-Date:   Sun,  1 Mar 2020 18:21:39 -0500
-Message-Id: <20200301232145.1465430-3-trond.myklebust@hammerspace.com>
+Subject: [PATCH 3/8] nfsd: Add tracepoints for exp_find_key() and exp_get_by_name()
+Date:   Sun,  1 Mar 2020 18:21:40 -0500
+Message-Id: <20200301232145.1465430-4-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200301232145.1465430-2-trond.myklebust@hammerspace.com>
+In-Reply-To: <20200301232145.1465430-3-trond.myklebust@hammerspace.com>
 References: <20200301232145.1465430-1-trond.myklebust@hammerspace.com>
  <20200301232145.1465430-2-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-3-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -62,92 +63,110 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add tracing to allow us to figure out where any stale filehandle issues
-may be originating from.
+Add tracepoints for upcalls.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfsd/nfsfh.c | 13 ++++++++++---
- fs/nfsd/trace.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 3 deletions(-)
+ fs/nfsd/export.c |  9 +++++++--
+ fs/nfsd/trace.h  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index b319080288c3..37bc8f5f4514 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -14,6 +14,7 @@
- #include "nfsd.h"
- #include "vfs.h"
- #include "auth.h"
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 15422c951fd1..e867db0bb380 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -23,6 +23,7 @@
+ #include "netns.h"
+ #include "pnfs.h"
+ #include "filecache.h"
 +#include "trace.h"
  
- #define NFSDDBG_FACILITY		NFSDDBG_FH
+ #define NFSDDBG_FACILITY	NFSDDBG_EXPORT
  
-@@ -209,11 +210,14 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
- 	}
- 
- 	error = nfserr_stale;
--	if (PTR_ERR(exp) == -ENOENT)
--		return error;
-+	if (IS_ERR(exp)) {
-+		trace_nfsd_set_fh_dentry_badexport(rqstp, fhp, PTR_ERR(exp));
-+
-+		if (PTR_ERR(exp) == -ENOENT)
-+			return error;
- 
--	if (IS_ERR(exp))
- 		return nfserrno(PTR_ERR(exp));
+@@ -832,8 +833,10 @@ exp_find_key(struct cache_detail *cd, struct auth_domain *clp, int fsid_type,
+ 	if (ek == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 	err = cache_check(cd, &ek->h, reqp);
+-	if (err)
++	if (err) {
++		trace_nfsd_exp_find_key(&key, err);
+ 		return ERR_PTR(err);
 +	}
+ 	return ek;
+ }
  
- 	if (exp->ex_flags & NFSEXP_NOSUBTREECHECK) {
- 		/* Elevate privileges so that the lack of 'r' or 'x'
-@@ -267,6 +271,9 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
- 		dentry = exportfs_decode_fh(exp->ex_path.mnt, fid,
- 				data_left, fileid_type,
- 				nfsd_acceptable, exp);
-+		if (IS_ERR_OR_NULL(dentry))
-+			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
-+					dentry ?  PTR_ERR(dentry) : -ESTALE);
- 	}
- 	if (dentry == NULL)
- 		goto out;
+@@ -855,8 +858,10 @@ exp_get_by_name(struct cache_detail *cd, struct auth_domain *clp,
+ 	if (exp == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 	err = cache_check(cd, &exp->h, reqp);
+-	if (err)
++	if (err) {
++		trace_nfsd_exp_get_by_name(&key, err);
+ 		return ERR_PTR(err);
++	}
+ 	return exp;
+ }
+ 
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 06dd0d337049..9abd1591a841 100644
+index 9abd1591a841..3b9277d7b5f2 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -50,6 +50,36 @@ TRACE_EVENT(nfsd_compound_status,
- 		__get_str(name), __entry->status)
- )
+@@ -9,6 +9,7 @@
+ #define _NFSD_TRACE_H
  
-+DECLARE_EVENT_CLASS(nfsd_fh_err_class,
-+	TP_PROTO(struct svc_rqst *rqstp,
-+		 struct svc_fh	*fhp,
-+		 int		status),
-+	TP_ARGS(rqstp, fhp, status),
+ #include <linux/tracepoint.h>
++#include "export.h"
+ #include "nfsfh.h"
+ 
+ TRACE_EVENT(nfsd_compound,
+@@ -80,6 +81,51 @@ DEFINE_EVENT(nfsd_fh_err_class, nfsd_##name,	\
+ DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badexport);
+ DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badhandle);
+ 
++TRACE_EVENT(nfsd_exp_find_key,
++	TP_PROTO(const struct svc_expkey *key,
++		 int status),
++	TP_ARGS(key, status),
 +	TP_STRUCT__entry(
-+		__field(u32, xid)
-+		__field(u32, fh_hash)
++		__field(int, fsidtype)
++		__array(u32, fsid, 6)
++		__string(auth_domain, key->ek_client->name)
 +		__field(int, status)
 +	),
 +	TP_fast_assign(
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
++		__entry->fsidtype = key->ek_fsidtype;
++		memcpy(__entry->fsid, key->ek_fsid, 4*6);
++		__assign_str(auth_domain, key->ek_client->name);
 +		__entry->status = status;
 +	),
-+	TP_printk("xid=0x%08x fh_hash=0x%08x status=%d",
-+		  __entry->xid, __entry->fh_hash,
-+		  __entry->status)
-+)
++	TP_printk("fsid=%x::%s domain=%s status=%d",
++		__entry->fsidtype,
++		__print_array(__entry->fsid, 6, 4),
++		__get_str(auth_domain),
++		__entry->status
++	)
++);
 +
-+#define DEFINE_NFSD_FH_ERR_EVENT(name)		\
-+DEFINE_EVENT(nfsd_fh_err_class, nfsd_##name,	\
-+	TP_PROTO(struct svc_rqst *rqstp,	\
-+		 struct svc_fh	*fhp,		\
-+		 int		status),	\
-+	TP_ARGS(rqstp, fhp, status))
-+
-+DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badexport);
-+DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badhandle);
++TRACE_EVENT(nfsd_exp_get_by_name,
++	TP_PROTO(const struct svc_export *key,
++		 int status),
++	TP_ARGS(key, status),
++	TP_STRUCT__entry(
++		__string(path, key->ex_path.dentry->d_name.name)
++		__string(auth_domain, key->ex_client->name)
++		__field(int, status)
++	),
++	TP_fast_assign(
++		__assign_str(path, key->ex_path.dentry->d_name.name);
++		__assign_str(auth_domain, key->ex_client->name);
++		__entry->status = status;
++	),
++	TP_printk("path=%s domain=%s status=%d",
++		__get_str(path),
++		__get_str(auth_domain),
++		__entry->status
++	)
++);
 +
  DECLARE_EVENT_CLASS(nfsd_io_class,
  	TP_PROTO(struct svc_rqst *rqstp,
