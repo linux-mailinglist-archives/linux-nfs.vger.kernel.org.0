@@ -2,178 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C064174EFD
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2020 19:46:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 559C81750EC
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2020 00:25:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgCASqA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 1 Mar 2020 13:46:00 -0500
-Received: from p3plsmtpa07-10.prod.phx3.secureserver.net ([173.201.192.239]:58043
-        "EHLO p3plsmtpa07-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725945AbgCASqA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 13:46:00 -0500
-X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Mar 2020 13:46:00 EST
-Received: from [172.20.1.219] ([50.235.29.75])
-        by :SMTPAUTH: with ESMTPSA
-        id 8TUAjlrXX3mdr8TUAjdMjZ; Sun, 01 Mar 2020 11:38:42 -0700
-X-CMAE-Analysis: v=2.3 cv=AZbP4EfG c=1 sm=1 tr=0
- a=VA9wWQeJdn4CMHigaZiKkA==:117 a=VA9wWQeJdn4CMHigaZiKkA==:17
- a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=SEc3moZ4AAAA:8
- a=yPCof4ZbAAAA:8 a=BLa6zQfhWGza00yZWR8A:9 a=EFZ49vrQq20z-xuo:21
- a=iBP7MK1XyrXoHnT4:21 a=QEXdDO2ut3YA:10 a=5oRCH6oROnRZc2VpWJZ3:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH v1 05/11] xprtrdma: Allocate Protection Domain in
- rpcrdma_ep_create()
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20200221214906.2072.32572.stgit@manet.1015granger.net>
- <20200221220033.2072.22880.stgit@manet.1015granger.net>
- <8a1b8d87-48a7-6cc2-66de-121a46d1b6a4@talpey.com>
- <D9382354-0063-43C5-9940-6F376D16E083@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <fd1a2b33-258e-eb8d-8ce8-83ee99504543@talpey.com>
-Date:   Sun, 1 Mar 2020 10:38:42 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726525AbgCAXZP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 Mar 2020 18:25:15 -0500
+Received: from mail-yw1-f50.google.com ([209.85.161.50]:38568 "EHLO
+        mail-yw1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgCAXZP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 18:25:15 -0500
+Received: by mail-yw1-f50.google.com with SMTP id 10so9482428ywv.5
+        for <linux-nfs@vger.kernel.org>; Sun, 01 Mar 2020 15:25:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tRYjmdyCdLkJBURWnLmo1M6qpfNuc24L7279rJBmO8=;
+        b=IJrRzYpj3YV8FRrX8V5HJgo+gZOGciwlmtVKbA5RfRds8Bgy3TOHYF0myt+M7pxeUe
+         b6aYovfLVZREIZqXRTXhOuuNCabSKa7uZST9MKlxBn6CA5LiELo3rLDcS3d4MCD2JDtX
+         ZR8xP3myZN211Xz/vjQm+90PluxOun0Z0EpqXWnO8AvHVmnPIINIe1q9SoDYcLwFkKUl
+         F12IITX+cTCf0DXYSVmIoTG59cfAk936XUmbt/JSk3iXdqnymQ3n29fYJZbKmN/f7FzT
+         MxQw/cQZxR0Oi/Tg1jyevMQxuJzUtaKrVeAT32Vj7IVJF1bR3957YbKEvphmrRseCgAn
+         5Cbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tRYjmdyCdLkJBURWnLmo1M6qpfNuc24L7279rJBmO8=;
+        b=WGEwxicpE9u9a56BFqNbMTwuNhtduF6mOQ5uKVzLZpf8q3AQW2NvaUrEr/IuCzkfle
+         avaWy+BIUHD54DJsYcLURexz2ptJde381d/wLm3c3Kt7dLqMx5P1XCwrTTt/7bgG54Dy
+         TBRnXFa1r/ifbRzmi5bMjZLIYGtg8a85eTXuPbcW4FBjv5j9AYD/tY41JfQIBy/UicOn
+         KNLERPRF7CbS/PCeHA03yWx3zFFnlM1fpYRDjTCkcj8PGpmdDENSEWhaVyYca1pe28b0
+         5P9bBtBLjA+ff29yzXAI3kGKa9bf/Gu1HOQKGbzYR5vq0f4vdSv730BziY6z7Nkd+rOS
+         xC0g==
+X-Gm-Message-State: APjAAAU6ZS67W451rQhytX1NcIO5V8aDTS0k6XQV9n0zAQIkKtugFAjt
+        gbFvLPMU9fw83RYoSXK6iQ==
+X-Google-Smtp-Source: APXvYqxzjXa4r2YjRObCSd0TimgsNEFFNxuIKzQwORIKb/U90UGrwHurysKna8B86t3ytB/sC3wbGg==
+X-Received: by 2002:a81:449:: with SMTP id 70mr14513722ywe.161.1583105113875;
+        Sun, 01 Mar 2020 15:25:13 -0800 (PST)
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net. [68.40.189.247])
+        by smtp.gmail.com with ESMTPSA id u4sm7167301ywu.26.2020.03.01.15.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 15:25:13 -0800 (PST)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/8] Bugfixes and tracing enhancements for knfsd
+Date:   Sun,  1 Mar 2020 18:21:37 -0500
+Message-Id: <20200301232145.1465430-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <D9382354-0063-43C5-9940-6F376D16E083@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfACK8M28YdLCj7WhOm5L9vbk5BgKBCZdkcutqlNwubOLkWsf9a/PbkrDIx1sDfqQvPLzQfCsLUm4CxBOSVHCBNYgVsoOipFEyNpkTTBCLvRxeIllSPss
- 3bHIEdbNX+2KEfsG0qq9syJan7yiGK8V4aGos+ire60YH0178WLM+CzAAH2yfszxP146vrH96b2j8l8/IDucHf5rjD/FJWXQVyPW5R47ecV4OI5sVznKvsWM
- MIHwZ9F2IzoRal8U9Bming==
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 3/1/2020 10:29 AM, Chuck Lever wrote:
-> Hi Tom-
-> 
-> Thanks for your careful reading of the patch series!
-> 
-> 
->> On Mar 1, 2020, at 1:11 PM, Tom Talpey <tom@talpey.com> wrote:
->>
->> On 2/21/2020 2:00 PM, Chuck Lever wrote:
->>> Make a Protection Domain (PD) a per-connection resource rather than
->>> a per-transport resource. In other words, when the connection
->>> terminates, the PD is destroyed.
->>> Thus there is one less HW resource that remains allocated to a
->>> transport after a connection is closed.
->>
->> That's a good goal, but there are cases where the upper layer may
->> want the PD to be shared. For example, in a multichannel configuration,
->> where RDMA may not be constrained to use a single connection.
-> 
-> I see two reasons why PD sharing won't be needed for the Linux
-> client implementation of RPC/RDMA:
-> 
-> - The plan for Linux NFS/RDMA is to manage multiple connections
->    in the NFS client layer, not at the RPC transport layer.
-> 
-> - We don't intend to retransmit an RPC that was registered via
->    one connection on a different connection; a retransmitted RPC
->    is re-marshaled from scratch before each transmit.
-> 
-> The purpose of destroying the PD at disconnect is to enable a
-> clean device removal model: basically, disconnect all connections
-> through that device, and we're guaranteed to have no more pinned
-> HW resources. AFAICT, that is the model also used in other kernel
-> ULPs.
+This series fixes an Oops that has been getting in the way of testing
+NFSv4.1 in the last few weeks. It adds a number of tracepoints around
+the knfsd cache and upcall mechanism in order to help debugging, then
+fixes a few races caused by the cache_listeners_exist() mechanism
+and goes back to addressing the garbage collection timeouts.
 
-True, and revoking the PD ensures that no further remote access can
-occur, that is, it's a fully secure approach.
+Finally, it fixes the long standing issue that knfsd will drop requests
+without dropping the TCP connection, something which violates the NFSv4
+protocol.
 
->> How would this approach support such a requirement?
-> 
-> As above, the Linux NFS client would create additional transports,
-> each with their own single connection (and PD).
-> 
-> 
->> Can a PD be provided to a new connection?
-> 
-> The sequence of API events is that an ID and PD are created first,
-> then a QP is created with the ID and PD, then the connection is
-> established.
+Trond Myklebust (8):
+  nfsd: Don't add locks to closed or closing open stateids
+  nfsd: Add tracing to nfsd_set_fh_dentry()
+  nfsd: Add tracepoints for exp_find_key() and exp_get_by_name()
+  nfsd: Add tracepoints for update of the expkey and export cache
+    entries
+  nfsd: export upcalls must not return ESTALE when mountd is down
+  SUNRPC/cache: Allow garbage collection of invalid cache entries
+  sunrpc: Add tracing for cache events
+  sunrpc: Drop the connection when the server drops a request
 
-Yes, I'm aware, and that was the question - if PD sharing were desired,
-can the PD be passed to the QP creation, instead of being allocated
-inline?
+ fs/nfs/dns_resolve.c              |  11 +--
+ fs/nfsd/export.c                  |  45 ++++++++---
+ fs/nfsd/nfs4idmap.c               |  14 ++++
+ fs/nfsd/nfs4state.c               |  73 ++++++++++--------
+ fs/nfsd/nfsfh.c                   |  13 +++-
+ fs/nfsd/trace.h                   | 122 +++++++++++++++++++++++++++++
+ include/linux/sunrpc/cache.h      |   6 +-
+ include/trace/events/sunrpc.h     |  33 ++++++++
+ net/sunrpc/auth_gss/svcauth_gss.c |  12 +++
+ net/sunrpc/cache.c                | 124 +++++++++++++++++-------------
+ net/sunrpc/svc_xprt.c             |  10 +++
+ net/sunrpc/svcauth_unix.c         |  12 +++
+ 12 files changed, 370 insertions(+), 105 deletions(-)
 
-If this isn't needed now, then it's fine to leave it out. But I think
-it's worth considering that it may be desirable in future.
+-- 
+2.24.1
 
-Tom.
-
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> ---
->>>   net/sunrpc/xprtrdma/verbs.c |   26 ++++++++++----------------
->>>   1 file changed, 10 insertions(+), 16 deletions(-)
->>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->>> index f361213a8157..36fe7baea014 100644
->>> --- a/net/sunrpc/xprtrdma/verbs.c
->>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>> @@ -363,14 +363,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
->>>   		rc = PTR_ERR(ia->ri_id);
->>>   		goto out_err;
->>>   	}
->>> -
->>> -	ia->ri_pd = ib_alloc_pd(ia->ri_id->device, 0);
->>> -	if (IS_ERR(ia->ri_pd)) {
->>> -		rc = PTR_ERR(ia->ri_pd);
->>> -		pr_err("rpcrdma: ib_alloc_pd() returned %d\n", rc);
->>> -		goto out_err;
->>> -	}
->>> -
->>>   	return 0;
->>>     out_err:
->>> @@ -403,9 +395,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
->>>     	rpcrdma_ep_destroy(r_xprt);
->>>   -	ib_dealloc_pd(ia->ri_pd);
->>> -	ia->ri_pd = NULL;
->>> -
->>>   	/* Allow waiters to continue */
->>>   	complete(&ia->ri_remove_done);
->>>   @@ -423,11 +412,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_xprt *r_xprt,
->>>   	if (ia->ri_id && !IS_ERR(ia->ri_id))
->>>   		rdma_destroy_id(ia->ri_id);
->>>   	ia->ri_id = NULL;
->>> -
->>> -	/* If the pd is still busy, xprtrdma missed freeing a resource */
->>> -	if (ia->ri_pd && !IS_ERR(ia->ri_pd))
->>> -		ib_dealloc_pd(ia->ri_pd);
->>> -	ia->ri_pd = NULL;
->>>   }
->>>     static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt,
->>> @@ -514,6 +498,12 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt,
->>>   	ep->rep_remote_cma.flow_control = 0;
->>>   	ep->rep_remote_cma.rnr_retry_count = 0;
->>>   +	ia->ri_pd = ib_alloc_pd(id->device, 0);
->>> +	if (IS_ERR(ia->ri_pd)) {
->>> +		rc = PTR_ERR(ia->ri_pd);
->>> +		goto out_destroy;
->>> +	}
->>> +
->>>   	rc = rdma_create_qp(id, ia->ri_pd, &ep->rep_attr);
->>>   	if (rc)
->>>   		goto out_destroy;
->>> @@ -540,6 +530,10 @@ static void rpcrdma_ep_destroy(struct rpcrdma_xprt *r_xprt)
->>>   	if (ep->rep_attr.send_cq)
->>>   		ib_free_cq(ep->rep_attr.send_cq);
->>>   	ep->rep_attr.send_cq = NULL;
->>> +
->>> +	if (ia->ri_pd)
->>> +		ib_dealloc_pd(ia->ri_pd);
->>> +	ia->ri_pd = NULL;
->>>   }
->>>     /* Re-establish a connection after a device removal event.
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-> 
-> 
