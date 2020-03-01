@@ -2,148 +2,201 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 875EC174EE0
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2020 19:12:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E610C174EF4
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2020 19:30:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgCASMa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 1 Mar 2020 13:12:30 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:43976 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCASMa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 13:12:30 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 021IAAeN004208;
-        Sun, 1 Mar 2020 18:12:27 GMT
+        id S1726359AbgCASaC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 Mar 2020 13:30:02 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:44882 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgCASaC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 Mar 2020 13:30:02 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 021IOiuq047786;
+        Sun, 1 Mar 2020 18:30:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ZZxiB4h1tWL5VBvR0EDV07M8QDEq5UmjiwyyYe8MlTY=;
- b=RK2eyc239vOlPYGJ3aANZNmA4yeb0OrNFfjPLAZuXN//pDxWv9arQpQ9CmHwQx/Wi3Dt
- w2tUg54eZ9DgqNcC990PR7HHf+nvseypWmhNw0wht40IY3D3ldtf2Bb5VtJ9NFBSpzwG
- bSXZuBA5bRfkgd8hMx9ZD/2IPp+2fzAyAkOhR6CXtMPukow1bP3OkYgDginAmqnCgw/C
- 5r9gR1rLynfMm3fj2gZmaZyS7RX5NoE9XNgA5y9jm5Ge6g9u0nv0keEXoLChNBqx+Jtz
- PVDhf9hA4q4Id9TcI3lYi86inO7XNVLieAqxy0ho+tLawu8PMk5FhNvX5gfpSjqxtJjW dQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yghn2r1kd-1
+ s=corp-2020-01-29; bh=8aRIkRoWOpPeztTUZM7Y1gsAnvUbgjVQ0XdhwYNMgck=;
+ b=to6H+/POc5/saPYK4EEmXYeyqppQcrNjjS5xZQ8+uNuV4wTi32xisIc9JVCG63zKzBcD
+ d9+HxePonRgL/I8Pb/Xxv07QROojKBsLRxRhjJyp4C1pvFOMEC+uWad1pKesqDuV7CRv
+ hjcRhebROhVr+UadScVTaAUfZ0ueB2gZg3vQ6sXLVHl2G8IA/IKEgi/sKl8zVjZoazpV
+ BCULu6XU72ccMs60N3gMvKMPpTlRb4nk3FYlGkNTiHTHZ1cPMnjPbmBpbb+/iE1qRpMO
+ XVhRoYJvOwkBAV/4PkGeuNVtq6ee0PjNq53IiWONoGUuHaDZjbRL45ix0J2dfWeeUJxT fQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2yffcu487b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 01 Mar 2020 18:12:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 021ICRuo073095;
-        Sun, 1 Mar 2020 18:12:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2yg1ef11eq-1
+        Sun, 01 Mar 2020 18:30:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 021INFqq051764;
+        Sun, 1 Mar 2020 18:30:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2yg1gtdw58-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 01 Mar 2020 18:12:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 021ICGv6007784;
-        Sun, 1 Mar 2020 18:12:16 GMT
+        Sun, 01 Mar 2020 18:29:59 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 021ITxcE023803;
+        Sun, 1 Mar 2020 18:29:59 GMT
 Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 01 Mar 2020 10:12:15 -0800
+        with ESMTP ; Sun, 01 Mar 2020 10:29:59 -0800
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v1 00/11] NFS/RDMA client side connection overhaul
+Subject: Re: [PATCH v1 05/11] xprtrdma: Allocate Protection Domain in
+ rpcrdma_ep_create()
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <3a891d0c-3192-6445-c4df-3725335e9d95@talpey.com>
-Date:   Sun, 1 Mar 2020 13:12:14 -0500
+In-Reply-To: <8a1b8d87-48a7-6cc2-66de-121a46d1b6a4@talpey.com>
+Date:   Sun, 1 Mar 2020 13:29:58 -0500
 Cc:     linux-rdma@vger.kernel.org,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <D7D498F4-07BB-4F8A-A95D-B14A1217E73C@oracle.com>
+Message-Id: <D9382354-0063-43C5-9940-6F376D16E083@oracle.com>
 References: <20200221214906.2072.32572.stgit@manet.1015granger.net>
- <3a891d0c-3192-6445-c4df-3725335e9d95@talpey.com>
+ <20200221220033.2072.22880.stgit@manet.1015granger.net>
+ <8a1b8d87-48a7-6cc2-66de-121a46d1b6a4@talpey.com>
 To:     Tom Talpey <tom@talpey.com>
 X-Mailer: Apple Mail (2.3445.104.11)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=993 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003010143
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003010144
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 suspectscore=2 spamscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003010142
+ definitions=main-2003010144
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Tom-
+
+Thanks for your careful reading of the patch series!
 
 
-> On Mar 1, 2020, at 1:09 PM, Tom Talpey <tom@talpey.com> wrote:
+> On Mar 1, 2020, at 1:11 PM, Tom Talpey <tom@talpey.com> wrote:
 >=20
 > On 2/21/2020 2:00 PM, Chuck Lever wrote:
->> Howdy.
->> I've had reports (and personal experience) where the Linux NFS/RDMA
->> client waits for a very long time after a disruption of the network
->> or NFS server.
->> There is a disconnect time wait in the Connection Manager which
->> blocks the RPC/RDMA transport from tearing down a connection for a
->> few minutes when the remote cannot respond to DREQ messages.
+>> Make a Protection Domain (PD) a per-connection resource rather than
+>> a per-transport resource. In other words, when the connection
+>> terminates, the PD is destroyed.
+>> Thus there is one less HW resource that remains allocated to a
+>> transport after a connection is closed.
 >=20
-> This seems really unfortunate. Why such a long wait in the RDMA layer?
-> I can see a backoff, to prevent connection attempt flooding, but a
-> constant "few minute" pause is a very blunt instrument.
+> That's a good goal, but there are cases where the upper layer may
+> want the PD to be shared. For example, in a multichannel =
+configuration,
+> where RDMA may not be constrained to use a single connection.
 
-The last clause here is the operative conundrum: "when the remote
-cannot respond". That should be pretty rare, but it's frequent
-enough to be bothersome in some environments.
+I see two reasons why PD sharing won't be needed for the Linux
+client implementation of RPC/RDMA:
 
-As to why the time wait is so long, I don't know the answer to that.
+- The plan for Linux NFS/RDMA is to manage multiple connections
+  in the NFS client layer, not at the RPC transport layer.
+
+- We don't intend to retransmit an RPC that was registered via
+  one connection on a different connection; a retransmitted RPC
+  is re-marshaled from scratch before each transmit.
+
+The purpose of destroying the PD at disconnect is to enable a
+clean device removal model: basically, disconnect all connections
+through that device, and we're guaranteed to have no more pinned
+HW resources. AFAICT, that is the model also used in other kernel
+ULPs.
 
 
->> An RPC/RDMA transport has only one slot for connection state, so the
->> transport is prevented from establishing a fresh connection until
->> the time wait completes.
->> This patch series refactors the connection end point data structures
->> to enable one active and multiple zombie connections. Now, while a
->> defunct connection is waiting to die, it is separated from the
->> transport, clearing the way for the immediate creation of a new
->> connection. Clean-up of the old connection's data structures and
->> resources then completes in the background.
->=20
-> This is a good idea in any case. It separates the layers, and leads
-> to better connection establishment throughput.
->=20
-> Does the RPCRDMA layer ensure it backs off, if connection retries
-> fail? Or are you depending on the NFS upper layer for this.
+> How would this approach support such a requirement?
 
-There is a complicated back-off scheme that is modeled on the TCP
-connection back-off logic.
+As above, the Linux NFS client would create additional transports,
+each with their own single connection (and PD).
+
+
+> Can a PD be provided to a new connection?
+
+The sequence of API events is that an ID and PD are created first,
+then a QP is created with the ID and PD, then the connection is
+established.
+
+But I might not have understood your question.
+
+
 
 
 > Tom.
 >=20
->> Well, that's the idea, anyway. Review and comments welcome. Hoping
->> this can be merged in v5.7.
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 >> ---
->> Chuck Lever (11):
->>       xprtrdma: Invoke rpcrdma_ep_create() in the connect worker
->>       xprtrdma: Refactor frwr_init_mr()
->>       xprtrdma: Clean up the post_send path
->>       xprtrdma: Refactor rpcrdma_ep_connect() and =
-rpcrdma_ep_disconnect()
->>       xprtrdma: Allocate Protection Domain in rpcrdma_ep_create()
->>       xprtrdma: Invoke rpcrdma_ia_open in the connect worker
->>       xprtrdma: Remove rpcrdma_ia::ri_flags
->>       xprtrdma: Disconnect on flushed completion
->>       xprtrdma: Merge struct rpcrdma_ia into struct rpcrdma_ep
->>       xprtrdma: Extract sockaddr from struct rdma_cm_id
->>       xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt
->>  include/trace/events/rpcrdma.h    |   97 ++---
->>  net/sunrpc/xprtrdma/backchannel.c |    8
->>  net/sunrpc/xprtrdma/frwr_ops.c    |  152 ++++----
->>  net/sunrpc/xprtrdma/rpc_rdma.c    |   32 +-
->>  net/sunrpc/xprtrdma/transport.c   |   72 +---
->>  net/sunrpc/xprtrdma/verbs.c       |  681 =
-++++++++++++++-----------------------
->>  net/sunrpc/xprtrdma/xprt_rdma.h   |   89 ++---
->>  7 files changed, 445 insertions(+), 686 deletions(-)
->> --
->> Chuck Lever
+>>  net/sunrpc/xprtrdma/verbs.c |   26 ++++++++++----------------
+>>  1 file changed, 10 insertions(+), 16 deletions(-)
+>> diff --git a/net/sunrpc/xprtrdma/verbs.c =
+b/net/sunrpc/xprtrdma/verbs.c
+>> index f361213a8157..36fe7baea014 100644
+>> --- a/net/sunrpc/xprtrdma/verbs.c
+>> +++ b/net/sunrpc/xprtrdma/verbs.c
+>> @@ -363,14 +363,6 @@ static void rpcrdma_update_cm_private(struct =
+rpcrdma_xprt *r_xprt,
+>>  		rc =3D PTR_ERR(ia->ri_id);
+>>  		goto out_err;
+>>  	}
+>> -
+>> -	ia->ri_pd =3D ib_alloc_pd(ia->ri_id->device, 0);
+>> -	if (IS_ERR(ia->ri_pd)) {
+>> -		rc =3D PTR_ERR(ia->ri_pd);
+>> -		pr_err("rpcrdma: ib_alloc_pd() returned %d\n", rc);
+>> -		goto out_err;
+>> -	}
+>> -
+>>  	return 0;
+>>    out_err:
+>> @@ -403,9 +395,6 @@ static void rpcrdma_update_cm_private(struct =
+rpcrdma_xprt *r_xprt,
+>>    	rpcrdma_ep_destroy(r_xprt);
+>>  -	ib_dealloc_pd(ia->ri_pd);
+>> -	ia->ri_pd =3D NULL;
+>> -
+>>  	/* Allow waiters to continue */
+>>  	complete(&ia->ri_remove_done);
+>>  @@ -423,11 +412,6 @@ static void rpcrdma_update_cm_private(struct =
+rpcrdma_xprt *r_xprt,
+>>  	if (ia->ri_id && !IS_ERR(ia->ri_id))
+>>  		rdma_destroy_id(ia->ri_id);
+>>  	ia->ri_id =3D NULL;
+>> -
+>> -	/* If the pd is still busy, xprtrdma missed freeing a resource =
+*/
+>> -	if (ia->ri_pd && !IS_ERR(ia->ri_pd))
+>> -		ib_dealloc_pd(ia->ri_pd);
+>> -	ia->ri_pd =3D NULL;
+>>  }
+>>    static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt,
+>> @@ -514,6 +498,12 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt =
+*r_xprt,
+>>  	ep->rep_remote_cma.flow_control =3D 0;
+>>  	ep->rep_remote_cma.rnr_retry_count =3D 0;
+>>  +	ia->ri_pd =3D ib_alloc_pd(id->device, 0);
+>> +	if (IS_ERR(ia->ri_pd)) {
+>> +		rc =3D PTR_ERR(ia->ri_pd);
+>> +		goto out_destroy;
+>> +	}
+>> +
+>>  	rc =3D rdma_create_qp(id, ia->ri_pd, &ep->rep_attr);
+>>  	if (rc)
+>>  		goto out_destroy;
+>> @@ -540,6 +530,10 @@ static void rpcrdma_ep_destroy(struct =
+rpcrdma_xprt *r_xprt)
+>>  	if (ep->rep_attr.send_cq)
+>>  		ib_free_cq(ep->rep_attr.send_cq);
+>>  	ep->rep_attr.send_cq =3D NULL;
+>> +
+>> +	if (ia->ri_pd)
+>> +		ib_dealloc_pd(ia->ri_pd);
+>> +	ia->ri_pd =3D NULL;
+>>  }
+>>    /* Re-establish a connection after a device removal event.
 
 --
 Chuck Lever
