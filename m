@@ -2,186 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FD09176489
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2020 21:02:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 937961764B5
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2020 21:12:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCBUCp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Mar 2020 15:02:45 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.38]:49230 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726793AbgCBUCo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Mar 2020 15:02:44 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 107354016425A
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Mar 2020 14:02:43 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8rH1jAxagEfyq8rH1jFRqQ; Mon, 02 Mar 2020 14:02:43 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NryDNxu/ODoeBsi1LY9dVerLlUdhHrWu4vysD9oZ7G0=; b=MBl9lRa2uQdQRhFCMyAYyQi7Eu
-        nnvWFpcQylvlPU55gp9C1kURKOBDzpVGjkuh0XLZ/BWjLcBbbs4WDMhqaA1Jtv+CVdwoDQ94ZIPsb
-        8LJx5Vaz5NTeknNadIfgzrrme1o+1i6gpiGjCKtKCBMT8CkUk+fzq7yjFEJqUAKjf7cltIszsICfT
-        xXShumusMdWQiwl02Z2/ndc9TaKK1jlUsFSzYBYsOvr9f1SNeV+hG7D2qcrzQIfyERqG9K17/uY5J
-        qgQYyrIuJvVh5k/RDDJZLiZV9TD9Mx4fWn7EA0FAtx9U2zH0ZRsubRmSJULpN/iT5v7zMLAo3wAa+
-        CKF7lQ8A==;
-Received: from [201.166.169.19] (port=30074 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8rH0-003xYk-7z; Mon, 02 Mar 2020 14:02:42 -0600
-Subject: Re: [PATCH][next] sunrpc: Replace zero-length array with
- flexible-array member
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200228132323.GA20181@embeddedor>
- <20200302195829.GD1149@fieldses.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ae7a3879-3344-b50e-6187-3ee898026ec5@embeddedor.com>
-Date:   Mon, 2 Mar 2020 14:05:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200302195829.GD1149@fieldses.org>
-Content-Type: text/plain; charset=utf-8
+        id S1725883AbgCBUM6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Mar 2020 15:12:58 -0500
+Received: from mail-bn7nam10on2123.outbound.protection.outlook.com ([40.107.92.123]:4961
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgCBUM5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:12:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=afCrxgNbEUrxUNR1S+e972Js6B6oT585xH7DvGzM0WoL8ExsOJvXwO2aiALAAtyf9jg5DGhBtutcfL46OzhfOLTjnDjfmGGfz3X9Q0gWFdZFBhCJkaGM5FguesfPsNHr3Ybww8q8SouoteIq7fYT/t6UMd6c5mSDL2+flr+8cuwfGAXEYh+4z0wGdWhdCELtN8ElV6YioLPVqx+cgEytFt1asxJ0A0qzenp/vU44UPiEmemwzBQEEEEWQ7+nCmgq4Cs2w3EJyWKryniWXsjxTXUKPV5NVq4kTWeNJJ1zQ4zjwX+MFob48aqegu28Sx90EvlQa/o63CFdYelj7QQMmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qigH3wcLAVIu+FYKtSGBidhPRpXUiY0SLUyOJbctnXY=;
+ b=XXi3iBL86CTTawZNtmg1ReToXNC0jsPuUbDcMlebbqYIOxpxThRnIsnE2/mCdCq2h0R06sVBymVdOBdngKv8vDhOyMzI0roq3Oyj294r5+PvevVEEceJPLETnih0bsGM8lB7by2m8iZKuJ8oaZ8E9fFYo67efbzab8QWzEkbAM3DztiuHjHHz7RQ3mcdoRIw7YUB2h34tX3esIF/Trj1GMn6olWmfLrVt6ClryW+YnSlz0lpAH+K7WF+a+vDVERwoQzjn+esSc0+O5muJ9MX6/6ibMFWOGs8ht7RhLMV5fZa7l0fffeJKL6B2HHhWqd42KLPA5EXGlvILVh6llCLNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qigH3wcLAVIu+FYKtSGBidhPRpXUiY0SLUyOJbctnXY=;
+ b=R7SuW2DuFg92gwtyA7l48IxJ+MLAxdEwpL+KduY53xiRXui4anAvtO8Hwb1XCkbYwj9OCPQGPjGVu/4zPgGgkiDolday95/lK5sFFNMl6QtdJ9GWYubFqufxI5RHR3V6cqZ6DcNkHurBlrTTw8lUXUHkjVbGcn52yM0r0xChNYg=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (2603:10b6:4:34::34)
+ by DM5PR1301MB2010.namprd13.prod.outlook.com (2603:10b6:4:32::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.15; Mon, 2 Mar
+ 2020 20:12:52 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2793.011; Mon, 2 Mar 2020
+ 20:12:52 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "dwysocha@redhat.com" <dwysocha@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bfields@redhat.com" <bfields@redhat.com>
+Subject: Re: [PATCH 8/8] sunrpc: Drop the connection when the server drops a
+ request
+Thread-Topic: [PATCH 8/8] sunrpc: Drop the connection when the server drops a
+ request
+Thread-Index: AQHV8CCww/IlmEuypkm7SA6Gv+qpPKg1fpWAgAA/DgA=
+Date:   Mon, 2 Mar 2020 20:12:51 +0000
+Message-ID: <32be2fbebcd4e30567f54c830e23a0ef35a4844e.camel@hammerspace.com>
+References: <20200301232145.1465430-1-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-2-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-3-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-4-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-5-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-6-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-7-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-8-trond.myklebust@hammerspace.com>
+         <20200301232145.1465430-9-trond.myklebust@hammerspace.com>
+         <CALF+zOkJPkYaXjCn-tj0dPCQUAjA05zyzxm5fzwoB-XP0SGYvw@mail.gmail.com>
+In-Reply-To: <CALF+zOkJPkYaXjCn-tj0dPCQUAjA05zyzxm5fzwoB-XP0SGYvw@mail.gmail.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.169.19
-X-Source-L: No
-X-Exim-ID: 1j8rH0-003xYk-7z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.166.169.19]:30074
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 07309c14-2429-45b7-66e8-08d7bee61638
+x-ms-traffictypediagnostic: DM5PR1301MB2010:
+x-microsoft-antispam-prvs: <DM5PR1301MB2010A3D1ACC40755E376FDE6B8E70@DM5PR1301MB2010.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(376002)(346002)(39830400003)(189003)(199004)(86362001)(76116006)(81156014)(6512007)(81166006)(8676002)(478600001)(71200400001)(26005)(2906002)(2616005)(8936002)(186003)(6506007)(53546011)(5660300002)(966005)(36756003)(6486002)(54906003)(66476007)(6916009)(4326008)(91956017)(66556008)(66446008)(316002)(64756008)(66946007)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2010;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: l+MxdXd3Q8HsO546+8V43GS8NQDlVRQxPj8pncUJV3EbX8nu51pLDqJ10ZQ6ltaC7Xbe/PYYQWlnUwE+Wsmn0K4bsMMJc+219LtE1DmCsRPAxjhZ+WIJuOxCxr5/5yxo3ZPI2PMj0JmMSZDBwp3VTGduk/VUgbKsHlIOUlKSI0zcIH35cJpaRpv90GhkiohgD5EJIlnk2eC9v6HIqjK47Yg3pT4t3OrDyFdrUCSDfq9YLhHWdCLZMAeUspuW6DkMs3IecnAsXUcwuNpTYJ/hzzULezqCFkhLgOf/0JuoAcIVBTzQ4eh49V6Jlv0TUPJcOSUmclwGmWI11g0aat0I4cxC0+Y8hM+YkF+r/ybiGu83BtifQDbwT4/tKSxTl0PdAmH51901TZpUAFxQvQdMKvn711fiDbxaojw71LBSZsbque9aaS9sPlmpw7P6ahEvAnyaob9r1389+ZTY6MQbK13w+Y2Xyj0LNSVX2MgpIOjc9DmNuicC8JAymQm44TVbYJ5eBaQy6tdcQGRe/Q4BvuY9v5xHr/wM9avWrFMDHawPPc52C8DryE8bznQty3iz
+x-ms-exchange-antispam-messagedata: YqfsoZ8B2JonqfwmBjuq6qOkf8eh00OFn/KKgO5m/qLLVkBX/lrN7R3iDjVfgVXhoHpLnBdqowlgI886ZaDK/8BafCvu1ewfetqaJe+69fVLHyjvnK3c5XuqfXG7GQY9lJtmj/C+g4GTbrY1CqNjYA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C5EACCB494737645B5B3CBE73CD4C576@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07309c14-2429-45b7-66e8-08d7bee61638
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 20:12:51.9365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dF+sRXkYhmMd7ebZxgoQUMbcNq8Vm8eUVM0/DBFfXFtP9l6+tuugH6yEUc2+QkVs7YN4RnrgAj0ctA1MeW8iKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2010
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 3/2/20 13:58, J. Bruce Fields wrote:
-> On Fri, Feb 28, 2020 at 07:23:23AM -0600, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> I don't understand the quoted sentences at all.  But I assume you're
-> telling me that sizeof(struct svc_deferred_req) won't be changed by this
-> patch, so, good, applied.  Thanks!
-> 
-
-Correct! :)
-
-Thanks
---
-Gustavo
-
-> --b.
-> 
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  include/linux/sunrpc/svc.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
->> index 1afe38eb33f7..7f0a83451bc0 100644
->> --- a/include/linux/sunrpc/svc.h
->> +++ b/include/linux/sunrpc/svc.h
->> @@ -380,7 +380,7 @@ struct svc_deferred_req {
->>  	struct cache_deferred_req handle;
->>  	size_t			xprt_hlen;
->>  	int			argslen;
->> -	__be32			args[0];
->> +	__be32			args[];
->>  };
->>  
->>  struct svc_process_info {
->> -- 
->> 2.25.0
+T24gTW9uLCAyMDIwLTAzLTAyIGF0IDExOjI3IC0wNTAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90
+ZToNCj4gT24gU3VuLCBNYXIgMSwgMjAyMCBhdCA2OjI1IFBNIFRyb25kIE15a2xlYnVzdCA8dHJv
+bmRteUBnbWFpbC5jb20+DQo+IHdyb3RlOg0KPiA+IElmIGEgc2VydmVyIHdhbnRzIHRvIGRyb3Ag
+YSByZXF1ZXN0LCB0aGVuIGl0IHNob3VsZCBhbHNvIGRyb3AgdGhlDQo+ID4gY29ubmVjdGlvbiwg
+aW4gb3JkZXIgdG8gbGV0IHRoZSBjbGllbnQga25vdy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4g
+LS0tDQo+ID4gIG5ldC9zdW5ycGMvc3ZjX3hwcnQuYyB8IDEwICsrKysrKysrKysNCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvbmV0
+L3N1bnJwYy9zdmNfeHBydC5jIGIvbmV0L3N1bnJwYy9zdmNfeHBydC5jDQo+ID4gaW5kZXggZGUz
+YzA3NzczM2E3Li44M2E1MjdlNTZjODcgMTAwNjQ0DQo+ID4gLS0tIGEvbmV0L3N1bnJwYy9zdmNf
+eHBydC5jDQo+ID4gKysrIGIvbmV0L3N1bnJwYy9zdmNfeHBydC5jDQo+ID4gQEAgLTg3Myw2ICs4
+NzMsMTMgQEAgaW50IHN2Y19yZWN2KHN0cnVjdCBzdmNfcnFzdCAqcnFzdHAsIGxvbmcNCj4gPiB0
+aW1lb3V0KQ0KPiA+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0xfR1BMKHN2Y19yZWN2KTsNCj4gPiAN
+Cj4gPiArc3RhdGljIHZvaWQgc3ZjX2Ryb3BfY29ubmVjdGlvbihzdHJ1Y3Qgc3ZjX3hwcnQgKnhw
+cnQpDQo+ID4gK3sNCj4gPiArICAgICAgIGlmICh0ZXN0X2JpdChYUFRfVEVNUCwgJnhwcnQtPnhw
+dF9mbGFncykgJiYNCj4gPiArICAgICAgICAgICAhdGVzdF9hbmRfc2V0X2JpdChYUFRfQ0xPU0Us
+ICZ4cHJ0LT54cHRfZmxhZ3MpKQ0KPiA+ICsgICAgICAgICAgICAgICBzdmNfeHBydF9lbnF1ZXVl
+KHhwcnQpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICAvKg0KPiA+ICAgKiBEcm9wIHJlcXVlc3QNCj4g
+PiAgICovDQo+ID4gQEAgLTg4MCw2ICs4ODcsOCBAQCB2b2lkIHN2Y19kcm9wKHN0cnVjdCBzdmNf
+cnFzdCAqcnFzdHApDQo+ID4gIHsNCj4gPiAgICAgICAgIHRyYWNlX3N2Y19kcm9wKHJxc3RwKTsN
+Cj4gPiAgICAgICAgIGRwcmludGsoInN2YzogeHBydCAlcCBkcm9wcGVkIHJlcXVlc3RcbiIsIHJx
+c3RwLT5ycV94cHJ0KTsNCj4gPiArICAgICAgIC8qIENsb3NlIHRoZSBjb25uZWN0aW9uIHdoZW4g
+ZHJvcHBpbmcgYSByZXF1ZXN0ICovDQo+ID4gKyAgICAgICBzdmNfZHJvcF9jb25uZWN0aW9uKHJx
+c3RwLT5ycV94cHJ0KTsNCj4gPiAgICAgICAgIHN2Y194cHJ0X3JlbGVhc2UocnFzdHApOw0KPiA+
+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0xfR1BMKHN2Y19kcm9wKTsNCj4gPiBAQCAtMTE0OCw2ICsx
+MTU3LDcgQEAgc3RhdGljIHZvaWQgc3ZjX3JldmlzaXQoc3RydWN0DQo+ID4gY2FjaGVfZGVmZXJy
+ZWRfcmVxICpkcmVxLCBpbnQgdG9vX21hbnkpDQo+ID4gICAgICAgICBpZiAodG9vX21hbnkgfHwg
+dGVzdF9iaXQoWFBUX0RFQUQsICZ4cHJ0LT54cHRfZmxhZ3MpKSB7DQo+ID4gICAgICAgICAgICAg
+ICAgIHNwaW5fdW5sb2NrKCZ4cHJ0LT54cHRfbG9jayk7DQo+ID4gICAgICAgICAgICAgICAgIGRw
+cmludGsoInJldmlzaXQgY2FuY2VsZWRcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICBzdmNfZHJv
+cF9jb25uZWN0aW9uKHhwcnQpOw0KPiA+ICAgICAgICAgICAgICAgICBzdmNfeHBydF9wdXQoeHBy
+dCk7DQo+ID4gICAgICAgICAgICAgICAgIHRyYWNlX3N2Y19kcm9wX2RlZmVycmVkKGRyKTsNCj4g
+PiAgICAgICAgICAgICAgICAga2ZyZWUoZHIpOw0KPiA+IC0tDQo+ID4gMi4yNC4xDQo+ID4gDQo+
+IA0KPiBUcm9uZCwgYmFjayBpbiAyMDE0IHlvdSBoYWQgdGhpcyBORlN2NCBvbmx5IHBhdGNoIHRo
+YXQgdG9vayBhIG1vcmUNCj4gc3VyZ2ljYWwgYXBwcm9hY2g6DQo+IGh0dHBzOi8vbWFyYy5pbmZv
+Lz9sPWxpbnV4LW5mcyZtPTE0MTQxNDUzMTgzMjc2OCZ3PTINCj4gDQo+IEl0IGxvb2tzIGxpa2Ug
+ZGlzY3Vzc2lvbiBkaWVkIG91dCBvbiBpdCBhZnRlciBpdCB3YXMgaW5lZmZlY3RpdmUgdG8NCj4g
+c29sdmUgYSBkaWZmZXJlbnQgcHJvYmxlbS4NCj4gSXMgdGhlcmUgYSByZWFzb24gd2h5IHlvdSBk
+b24ndCB3YW50IHRvIGRvIHRoYXQgYXBwcm9hY2ggbm93Pw0KPiANCg0KTGV0IG1lIHJlc2VuZCB0
+aGlzIHBhdGNoIHdpdGggYSBiZXR0ZXIgcHJvcG9zYWwuIEkgdGhpbmsgdGhlIG1haW4gMg0KcHJv
+YmxlbXMgaGVyZSBhcmUgcmVhbGx5DQoNCiAgIDEuIHRoZSBzdmNfcmV2aXNpdCgpIGNhc2UsIHdo
+ZXJlIHdlIGNhbmNlbCB0aGUgcmV2aXNpdC4gVGhhdCBjYXNlDQogICAgICBhZmZlY3RzIGFsbCB2
+ZXJzaW9ucyBvZiBORlMsIGFuZCBjYW4gbGVhZCB0byBwZXJmb3JtYW5jZSBpc3N1ZXMuDQogICAy
+LiB0aGUgTkZTdjIsdjMsdjQuMCByZXBsYXkgY2FjaGUsIHdoZXJlIGRyb3BwaW5nIHRoZSByZXBs
+YXkgKGUuZy4NCiAgICAgIGFmdGVyIGEgY29ubmVjdGlvbiBicmVha2FnZSkgY2FuIGNhdXNlIGEg
+cGVyZm9ybWFuY2UgaGl0LCBhbmQgZm9yDQogICAgICBzb21ldGhpbmcgbGlrZSBUQ1AsIHdoaWNo
+IGhhcyBsb25nICh1c3VhbGx5IDYwIHNlY29uZCkgdGltZW91dHMgaXQNCiAgICAgIGNvdWxkIGNh
+dXNlIHRoZSByZXBsYXkgdG8gYmUgZGVsYXllZCB1bnRpbCBhZnRlciB0aGUgcmVwbHkgZ2V0cw0K
+ICAgICAga2lja2VkIG91dCBvZiB0aGUgY2FjaGUuIFRoaXMgaXMgdGhlIGNhc2Ugd2hlcmUgTkZT
+djQuMCBjYW4gcHJvYmFibHkNCiAgICAgIGVuZCB1cCBoYW5naW5nLCBzaW5jZSB0aGUgcmVwbGF5
+IHdvbid0IGJlIGZvcnRoY29taW5nIHVudGlsIGEgbmV3DQogICAgICBjb25uZWN0aW9uIGJyZWFr
+YWdlIG9jY3Vycy4NCg0KSSB0aGluayAoMSkgaXMgYmVzdCBzZXJ2ZWQgYnkgYSBwYXRjaCBsaWtl
+IHRoaXMgb25lLg0KUGVyaGFwcyAoMikgaXMgYmV0dGVyIHNlcnZlZCBieSBhZG9wdGluZyB0aGUg
+c3ZjX2RlZmVyKCkgbWVjaGFuaXNtPw0KDQpIbW0uLi4gUGVyaGFwcyAyIHBhdGNoZXMgYXJlIGlu
+IG9yZGVyLi4uDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50
+YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
