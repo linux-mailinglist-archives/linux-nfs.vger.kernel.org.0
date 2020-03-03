@@ -2,207 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 792871776F1
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2020 14:28:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88455177A04
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2020 16:08:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgCCN2G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Mar 2020 08:28:06 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44570 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgCCN2G (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Mar 2020 08:28:06 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DRi1V137872;
-        Tue, 3 Mar 2020 13:27:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- content-transfer-encoding : from : mime-version : subject : date :
- message-id : references : cc : in-reply-to : to; s=corp-2020-01-29;
- bh=4uBQXbohBCPauxNVBKSxVlDkr8ZiGTYylup1XtPFb74=;
- b=qvWUvyofWNdLYID3nouKJng8I+ktdkDuu9PTPttN0xsNqttHjuuJOJ5XXSlFHXm0P/06
- 8zKulKVc7kp6nut+MmqDFhRwgz+cMC7GXNrSbH5RYdXRBEAnmZX+aE0siQB1CUEn6fS1
- qKo/D4lofGONyCJRO8cGNaGfWg/xacZLxwNUMd4IJV/YYCbfi2BAmnoQU/LhaOta+hAZ
- hLSzhEKQLsNf4bu8NQBVSwTzQamfN6PfY65UbgOOTcqcHAKmzjXhaqNY7B2nm/yDYz00
- wcRNhSa9FXsKzSUi93NS9Zkzx9Zx/i2DRmZKmwqG3ZwvE0uXNO1wJNurRenTIb9JNktQ 8g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yffcuf8q3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:27:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DMhVF002241;
-        Tue, 3 Mar 2020 13:27:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yg1ekq86d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:27:56 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023DRr6a000921;
-        Tue, 3 Mar 2020 13:27:53 GMT
-Received: from [192.168.1.139] (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 05:27:52 -0800
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Chuck Lever <chuck.lever@oracle.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 2/8] nfsd: Add tracing to nfsd_set_fh_dentry()
-Date:   Tue, 3 Mar 2020 08:27:51 -0500
-Message-Id: <26084E44-0677-42A6-8DC8-71169070FE8D@oracle.com>
-References: <3fa96b3a1ec599624d464085854a39a6b2b86447.camel@hammerspace.com>
-Cc:     "chucklever@gmail.com" <chucklever@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>
-In-Reply-To: <3fa96b3a1ec599624d464085854a39a6b2b86447.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: iPhone Mail (17D50)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030103
+        id S1729409AbgCCPIe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Mar 2020 10:08:34 -0500
+Received: from fieldses.org ([173.255.197.46]:37180 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727507AbgCCPIe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:08:34 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 62F7D378; Tue,  3 Mar 2020 10:08:33 -0500 (EST)
+Date:   Tue, 3 Mar 2020 10:08:33 -0500
+To:     schumaker.anna@gmail.com
+Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org,
+        Anna.Schumaker@Netapp.com, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v2 0/4] NFSD: Add support for the v4.2 READ_PLUS operation
+Message-ID: <20200303150833.GB17257@fieldses.org>
+References: <20200214211206.407725-1-Anna.Schumaker@Netapp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214211206.407725-1-Anna.Schumaker@Netapp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Sorry for the delay, looking at this a little more carefully now....
 
-> On Mar 3, 2020, at 12:59 AM, Trond Myklebust <trondmy@hammerspace.com> wro=
-te:
->=20
-> =EF=BB=BFOn Mon, 2020-03-02 at 19:22 -0500, Chuck Lever wrote:
->>> On Mar 1, 2020, at 6:21 PM, Trond Myklebust <trondmy@gmail.com>
->>> wrote:
->>>=20
->>> Add tracing to allow us to figure out where any stale filehandle
->>> issues
->>> may be originating from.
->>>=20
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>> ---
->>> fs/nfsd/nfsfh.c | 13 ++++++++++---
->>> fs/nfsd/trace.h | 30 ++++++++++++++++++++++++++++++
->>> 2 files changed, 40 insertions(+), 3 deletions(-)
->>>=20
->>> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
->>> index b319080288c3..37bc8f5f4514 100644
->>> --- a/fs/nfsd/nfsfh.c
->>> +++ b/fs/nfsd/nfsfh.c
->>> @@ -14,6 +14,7 @@
->>> #include "nfsd.h"
->>> #include "vfs.h"
->>> #include "auth.h"
->>> +#include "trace.h"
->>>=20
->>> #define NFSDDBG_FACILITY        NFSDDBG_FH
->>>=20
->>> @@ -209,11 +210,14 @@ static __be32 nfsd_set_fh_dentry(struct
->>> svc_rqst *rqstp, struct svc_fh *fhp)
->>>    }
->>>=20
->>>    error =3D nfserr_stale;
->>> -    if (PTR_ERR(exp) =3D=3D -ENOENT)
->>> -        return error;
->>> +    if (IS_ERR(exp)) {
->>> +        trace_nfsd_set_fh_dentry_badexport(rqstp, fhp,
->>> PTR_ERR(exp));
->>> +
->>> +        if (PTR_ERR(exp) =3D=3D -ENOENT)
->>> +            return error;
->>>=20
->>> -    if (IS_ERR(exp))
->>>        return nfserrno(PTR_ERR(exp));
->>> +    }
->>>=20
->>>    if (exp->ex_flags & NFSEXP_NOSUBTREECHECK) {
->>>        /* Elevate privileges so that the lack of 'r' or 'x'
->>> @@ -267,6 +271,9 @@ static __be32 nfsd_set_fh_dentry(struct
->>> svc_rqst *rqstp, struct svc_fh *fhp)
->>>        dentry =3D exportfs_decode_fh(exp->ex_path.mnt, fid,
->>>                data_left, fileid_type,
->>>                nfsd_acceptable, exp);
->>> +        if (IS_ERR_OR_NULL(dentry))
->>> +            trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
->>> +                    dentry ?  PTR_ERR(dentry) :
->>> -ESTALE);
->>=20
->> If you'll be respinning this series, a handful of nits:
->>=20
->=20
-> I see no need to respin the entire series. Just the last patch.
+Previously I remember you found a problem with very slow
+SEEK_HOLE/SEEK_DATA on some filesystems--has that been fixed?
 
-Fair enough.
+On Fri, Feb 14, 2020 at 04:12:02PM -0500, schumaker.anna@gmail.com wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> 
+> These patches add server support for the READ_PLUS operation, which
+> breaks read requests into several "data" and "hole" segments when
+> replying to the client.
+> 
+> Here are the results of some performance tests I ran on Netapp lab
+> machines.
 
+Any details?  Ideally we'd have enough detail about the hardware and
+software used that someone else could reproduce your results if
+necessary.
 
->> - the line above has a double space
->> - the trace point names here are a little long, will result in
->>  hard-to-read formatting in the trace log
->> - checkpatch.pl complains about a couple of the later patches,
->>  where one arm of an "if" statement has braces but the other
->>  does not
->>=20
->>>    }
->>>    if (dentry =3D=3D NULL)
->>>        goto out;
->>> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
->>> index 06dd0d337049..9abd1591a841 100644
->>> --- a/fs/nfsd/trace.h
->>> +++ b/fs/nfsd/trace.h
->>> @@ -50,6 +50,36 @@ TRACE_EVENT(nfsd_compound_status,
->>>        __get_str(name), __entry->status)
->>> )
->>>=20
->>> +DECLARE_EVENT_CLASS(nfsd_fh_err_class,
->>> +    TP_PROTO(struct svc_rqst *rqstp,
->>> +         struct svc_fh    *fhp,
->>> +         int        status),
->>> +    TP_ARGS(rqstp, fhp, status),
->>> +    TP_STRUCT__entry(
->>> +        __field(u32, xid)
->>> +        __field(u32, fh_hash)
->>> +        __field(int, status)
->>> +    ),
->>> +    TP_fast_assign(
->>> +        __entry->xid =3D be32_to_cpu(rqstp->rq_xid);
->>> +        __entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
->>> +        __entry->status =3D status;
->>> +    ),
->>> +    TP_printk("xid=3D0x%08x fh_hash=3D0x%08x status=3D%d",
->>> +          __entry->xid, __entry->fh_hash,
->>> +          __entry->status)
->>> +)
->>> +
->>> +#define DEFINE_NFSD_FH_ERR_EVENT(name)        \
->>> +DEFINE_EVENT(nfsd_fh_err_class, nfsd_##name,    \
->>> +    TP_PROTO(struct svc_rqst *rqstp,    \
->>> +         struct svc_fh    *fhp,        \
->>> +         int        status),    \
->>> +    TP_ARGS(rqstp, fhp, status))
->>> +
->>> +DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badexport);
->>> +DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badhandle);
->>> +
->>> DECLARE_EVENT_CLASS(nfsd_io_class,
->>>    TP_PROTO(struct svc_rqst *rqstp,
->>>         struct svc_fh    *fhp,
->>> --=20
->>> 2.24.1
->>>=20
->>=20
->> --
->> Chuck Lever
->> chucklever@gmail.com
->>=20
->>=20
->>=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
+At a minimum I think it would be helpful to know your network latency
+and round trip time.  RPC statistics (e.g. number of round trips) might
+also be interesting.
 
+Is this a single run for each number?
+
+> I tested by reading various 2G files from a few different
+> undelying filesystems and across several NFS versions. I used the
+> `vmtouch` utility to make sure files were only cached when we wanted
+> them to be. In addition to 100% data and 100% hole cases, I also tested
+> with files that alternate between data and hole segments. These files
+> have either 4K, 8K, 16K, or 32K segment sizes and start with either data
+> or hole segments. So the file mixed-4d has a 4K segment size beginning
+> with a data segment, but mixed-32h hase 32K segments beginning with a
+> hole. The units are in seconds, with the first number for each NFS
+> version being the uncached read time and the second number is for when
+> the file is cached on the server.
+
+OK, READ_PLUS is in 4.2, so it's the last column that's the most
+interesting one:
+
+> 
+> ext4      |        v3       |       v4.0      |       v4.1      |       v4.2      |
+> ----------|-----------------|-----------------|-----------------|-----------------|
+> data      | 22.909 : 18.253 | 22.934 : 18.252 | 22.902 : 18.253 | 23.485 : 18.253 |
+
+So, the 4.2 case may be taking a couple percent longer in the case there
+are no holes.
+
+> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.708 :  0.709 |
+
+And as expected READ_PLUS is a big advantage when the file is one big
+hole.  And there's no difference between cached and uncached reads in
+this case since the server's got no data to read off its disk.
+
+> mixed-4d  | 28.261 : 18.253 | 29.616 : 18.252 | 28.341 : 18.252 | 24.508 :  9.150 |
+> mixed-8d  | 27.956 : 18.253 | 28.404 : 18.252 | 28.320 : 18.252 | 23.967 :  9.140 |
+> mixed-16d | 28.172 : 18.253 | 27.946 : 18.252 | 27.627 : 18.252 | 23.043 :  9.134 |
+> mixed-32d | 25.350 : 18.253 | 24.406 : 18.252 | 24.384 : 18.253 | 20.698 :  9.132 |
+> mixed-4h  | 28.913 : 18.253 | 28.564 : 18.252 | 27.996 : 18.252 | 21.837 :  9.150 |
+> mixed-8h  | 28.625 : 18.253 | 27.833 : 18.252 | 27.798 : 18.253 | 21.710 :  9.140 |
+> mixed-16h | 27.975 : 18.253 | 27.662 : 18.252 | 27.795 : 18.253 | 20.585 :  9.134 |
+> mixed-32h | 25.958 : 18.253 | 25.491 : 18.252 | 24.856 : 18.252 | 21.018 :  9.132 |
+
+So looks like READ_PLUS helps in every case and there's a slight
+improvement with larger hole/data segments, so the seeking does have
+some overhead.  (Either that or it's just the extra rpc round trips--I
+seem to recall this READ_PLUS implementation only handles at most one
+hole and one data segment.  But the fact that the times are so similar
+in the uncached case suggests rpc latency isn't a factor--what's your
+network?)
+
+I wonder why the hole-first cases are faster than the data-first?
+
+> 
+> xfs       |        v3       |       v4.0      |       v4.1      |       v4.2      |
+> ----------|-----------------|-----------------|-----------------|-----------------|
+> data      | 22.041 : 18.253 | 22.618 : 18.252 | 23.067 : 18.253 | 23.496 : 18.253 |
+> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.723 :  0.708 |
+> mixed-4d  | 29.417 : 18.253 | 28.503 : 18.252 | 28.671 : 18.253 | 24.957 :  9.150 |
+> mixed-8d  | 29.080 : 18.253 | 29.401 : 18.252 | 29.251 : 18.252 | 24.625 :  9.140 |
+> mixed-16d | 27.638 : 18.253 | 28.606 : 18.252 | 27.871 : 18.253 | 25.511 :  9.135 |
+> mixed-32d | 24.967 : 18.253 | 25.239 : 18.252 | 25.434 : 18.252 | 21.728 :  9.132 |
+> mixed-4h  | 34.816 : 18.253 | 36.243 : 18.252 | 35.837 : 18.252 | 32.332 :  9.150 |
+> mixed-8h  | 43.469 : 18.253 | 44.009 : 18.252 | 43.810 : 18.253 | 37.962 :  9.140 |
+> mixed-16h | 29.280 : 18.253 | 28.563 : 18.252 | 28.241 : 18.252 | 22.116 :  9.134 |
+> mixed-32h | 29.428 : 18.253 | 29.378 : 18.252 | 28.808 : 18.253 | 27.378 :  9.134 |
+>
+> btrfs     |        v3       |       v4.0      |       v4.1      |       v4.2      |
+> ----------|-----------------|-----------------|-----------------|-----------------|
+> data      | 25.547 : 18.253 | 25.053 : 18.252 | 24.209 : 18.253 | 32.121 : 18.253 |
+> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.252 |  0.702 :  0.724 |
+> mixed-4d  | 19.016 : 18.253 | 18.822 : 18.252 | 18.955 : 18.253 | 18.697 :  9.150 |
+> mixed-8d  | 19.186 : 18.253 | 19.444 : 18.252 | 18.841 : 18.253 | 18.452 :  9.140 |
+> mixed-16d | 18.480 : 18.253 | 19.010 : 18.252 | 19.167 : 18.252 | 16.000 :  9.134 |
+> mixed-32d | 18.635 : 18.253 | 18.565 : 18.252 | 18.550 : 18.252 | 15.930 :  9.132 |
+> mixed-4h  | 19.079 : 18.253 | 18.990 : 18.252 | 19.157 : 18.253 | 27.834 :  9.150 |
+> mixed-8h  | 18.613 : 18.253 | 19.234 : 18.252 | 18.616 : 18.253 | 20.177 :  9.140 |
+> mixed-16h | 18.590 : 18.253 | 19.221 : 18.252 | 19.654 : 18.253 | 17.273 :  9.135 |
+> mixed-32h | 18.768 : 18.253 | 19.122 : 18.252 | 18.535 : 18.252 | 15.791 :  9.132 |
+> 
+> ext3      |        v3       |       v4.0      |       v4.1      |       v4.2      |
+> ----------|-----------------|-----------------|-----------------|-----------------|
+> data      | 34.292 : 18.253 | 33.810 : 18.252 | 33.450 : 18.253 | 33.390 : 18.254 |
+> hole      | 18.256 : 18.253 | 18.255 : 18.252 | 18.256 : 18.253 |  0.718 :  0.728 |
+> mixed-4d  | 46.818 : 18.253 | 47.140 : 18.252 | 48.385 : 18.253 | 42.887 :  9.150 |
+> mixed-8d  | 58.554 : 18.253 | 59.277 : 18.252 | 59.673 : 18.253 | 56.760 :  9.140 |
+> mixed-16d | 44.631 : 18.253 | 44.291 : 18.252 | 44.729 : 18.253 | 40.237 :  9.135 |
+> mixed-32d | 39.110 : 18.253 | 38.735 : 18.252 | 38.902 : 18.252 | 35.270 :  9.132 |
+> mixed-4h  | 56.396 : 18.253 | 56.387 : 18.252 | 56.573 : 18.253 | 67.661 :  9.150 |
+> mixed-8h  | 58.483 : 18.253 | 58.484 : 18.252 | 59.099 : 18.253 | 77.958 :  9.140 |
+> mixed-16h | 42.511 : 18.253 | 42.338 : 18.252 | 42.356 : 18.252 | 51.805 :  9.135 |
+> mixed-32h | 38.419 : 18.253 | 38.504 : 18.252 | 38.643 : 18.252 | 40.411 :  9.132 |
+> 
+> Any questions?
+
+I'm surprised at the big differences between filesystems in the mixed
+cases.  Time for the uncached mixed-4h NFSv4.1 read is (19s, 28s, 36s,
+57s) respectively for (btrfs, ext4, xfs, ext3).
+
+READ_PLUS means giving up zero-copy on the client since the offset of
+read data in the reply is no longer predictable, I wonder what sort of
+test would show that.
+
+--b.
