@@ -2,34 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 955D2177C3E
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2020 17:46:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B32F5177C76
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2020 17:54:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgCCQpk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Mar 2020 11:45:40 -0500
-Received: from fieldses.org ([173.255.197.46]:37318 "EHLO fieldses.org"
+        id S1727311AbgCCQyj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Mar 2020 11:54:39 -0500
+Received: from fieldses.org ([173.255.197.46]:37338 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgCCQpk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:45:40 -0500
+        id S1727070AbgCCQyj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:54:39 -0500
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 24CC11D3E; Tue,  3 Mar 2020 11:45:40 -0500 (EST)
-Date:   Tue, 3 Mar 2020 11:45:40 -0500
+        id 1B27D1C22; Tue,  3 Mar 2020 11:54:39 -0500 (EST)
+Date:   Tue, 3 Mar 2020 11:54:39 -0500
 From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] svcrdma: Replace zero-length array with
- flexible-array member
-Message-ID: <20200303164540.GB19140@fieldses.org>
-References: <20200217200500.GA7628@embeddedor>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] fs: nfsd: nfs4state.c: Use built-in RCU list checking
+Message-ID: <20200303165439.GC19140@fieldses.org>
+References: <20200213150331.5727-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217200500.GA7628@embeddedor>
+In-Reply-To: <20200213150331.5727-1-madhuparnabhowmik10@gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
@@ -38,52 +35,33 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Applying for 5.7, thanks.--b.
 
-On Mon, Feb 17, 2020 at 02:05:00PM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Thu, Feb 13, 2020 at 08:33:31PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> list_for_each_entry_rcu() has built-in RCU and lock checking.
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
+> Pass cond argument to list_for_each_entry_rcu() to silence
+> false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
+> by default.
 > 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > ---
->  net/sunrpc/xprtrdma/svc_rdma_rw.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/nfsd/nfs4state.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> index 48fe3b16b0d9..003610ce00bc 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> @@ -41,7 +41,7 @@ struct svc_rdma_rw_ctxt {
->  	struct rdma_rw_ctx	rw_ctx;
->  	int			rw_nents;
->  	struct sg_table		rw_sg_table;
-> -	struct scatterlist	rw_first_sgl[0];
-> +	struct scatterlist	rw_first_sgl[];
->  };
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 369e574c5092..3a80721fe53d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4295,7 +4295,8 @@ find_file_locked(struct knfsd_fh *fh, unsigned int hashval)
+>  {
+>  	struct nfs4_file *fp;
 >  
->  static inline struct svc_rdma_rw_ctxt *
+> -	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash) {
+> +	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
+> +				lockdep_is_held(&state_lock)) {
+>  		if (fh_match(&fp->fi_fhandle, fh)) {
+>  			if (refcount_inc_not_zero(&fp->fi_ref))
+>  				return fp;
 > -- 
-> 2.25.0
+> 2.17.1
