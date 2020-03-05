@@ -2,115 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAA0B179E64
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2020 04:46:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C7617A3F4
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2020 12:16:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725844AbgCEDqW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Mar 2020 22:46:22 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725776AbgCEDqW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Mar 2020 22:46:22 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 794E7EBDBB5B7903EDA3;
-        Thu,  5 Mar 2020 11:46:20 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Mar 2020
- 11:46:18 +0800
-Subject: Re: [PATCH] nfsd: Fix build error
-To:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-References: <20200304131803.46560-1-yuehaibing@huawei.com>
- <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
- <20200304200609.GA26924@fieldses.org>
-CC:     Olga Kornievskaia <kolga@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <ff3a1cae-c628-9324-f32f-c7e694585686@huawei.com>
-Date:   Thu, 5 Mar 2020 11:46:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1727306AbgCELQR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Mar 2020 06:16:17 -0500
+Received: from ulan.pagasa.dost.gov.ph ([202.90.128.205]:47754 "EHLO
+        mailgw.pagasa.dost.gov.ph" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725880AbgCELQQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Mar 2020 06:16:16 -0500
+X-Greylist: delayed 1274 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 06:16:06 EST
+Received: from webmail.pagasa.dost.int ([10.10.11.8])
+        by mailgw.pagasa.dost.gov.ph  with ESMTP id 025AseSK006737-025AseSM006737
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 5 Mar 2020 18:54:40 +0800
+Received: from localhost (localhost [127.0.0.1])
+        by webmail.pagasa.dost.int (Postfix) with ESMTP id 2FB4F2981A90;
+        Thu,  5 Mar 2020 18:46:49 +0800 (PST)
+Received: from webmail.pagasa.dost.int ([127.0.0.1])
+        by localhost (webmail.pagasa.dost.int [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id r7J1A0N3aHYl; Thu,  5 Mar 2020 18:46:48 +0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by webmail.pagasa.dost.int (Postfix) with ESMTP id 2232C2981A4C;
+        Thu,  5 Mar 2020 18:46:48 +0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 webmail.pagasa.dost.int 2232C2981A4C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pagasa.dost.gov.ph;
+        s=96B9A03E-48B0-11EA-A7E8-92F42F537CE2; t=1583405208;
+        bh=RC75T5p3JPNk7JUNB+lH0UfaFQO1Ac584gPL3SIL6h8=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=vwxX3L8Z7uHnDJPZBIix9IBQi0XMBiY4sLQTc/9+h6pT2FHeTz61v6B+3f3w6WhXh
+         jUdnW3+FuZCvkf1pcG3LkjpsYvCQO7zO587a10BanpMqFFL6zPGTaTUsrqnCnsqpAd
+         CtN8Atz3iXBEFHZeiXsfNfnWSfk0n7tqEffbmBy8=
+X-Virus-Scanned: amavisd-new at pagasa.dost.int
+Received: from webmail.pagasa.dost.int ([127.0.0.1])
+        by localhost (webmail.pagasa.dost.int [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id WT2tTJV-1oie; Thu,  5 Mar 2020 18:46:47 +0800 (PST)
+Received: from webmail.pagasa.dost.int (webmail.pagasa.dost.int [10.11.1.8])
+        by webmail.pagasa.dost.int (Postfix) with ESMTP id 5119729819D2;
+        Thu,  5 Mar 2020 18:46:46 +0800 (PST)
+Date:   Thu, 5 Mar 2020 18:46:46 +0800 (PST)
+From:   "Juanito S. Galang" <juanito.galang@pagasa.dost.gov.ph>
+Message-ID: <1980644409.3575157.1583405206290.JavaMail.zimbra@pagasa.dost.gov.ph>
+Subject: 
 MIME-Version: 1.0
-In-Reply-To: <20200304200609.GA26924@fieldses.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - GC79 (Win)/8.8.15_GA_3895)
+Thread-Index: lWYDQbv6QI/eIWKrWUD3NPCXqIIr9A==
+Thread-Topic: 
+X-FEAS-DKIM: Valid
+Authentication-Results: mailgw.pagasa.dost.gov.ph;
+        dkim=pass header.i=@pagasa.dost.gov.ph
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020/3/5 4:06, Bruce Fields wrote:
-> On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
->> Hi-
->>
->>> On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> wrote:
->>>
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
->>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
->>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
->>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
->>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
->>>
->>> Add dependency to NFSD_V4_2_INTER_SSC to fix this.
->>>
->>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>> fs/nfsd/Kconfig | 1 +
->>> 1 file changed, 1 insertion(+)
->>>
->>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->>> index f368f32..fc587a5 100644
->>> --- a/fs/nfsd/Kconfig
->>> +++ b/fs/nfsd/Kconfig
->>> @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
->>>
->>> config NFSD_V4_2_INTER_SSC
->>> 	bool "NFSv4.2 inter server to server COPY"
->>> +	depends on !(NFSD=y && NFS_FS=m)
->>
->> The new dependency is not especially clear to me; more explanation
->> in the patch description about the cause of the build failure
->> would definitely be helpful.
->>
->> NFSD_V4 can't be set unless NFSD is also set.
->>
->> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
->> be set unless NFS_FS is also set.
->>
->> So what's really going on here?
-> 
-> I don't understand that "depends" either.
-> 
-> The fundamental problem, though, is that nfsd is calling nfs code
-> directly.
 
-Yes
 
-> 
-> Which I noticed in earlier review and then forgot to follow up on,
-> sorry.
-> 
-> So either we:
-> 
-> 	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
-
-It only fails while NFSD=y && NFS_FS=m, other cases works fine as Chuck Lever pointed.
-
-> 	- write some code so nfsd can load nfs and find those symbols at
-> 	  runtime if it needs to do a copy.
-> 
-> The latter's certainly doable, but it'd be simplest to do the former.
-> Are there actually a lot of people who want nfsd but not nfs?  Does that
-> cause a real problem for anyone?
-> 
-> --b.
-> 
-> .
-> 
-
+Herzlichen Gl=C3=BCckwunsch Lieber Beg=C3=BCnstigter,Sie erhalten diese E-M=
+ail von der Robert Bailey Foundation. Ich bin ein pensionierter Regierungsa=
+ngestellter aus Harlem und ein Gewinner des Powerball Lottery Jackpot im We=
+rt von 343,8 Millionen US-Dollar. Ich bin der gr=C3=B6=C3=9Fte Jackpot-Gewi=
+nner in der Geschichte der New Yorker Lotterie im US-Bundesstaat Amerika. I=
+ch habe diese Lotterie am 27. Oktober 2018 gewonnen und m=C3=B6chte Sie dar=
+=C3=BCber informieren, dass Google in Zusammenarbeit mit Microsoft Ihre "E-=
+Mail-Adresse" auf meine Bitte, einen Spendenbetrag von 3.000.000,00 Million=
+en Euro zu erhalten, =C3=BCbermittelt hat. Ich spende diese 3 Millionen Eur=
+o an Sie, um den Wohlt=C3=A4tigkeitsheimen und armen Menschen in Ihrer Geme=
+inde zu helfen, damit wir die Welt f=C3=BCr alle verbessern k=C3=B6nnen.Wei=
+tere Informationen finden Sie auf der folgenden Website, damit Sie nicht sk=
+eptisch sind
+Diese Spende von 3 Mio. EUR.https://nypost.com/2018/11/14/meet-the-winner-o=
+f-the-biggest-lottery-jackpot-in-new-york-history/Sie k=C3=B6nnen auch mein=
+ YouTube f=C3=BCr mehr Best=C3=A4tigung aufpassen:
+https://www.youtube.com/watch?v=3DH5vT18Ysavc
+Bitte beachten Sie, dass alle Antworten an (robertdonation7@gmail.com=C2=A0=
+ ) gesendet werden, damit wir das k=C3=B6nnen
+Fahren Sie fort, um das gespendete Geld an Sie zu =C3=BCberweisen.E-Mail: r=
+obertdonation7@gmail.comFreundliche Gr=C3=BC=C3=9Fe,
+Robert Bailey
+* * * * * * * * * * * * * * * *
+Powerball Jackpot Gewinner
