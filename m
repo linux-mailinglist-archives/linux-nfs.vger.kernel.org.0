@@ -2,123 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7465C179C5B
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2020 00:25:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAA0B179E64
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2020 04:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388542AbgCDXZP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Mar 2020 18:25:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53354 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388528AbgCDXZP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Mar 2020 18:25:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583364314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=STXEfFkooG2xzETDunDOLyL95ZsWSxibSRKSv8xISCbm/VAo/CBCFAJ1fGxsi/Lkq0sIi6
-        bMCYti5nBj/U51JbgpcOebLh7xHEYRKAxmvkny3UCiHFhDSkX55yHOlhVgTOMwpHmtolvI
-        BQ44X6Th6YPEjo6kTY8XrD2nsP7Obio=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-jTPr6Mx8NWSRDpX5MAPnXA-1; Wed, 04 Mar 2020 18:25:13 -0500
-X-MC-Unique: jTPr6Mx8NWSRDpX5MAPnXA-1
-Received: by mail-ed1-f71.google.com with SMTP id f13so2808990edy.21
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Mar 2020 15:25:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=WmTSI9GBDAljgZis5mS/+ms4Us+UBJC5Uc8JTmglYdt0mI/hZxxDyEm5kJiWnvudEf
-         E8sw1iWRxZWY2+h44Sd7z6H7qLbM8JtoshzXWMlGQ8jc+LSk5tIh5OJZG9qvHjRC7dYM
-         YTMvBwl7QPimIwV3hA3TeWOmSB8jPk3jWuBNekpm2pqAKbQFxJrW+67SASpA6SNnyJIf
-         yLwIB0dG+NUNVAdSuiCWCUMWXGYZP4ZFJnmRuFTjOMidCmjKB3a5nQ7LJJ5/BsmuQlgU
-         2ToweWnF5JMNvLSjAnIJkyw04TpqYrQgXa3+/2I3IAjxayxWqeALFwGeena9vcLSfyEc
-         merQ==
-X-Gm-Message-State: ANhLgQ1dTkRZBdXuitD/E8fqhaFQk8BNfbuhL56kHxHfP9ZRzLjTCZOf
-        fnX4RrQXk536ivvrwcMY8s5V/UK1iAgDmmz9aiwKOzAgplWnAXw523maUsJhLqa9nl1uDEJ+9dP
-        jiCneWvbFjj5D5HiDsTfaOA5EDi9APadaPYek
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308679edt.367.1583364311868;
-        Wed, 04 Mar 2020 15:25:11 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtRn9VC83shY8XHTDzRhsN1U3qcWCfB7uMojQH5bbSmIYgKzcRcKNB9bk5ZyS5m8JegYhUQLyH/6undXUq6ODg=
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308663edt.367.1583364311594;
- Wed, 04 Mar 2020 15:25:11 -0800 (PST)
+        id S1725844AbgCEDqW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Mar 2020 22:46:22 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35802 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbgCEDqW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 4 Mar 2020 22:46:22 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 794E7EBDBB5B7903EDA3;
+        Thu,  5 Mar 2020 11:46:20 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Mar 2020
+ 11:46:18 +0800
+Subject: Re: [PATCH] nfsd: Fix build error
+To:     Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+References: <20200304131803.46560-1-yuehaibing@huawei.com>
+ <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
+ <20200304200609.GA26924@fieldses.org>
+CC:     Olga Kornievskaia <kolga@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <ff3a1cae-c628-9324-f32f-c7e694585686@huawei.com>
+Date:   Thu, 5 Mar 2020 11:46:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20200223165724.23816-1-mcroce@redhat.com> <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-In-Reply-To: <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 5 Mar 2020 00:24:35 +0100
-Message-ID: <CAGnkfhxAHctB9MHD0LzSk8uh4tEoF-hw+iwYAEdfeY_=g3NT2A@mail.gmail.com>
-Subject: Re: [PATCH] block: refactor duplicated macros
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200304200609.GA26924@fieldses.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 9:57 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sun, Feb 23, 2020 at 9:04 AM Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> > several times in different flavours across the whole tree.
-> > Define them just once in a common header.
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > ---
-> >  block/blk-lib.c                  |  2 +-
-> >  drivers/block/brd.c              |  3 ---
-> >  drivers/block/null_blk_main.c    |  4 ----
-> >  drivers/block/zram/zram_drv.c    |  8 ++++----
-> >  drivers/block/zram/zram_drv.h    |  2 --
-> >  drivers/dax/super.c              |  2 +-
->
-> For the dax change:
->
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
->
-> However...
->
-> [..]
-> >  include/linux/blkdev.h           |  4 ++++
-> [..]
-> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > index 053ea4b51988..b3c9be6906a0 100644
-> > --- a/include/linux/blkdev.h
-> > +++ b/include/linux/blkdev.h
-> > @@ -910,6 +910,10 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
-> >  #define SECTOR_SIZE (1 << SECTOR_SHIFT)
-> >  #endif
-> >
-> > +#define PAGE_SECTORS_SHIFT     (PAGE_SHIFT - SECTOR_SHIFT)
-> > +#define PAGE_SECTORS           (1 << PAGE_SECTORS_SHIFT)
-> > +#define SECTOR_MASK            (PAGE_SECTORS - 1)
-> > +
->
-> ...I think SECTOR_MASK is misnamed given it considers pages, and
-> should probably match the polarity of PAGE_MASK, i.e.
->
-> #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
->
+On 2020/3/5 4:06, Bruce Fields wrote:
+> On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
+>> Hi-
+>>
+>>> On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> wrote:
+>>>
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
+>>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
+>>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
+>>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
+>>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
+>>>
+>>> Add dependency to NFSD_V4_2_INTER_SSC to fix this.
+>>>
+>>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> ---
+>>> fs/nfsd/Kconfig | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+>>> index f368f32..fc587a5 100644
+>>> --- a/fs/nfsd/Kconfig
+>>> +++ b/fs/nfsd/Kconfig
+>>> @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
+>>>
+>>> config NFSD_V4_2_INTER_SSC
+>>> 	bool "NFSv4.2 inter server to server COPY"
+>>> +	depends on !(NFSD=y && NFS_FS=m)
+>>
+>> The new dependency is not especially clear to me; more explanation
+>> in the patch description about the cause of the build failure
+>> would definitely be helpful.
+>>
+>> NFSD_V4 can't be set unless NFSD is also set.
+>>
+>> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
+>> be set unless NFS_FS is also set.
+>>
+>> So what's really going on here?
+> 
+> I don't understand that "depends" either.
+> 
+> The fundamental problem, though, is that nfsd is calling nfs code
+> directly.
 
-Makes sense. I just kept the same value as in drivers/block/null_blk_main.c
+Yes
 
--- 
-Matteo Croce
-per aspera ad upstream
+> 
+> Which I noticed in earlier review and then forgot to follow up on,
+> sorry.
+> 
+> So either we:
+> 
+> 	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
+
+It only fails while NFSD=y && NFS_FS=m, other cases works fine as Chuck Lever pointed.
+
+> 	- write some code so nfsd can load nfs and find those symbols at
+> 	  runtime if it needs to do a copy.
+> 
+> The latter's certainly doable, but it'd be simplest to do the former.
+> Are there actually a lot of people who want nfsd but not nfs?  Does that
+> cause a real problem for anyone?
+> 
+> --b.
+> 
+> .
+> 
 
