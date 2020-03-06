@@ -2,83 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EC2F17B991
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2020 10:50:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D02817C251
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2020 16:56:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgCFJu0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Mar 2020 04:50:26 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:39728 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgCFJu0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Mar 2020 04:50:26 -0500
-Received: by mail-il1-f196.google.com with SMTP id q87so1216233ill.6
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Mar 2020 01:50:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=/P9ncvx+VEUMrpqNZpinMs8EiuqcVr5r7uKIGRLhXTM=;
-        b=hve1laRBE/DppOS8DhSeyPWweRiWj7u0qnQkyfb5WiqvT4YCwOweCMDDDkeYaxKUCv
-         7N3sFZlF+74n86w7uUvknLaSKvH8SJ+m1mMbzypLLM+661zgubiAMQmOleSkKQbvkzyS
-         k2iMuhNg1sSiqP3PvKT/WdrwJa8vQOZglMgh56L4jlRVcgMAu711WgBeiBkJ+CDd2hTX
-         vsLXzwzFwU8X7549AQ+IVV6PQBGwYkIthlPV6hqHcwguWfktGfz80EfD6Vnui+BYQQM5
-         Y1gOXRjmNrgQQVG/PRoGf5lqXdwXishlCwC/yL9xjduXu3VvH6D0fbrNsKH3Egg1zap6
-         aHtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=/P9ncvx+VEUMrpqNZpinMs8EiuqcVr5r7uKIGRLhXTM=;
-        b=lOmo4GYDYvoZa1Qm/1QoYQfHfHlaAS/SH6nzgYee1GaQc4iGiPHfyqVnR00wGAl51o
-         oiPMIH01SMavEvfdTDew3s+45scbBTTqPJkuNRbX/0qOOW9lv14tyTb48Yss+PQ5TQZ7
-         VN4m+dzEksFVnIcQXpAzf0ezr1W/U91VhDwlJz8NOZYikp22TPdaH7pzbi2grgQt1Cm0
-         hhGoilm1j850AxvgXOn158smsJr7rm0mtkknoNvn4bZG0KuWeGtUO07oxidf28i+KKRr
-         iMW8h85UqKMjZ9A1Warg70TmZtbdAT9XXAiUiGxjBYWP9wyYZ01QIokRf3hHudASCrGR
-         17Ig==
-X-Gm-Message-State: ANhLgQ3CCeFdFbF/m4xl7ivYqRxj9GaLOoP0vYnD3cHPUTM6WUZfAHLw
-        Ia7g9GgdbrT1NMcLKT3uSbhirnV+Y1Je8ONFBog=
-X-Google-Smtp-Source: ADFU+vsXXojjv/j/yVJ6zkLa7W1BGo2TRBT0tvBGUm/XVPwlVxIc4LIc4HWKpg6rqxAqUgQ/FIWNAsXi0FHqHC8izP0=
-X-Received: by 2002:a92:c106:: with SMTP id p6mr2261951ile.95.1583488225734;
- Fri, 06 Mar 2020 01:50:25 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a02:1344:0:0:0:0:0 with HTTP; Fri, 6 Mar 2020 01:50:24 -0800 (PST)
-Reply-To: robertandersongood1@gmail.com
-From:   robert <robertandersongood20@gmail.com>
-Date:   Fri, 6 Mar 2020 01:50:24 -0800
-Message-ID: <CAEC7LWGEv5XshsKRfe-a5dnnm-SFD3c6H8XVwQwD_QP7QPkYmg@mail.gmail.com>
-Subject: help
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+        id S1726259AbgCFP4o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Mar 2020 10:56:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53314 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgCFP4o (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Mar 2020 10:56:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026Fs0Mk132456;
+        Fri, 6 Mar 2020 15:56:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=GA2JMjUKfPoqn20Q0YPtUNc/T/Qbw8z3YI92LT2a/QI=;
+ b=Ed8PAyOvzqwYYOSfalkR+z/afTYP5YKwzHBNE4orT3/UlJD+8WIqFAQ174T7lEr1XW9M
+ 7y4pMutvE+j486TCUMYkmwlcO+QLxoJOUB0RkN3StLhrQnbI18lMdUwbuGR+48MQ2671
+ /UxZTrWDcJsJMY3o/J9I9TYI0oq70bqdoX5AxXoHMogI9d52iKE0NMZTLurSyIqphLUb
+ YNLADKZ9NZ5NFjpMRriC3J409xkZ9348uj6CrEtYItXvR3mqnEMoBnu06qpDz0wuGu5a
+ Av4q2DcaOg+Wo/id6RoGOVXDeRx2qpeIawtyaOTpwCcL4N9x0seOJ7y/I32zlERJYrVe 8g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ykgys2nqj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 15:56:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026Fh06e091781;
+        Fri, 6 Mar 2020 15:56:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2yg1s11anw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 15:56:28 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026FuQgQ005020;
+        Fri, 6 Mar 2020 15:56:26 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 07:56:26 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] NFSD: Fix NFS server build errors
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <631f52a1-b557-9137-0a7c-f493ac3339af@huawei.com>
+Date:   Fri, 6 Mar 2020 10:56:24 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <734C2816-BB0C-4E6B-9894-67C9754DC071@oracle.com>
+References: <20200305233433.14530.61315.stgit@klimt.1015granger.net>
+ <631f52a1-b557-9137-0a7c-f493ac3339af@huawei.com>
+To:     Yuehaibing <yuehaibing@huawei.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 spamscore=0 clxscore=1015 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060109
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-0JTQvtGA0L7Qs9C+0Lkg0LTRgNGD0LMsDQrQnNC10L3RjyDQt9C+0LLRg9GCINCR0LDRgNGA0L7Q
-sdC10YDRgiDQkNC90LTQtdGA0YHQvtC9LiDQryDQsNC00LLQvtC60LDRgiDQuCDRh9Cw0YHRgtC9
-0YvQuQ0K0LzQtdC90LXQtNC20LXRgCDQv9C+INGA0LDQsdC+0YLQtSDRgSDQutC70LjQtdC90YLQ
-sNC80Lgg0L/QvtC60L7QudC90L7QvNGDINC60LvQuNC10L3RgtGDLiDQkiAyMDE1INCz0L7QtNGD
-INC80L7QuQ0K0LrQu9C40LXQvdGCINC/0L4g0LjQvNC10L3QuA0K0JzQuNGB0YLQtdGAINCa0LDR
-gNC70L7RgSwg0YHQutC+0L3Rh9Cw0LvRgdGPLCDQv9GA0LjRh9C40L3QsCwg0L/QviDQutC+0YLQ
-vtGA0L7QuSDRjyDRgdCy0Y/Qt9Cw0LvRgdGPINGBINCy0LDQvNC4LCDQv9C+0YLQvtC80YMg0YfR
-gtC+INCy0YsNCtC90L7RgdC40YLQtSDRgtGDINC20LUg0YTQsNC80LjQu9C40Y4g0YEg0YPQvNC1
-0YDRiNC40LwsINC4INGPINC80L7Qs9GDINC/0YDQtdC00YHRgtCw0LLQuNGC0Ywg0LLQsNGBINC6
-0LDQug0K0LHQtdC90LXRhNC40YbQuNCw0YDQsCDQuCDQsdC70LjQttCw0LnRiNC40YUg0YDQvtC0
-0YHRgtCy0LXQvdC90LjQutC+0LIg0LIg0LzQvtC4INGB0YDQtdC00YHRgtCy0LAg0L/QvtC60L7Q
-udC90L7Qs9C+DQrQutC70LjQtdC90YLQsCwg0YLQviDQstGLINCx0YPQtNC10YLQtQ0K0YHRgtC+
-0Y/RgtGMINC60LDQuiDQtdCz0L4g0LHQu9C40LbQsNC50YjQuNC1INGA0L7QtNGB0YLQstC10L3Q
-vdC40LrQuCDQuCDRgtGA0LXQsdC+0LLQsNGC0Ywg0YHRgNC10LTRgdGC0LLQsC4g0L7RgdGC0LDQ
-stC40LIg0LTQtdC90YzQs9C4DQrQvdCw0YHQu9C10LTRgdGC0LLQviDRgdC10LzQuCDQvNC40LvQ
-u9C40L7QvdC+0LIg0L/Rj9GC0LjRgdC+0YIg0YLRi9GB0Y/RhyDQtNC+0LvQu9Cw0YDQvtCyINCh
-0KjQkA0K0JTQvtC70LvQsNGA0YsgKDcsNTAwLDAwMCwwMCDQtNC+0LvQu9Cw0YDQvtCyINCh0KjQ
-kCkuINCc0L7QuSDQv9C+0LrQvtC50L3Ri9C5INC60LvQuNC10L3RgiDQuCDQt9Cw0LrQsNC00YvR
-h9C90YvQuQ0K0LTRgNGD0LMg0LLRi9GA0L7RgdC70Lgg0LINCiLQlNC+0Lwg0LHQtdC30LTQtdGC
-0L3Ri9GFINC00LXRgtC10LkiLiDQoyDQvdC10LPQviDQvdC1INCx0YvQu9C+INC90Lgg0YHQtdC8
-0YzQuCwg0L3QuCDQsdC10L3QtdGE0LjRhtC40LDRgNCwLCDQvdC4INGB0LvQtdC00YPRjtGJ0LXQ
-s9C+DQrQoNC+0LTRgdGC0LLQtdC90L3Ri9C1INCyINC90LDRgdC70LXQtNGB0YLQstC+INGB0YDQ
-tdC00YHRgtCy0LAsINC+0YHRgtCw0LLQu9C10L3QvdGL0LUg0LIg0LHQsNC90LrQtS4NCtCS0Ysg
-0LTQvtC70LbQvdGLINGB0LLRj9C30LDRgtGM0YHRjyDRgdC+INC80L3QvtC5INGH0LXRgNC10Lcg
-0LzQvtC5INGH0LDRgdGC0L3Ri9C5INCw0LTRgNC10YEg0Y3Qu9C10LrRgtGA0L7QvdC90L7QuSDQ
-v9C+0YfRgtGLOg0Kcm9iZXJ0YW5kZXJzb25oYXBweTFAZ21haWwuY29tDQrQoSDRg9Cy0LDQttC1
-0L3QuNC10LwsDQrQkdCw0YAuINCg0L7QsdC10YDRgiDQkNC90LTQtdGA0YHQvtC9DQo=
+
+
+> On Mar 5, 2020, at 9:14 PM, Yuehaibing <yuehaibing@huawei.com> wrote:
+> 
+> On 2020/3/6 7:38, Chuck Lever wrote:
+>> yuehaibing@huawei.com reports the following build errors arise when
+>> CONFIG_NFSD_V4_2_INTER_SSC is set and the NFS client is not built
+>> into the kernel:
+>> 
+>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
+>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
+>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
+>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
+>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
+>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
+>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
+>> 
+>> The new inter-server copy code invokes client functions. Until the
+>> NFS server has infrastructure to load the appropriate NFS client
+>> modules to handle inter-server copy requests, let's constrain the
+>> way this feature is built.
+>> 
+>> Reported-by: YueHaibing <yuehaibing@huawei.com>
+>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>> fs/nfsd/Kconfig |    2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> Yue - does this work for you? The dependency is easier for me to
+>> understand.
+> 
+> It works for me.
+> 
+> Tested-by: YueHaibing <yuehaibing@huawei.com> # build-tested
+
+Thanks, I've added this tag and pushed to nfsd-5.7-testing.
+
+Bruce and Olga, you can still veto this approach until I push into
+linux-next. It will be a couple of weeks at least.
+
+
+>> Bruce and Olga - OK with this temporary solution?
+>> 
+>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+>> index f368f3215f88..99d2cae91bd6 100644
+>> --- a/fs/nfsd/Kconfig
+>> +++ b/fs/nfsd/Kconfig
+>> @@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
+>> 
+>> config NFSD_V4_2_INTER_SSC
+>> 	bool "NFSv4.2 inter server to server COPY"
+>> -	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+>> +	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
+>> 	help
+>> 	  This option enables support for NFSv4.2 inter server to
+>> 	  server copy where the destination server calls the NFSv4.2
+
+--
+Chuck Lever
+
+
+
