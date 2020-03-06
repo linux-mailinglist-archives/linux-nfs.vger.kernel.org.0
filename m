@@ -2,136 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D02817C251
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2020 16:56:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16AFA17C813
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2020 23:01:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgCFP4o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Mar 2020 10:56:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53314 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgCFP4o (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Mar 2020 10:56:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026Fs0Mk132456;
-        Fri, 6 Mar 2020 15:56:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=GA2JMjUKfPoqn20Q0YPtUNc/T/Qbw8z3YI92LT2a/QI=;
- b=Ed8PAyOvzqwYYOSfalkR+z/afTYP5YKwzHBNE4orT3/UlJD+8WIqFAQ174T7lEr1XW9M
- 7y4pMutvE+j486TCUMYkmwlcO+QLxoJOUB0RkN3StLhrQnbI18lMdUwbuGR+48MQ2671
- /UxZTrWDcJsJMY3o/J9I9TYI0oq70bqdoX5AxXoHMogI9d52iKE0NMZTLurSyIqphLUb
- YNLADKZ9NZ5NFjpMRriC3J409xkZ9348uj6CrEtYItXvR3mqnEMoBnu06qpDz0wuGu5a
- Av4q2DcaOg+Wo/id6RoGOVXDeRx2qpeIawtyaOTpwCcL4N9x0seOJ7y/I32zlERJYrVe 8g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ykgys2nqj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 15:56:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026Fh06e091781;
-        Fri, 6 Mar 2020 15:56:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2yg1s11anw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 15:56:28 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026FuQgQ005020;
-        Fri, 6 Mar 2020 15:56:26 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Mar 2020 07:56:26 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] NFSD: Fix NFS server build errors
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <631f52a1-b557-9137-0a7c-f493ac3339af@huawei.com>
-Date:   Fri, 6 Mar 2020 10:56:24 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <734C2816-BB0C-4E6B-9894-67C9754DC071@oracle.com>
-References: <20200305233433.14530.61315.stgit@klimt.1015granger.net>
- <631f52a1-b557-9137-0a7c-f493ac3339af@huawei.com>
-To:     Yuehaibing <yuehaibing@huawei.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 phishscore=0
- adultscore=0 priorityscore=1501 spamscore=0 clxscore=1015 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003060109
+        id S1726194AbgCFWBl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 6 Mar 2020 17:01:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54906 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726171AbgCFWBl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Mar 2020 17:01:41 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-girT2cKGN6qj0ciNYhcecg-1; Fri, 06 Mar 2020 17:01:36 -0500
+X-MC-Unique: girT2cKGN6qj0ciNYhcecg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A891A800D54;
+        Fri,  6 Mar 2020 22:01:34 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-120-213.rdu2.redhat.com [10.10.120.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CAB4F5C28D;
+        Fri,  6 Mar 2020 22:01:33 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id F18AF1A0110; Fri,  6 Mar 2020 17:01:32 -0500 (EST)
+Date:   Fri, 6 Mar 2020 17:01:32 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Richard Haines <richard_c_haines@btinternet.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, linux-nfs@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>
+Subject: Re: [PATCH] NFS: Ensure security label is set for root inode
+Message-ID: <20200306220132.GD3175@aion.usersys.redhat.com>
+References: <20200303225837.1557210-1-smayhew@redhat.com>
+ <6bb287d1687dc87fe9abc11d475b3b9df061f775.camel@btinternet.com>
+ <20200304143701.GB3175@aion.usersys.redhat.com>
+ <CAEjxPJ7A1KRJ3+o0-edW3byYBSjGa7=KnU5QaYCiVt6Lq6ZfpA@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAEjxPJ7A1KRJ3+o0-edW3byYBSjGa7=KnU5QaYCiVt6Lq6ZfpA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, 04 Mar 2020, Stephen Smalley wrote:
 
-
-> On Mar 5, 2020, at 9:14 PM, Yuehaibing <yuehaibing@huawei.com> wrote:
+> On Wed, Mar 4, 2020 at 9:37 AM Scott Mayhew <smayhew@redhat.com> wrote:
+> >
+> > On Wed, 04 Mar 2020, Richard Haines wrote:
+> > > I built and tested this patch on selinux-next (note that the NFS module
+> > > is a few patches behind).
+> > > The unlabeled problem is solved, however using:
+> > >
+> > > mount -t nfs -o
+> > > vers=4.2,rootcontext=system_u:object_r:test_filesystem_file_t:s0
+> > > localhost:$TESTDIR /mnt/selinux-testsuite
+> > >
+> > > I get the message:
+> > >     mount.nfs: an incorrect mount option was specified
+> > > with a log entry:
+> > >     SELinux: mount invalid.  Same superblock, different security
+> > > settings for (dev 0:42, type nfs)
+> > >
+> > > If I use "fscontext=" instead then works okay. Using no context option
+> > > also works. I guess the rootcontext= option should still work ???
+> >
+> > Thanks for testing.  It definitely wasn't my intention to break
+> > anything, so I'll look into it.
 > 
-> On 2020/3/6 7:38, Chuck Lever wrote:
->> yuehaibing@huawei.com reports the following build errors arise when
->> CONFIG_NFSD_V4_2_INTER_SSC is set and the NFS client is not built
->> into the kernel:
->> 
->> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
->> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
->> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
->> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
->> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
->> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
->> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
->> 
->> The new inter-server copy code invokes client functions. Until the
->> NFS server has infrastructure to load the appropriate NFS client
->> modules to handle inter-server copy requests, let's constrain the
->> way this feature is built.
->> 
->> Reported-by: YueHaibing <yuehaibing@huawei.com>
->> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->> fs/nfsd/Kconfig |    2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> Yue - does this work for you? The dependency is easier for me to
->> understand.
+> I'm not sure that rootcontext= should be supported or is supportable
+> over labeled NFS.
+
+Should rootcontext= be supported for NFS versions < 4.2?  If not then
+maybe it that option should be rejected for nfs and nfs4 fstypes in
+selinux_set_mnt_opts().
+
+> It's primary use case is to allow assigning a specific context other
+> than the default policy-defined one
+> to the root directory for filesystems that support labeling but don't
+> have existing labels on their root
+> directories, e.g. tmpfs mounts.  Even if we set the rootcontext based
+> on rootcontext= during mount(2),
+> it would likely get overridden by subsequent attribute fetches from
+> the server I would think (e.g. it probably
+> already switches to the context from the server after 30 seconds or
+
+Yes, that's what happens.  If we wanted to retain that behavior moving
+forward, then we need to avoid calling nfs_setsecurity() for the root
+inode when the rootcontext= option was used.  To do that, I think we'd
+need to add a flag that could be passed back to NFS via the
+set_kern_flags parameter of selinux_set_mnt_opts().
+
+> so?). As long as the separate context= option
+> continues to work correctly on NFS, I'm not overly concerned about this.
+
+Yep, the context= option still works.
 > 
-> It works for me.
+> I should note that we are getting similar errors though when trying to
+> specify any context-related
+> mount options on NFS via the new fsconfig(2) system call, see
+> https://github.com/SELinuxProject/selinux-kernel/issues/49
+> I don't know if this change in when security_sb_set_mnt_opts() will
+> alter that situation any.
 > 
-> Tested-by: YueHaibing <yuehaibing@huawei.com> # build-tested
+> Also, FYI, we have recently made it possible to run the
+> selinux-testsuite without errors within a labeled NFS
+> mount.  If you clone
+> https://github.com/SELinuxProject/selinux-testsuite/ and follow the
+> README.md
+> instructions including the NFS section and run ./tools/nfs.sh, it will
+> export and mount the testsuite directory
+> via labeled NFS over loopback and run all tests that can be supported
+> over NFS, and then runs a few specific
+> tests for context= mount options (but not the other mount options at
+> present).  It still needs some further
+> enhancements as per
+> https://github.com/SELinuxProject/selinux-testsuite/issues/32#issuecomment-582992492
+> but it at least provides some degree of regression testing.
 
-Thanks, I've added this tag and pushed to nfsd-5.7-testing.
+Thanks.  I ran this a few times and aside from an exportfs bug
+everything passed.  I'll be sure to run this in the future too.
 
-Bruce and Olga, you can still veto this approach until I push into
-linux-next. It will be a couple of weeks at least.
-
-
->> Bruce and Olga - OK with this temporary solution?
->> 
->> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->> index f368f3215f88..99d2cae91bd6 100644
->> --- a/fs/nfsd/Kconfig
->> +++ b/fs/nfsd/Kconfig
->> @@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
->> 
->> config NFSD_V4_2_INTER_SSC
->> 	bool "NFSv4.2 inter server to server COPY"
->> -	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
->> +	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
->> 	help
->> 	  This option enables support for NFSv4.2 inter server to
->> 	  server copy where the destination server calls the NFSv4.2
-
---
-Chuck Lever
-
-
+-Scott
 
