@@ -2,153 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B8E517D567
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Mar 2020 19:15:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A65A17D5D6
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Mar 2020 20:22:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgCHSPM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Mar 2020 14:15:12 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:41290 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgCHSPL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Mar 2020 14:15:11 -0400
-Received: by mail-yw1-f66.google.com with SMTP id p124so7843778ywc.8
-        for <linux-nfs@vger.kernel.org>; Sun, 08 Mar 2020 11:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=c7q1TVrakNSr8Hp0Qov+6knvu2ojMNneY+lqdYOxbDI=;
-        b=RSUwAKXuBy+aFp/CpBlLeHevseG2uKoMGTwlkJF8rFvc4YKlzL+HPQUHTwjwp/IUED
-         L/M8ao83Xrdidw/GN+/04/YA1lF8Ac8xPOsPPE7mjFytU3PQNvV8NU+Khs6j2Og0Esvq
-         jGPWo65Z4S1q23KZ8OXnqghg9XtXcjwZg2RsD1xPChLkVSk1FJ2Ex9K3EnhdfjKkGpuj
-         DODaV45TeSFL162Zs5e4+v1nGMYU5zj71LMdLtjClb/qQeLmcf07zn0iJpe+z7v0mJ8s
-         Zl1gi6P/msfpH6FoQ1AwdnURuQmODj6tkmgWKmvWmoIwuYOptJqjTfV7cEzfyme3Ehdy
-         CT1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=c7q1TVrakNSr8Hp0Qov+6knvu2ojMNneY+lqdYOxbDI=;
-        b=k7qAvLe3lAreJf2a9yJ0PZZP5jdoJ+veVqrEF6dq3ZaEC9zLjF+3f8VTKVq/Xgp/WA
-         YmZt9HHjRTWJ5FePHG8K0x9Yb3HyHGhnVfyFDICv2P/QqkNJSSu9iAKAT/ZyuqLwJN00
-         MtkWhLyD9bKuoLPAwhgT+k38UG4Fh7Kbw+qkTCYqhWjDgBvhx5l+x1Ws+nZkVq3zgQb7
-         gMz0JTJ0iU2PRJEKJo8DlFTLdGJKtxvy/yeM0Nzf96dEmppf308K0HNK+MIRfZ2kYKTW
-         4s5HZ7j7YwKOWkWNefelZZKHxwgdJJ710qyJrqnXq6pCUmCxYlD0bR1nN0qdVKd9/ZW5
-         ppVg==
-X-Gm-Message-State: ANhLgQ2X5Kkh+Ef/Vq3QPc+EgSyIFrnDUeFZ27p+q/r/mW+4gJy5HYj4
-        nt7TaSw4djrS8vTcxLTBzWk=
-X-Google-Smtp-Source: ADFU+vsRGVsaQkGvhFMJGqcsEInJfu+/ro3nf0yIRzcqm7wdU3NPK0GP8Hxgke0BOWnW2xEwpkkw+w==
-X-Received: by 2002:a81:25cb:: with SMTP id l194mr13718942ywl.379.1583691310691;
-        Sun, 08 Mar 2020 11:15:10 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id o13sm15426987ywl.9.2020.03.08.11.15.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Mar 2020 11:15:10 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 028IF9A5004529;
-        Sun, 8 Mar 2020 18:15:09 GMT
-Subject: [PATCH v1 2/2] SUNRPC: Remove xdr_buf_read_mic()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     bcodding@redhat.com
-Date:   Sun, 08 Mar 2020 14:15:09 -0400
-Message-ID: <20200308181509.14148.58149.stgit@manet.1015granger.net>
-In-Reply-To: <20200308181503.14148.29579.stgit@manet.1015granger.net>
-References: <20200308181503.14148.29579.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        id S1726338AbgCHTWZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Mar 2020 15:22:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38110 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726330AbgCHTWZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Mar 2020 15:22:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583695344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=k+06c3ftd6Dz8n0ftVlHdIoiiu2oDYVfjVRVmvoZXe8=;
+        b=PtDc1jSa+8/EP/0FrVo3MzN2BXagmi5L8hF1cG3rF4BrIbu3qfxRt2pq/y/wiw7+MzkIOa
+        0RILzh/SJ5yTGbyZBBkIAMCZHo9uz9mFUsrWBjhUQNBiW7Rofj8cb27k/rhKcZ1lFCc7/j
+        LQji4qXVxjH9Md5hb0QWaEAxKdrZZjc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-SiArl8Q1N92AFF0AuaBQjg-1; Sun, 08 Mar 2020 15:22:21 -0400
+X-MC-Unique: SiArl8Q1N92AFF0AuaBQjg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C68413EA
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Mar 2020 19:22:20 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-118-58.phx2.redhat.com [10.3.118.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C81E78F341
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Mar 2020 19:22:16 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] gssd: ignore pipe files that do not exist
+Date:   Sun,  8 Mar 2020 15:22:14 -0400
+Message-Id: <20200308192214.25071-1-steved@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: this function is no longer used.
+As part commit e0eb6ebb which cleaned up the
+dnotify to inotify conversion (commit 55197c98)
+ignore pipe files that don't exist
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- include/linux/sunrpc/xdr.h |    1 -
- net/sunrpc/xdr.c           |   55 --------------------------------------------
- 2 files changed, 56 deletions(-)
+ utils/gssd/gssd.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index a1264b19b34c..f0f0abef1a6e 100644
---- a/include/linux/sunrpc/xdr.h
-+++ b/include/linux/sunrpc/xdr.h
-@@ -184,7 +184,6 @@ static inline void xdr_netobj_dup(struct xdr_netobj *dst,
- extern void xdr_shift_buf(struct xdr_buf *, size_t);
- extern void xdr_buf_from_iov(struct kvec *, struct xdr_buf *);
- extern int xdr_buf_subsegment(struct xdr_buf *, struct xdr_buf *, unsigned int, unsigned int);
--extern int xdr_buf_read_mic(struct xdr_buf *, struct xdr_netobj *, unsigned int);
- extern int read_bytes_from_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
- extern int write_bytes_to_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
- 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index e5497dc2475b..15b58c5144f9 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1235,61 +1235,6 @@ int write_bytes_to_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, un
- }
- EXPORT_SYMBOL_GPL(xdr_encode_word);
- 
--/**
-- * xdr_buf_read_mic() - obtain the address of the GSS mic from xdr buf
-- * @buf: pointer to buffer containing a mic
-- * @mic: on success, returns the address of the mic
-- * @offset: the offset in buf where mic may be found
-- *
-- * This function may modify the xdr buf if the mic is found to be straddling
-- * a boundary between head, pages, and tail.  On success the mic can be read
-- * from the address returned.  There is no need to free the mic.
-- *
-- * Return: Success returns 0, otherwise an integer error.
-- */
--int xdr_buf_read_mic(struct xdr_buf *buf, struct xdr_netobj *mic, unsigned int offset)
--{
--	struct xdr_buf subbuf;
--	unsigned int boundary;
--
--	if (xdr_decode_word(buf, offset, &mic->len))
--		return -EFAULT;
--	offset += 4;
--
--	/* Is the mic partially in the head? */
--	boundary = buf->head[0].iov_len;
--	if (offset < boundary && (offset + mic->len) > boundary)
--		xdr_shift_buf(buf, boundary - offset);
--
--	/* Is the mic partially in the pages? */
--	boundary += buf->page_len;
--	if (offset < boundary && (offset + mic->len) > boundary)
--		xdr_shrink_pagelen(buf, boundary - offset);
--
--	if (xdr_buf_subsegment(buf, &subbuf, offset, mic->len))
--		return -EFAULT;
--
--	/* Is the mic contained entirely in the head? */
--	mic->data = subbuf.head[0].iov_base;
--	if (subbuf.head[0].iov_len == mic->len)
--		return 0;
--	/* ..or is the mic contained entirely in the tail? */
--	mic->data = subbuf.tail[0].iov_base;
--	if (subbuf.tail[0].iov_len == mic->len)
--		return 0;
--
--	/* Find a contiguous area in @buf to hold all of @mic */
--	if (mic->len > buf->buflen - buf->len)
--		return -ENOMEM;
--	if (buf->tail[0].iov_len != 0)
--		mic->data = buf->tail[0].iov_base + buf->tail[0].iov_len;
--	else
--		mic->data = buf->head[0].iov_base + buf->head[0].iov_len;
--	__read_bytes_from_xdr_buf(&subbuf, mic->data, mic->len);
--	return 0;
--}
--EXPORT_SYMBOL_GPL(xdr_buf_read_mic);
--
- /* Returns 0 on success, or else a negative error code. */
- static int
- xdr_xcode_array2(struct xdr_buf *buf, unsigned int base,
+diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+index c38dedb..588da0f 100644
+--- a/utils/gssd/gssd.c
++++ b/utils/gssd/gssd.c
+@@ -493,8 +493,8 @@ gssd_get_clnt(struct topdir *tdi, const char *name)
+ 	clp->wd =3D inotify_add_watch(inotify_fd, clp->relpath, IN_CREATE | IN_=
+DELETE);
+ 	if (clp->wd < 0) {
+ 		if (errno !=3D ENOENT)
+-			printerr(0, "ERROR: inotify_add_watch failed for %s: %s\n",
+-			 	clp->relpath, strerror(errno));
++			printerr(0, "ERROR: %s: inotify_add_watch failed for %s: %s\n",
++			 	__FUNCTION__, clp->relpath, strerror(errno));
+ 		goto out;
+ 	}
+=20
+@@ -523,8 +523,9 @@ gssd_scan_clnt(struct clnt_info *clp)
+=20
+ 	clntfd =3D openat(pipefs_fd, clp->relpath, O_RDONLY);
+ 	if (clntfd < 0) {
+-		printerr(0, "ERROR: can't openat %s: %s\n",
+-			 clp->relpath, strerror(errno));
++		if (errno !=3D ENOENT)
++			printerr(0, "ERROR: %s: can't openat %s: %s\n",
++			 	__FUNCTION__, clp->relpath, strerror(errno));
+ 		return -1;
+ 	}
+=20
+@@ -588,8 +589,8 @@ gssd_get_topdir(const char *name)
+=20
+ 	tdi->wd =3D inotify_add_watch(inotify_fd, name, IN_CREATE);
+ 	if (tdi->wd < 0) {
+-		printerr(0, "ERROR: inotify_add_watch failed for top dir %s: %s\n",
+-			 tdi->name, strerror(errno));
++		printerr(0, "ERROR: %s: inotify_add_watch failed for top dir %s: %s\n"=
+,
++			 __FUNCTION__, tdi->name, strerror(errno));
+ 		free(tdi);
+ 		return NULL;
+ 	}
+@@ -616,8 +617,9 @@ gssd_scan_topdir(const char *name)
+=20
+ 	dfd =3D openat(pipefs_fd, tdi->name, O_RDONLY);
+ 	if (dfd < 0) {
+-		printerr(0, "ERROR: can't openat %s: %s\n",
+-			 tdi->name, strerror(errno));
++		if (errno !=3D ENOENT)
++			printerr(0, "ERROR: %s: can't openat %s: %s\n",
++			 	__FUNCTION__, tdi->name, strerror(errno));
+ 		return;
+ 	}
+=20
+--=20
+2.24.1
 
