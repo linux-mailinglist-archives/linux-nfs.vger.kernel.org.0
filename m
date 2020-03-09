@@ -2,123 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 047C817E235
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2020 15:06:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D4317E4EC
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2020 17:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCIOGc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Mar 2020 10:06:32 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46543 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgCIOGc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Mar 2020 10:06:32 -0400
-Received: by mail-yw1-f67.google.com with SMTP id x5so9329761ywb.13
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Mar 2020 07:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=1lEUHCepp9EVXhsji/LcPSTxm+btIegD2d/zO+XVB4E=;
-        b=jIa9OuXWXf5W99u5WjcV9ZLLU8yJoXrIpnbrjGqnoNKSmzcDfBGm8tJQ4Ag+5UlQ/C
-         9Htk/PwbaUkNZ6gOtPZl2vWkHc6xrfXWQgck/iNfMHaUJzKnXfLOgeAfngLo0fP69F58
-         fuw5kvh2pTJGwv3DV4UDR7HL6RLtRR6RgT8PhbRJwiMjfvN2zMiFxaJyYJ7nnIwGuMRe
-         fZL2UqNnsFNq+z5ulKUkvxKH8FH3NHnuBdDSYaXNnymX8fpClJb3jkc9X66mItyV4KWg
-         Saugeqn+e6EG4YXziIj0hcQ7s2qoz8y/G5WSYlmaBKlN5e6YN538xNqjc/lE6pLT9xWY
-         P+dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=1lEUHCepp9EVXhsji/LcPSTxm+btIegD2d/zO+XVB4E=;
-        b=j7KTFd2NI7NoBfLj/ryY1BtmM+dtSxUI9Z21q3UDEqUZriN2ZriG2h9FVFqxoScH2N
-         tRP3CjVq0aPafVhKSmqc60LUYLDs7Ypf4VS6kop1pBvOJoXzA0rc2yZMO9oiLsmQ7LH4
-         gVpjYZNMuRvAtaVvL+n2mDz+0SHkQWgk7VGqfQlXwPB9AgGawBQ0pLuhRY3n06kP2bq8
-         Txa8q0bQmOzQNvUHZ2G2qpIoBJUQ3w1LqWNDoKq+aoMVy6BgsZGw6F8zVb72dtCjtlzC
-         lZzcaAIVzURrlii4jvkkbjkflFsvRoqJVvWc6GMtjpnRw+0/UxtWAwe2fltSpgSu520A
-         acKQ==
-X-Gm-Message-State: ANhLgQ0fbnHz8+M16xL1LKFAqsB4I0AUHE985qi0KeVrKSePSG/6/nxB
-        Z4symIFMvwFvTYvO9cDvo2i4IRGrtUc=
-X-Google-Smtp-Source: ADFU+vunMdkx6lq40wIn6Fxtm2Usuw6wbGYwEYPDSLg14ekxfsX+rQFQzqHygtckPVkDSkq3xkL+8A==
-X-Received: by 2002:a25:1986:: with SMTP id 128mr16803597ybz.215.1583762790818;
-        Mon, 09 Mar 2020 07:06:30 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x62sm3120038ywg.34.2020.03.09.07.06.30
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 07:06:30 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 029E6Tpv007539
-        for <linux-nfs@vger.kernel.org>; Mon, 9 Mar 2020 14:06:29 GMT
-Subject: [PATCH v2 3/3] SUNRPC: Trim stack utilization in the wrap and
- unwrap paths
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Mon, 09 Mar 2020 10:06:29 -0400
-Message-ID: <20200309140629.2637.65733.stgit@manet.1015granger.net>
-In-Reply-To: <20200309140301.2637.9696.stgit@manet.1015granger.net>
-References: <20200309140301.2637.9696.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
+        id S1727083AbgCIQlu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Mar 2020 12:41:50 -0400
+Received: from mailomta5-sa.btinternet.com ([213.120.69.11]:31529 "EHLO
+        sa-prd-fep-040.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727061AbgCIQlu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Mar 2020 12:41:50 -0400
+Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
+          by sa-prd-fep-040.btinternet.com with ESMTP
+          id <20200309164145.GMZM30239.sa-prd-fep-040.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
+          Mon, 9 Mar 2020 16:41:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=btinternet.com; s=btmx201904; t=1583772105; 
+        bh=LSy2qrTqIK3RE+estOpnakZt4GtKNxZMwAEUAH+Vrpw=;
+        h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:MIME-Version;
+        b=ISPm9QQmIiUtnvijyv0+4YVATdn16+FWuxF/8dR/jHQSnx5jhYd3O+rpB9a1cTwwlhN8sGZ9K6QC2i7uI7+Hs80hZmaNsyn2WSHk3XMHnzRoC3gUHvM32n/K0/pF69QThRL5LNUMBXNQ2HZaUBTmCC5ESk9sIM9sDnV8NlrMLT91qC6LPMWKfYTu66rSo2//s+XMyxW5bCSXtLoDRFrQ0zZsZ5GVn5RPRk+uV0FCJW1HKazAAgGGJmqMAjywv9usvOG4m2948IwGwcHwMuM/f+iAEsUGlPDu0hU3g6/Tk9EKSawLlUinnwqzcBAba3wuIRdeOwdma1ik0SYnjWHY+A==
+Authentication-Results: btinternet.com;
+    auth=pass (PLAIN) smtp.auth=richard_c_haines@btinternet.com
+X-Originating-IP: [86.134.5.48]
+X-OWM-Source-IP: 86.134.5.48 (GB)
+X-OWM-Env-Sender: richard_c_haines@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpeftihgthhgrrhguucfjrghinhgvshcuoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeekiedrudefgedrhedrgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpihhnvghtpeekiedrudefgedrhedrgeekpdhmrghilhhfrhhomhepoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqecuuefqffgjpeekuefkvffokffogfdprhgtphhtthhopeeorghnnhgrrdhstghhuhhmrghkvghrsehnvghtrghpphdrtghomheqpdhrtghpthhtohepoegsfhhivghlughssehfihgvlhgushgvshdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeophgruhhlsehprghulhdqmhhoohhrvgdrtghomheqpdhrtghpthhtohepoehrihgthhgrrhgupggtpghhrghinhgv
+        sheshhhothhmrghilhdrtghomheqpdhrtghpthhtohepoehsughssehthigthhhordhnshgrrdhgohhvqedprhgtphhtthhopeeoshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehsmhgrhihhvgifsehrvgguhhgrthdrtghomheqpdhrtghpthhtohepoehsthgvphhhvghnrdhsmhgrlhhlvgihrdifohhrkhesghhmrghilhdrtghomheqpdhrtghpthhtohepoehtrhhonhgurdhmhihklhgvsghushhtsehhrghmmhgvrhhsphgrtggvrdgtohhmqe
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from localhost.localdomain (86.134.5.48) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.340) (authenticated as richard_c_haines@btinternet.com)
+        id 5E3A27DB052917A6; Mon, 9 Mar 2020 16:41:45 +0000
+Message-ID: <41dadf5423aa1b9c0910ac3d805e6caf785dec8f.camel@btinternet.com>
+Subject: Re: [PATCH] NFS: Ensure security label is set for root inode
+From:   Richard Haines <richard_c_haines@btinternet.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Scott Mayhew <smayhew@redhat.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, linux-nfs@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>
+Date:   Mon, 09 Mar 2020 16:41:44 +0000
+In-Reply-To: <CAEjxPJ6pLLGQ2ywfjkanDNZc1isVV8=6sJmoYFy8shaSGr972A@mail.gmail.com>
+References: <20200303225837.1557210-1-smayhew@redhat.com>
+         <6bb287d1687dc87fe9abc11d475b3b9df061f775.camel@btinternet.com>
+         <20200304143701.GB3175@aion.usersys.redhat.com>
+         <CAEjxPJ7A1KRJ3+o0-edW3byYBSjGa7=KnU5QaYCiVt6Lq6ZfpA@mail.gmail.com>
+         <20200306220132.GD3175@aion.usersys.redhat.com>
+         <dc704637496883ac7c21c196aeae4e1ab37f76fa.camel@btinternet.com>
+         <CAEjxPJ6pLLGQ2ywfjkanDNZc1isVV8=6sJmoYFy8shaSGr972A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-By preventing compiler inlining of the integrity and privacy
-helpers, stack utilization for the common case (authentication only)
-goes way down.
+On Mon, 2020-03-09 at 09:35 -0400, Stephen Smalley wrote:
+> On Sun, Mar 8, 2020 at 1:47 PM Richard Haines
+> <richard_c_haines@btinternet.com> wrote:
+> > On Fri, 2020-03-06 at 17:01 -0500, Scott Mayhew wrote:
+> > > On Wed, 04 Mar 2020, Stephen Smalley wrote:
+> > > > I should note that we are getting similar errors though when
+> > > > trying
+> > > > to
+> > > > specify any context-related
+> > > > mount options on NFS via the new fsconfig(2) system call, see
+> > > > https://github.com/SELinuxProject/selinux-kernel/issues/49
+> > I've done further testing and found that with this patch the
+> > fsconfig(2) problem is also resolved for nfs (provided the
+> > rootcontext
+> > is not specified).
+> 
+> Excellent, two bugs fixed with one patch!
+> 
+> > > > It still needs some further
+> > > > enhancements as per
+> > > > https://github.com/SELinuxProject/selinux-testsuite/issues/32#issuecomment-582992492
+> > > > but it at least provides some degree of regression testing.
+> > Could you describe how I could test these, also are there any other
+> > SELinux tests that may be useful (with howto's). I'm almost ready
+> > to
+> > post another set of RFC test patches, but can add more.
+> 
+> The ones identified in that github issue comment would simply be
+> additional tests in tools/nfs.sh
+> unless they happen to already be covered by your fs/filesystem tests
+> once those are applied to the
+> host/native filesystem instead of just ext4.  The test cases are:
+> 
+> 0. Test the bug fixed by this patch, i.e. perform mount of a
+> security_label exported filesystem, check the label of the mounted
+> directory to confirm it isn't unlabeled.
+> That's a NFS-specific test, goes in tools/nfs.sh.
+> 
+> 1. Mount the same filesystem twice with two different sets of context
+> mount options, check that mount(2) fails with errno EINVAL.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/auth_gss.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+I've tests for the first part already, however with NFS it returns
+EBUSY (using mount(2) or the fixed fsconfig(2)). On ext4, xfs & vfat it
+does return EINVAL. I guess another NFS bug. Also mount(8) ignores the
+error and just carries on. Here is a test using the testsuite mount(2):
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index fa991f4fe53a..6ffdbc3297b9 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1724,8 +1724,9 @@ static int gss_cred_is_negative_entry(struct rpc_cred *cred)
- 	goto out;
- }
- 
--static int gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
--			      struct rpc_task *task, struct xdr_stream *xdr)
-+static noinline_for_stack int
-+gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
-+		   struct rpc_task *task, struct xdr_stream *xdr)
- {
- 	struct rpc_rqst *rqstp = task->tk_rqstp;
- 	struct xdr_buf integ_buf, *snd_buf = &rqstp->rq_snd_buf;
-@@ -1816,8 +1817,9 @@ static int gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
- 	return -EAGAIN;
- }
- 
--static int gss_wrap_req_priv(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
--			     struct rpc_task *task, struct xdr_stream *xdr)
-+static noinline_for_stack int
-+gss_wrap_req_priv(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
-+		  struct rpc_task *task, struct xdr_stream *xdr)
- {
- 	struct rpc_rqst *rqstp = task->tk_rqstp;
- 	struct xdr_buf	*snd_buf = &rqstp->rq_snd_buf;
-@@ -1947,7 +1949,7 @@ static int gss_wrap_req(struct rpc_task *task, struct xdr_stream *xdr)
-  *		proc_req_arg_t arg;
-  *	};
-  */
--static int
-+static noinline_for_stack int
- gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 		      struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		      struct xdr_stream *xdr)
-@@ -2023,7 +2025,7 @@ static int gss_wrap_req(struct rpc_task *task, struct xdr_stream *xdr)
- 	goto out;
- }
- 
--static int
-+static noinline_for_stack int
- gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
- 		     struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		     struct xdr_stream *xdr)
+tools/nfs-mount2.sh
+#!/bin/sh -e
+MOUNT=`stat --print %m .`
+TESTDIR=`pwd`
+NET="nfsvers=4.2,proto=tcp,clientaddr=127.0.0.1,addr=127.0.0.1"
+
+function err_exit() {
+    echo "Error on line: $1 - Closing down NFS"
+    umount /mnt/selinux-testsuite
+    exportfs -u localhost:$MOUNT
+    rmdir /mnt/selinux-testsuite
+    systemctl stop nfs-server
+    exit 1
+}
+
+trap 'err_exit $LINENO' ERR
+
+systemctl start nfs-server
+exportfs -orw,no_root_squash,security_label localhost:$MOUNT
+mkdir -p /mnt/selinux-testsuite
+
+tests/filesystem/mount -v -f nfs -o vers=4.2,$NET -s localhost:$TESTDIR
+-t /mnt/selinux-testsuite
+
+tests/filesystem/mount -v -f nfs -o
+vers=4.2,$NET,context=system_u:object_r:etc_t:s0 -s localhost:$TESTDIR
+-t /mnt/selinux-testsuite
+echo "Testing context mount of a security_label export."
+fctx=`secon -t -f /mnt/selinux-testsuite`
+if [ "$fctx" != "etc_t" ]; then
+    echo "Context mount failed: got $fctx instead of etc_t."
+    err_exit $LINENO
+fi
+umount /mnt/selinux-testsuite
+echo "Done"
+exportfs -u localhost:$MOUNT
+rmdir /mnt/selinux-testsuite
+systemctl stop nfs-server
+
+> Test cases might include a) mount first without any context mount
+> options, then try mounting a 2nd time with context mount options and
+> vice versa, b) mounting
+> with the same set of context options (e.g. both using context=) but
+> different context values, c) mounting with different sets of context
+> options (e.g. one uses
+> context=, the other uses fscontext=).  This test could be done in
+> fs/filesystem for any filesystem type, not NFS-specific.
+> 
+> 2. Mount a security_label exported NFS filesystem twice, confirm that
+> NFS security labeling support isn't silently disabled by trying to
+> set a label on a file and confirm it is set (fixed by  kernel commit
+> 3815a245b50124f0865415dcb606a034e97494d4).  This would go in
+> tools/nfs.sh
+> since it is NFS-specific.
+> 
+> 3. Perform a context= mount of a security_label exported NFS
+> filesystem, check that pre-existing files within the mount show up
+> with the context= value
+> not the underlying xattr value (fixed by kernel commit
+> 0b4d3452b8b4a5309b4445b900e3cec022cca95a). My original version of
+> tools/nfs.sh actually would have caught this because it was testing
+> the context of the nfs.sh script file itself within the context mount
+> but I dropped it back to only checking the top-level mount directory
+> when I moved tools/nfs.sh to avoid depending on a fixed location for
+> it, so it won't be caught currently. We could just change it back to
+> testing the context of a pre-existing file within the mount; any file
+> will do.  This would go in tools/nfs.sh, NFS-specific.
+> 
+> 4. Ensuring that all of the tests/filesystem and tests/fs_filesystem
+> tests that make sense for NFS are being run on the labeled NFS mount
+> itself when run via tools/nfs.sh and not just on an ext4 mount
+> created
+> by the test script.
 
