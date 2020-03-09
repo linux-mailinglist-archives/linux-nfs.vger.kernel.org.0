@@ -2,132 +2,523 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E82017E147
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2020 14:34:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E0217E1D8
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2020 15:01:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCINdr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Mar 2020 09:33:47 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42740 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgCINdq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Mar 2020 09:33:46 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l12so10105432oil.9;
-        Mon, 09 Mar 2020 06:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ialzMb9unvo1blKnLREXVnt9D6XdD9BuSGr9u/eAjeE=;
-        b=IHW6rpF93ev58libSB1Afl3/J/LVDIvD/tMa4UXKL3PyYR0I/Xu4u186tGquX7D4xt
-         9GQaRt0/EreF41uU0VQtxCVaMldWwKRc8zugc2fnlsxp999xzL4fSMf8zqYYO92MXEMo
-         jFI2Z4xLCTRqCxOGlxl7nY0NG4INdCE1fKxgcXLTZMqhZAqSgtjMo6f7Vuk8vVG3AO9+
-         wCIZRcYfFpqqh8U1cJZlIV+iHu9r/4lhVheqE1+nojVvnh1j86GPRCVFrn4OQ+V5U1WO
-         V9T2AWp5R6x54+JJl9FGTiIRTBNZqb4sY4Zx2S+AyD38Wp/vHW3IjiH3TreD35hglRRF
-         qhug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ialzMb9unvo1blKnLREXVnt9D6XdD9BuSGr9u/eAjeE=;
-        b=oVCS2h83G87WQAUdw64Ly8/8KY/ZLXSaCsHnbOH3XzAfZxDybFiXDrBgppWqhDdMIo
-         Hy1lM2OuFr8NRs84PwukrRXcZfwx1op38P/PYvJBmrxWG7NhxOTqvFIGNPMUUE9xrzvQ
-         Ow4uGjJ4WDbYXKBVIc2dhFBvmLR5QZGSYHp7lYv+g4hG8EE8iioSfPtUm3GZQ3Crpvp1
-         NB4LpPfyAjjZm+B6UpVn5zN0ttgxoUasPECL+5BimT8DmaEaQCtKwtZGOL7SA3SJ3OEs
-         HYNrzocMCMnhs1OPl8hBJOMmfJMK50eaL5bHCq5D7x4oGKtIxkvGLrfW3SPcVYNQr9Wz
-         z7FQ==
-X-Gm-Message-State: ANhLgQ0SR1AMDNxoTJoWMosyTTCWU/LBePRqJhXPKbBXOvRnaRc33dta
-        F9+3XfQ3BZuHmK+h6hRH1FjHgPwtbyYbZMhSB2I=
-X-Google-Smtp-Source: ADFU+vvsjX0+xrIEhglXOyV1r2tonpOH5cAdpMu6kNvh/FJrMt+P+o3iU/hMmdxI0NML4mYoLN81a0JkvynVH10mA9o=
-X-Received: by 2002:aca:ad54:: with SMTP id w81mr11596993oie.172.1583760825458;
- Mon, 09 Mar 2020 06:33:45 -0700 (PDT)
+        id S1726640AbgCIOA7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Mar 2020 10:00:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26475 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726720AbgCIOA7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Mar 2020 10:00:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583762457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LCwQdPmaneRQtBpeq1ZGN6m1ErYqxzPhN+jQBM7D2cs=;
+        b=VeFmxTOq0mGIdGldf5k6/Ud5kdx+RSpMNFMwZ6WcUIc6ZxsLbUg0ibfl8S5DBbf9QwM87T
+        HvHXeROmLOdfwj9x/AsBaSFpzRcJgf0CQRlssdYfXyMx/GMS3DhpFLhDDhHBmnDhgecmKM
+        NKJ3z/k/OggdJW6hbwgcrcFTzqKKPWE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-zAdC5ZQsMgOBZepluVmQNg-1; Mon, 09 Mar 2020 10:00:55 -0400
+X-MC-Unique: zAdC5ZQsMgOBZepluVmQNg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C455EDB63;
+        Mon,  9 Mar 2020 14:00:51 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCFD18B773;
+        Mon,  9 Mar 2020 14:00:46 +0000 (UTC)
+Subject: [PATCH 00/14] VFS: Filesystem information [ver #18]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     Theodore Ts'o <tytso@mit.edu>, Stefan Metzmacher <metze@samba.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
+        kzak@redhat.com, jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 09 Mar 2020 14:00:46 +0000
+Message-ID: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-References: <20200303225837.1557210-1-smayhew@redhat.com> <6bb287d1687dc87fe9abc11d475b3b9df061f775.camel@btinternet.com>
- <20200304143701.GB3175@aion.usersys.redhat.com> <CAEjxPJ7A1KRJ3+o0-edW3byYBSjGa7=KnU5QaYCiVt6Lq6ZfpA@mail.gmail.com>
- <20200306220132.GD3175@aion.usersys.redhat.com> <dc704637496883ac7c21c196aeae4e1ab37f76fa.camel@btinternet.com>
-In-Reply-To: <dc704637496883ac7c21c196aeae4e1ab37f76fa.camel@btinternet.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 9 Mar 2020 09:35:22 -0400
-Message-ID: <CAEjxPJ6pLLGQ2ywfjkanDNZc1isVV8=6sJmoYFy8shaSGr972A@mail.gmail.com>
-Subject: Re: [PATCH] NFS: Ensure security label is set for root inode
-To:     Richard Haines <richard_c_haines@btinternet.com>
-Cc:     Scott Mayhew <smayhew@redhat.com>, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, bfields@fieldses.org,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, linux-nfs@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 1:47 PM Richard Haines
-<richard_c_haines@btinternet.com> wrote:
->
-> On Fri, 2020-03-06 at 17:01 -0500, Scott Mayhew wrote:
-> > On Wed, 04 Mar 2020, Stephen Smalley wrote:
-> > > I should note that we are getting similar errors though when trying
-> > > to
-> > > specify any context-related
-> > > mount options on NFS via the new fsconfig(2) system call, see
-> > > https://github.com/SELinuxProject/selinux-kernel/issues/49
-> I've done further testing and found that with this patch the
-> fsconfig(2) problem is also resolved for nfs (provided the rootcontext
-> is not specified).
 
-Excellent, two bugs fixed with one patch!
+Here's a set of patches that adds a system call, fsinfo(), that allows
+information about the VFS, mount topology, superblock and files to be
+retrieved.
 
->>> It still needs some further
-> > > enhancements as per
-> > > https://github.com/SELinuxProject/selinux-testsuite/issues/32#issuecomment-582992492
-> > > but it at least provides some degree of regression testing.
-> Could you describe how I could test these, also are there any other
-> SELinux tests that may be useful (with howto's). I'm almost ready to
-> post another set of RFC test patches, but can add more.
+The patchset is based on top of the notifications patchset and allows event
+counters implemented in the latter to be retrieved to allow overruns to be
+efficiently managed.
 
-The ones identified in that github issue comment would simply be
-additional tests in tools/nfs.sh
-unless they happen to already be covered by your fs/filesystem tests
-once those are applied to the
-host/native filesystem instead of just ext4.  The test cases are:
+Included are a couple of sample programs plus limited example code for NFS
+and Ext4.  The example code is not intended to go upstream as-is.
 
-0. Test the bug fixed by this patch, i.e. perform mount of a
-security_label exported filesystem, check the label of the mounted
-directory to confirm it isn't unlabeled.
-That's a NFS-specific test, goes in tools/nfs.sh.
 
-1. Mount the same filesystem twice with two different sets of context
-mount options, check that mount(2) fails with errno EINVAL.
-Test cases might include a) mount first without any context mount
-options, then try mounting a 2nd time with context mount options and
-vice versa, b) mounting
-with the same set of context options (e.g. both using context=) but
-different context values, c) mounting with different sets of context
-options (e.g. one uses
-context=, the other uses fscontext=).  This test could be done in
-fs/filesystem for any filesystem type, not NFS-specific.
+=======
+THE WHY
+=======
 
-2. Mount a security_label exported NFS filesystem twice, confirm that
-NFS security labeling support isn't silently disabled by trying to
-set a label on a file and confirm it is set (fixed by  kernel commit
-3815a245b50124f0865415dcb606a034e97494d4).  This would go in
-tools/nfs.sh
-since it is NFS-specific.
+Why do we want this?
 
-3. Perform a context= mount of a security_label exported NFS
-filesystem, check that pre-existing files within the mount show up
-with the context= value
-not the underlying xattr value (fixed by kernel commit
-0b4d3452b8b4a5309b4445b900e3cec022cca95a). My original version of
-tools/nfs.sh actually would have caught this because it was testing
-the context of the nfs.sh script file itself within the context mount
-but I dropped it back to only checking the top-level mount directory
-when I moved tools/nfs.sh to avoid depending on a fixed location for
-it, so it won't be caught currently. We could just change it back to
-testing the context of a pre-existing file within the mount; any file
-will do.  This would go in tools/nfs.sh, NFS-specific.
+Using /proc/mounts (or similar) has problems:
 
-4. Ensuring that all of the tests/filesystem and tests/fs_filesystem
-tests that make sense for NFS are being run on the labeled NFS mount
-itself when run via tools/nfs.sh and not just on an ext4 mount created
-by the test script.
+ (1) Reading from it holds a global lock (namespace_sem) that prevents
+     mounting and unmounting.  Lots of data is encoded and mangled into
+     text whilst the lock is held, including superblock option strings and
+     mount point paths.  This causes performance problems when there are a
+     lot of mount objects in a system.
+
+ (2) Even though namespace_sem is held during a read, reading the whole
+     file isn't necessarily atomic with respect to mount-type operations.
+     If a read isn't satisfied in one go, then it may return to userspace
+     briefly and then continue reading some way into the file.  But changes
+     can occur in the interval that may then go unseen.
+
+ (3) Determining what has changed means parsing and comparing consecutive
+     outputs of /proc/mounts.
+
+ (4) Querying a specific mount or superblock means searching through
+     /proc/mounts and searching by path or mount ID - but we might have an
+     fd we want to query.
+
+ (5) Mount topology is not explicit.  One must derive it manually by
+     comparing entries.
+
+ (6) Whilst you can poll() it for events, it only tells you that something
+     changed in the namespace, not what or whether you can even see the
+     change.
+
+To fix the notification issues, the preceding notifications patchset added
+mount watch notifications whereby you can watch for notifications in a
+specific mount subtree.  The notification messages include the ID(s) of the
+affected mounts.
+
+To support notifications, however, we need to be able to handle overruns in
+the notification queue.  I added a number of event counters to struct
+super_block and struct mount to allow you to pin down the changes, but
+there needs to be a way to retrieve them.  Exposing them through /proc
+would require adding yet another /proc/mounts-type file.  We could add
+per-mount directories full of attributes in sysfs, but that has issues also
+(see below).
+
+Adding an extensible system call interface for retrieving filesystem
+information also allows other things to be exposed:
+
+ (1) Jeff Layton's error handling changes need a way to allow error event
+     information to be retrieved.
+
+ (2) Bits in masks returned by things like statx() and FS_IOC_GETFLAGS are
+     actually 3-state { Set, Unset, Not supported }.  It could be useful to
+     provide a way to expose information like this[*].
+
+ (3) Limits of the numerical metadata values in a filesystem[*].
+
+ (4) Filesystem capability information[*].  Filesystems don't all have the
+     same capabilities, and even different instances may have different
+     capabilities, particularly with network filesystems where the set of
+     may be server-dependent.  Capabilities might even vary at file
+     granularity - though possibly such information should be conveyed
+     through statx() instead.
+
+ (5) ID mapping/shifting tables in use for a superblock.
+
+ (6) Filesystem-specific information.  I need something for AFS so that I
+     can do pioctl()-emulation, thereby allowing me to implement certain of
+     the AFS command line utilities that query state of a particular file.
+     This could also have application for other filesystems, such as NFS,
+     CIFS and ext4.
+
+ [*] In a lot of cases these are probably fixed and can be memcpy'd from
+     static data.
+
+There's a further consideration: I want to make it possible to have
+fsconfig(fd, FSCONFIG_CMD_CREATE) be intercepted by a container manager
+such that the manager can supervise a mount attempted inside the container.
+The manager would be given an fd pointing to the fs_context struct and
+would then need some way to query it (fsinfo()) and modify it (fsconfig()).
+This could also be used to arbitrate user-requested mounts when containers
+are not in play.
+
+
+============================
+WHY NOT USE PROCFS OR SYSFS?
+============================
+
+Why is it better to go with a new system call rather than adding more magic
+stuff to /proc or /sysfs for each superblock object and each mount object?
+
+ (1) It can be targetted.  It makes it easy to query directly by path or
+     fd, but can also query by mount ID or fscontext fd.  procfs and sysfs
+     cannot do three of these things easily.
+
+ (2) Easier to provide LSM oversight.  Is the accessing process allowed to
+     query information pertinent to a particular file?
+
+ (3) It's more efficient as we can return specific binary data rather than
+     making huge text dumps.  Granted, sysfs and procfs could present the
+     same data, though as lots of little files which have to be
+     individually opened, read, closed and parsed.
+
+ (4) We wouldn't have the overhead of open and close (even adding a
+     self-contained readfile() syscall has to do that internally).
+
+ (5) Opening a file in procfs or sysfs has a pathwalk overhead for each
+     file accessed.  We can use an integer attribute ID instead (yes, this
+     is similar to ioctl) - but could also use a string ID if that is
+     preferred.
+
+ (6) Can query cross-namespace if, say, a container manager process is
+     given an fs_context that hasn't yet been mounted into a namespace - or
+     hasn't even been fully created yet.
+
+ (7) Don't have to create/delete a bunch of sysfs/procfs nodes each time a
+     mount happens or is removed - and since systemd makes much use of
+     mount namespaces and mount propagation, this will create a lot of
+     nodes.
+
+
+================
+DESIGN DECISIONS
+================
+
+ (1) Information is partitioned into sets of attributes.
+
+ (2) Attribute IDs are integers as they're fast to compare.
+
+ (3) Attribute values are typed (struct, list of structs, string, opaque
+     blob).  They type is fixed for a particular attribute.
+
+ (4) For structure types, the length is also a version.  New fields can be
+     tacked onto the end.
+
+ (5) When copying a versioned struct to userspace, the core handles a
+     version mismatch by truncating or zero-padding the data as necessary.
+     None of this is seen by the filesystem.
+
+ (6) The core handles all the buffering and buffer resizing.
+
+ (7) The filesystem never gets any access to the userspace parameter buffer
+     or result buffer.
+
+ (8) "Meta" attributes can describe other attributes.
+
+
+========
+OVERVIEW
+========
+
+fsinfo() is a system call that allows information about the filesystem at a
+particular path point to be queried as a set of attributes.
+
+Attribute values are of four basic types:
+
+ (1) Structure with version-dependent length (the length is the version).
+
+ (2) Variable-length string.
+
+ (3) List of structures (all the same length).
+
+ (4) Opaque blob.
+
+Attributes can have multiple values either as a sequence of values or a
+sequence-of-sequences of values and all the values of a particular
+attribute must be of the same type.  Values can be up to INT_MAX size,
+subject to memory availability.
+
+Note that the values of an attribute *are* allowed to vary between dentries
+within a single superblock, depending on the specific dentry that you're
+looking at, but the values still have to be of the type for that attribute.
+
+I've tried to make the interface as light as possible, so integer attribute
+ID rather than string and the core does all the buffer allocation and
+expansion and all the extensibility support work rather than leaving that
+to the filesystems.  This means that userspace pointers are not exposed to
+the filesystem.
+
+
+fsinfo() allows a variety of information to be retrieved about a filesystem
+and the mount topology:
+
+ (1) General superblock attributes:
+
+     - Filesystem identifiers (UUID, volume label, device numbers, ...)
+     - The limits on a filesystem's capabilities
+     - Information on supported statx fields and attributes and IOC flags.
+     - A variety single-bit flags indicating supported capabilities.
+     - Timestamp resolution and range.
+     - The amount of space/free space in a filesystem (as statfs()).
+     - Superblock notification counter.
+
+ (2) Filesystem-specific superblock attributes:
+
+     - Superblock-level timestamps.
+     - Cell name, workgroup or other netfs grouping concept.
+     - Server names and addresses.
+
+ (3) VFS information:
+
+     - Mount topology information.
+     - Mount attributes.
+     - Mount notification counter.
+     - Mount point path.
+
+ (4) Information about what the fsinfo() syscall itself supports, including
+     the type and struct size of attributes.
+
+The system is extensible:
+
+ (1) New attributes can be added.  There is no requirement that a
+     filesystem implement every attribute.  A helper function is provided
+     to scan a list of attributes and a filesystem can have multiple such
+     lists.
+
+ (2) Version length-dependent structure attributes can be made larger and
+     have additional information tacked on the end, provided it keeps the
+     layout of the existing fields.  If an older process asks for a shorter
+     structure, it will only be given the bits it asks for.  If a newer
+     process asks for a longer structure on an older kernel, the extra
+     space will be set to 0.  In all cases, the size of the data actually
+     available is returned.
+
+     In essence, the size of a structure is that structure's version: a
+     smaller size is an earlier version and a later version includes
+     everything that the earlier version did.
+
+ (3) New single-bit capability flags can be added.  This is a structure-typed
+     attribute and, as such, (2) applies.  Any bits you wanted but the kernel
+     doesn't support are automatically set to 0.
+
+fsinfo() may be called like the following, for example:
+
+	struct fsinfo_params params = {
+		.resolve_flags	= RESOLVE_NO_TRAILING_SYMLINKS,
+		.flags		= FSINFO_FLAGS_QUERY_PATH,
+		.request	= FSINFO_ATTR_AFS_SERVER_ADDRESSES,
+		.Nth		= 2,
+	};
+	struct fsinfo_server_address address;
+	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
+		     &address, sizeof(address));
+
+The above example would query an AFS filesystem to retrieve the address
+list for the 3rd server, and:
+
+	struct fsinfo_params params = {
+		.resolve_flags	= RESOLVE_NO_TRAILING_SYMLINKS,
+		.flags		= FSINFO_FLAGS_QUERY_PATH,
+		.request	= FSINFO_ATTR_NFS_SERVER_NAME;
+	};
+	char server_name[256];
+	len = fsinfo(AT_FDCWD, "/home/dhowells/", &params,
+		     &server_name, sizeof(server_name));
+
+would retrieve the name of the NFS server as a string.
+
+In future, I want to make fsinfo() capable of querying a context created by
+fsopen() or fspick(), e.g.:
+
+	fd = fsopen("ext4", 0);
+	struct fsinfo_params params = {
+		.flags		= FSINFO_FLAGS_QUERY_FSCONTEXT,
+		.request	= FSINFO_ATTR_CONFIGURATION;
+	};
+	char buffer[65536];
+	fsinfo(fd, NULL, &params, &buffer, sizeof(buffer));
+
+even if that context doesn't currently have a superblock attached.
+
+The patches can be found here also:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+
+on branch:
+
+	fsinfo-core
+
+
+===================
+SIGNIFICANT CHANGES
+===================
+
+ ver #18:
+
+ (*) Moved the mount and superblock notification patches into a different
+     branch.
+
+ (*) Made superblock configuration (->show_opts), bindmount path
+     (->show_path) and filesystem statistics (->show_stats) available as
+     the CONFIGURATION, MOUNT_PATH and FS_STATISTICS attributes.
+
+ (*) Made mountpoint device name available, filtered through the superblock
+     (->show_devname), as the SOURCE attribute.
+
+ (*) Made the mountpoint available as a full path as well as a relative
+     one.
+
+ (*) Added more event counters to MOUNT_INFO, including a subtree
+     notification counter, to make it easier to clean up after a
+     notification overrun.
+
+ (*) Made the event counter value returned by MOUNT_CHILDREN the sum of the
+     five event counters.
+
+ (*) Added a mount uniquifier and added that to the MOUNT_CHILDREN entries
+     also so that mount ID reuse can be detected.
+
+ (*) Merged the SB_NOTIFICATION attribute into the MOUNT_INFO attribute to
+     avoid duplicate information.
+
+ (*) Switched to using the RESOLVE_* flags rather than AT_* flags for
+     pathwalk control.  Added more RESOLVE_* flags.
+
+ (*) Used a lock instead of RCU to enumerate children for the
+     MOUNT_CHILDREN attribute for safety.  This is probably worth
+     revisiting at a later date, however.
+
+
+ ver #17:
+
+ (*) Applied comments from Jann Horn, Darrick Wong and Christian Brauner.
+
+ (*) Rearranged the order in which fsinfo() does things so that the
+     superblock operations table can have a function pointer rather than a
+     table pointer.  The ->fsinfo() op is now called at least twice, once
+     to determine the size of buffer needed and then to retrieve the data.
+     If the retrieval step indicates yet more space is needed, the buffer
+     will be expanded and that step repeated.
+
+ (*) Merge the element size into the size in the fsinfo_attribute def and
+     don't set size for strings or opaques.  Let a helper work that out.
+     This means that strings can actually get larger then 4K.
+
+ (*) A helper is provided to scan a list of attributes and call the
+     appropriate get function.  This can be called from a filesystem's
+     ->fsinfo() method multiple times.  It also handles attribute
+     enumeration and info querying.
+
+ (*) Rearranged the patches to put all the notification patches first.
+     This allowed some of the bits to be squashed together.  At some point,
+     I'll move the notification patches into a different branch.
+
+ ver #16:
+
+ (*) Split the features bits out of the fsinfo() core into their own patch
+     and got rid of the name encoding attributes.
+
+ (*) Renamed the 'array' type to 'list' and made AFS use it for returning
+     server address lists.
+
+ (*) Changed the ->fsinfo() method into an ->fsinfo_attributes[] table,
+     where each attribute has a ->get() method to deal with it.  These
+     tables can then be returned with an fsinfo meta attribute.
+
+ (*) Dropped the fscontext query and parameter/description retrieval
+     attributes for now.
+
+ (*) Picked the mount topology attributes into this branch.
+
+ (*) Picked the mount notifications into this branch and rebased on top of
+     notifications-pipe-core.
+
+ (*) Picked the superblock notifications into this branch.
+
+ (*) Add sample code for Ext4 and NFS.
+
+David
+---
+David Howells (14):
+      VFS: Add additional RESOLVE_* flags
+      fsinfo: Add fsinfo() syscall to query filesystem information
+      fsinfo: Provide a bitmap of supported features
+      fsinfo: Allow retrieval of superblock devname, options and stats
+      fsinfo: Allow fsinfo() to look up a mount object by ID
+      fsinfo: Add a uniquifier ID to struct mount
+      fsinfo: Allow mount information to be queried
+      fsinfo: Allow the mount topology propogation flags to be retrieved
+      fsinfo: Provide notification overrun handling support
+      fsinfo: sample: Mount listing program
+      fsinfo: Add API documentation
+      fsinfo: Add support for AFS
+      fsinfo: Example support for Ext4
+      fsinfo: Example support for NFS
+
+
+ Documentation/filesystems/fsinfo.rst        |  564 +++++++++++++++++
+ arch/alpha/kernel/syscalls/syscall.tbl      |    1 
+ arch/arm/tools/syscall.tbl                  |    1 
+ arch/arm64/include/asm/unistd.h             |    2 
+ arch/ia64/kernel/syscalls/syscall.tbl       |    1 
+ arch/m68k/kernel/syscalls/syscall.tbl       |    1 
+ arch/microblaze/kernel/syscalls/syscall.tbl |    1 
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 
+ arch/parisc/kernel/syscalls/syscall.tbl     |    1 
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    1 
+ arch/s390/kernel/syscalls/syscall.tbl       |    1 
+ arch/sh/kernel/syscalls/syscall.tbl         |    1 
+ arch/sparc/kernel/syscalls/syscall.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_32.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_64.tbl      |    1 
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    1 
+ fs/Kconfig                                  |    7 
+ fs/Makefile                                 |    1 
+ fs/afs/internal.h                           |    1 
+ fs/afs/super.c                              |  218 +++++++
+ fs/d_path.c                                 |    2 
+ fs/ext4/Makefile                            |    1 
+ fs/ext4/ext4.h                              |    6 
+ fs/ext4/fsinfo.c                            |   45 +
+ fs/ext4/super.c                             |    3 
+ fs/fsinfo.c                                 |  720 ++++++++++++++++++++++
+ fs/internal.h                               |   13 
+ fs/mount.h                                  |    3 
+ fs/namespace.c                              |  362 +++++++++++
+ fs/nfs/Makefile                             |    1 
+ fs/nfs/fsinfo.c                             |  230 +++++++
+ fs/nfs/internal.h                           |    6 
+ fs/nfs/nfs4super.c                          |    3 
+ fs/nfs/super.c                              |    3 
+ fs/open.c                                   |    8 
+ include/linux/fcntl.h                       |    3 
+ include/linux/fs.h                          |    4 
+ include/linux/fsinfo.h                      |  111 +++
+ include/linux/syscalls.h                    |    4 
+ include/uapi/asm-generic/unistd.h           |    4 
+ include/uapi/linux/fsinfo.h                 |  360 +++++++++++
+ include/uapi/linux/mount.h                  |   10 
+ include/uapi/linux/openat2.h                |    8 
+ include/uapi/linux/windows.h                |   35 +
+ kernel/sys_ni.c                             |    1 
+ samples/vfs/Makefile                        |    7 
+ samples/vfs/test-fsinfo.c                   |  880 +++++++++++++++++++++++++++
+ samples/vfs/test-mntinfo.c                  |  277 ++++++++
+ 50 files changed, 3905 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/filesystems/fsinfo.rst
+ create mode 100644 fs/ext4/fsinfo.c
+ create mode 100644 fs/fsinfo.c
+ create mode 100644 fs/nfs/fsinfo.c
+ create mode 100644 include/linux/fsinfo.h
+ create mode 100644 include/uapi/linux/fsinfo.h
+ create mode 100644 include/uapi/linux/windows.h
+ create mode 100644 samples/vfs/test-fsinfo.c
+ create mode 100644 samples/vfs/test-mntinfo.c
+
+
