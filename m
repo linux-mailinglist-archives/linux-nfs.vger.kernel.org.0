@@ -2,74 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D00917F70C
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2020 13:05:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2475B17F77A
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2020 13:32:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgCJMFn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Mar 2020 08:05:43 -0400
-Received: from mail.11d01.mspz7.gob.ec ([190.152.145.91]:52492 "EHLO
-        mail.11d01.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgCJMFn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Mar 2020 08:05:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id 24AD72F6C974;
-        Tue, 10 Mar 2020 04:21:07 -0500 (-05)
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id c0Wir6ui3Jza; Tue, 10 Mar 2020 04:21:06 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id 1C2E12F66E45;
-        Tue, 10 Mar 2020 03:37:32 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.11d01.mspz7.gob.ec 1C2E12F66E45
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=11d01.mspz7.gob.ec;
-        s=50CBC7E4-8BED-11E9-AF6C-F1A741A224D3; t=1583829452;
-        bh=o+H3O7n1+zJcXo0FhJs7spyf8HmE4ClnBa/Y2Gk0DL0=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Reply-To:Message-Id;
-        b=ZfBhs2l4F/LWGJG5CaMSKr7hYvw4NOMMDmeSq0WrzKqxlkIfHKX6bn8TWjoKDlays
-         cFzKQlLxNYeCMLhMY9JswXFZFR6sXUDfvVHxGSeypzzQo9t/5dnVih/z8ZDS3eT4Bu
-         SmEAG9sBXj9Bdhtt9ly+HuQOnm28P0ld6wcIFat8=
-X-Virus-Scanned: amavisd-new at 11d01.mspz7.gob.ec
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1MApC1jXuu1q; Tue, 10 Mar 2020 03:37:31 -0500 (-05)
-Received: from [10.19.167.32] (unknown [105.0.4.171])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTPSA id A75AD2F6CBAF;
-        Tue, 10 Mar 2020 02:59:33 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S1726315AbgCJMcT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Mar 2020 08:32:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726252AbgCJMcT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:32:19 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D43095AD1AB69C88E07F;
+        Tue, 10 Mar 2020 20:32:16 +0800 (CST)
+Received: from fedora-aep.huawei.cmm (10.175.113.49) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 10 Mar 2020 20:32:10 +0800
+From:   yangerkun <yangerkun@huawei.com>
+To:     <sashal@kernel.org>, <gregkh@linuxfoundation.org>
+CC:     <trond.myklebust@primarydata.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>, <stable@vger.kernel.org>,
+        <yangerkun@huawei.com>
+Subject: [PATCH 4.4.y/4.9.y] NFS: fix highmem leak exist in nfs_readdir_xdr_to_array
+Date:   Tue, 10 Mar 2020 21:00:52 +0800
+Message-ID: <20200310130052.5728-1-yangerkun@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <ronald.pena@11d01.mspz7.gob.ec>
-From:   ''Michael weirsky'' <ronald.pena@11d01.mspz7.gob.ec>
-Date:   Tue, 10 Mar 2020 10:29:02 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20200310075933.A75AD2F6CBAF@mail.11d01.mspz7.gob.ec>
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.49]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Lieber Freund,
+The patch 'e22dea67d2f7 ("NFS: Fix memory leaks and corruption in
+readdir")' in 4.4.y/4.9.y will introduce a highmem leak.
+Actually, nfs_readdir_get_array has did what we want to do. No need to
+call kmap again.
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
-Das ist dein Spendencode: [MW530342019]
-www.youtube.com/watch?v=3Dun8yRTmrYMY
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+---
+ fs/nfs/dir.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Antworten Sie mit dem SPENDE-CODE an diese =
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index c2665d920cf8..2517fcd423b6 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -678,8 +678,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 		goto out_label_free;
+ 	}
+ 
+-	array = kmap(page);
+-
+ 	status = nfs_readdir_alloc_pages(pages, array_size);
+ 	if (status < 0)
+ 		goto out_release_array;
+-- 
+2.17.2
 
-
-E-Mail:mikeweirskyspende@gmail.com
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Mike Weirsky
