@@ -2,89 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC63180C0F
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 00:10:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BCC5180C37
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 00:19:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgCJXKH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Mar 2020 19:10:07 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38518 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbgCJXKH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Mar 2020 19:10:07 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h5so510420edn.5
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2020 16:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZjzfLVKcrEVYs6WhxkjJMrt4JgyDW89UP2lOPu52OFg=;
-        b=AFnM8/qVZ5INpBhagP0TzCOiNgkxgenab2JvoMJ9TochGwwsyROWvjIewmaXHDUmar
-         l+T11XTf3Z5/Ln3tLw8rQzmHYyAEoebfFfwlJsw4tdw5dINkokIRH6NS2P54C8D6wCSe
-         ws5FELqRVVqhVPNU17Zok/L7q8FpBv0xeV2Yx/a7IwZ+YYOXOhMa8eTAabzdA20EG7IY
-         J84WyBNSEyA/7FhPiNt9Zcn8JPOOzmRwoHz4R7hn1NRoq0KTMVjRHrmh0e6pxHuZgivu
-         ZZqYfgk18R1hF/eFxnc6c5j6COc0wlMKtMCm0st1cu2neOcTZro4+BlqXr2NtmU9v/Vs
-         2n4g==
+        id S1727311AbgCJXTD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Mar 2020 19:19:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43278 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727659AbgCJXTD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Mar 2020 19:19:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583882342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
+        b=ePT3ybQq7KlGmqxO6iw8fnPh7diSygkqL+zDJkDzSfoSPeRrt0z1uZYL9GJmmcxMWAgUIJ
+        bupMJEySk8dAf3qr+64zujsrYvGLpXGQ9rp6XYpGlIe8jtiYzdF5PjXzbscA/f6zq/oXu9
+        TuBg8tgx7poj6sxgV2q6pz6Ffz1K80w=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-321-PK5GffabP9ej_oIJrMHa2w-1; Tue, 10 Mar 2020 19:18:58 -0400
+X-MC-Unique: PK5GffabP9ej_oIJrMHa2w-1
+Received: by mail-ed1-f70.google.com with SMTP id m24so191392edq.8
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2020 16:18:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZjzfLVKcrEVYs6WhxkjJMrt4JgyDW89UP2lOPu52OFg=;
-        b=oD/TSf+7nHF73q1jljkk8GSKiYxBmeweni9EcXmoiRZ9Sizaq4l3RKVXlBJ3lehcD4
-         Qm5ozQi7ff2fmfZl8U08ShTZgI4ZRe3ZbZKJZo0UA0F90wEl2m5O5Z68cr86WDynOp1D
-         QIdlJnaUTldUbXIlEM/wUA+xvwJiC2jPYBvg/7g/XCuUcuPHoX1G6JV3jok0NBu8yxmJ
-         Sr+NgJDuC+vTRpXuJ2iME3hCe2Ryw1Fwh/AWOq4I+1B0nNJq74j9ofxKOpw+1/EFSKud
-         FRWxpFOHSqlEa/pl0cUSJouztZl9hN5zUF5UdyctMHK4BSuH4zqAsM1tY+6Rzs3eEXUP
-         Zuag==
-X-Gm-Message-State: ANhLgQ2sJWgFcaI4TQaj0DbJjckVxvZZ2t3nGbxhZqJ5wORwO2rFoDq1
-        vdLtUZaRiWY+VCLdr82kBi4aZQ==
-X-Google-Smtp-Source: ADFU+vuw/QrLgknOBSnLL6UEPd5ZmG0mMBAvF0lDukG/ngJ9XGt+BMvhR1Vfo0DVxEJ2jx46GiOIfQ==
-X-Received: by 2002:a05:6402:549:: with SMTP id i9mr174325edx.323.1583881805877;
-        Tue, 10 Mar 2020 16:10:05 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5? ([2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5])
-        by smtp.gmail.com with ESMTPSA id h22sm3715651eds.88.2020.03.10.16.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 16:10:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
+        b=FTgxPMeUs8bpHUFnzK1pQ/319IASVYNmnqUnc5tJ5XMH5HMa1onz7RJP8zMASGcEF1
+         OwFqKSboBRKhJIeTbyRvFKn5y5IgnXdwAIagOkepP3QTMn3FkfJBobYIFwvOKMd1s1el
+         OObNOhdterD7DgwhiFA44KV/BsltOIv+VuSdwa+T8oBLETvY+aawhsMMrR2osOrEG1ql
+         bhACGdUQU/u/7bkDArdIk/4Rdstc50o8AStBTJSjzagAHjz8U+GFhBPx3fRKhXcWyomx
+         l3PCggKuThOcwhqLh/Yj0ijundYldBDSfjFcHKlTXSCGYdsFQA6n6+bsdUFa1EV9q7dt
+         EiZg==
+X-Gm-Message-State: ANhLgQ1pzJT7Lm95/89cfb5V4albmY1+GxPF6hS+i2lZLk7aCNWFv3YV
+        FDsy6vJJ4EH+ztU1RnZt15n/3mP3FJlTbyISU5NHk3SmB24E+jTO/IuUGCTFG7ihdIO5PYz5ppz
+        u0Trz6SUnFN/smgVhuR6tA/vXj0YGhga+tdS6
+X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415672ejc.377.1583882337423;
+        Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vstjHqiZOF0xElis+31S7G0gY2aH73JLw/AluJvKeWmdJcJyHfoWoeERc+w0Ht0pyWZgseKXsqtbLAkFkQLxyM=
+X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415648ejc.377.1583882337100;
+ Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200310223516.102758-1-mcroce@redhat.com> <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
+In-Reply-To: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Wed, 11 Mar 2020 00:18:21 +0100
+Message-ID: <CAGnkfhwjXN_T09MsD1e6P95gUqxCbWL7BcOLSy16_QOZsZKbgQ@mail.gmail.com>
 Subject: Re: [PATCH v2] block: refactor duplicated macros
-To:     Matteo Croce <mcroce@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mmc@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Song Liu <song@kernel.org>
-References: <20200310223516.102758-1-mcroce@redhat.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
-Date:   Wed, 11 Mar 2020 00:10:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200310223516.102758-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 12:10 AM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+>
+>
+> On 3/10/20 11:35 PM, Matteo Croce wrote:
+> > +++ b/drivers/md/raid1.c
+> > @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
+> >       int vcnt;
+> >
+> >       /* Fix variable parts of all bios */
+> > -     vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
+> > +     vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
+>
+> Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
+>
+> Thanks,
+> Guoqing
+>
 
+Wow, there are a lot of them!
 
-On 3/10/20 11:35 PM, Matteo Croce wrote:
-> +++ b/drivers/md/raid1.c
-> @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
->   	int vcnt;
->   
->   	/* Fix variable parts of all bios */
-> -	vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
-> +	vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
+$ git grep -c 'PAGE_SHIFT - 9'
+arch/ia64/include/asm/pgtable.h:2
+block/blk-settings.c:2
+block/partition-generic.c:1
+drivers/md/dm-table.c:1
+drivers/md/raid1.c:1
+drivers/md/raid10.c:1
+drivers/md/raid5-cache.c:5
+drivers/md/raid5.h:1
+drivers/nvme/host/fc.c:1
+drivers/nvme/target/loop.c:1
+fs/erofs/internal.h:1
+fs/ext2/dir.c:1
+fs/libfs.c:1
+fs/nilfs2/dir.c:1
+mm/page_io.c:2
+mm/swapfile.c:6
 
-Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
+-- 
+Matteo Croce
+per aspera ad upstream
 
-Thanks,
-Guoqing
