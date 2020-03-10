@@ -2,117 +2,198 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BCC5180C37
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 00:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 626CC180CA7
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 00:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgCJXTD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Mar 2020 19:19:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43278 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727659AbgCJXTD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Mar 2020 19:19:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583882342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
-        b=ePT3ybQq7KlGmqxO6iw8fnPh7diSygkqL+zDJkDzSfoSPeRrt0z1uZYL9GJmmcxMWAgUIJ
-        bupMJEySk8dAf3qr+64zujsrYvGLpXGQ9rp6XYpGlIe8jtiYzdF5PjXzbscA/f6zq/oXu9
-        TuBg8tgx7poj6sxgV2q6pz6Ffz1K80w=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-PK5GffabP9ej_oIJrMHa2w-1; Tue, 10 Mar 2020 19:18:58 -0400
-X-MC-Unique: PK5GffabP9ej_oIJrMHa2w-1
-Received: by mail-ed1-f70.google.com with SMTP id m24so191392edq.8
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2020 16:18:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
-        b=FTgxPMeUs8bpHUFnzK1pQ/319IASVYNmnqUnc5tJ5XMH5HMa1onz7RJP8zMASGcEF1
-         OwFqKSboBRKhJIeTbyRvFKn5y5IgnXdwAIagOkepP3QTMn3FkfJBobYIFwvOKMd1s1el
-         OObNOhdterD7DgwhiFA44KV/BsltOIv+VuSdwa+T8oBLETvY+aawhsMMrR2osOrEG1ql
-         bhACGdUQU/u/7bkDArdIk/4Rdstc50o8AStBTJSjzagAHjz8U+GFhBPx3fRKhXcWyomx
-         l3PCggKuThOcwhqLh/Yj0ijundYldBDSfjFcHKlTXSCGYdsFQA6n6+bsdUFa1EV9q7dt
-         EiZg==
-X-Gm-Message-State: ANhLgQ1pzJT7Lm95/89cfb5V4albmY1+GxPF6hS+i2lZLk7aCNWFv3YV
-        FDsy6vJJ4EH+ztU1RnZt15n/3mP3FJlTbyISU5NHk3SmB24E+jTO/IuUGCTFG7ihdIO5PYz5ppz
-        u0Trz6SUnFN/smgVhuR6tA/vXj0YGhga+tdS6
-X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415672ejc.377.1583882337423;
-        Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vstjHqiZOF0xElis+31S7G0gY2aH73JLw/AluJvKeWmdJcJyHfoWoeERc+w0Ht0pyWZgseKXsqtbLAkFkQLxyM=
-X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415648ejc.377.1583882337100;
- Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310223516.102758-1-mcroce@redhat.com> <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
-In-Reply-To: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 11 Mar 2020 00:18:21 +0100
-Message-ID: <CAGnkfhwjXN_T09MsD1e6P95gUqxCbWL7BcOLSy16_QOZsZKbgQ@mail.gmail.com>
-Subject: Re: [PATCH v2] block: refactor duplicated macros
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726899AbgCJX4n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Mar 2020 19:56:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38644 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCJX4n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Mar 2020 19:56:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ANrQiB180107;
+        Tue, 10 Mar 2020 23:56:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=21SvJWEk2E+Aqm68uaD3CEp+jglEOIKbCoojg5zGiCA=;
+ b=UqESqA+0eaAq7jAnR/jo5gpUx5eCn7Mzdexy40CCxniFS9vgy9qlQUhmORQXfieWiZOI
+ /o+HzKCg0+UjkPxs+fFTOqdw53JIPXoUra7b8kLNlVyjW09JoOIK5OtwPtnwn8mcK/bT
+ lz8PbneY758QX7HqUoBXUx4w0p/FpSmbvw5BjeGohBFboOwl2unnZhkWQ1I+yHAYOAVU
+ udzuy1JxY9ePOrNYp9cUr+R2MTittY6n0i06xWQKtD3zdxZU0iFHzvJdOo1C1OTjRJjY
+ EpTdTbdMjcDZGUx43OZ/8TOZ5fv0T4dQT67F3j0bzrK2p7BapY9gGnIbRDCwDKJTmtNw Vg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yp7hm4xtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 23:56:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ANqOEt089006;
+        Tue, 10 Mar 2020 23:56:35 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2yp8nwqt73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 23:56:34 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02ANuVw1018460;
+        Tue, 10 Mar 2020 23:56:31 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 16:56:31 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC PATCH] fix krb5p mount not providing large enough buffer in
+ rq_rcvsize
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAN-5tyHQpS7AmPX1cDxKpD=5gyAM7+nmLX+iA29QV7sLwhoX9Q@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 19:56:30 -0400
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EE167593-39A6-4E29-B690-31D1D985DCC0@oracle.com>
+References: <CAN-5tyHegg96s7mr1YeoPbVd0UA7_cd2GEPYNWx98uUcx-0ARw@mail.gmail.com>
+ <FF0659E0-8F04-4005-96D0-5D513881EDFE@oracle.com>
+ <CAN-5tyHQpS7AmPX1cDxKpD=5gyAM7+nmLX+iA29QV7sLwhoX9Q@mail.gmail.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100143
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:10 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
->
->
->
-> On 3/10/20 11:35 PM, Matteo Croce wrote:
-> > +++ b/drivers/md/raid1.c
-> > @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
-> >       int vcnt;
-> >
-> >       /* Fix variable parts of all bios */
-> > -     vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
-> > +     vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
->
-> Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
->
-> Thanks,
-> Guoqing
->
 
-Wow, there are a lot of them!
 
-$ git grep -c 'PAGE_SHIFT - 9'
-arch/ia64/include/asm/pgtable.h:2
-block/blk-settings.c:2
-block/partition-generic.c:1
-drivers/md/dm-table.c:1
-drivers/md/raid1.c:1
-drivers/md/raid10.c:1
-drivers/md/raid5-cache.c:5
-drivers/md/raid5.h:1
-drivers/nvme/host/fc.c:1
-drivers/nvme/target/loop.c:1
-fs/erofs/internal.h:1
-fs/ext2/dir.c:1
-fs/libfs.c:1
-fs/nilfs2/dir.c:1
-mm/page_io.c:2
-mm/swapfile.c:6
+> On Mar 10, 2020, at 5:07 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
+>=20
+> Hi Chuck,
+>=20
+> On Tue, Mar 10, 2020 at 3:57 PM Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>>=20
+>> Hi Olga-
+>>=20
+>>> On Mar 10, 2020, at 2:58 PM, Olga Kornievskaia <aglo@umich.edu> =
+wrote:
+>>>=20
+>>> Ever since commit 2c94b8eca1a26 "SUNRPC: Use au_rslack when =
+computing
+>>> reply buffer size". It changed how "req->rq_rcvsize" is calculated. =
+It
+>>> used to use au_cslack value which was nice and large and changed it =
+to
+>>> au_rslack value which turns out to be too small.
+>>>=20
+>>> Since 5.1, v3 mount with sec=3Dkrb5p fails against an Ontap server
+>>> because client's receive buffer it too small.
+>>=20
+>> Can you be more specific? For instance, why is 100 bytes adequate for
+>> Linux servers, but not OnTAP?
+>=20
+> I don't know why Ontap sends more data than Linux server.
 
--- 
-Matteo Croce
-per aspera ad upstream
+Let's be sure we are fixing the right problem. Yes, au_rslack is
+smaller in v5.1, and that results in a behavioral regression. But
+exactly which part of the new calculation is incorrect is not yet
+clear. Simply bumping GSS_VERF_SLACK could very well plaster over
+the real problem.
+
+
+> The opaque_len is just a lot larger. For the first message Linux
+> opaque_len is 120bytes and Ontap it's 206. So it could be for instance
+> for FSINFO that sends the file handle, for Netapp the file handle is
+> 44bytes and for Linux it's only 28bytes.
+
+The maximum filehandle size should already be accounted for in the
+maxsize macro for FSINFO.
+
+Is this problem evident only with NFSv3 plus krb5p?
+
+
+>> Is this explanation for the current value not correct?
+>>=20
+>>  51 /* length of a krb5 verifier (48), plus data added before =
+arguments when
+>>  52  * using integrity (two 4-byte integers): */
+>=20
+> I'm not sure what it is suppose to be. Isn't "data before arguments"
+> can vary in length and thus explain why linux and onto sizes are
+> different?
+> Looking at the network trace the krb5 verifier I see is 36bytes.
+
+GSS_VERF_SLACK is only for the extra length added by GSS data. The
+length of the RPC message itself is handled separately, see above.
+
+Can you post a Wireshark dissection of the problematic FSINFO reply?
+(Having a working reply from Linux and a failing reply from OnTAP
+would be even better).
+
+
+>>> For GSS, au_rslack is calculated from GSS_VERF_SLACK value which is
+>>> currently 100. And it's not enough. Changing it to 104 works and =
+then
+>>> au_rslack is recalculated based on actual received mic.len and not
+>>> just the default buffer size.
+
+What are the computed au_ralign and au_rslack values after the first
+successful operation?
+
+
+>>> I would like to propose to change it to something a little larger =
+than
+>>> 104, like 120 to give room if some other server might reply with
+>>> something even larger.
+>>=20
+>> Why does it need to be larger than 104?
+>=20
+> I don't know why 100 was chosen and given that I think arguments are
+> taken into the account and arguments can change. I think NetApp has
+> changed their file handle sizes (at some point, not in the near past
+> but i think so?). Perhaps they might want to do that again so the size
+> will change again.
+>=20
+> Honestly, I would have like for 100 to be 200 to be safe.
+
+To be safe, I would like to have a good understanding of the details,
+rather than guessing at an arbitrary maximum value. Let's choose a
+rational maximum and include a descriptive comment about why that value
+is the best choice.
+
+
+>>> Thoughts? Will send an actual patch if no objections to this one.
+>>>=20
+>>> diff --git a/net/sunrpc/auth_gss/auth_gss.c =
+b/net/sunrpc/auth_gss/auth_gss.c
+>>> index 24ca861..44ae6bc 100644
+>>> --- a/net/sunrpc/auth_gss/auth_gss.c
+>>> +++ b/net/sunrpc/auth_gss/auth_gss.c
+>>> @@ -50,7 +50,7 @@
+>>> #define GSS_CRED_SLACK         (RPC_MAX_AUTH_SIZE * 2)
+>>> /* length of a krb5 verifier (48), plus data added before arguments =
+when
+>>> * using integrity (two 4-byte integers): */
+>>> -#define GSS_VERF_SLACK         100
+>>> +#define GSS_VERF_SLACK         120
+>>>=20
+>>> static DEFINE_HASHTABLE(gss_auth_hash_table, 4);
+>>> static DEFINE_SPINLOCK(gss_auth_hash_lock);
+>>=20
+>> --
+>> Chuck Lever
+
+--
+Chuck Lever
+
+
 
