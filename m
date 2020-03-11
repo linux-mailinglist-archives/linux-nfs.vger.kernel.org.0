@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 038F61822FA
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 21:00:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93211182308
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 21:00:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbgCKT77 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Mar 2020 15:59:59 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:21948 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731165AbgCKT76 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Mar 2020 15:59:58 -0400
+        id S2387463AbgCKUAS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Mar 2020 16:00:18 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:56670 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387447AbgCKUAS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Mar 2020 16:00:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1583956797; x=1615492797;
+  t=1583956817; x=1615492817;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=O97YRg8xTKVNLX0Bt23R4Gp6o7/2FpRmJtAjQredx1I=;
-  b=hHZqOrSpS5roBrl3Ma0zx4f/DvX3bdLGuVjnLZIewkJHUQ5hJVyuRXrn
-   0Byykt4m0augH93I6pYxZI+HixYrKl7zv5IRXfdmGZ22ky6Vbn2GppbpO
-   1CwfFLZAifFe4nF4Hr5Ri6pkCKnoz5ORM9iOamewe267oV6RFaVuXh9H6
-   I=;
-IronPort-SDR: GMk410Y7D4qQ/BD/yAqqtETauutyvU66ngyfSgdnJp0oCXZsy4E/Q2DT4feiNndAoZbs2/Ag5y
- mJgsZcqyJcdQ==
+  bh=4THswT0o52ovnlzrXKlcAZT1YB714M/0FcpslE4Pfsw=;
+  b=Tiki7QWEQHqXwsTDaEgr6Z56X+2seMlA4dQFA2D1FOvtazs76ONQDpst
+   SlTGE1CEZRjiRCH25U2KqzI61jcCqiSxUdki+rsEUa3NqmNOyaeCb90nE
+   k7EqWBV5+EAYFe2QNt0DyPogS//0UieqR+V+9WaAV8FDrz+jgW0O4lOLk
+   E=;
+IronPort-SDR: OPsR8adRoXxDdGxbP1UpIoarxi54t1P3vm6FT2w+4BVLTOIo0Zay+FQymQymFZe2emu5vfRdG0
+ ZQCSaduazOng==
 X-IronPort-AV: E=Sophos;i="5.70,541,1574121600"; 
-   d="scan'208";a="30664617"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 11 Mar 2020 19:59:56 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id D0EF0A19C3;
-        Wed, 11 Mar 2020 19:59:55 +0000 (UTC)
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Mar 2020 19:59:55 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 11 Mar 2020 19:59:54 +0000
+   d="scan'208";a="22302158"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 Mar 2020 20:00:16 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id BC635A3059;
+        Wed, 11 Mar 2020 20:00:15 +0000 (UTC)
+Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Mar 2020 19:59:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 11 Mar 2020 19:59:56 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 11 Mar 2020 19:59:55 +0000
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1236.3 via Frontend Transport; Wed, 11 Mar 2020 19:59:55 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 0BB20DEC13; Wed, 11 Mar 2020 19:59:55 +0000 (UTC)
+        id 0E5E9DEC0F; Wed, 11 Mar 2020 19:59:55 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
         <linux-nfs@vger.kernel.org>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH 03/14] nfsd: split off the write decode code in to a separate function
-Date:   Wed, 11 Mar 2020 19:59:43 +0000
-Message-ID: <20200311195954.27117-4-fllinden@amazon.com>
+Subject: [PATCH 04/14] nfsd: make sure the nfsd4_ops array has the right size
+Date:   Wed, 11 Mar 2020 19:59:44 +0000
+Message-ID: <20200311195954.27117-5-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
 In-Reply-To: <20200311195954.27117-1-fllinden@amazon.com>
 References: <20200311195954.27117-1-fllinden@amazon.com>
@@ -58,114 +58,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfs4_decode_write has code to parse incoming XDR write data in to
-a kvec head, and a list of pages.
+The nfsd4_ops was initialized by initializing individual indices (op
+numbers). So, the size of the array was determined by the largest
+op number.
 
-Put this code in to a separate function, so that it can be used
-later by the xattr code, for setxattr. No functional change.
+Some operations are enabled conditionally, based on config options.
+If a conditionally enabled operation were to be the highest numbered
+operation, the code (through OPDESC) would attempt to access memory
+beyond the end of the array. This currently can't happen, since the
+highest numbered op is not conditional, but it might in the future.
+
+So, always size the array with LAST_NFS4_OP + 1.
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- fs/nfsd/nfs4xdr.c | 72 ++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 42 insertions(+), 30 deletions(-)
+ fs/nfsd/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 9761512674a0..6e7fc6a9931e 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -257,6 +257,44 @@ svcxdr_dupstr(struct nfsd4_compoundargs *argp, void *buf, u32 len)
- 	return p;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 0e75f7fb5fec..5de6449e6ff8 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2699,7 +2699,7 @@ static inline u32 nfsd4_seek_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
+ 	return (op_encode_hdr_size + 3) * sizeof(__be32);
  }
  
-+static __be32
-+svcxdr_construct_vector(struct nfsd4_compoundargs *argp, struct kvec *head,
-+			struct page ***pagelist, u32 buflen)
-+{
-+	int avail;
-+	int len;
-+	int pages;
-+
-+	/* Sorry .. no magic macros for this.. *
-+	 * READ_BUF(write->wr_buflen);
-+	 * SAVEMEM(write->wr_buf, write->wr_buflen);
-+	 */
-+	avail = (char *)argp->end - (char *)argp->p;
-+	if (avail + argp->pagelen < buflen) {
-+		dprintk("NFSD: xdr error (%s:%d)\n",
-+			       __FILE__, __LINE__);
-+		return nfserr_bad_xdr;
-+	}
-+	head->iov_base = argp->p;
-+	head->iov_len = avail;
-+	*pagelist = argp->pagelist;
-+
-+	len = XDR_QUADLEN(buflen) << 2;
-+	if (len >= avail) {
-+		len -= avail;
-+
-+		pages = len >> PAGE_SHIFT;
-+		argp->pagelist += pages;
-+		argp->pagelen -= pages * PAGE_SIZE;
-+		len -= pages * PAGE_SIZE;
-+
-+		next_decode_page(argp);
-+	}
-+	argp->p += XDR_QUADLEN(len);
-+
-+	return 0;
-+}
-+
- /**
-  * savemem - duplicate a chunk of memory for later processing
-  * @argp: NFSv4 compound argument structure to be freed with
-@@ -1265,8 +1303,6 @@ nfsd4_decode_verify(struct nfsd4_compoundargs *argp, struct nfsd4_verify *verify
- static __be32
- nfsd4_decode_write(struct nfsd4_compoundargs *argp, struct nfsd4_write *write)
- {
--	int avail;
--	int len;
- 	DECODE_HEAD;
- 
- 	status = nfsd4_decode_stateid(argp, &write->wr_stateid);
-@@ -1279,34 +1315,10 @@ nfsd4_decode_write(struct nfsd4_compoundargs *argp, struct nfsd4_write *write)
- 		goto xdr_error;
- 	write->wr_buflen = be32_to_cpup(p++);
- 
--	/* Sorry .. no magic macros for this.. *
--	 * READ_BUF(write->wr_buflen);
--	 * SAVEMEM(write->wr_buf, write->wr_buflen);
--	 */
--	avail = (char*)argp->end - (char*)argp->p;
--	if (avail + argp->pagelen < write->wr_buflen) {
--		dprintk("NFSD: xdr error (%s:%d)\n",
--				__FILE__, __LINE__);
--		goto xdr_error;
--	}
--	write->wr_head.iov_base = p;
--	write->wr_head.iov_len = avail;
--	write->wr_pagelist = argp->pagelist;
--
--	len = XDR_QUADLEN(write->wr_buflen) << 2;
--	if (len >= avail) {
--		int pages;
--
--		len -= avail;
--
--		pages = len >> PAGE_SHIFT;
--		argp->pagelist += pages;
--		argp->pagelen -= pages * PAGE_SIZE;
--		len -= pages * PAGE_SIZE;
--
--		next_decode_page(argp);
--	}
--	argp->p += XDR_QUADLEN(len);
-+	status = svcxdr_construct_vector(argp, &write->wr_head,
-+					 &write->wr_pagelist, write->wr_buflen);
-+	if (status)
-+		return status;
- 
- 	DECODE_TAIL;
- }
+-static const struct nfsd4_operation nfsd4_ops[] = {
++static const struct nfsd4_operation nfsd4_ops[LAST_NFS4_OP + 1] = {
+ 	[OP_ACCESS] = {
+ 		.op_func = nfsd4_access,
+ 		.op_name = "OP_ACCESS",
 -- 
 2.16.6
 
