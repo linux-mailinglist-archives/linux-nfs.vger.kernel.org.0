@@ -2,123 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41D05181C31
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 16:21:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8821181C4F
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2020 16:28:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgCKPVU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Mar 2020 11:21:20 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46186 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbgCKPVU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Mar 2020 11:21:20 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x5so2297791ywb.13
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2020 08:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=BmXZ22GcGEbc6UE9Xpf8G0Sx0iIs8bTE3EMBbdeT6V8=;
-        b=FCFAD6o72+nuQE9gMZ3oj7x3pcz/PH3NRedDDT5tCsmvSdrKKRC0DXG/h+NWzFTUun
-         DFIacAZmYSf+88Txqlw8HuKaLFa9wGSqLV8uTRLGKQls4aKkSLW1J5Sdiq1iObZ23CxD
-         UPYwtoNTfr1xz3BW379KuuIIlXHV9hF58dKC8QQgPrjLOas+lF51Puf0Wg3OWmM3uxnH
-         4FhffOylLqPyTwU2KtyVdJAG58k6tWsgNKz+4LxPxnuF1dTd82mqXj5I16hN1oKuJcBo
-         pG6GpFx4L0pAtUpyWLwu1y0jjyvgW/4HqNf9V4dgIQGGS9JOaDkaWTmOduVzQvNLSImT
-         KJ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=BmXZ22GcGEbc6UE9Xpf8G0Sx0iIs8bTE3EMBbdeT6V8=;
-        b=NaxQm6hTp7WmnXFJKqknydQ1Hh72UaB001LoQdlFrwFTV219STJ09Myx3O4atp3iKv
-         240JoVx0XKXq7sdYDWiOItLWj9QO8AazwIfvL8D+giDhGxxjJ6+dRHmfSzDpuJ9w5q9j
-         D3ejewTsjLGbOwX6vshKWC5zTxaxsmxT8Z4LDaa/aY2SDJOKxD+GOCS4If35LmoyS0hk
-         tjKFm0noFLBzkvHCDYXr1+hjIAq2xTuL8qNL9vl0/XVxBc+LfKXulMEJ9ijrlv/JixHd
-         fnQDalAYzaWwT1j2mspbMSpfq5KCR+f/6MdJ7Cx+vGiKngkK22WTfhX92pO+CMFmWObG
-         MZqg==
-X-Gm-Message-State: ANhLgQ2UNM73T25owlW0SP7Wl3ic3PHHGJrb1mwFNePDd0BR9nbCyf62
-        UkSH1egCGIY78l9JU5Ap/9PoNUTz4Q8=
-X-Google-Smtp-Source: ADFU+vu6A2Tp4/UBLAHZyUCa+PZeZ81hX75VxpXlFCOA0gSeLUBsO9iSHgc2d6PWgImhg4X7avAdUg==
-X-Received: by 2002:a81:91ca:: with SMTP id i193mr3707345ywg.265.1583940079283;
-        Wed, 11 Mar 2020 08:21:19 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s130sm20839575ywg.11.2020.03.11.08.21.18
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 08:21:18 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02BFLHxc014823
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2020 15:21:17 GMT
-Subject: [PATCH v3 3/3] SUNRPC: Trim stack utilization in the wrap and
- unwrap paths
+        id S1729921AbgCKP22 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Mar 2020 11:28:28 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52196 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgCKP22 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Mar 2020 11:28:28 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BFBd24024633;
+        Wed, 11 Mar 2020 15:28:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=CYFt/F+/5ZQDd8hZSXAyzslym8vn7YEhAxZ4h9jmyjg=;
+ b=XdnTh2o1WrnfuMTzAXJSKUXznTFGbdSsu7sST8IVjfp/RboUAd3zZv2E4TApMRzFOmf3
+ GNCi0CYah4kQ1dYoJPH32mVpztnfd+J5g1Clu0Q68xmyA2n58U6YeHI4l0cCsKS/cwTa
+ Q801xUzdWv60gXLlU94zQs8YkWD6pa4O7xG/If/NOTLrQdnkuaA6o2Si9+pRZmyM7dUL
+ ZJTEZrnhqX7IUxNe7tXrsl5OPxC5Ke8WHgF9E9QkBbLxUPEsgknpu2NWfXokxC1ALlLZ
+ udPGpJkoFSQJc1vwPEjehlzuqxzloEgYpmSRzvuce9rUUkOjk4rrP642Ps/p0wuDj4s+ 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ym31ume5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 15:28:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BFKAc6161150;
+        Wed, 11 Mar 2020 15:26:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ypv9vb748-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 15:26:21 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02BFQJup027863;
+        Wed, 11 Mar 2020 15:26:19 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Mar 2020 08:26:19 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 8/8] sunrpc: Drop the connection when the server drops a
+ request
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Wed, 11 Mar 2020 11:21:17 -0400
-Message-ID: <20200311152117.24642.6326.stgit@manet.1015granger.net>
-In-Reply-To: <20200311151853.24642.92772.stgit@manet.1015granger.net>
-References: <20200311151853.24642.92772.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <32be2fbebcd4e30567f54c830e23a0ef35a4844e.camel@hammerspace.com>
+Date:   Wed, 11 Mar 2020 11:26:18 -0400
+Cc:     "dwysocha@redhat.com" <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8B37E4E5-1F62-4EA7-8F40-88FBB30C1738@oracle.com>
+References: <20200301232145.1465430-1-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-2-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-3-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-4-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-5-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-6-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-7-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-8-trond.myklebust@hammerspace.com>
+ <20200301232145.1465430-9-trond.myklebust@hammerspace.com>
+ <CALF+zOkJPkYaXjCn-tj0dPCQUAjA05zyzxm5fzwoB-XP0SGYvw@mail.gmail.com>
+ <32be2fbebcd4e30567f54c830e23a0ef35a4844e.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110097
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-By preventing compiler inlining of the integrity and privacy
-helpers, stack utilization for the common case (authentication only)
-goes way down.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/auth_gss.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 98b2c8bc8f40..45707a306f20 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1724,8 +1724,9 @@ static int gss_cred_is_negative_entry(struct rpc_cred *cred)
- 	goto out;
- }
- 
--static int gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
--			      struct rpc_task *task, struct xdr_stream *xdr)
-+static noinline_for_stack int
-+gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
-+		   struct rpc_task *task, struct xdr_stream *xdr)
- {
- 	struct rpc_rqst *rqstp = task->tk_rqstp;
- 	struct xdr_buf integ_buf, *snd_buf = &rqstp->rq_snd_buf;
-@@ -1816,8 +1817,9 @@ static int gss_wrap_req_integ(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
- 	return -EAGAIN;
- }
- 
--static int gss_wrap_req_priv(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
--			     struct rpc_task *task, struct xdr_stream *xdr)
-+static noinline_for_stack int
-+gss_wrap_req_priv(struct rpc_cred *cred, struct gss_cl_ctx *ctx,
-+		  struct rpc_task *task, struct xdr_stream *xdr)
- {
- 	struct rpc_rqst *rqstp = task->tk_rqstp;
- 	struct xdr_buf	*snd_buf = &rqstp->rq_snd_buf;
-@@ -1947,7 +1949,7 @@ static int gss_wrap_req(struct rpc_task *task, struct xdr_stream *xdr)
-  *		proc_req_arg_t arg;
-  *	};
-  */
--static int
-+static noinline_for_stack int
- gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 		      struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		      struct xdr_stream *xdr)
-@@ -2021,7 +2023,7 @@ static int gss_wrap_req(struct rpc_task *task, struct xdr_stream *xdr)
- 	goto out;
- }
- 
--static int
-+static noinline_for_stack int
- gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
- 		     struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		     struct xdr_stream *xdr)
+> On Mar 2, 2020, at 3:12 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Mon, 2020-03-02 at 11:27 -0500, David Wysochanski wrote:
+>> On Sun, Mar 1, 2020 at 6:25 PM Trond Myklebust <trondmy@gmail.com>
+>> wrote:
+>>> If a server wants to drop a request, then it should also drop the
+>>> connection, in order to let the client know.
+>>>=20
+>>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>> ---
+>>> net/sunrpc/svc_xprt.c | 10 ++++++++++
+>>> 1 file changed, 10 insertions(+)
+>>>=20
+>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>>> index de3c077733a7..83a527e56c87 100644
+>>> --- a/net/sunrpc/svc_xprt.c
+>>> +++ b/net/sunrpc/svc_xprt.c
+>>> @@ -873,6 +873,13 @@ int svc_recv(struct svc_rqst *rqstp, long
+>>> timeout)
+>>> }
+>>> EXPORT_SYMBOL_GPL(svc_recv);
+>>>=20
+>>> +static void svc_drop_connection(struct svc_xprt *xprt)
+>>> +{
+>>> +       if (test_bit(XPT_TEMP, &xprt->xpt_flags) &&
+>>> +           !test_and_set_bit(XPT_CLOSE, &xprt->xpt_flags))
+>>> +               svc_xprt_enqueue(xprt);
+>>> +}
+>>> +
+>>> /*
+>>>  * Drop request
+>>>  */
+>>> @@ -880,6 +887,8 @@ void svc_drop(struct svc_rqst *rqstp)
+>>> {
+>>>        trace_svc_drop(rqstp);
+>>>        dprintk("svc: xprt %p dropped request\n", rqstp->rq_xprt);
+>>> +       /* Close the connection when dropping a request */
+>>> +       svc_drop_connection(rqstp->rq_xprt);
+>>>        svc_xprt_release(rqstp);
+>>> }
+>>> EXPORT_SYMBOL_GPL(svc_drop);
+>>> @@ -1148,6 +1157,7 @@ static void svc_revisit(struct
+>>> cache_deferred_req *dreq, int too_many)
+>>>        if (too_many || test_bit(XPT_DEAD, &xprt->xpt_flags)) {
+>>>                spin_unlock(&xprt->xpt_lock);
+>>>                dprintk("revisit canceled\n");
+>>> +               svc_drop_connection(xprt);
+>>>                svc_xprt_put(xprt);
+>>>                trace_svc_drop_deferred(dr);
+>>>                kfree(dr);
+>>> --
+>>> 2.24.1
+>>>=20
+>>=20
+>> Trond, back in 2014 you had this NFSv4 only patch that took a more
+>> surgical approach:
+>> https://marc.info/?l=3Dlinux-nfs&m=3D141414531832768&w=3D2
+>>=20
+>> It looks like discussion died out on it after it was ineffective to
+>> solve a different problem.
+>> Is there a reason why you don't want to do that approach now?
+>>=20
+>=20
+> Let me resend this patch with a better proposal.
+
+Hey Trond, any progress here?
+
+
+> I think the main 2
+> problems here are really
+>=20
+>   1. the svc_revisit() case, where we cancel the revisit. That case
+>      affects all versions of NFS, and can lead to performance issues.
+>   2. the NFSv2,v3,v4.0 replay cache, where dropping the replay (e.g.
+>      after a connection breakage) can cause a performance hit, and for
+>      something like TCP, which has long (usually 60 second) timeouts =
+it
+>      could cause the replay to be delayed until after the reply gets
+>      kicked out of the cache. This is the case where NFSv4.0 can =
+probably
+>      end up hanging, since the replay won't be forthcoming until a new
+>      connection breakage occurs.
+>=20
+> I think (1) is best served by a patch like this one.
+> Perhaps (2) is better served by adopting the svc_defer() mechanism?
+>=20
+> Hmm... Perhaps 2 patches are in order...
+
+--
+Chuck Lever
+
+
 
