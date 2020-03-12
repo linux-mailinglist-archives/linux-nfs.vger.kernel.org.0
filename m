@@ -2,207 +2,291 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1851835EE
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 17:15:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A0F18361D
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 17:26:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgCLQPO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Mar 2020 12:15:14 -0400
-Received: from smtp-o-1.desy.de ([131.169.56.154]:42581 "EHLO smtp-o-1.desy.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgCLQPN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:15:13 -0400
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
-        by smtp-o-1.desy.de (Postfix) with ESMTP id 764ABE07D9
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2020 17:15:11 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 764ABE07D9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1584029711; bh=qYUCrS4Wn5gbng3eCqVtNEG71sv57E1ak+mNPNGUPCg=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=y8kdpOcOblLEPMi03E2m9fGLDd0dkK6HICKFseSJRNC64EiXccG5lSYcCsdAtKuL6
-         UVEo9hD5zcei5NBSMWrWKVLOkpKGxDWKcpTyce8xE+dzs4nMzU5KrItS+UbMzn+9fK
-         qJfsqYv8JXb4LupkgqmOVEkGthqEEDV6Vkq4AFlM=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-        by smtp-buf-1.desy.de (Postfix) with ESMTP id 6AB87120262;
-        Thu, 12 Mar 2020 17:15:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id 3D62F100076;
-        Thu, 12 Mar 2020 17:15:11 +0100 (CET)
-Date:   Thu, 12 Mar 2020 17:15:10 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+        id S1727001AbgCLQ0c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Mar 2020 12:26:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50560 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgCLQ0c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Mar 2020 12:26:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CGMbf2011929;
+        Thu, 12 Mar 2020 16:26:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=NBjMBvQQVCJKAtToxENg/CbpgktAbVudPHABYsWl8Is=;
+ b=dRyXcTA8e3HeITH6llrgBbzIP4GxZai21yn11gPX948hd8d2vLyJPZwbW7913YaCsbl4
+ Alf48ZQHvH3bgwijR57L52iSzpEOv78uc1dxUBrKXa2+dfcZkb5ACNeAt4wuyPJGHgFi
+ bVmGGss8z66M/yijkfSG0/TnuevhvqzPesMl+raOmp381pMvDVoJWuETm9omPyo+xUdu
+ ESsKuZMtCFTuHavnuB+qiSH7Ow5xMKn6viyR3FhwvX6CW5d7FkCKUSOr4nXHkbJgDWuc
+ yWcJRsOvE0I4cJFpZmKz4wkrvShd52ABG26JWQm51cMvk81P5KsRItsT7nB0jqGY9VYd 6w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yp9v6drpm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 16:26:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CGNged068618;
+        Thu, 12 Mar 2020 16:24:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yqkvmy0n5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 16:24:28 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02CGNk5u015164;
+        Thu, 12 Mar 2020 16:23:46 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Mar 2020 09:23:46 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 02/14] xattr: modify vfs_{set,remove}xattr for NFS server
+ use
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200311195954.27117-3-fllinden@amazon.com>
+Date:   Thu, 12 Mar 2020 12:23:44 -0400
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C75E3B87-6A91-4258-949C-DDE323A77882@oracle.com>
+References: <20200311195954.27117-1-fllinden@amazon.com>
+ <20200311195954.27117-3-fllinden@amazon.com>
 To:     Frank van der Linden <fllinden@amazon.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <530167624.4533477.1584029710746.JavaMail.zimbra@desy.de>
-In-Reply-To: <20200311195613.26108-4-fllinden@amazon.com>
-References: <20200311195613.26108-1-fllinden@amazon.com> <20200311195613.26108-4-fllinden@amazon.com>
-Subject: Re: [PATCH 03/13] NFSv4.2: query the server for extended attribute
- support
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: NFSv4.2: query the server for extended attribute support
-Thread-Index: MDwlLLyBBH3+dOprCluNI/1+/8upHQ==
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120084
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Frank,
 
------ Original Message -----
-> From: "Frank van der Linden" <fllinden@amazon.com>
-> To: "Trond Myklebust" <trond.myklebust@hammerspace.com>, "Anna Schumaker" <anna.schumaker@netapp.com>, "linux-nfs"
-> <linux-nfs@vger.kernel.org>
-> Cc: "Frank van der Linden" <fllinden@amazon.com>
-> Sent: Wednesday, March 11, 2020 8:56:03 PM
-> Subject: [PATCH 03/13] NFSv4.2: query the server for extended attribute support
 
-> Query the server for extended attribute support, and record it
-> as the NFS_CAP_XATTR flag in the server capabilities.
-> 
+> On Mar 11, 2020, at 3:59 PM, Frank van der Linden =
+<fllinden@amazon.com> wrote:
+>=20
+> To be called from the upcoming NFS server xattr code, the =
+vfs_removexattr
+> and vfs_setxattr need some modifications.
+>=20
+> First, they need to grow a _locked variant, since the NFS server code
+> will call this with i_rwsem held. It needs to do that in fh_lock to be
+> able to atomically provide the before and after change attributes.
+>=20
+> Second, RFC 8276 (NFSv4 extended attribute support) specifies that
+> delegations should be recalled (8.4.2.4, 8.4.4.4) when a SETXATTR
+> or REMOVEXATTR operation is performed. So, like with other fs
+> operations, try to break the delegation. The _locked version of
+> these operations will not wait for the delegation to be successfully
+> broken, instead returning an error if it wasn't, so that the NFS
+> server code can return NFS4ERR_DELAY to the client (similar to
+> what e.g. vfs_link does).
+>=20
 > Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+
+Frank, I appreciate the verbosity of the patch descriptions, and
+thanks very much for splitting the client and server work into
+separate series.
+
+[cel@klimt linux]$ scripts/get_maintainer.pl fs/xattr.c
+Alexander Viro <viro@zeniv.linux.org.uk> (maintainer:FILESYSTEMS (VFS =
+and infrastructure))
+linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and =
+infrastructure))
+linux-kernel@vger.kernel.org (open list)
+[cel@klimt linux]$=20
+
+So patches like this one and 13/14 (or perhaps the whole series)
+needs to be cc: linux-fsdevel@vger.kernel.org. At least those
+two patches in particular will need an Acked-by: from viro.
+
+
 > ---
-> fs/nfs/nfs4proc.c         | 14 ++++++++++++--
-> fs/nfs/nfs4xdr.c          | 23 +++++++++++++++++++++++
-> include/linux/nfs_fs_sb.h |  1 +
-> include/linux/nfs_xdr.h   |  1 +
-> 4 files changed, 37 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 69b7ab7a5815..47bbd7db9d18 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -3742,6 +3742,7 @@ static void nfs4_close_context(struct nfs_open_context
-> *ctx, int is_sync)
-> static int _nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh
-> *fhandle)
-> {
-> 	u32 bitmask[3] = {}, minorversion = server->nfs_client->cl_minorversion;
-> +	u32 fattr4_word2_nfs42_mask;
-> 	struct nfs4_server_caps_arg args = {
-> 		.fhandle = fhandle,
-> 		.bitmask = bitmask,
-> @@ -3763,6 +3764,13 @@ static int _nfs4_server_capabilities(struct nfs_server
-> *server, struct nfs_fh *f
-> 	if (minorversion)
-> 		bitmask[2] = FATTR4_WORD2_SUPPATTR_EXCLCREAT;
-> 
-> +	fattr4_word2_nfs42_mask = FATTR4_WORD2_NFS42_MASK;
-> +
-> +	if (minorversion >= 2) {
-
-I am not sure you need this extra check as by querying for  FATTR4_WORD0_SUPPORTED_ATTRS
-server already will return FATTR4_WORD2_XATTR_SUPPORT if supported.
-
-Tigran.
-
-> +		bitmask[2] |= FATTR4_WORD2_XATTR_SUPPORT;
-> +		fattr4_word2_nfs42_mask |= FATTR4_WORD2_XATTR_SUPPORT;
-> +	}
-> +
-> 	status = nfs4_call_sync(server->client, server, &msg, &args.seq_args,
-> 	&res.seq_res, 0);
-> 	if (status == 0) {
-> 		/* Sanity check the server answers */
-> @@ -3775,7 +3783,7 @@ static int _nfs4_server_capabilities(struct nfs_server
-> *server, struct nfs_fh *f
-> 			res.attr_bitmask[2] &= FATTR4_WORD2_NFS41_MASK;
-> 			break;
-> 		case 2:
-> -			res.attr_bitmask[2] &= FATTR4_WORD2_NFS42_MASK;
-> +			res.attr_bitmask[2] &= fattr4_word2_nfs42_mask;
-> 		}
-> 		memcpy(server->attr_bitmask, res.attr_bitmask, sizeof(server->attr_bitmask));
-> 		server->caps &= ~(NFS_CAP_ACLS|NFS_CAP_HARDLINKS|
-> @@ -3783,7 +3791,7 @@ static int _nfs4_server_capabilities(struct nfs_server
-> *server, struct nfs_fh *f
-> 				NFS_CAP_MODE|NFS_CAP_NLINK|NFS_CAP_OWNER|
-> 				NFS_CAP_OWNER_GROUP|NFS_CAP_ATIME|
-> 				NFS_CAP_CTIME|NFS_CAP_MTIME|
-> -				NFS_CAP_SECURITY_LABEL);
-> +				NFS_CAP_SECURITY_LABEL|NFS_CAP_XATTR);
-> 		if (res.attr_bitmask[0] & FATTR4_WORD0_ACL &&
-> 				res.acl_bitmask & ACL4_SUPPORT_ALLOW_ACL)
-> 			server->caps |= NFS_CAP_ACLS;
-> @@ -3811,6 +3819,8 @@ static int _nfs4_server_capabilities(struct nfs_server
-> *server, struct nfs_fh *f
-> 		if (res.attr_bitmask[2] & FATTR4_WORD2_SECURITY_LABEL)
-> 			server->caps |= NFS_CAP_SECURITY_LABEL;
-> #endif
-> +		if (res.has_xattr)
-> +			server->caps |= NFS_CAP_XATTR;
-> 		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
-> 				sizeof(server->attr_bitmask));
-> 		server->attr_bitmask_nl[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index 47817ef0aadb..bebc087a1433 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -4201,6 +4201,26 @@ static int decode_attr_time_modify(struct xdr_stream
-> *xdr, uint32_t *bitmap, str
-> 	return status;
+> fs/xattr.c            | 63 =
++++++++++++++++++++++++++++++++++++++++++++++------
+> include/linux/xattr.h |  2 ++
+> 2 files changed, 58 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 90dd78f0eb27..58013bcbc333 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -204,10 +204,10 @@ int __vfs_setxattr_noperm(struct dentry *dentry, =
+const char *name,
+> 	return error;
 > }
-> 
-> +static int decode_attr_xattrsupport(struct xdr_stream *xdr, uint32_t *bitmap,
-> +				    uint32_t *res)
-> +{
-> +	__be32 *p;
-> +
-> +	*res = 0;
-> +	if (unlikely(bitmap[2] & (FATTR4_WORD2_XATTR_SUPPORT - 1U)))
-> +		return -EIO;
-> +	if (likely(bitmap[2] & FATTR4_WORD2_XATTR_SUPPORT)) {
-> +		p = xdr_inline_decode(xdr, 4);
-> +		if (unlikely(!p))
-> +			return -EIO;
-> +		*res = be32_to_cpup(p);
-> +		bitmap[2] &= ~FATTR4_WORD2_XATTR_SUPPORT;
-> +	}
-> +	dprintk("%s: XATTR support=%s\n", __func__,
-> +		*res == 0 ? "false" : "true");
-> +	return 0;
-> +}
-> +
-> static int verify_attr_len(struct xdr_stream *xdr, unsigned int savep, uint32_t
-> attrlen)
+>=20
+> -
+> int
+> -vfs_setxattr(struct dentry *dentry, const char *name, const void =
+*value,
+> -		size_t size, int flags)
+> +__vfs_setxattr_locked(struct dentry *dentry, const char *name,
+> +		const void *value, size_t size, int flags,
+> +		struct inode **delegated_inode)
+
+Since you will need to repost, please consider adding a Doxygen
+comment in front of newly introduced global APIs. Such a comment
+would be an appropriate place to add non-NFS-related explanatory
+text you have provided in the patch description.
+
+Goes for global APIs introduced in other patches too.
+
+
 > {
-> 	unsigned int attrwords = XDR_QUADLEN(attrlen);
-> @@ -4371,6 +4391,9 @@ static int decode_server_caps(struct xdr_stream *xdr,
-> struct nfs4_server_caps_re
-> 	if ((status = decode_attr_exclcreat_supported(xdr, bitmap,
-> 				res->exclcreat_bitmask)) != 0)
-> 		goto xdr_error;
-> +	status = decode_attr_xattrsupport(xdr, bitmap, &res->has_xattr);
-> +	if (status != 0)
-> +		goto xdr_error;
-> 	status = verify_attr_len(xdr, savep, attrlen);
-> xdr_error:
-> 	dprintk("%s: xdr returned %d!\n", __func__, -status);
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index 465fa98258a3..d881f7a38bc9 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -281,5 +281,6 @@ struct nfs_server {
-> #define NFS_CAP_OFFLOAD_CANCEL	(1U << 25)
-> #define NFS_CAP_LAYOUTERROR	(1U << 26)
-> #define NFS_CAP_COPY_NOTIFY	(1U << 27)
-> +#define NFS_CAP_XATTR		(1U << 28)
-> 
-> #endif
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 94c77ed55ce1..5076fe42c693 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1178,6 +1178,7 @@ struct nfs4_server_caps_res {
-> 	u32				has_links;
-> 	u32				has_symlinks;
-> 	u32				fh_expire_type;
-> +	u32				has_xattr;
-> };
-> 
-> #define NFS4_PATHNAME_MAXCOMPONENTS 512
-> --
+> 	struct inode *inode =3D dentry->d_inode;
+> 	int error;
+> @@ -216,15 +216,40 @@ vfs_setxattr(struct dentry *dentry, const char =
+*name, const void *value,
+> 	if (error)
+> 		return error;
+>=20
+> -	inode_lock(inode);
+> 	error =3D security_inode_setxattr(dentry, name, value, size, =
+flags);
+> 	if (error)
+> 		goto out;
+>=20
+> +	error =3D try_break_deleg(inode, delegated_inode);
+> +	if (error)
+> +		goto out;
+> +
+> 	error =3D __vfs_setxattr_noperm(dentry, name, value, size, =
+flags);
+>=20
+> out:
+> +	return error;
+> +}
+> +EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
+> +
+> +int
+> +vfs_setxattr(struct dentry *dentry, const char *name, const void =
+*value,
+> +		size_t size, int flags)
+> +{
+> +	struct inode *inode =3D dentry->d_inode;
+> +	struct inode *delegated_inode =3D NULL;
+> +	int error;
+> +
+> +retry_deleg:
+> +	inode_lock(inode);
+> +	error =3D __vfs_setxattr_locked(dentry, name, value, size, =
+flags,
+> +	    &delegated_inode);
+> 	inode_unlock(inode);
+> +
+> +	if (delegated_inode) {
+> +		error =3D break_deleg_wait(&delegated_inode);
+> +		if (!error)
+> +			goto retry_deleg;
+> +	}
+> 	return error;
+> }
+> EXPORT_SYMBOL_GPL(vfs_setxattr);
+> @@ -379,7 +404,8 @@ __vfs_removexattr(struct dentry *dentry, const =
+char *name)
+> EXPORT_SYMBOL(__vfs_removexattr);
+>=20
+> int
+> -vfs_removexattr(struct dentry *dentry, const char *name)
+> +__vfs_removexattr_locked(struct dentry *dentry, const char *name,
+> +		struct inode **delegated_inode)
+> {
+> 	struct inode *inode =3D dentry->d_inode;
+> 	int error;
+> @@ -388,11 +414,14 @@ vfs_removexattr(struct dentry *dentry, const =
+char *name)
+> 	if (error)
+> 		return error;
+>=20
+> -	inode_lock(inode);
+> 	error =3D security_inode_removexattr(dentry, name);
+> 	if (error)
+> 		goto out;
+>=20
+> +	error =3D try_break_deleg(inode, delegated_inode);
+> +	if (error)
+> +		goto out;
+> +
+> 	error =3D __vfs_removexattr(dentry, name);
+>=20
+> 	if (!error) {
+> @@ -401,12 +430,32 @@ vfs_removexattr(struct dentry *dentry, const =
+char *name)
+> 	}
+>=20
+> out:
+> +	return error;
+> +}
+> +EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
+> +
+> +int
+> +vfs_removexattr(struct dentry *dentry, const char *name)
+> +{
+> +	struct inode *inode =3D dentry->d_inode;
+> +	struct inode *delegated_inode =3D NULL;
+> +	int error;
+> +
+> +retry_deleg:
+> +	inode_lock(inode);
+> +	error =3D __vfs_removexattr_locked(dentry, name, =
+&delegated_inode);
+> 	inode_unlock(inode);
+> +
+> +	if (delegated_inode) {
+> +		error =3D break_deleg_wait(&delegated_inode);
+> +		if (!error)
+> +			goto retry_deleg;
+> +	}
+> +
+> 	return error;
+> }
+> EXPORT_SYMBOL_GPL(vfs_removexattr);
+>=20
+> -
+> /*
+>  * Extended attribute SET operations
+>  */
+> diff --git a/include/linux/xattr.h b/include/linux/xattr.h
+> index 6dad031be3c2..3a71ad716da5 100644
+> --- a/include/linux/xattr.h
+> +++ b/include/linux/xattr.h
+> @@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, const char *, =
+void *, size_t);
+> ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+> int __vfs_setxattr(struct dentry *, struct inode *, const char *, =
+const void *, size_t, int);
+> int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, =
+size_t, int);
+> +int __vfs_setxattr_locked(struct dentry *, const char *, const void =
+*, size_t, int, struct inode **);
+> int vfs_setxattr(struct dentry *, const char *, const void *, size_t, =
+int);
+> int __vfs_removexattr(struct dentry *, const char *);
+> +int __vfs_removexattr_locked(struct dentry *, const char *, struct =
+inode **);
+> int vfs_removexattr(struct dentry *, const char *);
+>=20
+> ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t =
+buffer_size);
+> --=20
 > 2.16.6
+>=20
+
+--
+Chuck Lever
+
+
+
