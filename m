@@ -2,146 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD37318381B
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 18:57:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3F67183933
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 20:06:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgCLR5b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Mar 2020 13:57:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55414 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCLR5b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Mar 2020 13:57:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CHqfGJ051111;
-        Thu, 12 Mar 2020 17:57:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=43lfaYlJTwFOfba3m+ivtd7tMbokpbgT0qM029QWjh8=;
- b=emxVyk3zdTNhNf4yA/NEg7FrqEWcOjNcMLHCUZlw5M/nQXuv04KMJZ4eiMhOPh71w3HH
- jmECmtGhcOefqd5OLfRAWRhE3+4exwDjoohtGsKuS77lss4UMaIqV3wEjmASkrK+oiZx
- ikvXEDf5HCBlU9Os4/z2gx0ztqYxoCURi4X5IMnElLKnS1Cyzgi/JEozTYEQPAlbEEzD
- KfY+4M0BPnu/yDCFhf0WPFqVtR8ZQFv8dcfoLD6EzcktGiLnGvrKWwbq+QdSCYixG9B0
- DYJozxWOgwzk/1bfsLpZiQ1QBXwYPXDa5IVk324bnVj89apgVhG7PuRMgRkTSsZRsEzR QA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ym31uu46q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 17:57:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CHvGEj027506;
-        Thu, 12 Mar 2020 17:57:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2yp8p85a6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 17:57:27 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02CHvR7s018596;
-        Thu, 12 Mar 2020 17:57:27 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Mar 2020 10:57:27 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 06/14] nfsd: define xattr functions to call in to their
- vfs counterparts
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200312171630.GA11733@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Date:   Thu, 12 Mar 2020 13:57:25 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D8888578-85D0-4824-9658-F5DAF1F27026@oracle.com>
-References: <20200311195954.27117-1-fllinden@amazon.com>
- <20200311195954.27117-7-fllinden@amazon.com>
- <77A441AA-E880-4C74-B662-B315D6734ED2@oracle.com>
- <20200312171630.GA11733@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+        id S1726483AbgCLTGR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Mar 2020 15:06:17 -0400
+Received: from smtp-o-1.desy.de ([131.169.56.154]:40667 "EHLO smtp-o-1.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgCLTGR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:06:17 -0400
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+        by smtp-o-1.desy.de (Postfix) with ESMTP id 70A36E07D9
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2020 20:06:15 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 70A36E07D9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1584039975; bh=1DkqTwiwunDJuy0v3SWxolXd+lui/PhviiPYDWKxt0k=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=zQ/i4cnMdpuIGj7jkCf2XDfcVWPri9pL7kcQUOuBM2C90r95OzXrfrqtjBLP03RF9
+         TjtsSq1oufriqpO7Dq9R7iTW/x6NBnzckvGZyTmxTESfhv5GEe4JKjWjKHPqBwb1RM
+         2mIFhkTJlXOOVDFX2ZwrTU+knnu99//U8vxMaS1k=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+        by smtp-buf-1.desy.de (Postfix) with ESMTP id 6632E120258;
+        Thu, 12 Mar 2020 20:06:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 3BC29C00A2;
+        Thu, 12 Mar 2020 20:06:15 +0100 (CET)
+Date:   Thu, 12 Mar 2020 20:06:15 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
 To:     Frank van der Linden <fllinden@amazon.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
- spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=886
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxlogscore=953 mlxscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120092
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <547455531.4549278.1584039975188.JavaMail.zimbra@desy.de>
+In-Reply-To: <20200311195613.26108-1-fllinden@amazon.com>
+References: <20200311195613.26108-1-fllinden@amazon.com>
+Subject: Re: [PATCH 00/13] client side user xattr (RFC8276) support
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: client side user xattr (RFC8276) support
+Thread-Index: UN9LW1/gxlH1qGfS76YmPi1oK92AtA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+I have applied the patchset and run simple test against dCache nfs server:
 
-> On Mar 12, 2020, at 1:16 PM, Frank van der Linden =
-<fllinden@amazon.com> wrote:
->=20
-> On Thu, Mar 12, 2020 at 12:23:57PM -0400, Chuck Lever wrote:
->>> On Mar 11, 2020, at 3:59 PM, Frank van der Linden =
-<fllinden@amazon.com> wrote:
->>>=20
->>> This adds the filehandle based functions for the xattr operations
->>> that call in to the vfs layer to do the actual work.
->>=20
->> Before posting again, use "make C=3D1" to clear up new sparse
->> errors, and scripts/checkpatch.pl to find and correct whitespace
->> damage introduced in this series.
->=20
-> Hi Chuck,
->=20
-> Thanks for this comment (and the other ones).
->=20
-> I forgot to run sparse - I have fixed the __be32/int type mismatches
-> it flagged in my tree.
->=20
-> I ran checkpath.pl before sending these in. Looks like I missed
-> one line that is too long. The warnings I didn't fix were:
->=20
-> =3D=3D
-> WARNING: function definition argument 'struct dentry *' should also =
-have an identifier name
-> #156: FILE: include/linux/xattr.h:54:
-> +int __vfs_setxattr_locked(struct dentry *, const char *, const void =
-*, size_t, int, struct inode **);
-> =3D=3D
->=20
-> ..changing this would make the prototype declaration of that function =
-not
-> match with the style of the ones around it (which also don't have =
-argument
-> names in their declarations) - so I decided not to.
->=20
-> The other one is:
->=20
-> =3D=3D=3D
-> WARNING: please, no spaces at the start of a line
-> #46: FILE: fs/nfsd/vfs.c:616:
-> +    {^INFS4_ACCESS_XAREAD,^INFSD_MAY_READ^I^I^I},$
-> =3D=3D=3D
->=20
-> The warning is correct, but the array that is part of, and the =
-surrounding
-> accessmap arrays, all have the same spacing. So to both silence =
-checkpacth
-> and make the code look consistent, I'd have to change the spacing in
-> all those arrays (nfs3_regaccess, nfs3_diraccess, nfs3_anyaccess).
->=20
-> This didn't seem right, so I didn't do it.
+root@anahit xattr-test]# df -h .
+Filesystem      Size  Used Avail Use% Mounted on
+ani:/           213G  179G   35G  84% /mnt
+[root@anahit xattr-test]#
+[root@anahit xattr-test]# touch file.txt
+[root@anahit xattr-test]# attr -l file.txt
+[root@anahit xattr-test]# attr -s key1 -V value1 file.txt
+Attribute "key1" set to a 6 byte value for file.txt:
+value1
+[root@anahit xattr-test]# attr -s key2 -V value2 file.txt
+Attribute "key2" set to a 6 byte value for file.txt:
+value2
+[root@anahit xattr-test]# attr -l file.txt
+Attribute "user.key1" has a 6 byte value for file.txt
+Attribute "user.key2" has a 6 byte value for file.txt
+[root@anahit xattr-test]# attr -g key1 file.txt
+Attribute "key1" had a 6 byte value for file.txt:
+value1
+[root@anahit xattr-test]# attr -g key2 file.txt
+Attribute "key2" had a 6 byte value for file.txt:
+value2
+[root@anahit xattr-test]# getfattr -n user.key1 file.txt
+# file: file.txt
+user.key1="value1"
 
-Fair enough, please add a comment to that effect to the patch =
-description.
+[root@anahit xattr-test]# getfattr -n user.key2 file.txt
+# file: file.txt
+user.key2="value2"
+
+[root@anahit xattr-test]# attr -r key1 file.txt
+[root@anahit xattr-test]# attr -r key2 file.txt
+[root@anahit xattr-test]# attr -l file.txt
+[root@anahit xattr-test]#
 
 
-> I'll be happy to send a separate whitespace cleanup for that, not sure
-> if it should be part of this series, though.
->=20
-> Frank
+At lease a dirrerent implementation in addition to linux server works as expected.
 
---
-Chuck Lever
+Tested-by:  "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
 
 
+Tigran.
 
+----- Original Message -----
+> From: "Frank van der Linden" <fllinden@amazon.com>
+> To: "Trond Myklebust" <trond.myklebust@hammerspace.com>, "Anna Schumaker" <anna.schumaker@netapp.com>, "linux-nfs"
+> <linux-nfs@vger.kernel.org>
+> Cc: "Frank van der Linden" <fllinden@amazon.com>
+> Sent: Wednesday, March 11, 2020 8:56:00 PM
+> Subject: [PATCH 00/13] client side user xattr (RFC8276) support
+
+> This patchset implements the client side for NFS user extended attributes,
+> as defined in RFC8726.
+> 
+> This was originally posted as an RFC in:
+> 
+> https://patchwork.kernel.org/cover/11143565/
+> 
+> Patch 1 is shared with the server side patch, posted
+> separately.
+> 
+> Most comments in there still apply, except that:
+> 
+> 1. Client side caching is now included in this patch set.
+> 2. As per the discussion, user extended attributes are enabled if
+>   the client and server support them (e.g. they support 4.2 and
+>   advertise the user extended attribute FATTR). There are no longer
+>   options to switch them off on either the client or the server.
+> 3. The code is no longer conditioned on a config option.
+> 4. The number of patches has been reduced somewhat by merging
+>   smaller, related ones.
+> 
+> The client side caching is implemented through a per-inode hash table,
+> which is allocated on demand. See fs/nfs/nfs42xattr.c for details.
+> 
+> This has been tested as follows:
+> 
+> * Linux client and server:
+>	* Test all corner cases (XATTR_SIZE_*)
+>	* Test all failure cases (no xattr, setxattr with different or
+>	  invalid flags, etc).
+>	* Verify the content of xattrs across several operations.
+>	* Use KASAN and KMEMLEAK for a longer mix of testruns to verify
+>	  that there were no leaks (after unmounting the filesystem).
+>	* Stress tested caching, trying to run the client out of memory.
+> 
+> * Tested against the FreeBSD-current implementation as well, which works
+>  (after I fixed 2 bugs in that implementation, which I'm sending out to
+>  them too).
+> 
+> * Not tested: RDMA (I couldn't get a setup going).
+> 
+> Frank van der Linden (13):
+>  nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
+>  nfs: add client side only definitions for user xattrs
+>  NFSv4.2: query the server for extended attribute support
+>  NFSv4.2: define limits and sizes for user xattr handling
+>  NFSv4.2: add client side XDR handling for extended attributes
+>  nfs: define nfs_access_get_cached function
+>  NFSv4.2: query the extended attribute access bits
+>  nfs: modify update_changeattr to deal with regular files
+>  nfs: define and use the NFS_INO_INVALID_XATTR flag
+>  nfs: make the buf_to_pages_noslab function available to the nfs code
+>  NFSv4.2: add the extended attribute proc functions.
+>  NFSv4.2: hook in the user extended attribute handlers
+>  NFSv4.2: add client side xattr caching.
+> 
+> fs/nfs/Makefile             |    1 +
+> fs/nfs/client.c             |   19 +-
+> fs/nfs/dir.c                |   24 +-
+> fs/nfs/inode.c              |   16 +-
+> fs/nfs/internal.h           |   28 ++
+> fs/nfs/nfs42.h              |   24 +
+> fs/nfs/nfs42proc.c          |  248 ++++++++++
+> fs/nfs/nfs42xattr.c         | 1083 +++++++++++++++++++++++++++++++++++++++++++
+> fs/nfs/nfs42xdr.c           |  442 ++++++++++++++++++
+> fs/nfs/nfs4_fs.h            |    5 +
+> fs/nfs/nfs4client.c         |   31 ++
+> fs/nfs/nfs4proc.c           |  248 ++++++++--
+> fs/nfs/nfs4super.c          |   10 +
+> fs/nfs/nfs4xdr.c            |   29 ++
+> fs/nfs/nfstrace.h           |    3 +-
+> include/linux/nfs4.h        |   25 +
+> include/linux/nfs_fs.h      |   12 +
+> include/linux/nfs_fs_sb.h   |    6 +
+> include/linux/nfs_xdr.h     |   60 ++-
+> include/uapi/linux/nfs4.h   |    3 +
+> include/uapi/linux/nfs_fs.h |    1 +
+> 21 files changed, 2276 insertions(+), 42 deletions(-)
+> create mode 100644 fs/nfs/nfs42xattr.c
+> 
+> --
+> 2.16.6
