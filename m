@@ -2,346 +2,279 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 081AA183A64
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 21:10:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF02F183AAC
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2020 21:35:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCLUKv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Mar 2020 16:10:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50896 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLUKv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Mar 2020 16:10:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CK9Ztf175621;
-        Thu, 12 Mar 2020 20:10:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=z1VPTfUFLRYWU2bmOeD+4Z+7iI9wdcSfpNKQamXDT+I=;
- b=vE2H+breGMfxX0sKGPouTXlyDtWgGpcynnqSvXzsu1k7GgkC5Wy5NSDMl9LdZw5GqF4d
- UUBp91jQo819jbWyS9LzhgoNMVMlbS02Ip1OJUcHGPg1R+kVhYGrkp4YI210OGb2yESZ
- ehiyWxtMMVf1RtbSuGK6cqaNBcg89P5Ds+wYq5YkhZ2vjA6Htduasx+3IcL00J7T874t
- YfkL+QRtS2O4xM3zBBHiX2Eef3Zd7lQoOZLU4j2Y/OmW4GINTcsvvLD1idY+IIgnPRUw
- qSpKfvCNlqVxL52SxL1knyThRMW4XjqxuF5ojiFQO7FaDRc63imVKZp9b43BwTX/l+f3 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yqtavggkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 20:10:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CK29Yw147627;
-        Thu, 12 Mar 2020 20:10:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yqtaayq92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 20:10:43 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02CKAeZH025605;
-        Thu, 12 Mar 2020 20:10:40 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Mar 2020 13:10:40 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RFC PATCH] fix krb5p mount not providing large enough buffer in
- rq_rcvsize
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyHjrNcSc+h62dBiYhNmLxWcR1Pj7fLJOnSfgR6JDZbEAA@mail.gmail.com>
-Date:   Thu, 12 Mar 2020 16:10:39 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E8169251-A626-4FD6-9A62-42C218AB79DF@oracle.com>
-References: <CAN-5tyHegg96s7mr1YeoPbVd0UA7_cd2GEPYNWx98uUcx-0ARw@mail.gmail.com>
- <FF0659E0-8F04-4005-96D0-5D513881EDFE@oracle.com>
- <CAN-5tyHQpS7AmPX1cDxKpD=5gyAM7+nmLX+iA29QV7sLwhoX9Q@mail.gmail.com>
- <EE167593-39A6-4E29-B690-31D1D985DCC0@oracle.com>
- <CAN-5tyHjrNcSc+h62dBiYhNmLxWcR1Pj7fLJOnSfgR6JDZbEAA@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003120099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- phishscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 adultscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003120099
+        id S1726736AbgCLUfs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Mar 2020 16:35:48 -0400
+Received: from mail-bn8nam12on2045.outbound.protection.outlook.com ([40.107.237.45]:47680
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725268AbgCLUfr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Mar 2020 16:35:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xu5SlZlllY42xmPzFBggS+xXcLCyDORVwVGrkivb4lJg9uxldgvz18auyL8cNs4Tgt46yxqqo88v0UxpaOSCRYsnVlTCM1ZLHp4MkEkjjYgDFtDQboAEMjGZleAcVaOBCLm2ma1FXtakMDSGVVnC8FZJ+Y01PANupOZKwh6d7AKijU6MCbCLUGqjS3VXt61dVusKgQv/ojwFFKfproRVonPEkSydX5uTifFpTqbUevHnS4tkO7TAeUwkc8Gga4SUOcxphTDmZdXrkXp+OxpW+kytiIQ3mUxGTSBsQLjJDVjzSX9tPybAurE4GvHSC4H7MQGBTTY9g82sWSnt53IvjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KasxvbdaVW0DjgNwQxkFq+lDFVlyyta0lH1m5zobUzM=;
+ b=RD0V91Izsk4vHkIwNVS0Si08um5mVmIC0uHmwysD1PzqRV8jdb8W9eaxMnDiha37mP6d3KBrBXzqWSFJLfNtkJtB0Wl1liQzUqRidHHsD2DQIbyXAzuYYLMfmh8dpHSxVhNJz5nkzbXzILbTGWgTzutHoeYnvIuI5mp+DbMZV41846TrEy0kbaz4NYyB14OaaoVpXHsHJQHkWkXBdKF+b8/GYAIhBgWg2i64h/guukmd1zEY3NwppY2NCi3V2MmbEYltoiEp50zQXqLSlSp8ez3+t51QSDvJkfGSXhhsKTSPEFnOeQ+eZ05ImVB5hmt1tqh1Xnl1iaEqZgBSFiPu3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KasxvbdaVW0DjgNwQxkFq+lDFVlyyta0lH1m5zobUzM=;
+ b=SSp8K5N/IW2MHOBtE8MCG+tj1d7NNp8KvPKy+W2MstD6KKHYZrXlHij5u9snYNGNyVqbFaqADnvX0DoHVhOP91r5IE7LumyBNdk0DK/5XPaiTNtULEzjy3Y+aPogWfD+aoQtZkUj15hOrBJiM1euTb6MRrV6qHPHwhSj1+K2Nzg=
+Received: from DM6PR06MB6617.namprd06.prod.outlook.com (2603:10b6:5:25f::14)
+ by DM6PR06MB4521.namprd06.prod.outlook.com (2603:10b6:5:fb::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Thu, 12 Mar
+ 2020 20:35:07 +0000
+Received: from DM6PR06MB6617.namprd06.prod.outlook.com
+ ([fe80::f1d5:1417:3acd:c3be]) by DM6PR06MB6617.namprd06.prod.outlook.com
+ ([fe80::f1d5:1417:3acd:c3be%6]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 20:35:07 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "fllinden@amazon.com" <fllinden@amazon.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH 04/13] NFSv4.2: define limits and sizes for user xattr
+ handling
+Thread-Topic: [PATCH 04/13] NFSv4.2: define limits and sizes for user xattr
+ handling
+Thread-Index: AQHV998oachc3MGgckuC1S0FxDTG0ahFa68A
+Date:   Thu, 12 Mar 2020 20:35:06 +0000
+Message-ID: <4cdfd8fa4a0fa75dd58ae278b5329b97f639527b.camel@netapp.com>
+References: <20200311195613.26108-1-fllinden@amazon.com>
+         <20200311195613.26108-5-fllinden@amazon.com>
+In-Reply-To: <20200311195613.26108-5-fllinden@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.0 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [68.42.68.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d8b770df-b08d-42d1-18c0-08d7c6c4da16
+x-ms-traffictypediagnostic: DM6PR06MB4521:
+x-microsoft-antispam-prvs: <DM6PR06MB452199C7FF98838E2F82BDF8F8FD0@DM6PR06MB4521.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0340850FCD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(376002)(396003)(199004)(316002)(2616005)(36756003)(5660300002)(64756008)(91956017)(66476007)(71200400001)(26005)(76116006)(186003)(6486002)(8676002)(6506007)(66446008)(478600001)(81166006)(66946007)(66556008)(81156014)(8936002)(110136005)(6512007)(86362001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR06MB4521;H:DM6PR06MB6617.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ymKDVjJlN2RRm0eseo0Sqt/D5UR9iAtvKJhA5zl9r4+Pa8yFc7dlckheRdwfIekG/8cUCKEG00s1uPgSlMzgFyCWMhAwG2rTe9tRs9tOQ2V/5VLhDe7R1Z/WuGi7wqExYhTrqlrHsG4iNTkHbAvXKH1aE1DMqPin3si0fHYOPqDMEHxY20UKYFetQMyHUqUz/j9ze5PEUzKQlL/AN3DxxQl36Hi4sN6QaI0FWl9INMTb//MTaddL2J2Kw8EO/c+yFiEOh9GKPm5daycpzeZJdIEunjlitlQ0nM7JPnMwCDlQAusTut/diSX969aKo6ckzn2rtHxtWaZwXd+qnJ0FS9eiVe6y4m1ZZQbPkTJ2M8zole/mjhkZrQdAkWE385ubkHNaHMj0GPxiQcBIegEOJA6ZMIsUreA58TzflRI7Rrust3Yp8tXuljzsfznnkoGP
+x-ms-exchange-antispam-messagedata: RRMlIqrN8ba7Pq2wgbr/QEBKgLg6LosOVVLRiBiADxgUJvMfsE4Wicj6qaoXHihDcBrnH4dQy9RT/4HEq/FyCL4jPEKLkEu0rLqsaNzLEOVfhyzDauWAfxIDMwUpEtYz9j/1WNeWNwSrIpGFtH8PJg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <57E11A90A4371341AFF681039FA25F63@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8b770df-b08d-42d1-18c0-08d7c6c4da16
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 20:35:06.9033
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w6H+RCStRcnFfd3C+bwHQZkdfAWEp073EFDe5MbwjprYz7z/t/PPPzh6gHh46/400C6OGjMPlByo+Lv0RfcS2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB4521
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Mar 12, 2020, at 3:17 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Tue, Mar 10, 2020 at 7:56 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On Mar 10, 2020, at 5:07 PM, Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->>>=20
->>> Hi Chuck,
->>>=20
->>> On Tue, Mar 10, 2020 at 3:57 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>>=20
->>>> Hi Olga-
->>>>=20
->>>>> On Mar 10, 2020, at 2:58 PM, Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->>>>>=20
->>>>> Ever since commit 2c94b8eca1a26 "SUNRPC: Use au_rslack when =
-computing
->>>>> reply buffer size". It changed how "req->rq_rcvsize" is =
-calculated. It
->>>>> used to use au_cslack value which was nice and large and changed =
-it to
->>>>> au_rslack value which turns out to be too small.
->>>>>=20
->>>>> Since 5.1, v3 mount with sec=3Dkrb5p fails against an Ontap server
->>>>> because client's receive buffer it too small.
->>>>=20
->>>> Can you be more specific? For instance, why is 100 bytes adequate =
-for
->>>> Linux servers, but not OnTAP?
->>>=20
->>> I don't know why Ontap sends more data than Linux server.
->>=20
->> Let's be sure we are fixing the right problem. Yes, au_rslack is
->> smaller in v5.1, and that results in a behavioral regression. But
->> exactly which part of the new calculation is incorrect is not yet
->> clear. Simply bumping GSS_VERF_SLACK could very well plaster over
->> the real problem.
->>=20
->>=20
->>> The opaque_len is just a lot larger. For the first message Linux
->>> opaque_len is 120bytes and Ontap it's 206. So it could be for =
-instance
->>> for FSINFO that sends the file handle, for Netapp the file handle is
->>> 44bytes and for Linux it's only 28bytes.
->>=20
->> The maximum filehandle size should already be accounted for in the
->> maxsize macro for FSINFO.
->>=20
->> Is this problem evident only with NFSv3 plus krb5p?
->=20
-> So far that seems to be the case. Every other version and security =
-flavor works.
->=20
->>>> Is this explanation for the current value not correct?
->>>>=20
->>>> 51 /* length of a krb5 verifier (48), plus data added before =
-arguments when
->>>> 52  * using integrity (two 4-byte integers): */
->>>=20
->>> I'm not sure what it is suppose to be. Isn't "data before arguments"
->>> can vary in length and thus explain why linux and onto sizes are
->>> different?
->>> Looking at the network trace the krb5 verifier I see is 36bytes.
->>=20
->> GSS_VERF_SLACK is only for the extra length added by GSS data. The
->> length of the RPC message itself is handled separately, see above.
->>=20
->> Can you post a Wireshark dissection of the problematic FSINFO reply?
->> (Having a working reply from Linux and a failing reply from OnTAP
->> would be even better).
->=20
-> I'm attaching two files. I mount against linux and mount against =
-ontap.
->=20
->=20
->=20
->=20
->>>>> For GSS, au_rslack is calculated from GSS_VERF_SLACK value which =
-is
->>>>> currently 100. And it's not enough. Changing it to 104 works and =
-then
->>>>> au_rslack is recalculated based on actual received mic.len and not
->>>>> just the default buffer size.
->>=20
->> What are the computed au_ralign and au_rslack values after the first
->> successful operation?
->=20
-> With GSS_VERF_SLACK 100
-> Linux run:
->=20
-> Mar 12 13:14:29 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D00000000e14fdc39 cslack=3D200 and rslack=3D25
-> Mar 12 13:14:29 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D00000000e14fdc39 ralign=3D25
-> Mar 12 13:14:29 localhost kernel: NFS call  fsinfo
-> ... <gssd upcall>
-> Mar 12 13:14:29 localhost kernel: AGLO: call_allocate
-> auth=3D00000000e14fdc39 au_cslack=3D200 au_rslack=3D25 rq_rcvsize=3D256
-> p_replen=3D35
-> Mar 12 13:14:29 localhost kernel: AGLO: gss_unwrap_resp_priv rcv_buf
-> len=3D176 is ok offset=3D56 opaque=3D120
-> Mar 12 13:14:29 localhost kernel: AGLO: gss_unwrap_resp_priv ****
-> auth=3D00000000e14fdc39 resetting au_rslack=3D26
-> Mar 12 13:14:29 localhost kernel: AGLO: gss_unwrap_resp_priv ****
-> auth=3D00000000e14fdc39 resetting au_ralign=3D26
-> Mar 12 13:14:29 localhost kernel: NFS reply fsinfo: 0
->=20
-> Ontap run:
-> Mar 12 13:16:46 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D00000000e02d9e6e cslack=3D200 and rslack=3D25
-> Mar 12 13:16:46 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D00000000e02d9e6e ralign=3D25
-> Mar 12 13:16:46 localhost kernel: NFS call  fsinfo
-> ... <gssd upcall>
-> Mar 12 13:16:46 localhost kernel: AGLO: call_allocate
-> auth=3D00000000e02d9e6e au_cslack=3D200 au_rslack=3D25 rq_rcvsize=3D256
-> p_replen=3D35
-> Mar 12 13:16:46 localhost kernel: AGLO: gss_unwrap_resp_priv rcv_buf
-> len=3D256 too small offset=3D56 opaque=3D204
-> Mar 12 13:16:46 localhost kernel: NFS reply fsinfo: -5
->=20
-> With GSS_VERF_SLACK 104
-> Mar 12 13:33:23 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D000000004a545ea2 cslack=3D200 and rslack=3D26
-> Mar 12 13:33:23 localhost kernel: AGLO: gss_create_new setting for
-> auth=3D000000004a545ea2 ralign=3D26
-> Mar 12 13:33:23 localhost kernel: NFS call  fsinfo
-> ... <gssd upcall>
-> Mar 12 13:33:23 localhost kernel: AGLO: call_allocate
-> auth=3D000000004a545ea2 au_cslack=3D200 au_rslack=3D26 rq_rcvsize=3D260
-> p_replen=3D35
-> Mar 12 13:33:23 localhost kernel: AGLO: gss_unwrap_resp_priv rcv_buf
-> len=3D260 is ok offset=3D56 opaque=3D204
-> Mar 12 13:33:23 localhost kernel: AGLO: gss_unwrap_resp_priv ****
-> auth=3D000000004a545ea2 resetting au_rslack=3D26
-> Mar 12 13:33:23 localhost kernel: AGLO: gss_unwrap_resp_priv ****
-> auth=3D000000004a545ea2 resetting au_ralign=3D26
-> Mar 12 13:33:23 localhost kernel: NFS reply fsinfo: 0
->=20
-> difference in actual packets in fsinfo is that ontap sends postattrs
-> so that's 84bytes.
->=20
->        req->rq_rcvsize =3D RPC_REPHDRSIZE + auth->au_rslack + \
->                        max_t(size_t, proc->p_replen, 2);
->=20
-> RPC_REPHDRSIZE is defined to be 4 (*4)  (it says it doesn't include
-> the verifier ???)
-
-> rslack needs to cover kerberos blob 25 (*4)  (but that's the kerberos
-> part a part of the wrap and not the verifier)
-> p_replen to cover fs_info args 35 (*4) (seems like the right number)
->=20
-> So we are missing the GSS to include the verifier and the kerberos
-> blob of the wrapper (and lengths!!). Basically we need GSS_VERF_SLACK
-> to cover 2 kerberos blobs (or more specifically KRB_TOKEN_CFX_GetMic
-> 9*4 and KRB_TOKEN_CFS_WRAP 15*4 + 2 lengths before the kerberos blobs
-> =3D 104 and we are only giving 100).
-
-GSS_VERF_SLACK is also used for setting au_verfsize, so please don't
-change its value. Define a new constant for initializing au_rslack.
-
-Let's construct that constant using the KRB5_TOKEN constants you mention
-here... include/linux/sunrpc/gss_krb5.h has
-
-221 /*
-222  * This compile-time check verifies that we will not exceed the
-223  * slack space allotted by the client and server auth_gss code
-224  * before they call gss_wrap().
-225  */
-226 #define GSS_KRB5_MAX_SLACK_NEEDED \
-227         (GSS_KRB5_TOK_HDR_LEN     /* gss token header */         \
-228         + GSS_KRB5_MAX_CKSUM_LEN  /* gss token checksum */       \
-229         + GSS_KRB5_MAX_BLOCKSIZE  /* confounder */               \
-230         + GSS_KRB5_MAX_BLOCKSIZE  /* possible padding */         \
-231         + GSS_KRB5_TOK_HDR_LEN    /* encrypted hdr in v2 token */\
-232         + GSS_KRB5_MAX_CKSUM_LEN  /* encryption hmac */          \
-233         + 4 + 4                   /* RPC verifier */             \
-234         + GSS_KRB5_TOK_HDR_LEN                                   \
-235         + GSS_KRB5_MAX_CKSUM_LEN)
-
-So this, or something like this, plus the comment below.
-
-
-> The reason things work against linux is because it has a nice buffer
-> of 84bytes of post attributes that it doesn't send.
-
-Missing post-attributes makes sense. Thank you for the analysis.
-
-
-> To address your later point that kerberos blob is encryption type
-> depended and that once some other encryption is added to gss-kerberos
-> that's larger than existing checksum then this value would need to be
-> adjusted again.
-
-> If you agree with my reasoning for the number then I'd like to send
-> out a patch now.
-
-The current numbers are based on the kernel GSS implementation =
-supporting
-only Kerberos with a narrow set of enctypes. That needs to be made clear
-in a documenting comment.
-
-The reason this has been bothersome is because the existing setting is
-a magic number (100), and its documenting comment has been stale since
-2006. Any proposed fix has to address the missing documentation.
-
-
->>>>> I would like to propose to change it to something a little larger =
-than
->>>>> 104, like 120 to give room if some other server might reply with
->>>>> something even larger.
->>>>=20
->>>> Why does it need to be larger than 104?
->>>=20
->>> I don't know why 100 was chosen and given that I think arguments are
->>> taken into the account and arguments can change. I think NetApp has
->>> changed their file handle sizes (at some point, not in the near past
->>> but i think so?). Perhaps they might want to do that again so the =
-size
->>> will change again.
->>>=20
->>> Honestly, I would have like for 100 to be 200 to be safe.
->>=20
->> To be safe, I would like to have a good understanding of the details,
->> rather than guessing at an arbitrary maximum value. Let's choose a
->> rational maximum and include a descriptive comment about why that =
-value
->> is the best choice.
->>=20
->>=20
->>>>> Thoughts? Will send an actual patch if no objections to this one.
->>>>>=20
->>>>> diff --git a/net/sunrpc/auth_gss/auth_gss.c =
-b/net/sunrpc/auth_gss/auth_gss.c
->>>>> index 24ca861..44ae6bc 100644
->>>>> --- a/net/sunrpc/auth_gss/auth_gss.c
->>>>> +++ b/net/sunrpc/auth_gss/auth_gss.c
->>>>> @@ -50,7 +50,7 @@
->>>>> #define GSS_CRED_SLACK         (RPC_MAX_AUTH_SIZE * 2)
->>>>> /* length of a krb5 verifier (48), plus data added before =
-arguments when
->>>>> * using integrity (two 4-byte integers): */
->>>>> -#define GSS_VERF_SLACK         100
->>>>> +#define GSS_VERF_SLACK         120
->>>>>=20
->>>>> static DEFINE_HASHTABLE(gss_auth_hash_table, 4);
->>>>> static DEFINE_SPINLOCK(gss_auth_hash_lock);
->>>>=20
->>>> --
->>>> Chuck Lever
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
-> <linux-v3-krb5p-mount.pcap.gz><ontap-v3-krb5-mount.pcap.gz>
-
---
-Chuck Lever
-
-
-
+SGkgRnJhbmssDQoNCk9uIFdlZCwgMjAyMC0wMy0xMSBhdCAxOTo1NiArMDAwMCwgRnJhbmsgdmFu
+IGRlciBMaW5kZW4gd3JvdGU6DQo+IFNldCBsaW1pdHMgZm9yIGV4dGVuZGVkIGF0dHJpYnV0ZXMg
+KGF0dHJpYnV0ZSB2YWx1ZSBzaXplIGFuZCBsaXN0eGF0dHINCj4gYnVmZmVyIHNpemUpLCBiYXNl
+ZCBvbiB0aGUgZnMtaW5kZXBlbmRlbnQgbGltaXRzIChYQVRUUl8qX01BWCkuDQo+IA0KPiBEZWZp
+bmUgdGhlIG1heGltdW0gWERSIHNpemVzIGZvciB0aGUgUkZDIDgyNzYgWEFUVFIgb3BlcmF0aW9u
+cy4NCj4gSW4gdGhlIGNhc2Ugb2Ygb3BlcmF0aW9ucyB0aGF0IGNhcnJ5IGEgbGFyZ2VyIHBheWxv
+YWQgKFNFVFhBVFRSLA0KPiBHRVRYQVRUUiwgTElTVFhBVFRSKSwgdGhlc2UgZXhjbHVkZSB0aGF0
+IHBheWxvYWQsIHdoaWNoIGlzIGFkZGVkDQo+IGFzIHNlcGFyYXRlIHBhZ2VzLCBsaWtlIG90aGVy
+IG9wZXJhdGlvbnMgZG8uDQo+IA0KPiBEZWZpbmUsIG11Y2ggbGlrZSBmb3IgcmVhZCBhbmQgd3Jp
+dGUgb3BlcmF0aW9ucywgdGhlIG1heGltdW0gb3ZlcmhlYWQNCj4gc2l6ZXMgZm9yIGdldC9zZXQv
+bGlzdHhhdHRyLCBhbmQgdXNlIHRoZW0gdG8gbGltaXQgdGhlIG1heGltdW0gcGF5bG9hZA0KPiBz
+aXplIGZvciB0aG9zZSBvcGVyYXRpb25zLCBpbiBjb21iaW5hdGlvbiB3aXRoIHRoZSBjaGFubmVs
+IGF0dHJpYnV0ZXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBGcmFuayB2YW4gZGVyIExpbmRlbiA8
+ZmxsaW5kZW5AYW1hem9uLmNvbT4NCj4gLS0tDQo+ICBmcy9uZnMvY2xpZW50LmMgICAgICAgICAg
+IHwgMTkgKysrKysrKysrKy0tDQo+ICBmcy9uZnMvaW50ZXJuYWwuaCAgICAgICAgIHwgIDUgKysr
+Kw0KPiAgZnMvbmZzL25mczQyLmggICAgICAgICAgICB8IDE2ICsrKysrKysrKysNCj4gIGZzL25m
+cy9uZnM0Mnhkci5jICAgICAgICAgfCA3NA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKw0KPiAgZnMvbmZzL25mczRjbGllbnQuYyAgICAgICB8IDMxICsr
+KysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L25mc19mc19zYi5oIHwgIDUgKysr
+Kw0KPiAgNiBmaWxlcyBjaGFuZ2VkLCAxNDggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvY2xpZW50LmMgYi9mcy9uZnMvY2xpZW50LmMNCj4g
+aW5kZXggOTg5YzMwYzk4NTExLi5lZWYzOWE0ZWMxMTQgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mcy9j
+bGllbnQuYw0KPiArKysgYi9mcy9uZnMvY2xpZW50LmMNCj4gQEAgLTUwLDYgKzUwLDcgQEANCj4g
+ICNpbmNsdWRlICJuZnMuaCINCj4gICNpbmNsdWRlICJuZXRucy5oIg0KPiAgI2luY2x1ZGUgInN5
+c2ZzLmgiDQo+ICsjaW5jbHVkZSAibmZzNDIuaCINCj4gIA0KPiAgI2RlZmluZSBORlNEQkdfRkFD
+SUxJVFkJCU5GU0RCR19DTElFTlQNCj4gIA0KPiBAQCAtNzQ4LDcgKzc0OSw3IEBAIHN0YXRpYyBp
+bnQgbmZzX2luaXRfc2VydmVyKHN0cnVjdCBuZnNfc2VydmVyICpzZXJ2ZXIsDQo+ICBzdGF0aWMg
+dm9pZCBuZnNfc2VydmVyX3NldF9mc2luZm8oc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlciwNCj4g
+IAkJCQkgIHN0cnVjdCBuZnNfZnNpbmZvICpmc2luZm8pDQo+ICB7DQo+IC0JdW5zaWduZWQgbG9u
+ZyBtYXhfcnBjX3BheWxvYWQ7DQo+ICsJdW5zaWduZWQgbG9uZyBtYXhfcnBjX3BheWxvYWQsIHJh
+d19tYXhfcnBjX3BheWxvYWQ7DQo+ICANCj4gIAkvKiBXb3JrIG91dCBhIGxvdCBvZiBwYXJhbWV0
+ZXJzICovDQo+ICAJaWYgKHNlcnZlci0+cnNpemUgPT0gMCkNCj4gQEAgLTc2MSw3ICs3NjIsOSBA
+QCBzdGF0aWMgdm9pZCBuZnNfc2VydmVyX3NldF9mc2luZm8oc3RydWN0IG5mc19zZXJ2ZXINCj4g
+KnNlcnZlciwNCj4gIAlpZiAoZnNpbmZvLT53dG1heCA+PSA1MTIgJiYgc2VydmVyLT53c2l6ZSA+
+IGZzaW5mby0+d3RtYXgpDQo+ICAJCXNlcnZlci0+d3NpemUgPSBuZnNfYmxvY2tfc2l6ZShmc2lu
+Zm8tPnd0bWF4LCBOVUxMKTsNCj4gIA0KPiAtCW1heF9ycGNfcGF5bG9hZCA9IG5mc19ibG9ja19z
+aXplKHJwY19tYXhfcGF5bG9hZChzZXJ2ZXItPmNsaWVudCksIE5VTEwpOw0KPiArCXJhd19tYXhf
+cnBjX3BheWxvYWQgPSBycGNfbWF4X3BheWxvYWQoc2VydmVyLT5jbGllbnQpOw0KPiArCW1heF9y
+cGNfcGF5bG9hZCA9IG5mc19ibG9ja19zaXplKHJhd19tYXhfcnBjX3BheWxvYWQsIE5VTEwpOw0K
+PiArDQo+ICAJaWYgKHNlcnZlci0+cnNpemUgPiBtYXhfcnBjX3BheWxvYWQpDQo+ICAJCXNlcnZl
+ci0+cnNpemUgPSBtYXhfcnBjX3BheWxvYWQ7DQo+ICAJaWYgKHNlcnZlci0+cnNpemUgPiBORlNf
+TUFYX0ZJTEVfSU9fU0laRSkNCj4gQEAgLTc5NCw2ICs3OTcsMTggQEAgc3RhdGljIHZvaWQgbmZz
+X3NlcnZlcl9zZXRfZnNpbmZvKHN0cnVjdCBuZnNfc2VydmVyDQo+ICpzZXJ2ZXIsDQo+ICAJc2Vy
+dmVyLT5jbG9uZV9ibGtzaXplID0gZnNpbmZvLT5jbG9uZV9ibGtzaXplOw0KPiAgCS8qIFdlJ3Jl
+IGFpcmJvcm5lIFNldCBzb2NrZXQgYnVmZmVyc2l6ZSAqLw0KPiAgCXJwY19zZXRidWZzaXplKHNl
+cnZlci0+Y2xpZW50LCBzZXJ2ZXItPndzaXplICsgMTAwLCBzZXJ2ZXItPnJzaXplICsNCj4gMTAw
+KTsNCj4gKw0KPiArI2lmZGVmIENPTkZJR19ORlNfVjRfMg0KPiArCS8qDQo+ICsJICogRGVmYXVs
+dHMgdW50aWwgbGltaXRlZCBieSB0aGUgc2Vzc2lvbiBwYXJhbWV0ZXJzLg0KPiArCSAqLw0KPiAr
+CXNlcnZlci0+Z3hhc2l6ZSA9IG1pbl90KHVuc2lnbmVkIGludCwgcmF3X21heF9ycGNfcGF5bG9h
+ZCwNCj4gKwkJCQlYQVRUUl9TSVpFX01BWCk7DQo+ICsJc2VydmVyLT5zeGFzaXplID0gbWluX3Qo
+dW5zaWduZWQgaW50LCByYXdfbWF4X3JwY19wYXlsb2FkLA0KPiArCQkJCVhBVFRSX1NJWkVfTUFY
+KTsNCj4gKwlzZXJ2ZXItPmx4YXNpemUgPSBtaW5fdCh1bnNpZ25lZCBpbnQsIHJhd19tYXhfcnBj
+X3BheWxvYWQsDQo+ICsJCQkJbmZzNDJfbGlzdHhhdHRyX3hkcnNpemUoWEFUVFJfTElTVF9NQVgp
+KTsNCj4gKyNlbmRpZg0KPiAgfQ0KPiAgDQo+ICAvKg0KPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2lu
+dGVybmFsLmggYi9mcy9uZnMvaW50ZXJuYWwuaA0KPiBpbmRleCBmODBjNDdkNWZmMjcuLjY4ZjIz
+NWE1NzFlMSAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL2ludGVybmFsLmgNCj4gKysrIGIvZnMvbmZz
+L2ludGVybmFsLmgNCj4gQEAgLTMwNiw2ICszMDYsMTEgQEAgZXh0ZXJuIGNvbnN0IHUzMiBuZnM0
+MV9tYXhyZWFkX292ZXJoZWFkOw0KPiAgZXh0ZXJuIGNvbnN0IHUzMiBuZnM0MV9tYXh3cml0ZV9v
+dmVyaGVhZDsNCj4gIGV4dGVybiBjb25zdCB1MzIgbmZzNDFfbWF4Z2V0ZGV2aW5mb19vdmVyaGVh
+ZDsNCj4gICNlbmRpZg0KPiArI2lmZGVmIENPTkZJR19ORlNfVjRfMg0KPiArZXh0ZXJuIGNvbnN0
+IHUzMiBuZnM0Ml9tYXhzZXR4YXR0cl9vdmVyaGVhZDsNCj4gK2V4dGVybiBjb25zdCB1MzIgbmZz
+NDJfbWF4Z2V0eGF0dHJfb3ZlcmhlYWQ7DQo+ICtleHRlcm4gY29uc3QgdTMyIG5mczQyX21heGxp
+c3R4YXR0cnNfb3ZlcmhlYWQ7DQo+ICsjZW5kaWYNCg0KQXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRo
+ZXNlIGFyZSBvbmx5IHVzZWQgYnkgdGhlIE5GUyB2NCBjb2RlLiBDYW4geW91IHB1dCB0aGVzZQ0K
+ZGVmaW5pdGlvbnMgaW4gbmZzNF9mcy5oIGluc3RlYWQgb2YgaW50ZXJuYWwuaCwgc2luY2UgdGhl
+IGdlbmVyaWMgY2xpZW50IGRvZXNuJ3QNCnJlYWxseSBuZWVkIHRvIGtub3cgYWJvdXQgaXQ/DQoN
+ClRoYW5rcywNCkFubmENCj4gIA0KPiAgLyogbmZzNHByb2MuYyAqLw0KPiAgI2lmIElTX0VOQUJM
+RUQoQ09ORklHX05GU19WNCkNCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0Mi5oIGIvZnMvbmZz
+L25mczQyLmgNCj4gaW5kZXggYzg5MWFmOTQ5ODg2Li41MWRlOGRkYzdkODggMTAwNjQ0DQo+IC0t
+LSBhL2ZzL25mcy9uZnM0Mi5oDQo+ICsrKyBiL2ZzL25mcy9uZnM0Mi5oDQo+IEBAIC02LDYgKzYs
+OCBAQA0KPiAgI2lmbmRlZiBfX0xJTlVYX0ZTX05GU19ORlM0XzJfSA0KPiAgI2RlZmluZSBfX0xJ
+TlVYX0ZTX05GU19ORlM0XzJfSA0KPiAgDQo+ICsjaW5jbHVkZSA8bGludXgveGF0dHIuaD4NCj4g
+Kw0KPiAgLyoNCj4gICAqIEZJWE1FOiAgZm91ciBMQVlPVVRTVEFUUyBjYWxscyBwZXIgY29tcG91
+bmQgYXQgbW9zdCEgRG8gd2UgbmVlZCB0byBzdXBwb3J0DQo+ICAgKiBtb3JlPyBOZWVkIHRvIGNv
+bnNpZGVyIG5vdCB0byBwcmUtYWxsb2MgdG9vIG11Y2ggZm9yIGEgY29tcG91bmQuDQo+IEBAIC0z
+Niw1ICszOCwxOSBAQCBzdGF0aWMgaW5saW5lIGJvb2wgbmZzNDJfZmlsZXNfZnJvbV9zYW1lX3Nl
+cnZlcihzdHJ1Y3QgZmlsZQ0KPiAqaW4sDQo+ICAJcmV0dXJuIG5mczRfY2hlY2tfc2VydmVyb3du
+ZXJfbWFqb3JfaWQoY19pbi0+Y2xfc2VydmVyb3duZXIsDQo+ICAJCQkJCSAgICAgICBjX291dC0+
+Y2xfc2VydmVyb3duZXIpOw0KPiAgfQ0KPiArDQo+ICsvKg0KPiArICogTWF4aW11bSBYRFIgYnVm
+ZmVyIHNpemUgbmVlZGVkIGZvciBhIGxpc3R4YXR0ciBidWZmZXIgb2YgYnVmbGVuIHNpemUuDQo+
+ICsgKg0KPiArICogVGhlIHVwcGVyIGJvdW5kYXJ5IGlzIGEgYnVmZmVyIHdpdGggYWxsIDEtYnl0
+ZSBzaXplZCBhdHRyaWJ1dGUgbmFtZXMuDQo+ICsgKiBUaGV5IHdvdWxkIGJlIDcgYnl0ZXMgbG9u
+ZyBpbiB0aGUgZXZlbnR1YWwgYnVmZmVyICgidXNlci54XDAiKSwgYW5kDQo+ICsgKiA4IGJ5dGVz
+IGxvbmcgWERSLWVuY29kZWQuDQo+ICsgKg0KPiArICogSW5jbHVkZSB0aGUgdHJhaWxpbmcgZW9m
+IHdvcmQgYXMgd2VsbC4NCj4gKyAqLw0KPiArc3RhdGljIGlubGluZSB1MzIgbmZzNDJfbGlzdHhh
+dHRyX3hkcnNpemUodTMyIGJ1ZmxlbikNCj4gK3sNCj4gKwlyZXR1cm4gKChidWZsZW4gLyAoWEFU
+VFJfVVNFUl9QUkVGSVhfTEVOICsgMikpICogOCkgKyA0Ow0KPiArfQ0KPiAgI2VuZGlmIC8qIENP
+TkZJR19ORlNfVjRfMiAqLw0KPiAgI2VuZGlmIC8qIF9fTElOVVhfRlNfTkZTX05GUzRfMl9IICov
+DQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNDJ4ZHIuYyBiL2ZzL25mcy9uZnM0Mnhkci5jDQo+
+IGluZGV4IGMwM2YzMjQ2ZDZjNS4uNjcxMmRhYTlkODViIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMv
+bmZzNDJ4ZHIuYw0KPiArKysgYi9mcy9uZnMvbmZzNDJ4ZHIuYw0KPiBAQCAtMTY5LDYgKzE2OSw4
+MCBAQA0KPiAgCQkJCQkgZGVjb2RlX2Nsb25lX21heHN6ICsgXA0KPiAgCQkJCQkgZGVjb2RlX2dl
+dGF0dHJfbWF4c3opDQo+ICANCj4gKyNpZmRlZiBDT05GSUdfTkZTX1Y0XzINCj4gKy8qIE5vdCBs
+aW1pdGVkIGJ5IE5GUyBpdHNlbGYsIGxpbWl0ZWQgYnkgdGhlIGdlbmVyaWMgeGF0dHIgY29kZSAq
+Lw0KPiArI2RlZmluZSBuZnM0X3hhdHRyX25hbWVfbWF4c3ogICBYRFJfUVVBRExFTihYQVRUUl9O
+QU1FX01BWCkNCj4gKw0KPiArI2RlZmluZSBlbmNvZGVfZ2V0eGF0dHJfbWF4c3ogICAob3BfZW5j
+b2RlX2hkcl9tYXhzeiArIDEgKyBcDQo+ICsJCQkJIG5mczRfeGF0dHJfbmFtZV9tYXhzeikNCj4g
+KyNkZWZpbmUgZGVjb2RlX2dldHhhdHRyX21heHN6ICAgKG9wX2RlY29kZV9oZHJfbWF4c3ogKyAx
+ICsgMSkNCj4gKyNkZWZpbmUgZW5jb2RlX3NldHhhdHRyX21heHN6ICAgKG9wX2VuY29kZV9oZHJf
+bWF4c3ogKyBcDQo+ICsJCQkJIDEgKyBuZnM0X3hhdHRyX25hbWVfbWF4c3ogKyAxKQ0KPiArI2Rl
+ZmluZSBkZWNvZGVfc2V0eGF0dHJfbWF4c3ogICAob3BfZGVjb2RlX2hkcl9tYXhzeiArDQo+IGRl
+Y29kZV9jaGFuZ2VfaW5mb19tYXhzeikNCj4gKyNkZWZpbmUgZW5jb2RlX2xpc3R4YXR0cnNfbWF4
+c3ogIChvcF9lbmNvZGVfaGRyX21heHN6ICsgMiArIDEpDQo+ICsjZGVmaW5lIGRlY29kZV9saXN0
+eGF0dHJzX21heHN6ICAob3BfZGVjb2RlX2hkcl9tYXhzeiArIDIgKyAxICsgMSkNCj4gKyNkZWZp
+bmUgZW5jb2RlX3JlbW92ZXhhdHRyX21heHN6IChvcF9lbmNvZGVfaGRyX21heHN6ICsgMSArIFwN
+Cj4gKwkJCQkgIG5mczRfeGF0dHJfbmFtZV9tYXhzeikNCj4gKyNkZWZpbmUgZGVjb2RlX3JlbW92
+ZXhhdHRyX21heHN6IChvcF9kZWNvZGVfaGRyX21heHN6ICsgXA0KPiArCQkJCSAgZGVjb2RlX2No
+YW5nZV9pbmZvX21heHN6KQ0KPiArDQo+ICsjZGVmaW5lIE5GUzRfZW5jX2dldHhhdHRyX3N6CShj
+b21wb3VuZF9lbmNvZGVfaGRyX21heHN6ICsgXA0KPiArCQkJCWVuY29kZV9zZXF1ZW5jZV9tYXhz
+eiArIFwNCj4gKwkJCQllbmNvZGVfcHV0ZmhfbWF4c3ogKyBcDQo+ICsJCQkJZW5jb2RlX2dldHhh
+dHRyX21heHN6KQ0KPiArI2RlZmluZSBORlM0X2RlY19nZXR4YXR0cl9zegkoY29tcG91bmRfZGVj
+b2RlX2hkcl9tYXhzeiArIFwNCj4gKwkJCQlkZWNvZGVfc2VxdWVuY2VfbWF4c3ogKyBcDQo+ICsJ
+CQkJZGVjb2RlX3B1dGZoX21heHN6ICsgXA0KPiArCQkJCWRlY29kZV9nZXR4YXR0cl9tYXhzeikN
+Cj4gKyNkZWZpbmUgTkZTNF9lbmNfc2V0eGF0dHJfc3oJKGNvbXBvdW5kX2VuY29kZV9oZHJfbWF4
+c3ogKyBcDQo+ICsJCQkJZW5jb2RlX3NlcXVlbmNlX21heHN6ICsgXA0KPiArCQkJCWVuY29kZV9w
+dXRmaF9tYXhzeiArIFwNCj4gKwkJCQllbmNvZGVfc2V0eGF0dHJfbWF4c3opDQo+ICsjZGVmaW5l
+IE5GUzRfZGVjX3NldHhhdHRyX3N6CShjb21wb3VuZF9kZWNvZGVfaGRyX21heHN6ICsgXA0KPiAr
+CQkJCWRlY29kZV9zZXF1ZW5jZV9tYXhzeiArIFwNCj4gKwkJCQlkZWNvZGVfcHV0ZmhfbWF4c3og
+KyBcDQo+ICsJCQkJZGVjb2RlX3NldHhhdHRyX21heHN6KQ0KPiArI2RlZmluZSBORlM0X2VuY19s
+aXN0eGF0dHJzX3N6CShjb21wb3VuZF9lbmNvZGVfaGRyX21heHN6ICsgXA0KPiArCQkJCWVuY29k
+ZV9zZXF1ZW5jZV9tYXhzeiArIFwNCj4gKwkJCQllbmNvZGVfcHV0ZmhfbWF4c3ogKyBcDQo+ICsJ
+CQkJZW5jb2RlX2xpc3R4YXR0cnNfbWF4c3opDQo+ICsjZGVmaW5lIE5GUzRfZGVjX2xpc3R4YXR0
+cnNfc3oJKGNvbXBvdW5kX2RlY29kZV9oZHJfbWF4c3ogKyBcDQo+ICsJCQkJZGVjb2RlX3NlcXVl
+bmNlX21heHN6ICsgXA0KPiArCQkJCWRlY29kZV9wdXRmaF9tYXhzeiArIFwNCj4gKwkJCQlkZWNv
+ZGVfbGlzdHhhdHRyc19tYXhzeikNCj4gKyNkZWZpbmUgTkZTNF9lbmNfcmVtb3ZleGF0dHJfc3oJ
+KGNvbXBvdW5kX2VuY29kZV9oZHJfbWF4c3ogKyBcDQo+ICsJCQkJZW5jb2RlX3NlcXVlbmNlX21h
+eHN6ICsgXA0KPiArCQkJCWVuY29kZV9wdXRmaF9tYXhzeiArIFwNCj4gKwkJCQllbmNvZGVfcmVt
+b3ZleGF0dHJfbWF4c3opDQo+ICsjZGVmaW5lIE5GUzRfZGVjX3JlbW92ZXhhdHRyX3N6CShjb21w
+b3VuZF9kZWNvZGVfaGRyX21heHN6ICsgXA0KPiArCQkJCWRlY29kZV9zZXF1ZW5jZV9tYXhzeiAr
+IFwNCj4gKwkJCQlkZWNvZGVfcHV0ZmhfbWF4c3ogKyBcDQo+ICsJCQkJZGVjb2RlX3JlbW92ZXhh
+dHRyX21heHN6KQ0KPiArDQo+ICsvKg0KPiArICogVGhlc2UgdmFsdWVzIHNwZWNpZnkgdGhlIG1h
+eGltdW0gYW1vdW50IG9mIGRhdGEgdGhhdCBpcyBub3QNCj4gKyAqIGFzc29jaWF0ZWQgd2l0aCB0
+aGUgZXh0ZW5kZWQgYXR0cmlidXRlIG5hbWUgb3IgZXh0ZW5kZWQNCj4gKyAqIGF0dHJpYnV0ZSBs
+aXN0IGluIHRoZSBTRVRYQVRUUiwgR0VUWEFUVFIgYW5kIExJU1RYQVRUUg0KPiArICogcmVzcGVj
+dGl2ZWx5Lg0KPiArICovDQo+ICtjb25zdCB1MzIgbmZzNDJfbWF4c2V0eGF0dHJfb3ZlcmhlYWQg
+PSAoKFJQQ19NQVhfSEVBREVSX1dJVEhfQVVUSCArDQo+ICsJCQkJCWNvbXBvdW5kX2VuY29kZV9o
+ZHJfbWF4c3ogKw0KPiArCQkJCQllbmNvZGVfc2VxdWVuY2VfbWF4c3ogKw0KPiArCQkJCQllbmNv
+ZGVfcHV0ZmhfbWF4c3ogKyAxICsNCj4gKwkJCQkJbmZzNF94YXR0cl9uYW1lX21heHN6KQ0KPiAr
+CQkJCQkqIFhEUl9VTklUKTsNCj4gKw0KPiArY29uc3QgdTMyIG5mczQyX21heGdldHhhdHRyX292
+ZXJoZWFkID0gKChSUENfTUFYX0hFQURFUl9XSVRIX0FVVEggKw0KPiArCQkJCQljb21wb3VuZF9k
+ZWNvZGVfaGRyX21heHN6ICsNCj4gKwkJCQkJZGVjb2RlX3NlcXVlbmNlX21heHN6ICsNCj4gKwkJ
+CQkJZGVjb2RlX3B1dGZoX21heHN6ICsgMSkgKiBYRFJfVU5JVCk7DQo+ICsNCj4gK2NvbnN0IHUz
+MiBuZnM0Ml9tYXhsaXN0eGF0dHJzX292ZXJoZWFkID0gKChSUENfTUFYX0hFQURFUl9XSVRIX0FV
+VEggKw0KPiArCQkJCQljb21wb3VuZF9kZWNvZGVfaGRyX21heHN6ICsNCj4gKwkJCQkJZGVjb2Rl
+X3NlcXVlbmNlX21heHN6ICsNCj4gKwkJCQkJZGVjb2RlX3B1dGZoX21heHN6ICsgMykgKiBYRFJf
+VU5JVCk7DQo+ICsjZW5kaWYNCj4gKw0KPiAgc3RhdGljIHZvaWQgZW5jb2RlX2ZhbGxvY2F0ZShz
+dHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLA0KPiAgCQkJICAgICBjb25zdCBzdHJ1Y3QgbmZzNDJfZmFs
+bG9jX2FyZ3MgKmFyZ3MpDQo+ICB7DQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNGNsaWVudC5j
+IGIvZnMvbmZzL25mczRjbGllbnQuYw0KPiBpbmRleCAwY2Q3NjdlNWM5NzcuLjhiMzIwZWYwZThh
+MyAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRjbGllbnQuYw0KPiArKysgYi9mcy9uZnMvbmZz
+NGNsaWVudC5jDQo+IEBAIC05OTMsNiArOTkzLDM2IEBAIHN0YXRpYyB2b2lkIG5mczRfc2Vzc2lv
+bl9saW1pdF9yd3NpemUoc3RydWN0IG5mc19zZXJ2ZXINCj4gKnNlcnZlcikNCj4gICNlbmRpZiAv
+KiBDT05GSUdfTkZTX1Y0XzEgKi8NCj4gIH0NCj4gIA0KPiArLyoNCj4gKyAqIExpbWl0IHhhdHRy
+IHNpemVzIHVzaW5nIHRoZSBjaGFubmVsIGF0dHJpYnV0ZXMuDQo+ICsgKi8NCj4gK3N0YXRpYyB2
+b2lkIG5mczRfc2Vzc2lvbl9saW1pdF94YXNpemUoc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlcikN
+Cj4gK3sNCj4gKyNpZmRlZiBDT05GSUdfTkZTX1Y0XzINCj4gKwlzdHJ1Y3QgbmZzNF9zZXNzaW9u
+ICpzZXNzOw0KPiArCXUzMiBzZXJ2ZXJfZ3hhX3N6Ow0KPiArCXUzMiBzZXJ2ZXJfc3hhX3N6Ow0K
+PiArCXUzMiBzZXJ2ZXJfbHhhX3N6Ow0KPiArDQo+ICsJaWYgKCFuZnM0X2hhc19zZXNzaW9uKHNl
+cnZlci0+bmZzX2NsaWVudCkpDQo+ICsJCXJldHVybjsNCj4gKw0KPiArCXNlc3MgPSBzZXJ2ZXIt
+Pm5mc19jbGllbnQtPmNsX3Nlc3Npb247DQo+ICsNCj4gKwlzZXJ2ZXJfZ3hhX3N6ID0gc2Vzcy0+
+ZmNfYXR0cnMubWF4X3Jlc3Bfc3ogLSBuZnM0Ml9tYXhnZXR4YXR0cl9vdmVyaGVhZDsNCj4gKwlz
+ZXJ2ZXJfc3hhX3N6ID0gc2Vzcy0+ZmNfYXR0cnMubWF4X3Jxc3Rfc3ogLSBuZnM0Ml9tYXhzZXR4
+YXR0cl9vdmVyaGVhZDsNCj4gKwlzZXJ2ZXJfbHhhX3N6ID0gc2Vzcy0+ZmNfYXR0cnMubWF4X3Jl
+c3Bfc3ogLQ0KPiArCSAgICBuZnM0Ml9tYXhsaXN0eGF0dHJzX292ZXJoZWFkOw0KPiArDQo+ICsJ
+aWYgKHNlcnZlci0+Z3hhc2l6ZSA+IHNlcnZlcl9neGFfc3opDQo+ICsJCXNlcnZlci0+Z3hhc2l6
+ZSA9IHNlcnZlcl9neGFfc3o7DQo+ICsJaWYgKHNlcnZlci0+c3hhc2l6ZSA+IHNlcnZlcl9zeGFf
+c3opDQo+ICsJCXNlcnZlci0+c3hhc2l6ZSA9IHNlcnZlcl9zeGFfc3o7DQo+ICsJaWYgKHNlcnZl
+ci0+bHhhc2l6ZSA+IHNlcnZlcl9seGFfc3opDQo+ICsJCXNlcnZlci0+bHhhc2l6ZSA9IHNlcnZl
+cl9seGFfc3o7DQo+ICsjZW5kaWYNCj4gK30NCj4gKw0KPiAgc3RhdGljIGludCBuZnM0X3NlcnZl
+cl9jb21tb25fc2V0dXAoc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlciwNCj4gIAkJc3RydWN0IG5m
+c19maCAqbW50ZmgsIGJvb2wgYXV0aF9wcm9iZSkNCj4gIHsNCj4gQEAgLTEwNDAsNiArMTA3MCw3
+IEBAIHN0YXRpYyBpbnQgbmZzNF9zZXJ2ZXJfY29tbW9uX3NldHVwKHN0cnVjdCBuZnNfc2VydmVy
+DQo+ICpzZXJ2ZXIsDQo+ICAJCWdvdG8gb3V0Ow0KPiAgDQo+ICAJbmZzNF9zZXNzaW9uX2xpbWl0
+X3J3c2l6ZShzZXJ2ZXIpOw0KPiArCW5mczRfc2Vzc2lvbl9saW1pdF94YXNpemUoc2VydmVyKTsN
+Cj4gIA0KPiAgCWlmIChzZXJ2ZXItPm5hbWVsZW4gPT0gMCB8fCBzZXJ2ZXItPm5hbWVsZW4gPiBO
+RlM0X01BWE5BTUxFTikNCj4gIAkJc2VydmVyLT5uYW1lbGVuID0gTkZTNF9NQVhOQU1MRU47DQo+
+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L25mc19mc19zYi5oIGIvaW5jbHVkZS9saW51eC9u
+ZnNfZnNfc2IuaA0KPiBpbmRleCBkODgxZjdhMzhiYzkuLjdlYWU3MmE4NzYyZSAxMDA2NDQNCj4g
+LS0tIGEvaW5jbHVkZS9saW51eC9uZnNfZnNfc2IuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L25m
+c19mc19zYi5oDQo+IEBAIC0xNjMsNiArMTYzLDExIEBAIHN0cnVjdCBuZnNfc2VydmVyIHsNCj4g
+IAl1bnNpZ25lZCBpbnQJCWR0c2l6ZTsJCS8qIHJlYWRkaXIgc2l6ZSAqLw0KPiAgCXVuc2lnbmVk
+IHNob3J0CQlwb3J0OwkJLyogInBvcnQ9IiBzZXR0aW5nICovDQo+ICAJdW5zaWduZWQgaW50CQli
+c2l6ZTsJCS8qIHNlcnZlciBibG9jayBzaXplICovDQo+ICsjaWZkZWYgQ09ORklHX05GU19WNF8y
+DQo+ICsJdW5zaWduZWQgaW50CQlneGFzaXplOwkvKiBnZXR4YXR0ciBzaXplICovDQo+ICsJdW5z
+aWduZWQgaW50CQlzeGFzaXplOwkvKiBzZXR4YXR0ciBzaXplICovDQo+ICsJdW5zaWduZWQgaW50
+CQlseGFzaXplOwkvKiBsaXN0eGF0dHIgc2l6ZSAqLw0KPiArI2VuZGlmDQo+ICAJdW5zaWduZWQg
+aW50CQlhY3JlZ21pbjsJLyogYXR0ciBjYWNoZSB0aW1lb3V0cyAqLw0KPiAgCXVuc2lnbmVkIGlu
+dAkJYWNyZWdtYXg7DQo+ICAJdW5zaWduZWQgaW50CQlhY2Rpcm1pbjsNCg==
