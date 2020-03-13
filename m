@@ -2,118 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DF9E1849AC
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 15:41:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9393C184AD7
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 16:35:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgCMOlx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Mar 2020 10:41:53 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50144 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgCMOlx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Mar 2020 10:41:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEciLe049372;
-        Fri, 13 Mar 2020 14:41:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=QlE6BF79h5NHgpRDoUzcEpSw7XtvD4SHXlP4GYYf3VA=;
- b=S1bt9EkGWwXQBnUMyE2nxcKa3Uibg2o1uu4274js9Hf+wX8fXyY0x7LJFEVmiQQpa84C
- v8KUi2X5KNcRf7qR5Ehz+2IlcW3+TQeKFL570kDpL02p5fUWKJmrOheI59DHkKO1o3zo
- nnBJ1AWPtBqV4/qynKfgYZtgfPMmtgOkVbG+DA0OmNhtCaTzetAELgw5nXcslzPjlpXO
- moSvEUGYnqB68PRAOZIuwicMVWPVqmBKiWHXnog3V7F7lJPw8MCIiAvbe+eG2vwmJg6z
- kmMTYqM8pAmUHxDH1H2q5dpb81fdHmJuQ2mNAJSr0JgB8+yQ3jab3a+aoYg/XKsn8U6D sg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2yqtagc7tb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:41:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEcLEt065974;
-        Fri, 13 Mar 2020 14:41:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2yqtad9x9m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:41:46 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02DEfjQS016592;
-        Fri, 13 Mar 2020 14:41:45 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Mar 2020 07:41:45 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/1] nfsd: remove read permission bit for ctl sysctl
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200313123957.6122-1-pvorel@suse.cz>
-Date:   Fri, 13 Mar 2020 10:41:44 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
-References: <20200313123957.6122-1-pvorel@suse.cz>
-To:     Petr Vorel <pvorel@suse.cz>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130077
+        id S1726637AbgCMPfv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Mar 2020 11:35:51 -0400
+Received: from fieldses.org ([173.255.197.46]:51172 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbgCMPfu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:35:50 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9FC1D83B; Fri, 13 Mar 2020 11:35:49 -0400 (EDT)
+Date:   Fri, 13 Mar 2020 11:35:49 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 02/14] xattr: modify vfs_{set,remove}xattr for NFS server
+ use
+Message-ID: <20200313153549.GD12537@fieldses.org>
+References: <20200311195954.27117-1-fllinden@amazon.com>
+ <20200311195954.27117-3-fllinden@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311195954.27117-3-fllinden@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 07:59:42PM +0000, Frank van der Linden wrote:
+> To be called from the upcoming NFS server xattr code, the vfs_removexattr
+> and vfs_setxattr need some modifications.
+> 
+> First, they need to grow a _locked variant, since the NFS server code
+> will call this with i_rwsem held. It needs to do that in fh_lock to be
+> able to atomically provide the before and after change attributes.
 
+Unlike NFSv3, NFSv4+ doesn't support atomic before- and after- change
+attributes for setattr.  Trying to take advantage of that assumption
+might result in worse code, though.
 
-> On Mar 13, 2020, at 8:39 AM, Petr Vorel <pvorel@suse.cz> wrote:
->=20
-> It's meant to be read only.
->=20
-> Fixes: 89c905beccbb ("nfsd: allow forced expiration of NFSv4 clients")
->=20
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> Second, RFC 8276 (NFSv4 extended attribute support) specifies that
+> delegations should be recalled (8.4.2.4, 8.4.4.4) when a SETXATTR
+> or REMOVEXATTR operation is performed. So, like with other fs
+> operations, try to break the delegation. The _locked version of
+> these operations will not wait for the delegation to be successfully
+> broken, instead returning an error if it wasn't, so that the NFS
+> server code can return NFS4ERR_DELAY to the client (similar to
+> what e.g. vfs_link does).
+
+Is there a preexisting bug here?  Even without NFS support for xattrs, a
+local setxattr on the filesystem should still revoke any delegations
+held by remote NFS clients.  I couldn't tell whether we're getting that
+right from a quick look at the current code.
+
+--b.
+
+> 
+> Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 > ---
-> Hi,
->=20
-> does not really fix anything, it's just confusing to have read
-> permission bit when not used.
-
-Hi Petr, applied to nfsd-5.7-testing, with the patch description =
-corrected
-to read:
-
-"It's meant to be write-only."
-
-
-> Kind regards,
-> Petr
->=20
-> fs/nfsd/nfs4state.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 65cfe9ab47be..475ece438cfc 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2636,7 +2636,7 @@ static const struct file_operations =
-client_ctl_fops =3D {
-> static const struct tree_descr client_files[] =3D {
-> 	[0] =3D {"info", &client_info_fops, S_IRUSR},
-> 	[1] =3D {"states", &client_states_fops, S_IRUSR},
-> -	[2] =3D {"ctl", &client_ctl_fops, S_IRUSR|S_IWUSR},
-> +	[2] =3D {"ctl", &client_ctl_fops, S_IWUSR},
-> 	[3] =3D {""},
-> };
-
---
-Chuck Lever
-
-
-
+>  fs/xattr.c            | 63 +++++++++++++++++++++++++++++++++++++++++++++------
+>  include/linux/xattr.h |  2 ++
+>  2 files changed, 58 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 90dd78f0eb27..58013bcbc333 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -204,10 +204,10 @@ int __vfs_setxattr_noperm(struct dentry *dentry, const char *name,
+>  	return error;
+>  }
+>  
+> -
+>  int
+> -vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
+> -		size_t size, int flags)
+> +__vfs_setxattr_locked(struct dentry *dentry, const char *name,
+> +		const void *value, size_t size, int flags,
+> +		struct inode **delegated_inode)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+>  	int error;
+> @@ -216,15 +216,40 @@ vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
+>  	if (error)
+>  		return error;
+>  
+> -	inode_lock(inode);
+>  	error = security_inode_setxattr(dentry, name, value, size, flags);
+>  	if (error)
+>  		goto out;
+>  
+> +	error = try_break_deleg(inode, delegated_inode);
+> +	if (error)
+> +		goto out;
+> +
+>  	error = __vfs_setxattr_noperm(dentry, name, value, size, flags);
+>  
+>  out:
+> +	return error;
+> +}
+> +EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
+> +
+> +int
+> +vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
+> +		size_t size, int flags)
+> +{
+> +	struct inode *inode = dentry->d_inode;
+> +	struct inode *delegated_inode = NULL;
+> +	int error;
+> +
+> +retry_deleg:
+> +	inode_lock(inode);
+> +	error = __vfs_setxattr_locked(dentry, name, value, size, flags,
+> +	    &delegated_inode);
+>  	inode_unlock(inode);
+> +
+> +	if (delegated_inode) {
+> +		error = break_deleg_wait(&delegated_inode);
+> +		if (!error)
+> +			goto retry_deleg;
+> +	}
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(vfs_setxattr);
+> @@ -379,7 +404,8 @@ __vfs_removexattr(struct dentry *dentry, const char *name)
+>  EXPORT_SYMBOL(__vfs_removexattr);
+>  
+>  int
+> -vfs_removexattr(struct dentry *dentry, const char *name)
+> +__vfs_removexattr_locked(struct dentry *dentry, const char *name,
+> +		struct inode **delegated_inode)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+>  	int error;
+> @@ -388,11 +414,14 @@ vfs_removexattr(struct dentry *dentry, const char *name)
+>  	if (error)
+>  		return error;
+>  
+> -	inode_lock(inode);
+>  	error = security_inode_removexattr(dentry, name);
+>  	if (error)
+>  		goto out;
+>  
+> +	error = try_break_deleg(inode, delegated_inode);
+> +	if (error)
+> +		goto out;
+> +
+>  	error = __vfs_removexattr(dentry, name);
+>  
+>  	if (!error) {
+> @@ -401,12 +430,32 @@ vfs_removexattr(struct dentry *dentry, const char *name)
+>  	}
+>  
+>  out:
+> +	return error;
+> +}
+> +EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
+> +
+> +int
+> +vfs_removexattr(struct dentry *dentry, const char *name)
+> +{
+> +	struct inode *inode = dentry->d_inode;
+> +	struct inode *delegated_inode = NULL;
+> +	int error;
+> +
+> +retry_deleg:
+> +	inode_lock(inode);
+> +	error = __vfs_removexattr_locked(dentry, name, &delegated_inode);
+>  	inode_unlock(inode);
+> +
+> +	if (delegated_inode) {
+> +		error = break_deleg_wait(&delegated_inode);
+> +		if (!error)
+> +			goto retry_deleg;
+> +	}
+> +
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(vfs_removexattr);
+>  
+> -
+>  /*
+>   * Extended attribute SET operations
+>   */
+> diff --git a/include/linux/xattr.h b/include/linux/xattr.h
+> index 6dad031be3c2..3a71ad716da5 100644
+> --- a/include/linux/xattr.h
+> +++ b/include/linux/xattr.h
+> @@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, const char *, void *, size_t);
+>  ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+>  int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
+>  int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, size_t, int);
+> +int __vfs_setxattr_locked(struct dentry *, const char *, const void *, size_t, int, struct inode **);
+>  int vfs_setxattr(struct dentry *, const char *, const void *, size_t, int);
+>  int __vfs_removexattr(struct dentry *, const char *);
+> +int __vfs_removexattr_locked(struct dentry *, const char *, struct inode **);
+>  int vfs_removexattr(struct dentry *, const char *);
+>  
+>  ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
+> -- 
+> 2.16.6
