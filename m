@@ -2,90 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D91B184E0C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 18:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4287184FE9
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 21:08:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCMRzd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Mar 2020 13:55:33 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:52348 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCMRzd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Mar 2020 13:55:33 -0400
+        id S1726620AbgCMUIO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Mar 2020 16:08:14 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37041 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgCMUIO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Mar 2020 16:08:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a141so11609568wme.2
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2020 13:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584122134; x=1615658134;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+IAf3wqqqLRqK3NTbkIrhUY5+LJxFuN34aCWNO1M0Vs=;
-  b=HyVxABY0oElm4ke0KfBd1T69irV3DQNmYWYO+4rb/9xskcQdUUdkEULU
-   Q0uNE+SHdDUxvbZZZ3T4boMgwNaGT7jDKRUr7NSE/4Uqe8xe73vXrWHVz
-   k2KacO9fSUYrKUD9YqgeXgJjkuO71k9w7973EDuhyMRyCOxtgOZpbSHBN
-   A=;
-IronPort-SDR: E98odBEbbxoB6CpZxbkA79UMyRomc6Ad5d454v/JN7aVoSVPu8apoYq+3uMYRrDAJ9FquK0cts
- WW41ZCnMeLJQ==
-X-IronPort-AV: E=Sophos;i="5.70,549,1574121600"; 
-   d="scan'208";a="31087707"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 13 Mar 2020 17:55:31 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 1C40CA2B12;
-        Fri, 13 Mar 2020 17:55:30 +0000 (UTC)
-Received: from EX13D37UWA003.ant.amazon.com (10.43.160.25) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 13 Mar 2020 17:55:29 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D37UWA003.ant.amazon.com (10.43.160.25) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 17:55:29 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Fri, 13 Mar 2020 17:55:29 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 91E22C13BA; Fri, 13 Mar 2020 17:55:29 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 17:55:29 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-CC:     "tigran.mkrtchyan@desy.de" <tigran.mkrtchyan@desy.de>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 03/13] NFSv4.2: query the server for extended attribute
- support
-Message-ID: <20200313175529.GB31307@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200311195613.26108-1-fllinden@amazon.com>
- <20200311195613.26108-4-fllinden@amazon.com>
- <530167624.4533477.1584029710746.JavaMail.zimbra@desy.de>
- <20200312205139.GA32293@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <20200312211555.GA5974@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <948465413.4651196.1584097887947.JavaMail.zimbra@desy.de>
- <6792d6a6012a241b8bd1555eea8c592ff318a444.camel@hammerspace.com>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iZS+FH53OkVhJcNSlkKU4D4ybFMgmQwg3DI7HcJdikE=;
+        b=ZhepRq6vZdwutn6+dVvHa2Nd2fUg4bkpFCPnrioEPM8960wwQ6QNriSWhEvDJyluGZ
+         HQ4DSXEFBc/Cc49UJZbZZ0+IKdIUweUfdMPsHzplzAiYXJCVtdUpATrIjywJPd2g8kUN
+         +X8qvsCdKPUnDbUvGBlpgcYdfoxQRkH4mt8DlRYiMe3qVfCPkJ4YFaYW5XdWy0EYNkSw
+         E3rqr3/a/UEm6Lg+97tyLpzT0wyZli0pYqhka4FZLhN4wiGKNSQkyh7rXnM+bLbRIk2F
+         hqKd6uEOJoaBI3njBYrs7pVHS6K4oxJ/ZoHnCO+KQayTDEz+/LYp7RzpmGuQtLDAfnNj
+         Lb1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=iZS+FH53OkVhJcNSlkKU4D4ybFMgmQwg3DI7HcJdikE=;
+        b=Mjg7lrt25OJ4WfCC4Vwd9TdDSr7kCgCotm18VPhvj5ewN7TD3eEdavykfbJVuQqKIh
+         l9UkvxoIgzab1FuXgpEWe6Xt0hTL+6bC29z8cQkleU8deBMkKmDmN0aL2fh/iIsZJMLF
+         5A8Py1hSREgwUzYanD7BexFmBti9L/N8GrET3YjZe0VX8+T9qeaz3fa1iuL5t/XSUSRS
+         UEq6eSwmFxWnKLT2gvwnP6HOn1j7XtqCvz3uZA13dbKPY47LSewu7nEinDIZlbdRm9FF
+         6FY5EqiBKPOrFYzRdkmrji7+8aJLUqXQWuf433V8iRYTnHYM4Ln7HijRP+WWsi37DmrY
+         ZrQQ==
+X-Gm-Message-State: ANhLgQ2Gim+2By+Y0Gj65+wce9nHy+UZMBk0u2JautVeR+VsfClipDEo
+        gBVwjEptRNqhXs4ThJboq8zaEzga
+X-Google-Smtp-Source: ADFU+vtr/jPNGO3gb2+d6KdtUIR0BSWbTZVZ7vFRqW98tXcFAM6FznTz4rZ4zqyJD/i08m+XNpiXBQ==
+X-Received: by 2002:a1c:7209:: with SMTP id n9mr12247146wmc.188.1584130090746;
+        Fri, 13 Mar 2020 13:08:10 -0700 (PDT)
+Received: from x230 ([62.201.25.198])
+        by smtp.gmail.com with ESMTPSA id w4sm29801395wrl.12.2020.03.13.13.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 13:08:09 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 21:08:07 +0100
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Subject: Re: [PATCH 1/1] nfsd: remove read permission bit for ctl sysctl
+Message-ID: <20200313200807.GA2137291@x230>
+Reply-To: Petr Vorel <petr.vorel@gmail.com>
+References: <20200313123957.6122-1-pvorel@suse.cz>
+ <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6792d6a6012a241b8bd1555eea8c592ff318a444.camel@hammerspace.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 01:50:38PM +0000, Trond Myklebust wrote:
-> 'xattr_support' seems like a protocol hack to allow the client to
-> determine whether or not the xattr operations are supported.
+> Hi Petr, applied to nfsd-5.7-testing, with the patch description corrected
+> to read:
 > 
-> The reason why it is a hack is that 'supported_attrs' is also a per-
-> filesystem attribute, and there is no value in advertising
-> 'xattr_support' there unless your filesystem also supports xattrs.
-> 
-> IOW: the protocol forces you to do 2 round trips to the server in order
-> to figure out something that really should be obvious with 1 round
-> trip.
+> "It's meant to be write-only."
+Thanks, Chuck!
 
-Right, that's the annoying part. I mean, theoretically, a server can
-legally reject a GETATTR because you're asking for an unknown
-attribute (e.g. xattr_support in this case). So then what I have
-in my current patch (asking for both the supported_attrs and
-xattr_support at once) might fail, and the mount would fail.
-
-Which means I should split it up and have nfs4_do_fsinfo do
-the 2nd part, just in case.
-
-- Frank
+Kind regards,
+Petr
