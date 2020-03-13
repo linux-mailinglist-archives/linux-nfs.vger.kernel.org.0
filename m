@@ -2,73 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4287184FE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 21:08:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E21C18509D
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 22:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgCMUIO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Mar 2020 16:08:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37041 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgCMUIO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Mar 2020 16:08:14 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a141so11609568wme.2
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2020 13:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iZS+FH53OkVhJcNSlkKU4D4ybFMgmQwg3DI7HcJdikE=;
-        b=ZhepRq6vZdwutn6+dVvHa2Nd2fUg4bkpFCPnrioEPM8960wwQ6QNriSWhEvDJyluGZ
-         HQ4DSXEFBc/Cc49UJZbZZ0+IKdIUweUfdMPsHzplzAiYXJCVtdUpATrIjywJPd2g8kUN
-         +X8qvsCdKPUnDbUvGBlpgcYdfoxQRkH4mt8DlRYiMe3qVfCPkJ4YFaYW5XdWy0EYNkSw
-         E3rqr3/a/UEm6Lg+97tyLpzT0wyZli0pYqhka4FZLhN4wiGKNSQkyh7rXnM+bLbRIk2F
-         hqKd6uEOJoaBI3njBYrs7pVHS6K4oxJ/ZoHnCO+KQayTDEz+/LYp7RzpmGuQtLDAfnNj
-         Lb1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=iZS+FH53OkVhJcNSlkKU4D4ybFMgmQwg3DI7HcJdikE=;
-        b=Mjg7lrt25OJ4WfCC4Vwd9TdDSr7kCgCotm18VPhvj5ewN7TD3eEdavykfbJVuQqKIh
-         l9UkvxoIgzab1FuXgpEWe6Xt0hTL+6bC29z8cQkleU8deBMkKmDmN0aL2fh/iIsZJMLF
-         5A8Py1hSREgwUzYanD7BexFmBti9L/N8GrET3YjZe0VX8+T9qeaz3fa1iuL5t/XSUSRS
-         UEq6eSwmFxWnKLT2gvwnP6HOn1j7XtqCvz3uZA13dbKPY47LSewu7nEinDIZlbdRm9FF
-         6FY5EqiBKPOrFYzRdkmrji7+8aJLUqXQWuf433V8iRYTnHYM4Ln7HijRP+WWsi37DmrY
-         ZrQQ==
-X-Gm-Message-State: ANhLgQ2Gim+2By+Y0Gj65+wce9nHy+UZMBk0u2JautVeR+VsfClipDEo
-        gBVwjEptRNqhXs4ThJboq8zaEzga
-X-Google-Smtp-Source: ADFU+vtr/jPNGO3gb2+d6KdtUIR0BSWbTZVZ7vFRqW98tXcFAM6FznTz4rZ4zqyJD/i08m+XNpiXBQ==
-X-Received: by 2002:a1c:7209:: with SMTP id n9mr12247146wmc.188.1584130090746;
-        Fri, 13 Mar 2020 13:08:10 -0700 (PDT)
-Received: from x230 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id w4sm29801395wrl.12.2020.03.13.13.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 13:08:09 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 21:08:07 +0100
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Petr Vorel <pvorel@suse.cz>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>
-Subject: Re: [PATCH 1/1] nfsd: remove read permission bit for ctl sysctl
-Message-ID: <20200313200807.GA2137291@x230>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20200313123957.6122-1-pvorel@suse.cz>
- <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
+        id S1726591AbgCMVGG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Mar 2020 17:06:06 -0400
+Received: from fieldses.org ([173.255.197.46]:51526 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgCMVGG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 13 Mar 2020 17:06:06 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 786F9C53; Fri, 13 Mar 2020 17:06:05 -0400 (EDT)
+Date:   Fri, 13 Mar 2020 17:06:05 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 02/14] xattr: modify vfs_{set, remove}xattr for NFS
+ server use
+Message-ID: <20200313210605.GE12537@fieldses.org>
+References: <20200311195954.27117-1-fllinden@amazon.com>
+ <20200311195954.27117-3-fllinden@amazon.com>
+ <20200313153549.GD12537@fieldses.org>
+ <20200313160702.GA31307@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
+In-Reply-To: <20200313160702.GA31307@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> Hi Petr, applied to nfsd-5.7-testing, with the patch description corrected
-> to read:
+On Fri, Mar 13, 2020 at 04:07:02PM +0000, Frank van der Linden wrote:
+> On Fri, Mar 13, 2020 at 11:35:49AM -0400, J. Bruce Fields wrote:
+> > 
+> > 
+> > On Wed, Mar 11, 2020 at 07:59:42PM +0000, Frank van der Linden wrote:
+> > > Second, RFC 8276 (NFSv4 extended attribute support) specifies that
+> > > delegations should be recalled (8.4.2.4, 8.4.4.4) when a SETXATTR
+> > > or REMOVEXATTR operation is performed. So, like with other fs
+> > > operations, try to break the delegation. The _locked version of
+> > > these operations will not wait for the delegation to be successfully
+> > > broken, instead returning an error if it wasn't, so that the NFS
+> > > server code can return NFS4ERR_DELAY to the client (similar to
+> > > what e.g. vfs_link does).
+> > 
+> > Is there a preexisting bug here?  Even without NFS support for xattrs, a
+> > local setxattr on the filesystem should still revoke any delegations
+> > held by remote NFS clients.  I couldn't tell whether we're getting that
+> > right from a quick look at the current code.
+> > 
+> > --b.
 > 
-> "It's meant to be write-only."
-Thanks, Chuck!
+> I think there's currently a bug if that's the expected behavior, yes.
+> Attribute changes will call notify_change(), and other methods (unlink,
+> link, rename) call try_break_deleg(). But the xattr entry points
+> don't do that, which is why I added it.
 
-Kind regards,
-Petr
+Got it, thanks.  In that case I'd move this patch (or the part of it
+required to fix that bug) to the front of the series and add a
+
+	Cc: stable@vger.kernel.org
+
+--b.
