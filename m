@@ -2,49 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2457E184922
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 15:19:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF9E1849AC
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2020 15:41:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgCMOTz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Mar 2020 10:19:55 -0400
-Received: from smtp-o-1.desy.de ([131.169.56.154]:49276 "EHLO smtp-o-1.desy.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgCMOTz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:19:55 -0400
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
-        by smtp-o-1.desy.de (Postfix) with ESMTP id 84CEFE0791
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2020 15:19:52 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 84CEFE0791
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1584109192; bh=+J7pIhgtVNMBgIJCrYMZg9P3ts/uS8GWixGshrtGQUA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=OpO8WdfC79PuH8aruyvQH2gu5FxK6Cbkoy8nKtjxsbqh8arjgiLXn60CAsTdw88IH
-         LZ75eSx2pyv1ITt5t8Udl+ZQkWloRv6VVuXFhpgkxxsQ+IHzJxvm+WMa3OwNY1gHEb
-         zW9j3hiTcUIu6WBvkti/AxIfbdJ5kDqjd1iH3BuY=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-        by smtp-buf-1.desy.de (Postfix) with ESMTP id 7D7E5120294;
-        Fri, 13 Mar 2020 15:19:52 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id 5432B100076;
-        Fri, 13 Mar 2020 15:19:52 +0100 (CET)
-Date:   Fri, 13 Mar 2020 15:19:52 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     trondmy <trondmy@hammerspace.com>
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Message-ID: <345401476.4712575.1584109192253.JavaMail.zimbra@desy.de>
-In-Reply-To: <6792d6a6012a241b8bd1555eea8c592ff318a444.camel@hammerspace.com>
-References: <20200311195613.26108-1-fllinden@amazon.com> <20200311195613.26108-4-fllinden@amazon.com> <530167624.4533477.1584029710746.JavaMail.zimbra@desy.de> <20200312205139.GA32293@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com> <20200312211555.GA5974@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com> <948465413.4651196.1584097887947.JavaMail.zimbra@desy.de> <6792d6a6012a241b8bd1555eea8c592ff318a444.camel@hammerspace.com>
-Subject: Re: [PATCH 03/13] NFSv4.2: query the server for extended attribute
- support
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: NFSv4.2: query the server for extended attribute support
-Thread-Index: AQHV998vv0PI2kCOxkaGqYUZpy0TZqhFIw8AgABNQICAAAbIgIAA6XKAgAAseIDnRh56DQ==
+        id S1726216AbgCMOlx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Mar 2020 10:41:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50144 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgCMOlx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Mar 2020 10:41:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEciLe049372;
+        Fri, 13 Mar 2020 14:41:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=QlE6BF79h5NHgpRDoUzcEpSw7XtvD4SHXlP4GYYf3VA=;
+ b=S1bt9EkGWwXQBnUMyE2nxcKa3Uibg2o1uu4274js9Hf+wX8fXyY0x7LJFEVmiQQpa84C
+ v8KUi2X5KNcRf7qR5Ehz+2IlcW3+TQeKFL570kDpL02p5fUWKJmrOheI59DHkKO1o3zo
+ nnBJ1AWPtBqV4/qynKfgYZtgfPMmtgOkVbG+DA0OmNhtCaTzetAELgw5nXcslzPjlpXO
+ moSvEUGYnqB68PRAOZIuwicMVWPVqmBKiWHXnog3V7F7lJPw8MCIiAvbe+eG2vwmJg6z
+ kmMTYqM8pAmUHxDH1H2q5dpb81fdHmJuQ2mNAJSr0JgB8+yQ3jab3a+aoYg/XKsn8U6D sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2yqtagc7tb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 14:41:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEcLEt065974;
+        Fri, 13 Mar 2020 14:41:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2yqtad9x9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 14:41:46 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02DEfjQS016592;
+        Fri, 13 Mar 2020 14:41:45 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Mar 2020 07:41:45 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 1/1] nfsd: remove read permission bit for ctl sysctl
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200313123957.6122-1-pvorel@suse.cz>
+Date:   Fri, 13 Mar 2020 10:41:44 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5A8BA7E5-C24D-4FA6-9D4B-1216398CDF38@oracle.com>
+References: <20200313123957.6122-1-pvorel@suse.cz>
+To:     Petr Vorel <pvorel@suse.cz>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130077
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -52,97 +72,48 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
------ Original Message -----
-> From: "trondmy" <trondmy@hammerspace.com>
-> To: "Frank van der Linden" <fllinden@amazon.com>, "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>, "Anna Schumaker" <anna.schumaker@netapp.com>
-> Sent: Friday, March 13, 2020 2:50:38 PM
-> Subject: Re: [PATCH 03/13] NFSv4.2: query the server for extended attribute support
+> On Mar 13, 2020, at 8:39 AM, Petr Vorel <pvorel@suse.cz> wrote:
+>=20
+> It's meant to be read only.
+>=20
+> Fixes: 89c905beccbb ("nfsd: allow forced expiration of NFSv4 clients")
+>=20
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+> Hi,
+>=20
+> does not really fix anything, it's just confusing to have read
+> permission bit when not used.
 
-> On Fri, 2020-03-13 at 12:11 +0100, Mkrtchyan, Tigran wrote:
->> Hi Frank,
->> 
->> I think the way how you have implemented is almost correct. You query
->> server for supported attributes. As result client will get all
->> attributes
->> supported bu the server and if FATTR4_XATTR_SUPPORT is returned, then
->> client
->> adds xattr capability. This the way how I read rfc8276. Do you have a
->> different
->> opinion?
->> 
-> 
-> 'xattr_support' seems like a protocol hack to allow the client to
-> determine whether or not the xattr operations are supported.
-> 
-> The reason why it is a hack is that 'supported_attrs' is also a per-
-> filesystem attribute, and there is no value in advertising
-> 'xattr_support' there unless your filesystem also supports xattrs.
-> 
-> IOW: the protocol forces you to do 2 round trips to the server in order
-> to figure out something that really should be obvious with 1 round
-> trip.
-> 
+Hi Petr, applied to nfsd-5.7-testing, with the patch description =
+corrected
+to read:
+
+"It's meant to be write-only."
 
 
-So you say  that client have to query for xattr_support every time the
-fsid is changing?
+> Kind regards,
+> Petr
+>=20
+> fs/nfsd/nfs4state.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 65cfe9ab47be..475ece438cfc 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2636,7 +2636,7 @@ static const struct file_operations =
+client_ctl_fops =3D {
+> static const struct tree_descr client_files[] =3D {
+> 	[0] =3D {"info", &client_info_fops, S_IRUSR},
+> 	[1] =3D {"states", &client_states_fops, S_IRUSR},
+> -	[2] =3D {"ctl", &client_ctl_fops, S_IRUSR|S_IWUSR},
+> +	[2] =3D {"ctl", &client_ctl_fops, S_IWUSR},
+> 	[3] =3D {""},
+> };
 
-Tigran.
+--
+Chuck Lever
 
->> Regards,
->>    Tigran.
->> 
->> ----- Original Message -----
->> > From: "Frank van der Linden" <fllinden@amazon.com>
->> > To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
->> > Cc: "Trond Myklebust" <trond.myklebust@hammerspace.com>, "Anna
->> > Schumaker" <anna.schumaker@netapp.com>, "linux-nfs"
->> > <linux-nfs@vger.kernel.org>
->> > Sent: Thursday, March 12, 2020 10:15:55 PM
->> > Subject: Re: [PATCH 03/13] NFSv4.2: query the server for extended
->> > attribute support
->> > On Thu, Mar 12, 2020 at 08:51:39PM +0000, Frank van der Linden
->> > wrote:
->> > > 1) The xattr_support attribute exists
->> > > 2) The xattr support attribute exists *and* it's true for the
->> > > root fh
->> > > 
->> > > Currently the code does 2) in one operation. That might not be
->> > > 100%
->> > > correct - the RFC does mention that (section 8.2):
->> > > 
->> > > "Before interrogating this attribute using GETATTR, a client
->> > > should
->> > >  determine whether it is a supported attribute by interrogating
->> > > the
->> > >  supported_attrs attribute."
->> > > 
->> > > That's a "should", not a "MUST", but it's still waving its finger
->> > > at you not to do this.
->> > > 
->> > > Since 8.2.1 says:
->> > > 
->> > > "However, a client may reasonably assume that a server
->> > >  (or file system) that does not support the xattr_support
->> > > attribute
->> > >  does not provide xattr support, and it acts on that basis."
->> > > 
->> > > ..I think you're right, and the code should just use the
->> > > existence
->> > > of the attribute as a signal that the server knows about xattrs -
->> > > operations should still error out correctly if it doesn't.
->> > > 
->> > > I'll make that change, thanks.
->> > 
->> > ..or, alternatively, only query xattr_support in
->> > nfs4_server_capabilities,
->> > and then its actual value, if it exists, in nfs4_fs_info.
->> > 
->> > Any opinions on this?
->> > 
->> > - Frank
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+
+
