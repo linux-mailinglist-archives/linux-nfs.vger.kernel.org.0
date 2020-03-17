@@ -2,119 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4E3F1891C0
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 00:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 240BE18924C
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 00:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgCQXDy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Mar 2020 19:03:54 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:33156 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgCQXDy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Mar 2020 19:03:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584486235; x=1616022235;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ucAvYYu7/OWyWytLWFkhGyOngxUutoticaQGw8QKmSM=;
-  b=nbS4RyRj7JOT7HKN/8K77jxcD4p3q/5NPW2ViNxPtnvaUnxlVptN74sT
-   WR10g718xCKKYM5G2y76IIs+feHsJTT5tWCwuapKFNBqsPBfuNvsN+kzC
-   B1P3ugZoP+PJs8TITwESUM+PY4pi5j10rtHbfAo2MiJ27CEvXUGLsK1Ta
-   c=;
-IronPort-SDR: vEfzQKWcxwfj9H3VdUgT/9vSPxhRuWZ2ebisWvEJRmiOSLi3Aq9OI+wM3rj4DopaorUYDOK1Uj
- AFzhyar3PQEg==
-X-IronPort-AV: E=Sophos;i="5.70,565,1574121600"; 
-   d="scan'208";a="21494060"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Mar 2020 23:03:42 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id E7AD0A0699;
-        Tue, 17 Mar 2020 23:03:40 +0000 (UTC)
-Received: from EX13D13UEA001.ant.amazon.com (10.43.61.119) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 17 Mar 2020 23:03:40 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D13UEA001.ant.amazon.com (10.43.61.119) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 17 Mar 2020 23:03:40 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Tue, 17 Mar 2020 23:03:39 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 9964DD8CF7; Tue, 17 Mar 2020 23:03:39 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 23:03:39 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-CC:     <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 00/13] client side user xattr (RFC8276) support
-Message-ID: <20200317230339.GA3130@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200311195613.26108-1-fllinden@amazon.com>
- <CAFX2Jf=g2Pv62cnciB4VG6HTndJSrtfeSR_oVu9PmiBez8_Upw@mail.gmail.com>
+        id S1726680AbgCQXtC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Mar 2020 19:49:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34536 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726564AbgCQXtC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 17 Mar 2020 19:49:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CE37DAFB8;
+        Tue, 17 Mar 2020 23:48:58 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>
+Date:   Wed, 18 Mar 2020 10:48:51 +1100
+Cc:     "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH/RFC] NFS: Minimize COMMIT calls during writeback.
+In-Reply-To: <7a556bb02c9cd7ef219d156aff2a603b9c0fe22b.camel@hammerspace.com>
+References: <87y2s1rwof.fsf@notabene.neil.brown.name> <b557a1d43105b42b304a2682ce8e2c31637e1989.camel@hammerspace.com> <87v9n5rmrz.fsf@notabene.neil.brown.name> <d841ade018c9b90a74e7977243bf0975b87c4365.camel@hammerspace.com> <87eetrs1p3.fsf@notabene.neil.brown.name> <7a556bb02c9cd7ef219d156aff2a603b9c0fe22b.camel@hammerspace.com>
+Message-ID: <875zf2sfto.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAFX2Jf=g2Pv62cnciB4VG6HTndJSrtfeSR_oVu9PmiBez8_Upw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:09:51PM -0400, Anna Schumaker wrote:
-> I'm curious if you've tried xfstests with your patches? There are a
-> handful of tests using xattrs that might be good to check with, too:
-> 
-> anna@gouda % grep xattr -l tests/generic/[0-9][0-9][0-9]
-> tests/generic/037
-> tests/generic/062
-> tests/generic/066
-> tests/generic/093
-> tests/generic/117
-> tests/generic/337
-> tests/generic/377
-> tests/generic/403
-> tests/generic/425
-> tests/generic/454
-> tests/generic/489
-> tests/generic/523
-> tests/generic/529
-> tests/generic/556
-> 
-> Thanks,
-> Anna
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I ran did a "check -nfs -g quick" run of xfstests-dev. The following tests
-were applicable to extended attributes:
+On Tue, Mar 17 2020, Trond Myklebust wrote:
 
-generic/020     fail   Doesn't compute MAX_ATTR right for NFS, passes
-                       after fixing that.
-generic/037     pass
-generic/062     fail   It unconditionally expects the "system" and
-                       "trusted" namespaces to be there too, not
-                       easily fixed.
-generic/066     pass
-generic/093     fail   Capabilities use the "security" namespace, can't
-                       work on NFS.
-generic/097     fail   "trusted" namespace explicitly used, can't work
-                       on NFS.
-generic/103     fail   fallocate fails on NFS, not xattr related
-generic/117     pass
-generic/377     fail   Doesn't expect the "system.nfs4acl" attribute to
-                       show up in listxattr.  Can be fixed by filtering
-                       out only "user" namespace xattrs.
-generic/403     fail   Uses the "trusted" namespace, but does not really
-                       need it. Works if converted to the "user" namespace.
-generic/454     pass
-generic/523     pass
+> On Tue, 2020-03-17 at 21:41 +1100, NeilBrown wrote:
+>>=20
+>> Fair enough.  I don't usually think of writeback as due to memory
+>> pressure, but I can see that I filesystem wouldn't much care for the
+>> distinction.
+>>=20
+>> Still there is no overlap imposed by the VM.  The VM is sending a
+>> sensible streak of writepages requests - as dd dirties more pages,
+>> the
+>> VM asks NFS to write out more pages.  All in a nice orderly fashion.
+>
+> The question essentially boils down to: "What is the purpose of the
+> background writeback?" My answer would be "To free up pages", something
+> that does not happen until COMMIT is sent.
+>
+> IOW: My concern is livelock, not serialisation. Right now, we do start
+> commit when a batch sent by the VM has been completely written (same as
+> we do when an O_DIRECT batch has been completely written). That ensures
+> that the pages can be freed. Your patch is deliberately designed to
+> defer that process that allows pages to be freed, and I'm not seeing
+> how it is bounded.
 
+In the current code the COMMIT for any given writepages() call only
+completes after:
+  - all the WRITEs generated by that writeapages call completes, and
+    then
+  - a subsequent COMMIT completes.
 
-In other words, there were no problems with the patches themselves, but
-xfstests will need some work to work properly.
+After my patch, the bound is a little more generous, but still a strong
+bound.  The COMMIT will be complete after:
+  - Any currently running COMMIT completes (there is usually only one),
+    then
+  - any writes that were submitted through writepages() before that
+    COMMIT completed, completed, then
+  - a subsequent COMMIT completes.
 
-I can send a few simple fixes in for xfstests, but a few need a bit more
-work, specifically the ones that expected certain xattr namespaces to be
-there. Right now there is a "_require_attr" check function, that probably
-needs to be split up in to "_require_attr_user, _require_attr_system", etc
-functions, which is a bit more work.
+So we wait extra time to allow for a COMMIT and some more WRITEs to
+complete.  Once the pending COMMIT completes, no more work can be added
+to the set of things that need to be waited for, so it cannot live-lock.
+=20=20
 
-- Frank
+>> >=20
+>> > commit_info.rpcs_out is there in order to count the number of
+>> > outstanding COMMITs. I'm not seeing why we need to change that
+>> > definition, particularly given that there can be processes out
+>> > there
+>> > that are trying to wait for the count to go to zero.
+>> >=20
+>> > The I/O completion structure already has its own reference counter,
+>> > and
+>> > I can see nothing stopping you from modifying
+>> > nfs_io_completion_commit() to do the same things you are trying to
+>> > do
+>> > in nfs_commit_end() here.
+>>=20
+>> I don't see how that would work.
+>> There are two events that need to happen asynchronously when a
+>> counter
+>> hits zero.
+>> One is that a COMMIT needs to be sent when the number of outstanding
+>> writes from a particular set hits zero.  That is the
+>> nfs_io_completion
+>> counter.
+>> The other is that the currently growing set of pending commits needs
+>> to
+>> be detached and allowed to drain so that another COMMIT will get
+>> sent.
+>> This is what I'm using rpcs_out for.  It seems quite a natural
+>> extension
+>> of its current use.
+>>=20
+>
+> You're not supposed to call kref_get() on something with a refcount of
+> zero. That means the nfs_io_completion counter defines the lifetime of
+> the object that your commit_info.ioc points to, and once that refcount
+> goes to zero, you should be removing it, which you are doing in
+> nfs_writepages().
+
+Certainly kref_get() cannot be called on something with a refcount of
+zero - and if you have something that might have just gone to zero you
+can use kref_get_unless_zero() to ensure you don't do the wrong thing.
+I use kref_get_unless_zero() in nfs_writepages, but there is nowhere
+that might take a ref on a kref with refcount of zero.
+
+The io completion stored in commit_info.ioc has an extra refcount
+to reflect the reference from commit_info.ioc.
+
+The reference is removed and the reference count dropped using atomic
+ops (no locking) so nfs_writepages() might get the pointer and not
+be able to increment that refcount because it is already zero.  RCU
+makes it safe to look at the refcount, and kref_get_unless_zero() makes
+it safe to try an increment it.
+
+>
+> commit_info.rpcs_out is non-zero for the lifetime of any COMMIT
+> operations. I'm not seeing how that relates to anything in the
+> preceding paragraph (other than that nfs_io_completion going to zero
+> will usually cause commit_info.rpcs_out to get incremented).
+> IOW: commit_info.rpcs_out goes to zero a long time after the object
+> pointed to by commit_info.ioc ought to be freed.
+
+Yes, I agree with this.  I confirm that rpcs_out will only go to zero
+well after commit_info.ioc is freed.  The purpose of my change to
+rpcs_out is to cause it to be non-zero *earlier*.
+
+As soon as there exists a detached io completion (which will eventually
+trigger a COMMIT), rpcs_out becomes non-zero.  The count held by the
+io completion is transferred to the pending COMMIT and dropped when the
+COMMIT completes.
+
+Making it non-zero earlier allows nfs_writepages to detect if there is
+already a pending COMMIT *even if it hasn't been sent yet*.
+
+If there is no pending COMMIT (or detached io completion), then it must
+create a detached io completion so that a commit will follow.
+If there *is* a pending COMMIT or detached io completion, then it can
+leave its io completion attached because it can be sure that a COMMIT
+will complete in bounded time, and so the io completion that it has
+attached will be detached and processed.
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5xYeMACgkQOeye3VZi
+gbkg7BAAkrgcTxkC+4ZmUOTH4eP0fJRTN9PgrSRCLcEk/J7bw+uNEF2qk0+isao+
+HbRTh0FoA1SgQUSOoqRIvOgCrCNM+rDYhLWOYB6BSGcYIsgGYfyEGHkVaIPXtawz
+NpDcGDhmLTMQpHtOjfX1ccTyOSTvsZPS3oGLFAEfZRYy8JoIpO4E6wd2vEJY46Ss
+X/x9j0WBCZq8LPl5VMe74AL4QpbyrajmOSG0KPxsZgkNHtjuw7RfdOVzV2HD3kbb
+w7pZV9QQlAhP0c9FLi23QVmcrygKX7u8sDkNe1Md+bvofmVxddJeHhBxJ36ZfmFA
+kTHvkCCbit1Ixfd4Ht50x5jMez59KCsmYiEBsMjZ77TcU1kmzITGEnJgUf9SYiQ0
+o1EWytPHdxCnyZZdshgJ2SpjcJ/LPOHlk6xCCVLB6YMDMEbVtXDf7rQQzXUBBzTN
+7v6QymMt46LjFDhq+D0utuVKyrsN7seXc8PwT4BvQfnpQFbhXRLjibsK28kzSsLw
+dbJoBj6wtvqROGLjDCl+qkUkqtCv0bVi5ur7i/D+Xyts0Yrtd6nZwG1e1Mz3Dj7D
+B8NUT3V6PUhNljTUCeTgAl76BQGJV3pLRVzScmskiRHvhFLiy/rVVCtFhh7u4g4S
+wiVXvIPN5xJ9iO1//48vUzy+xV1n4NJ0G4T+vVUInersHDPsJn4=
+=qLS9
+-----END PGP SIGNATURE-----
+--=-=-=--
