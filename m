@@ -2,182 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 240BE18924C
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 00:49:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B9D1899AE
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 11:41:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCQXtC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Mar 2020 19:49:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34536 "EHLO mx2.suse.de"
+        id S1726786AbgCRKky (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Mar 2020 06:40:54 -0400
+Received: from smtp-o-3.desy.de ([131.169.56.156]:38678 "EHLO smtp-o-3.desy.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgCQXtC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 17 Mar 2020 19:49:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CE37DAFB8;
-        Tue, 17 Mar 2020 23:48:58 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>
-Date:   Wed, 18 Mar 2020 10:48:51 +1100
-Cc:     "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC] NFS: Minimize COMMIT calls during writeback.
-In-Reply-To: <7a556bb02c9cd7ef219d156aff2a603b9c0fe22b.camel@hammerspace.com>
-References: <87y2s1rwof.fsf@notabene.neil.brown.name> <b557a1d43105b42b304a2682ce8e2c31637e1989.camel@hammerspace.com> <87v9n5rmrz.fsf@notabene.neil.brown.name> <d841ade018c9b90a74e7977243bf0975b87c4365.camel@hammerspace.com> <87eetrs1p3.fsf@notabene.neil.brown.name> <7a556bb02c9cd7ef219d156aff2a603b9c0fe22b.camel@hammerspace.com>
-Message-ID: <875zf2sfto.fsf@notabene.neil.brown.name>
+        id S1727702AbgCRKkx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:40:53 -0400
+Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [IPv6:2001:638:700:1038::1:a6])
+        by smtp-o-3.desy.de (Postfix) with ESMTP id 92C46604B3
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Mar 2020 11:40:51 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 92C46604B3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1584528051; bh=5qup0rhEXKfBkGzugBVdBeIARtxxtgHt3OZlySyVO48=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yaf+an/7uK2jBuxmyKL0trC6/Qu+RIE6rwauwgwDNABL6nzop/JMSvF0f+LpSta5X
+         ibpSVasXYQks8y4ZYMcbWIcnotxhIMLRA4fyJY0/Zp/YWVFjl86jVghqkwC2hTvS9o
+         NpFuFLlUmQOyiZU1eg6nMDTsYFIkW/El/X5R7GZU=
+Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [131.169.56.131])
+        by smtp-buf-3.desy.de (Postfix) with ESMTP id 8EDD6A00B3;
+        Wed, 18 Mar 2020 11:40:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from ani.desy.de (zitpcx21033.desy.de [131.169.185.213])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 62417C00A2;
+        Wed, 18 Mar 2020 11:40:51 +0100 (CET)
+From:   Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org,
+        Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: [PATCH] rpc: fix str to bytes conversion
+Date:   Wed, 18 Mar 2020 11:40:31 +0100
+Message-Id: <20200318104031.289921-1-tigran.mkrtchyan@desy.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+fix back channel ping from server
+---
+ rpc/rpc.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On Tue, Mar 17 2020, Trond Myklebust wrote:
+diff --git a/rpc/rpc.py b/rpc/rpc.py
+index c536384..d15cf06 100644
+--- a/rpc/rpc.py
++++ b/rpc/rpc.py
+@@ -693,8 +693,11 @@ class ConnectionHandler(object):
+                 status, result, notify = tuple
+             if result is None:
+                 result = b''
++            if isinstance(result, str):
++                result = bytes(result, encoding='UTF-8')
++
+             if not isinstance(result, bytes):
+-                raise TypeError("Expected string")
++                raise TypeError("Expected bytes, got %s" % type(result))
+             # status, result = method(msg_data, call_info)
+             log_t.debug("Called method, got %r, %r" % (status, result))
+         except rpclib.RPCDrop:
+-- 
+2.25.1
 
-> On Tue, 2020-03-17 at 21:41 +1100, NeilBrown wrote:
->>=20
->> Fair enough.  I don't usually think of writeback as due to memory
->> pressure, but I can see that I filesystem wouldn't much care for the
->> distinction.
->>=20
->> Still there is no overlap imposed by the VM.  The VM is sending a
->> sensible streak of writepages requests - as dd dirties more pages,
->> the
->> VM asks NFS to write out more pages.  All in a nice orderly fashion.
->
-> The question essentially boils down to: "What is the purpose of the
-> background writeback?" My answer would be "To free up pages", something
-> that does not happen until COMMIT is sent.
->
-> IOW: My concern is livelock, not serialisation. Right now, we do start
-> commit when a batch sent by the VM has been completely written (same as
-> we do when an O_DIRECT batch has been completely written). That ensures
-> that the pages can be freed. Your patch is deliberately designed to
-> defer that process that allows pages to be freed, and I'm not seeing
-> how it is bounded.
-
-In the current code the COMMIT for any given writepages() call only
-completes after:
-  - all the WRITEs generated by that writeapages call completes, and
-    then
-  - a subsequent COMMIT completes.
-
-After my patch, the bound is a little more generous, but still a strong
-bound.  The COMMIT will be complete after:
-  - Any currently running COMMIT completes (there is usually only one),
-    then
-  - any writes that were submitted through writepages() before that
-    COMMIT completed, completed, then
-  - a subsequent COMMIT completes.
-
-So we wait extra time to allow for a COMMIT and some more WRITEs to
-complete.  Once the pending COMMIT completes, no more work can be added
-to the set of things that need to be waited for, so it cannot live-lock.
-=20=20
-
->> >=20
->> > commit_info.rpcs_out is there in order to count the number of
->> > outstanding COMMITs. I'm not seeing why we need to change that
->> > definition, particularly given that there can be processes out
->> > there
->> > that are trying to wait for the count to go to zero.
->> >=20
->> > The I/O completion structure already has its own reference counter,
->> > and
->> > I can see nothing stopping you from modifying
->> > nfs_io_completion_commit() to do the same things you are trying to
->> > do
->> > in nfs_commit_end() here.
->>=20
->> I don't see how that would work.
->> There are two events that need to happen asynchronously when a
->> counter
->> hits zero.
->> One is that a COMMIT needs to be sent when the number of outstanding
->> writes from a particular set hits zero.  That is the
->> nfs_io_completion
->> counter.
->> The other is that the currently growing set of pending commits needs
->> to
->> be detached and allowed to drain so that another COMMIT will get
->> sent.
->> This is what I'm using rpcs_out for.  It seems quite a natural
->> extension
->> of its current use.
->>=20
->
-> You're not supposed to call kref_get() on something with a refcount of
-> zero. That means the nfs_io_completion counter defines the lifetime of
-> the object that your commit_info.ioc points to, and once that refcount
-> goes to zero, you should be removing it, which you are doing in
-> nfs_writepages().
-
-Certainly kref_get() cannot be called on something with a refcount of
-zero - and if you have something that might have just gone to zero you
-can use kref_get_unless_zero() to ensure you don't do the wrong thing.
-I use kref_get_unless_zero() in nfs_writepages, but there is nowhere
-that might take a ref on a kref with refcount of zero.
-
-The io completion stored in commit_info.ioc has an extra refcount
-to reflect the reference from commit_info.ioc.
-
-The reference is removed and the reference count dropped using atomic
-ops (no locking) so nfs_writepages() might get the pointer and not
-be able to increment that refcount because it is already zero.  RCU
-makes it safe to look at the refcount, and kref_get_unless_zero() makes
-it safe to try an increment it.
-
->
-> commit_info.rpcs_out is non-zero for the lifetime of any COMMIT
-> operations. I'm not seeing how that relates to anything in the
-> preceding paragraph (other than that nfs_io_completion going to zero
-> will usually cause commit_info.rpcs_out to get incremented).
-> IOW: commit_info.rpcs_out goes to zero a long time after the object
-> pointed to by commit_info.ioc ought to be freed.
-
-Yes, I agree with this.  I confirm that rpcs_out will only go to zero
-well after commit_info.ioc is freed.  The purpose of my change to
-rpcs_out is to cause it to be non-zero *earlier*.
-
-As soon as there exists a detached io completion (which will eventually
-trigger a COMMIT), rpcs_out becomes non-zero.  The count held by the
-io completion is transferred to the pending COMMIT and dropped when the
-COMMIT completes.
-
-Making it non-zero earlier allows nfs_writepages to detect if there is
-already a pending COMMIT *even if it hasn't been sent yet*.
-
-If there is no pending COMMIT (or detached io completion), then it must
-create a detached io completion so that a commit will follow.
-If there *is* a pending COMMIT or detached io completion, then it can
-leave its io completion attached because it can be sure that a COMMIT
-will complete in bounded time, and so the io completion that it has
-attached will be detached and processed.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5xYeMACgkQOeye3VZi
-gbkg7BAAkrgcTxkC+4ZmUOTH4eP0fJRTN9PgrSRCLcEk/J7bw+uNEF2qk0+isao+
-HbRTh0FoA1SgQUSOoqRIvOgCrCNM+rDYhLWOYB6BSGcYIsgGYfyEGHkVaIPXtawz
-NpDcGDhmLTMQpHtOjfX1ccTyOSTvsZPS3oGLFAEfZRYy8JoIpO4E6wd2vEJY46Ss
-X/x9j0WBCZq8LPl5VMe74AL4QpbyrajmOSG0KPxsZgkNHtjuw7RfdOVzV2HD3kbb
-w7pZV9QQlAhP0c9FLi23QVmcrygKX7u8sDkNe1Md+bvofmVxddJeHhBxJ36ZfmFA
-kTHvkCCbit1Ixfd4Ht50x5jMez59KCsmYiEBsMjZ77TcU1kmzITGEnJgUf9SYiQ0
-o1EWytPHdxCnyZZdshgJ2SpjcJ/LPOHlk6xCCVLB6YMDMEbVtXDf7rQQzXUBBzTN
-7v6QymMt46LjFDhq+D0utuVKyrsN7seXc8PwT4BvQfnpQFbhXRLjibsK28kzSsLw
-dbJoBj6wtvqROGLjDCl+qkUkqtCv0bVi5ur7i/D+Xyts0Yrtd6nZwG1e1Mz3Dj7D
-B8NUT3V6PUhNljTUCeTgAl76BQGJV3pLRVzScmskiRHvhFLiy/rVVCtFhh7u4g4S
-wiVXvIPN5xJ9iO1//48vUzy+xV1n4NJ0G4T+vVUInersHDPsJn4=
-=qLS9
------END PGP SIGNATURE-----
---=-=-=--
