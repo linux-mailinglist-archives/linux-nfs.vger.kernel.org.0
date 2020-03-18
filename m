@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F238318A6BE
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 22:10:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 374F718A694
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2020 22:09:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCRVKH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Mar 2020 17:10:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        id S1726596AbgCRUxr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Mar 2020 16:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgCRUxc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:53:32 -0400
+        id S1727262AbgCRUxr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5462020724;
-        Wed, 18 Mar 2020 20:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9087B20724;
+        Wed, 18 Mar 2020 20:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564812;
-        bh=ztCb4QjpjJS95pKFatfKpFF+V1RYi6Jlppehs5ldGno=;
+        s=default; t=1584564826;
+        bh=ePVB3mhFEyRGGn0YVF44FQkofOhQSp5ciqnPPMTYVzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMa1bmOXn60di3oemyQDhkn1VfwvXwpO67qyvF9D22bukV//U/oQ70/8Zj2QRUQyJ
-         LpmQSge07auPvIq70aTDxENmLLzjeO+xNkZgG9dXuTEw7zlzmA0ZoLvQ/2mWHEwtUG
-         nyzGcsh4HkzoC7rewAmqd0bkkA8369N8t/ownB2o=
+        b=0keH5Kmk71gBT9xIw73R84/gVmmUhps1hdByTe328mc9m4hVLVdgrle1H1JZOq9Xi
+         cBtJZqhAdVT9PZPgbOXmdlHhMJPavHA/ymLfMK7UGHGJC47/kYXHtb3Tqdjukb34m1
+         /t3ypmUTaI7tTElZkQVhShR6StTJJF+y9XbKnDRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Scott Mayhew <smayhew@redhat.com>,
         Dave Wysochanski <dwysocha@redhat.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 08/84] nfs: add minor version to nfs_server_key for fscache
-Date:   Wed, 18 Mar 2020 16:52:05 -0400
-Message-Id: <20200318205321.16066-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 07/73] nfs: add minor version to nfs_server_key for fscache
+Date:   Wed, 18 Mar 2020 16:52:31 -0400
+Message-Id: <20200318205337.16279-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205321.16066-1-sashal@kernel.org>
-References: <20200318205321.16066-1-sashal@kernel.org>
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 02110a30a49ea..a851339defeb5 100644
+index 30838304a0bf2..a05f77f9c21ed 100644
 --- a/fs/nfs/client.c
 +++ b/fs/nfs/client.c
 @@ -153,6 +153,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
@@ -101,7 +101,7 @@ index 3800ab6f08fa8..a6dcc2151e779 100644
  
  	switch (clp->cl_addr.ss_family) {
 diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 460d6251c405f..2c274fea80937 100644
+index da6204025a2db..914feab64702c 100644
 --- a/fs/nfs/nfs4client.c
 +++ b/fs/nfs/nfs4client.c
 @@ -216,7 +216,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
