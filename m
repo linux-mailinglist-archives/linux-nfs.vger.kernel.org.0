@@ -2,56 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1438E18BAD8
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 16:20:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A32A118BADB
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 16:20:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgCSPU3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Mar 2020 11:20:29 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:41333 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgCSPU2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 11:20:28 -0400
-Received: by mail-qv1-f68.google.com with SMTP id a10so1182254qvq.8;
-        Thu, 19 Mar 2020 08:20:26 -0700 (PDT)
+        id S1727470AbgCSPUe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Mar 2020 11:20:34 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43687 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgCSPUe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 11:20:34 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l13so2077085qtv.10;
+        Thu, 19 Mar 2020 08:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=ZtMj/CBgCD3yGjXP1YkOgaQmTlsjIgpm/I74/jq1ac4=;
-        b=E4JRJX4luJOgYONYsHvQhSr12DWtuR5xbWoovSf6PvhbhhpGNj38hF7rznswQcU1I3
-         kXbeXvCea3H3ueHXMzH/nbXUEL2dFHXgdUhDghJ1n5mrxZXbp2MetqyRwODoAfe20tio
-         P31XRvSOYR4Dq4sp5Zxxfjd30Ry557T+LiHTDjsgp0KJ55I4CVTXA4INuPa9Mp0rTDi8
-         b/4lct20e40sh4WSHRMVJr46rUpeztRZgAi6BECb40MtrNVV/O4F860GZOqVG9k8YSYd
-         lYrT09V8L9nz/h5RtxuyWVNIWGKBa3VLNFFZkpamjvoMJQ9N+44lfNHnQuW6pzUruFVH
-         bunQ==
+        h=sender:subject:from:to:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=CIxixJZwpGLo0sVVb9Fs9GENGxOabLmSEhF/beS+CUs=;
+        b=pKqpvb9Q0p1Pbf+ZrXo4eb6DnCbdVOlbkmfP7SXeHojXC+CMF7XugwNYQwno6zZN7B
+         6fEgAyKuT3QwWL5gx1DywyyzhNr2O1IHu0u5REPv1k7deq/E1uABfB695D6w8udU7uX2
+         7iNto/liDpkJtdLHzVhPIlyoxGqQxsehUyRADT3UJjk0yZpo1vQOcV80Z8mREDvDmq7n
+         VpGL5NwwNpDF8GblXw4hDEqTQmJr8GFuHNxre6YZURJjYAHDozxd7U75TzOwh+GXc6AC
+         cTsvzk3miiWE1OrpyDrTdXwlKd0D2Bifudm4v3rztcd39yMeuBnEbVz2qzM+lUBdf47G
+         k9Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=ZtMj/CBgCD3yGjXP1YkOgaQmTlsjIgpm/I74/jq1ac4=;
-        b=mHviqZ2ZrkCkDctR5FX6bQJaOpn+eckbixG3Agd7Esm/vrYmGq+vdI6eg2Saw2RUH4
-         uyeP1JRqFcPidJubfHzJ4gyIktPJoLkNZlGaLcqWzSJxXw5DfDy9rG9KKt5A+WKZ5B3X
-         nfRU7gX7Vou7uTpGQ/Qoa3lslnR9AjS7aRqJQxgMNBoXC4uOUCIkFUciPtkvVWZ79DxW
-         J4Gj0nQ1TUwSHSzuYHe6T8BJ0s+5COPlDiFDqc+GYZiWV862YNW3UvAUtaIDgV+ab69c
-         1Cf5L80ZTuzFpjif2BA6BhJC20xCqK7ivG7FN0YKvR0YHCYNn2Em3vRi0EVW7xjKsbzA
-         GWyQ==
-X-Gm-Message-State: ANhLgQ3wrlPFJn/7aWAHPANYNXJ1beJxnjptOIZKY77M4mr+tk5UgmZn
-        3TT84iRHa0itOtY82m9lNTSOGNFzzos=
-X-Google-Smtp-Source: ADFU+vsTt5F2ty1kdCBE2hG4/bJmmvyxcpTUpMaVIC/e6eJDAtfVAoGXAPjYSUe1CHGoSzN0UrduFQ==
-X-Received: by 2002:ad4:4a89:: with SMTP id h9mr3494361qvx.168.1584631225592;
-        Thu, 19 Mar 2020 08:20:25 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=CIxixJZwpGLo0sVVb9Fs9GENGxOabLmSEhF/beS+CUs=;
+        b=mJ7lSaSB6C7zK2LDkb5j4rrtudZRMN8TJaBgMOHUWzttJzMgYBuq6Zx3D/CvnOpd08
+         1JJTG/N/r2w9BR7Til1zufRwVPqcIln1Sg72zbTpxaV3c/FHacK1FvF+gCkto/9UyH66
+         cKgdcdjRM8DlnfUrXlhZFpNiQwdwKwXPvB8Vkcrl8VzK1BrnkzrzonVAEE1pAXJQUSQT
+         cOCRmJa536Q9R7uZh2Lkc9Y190nXn9wTOO/sVbbcDT+SYkAAJsyxAUzF9SU8+nSMrBoP
+         EzRcJeiUmFEVv73adLfe6MmZU18jvwiGHs4T8vsd0rqLDkdWybZB3je27PJvELxLivNt
+         KzhQ==
+X-Gm-Message-State: ANhLgQ2MJBXXndpK9z0EKofOhDEgha14UbHvnzwPfnd/w5smArrq4pao
+        8klFEfRV+29eYxDLDTO/Ef2ZXqFk5pY=
+X-Google-Smtp-Source: ADFU+vuGslyW59Tsmb+QpDMJ17l2ulj/3fKIj/OktAout4Z7lHNr22T3gY6H4296Y2Icn4lHb6VkEw==
+X-Received: by 2002:aed:38ea:: with SMTP id k97mr3419602qte.327.1584631230596;
+        Thu, 19 Mar 2020 08:20:30 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id h25sm1652734qkg.87.2020.03.19.08.20.24
+        by smtp.gmail.com with ESMTPSA id v1sm1749730qtc.30.2020.03.19.08.20.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 08:20:24 -0700 (PDT)
+        Thu, 19 Mar 2020 08:20:29 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02JFKNfo011145;
-        Thu, 19 Mar 2020 15:20:23 GMT
-Subject: [PATCH RFC 00/11] Linux NFS server support for multiple Write chunks
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02JFKSrs011148;
+        Thu, 19 Mar 2020 15:20:28 GMT
+Subject: [PATCH RFC 01/11] SUNRPC: Adjust synopsis of xdr_buf_subsegment()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Thu, 19 Mar 2020 11:20:23 -0400
-Message-ID: <20200319150136.16298.68813.stgit@klimt.1015granger.net>
+Date:   Thu, 19 Mar 2020 11:20:28 -0400
+Message-ID: <20200319152028.16298.49075.stgit@klimt.1015granger.net>
+In-Reply-To: <20200319150136.16298.68813.stgit@klimt.1015granger.net>
+References: <20200319150136.16298.68813.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -61,60 +64,42 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The RPC/RDMA version 1 protocol allows clients to provision more
-than one Write chunk in each RPC/RDMA message. The Linux NFS client
-never has need to construct a message with multiple Write chunks, so
-the Linux NFS server has never implemented support for them.
+This makes it easier for callers to keep that buffer const as well.
 
-At testing events, we discovered that the Solaris NFS client can
-emit such requests on occasion, but only when an application invokes
-readv(2) on a "forcedirectio" mount -- rare, indeed.
-
-Even so, it's been on my "to-do" list for quite some time to get the
-Linux NFS server to handle multiple Write chunks. While addressing
-the recent NFSD/RDMA bug with Linux filesystems that do not have a 
-.read_splice method [1], I realized that it was time to get this one
-off my plate.
-
-So here is an attempt to support NFS/RDMA clients that send multiple
-Write chunks. To do this generically requires more xdr_buf slicing
-and dicing than the simple "zero or one" implementation.
-
-At the same time, the ability to send RDMA Write requests _outside_
-the .xpo_sendto path is introduced. Extensive testing has not
-revealed any functional or performance regression with this change.
-
-Thoughts and comments are welcome.
-
-
-[1] - https://bugzilla.kernel.org/show_bug.cgi?id=198053
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ include/linux/sunrpc/xdr.h |    3 ++-
+ net/sunrpc/xdr.c           |    5 ++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Chuck Lever (11):
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 8529d6e33137..3caa1fe75408 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -183,7 +183,8 @@ xdr_adjust_iovec(struct kvec *iov, __be32 *p)
+  */
+ extern void xdr_shift_buf(struct xdr_buf *, size_t);
+ extern void xdr_buf_from_iov(struct kvec *, struct xdr_buf *);
+-extern int xdr_buf_subsegment(struct xdr_buf *, struct xdr_buf *, unsigned int, unsigned int);
++extern int xdr_buf_subsegment(const struct xdr_buf *buf, struct xdr_buf *subbuf,
++			      unsigned int base, unsigned int len);
+ extern int xdr_buf_read_mic(struct xdr_buf *, struct xdr_netobj *, unsigned int);
+ extern int read_bytes_from_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
+ extern int write_bytes_to_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index e5497dc2475b..0f7f5d9058e2 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1105,9 +1105,8 @@ EXPORT_SYMBOL_GPL(xdr_buf_from_iov);
+  *
+  * Returns -1 if base of length are out of bounds.
+  */
+-int
+-xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+-			unsigned int base, unsigned int len)
++int xdr_buf_subsegment(const struct xdr_buf *buf, struct xdr_buf *subbuf,
++		       unsigned int base, unsigned int len)
+ {
+ 	subbuf->buflen = subbuf->len = len;
+ 	if (base < buf->head[0].iov_len) {
 
-      SUNRPC: Adjust synopsis of xdr_buf_subsegment()
-      svcrdma: Clean up RDMA Write path
-      NFSD: Invoke svc_encode_read_payload in "read" NFSD encoders
-      svcrdma: Post RDMA Writes while XDR encoding replies
-      svcrdma: Clean up svc_rdma_encode_reply_chunk()
-      svcrdma: Cache number of Write chunks
-      svcrdma: Add a data structure to track READ payloads
-      svcrdma: Add svc_rdma_skip_payloads()
-      svcrdma: Support multiple READ payloads when pulling up
-      svcrdma: Support multiple READ payloads in svc_rdma_map_reply_msg()
-      svcrdma: Support multiple Write chunks in svc_rdma_send_reply_chunk
-
-
- fs/nfsd/nfs3xdr.c                       |   4 +
- fs/nfsd/nfs4xdr.c                       |   3 +
- fs/nfsd/nfsxdr.c                        |   4 +
- include/linux/sunrpc/svc_rdma.h         |  24 +-
- include/trace/events/rpcrdma.h          |  16 +-
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  32 +-
- net/sunrpc/xprtrdma/svc_rdma_rw.c       | 134 +++++---
- net/sunrpc/xprtrdma/svc_rdma_sendto.c   | 556 ++++++++++++++++++++------------
- 8 files changed, 486 insertions(+), 287 deletions(-)
-
---
-Chuck Lever
