@@ -2,136 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF1CA18B9DE
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 16:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1438E18BAD8
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 16:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgCSPAD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Mar 2020 11:00:03 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59122 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbgCSPAD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 11:00:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JEwlfs164617;
-        Thu, 19 Mar 2020 14:59:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=S+s00056yBmxW0bXhrPxXjkIjSTklD49q+1ypVjq9WU=;
- b=ylTuKI6jEOhbvoxWeu+OQ/ASIO19Hc9agFSHtxmcalmVvQywoBVO1y3M/8AEHhgXcliO
- 97WGyMFeZIbfXb7Da3Ee+YtoiEpQi8qp3BeLysTiUDwTanQX280QOzXnzKz7pYXIvwqX
- viH7ULIj4tpXALPNUKTGUf33HmSBoT4sqnkAnxgLrWUsD+v4ARDdi0a7MMUtN8xmiLjp
- LrJBFXELhTetihfVrsi87J+tk2ur2XWHwJ6oPZOX1dHsidl06DYb3WpJ1A8orAh/xtt5
- /J30M1MM8wAKgiYA/9MGzYoT1yAruhZfDR7fZ2+cZA3h6mHfd7k3KWB3dL5/PTuXvify sw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2yrq7m8pnt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 14:59:59 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JEueA8145773;
-        Thu, 19 Mar 2020 14:59:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ys8rmbj6e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 14:59:58 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02JExvFs031480;
-        Thu, 19 Mar 2020 14:59:57 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Mar 2020 07:59:57 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] nfsd4: kill warnings on testing stateids with mismatched
- clientids
+        id S1727346AbgCSPU3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Mar 2020 11:20:29 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41333 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgCSPU2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 11:20:28 -0400
+Received: by mail-qv1-f68.google.com with SMTP id a10so1182254qvq.8;
+        Thu, 19 Mar 2020 08:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ZtMj/CBgCD3yGjXP1YkOgaQmTlsjIgpm/I74/jq1ac4=;
+        b=E4JRJX4luJOgYONYsHvQhSr12DWtuR5xbWoovSf6PvhbhhpGNj38hF7rznswQcU1I3
+         kXbeXvCea3H3ueHXMzH/nbXUEL2dFHXgdUhDghJ1n5mrxZXbp2MetqyRwODoAfe20tio
+         P31XRvSOYR4Dq4sp5Zxxfjd30Ry557T+LiHTDjsgp0KJ55I4CVTXA4INuPa9Mp0rTDi8
+         b/4lct20e40sh4WSHRMVJr46rUpeztRZgAi6BECb40MtrNVV/O4F860GZOqVG9k8YSYd
+         lYrT09V8L9nz/h5RtxuyWVNIWGKBa3VLNFFZkpamjvoMJQ9N+44lfNHnQuW6pzUruFVH
+         bunQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ZtMj/CBgCD3yGjXP1YkOgaQmTlsjIgpm/I74/jq1ac4=;
+        b=mHviqZ2ZrkCkDctR5FX6bQJaOpn+eckbixG3Agd7Esm/vrYmGq+vdI6eg2Saw2RUH4
+         uyeP1JRqFcPidJubfHzJ4gyIktPJoLkNZlGaLcqWzSJxXw5DfDy9rG9KKt5A+WKZ5B3X
+         nfRU7gX7Vou7uTpGQ/Qoa3lslnR9AjS7aRqJQxgMNBoXC4uOUCIkFUciPtkvVWZ79DxW
+         J4Gj0nQ1TUwSHSzuYHe6T8BJ0s+5COPlDiFDqc+GYZiWV862YNW3UvAUtaIDgV+ab69c
+         1Cf5L80ZTuzFpjif2BA6BhJC20xCqK7ivG7FN0YKvR0YHCYNn2Em3vRi0EVW7xjKsbzA
+         GWyQ==
+X-Gm-Message-State: ANhLgQ3wrlPFJn/7aWAHPANYNXJ1beJxnjptOIZKY77M4mr+tk5UgmZn
+        3TT84iRHa0itOtY82m9lNTSOGNFzzos=
+X-Google-Smtp-Source: ADFU+vsTt5F2ty1kdCBE2hG4/bJmmvyxcpTUpMaVIC/e6eJDAtfVAoGXAPjYSUe1CHGoSzN0UrduFQ==
+X-Received: by 2002:ad4:4a89:: with SMTP id h9mr3494361qvx.168.1584631225592;
+        Thu, 19 Mar 2020 08:20:25 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id h25sm1652734qkg.87.2020.03.19.08.20.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 08:20:24 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02JFKNfo011145;
+        Thu, 19 Mar 2020 15:20:23 GMT
+Subject: [PATCH RFC 00/11] Linux NFS server support for multiple Write chunks
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <A2752AC8-E6FF-4ED7-86BE-4D64ACE1F7D7@redhat.com>
-Date:   Thu, 19 Mar 2020 10:59:56 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <88C0AB03-E10D-40D2-BDB6-3185D099C192@oracle.com>
-References: <20200319141849.GB1546@fieldses.org>
- <A2752AC8-E6FF-4ED7-86BE-4D64ACE1F7D7@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003190067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003190067
+To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Thu, 19 Mar 2020 11:20:23 -0400
+Message-ID: <20200319150136.16298.68813.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.22
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+The RPC/RDMA version 1 protocol allows clients to provision more
+than one Write chunk in each RPC/RDMA message. The Linux NFS client
+never has need to construct a message with multiple Write chunks, so
+the Linux NFS server has never implemented support for them.
+
+At testing events, we discovered that the Solaris NFS client can
+emit such requests on occasion, but only when an application invokes
+readv(2) on a "forcedirectio" mount -- rare, indeed.
+
+Even so, it's been on my "to-do" list for quite some time to get the
+Linux NFS server to handle multiple Write chunks. While addressing
+the recent NFSD/RDMA bug with Linux filesystems that do not have a 
+.read_splice method [1], I realized that it was time to get this one
+off my plate.
+
+So here is an attempt to support NFS/RDMA clients that send multiple
+Write chunks. To do this generically requires more xdr_buf slicing
+and dicing than the simple "zero or one" implementation.
+
+At the same time, the ability to send RDMA Write requests _outside_
+the .xpo_sendto path is introduced. Extensive testing has not
+revealed any functional or performance regression with this change.
+
+Thoughts and comments are welcome.
 
 
-> On Mar 19, 2020, at 10:30 AM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->=20
-> On 19 Mar 2020, at 10:18, J. Bruce Fields wrote:
->=20
->> From: "J. Bruce Fields" <bfields@redhat.com>
->>=20
->> It's normal for a client to test a stateid from a previous instance,
->> e.g. after a network partition.
->>=20
->> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
->=20
-> Thanks!
->=20
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+[1] - https://bugzilla.kernel.org/show_bug.cgi?id=198053
 
-Applied to nfsd-5.7, thanks all!
+---
+
+Chuck Lever (11):
+
+      SUNRPC: Adjust synopsis of xdr_buf_subsegment()
+      svcrdma: Clean up RDMA Write path
+      NFSD: Invoke svc_encode_read_payload in "read" NFSD encoders
+      svcrdma: Post RDMA Writes while XDR encoding replies
+      svcrdma: Clean up svc_rdma_encode_reply_chunk()
+      svcrdma: Cache number of Write chunks
+      svcrdma: Add a data structure to track READ payloads
+      svcrdma: Add svc_rdma_skip_payloads()
+      svcrdma: Support multiple READ payloads when pulling up
+      svcrdma: Support multiple READ payloads in svc_rdma_map_reply_msg()
+      svcrdma: Support multiple Write chunks in svc_rdma_send_reply_chunk
 
 
-> Ben
->=20
->> ---
->> fs/nfsd/nfs4state.c | 9 +--------
->> 1 file changed, 1 insertion(+), 8 deletions(-)
->>=20
->> I'm not a fan of printk's even on buggy client behavior.  I guess it
->> could be a dprintk.  I'm not sure it adds much over information you
->> could get at some other layer, e.g. from a network trace.
->>=20
->> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->> index c1f347bbf8f4..927cfb9d2204 100644
->> --- a/fs/nfsd/nfs4state.c
->> +++ b/fs/nfsd/nfs4state.c
->> @@ -5522,15 +5522,8 @@ static __be32 nfsd4_validate_stateid(struct =
-nfs4_client *cl, stateid_t *stateid)
->> 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
->> 		CLOSE_STATEID(stateid))
->> 		return status;
->> -	/* Client debugging aid. */
->> -	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid)) {
->> -		char addr_str[INET6_ADDRSTRLEN];
->> -		rpc_ntop((struct sockaddr *)&cl->cl_addr, addr_str,
->> -				 sizeof(addr_str));
->> -		pr_warn_ratelimited("NFSD: client %s testing state ID "
->> -					"with incorrect client ID\n", =
-addr_str);
->> +	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid))
->> 		return status;
->> -	}
->> 	spin_lock(&cl->cl_lock);
->> 	s =3D find_stateid_locked(cl, stateid);
->> 	if (!s)
->> --=20
->> 2.25.1
->=20
+ fs/nfsd/nfs3xdr.c                       |   4 +
+ fs/nfsd/nfs4xdr.c                       |   3 +
+ fs/nfsd/nfsxdr.c                        |   4 +
+ include/linux/sunrpc/svc_rdma.h         |  24 +-
+ include/trace/events/rpcrdma.h          |  16 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  32 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c       | 134 +++++---
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c   | 556 ++++++++++++++++++++------------
+ 8 files changed, 486 insertions(+), 287 deletions(-)
 
 --
 Chuck Lever
-
-
-
