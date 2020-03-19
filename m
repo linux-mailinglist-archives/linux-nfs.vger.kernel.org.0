@@ -2,171 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 801EB18B389
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 13:37:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85D4018B92E
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 15:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCSMhM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Mar 2020 08:37:12 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38899 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbgCSMhM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 08:37:12 -0400
-Received: by mail-il1-f194.google.com with SMTP id p1so2046662ils.5
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Mar 2020 05:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
-        b=cMtY3qUcEmiCWPAEeCd5lhB7x3Biy4/6Het2lKK01B7wcpZG2RZMmWE3LV0gVxGIei
-         UuMBMRql9WM+pRx9p4acPSg0mo4kZ7BHmdSm48TJO0cwwlRT82C+TUnt1Ixfd5tAZfQB
-         qGlXYFxfI9xkqU5Rq8m22vi2BvEMfsNiNnE2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
-        b=b3NibPUHNJK4HhFoW6FXPu9KjYbHJnAY46h3fxCgFVRInZrGsR8/0XUXI8AbKxp/yX
-         oS4QJqD4lgl4JnlVzf6HfRpvxQghgPLjRupUqjveOVxVRO7/sIqR4jiiXTcPs0ChFGnM
-         Uj+amBWHBrK76+eX0tQ+rgKl8cppkxZAjBrUYlvqagQLPZ5b11sRmSGnsAV2OcFj9mzi
-         h1MVzStnZY67dVQOmHsvkE++LDYxAlQ+WUW+wjqiOgkYxC3gDkICYRQInSA7VysvpSRu
-         c7Hk4tSS6Ckb1XYpB5Z7fMPC6z3ZjUy2OiLPE6GtpZoCCrUXAxNijB5M57dVGxzOoMRz
-         rpTQ==
-X-Gm-Message-State: ANhLgQ2i+ZUl7RIqkD/gXZ/eZlt6/5hmJH/flHP9VhUihvdFdZ+/soX1
-        9vV2VeQ3MNadAtqig1MokT8iac1EjKnED7Yt1H2syg==
-X-Google-Smtp-Source: ADFU+vsTsJqo2m1ETEsSuJlFNylEmftzB1ulJzyZd8sss8uJZS7aWDqz3pxVA9Gv6H7ICK0JOZMAndoK/X55keC9JJI=
-X-Received: by 2002:a92:3b8c:: with SMTP id n12mr2899150ilh.186.1584621429946;
- Thu, 19 Mar 2020 05:37:09 -0700 (PDT)
+        id S1726871AbgCSOSt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Mar 2020 10:18:49 -0400
+Received: from fieldses.org ([173.255.197.46]:46672 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbgCSOSt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:18:49 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1361CBD1; Thu, 19 Mar 2020 10:18:49 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 10:18:49 -0400
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd4: kill warnings on testing stateids with mismatched
+ clientids
+Message-ID: <20200319141849.GB1546@fieldses.org>
 MIME-Version: 1.0
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
- <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <3085880.1584614257@warthog.procyon.org.uk>
-In-Reply-To: <3085880.1584614257@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 19 Mar 2020 13:36:58 +0100
-Message-ID: <CAJfpegv-_ai1LiW6=D+AnkozzmmXbB8=g8QDCS15bh==Wn3yoA@mail.gmail.com>
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:37 AM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > >  (2) It's more efficient as we can return specific binary data rather than
-> > >      making huge text dumps.  Granted, sysfs and procfs could present the
-> > >      same data, though as lots of little files which have to be
-> > >      individually opened, read, closed and parsed.
-> >
-> > Asked this a number of times, but you haven't answered yet:  what
-> > application would require such a high efficiency?
->
-> Low efficiency means more time doing this when that time could be spent doing
-> other things - or even putting the CPU in a powersaving state.  Using an
-> open/read/close render-to-text-and-parse interface *will* be slower and less
-> efficient as there are more things you have to do to use it.
->
-> Then consider doing a walk over all the mounts in the case where there are
-> 10000 of them - we have issues with /proc/mounts for such.  fsinfo() will end
-> up doing a lot less work.
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-Current /proc/mounts problems arise from the fact that mount info can
-only be queried for the whole namespace, and hence changes related to
-a single mount will require rescanning the complete mount list.  If
-mount info can be queried for individual mounts, then the need to scan
-the complete list will be rare.  That's *the* point of this change.
+It's normal for a client to test a stateid from a previous instance,
+e.g. after a network partition.
 
-> > >  (3) We wouldn't have the overhead of open and close (even adding a
-> > >      self-contained readfile() syscall has to do that internally
-> >
-> > Busted: add f_op->readfile() and be done with all that.   For example
-> > DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
->
-> Look at your example.  "f_op->".  That's "file->f_op->" I presume.
->
-> You would have to make it "i_op->" to avoid the open and the close - and for
-> things like procfs and sysfs, that's probably entirely reasonable - but bear
-> in mind that you still have to apply all the LSM file security controls, just
-> in case the backing filesystem is, say, ext4 rather than procfs.
->
-> > We could optimize existing proc, sys, etc. interfaces, but it's not
-> > been an issue, apparently.
->
-> You can't get rid of or change many of the existing interfaces.  A lot of them
-> are effectively indirect system calls and are, as such, part of the fixed
-> UAPI.  You'd have to add a parallel optimised set.
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ fs/nfsd/nfs4state.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-Sure.
+I'm not a fan of printk's even on buggy client behavior.  I guess it
+could be a dprintk.  I'm not sure it adds much over information you
+could get at some other layer, e.g. from a network trace.
 
-We already have the single_open() internal API that is basically a
-->readfile() wrapper.   Moving this up to the f_op level (no, it's not
-an i_op, and yes, we do need struct file, but it can be simply
-allocated on the stack) is a trivial optimization that would let a
-readfile(2) syscall access that level.  No new complexity in that
-case.    Same generally goes for seq_file: seq_readfile() is trivial
-to implement without messing with current implementation or any
-existing APIs.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c1f347bbf8f4..927cfb9d2204 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5522,15 +5522,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+ 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+ 		CLOSE_STATEID(stateid))
+ 		return status;
+-	/* Client debugging aid. */
+-	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid)) {
+-		char addr_str[INET6_ADDRSTRLEN];
+-		rpc_ntop((struct sockaddr *)&cl->cl_addr, addr_str,
+-				 sizeof(addr_str));
+-		pr_warn_ratelimited("NFSD: client %s testing state ID "
+-					"with incorrect client ID\n", addr_str);
++	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid))
+ 		return status;
+-	}
+ 	spin_lock(&cl->cl_lock);
+ 	s = find_stateid_locked(cl, stateid);
+ 	if (!s)
+-- 
+2.25.1
 
->
-> > >  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each time a
-> > >      mount happens or is removed - and since systemd makes much use of
-> > >      mount namespaces and mount propagation, this will create a lot of
-> > >      nodes.
-> >
-> > Not true.
->
-> This may not be true if you roll your own special filesystem.  It *is* true if
-> you do it in procfs or sysfs.  The files don't exist if you don't create nodes
-> or attribute tables for them.
-
-That's one of the reasons why I opted to roll my own.  But the ideas
-therein could be applied to kernfs, if found to be generally useful.
-Nothing magic about that.
-
->
-> > > The argument for doing this through procfs/sysfs/somemagicfs is that
-> > > someone using a shell can just query the magic files using ordinary text
-> > > tools, such as cat - and that has merit - but it doesn't solve the
-> > > query-by-pathname problem.
-> > >
-> > > The suggested way around the query-by-pathname problem is to open the
-> > > target file O_PATH and then look in a magic directory under procfs
-> > > corresponding to the fd number to see a set of attribute files[*] laid out.
-> > > Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
-> >
-> > Bash doesn't have fsinfo(2) either, so that's not really a good argument.
->
-> I never claimed that fsinfo() could be accessed directly from the shell.  For
-> you proposal, you claimed "immediately usable from all programming languages,
-> including scripts".
-
-You are right.  Note however: only special files need the O_PATH
-handling, regular files are directories can be opened by the shell
-without side effects.
-
-In any case, I think neither of us can be convinced of the other's
-right, so I guess It's up to Al and Linus to make a decision.
-
-Thanks,
-Miklos
