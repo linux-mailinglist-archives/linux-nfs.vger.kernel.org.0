@@ -2,47 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACFAD18B19E
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 11:37:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 801EB18B389
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 13:37:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgCSKht (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Mar 2020 06:37:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:57288 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727023AbgCSKhs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 06:37:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584614267;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CiofkCH/sv7+7rpU6YsJXFWeq/w+9dcTqMLo0EbVExc=;
-        b=CK6NauoXI0Z63pckSz1EJg+hyCd+MygVolTHycTgOZr35DfTpEoCbe8AGdOOrgW6BAw9CK
-        h3qfyyWJcHeT23ccKfmGyCAUSJYSSY6cci5KgryR4fpDcIKlgx+EcDRYwhB2QewLVzBe0V
-        se9+mHy+sPggjiyAje65N7HtEB3cMes=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-285-cUdAiS5ZN1Sq4KuQlxE-7w-1; Thu, 19 Mar 2020 06:37:44 -0400
-X-MC-Unique: cUdAiS5ZN1Sq4KuQlxE-7w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBCD5107ACC4;
-        Thu, 19 Mar 2020 10:37:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3A2117B91;
-        Thu, 19 Mar 2020 10:37:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
-References: <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1727137AbgCSMhM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Mar 2020 08:37:12 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38899 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbgCSMhM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 08:37:12 -0400
+Received: by mail-il1-f194.google.com with SMTP id p1so2046662ils.5
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Mar 2020 05:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
+        b=cMtY3qUcEmiCWPAEeCd5lhB7x3Biy4/6Het2lKK01B7wcpZG2RZMmWE3LV0gVxGIei
+         UuMBMRql9WM+pRx9p4acPSg0mo4kZ7BHmdSm48TJO0cwwlRT82C+TUnt1Ixfd5tAZfQB
+         qGlXYFxfI9xkqU5Rq8m22vi2BvEMfsNiNnE2E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
+        b=b3NibPUHNJK4HhFoW6FXPu9KjYbHJnAY46h3fxCgFVRInZrGsR8/0XUXI8AbKxp/yX
+         oS4QJqD4lgl4JnlVzf6HfRpvxQghgPLjRupUqjveOVxVRO7/sIqR4jiiXTcPs0ChFGnM
+         Uj+amBWHBrK76+eX0tQ+rgKl8cppkxZAjBrUYlvqagQLPZ5b11sRmSGnsAV2OcFj9mzi
+         h1MVzStnZY67dVQOmHsvkE++LDYxAlQ+WUW+wjqiOgkYxC3gDkICYRQInSA7VysvpSRu
+         c7Hk4tSS6Ckb1XYpB5Z7fMPC6z3ZjUy2OiLPE6GtpZoCCrUXAxNijB5M57dVGxzOoMRz
+         rpTQ==
+X-Gm-Message-State: ANhLgQ2i+ZUl7RIqkD/gXZ/eZlt6/5hmJH/flHP9VhUihvdFdZ+/soX1
+        9vV2VeQ3MNadAtqig1MokT8iac1EjKnED7Yt1H2syg==
+X-Google-Smtp-Source: ADFU+vsTsJqo2m1ETEsSuJlFNylEmftzB1ulJzyZd8sss8uJZS7aWDqz3pxVA9Gv6H7ICK0JOZMAndoK/X55keC9JJI=
+X-Received: by 2002:a92:3b8c:: with SMTP id n12mr2899150ilh.186.1584621429946;
+ Thu, 19 Mar 2020 05:37:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+ <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <3085880.1584614257@warthog.procyon.org.uk>
+In-Reply-To: <3085880.1584614257@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 19 Mar 2020 13:36:58 +0100
+Message-ID: <CAJfpegv-_ai1LiW6=D+AnkozzmmXbB8=g8QDCS15bh==Wn3yoA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linux NFS list <linux-nfs@vger.kernel.org>,
         Andreas Dilger <adilger.kernel@dilger.ca>,
@@ -60,142 +64,109 @@ Cc:     dhowells@redhat.com,
         linux-fsdevel@vger.kernel.org,
         LSM <linux-security-module@vger.kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3085879.1584614257.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 19 Mar 2020 10:37:37 +0000
-Message-ID: <3085880.1584614257@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
-
-> >  (2) It's more efficient as we can return specific binary data rather =
-than
-> >      making huge text dumps.  Granted, sysfs and procfs could present =
-the
-> >      same data, though as lots of little files which have to be
-> >      individually opened, read, closed and parsed.
-> =
-
-> Asked this a number of times, but you haven't answered yet:  what
-> application would require such a high efficiency?
-
-Low efficiency means more time doing this when that time could be spent do=
-ing
-other things - or even putting the CPU in a powersaving state.  Using an
-open/read/close render-to-text-and-parse interface *will* be slower and le=
-ss
-efficient as there are more things you have to do to use it.
-
-Then consider doing a walk over all the mounts in the case where there are
-10000 of them - we have issues with /proc/mounts for such.  fsinfo() will =
-end
-up doing a lot less work.
-
-> I strongly feel that mount info belongs in the latter category
-
-I feel strongly that a lot of stuff done through /proc or /sys shouldn't b=
-e.
-
-Yes, it's nice that you can explore it with cat and poke it with echo, but=
- it
-has a number of problems: security, atomiticity, efficiency and providing =
-an
-round-the-back way to pin stuff if not done right.
-
-> >  (3) We wouldn't have the overhead of open and close (even adding a
-> >      self-contained readfile() syscall has to do that internally
-> =
-
-> Busted: add f_op->readfile() and be done with all that.   For example
-> DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
-
-Look at your example.  "f_op->".  That's "file->f_op->" I presume.
-
-You would have to make it "i_op->" to avoid the open and the close - and f=
-or
-things like procfs and sysfs, that's probably entirely reasonable - but be=
-ar
-in mind that you still have to apply all the LSM file security controls, j=
-ust
-in case the backing filesystem is, say, ext4 rather than procfs.
-
-> We could optimize existing proc, sys, etc. interfaces, but it's not
-> been an issue, apparently.
-
-You can't get rid of or change many of the existing interfaces.  A lot of =
-them
-are effectively indirect system calls and are, as such, part of the fixed
-UAPI.  You'd have to add a parallel optimised set.
-
-> >  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each ti=
-me a
-> >      mount happens or is removed - and since systemd makes much use of
-> >      mount namespaces and mount propagation, this will create a lot of
-> >      nodes.
-> =
-
-> Not true.
-
-This may not be true if you roll your own special filesystem.  It *is* tru=
-e if
-you do it in procfs or sysfs.  The files don't exist if you don't create n=
-odes
-or attribute tables for them.
-
-> > The argument for doing this through procfs/sysfs/somemagicfs is that
-> > someone using a shell can just query the magic files using ordinary te=
-xt
-> > tools, such as cat - and that has merit - but it doesn't solve the
-> > query-by-pathname problem.
+On Thu, Mar 19, 2020 at 11:37 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> > >  (2) It's more efficient as we can return specific binary data rather than
+> > >      making huge text dumps.  Granted, sysfs and procfs could present the
+> > >      same data, though as lots of little files which have to be
+> > >      individually opened, read, closed and parsed.
 > >
-> > The suggested way around the query-by-pathname problem is to open the
-> > target file O_PATH and then look in a magic directory under procfs
-> > corresponding to the fd number to see a set of attribute files[*] laid=
- out.
-> > Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
-> =
+> > Asked this a number of times, but you haven't answered yet:  what
+> > application would require such a high efficiency?
+>
+> Low efficiency means more time doing this when that time could be spent doing
+> other things - or even putting the CPU in a powersaving state.  Using an
+> open/read/close render-to-text-and-parse interface *will* be slower and less
+> efficient as there are more things you have to do to use it.
+>
+> Then consider doing a walk over all the mounts in the case where there are
+> 10000 of them - we have issues with /proc/mounts for such.  fsinfo() will end
+> up doing a lot less work.
 
-> Bash doesn't have fsinfo(2) either, so that's not really a good argument=
-.
+Current /proc/mounts problems arise from the fact that mount info can
+only be queried for the whole namespace, and hence changes related to
+a single mount will require rescanning the complete mount list.  If
+mount info can be queried for individual mounts, then the need to scan
+the complete list will be rare.  That's *the* point of this change.
 
-I never claimed that fsinfo() could be accessed directly from the shell.  =
-For
-you proposal, you claimed "immediately usable from all programming languag=
-es,
-including scripts".
+> > >  (3) We wouldn't have the overhead of open and close (even adding a
+> > >      self-contained readfile() syscall has to do that internally
+> >
+> > Busted: add f_op->readfile() and be done with all that.   For example
+> > DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
+>
+> Look at your example.  "f_op->".  That's "file->f_op->" I presume.
+>
+> You would have to make it "i_op->" to avoid the open and the close - and for
+> things like procfs and sysfs, that's probably entirely reasonable - but bear
+> in mind that you still have to apply all the LSM file security controls, just
+> in case the backing filesystem is, say, ext4 rather than procfs.
+>
+> > We could optimize existing proc, sys, etc. interfaces, but it's not
+> > been an issue, apparently.
+>
+> You can't get rid of or change many of the existing interfaces.  A lot of them
+> are effectively indirect system calls and are, as such, part of the fixed
+> UAPI.  You'd have to add a parallel optimised set.
 
-> Implementing a utility to show mount attribute(s) by path is trivial
-> for the file based interface, while it would need to be updated for
-> each extension of fsinfo(2).   Same goes for libc, language bindings,
-> etc.
+Sure.
 
-That's not precisely true.  If you aren't using an extension to an fsinfo(=
-)
-attribute, you wouldn't need to change anything[*].
+We already have the single_open() internal API that is basically a
+->readfile() wrapper.   Moving this up to the f_op level (no, it's not
+an i_op, and yes, we do need struct file, but it can be simply
+allocated on the stack) is a trivial optimization that would let a
+readfile(2) syscall access that level.  No new complexity in that
+case.    Same generally goes for seq_file: seq_readfile() is trivial
+to implement without messing with current implementation or any
+existing APIs.
 
-If you want to use an extension - *even* through a file based interface - =
-you
-*would* have to change your code and your parser.
+>
+> > >  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each time a
+> > >      mount happens or is removed - and since systemd makes much use of
+> > >      mount namespaces and mount propagation, this will create a lot of
+> > >      nodes.
+> >
+> > Not true.
+>
+> This may not be true if you roll your own special filesystem.  It *is* true if
+> you do it in procfs or sysfs.  The files don't exist if you don't create nodes
+> or attribute tables for them.
 
-And, no, extending an fsinfo() attribute would not require any changes to =
-libc
-unless libc is using that attribute[*] and wants to access the extension.
+That's one of the reasons why I opted to roll my own.  But the ideas
+therein could be applied to kernfs, if found to be generally useful.
+Nothing magic about that.
 
-[*] I assume that in C/C++ at least, you'd use linux/fsinfo.h rather than =
-some
-    libc version.
+>
+> > > The argument for doing this through procfs/sysfs/somemagicfs is that
+> > > someone using a shell can just query the magic files using ordinary text
+> > > tools, such as cat - and that has merit - but it doesn't solve the
+> > > query-by-pathname problem.
+> > >
+> > > The suggested way around the query-by-pathname problem is to open the
+> > > target file O_PATH and then look in a magic directory under procfs
+> > > corresponding to the fd number to see a set of attribute files[*] laid out.
+> > > Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
+> >
+> > Bash doesn't have fsinfo(2) either, so that's not really a good argument.
+>
+> I never claimed that fsinfo() could be accessed directly from the shell.  For
+> you proposal, you claimed "immediately usable from all programming languages,
+> including scripts".
 
-[*] statfs() could be emulated this way, but I'm not sure what else libc
-    specifically is going to look at.  This is more aimed at libmount amon=
-gst
-    other things.
+You are right.  Note however: only special files need the O_PATH
+handling, regular files are directories can be opened by the shell
+without side effects.
 
-David
+In any case, I think neither of us can be convinced of the other's
+right, so I guess It's up to Al and Linus to make a decision.
 
+Thanks,
+Miklos
