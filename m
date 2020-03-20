@@ -2,121 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAED518C2DE
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2020 23:15:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8ACD18CC5A
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Mar 2020 12:08:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCSWP3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Mar 2020 18:15:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42770 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbgCSWP3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Mar 2020 18:15:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JM9Gk7033728;
-        Thu, 19 Mar 2020 22:15:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=E1FaicFESA4imF///TfvbR91Gf+p3rJfvO3SjUsBAps=;
- b=fE+Xxom/O3bYtmMRbV1oukvUvf/oN3tXZ83eCre4OK8i7c4cgi6/pSdFigOMHc24Umw9
- av9WyMv7nuOoXZdyXl2TkFkp+8m8LqE3EFqnGix7/ech8/iHQ69oltGoY9Xw8/YLKbh8
- SKfw0tDSAwELnkKhJPm7gl6pem95Izo7Xegd3hroIJHEQBvE+2QhzkUKbd6NRCJoEu8A
- py12zmXI8Ci1JDWJosfBF+TuvZRlimG8fmoq9/p0V1ieRMtXGj17rUPjdbs31ZGgP7Ev
- eS/HG1FS/A+uID6N1Sp3szCwKwG+6vY1AabS7/v4kUYxpCm5zzscnSehZ0V29J9eCYa9 Ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2yrpprjyh3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 22:15:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JM2jw9134111;
-        Thu, 19 Mar 2020 22:15:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2ys9054nb2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 22:15:22 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02JMFKjq015571;
-        Thu, 19 Mar 2020 22:15:21 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Mar 2020 15:15:20 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 11/14] nfsd: add user xattr RPC XDR encoding/decoding
- logic
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200319221350.GA18279@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Date:   Thu, 19 Mar 2020 18:15:19 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1C99F4A1-4868-43C2-9F36-25FA5D82B92E@oracle.com>
-References: <20200311195954.27117-1-fllinden@amazon.com>
- <20200311195954.27117-12-fllinden@amazon.com>
- <17D7709F-2FE0-4B84-A9AF-4D6C2B36A4E7@oracle.com>
- <20200319221350.GA18279@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-To:     Frank van der Linden <fllinden@amazon.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003190090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003190090
+        id S1727047AbgCTLIx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Mar 2020 07:08:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39958 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbgCTLIx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Mar 2020 07:08:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e19so5554264otj.7
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Mar 2020 04:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=kuhba0bbR9oJup1oQ7P5tNPZ9FqBHXE57QqcfHgaIHo=;
+        b=JAtXBJqr5hMz+TFFzUTYToXqzS7c51G8vKLiqCDy1i1/On+nQVdz02QZ1PRqL4CyBV
+         X4glRefjimK9GfDoVGwz8kikRgk33FnvkUhx6uO4BTbQbNm8S7O1AZPp10dlFLgtAz0x
+         rFL2qxUTruF+kToHLDhlYtTwze4TqFKBuWQhuO1oFhcmi9UjJZsAD/qhKChg4pw0VokL
+         SgTYqaqGQz81XLJqAqHOfKZ5rlEVViGHosb0tMGyvx04G/1DF2wv71hjcOE2AncHgCvI
+         Lc+mT4lwLkUcrLP/YwU6bt6V/8IAZf//w9FHMt91tLvtR+ljZtq+6uIqjb2GkwLz0CRD
+         0svQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=kuhba0bbR9oJup1oQ7P5tNPZ9FqBHXE57QqcfHgaIHo=;
+        b=k4TdLWWvQWVylDLExXVPKrbbTcXqEk9hX6Ue9lgcsQL6UcCktnk/dSEhwD9qusBRml
+         fQ1JJM5H17hQXCE05QQlgG9kwMPNark2m30zjW19tnHLa19xYe1Lt+QnVeejrOKUGauf
+         WASavxXsCSkyA/SeijaXKMZLiuF5RtYWczTUxC47v32FYo2v2Kc2okv5Tcl6ze1KIlFc
+         hy5syvCSIjrAssoaqv1GNW6R5m5g7WQWGKja9NJKGy9cTrK2ilZ9kEG6Vm+GVU7Dd4SZ
+         3B4zEPx9ARAmsOjMbCmI38P2cvOq5eZGLSReliv4B9QUd4vKHxvpqf86v57DViDzbN9L
+         wu7g==
+X-Gm-Message-State: ANhLgQ3Tl6psN0r1a/EEDn1dcK2nqVNKiGE5q4h40cGjwIAi9u7qDssu
+        p1p1rj5bY9IM8T7+bBqL8uAlp4QPy821JHcUwp/bgMRVnso=
+X-Google-Smtp-Source: ADFU+vvH+LGd+WFNKdJlGlEYryRTNsEjpn0AcYGn8HwXGyvhoRjiJZ82jJbccAGwHdEvKWUIlQW8FYcgRnFZ/M56vEw=
+X-Received: by 2002:a9d:282:: with SMTP id 2mr6105589otl.178.1584702532193;
+ Fri, 20 Mar 2020 04:08:52 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a4a:c897:0:0:0:0:0 with HTTP; Fri, 20 Mar 2020 04:08:51
+ -0700 (PDT)
+From:   federa bureau of inteligence <federabureauofinteligence@gmail.com>
+Date:   Fri, 20 Mar 2020 11:08:51 +0000
+Message-ID: <CAE9o6LB8uVVDxDvXUM48MSUTPhbV1MGNW-EXBpanBopr0qXsMA@mail.gmail.com>
+Subject: HAPPY SURVIVAL OF CORONAVIRUS
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Dear Sir,
 
+HAPPY SURVIVAL OF CORONAVIRUS
 
-> On Mar 19, 2020, at 6:13 PM, Frank van der Linden =
-<fllinden@amazon.com> wrote:
->=20
-> On Thu, Mar 12, 2020 at 12:24:18PM -0400, Chuck Lever wrote:
->>> +static inline u32 nfsd4_getxattr_rsize(struct svc_rqst *rqstp,
->>> +                                    struct nfsd4_op *op)
->>> +{
->>> +     u32 maxcount, rlen;
->>> +
->>> +     maxcount =3D svc_max_payload(rqstp);
->>> +     rlen =3D min_t(u32, XATTR_SIZE_MAX, maxcount);
->>> +
->>> +     return (op_encode_hdr_size + 1 + XDR_QUADLEN(rlen)) * =
-sizeof(__be32);
->>=20
->> These should be added in the same patch that adds OP_GETXATTR and =
-friends.
->>=20
->> Also, Trond recently added xdr_align_size which I prefer over the
->> use of XDR_QUADLEN in new code.
->=20
-> Thanks, I've squashed together those patches for this and the other =
-reasons
-> you pointed out.
->=20
-> As for XDR_QUADLEN: that returns the 32bit-word rounded up lenghth - =
-in words.
-> xdr_aligned_size returns the 32bit-word rounded up length - in bytes.
->=20
-> So, the result would then look something like:
->=20
-> 	return xdr_align_size((op_encode_hdr_size * 4) + 4 + rlen);
->=20
-> Is that what you're suggesting?
+We are reaching for a very interesting business transaction which we
+feel will of great benefit.We the FBI unit in the western subregion of
+Africa have a fund which we confiscated and lodge it in a bank
 
-Oops, you're right. When you want words, XDR_QUADLEN is correct. Never =
-mind!
+This fund is worth of $12.5 million dollars.We will need your
+assistance to recieve this fund into your account for investment in
+your country.
 
+We will need your urgent response for details
 
---
-Chuck Lever
-
-
-
+Inspector Greg Adams,
+For and on behalf of Cote D'Ivoire FBI
+Tel 00225 6716 6756
