@@ -2,70 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8ACD18CC5A
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Mar 2020 12:08:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9328E18D4CD
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Mar 2020 17:47:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgCTLIx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Mar 2020 07:08:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39958 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCTLIx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Mar 2020 07:08:53 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e19so5554264otj.7
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Mar 2020 04:08:52 -0700 (PDT)
+        id S1727560AbgCTQrl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Mar 2020 12:47:41 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:55688 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgCTQrl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Mar 2020 12:47:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=kuhba0bbR9oJup1oQ7P5tNPZ9FqBHXE57QqcfHgaIHo=;
-        b=JAtXBJqr5hMz+TFFzUTYToXqzS7c51G8vKLiqCDy1i1/On+nQVdz02QZ1PRqL4CyBV
-         X4glRefjimK9GfDoVGwz8kikRgk33FnvkUhx6uO4BTbQbNm8S7O1AZPp10dlFLgtAz0x
-         rFL2qxUTruF+kToHLDhlYtTwze4TqFKBuWQhuO1oFhcmi9UjJZsAD/qhKChg4pw0VokL
-         SgTYqaqGQz81XLJqAqHOfKZ5rlEVViGHosb0tMGyvx04G/1DF2wv71hjcOE2AncHgCvI
-         Lc+mT4lwLkUcrLP/YwU6bt6V/8IAZf//w9FHMt91tLvtR+ljZtq+6uIqjb2GkwLz0CRD
-         0svQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=kuhba0bbR9oJup1oQ7P5tNPZ9FqBHXE57QqcfHgaIHo=;
-        b=k4TdLWWvQWVylDLExXVPKrbbTcXqEk9hX6Ue9lgcsQL6UcCktnk/dSEhwD9qusBRml
-         fQ1JJM5H17hQXCE05QQlgG9kwMPNark2m30zjW19tnHLa19xYe1Lt+QnVeejrOKUGauf
-         WASavxXsCSkyA/SeijaXKMZLiuF5RtYWczTUxC47v32FYo2v2Kc2okv5Tcl6ze1KIlFc
-         hy5syvCSIjrAssoaqv1GNW6R5m5g7WQWGKja9NJKGy9cTrK2ilZ9kEG6Vm+GVU7Dd4SZ
-         3B4zEPx9ARAmsOjMbCmI38P2cvOq5eZGLSReliv4B9QUd4vKHxvpqf86v57DViDzbN9L
-         wu7g==
-X-Gm-Message-State: ANhLgQ3Tl6psN0r1a/EEDn1dcK2nqVNKiGE5q4h40cGjwIAi9u7qDssu
-        p1p1rj5bY9IM8T7+bBqL8uAlp4QPy821JHcUwp/bgMRVnso=
-X-Google-Smtp-Source: ADFU+vvH+LGd+WFNKdJlGlEYryRTNsEjpn0AcYGn8HwXGyvhoRjiJZ82jJbccAGwHdEvKWUIlQW8FYcgRnFZ/M56vEw=
-X-Received: by 2002:a9d:282:: with SMTP id 2mr6105589otl.178.1584702532193;
- Fri, 20 Mar 2020 04:08:52 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1584722861; x=1616258861;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=XtMDPpIarwf/crTWNE7mjozXIyPtNkdtp+PQxgObG64=;
+  b=YXL9LWQ5QzL/DGXg8rALEYqm7Z/VNwJ+Z9AaPsfmq7rBncdB1l0YMGet
+   mX8w35QtecWnYfa1qVrRiVsPo6c0NpVGfcRF5BiU2BiomB/O9atQqLyBP
+   wREnTWLzanIHwvil+gVtCatdb8ikujfTiqiirqV0fC463xIRrDYXT5NjY
+   E=;
+IronPort-SDR: PUw4Fpjs8TpfwBL9gxTCkc+VlojwYQ6+8Yvw3lYmTwkAHhjfEbP1P296FAVVTFrjzy8c8SLfDK
+ 1L/MAX0eI6vw==
+X-IronPort-AV: E=Sophos;i="5.72,285,1580774400"; 
+   d="scan'208";a="33811913"
+Subject: Re: [PATCH 11/14] nfsd: add user xattr RPC XDR encoding/decoding logic
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Mar 2020 16:47:39 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 7DAE4A1DC8;
+        Fri, 20 Mar 2020 16:47:38 +0000 (UTC)
+Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 20 Mar 2020 16:47:37 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 16:47:37 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Fri, 20 Mar 2020 16:47:37 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 80807CAD77; Fri, 20 Mar 2020 16:47:37 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 16:47:37 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+CC:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <20200320164737.GA19415@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200311195954.27117-1-fllinden@amazon.com>
+ <20200311195954.27117-12-fllinden@amazon.com>
+ <6955728A-CFCC-40FC-9E02-671255EDD45F@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a4a:c897:0:0:0:0:0 with HTTP; Fri, 20 Mar 2020 04:08:51
- -0700 (PDT)
-From:   federa bureau of inteligence <federabureauofinteligence@gmail.com>
-Date:   Fri, 20 Mar 2020 11:08:51 +0000
-Message-ID: <CAE9o6LB8uVVDxDvXUM48MSUTPhbV1MGNW-EXBpanBopr0qXsMA@mail.gmail.com>
-Subject: HAPPY SURVIVAL OF CORONAVIRUS
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6955728A-CFCC-40FC-9E02-671255EDD45F@oracle.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear Sir,
+Hi Chuck,
 
-HAPPY SURVIVAL OF CORONAVIRUS
+On Thu, Mar 12, 2020 at 03:16:37PM -0400, Chuck Lever wrote:
+> > +static __be32
+> > +nfsd4_decode_setxattr(struct nfsd4_compoundargs *argp,
+> > +                   struct nfsd4_setxattr *setxattr)
+> > +{
+> > +     DECODE_HEAD;
+> > +     u32 flags, maxcount, size;
+> > +     struct kvec head;
+> > +     struct page **pagelist;
+> > +
+> > +     READ_BUF(4);
+> > +     flags = be32_to_cpup(p++);
+> > +
+> > +     if (flags > SETXATTR4_REPLACE)
+> > +             return nfserr_inval;
+> > +     setxattr->setxa_flags = flags;
+> > +
+> > +     status = nfsd4_decode_xattr_name(argp, &setxattr->setxa_name);
+> > +     if (status)
+> > +             return status;
+> > +
+> > +     maxcount = svc_max_payload(argp->rqstp);
+> > +     maxcount = min_t(u32, XATTR_SIZE_MAX, maxcount);
+> > +
+> > +     READ_BUF(4);
+> > +     size = be32_to_cpup(p++);
+> > +     if (size > maxcount)
+> > +             return nfserr_xattr2big;
+> > +
+> > +     setxattr->setxa_len = size;
+> > +     if (size > 0) {
+> > +             status = svcxdr_construct_vector(argp, &head, &pagelist, size);
+> > +             if (status)
+> > +                     return status;
+> > +
+> > +             status = nfsd4_vbuf_from_stream(argp, &head, pagelist,
+> > +                 &setxattr->setxa_buf, size);
+> > +     }
+> 
+> Now I'm wondering if read_bytes_from_xdr_buf() might be adequate
+> for this purpose, so you can avoid open-coding all of this logic.
 
-We are reaching for a very interesting business transaction which we
-feel will of great benefit.We the FBI unit in the western subregion of
-Africa have a fund which we confiscated and lodge it in a bank
+This took a little longer, I had to check my notes, but basically the
+reasons for doing it this way are:
 
-This fund is worth of $12.5 million dollars.We will need your
-assistance to recieve this fund into your account for investment in
-your country.
+* The nfsd decode path uses nfsd4_compoundargs, which doesn't have an
+  xdr_stream (it has a page array). So read_bytes_from_xdr_buf isn't
+  a natural fit.
+* READ_BUF/read_buf don't deal with > PAGE_SIZE chunks, but xattrs may
+  be larger than that.
 
-We will need your urgent response for details
+The other code that deals with > PAGE_SIZE chunks is the write code. So,
+I factored out some code from the write code, used that, and added a function
+to process the resulting kvec / pagelist (nfs4_vbuf_from_stream).
 
-Inspector Greg Adams,
-For and on behalf of Cote D'Ivoire FBI
-Tel 00225 6716 6756
+There definitely seem to be several copy functions in both the client
+and server code that basically do the same, but in slightly different ways,
+depending on whether they use an XDR buf or not, whether the pages are
+mapped or not, etc. Seems like a good candidate for a cleanup, but I
+considered it to be out of scope for these patches.
+
+- Frank
