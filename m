@@ -2,213 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE43A191149
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 14:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 776E7191204
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 14:52:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgCXNjZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Mar 2020 09:39:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39534 "EHLO
+        id S1727466AbgCXNv3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Mar 2020 09:51:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50414 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgCXNjY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Mar 2020 09:39:24 -0400
+        with ESMTP id S1727266AbgCXNv3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Mar 2020 09:51:29 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ODYN0j023759;
-        Tue, 24 Mar 2020 13:39:01 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ODiEwq117779;
+        Tue, 24 Mar 2020 13:51:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=wu9AtgzTo/Gwj3f6XPoxfXE2g2B6e6FgzGcGeUZcfqE=;
- b=iQTUZTyuWyFRzCBAzrA7M+/M+XHto6a9FXArtKgQF+2AdNR0ppMnWp9byNc4ldvlq+Jl
- 3CXxCE4oyfinm8MVvLvy4bbnXyr9d6ewKgRlveotI9rxqNF/UGESqvQOv30hNGlAYJ+O
- DsgkEfD0RqBZoueGXRHnj07fSQLroq4AYyA6/KF+dGP+QKOY1PfA/X0YQd3sA1+1VN0K
- EIHSrns8kfWWClNIVndP2c3wj4a9OaLGWfMbuSVDVCHcD/hWxAD9OAQxWpa3mbZcx1f4
- n+4jYp+Nds2kGoX029zMp61NlqzlhqhBxHc+EW2NBg1r00Kv/wEvYehKYN9mQerMpnRj gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yx8ac19da-1
+ s=corp-2020-01-29; bh=TMKn8p2QkdOEEOovsRTfA80kmULbmEVaHscf1Q24bDo=;
+ b=m+1neoNm1lpcju8E4I4RI+C9wUbv6umKkpqiQDKUndE80S179Owc4rdhw+g5Hw1M07i8
+ Tu+DSpF6HNjCXuenctRDWSNWYdcTA+IVcgvXVvteLPmfgyNWqbm6uA3RMbBh4RFNq399
+ rtgQWd2wDNFZyGiWywzXSIHeu31gxdka559XF5iV7KwuWaKfxSGdiF3VzLqJ7GbGQ0N3
+ oSV5/xHDPx5c7dIYs2rf6Iwd8ODPtb181aJt/juddZ48Eplm/RxC3QKKqTsyr9uoU9d6
+ JUyEopUAZBxnc9F5UxJlANTOU/v/nc+f1SrCJx1zvy2Q3V5jtNsjiMGVS6tIQucNxnqN dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yx8ac1bg6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 13:39:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ODW9tl108969;
-        Tue, 24 Mar 2020 13:39:01 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yxw4p9qph-1
+        Tue, 24 Mar 2020 13:51:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ODnrNO180558;
+        Tue, 24 Mar 2020 13:51:03 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2yxw92pj6a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 13:39:01 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02ODcuOh005552;
-        Tue, 24 Mar 2020 13:38:56 GMT
+        Tue, 24 Mar 2020 13:51:03 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02ODp05u020554;
+        Tue, 24 Mar 2020 13:51:01 GMT
 Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Mar 2020 06:38:56 -0700
+        with ESMTP ; Tue, 24 Mar 2020 06:51:00 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
+Subject: Re: refcount underflow in nfsd41_destroy_cb
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
-Date:   Tue, 24 Mar 2020 09:38:55 -0400
+In-Reply-To: <20200323160919.021e6c8a.jasiu@belsznica.pl>
+Date:   Tue, 24 Mar 2020 09:50:59 -0400
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Yihao Wu <wuyihao@linux.alibaba.com>
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jan Psota <jasiu@belsznica.pl>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
-References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
-To:     Bruce Fields <bfields@fieldses.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        NeilBrown <neilb@suse.com>
+Message-Id: <6A4BC0CB-9A2F-405B-A7F7-5BFDA4FAD8CB@oracle.com>
+References: <CAHmME9ro8BPBTMfu8dEbGmkH7qHLdQ=CXGEOW2C7MR4bmT6T+w@mail.gmail.com>
+ <44C9D860-4F51-46B1-88A3-D10DDEF4BD8E@oracle.com>
+ <20200322044352.2ff1fbd8.jasiu@belsznica.pl>
+ <0C8A86EA-6015-4E9E-9A0E-DAEB4E988269@oracle.com>
+ <20200323160919.021e6c8a.jasiu@belsznica.pl>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
 X-Mailer: Apple Mail (2.3445.104.11)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240073
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003240074
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 suspectscore=2 priorityscore=1501 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
  mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240073
+ engine=8.12.0-2003020000 definitions=main-2003240074
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Trond,
 
+> On Mar 23, 2020, at 11:09 AM, Jan Psota <jasiu@belsznica.pl> wrote:
+>=20
+>> I thought I read in the initial report that you were seeing this
+>> problem only on v5.6-rc6. What is the earliest kernel release
+>> where you saw refcount UaF warnings from nfsd4_destroy_cb?
+>>=20
+> I didn't noticed that earlier too, because until connection breakage =
+on
+> WireGuard I did not have any problems related. But when you are =
+asking,
+> I found it in my Pentium G2020 system too since 5.5.4 kernel and 5.4.2
+> looks not affected (I have logs since 01 Jan and fault begin to appear
+> on Feb 21, when I switched from 5.4.2 to 5.5.4 kernel a day before)
+>=20
+> $ journalctl | grep nfsd41_destroy_cb
+> lut 21 01:07:58 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> lut 27 01:01:12 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 03 00:59:01 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 03 23:03:02 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 11 11:52:42 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 13 01:12:02 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 14 14:31:39 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 15 20:56:56 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 17 15:58:32 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+> mar 22 15:24:03 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>=20
+> I attach NFS part of my .config and a screen dump of menuconfig.
+> <nfs.config><nfs-config.txt>
 
-> On Mar 24, 2020, at 5:49 AM, Yihao Wu <wuyihao@linux.alibaba.com> =
-wrote:
->=20
-> cache_purge should hold cache_list_lock as cache_clean does. Otherwise =
-a cache
-> can be cache_put twice, which leads to a use-after-free bug.
->=20
-> To reproduce, run ltp. It happens rarely.  /opt/ltp/runltp run -f =
-net.nfs
->=20
-> [14454.137661] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [14454.138863] BUG: KASAN: use-after-free in cache_purge+0xce/0x160 =
-[sunrpc]
-> [14454.139822] Read of size 4 at addr ffff8883d484d560 by task =
-nfsd/31993
-> [14454.140746]
-> [14454.140995] CPU: 1 PID: 31993 Comm: nfsd Kdump: loaded Not tainted =
-4.19.91-0.229.git.87bac30.al7.x86_64.debug #1
-> [14454.141002] Call Trace:
-> [14454.141014]  dump_stack+0xaf/0xfb[14454.141027]  =
-print_address_description+0x6a/0x2a0
-> [14454.141037]  kasan_report+0x166/0x2b0[14454.141057]  ? =
-cache_purge+0xce/0x160 [sunrpc]
-> [14454.141079]  cache_purge+0xce/0x160 [sunrpc]
-> [14454.141099]  nfsd_last_thread+0x267/0x270 [nfsd][14454.141109]  ? =
-nfsd_last_thread+0x5/0x270 [nfsd]
-> [14454.141130]  nfsd_destroy+0xcb/0x180 [nfsd]
-> [14454.141140]  ? nfsd_destroy+0x5/0x180 [nfsd]
-> [14454.141153]  nfsd+0x1e4/0x2b0 [nfsd]
-> [14454.141163]  ? nfsd+0x5/0x2b0 [nfsd]
-> [14454.141173]  kthread+0x114/0x150
-> [14454.141183]  ? nfsd_destroy+0x180/0x180 [nfsd]
-> [14454.141187]  ? kthread_park+0xb0/0xb0
-> [14454.141197]  ret_from_fork+0x3a/0x50
-> [14454.141224]
-> [14454.141475] Allocated by task 20918:
-> [14454.142011]  kmem_cache_alloc_trace+0x9f/0x2e0
-> [14454.142027]  sunrpc_cache_lookup+0xca/0x2f0 [sunrpc]
-> [14454.142037]  svc_export_parse+0x1e7/0x930 [nfsd]
-> [14454.142051]  cache_do_downcall+0x5a/0x80 [sunrpc]
-> [14454.142064]  cache_downcall+0x78/0x180 [sunrpc]
-> [14454.142078]  cache_write_procfs+0x57/0x80 [sunrpc]
-> [14454.142083]  proc_reg_write+0x90/0xd0
-> [14454.142088]  vfs_write+0xc2/0x1c0
-> [14454.142092]  ksys_write+0x4d/0xd0
-> [14454.142098]  do_syscall_64+0x60/0x250
-> [14454.142103]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [14454.142106]
-> [14454.142344] Freed by task 19165:
-> [14454.142804]  kfree+0x114/0x300
-> [14454.142819]  cache_clean+0x2a4/0x2e0 [sunrpc]
-> [14454.142833]  cache_flush+0x24/0x60 [sunrpc]
-> [14454.142845]  write_flush.isra.19+0xbe/0x100 [sunrpc]
-> [14454.142849]  proc_reg_write+0x90/0xd0
-> [14454.142853]  vfs_write+0xc2/0x1c0
-> [14454.142856]  ksys_write+0x4d/0xd0
-> [14454.142860]  do_syscall_64+0x60/0x250
-> [14454.142865]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [14454.142867]
-> [14454.143095] The buggy address belongs to the object at =
-ffff8883d484d540 which belongs to the cache kmalloc-256 of size 256
-> [14454.144842] The buggy address is located 32 bytes inside of  =
-256-byte region [ffff8883d484d540, ffff8883d484d640)
-> [14454.146463] The buggy address belongs to the page:
-> [14454.147155] page:ffffea000f521300 count:1 mapcount:0 =
-mapping:ffff888107c02e00 index:0xffff8883d484da40 compound_map count: 0
-> [14454.148712] flags: 0x17fffc00010200(slab|head)
-> [14454.149356] raw: 0017fffc00010200 ffffea000f4baf00 0000000200000002 =
-ffff888107c02e00
-> [14454.150453] raw: ffff8883d484da40 0000000080190001 00000001ffffffff =
-0000000000000000
-> [14454.151557] page dumped because: kasan: bad access detected
-> [14454.152364]
-> [14454.152606] Memory state around the buggy address:
-> [14454.153300]  ffff8883d484d400: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [14454.154319]  ffff8883d484d480: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [14454.155324] >ffff8883d484d500: fc fc fc fc fc fc fc fc fb fb fb fb =
-fb fb fb fb
-> [14454.156334]                                                        =
-^
-> [14454.157237]  ffff8883d484d580: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [14454.158262]  ffff8883d484d600: fb fb fb fb fb fb fb fb fc fc fc fc =
-fc fc fc fc
-> [14454.159282] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [14454.160224] Disabling lock debugging due to kernel taint
->=20
-> Fixes: 471a930ad7d1(SUNRPC: Drop all entries from cache_detail when =
-cache_purge())
-> Cc: stable@vger.kernel.org #v4.11+
-> Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+I'm wondering if
 
-Mechanically this looks OK, but I would feel more comfortable
-if a domain expert could review this. Neil, Trond, Bruce?
+2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and =
+nfsd4_shutdown_callback()")
 
+or
 
-> ---
-> net/sunrpc/cache.c | 3 +++
-> 1 file changed, 3 insertions(+)
->=20
-> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> index bd843a81afa0..3e523eefc47f 100644
-> --- a/net/sunrpc/cache.c
-> +++ b/net/sunrpc/cache.c
-> @@ -524,9 +524,11 @@ void cache_purge(struct cache_detail *detail)
-> 	struct hlist_node *tmp =3D NULL;
-> 	int i =3D 0;
->=20
-> +	spin_lock(&cache_list_lock);
-> 	spin_lock(&detail->hash_lock);
-> 	if (!detail->entries) {
-> 		spin_unlock(&detail->hash_lock);
-> +		spin_unlock(&cache_list_lock);
-> 		return;
-> 	}
->=20
-> @@ -541,6 +543,7 @@ void cache_purge(struct cache_detail *detail)
-> 		}
-> 	}
-> 	spin_unlock(&detail->hash_lock);
-> +	spin_unlock(&cache_list_lock);
-> }
-> EXPORT_SYMBOL_GPL(cache_purge);
->=20
-> --=20
-> 2.20.1.2432.ga663e714
->=20
+12357f1b2c8e ("nfsd: minor 4.1 callback cleanup")
+
+might be related to this issue (see down-thread for details and =
+backtraces).
 
 --
 Chuck Lever
