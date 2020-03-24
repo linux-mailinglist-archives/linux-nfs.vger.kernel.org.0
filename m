@@ -2,194 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D9019142D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 16:24:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00F2719162C
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 17:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgCXPY1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Mar 2020 11:24:27 -0400
-Received: from mail-bn7nam10on2122.outbound.protection.outlook.com ([40.107.92.122]:35360
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727487AbgCXPY1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:24:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ni4vFzs8SpYFtxT+OcmM2x2EqRHgGDNLAj6jADGX9ip12quEi8o8JCYxZjb8DW3L4ttNV9ZVGD5ZNF6o5GLY5AdUIA5Qm9BbTFbcILH8nphTE0KJO1aJBTPBOY+TACu/SdSV1tiHWPxQ/ZpgwIdympQfQ09u0TBjXUDDZCzH8kGkOMldk/7XDsZb1KtRzSI0Xna8VE5n1O2Ofwlqohusa+5MFVUDeJR1rVVcJL0GHlronKBpJNcFvaAPVT3XQ/8gkcmHMo+cL27ktupD+VROZOFUKXGdlNHXsaA+sHP6F54kAue74wDD/eeT4UqXKuVU2n3YXyZKVdo+L4tFWCFyxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rmpW2UY3T/rr+zl1CirBh4cOFU9V9aHiLlyuv8F5TN4=;
- b=mgcBQDkngPeRdHktHDA3krfiQ/17X2yd9UcWFNWi2JSdQnkQidKF0+pR/tDJ0/G6EbN0fT1vZ7vYyb68r0Pfx3MyQYuzMFzqhZTqrB7IjJJf4eGt0j13aM6T19lP1qMajbXYpkKLbIBGNqiuBgbNUyZ6uAes5hMUkvPYeQ2dw1tmXZVqyFGuDdGPK9epUxGHxwQZzZd0Kd2uBAhyO8Kntfx3G25/4AqVeXYhJKewuxFhLOni91a+W/TnQsEFUEnRvVTWTjxFdE3qc7/KGPmf16zSyiU8FwRx9p2d6SHgpZSOpjCResxXvgpEYKjBbZ7wFxxxwqsh2JVRLwdyHVMgrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rmpW2UY3T/rr+zl1CirBh4cOFU9V9aHiLlyuv8F5TN4=;
- b=JDnJLKLwIc3vycSLDmQnoDuzTgSzxp6vGPQGJ76NZcQIw+u+oy42sBxVlMIbE8zVE2zN3ZPrcPmwX/QosXvoAns2eTKXZw0gbqZtySzBV5H/b9Yna/IKGUlHfvWvtydnI4w3Ly+UateYGqTaf7zkRaDzDGnjG6CmV8XdrnAoCFY=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3654.namprd13.prod.outlook.com (2603:10b6:610:94::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.15; Tue, 24 Mar
- 2020 15:24:22 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36%7]) with mapi id 15.20.2856.015; Tue, 24 Mar 2020
- 15:24:22 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "neilb@suse.com" <neilb@suse.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "wuyihao@linux.alibaba.com" <wuyihao@linux.alibaba.com>
-Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
-Thread-Topic: [PATCH] nfsd: fix race between cache_clean and cache_purge
-Thread-Index: AQHWAcG05NvkxcHsqEKnZwwsE0EITqhXv5yAgAAdc4A=
-Date:   Tue, 24 Mar 2020 15:24:22 +0000
-Message-ID: <13c45bdcb67d689bfcb4f4b720b631e56c662f2b.camel@hammerspace.com>
-References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
-         <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
-In-Reply-To: <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 34f8fa3e-6327-4a23-2e29-08d7d0076e38
-x-ms-traffictypediagnostic: CH2PR13MB3654:
-x-microsoft-antispam-prvs: <CH2PR13MB365478CD9C95E4A7401C06CBB8F10@CH2PR13MB3654.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(346002)(136003)(366004)(376002)(4326008)(81156014)(36756003)(26005)(6506007)(8936002)(91956017)(8676002)(53546011)(81166006)(186003)(2616005)(478600001)(316002)(6486002)(2906002)(110136005)(54906003)(71200400001)(66556008)(5660300002)(86362001)(66476007)(6512007)(64756008)(66446008)(76116006)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR13MB3654;H:CH2PR13MB3398.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HIUZ55/akk+1vNNRoT1NrWWtAiPZvWWjLLW2cbzuKj4zVD/X9n1YmxwI/stBwwZiH0sWkGUxgUN7PnTWPE1MLOqhOsEgV+caof1JXJuK8n4ZBw+EYLNgF/Z1aRmhTZdCOqTVALJT2jP1ZdBZKow3ZgRVWcu6Zp/LtA6MxurXQf/qopqDE/efKPLpVgE7609kxcJPqZXA4VQOOVDOMUFRVKF4uHhciGxskx6dXvr7EBud5uVDfDMXwDhKtNGtDQ5i+ZJpNlpSZGDXj50PqOcXXde2EThTU5GmYEx0orZ4xeKAfs7hKVQPJfFPAywg2FANSBcWaQzAZA3Mch90czXQuabUMYwbLuF/gEGk081m2NL900bwl99bHeyemsY5N/CMupTuhZrkNSt9o47MiGvLauGFauPRvB4Yi1T8coCzVsqw8Er1oIivYelNm1TFjPgc
-x-ms-exchange-antispam-messagedata: qk6dP5QZ/uIx2/rqFgBWce4uYIjPzt6uQkMvAKD0qOMru5+1F3z704h5S5+mA1nnD+oW7FfuQn856juex7/wI4OGvYyfaZmc7sLooffyxxXheA2lTbTpdvtx8GSlon0Wxo5q2m8hS0D48yJ+pMTq+A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6F29A1CA16232945AA0F8923ADF80C4C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727800AbgCXQVX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Mar 2020 12:21:23 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:51503 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgCXQVW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Mar 2020 12:21:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585066882; x=1616602882;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=lHOS/dh88z3U2qZioVP96n0RoORSEsBhqjVDzYTZ3cg=;
+  b=JR3ZJmUmwpeJcod5SRDOuZ8L/NdEPH47VG6/MG57GQ5jQh3lWfgVdjna
+   HL5xKFw177k5LgfpgR92/5hmrIydaWvrDqhoiKp3JbT4VtWJe4O14TGE5
+   JHgqcTlZ8kuiSxw+UiYigk0eGliGxyhXGd675CQWtz7P8k94NRqEK25cv
+   k=;
+IronPort-SDR: 3bQUevArD9VSq70qRf1G8ZT9dQ1AT496/0nDkyETwBsRt6jxKjrjxlyVcAivYnr65IpfvHBa4U
+ UDzDUN1r9vuw==
+X-IronPort-AV: E=Sophos;i="5.72,301,1580774400"; 
+   d="scan'208";a="22698173"
+Subject: Re: [nfs] c5654df66d: stress-ng.msg.ops_per_sec 15.5% improvement
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Mar 2020 16:21:09 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 82F4DA2967;
+        Tue, 24 Mar 2020 16:21:08 +0000 (UTC)
+Received: from EX13D03UWC004.ant.amazon.com (10.43.162.49) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 24 Mar 2020 16:21:08 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D03UWC004.ant.amazon.com (10.43.162.49) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 24 Mar 2020 16:21:07 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Tue, 24 Mar 2020 16:21:07 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id E8E23C1350; Tue, 24 Mar 2020 16:21:07 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 16:21:07 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     kernel test robot <rong.a.chen@intel.com>
+CC:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>, <lkp@lists.01.org>
+Message-ID: <20200324162107.GA8591@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200311195613.26108-10-fllinden@amazon.com>
+ <20200324060215.GD11705@shao2-debian>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34f8fa3e-6327-4a23-2e29-08d7d0076e38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 15:24:22.5160
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r6oY8aqqhYnKxzdDRJcx4/cjZTY3EsBeaV3woNWz9BZOOU22H1XY1DkiV9lHVnqWbklyHOKa1cuMtHUGUMhK+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3654
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200324060215.GD11705@shao2-debian>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTI0IGF0IDA5OjM4IC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-PiBPbiBNYXIgMjQsIDIwMjAsIGF0IDU6NDkgQU0sIFlpaGFvIFd1IDx3dXlpaGFvQGxpbnV4LmFs
-aWJhYmEuY29tPg0KPiA+IHdyb3RlOg0KPiA+IA0KPiA+IGNhY2hlX3B1cmdlIHNob3VsZCBob2xk
-IGNhY2hlX2xpc3RfbG9jayBhcyBjYWNoZV9jbGVhbiBkb2VzLg0KPiA+IE90aGVyd2lzZSBhIGNh
-Y2hlDQo+ID4gY2FuIGJlIGNhY2hlX3B1dCB0d2ljZSwgd2hpY2ggbGVhZHMgdG8gYSB1c2UtYWZ0
-ZXItZnJlZSBidWcuDQo+ID4gDQo+ID4gVG8gcmVwcm9kdWNlLCBydW4gbHRwLiBJdCBoYXBwZW5z
-IHJhcmVseS4gIC9vcHQvbHRwL3J1bmx0cCBydW4gLWYNCj4gPiBuZXQubmZzDQo+ID4gDQo+ID4g
-WzE0NDU0LjEzNzY2MV0NCj4gPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiBbMTQ0NTQuMTM4ODYzXSBCVUc6IEtB
-U0FOOiB1c2UtYWZ0ZXItZnJlZSBpbiBjYWNoZV9wdXJnZSsweGNlLzB4MTYwDQo+ID4gW3N1bnJw
-Y10NCj4gPiBbMTQ0NTQuMTM5ODIyXSBSZWFkIG9mIHNpemUgNCBhdCBhZGRyIGZmZmY4ODgzZDQ4
-NGQ1NjAgYnkgdGFzaw0KPiA+IG5mc2QvMzE5OTMNCj4gPiBbMTQ0NTQuMTQwNzQ2XQ0KPiA+IFsx
-NDQ1NC4xNDA5OTVdIENQVTogMSBQSUQ6IDMxOTkzIENvbW06IG5mc2QgS2R1bXA6IGxvYWRlZCBO
-b3QNCj4gPiB0YWludGVkIDQuMTkuOTEtMC4yMjkuZ2l0Ljg3YmFjMzAuYWw3Lng4Nl82NC5kZWJ1
-ZyAjMQ0KPiA+IFsxNDQ1NC4xNDEwMDJdIENhbGwgVHJhY2U6DQo+ID4gWzE0NDU0LjE0MTAxNF0g
-IGR1bXBfc3RhY2srMHhhZi8weGZiWzE0NDU0LjE0MTAyN10gIHByaW50X2FkZHJlc3NfZA0KPiA+
-IGVzY3JpcHRpb24rMHg2YS8weDJhMA0KPiA+IFsxNDQ1NC4xNDEwMzddICBrYXNhbl9yZXBvcnQr
-MHgxNjYvMHgyYjBbMTQ0NTQuMTQxMDU3XSAgPw0KPiA+IGNhY2hlX3B1cmdlKzB4Y2UvMHgxNjAg
-W3N1bnJwY10NCj4gPiBbMTQ0NTQuMTQxMDc5XSAgY2FjaGVfcHVyZ2UrMHhjZS8weDE2MCBbc3Vu
-cnBjXQ0KPiA+IFsxNDQ1NC4xNDEwOTldICBuZnNkX2xhc3RfdGhyZWFkKzB4MjY3LzB4MjcwDQo+
-ID4gW25mc2RdWzE0NDU0LjE0MTEwOV0gID8gbmZzZF9sYXN0X3RocmVhZCsweDUvMHgyNzAgW25m
-c2RdDQo+ID4gWzE0NDU0LjE0MTEzMF0gIG5mc2RfZGVzdHJveSsweGNiLzB4MTgwIFtuZnNkXQ0K
-PiA+IFsxNDQ1NC4xNDExNDBdICA/IG5mc2RfZGVzdHJveSsweDUvMHgxODAgW25mc2RdDQo+ID4g
-WzE0NDU0LjE0MTE1M10gIG5mc2QrMHgxZTQvMHgyYjAgW25mc2RdDQo+ID4gWzE0NDU0LjE0MTE2
-M10gID8gbmZzZCsweDUvMHgyYjAgW25mc2RdDQo+ID4gWzE0NDU0LjE0MTE3M10gIGt0aHJlYWQr
-MHgxMTQvMHgxNTANCj4gPiBbMTQ0NTQuMTQxMTgzXSAgPyBuZnNkX2Rlc3Ryb3krMHgxODAvMHgx
-ODAgW25mc2RdDQo+ID4gWzE0NDU0LjE0MTE4N10gID8ga3RocmVhZF9wYXJrKzB4YjAvMHhiMA0K
-PiA+IFsxNDQ1NC4xNDExOTddICByZXRfZnJvbV9mb3JrKzB4M2EvMHg1MA0KPiA+IFsxNDQ1NC4x
-NDEyMjRdDQo+ID4gWzE0NDU0LjE0MTQ3NV0gQWxsb2NhdGVkIGJ5IHRhc2sgMjA5MTg6DQo+ID4g
-WzE0NDU0LjE0MjAxMV0gIGttZW1fY2FjaGVfYWxsb2NfdHJhY2UrMHg5Zi8weDJlMA0KPiA+IFsx
-NDQ1NC4xNDIwMjddICBzdW5ycGNfY2FjaGVfbG9va3VwKzB4Y2EvMHgyZjAgW3N1bnJwY10NCj4g
-PiBbMTQ0NTQuMTQyMDM3XSAgc3ZjX2V4cG9ydF9wYXJzZSsweDFlNy8weDkzMCBbbmZzZF0NCj4g
-PiBbMTQ0NTQuMTQyMDUxXSAgY2FjaGVfZG9fZG93bmNhbGwrMHg1YS8weDgwIFtzdW5ycGNdDQo+
-ID4gWzE0NDU0LjE0MjA2NF0gIGNhY2hlX2Rvd25jYWxsKzB4NzgvMHgxODAgW3N1bnJwY10NCj4g
-PiBbMTQ0NTQuMTQyMDc4XSAgY2FjaGVfd3JpdGVfcHJvY2ZzKzB4NTcvMHg4MCBbc3VucnBjXQ0K
-PiA+IFsxNDQ1NC4xNDIwODNdICBwcm9jX3JlZ193cml0ZSsweDkwLzB4ZDANCj4gPiBbMTQ0NTQu
-MTQyMDg4XSAgdmZzX3dyaXRlKzB4YzIvMHgxYzANCj4gPiBbMTQ0NTQuMTQyMDkyXSAga3N5c193
-cml0ZSsweDRkLzB4ZDANCj4gPiBbMTQ0NTQuMTQyMDk4XSAgZG9fc3lzY2FsbF82NCsweDYwLzB4
-MjUwDQo+ID4gWzE0NDU0LjE0MjEwM10gIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsw
-eDQ5LzB4YmUNCj4gPiBbMTQ0NTQuMTQyMTA2XQ0KPiA+IFsxNDQ1NC4xNDIzNDRdIEZyZWVkIGJ5
-IHRhc2sgMTkxNjU6DQo+ID4gWzE0NDU0LjE0MjgwNF0gIGtmcmVlKzB4MTE0LzB4MzAwDQo+ID4g
-WzE0NDU0LjE0MjgxOV0gIGNhY2hlX2NsZWFuKzB4MmE0LzB4MmUwIFtzdW5ycGNdDQo+ID4gWzE0
-NDU0LjE0MjgzM10gIGNhY2hlX2ZsdXNoKzB4MjQvMHg2MCBbc3VucnBjXQ0KPiA+IFsxNDQ1NC4x
-NDI4NDVdICB3cml0ZV9mbHVzaC5pc3JhLjE5KzB4YmUvMHgxMDAgW3N1bnJwY10NCj4gPiBbMTQ0
-NTQuMTQyODQ5XSAgcHJvY19yZWdfd3JpdGUrMHg5MC8weGQwDQo+ID4gWzE0NDU0LjE0Mjg1M10g
-IHZmc193cml0ZSsweGMyLzB4MWMwDQo+ID4gWzE0NDU0LjE0Mjg1Nl0gIGtzeXNfd3JpdGUrMHg0
-ZC8weGQwDQo+ID4gWzE0NDU0LjE0Mjg2MF0gIGRvX3N5c2NhbGxfNjQrMHg2MC8weDI1MA0KPiA+
-IFsxNDQ1NC4xNDI4NjVdICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0OS8weGJl
-DQo+ID4gWzE0NDU0LjE0Mjg2N10NCj4gPiBbMTQ0NTQuMTQzMDk1XSBUaGUgYnVnZ3kgYWRkcmVz
-cyBiZWxvbmdzIHRvIHRoZSBvYmplY3QgYXQNCj4gPiBmZmZmODg4M2Q0ODRkNTQwIHdoaWNoIGJl
-bG9uZ3MgdG8gdGhlIGNhY2hlIGttYWxsb2MtMjU2IG9mIHNpemUgMjU2DQo+ID4gWzE0NDU0LjE0
-NDg0Ml0gVGhlIGJ1Z2d5IGFkZHJlc3MgaXMgbG9jYXRlZCAzMiBieXRlcyBpbnNpZGUNCj4gPiBv
-ZiAgMjU2LWJ5dGUgcmVnaW9uIFtmZmZmODg4M2Q0ODRkNTQwLCBmZmZmODg4M2Q0ODRkNjQwKQ0K
-PiA+IFsxNDQ1NC4xNDY0NjNdIFRoZSBidWdneSBhZGRyZXNzIGJlbG9uZ3MgdG8gdGhlIHBhZ2U6
-DQo+ID4gWzE0NDU0LjE0NzE1NV0gcGFnZTpmZmZmZWEwMDBmNTIxMzAwIGNvdW50OjEgbWFwY291
-bnQ6MA0KPiA+IG1hcHBpbmc6ZmZmZjg4ODEwN2MwMmUwMCBpbmRleDoweGZmZmY4ODgzZDQ4NGRh
-NDAgY29tcG91bmRfbWFwDQo+ID4gY291bnQ6IDANCj4gPiBbMTQ0NTQuMTQ4NzEyXSBmbGFnczog
-MHgxN2ZmZmMwMDAxMDIwMChzbGFifGhlYWQpDQo+ID4gWzE0NDU0LjE0OTM1Nl0gcmF3OiAwMDE3
-ZmZmYzAwMDEwMjAwIGZmZmZlYTAwMGY0YmFmMDANCj4gPiAwMDAwMDAwMjAwMDAwMDAyIGZmZmY4
-ODgxMDdjMDJlMDANCj4gPiBbMTQ0NTQuMTUwNDUzXSByYXc6IGZmZmY4ODgzZDQ4NGRhNDAgMDAw
-MDAwMDA4MDE5MDAwMQ0KPiA+IDAwMDAwMDAxZmZmZmZmZmYgMDAwMDAwMDAwMDAwMDAwMA0KPiA+
-IFsxNDQ1NC4xNTE1NTddIHBhZ2UgZHVtcGVkIGJlY2F1c2U6IGthc2FuOiBiYWQgYWNjZXNzIGRl
-dGVjdGVkDQo+ID4gWzE0NDU0LjE1MjM2NF0NCj4gPiBbMTQ0NTQuMTUyNjA2XSBNZW1vcnkgc3Rh
-dGUgYXJvdW5kIHRoZSBidWdneSBhZGRyZXNzOg0KPiA+IFsxNDQ1NC4xNTMzMDBdICBmZmZmODg4
-M2Q0ODRkNDAwOiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYg0KPiA+IGZiIGZiIGZi
-IGZiIGZiDQo+ID4gWzE0NDU0LjE1NDMxOV0gIGZmZmY4ODgzZDQ4NGQ0ODA6IGZiIGZiIGZiIGZi
-IGZiIGZiIGZiIGZiIGZiIGZiIGZiDQo+ID4gZmIgZmIgZmIgZmIgZmINCj4gPiBbMTQ0NTQuMTU1
-MzI0XSA+ZmZmZjg4ODNkNDg0ZDUwMDogZmMgZmMgZmMgZmMgZmMgZmMgZmMgZmMgZmIgZmIgZmIN
-Cj4gPiBmYiBmYiBmYiBmYiBmYg0KPiA+IFsxNDQ1NC4xNTYzMzRdICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICBeDQo+ID4gWzE0NDU0
-LjE1NzIzN10gIGZmZmY4ODgzZDQ4NGQ1ODA6IGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZi
-IGZiDQo+ID4gZmIgZmIgZmIgZmIgZmINCj4gPiBbMTQ0NTQuMTU4MjYyXSAgZmZmZjg4ODNkNDg0
-ZDYwMDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmMgZmMgZmMNCj4gPiBmYyBmYyBmYyBmYyBm
-Yw0KPiA+IFsxNDQ1NC4xNTkyODJdDQo+ID4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+ID4gWzE0NDU0LjE2MDIyNF0g
-RGlzYWJsaW5nIGxvY2sgZGVidWdnaW5nIGR1ZSB0byBrZXJuZWwgdGFpbnQNCj4gPiANCj4gPiBG
-aXhlczogNDcxYTkzMGFkN2QxKFNVTlJQQzogRHJvcCBhbGwgZW50cmllcyBmcm9tIGNhY2hlX2Rl
-dGFpbCB3aGVuDQo+ID4gY2FjaGVfcHVyZ2UoKSkNCj4gPiBDYzogc3RhYmxlQHZnZXIua2VybmVs
-Lm9yZyAjdjQuMTErDQo+ID4gU2lnbmVkLW9mZi1ieTogWWloYW8gV3UgPHd1eWloYW9AbGludXgu
-YWxpYmFiYS5jb20+DQo+IA0KPiBNZWNoYW5pY2FsbHkgdGhpcyBsb29rcyBPSywgYnV0IEkgd291
-bGQgZmVlbCBtb3JlIGNvbWZvcnRhYmxlDQo+IGlmIGEgZG9tYWluIGV4cGVydCBjb3VsZCByZXZp
-ZXcgdGhpcy4gTmVpbCwgVHJvbmQsIEJydWNlPw0KPiANCj4gDQo+ID4gLS0tDQo+ID4gbmV0L3N1
-bnJwYy9jYWNoZS5jIHwgMyArKysNCj4gPiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
-DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMvY2FjaGUuYyBiL25ldC9zdW5ycGMv
-Y2FjaGUuYw0KPiA+IGluZGV4IGJkODQzYTgxYWZhMC4uM2U1MjNlZWZjNDdmIDEwMDY0NA0KPiA+
-IC0tLSBhL25ldC9zdW5ycGMvY2FjaGUuYw0KPiA+ICsrKyBiL25ldC9zdW5ycGMvY2FjaGUuYw0K
-PiA+IEBAIC01MjQsOSArNTI0LDExIEBAIHZvaWQgY2FjaGVfcHVyZ2Uoc3RydWN0IGNhY2hlX2Rl
-dGFpbCAqZGV0YWlsKQ0KPiA+IAlzdHJ1Y3QgaGxpc3Rfbm9kZSAqdG1wID0gTlVMTDsNCj4gPiAJ
-aW50IGkgPSAwOw0KPiA+IA0KPiA+ICsJc3Bpbl9sb2NrKCZjYWNoZV9saXN0X2xvY2spOw0KPiA+
-IAlzcGluX2xvY2soJmRldGFpbC0+aGFzaF9sb2NrKTsNCj4gPiAJaWYgKCFkZXRhaWwtPmVudHJp
-ZXMpIHsNCj4gPiAJCXNwaW5fdW5sb2NrKCZkZXRhaWwtPmhhc2hfbG9jayk7DQo+ID4gKwkJc3Bp
-bl91bmxvY2soJmNhY2hlX2xpc3RfbG9jayk7DQo+ID4gCQlyZXR1cm47DQo+ID4gCX0NCj4gPiAN
-Cj4gPiBAQCAtNTQxLDYgKzU0Myw3IEBAIHZvaWQgY2FjaGVfcHVyZ2Uoc3RydWN0IGNhY2hlX2Rl
-dGFpbCAqZGV0YWlsKQ0KPiA+IAkJfQ0KPiA+IAl9DQo+ID4gCXNwaW5fdW5sb2NrKCZkZXRhaWwt
-Pmhhc2hfbG9jayk7DQo+ID4gKwlzcGluX3VubG9jaygmY2FjaGVfbGlzdF9sb2NrKTsNCj4gPiB9
-DQo+ID4gRVhQT1JUX1NZTUJPTF9HUEwoY2FjaGVfcHVyZ2UpOw0KDQoNCkhtbS4uLiBTaG91bGRu
-J3QgdGhpcyBwYXRjaCBiZSBkcm9wcGluZyBjYWNoZV9saXN0X2xvY2soKSB3aGVuIHdlIGNhbGwN
-CnN1bnJwY19lbmRfY2FjaGVfcmVtb3ZlX2VudHJ5KCk/IFRoZSBsYXR0ZXIgZG9lcyBjYWxsIGJv
-dGgNCmNhY2hlX3JldmlzaXRfcmVxdWVzdCgpIGFuZCBjYWNoZV9wdXQoKSwgYW5kIHdoaWxlIHRo
-ZXkgZG8gbm90DQpleHBsaWNpdGx5IGNhbGwgYW55dGhpbmcgdGhhdCBob2xkcyBjYWNoZV9saXN0
-X2xvY2ssIHNvbWUgb2YgdGhvc2UgY2QtDQo+Y2FjaGVfcHV0IGNhbGxiYWNrcyBkbyBsb29rIGFz
-IGlmIHRoZXJlIGlzIHBvdGVudGlhbCBmb3IgZGVhZGxvY2suDQoNCg0KLS0gDQpUcm9uZCBNeWts
-ZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15
-a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Tue, Mar 24, 2020 at 02:02:15PM +0800, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed a 15.5% improvement of stress-ng.msg.ops_per_sec due to commit:
+> 
+> 
+> commit: c5654df66d65f6b5f8967f15a0b61f89acb5941e ("[PATCH 09/13] nfs: define and use the NFS_INO_INVALID_XATTR flag")
+> url: https://github.com/0day-ci/linux/commits/Frank-van-der-Linden/client-side-user-xattr-RFC8276-support/20200312-064740
+> base: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+
+Hm, I think I have doubts about the validity of a test that sees a 15%
+improvement in SysV msg ops after a change in the NFS client code :-)
+
+- Frank
