@@ -2,53 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5673191335
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 15:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5749D191344
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2020 15:34:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCXO3D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Mar 2020 10:29:03 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:60030 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727382AbgCXO3D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Mar 2020 10:29:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TtX8sph_1585060130;
-Received: from Macintosh.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TtX8sph_1585060130)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 24 Mar 2020 22:28:50 +0800
-Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
+        id S1726988AbgCXOd4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Mar 2020 10:33:56 -0400
+Received: from fieldses.org ([173.255.197.46]:53156 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726802AbgCXOd4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:33:56 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 34B18201A; Tue, 24 Mar 2020 10:33:56 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 10:33:56 -0400
+From:   Bruce Fields <bfields@fieldses.org>
 To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        NeilBrown <neilb@suse.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Yihao Wu <wuyihao@linux.alibaba.com>
+Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
+Message-ID: <20200324143356.GA11065@fieldses.org>
 References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
- <91F74983-D681-4CD3-92FF-8CDB8DB7CD8D@oracle.com>
-From:   Yihao Wu <wuyihao@linux.alibaba.com>
-Message-ID: <709608a5-24e6-d279-ef3a-ff9ab7538f88@linux.alibaba.com>
-Date:   Tue, 24 Mar 2020 22:28:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+ <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <91F74983-D681-4CD3-92FF-8CDB8DB7CD8D@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020/3/24 10:18 PM, Chuck Lever wrote:
->> Fixes: 471a930ad7d1(SUNRPC: Drop all entries from cache_detail when cache_purge())
->> Cc: stable@vger.kernel.org #v4.11+
-> Yihao, I couldn't get this patch to apply to kernels before v5.0.
-> 
-> I don't think we need both a Fixes tag and a Cc: stable, because
-> stable maintainers will try to apply this patch to any kernel that
-> has 471a930, and ignore the failures.
-> 
-> So if I apply your fix, I'm going to drop the Cc: stable tag.
-> 
-> 
+On Tue, Mar 24, 2020 at 09:38:55AM -0400, Chuck Lever wrote:
+> Mechanically this looks OK, but I would feel more comfortable
+> if a domain expert could review this. Neil, Trond, Bruce?
 
-OK. And thanks for reviewing and reminding me this, Chuck.
+Looks right to me.
 
-Yihao Wu
+Reviewed-by: J. Bruce Fields <bfields@redhat.com>
+
+--b.
