@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA486191DB9
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 00:49:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB576191DBB
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 00:49:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgCXXtr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1727163AbgCXXtr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 24 Mar 2020 19:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbgCXXtq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:49:46 -0400
+        id S1727176AbgCXXtr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:49:47 -0400
 Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net [68.40.189.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05902073E
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2020 23:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E89E2076A
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2020 23:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1585093786;
-        bh=+SFShDxnoX+gVXJT4uPxAaGlDjkIaMd8lZ0ElJY57m0=;
+        bh=xt+b6i6Dbj54XKSB1pNam2L2unBJ6u/n1S6L5zmv1Rw=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=OpBHSN/kZ5Bg4wZo6mCV6f9AWK2PoBru3RYU/unOgi0FeH50KabqqE/7ZqikPMAJg
-         e/6phyKn1ggSUBVGN4orlM5Ijv5lGdCae92LCWE8sRmi+aOd5bVWlicLVF5+OBM2Qm
-         m9PXE8HlFSXMIqrY6lpXVzuP3KsopDlN1+hBAbdM=
+        b=LbdEaGSOAIbmMAW1rFSxMTwDSjD6zH7p7s5eq6AL5BGIzNG7eKH/YH4tffLxGYJ5a
+         HrwqRqFgUQaA0b5oAlYqeLvq50W/pq66dInzQ4ajyKQ8ESrRqC61278IsohP01EqG9
+         pdj67aVohg193jXsPyxq+882Y3sd5PC3F6QrP7Sw=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 18/22] NFS/pNFS: Fix pnfs_layout_mark_request_commit() invalid layout segment handling
-Date:   Tue, 24 Mar 2020 19:47:24 -0400
-Message-Id: <20200324234728.8997-19-trondmy@kernel.org>
+Subject: [PATCH 19/22] pNFS/flexfile: Don't merge layout segments if the mirrors don't match
+Date:   Tue, 24 Mar 2020 19:47:25 -0400
+Message-Id: <20200324234728.8997-20-trondmy@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324234728.8997-18-trondmy@kernel.org>
+In-Reply-To: <20200324234728.8997-19-trondmy@kernel.org>
 References: <20200324234728.8997-1-trondmy@kernel.org>
  <20200324234728.8997-2-trondmy@kernel.org>
  <20200324234728.8997-3-trondmy@kernel.org>
@@ -48,6 +48,7 @@ References: <20200324234728.8997-1-trondmy@kernel.org>
  <20200324234728.8997-16-trondmy@kernel.org>
  <20200324234728.8997-17-trondmy@kernel.org>
  <20200324234728.8997-18-trondmy@kernel.org>
+ <20200324234728.8997-19-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -57,57 +58,51 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Fix up pnfs_layout_mark_request_commit() to alway reschedule the write
-if the layout segment is invalid. Also minor cleanup.
+Check that the number of mirrors, and the mirror information matches
+before deciding to merge layout segments in pNFS/flexfiles.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/pnfs_nfs.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index abf16fc98346..25f135572fc8 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -1166,26 +1166,22 @@ pnfs_layout_mark_request_commit(struct nfs_page *req,
- {
- 	struct list_head *list;
- 	struct pnfs_commit_array *array;
--	struct pnfs_commit_bucket *buckets;
-+	struct pnfs_commit_bucket *bucket;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index cdd0c87b03dc..3cc2d3165a11 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -283,6 +283,23 @@ static void _ff_layout_free_lseg(struct nfs4_ff_layout_segment *fls)
+ 	}
+ }
  
- 	mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
- 	array = pnfs_lookup_commit_array(cinfo->ds, lseg);
--	if (!array)
-+	if (!array || !pnfs_is_valid_lseg(lseg))
- 		goto out_resched;
--	buckets = array->buckets;
--	list = &buckets[ds_commit_idx].written;
--	if (list_empty(list)) {
--		if (!pnfs_is_valid_lseg(lseg))
--			goto out_resched;
--		/* Non-empty buckets hold a reference on the lseg.  That ref
--		 * is normally transferred to the COMMIT call and released
--		 * there.  It could also be released if the last req is pulled
--		 * off due to a rewrite, in which case it will be done in
--		 * pnfs_common_clear_request_commit
--		 */
--		if (!buckets[ds_commit_idx].lseg)
--			buckets[ds_commit_idx].lseg = pnfs_get_lseg(lseg);
--	}
-+	bucket = &array->buckets[ds_commit_idx];
-+	list = &bucket->written;
-+	/* Non-empty buckets hold a reference on the lseg.  That ref
-+	 * is normally transferred to the COMMIT call and released
-+	 * there.  It could also be released if the last req is pulled
-+	 * off due to a rewrite, in which case it will be done in
-+	 * pnfs_common_clear_request_commit
-+	 */
-+	if (!bucket->lseg)
-+		bucket->lseg = pnfs_get_lseg(lseg);
- 	set_bit(PG_COMMIT_TO_DS, &req->wb_flags);
- 	cinfo->ds->nwritten++;
++static bool
++ff_lseg_match_mirrors(struct pnfs_layout_segment *l1,
++		struct pnfs_layout_segment *l2)
++{
++	const struct nfs4_ff_layout_segment *fl1 = FF_LAYOUT_LSEG(l1);
++	const struct nfs4_ff_layout_segment *fl2 = FF_LAYOUT_LSEG(l1);
++	u32 i;
++
++	if (fl1->mirror_array_cnt != fl2->mirror_array_cnt)
++		return false;
++	for (i = 0; i < fl1->mirror_array_cnt; i++) {
++		if (fl1->mirror_array[i] != fl2->mirror_array[i])
++			return false;
++	}
++	return true;
++}
++
+ static bool
+ ff_lseg_range_is_after(const struct pnfs_layout_range *l1,
+ 		const struct pnfs_layout_range *l2)
+@@ -318,6 +335,8 @@ ff_lseg_merge(struct pnfs_layout_segment *new,
+ 			new->pls_range.length);
+ 	if (new_end < old->pls_range.offset)
+ 		return false;
++	if (!ff_lseg_match_mirrors(new, old))
++		return false;
  
+ 	/* Mergeable: copy info from 'old' to 'new' */
+ 	if (new_end < old_end)
 -- 
 2.25.1
 
