@@ -2,220 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B03D9191D3E
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 00:07:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E043191DAB
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 00:49:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgCXXH0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Mar 2020 19:07:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48196 "EHLO mx2.suse.de"
+        id S1727067AbgCXXtj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Mar 2020 19:49:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgCXXHZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:07:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 42D77AD48;
-        Tue, 24 Mar 2020 23:07:23 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Yihao Wu <wuyihao@linux.alibaba.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Date:   Wed, 25 Mar 2020 10:07:14 +1100
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
-In-Reply-To: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
-References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
-Message-ID: <87369x8i8t.fsf@notabene.neil.brown.name>
+        id S1726212AbgCXXtj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:49:39 -0400
+Received: from localhost.localdomain (c-68-40-189-247.hsd1.mi.comcast.net [68.40.189.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 893F920719
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2020 23:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585093777;
+        bh=ktZKbgMD2CA22QiFwNaUDNUOSXgoTHb3bZLLYwUQFSw=;
+        h=From:To:Subject:Date:From;
+        b=uI3rMCYqnGeiO93G4ht/Qv/qK8+bm4D4trU0kJ1J1yAA6JqdmkBYLR7J6SD39A0Xo
+         O2mKvKSxarOhzmCC2L94P1qDv6pazLNxZKZw5ohLU9Oit1A38MCLMRx8AdVreweRkl
+         asWURq1RIcQpS5KKrtO6tSUy5uOV6NKWC8NRPJEw=
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 00/22] Fix NFS commit to DS
+Date:   Tue, 24 Mar 2020 19:47:06 -0400
+Message-Id: <20200324234728.8997-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-On Tue, Mar 24 2020, Yihao Wu wrote:
+The commit to DS code is currently broken in the face of layout
+segments that do not cover the full file case. In particular, if
+the layout is a flexfile mirrored layout, we see that if two layout
+segments have differing numbers of mirrors, or just have different
+ordering of mirrors, then the current code can lead to data
+corruption and even kernel Oopses on the client.
 
-> cache_purge should hold cache_list_lock as cache_clean does. Otherwise a =
-cache
-> can be cache_put twice, which leads to a use-after-free bug.
->
-> To reproduce, run ltp. It happens rarely.  /opt/ltp/runltp run -f net.nfs
->
-> [14454.137661] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [14454.138863] BUG: KASAN: use-after-free in cache_purge+0xce/0x160 [sunr=
-pc]
-> [14454.139822] Read of size 4 at addr ffff8883d484d560 by task nfsd/31993
-> [14454.140746]
-> [14454.140995] CPU: 1 PID: 31993 Comm: nfsd Kdump: loaded Not tainted 4.1=
-9.91-0.229.git.87bac30.al7.x86_64.debug #1
-> [14454.141002] Call Trace:
-> [14454.141014] =C2=A0dump_stack+0xaf/0xfb[14454.141027] =C2=A0print_addre=
-ss_description+0x6a/0x2a0
-> [14454.141037] =C2=A0kasan_report+0x166/0x2b0[14454.141057] =C2=A0? cache=
-_purge+0xce/0x160 [sunrpc]
-> [14454.141079] =C2=A0cache_purge+0xce/0x160 [sunrpc]
-> [14454.141099] =C2=A0nfsd_last_thread+0x267/0x270 [nfsd][14454.141109] =
-=C2=A0? nfsd_last_thread+0x5/0x270 [nfsd]
-> [14454.141130] =C2=A0nfsd_destroy+0xcb/0x180 [nfsd]
-> [14454.141140] =C2=A0? nfsd_destroy+0x5/0x180 [nfsd]
-> [14454.141153] =C2=A0nfsd+0x1e4/0x2b0 [nfsd]
-> [14454.141163] =C2=A0? nfsd+0x5/0x2b0 [nfsd]
-> [14454.141173] =C2=A0kthread+0x114/0x150
-> [14454.141183] =C2=A0? nfsd_destroy+0x180/0x180 [nfsd]
-> [14454.141187] =C2=A0? kthread_park+0xb0/0xb0
-> [14454.141197] =C2=A0ret_from_fork+0x3a/0x50
-> [14454.141224]
-> [14454.141475] Allocated by task 20918:
-> [14454.142011] =C2=A0kmem_cache_alloc_trace+0x9f/0x2e0
-> [14454.142027] =C2=A0sunrpc_cache_lookup+0xca/0x2f0 [sunrpc]
-> [14454.142037] =C2=A0svc_export_parse+0x1e7/0x930 [nfsd]
-> [14454.142051] =C2=A0cache_do_downcall+0x5a/0x80 [sunrpc]
-> [14454.142064] =C2=A0cache_downcall+0x78/0x180 [sunrpc]
-> [14454.142078] =C2=A0cache_write_procfs+0x57/0x80 [sunrpc]
-> [14454.142083] =C2=A0proc_reg_write+0x90/0xd0
-> [14454.142088] =C2=A0vfs_write+0xc2/0x1c0
-> [14454.142092] =C2=A0ksys_write+0x4d/0xd0
-> [14454.142098] =C2=A0do_syscall_64+0x60/0x250
-> [14454.142103] =C2=A0entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [14454.142106]
-> [14454.142344] Freed by task 19165:
-> [14454.142804] =C2=A0kfree+0x114/0x300
-> [14454.142819] =C2=A0cache_clean+0x2a4/0x2e0 [sunrpc]
-> [14454.142833] =C2=A0cache_flush+0x24/0x60 [sunrpc]
-> [14454.142845] =C2=A0write_flush.isra.19+0xbe/0x100 [sunrpc]
-> [14454.142849] =C2=A0proc_reg_write+0x90/0xd0
-> [14454.142853] =C2=A0vfs_write+0xc2/0x1c0
-> [14454.142856] =C2=A0ksys_write+0x4d/0xd0
-> [14454.142860] =C2=A0do_syscall_64+0x60/0x250
-> [14454.142865] =C2=A0entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [14454.142867]
-> [14454.143095] The buggy address belongs to the object at ffff8883d484d54=
-0 which belongs to the cache kmalloc-256 of size 256
-> [14454.144842] The buggy address is located 32 bytes inside of =C2=A0256-=
-byte region [ffff8883d484d540, ffff8883d484d640)
-> [14454.146463] The buggy address belongs to the page:
-> [14454.147155] page:ffffea000f521300 count:1 mapcount:0 mapping:ffff88810=
-7c02e00 index:0xffff8883d484da40 compound_map count: 0
-> [14454.148712] flags: 0x17fffc00010200(slab|head)
-> [14454.149356] raw: 0017fffc00010200 ffffea000f4baf00 0000000200000002 ff=
-ff888107c02e00
-> [14454.150453] raw: ffff8883d484da40 0000000080190001 00000001ffffffff 00=
-00000000000000
-> [14454.151557] page dumped because: kasan: bad access detected
-> [14454.152364]
-> [14454.152606] Memory state around the buggy address:
-> [14454.153300] =C2=A0ffff8883d484d400: fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb fb
-> [14454.154319] =C2=A0ffff8883d484d480: fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb fb
-> [14454.155324] >ffff8883d484d500: fc fc fc fc fc fc fc fc fb fb fb fb fb =
-fb fb fb
-> [14454.156334] =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0^
-> [14454.157237] =C2=A0ffff8883d484d580: fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb fb
-> [14454.158262] =C2=A0ffff8883d484d600: fb fb fb fb fb fb fb fb fc fc fc f=
-c fc fc fc fc
-> [14454.159282] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [14454.160224] Disabling lock debugging due to kernel taint
->
-> Fixes: 471a930ad7d1(SUNRPC: Drop all entries from cache_detail when cache=
-_purge())
-> Cc: stable@vger.kernel.org #v4.11+
-> Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-> ---
->  net/sunrpc/cache.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> index bd843a81afa0..3e523eefc47f 100644
-> --- a/net/sunrpc/cache.c
-> +++ b/net/sunrpc/cache.c
-> @@ -524,9 +524,11 @@ void cache_purge(struct cache_detail *detail)
->  	struct hlist_node *tmp =3D NULL;
->  	int i =3D 0;
->=20=20
-> +	spin_lock(&cache_list_lock);
->  	spin_lock(&detail->hash_lock);
->  	if (!detail->entries) {
->  		spin_unlock(&detail->hash_lock);
-> +		spin_unlock(&cache_list_lock);
->  		return;
->  	}
->=20=20
-> @@ -541,6 +543,7 @@ void cache_purge(struct cache_detail *detail)
->  		}
->  	}
->  	spin_unlock(&detail->hash_lock);
-> +	spin_unlock(&cache_list_lock);
->  }
->  EXPORT_SYMBOL_GPL(cache_purge);
->=20=20
-> --=20
-> 2.20.1.2432.ga663e714
+The root cause of these problems is the fact that we have one
+array of commit lists per struct pnfs_ds_commit_info, and
+that once that array is set up, it cannot change. This despite
+the fact that layout segments can be recalled and changed on
+the fly.
+This patch set attempts to fix that problem by changing the
+array of commit lists into a list of lists. It does so in
+a way that ensures 1-1 correspondence between a layout
+segment and a set of commits for the case of buffered writes,
+and a similar setup for a collection of O_DIRECT writes.
 
-I wonder if this is the best solution.
-This code:
+Since most of this work is acting on code that is currently
+common to both the files layout and the flexfiles layout, I've
+fixed up both layout types in the same way.
 
-		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
-			sunrpc_begin_cache_remove_entry(ch, detail);
-			spin_unlock(&detail->hash_lock);
-			sunrpc_end_cache_remove_entry(ch, detail);
-			spin_lock(&detail->hash_lock);
-		}
+Trond Myklebust (22):
+  pNFS/flexfiles: Simplify allocation of the mirror array
+  NFS/pNFS: Refactor pnfs_generic_commit_pagelist()
+  pNFS: Add a helper to allocate the array of buckets
+  NFSv4/pnfs: Support a list of commit arrays in struct
+    pnfs_ds_commit_info
+  NFSv4/pNFS: Scan the full list of commit arrays when committing
+  pNFS: Support per-layout segment commits in
+    pnfs_generic_recover_commit_reqs()
+  pNFS: Support per-layout segment commits in
+    pnfs_generic_commit_pagelist()
+  NFS/pNFS: Allow O_DIRECT to release the DS commitinfo
+  NFS: commit errors should be fatal
+  NFS: Fix O_DIRECT commit verifier handling
+  NFS/pNFS: Support commit arrays in
+    nfs_clear_pnfs_ds_commit_verifiers()
+  pNFS: Add infrastructure for cleaning up per-layout commit structures
+  pNFS: Enable per-layout segment commit structures
+  NFS/pNFS: Add a helper pnfs_generic_search_commit_reqs()
+  NFS: Remove bucket array from struct pnfs_ds_commit_info
+  NFS/pNFS: Clean up pNFS commit operations
+  NFS/pNFS: Simplify bucket layout segment reference counting
+  NFS/pNFS: Fix pnfs_layout_mark_request_commit() invalid layout segment
+    handling
+  pNFS/flexfile: Don't merge layout segments if the mirrors don't match
+  pNFS/flexfiles: Check the layout segment range before doing I/O
+  pNFS/flexfiles: remove requirement for whole file layouts
+  pNFS/flexfiles: Specify the layout segment range in LAYOUTGET
 
-Looks wrong.
-Dropping a lock while walking a list if only safe if you hold a
-reference to the place-holder - 'tmp' in this case.  but we don't.
-As this is trying to remove everything in the list it would be safer to
-do something like
+ fs/nfs/direct.c                        | 174 +++------
+ fs/nfs/filelayout/filelayout.c         | 163 +++-----
+ fs/nfs/flexfilelayout/flexfilelayout.c | 203 ++++------
+ fs/nfs/flexfilelayout/flexfilelayout.h |   2 +-
+ fs/nfs/internal.h                      |  26 +-
+ fs/nfs/pnfs.c                          |   4 +-
+ fs/nfs/pnfs.h                          | 127 ++++--
+ fs/nfs/pnfs_nfs.c                      | 514 ++++++++++++++++++-------
+ fs/nfs/write.c                         |  16 +-
+ include/linux/nfs_xdr.h                |  32 +-
+ 10 files changed, 699 insertions(+), 562 deletions(-)
 
- while (!hlist_empty(head)) {
- 	ch =3D hlist_entry(head->first, struct cache_head, h);
-	sunrpc_begin_cache_remove_entry(ch, detail);
-	spin_unlock(&detail->hash_lock);
-	sunrpc_end_cache_remove_entry(ch, detail);
-	spin_lock(&detail->hash_lock);
- }
+-- 
+2.25.1
 
-I'm guessing that would fix the problem in a more focused.
-But I'm not 100% sure because there is no analysis given of the cause.
-What line is
-  cache_purge+0xce/0x160
-./scripts/faddr2line can tell you.
-I suspect it is the hlist_for_each_entry_safe() line.
-
-Can you test the change I suggest and see if it helps?
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl56kqMACgkQOeye3VZi
-gbnmSg/+I9dkp/1NVaF72s7lhT++FHxtNJuQgA8N03mFoHoDN43W/KeLxsmwDH1R
-bgFBki6nKSRIrIVXY15fv2HtC8ThReWTnCBviQJnZp5qFFJNZwyC3HW0gKzVJ2Lg
-cqNxy/ReuOH+zLOwXCXJiQMr4axEB7cwvwovzWhJZ85s4PiWr+v1x2v4ZX2vq0h3
-1FXTbLAwoXOjms0pii9kH/+GKk8P4SYWsDh2fnsC0WTYZoaktQZhOzD2OR7iRVgS
-KLPwlMKxRxarIzFFPn8sJqFbemBNl3aAWbLaqQSnjLneZLFLbE7r8MxZIHZFkFSO
-jPLmI9cvL3ggV0hhWl0O7biRjh4FIyCyUsLNyz/KkXYbeKIfrqhZRJ6gKttwnb2t
-d2V7ktN06a3eOG6q45k3UUxA6p5ZPCy1h9m82cX1kwWpX3RqMEF2t55gkrLRMxQJ
-qda7NVIezkraRK1pFtQqVrRTm3bmPuDEvI0opVT0uu+Olc/zclR4D85h1UdfN5VY
-tdwb83g8Z+ePtDJ2r7E71znxTavpRYzQ7oSXa+dGzFFDdpciJt9UuBD8DtTR2rqN
-txLXJ3LRe3vRzJuD4/PKBTiVpnUzRq9ao0BZ/LGsQczvquDC+mOO7bOdbAKzYsib
-C69RrW3Z5LNp/xaCNwjfeuFI6yMi2UysCaKrngiOeB2oQv7r1qU=
-=kZp0
------END PGP SIGNATURE-----
---=-=-=--
