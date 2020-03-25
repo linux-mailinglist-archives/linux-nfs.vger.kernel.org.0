@@ -2,253 +2,334 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D706519330E
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 22:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE09193320
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 22:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbgCYVwQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 17:52:16 -0400
-Received: from mail-mw2nam12on2135.outbound.protection.outlook.com ([40.107.244.135]:15329
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726081AbgCYVwP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:52:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EOon0LwL2RRcvljwRCi3fuz2SbnUoPyPI9BUMjWapXBlxa9b0vQVQmtQCkpgQijOUdXK731IfL/eds920j6FqjAyIjPqf/9N+gXfIY6dqAwcTFawMpDoKXrLrzaA23gG592ckjFD2WSNmTqKKzw7GYPy2bYxPieyJ9fGnlQUZfDnrOfzKfTZsVnxbNbFoMOw33DDjmSIDfhWvEdARI68NUo3ZP25xklTxpND0sPOduUIaw/GQf0gueSSoQmY8IBoA6YYsN1hf/EztDTSVF7+BmzNtzt1a/qQjGFfnNmxyG/Iz/R+8gFMSmyHKPKqsWwdLVCTX+C5sX4td5oWBQuaWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AqIovq3Nksfv8w2lSWX2uN5g/P438t3andglmhyLPnk=;
- b=H5lOk65E+zB6q9SrfAp8fJw3F3rwSaZfwnrI8CBsTLvXDqdCNKHr72+tAcwXKejuM71YJ0Nob9lK12uxLBlqOFVdZnSUgYH4k4tEiX7Q4hRyy8dbPI2Z1q5D6ssC6rWlsVapA9ukwag5iKvve6dlIVaSpT7T5/iqwJvKWf8vs+bZzrGzOvQ1nIf1xR7pNh295LVmMD8wGQ7NZkACwoUT/Qki9pMDzu492ZrPKAVTZOqpGCtD0eM7SW6MD6Tk8qJOLrNCIDodaXkjLZYY91Y9SmdEDVN/XFNWr90qDPnP0tH6jUVWYg+3SMNDK5j0oY6rMSZSYLjsbKgsfDvkah1zjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AqIovq3Nksfv8w2lSWX2uN5g/P438t3andglmhyLPnk=;
- b=GtO5hatFef7GUIb9E6e9yHAHnk5gSnUqxt4Hw9isPcCvthU84oDzZwmeGHoty6mVte0ubVKsiIiFy87i4qFW2w8Fe5aEDHSoe8O26Qfl0KGnNIg9EylBvUshYKywv3ORgQD+xAYoKAOG3dErh9wtcH+LlO/CFNICWY7VOvIv910=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3782.namprd13.prod.outlook.com (2603:10b6:610:a0::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.8; Wed, 25 Mar
- 2020 21:52:10 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36%7]) with mapi id 15.20.2856.019; Wed, 25 Mar 2020
- 21:52:10 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
+        id S1727356AbgCYVzj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 17:55:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54782 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbgCYVzj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 17:55:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PLrEYM185339;
+        Wed, 25 Mar 2020 21:55:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=MHIFLaqehNEzj2aaBi1COtgXhNQ6QwQXQLUeqcUoHrU=;
+ b=dDFBncZQ6a1fQcRp62M1ddyVn96jLb2zXxhV7+oC46Vp7zOD5TB4D0Ym77R70pot7nIO
+ Cf+zp9hjbsbmZvfDVjBMfOtNd44S1NwhW+OUCVjpkh8VeL3k8Tqc9ou1JR/ZRFdFBsXs
+ UnRkPmiBGqAsvuk9IgQnCsx9At8L4ExLGIzUaxnOA8sZgeVeN4jiE5ivqMCcfXlE2/Yg
+ xXrDO4Vqtb6r/N7uWUaORHuvyzCHtrDKNgYYwOiLtyI49wG4kdcNDXbXGZADJK0qC/9O
+ VMkJY4Wz21yhHzWmWG/wjllXcOkVBx5a+To2i44ngldvmmElroAZW64IK2/wb2+rHr1D wQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ywabrcc3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 21:55:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PLqUOr002356;
+        Wed, 25 Mar 2020 21:55:34 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2yxw4sabtq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 21:55:33 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PLtWQk025398;
+        Wed, 25 Mar 2020 21:55:32 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Mar 2020 14:55:32 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: [PATCH 1/1] SUNRPC: fix krb5p mount to provide large enough
  buffer in rq_rcvsize
-Thread-Topic: [PATCH 1/1] SUNRPC: fix krb5p mount to provide large enough
- buffer in rq_rcvsize
-Thread-Index: AQHWAuib/DUW2k1KwEu/cfvyQqany6hZ1C2AgAAC74CAAAJWgA==
-Date:   Wed, 25 Mar 2020 21:52:10 +0000
-Message-ID: <95dfed7d00d8d0d02a0705e8c1ceeb961456a554.camel@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <95dfed7d00d8d0d02a0705e8c1ceeb961456a554.camel@hammerspace.com>
+Date:   Wed, 25 Mar 2020 17:55:31 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0D3443FF-0170-40E2-B3A5-54B486B88023@oracle.com>
 References: <20200325210136.2826-1-olga.kornievskaia@gmail.com>
-         <7363e7b550dc5adad3f00fb84d9586764b8ec4fb.camel@hammerspace.com>
-         <8A8EC7E8-9EB6-49DA-8393-241B4977E67E@oracle.com>
-In-Reply-To: <8A8EC7E8-9EB6-49DA-8393-241B4977E67E@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 115c0fa2-0eb1-4b8b-226f-08d7d106c56f
-x-ms-traffictypediagnostic: CH2PR13MB3782:
-x-microsoft-antispam-prvs: <CH2PR13MB3782B450E8842274580ED216B8CE0@CH2PR13MB3782.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(346002)(366004)(396003)(376002)(136003)(81156014)(5660300002)(6916009)(8936002)(4326008)(71200400001)(186003)(54906003)(66446008)(64756008)(26005)(316002)(2906002)(8676002)(6512007)(81166006)(36756003)(2616005)(478600001)(86362001)(91956017)(66556008)(6486002)(66946007)(76116006)(66476007)(6506007)(53546011)(42413003)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR13MB3782;H:CH2PR13MB3398.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8e/cnp/1TbKwZQk6gU28vdvz5Y4P97VfQpQhRaWxhiH4cz6E/DlYPqpSYivRLn7pR7lOZvV7jpsnBQZL72wFD/QGL+q5F7dNPQNnJWasDtZQQ/Kg5Z5xHlY7SVDwFDcARmEThoo5KfenvpjeuX50WhKTmhSF2cSXqnfw9L3yG2vq6ukJi2Eql5Q8axlANiQG14k0hY0fN85qXsGOwjvjvHCNrf9F/hJIlzPj2Edzwq5at6y/KO56jbTysuDFgDXUPhUdEGA1METAtZWAB8ZsMUVHcej6yuyBB4sqfBUF7NlY39G8aJFETt/bCERQXAQzkrSZcVz26eW1l12ch1kauV2dQ+2DccHstnkIqb7r5eFiDaFlpon7ZFCzodkzZQm8mAhu7IsFXl21QJF/0VBjrs5Xa77DG51bVCSVy8XOtovNQoghc0YeqBYPw6bzS1ir4Pb1b0dKcOGiiSRgBZZ62BBTsUaR17qQb2fpFUVtQpiyh+aXcI05xQUavSQ5viiSMXi65MnAizeRxlawUHdldQ==
-x-ms-exchange-antispam-messagedata: LugBLwBvLHnrJyf+HLJ+Wvpo9eqCqrxTXzYf9WoXuGeksLyDKLamXdihmCBZxH6v7yGAACES26j9F/gUaG+63wVP5tkHcqjLXM0AngFOTJJ0pyazlpibB37uWl8+W95o0eurBnzznRtIRgKW/vgzKA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BCFA0C1DB6F07841A7FB2915AD66AF60@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 115c0fa2-0eb1-4b8b-226f-08d7d106c56f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 21:52:10.7938
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wNQJB04zNMERXIro/9OD1Jzddy1FKVRuz/VaAGzfj2IbTzl3uidmBqag8zLk6bfmgvFJiSXcvgmibOQaWK9rfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3782
+ <7363e7b550dc5adad3f00fb84d9586764b8ec4fb.camel@hammerspace.com>
+ <8A8EC7E8-9EB6-49DA-8393-241B4977E67E@oracle.com>
+ <95dfed7d00d8d0d02a0705e8c1ceeb961456a554.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003250167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003250167
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAzLTI1IGF0IDE3OjQzIC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-PiBPbiBNYXIgMjUsIDIwMjAsIGF0IDU6MzMgUE0sIFRyb25kIE15a2xlYnVzdCA8DQo+ID4gdHJv
-bmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEhpIE9sZ2EsDQo+ID4gDQo+
-ID4gT24gV2VkLCAyMDIwLTAzLTI1IGF0IDE3OjAxIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3
-cm90ZToNCj4gPiA+IEZyb206IE9sZ2EgS29ybmlldnNrYWlhIDxrb2xnYUBuZXRhcHAuY29tPg0K
-PiA+ID4gDQo+ID4gPiBFdmVyIHNpbmNlIGNvbW1pdCAyYzk0YjhlY2ExYTIgKCJTVU5SUEM6IFVz
-ZSBhdV9yc2xhY2sgd2hlbg0KPiA+ID4gY29tcHV0aW5nDQo+ID4gPiByZXBseSBidWZmZXIgc2l6
-ZSIpLiBJdCBjaGFuZ2VkIGhvdyAicmVxLT5ycV9yY3ZzaXplIiBpcw0KPiA+ID4gY2FsY3VsYXRl
-ZC4NCj4gPiA+IEl0DQo+ID4gPiB1c2VkIHRvIHVzZSBhdV9jc2xhY2sgdmFsdWUgd2hpY2ggd2Fz
-IG5pY2UgYW5kIGxhcmdlIGFuZCBjaGFuZ2VkDQo+ID4gPiBpdA0KPiA+ID4gdG8NCj4gPiA+IGF1
-X3JzbGFjayB2YWx1ZSB3aGljaCB0dXJucyBvdXQgdG8gYmUgdG9vIHNtYWxsLg0KPiA+ID4gDQo+
-ID4gPiBTaW5jZSA1LjEsIHYzIG1vdW50IHdpdGggc2VjPWtyYjVwIGZhaWxzIGFnYWluc3QgYW4g
-T250YXAgc2VydmVyDQo+ID4gPiBiZWNhdXNlIGNsaWVudCdzIHJlY2VpdmUgYnVmZmVyIGl0IHRv
-byBzbWFsbC4NCj4gPiA+IA0KPiA+ID4gRm9yIGdzcyBrcmI1cCwgd2UgbmVlZCB0byBhY2NvdW50
-IGZvciB0aGUgbWljIHRva2VuIGluIHRoZQ0KPiA+ID4gdmVyaWZpZXIsDQo+ID4gPiBhbmQgdGhl
-IHdyYXAgdG9rZW4gaW4gdGhlIHdyYXAgdG9rZW4uDQo+ID4gPiANCj4gPiA+IFJGQyA0MTIxIGRl
-ZmluZXM6DQo+ID4gPiBtaWMgdG9rZW4NCj4gPiA+IE9jdGV0IG5vICAgTmFtZSAgICAgICAgRGVz
-Y3JpcHRpb24NCj4gPiA+ICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiAtDQo+ID4gPiAtLS0tDQo+ID4gPiAgICAg
-ICAgIDAuLjEgICAgIFRPS19JRCAgICAgSWRlbnRpZmljYXRpb24gZmllbGQuICBUb2tlbnMgZW1p
-dHRlZA0KPiA+ID4gYnkNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHU1NfR2V0
-TUlDKCkgY29udGFpbiB0aGUgaGV4IHZhbHVlIDA0DQo+ID4gPiAwNA0KPiA+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGV4cHJlc3NlZCBpbiBiaWctZW5kaWFuIG9yZGVyIGluIHRoaXMN
-Cj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWVsZC4NCj4gPiA+ICAgICAgICAg
-MiAgICAgICAgRmxhZ3MgICAgICBBdHRyaWJ1dGVzIGZpZWxkLCBhcyBkZXNjcmliZWQgaW4NCj4g
-PiA+IHNlY3Rpb24NCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0LjIuMi4NCj4g
-PiA+ICAgICAgICAgMy4uNyAgICAgRmlsbGVyICAgICBDb250YWlucyBmaXZlIG9jdGV0cyBvZiBo
-ZXggdmFsdWUgRkYuDQo+ID4gPiAgICAgICAgIDguLjE1ICAgIFNORF9TRVEgICAgU2VxdWVuY2Ug
-bnVtYmVyIGZpZWxkIGluIGNsZWFyIHRleHQsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgZXhwcmVzc2VkIGluIGJpZy1lbmRpYW4gb3JkZXIuDQo+ID4gPiAgICAgICAgIDE2Li5s
-YXN0IFNHTl9DS1NVTSAgQ2hlY2tzdW0gb2YgdGhlICJ0by1iZS1zaWduZWQiIGRhdGENCj4gPiA+
-IGFuZA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9jdGV0IDAuLjE1LCBhcyBk
-ZXNjcmliZWQgaW4gc2VjdGlvbg0KPiA+ID4gNC4yLjQuDQo+ID4gPiANCj4gPiA+IHRoYXQncyAx
-NmJ5dGVzIChHU1NfS1JCNV9UT0tfSERSX0xFTikgKyBjaGtzdW0NCj4gPiA+IA0KPiA+ID4gd3Jh
-cCB0b2tlbg0KPiA+ID4gT2N0ZXQgbm8gICBOYW1lICAgICAgICBEZXNjcmlwdGlvbg0KPiA+ID4g
-ICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0NCj4gPiA+IC0NCj4gPiA+IC0tLS0NCj4gPiA+ICAgICAgICAgIDAuLjEgICAgIFRP
-S19JRCAgICBJZGVudGlmaWNhdGlvbiBmaWVsZC4gIFRva2VucyBlbWl0dGVkDQo+ID4gPiBieQ0K
-PiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdTU19XcmFwKCkgY29udGFpbiB0aGUg
-aGV4IHZhbHVlIDA1DQo+ID4gPiAwNA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGV4cHJlc3NlZCBpbiBiaWctZW5kaWFuIG9yZGVyIGluIHRoaXMNCj4gPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBmaWVsZC4NCj4gPiA+ICAgICAgICAgIDIgICAgICAgIEZsYWdzICAg
-ICBBdHRyaWJ1dGVzIGZpZWxkLCBhcyBkZXNjcmliZWQgaW4NCj4gPiA+IHNlY3Rpb24NCj4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0LjIuMi4NCj4gPiA+ICAgICAgICAgIDMgICAg
-ICAgIEZpbGxlciAgICBDb250YWlucyB0aGUgaGV4IHZhbHVlIEZGLg0KPiA+ID4gICAgICAgICAg
-NC4uNSAgICAgRUMgICAgICAgIENvbnRhaW5zIHRoZSAiZXh0cmEgY291bnQiIGZpZWxkLCBpbg0K
-PiA+ID4gYmlnLQ0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuZGlhbiBvcmRl
-ciBhcyBkZXNjcmliZWQgaW4gc2VjdGlvbg0KPiA+ID4gNC4yLjMuDQo+ID4gPiAgICAgICAgICA2
-Li43ICAgICBSUkMgICAgICAgQ29udGFpbnMgdGhlICJyaWdodCByb3RhdGlvbiBjb3VudCINCj4g
-PiA+IGluDQo+ID4gPiBiaWctDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW5k
-aWFuIG9yZGVyLCBhcyBkZXNjcmliZWQgaW4gc2VjdGlvbg0KPiA+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDQuMi41Lg0KPiA+ID4gICAgICAgICAgOC4uMTUgICAgU05EX1NFUSAgIFNl
-cXVlbmNlIG51bWJlciBmaWVsZCBpbiBjbGVhciB0ZXh0LA0KPiA+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGV4cHJlc3NlZCBpbiBiaWctZW5kaWFuIG9yZGVyLg0KPiA+ID4gICAgICAg
-ICAgMTYuLmxhc3QgRGF0YSAgICAgIEVuY3J5cHRlZCBkYXRhIGZvciBXcmFwIHRva2VucyB3aXRo
-DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZmlkZW50aWFsaXR5LCBvciBw
-bGFpbnRleHQgZGF0YQ0KPiA+ID4gZm9sbG93ZWQNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBieSB0aGUgY2hlY2tzdW0gZm9yIFdyYXAgdG9rZW5zDQo+ID4gPiB3aXRob3V0DQo+
-ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZmlkZW50aWFsaXR5LCBhcyBkZXNj
-cmliZWQgaW4NCj4gPiA+IHNlY3Rpb24NCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICA0LjIuNC4NCj4gPiA+IA0KPiA+ID4gQWxzbyAxNmJ5dGVzIG9mIGhlYWRlciAoR1NTX0tSQjVf
-VE9LX0hEUl9MRU4pLCBlbmNyeXB0ZWQgZGF0YSwNCj4gPiA+IGFuZA0KPiA+ID4gY2tzdW0NCj4g
-PiA+IChvdGhlciB0aGluZ3MgbGlrZSBwYWRkaW5nKQ0KPiA+ID4gDQo+ID4gPiBSRkMgMzk2MSBk
-ZWZpbmVzIGtub3duIGNrc3VtIHNpemVzOg0KPiA+ID4gQ2hlY2tzdW0NCj4gPiA+IHR5cGUgICAg
-ICAgICAgICAgIHN1bXR5cGUgICAgICAgIGNoZWNrc3VtICAgICAgICAgc2VjdGlvbiBvcg0KPiA+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlICAgICAgICAgICAgc2l6ZSAg
-ICAgICAgIHJlZmUNCj4gPiA+IHJlbg0KPiA+ID4gY2UNCj4gPiA+ICAgLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gLS0t
-DQo+ID4gPiAtLS0tLQ0KPiA+ID4gIA0KPiA+ID4gQ1JDMzIgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMSAgICAgICAgICAgICAgIDQgICAgICAgICAgIDYuMS4NCj4gPiA+IDMNCj4gPiA+ICAg
-cnNhLQ0KPiA+ID4gbWQ0ICAgICAgICAgICAgICAgICAgICAgICAgICAyICAgICAgICAgICAgICAx
-NiAgICAgICAgICAgNi4xLjINCj4gPiA+ICAgcnNhLW1kNC0NCj4gPiA+IGRlcyAgICAgICAgICAg
-ICAgICAgICAgICAzICAgICAgICAgICAgICAyNCAgICAgICAgICAgNi4yLjUNCj4gPiA+ICAgZGVz
-LQ0KPiA+ID4gbWFjICAgICAgICAgICAgICAgICAgICAgICAgICA0ICAgICAgICAgICAgICAxNiAg
-ICAgICAgICAgNi4yLjcNCj4gPiA+ICAgZGVzLW1hYy0NCj4gPiA+IGsgICAgICAgICAgICAgICAg
-ICAgICAgICA1ICAgICAgICAgICAgICAgOCAgICAgICAgICAgNi4yLjgNCj4gPiA+ICAgcnNhLW1k
-NC1kZXMtDQo+ID4gPiBrICAgICAgICAgICAgICAgICAgICA2ICAgICAgICAgICAgICAxNiAgICAg
-ICAgICAgNi4yLjYNCj4gPiA+ICAgcnNhLQ0KPiA+ID4gbWQ1ICAgICAgICAgICAgICAgICAgICAg
-ICAgICA3ICAgICAgICAgICAgICAxNiAgICAgICAgICAgNi4xLjENCj4gPiA+ICAgcnNhLW1kNS0N
-Cj4gPiA+IGRlcyAgICAgICAgICAgICAgICAgICAgICA4ICAgICAgICAgICAgICAyNCAgICAgICAg
-ICAgNi4yLjQNCj4gPiA+ICAgcnNhLW1kNS0NCj4gPiA+IGRlczMgICAgICAgICAgICAgICAgICAg
-ICA5ICAgICAgICAgICAgICAyNCAgICAgICAgICAgICA/Pw0KPiA+ID4gICBzaGExDQo+ID4gPiAo
-dW5rZXllZCkgICAgICAgICAgICAgICAgICAxMCAgICAgICAgICAgICAgMjAgICAgICAgICAgICAg
-Pz8NCj4gPiA+ICAgaG1hYy1zaGExLWRlczMtDQo+ID4gPiBrZCAgICAgICAgICAgICAgIDEyICAg
-ICAgICAgICAgICAyMCAgICAgICAgICAgIDYuMw0KPiA+ID4gICBobWFjLXNoYTEtDQo+ID4gPiBk
-ZXMzICAgICAgICAgICAgICAgICAgMTMgICAgICAgICAgICAgIDIwICAgICAgICAgICAgID8/DQo+
-ID4gPiAgIHNoYTENCj4gPiA+ICh1bmtleWVkKSAgICAgICAgICAgICAgICAgIDE0ICAgICAgICAg
-ICAgICAyMCAgICAgICAgICAgICA/Pw0KPiA+ID4gICBobWFjLXNoYTEtOTYtDQo+ID4gPiBhZXMx
-MjggICAgICAgICAgICAgMTUgICAgICAgICAgICAgIDIwICAgICAgICAgW0tSQjUtDQo+ID4gPiBB
-RVNdDQo+ID4gPiAgIGhtYWMtc2hhMS05Ni0NCj4gPiA+IGFlczI1NiAgICAgICAgICAgICAxNiAg
-ICAgICAgICAgICAgMjAgICAgICAgICBbS1JCNS0NCj4gPiA+IEFFU10NCj4gPiA+ICANCj4gPiA+
-IFtyZXNlcnZlZF0gICAgICAgICAgICAgICAgICAweDgwMDMgICAgICAgICAgICAgICA/ICAgICAg
-ICAgW0dTUy0NCj4gPiA+IEtSQjVdDQo+ID4gPiANCj4gPiA+IExpbnV4IGtlcm5lbCBub3cgbWFp
-bmx5IHN1cHBvcnRzIHR5cGUgMTUsMTYgc28gbWF4IGNrc3VtIHNpemUgaXMNCj4gPiA+IDIwYnl0
-ZXMuDQo+ID4gPiAoR1NTX0tSQjVfTUFYX0NLU1VNX0xFTikNCj4gPiA+IA0KPiA+ID4gUmUtdXNl
-IGFscmVhZHkgZXhpc3RpbmcgZGVmaW5lIG9mIEdTU19LUkI1X01BWF9TTEFDS19ORUVERUQNCj4g
-PiA+IHRoYXQncw0KPiA+ID4gdXNlZA0KPiA+ID4gZm9yIGVuY29kaW5nIHRoZSBnc3Nfd3JhcCB0
-b2tlbnMgKHNhbWUgdG9rZW5zIGFyZSB1c2VkIGluIHJlcGx5KS4NCj4gPiA+IA0KPiA+ID4gRml4
-ZXM6IDJjOTRiOGVjYTFhMiAoIlNVTlJQQzogVXNlIGF1X3JzbGFjayB3aGVuIGNvbXB1dGluZyBy
-ZXBseQ0KPiA+ID4gYnVmZmVyIHNpemUiKQ0KPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3Ju
-aWV2c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+DQo+ID4gPiAtLS0NCj4gPiA+IG5ldC9zdW5ycGMv
-YXV0aF9nc3MvYXV0aF9nc3MuYyB8IDUgKysrKy0NCj4gPiA+IDEgZmlsZSBjaGFuZ2VkLCA0IGlu
-c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL25l
-dC9zdW5ycGMvYXV0aF9nc3MvYXV0aF9nc3MuYw0KPiA+ID4gYi9uZXQvc3VucnBjL2F1dGhfZ3Nz
-L2F1dGhfZ3NzLmMNCj4gPiA+IGluZGV4IDI0Y2E4NjEuLjVhNzMzYTYgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9uZXQvc3VucnBjL2F1dGhfZ3NzL2F1dGhfZ3NzLmMNCj4gPiA+ICsrKyBiL25ldC9zdW5y
-cGMvYXV0aF9nc3MvYXV0aF9nc3MuYw0KPiA+ID4gQEAgLTIwLDYgKzIwLDcgQEANCj4gPiA+ICNp
-bmNsdWRlIDxsaW51eC9zdW5ycGMvY2xudC5oPg0KPiA+ID4gI2luY2x1ZGUgPGxpbnV4L3N1bnJw
-Yy9hdXRoLmg+DQo+ID4gPiAjaW5jbHVkZSA8bGludXgvc3VucnBjL2F1dGhfZ3NzLmg+DQo+ID4g
-PiArI2luY2x1ZGUgPGxpbnV4L3N1bnJwYy9nc3Nfa3JiNS5oPg0KPiA+ID4gI2luY2x1ZGUgPGxp
-bnV4L3N1bnJwYy9zdmNhdXRoX2dzcy5oPg0KPiA+ID4gI2luY2x1ZGUgPGxpbnV4L3N1bnJwYy9n
-c3NfZXJyLmg+DQo+ID4gPiAjaW5jbHVkZSA8bGludXgvd29ya3F1ZXVlLmg+DQo+ID4gPiBAQCAt
-NTEsNiArNTIsOCBAQA0KPiA+ID4gLyogbGVuZ3RoIG9mIGEga3JiNSB2ZXJpZmllciAoNDgpLCBw
-bHVzIGRhdGEgYWRkZWQgYmVmb3JlDQo+ID4gPiBhcmd1bWVudHMNCj4gPiA+IHdoZW4NCj4gPiA+
-ICAqIHVzaW5nIGludGVncml0eSAodHdvIDQtYnl0ZSBpbnRlZ2Vycyk6ICovDQo+ID4gPiAjZGVm
-aW5lIEdTU19WRVJGX1NMQUNLCQkxMDANCj4gPiA+ICsvKiBjb3ZlcnMgbGVuZ3RocyBvZiBnc3Nf
-dW53cmFwKCkgZXh0cmEga2VyYmVyb3MgbWljIGFuZCB3cmFwDQo+ID4gPiB0b2tlbg0KPiA+ID4g
-Ki8NCj4gPiA+ICsjZGVmaW5lIEdTU19SRVNQX1NMQUNLCQkoR1NTX0tSQjVfTUFYX1NMQUNLX05F
-RURFRCA8PA0KPiA+ID4gMikNCj4gPiA+IA0KPiA+ID4gc3RhdGljIERFRklORV9IQVNIVEFCTEUo
-Z3NzX2F1dGhfaGFzaF90YWJsZSwgNCk7DQo+ID4gPiBzdGF0aWMgREVGSU5FX1NQSU5MT0NLKGdz
-c19hdXRoX2hhc2hfbG9jayk7DQo+ID4gPiBAQCAtMTA1MCw3ICsxMDUzLDcgQEAgc3RhdGljIHZv
-aWQgZ3NzX3BpcGVfZnJlZShzdHJ1Y3QgZ3NzX3BpcGUNCj4gPiA+ICpwKQ0KPiA+ID4gCQlnb3Rv
-IGVycl9wdXRfbWVjaDsNCj4gPiA+IAlhdXRoID0gJmdzc19hdXRoLT5ycGNfYXV0aDsNCj4gPiA+
-IAlhdXRoLT5hdV9jc2xhY2sgPSBHU1NfQ1JFRF9TTEFDSyA+PiAyOw0KPiA+ID4gLQlhdXRoLT5h
-dV9yc2xhY2sgPSBHU1NfVkVSRl9TTEFDSyA+PiAyOw0KPiA+ID4gKwlhdXRoLT5hdV9yc2xhY2sg
-PSBHU1NfUkVTUF9TTEFDSyA+PiAyOw0KPiA+ID4gCWF1dGgtPmF1X3ZlcmZzaXplID0gR1NTX1ZF
-UkZfU0xBQ0sgPj4gMjsNCj4gPiA+IAlhdXRoLT5hdV9yYWxpZ24gPSBHU1NfVkVSRl9TTEFDSyA+
-PiAyOw0KPiA+ID4gCWF1dGgtPmF1X2ZsYWdzID0gMDsNCj4gPiANCj4gPiBJcyB0aGlzIGEgc3Vm
-ZmljaWVudCBmaXgsIHRob3VnaD8gSXQgbG9va3MgdG8gbWUgYXMgaWYgdGhlIGFib3ZlIGlzDQo+
-ID4ganVzdCBhbiBpbml0aWFsIHZhbHVlIHRoYXQgZ2V0cyBhZGp1c3RlZCBvbiB0aGUgZmx5IGlu
-DQo+ID4gZ3NzX3Vud3JhcF9yZXNwX3ByaXYoKToNCj4gPiANCj4gPiAgICAgICAgYXV0aC0+YXVf
-cnNsYWNrID0gYXV0aC0+YXVfdmVyZnNpemUgKyAyICsNCj4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgWERSX1FVQURMRU4oc2F2ZWRsZW4gLSByY3ZfYnVmLT5sZW4pOw0KPiA+ICAgICAgICBh
-dXRoLT5hdV9yYWxpZ24gPSBhdXRoLT5hdV92ZXJmc2l6ZSArIDIgKw0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICBYRFJfUVVBRExFTihzYXZlZGxlbiAtIHJjdl9idWYtPmxlbik7DQo+IA0K
-PiBUaGF0J3MgY29ycmVjdC4gVGhlIEdTU18qX1NMQUNLIHZhbHVlIGlzIGEgX3N6IHZhbHVlIHRo
-YXQgaXMNCj4gdGhlIGxhcmdlc3QgcG9zc2libGUgZXhwZWN0ZWQgc2l6ZSBvZiB0aGUgZXh0cmEg
-R1NTIGRhdGEuDQo+IA0KPiANCj4gPiBNeSBxdWVzdGlvbnMgd291bGQgYmUNCj4gPiANCj4gPiAt
-IEFyZSB3ZSBzdXJlIHRoYXQgdGhlIGFib3ZlIGNhbGN1bGF0aW9uIChpbg0KPiA+IGdzc191bndy
-YXBfcmVzcF9wcml2KCkpIGlzDQo+ID4gY29ycmVjdD8NCj4gDQo+IFllcywgdGhpcyBpcyB0aGUg
-Y29ycmVjdCBjb21wdXRhdGlvbi4NCj4gDQo+IFdlIGtub3cgdGhpcyBiZWNhdXNlIGlmIHRoZSBp
-bml0aWFsIGF1X3JzbGFjayB2YWx1ZSBpcyBsYXJnZQ0KPiBlbm91Z2gsIHRoZW4gc3Vic2VxdWVu
-dCBSZXBsaWVzIGhhdmUgdGhlIGNvcnJlY3QgYW1vdW50IG9mIGJ1ZmZlcg0KPiBzcGFjZSBhbmQg
-YWx3YXlzIHN1Y2NlZWQuDQo+IA0KPiANCj4gPiAtIEFyZSB3ZSBzdXJlIHRoYXQgdGhlIGFib3Zl
-IGNhbGN1bGF0aW9uIGFsd2F5cyBnaXZlcyB0aGUgc2FtZQ0KPiA+IGFuc3dlcg0KPiA+IG92ZXIg
-dGltZT8gV2UgcHJvYmFibHkgc2hvdWxkIG5vdCBzdG9yZSBhIHZhbHVlIHRoYXQga2VlcHMNCj4g
-PiBjaGFuZ2luZy4NCj4gDQo+IEl0IGRvZXMgbm90IGNoYW5nZSBhZnRlciB0aGUgZmlyc3QgUmVw
-bHkuIGF1X3JzbGFjayBpcyB0eXBpY2FsbHkNCj4gYWRqdXN0ZWQgZG93bndhcmRzIGZyb20gdGhl
-IGluaXRpYWwgdmFsdWUgYmFzZWQgb24gdGhlIHNpemUgb2YgdGhlDQo+IGZpcnN0IHJlY2VpdmVk
-IFJlcGx5Lg0KPiANCj4gTm90IHNldHRpbmcgdGhlc2UgdmFyaWFibGVzIGFmdGVyIHRoZSBmaXJz
-dCBSZXBseSBoYXMgYmVlbiByZWNlaXZlZA0KPiB3b3VsZCBiZSBhIG1pbm9yIG9wdGltaXphdGlv
-biB0aGF0IGNvdWxkIGJlIGRvbmUgYWZ0ZXIgT2xnYSdzIGZpeC4NCj4gDQoNCk9LLiBTbyB5b3Un
-cmUgYm90aCBzYXlpbmcgdGhhdCBhcyBsb25nIGFzIHRoZSBpbml0aWFsIHZhbHVlIGlzIGNvcnJl
-Y3QsDQp3ZSdyZSBnb29kIGZvciB0aGUgZHVyYXRpb24gb2YgdGhlIEdTUyBzZXNzaW9uPyBGYWly
-IGVub3VnaCwgSSdsbCBhcHBseQ0KdGhpcyBwYXRjaCBmb3IgNS43IHRoZW4uDQoNCkxldCdzIGFs
-c28gZml4IHVwIHRoZSBhYm92ZSBpbiBhIHNlcGFyYXRlIHBhdGNoIHRvIG5vdCBrZWVwIHNldHRp
-bmcNCmF1dGgtPmF1X3JzbGFjayAvIGF1dGgtPmF1X3JhbGlnbiBpZiB0aGVpciB2YWx1ZXMgYXJl
-IG5vdCBjaGFuZ2luZy4NClRoYXQgc2hvdWxkIHByZXZlbnQgdW5uZWNlc3NhcnkgY2FjaGUgbGlu
-ZSBib3VuY2luZy4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFp
-bnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0K
-DQo=
+
+
+> On Mar 25, 2020, at 5:52 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Wed, 2020-03-25 at 17:43 -0400, Chuck Lever wrote:
+>>> On Mar 25, 2020, at 5:33 PM, Trond Myklebust <
+>>> trondmy@hammerspace.com> wrote:
+>>>=20
+>>> Hi Olga,
+>>>=20
+>>> On Wed, 2020-03-25 at 17:01 -0400, Olga Kornievskaia wrote:
+>>>> From: Olga Kornievskaia <kolga@netapp.com>
+>>>>=20
+>>>> Ever since commit 2c94b8eca1a2 ("SUNRPC: Use au_rslack when
+>>>> computing
+>>>> reply buffer size"). It changed how "req->rq_rcvsize" is
+>>>> calculated.
+>>>> It
+>>>> used to use au_cslack value which was nice and large and changed
+>>>> it
+>>>> to
+>>>> au_rslack value which turns out to be too small.
+>>>>=20
+>>>> Since 5.1, v3 mount with sec=3Dkrb5p fails against an Ontap server
+>>>> because client's receive buffer it too small.
+>>>>=20
+>>>> For gss krb5p, we need to account for the mic token in the
+>>>> verifier,
+>>>> and the wrap token in the wrap token.
+>>>>=20
+>>>> RFC 4121 defines:
+>>>> mic token
+>>>> Octet no   Name        Description
+>>>>        ---------------------------------------------------------
+>>>> -
+>>>> ----
+>>>>        0..1     TOK_ID     Identification field.  Tokens emitted
+>>>> by
+>>>>                            GSS_GetMIC() contain the hex value 04
+>>>> 04
+>>>>                            expressed in big-endian order in this
+>>>>                            field.
+>>>>        2        Flags      Attributes field, as described in
+>>>> section
+>>>>                            4.2.2.
+>>>>        3..7     Filler     Contains five octets of hex value FF.
+>>>>        8..15    SND_SEQ    Sequence number field in clear text,
+>>>>                            expressed in big-endian order.
+>>>>        16..last SGN_CKSUM  Checksum of the "to-be-signed" data
+>>>> and
+>>>>                            octet 0..15, as described in section
+>>>> 4.2.4.
+>>>>=20
+>>>> that's 16bytes (GSS_KRB5_TOK_HDR_LEN) + chksum
+>>>>=20
+>>>> wrap token
+>>>> Octet no   Name        Description
+>>>>        ---------------------------------------------------------
+>>>> -
+>>>> ----
+>>>>         0..1     TOK_ID    Identification field.  Tokens emitted
+>>>> by
+>>>>                            GSS_Wrap() contain the hex value 05
+>>>> 04
+>>>>                            expressed in big-endian order in this
+>>>>                            field.
+>>>>         2        Flags     Attributes field, as described in
+>>>> section
+>>>>                            4.2.2.
+>>>>         3        Filler    Contains the hex value FF.
+>>>>         4..5     EC        Contains the "extra count" field, in
+>>>> big-
+>>>>                            endian order as described in section
+>>>> 4.2.3.
+>>>>         6..7     RRC       Contains the "right rotation count"
+>>>> in
+>>>> big-
+>>>>                            endian order, as described in section
+>>>>                            4.2.5.
+>>>>         8..15    SND_SEQ   Sequence number field in clear text,
+>>>>                            expressed in big-endian order.
+>>>>         16..last Data      Encrypted data for Wrap tokens with
+>>>>                            confidentiality, or plaintext data
+>>>> followed
+>>>>                            by the checksum for Wrap tokens
+>>>> without
+>>>>                            confidentiality, as described in
+>>>> section
+>>>>                            4.2.4.
+>>>>=20
+>>>> Also 16bytes of header (GSS_KRB5_TOK_HDR_LEN), encrypted data,
+>>>> and
+>>>> cksum
+>>>> (other things like padding)
+>>>>=20
+>>>> RFC 3961 defines known cksum sizes:
+>>>> Checksum
+>>>> type              sumtype        checksum         section or
+>>>>                               value            size         refe
+>>>> ren
+>>>> ce
+>>>>  -------------------------------------------------------------
+>>>> ---
+>>>> -----
+>>>>=20
+>>>> CRC32                            1               4           6.1.
+>>>> 3
+>>>>  rsa-
+>>>> md4                          2              16           6.1.2
+>>>>  rsa-md4-
+>>>> des                      3              24           6.2.5
+>>>>  des-
+>>>> mac                          4              16           6.2.7
+>>>>  des-mac-
+>>>> k                        5               8           6.2.8
+>>>>  rsa-md4-des-
+>>>> k                    6              16           6.2.6
+>>>>  rsa-
+>>>> md5                          7              16           6.1.1
+>>>>  rsa-md5-
+>>>> des                      8              24           6.2.4
+>>>>  rsa-md5-
+>>>> des3                     9              24             ??
+>>>>  sha1
+>>>> (unkeyed)                  10              20             ??
+>>>>  hmac-sha1-des3-
+>>>> kd               12              20            6.3
+>>>>  hmac-sha1-
+>>>> des3                  13              20             ??
+>>>>  sha1
+>>>> (unkeyed)                  14              20             ??
+>>>>  hmac-sha1-96-
+>>>> aes128             15              20         [KRB5-
+>>>> AES]
+>>>>  hmac-sha1-96-
+>>>> aes256             16              20         [KRB5-
+>>>> AES]
+>>>>=20
+>>>> [reserved]                  0x8003               ?         [GSS-
+>>>> KRB5]
+>>>>=20
+>>>> Linux kernel now mainly supports type 15,16 so max cksum size is
+>>>> 20bytes.
+>>>> (GSS_KRB5_MAX_CKSUM_LEN)
+>>>>=20
+>>>> Re-use already existing define of GSS_KRB5_MAX_SLACK_NEEDED
+>>>> that's
+>>>> used
+>>>> for encoding the gss_wrap tokens (same tokens are used in reply).
+>>>>=20
+>>>> Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply
+>>>> buffer size")
+>>>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+>>>> ---
+>>>> net/sunrpc/auth_gss/auth_gss.c | 5 ++++-
+>>>> 1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>=20
+>>>> diff --git a/net/sunrpc/auth_gss/auth_gss.c
+>>>> b/net/sunrpc/auth_gss/auth_gss.c
+>>>> index 24ca861..5a733a6 100644
+>>>> --- a/net/sunrpc/auth_gss/auth_gss.c
+>>>> +++ b/net/sunrpc/auth_gss/auth_gss.c
+>>>> @@ -20,6 +20,7 @@
+>>>> #include <linux/sunrpc/clnt.h>
+>>>> #include <linux/sunrpc/auth.h>
+>>>> #include <linux/sunrpc/auth_gss.h>
+>>>> +#include <linux/sunrpc/gss_krb5.h>
+>>>> #include <linux/sunrpc/svcauth_gss.h>
+>>>> #include <linux/sunrpc/gss_err.h>
+>>>> #include <linux/workqueue.h>
+>>>> @@ -51,6 +52,8 @@
+>>>> /* length of a krb5 verifier (48), plus data added before
+>>>> arguments
+>>>> when
+>>>> * using integrity (two 4-byte integers): */
+>>>> #define GSS_VERF_SLACK		100
+>>>> +/* covers lengths of gss_unwrap() extra kerberos mic and wrap
+>>>> token
+>>>> */
+>>>> +#define GSS_RESP_SLACK		(GSS_KRB5_MAX_SLACK_NEEDED <<
+>>>> 2)
+>>>>=20
+>>>> static DEFINE_HASHTABLE(gss_auth_hash_table, 4);
+>>>> static DEFINE_SPINLOCK(gss_auth_hash_lock);
+>>>> @@ -1050,7 +1053,7 @@ static void gss_pipe_free(struct gss_pipe
+>>>> *p)
+>>>> 		goto err_put_mech;
+>>>> 	auth =3D &gss_auth->rpc_auth;
+>>>> 	auth->au_cslack =3D GSS_CRED_SLACK >> 2;
+>>>> -	auth->au_rslack =3D GSS_VERF_SLACK >> 2;
+>>>> +	auth->au_rslack =3D GSS_RESP_SLACK >> 2;
+>>>> 	auth->au_verfsize =3D GSS_VERF_SLACK >> 2;
+>>>> 	auth->au_ralign =3D GSS_VERF_SLACK >> 2;
+>>>> 	auth->au_flags =3D 0;
+>>>=20
+>>> Is this a sufficient fix, though? It looks to me as if the above is
+>>> just an initial value that gets adjusted on the fly in
+>>> gss_unwrap_resp_priv():
+>>>=20
+>>>       auth->au_rslack =3D auth->au_verfsize + 2 +
+>>>                         XDR_QUADLEN(savedlen - rcv_buf->len);
+>>>       auth->au_ralign =3D auth->au_verfsize + 2 +
+>>>                         XDR_QUADLEN(savedlen - rcv_buf->len);
+>>=20
+>> That's correct. The GSS_*_SLACK value is a _sz value that is
+>> the largest possible expected size of the extra GSS data.
+>>=20
+>>=20
+>>> My questions would be
+>>>=20
+>>> - Are we sure that the above calculation (in
+>>> gss_unwrap_resp_priv()) is
+>>> correct?
+>>=20
+>> Yes, this is the correct computation.
+>>=20
+>> We know this because if the initial au_rslack value is large
+>> enough, then subsequent Replies have the correct amount of buffer
+>> space and always succeed.
+>>=20
+>>=20
+>>> - Are we sure that the above calculation always gives the same
+>>> answer
+>>> over time? We probably should not store a value that keeps
+>>> changing.
+>>=20
+>> It does not change after the first Reply. au_rslack is typically
+>> adjusted downwards from the initial value based on the size of the
+>> first received Reply.
+>>=20
+>> Not setting these variables after the first Reply has been received
+>> would be a minor optimization that could be done after Olga's fix.
+>>=20
+>=20
+> OK. So you're both saying that as long as the initial value is =
+correct,
+> we're good for the duration of the GSS session? Fair enough, I'll =
+apply
+> this patch for 5.7 then.
+
+Thanks, please see my one-line correction. I think the definition of
+GSS_RESP_SLACK should not include the "<< 2", I would like Olga to
+confirm.
+
+
+> Let's also fix up the above in a separate patch to not keep setting
+> auth->au_rslack / auth->au_ralign if their values are not changing.
+> That should prevent unnecessary cache line bouncing.
+
+I volunteer, unless Olga wants to take it.
+
+
+--
+Chuck Lever
+
+
+
