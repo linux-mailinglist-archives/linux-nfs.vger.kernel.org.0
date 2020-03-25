@@ -2,52 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C66F0193443
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C0A219343B
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:10:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCYXLI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 19:11:08 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:40828 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbgCYXLI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:11:08 -0400
+        id S1727358AbgCYXK5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 19:10:57 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60793 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbgCYXK5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:10:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585177867; x=1616713867;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=njHYg5IBfxigZMQpTlelWlI9ARc5mEgd9mXi449OG1A=;
-  b=k8Ek+H1bZNJpOCnOK0CcCdyJ3NVADDWD6F4jBfJJ/JeMSS/AMthN95CN
-   yXogKa9LRkhv6ttRqCl25VkGbFB6HZ0P7qvauoDq1NHE+LKIELIFO4tVP
-   mcEkxmCrB83pWgGMv7q3iFU2Aw6oIRCZHvCFRtHOSjwQgMvXjPqKwY3O3
-   c=;
-IronPort-SDR: 9XcHhEf3FqrEJfURWhpPsC+RfVheREnRe3j25fB4bsEM7ce7hMx4KnBObwOjNQoz5y097M5aMT
- Lfq5nq/wlk5Q==
+  t=1585177856; x=1616713856;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=BEgJ6f0d4G9lFlPved0AH6fQpspQ/nvMCpPzD8vZEmk=;
+  b=LUPIwkDac7W+IdSJgLjlsEBz9Z7+4gE8VXhK2P5HBdRKynlfsvMCMbyi
+   wKod9tVKUG/U6/JjiIfRGXXx45d5nAcOvKk/0ZOMld+jIgUmffPsk1fwG
+   BVDHhnPcq86+D47mHco5bl1knw2vWblAHg/P2X2T3PVfRaO9rqZMTQJQM
+   g=;
+IronPort-SDR: QTml7+DhxFlGJOfsRYpDSF8JCLdOqPcOEX0HyiNdU/vGjbWW4r4SH7pYb2XVY+P139Vd76u8rl
+ 9E+AxBeT3Dng==
 X-IronPort-AV: E=Sophos;i="5.72,306,1580774400"; 
-   d="scan'208";a="22761098"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 25 Mar 2020 23:10:54 +0000
+   d="scan'208";a="34866153"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 25 Mar 2020 23:10:54 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id CD25AA239C;
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id D36F7A2F3A;
         Wed, 25 Mar 2020 23:10:53 +0000 (UTC)
-Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
+Received: from EX13D13UWB003.ant.amazon.com (10.43.161.233) by
  EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
  id 15.0.1367.3; Wed, 25 Mar 2020 23:10:52 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D13UWB003.ant.amazon.com (10.43.161.233) with Microsoft SMTP Server (TLS)
  id 15.0.1497.2; Wed, 25 Mar 2020 23:10:52 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1236.3 via Frontend Transport; Wed, 25 Mar 2020 23:10:51 +0000
+ (172.23.141.97) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 25 Mar 2020 23:10:51 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 46F23D92AA; Wed, 25 Mar 2020 23:10:51 +0000 (UTC)
+        id 4A628D92BF; Wed, 25 Mar 2020 23:10:51 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
         <trond.myklebust@hammerspace.com>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
-Date:   Wed, 25 Mar 2020 23:10:38 +0000
-Message-ID: <20200325231051.31652-1-fllinden@amazon.com>
+Subject: [PATCH v2 01/13] nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
+Date:   Wed, 25 Mar 2020 23:10:39 +0000
+Message-ID: <20200325231051.31652-2-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
+In-Reply-To: <20200325231051.31652-1-fllinden@amazon.com>
+References: <20200325231051.31652-1-fllinden@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-nfs-owner@vger.kernel.org
@@ -55,68 +58,79 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-v1 is here: https://www.spinics.net/lists/linux-nfs/msg76740.html
+Add definitions for the new operations, errors and flags as defined
+in RFC 8276 (File System Extended Attributes in NFSv4).
 
-v2:
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+---
+ include/linux/nfs4.h      | 20 ++++++++++++++++++++
+ include/uapi/linux/nfs4.h |  3 +++
+ 2 files changed, 23 insertions(+)
 
-* Move nfs4 specific definitions to nfs_fs4.h
-* Squash some patches together to avoid unused function warnings
-  when bisecting.
-* Made determining server support a two-step process. First,
-  the extended attribute FATTR is verified to be supported, then
-  the value of the attributed is queried in fsinfo to determine
-  support.
-* Fixed up Makefile to remove an unneeded extra line.
-
-This was tested as before (using my own stress tests), but also
-with xfstests-dev. No issues were found, but xfstests needs some
-fixes to correctly run the applicable xattr tests on NFS. I
-have those changes, but need to send them out.
-
-I also tested stress-ng-xattr with 1000 workers on the client
-side, running for 8 hours without problems (except for noting
-that the session tbl_lock can become quite hot when doing
-NFS operations by 1000 threads, but that's a separate issue).
-
-
-Frank van der Linden (13):
-  nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
-  nfs: add client side only definitions for user xattrs
-  NFSv4.2: define limits and sizes for user xattr handling
-  NFSv4.2: query the server for extended attribute support
-  NFSv4.2: add client side XDR handling for extended attributes
-  nfs: define nfs_access_get_cached function
-  NFSv4.2: query the extended attribute access bits
-  nfs: modify update_changeattr to deal with regular files
-  nfs: define and use the NFS_INO_INVALID_XATTR flag
-  nfs: make the buf_to_pages_noslab function available to the nfs code
-  NFSv4.2: add the extended attribute proc functions.
-  NFSv4.2: hook in the user extended attribute handlers
-  NFSv4.2: add client side xattr caching.
-
- fs/nfs/Makefile             |    2 +-
- fs/nfs/client.c             |   22 +-
- fs/nfs/dir.c                |   24 +-
- fs/nfs/inode.c              |   16 +-
- fs/nfs/nfs42.h              |   24 +
- fs/nfs/nfs42proc.c          |  248 ++++++++
- fs/nfs/nfs42xattr.c         | 1083 +++++++++++++++++++++++++++++++++++
- fs/nfs/nfs42xdr.c           |  438 ++++++++++++++
- fs/nfs/nfs4_fs.h            |   35 ++
- fs/nfs/nfs4client.c         |   31 +
- fs/nfs/nfs4proc.c           |  237 +++++++-
- fs/nfs/nfs4super.c          |   10 +
- fs/nfs/nfs4xdr.c            |   31 +
- fs/nfs/nfstrace.h           |    3 +-
- include/linux/nfs4.h        |   25 +
- include/linux/nfs_fs.h      |   12 +
- include/linux/nfs_fs_sb.h   |    6 +
- include/linux/nfs_xdr.h     |   60 +-
- include/uapi/linux/nfs4.h   |    3 +
- include/uapi/linux/nfs_fs.h |    1 +
- 20 files changed, 2269 insertions(+), 42 deletions(-)
- create mode 100644 fs/nfs/nfs42xattr.c
-
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index 82d8fb422092..350aeda0c48c 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -150,6 +150,12 @@ enum nfs_opnum4 {
+ 	OP_WRITE_SAME = 70,
+ 	OP_CLONE = 71,
+ 
++	/* xattr support (RFC8726) */
++	OP_GETXATTR                = 72,
++	OP_SETXATTR                = 73,
++	OP_LISTXATTRS              = 74,
++	OP_REMOVEXATTR             = 75,
++
+ 	OP_ILLEGAL = 10044,
+ };
+ 
+@@ -280,6 +286,10 @@ enum nfsstat4 {
+ 	NFS4ERR_WRONG_LFS = 10092,
+ 	NFS4ERR_BADLABEL = 10093,
+ 	NFS4ERR_OFFLOAD_NO_REQS = 10094,
++
++	/* xattr (RFC8276) */
++	NFS4ERR_NOXATTR        = 10095,
++	NFS4ERR_XATTR2BIG      = 10096,
+ };
+ 
+ static inline bool seqid_mutating_err(u32 err)
+@@ -452,6 +462,7 @@ enum change_attr_type4 {
+ #define FATTR4_WORD2_CHANGE_ATTR_TYPE	(1UL << 15)
+ #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
+ #define FATTR4_WORD2_MODE_UMASK		(1UL << 17)
++#define FATTR4_WORD2_XATTR_SUPPORT	(1UL << 18)
+ 
+ /* MDS threshold bitmap bits */
+ #define THRESHOLD_RD                    (1UL << 0)
+@@ -700,4 +711,13 @@ struct nl4_server {
+ 		struct nfs42_netaddr	nl4_addr; /* NL4_NETADDR */
+ 	} u;
+ };
++
++/*
++ * Options for setxattr. These match the flags for setxattr(2).
++ */
++enum nfs4_setxattr_options {
++	SETXATTR4_EITHER	= 0,
++	SETXATTR4_CREATE	= 1,
++	SETXATTR4_REPLACE	= 2,
++};
+ #endif
+diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
+index 8572930cf5b0..bf197e99b98f 100644
+--- a/include/uapi/linux/nfs4.h
++++ b/include/uapi/linux/nfs4.h
+@@ -33,6 +33,9 @@
+ #define NFS4_ACCESS_EXTEND      0x0008
+ #define NFS4_ACCESS_DELETE      0x0010
+ #define NFS4_ACCESS_EXECUTE     0x0020
++#define NFS4_ACCESS_XAREAD      0x0040
++#define NFS4_ACCESS_XAWRITE     0x0080
++#define NFS4_ACCESS_XALIST      0x0100
+ 
+ #define NFS4_FH_PERSISTENT		0x0000
+ #define NFS4_FH_NOEXPIRE_WITH_OPEN	0x0001
 -- 
 2.17.2
 
