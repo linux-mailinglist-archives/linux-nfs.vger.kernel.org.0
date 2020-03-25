@@ -2,100 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17DE6191F60
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 03:42:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC1DF192177
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 08:00:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgCYCm2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Mar 2020 22:42:28 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52814 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbgCYCm1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Mar 2020 22:42:27 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ng8so402941pjb.2
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2020 19:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=tJVGZmmA1bFjoevn7/qDYyyvIJ/eyc0u4ubgnC7ziTY=;
-        b=H4706YZqf8/zScGoFg12vybnR9M2VsIQVJgSz3rS1dHY9dQHDGFEdxDFbUd7d1zTgX
-         a1SAGpNqJGQq66/k++qcyoET2sxmyH3emD3uXnYHai1yW2TdH35PONdQL7aDm0PfPzyp
-         tYlxhgWpkpR2jgcSCMS6Pg5GkhF65IhQxffKc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=tJVGZmmA1bFjoevn7/qDYyyvIJ/eyc0u4ubgnC7ziTY=;
-        b=XKILiO8TCtV+Qh6BXsDQ7xgavjhgtgyzfXzO4aKwGCuk+6a1uJieZaYGtXCGu5IBfF
-         s7cVr33ZIEFDLlroRBPkdc9hXb42EimUXrMGvvWwKzPlSqS3fQ1VpeqhTvBkpYSTrKAw
-         vqiLs98PTfIRK55S/YtHyAl8omRMbxMhFxrmlHfr/zmauceWQXh99GqnyRgjcYcVMzK0
-         io+BRaOxUOsS5HzGCXyvqCj9CKEqZgxIDso6Bxzpi2nhqreolSbbTH8tffLp3WxTDNQn
-         ugsTOaEjxwAPQplACT7OubJS1Da4J+0We55uwMMEAkRi13YjKTexbO7gdqSBVLYSONqh
-         kslg==
-X-Gm-Message-State: ANhLgQ1z1FfkyMEb/Xi/RwC0Tkr9Jqod+I9r6B+2ULv5d6aE5jYqN4wM
-        FZ85ifG4tQE7N8hJ+fQAcnknng==
-X-Google-Smtp-Source: ADFU+vtS5LbLrzS1jhzDwYVrTj6A9lZWX06g/Mga4Nlp7aFIrRyOCBB7aq2FIo/kyw4uUBQ1+JG/MQ==
-X-Received: by 2002:a17:90a:33d1:: with SMTP id n75mr1033588pjb.167.1585104145832;
-        Tue, 24 Mar 2020 19:42:25 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x4sm858194pgr.9.2020.03.24.19.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 19:42:25 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1726319AbgCYHAG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 03:00:06 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:55376 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgCYHAD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 03:00:03 -0400
+X-Greylist: delayed 11358 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 03:00:00 EDT
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 02P3oXp9021731
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 24 Mar 2020 20:50:33 -0700 (PDT)
+Received: from pek-lpggp3.wrs.com (128.224.153.76) by ALA-HCB.corp.ad.wrs.com
+ (147.11.189.41) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 20:50:15 -0700
+From:   Song liwei <liwei.song@windriver.com>
+To:     Trond <trond.myklebust@hammerspace.com>,
+        Anna <anna.schumaker@netapp.com>
+CC:     Olga <olga.kornievskaia@gmail.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LiweiSong <liwei.song@windriver.com>
+Subject: [PATCH] nfsroot: set tcp as the defalut transport protocol
+Date:   Wed, 25 Mar 2020 11:50:13 +0800
+Message-ID: <20200325035013.26697-1-liwei.song@windriver.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5cfeed6df208b74913312a1c97235ee615180f91.1582361737.git.mchehab+huawei@kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org> <5cfeed6df208b74913312a1c97235ee615180f91.1582361737.git.mchehab+huawei@kernel.org>
-Subject: Re: [PATCH 3/7] docs: fix broken references to text files
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arch@vger.kernel.org, linux-nfs@vger.kernel.org,
-        kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        netdev@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date:   Tue, 24 Mar 2020 19:42:24 -0700
-Message-ID: <158510414428.125146.17397141028775937874@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Quoting Mauro Carvalho Chehab (2020-02-22 01:00:03)
-> Several references got broken due to txt to ReST conversion.
->=20
-> Several of them can be automatically fixed with:
->=20
->         scripts/documentation-file-ref-check --fix
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  drivers/hwtracing/coresight/Kconfig                  |  2 +-
->=20
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/core=
-sight/Kconfig
-> index 6ff30e25af55..6d42a6d3766f 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -107,7 +107,7 @@ config CORESIGHT_CPU_DEBUG
->           can quickly get to know program counter (PC), secure state,
->           exception level, etc. Before use debugging functionality, platf=
-orm
->           needs to ensure the clock domain and power domain are enabled
-> -         properly, please refer Documentation/trace/coresight-cpu-debug.=
-rst
-> +         properly, please refer Documentation/trace/coresight/coresight-=
-cpu-debug.rst
->           for detailed description and the example for usage.
-> =20
->  endif
+From: Liwei Song <liwei.song@windriver.com>
 
-I ran into this today and almost sent a patch. Can you split this patch
-up into more pieces and send it off to the respective subsystem
-maintainers?
+UDP is disabled by default in commit b24ee6c64ca7 ("NFS: allow
+deprecation of NFS UDP protocol"), but the default mount options
+is still udp, change it to tcp to avoid the "Unsupported transport
+protocol udp" error if no protocol is specified when mount nfs.
+
+Fixes: b24ee6c64ca7 ("NFS: allow deprecation of NFS UDP protocol")
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+---
+ fs/nfs/nfsroot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index effaa4247b91..8d3278805602 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -88,7 +88,7 @@
+ #define NFS_ROOT		"/tftpboot/%s"
+ 
+ /* Default NFSROOT mount options. */
+-#define NFS_DEF_OPTIONS		"vers=2,udp,rsize=4096,wsize=4096"
++#define NFS_DEF_OPTIONS		"vers=2,tcp,rsize=4096,wsize=4096"
+ 
+ /* Parameters passed from the kernel command line */
+ static char nfs_root_parms[NFS_MAXPATHLEN + 1] __initdata = "";
+-- 
+2.17.1
+
