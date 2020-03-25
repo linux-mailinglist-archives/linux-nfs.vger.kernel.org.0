@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDA44192C08
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 16:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D2C5192D34
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 16:47:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgCYPQk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 11:16:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:35146 "EHLO mga07.intel.com"
+        id S1727569AbgCYPrc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 11:47:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18729 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727569AbgCYPQj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:16:39 -0400
-IronPort-SDR: mjVp74FI4/QyWPtuYQC4rkLJDHVo/XqnDnnHtrZ2WTz2ENln1A6HA5muXs1XsEMr7ngDI6CAT+
- 1CBQgIdieNQA==
+        id S1727604AbgCYPrc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:47:32 -0400
+IronPort-SDR: 7W2keHGjVXSIKv34fT74/IEX/7BeISzW4pXgcOh9fUM2BbX6Qa+m5Bnu1tgDenbzrQW7vKXQZt
+ BH8LS6l3wCig==
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 08:16:14 -0700
-IronPort-SDR: hnWPi5jmonAwqdGdxTUfrOEJW21Umlsd37P1Kvesne2o9og+SuXUZXrtQQAjklACNV0PuvHsvE
- un27EYVBkFvA==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 08:47:29 -0700
+IronPort-SDR: w2ejh51/ANJ8yBBMHO4eMOZ+HQbWYBUpA9wGr1zmMBkWjWMji9RLwDQzgOR6PRr1dp2o+/Ryob
+ JU8eBMRD2b0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="gz'50?scan'50,208,50";a="448307028"
+   d="gz'50?scan'50,208,50";a="270844620"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2020 08:16:10 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 25 Mar 2020 08:47:27 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jH7lJ-000IMf-HE; Wed, 25 Mar 2020 23:16:09 +0800
-Date:   Wed, 25 Mar 2020 23:15:41 +0800
+        id 1jH8Fa-000GBv-HJ; Wed, 25 Mar 2020 23:47:26 +0800
+Date:   Wed, 25 Mar 2020 23:47:04 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>
 Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
         linux-nfs@vger.kernel.org
-Subject: [nfs:testing 36/54] fs/nfs/direct.c:308:33: error: no member named
+Subject: [nfs:testing 48/54] fs/nfs/pnfs.h:808:28: error: no member named
  'commits' in 'struct pnfs_ds_commit_info'
-Message-ID: <202003252337.VpntqsJ8%lkp@intel.com>
+Message-ID: <202003252301.mJcHYctS%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="tKW2IUtsqtDRztdT"
+Content-Type: multipart/mixed; boundary="6c2NcOVqGQ03X4Wi"
 Content-Disposition: inline
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -46,19 +46,19 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---tKW2IUtsqtDRztdT
+--6c2NcOVqGQ03X4Wi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 tree:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git testing
 head:   21b71e249eabc75f6db7fb1ff83ce9fc34b09828
-commit: cd21157690af4193233d71828cac656f316a35f9 [36/54] NFSv4/pnfs: Support a list of commit arrays in struct pnfs_ds_commit_info
+commit: 0e648259eac31aaf3922faa9874ab797ed82e11d [48/54] NFS/pNFS: Clean up pNFS commit operations
 config: x86_64-defconfig (attached as .config)
 compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 2093fdd429d52348e08969180ac6b1e705fc4ff6)
 reproduce:
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        git checkout cd21157690af4193233d71828cac656f316a35f9
+        git checkout 0e648259eac31aaf3922faa9874ab797ed82e11d
         # save the attached .config to linux build tree
         COMPILER=clang make.cross ARCH=x86_64 
 
@@ -67,45 +67,41 @@ Reported-by: kbuild test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
->> fs/nfs/direct.c:308:33: error: no member named 'commits' in 'struct pnfs_ds_commit_info'
+   In file included from fs/nfs/nfs4client.c:19:
+>> fs/nfs/pnfs.h:808:28: error: no member named 'commits' in 'struct pnfs_ds_commit_info'
+           INIT_LIST_HEAD(&fl_cinfo->commits);
+                           ~~~~~~~~  ^
+   1 error generated.
+--
+   In file included from fs/nfs/direct.c:61:
+>> fs/nfs/pnfs.h:808:28: error: no member named 'commits' in 'struct pnfs_ds_commit_info'
+           INIT_LIST_HEAD(&fl_cinfo->commits);
+                           ~~~~~~~~  ^
+   fs/nfs/direct.c:208:33: error: no member named 'commits' in 'struct pnfs_ds_commit_info'
            INIT_LIST_HEAD(&dreq->ds_cinfo.commits);
                            ~~~~~~~~~~~~~~ ^
-   1 error generated.
+   2 errors generated.
 
-vim +308 fs/nfs/direct.c
+vim +808 fs/nfs/pnfs.h
 
-   295	
-   296	static inline struct nfs_direct_req *nfs_direct_req_alloc(void)
-   297	{
-   298		struct nfs_direct_req *dreq;
-   299	
-   300		dreq = kmem_cache_zalloc(nfs_direct_cachep, GFP_KERNEL);
-   301		if (!dreq)
-   302			return NULL;
-   303	
-   304		kref_init(&dreq->kref);
-   305		kref_get(&dreq->kref);
-   306		init_completion(&dreq->completion);
-   307		INIT_LIST_HEAD(&dreq->mds_cinfo.list);
- > 308		INIT_LIST_HEAD(&dreq->ds_cinfo.commits);
-   309		dreq->verf.committed = NFS_INVALID_STABLE_HOW;	/* not set yet */
-   310		INIT_WORK(&dreq->work, nfs_direct_write_schedule_work);
-   311		spin_lock_init(&dreq->lock);
-   312	
-   313		return dreq;
-   314	}
-   315	
+   804	
+   805	static inline void
+   806	pnfs_init_ds_commit_info(struct pnfs_ds_commit_info *fl_cinfo, struct inode *inode)
+   807	{
+ > 808		INIT_LIST_HEAD(&fl_cinfo->commits);
+   809	}
+   810	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---tKW2IUtsqtDRztdT
+--6c2NcOVqGQ03X4Wi
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICHBve14AAy5jb25maWcAlDzbdtu2su/9Cq30pX1oYjuOT7rPygNIghIqkmAAUBe/cKm2
+H4sICAZ3e14AAy5jb25maWcAlDzbdtu2su/9Cq30pX1oYjuOT7rPygNIghIqkmAAUBe/cKm2
 nPpsX7JluTv5+zMDECQAgmrb1ZVEmMF97jPgjz/8OCOvx+fH3fH+Zvfw8H32Zf+0P+yO+9vZ
 3f3D/n9nGZ9VXM1oxtRbQC7un16/vfv28aq9upx9eHv19uyXw83VbLk/PO0fZunz0939l1fo
 f//89MOPP8D/P0Lj41cY6vCv2c3D7unL7M/94QXAs/Pzt2dvz2Y/fbk//uvdO/jz8f5weD68
@@ -648,4 +644,4 @@ TwcWQ6emHeg8nvTYGBpiBIuh4UdzswnegcI+7xaW0PYKvsIh2QtrG8VlOveY8IhiQlFQ04H+
 8HtRNyEp5Acb6kVMyjQfmBEgzQRwaBhcHWQBxzBoWQkLABqrtRrcHqxAAuKe/H84DoZnYuoB
 AA==
 
---tKW2IUtsqtDRztdT--
+--6c2NcOVqGQ03X4Wi--
