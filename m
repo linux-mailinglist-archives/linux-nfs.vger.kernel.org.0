@@ -2,88 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D52B19213C
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 07:37:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E6B19218B
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 08:05:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgCYGhT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 02:37:19 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:49815 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgCYGhS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 02:37:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tta890y_1585118232;
-Received: from Macintosh.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0Tta890y_1585118232)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 25 Mar 2020 14:37:13 +0800
-Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        "neilb@suse.com" <neilb@suse.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
- <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
- <13c45bdcb67d689bfcb4f4b720b631e56c662f2b.camel@hammerspace.com>
- <CCFA2CA8-150C-432C-B939-9085B791FE74@oracle.com>
-From:   Yihao Wu <wuyihao@linux.alibaba.com>
-Message-ID: <5372f88d-efb7-25a3-789f-53bfa7bb6f26@linux.alibaba.com>
-Date:   Wed, 25 Mar 2020 14:37:12 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        id S1725939AbgCYHE7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 03:04:59 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:47645 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgCYHE7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 03:04:59 -0400
+Received: from localhost.localdomain ([93.22.148.147])
+        by mwinf5d03 with ME
+        id JX4r2200J3B2lW503X4s9d; Wed, 25 Mar 2020 08:04:56 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 25 Mar 2020 08:04:56 +0100
+X-ME-IP: 93.22.148.147
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
+        kuba@kernel.org, gnb@sgi.com, neilb@suse.de,
+        tom@opengridcomputing.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 1/2] SUNRPC: Fix a potential buffer overflow in 'svc_print_xprts()'
+Date:   Wed, 25 Mar 2020 08:04:40 +0100
+Message-Id: <20200325070440.21988-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CCFA2CA8-150C-432C-B939-9085B791FE74@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020/3/25 1:46 AM, Chuck Lever wrote:
->>>> ---
->>>> net/sunrpc/cache.c | 3 +++
->>>> 1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
->>>> index bd843a81afa0..3e523eefc47f 100644
->>>> --- a/net/sunrpc/cache.c
->>>> +++ b/net/sunrpc/cache.c
->>>> @@ -524,9 +524,11 @@ void cache_purge(struct cache_detail *detail)
->>>> 	struct hlist_node *tmp = NULL;
->>>> 	int i = 0;
->>>>
->>>> +	spin_lock(&cache_list_lock);
->>>> 	spin_lock(&detail->hash_lock);
->>>> 	if (!detail->entries) {
->>>> 		spin_unlock(&detail->hash_lock);
->>>> +		spin_unlock(&cache_list_lock);
->>>> 		return;
->>>> 	}
->>>>
->>>> @@ -541,6 +543,7 @@ void cache_purge(struct cache_detail *detail)
->>>> 		}
->>>> 	}
->>>> 	spin_unlock(&detail->hash_lock);
->>>> +	spin_unlock(&cache_list_lock);
->>>> }
->>>> EXPORT_SYMBOL_GPL(cache_purge);
->>
->> Hmm... Shouldn't this patch be dropping cache_list_lock() when we call
->> sunrpc_end_cache_remove_entry()? The latter does call both
->> cache_revisit_request() and cache_put(), and while they do not
->> explicitly call anything that holds cache_list_lock, some of those cd-
->>> cache_put callbacks do look as if there is potential for deadlock.
-> I see svc_export_put calling dput, eventually, which might_sleep().
+'maxlen' is the total size of the destination buffer. There is only one
+caller and this value is 256.
 
-Wow that's a little strange. If svc_export_put->dput might_sleep, why can we
-spin_lock(&detail->hash_lock); in cache_purge in the first place?
+When we compute the size already used and what we would like to add in
+the buffer, the trailling NULL character is not taken into account.
+However, this trailling character will be added by the 'strcat' once we
+have checked that we have enough place.
 
-And I agree with Trond those cd->cache_put callbacks are dangerous. I will look
-into them today.
+So, there is a off-by-one issue and 1 byte of the stack could be
+erroneously overwridden.
 
-But if we dropping cache_list_lock when we call sunrpc_end_cache_remove_entry,
-cache_put is not protected, and this patch won't work anymore, right?
+Take into account the trailling NULL, when checking if there is enough
+place in the destination buffer.
 
-Thanks,
-Yihao Wu
+Fixes: dc9a16e49dbba ("svc: Add /proc/sys/sunrpc/transport files")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ net/sunrpc/svc_xprt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index d53259346235..df39e7b8b06c 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -120,7 +120,7 @@ int svc_print_xprts(char *buf, int maxlen)
+ 
+ 		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
+ 		slen = strlen(tmpstr);
+-		if (len + slen > maxlen)
++		if (len + slen >= maxlen)
+ 			break;
+ 		len += slen;
+ 		strcat(buf, tmpstr);
+-- 
+2.20.1
+
