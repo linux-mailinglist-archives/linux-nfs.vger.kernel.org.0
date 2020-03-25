@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51805193444
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:11:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBD2319343A
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:10:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCYXLJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 19:11:09 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:45746 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbgCYXLI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:11:08 -0400
+        id S1727452AbgCYXK4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 19:10:56 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:57079 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYXK4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:10:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585177867; x=1616713867;
+  t=1585177856; x=1616713856;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=KatEFjI2jPn7fetiU6/lu4aiwgIU+vsVMmnpk6wO1PQ=;
-  b=uCnRPlQqK5GLQMBZoP+1Xwh5SsrjehZEExNNwPXlAQthWJBV9ERQlQd7
-   liDaf1/YSOzpEVIRLufmTeUJg/Ys0UN/TX0xm/fV8Lv3wjw2A4immVtPk
-   eOeD15uBQginLKBUs85uPzj4kUv1lbE4vM9bvIWj0ovWESiWR+3ykILW9
-   o=;
-IronPort-SDR: Kzg3XG3jOFWtDjRth7J9FCDueX6cdazOC37HxUoxucsIvFjDKf3vijD2eIAYzNziOy3+aTjP9V
- NZzDSa8svNOA==
+  bh=vFxYbbJ0r1Vr860xlMErPtE+KLkDFnIDnLKOGik33OI=;
+  b=ZrCK63efmQaj0UZ4em4O05Z54iq16UG0rjnZOSjPVYjzp+BSv+EGzZ+f
+   7aeIZ22WejFaOYtE86Q7T4cPc2Z4E2d5AIVm4hWoFYpSSeDjVb32y2MuK
+   PDdqJH/iCvDuhWsNUg9KaCTFGBYuL2QSpU0c+pAVWXh04nt5JaZuTweo7
+   I=;
+IronPort-SDR: P1MRoKeFhvlJPM3nQJMwAw78SfinSP1SBoFFJZYaevWptu0XaWHdG1hwp5tr4yZV1ARNZLhS9o
+ 10VRXn91/g2A==
 X-IronPort-AV: E=Sophos;i="5.72,306,1580774400"; 
-   d="scan'208";a="22920039"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 Mar 2020 23:10:55 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id B02C4A2F3C;
-        Wed, 25 Mar 2020 23:10:54 +0000 (UTC)
-Received: from EX13D13UWB003.ant.amazon.com (10.43.161.233) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 25 Mar 2020 23:10:53 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D13UWB003.ant.amazon.com (10.43.161.233) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 25 Mar 2020 23:10:52 +0000
+   d="scan'208";a="25116063"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 Mar 2020 23:10:53 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 6BEB0A2D34;
+        Wed, 25 Mar 2020 23:10:52 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 25 Mar 2020 23:10:51 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 25 Mar 2020 23:10:51 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ (172.23.141.97) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
  Server id 15.0.1367.3 via Frontend Transport; Wed, 25 Mar 2020 23:10:51 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 5C10AD92C4; Wed, 25 Mar 2020 23:10:51 +0000 (UTC)
+        id 5F839D92C5; Wed, 25 Mar 2020 23:10:51 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
         <trond.myklebust@hammerspace.com>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v2 06/13] nfs: define nfs_access_get_cached function
-Date:   Wed, 25 Mar 2020 23:10:44 +0000
-Message-ID: <20200325231051.31652-7-fllinden@amazon.com>
+Subject: [PATCH v2 07/13] NFSv4.2: query the extended attribute access bits
+Date:   Wed, 25 Mar 2020 23:10:45 +0000
+Message-ID: <20200325231051.31652-8-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
 In-Reply-To: <20200325231051.31652-1-fllinden@amazon.com>
 References: <20200325231051.31652-1-fllinden@amazon.com>
@@ -58,77 +58,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The only consumer of nfs_access_get_cached_rcu and nfs_access_cached
-calls these static functions in order to first try RCU access, and
-then locked access.
-
-Combine them in to a single function, and call that. Make this function
-available to the rest of the NFS code.
+RFC 8276 defines separate ACCESS bits for extended attribute checking.
+Query them in nfs_do_access and opendata.
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- fs/nfs/dir.c           | 20 ++++++++++++++++----
- include/linux/nfs_fs.h |  2 ++
- 2 files changed, 18 insertions(+), 4 deletions(-)
+ fs/nfs/dir.c      | 4 ++++
+ fs/nfs/nfs4proc.c | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 193d6fb363b7..a0b564781e3e 100644
+index a0b564781e3e..bd2606539299 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -2433,7 +2433,7 @@ static struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, co
- 	return NULL;
- }
- 
--static int nfs_access_get_cached(struct inode *inode, const struct cred *cred, struct nfs_access_entry *res, bool may_block)
-+static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *cred, struct nfs_access_entry *res, bool may_block)
- {
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 	struct nfs_access_entry *cache;
-@@ -2506,6 +2506,20 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
- 	return err;
- }
- 
-+int nfs_access_get_cached(struct inode *inode, const struct cred *cred, struct
-+nfs_access_entry *res, bool may_block)
-+{
-+	int status;
-+
-+	status = nfs_access_get_cached_rcu(inode, cred, res);
-+	if (status != 0)
-+		status = nfs_access_get_cached_locked(inode, cred, res,
-+		    may_block);
-+
-+	return status;
-+}
-+EXPORT_SYMBOL_GPL(nfs_access_get_cached);
-+
- static void nfs_access_add_rbtree(struct inode *inode, struct nfs_access_entry *set)
- {
- 	struct nfs_inode *nfsi = NFS_I(inode);
-@@ -2620,9 +2634,7 @@ static int nfs_do_access(struct inode *inode, const struct cred *cred, int mask)
- 
- 	trace_nfs_access_enter(inode);
- 
--	status = nfs_access_get_cached_rcu(inode, cred, &cache);
--	if (status != 0)
--		status = nfs_access_get_cached(inode, cred, &cache, may_block);
-+	status = nfs_access_get_cached(inode, cred, &cache, may_block);
- 	if (status == 0)
- 		goto out_cached;
- 
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 442458e94ab5..e86e7a747092 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -491,6 +491,8 @@ extern int nfs_instantiate(struct dentry *dentry, struct nfs_fh *fh,
- 			struct nfs_fattr *fattr, struct nfs4_label *label);
- extern int nfs_may_open(struct inode *inode, const struct cred *cred, int openflags);
- extern void nfs_access_zap_cache(struct inode *inode);
-+extern int nfs_access_get_cached(struct inode *inode, const struct cred *cred, struct nfs_access_entry *res,
-+				 bool may_block);
- 
- /*
-  * linux/fs/nfs/symlink.c
+@@ -2646,6 +2646,10 @@ static int nfs_do_access(struct inode *inode, const struct cred *cred, int mask)
+ 	 * Determine which access bits we want to ask for...
+ 	 */
+ 	cache.mask = NFS_ACCESS_READ | NFS_ACCESS_MODIFY | NFS_ACCESS_EXTEND;
++	if (nfs_server_capable(inode, NFS_CAP_XATTR)) {
++		cache.mask |= NFS_ACCESS_XAREAD | NFS_ACCESS_XAWRITE |
++		    NFS_ACCESS_XALIST;
++	}
+ 	if (S_ISDIR(inode->i_mode))
+ 		cache.mask |= NFS_ACCESS_DELETE | NFS_ACCESS_LOOKUP;
+ 	else
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 11eac1b46749..9207f945d75c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1341,6 +1341,12 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 				NFS4_ACCESS_MODIFY |
+ 				NFS4_ACCESS_EXTEND |
+ 				NFS4_ACCESS_EXECUTE;
++#ifdef CONFIG_NFS_V4_2
++			if (server->caps & NFS_CAP_XATTR)
++				p->o_arg.access |= NFS4_ACCESS_XAREAD |
++				    NFS4_ACCESS_XAWRITE |
++				    NFS4_ACCESS_XALIST;
++#endif
+ 		}
+ 	}
+ 	p->o_arg.clientid = server->nfs_client->cl_clientid;
 -- 
 2.17.2
 
