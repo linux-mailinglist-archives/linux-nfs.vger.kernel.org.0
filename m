@@ -2,174 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 954171933E2
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 23:53:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C66F0193443
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCYWx2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 18:53:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54188 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCYWx2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:53:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E7F1AAD88;
-        Wed, 25 Mar 2020 22:53:25 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 26 Mar 2020 09:53:19 +1100
-Cc:     linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-In-Reply-To: <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr> <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com> <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
-Message-ID: <87wo786o80.fsf@notabene.neil.brown.name>
+        id S1727486AbgCYXLI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 19:11:08 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:40828 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbgCYXLI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:11:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585177867; x=1616713867;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=njHYg5IBfxigZMQpTlelWlI9ARc5mEgd9mXi449OG1A=;
+  b=k8Ek+H1bZNJpOCnOK0CcCdyJ3NVADDWD6F4jBfJJ/JeMSS/AMthN95CN
+   yXogKa9LRkhv6ttRqCl25VkGbFB6HZ0P7qvauoDq1NHE+LKIELIFO4tVP
+   mcEkxmCrB83pWgGMv7q3iFU2Aw6oIRCZHvCFRtHOSjwQgMvXjPqKwY3O3
+   c=;
+IronPort-SDR: 9XcHhEf3FqrEJfURWhpPsC+RfVheREnRe3j25fB4bsEM7ce7hMx4KnBObwOjNQoz5y097M5aMT
+ Lfq5nq/wlk5Q==
+X-IronPort-AV: E=Sophos;i="5.72,306,1580774400"; 
+   d="scan'208";a="22761098"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 25 Mar 2020 23:10:54 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id CD25AA239C;
+        Wed, 25 Mar 2020 23:10:53 +0000 (UTC)
+Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 25 Mar 2020 23:10:52 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 25 Mar 2020 23:10:52 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1236.3 via Frontend Transport; Wed, 25 Mar 2020 23:10:51 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 46F23D92AA; Wed, 25 Mar 2020 23:10:51 +0000 (UTC)
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
+        <trond.myklebust@hammerspace.com>
+CC:     Frank van der Linden <fllinden@amazon.com>
+Subject: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
+Date:   Wed, 25 Mar 2020 23:10:38 +0000
+Message-ID: <20200325231051.31652-1-fllinden@amazon.com>
+X-Mailer: git-send-email 2.16.6
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+v1 is here: https://www.spinics.net/lists/linux-nfs/msg76740.html
 
-On Wed, Mar 25 2020, Christophe JAILLET wrote:
+v2:
 
-> Le 25/03/2020 =C3=A0 15:52, Chuck Lever a =C3=A9crit=C2=A0:
->> Hi Christophe,
->>
->>
->>> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET <christophe.jaillet@wan=
-adoo.fr> wrote:
->>>
->>> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
->>> overflow.
->> That's true as a general statement, but how likely is such an
->> overflow to occur here?
->>
-> I guess, that it us unlikely and that the 80 chars buffer is big enough.
-> That is the exact reason of why I've proposed 2 patches. The first one=20
-> could happen in RL. The 2nd is more like a clean-up and is less=20
-> relevant, IMHO.
->>
->>> The return value can also be used to avoid a strlen a call.
->> That's also true of sprintf, isn't it?
->
-> Sure.
->
->
->>
->>> Finally, we know where we need to copy and the length to copy, so, we
->>> can save a few cycles by rearraging the code and using a memcpy instead=
- of
->>> a strcat.
->> I would be OK with squashing these two patches together. I don't
->> see the need to keep the two changes separated.
->
-> NP, I can resend as a V2 with your comments.
-> As said above, the first fixes something that could, IMHO, happen and=20
-> the 2nd is more a matter of taste and a clean-up.
->
->
->>
->>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>> ---
->>> This patch should have no functionnal change.
->>> We could go further, use scnprintf and write directly in the destination
->>> buffer. However, this could lead to a truncated last line.
->> That's exactly what this function is trying to avoid. As part of any
->> change in this area, it would be good to replace the current block
->> comment before this function with a Doxygen-format comment that
->> documents that goal.
->
-> I'll take care of it.
->
->
->>> ---
->>> net/sunrpc/svc_xprt.c | 8 ++++----
->>> 1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index df39e7b8b06c..6df861650040 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
->>> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
->>> 		int slen;
->>>
->>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
->>> -		slen =3D strlen(tmpstr);
->>> -		if (len + slen >=3D maxlen)
->>> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
->>> +				xcl->xcl_name, xcl->xcl_max_payload);
->>> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
->>> 			break;
->>> +		memcpy(buf + len, tmpstr, slen + 1);
->>> 		len +=3D slen;
->>> -		strcat(buf, tmpstr);
->> IMO replacing the strcat makes the code harder to read, and this
->> is certainly not a performance path. Can you drop that part of the
->> patch?
->
-> Ok
->
->
->>
->>> 	}
->>> 	spin_unlock(&svc_xprt_class_lock);
->>>
->>> --=20
+* Move nfs4 specific definitions to nfs_fs4.h
+* Squash some patches together to avoid unused function warnings
+  when bisecting.
+* Made determining server support a two-step process. First,
+  the extended attribute FATTR is verified to be supported, then
+  the value of the attributed is queried in fsinfo to determine
+  support.
+* Fixed up Makefile to remove an unneeded extra line.
 
-Can I suggest something more like this:
+This was tested as before (using my own stress tests), but also
+with xfstests-dev. No issues were found, but xfstests needs some
+fixes to correctly run the applicable xattr tests on NFS. I
+have those changes, but need to send them out.
 
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index de3c077733a7..0292f45b70f6 100644
-=2D-- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
- 	buf[0] =3D '\0';
-=20
- 	spin_lock(&svc_xprt_class_lock);
-=2D	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-=2D		int slen;
-=2D
-=2D		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
-=2D		slen =3D strlen(tmpstr);
-=2D		if (len + slen > maxlen)
-=2D			break;
-=2D		len +=3D slen;
-=2D		strcat(buf, tmpstr);
-=2D	}
-+	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
-+		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
-+				 xcl->xcl_name, xcl->xcl_max_payload);
- 	spin_unlock(&svc_xprt_class_lock);
-=20
- 	return len;
+I also tested stress-ng-xattr with 1000 workers on the client
+side, running for 8 hours without problems (except for noting
+that the session tbl_lock can become quite hot when doing
+NFS operations by 1000 threads, but that's a separate issue).
 
-NeilBrown
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Frank van der Linden (13):
+  nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
+  nfs: add client side only definitions for user xattrs
+  NFSv4.2: define limits and sizes for user xattr handling
+  NFSv4.2: query the server for extended attribute support
+  NFSv4.2: add client side XDR handling for extended attributes
+  nfs: define nfs_access_get_cached function
+  NFSv4.2: query the extended attribute access bits
+  nfs: modify update_changeattr to deal with regular files
+  nfs: define and use the NFS_INO_INVALID_XATTR flag
+  nfs: make the buf_to_pages_noslab function available to the nfs code
+  NFSv4.2: add the extended attribute proc functions.
+  NFSv4.2: hook in the user extended attribute handlers
+  NFSv4.2: add client side xattr caching.
 
------BEGIN PGP SIGNATURE-----
+ fs/nfs/Makefile             |    2 +-
+ fs/nfs/client.c             |   22 +-
+ fs/nfs/dir.c                |   24 +-
+ fs/nfs/inode.c              |   16 +-
+ fs/nfs/nfs42.h              |   24 +
+ fs/nfs/nfs42proc.c          |  248 ++++++++
+ fs/nfs/nfs42xattr.c         | 1083 +++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs42xdr.c           |  438 ++++++++++++++
+ fs/nfs/nfs4_fs.h            |   35 ++
+ fs/nfs/nfs4client.c         |   31 +
+ fs/nfs/nfs4proc.c           |  237 +++++++-
+ fs/nfs/nfs4super.c          |   10 +
+ fs/nfs/nfs4xdr.c            |   31 +
+ fs/nfs/nfstrace.h           |    3 +-
+ include/linux/nfs4.h        |   25 +
+ include/linux/nfs_fs.h      |   12 +
+ include/linux/nfs_fs_sb.h   |    6 +
+ include/linux/nfs_xdr.h     |   60 +-
+ include/uapi/linux/nfs4.h   |    3 +
+ include/uapi/linux/nfs_fs.h |    1 +
+ 20 files changed, 2269 insertions(+), 42 deletions(-)
+ create mode 100644 fs/nfs/nfs42xattr.c
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl574N8ACgkQOeye3VZi
-gblt1g/9HiVqAgfOAczPAHMlZ3fEpsGid1IWxmMW6KeiZkcNztY76eVboisWNlPs
-ZZK88kbrsOAKqagKDyKbRc1qbEFBfMQd0EGzQm4J562fO0YQgF7MwGVhBfxXGEeL
-ca9GPo2ZqG2p9/9FjFIk+/kOYk/8WMpK9noKlKR4Nqk/C+jW2jqNtZf/f6BE1OU/
-js7FCd0iK4KQSLGXSKT4i9puHiJoZMi0d+7bAxWDxub9UFrQk5yk1HQDQK6EuQj0
-hhalu5Pz3KoBih6gzlVLR0O2rUGr8abLRM/L0Cwa3p2113gymBmsEVPJyAQ2O5E/
-ohyRZCeGKMs9RXAcsAjFUr6CVmeJFvT+P35wbDT29V5wbnOja0R8UubAVxg8PPnm
-ZPrGeDVzOrKvRWoydX1mPffpj8PexJvJSZaXvDugmqY30WKDgDsjg7vsHox7oRC7
-R0MY26ilBwsvdrsegZlr3J7jRIcDj+ItkLoKYubhu0VUMQSyGZlP++Cz43PdQD21
-dujfjUKOVQvZ3h3IKO8L7Zo8hcetaKwDqCtrigO0O0IrClfSX7Jtrojnyj8jUobB
-67x/pEkRB8WVXI6ldungASWirIir5COofkJCVRNPeQDk6tFKb4blb5jqA8Xxi/Xt
-gua4apqXIK9M1nmXvriKSzVmiB+RRJG6Tjx+jfqNaDi8WRZKcyI=
-=aTlo
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+2.17.2
+
