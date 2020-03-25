@@ -2,157 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9F8192B84
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 15:53:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2629192BFF
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2020 16:14:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCYOxH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 10:53:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44488 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgCYOxH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 10:53:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnCVY123452;
-        Wed, 25 Mar 2020 14:52:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=zAbyJ2Adl64oNbkxQzSsrnmxkJw2yY8FglQ1E9FwStQ=;
- b=yQJWcnOfku9uKxYBkOXUpDtesOWtiEBYp+1Hn3ZsnCMfcihU0S3HrgOE9CJ2R2xHfmMc
- tr3u0Ao+VmlsOjX8PR2UBoVXQJsO6uej3N8QdvLA9O7Rtozbcor1SJ6LaodjwvnICNmm
- R7yuxqbigT1spwuEPU8c7yv8mvNZm/mGB4y9thRh7WIVVDUOINh/TUPUov2whNxRGg2r
- +dOv+2swst5qtmqNcs8a4Zc3UHhkXKIWogzCLc4nvBZSqUgjkZLwgM1/gtDwtMjg3H/W
- ir0ECcbuUvPjrr1+xcIVylcLAHSQovB2JGmxHZGNSBVA+mJjW2vPsX8ylAtFGU7aQjPP 6w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ywabra6g4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 14:52:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnjRm022210;
-        Wed, 25 Mar 2020 14:52:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3003ghv4qe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 14:52:50 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PEqkf5008920;
-        Wed, 25 Mar 2020 14:52:46 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 07:52:46 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
-Date:   Wed, 25 Mar 2020 10:52:44 -0400
-Cc:     trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>, davem@davemloft.net,
-        kuba@kernel.org, gnb@sgi.com, Neil Brown <neilb@suse.de>,
-        Tom Tucker <tom@opengridcomputing.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250122
+        id S1727524AbgCYPOj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 11:14:39 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:49877 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727319AbgCYPOj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 11:14:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TtcTuPJ_1585149273;
+Received: from Macintosh.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TtcTuPJ_1585149273)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 25 Mar 2020 23:14:34 +0800
+Subject: Re: [PATCH] nfsd: fix race between cache_clean and cache_purge
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        "neilb@suse.com" <neilb@suse.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <5eed50660eb13326b0fbf537fb58481ea53c1acb.1585043174.git.wuyihao@linux.alibaba.com>
+ <8B2BC124-6911-46C9-9B01-A237AC149F0A@oracle.com>
+ <13c45bdcb67d689bfcb4f4b720b631e56c662f2b.camel@hammerspace.com>
+ <CCFA2CA8-150C-432C-B939-9085B791FE74@oracle.com>
+ <5372f88d-efb7-25a3-789f-53bfa7bb6f26@linux.alibaba.com>
+ <6AA6A103-6A9C-40CF-A625-B7A29B0D6BA0@oracle.com>
+From:   Yihao Wu <wuyihao@linux.alibaba.com>
+Message-ID: <eaa72567-a77d-5274-1569-fb3daf2c4162@linux.alibaba.com>
+Date:   Wed, 25 Mar 2020 23:14:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <6AA6A103-6A9C-40CF-A625-B7A29B0D6BA0@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Christophe,
+On 2020/3/25 10:24 PM, Chuck Lever wrote:
+> 
+> 
+>> On Mar 25, 2020, at 2:37 AM, Yihao Wu <wuyihao@linux.alibaba.com> wrote:
+>>
+>> On 2020/3/25 1:46 AM, Chuck Lever wrote:
+>>>>>> ---
+>>>>>> net/sunrpc/cache.c | 3 +++
+>>>>>> 1 file changed, 3 insertions(+)
+>>>>>>
+>>>>>> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+>>>>>> index bd843a81afa0..3e523eefc47f 100644
+>>>>>> --- a/net/sunrpc/cache.c
+>>>>>> +++ b/net/sunrpc/cache.c
+>>>>>> @@ -524,9 +524,11 @@ void cache_purge(struct cache_detail *detail)
+>>>>>> 	struct hlist_node *tmp = NULL;
+>>>>>> 	int i = 0;
+>>>>>>
+>>>>>> +	spin_lock(&cache_list_lock);
+>>>>>> 	spin_lock(&detail->hash_lock);
+>>>>>> 	if (!detail->entries) {
+>>>>>> 		spin_unlock(&detail->hash_lock);
+>>>>>> +		spin_unlock(&cache_list_lock);
+>>>>>> 		return;
+>>>>>> 	}
+>>>>>>
+>>>>>> @@ -541,6 +543,7 @@ void cache_purge(struct cache_detail *detail)
+>>>>>> 		}
+>>>>>> 	}
+>>>>>> 	spin_unlock(&detail->hash_lock);
+>>>>>> +	spin_unlock(&cache_list_lock);
+>>>>>> }
+>>>>>> EXPORT_SYMBOL_GPL(cache_purge);
+>>>>
+>>>> Hmm... Shouldn't this patch be dropping cache_list_lock() when we call
+>>>> sunrpc_end_cache_remove_entry()? The latter does call both
+>>>> cache_revisit_request() and cache_put(), and while they do not
+>>>> explicitly call anything that holds cache_list_lock, some of those cd-
+>>>>> cache_put callbacks do look as if there is potential for deadlock.
+>>> I see svc_export_put calling dput, eventually, which might_sleep().
+>>
+>> Wow that's a little strange. If svc_export_put->dput might_sleep, why can we
+>> spin_lock(&detail->hash_lock); in cache_purge in the first place?
+>>
+>> And I agree with Trond those cd->cache_put callbacks are dangerous. I will look
+>> into them today.
+>>
+>> But if we dropping cache_list_lock when we call sunrpc_end_cache_remove_entry,
+>> cache_put is not protected, and this patch won't work anymore, right?
+> 
+> IMHO Neil's proposed solution seems pretty safe, and follows a well-understood
+> pattern.
+> 
+> It would be nice (but not 100% necessary) if the race you found was spelled out
+> in the patch description.
+> 
+> Thanks!
+> 
+> 
+> --
+> Chuck Lever
+> 
+> 
 
+Yeah. I believe Neil's solution must be better. 
+But I'm still studying it, so I didn't reply to him yet.
+OK. I'll try make it more clearly in the next version patch.
 
-> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET =
-<christophe.jaillet@wanadoo.fr> wrote:
->=20
-> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
-> overflow.
-
-That's true as a general statement, but how likely is such an
-overflow to occur here?
-
-
-> The return value can also be used to avoid a strlen a call.
-
-That's also true of sprintf, isn't it?
-
-
-> Finally, we know where we need to copy and the length to copy, so, we
-> can save a few cycles by rearraging the code and using a memcpy =
-instead of
-> a strcat.
-
-I would be OK with squashing these two patches together. I don't
-see the need to keep the two changes separated.
-
-
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> This patch should have no functionnal change.
-> We could go further, use scnprintf and write directly in the =
-destination
-> buffer. However, this could lead to a truncated last line.
-
-That's exactly what this function is trying to avoid. As part of any
-change in this area, it would be good to replace the current block
-comment before this function with a Doxygen-format comment that
-documents that goal.
-
-
-> ---
-> net/sunrpc/svc_xprt.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index df39e7b8b06c..6df861650040 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int slen;
->=20
-> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
-> -		slen =3D strlen(tmpstr);
-> -		if (len + slen >=3D maxlen)
-> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
-> +				xcl->xcl_name, xcl->xcl_max_payload);
-> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
-> 			break;
-> +		memcpy(buf + len, tmpstr, slen + 1);
-> 		len +=3D slen;
-> -		strcat(buf, tmpstr);
-
-IMO replacing the strcat makes the code harder to read, and this
-is certainly not a performance path. Can you drop that part of the
-patch?
-
-
-> 	}
-> 	spin_unlock(&svc_xprt_class_lock);
->=20
-> --=20
-> 2.20.1
->=20
-
---
-Chuck Lever
-
-
-
+Thanks,
+Yihao Wu
