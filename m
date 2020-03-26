@@ -2,214 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8711719413B
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 15:25:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F399194238
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 16:00:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgCZOZt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 10:25:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51896 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgCZOZt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 10:25:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QEOwFs026520;
-        Thu, 26 Mar 2020 14:25:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=lbPAye3rNwkKkX/6IUO+Chkrv9DTjuCZgRGbj7WtxuA=;
- b=LxSWjnKmrV75dH0ewx3e7AvJTr88nOGzWnUEkRsNEPyXVh92qGCR6OfuH9waqIzFfKHo
- 6vwhIUj+Pikrvo/DCjTit45+LT54hE+enICVGu0swIajg2PXKOEmIynU7YDKHYeYKOlq
- UxBGU04cpCVRKmxD9c5gn8axhTFfWZLPCfFZovyj+QQeGvy7vG60OVUzm6qa6auMTSKK
- y17jeQ2NTeDS0LFxJCp/J1TjPsHgTJMb7ZidMbYj6JJ7eIaUJYYEg74OMG9/dcWHDRyy
- +4Gzq1Do54ttYHyLVF2ktWArhxJICzT8klzpcw4bVb4KBplksFytlsyr3hf+q3VX1rXr 1w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 300urk0thf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:25:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QEM03t072108;
-        Thu, 26 Mar 2020 14:25:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 3006r8j28f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:25:43 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QEPhW1007764;
-        Thu, 26 Mar 2020 14:25:43 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 07:25:42 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 1/1] SUNRPC: fix krb5p mount to provide large enough
- buffer in rq_rcvsize
+        id S1726318AbgCZPAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Mar 2020 11:00:44 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:46641 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZPAo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 11:00:44 -0400
+Received: by mail-qv1-f67.google.com with SMTP id m2so3042126qvu.13;
+        Thu, 26 Mar 2020 08:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ygcBKCp+0WYFKntXrF557PkaUGgSa7RUea/+BnXY+Iw=;
+        b=ckfMy+ko331Di/eJBTkHXmfLrNLdygWBsFQhraRs0/LyxH5TD8fgmqSIiuYErtJVsO
+         dlsDC63LpKE2+2ZgdnXbcdinQQ3NIDGlZuSYFZsZqyHbqno2zIc4+omk7XQyi+UBWGZr
+         s7ub8Po32TP2jct/Ho2lloZpOaDs9FVFWPKdl7ddUCOhSc4SeviAi9ZVLS0M/TU6hNr8
+         jTlPUui7rQ0vl4JsjEHMkB5jljzotlx/0lUQeva+e/2QK2H9yMFulV6mp7xi4Bla8Xdv
+         pPOyqTi4VLPpXGUUCuOs9Iqgil20xOiDJPMMX0x4cPUGnsLV8Sz8tIEMyecp+Lza64Tw
+         5MoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ygcBKCp+0WYFKntXrF557PkaUGgSa7RUea/+BnXY+Iw=;
+        b=fKeugFSzfnZZkM2EUakz/Q4uEfkdzwPuoFOE6Yar6QXIyY5Urn5Kg5PNwMC4/8OQ37
+         ssopoajetF0kLGiTzI8itBdiIrnhCs0n47X2biXc9O6FIA09VvPVOWm1khKoGIW0YBWm
+         5++v/Z4jNkcu0GYIDYaQwLbL83SkXQ2JjnJ+vIrw5yE2dCtyZqIwXKITnTDXYqbrIGTR
+         mjJb2f/BcH7098ScGkYmW0yzXLr7gDVAw6dOK0fx2V89QfSNU4UqVNGkZjQqzG4q3EZO
+         Bfc9C+0H+OcciCyzjfrj0rX8dkd3iLtpV2W4JgUiBux6Z9W2m4Oy3y0ROQw+mvZ2iFmz
+         +iYg==
+X-Gm-Message-State: ANhLgQ1yY1BVg09dIvi+iPauA6jC4VeuJBqGJsxpm6DZpxHixo3hU7S0
+        YTJYG9B2KkBQ55WPRoqHp6LvsrQs
+X-Google-Smtp-Source: ADFU+vvMhRwqEvLeWKqvwuAADPwYsLk6SdbMkdPfM6oevC4/8PJwgjJ+uLzkE+RD7Xfnz0R4cCAl0Q==
+X-Received: by 2002:a0c:ec07:: with SMTP id y7mr8672795qvo.142.1585234841667;
+        Thu, 26 Mar 2020 08:00:41 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id w9sm1521587qkf.28.2020.03.26.08.00.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 08:00:41 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02QF0col001280;
+        Thu, 26 Mar 2020 15:00:38 GMT
+Subject: [PATCH] svcrdma: Fix leak of transport addresses
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200326142451.3666-1-olga.kornievskaia@gmail.com>
-Date:   Thu, 26 Mar 2020 10:25:41 -0400
-Cc:     trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F945671A-CB6B-431B-9172-907294F3F1AA@oracle.com>
-References: <20200326142451.3666-1-olga.kornievskaia@gmail.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
- phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260111
+To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Thu, 26 Mar 2020 11:00:38 -0400
+Message-ID: <20200326145920.29379.46066.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.22-7-g1113
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Kernel memory leak detected:
 
+unreferenced object 0xffff888849cdf480 (size 8):
+  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
+  hex dump (first 8 bytes):
+    30 00 cd 49 88 88 ff ff                          0..I....
+  backtrace:
+    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
+    [<00000000a2724354>] kstrdup+0x2b/0x43
+    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
+    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
+    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
+    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
+    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
+    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
+    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
+    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
+    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
+    [<000000005205fb78>] kthread+0xf6/0xfb
+    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
 
-> On Mar 26, 2020, at 10:24 AM, Olga Kornievskaia =
-<olga.kornievskaia@gmail.com> wrote:
->=20
-> Ever since commit 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing
-> reply buffer size"). It changed how "req->rq_rcvsize" is calculated. =
-It
-> used to use au_cslack value which was nice and large and changed it to
-> au_rslack value which turns out to be too small.
->=20
-> Since 5.1, v3 mount with sec=3Dkrb5p fails against an Ontap server
-> because client's receive buffer it too small.
->=20
-> For gss krb5p, we need to account for the mic token in the verifier,
-> and the wrap token in the wrap token.
->=20
-> RFC 4121 defines:
-> mic token
-> Octet no   Name        Description
->         --------------------------------------------------------------
->         0..1     TOK_ID     Identification field.  Tokens emitted by
->                             GSS_GetMIC() contain the hex value 04 04
->                             expressed in big-endian order in this
->                             field.
->         2        Flags      Attributes field, as described in section
->                             4.2.2.
->         3..7     Filler     Contains five octets of hex value FF.
->         8..15    SND_SEQ    Sequence number field in clear text,
->                             expressed in big-endian order.
->         16..last SGN_CKSUM  Checksum of the "to-be-signed" data and
->                             octet 0..15, as described in section =
-4.2.4.
->=20
-> that's 16bytes (GSS_KRB5_TOK_HDR_LEN) + chksum
->=20
-> wrap token
-> Octet no   Name        Description
->         --------------------------------------------------------------
->          0..1     TOK_ID    Identification field.  Tokens emitted by
->                             GSS_Wrap() contain the hex value 05 04
->                             expressed in big-endian order in this
->                             field.
->          2        Flags     Attributes field, as described in section
->                             4.2.2.
->          3        Filler    Contains the hex value FF.
->          4..5     EC        Contains the "extra count" field, in big-
->                             endian order as described in section =
-4.2.3.
->          6..7     RRC       Contains the "right rotation count" in =
-big-
->                             endian order, as described in section
->                             4.2.5.
->          8..15    SND_SEQ   Sequence number field in clear text,
->                             expressed in big-endian order.
->          16..last Data      Encrypted data for Wrap tokens with
->                             confidentiality, or plaintext data =
-followed
->                             by the checksum for Wrap tokens without
->                             confidentiality, as described in section
->                             4.2.4.
->=20
-> Also 16bytes of header (GSS_KRB5_TOK_HDR_LEN), encrypted data, and =
-cksum
-> (other things like padding)
->=20
-> RFC 3961 defines known cksum sizes:
-> Checksum type              sumtype        checksum         section or
->                                value            size         reference
->   =
----------------------------------------------------------------------
->   CRC32                            1               4           6.1.3
->   rsa-md4                          2              16           6.1.2
->   rsa-md4-des                      3              24           6.2.5
->   des-mac                          4              16           6.2.7
->   des-mac-k                        5               8           6.2.8
->   rsa-md4-des-k                    6              16           6.2.6
->   rsa-md5                          7              16           6.1.1
->   rsa-md5-des                      8              24           6.2.4
->   rsa-md5-des3                     9              24             ??
->   sha1 (unkeyed)                  10              20             ??
->   hmac-sha1-des3-kd               12              20            6.3
->   hmac-sha1-des3                  13              20             ??
->   sha1 (unkeyed)                  14              20             ??
->   hmac-sha1-96-aes128             15              20         =
-[KRB5-AES]
->   hmac-sha1-96-aes256             16              20         =
-[KRB5-AES]
->   [reserved]                  0x8003               ?         =
-[GSS-KRB5]
->=20
-> Linux kernel now mainly supports type 15,16 so max cksum size is =
-20bytes.
-> (GSS_KRB5_MAX_CKSUM_LEN)
->=20
-> Re-use already existing define of GSS_KRB5_MAX_SLACK_NEEDED that's =
-used
-> for encoding the gss_wrap tokens (same tokens are used in reply).
->=20
-> Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply =
-buffer size")
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Introduce a call to xprt_rdma_free_addresses() similar to the way
+that the TCP backchannel releases a transport's peer address
+strings.
 
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    1 +
+ 1 file changed, 1 insertion(+)
 
+Here's a possible fix for v5.7-rc.
 
-> ---
-> net/sunrpc/auth_gss/auth_gss.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/net/sunrpc/auth_gss/auth_gss.c =
-b/net/sunrpc/auth_gss/auth_gss.c
-> index 24ca861..d6cd2a5 100644
-> --- a/net/sunrpc/auth_gss/auth_gss.c
-> +++ b/net/sunrpc/auth_gss/auth_gss.c
-> @@ -20,6 +20,7 @@
-> #include <linux/sunrpc/clnt.h>
-> #include <linux/sunrpc/auth.h>
-> #include <linux/sunrpc/auth_gss.h>
-> +#include <linux/sunrpc/gss_krb5.h>
-> #include <linux/sunrpc/svcauth_gss.h>
-> #include <linux/sunrpc/gss_err.h>
-> #include <linux/workqueue.h>
-> @@ -1050,7 +1051,7 @@ static void gss_pipe_free(struct gss_pipe *p)
-> 		goto err_put_mech;
-> 	auth =3D &gss_auth->rpc_auth;
-> 	auth->au_cslack =3D GSS_CRED_SLACK >> 2;
-> -	auth->au_rslack =3D GSS_VERF_SLACK >> 2;
-> +	auth->au_rslack =3D GSS_KRB5_MAX_SLACK_NEEDED >> 2;
-> 	auth->au_verfsize =3D GSS_VERF_SLACK >> 2;
-> 	auth->au_ralign =3D GSS_VERF_SLACK >> 2;
-> 	auth->au_flags =3D 0;
-> --=20
-> 1.8.3.1
->=20
-
---
-Chuck Lever
-
-
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 46b59e91d34a..d510a3a15d4b 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -252,6 +252,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
+ {
+ 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
+ 
++	xprt_rdma_free_addresses(xprt);
+ 	xprt_free(xprt);
+ }
+ 
 
