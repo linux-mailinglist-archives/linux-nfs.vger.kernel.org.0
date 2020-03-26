@@ -2,168 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B0E11943A5
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 16:55:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DF6D1946F4
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 20:03:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCZPzq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 11:55:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50456 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgCZPzq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 11:55:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QFn9ce007073;
-        Thu, 26 Mar 2020 15:55:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=M3fBdqs013ErGxj7QI2NXZPfPsz0DC2QSu5ns6vXYb4=;
- b=SVc9Wlz8tjbLpOMs8WyqgRuwU54bf9ag9kmbpPwdqq02mHFLlqgW4msI8+Bq/VgGQUWE
- VjIj96553SuJlwxveahkOxzkyejGTaLIYLdMtu5BCV8MRlEmXc/afmo8KZn20V1SX+WU
- XpWVJctYA8VD2cJnJD5ChvD7hhm1jyAr21uvyKCNgVX8m2mcspWfTRAS+6ohpA12/LA/
- H9zGJIK25FQHbQG4UdabVn8uVD4fe4uKGaCRPcHEC4nqVqttDVy8QEaMEFov62tiIynh
- D5TJlqgSfPpPPJofLzKh97QnBA6XZX/F6jDGomVs1YNSfzIwmQgbAtJWHOiH0etsRlsS zw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2ywavmgnj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 15:55:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QFogHP183897;
-        Thu, 26 Mar 2020 15:55:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yxw4twq4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 15:55:39 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QFtc2G015040;
-        Thu, 26 Mar 2020 15:55:39 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 08:55:38 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] nfsd: memory corruption in nfsd4_lock()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <db0980d0-8c99-940a-1748-04e679a366d1@virtuozzo.com>
-Date:   Thu, 26 Mar 2020 11:55:36 -0400
-Cc:     Bruce Fields <bfields@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7E365A05-4D39-4BF9-8E44-244136173FC7@oracle.com>
-References: <db0980d0-8c99-940a-1748-04e679a366d1@virtuozzo.com>
-To:     Vasily Averin <vvs@virtuozzo.com>, Jeff Layton <jlayton@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=2 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260122
+        id S1727192AbgCZTDR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Mar 2020 15:03:17 -0400
+Received: from smtp-o-3.desy.de ([131.169.56.156]:36537 "EHLO smtp-o-3.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgCZTDQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:03:16 -0400
+Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [131.169.56.166])
+        by smtp-o-3.desy.de (Postfix) with ESMTP id 64DF16049D
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Mar 2020 20:03:14 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 64DF16049D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1585249394; bh=v910PNI4OnJ6Njsd9SRTmzsJcZEqYnktsPpV2maBiHc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=qxb+5/tnU8cZLkwHs+Ezvt0HDmsyRIpezu93jQFlmKkc9jfe5CTc4mDQM2UYmOVlx
+         N6sFrBAKzseOqBg2tpTPMzOWEslJzY3BSD1zEyI3py8ffNtMvZ5ZeLqiODEFyr+DJS
+         gbA+2fZz7RpY+2QQGbTHu3YhWQ7LsTienEFGuFdE=
+Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [131.169.56.131])
+        by smtp-buf-3.desy.de (Postfix) with ESMTP id 589E1A00B3;
+        Thu, 26 Mar 2020 20:03:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-2.desy.de (Postfix) with ESMTP id 2FF1F100076;
+        Thu, 26 Mar 2020 20:03:14 +0100 (CET)
+Date:   Thu, 26 Mar 2020 20:03:13 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Message-ID: <1885904737.8217161.1585249393750.JavaMail.zimbra@desy.de>
+In-Reply-To: <20200325231051.31652-1-fllinden@amazon.com>
+References: <20200325231051.31652-1-fllinden@amazon.com>
+Subject: Re: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF74 (Linux)/8.8.15_GA_3895)
+Thread-Topic: NFS client user xattr (RFC8276) support
+Thread-Index: KvqUgEw5xowS7eTlF5AaiMw/U7jCcA==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Howdy-
+Hi Frank.
 
-> On Mar 23, 2020, at 3:55 AM, Vasily Averin <vvs@virtuozzo.com> wrote:
->=20
-> New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
-> does not initialised nbl_list and nbl_lru.
-> If conflock allocation fails rollback can call list_del_init()
-> access uninitialized fields and corrupt memory.
->=20
-> Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for =
-v4.1+ lock")
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+----- Original Message -----
+> From: "Frank van der Linden" <fllinden@amazon.com>
+> To: "linux-nfs" <linux-nfs@vger.kernel.org>, "Anna Schumaker" <anna.schumaker@netapp.com>, "Trond Myklebust"
+> <trond.myklebust@hammerspace.com>
+> Cc: "Frank van der Linden" <fllinden@amazon.com>
+> Sent: Thursday, March 26, 2020 12:10:38 AM
+> Subject: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
 
-I'm not certain where we stand with this one. Jeff, are you OK
-with me taking this for v5.7, or is there additional work needed?
+> v1 is here: https://www.spinics.net/lists/linux-nfs/msg76740.html
+> 
+> v2:
+> 
+> * Move nfs4 specific definitions to nfs_fs4.h
+> * Squash some patches together to avoid unused function warnings
+>  when bisecting.
+> * Made determining server support a two-step process. First,
+>  the extended attribute FATTR is verified to be supported, then
+>  the value of the attributed is queried in fsinfo to determine
+>  support.
 
-I can drop the dprintk when I merge it.
+The new patchset looks broken to me.
 
+Client quiryes for supported attributes and gets xattr_support bit set:
 
-> ---
-> fs/nfsd/nfs4state.c | 32 +++++++++++++++-----------------
-> 1 file changed, 15 insertions(+), 17 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 369e574c5092..176ef8d24fae 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6524,6 +6524,13 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 		goto out;
-> 	}
->=20
-> +	conflock =3D locks_alloc_lock();
-> +	if (!conflock) {
-> +		dprintk("NFSD: %s: unable to allocate lock!\n", =
-__func__);
-> +		status =3D nfserr_jukebox;
-> +		goto out;
-> +	}
-> +
-> 	nbl =3D find_or_allocate_block(lock_sop, &fp->fi_fhandle, nn);
-> 	if (!nbl) {
-> 		dprintk("NFSD: %s: unable to allocate block!\n", =
-__func__);
-> @@ -6542,13 +6549,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 	file_lock->fl_end =3D last_byte_offset(lock->lk_offset, =
-lock->lk_length);
-> 	nfs4_transform_lock_offset(file_lock);
->=20
-> -	conflock =3D locks_alloc_lock();
-> -	if (!conflock) {
-> -		dprintk("NFSD: %s: unable to allocate lock!\n", =
-__func__);
-> -		status =3D nfserr_jukebox;
-> -		goto out;
-> -	}
-> -
-> 	if (fl_flags & FL_SLEEP) {
-> 		nbl->nbl_time =3D jiffies;
-> 		spin_lock(&nn->blocked_locks_lock);
-> @@ -6581,17 +6581,15 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 		status =3D nfserrno(err);
-> 		break;
-> 	}
-> -out:
-> -	if (nbl) {
-> -		/* dequeue it if we queued it before */
-> -		if (fl_flags & FL_SLEEP) {
-> -			spin_lock(&nn->blocked_locks_lock);
-> -			list_del_init(&nbl->nbl_list);
-> -			list_del_init(&nbl->nbl_lru);
-> -			spin_unlock(&nn->blocked_locks_lock);
-> -		}
-> -		free_blocked_lock(nbl);
-> +	/* dequeue it if we queued it before */
-> +	if (fl_flags & FL_SLEEP) {
-> +		spin_lock(&nn->blocked_locks_lock);
-> +		list_del_init(&nbl->nbl_list);
-> +		list_del_init(&nbl->nbl_lru);
-> +		spin_unlock(&nn->blocked_locks_lock);
-> 	}
-> +	free_blocked_lock(nbl);
-> +out:
-> 	if (nf)
-> 		nfsd_file_put(nf);
-> 	if (lock_stp) {
-> --=20
-> 2.17.1
->=20
+Mar 26 11:27:07 ani.desy.de kernel: decode_attr_supported: bitmask=fcffbfff:40fdbe3e:00040800
 
---
-Chuck Lever
+However, the attribute never queries, but client makes is decision:
+
+Mar 26 11:27:07 ani.desy.de kernel: decode_attr_xattrsupport: XATTR support=false
+
+The packets can be found here: https://sas.desy.de/index.php/s/GEPiBxPg3eR4aGA
+
+Can you provide packets of your mount/umount round.
+
+Regards,
+   Tigran.
 
 
-
+> * Fixed up Makefile to remove an unneeded extra line.
+> 
+> This was tested as before (using my own stress tests), but also
+> with xfstests-dev. No issues were found, but xfstests needs some
+> fixes to correctly run the applicable xattr tests on NFS. I
+> have those changes, but need to send them out.
+> 
+> I also tested stress-ng-xattr with 1000 workers on the client
+> side, running for 8 hours without problems (except for noting
+> that the session tbl_lock can become quite hot when doing
+> NFS operations by 1000 threads, but that's a separate issue).
+> 
+> 
+> Frank van der Linden (13):
+>  nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
+>  nfs: add client side only definitions for user xattrs
+>  NFSv4.2: define limits and sizes for user xattr handling
+>  NFSv4.2: query the server for extended attribute support
+>  NFSv4.2: add client side XDR handling for extended attributes
+>  nfs: define nfs_access_get_cached function
+>  NFSv4.2: query the extended attribute access bits
+>  nfs: modify update_changeattr to deal with regular files
+>  nfs: define and use the NFS_INO_INVALID_XATTR flag
+>  nfs: make the buf_to_pages_noslab function available to the nfs code
+>  NFSv4.2: add the extended attribute proc functions.
+>  NFSv4.2: hook in the user extended attribute handlers
+>  NFSv4.2: add client side xattr caching.
+> 
+> fs/nfs/Makefile             |    2 +-
+> fs/nfs/client.c             |   22 +-
+> fs/nfs/dir.c                |   24 +-
+> fs/nfs/inode.c              |   16 +-
+> fs/nfs/nfs42.h              |   24 +
+> fs/nfs/nfs42proc.c          |  248 ++++++++
+> fs/nfs/nfs42xattr.c         | 1083 +++++++++++++++++++++++++++++++++++
+> fs/nfs/nfs42xdr.c           |  438 ++++++++++++++
+> fs/nfs/nfs4_fs.h            |   35 ++
+> fs/nfs/nfs4client.c         |   31 +
+> fs/nfs/nfs4proc.c           |  237 +++++++-
+> fs/nfs/nfs4super.c          |   10 +
+> fs/nfs/nfs4xdr.c            |   31 +
+> fs/nfs/nfstrace.h           |    3 +-
+> include/linux/nfs4.h        |   25 +
+> include/linux/nfs_fs.h      |   12 +
+> include/linux/nfs_fs_sb.h   |    6 +
+> include/linux/nfs_xdr.h     |   60 +-
+> include/uapi/linux/nfs4.h   |    3 +
+> include/uapi/linux/nfs_fs.h |    1 +
+> 20 files changed, 2269 insertions(+), 42 deletions(-)
+> create mode 100644 fs/nfs/nfs42xattr.c
+> 
+> --
+> 2.17.2
