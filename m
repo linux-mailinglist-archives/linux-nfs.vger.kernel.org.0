@@ -2,156 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F70E194B88
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 23:29:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D85F0194C0B
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 00:16:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgCZW3v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 18:29:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55132 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZW3v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 18:29:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMSYv0178468;
-        Thu, 26 Mar 2020 22:29:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=AbnF9vL8V5KcErLA/dx3AbUSHBS3ZjKSUCbowOPIxBQ=;
- b=OSvQga1K+wfyGCM+thkdl6gQ6QHkKbTxVPkn1eo+KofzPr8bhKUaE0P5mNGwqS3jlmpG
- hGyCiDR24GbFuCl2ewyo6tbQWcqt7JWvgMd4PKVcMotgJkoCj2OfA/eCahe9eKlxf/Y9
- D2+Ef3FfxMq5mksmKSSFXLsR0bQ6iGfDCPeBrw9b711H9cyvudTplqHybroFSEm9wd4c
- GzdcA946rESJE5punlDl6SiojrvVtOwaau6kxSITrU3yf8bZidQqJF8eC7rbBDJvRxSr
- chfIFIxIrL8WwzcvS1/vhqUhsJmNC1JYxCY0Jc6krGCC8b0XXPNeVw9zFtqZNQnDVeY7 xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 300urk36pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:29:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMQb85133092;
-        Thu, 26 Mar 2020 22:29:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30073epnya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:29:44 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QMThpU029885;
-        Thu, 26 Mar 2020 22:29:43 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 15:29:43 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <87r1xe7pvy.fsf@notabene.neil.brown.name>
-Date:   Thu, 26 Mar 2020 18:29:41 -0400
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9AC34F25-68B7-4184-9A91-A6D026F6BA6F@oracle.com>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
- <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
- <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
- <87wo786o80.fsf@notabene.neil.brown.name>
- <2e2d1293-c978-3f1d-5a1e-dc43dc2ad06b@wanadoo.fr>
- <87r1xe7pvy.fsf@notabene.neil.brown.name>
-To:     Neil Brown <neilb@suse.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=988 adultscore=0
- suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260163
+        id S1727026AbgCZXQS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Mar 2020 19:16:18 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:20649 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZXQS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 19:16:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585264577; x=1616800577;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=6AiyNYqRtKTK4AcYgbg/kzINgVDS2hv+9Q2+eYU3+uk=;
+  b=ULzD1GlRDpPRmgWYAu6XOiLKotBPzX08H72dLeCwOKjXTQ4gvzTLGYq4
+   EP/zwN+AM8EC/d07WNB2p8tumVuGRaTst2p+ww1KAZm27BRip4n+Xstq+
+   0E0P9uXIRTn8y4c0Kx1qHCenBCDw3iK5U7dOmGQLA1ApTiCHmL6xkG9iS
+   I=;
+IronPort-SDR: Atb902mrZSWiH2A+mnNl62XXB9l0VV7wdwrC74HgPJL2BMBPW1SVmngMmkz55FT+XMUj2EeuI3
+ LDjBDbyEIUUA==
+X-IronPort-AV: E=Sophos;i="5.72,310,1580774400"; 
+   d="scan'208";a="22920075"
+Subject: Re: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 26 Mar 2020 23:16:04 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 4E358A1C2E;
+        Thu, 26 Mar 2020 23:16:02 +0000 (UTC)
+Received: from EX13D14UWC003.ant.amazon.com (10.43.162.19) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 26 Mar 2020 23:16:02 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D14UWC003.ant.amazon.com (10.43.162.19) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Mar 2020 23:16:02 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Thu, 26 Mar 2020 23:16:02 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 53D31DEE07; Thu, 26 Mar 2020 23:16:02 +0000 (UTC)
+Date:   Thu, 26 Mar 2020 23:16:02 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+CC:     linux-nfs <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Message-ID: <20200326231602.GA29187@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200325231051.31652-1-fllinden@amazon.com>
+ <1885904737.8217161.1585249393750.JavaMail.zimbra@desy.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1885904737.8217161.1585249393750.JavaMail.zimbra@desy.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 08:03:13PM +0100, Mkrtchyan, Tigran wrote:
+> The new patchset looks broken to me.
+> 
+> Client quiryes for supported attributes and gets xattr_support bit set:
+> 
+> Mar 26 11:27:07 ani.desy.de kernel: decode_attr_supported: bitmask=fcffbfff:40fdbe3e:00040800
+> 
+> However, the attribute never queries, but client makes is decision:
+> 
+> Mar 26 11:27:07 ani.desy.de kernel: decode_attr_xattrsupport: XATTR support=false
+> 
+> The packets can be found here: https://sas.desy.de/index.php/s/GEPiBxPg3eR4aGA
+> 
+> Can you provide packets of your mount/umount round.
 
+Hi Tigran,
 
-> On Mar 26, 2020, at 5:44 PM, NeilBrown <neilb@suse.de> wrote:
->=20
-> On Thu, Mar 26 2020, Christophe JAILLET wrote:
->=20
->> Le 25/03/2020 =C3=A0 23:53, NeilBrown a =C3=A9crit :
->>> Can I suggest something more like this:
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index de3c077733a7..0292f45b70f6 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
->>>  	buf[0] =3D '\0';
->>>=20
->>>  	spin_lock(&svc_xprt_class_lock);
->>> -	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
->>> -		int slen;
->>> -
->>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
->>> -		slen =3D strlen(tmpstr);
->>> -		if (len + slen > maxlen)
->>> -			break;
->>> -		len +=3D slen;
->>> -		strcat(buf, tmpstr);
->>> -	}
->>> +	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
->>> +		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
->>> +				 xcl->xcl_name, xcl->xcl_max_payload);
->>>  	spin_unlock(&svc_xprt_class_lock);
->>>=20
->>>  	return len;
->>>=20
->>> NeilBrown
->>=20
->> Hi,
->>=20
->> this was what I suggested in the patch:
->>     ---
->>     This patch should have no functional change.
->>     We could go further, use scnprintf and write directly in the=20
->> destination
->>     buffer. However, this could lead to a truncated last line.
->>     ---
->=20
-> Sorry - I missed that.
-> So add
->=20
-> end =3D strrchr(tmpstr, '\n');
-> if (end)
->    end[1] =3D 0;
-> else
->    tmpstr[0] =3D 0;
->=20
-> or maybe something like
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int l =3D snprintf(buf + len, maxlen - len, "%s %d\n",
-> 				 xcl->xcl_name, xcl->xcl_max_payload);
->                if (l < maxlen - len)
->                	len +=3D l;
->        }
->        buf[len] =3D 0;
->=20
-> There really is no need to have the secondary buffer, and I think =
-doing
-> so just complicates the code.
+I looked at your packet dump. It seems like your server only supports 4.1,
+not 4.2. xattr support builds on 4.2 (within the rules laid out in
+RFC 8178).
 
-In the interest of getting this fix into the upcoming merge window, =
-let's
-stick with the temporary buffer approach. Thanks!
+So, the fsinfo client call, which is just a GETATTR, masks out the 4.2
+fattr bits from server->attr_mask, and just uses the 4.1 bits. Meaning that
+xattr_support is not included, and defaults to false.
 
+The packet dump also indicates that your server advertises the xattr_support
+fattr as supported, even though it's in a 4.1 session, which would not
+be correct.
 
---
-Chuck Lever
-
-
-
+- Frank
