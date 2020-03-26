@@ -2,108 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F399194238
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 16:00:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B0E11943A5
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 16:55:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgCZPAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 11:00:44 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46641 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZPAo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 11:00:44 -0400
-Received: by mail-qv1-f67.google.com with SMTP id m2so3042126qvu.13;
-        Thu, 26 Mar 2020 08:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=ygcBKCp+0WYFKntXrF557PkaUGgSa7RUea/+BnXY+Iw=;
-        b=ckfMy+ko331Di/eJBTkHXmfLrNLdygWBsFQhraRs0/LyxH5TD8fgmqSIiuYErtJVsO
-         dlsDC63LpKE2+2ZgdnXbcdinQQ3NIDGlZuSYFZsZqyHbqno2zIc4+omk7XQyi+UBWGZr
-         s7ub8Po32TP2jct/Ho2lloZpOaDs9FVFWPKdl7ddUCOhSc4SeviAi9ZVLS0M/TU6hNr8
-         jTlPUui7rQ0vl4JsjEHMkB5jljzotlx/0lUQeva+e/2QK2H9yMFulV6mp7xi4Bla8Xdv
-         pPOyqTi4VLPpXGUUCuOs9Iqgil20xOiDJPMMX0x4cPUGnsLV8Sz8tIEMyecp+Lza64Tw
-         5MoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=ygcBKCp+0WYFKntXrF557PkaUGgSa7RUea/+BnXY+Iw=;
-        b=fKeugFSzfnZZkM2EUakz/Q4uEfkdzwPuoFOE6Yar6QXIyY5Urn5Kg5PNwMC4/8OQ37
-         ssopoajetF0kLGiTzI8itBdiIrnhCs0n47X2biXc9O6FIA09VvPVOWm1khKoGIW0YBWm
-         5++v/Z4jNkcu0GYIDYaQwLbL83SkXQ2JjnJ+vIrw5yE2dCtyZqIwXKITnTDXYqbrIGTR
-         mjJb2f/BcH7098ScGkYmW0yzXLr7gDVAw6dOK0fx2V89QfSNU4UqVNGkZjQqzG4q3EZO
-         Bfc9C+0H+OcciCyzjfrj0rX8dkd3iLtpV2W4JgUiBux6Z9W2m4Oy3y0ROQw+mvZ2iFmz
-         +iYg==
-X-Gm-Message-State: ANhLgQ1yY1BVg09dIvi+iPauA6jC4VeuJBqGJsxpm6DZpxHixo3hU7S0
-        YTJYG9B2KkBQ55WPRoqHp6LvsrQs
-X-Google-Smtp-Source: ADFU+vvMhRwqEvLeWKqvwuAADPwYsLk6SdbMkdPfM6oevC4/8PJwgjJ+uLzkE+RD7Xfnz0R4cCAl0Q==
-X-Received: by 2002:a0c:ec07:: with SMTP id y7mr8672795qvo.142.1585234841667;
-        Thu, 26 Mar 2020 08:00:41 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id w9sm1521587qkf.28.2020.03.26.08.00.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Mar 2020 08:00:41 -0700 (PDT)
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 02QF0col001280;
-        Thu, 26 Mar 2020 15:00:38 GMT
-Subject: [PATCH] svcrdma: Fix leak of transport addresses
+        id S1727431AbgCZPzq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Mar 2020 11:55:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50456 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgCZPzq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 11:55:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QFn9ce007073;
+        Thu, 26 Mar 2020 15:55:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=M3fBdqs013ErGxj7QI2NXZPfPsz0DC2QSu5ns6vXYb4=;
+ b=SVc9Wlz8tjbLpOMs8WyqgRuwU54bf9ag9kmbpPwdqq02mHFLlqgW4msI8+Bq/VgGQUWE
+ VjIj96553SuJlwxveahkOxzkyejGTaLIYLdMtu5BCV8MRlEmXc/afmo8KZn20V1SX+WU
+ XpWVJctYA8VD2cJnJD5ChvD7hhm1jyAr21uvyKCNgVX8m2mcspWfTRAS+6ohpA12/LA/
+ H9zGJIK25FQHbQG4UdabVn8uVD4fe4uKGaCRPcHEC4nqVqttDVy8QEaMEFov62tiIynh
+ D5TJlqgSfPpPPJofLzKh97QnBA6XZX/F6jDGomVs1YNSfzIwmQgbAtJWHOiH0etsRlsS zw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2ywavmgnj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 15:55:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QFogHP183897;
+        Thu, 26 Mar 2020 15:55:39 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2yxw4twq4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 15:55:39 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QFtc2G015040;
+        Thu, 26 Mar 2020 15:55:39 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 08:55:38 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] nfsd: memory corruption in nfsd4_lock()
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Thu, 26 Mar 2020 11:00:38 -0400
-Message-ID: <20200326145920.29379.46066.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.22-7-g1113
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <db0980d0-8c99-940a-1748-04e679a366d1@virtuozzo.com>
+Date:   Thu, 26 Mar 2020 11:55:36 -0400
+Cc:     Bruce Fields <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7E365A05-4D39-4BF9-8E44-244136173FC7@oracle.com>
+References: <db0980d0-8c99-940a-1748-04e679a366d1@virtuozzo.com>
+To:     Vasily Averin <vvs@virtuozzo.com>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 suspectscore=2 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260122
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Kernel memory leak detected:
+Howdy-
 
-unreferenced object 0xffff888849cdf480 (size 8):
-  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
-  hex dump (first 8 bytes):
-    30 00 cd 49 88 88 ff ff                          0..I....
-  backtrace:
-    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
-    [<00000000a2724354>] kstrdup+0x2b/0x43
-    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
-    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
-    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
-    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
-    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
-    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
-    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
-    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
-    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
-    [<000000005205fb78>] kthread+0xf6/0xfb
-    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
+> On Mar 23, 2020, at 3:55 AM, Vasily Averin <vvs@virtuozzo.com> wrote:
+>=20
+> New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
+> does not initialised nbl_list and nbl_lru.
+> If conflock allocation fails rollback can call list_del_init()
+> access uninitialized fields and corrupt memory.
+>=20
+> Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for =
+v4.1+ lock")
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 
-Introduce a call to xprt_rdma_free_addresses() similar to the way
-that the TCP backchannel releases a transport's peer address
-strings.
+I'm not certain where we stand with this one. Jeff, are you OK
+with me taking this for v5.7, or is there additional work needed?
 
-Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    1 +
- 1 file changed, 1 insertion(+)
+I can drop the dprintk when I merge it.
 
-Here's a possible fix for v5.7-rc.
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 46b59e91d34a..d510a3a15d4b 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -252,6 +252,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
- 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
- 
-+	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
- }
- 
+> ---
+> fs/nfsd/nfs4state.c | 32 +++++++++++++++-----------------
+> 1 file changed, 15 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 369e574c5092..176ef8d24fae 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -6524,6 +6524,13 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 		goto out;
+> 	}
+>=20
+> +	conflock =3D locks_alloc_lock();
+> +	if (!conflock) {
+> +		dprintk("NFSD: %s: unable to allocate lock!\n", =
+__func__);
+> +		status =3D nfserr_jukebox;
+> +		goto out;
+> +	}
+> +
+> 	nbl =3D find_or_allocate_block(lock_sop, &fp->fi_fhandle, nn);
+> 	if (!nbl) {
+> 		dprintk("NFSD: %s: unable to allocate block!\n", =
+__func__);
+> @@ -6542,13 +6549,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 	file_lock->fl_end =3D last_byte_offset(lock->lk_offset, =
+lock->lk_length);
+> 	nfs4_transform_lock_offset(file_lock);
+>=20
+> -	conflock =3D locks_alloc_lock();
+> -	if (!conflock) {
+> -		dprintk("NFSD: %s: unable to allocate lock!\n", =
+__func__);
+> -		status =3D nfserr_jukebox;
+> -		goto out;
+> -	}
+> -
+> 	if (fl_flags & FL_SLEEP) {
+> 		nbl->nbl_time =3D jiffies;
+> 		spin_lock(&nn->blocked_locks_lock);
+> @@ -6581,17 +6581,15 @@ nfsd4_lock(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 		status =3D nfserrno(err);
+> 		break;
+> 	}
+> -out:
+> -	if (nbl) {
+> -		/* dequeue it if we queued it before */
+> -		if (fl_flags & FL_SLEEP) {
+> -			spin_lock(&nn->blocked_locks_lock);
+> -			list_del_init(&nbl->nbl_list);
+> -			list_del_init(&nbl->nbl_lru);
+> -			spin_unlock(&nn->blocked_locks_lock);
+> -		}
+> -		free_blocked_lock(nbl);
+> +	/* dequeue it if we queued it before */
+> +	if (fl_flags & FL_SLEEP) {
+> +		spin_lock(&nn->blocked_locks_lock);
+> +		list_del_init(&nbl->nbl_list);
+> +		list_del_init(&nbl->nbl_lru);
+> +		spin_unlock(&nn->blocked_locks_lock);
+> 	}
+> +	free_blocked_lock(nbl);
+> +out:
+> 	if (nf)
+> 		nfsd_file_put(nf);
+> 	if (lock_stp) {
+> --=20
+> 2.17.1
+>=20
+
+--
+Chuck Lever
+
+
 
