@@ -2,86 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2380A1934B9
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 00:45:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4041936E0
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 04:26:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCYXpB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Mar 2020 19:45:01 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:55704 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbgCYXpB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Mar 2020 19:45:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585179901; x=1616715901;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=7JI0zNZnqBVSTnkujz+99I77yvFGg4iqfKnGSolIdEg=;
-  b=GkF64XYyLxR+Kj63FzR7Vod7jC6fE6ylKn/x33sIE8Qy72KjrWATYQtc
-   ZdNvgMgw28YUlGPlQ95vDmsCprFgoaTzennJHdvq44KX3PJUsoyEh6sQ/
-   FQZ9OnGimIB7PTzPco8mIyOLxuctMTY+7r578EUGejpwob/HyF3k8fU54
-   I=;
-IronPort-SDR: L0zWidj/zRgOxSCqHGxQMkMw+j7htn8KudrSjG/XFuuv83t+Lk1tAoiIVik60k0RLxy1ZRADyp
- T2VxBElayaRA==
-X-IronPort-AV: E=Sophos;i="5.72,306,1580774400"; 
-   d="scan'208";a="33472389"
-Subject: Re: [PATCH 11/14] nfsd: add user xattr RPC XDR encoding/decoding logic
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 Mar 2020 23:44:59 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id D84BCA0495;
-        Wed, 25 Mar 2020 23:44:57 +0000 (UTC)
-Received: from EX13D15UEE004.ant.amazon.com (10.43.62.241) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 25 Mar 2020 23:44:56 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D15UEE004.ant.amazon.com (10.43.62.241) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 25 Mar 2020 23:44:56 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 25 Mar 2020 23:44:56 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 08745C1350; Wed, 25 Mar 2020 23:44:56 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 23:44:56 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-CC:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Message-ID: <20200325234455.GA742@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200311195954.27117-1-fllinden@amazon.com>
- <20200311195954.27117-12-fllinden@amazon.com>
- <17D7709F-2FE0-4B84-A9AF-4D6C2B36A4E7@oracle.com>
+        id S1727641AbgCZDZv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Mar 2020 23:25:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55854 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728096AbgCZDZh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:25:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D6ADAAD4F;
+        Thu, 26 Mar 2020 03:25:34 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Date:   Thu, 26 Mar 2020 14:25:21 +1100
+Subject: [PATCH/RFC] MM: fix writeback for NFS
+cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <87tv2b7q72.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <17D7709F-2FE0-4B84-A9AF-4D6C2B36A4E7@oracle.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:24:18PM -0400, Chuck Lever wrote:
-> > On Mar 11, 2020, at 3:59 PM, Frank van der Linden <fllinden@amazon.com> wrote:
-> > +     /*
-> > +      * Unfortunately, there is no interface to only list xattrs for
-> > +      * one prefix. So there is no good way to convert maxcount to
-> > +      * a maximum value to pass to vfs_listxattr, as we don't know
-> > +      * how many of the returned attributes will be user attributes.
-> > +      *
-> > +      * So, always ask vfs_listxattr for the maximum size, and encode
-> > +      * as many as possible.
-> > +      */
-> 
-> Well, this approach worries me a little bit. Wouldn't it be better if the
-> VFS provided the APIs? Review by linux-fsdevel might help here.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I missed this comment initially, sorry about the slow reply.
 
-I'll copy this one to -fsdevel for v2.
+Page account happens a little differently for NFS, and writeback is
+aware of this, but handles it wrongly.
+With NFS, pages go throught three states which are accounted separately:
+ NR_FILE_DIRTY - page is dirty and unwritten
+ NR_WRITEBACK  - page is being written back
+ NR_UNSTABLE_NFS - page has been written, but might need to be written
+		again if server restarts.  Once an NFS COMMIT
+		completes, page becomes freeable.
 
-It would require a modified or new entry point to all filesystems to
-support this properly, so I didn't touch it. It's not a complex
-task, it just would lead to quite a bit of code churn.
+writeback combines both the NF_FILE_DIRTY counters and NF_UNSTABLE_NFS
+together, which doesn't make a lot of sense.  NR_UNSTABLE_NFS is more
+like NR_WRITEBACK in that there is nothing that can be done for these
+pages except wait.
 
-- Frank
+Current behaviour is that when there are a lot of NR_UNSTABLE_NFS pages,
+balance_dirty_pages() repeatedly schedules the writeback thread, even
+when the number of dirty pages is below the threshold.  This result is
+each ->write_pages() call into NFS only finding relatively few DIRTY
+pages, so it creates requests that are well below the maximum size.
+Depending on performance of characteristics of the server, this can
+substantially reduce throughput.
+
+There are two places where balance_dirty_pages() schedules the writeback
+thread, and each of them schedule writeback too often.
+
+1/ When balance_dirty_pages() determines that it must wait for the
+   number of dirty pages to shrink, it unconditionally schedules
+   writeback.
+   This is probably not ideal for any filesystem but I measured it to be
+   harmful for NFS.  This writeback should only be scheduled if the
+   number of dirty pages is above the threshold.  While it is below,
+   waiting for the pending writes to complete (and be committed) is a more
+   appropriate behaviour.
+
+2/ When balance_dirty_pages() finishes, it again shedules writeback
+   if nr_reclaimable is above the background threshold.  This is
+   conceptually correct, but wrong because nr_reclaimable is wrong.
+   The impliciation of this usage is that nr_reclaimable is the number
+   of pages that can be reclaimed if writeback is triggered.  In fact it
+   is NR_FILE_DIRTY plus NR_UNSTABLE_NFS, which is not a meaningful
+   number.
+
+So this patch removes NR_UNSTABLE_NFS from nr_reclaimable, and only
+schedules writeback when the new nr_reclaimable is greater than
+=2D>thresh or ->bg_thresh, depending on context.
+
+The effect of this can be measured by looking at the count of
+nfs_writepages calls while performing a large streaming write (larger
+than dirty_threshold)
+
+e.g.
+  mount -t nfs server:/path /mnt
+  dd if=3D/dev/zero of=3D/mnt/zeros bs=3D1M count=3D1000
+  awk '/events:/ {print $13}' /proc/self/mountstats
+
+Each writepages call should normally submit writes for 4M (1024 pages)
+or more (MIN_WRITEBACK_PAGES) (unless memory size is tiny).
+With the patch I measure typically 200-300 writepages calls with the
+above, which suggests an average of about 850 pages being made available to
+each writepages call.  This is less than MIN_WRITEBACK_PAGES, but enough
+to assemble large 1MB WRITE requests fairly often.
+
+Without the patch, numbers range from about 2000 to over 10000, meaning
+an average of maybe 100 pages per call, which means we rarely get large
+1M requests, and often get small requests
+
+Note that there are other places where NR_FILE_DIRTY and NR_UNSTABLE_NFS
+are combined (wb_over_bg_thresh() and get_nr_dirty_pages()).  I suspect
+they are wrong too.  I also suspect that unstable-NFS pages should not be
+included in the WB_RECLAIMABLE wb_stat, but I haven't explored that in
+detail yet.
+
+Note that the current behaviour of NFS w.r.t sending COMMIT requests is
+that as soon as a batch of writes all complete, a COMMIT is scheduled.
+Prior to commit 919e3bd9a875 ("NFS: Ensure we commit after writeback is
+complete"), other mechanisms triggered the COMMIT.  It is possible that
+the current writeback code made more sense before that commit.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ mm/page-writeback.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 2caf780a42e7..99419cba1e7a 100644
+=2D-- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1593,10 +1593,11 @@ static void balance_dirty_pages(struct bdi_writebac=
+k *wb,
+ 		 * written to the server's write cache, but has not yet
+ 		 * been flushed to permanent storage.
+ 		 */
+=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
+=2D					global_node_page_state(NR_UNSTABLE_NFS);
++		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail =3D global_dirtyable_memory();
+=2D		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
++		gdtc->dirty =3D nr_reclaimable +
++			global_node_page_state(NR_WRITEBACK) +
++			global_node_page_state(NR_UNSTABLE_NFS);
+=20
+ 		domain_dirty_limits(gdtc);
+=20
+@@ -1664,7 +1665,8 @@ static void balance_dirty_pages(struct bdi_writeback =
+*wb,
+ 			break;
+ 		}
+=20
+=2D		if (unlikely(!writeback_in_progress(wb)))
++		if (nr_reclaimable > gdtc->thresh &&
++		    unlikely(!writeback_in_progress(wb)))
+ 			wb_start_background_writeback(wb);
+=20
+ 		mem_cgroup_flush_foreign(wb);
+=2D-=20
+2.25.2
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl58IKIACgkQOeye3VZi
+gbm0kA//S4tZFypb4X9O3m1jpKH4hS21QOLhfE6Su7e7QnvQ/RhDjh+XfQMgQlzN
+ih2rwz/J3tJN8HKvxK/8nK2ssqRXittASSn+0jZod4qLI47Or71MqZaK58on1xfr
+sq9Hfw0AR80tsxwwvligo1gwg53oxjpJty1gA0yNP/dTaiYL7+q9+Fau//IdcZq0
+DmVYIlglNucRW0mc8uOarT9WVo8g7v5LSRBOpIRyvc61/Mw8WP4tvlaKVUdSWijA
+V8NGGFJw7hJgbRq1VUBhPM2euD6lDzzLrlDLAUPoUbajwaGPxkP8mA09vTzmrinL
+HAFVIKBLVCCsfzZmYdXloyhrDRYFAFNujtsGdt/sqRocVDppCyWMZlfN+PdEomPQ
+dOQsTqAdrSZJeHwdhcqYfh6z6n6VEmTkjIwQeY3jtLBHUWHjjCnS4Ja8NKdF40Ub
+nNs3bLif3rV0pGjmJJ81O9oWglRRHoXTWt5PaU5m1kOEJjGuEthh/fjY1wZw9ejF
+muqWZZDpmfGxeRYgqR3xe1koh+MSPZuRp/timuX5B1mG7gcN1BUTX0dkBBHJbBdz
+oQHuuH6+F2zynjbCubaVigbC1cyiqdANrT9Itixi7VWoxqSzLds7KOBi8P/xSCzL
+gVR+i40MT3D6NDMaYefGkXX1CVAw4jbkaVHaKraoOIx1qZJiDAg=
+=A5hb
+-----END PGP SIGNATURE-----
+--=-=-=--
