@@ -2,92 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB1D1947AF
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 20:43:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11F18194953
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2020 21:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgCZTnX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 15:43:23 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:43175 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTnX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 15:43:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585251803; x=1616787803;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=kkMAo9tlALypU50SmLIoNgIeRamMDYFBFxphReA70RQ=;
-  b=lg0e8UwxaQ71I7iN8uf1OI4RE0qUY1v6r86a4eepk7Uo+AxmfdrIBJDC
-   6R+rLGIKHRfPX6r7faiMV2sGimtFpv2RkGpXr6kbRMCsyn8nApcZg4OEK
-   Rth9qMFhz0yyoCurUkQEhT2li39vZkUGgtqq58OMnMmTvP/5GuP5GDLR4
-   w=;
-IronPort-SDR: Wq6+MP2377wZj7q4xMEyB/mwh8AAKn/fxyGz9+qchUYScaFOWFEhhHCu2Felrj8CI8OWGijB9i
- mO9L7IvU4SzQ==
-X-IronPort-AV: E=Sophos;i="5.72,309,1580774400"; 
-   d="scan'208";a="25296185"
-Subject: Re: [PATCH v2 00/13] NFS client user xattr (RFC8276) support
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 26 Mar 2020 19:43:21 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 3A48CA1FFA;
-        Thu, 26 Mar 2020 19:43:20 +0000 (UTC)
-Received: from EX13D34UWC001.ant.amazon.com (10.43.162.112) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 26 Mar 2020 19:43:19 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D34UWC001.ant.amazon.com (10.43.162.112) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 26 Mar 2020 19:43:19 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Thu, 26 Mar 2020 19:43:19 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id BDF42D92A4; Thu, 26 Mar 2020 19:43:19 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 19:43:19 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-CC:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Message-ID: <20200326194319.GA3398@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200325231051.31652-1-fllinden@amazon.com>
- <1885904737.8217161.1585249393750.JavaMail.zimbra@desy.de>
+        id S1726291AbgCZUkC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Mar 2020 16:40:02 -0400
+Received: from fieldses.org ([173.255.197.46]:56614 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbgCZUkC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:40:02 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E40A5BD1; Thu, 26 Mar 2020 16:40:01 -0400 (EDT)
+Date:   Thu, 26 Mar 2020 16:40:01 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bfields@redhat.com" <bfields@redhat.com>,
+        Kinglong Mee <kinglongmee@gmail.com>
+Subject: Re: [PATCH] SUNRPC/cache: Allow garbage collection of invalid cache
+ entries
+Message-ID: <20200326204001.GA25053@fieldses.org>
+References: <20200114165738.922961-1-trond.myklebust@hammerspace.com>
+ <20200206163322.GB2244@fieldses.org>
+ <8dc1ed17de98e4b59fb9e408692c152456863a20.camel@hammerspace.com>
+ <20200207181817.GC17036@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1885904737.8217161.1585249393750.JavaMail.zimbra@desy.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20200207181817.GC17036@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 08:03:13PM +0100, Mkrtchyan, Tigran wrote:
-> Hi Frank.
-> 
-> The new patchset looks broken to me.
-> 
-> Client quiryes for supported attributes and gets xattr_support bit set:
-> 
-> Mar 26 11:27:07 ani.desy.de kernel: decode_attr_supported: bitmask=fcffbfff:40fdbe3e:00040800
-> 
-> However, the attribute never queries, but client makes is decision:
-> 
-> Mar 26 11:27:07 ani.desy.de kernel: decode_attr_xattrsupport: XATTR support=false
-> 
-> The packets can be found here: https://sas.desy.de/index.php/s/GEPiBxPg3eR4aGA
-> 
-> Can you provide packets of your mount/umount round.
-> 
-> Regards,
->    Tigran.
+Sorry, just getting back to this:
 
-Hi Tigran,
+On Fri, Feb 07, 2020 at 01:18:17PM -0500, bfields@fieldses.org wrote:
+> On Fri, Feb 07, 2020 at 02:25:27PM +0000, Trond Myklebust wrote:
+> > On Thu, 2020-02-06 at 11:33 -0500, J. Bruce Fields wrote:
+> > > On Tue, Jan 14, 2020 at 11:57:38AM -0500, Trond Myklebust wrote:
+> > > > If the cache entry never gets initialised, we want the garbage
+> > > > collector to be able to evict it. Otherwise if the upcall daemon
+> > > > fails to initialise the entry, we end up never expiring it.
+> > > 
+> > > Could you tell us more about what motivated this?
+> > > 
+> > > It's causing failures on pynfs server-reboot tests.  I haven't pinned
+> > > down the cause yet, but it looks like it could be a regression to the
+> > > behavior Kinglong Mee describes in detail in his original patch.
+> > > 
+> > 
+> > Can you point me to the tests that are failing?
+> 
+> I'm basically doing
+> 
+> 	./nfs4.1/testserver.py myserver:/path reboot
+> 			--serverhelper=examples/server_helper.sh
+> 			--serverhelperarg=myserver
+> 
+> For all I know at this point, the change could be exposing a pynfs-side
+> bug.
 
-This patchset works against the server side patches, and also works against
-a FreeBSD-current server.
+From a trace, it's clear that the server is actually becoming
+unresponsive, so it's not a pynfs bug.
 
-Is this failure happening with your Java server?
+> > The motivation here is to allow the garbage collector to do its job of
+> > evicting cache entries after they are supposed to have timed out.
+> 
+> Understood.  I was curious whether this was found by code inspection or
+> because you'd run across a case where the leak was causing a practical
+> problem.
 
-Let me look at your packet dump and compare it with a working scenario.
+I'm still curious.
 
-- Frank
+> > The fact that uninitialised cache entries are given an infinite
+> > lifetime, and are never evicted is a de facto memory leak if, for
+> > instance, the mountd daemon ignores the cache request, or the downcall
+> > in expkey_parse() or svc_export_parse() fails without being able to
+> > update the request.
+
+If mountd ignores cache requests, or downcalls fail, then the server's
+broken anyway.  The server can't do anything without mountd.
+
+> > The threads that are waiting for the cache replies already have a
+> > mechanism for dealing with timeouts (with cache_wait_req() and
+> > deferred requests), so the question is what is so special about
+> > uninitialised requests that we have to leak them in order to avoid a
+> > problem with reboot?
+
+I'm not sure I have this right yet.  I'm just staring at the code and at
+Kinglong Mee's description on d6fc8821c2d2.  I think the way it works is
+that a cash flush from mountd results in all cache entries (including
+invalid entries that nfsd threads are waiting on) being considered
+expired.  So cache_check() returns an immediate ETIMEDOUT without
+waiting.
+
+Maybe the cache_is_expired() logic should be something more like:
+
+	if (h->expiry_time < seconds_since_boot())
+		return true;
+	if (!test_bit(CACHE_VALID, &h->flags))
+		return false;
+	return h->expiry_time < seconds_since_boot();
+
+So invalid cache entries (which are waiting for a reply from mountd) can
+expire, but they can't be flushed.  If that makes sense.
+
+As a stopgap we may want to revert or drop the "Allow garbage
+collection" patch, as the (preexisting) memory leak seems lower impact
+than the server hang.
+
+--b.
