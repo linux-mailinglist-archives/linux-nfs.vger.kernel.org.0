@@ -2,96 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15D1D194E9A
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 02:50:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47F7F19502A
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 05:50:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgC0BuX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Mar 2020 21:50:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22184 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727122AbgC0BuW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Mar 2020 21:50:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585273821;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lHsUR9XT1E/Q6hzKRYTJISM9Xe7WluzoyIo6Kd8o0QY=;
-        b=icQA4gCW4+LoclDOLz6bhVTrfRUOMl67I4xjriZj3QkJMMT3Erml4ITYwd33SmlRmp/dKe
-        kthQGtUrFn1/J+sBLVmWSbKQgvw1+eLUD5KA1S6S6YaLLXbqHvISP/Cpqk0AdEjkX8zizV
-        mf4idRWy232B1acLws0tg+tL36CxmRk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-Unu6JB2EMF2Xxgoc2gPI4Q-1; Thu, 26 Mar 2020 21:50:15 -0400
-X-MC-Unique: Unu6JB2EMF2Xxgoc2gPI4Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FDE1800D50;
-        Fri, 27 Mar 2020 01:50:14 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-118-194.rdu2.redhat.com [10.10.118.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C30A060BF3;
-        Fri, 27 Mar 2020 01:50:13 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 78C8B120513; Thu, 26 Mar 2020 21:50:12 -0400 (EDT)
-Date:   Thu, 26 Mar 2020 21:50:12 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "kinglongmee@gmail.com" <kinglongmee@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] SUNRPC/cache: Allow garbage collection of invalid cache
- entries
-Message-ID: <20200327015012.GA107036@pick.fieldses.org>
-References: <20200114165738.922961-1-trond.myklebust@hammerspace.com>
- <20200206163322.GB2244@fieldses.org>
- <8dc1ed17de98e4b59fb9e408692c152456863a20.camel@hammerspace.com>
- <20200207181817.GC17036@fieldses.org>
- <20200326204001.GA25053@fieldses.org>
- <1a0ce8bb1150835f7a25126df2524e8a8fb0e112.camel@hammerspace.com>
+        id S1726384AbgC0Euy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Mar 2020 00:50:54 -0400
+Received: from relay.sw.ru ([185.231.240.75]:40470 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbgC0Euy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 27 Mar 2020 00:50:54 -0400
+Received: from vvs-ws.sw.ru ([172.16.24.21])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1jHgx8-00052C-Ff; Fri, 27 Mar 2020 07:50:42 +0300
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH v2] nfsd: memory corruption in nfsd4_lock()
+To:     "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+References: <7E365A05-4D39-4BF9-8E44-244136173FC7@oracle.com>
+Message-ID: <d169e942-03e4-0a4b-8c45-56f4c26cd45c@virtuozzo.com>
+Date:   Fri, 27 Mar 2020 07:50:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a0ce8bb1150835f7a25126df2524e8a8fb0e112.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <7E365A05-4D39-4BF9-8E44-244136173FC7@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:42:19PM +0000, Trond Myklebust wrote:
-> On Thu, 2020-03-26 at 16:40 -0400, bfields@fieldses.org wrote:
-> > Maybe the cache_is_expired() logic should be something more like:
-> > 
-> > 	if (h->expiry_time < seconds_since_boot())
-> > 		return true;
-> > 	if (!test_bit(CACHE_VALID, &h->flags))
-> > 		return false;
-> > 	return h->expiry_time < seconds_since_boot();
-> > 
-> > So invalid cache entries (which are waiting for a reply from mountd)
-> > can
-> > expire, but they can't be flushed.  If that makes sense.
-> > 
-> > As a stopgap we may want to revert or drop the "Allow garbage
-> > collection" patch, as the (preexisting) memory leak seems lower
-> > impact
-> > than the server hang.
-> 
-> I believe you were probably seeing the effect of the
-> cache_listeners_exist() test, which is just wrong for all cache upcall
-> users except idmapper and svcauth_gss. We should not be creating
-> negative cache entries just because the rpc.mountd daemon happens to be
-> slow to connect to the upcall pipes when starting up, or because it
-> crashes and fails to restart correctly.
-> 
-> That's why, when I resubmitted this patch, I included 
-> https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=commitdiff;h=b840228cd6096bebe16b3e4eb5d93597d0e02c6d
-> 
-> which turns off that particular test for all the upcalls to rpc.mountd.
+Dear Chuck,
+please use following patch instead.
+-----
+New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
+does not initialized nbl_list and nbl_lru.
+If conflock allocation fails rollback can call list_del_init()
+access uninitialized fields and corrupt memory.
 
-The hangs persist with that patch, but go away with the change to the
-cache_is_expired() logic above.
+v2: just initialize nbl_list and nbl_lru right after nbl allocation.
 
---b.
+Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+---
+ fs/nfsd/nfs4state.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 369e574c5092..1b2eb6b35d64 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -266,6 +266,8 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
+ 	if (!nbl) {
+ 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
+ 		if (nbl) {
++			INIT_LIST_HEAD(&nbl->nbl_list);
++			INIT_LIST_HEAD(&nbl->nbl_lru);
+ 			fh_copy_shallow(&nbl->nbl_fh, fh);
+ 			locks_init_lock(&nbl->nbl_lock);
+ 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
+-- 
+2.17.1
 
