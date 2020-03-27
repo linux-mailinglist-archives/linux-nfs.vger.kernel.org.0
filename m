@@ -2,76 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B482E195B28
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 17:34:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96E88195E68
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 20:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgC0QeD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Mar 2020 12:34:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58490 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbgC0QeC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 12:34:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGMSEh134501;
-        Fri, 27 Mar 2020 16:33:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=jtn7o2RhFvINwYlF9zAidEwSZ9rhb3VsE2CDhAlOads=;
- b=ATmBjj0I7w4miIptaUNnsW0Rn/WJOQoompsthfwAI4TxezVefXJe4TUOgLTCiZPK2mdg
- rYBifw88+pJkeIwBpdSTbNq2rEIAewVB5m9BVFvZITH2GWFRx5fiF0Scj7DnALI6UwTs
- 7Qd/3G3GBhlqv0nU9TmsCOiRE6/5PMhnzidP4WV/dBPL96aMBSAA0lGweI+xgmexPfj3
- 7XFTFmJhOl+UdnQ9qTOC2I+zZ/YDuMV3uMGE1lhdP5fuRU1zaOdXMVcX36YbeQ5CqL8+
- MKrpefzdHpo3vgGrqmlX7ov8/k/ngEXl7HdKKTEg9mMhSOz35JL+SUWeyC/S7JHhTQfm Hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 3019veb8cb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 16:33:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RGW4jJ121146;
-        Fri, 27 Mar 2020 16:33:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3003gp8xvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 16:33:42 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02RGXcUd019210;
-        Fri, 27 Mar 2020 16:33:38 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Mar 2020 09:33:38 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH V2] SUNRPC: Fix a potential buffer overflow in
- 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200327161539.21554-1-christophe.jaillet@wanadoo.fr>
-Date:   Fri, 27 Mar 2020 12:33:36 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        davem@davemloft.net, kuba@kernel.org, Neil Brown <neilb@suse.de>,
-        Tom Tucker <tom@opengridcomputing.com>, gnb@sgi.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC65FE50-6CEC-4D97-9011-2A88F63C26D7@oracle.com>
-References: <20200327161539.21554-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1011 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270144
+        id S1727125AbgC0TPM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Mar 2020 15:15:12 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:32285 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgC0TPM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 15:15:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585336511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SzUmzT8sPmWy6WzmPf5sB1omR2vIAepli/By1hmsH6k=;
+        b=KQGDmvilqNIHkw/eOAJ5tNdg4mXJAWTSAKCXJ8rbjskh1F4I36IYOFFXg1HhGxmTO5eUmw
+        U5w99LE9OeIL3bxw8mlh8rjIduKI8iu3OFnDZLuQLcd8MmEnCdiYwOJYyogrg+tuMFdgZR
+        4kha+TBaLIg4rpPp93F/dkRPq9HMCEc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-222-Pn9GJNiBNPObGVZifolrhg-1; Fri, 27 Mar 2020 15:15:09 -0400
+X-MC-Unique: Pn9GJNiBNPObGVZifolrhg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 693A38017CC;
+        Fri, 27 Mar 2020 19:15:08 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-114-250.phx2.redhat.com [10.3.114.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E84A35C1D4;
+        Fri, 27 Mar 2020 19:15:07 +0000 (UTC)
+Subject: Re: [nfs-utils PATCH 1/1] error.c: Put string for EOPNOTSUPP on
+ single line
+To:     Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org
+References: <20200302140855.19453-1-pvorel@suse.cz>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <253ac076-7137-f172-900a-f87cfb99e384@RedHat.com>
+Date:   Fri, 27 Mar 2020 15:15:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200302140855.19453-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -79,97 +55,32 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Mar 27, 2020, at 12:15 PM, Christophe JAILLET =
-<christophe.jaillet@wanadoo.fr> wrote:
->=20
-> 'maxlen' is the total size of the destination buffer. There is only =
-one
-> caller and this value is 256.
->=20
-> When we compute the size already used and what we would like to add in
-> the buffer, the trailling NULL character is not taken into account.
-> However, this trailling character will be added by the 'strcat' once =
-we
-> have checked that we have enough place.
->=20
-> So, there is a off-by-one issue and 1 byte of the stack could be
-> erroneously overwridden.
->=20
-> Take into account the trailling NULL, when checking if there is enough
-> place in the destination buffer.
->=20
->=20
-> While at it, also replace a 'sprintf' by a safer 'snprintf', check for
-> output truncation and avoid a superfluous 'strlen'.
->=20
-> Fixes: dc9a16e49dbba ("svc: Add /proc/sys/sunrpc/transport files")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> V2: add a doxygen comment to clarify the goal of the function
->    merge previous 2 patches into a single one
->    keep strcat for clarity, this function being just a slow path =
-anyway
->=20
-> Doc being most of the time a matter of taste, please adjust the =
-description
-> as needed.
+On 3/2/20 9:08 AM, Petr Vorel wrote:
+> to help people find it when search for common NFS error:
+> mount.nfs: requested NFS version or transport protocol is not supported
+> 
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+Committed... (tag: nfs-utils-2-4-4-rc2)
 
-I've applied this to my local nfsd-5.7 with a very small adjustment
-to the doc-comment. Testing it now. Thanks, all.
-
+steved.
 
 > ---
-> net/sunrpc/svc_xprt.c | 19 ++++++++++++++-----
-> 1 file changed, 14 insertions(+), 5 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index de3c077733a7..e0f61a8c1965 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -104,8 +104,17 @@ void svc_unreg_xprt_class(struct svc_xprt_class =
-*xcl)
-> }
-> EXPORT_SYMBOL_GPL(svc_unreg_xprt_class);
->=20
-> -/*
-> - * Format the transport list for printing
-> +/**
-> + * svc_print_xprts - Format the transport list for printing
-> + * @buf: target buffer for formatted address
-> + * @maxlen: length of target buffer
-> + *
-> + * Fills in @buf with a string containing a list of transport names, =
-each name
-> + * terminated with '\n'. If the buffer is too small, some entries may =
-be
-> + * missing, but it is guaranteed that the line in the output buffer =
-are
-> + * complete.
-> + *
-> + * Returns positive length of the filled-in string.
->  */
-> int svc_print_xprts(char *buf, int maxlen)
-> {
-> @@ -118,9 +127,9 @@ int svc_print_xprts(char *buf, int maxlen)
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int slen;
->=20
-> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
-> -		slen =3D strlen(tmpstr);
-> -		if (len + slen > maxlen)
-> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
-> +				xcl->xcl_name, xcl->xcl_max_payload);
-> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
-> 			break;
-> 		len +=3D slen;
-> 		strcat(buf, tmpstr);
-> --=20
-> 2.20.1
->=20
-
---
-Chuck Lever
-
-
+>  utils/mount/error.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/utils/mount/error.c b/utils/mount/error.c
+> index 986f0660..73295bf0 100644
+> --- a/utils/mount/error.c
+> +++ b/utils/mount/error.c
+> @@ -210,8 +210,7 @@ void mount_error(const char *spec, const char *mount_point, int error)
+>  		nfs_error(_("%s: an incorrect mount option was specified"), progname);
+>  		break;
+>  	case EOPNOTSUPP:
+> -		nfs_error(_("%s: requested NFS version or transport"
+> -				" protocol is not supported"),
+> +		nfs_error(_("%s: requested NFS version or transport protocol is not supported"),
+>  				progname);
+>  		break;
+>  	case ENOTDIR:
+> 
 
