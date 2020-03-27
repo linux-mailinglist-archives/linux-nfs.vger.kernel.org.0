@@ -2,115 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CEBB195A1F
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 16:44:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD536195A53
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 16:53:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgC0Pon (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Mar 2020 11:44:43 -0400
-Received: from mail-il1-f174.google.com ([209.85.166.174]:38371 "EHLO
-        mail-il1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0Pom (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 11:44:42 -0400
-Received: by mail-il1-f174.google.com with SMTP id n13so1815231ilm.5;
-        Fri, 27 Mar 2020 08:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:message-id:subject:from:to:cc:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=2ykPEOgSq0wavRzazX4tMFg+Ejah2L4TJdy5WsFJqoE=;
-        b=ZtiQqMEVUOYnpBfmeFamFP5oTnv52BpsMtztqk0PgOAcQ8mqHLTea3sDABawgsY+JR
-         B/nKBv93hPGt1VR9ZYw1bjcJQro11uSEEM2uzW3wg5UWccmTomhEg57mkDyXjkmkW9C2
-         /z2eXnv6TXBmYIKWG0NNWxNAx5Vx+VlqvvN7EvcsCcF7mi//Fg17odOixCw2UK/BcTig
-         J1/N0AoMKRpJB7zSsJD7buGsfKoUhj/4fVj8br3JW8G+16Vjm/iEZrai97KBStyMZgMA
-         zqKMKJG/vUCVft8iEVUJKmaEzNw00h2dyfY+eLQs/JmuNDTw/ZT67h5fYhLXJa3UHH2E
-         9zxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:message-id:subject:from:to:cc:date
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=2ykPEOgSq0wavRzazX4tMFg+Ejah2L4TJdy5WsFJqoE=;
-        b=V1hbepaEzA5Mg6dN5lgch4tbiEb3SYkNOdEtbBGEZLzTt7UKJvg45xP38tJcfg1mlO
-         Ks53tJVag7bmoF99diIUF1FQbYR9JOBmgGWnMxBY6NEJ+D5ViEWkVYyDZxxNGk/Y/jtI
-         E419YyjMNRdD113vqEmaNgC1pk3Bxi0IF0UNT/6/j6URI/aJk0rg14B5rbDo3Z2pA4bw
-         q75IuMIror5IWL6rU4b9t/ug0Y3OwfkBI8B5RRxSQj/gfuh4XnbsV997yVVXZiL7/GPI
-         Yp+spj8iwIDibB+VgdXVCO3hFlU6wCkrfMI+sJaFWoiI50WWGiiKwdRzmFfs2r1sC8+j
-         ph7A==
-X-Gm-Message-State: ANhLgQ0gAEWdCqDfA7LFTIspR9+iOEOowxbg/G14Vl7mMAG0sL8Y3eqx
-        oRSbwoCyNekPliX7d0tAFeHWxHlT
-X-Google-Smtp-Source: ADFU+vsBNrx3qZGgKUul2SAgXNQL/V5EDeYBgCogrXc+QD75aVEy7rkiUVNdIGUoFVJ0tMXQDis9zQ==
-X-Received: by 2002:a92:3b9c:: with SMTP id n28mr14405007ilh.53.1585323881480;
-        Fri, 27 Mar 2020 08:44:41 -0700 (PDT)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.googlemail.com with ESMTPSA id h70sm2021930ilf.8.2020.03.27.08.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 08:44:40 -0700 (PDT)
-Message-ID: <4efff0ad2ddd1db5a5c067ce1d450edd1da46bbc.camel@gmail.com>
-Subject: [GIT PULL] Please pull NFSoRDMA Client Updates for 5.7
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Date:   Fri, 27 Mar 2020 11:44:40 -0400
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0 
+        id S1727247AbgC0PxS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Mar 2020 11:53:18 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22966 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgC0PxS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 11:53:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585324397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4ux9281k5ABNf6TBBZshoWzpO+bbygIq24q5khD5TiA=;
+        b=UM1EawGzdFppvpq0ZaVgH8ryyOD5/vH9HbvIngz7b4tImklLxgU1cIsmsgrhehKcsnexgD
+        qf9XCGcKeksi2orM56NTWFsMjxNTquWhYAt1sQXCUWUKXTyFpt/QSBeBQJIgtKPqLoysVn
+        wH9Lx62qEYMAHBGuESydlLyhJxbQaXc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-XdiGj_h6NCOK8aNdh-iUtw-1; Fri, 27 Mar 2020 11:53:12 -0400
+X-MC-Unique: XdiGj_h6NCOK8aNdh-iUtw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B0181005514;
+        Fri, 27 Mar 2020 15:53:11 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-119-7.rdu2.redhat.com [10.10.119.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE1EACFCC;
+        Fri, 27 Mar 2020 15:53:10 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 851DE12023D; Fri, 27 Mar 2020 11:53:09 -0400 (EDT)
+Date:   Fri, 27 Mar 2020 11:53:09 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "kinglongmee@gmail.com" <kinglongmee@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: [PATCH] SUNRPC/cache: don't allow invalid entries to be flushed
+Message-ID: <20200327155309.GA135601@pick.fieldses.org>
+References: <20200114165738.922961-1-trond.myklebust@hammerspace.com>
+ <20200206163322.GB2244@fieldses.org>
+ <8dc1ed17de98e4b59fb9e408692c152456863a20.camel@hammerspace.com>
+ <20200207181817.GC17036@fieldses.org>
+ <20200326204001.GA25053@fieldses.org>
+ <1a0ce8bb1150835f7a25126df2524e8a8fb0e112.camel@hammerspace.com>
+ <20200327015012.GA107036@pick.fieldses.org>
+ <80c83f5543d7d758a165be167d3bf0b2175e57f8.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80c83f5543d7d758a165be167d3bf0b2175e57f8.camel@hammerspace.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
+Trond points out in 277f27e2f277 that we allow invalid cache entries to
+persist indefinitely.  That fix, however, reintroduces the problem fixed
+by Kinglong Mee's d6fc8821c2d2 "SUNRPC/Cache: Always treat the invalid
+cache as unexpired", where an invalid cache entry is immediately removed
+by a flush before mountd responds to it.  The result is that the server
+thread that should be waiting for mountd to fill in that entry instead
+gets an -ETIMEDOUT return from cache_check().  Symptoms are the server
+becoming unresponsive after a restart, reproduceable by running pynfs
+4.1 test REBT5.
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+Instead, take a compromise approach: allow invalid cache entries to be
+removed after they expire, but not to be removed by a cache flush.
 
-are available in the Git repository at:
+Fixes: 277f27e2f277 "SUNRPC/cache: Allow garbage collection..."
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ include/linux/sunrpc/cache.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-rdma-for-5.7-1
-
-for you to fetch changes up to e28ce90083f032ca0e8ea03478f5b6a38f5930f7:
-
-  xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt (2020-03-27 10:47:25
--0400)
-
-----------------------------------------------------------------
-New Features:
-- Allow one active connection and several zombie connections to prevent
-  blocking if the remote server is unresponsive.
-
-Bugfixes and Cleanups:
-- Enhance MR-related trace points 
-- Refactor connection set-up and disconnect functions
-- Make Protection Domains per-connection instead of per-transport
-- Merge struct rpcrdma_ia into rpcrdma_ep
-
-Thanks,
-Anna
-----------------------------------------------------------------
-
-Chuck Lever (12):
-      xprtrdma: Enhance MR-related trace points
-      xprtrdma: Invoke rpcrdma_ep_create() in the connect worker
-      xprtrdma: Refactor frwr_init_mr()
-      xprtrdma: Clean up the post_send path
-      xprtrdma: Refactor rpcrdma_ep_connect() and rpcrdma_ep_disconnect()
-      xprtrdma: Allocate Protection Domain in rpcrdma_ep_create()
-      xprtrdma: Invoke rpcrdma_ia_open in the connect worker
-      xprtrdma: Remove rpcrdma_ia::ri_flags
-      xprtrdma: Disconnect on flushed completion
-      xprtrdma: Merge struct rpcrdma_ia into struct rpcrdma_ep
-      xprtrdma: Extract sockaddr from struct rdma_cm_id
-      xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt
-
- include/trace/events/rpcrdma.h    | 153 ++++++++++------------
- net/sunrpc/xprtrdma/backchannel.c |   8 +-
- net/sunrpc/xprtrdma/frwr_ops.c    | 152 +++++++++++-----------
- net/sunrpc/xprtrdma/rpc_rdma.c    |  32 ++---
- net/sunrpc/xprtrdma/transport.c   |  72 ++++-------
- net/sunrpc/xprtrdma/verbs.c       | 679 +++++++++++++++++++++++++++++++++++++
--------------------------------------------------------------
- net/sunrpc/xprtrdma/xprt_rdma.h   |  89 +++++--------
- 7 files changed, 473 insertions(+), 712 deletions(-)
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index 532cdbda43da..10891b70fc7b 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -209,8 +209,11 @@ static inline void cache_put(struct cache_head *h, struct cache_detail *cd)
+ 
+ static inline bool cache_is_expired(struct cache_detail *detail, struct cache_head *h)
+ {
+-	return  (h->expiry_time < seconds_since_boot()) ||
+-		(detail->flush_time >= h->last_refresh);
++	if (h->expiry_time < seconds_since_boot())
++		return true;
++	if (!test_bit(CACHE_VALID, &h->flags))
++		return false;
++	return detail->flush_time >= h->last_refresh;
+ }
+ 
+ extern int cache_check(struct cache_detail *detail,
+-- 
+2.25.1
 
