@@ -2,98 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F17B6195E71
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2020 20:16:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C87F1961D4
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Mar 2020 00:27:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgC0TQg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Mar 2020 15:16:36 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41464 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727143AbgC0TQg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 15:16:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585336595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ClgdbfsN2BzyCiLhgFHe7L5SuiA1rMvZiylC76ARHq8=;
-        b=A/eNs6+ebO0l47mwjGkDNOipTYxJSxsKyjHo7e/jAj22rCrR/hNCsmVk+AQQfiPvw08t96
-        GU6l/wgxM5gmf2zL/CjIWOOrQ1nv5jbSaxbsuAwBPCZa1F02gu8TFuemE9dqsWERPu7cpw
-        aHka74eIkQbmwydaHl83K6fcbR5gpxQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-FjqwnJsWNHm8_cyUuOET9g-1; Fri, 27 Mar 2020 15:16:31 -0400
-X-MC-Unique: FjqwnJsWNHm8_cyUuOET9g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4879B18B9FC1;
-        Fri, 27 Mar 2020 19:16:30 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-114-250.phx2.redhat.com [10.3.114.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F3E1E1001B28;
-        Fri, 27 Mar 2020 19:16:29 +0000 (UTC)
-Subject: Re: [PATCH nfs-utils] conffile: Don't give warning for optional
- config files.
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-References: <87imiq7586.fsf@notabene.neil.brown.name>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <caecff75-cca3-53f4-ef7c-3b66bbd2ff11@RedHat.com>
-Date:   Fri, 27 Mar 2020 15:16:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726518AbgC0X1V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Mar 2020 19:27:21 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:12188 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgC0X1V (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 19:27:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585351640; x=1616887640;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=r79HtRwjmlXKWRRlfbCVnqNyKeM8soF7T5baOX5aW4w=;
+  b=V3twmtpDCpdZIvPlTYVbnKhBEYAooTeZ9uAJG28QXzxzrK3kNItkYst8
+   lh+kNQjPFF2Hjs6j/A7MvxtNwDDzxDPw1TmrRfSWOEiJiKN7Xol0p1uFj
+   I2H5E44vU0h3jwfJFbWfLOuqq+uTMYxcqPsHWC99bdMZIyBE4nc61sIlK
+   w=;
+IronPort-SDR: tLO0y1qmqiHdlB12kwTxZYiRFi12/V/UO3DeagHPlYSB+RIqxg04xB4sjweZJkyLic8saB88gE
+ f7m3XIa/PGtA==
+X-IronPort-AV: E=Sophos;i="5.72,314,1580774400"; 
+   d="scan'208";a="33900227"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 Mar 2020 23:27:19 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id DE60CA2612;
+        Fri, 27 Mar 2020 23:27:18 +0000 (UTC)
+Received: from EX13D13UWB003.ant.amazon.com (10.43.161.233) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 27 Mar 2020 23:27:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D13UWB003.ant.amazon.com (10.43.161.233) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 27 Mar 2020 23:27:18 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Fri, 27 Mar 2020 23:27:17 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 2D577D92A4; Fri, 27 Mar 2020 23:27:17 +0000 (UTC)
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <linux-nfs@vger.kernel.org>
+CC:     Frank van der Linden <fllinden@amazon.com>
+Subject: [PATCH v2 00/11] NFS server user xattr support (RFC8276)
+Date:   Fri, 27 Mar 2020 23:27:06 +0000
+Message-ID: <20200327232717.15331-1-fllinden@amazon.com>
+X-Mailer: git-send-email 2.16.6
 MIME-Version: 1.0
-In-Reply-To: <87imiq7586.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+v1 is here: https://www.spinics.net/lists/linux-nfs/msg76740.html
 
+v2:
 
-On 3/27/20 1:10 AM, NeilBrown wrote:
-> 
-> A recent commit added the possibility of optional config files for which
-> warning messages would be suppressed.
-> Unfortunately only one of the possible warning messages - the least
-> likely one - was suppressed.
-> 
-> This patch suppresses the other.
-> 
-> Fixes: c6fdcbe0a5cf ("conffile: allow optional include files")
-> Signed-off-by: NeilBrown <neilb@suse.de>
-Committed... (tag: nfs-utils-2-4-4-rc2)
+* Moved the xattr changes upfront, and Cc-ed them to the appropriate
+  recipients.
+* Added doxygen comments to the new exported functions (xattr)
+* Squashed a number of patches together to avoid unused function
+  warnings.
+* Renamed nfs4_vbuf_from_stream to nfs4_vbuf_from_vector
 
-steved.
-> ---
->  support/nfs/conffile.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> 
-> That was careless - sorry.  I really have tested this time.
-> NeilBrown
-> 
-> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
-> index d55bfe10120a..3d13610ee766 100644
-> --- a/support/nfs/conffile.c
-> +++ b/support/nfs/conffile.c
-> @@ -429,9 +429,9 @@ conf_parse_line(int trans, char *line, const char *filename, int lineno, char **
->  
->  		subconf = conf_readfile(relpath);
->  		if (subconf == NULL) {
-> -			xlog_warn("config error at %s:%d: "
-> -				"error loading included config",
-> -				  filename, lineno);
-> +			if (!optional)
-> +				xlog_warn("config error at %s:%d: error loading included config",
-> +					  filename, lineno);
->  			if (relpath)
->  				free(relpath);
->  			return;
-> 
+ fs/nfsd/nfs4proc.c        | 140 +++++++++-
+ fs/nfsd/nfs4xdr.c         | 535 +++++++++++++++++++++++++++++++++++---
+ fs/nfsd/nfsd.h            |   5 +-
+ fs/nfsd/vfs.c             | 142 ++++++++++
+ fs/nfsd/vfs.h             |  10 +
+ fs/nfsd/xdr4.h            |  31 +++
+ fs/xattr.c                | 111 +++++++-
+ include/linux/nfs4.h      |  22 +-
+ include/linux/xattr.h     |   4 +
+ include/uapi/linux/nfs4.h |   3 +
+ 10 files changed, 961 insertions(+), 42 deletions(-)
+
+-- 
+2.17.2
 
