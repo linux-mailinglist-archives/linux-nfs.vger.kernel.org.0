@@ -2,56 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E5519670B
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Mar 2020 16:34:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8B79196733
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Mar 2020 17:00:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgC1Peo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 28 Mar 2020 11:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
+        id S1726899AbgC1QAp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 28 Mar 2020 12:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbgC1Pen (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 28 Mar 2020 11:34:43 -0400
+        id S1726518AbgC1QAp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:00:45 -0400
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E8120748
-        for <linux-nfs@vger.kernel.org>; Sat, 28 Mar 2020 15:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90ACD206DB
+        for <linux-nfs@vger.kernel.org>; Sat, 28 Mar 2020 16:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585409683;
-        bh=N2F+UWkB32txK8mb0OmAnuzV4O09A/+ZXa4KFe+L4BM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oFDWD09+IKI5kO6f0E6dbQQbk7n5PyAvBgWp5KYZfidYhDtyq5pvofgdUjGpY+qG1
-         qkYa+DiXegKDugzSTiF0nbq6d4HQ68Tsgfyc7O2dtZLkZeRkvqkN3KsMEqdtHLUM4+
-         +2bbH24GKyrjI3fHLmYDK9gO8jxQ+w6raSUkG6MA=
+        s=default; t=1585411244;
+        bh=C2p5QfZF4yvel01Z8hXZlMU1t/u4Pteqp/iiDmofIN0=;
+        h=From:To:Subject:Date:From;
+        b=dj0ywUgKYoKL3anZVtovX7lu6lD9WAJRets+S7B0s4+6toblPppacyo04/XhUd/+U
+         IMK6xSfn9uPFKMChTLZtmfKBGXgJf7VxHmvm3dQ9QHkzEw3ilrrKQQwlx80V/BB3+k
+         2wANUl8qZfIllWAIkbVVBE47HieDVZISUJG7tY6U=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 22/22] pNFS/flexfiles: Specify the layout segment range in LAYOUTGET
-Date:   Sat, 28 Mar 2020 11:32:20 -0400
-Message-Id: <20200328153220.1352010-23-trondmy@kernel.org>
+Subject: [PATCH] NFS: Remove unused FLUSH_SYNC support in nfs_initiate_pgio()
+Date:   Sat, 28 Mar 2020 11:58:31 -0400
+Message-Id: <20200328155831.1372523-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200328153220.1352010-22-trondmy@kernel.org>
-References: <20200328153220.1352010-1-trondmy@kernel.org>
- <20200328153220.1352010-2-trondmy@kernel.org>
- <20200328153220.1352010-3-trondmy@kernel.org>
- <20200328153220.1352010-4-trondmy@kernel.org>
- <20200328153220.1352010-5-trondmy@kernel.org>
- <20200328153220.1352010-6-trondmy@kernel.org>
- <20200328153220.1352010-7-trondmy@kernel.org>
- <20200328153220.1352010-8-trondmy@kernel.org>
- <20200328153220.1352010-9-trondmy@kernel.org>
- <20200328153220.1352010-10-trondmy@kernel.org>
- <20200328153220.1352010-11-trondmy@kernel.org>
- <20200328153220.1352010-12-trondmy@kernel.org>
- <20200328153220.1352010-13-trondmy@kernel.org>
- <20200328153220.1352010-14-trondmy@kernel.org>
- <20200328153220.1352010-15-trondmy@kernel.org>
- <20200328153220.1352010-16-trondmy@kernel.org>
- <20200328153220.1352010-17-trondmy@kernel.org>
- <20200328153220.1352010-18-trondmy@kernel.org>
- <20200328153220.1352010-19-trondmy@kernel.org>
- <20200328153220.1352010-20-trondmy@kernel.org>
- <20200328153220.1352010-21-trondmy@kernel.org>
- <20200328153220.1352010-22-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -61,42 +38,54 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Move from requesting only full file layout segments, to requesting
-layout segments that match our I/O size. This means the server is
-still free to return a full file layout, but we will no longer
-error out if it does not.
+If the FLUSH_SYNC flag is set, nfs_initiate_pgio() will currently
+wait for completion, and then return the status of the I/O operation.
+What we actually want to report in nfs_pageio_doio() is whether or
+not the RPC call was launched successfully, whereas actual I/O
+status is intended handled in the reply callbacks.
+
+Since FLUSH_SYNC is never set by any of the callers anyway, let's
+just remove that code altogether.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/pagelist.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 42f581e213cc..7d399f72ebbb 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -798,8 +798,8 @@ ff_layout_pg_get_read(struct nfs_pageio_descriptor *pgio,
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = pnfs_update_layout(pgio->pg_inode,
- 					   nfs_req_openctx(req),
--					   0,
--					   NFS4_MAX_UINT64,
-+					   req_offset(req),
-+					   req->wb_bytes,
- 					   IOMODE_READ,
- 					   strict_iomode,
- 					   GFP_KERNEL);
-@@ -891,8 +891,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg = pnfs_update_layout(pgio->pg_inode,
- 						   nfs_req_openctx(req),
--						   0,
--						   NFS4_MAX_UINT64,
-+						   req_offset(req),
-+						   req->wb_bytes,
- 						   IOMODE_RW,
- 						   false,
- 						   GFP_NOFS);
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index c9c3edefc5be..be5e209399ea 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -629,7 +629,6 @@ int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+ 		.workqueue = nfsiod_workqueue,
+ 		.flags = RPC_TASK_ASYNC | RPC_TASK_CRED_NOREF | flags,
+ 	};
+-	int ret = 0;
+ 
+ 	hdr->rw_ops->rw_initiate(hdr, &msg, rpc_ops, &task_setup_data, how);
+ 
+@@ -641,18 +640,10 @@ int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+ 		(unsigned long long)hdr->args.offset);
+ 
+ 	task = rpc_run_task(&task_setup_data);
+-	if (IS_ERR(task)) {
+-		ret = PTR_ERR(task);
+-		goto out;
+-	}
+-	if (how & FLUSH_SYNC) {
+-		ret = rpc_wait_for_completion_task(task);
+-		if (ret == 0)
+-			ret = task->tk_status;
+-	}
++	if (IS_ERR(task))
++		return PTR_ERR(task);
+ 	rpc_put_task(task);
+-out:
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(nfs_initiate_pgio);
+ 
 -- 
 2.25.1
 
