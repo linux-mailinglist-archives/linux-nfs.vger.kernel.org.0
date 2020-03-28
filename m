@@ -2,93 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6241961DA
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Mar 2020 00:27:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D2DE1965E4
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Mar 2020 12:57:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgC0X1b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Mar 2020 19:27:31 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:51393 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgC0X1b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Mar 2020 19:27:31 -0400
+        id S1726269AbgC1L5F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 28 Mar 2020 07:57:05 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38867 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgC1L5F (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 28 Mar 2020 07:57:05 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c5so10048030lfp.5;
+        Sat, 28 Mar 2020 04:57:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585351651; x=1616887651;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=wNkAfSTgdEAIbGcVb6r+bcMQaXx7rIi2krMlk1sNQPM=;
-  b=H7ZO//jFyG8jyTD2UicWo1kyqKtVahmAlfXvbxOtfU6GukVhx67vKsBO
-   DqLlXiAGZ1mtJFWKopwpnCSXoskvhc9Kvdk34RskG1TtjWn+6qLsOwBZM
-   tRYnyINsxyZPFpPs+5oxW7irFJJ6PWPwXVqSeGpgwptcIl4cV1YkPk5uW
-   s=;
-IronPort-SDR: A/fs2mQvYBKtoN5l+EQETFXtItOyIibhLue6RpCt1boxGJMfFA29L/bDosRmDqqSrIJtpZEH5e
- iEaauPPl8H8w==
-X-IronPort-AV: E=Sophos;i="5.72,314,1580774400"; 
-   d="scan'208";a="23086497"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 27 Mar 2020 23:27:19 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 2EA21A2A33;
-        Fri, 27 Mar 2020 23:27:18 +0000 (UTC)
-Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 27 Mar 2020 23:27:17 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 27 Mar 2020 23:27:17 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Fri, 27 Mar 2020 23:27:17 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 54658DEFB8; Fri, 27 Mar 2020 23:27:17 +0000 (UTC)
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <linux-nfs@vger.kernel.org>
-CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v2 11/11] nfsd: add fattr support for user extended attributes
-Date:   Fri, 27 Mar 2020 23:27:17 +0000
-Message-ID: <20200327232717.15331-12-fllinden@amazon.com>
-X-Mailer: git-send-email 2.16.6
-In-Reply-To: <20200327232717.15331-1-fllinden@amazon.com>
-References: <20200327232717.15331-1-fllinden@amazon.com>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vohZ7RYylce7oG+qd7nKsIkPDOq6dSZqCFLWe4oqhRw=;
+        b=Fx7tQ6Zx/Nr3LIGzvw0af6WO8UdeI9QkitOU1hB16V+V2SzaIGLvx6tTDUmrhBiB+D
+         9nv/xcrIVkyNjaDWhL1IAyA6lyZP5vj/R7W9za40FiwFK5CB/lVUQcoyPLh9eOKNu9Zf
+         6Sinv8vNfrvvDVDVpw/HFLap893Nmag8KmDF6MteX1L+SWSoFEDB8rY0B0m5grsCppZy
+         qUFDFsQRqQczoishI/4T29L8Mll8dm4lC+a2v0lBdTDVhLFKgYpIUPqyntkgV0GhXQX6
+         Y4azQoxaxeDUPxOO2rZZqwRUfXZbBoJx1/9OoZnSIhWLzEXbAKe46885zIg7RI9tkC7+
+         cayg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vohZ7RYylce7oG+qd7nKsIkPDOq6dSZqCFLWe4oqhRw=;
+        b=Zv3GYj/7lIgJH0YHWQAwUejjHyAa+ZvFGtZi6mmWF6wEF8gQG4F0vjqnWKrKoij6ct
+         rKbGihBaacFfbvCm9/+UKtGHCDeTYPzDoAk8KF8VE0+FO2rI5/X7gF5bFxDpbFrdyl5u
+         jR57ZovZ2rFjnNtEhL79iIRmnjS6SQJfv6MvBDq/bcJuIib1S3Ed743+xf2n8wxxax1i
+         aKY3Ief0BEzZgM5mFPhfxYz3miuVM0Ku9Ry0awU26qRRxczZN+eQBm/unLcRYXiUPAzb
+         RHCCe4yNLJdhda+5wL/v7HzOMV4aPRvxXd1qc36FZjcJHgfrKYqdEdQmrh1rqlog7VfH
+         fKMg==
+X-Gm-Message-State: AGi0PubUsD82PZ/Fzd+mF7WvQkMKflbdtpkCY4rk7FR2WCQ9Wof/ShVk
+        G8wePtTHSXE4sN7/FOGDZD8=
+X-Google-Smtp-Source: APiQypLZYuYBOJKIzNJJMdP/KVOg5d8z8nE1cQlOOst4rOmQHNithBgqa92wV4ZbvMgbxZGfEF6YLA==
+X-Received: by 2002:ac2:4858:: with SMTP id 24mr2465051lfy.135.1585396622422;
+        Sat, 28 Mar 2020 04:57:02 -0700 (PDT)
+Received: from laptop ([178.209.50.173])
+        by smtp.gmail.com with ESMTPSA id q1sm1247898lfc.92.2020.03.28.04.56.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 28 Mar 2020 04:57:01 -0700 (PDT)
+Date:   Sat, 28 Mar 2020 14:56:55 +0300
+From:   Fedor Tokarev <ftokarev@gmail.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com,
+        anna.schumaker@netapp.com, trond.myklebust@hammerspace.com,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
+Message-ID: <20200328115650.GA27729@laptop>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Check if user extended attributes are supported for an inode,
-and return the answer when being queried for file attributes.
+Fix off-by-one issues in 'rpc_ntop6':
+ - 'snprintf' returns the number of characters which would have been
+   written if enough space had been available, excluding the terminating
+   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
+   last character was dropped.
+ - 'strcat' adds a terminating null byte to the string, thus if len ==
+   buflen, the null byte is written past the end of the buffer.
 
-An exported filesystem can now signal its RFC8276 user extended
-attributes capability.
-
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
 ---
- fs/nfsd/nfs4xdr.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 4c4508f1bb8e..5acf719c0451 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3229,6 +3229,15 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	}
- #endif
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 8b4d72b..010dcb8 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -82,11 +82,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
  
-+	if (bmval2 & FATTR4_WORD2_XATTR_SUPPORT) {
-+		p = xdr_reserve_space(xdr, 4);
-+		if (!p)
-+			goto out_resource;
-+		err = xattr_supported_namespace(d_inode(dentry),
-+						XATTR_USER_PREFIX);
-+		*p++ = cpu_to_be32(err == 0);
-+	}
-+
- 	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
- 	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
- 	status = nfs_ok;
+ 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
+ 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
+-	if (unlikely((size_t)rc > sizeof(scopebuf)))
++	if (unlikely((size_t)rc >= sizeof(scopebuf)))
+ 		return 0;
+ 
+ 	len += rc;
+-	if (unlikely(len > buflen))
++	if (unlikely(len >= buflen))
+ 		return 0;
+ 
+ 	strcat(buf, scopebuf);
 -- 
-2.17.2
+2.7.4
 
