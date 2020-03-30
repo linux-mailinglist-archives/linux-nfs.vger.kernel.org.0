@@ -2,57 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC090197A3D
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2020 13:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7636197C22
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2020 14:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgC3LBX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Mar 2020 07:01:23 -0400
-Received: from mail.11d01.mspz7.gob.ec ([190.152.145.91]:53576 "EHLO
-        mail.11d01.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729553AbgC3LBN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Mar 2020 07:01:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id AA7082F6F5DA;
-        Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id IZnl-T0LqKgH; Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id 401052F6F5D6;
-        Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.11d01.mspz7.gob.ec 401052F6F5D6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=11d01.mspz7.gob.ec;
-        s=50CBC7E4-8BED-11E9-AF6C-F1A741A224D3; t=1585559792;
-        bh=cLQbOHa1aY+/FyDjaDQOZOnnnlZDxMu+rBX/cg5yps8=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Reply-To:Message-Id;
-        b=qawSujttBWuEzMohr9ZJPS+i2KBi3hr5/FcbJkWupAQ54cW5sJQcKm2EOYoGPS/WY
-         IP/dkFJGNLTacUbozehg5xP/8hI3urfPaW1TjBB9ABavYK387DJ+EsW5thDlBzmt7A
-         siR7dBq32P4Kk1hx7f/HMVpbL32/Be4WatQQrgJ0=
-X-Virus-Scanned: amavisd-new at 11d01.mspz7.gob.ec
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 6P2MkD7SVnok; Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-Received: from [10.121.152.251] (unknown [105.12.0.10])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTPSA id D5B2A2F6F546;
-        Mon, 30 Mar 2020 04:16:21 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1729596AbgC3MnH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Mar 2020 08:43:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38411 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727339AbgC3MnH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Mar 2020 08:43:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so7860661pfo.5
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2020 05:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=4eANpMDTE+G6Q9rWGKxo6oSRPOg4DOHsmr6rBaWJCcA=;
+        b=Adcb4TCuqi7sI83JI7TDGbxDmwiMMsHgUjbzITJo4ASxGzI0ZKZDiDIy5TS2DcO71d
+         E16quUNI+lcq326D3MD1dhI3jVPf4u44ZqWuE1Z7gbJI5/MDYbjgf4wANuLObJTaoioy
+         ao7WcJXARzYXGO6MRpGHGGB4WpXauy05MNz0lNDNRSsyb1smZzg4L+JUg1WACVJN+ZeT
+         7QeCTm8qlsIU1v2hT+2i12n2SHTGhstBkeObOH0fVhQagVfVCr/FPndxuO7ri24moIea
+         H8Ke5oeFekaSSszCTwPIcQBCioOi9fAf6h9j+0peSU6hm1V3fp6SPVRrxeTQQEx7X/E9
+         meeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=4eANpMDTE+G6Q9rWGKxo6oSRPOg4DOHsmr6rBaWJCcA=;
+        b=J5zLON8gwR5gYer8XrSRcu9PcXPPqr3jseKZ43BbydzfkJla232UKP14IzolBEWWzG
+         1PTE7OqddTmz+n9r1YCtdw4YXEHmtO/+vVxh6SVDfSxJVHGagovIgjlU7NHZg2jX0Op5
+         Ry4JrmhbMKUlX6pKEjiBGcMzGZqT2h+B32Nl6kbExBcJJlHY/XaospWYajxGgjPZ5XiZ
+         LUu365CnQyp28fwwp76ah2IvKZUye0tkjj5c00p0cVOZ0n+6FykUmqA/v/RsokzKl78e
+         b9Cd9aAiLlZ1alMYpPMVPdOz7bTRDpX6XRoMMYuGvhepT/F5Agkh04NpwgrADLT9Wb6z
+         m1BQ==
+X-Gm-Message-State: ANhLgQ0bZaYKVOzcdkEtwL2/3x+CfJSpAfiTkJUDutD8kRq5/lCOqgkU
+        FHOJkJnRNvX+AX7PEOWU168DXrLu
+X-Google-Smtp-Source: ADFU+vua0cBzazx0Nsw/4FpTrcyupHnogcLj5mcnNqMETJP6EIxsUXbRR5jIkUIA0d4ccwFtT4PpBw==
+X-Received: by 2002:a63:8343:: with SMTP id h64mr12306920pge.73.1585572184421;
+        Mon, 30 Mar 2020 05:43:04 -0700 (PDT)
+Received: from C02W82TBHV2R ([116.75.57.209])
+        by smtp.gmail.com with ESMTPSA id w9sm10198732pfd.94.2020.03.30.05.43.02
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 05:43:03 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 18:12:59 +0530
+From:   Srikrishan Malik <srikrishanmalik@gmail.com>
+To:     linux-nfs@vger.kernel.org
+Subject: libnfsidmap: SASL bind suppoprt in umich_ldap
+Message-ID: <20200330123501.GA50689@C02W82TBHV2R>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: spende von 2.000.000,00 Euro
-To:     Recipients <luis.sanchez@11d01.mspz7.gob.ec>
-From:   "Manuel Franco" <luis.sanchez@11d01.mspz7.gob.ec>
-Date:   Mon, 30 Mar 2020 11:47:35 +0200
-Reply-To: manuelfrancospende11@gmail.com
-Message-Id: <20200330091621.D5B2A2F6F546@mail.11d01.mspz7.gob.ec>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ich bin Manuel Franco, ich spende Ihnen 2.000.000,00 Euro. Kontaktieren Sie=
- mich jetzt, damit wir fortfahren k=F6nnen.
+Hi,
 
-I am Manuel Franco, I donate to you 2,000,000.00 euros. Contact me now so w=
-e can proceed.
+This is regarding the umich_ldap plugin in libnfsidmap.
+This plugin uses only simple bind, are there any
+plans/ongoing efforts to support SASL binds.
+
+Thanks 
+Sri
