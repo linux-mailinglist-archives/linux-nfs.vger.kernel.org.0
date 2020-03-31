@@ -2,107 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34774199B46
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2020 18:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA335199D95
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2020 20:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgCaQUs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Mar 2020 12:20:48 -0400
-Received: from mail-dm6nam12on2115.outbound.protection.outlook.com ([40.107.243.115]:47594
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730011AbgCaQUs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:20:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O5u5BQN1+9tQ0IICanc7WfEzZYjuBhIiAIyMUi0wLBtCEbM5NsaXdYh5ZWIUeg0WLHmaLagamcznE1L2QTI8uJnKs/jLhXPMAnPMu5Ac8DBR+PrrxPdkFgUNz1GqINjSiprtVgKyK95vqQI/bNVATW9CUgaXWxZjueB+EmHKSpQ9dUeIdz3MbQDDhn4RTtJNnoPBT4Tekh7DYmir2816pkYrneSUEdl79b6k/I0Pu6l/cuMjCeeCffb0pPL5fbY+bLIehdOPMqaO++CYXxjkLi9buJZAqPUPL3WB+ekRDAkXj48VFFI3BcLMUWt2gHy94LZWSUzYYynguJvDj/x1Rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/AO7MiRrIGZ3Kc4AHcErgphlQoWxmySKXD/cICOAM8=;
- b=LF3BGCgsUvTWWh4Xo/UFsHdDTsL2GaIPf0g/1yo19lq4YW+uhk+Etf+vbgtAtHdgiSh982xdygFFg6F2iUI6qEIX4BUlvSaArEQrRTl8sBPIf6soXzgmyXYmhHdxEoBuOIfcim3aqTbWmyFB7pemZB/F4uobViWDDTJtPe/mYB9pnZbkQUndMXgtGlZrdqHHnGuBVOq1RYSs/T+g7AFIadPt7siyD4VH/tEYC+HzuJg7hRX50+YCZ1xA4ptq8zuCo5kn3JSLe85KfFIGu+/NlyNCldaBNoCF90AF7klLhJGZdP795rn11yfqJhkYhTBXY7sqK5c8YkZCOWsg11Gj4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/AO7MiRrIGZ3Kc4AHcErgphlQoWxmySKXD/cICOAM8=;
- b=NPx4jLatxLC3/SjT8Ks2lygbar1ysf/9QofnUKEBKGEn3XEy0Gx+0NSdRYeDUTeEJsVtuH/UnX4lMY0ytB/PNvju6jG+mK6ylFYMZ7SV/2xMs3GxdECtugazoEYS89lV2tpG8XhGrXLM0bT+v+TbbED0NuwW76DoDecpS1Lt87o=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3574.namprd13.prod.outlook.com (2603:10b6:610:23::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.13; Tue, 31 Mar
- 2020 16:20:41 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36%7]) with mapi id 15.20.2878.012; Tue, 31 Mar 2020
- 16:20:41 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "walteste@inf.ethz.ch" <walteste@inf.ethz.ch>
-Subject: Re: [PATCH] Add regex plugin for nfsidmap
-Thread-Topic: [PATCH] Add regex plugin for nfsidmap
-Thread-Index: AQHWBz3V7u4++9DRMEK8lKZQQ2gXCahi4icA
-Date:   Tue, 31 Mar 2020 16:20:41 +0000
-Message-ID: <9ddd1ed60d57ea13a704b9f609c4dc3536043e66.camel@hammerspace.com>
-References: <20200331090237.D56A4B7279@osaka.inf.ethz.ch>
-In-Reply-To: <20200331090237.D56A4B7279@osaka.inf.ethz.ch>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 29e11b34-0421-41c3-d70e-08d7d58f7513
-x-ms-traffictypediagnostic: CH2PR13MB3574:
-x-microsoft-antispam-prvs: <CH2PR13MB357420E7B294F65013A8AE73B8C80@CH2PR13MB3574.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0359162B6D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(136003)(346002)(396003)(39830400003)(366004)(6486002)(66946007)(36756003)(66446008)(66476007)(5660300002)(91956017)(76116006)(66556008)(81156014)(81166006)(8676002)(64756008)(186003)(71200400001)(26005)(86362001)(8936002)(2906002)(478600001)(6506007)(2616005)(110136005)(6512007)(316002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qnw3TPjY6a20NBGm2V3An5OI/y8VJ1FlogcEOgmlLl8mz3ODkXuy1M+O+6U03FKN5lFNETWqmZacEmBWk+9xNQ+182JwXQ/MxoVTztPdMGV9g9z+e/HhvL1UIrAwyFOd+679+jhYScfs8Vn7AvCxfNB6Wc7E/rk2SqqJToxkDMnrrkDbJys978BNkq5gJ9+9RqH1E0j1L99yVWXEjHiWYGHhV0gX5KXQgvkA0RTqqmEX4eLo0c6pZcytlxktFseuWhoabcaLRpe7jMX6NilKyPtba28EIGlnfd+rk3vAgqEPIoHRiOSjQQs8mgTG/R08BV8JqeM2mFpA5Hz2bIIJiDSX3LbyFtUxGFnZdU5ynehedCukHZWzUIkQAXJLRAcTdxcC/xemSSEXl6+CWm6O8QNMJzFH/cyer3Sh/rHJFuC6KDr07uoOkhdeo3nvc4CH
-x-ms-exchange-antispam-messagedata: +1XEqtIR+txeqyDlA2JkA6ioTXuyHZnd5Pj22I/cLNZEEuKOch7RsnjJQfELdEbpPNHiaBTW9omk6FtT+ZYA8WbIu95n1/F//eEa8EI3oZx0V/MsgsQH1YWCyysUg90pslZ54D+mF9f0asXc1uVWTA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C85CF114DE497946AFD7E33FE163E174@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29e11b34-0421-41c3-d70e-08d7d58f7513
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 16:20:41.5569
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AZmdslJViFb1JKmFKb4wmgQfNTl8dYVN+pOPE2i/C5h3pDuaHSqkPaCL+x3HfUp/ZusJ1TEUqURTYSilKj6h0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3574
+        id S1726150AbgCaSBX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Mar 2020 14:01:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52008 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgCaSBX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Mar 2020 14:01:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VHxX6x036173;
+        Tue, 31 Mar 2020 18:01:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=VsqCEtjj5Md5wBLezqFiNu+A2Tb4/B73IANBEKHxYrY=;
+ b=J9UcvFnEwS6b2fNrGZ5KQ4SuED30C04SgRzGzLcCk6hAQIl+3xyTZRC/Bw5Dqj6cUdK/
+ BOJogewY94Xq2+lsUl6Ag3L5KOJKF1RXLK1IVE+LV9k20/zuDyN0RCv129zDlAekoXh3
+ Z3HwvWxhrrSDKtscyChKX3jYK7suuf+taexwCXgHj5oTP6mOzdu+kmnyYn4twAnv6J1S
+ 7uX2d3ZZI38/3Xx2lNb+E3UUhrGFNVWUqbcqxQwY1dDNJRHUNe21YLkAfXE4FM25GoNB
+ Tjj8ad5C655wo47iANSVGPo6ijMW0U0yYijscdJVoX3nljqJyR4Mib3NwVL59iXkAuyF lQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 303cev13r7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 18:01:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VHv1sW077057;
+        Tue, 31 Mar 2020 17:59:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 302gcd8xjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 17:59:15 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02VHxCKb010335;
+        Tue, 31 Mar 2020 17:59:13 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 31 Mar 2020 10:59:12 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: refcount underflow in nfsd41_destroy_cb
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <6A4BC0CB-9A2F-405B-A7F7-5BFDA4FAD8CB@oracle.com>
+Date:   Tue, 31 Mar 2020 13:59:10 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jan Psota <jasiu@belsznica.pl>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0B4E0C1C-58FF-43EB-BF68-E96BB9DCE664@oracle.com>
+References: <CAHmME9ro8BPBTMfu8dEbGmkH7qHLdQ=CXGEOW2C7MR4bmT6T+w@mail.gmail.com>
+ <44C9D860-4F51-46B1-88A3-D10DDEF4BD8E@oracle.com>
+ <20200322044352.2ff1fbd8.jasiu@belsznica.pl>
+ <0C8A86EA-6015-4E9E-9A0E-DAEB4E988269@oracle.com>
+ <20200323160919.021e6c8a.jasiu@belsznica.pl>
+ <6A4BC0CB-9A2F-405B-A7F7-5BFDA4FAD8CB@oracle.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=974 adultscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310153
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTMxIGF0IDExOjAyICswMjAwLCBTdGVmYW4gV2FsdGVyIHdyb3RlOg0K
-PiBUaGUgcGF0Y2ggYmVsb3cgYWRkcyBhIG5ldyBuZnNpZG1hcCBwbHVnaW4gdGhhdCB1c2VzIHJl
-Z2V4IHRvIGV4dHJhY3QNCj4gaWRzIGZyb20gTkZTdjQgbmFtZXMuIE5hbWVzIGFyZSBjcmVhdGVk
-IGZyb20gaWRzIGJ5IHByZS0gYW5kDQo+IGFwcGVuZGluZw0KPiBzdGF0aWMgc3RyaW5ncy4gSXQg
-d29ya3Mgd2l0aCBib3RoIGlkbWFwZCBvbiBzZXJ2ZXJzIGFuZCBuZnNpZG1hcCBvbg0KPiBjbGll
-bnRzLg0KPiANCj4gVGhpcyBwbHVnaW4gaXMgZXNwZWNpYWxseSB1c2VmdWwgaW4gZW52aXJvbm1l
-bnRzIHdpdGggQWN0aXZlDQo+IERpcmVjdG9yeQ0KPiB3aGVyZSBkaXN0cmlidXRlZCBORlMgc2Vy
-dmVycyB1c2UgYSBtaXggb2Ygc2hvcnQgKHVuYW1lKSBhbmQgbG9uZw0KPiAoZG9tYWluXHVuYW1l
-KSBuYW1lcy4gQ29tYmluaW5nIGl0IHdpdGggdGhlIG5zc3dpdGNoIHBsdWdpbiBjb3ZlcnMNCj4g
-Ym90aA0KPiB2YXJpYW50cy4NCj4gDQo+IEN1cnJlbnRseSB0aGlzIHBsdWdpbiBoYXMgaXRzIG93
-biBnaXQgcHJvamVjdCBvbiBnaXRodWIgYnV0IEkgdGhpbmsNCj4gaXQgY291bGQgYmUgaGVscGZ1
-bCBpZiBpdCB3b3VsZCBiZSBpbmNvcnBvcmF0ZWQgaW4gdGhlIG1haW4gbmZzLXV0aWxzDQo+IHBs
-dWdpbiBzZXQuDQoNCkhtbS4uLiBXaHkgd291bGRuJ3QgeW91IHJhdGhlciB3YW50IHRvIHVzZSBz
-b21ldGhpbmcgbGlrZSB0aGUNCnNzc19ycGNpZG1hcGQgcGx1Z2luIGluIHRoZSBBRCBlbnZpcm9u
-bWVudD8gTWFudWFsIGVkaXRpbmcgb2YgdGhlDQp1c2VybmFtZSBzb3VuZHMgZXJyb3IgcHJvbmUs
-IHBhcnRpY3VsYXJseSBpZiB5b3VyIGRvbWFpbiBpcyBwYXJ0IG9mIGFuDQpBRCBmb3Jlc3QuDQoN
-CkknbSBub3Qgc2F5aW5nIHRoYXQgdGhpcyBwbHVnaW4gY291bGRuJ3QgYmUgdXNlZnVsIGluIG90
-aGVyDQpjaXJjdW1zdGFuY2VzIChwbGVhc2UgZWxhYm9yYXRlKSwganVzdCB0aGF0IHRoZSBBRCB1
-c2UgY2FzZSBzb3VuZHMgYQ0KbGl0dGxlIGlmZnkuLi4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QN
-CkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVz
-dEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Trond, any thoughts?
+
+> On Mar 24, 2020, at 9:50 AM, Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>=20
+> Trond,
+>=20
+>> On Mar 23, 2020, at 11:09 AM, Jan Psota <jasiu@belsznica.pl> wrote:
+>>=20
+>>> I thought I read in the initial report that you were seeing this
+>>> problem only on v5.6-rc6. What is the earliest kernel release
+>>> where you saw refcount UaF warnings from nfsd4_destroy_cb?
+>>>=20
+>> I didn't noticed that earlier too, because until connection breakage =
+on
+>> WireGuard I did not have any problems related. But when you are =
+asking,
+>> I found it in my Pentium G2020 system too since 5.5.4 kernel and =
+5.4.2
+>> looks not affected (I have logs since 01 Jan and fault begin to =
+appear
+>> on Feb 21, when I switched from 5.4.2 to 5.5.4 kernel a day before)
+>>=20
+>> $ journalctl | grep nfsd41_destroy_cb
+>> lut 21 01:07:58 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> lut 27 01:01:12 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 03 00:59:01 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 03 23:03:02 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 11 11:52:42 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 13 01:12:02 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 14 14:31:39 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 15 20:56:56 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 17 15:58:32 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>> mar 22 15:24:03 mordimer kernel:  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+>>=20
+>> I attach NFS part of my .config and a screen dump of menuconfig.
+>> <nfs.config><nfs-config.txt>
+>=20
+> I'm wondering if
+>=20
+> 2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and =
+nfsd4_shutdown_callback()")
+>=20
+> or
+>=20
+> 12357f1b2c8e ("nfsd: minor 4.1 callback cleanup")
+>=20
+> might be related to this issue (see down-thread for details and =
+backtraces).
+>=20
+> --
+> Chuck Lever
+
+--
+Chuck Lever
+
+
+
