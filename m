@@ -2,126 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C0219B61C
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2020 20:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 148F819B671
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2020 21:37:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbgDAS7G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Apr 2020 14:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732264AbgDAS7G (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:59:06 -0400
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C55C20784
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Apr 2020 18:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585767545;
-        bh=b+6vClENyKhhY8Nu1njz14RCxd5nXpTz0AXUXoOIV2I=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Q1BEBMWYDUkKjL8CFLq500WgdiaD3SaiPh0bPsSUECAMFpluCZ5pGjR5O9cNUNHOr
-         DxtVHyxkkPnuD7OparLox1oa+QrI8DAjbz0XmMeVlyloFVzGfOhNsBNKyggSROr2T8
-         7FQutLA6DUhp6weuXUpN9bwGQvkUnn3IQw6j6Fzg=
-From:   trondmy@kernel.org
+        id S1732671AbgDATh4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Apr 2020 15:37:56 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44228 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732637AbgDAThz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Apr 2020 15:37:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x16so1154078qts.11
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Apr 2020 12:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=bMOoSDbiik8tuCzrQzumpxZbl0LyO5dkAMzsicEViig=;
+        b=gfDacRK/lgkPo2GslN5gN6EG5pEA7d9G0NH1/xerqYxK3Y23RqJtKDNJQCHBwi5COR
+         LMu5xXFeuQ/8/KXL/AVM+pVH65v6Xf7bdU7bYyquGhRCDKJeAKEasMhBu/7Rd4Zis+bD
+         Q9xdhMeCaDF2svXZDpt+vXY5GlbTUepi1iDk2iuk+kuzgcOYdXNnxCg3aR04G4GcfySQ
+         1XgeH/ZAvFR7dkNeB4g8tQJAasffSUW+c0C8/zy+xpzaZYnUOZyZmk9ThIGdR4PfH7PO
+         Ko6plx+wgZbRAUp2VguV3Q9JmjYtfQdE4qj7f/JdlzfhkOH2iUdZVK2MmgFIFixaQGB4
+         MEuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=bMOoSDbiik8tuCzrQzumpxZbl0LyO5dkAMzsicEViig=;
+        b=Nf788vxqE7O92nwQBk749QI4k6u15MvlB08td+KvoB9fXZNSAl1/lrb8n0M1g1EuQG
+         k3rexYwgGj/t8HgDtXyYCvpoKWckZ4HiC9HdU7+riI5cjEIRbpU5C2OITm2kPiAY8YnY
+         0UEzH/Pwr/zoKcMt/2DaDq4ndafUveid72s59JkrEwEX7ThX4nUwGV80kq4KWENrBGmb
+         +NrZSxQpEoEK+mNIIZj0+vFYDwFGAmC+y4uLRrpR679sred+NsDSgwfV1xn7k3lRP5Xf
+         2CKcju2FZrm8koqMfoz2lvHQqgvuo5J54Ud8sR22qWLpvrN2SZYo9hJStqjvO7wUdA3q
+         e+FQ==
+X-Gm-Message-State: ANhLgQ08k1mH9HOO4NHVIAEUuh/DriDPloAa22NMkO5nijN1zzsWRQFJ
+        Rh2EAyhVm9JzXOh/ltXp4mvvVdx8
+X-Google-Smtp-Source: ADFU+vvMhUvH/xRf2Q0RnoGtwuSbcbuXuP9ckyXDLJqEzxV0b5Mp1O+BN2rXEMTQAGdtqI3DGpdxig==
+X-Received: by 2002:ac8:1c72:: with SMTP id j47mr12382339qtk.377.1585769872807;
+        Wed, 01 Apr 2020 12:37:52 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id b189sm2030488qkc.104.2020.04.01.12.37.51
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 12:37:52 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 031JbosK022639
+        for <linux-nfs@vger.kernel.org>; Wed, 1 Apr 2020 19:37:50 GMT
+Subject: [PATCH RFC] sunrpc: Ensure signalled RPC tasks exit
+From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 10/10] NFS: Try to join page groups before an O_DIRECT retransmission
-Date:   Wed,  1 Apr 2020 14:56:52 -0400
-Message-Id: <20200401185652.1904777-11-trondmy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200401185652.1904777-10-trondmy@kernel.org>
-References: <20200401185652.1904777-1-trondmy@kernel.org>
- <20200401185652.1904777-2-trondmy@kernel.org>
- <20200401185652.1904777-3-trondmy@kernel.org>
- <20200401185652.1904777-4-trondmy@kernel.org>
- <20200401185652.1904777-5-trondmy@kernel.org>
- <20200401185652.1904777-6-trondmy@kernel.org>
- <20200401185652.1904777-7-trondmy@kernel.org>
- <20200401185652.1904777-8-trondmy@kernel.org>
- <20200401185652.1904777-9-trondmy@kernel.org>
- <20200401185652.1904777-10-trondmy@kernel.org>
+Date:   Wed, 01 Apr 2020 15:37:50 -0400
+Message-ID: <20200401193559.6487.55107.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+If an RPC task is signaled while it is running and the transport is
+not connected, it will never sleep and never be terminated. This can
+happen when a RPC transport is shut down: the remaining tasks are
+signalled, but the transport is disconnected.
 
-If we have to retransmit requests, try to join their page groups
-first.
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/direct.c          | 20 ++++++++++++++++++++
- fs/nfs/write.c           |  2 +-
- include/linux/nfs_page.h |  1 +
- 3 files changed, 22 insertions(+), 1 deletion(-)
+ net/sunrpc/sched.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 8074304fd5b4..a57e7c72c7f4 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -505,6 +505,24 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	return result;
- }
+Interested in comments and suggestions.
+
+Nearly every time my NFS/RDMA client unmounts when using krb5, the
+umount hangs (killably). I tracked it down to an NFSv3 NULL request
+that is signalled but loops and does not exit.
+
+
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 55e900255b0c..905c31f75593 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -905,6 +905,12 @@ static void __rpc_execute(struct rpc_task *task)
+ 		trace_rpc_task_run_action(task, do_action);
+ 		do_action(task);
  
-+static void
-+nfs_direct_join_group(struct list_head *list, struct inode *inode)
-+{
-+	struct nfs_page *req, *next;
-+
-+	list_for_each_entry(req, list, wb_list) {
-+		if (req->wb_head != req || req->wb_this_page == req)
-+			continue;
-+		for (next = req->wb_this_page;
-+				next != req->wb_head;
-+				next = next->wb_this_page) {
-+			nfs_list_remove_request(next);
-+			nfs_release_request(next);
++		if (RPC_SIGNALLED(task)) {
++			task->tk_rpc_status = -ERESTARTSYS;
++			rpc_exit(task, -ERESTARTSYS);
++			break;
 +		}
-+		nfs_join_page_group(req, inode);
-+	}
-+}
 +
- static void
- nfs_direct_write_scan_commit_list(struct inode *inode,
- 				  struct list_head *list,
-@@ -527,6 +545,8 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
- 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
- 	nfs_direct_write_scan_commit_list(dreq->inode, &reqs, &cinfo);
+ 		/*
+ 		 * Lockless check for whether task is sleeping or not.
+ 		 */
+@@ -912,14 +918,6 @@ static void __rpc_execute(struct rpc_task *task)
+ 			continue;
  
-+	nfs_direct_join_group(&reqs, dreq->inode);
-+
- 	dreq->count = 0;
- 	dreq->max_count = 0;
- 	list_for_each_entry(req, &reqs, wb_list)
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 63b64333c3ea..df4b87c30ac9 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -501,7 +501,7 @@ nfs_destroy_unlinked_subrequests(struct nfs_page *destroy_list,
-  * the (former) group.  All subrequests are removed from any write or commit
-  * lists, unlinked from the group and destroyed.
-  */
--static void
-+void
- nfs_join_page_group(struct nfs_page *head, struct inode *inode)
- {
- 	struct nfs_page *subreq;
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index 99198c039bd6..c32c15216da3 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -141,6 +141,7 @@ extern	void nfs_unlock_request(struct nfs_page *req);
- extern	void nfs_unlock_and_release_request(struct nfs_page *);
- extern	struct nfs_page *nfs_page_group_lock_head(struct nfs_page *req);
- extern	int nfs_page_group_lock_subrequests(struct nfs_page *head);
-+extern	void nfs_join_page_group(struct nfs_page *head, struct inode *inode);
- extern int nfs_page_group_lock(struct nfs_page *);
- extern void nfs_page_group_unlock(struct nfs_page *);
- extern bool nfs_page_group_sync_on_bit(struct nfs_page *, unsigned int);
--- 
-2.25.1
+ 		/*
+-		 * Signalled tasks should exit rather than sleep.
+-		 */
+-		if (RPC_SIGNALLED(task)) {
+-			task->tk_rpc_status = -ERESTARTSYS;
+-			rpc_exit(task, -ERESTARTSYS);
+-		}
+-
+-		/*
+ 		 * The queue->lock protects against races with
+ 		 * rpc_make_runnable().
+ 		 *
 
