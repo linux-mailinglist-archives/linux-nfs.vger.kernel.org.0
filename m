@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22CF219B919
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 01:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B96A319B91B
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 01:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbgDAXwd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Apr 2020 19:52:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38342 "EHLO mx2.suse.de"
+        id S1733008AbgDAXx3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Apr 2020 19:53:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38468 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733265AbgDAXwd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:52:33 -0400
+        id S1732682AbgDAXx3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 1 Apr 2020 19:53:29 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C7D9ADD3;
-        Wed,  1 Apr 2020 23:52:30 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 0EB70AEC6;
+        Wed,  1 Apr 2020 23:53:27 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Jan Kara <jack@suse.cz>
-Date:   Thu, 02 Apr 2020 10:52:21 +1100
+Date:   Thu, 02 Apr 2020 10:53:20 +1100
 Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Writeback fixes for NFS
-In-Reply-To: <87tv2b7q72.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
-Message-ID: <87v9miydai.fsf@notabene.neil.brown.name>
+Subject: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+In-Reply-To: <87v9miydai.fsf@notabene.neil.brown.name>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name>
+Message-ID: <87sghmyd8v.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -37,76 +37,220 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Please ignore my previous patch (which this is in reply to), it was
-flawed in various ways.
+PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+loop block driver, where a daemon needs to write to one bdi in
+order to free up writes queued to another bdi.
 
-I now understand the code a bit better and have a somewhat simpler patch
-which appears to address the same problem.
+The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+pages, so that it can still dirty pages after other processses have been
+throttled.
 
-The problem is that writeback to NFS often produces lots of small writes
-(10s of K) rather than fewer large writes (1M).  This pattern can often
-hurt throughput, but in certain circumstances it can hurt NFS throughput
-more than expected.
+This approach was designed when all threads were blocked equally,
+independently on which device they were writing to, or how fast it was.
+Since that time the writeback algorithm has changed substantially with
+different threads getting different allowances based on non-trivial
+heuristics.  This means the simple "add 25%" heuristic is no longer
+reliable.
 
-Each nfs_writepages() call results in an NFS commit being sent to the
-server.  If writeback triggers lots of smaller nfs_writepages calls,
-this means lots of COMMITs.  If the server is slow to handle the COMMIT
-(I've seen the Ganesha NFS server take over 200ms per commit), these
-COMMITs can overlap, queue up, and choke the NFS server and cause
-order-of-magnitude drop in throughput.
+This patch changes the heuristic to ignore the global limits and
+consider only the limit relevant to the bdi being written to.  This
+approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+should not introduce surprises.  This has the desired result of
+protecting the task from the consequences of large amounts of dirty data
+queued for other devices.
 
-So we really want to only call nfs_writepages when there are a largish
-number of pages to be written - i.e. that are 'dirty'.
+This approach of "only consider the target bdi" is consistent with the
+other use of PF_LESS_THROTTLE in current_may_throttle(), were it causes
+attention to be focussed only on the target bdi.
 
-For historical reasons that I didn't thoroughly research but I'm
-confident are no longer relevant, pages that have been written to the
-NFS server but have not yet been the subject of a COMMIT - so-called
-"unstable" pages - are effectively accounted that same as "dirty" pages
-(sometimes called "reclaimable").
-This can result in writeback thinking there are lots of "dirty" pages to
-reclaim, while nfs_writepages can only find a few that it can write out.
+So this patch
+ - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
+ - remove the 25% bonus that that flag gives, and
+ - imposes 'strictlimit' handling for any process with PF_LOCAL_THROTTLE
+   set.
 
-The second patch following changes the accounting for these "unstable"
-pages.  They are now always accounted exactly the same was writeback
-pages.  Conceptually they can be thought of as still in writeback, but the
-writeback is now happening on the server.
+Note that previously realtime threads were treated the same as
+PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
+real-time threads, so it is now different from the behaviour of nfsd and
+loop tasks.  I don't know what is wanted for realtime.
 
-A COMMIT will always automatically follow the writes generated by
-nfs_writepages, so from the perspective of the VM, there really is no
-difference: It has scheduled the write and there is nothing else it can
-do except wait.
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ drivers/block/loop.c  |  2 +-
+ fs/nfsd/vfs.c         |  9 +++++----
+ include/linux/sched.h |  2 +-
+ kernel/sys.c          |  2 +-
+ mm/page-writeback.c   | 10 ++++++----
+ mm/vmscan.c           |  4 ++--
+ 6 files changed, 16 insertions(+), 13 deletions(-)
 
-Testing this patch showed that loop-back NFS is prone to deadlocks
-again.  I cannot see exactly how the change to 'unstable' accounting
-affected this, but I can see that the old +25% heuristic can no longer
-be justified given the complexity of writeback calculations.
-So the first patch following changes how writeback is handled for NFS
-servers handling loop-back requests (and other similar services) so that
-it is more obviously safe against excessive dirty pages scheduled for
-other devices.
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 739b372a5112..2c59371ce936 100644
+=2D-- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -897,7 +897,7 @@ static void loop_unprepare_queue(struct loop_device *lo)
+=20
+ static int loop_kthread_worker_fn(void *worker_ptr)
+ {
+=2D	current->flags |=3D PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
++	current->flags |=3D PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+ 	return kthread_worker_fn(worker_ptr);
+ }
+=20
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 0aa02eb18bd3..c3fbab1753ec 100644
+=2D-- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -979,12 +979,13 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh =
+*fhp, struct nfsd_file *nf,
+=20
+ 	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
+ 		/*
+=2D		 * We want less throttling in balance_dirty_pages()
+=2D		 * and shrink_inactive_list() so that nfs to
++		 * We want throttling in balance_dirty_pages()
++		 * and shrink_inactive_list() to only consider
++		 * the backingdev we are writing to, so that nfs to
+ 		 * localhost doesn't cause nfsd to lock up due to all
+ 		 * the client's dirty pages or its congested queue.
+ 		 */
+=2D		current->flags |=3D PF_LESS_THROTTLE;
++		current->flags |=3D PF_LOCAL_THROTTLE;
+=20
+ 	exp =3D fhp->fh_export;
+ 	use_wgather =3D (rqstp->rq_vers =3D=3D 2) && EX_WGATHER(exp);
+@@ -1037,7 +1038,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh =
+*fhp, struct nfsd_file *nf,
+ 		nfserr =3D nfserrno(host_err);
+ 	}
+ 	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
+=2D		current_restore_flags(pflags, PF_LESS_THROTTLE);
++		current_restore_flags(pflags, PF_LOCAL_THROTTLE);
+ 	return nfserr;
+ }
+=20
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 04278493bf15..5dcd27abc8cd 100644
+=2D-- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1473,7 +1473,7 @@ extern struct pid *cad_pid;
+ #define PF_KSWAPD		0x00020000	/* I am kswapd */
+ #define PF_MEMALLOC_NOFS	0x00040000	/* All allocation requests will inheri=
+t GFP_NOFS */
+ #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inheri=
+t GFP_NOIO */
+=2D#define PF_LESS_THROTTLE	0x00100000	/* Throttle me less: I clean memory =
+*/
++#define PF_LOCAL_THROTTLE	0x00100000	/* Throttle me less: I clean memory */
+ #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+ #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+ #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index d325f3ab624a..180a2fa33f7f 100644
+=2D-- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2262,7 +2262,7 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struc=
+t *t, unsigned long which,
+ 	return -EINVAL;
+ }
+=20
+=2D#define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE)
++#define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
+=20
+ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, ar=
+g3,
+ 		unsigned long, arg4, unsigned long, arg5)
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 2caf780a42e7..2afb09fa2fe0 100644
+=2D-- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -387,8 +387,7 @@ static unsigned long global_dirtyable_memory(void)
+  * Calculate @dtc->thresh and ->bg_thresh considering
+  * vm_dirty_{bytes|ratio} and dirty_background_{bytes|ratio}.  The caller
+  * must ensure that @dtc->avail is set before calling this function.  The
+=2D * dirty limits will be lifted by 1/4 for PF_LESS_THROTTLE (ie. nfsd) and
+=2D * real-time tasks.
++ * dirty limits will be lifted by 1/4 for real-time tasks.
+  */
+ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
+ {
+@@ -436,7 +435,7 @@ static void domain_dirty_limits(struct dirty_throttle_c=
+ontrol *dtc)
+ 	if (bg_thresh >=3D thresh)
+ 		bg_thresh =3D thresh / 2;
+ 	tsk =3D current;
+=2D	if (tsk->flags & PF_LESS_THROTTLE || rt_task(tsk)) {
++	if (rt_task(tsk)) {
+ 		bg_thresh +=3D bg_thresh / 4 + global_wb_domain.dirty_limit / 32;
+ 		thresh +=3D thresh / 4 + global_wb_domain.dirty_limit / 32;
+ 	}
+@@ -486,7 +485,7 @@ static unsigned long node_dirty_limit(struct pglist_dat=
+a *pgdat)
+ 	else
+ 		dirty =3D vm_dirty_ratio * node_memory / 100;
+=20
+=2D	if (tsk->flags & PF_LESS_THROTTLE || rt_task(tsk))
++	if (rt_task(tsk))
+ 		dirty +=3D dirty / 4;
+=20
+ 	return dirty;
+@@ -1580,6 +1579,9 @@ static void balance_dirty_pages(struct bdi_writeback =
+*wb,
+ 	bool strictlimit =3D bdi->capabilities & BDI_CAP_STRICTLIMIT;
+ 	unsigned long start_time =3D jiffies;
+=20
++	if (current->flags & PF_LOCAL_THROTTLE)
++		/* This task must only be throttled by its own writeback */
++		strictlimit =3D true;
+ 	for (;;) {
+ 		unsigned long now =3D jiffies;
+ 		unsigned long dirty, thresh, bg_thresh;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 876370565455..c5cf25938c56 100644
+=2D-- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1880,13 +1880,13 @@ static unsigned noinline_for_stack move_pages_to_lr=
+u(struct lruvec *lruvec,
+=20
+ /*
+  * If a kernel thread (such as nfsd for loop-back mounts) services
+=2D * a backing device by writing to the page cache it sets PF_LESS_THROTTL=
+E.
++ * a backing device by writing to the page cache it sets PF_LOCAL_THROTTLE.
+  * In that case we should only throttle if the backing device it is
+  * writing to is congested.  In other cases it is safe to throttle.
+  */
+ static int current_may_throttle(void)
+ {
+=2D	return !(current->flags & PF_LESS_THROTTLE) ||
++	return !(current->flags & PF_LOCAL_THROTTLE) ||
+ 		current->backing_dev_info =3D=3D NULL ||
+ 		bdi_write_congested(current->backing_dev_info);
+ }
+=2D-=20
+2.26.0
 
-Thanks,
-NeilBrown
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FKTYACgkQOeye3VZi
-gbkMhQ/9Eb/q3J6cLCyuDP/OqMQWyM38kLkbAhYYBgjcrgn7r/VmruQJfREPQGZc
-f2i7X9VZiBFCIh0HXRdsR17d4qU6NCtAtf234EppdkceGrT+yA1RNdUV1nOFZJCY
-1Qs/xyNzHOgzveedx2wuGJ5BA94Dd6MVeNE+DxFEgzqPexp14/8vqALhbLB0GLJu
-eN8R7w+uCIUvTDeQp0TFuG6aUWDcQoIWi3aCxMfTICyYxjG35Nss2N/N7HinmZa/
-zg8nMnE/iCFc7It89N/6i8IjjAE62SBcj5kfhzdqY3DguVX6nio3raef/ZMoH3bS
-j7DEQacqwUVOsvoLutEzGBRRZ+GQEa2+Cal5AniuUpBOfOr+DyhOOpSVDPNLBY/b
-7yTzK1BR1ttFI3NtJpKoFbNdKfpWkIpdebPhe6AcfOT+rhnbgXWkl15oexsiZWOU
-q5k49bL9HPZ6NRsMng2pS2W7BYNQVqin70XuO2XnOTHLa+BOBh0cm6k0QTjc+XI+
-/bvNonecFYqQMAcDtVDwo7G3bCwPxcSfcUDM5QD+TqbJ5tZLF2yHu1KWcZhTrtWf
-q++Lrs0NGYXoe/iyqtNYkdBFOk/4YzWVZzzfNi8feV1oqYRACqKhSmicFhdr4OYc
-vEfR84TCAEldq/TWUw0o51i2HvZvcsJ1hwl5PdwnCAGsnQC8rsw=
-=nBP7
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FKXAACgkQOeye3VZi
+gbk+MQ//bcEgMT5Zpv9O/dBSsXZXAb3xa/L0Rh/3fJP04ApbxjsltqS9kUXRAkeB
+z+GjhE7/Sa8v7OEMG9DihUc6vRtBULUzsLVQK7XL7dtlCNLTJMZAdf6x5V/PJlcK
+qLX97Fz0O+Vh/QDnZ67O3rkXU8R2bYgjYn+z8GG9C6hZfz5YSMzXKlPjhZVGWLMu
+ZCDYDK+M+qJlaBOQ7XFdDakm88kDUrd1I8Hla9oN4LRuYhN2QhtYTpbpdPMRqqqt
+QCEJFB+44+OGMNUy1S6iJU4RoMwstBlQISDXH1+NoBaEeiyW45kseRpTVBFXVLmd
+aeliKm3JygvEyr5ndSq/fxwW301zG6STDPcow8/bPa2fqLnSbokBNbivOR8A+gdW
+vzDR812O1e8BHwC4lq332CBuod6mNPRmjy8FtHPFPolfPmncO3T0zxh4RCrxS7Wb
+8oWw8hsbpO+TU+HNicu5YwWJ6HUAKVvvmqpu6pEOxyGznGiHHWuKRBe85gxUVI5h
+m+qwnCWrHArl61Q6fkwZsNhZIKGx1WlEZa2stT+nIImmktZj4CfVtRai9Ff9LifI
+09ISrYOBkv7zwT2/ZULfU6+H0UoJoKXsz2D3MBFbyUYLC+9ZP1TIjG6bVOajfwuk
+43ktWdtUs1ACRrjwNU8IW2ges2hnG5blhRdGJTVtgPg3HqkGtKc=
+=l23v
 -----END PGP SIGNATURE-----
 --=-=-=--
