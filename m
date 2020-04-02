@@ -2,153 +2,163 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B09119BAA3
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 05:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA5C119BB3B
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 06:58:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387443AbgDBDXo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Apr 2020 23:23:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44477 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732664AbgDBDXo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Apr 2020 23:23:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585797823;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K7PlE1BOvd4yWyewYc0QHOLEgPNNxiICYcnTl2gESck=;
-        b=LbAT2ec43CejEK+JxDWM+B7uaFWgKfoInKeFOTqpA9hwYY8ArKT7kKaB2pn42+TvgEwxOp
-        JatQ67EzLXRpjJZsKs7yfxMzf3m/mzv2Oa0M3/e/7TGQzfO+4rCTanAZlnRZqNdDrLyb3z
-        4ReH5cCFZJ+uuOHX2ELIvRp21zQw6rc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-0cNM-cReMNm_NkUsjhAWog-1; Wed, 01 Apr 2020 23:23:41 -0400
-X-MC-Unique: 0cNM-cReMNm_NkUsjhAWog-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 858F7107ACC9;
-        Thu,  2 Apr 2020 03:23:40 +0000 (UTC)
-Received: from yoyang-pc.usersys.redhat.com (dhcp-12-152.nay.redhat.com [10.66.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5740496F83;
-        Thu,  2 Apr 2020 03:23:38 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 11:23:35 +0800
-From:   Yongcheng Yang <yoyang@redhat.com>
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     steved@redhat.com, bfields@fieldses.org, jlayton@kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [nfs-utils PATCH RFC v3 6/8] nfsdcld: add /etc/nfs.conf support
-Message-ID: <20200402032335.GA7811@yoyang-pc.usersys.redhat.com>
-References: <20190326220730.3763-1-smayhew@redhat.com>
- <20190326220730.3763-7-smayhew@redhat.com>
+        id S1726136AbgDBE6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Apr 2020 00:58:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47634 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgDBE6I (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 2 Apr 2020 00:58:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D2602AD46;
+        Thu,  2 Apr 2020 04:58:05 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Hillf Danton <hdanton@sina.com>
+Date:   Thu, 02 Apr 2020 15:57:56 +1100
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+In-Reply-To: <20200402042644.17028-1-hdanton@sina.com>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <20200402042644.17028-1-hdanton@sina.com>
+Message-ID: <87mu7uxz57.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326220730.3763-7-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Scott,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for jumping back into this thread after one year.
+On Thu, Apr 02 2020, Hillf Danton wrote:
 
-Maybe one another man page nfs.conf(5) (i.e. systemd/nfs.conf.man)
-also needs an update (just as nfsdcltrack does).
+> On Thu, 02 Apr 2020 10:53:20 +1100 NeilBrown wrote:
+>>=20
+>> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+>> loop block driver, where a daemon needs to write to one bdi in
+>> order to free up writes queued to another bdi.
+>>=20
+>> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+>> pages, so that it can still dirty pages after other processses have been
+>> throttled.
+>>=20
+>> This approach was designed when all threads were blocked equally,
+>> independently on which device they were writing to, or how fast it was.
+>> Since that time the writeback algorithm has changed substantially with
+>> different threads getting different allowances based on non-trivial
+>> heuristics.  This means the simple "add 25%" heuristic is no longer
+>> reliable.
+>>=20
+>> This patch changes the heuristic to ignore the global limits and
+>> consider only the limit relevant to the bdi being written to.  This
+>> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+>> should not introduce surprises.  This has the desired result of
+>> protecting the task from the consequences of large amounts of dirty data
+>> queued for other devices.
+>>=20
+>> This approach of "only consider the target bdi" is consistent with the
+>> other use of PF_LESS_THROTTLE in current_may_throttle(), were it causes
+>> attention to be focussed only on the target bdi.
+>>=20
+>> So this patch
+>>  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
+>>  - remove the 25% bonus that that flag gives, and
+>>  - imposes 'strictlimit' handling for any process with PF_LOCAL_THROTTLE
+>>    set.
+>
+> 	/*
+> 	 * The strictlimit feature is a tool preventing mistrusted filesystems
+> 	 * from growing a large number of dirty pages before throttling. For
+>
+> Based on the comment snippet, I suspect it is applicable to IO flushers
+> unless they are likely generating tons of dirty pages. If they are,
+> however, cutting their bonuses seem questionable.
+
+The purpose of the strictlimit feature was to isolate one filesystem
+(bdi) from all others, so that the one cannot create dirty pages which
+unfairly disadvantage the others - this is what that comment says.
+But the implementation appears to focus on the isolation, not the
+specific purpose, and isolation works both ways.  It protects the others
+from the one, and the one from the others.
+
+fuse needs to be isolated so it doesn't harm others.
+nfsd and loop need to be isolate so they aren't harmed by others.
+I'm less familiar with IO flushers but I suspect that have exactly the
+same need as nfsd and loop - they need to be isolated from dirty pages
+other than on the device they are writing to.
+The 25% bonus was never about giving them a bonus because they need it.
+It was about protecting them from excess usage elsewhere.  I strongly
+suspect that my change will provide a conceptually better service for IO
+flushers. (whether it is better in a practical measurable sense I cannot
+say, but I'd be surprised if it was worse).
+
+One possible problem with strictlimit isolation is suggested by the
+comment
+
+	 *
+	 * In strictlimit case make decision based on the wb counters
+	 * and limits. Small writeouts when the wb limits are ramping
+	 * up are the price we consciously pay for strictlimit-ing.
+	 *
+
+This suggests that starting transients may be worse in some cases.
+I haven't noticed any problems in my (limited) testing so while I
+suspect there is a genuine difference here, I don't expect it to be problem=
+atic.
+
+>
+>>=20
+>> Note that previously realtime threads were treated the same as
+>> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
+>> real-time threads, so it is now different from the behaviour of nfsd and
+>> loop tasks.  I don't know what is wanted for realtime.
+>>=20
+>> Signed-off-by: NeilBrown <neilb@suse.de>
+>> =3D2D--
+>
+> Hrm corrupted delivery?
+
+No, that's just normal email quotation for a multi-part message (needed
+for crypto-signing which I do by default)
+'git am', for example, is quite capable of coping with it.
 
 Thanks,
-Yongcheng
+NeilBrown
 
-On Tue, Mar 26, 2019 at 06:07:28PM -0400, Scott Mayhew wrote:
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  nfs.conf                  |  4 ++++
->  utils/nfsdcld/nfsdcld.c   | 13 +++++++++++++
->  utils/nfsdcld/nfsdcld.man | 15 +++++++++++++++
->  3 files changed, 32 insertions(+)
-> 
-> diff --git a/nfs.conf b/nfs.conf
-> index 796bee4..aabf300 100644
-> --- a/nfs.conf
-> +++ b/nfs.conf
-> @@ -34,6 +34,10 @@
->  # state-directory-path=/var/lib/nfs
->  # ha-callout=
->  #
-> +[nfsdcld]
-> +# debug=0
-> +# storagedir=/var/lib/nfs/nfsdcld
-> +#
->  [nfsdcltrack]
->  # debug=0
->  # storagedir=/var/lib/nfs/nfsdcltrack
-> diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-> index 272c7c5..313c68f 100644
-> --- a/utils/nfsdcld/nfsdcld.c
-> +++ b/utils/nfsdcld/nfsdcld.c
-> @@ -45,6 +45,7 @@
->  #include "cld-internal.h"
->  #include "sqlite.h"
->  #include "../mount/version.h"
-> +#include "conffile.h"
->  
->  #ifndef DEFAULT_PIPEFS_DIR
->  #define DEFAULT_PIPEFS_DIR NFS_STATEDIR "/rpc_pipefs"
-> @@ -640,6 +641,7 @@ main(int argc, char **argv)
->  	char *progname;
->  	char *storagedir = CLD_DEFAULT_STORAGEDIR;
->  	struct cld_client clnt;
-> +	char *s;
->  
->  	memset(&clnt, 0, sizeof(clnt));
->  
-> @@ -653,6 +655,17 @@ main(int argc, char **argv)
->  	xlog_syslog(0);
->  	xlog_stderr(1);
->  
-> +	conf_init_file(NFS_CONFFILE);
-> +	s = conf_get_str("general", "pipefs-directory");
-> +	if (s)
-> +		strlcpy(pipefs_dir, s, sizeof(pipefs_dir));
-> +	s = conf_get_str("nfsdcld", "storagedir");
-> +	if (s)
-> +		storagedir = s;
-> +	rc = conf_get_num("nfsdcld", "debug", 0);
-> +	if (rc > 0)
-> +		xlog_config(D_ALL, 1);
-> +
->  	/* process command-line options */
->  	while ((arg = getopt_long(argc, argv, "hdFp:s:", longopts,
->  				  NULL)) != EOF) {
-> diff --git a/utils/nfsdcld/nfsdcld.man b/utils/nfsdcld/nfsdcld.man
-> index b607ba6..c271d14 100644
-> --- a/utils/nfsdcld/nfsdcld.man
-> +++ b/utils/nfsdcld/nfsdcld.man
-> @@ -163,6 +163,21 @@ Location of the rpc_pipefs filesystem. The default value is
->  .IX Item "-s storagedir, --storagedir=storage_dir"
->  Directory where stable storage information should be kept. The default
->  value is \fI/var/lib/nfs/nfsdcld\fR.
-> +.SH "CONFIGURATION FILE"
-> +.IX Header "CONFIGURATION FILE"
-> +The following values are recognized in the \fB[nfsdcld]\fR section
-> +of the \fI/etc/nfs.conf\fR configuration file:
-> +.IP "\fBstoragedir\fR" 4
-> +.IX Item "storagedir"
-> +Equivalent to \fB\-s\fR/\fB\-\-storagedir\fR.
-> +.IP "\fBdebug\fR" 4
-> +.IX Item "debug"
-> +Setting "debug = 1" is equivalent to \fB\-d\fR/\fB\-\-debug\fR.
-> +.LP
-> +In addition, the following value is recognized from the \fB[general]\fR section:
-> +.IP "\fBpipefs\-directory\fR" 4
-> +.IX Item "pipefs-directory"
-> +Equivalent to \fB\-p\fR/\fB\-\-pipefsdir\fR.
->  .SH "NOTES"
->  .IX Header "NOTES"
->  The Linux kernel NFSv4 server has historically tracked this information
-> -- 
-> 2.17.2
-> 
+>
+>>  drivers/block/loop.c  |  2 +-
+>>  fs/nfsd/vfs.c         |  9 +++++----
+>>  include/linux/sched.h |  2 +-
+>>  kernel/sys.c          |  2 +-
+>>  mm/page-writeback.c   | 10 ++++++----
+>>  mm/vmscan.c           |  4 ++--
+>>  6 files changed, 16 insertions(+), 13 deletions(-)
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FcNQACgkQOeye3VZi
+gblDmw/+NLPz80exgMWUF374oK1wARIqZr+wHTPVkaibovw8bomzXDLuPfLjOvMZ
+8H/U228VytpbSzhPCT82Ief8GaHb7uARwHEvxIJSCcNyPt+oyKbLJgRbp3Zu5z5h
+GD9in0nS4+TG5cEImhK8318jKBdCsEpX48Xe8YyW4bvIDWRyJHIuV8W6VYVSW/kF
+WWTgtJ7OLPhNGk1Ob/Gcx7gHnTGZv8tCo9EmDzBw87ZJDIP5hCG7fHeETNCf22jj
+GzZirbPR96Gvnur45qGfth2xbIMTiBmUwho0j1lRFE2R8Cz92c7m33UChQ72Z0v2
+1O8gLh6xlFhgD9GqbBLgVsNV3i3JOL6TLPQF2k6V6GC3POjNx3ohVV8S0p21F9Y+
+WUw5F+1XCkuoXUbOyPp4cD/chxzNZ/rE50T4YCD7GYE98qkLUXN9+4tmWkAcQUx2
+zINCbge4dsrUIJKzHberVtWeRpqIp1f2eoUWWZTmw/cHSGr4GkmKeTSKFCa8CWja
+lqjCsbz6FvB2TVHeDOBCI1F9A6CceD0AlbQ3jHU1If63QPVjrtmC1XkhQlcve+bK
+6eivYhInXZWR8JMe3VEogT2v0XHRzLlOEcK26UVFKb4WEDVrhnjC6HS3YTuVGC22
+gk27jBoVuQjCavat0iPBWrMaj4sNe5t37Z/4l6kfC1XXDU1o/60=
+=oqvq
+-----END PGP SIGNATURE-----
+--=-=-=--
