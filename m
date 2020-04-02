@@ -2,163 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5C119BB3B
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 06:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A50D19C3B9
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 16:14:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgDBE6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Apr 2020 00:58:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47634 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgDBE6I (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:58:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2602AD46;
-        Thu,  2 Apr 2020 04:58:05 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Hillf Danton <hdanton@sina.com>
-Date:   Thu, 02 Apr 2020 15:57:56 +1100
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-In-Reply-To: <20200402042644.17028-1-hdanton@sina.com>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <20200402042644.17028-1-hdanton@sina.com>
-Message-ID: <87mu7uxz57.fsf@notabene.neil.brown.name>
+        id S1731715AbgDBOOn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Apr 2020 10:14:43 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36181 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731861AbgDBOOn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Apr 2020 10:14:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585836882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jHomtIlfVWCjz0uqN5tmjf5fA1sQAGrA5th4ZK/FkAU=;
+        b=cuX86C/a120lvfm63jNnZRIB4mcW1LHqbj7OC1tbBMk6dxVYNYzk4jsONk97naTx363Wxh
+        XGKQnK7c090YpVWMi5wNXLerWGfPOQ2aIU5fKg76MPrKjNvsD6UbQCq051pHKP3j6JmIMo
+        E2+iyNeUCgMaqIWSA/3J7pcnIFqX/LQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-1BusTZ8oOt2-QFfQoMK6lw-1; Thu, 02 Apr 2020 10:14:38 -0400
+X-MC-Unique: 1BusTZ8oOt2-QFfQoMK6lw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFCDC800D50;
+        Thu,  2 Apr 2020 14:14:34 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.194.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39C1899E16;
+        Thu,  2 Apr 2020 14:14:27 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 16:14:24 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     Ian Kent <raven@themaw.net>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+Message-ID: <20200402141424.3zyphot2kjf5vaoo@ws.net.home>
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+ <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
+ <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
+ <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
+ <2465266.1585729649@warthog.procyon.org.uk>
+ <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
+ <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 02, 2020 at 09:38:20AM +0800, Ian Kent wrote:
+> I prefer the system call interface and I'm not offering justification
+> for that other than a general dislike (and on occasion outright
+> frustration) of pretty much every proc implementation I have had to
+> look at.
 
-On Thu, Apr 02 2020, Hillf Danton wrote:
+Frankly, I'm modest, what about to have both interfaces in kernel --
+fsinfo() as well mountfs? It's nothing unusual for example for block
+devices to have attribute accessible by /sys as well as by ioctl().
 
-> On Thu, 02 Apr 2020 10:53:20 +1100 NeilBrown wrote:
->>=20
->> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
->> loop block driver, where a daemon needs to write to one bdi in
->> order to free up writes queued to another bdi.
->>=20
->> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
->> pages, so that it can still dirty pages after other processses have been
->> throttled.
->>=20
->> This approach was designed when all threads were blocked equally,
->> independently on which device they were writing to, or how fast it was.
->> Since that time the writeback algorithm has changed substantially with
->> different threads getting different allowances based on non-trivial
->> heuristics.  This means the simple "add 25%" heuristic is no longer
->> reliable.
->>=20
->> This patch changes the heuristic to ignore the global limits and
->> consider only the limit relevant to the bdi being written to.  This
->> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
->> should not introduce surprises.  This has the desired result of
->> protecting the task from the consequences of large amounts of dirty data
->> queued for other devices.
->>=20
->> This approach of "only consider the target bdi" is consistent with the
->> other use of PF_LESS_THROTTLE in current_may_throttle(), were it causes
->> attention to be focussed only on the target bdi.
->>=20
->> So this patch
->>  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
->>  - remove the 25% bonus that that flag gives, and
->>  - imposes 'strictlimit' handling for any process with PF_LOCAL_THROTTLE
->>    set.
->
-> 	/*
-> 	 * The strictlimit feature is a tool preventing mistrusted filesystems
-> 	 * from growing a large number of dirty pages before throttling. For
->
-> Based on the comment snippet, I suspect it is applicable to IO flushers
-> unless they are likely generating tons of dirty pages. If they are,
-> however, cutting their bonuses seem questionable.
+I can imagine that for complex task or performance sensitive tasks
+it's better to use fsinfo(), but in another simple use-cases (for
+example to convert mountpoint to device name in shell) is better to
+read /proc/.../<atrtr>.
 
-The purpose of the strictlimit feature was to isolate one filesystem
-(bdi) from all others, so that the one cannot create dirty pages which
-unfairly disadvantage the others - this is what that comment says.
-But the implementation appears to focus on the isolation, not the
-specific purpose, and isolation works both ways.  It protects the others
-from the one, and the one from the others.
+    Karel
 
-fuse needs to be isolated so it doesn't harm others.
-nfsd and loop need to be isolate so they aren't harmed by others.
-I'm less familiar with IO flushers but I suspect that have exactly the
-same need as nfsd and loop - they need to be isolated from dirty pages
-other than on the device they are writing to.
-The 25% bonus was never about giving them a bonus because they need it.
-It was about protecting them from excess usage elsewhere.  I strongly
-suspect that my change will provide a conceptually better service for IO
-flushers. (whether it is better in a practical measurable sense I cannot
-say, but I'd be surprised if it was worse).
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
 
-One possible problem with strictlimit isolation is suggested by the
-comment
-
-	 *
-	 * In strictlimit case make decision based on the wb counters
-	 * and limits. Small writeouts when the wb limits are ramping
-	 * up are the price we consciously pay for strictlimit-ing.
-	 *
-
-This suggests that starting transients may be worse in some cases.
-I haven't noticed any problems in my (limited) testing so while I
-suspect there is a genuine difference here, I don't expect it to be problem=
-atic.
-
->
->>=20
->> Note that previously realtime threads were treated the same as
->> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
->> real-time threads, so it is now different from the behaviour of nfsd and
->> loop tasks.  I don't know what is wanted for realtime.
->>=20
->> Signed-off-by: NeilBrown <neilb@suse.de>
->> =3D2D--
->
-> Hrm corrupted delivery?
-
-No, that's just normal email quotation for a multi-part message (needed
-for crypto-signing which I do by default)
-'git am', for example, is quite capable of coping with it.
-
-Thanks,
-NeilBrown
-
->
->>  drivers/block/loop.c  |  2 +-
->>  fs/nfsd/vfs.c         |  9 +++++----
->>  include/linux/sched.h |  2 +-
->>  kernel/sys.c          |  2 +-
->>  mm/page-writeback.c   | 10 ++++++----
->>  mm/vmscan.c           |  4 ++--
->>  6 files changed, 16 insertions(+), 13 deletions(-)
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FcNQACgkQOeye3VZi
-gblDmw/+NLPz80exgMWUF374oK1wARIqZr+wHTPVkaibovw8bomzXDLuPfLjOvMZ
-8H/U228VytpbSzhPCT82Ief8GaHb7uARwHEvxIJSCcNyPt+oyKbLJgRbp3Zu5z5h
-GD9in0nS4+TG5cEImhK8318jKBdCsEpX48Xe8YyW4bvIDWRyJHIuV8W6VYVSW/kF
-WWTgtJ7OLPhNGk1Ob/Gcx7gHnTGZv8tCo9EmDzBw87ZJDIP5hCG7fHeETNCf22jj
-GzZirbPR96Gvnur45qGfth2xbIMTiBmUwho0j1lRFE2R8Cz92c7m33UChQ72Z0v2
-1O8gLh6xlFhgD9GqbBLgVsNV3i3JOL6TLPQF2k6V6GC3POjNx3ohVV8S0p21F9Y+
-WUw5F+1XCkuoXUbOyPp4cD/chxzNZ/rE50T4YCD7GYE98qkLUXN9+4tmWkAcQUx2
-zINCbge4dsrUIJKzHberVtWeRpqIp1f2eoUWWZTmw/cHSGr4GkmKeTSKFCa8CWja
-lqjCsbz6FvB2TVHeDOBCI1F9A6CceD0AlbQ3jHU1If63QPVjrtmC1XkhQlcve+bK
-6eivYhInXZWR8JMe3VEogT2v0XHRzLlOEcK26UVFKb4WEDVrhnjC6HS3YTuVGC22
-gk27jBoVuQjCavat0iPBWrMaj4sNe5t37Z/4l6kfC1XXDU1o/60=
-=oqvq
------END PGP SIGNATURE-----
---=-=-=--
