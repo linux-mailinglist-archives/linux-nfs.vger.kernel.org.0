@@ -2,166 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 473FD19B9F9
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 03:38:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B09119BAA3
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 05:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbgDBBie (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Apr 2020 21:38:34 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46223 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726319AbgDBBid (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Apr 2020 21:38:33 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3ABD45801C4;
-        Wed,  1 Apr 2020 21:38:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 01 Apr 2020 21:38:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQPzU=; b=EhjE5WUllq7utAsj
-        QGotnYbb9Kw8jZCsD7odmyKl1n5mYNo16UGKeB+MA/N8pXr1cwCWa1jb2Qz6NnFR
-        OmkHYTPm3ClH8nYV38aHOd8+YkGAGNacEUH924J1y6HJ80OvGw1vOk420eaVRmr1
-        Wqv16Qg6Prbwz52FOwUoa9pw7JtngLbVwCiM9SbAOY4/IxfKTbu2Bj+zofmYQPAZ
-        3DbFdozqMh3qo9qJ646FaGfljfvPwyXGuJkQfmzNQxDFzQLOA6lcR1LS1OAtdFYu
-        R1qMp7IVbQ+56/KqtUyLLkVzOUUUIIJ+umm4GYxaZV/Wirk+sjBmfMOp/5UCTFtr
-        +kr2LQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQP
-        zU=; b=ZVR+2Un1ogFAbTykJdID1KGQHIQCJlxQdHSQLt4iyc695rALIxGzJ/tZx
-        8ttNUhd77g0OaBXN5/v5Q61v4ileqM3MNUllXQT/wmZHyyTxCGxukO3drlUximUQ
-        Yn0lLHQQ4deECa6MIpgb5BJCB4VMr8RT3NfjFcB+xwsNz55sEXdbwq6kd1MQnzlK
-        Mta2qB0IOK7uVSe1r+MH6dKM/Ym1LVOlW+qAmnUOMTA0qqlWFDEPpyRtftHWjREV
-        czKId4Nepql7rXMwphjcl51Mlljv3xaYYmB6qAyPcxod1+UpKfKizo5hobnmT3m2
-        byqO5tanFiUouyIa6j4md5wueG0Pg==
-X-ME-Sender: <xms:F0KFXnxfg-I39THCyxl8TBBO4WHZ_l_tGpGYiNs6KqDi_2mdnroUvg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdefgdehtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
-    duieeirddvfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
-X-ME-Proxy: <xmx:F0KFXjgFLqkZZSXP7k-wS0dX0TesDJcOZg4BLckP6jqvx7AMc3i6yw>
-    <xmx:F0KFXsV1k4K3Nk4yTG1Kpiu9GOkeb9fya0zvYG0XJ_h-ikBRchiVTg>
-    <xmx:F0KFXl0sM4s2FZ5lq6RtbJIVXDAH4v1HQranqyejd-iKBEZ1hzssSA>
-    <xmx:GEKFXpBmaOPBnPhHnGLHAp7bVvRp7u-xAXONrNwu4w2Gmy4Elbu9bg>
-Received: from mickey.themaw.net (unknown [118.209.166.232])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 69846306CD83;
-        Wed,  1 Apr 2020 21:38:24 -0400 (EDT)
-Message-ID: <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 02 Apr 2020 09:38:20 +0800
-In-Reply-To: <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-         <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
-         <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
-         <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
-         <2465266.1585729649@warthog.procyon.org.uk>
-         <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        id S2387443AbgDBDXo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Apr 2020 23:23:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44477 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732664AbgDBDXo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Apr 2020 23:23:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585797823;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K7PlE1BOvd4yWyewYc0QHOLEgPNNxiICYcnTl2gESck=;
+        b=LbAT2ec43CejEK+JxDWM+B7uaFWgKfoInKeFOTqpA9hwYY8ArKT7kKaB2pn42+TvgEwxOp
+        JatQ67EzLXRpjJZsKs7yfxMzf3m/mzv2Oa0M3/e/7TGQzfO+4rCTanAZlnRZqNdDrLyb3z
+        4ReH5cCFZJ+uuOHX2ELIvRp21zQw6rc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-0cNM-cReMNm_NkUsjhAWog-1; Wed, 01 Apr 2020 23:23:41 -0400
+X-MC-Unique: 0cNM-cReMNm_NkUsjhAWog-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 858F7107ACC9;
+        Thu,  2 Apr 2020 03:23:40 +0000 (UTC)
+Received: from yoyang-pc.usersys.redhat.com (dhcp-12-152.nay.redhat.com [10.66.12.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5740496F83;
+        Thu,  2 Apr 2020 03:23:38 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 11:23:35 +0800
+From:   Yongcheng Yang <yoyang@redhat.com>
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     steved@redhat.com, bfields@fieldses.org, jlayton@kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [nfs-utils PATCH RFC v3 6/8] nfsdcld: add /etc/nfs.conf support
+Message-ID: <20200402032335.GA7811@yoyang-pc.usersys.redhat.com>
+References: <20190326220730.3763-1-smayhew@redhat.com>
+ <20190326220730.3763-7-smayhew@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326220730.3763-7-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2020-04-01 at 10:37 +0200, Miklos Szeredi wrote:
-> On Wed, Apr 1, 2020 at 10:27 AM David Howells <dhowells@redhat.com>
-> wrote:
-> > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > 
-> > > According to dhowell's measurements processing 100k mounts would
-> > > take
-> > > about a few seconds of system time (that's the time spent by the
-> > > kernel to retrieve the data,
-> > 
-> > But the inefficiency of mountfs - at least as currently implemented
-> > - scales
-> > up with the number of individual values you want to retrieve, both
-> > in terms of
-> > memory usage and time taken.
+Hi Scott,
+
+Sorry for jumping back into this thread after one year.
+
+Maybe one another man page nfs.conf(5) (i.e. systemd/nfs.conf.man)
+also needs an update (just as nfsdcltrack does).
+
+Thanks,
+Yongcheng
+
+On Tue, Mar 26, 2019 at 06:07:28PM -0400, Scott Mayhew wrote:
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  nfs.conf                  |  4 ++++
+>  utils/nfsdcld/nfsdcld.c   | 13 +++++++++++++
+>  utils/nfsdcld/nfsdcld.man | 15 +++++++++++++++
+>  3 files changed, 32 insertions(+)
 > 
-> I've taken that into account when guesstimating a "few seconds per
-> 100k entries".  My guess is that there's probably an order of
-> magnitude difference between the performance of a fs based interface
-> and a binary syscall based interface.  That could be reduced somewhat
-> with a readfile(2) type API.
+> diff --git a/nfs.conf b/nfs.conf
+> index 796bee4..aabf300 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -34,6 +34,10 @@
+>  # state-directory-path=/var/lib/nfs
+>  # ha-callout=
+>  #
+> +[nfsdcld]
+> +# debug=0
+> +# storagedir=/var/lib/nfs/nfsdcld
+> +#
+>  [nfsdcltrack]
+>  # debug=0
+>  # storagedir=/var/lib/nfs/nfsdcltrack
+> diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
+> index 272c7c5..313c68f 100644
+> --- a/utils/nfsdcld/nfsdcld.c
+> +++ b/utils/nfsdcld/nfsdcld.c
+> @@ -45,6 +45,7 @@
+>  #include "cld-internal.h"
+>  #include "sqlite.h"
+>  #include "../mount/version.h"
+> +#include "conffile.h"
+>  
+>  #ifndef DEFAULT_PIPEFS_DIR
+>  #define DEFAULT_PIPEFS_DIR NFS_STATEDIR "/rpc_pipefs"
+> @@ -640,6 +641,7 @@ main(int argc, char **argv)
+>  	char *progname;
+>  	char *storagedir = CLD_DEFAULT_STORAGEDIR;
+>  	struct cld_client clnt;
+> +	char *s;
+>  
+>  	memset(&clnt, 0, sizeof(clnt));
+>  
+> @@ -653,6 +655,17 @@ main(int argc, char **argv)
+>  	xlog_syslog(0);
+>  	xlog_stderr(1);
+>  
+> +	conf_init_file(NFS_CONFFILE);
+> +	s = conf_get_str("general", "pipefs-directory");
+> +	if (s)
+> +		strlcpy(pipefs_dir, s, sizeof(pipefs_dir));
+> +	s = conf_get_str("nfsdcld", "storagedir");
+> +	if (s)
+> +		storagedir = s;
+> +	rc = conf_get_num("nfsdcld", "debug", 0);
+> +	if (rc > 0)
+> +		xlog_config(D_ALL, 1);
+> +
+>  	/* process command-line options */
+>  	while ((arg = getopt_long(argc, argv, "hdFp:s:", longopts,
+>  				  NULL)) != EOF) {
+> diff --git a/utils/nfsdcld/nfsdcld.man b/utils/nfsdcld/nfsdcld.man
+> index b607ba6..c271d14 100644
+> --- a/utils/nfsdcld/nfsdcld.man
+> +++ b/utils/nfsdcld/nfsdcld.man
+> @@ -163,6 +163,21 @@ Location of the rpc_pipefs filesystem. The default value is
+>  .IX Item "-s storagedir, --storagedir=storage_dir"
+>  Directory where stable storage information should be kept. The default
+>  value is \fI/var/lib/nfs/nfsdcld\fR.
+> +.SH "CONFIGURATION FILE"
+> +.IX Header "CONFIGURATION FILE"
+> +The following values are recognized in the \fB[nfsdcld]\fR section
+> +of the \fI/etc/nfs.conf\fR configuration file:
+> +.IP "\fBstoragedir\fR" 4
+> +.IX Item "storagedir"
+> +Equivalent to \fB\-s\fR/\fB\-\-storagedir\fR.
+> +.IP "\fBdebug\fR" 4
+> +.IX Item "debug"
+> +Setting "debug = 1" is equivalent to \fB\-d\fR/\fB\-\-debug\fR.
+> +.LP
+> +In addition, the following value is recognized from the \fB[general]\fR section:
+> +.IP "\fBpipefs\-directory\fR" 4
+> +.IX Item "pipefs-directory"
+> +Equivalent to \fB\-p\fR/\fB\-\-pipefsdir\fR.
+>  .SH "NOTES"
+>  .IX Header "NOTES"
+>  The Linux kernel NFSv4 server has historically tracked this information
+> -- 
+> 2.17.2
 > 
-> But the point is: this does not matter.  Whether it's .5s or 5s is
-> completely irrelevant, as neither is going to take down the system,
-> and userspace processing is probably going to take as much, if not
-> more time.  And remember, we are talking about stopping and starting
-> the automount daemon, which is something that happens, but it should
-> not happen often by any measure.
-
-Yes, but don't forget, I'm reporting what I saw when testing during
-development.
-
-From previous discussion we know systemd (and probably the other apps
-like udisks2, et. al.) gets notified on mount and umount activity so
-its not going to be just starting and stopping autofs that's a problem
-with very large mount tables.
-
-To get a feel for the real difference we'd need to make the libmount
-changes for both and then check between the two and check behaviour.
-The mount and umount lookup case that Karel (and I) talked about
-should be sufficient.
-
-The biggest problem I had with fsinfo() when I was working with
-earlier series was getting fs specific options, in particular the
-need to use sb op ->fsinfo(). With this latest series David has made
-that part of the generic code and your patch also cover it.
-
-So the thing that was holding me up is done so we should be getting
-on with libmount improvements, we need to settle this.
-
-I prefer the system call interface and I'm not offering justification
-for that other than a general dislike (and on occasion outright
-frustration) of pretty much every proc implementation I have had to
-look at.
-
-> 
-> > With fsinfo(), I've tried to batch values together where it makes
-> > sense - and
-> > there's no lingering memory overhead - no extra inodes, dentries
-> > and files
-> > required.
-> 
-> The dentries, inodes and files in your test are single use (except
-> the
-> root dentry) and can be made ephemeral if that turns out to be
-> better.
-> My guess is that dentries belonging to individual attributes should
-> be
-> deleted on final put, while the dentries belonging to the mount
-> directory can be reclaimed normally.
-> 
-> Thanks,
-> Miklos
 
