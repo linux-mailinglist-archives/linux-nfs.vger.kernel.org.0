@@ -2,33 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2E919CB3B
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 22:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4542819CB3C
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 22:32:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbgDBUcc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Apr 2020 16:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
+        id S2389086AbgDBUcd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Apr 2020 16:32:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgDBUcc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:32:32 -0400
+        id S1728225AbgDBUcd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:32:33 -0400
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 194BF20678
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D48206E9
         for <linux-nfs@vger.kernel.org>; Thu,  2 Apr 2020 20:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1585859552;
-        bh=Gqme0TZgXCGLbqU2j6oV59NYlkYpiJ+m2BbRFkg5tE8=;
-        h=From:To:Subject:Date:From;
-        b=knAxV0vrhYhg5FsICrQlZ7zRajye3jw5MicRSpUNokfC3a0cc+QbiEy8SWfSvVpG/
-         UFqaHk4grwssXT9bSXrw64yNjTQ5nQFKhDlJfKzsD5lUhoJ3uxKR+OA1nDVpJM8noU
-         pKVj2UqJHizE7BJswtnZ1nJtjGz7LNOlvVF293MA=
+        bh=utEhknUPbEj8txUV1e2LOOnRDtYnuux0v6wBCh5T3rc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=qrj/T8426gGP0168Bvhkz790d+CvYW+QAR5N8+9QH5/y4Pb5D3/CiuH6eX8FGUqO2
+         CNFqOG9ncnQzdMdZ8M2FiGmaZOCPIertY4F8FNPwHN5OVBMKfyeR+vG3rgADsvc6WJ
+         p9wMG4id93s5+WTX5B1IQI34CdsLUE8mGaMgBul8=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFS: finish_automount() requires us to hold 2 refs to the mount record
-Date:   Thu,  2 Apr 2020 16:30:17 -0400
-Message-Id: <20200402203018.385154-1-trondmy@kernel.org>
+Subject: [PATCH 2/2] NFS: Add a module parameter to set nfs_mountpoint_expiry_timeout
+Date:   Thu,  2 Apr 2020 16:30:18 -0400
+Message-Id: <20200402203018.385154-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200402203018.385154-1-trondmy@kernel.org>
+References: <20200402203018.385154-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -38,60 +40,58 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-We must not return from nfs_d_automount() without holding 2 references
-to the mount record. Doing so, will trigger the BUG() in finish_automount().
-Also ensure that we don't try to reschedule the automount timer with
-a negative timeout value.
+Setting nfs_mountpoint_expiry_timeout() to a negative value stops
+mountpoint expiration, while setting it to a positive value restarts
+the scheduler.
 
-Fixes: 22a1ae9a93fb ("NFS: If nfs_mountpoint_expiry_timeout < 0, do not expire submounts")
-Cc: stable@vger.kernel.org # v5.5+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/namespace.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/nfs/namespace.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index da67820462f2..50b162dd88f5 100644
+index 50b162dd88f5..4c02f0e00620 100644
 --- a/fs/nfs/namespace.c
 +++ b/fs/nfs/namespace.c
-@@ -145,6 +145,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
- 	struct vfsmount *mnt = ERR_PTR(-ENOMEM);
- 	struct nfs_server *server = NFS_SERVER(d_inode(path->dentry));
- 	struct nfs_client *client = server->nfs_client;
-+	int timeout = READ_ONCE(nfs_mountpoint_expiry_timeout);
- 	int ret;
- 
- 	if (IS_ROOT(path->dentry))
-@@ -190,12 +191,12 @@ struct vfsmount *nfs_d_automount(struct path *path)
- 	if (IS_ERR(mnt))
- 		goto out_fc;
- 
--	if (nfs_mountpoint_expiry_timeout < 0)
-+	mntget(mnt); /* prevent immediate expiration */
-+	if (timeout < 0)
- 		goto out_fc;
- 
--	mntget(mnt); /* prevent immediate expiration */
- 	mnt_set_expiry(mnt, &nfs_automount_list);
--	schedule_delayed_work(&nfs_automount_task, nfs_mountpoint_expiry_timeout);
-+	schedule_delayed_work(&nfs_automount_task, timeout);
- 
- out_fc:
- 	put_fs_context(fc);
-@@ -233,10 +234,11 @@ const struct inode_operations nfs_referral_inode_operations = {
- static void nfs_expire_automounts(struct work_struct *work)
- {
- 	struct list_head *list = &nfs_automount_list;
-+	int timeout = READ_ONCE(nfs_mountpoint_expiry_timeout);
- 
- 	mark_mounts_for_expiry(list);
--	if (!list_empty(list))
--		schedule_delayed_work(&nfs_automount_task, nfs_mountpoint_expiry_timeout);
-+	if (!list_empty(list) && timeout >= 0)
-+		schedule_delayed_work(&nfs_automount_task, timeout);
+@@ -311,3 +311,38 @@ int nfs_submount(struct fs_context *fc, struct nfs_server *server)
+ 	return nfs_do_submount(fc);
  }
- 
- void nfs_release_automount_timer(void)
+ EXPORT_SYMBOL_GPL(nfs_submount);
++
++static int param_set_nfs_timeout(const char *val, const struct kernel_param *kp)
++{
++	long num;
++	int ret;
++
++	if (!val)
++		return -EINVAL;
++	ret = kstrtol(val, 0, &num);
++	if (ret)
++		return -EINVAL;
++	if (num >= 0) {
++		num *= HZ;
++		if (num > INT_MAX)
++			num = INT_MAX;
++		*((int *)kp->arg) = num;
++		if (!list_empty(&nfs_automount_list))
++			mod_delayed_work(system_wq, &nfs_automount_task, num);
++	} else {
++		*((int *)kp->arg) = -1;
++		cancel_delayed_work(&nfs_automount_task);
++	}
++	return 0;
++}
++
++static const struct kernel_param_ops param_ops_nfs_timeout = {
++	.set = param_set_nfs_timeout,
++	.get = param_get_uint,
++};
++#define param_check_nfs_timeout(name, p) __param_check(name, p, int);
++
++module_param(nfs_mountpoint_expiry_timeout, nfs_timeout, 0644);
++MODULE_PARM_DESC(nfs_mountpoint_expiry_timeout,
++		"Set the NFS automounted mountpoint timeout value."
++		"Negative values turn expiration off.");
 -- 
 2.25.1
 
