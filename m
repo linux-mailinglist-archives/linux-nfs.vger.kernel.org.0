@@ -2,210 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF5119B91F
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 01:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 473FD19B9F9
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2020 03:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732872AbgDAXyR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Apr 2020 19:54:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732682AbgDAXyQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:54:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9C669ACE3;
-        Wed,  1 Apr 2020 23:54:14 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>
-Date:   Thu, 02 Apr 2020 10:54:07 +1100
-Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] Deprecate NR_UNSTABLE_NFS, use NR_WRITEBACK
-In-Reply-To: <87sghmyd8v.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name>
-Message-ID: <87pncqyd7k.fsf@notabene.neil.brown.name>
+        id S1732498AbgDBBie (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Apr 2020 21:38:34 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46223 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726319AbgDBBid (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Apr 2020 21:38:33 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3ABD45801C4;
+        Wed,  1 Apr 2020 21:38:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 01 Apr 2020 21:38:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQPzU=; b=EhjE5WUllq7utAsj
+        QGotnYbb9Kw8jZCsD7odmyKl1n5mYNo16UGKeB+MA/N8pXr1cwCWa1jb2Qz6NnFR
+        OmkHYTPm3ClH8nYV38aHOd8+YkGAGNacEUH924J1y6HJ80OvGw1vOk420eaVRmr1
+        Wqv16Qg6Prbwz52FOwUoa9pw7JtngLbVwCiM9SbAOY4/IxfKTbu2Bj+zofmYQPAZ
+        3DbFdozqMh3qo9qJ646FaGfljfvPwyXGuJkQfmzNQxDFzQLOA6lcR1LS1OAtdFYu
+        R1qMp7IVbQ+56/KqtUyLLkVzOUUUIIJ+umm4GYxaZV/Wirk+sjBmfMOp/5UCTFtr
+        +kr2LQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQP
+        zU=; b=ZVR+2Un1ogFAbTykJdID1KGQHIQCJlxQdHSQLt4iyc695rALIxGzJ/tZx
+        8ttNUhd77g0OaBXN5/v5Q61v4ileqM3MNUllXQT/wmZHyyTxCGxukO3drlUximUQ
+        Yn0lLHQQ4deECa6MIpgb5BJCB4VMr8RT3NfjFcB+xwsNz55sEXdbwq6kd1MQnzlK
+        Mta2qB0IOK7uVSe1r+MH6dKM/Ym1LVOlW+qAmnUOMTA0qqlWFDEPpyRtftHWjREV
+        czKId4Nepql7rXMwphjcl51Mlljv3xaYYmB6qAyPcxod1+UpKfKizo5hobnmT3m2
+        byqO5tanFiUouyIa6j4md5wueG0Pg==
+X-ME-Sender: <xms:F0KFXnxfg-I39THCyxl8TBBO4WHZ_l_tGpGYiNs6KqDi_2mdnroUvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdefgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    duieeirddvfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:F0KFXjgFLqkZZSXP7k-wS0dX0TesDJcOZg4BLckP6jqvx7AMc3i6yw>
+    <xmx:F0KFXsV1k4K3Nk4yTG1Kpiu9GOkeb9fya0zvYG0XJ_h-ikBRchiVTg>
+    <xmx:F0KFXl0sM4s2FZ5lq6RtbJIVXDAH4v1HQranqyejd-iKBEZ1hzssSA>
+    <xmx:GEKFXpBmaOPBnPhHnGLHAp7bVvRp7u-xAXONrNwu4w2Gmy4Elbu9bg>
+Received: from mickey.themaw.net (unknown [118.209.166.232])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 69846306CD83;
+        Wed,  1 Apr 2020 21:38:24 -0400 (EDT)
+Message-ID: <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 02 Apr 2020 09:38:20 +0800
+In-Reply-To: <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+         <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
+         <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
+         <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
+         <2465266.1585729649@warthog.procyon.org.uk>
+         <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2020-04-01 at 10:37 +0200, Miklos Szeredi wrote:
+> On Wed, Apr 1, 2020 at 10:27 AM David Howells <dhowells@redhat.com>
+> wrote:
+> > Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > 
+> > > According to dhowell's measurements processing 100k mounts would
+> > > take
+> > > about a few seconds of system time (that's the time spent by the
+> > > kernel to retrieve the data,
+> > 
+> > But the inefficiency of mountfs - at least as currently implemented
+> > - scales
+> > up with the number of individual values you want to retrieve, both
+> > in terms of
+> > memory usage and time taken.
+> 
+> I've taken that into account when guesstimating a "few seconds per
+> 100k entries".  My guess is that there's probably an order of
+> magnitude difference between the performance of a fs based interface
+> and a binary syscall based interface.  That could be reduced somewhat
+> with a readfile(2) type API.
+> 
+> But the point is: this does not matter.  Whether it's .5s or 5s is
+> completely irrelevant, as neither is going to take down the system,
+> and userspace processing is probably going to take as much, if not
+> more time.  And remember, we are talking about stopping and starting
+> the automount daemon, which is something that happens, but it should
+> not happen often by any measure.
 
+Yes, but don't forget, I'm reporting what I saw when testing during
+development.
 
-After an NFS page has been written it is considered "unstable" until a
-COMMIT request succeeds.  If the COMMIT fails, the page will be
-re-written.
+From previous discussion we know systemd (and probably the other apps
+like udisks2, et. al.) gets notified on mount and umount activity so
+its not going to be just starting and stopping autofs that's a problem
+with very large mount tables.
 
-These "unstable" pages are currently accounted as "reclaimable",
-either in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-'reclaimable' count.  This might have made sense when sending the COMMIT
-required a separate action by the VFS/MM (e.g. releasepage() used to
-send a COMMIT).  However now that all writes generated by ->writepages()
-will automatically be followed by a COMMIT, it makes more sense to
-treat them as writeback pages.
+To get a feel for the real difference we'd need to make the libmount
+changes for both and then check between the two and check behaviour.
+The mount and umount lookup case that Karel (and I) talked about
+should be sufficient.
 
-So this page deprecates NR_UNSTABLE_NFS and accounts unstable pages in
-NR_WRITEBACK and WB_WRITEBACK.
+The biggest problem I had with fsinfo() when I was working with
+earlier series was getting fs specific options, in particular the
+need to use sb op ->fsinfo(). With this latest series David has made
+that part of the generic code and your patch also cover it.
 
-A particular effect of this change is that when
-wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-will report 'true' a lot less often as the 'unstable' pages are no
-longer considered 'dirty' (and there is nothing that writeback can do
-about them anyway).
+So the thing that was holding me up is done so we should be getting
+on with libmount improvements, we need to settle this.
 
-Currently wb_check_background_flush() will trigger writeback to NFS even
-when there are relatively few dirty pages (if there are lots of unstable
-pages), this can result in small writes going to the server (10s of
-Kilobytes rather than a Megabyte) which hurts throughput.
-With this that, there are fewer writes which are each larger on average.
+I prefer the system call interface and I'm not offering justification
+for that other than a general dislike (and on occasion outright
+frustration) of pretty much every proc implementation I have had to
+look at.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- fs/fs-writeback.c      | 1 -
- fs/nfs/internal.h      | 7 +++++--
- fs/nfs/write.c         | 4 ++--
- include/linux/mmzone.h | 2 +-
- mm/memcontrol.c        | 1 -
- mm/page-writeback.c    | 7 ++-----
- 6 files changed, 10 insertions(+), 12 deletions(-)
+> 
+> > With fsinfo(), I've tried to batch values together where it makes
+> > sense - and
+> > there's no lingering memory overhead - no extra inodes, dentries
+> > and files
+> > required.
+> 
+> The dentries, inodes and files in your test are single use (except
+> the
+> root dentry) and can be made ephemeral if that turns out to be
+> better.
+> My guess is that dentries belonging to individual attributes should
+> be
+> deleted on final put, while the dentries belonging to the mount
+> directory can be reclaimed normally.
+> 
+> Thanks,
+> Miklos
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..c5bdf46e3b4b 100644
-=2D-- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_=
-info *bdi,
- static unsigned long get_nr_dirty_pages(void)
- {
- 	return global_node_page_state(NR_FILE_DIRTY) +
-=2D		global_node_page_state(NR_UNSTABLE_NFS) +
- 		get_nr_dirty_inodes();
- }
-=20
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index f80c47d5ff27..ba1ff5adeccd 100644
-=2D-- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -660,8 +660,11 @@ void nfs_mark_page_unstable(struct page *page, struct =
-nfs_commit_info *cinfo)
- 	if (!cinfo->dreq) {
- 		struct inode *inode =3D page_file_mapping(page)->host;
-=20
-=2D		inc_node_page_state(page, NR_UNSTABLE_NFS);
-=2D		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-+		/* This page is really still in write-back - just that the
-+		 * writeback is happening on the server now.
-+		 */
-+		inc_node_page_state(page, NR_WRITEBACK);
-+		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
- 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
- 	}
- }
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index c478b772cc49..2e15a56620b3 100644
-=2D-- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pn=
-fs_layout_segment *lseg,
- static void
- nfs_clear_page_commit(struct page *page)
- {
-=2D	dec_node_page_state(page, NR_UNSTABLE_NFS);
-+	dec_node_page_state(page, NR_WRITEBACK);
- 	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-=2D		    WB_RECLAIMABLE);
-+		    WB_WRITEBACK);
- }
-=20
- /* Called holding the request lock on @req */
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..227fcb8cd0e6 100644
-=2D-- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -237,7 +237,7 @@ enum node_stat_item {
- 	NR_FILE_THPS,
- 	NR_FILE_PMDMAPPED,
- 	NR_ANON_THPS,
-=2D	NR_UNSTABLE_NFS,	/* NFS unstable pages */
-+	NR_UNSTABLE_NFS,	/* NFS unstable pages - DEPRECATED DO NOT USE */
- 	NR_VMSCAN_WRITE,
- 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
- 	NR_DIRTIED,		/* page dirtyings since bootup */
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7ddf91c4295f..fad8e8a23235 100644
-=2D-- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4317,7 +4317,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, un=
-signed long *pfilepages,
-=20
- 	*pdirty =3D memcg_exact_page_state(memcg, NR_FILE_DIRTY);
-=20
-=2D	/* this should eventually include NR_UNSTABLE_NFS */
- 	*pwriteback =3D memcg_exact_page_state(memcg, NR_WRITEBACK);
- 	*pfilepages =3D memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
- 			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 2afb09fa2fe0..d1f03c799d11 100644
-=2D-- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
- 	unsigned long nr_pages =3D 0;
-=20
- 	nr_pages +=3D node_page_state(pgdat, NR_FILE_DIRTY);
-=2D	nr_pages +=3D node_page_state(pgdat, NR_UNSTABLE_NFS);
- 	nr_pages +=3D node_page_state(pgdat, NR_WRITEBACK);
-=20
- 	return nr_pages <=3D limit;
-@@ -1595,8 +1594,7 @@ static void balance_dirty_pages(struct bdi_writeback =
-*wb,
- 		 * written to the server's write cache, but has not yet
- 		 * been flushed to permanent storage.
- 		 */
-=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D					global_node_page_state(NR_UNSTABLE_NFS);
-+		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
- 		gdtc->avail =3D global_dirtyable_memory();
- 		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
-=20
-@@ -1940,8 +1938,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
- 	 * as we're trying to decide whether to put more under writeback.
- 	 */
- 	gdtc->avail =3D global_dirtyable_memory();
-=2D	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D		      global_node_page_state(NR_UNSTABLE_NFS);
-+	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY);
- 	domain_dirty_limits(gdtc);
-=20
- 	if (gdtc->dirty > gdtc->bg_thresh)
-=2D-=20
-2.26.0
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FKZ8ACgkQOeye3VZi
-gblLJA/9Gfox05USaTaiOe2VF+TKwLQmcTQoIIkSD/9KH4RCz4kenbeVDitMuU3G
-0sNCkE6Ug4aWGQtHsJ+o9IhdwuLG8mN+4GfNt1fRoV3/JUEmNyIaE9HB5ZYAyOCK
-ahLPXBkhKW2ISGyweva/ic1FIsEIFz6NmOaUFM5ulFLMfoSRTTMTyUbZGZrUzVbI
-C6S9PXACbOYkVmSXxUOMcO04pleJzhyB0zkykWPkDenwleB4rBCw6I6YOdpf1EXp
-HCMMXwJTfzgFYXuN5wClvRxp3SSsWoyR/do+IR+I7xGRFotHT4f3zdM85f4PhEeI
-LBoGykHo/c38RySt3fnraDiGrokHGM3n8SIxVIHCnu5lssCuZgMW9QEmX3R1NBIs
-3U/fXAbSiGkXYAWscDKQhOMFZFBvLMSdu719EcbsuuRuMMNKvjNyHXiQyLdiX/hn
-veUgBytz/7fio+WfhC2h+xLZKqkLTU0tuO4rSNopADnZfWl9ieQPE4G88eP6LeIS
-/WNgdmY1Mh2/0AsZtny4oWQskpm+T8ahAcS6zz5MlQu9Qtk7hxMEbBIYkHrepH8D
-D6MMJMCEViCF2UZUb+FHNjbqJeVoaD8VvuAQL9PHVL72Kxg1N0HUOI25piszdGmI
-q4Dq9wkeEzMt6KnFivkqRMQJClziBcQe6Qk0/7izZCBdPWTLORk=
-=+oK6
------END PGP SIGNATURE-----
---=-=-=--
