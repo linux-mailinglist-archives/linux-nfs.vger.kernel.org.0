@@ -2,30 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F073519ED0C
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Apr 2020 19:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C017D19ED31
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Apr 2020 19:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgDERid (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Apr 2020 13:38:33 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:35208 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726901AbgDERid (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Apr 2020 13:38:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TugAysl_1586108297;
-Received: from localhost(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0TugAysl_1586108297)
+        id S1726830AbgDER5g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Apr 2020 13:57:36 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:40115 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726776AbgDER5g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Apr 2020 13:57:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=wuyihao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tuft5DG_1586109442;
+Received: from Macintosh.local(mailfrom:wuyihao@linux.alibaba.com fp:SMTPD_---0Tuft5DG_1586109442)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 06 Apr 2020 01:38:18 +0800
+          Mon, 06 Apr 2020 01:57:23 +0800
+Subject: [PATCH v3] SUNRPC/cache: Fix unsafe traverse caused double-free in
+ cache_purge
 From:   Yihao Wu <wuyihao@linux.alibaba.com>
 To:     "J . Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>,
         NeilBrown <neilb@suse.de>, Sasha Levin <sashal@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2] SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
-Date:   Mon,  6 Apr 2020 01:38:16 +0800
-Message-Id: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.2432.ga663e714
+References: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com>
+Message-ID: <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
+Date:   Mon, 6 Apr 2020 01:57:22 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -40,20 +46,24 @@ Fix this bug by holding only the deleted entry's reference.
 
 Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
 ---
- net/sunrpc/cache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v1->v2: Use Neil's better solution
+v2->v3: Fix a checkscript warning
+
+ net/sunrpc/cache.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index af0ddd28b081..9649c7fcccd2 100644
+index af0ddd28b081..b445874e8e2f 100644
 --- a/net/sunrpc/cache.c
 +++ b/net/sunrpc/cache.c
-@@ -541,7 +541,8 @@ void cache_purge(struct cache_detail *detail)
+@@ -541,7 +541,9 @@ void cache_purge(struct cache_detail *detail)
  	dprintk("RPC: %d entries in %s cache\n", detail->entries, detail->name);
  	for (i = 0; i < detail->hash_size; i++) {
  		head = &detail->hash_table[i];
 -		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
 +		while (!hlist_empty(head)) {
-+			ch = hlist_entry(head->first, struct cache_head, cache_list);
++			ch = hlist_entry(head->first, struct cache_head,
++					 cache_list);
  			sunrpc_begin_cache_remove_entry(ch, detail);
  			spin_unlock(&detail->hash_lock);
  			sunrpc_end_cache_remove_entry(ch, detail);
