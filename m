@@ -2,138 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F08B719ED5B
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Apr 2020 20:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 087D519EEC6
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 02:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgDESf2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Apr 2020 14:35:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60940 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgDESf1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Apr 2020 14:35:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 035ITKQn062753;
-        Sun, 5 Apr 2020 18:35:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=76aUSOkgKUdsEwfXVDOy+zJla8Ciy7zeZNM3rDpEth8=;
- b=UQPtmYhSCPY/8qKvVQQ3Zid5p6IR+GWVKbhfIVuhwpY+VaGiQeNQW365GgZI0KjZCm+Q
- E/icqFe03WjiAELrAOBKBEhsSpFa1ApE/K6Lp/+N2P+DrEUDtBqX+HIjfvy/9eSWhxP7
- I2IiE0skOttH1czt3wwRo/Nq6Bk9RvyOLgiIvyJXqiQ+K3hpXxKw11iiQth1iP11L5JH
- n4VOrF+O7myZdFem/x4OAcFzhGVUjtHatlmODi7JVUTNoW49TE64XYJ3pfK3S1ZH1hx6
- Rx8M8Qaf/tnx3CB09ICHxLuPJxPbOMiMA2g8MzAIHou6axoo9E6VQeCbI0pc+CYc1Gz4 Hg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 306jvmumc5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 05 Apr 2020 18:35:18 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 035IQUHf126709;
-        Sun, 5 Apr 2020 18:35:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 3073sng4j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 05 Apr 2020 18:35:17 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 035IZFGx026862;
-        Sun, 5 Apr 2020 18:35:16 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 05 Apr 2020 11:35:14 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3] SUNRPC/cache: Fix unsafe traverse caused double-free
- in cache_purge
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <25dcf75e-65b1-b6e8-1fe5-81a193ed4189@linux.alibaba.com>
-Date:   Sun, 5 Apr 2020 14:35:13 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>, Neil Brown <neilb@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <93CF97D8-1E4B-4310-9C51-9D373424D0BF@oracle.com>
-References: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com>
- <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
- <0308EB8A-A8B7-412C-8F93-A444DE47CB1D@oracle.com>
- <25dcf75e-65b1-b6e8-1fe5-81a193ed4189@linux.alibaba.com>
-To:     Yihao Wu <wuyihao@linux.alibaba.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004050170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004050170
+        id S1727509AbgDFADu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Apr 2020 20:03:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727254AbgDFADt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 5 Apr 2020 20:03:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E79EAAC75;
+        Mon,  6 Apr 2020 00:03:47 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Yihao Wu <wuyihao@linux.alibaba.com>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Mon, 06 Apr 2020 10:03:41 +1000
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3] SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
+In-Reply-To: <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
+References: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com> <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
+Message-ID: <87sghhwkde.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 06 2020, Yihao Wu wrote:
 
-> On Apr 5, 2020, at 2:31 PM, Yihao Wu <wuyihao@linux.alibaba.com> =
-wrote:
->=20
->>> net/sunrpc/cache.c | 4 +++-
->>> 1 file changed, 3 insertions(+), 1 deletion(-)
->>>=20
->>> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
->>> index af0ddd28b081..b445874e8e2f 100644
->>> --- a/net/sunrpc/cache.c
->>> +++ b/net/sunrpc/cache.c
->>> @@ -541,7 +541,9 @@ void cache_purge(struct cache_detail *detail)
->>> 	dprintk("RPC: %d entries in %s cache\n", detail->entries, =
-detail->name);
->>> 	for (i =3D 0; i < detail->hash_size; i++) {
->>> 		head =3D &detail->hash_table[i];
->>> -		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
->>=20
->> If review/testing shows you need to respin this patch, I note that =
-"tmp" is
->> now unused and should be removed. I've pulled v3 into my testing =
-branch and
->> made that minor change. Thanks!
->>=20
->>=20
->>> +		while (!hlist_empty(head)) {
->>> +			ch =3D hlist_entry(head->first, struct =
-cache_head,
->>> +					 cache_list);
->>> 			sunrpc_begin_cache_remove_entry(ch, detail);
->>> 			spin_unlock(&detail->hash_lock);
->>> 			sunrpc_end_cache_remove_entry(ch, detail);
->>> --=20
->>> 2.20.1.2432.ga663e714
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->=20
-> Thanks a lot, Chuck!
->=20
-> If it needs further changes by me, I'll fix the unused 'tmp' along =
-with them.
->=20
-> BTW, if you and Neil think it's proper to add Signed-off-by Neil too =
-later,
-> please do, since the bug fix owes to Neil's idea :-)
+> Deleting list entry within hlist_for_each_entry_safe is not safe unless
+> next pointer (tmp) is protected too. It's not, because once hash_lock
+> is released, cache_clean may delete the entry that tmp points to. Then
+> cache_purge can walk to a deleted entry and tries to double free it.
+>
+> Fix this bug by holding only the deleted entry's reference.
+>
+> Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+> ---
+> v1->v2: Use Neil's better solution
+> v2->v3: Fix a checkscript warning
+>
+>  net/sunrpc/cache.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> index af0ddd28b081..b445874e8e2f 100644
+> --- a/net/sunrpc/cache.c
+> +++ b/net/sunrpc/cache.c
+> @@ -541,7 +541,9 @@ void cache_purge(struct cache_detail *detail)
+>  	dprintk("RPC: %d entries in %s cache\n", detail->entries, detail->name);
+>  	for (i =3D 0; i < detail->hash_size; i++) {
+>  		head =3D &detail->hash_table[i];
+> -		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
+> +		while (!hlist_empty(head)) {
+> +			ch =3D hlist_entry(head->first, struct cache_head,
+> +					 cache_list);
+>  			sunrpc_begin_cache_remove_entry(ch, detail);
+>  			spin_unlock(&detail->hash_lock);
+>  			sunrpc_end_cache_remove_entry(ch, detail);
+> --=20
+> 2.20.1.2432.ga663e714
 
-Actually a "Suggested-by:" tag is appropriate for attribution. I'll add:
+Reviewed-by: NeilBrown <neilb@suse.de>
 
-Suggested-by: NeilBrown <neilb@suse.de>
+Thanks for finding the bug and testing the solution!
+NeilBrown
 
-to what I have in my tree.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
---
-Chuck Lever
-
-
-
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6Kcd0ACgkQOeye3VZi
+gbnFixAAgNieKy6tuW0ODMW2Rk7mJKO31gs1OQJ5sBrvgSOc4eJuRH64e2zYI7SE
+idBUCcwdTCo6ldH1v9OG8trl2QXuiZA7/CW7bWa0Acr5zm048RWuegiqGmNnaC9g
+GBKM0ucJa/Cb+GPmFEATUWT6lssnd44J5dYjC/HOlEKHkhI92pg8ZeBMo40xM67b
+ogxTXIupSZDv6fe6p5OBrEL15HArXkz4aIGAH5Xm2OFSFkVn8RVZB3NEx2Fw1NPj
+mj7gM41db8ehDzYjZp88mfwAdsNu6KEqGHYyNBnYyvDznLRIi64hSG+Tz+UsCU0l
+mFJe1338DofkIwnlAsaOQTi4dvyKb7xat1htTv2zNIRJbZhSDe7Ef4gdYdkda4wI
+NFFCB7c3ROd6kArKXeLupCwPkuX1hS4nR5Qn5hlLcyWey9Rt0XqDEMHDVUrWbk2g
+55yUcE5woQLtLb8ESNJquuEFXb76qnaZlrHeTHm7eKD/OdKZqDoeC0kzA9lV57WR
+5yuC1KtoUT7oSyFlSthRg1eydWg0l5NJWQLx9etCFPWzFQjX0JBmaz9M76AMbH0Q
+VuIn1d1mOD/0qi+KZyh947mkoJXsF9huZJ/NQgu4L5d6at9mWwLhF/dQE8oSQeqH
+4t6dzUiO1pFmZoYLOOQrl5J5TXVi64M4QY+F9QKV0RxunaeN4ak=
+=I+T7
+-----END PGP SIGNATURE-----
+--=-=-=--
