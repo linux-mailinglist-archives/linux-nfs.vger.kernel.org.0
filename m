@@ -2,30 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 087D519EEC6
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 02:03:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A46E19EECA
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 02:14:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgDFADu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Apr 2020 20:03:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59890 "EHLO mx2.suse.de"
+        id S1727509AbgDFAO3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Apr 2020 20:14:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34064 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbgDFADt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 5 Apr 2020 20:03:49 -0400
+        id S1727254AbgDFAO3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 5 Apr 2020 20:14:29 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E79EAAC75;
-        Mon,  6 Apr 2020 00:03:47 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 83147AC2D;
+        Mon,  6 Apr 2020 00:14:24 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     Yihao Wu <wuyihao@linux.alibaba.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Mon, 06 Apr 2020 10:03:41 +1000
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3] SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
-In-Reply-To: <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
-References: <4568a7cf87f110b8e59fda6f53fda34c550ab403.1586108200.git.wuyihao@linux.alibaba.com> <e0dd0339-a15e-814d-ac5a-5f51bc15d73c@linux.alibaba.com>
-Message-ID: <87sghhwkde.fsf@notabene.neil.brown.name>
+To:     Michal Hocko <mhocko@kernel.org>, Jan Kara <jack@suse.cz>
+Date:   Mon, 06 Apr 2020 10:14:16 +1000
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK instead.
+In-Reply-To: <20200403110358.GB22681@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name> <87pncqyd7k.fsf@notabene.neil.brown.name> <20200402151009.GA14130@infradead.org> <87h7y1y0ra.fsf@notabene.neil.brown.name> <20200403094220.GA29920@quack2.suse.cz> <20200403110358.GB22681@dhcp22.suse.cz>
+Message-ID: <87pnclwjvr.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -38,44 +39,42 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 06 2020, Yihao Wu wrote:
+On Fri, Apr 03 2020, Michal Hocko wrote:
 
-> Deleting list entry within hlist_for_each_entry_safe is not safe unless
-> next pointer (tmp) is protected too. It's not, because once hash_lock
-> is released, cache_clean may delete the entry that tmp points to. Then
-> cache_purge can walk to a deleted entry and tries to double free it.
+> On Fri 03-04-20 11:42:20, Jan Kara wrote:
+> [...]
+>> > diff --git a/mm/vmstat.c b/mm/vmstat.c
+>> > index 78d53378db99..d1291537bbb9 100644
+>> > --- a/mm/vmstat.c
+>> > +++ b/mm/vmstat.c
+>> > @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] =3D {
+>> >  	"nr_file_hugepages",
+>> >  	"nr_file_pmdmapped",
+>> >  	"nr_anon_transparent_hugepages",
+>> > -	"nr_unstable",
+>> >  	"nr_vmscan_write",
+>> >  	"nr_vmscan_immediate_reclaim",
+>> >  	"nr_dirtied",
+>>=20
+>> This is probably the most tricky to deal with given how /proc/vmstat is
+>> formatted. OTOH for this file there's good chance we'd get away with just
+>> deleting nr_unstable line because there are entries added to it in the
+>> middle (e.g. in 60fbf0ab5da1 last September) and nobody complained yet.
+>>=20
+>> What do mm people think? How were changes to vmstat counters handled in =
+the
+>> past?
 >
-> Fix this bug by holding only the deleted entry's reference.
->
-> Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-> ---
-> v1->v2: Use Neil's better solution
-> v2->v3: Fix a checkscript warning
->
->  net/sunrpc/cache.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> index af0ddd28b081..b445874e8e2f 100644
-> --- a/net/sunrpc/cache.c
-> +++ b/net/sunrpc/cache.c
-> @@ -541,7 +541,9 @@ void cache_purge(struct cache_detail *detail)
->  	dprintk("RPC: %d entries in %s cache\n", detail->entries, detail->name);
->  	for (i =3D 0; i < detail->hash_size; i++) {
->  		head =3D &detail->hash_table[i];
-> -		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
-> +		while (!hlist_empty(head)) {
-> +			ch =3D hlist_entry(head->first, struct cache_head,
-> +					 cache_list);
->  			sunrpc_begin_cache_remove_entry(ch, detail);
->  			spin_unlock(&detail->hash_lock);
->  			sunrpc_end_cache_remove_entry(ch, detail);
-> --=20
-> 2.20.1.2432.ga663e714
+> Adding new counters in the middle seems to be generally OK. I would be
+> more worried about removing counters though. So if we can simply print a
+> phone value at the very end then this should be a reasonable workaround.
 
-Reviewed-by: NeilBrown <neilb@suse.de>
+At the very end?
+Do you mean not have "nr_unstable 0" appear at all, but having "dummy 0"
+appear at the end just so that the number of lines doesn't decrease?
+Am I misunderstanding?
 
-Thanks for finding the bug and testing the solution!
+Thanks,
 NeilBrown
 
 --=-=-=
@@ -83,18 +82,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6Kcd0ACgkQOeye3VZi
-gbnFixAAgNieKy6tuW0ODMW2Rk7mJKO31gs1OQJ5sBrvgSOc4eJuRH64e2zYI7SE
-idBUCcwdTCo6ldH1v9OG8trl2QXuiZA7/CW7bWa0Acr5zm048RWuegiqGmNnaC9g
-GBKM0ucJa/Cb+GPmFEATUWT6lssnd44J5dYjC/HOlEKHkhI92pg8ZeBMo40xM67b
-ogxTXIupSZDv6fe6p5OBrEL15HArXkz4aIGAH5Xm2OFSFkVn8RVZB3NEx2Fw1NPj
-mj7gM41db8ehDzYjZp88mfwAdsNu6KEqGHYyNBnYyvDznLRIi64hSG+Tz+UsCU0l
-mFJe1338DofkIwnlAsaOQTi4dvyKb7xat1htTv2zNIRJbZhSDe7Ef4gdYdkda4wI
-NFFCB7c3ROd6kArKXeLupCwPkuX1hS4nR5Qn5hlLcyWey9Rt0XqDEMHDVUrWbk2g
-55yUcE5woQLtLb8ESNJquuEFXb76qnaZlrHeTHm7eKD/OdKZqDoeC0kzA9lV57WR
-5yuC1KtoUT7oSyFlSthRg1eydWg0l5NJWQLx9etCFPWzFQjX0JBmaz9M76AMbH0Q
-VuIn1d1mOD/0qi+KZyh947mkoJXsF9huZJ/NQgu4L5d6at9mWwLhF/dQE8oSQeqH
-4t6dzUiO1pFmZoYLOOQrl5J5TXVi64M4QY+F9QKV0RxunaeN4ak=
-=I+T7
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6KdFgACgkQOeye3VZi
+gbk9eRAAgpuSPME4j7VuvpAzToqgPRWUqCepTVE70zZqQHFCfaVdhSnZZPPW6qhi
+vrup/0wKoQBzB3zHQDDX9vEeIiwO5wyC3FTTN4moD8LhJ3i+hsixC3GPBw4Ptr1p
+V5scdcdecrGMOsAXcOIV9VFLpHe+Jn1ScakAPPU7mWi7mhUQ34U1vjTBTlPzzOQC
+0mWJtmD4i8IIPDwX5W0g6cbDQNRmgFnwmPrNLIw62knSZgOZHb7tjG2MZ4HS73E5
+xle7reCfleLezyB7HbJwBY352Oz6kUhb8ogiXcDk2iP8c7CqciUvkp20yPM2IkLB
+sjx62r5PKer719o0BdB+ISCJmQJ6IycMHXB9aptLoWi0Xw3JvOwWvY5C/bgDq96E
+R6R7Ekb77H8mhZmBNGYjOqJTib9QY19nhrp9PcAzlD8g2/5fw6KI1kW/K11ucaGa
+QBErUxFm5dreRivJZklhgLUStMd68i6ALdiNu8XQLoVILfVCGDaLJo5tNK9nWzGr
+sJ//OTsSa5/qw522j9EWHju8SB1jDgmG5upoyhxzTbNXhGLYbfwbVRjtZQdEwtU+
+HmLHW7w/EGBcK4XaMZHp1uKUClxwwCRR4y+0pj51mNtfu8zZ+KqHXsNo+SZjJ8fX
+GQ05sBO9+Iayuy+Todsgcy5MXerd2nETnq0HNJBdo8gpZZkbURk=
+=znt9
 -----END PGP SIGNATURE-----
 --=-=-=--
