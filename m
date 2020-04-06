@@ -2,124 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FEF419F10C
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 09:41:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2E7F19F11A
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 09:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgDFHlX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Apr 2020 03:41:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42379 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgDFHlW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Apr 2020 03:41:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so16132036wrx.9;
-        Mon, 06 Apr 2020 00:41:21 -0700 (PDT)
+        id S1726578AbgDFHo5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Apr 2020 03:44:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53402 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFHo5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Apr 2020 03:44:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d77so13625468wmd.3;
+        Mon, 06 Apr 2020 00:44:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nAQr+9K38MgvDYYgFchl8YBFkKBoGytRmVlPwECNUXM=;
-        b=DX31JS7B9ArZy3oNsK1Yc4T0VMelX1Co6oQFIkXFohs0tVjGP+DuY1Tg03kQk3wrjv
-         gHnzavd8trWlZRPI05+PNq/BDhkPb5SeeFXHKGIlzzQT7DVye+jKwhWtAGGJagzxzrIe
-         lbiIjuFHt2KErVFW1fM60Ypvz74zfb/vPQqd6jjYHSjDnVRg2Wnvtnn5G939SVBYbp9w
-         ui3ls4naDHdNoA4wpmDzZsVKA974CihHdlNfa7U2YUES1wvVzn33LOTQejUe9Tm6q6iv
-         fJmHjw8G/1E4fbIcXQAxdZw3B8WHkbcs+h+6SdGAfEbTd2w0AyVQQhPx5IdsrTRaYxgD
-         TqGg==
-X-Gm-Message-State: AGi0Pub/1D6/z5K/XL1ekY5FJpaZLAXQItQRRxaVFQjzcgoWsH0mbmn8
-        PN8AqJfpP6ez4GcskAfsiiA=
-X-Google-Smtp-Source: APiQypKPzaN/Qn9P7OD6uTxybVieU5yFLGLohLtLIFIR3egzCrHscNwlVQ/Uk9zL2X5VoX0jhSBGrA==
-X-Received: by 2002:adf:904e:: with SMTP id h72mr4288049wrh.367.1586158881210;
-        Mon, 06 Apr 2020 00:41:21 -0700 (PDT)
+        bh=txWInbuQbmkgFxJ+50xnQXLhTEQvs1Jqq2HY6J0OmlU=;
+        b=QoMOsFRiahP6Pg7Gai160asclW5Lzm+ToLoPpt83KcHbhU8hT/5CXufMx2snTIuvvo
+         Bsc5BQSEWDlAM8SoqvgXx4Az+95SK3L4nhqt5pORwyNvxLA47FGtnUAhAMcnrCu6H6Oh
+         NiGULMv/F5QmibD+1EYA3bMVgxW57vO5ro87zGcipVesoI82bWOR7H5f8/z7U37Mgy9p
+         NDaDpYzrfnrElIr1BBWag9VSJbOvMbjj5He8pjXtJGsL0nqV2ifdZ6G7ylVpRWJZk8cd
+         Wv2YIZEg6lIyT4I67M7nIbFQ3cwnNzWR7x/w107ic1QkZP0V7YbwwM+XQc0Mv74KGaEN
+         Pdjg==
+X-Gm-Message-State: AGi0PuY39d+/iEHlQptkN8JxnbrQpIhZR8k++XgbTe35tgZI/RHge60A
+        qNbTJmIJ99sqqtdDDkCNxts=
+X-Google-Smtp-Source: APiQypJ/uoIUR+40nexUPOLJDWAC+iVUJJZll3wmjJET1u6SyNHZsHCm9tunzpCMG0peDimrSZlprA==
+X-Received: by 2002:a1c:bd8b:: with SMTP id n133mr10454476wmf.175.1586159095092;
+        Mon, 06 Apr 2020 00:44:55 -0700 (PDT)
 Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id o129sm15907239wma.20.2020.04.06.00.41.20
+        by smtp.gmail.com with ESMTPSA id q11sm24372569wme.0.2020.04.06.00.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 00:41:20 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:41:19 +0200
+        Mon, 06 Apr 2020 00:44:54 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 09:44:53 +0200
 From:   Michal Hocko <mhocko@kernel.org>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
- instead.
-Message-ID: <20200406074119.GG19426@dhcp22.suse.cz>
+Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+Message-ID: <20200406074453.GH19426@dhcp22.suse.cz>
 References: <87tv2b7q72.fsf@notabene.neil.brown.name>
  <87v9miydai.fsf@notabene.neil.brown.name>
  <87sghmyd8v.fsf@notabene.neil.brown.name>
- <87pncqyd7k.fsf@notabene.neil.brown.name>
- <20200402151009.GA14130@infradead.org>
- <87h7y1y0ra.fsf@notabene.neil.brown.name>
- <20200403094220.GA29920@quack2.suse.cz>
- <20200403110358.GB22681@dhcp22.suse.cz>
- <87pnclwjvr.fsf@notabene.neil.brown.name>
+ <20200403151534.GG22681@dhcp22.suse.cz>
+ <878sjcxn7i.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pnclwjvr.fsf@notabene.neil.brown.name>
+In-Reply-To: <878sjcxn7i.fsf@notabene.neil.brown.name>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon 06-04-20 10:14:16, Neil Brown wrote:
+On Sat 04-04-20 08:40:17, Neil Brown wrote:
 > On Fri, Apr 03 2020, Michal Hocko wrote:
 > 
-> > On Fri 03-04-20 11:42:20, Jan Kara wrote:
-> > [...]
-> >> > diff --git a/mm/vmstat.c b/mm/vmstat.c
-> >> > index 78d53378db99..d1291537bbb9 100644
-> >> > --- a/mm/vmstat.c
-> >> > +++ b/mm/vmstat.c
-> >> > @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] = {
-> >> >  	"nr_file_hugepages",
-> >> >  	"nr_file_pmdmapped",
-> >> >  	"nr_anon_transparent_hugepages",
-> >> > -	"nr_unstable",
-> >> >  	"nr_vmscan_write",
-> >> >  	"nr_vmscan_immediate_reclaim",
-> >> >  	"nr_dirtied",
+> > On Thu 02-04-20 10:53:20, Neil Brown wrote:
 > >> 
-> >> This is probably the most tricky to deal with given how /proc/vmstat is
-> >> formatted. OTOH for this file there's good chance we'd get away with just
-> >> deleting nr_unstable line because there are entries added to it in the
-> >> middle (e.g. in 60fbf0ab5da1 last September) and nobody complained yet.
+> >> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+> >> loop block driver, where a daemon needs to write to one bdi in
+> >> order to free up writes queued to another bdi.
 > >> 
-> >> What do mm people think? How were changes to vmstat counters handled in the
-> >> past?
+> >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+> >> pages, so that it can still dirty pages after other processses have been
+> >> throttled.
+> >> 
+> >> This approach was designed when all threads were blocked equally,
+> >> independently on which device they were writing to, or how fast it was.
+> >> Since that time the writeback algorithm has changed substantially with
+> >> different threads getting different allowances based on non-trivial
+> >> heuristics.  This means the simple "add 25%" heuristic is no longer
+> >> reliable.
+> >> 
+> >> This patch changes the heuristic to ignore the global limits and
+> >> consider only the limit relevant to the bdi being written to.  This
+> >> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+> >> should not introduce surprises.  This has the desired result of
+> >> protecting the task from the consequences of large amounts of dirty data
+> >> queued for other devices.
 > >
-> > Adding new counters in the middle seems to be generally OK. I would be
-> > more worried about removing counters though. So if we can simply print a
-> > phone value at the very end then this should be a reasonable workaround.
+> > While I understand that you want to have per bdi throttling for those
+> > "special" files I am still missing how this is going to provide the
+> > additional room that the additnal 25% gave them previously. I might
+> > misremember or things have changed (what you mention as non-trivial
+> > heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
+> > forward progress. Care to expan some more on how this is handled now?
+> > Maybe we do not need it anymore but calling that out explicitly would be
+> > really helpful.
 > 
-> At the very end?
-> Do you mean not have "nr_unstable 0" appear at all, but having "dummy 0"
-> appear at the end just so that the number of lines doesn't decrease?
-> Am I misunderstanding?
+> The 25% was a means to an end, not an end in itself.
+> 
+> The problem is that the NFS server needs to be able to write to the
+> backing filesystem when the dirty memory limits have been reached by
+> being totally consumed by dirty pages on the NFS filesystem.
+> 
+> The 25% was just a way of giving an allowance of dirty pages to nfsd
+> that could not be consumed by processes writing to an NFS filesystem.
+> i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it only
+> really needs 1 page privately, but a few pages give better throughput
+> and 25% seemed like a good idea at the time.
 
-Sorry for not being clear. I meant semething like
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 78d53378db99..836e3f7a7aff 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1705,8 +1705,16 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
- static void *vmstat_next(struct seq_file *m, void *arg, loff_t *pos)
- {
- 	(*pos)++;
--	if (*pos >= NR_VMSTAT_ITEMS)
-+	if (*pos >= NR_VMSTAT_ITEMS) {
-+		/*
-+		 * deprecated counters which are no longer represented
-+		 * in vmstat arrays. We just lie about them to be always
-+		 * 0 to not break userspace which might expect them in
-+		 * int the output.
-+		 */
-+		seq_puts(m, "nr_unstable 0")
- 		return NULL;
-+	}
- 	return (unsigned long *)m->private + *pos;
- }
+Yes this part is clear to me.
  
+> per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
+> de-emphasises the 25% (the irrelevant detail).
+
+It is still not clear to me how this patch is going to behave when the
+global dirty throttling is essentially equal to the per-bdi - e.g. there
+is only a single bdi and now the PF_LOCAL_THROTTLE process doesn't have
+anything private.
 
 -- 
 Michal Hocko
