@@ -2,161 +2,163 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C48B919FD0B
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 20:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9F5319FE21
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2020 21:36:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgDFSYL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Apr 2020 14:24:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53114 "EHLO mx2.suse.de"
+        id S1725957AbgDFTgH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Apr 2020 15:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgDFSYL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:24:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4F3E5BBF4;
-        Mon,  6 Apr 2020 18:24:06 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Date:   Mon, 06 Apr 2020 21:58:18 +1000
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-In-Reply-To: <20200406093601.GA1143@quack2.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name> <20200403151534.GG22681@dhcp22.suse.cz> <878sjcxn7i.fsf@notabene.neil.brown.name> <20200406074453.GH19426@dhcp22.suse.cz> <20200406093601.GA1143@quack2.suse.cz>
-Message-ID: <87mu7ox1ut.fsf@notabene.neil.brown.name>
+        id S1725895AbgDFTgH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 6 Apr 2020 15:36:07 -0400
+Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD12206F5
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2020 19:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586201766;
+        bh=ve3C8JGHOplU4sbU4ikKE9qhRnOGXbrlPy6qN5qo9qw=;
+        h=From:To:Subject:Date:From;
+        b=jYe8g/HXF8R/OQnDMQYvQbdz1P/3a4CmCVIqut1jQtKvgnt6tCFWpX0Lxmjthn6Je
+         dJfXVwF9mIHAnVhxaPH2l0c2PBWdNhzI/eUYLJ5WNSXC7IDnMCS/cMVF0tuxelBAHJ
+         L5Ps5YkbQAxQxjQVv+T/UlOsjM9wbPNO8u3KzE/E=
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Clean up process of marking inode stale.
+Date:   Mon,  6 Apr 2020 15:33:52 -0400
+Message-Id: <20200406193353.101924-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-On Mon, Apr 06 2020, Jan Kara wrote:
+Instead of the various open coded calls to set the NFS_INO_STALE bit
+and call nfs_zap_caches(), consolidate them into a single function
+nfs_set_inode_stale().
 
-> On Mon 06-04-20 09:44:53, Michal Hocko wrote:
->> On Sat 04-04-20 08:40:17, Neil Brown wrote:
->> > On Fri, Apr 03 2020, Michal Hocko wrote:
->> >=20
->> > > On Thu 02-04-20 10:53:20, Neil Brown wrote:
->> > >>=20
->> > >> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in t=
-he
->> > >> loop block driver, where a daemon needs to write to one bdi in
->> > >> order to free up writes queued to another bdi.
->> > >>=20
->> > >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dir=
-ty
->> > >> pages, so that it can still dirty pages after other processses have=
- been
->> > >> throttled.
->> > >>=20
->> > >> This approach was designed when all threads were blocked equally,
->> > >> independently on which device they were writing to, or how fast it =
-was.
->> > >> Since that time the writeback algorithm has changed substantially w=
-ith
->> > >> different threads getting different allowances based on non-trivial
->> > >> heuristics.  This means the simple "add 25%" heuristic is no longer
->> > >> reliable.
->> > >>=20
->> > >> This patch changes the heuristic to ignore the global limits and
->> > >> consider only the limit relevant to the bdi being written to.  This
->> > >> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) =
-and
->> > >> should not introduce surprises.  This has the desired result of
->> > >> protecting the task from the consequences of large amounts of dirty=
- data
->> > >> queued for other devices.
->> > >
->> > > While I understand that you want to have per bdi throttling for those
->> > > "special" files I am still missing how this is going to provide the
->> > > additional room that the additnal 25% gave them previously. I might
->> > > misremember or things have changed (what you mention as non-trivial
->> > > heuristics) but PF_LESS_THROTTLE really needed that room to guarante=
-e a
->> > > forward progress. Care to expan some more on how this is handled now?
->> > > Maybe we do not need it anymore but calling that out explicitly woul=
-d be
->> > > really helpful.
->> >=20
->> > The 25% was a means to an end, not an end in itself.
->> >=20
->> > The problem is that the NFS server needs to be able to write to the
->> > backing filesystem when the dirty memory limits have been reached by
->> > being totally consumed by dirty pages on the NFS filesystem.
->> >=20
->> > The 25% was just a way of giving an allowance of dirty pages to nfsd
->> > that could not be consumed by processes writing to an NFS filesystem.
->> > i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it on=
-ly
->> > really needs 1 page privately, but a few pages give better throughput
->> > and 25% seemed like a good idea at the time.
->>=20
->> Yes this part is clear to me.
->>=20=20
->> > per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
->> > de-emphasises the 25% (the irrelevant detail).
->>=20
->> It is still not clear to me how this patch is going to behave when the
->> global dirty throttling is essentially equal to the per-bdi - e.g. there
->> is only a single bdi and now the PF_LOCAL_THROTTLE process doesn't have
->> anything private.
->
-> Let me think out loud so see whether I understand this properly. There are
-> two BDIs involved in NFS loop mount - the NFS virtual BDI (let's call it
-> simply NFS-bdi) and the bdi of the real filesystem that is backing NFS
-> (let's call this real-bdi). The case we are concerned about is when NFS-b=
-di
-> is full of dirty pages so that global dirty limit of the machine is
-> exceeded. Then flusher thread will take dirty pages from NFS-bdi and send
-> them over localhost to nfsd. Nfsd, which has PF_LOCAL_THROTTLE set, will =
-take
-> these pages and write them to real-bdi. Now because PF_LOCAL_THROTTLE is
-> set for nfsd, the fact that we are over global limit does not take effect
-> and nfsd is still able to write to real-bdi until dirty limit on real-bdi
-> is reached. So things should work as Neil writes AFAIU.
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/dir.c           |  5 +++--
+ fs/nfs/inode.c         | 18 +++++++++++++-----
+ fs/nfs/nfstrace.h      |  1 +
+ fs/nfs/read.c          |  2 +-
+ include/linux/nfs_fs.h |  1 +
+ 5 files changed, 19 insertions(+), 8 deletions(-)
 
-Exactly.  The 'loop' block device follows a similar pattern - there is
-the 'loop' bdi that might consume all the allowed dirty pages, and the
-backing bdi that we need to write to so those dirty pages can be
-cleaned.
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index f14184d0ba82..d729d8311c7e 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2669,9 +2669,10 @@ static int nfs_do_access(struct inode *inode, const struct cred *cred, int mask)
+ 	status = NFS_PROTO(inode)->access(inode, &cache);
+ 	if (status != 0) {
+ 		if (status == -ESTALE) {
+-			nfs_zap_caches(inode);
+ 			if (!S_ISDIR(inode->i_mode))
+-				set_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
++				nfs_set_inode_stale(inode);
++			else
++				nfs_zap_caches(inode);
+ 		}
+ 		goto out;
+ 	}
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index a10fb87c6ac3..b9d0921cb4fe 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -62,7 +62,6 @@
+ /* Default is to see 64-bit inode numbers */
+ static bool enable_ino64 = NFS_64_BIT_INODE_NUMBERS_ENABLED;
+ 
+-static void nfs_invalidate_inode(struct inode *);
+ static int nfs_update_inode(struct inode *, struct nfs_fattr *);
+ 
+ static struct kmem_cache * nfs_inode_cachep;
+@@ -284,10 +283,18 @@ EXPORT_SYMBOL_GPL(nfs_invalidate_atime);
+  * Invalidate, but do not unhash, the inode.
+  * NB: must be called with inode->i_lock held!
+  */
+-static void nfs_invalidate_inode(struct inode *inode)
++static void nfs_set_inode_stale_locked(struct inode *inode)
+ {
+ 	set_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
+ 	nfs_zap_caches_locked(inode);
++	trace_nfs_set_inode_stale(inode);
++}
++
++void nfs_set_inode_stale(struct inode *inode)
++{
++	spin_lock(&inode->i_lock);
++	nfs_set_inode_stale_locked(inode);
++	spin_unlock(&inode->i_lock);
+ }
+ 
+ struct nfs_find_desc {
+@@ -1163,9 +1170,10 @@ __nfs_revalidate_inode(struct nfs_server *server, struct inode *inode)
+ 				status = 0;
+ 			break;
+ 		case -ESTALE:
+-			nfs_zap_caches(inode);
+ 			if (!S_ISDIR(inode->i_mode))
+-				set_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
++				nfs_set_inode_stale(inode);
++			else
++				nfs_zap_caches(inode);
+ 		}
+ 		goto err_out;
+ 	}
+@@ -2064,7 +2072,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	 * lookup validation will know that the inode is bad.
+ 	 * (But we fall through to invalidate the caches.)
+ 	 */
+-	nfs_invalidate_inode(inode);
++	nfs_set_inode_stale_locked(inode);
+ 	return -ESTALE;
+ }
+ 
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index a9588d19a5ae..7e7a97ae21ed 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -181,6 +181,7 @@ DECLARE_EVENT_CLASS(nfs_inode_event_done,
+ 				int error \
+ 			), \
+ 			TP_ARGS(inode, error))
++DEFINE_NFS_INODE_EVENT(nfs_set_inode_stale);
+ DEFINE_NFS_INODE_EVENT(nfs_refresh_inode_enter);
+ DEFINE_NFS_INODE_EVENT_DONE(nfs_refresh_inode_exit);
+ DEFINE_NFS_INODE_EVENT(nfs_revalidate_inode_enter);
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index 34bb9add2302..13b22e898116 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -250,7 +250,7 @@ static int nfs_readpage_done(struct rpc_task *task,
+ 	trace_nfs_readpage_done(task, hdr);
+ 
+ 	if (task->tk_status == -ESTALE) {
+-		set_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
++		nfs_set_inode_stale(inode);
+ 		nfs_mark_for_revalidate(inode);
+ 	}
+ 	return 0;
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 5d5b91e54f73..73eda45f1cfd 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -354,6 +354,7 @@ static inline unsigned long nfs_save_change_attribute(struct inode *dir)
+ extern int nfs_sync_mapping(struct address_space *mapping);
+ extern void nfs_zap_mapping(struct inode *inode, struct address_space *mapping);
+ extern void nfs_zap_caches(struct inode *);
++extern void nfs_set_inode_stale(struct inode *inode);
+ extern void nfs_invalidate_atime(struct inode *);
+ extern struct inode *nfs_fhget(struct super_block *, struct nfs_fh *,
+ 				struct nfs_fattr *, struct nfs4_label *);
+-- 
+2.25.2
 
-The intention for PR_SET_IO_FLUSHER as described in 'man 2 prctl'
-is much the same.  The thread that sets this is expected to be working
-on behalf of a "block layer or filesystem" such as "FUSE daemons,  SCSI
-device  emulation daemons" - each of these would be serving a bdi
-"above" by writing to a bdi "below".
-
-I'll add some more text to the changelog to make this clearer.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6LGVwACgkQOeye3VZi
-gblH+RAAlcjEy90rucreHhtSxKfL4Fegmm5J2BHk9DCovgq/umVm/vGLLYQABj/A
-Aq0bDdE4za3maOg55/3Ee+b9gkZap68lQDaq0l79Jn0agCdzqrfqIT18CywwfxV5
-xP5s00MWhRN9mFa3wGi2nKkL00NRmRptnzJHtmMdfnhjoASjir6tfnYIDJe3jrxQ
-TKXMr84sVoEfYd8lb7BDoH8OK4Dr8I1gNl2Us6lsLFk7fnBAzKqr7kYmbd4QNwXR
-6T928smDKxptyhlOR02pekY1EqIcXZeQUyQ0ubx02iKj6b7z54nwaMo0VehngPZc
-MU17ddYmOS7bbbB6mM+reKumrdH3PWjAz8yadb68jisp8RS7DatBtFx4dkHz8AQh
-X3W5J4Hq4/8BxR+IEhbw8iSAz/HUQNPf8hNdvRkuxtc2UAfvzQVzmuAeVIGnb2+i
-V3pYl4l63BAjmnVO0kbC/zXEbLetzrjXINeII/swLd3rYKbtMibX4TcAVQfzichK
-9hlZ61xT4EXAFy7Zf1Mgi8hwcdpf2gJvPHYFkRqaPMr6jLYNCU/jSc+sgzVUPMmo
-IFZGhfOywLVvpMCIob7HF8F1eGjElbrhcGgqoUgc/x4s8kh3lDeR98C9R8SKSI2j
-JLm9g7NkU/TQIFhb9+v0V11UboteYMGrwZlh2A7UVXKNrThP56Y=
-=QtOq
------END PGP SIGNATURE-----
---=-=-=--
