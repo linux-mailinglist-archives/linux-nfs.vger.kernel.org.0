@@ -2,186 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1143E1A1BBF
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2020 08:02:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F10B1A2DFA
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Apr 2020 05:32:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgDHGCr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Apr 2020 02:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHGCr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 8 Apr 2020 02:02:47 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A796E20692;
-        Wed,  8 Apr 2020 06:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586325766;
-        bh=8v8ZKXib54k0pnUocYC3djwt29r0O8csFX6JxH9NeOE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I8Hl/5DKmnHwOdThCnnANV+OtdCemNc0qjoKCUprQdh3GmAP+u63XbrZRgae0SlFx
-         /d/lnSiF5W4FUGiUNdzfMuJmeTr8ysGLIaMlWMGYXPWs5tiaV9u6G8UTAxSObkLeUg
-         RH9+LVDKJbhP9R2hJ/A/jX6dRkhu9Tl71aMPAk8Q=
-Date:   Wed, 8 Apr 2020 09:02:42 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] svcrdma: Fix leak of svc_rdma_recv_ctxt objects
-Message-ID: <20200408060242.GB3310@unreal>
-References: <20200407190938.24045.64947.stgit@klimt.1015granger.net>
- <20200407191106.24045.88035.stgit@klimt.1015granger.net>
+        id S1726549AbgDIDcI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Apr 2020 23:32:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34046 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgDIDcI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Apr 2020 23:32:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l14so4353230pgb.1
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2020 20:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oqJTPtpkTpUkbGBrE2+CxYaGq608cjc1ZWSBRo2kHeU=;
+        b=pFtY7jl18S9tEXCrJ+vE7hmtCUsxe89l2Pnuj3IxMUcChtCB7DBKD0Eu8Rkf0IV2Ry
+         XIy5Sc3wqA/wE1P+lm2RwDF3cvO30Iv/PT75PWi18sQGXw63lrwrNxVrISY168C3mzra
+         MHPpxXNev4dYA+Hr41aD2Z60IeDCyWT3JaEgKryj0XRl6fgEqkWtV/Uy9emUvrH0KE4g
+         Mv9D6Rn5DPv8PP3k6FgKwPw7mOnT014oIW/i1C5YK+SIxMRKNMOY19IUjpZeV4D8jkrb
+         +v4hj1DqPYN0omYsRi16ao61EXMZ5RRnurlttsopTpGT+J4kjYGKAhN47APQ5BW/Cbpt
+         VPYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oqJTPtpkTpUkbGBrE2+CxYaGq608cjc1ZWSBRo2kHeU=;
+        b=PgtYayZcJJN+AeP1J8HRy21oeeBwS25zRo1Xdw+cdFpXM+e3uhGPjYJpn4qIKQdZrS
+         p6UKilxRFcxKs2EVnfq4drYtt4eFWdrqeonX6Ek30wL+4uFTL1jhrgPsIj0gTzyYNrl3
+         YqZxY7d74OZWiYDpeUHAk6/UyDBJ/KlDTKsJfDwjO1ywbFXyP6vSiog6zy1YT10Zrvcj
+         +u/O/n1udxeJa9Rg49RfY6bxMHi0wkQDbNENkMOrOFeRDjKKg0+g9/WPO75NK90N1ehm
+         einFkGjuI4SyhrdOLx1CA7xFlAx4fXmb/h3ARPNXPNXLo9GIOKRG6wPbTIVp9Dk/y+kA
+         rE0A==
+X-Gm-Message-State: AGi0PuaORk/uw6RVI77fPRohlNCuef6elnitJTrQauQicdUz2Lqdiiys
+        4HpOlgLT4b/B1AZaSN2fETE=
+X-Google-Smtp-Source: APiQypJr+N1+27tpCvPrkmxYxqY0cXd78xAvwavjGbjTOWxQwSBgGnx0tNcd6ETO8KIlrlQfU6ujNg==
+X-Received: by 2002:a63:a35a:: with SMTP id v26mr10496800pgn.40.1586403127299;
+        Wed, 08 Apr 2020 20:32:07 -0700 (PDT)
+Received: from C02W82TBHV2R ([116.75.57.209])
+        by smtp.gmail.com with ESMTPSA id p1sm17983709pfq.114.2020.04.08.20.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 20:32:06 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 09:02:01 +0530
+From:   Srikrishan Malik <srikrishanmalik@gmail.com>
+To:     Steve Dickson <SteveD@RedHat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: libnfsidmap: SASL bind suppoprt in umich_ldap
+Message-ID: <20200409033201.GA8924@C02W82TBHV2R>
+References: <20200330123501.GA50689@C02W82TBHV2R>
+ <b9c6f7bd-ed86-4951-98cc-0e2938d0a2c3@RedHat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200407191106.24045.88035.stgit@klimt.1015granger.net>
+In-Reply-To: <b9c6f7bd-ed86-4951-98cc-0e2938d0a2c3@RedHat.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 03:11:06PM -0400, Chuck Lever wrote:
-> Utilize the xpo_release_rqst transport method to ensure that each
-> rqstp's svc_rdma_recv_ctxt object is released even when the server
-> cannot return a Reply for that rqstp.
->
-> Without this fix, each RPC whose Reply cannot be sent leaks one
-> svc_rdma_recv_ctxt. This is a 2.5KB structure, a 4KB DMA-mapped
-> Receive buffer, and any pages that might be part of the Reply
-> message.
->
-> The leak is infrequent unless the network fabric is unreliable or
-> Kerberos is in use, as GSS sequence window overruns, which result
-> in connection loss, are more common on fast transports.
->
-> Fixes: 3a88092ee319 ("svcrdma: Preserve Receive buffer until ... ")
+On Mon, Mar 30, 2020 at 11:06:54AM -0400, Steve Dickson wrote:
+> Hello,
+> 
+> On 3/30/20 8:42 AM, Srikrishan Malik wrote:
+> > Hi,
+> > 
+> > This is regarding the umich_ldap plugin in libnfsidmap.
+> > This plugin uses only simple bind, are there any
+> > plans/ongoing efforts to support SASL binds.
+> No... Not that I'm aware of... Patches welcomed!  ;-) 
 
-Chuck,
+Sent a patch for this.
 
-Can you please don't mangle the Fixes line?
-A lot of automatization is relying on the fact that this line is canonical,
-both in format and in the actual content.
-
-Thanks
-
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  include/linux/sunrpc/svc_rdma.h          |    1 +
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |   22 ++++++++++++++++++++++
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c    |   13 +++----------
->  net/sunrpc/xprtrdma/svc_rdma_transport.c |    5 -----
->  4 files changed, 26 insertions(+), 15 deletions(-)
->
-> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-> index 78fe2ac6dc6c..cbcfbd0521e3 100644
-> --- a/include/linux/sunrpc/svc_rdma.h
-> +++ b/include/linux/sunrpc/svc_rdma.h
-> @@ -170,6 +170,7 @@ extern bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma);
->  extern void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
->  				   struct svc_rdma_recv_ctxt *ctxt);
->  extern void svc_rdma_flush_recv_queues(struct svcxprt_rdma *rdma);
-> +extern void svc_rdma_release_rqst(struct svc_rqst *rqstp);
->  extern int svc_rdma_recvfrom(struct svc_rqst *);
->
->  /* svc_rdma_rw.c */
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> index 54469b72b25f..efa5fcb5793f 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> @@ -223,6 +223,26 @@ void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
->  		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
->  }
->
-> +/**
-> + * svc_rdma_release_rqst - Release transport-specific per-rqst resources
-> + * @rqstp: svc_rqst being released
-> + *
-> + * Ensure that the recv_ctxt is released whether or not a Reply
-> + * was sent. For example, the client could close the connection,
-> + * or svc_process could drop an RPC, before the Reply is sent.
-> + */
-> +void svc_rdma_release_rqst(struct svc_rqst *rqstp)
-> +{
-> +	struct svc_rdma_recv_ctxt *ctxt = rqstp->rq_xprt_ctxt;
-> +	struct svc_xprt *xprt = rqstp->rq_xprt;
-> +	struct svcxprt_rdma *rdma =
-> +		container_of(xprt, struct svcxprt_rdma, sc_xprt);
-> +
-> +	rqstp->rq_xprt_ctxt = NULL;
-> +	if (ctxt)
-> +		svc_rdma_recv_ctxt_put(rdma, ctxt);
-> +}
-> +
->  static int __svc_rdma_post_recv(struct svcxprt_rdma *rdma,
->  				struct svc_rdma_recv_ctxt *ctxt)
->  {
-> @@ -820,6 +840,8 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
->  	__be32 *p;
->  	int ret;
->
-> +	rqstp->rq_xprt_ctxt = NULL;
-> +
->  	spin_lock(&rdma_xprt->sc_rq_dto_lock);
->  	ctxt = svc_rdma_next_recv_ctxt(&rdma_xprt->sc_read_complete_q);
->  	if (ctxt) {
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> index 6a87a2379e91..b6c8643867f2 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> @@ -926,12 +926,7 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
->  	ret = svc_rdma_send_reply_msg(rdma, sctxt, rctxt, rqstp);
->  	if (ret < 0)
->  		goto err1;
-> -	ret = 0;
-> -
-> -out:
-> -	rqstp->rq_xprt_ctxt = NULL;
-> -	svc_rdma_recv_ctxt_put(rdma, rctxt);
-> -	return ret;
-> +	return 0;
->
->   err2:
->  	if (ret != -E2BIG && ret != -EINVAL)
-> @@ -940,16 +935,14 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
->  	ret = svc_rdma_send_error_msg(rdma, sctxt, rqstp);
->  	if (ret < 0)
->  		goto err1;
-> -	ret = 0;
-> -	goto out;
-> +	return 0;
->
->   err1:
->  	svc_rdma_send_ctxt_put(rdma, sctxt);
->   err0:
->  	trace_svcrdma_send_failed(rqstp, ret);
->  	set_bit(XPT_CLOSE, &xprt->xpt_flags);
-> -	ret = -ENOTCONN;
-> -	goto out;
-> +	return -ENOTCONN;
->  }
->
->  /**
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> index 8bb99980ae85..ea54785db4f8 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> @@ -71,7 +71,6 @@ static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
->  					struct sockaddr *sa, int salen,
->  					int flags);
->  static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt);
-> -static void svc_rdma_release_rqst(struct svc_rqst *);
->  static void svc_rdma_detach(struct svc_xprt *xprt);
->  static void svc_rdma_free(struct svc_xprt *xprt);
->  static int svc_rdma_has_wspace(struct svc_xprt *xprt);
-> @@ -552,10 +551,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
->  	return NULL;
->  }
->
-> -static void svc_rdma_release_rqst(struct svc_rqst *rqstp)
-> -{
-> -}
-> -
->  /*
->   * When connected, an svc_xprt has at least two references:
->   *
->
+> 
+> steved.
+> 
