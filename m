@@ -1,109 +1,58 @@
 Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5C3D1A5E45
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Apr 2020 13:29:48 +0200 (CEST)
+Received: from vger.kernel.org (unknown [209.132.180.67])
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA5B1A5F8C
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Apr 2020 19:30:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgDLL3r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 12 Apr 2020 07:29:47 -0400
-Received: from mail-io1-f52.google.com ([209.85.166.52]:39075 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgDLL3q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Apr 2020 07:29:46 -0400
-Received: by mail-io1-f52.google.com with SMTP id m4so6597107ioq.6;
-        Sun, 12 Apr 2020 04:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lr8Du1SNizwqButahq7qkxIKOJ2tYQem2z0WmME8mcI=;
-        b=LRxbCfnM2pAXUuR19iUj6iP0vBxBl6OyeOmOOFBnYiOUeygcQ6wd1ZJA8timIuABUC
-         qwiyPIxYWoFB0KCfgStqa+sucIENFSFvuxV8jsgBP98rW2uLQoWKjQxVJhKDGBVZ+6xe
-         R7PXQvvSTcHwhvyiqPcN/tjHlnXBVdMgSle2tEim4e0DIJkyK36IJJVTuF4NMB9PnNgy
-         B7JPZMVRJ2EQMuwlhRlQreGJoMd/A9TK4nt09k72toTtnRmCb9qFnVIIux0+PIBx24ng
-         qHmcHmpPCaKYSBeG1F+fEImHYHNyFphV79PbEwuBStrk1+bH4acZopN6z/F0OA7M8hY4
-         zEZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lr8Du1SNizwqButahq7qkxIKOJ2tYQem2z0WmME8mcI=;
-        b=DNCrM6CC1K7gz75dwyseFfjfYG0aNrb6lKA6PO9gsCRpO8Eje2Tzy75VHJDRsxbSNS
-         zWqGkP18q4RFbsG+XbJa29s9KYguopuRHk8bhC8P95t9aLEit8HQG/6rE9f/qS+/qZQa
-         xAPKzTsZc3xbb7S1KGlwjn/K1R0pM1+LQZBgU5aM5tHyXnK5EpK2Aeqxr1LUU1hrMO9+
-         DSluX7McTJcMjULXVeZDcX939IP/K3aCOo1ZOfYZXP00Tnest2cPbEEHxJQ7NHss1X2M
-         dLDcCV/PJLtN6BFziFbNMh9IiVbAxSkiJ4dxdTx48geHuemYYrUek1bHr23wCsYN+iVM
-         hRyg==
-X-Gm-Message-State: AGi0Pubk4M+aVapQJc/fO1Qik9hs3qL4vXT11L/icNFxAK5lIz5SR7LZ
-        afG1agQYkDrEpnsEftJ6sJKQ/QN8kXLg++4gftE=
-X-Google-Smtp-Source: APiQypJoFFkbwvHNs7m2NtbtOkd6202kUw0Zhm4Xg4fnqOTM83ohDAaCR7uPl1lz0AyybO2GXi0EnO5JCXeTMI5sX7g=
-X-Received: by 2002:a05:6638:38e:: with SMTP id y14mr11426792jap.123.1586690986095;
- Sun, 12 Apr 2020 04:29:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
-In-Reply-To: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 12 Apr 2020 14:29:35 +0300
-Message-ID: <CAOQ4uxhPKR34cXvWfF49z8mTGJm+oP2ibfohsXNdY7tXaOi4RA@mail.gmail.com>
-Subject: Re: Same mountpoint restriction in FICLONE ioctls
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Steve French <smfrench@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727310AbgDLRaI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 12 Apr 2020 13:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:34128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbgDLRaI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Apr 2020 13:30:08 -0400
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E093C00860C;
+        Sun, 12 Apr 2020 10:25:04 -0700 (PDT)
+Subject: Re: [GIT PULL] Please pull NFS bugfix for Linux 5.7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586712303;
+        bh=NQKG3sieFZziBsWnKTIbtYsYsR1dXln+HTDYfjofghA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=KcoWFwrg5WaYW52aT+62LcDQnipnEq1BI/XHm1KjUGZbwmpKWOb5CQ4zVElkAizKq
+         PylSpJJow42hrfnsj6IjRSDUsKL/cNBqddgTE0SVkZn9dBz+TPkijU/bfJF3bN9RBz
+         iOy4DUrO3AVRJXCON5Eokq2bQr0ogbChQGRgVV/Y=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <b1fd16bb3607f03e60f4e18c0d8d046451f8882d.camel@hammerspace.com>
+References: <b1fd16bb3607f03e60f4e18c0d8d046451f8882d.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <b1fd16bb3607f03e60f4e18c0d8d046451f8882d.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
+ tags/nfs-for-5.7-2
+X-PR-Tracked-Commit-Id: 27d231c0c63bb619997a24bab85d54d90ca71110
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 50bda5faa6251da85e82db234372f1fc1c69a9d2
+Message-Id: <158671230377.12917.5540924749813551775.pr-tracker-bot@kernel.org>
+Date:   Sun, 12 Apr 2020 17:25:03 +0000
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-+CC XFS,NFS,CIFS
+The pull request you sent on Sun, 12 Apr 2020 00:59:00 +0000:
 
-On Sun, Apr 12, 2020 at 1:06 PM Keno Fischer <keno@juliacomputing.com> wrote:
->
-> Hello,
->
-> I was curious about the reasoning behind the
-> same-mountpoint restriction in the FICLONE
-> ioctl. I saw that in commit
->
-> [913b86e92] vfs: allow vfs_clone_file_range() across mount points
->
-> this check was moved from the vfs layer into
-> the ioctl itself, so it appears to be a policy restriction
-> rather than a technical limitation. I understand why
-> hardlinks are disallowed across mount point boundaries,
-> but it seems like that rationale would not apply to clones,
-> since modifying the clone would not affect the original
-> file. Is there some other reason that the ioctl enforces
-> this restriction?
->
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.7-2
 
-I don't know. I suppose that when FICLONE was introduced
-there wasn't any use case for cross mount clone.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/50bda5faa6251da85e82db234372f1fc1c69a9d2
 
-Note that copy_file_range() also had this restriction, which was
-recently lifted, because NFSv4 and CIFS needed this functionality.
+Thank you!
 
-As far as I can tell, CIFS and NFSv4 can also support cross mount
-clone, but nobody stepped up to request or implement that.
-
-The question is: do you *really* need cross mount clone?
-Can you use copy_file_range() instead?
-It attempts to do remap_file_range() (clone) before falling back to
-kernel copy_file_range().
-
-> Removing this restrictions would have some performance
-> advantages for us, but I figured there must be a good reason
-> why it's there that I just don't know about, so I figured I'd ask.
->
-
-You did not specify your use case.
-Across which filesystems mounts are you trying to clone?
-
-Thanks,
-Amir.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
