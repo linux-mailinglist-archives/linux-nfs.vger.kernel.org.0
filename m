@@ -2,137 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6A8F1A646F
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Apr 2020 11:04:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63581A65D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Apr 2020 13:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgDMJEq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Apr 2020 05:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728091AbgDMJEl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Apr 2020 05:04:41 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0008AC008749;
-        Mon, 13 Apr 2020 01:57:51 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f82so4509930ilh.8;
-        Mon, 13 Apr 2020 01:57:51 -0700 (PDT)
+        id S1729141AbgDMLt7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Apr 2020 07:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729173AbgDMLt6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Apr 2020 07:49:58 -0400
+X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 07:49:58 EDT
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5729AC008769
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Apr 2020 04:41:09 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id r4so4340875pgg.4
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Apr 2020 04:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GHA9/acdYNKg6TtXigttoWf+ctJ+xZIYedEqvuMFErI=;
-        b=gtIWF+DRFw3NFjElbOmdUq+StalADZweXYUfWCkqiK8JLnF7+ewHUQMxY+05DelQSh
-         qXSsO4sJPiZJO5nQCa3P36ztKcww04jTPFhV7HkEKzuN22nplRCgZ1Zf7qRo3fGIKHQ6
-         7X+qnxY6W3J8t4tN73OF6zZKx1wsnuu+3MN8PLFa77bWZvxOID6Hap2HgyVEMWm3235m
-         wPXQZS9Mq+UFvND3v/rf6kfHfS9Dtlj7GHzLNFHzDfKI7YP88UIGKKQWyrGgKy/TRMLg
-         f8Hw9XVxkuDpz/JGArMAMJnoBgNoxJHtqr1WTtcp0Hph4bDYkRgn0hNTjOVSZevNria0
-         0x/w==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=HxOaFJZljqXQIeSLw7dw+YeTIVe76Yo57NkC3rYQjPPsruaWLZEetJYgTw7mDA7iYw
+         4KM/sQKuVdxfTyBgHy0QGrcgvhBAp/s2WR+7lhwMEms7c5U3ARzlxX4w9gHN6kyIVCTo
+         InVjjBwajQbgYMLlLr/dGAnfAOq75HLmi2bmQShdg5UrDH6ZNHdmpjirCjsFE3E+W3lI
+         4HPNdhIk9GHy3wOVy8qt79oLhQ3V0WJ+l2R8YfTk5No8OB207Mc1ssyzLdiNdU6iDIon
+         HSnId1sWR9JHq8BkscMOY+TVCS7WuDDdfTSRJRDObUGUY3pKdsd/NGq97n4qtv5szVJr
+         IEMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GHA9/acdYNKg6TtXigttoWf+ctJ+xZIYedEqvuMFErI=;
-        b=NwsDSGSaKdFTZkTmiVqAnpW62xZArNmU6d5w+o9F3+bbxfOmvyEXM1NA/Tx9OASAs5
-         9sbCeOYFDS4bKI7QSV71QBVjO8wgap36rBwLifstQCNg9eEuR69n/+eLuSxaFt1pjfGW
-         ngPQ13g8ZqqbeAFU5lrAwPuA/O6SVjn89RKS3ogq/3kMc4sgXcfaHeKiOAgYZkg3Xkbs
-         wX2Thtd2M9nmPcCjwXVyEjHeEUY0kExO9sU8AlrGC7v7FCu5D3CrD2blMwUNlSW6C8iU
-         P93Ne5NimiENFEA368sKClnHegA3N+jmRyv8LI5wpckkC+fJWJcOGR8KPEf5Wdanzgmq
-         65ZQ==
-X-Gm-Message-State: AGi0PuZ9vZcE3FWUmgWohdx6HQ09ge0lVV//bZNOsX3jJqaJwNvlOKXN
-        As5tGuTTwMH4mLlSh8PJ70ThsoCQc5F6VOHZWFMU/qWI
-X-Google-Smtp-Source: APiQypJCBRNY8WDeGRUOflqvmNLp4SLE40Vw+oZCgbf0ZQM7kLQ076HrzVTr4mL4n8pgv7NuZjDw6OSN5H1RzKfZw1A=
-X-Received: by 2002:a92:cc02:: with SMTP id s2mr12907286ilp.9.1586768271374;
- Mon, 13 Apr 2020 01:57:51 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=AcHcwjHzB2C6YaD9W6wFM1FRfuq2GA9bO7woWTp+Muf7/EzocgFulfyvJDxdsNshxC
+         iO0UgUCUt1HrqHFw5A6ZJfSSDzQZk+Zyk/eo6dTMczPydKZk01d9e1aj5xYdT+QHCGYT
+         8j9MySFC4LRZmCXU227gnEwmNQufsi8qML6xMLJZ34ke45PmMjKGfSOj4BXz0IyoXv8h
+         ivMhtQEEVagW34RbRLYcOsmCDw1VoEogK5WvdZAe15Exo5DQF5exfCynlwP95DsON/f2
+         pHHl6NLKEMrA0hws9P6dpht131mxsI6q7RHkBEIfn6Z/4PyWk/s0fIaP12LS/Jj8Rm14
+         Tdtg==
+X-Gm-Message-State: AGi0PuZO2+w46LcT4Yy8Z/qEYqbk4dt7E9Rr25VbxlTrDax5wS+TKU3i
+        1wvmmB7mjdUb11AkqnjzozMCOwfvfg4qZeHCoKiq6v4=
+X-Google-Smtp-Source: APiQypJ8Xf5JZIaJmuakcegBHklRN/w3ObzOY1fG2hZhiF0393fUgrxf6qaSVcLD5pLEm/4TEQgoj9oGK8tQ5EeyGAU=
+X-Received: by 2002:a05:6e02:c8f:: with SMTP id b15mr14965961ile.35.1586778068198;
+ Mon, 13 Apr 2020 04:41:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
- <CAOQ4uxhPKR34cXvWfF49z8mTGJm+oP2ibfohsXNdY7tXaOi4RA@mail.gmail.com> <CABV8kRxVA0j2qLkyWx+vULh2DxK2Ef4nPk-zXCikN8XmdBOFgQ@mail.gmail.com>
-In-Reply-To: <CABV8kRxVA0j2qLkyWx+vULh2DxK2Ef4nPk-zXCikN8XmdBOFgQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 13 Apr 2020 11:57:40 +0300
-Message-ID: <CAOQ4uxh2KKwORLC+gWEF=mWzBa3Kh4A4HgRoiad5N5qu06xjcg@mail.gmail.com>
-Subject: Re: Same mountpoint restriction in FICLONE ioctls
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Steve French <smfrench@gmail.com>
+Received: by 2002:a02:5e49:0:0:0:0:0 with HTTP; Mon, 13 Apr 2020 04:41:07
+ -0700 (PDT)
+Reply-To: mgbenin903@gmail.com
+From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
+        <info.zennitbankplcnigerian@gmail.com>
+Date:   Mon, 13 Apr 2020 13:41:07 +0200
+Message-ID: <CABHzvrm3rWryg1yAooKeHwdxzrKD47PRAEfC+ay1A6i5z3Wdiw@mail.gmail.com>
+Subject: I have already sent you first payment US$5000.00 this morning through
+ MONEY Gram service.it is available to pick up in address now.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 1:28 AM Keno Fischer <keno@juliacomputing.com> wrote:
->
-> > You did not specify your use case.
->
-> My use case is recording (https://rr-project.org/) executions
+ATTN DEAR BENEFICIARY.
 
-Cool! I should try that ;-)
+GOOD NEWS.
 
-> of containers (which often make heavy use of bind mounts on
-> the same file system, thus me running into this restriction).
-> In essence, at relevant read or mmap operations,
-> rr needs to checkpoint the file that was opened,
-> in case it later gets deleted or modified.
-> It always tries to FICLONE the file first,
-> before deciding heuristically whether to
-> instead create a copy (if it decides there is a low
-> likelihood the file will get changed - e.g. because
-> it's a system file - it may decide to take the chance and
-> not copy it at the risk of creating a broken recording).
-> That's often a decent trade-off, but of course it's not
-> 100% perfect.
->
-> > The question is: do you *really* need cross mount clone?
-> > Can you use copy_file_range() instead?
->
-> Good question. copy_file_range doesn't quite work
-> for that initial clone, because we do want it to fail if
-> cloning doesn't work (so that we can apply the
-> heuristics). However, you make a good point that
-> the copy fallback should probably use copy_file_range.
-> At least that way, if it does decide to copy, the
-> performance will be better.
->
-> It would still be nice for FICLONE to ease this restriction,
-> since it reduces the chance of the heuristics getting
-> it wrong and preventing the copy, even if such
-> a copy would have been cheap.
->
+I have already sent you first payment US$5000.00 this morning through
+MONEY Gram service.it is available to pick up in address now.
 
-You make it sound like the heuristic decision must be made
-*after* trying to clone, but it can be made before and pass
-flags to the kernel whether or to fallback to copy.
+So we advise you to Contact This Money Gram office to pick up your
+transfer $US5000.00 today.
 
-copy_file_range(2) has an unused flags argument.
-Adding support for flags like:
-COPY_FILE_RANGE_BY_FS
-COPY_FILE_RANGE_BY_KERNEL
 
-or any other names elected after bike shedding can be used
-to control whether user intended to use filesystem internal
-clone/copy methods and/or to fallback to kernel copy.
+Note that your compensation payment funds is total amount $US2.800,000
+Million Dollars.We have instructed the Money Gram Agent,Mr. James
+Gadner to keep sending the transfer to you daily, but the maximum
+amount you will be receiving everyday is US$5000.00. Contact Agent now
+to pick up your first payment $US5000.00 immediately.
 
-I think this functionality will be useful to many.
+Contact Person, Mr. James Gadner, Dir. Money Gram Benin.
+Email: mgbenin903@gmail.com
+Telephone Numbers: +229 62819378/ +229 98477762
 
-> > Across which filesystems mounts are you trying to clone?
->
-> This functionality was written with btrfs in mind, so that's
-> what I was testing with. The mounts themselves are just
-> different bindmounts into the same filesystem.
->
+HERE IS YOUR PAYMENT DETAILS FOR THE FIRST =C2=A3US5000.00 SENT TODAY.
 
-I can also suggest a workaround for you.
-If your only problem is bind mounts and if recorder is a privileged
-process (CAP_DAC_READ_SEARCH) then you can use a "master"
-bind mount to perform all clone operations on.
-Use name_to_handle_at(2) to get sb file handle of source file.
-Use open_by_handle_at(2) to get an open file descriptor of the source
-file under the "master" bind mount.
+Track View Website link:
+https://secure.moneygram.com/track
+Sender=E2=80=99s First name: David
+Sender=E2=80=99s Last Name: Joiner
+Money Transfer Control Number (MTCN) (REFERENCE)# 26046856
 
-Thanks,
-Amir.
+Contact the Mmoney Gram Urgent and reconfirm your address to the
+office before, they will allow you to pick up the transfer today.
+
+HERE IS WHAT REQUIRED OF YOU.
+
+YOUR FULL NAME---------
+ADDRESS--------------
+COUNTRY-----------------------------
+TELEPHONE NUMBERS-----------------
+
+Note, I paid the transfer fee for you, but only you are required to
+send to the office is $75 only,Been Your Payment File activation fee,
+Send once you contact the office,before you can able to pick up your
+transfer today.
+
+Let me know once you pick up first payment today.
+
+Barrister Robert Richter UN-Attorney at Law Court-Benin
