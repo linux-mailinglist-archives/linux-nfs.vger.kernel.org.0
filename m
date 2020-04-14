@@ -2,52 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4228D1A7FAA
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 16:26:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B9F31A7FB7
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 16:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390543AbgDNO0G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Apr 2020 10:26:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56950 "EHLO
+        id S2390737AbgDNO1S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Apr 2020 10:27:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46120 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733197AbgDNO0D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Apr 2020 10:26:03 -0400
+        with ESMTP id S2390729AbgDNO1M (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Apr 2020 10:27:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586874362;
+        s=mimecast20190719; t=1586874431;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kUnrI8a/LRuh/krAaV6gfJC7jslGuf9CJt0GDZnCtGE=;
-        b=hsTPtnjmLErvAySeamaB1OfWOWyPJFUI7KU0y20BVM5jQuYlA4902W8bOaPkC5cBi1bLi8
-        yB/ZlsIBKcvEAWWvAqlURDFrQyn1ZLIuIOYcwMDBaF+BXFChleXaTt+t/YZs2DN6pk7gzd
-        X8Iqdr38G/CFpJmZJoulTWVTqxaWLZo=
+        bh=4H7TAKB4dm82Jdk9InJK6ckbKEcKsNBHOaf2lPjiQ58=;
+        b=JrpIxJn+08EGuPQFTgydzQuVbB9egyTih+lo5p0gi0r0FDWxPP8y3daaZsR2HqNT9FQQNT
+        fJdOmuyq+rz6SreTCZlbtGJJy+s9lJOKjjaCQ9CyRc2thMrjYjoR++NiTJ8snxdMIQhOF+
+        9LNZcFXD60WWbqGevU7BLf89D+DH5y8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-Byk32WVRO_26baYEDxI5Eg-1; Tue, 14 Apr 2020 10:26:01 -0400
-X-MC-Unique: Byk32WVRO_26baYEDxI5Eg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-269-sCmWdXpCMWugIEzu6cdW_g-1; Tue, 14 Apr 2020 10:27:08 -0400
+X-MC-Unique: sCmWdXpCMWugIEzu6cdW_g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FAADDBA3;
-        Tue, 14 Apr 2020 14:26:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74698DBA8;
+        Tue, 14 Apr 2020 14:27:07 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-113-136.phx2.redhat.com [10.3.113.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C31229F99D;
-        Tue, 14 Apr 2020 14:25:59 +0000 (UTC)
-Subject: Re: [PATCH 2/2] nfs-utils: tools: use nls.h
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FDF210016EB;
+        Tue, 14 Apr 2020 14:27:07 +0000 (UTC)
+Subject: Re: [PATCH] nfsidmap: define NS_MAXMSG if undefined
 To:     Rosen Penev <rosenp@gmail.com>, linux-nfs@vger.kernel.org
-References: <20200404052453.2631191-1-rosenp@gmail.com>
- <20200404052453.2631191-2-rosenp@gmail.com>
+References: <20200404053642.2632532-1-rosenp@gmail.com>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <7537a7dd-ad2b-5131-adc8-47a412dd3c8e@RedHat.com>
-Date:   Tue, 14 Apr 2020 10:25:59 -0400
+Message-ID: <1cc2c337-68df-7890-5031-61ef36f96a84@RedHat.com>
+Date:   Tue, 14 Apr 2020 10:27:06 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200404052453.2631191-2-rosenp@gmail.com>
+In-Reply-To: <20200404053642.2632532-1-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -55,8 +54,8 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 4/4/20 1:24 AM, Rosen Penev wrote:
-> libintl.h is not available everywhere. This fixes compilation.
+On 4/4/20 1:36 AM, Rosen Penev wrote:
+> uClibc-ng does not define it.
 > 
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
@@ -64,46 +63,23 @@ Committed... (tag: nfs-utils-2-4-4-rc3)
 
 steved.
 > ---
->  tools/rpcgen/rpc_main.c | 2 +-
->  tools/rpcgen/rpc_scan.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  support/nfsidmap/libnfsidmap.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/tools/rpcgen/rpc_main.c b/tools/rpcgen/rpc_main.c
-> index 1b26e522..e97940b9 100644
-> --- a/tools/rpcgen/rpc_main.c
-> +++ b/tools/rpcgen/rpc_main.c
-> @@ -42,7 +42,6 @@
->  #include <stdio.h>
->  #include <string.h>
->  #include <unistd.h>
-> -#include <libintl.h>
->  #include <locale.h>
->  #include <ctype.h>
->  #include <sys/types.h>
-> @@ -54,6 +53,7 @@
->  #include "rpc_util.h"
->  #include "rpc_scan.h"
->  #include "proto.h"
-> +#include "nls.h"
+> diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidmap.c
+> index d11710f1..bce448cf 100644
+> --- a/support/nfsidmap/libnfsidmap.c
+> +++ b/support/nfsidmap/libnfsidmap.c
+> @@ -89,6 +89,10 @@ gid_t nobody_gid = (gid_t)-1;
+>  #define NFS4DNSTXTREC "_nfsv4idmapdomain"
+>  #endif
 >  
->  #ifndef _
->  #define _(String) gettext (String)
-> diff --git a/tools/rpcgen/rpc_scan.c b/tools/rpcgen/rpc_scan.c
-> index 79eba964..7de61120 100644
-> --- a/tools/rpcgen/rpc_scan.c
-> +++ b/tools/rpcgen/rpc_scan.c
-> @@ -37,11 +37,11 @@
->  #include <stdio.h>
->  #include <ctype.h>
->  #include <string.h>
-> -#include <libintl.h>
->  #include "rpc_scan.h"
->  #include "rpc_parse.h"
->  #include "rpc_util.h"
->  #include "proto.h"
-> +#include "nls.h"
->  
->  #ifndef _
->  #define _(String) gettext (String)
+> +#ifndef NS_MAXMSG
+> +#define NS_MAXMSG 65535
+> +#endif
+> +
+>  /* Default logging fuction */
+>  static void default_logger(const char *fmt, ...)
+>  {
 > 
 
