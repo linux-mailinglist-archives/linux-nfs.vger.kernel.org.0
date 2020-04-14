@@ -2,126 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B6101A7019
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 02:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80E501A7162
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 05:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390481AbgDNAaC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Apr 2020 20:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390469AbgDNAaB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Apr 2020 20:30:01 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A08C008618
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Apr 2020 17:30:01 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p8so5231162pgi.5
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Apr 2020 17:30:00 -0700 (PDT)
+        id S2404349AbgDNDAa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Apr 2020 23:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404224AbgDNDAa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Apr 2020 23:00:30 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3EA0C0A3BDC;
+        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id f82so7217850ilh.8;
+        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=GtP40NBc6K+wY7TevCqJVJVyGGxw6eyhk3x6njvRZbI=;
-        b=PMRE9MFBjRNguCLZJxvQ0tC6cbj5HN/L0mNJHOjg1H5naWvyPaji8Uw6CjXqOQ2azW
-         MhWs/LuNrHlvICFisvb7Cy6SJ3VKQrmiHJlokad5hGoOXcGXzDY3vorrrgpyAZrAVUDE
-         dUN76VdbMCLvs9G10TRyVoj/R2uKEUPKhrkRhwWPh9Qq6Oj8zqhrDAXwnWHye+K8R3ym
-         lDZQumSHVx6+RupP9U0o1EyjztcXPr7zTXefIIyzd+nYkxQBJg3bKkumuWN4k6N/hrZC
-         eN210smaNX58gX6QVglgalvDGfi5xzWfnOSt7/cWPG1d3xQeaexIo7gZ03EO3NRYAH/8
-         2wUQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
+        b=PFv2e/MWAiprnN1BhiBDycrqJD137NITfKgcM7yyJdOWGGyV+BAY02xot6sVwbHfU+
+         uEptpiXO+doA8o30kbNcrmXTY7DmbhUtqjkyGQvFPMGlRMzVxd7tnHfoBetxg4uq/0Vw
+         BmRav/H54feN1KZotQw7H6sgqxeWFmzHa/5DgwsiS05E6rcS52FCF8fGHL290i5nf5M3
+         U8imVjIi/3FUdqzyBELP7Dlg06lKzJtiiWkcFt09N+wzhCSOwLoGA5sAdqMXJAxAZ9NL
+         rOri6Y6EQ0ZBpdrucsic1PNOat0LDsc7bgp/tkYl7E9aEXu6GbyM0Im6zpwd6DJKH+dD
+         PT1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=GtP40NBc6K+wY7TevCqJVJVyGGxw6eyhk3x6njvRZbI=;
-        b=e1w9kBk6eNzLv6L7JJ6Pb8Xlgk+vANhKKF1LKpsSxvCQLADuWybXg22xFW+e6SEDsf
-         leIBpt3osE0kuMywqSP9I7lcu52C5tkpqBg1orpXChusR1+Vj2v0V9NogTNq3wnctazz
-         W4TmAJvkNHEjvLFgAKs5+ahdTD120Slqtt5QCeyCMj8g05UlF4FZybg2dZz1xJE678MT
-         Ac374dyCEYptGaNiZPUynTlRk0QxrqKSHWtsmY/B636yopYtsEIo+af1ZlaUB1B2K5O4
-         0eYBQPSnKCNM9o/D5QHlGv7wA4ZgKAjuLonN6IYNGe+Vf9knZY7dsCjed53L9KYwJbSN
-         3J/A==
-X-Gm-Message-State: AGi0PubftgRn5F8Rs0cze4FF3XYXgFgGqu0xXWMM6z199HiQ5RUgTIyQ
-        mu6ls4NwB3wAjY3Muvt4GwTcQQ==
-X-Google-Smtp-Source: APiQypL5W5g7xmsU3GZXO1UecYYPwVLK1dPD412glciRM3pdZ8NSkRu/LjnNHn8Pg6Fxg4L/cgCpIw==
-X-Received: by 2002:a62:dd48:: with SMTP id w69mr10144721pff.86.1586824199909;
-        Mon, 13 Apr 2020 17:29:59 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id g11sm10055136pjs.17.2020.04.13.17.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 17:29:59 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 17:29:58 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Waiman Long <longman@redhat.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
-Message-ID: <alpine.DEB.2.21.2004131729410.260270@chino.kir.corp.google.com>
-References: <20200413211550.8307-1-longman@redhat.com> <20200413211550.8307-2-longman@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
+        b=eDNIZUAPHiYKE0RMfKO3Ud7dY6cgfNcquZSRJKuw843xXgRh2+cVOX4u9HXq0YvIt4
+         /5aDZpXPCoG+TG3BIAUaOqS10oXStqbWSF3UIxN6SsDXHPKtktD70+6X9AhjqqLvI0TH
+         6Nj4eKP95nsFtp5RiMkcyCd116eHf+71DWK7oIt9J4A2HRjBckZK/ZEOzFalxwpeNmBr
+         lPqG+4up+fP/613XtpAvrzyojB2fsr7QTiJ6MtDgmj+ybXcXa5vqRqtS3QDgby+y4rdP
+         dxXafcRosJRaAH/rXYtOGTnDV3Po+ULzKAz03tpNbjFda0zwQJ+xMn7EtwksGlpO/s6K
+         dRhw==
+X-Gm-Message-State: AGi0PuYJ1QG01blnApoVL1QNvC4YZalSEEvnyPrJFPH8QxZXvR+qnc3l
+        VTw6In2TKWgT5Woq5w5U/TMXG2WOm+UJiF5jhkXR45Cd
+X-Google-Smtp-Source: APiQypIcccZX6FgExHTpUgHvvHh5LMPDLG+hilm7yJjaE8lpm5gSqgSU+a+4KO0VwFPvF16dB7XLOKXGMlciYxuN/C0=
+X-Received: by 2002:a92:394d:: with SMTP id g74mr19906784ila.250.1586833229197;
+ Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
+ <CAOQ4uxhPKR34cXvWfF49z8mTGJm+oP2ibfohsXNdY7tXaOi4RA@mail.gmail.com>
+ <CABV8kRxVA0j2qLkyWx+vULh2DxK2Ef4nPk-zXCikN8XmdBOFgQ@mail.gmail.com>
+ <CAOQ4uxh2KKwORLC+gWEF=mWzBa3Kh4A4HgRoiad5N5qu06xjcg@mail.gmail.com> <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
+In-Reply-To: <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 14 Apr 2020 06:00:17 +0300
+Message-ID: <CAOQ4uxj1csY-Vn2suFZMseEZgvAZzhQ82TR+XtDRQ=cOzwvzzw@mail.gmail.com>
+Subject: Re: Same mountpoint restriction in FICLONE ioctls
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Steve French <smfrench@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 13 Apr 2020, Waiman Long wrote:
+On Mon, Apr 13, 2020 at 10:40 PM Keno Fischer <keno@juliacomputing.com> wrote:
+>
+> > You make it sound like the heuristic decision must be made
+> > *after* trying to clone, but it can be made before and pass
+> > flags to the kernel whether or to fallback to copy.
+>
+> True, though I simplified slightly. There's other things we try
+> first if the clone fails, like creating a hardlink. If cloning fails,
+> we also often only want to copy a part of the file (again
+> heuristically, whether more than what the program asked
+> for will be useful for debugging)
 
-> As said by Linus:
-> 
->   A symmetric naming is only helpful if it implies symmetries in use.
->   Otherwise it's actively misleading.
-> 
->   In "kzalloc()", the z is meaningful and an important part of what the
->   caller wants.
-> 
->   In "kzfree()", the z is actively detrimental, because maybe in the
->   future we really _might_ want to use that "memfill(0xdeadbeef)" or
->   something. The "zero" part of the interface isn't even _relevant_.
-> 
-> The main reason that kzfree() exists is to clear sensitive information
-> that should not be leaked to other future users of the same memory
-> objects.
-> 
-> Rename kzfree() to kfree_sensitive() to follow the example of the
-> recently added kvfree_sensitive() and make the intention of the API
-> more explicit. In addition, memzero_explicit() is used to clear the
-> memory to make sure that it won't get optimized away by the compiler.
-> 
-> The renaming is done by using the command sequence:
-> 
->   git grep -w --name-only kzfree |\
->   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
-> 
-> followed by some editing of the kfree_sensitive() kerneldoc and the
-> use of memzero_explicit() instead of memset().
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+Fair enough.
 
-Acked-by: David Rientjes <rientjes@google.com>
+>
+> > copy_file_range(2) has an unused flags argument.
+> > Adding support for flags like:
+> > COPY_FILE_RANGE_BY_FS
+> > COPY_FILE_RANGE_BY_KERNEL
+>
+> That would solve it of course, and I'd be happy with that
+> solution, but it seems like we'd end up with just another
+> spelling for the cloning ioctls then that have subtly different
+> semantics.
+>
+
+Yeh. Another spelling is a common way to change behavior.
+In fact, it is the only way if you want to avoid changing behavior
+of existing application.
+
+Generally speaking, syscall interface is an improvement over ioctl
+interface. Flags like:
+COPY_FILE_RANGE_REFLINK
+COPY_FILE_RANGE_NO_XDEV
+along with proper documentation, can help make the change of behavior
+explicit. The flags mentioned above would describe the existing
+FICLONERANGE semantics.
+
+But the thing is that the above is not just a fancy maneuver for relaxing the
+same mnt restriction of FICLONERANGE.
+I believe that enhancing the semantics of copy_file_range(2) has benefits
+beyond your use case.
+copy tools could make use of nfs/cifs server side copy without falling back
+to kernel copy.
+
+Thanks,
+Amir.
