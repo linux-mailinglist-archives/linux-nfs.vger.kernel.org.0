@@ -2,115 +2,282 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80E501A7162
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 05:00:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 038441A7358
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 08:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404349AbgDNDAa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Apr 2020 23:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404224AbgDNDAa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Apr 2020 23:00:30 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3EA0C0A3BDC;
-        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f82so7217850ilh.8;
-        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
-        b=PFv2e/MWAiprnN1BhiBDycrqJD137NITfKgcM7yyJdOWGGyV+BAY02xot6sVwbHfU+
-         uEptpiXO+doA8o30kbNcrmXTY7DmbhUtqjkyGQvFPMGlRMzVxd7tnHfoBetxg4uq/0Vw
-         BmRav/H54feN1KZotQw7H6sgqxeWFmzHa/5DgwsiS05E6rcS52FCF8fGHL290i5nf5M3
-         U8imVjIi/3FUdqzyBELP7Dlg06lKzJtiiWkcFt09N+wzhCSOwLoGA5sAdqMXJAxAZ9NL
-         rOri6Y6EQ0ZBpdrucsic1PNOat0LDsc7bgp/tkYl7E9aEXu6GbyM0Im6zpwd6DJKH+dD
-         PT1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
-        b=eDNIZUAPHiYKE0RMfKO3Ud7dY6cgfNcquZSRJKuw843xXgRh2+cVOX4u9HXq0YvIt4
-         /5aDZpXPCoG+TG3BIAUaOqS10oXStqbWSF3UIxN6SsDXHPKtktD70+6X9AhjqqLvI0TH
-         6Nj4eKP95nsFtp5RiMkcyCd116eHf+71DWK7oIt9J4A2HRjBckZK/ZEOzFalxwpeNmBr
-         lPqG+4up+fP/613XtpAvrzyojB2fsr7QTiJ6MtDgmj+ybXcXa5vqRqtS3QDgby+y4rdP
-         dxXafcRosJRaAH/rXYtOGTnDV3Po+ULzKAz03tpNbjFda0zwQJ+xMn7EtwksGlpO/s6K
-         dRhw==
-X-Gm-Message-State: AGi0PuYJ1QG01blnApoVL1QNvC4YZalSEEvnyPrJFPH8QxZXvR+qnc3l
-        VTw6In2TKWgT5Woq5w5U/TMXG2WOm+UJiF5jhkXR45Cd
-X-Google-Smtp-Source: APiQypIcccZX6FgExHTpUgHvvHh5LMPDLG+hilm7yJjaE8lpm5gSqgSU+a+4KO0VwFPvF16dB7XLOKXGMlciYxuN/C0=
-X-Received: by 2002:a92:394d:: with SMTP id g74mr19906784ila.250.1586833229197;
- Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
+        id S2405783AbgDNGIn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Apr 2020 02:08:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51680 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405711AbgDNGIj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 14 Apr 2020 02:08:39 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 491Zmc64yLz9txkH;
+        Tue, 14 Apr 2020 08:08:32 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=swLCNyX7; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 4yni2YpdXT3P; Tue, 14 Apr 2020 08:08:32 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491Zmc4L0Rz9txkG;
+        Tue, 14 Apr 2020 08:08:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586844512; bh=AyML/oaUiIiNPJKHTIdsIrbz6fYQpNyy/73cMAJtVGI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=swLCNyX719PsbdWXJyAjua3tpVkuZHN/PgaRAzIUI6j3FuSDm374UPnlGZYSrGzxT
+         ndt6dm09KOl8ksmzmfqqYKRuIRIOuM5gK03jv/9oM2sodvHG7ZsAdW0K43bNG1m7AR
+         C9uF0GCYNnsgDDdT0CCsxA/cfFfbv77mzxAhptqM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B4A48B77D;
+        Tue, 14 Apr 2020 08:08:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IsbJC8uJ2iOV; Tue, 14 Apr 2020 08:08:33 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 997728B752;
+        Tue, 14 Apr 2020 08:08:30 +0200 (CEST)
+Subject: Re: [PATCH v2 2/2] crypto: Remove unnecessary memzero_explicit()
+To:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200413211550.8307-1-longman@redhat.com>
+ <20200413222846.24240-1-longman@redhat.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
+Date:   Tue, 14 Apr 2020 08:08:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
- <CAOQ4uxhPKR34cXvWfF49z8mTGJm+oP2ibfohsXNdY7tXaOi4RA@mail.gmail.com>
- <CABV8kRxVA0j2qLkyWx+vULh2DxK2Ef4nPk-zXCikN8XmdBOFgQ@mail.gmail.com>
- <CAOQ4uxh2KKwORLC+gWEF=mWzBa3Kh4A4HgRoiad5N5qu06xjcg@mail.gmail.com> <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
-In-Reply-To: <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 14 Apr 2020 06:00:17 +0300
-Message-ID: <CAOQ4uxj1csY-Vn2suFZMseEZgvAZzhQ82TR+XtDRQ=cOzwvzzw@mail.gmail.com>
-Subject: Re: Same mountpoint restriction in FICLONE ioctls
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Steve French <smfrench@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200413222846.24240-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:40 PM Keno Fischer <keno@juliacomputing.com> wrote:
->
-> > You make it sound like the heuristic decision must be made
-> > *after* trying to clone, but it can be made before and pass
-> > flags to the kernel whether or to fallback to copy.
->
-> True, though I simplified slightly. There's other things we try
-> first if the clone fails, like creating a hardlink. If cloning fails,
-> we also often only want to copy a part of the file (again
-> heuristically, whether more than what the program asked
-> for will be useful for debugging)
 
-Fair enough.
 
->
-> > copy_file_range(2) has an unused flags argument.
-> > Adding support for flags like:
-> > COPY_FILE_RANGE_BY_FS
-> > COPY_FILE_RANGE_BY_KERNEL
->
-> That would solve it of course, and I'd be happy with that
-> solution, but it seems like we'd end up with just another
-> spelling for the cloning ioctls then that have subtly different
-> semantics.
->
+Le 14/04/2020 à 00:28, Waiman Long a écrit :
+> Since kfree_sensitive() will do an implicit memzero_explicit(), there
+> is no need to call memzero_explicit() before it. Eliminate those
+> memzero_explicit() and simplify the call sites. For better correctness,
+> the setting of keylen is also moved down after the key pointer check.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>   .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 19 +++++-------------
+>   .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 20 +++++--------------
+>   drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 12 +++--------
+>   drivers/crypto/inside-secure/safexcel_hash.c  |  3 +--
+>   4 files changed, 14 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> index aa4e8fdc2b32..8358fac98719 100644
+> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> @@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
+>   {
+>   	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+>   
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> +	kfree_sensitive(op->key);
+>   	crypto_free_sync_skcipher(op->fallback_tfm);
+>   	pm_runtime_put_sync_suspend(op->ce->dev);
+>   }
+> @@ -391,14 +388,11 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>   		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
+>   		return -EINVAL;
+>   	}
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> -	op->keylen = keylen;
+> +	kfree_sensitive(op->key);
+>   	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>   	if (!op->key)
+>   		return -ENOMEM;
+> +	op->keylen = keylen;
 
-Yeh. Another spelling is a common way to change behavior.
-In fact, it is the only way if you want to avoid changing behavior
-of existing application.
+Does it matter at all to ensure op->keylen is not set when of->key is 
+NULL ? I'm not sure.
 
-Generally speaking, syscall interface is an improvement over ioctl
-interface. Flags like:
-COPY_FILE_RANGE_REFLINK
-COPY_FILE_RANGE_NO_XDEV
-along with proper documentation, can help make the change of behavior
-explicit. The flags mentioned above would describe the existing
-FICLONERANGE semantics.
+But if it does, then op->keylen should be set to 0 when freeing op->key.
 
-But the thing is that the above is not just a fancy maneuver for relaxing the
-same mnt restriction of FICLONERANGE.
-I believe that enhancing the semantics of copy_file_range(2) has benefits
-beyond your use case.
-copy tools could make use of nfs/cifs server side copy without falling back
-to kernel copy.
+>   
+>   	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+>   	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+> @@ -416,14 +410,11 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>   	if (err)
+>   		return err;
+>   
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> -	op->keylen = keylen;
+> +	kfree_sensitive(op->key);
+>   	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>   	if (!op->key)
+>   		return -ENOMEM;
+> +	op->keylen = keylen;
 
-Thanks,
-Amir.
+Same comment as above.
+
+>   
+>   	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+>   	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+> diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> index 5246ef4f5430..0495fbc27fcc 100644
+> --- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> +++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> @@ -249,7 +249,6 @@ static int sun8i_ss_cipher(struct skcipher_request *areq)
+>   			offset = areq->cryptlen - ivsize;
+>   			if (rctx->op_dir & SS_DECRYPTION) {
+>   				memcpy(areq->iv, backup_iv, ivsize);
+> -				memzero_explicit(backup_iv, ivsize);
+>   				kfree_sensitive(backup_iv);
+>   			} else {
+>   				scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+> @@ -367,10 +366,7 @@ void sun8i_ss_cipher_exit(struct crypto_tfm *tfm)
+>   {
+>   	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+>   
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> +	kfree_sensitive(op->key);
+>   	crypto_free_sync_skcipher(op->fallback_tfm);
+>   	pm_runtime_put_sync(op->ss->dev);
+>   }
+> @@ -392,14 +388,11 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>   		dev_dbg(ss->dev, "ERROR: Invalid keylen %u\n", keylen);
+>   		return -EINVAL;
+>   	}
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> -	op->keylen = keylen;
+> +	kfree_sensitive(op->key);
+>   	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>   	if (!op->key)
+>   		return -ENOMEM;
+> +	op->keylen = keylen;
+
+Same comment as above.
+
+>   
+>   	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+>   	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+> @@ -418,14 +411,11 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>   		return -EINVAL;
+>   	}
+>   
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> -	op->keylen = keylen;
+> +	kfree_sensitive(op->key);
+>   	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>   	if (!op->key)
+>   		return -ENOMEM;
+> +	op->keylen = keylen;
+
+Same comment as above.
+
+>   
+>   	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+>   	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+> diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> index fd1269900d67..6aa9ce7bbbd4 100644
+> --- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> +++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> @@ -341,10 +341,7 @@ void meson_cipher_exit(struct crypto_tfm *tfm)
+>   {
+>   	struct meson_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+>   
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> +	kfree_sensitive(op->key);
+>   	crypto_free_sync_skcipher(op->fallback_tfm);
+>   }
+>   
+> @@ -368,14 +365,11 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>   		dev_dbg(mc->dev, "ERROR: Invalid keylen %u\n", keylen);
+>   		return -EINVAL;
+>   	}
+> -	if (op->key) {
+> -		memzero_explicit(op->key, op->keylen);
+> -		kfree(op->key);
+> -	}
+> -	op->keylen = keylen;
+> +	kfree_sensitive(op->key);
+>   	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>   	if (!op->key)
+>   		return -ENOMEM;
+> +	op->keylen = keylen;
+
+Same comment as above.
+
+>   
+>   	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
+>   }
+> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
+> index 43962bc709c6..4a2d162914de 100644
+> --- a/drivers/crypto/inside-secure/safexcel_hash.c
+> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
+> @@ -1081,8 +1081,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
+>   		}
+>   
+>   		/* Avoid leaking */
+> -		memzero_explicit(keydup, keylen);
+> -		kfree(keydup);
+> +		kfree_sensitive(keydup);
+>   
+>   		if (ret)
+>   			return ret;
+> 
+
+
+Christophe
