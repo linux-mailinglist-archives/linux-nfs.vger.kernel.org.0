@@ -2,158 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACA461A84BE
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 18:26:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBCF1A88BC
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2020 20:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391479AbgDNQZv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Apr 2020 12:25:51 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42513 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391475AbgDNQZF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Apr 2020 12:25:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586881500;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yW8t58m2bp1NhazlqC7/k8J+nPWsrZBYDWUsjTyk2qQ=;
-        b=FjbGTECJfZsMnE9+A9oMfnoEDVqb3ysBa861htGWRU+yidk9RoBOD7o2an4hkB7oIpWOgU
-        vVbUHCEpGia52lD8Kq9lm1U1hWrXd6qGyBfR3aQofT39nCULd18fees8sV9+P645czW0dp
-        ksD6uFV6/0qe4NYZLXR8UuNcX844jPg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-m_CJjLwlPvyXxruKyZ4cKA-1; Tue, 14 Apr 2020 12:24:56 -0400
-X-MC-Unique: m_CJjLwlPvyXxruKyZ4cKA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2503527AbgDNSL4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Apr 2020 14:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503521AbgDNSLv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:11:51 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12123107ACC4;
-        Tue, 14 Apr 2020 16:24:50 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E02D118DEE;
-        Tue, 14 Apr 2020 16:24:36 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] crypto: Remove unnecessary memzero_explicit()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413222846.24240-1-longman@redhat.com>
- <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <e194a51f-a5e5-a557-c008-b08cac558572@redhat.com>
-Date:   Tue, 14 Apr 2020 12:24:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id E40B220767;
+        Tue, 14 Apr 2020 18:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586887910;
+        bh=PXyEm7hJ8M3gDvk5QS/Bwpkh+X2oP5lM7oQmHn/oohM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uwkg7EcBmDByFE6ub/7Cx3FrX4bOqN9fJi79Rin1bc9rhyf+Dtj5hGHES4sOFObDl
+         uMurHGzZLefYtz9IrdKOnK6apNl7y6mK050DsVK1LE+qzRYWABZwEc3tyMAllmoGQF
+         0i5Z64usbhFbnI9bFmrJw4yR9RLJfPLB80uIMbY8=
+Date:   Tue, 14 Apr 2020 21:11:41 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] svcrdma: Fix leak of svc_rdma_recv_ctxt objects
+Message-ID: <20200414181141.GA1239315@unreal>
+References: <20200407190938.24045.64947.stgit@klimt.1015granger.net>
+ <20200407191106.24045.88035.stgit@klimt.1015granger.net>
+ <20200408060242.GB3310@unreal>
+ <D3CFDCAA-589C-4B3F-B769-099BF775D098@oracle.com>
+ <20200409174750.GK11886@ziepe.ca>
+ <20200413192907.GA23596@fieldses.org>
+ <20200414121931.GA5100@ziepe.ca>
+ <20200414151303.GA9796@fieldses.org>
+ <20200414152016.GE5100@ziepe.ca>
+ <20200414161744.GB9796@fieldses.org>
 MIME-Version: 1.0
-In-Reply-To: <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414161744.GB9796@fieldses.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4/14/20 2:08 AM, Christophe Leroy wrote:
+On Tue, Apr 14, 2020 at 12:17:44PM -0400, J. Bruce Fields wrote:
+> On Tue, Apr 14, 2020 at 12:20:16PM -0300, Jason Gunthorpe wrote:
+> > On Tue, Apr 14, 2020 at 11:13:03AM -0400, J. Bruce Fields wrote:
+> > > On Tue, Apr 14, 2020 at 09:19:31AM -0300, Jason Gunthorpe wrote:
+> > > > On Mon, Apr 13, 2020 at 03:29:07PM -0400, J. Bruce Fields wrote:
+> > > > > On Thu, Apr 09, 2020 at 02:47:50PM -0300, Jason Gunthorpe wrote:
+> > > > > > On Thu, Apr 09, 2020 at 10:33:32AM -0400, Chuck Lever wrote:
+> > > > > > > The commit ID is what automation should key off of. The short
+> > > > > > > description is only for human consumption.
+> > > > > >
+> > > > > > Right, so if the actual commit message isn't included so humans can
+> > > > > > read it then what was the point of including anything?
+> > > > >
+> > > > > Personally as a human reading commits in a terminal window I prefer the
+> > > > > abbreviated form.
+> > > >
+> > > > Frankly, I think they are useless, picking one of yours at random:
+> > > >
+> > > >     Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+> > > >
+> > > > And sadly the '4e48f1cccab3' commit doesn't appear in Linus's tree so
+> > >
+> > > Ow, apologies.  Looks like I rebased after writing that Fixes tag.
+> > >
+> > > I wonder if it's possible to make git warn....
+> > >
+> > > Looks like a pre-rebase hook could check the branch being rebased for
+> > > "Fixes:" lines referencing commits on the rebased branch.
+> >
+> > I have some silly stuff to check patches before pushing them and it
+> > includes checking the fixes lines because they are very often
+> > wrong, both with wrong commit IDs and wrong subjects!
 >
->
-> Le 14/04/2020 =C3=A0 00:28, Waiman Long a =C3=A9crit=C2=A0:
->> Since kfree_sensitive() will do an implicit memzero_explicit(), there
->> is no need to call memzero_explicit() before it. Eliminate those
->> memzero_explicit() and simplify the call sites. For better correctness=
-,
->> the setting of keylen is also moved down after the key pointer check.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->> =C2=A0 .../allwinner/sun8i-ce/sun8i-ce-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 19 +++++-------------
->> =C2=A0 .../allwinner/sun8i-ss/sun8i-ss-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 20 +++++--------------
->> =C2=A0 drivers/crypto/amlogic/amlogic-gxl-cipher.c=C2=A0=C2=A0 | 12 ++=
-+--------
->> =C2=A0 drivers/crypto/inside-secure/safexcel_hash.c=C2=A0 |=C2=A0 3 +-=
--
->> =C2=A0 4 files changed, 14 insertions(+), 40 deletions(-)
->>
->> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> index aa4e8fdc2b32..8358fac98719 100644
->> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> @@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
->> =C2=A0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sun8i_cipher_tfm_ctx *op =3D cry=
-pto_tfm_ctx(tfm);
->> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (op->key) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
-op->keylen);
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
->> -=C2=A0=C2=A0=C2=A0 }
->> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 crypto_free_sync_skcipher(op->fallback_=
-tfm);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_put_sync_suspend(op->ce->dev=
-);
->> =C2=A0 }
->> @@ -391,14 +388,11 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher
->> *tfm, const u8 *key,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(ce->dev=
-, "ERROR: Invalid keylen %u\n", keylen);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> -=C2=A0=C2=A0=C2=A0 if (op->key) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
-op->keylen);
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
->> -=C2=A0=C2=A0=C2=A0 }
->> -=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
->> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 op->key =3D kmemdup(key, keylen, GFP_KE=
-RNEL | GFP_DMA);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!op->key)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
->> +=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
->
-> Does it matter at all to ensure op->keylen is not set when of->key is
-> NULL ? I'm not sure.
->
-> But if it does, then op->keylen should be set to 0 when freeing op->key=
-.=20
+> I'd be interested in seeing it.
 
-My thinking is that if memory allocation fails, we just don't touch
-anything and return an error code. I will not explicitly set keylen to 0
-in this case unless it is specified in the API documentation.
+checkpatch.pl checks it or supposed to check.
 
-Cheers,
-Longman
+commit a8dd86bf746256fbf68f82bc13356244c5ad8efa
+Author: Matteo Croce <mcroce@redhat.com>
+Date:   Wed Sep 25 16:46:38 2019 -0700
 
+    checkpatch.pl: warn on invalid commit id
+
+    It can happen that a commit message refers to an invalid commit id,
+    because the referenced hash changed following a rebase, or simply by
+    mistake.  Add a check in checkpatch.pl which checks that an hash
+    referenced by a Fixes tag, or just cited in the commit message, is a valid
+    commit id.
+
+        $ scripts/checkpatch.pl <<'EOF'
+        Subject: [PATCH] test commit
+
+        Sample test commit to test checkpatch.pl
+        Commit 1da177e4c3f4 ("Linux-2.6.12-rc2") really exists,
+        commit 0bba044c4ce7 ("tree") is valid but not a commit,
+        while commit b4cc0b1c0cca ("unknown") is invalid.
+
+        Fixes: f0cacc14cade ("unknown")
+        Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+        EOF
+        WARNING: Unknown commit id '0bba044c4ce7', maybe rebased or not pulled?
+        #8:
+        commit 0bba044c4ce7 ("tree") is valid but not a commit,
+
+        WARNING: Unknown commit id 'b4cc0b1c0cca', maybe rebased or not pulled?
+        #9:
+        while commit b4cc0b1c0cca ("unknown") is invalid.
+
+        WARNING: Unknown commit id 'f0cacc14cade', maybe rebased or not pulled?
+        #11:
+        Fixes: f0cacc14cade ("unknown")
+
+        total: 0 errors, 3 warnings, 4 lines checked
+
+    Link: http://lkml.kernel.org/r/20190711001640.13398-1-mcroce@redhat.com
+    Signed-off-by: Matteo Croce <mcroce@redhat.com>
+    Cc: Joe Perches <joe@perches.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
