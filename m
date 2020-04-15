@@ -2,131 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 419BC1A9236
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 07:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3171A991D
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 11:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389286AbgDOFBi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 01:01:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393193AbgDOFBM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 01:01:12 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802D6C03C1A8
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Apr 2020 22:01:09 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id 37so1088731qvc.8
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Apr 2020 22:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ef3HLI/XX5ogd42JRuoGnEbb/Ln3ZxgvuLj5jaeUWkI=;
-        b=Tcxzc6xC3iVTZShTUf3CIv3N8B5ZyCbru12fLV5+tpVooL5/Bo3MM2R4w1+y/qKNnw
-         9lu0zJBRs+VK1Bc14YzwiZC+K/efs95VT8GzxaoJoz3t2WhfDZxWX+BgsMNU20r8wRPv
-         WS98QN/V8NZIzymtO0juNqdA9Tg6/2OTyjU7Zm1KL9ejebzf7wo1d0uOEsRrlg17M8fg
-         qYmffi6H6MwGLJe4epZjwPPvjWIdIXS0xtejpuhYYUqQSrz2GfoywvJh6tC6sCJVyKe7
-         xzOQhWdIv/o82YQJCk9DtMPUw2B8iLWuNwugd4l1OepDEbLixuOHRPHRALsrInJO+Rsn
-         o1og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ef3HLI/XX5ogd42JRuoGnEbb/Ln3ZxgvuLj5jaeUWkI=;
-        b=k0WejjIBc6QqWmlWlvBxBqHD8js8RDfgVcwVi6tKr+jgLTJqyCZwVNsGM9CWquCJKr
-         merc4Xz1i98+E8vMT8YNAmw1NZEfPh8E6/vSlUZ1IRqhYdk5ZnNsSCzpOBNLBJuugdgH
-         3uwoYTDwArsUsPGnPht5CIaosoDo0djOnLfqSCB5+qrUhfSJjLcN4Ne/BFH+NDefZEtw
-         +eJS2D4aSOKoaSEmc2QPuHQJZU+jmlBbb6eCsc12OVE8CoRoC2E8jIBYrnl0cdp7WLSo
-         GcUAZS4LT4rn0PbFwOPgI1ewUNImdpV/qCUgteWeGV5Vvrm0aEp+8DXJlBVAJSYqTjmp
-         aY3A==
-X-Gm-Message-State: AGi0PuY9sjHv0d1sHsVUkJPAHJ0d20UtNYkbFJ94mYGtwnCXRD30TIp0
-        borbqp2xBcJqQeVbTEwsH5Q/Wg==
-X-Google-Smtp-Source: APiQypJRjg+PyUSZjrIkjpxdMfgyPb9bMEWnffTFRMxoE1aQMUITXzNurR0P/0BN6q0H0W5xTyhSBA==
-X-Received: by 2002:a0c:e88d:: with SMTP id b13mr3243342qvo.245.1586926868219;
-        Tue, 14 Apr 2020 22:01:08 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e623])
-        by smtp.gmail.com with ESMTPSA id 10sm6168833qtp.4.2020.04.14.22.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 22:01:07 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 01:01:06 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-Message-ID: <20200415050106.GA154671@cmpxchg.org>
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com>
+        id S2895710AbgDOJjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 05:39:23 -0400
+Received: from smtp-o-2.desy.de ([131.169.56.155]:48188 "EHLO smtp-o-2.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895690AbgDOJjV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:39:21 -0400
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id D4283160778
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de D4283160778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1586943556; bh=xrURf8aMpSJGTGLubuCcf69I263xbUFCf/wrrboNeNE=;
+        h=Date:From:To:Subject:From;
+        b=ywWnH99Xp3RIZ7EFjgwzRhwcGLZD6IaklrTBQKbciOmZa4SW/b9yzz9YhmHY9F7dy
+         Ur9aN5f7HzIvdptLSvfFAFCAQl8zat22e80eZZgWJIfWnMHQlmuJLrUEIdKrC5CZWq
+         ll5dQrR8/vNHIeKq3Wx3f7Ti59CGJpL/U3SHck1c=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id D039E1A0101
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id A93A4C008A
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <563971101.12407489.1586943556660.JavaMail.zimbra@desy.de>
+Subject: multiple EXCHANGE_ID diring a mount.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Index: noP7bN9i69FFVyqBi2IgCdXjpu5SMA==
+Thread-Topic: multiple EXCHANGE_ID diring a mount.
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
-> As said by Linus:
-> 
->   A symmetric naming is only helpful if it implies symmetries in use.
->   Otherwise it's actively misleading.
 
-As the btrfs example proves - people can be tempted by this false
-symmetry to pair kzalloc with kzfree, which isn't what we wanted.
 
->   In "kzalloc()", the z is meaningful and an important part of what the
->   caller wants.
-> 
->   In "kzfree()", the z is actively detrimental, because maybe in the
->   future we really _might_ want to use that "memfill(0xdeadbeef)" or
->   something. The "zero" part of the interface isn't even _relevant_.
-> 
-> The main reason that kzfree() exists is to clear sensitive information
-> that should not be leaked to other future users of the same memory
-> objects.
-> 
-> Rename kzfree() to kfree_sensitive() to follow the example of the
-> recently added kvfree_sensitive() and make the intention of the API
-> more explicit. In addition, memzero_explicit() is used to clear the
-> memory to make sure that it won't get optimized away by the compiler.
-> 
-> The renaming is done by using the command sequence:
-> 
->   git grep -w --name-only kzfree |\
->   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
-> 
-> followed by some editing of the kfree_sensitive() kerneldoc and the
-> use of memzero_explicit() instead of memset().
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+Dear NFS (client) developers,
 
-Looks good to me. Thanks for fixing this very old mistake.
+Today I notice, that during mount nfs client sends two  EXCHANGE_ID operati=
+ons:
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+
+    4 0.000380551 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 NULL Cal=
+l
+    6 0.001052087 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 NULL Rep=
+ly (Call In 4)
+    8 0.001501687 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call EXC=
+HANGE_ID
+    9 0.002105356 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
+all In 8) EXCHANGE_ID
+   11 0.002489297 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call EXC=
+HANGE_ID <----------------------------------- A second one
+   12 0.003422630 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
+all In 11) EXCHANGE_ID
+   14 0.003569542 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call CRE=
+ATE_SESSION
+   17 0.004701642 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
+all In 14) CREATE_SESSION
+   18 0.004822235 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call REC=
+LAIM_COMPLETE
+   19 0.005317324 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
+all In 18) RECLAIM_COMPLETE
+   20 0.005489908 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call SEC=
+INFO_NO_NAME
+   21 0.006648815 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
+all In 20) SECINFO_NO_NAME
+
+
+I observe this with kernel 5.6 and 5.5. On opposite, the older kernels, lik=
+e in RHEL7 don't do this
+
+Older kernel (3.10.0-1062.12.1.el7.x86_64)
+
+$ tshark -r ex_id_el7.pcap -Y nfs
+  8 0.006731652 131.169.240.106 -> 131.169.240.145 NFS 336 V4 Call EXCHANGE=
+_ID
+  9 0.008812988 131.169.240.145 -> 131.169.240.106 NFS 224 V4 Reply (Call I=
+n 8) EXCHANGE_ID
+ 10 0.009127689 131.169.240.106 -> 131.169.240.145 NFS 292 V4 Call CREATE_S=
+ESSION
+ 13 0.012583411 131.169.240.145 -> 131.169.240.106 NFS 196 V4 Reply (Call I=
+n 10) CREATE_SESSION
+ 14 0.012805867 131.169.240.106 -> 131.169.240.145 NFS 208 V4 Call RECLAIM_=
+COMPLETE
+ 15 0.013716790 131.169.240.145 -> 131.169.240.106 NFS 160 V4 Reply (Call I=
+n 14) RECLAIM_COMPLETE
+ 16 0.013981538 131.169.240.106 -> 131.169.240.145 NFS 216 V4 Call SECINFO_=
+NO_NAME
+ 17 0.019359329 131.169.240.145 -> 131.169.240.106 NFS 176 V4 Reply (Call I=
+n 16) SECINFO_NO_NAME
+
+
+This is of course not a big problem, but can point to an unintended change =
+or error. The capture
+file available at:
+
+https://sas.desy.de/index.php/s/3sRA9WD5BEpZH7z
+
+Regards,
+   Tigran.
