@@ -2,173 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 504B41AB245
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 22:06:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B55D1AB260
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 22:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406557AbgDOUG1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 16:06:27 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47522 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406385AbgDOUGZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:06:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FK4IDq189273;
-        Wed, 15 Apr 2020 20:06:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=e4dRUu2wgTZTB/ox2huWaCLoCqjAmEMWUdAH01eCSZU=;
- b=p1W20aHmBDxvd1bIigDUXhVP7yQWIwfpSHRb0C/xj/OweGQ7AM7Mr1oY1Sbzc7E/B7Vh
- 22iO+Y4trDWOfEELpg0/McoXPrSIum4MYPNBJZxhVLbnQs37mtbTv/ugnWGTWmeF1ibx
- QFYfJOpRQ9Uaahyts0xueuQMmD7NC2q3RAefVOLKhUdJzB8AP5AYRR/22nHeGYAhBW7V
- FoDcM7EwcAG6L7ri+8I9LEBdnnEr8K4Ca90W6G6aAlqDmcI/P6ghNTIlXPL+DAUYqt5B
- KOOlg5QikxmHFXyPI2A0ur3SXdFeJMjGgvvxHhNL5SuW5ytH75SIlHS42x8YaLDtfgQ6 hA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30dn95nkp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 20:06:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FK26pq180451;
-        Wed, 15 Apr 2020 20:06:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30dn9cw341-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 20:06:20 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03FK6Imk024647;
-        Wed, 15 Apr 2020 20:06:19 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Apr 2020 13:06:18 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: GSS unwrapping breaks the DRC
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200415192542.GA6466@fieldses.org>
-Date:   Wed, 15 Apr 2020 16:06:17 -0400
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0775FBE7-C2DD-4ED6-955D-22B944F302E0@oracle.com>
-References: <DAED9EC8-7461-48FF-AD6C-C85FB968F8A6@oracle.com>
- <20200415192542.GA6466@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=774 mlxscore=0 adultscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004150149
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=823 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150149
+        id S2441995AbgDOUOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 16:14:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46855 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2441993AbgDOUOv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586981689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=uhLQTt1EhkOR7lKRcEjMAOmv9o1JxeyWPK7wmruvwmE=;
+        b=iALPwY87LbHh43Ieh95HArlTqR/qlbH2csDyPZfjovNPpufuHYwe+FPsy7QyIiUfJz4qCM
+        CV8bxr2xyOQXF+3Pwxvnv/NIGuz6FeRmnRBQeoTMHzsGxvBsSog3PVukPfURKuA5lSbL8E
+        ydhKJkm2yePKSGweX+xdkbeW4lUZnF0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-RKfkgMpFN5eX7c6iKn3Kyg-1; Wed, 15 Apr 2020 16:14:46 -0400
+X-MC-Unique: RKfkgMpFN5eX7c6iKn3Kyg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C62EE8018A2
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 20:14:45 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-112-216.rdu2.redhat.com [10.10.112.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7025C116D88;
+        Wed, 15 Apr 2020 20:14:45 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     dhowells@redhat.com, linux-nfs@vger.kernel.org
+Subject: [PATCH 1/3] NFS: Fix fscache super_cookie index_key from changing after umount
+Date:   Wed, 15 Apr 2020 16:14:41 -0400
+Message-Id: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
+the cookie") added the index_key and index_key_len parameters to
+fscache_acquire_cookie(), and updated the callers in the NFS client.
+One of the callers was inside nfs_fscache_get_super_cookie()
+and was changed to use the full struct nfs_fscache_key as the
+index_key.  However, a couple members of this structure contain
+pointers and thus will change each time the same NFS share is
+remounted.  Since index_key is used for fscache_cookie->key_hash
+and this subsequently is used to compare cookies, the effectiveness
+of fscache with NFS is reduced to the point at which a umount
+occurs.   Any subsequent remount of the same share will cause a
+unique NFS super_block index_key and key_hash to be generated for
+the same data, rendering any prior fscache data unable to be
+found.  A simple reproducer demonstrates the problem.
 
+1. Mount share with 'fsc', create a file, drop page cache
+systemctl start cachefilesd
+mount -o vers=3,fsc 127.0.0.1:/export /mnt
+dd if=/dev/zero of=/mnt/file1.bin bs=4096 count=1
+echo 3 > /proc/sys/vm/drop_caches
 
-> On Apr 15, 2020, at 3:25 PM, Bruce Fields <bfields@fieldses.org> =
-wrote:
->=20
-> On Wed, Apr 15, 2020 at 01:05:11PM -0400, Chuck Lever wrote:
->> Hi Bruce and Jeff:
->>=20
->> Testing intensive workloads with NFSv3 and NFSv4.0 on NFS/RDMA with =
-krb5i
->> or krb5p results in a pretty quick workload failure. Closer =
-examination
->> shows that the client is able to overrun the GSS sequence window with
->> some regularity. When that happens, the server drops the connection.
->>=20
->> However, when the client retransmits requests with lost replies, they
->> never hit in the DRC, and that results in unexpected failures of non-
->> idempotent requests.
->>=20
->> The retransmitted XIDs are found in the DRC, but the retransmitted =
-request
->> has a different checksum than the original. We're hitting the =
-"mismatch"
->> case in nfsd_cache_key_cmp for these requests.
->>=20
->> I tracked down the problem to the way the DRC computes the length of =
-the
->> part of the buffer it wants to checksum. nfsd_cache_csum uses
->>=20
->>  head.iov_len + page_len
->>=20
->> and then caps that at RC_CSUMLEN.
->>=20
->> That works fine for krb5 and sys, but the GSS unwrap functions
->> (integ_unwrap_data and priv_unwrap_data) don't appear to update =
-head.iov_len
->> properly. So nfsd_cache_csum's length computation is significantly =
-larger
->> than the clear-text message, and that allows stale parts of the =
-xdr_buf
->> to be included in the checksum.
->>=20
->> Using xdr_buf_subsegment() at the end of integ_unwrap_data sets the =
-xdr_buf
->> lengths properly and fixes the situation for krb5i.
->>=20
->> I don't see a similar solution for priv_unwrap_data: there's no MIC =
-len
->> available, and priv_len is not the actual length of the clear-text =
-message.
->>=20
->> Moreover, the comment in fix_priv_head() is disturbing. I don't see =
-anywhere
->> where the relationship between the buf's head/len and how svc_defer =
-works is
->> authoritatively documented. It's not clear exactly how =
-priv_unwrap_data is
->> supposed to accommodate svc_defer, or whether integ_unwrap_data also =
-needs
->> to accommodate it.
->>=20
->> So I can't tell if the GSS unwrap functions are wrong or if there's a =
-more
->> accurate way to compute the message length in nfsd_cache_csum. I =
-suspect
->> both could use some improvement, but I'm not certain exactly what =
-that
->> might be.
->=20
-> I don't know, I tried looking through that code and didn't get any
-> further than you.  The gss unwrap code does look suspect to me.  It
-> needs some kind of proper design, as it stands it's just an =
-accumulation
-> of fixes.
+2. Read file into page cache and fscache, then unmount
+dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
+umount /mnt
 
-Having recently completed overhauling the client-side equivalents, I
-agree with you there.
+3. Remount and re-read which should come from fscache
+mount -o vers=3,fsc 127.0.0.1:/export /mnt
+echo 3 > /proc/sys/vm/drop_caches
+dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
 
-I've now convinced myself that because nfsd_cache_csum might need to
-advance into the first page of the Call message, rq_arg.head.iov_len
-must contain an accurate length so that csum_partial is applied
-correctly to the head buffer.
+4. Check for READ ops in mountstats - there should be none
+grep READ: /proc/self/mountstats
 
-Therefore it is the preceding code that needs to set up =
-rq_arg.head.iov_len
-correctly. The GSS unwrap functions have to do this, and therefore these
-must be fixed. I would theorize that svc_defer also depends on =
-head.iov_len
-being set correctly.
+Looking at the history and the removed function, nfs_super_get_key(),
+we should only use nfs_fscache_key.key plus any uniquifier, for
+the fscache index_key.
 
-As far as how rq_arg.len needs to be set for svc_defer, I think I need
-to have some kind of test case to examine how that path is triggered. =
-Any
-advice appreciated.
+Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+---
+ fs/nfs/fscache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
---
-Chuck Lever
-
-
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 1abf126c2df4..8eff1fd806b1 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -188,7 +188,8 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
+ 	/* create a cache index for looking up filehandles */
+ 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
+ 					       &nfs_fscache_super_index_def,
+-					       key, sizeof(*key) + ulen,
++					       &key->key,
++					       sizeof(key->key) + ulen,
+ 					       NULL, 0,
+ 					       nfss, 0, true);
+ 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
+-- 
+1.8.3.1
 
