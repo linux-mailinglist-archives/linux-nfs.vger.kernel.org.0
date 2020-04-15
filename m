@@ -2,111 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D3171A991D
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 11:39:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E864D1A992C
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 11:44:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895710AbgDOJjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 05:39:23 -0400
-Received: from smtp-o-2.desy.de ([131.169.56.155]:48188 "EHLO smtp-o-2.desy.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895690AbgDOJjV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:39:21 -0400
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
-        by smtp-o-2.desy.de (Postfix) with ESMTP id D4283160778
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de D4283160778
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1586943556; bh=xrURf8aMpSJGTGLubuCcf69I263xbUFCf/wrrboNeNE=;
-        h=Date:From:To:Subject:From;
-        b=ywWnH99Xp3RIZ7EFjgwzRhwcGLZD6IaklrTBQKbciOmZa4SW/b9yzz9YhmHY9F7dy
-         Ur9aN5f7HzIvdptLSvfFAFCAQl8zat22e80eZZgWJIfWnMHQlmuJLrUEIdKrC5CZWq
-         ll5dQrR8/vNHIeKq3Wx3f7Ti59CGJpL/U3SHck1c=
-Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
-        by smtp-buf-2.desy.de (Postfix) with ESMTP id D039E1A0101
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-1.desy.de (Postfix) with ESMTP id A93A4C008A
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 11:39:16 +0200 (CEST)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <563971101.12407489.1586943556660.JavaMail.zimbra@desy.de>
-Subject: multiple EXCHANGE_ID diring a mount.
+        id S2895748AbgDOJom (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 05:44:42 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44899 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895749AbgDOJok (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 05:44:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586943878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bKa8snlnDryG0vgt7Fg/rdv6w9fg6r4FpdXiLIxnEdE=;
+        b=AdhJXXlV/+qPI1sD24Ht8F67XLwlJBO5HQHLMOEXl2ug8Qj+ge/0Fw+OxjeIrnmVu1EnW6
+        6K9bcJGYaLfSkrByAVS/QRHEnDxo+i+W6q/PZKxvKQx4YuCiIEoG46uMs5PdsSuiYbcg+p
+        N/0+J5XZqnKr7z8D01qVHjzsu0OueB0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-olUJzS60OsClk0RUhQWf4A-1; Wed, 15 Apr 2020 05:44:34 -0400
+X-MC-Unique: olUJzS60OsClk0RUhQWf4A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 216EB800D5C;
+        Wed, 15 Apr 2020 09:44:33 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-114-61.ams2.redhat.com [10.36.114.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E8D72B479;
+        Wed, 15 Apr 2020 09:44:30 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        keyrings@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+References: <3865908.1586874010@warthog.procyon.org.uk>
+Date:   Wed, 15 Apr 2020 11:44:29 +0200
+In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk> (David Howells's
+        message of "Tue, 14 Apr 2020 15:20:10 +0100")
+Message-ID: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Index: noP7bN9i69FFVyqBi2IgCdXjpu5SMA==
-Thread-Topic: multiple EXCHANGE_ID diring a mount.
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+* David Howells:
 
+> Since key.dns_resolver isn't given a TTL for the address information obta=
+ined
+> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
+> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
+> because that is looked up in the DNS directly, but it doesn't look up A or
+> AAAA records, so doesn't get an expiry for the addresses themselves.
+>
+> I've previously asked the libc folks if there's a way to get this informa=
+tion
+> exposed in struct addrinfo, but I don't think that ended up going anywher=
+e -
+> and, in any case, would take a few years to work through the system.
+>
+> For the moment, I think I should put a default on any dns_resolver keys a=
+nd
+> have it applied either by the kernel (configurable with a /proc/sys/ sett=
+ing)
+> or by the key.dnf_resolver program (configurable with an /etc file).
+>
+> Any suggestion as to the preferred default TTL?  10 minutes?
 
-Dear NFS (client) developers,
+You can get the real TTL if you do a DNS resolution on the name and
+match the addresses against what you get out of the NSS functions.  If
+they match, you can use the TTL from DNS.  Hackish, but it does give you
+*some* TTL value.
 
-Today I notice, that during mount nfs client sends two  EXCHANGE_ID operati=
-ons:
+The question remains what the expected impact of TTL expiry is.  Will
+the kernel just perform a new DNS query if it needs one?  Or would you
+expect that (say) the NFS client rechecks the addresses after TTL expiry
+and if they change, reconnect to a new NFS server?
 
+If a TTL expiration does not trigger anything, than it seems purely an
+optimization to avoid kernel =E2=86=92 userspace callbacks.  I think you ca=
+n do
+with a very short TTL in this case, on the order of seconds (or no
+caching at all).
 
-    4 0.000380551 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 NULL Cal=
-l
-    6 0.001052087 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 NULL Rep=
-ly (Call In 4)
-    8 0.001501687 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call EXC=
-HANGE_ID
-    9 0.002105356 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
-all In 8) EXCHANGE_ID
-   11 0.002489297 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call EXC=
-HANGE_ID <----------------------------------- A second one
-   12 0.003422630 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
-all In 11) EXCHANGE_ID
-   14 0.003569542 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call CRE=
-ATE_SESSION
-   17 0.004701642 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
-all In 14) CREATE_SESSION
-   18 0.004822235 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call REC=
-LAIM_COMPLETE
-   19 0.005317324 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
-all In 18) RECLAIM_COMPLETE
-   20 0.005489908 131.169.185.213 =E2=86=92 131.169.191.144 NFS V4 Call SEC=
-INFO_NO_NAME
-   21 0.006648815 131.169.191.144 =E2=86=92 131.169.185.213 NFS V4 Reply (C=
-all In 20) SECINFO_NO_NAME
+Negative caching is also worthy of consideration and can be considerably
+more tricky.
 
+Thanks,
+Florian
 
-I observe this with kernel 5.6 and 5.5. On opposite, the older kernels, lik=
-e in RHEL7 don't do this
-
-Older kernel (3.10.0-1062.12.1.el7.x86_64)
-
-$ tshark -r ex_id_el7.pcap -Y nfs
-  8 0.006731652 131.169.240.106 -> 131.169.240.145 NFS 336 V4 Call EXCHANGE=
-_ID
-  9 0.008812988 131.169.240.145 -> 131.169.240.106 NFS 224 V4 Reply (Call I=
-n 8) EXCHANGE_ID
- 10 0.009127689 131.169.240.106 -> 131.169.240.145 NFS 292 V4 Call CREATE_S=
-ESSION
- 13 0.012583411 131.169.240.145 -> 131.169.240.106 NFS 196 V4 Reply (Call I=
-n 10) CREATE_SESSION
- 14 0.012805867 131.169.240.106 -> 131.169.240.145 NFS 208 V4 Call RECLAIM_=
-COMPLETE
- 15 0.013716790 131.169.240.145 -> 131.169.240.106 NFS 160 V4 Reply (Call I=
-n 14) RECLAIM_COMPLETE
- 16 0.013981538 131.169.240.106 -> 131.169.240.145 NFS 216 V4 Call SECINFO_=
-NO_NAME
- 17 0.019359329 131.169.240.145 -> 131.169.240.106 NFS 176 V4 Reply (Call I=
-n 16) SECINFO_NO_NAME
-
-
-This is of course not a big problem, but can point to an unintended change =
-or error. The capture
-file available at:
-
-https://sas.desy.de/index.php/s/3sRA9WD5BEpZH7z
-
-Regards,
-   Tigran.
