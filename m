@@ -2,101 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E864D1A992C
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 11:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8819E1AA3DF
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 15:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895748AbgDOJom (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 05:44:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44899 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895749AbgDOJok (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 05:44:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586943878;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bKa8snlnDryG0vgt7Fg/rdv6w9fg6r4FpdXiLIxnEdE=;
-        b=AdhJXXlV/+qPI1sD24Ht8F67XLwlJBO5HQHLMOEXl2ug8Qj+ge/0Fw+OxjeIrnmVu1EnW6
-        6K9bcJGYaLfSkrByAVS/QRHEnDxo+i+W6q/PZKxvKQx4YuCiIEoG46uMs5PdsSuiYbcg+p
-        N/0+J5XZqnKr7z8D01qVHjzsu0OueB0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-508-olUJzS60OsClk0RUhQWf4A-1; Wed, 15 Apr 2020 05:44:34 -0400
-X-MC-Unique: olUJzS60OsClk0RUhQWf4A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S370670AbgDONNl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 09:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897049AbgDOLfZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 216EB800D5C;
-        Wed, 15 Apr 2020 09:44:33 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-114-61.ams2.redhat.com [10.36.114.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E8D72B479;
-        Wed, 15 Apr 2020 09:44:30 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        keyrings@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-References: <3865908.1586874010@warthog.procyon.org.uk>
-Date:   Wed, 15 Apr 2020 11:44:29 +0200
-In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk> (David Howells's
-        message of "Tue, 14 Apr 2020 15:20:10 +0100")
-Message-ID: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02AE20737;
+        Wed, 15 Apr 2020 11:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950525;
+        bh=FtXTfofnjxnh+C0trmA6BpW36cW+yD3+qYSHdl9Ug4M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KxW4A6k8wrrZ3JErvUi5HdHPMuvtpGUv6wrHvOIIAj6N0T4eCKYvgRx6qLZ+Ig4Xf
+         A1odxLHabbXq7kpgE6mkGflz+9H3EYiqyPferC5xkHy5MlLwlzg+5aBH1WBAB2u4k4
+         Ukr7U9U3YinEYzkyzEkvw97KOP2zYm1THDJecM4U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 034/129] NFS: alloc_nfs_open_context() must use the file cred when available
+Date:   Wed, 15 Apr 2020 07:33:09 -0400
+Message-Id: <20200415113445.11881-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-* David Howells:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-> Since key.dns_resolver isn't given a TTL for the address information obta=
-ined
-> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
-> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
-> because that is looked up in the DNS directly, but it doesn't look up A or
-> AAAA records, so doesn't get an expiry for the addresses themselves.
->
-> I've previously asked the libc folks if there's a way to get this informa=
-tion
-> exposed in struct addrinfo, but I don't think that ended up going anywher=
-e -
-> and, in any case, would take a few years to work through the system.
->
-> For the moment, I think I should put a default on any dns_resolver keys a=
-nd
-> have it applied either by the kernel (configurable with a /proc/sys/ sett=
-ing)
-> or by the key.dnf_resolver program (configurable with an /etc file).
->
-> Any suggestion as to the preferred default TTL?  10 minutes?
+[ Upstream commit 1d179d6bd67369a52edea8562154b31ee20be1cc ]
 
-You can get the real TTL if you do a DNS resolution on the name and
-match the addresses against what you get out of the NSS functions.  If
-they match, you can use the TTL from DNS.  Hackish, but it does give you
-*some* TTL value.
+If we're creating a nfs_open_context() for a specific file pointer,
+we must use the cred assigned to that file.
 
-The question remains what the expected impact of TTL expiry is.  Will
-the kernel just perform a new DNS query if it needs one?  Or would you
-expect that (say) the NFS client rechecks the addresses after TTL expiry
-and if they change, reconnect to a new NFS server?
+Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/inode.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-If a TTL expiration does not trigger anything, than it seems purely an
-optimization to avoid kernel =E2=86=92 userspace callbacks.  I think you ca=
-n do
-with a very short TTL in this case, on the order of seconds (or no
-caching at all).
-
-Negative caching is also worthy of consideration and can be considerably
-more tricky.
-
-Thanks,
-Florian
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 11bf15800ac99..a10fb87c6ac33 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -959,16 +959,16 @@ struct nfs_open_context *alloc_nfs_open_context(struct dentry *dentry,
+ 						struct file *filp)
+ {
+ 	struct nfs_open_context *ctx;
+-	const struct cred *cred = get_current_cred();
+ 
+ 	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx) {
+-		put_cred(cred);
++	if (!ctx)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 	nfs_sb_active(dentry->d_sb);
+ 	ctx->dentry = dget(dentry);
+-	ctx->cred = cred;
++	if (filp)
++		ctx->cred = get_cred(filp->f_cred);
++	else
++		ctx->cred = get_current_cred();
+ 	ctx->ll_cred = NULL;
+ 	ctx->state = NULL;
+ 	ctx->mode = f_mode;
+-- 
+2.20.1
 
