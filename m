@@ -2,35 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DDD61A9C7D
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 13:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF5A61AA2A3
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 15:00:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897097AbgDOLf5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 07:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        id S2503291AbgDOM6z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 08:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408893AbgDOLfu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:50 -0400
+        id S2897170AbgDOLgm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9006B20737;
-        Wed, 15 Apr 2020 11:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94EEA214D8;
+        Wed, 15 Apr 2020 11:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950550;
-        bh=nSl82cjhWjTA2l0ExvViT8VlR3vIJzSYqkYo4UEfc7k=;
+        s=default; t=1586950597;
+        bh=IMGULC2cXAQ6DuCwZ1QCNT0FF77EOO3SOTS0Todyx5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYA+w9keah0mVOldlZDFaQUHhTqPrw9o4qcpomBXibVkzAYCY4LP5xIFPx9q+F2iQ
-         TOSqTk63sE8mjc0pkCi+MbIw1oWf2zBzT5uoMp4c8ZdTyRIdc0dpTpbsWaZORG0Phh
-         WSKlO2+PjIR4s64CIr6amGNt9lF/gCxlA6tgdlAc=
+        b=zst6gmb3NBTEiQBBKR5LlH9FnsocQqv2ftQ0N5oW+5vFgAKSq33lmF3HA4nhY2CNZ
+         dq4kF7ROJRibJni0kJ2WIUMfLFxa/J9sE3fUxJCeT6D/zSjxH4rfHimDM2/iZSMOma
+         OlDKsIJTu2WSaX4TP3fG7TeQePiUPhB/1/dPMSUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liwei Song <liwei.song@windriver.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 056/129] nfsroot: set tcp as the default transport protocol
-Date:   Wed, 15 Apr 2020 07:33:31 -0400
-Message-Id: <20200415113445.11881-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 093/129] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 15 Apr 2020 07:34:08 -0400
+Message-Id: <20200415113445.11881-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -43,36 +42,54 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Liwei Song <liwei.song@windriver.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 89c8023fd46167a41246a56b31d1b3c9a20b6970 ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-UDP is disabled by default in commit b24ee6c64ca7 ("NFS: allow
-deprecation of NFS UDP protocol"), but the default mount options
-is still udp, change it to tcp to avoid the "Unsupported transport
-protocol udp" error if no protocol is specified when mount nfs.
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-Fixes: b24ee6c64ca7 ("NFS: allow deprecation of NFS UDP protocol")
-Signed-off-by: Liwei Song <liwei.song@windriver.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfsroot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
-index effaa4247b912..8d32788056022 100644
---- a/fs/nfs/nfsroot.c
-+++ b/fs/nfs/nfsroot.c
-@@ -88,7 +88,7 @@
- #define NFS_ROOT		"/tftpboot/%s"
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 20b3717cd7ca8..3335cd2e8047b 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -886,15 +886,6 @@ static void nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	pgio->pg_mirror_count = mirror_count;
+ }
  
- /* Default NFSROOT mount options. */
--#define NFS_DEF_OPTIONS		"vers=2,udp,rsize=4096,wsize=4096"
-+#define NFS_DEF_OPTIONS		"vers=2,tcp,rsize=4096,wsize=4096"
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
+ {
+ 	pgio->pg_mirror_count = 1;
+@@ -1320,6 +1311,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
+ 	}
+ }
  
- /* Parameters passed from the kernel command line */
- static char nfs_root_parms[NFS_MAXPATHLEN + 1] __initdata = "";
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
++
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
