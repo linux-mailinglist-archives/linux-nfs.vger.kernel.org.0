@@ -2,102 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B55D1AB260
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 22:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BC481AB262
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 22:17:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441995AbgDOUOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 16:14:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46855 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441993AbgDOUOv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:14:51 -0400
+        id S2436830AbgDOUOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 16:14:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34209 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2441994AbgDOUOx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:14:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586981689;
+        s=mimecast20190719; t=1586981691;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=uhLQTt1EhkOR7lKRcEjMAOmv9o1JxeyWPK7wmruvwmE=;
-        b=iALPwY87LbHh43Ieh95HArlTqR/qlbH2csDyPZfjovNPpufuHYwe+FPsy7QyIiUfJz4qCM
-        CV8bxr2xyOQXF+3Pwxvnv/NIGuz6FeRmnRBQeoTMHzsGxvBsSog3PVukPfURKuA5lSbL8E
-        ydhKJkm2yePKSGweX+xdkbeW4lUZnF0=
+         to:to:cc:in-reply-to:in-reply-to:references:references;
+        bh=Efur/vY4xwn/kIgQfIM5xCo7lZEU9KQjeM4hi3ie3uA=;
+        b=GsH7iYmJGpaGrcFvnICYBKq0rBZw+tvXmtTc/pBlTZaohLvirsIr1KdKppl+ZpD75tToCf
+        HyBFeVWJm/Q+AqBxhqJjq+jBJ7UOYwbhw/YIRXDtk1GTYl1VUDQ9EK6QSbeXMx6+SmwIvU
+        bAuioZQCNNtYUORfoVMAj1XGE3TZHgQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-RKfkgMpFN5eX7c6iKn3Kyg-1; Wed, 15 Apr 2020 16:14:46 -0400
-X-MC-Unique: RKfkgMpFN5eX7c6iKn3Kyg-1
+ us-mta-202-g6XCC-80O5STmKUegHqq7w-1; Wed, 15 Apr 2020 16:14:47 -0400
+X-MC-Unique: g6XCC-80O5STmKUegHqq7w-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C62EE8018A2
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 20:14:45 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ABFA18FF661
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 20:14:46 +0000 (UTC)
 Received: from dwysocha.rdu.csb (ovpn-112-216.rdu2.redhat.com [10.10.112.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7025C116D88;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9283A63D6;
         Wed, 15 Apr 2020 20:14:45 +0000 (UTC)
 From:   Dave Wysochanski <dwysocha@redhat.com>
 To:     dhowells@redhat.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 1/3] NFS: Fix fscache super_cookie index_key from changing after umount
-Date:   Wed, 15 Apr 2020 16:14:41 -0400
-Message-Id: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
+Subject: [PATCH 2/3] NFS: Fix fscache super_cookie allocation
+Date:   Wed, 15 Apr 2020 16:14:42 -0400
+Message-Id: <1586981683-3077-2-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
+References: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
-the cookie") added the index_key and index_key_len parameters to
-fscache_acquire_cookie(), and updated the callers in the NFS client.
-One of the callers was inside nfs_fscache_get_super_cookie()
-and was changed to use the full struct nfs_fscache_key as the
-index_key.  However, a couple members of this structure contain
-pointers and thus will change each time the same NFS share is
-remounted.  Since index_key is used for fscache_cookie->key_hash
-and this subsequently is used to compare cookies, the effectiveness
-of fscache with NFS is reduced to the point at which a umount
-occurs.   Any subsequent remount of the same share will cause a
-unique NFS super_block index_key and key_hash to be generated for
-the same data, rendering any prior fscache data unable to be
-found.  A simple reproducer demonstrates the problem.
+Commit f2aedb713c28 ("NFS: Add fs_context support.") reworked
+NFS mount code paths for fs_context support which included
+super_block initialization.  In the process there was an extra
+return left in the code and so we never call
+nfs_fscache_get_super_cookie even if 'fsc' is given on as mount
+option.  In addition, there is an extra check inside
+nfs_fscache_get_super_cookie for the NFS_OPTION_FSCACHE which
+is unnecessary since the only caller nfs_get_cache_cookie
+checks this flag.
 
-1. Mount share with 'fsc', create a file, drop page cache
-systemctl start cachefilesd
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-dd if=/dev/zero of=/mnt/file1.bin bs=4096 count=1
-echo 3 > /proc/sys/vm/drop_caches
-
-2. Read file into page cache and fscache, then unmount
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
-umount /mnt
-
-3. Remount and re-read which should come from fscache
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-echo 3 > /proc/sys/vm/drop_caches
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
-
-4. Check for READ ops in mountstats - there should be none
-grep READ: /proc/self/mountstats
-
-Looking at the history and the removed function, nfs_super_get_key(),
-we should only use nfs_fscache_key.key plus any uniquifier, for
-the fscache index_key.
-
-Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
+Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
 Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 ---
- fs/nfs/fscache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/fscache.c | 2 --
+ fs/nfs/super.c   | 1 -
+ 2 files changed, 3 deletions(-)
 
 diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 1abf126c2df4..8eff1fd806b1 100644
+index 8eff1fd806b1..f51718415606 100644
 --- a/fs/nfs/fscache.c
 +++ b/fs/nfs/fscache.c
-@@ -188,7 +188,8 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 	/* create a cache index for looking up filehandles */
- 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
- 					       &nfs_fscache_super_index_def,
--					       key, sizeof(*key) + ulen,
-+					       &key->key,
-+					       sizeof(key->key) + ulen,
- 					       NULL, 0,
- 					       nfss, 0, true);
- 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
+@@ -118,8 +118,6 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
+ 
+ 	nfss->fscache_key = NULL;
+ 	nfss->fscache = NULL;
+-	if (!(nfss->options & NFS_OPTION_FSCACHE))
+-		return;
+ 	if (!uniq) {
+ 		uniq = "";
+ 		ulen = 1;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 59ef3b13ccca..cc34aa3a8ba4 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1189,7 +1189,6 @@ static void nfs_get_cache_cookie(struct super_block *sb,
+ 			uniq = ctx->fscache_uniq;
+ 			ulen = strlen(ctx->fscache_uniq);
+ 		}
+-		return;
+ 	}
+ 
+ 	nfs_fscache_get_super_cookie(sb, uniq, ulen);
 -- 
 1.8.3.1
 
