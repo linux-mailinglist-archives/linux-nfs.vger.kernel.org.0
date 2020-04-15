@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 697821AA1E6
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 14:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D08461AA1C5
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 14:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408950AbgDOLnD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 07:43:03 -0400
+        id S2408966AbgDOLnK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 07:43:10 -0400
 Received: from mail.kernel.org ([198.145.29.99]:34498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408939AbgDOLnB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:01 -0400
+        id S2408961AbgDOLnI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DAC420768;
-        Wed, 15 Apr 2020 11:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E94E2137B;
+        Wed, 15 Apr 2020 11:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950980;
-        bh=53CAxUZWcyIkT9WZ1+VgTZGW//eve9xs10YjEaHuZ6c=;
+        s=default; t=1586950988;
+        bh=L0c94b19MVAUqN2/oWXuSNcZrhQ1Dm0Nd6V1dgiWk8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1R4ym3c6OQj7aqcXq8JsQ01tPJLxvXbwuV+fvrF/te2qogPSY7+iEILH/lCvG0CGg
-         7nnNZSzKDhmUiwZz99Mvi0HaW/pXz+uwy24XGhiLKP7wxVG3AzULila1zJt/a8mygb
-         up3FmAbZXPJNBJQLs8Ugb6CjFTqbjdebA4KQ0FRo=
+        b=jaros32FamXqjXmou8BEAegA1Skj7yU7uUkFkndQMkChXxn7AJi3+Jw++2OwsUZfU
+         s7TJ2JMlL9e6dh9Rvo9QqKusoh+fUp7cV//s8LAYnIpI/n46p9BCSEwmb3DlIPS1LS
+         qqhzg96KE1oDMXl2Xvxhqp4WgIbeZgFWLip5holQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
+Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 028/106] NFSv4.2: error out when relink swapfile
-Date:   Wed, 15 Apr 2020 07:41:08 -0400
-Message-Id: <20200415114226.13103-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 035/106] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
+Date:   Wed, 15 Apr 2020 07:41:15 -0400
+Message-Id: <20200415114226.13103-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -43,33 +43,48 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Murphy Zhou <jencce.kernel@gmail.com>
+From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 
-[ Upstream commit f5fdf1243fb750598b46305dd03c553949cfa14f ]
+[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
 
-This fixes xfstests generic/356 failure on NFSv4.2.
+When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
+initialized to 2. Therefore we need to call nfs_direct_req_release()
+twice to release the allocated dreq. Usually it is called in
+nfs_file_direct_{read, write}() and nfs_direct_complete().
 
-Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
+However, current code only calls nfs_direct_req_relese() once if
+nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
+So, that case would result in memory leak.
+
+Fix this by adding the missing call.
+
+Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfs/direct.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 3f892035c1413..b217400050288 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -251,6 +251,9 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
- 	if (remap_flags & ~REMAP_FILE_ADVISORY)
- 		return -EINVAL;
- 
-+	if (IS_SWAPFILE(dst_inode) || IS_SWAPFILE(src_inode))
-+		return -ETXTBSY;
-+
- 	/* check alignment w.r.t. clone_blksize */
- 	ret = -EINVAL;
- 	if (bs) {
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 29f00da8a0b7f..6b0bf4ebd8124 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -571,6 +571,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
+ 	l_ctx = nfs_get_lock_context(dreq->ctx);
+ 	if (IS_ERR(l_ctx)) {
+ 		result = PTR_ERR(l_ctx);
++		nfs_direct_req_release(dreq);
+ 		goto out_release;
+ 	}
+ 	dreq->l_ctx = l_ctx;
+@@ -989,6 +990,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
+ 	l_ctx = nfs_get_lock_context(dreq->ctx);
+ 	if (IS_ERR(l_ctx)) {
+ 		result = PTR_ERR(l_ctx);
++		nfs_direct_req_release(dreq);
+ 		goto out_release;
+ 	}
+ 	dreq->l_ctx = l_ctx;
 -- 
 2.20.1
 
