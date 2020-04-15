@@ -2,35 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2964B1A9E7C
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 13:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E44581A9DEB
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 13:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409653AbgDOL4g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 07:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
+        id S2409435AbgDOLsL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 07:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbgDOLry (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:54 -0400
+        id S2409424AbgDOLsI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A5821582;
-        Wed, 15 Apr 2020 11:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7542621569;
+        Wed, 15 Apr 2020 11:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951273;
-        bh=TF/01RNQtNtjrq6KbrU+2FAcLCzjC1oerULda68YHj4=;
+        s=default; t=1586951288;
+        bh=GaNAlxoIcuufHCy0GFgNzN8L5z5nlk6PDPiyXYSP6Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvxUiypJuukFn8WeoAaKsHcmZqHkoSTZ7jCCMnlX8ipfj1euR9kxwpM8dl4aCtdo1
-         ayFM4Aqw08ZWNe4ffzxVn+BDL+bimho1LbWSb4ju3yE1kr13hrggs+s3VhmtsgQpHy
-         KNPk6ZEWn1hkkDntaSV1bUqJ8sV7mFJ+H5qsdpRk=
+        b=bP6zF7zTQdLC8mjCqjDt55UVqMFc77oYbyIKfIO+bZRuEO+cyc1CE0lx0VjCw0ke3
+         yIfpyYbMWUPPJ70aiZQll3IT0qdleupEzyHy5r18PDplvHn4xSvUzwN4gRR1DDdXos
+         dGWiUj/Dbp7VN/JT/tLxvvYlJjiHVzV2stZMgFbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/21] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 15 Apr 2020 07:47:31 -0400
-Message-Id: <20200415114748.15713-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 16/21] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 15 Apr 2020 07:47:43 -0400
+Message-Id: <20200415114748.15713-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -43,48 +42,54 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
-
-Fix this by adding the missing call.
-
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 53f0012ace42f..de135d2591ffb 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -595,6 +595,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index b6e25126a0b0f..529f3a5762637 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -851,15 +851,6 @@ static int nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	return 0;
+ }
+ 
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
+ {
+ 	pgio->pg_mirror_count = 1;
+@@ -1285,6 +1276,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
  	}
- 	dreq->l_ctx = l_ctx;
-@@ -1019,6 +1020,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
+ }
+ 
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
++
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
