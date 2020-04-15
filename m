@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC481AB262
+	by mail.lfdr.de (Postfix) with ESMTP id 1444A1AB261
 	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2020 22:17:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436830AbgDOUOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 16:14:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34209 "EHLO
+        id S2441993AbgDOUOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 16:14:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23766 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2441994AbgDOUOx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:14:53 -0400
+        with ESMTP id S2436830AbgDOUOv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Apr 2020 16:14:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586981691;
+        s=mimecast20190719; t=1586981689;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:in-reply-to:in-reply-to:references:references;
-        bh=Efur/vY4xwn/kIgQfIM5xCo7lZEU9KQjeM4hi3ie3uA=;
-        b=GsH7iYmJGpaGrcFvnICYBKq0rBZw+tvXmtTc/pBlTZaohLvirsIr1KdKppl+ZpD75tToCf
-        HyBFeVWJm/Q+AqBxhqJjq+jBJ7UOYwbhw/YIRXDtk1GTYl1VUDQ9EK6QSbeXMx6+SmwIvU
-        bAuioZQCNNtYUORfoVMAj1XGE3TZHgQ=
+        bh=U5T9k80rrJDjitBUyKTVAYoM2U+n8HqD4IGf0Foilmw=;
+        b=Uk5C/Cz49512Jri995DVexntaf2lT9VWzWGrCQXwdhGSU+9bzi6rkIDLiQEgbs+Z4/FsJi
+        sRD6xSBvOXPI1NctA9pqR/iyOkuKPb1pvS9XX08SU4ZRA6L3gQMVWIuydmyl3yPt6ieboD
+        Mlb3XxMMNkuzpCf9tXmO0ZkqhCDWKiY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-g6XCC-80O5STmKUegHqq7w-1; Wed, 15 Apr 2020 16:14:47 -0400
-X-MC-Unique: g6XCC-80O5STmKUegHqq7w-1
+ us-mta-99-s_O79nprNeK-UhnpE2T-0w-1; Wed, 15 Apr 2020 16:14:47 -0400
+X-MC-Unique: s_O79nprNeK-UhnpE2T-0w-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ABFA18FF661
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFE761005513
         for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2020 20:14:46 +0000 (UTC)
 Received: from dwysocha.rdu.csb (ovpn-112-216.rdu2.redhat.com [10.10.112.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9283A63D6;
-        Wed, 15 Apr 2020 20:14:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D842A63D6;
+        Wed, 15 Apr 2020 20:14:46 +0000 (UTC)
 From:   Dave Wysochanski <dwysocha@redhat.com>
 To:     dhowells@redhat.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 2/3] NFS: Fix fscache super_cookie allocation
-Date:   Wed, 15 Apr 2020 16:14:42 -0400
-Message-Id: <1586981683-3077-2-git-send-email-dwysocha@redhat.com>
+Subject: [PATCH 3/3] NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+Date:   Wed, 15 Apr 2020 16:14:43 -0400
+Message-Id: <1586981683-3077-3-git-send-email-dwysocha@redhat.com>
 In-Reply-To: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
 References: <1586981683-3077-1-git-send-email-dwysocha@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
@@ -44,48 +44,92 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Commit f2aedb713c28 ("NFS: Add fs_context support.") reworked
-NFS mount code paths for fs_context support which included
-super_block initialization.  In the process there was an extra
-return left in the code and so we never call
-nfs_fscache_get_super_cookie even if 'fsc' is given on as mount
-option.  In addition, there is an extra check inside
-nfs_fscache_get_super_cookie for the NFS_OPTION_FSCACHE which
-is unnecessary since the only caller nfs_get_cache_cookie
-checks this flag.
+Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
+the cookie") added the aux_data and aux_data_len to parameters to
+fscache_acquire_cookie(), and updated the callers in the NFS client.
+In the process it modified the aux_data to include the change_attr,
+but missed adding change_attr to a couple places where aux_data was
+used.  Specifically, when opening a file and the change_attr is not
+added, the following attempt to lookup an object will fail inside
+cachefiles_check_object_xattr() = -116 due to
+nfs_fscache_inode_check_aux() failing memcmp on auxdata and returning
+FSCACHE_CHECKAUX_OBSOLETE.
 
-Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+Fix this by adding nfs_fscache_update_auxdata() to set the auxdata
+from all relevant fields in the inode, including the change_attr.
+
+Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
 Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 ---
- fs/nfs/fscache.c | 2 --
- fs/nfs/super.c   | 1 -
- 2 files changed, 3 deletions(-)
+ fs/nfs/fscache.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
 diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 8eff1fd806b1..f51718415606 100644
+index f51718415606..e3240f9f9570 100644
 --- a/fs/nfs/fscache.c
 +++ b/fs/nfs/fscache.c
-@@ -118,8 +118,6 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 
- 	nfss->fscache_key = NULL;
- 	nfss->fscache = NULL;
--	if (!(nfss->options & NFS_OPTION_FSCACHE))
--		return;
- 	if (!uniq) {
- 		uniq = "";
- 		ulen = 1;
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 59ef3b13ccca..cc34aa3a8ba4 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1189,7 +1189,6 @@ static void nfs_get_cache_cookie(struct super_block *sb,
- 			uniq = ctx->fscache_uniq;
- 			ulen = strlen(ctx->fscache_uniq);
- 		}
--		return;
+@@ -225,6 +225,19 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
  	}
+ }
  
- 	nfs_fscache_get_super_cookie(sb, uniq, ulen);
++static nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
++				  struct nfs_inode *nfsi)
++{
++	memset(auxdata, 0, sizeof(*auxdata));
++	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++
++	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
++		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++}
++
+ /*
+  * Initialise the per-inode cache cookie pointer for an NFS inode.
+  */
+@@ -238,14 +251,7 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
+ 		return;
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+-
+-	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+-		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
+ 					       &nfs_fscache_inode_object_def,
+@@ -265,11 +271,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -309,11 +311,7 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 	if (!fscache_cookie_valid(cookie))
+ 		return;
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
 -- 
 1.8.3.1
 
