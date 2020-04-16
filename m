@@ -2,58 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3E9B1AD338
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 01:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C671AD1FC
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2020 23:37:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgDPXfE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Apr 2020 19:35:04 -0400
-Received: from mail.dsns.gov.ua ([194.0.148.99]:37970 "EHLO mail.dsns.gov.ua"
+        id S1726362AbgDPVhC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Apr 2020 17:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgDPXfD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Apr 2020 19:35:03 -0400
-X-Greylist: delayed 9287 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 19:34:56 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 6223A1EC85AF;
-        Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
-Received: from mail.dsns.gov.ua ([127.0.0.1])
-        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ekdCUR6pZ0Aa; Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 67C3E1EC85F9;
-        Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 67C3E1EC85F9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
-        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1587069326;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=BFrHb0sdI6ttGZUrYrU3NgniYtd1aDAhnXXb2vKIb2B9styAswbm0NbzZRAHiMp0y
-         hUE3veWMbUD+qTP/VmiRFig+sJh7tgrjRSipmI8jEPDH4mLyVFQtPdyPojLkpu/SlT
-         y/CjSPHdIqozfsh/zyWU9aeO41yKuuO77HTVyT/eVGDUtLYGTijz0IeETvwB1Yur4I
-         5RegLOWC96rliENvAjVU5IoM4JfcadYa95Q959RRtGyCSnevHOMfGycVhDjkxX/p7G
-         0gUYzq9GdO73hW8YI3AV2m5dSWB1tPfsxP4FJUwoBTp88jIZZeY7uAiDenSeAUtBdj
-         PKl/BScyij7GQ==
-X-Virus-Scanned: amavisd-new at dsns.gov.ua
-Received: from mail.dsns.gov.ua ([127.0.0.1])
-        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id U4DcK3mdlYyf; Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
-Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 9BAF81EC8118;
-        Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
-Date:   Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
-From:   Saleem Netanyahu <duchenko@dsns.gov.ua>
-Reply-To: Saleem Netanyahu <saleemnetu@gmail.com>
-Message-ID: <1255292802.718114.1587069315574.JavaMail.zimbra@dsns.gov.ua>
-Subject: Hey, how are u, can we talk?
+        id S1726465AbgDPVhB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Apr 2020 17:37:01 -0400
+Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC6206D5;
+        Thu, 16 Apr 2020 21:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587073021;
+        bh=Cfi0+yFzJtQK/nhYT+xLhV32M3eu6Haf2f7Ia1tbhnQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=liL+FgkgbMS6OSJCt4/Y28tEjenmatPCsivUONuiDU0HobT68XnhDhBmJBxiAWr7u
+         2Tccj8GT4WE3wL6UaE/i+pj8MHPxcAI9A7CAIUPGUOH2f8bDSYaoVdxuSLDTeziNhW
+         dnxLd3Tl5EEGPBgllR2ciIwJV0VyyTLFaOo65QSs=
+From:   trondmy@kernel.org
+To:     Steve Dickson <SteveD@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] Fix a buffer overflow in qword_add()
+Date:   Thu, 16 Apr 2020 17:34:53 -0400
+Message-Id: <20200416213453.80110-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [45.82.223.36, 172.69.54.54]
-X-Mailer: Zimbra 8.8.15_GA_3918 (zclient/8.8.15_GA_3918)
-Thread-Index: oV9MZN6+Sh4gFPdsGziQ2IngcJhATw==
-Thread-Topic: Hey, how are u, can we talk?
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
+
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
+
+Don't allow writing beyond the end of the buffer.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ support/nfs/cacheio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/support/nfs/cacheio.c b/support/nfs/cacheio.c
+index 126c12831668..70ead94d64f0 100644
+--- a/support/nfs/cacheio.c
++++ b/support/nfs/cacheio.c
+@@ -42,7 +42,7 @@ void qword_add(char **bpp, int *lp, char *str)
+ 
+ 	if (len < 0) return;
+ 
+-	while ((c=*str++) && len)
++	while ((c=*str++) && len > 0)
+ 		switch(c) {
+ 		case ' ':
+ 		case '\t':
+-- 
+2.25.2
 
