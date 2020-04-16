@@ -2,141 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA6D1AB489
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2020 02:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F17A1AB4C5
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2020 02:30:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgDPAAQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Apr 2020 20:00:16 -0400
-Received: from fieldses.org ([173.255.197.46]:50612 "EHLO fieldses.org"
+        id S2391781AbgDPAaA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Apr 2020 20:30:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42916 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730005AbgDPAAM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:00:12 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A2AFBC51; Wed, 15 Apr 2020 20:00:09 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 20:00:09 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: GSS unwrapping breaks the DRC
-Message-ID: <20200416000009.GA13083@fieldses.org>
-References: <DAED9EC8-7461-48FF-AD6C-C85FB968F8A6@oracle.com>
- <20200415192542.GA6466@fieldses.org>
- <0775FBE7-C2DD-4ED6-955D-22B944F302E0@oracle.com>
- <20200415215823.GB6466@fieldses.org>
- <39815C35-EAD8-4B2E-B48F-88F3D5B10C57@oracle.com>
+        id S2391755AbgDPA36 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:29:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 39771AF8A;
+        Thu, 16 Apr 2020 00:29:53 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>
+Date:   Thu, 16 Apr 2020 10:29:45 +1000
+Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Writeback fixes for NFS - V3
+In-Reply-To: <87ftdgw58w.fsf@notabene.neil.brown.name>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name>
+Message-ID: <87wo6gs26e.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39815C35-EAD8-4B2E-B48F-88F3D5B10C57@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 06:23:57PM -0400, Chuck Lever wrote:
-> 
-> 
-> > On Apr 15, 2020, at 5:58 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > On Wed, Apr 15, 2020 at 04:06:17PM -0400, Chuck Lever wrote:
-> >> 
-> >> 
-> >>> On Apr 15, 2020, at 3:25 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> >>> 
-> >>> On Wed, Apr 15, 2020 at 01:05:11PM -0400, Chuck Lever wrote:
-> >>>> Hi Bruce and Jeff:
-> >>>> 
-> >>>> Testing intensive workloads with NFSv3 and NFSv4.0 on NFS/RDMA with krb5i
-> >>>> or krb5p results in a pretty quick workload failure. Closer examination
-> >>>> shows that the client is able to overrun the GSS sequence window with
-> >>>> some regularity. When that happens, the server drops the connection.
-> >>>> 
-> >>>> However, when the client retransmits requests with lost replies, they
-> >>>> never hit in the DRC, and that results in unexpected failures of non-
-> >>>> idempotent requests.
-> >>>> 
-> >>>> The retransmitted XIDs are found in the DRC, but the retransmitted request
-> >>>> has a different checksum than the original. We're hitting the "mismatch"
-> >>>> case in nfsd_cache_key_cmp for these requests.
-> >>>> 
-> >>>> I tracked down the problem to the way the DRC computes the length of the
-> >>>> part of the buffer it wants to checksum. nfsd_cache_csum uses
-> >>>> 
-> >>>> head.iov_len + page_len
-> >>>> 
-> >>>> and then caps that at RC_CSUMLEN.
-> >>>> 
-> >>>> That works fine for krb5 and sys, but the GSS unwrap functions
-> >>>> (integ_unwrap_data and priv_unwrap_data) don't appear to update head.iov_len
-> >>>> properly. So nfsd_cache_csum's length computation is significantly larger
-> >>>> than the clear-text message, and that allows stale parts of the xdr_buf
-> >>>> to be included in the checksum.
-> >>>> 
-> >>>> Using xdr_buf_subsegment() at the end of integ_unwrap_data sets the xdr_buf
-> >>>> lengths properly and fixes the situation for krb5i.
-> >>>> 
-> >>>> I don't see a similar solution for priv_unwrap_data: there's no MIC len
-> >>>> available, and priv_len is not the actual length of the clear-text message.
-> >>>> 
-> >>>> Moreover, the comment in fix_priv_head() is disturbing. I don't see anywhere
-> >>>> where the relationship between the buf's head/len and how svc_defer works is
-> >>>> authoritatively documented. It's not clear exactly how priv_unwrap_data is
-> >>>> supposed to accommodate svc_defer, or whether integ_unwrap_data also needs
-> >>>> to accommodate it.
-> >>>> 
-> >>>> So I can't tell if the GSS unwrap functions are wrong or if there's a more
-> >>>> accurate way to compute the message length in nfsd_cache_csum. I suspect
-> >>>> both could use some improvement, but I'm not certain exactly what that
-> >>>> might be.
-> >>> 
-> >>> I don't know, I tried looking through that code and didn't get any
-> >>> further than you.  The gss unwrap code does look suspect to me.  It
-> >>> needs some kind of proper design, as it stands it's just an accumulation
-> >>> of fixes.
-> >> 
-> >> Having recently completed overhauling the client-side equivalents, I
-> >> agree with you there.
-> >> 
-> >> I've now convinced myself that because nfsd_cache_csum might need to
-> >> advance into the first page of the Call message, rq_arg.head.iov_len
-> >> must contain an accurate length so that csum_partial is applied
-> >> correctly to the head buffer.
-> >> 
-> >> Therefore it is the preceding code that needs to set up rq_arg.head.iov_len
-> >> correctly. The GSS unwrap functions have to do this, and therefore these
-> >> must be fixed. I would theorize that svc_defer also depends on head.iov_len
-> >> being set correctly.
-> >> 
-> >> As far as how rq_arg.len needs to be set for svc_defer, I think I need
-> >> to have some kind of test case to examine how that path is triggered. Any
-> >> advice appreciated.
-> > 
-> > It's triggered on upcalls, so for example if you flush the export caches
-> > with exports -f and then send an rpc with a filehandle, it should call
-> > svc_defer on that request.
-> 
-> /me puts a brown paper bag over his head
-> 
-> Reverting 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()") seems to fix both
-> krb5i and krb5p.
+--=-=-=
+Content-Type: text/plain
 
-Well, it has my ack too....
 
-> I'll post an official patch once I've done a little more testing. I promise
-> to get the Fixes: tag right :-)
+This is version 3 (I think) of my patches to improve NFS writeaback.
 
-I did have it in the back of my mind that one of us had fixed a similar
-bug before.  Indeed, Jeff's:
+Changes:
+ - the code for adding legacy values to /proc/vmstat was broken.
+   I haven't taken the approach that Michal and Jan discussed but
+   a simpler (I hope) approach that just seq_puts() the lines at an
+   appropriate place.
 
-	4c190e2f913f "sunrpc: trim off trailing checksum before
-		returning decrypted or integrity authenticated buffer"
+ - I've modified the handling of PF_LOCAL_THROTTLE - sufficiently that
+   I dropped Jan's reviewed-by.
+   Rather than invoking the same behaviour as BDI_CAP_STRICTLIMIT,
+   I now just use the part I needed.
+   So if the global threshold is not exceeded, PF_LOCAL_THROTTLE tasks
+   are not throttled.  This is the case for normal processes, but not
+   when BDI_CAP_STRICTLIMIT is in effect.
+   If the global threshold *is* exceeded, only then to we check the
+   local per-bdi threshold.  If that is not exceeded then
+   PF_LOCAL_THROTTLE again avoid any throttling.  Only if both the
+   thresholds are exceeded are these tasks throttled.
+   I think this is more refletive if what we actually need.
 
-explains exactly the bug you saw.
 
-Maybe some of that changelog should move into a code comment instead.
+Thanks,
+NeilBrown
 
-And I still think the code is more accidents waiting to happen.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
---b.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6XpvkACgkQOeye3VZi
+gbmE0g//fohyxqVmWfY0gBY1Eu5eE69mCobqspLO+gxINBuecBNhzJRXDub+b9Jk
+gGwg5NnJ0yJfUxN//Et4UzX+ZhQWg5rrJ9fYPXkNt4LrsRR1fnr31jUI3+S+XpcZ
+GxnJjWCHskHVlqf7N9cjdFj+i6Yl4/yVqP0XqWtBVW+IDBvP8WAmICh5BM5rEqrB
+0MEKRU3UwVFWLvn+tH6BrSboiSCNHIxsGL/t2nYQf3/CD+s00t4YzRp1FPzV8/WE
+T1i93OdjiOzaWqDQs3VBaPqyb7fzo/Y35s/2cDJ/WXD2kuEDefmM5P+7uF/UUXir
+DlCa1IC5mlbsP2qMsrJl4SgbL0IUgqZXpZZUU7n77N7hd6QznJMI60mXKBthrnwq
+J6Tuua66nAWI7te6EHJkLYP5zTHiAa8dQEk5o7S0ENx/ojcoXjU2LWfMEgCVGrud
+GUCHWWswFD4w3Xz29UDwAfUTkntbML77hgwlhUI9bKsOtu3IvlQ3npbyVS3DN8wu
+WQh0YR5e/C3vAQA6vHgw3WhJcMG2vqqMdZeCIwcGOBZ9Z+c00j7t+T9PN2UHiLWs
+3OX6yo70TJwYvzRqWrqWJMnaQ1kPxMJVDCt9ZteVkCgmE/PTYCqDNuAUKnZds5Ej
+XFbpwoyhzN/hxLJRbUOndIb7NJspO5hPVzJvkrrt9era8tXt7j8=
+=pJOU
+-----END PGP SIGNATURE-----
+--=-=-=--
