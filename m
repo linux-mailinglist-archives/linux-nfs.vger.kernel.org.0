@@ -2,37 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1C081AD29D
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 00:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 602E11AD2A3
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 00:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgDPWPD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Apr 2020 18:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        id S1729199AbgDPWPF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Apr 2020 18:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbgDPWPB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:15:01 -0400
+        id S1729193AbgDPWPC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:15:02 -0400
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF7622202;
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9072223F;
         Thu, 16 Apr 2020 22:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587075301;
-        bh=T4yeFO6a2Xdolflm5Sk9634oTQJvbzJs/jNvsRwN3WQ=;
+        s=default; t=1587075302;
+        bh=XcOH0u56sQC3dCT24oQ04hjxmbOtq4sKYGsePtObZeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGwuRcQKsVWEt4ewo6qZk9fAhzxWTd3O9O5+X9l/oALtWLfS6xgBIyyuebHqwyABu
-         FBfo8i6Iebztpw06608cynpDWHhXiL13nhhdVKVH59D2STRSa/TmmSMc8Fwpxd1j9Q
-         r5SEVSZxPACtw22bmA6sBgGa6aRcMVih96L91N0A=
+        b=qI//DXS3Dl+Ay6ociqIRM5DeFZ6AavbPMvTPyUaWUmEoT+r3ALknm60R0zkV4V3a+
+         MztMA31gOCbCmn8q1j2f8+GF1ZHWY40f/lWymgFSO4/qqyibToBfhEwnMhaZG3EBgi
+         xB5CC2vWn9ri+VhdF+qcoJg3yR1Ay8alrl84rSOQ=
 From:   trondmy@kernel.org
 To:     Steve Dickson <SteveD@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/7] nfsd: Support running nfsd_name_to_handle_at() in the root jail
-Date:   Thu, 16 Apr 2020 18:12:47 -0400
-Message-Id: <20200416221252.82102-3-trondmy@kernel.org>
+Subject: [PATCH 3/7] mountd: Fix up path checking helper same_path()
+Date:   Thu, 16 Apr 2020 18:12:48 -0400
+Message-Id: <20200416221252.82102-4-trondmy@kernel.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200416221252.82102-2-trondmy@kernel.org>
+In-Reply-To: <20200416221252.82102-3-trondmy@kernel.org>
 References: <20200416221252.82102-1-trondmy@kernel.org>
  <20200416221252.82102-2-trondmy@kernel.org>
+ <20200416221252.82102-3-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -42,123 +43,144 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When running nfsd_name_to_handle_at(), we usually want to see the same
-namespace as knfsd, so add helpers.
+Convert 'same_path()' so that it works when 'rootdir'
+is set in the [exports] section of nfs.conf.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- support/include/nfsd_path.h |  4 +++
- support/misc/nfsd_path.c    | 66 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ utils/mountd/cache.c | 83 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 59 insertions(+), 24 deletions(-)
 
-diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
-index 8331ff96a277..3b73aadd8af7 100644
---- a/support/include/nfsd_path.h
-+++ b/support/include/nfsd_path.h
-@@ -6,6 +6,7 @@
- 
- #include <sys/stat.h>
- 
-+struct file_handle;
- struct statfs64;
- 
- void 		nfsd_path_init(void);
-@@ -25,4 +26,7 @@ char *		nfsd_realpath(const char *path, char *resolved_path);
- ssize_t		nfsd_path_read(int fd, char *buf, size_t len);
- ssize_t		nfsd_path_write(int fd, const char *buf, size_t len);
- 
-+int		nfsd_name_to_handle_at(int fd, const char *path,
-+				       struct file_handle *fh,
-+				       int *mount_id, int flags);
- #endif
-diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-index ab6c98dbe395..1f6dfd4b642b 100644
---- a/support/misc/nfsd_path.c
-+++ b/support/misc/nfsd_path.c
-@@ -6,6 +6,7 @@
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/vfs.h>
-+#include <fcntl.h>
- #include <limits.h>
- #include <stdlib.h>
- #include <unistd.h>
-@@ -14,6 +15,7 @@
- #include "xmalloc.h"
- #include "xlog.h"
- #include "xstat.h"
-+#include "nfslib.h"
- #include "nfsd_path.h"
- #include "workqueue.h"
- 
-@@ -340,3 +342,67 @@ nfsd_path_write(int fd, const char *buf, size_t len)
- 		return write(fd, buf, len);
- 	return nfsd_run_write(nfsd_wq, fd, buf, len);
+diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
+index 7d8657c91323..94e9e44b46b9 100644
+--- a/utils/mountd/cache.c
++++ b/utils/mountd/cache.c
+@@ -72,6 +72,18 @@ static ssize_t cache_write(int fd, const char *buf, size_t len)
+ 	return nfsd_path_write(fd, buf, len);
  }
-+
-+#if defined(HAVE_NAME_TO_HANDLE_AT)
-+struct nfsd_handle_data {
-+	int fd;
-+	const char *path;
-+	struct file_handle *fh;
-+	int *mount_id;
-+	int flags;
-+	int ret;
-+	int err;
-+};
-+
-+static void
-+nfsd_name_to_handle_func(void *data)
+ 
++static bool path_lookup_error(int err)
 +{
-+	struct nfsd_handle_data *d = data;
-+
-+	d->ret = name_to_handle_at(d->fd, d->path,
-+			d->fh, d->mount_id, d->flags);
-+	if (d->ret < 0)
-+		d->err = errno;
++	switch (err) {
++	case ELOOP:
++	case ENAMETOOLONG:
++	case ENOENT:
++	case ENOTDIR:
++		return 1;
++	}
++	return 0;
 +}
 +
-+static int
-+nfsd_run_name_to_handle_at(struct xthread_workqueue *wq,
-+		int fd, const char *path, struct file_handle *fh,
-+		int *mount_id, int flags)
-+{
-+	struct nfsd_handle_data data = {
-+		fd,
-+		path,
-+		fh,
-+		mount_id,
-+		flags,
-+		0,
-+		0
-+	};
+ /*
+  * Support routines for text-based upcalls.
+  * Fields are separated by spaces.
+@@ -430,23 +442,9 @@ static inline int count_slashes(char *p)
+ 	return cnt;
+ }
+ 
+-static int same_path(char *child, char *parent, int len)
++#if defined(HAVE_STRUCT_FILE_HANDLE)
++static int check_same_path_by_handle(const char *child, const char *parent)
+ {
+-	static char p[PATH_MAX];
+-	struct stat sc, sp;
+-
+-	if (len <= 0)
+-		len = strlen(child);
+-	strncpy(p, child, len);
+-	p[len] = 0;
+-	if (strcmp(p, parent) == 0)
+-		return 1;
+-
+-	/* If number of '/' are different, they must be different */
+-	if (count_slashes(p) != count_slashes(parent))
+-		return 0;
+-
+-#if defined(HAVE_NAME_TO_HANDLE_AT) && defined(HAVE_STRUCT_FILE_HANDLE)
+ 	struct {
+ 		struct file_handle fh;
+ 		unsigned char handle[128];
+@@ -455,13 +453,17 @@ static int same_path(char *child, char *parent, int len)
+ 
+ 	fchild.fh.handle_bytes = 128;
+ 	fparent.fh.handle_bytes = 128;
+-	if (name_to_handle_at(AT_FDCWD, p, &fchild.fh, &mnt_child, 0) != 0) {
+-		if (errno == ENOSYS)
+-			goto fallback;
+-		return 0;
 +
-+	xthread_work_run_sync(wq, nfsd_name_to_handle_func, &data);
-+	if (data.ret < 0)
-+		errno = data.err;
-+	return data.ret;
-+}
-+
-+int
-+nfsd_name_to_handle_at(int fd, const char *path, struct file_handle *fh,
-+		int *mount_id, int flags)
-+{
-+	if (!nfsd_wq)
-+		return name_to_handle_at(fd, path, fh, mount_id, flags);
-+
-+	return nfsd_run_name_to_handle_at(nfsd_wq, fd, path, fh,
-+			mount_id, flags);
++	/* This process should have the CAP_DAC_READ_SEARCH capability */
++	if (nfsd_name_to_handle_at(AT_FDCWD, child, &fchild.fh, &mnt_child, 0) < 0)
++		return -1;
++	if (nfsd_name_to_handle_at(AT_FDCWD, parent, &fparent.fh, &mnt_parent, 0) < 0) {
++		/* If the child resolved, but the parent did not, they differ */
++		if (path_lookup_error(errno))
++			return 0;
++		/* Otherwise, we just don't know */
++		return -1;
+ 	}
+-	if (name_to_handle_at(AT_FDCWD, parent, &fparent.fh, &mnt_parent, 0) != 0)
+-		return 0;
+ 
+ 	if (mnt_child != mnt_parent ||
+ 	    fchild.fh.handle_bytes != fparent.fh.handle_bytes ||
+@@ -471,14 +473,24 @@ static int same_path(char *child, char *parent, int len)
+ 		return 0;
+ 
+ 	return 1;
+-fallback:
 +}
 +#else
-+int
-+nfsd_name_to_handle_at(int UNUSED(fd), const char *UNUSED(path),
-+		struct file_handle *UNUSED(fh),
-+		int *UNUSED(mount_id), int UNUSED(flags))
++static int check_same_path_by_handle(const char *child, const char *parent)
 +{
 +	errno = ENOSYS;
 +	return -1;
 +}
-+#endif
+ #endif
+ 
++static int check_same_path_by_inode(const char *child, const char *parent)
++{
++	struct stat sc, sp;
++
+ 	/* This is nearly good enough.  However if a directory is
+ 	 * bind-mounted in two places and both are exported, it
+ 	 * could give a false positive
+ 	 */
+-	if (nfsd_path_lstat(p, &sc) != 0)
++	if (nfsd_path_lstat(child, &sc) != 0)
+ 		return 0;
+ 	if (nfsd_path_lstat(parent, &sp) != 0)
+ 		return 0;
+@@ -490,6 +502,29 @@ fallback:
+ 	return 1;
+ }
+ 
++static int same_path(char *child, char *parent, int len)
++{
++	static char p[PATH_MAX];
++	int err;
++
++	if (len <= 0)
++		len = strlen(child);
++	strncpy(p, child, len);
++	p[len] = 0;
++	if (strcmp(p, parent) == 0)
++		return 1;
++
++	/* If number of '/' are different, they must be different */
++	if (count_slashes(p) != count_slashes(parent))
++		return 0;
++
++	/* Try to use filehandle approach before falling back to stat() */
++	err = check_same_path_by_handle(p, parent);
++	if (err != -1)
++		return err;
++	return check_same_path_by_inode(p, parent);
++}
++
+ static int is_subdirectory(char *child, char *parent)
+ {
+ 	/* Check is child is strictly a subdirectory of
 -- 
 2.25.2
 
