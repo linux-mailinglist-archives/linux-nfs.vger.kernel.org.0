@@ -2,83 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E706E1ADC34
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 13:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 744081AE0D6
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 17:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgDQLbo convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 17 Apr 2020 07:31:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55428 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbgDQLbo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:31:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4A696ABEF;
-        Fri, 17 Apr 2020 11:31:40 +0000 (UTC)
-From:   =?utf-8?Q?Aur=C3=A9lien?= Aptel <aaptel@suse.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-In-Reply-To: <8DC44895-E904-4155-B7B8-B109A777F23C@oracle.com>
-References: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
- <3865908.1586874010@warthog.procyon.org.uk>
- <128769.1587032833@warthog.procyon.org.uk>
- <8DC44895-E904-4155-B7B8-B109A777F23C@oracle.com>
-Date:   Fri, 17 Apr 2020 13:31:39 +0200
-Message-ID: <87sgh22vs4.fsf@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        id S1728413AbgDQPPo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Apr 2020 11:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728272AbgDQPPn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Apr 2020 11:15:43 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0392C061A0C
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2020 08:15:42 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id j4so2691824qkc.11
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2020 08:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=H2wogtu4IhaCEW6EMuS40p5PUHnjiSqx4hVd7AUf+ww=;
+        b=UWFJHdK5t+u7Cabf2S+LkzlhalX7JQ1j2hSUuox8IyNfekcw0Q4jwgaAxIaVerRr54
+         nkLHhlxMeG28oJOk/23LhRCreo+iVJmridC6IFvZUSXDNOzW9u9aLxyqdbQdHaBkrJEg
+         hHTnTagR+7uU/ORtiLS8q5hIg5cfKOfuNPDXnke+R59NJLe6vQeqcrYlIK612uYQNFIu
+         PFNF/f3Nnv+PAJMKEZud8j8O9zb/KxvqpEe7rD7dIbIIXJ09XzX9PXH5wOVgqPOJGg+0
+         EfuPGrfArtFICmA+UOS0IbSvfl/1Z17OGCDkZlgMcTRjgyWmAGr/g6RdxbzS545hF67d
+         /lHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H2wogtu4IhaCEW6EMuS40p5PUHnjiSqx4hVd7AUf+ww=;
+        b=PZWckJpfq550FAOxO6sS98G/elauEGEu1S18PFbu0dpSqkIkaiogow6O+5TmFX/a1l
+         KH9FJphmhjBGGPk7hmRJ2VLgf+axxqTQ8n/ypmX8GPcOuLpuzfVMuu6F3nlmyga4Vxqw
+         ojNsb+Cx42X9QDBIq3MYg9y7SglSiE6x0ToIKSoH7eVuuhKDjqVyx9wcQWH+WPniSIOB
+         E8pE25eq2sbXn3wRLlokkJnSu3BubkGWm99eaSxWUVQovoRKnWchjKiLSoAyf38jh9Xm
+         /Lp0dS3WAGnWqGJ3bZagf3Ez/brjRLZOwphC99CkluX6+P9AcTT8SyBClpkxXDQA2DSd
+         ERLg==
+X-Gm-Message-State: AGi0PuaUiDYqOepj/8wSVeNLfl+JHXUZfpAZzTqZQhe1eatj3kwL2mPl
+        ZlMKXXRFXzqJd4PDjjhwNJLmQ/PB
+X-Google-Smtp-Source: APiQypJGz0NMMqvoId+nRCJ68wb+dHC7bZR6OH8tIzYKLVixEba9D1/3EqUxadV5hhuHpFx3dnsSwQ==
+X-Received: by 2002:a37:6754:: with SMTP id b81mr3679566qkc.129.1587136542044;
+        Fri, 17 Apr 2020 08:15:42 -0700 (PDT)
+Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id q17sm7150738qtk.84.2020.04.17.08.15.40
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 17 Apr 2020 08:15:41 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4.1: fix lone sequence transport assignment
+Date:   Fri, 17 Apr 2020 11:15:40 -0400
+Message-Id: <20200417151540.22111-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Chuck Lever <chuck.lever@oracle.com> writes:
-> The Linux NFS client won't connect to a new server when the server's
-> DNS information changes. A fresh mount operation would be needed for
-> the client to recognize and make use of it.
->
-> There are mechanisms in the NFSv4 protocol to collect server IP addresses
-> from the server itself (fs_locations) and then try those locations if the
-> current server fails to respond. But currently that is not implemented in
-> Linux (and servers would need to be ready to provide that kind of update).
+When nconnect is used, SEQUENCE operation currently isn't bound to
+a particular transport. The problem is created on an idle mount,
+where SEQUENCE is the only operation being sent and opened TPC
+connections are slowly being close from the lack of use. If SEQUENCE
+is not assigned to the main connection, the main connection can
+be closed and with that so is the back channel bound to that
+connection.
 
-We have a very similar system in CIFS. Failover can be handled in 2 ways
-(technically both can be used at the same time):
+Since the only way client handles callback_path down is by sending
+BIND_CONN_TO_SESSION requesting to bind both backchannel and fore
+channel on the connection that was left going, but that connection
+was already bound to only forechannel. According to the spec, it's
+not allowed to change channel binding after they are done.
 
-a) with DFS, the mount can have a list of possible location to connect
-   to, sort of like cross-server symlinks with multiple possible
-   targets. Note that the target value uses hostnames.
-b) the domain controler can notice the server is down and automatically
-   switch the server hostname DNS entry to a backup one with a different IP.
+The fix is to make sure that a lone SEQUENCE always goes on the
+main connection, keeping backchannel alive.
 
->> CIFS also doesn't make direct use of the TTL, and again this may be because it
->> uses the server address as part of the primary key for the superblock (see
->> cifs_match_super()).
+Fixes: 5a0c257f8 ("NFS: send state management on a single connection")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-When we try to reconnect after a failure (using (a) or just reconnecting
-to same server) we resolve the host again to try to use any new IP (in
-case (b) happened). This is done via upcalling using the request_key()
-API.
-
-The cifs.upcall prog (from cifs-utils) calls getaddrinfo() and sets a
-key with a default TTL of 10mn [2][3] but if the system uses DNS caching
-via nscd[1] there's no way to tell how long the old IP will remain in
-use...
-
-1: https://linux.die.net/man/8/nscd
-2: https://github.com/piastry/cifs-utils/blob/9a8c21ad9e4510a83a3a41f7a04f763a4fe9ec09/cifs.upcall.c#L66
-3: https://github.com/piastry/cifs-utils/blob/9a8c21ad9e4510a83a3a41f7a04f763a4fe9ec09/cifs.upcall.c#L783
-
-Cheers,
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 99e9f2e..461f85d 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8857,7 +8857,7 @@ static struct rpc_task *_nfs41_proc_sequence(struct nfs_client *clp,
+ 		.rpc_client = clp->cl_rpcclient,
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs41_sequence_ops,
+-		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+ 	};
+ 	struct rpc_task *ret;
+ 
 -- 
-Aurélien Aptel / SUSE Labs Samba Team
-GPG: 1839 CB5F 9F5B FB9B AA97  8C99 03C8 A49B 521B D5D3
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, DE
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah HRB 247165 (AG München)
+1.8.3.1
+
