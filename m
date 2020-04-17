@@ -2,232 +2,291 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD2C1AE4EA
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 20:41:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A291AE571
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2020 21:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgDQSln (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Apr 2020 14:41:43 -0400
-Received: from mail-co1nam11on2130.outbound.protection.outlook.com ([40.107.220.130]:30432
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbgDQSlm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:41:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P3v0E3PzA8aaR73j6I6RwKokYyw1eHh1Npr3mPczvL3DjvHg9j81rkWl8AebAPvdYL9YFEWl/t3WUhaqmMYi6W3pdzQD1e8wmpB7QEyGZ9bkLow/l4X4fRjoMe603PodGDsmqqQXAiVQIhQiDSwjCXImAoWne/dCqQWy2yG8hYy4HxGOb9zSBfQsWvUN822Kcht96Jv+IyYUyz4ZfKwUNdP/VlsI2I5SHtm71zxAhJpfG8gzDySxKiAKsyUnEX2dyP3dxKKcFPfieJEAbQx4tg/e3CxPMnl0kppSIzZ2T6vNf9xJs58Oy5lWVoTWlqdfa5ITUV9OsOyewW2x8fX/tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZWb9sN6oe2iE3QWeHn8qDxrqA18NvlCx77bG3JfmcgU=;
- b=C4fX9xtjXp9gtEpwv7IahJE37OCc3WH8nDspW4VajuZx1LMC/z3zh47RTJQMLX3WFl9i1SztJ6NLMbtXlSoxT5Vcii95tlEGDt3779CyINRYJaTSCAes4HBNYSdH9LbYBiEt31QCHBQILo8v6nGgbjQVZjv3la9hg8DruTcSLuWUIhMswN/gyZ60NXHxgtYmef8Q8LXmlFD8N0KTfiz4XCHyt8FjyPlWTo73v9cO0zSjezE2XeifIl2NPFmIrz5gUrx91elfwHERXhlV82zEipmcJ3O2QW+Emo9LqV9jS/Ax6xQXtUDK8yZBO2RL9BgwDX/UXqi1UVKRGaJAjT0DGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZWb9sN6oe2iE3QWeHn8qDxrqA18NvlCx77bG3JfmcgU=;
- b=OgcmLygOh3Uj6aOtVze/jzhlVCETPuUjHg3u3TFdzTI59cUV4w1PCZIgdgpY9RYWSNUQVueurVLl+LzqeSF8xkfam5e7lo60EkwnIVm/NTOMipU9EcwaIBk0a7weiPe+Wa7UzqvX9FQqvWqskK3cfZnDasAa8PwHg/dTqW/WPxg=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3637.namprd13.prod.outlook.com (2603:10b6:610:90::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6; Fri, 17 Apr
- 2020 18:41:36 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2937.007; Fri, 17 Apr 2020
- 18:41:36 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 1/1] NFSv4.1: fix lone sequence transport assignment
-Thread-Topic: [PATCH 1/1] NFSv4.1: fix lone sequence transport assignment
-Thread-Index: AQHWFMsRjFm2JNXk8kav0WOkI+SUpah9cM+AgAADbACAAApfgIAAB24AgAAB0wCAABUKAIAACSgA
-Date:   Fri, 17 Apr 2020 18:41:36 +0000
-Message-ID: <e609a66be315e5c8e663727147dd5da0d25c11bb.camel@hammerspace.com>
-References: <20200417151540.22111-1-olga.kornievskaia@gmail.com>
-         <9c6c72708f360f543e2b8caaf56cc074aa825c96.camel@hammerspace.com>
-         <CAN-5tyHQ_Gs-HmWLdbQYz1o8UyB2jv_oD2EtJP94qgtrfeK52Q@mail.gmail.com>
-         <7dd1b9300d2a0ec1a31fb3879c62a94f535ccad5.camel@hammerspace.com>
-         <CAN-5tyEbi8Z8bxU1enkkhjAyJj-nb9=j33xcLi7FE2+A79-qng@mail.gmail.com>
-         <52b65780986192bb635638d4615176bbc1ad579c.camel@hammerspace.com>
-         <CAN-5tyFrhwVjtDcz0X5GRysief=CTrpUsFWi_ByT2=k6LVtJXw@mail.gmail.com>
-In-Reply-To: <CAN-5tyFrhwVjtDcz0X5GRysief=CTrpUsFWi_ByT2=k6LVtJXw@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3406f841-de92-4cf0-f6e6-08d7e2fef59b
-x-ms-traffictypediagnostic: CH2PR13MB3637:
-x-microsoft-antispam-prvs: <CH2PR13MB3637258C77FC8C811C2B148EB8D90@CH2PR13MB3637.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(39830400003)(346002)(376002)(396003)(316002)(36756003)(6486002)(86362001)(2906002)(6512007)(6916009)(5660300002)(54906003)(91956017)(186003)(6506007)(2616005)(66476007)(478600001)(66446008)(66946007)(66556008)(4326008)(76116006)(8676002)(71200400001)(81156014)(26005)(64756008)(8936002)(53546011);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uPVUgTxRYcMYfOhcSI9CgbDgAB8EMIItofJ0kI7G3Gnw69Ljnx4YbjalUnDX5F06SgiHs3eikT+HCnNw9NbAahvd3SbgDbrdbPx2421XNg2iUfo9tO3UHNYNxLhL2qeVBRu8F3XOVtwSYxN7RljQ99UbXGH5xHJIR9KsaFXw78k337cezgAXXKwhscCAUZ31pksH5oAZkn4BKfVXy5J/X07DQXqyyN5XkDd7oeQPjiOVJVMu7eIyx2th7GPgk2bpHDkOMN7qcuvypCu78vaUOholgO9V2Dhcg4BE4GH/A518j06HP8BPjM4i3hiump2YBKOJ6NQKcpwAkTXofI1zssvcziSGGX49jh8YHRpiqN1ZC6Umu+NpbC2GgRlbXs0vGE4Si+WEI+xW5CpygRtcLXHVDf3cBZgSbOTBbJ56kJBzCriZGDTuTa+VvGgCKkIk
-x-ms-exchange-antispam-messagedata: LXYlMqbz03R/mZkd9pohi+L76mitOWuTHSoUL3YLyE7Gg1PkItrEVTjv+9qIuEF3uXSw2TWSeOyKR7xLl2nLLWYutmryuvlCN+xEqSjKvLU1Spy0jeRqmeaXGxCd0iG1M8J+KVIEjd12fYtHoAadb60RU6nj+wdDDAnEGyDzthp+TxqmO9Yav/+GurN82zY0Z5p/6UJuPPBiul8/F7moQQD+fZ7+6HzmtpKYmDFTOTpBrHVnOuQtdJkeHn3e8AF/TnxoJYnEmqq/AfYoxy+zAVRRSvqMXycVkokRCYKVOyEghOGJojJF8S1o2op4T8SY4IFr+jyE3NMHTxvuioFRIO5NM7PsGjdsz/UwaGgf27Tti5nIVM6RXGoOyAHHQ06eScRPX9aQFuSE4WfK5EctNHS+ynepPMhtcEvhKZQMuPsP1ubx70lLeTciiytYBth9sp7jooo4KXSrdlWSBgswc3OZRyRBQEMr+Mw3zORIZegHje9u4thzqkhPsh78EODMDyktPHHTBvVS4281Ev6YZlxdT8cE1OZE3DQbyaaJTuD8u+37swMb7zvEglJJ8U+WRrTJr0x+0H9v9h+d3wwBG8tPhJw5RaKXVkoYcoCB4LYUfMKySD6s7MGbCX2OE0RLU9NVurBwAPLzpmZQlfnL+jCKcXUtVtS5dex/wUZMRVU6ktl/i9hpYp3R2mo5IrVVilXAD09QIPp5hdrluEQ0lpaylJlHDqSY5g/ZYsrhcEXSN6nmbya3uAjCnN9PgnreyMNzfR8jP8YwVa+ACY7ng2bCExI8DwdC6rI+pDDe+9M=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <005136F64AA5CC43ACE31F11B61B05D2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726554AbgDQTGm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Apr 2020 15:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDQTGl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Apr 2020 15:06:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D65BC061A0C
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2020 12:06:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k11so4278247wrp.5
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2020 12:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g/Me2JTiV6ixHaW65r0VrfnP6vhpwLshDhGNXkNuO00=;
+        b=lV+HRA3XQNFrYxQCYKXyhIwrlT4fWIevrJmlrYen29HbxDv2RSfWQbAg3DFzMZfwAm
+         Ai9IjcL8dMi2u8NJGvj/lcQNt5wdCKRP8mkcLfBdlwxhmDhRs4IRpgRjSpkG+H3Qp7IG
+         wHAaQfvxZoB3mc16AbfYeBGra5ItST6kt3ndXGk+LF/asvGYBpXDrVR/kXdFo2WDWCpR
+         ojTnEERF7ACFv41hkgyzE8rfQbr7Sc5J5OcnhF4an7xp2FMDl9OuSeDNDN7U2mvpux7A
+         4V5Q4ffE7EdAz14COoj+volbGTjwYC+E2oeW87B+fFMxCKj7gjF90bwYZCbm5M+1Le+J
+         RZJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g/Me2JTiV6ixHaW65r0VrfnP6vhpwLshDhGNXkNuO00=;
+        b=rotyiwGra90El9Em3XbL/j5enekxp5b9AzAgK6X5CfZZu8mcdNVu/kMpEldSHHmkWN
+         CyJUhEWo4xoxtZENp2343c9qnAcrg32nDWuuTf8omxz8wpzKBnhbrNzfC6uy3l5vL3i4
+         HvrnukMdtVcXDyNpXFzPdfJSvMvF32jYhqKcwndCqkR+utXfGr99rWEnooZAs/SYvBlu
+         E6Ad1Vog7Wv5/76fw/Q5Pg39DbW96XSyh/V1Q+ecXprDFPxArLX7Ym0cfKrLJ2Vv1Wkx
+         oyG10u7/SsTHKYR5Zr+/s6m/T+SZ87Ohy4BVGhez8PrR8BH4aCVhA5xqgkfQZc0jzja8
+         iQyw==
+X-Gm-Message-State: AGi0PuYPA7xOlM05hJ6/Od2GZzxLV7t/5yJL6UWePzdlau/9jla8FROR
+        gXHuRG7XcxkbZsZtcDZ4d/xCtkUTRsiTyJnisNY=
+X-Google-Smtp-Source: APiQypJ6ytE03eRYaiNj2N8HbKZvpgj9X6xAnV6vAbhxb6kePMR5cI8vgTVgyvneGYbCllqK+IZsV2qNlCZ0szeFsWI=
+X-Received: by 2002:adf:ce0a:: with SMTP id p10mr5224673wrn.89.1587150400085;
+ Fri, 17 Apr 2020 12:06:40 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3406f841-de92-4cf0-f6e6-08d7e2fef59b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 18:41:36.5254
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r8QA5cOrMZexVqGjyF24WnG/vWk0K2KmjRZ83DNQ3wCblr8lBJyqmO3Q5AdX7HcaIFy0xqsN2NIyXSndQCa+tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3637
+References: <20200417151540.22111-1-olga.kornievskaia@gmail.com>
+ <9c6c72708f360f543e2b8caaf56cc074aa825c96.camel@hammerspace.com>
+ <CAN-5tyHQ_Gs-HmWLdbQYz1o8UyB2jv_oD2EtJP94qgtrfeK52Q@mail.gmail.com>
+ <7dd1b9300d2a0ec1a31fb3879c62a94f535ccad5.camel@hammerspace.com>
+ <CAN-5tyEbi8Z8bxU1enkkhjAyJj-nb9=j33xcLi7FE2+A79-qng@mail.gmail.com>
+ <52b65780986192bb635638d4615176bbc1ad579c.camel@hammerspace.com>
+ <CAN-5tyFrhwVjtDcz0X5GRysief=CTrpUsFWi_ByT2=k6LVtJXw@mail.gmail.com> <e609a66be315e5c8e663727147dd5da0d25c11bb.camel@hammerspace.com>
+In-Reply-To: <e609a66be315e5c8e663727147dd5da0d25c11bb.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Fri, 17 Apr 2020 15:06:28 -0400
+Message-ID: <CAN-5tyE3uRJ+wCnSmZD6zCedHBB0waBKn6oqDvOLoeX=BJGVqg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4.1: fix lone sequence transport assignment
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA0LTE3IGF0IDE0OjA4IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gT24gRnJpLCBBcHIgMTcsIDIwMjAgYXQgMTI6NTMgUE0gVHJvbmQgTXlrbGVidXN0DQo+
-IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gRnJpLCAyMDIwLTA0LTE3
-IGF0IDEyOjQ2IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9uIEZyaSwg
-QXByIDE3LCAyMDIwIGF0IDEyOjIwIFBNIFRyb25kIE15a2xlYnVzdA0KPiA+ID4gPHRyb25kbXlA
-aGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gT24gRnJpLCAyMDIwLTA0LTE3IGF0IDEx
-OjQzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+ID4gPiBIaSBUcm9uZCwN
-Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiBPbiBGcmksIEFwciAxNywgMjAyMCBhdCAxMTozMSBBTSBU
-cm9uZCBNeWtsZWJ1c3QNCj4gPiA+ID4gPiA8dHJvbmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3Rl
-Og0KPiA+ID4gPiA+ID4gSGkgT2xnYSwNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gT24gRnJp
-LCAyMDIwLTA0LTE3IGF0IDExOjE1IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4g
-PiA+ID4gPiA+ID4gV2hlbiBuY29ubmVjdCBpcyB1c2VkLCBTRVFVRU5DRSBvcGVyYXRpb24gY3Vy
-cmVudGx5IGlzbid0DQo+ID4gPiA+ID4gPiA+IGJvdW5kDQo+ID4gPiA+ID4gPiA+IHRvDQo+ID4g
-PiA+ID4gPiA+IGEgcGFydGljdWxhciB0cmFuc3BvcnQuIFRoZSBwcm9ibGVtIGlzIGNyZWF0ZWQg
-b24gYW4gaWRsZQ0KPiA+ID4gPiA+ID4gPiBtb3VudCwNCj4gPiA+ID4gPiA+ID4gd2hlcmUgU0VR
-VUVOQ0UgaXMgdGhlIG9ubHkgb3BlcmF0aW9uIGJlaW5nIHNlbnQgYW5kDQo+ID4gPiA+ID4gPiA+
-IG9wZW5lZA0KPiA+ID4gPiA+ID4gPiBUUEMNCj4gPiA+ID4gPiA+ID4gY29ubmVjdGlvbnMgYXJl
-IHNsb3dseSBiZWluZyBjbG9zZSBmcm9tIHRoZSBsYWNrIG9mIHVzZS4NCj4gPiA+ID4gPiA+ID4g
-SWYNCj4gPiA+ID4gPiA+ID4gU0VRVUVOQ0UNCj4gPiA+ID4gPiA+ID4gaXMgbm90IGFzc2lnbmVk
-IHRvIHRoZSBtYWluIGNvbm5lY3Rpb24sIHRoZSBtYWluDQo+ID4gPiA+ID4gPiA+IGNvbm5lY3Rp
-b24NCj4gPiA+ID4gPiA+ID4gY2FuDQo+ID4gPiA+ID4gPiA+IGJlIGNsb3NlZCBhbmQgd2l0aCB0
-aGF0IHNvIGlzIHRoZSBiYWNrIGNoYW5uZWwgYm91bmQgdG8NCj4gPiA+ID4gPiA+ID4gdGhhdA0K
-PiA+ID4gPiA+ID4gPiBjb25uZWN0aW9uLg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4g
-U2luY2UgdGhlIG9ubHkgd2F5IGNsaWVudCBoYW5kbGVzIGNhbGxiYWNrX3BhdGggZG93biBpcw0K
-PiA+ID4gPiA+ID4gPiBieQ0KPiA+ID4gPiA+ID4gPiBzZW5kaW5nDQo+ID4gPiA+ID4gPiA+IEJJ
-TkRfQ09OTl9UT19TRVNTSU9OIHJlcXVlc3RpbmcgdG8gYmluZCBib3RoIGJhY2tjaGFubmVsDQo+
-ID4gPiA+ID4gPiA+IGFuZA0KPiA+ID4gPiA+ID4gPiBmb3JlDQo+ID4gPiA+ID4gPiA+IGNoYW5u
-ZWwgb24gdGhlIGNvbm5lY3Rpb24gdGhhdCB3YXMgbGVmdCBnb2luZywgYnV0IHRoYXQNCj4gPiA+
-ID4gPiA+ID4gY29ubmVjdGlvbg0KPiA+ID4gPiA+ID4gPiB3YXMgYWxyZWFkeSBib3VuZCB0byBv
-bmx5IGZvcmVjaGFubmVsLiBBY2NvcmRpbmcgdG8gdGhlDQo+ID4gPiA+ID4gPiA+IHNwZWMsDQo+
-ID4gPiA+ID4gPiA+IGl0J3MNCj4gPiA+ID4gPiA+ID4gbm90IGFsbG93ZWQgdG8gY2hhbmdlIGNo
-YW5uZWwgYmluZGluZyBhZnRlciB0aGV5IGFyZQ0KPiA+ID4gPiA+ID4gPiBkb25lLg0KPiA+ID4g
-PiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gVGhlIGZpeCBpcyB0byBtYWtlIHN1cmUgdGhhdCBhIGxv
-bmUgU0VRVUVOQ0UgYWx3YXlzIGdvZXMNCj4gPiA+ID4gPiA+ID4gb24NCj4gPiA+ID4gPiA+ID4g
-dGhlDQo+ID4gPiA+ID4gPiA+IG1haW4gY29ubmVjdGlvbiwga2VlcGluZyBiYWNrY2hhbm5lbCBh
-bGl2ZS4NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IEZpeGVzOiA1YTBjMjU3ZjggKCJO
-RlM6IHNlbmQgc3RhdGUgbWFuYWdlbWVudCBvbiBhIHNpbmdsZQ0KPiA+ID4gPiA+ID4gPiBjb25u
-ZWN0aW9uIikNCj4gPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3JuaWV2c2thaWEg
-PGtvbGdhQG5ldGFwcC5jb20+DQo+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiAgZnMv
-bmZzL25mczRwcm9jLmMgfCAyICstDQo+ID4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+
-IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4g
-PiA+ID4gPiA+IGluZGV4IDk5ZTlmMmUuLjQ2MWY4NWQgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0t
-LSBhL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4gPiA+ID4gPiA+ICsrKyBiL2ZzL25mcy9uZnM0cHJv
-Yy5jDQo+ID4gPiA+ID4gPiA+IEBAIC04ODU3LDcgKzg4NTcsNyBAQCBzdGF0aWMgc3RydWN0IHJw
-Y190YXNrDQo+ID4gPiA+ID4gPiA+ICpfbmZzNDFfcHJvY19zZXF1ZW5jZShzdHJ1Y3QgbmZzX2Ns
-aWVudCAqY2xwLA0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgIC5ycGNfY2xpZW50ID0gY2xw
-LT5jbF9ycGNjbGllbnQsDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgLnJwY19tZXNzYWdl
-ID0gJm1zZywNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAuY2FsbGJhY2tfb3BzID0gJm5m
-czQxX3NlcXVlbmNlX29wcywNCj4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAuZmxhZ3MgPSBS
-UENfVEFTS19BU1lOQyB8IFJQQ19UQVNLX1RJTUVPVVQsDQo+ID4gPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgLmZsYWdzID0gUlBDX1RBU0tfQVNZTkMgfCBSUENfVEFTS19USU1FT1VUDQo+ID4gPiA+
-ID4gPiA+IHwNCj4gPiA+ID4gPiA+ID4gUlBDX1RBU0tfTk9fUk9VTkRfUk9CSU4sDQo+ID4gPiA+
-ID4gPiA+ICAgICAgIH07DQo+ID4gPiA+ID4gPiA+ICAgICAgIHN0cnVjdCBycGNfdGFzayAqcmV0
-Ow0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gVGhpcyB3b3JrcyBv
-bmx5IGluIHRoZSBjYXNlIHdoZXJlIHRoZSBjbGllbnQgaXMgb25seQ0KPiA+ID4gPiA+ID4gc2Vu
-ZGluZw0KPiA+ID4gPiA+ID4gU0VRVUVOQ0UNCj4gPiA+ID4gPiA+IGluc3RydWN0aW9ucy4gVGhl
-cmUgYXJlIG90aGVyIGNhc2VzIHdoZXJlIGl0IGNvdWxkIGJlDQo+ID4gPiA+ID4gPiBzZW5kaW5n
-DQo+ID4gPiA+ID4gPiBvdXQNCj4gPiA+ID4gPiA+IG90aGVyDQo+ID4gPiA+ID4gPiBvcGVyYXRp
-b25zIHRoYXQgYWxzbyByZW5ldyB0aGUgbGVhc2UsIGJ1dCBpcyBkb2luZyBpdCB2ZXJ5DQo+ID4g
-PiA+ID4gPiBpbmZyZXF1ZW50bHkuIFdvbid0IHRoYXQgYWxzbyBydW4gaW50byB0aGUgc2FtZSBw
-cm9ibGVtPw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IEhtLi4uIEkgc2VlIHNvIG1haW4gY2hhbm5l
-bCBjYW4gc3RpbGwgZ28gaWRsZSBhbmQgY2xvc2UsIHdoZW4NCj4gPiA+ID4gPiBpbmZyZXF1ZW50
-IG9wZXJhdGlvbnMgYXJlIGhhcHBlbmluZyBvbiB0aGUgb3RoZXIgY29ubmVjdGlvbnMNCj4gPiA+
-ID4gPiBiZWZvcmUNCj4gPiA+ID4gPiByb3VuZC1yb2Jpbi1pbmcgdG8gdGhlIG1haW4gY29ubmVj
-dGlvbi4uLi4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IElzIHRoZSBmdW5kYW1lbnRhbCBwcm9i
-bGVtIGhlcmUgdGhhdCB3ZSdyZSBub3QgaGFuZGxpbmcgdGhlDQo+ID4gPiA+ID4gPiBTRVE0X1NU
-QVRVU19DQl9QQVRIX0RPV04gLyBTRVE0X1NUQVRVU19DQl9QQVRIX0RPV05fU0VTU0lPTg0KPiA+
-ID4gPiA+ID4gZmxhZ3MNCj4gPiA+ID4gPiA+IGNvcnJlY3RseSBvciBpcyB0aGVyZSBzb21ldGhp
-bmcgZWxzZSBnb2luZyBvbj8NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBZZXMgdGhlIGNsaWVudCBk
-b2Vzbid0IHJlY292ZXIgcHJvcGVybHkuIEJ1dCB0aGUgZml4IHdhc24ndA0KPiA+ID4gPiA+IHRy
-aXZpYWwNCj4gPiA+ID4gPiB0bw0KPiA+ID4gPiA+IG1lIChzbyBJIHRob3VnaHQgbXkgcGF0Y2gg
-d2FzIGVub3VnaCBidXQgSSBzZWUgaXQncyBub3QpLiBTYXkNCj4gPiA+ID4gPiBjbGllbnQNCj4g
-PiA+ID4gPiBzaHV0cyBkb3duIHRoZSBtYWluIGNvbm5lY3Rpb24gYmVjYXVzZSBpdCB3YXMgaWRs
-ZS4gTm93DQo+ID4gPiA+ID4gd2hhdGV2ZXINCj4gPiA+ID4gPiBvcGVyYXRpb25zIGdvZXMgb24g
-YSBkaWZmZXJlbnQgY29ubmVjdGlvbiBpcyBnb2luZyB0byBnZXQNCj4gPiA+ID4gPiBjYWxsYmFj
-aw0KPiA+ID4gPiA+IGRvd24uIFRoZSBvbmx5IHdheSB0aGUgY2xpZW50IGNhbiBjcmVhdGUgYSBu
-ZXcgYmFja2NoYW5uZWwNCj4gPiA+ID4gPiAoYWNjb3JkaW5nDQo+ID4gPiA+ID4gdG8gdGhlIHNw
-ZWMpIGlzIGlmIGl0IGNyZWF0ZXMgYSBicmFuZCBuZXcgY29ubmVjdGlvbiBhbmQNCj4gPiA+ID4g
-PiBzZW5kcw0KPiA+ID4gPiA+IEJJTkRfQ09OTl9UT19TRVNTSU9OIHRoZXJlIChhbGwgZXhpc3Rp
-bmcgY29ubmVjdGlvbnMgYXJlDQo+ID4gPiA+ID4gYWxyZWFkeQ0KPiA+ID4gPiA+IGJvdW5kDQo+
-ID4gPiA+ID4gdG8gZm9yZSBjaGFubmVsIGFuZCBhY2NvcmRpbmcgdG8gdGhlIHNwZWMgeW91IGNh
-bid0IG1vZGlmeQ0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IGV4aXN0aW5nIGJpbmRpbmcpLiBC
-dXQgdGhlbiB3ZSdkIG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgaXQncw0KPiA+ID4gPiA+IHRoZQ0K
-PiA+ID4gPiA+IGZpcnN0DQo+ID4gPiA+ID4gb25lIGluIHRoZSBsaXN0IG9mIGNvbm5lY3Rpb25z
-IHdlIGl0ZXJhdGUgdGhydSAoYXMgaSB0aGluaw0KPiA+ID4gPiA+IDFzdA0KPiA+ID4gPiA+IG1h
-cmtzDQo+ID4gPiA+ID4gdGhlIG1haW4gY29ubmVjdGlvbj8pIGFzIHRoZSBvdGhlciBvcGVyYXRp
-b25zIHRoYXQgc3VwcG9zZWQNCj4gPiA+ID4gPiB0bw0KPiA+ID4gPiA+IG9ubHkNCj4gPiA+ID4g
-PiBnbw0KPiA+ID4gPiA+IG9uIG1haW4gY29ubmVjdGlvbiBuZWVkIHRvIGtub3cgd2hpY2ggY29u
-bmVjdGlvbiB0byBwaWNrLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IFRoZSByZWFzb24gaXQncyBu
-b3Qgc2VlbiBhZ2FpbnN0IGxpbnV4IGlzIGJlY2F1c2UgaXQgZG9lc24ndA0KPiA+ID4gPiA+IGZv
-bGxvdw0KPiA+ID4gPiA+IHRoZSBzcGVjIGlzIGRvZXNuJ3QgcmVqZWN0IGF0dGVtcHRzIHRvIGJp
-bmQgYSBiYWNrY2hhbm5lbCB0bw0KPiA+ID4gPiA+IGFuDQo+ID4gPiA+ID4gYWxyZWFkeSBleGlz
-dGluZyBjb25uZWN0aW9uIHRoYXQgd2FzIG9ubHkgYm91bmQgZm9yIGZvcmUNCj4gPiA+ID4gPiBj
-aGFubmVsLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gT2gsIEkgc2VlLiBTbyB0aGUg
-c2VydmVyIGlzIHJlcGx5aW5nIE5GUzRFUlJfSU5WQUwgaW4gb3JkZXIgdG8NCj4gPiA+ID4gbGV0
-DQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBjbGllbnQga25vdyB0aGF0IGl0IGlzIHRyeWluZyB0byBj
-aGFuZ2UgdGhlIGNoYW5uZWwgYmluZGluZ3MNCj4gPiA+ID4gZm9yDQo+ID4gPiA+IHRoYXQNCj4g
-PiA+ID4gY29ubmVjdGlvbi4NCj4gPiA+IA0KPiA+ID4gV2VsbCBzZXJ2ZXIgaXNuJ3QgZmFpbGlu
-ZyBiZWNhdXNlIGNsaWVudCBpcyBhc2tpbmcgZm9yDQo+ID4gPiBGT1JFX09SX0JPVEgNCj4gPiA+
-IGFuZCBpdCdzIGEgY2hvaWNlIHNvIHNlcnZlciBpcyByZXR1cm5pbmcgRk9SRS4gSSdtIG5vdCBz
-dXJlIHdlDQo+ID4gPiBjYW4NCj4gPiA+IGFzaw0KPiA+ID4gdGhlIHNlcnZlciB0byBmYWlsIHRo
-ZSByZXF1ZXN0IHdpdGggRVJSX0lOVkFMLi4uLiAocmF0aGVyIEkgY2FuDQo+ID4gPiBhc2sNCj4g
-PiA+IGJ1dCApIHJhdGhlciBjYW4gd2UgZXhwZWN0IHRoZSBzZXJ2ZXIgdG8gZG8gdGhhdCBhbHdh
-eXM/DQo+ID4gDQo+ID4gSW4gUkZDNTY2MSwgU2VjdGlvbiAxOC4zNC4zIEkgZm91bmQgdGhlIGZv
-bGxvd2luZyBub3JtYXRpdmUgdGV4dDoNCj4gPiANCj4gPiAgICBJbnZva2luZyBCSU5EX0NPTk5f
-VE9fU0VTU0lPTiBvbiBhIGNvbm5lY3Rpb24gYWxyZWFkeSBhc3NvY2lhdGVkDQo+ID4gd2l0aA0K
-PiA+ICAgIHRoZSBzcGVjaWZpZWQgc2Vzc2lvbiBoYXMgbm8gZWZmZWN0LCBhbmQgdGhlIHNlcnZl
-ciBNVVNUIHJlc3BvbmQNCj4gPiB3aXRoDQo+ID4gICAgTkZTNF9PSywgdW5sZXNzIHRoZSBjbGll
-bnQgaXMgZGVtYW5kaW5nIGNoYW5nZXMgdG8gdGhlIHNldCBvZg0KPiA+ICAgIGNoYW5uZWxzIHRo
-ZSBjb25uZWN0aW9uIGlzIGFzc29jaWF0ZWQgd2l0aC4gIElmIHNvLCB0aGUgc2VydmVyDQo+ID4g
-TVVTVA0KPiA+ICAgIHJldHVybiBORlM0RVJSX0lOVkFMLg0KPiA+IA0KPiA+IA0KPiA+IElPVzog
-aXQgc291bmRzIGxpa2UgeW91ciBzZXJ2ZXIgaXNuJ3QgZm9sbG93aW5nIHRoZSBzcGVjIGVpdGhl
-ci4NCj4gDQo+IFRoYW5rIHlvdSB0aGFuayB5b3UhIEkgbWlzc2VkIHRoYXQuIE9rIHNvIHdlJ2xs
-IGFzc3VtZSBpdCBkb2VzIGFuZCBJDQo+IHdpbGwgdHJ5IHRvIGNvbWUgdXAgd2l0aCB3aGF0IHlv
-dSBhcmUgc3VnZ2VzdGluZy4uLg0KPiANCj4gRG8gd2UgbmVlZCB0byBkbyByZW9yZGVyIHRoZSBj
-b25uZWN0aW9uIGxpc3Q/IEFmdGVyIHdlIHJlc2V0IHRoZQ0KPiBjb25uZWN0aW9uLCBpdCB3aWxs
-IGJlIG9uIHNvbWUgcmFuZG9tIGNvbm5lY3Rpb24gb24gdGhlIGxpc3Qgb2YNCj4gY29ubmVjdGlv
-bnMuIEJ1dCBmb3IgdGhlIE5PX1JPQklOIGNvbm5lY3Rpb25zIHdlIHBpY2sgdGhlIGZpcnN0DQo+
-IGNvbm5lY3Rpb24gaW4gdGhlIGxpc3QgKHdoaWNoIHdpbGwgbm90IGJlIHRoZSBiYWNrY2hhbm5l
-bA0KPiBjb25uZWN0aW9uKS4NCj4gRG9lcyBpdCBtYXR0ZXI/DQoNClRoYXQncyB3aHkgSSBzdWdn
-ZXN0ZWQgdGhlIHJwY190YXNrX2Nsb3NlX2Nvbm5lY3Rpb24oKSB3cmFwcGVyIGJlbG93Lg0KSXQg
-c2hvdWxkIGVuc3VyZSB0aGF0IHdlIGNsb3NlIHRoZSBzYW1lIGNvbm5lY3Rpb24gdGhhdCBnb3Qg
-dGhlDQpORlM0RVJSX0lOVkFMLCBhbmQgdGhlbiB3aGVuIHdlIHJlc3RhcnQgdGhlIFJQQyBjYWxs
-ICh1c2luZw0KcnBjX3Jlc3RhcnRfY2FsbF9wcmVwYXJlKCkpIGl0IHdpbGwganVzdCBhdXRvbWF0
-aWNhbGx5IGNyZWF0ZSBhIG5ldw0KY29ubmVjdGlvbiBvbiB0aGF0IHNhbWUgc3RydWN0IHhwcnQu
-Li4NCg0KPiANCj4gPiA+ID4gSG1tLi4uIElzIHRoZXJlIGFueSByZWFzb24gd2h5IHdlIGNhbid0
-IGp1c3QgYWRkIGEgaGFuZGxlciB0bw0KPiA+ID4gPiBuZnM0X2JpbmRfb25lX2Nvbm5fdG9fc2Vz
-c2lvbl9kb25lKCkgdGhhdCBpbnRlcmNlcHRzDQo+ID4gPiA+IE5GUzRFUlJfSU5WQUwsDQo+ID4g
-PiA+IGFuZA0KPiA+ID4gPiBkaXNjb25uZWN0cyB0aGUgeHBydCBiZWZvcmUgcmV0cnlpbmc/DQo+
-ID4gPiA+IFdlIHNob3VsZCBwcm9iYWJseSBhZGQgYSB3cmFwcGVyIHRvIHhwcnRfZm9yY2VfZGlz
-Y29ubmVjdCgpIGluDQo+ID4gPiA+IGluY2x1ZGUvbGludXgvc3VucnBjL2NsbnQuaC4gU29tZXRo
-aW5nIGxpa2UgdGhlIGZvbGxvd2luZz8NCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBzdGF0
-aWMgaW5saW5lIHZvaWQgcnBjX3Rhc2tfY2xvc2VfY29ubmVjdGlvbihzdHJ1Y3QgcnBjX3Rhc2sN
-Cj4gPiA+ID4gKnRhc2spDQo+ID4gPiA+IHsNCj4gPiA+ID4gICAgICAgICBpZiAodGFzay0+dGtf
-eHBydCkNCj4gPiA+ID4gICAgICAgICAgICAgICAgIHhwcnRfZm9yY2VfZGlzY29ubmVjdCh0YXNr
-LT50a194cHJ0KTsNCj4gPiA+ID4gfQ0KPiA+ID4gPiANCj4gPiANCg0KLS0gDQpUcm9uZCBNeWts
-ZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15
-a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Fri, Apr 17, 2020 at 2:41 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Fri, 2020-04-17 at 14:08 -0400, Olga Kornievskaia wrote:
+> > On Fri, Apr 17, 2020 at 12:53 PM Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > > On Fri, 2020-04-17 at 12:46 -0400, Olga Kornievskaia wrote:
+> > > > On Fri, Apr 17, 2020 at 12:20 PM Trond Myklebust
+> > > > <trondmy@hammerspace.com> wrote:
+> > > > > On Fri, 2020-04-17 at 11:43 -0400, Olga Kornievskaia wrote:
+> > > > > > Hi Trond,
+> > > > > >
+> > > > > > On Fri, Apr 17, 2020 at 11:31 AM Trond Myklebust
+> > > > > > <trondmy@hammerspace.com> wrote:
+> > > > > > > Hi Olga,
+> > > > > > >
+> > > > > > > On Fri, 2020-04-17 at 11:15 -0400, Olga Kornievskaia wrote:
+> > > > > > > > When nconnect is used, SEQUENCE operation currently isn't
+> > > > > > > > bound
+> > > > > > > > to
+> > > > > > > > a particular transport. The problem is created on an idle
+> > > > > > > > mount,
+> > > > > > > > where SEQUENCE is the only operation being sent and
+> > > > > > > > opened
+> > > > > > > > TPC
+> > > > > > > > connections are slowly being close from the lack of use.
+> > > > > > > > If
+> > > > > > > > SEQUENCE
+> > > > > > > > is not assigned to the main connection, the main
+> > > > > > > > connection
+> > > > > > > > can
+> > > > > > > > be closed and with that so is the back channel bound to
+> > > > > > > > that
+> > > > > > > > connection.
+> > > > > > > >
+> > > > > > > > Since the only way client handles callback_path down is
+> > > > > > > > by
+> > > > > > > > sending
+> > > > > > > > BIND_CONN_TO_SESSION requesting to bind both backchannel
+> > > > > > > > and
+> > > > > > > > fore
+> > > > > > > > channel on the connection that was left going, but that
+> > > > > > > > connection
+> > > > > > > > was already bound to only forechannel. According to the
+> > > > > > > > spec,
+> > > > > > > > it's
+> > > > > > > > not allowed to change channel binding after they are
+> > > > > > > > done.
+> > > > > > > >
+> > > > > > > > The fix is to make sure that a lone SEQUENCE always goes
+> > > > > > > > on
+> > > > > > > > the
+> > > > > > > > main connection, keeping backchannel alive.
+> > > > > > > >
+> > > > > > > > Fixes: 5a0c257f8 ("NFS: send state management on a single
+> > > > > > > > connection")
+> > > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > > ---
+> > > > > > > >  fs/nfs/nfs4proc.c | 2 +-
+> > > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > >
+> > > > > > > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > > > > > > index 99e9f2e..461f85d 100644
+> > > > > > > > --- a/fs/nfs/nfs4proc.c
+> > > > > > > > +++ b/fs/nfs/nfs4proc.c
+> > > > > > > > @@ -8857,7 +8857,7 @@ static struct rpc_task
+> > > > > > > > *_nfs41_proc_sequence(struct nfs_client *clp,
+> > > > > > > >               .rpc_client = clp->cl_rpcclient,
+> > > > > > > >               .rpc_message = &msg,
+> > > > > > > >               .callback_ops = &nfs41_sequence_ops,
+> > > > > > > > -             .flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT,
+> > > > > > > > +             .flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT
+> > > > > > > > |
+> > > > > > > > RPC_TASK_NO_ROUND_ROBIN,
+> > > > > > > >       };
+> > > > > > > >       struct rpc_task *ret;
+> > > > > > > >
+> > > > > > >
+> > > > > > > This works only in the case where the client is only
+> > > > > > > sending
+> > > > > > > SEQUENCE
+> > > > > > > instructions. There are other cases where it could be
+> > > > > > > sending
+> > > > > > > out
+> > > > > > > other
+> > > > > > > operations that also renew the lease, but is doing it very
+> > > > > > > infrequently. Won't that also run into the same problem?
+> > > > > >
+> > > > > > Hm... I see so main channel can still go idle and close, when
+> > > > > > infrequent operations are happening on the other connections
+> > > > > > before
+> > > > > > round-robin-ing to the main connection....
+> > > > > >
+> > > > > > > Is the fundamental problem here that we're not handling the
+> > > > > > > SEQ4_STATUS_CB_PATH_DOWN / SEQ4_STATUS_CB_PATH_DOWN_SESSION
+> > > > > > > flags
+> > > > > > > correctly or is there something else going on?
+> > > > > >
+> > > > > > Yes the client doesn't recover properly. But the fix wasn't
+> > > > > > trivial
+> > > > > > to
+> > > > > > me (so I thought my patch was enough but I see it's not). Say
+> > > > > > client
+> > > > > > shuts down the main connection because it was idle. Now
+> > > > > > whatever
+> > > > > > operations goes on a different connection is going to get
+> > > > > > callback
+> > > > > > down. The only way the client can create a new backchannel
+> > > > > > (according
+> > > > > > to the spec) is if it creates a brand new connection and
+> > > > > > sends
+> > > > > > BIND_CONN_TO_SESSION there (all existing connections are
+> > > > > > already
+> > > > > > bound
+> > > > > > to fore channel and according to the spec you can't modify
+> > > > > > the
+> > > > > > existing binding). But then we'd need to make sure that it's
+> > > > > > the
+> > > > > > first
+> > > > > > one in the list of connections we iterate thru (as i think
+> > > > > > 1st
+> > > > > > marks
+> > > > > > the main connection?) as the other operations that supposed
+> > > > > > to
+> > > > > > only
+> > > > > > go
+> > > > > > on main connection need to know which connection to pick.
+> > > > > >
+> > > > > > The reason it's not seen against linux is because it doesn't
+> > > > > > follow
+> > > > > > the spec is doesn't reject attempts to bind a backchannel to
+> > > > > > an
+> > > > > > already existing connection that was only bound for fore
+> > > > > > channel.
+> > > > > >
+> > > > >
+> > > > > Oh, I see. So the server is replying NFS4ERR_INVAL in order to
+> > > > > let
+> > > > > the
+> > > > > client know that it is trying to change the channel bindings
+> > > > > for
+> > > > > that
+> > > > > connection.
+> > > >
+> > > > Well server isn't failing because client is asking for
+> > > > FORE_OR_BOTH
+> > > > and it's a choice so server is returning FORE. I'm not sure we
+> > > > can
+> > > > ask
+> > > > the server to fail the request with ERR_INVAL.... (rather I can
+> > > > ask
+> > > > but ) rather can we expect the server to do that always?
+> > >
+> > > In RFC5661, Section 18.34.3 I found the following normative text:
+> > >
+> > >    Invoking BIND_CONN_TO_SESSION on a connection already associated
+> > > with
+> > >    the specified session has no effect, and the server MUST respond
+> > > with
+> > >    NFS4_OK, unless the client is demanding changes to the set of
+> > >    channels the connection is associated with.  If so, the server
+> > > MUST
+> > >    return NFS4ERR_INVAL.
+> > >
+> > >
+> > > IOW: it sounds like your server isn't following the spec either.
+> >
+> > Thank you thank you! I missed that. Ok so we'll assume it does and I
+> > will try to come up with what you are suggesting...
+> >
+> > Do we need to do reorder the connection list? After we reset the
+> > connection, it will be on some random connection on the list of
+> > connections. But for the NO_ROBIN connections we pick the first
+> > connection in the list (which will not be the backchannel
+> > connection).
+> > Does it matter?
+>
+> That's why I suggested the rpc_task_close_connection() wrapper below.
+> It should ensure that we close the same connection that got the
+> NFS4ERR_INVAL, and then when we restart the RPC call (using
+> rpc_restart_call_prepare()) it will just automatically create a new
+> connection on that same struct xprt...
+
+Ok let me try with an example.
+Start with:
+connection1 (first one on the list) (also the backchannel connection)
+connection2
+connection3
+
+1. connection1 and 2 go idle and are stopped. Now backchannel is down.
+2. connection3 sends a SEQUENCE (or whatever op) and gets callback_path down
+3. client send BIND_CONN_TO_SESSION on connection3. gets ERR_INVAL.
+Client resets the connection3 and sends new BIND_CONN_TO_SESSION and
+now connection3 is our backchannel and fore channel. But connection3
+is not the first one the list of transports
+4. state management operations will pick connection1 out of the list
+(but it's not a backchannel connection).
+
+Is that a problem?
+
+>
+> >
+> > > > > Hmm... Is there any reason why we can't just add a handler to
+> > > > > nfs4_bind_one_conn_to_session_done() that intercepts
+> > > > > NFS4ERR_INVAL,
+> > > > > and
+> > > > > disconnects the xprt before retrying?
+> > > > > We should probably add a wrapper to xprt_force_disconnect() in
+> > > > > include/linux/sunrpc/clnt.h. Something like the following?
+> > > > >
+> > > > >
+> > > > > static inline void rpc_task_close_connection(struct rpc_task
+> > > > > *task)
+> > > > > {
+> > > > >         if (task->tk_xprt)
+> > > > >                 xprt_force_disconnect(task->tk_xprt);
+> > > > > }
+> > > > >
+> > >
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
