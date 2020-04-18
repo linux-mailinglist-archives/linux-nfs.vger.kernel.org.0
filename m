@@ -2,119 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7DE01AF423
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2020 21:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B63E1AF42C
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2020 21:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgDRTQQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Apr 2020 15:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726086AbgDRTQQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Apr 2020 15:16:16 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0EA9C061A0C
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Apr 2020 12:16:15 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 131so4578711lfh.11
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Apr 2020 12:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M5L2K70fxOQxP+uWdRM/yMA+3xinlowUvRSVTNSTLNw=;
-        b=VUI+VnT1NDQO7RfejypC/A0x1WOF6JlDgQOx4uVj0o8myo36afYqYoAB1bDh9hMclE
-         y2579x/RBIr7L8eyYz+tWMdcXNGl1k4dVtK8zltRzr1OvNlhqXGfw7OPYoGf+9sgrfJ0
-         nPVwr3eWFbVskZYoGSYtK1N/R40NufLSxc2Ks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M5L2K70fxOQxP+uWdRM/yMA+3xinlowUvRSVTNSTLNw=;
-        b=p56Tmyo8Taex2NLLZn7rDes2XtiVnRA0JwV688qZbU9hjLwu9uwnMBvOAa9pltAodm
-         O40yCkIxsgb2PiDsQA28rPsQ7/c7Nc3k3zLuC21zSayEuqnr+v5HqILEr8Cu4lz5JtEu
-         EJc669syuI+zHZH8H/oX1hrpBM6FZmU17H6Vyiz4g5MnsxnyNTpG1qmZzTljuLt4Wnin
-         X0no2GgG91vDsew5CBcEO86HfgGMbTgy8pEycYkYLTKFP7qWQqR6FDYsAeaDZBxu2HoK
-         ioW7HjZlW439jtx6Lj+tCOX0kSwUMcdGqGJKk8eKeGbZSkoy/liRuOczle2Z+vbcNlxB
-         HlTQ==
-X-Gm-Message-State: AGi0PubbyGhmPdTaBXruY/uzR/HnMcu3pVfLDjoWLa5YWzw+oeg5o9mD
-        wmOKlIjLeW0FstW6ta+pxGwwNGWrSZI=
-X-Google-Smtp-Source: APiQypLQBw47w7S7AjuQtlmBLZRbF9IakswyjIhdm2AcNB5/hHwhX8mkrrYmt8CT5h6DRNbeyKf1Xg==
-X-Received: by 2002:ac2:5395:: with SMTP id g21mr5634787lfh.61.1587237374318;
-        Sat, 18 Apr 2020 12:16:14 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id r21sm20647950ljp.29.2020.04.18.12.16.13
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 12:16:14 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id y4so5581172ljn.7
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Apr 2020 12:16:13 -0700 (PDT)
-X-Received: by 2002:a2e:1418:: with SMTP id u24mr5613429ljd.265.1587237373258;
- Sat, 18 Apr 2020 12:16:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200418184111.13401-1-rdunlap@infradead.org> <20200418184111.13401-8-rdunlap@infradead.org>
- <20200418185033.GQ5820@bombadil.infradead.org> <b88d6f8b-e6af-7071-cefa-dc12e79116b6@infradead.org>
- <d018321b0f281ff29efb04dd1496c8e6499812fb.camel@perches.com>
-In-Reply-To: <d018321b0f281ff29efb04dd1496c8e6499812fb.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 18 Apr 2020 12:15:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi4QU90W1j1VVUrqdrkrq-0XPA06sjGUm-g1VHRB-35YA@mail.gmail.com>
-Message-ID: <CAHk-=wi4QU90W1j1VVUrqdrkrq-0XPA06sjGUm-g1VHRB-35YA@mail.gmail.com>
-Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in devcoredump.c
-To:     Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1728178AbgDRTRV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 Apr 2020 15:17:21 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:47480 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgDRTRU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Apr 2020 15:17:20 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jPswv-00APdE-Hr; Sat, 18 Apr 2020 21:16:21 +0200
+Message-ID: <ae170e7c4988399e63a00ad8505e397665563d22.camel@sipsolutions.net>
+Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
+ devcoredump.c
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Matthew Wilcox <willy@infradead.org>, Joe Perches <joe@perches.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
+        linux-nfs@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        target-devel <target-devel@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
         Zzy Wysm <zzy@zzywysm.com>
+Date:   Sat, 18 Apr 2020 21:16:19 +0200
+In-Reply-To: <20200418191338.GR5820@bombadil.infradead.org>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+         <20200418184111.13401-8-rdunlap@infradead.org>
+         <20200418185033.GQ5820@bombadil.infradead.org>
+         <b88d6f8b-e6af-7071-cefa-dc12e79116b6@infradead.org>
+         <d018321b0f281ff29efb04dd1496c8e6499812fb.camel@perches.com>
+         <20200418191338.GR5820@bombadil.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:57 AM Joe Perches <joe@perches.com> wrote:
->
-> sysfs_create_link is __must_check
+On Sat, 2020-04-18 at 12:13 -0700, Matthew Wilcox wrote:
+> 
+> > > > >  	if (sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+> > > > >  			      "failing_device"))
+> > > > > -		/* nothing - symlink will be missing */;
+> > > > > +		do_empty(); /* nothing - symlink will be missing */
+> > > > >  
+> > > > >  	if (sysfs_create_link(&dev->kobj, &devcd->devcd_dev.kobj,
+> > > > >  			      "devcoredump"))
+> > > > > -		/* nothing - symlink will be missing */;
+> > > > > +		do_empty(); /* nothing - symlink will be missing */
+> > > > >  
+> > > > >  	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
+> > > > >  	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
+> > > > 
+> > > > Could just remove the 'if's?
+> > > > 
+> > > > +	sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+> > > > +			"failing_device");
+> > > > 
+> > > 
+> > > OK.
+> > 
+> > sysfs_create_link is __must_check
+> 
+> Oh, I missed the declaration -- I just saw the definition.  This is a
+> situation where __must_check hurts us and it should be removed.
+> 
+> Or this code is wrong and it should be
+> 
+> 	WARN(sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+> 			"failing_device");
 
-The way to handle __must_check if you really really don't want to test
-and have good reasons is
+Perhaps it should be. I didn't think it really mattered _that_ much if
+the symlink suddenly went missing, but OTOH I don't even know how it
+could possibly fail.
 
- (a) add a big comment about why this case ostensibly doesn't need the check
+johannes
 
- (b) cast a test of it to '(void)' or something (I guess we could add
-a helper for this). So something like
-
-        /* We will always clean up, we don't care whether this fails
-or succeeds */
-        (void)!!sysfs_create_link(...)
-
-There are other alternatives (like using WARN_ON_ONCE() instead, for
-example). So it depends on the code. Which is why that comment is
-important to show why the code chose that option.
-
-However, I wonder if in this case we should just remove the
-__must_check. Greg? It goes back a long long time.
-
-Particularly for the "nowarn" version of that function. I'm not seeing
-why you'd have to care, particularly if you don't even care about the
-link already existing..
-
-            Linus
