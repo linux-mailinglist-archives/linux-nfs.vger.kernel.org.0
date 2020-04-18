@@ -2,70 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1AFC1AF311
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2020 20:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C57961AF33E
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2020 20:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725923AbgDRSLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Apr 2020 14:11:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40000 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725824AbgDRSLB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Apr 2020 14:11:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587233460;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4MjBHhLWma7Wyo6Y0oaah6/D7fXV7EHmjvl18i27sII=;
-        b=ioJsq6jDqqUymi/qLQOonq70uqML+lxutR1y/JbA3h/mADpYNYIB7yvsamEMYK7MhObPek
-        yHXj4lubS0oBFTvYJPcArylZugqLbDiNKzw2LkD/i7kkHzolXvUwxmR0is31euCFhvWHV0
-        0LJfC5B3F2OrzBKEsC0LyokAlV2pkmg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-VnSCfK7uOTK_mHQ6IZsLpQ-1; Sat, 18 Apr 2020 14:10:58 -0400
-X-MC-Unique: VnSCfK7uOTK_mHQ6IZsLpQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BD3D1005510;
-        Sat, 18 Apr 2020 18:10:57 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-5.ams2.redhat.com [10.36.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BEF660C05;
-        Sat, 18 Apr 2020 18:10:54 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Steve French <smfrench@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-References: <3865908.1586874010@warthog.procyon.org.uk>
-        <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
-Date:   Sat, 18 Apr 2020 20:10:53 +0200
-In-Reply-To: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
-        (Steve French's message of "Fri, 17 Apr 2020 18:23:53 -0500")
-Message-ID: <87a738aclu.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        id S1727884AbgDRSlU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 Apr 2020 14:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgDRSlR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Apr 2020 14:41:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C78C061A41;
+        Sat, 18 Apr 2020 11:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=d5zfrylOKoUmkiJ/VV8Fl3fzLkxXbmDEJr/3MIsevyo=; b=XCwSjlVez+qHxOPmcyTIK6oiMp
+        olawr70vtpi0V1QI9XKQUEdNlzc7gZtydJwYjHnNgNwCiR0Y8ytqLU1885mYKcfU2nNRcSQ+hBEej
+        MiJH64ZiTrBz5h80SHKV7B2XhV/8NA5dx2/XMstBP2kRcY+jAyFTPEP07dibSEvWPpw6URRhjEARq
+        GsW6VSkFXNXfFpWKtacsKtxhxuNePEr2gYhZGljGT1rr1HkTT8hxKqdKHdiJLDwOvTjuHdAESVOeL
+        NqEnuUJjyC5UmLntvc7lJwAg8Acv/O1w1fMRoAZtCHCPa4lyuiz4kTPN/HiIYqU17pqZ6fxYiBEQ9
+        d15hNa1Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPsOv-0007rZ-9I; Sat, 18 Apr 2020 18:41:13 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: [RFC PATCH 0/9] fix -Wempty-body build warnings
+Date:   Sat, 18 Apr 2020 11:41:02 -0700
+Message-Id: <20200418184111.13401-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-* Steve French:
+Hi,
 
->>> The question remains what the expected impact of TTL expiry is.  Will
->>> the kernel just perform a new DNS query if it needs one?
->
-> For SMB3/CIFS mounts, Paulo added support last year for automatic
-> reconnect if the IP address of the server changes.  It also is helpful
-> when DFS (global name space) addresses change.
+When -Wextra is used, gcc emits many warnings about an empty 'if' or
+'else' body, like this:
 
-Do you have reference to the source code implementation?  Thanks.
+../fs/posix_acl.c: In function ‘get_acl’:
+../fs/posix_acl.c:127:22: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+   /* fall through */ ;
+                      ^
 
-Florian
+To quieten these warnings, add a new macro "do_empty()".
+I originally wanted to use do_nothing(), but that's already in use.
 
+It would sorta be nice if "fallthrough" could be coerced for this
+instead of using something like do_empty().
+
+Or should we just use "{}" in place of ";"?
+This causes some odd coding style issue IMO. E.g., see this change:
+
+original:
+ 	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED)
+		/* fall through */ ;
+
+with new macro:
+ 	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED)
+		do_empty(); /* fall through */
+
+using {}:
+ 	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED)
+		{} /* fall through */
+or
+		{ /* fall through */ }
+or even
+ 	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED) {
+		/* fall through */ }
+or
+ 	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED) {
+		} /* fall through */
+
+
+ drivers/base/devcoredump.c         |    5 +++--
+ drivers/dax/bus.c                  |    5 +++--
+ drivers/input/mouse/synaptics.c    |    3 ++-
+ drivers/target/target_core_pscsi.c |    3 ++-
+ drivers/usb/core/sysfs.c           |    2 +-
+ fs/nfsd/nfs4state.c                |    3 ++-
+ fs/posix_acl.c                     |    2 +-
+ include/linux/kernel.h             |    8 ++++++++
+ sound/drivers/vx/vx_core.c         |    3 ++-
+ 9 files changed, 24 insertions(+), 10 deletions(-)
