@@ -2,80 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A1A1AF893
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 10:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 318A91AF8AA
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 10:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725923AbgDSIBh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Apr 2020 04:01:37 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:44886 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgDSIBh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 04:01:37 -0400
-X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Apr 2020 04:01:36 EDT
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 379041B1692ED7;
-        Sun, 19 Apr 2020 07:52:22 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on orion.archlinux.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=ALL_TRUSTED=-1,BAYES_00=-1,
-        DKIMWL_WL_HIGH=-0.001,DKIM_SIGNED=0.1,DKIM_VALID=-0.1,
-        DKIM_VALID_AU=-0.1,T_DMARC_POLICY_NONE=0.01 autolearn=ham
-        autolearn_force=no version=3.4.4
-X-Spam-BL-Results: 
-Received: from didactylos.attlocal.net (unknown [IPv6:2600:1700:57f0:ca20:763a:c795:fcf6:91ea])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: eschwartz)
-        by orion.archlinux.org (Postfix) with ESMTPSA id 786D01B1692EC8;
-        Sun, 19 Apr 2020 07:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=archlinux.org;
-        s=orion; t=1587282742;
-        bh=WVfGD3PKZobGqjA25U/wkz9n5sLv1UH9/4Glx1+gt2g=;
-        h=From:To:Cc:Subject:Date;
-        b=SOrwC+Vm8czx699tuYfmIy/WpUV03V8ZMPj5f04c06WJ5FP+vs9nxQseXA+ZZlJ/E
-         FHRo2dnoQtVVeoaCkE+hZMal9XCNYfgoSojTohZEe/y5ynfesqx1RE04pwD5Wls2+Q
-         x/GUlBKjuAviyBChZbwnJuNUruN26cx5lcHXuBOPk/+0D2hqfgLs+6YKkNrvRH3ja/
-         CdarDC07Q9PX7ON0luq+wOEjegMkTtw+VebSn016BMpNk7Si6evN1EPwLMpr9Un1xT
-         ejMLIPLQaaOe1NK8cn2YUskMmtipnzQwiGt1Ben/R/Ipub8+jpyjR0YKwZKHnkjfwk
-         /3fC45Jg23w2AwW5hGq9NFRbUgaRTSuYZ5NdFmH3HGzQ3T63gHCTNNwH46Hlxe+Qz8
-         ojrICQcOILxSBs4dLHse1ISkolBR3BTQ1kYUV1zNC4l9ZlG7wXlyzuwlCqhQQG514x
-         T9YvQfsiVWPEVLYY+TRepfSZhQBuEkDMj3EQ7SaL+XLpp65RkfHRNcC/A2oZaC0leC
-         yKluwzAwPKFqEYswoOQfaQrM7UEspge8fmPAn2cp5innCpHvhRdlddh8eK+GevBUvb
-         pZFeX1tOhEd3jlABUZUEPiScyxquX0kiKxT97XYolRoqBTYHaHxwnq7FRQHvc21V/B
-         n1saeQ6wrmCyNaE1KkNUpNcM=
-From:   Eli Schwartz <eschwartz@archlinux.org>
-To:     libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] pkg-config: use the correct replacements for libdir/includedir
-Date:   Sun, 19 Apr 2020 03:52:01 -0400
-Message-Id: <20200419075201.1161001-1-eschwartz@archlinux.org>
-X-Mailer: git-send-email 2.26.0
+        id S1726006AbgDSIPy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 04:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725446AbgDSIPy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 04:15:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4604DC061A0C;
+        Sun, 19 Apr 2020 01:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5ESkbM+8vdIgFeaQKLQyxVIJU96HxbIdvJ6LQfSPcow=; b=pvwx1GcXIeC3t5uPawsWBkdVHQ
+        iiXxl+0atw1Ow7dCeTaEPlV5pGZmU5NeEHgiD6GauX1slXAECXQsFNE9NMWu2519ywz/b+wff/WOX
+        TMC/+MPMdjO3TT0Rftrna/Ci0Cahq1lB09MN0hgPjg6UlZQSvFQvI8Hl6eF9ZnaIwxOSfJg5ri8Io
+        KIuagSQHqNGIuLyx0OKk7Kr7BqpWFvOxOSCJWQS71I0fmCgMrFQjcaFVpza7oTJ7VbiVVU4LRpdAF
+        8xATbPDeZWMvxCY4UHfmtjy1TJqqQqEx8Dbn+J6I61UlAQZJU8HDszvtYFjQWk5yWngyPZTufulmD
+        TFNoMHog==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQ57G-0008EZ-Na; Sun, 19 Apr 2020 08:15:50 +0000
+Date:   Sun, 19 Apr 2020 01:15:50 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 8/9] dax: fix empty-body warnings in bus.c
+Message-ID: <20200419081550.GA22341@infradead.org>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-9-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418184111.13401-9-rdunlap@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-They are defined pkg-config variables for a reason, let's reuse them as
-is the intended usage of pkg-config. This ensures various pkg-config
-features continue to work as expected.
+On Sat, Apr 18, 2020 at 11:41:10AM -0700, Randy Dunlap wrote:
+>  				rc = -ENOMEM;
+>  		} else
+> -			/* nothing to remove */;
+> +			do_empty(); /* nothing to remove */
+>  	} else if (action == ID_REMOVE) {
+>  		list_del(&dax_id->list);
+>  		kfree(dax_id);
+>  	} else
+> -		/* dax_id already added */;
+> +		do_empty(); /* dax_id already added */
 
-Signed-off-by: Eli Schwartz <eschwartz@archlinux.org>
----
- libtirpc.pc.in | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/libtirpc.pc.in b/libtirpc.pc.in
-index 38034c5..863950f 100644
---- a/libtirpc.pc.in
-+++ b/libtirpc.pc.in
-@@ -9,4 +9,4 @@ Requires:
- Version: @PACKAGE_VERSION@
- Libs: -L@libdir@ -ltirpc
- Libs.private: -lpthread
--Cflags: -I@includedir@/tirpc
-+Cflags: -I${includedir}/tirpc
--- 
-2.26.0
+This is just nasty.  Please just always turn this bogus warning off
+as the existing code is a perfectly readable idiom while the new code
+is just nasty crap for no good reason at all.
