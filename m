@@ -2,79 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 318A91AF8AA
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 10:16:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0291AF8CD
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 10:38:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgDSIPy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Apr 2020 04:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725446AbgDSIPy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 04:15:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4604DC061A0C;
-        Sun, 19 Apr 2020 01:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5ESkbM+8vdIgFeaQKLQyxVIJU96HxbIdvJ6LQfSPcow=; b=pvwx1GcXIeC3t5uPawsWBkdVHQ
-        iiXxl+0atw1Ow7dCeTaEPlV5pGZmU5NeEHgiD6GauX1slXAECXQsFNE9NMWu2519ywz/b+wff/WOX
-        TMC/+MPMdjO3TT0Rftrna/Ci0Cahq1lB09MN0hgPjg6UlZQSvFQvI8Hl6eF9ZnaIwxOSfJg5ri8Io
-        KIuagSQHqNGIuLyx0OKk7Kr7BqpWFvOxOSCJWQS71I0fmCgMrFQjcaFVpza7oTJ7VbiVVU4LRpdAF
-        8xATbPDeZWMvxCY4UHfmtjy1TJqqQqEx8Dbn+J6I61UlAQZJU8HDszvtYFjQWk5yWngyPZTufulmD
-        TFNoMHog==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQ57G-0008EZ-Na; Sun, 19 Apr 2020 08:15:50 +0000
-Date:   Sun, 19 Apr 2020 01:15:50 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-Subject: Re: [PATCH 8/9] dax: fix empty-body warnings in bus.c
-Message-ID: <20200419081550.GA22341@infradead.org>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-9-rdunlap@infradead.org>
+        id S1725994AbgDSIiC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 04:38:02 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46192 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbgDSIiB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 04:38:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587285480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gtE/RAI8Ll8mxlz3GjJNNnyp/GGzHjOzYL41aghGZqo=;
+        b=KpAID+zlhBw8BsNROAh+bs9SIC01CM/8ER1TUrEL+ZeP4VyaJE5olj+zBGO7zESVinowXu
+        vZinpEcgLEvBvWImcSYtA3+kIXa+VbSTLf5opn5+jeRG72bO7AmvJMfZbs3IvzgobFgesg
+        +ZONGV+j+1K6DsRna1BYij9tgFJLr3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-LHnNx2NRM0CC-We1R3FlPQ-1; Sun, 19 Apr 2020 04:37:56 -0400
+X-MC-Unique: LHnNx2NRM0CC-We1R3FlPQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D694318C35A0;
+        Sun, 19 Apr 2020 08:37:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AB8FA1056;
+        Sun, 19 Apr 2020 08:37:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+References: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk>
+To:     Steve French <smfrench@gmail.com>
+Cc:     dhowells@redhat.com, linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: Re: What's a good default TTL for DNS keys in the kernel
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418184111.13401-9-rdunlap@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <927452.1587285472.1@warthog.procyon.org.uk>
+Date:   Sun, 19 Apr 2020 09:37:52 +0100
+Message-ID: <927453.1587285472@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:41:10AM -0700, Randy Dunlap wrote:
->  				rc = -ENOMEM;
->  		} else
-> -			/* nothing to remove */;
-> +			do_empty(); /* nothing to remove */
->  	} else if (action == ID_REMOVE) {
->  		list_del(&dax_id->list);
->  		kfree(dax_id);
->  	} else
-> -		/* dax_id already added */;
-> +		do_empty(); /* dax_id already added */
+Steve French <smfrench@gmail.com> wrote:
 
-This is just nasty.  Please just always turn this bogus warning off
-as the existing code is a perfectly readable idiom while the new code
-is just nasty crap for no good reason at all.
+> For SMB3/CIFS mounts, Paulo added support last year for automatic
+> reconnect if the IP address of the server changes.  It also is helpful
+> when DFS (global name space) addresses change.
+
+What happens if the IP address the superblock is going to changes, then
+another mount is made back to the original IP address?  Does the second mount
+just pick the original superblock?
+
+David
+
