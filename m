@@ -2,171 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF60D1AF578
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 00:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61F2B1AF712
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 06:54:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgDRWhI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Apr 2020 18:37:08 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36466 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgDRWhI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Apr 2020 18:37:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03IMWJax025251;
-        Sat, 18 Apr 2020 22:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=zK4gJmDAQjm6odpqw+dWgt3X8Z8VkPHJX9eb1aKLC5g=;
- b=x2TF6WJw26JFS9DnzG1jjX7fP7mK0Gmueyj0VEUPz5H83bvjFEEwlne4gN+tk9eBscUm
- 90ro37TBLrsx8aoPw+tGrpex6qPRAvhSHvbeBXswEwzL2kVQ3pz78kuJncF1HNoWMT2j
- QRoWUa/r0eaCnaztQlQ4n8h/igTGoktprS0Lj0IKrdFzvtpr1o3bwUEpjem5uQioamKj
- 82bJVWqQoP+zfd1SQ+rPmWEF1NJGwV8Sey/KtKrs2TWKmazxhP9idWtuAFq86C+upl5u
- lJ2ZrAZYW+xzqm4vONNeX03aSz20xUVcvYXQ9z+0XJHfCyxQGRNSSE1mtNbDXfldBK+t HA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30fsgkj1d6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 18 Apr 2020 22:35:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03IMXRJG022075;
-        Sat, 18 Apr 2020 22:33:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30fqkadq8j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 18 Apr 2020 22:33:49 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03IMXbL4005563;
-        Sat, 18 Apr 2020 22:33:41 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 18 Apr 2020 15:33:37 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 6/9] nfsd: fix empty-body warning in nfs4state.c
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <c838fc1d-3973-9cd8-ecc6-8739af514dd0@infradead.org>
-Date:   Sat, 18 Apr 2020 18:33:35 -0400
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "zzy@zzywysm.com" <zzy@zzywysm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B4067786-F04F-4CE5-B84B-DE5BB0890529@oracle.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-7-rdunlap@infradead.org>
- <CDCF7717-7CBC-47CA-9E83-3A18ECB3AB89@oracle.com>
- <d2e2f7967804446a825ec0ff61095e6640b5a968.camel@hammerspace.com>
- <c838fc1d-3973-9cd8-ecc6-8739af514dd0@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9595 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- spamscore=0 mlxscore=0 malwarescore=0 phishscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004180188
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9595 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004180188
+        id S1725959AbgDSEyJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 00:54:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbgDSEyJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 00:54:09 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343CAC061A0C;
+        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i2so3446439ybk.2;
+        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
+        b=nHn0HnEoktBrbfUcj+ZOPirGnQncKk4bHCrDStjtphOSF7bEr+pXuF9TflkLymQDwU
+         JLP9cTNkEi4eDTTijxfx8Lzqan2IONHkpataQ73Xi23AZLZKRTtqioenP1GMzUTW89F6
+         L/ZnDRYzmODT6t4cQAbj8orEcwDmfiOdLHrLOiLzFrB/RLeWqvOXv+FV/RM9nBV2mPoe
+         H7pGMrAI06Td1kFo9HT9S+PVFkqmIzWCrLdPJ1b1wVJgARkHy9dtWLdi1kLUySdJwXgQ
+         Umj4VWNaUTQPYwFkbjJStreNlh8SMLlUtVA8UogqzA5/CDHHUzIi7m7OLJah7i6spynI
+         MxUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
+        b=pmO0GKLzeQCeMX+WO1ADP8AGlO5UZ87vALfJ4+9tEjXL9keJnjJbPsBYpOxUH/u+e2
+         1bhY1XVcx8Dv4sOmvFcMVBxbDqUx9mQYtaFf/6z3reOptWKV6wp0aiE9XzP/UQO92CZg
+         f5gznff4tG1umK2ETaVWkERJ8oB12RsIi3IQ+pkQ/y71QHHSwOwmX9X3UvbtNTkCBD5E
+         0uKzYnFwyAbVg6uhB9eJXeQKimPaiyWMbWOvzhqOP2ZrAhL3bDjrWjkM/uWmZ40/8EXp
+         ksalpqh8e+w63gkYdix8VdATtTG/UYLRRnS1nNP6wDYP1lsNvBi9g4uVVuF7HYf/ppdH
+         ZvaQ==
+X-Gm-Message-State: AGi0PuY75pTLjoU327C9OkLo5BptHF2bcfgLhDINaRp+SYaBE/pM2mjF
+        DG+tdaWiJUKe5d4kJWxzPjEk9WYMXaTo24NNM/s=
+X-Google-Smtp-Source: APiQypKexOfCMHJoNZ1DUDrRLe7fxIec4nFsf9towAfH9uHBxh8i1vwDgiNOHtLvi8jVmjXwsDfRpb2RLG/yU7rA8RU=
+X-Received: by 2002:a25:cf12:: with SMTP id f18mr9682392ybg.167.1587272048258;
+ Sat, 18 Apr 2020 21:54:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <3865908.1586874010@warthog.procyon.org.uk> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+ <87a738aclu.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87a738aclu.fsf@oldenburg2.str.redhat.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 18 Apr 2020 23:53:57 -0500
+Message-ID: <CAH2r5mth8Jc0dfAOP+hXTp-hJBHoNT4M=J8Ypcq+BhP4a_Wc6Q@mail.gmail.com>
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+commit 28eb24ff75c5ac130eb326b3b4d0dcecfc0f427d
+Author: Paulo Alcantara <paulo@paulo.ac>
+Date:   Tue Nov 20 15:16:36 2018 -0200
+
+    cifs: Always resolve hostname before reconnecting
+
+    In case a hostname resolves to a different IP address (e.g. long
+    running mounts), make sure to resolve it every time prior to calling
+    generic_ip_connect() in reconnect.
+...
+
+(Note that this patch may have some minor dependencies on a few other
+DFS related patches that were merged immediately before it.
+08744015492f cifs: Add support for failover in cifs_reconnect_tcon()
+a3a53b760379 cifs: Add support for failover in smb2_reconnect()
+23324407143d cifs: Only free DFS target list if we actually got one
+e511d31753e3 cifs: start DFS cache refresher in cifs_mount()
+93d5cb517db3 cifs: Add support for failover in cifs_reconnect()
+4a367dc04435 cifs: Add support for failover in cifs_mount()
+1c780228e9d4 cifs: Make use of DFS cache to get new DFS referrals
+
+On Sat, Apr 18, 2020 at 1:11 PM Florian Weimer <fweimer@redhat.com> wrote:
+>
+> * Steve French:
+>
+> >>> The question remains what the expected impact of TTL expiry is.  Will
+> >>> the kernel just perform a new DNS query if it needs one?
+> >
+> > For SMB3/CIFS mounts, Paulo added support last year for automatic
+> > reconnect if the IP address of the server changes.  It also is helpful
+> > when DFS (global name space) addresses change.
+>
+> Do you have reference to the source code implementation?  Thanks.
+>
+> Florian
+>
 
 
-> On Apr 18, 2020, at 6:32 PM, Randy Dunlap <rdunlap@infradead.org> =
-wrote:
->=20
-> On 4/18/20 3:28 PM, Trond Myklebust wrote:
->> On Sat, 2020-04-18 at 14:45 -0400, Chuck Lever wrote:
->>>> On Apr 18, 2020, at 2:41 PM, Randy Dunlap <rdunlap@infradead.org>
->>>> wrote:
->>>>=20
->>>> Fix gcc empty-body warning when -Wextra is used:
->>>>=20
->>>> ../fs/nfsd/nfs4state.c:3898:3: warning: suggest braces around empty
->>>> body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
->>>>=20
->>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: "J. Bruce Fields" <bfields@fieldses.org>
->>>> Cc: Chuck Lever <chuck.lever@oracle.com>
->>>> Cc: linux-nfs@vger.kernel.org
->>>=20
->>> I have a patch in my queue that addresses this particular warning,
->>> but your change works for me too.
->>>=20
->>> Acked-by: Chuck Lever <chuck.lever@oracle.com>
->>>=20
->>> Unless Bruce objects.
->>>=20
->>>=20
->>>> ---
->>>> fs/nfsd/nfs4state.c |    3 ++-
->>>> 1 file changed, 2 insertions(+), 1 deletion(-)
->>>>=20
->>>> --- linux-next-20200417.orig/fs/nfsd/nfs4state.c
->>>> +++ linux-next-20200417/fs/nfsd/nfs4state.c
->>>> @@ -34,6 +34,7 @@
->>>>=20
->>>> #include <linux/file.h>
->>>> #include <linux/fs.h>
->>>> +#include <linux/kernel.h>
->>>> #include <linux/slab.h>
->>>> #include <linux/namei.h>
->>>> #include <linux/swap.h>
->>>> @@ -3895,7 +3896,7 @@ nfsd4_setclientid(struct svc_rqst *rqstp
->>>> 		copy_clid(new, conf);
->>>> 		gen_confirm(new, nn);
->>>> 	} else /* case 4 (new client) or cases 2, 3 (client reboot): */
->>>> -		;
->>>> +		do_empty();
->>=20
->> Urgh... This is just for documentation purposes anyway, so why not =
-just
->> turn it all into a comment by moving the 'else' into the comment =
-field?
->>=20
->> i.e.
->> 	} /* else case 4 (.... */
->>=20
->> 	new->cl_minorversion =3D 0;
->>>> 	gen_callback(new, setclid, rqstp);
->>>> 	add_to_unconfirmed(new);
->=20
-> Like I said earlier, since Chuck has a patch that addresses this,
-> let's just go with that.
+-- 
+Thanks,
 
-I'll post that patch for review as part of my NFSD for-5.8 patches.
-
-
---
-Chuck Lever
-
-
-
+Steve
