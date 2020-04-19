@@ -2,107 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61F2B1AF712
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 06:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7C881AF772
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 08:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDSEyJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Apr 2020 00:54:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725763AbgDSEyJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 00:54:09 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343CAC061A0C;
-        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id i2so3446439ybk.2;
-        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
-        b=nHn0HnEoktBrbfUcj+ZOPirGnQncKk4bHCrDStjtphOSF7bEr+pXuF9TflkLymQDwU
-         JLP9cTNkEi4eDTTijxfx8Lzqan2IONHkpataQ73Xi23AZLZKRTtqioenP1GMzUTW89F6
-         L/ZnDRYzmODT6t4cQAbj8orEcwDmfiOdLHrLOiLzFrB/RLeWqvOXv+FV/RM9nBV2mPoe
-         H7pGMrAI06Td1kFo9HT9S+PVFkqmIzWCrLdPJ1b1wVJgARkHy9dtWLdi1kLUySdJwXgQ
-         Umj4VWNaUTQPYwFkbjJStreNlh8SMLlUtVA8UogqzA5/CDHHUzIi7m7OLJah7i6spynI
-         MxUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
-        b=pmO0GKLzeQCeMX+WO1ADP8AGlO5UZ87vALfJ4+9tEjXL9keJnjJbPsBYpOxUH/u+e2
-         1bhY1XVcx8Dv4sOmvFcMVBxbDqUx9mQYtaFf/6z3reOptWKV6wp0aiE9XzP/UQO92CZg
-         f5gznff4tG1umK2ETaVWkERJ8oB12RsIi3IQ+pkQ/y71QHHSwOwmX9X3UvbtNTkCBD5E
-         0uKzYnFwyAbVg6uhB9eJXeQKimPaiyWMbWOvzhqOP2ZrAhL3bDjrWjkM/uWmZ40/8EXp
-         ksalpqh8e+w63gkYdix8VdATtTG/UYLRRnS1nNP6wDYP1lsNvBi9g4uVVuF7HYf/ppdH
-         ZvaQ==
-X-Gm-Message-State: AGi0PuY75pTLjoU327C9OkLo5BptHF2bcfgLhDINaRp+SYaBE/pM2mjF
-        DG+tdaWiJUKe5d4kJWxzPjEk9WYMXaTo24NNM/s=
-X-Google-Smtp-Source: APiQypKexOfCMHJoNZ1DUDrRLe7fxIec4nFsf9towAfH9uHBxh8i1vwDgiNOHtLvi8jVmjXwsDfRpb2RLG/yU7rA8RU=
-X-Received: by 2002:a25:cf12:: with SMTP id f18mr9682392ybg.167.1587272048258;
- Sat, 18 Apr 2020 21:54:08 -0700 (PDT)
+        id S1725990AbgDSGCv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 02:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgDSGCu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 19 Apr 2020 02:02:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A4B2076A;
+        Sun, 19 Apr 2020 06:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587276170;
+        bh=r2AgjpwBy563/SvDhTEdOgTQsrTjb6KChd2dLbtCIIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pTMv1wODwFpdjz0FVgzA+p2WSCpvCxj18+/q3aiIPhhtKR+jsjHHIdl5zJ2q2+RA3
+         +Tdmi8jGAiqk3VTvUYzIU3dTg9Q3SKwo6y6sZDkWyGvygbRRccfGpH1VpT4kAcKc5E
+         4lTNQxLSLwDJyeMo2kAEPugwsa59XjBdxg3VhiTs=
+Date:   Sun, 19 Apr 2020 08:02:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
+ devcoredump.c
+Message-ID: <20200419060247.GA3535909@kroah.com>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-8-rdunlap@infradead.org>
 MIME-Version: 1.0
-References: <3865908.1586874010@warthog.procyon.org.uk> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
- <87a738aclu.fsf@oldenburg2.str.redhat.com>
-In-Reply-To: <87a738aclu.fsf@oldenburg2.str.redhat.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 18 Apr 2020 23:53:57 -0500
-Message-ID: <CAH2r5mth8Jc0dfAOP+hXTp-hJBHoNT4M=J8Ypcq+BhP4a_Wc6Q@mail.gmail.com>
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200418184111.13401-8-rdunlap@infradead.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-commit 28eb24ff75c5ac130eb326b3b4d0dcecfc0f427d
-Author: Paulo Alcantara <paulo@paulo.ac>
-Date:   Tue Nov 20 15:16:36 2018 -0200
+On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
+> Fix gcc empty-body warning when -Wextra is used:
+> 
+> ../drivers/base/devcoredump.c:297:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+> ../drivers/base/devcoredump.c:301:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  drivers/base/devcoredump.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> --- linux-next-20200417.orig/drivers/base/devcoredump.c
+> +++ linux-next-20200417/drivers/base/devcoredump.c
+> @@ -9,6 +9,7 @@
+>   *
+>   * Author: Johannes Berg <johannes@sipsolutions.net>
+>   */
+> +#include <linux/kernel.h>
 
-    cifs: Always resolve hostname before reconnecting
+Why the need for this .h file being added for reformatting the code?
 
-    In case a hostname resolves to a different IP address (e.g. long
-    running mounts), make sure to resolve it every time prior to calling
-    generic_ip_connect() in reconnect.
-...
+thanks,
 
-(Note that this patch may have some minor dependencies on a few other
-DFS related patches that were merged immediately before it.
-08744015492f cifs: Add support for failover in cifs_reconnect_tcon()
-a3a53b760379 cifs: Add support for failover in smb2_reconnect()
-23324407143d cifs: Only free DFS target list if we actually got one
-e511d31753e3 cifs: start DFS cache refresher in cifs_mount()
-93d5cb517db3 cifs: Add support for failover in cifs_reconnect()
-4a367dc04435 cifs: Add support for failover in cifs_mount()
-1c780228e9d4 cifs: Make use of DFS cache to get new DFS referrals
-
-On Sat, Apr 18, 2020 at 1:11 PM Florian Weimer <fweimer@redhat.com> wrote:
->
-> * Steve French:
->
-> >>> The question remains what the expected impact of TTL expiry is.  Will
-> >>> the kernel just perform a new DNS query if it needs one?
-> >
-> > For SMB3/CIFS mounts, Paulo added support last year for automatic
-> > reconnect if the IP address of the server changes.  It also is helpful
-> > when DFS (global name space) addresses change.
->
-> Do you have reference to the source code implementation?  Thanks.
->
-> Florian
->
-
-
--- 
-Thanks,
-
-Steve
+greg k-h
