@@ -2,88 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D53A1AF774
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 08:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BF31AF78A
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 08:22:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDSGEI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Apr 2020 02:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgDSGEH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 19 Apr 2020 02:04:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413BA2076A;
-        Sun, 19 Apr 2020 06:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587276247;
-        bh=agNi+92Rk4VTgZzA3ehgkSQ9y4v1a+tAYpxKg5s3wAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2a4P62AV1qdwRJhSwItZe45Wmyq7eJCSCexW9g0a3N4ujoGZ8gNWS52E9mXAEcDMu
-         MVTzEtKlOCze+k1ZHx9ZbgImXxdUJq4+HCQIb6h6A/d0jQvRT8FYmdVneCtPIDW3ea
-         oBSwXeCSPEAnzjcpBuad/kRHbvJ+xX2EHIlpiMHI=
-Date:   Sun, 19 Apr 2020 08:04:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
- devcoredump.c
-Message-ID: <20200419060404.GB3535909@kroah.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-8-rdunlap@infradead.org>
- <20200419060247.GA3535909@kroah.com>
+        id S1725923AbgDSGWs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 02:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgDSGWs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 02:22:48 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3DCC061A0C;
+        Sat, 18 Apr 2020 23:22:47 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id u6so6406268ljl.6;
+        Sat, 18 Apr 2020 23:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=IzTtIFRjYXveQaOsap7Ahk5ZI4rl9Tq5J8b2Kvm4YXI=;
+        b=DkrhN0oztnt/6TlHZBaZWxItG3iTHrKv+3OY50mbu4fdcWCDR85VXaNG6gdhmXmNMT
+         W5Xxpbp9QtG7MvXH5AFoGqsefik9MG6q6ZsHaEJjKL71W88o/RNOFIUkc4a2W6q/gVaM
+         Xu5W1Fp8VhojFInwbd04DMztBE0F5n/jJImjmrmtgBkGPw+qFNB32WmTKEAXnA01z3sy
+         Hc8hsUAzbNMhwUeo3ohZK57b9VA9ujJMySuNYBw85dLLljB+fVFj0HEiV3/Ytn/2jA34
+         PrJj1wcBJ3xeuWwjNlzfIa5Yd3/Lxcbd5YHxMZlL45Fj/CXsNe9uGQpZzI17ulqZgnUJ
+         sfaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=IzTtIFRjYXveQaOsap7Ahk5ZI4rl9Tq5J8b2Kvm4YXI=;
+        b=pQPg5o3WZjmsGzONEOzWli0O00vQwnFfpBeHkh37zbNSA2o6mfeKy20+0yNvtDwdPj
+         VpCoJluj1+dYELmb8iYBhVJDqNiKvlwKB/C5RO7X7ajGPXDDzaMbadTnZWGU3i3+32pc
+         Lbhck+pjjNFf4RfbYDnckUxYphssx5iSyvRv85zpDIURuD+kcOjcOkS/9iHOrQIld+Di
+         mFJ7xt6K6MYYUV5GXQqoSBrjQ2RqMU0ryI64J3ppWs0sx3om6NK/nUrNZ7oU/9r9CNM5
+         7Y9u3hNoAOwhSD20hy5vocWCQTLxOPfyav+HabHcCDkVuAHKhUiWTOMmECB1BMwKq5//
+         rGsg==
+X-Gm-Message-State: AGi0PuZZbNT6QVGXd+6xV2H41QPy8nMVaiNyYOPfUPopTDbJ0Mt9Xfa7
+        1kPGod+p63kRpt53lM1DEVErLBQ/uJsAwBN8GGeLVfE+
+X-Google-Smtp-Source: APiQypIpY3aUAzHUQfQLx2jI0YLTTDEpw59oWaAaUqF68KrTWhsXeiTiQmgKQhJGx86x0bo3AGFsTKMaBIRQ6QS+v9U=
+X-Received: by 2002:a2e:9616:: with SMTP id v22mr6182921ljh.107.1587277365815;
+ Sat, 18 Apr 2020 23:22:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200419060247.GA3535909@kroah.com>
+From:   Sun Ted <xulinsun@gmail.com>
+Date:   Sun, 19 Apr 2020 14:22:34 +0800
+Message-ID: <CACiNFG4y9T8tjcpypyfFfOgPjRkc++rNhn85iuuWARA7dXemJA@mail.gmail.com>
+Subject: net/sunrpc Bug ? Unable to handle kernel NULL pointer dereference at
+ virtual address 0000000000000000 on kernel 5.2.37
+To:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        xulin sun <xulinsun@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 08:02:47AM +0200, Greg Kroah-Hartman wrote:
-> On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
-> > Fix gcc empty-body warning when -Wextra is used:
-> > 
-> > ../drivers/base/devcoredump.c:297:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> > ../drivers/base/devcoredump.c:301:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > ---
-> >  drivers/base/devcoredump.c |    5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > --- linux-next-20200417.orig/drivers/base/devcoredump.c
-> > +++ linux-next-20200417/drivers/base/devcoredump.c
-> > @@ -9,6 +9,7 @@
-> >   *
-> >   * Author: Johannes Berg <johannes@sipsolutions.net>
-> >   */
-> > +#include <linux/kernel.h>
-> 
-> Why the need for this .h file being added for reformatting the code?
+Hi Forks,
 
-Ah, the function you add, nevermind, need more coffee...
+On the kernel version 5.2.37 or a bit earlier, running pressure
+testing with module insert & remove, actually the inserted module is
+not special and could be anyone.
+After dozens of testing, there will be throw below call trace and the
+system hung.
+
+Testing script for insert & remove module like below:
+             for each in {1..100} ; do echo "$each" ; insmod
+openvswitch.ko ;  rmmod  openvswitch.ko ; usleep 100000 ; done
+The target machine is: arm64, cortex a53.
+
+Disassembled the line " __wake_up_common_lock+0x98/0xe0 ", it located
+the code "include/linux/spinlock.h" , it should be using the NULL
+pointer "lock->rlock "
+
+static __always_inline void spin_unlock_irqrestore(spinlock_t *lock,
+unsigned long flags)
+{
+        raw_spin_unlock_irqrestore(&lock->rlock, flags);
+
+Did you ever see this issue or have a fix for this based on kernel
+5.2.37 version?
+
+Call trace:
+openvswitch: Open vSwitch switching datapath
+Unable to handle kernel NULL pointer dereference at virtual address
+0000000000000000
+Mem abort info:
+  ESR = 0x86000005
+  Exception class = IABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+user pgtable: 4k pages, 39-bit VAs, pgdp=00000008f2ea9000
+[0000000000000000] pgd=0000000000000000, pud=0000000000000000
+Internal error: Oops: 86000005 [#1] PREEMPT SMP
+Modules linked in: openvswitch hse sch_fq_codel nsh nf_conncount
+nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 [last unloaded:
+openvswitch]
+CPU: 2 PID: 209 Comm: kworker/u9:3 Not tainted 5.2.37-yocto-standard #1
+Hardware name: Freescale S32G275 (DT)
+Workqueue: xprtiod xs_stream_data_receive_workfn
+pstate: 80000085 (Nzcv daIf -PAN -UAO)
+pc : 0x0
+lr : __wake_up_common+0x90/0x150
+sp : ffffff801146ba60
+x29: ffffff801146ba60 x28: ffffff8010d36000
+x27: ffffff801146bb90 x26: 0000000000000000
+x25: 0000000000000003 x24: 0000000000000000
+x23: 0000000000000001 x22: ffffff801146bb00
+x21: ffffff8010d351e8 x20: 0000000000000000
+x19: ffffff80112c37a0 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0000000000000000
+x13: 0000003002000000 x12: 0000902802000000
+x11: 0000000000000000 x10: 000001000000ed01
+x9 : 0000010000000000 x8 : 9b5e0000000048a6
+x7 : 0000000000000068 x6 : ffffff80112c37a0
+x5 : 0000000000000000 x4 : ffffff801146bb90
+x3 : ffffff801146bb90 x2 : 0000000000000000
+x1 : 0000000000000003 x0 : ffffff80112c37a0
+Call trace:
+ 0x0
+ __wake_up_common_lock+0x98/0xe0
+ __wake_up+0x40/0x50
+ wake_up_bit+0x8c/0xb8
+ rpc_make_runnable+0xc8/0xd0
+ rpc_wake_up_task_on_wq_queue_action_locked+0x110/0x278
+ rpc_wake_up_queued_task.part.0+0x40/0x58
+ rpc_wake_up_queued_task+0x38/0x48
+ xprt_complete_rqst+0x68/0x128
+ xs_read_stream.constprop.0+0x2ec/0x3d0
+ xs_stream_data_receive_workfn+0x60/0x190
+ process_one_work+0x1bc/0x440
+ worker_thread+0x50/0x408
+ kthread+0x104/0x130
+ ret_from_fork+0x10/0x1c
+Code: bad PC value
+Kernel panic - not syncing: Fatal exception in interrupt
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,2000200c
+Memory Limit: none
+
+Thanks
+Xulin
