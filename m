@@ -2,110 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F6E1B0AC0
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 14:51:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E91C81B0AF0
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 14:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgDTMus (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Apr 2020 08:50:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29118 "EHLO
+        id S1729288AbgDTMv4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Apr 2020 08:51:56 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29452 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726835AbgDTMur (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 08:50:47 -0400
+        by vger.kernel.org with ESMTP id S1729206AbgDTMvy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 08:51:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587387046;
+        s=mimecast20190719; t=1587387112;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=Qd7OOKpIxtwOfSosvMWX0atS+SJ4FcQrlo50hLYGJzY=;
-        b=X8QfgLBQVqtK4Xhj8yGSAKe88yLItPwR1WmKqkKv9u7F0Po+7Bn/OO0MtkweUJQAnQXXUx
-        DkEtxPMNl0y2mom4G2VZ2Tv5415XOjMmgIaiEvav0NSmh7LdIxy7s/e8Y3pyWz1+ZzRe/m
-        r+U7N2kDqksolStIi5WRumFUrEtC5Yo=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qI4LH96Te2D61UkMMiu56eI+whpozLCjxv2Sx2J1tLs=;
+        b=OAdnvoOUUhPKmWvDzvfS4AG+b13krnEf7pUG9nQ2u3pxuIWAvhn06V14y1WQtsFZThYiK5
+        bhr+RCFyvd1gt/bIMPVQeZyZHKkNEP/rX8SB2TwMbZ8HbNqOnb7hdefudaxwI/V8n4j2ht
+        vwgxA2dj78OrtDhuPW8U2+xlGoQ9nOg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-OLs-iH1TMR6UYJY09Au9pg-1; Mon, 20 Apr 2020 08:50:39 -0400
-X-MC-Unique: OLs-iH1TMR6UYJY09Au9pg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-358-Ml-2KNMWM828K23lPn3ExQ-1; Mon, 20 Apr 2020 08:51:48 -0400
+X-MC-Unique: Ml-2KNMWM828K23lPn3ExQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84785802562;
-        Mon, 20 Apr 2020 12:50:37 +0000 (UTC)
-Received: from nevermore.foobar.lan (unknown [10.74.8.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B41126578;
-        Mon, 20 Apr 2020 12:50:35 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 18:20:31 +0530
-From:   Achilles Gaikwad <agaikwad@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     bfields@fieldses.org, trondmy@hammerspace.com, kdsouza@redhat.com
-Subject: [PATCH v3] nfsd4: add filename to states output
-Message-ID: <20200420125031.GA44720@nevermore.foobar.lan>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162BF1005510;
+        Mon, 20 Apr 2020 12:51:47 +0000 (UTC)
+Received: from max.home.com (ovpn-114-63.ams2.redhat.com [10.36.114.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5EB15DA7C;
+        Mon, 20 Apr 2020 12:51:43 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "akpm@osdl.org" <akpm@osdl.org>,
+        "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "okir@suse.de" <okir@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
+        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>
+Subject: Re: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon, 20 Apr 2020 14:51:41 +0200
+Message-Id: <20200420125141.18002-1-agruenba@redhat.com>
+In-Reply-To: <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
+References: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn> <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add filename to states output for ease of debugging.
+Am Mo., 20. Apr. 2020 um 14:15 Uhr schrieb Trond Myklebust <trondmy@hamme=
+rspace.com>:
+> I don't really see any alternative to adding a 'dfalloc' to track the
+> allocated dfacl separately.
 
-Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
-Signed-off-by: Kenneth Dsouza <kdsouza@redhat.com>
+Something like the attached patch should work as well.
+
+Thanks,
+Andreas
+
 ---
- fs/nfsd/nfs4state.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/nfs/nfs3acl.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index e32ecedece0f..27338640959d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2404,6 +2404,11 @@ static void states_stop(struct seq_file *s, void *v)
- 	spin_unlock(&clp->cl_lock);
- }
- 
-+static void nfs4_show_fname(struct seq_file *s, struct nfsd_file *f)
-+{
-+         seq_printf(s, "filename: \"%pD2\"", f->nf_file);
-+}
-+
- static void nfs4_show_superblock(struct seq_file *s, struct nfsd_file *f)
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c60..f1581f11c220 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,41 @@ int nfs3_proc_setacls(struct inode *inode, struct p=
+osix_acl *acl,
+=20
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
  {
- 	struct inode *inode = f->nf_inode;
-@@ -2449,6 +2454,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
- 
- 	nfs4_show_superblock(s, file);
- 	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
-+	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
- 	nfsd_file_put(file);
-@@ -2480,6 +2487,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
- 	nfs4_show_superblock(s, file);
- 	/* XXX: open stateid? */
- 	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
-+	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
- 	nfsd_file_put(file);
-@@ -2506,6 +2515,8 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 	/* XXX: lease time, whether it's being recalled. */
- 
- 	nfs4_show_superblock(s, file);
-+	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
- 	seq_printf(s, " }\n");
- 
- 	return 0;
-@@ -2524,6 +2535,8 @@ static int nfs4_show_layout(struct seq_file *s, struct nfs4_stid *st)
- 	/* XXX: What else would be useful? */
- 
- 	nfs4_show_superblock(s, file);
-+	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
- 	seq_printf(s, " }\n");
- 
- 	return 0;
--- 
+-	struct posix_acl *alloc =3D NULL, *dfacl =3D NULL;
++	struct posix_acl *orig =3D acl, *dfacl =3D NULL;
+ 	int status;
+=20
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc =3D dfacl =3D get_acl(inode, ACL_TYPE_DEFAULT);
+-			if (IS_ERR(alloc))
+-				goto fail;
++			dfacl =3D get_acl(inode, ACL_TYPE_DEFAULT);
++			status =3D PTR_ERR(dfacl);
++			if (IS_ERR(dfacl))
++				goto out;
+ 			break;
+=20
+ 		case ACL_TYPE_DEFAULT:
+ 			dfacl =3D acl;
+-			alloc =3D acl =3D get_acl(inode, ACL_TYPE_ACCESS);
+-			if (IS_ERR(alloc))
+-				goto fail;
++			acl =3D get_acl(inode, ACL_TYPE_ACCESS);
++			status =3D PTR_ERR(acl);
++			if (IS_ERR(acl))
++				goto out;
+ 			break;
+ 		}
+ 	}
+=20
+ 	if (acl =3D=3D NULL) {
+-		alloc =3D acl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+-		if (IS_ERR(alloc))
+-			goto fail;
++		acl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		status =3D PTR_ERR(acl);
++		if (IS_ERR(acl))
++			goto out;
+ 	}
+ 	status =3D __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl !=3D orig)
++		posix_acl_release(acl);
++	if (dfacl !=3D orig)
++		posix_acl_release(dfacl);
+ 	return status;
+-
+-fail:
+-	return PTR_ERR(alloc);
+ }
+=20
+ const struct xattr_handler *nfs3_xattr_handlers[] =3D {
+
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+--=20
 2.25.3
 
