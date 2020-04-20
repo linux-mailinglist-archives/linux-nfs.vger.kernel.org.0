@@ -2,80 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A41D11B0C39
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 15:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B0F1B0C51
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 15:13:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgDTNEt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Apr 2020 09:04:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47880 "EHLO
+        id S1726050AbgDTNNw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Apr 2020 09:13:52 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33599 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726287AbgDTNEs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 09:04:48 -0400
+        by vger.kernel.org with ESMTP id S1726760AbgDTNNs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 09:13:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587387887;
+        s=mimecast20190719; t=1587388427;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W/bxTTX2WEiUDHSLV77/6UHjct+uk1657fsz3qpCp+I=;
-        b=GBFcZPhHgAfgtRHndsOLYevqpMbRbexqLHXLQOwibGNCiK8/EhPgQxdohKZXqpQJmM8Sb0
-        DYlW6LqonqDMUF5NMim2C16KA0fIZTkRvjxvGp/4HQWPO+R2KCjo2H6bxsDmzTTW6ZmoS8
-        jFQ1qHt32ZjcQARwyKos3g1tPkXr9JI=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-d1HGWHi6M8G5NXW8FElSqA-1; Mon, 20 Apr 2020 09:04:43 -0400
-X-MC-Unique: d1HGWHi6M8G5NXW8FElSqA-1
-Received: by mail-oo1-f69.google.com with SMTP id u14so1871358oon.17
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Apr 2020 06:04:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W/bxTTX2WEiUDHSLV77/6UHjct+uk1657fsz3qpCp+I=;
-        b=iUiPLxt3uJWfEGREgWqfs7S6lNwiPsdjFHRQB5H19wvJP+LA9i9WHNOtyGwP5MdaP1
-         ruuO7870VS8XM4sB5zn6hdIF59ZOIoBZaGNCBK4mqExX+Mq/dxZCJ4d+zZtGYJbSUojj
-         ZE7acQhr/Gzino5iPJIfbWJoipvPZ91bzGt8lkengi+5ujVpwi53CI6MyoP78bDLQPbN
-         tovNZuHGMDkG362Wm8dE494I2arDXvue95zLlpm+a51wu4HIqi0g+s3Ihvs7KMgX3sS1
-         BnQNTM1WxZSNOLT9rwe3Ty3cOYn/T18kOuO+RbQWH6wwgTJimMHL6236WC2FYfPrbryr
-         iRbA==
-X-Gm-Message-State: AGi0PuZO0zNUpSFcSsF1BCQE5vLkc3cxlUpK+aa7eNBjHIZZm4jKwEHx
-        n/CKploWfTW34f29v9RUrAJ0BGpy5VMT26E+ce1y4gync37lsuduJ6O3BAugoHwvMvWSBhSa2Fp
-        uJvCPUXoDcFqaL/3w3sW+zFNP595Xw3j6XaTj
-X-Received: by 2002:aca:88d:: with SMTP id 135mr9971538oii.10.1587387883080;
-        Mon, 20 Apr 2020 06:04:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLY7P4yV5E3/wHnumRqm5PZKROtZDJ6lfZUbx8EURZu+U+ZcCM/EEpfnJ9UL6QjsmXOxs19CnraHACJqSY6K+E=
-X-Received: by 2002:aca:88d:: with SMTP id 135mr9971505oii.10.1587387882792;
- Mon, 20 Apr 2020 06:04:42 -0700 (PDT)
+        bh=IYew2ybNbEYlxnWhOLAX8rprgalSjY8htLDKj7llLh0=;
+        b=f/2co/SUzVgqO+vx5jBvEWWT0ZbE7IJgrb7wpxxCkS6cnhDWFHcocKa5iYw8v6fhe1Bf0j
+        WXtK1UTtA1fjvHYzfNiQv7Y2+yWzFVI0hGDs6w1QLZXmeErm0ZXcx1hsJYmNDitVS35fxK
+        RBr57UUVzEb+ct7eka7VJO0DKky4A7E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-8q1U0xdCNU2fff9u2tmIGQ-1; Mon, 20 Apr 2020 09:13:45 -0400
+X-MC-Unique: 8q1U0xdCNU2fff9u2tmIGQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80352149C1;
+        Mon, 20 Apr 2020 13:13:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BDD510013A1;
+        Mon, 20 Apr 2020 13:13:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <87imhvj7m6.fsf@cjr.nz>
+References: <87imhvj7m6.fsf@cjr.nz> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <927453.1587285472@warthog.procyon.org.uk>
+To:     Paulo Alcantara <pc@cjr.nz>
+Cc:     dhowells@redhat.com, Steve French <smfrench@gmail.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: Re: What's a good default TTL for DNS keys in the kernel
 MIME-Version: 1.0
-References: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
- <20200420125141.18002-1-agruenba@redhat.com> <52a445020247f4dbe810ce757e48cd563a69c4ce.camel@hammerspace.com>
-In-Reply-To: <52a445020247f4dbe810ce757e48cd563a69c4ce.camel@hammerspace.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Mon, 20 Apr 2020 15:04:31 +0200
-Message-ID: <CAHc6FU411Eoo_E=aQiR=Vk2Tx6XCZEuiz25NykWY+dd5wKrszg@mail.gmail.com>
-Subject: Re: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "akpm@osdl.org" <akpm@osdl.org>,
-        "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "okir@suse.de" <okir@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
-        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1136023.1587388420.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 20 Apr 2020 14:13:40 +0100
+Message-ID: <1136024.1587388420@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 2:59 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
-> Well, that should Oops when either IS_ERR(acl) or IS_ERR(dfacl)
-> triggers, shouldn't it?
+Paulo Alcantara <pc@cjr.nz> wrote:
 
-Yes, checks missings. But you get the idea.
+> >> For SMB3/CIFS mounts, Paulo added support last year for automatic
+> >> reconnect if the IP address of the server changes.  It also is helpfu=
+l
+> >> when DFS (global name space) addresses change.
+> >
+> > What happens if the IP address the superblock is going to changes, the=
+n
+> > another mount is made back to the original IP address?  Does the secon=
+d mount
+> > just pick the original superblock?
+> =
 
-Thanks,
-Andreas
+> It is going to transparently reconnect to the new ip address, SMB share,
+> and cifs superblock is kept unchanged.  We, however, update internal
+> TCP_Server_Info structure to reflect new destination ip address.
+> =
+
+> For the second mount, since the hostname (extracted out of the UNC path
+> at mount time) resolves to a new ip address and that address was saved e=
+arlier
+> in TCP_Server_Info structure during reconnect, we will end up
+> reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super()=
+.
+
+Would that be a bug?
+
+David
 
