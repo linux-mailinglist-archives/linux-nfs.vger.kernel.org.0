@@ -2,157 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BBE21AFDF8
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2020 22:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 037371AFF0D
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 02:03:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgDSUPr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Apr 2020 16:15:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38442 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725905AbgDSUPr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 16:15:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587327345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dz1cnU6WA4NYfV3z7iMjwWJCTB21f7P+TYeg4ywg2m4=;
-        b=BILOi0QwCkdUa2pqzXAMM5sEIpr95HzSDuQB/qqgYj00p4gYDwJdQNsT5VCg0p/AeZEkmK
-        Ck4kmvTZBjp0zE/T1fn0JwWKJgyxhjEFOhsVAnnz6TqpC+lHJ1zt/9lZ9PuVfdFZx21kLa
-        jWFxcwiVcr264viE89RPAc47Ddg2zu4=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-boFYBOuBOBeDVAL7vJvTOA-1; Sun, 19 Apr 2020 16:15:43 -0400
-X-MC-Unique: boFYBOuBOBeDVAL7vJvTOA-1
-Received: by mail-lf1-f71.google.com with SMTP id b16so3299882lfb.19
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Apr 2020 13:15:43 -0700 (PDT)
+        id S1725950AbgDTAC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Apr 2020 20:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725947AbgDTAC5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Apr 2020 20:02:57 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51D2C061A0C;
+        Sun, 19 Apr 2020 17:02:57 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g74so8823204qke.13;
+        Sun, 19 Apr 2020 17:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=B7xhq+APf45x2wvg9KIt4Ho6+03Chcke1iwq0BwwM+M=;
+        b=MscsKhTEA6Jnkt8Ng2/gx2Arr179frr1l9cNMNP71SdbeHVAWRGTZaD9FbnSOu5uhr
+         xhCjjFsRkkIJuVCdT6fhtKfh2XTFtHG+GOP7r6o3la6oRTweSy7TtNUNMqiZzMKQHG7v
+         VlOkNaXPUxCLdjIMzWoLAlTAoPML2KLybCHhE6jJStU+2iSmsnkeoTq0aGcTKeS+P1oD
+         WnC2L2pe4+JNlwzYlEDBHNuANRuDF+CcAfR7ZWMeB1zoHeSr1tyQg5fJxqBhHOGxlu9Q
+         SlJUMHQAJp9KjtZMQhXCxffDtibVVncFBst04AW7Xl/exNJlTM1FR/v3gQyU2YApHS89
+         xYJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dz1cnU6WA4NYfV3z7iMjwWJCTB21f7P+TYeg4ywg2m4=;
-        b=WB+eHC+YKhPTKm+Kg6OmJwBL03rU5avAeQa+c9exTZQgc5l8ZjbMu3/mTduX2XpizG
-         +Gez+ybno15hKir0Si08mIGc2stQZHZN02s+YVZrlcEuKIzk8SznzNaV1Zb73ClbCOE5
-         H9IE7v6v/9ayUAf/VUM9Xi70RdjIgeu+FwTrutrnIKV7b5fiRdcr300oZ7AxxVouEXq+
-         4W3oJhe4S9nJld/1YHewuEsz9V8LNaLICRqhdmaz6IVdj+osZOWIcX03YfEANZJE5yZI
-         kgC96jtY0aL+f92pYS88YPNJ+K2nqq7lghm2K/gBN27vxr9ENqMDrSGD9ARbRom9E7Zb
-         qRtA==
-X-Gm-Message-State: AGi0PuY54MafHYzaZkdqGqn8WJTvrcPcwCZCJcTE1VIWgtENHueAgQ4i
-        LbaLqlkeS8ejCk4puzcGdJaoJmZrGV3s7QXEO4RXuPG0XOCX/jyRheVpAk0h1deN5ZXMsWSne9V
-        QNnzzDrFVm1IT72mJpUKmQi3sMK2O4uxP7vJL
-X-Received: by 2002:ac2:4554:: with SMTP id j20mr8543749lfm.91.1587327341810;
-        Sun, 19 Apr 2020 13:15:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLAzflkwLhWJFyl+eq9K8QUtWCaZscYI3ap+CfTzzRsH+jdTcW0VhcmNGLZQDihjdzigGXR5FoDiujXom5dBr8=
-X-Received: by 2002:ac2:4554:: with SMTP id j20mr8543744lfm.91.1587327341583;
- Sun, 19 Apr 2020 13:15:41 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=B7xhq+APf45x2wvg9KIt4Ho6+03Chcke1iwq0BwwM+M=;
+        b=BF/Mbqkfqi8+upjxYpuxe8/LnXTQhFLnuJVbP7L6kVYch3RsMi44yzZkKuC9k0wTGG
+         DlpebsjOny48iR5bVUS5IId8W8+/TW6tWeH/HQ6s9E4miegiTo9kFuH5bDImJmyZxC3i
+         L/iISyNdMZZ/Ieqi07ZE5GFzG8D5i2p2sEo4BFLsHQFw2fGH0RtfpzcgxFl82gTvXQzT
+         Xy4jXDQRd3FXMEz59ZIxjdeeXv4JQyAsm55MbwA2qD8DFRTfI7EIuFYKWrfPYAoIAj0+
+         9D076uko4fGFnzgATpbKpIyeLFVo3X6wDY8Lno2IJrbEw0LDv9aC2bWOxUV12cCoxCAP
+         ep5A==
+X-Gm-Message-State: AGi0PuYaLRdbKxZN1nqWIu/JGMFuawRuYZWWJfV81udSMI7DYErO0lv8
+        j5Crk3HEk5mmhHfhR4LQq1c4lqOO
+X-Google-Smtp-Source: APiQypIbwA2jcpLiZ0M7FZU1gj+i3IUO+DwedgVWGEjmMbkPPfjFDDljXe7qBU+N/NIIJBBKxr1DLg==
+X-Received: by 2002:ae9:ef93:: with SMTP id d141mr13783889qkg.311.1587340976769;
+        Sun, 19 Apr 2020 17:02:56 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id o43sm6087979qtc.23.2020.04.19.17.02.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 17:02:56 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 03K02sIh016690;
+        Mon, 20 Apr 2020 00:02:54 GMT
+Subject: [PATCH v1 0/3] NFS/RDMA client patches for v5.7-rc
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     anna.schumaker@netapp.com
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Sun, 19 Apr 2020 20:02:54 -0400
+Message-ID: <20200420000223.6417.32126.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20200419173620.GA98107@nevermore.foobar.lan> <4374ca0a713db31a6fc17d653cd5fe54f2f95ec7.camel@hammerspace.com>
-In-Reply-To: <4374ca0a713db31a6fc17d653cd5fe54f2f95ec7.camel@hammerspace.com>
-From:   Achilles Gaikwad <agaikwad@redhat.com>
-Date:   Mon, 20 Apr 2020 01:45:30 +0530
-Message-ID: <CAK0MK2rcyFybBXhAzGze=S-44+GdK7tphPVm45Qw7Z2p-p-JPA@mail.gmail.com>
-Subject: Re: [PATCH] nfsd4: add filename to states output
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks for the help Trond!
-I'll fix the code and send another patch.
+Hi Anna-
 
-Best,
-- Achilles
+Patches 1 and 3 fix problems introduced in v5.7, and patch 2
+addresses a potential crasher that's been around for a while.
+
+Please consider these for 5.7-rc. Thanks!
+
 ---
 
-On Mon, Apr 20, 2020 at 12:42 AM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> On Sun, 2020-04-19 at 23:06 +0530, Achilles Gaikwad wrote:
-> > Add filename to states output for ease of debugging.
-> >
-> > Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
-> > Signed-off-by: Kenneth Dsouza <kdsouza@redhat.com>
-> > ---
-> >  fs/nfsd/nfs4state.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index e32ecedece0f..0f4ed5e3fbe4 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -2414,6 +2414,11 @@ static void nfs4_show_superblock(struct
-> > seq_file *s, struct nfsd_file *f)
-> >                                        inode->i_ino);
-> >  }
-> >
-> > +static void nfs4_show_fname(struct seq_file *s, struct nfsd_file *f)
-> > +{
-> > +     seq_printf(s, "filename: \"%s\"", f->nf_file->f_path.dentry-
-> > >d_name.name);
->
-> Please consider using the '%pD' format specifier, as described in
-> Documentation/core-api/printk-formats.rst, which is designed to avoid
-> races with rename in cases like the above.
->
-> Note that most debugging printks use something like %pD2 in order to
-> display the name of the parent directory as well, in which case you
-> want
->
->         seq_printf (s, "filename: \"%pD2\"", f->nf_file);
->
-> > +}
-> > +
-> >  static void nfs4_show_owner(struct seq_file *s, struct
-> > nfs4_stateowner *oo)
-> >  {
-> >       seq_printf(s, "owner: ");
-> > @@ -2449,6 +2454,8 @@ static int nfs4_show_open(struct seq_file *s,
-> > struct nfs4_stid *st)
-> >
-> >       nfs4_show_superblock(s, file);
-> >       seq_printf(s, ", ");
-> > +     nfs4_show_fname(s, file);
-> > +     seq_printf(s, ", ");
-> >       nfs4_show_owner(s, oo);
-> >       seq_printf(s, " }\n");
-> >       nfsd_file_put(file);
-> > @@ -2480,6 +2487,8 @@ static int nfs4_show_lock(struct seq_file *s,
-> > struct nfs4_stid *st)
-> >       nfs4_show_superblock(s, file);
-> >       /* XXX: open stateid? */
-> >       seq_printf(s, ", ");
-> > +     nfs4_show_fname(s, file);
-> > +     seq_printf(s, ", ");
-> >       nfs4_show_owner(s, oo);
-> >       seq_printf(s, " }\n");
-> >       nfsd_file_put(file);
-> > @@ -2506,6 +2515,7 @@ static int nfs4_show_deleg(struct seq_file *s,
-> > struct nfs4_stid *st)
-> >       /* XXX: lease time, whether it's being recalled. */
-> >
-> >       nfs4_show_superblock(s, file);
-> > +     nfs4_show_fname(s, file);
-> >       seq_printf(s, " }\n");
-> >
-> >       return 0;
-> > @@ -2524,6 +2534,7 @@ static int nfs4_show_layout(struct seq_file *s,
-> > struct nfs4_stid *st)
-> >       /* XXX: What else would be useful? */
-> >
-> >       nfs4_show_superblock(s, file);
-> > +     nfs4_show_fname(s, file);
-> >       seq_printf(s, " }\n");
-> >
-> >       return 0;
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+Chuck Lever (3):
+      xprtrdma: Restore wake-up-all to rpcrdma_cm_event_handler()
+      xprtrdma: Fix trace point use-after-free race
+      xprtrdma: Fix use of xdr_stream_encode_item_{present,absent}
 
+
+ include/trace/events/rpcrdma.h |   12 ++++--------
+ net/sunrpc/xprtrdma/rpc_rdma.c |   15 +++++++++++----
+ net/sunrpc/xprtrdma/verbs.c    |    3 ++-
+ 3 files changed, 17 insertions(+), 13 deletions(-)
+
+--
+Chuck Lever
