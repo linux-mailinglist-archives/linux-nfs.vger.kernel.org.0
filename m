@@ -2,115 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 865F91B18FF
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Apr 2020 00:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC2AA1B1944
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Apr 2020 00:15:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDTWED (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Apr 2020 18:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTWEC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 18:04:02 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C9EC061A0C
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Apr 2020 15:04:02 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id ED4A5C53; Mon, 20 Apr 2020 18:04:01 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 18:04:01 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Achilles Gaikwad <agaikwad@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com,
-        kdsouza@redhat.com
-Subject: Re: [PATCH v3] nfsd4: add filename to states output
-Message-ID: <20200420220401.GB3571@fieldses.org>
-References: <20200420125031.GA44720@nevermore.foobar.lan>
+        id S1727019AbgDTWOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Apr 2020 18:14:53 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37542 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726362AbgDTWOr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 18:14:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587420886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MiSDbiTo+2+0bF+oftBWtRobU1R64CceTEeiiGvXzRk=;
+        b=WeENLdUECtNUJblMqbb/nZmabXuDc+QE8ThLrx5QTdYx3eueUaDGnaS8dIJUB/6qUT7mOA
+        U7Pad0ZTIfXupxjIKqa07/aeew6MN84qyGRt31t3xcGxZJCWdSaBBc2pY3HCeUW5R5fhng
+        SRDZIFHRjrGcs6g9a97Nxyg/ggyTax0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-aoNIUofJN7OwJncvIaYdTg-1; Mon, 20 Apr 2020 18:14:44 -0400
+X-MC-Unique: aoNIUofJN7OwJncvIaYdTg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 893061005509;
+        Mon, 20 Apr 2020 22:14:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8BB676E60;
+        Mon, 20 Apr 2020 22:14:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <878siq587w.fsf@cjr.nz>
+References: <878siq587w.fsf@cjr.nz> <87imhvj7m6.fsf@cjr.nz> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <927453.1587285472@warthog.procyon.org.uk> <1136024.1587388420@warthog.procyon.org.uk>
+To:     Paulo Alcantara <pc@cjr.nz>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Steve French <smfrench@gmail.com>, jlayton@redhat.com,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: cifs - Race between IP address change and sget()?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420125031.GA44720@nevermore.foobar.lan>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1986039.1587420879.1@warthog.procyon.org.uk>
+Date:   Mon, 20 Apr 2020 23:14:39 +0100
+Message-ID: <1986040.1587420879@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:20:31PM +0530, Achilles Gaikwad wrote:
-> Add filename to states output for ease of debugging.
+Paulo Alcantara <pc@cjr.nz> wrote:
 
-Thanks!
-
-The results may be surprising for disconnected dentries.  E.g., start a
-"tail -f" on a file on an NFS export, then reboot the server and give
-the client a chance to recover, and then look at /proc/fs/nfsd/clients,
-and you'll just see
-
-	filename: "/"
-
-But, I suppose it's still nice to print the pathname when it's
-available.  The one improvement I can think of is to print something
-like "<disconnected>" in that case.  I'm not sure where that logic would
-go.
-
---b.
-
+> >> > What happens if the IP address the superblock is going to changes, then
+> >> > another mount is made back to the original IP address?  Does the second
+> >> > mount just pick the original superblock?
+> >> 
+> >> It is going to transparently reconnect to the new ip address, SMB share,
+> >> and cifs superblock is kept unchanged.  We, however, update internal
+> >> TCP_Server_Info structure to reflect new destination ip address.
+> >> 
+> >> For the second mount, since the hostname (extracted out of the UNC path
+> >> at mount time) resolves to a new ip address and that address was saved
+> >> earlier in TCP_Server_Info structure during reconnect, we will end up
+> >> reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
+> >
+> > Would that be a bug?
 > 
-> Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
-> Signed-off-by: Kenneth Dsouza <kdsouza@redhat.com>
-> ---
->  fs/nfsd/nfs4state.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Probably.
 > 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index e32ecedece0f..27338640959d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2404,6 +2404,11 @@ static void states_stop(struct seq_file *s, void *v)
->  	spin_unlock(&clp->cl_lock);
->  }
->  
-> +static void nfs4_show_fname(struct seq_file *s, struct nfsd_file *f)
-> +{
-> +         seq_printf(s, "filename: \"%pD2\"", f->nf_file);
-> +}
-> +
->  static void nfs4_show_superblock(struct seq_file *s, struct nfsd_file *f)
->  {
->  	struct inode *inode = f->nf_inode;
-> @@ -2449,6 +2454,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
->  
->  	nfs4_show_superblock(s, file);
->  	seq_printf(s, ", ");
-> +	nfs4_show_fname(s, file);
-> +	seq_printf(s, ", ");
->  	nfs4_show_owner(s, oo);
->  	seq_printf(s, " }\n");
->  	nfsd_file_put(file);
-> @@ -2480,6 +2487,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
->  	nfs4_show_superblock(s, file);
->  	/* XXX: open stateid? */
->  	seq_printf(s, ", ");
-> +	nfs4_show_fname(s, file);
-> +	seq_printf(s, ", ");
->  	nfs4_show_owner(s, oo);
->  	seq_printf(s, " }\n");
->  	nfsd_file_put(file);
-> @@ -2506,6 +2515,8 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
->  	/* XXX: lease time, whether it's being recalled. */
->  
->  	nfs4_show_superblock(s, file);
-> +	seq_printf(s, ", ");
-> +	nfs4_show_fname(s, file);
->  	seq_printf(s, " }\n");
->  
->  	return 0;
-> @@ -2524,6 +2535,8 @@ static int nfs4_show_layout(struct seq_file *s, struct nfs4_stid *st)
->  	/* XXX: What else would be useful? */
->  
->  	nfs4_show_superblock(s, file);
-> +	seq_printf(s, ", ");
-> +	nfs4_show_fname(s, file);
->  	seq_printf(s, " }\n");
->  
->  	return 0;
-> -- 
-> 2.25.3
+> I'm not sure how that code is supposed to work, TBH.
+
+Hmmm...  I think there may be a race here then - but I'm not sure it can be
+avoided or if it matters.
+
+Since the address is part of the primary key to sget() for cifs, changing the
+IP address will change the primary key.  Jeff tells me that this is governed
+by a spinlock taken by cifs_match_super().  However, sget() may be busy
+attaching a new mount to the old superblock under the sb_lock core vfs lock,
+having already found a match.
+
+Should the change of parameters made by cifs be effected with sb_lock held to
+try and avoid ending up using the wrong superblock?
+
+However, because the TCP_Server_Info is apparently updated, it looks like my
+original concern is not actually a problem (the idea that if a mounted server
+changes its IP address and then a new server comes online at the old IP
+address, it might end up sharing superblocks because the IP address is part of
+the key).
+
+David
+
