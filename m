@@ -2,108 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E04DE1B00DD
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 07:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637821B0129
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2020 07:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgDTFAC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Apr 2020 01:00:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55595 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725815AbgDTFAC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 01:00:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587358801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=a8NlP/8IMjqncSyB+WZ1HvHgg3EQ8VUS33dMd8/Toi4=;
-        b=Q+LvA/8AYOsVzsHNw5OvyeJEt6ou+/UX6eFUcgKWSy0+UbsLNYWKGV0GPv5A9TvvUNy74B
-        KEqYEFYhnSu9G4Treu9V+BZNKZC5d9AJbUT3jAkBltEAibHnn0QXOgvvTGmglOjAWHCHYO
-        BK7DelqecVCVMddWnyjDLmXweoJjsZA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-513-fwBXtdteNbWGXOb2uWOXcg-1; Mon, 20 Apr 2020 00:59:59 -0400
-X-MC-Unique: fwBXtdteNbWGXOb2uWOXcg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20C53800D5C;
-        Mon, 20 Apr 2020 04:59:58 +0000 (UTC)
-Received: from nevermore.foobar.lan (unknown [10.74.8.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 016E728980;
-        Mon, 20 Apr 2020 04:59:55 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 10:29:52 +0530
-From:   Achilles Gaikwad <agaikwad@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     bfields@fieldses.org, trondmy@hammerspace.com, kdsouza@redhat.com
-Subject: [PATCH v2] nfsd4: add filename to states output
-Message-ID: <20200420045952.GA61440@nevermore.foobar.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        id S1726067AbgDTFuB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Apr 2020 01:50:01 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:49776 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbgDTFuB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:50:01 -0400
+X-Greylist: delayed 346 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Apr 2020 01:49:59 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=yAOu0VUkborL/7+dqlJ4jWkJ1m2aAADVyJZ3KeTxc1w=; b=3
+        Vwu87CCBMNoOn8C3OXoqNfWk/SbXJqSw+e7lDhS92qY78pj/qLTaNn7w+ibW2IAp
+        iqTcgm5gQY7pl2PlClqregA8jJ1LD8hSO8DYT1qYWKZEoJmXUwXtmd1oY1szPuWd
+        9WOtgK+AaFI6yZZT0mLP0TFbNChzxNv4mk9FhbaV5k=
+Received: from localhost.localdomain (unknown [120.229.255.67])
+        by app2 (Coremail) with SMTP id XQUFCgA3ywicNp1ePAAeAA--.3223S3;
+        Mon, 20 Apr 2020 13:43:57 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Olaf Kirch <okir@suse.de>, Andrew Morton <akpm@osdl.org>,
+        Andreas Gruenbacher <agruen@suse.de>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon, 20 Apr 2020 13:43:28 +0800
+Message-Id: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgA3ywicNp1ePAAeAA--.3223S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrKFW3tr4ruw1xtFykAw1DZFb_yoW8JF45pw
+        4Ikr1UtF98tFW8tas8Aw48W34kAa10qw1rKwn5Wa1SvrnxXasxCFyYqw13XFWUArW8JF18
+        Wr1Yg3y3Z3WDCaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
+        wI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUO2NtUUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add filename to states output for ease of debugging.
+nfs3_set_acl() invokes get_acl(), which returns a local reference of the
+posix_acl object to "alloc" with increased refcount.
 
-Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
-Signed-off-by: Kenneth Dsouza <kdsouza@redhat.com>
+When nfs3_set_acl() returns or a new object is assigned to "alloc",  the
+original local reference of  "alloc" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one path of nfs3_set_acl(). When
+"acl" equals to NULL but "alloc" is not NULL, the function forgets to
+decrease the refcnt increased by get_acl() and causes a refcnt leak.
+
+Fix this issue by calling posix_acl_release() on this path when "alloc"
+is not NULL.
+
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- fs/nfsd/nfs4state.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/nfs/nfs3acl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index e32ecedece0f..f1cc825ff20b 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2404,6 +2404,11 @@ static void states_stop(struct seq_file *s, void *v)
- 	spin_unlock(&clp->cl_lock);
- }
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c60..b5c41bcca8cf 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -274,6 +274,8 @@ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ 	}
  
-+static void nfs4_show_fname(struct seq_file *s, struct nfsd_file *f)
-+{
-+         seq_printf(s, "filename: \"%pD2\"", f->nf_file);
-+}
-+
- static void nfs4_show_superblock(struct seq_file *s, struct nfsd_file *f)
- {
- 	struct inode *inode = f->nf_inode;
-@@ -2449,6 +2454,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
- 
- 	nfs4_show_superblock(s, file);
- 	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
-+	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
- 	nfsd_file_put(file);
-@@ -2480,6 +2487,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
- 	nfs4_show_superblock(s, file);
- 	/* XXX: open stateid? */
- 	seq_printf(s, ", ");
-+	nfs4_show_fname(s, file);
-+	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
- 	nfsd_file_put(file);
-@@ -2506,6 +2515,7 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 	/* XXX: lease time, whether it's being recalled. */
- 
- 	nfs4_show_superblock(s, file);
-+	nfs4_show_fname(s, file);
- 	seq_printf(s, " }\n");
- 
- 	return 0;
-@@ -2524,6 +2534,7 @@ static int nfs4_show_layout(struct seq_file *s, struct nfs4_stid *st)
- 	/* XXX: What else would be useful? */
- 
- 	nfs4_show_superblock(s, file);
-+	nfs4_show_fname(s, file);
- 	seq_printf(s, " }\n");
- 
- 	return 0;
+ 	if (acl == NULL) {
++		if (alloc)
++			posix_acl_release(alloc);
+ 		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
 -- 
-2.25.3
+2.7.4
 
