@@ -2,134 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6641B1985
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Apr 2020 00:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2F81B1B35
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Apr 2020 03:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgDTWao (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Apr 2020 18:30:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29712 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726201AbgDTWan (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Apr 2020 18:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587421841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
-        b=M9K+Ce0pFPTIUPMmsJa/84tA2++gzQV2giT50alI0titPuGjK4zvuhG12ohwkZ4D2mbODb
-        55NO65uVc3NxVaZQm75EdMdhocDXmJ+EKK+wUH90MO81UGXpoZQwwSSqTb0kVcD5WT5Tyn
-        j0xhA7UqH0DNtzVKeLQHnsocxS1JvdU=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-Y77NcqemPEeIMZSN37AtQw-1; Mon, 20 Apr 2020 18:30:40 -0400
-X-MC-Unique: Y77NcqemPEeIMZSN37AtQw-1
-Received: by mail-qv1-f72.google.com with SMTP id m20so11880932qvy.13
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
-        b=bBH84IulWVXGU2ZobiajySG7qUSuAgkoM1CxrJWimwHtjq9dw4688gMyc8pXnXd9Dq
-         WprQobIIOLO0v/pBHmQJZ5/p2NIuEkVED+n9pKq5YHxZO9aAiTuFUXwI1S9/yd0y6LrB
-         KmpXKm76OsRvdXhVJ6T5UIr9cyAEmhBh+WaBoqU0EobEfzNpKmXdNV55aQaeTqp1FBAR
-         a39JvP1OOhaJ0t2vaP4KJuJpF6O9HvrIZaycepYy6J3aQDdOWL2fO+PykwHvSH7B260j
-         ZtC2OSUX4P43OgyMTwtH22b1AcPQPIn/bkY/BXgqVEFitTGEjkNTbIPVCtJNOQlDkCn9
-         WxwA==
-X-Gm-Message-State: AGi0Puan62GhtZnAhN59itq57CvbQVxmzz4L57D99aIn6JyZPkDadv1G
-        gRsijPc4wlXJtHmmhCH+4AFddp8G/ujRLtZm5AwLNj6ZLKgUsbFU3CMpZ1bECNbunhPVUpfx/aR
-        TOafsRfZQ+wrgO4OozuDb
-X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266936qtj.154.1587421839478;
-        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL1XEhHKfWJ4L3lMwmFDzE2+TBxLfE0ulmEwOUTO4o7oVPQ7Klu15FdcDd0dnvjj9vSaCf+vQ==
-X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266910qtj.154.1587421839193;
-        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id m40sm545368qtc.33.2020.04.20.15.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:30:38 -0700 (PDT)
-Message-ID: <93e1141d15e44a7490d756b0a00060660306fadc.camel@redhat.com>
-Subject: Re: cifs - Race between IP address change and sget()?
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@cjr.nz>
-Cc:     viro@zeniv.linux.org.uk, Steve French <smfrench@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Date:   Mon, 20 Apr 2020 18:30:37 -0400
-In-Reply-To: <1986040.1587420879@warthog.procyon.org.uk>
-References: <878siq587w.fsf@cjr.nz> <87imhvj7m6.fsf@cjr.nz>
-         <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
-         <3865908.1586874010@warthog.procyon.org.uk>
-         <927453.1587285472@warthog.procyon.org.uk>
-         <1136024.1587388420@warthog.procyon.org.uk>
-         <1986040.1587420879@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726017AbgDUBVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Apr 2020 21:21:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36846 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgDUBVN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 Apr 2020 21:21:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 85D4EAEBE;
+        Tue, 21 Apr 2020 01:21:09 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Tue, 21 Apr 2020 11:20:53 +1000
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 5/9] usb: fix empty-body warning in sysfs.c
+In-Reply-To: <Pine.LNX.4.44L0.2004181549020.8036-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004181549020.8036-100000@netrider.rowland.org>
+Message-ID: <87368xskga.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2020-04-20 at 23:14 +0100, David Howells wrote:
-> Paulo Alcantara <pc@cjr.nz> wrote:
-> 
-> > > > > What happens if the IP address the superblock is going to changes, then
-> > > > > another mount is made back to the original IP address?  Does the second
-> > > > > mount just pick the original superblock?
-> > > > 
-> > > > It is going to transparently reconnect to the new ip address, SMB share,
-> > > > and cifs superblock is kept unchanged.  We, however, update internal
-> > > > TCP_Server_Info structure to reflect new destination ip address.
-> > > > 
-> > > > For the second mount, since the hostname (extracted out of the UNC path
-> > > > at mount time) resolves to a new ip address and that address was saved
-> > > > earlier in TCP_Server_Info structure during reconnect, we will end up
-> > > > reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
-> > > 
-> > > Would that be a bug?
-> > 
-> > Probably.
-> > 
-> > I'm not sure how that code is supposed to work, TBH.
-> 
-> Hmmm...  I think there may be a race here then - but I'm not sure it can be
-> avoided or if it matters.
-> 
-> Since the address is part of the primary key to sget() for cifs, changing the
-> IP address will change the primary key.  Jeff tells me that this is governed
-> by a spinlock taken by cifs_match_super().  However, sget() may be busy
-> attaching a new mount to the old superblock under the sb_lock core vfs lock,
-> having already found a match.
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Not exactly. Both places that match TCP_Server_Info objects by address
-hold the cifs_tcp_ses_lock. The address looks like it gets changed in
-reconn_set_ipaddr, and the lock is not currently taken there, AFAICT. I
-think it probably should be (at least around the cifs_convert_address
-call).
+On Sat, Apr 18 2020, Alan Stern wrote:
 
-> Should the change of parameters made by cifs be effected with sb_lock held to
-> try and avoid ending up using the wrong superblock?
-> 
-> However, because the TCP_Server_Info is apparently updated, it looks like my
-> original concern is not actually a problem (the idea that if a mounted server
-> changes its IP address and then a new server comes online at the old IP
-> address, it might end up sharing superblocks because the IP address is part of
-> the key).
-> 
+> On Sat, 18 Apr 2020, Matthew Wilcox wrote:
+>
+>> On Sat, Apr 18, 2020 at 11:41:07AM -0700, Randy Dunlap wrote:
+>> > +++ linux-next-20200327/drivers/usb/core/sysfs.c
+>> > @@ -1263,7 +1263,7 @@ void usb_create_sysfs_intf_files(struct
+>> >  	if (!alt->string && !(udev->quirks & USB_QUIRK_CONFIG_INTF_STRINGS))
+>> >  		alt->string =3D usb_cache_string(udev, alt->desc.iInterface);
+>> >  	if (alt->string && device_create_file(&intf->dev, &dev_attr_interfac=
+e))
+>> > -		;	/* We don't actually care if the function fails. */
+>> > +		do_empty(); /* We don't actually care if the function fails. */
+>> >  	intf->sysfs_files_created =3D 1;
+>> >  }
+>>=20
+>> Why not just?
+>>=20
+>> +	if (alt->string)
+>> +		device_create_file(&intf->dev, &dev_attr_interface);
+>
+> This is another __must_check function call.
+>
+> The reason we don't care if the call fails is because the file
+> being created holds the USB interface string descriptor, something
+> which is purely informational and hardly ever gets set (and no doubt
+> gets used even less often).
+>
+> Is this another situation where the comment should be expanded and the=20
+> code modified to include a useless test and cast-to-void?
+>
+> Or should device_create_file() not be __must_check after all?
 
-I'm not sure we should concern ourselves with much more than just not
-allowing addresses to change while matching/searching. If you're
-standing up new servers at old addresses while you still have clients
-are migrating, then you are probably Doing it Wrong.
+One approach to dealing with __must_check function that you don't want
+to check is to cause failure to call
+   pr_debug("usb: interface descriptor file not created");
+or similar.  It silences the compiler, serves as documentation, and
+creates a message that is almost certainly never seen.
 
--- 
-Jeff Layton <jlayton@redhat.com>
+This is what I did in drivers/md/md.c...
 
+	if (mddev->kobj.sd &&
+	    sysfs_create_group(&mddev->kobj, &md_bitmap_group))
+		pr_debug("pointless warning\n");
+
+(I give better warnings elsewhere - I must have run out of patience by
+ this point).
+
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6eSnUACgkQOeye3VZi
+gbn4EQ//WLEH1OYjzYF3ZAV16KgjXghaIeaNMOhGWUi79iqI/c9Zfe7VUDBPE5ip
+xTdZh+pKAubrzHjja6sbwXCEpY1XaGBeyKxl8lc/w8bsG6yMdN0n3eP7jgMucCtN
+U7DuAjjSjFvMLYDUBs6jhPbko+Qse3InDgyZH0gTueYI1QMmSag7EZs0xdvv6dAz
+NgtTQbJ7MBv3CQTg3Y+O6pMvRQbwSYuUb118jv9BH5ktkRmfJ5lP0LGfDD1d/AeR
+Z9oH8asOZK2ZprUXg6cuI/lf1kxFCNDGwXI9x0eDWpyt8akceeXLsxhg7Jw2KlZA
+Ry4UOB//Ehxq5ZtqxQAcHNzbfXJM1JaZjbyk+Im8F3q0/i2aE2/9pGvREe91rX3u
+gq2UO+5djv+TxKg1nZcFIHV/ycfdw4HWT6jKnYwOTahceJxkcswrRYqWBDePNqws
+oeWTPfUxQIIMUAYl0Zsf8EXLCqKvOmVqRI3cY2jIZHOJraynmtfL+/FRsg3PNu5T
+m5nSJbLvQMzITNuBTOf8BvdeAasCfR6v4RlIJYbonBJxXtUrXL7yeX0FclVpJ98+
+noaE1F/eUxnG5t+n3Gr6C9ttT/avXsr7Gm7okuNwkY1vvZSoXbFPZG0VIW0SiLWY
+kiqSFLeEDXCaNk4yYZlcNe17qTuJiZxx4RnTkF1IykZIcQv8haE=
+=K7Ae
+-----END PGP SIGNATURE-----
+--=-=-=--
