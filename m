@@ -2,113 +2,251 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB3B1B440F
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2020 14:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C50A1B4553
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2020 14:46:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDVMML (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Apr 2020 08:12:11 -0400
-Received: from mail-dm6nam12on2137.outbound.protection.outlook.com ([40.107.243.137]:7591
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726110AbgDVMMK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:12:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QgSGcMkZOviZfakPH/Fu4Iwmvqdrl2Qtl+5AGd0BaheKRNxUSE2I0UOtijL4XKTVxvBhVqAE2Kt65yzoGJqT51CgGolbQ2JYilncOAVTl/FRxVatr8H+RrlkLhoDsdozEHPbWBFX+G81tM2ao99gCVIYy1jsHrrBIixRK01BI9szqzv3iPrQstSf7B+uknP5mCuj3CiPa8IfyXsJup4Rf8I9sFkqUuVHBEa1lmaplcOjVJgdmoXUQpujSiPKi/poBhLql5tL9BbTneLFiQYL1+2aHSArigyxbqEdjqKXZHC+wau2iIZGI4yKsk7tMu+zOFk2akTGaeDt7C6YRQ+4fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LdOkCrISjZmoqd9c7yNnt+XHr8HdRrHP9XgYAr1dn/M=;
- b=G/TaJ3ihIILx8ioxzvE+eX1Kgdzfo+2Xep6pox3cNnWla6DZb9FdZwWt4Sc03+kRbN0lYd5MJWJ/wYQyGuahTabZUi5Kqp3qgxT0mgrYOUn7Qy7X1oxfzHH3fYrV3kf0awT7OT2exG8rvHvkDgAFKYoXW800711ukwLMSm5VYSn43HydKOMO2gHvCil7HassHqmjZtGAyac5+7aNj3ZiwsenwfpScoUMZDTan+KIsDRVuJnhZqtiG/ygKA4b3OO2M3Rq2IF79NEr8oE/JBt/KeZPiLZgp4NfVVMKt+BFxBzWHxh6I43r0ly2cfr+Kv7QqZBH4Sl3g06JYw9M7KfnDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LdOkCrISjZmoqd9c7yNnt+XHr8HdRrHP9XgYAr1dn/M=;
- b=HbUCFDjsLV0pYp6Pa4RpWbujb39lShVfcakNjT1HZeLTmGWai/lVDmG1WOEnOMs2cvzAEsKxbiJykSD4rZVjgQtprAjEb76EDF02QNzY03o8GsFIfHLU0USBGft5bWpfmpMobXQLsvAJP34uqlDVZCiY55RXdhPYEY041AJAVco=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3576.namprd13.prod.outlook.com (2603:10b6:610:27::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6; Wed, 22 Apr
- 2020 12:12:08 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2937.012; Wed, 22 Apr 2020
- 12:12:08 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "teroincn@gmail.com" <teroincn@gmail.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [BUG] fs: nsf: does there exist a memleak in function
- nfs4_run_open_task?
-Thread-Topic: [BUG] fs: nsf: does there exist a memleak in function
- nfs4_run_open_task?
-Thread-Index: AQHWGFDKBBhMuVYBaUOy/K08wFwHd6iFDdgA
-Date:   Wed, 22 Apr 2020 12:12:08 +0000
-Message-ID: <997651b82c2657b7818f00f2bcfdc009ef6b723a.camel@hammerspace.com>
-References: <CANTwqXDJi1LuT1Q382R6qFHm7qMqx6My6aCR0pejNR8BqzFLKg@mail.gmail.com>
-In-Reply-To: <CANTwqXDJi1LuT1Q382R6qFHm7qMqx6My6aCR0pejNR8BqzFLKg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67e1467e-633f-456b-cd4e-08d7e6b66105
-x-ms-traffictypediagnostic: CH2PR13MB3576:
-x-microsoft-antispam-prvs: <CH2PR13MB35766D67C8263102A4BB12E1B8D20@CH2PR13MB3576.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(366004)(376002)(26005)(4326008)(5660300002)(508600001)(966005)(2906002)(86362001)(36756003)(110136005)(6512007)(71200400001)(2616005)(186003)(66476007)(6486002)(8936002)(91956017)(81156014)(66946007)(6506007)(8676002)(76116006)(66556008)(66446008)(64756008);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y8AqR3edCbXjXgHfyjcjSICuu0fQNg9EMaYx60kr7cFbyPiJ+DMm1evqc/X0r3M8OYJ7gqIR38DrwaLLJeCHM7ed+WVEjkVdv7A+4LEzC/hqjM/2/1T4trGYTcSHFUVEw8mV46SRHktNZDVw3woVVQwtyvzhDGtzqv/Q9sLGPHO0asUZRKK//od25KAHu4aNJ9nCu6PBFHTZYIKvdvvrjtOxXVwLdSFL0tOca17GIjRPPSq1oK9QhPQUQLnltXr64Vat7uafJHRd60MDfexj4oBjDaAHiwPnsBGMvuZnrBnExaHqQTAD8eVPgsBvWUOnqC+VtwkdvZTk4YHxTr3y+gmJXVJd86Kt3sRDnR+/1D3AIlvcuxB9OKfQVDJhKKosBSuz5AeufWrvxfEYuo4wfU4oHNw/QTilhHQA0b0UkqwUcfDCNxO4IKF6MfgfhHRAMkLPiDZj2EUp81eyempgSQTsOvD5rf5+oBrJH6ZZ0CJpxPE8HrvFhJ9pJE//oftWw66p+LQkgxTiwVosg9a2eg==
-x-ms-exchange-antispam-messagedata: VfAo7oo9SVtaqE4DxhlaQWnEXD79u2rzpM+skhAqfljKxSNQh95I75m1elaBTLqNwbPB4ShbRy6XSlZWbxk/h0sQY5QSckXBWxZj5sgWOyswDqFXprvBy3n/zHl1VHV23AdR9B4GCRdgBgn1wWnADnsL3gaDrsmnWxbL8zNm6rthrcQ+jdYA5XJjDLxJppxLfK+mVuXt9dK7slZSnHuzOEKgk3CKUwfBvrwB9h66LnxXr5Kc7cAjs64ZT4CehlXYAdx7zppasC5wENDytt7ym56/OkSB3B5x3xhvgnoyyXRrEtgZbJtITuZBTjkgTd2xW6F/6QJTIQ88RtBoGxRfxzK3EZpf2HDxUUtxHy1hMEYOqp5EXY3lnHMQVQW4T+UKvGNWQFzX2Sne8p9lkj61MVC4a2LG8fOveNEWkjSDlAx4cs3avRpo7niUnbxb4tPjmY98AsuINPd/aS1bFGtgulkAZFcLUHh1DPVOkAqW5ZvKZwpXA4wvI95en1Zz16/3zll+tCToQPDuFvso2HS9Tp0VJOUv1xKqp83K2gida4OCQpZTusWaZ+XB2owW5la1UzVdYvU7KqMUqAZQ7met7WsSYTOFm578I+w77prMf2v7BPJpuqI7E6fQwpUAYSed/yAQl1soMuA7pw1MNnJzDLXUBv2sOiRfLZRhLOZr5uYQg/+WtcmNZIE1kWm4WourvGSU83Q+aCjdSoXJINE80BnBLYaLq5qexfa4fsYdQBailDMP+Ij/YBCHPNFsbbwfrj1EU8OgcRpHKclzRj7Azk9P79E3NPFcM5d/HtssjHc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <67AC41FE8E7A8A448F5A138ABFCB551C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726378AbgDVMqG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Apr 2020 08:46:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgDVMqF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:46:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C0F96AD4B;
+        Wed, 22 Apr 2020 12:46:02 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4703C1E0E53; Wed, 22 Apr 2020 14:46:00 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 14:46:00 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2 V3] MM: replace PF_LESS_THROTTLE with
+ PF_LOCAL_THROTTLE
+Message-ID: <20200422124600.GH8775@quack2.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87ftdgw58w.fsf@notabene.neil.brown.name>
+ <87wo6gs26e.fsf@notabene.neil.brown.name>
+ <87tv1ks24t.fsf@notabene.neil.brown.name>
+ <20200416151906.GQ23739@quack2.suse.cz>
+ <87zhb5r30c.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67e1467e-633f-456b-cd4e-08d7e6b66105
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 12:12:08.0831
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hPbWEArR4v4/4okfmgNIz1KhvMIfY8/ztD6BSL9EXm4sITtnxozFbYVVCENXo31i8eRkXbIyOmSVuTq/6UyD1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3576
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhb5r30c.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTIyIGF0IDEwOjUwICswODAwLCDkur/kuIAgd3JvdGU6DQo+IEhpLCBh
-bGw6DQo+IFdoZW4gcmV2aWV3aW5nIHRoZSBjb2RlIG9mICBuZnM0X3J1bl9vcGVuX3Rhc2ssIGlm
-IHRoZSBycGNfdGFzayBzdGFydA0KPiBmYWlsZWQsIHRoZSBvcGVuZGF0YSByZWZlcmVuY2UgaGVs
-ZCBmcm9tIGtyZWZfZ2V0IHdvdWxkIG5vdCBiZQ0KPiByZWxlYXNlZCBldmVuIHJldHVybiB0byB1
-cHBlciBjYWxsZXJzLg0KPiBJJ20gd29uZGVyIHRoYXQgZG9lcyAgdGhlcmUgbGVhayB0aGUgb3Bl
-bmRhdGE/DQo+IA0KPiBzdGF0aWMgaW50IG5mczRfcnVuX29wZW5fdGFzayhzdHJ1Y3QgbmZzNF9v
-cGVuZGF0YSAqZGF0YSwgaW50DQo+IGlzcmVjb3ZlcikNCj4gew0KPiAgICAgICAuLi4NCj4gICAg
-ICAgc3RydWN0IHJwY190YXNrX3NldHVwIHRhc2tfc2V0dXBfZGF0YSA9IHsNCj4gICAgICAgLi4u
-DQo+IC4gICAgIGNhbGxiYWNrX29wcyA9ICZuZnM0X29wZW5fb3BzLA0KPiAuICAgICBjYWxsYmFj
-a19kYXRhID0gZGF0YSwNCj4gICAgICAgLi4uDQo+ICAgICAgIH07DQo+ICAgICAgIGludCBzdGF0
-dXM7DQo+IA0KPiAgICAgICBuZnM0X2luaXRfc2VxdWVuY2UoJm9fYXJnLT5zZXFfYXJncywgJm9f
-cmVzLT5zZXFfcmVzLCAxKTsNCj4gICAgICAga3JlZl9nZXQoJmRhdGEtPmtyZWYpOw0KPiAgICAg
-ICAuLi4NCj4gDQo+ICAgICAgdGFzayA9IHJwY19ydW5fdGFzaygmdGFza19zZXR1cF9kYXRhKTsN
-Cj4gICAgICBpZiAoSVNfRVJSKHRhc2spKQ0KPiAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUih0
-YXNrKTsNCj4gICAgICBzdGF0dXMgPSBycGNfd2FpdF9mb3JfY29tcGxldGlvbl90YXNrKHRhc2sp
-Ow0KPiAgICAgaWYgKHN0YXR1cyAhPSAwKSB7DQo+ICAgICAgICAgICAgZGF0YS0+Y2FuY2VsbGVk
-ID0gdHJ1ZTsNCj4gICAgICAgICAgICBzbXBfd21iKCk7DQo+ICAgICAgfSBlbHNlDQo+ICAgICAg
-ICAgICBzdGF0dXMgPSBkYXRhLT5ycGNfc3RhdHVzOw0KPiAgICAgIHJwY19wdXRfdGFzayh0YXNr
-KTsNCj4gDQo+ICAgICAgcmV0dXJuIHN0YXR1czsNCj4gfQ0KPiANCj4gQmVzdCByZWdhcmRzLA0K
-PiANCg0KUGxlYXNlIHNlZSBjb21taXQgNjJiMjQxN2U4NGJhICgNCmh0dHBzOi8vZ2l0Lmtlcm5l
-bC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQv
-P2lkPTYyYjI0MTdlODRiYQ0KKQ0KDQpUaGFua3MNCiAgVHJvbmQNCi0tIA0KVHJvbmQgTXlrbGVi
-dXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Tue 21-04-20 12:22:59, NeilBrown wrote:
+> On Thu, Apr 16 2020, Jan Kara wrote:
+> 
+> > On Thu 16-04-20 10:30:42, NeilBrown wrote:
+> >> 
+> >> PF_LESS_THROTTLE exists for loop-back nfsd (and a similar need in the
+> >> loop block driver and callers of prctl(PR_SET_IO_FLUSHER)), where a
+> >> daemon needs to write to one bdi (the final bdi) in order to free up
+> >> writes queued to another bdi (the client bdi).
+> >> 
+> >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+> >> pages, so that it can still dirty pages after other processses have been
+> >> throttled.
+> >> 
+> >> This approach was designed when all threads were blocked equally,
+> >> independently on which device they were writing to, or how fast it was.
+> >> Since that time the writeback algorithm has changed substantially with
+> >> different threads getting different allowances based on non-trivial
+> >> heuristics.  This means the simple "add 25%" heuristic is no longer
+> >> reliable.
+> >> 
+> >> The important issue is not that the daemon needs a *larger* dirty page
+> >> allowance, but that it needs a *private* dirty page allowance, so that
+> >> dirty pages for the "client" bdi that it is helping to clear (the bdi for
+> >> an NFS filesystem or loop block device etc) do not affect the throttling
+> >> of the deamon writing to the "final" bdi.
+> >> 
+> >> This patch changes the heuristic so that the task is only throttled if
+> >> *both* the global threshhold *and* the per-wb threshold are exceeded.
+> >> This is similar to the effect of BDI_CAP_STRICTLIMIT which causes the
+> >> global limits to be ignored, but it isn't as strict.  A PF_LOCAL_THROTTLE
+> >> task will be allowed to proceed unthrottled if the global threshold is
+> >> not exceeded or if the local threshold is not exceeded.  They need to
+> >> both be exceeded before PF_LOCAL_THROTTLE tasks are throttled.
+> >> 
+> >> This approach of "only throttle when target bdi is busy" is consistent
+> >> with the other use of PF_LESS_THROTTLE in current_may_throttle(), were
+> >> it causes attention to be focussed only on the target bdi.
+> >> 
+> >> So this patch
+> >>  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
+> >>  - removes the 25% bonus that that flag gives, and
+> >>  - If PF_LOCAL_THROTTLE is set, don't delay at all unless both
+> >>    thresholds are exceeded.
+> >> 
+> >> Note that previously realtime threads were treated the same as
+> >> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
+> >> real-time threads, so it is now different from the behaviour of nfsd and
+> >> loop tasks.  I don't know what is wanted for realtime.
+> >> 
+> >> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> >> Signed-off-by: NeilBrown <neilb@suse.de>
+> >
+> > ...
+> >
+> >> @@ -1700,6 +1699,17 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+> >>  				sdtc = mdtc;
+> >>  		}
+> >>  
+> >> +		if (current->flags & PF_LOCAL_THROTTLE)
+> >> +			/* This task must only be throttled based on the bdi
+> >> +			 * it is writing to - dirty pages for other bdis might
+> >> +			 * be pages this task is trying to write out.  So it
+> >> +			 * gets a free pass unless both global and local
+> >> +			 * thresholds are exceeded.  i.e unless
+> >> +			 * "dirty_exceeded".
+> >> +			 */
+> >> +			if (!dirty_exceeded)
+> >> +				break;
+> >> +
+> >>  		if (dirty_exceeded && !wb->dirty_exceeded)
+> >>  			wb->dirty_exceeded = 1;
+> >
+> > Ok, but note that this will have one sideeffect you maybe didn't realize:
+> > Currently we try to throttle tasks softly - the heuristic rougly works like
+> > this: If dirty < (thresh + bg_thresh)/2, leave the task alone.
+> > (thresh+bg_thresh)/2 is called "freerun ceiling". If dirty is greater than
+> > this, we delay the task somewhat (the aim is to delay the task as long as
+> > it would take to write back the pages task has dirtied) in
+> > balance_dirty_pages() so ideally 'thresh' is never hit. Only if the
+> > heuristic consistently underestimates the time to writeback pages, we hit
+> > 'thresh' and then block the task as long as it takes flush worker to clean
+> > enough pages to get below 'thresh'. This all leads to task being usually
+> > gradually slowed down in balance_dirty_pages() which generally leads to
+> > smoother overall system behavior.
+> >
+> > What you did makes PF_LOCAL_THROTTLE tasks ignore any limits and then when
+> > local bdi limit is exceeded, they'll suddently hit the wall and be blocked
+> > for a long time in balance_dirty_pages().
+> >
+> > So I like what you suggest in principle, just I think the implementation
+> > has undesirable sideeffects. I think it would be better to modify
+> > wb_position_ratio() to take PF_LOCAL_THROTTLE into account. It will be
+> > probably similar to how BDI_CAP_STRICTLIMIT is handled but different in
+> > some ways because BDI_CAP_STRICTLIMIT takes minimum from wb_pos_ratio and
+> > global pos_ratio, you rather want to take wb_pos_ratio only. Also there are
+> > some early bail out conditions when we are over global dirty limit which
+> > you need to handle differently for PF_LOCAL_THROTTLE. And then, when you
+> > have appropriate pos_ratio computed based on your policy, you can let the
+> > task wait for appropriate amount of time and things should just work (TM) ;).
+> > Thinking about it, you probably also want to add 'freerun' condition for
+> > PF_LOCAL_THROTTLE tasks like:
+> >
+> > 	if ((current->flags & PF_LOCAL_THROTTLE) &&
+> > 	    wb_dirty <= dirty_freerun_ceiling(wb_thresh, wb_bg_thresh))
+> > 		go the freerun path...
+> >
+> 
+> Thanks.....
+> I have 2 thoughts on this.
+> One is that I'm not sure how much it really matters.
+> The PF_LOCAL_THROTTLE task it always doing writeout on behalf of some
+> other process.  Some process writes to NFS or to a loop block device or
+> somewhere, then the PF_LOCAL_THROTTLE task writes those dirty pages out
+> to a different BDI.  So the top level task will be throttled, an the
+> PF_LOCAL_THROTTLE task won't get more than it can handle.
+> There will be starting transients of course, but I doubt it would
+> generally be a problem.  However it would still be nice to find the
+> "right" solution.
+
+I'm not sure PF_LOCAL_THROTTLE "won't get more than it can handle". Once
+dirty pages on NFS BDI accumulate, flush worker will start to push them out
+as fast as it can. So the only thing that's limitting this is the dirty
+throttling on the receiving (NFS server - thus underlying BDI) side. When
+underlying BDI throttling triggers depends on that BDI dirty limits and
+those are proportional part of global dirty limits scaled by writeback
+throughput on underlying BDI compared to other BDIs. So depending on which
+BDIs are in the system and how active they are in dirtying pages
+'underlying BDI' will get different dirty limits set. It's quite imaginable
+that in some configurations it will be easy to push NFS server to hit its
+dirty limit even with PF_LOCAL_THROTTLE. And then having NFS server
+undersponsive for couple seconds because it is blocked in
+balance_dirty_pages() just is not nice...
+
+> My second thought is that I really don't understand the writeback code.
+> I think I understand the general principle, and there are lots of big
+> comments that try to explain things, but it just doesn't seem to help.
+> I look at the code and see more questions than answers.
+
+I fully understand what you mean :). The logic is complex and while
+Fengguang wrote a lot of comments it is still rather hard to follow.
+
+> What are the units for "dirty_ratelimit"??  I think it is pages per
+> second, because it is initialized to INIT_BW which is documented as 100
+> MB/s.
+
+Yes, that's what I think as well.
+
+> What is the difference between dirty_ratelimit and
+> balanced_dirty_ratelimit?
+> The later is "balanced" I guess.  What does that mean?
+> Apparently (from backing-dev-defs.h) dirty_ratelimit moves in smaller
+> steps and is more smooth than balanced_dirty_ratelimit.  How is being
+> less smooth, more balanced??
+
+Yeah. So I cannot really explain the naming to you (not sure why Fengguang
+chose these names). But 'balanced_dirty_ratelimit' is pages/second value we
+want to limit task to based on the events in the most current time slice.
+'dirty_ratelimit' is smoothed version of 'balanced_dirty_ratelimit' taking
+more of history into account.
+
+> What is pos_ratio? And what is RATELIMIT_CALC_SHIFT ???
+> Maybe pos_ratio is the ratio of the actual number of dirty pages to the
+> desired number?  And pos_ratio is calculated with fixed-point arithmetic
+> and RATELIMIT_CALC_SHIFT tells where the point is?
+
+So RATELIMIT_CALC_SHIFT is indeed the shift of fixed point arithmetic used
+in the computations. Pos_ratio is the multiplicative "correction" factor we
+apply to computed dirty_ratelimit (i.e., task_ratelimit = dirty_ratelimit *
+pos_ratio) - so if we see we are able to writeout say 100 MB/s but we are
+still relatively far from dirty limits, we let tasks dirty 200 MB/s
+(pos_ratio is 2). As we are nearing dirty limits, pos_ratio is dropping
+(it's appropriately scaled and shifted third order polynomial) so very
+close to dirty limits, we let tasks dirty only say 10 MB/s even though we
+are still able to write out 100 MB/s.
+
+> I think I understand freerun - half way between the dirty limit and the
+> dirty_bg limit.  Se below dirty_bg, no writeback happens.  Between there
+> and freerun, writeback happens, but nothing in throttled.  From free up
+> to the limit, tasks are progressively throttled.
+
+Correct.
+
+> "setpoint" is the midpoint of this range.  Is the goal that pos_ratio is
+> computed for.
+> (except that in the BDI_CAP_STRICTLIMIT part of wb_position_ratio)
+> wb_setpoint is set to the bottom of this range, same as the freerun ceiling.)
+
+Correct.
+
+> Then we have the control lines, which are cubic(?) for global counts and
+> linear for per-wb - but truncated at 1/4.  The comment says "so that
+> wb_dirty can be smoothly throttled".  It'll take me a while to work out
+> what a hard edge results in smooth throttling.  I suspect it makes sense
+> but it doesn't jump out at me.
+> 
+> So, you see, I don't feel at all confident changing any of this code
+> because I just don't get it.
+> 
+> So I'm inclined to stick with the patch that I have. :-(
+
+OK, I'll try to write something and we'll see if it will work :)
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
