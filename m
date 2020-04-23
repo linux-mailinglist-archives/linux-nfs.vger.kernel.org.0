@@ -2,144 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 045C11B64AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA8E91B64C0
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgDWToA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Apr 2020 15:44:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33304 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWToA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:44:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NJIgSL134304;
-        Thu, 23 Apr 2020 19:43:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=3NkQHJR+uQIhXOgJg2kzFK8YY1ZbqU+ENJdRg3kjx64=;
- b=yMUdbFr3kOnwS7hLcmxN5m1PQ8LA4SWc1IanMRhn0xMOh6Ejrfz9Sj/yuwpfq0HogQ3D
- 7fQIMAEMSOAh/qm7DcGYwe0PTVPlbsiPPacFnRrUIpDcLQPgGdMMD1vdoWE4IlWCeb01
- Ix2ybHrztVgtWrlr819630cW7ouxOEqwAhN/G6xwfxdaOyNPjUZsVIYrjsh4GB98fnU4
- 0QE6hyvGzfMOIDfgDpTbn6VZgH7xokDSj4qj0lWfgUP9++mUacuMAciuNOMG2t2LCj38
- 6mQRuMhjaLuh1EcFAECj2zz/sK5YeJW9GC0GikoXnhkGyaQs6xGYvEXjekmA6cQ6XdsD +g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30ketdgume-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 19:43:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NJfhxT167468;
-        Thu, 23 Apr 2020 19:43:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30gb3w59ga-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 19:43:55 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03NJhsPb019773;
-        Thu, 23 Apr 2020 19:43:54 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Apr 2020 12:43:54 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH RFC2 2/2] sunrpc: Ensure signalled RPC tasks exit
+        id S1726414AbgDWTts (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Apr 2020 15:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgDWTts (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:49:48 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC05C09B042
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:49:48 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id c63so7832478qke.2
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=JydxOVkRQs09TE/qgxgfXOHiZRek0jYCxIC3ncbqfOU=;
+        b=Viut8d1fT+aksXOGavDZe6jv8TEDVdbydfZ3Cj5U8BYoi3eYbkaSRIlx6UzCxe4w5/
+         VYxeKp2cu56Vn6l1XHtUmnfDW8EBQtdbcz5RbpFedX5F48rwbBKuQx8Aosj+e7xFSJuc
+         2mgbWVEYAv5xafeixKM35dnzdLLW8hqOeILE71wCOurJ462avET3g+mgGb0OFpIN44P9
+         w3QNpvjO5hMFGhuF2pdyPpGqtHftCjQ6JLxilB6vV/AcDCQwzKX6ycIdWRvx63JJeGas
+         JIB7lFJ/eMF0POzjfy+TCDH/YFNEa+Q9kk8WaKV4IPD+blF1Trf4Zz3G/7kOFWEDLNI+
+         4DJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=JydxOVkRQs09TE/qgxgfXOHiZRek0jYCxIC3ncbqfOU=;
+        b=qt5ynzqcYkBBnKKn+jrA6DqSj8okqVCcYGBordJjSyFWzYIZKfZX11L7SiG45jPN3k
+         OYE6/cYRqItNOw74U/Rj5iTwYLzL52YyoruB95kiydQbIo9oiEXpH+bvEVXnQa8F6kDW
+         nsfAA7Ofl3RIQ87rEqDqful8sD9hsVaBGanaXtg7Wr0Mbf4+EetIwO+NyWfo0Ydy00QA
+         8UmIcjjlzie9zg3NP4IM56bYMSu50kX34koCD0ex8twqMhzoQ269/myResAt5C7QMK5a
+         wDBtiTpXjHwXzF3EykbvlEoCHX0hhwEdNyKwIoUNx3Vv+HS1lA/K0kn2SEhHAlm8ztEW
+         Rspg==
+X-Gm-Message-State: AGi0PuZrQ1C5j7OA7YOaeZfaCFGekZg/X7DI0+E69bu9LXFutz4n5EsY
+        aBhyq08gz6XGpdTA4jWA9lQ=
+X-Google-Smtp-Source: APiQypJueE/IxlTI+GxdMewGGdBBg8GW6C/F4QUG7aeuTtbtDsx6woFL6ymXv4086dwo7IZtBmwtdg==
+X-Received: by 2002:a37:6191:: with SMTP id v139mr4917700qkb.469.1587671387601;
+        Thu, 23 Apr 2020 12:49:47 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id m187sm2200019qkc.30.2020.04.23.12.49.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 12:49:46 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 03NJnj1d030439;
+        Thu, 23 Apr 2020 19:49:45 GMT
+Subject: [PATCH RFC3 0/2] umount hangs on sec=krb5,i,p mounts
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200423194317.7849.3375.stgit@manet.1015granger.net>
-Date:   Thu, 23 Apr 2020 15:43:53 -0400
-Cc:     trondmy@hammerspace.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 23 Apr 2020 15:49:45 -0400
+Message-ID: <20200423194434.7923.31241.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <D66F6DAA-CAB4-42A3-8E2D-38EB53055654@oracle.com>
-References: <20200423194311.7849.36326.stgit@manet.1015granger.net>
- <20200423194317.7849.3375.stgit@manet.1015granger.net>
-To:     Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230146
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sigh.
+I've dug into this a little more. Posting these two patches just
+as conversation pieces.
 
-I forgot to set the command line flag to compose a cover letter.
-Let me get to that.
+The spinning NULL task at umount time, it turns out, is the kernel's
+attempt to send GSS DESTROY_CONTEXT. This NULL is triggered just
+as the RPC client has killed all tasks. The spinning rpc_task will
+run until a soft timeout occurs, and then the umount unhangs.
 
+Maybe set a shutdown flag in the client, and cause early FSM steps
+to fail if this flag is set? Or should the client skip context
+destruction if this flag is set?
 
-> On Apr 23, 2020, at 3:43 PM, Chuck Lever <chuck.lever@oracle.com> wrote:
-> 
-> If an RPC task is signaled while it is running and the transport is
-> not connected, it will never sleep and never be terminated. This can
-> happen when a RPC transport is shut down: the remaining tasks are
-> signalled, but the transport is disconnected.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
-> include/linux/sunrpc/sched.h |    3 ++-
-> net/sunrpc/sched.c           |   14 ++++++--------
-> 2 files changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-> index df696efdd675..9f5e48f154c5 100644
-> --- a/include/linux/sunrpc/sched.h
-> +++ b/include/linux/sunrpc/sched.h
-> @@ -170,7 +170,8 @@ struct rpc_task_setup {
-> 
-> #define RPC_IS_ACTIVATED(t)	test_bit(RPC_TASK_ACTIVE, &(t)->tk_runstate)
-> 
-> -#define RPC_SIGNALLED(t)	test_bit(RPC_TASK_SIGNALLED, &(t)->tk_runstate)
-> +#define RPC_SIGNALLED(t)	\
-> +	unlikely(test_bit(RPC_TASK_SIGNALLED, &(t)->tk_runstate) != 0)
-> 
-> /*
->  * Task priorities.
-> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> index 7eba20a88438..99b7b834a110 100644
-> --- a/net/sunrpc/sched.c
-> +++ b/net/sunrpc/sched.c
-> @@ -912,6 +912,12 @@ static void __rpc_execute(struct rpc_task *task)
-> 		trace_rpc_task_run_action(task, do_action);
-> 		do_action(task);
-> 
-> +		if (RPC_SIGNALLED(task)) {
-> +			task->tk_rpc_status = -ERESTARTSYS;
-> +			rpc_exit(task, -ERESTARTSYS);
-> +			break;
-> +		}
-> +
-> 		/*
-> 		 * Lockless check for whether task is sleeping or not.
-> 		 */
-> @@ -919,14 +925,6 @@ static void __rpc_execute(struct rpc_task *task)
-> 			continue;
-> 
-> 		/*
-> -		 * Signalled tasks should exit rather than sleep.
-> -		 */
-> -		if (RPC_SIGNALLED(task)) {
-> -			task->tk_rpc_status = -ERESTARTSYS;
-> -			rpc_exit(task, -ERESTARTSYS);
-> -		}
-> -
-> -		/*
-> 		 * The queue->lock protects against races with
-> 		 * rpc_make_runnable().
-> 		 *
-> 
+Any other thoughts?
+
+---
+
+Chuck Lever (2):
+      SUNRPC: Set SOFTCONN when destroying GSS contexts
+      sunrpc: Ensure signalled RPC tasks exit
 
 --
 Chuck Lever
-
-
-
