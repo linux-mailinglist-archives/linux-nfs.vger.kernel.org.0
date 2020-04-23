@@ -2,138 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB1E1B5DEF
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 16:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B85A91B5E22
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 16:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgDWOgo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Apr 2020 10:36:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56686 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWOgo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 10:36:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NESqx4043325;
-        Thu, 23 Apr 2020 14:36:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
- content-transfer-encoding : mime-version : subject : message-id : date :
- cc : to; s=corp-2020-01-29;
- bh=vhc1qxRXMx+iuW9x2FbtF55Pq5hnzBq07HQyTGBkbI4=;
- b=M0IdiOuhleGgSwvuxcumRfGfShs+bWWU8BddaDiKGgCPDw8xDeNALaru/oA5jLPbUJv4
- K28p+Iwq9GCqEU0d0Svz/QuCmf+16GiQ6jzP8XW35seZDKetC2uDbpcqCYVIia/xcmiq
- 3SBNHz1nM186Am/qu3zQ8CPrXD8i5YOLGqDGNsj4tMel0bV0BxULUqdJG3qiWcH8zLm/
- /XYQt8SPYNE/Eb/c9MhsGEDbg9pgxItsTyEU6HuSKlvHT7EhtXKcmrwe0YNJJvfj3Wef
- soFHNnKGs7I3O2H5LuQ1bRumFiuupTdxJGiY+iF6cpceJyv8UjHnTmP1s/pqyy4yGyQk zQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30grpgwd7j-1
+        id S1728266AbgDWOo0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Apr 2020 10:44:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42212 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgDWOo0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 10:44:26 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NEd3Io089155;
+        Thu, 23 Apr 2020 14:43:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=U0l3rZSHeT3B77iPKt/LP/tNMNy58XvjcMskI+WbSbA=;
+ b=xLXUAkhhUqCaMMKBL/8CKYV2snocLN1vKd5SmZdd+WfIqb7SGwPjGLCCw9XydX2IcDDZ
+ CJ/3IEwHFOn0WRsuHh+qhqCGbnKKm2ajh+D6HE94/lcrvhBZzi9xl+6D9w9Zoax+2uMP
+ OkKPdJWoNsaAgqYu8ckooRzLXwXrWJg+HJH4SCDfe5tq/uJhsMaoNbBiLGdQzpAnm2du
+ 874jQ7qMyVRABNGe26WfHbSI38ncihMzY5oX2nz0BkNLaznc0iCKtgsMXbrkuXAsuabf
+ 1N9KLXOygH2J526rEnfPAo23t+2p779f8WZMQg344ZMb6LDlBvCy0zDXYBrquesepMYt vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30k7qe1qcd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 14:36:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NEXfYh016068;
-        Thu, 23 Apr 2020 14:36:41 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30k7qv81my-1
+        Thu, 23 Apr 2020 14:43:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NEcUOi038314;
+        Thu, 23 Apr 2020 14:43:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30gb1muep4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 14:36:41 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03NEae1Z028661;
-        Thu, 23 Apr 2020 14:36:40 GMT
+        Thu, 23 Apr 2020 14:43:42 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03NEhbKw031862;
+        Thu, 23 Apr 2020 14:43:37 GMT
 Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Apr 2020 07:36:40 -0700
-From:   Chuck Lever <chuck.lever@oracle.com>
+        with ESMTP ; Thu, 23 Apr 2020 07:43:36 -0700
 Content-Type: text/plain;
         charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: [GIT PULL] Please pull first round of NFS server -rc fixes for v5.7
-Message-Id: <AC510313-C744-4F22-82F7-F75F20F4B073@oracle.com>
-Date:   Thu, 23 Apr 2020 10:36:39 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next] xprtrdma: Make xprt_rdma_slot_table_entries static
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <1587625802-97494-1-git-send-email-zou_wei@huawei.com>
+Date:   Thu, 23 Apr 2020 10:43:34 -0400
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        davem@davemloft.net, kuba@kernel.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <30D769C6-2F48-40C7-BDFC-4CD3398DE852@oracle.com>
+References: <1587625802-97494-1-git-send-email-zou_wei@huawei.com>
+To:     Zou Wei <zou_wei@huawei.com>
 X-Mailer: Apple Mail (2.3445.104.11)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 suspectscore=2 bulkscore=0 phishscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230116
+ definitions=main-2004230117
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=2 bulkscore=0 clxscore=1015
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230116
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 mlxscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230117
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus-
-
-As promised, here is the first set of 5.7-rc fixes for NFS server =
-issues.
-These were all unresolved at the time the 5.7 window opened, and needed
-some additional time to ensure they were correctly addressed. They are
-ready now.
-
-At the moment I know of one more urgent issue regarding the NFS server.
-A fix has been tested and is under review. I expect to send one more
-"5.7-rc fixes" PR, containing this fix (which now consists of 3 =
-patches).
 
 
-The following changes since commit =
-8f3d9f354286745c751374f5f1fcafee6b3f3136:
+> On Apr 23, 2020, at 3:10 AM, Zou Wei <zou_wei@huawei.com> wrote:
+>=20
+> Fix the following sparse warning:
+>=20
+> net/sunrpc/xprtrdma/transport.c:71:14: warning: symbol =
+'xprt_rdma_slot_table_entries'
+> was not declared. Should it be static?
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.7-rc-1
-
-for you to fetch changes up to 23cf1ee1f1869966b75518c59b5cbda4c6c92450:
-
-  svcrdma: Fix leak of svc_rdma_recv_ctxt objects (2020-04-17 12:40:38 =
--0400)
-
-----------------------------------------------------------------
-Fixes:
-
-- Address several use-after-free and memory leak bugs
-
-- Prevent a backchannel livelock
-
-----------------------------------------------------------------
-Chuck Lever (3):
-      SUNRPC: Fix backchannel RPC soft lockups
-      svcrdma: Fix trace point use-after-free race
-      svcrdma: Fix leak of svc_rdma_recv_ctxt objects
-
-Vasily Averin (1):
-      nfsd: memory corruption in nfsd4_lock()
-
-Yihao Wu (1):
-      SUNRPC/cache: Fix unsafe traverse caused double-free in =
-cache_purge
-
- fs/nfsd/nfs4callback.c                     |  4 +++-
- fs/nfsd/nfs4state.c                        |  2 ++
- include/linux/sunrpc/svc_rdma.h            |  1 +
- include/trace/events/rpcrdma.h             | 50 =
-++++++++++++++++++++++++++++++++++++--------------
- net/sunrpc/cache.c                         |  5 +++--
- net/sunrpc/svc_xprt.c                      |  5 ++---
- net/sunrpc/svcsock.c                       |  4 ++++
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  2 ++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    | 22 ++++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_rw.c          |  3 +--
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 29 =
-++++++++++++-----------------
- net/sunrpc/xprtrdma/svc_rdma_transport.c   |  5 -----
- net/sunrpc/xprtsock.c                      |  1 +
- 13 files changed, 89 insertions(+), 44 deletions(-)
+> ---
+> net/sunrpc/xprtrdma/transport.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/transport.c =
+b/net/sunrpc/xprtrdma/transport.c
+> index 659da37..9f2e8f5 100644
+> --- a/net/sunrpc/xprtrdma/transport.c
+> +++ b/net/sunrpc/xprtrdma/transport.c
+> @@ -68,7 +68,7 @@
+>  * tunables
+>  */
+>=20
+> -unsigned int xprt_rdma_slot_table_entries =3D RPCRDMA_DEF_SLOT_TABLE;
+> +static unsigned int xprt_rdma_slot_table_entries =3D =
+RPCRDMA_DEF_SLOT_TABLE;
+> unsigned int xprt_rdma_max_inline_read =3D RPCRDMA_DEF_INLINE;
+> unsigned int xprt_rdma_max_inline_write =3D RPCRDMA_DEF_INLINE;
+> unsigned int xprt_rdma_memreg_strategy		=3D =
+RPCRDMA_FRWR;
+> --=20
+> 2.6.2
 
 --
 Chuck Lever
