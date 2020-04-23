@@ -2,152 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54EE41B64AD
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B86C91B64A8
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDWToF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Apr 2020 15:44:05 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51420 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWToF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:44:05 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NJgism129191;
-        Thu, 23 Apr 2020 19:44:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=YMQc1kuGl6pqOgoz+h8brmaVlw6G+a9FkrDyb4yyq/s=;
- b=eSVj19TAzxio57QA+mosaCyPoB8ZIi494ioZbkY2wpGHqyseqfy+Y40lybqfpNCru6WX
- zHVOHBj8o2lQ+uBshAHWF+tGVCIa4ksD/i9DP+9+1V7GzyRuKC/yVuPrX7bW7kcqB7Q2
- BwooAYSrpB5/OYDdWHarvJBEveqzhvnixvdwl9L7h55khnNJDIR+bTgnVTwSSH337Lkh
- SzaAvLr+E6OmoDcVLmKkw9manAbNoaRJIVe1Vdjak1Xh85Mv19Ii4WNSL4t1FHBRpSXr
- jI7yLiNaSh7Nvvt9L+OmwJq4Mesu1GMfYf1Cd0Ss8flyB4XWu8fN9cZyT/xFj50AE9zn SQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30jvq4wjwb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 19:44:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NJfhMq167518;
-        Thu, 23 Apr 2020 19:42:00 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30gb3w560k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 19:42:00 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03NJfuYT017250;
-        Thu, 23 Apr 2020 19:41:59 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Apr 2020 12:41:56 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: GSS unwrapping breaks the DRC
+        id S1727807AbgDWTnP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Apr 2020 15:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgDWTnO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:43:14 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D36C09B042
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:14 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m67so7716067qke.12
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=lmiGKU/0BzK3kvDCVebAFBHLnXuLfxEKHT7+An2vDSY=;
+        b=SilGvuehru++w3CaSjNF9/99NO3lea2mM8qR7vger4JywbVejtuxidO+UAzmxas2ns
+         vlJK77PoUpYMSEWj79l0qI3dT0Y6XI7Avh/ASWmCUKYrGy5HCja4dQ7PZYT9pOYxRWw5
+         WzN8C2mf1DtVtBg5R0yGdQveBdQwGjpUVvbWwB7WytfHUZDhq5QX+hoaTnU2brrhejRI
+         lXJwLarkmXF76EsZIXe2wfX8Kc/v75Gs0fZbI0ZomFuWZf67XaYEJnL26tJdj0kq7gZU
+         CMfTnUYFqmPr4oL/3MwgH4RbdKrdZK9DGL+qq9QLLfDxuajoXkB+PhKnzIu+4NCAoqnI
+         hE8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=lmiGKU/0BzK3kvDCVebAFBHLnXuLfxEKHT7+An2vDSY=;
+        b=t1CTS09bztlPF15lXNFgEqgAoF1OzlMgmhhjPwLTytM/xv+5u0F7Oy4aw6JgbiQ9/p
+         RK5RK6MeCCzeX8c37TJ9oQd6w360iuW25R1ay4y37OLlovLfig/XZo9Oxk4CxjtJ45ZI
+         fSl9CwJeUjo0/wCBQHT6Fja2HxLGgH+kZnHlpG9Luo5vIbomDCoWnpqGuaG9FWvCaJfk
+         8xi1J43eXfVClmmVBACOJ/qc2ET4RXWRLdKfXzxdyP86U+x1+wuPVw/Tf0Dz7BUZp+Jn
+         DB11b7pgNWJ7Xzkr2c4mFfO7Hdsf09XRCcwjy8zrRbUnAEmCiPkSs97WMYCSDQaBM/ZA
+         wHaw==
+X-Gm-Message-State: AGi0PuY/gkLBRufAwZEmgtwFFUaAURntMhU8OKYwDmI9JsCZD3UzKYrm
+        4GUMLm+MqIxlt4z5F8FxclKszTEI
+X-Google-Smtp-Source: APiQypLuF+WpK/XZKjfnGHmrjvVX1hrMjs7EDjI5GfyyC1ODu+70wTr4PzZURgzGJfK47E0a4mjTUA==
+X-Received: by 2002:a05:620a:15a4:: with SMTP id f4mr5041918qkk.221.1587670993945;
+        Thu, 23 Apr 2020 12:43:13 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id g25sm2166255qkl.50.2020.04.23.12.43.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 12:43:13 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 03NJhBM9030431;
+        Thu, 23 Apr 2020 19:43:11 GMT
+Subject: [PATCH RFC2 1/2] SUNRPC: Set SOFTCONN when destroying GSS contexts
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200423193405.GB4561@fieldses.org>
-Date:   Thu, 23 Apr 2020 15:41:53 -0400
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 23 Apr 2020 15:43:11 -0400
+Message-ID: <20200423194311.7849.36326.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <9B405815-0F35-4330-842F-1980E76A9309@oracle.com>
-References: <DAED9EC8-7461-48FF-AD6C-C85FB968F8A6@oracle.com>
- <20200415192542.GA6466@fieldses.org>
- <0775FBE7-C2DD-4ED6-955D-22B944F302E0@oracle.com>
- <20200415215823.GB6466@fieldses.org>
- <39815C35-EAD8-4B2E-B48F-88F3D5B10C57@oracle.com>
- <AA069628-0668-4F15-8C29-23997D04185B@oracle.com>
- <20200423193405.GB4561@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=543 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 adultscore=0 mlxlogscore=589 phishscore=0 impostorscore=0
- clxscore=1015 bulkscore=0 spamscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230147
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce-
+Prevent a (temporary) hang when shutting down an rpc_clnt that has
+used one or more GSS creds.
 
-> On Apr 23, 2020, at 3:34 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> On Fri, Apr 17, 2020 at 05:48:35PM -0400, Chuck Lever wrote:
->> I've hit a snag here.
->> 
->> I reverted 241b1f419f0e on my server, and all tests completed
->> successfully.
->> 
->> I reverted 241b1f419f0e on my client, and now krb5p is failing. Using
->> xdr_buf_trim does the right thing on the server, but on the client it
->> has exposed a latent bug in gss_unwrap_resp_priv() (ie, the bug does
->> not appear to be harmful until 241b1f419f0e has been reverted).
->> 
->> The calculation of au_ralign in that function is wrong, and that forces
->> rpc_prepare_reply_pages to allocate a zero-length tail. xdr_buf_trim()
->> then lops off the end of each subsequent clear-text RPC message, and
->> eventually a short READ results in test failures.
->> 
->> After experimenting with this for a day, I don't see any way for
->> gss_unwrap_resp_priv() to estimate au_ralign based on what gss_unwrap()
->> has done to the xdr_buf. The kerberos_v1 unwrap method does not appear
->> to have any trailing checksum, for example, but v2 does.
->> 
->> The best approach for now seems to be to have the pseudoflavor-specific
->> unwrap methods return the correct ralign value. A straightforward way
->> to do this would be to add a *int parameter to ->gss_unwrap that would
->> be set to the proper value; or hide that value somewhere in the xdr_buf.
->> 
->> Any other thoughts or random bits of inspiration?
-> 
-> No.  Among other things, a quick skim wasn't enough to remind me what
-> au_ralign is and why we have both that and au_rslack....  Sorry!  I've
-> got not much to offer but sympathy.
+I noticed that callers of rpc_call_null_helper() use a common set of
+flags, so I collected them all in that helper function.
 
-I added au_ralign last year to deal with where the beginning of the
-encapsulated upper layer message lands. So:
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/auth_gss/auth_gss.c |    2 +-
+ net/sunrpc/clnt.c              |   10 ++++------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
-au_verfsize - the size of the RPC header's verifier field
-au_ralign - the offset of the start of the upper layer results
-au_rslack - the total size of the RPC header and results
-
-Note that the krb5_v2 unwrapper deals with this already. It's got
-headskip and tailskip. The v1 unwrapper doesn't need to worry about
-trailing GSS data.
-
-The purpose of this is to ensure that the upper layer's data payload
-(ie, what is supposed to land in the buf->pages most of the time)
-is not going to need to be re-aligned via a memcpy. au_ralign is
-used to this effect in rpc_prepare_reply_pages when setting up
-rq_rcv_buf.
-
-
-> ...
-> 
-> I have a random thought out of left field: after the xdr_stream
-> conversion, fs/nfs/nfs4xdr.c mostly doesn't deal directly with the reply
-> buffer any more.  It calls xdr_inline_decode(xdr, n) and gets back a
-> pointer to the next n bytes of rpc data.  Or it calls xdr_read_pages()
-> after which read data's supposed to be moved to the right place.
-> 
-> Would it be possible to delay rpcsec_gss decoding until then?  Would
-> that make things simpler or more complicated?
-> 
-> Eh, I think the answer is probably "more complicated".
-> 
-> --b.
-
---
-Chuck Lever
-
-
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index ac5cac0dd24b..16cec9755b86 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -1285,7 +1285,7 @@ static void gss_pipe_free(struct gss_pipe *p)
+ 		ctx->gc_proc = RPC_GSS_PROC_DESTROY;
+ 
+ 		task = rpc_call_null(gss_auth->client, &new->gc_base,
+-				RPC_TASK_ASYNC|RPC_TASK_SOFT);
++				     RPC_TASK_ASYNC);
+ 		if (!IS_ERR(task))
+ 			rpc_put_task(task);
+ 
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 325a0858700f..ddc98b97c170 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2742,7 +2742,8 @@ struct rpc_task *rpc_call_null_helper(struct rpc_clnt *clnt,
+ 		.rpc_op_cred = cred,
+ 		.callback_ops = (ops != NULL) ? ops : &rpc_default_ops,
+ 		.callback_data = data,
+-		.flags = flags | RPC_TASK_NULLCREDS,
++		.flags = flags | RPC_TASK_SOFT | RPC_TASK_SOFTCONN |
++			 RPC_TASK_NULLCREDS,
+ 	};
+ 
+ 	return rpc_run_task(&task_setup_data);
+@@ -2805,8 +2806,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
+ 		goto success;
+ 	}
+ 
+-	task = rpc_call_null_helper(clnt, xprt, NULL,
+-			RPC_TASK_SOFT|RPC_TASK_SOFTCONN|RPC_TASK_ASYNC|RPC_TASK_NULLCREDS,
++	task = rpc_call_null_helper(clnt, xprt, NULL, RPC_TASK_ASYNC,
+ 			&rpc_cb_add_xprt_call_ops, data);
+ 	if (IS_ERR(task))
+ 		return PTR_ERR(task);
+@@ -2850,9 +2850,7 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
+ 		goto out_err;
+ 
+ 	/* Test the connection */
+-	task = rpc_call_null_helper(clnt, xprt, NULL,
+-				    RPC_TASK_SOFT | RPC_TASK_SOFTCONN | RPC_TASK_NULLCREDS,
+-				    NULL, NULL);
++	task = rpc_call_null_helper(clnt, xprt, NULL, 0, NULL, NULL);
+ 	if (IS_ERR(task)) {
+ 		status = PTR_ERR(task);
+ 		goto out_err;
 
