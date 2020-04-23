@@ -2,60 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B86C91B64A8
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A78B61B64A9
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgDWTnP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Apr 2020 15:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        id S1727896AbgDWTnU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Apr 2020 15:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgDWTnO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:43:14 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D36C09B042
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:14 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id m67so7716067qke.12
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:14 -0700 (PDT)
+        with ESMTP id S1726720AbgDWTnT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:43:19 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF67C09B042
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:19 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id i68so5946541qtb.5
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=lmiGKU/0BzK3kvDCVebAFBHLnXuLfxEKHT7+An2vDSY=;
-        b=SilGvuehru++w3CaSjNF9/99NO3lea2mM8qR7vger4JywbVejtuxidO+UAzmxas2ns
-         vlJK77PoUpYMSEWj79l0qI3dT0Y6XI7Avh/ASWmCUKYrGy5HCja4dQ7PZYT9pOYxRWw5
-         WzN8C2mf1DtVtBg5R0yGdQveBdQwGjpUVvbWwB7WytfHUZDhq5QX+hoaTnU2brrhejRI
-         lXJwLarkmXF76EsZIXe2wfX8Kc/v75Gs0fZbI0ZomFuWZf67XaYEJnL26tJdj0kq7gZU
-         CMfTnUYFqmPr4oL/3MwgH4RbdKrdZK9DGL+qq9QLLfDxuajoXkB+PhKnzIu+4NCAoqnI
-         hE8g==
+        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=+AE51vMhMRmnKr1C0p9d5nMOGQsfWTJDmE45ZxSurVE=;
+        b=GuO4VlcIBkdXyeibRra5mDjQuM4L0nb9tdpL32ApLTPK6Hhp35Q6H//5nJDt56AjUz
+         yH2Xy8LUrQhaLpLCoH0yMuzTMP+nOjoRzBbOBb+KBRtK2vOy7UImqB30vMpeI5Pdqx6z
+         D3b9NQsRNCymUeGFEJF07Fbq9m3HBDSpXg3SpDALLpjcH3U813h6nQgFfQurRTW+LIt4
+         hfsylDXco30X7r/39APSsfu/xSzmfwLBUDiAM+nyaMST0eBZPG25RYTvsOnZFGsYPanr
+         6YmJKVQvcZIwxSq6ChAg14Pd/LuCorMTuDApkTZ0mOThafNAskZ62UAiJO3HIXVzlx84
+         i4Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=lmiGKU/0BzK3kvDCVebAFBHLnXuLfxEKHT7+An2vDSY=;
-        b=t1CTS09bztlPF15lXNFgEqgAoF1OzlMgmhhjPwLTytM/xv+5u0F7Oy4aw6JgbiQ9/p
-         RK5RK6MeCCzeX8c37TJ9oQd6w360iuW25R1ay4y37OLlovLfig/XZo9Oxk4CxjtJ45ZI
-         fSl9CwJeUjo0/wCBQHT6Fja2HxLGgH+kZnHlpG9Luo5vIbomDCoWnpqGuaG9FWvCaJfk
-         8xi1J43eXfVClmmVBACOJ/qc2ET4RXWRLdKfXzxdyP86U+x1+wuPVw/Tf0Dz7BUZp+Jn
-         DB11b7pgNWJ7Xzkr2c4mFfO7Hdsf09XRCcwjy8zrRbUnAEmCiPkSs97WMYCSDQaBM/ZA
-         wHaw==
-X-Gm-Message-State: AGi0PuY/gkLBRufAwZEmgtwFFUaAURntMhU8OKYwDmI9JsCZD3UzKYrm
-        4GUMLm+MqIxlt4z5F8FxclKszTEI
-X-Google-Smtp-Source: APiQypLuF+WpK/XZKjfnGHmrjvVX1hrMjs7EDjI5GfyyC1ODu+70wTr4PzZURgzGJfK47E0a4mjTUA==
-X-Received: by 2002:a05:620a:15a4:: with SMTP id f4mr5041918qkk.221.1587670993945;
-        Thu, 23 Apr 2020 12:43:13 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=+AE51vMhMRmnKr1C0p9d5nMOGQsfWTJDmE45ZxSurVE=;
+        b=NduwRhLsQ4PBzCd+++HO0gg+cIahtSFW1u75OEMIR4G6A81GVWkfIGXAE1jXR6ZaKV
+         PaalQtIPK+RmPjAbRgrhtDmeemmKQEQPK9/6EP8ST2+IJjEC3sTg8+QWj8QyMiPn9Hl/
+         DfSCIdXRBUW+jJ1ydjRdfi0WQHII1Z5dTzJFJKJMST4GuCliWl27ErE+Wq96ajIwu+Z1
+         mtHd7JbgiS5xlbS6eIJ9kencLiQGelaVE/mCPZLz5XbyG3HWJvGdm0QxyVT6mOrkdV0T
+         MnwRenFR/xz378owA4bldeVqzrzlhxhF9LP6jVc/XiFF+Zai10sb4YFM/oe+geXJr6Iy
+         fKiw==
+X-Gm-Message-State: AGi0Pubd7MeUsjgHsc1hc0SwCxgXQV8kdTy9y/9WKLqRG5c3SPWp8DNi
+        d2S5aj2wtpArkwJz2CeTDMX+5WYx
+X-Google-Smtp-Source: APiQypJg2VccbNIPDyfeR/zYhyHVu3tgNj5xAtsC9PcB/ars2BbxlsnCHwO0B7nVEYCHdM5CrrqF4w==
+X-Received: by 2002:aed:2de7:: with SMTP id i94mr5911294qtd.248.1587670998975;
+        Thu, 23 Apr 2020 12:43:18 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g25sm2166255qkl.50.2020.04.23.12.43.13
+        by smtp.gmail.com with ESMTPSA id e8sm2112461qkl.57.2020.04.23.12.43.18
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 12:43:13 -0700 (PDT)
+        Thu, 23 Apr 2020 12:43:18 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 03NJhBM9030431;
-        Thu, 23 Apr 2020 19:43:11 GMT
-Subject: [PATCH RFC2 1/2] SUNRPC: Set SOFTCONN when destroying GSS contexts
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 03NJhH8H030434;
+        Thu, 23 Apr 2020 19:43:17 GMT
+Subject: [PATCH RFC2 2/2] sunrpc: Ensure signalled RPC tasks exit
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Thu, 23 Apr 2020 15:43:11 -0400
-Message-ID: <20200423194311.7849.36326.stgit@manet.1015granger.net>
+Date:   Thu, 23 Apr 2020 15:43:17 -0400
+Message-ID: <20200423194317.7849.3375.stgit@manet.1015granger.net>
+In-Reply-To: <20200423194311.7849.36326.stgit@manet.1015granger.net>
+References: <20200423194311.7849.36326.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -65,64 +68,61 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Prevent a (temporary) hang when shutting down an rpc_clnt that has
-used one or more GSS creds.
-
-I noticed that callers of rpc_call_null_helper() use a common set of
-flags, so I collected them all in that helper function.
+If an RPC task is signaled while it is running and the transport is
+not connected, it will never sleep and never be terminated. This can
+happen when a RPC transport is shut down: the remaining tasks are
+signalled, but the transport is disconnected.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/auth_gss.c |    2 +-
- net/sunrpc/clnt.c              |   10 ++++------
- 2 files changed, 5 insertions(+), 7 deletions(-)
+ include/linux/sunrpc/sched.h |    3 ++-
+ net/sunrpc/sched.c           |   14 ++++++--------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index ac5cac0dd24b..16cec9755b86 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1285,7 +1285,7 @@ static void gss_pipe_free(struct gss_pipe *p)
- 		ctx->gc_proc = RPC_GSS_PROC_DESTROY;
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index df696efdd675..9f5e48f154c5 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -170,7 +170,8 @@ struct rpc_task_setup {
  
- 		task = rpc_call_null(gss_auth->client, &new->gc_base,
--				RPC_TASK_ASYNC|RPC_TASK_SOFT);
-+				     RPC_TASK_ASYNC);
- 		if (!IS_ERR(task))
- 			rpc_put_task(task);
+ #define RPC_IS_ACTIVATED(t)	test_bit(RPC_TASK_ACTIVE, &(t)->tk_runstate)
  
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 325a0858700f..ddc98b97c170 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2742,7 +2742,8 @@ struct rpc_task *rpc_call_null_helper(struct rpc_clnt *clnt,
- 		.rpc_op_cred = cred,
- 		.callback_ops = (ops != NULL) ? ops : &rpc_default_ops,
- 		.callback_data = data,
--		.flags = flags | RPC_TASK_NULLCREDS,
-+		.flags = flags | RPC_TASK_SOFT | RPC_TASK_SOFTCONN |
-+			 RPC_TASK_NULLCREDS,
- 	};
+-#define RPC_SIGNALLED(t)	test_bit(RPC_TASK_SIGNALLED, &(t)->tk_runstate)
++#define RPC_SIGNALLED(t)	\
++	unlikely(test_bit(RPC_TASK_SIGNALLED, &(t)->tk_runstate) != 0)
  
- 	return rpc_run_task(&task_setup_data);
-@@ -2805,8 +2806,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 		goto success;
- 	}
+ /*
+  * Task priorities.
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 7eba20a88438..99b7b834a110 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -912,6 +912,12 @@ static void __rpc_execute(struct rpc_task *task)
+ 		trace_rpc_task_run_action(task, do_action);
+ 		do_action(task);
  
--	task = rpc_call_null_helper(clnt, xprt, NULL,
--			RPC_TASK_SOFT|RPC_TASK_SOFTCONN|RPC_TASK_ASYNC|RPC_TASK_NULLCREDS,
-+	task = rpc_call_null_helper(clnt, xprt, NULL, RPC_TASK_ASYNC,
- 			&rpc_cb_add_xprt_call_ops, data);
- 	if (IS_ERR(task))
- 		return PTR_ERR(task);
-@@ -2850,9 +2850,7 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
- 		goto out_err;
++		if (RPC_SIGNALLED(task)) {
++			task->tk_rpc_status = -ERESTARTSYS;
++			rpc_exit(task, -ERESTARTSYS);
++			break;
++		}
++
+ 		/*
+ 		 * Lockless check for whether task is sleeping or not.
+ 		 */
+@@ -919,14 +925,6 @@ static void __rpc_execute(struct rpc_task *task)
+ 			continue;
  
- 	/* Test the connection */
--	task = rpc_call_null_helper(clnt, xprt, NULL,
--				    RPC_TASK_SOFT | RPC_TASK_SOFTCONN | RPC_TASK_NULLCREDS,
--				    NULL, NULL);
-+	task = rpc_call_null_helper(clnt, xprt, NULL, 0, NULL, NULL);
- 	if (IS_ERR(task)) {
- 		status = PTR_ERR(task);
- 		goto out_err;
+ 		/*
+-		 * Signalled tasks should exit rather than sleep.
+-		 */
+-		if (RPC_SIGNALLED(task)) {
+-			task->tk_rpc_status = -ERESTARTSYS;
+-			rpc_exit(task, -ERESTARTSYS);
+-		}
+-
+-		/*
+ 		 * The queue->lock protects against races with
+ 		 * rpc_make_runnable().
+ 		 *
 
