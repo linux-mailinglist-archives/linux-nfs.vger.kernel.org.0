@@ -2,91 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B3491B639A
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 20:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF9E1B6483
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2020 21:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgDWS1e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Apr 2020 14:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
+        id S1728782AbgDWTeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Apr 2020 15:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730315AbgDWS0y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 14:26:54 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F811C0254A0
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 11:26:52 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b18so6559557ilf.2
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 11:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
-         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
-         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
-         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
-         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
-         vLew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=OHWn0rlbppbFiImx1f1cD7iMs26eL5yqX9Wsuc3KnvEqPPa4vbEC35n7hxLTg9ZFTe
-         SbupZRSpNklxf1vFzZ1pDEsjbnuQVLT+MTh0z4SrTelPtblc47SAT1DRXli+inc8ZPZN
-         t3oY5Mzy15urz8ib2hBwhtORFzVkoV88DLc1pfRhn0oXzKCjXkjSMHTYGYS1f/l0VtdW
-         zSUUiIf86zkoUx3czZBP0jG4U361atkN9BMiBXoX4H29qVDIboX/3Yx0w4vE3X3RZdRA
-         UYQLulVmKc/9d7w4foVSUPqm/cxKhwrS+nmCUhEXr2VHaRaqI17gsjtKZIJQsNExtTJT
-         O9Yw==
-X-Gm-Message-State: AGi0PubZV8eW/JBB+udFtu3KY9QV55TbYIeHaNhIa9CdBFeqTx9EdPtX
-        st158drRj54rF/78LVjHepeuV6fe9+KXPE3u3OePtoQ=
-X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
-X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
- Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
+        with ESMTP id S1728308AbgDWTeG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Apr 2020 15:34:06 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E81FC09B042
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2020 12:34:06 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 757D414DC; Thu, 23 Apr 2020 15:34:05 -0400 (EDT)
+Date:   Thu, 23 Apr 2020 15:34:05 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: GSS unwrapping breaks the DRC
+Message-ID: <20200423193405.GB4561@fieldses.org>
+References: <DAED9EC8-7461-48FF-AD6C-C85FB968F8A6@oracle.com>
+ <20200415192542.GA6466@fieldses.org>
+ <0775FBE7-C2DD-4ED6-955D-22B944F302E0@oracle.com>
+ <20200415215823.GB6466@fieldses.org>
+ <39815C35-EAD8-4B2E-B48F-88F3D5B10C57@oracle.com>
+ <AA069628-0668-4F15-8C29-23997D04185B@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:26:49 +0200
-Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
-Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
- amount of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AA069628-0668-4F15-8C29-23997D04185B@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+On Fri, Apr 17, 2020 at 05:48:35PM -0400, Chuck Lever wrote:
+> I've hit a snag here.
+> 
+> I reverted 241b1f419f0e on my server, and all tests completed
+> successfully.
+> 
+> I reverted 241b1f419f0e on my client, and now krb5p is failing. Using
+> xdr_buf_trim does the right thing on the server, but on the client it
+> has exposed a latent bug in gss_unwrap_resp_priv() (ie, the bug does
+> not appear to be harmful until 241b1f419f0e has been reverted).
+> 
+> The calculation of au_ralign in that function is wrong, and that forces
+> rpc_prepare_reply_pages to allocate a zero-length tail. xdr_buf_trim()
+> then lops off the end of each subsequent clear-text RPC message, and
+> eventually a short READ results in test failures.
+> 
+> After experimenting with this for a day, I don't see any way for
+> gss_unwrap_resp_priv() to estimate au_ralign based on what gss_unwrap()
+> has done to the xdr_buf. The kerberos_v1 unwrap method does not appear
+> to have any trailing checksum, for example, but v2 does.
+> 
+> The best approach for now seems to be to have the pseudoflavor-specific
+> unwrap methods return the correct ralign value. A straightforward way
+> to do this would be to add a *int parameter to ->gss_unwrap that would
+> be set to the proper value; or hide that value somewhere in the xdr_buf.
+> 
+> Any other thoughts or random bits of inspiration?
+
+No.  Among other things, a quick skim wasn't enough to remind me what
+au_ralign is and why we have both that and au_rslack....  Sorry!  I've
+got not much to offer but sympathy.
+
+...
+
+I have a random thought out of left field: after the xdr_stream
+conversion, fs/nfs/nfs4xdr.c mostly doesn't deal directly with the reply
+buffer any more.  It calls xdr_inline_decode(xdr, n) and gets back a
+pointer to the next n bytes of rpc data.  Or it calls xdr_read_pages()
+after which read data's supposed to be moved to the right place.
+
+Would it be possible to delay rpcsec_gss decoding until then?  Would
+that make things simpler or more complicated?
+
+Eh, I think the answer is probably "more complicated".
+
+--b.
