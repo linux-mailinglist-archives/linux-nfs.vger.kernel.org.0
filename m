@@ -2,100 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C93C81B8196
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2020 23:19:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1680D1B81B2
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2020 23:45:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgDXVTW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Apr 2020 17:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51410 "EHLO
+        id S1726040AbgDXVpp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Apr 2020 17:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgDXVTW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Apr 2020 17:19:22 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83DEC09B048;
-        Fri, 24 Apr 2020 14:19:21 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id i68so9193258qtb.5;
-        Fri, 24 Apr 2020 14:19:21 -0700 (PDT)
+        with ESMTP id S1726027AbgDXVpp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Apr 2020 17:45:45 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1F8C09B049
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2020 14:45:43 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id k12so9267677qtm.4
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2020 14:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=fXa5ZQfBwOl7sxD1r5EZkygeH/aqjfJgOvY7hYBHa9w=;
-        b=pTsALS5ldCOL8b8K4RRVPC2hHJb1+FgzXfI931FbjXV0hDLETRK4iwFhke7W2/10oV
-         6SCuFCn98Dg5fXPUd2230yxerekJI7foUrUzA+Sy4VuvH6e+Qg9PnfpJ0CM5/FriH/NQ
-         HTfaJ1ubiYvheHvQ/o0QLOEOwm0Hc8KJI5w7220lJ1D52jhE/qs7d33ajnWXRAxxG65Q
-         PC7/FpOMFOVkLLU93JRpsZl5XH6TBBWFWqbHOQNkPP4z77mUQ0F8BN61hsqV1SsmNXxC
-         anD1wx3PIntX4jCNLTI+p7KTx1vwZtA+ysWucseZLmeKnVhax1eAdBNxIXg6dNNbEJFL
-         elgw==
+        h=from:to:cc:subject:date:message-id;
+        bh=FdOXTtHy+tCOIWxiQkJvu6mdbfuP/REbWenvSsfQc9k=;
+        b=thCXb3rIaXehMSl+LourIZlw8pvC7TCRw3EkU6LvfGn3UGa5EPc9ow4UFRBpAWobdQ
+         nQ4BIXkZVeNgzC+0rxowoOvJkBq9N1xX9rStKLKjKNlFivvY6wq78PikCboJJQgqfjnG
+         pXxcIPbRfHIFRwPQ9EOdWzhN/XF6S5RQ+9BsMhkhenmJGrNDDm40Lbi7+bLV376TxpWu
+         WGuX7ACCZrdlSZ26/QLzOyak/J3/CjtXYUC1oSWAdNe97g74ieIdcLk5IOrF6AIpUVd1
+         sHCNuKRsVH/Ubw1mKGv2xDnfcTWhMsuTMolwAqLGNwKqBjiHB7jN+9dt35iod9iaT5Dk
+         C2NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:to:cc:from:subject:message-id:date
-         :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=fXa5ZQfBwOl7sxD1r5EZkygeH/aqjfJgOvY7hYBHa9w=;
-        b=GZooiuMQV3hMvh2J0V7HkqsRwY2uxWTT8kP4wwOYtyELXHZao837WsmoVczklSdoiP
-         vjOfl/lcCYYmc6ckJ/qem9Ayskvfewk1TSKeCvIrMdijurpLqcFmYZMaS7877LgpqiaB
-         8yO723heUrQOv9YHNj8JicNAa0E+FVoZemGUez8LzoFrbXjTDEYFVF2cz0cgZEpFCaSZ
-         tmW2mecdyGdYzSHB9OR6ndTrKzFkFDZPLCM+Zo1u2AlCAQ06jL4CuwGAeFwERstBVRuL
-         qImPBzEKqne7QF5xHALOLB7/iwvRE0REJ46eAAzhX+I4l6mHJO0EyJb88BIAT8kGLkEJ
-         kMVQ==
-X-Gm-Message-State: AGi0Pub/dn1P+uWZrgK05swy1hrc2ei/IgvFrKwAJ8LL5m+1hxGYIJiG
-        oGpCgLrZHccRV0JeJRHXHC6a9l9kpqk=
-X-Google-Smtp-Source: APiQypJywaIdnm4aLifH77u50linEM5gKc2ZL+3ntkv/UawL0RBccSXYT8nu25D4do6ICxkpGv6vRA==
-X-Received: by 2002:ac8:32a4:: with SMTP id z33mr12022128qta.363.1587763160564;
-        Fri, 24 Apr 2020 14:19:20 -0700 (PDT)
-Received: from [192.168.1.43] (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id p22sm2166422qtb.91.2020.04.24.14.19.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 14:19:20 -0700 (PDT)
-To:     trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Subject: [GIT PULL] Please pull NFSoRDMA Client Bugfixes for Linux 5.7
-Message-ID: <b380cea4-b711-fd33-8a79-434657168950@gmail.com>
-Date:   Fri, 24 Apr 2020 17:19:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FdOXTtHy+tCOIWxiQkJvu6mdbfuP/REbWenvSsfQc9k=;
+        b=hgrNc3AiudulU0knOvpP/HvmQQpDy2/LeqDBDG9P9XKlOE2G+wI3UpVsWbm/QuLdtA
+         RWvkJI6Qp9/MvduzBtdDKXcwpUqkFHJ03EBfLlHIEfKhbv1+iSGEay88UtSL6VrMtN+W
+         owPakhX1I7v+1csnnXLWVbkHZK3ibN5h07sDfBS3PqojGxLcUYSgl4wVqbmoBU75G5Kt
+         JUaRrva3Ap8j6oOzSnwJ2H6zPK5GUrV5kGvVMgkqRlijuDZyP86hMh8WIN0DDr1W5I1v
+         aBO+1haQgmOAPI68bdwFMZGivGYe42kpmYYHHoSf/I/OEZTCdOWbUDlk4YkCMs0TuaXR
+         s07w==
+X-Gm-Message-State: AGi0PubLsyTTsNV2ZZddmTboP2UfUHPyhSA3l7hOsE7VZU6fxrizRaRp
+        TMEvTywaZ4vSCT8O/V73deknn6fQ
+X-Google-Smtp-Source: APiQypJQcnZam1W+iJSKgc4ISK1KYMyAollJGMaelt2+c9Z9TvL6chAML2kdjaPaiyNw/Hcv4Wcmog==
+X-Received: by 2002:ac8:2f15:: with SMTP id j21mr11876350qta.259.1587764742885;
+        Fri, 24 Apr 2020 14:45:42 -0700 (PDT)
+Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id i42sm5052315qtc.83.2020.04.24.14.45.41
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 24 Apr 2020 14:45:42 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/1] NFSv4.1: fix handling of backchannel binding in BIND_CONN_TO_SESSION
+Date:   Fri, 24 Apr 2020 17:45:50 -0400
+Message-Id: <20200424214550.30462-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+Currently, if the client sends BIND_CONN_TO_SESSION with
+NFS4_CDFC4_FORE_OR_BOTH but only gets NFS4_CDFS4_FORE back it ignores
+that it wasn't able to enable a backchannel.
 
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+To make sure, the client sends BIND_CONN_TO_SESSION as the first
+operation on the connections (ie., no other session compounds haven't
+been sent before), and if the client's request to bind the backchannel
+is not satisfied, then reset the connection and retry.
 
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+Cc: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/nfs4proc.c           | 8 ++++++++
+ include/linux/nfs_xdr.h     | 2 ++
+ include/linux/sunrpc/clnt.h | 5 +++++
+ 3 files changed, 15 insertions(+)
 
-
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-rdma-for-5.7-2
-
-for you to fetch changes up to 48a124e383508d3d73453d540a825c0745454af9:
-
-  xprtrdma: Fix use of xdr_stream_encode_item_{present, absent} (2020-04-20 10:45:01 -0400)
-
-----------------------------------------------------------------
-
-These patches fix two bugs that Chuck found that were introduced in the original 5.7 pull request, and also a use-after-free race in the tracepoints code.
-
-Thanks,
-
-Anna
-
-----------------------------------------------------------------
-
-Chuck Lever (3):
-      xprtrdma: Restore wake-up-all to rpcrdma_cm_event_handler()
-      xprtrdma: Fix trace point use-after-free race
-      xprtrdma: Fix use of xdr_stream_encode_item_{present, absent}
-
- include/trace/events/rpcrdma.h | 12 ++++--------
- net/sunrpc/xprtrdma/rpc_rdma.c | 15 +++++++++++----
- net/sunrpc/xprtrdma/verbs.c    |  3 ++-
- 3 files changed, 17 insertions(+), 13 deletions(-)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 512afb1..7e7c24e 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7891,6 +7891,7 @@ static int nfs4_check_cl_exchange_flags(u32 flags)
+ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
++	struct nfs41_bind_conn_to_session_res *res = task->tk_msg.rpc_resp;
+ 	struct nfs_client *clp = args->client;
+ 
+ 	switch (task->tk_status) {
+@@ -7899,6 +7900,12 @@ static int nfs4_check_cl_exchange_flags(u32 flags)
+ 		nfs4_schedule_session_recovery(clp->cl_session,
+ 				task->tk_status);
+ 	}
++	if (args->dir == NFS4_CDFC4_FORE_OR_BOTH &&
++			res->dir != NFS4_CDFS4_BOTH) {
++		rpc_task_close_connection(task);
++		if (args->retries++ < MAX_BIND_CONN_TO_SESSION_RETRIES)
++			rpc_restart_call(task);
++	}
+ }
+ 
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+@@ -7921,6 +7928,7 @@ int nfs4_proc_bind_one_conn_to_session(struct rpc_clnt *clnt,
+ 	struct nfs41_bind_conn_to_session_args args = {
+ 		.client = clp,
+ 		.dir = NFS4_CDFC4_FORE_OR_BOTH,
++		.retries = 0,
+ 	};
+ 	struct nfs41_bind_conn_to_session_res res;
+ 	struct rpc_message msg = {
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 4402304..e5f3e7d 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1317,11 +1317,13 @@ struct nfs41_impl_id {
+ 	struct nfstime4			date;
+ };
+ 
++#define MAX_BIND_CONN_TO_SESSION_RETRIES 3
+ struct nfs41_bind_conn_to_session_args {
+ 	struct nfs_client		*client;
+ 	struct nfs4_sessionid		sessionid;
+ 	u32				dir;
+ 	bool				use_conn_in_rdma_mode;
++	int				retries;
+ };
+ 
+ struct nfs41_bind_conn_to_session_res {
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index ca7e108..cc20a08 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -236,4 +236,9 @@ static inline int rpc_reply_expected(struct rpc_task *task)
+ 		(task->tk_msg.rpc_proc->p_decode != NULL);
+ }
+ 
++static inline void rpc_task_close_connection(struct rpc_task *task)
++{
++	if (task->tk_xprt)
++		xprt_force_disconnect(task->tk_xprt);
++}
+ #endif /* _LINUX_SUNRPC_CLNT_H */
+-- 
+1.8.3.1
 
