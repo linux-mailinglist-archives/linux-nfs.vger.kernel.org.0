@@ -2,90 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76EC11B7DF3
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2020 20:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F03E01B7E94
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2020 21:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgDXSjS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Apr 2020 14:39:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44018 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726813AbgDXSjS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Apr 2020 14:39:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587753557;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pRWjt1jNRT9b4RDTw3tQQTwJ2Uu6juw8u/PT0DtCcLI=;
-        b=QYHgKi1FwI4capG+cTaOurAfoZf2zmdITkphUb9/SItbpUmXtOzZBqGGTYRy3LCArqMUsC
-        gDHdLp1ltlzLKHCHVyL3wpUnSkQLUWww/ET7uvnyCzahQrwulwTSfWCrIN3/hjxBvoPP7B
-        Dh4QnYQKrJiOkY6Nw6agwJCo3Dthf+8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-9HxYoIRDOBqdQxRokGWk5Q-1; Fri, 24 Apr 2020 14:39:14 -0400
-X-MC-Unique: 9HxYoIRDOBqdQxRokGWk5Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B8711800D42
-        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2020 18:39:14 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-114-147.phx2.redhat.com [10.3.114.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C245960626;
-        Fri, 24 Apr 2020 18:39:13 +0000 (UTC)
-From:   Tom Stellard <tstellar@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Tom Stellard <tstellar@redhat.com>
-Subject: [PATCH 2/2] Use format attribute to silence -Wformat-nonliteral warnings
-Date:   Fri, 24 Apr 2020 18:39:06 +0000
-Message-Id: <20200424183906.119687-3-tstellar@redhat.com>
-In-Reply-To: <20200424183906.119687-1-tstellar@redhat.com>
-References: <20200424183906.119687-1-tstellar@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+        id S1727059AbgDXTIu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Apr 2020 15:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726793AbgDXTIu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Apr 2020 15:08:50 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3457DC09B048
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2020 12:08:50 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id j4so11276727qkc.11
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2020 12:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vjL1A60vMGZSyAD2t3jEI6jFFGQdWWPbUF7NN5dPSPY=;
+        b=nTXcWuBGPUAZOtTSx3qjMp693c/Clu/yxD54yeXi1kY+rUcfb54N8Yt/hbXJZ7YTaV
+         uPW/2tBUxOlKFcGa3aebEZM0oxxV+9lutUPfDur7RgLMOj4EamaE2HMed7cSG6P/lJAx
+         D/gGP+tOeiP54Ch84VH29Y001sFAE1rQ3xGABTZxzG3r4byCEiWW25pFFWIhC8TtfeEG
+         O0BDplUmJ8OuY0nIEbpG9k3+UU/ukH7gQg8DsPQev5lQBLn/5SP0Kc0F8CJQrlB2biqJ
+         MjW+o62hl/pjFXcTiegcxF5UQ63XHiKH7qJumnFXKR3drPWRfmLTDCZSJWc/IrcRAMi+
+         tW8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vjL1A60vMGZSyAD2t3jEI6jFFGQdWWPbUF7NN5dPSPY=;
+        b=P9xsJF6RpQP21Gi+6ocByFWvEW3MjtdEUxKoh+sT/P1AmvnpkYrx7xLDPwdwYtJgOK
+         HuoXM4cECxRW3wGgUrmhczF0chIFT2ArlBsED4/zBXCUY0lXDfuM0QsERaUxQrnJvClq
+         taHEd/t3igYWgum6bQQlUTnzTu/+OsFgze814rKv/7LqaXZOqkRTpHSHu9i+SzZJKIHF
+         +FTMlcibVVBkp+H9foeWrRGCTMZvcS02TLmMgidyGI9X3GMGxUWstWGizyf63hhssHAs
+         huy0MEF32+JdkpQV4BfwKyFkhG+anMe0He5eNgih7kTzo9g2ubQt8kdDS+qcU+8Q8FBi
+         f62A==
+X-Gm-Message-State: AGi0PuaEJFX2kWw2EBSjVnQ8s9s0RUgXn3jGzpJEXjiSB2XVzBiu1wTK
+        s5Hka39HzA7QT6jgu6fhTnwofwpl
+X-Google-Smtp-Source: APiQypJEthACrrCEUXssYiH32+BDM5oveNZ4u6sVOOIGCmr7Y0d1DrXWparYvcCCI3LN0HOg/H+E9Q==
+X-Received: by 2002:ae9:f70a:: with SMTP id s10mr10346114qkg.313.1587755329235;
+        Fri, 24 Apr 2020 12:08:49 -0700 (PDT)
+Received: from Olgas-MBP-201.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id m26sm4588097qta.53.2020.04.24.12.08.47
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 24 Apr 2020 12:08:48 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4.1: fix handling of backchannel binding in BIND_CONN_TO_SESSION
+Date:   Fri, 24 Apr 2020 15:08:56 -0400
+Message-Id: <20200424190856.30292-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This will also cause the compiler to add checks to ensure the
-arguments are consistent with the printf format.
----
- support/nfsidmap/libnfsidmap.c | 2 +-
- utils/gssd/err_util.c          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Currently, if the client sends BIND_CONN_TO_SESSION with
+NFS4_CDFC4_FORE_OR_BOTH but only gets NFS4_CDFS4_FORE back it ignores
+that it wasn't able to enable a backchannel.
 
-diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidma=
-p.c
-index bce448cf..5d551e4f 100644
---- a/support/nfsidmap/libnfsidmap.c
-+++ b/support/nfsidmap/libnfsidmap.c
-@@ -94,7 +94,7 @@ gid_t nobody_gid =3D (gid_t)-1;
- #endif
-=20
- /* Default logging fuction */
--static void default_logger(const char *fmt, ...)
-+__attribute__ ((format (printf, 1, 2))) static void default_logger(const=
- char *fmt, ...)
+To make sure, the client sends BIND_CONN_TO_SESSION as the first
+operation on the connections (ie., no other session compounds haven't
+been sent before), and if the client's request to bind the backchannel
+is not satisfied, then reset the connection and retry.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/nfs4proc.c           | 6 ++++++
+ include/linux/sunrpc/clnt.h | 5 +++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 512afb1..69a5487 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7891,6 +7891,7 @@ static int nfs4_check_cl_exchange_flags(u32 flags)
+ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
  {
- 	va_list vp;
-=20
-diff --git a/utils/gssd/err_util.c b/utils/gssd/err_util.c
-index 2b1132ac..7179cc02 100644
---- a/utils/gssd/err_util.c
-+++ b/utils/gssd/err_util.c
-@@ -50,7 +50,7 @@ void initerr(char *progname, int set_verbosity, int set=
-_fg)
+ 	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
++	struct nfs41_bind_conn_to_session_res *res = task->tk_msg.rpc_resp;
+ 	struct nfs_client *clp = args->client;
+ 
+ 	switch (task->tk_status) {
+@@ -7899,6 +7900,11 @@ static int nfs4_check_cl_exchange_flags(u32 flags)
+ 		nfs4_schedule_session_recovery(clp->cl_session,
+ 				task->tk_status);
+ 	}
++	if (args->dir == NFS4_CDFC4_FORE_OR_BOTH &&
++			res->dir != NFS4_CDFS4_BOTH) {
++		rpc_task_close_connection(task);
++		task->tk_status = -NFS4ERR_DELAY;
++	}
  }
-=20
-=20
--void printerr(int priority, char *format, ...)
-+__attribute__ ((format (printf, 2, 3))) void printerr(int priority, char=
- *format, ...)
- {
- 	va_list args;
-=20
---=20
-2.25.3
+ 
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index ca7e108..cc20a08 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -236,4 +236,9 @@ static inline int rpc_reply_expected(struct rpc_task *task)
+ 		(task->tk_msg.rpc_proc->p_decode != NULL);
+ }
+ 
++static inline void rpc_task_close_connection(struct rpc_task *task)
++{
++	if (task->tk_xprt)
++		xprt_force_disconnect(task->tk_xprt);
++}
+ #endif /* _LINUX_SUNRPC_CLNT_H */
+-- 
+1.8.3.1
 
