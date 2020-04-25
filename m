@@ -2,83 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2320F1B86B1
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2020 15:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A268C1B86C4
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2020 15:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgDYNFP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 25 Apr 2020 09:05:15 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:49637 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbgDYNFP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 25 Apr 2020 09:05:15 -0400
+        id S1726142AbgDYN2G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 25 Apr 2020 09:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgDYN2F (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 25 Apr 2020 09:28:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2D2C09B04B;
+        Sat, 25 Apr 2020 06:28:05 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e6so5070123pjt.4;
+        Sat, 25 Apr 2020 06:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=b3kabGWnfNFyI0kGh5Ho2f4n4DJ0P9WeOICVw1fEAa0=; b=z
-        mV6amTcpJ8dIb1HSrsbWCS54si9wt2COGtn1r+qAHd+knrdkeAvl6CzTIO7EVAJ6
-        8q2V1CvJJTCQoTQWu13UhBt4B3I5ARQvWKPZPrqB/ZapVgVoghTzdlH6ceNWIU+l
-        KCiDM6MD2LzxXmRsN6rn7cW7IIfPPHLEfsu8FIJrRU=
-Received: from localhost.localdomain (unknown [120.229.255.80])
-        by app2 (Coremail) with SMTP id XQUFCgD3_+N_NaReRXapAA--.3366S3;
-        Sat, 25 Apr 2020 21:05:06 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=JFUMd+hzddJv1Y5rfJOEfNkA9WRYQpoUhmzVHfC1wng=;
+        b=nxp6OVhnza08ie6D39XDlN1ZYFPB9ELuvbSZXs0flgOaNwD8soyFKFHYT42SQIIc5Z
+         V5dVf/WUeBq37GEGlfJ+0QNEmobaflgBKY8/ZF7THhxkDH4bGlabUvsvpN1ARICVusrO
+         EFIXtz00FzYfKC2KFQ+uUhgb9mCyepZ2t4XO63RJWjM5gup8ebFjfcgYJ6G26azTWSoW
+         AXkK+KLWEVw0g3zTV7Ihp8qmaKkbeuEj0e2f8Nf0JGkM/9uQoc7fS3bK6nrg1UdIgPFj
+         ybZoWMPF8gqZWE6poTLYqgYNqGIQ4bs80wzCb83cuOmJfYXRRAg9Hq21FrztqbG+Fl4W
+         6Wmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=JFUMd+hzddJv1Y5rfJOEfNkA9WRYQpoUhmzVHfC1wng=;
+        b=EUBjB4e75iaOkGIFeV3tz7W+CxZReWRfzk6SUMWh+KEODxSNko0p0SKM5KsFVR6mkQ
+         YVgPp5NSM0FLLfLVlpyOIXJHaYU2rO8ToFv61hsM1IZaVhFTDQSl+W+fOaAsBiFiiCWd
+         TdKymuiXnWdIO2iPvsS+f+U2/tRosEQDsf3qpYf8QkNp6rYB74mHypYbHGkuF25I741Q
+         umNwseCbyOGGUnmbNlD8dwFsf6hrbQid4+mhx7kWincIdp2HnJ3zfm6C53mW13caW9od
+         C1V5LJG2kECgW6oVFwMNFAkmrXMGFjBqrFENXPWjc6LoWcdGR5iEyttuIJkOsGZdyqPk
+         HjsQ==
+X-Gm-Message-State: AGi0PubVnS8UQFdIPnX/VUDJyM9Mnrn11HNSJMfZwxJoe5ZCwtx6MRIR
+        8CRhB2092XqU2v5hwG2DePc=
+X-Google-Smtp-Source: APiQypLookv25Ls/pU34dNRvSz7a3CRLRqIsMsAJddEadGB5Au0mM/Jm96k3hFAFhdw2Jc855r4CiA==
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr13035530plc.209.1587821285085;
+        Sat, 25 Apr 2020 06:28:05 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id r28sm8300840pfg.186.2020.04.25.06.28.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 Apr 2020 06:28:04 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 18:57:58 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] NFSv4: Remove unreachable error condition due to rpc_run_task()
-Date:   Sat, 25 Apr 2020 21:04:40 +0800
-Message-Id: <1587819881-39973-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgD3_+N_NaReRXapAA--.3366S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruF13tryDJrW8KryDuFy5twb_yoWfCwc_uF
-        yfXr97Z39rAF1DXr17Ka90ya4UW398tr10yan8G3W2y348Kay5AFWkZFn8JFW8urZ0vr4r
-        Cws5CFySv3yfujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxkIecxEwVAFwVW5GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-        73UjIFyTuYvjfUndgAUUUUU
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: Use the correct style for SPDX License Identifier
+Message-ID: <20200425132754.GA10083@nishad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfs4_proc_layoutget() invokes rpc_run_task(), which return the value to
-"task". Since rpc_run_task() is impossible to return an ERR pointer,
-there is no need to add the IS_ERR() condition on "task" here. So we
-need to remove it.
+This patch corrects the SPDX License Identifier style in
+header file related to NFS Client support.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 ---
- fs/nfs/nfs4proc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/sysfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 512afb1c7867..1c710a7834c2 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9191,8 +9191,7 @@ nfs4_proc_layoutget(struct nfs4_layoutget *lgp, long *timeout)
- 	nfs4_init_sequence(&lgp->args.seq_args, &lgp->res.seq_res, 0, 0);
- 
- 	task = rpc_run_task(&task_setup_data);
--	if (IS_ERR(task))
--		return ERR_CAST(task);
-+
- 	status = rpc_wait_for_completion_task(task);
- 	if (status != 0)
- 		goto out;
+diff --git a/fs/nfs/sysfs.h b/fs/nfs/sysfs.h
+index f1b27411dcc0..ebcbdc40483b 100644
+--- a/fs/nfs/sysfs.h
++++ b/fs/nfs/sysfs.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2019 Hammerspace Inc
+  */
 -- 
-2.7.4
+2.17.1
 
