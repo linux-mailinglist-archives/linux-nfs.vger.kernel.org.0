@@ -2,61 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5081BB173
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2020 00:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4FD1BB752
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2020 09:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgD0WUW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Apr 2020 18:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726204AbgD0WUV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Apr 2020 18:20:21 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4847C0610D5
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Apr 2020 15:20:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5788383B; Mon, 27 Apr 2020 18:20:21 -0400 (EDT)
-Date:   Mon, 27 Apr 2020 18:20:21 -0400
-To:     sea you <seayou@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: TestStateID woes with recent clients
-Message-ID: <20200427222021.GH31277@fieldses.org>
-References: <CAL9i7GFknrUDyp9PsGK-wbJ=0m30vHnvzoxpOjKtpRJPGDArjQ@mail.gmail.com>
+        id S1726450AbgD1HSa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Apr 2020 03:18:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41556 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726284AbgD1HSa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:18:30 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D35D3B30969C8CAFF1F;
+        Tue, 28 Apr 2020 15:18:25 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Apr 2020 15:18:15 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-nfs@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] NFSv4: Use GFP_ATOMIC under spin lock in _pnfs_grab_empty_layout()
+Date:   Tue, 28 Apr 2020 07:19:32 +0000
+Message-ID: <20200428071932.69976-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL9i7GFknrUDyp9PsGK-wbJ=0m30vHnvzoxpOjKtpRJPGDArjQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 04:32:27PM +0200, sea you wrote:
-> Time-to-time we're plagued with a lot of "TestStateID" RPC calls on a
-> 4.15.0-88 (Ubuntu Bionic) kernel, where clients (~310 VMS) are using
-> either 4.19.106 or 4.19.107 (Flatcar Linux). What we see during these
-> "storms", is that _some_ clients are testing the same id for callback
-> like
-...
-> Due to this, some processes on some clients are stuck and these nodes
-> need to be rebooted. Initially, we thought we're facing the issue that
-> was fixed in 44f411c353bf, but as I see we're already using a kernel
-> where it was backported to via 90d73c1cadb8.
-> 
-> Clients are mounting as
-> "rw,nosuid,nodev,noexec,noatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,acregmin=600,acregmax=600,acdirmin=600,acdirmax=600,hard,proto=tcp,timeo=600,retrans=2,sec=sys"
-> 
-> Export options are the following
-> "<world>(rw,async,wdelay,crossmnt,no_root_squash,no_subtree_check,fsid=762,sec=sys,rw,secure,no_root_squash,no_all_squash)"
+A spin lock is taken here so we should use GFP_ATOMIC.
 
-Sorry for the derail, but the "async" export option is almost a never
-good idea.
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ fs/nfs/pnfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Can you please point me in a direction that I should check further?
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index dd2e14f5875d..d84c1b7b71d2 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2170,7 +2170,7 @@ _pnfs_grab_empty_layout(struct inode *ino, struct nfs_open_context *ctx)
+ 	struct pnfs_layout_hdr *lo;
+ 
+ 	spin_lock(&ino->i_lock);
+-	lo = pnfs_find_alloc_layout(ino, ctx, GFP_KERNEL);
++	lo = pnfs_find_alloc_layout(ino, ctx, GFP_ATOMIC);
+ 	if (!lo)
+ 		goto out_unlock;
+ 	if (!test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
 
-Off the top of my head, my only suggestion is to retest if possible on
-the latest upstream kernel.
 
---b.
+
