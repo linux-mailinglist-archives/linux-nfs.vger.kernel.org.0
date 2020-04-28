@@ -2,97 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7C161BC775
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2020 20:05:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE20E1BC79E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2020 20:15:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgD1SFI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Apr 2020 14:05:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53006 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgD1SFI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Apr 2020 14:05:08 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SI3JGe179561;
-        Tue, 28 Apr 2020 18:04:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=vi5JgPZeW6IgAfDz5vpQSaEFGipy5i87NXmAvFjyxYM=;
- b=l6p7BpTh3GdWoTwa8iOKOTdorj4x+S6s34Adi1GKLT/RR1TIEMmoaMa91ttNtlIDbjTW
- FZd08OThR2Aak+I80m3pqQeIWSqMB5WEbMLmof4K/ZkLFFDZx6sF5kUCWk+D+YMH5SXf
- dABwrPspnsAzFi6Rq3M4dqSMVyyOV4jl+XkihMe9YlQmV2FiJcmwfh1Z/H69HYKdtB74
- bKsppaWCiceLmPDPcEoGEWJAFqjmf5w6PY53McedqvvgCYOIqw9leJWRT8eQiG9fc0jA
- vbixjdtyLhARx+uOVeoWiwW2hcwtsaLScNFc1NCKmb5U36p1yxRNE7thJztwG1DgBGu6 Ng== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30p2p06y4r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 18:04:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHw2g2154966;
-        Tue, 28 Apr 2020 18:04:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30mxrt41vb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 18:04:56 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SI4sbo028292;
-        Tue, 28 Apr 2020 18:04:54 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 11:04:54 -0700
-Date:   Tue, 28 Apr 2020 21:04:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] NFSv4: Use GFP_ATOMIC under spin lock in
- _pnfs_grab_empty_layout()
-Message-ID: <20200428180448.GJ2014@kadam>
-References: <20200428071932.69976-1-weiyongjun1@huawei.com>
+        id S1728449AbgD1SPG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Apr 2020 14:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgD1SPG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Apr 2020 14:15:06 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBA9C03C1AB
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 11:15:06 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id gr25so17998942ejb.10
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 11:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=pxjdZpqcamLG72XCoSC0lwx2EPV6FSiZswEBQmaksJg=;
+        b=GRmXrXfMu0aHrweJmDldoLQs1l6BsdP3epaYKYbDr1apHyfPDV6ewbDRofsJxJGPaf
+         DwdG33LsZ+GANlxzOfJ0p+jpe9Eq/ut//28m/7YSipMSw4pd2oRoTLrh/6Bk0nSYM+U8
+         9ESHNGeZdTs1W06PMgnB3DCxhIAeUkYryCqYIO1kyM3MCjWeccGJvMEI6gxCHA2YMTnx
+         jEOwyR6Sb/0e9+3dd6FPLQkpX4o6wEQGCwR3NPA13zjogEAbApw7Q3DcKrfbNzNC75Hu
+         yfT4HwPF+kmeN8CoVVZSogN9IK0ZzoZVaAdLWYW8mjo9FBBQAvsAJJAW7Z/uPsrcsgSl
+         lPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=pxjdZpqcamLG72XCoSC0lwx2EPV6FSiZswEBQmaksJg=;
+        b=cTeaZRHUXnk49me0S3LXPUlyDWxUFOXZYhGEjUb486fDjYY/Sbe/pAQIOTo9/3wnFq
+         zXv84/MirlCZvlV0Di7I0vSt6XH46N/dEbD24KK9eLpkan8OQB3+eeL5UgLh1HdmQfgx
+         HnyP9mY2m9eWXvWeVGrEaKWMR2fDID0tW+p8VB+cYT5F2unLvnfJiH07s4E6xjM0gjno
+         hJFjS9++vFxWv9usVl1+XCPrpzquqa2FMlvPE65zOk/aHGa/MKEfOwlwYtyj4SLMx5ls
+         B4odbZZ7PrGe+JtpGtHot8GhVTWAywCjxVi4IGlbVqJtDlGZGvWrYXV8L5piOrb4p8Q5
+         whSw==
+X-Gm-Message-State: AGi0PuYfOrhCDDX4vpZeSzZCfYfuY2/O5vHGSGMIWan5xLSeX5Hxvt2Z
+        ON1LetT/uGno0ykphqS/itYSlgMyLm3WvDGRfBbtlA==
+X-Google-Smtp-Source: APiQypKu66xPXaZNpJPPIM6ht+q9B8VzMCcfqlUE3iQ28LHQ6gSQxXdE6JthfYTPA7dQVbFp+uREKENqfxmHLKsCu6A=
+X-Received: by 2002:a17:906:54cd:: with SMTP id c13mr24914880ejp.307.1588097704563;
+ Tue, 28 Apr 2020 11:15:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428071932.69976-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280143
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Tue, 28 Apr 2020 14:14:53 -0400
+Message-ID: <CAN-5tyE6JTeK7RFA7AkcO63p6iFE2v1+x2RFwRrTB1Jb1Yr76Q@mail.gmail.com>
+Subject: handling ERR_SERVERFAULT on RESTOREFH
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:19:32AM +0000, Wei Yongjun wrote:
-> A spin lock is taken here so we should use GFP_ATOMIC.
-> 
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  fs/nfs/pnfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index dd2e14f5875d..d84c1b7b71d2 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -2170,7 +2170,7 @@ _pnfs_grab_empty_layout(struct inode *ino, struct nfs_open_context *ctx)
->  	struct pnfs_layout_hdr *lo;
->  
->  	spin_lock(&ino->i_lock);
-                   ^^^
-> -	lo = pnfs_find_alloc_layout(ino, ctx, GFP_KERNEL);
-> +	lo = pnfs_find_alloc_layout(ino, ctx, GFP_ATOMIC);
-                                    ^^^
-It releases the lock before allocating.  It's annotated.
+Hi folk,
 
-regards,
-dan carpenter
+Looking for guidance on what folks think. A client is sending a LINK
+operation to the server. This compound after the LINK has RESTOREFH
+and GETATTR. Server returns SERVER_FAULT to on RESTOREFH. But LINK is
+done successfully. Client still fails the system call with EIO. We
+have a hardline and "ln" saying hardlink failed.
 
+Should the client not fail the system call in this case? The fact that
+we couldn't get up-to-date attributes don't seem like the reason to
+fail the system call?
+
+Thank you.
