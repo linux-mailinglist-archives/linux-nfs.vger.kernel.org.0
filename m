@@ -2,143 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C9BB1BD04F
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2020 01:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A20D1BD0AA
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2020 01:42:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgD1XDB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Apr 2020 19:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1XDA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Apr 2020 19:03:00 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307EEC03C1AD
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 16:02:59 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id f12so283377edn.12
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 16:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9YTlL9NFYEqNGL5jHt8OJmVTo8me1tB7nLrrpAy4Zm4=;
-        b=ijgcK9CuM9fQjgzjt2XoK1uh3UVI0Ikbh6Bwzng9Bn+JW2QY2bZlGTprNxmLXvEnX4
-         SguNUdpsEccoyUwyjLiaHw4Xtt2p+V+gCh4S5siGpjXPYHK2YGcf7bUjiX9rz3A0oRG1
-         stMP3UrpauCqtKqEzqhnQQvdEsmNTfRD1khKmJXTOBYXYc8kz25vAxR3lizxF7PA3OuB
-         MVN/TjHS1X8u7K1E7G/NmvaTOt16JVbOGz6rirQ5c9Tf9JSBd0qG0NTJAMQ8KOu/BAEm
-         tKwzom6ALj8qkyOCVbd/2e2x3HB1GtVHsHUaZR9T3jQxSkimz+zFESXTruKrd/w9dDb5
-         ntPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9YTlL9NFYEqNGL5jHt8OJmVTo8me1tB7nLrrpAy4Zm4=;
-        b=T4IhA4SeH2Ez8c5yDvqUZPD3qcHROffYy8DDzCG2rddXuC0SDgzEK8LSqGo0flm7el
-         TexlaD5w32BHqbWeajM8bk17X27vrqzfPcyMFEUqXmmTPzXdnBXDIwHlodRLh3ZW/FHR
-         N2SeJUjJ5+X3nDnghqlE4TQR4kSAzlh9XIRLFjUlgD7PgDFx5j3cIqzKpHECsUl26V4f
-         ZylVnMkB0R1fV95Pv6NGQfWPiM42Lr81g+SpjODeMt7RwGUYjaitQcCmMxmNngu/h1gP
-         xFsqz/KfUFtt403gaOTxM7JAwqdX9nAwpzWYjnyCqPFFFEYQNEckUqXlYoNXjFgPStkn
-         JulQ==
-X-Gm-Message-State: AGi0PubHpfIc8mzCHBJaLr8bPtX+kJ656lbF3dEtMI3ja0ltVYb8AHM0
-        XWpQa2HRHuI9ueHGRiDICkZOhIDWTKWbaCSwp5b2VQ==
-X-Google-Smtp-Source: APiQypIqB8e6lPK4DRdlEFdLX4rNSosRO/xWqOOsnpXvEimm2RdFPI6Y191z3J+uHJ48BPaCPQXu9Re33YbgSaLgWp4=
-X-Received: by 2002:a05:6402:1215:: with SMTP id c21mr90988edw.128.1588114977703;
- Tue, 28 Apr 2020 16:02:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAN-5tyE6JTeK7RFA7AkcO63p6iFE2v1+x2RFwRrTB1Jb1Yr76Q@mail.gmail.com>
- <98410608e028cb4b53024c7669e0fb70fea98214.camel@hammerspace.com>
- <CAN-5tyGDC9ittxr7d4wL_fKLQu9NLdZWwB19iEPsCn+Y0_sqVg@mail.gmail.com> <98a10c8775e4127419ac57630f839744bdf1063d.camel@hammerspace.com>
-In-Reply-To: <98a10c8775e4127419ac57630f839744bdf1063d.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 28 Apr 2020 19:02:46 -0400
-Message-ID: <CAN-5tyGfCXVTz4dq3Qj2eXww8BNB_dT=0QwWteEGM93MZBJudw@mail.gmail.com>
+        id S1726256AbgD1XmB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Apr 2020 19:42:01 -0400
+Received: from mail-dm6nam10on2120.outbound.protection.outlook.com ([40.107.93.120]:48096
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbgD1XmA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:42:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aNjqTX0XOIdPEDl0R7AXNpnjvz9dQV9hQCRQBD3MbIkdNGYtmeUlV6tWL1Q7vLp2/Kb3PQTDLrUUkvsSsLkdAEVhDs0c1C7BqJ6sf5nk5euLSr3H3zo5Xd0RREnyqddyR++uZ9/s+Vhqws2SIarxkkwAJtKdKuXONOWPj2jy469ZdBm0gnpzrM8Qje3Skdd/OE4T999TWNFuRpo4m1yuxqCgqskHFKKo8S2RPsdUA93UwqJmEyLqp77NwirhDB5Unlgh81HxpI3wNBcTLnanh5gjQ1YBDo4IVPAcUnR3OCBKgQBH/IQLrbdFjx87ZqicUSn27jYRpziR5STKbTc0uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v/yzCpMHyEtwm8Y+n+LrqnYC/e2jNxitV5JZY2PXq7w=;
+ b=kPIXJHXd0xHLHCem7I1wDCy1vRqIKvU8u2S/vSiNqhLLXin8Vpve6S6owspvkCnAVNOgKSmjX/3P6Tc7WI9daLhIiIcyxABXKC5ZMDuCP08/WzDFxt1ph2VwiMQJd1IXKJEDln/167Dg4QO7qGZKljoXc1Jsx2oWptQzo81P9sCV0ypq844kMJ+heLZDX/hPkh17F2DqQwxnKcKK9AB8dqp9pNzg5ZoslyTD4xZta2O7RogFw6wbO5Lj+X9wwUBlnBWLUhE+UKM18y+WxhK3S43G1PIJjHSBzglI3l8ABxfGq1LsNSGj9rVrgLyUjOqTG//M2MLjsq6itTixB8KFtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v/yzCpMHyEtwm8Y+n+LrqnYC/e2jNxitV5JZY2PXq7w=;
+ b=VwVpAqaL1kvANma90KVfOKrzwQU3D9RPfVqopoEEoJnfl++w151d+WrOxnUxKrRNGRk9NhOhlSS6MtJk34gCTUBq0wn7UD2zjH1COFyp2nUJT7xgHuLjdKPsN6SIBq0/bDwXRqlmrchCbXeKC8oC2kVUueisP2QLRmoA8UfLtso=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3606.namprd13.prod.outlook.com (2603:10b6:610:2e::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.14; Tue, 28 Apr
+ 2020 23:41:56 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2958.014; Tue, 28 Apr 2020
+ 23:41:56 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: handling ERR_SERVERFAULT on RESTOREFH
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: handling ERR_SERVERFAULT on RESTOREFH
+Thread-Index: AQHWHYjzjBZLlmadoEGcRGdAsbmgTaiO38OAgAAfvACAAA5TAIAAGV4AgAAK7wA=
+Date:   Tue, 28 Apr 2020 23:41:56 +0000
+Message-ID: <b96e65b7aeb72e466d2a0170d4347652b6ab0ec5.camel@hammerspace.com>
+References: <CAN-5tyE6JTeK7RFA7AkcO63p6iFE2v1+x2RFwRrTB1Jb1Yr76Q@mail.gmail.com>
+         <98410608e028cb4b53024c7669e0fb70fea98214.camel@hammerspace.com>
+         <CAN-5tyGDC9ittxr7d4wL_fKLQu9NLdZWwB19iEPsCn+Y0_sqVg@mail.gmail.com>
+         <98a10c8775e4127419ac57630f839744bdf1063d.camel@hammerspace.com>
+         <CAN-5tyGfCXVTz4dq3Qj2eXww8BNB_dT=0QwWteEGM93MZBJudw@mail.gmail.com>
+In-Reply-To: <CAN-5tyGfCXVTz4dq3Qj2eXww8BNB_dT=0QwWteEGM93MZBJudw@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: umich.edu; dkim=none (message not signed)
+ header.d=none;umich.edu; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 091077e1-dfd7-4d69-896a-08d7ebcdbccc
+x-ms-traffictypediagnostic: CH2PR13MB3606:
+x-microsoft-antispam-prvs: <CH2PR13MB3606AD74E1DA3E869725E520B8AC0@CH2PR13MB3606.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0387D64A71
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +pFiYaSi6sCeNxJsfDiKawuR0sRki7dJwsn6I0SSjIipUw0CfX3PPoYh68Rw1wlCIJXjX7RoLnT7W1pUCGsv9yVTmkh9ge/5bxuhKTdeJfWSAATdWwIpp65eHVbZ9GrIAzD+vAFZmUngVObGuUw3ZFJEdM9Pfi9tD002EBAHUnnMlEbiKDKynO5KD1cfT4AcbMuOJt6Y0sO3ILDWhCb32kRnCdqA62rH+1J/K9ihhbZf9+ruyoPJ0Bos5eBdQDCGZ636jr03/a2/i5GoyYdVt/Aj5YeIpRj1A5qH7pRwtQhlLN4VB3o80sNoLoJ4B3jHQkIcA5Nmp2/MMgKkLxliSNmrzaTH+BiJgf4zC9Do5H4fGhXyvLSqUcMYejvzQLMIlZao1qyaKC1Iy8UFUW3ZIR6MeNi6wvR36lNFL9IXpKRN2BUQzlA/ZrXs0mwS1Wqv
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(376002)(396003)(39830400003)(136003)(6512007)(2906002)(6486002)(316002)(71200400001)(86362001)(36756003)(8676002)(2616005)(6916009)(6506007)(53546011)(76116006)(4326008)(66446008)(8936002)(26005)(5660300002)(66946007)(91956017)(186003)(66556008)(64756008)(66476007)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: bUb14cnYseV4D6NIoip/HS5CncURTAR4COqlXOEAgyCGjX5lJUPWAkyMkduoSTRKOcUTz0Ypf7twNXo9QZ6K0l8lJ5+kAeFjQTXad4qtTHq6gSJAY3sM7BW7QPjKj340u3UHPgkJSZ8EyyFQ9Ky6txtIGBpI3NJR0uR3v5zGUgpZFLeASFmESMklvTbNpYaYDt3suBYTwiCOqndcODIa2iBiZXVzQ9cbBm9701IYHvWfYYceuiusFUCYfLaTfxIsznyx22LS8CtjmqmgOr1bDHEFdHg01IPXJtW6LU6BKtsSA6KyttJjfAujIWnvRFF3junvb1M2KTlrqECsrCaJAn8MlBenVynjZpYUNuDyhTGSu9+jWtdBow61NlzqLw514u/CQSv5nAnJvfVUgLRsuRHrWWwT5W440eUwoRQQsEL8Pd6NHenxqJUsLhLKoFUwZctayX88ZigzaKiCAo0p2wbUj88OwQoYROXNfeVye4lnQGH12liXOq166xwO2y8MLDM1qDDkyZd8gBQA7KRahnm+YZUBvnPhmKqxH5N5S9nKOsY3z2JalFo0pzrFCu6Jgiv4OljuNYwdd9a0aONX3v48hIESYyRWeLubuyX3BVTly6Yv0X0jb3zoD52X6i+JwJarxmgt/7Fj0UFbPHOJxQYdwnFFxiXIZgnOMJ4RWIyM6kaTC/pnN1uzJlbJssj50UxAGnViG3Ky+u/HIOwx+l69QCyCQhiuynSWdYMeduv/QToRqtiTygdy4w8hi0ac2HON4A3g7wapi2xhTqwzcuA4xYC0OvHAM2iIPU/D/U0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DCB878378D63624383A0CFAA9DD388B2@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 091077e1-dfd7-4d69-896a-08d7ebcdbccc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 23:41:56.3569
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pwpyIQWYSZSHefAAnwmJ58z31PIMt/GlAP0omoi3321bPsxkYeftqnvNSjSKYXuw04EN/iRA637FjqkYt8jU6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3606
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 5:32 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2020-04-28 at 16:40 -0400, Olga Kornievskaia wrote:
-> > On Tue, Apr 28, 2020 at 2:47 PM Trond Myklebust <
-> > trondmy@hammerspace.com> wrote:
-> > > Hi Olga,
-> > >
-> > > On Tue, 2020-04-28 at 14:14 -0400, Olga Kornievskaia wrote:
-> > > > Hi folk,
-> > > >
-> > > > Looking for guidance on what folks think. A client is sending a
-> > > > LINK
-> > > > operation to the server. This compound after the LINK has
-> > > > RESTOREFH
-> > > > and GETATTR. Server returns SERVER_FAULT to on RESTOREFH. But
-> > > > LINK is
-> > > > done successfully. Client still fails the system call with EIO.
-> > > > We
-> > > > have a hardline and "ln" saying hardlink failed.
-> > > >
-> > > > Should the client not fail the system call in this case? The fact
-> > > > that
-> > > > we couldn't get up-to-date attributes don't seem like the reason
-> > > > to
-> > > > fail the system call?
-> > > >
-> > > > Thank you.
-> > >
-> > > I don't really see this as worth fixing on the client. It is very
-> > > clearly a server bug.
-> >
-> > Why is that a server bug? A server can legitimately have an issue
-> > trying to execute an operation (RESTOREFH) and legitimately returning
-> > an error.
->
-> If it is happening consistently on the server, then it is a bug, and it
-> gets reported by the client in the same way we always report
-> NFS4ERR_SERVERFAULT, by converting to an EREMOTEIO.
-
-Yes but the client doesn't retry so it can't assess if it's
-consistently happening or not. It can be a transient error (or ENOMEM)
-that's later resolved.
-
-> > NFS client also ignores errors of the returning GETATTR after the
-> > RESTOREFH. So I'm not sure why we are then not ignoring errors (or
-> > some errors) of the RESTOREFH.
->
-> We do need to check the value of RESTOREFH in order to figure out if we
-> can continue reading the XDR buffer to decode the file attributes. We
-> want to read those file attributes because we do expect the change
-> attribute, the ctime and the nlinks values to all change as a result of
-> the operation.
-
-I have nothing against decoding the error and using it in a decision
-to keep decoding. But the client doesn't have to propagate the
-RESTOREFH error to the application?
-
-In all other non-idempotent operations that have other operations (ie
-GETATTR) following them, the client ignores the errors. Btw I just
-noticed that on OPEN compound, since we ignore decode error from the
-GETATTR, it would continue decoding LAYOUTGET...
-
-CREATE has problem if the following GETFH will return EDELAY. Client
-doesn't deal with retrying a part of the compound. It retries the
-whole compound. It leads to an error (since non-idempotent operation
-is retried). But I guess that's a 2nd issue (or a 3rd if we could the
-decoding layoutget)....
-
-All this is under the umbrella of how to handle errors on
-non-idempotent operations in a compound....
-
-
->
-> Cheers
->   Trond
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVHVlLCAyMDIwLTA0LTI4IGF0IDE5OjAyIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVHVlLCBBcHIgMjgsIDIwMjAgYXQgNTozMiBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
+PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTA0LTI4
+IGF0IDE2OjQwIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9uIFR1ZSwg
+QXByIDI4LCAyMDIwIGF0IDI6NDcgUE0gVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+IHRyb25kbXlA
+aGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gSGkgT2xnYSwNCj4gPiA+ID4gDQo+ID4g
+PiA+IE9uIFR1ZSwgMjAyMC0wNC0yOCBhdCAxNDoxNCAtMDQwMCwgT2xnYSBLb3JuaWV2c2thaWEg
+d3JvdGU6DQo+ID4gPiA+ID4gSGkgZm9saywNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBMb29raW5n
+IGZvciBndWlkYW5jZSBvbiB3aGF0IGZvbGtzIHRoaW5rLiBBIGNsaWVudCBpcyBzZW5kaW5nDQo+
+ID4gPiA+ID4gYQ0KPiA+ID4gPiA+IExJTksNCj4gPiA+ID4gPiBvcGVyYXRpb24gdG8gdGhlIHNl
+cnZlci4gVGhpcyBjb21wb3VuZCBhZnRlciB0aGUgTElOSyBoYXMNCj4gPiA+ID4gPiBSRVNUT1JF
+RkgNCj4gPiA+ID4gPiBhbmQgR0VUQVRUUi4gU2VydmVyIHJldHVybnMgU0VSVkVSX0ZBVUxUIHRv
+IG9uIFJFU1RPUkVGSC4gQnV0DQo+ID4gPiA+ID4gTElOSyBpcw0KPiA+ID4gPiA+IGRvbmUgc3Vj
+Y2Vzc2Z1bGx5LiBDbGllbnQgc3RpbGwgZmFpbHMgdGhlIHN5c3RlbSBjYWxsIHdpdGgNCj4gPiA+
+ID4gPiBFSU8uDQo+ID4gPiA+ID4gV2UNCj4gPiA+ID4gPiBoYXZlIGEgaGFyZGxpbmUgYW5kICJs
+biIgc2F5aW5nIGhhcmRsaW5rIGZhaWxlZC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTaG91bGQg
+dGhlIGNsaWVudCBub3QgZmFpbCB0aGUgc3lzdGVtIGNhbGwgaW4gdGhpcyBjYXNlPyBUaGUNCj4g
+PiA+ID4gPiBmYWN0DQo+ID4gPiA+ID4gdGhhdA0KPiA+ID4gPiA+IHdlIGNvdWxkbid0IGdldCB1
+cC10by1kYXRlIGF0dHJpYnV0ZXMgZG9uJ3Qgc2VlbSBsaWtlIHRoZQ0KPiA+ID4gPiA+IHJlYXNv
+bg0KPiA+ID4gPiA+IHRvDQo+ID4gPiA+ID4gZmFpbCB0aGUgc3lzdGVtIGNhbGw/DQo+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gVGhhbmsgeW91Lg0KPiA+ID4gPiANCj4gPiA+ID4gSSBkb24ndCByZWFs
+bHkgc2VlIHRoaXMgYXMgd29ydGggZml4aW5nIG9uIHRoZSBjbGllbnQuIEl0IGlzDQo+ID4gPiA+
+IHZlcnkNCj4gPiA+ID4gY2xlYXJseSBhIHNlcnZlciBidWcuDQo+ID4gPiANCj4gPiA+IFdoeSBp
+cyB0aGF0IGEgc2VydmVyIGJ1Zz8gQSBzZXJ2ZXIgY2FuIGxlZ2l0aW1hdGVseSBoYXZlIGFuIGlz
+c3VlDQo+ID4gPiB0cnlpbmcgdG8gZXhlY3V0ZSBhbiBvcGVyYXRpb24gKFJFU1RPUkVGSCkgYW5k
+IGxlZ2l0aW1hdGVseQ0KPiA+ID4gcmV0dXJuaW5nDQo+ID4gPiBhbiBlcnJvci4NCj4gPiANCj4g
+PiBJZiBpdCBpcyBoYXBwZW5pbmcgY29uc2lzdGVudGx5IG9uIHRoZSBzZXJ2ZXIsIHRoZW4gaXQg
+aXMgYSBidWcsDQo+ID4gYW5kIGl0DQo+ID4gZ2V0cyByZXBvcnRlZCBieSB0aGUgY2xpZW50IGlu
+IHRoZSBzYW1lIHdheSB3ZSBhbHdheXMgcmVwb3J0DQo+ID4gTkZTNEVSUl9TRVJWRVJGQVVMVCwg
+YnkgY29udmVydGluZyB0byBhbiBFUkVNT1RFSU8uDQo+IA0KPiBZZXMgYnV0IHRoZSBjbGllbnQg
+ZG9lc24ndCByZXRyeSBzbyBpdCBjYW4ndCBhc3Nlc3MgaWYgaXQncw0KPiBjb25zaXN0ZW50bHkg
+aGFwcGVuaW5nIG9yIG5vdC4gSXQgY2FuIGJlIGEgdHJhbnNpZW50IGVycm9yIChvcg0KPiBFTk9N
+RU0pDQo+IHRoYXQncyBsYXRlciByZXNvbHZlZC4NCg0KSWYgdGhlIHNlcnZlciB3YW50cyB0byBz
+aWduYWwgYSB0cmFuc2llbnQgZXJyb3IsIGl0IHNob3VsZCBzZW5kDQpORlM0RVJSX0RFTEFZLg0K
+DQo+ID4gPiBORlMgY2xpZW50IGFsc28gaWdub3JlcyBlcnJvcnMgb2YgdGhlIHJldHVybmluZyBH
+RVRBVFRSIGFmdGVyIHRoZQ0KPiA+ID4gUkVTVE9SRUZILiBTbyBJJ20gbm90IHN1cmUgd2h5IHdl
+IGFyZSB0aGVuIG5vdCBpZ25vcmluZyBlcnJvcnMNCj4gPiA+IChvcg0KPiA+ID4gc29tZSBlcnJv
+cnMpIG9mIHRoZSBSRVNUT1JFRkguDQo+ID4gDQo+ID4gV2UgZG8gbmVlZCB0byBjaGVjayB0aGUg
+dmFsdWUgb2YgUkVTVE9SRUZIIGluIG9yZGVyIHRvIGZpZ3VyZSBvdXQNCj4gPiBpZiB3ZQ0KPiA+
+IGNhbiBjb250aW51ZSByZWFkaW5nIHRoZSBYRFIgYnVmZmVyIHRvIGRlY29kZSB0aGUgZmlsZSBh
+dHRyaWJ1dGVzLg0KPiA+IFdlDQo+ID4gd2FudCB0byByZWFkIHRob3NlIGZpbGUgYXR0cmlidXRl
+cyBiZWNhdXNlIHdlIGRvIGV4cGVjdCB0aGUgY2hhbmdlDQo+ID4gYXR0cmlidXRlLCB0aGUgY3Rp
+bWUgYW5kIHRoZSBubGlua3MgdmFsdWVzIHRvIGFsbCBjaGFuZ2UgYXMgYQ0KPiA+IHJlc3VsdCBv
+Zg0KPiA+IHRoZSBvcGVyYXRpb24uDQo+IA0KPiBJIGhhdmUgbm90aGluZyBhZ2FpbnN0IGRlY29k
+aW5nIHRoZSBlcnJvciBhbmQgdXNpbmcgaXQgaW4gYSBkZWNpc2lvbg0KPiB0byBrZWVwIGRlY29k
+aW5nLiBCdXQgdGhlIGNsaWVudCBkb2Vzbid0IGhhdmUgdG8gcHJvcGFnYXRlIHRoZQ0KPiBSRVNU
+T1JFRkggZXJyb3IgdG8gdGhlIGFwcGxpY2F0aW9uPw0KPiANCj4gSW4gYWxsIG90aGVyIG5vbi1p
+ZGVtcG90ZW50IG9wZXJhdGlvbnMgdGhhdCBoYXZlIG90aGVyIG9wZXJhdGlvbnMgKGllDQo+IEdF
+VEFUVFIpIGZvbGxvd2luZyB0aGVtLCB0aGUgY2xpZW50IGlnbm9yZXMgdGhlIGVycm9ycy4gQnR3
+IEkganVzdA0KPiBub3RpY2VkIHRoYXQgb24gT1BFTiBjb21wb3VuZCwgc2luY2Ugd2UgaWdub3Jl
+IGRlY29kZSBlcnJvciBmcm9tIHRoZQ0KPiBHRVRBVFRSLCBpdCB3b3VsZCBjb250aW51ZSBkZWNv
+ZGluZyBMQVlPVVRHRVQuLi4NCj4gDQo+IENSRUFURSBoYXMgcHJvYmxlbSBpZiB0aGUgZm9sbG93
+aW5nIEdFVEZIIHdpbGwgcmV0dXJuIEVERUxBWS4gQ2xpZW50DQo+IGRvZXNuJ3QgZGVhbCB3aXRo
+IHJldHJ5aW5nIGEgcGFydCBvZiB0aGUgY29tcG91bmQuIEl0IHJldHJpZXMgdGhlDQo+IHdob2xl
+IGNvbXBvdW5kLiBJdCBsZWFkcyB0byBhbiBlcnJvciAoc2luY2Ugbm9uLWlkZW1wb3RlbnQgb3Bl
+cmF0aW9uDQo+IGlzIHJldHJpZWQpLiBCdXQgSSBndWVzcyB0aGF0J3MgYSAybmQgaXNzdWUgKG9y
+IGEgM3JkIGlmIHdlIGNvdWxkIHRoZQ0KPiBkZWNvZGluZyBsYXlvdXRnZXQpLi4uLg0KPiANCj4g
+QWxsIHRoaXMgaXMgdW5kZXIgdGhlIHVtYnJlbGxhIG9mIGhvdyB0byBoYW5kbGUgZXJyb3JzIG9u
+DQo+IG5vbi1pZGVtcG90ZW50IG9wZXJhdGlvbnMgaW4gYSBjb21wb3VuZC4uLi4NCg0KVGhlcmUg
+aXMgbm8gcG9pbnQgaW4gdHJ5aW5nIHRvIGhhbmRsZSBlcnJvcnMgdGhhdCBtYWtlIG5vIHNlbnNl
+LiBJZiB0aGUNCnNlcnZlciBoYXMgYSBidWcsIHRoZW4gbGV0J3MgZXhwb3NlIGl0IGluc3RlYWQg
+b2YgdHJ5aW5nIHRvIGhpZGUgaXQgaW4NCnRoZSBzb2ZhIGN1c2hpb25zLg0KDQotLSANClRyb25k
+IE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJv
+bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
