@@ -2,200 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D49C1BD219
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2020 04:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06651BDB4D
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2020 14:03:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgD2CMn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Apr 2020 22:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2CMn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Apr 2020 22:12:43 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABCAC03C1AC
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 19:12:41 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a2so302283ejx.5
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2020 19:12:41 -0700 (PDT)
+        id S1726891AbgD2MDQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Apr 2020 08:03:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbgD2MDP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Apr 2020 08:03:15 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3169CC03C1AD
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2020 05:03:15 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id w20so2352337ljj.0
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2020 05:03:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D8VNVhrdGPuxCV0F2/QOjSKfMyzp+lZcEy/ZU+MtTnk=;
-        b=VLmzff7EDQTQveYC+QfUZmy4pCEfZ+F+463kkmOjpZngO1i+BS8lCxrdMEHDiW0fWq
-         XshCSgK9fEXxGZK0/DQbqjQl0uGg2FpSStEU3W5+xTOBCpk9kWdeLiE/Ge0lBTq6ef6I
-         K9KYt4eR/qQXgBT/qugaWruGM1j359D5CsBKgke7ii7PrIjhFdsGSzmNKAzkbi6L9oGp
-         8Y/33TNys3za05jZkSi8G3D+Aanm4DT8BXgVOUMf0mvHZGmEUUpjOSlQUCERnoA20XfF
-         D/oBb/dLGlewVIr1p/fjyOgctTIktwj3HwoIQJ4l1pgBWVMceMZFES256ECeQEBI1wLO
-         CqrA==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=qahp3iAZwIJGWwgqOB8C8znd2GCfzFnf0HdXDuS25Yc=;
+        b=A18CgSuzl1wYXhJPwC5bbEtxiqcbC0xUsN1MbHIKKsqLIlvHEHLYMVI6E1n5YUXLDX
+         jObspzUZq3QWfSBFAXMHSY+cqDZwG3iKMHTCQgwV8qGECPra5K0tlsyNFrK9E3qc+Wbk
+         d/juPEEQDFxqlwjkI0r2nrcHFIpxTWqWoo65RUg4JY4A9FuJ4uS0g1c2rntc3TnATGfM
+         9yUUxgFVy386hksWSy5HA3xBLl3Et1vumYG0zwhT7sIKljBmYSNAICc0LNYMQVKxGSbO
+         ch7Njr2XfRF8gpMn/kvNZKvT1b55/gbEckyUW+aY++mxtOLEGF0ABOSb0ZiGdzof5LIJ
+         UDGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D8VNVhrdGPuxCV0F2/QOjSKfMyzp+lZcEy/ZU+MtTnk=;
-        b=oqQN+Jb0jkK5/DpKTgedQUpXRRqcR/+5OtfO/r0uXndjne2ELR3Vb7eJDyhlGwZRE/
-         4FqFK4m40p86cwDcOTOkC9agGx3E2xBVdDIv9tmj6OZRJfpfZLA02ZlppEBjsb8Qt6Ea
-         l8HUOI/31T6hjOwIGAZgg0h096k4Bxpwek0ge/3ZWrvGWRuAvYL6xPNAQO/17B/f4Mj1
-         J7Ufa3a9eK4Da+QOu+cbHs50W/pMkFkvLY/KsUkKpcGgNLnEPwx+QLYHnCPTqw5S4k8W
-         /gnb52uEFsxuOJZAUKSBsqG4bCl4pDZGshnoyqwQO41WnLwNCpPLxNdj+sQxDjJSVn0l
-         0Qhg==
-X-Gm-Message-State: AGi0PuZ4V8LABoVJ5tiqcEDmgvivkC4CUEiUR3UapYkL2IP5ALNRWakx
-        kzWFHbuI6a8k5/J5iskw978OXd0dIUxWaRjaC5I=
-X-Google-Smtp-Source: APiQypK9m989cTh43FwwoMGWX6AZ5EUdGmNFe6JO2GABoAqIswHW4Fn7NqtcWAMr/YYj7fH4OUoNauHeclRXo4S08qU=
-X-Received: by 2002:a17:906:2792:: with SMTP id j18mr581559ejc.215.1588126360048;
- Tue, 28 Apr 2020 19:12:40 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=qahp3iAZwIJGWwgqOB8C8znd2GCfzFnf0HdXDuS25Yc=;
+        b=S/gX9ruzsfl4c71R5dpXYcY0UKlip5nj0jwizlMT7R2gzFPqh40ex36jnRohMUDskH
+         dMaqAjH5AH0/0iXHDJv/rrhAddEBKcBagRvbjzV2719S1los5POdY6ix92G3aDZJk05R
+         UFjZKg2muB5dviKZDRdbcKa1jP1jU3QjOLEAU9SzBzetjOisPv0t4fbWemEA1OV4a45R
+         /J17FgLL7jz79M5XNUpj+fR9GkK7xDol/6+WCOq39IjIaAljZKJxLbKc0i72ZZNMZJU/
+         qJzmETBdPUe267Pu5m6g/BmcqMvwV2J7/B+Br5JUtN1jpPZaBFdDKC8CYxV9DxPeZ8Sh
+         1TBg==
+X-Gm-Message-State: AGi0PuY273Q8lIYC0nRqGtqe/UkYZJuh6U1Y490Bx28D/pJBlVyCjISF
+        Cbsbt/w2p/sdIz7vn4iyKfr5rizS912BC7HcTQhefXof
+X-Google-Smtp-Source: APiQypIzXXwAiQGqx73un+JDbvgsFiSGhMTvrvyt/eGuNmIKXb6GDoJ8zs4/xNAUli9wny17iFMI+wcYRXFiLflXvB4=
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr21354433ljk.134.1588161788619;
+ Wed, 29 Apr 2020 05:03:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAN-5tyE6JTeK7RFA7AkcO63p6iFE2v1+x2RFwRrTB1Jb1Yr76Q@mail.gmail.com>
- <98410608e028cb4b53024c7669e0fb70fea98214.camel@hammerspace.com>
- <CAN-5tyGDC9ittxr7d4wL_fKLQu9NLdZWwB19iEPsCn+Y0_sqVg@mail.gmail.com>
- <98a10c8775e4127419ac57630f839744bdf1063d.camel@hammerspace.com>
- <CAN-5tyGfCXVTz4dq3Qj2eXww8BNB_dT=0QwWteEGM93MZBJudw@mail.gmail.com>
- <b96e65b7aeb72e466d2a0170d4347652b6ab0ec5.camel@hammerspace.com> <8549f1fc955faedc35d810a4ad3e21904379a59a.camel@hammerspace.com>
-In-Reply-To: <8549f1fc955faedc35d810a4ad3e21904379a59a.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 28 Apr 2020 22:12:29 -0400
-Message-ID: <CAN-5tyFRDg7W9pt57jTzoRgL8L=0_d7gCoRiAqWQR36iny33NQ@mail.gmail.com>
-Subject: Re: handling ERR_SERVERFAULT on RESTOREFH
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+From:   gaurav gangalwar <gaurav.gangalwar@gmail.com>
+Date:   Wed, 29 Apr 2020 17:32:57 +0530
+Message-ID: <CAJiE4OnMQE7b7bzj=rnMBZ5xRrzTfHqqgyNOSGguuDFk3G=z1Q@mail.gmail.com>
+Subject: [Problem] Client discarding data, mount hung.
+To:     linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 7:56 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2020-04-28 at 19:41 -0400, Trond Myklebust wrote:
-> > On Tue, 2020-04-28 at 19:02 -0400, Olga Kornievskaia wrote:
-> > > On Tue, Apr 28, 2020 at 5:32 PM Trond Myklebust <
-> > > trondmy@hammerspace.com> wrote:
-> > > > On Tue, 2020-04-28 at 16:40 -0400, Olga Kornievskaia wrote:
-> > > > > On Tue, Apr 28, 2020 at 2:47 PM Trond Myklebust <
-> > > > > trondmy@hammerspace.com> wrote:
-> > > > > > Hi Olga,
-> > > > > >
-> > > > > > On Tue, 2020-04-28 at 14:14 -0400, Olga Kornievskaia wrote:
-> > > > > > > Hi folk,
-> > > > > > >
-> > > > > > > Looking for guidance on what folks think. A client is
-> > > > > > > sending
-> > > > > > > a
-> > > > > > > LINK
-> > > > > > > operation to the server. This compound after the LINK has
-> > > > > > > RESTOREFH
-> > > > > > > and GETATTR. Server returns SERVER_FAULT to on RESTOREFH.
-> > > > > > > But
-> > > > > > > LINK is
-> > > > > > > done successfully. Client still fails the system call with
-> > > > > > > EIO.
-> > > > > > > We
-> > > > > > > have a hardline and "ln" saying hardlink failed.
-> > > > > > >
-> > > > > > > Should the client not fail the system call in this case?
-> > > > > > > The
-> > > > > > > fact
-> > > > > > > that
-> > > > > > > we couldn't get up-to-date attributes don't seem like the
-> > > > > > > reason
-> > > > > > > to
-> > > > > > > fail the system call?
-> > > > > > >
-> > > > > > > Thank you.
-> > > > > >
-> > > > > > I don't really see this as worth fixing on the client. It is
-> > > > > > very
-> > > > > > clearly a server bug.
-> > > > >
-> > > > > Why is that a server bug? A server can legitimately have an
-> > > > > issue
-> > > > > trying to execute an operation (RESTOREFH) and legitimately
-> > > > > returning
-> > > > > an error.
-> > > >
-> > > > If it is happening consistently on the server, then it is a bug,
-> > > > and it
-> > > > gets reported by the client in the same way we always report
-> > > > NFS4ERR_SERVERFAULT, by converting to an EREMOTEIO.
-> > >
-> > > Yes but the client doesn't retry so it can't assess if it's
-> > > consistently happening or not. It can be a transient error (or
-> > > ENOMEM)
-> > > that's later resolved.
-> >
-> > If the server wants to signal a transient error, it should send
-> > NFS4ERR_DELAY.
-> >
-> > > > > NFS client also ignores errors of the returning GETATTR after
-> > > > > the
-> > > > > RESTOREFH. So I'm not sure why we are then not ignoring errors
-> > > > > (or
-> > > > > some errors) of the RESTOREFH.
-> > > >
-> > > > We do need to check the value of RESTOREFH in order to figure out
-> > > > if we
-> > > > can continue reading the XDR buffer to decode the file
-> > > > attributes.
-> > > > We
-> > > > want to read those file attributes because we do expect the
-> > > > change
-> > > > attribute, the ctime and the nlinks values to all change as a
-> > > > result of
-> > > > the operation.
-> > >
-> > > I have nothing against decoding the error and using it in a
-> > > decision
-> > > to keep decoding. But the client doesn't have to propagate the
-> > > RESTOREFH error to the application?
-> > >
-> > > In all other non-idempotent operations that have other operations
-> > > (ie
-> > > GETATTR) following them, the client ignores the errors. Btw I just
-> > > noticed that on OPEN compound, since we ignore decode error from
-> > > the
-> > > GETATTR, it would continue decoding LAYOUTGET...
-> > >
-> > > CREATE has problem if the following GETFH will return EDELAY.
-> > > Client
-> > > doesn't deal with retrying a part of the compound. It retries the
-> > > whole compound. It leads to an error (since non-idempotent
-> > > operation
-> > > is retried). But I guess that's a 2nd issue (or a 3rd if we could
-> > > the
-> > > decoding layoutget)....
-> > >
-> > > All this is under the umbrella of how to handle errors on
-> > > non-idempotent operations in a compound....
-> >
-> > There is no point in trying to handle errors that make no sense. If
-> > the
-> > server has a bug, then let's expose it instead of trying to hide it
-> > in
-> > the sofa cushions.
->
-> It basically boils down to this:
->  * I do not want to have to maintain a list of server bugs in the
->    client.
+I am getting these logs in rpcdebug, client is discarding replies for
+FSINFO and FSSTAT.
+Mount point is not accessible, but I am able to mount and access from other=
+ ips.
 
-I also believe that client shouldn't be coded to a broken server. But
-in some of those cases, the client is not spec compliant, how is that
-a server bug? The case of SERVERFAULT of RESTOREFH I'm not sure what
-to make of it. I think it's more of a spec failure to address. It
-seems that server isn't allowed to fail after executing a
-non-idempotent operation but that's a hard requirement. I still think
-that client's best set of action is to ignore errors on RESTOREFH.
+C02W91BDHV2R:jita-hang-discard gaurav.gangalwar$ grep "discarded" syslog.1
 
->  * If I make a client change, I don't want to have to consider whether
->    or not it causes a regression against some server that only 10
->    people are still using, and that never got a fix for a bug because
->    "the clients handle it".
->
-> We should fix client bugs when it is clear that they are client bugs.
-> We should push back hard on server bugs because the client is already a
-> complex enough beast.
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+ discarded 172 bytes
+
+Apr 28 16:13:09 jita_tester_host_12 kernel: [2345499.393657] RPC:
+ discarded 168 bytes
+
+Apr 28 16:13:16 jita_tester_host_12 kernel: [2345507.216440] RPC:
+ discarded 172 bytes
+
+Apr 28 16:13:44 jita_tester_host_12 kernel: [2345534.412376] RPC:
+ discarded 168 bytes
+
+
+I am not sure what could be the reason for discarding, I am using tcp
+as mount option, as per code looks like tcp_flags on transport may not
+be set.
+I am clueless, how to debug, as I couldn=E2=80=99t find any failure in serv=
+er
+logs and tcpdump.
+Please let me know how to debug this issue further?
+
+Pasting more log snippet and kernel version
+
+nutanix@jita_tester_host_12:~$ uname -a
+
+Linux jita_tester_host_12 4.15.0-38-generic #41-Ubuntu SMP Wed Oct 10
+10:59:38 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782554] RPC:
+61642 xprt_transmit(72)
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782606] RPC:
+ xs_tcp_send_request(72) =3D 0
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782607] RPC:
+61642 xmit complete
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782609] RPC:
+61642 sleep_on(queue "xprt_pending" time 4881255675)
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782610] RPC:
+61642 added to queue 00000000d869a80a "xprt_pending"
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782611] RPC:
+61642 setting alarm for 60000 ms
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782612] RPC:
+ wake_up_first(00000000ae52133b "xprt_sending")
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782613] RPC:
+61642 sync task going to sleep
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783719] RPC:
+ xs_data_ready...
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783759] RPC:
+ xs_tcp_data_recv started
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+ discarded 172 bytes
+
+Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+ xs_tcp_data_recv done
+
+
+
+Regards,
+Gaurav
