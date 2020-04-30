@@ -2,114 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7192C1C03EB
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2020 19:32:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C38CA1C06AC
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2020 21:44:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgD3RcB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Apr 2020 13:32:01 -0400
-Received: from fieldses.org ([173.255.197.46]:38468 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgD3RcB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:32:01 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A11D61C29; Thu, 30 Apr 2020 13:32:00 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 13:32:00 -0400
-To:     Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>
-Cc:     linux-nfs@vger.kernel.org,
-        Miguel Rodriguez <miguel.rodriguez@udima.es>,
-        Isaac Marco Blancas <isaac.marco@udima.es>
-Subject: Re: Random IO errors on nfs clients running linux > 4.20
-Message-ID: <20200430173200.GE29491@fieldses.org>
-References: <20200429171527.GG2531021@var.inittab.org>
+        id S1726626AbgD3ToP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Apr 2020 15:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgD3ToO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Apr 2020 15:44:14 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C70DC035494
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2020 12:44:13 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id b12so2766423ion.8
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2020 12:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mBq8tSWjKQgsRenscJ+i7RimvOiJyY3Qg7RoQBJa8hs=;
+        b=bpj1uK0XyAPTZxumWr9hEJrfBNMRJbtUBCyFEoFVlon3boVPU/KqM2lhPfONo/WCiS
+         sU6+xqsP20+qzX1jkRvk48FymtM9jdL5Uajr+Y2Bq+5ry/pVeaFFD25VxichdYFJvjlI
+         EC893IQen2N7v0QS9xEIVNfpm15jn2SxlbL8X0r9yEvhSorIapQIwh1qMQT70dvptaVo
+         Rvj8QbRMyri9CIDO2q+yLJi+TMXfzjx7l3tGeMP2S2qK2dtvPXZB3fiDLZmt2W3ct+dU
+         9K6uFYKxLUAJvs6a1SoghXTRn/H0OtDFbi6ztQRduOEIlDoGJYtrKVKsHWVyctxyeEAJ
+         eUxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mBq8tSWjKQgsRenscJ+i7RimvOiJyY3Qg7RoQBJa8hs=;
+        b=BDpVpee2L0REEQstFb6dSGe9cl6H1z9CHgWQGRwdhnhogegRPmHoZr+O30MsgbCY0S
+         0JxkrQRM9JjdaOhD+l1YDjr4GTwkzL1O7ULj6lYL9Zxe5E59DzBnW1ofwjDy06dit2tK
+         FsQ1NeL1TpbM0eI+sxDEfLBBuFrr4PDapP8+zfG4mjDJodPDloIi0Ybp7GR6SAI9Glt9
+         Kmj81sK+x3hkzVOrjAyeHUXJrA1qC2Z/ZjV5HyLm/LpH6IR5i2LFyFSp3uHQG3xX0aDH
+         q78u0Oso4/aAg/38jt1UkSM+5pyCy/vsEt769E++yLLD/LHX9GU47EBW04CQElGxHEO3
+         jcRg==
+X-Gm-Message-State: AGi0Pua4LOBG1T/QTLPrfJlA5CZTyLuiJizZL6F0azKG+8Y3yDhk9hIW
+        S9/9W8c2A6wqATmhPnZFyx0YH1PPIfYl/btllJg=
+X-Google-Smtp-Source: APiQypIrwqdzquKEnHyvFWEVS3WL865+rx1DFOQo0AHdvBMeep+GE44S9HDJ/LkdG26zXtKJmcCK87mFgr12cv5B2mM=
+X-Received: by 2002:a02:a787:: with SMTP id e7mr3341145jaj.92.1588275852620;
+ Thu, 30 Apr 2020 12:44:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200429171527.GG2531021@var.inittab.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+References: <CAJiE4OnMQE7b7bzj=rnMBZ5xRrzTfHqqgyNOSGguuDFk3G=z1Q@mail.gmail.com>
+In-Reply-To: <CAJiE4OnMQE7b7bzj=rnMBZ5xRrzTfHqqgyNOSGguuDFk3G=z1Q@mail.gmail.com>
+From:   Ashish Sangwan <ashishsangwan2@gmail.com>
+Date:   Fri, 1 May 2020 01:14:01 +0530
+Message-ID: <CAOiN93nuAVE+xyC_NYpXX50LRq---tn0mVFVFJP5syEKHhSxzA@mail.gmail.com>
+Subject: Re: [Problem] Client discarding data, mount hung.
+To:     gaurav gangalwar <gaurav.gangalwar@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:15:27PM +0200, Alberto Gonzalez Iniesta wrote:
-> I'm sorry for reporting this (a little bit) late, but it took us (Miguel
-> in Cc:) some time to track this issue to an exact kernel update.
-> 
-> We're running a +200 clients NFS server with Ubuntu 16.04 and 18.04
-> clients. The server runs Debian 8.11 (jessie) with Linux 3.16.0 and
-> nfs-kernel-server 1:1.2.8-9+deb8u1. It has been working some years now
-> without issues.
-> 
-> But since we started moving clients from Ubuntu 16.04 to Ubuntu 18.04
-> some of them started experiencing failures while working on NFS mounts.
-> The failures are arbitrary and sometimes it may take more than 20 minutes
-> to come out (which made finding out which kernel version introduced
-> this a pain). We are almost sure that some directories are more prone to
-> suffer from this than others (maybe related to path length/chars?).
-> 
-> The error is also not very "verbose", from an strace:
-> 
-> execve("/bin/ls", ["ls", "-lR", "Becas y ayudas/"], 0x7ffccb7f5b20 /* 16 vars */) = 0
-> [lots of uninteresting output]
-> openat(AT_FDCWD, "Becas y ayudas/", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-> fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> fstat(1, {st_mode=S_IFCHR|0666, st_rdev=makedev(1, 3), ...}) = 0
-> ioctl(1, TCGETS, 0x7ffd8b725c80)        = -1 ENOTTY (Inappropriate ioctl for device)
-> getdents(3, /* 35 entries */, 32768)    = 1936
-> [lots of lstats)
-> lstat("Becas y ayudas/Convocatorias", {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> getdents(3, 0x561af78de890, 32768)      = -1 EIO (Input/output error)
+On Wed, Apr 29, 2020 at 5:35 PM gaurav gangalwar
+<gaurav.gangalwar@gmail.com> wrote:
+>
+> I am getting these logs in rpcdebug, client is discarding replies for
+> FSINFO and FSSTAT.
+> Mount point is not accessible, but I am able to mount and access from oth=
+er ips.
+>
+> C02W91BDHV2R:jita-hang-discard gaurav.gangalwar$ grep "discarded" syslog.=
+1
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+>  discarded 172 bytes
+>
+> Apr 28 16:13:09 jita_tester_host_12 kernel: [2345499.393657] RPC:
+>  discarded 168 bytes
+>
+> Apr 28 16:13:16 jita_tester_host_12 kernel: [2345507.216440] RPC:
+>  discarded 172 bytes
+>
+> Apr 28 16:13:44 jita_tester_host_12 kernel: [2345534.412376] RPC:
+>  discarded 168 bytes
+>
+Adding some more information to what Gaurav mentioned:
+A quick glance at the code, looks like in xs_tcp_data_recv(),
+xs_tcp_read_discard() is called for the entire packet.
+That would mean transport->tcp_flags are 0?
 
-Ideas off the top of my head....
+But we have seen that the connection is still in ESTABLISHED state:
+tcp    0   0 10.41.24.83:973     10.41.24.14:2049    ESTABLISHED -
 
-It'd be really useful to get a network trace--something like tcpdump -s0
--wtmp.pcap -i<interface>, then reproduce the problem, then look through
-it to see if you can find the READDIR or STAT or whatever that results
-in the unexpected EIO.  But if takes a while to reproduce, that may be
-difficult.
+Not sure how can tcp_flags become 0 for established connection?
 
-Is there anything in the logs?
 
-It might be worth turning on some more debug logging--see the "rpcdebug"
-command.
-
---b.
-
-> 
-> (I can send you the full output if you need it)
-> 
-> We can run the previous "ls -lR" 20 times and get no error, or get
-> this "ls: leyendo el directorio 'Becas y ayudas/': Error de entrada/salida"
-> (ls: reading directorio 'Becas y ayudas/': Input/Output Error") every
-> now and then.
-> 
-> The error happens (obviously?) with ls, rsync and the users's GUI tools.
-> 
-> There's nothing in dmesg (or elsewhere).
-> These are the kernels with tried:
-> 4.18.0-25   -> Can't reproduce
-> 4.19.0      -> Can't reproduce
-> 4.20.17     -> Happening (hard to reproduce)
-> 5.0.0-15    -> Happening (hard to reproduce)
-> 5.3.0-45    -> Happening (more frequently)
-> 5.6.0-rc7   -> Reproduced a couple of times after boot, then nothing
-> 
-> We did long (as in daylong) testing trying to reproduce this with all
-> those kernel versions, so we are pretty sure 4.18 and 4.19 don't
-> experience this and our Ubuntu 16.04 clients don't have any issue.
-> 
-> I know we aren't providing much info but we are really looking forward
-> to doing all the testing required (we already spent lots of time in it).
-> 
-> Thanks for your work.
-> 
+>
+> I am not sure what could be the reason for discarding, I am using tcp
+> as mount option, as per code looks like tcp_flags on transport may not
+> be set.
+> I am clueless, how to debug, as I couldn=E2=80=99t find any failure in se=
+rver
+> logs and tcpdump.
+> Please let me know how to debug this issue further?
+>
+> Pasting more log snippet and kernel version
+>
+> nutanix@jita_tester_host_12:~$ uname -a
+>
+> Linux jita_tester_host_12 4.15.0-38-generic #41-Ubuntu SMP Wed Oct 10
+> 10:59:38 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+>
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782554] RPC:
+> 61642 xprt_transmit(72)
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782606] RPC:
+>  xs_tcp_send_request(72) =3D 0
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782607] RPC:
+> 61642 xmit complete
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782609] RPC:
+> 61642 sleep_on(queue "xprt_pending" time 4881255675)
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782610] RPC:
+> 61642 added to queue 00000000d869a80a "xprt_pending"
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782611] RPC:
+> 61642 setting alarm for 60000 ms
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782612] RPC:
+>  wake_up_first(00000000ae52133b "xprt_sending")
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.782613] RPC:
+> 61642 sync task going to sleep
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783719] RPC:
+>  xs_data_ready...
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783759] RPC:
+>  xs_tcp_data_recv started
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+>  discarded 172 bytes
+>
+> Apr 28 16:12:16 jita_tester_host_12 kernel: [2345446.783761] RPC:
+>  xs_tcp_data_recv done
+>
+>
+>
 > Regards,
-> 
-> Alberto
-> 
-> -- 
-> Alberto González Iniesta             | Universidad a Distancia
-> alberto.gonzalez@udima.es            | de Madrid
+> Gaurav
