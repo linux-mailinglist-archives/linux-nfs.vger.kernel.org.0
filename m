@@ -2,106 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A27F1BE507
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2020 19:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C81A31BF01D
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2020 08:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgD2RVT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Apr 2020 13:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2RVT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Apr 2020 13:21:19 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Apr 2020 10:21:19 PDT
-Received: from etc.inittab.org (etc.inittab.org [IPv6:2001:41d0:2:234d::31c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9416BC03C1AE
-        for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2020 10:21:19 -0700 (PDT)
+        id S1726391AbgD3GQW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Apr 2020 02:16:22 -0400
+Received: from etc.inittab.org ([51.254.149.154]:56390 "EHLO etc.inittab.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgD3GQW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:16:22 -0400
+X-Greylist: delayed 494 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 02:16:22 EDT
 Received: from var.inittab.org (89.141.236.227.dyn.user.ono.com [89.141.236.227])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: smtp_auth_agi@correo-e.org)
-        by etc.inittab.org (Postfix) with ESMTPSA id 20086A00F8;
-        Wed, 29 Apr 2020 19:15:28 +0200 (CEST)
+        by etc.inittab.org (Postfix) with ESMTPSA id 8391EA0072
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2020 08:08:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=inittab.org;
+        s=default; t=1588226886;
+        bh=lIeYDZx5LRUpTU9kcHHAc9agDV0BH0P1yKjNF/7yVqM=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=j35MPSCuYGgzdDfpreAyQ/udAA3iqPas60DGT+5fMtZvoK8c/qdIAVqsYqWTf8nGp
+         AzrhMbgl5XAfcedqnUgivm0sadiWgXlkhPfOF2bP/Onk35kWaL45i4NjTn0Y69wy2K
+         EEDHCuH4Vt0HY8vLBtBFAXVeFr+0GxQhIq/3QM40=
 Received: by var.inittab.org (Postfix, from userid 1000)
-        id A4EE14267A; Wed, 29 Apr 2020 19:15:27 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 19:15:27 +0200
-From:   Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>
+        id 1FADE4267A; Thu, 30 Apr 2020 08:08:06 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 08:08:06 +0200
+From:   Alberto Gonzalez Iniesta <agi@inittab.org>
 To:     linux-nfs@vger.kernel.org
-Cc:     Miguel Rodriguez <miguel.rodriguez@udima.es>,
-        Isaac Marco Blancas <isaac.marco@udima.es>
-Subject: Random IO errors on nfs clients running linux > 4.20
-Message-ID: <20200429171527.GG2531021@var.inittab.org>
+Subject: Re: Random IO errors on nfs clients running linux > 4.20
+Message-ID: <20200430060806.GJ2531021@var.inittab.org>
+References: <20200429171527.GG2531021@var.inittab.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200429171527.GG2531021@var.inittab.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello NFS maintainers,
+On Wed, Apr 29, 2020 at 07:15:27PM +0200, Alberto Gonzalez Iniesta wrote:
+> Hello NFS maintainers,
+>
+> I know we aren't providing much info but we are really looking forward
+> to doing all the testing required (we already spent lots of time in it).
 
-I'm sorry for reporting this (a little bit) late, but it took us (Miguel
-in Cc:) some time to track this issue to an exact kernel update.
+Hi,
 
-We're running a +200 clients NFS server with Ubuntu 16.04 and 18.04
-clients. The server runs Debian 8.11 (jessie) with Linux 3.16.0 and
-nfs-kernel-server 1:1.2.8-9+deb8u1. It has been working some years now
-without issues.
-
-But since we started moving clients from Ubuntu 16.04 to Ubuntu 18.04
-some of them started experiencing failures while working on NFS mounts.
-The failures are arbitrary and sometimes it may take more than 20 minutes
-to come out (which made finding out which kernel version introduced
-this a pain). We are almost sure that some directories are more prone to
-suffer from this than others (maybe related to path length/chars?).
-
-The error is also not very "verbose", from an strace:
-
-execve("/bin/ls", ["ls", "-lR", "Becas y ayudas/"], 0x7ffccb7f5b20 /* 16 vars */) = 0
-[lots of uninteresting output]
-openat(AT_FDCWD, "Becas y ayudas/", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-fstat(1, {st_mode=S_IFCHR|0666, st_rdev=makedev(1, 3), ...}) = 0
-ioctl(1, TCGETS, 0x7ffd8b725c80)        = -1 ENOTTY (Inappropriate ioctl for device)
-getdents(3, /* 35 entries */, 32768)    = 1936
-[lots of lstats)
-lstat("Becas y ayudas/Convocatorias", {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-getdents(3, 0x561af78de890, 32768)      = -1 EIO (Input/output error)
-
-(I can send you the full output if you need it)
-
-We can run the previous "ls -lR" 20 times and get no error, or get
-this "ls: leyendo el directorio 'Becas y ayudas/': Error de entrada/salida"
-(ls: reading directorio 'Becas y ayudas/': Input/Output Error") every
-now and then.
-
-The error happens (obviously?) with ls, rsync and the users's GUI tools.
-
-There's nothing in dmesg (or elsewhere).
-These are the kernels with tried:
-4.18.0-25   -> Can't reproduce
-4.19.0      -> Can't reproduce
-4.20.17     -> Happening (hard to reproduce)
-5.0.0-15    -> Happening (hard to reproduce)
-5.3.0-45    -> Happening (more frequently)
-5.6.0-rc7   -> Reproduced a couple of times after boot, then nothing
-
-We did long (as in daylong) testing trying to reproduce this with all
-those kernel versions, so we are pretty sure 4.18 and 4.19 don't
-experience this and our Ubuntu 16.04 clients don't have any issue.
-
-I know we aren't providing much info but we are really looking forward
-to doing all the testing required (we already spent lots of time in it).
-
-Thanks for your work.
+Sorry, I was providing way too little info...
+We're using NFSv4 with kerberos, mounts are done with:
+mount -t nfs4 -o sec=krb5p,exec,noauto pluto.XXXX:/publico /media/pluto
 
 Regards,
 
 Alberto
 
 -- 
-Alberto González Iniesta             | Universidad a Distancia
-alberto.gonzalez@udima.es            | de Madrid
+Alberto Gonzalez Iniesta    | Formación, consultoría y soporte técnico
+mailto/sip: agi@inittab.org | en GNU/Linux y software libre
+Encrypted mail preferred    | http://inittab.com
+
+Key fingerprint = 5347 CBD8 3E30 A9EB 4D7D  4BF2 009B 3375 6B9A AA55
