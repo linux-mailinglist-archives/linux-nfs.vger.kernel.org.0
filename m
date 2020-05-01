@@ -2,123 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E66091C1A44
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 18:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FEB1C1B92
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 19:22:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgEAQBz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 May 2020 12:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729998AbgEAQBz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 12:01:55 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28738C061A0E
-        for <linux-nfs@vger.kernel.org>; Fri,  1 May 2020 09:01:55 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 077ED5F48; Fri,  1 May 2020 12:01:54 -0400 (EDT)
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Shaohua Li <shli@fb.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4/4] kthreads: allow cloning threads with different flags
-Date:   Fri,  1 May 2020 12:01:52 -0400
-Message-Id: <1588348912-24781-5-git-send-email-bfields@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588348912-24781-1-git-send-email-bfields@redhat.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+        id S1729108AbgEARWK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 May 2020 13:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729046AbgEARWJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 13:22:09 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80257C061A0C
+        for <linux-nfs@vger.kernel.org>; Fri,  1 May 2020 10:22:09 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id w29so8462870qtv.3
+        for <linux-nfs@vger.kernel.org>; Fri, 01 May 2020 10:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=AQtGKzCzBcvGBUFLvjv8R9YA9GLoumA3ZRJvMwXGlxI=;
+        b=Fg0e1cq5srwh/Ok+tqqldTIRp3F3zoHqGgjQhz6YX5B1NDWxeIfxYoTpRcLHLbYDGk
+         +gp48BtYmIvq/tq++NvUQ4hTEPdKliLyOc7HJKRWR7VSCOCyruklEYCKvsaufidbRSc/
+         Hx3qCEYVFsiDBjwjr5PnSlKZdYAehZ9Of+S8/I8E79eIFMfV4TIh3w6F+L6Kf7kS6iIK
+         nBojcG12yR9tdal9x8kvhaw42zuVJeS33S77JGgUuWOvFLeR2gPLI5FVrwnsLyv34vkx
+         ypOMbBEkkcZXPKNk3NkIXLfkIAEvqLwqwdU/ss6TjV3OJKtfxlSDEbkXkO2Do78e1MRy
+         HaDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=AQtGKzCzBcvGBUFLvjv8R9YA9GLoumA3ZRJvMwXGlxI=;
+        b=OPjPe3IloHr3UZIS6DH+tGeV0F8TZ8lQdVljw5FVxgoUTgFeD1/91qdyRY8+RBNrV/
+         vcPHPNfFWhO2Pvp7yxjAmpE7CewsuOfF65gfPEo4R+H96Tx7l6BH57ANP7xmcli7ZxK3
+         CUWlDXS+IL6UKLSM7cUX39lNjJxl/PtXP7YVVesLBBzSJkA6Dfc+a8xpURzbENVXK2td
+         5/UzO998NcMRlLZH+rurTcadFPRIYB7MOrUwR3bID4IVu/Cz9yOfNz7cJR0KaZWzmU9y
+         eUlNQYpAtdFtMsA4B2lm4VuazCtd4/k/qJLuoEws0kHQ9jGsIo+MQZhpTP2/AFt3TfRC
+         IzVw==
+X-Gm-Message-State: AGi0PuYOYNYOidQ2L05uIQILpQPfJEQhR638G1vZJwd99bzkXcCh0uy5
+        7oDQ9/QHvjkLt+v5vaq5Kkn83N51
+X-Google-Smtp-Source: APiQypLmM975yyUL2ZJkFg1/BUrf3QM/r52DMDreob5x7QAJiELoWGkZAnN6RhvFepyUL8DJz1NP7Q==
+X-Received: by 2002:ac8:70c8:: with SMTP id g8mr4844062qtp.385.1588353728545;
+        Fri, 01 May 2020 10:22:08 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id y18sm3187811qty.41.2020.05.01.10.22.07
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 10:22:07 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 041HM5QS026672
+        for <linux-nfs@vger.kernel.org>; Fri, 1 May 2020 17:22:06 GMT
+Subject: [PATCH v1 0/4] New NFSD tracepoints
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Fri, 01 May 2020 13:22:05 -0400
+Message-ID: <20200501171750.3764.7676.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.22-20-geafe
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+These patches introduce tracepoint infrastructure in several places
+in the NFS server in order to help improve operational observability.
+They were constructed while chasing down problems I found while
+testing v5.7.
 
-This is so knfsd can add CLONE_THREAD.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 ---
- include/linux/kthread.h |  3 ++-
- kernel/kthread.c        | 11 +++++++----
- 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index a7ffdf96a3b2..7069feb6da65 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -10,11 +10,12 @@ struct kthread_group {
- 	spinlock_t create_lock;
- 	struct list_head create_list;
- 	struct task_struct *task;
-+	unsigned long flags;
- };
- 
- extern struct kthread_group kthreadd_default;
- 
--struct kthread_group *kthread_start_group(char *);
-+struct kthread_group *kthread_start_group(unsigned long, char *);
- void kthread_stop_group(struct kthread_group *);
- 
- struct task_struct *kthread_group_create_on_node(struct kthread_group *,
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 5232f6f597b5..57f6687ecec7 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -29,6 +29,7 @@ struct kthread_group kthreadd_default = {
- 	.name = "kthreadd",
- 	.create_lock = __SPIN_LOCK_UNLOCKED(kthreadd_default.create_lock),
- 	.create_list = LIST_HEAD_INIT(kthreadd_default.create_list),
-+	.flags = CLONE_FS | CLONE_FILES | SIGCHLD,
- };
- 
- void wake_kthreadd(struct kthread_group *kg)
-@@ -36,7 +37,7 @@ void wake_kthreadd(struct kthread_group *kg)
- 	wake_up_process(kg->task);
- }
- 
--struct kthread_group *kthread_start_group(char *name)
-+struct kthread_group *kthread_start_group(unsigned long flags, char *name)
- {
- 	struct kthread_group *new;
- 	struct task_struct *task;
-@@ -47,6 +48,7 @@ struct kthread_group *kthread_start_group(char *name)
- 	spin_lock_init(&new->create_lock);
- 	INIT_LIST_HEAD(&new->create_list);
- 	new->name = name;
-+	new->flags = flags;
- 	task = kthread_run(kthreadd, new, name);
- 	if (IS_ERR(task)) {
- 		kfree(new);
-@@ -314,7 +316,8 @@ int tsk_fork_get_node(struct task_struct *tsk)
- 	return NUMA_NO_NODE;
- }
- 
--static void create_kthread(struct kthread_create_info *create)
-+static void create_kthread(struct kthread_create_info *create,
-+			   unsigned long flags)
- {
- 	int pid;
- 
-@@ -322,7 +325,7 @@ static void create_kthread(struct kthread_create_info *create)
- 	current->pref_node_fork = create->node;
- #endif
- 	/* We want our own signal handler (we take no signals by default). */
--	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
-+	pid = kernel_thread(kthread, create, flags);
- 	if (pid < 0) {
- 		/* If user was SIGKILLed, I release the structure. */
- 		struct completion *done = xchg(&create->done, NULL);
-@@ -645,7 +648,7 @@ void kthread_do_work(struct kthread_group *kg)
- 		list_del_init(&create->list);
- 		spin_unlock(&kg->create_lock);
- 
--		create_kthread(create);
-+		create_kthread(create, kg->flags);
- 
- 		spin_lock(&kg->create_lock);
- 	}
--- 
-2.26.2
+Chuck Lever (4):
+      NFSD: Add tracepoints to NFSD's duplicate reply cache
+      NFSD: Add tracepoints to the NFSD state management code
+      NFSD: Add tracepoints for monitoring NFSD callbacks
+      SUNRPC: Clean up request deferral tracepoints
 
+
+ fs/nfsd/nfs4callback.c        |  37 +++--
+ fs/nfsd/nfs4state.c           |  58 +++----
+ fs/nfsd/state.h               |   7 -
+ fs/nfsd/trace.h               | 286 ++++++++++++++++++++++++++++++++++
+ include/trace/events/sunrpc.h |  11 +-
+ net/sunrpc/svc_xprt.c         |  12 +-
+ 6 files changed, 343 insertions(+), 68 deletions(-)
+
+--
+Chuck Lever
