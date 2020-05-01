@@ -2,133 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ECAD1C1D93
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 21:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCC1D1C1D97
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 21:05:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgEATEJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 May 2020 15:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729839AbgEATEI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 15:04:08 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E61DC061A0C;
-        Fri,  1 May 2020 12:04:08 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id ep1so5218423qvb.0;
-        Fri, 01 May 2020 12:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=96QSejN1XjBz5VbtJDX6HxKzPqbLYh9wojk8iWHqLno=;
-        b=MI+zjTglh3QnVcwW0brnjedn+laYrJJuSNbxiYnKzoh09rTfENcuFFmwo7VpxdmHwc
-         f9QO33giWqcvpLqGew+yysKEKAlq5FyDCaY6z4FAIYeJTNcd19PUKu2AK5MEeDY8S7tU
-         r6x8eBPy+G01ix3lhkgxraQO/RrSPQOw+sWYp2r5dl/r782tVvWnQfDZetVl/xMOkQ93
-         mixRIu8bfjtjAjEvy64MbsdoNeTkMX5glunvzcmc1F0EeyGBqaWc0OLy5evB4tu+dAX0
-         NnAfnGUkxpqz9Nd0P7Wuet3lkAvLkekAchxAPE5OICjjTLkgpzWa3B64bYqsrXyZ2RZy
-         EzxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=96QSejN1XjBz5VbtJDX6HxKzPqbLYh9wojk8iWHqLno=;
-        b=NKVHWSesUiAnNKkbaXNC6ISJA6F073GXd72LDplZzqGtQ1lSX9rxMleFCFbQi7JatT
-         d3Pzdimvckw+ZtkNH8Ye0q8QVfcMgXMlVB9FLLoD96fVASA2JwVyvKdyOfjhvBT02P8B
-         ra9T1gceoPHpIec0DRHy3OXcXnroDeTCnii1P4o6/Bj9SFiufJRXgRS1uLxp7tHSi/Td
-         QYYkzFYblrQGeJyEdABR/pvI6zXJHDB8SU4A4pYX3Kb/C1gH3Ayqyfor4X2KwYE8MDsy
-         6IQPVQa1/G1oNYwAPr9cdbgUMnz572mY8URUOdppFb10ukf/DZwyjSsJiBEdQtaRKD7V
-         LilA==
-X-Gm-Message-State: AGi0Pua5+7S8+K2mnngL8aLGWE9ksOQcVqLOsZxQWEt8l9icp/HtkV0M
-        UcpeCKrFVmgi25FwoD0FW3y+JEZk
-X-Google-Smtp-Source: APiQypKCCqgHkqrg06aLIKuVkScXSBXvW87TYSiB7WpvGUMoYl7PEWKtk4K4UFrlh74lym20CDc39A==
-X-Received: by 2002:a05:6214:a14:: with SMTP id dw20mr5356066qvb.179.1588359847374;
-        Fri, 01 May 2020 12:04:07 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g8sm3295927qkb.30.2020.05.01.12.04.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 12:04:06 -0700 (PDT)
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 041J45Ua026984;
-        Fri, 1 May 2020 19:04:05 GMT
-Subject: [PATCH RFC] SUNRPC: crypto calls should never schedule
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org
-Date:   Fri, 01 May 2020 15:04:05 -0400
-Message-ID: <20200501190405.2324.25423.stgit@klimt.1015granger.net>
-In-Reply-To: <20200501184301.2324.22719.stgit@klimt.1015granger.net>
-References: <20200501184301.2324.22719.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.22-20-geafe
-MIME-Version: 1.0
+        id S1730033AbgEATFu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 May 2020 15:05:50 -0400
+Received: from mail-mw2nam12on2115.outbound.protection.outlook.com ([40.107.244.115]:60610
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729766AbgEATFt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 1 May 2020 15:05:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dz+Gospb3EVRQ7HgE4+LX6UsEZ4ppEh6wa+8q0GcPCR/iGIuBImGPpb8kcPN3kLpqSimVHlsUDrMyI7wqEAQm7KoVf11Uh2fF0Dy5tY1TFP1sWQkbPDq2v2P0lBsqPCfUyKE9yLVxDt2mpTxybHcFVikIKZo99yPuRDSx4ky/w5W1GAcVYf7SZFkSSydHs5qlmMXH2jr7Byx6iq4XLmq62Nzi6gs7qOsVjw8JfaKfYqjdzWg5vYm5EyGqoEVSaPzLQJlvsJEYFv0OnR9N5tV8dPFeXs89EZIh4sNg1bjFkED/+5bl/KbE0NX6JFRvgxgTmkQAzw0DJK6szbKWbQbOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYVCvZBpLiKANs0uTrGLayUXf0G20Ue04qWn5sejOsI=;
+ b=VCKBAncvbmcCsd1Rxsj556/nvHfVGmmyr+3DrQxYWFSSpK1ISXIRxGfX0bfHQpZsIPo9PRSwKs7DD6ZdMgHMZ1Wco0KrJeXZ10Pqr4KC3ZJmlqcDNPgCz+KLRejuhcMmoWNTRUbl/jRgu46ZNgAtghMO4/RDzDfNo6GECwV0tZ/WKzvcMtHiOufKvX7+KwXSHNiVoui+IcxL60IBNIUr+YACXuIZR2IlvIwcEaUl0tiMASXfvPkZq4sQ3YVmDJYacYp9uoXcBs3P5xJMDnDnkuCNZiQyMRn2LS3PkHIZP5uWyWBFDbah4wFFVZTwuyjH5n/KlL3MPNhlr11891jIrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYVCvZBpLiKANs0uTrGLayUXf0G20Ue04qWn5sejOsI=;
+ b=XQqfcFEbU9l46YpM5OnAAIPhrlfiN6PfE1I2XJ5MLGBsbkUdQm/zYEMrXNfjrQKjRfDhzuS6M2F6Nu1xpYuptSy+NBTBuRdfs1ACgTvUFcxQmESwRIQ6tuPwxSDb9elkYtUf7N9/EZq+dXnCv52hZKGuP25mOsmYpcuT5cXP3tM=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3845.namprd13.prod.outlook.com (2603:10b6:610:95::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14; Fri, 1 May
+ 2020 19:05:46 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2958.020; Fri, 1 May 2020
+ 19:05:46 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@redhat.com" <bfields@redhat.com>,
+        "tj@kernel.org" <tj@kernel.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jlayton@redhat.com" <jlayton@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "shli@fb.com" <shli@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "oleg@redhat.com" <oleg@redhat.com>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Thread-Topic: [PATCH 0/4] allow multiple kthreadd's
+Thread-Index: AQHWH9HY9FPsmROjLUGJeMt1ojnpm6iThNsAgAAGSQCAAAe8gIAABIMA
+Date:   Fri, 1 May 2020 19:05:46 +0000
+Message-ID: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+         <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+         <20200501182154.GG5462@mtj.thefacebook.com>
+         <20200501184935.GD9191@pick.fieldses.org>
+In-Reply-To: <20200501184935.GD9191@pick.fieldses.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0135d75-349c-479b-1fca-08d7ee02a7b9
+x-ms-traffictypediagnostic: CH2PR13MB3845:
+x-microsoft-antispam-prvs: <CH2PR13MB3845FC74739D33E17A148E99B8AB0@CH2PR13MB3845.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0390DB4BDA
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xpfL40F1aM/Tf860bBqjd1OvYKpz/tgWJYVjEM9oeWTMFUTDjk4nqJhuPeGPD0zsDKYQO1C9PU74nOqJtQAPNnjWhkJ/Y2+XtKPIISIWMPUe+7jIJ1W9GVogvQNedLmTWA172oq0c0BCFPqnLQXzlQHG6FIgglahWaw2rvVVpohQbK1fBxzbfBaG1ptLFKi3chpjpxNbYeGf7ebW5NzUF397d6I5juTxhkYMm4MrZ7FnWbIiKWUNRlKHsmDefLJBlNZ2bbN+F5w5vY2vmTLJZz/ptxz4eK02dZjfzVXuYrCKIEwOV/rBQ7xQtlRP4i5sKPzRiCF6CEtrksZ7Dw5ZUSO+51YRlpVbvUkYrwuu/2vKzrnIWNpt6a+Ma308gGbS9n/6bweeABp8Ff5rrpw6Tjpojs4Irs0KLy/FY4VRaBByq+LQ34T0w4dEmOjZxcD/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(39830400003)(376002)(66946007)(76116006)(4326008)(2616005)(8936002)(6506007)(5660300002)(8676002)(2906002)(6512007)(66476007)(66446008)(64756008)(66556008)(71200400001)(110136005)(91956017)(86362001)(6486002)(26005)(186003)(478600001)(316002)(36756003)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: NuqSs6OvMhkziz5yoOuiK4EHMAMoa+eYHo/m/QcGrb9x6IfWnsJxNGE9L9zrf/C43Lz/Lwxuzpfn92Zeg+lDRBSzBM7sGSvvyrZ4HLuROWZFxXgRR8DztDKcz2jiMjeraeT+K4uy2g0/7LE0AXIdQjGJ6tqagRh9n2plGpsHzT19hk9SRoWt+A0lOQVsHmlbnlLRoN60AnG6osm29QUZ4jm/YtU+i6DXMH6dye63OYs1hyXR6mT16h0Pu1QznRmfKYK+mvimTZ7aNoRGPIkffNpwtWtEmDGTT/scf7rqPGfhL2ILSU33V1apKGrqARbm2b0X2oXoLXNbmmHZWHu6pf+hPqiOiPdqYSplFtPNSwdekKs35kGgCkf1qi9YdZa0KsJKItBRyHIJFSvzVSKhieC7tx3wtZZ365Xcg+sVy7fJPs8KSUsigqCIjcZDqINSCLVBF3Lh1Slrsu45twnjSg5qfdrho7gfEBZZ+jOoqsULT9+s37Si3D7TWZ8yi0MwXlX4AfiszlBH4BOjvnuvXXUFDALqOM/zfJC/yobGttMnjEUTfqDihhWBqHegXPudgSeeNiHVzQ7Hfh0oVfJfmWLI+bVvNwm67HQLqWYEpQm6Mc8B52aw0IjyUB9M/ifEpcrfk1c9qR96ia5kuhhIFRraRm7V/AfVyKQcOFfTMfzkKLVkDgiqhh1Xc3zYi+/cCcGnFRgeiIQCYJKAY4InOlTB6fECwFu5JSE7Kk6C2GmTKfObl0Pqxv/u0S6d9KRvXIY6DJuFJEHErtJsstESG3mwKA6nOidKb1RX9zb6Now=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-ID: <66F25ECF2874224EBB3CB7DE05851F4A@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0135d75-349c-479b-1fca-08d7ee02a7b9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2020 19:05:46.5868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vqCUx5OnIcR3XpNEpA0z8n9VVwFt38IeZz8/ezT0GO3Ox4FNmWu81wrw+ZaHvzNexzrJipu4Q9mDZPPOGud03A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3845
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Do not allow the crypto core to reschedule while processing RPC
-requests. gss_krb5_crypto.c does make crypto API calls in process
-context. However:
-
-- When handling a received Call, rescheduling can introduce
-latencies that result in processing delays causing a request to
-fall outside the GSS sequence number window. When that occurs,
-the server is required to drop that request and the connection on
-which it arrived.
-
-- On the client side, ostensibly RPC tasks are not supposed to sleep
-or reschedule outside the RPC scheduler. Otherwise there is a risk
-of deadlock.
-
-Generally speaking, the risk of removing the cond_resched() is low.
-A block of data handled in these paths will not exceed 1MB + a
-little a overhead, and processing a single RPC is already
-appropriately interleaved amongst both processes and CPUs.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/gss_krb5_crypto.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-index e7180da1fc6a..083438f73e52 100644
---- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-@@ -209,7 +209,7 @@ make_checksum_hmac_md5(struct krb5_ctx *kctx, char *header, int hdrlen,
- 	if (!req)
- 		goto out_free_hmac_md5;
- 
--	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
-+	ahash_request_set_callback(req, 0, NULL, NULL);
- 
- 	err = crypto_ahash_init(req);
- 	if (err)
-@@ -239,7 +239,7 @@ make_checksum_hmac_md5(struct krb5_ctx *kctx, char *header, int hdrlen,
- 	if (!req)
- 		goto out_free_hmac_md5;
- 
--	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
-+	ahash_request_set_callback(req, 0, NULL, NULL);
- 
- 	err = crypto_ahash_setkey(hmac_md5, cksumkey, kctx->gk5e->keylength);
- 	if (err)
-@@ -307,7 +307,7 @@ make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
- 	if (!req)
- 		goto out_free_ahash;
- 
--	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
-+	ahash_request_set_callback(req, 0, NULL, NULL);
- 
- 	checksumlen = crypto_ahash_digestsize(tfm);
- 
-@@ -403,7 +403,7 @@ make_checksum_v2(struct krb5_ctx *kctx, char *header, int hdrlen,
- 	if (!req)
- 		goto out_free_ahash;
- 
--	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
-+	ahash_request_set_callback(req, 0, NULL, NULL);
- 
- 	err = crypto_ahash_setkey(tfm, cksumkey, kctx->gk5e->keylength);
- 	if (err)
-
+T24gRnJpLCAyMDIwLTA1LTAxIGF0IDE0OjQ5IC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIEZyaSwgTWF5IDAxLCAyMDIwIGF0IDAyOjIxOjU0UE0gLTA0MDAsIFRlanVuIEhlbyB3
+cm90ZToNCj4gPiBIZWxsbywNCj4gPiANCj4gPiBPbiBGcmksIE1heSAwMSwgMjAyMCBhdCAxMDo1
+OToyNEFNIC0wNzAwLCBMaW51cyBUb3J2YWxkcyB3cm90ZToNCj4gPiA+IFdoaWNoIGtpbmQgb2Yg
+bWFrZXMgbWUgd2FudCB0byBwb2ludCBhIGZpbmdlciBhdCBUZWp1bi4gQnV0IGl0J3MNCj4gPiA+
+IGJlZW4NCj4gPiA+IG1vc3RseSBQZXRlclogdG91Y2hpbmcgdGhpcyBmaWxlIGxhdGVseS4uDQo+
+ID4gDQo+ID4gTG9va3MgZmluZSB0byBtZSB0b28uIEkgZG9uJ3QgcXVpdGUgdW5kZXJzdGFuZCB0
+aGUgdXNlY2FzZSB0aG8uIEl0DQo+ID4gbG9va3MNCj4gPiBsaWtlIGFsbCBpdCdzIGJlaW5nIHVz
+ZWQgZm9yIGlzIHRvIHRhZyBzb21lIGt0aHJlYWRzIGFzIGJlbG9uZ2luZw0KPiA+IHRvIHRoZQ0K
+PiA+IHNhbWUgZ3JvdXAuDQo+IA0KPiBQcmV0dHkgbXVjaC4NCj4gDQoNCldlbiBydW5uaW5nIGFu
+IGluc3RhbmNlIG9mIGtuZnNkIGZyb20gaW5zaWRlIGEgY29udGFpbmVyLCB5b3Ugd2FudCB0bw0K
+YmUgYWJsZSB0byBoYXZlIHRoZSBrbmZzZCBrdGhyZWFkcyBiZSBwYXJlbnRlZCB0byB0aGUgY29u
+dGFpbmVyIGluaXQNCnByb2Nlc3Mgc28gdGhhdCB0aGV5IGdldCBraWxsZWQgb2ZmIHdoZW4gdGhl
+IGNvbnRhaW5lciBpcyBraWxsZWQuDQoNClJpZ2h0IG5vdywgd2UgY2FuIGVhc2lseSBsZWFrIHRo
+b3NlIGtlcm5lbCB0aHJlYWRzIHNpbXBseSBieSBraWxsaW5nDQp0aGUgY29udGFpbmVyLg0KDQo+
+ID4gQ2FuJ3QgdGhhdCBiZSBkb25lIHdpdGgga3RocmVhZF9kYXRhKCk/DQo+IA0KPiBIdWgsIG1h
+eWJlIHNvLCB0aGFua3MuDQo+IA0KPiBJIG5lZWQgdG8gY2hlY2sgdGhpcyBmcm9tIGdlbmVyaWMg
+ZmlsZSBsb2NraW5nIGNvZGUgdGhhdCBjb3VsZCBiZSBydW4NCj4gYnkNCj4gYW55IHRhc2stLWJ1
+dCBJIGFzc3VtZSB0aGVyZSdzIGFuIGVhc3kgd2F5IEkgY2FuIGNoZWNrIGlmIEknbSBhDQo+IGt0
+aHJlYWQNCj4gYmVmb3JlIGNhbGxpbmcgIGt0aHJlYWRfZGF0YShjdXJyZW50KS4NCj4gDQo+IEkg
+ZG8gZXhwZWN0IHRvIGV4cG9zZSBhIGRlbGVnYXRpb24gaW50ZXJmYWNlIGZvciB1c2Vyc3BhY2Ug
+c2VydmVycw0KPiBldmVudHVhbGx5IHRvby4gIEJ1dCB3ZSBjb3VsZCBkbyB0aGUgdGdpZCBjaGVj
+ayBmb3IgdGhlbSBhbmQgc3RpbGwNCj4gdXNlDQo+IGt0aHJlYWRfZGF0YSgpIGZvciBuZnNkLiAg
+VGhhdCBtaWdodCB3b3JrLg0KPiANCj4gLS1iLg0KPiANCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpM
+aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RA
+aGFtbWVyc3BhY2UuY29tDQoNCg0K
