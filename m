@@ -2,98 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0958C1C0DFD
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 08:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D8AE1C0E49
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 08:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgEAGWp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 May 2020 02:22:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27465 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728126AbgEAGWp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 02:22:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588314164;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BoTBgggpU8NL8r7V5cVTwFDIt+EnRLA6YPyOr17wFSs=;
-        b=T11NIQ/lBr3iQlUCG6xDEsdVwjdJVlLit9iATOfPUvYdckQAI5rI7agMF8yLVQIrjdLk5D
-        oClD4NoCyir/3lUUiWCkFmS1qZU9df5hahhQmzbFpsr5NeHqTVtNLtdHaq0mQuRtuyuXmk
-        VsH4l23oYe26bAXT4pNGVPmYIU2DjE8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-qbtqjVoQP_mUhtj0CsW39w-1; Fri, 01 May 2020 02:22:39 -0400
-X-MC-Unique: qbtqjVoQP_mUhtj0CsW39w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C2621895A28
-        for <linux-nfs@vger.kernel.org>; Fri,  1 May 2020 06:22:38 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.74.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 628021002382;
-        Fri,  1 May 2020 06:22:34 +0000 (UTC)
-From:   Kenneth D'souza <kdsouza@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     bfields@redhat.com, kdsouza@redhat.com, agaikwad@redhat.com
-Subject: [PATCH] nfsd4: Make "info" file json compatible.
-Date:   Fri,  1 May 2020 11:52:30 +0530
-Message-Id: <20200501062230.19693-1-kdsouza@redhat.com>
+        id S1728274AbgEAGir (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 May 2020 02:38:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45872 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbgEAGiq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 02:38:46 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0416XqW9160045;
+        Fri, 1 May 2020 02:37:54 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30r821rte6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 02:37:54 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0416WEqt015322;
+        Fri, 1 May 2020 06:37:52 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 30mcu7y8ur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 06:37:51 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0416afcx65929600
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 1 May 2020 06:36:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BACEFAE045;
+        Fri,  1 May 2020 06:37:49 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8FD8AE04D;
+        Fri,  1 May 2020 06:37:47 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.81.13])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 May 2020 06:37:47 +0000 (GMT)
+Subject: Re: [RESEND PATCH 0/1] Use inode_lock/unlock class of provided APIs
+ in filesystems
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, willy@infradead.org,
+        jlayton@kernel.org, ceph-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+        dsterba@suse.cz
+References: <20200101105248.25304-1-riteshh@linux.ibm.com>
+ <20200501043741.GK23230@ZenIV.linux.org.uk>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Fri, 1 May 2020 12:07:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200501043741.GK23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200501063747.D8FD8AE04D@d06av26.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_01:2020-04-30,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=748 spamscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005010044
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently the output returned by client_info_show() is not
-pure json, fix it so user space can pass the file properly.
 
-Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
-Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
----
- fs/nfsd/nfs4state.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c107caa56525..f2a14f95ffa6 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2341,19 +2341,24 @@ static int client_info_show(struct seq_file *m, v=
-oid *v)
- 	if (!clp)
- 		return -ENXIO;
- 	memcpy(&clid, &clp->cl_clientid, sizeof(clid));
--	seq_printf(m, "clientid: 0x%llx\n", clid);
--	seq_printf(m, "address: \"%pISpc\"\n", (struct sockaddr *)&clp->cl_addr=
-);
--	seq_printf(m, "name: ");
-+	seq_printf(m, "{\n");
-+	seq_printf(m, "\t\"clientid\": \"0x%llx\",\n", clid);
-+	seq_printf(m, "\t\"address\": \"%pISpc\",\n", (struct sockaddr *)&clp->=
-cl_addr);
-+	seq_printf(m, "\t\"name\": ");
- 	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
--	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
-+	seq_printf(m, ", ");
-+	seq_printf(m, "\n\t\"minor version\": %d,\n", clp->cl_minorversion);
- 	if (clp->cl_nii_domain.data) {
--		seq_printf(m, "Implementation domain: ");
-+		seq_printf(m, "\t\"Implementation domain\": ");
- 		seq_quote_mem(m, clp->cl_nii_domain.data,
- 					clp->cl_nii_domain.len);
--		seq_printf(m, "\nImplementation name: ");
-+		seq_printf(m, ", ");
-+		seq_printf(m, "\n\t\"Implementation name\": ");
- 		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
--		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
-+		seq_printf(m, ", ");
-+		seq_printf(m, "\n\t\"Implementation time\": \"[%lld, %ld]\"\n",
- 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
-+		seq_printf(m, "}\n");
- 	}
- 	drop_client(clp);
-=20
---=20
-2.21.1
+On 5/1/20 10:07 AM, Al Viro wrote:
+> On Wed, Jan 01, 2020 at 04:22:47PM +0530, Ritesh Harjani wrote:
+>> Al, any comments?
+>> Resending this after adding Reviewed-by/Acked-by tags.
+> 
+> .... argh.  My apologies - that got fallen through the cracks.
+> Could you rebase and resend it?
+> 
+Np.
+Sure, will rebase and resend.
+
+-ritesh
 
