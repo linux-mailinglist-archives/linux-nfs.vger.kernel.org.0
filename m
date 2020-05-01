@@ -2,60 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FD71C1C0F
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 19:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D28D11C1C16
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 19:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgEARkk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 May 2020 13:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33768 "EHLO
+        id S1729782AbgEARkp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 May 2020 13:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729572AbgEARkj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 13:40:39 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73E4C061A0C;
-        Fri,  1 May 2020 10:40:39 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id y19so5092881qvv.4;
-        Fri, 01 May 2020 10:40:39 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1729572AbgEARkp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 13:40:45 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E47C4C061A0C;
+        Fri,  1 May 2020 10:40:44 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b188so9922605qkd.9;
+        Fri, 01 May 2020 10:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=9C4PcF/usiCJ5I83M8hMFfyUfv897E3z7ZSz4cgOCbs=;
-        b=mXYMmzeERNOAPHg/vR6dpSm1IVHzwIZCBQF1VUmpjfaSwnjaLVQpGhE6xS4B2b4Iyw
-         LgTm0LFjgbqcVE4hpLATC6ns/zevxt1K23NYXZ+MeqW+iHfvq1aHlNucKoMvMvUJ5cET
-         dAxEyckVYUfL+tczoL/KCovGrYxt2a8S4rU47EsjpTxOUugwUjc9IKyQq7eY5gXr9MZ/
-         oIp04NB1Czrvc5yWHVoRryOyBpZWddRof2ZOT8egsDwFqaCa64kRziLTvqabBxxit47i
-         SCp/aDKSZwXyT6WxC+chA8DJK/5+fXsSHOMeAHpWZ2pCo5cG5quVlepCtgocY+nZS25K
-         uwAQ==
+        bh=bQ1GsoV6mL/QdiU1sTMcePB/ArTRzgDahu4Tj8VCGOE=;
+        b=Nf8KUTFi3sMZDpmkQ0JpH+ureZnyfoeOr2VmDuOuy8FHyI1WiEZMPuwDIE490T+7Q2
+         5QAC+3sthE6+WHkXbjgVz8TJcVxzbUBpFRniY1LmIZVg8A4+/oNWUokXSs2VkogVy3y4
+         rbjwdaAtC2zxEXrfLRXDbzegVLoDUT0Re3luHmpJzHyMxepRAKiXNU/J+ozQx8ZszQnZ
+         lVmltOlYUuSNDSAC7RXJI35a1pM3PLkBwqRpJCjY1zgGpfXIIs/c4dzZXVURa2v8l+0q
+         yMKWUQcI5qF95u8rJQhkoh+GQDNJHeEaeAOMuhLUudkj/DKCb1bzNOfgSCw+52QZRu29
+         fl2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=9C4PcF/usiCJ5I83M8hMFfyUfv897E3z7ZSz4cgOCbs=;
-        b=NuA3kV5bb0LUzODAG4ZXHDjc34s35FU0RHkzxzQQNvptxfn6C+BPy+UxaSoe6CkW2E
-         umvgoxchsUJLV3bG6jldvtcrcTQ7vyxrC00nBEZNoA2ukJPGGHBFs2JJzBhc6TEbHvbT
-         ajavtGWBK3ZkCugDzmCGunjEd8en3VmQIpdS8Ovne5lVa0/2zbXs/73bwbS1MV01ocOd
-         gp6atm0rLNwZ2YVZ2Z1ExmiHHM63825opYxTrhuQ9UN5JyWHDGaEW6fhlOX9mrqHavb1
-         v7Zm1AYb3UUNprhziNzPrdCwSnJ+hPyvAxAcY+B4OfTnyiPtdNGFHQDiq0jHxLHRrjkP
-         Yf0g==
-X-Gm-Message-State: AGi0PuYtjdlxjrUWnqOIUVRkdumE/Ei83XiJtUXqPpdV2njgyS9qwgYu
-        6MgFcja00UdPxEt49Z5xFBfv+oJN
-X-Google-Smtp-Source: APiQypJihBRjJ2oXYOxdu2OatOrP+A+qHl8Tbzd+UF4bC7PBkOm3WvyKfYqOMvdpdXtN1ZtW8BQmBw==
-X-Received: by 2002:a0c:b659:: with SMTP id q25mr5152946qvf.48.1588354838880;
-        Fri, 01 May 2020 10:40:38 -0700 (PDT)
+        bh=bQ1GsoV6mL/QdiU1sTMcePB/ArTRzgDahu4Tj8VCGOE=;
+        b=JeekNOYB0wWGU70fGVs32QZbbkIWp6Fw+I08PTTBG8ueJN9TxIZQHtvnLJsAkKQiK0
+         FQlsf6bJCz6NleV365McTJmQk+mtVTxdBfiVaOGFoWI5Joo2JvmK9LpO2NErjGorKjS/
+         R8IWasQcgNy8frP9QceDcgc2SIiq9mrDOh6TwyPtDu8dtdt2yAwYmY7ctxc6MJ1XGSQY
+         DVClLHzbYMCGHx6QqhbXciYkIvYnMDCMTvJugU++6Zyrg2wzFscBejcymXkbSZ5LXySb
+         BFghfmu2mq02aYUXbuP+l1eNiYsml5KKrRjJYa5MRAkOTm9QmGoaR8kewHIrlpnlYCNA
+         p3zA==
+X-Gm-Message-State: AGi0PuY7Z0tJ+uN76VcxipkZp7YZb2Cgm2VjdUlmug+EXMQtbpj/8JIE
+        wMQmuAZfW2rrLXM56PsQ4FcjPums
+X-Google-Smtp-Source: APiQypKHncCoHbHCRfh4b+u+AbhQUu4PAyuOdkpEAq+c995Ai5xD6IhiTP0u3y3vIcrcZaMyljESJg==
+X-Received: by 2002:a05:620a:13e1:: with SMTP id h1mr4750796qkl.10.1588354844058;
+        Fri, 01 May 2020 10:40:44 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id p2sm3162256qkm.65.2020.05.01.10.40.38
+        by smtp.gmail.com with ESMTPSA id o43sm3066347qtc.23.2020.05.01.10.40.43
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 10:40:38 -0700 (PDT)
+        Fri, 01 May 2020 10:40:43 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 041HebBQ026768;
-        Fri, 1 May 2020 17:40:37 GMT
-Subject: [PATCH v1 2/7] svcrdma: Clean up handling of get_rw_ctx errors
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 041HegEv026771;
+        Fri, 1 May 2020 17:40:42 GMT
+Subject: [PATCH v1 3/7] svcrdma: Trace page overruns when constructing RDMA
+ Reads
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 01 May 2020 13:40:37 -0400
-Message-ID: <20200501174037.3899.88600.stgit@klimt.1015granger.net>
+Date:   Fri, 01 May 2020 13:40:42 -0400
+Message-ID: <20200501174042.3899.51707.stgit@klimt.1015granger.net>
 In-Reply-To: <20200501173903.3899.31567.stgit@klimt.1015granger.net>
 References: <20200501173903.3899.31567.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-20-geafe
@@ -67,44 +68,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Replace two dprintk call sites with a tracepoint.
+Clean up: Replace a dprintk call site with a tracepoint.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h    |   25 +++++++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_rw.c |   27 +++++++++++----------------
- 2 files changed, 36 insertions(+), 16 deletions(-)
+ include/trace/events/rpcrdma.h    |   28 ++++++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |    2 +-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 72dc9f6146fb..a2fc5f3fb7d9 100644
+index a2fc5f3fb7d9..15dc1e852a0c 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -1620,6 +1620,31 @@ TRACE_EVENT(svcrdma_dma_map_rw_err,
+@@ -1645,6 +1645,34 @@ TRACE_EVENT(svcrdma_no_rwctx_err,
  	)
  );
  
-+TRACE_EVENT(svcrdma_no_rwctx_err,
++TRACE_EVENT(svcrdma_page_overrun_err,
 +	TP_PROTO(
 +		const struct svcxprt_rdma *rdma,
-+		unsigned int num_sges
++		const struct svc_rqst *rqst,
++		unsigned int pageno
 +	),
 +
-+	TP_ARGS(rdma, num_sges),
++	TP_ARGS(rdma, rqst, pageno),
 +
 +	TP_STRUCT__entry(
-+		__field(unsigned int, num_sges)
++		__field(unsigned int, pageno)
++		__field(u32, xid)
 +		__string(device, rdma->sc_cm_id->device->name)
 +		__string(addr, rdma->sc_xprt.xpt_remotebuf)
 +	),
 +
 +	TP_fast_assign(
-+		__entry->num_sges = num_sges;
++		__entry->pageno = pageno;
++		__entry->xid = __be32_to_cpu(rqst->rq_xid);
 +		__assign_str(device, rdma->sc_cm_id->device->name);
 +		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
 +	),
 +
-+	TP_printk("addr=%s device=%s num_sges=%d",
-+		__get_str(addr), __get_str(device), __entry->num_sges
++	TP_printk("addr=%s device=%s xid=0x%08x pageno=%u", __get_str(addr),
++		__get_str(device), __entry->xid, __entry->pageno
 +	)
 +);
 +
@@ -112,76 +116,16 @@ index 72dc9f6146fb..a2fc5f3fb7d9 100644
  	TP_PROTO(
  		unsigned int len
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index db70709e165a..c2d49f607cfe 100644
+index c2d49f607cfe..17098a11d2ad 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -67,19 +67,22 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 		ctxt = kmalloc(struct_size(ctxt, rw_first_sgl, SG_CHUNK_SIZE),
- 			       GFP_KERNEL);
- 		if (!ctxt)
--			goto out;
-+			goto out_noctx;
- 		INIT_LIST_HEAD(&ctxt->rw_list);
- 	}
- 
- 	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
- 	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
- 				   ctxt->rw_sg_table.sgl,
--				   SG_CHUNK_SIZE)) {
--		kfree(ctxt);
--		ctxt = NULL;
--	}
--out:
-+				   SG_CHUNK_SIZE))
-+		goto out_free;
- 	return ctxt;
-+
-+out_free:
-+	kfree(ctxt);
-+out_noctx:
-+	trace_svcrdma_no_rwctx_err(rdma, sges);
-+	return NULL;
- }
- 
- static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-@@ -456,7 +459,7 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
- 		ctxt = svc_rdma_get_rw_ctxt(rdma,
- 					    (write_len >> PAGE_SHIFT) + 2);
- 		if (!ctxt)
--			goto out_noctx;
-+			return -ENOMEM;
- 
- 		constructor(info, write_len, ctxt);
- 		ret = svc_rdma_rw_ctx_init(rdma, ctxt, seg_offset, seg_handle,
-@@ -484,10 +487,6 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
- 	dprintk("svcrdma: inadequate space in Write chunk (%u)\n",
- 		info->wi_nsegs);
- 	return -E2BIG;
--
--out_noctx:
--	dprintk("svcrdma: no R/W ctxs available\n");
--	return -ENOMEM;
- }
- 
- /* Send one of an xdr_buf's kvecs by itself. To send a Reply
-@@ -637,7 +636,7 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
- 	sge_no = PAGE_ALIGN(info->ri_pageoff + len) >> PAGE_SHIFT;
- 	ctxt = svc_rdma_get_rw_ctxt(cc->cc_rdma, sge_no);
- 	if (!ctxt)
--		goto out_noctx;
-+		return -ENOMEM;
- 	ctxt->rw_nents = sge_no;
- 
- 	sg = ctxt->rw_sg_table.sgl;
-@@ -676,10 +675,6 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
- 	cc->cc_sqecount += ret;
+@@ -676,7 +676,7 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
  	return 0;
  
--out_noctx:
--	dprintk("svcrdma: no R/W ctxs available\n");
--	return -ENOMEM;
--
  out_overrun:
- 	dprintk("svcrdma: request overruns rq_pages\n");
+-	dprintk("svcrdma: request overruns rq_pages\n");
++	trace_svcrdma_page_overrun_err(cc->cc_rdma, rqstp, info->ri_pageno);
  	return -EINVAL;
+ }
+ 
 
