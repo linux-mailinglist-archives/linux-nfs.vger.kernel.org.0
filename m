@@ -2,96 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C931C1DD0
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2020 21:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BF641C2338
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2020 07:33:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgEATW2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 May 2020 15:22:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29642 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726702AbgEATW1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 May 2020 15:22:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588360947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uvr7NE+VoOzpD9fS1fNpWQ3alb4De94rrwIJLuJTDvI=;
-        b=IlAU2fgFr/xFimsCTaIdPg8RMBVh/eD164bGUwoVPBKugfH1SgEX/E1VHyzOylyPmufSrP
-        gDzUHyYWN+7OT2/PwXBGuCgOWDR04iG4Zfd1QCMARpYMHF/xD+eP7r5yMs5XUMOZGL7KVz
-        vZaeSbQKlS57MWs6MDwYQDDdXqDc7Ds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-0yGqluTzMCaj3-bbGH5WfA-1; Fri, 01 May 2020 15:22:25 -0400
-X-MC-Unique: 0yGqluTzMCaj3-bbGH5WfA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726787AbgEBFd2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 2 May 2020 01:33:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgEBFd2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 2 May 2020 01:33:28 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E407D8014D9;
-        Fri,  1 May 2020 19:22:23 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-114-161.phx2.redhat.com [10.3.114.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4D542B4CB;
-        Fri,  1 May 2020 19:22:20 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 04C461202A6; Fri,  1 May 2020 15:22:19 -0400 (EDT)
-Date:   Fri, 1 May 2020 15:22:19 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "tj@kernel.org" <tj@kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "shli@fb.com" <shli@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "oleg@redhat.com" <oleg@redhat.com>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200501192219.GG9191@pick.fieldses.org>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200501184935.GD9191@pick.fieldses.org>
- <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id F0D5D208DB;
+        Sat,  2 May 2020 05:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588397607;
+        bh=MYhkXQ8M6ehjcKnUAHPgBXgoMFSmViXmlsVaKB/2/iE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EuFRJQF7AGrZKvzyKctf8/XBXbFdmS7XU+HXEDsVj1Uiclh02NaQ+LErt1Tlyg7nq
+         wxqZntoSP2TMAzTR92QeFiKii2Pyrj26p5GQzuQv4F3MuyWA7XqVLcGGdg36Y16fux
+         LWOXU+/+qXQZC3nDixS7relR/AF8g3aPbd7kM2D8=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-crypto@vger.kernel.org
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>, ecryptfs@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        keyrings@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Lars Persson <lars.persson@axis.com>,
+        linux-bluetooth@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
+        Robert Baldyga <r.baldyga@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: [PATCH 00/20] crypto: introduce crypto_shash_tfm_digest()
+Date:   Fri,  1 May 2020 22:31:02 -0700
+Message-Id: <20200502053122.995648-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 01, 2020 at 07:05:46PM +0000, Trond Myklebust wrote:
-> On Fri, 2020-05-01 at 14:49 -0400, J. Bruce Fields wrote:
-> > On Fri, May 01, 2020 at 02:21:54PM -0400, Tejun Heo wrote:
-> > > Hello,
-> > > 
-> > > On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
-> > > > Which kind of makes me want to point a finger at Tejun. But it's
-> > > > been
-> > > > mostly PeterZ touching this file lately..
-> > > 
-> > > Looks fine to me too. I don't quite understand the usecase tho. It
-> > > looks
-> > > like all it's being used for is to tag some kthreads as belonging
-> > > to the
-> > > same group.
-> > 
-> > Pretty much.
-> 
-> Wen running an instance of knfsd from inside a container, you want to
-> be able to have the knfsd kthreads be parented to the container init
-> process so that they get killed off when the container is killed.
-> 
-> Right now, we can easily leak those kernel threads simply by killing
-> the container.
+This series introduces a helper function crypto_shash_tfm_digest() which
+replaces the following common pattern:
 
-Oh, got it.
+	{
+		SHASH_DESC_ON_STACK(desc, tfm);
+		int err;
 
-Currently knfsd supports nfs service in containers, but it uses a single
-set of threads to serve requests from any container.  It should shut the
-server threads down when the last container using them goes away.
+		desc->tfm = tfm;
 
---b.
+		err = crypto_shash_digest(desc, data, len, out);
+
+		shash_desc_zero(desc);
+	}
+
+with:
+
+	err = crypto_shash_tfm_digest(tfm, data, len, out);
+
+Patch 1 introduces this helper function, and patches 2-20 convert all
+relevant users to use it.
+
+IMO, it would be easiest to take all these patches through the crypto
+tree.  But taking just the "crypto:" ones and then me trying to get the
+rest merged later via subsystem trees is also an option.
+
+Eric Biggers (20):
+  crypto: hash - introduce crypto_shash_tfm_digest()
+  crypto: arm64/aes-glue - use crypto_shash_tfm_digest()
+  crypto: essiv - use crypto_shash_tfm_digest()
+  crypto: artpec6 - use crypto_shash_tfm_digest()
+  crypto: ccp - use crypto_shash_tfm_digest()
+  crypto: ccree - use crypto_shash_tfm_digest()
+  crypto: hisilicon/sec2 - use crypto_shash_tfm_digest()
+  crypto: mediatek - use crypto_shash_tfm_digest()
+  crypto: n2 - use crypto_shash_tfm_digest()
+  crypto: omap-sham - use crypto_shash_tfm_digest()
+  crypto: s5p-sss - use crypto_shash_tfm_digest()
+  nfc: s3fwrn5: use crypto_shash_tfm_digest()
+  fscrypt: use crypto_shash_tfm_digest()
+  ecryptfs: use crypto_shash_tfm_digest()
+  nfsd: use crypto_shash_tfm_digest()
+  ubifs: use crypto_shash_tfm_digest()
+  Bluetooth: use crypto_shash_tfm_digest()
+  sctp: use crypto_shash_tfm_digest()
+  KEYS: encrypted: use crypto_shash_tfm_digest()
+  ASoC: cros_ec_codec: use crypto_shash_tfm_digest()
+
+ arch/arm64/crypto/aes-glue.c               |  4 +--
+ crypto/essiv.c                             |  4 +--
+ crypto/shash.c                             | 16 +++++++++
+ drivers/crypto/axis/artpec6_crypto.c       | 10 ++----
+ drivers/crypto/ccp/ccp-crypto-sha.c        |  9 ++---
+ drivers/crypto/ccree/cc_cipher.c           |  9 ++---
+ drivers/crypto/hisilicon/sec2/sec_crypto.c |  5 ++-
+ drivers/crypto/mediatek/mtk-sha.c          |  7 ++--
+ drivers/crypto/n2_core.c                   |  7 ++--
+ drivers/crypto/omap-sham.c                 | 20 +++--------
+ drivers/crypto/s5p-sss.c                   | 39 ++++------------------
+ drivers/nfc/s3fwrn5/firmware.c             | 10 +-----
+ fs/crypto/fname.c                          |  7 +---
+ fs/crypto/hkdf.c                           |  6 +---
+ fs/ecryptfs/crypto.c                       | 17 +---------
+ fs/nfsd/nfs4recover.c                      | 26 ++++-----------
+ fs/ubifs/auth.c                            | 20 ++---------
+ fs/ubifs/master.c                          |  9 ++---
+ fs/ubifs/replay.c                          | 14 ++------
+ include/crypto/hash.h                      | 19 +++++++++++
+ net/bluetooth/smp.c                        |  6 +---
+ net/sctp/auth.c                            | 10 ++----
+ net/sctp/sm_make_chunk.c                   | 23 +++++--------
+ security/keys/encrypted-keys/encrypted.c   | 18 ++--------
+ sound/soc/codecs/cros_ec_codec.c           |  9 +----
+ 25 files changed, 95 insertions(+), 229 deletions(-)
+
+-- 
+2.26.2
 
