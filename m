@@ -2,227 +2,238 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 758F71C41C7
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2020 19:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F8BA1C4182
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2020 19:12:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgEDRON (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 May 2020 13:14:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40966 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730275AbgEDROL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 May 2020 13:14:11 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044HDdl0088060;
-        Mon, 4 May 2020 17:14:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Qfd+YeVStkaTAf5e75gdXl4bjZBqR9/WaM+Ppmqc6Jg=;
- b=BBSfUQku/fOOcUitUBwOkfcuaixXfQTZn+OcwMMKBU6uUKnHuvG3Kb69AjTXWa48ijjd
- wAl9fPjT1i2m0dyM3bTmHnYPOR/HCkhcwDAljHamTXlJK61/t9EI/XoBwdeRJRC8J8Nt
- /j3GjigwJqwBOOADJvPBZHN4WtQoCyHmlbgiTUwv1EgA+SlAiqKMnYdO4jbJ6c8aXPwQ
- 6VUwz1uO496FHg7wcLQ3RPkM2M6LmkdMv7WoIllfCa7ugHRQGCyB+7pBrRcrIEnbiBCW
- c5Zow8SOW7aJeqIF7b+ScVyyb1EfA7IBeyNnt+ZDF1Nis2DpKhHxgiM0M9YXWRvoQIa1 Cw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30s1gn027w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 17:14:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044HBUWJ078093;
-        Mon, 4 May 2020 17:12:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjnb8t79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 17:12:06 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044HC4UV026807;
-        Mon, 4 May 2020 17:12:05 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 10:12:04 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v1 4/4] SUNRPC: Clean up request deferral tracepoints
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200504160414.GA2757@fieldses.org>
-Date:   Mon, 4 May 2020 13:12:02 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0A259214-3C62-46C2-842B-8CEBDA7B9256@oracle.com>
-References: <20200501171750.3764.7676.stgit@klimt.1015granger.net>
- <20200501172227.3764.74938.stgit@klimt.1015granger.net>
- <20200504160414.GA2757@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040136
+        id S1729996AbgEDRMX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 May 2020 13:12:23 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45176 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729751AbgEDRMW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 May 2020 13:12:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588612341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8tpLo+3a8muKcubONIVwEpKqqU8oLu9wirDilBZsCq4=;
+        b=PaaTRHoLeAlVJkM6PkGjk2fjg5oaSgfpvSwMONKwVRNEBF9QZYl5TP2LwTHWj9mp+uqbPI
+        IQi3QP0pkplw+n7o4zQ7WyigWrhbAdKo/Js6VCQ3mFz8DrCetv/4yRuEtTwOYvwyWFm8Yu
+        C9UxcT5W+gmeSyvpVR36+6S+bb97Yqw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-zuUImBPONrG6TGboFCcfdA-1; Mon, 04 May 2020 13:12:15 -0400
+X-MC-Unique: zuUImBPONrG6TGboFCcfdA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A9A18014D7;
+        Mon,  4 May 2020 17:12:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C5182C264;
+        Mon,  4 May 2020 17:12:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 31/61] cachefiles: Implement new fscache I/O backend API
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 May 2020 18:12:09 +0100
+Message-ID: <158861232949.340223.21702873867667105.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Implement the new fscache I/O backend API in cachefiles.  The
+cachefiles_object struct carries a non-accounted file to the cachefiles
+object (so that it doesn't cause ENFILE).
 
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-> On May 4, 2020, at 12:04 PM, bfields@fieldses.org wrote:
->=20
-> On Fri, May 01, 2020 at 01:22:27PM -0400, Chuck Lever wrote:
->> - Rename these so they are easy to enable and search for as a set
->> - Move the tracepoints to get a more accurate sense of control flow
->> - Tracepoints should not fire on xprt shutdown
->> - Display memory address in case data structure had been corrupted
->> - Abandon dprintk in these paths
->>=20
->> I haven't ever gotten one of these tracepoints to trigger. I wonder
->> if we should simply remove them.
->=20
-> It's definitely not dead code.
+ fs/cachefiles/Makefile    |    1 +
+ fs/cachefiles/interface.c |    3 ++
+ fs/cachefiles/internal.h  |   14 +++++++
+ fs/cachefiles/io.c        |   88 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/cachefiles/namei.c     |    3 ++
+ 5 files changed, 109 insertions(+)
+ create mode 100644 fs/cachefiles/io.c
 
-Sure. I'm just suggesting that maybe we could make do with just a single
-tracepoint here (or maybe, no tracepoints) since these paths don't seem
-to trigger often.
-
-
-> But I forget the conditions required to
-> hit those cases.  Looking.... So, we in cache_check we have a cache =
-miss
-> that requires an upcall, and call cache_defer_req, which will wait for =
-a
-> response 1 or 5 seconds (depending on how busy server threads are) and
-> then calls svc_defer().
-
-It would be valuable to have some stock test cases in our community =
-tools
-that would exercise these paths.
-
-
-> --b.
->=20
->>=20
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->> include/trace/events/sunrpc.h |   11 ++++++++---
->> net/sunrpc/svc_xprt.c         |   12 ++++++------
->> 2 files changed, 14 insertions(+), 9 deletions(-)
->>=20
->> diff --git a/include/trace/events/sunrpc.h =
-b/include/trace/events/sunrpc.h
->> index ffd2215950dc..3158b3f7e01e 100644
->> --- a/include/trace/events/sunrpc.h
->> +++ b/include/trace/events/sunrpc.h
->> @@ -1313,27 +1313,32 @@ DECLARE_EVENT_CLASS(svc_deferred_event,
->> 	TP_ARGS(dr),
->>=20
->> 	TP_STRUCT__entry(
->> +		__field(const void *, dr)
->> 		__field(u32, xid)
->> 		__string(addr, dr->xprt->xpt_remotebuf)
->> 	),
->>=20
->> 	TP_fast_assign(
->> +		__entry->dr =3D dr;
->> 		__entry->xid =3D be32_to_cpu(*(__be32 *)(dr->args +
->> 						       =
-(dr->xprt_hlen>>2)));
->> 		__assign_str(addr, dr->xprt->xpt_remotebuf);
->> 	),
->>=20
->> -	TP_printk("addr=3D%s xid=3D0x%08x", __get_str(addr), =
-__entry->xid)
->> +	TP_printk("addr=3D%s dr=3D%p xid=3D0x%08x", __get_str(addr), =
-__entry->dr,
->> +		__entry->xid)
->> );
->> +
->> #define DEFINE_SVC_DEFERRED_EVENT(name) \
->> -	DEFINE_EVENT(svc_deferred_event, svc_##name##_deferred, \
->> +	DEFINE_EVENT(svc_deferred_event, svc_defer_##name, \
->> 			TP_PROTO( \
->> 				const struct svc_deferred_req *dr \
->> 			), \
->> 			TP_ARGS(dr))
->>=20
->> DEFINE_SVC_DEFERRED_EVENT(drop);
->> -DEFINE_SVC_DEFERRED_EVENT(revisit);
->> +DEFINE_SVC_DEFERRED_EVENT(queue);
->> +DEFINE_SVC_DEFERRED_EVENT(recv);
->>=20
->> DECLARE_EVENT_CLASS(cache_event,
->> 	TP_PROTO(
->> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->> index 2284ff038dad..e12ec68cd0ff 100644
->> --- a/net/sunrpc/svc_xprt.c
->> +++ b/net/sunrpc/svc_xprt.c
->> @@ -1158,16 +1158,15 @@ static void svc_revisit(struct =
-cache_deferred_req *dreq, int too_many)
->> 	set_bit(XPT_DEFERRED, &xprt->xpt_flags);
->> 	if (too_many || test_bit(XPT_DEAD, &xprt->xpt_flags)) {
->> 		spin_unlock(&xprt->xpt_lock);
->> -		dprintk("revisit canceled\n");
->> +		trace_svc_defer_drop(dr);
->> 		svc_xprt_put(xprt);
->> -		trace_svc_drop_deferred(dr);
->> 		kfree(dr);
->> 		return;
->> 	}
->> -	dprintk("revisit queued\n");
->> 	dr->xprt =3D NULL;
->> 	list_add(&dr->handle.recent, &xprt->xpt_deferred);
->> 	spin_unlock(&xprt->xpt_lock);
->> +	trace_svc_defer_queue(dr);
->> 	svc_xprt_enqueue(xprt);
->> 	svc_xprt_put(xprt);
->> }
->> @@ -1213,22 +1212,24 @@ static struct cache_deferred_req =
-*svc_defer(struct cache_req *req)
->> 		memcpy(dr->args, rqstp->rq_arg.head[0].iov_base - skip,
->> 		       dr->argslen << 2);
->> 	}
->> +	trace_svc_defer(rqstp);
->> 	svc_xprt_get(rqstp->rq_xprt);
->> 	dr->xprt =3D rqstp->rq_xprt;
->> 	set_bit(RQ_DROPME, &rqstp->rq_flags);
->>=20
->> 	dr->handle.revisit =3D svc_revisit;
->> -	trace_svc_defer(rqstp);
->> 	return &dr->handle;
->> }
->>=20
->> /*
->>  * recv data from a deferred request into an active one
->>  */
->> -static int svc_deferred_recv(struct svc_rqst *rqstp)
->> +static noinline int svc_deferred_recv(struct svc_rqst *rqstp)
->> {
->> 	struct svc_deferred_req *dr =3D rqstp->rq_deferred;
->>=20
->> +	trace_svc_defer_recv(dr);
->> +
->> 	/* setup iov_base past transport header */
->> 	rqstp->rq_arg.head[0].iov_base =3D dr->args + =
-(dr->xprt_hlen>>2);
->> 	/* The iov_len does not include the transport header bytes */
->> @@ -1259,7 +1260,6 @@ static struct svc_deferred_req =
-*svc_deferred_dequeue(struct svc_xprt *xprt)
->> 				struct svc_deferred_req,
->> 				handle.recent);
->> 		list_del_init(&dr->handle.recent);
->> -		trace_svc_revisit_deferred(dr);
->> 	} else
->> 		clear_bit(XPT_DEFERRED, &xprt->xpt_flags);
->> 	spin_unlock(&xprt->xpt_lock);
-
---
-Chuck Lever
-
+diff --git a/fs/cachefiles/Makefile b/fs/cachefiles/Makefile
+index 3455d3646547..d894d317d6e7 100644
+--- a/fs/cachefiles/Makefile
++++ b/fs/cachefiles/Makefile
+@@ -7,6 +7,7 @@ cachefiles-y := \
+ 	bind.o \
+ 	daemon.o \
+ 	interface.o \
++	io.o \
+ 	key.o \
+ 	main.o \
+ 	namei.o \
+diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
+index 47596b58c2da..747211363ae0 100644
+--- a/fs/cachefiles/interface.c
++++ b/fs/cachefiles/interface.c
+@@ -469,4 +469,7 @@ const struct fscache_cache_ops cachefiles_cache_ops = {
+ 	.put_object		= cachefiles_put_object,
+ 	.get_object_usage	= cachefiles_get_object_usage,
+ 	.sync_cache		= cachefiles_sync_cache,
++	.shape_extent		= cachefiles_shape_extent,
++	.read			= cachefiles_read,
++	.write			= cachefiles_write,
+ };
+diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+index 16d15291a629..9f9e33893b4f 100644
+--- a/fs/cachefiles/internal.h
++++ b/fs/cachefiles/internal.h
+@@ -115,6 +115,20 @@ extern const struct fscache_cache_ops cachefiles_cache_ops;
+ extern struct fscache_object *cachefiles_grab_object(struct fscache_object *_object,
+ 						     enum fscache_obj_ref_trace why);
+ 
++/*
++ * io.c
++ */
++extern unsigned int cachefiles_shape_extent(struct fscache_object *object,
++					    struct fscache_extent *extent,
++					    loff_t i_size, bool for_write);
++extern int cachefiles_read(struct fscache_object *object,
++			   struct fscache_io_request *req,
++			   struct iov_iter *iter);
++extern int cachefiles_write(struct fscache_object *object,
++			    struct fscache_io_request *req,
++			    struct iov_iter *iter);
++extern bool cachefiles_open_object(struct cachefiles_object *obj);
++
+ /*
+  * key.c
+  */
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+new file mode 100644
+index 000000000000..d472e9d9173c
+--- /dev/null
++++ b/fs/cachefiles/io.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Data I/O routines
++ *
++ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ */
++
++#include <linux/mount.h>
++#include <linux/slab.h>
++#include <linux/file.h>
++#include <linux/uio.h>
++#include <linux/xattr.h>
++#include "internal.h"
++
++/*
++ * Determine the size of a data extent in a cache object.  This must be written
++ * as a whole unit, but can be read piecemeal.
++ */
++unsigned int cachefiles_shape_extent(struct fscache_object *object,
++				     struct fscache_extent *extent,
++				     loff_t i_size, bool for_write)
++{
++	return 0;
++}
++
++/*
++ * Initiate a read from the cache.
++ */
++int cachefiles_read(struct fscache_object *object,
++		    struct fscache_io_request *req,
++		    struct iov_iter *iter)
++{
++	req->error = -ENODATA;
++	if (req->io_done)
++		req->io_done(req);
++	return -ENODATA;
++}
++
++/*
++ * Initiate a write to the cache.
++ */
++int cachefiles_write(struct fscache_object *object,
++		     struct fscache_io_request *req,
++		     struct iov_iter *iter)
++{
++	req->error = -ENOBUFS;
++	if (req->io_done)
++		req->io_done(req);
++	return -ENOBUFS;
++}
++
++/*
++ * Open a cache object.
++ */
++bool cachefiles_open_object(struct cachefiles_object *object)
++{
++	struct cachefiles_cache *cache =
++		container_of(object->fscache.cache, struct cachefiles_cache, cache);
++	struct file *file;
++	struct path path;
++
++	path.mnt = cache->mnt;
++	path.dentry = object->backer;
++
++	file = open_with_fake_path(&path,
++				   O_RDWR | O_LARGEFILE | O_DIRECT,
++				   d_backing_inode(object->backer),
++				   cache->cache_cred);
++	if (IS_ERR(file))
++		goto error;
++
++	if (!S_ISREG(file_inode(file)->i_mode))
++		goto error_file;
++
++	if (unlikely(!file->f_op->read_iter) ||
++	    unlikely(!file->f_op->write_iter)) {
++		pr_notice("Cache does not support read_iter and write_iter\n");
++		goto error_file;
++	}
++
++	object->backing_file = file;
++	return true;
++
++error_file:
++	fput(file);
++error:
++	return false;
++}
+diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+index ad7edd41ce27..c33b5ee65ac1 100644
+--- a/fs/cachefiles/namei.c
++++ b/fs/cachefiles/namei.c
+@@ -492,6 +492,9 @@ bool cachefiles_walk_to_object(struct cachefiles_object *parent,
+ 		} else {
+ 			BUG(); // TODO: open file in data-class subdir
+ 		}
++
++		if (!cachefiles_open_object(object))
++			goto check_error;
+ 	}
+ 
+ 	if (object->new)
 
 
