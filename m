@@ -2,148 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 732031C2DDF
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 May 2020 18:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A708C1C3F4F
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2020 18:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgECQNb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 3 May 2020 12:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
+        id S1728158AbgEDQEP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 May 2020 12:04:15 -0400
+Received: from fieldses.org ([173.255.197.46]:45026 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgECQNb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 3 May 2020 12:13:31 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6096A21973;
-        Sun,  3 May 2020 16:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588522410;
-        bh=e6r2Z72h7hrcZe1FEJD+LSdrn+Cl58pNFQIvjPxoo2M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V8qtkFP37pelp3XQoW9bGwWGkgu5Kz3XzIxErbVnu3G8HsLuAndHmhHo1NBShv4m7
-         nNsogNOBrvbfT8TDxtrJsGXnjbwN+E7njDwepvGDR6/ufPefsD4zY6srKh6ETByRvQ
-         OMeM2HbrCm8B3m6HChhV5YmVghbNF7XaiwDaH6G4=
-Received: by mail-io1-f46.google.com with SMTP id k18so9841861ion.0;
-        Sun, 03 May 2020 09:13:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZQJKN5Ji5MB1+PY7st7xTLCdYjbUSoWwQPEV0kpZh02D8M3fau
-        Vzh4q5mQaUHiNWkT1i5Mj+utgycbMgFl7hSJMhs=
-X-Google-Smtp-Source: APiQypLhY9++881yFhc1aV+hz5b6ucbeJlKQ6tWViPFt3Ctm6mc2jiEci1yn1OxgzY22xIRCzNrubZForogPxDE10r0=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr12406558iob.142.1588522409725;
- Sun, 03 May 2020 09:13:29 -0700 (PDT)
+        id S1726551AbgEDQEP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 4 May 2020 12:04:15 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9F954150A; Mon,  4 May 2020 12:04:14 -0400 (EDT)
+Date:   Mon, 4 May 2020 12:04:14 -0400
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] SUNRPC: Clean up request deferral tracepoints
+Message-ID: <20200504160414.GA2757@fieldses.org>
+References: <20200501171750.3764.7676.stgit@klimt.1015granger.net>
+ <20200501172227.3764.74938.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-References: <20200502053122.995648-1-ebiggers@kernel.org>
-In-Reply-To: <20200502053122.995648-1-ebiggers@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 3 May 2020 18:13:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG9Cubj9zO4paGd94cAvG1h21Z0X3CmyNr-orD7WC1=vw@mail.gmail.com>
-Message-ID: <CAMj1kXG9Cubj9zO4paGd94cAvG1h21Z0X3CmyNr-orD7WC1=vw@mail.gmail.com>
-Subject: Re: [PATCH 00/20] crypto: introduce crypto_shash_tfm_digest()
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        ecryptfs@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        keyrings@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Krzysztof Opasiak <k.opasiak@samsung.com>,
-        Lars Persson <lars.persson@axis.com>,
-        linux-bluetooth@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
-        Robert Baldyga <r.baldyga@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501172227.3764.74938.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2 May 2020 at 07:33, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> This series introduces a helper function crypto_shash_tfm_digest() which
-> replaces the following common pattern:
->
->         {
->                 SHASH_DESC_ON_STACK(desc, tfm);
->                 int err;
->
->                 desc->tfm = tfm;
->
->                 err = crypto_shash_digest(desc, data, len, out);
->
->                 shash_desc_zero(desc);
->         }
->
-> with:
->
->         err = crypto_shash_tfm_digest(tfm, data, len, out);
->
-> Patch 1 introduces this helper function, and patches 2-20 convert all
-> relevant users to use it.
->
-> IMO, it would be easiest to take all these patches through the crypto
-> tree.  But taking just the "crypto:" ones and then me trying to get the
-> rest merged later via subsystem trees is also an option.
->
-> Eric Biggers (20):
->   crypto: hash - introduce crypto_shash_tfm_digest()
->   crypto: arm64/aes-glue - use crypto_shash_tfm_digest()
->   crypto: essiv - use crypto_shash_tfm_digest()
->   crypto: artpec6 - use crypto_shash_tfm_digest()
->   crypto: ccp - use crypto_shash_tfm_digest()
->   crypto: ccree - use crypto_shash_tfm_digest()
->   crypto: hisilicon/sec2 - use crypto_shash_tfm_digest()
->   crypto: mediatek - use crypto_shash_tfm_digest()
->   crypto: n2 - use crypto_shash_tfm_digest()
->   crypto: omap-sham - use crypto_shash_tfm_digest()
->   crypto: s5p-sss - use crypto_shash_tfm_digest()
->   nfc: s3fwrn5: use crypto_shash_tfm_digest()
->   fscrypt: use crypto_shash_tfm_digest()
->   ecryptfs: use crypto_shash_tfm_digest()
->   nfsd: use crypto_shash_tfm_digest()
->   ubifs: use crypto_shash_tfm_digest()
->   Bluetooth: use crypto_shash_tfm_digest()
->   sctp: use crypto_shash_tfm_digest()
->   KEYS: encrypted: use crypto_shash_tfm_digest()
->   ASoC: cros_ec_codec: use crypto_shash_tfm_digest()
->
+On Fri, May 01, 2020 at 01:22:27PM -0400, Chuck Lever wrote:
+> - Rename these so they are easy to enable and search for as a set
+> - Move the tracepoints to get a more accurate sense of control flow
+> - Tracepoints should not fire on xprt shutdown
+> - Display memory address in case data structure had been corrupted
+> - Abandon dprintk in these paths
+> 
+> I haven't ever gotten one of these tracepoints to trigger. I wonder
+> if we should simply remove them.
 
-For the series,
+It's definitely not dead code.  But I forget the conditions required to
+hit those cases.  Looking.... So, we in cache_check we have a cache miss
+that requires an upcall, and call cache_defer_req, which will wait for a
+response 1 or 5 seconds (depending on how busy server threads are) and
+then calls svc_defer().
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+--b.
 
-
->  arch/arm64/crypto/aes-glue.c               |  4 +--
->  crypto/essiv.c                             |  4 +--
->  crypto/shash.c                             | 16 +++++++++
->  drivers/crypto/axis/artpec6_crypto.c       | 10 ++----
->  drivers/crypto/ccp/ccp-crypto-sha.c        |  9 ++---
->  drivers/crypto/ccree/cc_cipher.c           |  9 ++---
->  drivers/crypto/hisilicon/sec2/sec_crypto.c |  5 ++-
->  drivers/crypto/mediatek/mtk-sha.c          |  7 ++--
->  drivers/crypto/n2_core.c                   |  7 ++--
->  drivers/crypto/omap-sham.c                 | 20 +++--------
->  drivers/crypto/s5p-sss.c                   | 39 ++++------------------
->  drivers/nfc/s3fwrn5/firmware.c             | 10 +-----
->  fs/crypto/fname.c                          |  7 +---
->  fs/crypto/hkdf.c                           |  6 +---
->  fs/ecryptfs/crypto.c                       | 17 +---------
->  fs/nfsd/nfs4recover.c                      | 26 ++++-----------
->  fs/ubifs/auth.c                            | 20 ++---------
->  fs/ubifs/master.c                          |  9 ++---
->  fs/ubifs/replay.c                          | 14 ++------
->  include/crypto/hash.h                      | 19 +++++++++++
->  net/bluetooth/smp.c                        |  6 +---
->  net/sctp/auth.c                            | 10 ++----
->  net/sctp/sm_make_chunk.c                   | 23 +++++--------
->  security/keys/encrypted-keys/encrypted.c   | 18 ++--------
->  sound/soc/codecs/cros_ec_codec.c           |  9 +----
->  25 files changed, 95 insertions(+), 229 deletions(-)
->
-> --
-> 2.26.2
->
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/trace/events/sunrpc.h |   11 ++++++++---
+>  net/sunrpc/svc_xprt.c         |   12 ++++++------
+>  2 files changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+> index ffd2215950dc..3158b3f7e01e 100644
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@ -1313,27 +1313,32 @@ DECLARE_EVENT_CLASS(svc_deferred_event,
+>  	TP_ARGS(dr),
+>  
+>  	TP_STRUCT__entry(
+> +		__field(const void *, dr)
+>  		__field(u32, xid)
+>  		__string(addr, dr->xprt->xpt_remotebuf)
+>  	),
+>  
+>  	TP_fast_assign(
+> +		__entry->dr = dr;
+>  		__entry->xid = be32_to_cpu(*(__be32 *)(dr->args +
+>  						       (dr->xprt_hlen>>2)));
+>  		__assign_str(addr, dr->xprt->xpt_remotebuf);
+>  	),
+>  
+> -	TP_printk("addr=%s xid=0x%08x", __get_str(addr), __entry->xid)
+> +	TP_printk("addr=%s dr=%p xid=0x%08x", __get_str(addr), __entry->dr,
+> +		__entry->xid)
+>  );
+> +
+>  #define DEFINE_SVC_DEFERRED_EVENT(name) \
+> -	DEFINE_EVENT(svc_deferred_event, svc_##name##_deferred, \
+> +	DEFINE_EVENT(svc_deferred_event, svc_defer_##name, \
+>  			TP_PROTO( \
+>  				const struct svc_deferred_req *dr \
+>  			), \
+>  			TP_ARGS(dr))
+>  
+>  DEFINE_SVC_DEFERRED_EVENT(drop);
+> -DEFINE_SVC_DEFERRED_EVENT(revisit);
+> +DEFINE_SVC_DEFERRED_EVENT(queue);
+> +DEFINE_SVC_DEFERRED_EVENT(recv);
+>  
+>  DECLARE_EVENT_CLASS(cache_event,
+>  	TP_PROTO(
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index 2284ff038dad..e12ec68cd0ff 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -1158,16 +1158,15 @@ static void svc_revisit(struct cache_deferred_req *dreq, int too_many)
+>  	set_bit(XPT_DEFERRED, &xprt->xpt_flags);
+>  	if (too_many || test_bit(XPT_DEAD, &xprt->xpt_flags)) {
+>  		spin_unlock(&xprt->xpt_lock);
+> -		dprintk("revisit canceled\n");
+> +		trace_svc_defer_drop(dr);
+>  		svc_xprt_put(xprt);
+> -		trace_svc_drop_deferred(dr);
+>  		kfree(dr);
+>  		return;
+>  	}
+> -	dprintk("revisit queued\n");
+>  	dr->xprt = NULL;
+>  	list_add(&dr->handle.recent, &xprt->xpt_deferred);
+>  	spin_unlock(&xprt->xpt_lock);
+> +	trace_svc_defer_queue(dr);
+>  	svc_xprt_enqueue(xprt);
+>  	svc_xprt_put(xprt);
+>  }
+> @@ -1213,22 +1212,24 @@ static struct cache_deferred_req *svc_defer(struct cache_req *req)
+>  		memcpy(dr->args, rqstp->rq_arg.head[0].iov_base - skip,
+>  		       dr->argslen << 2);
+>  	}
+> +	trace_svc_defer(rqstp);
+>  	svc_xprt_get(rqstp->rq_xprt);
+>  	dr->xprt = rqstp->rq_xprt;
+>  	set_bit(RQ_DROPME, &rqstp->rq_flags);
+>  
+>  	dr->handle.revisit = svc_revisit;
+> -	trace_svc_defer(rqstp);
+>  	return &dr->handle;
+>  }
+>  
+>  /*
+>   * recv data from a deferred request into an active one
+>   */
+> -static int svc_deferred_recv(struct svc_rqst *rqstp)
+> +static noinline int svc_deferred_recv(struct svc_rqst *rqstp)
+>  {
+>  	struct svc_deferred_req *dr = rqstp->rq_deferred;
+>  
+> +	trace_svc_defer_recv(dr);
+> +
+>  	/* setup iov_base past transport header */
+>  	rqstp->rq_arg.head[0].iov_base = dr->args + (dr->xprt_hlen>>2);
+>  	/* The iov_len does not include the transport header bytes */
+> @@ -1259,7 +1260,6 @@ static struct svc_deferred_req *svc_deferred_dequeue(struct svc_xprt *xprt)
+>  				struct svc_deferred_req,
+>  				handle.recent);
+>  		list_del_init(&dr->handle.recent);
+> -		trace_svc_revisit_deferred(dr);
+>  	} else
+>  		clear_bit(XPT_DEFERRED, &xprt->xpt_flags);
+>  	spin_unlock(&xprt->xpt_lock);
