@@ -2,69 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E20511C5128
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2020 10:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB32B1C54F2
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2020 14:00:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgEEIqZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 May 2020 04:46:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3846 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728220AbgEEIqY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 5 May 2020 04:46:24 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ED478BB0EFFF13225343;
-        Tue,  5 May 2020 16:46:13 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:46:05 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] sunrpc: Remove unused function ip_map_update
-Date:   Tue, 5 May 2020 16:45:37 +0800
-Message-ID: <20200505084537.52372-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1728804AbgEEL76 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 May 2020 07:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727090AbgEEL76 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 May 2020 07:59:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC6AC061A0F;
+        Tue,  5 May 2020 04:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=REPCft4TfvdeWRVXri2o1wuqZJcFojbavxrdrjtttCI=; b=NWIHP2gLwMqhCrrP0wSUBPv/7z
+        G7dxQhOCiYv0w/rVrLpvagaryypM4WVVrVT3d96a0dX4gHH3uH/bISMCDo7chbiqvapAgCfGxdYWB
+        5OWaNHLX4wYaHdJN6OvdzMnl2MxU+AceWTvhlzlHxfc+9+bmYyZ7Bfu37w0Iy9zZhNpucB4vmTHaJ
+        z563vHi53bukqAgYai33YDQikFMZsdCs1yPrbEso6bhPlyXfHA7ebfkSIz74UByYomhc8DfMmIcqj
+        30SF4G+p9UdMv/jzsXFgM5E0I3y4YLfe2uwd5KP1StlJI+y9n0aOA0bYljdtXbftau0rzofUJZwno
+        XQhNFf8A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVwEk-0004lb-81; Tue, 05 May 2020 11:59:46 +0000
+Date:   Tue, 5 May 2020 04:59:46 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before
+ modifying/releasing a page
+Message-ID: <20200505115946.GF16070@bombadil.infradead.org>
+References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+ <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-commit 49b28684fdba ("nfsd: Remove deprecated nfsctl system call and related code.")
-left behind this, remove it.
+On Mon, May 04, 2020 at 06:15:39PM +0100, David Howells wrote:
+> PG_fscache is going to be used to indicate that a page is being written to
+> the cache, and that the page should not be modified or released until it's
+> finished.
+> 
+> Make afs_invalidatepage() and afs_releasepage() wait for it.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/sunrpc/svcauth_unix.c | 9 ---------
- 1 file changed, 9 deletions(-)
-
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 6c8f802c4261..97c0bddba7a3 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -332,15 +332,6 @@ static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
- 	return 0;
- }
- 
--static inline int ip_map_update(struct net *net, struct ip_map *ipm,
--		struct unix_domain *udom, time64_t expiry)
--{
--	struct sunrpc_net *sn;
--
--	sn = net_generic(net, sunrpc_net_id);
--	return __ip_map_update(sn->ip_map_cache, ipm, udom, expiry);
--}
--
- void svcauth_unix_purge(struct net *net)
- {
- 	struct sunrpc_net *sn;
--- 
-2.17.1
-
+Well, why?  Keeping a refcount on the page will prevent it from going
+away while it's being written to storage.  And the fact that it's
+being written to this cache is no reason to delay the truncate of a file
+(is it?)  Similarly, I don't see why we need to wait for the page to make
+it to the cache before we start to modify it.  Certainly we'll need to
+re-write it to the cache since the cache is now stale, but why should
+we wait for the now-stale write to complete?
 
