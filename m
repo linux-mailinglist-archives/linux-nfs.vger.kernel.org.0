@@ -2,86 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AB991C72B8
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2020 16:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4B0B1C7510
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2020 17:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgEFOYm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 May 2020 10:24:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24803 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728855AbgEFOYm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 May 2020 10:24:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588775080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dbddwc8AWoCH822EokkiRcp0XFOdJXpCOboNl38sqMs=;
-        b=Ec5egBY7MQtrsi+HfvGFiG2yB8hL0u9v8a4bF5O/swX57l8qXcM0uz5IfUF3zW+cZRb0mU
-        C/1Q7ZJNNxpNrh77XnxbywI7c7IJrssKx79dghteYOjUw8jnvgVm2jmxXedVuankpOC2+p
-        MIeHNlCwKM0MnNKfWuQNIkGQSheYbtk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-7dSlh3iYM9GY009Ms9gsRQ-1; Wed, 06 May 2020 10:24:39 -0400
-X-MC-Unique: 7dSlh3iYM9GY009Ms9gsRQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1CE281CBE1;
-        Wed,  6 May 2020 14:24:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2557E6299C;
-        Wed,  6 May 2020 14:24:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200506110942.GL16070@bombadil.infradead.org>
-References: <20200506110942.GL16070@bombadil.infradead.org> <20200505115946.GF16070@bombadil.infradead.org> <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk> <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk> <683739.1588751878@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
+        id S1729197AbgEFPg7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 May 2020 11:36:59 -0400
+Received: from fieldses.org ([173.255.197.46]:47704 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgEFPg7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 6 May 2020 11:36:59 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 918B71507; Wed,  6 May 2020 11:36:58 -0400 (EDT)
+Date:   Wed, 6 May 2020 11:36:58 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
         Jeff Layton <jlayton@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before modifying/releasing a page
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200506153658.GA21307@fieldses.org>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
+ <20200505210118.GC27966@fieldses.org>
+ <20200505210956.GA3350@mtj.thefacebook.com>
+ <20200505212527.GA1265@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <713140.1588775072.1@warthog.procyon.org.uk>
-Date:   Wed, 06 May 2020 15:24:32 +0100
-Message-ID: <713141.1588775072@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505212527.GA1265@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
-
-> > Won't that screw up ITER_MAPPING?  Does that mean that ITER_MAPPING isn't
-> > viable?
+On Tue, May 05, 2020 at 05:25:27PM -0400, J. Bruce Fields wrote:
+> On Tue, May 05, 2020 at 05:09:56PM -0400, Tejun Heo wrote:
+> > It's not the end of the world but a bit hacky. I wonder whether something
+> > like the following would work better for identifying worker type so that you
+> > can do sth like
+> > 
+> >  if (kthread_fn(current) == nfsd)
+> >         return kthread_data(current);
+> >  else
+> >         return NULL;     
 > 
-> Can you remind me why ITER_MAPPING needs:
-> 
-> "The caller must guarantee that the pages are all present and they must be
-> locked using PG_locked, PG_writeback or PG_fscache to prevent them from
-> going away or being migrated whilst they're being accessed."
-> 
-> An elevated refcount prevents migration, and it also prevents the pages
-> from being freed.  It doesn't prevent them from being truncated out of
-> the file, but it does ensure the pages aren't reallocated.
+> Yes, definitely more generic, looks good to me.
 
-ITER_MAPPING relies on the mapping to maintain the pointers to the pages so
-that it can find them rather than being like ITER_BVEC where there's a
-separate list.
+This is what I'm testing with.
 
-Truncate removes the pages from the mapping - at which point ITER_MAPPING can
-no longer find them.
+If it's OK with you, could I add your Signed-off-by and take it through
+the nfsd tree? I'll have some other patches that will depend on it.
 
-David
+--b.
 
+
+commit 379bfe5257b6
+Author: Tejun Heo <tj@kernel.org>
+Date:   Tue May 5 21:26:07 2020 -0400
+
+    kthread: save thread function
+    
+    It's handy to keep the kthread_fn just as a unique cookie to identify
+    classes of kthreads.  E.g. if you can verify that a given task is
+    running your thread_fn, then you may know what sort of type kthread_data
+    points to.
+    
+    We'll use this in nfsd to pass some information into the vfs.  Note it
+    will need kthread_data() exported too.
+    
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+index 8bbcaad7ef0f..c00ee443833f 100644
+--- a/include/linux/kthread.h
++++ b/include/linux/kthread.h
+@@ -57,6 +57,7 @@ bool kthread_should_stop(void);
+ bool kthread_should_park(void);
+ bool __kthread_should_park(struct task_struct *k);
+ bool kthread_freezable_should_stop(bool *was_frozen);
++void *kthread_fn(struct task_struct *k);
+ void *kthread_data(struct task_struct *k);
+ void *kthread_probe_data(struct task_struct *k);
+ int kthread_park(struct task_struct *k);
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a..b87c4a9ba91d 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -46,6 +46,7 @@ struct kthread_create_info
+ struct kthread {
+ 	unsigned long flags;
+ 	unsigned int cpu;
++	int (*threadfn)(void *);
+ 	void *data;
+ 	struct completion parked;
+ 	struct completion exited;
+@@ -152,6 +153,20 @@ bool kthread_freezable_should_stop(bool *was_frozen)
+ }
+ EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
+ 
++/**
++ * kthread_fn - return the function specified on kthread creation
++ * @task: kthread task in question
++ *
++ * Returns NULL if the task is not a kthread.
++ */
++void *kthread_fn(struct task_struct *task)
++{
++	if (task->flags & PF_KTHREAD)
++		return to_kthread(task)->threadfn;
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(kthread_fn);
++
+ /**
+  * kthread_data - return data value specified on kthread creation
+  * @task: kthread task in question
+@@ -164,6 +179,7 @@ void *kthread_data(struct task_struct *task)
+ {
+ 	return to_kthread(task)->data;
+ }
++EXPORT_SYMBOL_GPL(kthread_data);
+ 
+ /**
+  * kthread_probe_data - speculative version of kthread_data()
+@@ -244,6 +260,7 @@ static int kthread(void *_create)
+ 		do_exit(-ENOMEM);
+ 	}
+ 
++	self->threadfn = threadfn;
+ 	self->data = data;
+ 	init_completion(&self->exited);
+ 	init_completion(&self->parked);
