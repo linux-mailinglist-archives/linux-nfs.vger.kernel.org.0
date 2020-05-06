@@ -2,110 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28C41C6307
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2020 23:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C6C81C6AA3
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2020 09:58:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgEEVZ2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 May 2020 17:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727785AbgEEVZ2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 May 2020 17:25:28 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4064C061A0F
-        for <linux-nfs@vger.kernel.org>; Tue,  5 May 2020 14:25:27 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0A4B7BDB; Tue,  5 May 2020 17:25:27 -0400 (EDT)
-Date:   Tue, 5 May 2020 17:25:27 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        id S1728345AbgEFH6J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 May 2020 03:58:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50790 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728478AbgEFH6I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 May 2020 03:58:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588751887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3XSAt+Mkup/SofBBKUCYx2i7ecGmmjnSIl1ryVz58Ao=;
+        b=HzTH+S3WJmPWiSSVXp/N9fFp1J+LX+0+poLWFk5bnwd0dtwJ32uOqiTG1XaYl8SHm/V1em
+        iwYWjPU4jpab0g0sb4qFxGA++J1HXnws4KV1Xzbhf7P+3KFMs/fTf1jpm/CAstZynP5GLM
+        Bu63T+0LKbSsZttPDY11j5g9PMZG9mw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459--Q3klqpZNS2sU59OYqcCAQ-1; Wed, 06 May 2020 03:58:03 -0400
+X-MC-Unique: -Q3klqpZNS2sU59OYqcCAQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A672B835B49;
+        Wed,  6 May 2020 07:58:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 014C45D9DA;
+        Wed,  6 May 2020 07:57:58 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200505115946.GF16070@bombadil.infradead.org>
+References: <20200505115946.GF16070@bombadil.infradead.org> <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk> <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
         Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200505212527.GA1265@fieldses.org>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200505021514.GA43625@pick.fieldses.org>
- <20200505210118.GC27966@fieldses.org>
- <20200505210956.GA3350@mtj.thefacebook.com>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before modifying/releasing a page
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505210956.GA3350@mtj.thefacebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <683738.1588751878.1@warthog.procyon.org.uk>
+Date:   Wed, 06 May 2020 08:57:58 +0100
+Message-ID: <683739.1588751878@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:09:56PM -0400, Tejun Heo wrote:
-> Hello,
-> 
-> On Tue, May 05, 2020 at 05:01:18PM -0400, J. Bruce Fields wrote:
-> > On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
-> > > Though now I'm feeling greedy: it would be nice to have both some kind
-> > > of global flag, *and* keep kthread->data pointing to svc_rqst (as that
-> > > would give me a simpler and quicker way to figure out which client is
-> > > conflicting).  Could I take a flag bit in kthread->flags, maybe?
+Matthew Wilcox <willy@infradead.org> wrote:
+
+> > PG_fscache is going to be used to indicate that a page is being written to
+> > the cache, and that the page should not be modified or released until it's
+> > finished.
 > > 
-> > Would something like this be too hacky?:
+> > Make afs_invalidatepage() and afs_releasepage() wait for it.
 > 
-> It's not the end of the world but a bit hacky. I wonder whether something
-> like the following would work better for identifying worker type so that you
-> can do sth like
-> 
->  if (kthread_fn(current) == nfsd)
->         return kthread_data(current);
->  else
->         return NULL;     
+> Well, why?  Keeping a refcount on the page will prevent it from going
+> away while it's being written to storage.  And the fact that it's
+> being written to this cache is no reason to delay the truncate of a file
+> (is it?)
 
-Yes, definitely more generic, looks good to me.
+Won't that screw up ITER_MAPPING?  Does that mean that ITER_MAPPING isn't
+viable?
 
---b.
+David
 
-> 
-> Thanks.
-> 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index bfbfa481be3a..4f3ab9f2c994 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -46,6 +46,7 @@ struct kthread_create_info
->  struct kthread {
->  	unsigned long flags;
->  	unsigned int cpu;
-> +	int (*threadfn)(void *);
->  	void *data;
->  	struct completion parked;
->  	struct completion exited;
-> @@ -152,6 +153,13 @@ bool kthread_freezable_should_stop(bool *was_frozen)
->  }
->  EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
->  
-> +void *kthread_fn(struct task_struct *task)
-> +{
-> +	if (task->flags & PF_KTHREAD)
-> +		return to_kthread(task)->threadfn;
-> +	return NULL;
-> +}
-> +
->  /**
->   * kthread_data - return data value specified on kthread creation
->   * @task: kthread task in question
-> @@ -244,6 +252,7 @@ static int kthread(void *_create)
->  		do_exit(-ENOMEM);
->  	}
->  
-> +	self->threadfn = threadfn;
->  	self->data = data;
->  	init_completion(&self->exited);
->  	init_completion(&self->parked);
-> 
-> -- 
-> tejun
