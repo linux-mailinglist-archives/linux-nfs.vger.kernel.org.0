@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCE71C8FFE
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2020 16:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8739E1C8FDE
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2020 16:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgEGOgv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 May 2020 10:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        id S1728166AbgEGO2f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 May 2020 10:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgEGO2K (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:10 -0400
+        id S1728154AbgEGO2f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2D802083B;
-        Thu,  7 May 2020 14:28:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A1BF2145D;
+        Thu,  7 May 2020 14:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861689;
-        bh=Dek+MGDDA1gIbGByUT5XOUMDdXthngPtNd3pio84ldc=;
+        s=default; t=1588861714;
+        bh=1gc/ZJjQLoxuABNwrGqSR1gLScz4TYvEcE6/5csEEiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xtc9G+odZRk3kQaWCw06CGd9FFmF4dz1vGM2GYvdWALgYPN88Movj/1VYNt3aaBb7
-         HR2Nq3jvgwnxG3bkYDWiE6sJRiOR6xXlssX5NEniIC94wijjnzkkaPpTVSUn+t65r4
-         kQcE308K6qTdjOc7q6QyJHxb5dZ3qOC5O9YpGiJM=
+        b=eiuQcGSj79VLSZr+ke30cMY9hfs9nPrAsyRLP2L7XZlHztUQXUnf8En2gYeXkwkKA
+         wBLnhPw2rK8UTGFFMM3bjZZkG8VMt5bQbBfrmOz7tdflPzqr8Kg4pk2dw7DA5UE5Nb
+         YqfimFHJidukCH0qd0cJJiLwqvt8gxpxMx9yIKcs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.de>,
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 34/50] SUNRPC: defer slow parts of rpc_free_client() to a workqueue.
-Date:   Thu,  7 May 2020 10:27:10 -0400
-Message-Id: <20200507142726.25751-34-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/35] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Thu,  7 May 2020 10:27:57 -0400
+Message-Id: <20200507142830.26239-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
-References: <20200507142726.25751-1-sashal@kernel.org>
+In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
+References: <20200507142830.26239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,115 +44,81 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 7c4310ff56422ea43418305d22bbc5fe19150ec4 ]
+[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
 
-The rpciod workqueue is on the write-out path for freeing dirty memory,
-so it is important that it never block waiting for memory to be
-allocated - this can lead to a deadlock.
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-rpc_execute() - which is often called by an rpciod work item - calls
-rcp_task_release_client() which can lead to rpc_free_client().
-
-rpc_free_client() makes two calls which could potentially block wating
-for memory allocation.
-
-rpc_clnt_debugfs_unregister() calls into debugfs and will block while
-any of the debugfs files are being accessed.  In particular it can block
-while any of the 'open' methods are being called and all of these use
-malloc for one thing or another.  So this can deadlock if the memory
-allocation waits for NFS to complete some writes via rpciod.
-
-rpc_clnt_remove_pipedir() can take the inode_lock() and while it isn't
-obvious that memory allocations can happen while the lock it held, it is
-safer to assume they might and to not let rpciod call
-rpc_clnt_remove_pipedir().
-
-So this patch moves these two calls (together with the final kfree() and
-rpciod_down()) into a work-item to be run from the system work-queue.
-rpciod can continue its important work, and the final stages of the free
-can happen whenever they happen.
-
-I have seen this deadlock on a 4.12 based kernel where debugfs used
-synchronize_srcu() when removing objects.  synchronize_srcu() requires a
-workqueue and there were no free workther threads and none could be
-allocated.  While debugsfs no longer uses SRCU, I believe the deadlock
-is still possible.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sunrpc/clnt.h |  8 +++++++-
- net/sunrpc/clnt.c           | 21 +++++++++++++++++----
- 2 files changed, 24 insertions(+), 5 deletions(-)
+ fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index ca7e108248e21..7bd124e06b36f 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -71,7 +71,13 @@ struct rpc_clnt {
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	struct dentry		*cl_debugfs;	/* debugfs directory */
- #endif
--	struct rpc_xprt_iter	cl_xpi;
-+	/* cl_work is only needed after cl_xpi is no longer used,
-+	 * and that are of similar size
-+	 */
-+	union {
-+		struct rpc_xprt_iter	cl_xpi;
-+		struct work_struct	cl_work;
-+	};
- 	const struct cred	*cl_cred;
- };
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c600..26c94b32d6f49 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
  
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 7324b21f923e6..a2c215a6980d8 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -880,6 +880,20 @@ EXPORT_SYMBOL_GPL(rpc_shutdown_client);
- /*
-  * Free an RPC client
-  */
-+static void rpc_free_client_work(struct work_struct *work)
-+{
-+	struct rpc_clnt *clnt = container_of(work, struct rpc_clnt, cl_work);
-+
-+	/* These might block on processes that might allocate memory,
-+	 * so they cannot be called in rpciod, so they are handled separately
-+	 * here.
-+	 */
-+	rpc_clnt_debugfs_unregister(clnt);
-+	rpc_clnt_remove_pipedir(clnt);
-+
-+	kfree(clnt);
-+	rpciod_down();
-+}
- static struct rpc_clnt *
- rpc_free_client(struct rpc_clnt *clnt)
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
  {
-@@ -890,17 +904,16 @@ rpc_free_client(struct rpc_clnt *clnt)
- 			rcu_dereference(clnt->cl_xprt)->servername);
- 	if (clnt->cl_parent != clnt)
- 		parent = clnt->cl_parent;
--	rpc_clnt_debugfs_unregister(clnt);
--	rpc_clnt_remove_pipedir(clnt);
- 	rpc_unregister_client(clnt);
- 	rpc_free_iostats(clnt->cl_metrics);
- 	clnt->cl_metrics = NULL;
- 	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
- 	xprt_iter_destroy(&clnt->cl_xpi);
--	rpciod_down();
- 	put_cred(clnt->cl_cred);
- 	rpc_free_clid(clnt);
--	kfree(clnt);
-+
-+	INIT_WORK(&clnt->cl_work, rpc_free_client_work);
-+	schedule_work(&clnt->cl_work);
- 	return parent;
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
+ 
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
+ 
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
+ 			break;
+ 		}
+ 	}
+ 
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
  }
  
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 -- 
 2.20.1
 
