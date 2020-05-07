@@ -2,163 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22ACD1C8B54
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2020 14:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AB51C8E7C
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2020 16:29:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgEGMuc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 May 2020 08:50:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20975 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725857AbgEGMub (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 May 2020 08:50:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588855830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=5VIIJVfPcPcxNCF5BNLslZGThASBdntF4ntG1HAVA18=;
-        b=V2IgO8d0Noq7fcaPkzJM37ZGCUxEhw3vsagpQnGFJHJg2yNcdyJbNcOJHzrnH4CnWvFXlN
-        YGkY9KDgEpUAFdDYMa29SDiN5vSxI5+8RIuOBdq4DAkRRGbzW1pCufNP/Ta7wH2kKo3y5e
-        Y4IanEIfnSj4qKAs4wTGZT6q0Fi8mm0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-3M9p_iYnPzqiIG8x0fkXww-1; Thu, 07 May 2020 08:50:28 -0400
-X-MC-Unique: 3M9p_iYnPzqiIG8x0fkXww-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726825AbgEGO1g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 May 2020 10:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbgEGO1f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:35 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F004189952A;
-        Thu,  7 May 2020 12:50:27 +0000 (UTC)
-Received: from dwysocha.rdu.csb (ovpn-112-13.rdu2.redhat.com [10.10.112.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 965F062A9F;
-        Thu,  7 May 2020 12:50:26 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     dhowells@redhat.com, kiran.modukuri@gmail.com,
-        carmark.dlut@gmail.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] cachefiles: Fix race between read_waiter and read_copier involving op->to_do
-Date:   Thu,  7 May 2020 08:50:22 -0400
-Message-Id: <1588855822-5532-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1588855822-5532-1-git-send-email-dwysocha@redhat.com>
-References: <1588855822-5532-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by mail.kernel.org (Postfix) with ESMTPSA id D96EB208DB;
+        Thu,  7 May 2020 14:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861654;
+        bh=1gc/ZJjQLoxuABNwrGqSR1gLScz4TYvEcE6/5csEEiQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jRlH0xFn8jVk2yNCGN6KuMcfIWJbq6tat+v73vu4T8/xFwCUe8JeHBmr65MoPsuCk
+         TCaRLg4FavdgnILBasOzkXUlTZ+tDus+sAoqeRn02vavT/nuARapxrgM+0oP7wlUKH
+         PZX0F2q7huLODb9Y225wqtq2/ycOl1ZDhnAAdBOs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 06/50] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Thu,  7 May 2020 10:26:42 -0400
+Message-Id: <20200507142726.25751-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
+References: <20200507142726.25751-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Lei Xue <carmark.dlut@gmail.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-There is a potential race in fscache operation enqueuing for reading and
-copying multiple pages from cachefiles to netfs.  The problem can be seen
-easily on a heavy loaded system (for example many processes reading files
-continually on an NFS share covered by fscache triggered this problem within
-a few minutes).
+[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
 
-The race is due to cachefiles_read_waiter() adding the op to the monitor
-to_do list and then then drop the object->work_lock spinlock before
-completing fscache_enqueue_operation().  Once the lock is dropped,
-cachefiles_read_copier() grabs the op, completes processing it, and
-makes it through fscache_retrieval_complete() which sets the op->state to
-the final state of FSCACHE_OP_ST_COMPLETE(4).  When cachefiles_read_waiter()
-finally gets through the remainder of fscache_enqueue_operation()
-it sees the invalid state, and hits the ASSERTCMP and the following
-oops is seen:
-[ 2259.612361] FS-Cache:
-[ 2259.614785] FS-Cache: Assertion failed
-[ 2259.618639] FS-Cache: 4 == 5 is false
-[ 2259.622456] ------------[ cut here ]------------
-[ 2259.627190] kernel BUG at fs/fscache/operation.c:70!
-...
-[ 2259.791675] RIP: 0010:[<ffffffffc061b4cf>]  [<ffffffffc061b4cf>] fscache_enqueue_operation+0xff/0x170 [fscache]
-[ 2259.802059] RSP: 0000:ffffa0263d543be0  EFLAGS: 00010046
-[ 2259.807521] RAX: 0000000000000019 RBX: ffffa01a4d390480 RCX: 0000000000000006
-[ 2259.814847] RDX: 0000000000000000 RSI: 0000000000000046 RDI: ffffa0263d553890
-[ 2259.822176] RBP: ffffa0263d543be8 R08: 0000000000000000 R09: ffffa0263c2d8708
-[ 2259.829502] R10: 0000000000001e7f R11: 0000000000000000 R12: ffffa01a4d390480
-[ 2259.844483] R13: ffff9fa9546c5920 R14: ffffa0263d543c80 R15: ffffa0293ff9bf10
-[ 2259.859554] FS:  00007f4b6efbd700(0000) GS:ffffa0263d540000(0000) knlGS:0000000000000000
-[ 2259.875571] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2259.889117] CR2: 00007f49e1624ff0 CR3: 0000012b38b38000 CR4: 00000000007607e0
-[ 2259.904015] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 2259.918764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 2259.933449] PKRU: 55555554
-[ 2259.943654] Call Trace:
-[ 2259.953592]  <IRQ>
-[ 2259.955577]  [<ffffffffc03a7c12>] cachefiles_read_waiter+0x92/0xf0 [cachefiles]
-[ 2259.978039]  [<ffffffffa34d3942>] __wake_up_common+0x82/0x120
-[ 2259.991392]  [<ffffffffa34d3a63>] __wake_up_common_lock+0x83/0xc0
-[ 2260.004930]  [<ffffffffa34d3510>] ? task_rq_unlock+0x20/0x20
-[ 2260.017863]  [<ffffffffa34d3ab3>] __wake_up+0x13/0x20
-[ 2260.030230]  [<ffffffffa34c72a0>] __wake_up_bit+0x50/0x70
-[ 2260.042535]  [<ffffffffa35bdcdb>] unlock_page+0x2b/0x30
-[ 2260.054495]  [<ffffffffa35bdd09>] page_endio+0x29/0x90
-[ 2260.066184]  [<ffffffffa368fc81>] mpage_end_io+0x51/0x80
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-CPU1
-cachefiles_read_waiter()
- 20 static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
- 21                                   int sync, void *_key)
- 22 {
-...
- 61         spin_lock(&object->work_lock);
- 62         list_add_tail(&monitor->op_link, &op->to_do);
- 63         spin_unlock(&object->work_lock);
-<begin race window>
- 64
- 65         fscache_enqueue_retrieval(op);
-182 static inline void fscache_enqueue_retrieval(struct fscache_retrieval *op)
-183 {
-184         fscache_enqueue_operation(&op->op);
-185 }
- 58 void fscache_enqueue_operation(struct fscache_operation *op)
- 59 {
- 60         struct fscache_cookie *cookie = op->object->cookie;
- 61
- 62         _enter("{OBJ%x OP%x,%u}",
- 63                op->object->debug_id, op->debug_id, atomic_read(&op->usage));
- 64
- 65         ASSERT(list_empty(&op->pend_link));
- 66         ASSERT(op->processor != NULL);
- 67         ASSERT(fscache_object_is_available(op->object));
- 68         ASSERTCMP(atomic_read(&op->usage), >, 0);
-<end race window>
-
-CPU2
-cachefiles_read_copier()
-168         while (!list_empty(&op->to_do)) {
-...
-202                 fscache_end_io(op, monitor->netfs_page, error);
-203                 put_page(monitor->netfs_page);
-204                 fscache_retrieval_complete(op, 1);
-
-CPU1
- 58 void fscache_enqueue_operation(struct fscache_operation *op)
- 59 {
-...
- 69         ASSERTIFCMP(op->state != FSCACHE_OP_ST_IN_PROGRESS,
- 70                     op->state, ==,  FSCACHE_OP_ST_CANCELLED);
-
-Signed-off-by: Lei Xue <carmark.dlut@gmail.com>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cachefiles/rdwr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
-index d3d78176b23c..e7726f5f1241 100644
---- a/fs/cachefiles/rdwr.c
-+++ b/fs/cachefiles/rdwr.c
-@@ -60,9 +60,9 @@ static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
- 	object = container_of(op->op.object, struct cachefiles_object, fscache);
- 	spin_lock(&object->work_lock);
- 	list_add_tail(&monitor->op_link, &op->to_do);
-+	fscache_enqueue_retrieval(op);
- 	spin_unlock(&object->work_lock);
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c600..26c94b32d6f49 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
  
--	fscache_enqueue_retrieval(op);
- 	fscache_put_retrieval(op);
- 	return 0;
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ {
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
+ 
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
+ 
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
+ 			break;
+ 		}
+ 	}
+ 
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
  }
+ 
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 -- 
-1.8.3.1
+2.20.1
 
