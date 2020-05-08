@@ -2,101 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E944A1CB9BF
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 May 2020 23:25:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3FB91CBA16
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 May 2020 23:50:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgEHVZX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 May 2020 17:25:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34058 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVZX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 8 May 2020 17:25:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 77347AF37;
-        Fri,  8 May 2020 21:25:24 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     syzbot <syzbot+22b5ef302c7c40d94ea8@syzkaller.appspotmail.com>,
-        anna.schumaker@netapp.com, bfields@fieldses.org,
-        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Date:   Sat, 09 May 2020 07:25:11 +1000
-Subject: [PATCH] SUNRPC: fix use-after-free in rpc_free_client_work()
-In-Reply-To: <000000000000925dda05a50b9c13@google.com>
-References: <000000000000925dda05a50b9c13@google.com>
-Message-ID: <87r1vuazm0.fsf@notabene.neil.brown.name>
+        id S1727926AbgEHVuz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 May 2020 17:50:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41152 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727110AbgEHVuy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 May 2020 17:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588974653;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WfmItu00sqA0T6UZ4ttYmvbh9bbKybU1lr+8KSmJvZg=;
+        b=SSxf0gco69Ef0B3w4CpIMJIoMcdUnlS+Ultxrxw5cpDzWDMIgao1trzeHzz1T+VCEtq2/Z
+        4Km4EU4RUMlDb39KDlHjTfJzEa47p1GG/zE9Gt9PfhptQ7/xyxbB5mSLvRb5mHhu8BC/0i
+        hHvxdchN2xxYUfbI1LzNDYeEleBgmDU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-rgvPNQIfOmSSfAHrHEesyw-1; Fri, 08 May 2020 17:50:52 -0400
+X-MC-Unique: rgvPNQIfOmSSfAHrHEesyw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9D138014C1;
+        Fri,  8 May 2020 21:50:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B5CE5C3FD;
+        Fri,  8 May 2020 21:50:43 +0000 (UTC)
+Subject: [PATCH 0/4] cachefiles, nfs: Fixes
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 08 May 2020 22:50:42 +0100
+Message-ID: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+
+Hi Linus, Trond, Anna,
+
+Can you pull these fixes for cachefiles and NFS's use of fscache?  Should
+they go through the NFS tree or directly upstream?  The things fixed are:
+
+ (1) The reorganisation of bmap() use accidentally caused the return value
+     of cachefiles_read_or_alloc_pages() to get corrupted.
+
+ (2) The NFS superblock index key accidentally got changed to include a
+     number of kernel pointers - meaning that the key isn't matchable after
+     a reboot.
+
+ (3) A redundant check in nfs_fscache_get_super_cookie().
+
+ (4) The NFS change_attr sometimes set in the auxiliary data for the
+     caching of an file and sometimes not, which causes the cache to get
+     discarded when it shouldn't.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	tag fscache-fixes-20200508
+
+Thanks,
+David
+---
+Dave Wysochanski (3):
+      NFS: Fix fscache super_cookie index_key from changing after umount
+      NFS: Fix fscache super_cookie allocation
+      NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+
+David Howells (1):
+      cachefiles: Fix corruption of the return value in cachefiles_read_or_alloc_pages()
 
 
-Parts of rpc_free_client() were recently moved to
-a separate rpc_free_clent_work().  This introduced
-a use-after-free as rpc_clnt_remove_pipedir() calls
-rpc_net_ns(), and that uses clnt->cl_xprt which has already
-been freed.
-So move the call to xprt_put() after the call to
-rpc_clnt_remove_pipedir().
-
-Reported-by: syzbot+22b5ef302c7c40d94ea8@syzkaller.appspotmail.com
-Fixes: 7c4310ff5642 ("SUNRPC: defer slow parts of rpc_free_client() to a wo=
-rkqueue.")
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- net/sunrpc/clnt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 8350d3a2e9a7..8d3972ea688b 100644
-=2D-- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -890,6 +890,7 @@ static void rpc_free_client_work(struct work_struct *wo=
-rk)
- 	 */
- 	rpc_clnt_debugfs_unregister(clnt);
- 	rpc_clnt_remove_pipedir(clnt);
-+	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
-=20
- 	kfree(clnt);
- 	rpciod_down();
-@@ -907,7 +908,6 @@ rpc_free_client(struct rpc_clnt *clnt)
- 	rpc_unregister_client(clnt);
- 	rpc_free_iostats(clnt->cl_metrics);
- 	clnt->cl_metrics =3D NULL;
-=2D	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
- 	xprt_iter_destroy(&clnt->cl_xpi);
- 	put_cred(clnt->cl_cred);
- 	rpc_free_clid(clnt);
-=2D-=20
-2.26.2
+ fs/cachefiles/rdwr.c |   10 +++++-----
+ fs/nfs/fscache.c     |   39 ++++++++++++++++++---------------------
+ fs/nfs/super.c       |    1 -
+ 3 files changed, 23 insertions(+), 27 deletions(-)
 
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl61zjgACgkQOeye3VZi
-gblVlw/8CCtC/Q5JSGk4ecudVzz/GotzZtcL+ayh2Qx3YDzyCOkvqaSIiDF1s88m
-8Tz+KYodZvdxFt157sv3JZ4SK5kIvNgy2UaCMhO3VqBc//9DOsGaRfWlT0kq6LWA
-0hzwEiYLpIHjw2zBmC8Y2tMdoU2rg/OVXphuNXfESOWHFTdeQ8Scj5n4wer0E2/n
-RG/Glj3kKWBa6W7bjYhR+LHuF+7ufmqqCkd20t/iYGkfwQB+kI9qMpS7N7SAI3zX
-Csx7TZaYnEeENKC8igA+8IUcq3smlh9j6BnF+F3YI+5gAHqis+9bOSbpAIVoBKHm
-xkQLc+r+QP7OP+3diZZwptwWqB2oS4Slk/BtM2F4K53PUjnv4HnEjFal4Yo2MXRW
-rDrL0YLdJuVebiYoxzm/Wqcnn9xQxizAfn6RpTLMabGiHzjQeg7CKRzAPcY7Stv3
-PfZ6T2ojmS4Xy8B0Ba4vtpzKdzC3o4IYYvtyAbr+pjw8OyEw8qSo9BPAvINS2ELE
-bV5NSzAVUCToOMNzuPUUlZEf2MeZvRfrMXUaKSwX79y8okDm7CHKgE5+tE+PKaic
-xFUh3wLhKIbAuM8CREMv98zCba8WIsrjPYCaoJQkE1e+lY2wtzmMmCZzXzHkhTWq
-o4Q65yrtHCV5anwW72GjUPCDp089jOpKWXsnulhPUVDjSlJ/ERA=
-=mg24
------END PGP SIGNATURE-----
---=-=-=--
