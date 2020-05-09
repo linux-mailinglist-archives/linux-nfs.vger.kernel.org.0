@@ -2,67 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 920F11CBAA0
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 May 2020 00:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C85991CC39E
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 May 2020 20:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgEHWTf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 May 2020 18:19:35 -0400
-Received: from fieldses.org ([173.255.197.46]:51030 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgEHWTf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 8 May 2020 18:19:35 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0772E20C8; Fri,  8 May 2020 18:19:35 -0400 (EDT)
-Date:   Fri, 8 May 2020 18:19:35 -0400
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>
+        id S1728011AbgEISHS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 9 May 2020 14:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726214AbgEISHS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 9 May 2020 14:07:18 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD58C061A0C
+        for <linux-nfs@vger.kernel.org>; Sat,  9 May 2020 11:07:16 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id h26so4435450qtu.8
+        for <linux-nfs@vger.kernel.org>; Sat, 09 May 2020 11:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=PLpNgI6NPoa9ofxmZ5ImM3R026fToUpVAHaI7CCPIT8=;
+        b=HrCACWjvvrWOquXGvE16taH/HYI65rjN8gskAvzQPM5/mnYjw3T3SX5YCxNEaNMt6E
+         5BmUgha0DgWz0C0kL8tZtwfWaWVwCJhkn4mTrCc6kqGxw4zRULSq4mL7C02eHmPb13J5
+         kh4VsBEGzKh9moBG5TuD6Hmjes1RMt5kA7HfoO9kuaBxAV5kZ5x96BoOjW065yNqCG+F
+         tnKbhtOwramFsGS5/BPNl0kz6RaTgAZIQopAEN39/LiEGrqd+gqa3AGis5dNXgqttklS
+         vrTSDBuzo57z3VPxMING9TbmFWbH/g+3tYCPuX8EVWBodqMj+I7586TG24crNRKz/jiC
+         MHHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=PLpNgI6NPoa9ofxmZ5ImM3R026fToUpVAHaI7CCPIT8=;
+        b=JKTv9V+II5e5L1Q1qxDO+UKZqOrhQSu2Y5aCgw72HR1PF/ijGkSU4ux82aM0O3BBGw
+         yYeDClJKV21c3wtA+aTcSM3uj+UiXQOiykgC8KQMB+3UiehzolhVAcixbdOo1JnMahuO
+         85Er3LpwMYr4hhcw7mzKml2U7CPnAhwefYzAG2aBLCW6WNkOzRjjCHrDCaw76mcDmP+/
+         btbJgUAcEVz0Ek2AAzmc0lkuuCMw3/Fgi1rHEmbFvXV7IYTNHQHq56JOfYfBixphjkBM
+         uOYxYfB3RZRKj2j2BqR9CjvwwVmQZeIE0763zTrElZyW+baJsMIplXPyXIiNZSbaiJsK
+         Fbzg==
+X-Gm-Message-State: AGi0PuYm9ZcLRXCu6PNn1sBfJMBm9K0JhSkRJSTTsFMGTpnu3g2rUDI+
+        L2p8Pc+eId/AQZ62iGfXyi3sU2VG
+X-Google-Smtp-Source: APiQypKGXVt5rFaU9gMKlQHYbFtnbhfD1SA12Fmhz7fL6aDtvjwr8LNOB0I1+o4Og5YfoKr6eyt1aA==
+X-Received: by 2002:ac8:3406:: with SMTP id u6mr9267507qtb.100.1589047636036;
+        Sat, 09 May 2020 11:07:16 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id h188sm4138940qke.82.2020.05.09.11.07.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 May 2020 11:07:15 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 049I7Dgo023566;
+        Sat, 9 May 2020 18:07:13 GMT
+Subject: [PATCH RFC] SUNRPC: Signalled ASYNC tasks need to exit
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfs: fix NULL deference in nfs4_get_valid_delegation
-Message-ID: <20200508221935.GA11225@fieldses.org>
+Date:   Sat, 09 May 2020 14:07:13 -0400
+Message-ID: <20200509180609.5185.37691.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+Ensure that signalled ASYNC rpc_tasks exit immediately instead of
+spinning until a timeout (or forever).
 
-We add the new state to the nfsi->open_states list, making it
-potentially visible to other threads, before we've finished initializing
-it.
+To avoid checking for the signal flag on every scheduler iteration,
+the check is instead introduced in the client's finite state
+machine.
 
-That wasn't a problem when all the readers were also taking the i_lock
-(as we do here), but since we switched to RCU, there's now a possibility
-that a reader could see the partially initialized state.
-
-Symptoms observed were a crash when another thread called
-nfs4_get_valid_delegation() on a NULL inode.
-
-Fixes: 9ae075fdd190 "NFSv4: Convert open state lookup to use RCU"
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/clnt.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index ac93715c05a4..a8dc25ce48bb 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -734,9 +734,9 @@ nfs4_get_open_state(struct inode *inode, struct nfs4_state_owner *owner)
- 		state = new;
- 		state->owner = owner;
- 		atomic_inc(&owner->so_count);
--		list_add_rcu(&state->inode_states, &nfsi->open_states);
- 		ihold(inode);
- 		state->inode = inode;
-+		list_add_rcu(&state->inode_states, &nfsi->open_states);
- 		spin_unlock(&inode->i_lock);
- 		/* Note: The reclaim code dictates that we add stateless
- 		 * and read-only stateids to the end of the list */
--- 
-2.26.2
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 22d7e0a8694b..1b628b6aa172 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2430,6 +2430,11 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
+ {
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 
++	if (RPC_SIGNALLED(task)) {
++		rpc_call_rpcerror(task, -ERESTARTSYS);
++		return;
++	}
++
+ 	if (xprt_adjust_timeout(task->tk_rqstp) == 0)
+ 		return;
+ 
 
