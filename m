@@ -2,415 +2,238 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE091CCBCD
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 May 2020 17:11:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F19D1CCBD2
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 May 2020 17:11:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgEJPKT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 10 May 2020 11:10:19 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38181 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728882AbgEJPKS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 May 2020 11:10:18 -0400
+        id S1729126AbgEJPLn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 10 May 2020 11:11:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59756 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728762AbgEJPLn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 May 2020 11:11:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589123414;
+        s=mimecast20190719; t=1589123501;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=R4R55670l9lwtgcbPllY5a9p9wiP5dnUX/91cY/51g8=;
-        b=Gpz+tdOr9ycQu0YPStIv8QJYpvMzvN4rB9BTaBwY8vZ9G7ZNpAdlkTGnwLt1FJ++OJLQ1a
-        gNIAGAXHXUpHNuY7kYRvuipJqoC86y99dbawrM9GJwRYbnAQ5rvNlQSOEKdNXJer1cZeKP
-        oqbeVcPHV1nIZdOvOPQ3JRvWadmgGJE=
+        bh=TdahuzsieweADx+tV9ejsKiSZGV8QZ8I81+5RDz8Q5k=;
+        b=A8T0AZiJTV2Z2WgifQxGuVUNJP6gi0Xsttg4xIXxrQxv4Dn6FAineiRy4bEGJ8Mmnu1pEd
+        +ZLchuAqkE0Z7aXWuHuoMOM5NsOgbUvYK0AI+KYOcCR4BGe5HFPq4Dm5NcwOHtK52lYLPk
+        2Z7CdAG4CLmaXc9VNA2xn1qCCv22YpQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-lOYP9LR5N4yn34tF6-rBHw-1; Sun, 10 May 2020 11:10:04 -0400
-X-MC-Unique: lOYP9LR5N4yn34tF6-rBHw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-344-MCu7boCPOLy4SF65Du7g4g-1; Sun, 10 May 2020 11:11:37 -0400
+X-MC-Unique: MCu7boCPOLy4SF65Du7g4g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C64EE107ACCA;
-        Sun, 10 May 2020 15:10:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57857100A8EA;
+        Sun, 10 May 2020 15:11:36 +0000 (UTC)
 Received: from nevermore.foobar.lan (unknown [10.74.8.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D7F2875262;
-        Sun, 10 May 2020 15:09:59 +0000 (UTC)
-Date:   Sun, 10 May 2020 20:39:56 +0530
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 602AF10016E8;
+        Sun, 10 May 2020 15:11:34 +0000 (UTC)
+Date:   Sun, 10 May 2020 20:41:30 +0530
 From:   Achilles Gaikwad <agaikwad@redhat.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     steved@redhat.com, bfields@fieldses.org, kdsouza@redhat.com,
         agaikwad@redhat.com
-Subject: [PATCH v2] nfs-utils: add new tool nfsdclts to parse output from
- proc files
-Message-ID: <20200510150956.GA1291905@nevermore.foobar.lan>
+Subject: [PATCH] add man page for tool nfsdclts
+Message-ID: <20200510151130.GA1295654@nevermore.foobar.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This tool parses the output from the following files
-
- /proc/fs/nfsd/clients/*/{states,info}
-
-- Tool has the following parameters so far:
-
-~~~
-$ nfsdclts -h
-usage: nfsdclts [-h] [-t type] [--clientinfo] [--hostname] [-q]
-
-Parse the nfsd states and clientinfo files.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -t type, --type type  Input the type that you want to be printed: open,
-                        lock, deleg, layout, all
-  --clientinfo          output clients information, --hostname is implied.
-  --hostname            print hostname of client instead of its ip address.
-                        Longer hostnames are truncated.
-  -q, --quiet           don't print the header information
-~~~
-
-- This tool enables the output to have both ip address and filaname[1]
-
-~~~
-Inode number | Type   | ip address            | Filename
-33811576     | lock   | [::1]:682             | foobar
-~~~
-
-- You can also display just the open files
-
-~~~
-Inode number | Type   | Access | Deny | ip address            | Filename
-:::
-226493407    | open   | r-     | --   | 10.65.211.137:708     | 999
-226493409    | open   | r-     | --   | 10.65.211.137:708     | ff
-226493410    | open   | r-     | --   | 10.65.211.137:708     | foo
-226493413    | open   | r-     | --   | 10.65.211.137:708     | open_lock.py
-33811575     | open   | r-     | --   | [::1]:682             | file
-33811576     | open   | rw     | --   | [::1]:682             | foobar
-:::
-~~~
-
-- Handles disconnected dentries from userspace by showing filename as :
-
-~~~
-Inode number | Type   | Access | Deny | ip address            | Filename
-:::
-226493409    | open   | r-     | --   | 10.65.211.66:867      | disconnected dentry
-226493409    | deleg  | r      |      | 10.65.211.66:867      | disconnected dentry
-226493410    | open   | r-     | --   | 10.65.211.66:867      | disconnected dentry
-226493410    | deleg  | r      |      | 10.65.211.66:867      | disconnected dentry
-~~~
-
-- Automatically drop the deny column for delegation
-
-~~~
-Inode number | Type   | Access | ip address            | Filename
-226726004    | deleg  | r      | 10.65.211.137:708     | foo
-226726013    | deleg  | r      | 10.65.211.137:708     | bar
-~~~
-
-- clientinfo would show the version of nfs that the client has mounted the share with
-
-  the client id.
-
-~~~
-Inode number | Type   | Access | Deny | ip address            | Client ID           | vers | Filename
-226726004    | open   | r-     | --   | 10.65.211.137:708     | 0xf2924e155ea84ae8  | 4.2  | foo
-226726004    | deleg  | r      |      | 10.65.211.137:708     | 0xf2924e155ea84ae8  | 4.2  | foo
-~~~
-
-- hostname option would show the hostname instead of ip addresses
-
-~~~
-Inode number | Type   | Access | Deny | Hostname              | Filename
-227054876    | open   | r-     | --   | vm137                 | fubar
-~~~
-
-If you do not like the header, please use the -q option.
-
-Your feedback and review is highly apprecaited!
-
-You will need the following patch for filename to be displayed:
-[1] https://www.spinics.net/lists/linux-nfs/msg77332.html
+This patch adds man page for the tool nfsdclts.
 
 Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
 Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
 ---
- configure.ac               |   1 +
- tools/Makefile.am          |   2 +-
- tools/nfsdclts/Makefile.am |   9 ++
- tools/nfsdclts/nfsdclts.py | 221 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 232 insertions(+), 1 deletion(-)
- create mode 100644 tools/nfsdclts/Makefile.am
- create mode 100755 tools/nfsdclts/nfsdclts.py
+ tools/nfsdclts/Makefile.am  |   4 +
+ tools/nfsdclts/nfsdclts.man | 156 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 160 insertions(+)
+ create mode 100644 tools/nfsdclts/nfsdclts.man
 
-diff --git a/configure.ac b/configure.ac
-index df88e58f..beea7b68 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -694,6 +694,7 @@ AC_CONFIG_FILES([
- 	tools/rpcgen/Makefile
- 	tools/mountstats/Makefile
- 	tools/nfs-iostat/Makefile
-+	tools/nfsdclts/Makefile
- 	tools/nfsconf/Makefile
- 	tools/clddb-tool/Makefile
- 	utils/Makefile
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 53e61170..df025e02 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
- OPTDIRS += clddb-tool
- endif
- 
--SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat $(OPTDIRS)
-+SUBDIRS = nfsdclts locktest rpcdebug nlmtest mountstats nfs-iostat $(OPTDIRS)
- 
- MAINTAINERCLEANFILES = Makefile.in
 diff --git a/tools/nfsdclts/Makefile.am b/tools/nfsdclts/Makefile.am
-new file mode 100644
-index 00000000..5fe2c1b2
---- /dev/null
+index 5fe2c1b2..6e24efe0 100644
+--- a/tools/nfsdclts/Makefile.am
 +++ b/tools/nfsdclts/Makefile.am
-@@ -0,0 +1,9 @@
-+## Process this file with automake to produce Makefile.in
-+PYTHON_FILES = nfsdclts.py
+@@ -1,6 +1,10 @@
+ ## Process this file with automake to produce Makefile.in
+ PYTHON_FILES = nfsdclts.py
+ 
++man8_MANS       = nfsdclts.man
 +
-+all-local: $(PYTHON_FILES)
++EXTRA_DIST      = $(man8_MANS) $(PYTHON_FILES)
 +
-+install-data-hook:
-+	$(INSTALL) -m 755 nfsdclts.py $(DESTDIR)$(sbindir)/nfsdclts
-+
-+MAINTAINERCLEANFILES=Makefile.in
-diff --git a/tools/nfsdclts/nfsdclts.py b/tools/nfsdclts/nfsdclts.py
-new file mode 100755
-index 00000000..9ac838d0
+ all-local: $(PYTHON_FILES)
+ 
+ install-data-hook:
+diff --git a/tools/nfsdclts/nfsdclts.man b/tools/nfsdclts/nfsdclts.man
+new file mode 100644
+index 00000000..139814c5
 --- /dev/null
-+++ b/tools/nfsdclts/nfsdclts.py
-@@ -0,0 +1,221 @@
-+#!/bin/python3
-+# -*- python-mode -*-
-+'''
-+    Copyright (C) 2020
-+    Authors:    Achilles Gaikwad <agaikwad@redhat.com>
-+                Kenneth  D'souza <kdsouza@redhat.com>
-+
-+    This program is free software: you can redistribute it and/or modify
-+    it under the terms of the GNU General Public License as published by
-+    the Free Software Foundation, either version 3 of the License, or
-+    (at your option) any later version.
-+
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+
-+    You should have received a copy of the GNU General Public License
-+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-+'''
-+
-+import multiprocessing as mp
-+import os
-+import signal
-+import sys
-+
-+try:
-+    import argparse
-+except ImportError:
-+    print('%s:  Failed to import argparse - make sure argparse is installed!'
-+        % sys.argv[0])
-+    sys.exit(1)
-+try:
-+    import yaml
-+except ImportError:
-+    print('%s:  Failed to import yaml - make sure python3-pyyaml is installed!'
-+        % sys.argv[0])
-+    sys.exit(1)
-+
-+BBOLD = '\033[1;30;47m' #Bold black text with white background.
-+ENDC = '\033[m' #Rest to defaults
-+
-+def init_worker():
-+    signal.signal(signal.SIGINT, signal.SIG_IGN)
-+
-+# this function converts the info file to a dictionary format, sorta. :)
-+def file_to_dict(path):
-+    client_info = {}
-+    with open(path) as f:
-+        for line in f:
-+            try:
-+                (key, val) = line.split(':')
-+                client_info[key] = val
-+    # FIXME: There has to be a better way of converting the info file to a dictionary.
-+            except ValueError:
-+                try:
-+                    (key, val) = line.split()
-+                    client_info[key] = val
-+                except:
-+                    pass
-+    return client_info
-+
-+# this function gets the paths from /proc/fs/nfsd/clients/
-+# returns a list of paths for each client which has nfs-share mounted.
-+def getpaths():
-+    path = []
-+    try:
-+        dirs = os.listdir('/proc/fs/nfsd/clients/')
-+    except OSError as reason:
-+        exit('%s' % reason)
-+    if len(dirs) !=0:
-+	    for i in dirs:
-+		    path.append('/proc/fs/nfsd/clients/' + i + '/states')
-+	    return (path)
-+    else:
-+	    exit('Nothing to process')
-+
-+# A single function to rule them all, in this function we gather all the data
-+# from already populated data_list and client_info.
-+def printer(data_list, argument):
-+    client_info_path = data_list.pop()
-+    client_info = file_to_dict(client_info_path)
-+    for i in data_list:
-+        for key in i:
-+            inode = i[key]['superblock'].split(':')[-1]
-+            # get the ip address from client_info as 'address:' note the extra
-+            # ':' as a suffix to address. If there is a better way to convert
-+            # the file to dictionary, please change the following value too.
-+            client_ip = client_info['address:']
-+            # The ip address is quoted, so we dequote it.
-+            client_ip = client_ip[1:-1]
-+            try:
-+                # if the nfs-server reboots while the nfs-client holds the files open,
-+                # the nfs-server would print the filename as '/'. For such instaces we
-+                # print the output as disconnected dentry instead of '/'.
-+                if(i[key]['filename']=='/'):
-+                    fname = 'disconnected dentry'
-+                else:
-+                    fname = i[key]['filename'].split('/')[-1]
-+            except KeyError:
-+                # for older kernels which do not have the fname patch in kernel, they
-+                # won't be able to see the fname field. Therefore post it as N/A.
-+                fname = "N/A"
-+            otype = i[key]['type']
-+            try:
-+                access = i[key]['access']
-+            except:
-+                access = ''
-+            try:
-+                deny = i[key]['deny']
-+            except:
-+                deny = ''
-+            hostname = client_info['name'].split()[-1].split('"')[0]
-+            hostname =  hostname.split('.')[0]
-+            otype = i[key]['type']
-+            # if the hostname is too long, it messes up with the output being in columns,
-+            # therefore we truncate the hostname followed by two '..' as suffix.
-+            if len(hostname) > 20:
-+                hostname = hostname[0:20] + '..'
-+            clientid = client_info['clientid'].strip()
-+            minorversion = client_info['minor version'].rstrip().rsplit()[0]
-+            # since some fields do not have deny column, we drop those if -t is either
-+            # layout or lock.
-+            drop = ['layout', 'lock']
-+
-+            # Printing the output this way instead of a single string which is concatenated
-+            # this makes it better to quickly add more columns in future.
-+            if(otype == argument.type or  argument.type == 'all'):
-+                print('%-13s' %inode, end='| ')
-+                print('%-7s' %otype, end='| ')
-+                if (argument.type not in drop):
-+                    print('%-7s' %access, end='| ')
-+                if (argument.type not in drop and argument.type !='deleg'):
-+                    print('%-5s' %deny, end='| ')
-+                if (argument.hostname == True):
-+                    print('%-22s' %hostname, end='| ')
-+                else:
-+                   print('%-22s' %client_ip, end='| ')
-+                if (argument.clientinfo == True) :
-+                    print('%-20s' %clientid, end='| ')
-+                    print('4.%-3s' %minorversion, end='| ')
-+                print(fname)
-+
-+def opener(path):
-+    try:
-+        with open(path, 'r') as nfsdata:
-+            data = yaml.load(nfsdata, Loader = yaml.BaseLoader)
-+            if data is not None:
-+                clientinfo = path.rsplit('/', 1)[0] + '/info'
-+                data.append(clientinfo)
-+                return data
-+
-+    except OSError as reason:
-+        print('%s' % reason)
-+
-+def print_cols(argument):
-+    title_inode = 'Inode number'
-+    title_otype = 'Type'
-+    title_access = 'Access'
-+    title_deny = 'Deny'
-+    title_fname = 'Filename'
-+    title_clientID = 'Client ID'
-+    title_hostname = 'Hostname'
-+    title_ip = 'ip address'
-+    title_nfsvers = 'vers'
-+
-+    drop = ['lock', 'layout']
-+    print(BBOLD, end='')
-+    print('%-13s' %title_inode, end='| ')
-+    print('%-7s' %title_otype, end='| ')
-+    if (argument.type not in drop):
-+        print('%-7s' %title_access, end='| ')
-+    if (argument.type not in drop and argument.type !='deleg'):
-+        print('%-5s' %title_deny, end='| ')
-+    if (argument.hostname == True):
-+        print('%-22s' %title_hostname, end='| ')
-+    else:
-+        print('%-22s' %title_ip, end='| ')
-+    if (argument.clientinfo == True):
-+        print('%-20s' %title_clientID, end='| ')
-+        print('%-5s' %title_nfsvers, end='| ')
-+    print(title_fname, end='')
-+    print(ENDC)
-+
-+def nfsd4_show():
-+
-+    parser = argparse.ArgumentParser(description = 'Parse the nfsd states and clientinfo files.')
-+    parser.add_argument('-t', '--type', metavar = 'type', type = str, choices = ['open',
-+        'deleg', 'lock', 'layout', 'all'],
-+        default = 'all',
-+        help = 'Input the type that you want to be printed: open, lock, deleg, layout, all')
-+    parser.add_argument('--clientinfo', action = 'store_true',
-+        help = 'output clients information, --hostname is implied.')
-+    parser.add_argument('--hostname', action = 'store_true',
-+        help = 'print hostname of client instead of its ip address. Longer hostnames are truncated.')
-+    parser.add_argument('-q', '--quiet', action = 'store_true',
-+        help = 'don\'t print the header information')
-+
-+    args = parser.parse_args()
-+    paths = getpaths()
-+    p = mp.Pool(mp.cpu_count(), init_worker)
-+    try:
-+        result = p.map(opener, paths)
-+        ### Drop None entries from list
-+        final_result = list(filter(None, result))
-+        p.close()
-+        p.join()
-+
-+        if len(final_result) !=0 and not args.quiet:
-+            print_cols(args)
-+
-+        for item in final_result:
-+            printer(item, args)
-+
-+    except KeyboardInterrupt:
-+        print('Caught KeyboardInterrupt, terminating workers')
-+        p.terminate()
-+        p.join()
-+
-+if __name__ == "__main__":
-+    nfsd4_show()
++++ b/tools/nfsdclts/nfsdclts.man
+@@ -0,0 +1,156 @@
++.\"
++.\" nfsdclts(8)
++.\"
++.TH "NFSDCLTS" "8" "2020-05-09" "nfsdclts" "nfsdclts"
++.ie \n(.g .ds Aq \(aq
++.el       .ds Aq '
++.ss \n[.ss] 0
++.nh
++.ad l
++.de URL
++\fI\\$2\fP <\\$1>\\$3
++..
++.als MTO URL
++.if \n[.g] \{\
++.  mso www.tmac
++.  am URL
++.    ad l
++.  .
++.  am MTO
++.    ad l
++.  .
++.  LINKSTYLE blue R < >
++.\}
++.SH "NAME"
++nfsdclts \- print various nfs client information for knfsd server.
++.SH "SYNOPSIS"
++.sp
++\fBnfsdclts\fP [\fI\-h\fP] [\fI\-t type\fP] [\fI\-\-clientinfo\fP] [\fI\-\-hostname\fP] [\fI\-q\fP]
++.SH "DESCRIPTION"
++.sp
++The nfsdclts(8) command parses the content present in /proc/fs/nfsd/clients/ directories. nfsdclts(8) displays files which are open, locked, delegated by the nfs\-client. It also prints useful client information such as hostname, clientID, NFS version mounted by the nfs\-client.
++.SH "OPTIONS"
++.sp
++\fB\-t, \-\-type\fP=TYPE
++.RS 4
++Specify the type of file to be displayed. Takes only one TYPE at a time.
++.sp
++\fIopen\fP, \fIlock\fP, \fIdeleg\fP, \fIlayout\fP, or \fIall\fP
++.sp
++open: displays the open files by nfs\-client(s).
++.sp
++lock: displays the files locked by nfs\-client(s).
++.sp
++layout: displays the files for which layout is given.
++.sp
++deleg: displays delegated files information and delegation type.
++.sp
++all: prints all the above type.
++.RE
++.sp
++\fB\-\-clientinfo\fP
++.RS 4
++displays various nfs\-client info fields such as version of nfs mounted at nfs\-client and clientID.
++.RE
++.sp
++\fB\-\-hostname\fP
++.RS 4
++Print hostname of nfs\-client instead of ip-address.
++.RE
++.sp
++\fB\-q, \-\-quiet\fP
++.RS 4
++Hide the header information.
++.RE
++.sp
++\fB\-h, \-\-help\fP
++.RS 4
++Print help explaining the command line options.
++.SH "EXAMPLES"
++.sp
++\fBnfsdclts \-\-type open\fP
++.RS 4
++List all files with open type only.
++.RE
++.sp
++.if n .RS 4
++.nf
++Inode number | Type   | Access | Deny | ip address            | Filename
++33823232     | open   | r\-     | \-\-   | [::1]:757             | testfile
++.fi
++.if n .RE
++.sp
++\fBnfsdclts \-\-type deleg\fP
++.RS 4
++List all files with deleg type only.
++.RE
++.sp
++.if n .RS 4
++.nf
++Inode number | Type   | Access | ip address            | Filename
++33823232     | deleg  | r      | [::1]:757             | testfile
++.fi
++.if n .RE
++.sp
++\fBnfsdclts \-\-hostname\fP
++.RS 4
++Print hostname instead of ip\-address.
++.RE
++.sp
++.if n .RS 4
++.nf
++Inode number | Type   | Access | Deny | Hostname              | Filename
++33823232     | open   | r\-     | \-\-   | nfs\-server            | testfile
++33823232     | deleg  | r      |      | nfs\-server            | testfile
++.fi
++.if n .RE
++.sp
++\fBnfsdclts \-\-clientinfo\fP
++.RS 4
++Print client information.
++.RE
++.sp
++.if n .RS 4
++.nf
++Inode number | Type   | Access | Deny | ip address            | Client ID           | vers | Filename
++33823232     | open   | r\-     | \-\-   | [::1]:757             | 0xc79a009f5eb65e84  | 4.2  | testfile
++33823232     | deleg  | r      |      | [::1]:757             | 0xc79a009f5eb65e84  | 4.2  | testfile
++.fi
++.if n .RE
++.sp
++\fBnfsdclts.py \-\-quiet \-\-hostname\fP
++.RS 4
++Hide the header information.
++.RE
++.sp
++.if n .RS 4
++.nf
++33823232     | open   | r\-     | \-\-   | nfs\-server            | testfile
++33823232     | deleg  | r      |      | nfs\-server            | testfile
++.fi
++.if n .RE
++.SH "FILES"
++.sp
++\fB/proc/fs/nfsd/clients/\fP
++.sp
++Displays basic information about each NFSv4 client.
++.sp
++\fB/proc/fs/nfsd/clients/#/info\fP
++.sp
++Displays information about all the opens held by the given client, including open modes, device numbers, inode numbers, and open owners.
++.sp
++\fB/proc/fs/nfsd/clients/#/states\fP
++.SH "NOTES"
++.sp
++/proc/fs/nfsd/clients/ support was initially introduced in 5.3 kernel and is only implemented for mount points using NFSv4.
++.SH "BUGS"
++Please report any BUGs to \c
++.MTO "linux\-nfs\(atvger.kernel.org" "" ""
++.SH SEE ALSO
++.BR nfsd (8),
++.BR exportfs (8),
++.BR idmapd (8),
++.BR statd (8)
++.SH "AUTHORS"
++Achilles Gaikwad <agaikwad@redhat.com> and
++Kenneth D'souza  <kdsouza@redhat.com>
 -- 
 2.26.2
 
