@@ -2,72 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 681041CCDF5
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 May 2020 22:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA641CCEBF
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2020 01:51:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgEJUf6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 10 May 2020 16:35:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31162 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729106AbgEJUf5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 May 2020 16:35:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589142956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DSFlNYwfdCpOV/I7s5/Tc33w1643YGxcvEZSHoh8T7o=;
-        b=SGbEDa3sEdDlG77g96bkiE5ApCm0NQ9dniCa7M1NIzRVnQCMmiqibqNlzQxmYcrzJGkEoA
-        SD4zpsAsIYYziGnhuwv64t50l+HOZl7Hj3/cxGWp9Psbn6tElksqcv5k9UYP+FTheJi32y
-        dVuPApVeCYEnrMslM5qtfa0+BZ6sc6k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-K3k0KoFINIa8H5p22cqmrw-1; Sun, 10 May 2020 16:35:52 -0400
-X-MC-Unique: K3k0KoFINIa8H5p22cqmrw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68F19107ACCA;
-        Sun, 10 May 2020 20:35:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C83C160DB4;
-        Sun, 10 May 2020 20:35:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <d4efead1d6dba67f5c862a8d00ca88dd3c45dd34.camel@hammerspace.com>
-References: <d4efead1d6dba67f5c862a8d00ca88dd3c45dd34.camel@hammerspace.com> <158897619675.1119820.2203023452686054109.stgit@warthog.procyon.org.uk>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     dhowells@redhat.com,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "cmaiolino@redhat.com" <cmaiolino@redhat.com>,
-        "carmark.dlut@gmail.com" <carmark.dlut@gmail.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 0/5] cachefiles, nfs: Fixes
+        id S1729224AbgEJXvX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 10 May 2020 19:51:23 -0400
+Received: from s58.linuxpl.com ([5.9.16.239]:53343 "EHLO s58.linuxpl.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729208AbgEJXvW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 10 May 2020 19:51:22 -0400
+X-Greylist: delayed 1649 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 May 2020 19:51:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=belsznica.pl; s=x; h=Content-Type:MIME-Version:References:In-Reply-To:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=apoDzRfWIeVLsZcFAt7c5LEOpQ/63mTWu+ARh3h8mwI=; b=tbUkYAjBU035VU8aaWTzWtq521
+        8TgWKHkZahmxcknJN+PF13dql/nz0db2lYF/lPc4VQqt4zOYBg07Tngja5XM1S7X+IwS9Z7PMakAi
+        Uul4YdNcPfqs0a0JuEBtS/Gy1Qdy6GK0y7+tmaVRtBsjs9cWJxuGExqM0dDTS9/G3kuW6W8hT9nCs
+        797R4UnoHVyxO0Radb251C1Hu8q6FOfbdnOOmHb/iX+FfrdhV0B2s7YQ3/00zOMOgmYfHKXp3Yo3w
+        zuUyLr29xM16yL0+w30cSQdXKZjD7M5mqJaZfN/WwO4XE4j9FAKiXrN+BNADA8RZUxDs4Av6ZrpYh
+        tAm0sx5Q==;
+Received: from user-5-173-104-160.play-internet.pl ([5.173.104.160] helo=mordimer)
+        by s58.linuxpl.com with esmtpa (Exim 4.92.3)
+        (envelope-from <jasiu@belsznica.pl>)
+        id 1jXvIT-00082w-4q; Mon, 11 May 2020 01:23:49 +0200
+Received: from mordimer (localhost [127.0.0.1])
+        by mordimer (Postfix) with ESMTP id 1AED460B65;
+        Mon, 11 May 2020 01:23:49 +0200 (CEST)
+Date:   Mon, 11 May 2020 01:23:48 +0200
+From:   Jan Psota <jasiu@belsznica.pl>
+To:     linux-nfs@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: refcount underflow in nfsd41_destroy_cb
+Message-ID: <20200511012348.0ff190bc.jasiu@belsznica.pl>
+In-Reply-To: <20200321154128.58eb8ef2.jasiu@belsznica.pl>
+References: <CAHmME9ro8BPBTMfu8dEbGmkH7qHLdQ=CXGEOW2C7MR4bmT6T+w@mail.gmail.com>
+        <20200321154128.58eb8ef2.jasiu@belsznica.pl>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Operating-System: Linux; Gentoo
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1787829.1589142943.1@warthog.procyon.org.uk>
-Date:   Sun, 10 May 2020 21:35:43 +0100
-Message-ID: <1787830.1589142943@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/mixed; boundary="MP_/kxBoEzMS=/lsOA1KlS4xYZ4"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> wrote:
+--MP_/kxBoEzMS=/lsOA1KlS4xYZ4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> I can pull this branch, and send it together with the NFS client
-> bugfixes for 5.7-rc5.
+Hi!
+Today's nfsd trace in attachment. My NFS-root-ed client worked on
+qemu-5.0.0 and tap interface (qemu has nothing to do with that effect
+- on another server, physical machine client is connected through gigabit
+ethernet). Error appeared on intensive NFS operations (Gentoo Linux on
+client was installing Libre Office from binary package, moving files
+from /var/tmp/portage to root filesystem).
 
-Thanks!
+Server /proc/version:
+	Linux version 5.7.0-rc2 (root@mordimer)
+	(gcc version 9.3.0 (Gentoo 9.3.0 p2), GNU ld (Gentoo 2.34 p1) 2.34.0)
+	#1 SMP PREEMPT Tue Apr 21 21:52:13 CEST 2020
 
-David
+server /proc/cmdline:
+	BOOT_IMAGE=/vmlinuz root=/dev/md0p4 panic=30 rw
+	md=0,/dev/sda,/dev/sdb rootdelay=1 ipv6.disable=1
 
+Client side errors were only some:
+	nfs: server 192.168.2.1 not responding, still trying
+	nfs: server 192.168.2.1 OK
+but it is normal.
+
+--MP_/kxBoEzMS=/lsOA1KlS4xYZ4
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=nfsd-trace-20200511.txt
+
+[17957.413775] ------------[ cut here ]------------
+[17957.413804] refcount_t: underflow; use-after-free.
+[17957.413835] WARNING: CPU: 1 PID: 26127 at lib/refcount.c:28 refcount_warn_saturate+0xd8/0xe0
+[17957.413872] Modules linked in: md5 nfsd auth_rpcgss nfs_acl lockd grace sunrpc fuse vhost_net vhost vhost_iotlb xt_mac xt_socket nf_socket_ipv4 xt_MASQUERADE xt_REDIRECT xt_TPROXY nf_tproxy_ipv4 xt_comment ipt_REJECT nf_reject_ipv4 xt_mark xt_multiport nfnetlink_log xt_NFLOG nf_log_ipv4 nf_log_common xt_LOG nf_nat_tftp nf_nat_sip nf_nat_h323 nf_nat_ftp nf_conntrack_tftp nf_conntrack_sip nf_conntrack_netlink nfnetlink nf_conntrack_h323 nf_conntrack_ftp tun bridge stp llc xt_tcpudp xt_conntrack iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_raw iptable_filter ip_tables x_tables rc_it913x_v1 it913x_fe hid_generic usbhid hid dvb_usb_it913x dvb_usb_v2 dvb_core videobuf2_vmalloc videobuf2_memops videobuf2_common rc_core btrfs blake2b_generic xor raid6_pq libcrc32c zlib_deflate zlib_inflate snd_hda_codec_realtek snd_hda_codec_generic x86_pkg_temp_thermal kvm_intel kvm ppdev irqbypass i915 crct10dif_pclmul crc32_pclmul sr_mod intel_cstate iosf_mbi
+[17957.413896]  intel_rapl_perf input_leds drm_kms_helper snd_hda_intel syscopyarea snd_intel_dspcfg sysfillrect pcspkr cdrom sysimgblt i2c_i801 fb_sys_fops intel_gtt r8169 snd_hda_codec i2c_algo_bit ehci_pci cfbfillrect cfbimgblt ehci_hcd realtek lpc_ich mei_me cfbcopyarea snd_hda_core usbcore libphy sky2 fb snd_hwdep mei mfd_core usb_common fbdev thermal parport_pc parport video sch_fq_codel snd_pcm_oss snd_mixer_oss snd_pcm snd_timer drm snd drm_panel_orientation_quirks soundcore agpgart backlight i2c_core coretemp hwmon
+[17957.414516] CPU: 1 PID: 26127 Comm: kworker/u4:2 Not tainted 5.7.0-rc2 #1
+[17957.414545] Hardware name: MSI MS-7788/H61M-P20 (G3) (MS-7788), BIOS V1.9 01/10/2013
+[17957.414587] Workqueue: rpciod rpc_async_schedule [sunrpc]
+[17957.414612] RIP: 0010:refcount_warn_saturate+0xd8/0xe0
+[17957.414633] Code: ff 48 c7 c7 f0 7a d7 81 c6 05 d1 35 d7 00 01 e8 5b 9b d0 ff 0f 0b c3 48 c7 c7 98 7a d7 81 c6 05 bd 35 d7 00 01 e8 45 9b d0 ff <0f> 0b c3 0f 1f 44 00 00 8b 07 3d 00 00 00 c0 74 12 83 f8 01 74 46
+[17957.414716] RSP: 0018:ffffc90000bafde0 EFLAGS: 00010282
+[17957.414738] RAX: 0000000000000026 RBX: 0000000000000e81 RCX: 0000000000000007
+[17957.414767] RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff888216718800
+[17957.414798] RBP: ffff8881c5270c70 R08: 0000000000000338 R09: ffffc90010054024
+[17957.414828] R10: 0000000000aaaaaa R11: 0000000000000000 R12: ffff88805b0a0510
+[17957.414857] R13: ffff888011707b30 R14: 0000000000000001 R15: ffff888130c9d000
+[17957.414889] FS:  0000000000000000(0000) GS:ffff888216700000(0000) knlGS:0000000000000000
+[17957.414924] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[17957.414948] CR2: 00005600ba4586e8 CR3: 000000015a210004 CR4: 00000000001626e0
+[17957.414978] Call Trace:
+[17957.414996]  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
+[17957.415020]  rpc_free_task+0x31/0x50 [sunrpc]
+[17957.415042]  __rpc_execute+0x38f/0x3a0 [sunrpc]
+[17957.415063]  ? pick_next_task_fair+0x295/0x2b0
+[17957.415082]  ? finish_task_switch+0x70/0x230
+[17957.415103]  rpc_async_schedule+0x24/0x40 [sunrpc]
+[17957.416404]  process_one_work+0x1cd/0x3c0
+[17957.417680]  worker_thread+0x45/0x3c0
+[17957.418947]  kthread+0x10b/0x150
+[17957.420195]  ? process_one_work+0x3c0/0x3c0
+[17957.421420]  ? kthread_park+0x80/0x80
+[17957.422620]  ret_from_fork+0x1f/0x30
+[17957.423790] ---[ end trace d52e90aa624996f1 ]---
+
+--MP_/kxBoEzMS=/lsOA1KlS4xYZ4--
