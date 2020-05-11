@@ -2,68 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FD61CE26E
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2020 20:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC731CE3A7
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2020 21:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbgEKSSQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 May 2020 14:18:16 -0400
-Received: from fieldses.org ([173.255.197.46]:54828 "EHLO fieldses.org"
+        id S1731349AbgEKTPC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 May 2020 15:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729768AbgEKSSQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 11 May 2020 14:18:16 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id F407B709; Mon, 11 May 2020 14:18:15 -0400 (EDT)
-Date:   Mon, 11 May 2020 14:18:15 -0400
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd4: remove "client testing stateid" log spam
-Message-ID: <20200511181815.GK8629@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+        id S1728613AbgEKTPC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 11 May 2020 15:15:02 -0400
+Subject: Re: [GIT PULL] Please pull the second round of NFS server -rc fixes
+ for v5.7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589224501;
+        bh=6nEntGBqg9GZAcn3Le7ZlMH3ksbXb8ECQpsYvPFmYAs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=t/PGFoCHHUiJOCZbXL+Ef1q9geMwsej6BqltoaaNfI4uLJa+yy9pIEptGV1eCnC3r
+         6203v3XkjtdWAdN2CBfqc2wXgB1Va8zujAomKEFgrFKOhpwrZeoZ0+OsjArpSLEZDX
+         0HoP/5b7zawdBdvs+5ipZv7oy5gRiYOlyRTL19uk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <0D57DEB9-C336-47A6-8219-6C3525B2EB0F@oracle.com>
+References: <0D57DEB9-C336-47A6-8219-6C3525B2EB0F@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <0D57DEB9-C336-47A6-8219-6C3525B2EB0F@oracle.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/cel/cel-2.6.git
+ tags/nfsd-5.7-rc-2
+X-PR-Tracked-Commit-Id: 0a8e7b7d08466b5fc52f8e96070acc116d82a8bb
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 152036d1379ffd6985262743dcf6b0f9c75f83a4
+Message-Id: <158922450176.1653.11285705842580856422.pr-tracker-bot@kernel.org>
+Date:   Mon, 11 May 2020 19:15:01 +0000
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+The pull request you sent on Mon, 11 May 2020 14:14:09 -0400:
 
-I try not to log even buggy client behavior by default, as I'd rather
-not give malicious clients a way to spam the logs.
+> git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.7-rc-2
 
-But this condition isn't even a sign of a buggy client--in recovery
-cases it's normal to test stateid's from a no-longer-active clientid.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/152036d1379ffd6985262743dcf6b0f9c75f83a4
 
-I'd be open to dprintk's or tracing here if people think it's necessary.
-For now, just remove this.
+Thank you!
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfs4state.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 65cfe9ab47be..e7a592f0a27e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5521,15 +5521,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
- 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
- 		CLOSE_STATEID(stateid))
- 		return status;
--	/* Client debugging aid. */
--	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid)) {
--		char addr_str[INET6_ADDRSTRLEN];
--		rpc_ntop((struct sockaddr *)&cl->cl_addr, addr_str,
--				 sizeof(addr_str));
--		pr_warn_ratelimited("NFSD: client %s testing state ID "
--					"with incorrect client ID\n", addr_str);
-+	if (!same_clid(&stateid->si_opaque.so_clid, &cl->cl_clientid))
- 		return status;
--	}
- 	spin_lock(&cl->cl_lock);
- 	s = find_stateid_locked(cl, stateid);
- 	if (!s)
 -- 
-2.26.2
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
