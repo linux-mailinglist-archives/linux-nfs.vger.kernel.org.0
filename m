@@ -2,114 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C779E1CE837
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 00:38:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1BE1CE8FC
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 01:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgEKWiW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 May 2020 18:38:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39716 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgEKWiW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 11 May 2020 18:38:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 39062AD89;
-        Mon, 11 May 2020 22:38:23 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Date:   Tue, 12 May 2020 08:38:10 +1000
-Cc:     Lei Xue <carmark.dlut@gmail.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>, dhowells@redhat.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] cachefiles, nfs: Fixes
-In-Reply-To: <158897619675.1119820.2203023452686054109.stgit@warthog.procyon.org.uk>
-References: <158897619675.1119820.2203023452686054109.stgit@warthog.procyon.org.uk>
-Message-ID: <87ftc6ayi5.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        id S1726106AbgEKXRS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 May 2020 19:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgEKXRS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 May 2020 19:17:18 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF24C061A0C
+        for <linux-nfs@vger.kernel.org>; Mon, 11 May 2020 16:17:18 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 617341C21; Mon, 11 May 2020 19:17:17 -0400 (EDT)
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 1/2] nfsd4: common stateid-printing code
+Date:   Mon, 11 May 2020 19:17:15 -0400
+Message-Id: <1589239036-17100-1-git-send-email-bfields@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-On Fri, May 08 2020, David Howells wrote:
+There's a problem with how I'm formatting stateids.  Before I fix it,
+I'd like to move the stateid formatting into a common helper.
 
-> Hi Linus, Trond, Anna,
->
-> Can you pull these fixes for cachefiles and NFS's use of fscache?  Should
-> they go through the NFS tree or directly upstream?  The things fixed are:
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ fs/nfsd/nfs4state.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-hi David,
-thanks for these fscache fixes.  Here is another for your consideration.
-
-NeilBrown
-
-
-From: NeilBrown <neilb@suse.de>
-Date: Tue, 12 May 2020 08:32:25 +1000
-Subject: [PATCH] cachefiles: fix inverted ASSERTion.
-
-bmap() returns a negative result precisely when a_ops->bmap is NULL.
-
-A recent patch converted
-
-       ASSERT(inode->i_mapping->a_ops->bmap);
-
-to an assertion that bmap(inode, ...) returns a negative number.
-This inverts the sense of the assertion.
-So change it back : ASSERT(ret =3D=3D 0)
-
-Fixes: 10d83e11a582 ("cachefiles: drop direct usage of ->bmap method.")
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- fs/cachefiles/rdwr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
-index 1dc97f2d6201..a4573c96660c 100644
-=2D-- a/fs/cachefiles/rdwr.c
-+++ b/fs/cachefiles/rdwr.c
-@@ -431,7 +431,7 @@ int cachefiles_read_or_alloc_page(struct fscache_retrie=
-val *op,
- 	block <<=3D shift;
-=20
- 	ret =3D bmap(inode, &block);
-=2D	ASSERT(ret < 0);
-+	ASSERT(ret =3D=3D 0);
-=20
- 	_debug("%llx -> %llx",
- 	       (unsigned long long) (page->index << shift),
-=2D-=20
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c107caa56525..ded08aeae497 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2422,6 +2422,11 @@ static void nfs4_show_owner(struct seq_file *s, struct nfs4_stateowner *oo)
+ 	seq_quote_mem(s, oo->so_owner.data, oo->so_owner.len);
+ }
+ 
++static void nfs4_show_stateid(struct seq_file *s, stateid_t *stid)
++{
++	seq_printf(s, "0x%16phN", stid);
++}
++
+ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ {
+ 	struct nfs4_ol_stateid *ols;
+@@ -2437,7 +2442,9 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
+ 
+-	seq_printf(s, "- 0x%16phN: { type: open, ", &st->sc_stateid);
++	seq_printf(s, "- ");
++	nfs4_show_stateid(s, &st->sc_stateid);
++	seq_printf(s, ": { type: open, ");
+ 
+ 	access = bmap_to_share_mode(ols->st_access_bmap);
+ 	deny   = bmap_to_share_mode(ols->st_deny_bmap);
+@@ -2470,7 +2477,9 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
+ 
+-	seq_printf(s, "- 0x%16phN: { type: lock, ", &st->sc_stateid);
++	seq_printf(s, "- ");
++	nfs4_show_stateid(s, &st->sc_stateid);
++	seq_printf(s, ": { type: lock, ");
+ 
+ 	/*
+ 	 * Note: a lock stateid isn't really the same thing as a lock,
+@@ -2499,7 +2508,9 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 	nf = st->sc_file;
+ 	file = nf->fi_deleg_file;
+ 
+-	seq_printf(s, "- 0x%16phN: { type: deleg, ", &st->sc_stateid);
++	seq_printf(s, "- ");
++	nfs4_show_stateid(s, &st->sc_stateid);
++	seq_printf(s, ": { type: deleg, ");
+ 
+ 	/* Kinda dead code as long as we only support read delegs: */
+ 	seq_printf(s, "access: %s, ",
+@@ -2521,7 +2532,9 @@ static int nfs4_show_layout(struct seq_file *s, struct nfs4_stid *st)
+ 	ls = container_of(st, struct nfs4_layout_stateid, ls_stid);
+ 	file = ls->ls_file;
+ 
+-	seq_printf(s, "- 0x%16phN: { type: layout, ", &st->sc_stateid);
++	seq_printf(s, "- ");
++	nfs4_show_stateid(s, &st->sc_stateid);
++	seq_printf(s, ": { type: layout, ");
+ 
+ 	/* XXX: What else would be useful? */
+ 
+-- 
 2.26.2
 
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6509IACgkQOeye3VZi
-gbnDKQ/+MIO9eK9pP/A6zoofl4dfmmO2wUUM1+DX2Oh1H/8wxdkOM3q9WtX9xL7N
-F3e7t1v3nGngJ0UqlXbO/Xu7j6dGCvj/m/nO1+1QlViPF5w0wYw+BJSr5fV/sXh+
-ZOxnNEZTyoj8/xjc+5h76a8tuwV0XKbKfGvkZ+AVH8E3YqMhGuAj/5E+oGoA0ida
-cCBs1rSWMXtYbcDAGcV6CoI4lHqMg62UPeX6fLush5nxDVu9wmQ3Gc0pSZ7lPNif
-nA3e363xgE4BVpZOnc9NEKfnBa+dRKFed6Br+K+kGvaFhao7ntVePSaKW6R/S7gJ
-H+yJpA5kAObGKsdF0KLHOFNeVZF+HfY4E/47Mwqboua5+1Y+REMnUa1TyYqK+TT3
-c9jI4MpaJFOLWBsR8t+NVCcEpJSpoKoK2zp2UL+r9/LCwCuUOIjxV92D9BCnwPLT
-QSG7pqfuHOnHkqugpjuQexljB+cYiklY+1KS6hxFNuktzL4i76EfISwj3wDRUHKd
-PpIUmelidrqdo9YX9y/hxbhTFjxzJNhvVLRqDHjKTEaPTDdT68U3gqlJdbLl25NM
-laUoAvufTQHsgNfTD1FKEVy2rsYkvJSOSRhP8OTykmLmGaAihgJhlnd4/O0uynqP
-1OD3A8TD1oaCQOW2Y6uShEwcnd57Omhvj6Cvl26MwcIWXbx0KV4=
-=shc0
------END PGP SIGNATURE-----
---=-=-=--
