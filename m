@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE62A1D0074
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 23:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40B7A1D0075
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 23:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgELVNh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 May 2020 17:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
+        id S1731049AbgELVNm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 May 2020 17:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731271AbgELVNg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 May 2020 17:13:36 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE2CC061A0C
-        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:13:36 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b6so14131926qkh.11
-        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:13:36 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728351AbgELVNm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 May 2020 17:13:42 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B4CC061A0C
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:13:41 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id z5so5226785qvw.4
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=v0wimesOpmxd1KvdsoN97nhQKHFPqtuYm4Ygpvvnngw=;
-        b=lsui1crzNKJ2bb65U7cPYRHLSUwFoxNsI/26pgICsyIK3erws6M/N7OFJNiBTT6qKW
-         07cWCMiVS9FSmIJInUkjfHJk4iDZaL48xIq8KUgumDKZ1DsdK1kjCbNssUFTrV8LCy4o
-         1zboaJ13gVs+Qw/UvpjccRQezMyItuETPTc1I1cUQO9eNV8I9gsjO/IQamwW95NEDpxl
-         T+mE4HuY+95cSHw7CFlsBJyfM0/h/Ptu9tDXoLn3F7/5EBVfwV+Oo8hoIgVyNtV2hggQ
-         0ZhgXHn9VmskzC2vL3oFW7SybZ3lmT0BFvpwfy9tWh87DiAIahIIejH2WLWx7UhCdLgY
-         U7hg==
+        bh=YV5n4SkC9nd6oKutJOA9/j+hXloVejchKDWBOqD3zek=;
+        b=c/iD+jQ6+RimZI/cQG0nORMbX8GInBGaJauu373KoFgg+UMdjPI4Ius9WoncYh8aEz
+         C4bHrSOzgTxWLRjPRzhUugtzamxka6Njue5tObYDgQfkt276VcwiTzKbVwwfAXCQhvhu
+         g1cibwpwjwOXSKw66gBAuU7UCIMQx/+o97kuDEBlkQrx/bNXrl1m8q9JLy5vtv0HLylo
+         lC4iULxtsQtbALlSUFxZ2E+hl6EAYzxcneDfQntWHUTT9gPDRIZ6I8EodR/Qo9skTSyK
+         cOnQ8dKNk3BMVuPNOVdjH3GxpdfmxrFYGnMSWAT0qbHbnPS5yj8O7pjsHsP9E6sT18vV
+         TSxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=v0wimesOpmxd1KvdsoN97nhQKHFPqtuYm4Ygpvvnngw=;
-        b=l5XPtjF3PoeJtVdZH/Tx2JqsYPAzKlZzwJNz6yuIg6E/9jnNLzKPxcLecE8blETT1H
-         8TQQjYGqObi6ncXcM+rLdeMyo/CbHdcQTlHs19PDqmEHbXkO2VaHW5v+tb/f9d5h0IJm
-         TyCgtY+Uxnl2C3w/0GoJDJTkN3r/uU/hvYX9DL9/O/ObDiYpSeXcKo8V60yXZuPZ69xf
-         +6l1utZCBRuTGog30aTKmu8TV+vi0i+3DzIwnOn6GoSRDnQlP8jGW8yTyPMumplYkDOQ
-         Ix4PRg2uaGWEk/B7viRkv2H16K37Y83h60h77LgnW/V0+b/XFr6zKKLE1l7IOFs7SR4e
-         L+9w==
-X-Gm-Message-State: AOAM532xsO5/xt7y+nIXes9DVdeqUGrADZwo9Ya+O5CUbBuGZBayBkpG
-        omOvbDT6lpkFCKPjTTurZtc=
-X-Google-Smtp-Source: ABdhPJxd7qEXUERPh+Di9IqpkwekW/tzbjV5wRakxszaZY0I2e3OeFixFB1morC4IIXLl042mzGd8g==
-X-Received: by 2002:a37:a809:: with SMTP id r9mr7115075qke.96.1589318015567;
-        Tue, 12 May 2020 14:13:35 -0700 (PDT)
+        bh=YV5n4SkC9nd6oKutJOA9/j+hXloVejchKDWBOqD3zek=;
+        b=nZqmUTPAOKyYCBto0xUSiaw1YsswrYc0Afqws+HDq7i9Sq6cPNFttbVYfBYNo6PvD4
+         SevHBsQ0o6pG9TFz0nkMtBnZ5WqDr0ys9jBq90EJBYKP7C3nuN2UWE9cRjtIdZEw4rDE
+         OAmp6gWzobngwax4ThVxkWB27kpxOvJiriGom+vkEIFL/N4hc18E3X41eS+c9zEOu4Ek
+         Y+0nalqkJ4G3FkY5qIbf+Ais1uakA3oUsH6k+5/MIZX6Vv/SYL0Zev04lIY6cz4W/En4
+         UmDNB88vQOAx6Z03O1vo2sKE3Nd56BLKNN/sYHFbl+hiH2d+oq94Y2wgTRLOLsAHOIsP
+         PW5w==
+X-Gm-Message-State: AGi0Puah7PLNLccNCa/XQ0hSojGoNY/XR4vrKGAZlGc9v5eXUEVswVjx
+        21aMsBgkSOiYZz6bpRZEObw=
+X-Google-Smtp-Source: APiQypK5H4ZX9nn2oN/kEdRwzoUQ3KZalimMcYH2ntcRo7pKYXjWSb7aYhl2ye4hphnMYD0m8lWuRg==
+X-Received: by 2002:a05:6214:1152:: with SMTP id b18mr10755740qvt.13.1589318020986;
+        Tue, 12 May 2020 14:13:40 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 132sm12316742qkj.117.2020.05.12.14.13.34
+        by smtp.gmail.com with ESMTPSA id d9sm12404166qtj.77.2020.05.12.14.13.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 14:13:35 -0700 (PDT)
+        Tue, 12 May 2020 14:13:40 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04CLDYIh009807;
-        Tue, 12 May 2020 21:13:34 GMT
-Subject: [PATCH v1 08/15] SUNRPC: Trace transport lifetime events
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04CLDdCA009810;
+        Tue, 12 May 2020 21:13:39 GMT
+Subject: [PATCH v1 09/15] SUNRPC: trace RPC client lifetime events
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 12 May 2020 17:13:34 -0400
-Message-ID: <20200512211333.3288.44263.stgit@manet.1015granger.net>
+Date:   Tue, 12 May 2020 17:13:39 -0400
+Message-ID: <20200512211339.3288.37402.stgit@manet.1015granger.net>
 In-Reply-To: <20200512210724.3288.15187.stgit@manet.1015granger.net>
 References: <20200512210724.3288.15187.stgit@manet.1015granger.net>
 User-Agent: StGit/0.17.1-dirty
@@ -68,213 +68,274 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Refactor: Hoist create/destroy/disconnect tracepoints out of
-xprtrdma and into the generic RPC client. Some benefits include:
-
-- Enable tracing of xprt lifetime events for the socket transport
-  types
-
-- Expose the different types of disconnect to help run down
-  issues with lingering connections
+The "create" tracepoint records parts of the rpc_create arguments,
+and the shutdown tracepoint records when the rpc_clnt is about to
+signal pending tasks and destroy auths.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h  |    4 ----
- include/trace/events/sunrpc.h   |   35 +++++++++++++++++++++++++++++++++++
- net/sunrpc/xprt.c               |   21 +++++++++++----------
- net/sunrpc/xprtrdma/transport.c |    8 --------
- net/sunrpc/xprtrdma/verbs.c     |    1 -
- 5 files changed, 46 insertions(+), 23 deletions(-)
+ include/trace/events/sunrpc.h |  111 +++++++++++++++++++++++++++++++++++++++++
+ net/sunrpc/clnt.c             |   39 ++++++--------
+ 2 files changed, 126 insertions(+), 24 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 132c3c778a43..edb55eab4762 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -380,12 +380,8 @@
- 
- DEFINE_CONN_EVENT(connect);
- DEFINE_CONN_EVENT(disconnect);
--DEFINE_CONN_EVENT(flush_dct);
- 
--DEFINE_RXPRT_EVENT(xprtrdma_create);
--DEFINE_RXPRT_EVENT(xprtrdma_op_destroy);
- DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
--DEFINE_RXPRT_EVENT(xprtrdma_op_close);
- DEFINE_RXPRT_EVENT(xprtrdma_op_setport);
- 
- TRACE_EVENT(xprtrdma_op_connect,
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 4747803b370e..fc8a969ba306 100644
+index fc8a969ba306..098c84750fb7 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -724,6 +724,41 @@
- DEFINE_RPC_SOCKET_EVENT(rpc_socket_close);
- DEFINE_RPC_SOCKET_EVENT(rpc_socket_shutdown);
+@@ -65,6 +65,117 @@
+ DEFINE_RPCXDRBUF_EVENT(reply_pages);
  
-+DECLARE_EVENT_CLASS(rpc_xprt_lifetime_class,
+ 
++DECLARE_EVENT_CLASS(rpc_clnt_class,
 +	TP_PROTO(
-+		const struct rpc_xprt *xprt
++		const struct rpc_clnt *clnt
 +	),
 +
-+	TP_ARGS(xprt),
++	TP_ARGS(clnt),
 +
 +	TP_STRUCT__entry(
-+		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
-+		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
++		__field(unsigned int, client_id)
 +	),
 +
 +	TP_fast_assign(
-+		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
++		__entry->client_id = clnt->cl_clid;
 +	),
 +
-+	TP_printk("peer=[%s]:%s", __get_str(addr), __get_str(port))
++	TP_printk("clid=%u", __entry->client_id)
 +);
 +
-+#define DEFINE_RPC_XPRT_LIFETIME_EVENT(name) \
-+	DEFINE_EVENT(rpc_xprt_lifetime_class, \
-+			xprt_##name, \
-+			TP_PROTO( \
-+				const struct rpc_xprt *xprt \
-+			), \
-+			TP_ARGS(xprt))
++#define DEFINE_RPC_CLNT_EVENT(name)					\
++		DEFINE_EVENT(rpc_clnt_class,				\
++				rpc_clnt_##name,			\
++				TP_PROTO(				\
++					const struct rpc_clnt *clnt	\
++				),					\
++				TP_ARGS(clnt))
 +
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(create);
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(disconnect_auto);
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(disconnect_done);
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(disconnect_force);
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(disconnect_cleanup);
-+DEFINE_RPC_XPRT_LIFETIME_EVENT(destroy);
++DEFINE_RPC_CLNT_EVENT(free);
++DEFINE_RPC_CLNT_EVENT(killall);
++DEFINE_RPC_CLNT_EVENT(shutdown);
++DEFINE_RPC_CLNT_EVENT(release);
++DEFINE_RPC_CLNT_EVENT(replace_xprt);
++DEFINE_RPC_CLNT_EVENT(replace_xprt_err);
 +
- DECLARE_EVENT_CLASS(rpc_xprt_event,
- 	TP_PROTO(
- 		const struct rpc_xprt *xprt,
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 053de053a024..d5cc5db9dbf3 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -663,6 +663,7 @@ static void xprt_autoclose(struct work_struct *work)
- 		container_of(work, struct rpc_xprt, task_cleanup);
- 	unsigned int pflags = memalloc_nofs_save();
- 
-+	trace_xprt_disconnect_auto(xprt);
- 	clear_bit(XPRT_CLOSE_WAIT, &xprt->state);
- 	xprt->ops->close(xprt);
- 	xprt_release_write(xprt, NULL);
-@@ -677,7 +678,7 @@ static void xprt_autoclose(struct work_struct *work)
-  */
- void xprt_disconnect_done(struct rpc_xprt *xprt)
- {
--	dprintk("RPC:       disconnected transport %p\n", xprt);
-+	trace_xprt_disconnect_done(xprt);
- 	spin_lock(&xprt->transport_lock);
- 	xprt_clear_connected(xprt);
- 	xprt_clear_write_space_locked(xprt);
-@@ -694,6 +695,8 @@ void xprt_disconnect_done(struct rpc_xprt *xprt)
-  */
- void xprt_force_disconnect(struct rpc_xprt *xprt)
- {
-+	trace_xprt_disconnect_force(xprt);
++TRACE_EVENT(rpc_clnt_new,
++	TP_PROTO(
++		const struct rpc_clnt *clnt,
++		const struct rpc_xprt *xprt,
++		const char *program,
++		const char *server
++	),
 +
- 	/* Don't race with the test_bit() in xprt_clear_locked() */
- 	spin_lock(&xprt->transport_lock);
- 	set_bit(XPRT_CLOSE_WAIT, &xprt->state);
-@@ -832,8 +835,10 @@ void xprt_connect(struct rpc_task *task)
- 	if (!xprt_lock_write(xprt, task))
- 		return;
++	TP_ARGS(clnt, xprt, program, server),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, client_id)
++		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
++		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
++		__string(program, program)
++		__string(server, server)
++	),
++
++	TP_fast_assign(
++		__entry->client_id = clnt->cl_clid;
++		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
++		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
++		__assign_str(program, program)
++		__assign_str(server, server)
++	),
++
++	TP_printk("client=%u peer=[%s]:%s program=%s server=%s",
++		__entry->client_id, __get_str(addr), __get_str(port),
++		__get_str(program), __get_str(server))
++);
++
++TRACE_EVENT(rpc_clnt_new_err,
++	TP_PROTO(
++		const char *program,
++		const char *server,
++		int error
++	),
++
++	TP_ARGS(program, server, error),
++
++	TP_STRUCT__entry(
++		__field(int, error)
++		__string(program, program)
++		__string(server, server)
++	),
++
++	TP_fast_assign(
++		__entry->error = error;
++		__assign_str(program, program)
++		__assign_str(server, server)
++	),
++
++	TP_printk("program=%s server=%s error=%d",
++		__get_str(program), __get_str(server), __entry->error)
++);
++
++TRACE_EVENT(rpc_clnt_clone_err,
++	TP_PROTO(
++		const struct rpc_clnt *clnt,
++		int error
++	),
++
++	TP_ARGS(clnt, error),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, client_id)
++		__field(int, error)
++	),
++
++	TP_fast_assign(
++		__entry->client_id = clnt->cl_clid;
++		__entry->error = error;
++	),
++
++	TP_printk("client=%u error=%d", __entry->client_id, __entry->error)
++);
++
++
+ TRACE_DEFINE_ENUM(RPC_AUTH_OK);
+ TRACE_DEFINE_ENUM(RPC_AUTH_BADCRED);
+ TRACE_DEFINE_ENUM(RPC_AUTH_REJECTEDCRED);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index c600628efa91..73d53b9898e6 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -370,10 +370,6 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 	const char *nodename = args->nodename;
+ 	int err;
  
--	if (test_and_clear_bit(XPRT_CLOSE_WAIT, &xprt->state))
-+	if (test_and_clear_bit(XPRT_CLOSE_WAIT, &xprt->state)) {
-+		trace_xprt_disconnect_cleanup(xprt);
- 		xprt->ops->close(xprt);
-+	}
+-	/* sanity check the name before trying to print it */
+-	dprintk("RPC:       creating %s client for %s (xprt %p)\n",
+-			program->name, args->servername, xprt);
+-
+ 	err = rpciod_up();
+ 	if (err)
+ 		goto out_no_rpciod;
+@@ -436,6 +432,8 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 		goto out_no_path;
+ 	if (parent)
+ 		atomic_inc(&parent->cl_count);
++
++	trace_rpc_clnt_new(clnt, xprt, program->name, args->servername);
+ 	return clnt;
  
- 	if (!xprt_connected(xprt)) {
- 		task->tk_rqstp->rq_connect_cookie = xprt->connect_cookie;
-@@ -1903,11 +1908,8 @@ struct rpc_xprt *xprt_create_transport(struct xprt_create *args)
+ out_no_path:
+@@ -450,6 +448,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ out_no_rpciod:
+ 	xprt_switch_put(xps);
+ 	xprt_put(xprt);
++	trace_rpc_clnt_new_err(program->name, args->servername, err);
+ 	return ERR_PTR(err);
+ }
  
- found:
- 	xprt = t->setup(args);
--	if (IS_ERR(xprt)) {
--		dprintk("RPC:       xprt_create_transport: failed, %ld\n",
--				-PTR_ERR(xprt));
-+	if (IS_ERR(xprt))
- 		goto out;
+@@ -634,10 +633,8 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
+ 	args->nodename = clnt->cl_nodename;
+ 
+ 	new = rpc_new_client(args, xps, xprt, clnt);
+-	if (IS_ERR(new)) {
+-		err = PTR_ERR(new);
+-		goto out_err;
 -	}
- 	if (args->flags & XPRT_CREATE_NO_IDLE_TIMEOUT)
- 		xprt->idle_timeout = 0;
- 	INIT_WORK(&xprt->task_cleanup, xprt_autoclose);
-@@ -1928,8 +1930,7 @@ struct rpc_xprt *xprt_create_transport(struct xprt_create *args)
++	if (IS_ERR(new))
++		return new;
  
- 	rpc_xprt_debugfs_register(xprt);
+ 	/* Turn off autobind on clones */
+ 	new->cl_autobind = 0;
+@@ -650,7 +647,7 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
+ 	return new;
  
--	dprintk("RPC:       created transport %p with %u slots\n", xprt,
--			xprt->max_reqs);
-+	trace_xprt_create(xprt);
- out:
- 	return xprt;
+ out_err:
+-	dprintk("RPC:       %s: returned error %d\n", __func__, err);
++	trace_rpc_clnt_clone_err(clnt, err);
+ 	return ERR_PTR(err);
  }
-@@ -1939,6 +1940,8 @@ static void xprt_destroy_cb(struct work_struct *work)
- 	struct rpc_xprt *xprt =
- 		container_of(work, struct rpc_xprt, task_cleanup);
  
-+	trace_xprt_destroy(xprt);
+@@ -723,11 +720,8 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
+ 	int err;
+ 
+ 	xprt = xprt_create_transport(args);
+-	if (IS_ERR(xprt)) {
+-		dprintk("RPC:       failed to create new xprt for clnt %p\n",
+-			clnt);
++	if (IS_ERR(xprt))
+ 		return PTR_ERR(xprt);
+-	}
+ 
+ 	xps = xprt_switch_alloc(xprt, GFP_KERNEL);
+ 	if (xps == NULL) {
+@@ -767,7 +761,7 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
+ 		rpc_release_client(parent);
+ 	xprt_switch_put(oldxps);
+ 	xprt_put(old);
+-	dprintk("RPC:       replaced xprt for clnt %p\n", clnt);
++	trace_rpc_clnt_replace_xprt(clnt);
+ 	return 0;
+ 
+ out_revert:
+@@ -777,7 +771,7 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
+ 	rpc_client_register(clnt, pseudoflavor, NULL);
+ 	xprt_switch_put(xps);
+ 	xprt_put(xprt);
+-	dprintk("RPC:       failed to switch xprt for clnt %p\n", clnt);
++	trace_rpc_clnt_replace_xprt_err(clnt);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(rpc_switch_client_transport);
+@@ -844,10 +838,11 @@ void rpc_killall_tasks(struct rpc_clnt *clnt)
+ 
+ 	if (list_empty(&clnt->cl_tasks))
+ 		return;
+-	dprintk("RPC:       killing all tasks for client %p\n", clnt);
 +
- 	rpc_xprt_debugfs_unregister(xprt);
- 	rpc_destroy_wait_queue(&xprt->binding);
- 	rpc_destroy_wait_queue(&xprt->pending);
-@@ -1963,8 +1966,6 @@ static void xprt_destroy_cb(struct work_struct *work)
-  */
- static void xprt_destroy(struct rpc_xprt *xprt)
- {
--	dprintk("RPC:       destroying transport %p\n", xprt);
--
  	/*
- 	 * Exclude transport connect/disconnect handlers and autoclose
+ 	 * Spin lock all_tasks to prevent changes...
  	 */
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 659da37020a4..048c2fd85728 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -281,8 +281,6 @@
++	trace_rpc_clnt_killall(clnt);
+ 	spin_lock(&clnt->cl_lock);
+ 	list_for_each_entry(rovr, &clnt->cl_tasks, tk_task)
+ 		rpc_signal_task(rovr);
+@@ -863,9 +858,7 @@ void rpc_shutdown_client(struct rpc_clnt *clnt)
  {
- 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(xprt);
+ 	might_sleep();
  
--	trace_xprtrdma_op_destroy(r_xprt);
--
- 	cancel_delayed_work_sync(&r_xprt->rx_connect_worker);
+-	dprintk_rcu("RPC:       shutting down %s client for %s\n",
+-			clnt->cl_program->name,
+-			rcu_dereference(clnt->cl_xprt)->servername);
++	trace_rpc_clnt_shutdown(clnt);
  
- 	rpcrdma_xprt_disconnect(r_xprt);
-@@ -365,10 +363,6 @@
- 
- 	xprt->max_payload = RPCRDMA_MAX_DATA_SEGS << PAGE_SHIFT;
- 
--	dprintk("RPC:       %s: %s:%s\n", __func__,
--		xprt->address_strings[RPC_DISPLAY_ADDR],
--		xprt->address_strings[RPC_DISPLAY_PORT]);
--	trace_xprtrdma_create(new_xprt);
- 	return xprt;
- }
- 
-@@ -385,8 +379,6 @@ void xprt_rdma_close(struct rpc_xprt *xprt)
+ 	while (!list_empty(&clnt->cl_tasks)) {
+ 		rpc_killall_tasks(clnt);
+@@ -884,6 +877,8 @@ static void rpc_free_client_work(struct work_struct *work)
  {
- 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(xprt);
+ 	struct rpc_clnt *clnt = container_of(work, struct rpc_clnt, cl_work);
  
--	trace_xprtrdma_op_close(r_xprt);
++	trace_rpc_clnt_free(clnt);
++
+ 	/* These might block on processes that might allocate memory,
+ 	 * so they cannot be called in rpciod, so they are handled separately
+ 	 * here.
+@@ -899,9 +894,7 @@ static void rpc_free_client_work(struct work_struct *work)
+ {
+ 	struct rpc_clnt *parent = NULL;
+ 
+-	dprintk_rcu("RPC:       destroying %s client for %s\n",
+-			clnt->cl_program->name,
+-			rcu_dereference(clnt->cl_xprt)->servername);
++	trace_rpc_clnt_release(clnt);
+ 	if (clnt->cl_parent != clnt)
+ 		parent = clnt->cl_parent;
+ 	rpc_unregister_client(clnt);
+@@ -945,8 +938,6 @@ static void rpc_free_client_work(struct work_struct *work)
+ void
+ rpc_release_client(struct rpc_clnt *clnt)
+ {
+-	dprintk("RPC:       rpc_release_client(%p)\n", clnt);
 -
- 	rpcrdma_xprt_disconnect(r_xprt);
- 
- 	xprt->reestablish_timeout = 0;
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 05c4d3a9cda2..2ae348377806 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -141,7 +141,6 @@ void rpcrdma_flush_disconnect(struct ib_cq *cq, struct ib_wc *wc)
- 	if (wc->status != IB_WC_SUCCESS &&
- 	    r_xprt->rx_ep->re_connect_status == 1) {
- 		r_xprt->rx_ep->re_connect_status = -ECONNABORTED;
--		trace_xprtrdma_flush_dct(r_xprt, wc->status);
- 		xprt_force_disconnect(xprt);
- 	}
- }
+ 	do {
+ 		if (list_empty(&clnt->cl_tasks))
+ 			wake_up(&destroy_wait);
 
