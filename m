@@ -2,112 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A921CED5F
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 08:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFE541D0066
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 23:13:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgELGzR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 May 2020 02:55:17 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45284 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgELGzR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 May 2020 02:55:17 -0400
-Received: by mail-io1-f72.google.com with SMTP id y6so5886851iol.12
-        for <linux-nfs@vger.kernel.org>; Mon, 11 May 2020 23:55:16 -0700 (PDT)
+        id S1728165AbgELVM4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 May 2020 17:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725950AbgELVMz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 May 2020 17:12:55 -0400
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8F8C061A0C
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:12:54 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id r3so7224949qvm.1
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2020 14:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=h/OwMCVZvIr6zk3l70XxNt9q1DZsQ8edzDB+a1u6XDU=;
+        b=Cf+FJ5PuupgBLMOqBTPJDSx+a7T6XwwDMBTQk2ikrV2pMAl55bf4NxJ62+tS8fE//7
+         k35veSfDr1rHs1FVQe+sHcgwwnotHYecun7OmAA9lDUAM1gWFQBQur3ztd38FAKpaNZ8
+         NrCSO3nwFMj+Zrc1MgJccA93wJZJwSYCTdSl4ZSo1S9BTX1UpgJWUWWGYiV9VnsLuLuZ
+         D/LGQOZAyqAyxPS/YviTcAnE48fiWAnAQhhwYokJ9SZEQSqta93TkVXuyh6TBi0z9Wa4
+         b7Nm/KlMkG7ZieP1cafnVzKwBmtTz7KlViFBD/C6Z5HcN/YHhub1kUV4XxtN9oSijVAP
+         LJJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nYuxikRQd1y8JjIoZo7imSaZgwUVBRsszkZdjA7ikeA=;
-        b=sKUjSZBnylVSV13ljjqMcIaZL4CUcYpb11ZZemoH0BLq40SRvXiuQHangqxftWgsvZ
-         9gPvwmlEzN5D5RCf/qsAbkjPVwrCCefoKD9A4FpVAevdG4RY4lTRynNRXJFJ6nErPY2h
-         6frG8KV+yWLdWH6+l/PBy88VL2m7TF1ZxudgqnBx1pdSqMZTNFzrcaTWOdX+jggS6BHj
-         mmMxmVvkLsOE1VEsLHAjvs7Qly6FefmpFu8Okgus8CET3UJWMPrUb0KfKHklgn1lYsqk
-         QUQvY+l2Ay7XaN10JPupXnnZ19uat+XMkPuwZ4vbtm0nN83GdU60GFJY/ocile0BqiDB
-         +0Xg==
-X-Gm-Message-State: AGi0PuYypdPTJ+/7VNoRRcyMdUkGgGCttchhTbM9qs7D7ZeskUxeWZx3
-        gZDTDwmfQ0AULWwg+y/5OSn7v/kekcFM2DvQ79kwiz14sg0O
-X-Google-Smtp-Source: APiQypJTfjl8Mevb0+zyALKxqVwVDOoXBPw6Xzhz5l0uVnLgmpdB6UQxigcW76BTbcAmcXQnzr5NoJqJxwVI8QHzZgBDc31kCc7p
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=h/OwMCVZvIr6zk3l70XxNt9q1DZsQ8edzDB+a1u6XDU=;
+        b=iBfjasmYef/sjXV2h3h8il7f5GNb6DbyupGsTGkTud1SK1xJQpZEonqHb5wC1nBhXO
+         hx17d6MLdwbvYqAPyPe6+KfmHbm6iqBlfcjgHInbyLMpSVqdapxot6AjdrGWqgapXfJU
+         jv0wYiSvdJgDRlYUE34dQ2+QVNtfoTgaIL+hW8FCXWQgEMHHp1WjEis9VgQmnfusVSay
+         kMg9PDGNvy2Stv/EefDV361FyV6jdIHBL+1fbX5Vzr7i8UIiW+AA9tb7FPCVYFk5G3+S
+         ZhetG3megprGiUIRpdS/ez2VVCM+UMkr6FZ5PF+TcSfsdCsjlcSCLxAfsWkNAj89IGqy
+         lGHQ==
+X-Gm-Message-State: AGi0PubiGyKqkQt3DeFlt+CgTl3p7c58kIlUGTbSKt5eZD/WHGvpQCER
+        gYquUMCIPDzqZxcQ8MaA93s=
+X-Google-Smtp-Source: APiQypKoKN3FvIokzXQ8IqgF/1YwCZz35DndBLKedqoHpRUTI1UEo3iKV4Yi8lXSd0O8qNnk7qSW6A==
+X-Received: by 2002:a0c:dd8c:: with SMTP id v12mr22402164qvk.134.1589317973167;
+        Tue, 12 May 2020 14:12:53 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id o67sm12148513qkc.2.2020.05.12.14.12.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 14:12:52 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04CLCouI009783;
+        Tue, 12 May 2020 21:12:50 GMT
+Subject: [PATCH v1 00/15] Possible patches for v5.8
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 12 May 2020 17:12:50 -0400
+Message-ID: <20200512210724.3288.15187.stgit@manet.1015granger.net>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-Received: by 2002:a02:c6c5:: with SMTP id r5mr15913250jan.133.1589266516187;
- Mon, 11 May 2020 23:55:16 -0700 (PDT)
-Date:   Mon, 11 May 2020 23:55:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000026a06e05a56df22f@google.com>
-Subject: general protection fault in nfsd_reply_cache_free_locked
-From:   syzbot <syzbot+a29df412692980277f9d@syzkaller.appspotmail.com>
-To:     bfields@fieldses.org, chuck.lever@oracle.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Fixes:
+ - Make sure ASYNC rpc_tasks observe signals
 
-syzbot found the following crash on:
-
-HEAD commit:    6e7f2eac Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14567034100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
-dashboard link: https://syzkaller.appspot.com/bug?extid=a29df412692980277f9d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 0 PID: 27932 Comm: kworker/u4:4 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
-Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
-RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
-RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
-RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
-R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
-R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2c531000 CR3: 00000000685a2000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
- nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 54f06072fc6a1afa ]---
-RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
-Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
-RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
-RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
-RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
-R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
-R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2c531000 CR3: 0000000094cfb000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+Improvements:
+ - Adjust reply slack values only once
+ - More client-side RPC tracepoint curation
+ - Add/improve tracepoints to capture internal NFS I/O errors
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Chuck Lever (15):
+      SUNRPC: Signalled ASYNC tasks need to exit
+      SUNRPC: receive buffer size estimation values almost never change
+      SUNRPC: Trace GSS context lifetimes
+      SUNRPC: Update the rpc_show_task_flags() macro
+      SUNRPC: Update the RPC_SHOW_SOCKET() macro
+      SUNRPC: Add tracepoint to rpc_call_rpcerror()
+      SUNRPC: Split the xdr_buf event class
+      SUNRPC: Trace transport lifetime events
+      SUNRPC: trace RPC client lifetime events
+      SUNRPC: rpc_call_null_helper() already sets RPC_TASK_NULLCREDS
+      SUNRPC: rpc_call_null_helper() should set RPC_TASK_SOFT
+      SUNRPC: Set SOFTCONN when destroying GSS contexts
+      NFS: nfs_xdr_status should record the procedure name
+      NFS: Trace short NFS READs
+      NFS: Add a tracepoint in nfs_set_pgio_error()
+
+
+ fs/nfs/nfstrace.h               |  106 +++++++++++++-
+ fs/nfs/pagelist.c               |    2 
+ fs/nfs/read.c                   |    2 
+ include/linux/sunrpc/auth.h     |    5 -
+ include/trace/events/rpcgss.h   |   89 +++++++++++-
+ include/trace/events/rpcrdma.h  |    4 -
+ include/trace/events/sunrpc.h   |  301 ++++++++++++++++++++++++++++++++-------
+ net/sunrpc/auth_gss/auth_gss.c  |   56 +++++--
+ net/sunrpc/auth_gss/trace.c     |    1 
+ net/sunrpc/clnt.c               |   59 +++-----
+ net/sunrpc/svc_xprt.c           |    4 -
+ net/sunrpc/xprt.c               |   23 ++-
+ net/sunrpc/xprtrdma/rpc_rdma.c  |    4 -
+ net/sunrpc/xprtrdma/transport.c |    8 -
+ net/sunrpc/xprtrdma/verbs.c     |    1 
+ 15 files changed, 527 insertions(+), 138 deletions(-)
+
+--
+Chuck Lever
