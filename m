@@ -2,58 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E0201CE8FB
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 01:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 882561CE991
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2020 02:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgEKXRS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 May 2020 19:17:18 -0400
-Received: from fieldses.org ([173.255.197.46]:55176 "EHLO fieldses.org"
+        id S1726415AbgELAVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 May 2020 20:21:13 -0400
+Received: from fieldses.org ([173.255.197.46]:55234 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgEKXRR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 11 May 2020 19:17:17 -0400
+        id S1725854AbgELAVN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 11 May 2020 20:21:13 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 676AF709; Mon, 11 May 2020 19:17:17 -0400 (EDT)
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 2/2] nfsd4: stid display should preserve on-the-wire byte order
-Date:   Mon, 11 May 2020 19:17:16 -0400
-Message-Id: <1589239036-17100-2-git-send-email-bfields@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1589239036-17100-1-git-send-email-bfields@redhat.com>
-References: <1589239036-17100-1-git-send-email-bfields@redhat.com>
+        id DD4588A6; Mon, 11 May 2020 20:21:12 -0400 (EDT)
+Date:   Mon, 11 May 2020 20:21:12 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, davem@davemloft.net, kuba@kernel.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sunrpc: add missing newline when printing parameter
+ 'pool_mode' by sysfs
+Message-ID: <20200512002112.GA17212@fieldses.org>
+References: <1588901580-44687-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1588901580-44687-2-git-send-email-wangxiongfeng2@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588901580-44687-2-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+On Fri, May 08, 2020 at 09:32:59AM +0800, Xiongfeng Wang wrote:
+> When I cat parameter '/sys/module/sunrpc/parameters/pool_mode', it
+> displays as follows. It is better to add a newline for easy reading.
 
-When we decode the stateid we byte-swap si_generation.
+Applying for 5.8.  I assume Trond's getting the other patch.
 
-But for simplicity's sake and ease of comparison with network traces,
-it's better to display the whole thing in network order.
+--b.
 
-Reported-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfs4state.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ded08aeae497..6fed3bf00ca7 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2424,7 +2424,8 @@ static void nfs4_show_owner(struct seq_file *s, struct nfs4_stateowner *oo)
- 
- static void nfs4_show_stateid(struct seq_file *s, stateid_t *stid)
- {
--	seq_printf(s, "0x%16phN", stid);
-+	seq_printf(s, "0x%.8x", stid->si_generation);
-+	seq_printf(s, "%12phN", &stid->si_opaque);
- }
- 
- static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
--- 
-2.26.2
-
+> 
+> [root@hulk-202 ~]# cat /sys/module/sunrpc/parameters/pool_mode
+> global[root@hulk-202 ~]#
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  net/sunrpc/svc.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 187dd4e..d8ef47f 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -88,15 +88,15 @@ struct svc_pool_map svc_pool_map = {
+>  	switch (*ip)
+>  	{
+>  	case SVC_POOL_AUTO:
+> -		return strlcpy(buf, "auto", 20);
+> +		return strlcpy(buf, "auto\n", 20);
+>  	case SVC_POOL_GLOBAL:
+> -		return strlcpy(buf, "global", 20);
+> +		return strlcpy(buf, "global\n", 20);
+>  	case SVC_POOL_PERCPU:
+> -		return strlcpy(buf, "percpu", 20);
+> +		return strlcpy(buf, "percpu\n", 20);
+>  	case SVC_POOL_PERNODE:
+> -		return strlcpy(buf, "pernode", 20);
+> +		return strlcpy(buf, "pernode\n", 20);
+>  	default:
+> -		return sprintf(buf, "%d", *ip);
+> +		return sprintf(buf, "%d\n", *ip);
+>  	}
+>  }
+>  
+> -- 
+> 1.7.12.4
