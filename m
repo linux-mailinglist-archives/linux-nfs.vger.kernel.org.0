@@ -2,129 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2EC21D084E
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2020 08:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D29231D09B3
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2020 09:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgEMG3p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 May 2020 02:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732175AbgEMG3F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 May 2020 02:29:05 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3618AC061A0C;
-        Tue, 12 May 2020 23:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=sYCeJWkvwiDcLO4azUz4Lghn771ZTzcCvIj3ODxfKA4=; b=L0xgcDwWBew/hUDnMRVxjAFIu0
-        nr3l2q6XF2Vl5FSu5iuND7L/B2s0+8lrY924YcHINLJjs2142Hvi/lu17oLe8a5J7XrMXSQn1vZ+s
-        KBdAEHb6c/nnwY5To5NpuwJe8USThbqwt/dx1BNtU4i0rsfEG1zyWAvoQtPe4Fn6tBCQ6dafGi6ti
-        sSF+YmLo/T0y5dtSly4MHmSA1G3UtgRy+xGkAB7nKDU2CUQp6V12yTilYZ/C2KcbvR3q/BB0ButgR
-        Tw5mexnLFPfVVKybEa3N1yFk0d6sUieQD9fw+qvEadIByagJTSJpz2Mw0hAKD9fkVdDYSQR4fa2Q+
-        MTpTE7mQ==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYksb-0005Jo-4P; Wed, 13 May 2020 06:28:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 33/33] net: remove kernel_getsockopt
-Date:   Wed, 13 May 2020 08:26:48 +0200
-Message-Id: <20200513062649.2100053-34-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
+        id S1728988AbgEMHQm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 May 2020 03:16:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60540 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728490AbgEMHQl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 13 May 2020 03:16:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B8867B1DD;
+        Wed, 13 May 2020 07:16:42 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jan Kara <jack@suse.cz>
+Date:   Wed, 13 May 2020 17:16:32 +1000
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2 V3] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+In-Reply-To: <20200422124600.GH8775@quack2.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name> <87wo6gs26e.fsf@notabene.neil.brown.name> <87tv1ks24t.fsf@notabene.neil.brown.name> <20200416151906.GQ23739@quack2.suse.cz> <87zhb5r30c.fsf@notabene.neil.brown.name> <20200422124600.GH8775@quack2.suse.cz>
+Message-ID: <871rnob8z3.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-No users left.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/net.h |  2 --
- net/socket.c        | 34 ----------------------------------
- 2 files changed, 36 deletions(-)
 
-diff --git a/include/linux/net.h b/include/linux/net.h
-index ece7513326293..e10f378194a59 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
- 		   int flags);
- int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
- int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
--int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
--		      int *optlen);
- int kernel_sendpage(struct socket *sock, struct page *page, int offset,
- 		    size_t size, int flags);
- int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
-diff --git a/net/socket.c b/net/socket.c
-index f37c3ef508691..49000f0d87f71 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3715,40 +3715,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
- }
- EXPORT_SYMBOL(kernel_getpeername);
- 
--/**
-- *	kernel_getsockopt - get a socket option (kernel space)
-- *	@sock: socket
-- *	@level: API level (SOL_SOCKET, ...)
-- *	@optname: option tag
-- *	@optval: option value
-- *	@optlen: option length
-- *
-- *	Assigns the option length to @optlen.
-- *	Returns 0 or an error.
-- */
--
--int kernel_getsockopt(struct socket *sock, int level, int optname,
--			char *optval, int *optlen)
--{
--	mm_segment_t oldfs = get_fs();
--	char __user *uoptval;
--	int __user *uoptlen;
--	int err;
--
--	uoptval = (char __user __force *) optval;
--	uoptlen = (int __user __force *) optlen;
--
--	set_fs(KERNEL_DS);
--	if (level == SOL_SOCKET)
--		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
--	else
--		err = sock->ops->getsockopt(sock, level, optname, uoptval,
--					    uoptlen);
--	set_fs(oldfs);
--	return err;
--}
--EXPORT_SYMBOL(kernel_getsockopt);
--
- /**
-  *	kernel_sendpage - send a &page through a socket (kernel space)
-  *	@sock: socket
--- 
-2.26.2
+I thought about this some more and come up with another "simple"
+approach that didn't require me understanding too much code, but does -
+I think - address your concerns.
 
+I've changed the heuristic to avoid any throttling on PF_LOCAL_THROTTLE
+task if:
+ - the global dirty count is below the global free-run threshold.  The
+   code did this already.
+ - (or) the per-wb dirty count is below the per-wb free-run threshold.
+   This is the change.
+
+This means that:
+ - in a steady stated, all bdis will be throttled based on their (steady
+   state) throughput, which is equally appropriate for PF_LOCAL_THROTTLE
+   tasks.
+ - a PF_LOCAL_THROTTLE task will never be *completely* blocked by dirty
+   pages queued for other devices.  This means no deadlock, and that is
+   the primary purpose of PF_LOCAL_THROTTLE.
+ - when writes through the PF_LOCAL_THROTTLE task start up from idle -
+   when there is no current throughput estimate - the PF_LOCAL_THROTTLE
+   can be expected to get a fair share of the available memory, just as
+   much as any other writer.  This was the possible problem with
+   treating PF_LOCAL_THROTTLE just like BDI_CAP_STRICTLIMIT.
+
+So I think this is a good solution.  Thoughts?
+Patches follow - I've address the comment formatting issue.
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl67ntAACgkQOeye3VZi
+gbkPqRAAtxj9x2Nnc8sDId77c2gR7zMDpFPEY6g07dqJpWw0yBr6dWPypKbUpsso
+4kqJpJDxKpM/zo6ysnkDPJJmNmgIS5n6s3vQCsumP7+TF3PpnMtAqG2GnvxVOLkN
+VPIb4HCghdI0mGS9xeR1OBPHsK8I0HvHg0CGWAo5rCCICRmDAQXCYL5QdGqfLuxj
+B/55yI4jzKfH6OaArJrrKWvWVdI825oGSn/bdffz/GighPP1QdLbNz4iWS5ab43O
+0tR4m9JjGQIB7RjxnNXp0knc3+2hVqKY6dallTpOpn4fE0n7TeSFu7lvI6wRL7F/
+OKLBlY9ca7jeIOcrCwBan5GFOh9Ou0IFvX41ehrFEFUc6dTb4836b8T9HunKP95d
+dwL3v1gpFI06IZwb+K0YGrf9MWDSZQeZ/tPyHM2VDFb2Jl3hx+3aVxhhY9bgPtjZ
+Mf3cbYBiGWU+xoZwPYKKw4ghNgJDTOZd0ohTTfM0c9TuGp7+NZUtU/3/9J9/Cw91
+P4ZNnN4AyW20Jh2ucfACOesx3LorjbvXIwRPaJJ8hLHQVUZ66RJoIs3QJ+5lpbQc
+pO6kQ8uTynnSHa5Gt39CnQVjAz2AoXsrU/sKFRQ/HAZd8hyzDXrgnn+EAdy6KwO1
+EF92Wa5AIVLDF4qfCuYsLDH4gAUrtRxFqoER4NWMxIJtX8nrChU=
+=vbJX
+-----END PGP SIGNATURE-----
+--=-=-=--
