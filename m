@@ -2,203 +2,481 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E63941D4C26
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2020 13:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06CEF1D5043
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2020 16:22:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgEOLKp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 May 2020 07:10:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35838 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgEOLKp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 15 May 2020 07:10:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3EC1AAE61;
-        Fri, 15 May 2020 11:10:46 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 211BC1E056A; Fri, 15 May 2020 13:10:43 +0200 (CEST)
-Date:   Fri, 15 May 2020 13:10:43 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2 V4] MM: replace PF_LESS_THROTTLE with
- PF_LOCAL_THROTTLE
-Message-ID: <20200515111043.GK9569@quack2.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87ftdgw58w.fsf@notabene.neil.brown.name>
- <87wo6gs26e.fsf@notabene.neil.brown.name>
- <87tv1ks24t.fsf@notabene.neil.brown.name>
- <20200416151906.GQ23739@quack2.suse.cz>
- <87zhb5r30c.fsf@notabene.neil.brown.name>
- <20200422124600.GH8775@quack2.suse.cz>
- <871rnob8z3.fsf@notabene.neil.brown.name>
- <87y2pw9udb.fsf@notabene.neil.brown.name>
+        id S1726168AbgEOOV6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 May 2020 10:21:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22182 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgEOOV6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 May 2020 10:21:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589552515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y89dDNsz0tb2LUBVrBLfE76+nLHI5tt+0gAGxSpHP0A=;
+        b=YgGy5+An3hJM9CIskbfCuz94rfQzgLvizayHBJp6w0tgv5X7ydGGJnz1RIv5Je6FrPkdF0
+        IXLn9RhPPrI/HeYFIR+6V+f/gF+BTLDnlmrZrRGwozc7yVs5cgAyIiFjMH7wHTc/7JuusU
+        v7RB4oGeVdg+bD8uQqUG9UoZAMqvKME=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-118-Ko97SdJTOe-01P1vyplEOA-1; Fri, 15 May 2020 10:21:40 -0400
+X-MC-Unique: Ko97SdJTOe-01P1vyplEOA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F58C107ACCA;
+        Fri, 15 May 2020 14:21:39 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-189.phx2.redhat.com [10.3.113.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B11E46;
+        Fri, 15 May 2020 14:21:38 +0000 (UTC)
+Subject: Re: [PATCH] nfs-utils: add new tool nfsd4-show to parse output from
+ proc files
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     Achilles Gaikwad <agaikwad@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Kenneth Dsouza <kdsouza@redhat.com>
+References: <20200428165142.GA1392654@nevermore.foobar.lan>
+ <19946bbc-6612-3f5c-d9b4-f6de541cf8e7@RedHat.com>
+ <CALF+zOnSSDVHSmTgjGRuraL87fcZw=iEGzopKmceyyuHjX-YGQ@mail.gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <3f19d1c9-68ae-ddb7-d60f-1145bba7ebec@RedHat.com>
+Date:   Fri, 15 May 2020 10:21:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2pw9udb.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALF+zOnSSDVHSmTgjGRuraL87fcZw=iEGzopKmceyyuHjX-YGQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed 13-05-20 17:17:20, NeilBrown wrote:
-> 
-> PF_LESS_THROTTLE exists for loop-back nfsd (and a similar need in the
-> loop block driver and callers of prctl(PR_SET_IO_FLUSHER)), where a
-> daemon needs to write to one bdi (the final bdi) in order to free up
-> writes queued to another bdi (the client bdi).
-> 
-> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
-> pages, so that it can still dirty pages after other processses have been
-> throttled.  The purpose of this is to avoid deadlock that happen when
-> the PF_LESS_THROTTLE process must write for any dirty pages to be freed,
-> but it is being thottled and cannot write.
-> 
-> This approach was designed when all threads were blocked equally,
-> independently on which device they were writing to, or how fast it was.
-> Since that time the writeback algorithm has changed substantially with
-> different threads getting different allowances based on non-trivial
-> heuristics.  This means the simple "add 25%" heuristic is no longer
-> reliable.
-> 
-> The important issue is not that the daemon needs a *larger* dirty page
-> allowance, but that it needs a *private* dirty page allowance, so that
-> dirty pages for the "client" bdi that it is helping to clear (the bdi for
-> an NFS filesystem or loop block device etc) do not affect the throttling
-> of the deamon writing to the "final" bdi.
-> 
-> This patch changes the heuristic so that the task is not throttled when
-> the bdi it is writing to has a dirty page count below below (or equal
-> to) the free-run threshold for that bdi.  This ensures it will always be
-> able to have some pages in flight, and so will not deadlock.
-> 
-> In a steady-state, it is expected that PF_LOCAL_THROTTLE tasks might
-> still be throttled by global threshold, but that is acceptable as it is
-> only the deadlock state that is interesting for this flag.
-> 
-> This approach of "only throttle when target bdi is busy" is consistent
-> with the other use of PF_LESS_THROTTLE in current_may_throttle(), were
-> it causes attention to be focussed only on the target bdi.
-> 
-> So this patch
->  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
->  - removes the 25% bonus that that flag gives, and
->  - If PF_LOCAL_THROTTLE is set, don't delay at all unless the
->    global and the local free-run thresholds are exceeded.
-> 
-> Note that previously realtime threads were treated the same as
-> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
-> real-time threads, so it is now different from the behaviour of nfsd and
-> loop tasks.  I don't know what is wanted for realtime.
-> 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com> (for nfsd change)
-> Signed-off-by: NeilBrown <neilb@suse.de>
-
-The idea looks good to me. It will still have the "threads may hit hard
-wall" behavior when BDI freerun threshold is crossed at the moment we are
-very close to the global limit but that should be rare. So I think for now
-this good enough.
-
-The patch looks good to me so feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-Throttling patches usually go through mm tree so ask Andrew to pick them
-up.
 
 
-								Honza
+On 5/10/20 1:09 PM, David Wysochanski wrote:
+> On Fri, May 8, 2020 at 1:01 PM Steve Dickson <SteveD@redhat.com> wrote:
+>>
+>> Hello,
+>>
+>> On 4/28/20 12:51 PM, Achilles Gaikwad wrote:
+>>> This tool parses the output from the following files
+>>>
+>>>  /proc/fs/nfsd/clients/*/{states,info}
+>>>
+>>> - Tool has the following parameters so far:
+>> This is looking very good! A couple things....
+>>
+>> A man page is needed and what do you think about
+>> changing the name to nfsdclts? I realize only v4
+>> clients will be shown but that's a doc issue imho.
+>>
+>> Basically I'm trying to some type of command name convention
+>>
+> 
+> Is there any precedence for 'clts' or was this just an attempt to
+> shorten the name?
+Just to shorten it... .
+> 
+> Maybe the closest near examples in nfs-utils for tools are:
+> nfsdcltrack - NFSv4 Client Tracking Callout Program
+> nfsdcld - NFSv4 Client Tracking Daemon
+> 
+> For naming maybe 'cl'<something> is consistent?
+> With that them, two possible names for this tool would be:
+> nfsdclinfo
+> nfsdclshow
+nfsdclnts, would that be better?
 
-> @@ -1653,8 +1652,12 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  		if (dirty <= dirty_freerun_ceiling(thresh, bg_thresh) &&
->  		    (!mdtc ||
->  		     m_dirty <= dirty_freerun_ceiling(m_thresh, m_bg_thresh))) {
-> -			unsigned long intv = dirty_poll_interval(dirty, thresh);
-> -			unsigned long m_intv = ULONG_MAX;
-> +			unsigned long intv;
-> +			unsigned long m_intv;
-> +
-> +		free_running:
-> +			intv = dirty_poll_interval(dirty, thresh);
-> +			m_intv = ULONG_MAX;
->  
->  			current->dirty_paused_when = now;
->  			current->nr_dirtied = 0;
-> @@ -1673,9 +1676,20 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  		 * Calculate global domain's pos_ratio and select the
->  		 * global dtc by default.
->  		 */
-> -		if (!strictlimit)
-> +		if (!strictlimit) {
->  			wb_dirty_limits(gdtc);
->  
-> +			if ((current->flags & PF_LOCAL_THROTTLE) &&
-> +			    gdtc->wb_dirty <
-> +			    dirty_freerun_ceiling(gdtc->wb_thresh,
-> +						  gdtc->wb_bg_thresh))
-> +				/*
-> +				 * LOCAL_THROTTLE tasks must not be throttled
-> +				 * when below the per-wb freerun ceiling.
-> +				 */
-> +				goto free_running;
-> +		}
-> +
->  		dirty_exceeded = (gdtc->wb_dirty > gdtc->wb_thresh) &&
->  			((gdtc->dirty > gdtc->thresh) || strictlimit);
->  
-> @@ -1689,9 +1703,20 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  			 * both global and memcg domains.  Choose the one
->  			 * w/ lower pos_ratio.
->  			 */
-> -			if (!strictlimit)
-> +			if (!strictlimit) {
->  				wb_dirty_limits(mdtc);
->  
-> +				if ((current->flags & PF_LOCAL_THROTTLE) &&
-> +				    mdtc->wb_dirty <
-> +				    dirty_freerun_ceiling(mdtc->wb_thresh,
-> +							  mdtc->wb_bg_thresh))
-> +					/*
-> +					 * LOCAL_THROTTLE tasks must not be
-> +					 * throttled when below the per-wb
-> +					 * freerun ceiling.
-> +					 */
-> +					goto free_running;
-> +			}
->  			dirty_exceeded |= (mdtc->wb_dirty > mdtc->wb_thresh) &&
->  				((mdtc->dirty > mdtc->thresh) || strictlimit);
->  
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index a37c87b5aee2..b2f5deb3603c 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1878,13 +1878,13 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  
->  /*
->   * If a kernel thread (such as nfsd for loop-back mounts) services
-> - * a backing device by writing to the page cache it sets PF_LESS_THROTTLE.
-> + * a backing device by writing to the page cache it sets PF_LOCAL_THROTTLE.
->   * In that case we should only throttle if the backing device it is
->   * writing to is congested.  In other cases it is safe to throttle.
->   */
->  static int current_may_throttle(void)
->  {
-> -	return !(current->flags & PF_LESS_THROTTLE) ||
-> +	return !(current->flags & PF_LOCAL_THROTTLE) ||
->  		current->backing_dev_info == NULL ||
->  		bdi_write_congested(current->backing_dev_info);
->  }
-> -- 
-> 2.26.2
+> 
+> I almost said 'nfsdclstats' because this is somewhat like a nfs server.
+> There's 'mountstats' for client side - is this somewhat a server side
+> equivalent?
+> Not really since 'stats' implies numbers and there's not a lot of that here.
+> 
+> FWIW, I also thought nfsd4-show was ok, but it seems to be a new naming format.
+Here are the current commands:
+
+./         mountstats*  nfsdclts*   nfsstat*     rpc.mountd*  sm-notify*
+../        nfsconf*     nfsidmap*   rpcdebug*    rpc.nfsd*    start-statd*
+blkmapd*   nfsdcld*     nfsiostat*  rpc.gssd*    rpc.statd*
+exportfs*  nfsdclddb*   nfsref*     rpc.idmapd*  showmount*
+
+I just thought it stick out.
+
+steved.
+> 
+> 
+>> BTW, I'm thinking this is going to be a very useful tool!
+>> Nice work!
+>>
+>> steved.
+>>
+>>>
+>>> ~~~
+>>> $ /usr/sbin/nfsd4-show -h
+>>> usage: nfsd4-show [-h] [-t type] [--clientinfo] [--hostname] [-q]
+>>>
+>>> Parse the nfsd states and clientinfo files.
+>>>
+>>> optional arguments:
+>>>   -h, --help            show this help message and exit
+>>>   -t type, --type type  Input the type that you want to be printed: open,
+>>>                         lock, deleg, layout, all
+>>>   --clientinfo          output clients information, --hostname is implied.
+>>>   --hostname            print hostname of client instead of its ip address.
+>>>                         Longer hostnames are truncated.
+>>>   -q, --quiet           don't print the header information
+>>> ~~~
+>>>
+>>> - This tool enables the output to have both ip address and filaname[1]
+>>>
+>>> ~~~
+>>> Inode number | Type   | ip address            | Filename
+>>> 33811576     | lock   | [::1]:682             | foobar
+>>> ~~~
+>>>
+>>> - You can also display just the open files
+>>>
+>>> ~~~
+>>> Inode number | Type   | Access | Deny | ip address            | Filename
+>>> :::
+>>> 226493407    | open   | r-     | --   | 10.65.211.137:708     | 999
+>>> 226493409    | open   | r-     | --   | 10.65.211.137:708     | ff
+>>> 226493410    | open   | r-     | --   | 10.65.211.137:708     | foo
+>>> 226493413    | open   | r-     | --   | 10.65.211.137:708     | open_lock.py
+>>> 33811575     | open   | r-     | --   | [::1]:682             | file
+>>> 33811576     | open   | rw     | --   | [::1]:682             | foobar
+>>> :::
+>>> ~~~
+>>>
+>>> - Handles disconnected dentries from userspace by showing filename as :
+>>>
+>>> ~~~
+>>> Inode number | Type   | Access | Deny | ip address            | Filename
+>>> :::
+>>> 226493409    | open   | r-     | --   | 10.65.211.66:867      | disconnected dentry
+>>> 226493409    | deleg  | r      |      | 10.65.211.66:867      | disconnected dentry
+>>> 226493410    | open   | r-     | --   | 10.65.211.66:867      | disconnected dentry
+>>> 226493410    | deleg  | r      |      | 10.65.211.66:867      | disconnected dentry
+>>> ~~~
+>>>
+>>> - Automatically drop the deny column for delegation
+>>>
+>>> ~~~
+>>> Inode number | Type   | Access | ip address            | Filename
+>>> 226726004    | deleg  | r      | 10.65.211.137:708     | foo
+>>> 226726013    | deleg  | r      | 10.65.211.137:708     | bar
+>>> ~~~
+>>>
+>>> - clientinfo would show the version of nfs that the client has mounted the share with
+>>>
+>>>   the client id.
+>>>
+>>> ~~~
+>>> Inode number | Type   | Access | Deny | ip address            | Client ID           | vers | Filename
+>>> 226726004    | open   | r-     | --   | 10.65.211.137:708     | 0xf2924e155ea84ae8  | 4.2  | foo
+>>> 226726004    | deleg  | r      |      | 10.65.211.137:708     | 0xf2924e155ea84ae8  | 4.2  | foo
+>>> ~~~
+>>>
+>>> - hostname option would show the hostname instead of ip addresses
+>>>
+>>> ~~~
+>>> Inode number | Type   | Access | Deny | Hostname              | Filename
+>>> 227054876    | open   | r-     | --   | vm137                 | fubar
+>>> ~~~
+>>>
+>>> If you do not like the header, please use the -q option.
+>>>
+>>> Your feedback and review is highly apprecaited!
+>>>
+>>> You will need the following patch for filename to be displayed:
+>>> [1] https://www.spinics.net/lists/linux-nfs/msg77332.html
+>>>
+>>> Signed-off-by: Achilles Gaikwad <agaikwad@redhat.com>
+>>> Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
+>>> ---
+>>>  configure.ac                   |   1 +
+>>>  tools/Makefile.am              |   2 +-
+>>>  tools/nfsd4-show/Makefile.am   |   9 ++
+>>>  tools/nfsd4-show/nfsd4-show.py | 219 +++++++++++++++++++++++++++++++++
+>>>  4 files changed, 230 insertions(+), 1 deletion(-)
+>>>  create mode 100644 tools/nfsd4-show/Makefile.am
+>>>  create mode 100755 tools/nfsd4-show/nfsd4-show.py
+>>>
+>>> diff --git a/configure.ac b/configure.ac
+>>> index 00b32800..366f9b7c 100644
+>>> --- a/configure.ac
+>>> +++ b/configure.ac
+>>> @@ -689,6 +689,7 @@ AC_CONFIG_FILES([
+>>>       tools/rpcgen/Makefile
+>>>       tools/mountstats/Makefile
+>>>       tools/nfs-iostat/Makefile
+>>> +     tools/nfsd4-show/Makefile
+>>>       tools/nfsconf/Makefile
+>>>       tools/clddb-tool/Makefile
+>>>       utils/Makefile
+>>> diff --git a/tools/Makefile.am b/tools/Makefile.am
+>>> index 53e61170..3cebbe95 100644
+>>> --- a/tools/Makefile.am
+>>> +++ b/tools/Makefile.am
+>>> @@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
+>>>  OPTDIRS += clddb-tool
+>>>  endif
+>>>
+>>> -SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat $(OPTDIRS)
+>>> +SUBDIRS = nfsd4-show locktest rpcdebug nlmtest mountstats nfs-iostat $(OPTDIRS)
+>>>
+>>>  MAINTAINERCLEANFILES = Makefile.in
+>>> diff --git a/tools/nfsd4-show/Makefile.am b/tools/nfsd4-show/Makefile.am
+>>> new file mode 100644
+>>> index 00000000..1b57cfb2
+>>> --- /dev/null
+>>> +++ b/tools/nfsd4-show/Makefile.am
+>>> @@ -0,0 +1,9 @@
+>>> +## Process this file with automake to produce Makefile.in
+>>> +PYTHON_FILES =  nfsd4-show.py
+>>> +
+>>> +all-local: $(PYTHON_FILES)
+>>> +
+>>> +install-data-hook:
+>>> +     $(INSTALL) -m 755 nfsd4-show.py $(DESTDIR)$(sbindir)/nfsd4-show
+>>> +
+>>> +MAINTAINERCLEANFILES=Makefile.in
+>>> \ No newline at end of file
+>>> diff --git a/tools/nfsd4-show/nfsd4-show.py b/tools/nfsd4-show/nfsd4-show.py
+>>> new file mode 100755
+>>> index 00000000..52775e66
+>>> --- /dev/null
+>>> +++ b/tools/nfsd4-show/nfsd4-show.py
+>>> @@ -0,0 +1,219 @@
+>>> +#!/bin/python3
+>>> +# -*- python-mode -*-
+>>> +'''
+>>> +    Copyright (C) 2020
+>>> +    Authors:    Achilles Gaikwad <agaikwad@redhat.com>
+>>> +                Kenneth  D'souza <kdsouza@redhat.com>
+>>> +
+>>> +    This program is free software: you can redistribute it and/or modify
+>>> +    it under the terms of the GNU General Public License as published by
+>>> +    the Free Software Foundation, either version 3 of the License, or
+>>> +    (at your option) any later version.
+>>> +
+>>> +    This program is distributed in the hope that it will be useful,
+>>> +    but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> +    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> +    GNU General Public License for more details.
+>>> +
+>>> +    You should have received a copy of the GNU General Public License
+>>> +    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+>>> +'''
+>>> +
+>>> +import multiprocessing as mp
+>>> +import os
+>>> +import signal
+>>> +import sys
+>>> +
+>>> +try:
+>>> +    import argparse
+>>> +except ImportError:
+>>> +    print('%s:  Failed to import argparse - make sure argparse is installed!'
+>>> +        % sys.argv[0])
+>>> +    sys.exit(1)
+>>> +try:
+>>> +    import yaml
+>>> +except ImportError:
+>>> +    print('%s:  Failed to import yaml - make sure python3-pyyaml is installed!'
+>>> +        % sys.argv[0])
+>>> +    sys.exit(1)
+>>> +
+>>> +BBOLD = '\033[1;30;47m' #Bold black text with white background.
+>>> +ENDC = '\033[m' #Rest to defaults
+>>> +
+>>> +def init_worker():
+>>> +    signal.signal(signal.SIGINT, signal.SIG_IGN)
+>>> +
+>>> +# this function converts the info file to a dictionary format, sorta. :)
+>>> +def file_to_dict(path):
+>>> +    client_info = {}
+>>> +    with open(path) as f:
+>>> +        for line in f:
+>>> +            try:
+>>> +                (key, val) = line.split(':')
+>>> +                client_info[key] = val
+>>> +    # FIXME: There has to be a better way of converting tscrews he info file to a dictionary.
+>>> +            except ValueError:
+>>> +                try:
+>>> +                    (key, val) = line.split()
+>>> +                    client_info[key] = val
+>>> +                except:
+>>> +                    pass
+>>> +    return client_info
+>>> +
+>>> +# this functino gets the paths from /proc/fs/nfsd/clients/
+>>> +# returns a list of paths for each client which has nfs-share mounted.
+>>> +def getpaths():
+>>> +    path = []
+>>> +    try:
+>>> +        dirs = os.listdir('/proc/fs/nfsd/clients/')
+>>> +    except OSError as reason:
+>>> +        exit('%s' % reason)
+>>> +    if len(dirs) !=0:
+>>> +         for i in dirs:
+>>> +                 path.append('/proc/fs/nfsd/clients/' + i + '/states')
+>>> +         return (path)
+>>> +    else:
+>>> +         exit('Nothing to process')
+>>> +
+>>> +# A single function to rule them all, in this function we gather all the data
+>>> +# from already populated data_list and client_info.
+>>> +def printer(data_list, argument):
+>>> +    client_info_path = data_list.pop()
+>>> +    client_info = file_to_dict(client_info_path)
+>>> +    for i in data_list:
+>>> +        for key in i:
+>>> +            inode = i[key]['superblock'].split(':')[-1]
+>>> +            # get the ip address from client_info as 'address:' note the extra
+>>> +            # ':' as a suffix to address. If there is a better way to convert
+>>> +            # the file to dictionary, please change the following value too.
+>>> +            client_ip = client_info['address:']
+>>> +            # The ip address is quoted, so we dequote it.
+>>> +            client_ip = client_ip[1:-1]
+>>> +            try:
+>>> +                # if the nfs-server reboots while the nfs-client holds the files open,
+>>> +                # the nfs-server would print the filename as '/'. For such instaces we
+>>> +                # print the output as disconnected dentry instead of '/'.
+>>> +                if(i[key]['filename']=='/'):
+>>> +                    fname = 'disconnected dentry'
+>>> +                else:
+>>> +                    fname = i[key]['filename'].split('/')[-1]
+>>> +            except KeyError:
+>>> +                # for older kernels which do not have the fname patch in kernel, they
+>>> +                # won't be able to see the fname field. Therefore post it as N/A.
+>>> +                fname = "N/A"
+>>> +            otype = i[key]['type']
+>>> +            try:
+>>> +                access = i[key]['access']
+>>> +            except:
+>>> +                access = ''
+>>> +            try:
+>>> +                deny = i[key]['deny']
+>>> +            except:
+>>> +                deny = ''
+>>> +            hostname = client_info['name'].split()[-1].split('"')[0]
+>>> +            hostname =  hostname.split('.')[0]
+>>> +            otype = i[key]['type']
+>>> +            # if the hostname is too long, it messes up with the output being in columns,
+>>> +            # therefore we truncate the hostname followed by two '..' as suffix.
+>>> +            if len(hostname) > 20:
+>>> +                hostname = hostname[0:20] + '..'
+>>> +            clientid = client_info['clientid'].strip()
+>>> +            minorversion = client_info['minor version'].rstrip().rsplit()[0]
+>>> +            # since some fields do not have deny column, we drop those if -t is either
+>>> +            # layout or lock.
+>>> +            drop = ['layout', 'lock']
+>>> +
+>>> +            # Printing the output this way instead of a single string which is concatenated
+>>> +            # this makes it better to quickly add more columns in future.
+>>> +            if(otype == argument.type or  argument.type == 'all'):
+>>> +                print('%-13s' %inode, end='| ')
+>>> +                print('%-7s' %otype, end='| ')
+>>> +                if (argument.type not in drop):
+>>> +                    print('%-7s' %access, end='| ')
+>>> +                if (argument.type not in drop and argument.type !='deleg'):
+>>> +                    print('%-5s' %deny, end='| ')
+>>> +                if (argument.hostname == True):
+>>> +                    print('%-22s' %hostname, end='| ')
+>>> +                else:
+>>> +                   print('%-22s' %client_ip, end='| ')
+>>> +                if (argument.clientinfo == True) :
+>>> +                    print('%-20s' %clientid, end='| ')
+>>> +                    print('4.%-3s' %minorversion, end='| ')
+>>> +                print(fname)
+>>> +
+>>> +def opener(path):
+>>> +    try:
+>>> +        with open(path, 'r') as nfsdata:
+>>> +            data = yaml.load(nfsdata, Loader = yaml.BaseLoader)
+>>> +            if data is not None:
+>>> +                clientinfo = path.rsplit('/', 1)[0] + '/info'
+>>> +                data.append(clientinfo)
+>>> +                return data
+>>> +
+>>> +    except OSError as reason:
+>>> +        print('%s' % reason)
+>>> +
+>>> +def print_cols(argument):
+>>> +    title_inode = 'Inode number'
+>>> +    title_otype = 'Type'
+>>> +    title_access = 'Access'
+>>> +    title_deny = 'Deny'
+>>> +    title_fname = 'Filename'
+>>> +    title_clientID = 'Client ID'
+>>> +    title_hostname = 'Hostname'
+>>> +    title_ip = 'ip address'
+>>> +    title_nfsvers = 'vers'
+>>> +
+>>> +    drop = ['lock', 'layout']
+>>> +    print(BBOLD, end='')
+>>> +    print('%-13s' %title_inode, end='| ')
+>>> +    print('%-7s' %title_otype, end='| ')
+>>> +    if (argument.type not in drop):
+>>> +        print('%-7s' %title_access, end='| ')
+>>> +    if (argument.type not in drop and argument.type !='deleg'):
+>>> +        print('%-5s' %title_deny, end='| ')
+>>> +    if (argument.hostname == True):
+>>> +        print('%-22s' %title_hostname, end='| ')
+>>> +    else:
+>>> +        print('%-22s' %title_ip, end='| ')
+>>> +    if (argument.clientinfo == True):
+>>> +        print('%-20s' %title_clientID, end='| ')
+>>> +        print('%-5s' %title_nfsvers, end='| ')
+>>> +    print(title_fname, end='')
+>>> +    print(ENDC)
+>>> +
+>>> +def nfsd4_show():
+>>> +
+>>> +    parser = argparse.ArgumentParser(description = 'Parse the nfsd states and clientinfo files.')
+>>> +    parser.add_argument('-t', '--type', metavar = 'type', type = str, choices = ['open',
+>>> +        'deleg', 'lock', 'layout', 'all'],
+>>> +        default = 'all',
+>>> +        help = 'Input the type that you want to be printed: open, lock, deleg, layout, all')
+>>> +    parser.add_argument('--clientinfo', action = 'store_true',
+>>> +        help = 'output clients information, --hostname is implied.')
+>>> +    parser.add_argument('--hostname', action = 'store_true',
+>>> +        help = 'print hostname of client instead of its ip address. Longer hostnames are truncated.')
+>>> +    parser.add_argument('-q', '--quiet', action = 'store_true',
+>>> +        help = 'don\'t print the header information')
+>>> +
+>>> +    args = parser.parse_args()
+>>> +    paths = getpaths()
+>>> +    p = mp.Pool(mp.cpu_count(), init_worker)
+>>> +    try:
+>>> +        result = p.map(opener, paths)
+>>> +        p.close()
+>>> +        p.join()
+>>> +        if len(result) !=0 and not args.quiet and result[0] is not None:
+>>> +            print_cols(args)
+>>> +
+>>> +        for i in result:
+>>> +            if i is not None:
+>>> +                printer(i, args)
+>>> +
+>>> +    except KeyboardInterrupt:
+>>> +        print('Caught KeyboardInterrupt, terminating workers')
+>>> +        p.terminate()
+>>> +        p.join()
+>>> +
+>>> +if __name__ == "__main__":
+>>> +    nfsd4_show()
+>>>
+>>
 > 
 
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
