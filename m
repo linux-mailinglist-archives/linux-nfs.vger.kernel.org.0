@@ -2,106 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C0B1D5C04
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2020 00:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AA0F1D5F49
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2020 08:58:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgEOWBr convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 15 May 2020 18:01:47 -0400
-Received: from fieldses.org ([173.255.197.46]:37482 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgEOWBr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 15 May 2020 18:01:47 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id C6B4CAAA; Fri, 15 May 2020 18:01:46 -0400 (EDT)
-Date:   Fri, 15 May 2020 18:01:46 -0400
-To:     Jan Psota <jasiu@belsznica.pl>
-Cc:     linux-nfs@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: Re: refcount underflow in nfsd41_destroy_cb
-Message-ID: <20200515220146.GA1669@fieldses.org>
-References: <CAHmME9ro8BPBTMfu8dEbGmkH7qHLdQ=CXGEOW2C7MR4bmT6T+w@mail.gmail.com>
- <20200321154128.58eb8ef2.jasiu@belsznica.pl>
- <20200511012348.0ff190bc.jasiu@belsznica.pl>
+        id S1726208AbgEPG6Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 May 2020 02:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725275AbgEPG6X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 16 May 2020 02:58:23 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EC1C061A0C;
+        Fri, 15 May 2020 23:58:23 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 4so4829368ilg.1;
+        Fri, 15 May 2020 23:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xz3mA7gXEghsYqzgkTDkc/lWuIvY9nv2qadN/Y/C29o=;
+        b=tjEjT0T4joITs7E9fqWO6Jdcal8Mm9A//Sxy/tV1wM4M/cdo2pepXC7EDKtncFvkdz
+         EbjxzJpQgPHUTPYs9PfM5JCEw/tJHKp8ZmqSmXXl99V/zDK0IZ+he47l8uksLfwU7eUG
+         hk/YuNqxoDWeRVjFmiPWfIWRw9qIwe+Lg8dqg7CJtr9Mw2gBw8ltqkWsZj92Tk4ru5Sv
+         2U1o6qMKB04qoPlWIRGe+Sk6Uyosvp5Xd1iQmhW0toaaofg7vO0PGA0NdtkhZCN6qqxp
+         3U/kY3nQysYhwRZ98tp9HbkWH4ZBJFO9WY/pxPDKG/kZXVHYVdFCiw0oxrHL1GSq1VBD
+         HB4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xz3mA7gXEghsYqzgkTDkc/lWuIvY9nv2qadN/Y/C29o=;
+        b=P6G1f+7Qs3lE3qPP1gwGAajoQhnLczPq7uAi35nSxsAJb2kJzKIw2ofaV3dglANoYa
+         BabzIiKgoRHrTWMjM0+AccUaX7ZSgNPcUPPoTnAbsNROo3uHV34lAz6Gq0aO8LGC6euu
+         9/rn5uhshMEvlgWe9uR1SytQnHabJh95aEXmSd9WT28erzFKIIN6FQGIq3xlv0J3ahq0
+         1TPFOVMeB1IhAD66Lp7yzmCu7B5RGgZIJ3m832MM+iuXXH3OvgLmV5wS5FTNZumUEyXR
+         Rw+zY5qRrDhnOLKuwWrsvBRcnjHoRR71RHvwaTjuioL2nBOTVxQpf6nlesgcQ3B1qg6J
+         BMig==
+X-Gm-Message-State: AOAM533vuHPscbJEmeag1tU23y7SrKQj992zBGX5cjLKgt/8IcbuS3Pr
+        GFt79Hz/g06+k9sZIW66HXb7Z9zScZHcrQBQ9YQ=
+X-Google-Smtp-Source: ABdhPJxPhlFzNRYYbjHc5f1Ny2HN2Udly2cPcxvGCv7xVev7BKHhOcj6m8zGb9XbioYYvgt8Ru95cAQczdjLpiYOUgg=
+X-Received: by 2002:a92:9e11:: with SMTP id q17mr7224070ili.137.1589612302844;
+ Fri, 15 May 2020 23:58:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200511012348.0ff190bc.jasiu@belsznica.pl>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+References: <20200514111453.GA99187@suse.com> <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+ <20200514124845.GA12559@suse.com> <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+ <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+ <20200515111548.GA54598@suse.com> <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+ <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com> <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+In-Reply-To: <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 16 May 2020 09:58:11 +0300
+Message-ID: <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 11, 2020 at 01:23:48AM +0200, Jan Psota wrote:
-> Hi!
-> Today's nfsd trace in attachment. My NFS-root-ed client worked on
-> qemu-5.0.0 and tap interface (qemu has nothing to do with that effect
-> - on another server, physical machine client is connected through gigabit
-> ethernet). Error appeared on intensive NFS operations (Gentoo Linux on
-> client was installing Libre Office from binary package, moving files
-> from /var/tmp/portage to root filesystem).
-> 
-> Server /proc/version:
-> 	Linux version 5.7.0-rc2 (root@mordimer)
-> 	(gcc version 9.3.0 (Gentoo 9.3.0 p2), GNU ld (Gentoo 2.34 p1) 2.34.0)
-> 	#1 SMP PREEMPT Tue Apr 21 21:52:13 CEST 2020
-> 
-> server /proc/cmdline:
-> 	BOOT_IMAGE=/vmlinuz root=/dev/md0p4 panic=30 rw
-> 	md=0,/dev/sda,/dev/sdb rootdelay=1 ipv6.disable=1
-> 
-> Client side errors were only some:
-> 	nfs: server 192.168.2.1 not responding, still trying
-> 	nfs: server 192.168.2.1 OK
-> but it is normal.
+[pulling in nfs guys]
 
-> [17957.413775] ------------[ cut here ]------------
-> [17957.413804] refcount_t: underflow; use-after-free.
+> > Questions:
+> > 1. Does sync() result in fully purging inodes on MDS?
+>
+> I don't think so, but again, that code is not trivial to follow. I do
+> know that the MDS keeps around a "strays directory" which contains
+> unlinked inodes that are lazily cleaned up. My suspicion is that it's
+> satisfying lookups out of this cache as well.
+>
+> Which may be fine...the MDS is not required to be POSIX compliant after
+> all. Only the fs drivers are.
+>
+> > 2. Is i_nlink synchronized among nodes on deferred delete?
+> > IWO, can inode come back from the dead on client if another node
+> > has linked it before i_nlink 0 was observed?
+>
+> No, that shouldn't happen. The caps mechanism should ensure that it
+> can't be observed by other clients until after the change.
+>
+> That said, Luis' current patch doesn't ensure we have the correct caps
+> to check the i_nlink. We may need to add that in before we can roll with
+> this.
+>
+> > 3. Can an NFS client be "migrated" from one ceph node to another
+> > with an open but unlinked file?
+> >
+>
+> No. Open files in ceph are generally per-client. You can't pass around a
+> fd (or equivalent).
 
-Looks like this is in the !cb->cb_need restart case of nfsd4_cb_release,
-which is ->release method of nfsd4_cb_ops.
+Not sure we are talking about the same thing.
+It's not ceph fd that is being passed around, it's the NFS client's fd.
+If there is no case where NFS client would access ceph client2
+with a handle it got from ceph client1, then there is no reason to satisfy
+an open_by_handle() call for an unlinked file on client2.
+If file was opened on client1, it may be "legal" to satisfy open_by_handle()
+on client2, but I don't see how stopping to satisfy that can break anything.
 
-So, an rpc task for a callback is being freed and decrementing
-clp->cl_cb_inflight, and discovering that cl_cb_inflight is already less
-than or equal to 0.  Either we've got unbalanced increments and
-decrements of cl_cb_inflight, or clp has already been freed out from
-under us.
+>
+> > I think what the test is trying to verify is that a "fully purged" inodes
+> > cannot be opened db handle, but there is no standard way to verify
+> > "fully purged", so the test resorts to sync() + another sync() + drop_caches.
+> >
+>
+> Got it. That makes sense.
+>
+> > Is there anything else that needs to be done on ceph in order to flush
+> > all deferred operations from this client to MDS?
+>
+> I'm leaning toward something like what Luis has proposed, but adding in
+> appropriate cap handling.
 
-I'm looking but can't quite see yet how that can happen.
+That sounds fine.
 
---b.
+>
+> Basically, we have to consider the situation where one client has the
+> file open and another client unlinks it, and then does an
+> open_by_handle_at. Should it succeed in that case?
+>
+> I can see arguments for either way.
 
+IMO, the behavior should be defined for a client that has the file open.
+For the rest it does not really matter.
 
-> [17957.413835] WARNING: CPU: 1 PID: 26127 at lib/refcount.c:28 refcount_warn_saturate+0xd8/0xe0
-> [17957.413872] Modules linked in: md5 nfsd auth_rpcgss nfs_acl lockd grace sunrpc fuse vhost_net vhost vhost_iotlb xt_mac xt_socket nf_socket_ipv4 xt_MASQUERADE xt_REDIRECT xt_TPROXY nf_tproxy_ipv4 xt_comment ipt_REJECT nf_reject_ipv4 xt_mark xt_multiport nfnetlink_log xt_NFLOG nf_log_ipv4 nf_log_common xt_LOG nf_nat_tftp nf_nat_sip nf_nat_h323 nf_nat_ftp nf_conntrack_tftp nf_conntrack_sip nf_conntrack_netlink nfnetlink nf_conntrack_h323 nf_conntrack_ftp tun bridge stp llc xt_tcpudp xt_conntrack iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_raw iptable_filter ip_tables x_tables rc_it913x_v1 it913x_fe hid_generic usbhid hid dvb_usb_it913x dvb_usb_v2 dvb_core videobuf2_vmalloc videobuf2_memops videobuf2_common rc_core btrfs blake2b_generic xor raid6_pq libcrc32c zlib_deflate zlib_inflate snd_hda_codec_realtek snd_hda_codec_generic x86_pkg_temp_thermal kvm_intel kvm ppdev irqbypass i915 crct10dif_pclmul crc32_pclmul sr_mod intel_cstate iosf_mbi
-> [17957.413896]  intel_rapl_perf input_leds drm_kms_helper snd_hda_intel syscopyarea snd_intel_dspcfg sysfillrect pcspkr cdrom sysimgblt i2c_i801 fb_sys_fops intel_gtt r8169 snd_hda_codec i2c_algo_bit ehci_pci cfbfillrect cfbimgblt ehci_hcd realtek lpc_ich mei_me cfbcopyarea snd_hda_core usbcore libphy sky2 fb snd_hwdep mei mfd_core usb_common fbdev thermal parport_pc parport video sch_fq_codel snd_pcm_oss snd_mixer_oss snd_pcm snd_timer drm snd drm_panel_orientation_quirks soundcore agpgart backlight i2c_core coretemp hwmon
-> [17957.414516] CPU: 1 PID: 26127 Comm: kworker/u4:2 Not tainted 5.7.0-rc2 #1
-> [17957.414545] Hardware name: MSI MS-7788/H61M-P20 (G3) (MS-7788), BIOS V1.9 01/10/2013
-> [17957.414587] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> [17957.414612] RIP: 0010:refcount_warn_saturate+0xd8/0xe0
-> [17957.414633] Code: ff 48 c7 c7 f0 7a d7 81 c6 05 d1 35 d7 00 01 e8 5b 9b d0 ff 0f 0b c3 48 c7 c7 98 7a d7 81 c6 05 bd 35 d7 00 01 e8 45 9b d0 ff <0f> 0b c3 0f 1f 44 00 00 8b 07 3d 00 00 00 c0 74 12 83 f8 01 74 46
-> [17957.414716] RSP: 0018:ffffc90000bafde0 EFLAGS: 00010282
-> [17957.414738] RAX: 0000000000000026 RBX: 0000000000000e81 RCX: 0000000000000007
-> [17957.414767] RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff888216718800
-> [17957.414798] RBP: ffff8881c5270c70 R08: 0000000000000338 R09: ffffc90010054024
-> [17957.414828] R10: 0000000000aaaaaa R11: 0000000000000000 R12: ffff88805b0a0510
-> [17957.414857] R13: ffff888011707b30 R14: 0000000000000001 R15: ffff888130c9d000
-> [17957.414889] FS:  0000000000000000(0000) GS:ffff888216700000(0000) knlGS:0000000000000000
-> [17957.414924] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [17957.414948] CR2: 00005600ba4586e8 CR3: 000000015a210004 CR4: 00000000001626e0
-> [17957.414978] Call Trace:
-> [17957.414996]  nfsd41_destroy_cb+0x2c/0x40 [nfsd]
-> [17957.415020]  rpc_free_task+0x31/0x50 [sunrpc]
-> [17957.415042]  __rpc_execute+0x38f/0x3a0 [sunrpc]
-> [17957.415063]  ? pick_next_task_fair+0x295/0x2b0
-> [17957.415082]  ? finish_task_switch+0x70/0x230
-> [17957.415103]  rpc_async_schedule+0x24/0x40 [sunrpc]
-> [17957.416404]  process_one_work+0x1cd/0x3c0
-> [17957.417680]  worker_thread+0x45/0x3c0
-> [17957.418947]  kthread+0x10b/0x150
-> [17957.420195]  ? process_one_work+0x3c0/0x3c0
-> [17957.421420]  ? kthread_park+0x80/0x80
-> [17957.422620]  ret_from_fork+0x1f/0x30
-> [17957.423790] ---[ end trace d52e90aa624996f1 ]---
+My argument is that is it easy to satisfy the test's expectation and conform
+to behavior of other filesystems without breaking any real workload.
 
+To satisfy the test's expectation, you only need to change behavior of ceph
+client in i_count 1 use case. If i_count is 1 need to take all relevant caps
+to check that i_nlink is "globally" 0, before returning ESTALE.
+But if i_count > 1, no need to bother.
+
+Thanks,
+Amir.
