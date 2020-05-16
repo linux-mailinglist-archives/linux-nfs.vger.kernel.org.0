@@ -2,78 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E5B21D6071
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2020 12:53:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0A4B1D60B4
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2020 14:10:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgEPKxx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 16 May 2020 06:53:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58591 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgEPKxx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 16 May 2020 06:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589626432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Sgk4L76+G8NMqHYS6ddlBe3JD0wGPSl87Vyk1kROUo=;
-        b=L3d/XVkRVmEqQHJ7tu6qkJebtrNbS6nV+xp8WePwe9T4KUuYxsH+QtuBiWLe70E28J/aHk
-        Nw2j+FN3upNyxV4V8SDDAg+3UTyk7NfzedE8fcQkcoZ/4OiJYthpQVdHo61Xp8lMfWfjFQ
-        t5JlyDtOBahRdnoAk8HU6wvSlhRKVzs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-GcqHfzqTMWmxPdkJ6SiDpg-1; Sat, 16 May 2020 06:53:50 -0400
-X-MC-Unique: GcqHfzqTMWmxPdkJ6SiDpg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726219AbgEPMKb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 May 2020 08:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbgEPMKb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 16 May 2020 08:10:31 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD92F1005512;
-        Sat, 16 May 2020 10:53:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10CCB5C6CA;
-        Sat, 16 May 2020 10:53:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com>
-References: <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com> <f91b8f29-271a-b5cd-410b-a43a399d34aa@infradead.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     dhowells@redhat.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "viro@ZenIV.linux.org.uk" <viro@ZenIV.linux.org.uk>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH -next] nfs: fsinfo: fix build when CONFIG_NFS_V4 is not enabled
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDF020657;
+        Sat, 16 May 2020 12:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589631030;
+        bh=04AbjCXytLCX9HGH+nxYI/rMKrxzV75ANLTUs/yDM/U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SMTPQgb5Hvr3EbSz8749/ImgGuqyITyV1BhWKkpIsG4uZvS3A8v4N4yBOg2pUraBL
+         1hgcVaRxrBMQYG0UP2evthJttAR0wLXuH+VM4zJiTFU+ORtBk0A7FzFIHVT2ZxNYiw
+         WMKg2+5Mt3WfubCC5gI9laL/Q1s/JC3gYvsbGOt8=
+Message-ID: <61e877867de7e683d88e2cc5d0945b0aecce1d2a.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Sat, 16 May 2020 08:10:27 -0400
+In-Reply-To: <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
+References: <20200514111453.GA99187@suse.com>
+         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+         <20200514124845.GA12559@suse.com>
+         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+         <20200515111548.GA54598@suse.com>
+         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+         <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+         <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <537091.1589626426.1@warthog.procyon.org.uk>
-Date:   Sat, 16 May 2020 11:53:46 +0100
-Message-ID: <537092.1589626426@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> wrote:
+On Sat, 2020-05-16 at 09:58 +0300, Amir Goldstein wrote:
+> [pulling in nfs guys]
+> 
+> > > Questions:
+> > > 1. Does sync() result in fully purging inodes on MDS?
+> > 
+> > I don't think so, but again, that code is not trivial to follow. I do
+> > know that the MDS keeps around a "strays directory" which contains
+> > unlinked inodes that are lazily cleaned up. My suspicion is that it's
+> > satisfying lookups out of this cache as well.
+> > 
+> > Which may be fine...the MDS is not required to be POSIX compliant after
+> > all. Only the fs drivers are.
+> > 
+> > > 2. Is i_nlink synchronized among nodes on deferred delete?
+> > > IWO, can inode come back from the dead on client if another node
+> > > has linked it before i_nlink 0 was observed?
+> > 
+> > No, that shouldn't happen. The caps mechanism should ensure that it
+> > can't be observed by other clients until after the change.
+> > 
+> > That said, Luis' current patch doesn't ensure we have the correct caps
+> > to check the i_nlink. We may need to add that in before we can roll with
+> > this.
+> > 
+> > > 3. Can an NFS client be "migrated" from one ceph node to another
+> > > with an open but unlinked file?
+> > > 
+> > 
+> > No. Open files in ceph are generally per-client. You can't pass around a
+> > fd (or equivalent).
+> 
+> Not sure we are talking about the same thing.
+> It's not ceph fd that is being passed around, it's the NFS client's fd.
+> If there is no case where NFS client would access ceph client2
+> with a handle it got from ceph client1, then there is no reason to satisfy
+> an open_by_handle() call for an unlinked file on client2.
+> If file was opened on client1, it may be "legal" to satisfy open_by_handle()
+> on client2, but I don't see how stopping to satisfy that can break anything.
+> 
 
-> This whole thing needs to be reviewed and acked by the NFS community,
-> and quite frankly I'm inclined to NAK this. This is the second time
-> David tries to push this unwanted rewrite of totally unrelated code.
+Not currently, but eventually we may need to allow for that...which is
+another good reason to handle this on the (Ceph) client instead, as the
+client can then decide whether treat an unlinked file as an ESTALE
+return based on its needs.
 
-Rewrite?  What?
+> > > I think what the test is trying to verify is that a "fully purged" inodes
+> > > cannot be opened db handle, but there is no standard way to verify
+> > > "fully purged", so the test resorts to sync() + another sync() + drop_caches.
+> > > 
+> > 
+> > Got it. That makes sense.
+> > 
+> > > Is there anything else that needs to be done on ceph in order to flush
+> > > all deferred operations from this client to MDS?
+> > 
+> > I'm leaning toward something like what Luis has proposed, but adding in
+> > appropriate cap handling.
+> 
+> That sounds fine.
+> 
+> > Basically, we have to consider the situation where one client has the
+> > file open and another client unlinks it, and then does an
+> > open_by_handle_at. Should it succeed in that case?
+> > 
+> > I can see arguments for either way.
+> 
+> IMO, the behavior should be defined for a client that has the file open.
+> For the rest it does not really matter.
+> 
+> My argument is that is it easy to satisfy the test's expectation and conform
+> to behavior of other filesystems without breaking any real workload.
+> 
+> To satisfy the test's expectation, you only need to change behavior of ceph
+> client in i_count 1 use case. If i_count is 1 need to take all relevant caps
+> to check that i_nlink is "globally" 0, before returning ESTALE.
+> But if i_count > 1, no need to bother.
 
-It's example code of what NFS could export through this interface.  I didn't
-submit it to Linus with the rest of the patches as it's only an example; same
-for the ext4 example.  I've tried running it past you and other NFS people a
-couple of times to try and elicit a response and wanted to try and ask you
-about it at LSF:-(
+Makes sense. Thanks.
 
-Anyway, I've dropped it for now.
-
-David
+-- 
+Jeff Layton <jlayton@kernel.org>
 
