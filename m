@@ -2,89 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C51D1D9C6F
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 May 2020 18:25:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 642401D9F85
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 May 2020 20:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgESQZA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 May 2020 12:25:00 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51041 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728689AbgESQZA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 May 2020 12:25:00 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7CBCF5C00D1;
-        Tue, 19 May 2020 12:24:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Tue, 19 May 2020 12:24:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
-         h=date:from:to:cc:subject:message-id:reply-to:references
-        :mime-version:content-type:in-reply-to; s=fm1; bh=7/52dq5GxyiFcd
-        dCLps86QCxmzKufuJnLl7OH1657qI=; b=c1zsJqiWBgruzDh/25LryFc4I/tJS+
-        KejzuOJ1efDWpsQMaT/iI4KAnDS8jXkboxzHQy4d076P8VZSYja7C1lqXzJAxwOU
-        /hHqX9Vh52Pk30pdFhFxBvtUvWJnCkP/6ZXnwYHBHf/wv8gK+uHbv3hQusJ8DlUB
-        tJgDY6o2zq2Rqj2G0aw14HNItLTKTgwuZCvTalwVu09DNN+r39xi3yiS0Fu4am2u
-        TfYm1o6nbLAxFMsajd7qy/8HN6kEkoapPVwE2rrpHeNfQntfA85cDt453wuUY2nc
-        4QmbMa00jCapZPZ8WeUbwAMb1HZBpHhCVqxFjQuXmt/PfKVCz/8cjO0A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:reply-to:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=7/52dq5GxyiFcddCLps86QCxmzKufuJnLl7OH1657qI=; b=fZkGF6+s
-        2NFay7YhJ+tKBb+twAe0shLDdn1FlFIJBQuxiomMjsGpQ/K8Vfjw7b8lrfWLGyAl
-        ASpfsxFhO1xrM3d/4JB2/9oQl7GK0irtWZY4mvvQFOGTKR3qLeATNUztzFFkG9hj
-        mJ3vXnWYEyhcD1gj+PJ/ijWHDqJpjpC7du7daw3nn+lGpeREw/9mjYfHF5MJMevQ
-        W9+49sDoDe2ddx0oK72Pr/S30OX5LWMdFSoN+pM6Ge8CFhZoQIp1gtAr2Y+zWUY3
-        gDuv/2jlCR3X3zZXxA3jj2W0qMeJMvTo2VfhJnb++3fCWmWkExulf7TzjItqUtM0
-        MufBtLPvlovf7A==
-X-ME-Sender: <xms:VQjEXlRLzugsFLKbHpleHm2R5P4Xz3dzQH6kstjIiDtNAwXKpJnfTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtjedgleelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhrfhggtggujggfsehttdertddtreejnecuhfhrohhmpeeuvghn
-    uceuohgvtghkvghluceomhgvsegsvghnsghovggtkhgvlhdrnhgvtheqnecuggftrfgrth
-    htvghrnhepjedtvdffheetgfektdehvefgieelgeefheejvdehtdduieetgedtfedtleev
-    vdffnecukfhppeeiledrvddtgedrudeikedrvdeffeenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgessggvnhgsohgvtghkvghlrdhnvght
-X-ME-Proxy: <xmx:VQjEXuym6QgehtMSmMpoV9E7TnaLg9GXaX3mTvL85qC7i3EAwGH9uQ>
-    <xmx:VQjEXq1yZDifEBgM-BnSBJ_sg8hMsS0yLWT_4Yka9-rkqVDOO7U70w>
-    <xmx:VQjEXtCtK0SpOh7vIKzJBJRtA5Rsv4RchA3niV5yLgsDwRm_jqcpyw>
-    <xmx:WgjEXga2rAiJlnRndipxaz5S5Xibw8t-qKafQBRhmbZN_wm9Ok0GLw>
-Received: from localhost (cpe-69-204-168-233.nycap.res.rr.com [69.204.168.233])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63B91306643B;
-        Tue, 19 May 2020 12:24:53 -0400 (EDT)
-Date:   Tue, 19 May 2020 12:24:52 -0400
-From:   Ben Boeckel <me@benboeckel.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     fweimer@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dns: Apply a default TTL to records obtained from
- getaddrinfo()
-Message-ID: <20200519162452.GA3010828@erythro.dev.benboeckel.internal>
-Reply-To: me@benboeckel.net
-References: <20200519141432.GA2949457@erythro.dev.benboeckel.internal>
- <20200518155148.GA2595638@erythro.dev.benboeckel.internal>
- <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
- <1080378.1589895580@warthog.procyon.org.uk>
- <1512927.1589904409@warthog.procyon.org.uk>
+        id S1726747AbgESSag (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 May 2020 14:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgESSag (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 May 2020 14:30:36 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A954C08C5C0;
+        Tue, 19 May 2020 11:30:36 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49RPZf5VLHz9sRK;
+        Wed, 20 May 2020 04:30:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589913034;
+        bh=SFuRTS9+gsJOEt25G5xbN66octtTZc5pVmdnC8JSOYY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QEpthBRFmd43iIY8p0vuV5Mp3WB2/0eKTluuZ/LZTP8xRONH579DjzRhcHk6SV1oS
+         XO/4z+N+KYk6urcgUBwfjSnx9j1pKYz4WfR/g4AJlXkfyalVHwmmVjEkF546FUtu5X
+         UGAtG7hBJH4w/AJ1KuKmOEuWHZCLAKR9y4WCqD6nhcfr9EqZ6Ml3S/8fV8LOfzpaKd
+         71uEIDujTkcFnYkAmOBVSZSpofByN78wqMs603Ro98A0/uxu5bosOVN+P1+YvLpQHF
+         5l4LmKinHsU/FgTsyg/aGaXSPyD3diNmck9anKsdGqr9zuY1HuJMUQtKvj21tf5lex
+         YmBgOX291z/dg==
+Date:   Wed, 20 May 2020 04:30:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the nfs-anna tree
+Message-ID: <20200520043033.036c78ac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1512927.1589904409@warthog.procyon.org.uk>
-User-Agent: Mutt/1.13.3 (2020-01-12)
+Content-Type: multipart/signed; boundary="Sig_/wf5Y6selKu=mRUD6OJSU6pF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 19, 2020 at 17:06:49 +0100, David Howells wrote:
-> Okay, how about this incremental change, then?  If fixes the typo, only prints
-> the "READ CONFIG" line in verbose mode, filters escape chars in the config
-> file and reduces the expiration time to 5s.
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks! Looks good to me.
+Hi all,
 
-Reviewed-by: Ben Boeckel <me@benboeckel.net>
+In commit
 
---Ben
+  049a9d8a9117 ("NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESS=
+ION")
+
+Fixes tag
+
+  Fixes: 02a95dee8 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session=
+_callback")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7EJckACgkQAVBC80lX
+0Gw40AgAgKe6CQ2f2H1eOxpBpI+V2ulc+2ivYjOW8s5WxndVEN3VN+F+o836/JO6
+TS/WUmcnwXf6pAFULbMCmhOBWPTpIdKIHWgmOKBZiVIaZvtBN0mt2Sq02avbXecN
+itK7/uhvE2Oz8uEmT1eAlkw8Olu+i22PvrXWY9unv0pqaTkEWCd0EceLTWk2sKRx
+5xULqXHpO/5S1VS7E4Ne7Y3hHkZ6rOeeHzD1nqn0gYH/GYDL0HnZZZ1RWqEfM2WT
+qEqeG2g8MzTTvah4RFP00g1/TJ+k8DZO4ok6O3We/Phrf00bIEnuuNxvBj+n8J5v
+/+p9w78wgOzXVdAF4/lxUOtlCsXkYA==
+=heuu
+-----END PGP SIGNATURE-----
+
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF--
