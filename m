@@ -2,147 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9454D1D9BFA
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 May 2020 18:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 697DE1D9C1A
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 May 2020 18:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgESQHD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 May 2020 12:07:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43246 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729316AbgESQHD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 May 2020 12:07:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589904421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T+1wIgatcNw+bs4bC4UVA93HHDhP2YXSs8RVpPtE368=;
-        b=c6P3MmymPM42wThTkKOWdNV88ZKCpRxZ9tCG3nvr72but/kZBxT8WStDQ/4JljpUpSOESc
-        sBUuyTx0EU89jB3+L6+3ZZOTfrn17Hqe5zt8Ya8QC7u1+Aqi/N4L1VHxs700aTl1i+DQn1
-        cZSH3/PMofJXFm3h+RHWxsMTDsw8Gls=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-KfD76cAVOHCMJEdCOgDVPQ-1; Tue, 19 May 2020 12:06:57 -0400
-X-MC-Unique: KfD76cAVOHCMJEdCOgDVPQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 350021005510;
-        Tue, 19 May 2020 16:06:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7730F5D9C5;
-        Tue, 19 May 2020 16:06:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200519141432.GA2949457@erythro.dev.benboeckel.internal>
-References: <20200519141432.GA2949457@erythro.dev.benboeckel.internal> <20200518155148.GA2595638@erythro.dev.benboeckel.internal> <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk> <1080378.1589895580@warthog.procyon.org.uk>
-To:     me@benboeckel.net, fweimer@redhat.com
-Cc:     dhowells@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dns: Apply a default TTL to records obtained from getaddrinfo()
+        id S1729238AbgESQLJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 May 2020 12:11:09 -0400
+Received: from fieldses.org ([173.255.197.46]:45050 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728953AbgESQLJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 19 May 2020 12:11:09 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id AD29E621B; Tue, 19 May 2020 12:11:08 -0400 (EDT)
+Date:   Tue, 19 May 2020 12:11:08 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v2 00/29] Possible NFSD patches for v5.8
+Message-ID: <20200519161108.GD25858@fieldses.org>
+References: <20200512211640.5826.77139.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1512926.1589904409.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 19 May 2020 17:06:49 +0100
-Message-ID: <1512927.1589904409@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512211640.5826.77139.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Okay, how about this incremental change, then?  If fixes the typo, only pr=
-ints
-the "READ CONFIG" line in verbose mode, filters escape chars in the config
-file and reduces the expiration time to 5s.
+I'm getting a repeatable timeout failure on python 4.0 test WRT15.  In
+pynfs, run: 
 
-David
----
-diff --git a/key.dns_resolver.c b/key.dns_resolver.c
-index c241eda3..7a7ec424 100644
---- a/key.dns_resolver.c
-+++ b/key.dns_resolver.c
-@@ -52,7 +52,7 @@ key_serial_t key;
- static int verbose;
- int debug_mode;
- unsigned mask =3D INET_ALL;
--unsigned int key_expiry =3D 10 * 60;
-+unsigned int key_expiry =3D 5;
- =
+	./nfs4.0/testserver.py server:/export/path --rundeps --maketree WRT15
 
- =
+Looks like it sends WRITE+GETATTR(FATTR4_SIZE) compounds with write
+offset 0 and write length taking on every value from 0 to 8192.
 
- /*
-@@ -109,7 +109,7 @@ void _error(const char *fmt, ...)
- }
- =
+Probably an xdr decoding bug of some kind?
 
- /*
-- * Pring a warning to stderr or the syslog
-+ * Print a warning to stderr or the syslog
-  */
- void warning(const char *fmt, ...)
- {
-@@ -454,7 +454,7 @@ static void read_config(void)
- 	unsigned int line =3D 0, u;
- 	int n;
- =
+I don't see anything in the server logs.
 
--	printf("READ CONFIG %s\n", config_file);
-+	info("READ CONFIG %s", config_file);
- =
+--b.
 
- 	f =3D fopen(config_file, "r");
- 	if (!f) {
-@@ -514,6 +514,16 @@ static void read_config(void)
- 			v =3D p =3D b;
- 			while (*b) {
- 				if (esc) {
-+					switch (*b) {
-+					case ' ':
-+					case '\t':
-+					case '"':
-+					case '\'':
-+					case '\\':
-+						break;
-+					default:
-+						goto invalid_escape_char;
-+					}
- 					esc =3D false;
- 					*p++ =3D *b++;
- 					continue;
-@@ -563,6 +573,8 @@ static void read_config(void)
- =
-
- missing_value:
- 	error("%s:%u: %s: Missing value", config_file, line, k);
-+invalid_escape_char:
-+	error("%s:%u: %s: Invalid char in escape", config_file, line, k);
- post_quote_data:
- 	error("%s:%u: %s: Data after closing quote", config_file, line, k);
- bad_value:
-diff --git a/man/key.dns_resolver.conf.5 b/man/key.dns_resolver.conf.5
-index 03d04049..c944ad55 100644
---- a/man/key.dns_resolver.conf.5
-+++ b/man/key.dns_resolver.conf.5
-@@ -34,7 +34,7 @@ Available options include:
- The number of seconds to set as the expiration on a cached record.  This =
-will
- be overridden if the program manages to retrieve TTL information along wi=
-th
- the addresses (if, for example, it accesses the DNS directly).  The defau=
-lt is
--600 seconds.  The value must be in the range 1 to INT_MAX.
-+5 seconds.  The value must be in the range 1 to INT_MAX.
- .P
- The file can also include comments beginning with a '#' character unless
- otherwise suppressed by being inside a quoted value or being escaped with=
- a
-
+On Tue, May 12, 2020 at 05:22:04PM -0400, Chuck Lever wrote:
+> Available to view:
+>   https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/nfsd-5.8
+> 
+> Pull from:
+>   git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-5.8
+> 
+> Highlights of this series:
+> * Remove serialization of sending RPC/RDMA Replies
+> * Convert the TCP socket send path to use xdr_buf::bvecs (pre-requisite for RPC-on-TLS)
+> * Fix svcrdma backchannel sendto return code
+> * Convert a number of dprintk call sites to use tracepoints
+> * Fix the "suggest braces around empty body in an ‘else’ statement" warning
+> 
+> Changes since v1:
+> * Rebased on v5.7-rc5+
+> * Re-organized the series so changes interesting to linux-rdma appear together
+> * Addressed sparse warnings found by the kbuild test robot
+> * Included an additional minor clean-up: removal of the unused SVCRDMA_DEBUG macro
+> * Clarified several patch descriptions
+> 
+> ---
+> 
+> Chuck Lever (29):
+>       SUNRPC: Move xpt_mutex into socket xpo_sendto methods
+>       svcrdma: Clean up the tracing for rw_ctx_init errors
+>       svcrdma: Clean up handling of get_rw_ctx errors
+>       svcrdma: Trace page overruns when constructing RDMA Reads
+>       svcrdma: trace undersized Write chunks
+>       svcrdma: Fix backchannel return code
+>       svcrdma: Remove backchannel dprintk call sites
+>       svcrdma: Rename tracepoints that record header decoding errors
+>       svcrdma: Remove the SVCRDMA_DEBUG macro
+>       svcrdma: Displayed remote IP address should match stored address
+>       svcrdma: Add tracepoints to report ->xpo_accept failures
+>       SUNRPC: Remove kernel memory address from svc_xprt tracepoints
+>       SUNRPC: Tracepoint to record errors in svc_xpo_create()
+>       SUNRPC: Trace a few more generic svc_xprt events
+>       SUNRPC: Remove "#include <trace/events/skb.h>"
+>       SUNRPC: Add more svcsock tracepoints
+>       SUNRPC: Replace dprintk call sites in TCP state change callouts
+>       SUNRPC: Trace server-side rpcbind registration events
+>       SUNRPC: Rename svc_sock::sk_reclen
+>       SUNRPC: Restructure svc_tcp_recv_record()
+>       SUNRPC: Refactor svc_recvfrom()
+>       SUNRPC: Restructure svc_udp_recvfrom()
+>       SUNRPC: svc_show_status() macro should have enum definitions
+>       NFSD: Add tracepoints to NFSD's duplicate reply cache
+>       NFSD: Add tracepoints to the NFSD state management code
+>       NFSD: Add tracepoints for monitoring NFSD callbacks
+>       SUNRPC: Clean up request deferral tracepoints
+>       NFSD: Squash an annoying compiler warning
+>       NFSD: Fix improperly-formatted Doxygen comments
+> 
+> 
+>  fs/nfsd/nfs4callback.c                     |  37 +-
+>  fs/nfsd/nfs4proc.c                         |   7 +-
+>  fs/nfsd/nfs4state.c                        |  63 ++--
+>  fs/nfsd/nfscache.c                         |  57 +--
+>  fs/nfsd/nfsctl.c                           |  26 +-
+>  fs/nfsd/state.h                            |   7 -
+>  fs/nfsd/trace.h                            | 345 ++++++++++++++++++
+>  include/linux/sunrpc/svc.h                 |   1 +
+>  include/linux/sunrpc/svc_rdma.h            |   6 +-
+>  include/linux/sunrpc/svcsock.h             |   6 +-
+>  include/trace/events/rpcrdma.h             | 142 ++++++--
+>  include/trace/events/sunrpc.h              | 387 ++++++++++++++++++--
+>  net/sunrpc/svc.c                           |  19 +-
+>  net/sunrpc/svc_xprt.c                      |  41 +--
+>  net/sunrpc/svcsock.c                       | 393 ++++++++++-----------
+>  net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  86 +----
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    |  21 +-
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c          |  92 ++---
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c   |  55 ++-
+>  19 files changed, 1221 insertions(+), 570 deletions(-)
+> 
+> --
+> Chuck Lever
