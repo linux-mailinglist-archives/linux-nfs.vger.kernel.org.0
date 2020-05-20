@@ -2,153 +2,132 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDB081DA5A4
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2020 01:34:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F38121DA71F
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2020 03:23:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgESXem (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 May 2020 19:34:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59518 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgESXel (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 May 2020 19:34:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNXIT9041018;
-        Tue, 19 May 2020 23:34:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=zWo1Fmp5PMdMy003njgTB/lKpxM26v28RXF62IjrSmI=;
- b=bR77MSJsFAtWpqdBlXs8DYddXn1hJJkx9TN0hbfs0DiE895mpI29P6lTrjADL4nLePkE
- nfJIoDrypnSyZnJiH9lL7wTDUAGHeaSSQIpG70wktadWioPiJN+d4eUIHmyu7T9Pa4cQ
- 8ZFzfAEVfHwEcfVGaHcGURdFILhmtgWyaeQwntUmmOYyUXmiOQbvYFGJIKbEJLqCtgpx
- 3khYkdBPdeykDKj3Ls38GB8P+FSIYONBlEU71D1vXtMlE+XyIDY9pfz2w95yAjjRXdEf
- rqlPRlHDgDeyuttC/eulf7hCZH7vt6qKo9AoVCpF2X5XdmAg1zaWbfe/6k69E/pcfyRa uw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3127kr89tx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 23:34:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNNBcT054371;
-        Tue, 19 May 2020 23:32:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 312sxtqg0x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 23:32:39 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04JNWc3F004522;
-        Tue, 19 May 2020 23:32:39 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 May 2020 16:32:38 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 00/29] Possible NFSD patches for v5.8
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <470B6839-FBC6-49BA-B633-DD49D271FD42@oracle.com>
-Date:   Tue, 19 May 2020 19:32:37 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <000ED881-6724-46EE-894E-57CD6DE10A15@oracle.com>
-References: <20200512211640.5826.77139.stgit@klimt.1015granger.net>
- <20200519161108.GD25858@fieldses.org>
- <81E97D7E-7B8D-4C64-844A-18EF0346C49C@oracle.com>
- <20200519212938.GG25858@fieldses.org>
- <470B6839-FBC6-49BA-B633-DD49D271FD42@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005190199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005190200
+        id S1726318AbgETBXm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 May 2020 21:23:42 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4870 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726348AbgETBXm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 19 May 2020 21:23:42 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 64AB167C2CCB3BC39152;
+        Wed, 20 May 2020 09:23:39 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 20 May 2020
+ 09:23:31 +0800
+From:   Zheng Bin <zhengbin13@huawei.com>
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>,
+        <zhengbin13@huawei.com>
+Subject: [PATCH] nfs: set invalid blocks after NFSv4 writes
+Date:   Wed, 20 May 2020 09:30:36 +0800
+Message-ID: <20200520013037.113612-1-zhengbin13@huawei.com>
+X-Mailer: git-send-email 2.26.0.106.g9fadedd
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Use the following command to test nfsv4(size of file1M is 1MB):
+mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
+cp file1M /mnt
+du -h /mnt/file1M  -->0 within 60s, then 1M
 
+When write is done(cp file1M /mnt), will call this:
+nfs_writeback_done
+  nfs4_write_done
+    nfs4_write_done_cb
+      nfs_writeback_update_inode
+        nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
+nfs_post_op_update_inode_force_wcc_locked
+   nfs_set_cache_invalid
+   nfs_refresh_inode_locked
+     nfs_update_inode
 
-> On May 19, 2020, at 6:25 PM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
-> Hi Bruce-
->=20
->> On May 19, 2020, at 5:29 PM, Bruce Fields <bfields@fieldses.org> =
-wrote:
->>=20
->> On Tue, May 19, 2020 at 12:14:22PM -0400, Chuck Lever wrote:
->>>=20
->>>=20
->>>> On May 19, 2020, at 12:11 PM, J. Bruce Fields =
-<bfields@fieldses.org> wrote:
->>>>=20
->>>> I'm getting a repeatable timeout failure on python 4.0 test WRT15.  =
-In
->>>> pynfs, run:=20
->>>>=20
->>>> 	./nfs4.0/testserver.py server:/export/path --rundeps --maketree =
-WRT15
->>>>=20
->>>> Looks like it sends WRITE+GETATTR(FATTR4_SIZE) compounds with write
->>>> offset 0 and write length taking on every value from 0 to 8192.
->>>>=20
->>>> Probably an xdr decoding bug of some kind?
->>>=20
->>> My first thought is to bisect, but I don't see a particular change =
-in my
->>> v5.8 series that would plausibly introduce this class of problem.
->>=20
->> It's SUNRPC: Refactor svc_recvfrom().
->>=20
->> That was just from a quick automated bisect.  I haven't tried to =
-figure
->> out where the bug is....
->=20
-> Your reproducer isn't working for me on EL7.
->=20
-> [root@manet ~]# yum install krb5-devel python3-devel swig =
-python3-gssapi python3-ply
-> Loaded plugins: ulninfo
-> Package krb5-devel-1.15.1-46.el7.x86_64 already installed and latest =
-version
-> Package python3-devel-3.6.8-13.0.1.el7.x86_64 already installed and =
-latest version
-> Package swig-2.0.10-5.el7.x86_64 already installed and latest version
-> No package python3-gssapi available.
-> No package python3-ply available.
-> Nothing to do
-> [root@manet ~]# logout
-> [cel@manet pynfs]$ ./nfs4.0/testserver.py server:/export/path =
---rundeps --maketree WRT15
-> Traceback (most recent call last):
->  File "./nfs4.0/testserver.py", line 388, in <module>
->    main()
->  File "./nfs4.0/testserver.py", line 242, in main
->    opt.machinename =3D os.fsencode(opt.machinename)
-> AttributeError: 'module' object has no attribute 'fsencode'
-> [cel@manet pynfs]$
+nfsd write response contains change, ctime, mtime, the flag will be
+clear after nfs_update_inode. Howerver, write response does not contain
+space_used, previous open response contains space_used whose value is 0,
+so inode->i_blocks is still 0.
 
-I've reproduced your original test failure. I can take a closer look
-tomorrow.
+nfs_getattr  -->called by "du -h"
+  do_update |= force_sync || nfs_attribute_cache_expired -->false in 60s
+  cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
+  do_update |= cache_validity & (NFS_INO_INVALID_ATTR    -->false
+  if (do_update) {
+        __nfs_revalidate_inode
+  }
 
-Looks like python3 is now a requirement for pynfs, despite the comments
-and code in nfs4.0/testserver.py.
+Within 60s, does not send getattr request to nfsd, thus "du -h /mnt/file1M"
+is 0.
 
-Also, the README should explain that the server under test has to permit
-access from insecure source ports (this still might not be the default
-for some NFS servers).
+Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
 
+Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+---
+ fs/nfs/inode.c         | 9 +++++++--
+ include/linux/nfs_fs.h | 6 ++++--
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index b9d0921cb4fe..2d743e42fee1 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1764,7 +1764,8 @@ int nfs_post_op_update_inode_force_wcc_locked(struct inode *inode, struct nfs_fa
+ 	status = nfs_post_op_update_inode_locked(inode, fattr,
+ 			NFS_INO_INVALID_CHANGE
+ 			| NFS_INO_INVALID_CTIME
+-			| NFS_INO_INVALID_MTIME);
++			| NFS_INO_INVALID_MTIME
++			| NFS_INO_INVALID_BLOCKS);
+ 	return status;
+ }
+
+@@ -2033,8 +2034,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 		inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
+ 	} else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
+ 		inode->i_blocks = fattr->du.nfs2.blocks;
+-	else
++	else {
++		nfsi->cache_validity |= save_cache_validity &
++				(NFS_INO_INVALID_BLOCKS
++				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
++	}
+
+ 	/* Update attrtimeo value if we're out of the unstable period */
+ 	if (attr_changed) {
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 73eda45f1cfd..77efdca12cab 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -227,14 +227,16 @@ struct nfs4_copy_state {
+ #define NFS_INO_INVALID_CTIME	BIT(9)		/* cached ctime is invalid */
+ #define NFS_INO_INVALID_MTIME	BIT(10)		/* cached mtime is invalid */
+ #define NFS_INO_INVALID_SIZE	BIT(11)		/* cached size is invalid */
+-#define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
++#define NFS_INO_INVALID_BLOCKS	BIT(12)         /* cached blocks are invalid */
++#define NFS_INO_INVALID_OTHER	BIT(13)		/* other attrs are invalid */
+ #define NFS_INO_DATA_INVAL_DEFER	\
+-				BIT(13)		/* Deferred cache invalidation */
++				BIT(14)		/* Deferred cache invalidation */
+
+ #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
+ 		| NFS_INO_INVALID_CTIME \
+ 		| NFS_INO_INVALID_MTIME \
+ 		| NFS_INO_INVALID_SIZE \
++		| NFS_INO_INVALID_BLOCKS \
+ 		| NFS_INO_INVALID_OTHER)	/* inode metadata is invalid */
+
+ /*
 --
-Chuck Lever
-
-
+2.26.0.106.g9fadedd
 
