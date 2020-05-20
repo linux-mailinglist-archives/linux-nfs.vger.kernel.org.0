@@ -2,148 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1C41DBBDE
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2020 19:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 438211DBC31
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2020 20:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgETRr2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 May 2020 13:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETRr2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 May 2020 13:47:28 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6952C061A0E
-        for <linux-nfs@vger.kernel.org>; Wed, 20 May 2020 10:47:27 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g12so2854170wrw.1
-        for <linux-nfs@vger.kernel.org>; Wed, 20 May 2020 10:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=c0beAKyQmRVTVKU7s0kSBMSL/mr7Tu2mxCscmG+TQJ0=;
-        b=YliE8jultGE1jgEltjaWEd8WFEwAZj5J1VmBTInA3R7mjQuJ7bz43Mdn8oIuW3GmE7
-         uZ2FC4QiqiB718iwosypeZRYMY2d26lbHfDK6+uR0FsMZ9DGbJKODuh+f+t1CCZruyLF
-         U5lczJmE/5hInyCZ/h9eIew9gGEh0hWRf+KSY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=c0beAKyQmRVTVKU7s0kSBMSL/mr7Tu2mxCscmG+TQJ0=;
-        b=q2J4Jbe0rB9Y1jSYcXFvmB4fI68tdr1li45KqVPW8jV4+DCtAKaqCiQgtgzFlcvC0t
-         rpo5jL/RV5y06svRQINXg1FGlZlyG+d90gdpQQaqf6ozQQn3K640WkohrYTsMt0Co2y0
-         id1jxBdL0PFZSmffsTY2UBdGZtu7y4buW+BsTPq2TX1SBjF806gqCG7OacSO64bgApeX
-         lyK7D6ib2gaK/wPendkHWVrjrg0fMmOQzjzmYAf1uxW/D6X3lXJtIWmJsFZ1YG5CSf4v
-         4GUueKtMBFZJXlBHGkBGWGsDMygx8ugxXT4m4lu68DdGDcuKFPobaI92xqrB8c8yFyq9
-         KZ5w==
-X-Gm-Message-State: AOAM533bVE0wHOxFt3C8RyZGkJ/rtoJCVldY6p/RFspkpMNheT06frk2
-        U5YmiFNqQmdozFK1yDapJD3GoVsYonw=
-X-Google-Smtp-Source: ABdhPJzSzgJ97XWEoW6z/bivPxepAcXk3tcGZbFPkqgKBPt0IbnNjXFKXHcG/638edo3ISARZGhlSw==
-X-Received: by 2002:a5d:51cb:: with SMTP id n11mr4936648wrv.236.1589996845988;
-        Wed, 20 May 2020 10:47:25 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id z7sm3566253wrl.88.2020.05.20.10.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:47:25 -0700 (PDT)
-Message-ID: <09ad6e031e64820f2efd7495d7467e2bb8b51fc5.camel@linuxfoundation.org>
-Subject: TEST_STATEID issues with NFS4.1 and FreeNAS server
-From:   Richard Purdie <richard.purdie@linuxfoundation.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Michael Halstead <mhalstead@linuxfoundation.org>
-Date:   Wed, 20 May 2020 18:47:24 +0100
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        id S1726748AbgETSBL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 May 2020 14:01:11 -0400
+Received: from mail-eopbgr760099.outbound.protection.outlook.com ([40.107.76.99]:26360
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726439AbgETSBK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 20 May 2020 14:01:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B9y3Q+BKiETlAcOyJ+8iJ25b6RduEUSuqjTQ5FshsgIAwOGvZCaLzDaXQw4ceDhvFQiJpU0OeyRkHSXqiOebOFN+QEvM9WsWdHc8yoO9bMZEnhgpfh7XA+FkskU5hrw7WCWx43JmU4f6ly3N+tUHuBA5jhYFh2uPmHKWfGo1zlEEgr07zcAERumMoBKRhYL1c4l6+Z7i9SO4UP+emqAIFhHKJQjNdoGSEEmwdNYkkAW2uLsA0XOsV3uHzVVxW7C77LnqIULvkSvUvtEJ6Rop5m8Em00izWuro7clUoDRK/0iKsI+2msptsD+sQ8Zl8X6VDJzwBAvHh5eomOOAzSHLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lyq/0tHuJEATYFx6shf7Kk5W+8BdqFoN4BwerzFZd1w=;
+ b=SkYzGHkeZP0kCwoJ/7Eez0g9lwhuEjjeKPXkUEXQ8D/N+w+HRQwBN5Zjie/5u0v7PjAP0dAgAKLuQtg+z7CAHuLDbs9sMh/ln6eYiByZ0hNZevvcDfLF5fu9gjaaLfg3/oVlsTRefskeAdXLg7cC254oIuy2kCCqm2e3UfNyJ2hQLzmZcWUOW3xwvO8H0jdCRctvoAOp2ot4ciBz6KHAItbqdHSW986XH6BWGkPC8il3/cxbbz9G9Uxv8QoQH34CMiU8pMe+i4DUjjW8Gyw6WM2fHjpJ29n68oG58KP0fmBLg6a7kajaQNWcwYny2T/HZBQTozgxu8V5bECgthmhOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lyq/0tHuJEATYFx6shf7Kk5W+8BdqFoN4BwerzFZd1w=;
+ b=XyHdfeABxp3uN31HXWRf67/xaoD5N8eepqqyXWZLofNIwrIrfVs/KgtpWnW+xkVLsqqnCOhXAx7wMX/p4ye1kOKu1OztCo72PMUrBvKutIjGncCWTRt0dlmu57rDtC3WHRhakNnbvkLHN6D2tYFOEDnrQBWpESOiot+MYVd6elY=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3719.namprd13.prod.outlook.com (2603:10b6:610:97::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Wed, 20 May
+ 2020 18:01:07 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.3021.013; Wed, 20 May 2020
+ 18:01:07 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "richard.purdie@linuxfoundation.org" 
+        <richard.purdie@linuxfoundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+CC:     "mhalstead@linuxfoundation.org" <mhalstead@linuxfoundation.org>
+Subject: Re: TEST_STATEID issues with NFS4.1 and FreeNAS server
+Thread-Topic: TEST_STATEID issues with NFS4.1 and FreeNAS server
+Thread-Index: AQHWLs6+hWCi0hkMMkOtApoBqM31paixQ6WA
+Date:   Wed, 20 May 2020 18:01:07 +0000
+Message-ID: <6e7c1125fb5533d1fad5d8b9130761df0fdf3516.camel@hammerspace.com>
+References: <09ad6e031e64820f2efd7495d7467e2bb8b51fc5.camel@linuxfoundation.org>
+In-Reply-To: <09ad6e031e64820f2efd7495d7467e2bb8b51fc5.camel@linuxfoundation.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a5d2de97-48cc-4c5f-43f6-08d7fce7c55b
+x-ms-traffictypediagnostic: CH2PR13MB3719:
+x-microsoft-antispam-prvs: <CH2PR13MB3719F4E319A28248E1CC5129B8B60@CH2PR13MB3719.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q7RzI8tkLttoaudBnpEtgo+CQlwuWYIv1z3lBj/a/mY98Z/i2I3avYOVug0P7Gx9sFE5v/6mMJpS2QrpNjsRui6NX7L5OsatJ4HQhphP0cCb5BDYW1RGBYeyMQvybz/+whi6+dy0Zs/WYYK3uwL16mLzTWZI2zvQrgVzjp9S+Gu7PUcYnrk0G0iWusytHoRX3Z6K8TOK6zi2Md/gyS2Zz8kPpNU6lc1LDg6ZeAIQJYnFAeIdwoLDdvpC19S2dknDHUunssBDkgKbbOYosu/Vq1NyFdurRBlWpPVid9QMNxWq6q9MabdpVor3Jl6qolKyNQSCP4hvrpuKJacnomyN7ttm+HMTYGPHSjgaUVqcky6Mix563GkTXmpk5gx0wiKxFtNv0xEUZ6TLvf9W3noZPQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39830400003)(396003)(136003)(366004)(376002)(346002)(186003)(5660300002)(6512007)(26005)(6506007)(2616005)(6486002)(86362001)(71200400001)(4326008)(36756003)(66556008)(8936002)(64756008)(76116006)(8676002)(66446008)(316002)(66476007)(110136005)(2906002)(478600001)(66946007)(966005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: V0zsXPsmyjOc23mPlgp4MyR9KWP63+Ym/pQFMHEN45zAHq1zXuk5212XCxPEvtUma8vlcOdHiI2M7SfGVwrVCAgsOjgAvCyCu9NXMTBNZh6NtMx3ua0hKxGv0Rd4xvzYXK9xL5nqYZnBCyZLJ3UuiZDouULkQJJPZggxwrSZxoylWJFpob8VOzpCYz9jIoazqY1/P4XwvwQmYMx3Oi8JamwpkEmplw/ZIfq/bXNgjrvaqj6ql8ZTiB0UaPzqU/Xwni4oLEydaXJhPNl29JxnDGj61SDW9YACd4KZ4o0qFLEiTlm8lH9jPzc4wwoL+oq1BivB1ySTl0YGMHyAenwv+Q03MnW1DbJL6jNrbsuAI5QbDstUIwXCYaAWgi2KETMb6nHX8vJtRsCxaC58tjBmdGGmWEQ0lTW5iFdyuNHGDFKFYYM40mIPzh8FnuugVxvkgcJcysn/dZk6l2+b5s25DN/yLOzm/NNJQw2iGP+nnGI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D7F1B5775DDCE740A25B21868238F347@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5d2de97-48cc-4c5f-43f6-08d7fce7c55b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 18:01:07.3413
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0VJ2cJuVN5rQDiqrcG0xGb/Np2oq+KR0IT14PhtBIzirBig1MeJ8RxSxcHjA72U9t2OTeyvDmHSb/BalCuqfrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3719
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-
-We have a cluster of machines where we're observing file accesses
-hanging over NFS. The clients showing the problems are Fedora and SUSE
-distros with the 5.6.11 kernel, e.g.:
-
-Linux version 5.6.11-1-default (geeko@buildhost) (gcc version 9.3.1 20200406 
-[revision 6db837a5288ee3ca5ec504fbd5a765817e556ac2] (SUSE Linux)) 
-#1 SMP Wed May 6 10:42:09 UTC 2020 (91c024a)
-
-In the example below we see a git clone hang, its having trouble
-reading a .pack file off the NFS share, the git process is in D state.
-I've included part of dmesg below with sysrq-w output.
-
-Mount options:
-
-rw,relatime,vers=4.1,rsize=131072,wsize=131072,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,local_lock=none
-
-mountstats shows:
- 
-READ:
-	632014263 ops (62%) 	629809108 errors (99%) 
-TEST_STATEID:
- 	363257078 ops (36%) 	363257078 errors (100%)
-
-which is a clue on what is happening. I grabbed some data with tcpdump
-and it shows the READ getting NFS4ERR_BAD_STATEID, there is then a
-TEST_STATEID which gets NFS4ERR_NOTSUPP. This repeats infinitely in a
-loop.
-
-The server is FreeNAS11.3 which does not have:
-https://github.com/HardenedBSD/hardenedBSD-stable/commit/63f6f19b0756b18f2e68d82cbe037f21f9a8c500
-applied so it will return NFS4ERR_NOTSUPP to TEST_STATEID.
-
-I think something may be needed to stop Linux getting into an infinite
-loop with this, regardless of whether the spec says TEST_STATEID can
-get a NFS4ERR_NOTSUPP or not?
-
-I freely admit I know little about much of this so I'm open to
-pointers. If we did remount as 4.0 we probably wouldn't see the issue
-as it would avoid the TEST_STATEID code.
-
-Cheers,
-
-Richard
-
-[249239.124271] NFS: nfs4_reclaim_open_state: unhandled error -524
-[249239.124722] NFSv4: state recovery failed for open file git2/github.com.rpm-software-management.dnf.git.lock, error = -524
-[249239.124723] NFSv4: state recovery failed for open file git2/github.com.rpm-software-management.dnf.git.lock, error = -524
-[249239.124724] NFSv4: state recovery failed for open file git2/github.com.rpm-software-management.dnf.git.lock, error = -524
-[249244.947749] NFS: __nfs4_reclaim_open_state: Lock reclaim failed!
-[249244.964169] NFS: nfs4_reclaim_open_state: unhandled error -524
-[249244.964646] NFSv4: state recovery failed for open file git2/github.com.rpm-software-management.dnf.git.lock, error = -524
-[249244.964648] NFSv4: state recovery failed for open file git2/github.com.rpm-software-management.dnf.git.lock, error = -524
-[376912.912171] NFS: __nfs4_reclaim_open_state: Lock reclaim failed!
-[376913.215654] NFS: __nfs4_reclaim_open_state: Lock reclaim failed!
-[408558.690581] sysrq: Show Blocked State
-[408558.690630]   task                        PC stack   pid father
-[408558.692490] git             D    0 41178  41159 0x00000004
-[408558.692494] Call Trace:
-[408558.692506]  ? __schedule+0x2d8/0x760
-[408558.692512]  ? blk_finish_plug+0x21/0x2e
-[408558.692516]  ? read_pages+0x87/0x1a0
-[408558.692519]  schedule+0x4a/0xb0
-[408558.692522]  io_schedule+0x12/0x40
-[408558.692528]  __lock_page_killable+0x131/0x250
-[408558.692532]  ? file_fdatawait_range+0x20/0x20
-[408558.692536]  filemap_fault+0x69e/0x9d0
-[408558.692540]  ? alloc_set_pte+0x118/0x660
-[408558.692546]  ? __alloc_pages_nodemask+0x166/0x300
-[408558.692552]  ? xas_load+0x9/0x80
-[408558.692556]  ? xas_find+0x177/0x1c0
-[408558.692559]  ? filemap_map_pages+0x8b/0x380
-[408558.692562]  __do_fault+0x36/0xd0
-[408558.692565]  do_fault+0x246/0x520
-[408558.692569]  __handle_mm_fault+0x5d5/0x820
-[408558.692573]  handle_mm_fault+0xc4/0x1f0
-[408558.692579]  do_user_addr_fault+0x1f9/0x450
-[408558.692585]  page_fault+0x3e/0x50
-[408558.692589] RIP: 0033:0x561301328dd1
-[408558.692596] Code: Bad RIP value.
-[408558.692597] RSP: 002b:00007fff69c81e10 EFLAGS: 00010202
-[408558.692600] RAX: 00007fc2165118a2 RBX: 00007fff69c81ec8 RCX: 00007fff69c81ec0
-[408558.692601] RDX: 00007fff69c81e2c RSI: 00000000001bd2a9 RDI: 00007fc2165118a2
-[408558.692602] RBP: 0000561303310ab0 R08: 000000000014e8a2 R09: 0000000000000075
-[408558.692604] R10: 00005613014843e0 R11: 0000000000000004 R12: 00007fff69c81ec0
-[408558.692605] R13: 0000000000000040 R14: 00007fff69c81f00 R15: 00007fff69c81ed0
-
+SGkgUmljaGFyZCwNCg0KT24gV2VkLCAyMDIwLTA1LTIwIGF0IDE4OjQ3ICswMTAwLCBSaWNoYXJk
+IFB1cmRpZSB3cm90ZToNCj4gSGksDQo+IA0KPiBXZSBoYXZlIGEgY2x1c3RlciBvZiBtYWNoaW5l
+cyB3aGVyZSB3ZSdyZSBvYnNlcnZpbmcgZmlsZSBhY2Nlc3Nlcw0KPiBoYW5naW5nIG92ZXIgTkZT
+LiBUaGUgY2xpZW50cyBzaG93aW5nIHRoZSBwcm9ibGVtcyBhcmUgRmVkb3JhIGFuZA0KPiBTVVNF
+DQo+IGRpc3Ryb3Mgd2l0aCB0aGUgNS42LjExIGtlcm5lbCwgZS5nLjoNCj4gDQo+IExpbnV4IHZl
+cnNpb24gNS42LjExLTEtZGVmYXVsdCAoZ2Vla29AYnVpbGRob3N0KSAoZ2NjIHZlcnNpb24gOS4z
+LjENCj4gMjAyMDA0MDYgDQo+IFtyZXZpc2lvbiA2ZGI4MzdhNTI4OGVlM2NhNWVjNTA0ZmJkNWE3
+NjU4MTdlNTU2YWMyXSAoU1VTRSBMaW51eCkpIA0KPiAjMSBTTVAgV2VkIE1heSA2IDEwOjQyOjA5
+IFVUQyAyMDIwICg5MWMwMjRhKQ0KPiANCj4gSW4gdGhlIGV4YW1wbGUgYmVsb3cgd2Ugc2VlIGEg
+Z2l0IGNsb25lIGhhbmcsIGl0cyBoYXZpbmcgdHJvdWJsZQ0KPiByZWFkaW5nIGEgLnBhY2sgZmls
+ZSBvZmYgdGhlIE5GUyBzaGFyZSwgdGhlIGdpdCBwcm9jZXNzIGlzIGluIEQNCj4gc3RhdGUuDQo+
+IEkndmUgaW5jbHVkZWQgcGFydCBvZiBkbWVzZyBiZWxvdyB3aXRoIHN5c3JxLXcgb3V0cHV0Lg0K
+PiANCj4gTW91bnQgb3B0aW9uczoNCj4gDQo+IHJ3LHJlbGF0aW1lLHZlcnM9NC4xLHJzaXplPTEz
+MTA3Mix3c2l6ZT0xMzEwNzIsbmFtbGVuPTI1NSxoYXJkLHByb3RvPQ0KPiB0Y3AsdGltZW89NjAw
+LHJldHJhbnM9MixzZWM9c3lzLGxvY2FsX2xvY2s9bm9uZQ0KPiANCj4gbW91bnRzdGF0cyBzaG93
+czoNCj4gIA0KPiBSRUFEOg0KPiAJNjMyMDE0MjYzIG9wcyAoNjIlKSAJNjI5ODA5MTA4IGVycm9y
+cyAoOTklKSANCj4gVEVTVF9TVEFURUlEOg0KPiAgCTM2MzI1NzA3OCBvcHMgKDM2JSkgCTM2MzI1
+NzA3OCBlcnJvcnMgKDEwMCUpDQo+IA0KPiB3aGljaCBpcyBhIGNsdWUgb24gd2hhdCBpcyBoYXBw
+ZW5pbmcuIEkgZ3JhYmJlZCBzb21lIGRhdGEgd2l0aA0KPiB0Y3BkdW1wDQo+IGFuZCBpdCBzaG93
+cyB0aGUgUkVBRCBnZXR0aW5nIE5GUzRFUlJfQkFEX1NUQVRFSUQsIHRoZXJlIGlzIHRoZW4gYQ0K
+PiBURVNUX1NUQVRFSUQgd2hpY2ggZ2V0cyBORlM0RVJSX05PVFNVUFAuIFRoaXMgcmVwZWF0cyBp
+bmZpbml0ZWx5IGluIGENCj4gbG9vcC4NCj4gDQo+IFRoZSBzZXJ2ZXIgaXMgRnJlZU5BUzExLjMg
+d2hpY2ggZG9lcyBub3QgaGF2ZToNCj4gaHR0cHM6Ly9naXRodWIuY29tL0hhcmRlbmVkQlNEL2hh
+cmRlbmVkQlNELXN0YWJsZS9jb21taXQvNjNmNmYxOWIwNzU2YjE4ZjJlNjhkODJjYmUwMzdmMjFm
+OWE4YzUwMA0KPiBhcHBsaWVkIHNvIGl0IHdpbGwgcmV0dXJuIE5GUzRFUlJfTk9UU1VQUCB0byBU
+RVNUX1NUQVRFSUQuDQo+IA0KPiBJIHRoaW5rIHNvbWV0aGluZyBtYXkgYmUgbmVlZGVkIHRvIHN0
+b3AgTGludXggZ2V0dGluZyBpbnRvIGFuDQo+IGluZmluaXRlDQo+IGxvb3Agd2l0aCB0aGlzLCBy
+ZWdhcmRsZXNzIG9mIHdoZXRoZXIgdGhlIHNwZWMgc2F5cyBURVNUX1NUQVRFSUQgY2FuDQo+IGdl
+dCBhIE5GUzRFUlJfTk9UU1VQUCBvciBub3Q/DQo+IA0KPiBJIGZyZWVseSBhZG1pdCBJIGtub3cg
+bGl0dGxlIGFib3V0IG11Y2ggb2YgdGhpcyBzbyBJJ20gb3BlbiB0bw0KPiBwb2ludGVycy4gSWYg
+d2UgZGlkIHJlbW91bnQgYXMgNC4wIHdlIHByb2JhYmx5IHdvdWxkbid0IHNlZSB0aGUgaXNzdWUN
+Cj4gYXMgaXQgd291bGQgYXZvaWQgdGhlIFRFU1RfU1RBVEVJRCBjb2RlLg0KDQpURVNUX1NUQVRF
+SUQgaXMgbGlzdGVkIGluIFJGQzU2NjEgU2VjdGlvbiAxNyBhcyBSRVFVSVJFRCB0byBpbXBsZW1l
+bnQNCmZvciBORlN2NC4xLiBXZSB3aWxsIG5vdCBiZSBhYmxlIHRvIHN1cHBvcnQgYSBzZXJ2ZXIg
+dGhhdCB2aW9sYXRlcyB0aGF0DQpyZXF1aXJlbWVudC4NCg0KQ2hlZXJzDQogIFRyb25kDQoNCi0t
+IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
+YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
