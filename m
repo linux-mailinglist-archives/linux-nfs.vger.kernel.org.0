@@ -2,29 +2,27 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2341DC58F
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 05:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E82F91DC58C
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 05:22:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgEUDXN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 May 2020 23:23:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59126 "EHLO mx2.suse.de"
+        id S1727955AbgEUDWy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 May 2020 23:22:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58918 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgEUDXN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 20 May 2020 23:23:13 -0400
+        id S1727825AbgEUDWy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 20 May 2020 23:22:54 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6DD5FB132;
-        Thu, 21 May 2020 03:23:14 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id D577CB132;
+        Thu, 21 May 2020 03:22:55 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, kircherlike@outlook.com,
         Stephen Hemminger <stephen@networkplumber.org>
 Date:   Thu, 21 May 2020 13:21:41 +1000
-Subject: [PATCH 3/3] sunrpc: clean up properly in gss_mech_unregister()
+Subject: [PATCH 0/3] SUNRPC/svc: fix gss flavour registration problems.
 Cc:     linux-nfs@vger.kernel.org
-Message-ID: <159003130171.24897.14813111815409180711.stgit@noble>
-In-Reply-To: <159003086409.24897.4659128962844846611.stgit@noble>
-References: <159003086409.24897.4659128962844846611.stgit@noble>
+Message-ID: <159003086409.24897.4659128962844846611.stgit@noble>
 User-Agent: StGit/0.21
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -34,122 +32,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-gss_mech_register() calls svcauth_gss_register_pseudoflavor() for each
-flavour, but gss_mech_unregister() does not call auth_domain_put().
-This is unbalanced and makes it impossible to reload the module.
+As reported in
+ https://bugzilla.kernel.org/show_bug.cgi?id=206651
+there are problems with sunrpc/svc flavour registration.
 
-Change svcauth_gss_register_pseudoflavor() to return the registered
-auth_domain, and save it for later release.
+This can be demonstrated as a memory-leak if you load the
+rpcsec_gss_krb5 module, then unload the sunrpc module and all
+dependents.  This action leaks 3 kmalloc-64 slab entires, and some
+strings.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Cc: stable@vger.kernel.org
-Signed-off-by: NeilBrown <neilb@suse.de>
+The possible consequences are worse.  If only unload rpcsec_gss_krb5
+and reload just that, it will allow the old registered flavour handlers
+to be used, and they will include pointers into memory which has since
+been freed and possibly reused.  This can result in undesired
+behaviour.
+
+The first patch makes the leak apparent with a WARNing, the second
+prevents it but also prevents module reload, the third removes the
+incorrect behaviour so the module can be safely unloaded and reloaded.
+
+I think all are suitable for -stable, but I haven't determined
+appropriate 'Fixes:' tags.
+
+NeilBrown
+
 ---
+
+NeilBrown (3):
+      sunrpc: check that domain table is empty at module unload.
+      sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
+      sunrpc: clean up properly in gss_mech_unregister()
+
+
  include/linux/sunrpc/gss_api.h        |    1 +
  include/linux/sunrpc/svcauth_gss.h    |    3 ++-
  net/sunrpc/auth_gss/gss_mech_switch.c |   12 +++++++++---
- net/sunrpc/auth_gss/svcauth_gss.c     |   12 ++++++------
- 4 files changed, 18 insertions(+), 10 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c     |   17 ++++++++++-------
+ net/sunrpc/sunrpc.h                   |    1 +
+ net/sunrpc/sunrpc_syms.c              |    2 ++
+ net/sunrpc/svcauth.c                  |   18 ++++++++++++++++++
+ 7 files changed, 43 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
-index bc07e51f20d1..bf4ac8a0268c 100644
---- a/include/linux/sunrpc/gss_api.h
-+++ b/include/linux/sunrpc/gss_api.h
-@@ -84,6 +84,7 @@ struct pf_desc {
- 	u32	service;
- 	char	*name;
- 	char	*auth_domain_name;
-+	struct auth_domain *domain;
- 	bool	datatouch;
- };
- 
-diff --git a/include/linux/sunrpc/svcauth_gss.h b/include/linux/sunrpc/svcauth_gss.h
-index ca39a388dc22..8983628b10ff 100644
---- a/include/linux/sunrpc/svcauth_gss.h
-+++ b/include/linux/sunrpc/svcauth_gss.h
-@@ -20,7 +20,8 @@ int gss_svc_init(void);
- void gss_svc_shutdown(void);
- int gss_svc_init_net(struct net *net);
- void gss_svc_shutdown_net(struct net *net);
--int svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name);
-+struct auth_domain *svcauth_gss_register_pseudoflavor(u32 pseudoflavor,
-+						      char * name);
- u32 svcauth_gss_flavor(struct auth_domain *dom);
- 
- #endif /* _LINUX_SUNRPC_SVCAUTH_GSS_H */
-diff --git a/net/sunrpc/auth_gss/gss_mech_switch.c b/net/sunrpc/auth_gss/gss_mech_switch.c
-index 69316ab1b9fa..fae632da1058 100644
---- a/net/sunrpc/auth_gss/gss_mech_switch.c
-+++ b/net/sunrpc/auth_gss/gss_mech_switch.c
-@@ -37,6 +37,8 @@ gss_mech_free(struct gss_api_mech *gm)
- 
- 	for (i = 0; i < gm->gm_pf_num; i++) {
- 		pf = &gm->gm_pfs[i];
-+		if (pf->domain)
-+			auth_domain_put(pf->domain);
- 		kfree(pf->auth_domain_name);
- 		pf->auth_domain_name = NULL;
- 	}
-@@ -59,6 +61,7 @@ make_auth_domain_name(char *name)
- static int
- gss_mech_svc_setup(struct gss_api_mech *gm)
- {
-+	struct auth_domain *dom;
- 	struct pf_desc *pf;
- 	int i, status;
- 
-@@ -68,10 +71,13 @@ gss_mech_svc_setup(struct gss_api_mech *gm)
- 		status = -ENOMEM;
- 		if (pf->auth_domain_name == NULL)
- 			goto out;
--		status = svcauth_gss_register_pseudoflavor(pf->pseudoflavor,
--							pf->auth_domain_name);
--		if (status)
-+		dom = svcauth_gss_register_pseudoflavor(
-+			pf->pseudoflavor, pf->auth_domain_name);
-+		if (IS_ERR(dom)) {
-+			status = PTR_ERR(dom);
- 			goto out;
-+		}
-+		pf->domain = dom;
- 	}
- 	return 0;
- out:
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 4aaaad794edb..4441920c3d04 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -809,7 +809,7 @@ u32 svcauth_gss_flavor(struct auth_domain *dom)
- 
- EXPORT_SYMBOL_GPL(svcauth_gss_flavor);
- 
--int
-+struct auth_domain *
- svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name)
- {
- 	struct gss_domain	*new;
-@@ -833,17 +833,17 @@ svcauth_gss_register_pseudoflavor(u32 pseudoflavor, char * name)
- 		       name);
- 		stat = -EALREADY;
- 		auth_domain_put(test);
--		kfree(new->h.name);
--		goto out_free_dom;
-+		goto out_free_name;
- 	}
--	return 0;
-+	return test;
- 
-+out_free_name:
-+	kfree(new->h.name);
- out_free_dom:
- 	kfree(new);
- out:
--	return stat;
-+	return ERR_PTR(stat);
- }
--
- EXPORT_SYMBOL_GPL(svcauth_gss_register_pseudoflavor);
- 
- static inline int
-
+--
+Signature
 
