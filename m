@@ -2,278 +2,194 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A8C31DD5EB
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 20:25:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F951DDB47
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2020 01:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgEUSZW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 May 2020 14:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728670AbgEUSZU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 May 2020 14:25:20 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F380C061A0E
-        for <linux-nfs@vger.kernel.org>; Thu, 21 May 2020 11:25:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d7so8545703ioq.5
-        for <linux-nfs@vger.kernel.org>; Thu, 21 May 2020 11:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=e0qg1Sr8E5ElWqLHDtPlrMkP8ELK/AhLrxMZmmoRNnk=;
-        b=VFABO16v2K7oRV3J2q1fDOt1WYpq2Cj2J0dCRuJh+Bc+MbYC1hjB25mB3nv5mKZ87z
-         YbmvR6DzKNBcm78rkpCp1t8656raHHstN7emN9yqciNzV2kvzuBriGkWMBBTuFNH84FJ
-         uJQlui6oE9Q8wo2uCafwOAU8MS/N0ujtg5l+UdV44iliiy5khiwoocGc+owGaFqTnCWQ
-         rhFw7yyFQlZUoWHQLDhxJUjSMi6OOYiy7XtodkxC7vD9zlY4wOgvJmpojn6Q1jZBSJXZ
-         ICfcEPN/C6iTm7YLTlWZz2SdCwFwNcFXN1fH2xMr9VIhi5mC2u6B3rYmcbOuVuhh5BYR
-         0EaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=e0qg1Sr8E5ElWqLHDtPlrMkP8ELK/AhLrxMZmmoRNnk=;
-        b=sYKpivNt154CZ7feQHRIXupYqh4U7AuYKJ7jkIcTyFuSb4afkCF50yCn51k4XXVNv7
-         UJXNz1lO7S0guad67EGK4TQrqUHisTLXBediiAwO6pZlk9emJDTVIS6/UHiZ60L+rvs5
-         7lcg04WH7qhA1coxq228UsBu/wJv6H+f4Zaa+GN936KI/6UuokoQn6X76K2DCIETph2R
-         hPlQ7Bs9Kip9HE5GVTR9A9NY9fFA+Mnyh41ryH79l2NO6uiBCwZEvbaavkl2GXB0WvZY
-         S6ZcnpPGUvj36NwfD91dY3RJ7OmvZY2LV6Km2sWBmDAavnEraZPqdesEUbHiBmwC6CkR
-         g2Sw==
-X-Gm-Message-State: AOAM5339ejBUPmlssxfzYBRVLWt4w6YV2GEN2GpqYdbMpCYVfALc4KxS
-        CctFX+zC4EoCN9xCsyExIQfq6lEK
-X-Google-Smtp-Source: ABdhPJwov49WtQzgjIs8JjDaKd/eODrM79biNa0zv5q2RWOrlei8VAcbcafiZ36g4JD5bXv91OA5MA==
-X-Received: by 2002:a02:a904:: with SMTP id n4mr4992793jam.105.1590085519306;
-        Thu, 21 May 2020 11:25:19 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g6sm3368563ile.38.2020.05.21.11.25.18
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 May 2020 11:25:18 -0700 (PDT)
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04LIPHsB001459
-        for <linux-nfs@vger.kernel.org>; Thu, 21 May 2020 18:25:17 GMT
-Subject: [PATCH v1] man: Update nfs(5) and rpc.gssd(8) discussion of keytab
- needs
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Thu, 21 May 2020 14:25:17 -0400
-Message-ID: <20200521182517.2331.18548.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.22-31-g4b47
+        id S1729806AbgEUXo7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 May 2020 19:44:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37986 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728537AbgEUXo7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 21 May 2020 19:44:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B2F15ACF9;
+        Thu, 21 May 2020 23:45:00 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Date:   Fri, 22 May 2020 09:44:50 +1000
+Cc:     Bruce Fields <bfields@fieldses.org>, kircherlike@outlook.com,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/3] sunrpc: check that domain table is empty at module unload.
+In-Reply-To: <AC992FCD-FB50-494D-ACDA-A021428D7F90@oracle.com>
+References: <159003086409.24897.4659128962844846611.stgit@noble> <159003130168.24897.13206733830315341548.stgit@noble> <AC992FCD-FB50-494D-ACDA-A021428D7F90@oracle.com>
+Message-ID: <878shkam4t.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Because of the <anyname> wildcard feature in rpc.gssd, it's possible
-for a customer to deploy the same keytab on many of her NFSv4 clients
-to reduce the overhead of keytab distribution.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-However, the practice of sharing the same service principal amongst
-NFSv4 clients brings with it some hazards. Add documentation of those
-exposures in our man pages.
+On Thu, May 21 2020, Chuck Lever wrote:
 
-The rpc.gssd(8) changes:
-- Remove some needless redundancy
-- Clarify the definition of "machine credentials"
-- Update the use of <anyname> to explicitly not recommend sharing
-service principals
+> Hi Neil!
+>
+> Thanks for the patches. Seems to me like a good fix overall.
+>
+> Judging by the syzbot e-mail, you might be posting a refresh of this
+> patch series, so I proffer a few minor review comments below.
+>
+>
+>> On May 20, 2020, at 11:21 PM, NeilBrown <neilb@suse.de> wrote:
+>>=20
+>> The domain table should be empty at module unload.  If it isn't there is
+>> a bug somewhere.  So check and report.
+>>=20
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D206651
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: NeilBrown <neilb@suse.de>
+>> ---
+>> net/sunrpc/sunrpc.h      |    1 +
+>> net/sunrpc/sunrpc_syms.c |    2 ++
+>> net/sunrpc/svcauth.c     |   18 ++++++++++++++++++
+>> 3 files changed, 21 insertions(+)
+>>=20
+>> diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+>> index 47a756503d11..f6fe2e6cd65a 100644
+>> --- a/net/sunrpc/sunrpc.h
+>> +++ b/net/sunrpc/sunrpc.h
+>> @@ -52,4 +52,5 @@ static inline int sock_is_loopback(struct sock *sk)
+>>=20
+>> int rpc_clients_notifier_register(void);
+>> void rpc_clients_notifier_unregister(void);
+>> +void auth_domain_cleanup(void);
+>> #endif /* _NET_SUNRPC_SUNRPC_H */
+>> diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
+>> index f9edaa9174a4..236fadc4a439 100644
+>> --- a/net/sunrpc/sunrpc_syms.c
+>> +++ b/net/sunrpc/sunrpc_syms.c
+>> @@ -23,6 +23,7 @@
+>> #include <linux/sunrpc/rpc_pipe_fs.h>
+>> #include <linux/sunrpc/xprtsock.h>
+>>=20
+>> +#include "sunrpc.h"
+>> #include "netns.h"
+>>=20
+>> unsigned int sunrpc_net_id;
+>> @@ -131,6 +132,7 @@ cleanup_sunrpc(void)
+>> 	unregister_rpc_pipefs();
+>> 	rpc_destroy_mempool();
+>> 	unregister_pernet_subsys(&sunrpc_net_ops);
+>> +	auth_domain_cleanup();
+>> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>> 	rpc_unregister_sysctl();
+>> #endif
+>> diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
+>> index 552617e3467b..477890e8b9d8 100644
+>> --- a/net/sunrpc/svcauth.c
+>> +++ b/net/sunrpc/svcauth.c
+>> @@ -205,3 +205,21 @@ struct auth_domain *auth_domain_find(char *name)
+>> 	return NULL;
+>> }
+>> EXPORT_SYMBOL_GPL(auth_domain_find);
+>> +
+>> +void auth_domain_cleanup(void)
+>> +{
+>> +	/* There should be no auth_domains left at module unload */
+>
+> Since this is a globally-visible function, could you move this comment
+> into a Doxy documenting comment before the function? It should make clear
+> that the purpose of this function is only for debugging.
 
-The nfs(5) changes add two things:
-- A brief discussion of the primary security exposure of sharing
-service principals
-- A mention of the nfs4.nfs_unique_id module parameter
+I wouldn't call it "globally-visible" as it isn't exported, and isn't
+even declared in linux/include/...
+But a Doxy comment is probably justified.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- utils/mount/nfs.man |   53 +++++++++++++++++++++++++++------------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+>
+>
+>> +	int h;
+>> +	bool found =3D false;
+>> +
+>> +	for (h =3D 0; h < DN_HASHMAX; h++) {
+>> +		struct auth_domain *hp;
+>> +
+>> +		hlist_for_each_entry(hp, auth_domain_table+h, hash) {
+>> +			found =3D true;
+>> +			printk(KERN_WARNING "sunrpc: domain %s still present at module unloa=
+d.\n",
+>> +			       hp->name);
+>
+> Nit: Documentation/process/coding-style.rst recommends using the pr_warn()
+> macro here (and equivalents in other patches)... And note that "svc:" is
+> the conventional prefix for server-side warnings.
 
-diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
-index cc3a210ab81e..3ec286b43c4d 100644
---- a/utils/gssd/gssd.man
-+++ b/utils/gssd/gssd.man
-@@ -45,22 +45,20 @@ is known as a
- .BR kerberos (1)
- for more on principals).
- .P
--For certain operations, a credential is required
--which represents no user,
--is otherwise unprivileged,
--and is always available.
--This is referred to as a
-+Certain operations require a credential that
-+represents no particular user
-+or
-+represents the host itself.
-+This kind of credential is called a
- .IR "machine credential" .
- .P
--Machine credentials are typically established using a
--.IR "service principal" ,
--whose encrypted password, called its
--.IR key ,
--is stored in a file, called a
--.IR keytab ,
--to avoid requiring a user prompt.
--A machine credential effectively does not expire because the system
--can renew it as needed without user intervention.
-+A host establishes its machine credential using a
-+.I "service principal"
-+whose encrypted password is stored in a local file known as a
-+.IR keytab .
-+A machine credential remains effective
-+without user intervention
-+as long as the host can renew it.
- .P
- Once obtained, credentials are typically stored in local temporary files
- with well-known pathnames.
-@@ -93,30 +91,12 @@ See the description of the
- .B -d
- option for details.
- .SS Machine Credentials
--A user credential is established by a user and
--is then shared with the kernel and
--.BR rpc.gssd .
--A machine credential is established by
--.B rpc.gssd
--for the kernel when there is no user.
--Therefore
--.B rpc.gssd
--must already have the materials on hand to establish this credential
--without requiring user intervention.
--.P
--.B rpc.gssd
--searches the local system's keytab for a principal and key to use
--to establish the machine credential.
--By default,
--.B rpc.gssd
--assumes the file
--.I /etc/krb5.keytab
--contains principals and keys that can be used to obtain machine credentials.
--.P
- .B rpc.gssd
--searches in the following order for a principal to use.
--The first matching credential is used.
--For the search, <hostname> and <REALM> are replaced with the local
-+searches the default keytab,
-+.IR /etc/krb5.keytab ,
-+in the following order for a principal and password to use
-+when establishing the machine credential.
-+For the search, rpc.gssd replaces <hostname> and <REALM> with the local
- system's hostname and Kerberos realm.
- .sp
-    <HOSTNAME>$@<REALM>
-@@ -133,15 +113,20 @@ system's hostname and Kerberos realm.
- .br
-    host/<anyname>@<REALM>
- .sp
--The <anyname> entries match on the service name and realm, but ignore the hostname.
--These can be used if a principal matching the local host's name is not found.
-+rpc.gssd selects one of the <anyname> entries if it does not find
-+a service principal matching the local hostname,
-+e.g. if DHCP assigns the local hostname dynamically.
-+The <anyname> facility enables the use of the same keytab on multiple systems.
-+However, using the same service principal to establish a machine credential
-+on multiple hosts can create unwanted security exposures
-+and is therefore not recommended.
- .P
--Note that the first principal in the search order is a user principal
-+Note that <HOSTNAME>$@<REALM> is a user principal
- that enables Kerberized NFS when the local system is joined
- to an Active Directory domain using Samba.
--A password for this principal must be provided in the local system's keytab.
-+The keytab provides the password for this principal.
- .P
--You can specify another keytab by using the
-+You can specify a different keytab by using the
- .B -k
- option if
- .I /etc/krb5.keytab
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index 6f79c63a7e9c..19fe22fb5411 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -1639,52 +1639,55 @@ from a server's pseudo-fs
- into one of the server's exported physical filesystems,
- which often have more restrictive security settings than the pseudo-fs.
- .SS "NFS version 4 Leases"
--In NFS version 4, a lease is a period of time during which a server
--irrevocably grants a file lock to a client.
--If the lease expires, the server is allowed to revoke that lock.
-+In NFS version 4, a lease is a period during which a server
-+irrevocably grants a client file locks.
-+Once the lease expires, the server may revoke those locks.
- Clients periodically renew their leases to prevent lock revocation.
- .P
- After an NFS version 4 server reboots, each client tells the
--server about all file open and lock state under its lease
-+server about existing file open and lock state under its lease
- before operation can continue.
--If the client reboots, the server frees all open and lock state
-+If a client reboots, the server frees all open and lock state
- associated with that client's lease.
- .P
--As part of establishing a lease, therefore,
-+When establishing a lease, therefore,
- a client must identify itself to a server.
--A fixed string is used to distinguish that client from
--others, and a changeable verifier is used to indicate
--when the client has rebooted.
--.P
--A client uses a particular security flavor and principal
--when performing the operations to establish a lease.
--If two clients happen to present the same identity string,
--a server can use their principals to detect that they are
--different clients, and prevent one client from interfering
--with the other's lease.
--.P
--The Linux NFS client establishes one lease for each server.
-+Each client presents an arbitrary string
-+to distinguish itself from other clients.
-+The client administrator can
-+supplement the default identity string using the
-+.I nfs4.nfs4_unique_id
-+module parameter to avoid collisions
-+with other client identity strings.
-+.P
-+A client also uses a unique security flavor and principal
-+when it establishes its lease.
-+If two clients present the same identity string,
-+a server can use client principals to distinguish between them,
-+thus securely preventing one client from interfering with the other's lease.
-+.P
-+The Linux NFS client establishes one lease on each NFS version 4 server.
- Lease management operations, such as lease renewal, are not
- done on behalf of a particular file, lock, user, or mount
--point, but on behalf of the whole client that owns that lease.
--These operations must use the same security flavor and
--principal that was used when the lease was established,
--even across client reboots.
-+point, but on behalf of the client that owns that lease.
-+A client uses a consistent identity string, security flavor,
-+and principal across client reboots to ensure that the server
-+can promptly reap expired lease state.
- .P
- When Kerberos is configured on a Linux NFS client
- (i.e., there is a
- .I /etc/krb5.keytab
- on that client), the client attempts to use a Kerberos
- security flavor for its lease management operations.
--This provides strong authentication of the client to
--each server it contacts.
-+Kerberos provides secure authentication of each client.
- By default, the client uses the
- .I host/
- or
- .I nfs/
- service principal in its
- .I /etc/krb5.keytab
--for this purpose.
-+for this purpose, as described in
-+.BR rpc.gssd (8).
- .P
- If the client has Kerberos configured, but the server
- does not, or if the client does not have a keytab or
+I'll fix that, thanks.
 
+>
+> I'm wondering... is it safe to release an auth_domain here if one is foun=
+d,
+> so that it is not actually orphaned? The warning is information for
+> developers; there's nothing, say, an administrator can do about this
+> situation.
+
+I don't think it is safe to release the domain.  The ->release()
+function could be in a module that has already been unloaded.
+
+>
+>
+>> +		}
+>> +	}
+>> +	WARN(found, "sunrpc: auth_domain_table not clean -> memory leak\n");
+>
+> Not sure a stack trace in addition to the above warning messages adds
+> relevant information. Can you provide a little justification for that?
+
+I guess so.  I wanted a nice loud warning - and people tend to notice
+stack traces more than they notice printks - it was an attempt at human
+engineering :-)
+
+Maybe I'll just leave it as pr_warn...
+
+Thanks for the review.
+
+NeilBrown
+
+
+>
+> Thanks!
+>
+>
+>> +}
+>>=20
+>>=20
+>
+> --
+> Chuck Lever
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl7HEnIACgkQOeye3VZi
+gbl77Q/9Fu63mMsGLJQSFzgMq2KmCAhFM9xBTJN0pxxt3f/IX/vB/aOIcT8KWcCI
+Kep93KGsuWhQRbJCztcTg9vXIWLeNfNsP7yCNe6B4LfrHh8M6XvkNXarYyYhsq8p
+1ttZHTx/8tgMK+S2CO6lZjR1rWKbQ2uRMM7PfLvalYInMqRuGYXb+8d7iQuXUp8o
+UR8CXwoChuKQSdcHy6FTf9FOOzyN4N0PpKv/MVTbPT2i1/CDyur2bxOTWBMqhrzw
+G3YwYlKf6yRH1P4BuhY25+Fq9rtsMbfa/ysPdxuZ4QtcTtCWL/yFwPcK2gfwNxFC
+uGKb+4zfaUHz0T2EH41INJUrIMA0aN7pL+3O2iFGQOBjd2ohHPdvhEC75I6LxyOR
+MGShuKEVEmPtEU4rOtz0dMbY9P8UvQVl+fWXzr/RCKYQcTyN90d4JtSyjomhjyl0
+m6/RD+FhG/IoKhwDwEHhHq6SOxlw7G6a0fwhFf1bJgj/5O9x8O9ZzpzTMrFnb9Ux
+SQLqlD+LXWTgC9I/AFdqhtae2F72eNbW7iXaTLATMUHnFlhs/U0pj5ub0ymUspek
+FmbJUoPxtvfhYBYYo0y9o+Jbo/oSUnOECHTvkIX6T/Iyj+oZ4v9sueXeKJJDGTw7
+O2Db3JQ5AFRQqkoFqSuE30miDIsgTg090JmfH2rf7PsXrbSMAIA=
+=NKCI
+-----END PGP SIGNATURE-----
+--=-=-=--
