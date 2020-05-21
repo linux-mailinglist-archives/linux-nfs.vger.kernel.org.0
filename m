@@ -2,106 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C1351DC58D
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 05:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B513E1DC687
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 07:13:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgEUDXB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 May 2020 23:23:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58966 "EHLO mx2.suse.de"
+        id S1726821AbgEUFM7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 May 2020 01:12:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34104 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgEUDXA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 20 May 2020 23:23:00 -0400
+        id S1726790AbgEUFM7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 21 May 2020 01:12:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E641CB13E;
-        Thu, 21 May 2020 03:23:01 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id CF7B0B213;
+        Thu, 21 May 2020 05:13:00 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, kircherlike@outlook.com,
-        Stephen Hemminger <stephen@networkplumber.org>
-Date:   Thu, 21 May 2020 13:21:41 +1000
-Subject: [PATCH 1/3] sunrpc: check that domain table is empty at module
- unload.
-Cc:     linux-nfs@vger.kernel.org
-Message-ID: <159003130168.24897.13206733830315341548.stgit@noble>
-In-Reply-To: <159003086409.24897.4659128962844846611.stgit@noble>
-References: <159003086409.24897.4659128962844846611.stgit@noble>
-User-Agent: StGit/0.21
+To:     Craig Small <csmall@dropbear.xyz>, linux-nfs@vger.kernel.org
+Date:   Thu, 21 May 2020 15:12:49 +1000
+Subject: Re: How to separate NFS mounts have same device ID
+In-Reply-To: <20200521023055.GA1246587@dropbear.xyz>
+References: <20200521023055.GA1246587@dropbear.xyz>
+Message-ID: <87eerdan1q.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The domain table should be empty at module unload.  If it isn't there is
-a bug somewhere.  So check and report.
+--=-=-=
+Content-Type: text/plain
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Cc: stable@vger.kernel.org
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- net/sunrpc/sunrpc.h      |    1 +
- net/sunrpc/sunrpc_syms.c |    2 ++
- net/sunrpc/svcauth.c     |   18 ++++++++++++++++++
- 3 files changed, 21 insertions(+)
+On Thu, May 21 2020, Craig Small wrote:
 
-diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
-index 47a756503d11..f6fe2e6cd65a 100644
---- a/net/sunrpc/sunrpc.h
-+++ b/net/sunrpc/sunrpc.h
-@@ -52,4 +52,5 @@ static inline int sock_is_loopback(struct sock *sk)
- 
- int rpc_clients_notifier_register(void);
- void rpc_clients_notifier_unregister(void);
-+void auth_domain_cleanup(void);
- #endif /* _NET_SUNRPC_SUNRPC_H */
-diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
-index f9edaa9174a4..236fadc4a439 100644
---- a/net/sunrpc/sunrpc_syms.c
-+++ b/net/sunrpc/sunrpc_syms.c
-@@ -23,6 +23,7 @@
- #include <linux/sunrpc/rpc_pipe_fs.h>
- #include <linux/sunrpc/xprtsock.h>
- 
-+#include "sunrpc.h"
- #include "netns.h"
- 
- unsigned int sunrpc_net_id;
-@@ -131,6 +132,7 @@ cleanup_sunrpc(void)
- 	unregister_rpc_pipefs();
- 	rpc_destroy_mempool();
- 	unregister_pernet_subsys(&sunrpc_net_ops);
-+	auth_domain_cleanup();
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	rpc_unregister_sysctl();
- #endif
-diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
-index 552617e3467b..477890e8b9d8 100644
---- a/net/sunrpc/svcauth.c
-+++ b/net/sunrpc/svcauth.c
-@@ -205,3 +205,21 @@ struct auth_domain *auth_domain_find(char *name)
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(auth_domain_find);
-+
-+void auth_domain_cleanup(void)
-+{
-+	/* There should be no auth_domains left at module unload */
-+	int h;
-+	bool found = false;
-+
-+	for (h = 0; h < DN_HASHMAX; h++) {
-+		struct auth_domain *hp;
-+
-+		hlist_for_each_entry(hp, auth_domain_table+h, hash) {
-+			found = true;
-+			printk(KERN_WARNING "sunrpc: domain %s still present at module unload.\n",
-+			       hp->name);
-+		}
-+	}
-+	WARN(found, "sunrpc: auth_domain_table not clean -> memory leak\n");
-+}
+> Hi,
+>   I'm the author of the psmisc programs that include things like killall and fuser.  I have a problem with finding files open on NFS mounts from the same server.  The issue is at https://gitlab.com/psmisc/psmisc/-/issues/10
+>
+> The way fuser does its job is to find the mounts you specify and collect the device IDs, then scans all /proc/<PID/fd/* for matching devices. However, NFS mounts from the same server have the same device ID so fuser reports every mount has the same file opened.
+>
+> Putting it another way, if I said "here is file /proc/<PID>/fd/3, dereference the symlink and tell me which of these two NFS mounts from the same server it comes from?" how would you do it?
+> A simple string match (/mnt/a vs /mnt/b) does not work because you can have symlinks across mounts.
+
+I would examine /proc/<PID>/fdinfo/3 and extract the 'mnt_id:' number,
+then look for that (as the first field) in /proc/<PID>/mountinfo.
+
+NeilBrown
 
 
+>
+> Any help here would be appreciated. I'm not subscribed to the list so hopefully, this makes it through whatever filters there are and please CC me on replies.
+>
+>  - Craig
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl7GDdQACgkQOeye3VZi
+gbmRIRAAspnl4XAGQbyhYdRpvczTXVCW2+pI6auDReMK9BfdFZ2cOQDZOV/mo1dT
+SSbq9cBctuVghelRy/6aA+PNA09Wm2BeA7v+gyPKNX/ocbAlqlSXjzueq16ZMLPj
+Q9l84fWYu4NJtd1jlxD3SYwbxV/C9XZb5UVdtbEb5fKs7eRSBYpz7VT7+0DOMgzu
+VU7Ml8qr/6fVTbPki9+oYugGkeSQJXnMOVwjiFuYU/ShgMXR8FiRMve7YSJ4os4J
+oxqeF2MI0Pe3vX9JoVfiHYUP+4puqJgXvpKExO9Z2EIulk6rDCk15OS7oz2LciUv
+9c1pe8nGh8DMz4gPd72K2BHKzdzv4bYpnpgeHyv/8FafeQWasss+yBPBouHIwkbM
+PBJh7Blj0o7GekVwQ/9YJIqpJplLB4qsv6oBPgzwTByqpOA67nzC1Y7iNAk0eUSS
+eci6U7nvWN2QzQncBRVkvIZBLJ+xJ3MQZ7rh7RtXMh0VXZl+I48gzxQOoz3cjIaY
+V+dgXHeyioGIaPytepfcmxmb6WTxz//YMXzTzbOQj8L4biezv8XMzZ2Y3vwRIq4H
+xsVXDAVIUeuwbBMwz9xfPhPyTGPI1HHRQo/AbMKqMIFpcblFzf1FQjsbS6NCj1X7
+dqcG6c0oxq1r8tGSERppw28R90isfvkuTdY567Fgp4YsOuCqEXY=
+=uTa8
+-----END PGP SIGNATURE-----
+--=-=-=--
