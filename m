@@ -2,190 +2,178 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6681DCEE6
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 16:06:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 388961DCFC7
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 16:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgEUOGO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 May 2020 10:06:14 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55908 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729493AbgEUOGN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 May 2020 10:06:13 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LE26ur005732;
-        Thu, 21 May 2020 14:06:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=2EDmhkZ2PCF7fLJHgXEioY9O5Yvho0Dt3NXpsdyupTE=;
- b=fuv49zrHVIX0WwHYV9t7bA8HpSQSY5jCKjYviSvnmJb64GAKmTu5b0acQD2Y3rvU79Bo
- QQ7pyMj95aMV43FwT3RWFf+c6IdRab1ATXIC2fqKP6q/iOByrhg930CW5l2mmmakMpe1
- 7GYq8BC88D9hqXGNUsiZOq276IIh8h6rGXrmSW2ZW/vml2Dik7GKigt5Y5izrfJ4m9f7
- GjCM6etzUuPAxzQROZwgfxCG1E9TIts4zL9z5XwOW9qmeUn5Iok82QR+124MviO8AIon
- cCDBCwWpxvMl1NVNqVAvOhBWssrT0JNGNjDaOiIqgTpuXxphwRm8tNKzpo3XEEP2M6rB JQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31284m8pj7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 14:06:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LE3FRb136340;
-        Thu, 21 May 2020 14:06:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 312t3b8f24-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 14:06:03 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LE61eo015992;
-        Thu, 21 May 2020 14:06:02 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 07:06:01 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/3] sunrpc: check that domain table is empty at module
- unload.
+        id S1728136AbgEUOdr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 May 2020 10:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgEUOdq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 May 2020 10:33:46 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7259C061A0E;
+        Thu, 21 May 2020 07:33:46 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id a14so7305438ilk.2;
+        Thu, 21 May 2020 07:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=F2doUypY+0PF/pJK7CMWb1oSI7oqBqmoWHwdiabFaSw=;
+        b=Q/zjh/IJY+dGYFkLm0/rypeoSJF5Hzj/jSKYg5niYVh8sUbJT4TrpkUTWw5Gp/HsOT
+         c/brtq2yRYUtUAiSabQvCmlB3M936Atbr3/Dpbt6WFshBLcTICytUPe3yK0T9j4Zv6s6
+         aVR0kRmLvYeyl14BUAJCK8XLRDZv2CWRC8XiVFinoJXor+J2VQT23IltDj4/9GuxXxqE
+         tHHfAq7MKBOPn/0KhF51tOkUUXwua1MjlOzmG9wnf05EsAFxgqERt2OJljnUq2Fo/mmG
+         zaiIleLBXj7bUwEk1JXuBbUES+pADk71HZs6NBemnJ1pM+cdhULpZbH8NutCqzoU26wE
+         XvOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=F2doUypY+0PF/pJK7CMWb1oSI7oqBqmoWHwdiabFaSw=;
+        b=DRHE+etl/DyxDSLaPke56RLND4LUVg//7Ti4FeVBuCetaOhTEa+5sTMO81hfkvI1wo
+         j261z64sapUdBaxlU7RVfqYVljqYgpAG4tkMm5HvolLuwNEe8Teftyqvsf4P467Z0Rwo
+         lVXTom4sAElPPtybuE5hqnuqwIKIjgo8kCKXZXXNLqgL+xZcUUFwUpDQGa6vIDtOKof8
+         8lCRvkEzsTnnKZhg36SbOUSSsj48gL9/qzVN9iPVtakLE0OaiwDIaBDMFhKivXqbnC6Y
+         db5Gw9I8oV4a47yz1L5xzfPUallHuqy31/jKbEj+eQJihq9mcNSqEGTenhGuUIQ8BTQb
+         +afA==
+X-Gm-Message-State: AOAM532f+xXLJqrcVZ2VB1vVy5LliPd/WJllti3/y/Kx1CslFMwRInvh
+        nhamBWkZxCU2FLJy/ENgPZO2jRnU
+X-Google-Smtp-Source: ABdhPJzM1nZz4CHKA64iptBFB1B3epWRbVQIHpdWuF29W7MU4ElvMlmXG9hBITOLWiq6lLApRuFZiw==
+X-Received: by 2002:a92:5d86:: with SMTP id e6mr8626193ilg.120.1590071625857;
+        Thu, 21 May 2020 07:33:45 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id y11sm2974659ily.22.2020.05.21.07.33.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 May 2020 07:33:44 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04LEXgXg000803;
+        Thu, 21 May 2020 14:33:43 GMT
+Subject: [PATCH v3 00/32] Possible NFSD patches for v5.8
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <159003130168.24897.13206733830315341548.stgit@noble>
-Date:   Thu, 21 May 2020 10:06:00 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>, kircherlike@outlook.com,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AC992FCD-FB50-494D-ACDA-A021428D7F90@oracle.com>
-References: <159003086409.24897.4659128962844846611.stgit@noble>
- <159003130168.24897.13206733830315341548.stgit@noble>
-To:     Neil Brown <neilb@suse.de>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005210105
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Thu, 21 May 2020 10:33:42 -0400
+Message-ID: <20200521141100.3557.17098.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.22-31-g4b47
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil!
+I've updated this series to address the WRT15 bug. The bug was due
+to an over-aggressive clean-up which unintentionally altered how
+XPT_DATA was set in svc_tcp_recvfrom().
 
-Thanks for the patches. Seems to me like a good fix overall.
+To help better expose that kind of change to code inspection, I've
+broken out the clean-ups in ("SUNRPC: Refactor svc_recvfrom()") into
+patches separate from the change that adds bvecs.
 
-Judging by the syzbot e-mail, you might be posting a refresh of this
-patch series, so I proffer a few minor review comments below.
+The fixed code has been tested with complete runs of pynfs (both
+4.0 and 4.1). No new test failures were observed. I've also run the
+cthon locking tests with NFSv3, NFSv4.0, and NFSv4.1 using TCP
+without observing any failures.
 
+In addition I've made a small change to the new svcsock tracepoints
+to follow the convention of reporting errors via tracepoints whose
+name ends in _err, rather than using the same tracepoint to report
+both normal progress and an error.
 
-> On May 20, 2020, at 11:21 PM, NeilBrown <neilb@suse.de> wrote:
->=20
-> The domain table should be empty at module unload.  If it isn't there =
-is
-> a bug somewhere.  So check and report.
->=20
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D206651
-> Cc: stable@vger.kernel.org
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
-> net/sunrpc/sunrpc.h      |    1 +
-> net/sunrpc/sunrpc_syms.c |    2 ++
-> net/sunrpc/svcauth.c     |   18 ++++++++++++++++++
-> 3 files changed, 21 insertions(+)
->=20
-> diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
-> index 47a756503d11..f6fe2e6cd65a 100644
-> --- a/net/sunrpc/sunrpc.h
-> +++ b/net/sunrpc/sunrpc.h
-> @@ -52,4 +52,5 @@ static inline int sock_is_loopback(struct sock *sk)
->=20
-> int rpc_clients_notifier_register(void);
-> void rpc_clients_notifier_unregister(void);
-> +void auth_domain_cleanup(void);
-> #endif /* _NET_SUNRPC_SUNRPC_H */
-> diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
-> index f9edaa9174a4..236fadc4a439 100644
-> --- a/net/sunrpc/sunrpc_syms.c
-> +++ b/net/sunrpc/sunrpc_syms.c
-> @@ -23,6 +23,7 @@
-> #include <linux/sunrpc/rpc_pipe_fs.h>
-> #include <linux/sunrpc/xprtsock.h>
->=20
-> +#include "sunrpc.h"
-> #include "netns.h"
->=20
-> unsigned int sunrpc_net_id;
-> @@ -131,6 +132,7 @@ cleanup_sunrpc(void)
-> 	unregister_rpc_pipefs();
-> 	rpc_destroy_mempool();
-> 	unregister_pernet_subsys(&sunrpc_net_ops);
-> +	auth_domain_cleanup();
-> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-> 	rpc_unregister_sysctl();
-> #endif
-> diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
-> index 552617e3467b..477890e8b9d8 100644
-> --- a/net/sunrpc/svcauth.c
-> +++ b/net/sunrpc/svcauth.c
-> @@ -205,3 +205,21 @@ struct auth_domain *auth_domain_find(char *name)
-> 	return NULL;
-> }
-> EXPORT_SYMBOL_GPL(auth_domain_find);
-> +
-> +void auth_domain_cleanup(void)
-> +{
-> +	/* There should be no auth_domains left at module unload */
-
-Since this is a globally-visible function, could you move this comment
-into a Doxy documenting comment before the function? It should make =
-clear
-that the purpose of this function is only for debugging.
+(Normal progress reports are for developers. Such tracepoints would
+be enabled only rarely because they fire for every socket receive.
+An error tracepoint can be left persistently enabled without causing
+a torrent of trace records).
 
 
-> +	int h;
-> +	bool found =3D false;
-> +
-> +	for (h =3D 0; h < DN_HASHMAX; h++) {
-> +		struct auth_domain *hp;
-> +
-> +		hlist_for_each_entry(hp, auth_domain_table+h, hash) {
-> +			found =3D true;
-> +			printk(KERN_WARNING "sunrpc: domain %s still =
-present at module unload.\n",
-> +			       hp->name);
+Available to view:
+  https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/nfsd-5.8
 
-Nit: Documentation/process/coding-style.rst recommends using the =
-pr_warn()
-macro here (and equivalents in other patches)... And note that "svc:" is
-the conventional prefix for server-side warnings.
+Pull from:
+  git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-5.8
 
-I'm wondering... is it safe to release an auth_domain here if one is =
-found,
-so that it is not actually orphaned? The warning is information for
-developers; there's nothing, say, an administrator can do about this
-situation.
+Highlights of this series:
+* Remove serialization of sending RPC/RDMA Replies
+* Convert the TCP socket send path to use xdr_buf::bvecs (pre-requisite for RPC-on-TLS)
+* Fix svcrdma backchannel sendto return code
+* Convert a number of dprintk call sites to use tracepoints
+* Fix the "suggest braces around empty body in an 'else' statement" warning
 
 
-> +		}
-> +	}
-> +	WARN(found, "sunrpc: auth_domain_table not clean -> memory =
-leak\n");
+Changes since v2:
+* Rebased on v5.7-rc6
+* Fixed a logic error that left XPT_DATA unset on return from svc_tcp_recvfrom()
+* Broke down "SUNRPC: Refactor svc_recvfrom()" to separate clean ups from logic changes
+* Some superfluous clean-ups have been redacted
+* Add separate tracepoints for error cases (eg, tcp_recv and tcp_recv_err)
 
-Not sure a stack trace in addition to the above warning messages adds
-relevant information. Can you provide a little justification for that?
+Changes since v1:
+* Rebased on v5.7-rc5+
+* Re-organized the series so changes interesting to linux-rdma appear together
+* Addressed sparse warnings found by the kbuild test robot
+* Included an additional minor clean-up: removal of the unused SVCRDMA_DEBUG macro
+* Clarified several patch descriptions
 
-Thanks!
+---
+
+Chuck Lever (32):
+      SUNRPC: Move xpt_mutex into socket xpo_sendto methods
+      svcrdma: Clean up the tracing for rw_ctx_init errors
+      svcrdma: Clean up handling of get_rw_ctx errors
+      svcrdma: Trace page overruns when constructing RDMA Reads
+      svcrdma: trace undersized Write chunks
+      svcrdma: Fix backchannel return code
+      svcrdma: Remove backchannel dprintk call sites
+      svcrdma: Rename tracepoints that record header decoding errors
+      svcrdma: Remove the SVCRDMA_DEBUG macro
+      svcrdma: Displayed remote IP address should match stored address
+      svcrdma: Add tracepoints to report ->xpo_accept failures
+      SUNRPC: Remove kernel memory address from svc_xprt tracepoints
+      SUNRPC: Tracepoint to record errors in svc_xpo_create()
+      SUNRPC: Trace a few more generic svc_xprt events
+      SUNRPC: Remove "#include <trace/events/skb.h>"
+      SUNRPC: Add more svcsock tracepoints
+      SUNRPC: Replace dprintk call sites in TCP state change callouts
+      SUNRPC: Trace server-side rpcbind registration events
+      SUNRPC: Rename svc_sock::sk_reclen
+      SUNRPC: Restructure svc_tcp_recv_record()
+      SUNRPC: Replace dprintk() call sites in TCP receive path
+      SUNRPC: Refactor recvfrom path dealing with incomplete TCP receives
+      SUNRPC: Clean up svc_release_skb() functions
+      SUNRPC: Refactor svc_recvfrom()
+      SUNRPC: Restructure svc_udp_recvfrom()
+      SUNRPC: svc_show_status() macro should have enum definitions
+      NFSD: Add tracepoints to NFSD's duplicate reply cache
+      NFSD: Add tracepoints to the NFSD state management code
+      NFSD: Add tracepoints for monitoring NFSD callbacks
+      SUNRPC: Clean up request deferral tracepoints
+      NFSD: Squash an annoying compiler warning
+      NFSD: Fix improperly-formatted Doxygen comments
 
 
-> +}
->=20
->=20
+ fs/nfsd/nfs4callback.c                     |  37 +-
+ fs/nfsd/nfs4proc.c                         |   7 +-
+ fs/nfsd/nfs4state.c                        |  63 ++--
+ fs/nfsd/nfscache.c                         |  57 +--
+ fs/nfsd/nfsctl.c                           |  26 +-
+ fs/nfsd/state.h                            |   7 -
+ fs/nfsd/trace.h                            | 345 +++++++++++++++++
+ include/linux/sunrpc/svc.h                 |   1 +
+ include/linux/sunrpc/svc_rdma.h            |   6 +-
+ include/linux/sunrpc/svcsock.h             |   6 +-
+ include/trace/events/rpcrdma.h             | 142 +++++--
+ include/trace/events/sunrpc.h              | 419 +++++++++++++++++++--
+ net/sunrpc/svc.c                           |  19 +-
+ net/sunrpc/svc_xprt.c                      |  41 +-
+ net/sunrpc/svcsock.c                       | 382 +++++++++----------
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  86 +----
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    |  21 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c          |  92 ++---
+ net/sunrpc/xprtrdma/svc_rdma_transport.c   |  55 ++-
+ 19 files changed, 1257 insertions(+), 555 deletions(-)
 
 --
 Chuck Lever
-
-
-
