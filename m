@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5269E1DD00B
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 16:35:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A3D1DD00D
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2020 16:36:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbgEUOfw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 May 2020 10:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
+        id S1729795AbgEUOf6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 May 2020 10:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729783AbgEUOfw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 May 2020 10:35:52 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096ECC061A0F;
-        Thu, 21 May 2020 07:35:52 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id f3so7694134ioj.1;
-        Thu, 21 May 2020 07:35:52 -0700 (PDT)
+        with ESMTP id S1728103AbgEUOf5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 May 2020 10:35:57 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B3CC061A0E;
+        Thu, 21 May 2020 07:35:57 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j3so7237628ilk.11;
+        Thu, 21 May 2020 07:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=zgLa7cSUPaaRWNelfv+DXK2nedeuxmo53QNSVVlQQaY=;
-        b=MH9AL0+Hd0i1PdeZjXhEnQNS3WOuE0yLCGOHIrWh9OK7aY3QRBPZmMt6mUXXZucX98
-         Gj584xCDVyEO6pbm8ajA6kwo24QB4I/uJIYWNBpSj0p+/s7/dabV3Jwn3kB9CV7TX5Qx
-         2CLqgbZ5fDsC9mExdplUGkTC5wKCmFRUUDOLvwhdk54hdCN6bcFLc1I2VStuGSL/j77n
-         SKfo5eUKJVPA0EYeG7nv4B8x8DyDYi3ku3EEdoRvadoxqzt5UwsNhE8BefLnvU+rWyvb
-         wYlNuGEJKmNieAXJfyAKY+uwT/+HYrX5RQBUgnxaC2QH+yznIgnvFdxQ1acWBceBP9gs
-         m25Q==
+        bh=yNlCk1OMvKGd0jU8MTuLuvq/QP3Nc1spuetnuyqYxGQ=;
+        b=t3AB47+BEZc+Rz2AneRDHDyzEQlTyR0llrs94FkCvP2qjZTHztBJmn5siT38YpgZ3j
+         Sh0Bm/V77kwROGsosbQFA0VIebL5FNXRaNhNKI4DyBNumIYJBRkMxbqCLCgegrGlRomR
+         f37Zw3b2HOoiXZ7VZB3jQVshpl85geFqLcBCtpDVI3wO0cAEraGQf49YH9kKQjnvb4r4
+         4s8uTHZamfDsbz5Lwewl2UH09FS+WXFBkOjy3KKLDbT+xJVJqy4q1mlfs6yU8E8Bq7Xh
+         hr6gBEW8qsuJudD9+Iz/DQ0FD1OkO0uslgPDPy7LgSutO2NhEAzd7Syk9Q/8w0MnvY61
+         9NIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=zgLa7cSUPaaRWNelfv+DXK2nedeuxmo53QNSVVlQQaY=;
-        b=DUyk2b3uaeBwHVBXqnL7ustFlEAwxJdvdE7c8b0GM3HMy6mkKw7z/uja2KElm2I1kr
-         VXUdJNka7ex1Csio/h2KYrPCtCDeEa083aDMsCot458bbwMYjBIyF3ztCyg20lQhnuTa
-         HfRL5MrKXdz60+U3X806Fo7Xh5/H93p5HirknQUS8SzkBgpOw6FRBNhSJE0ZLvh0BiOq
-         BQRNTMNLQjeNL823vf3DzuIrV8KxBxkcHqqAULif0r+R+LvUKR3T3t/8JsJe1oIsTNOP
-         Ey3GWvYBtkIe9OBx/yWFKsrpkAVOQpUBPOxWSF6xFA8B4E4uM0e7Q+QswjzBrSnqq/lq
-         FFYQ==
-X-Gm-Message-State: AOAM5336xDgTTNcBG+bUU05tpyobmcus7krDz2OFbwoLHfQgte2aHipo
-        6mz5/6M+mwEJHHQEypg9wNqxZFoN
-X-Google-Smtp-Source: ABdhPJzf0zSuJ98qD1eOoXCmyWFJIa+wbCFizoxtv1oEglng+bnwhpHMunmsfVyleu/UTqx21kHO2A==
-X-Received: by 2002:a6b:3787:: with SMTP id e129mr7707179ioa.83.1590071751089;
-        Thu, 21 May 2020 07:35:51 -0700 (PDT)
+        bh=yNlCk1OMvKGd0jU8MTuLuvq/QP3Nc1spuetnuyqYxGQ=;
+        b=tT7fd8SbQRrsaxKUUYe/aJk7GRIRZ03ciioulJvBKTy5KtvCMybaUQ13b3vuijOCUy
+         f+iEwyIRbTNpTMrDYSPTe0Y7vtkZ1gi8L45XtEeFjBnz9FfowNzNrRTf48VvftmBiwnb
+         4iwTCExq2wa53jXnWgK58nvmKnMIalXBfiLZsGdYuzoppVbQBbhZk3sI8B+u61O9HIlA
+         HQpC3taB9uXKNjhyG3gQqdoBIChJoLxUiMzZw/JUlmSx/y4YUOOT+1hDm77sMMBX9W2l
+         nzh6H5JgCK1SPb2PsHBt+Wc3lFPRJWUrlQe+4upeWLnX8A2Etimm9Ap4egxp1apAA3s+
+         Dd9w==
+X-Gm-Message-State: AOAM5314kRBqz1VQJ4hMBCYqFHXuA+VAfdr3AXZmCtjTYK3JanzbYNcg
+        LLoDz6YnveJC1a1iKL9211P+Tvmg
+X-Google-Smtp-Source: ABdhPJyLGZJYbOqtsnLsbxTXxdYI6CzzxZ+1sO0ShkyY17M5cMyANrIY3J6m2mBcMZOzWHlmRcTTmg==
+X-Received: by 2002:a92:ba14:: with SMTP id o20mr9012144ili.23.1590071756500;
+        Thu, 21 May 2020 07:35:56 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id u203sm2378288iod.54.2020.05.21.07.35.50
+        by smtp.gmail.com with ESMTPSA id c13sm3093347ilu.81.2020.05.21.07.35.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 May 2020 07:35:50 -0700 (PDT)
+        Thu, 21 May 2020 07:35:55 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04LEZnal000909;
-        Thu, 21 May 2020 14:35:49 GMT
-Subject: [PATCH v3 24/32] SUNRPC: Refactor svc_recvfrom()
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04LEZtnq000913;
+        Thu, 21 May 2020 14:35:55 GMT
+Subject: [PATCH v3 25/32] SUNRPC: Restructure svc_udp_recvfrom()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Thu, 21 May 2020 10:35:49 -0400
-Message-ID: <20200521143549.3557.41493.stgit@klimt.1015granger.net>
+Date:   Thu, 21 May 2020 10:35:55 -0400
+Message-ID: <20200521143555.3557.78504.stgit@klimt.1015granger.net>
 In-Reply-To: <20200521141100.3557.17098.stgit@klimt.1015granger.net>
 References: <20200521141100.3557.17098.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,213 +68,131 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This function is not currently "generic" so remove the documenting
-comment and rename it appropriately. Its internals are converted to
-use bio_vecs for reading from the transport socket.
-
-In existing typical sunrpc uses of bio_vecs, the bio_vec array is
-allocated dynamically. Here, instead, an array of bio_vecs is added
-to svc_rqst. The lifetime of this array can be greater than one call
-to xpo_recvfrom():
-
-- Multiple calls to xpo_recvfrom() might be needed to read an RPC
-  message completely.
-
-- At some later point, rq_arg.bvecs will point to this array and it
-  will carry the received message into svc_process().
-
-I also expect that a future optimization will remove either the
-rq_vec or rq_pages array in favor of rq_bvec, thus conserving the
-size of struct svc_rqst.
+Clean up. At this point, we are not ready yet to support bio_vecs in
+the UDP transport implementation. However, we can clean up
+svc_udp_recvfrom() to match the tracing and straight-lining recently
+changes made in svc_tcp_recvfrom().
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h |    1 
- net/sunrpc/svcsock.c       |  109 +++++++++++++++++++++++++++-----------------
- 2 files changed, 69 insertions(+), 41 deletions(-)
+ include/trace/events/sunrpc.h |    2 +
+ net/sunrpc/svcsock.c          |   60 ++++++++++++++++++++++++-----------------
+ 2 files changed, 37 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index fd390894a584..05da19a0516d 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -254,6 +254,7 @@ struct svc_rqst {
- 	struct page *		*rq_page_end;  /* one past the last page */
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 81659876b4af..08c7d618ceb4 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1501,6 +1501,8 @@ DECLARE_EVENT_CLASS(svcsock_class,
+ 			TP_ARGS(xprt, result))
  
- 	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
-+	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
- 
- 	__be32			rq_xid;		/* transmission id */
- 	u32			rq_prog;	/* program number */
+ DEFINE_SVCSOCK_EVENT(udp_send);
++DEFINE_SVCSOCK_EVENT(udp_recv);
++DEFINE_SVCSOCK_EVENT(udp_recv_err);
+ DEFINE_SVCSOCK_EVENT(tcp_send);
+ DEFINE_SVCSOCK_EVENT(tcp_recv);
+ DEFINE_SVCSOCK_EVENT(tcp_recv_eagain);
 diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 5b2981a0711c..3e25511b800e 100644
+index 3e25511b800e..97d2b6f8c791 100644
 --- a/net/sunrpc/svcsock.c
 +++ b/net/sunrpc/svcsock.c
-@@ -223,26 +223,62 @@ static int svc_one_sock_name(struct svc_sock *svsk, char *buf, int remaining)
- 	return len;
- }
- 
-+#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
-+static void svc_flush_bvec(const struct bio_vec *bvec, size_t size, size_t seek)
-+{
-+	struct bvec_iter bi = {
-+		.bi_size	= size,
-+	};
-+	struct bio_vec bv;
-+
-+	bvec_iter_advance(bvec, &bi, seek & PAGE_MASK);
-+	for_each_bvec(bv, bvec, bi, bi)
-+		flush_dcache_page(bv.bv_page);
-+}
-+#else
-+static inline void svc_flush_bvec(const struct bio_vec *bvec, size_t size,
-+				  size_t seek)
-+{
-+}
-+#endif
-+
- /*
-- * Generic recvfrom routine.
-+ * Read from @rqstp's transport socket. The incoming message fills whole
-+ * pages in @rqstp's rq_pages array until the last page of the message
-+ * has been received into a partial page.
-  */
--static ssize_t svc_recvfrom(struct svc_rqst *rqstp, struct kvec *iov,
--			    unsigned int nr, size_t buflen, unsigned int base)
-+static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
-+				size_t seek)
- {
- 	struct svc_sock *svsk =
- 		container_of(rqstp->rq_xprt, struct svc_sock, sk_xprt);
-+	struct bio_vec *bvec = rqstp->rq_bvec;
- 	struct msghdr msg = { NULL };
-+	unsigned int i;
- 	ssize_t len;
-+	size_t t;
- 
- 	rqstp->rq_xprt_hlen = 0;
- 
- 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
--	iov_iter_kvec(&msg.msg_iter, READ, iov, nr, buflen);
--	if (base != 0) {
--		iov_iter_advance(&msg.msg_iter, base);
--		buflen -= base;
-+
-+	for (i = 0, t = 0; t < buflen; i++, t += PAGE_SIZE) {
-+		bvec[i].bv_page = rqstp->rq_pages[i];
-+		bvec[i].bv_len = PAGE_SIZE;
-+		bvec[i].bv_offset = 0;
-+	}
-+	rqstp->rq_respages = &rqstp->rq_pages[i];
-+	rqstp->rq_next_page = rqstp->rq_respages + 1;
-+
-+	iov_iter_bvec(&msg.msg_iter, READ, bvec, i, buflen);
-+	if (seek) {
-+		iov_iter_advance(&msg.msg_iter, seek);
-+		buflen -= seek;
- 	}
- 	len = sock_recvmsg(svsk->sk_sock, &msg, MSG_DONTWAIT);
-+	if (len > 0)
-+		svc_flush_bvec(bvec, len, seek);
-+
- 	/* If we read a full record, then assume there may be more
- 	 * data to read (stream based sockets only!)
- 	 */
-@@ -775,13 +811,14 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xprt *xprt)
- 	return NULL;
- }
- 
--static unsigned int svc_tcp_restore_pages(struct svc_sock *svsk, struct svc_rqst *rqstp)
-+static size_t svc_tcp_restore_pages(struct svc_sock *svsk,
-+				    struct svc_rqst *rqstp)
- {
--	unsigned int i, len, npages;
-+	size_t len = svsk->sk_datalen;
-+	unsigned int i, npages;
- 
--	if (svsk->sk_datalen == 0)
-+	if (!len)
- 		return 0;
--	len = svsk->sk_datalen;
- 	npages = (len + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 	for (i = 0; i < npages; i++) {
- 		if (rqstp->rq_pages[i] != NULL)
-@@ -917,20 +954,6 @@ static int receive_cb_reply(struct svc_sock *svsk, struct svc_rqst *rqstp)
- 	return -EAGAIN;
- }
- 
--static int copy_pages_to_kvecs(struct kvec *vec, struct page **pages, int len)
--{
--	int i = 0;
--	int t = 0;
--
--	while (t < len) {
--		vec[i].iov_base = page_address(pages[i]);
--		vec[i].iov_len = PAGE_SIZE;
--		i++;
--		t += PAGE_SIZE;
--	}
--	return i;
--}
--
- static void svc_tcp_fragment_received(struct svc_sock *svsk)
- {
- 	/* If we have more data, signal svc_xprt_enqueue() to try again */
-@@ -938,20 +961,33 @@ static void svc_tcp_fragment_received(struct svc_sock *svsk)
- 	svsk->sk_marker = xdr_zero;
+@@ -425,8 +425,15 @@ static int svc_udp_get_dest_address(struct svc_rqst *rqstp,
+ 	return 0;
  }
  
 -/*
-- * Receive data from a TCP socket.
+- * Receive a datagram from a UDP socket.
 +/**
-+ * svc_tcp_recvfrom - Receive data from a TCP socket
++ * svc_udp_recvfrom - Receive a datagram from a UDP socket.
 + * @rqstp: request structure into which to receive an RPC Call
 + *
 + * Called in a loop when XPT_DATA has been set.
 + *
-+ * Read the 4-byte stream record marker, then use the record length
-+ * in that marker to set up exactly the resources needed to receive
-+ * the next RPC message into @rqstp.
-+ *
 + * Returns:
 + *   On success, the number of bytes in a received RPC Call, or
 + *   %0 if a complete RPC Call message was not ready to return
-+ *
-+ * The zero return case handles partial receives and callback Replies.
-+ * The state of a partial receive is preserved in the svc_sock for
-+ * the next call to svc_tcp_recvfrom.
   */
- static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
+ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
  {
- 	struct svc_sock	*svsk =
- 		container_of(rqstp->rq_xprt, struct svc_sock, sk_xprt);
- 	struct svc_serv	*serv = svsk->sk_xprt.xpt_server;
--	int		len;
--	struct kvec *vec;
--	unsigned int want, base;
-+	size_t want, base;
-+	ssize_t len;
- 	__be32 *p;
- 	__be32 calldir;
--	int pnum;
+@@ -460,20 +467,14 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
+ 	    svc_sock_setbufsize(svsk, serv->sv_nrthreads + 3);
  
  	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
- 	len = svc_tcp_read_marker(svsk, rqstp);
-@@ -960,16 +996,7 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
+-	skb = NULL;
+ 	err = kernel_recvmsg(svsk->sk_sock, &msg, NULL,
+ 			     0, 0, MSG_PEEK | MSG_DONTWAIT);
+-	if (err >= 0)
+-		skb = skb_recv_udp(svsk->sk_sk, 0, 1, &err);
+-
+-	if (skb == NULL) {
+-		if (err != -EAGAIN) {
+-			/* possibly an icmp error */
+-			dprintk("svc: recvfrom returned error %d\n", -err);
+-			set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+-		}
+-		return 0;
+-	}
++	if (err < 0)
++		goto out_recv_err;
++	skb = skb_recv_udp(svsk->sk_sk, 0, 1, &err);
++	if (!skb)
++		goto out_recv_err;
++
+ 	len = svc_addr_len(svc_addr(rqstp));
+ 	rqstp->rq_addrlen = len;
+ 	if (skb->tstamp == 0) {
+@@ -484,26 +485,21 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
+ 	sock_write_timestamp(svsk->sk_sk, skb->tstamp);
+ 	set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags); /* there may be more data... */
  
- 	base = svc_tcp_restore_pages(svsk, rqstp);
- 	want = len - (svsk->sk_tcplen - sizeof(rpc_fraghdr));
--
--	vec = rqstp->rq_vec;
--
--	pnum = copy_pages_to_kvecs(&vec[0], &rqstp->rq_pages[0], base + want);
--
--	rqstp->rq_respages = &rqstp->rq_pages[pnum];
--	rqstp->rq_next_page = rqstp->rq_respages + 1;
--
--	/* Now receive data */
--	len = svc_recvfrom(rqstp, vec, pnum, base + want, base);
-+	len = svc_tcp_read_msg(rqstp, base + want, base);
- 	if (len >= 0) {
- 		trace_svcsock_tcp_recv(&svsk->sk_xprt, len);
- 		svsk->sk_tcplen += len;
+-	len  = skb->len;
++	len = skb->len;
+ 	rqstp->rq_arg.len = len;
++	trace_svcsock_udp_recv(&svsk->sk_xprt, len);
+ 
+ 	rqstp->rq_prot = IPPROTO_UDP;
+ 
+-	if (!svc_udp_get_dest_address(rqstp, cmh)) {
+-		net_warn_ratelimited("svc: received unknown control message %d/%d; dropping RPC reply datagram\n",
+-				     cmh->cmsg_level, cmh->cmsg_type);
+-		goto out_free;
+-	}
++	if (!svc_udp_get_dest_address(rqstp, cmh))
++		goto out_cmsg_err;
+ 	rqstp->rq_daddrlen = svc_addr_len(svc_daddr(rqstp));
+ 
+ 	if (skb_is_nonlinear(skb)) {
+ 		/* we have to copy */
+ 		local_bh_disable();
+-		if (csum_partial_copy_to_xdr(&rqstp->rq_arg, skb)) {
+-			local_bh_enable();
+-			/* checksum error */
+-			goto out_free;
+-		}
++		if (csum_partial_copy_to_xdr(&rqstp->rq_arg, skb))
++			goto out_bh_enable;
+ 		local_bh_enable();
+ 		consume_skb(skb);
+ 	} else {
+@@ -531,6 +527,20 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
+ 		serv->sv_stats->netudpcnt++;
+ 
+ 	return len;
++
++out_recv_err:
++	if (err != -EAGAIN) {
++		/* possibly an icmp error */
++		set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
++	}
++	trace_svcsock_udp_recv_err(&svsk->sk_xprt, err);
++	return 0;
++out_cmsg_err:
++	net_warn_ratelimited("svc: received unknown control message %d/%d; dropping RPC reply datagram\n",
++			     cmh->cmsg_level, cmh->cmsg_type);
++	goto out_free;
++out_bh_enable:
++	local_bh_enable();
+ out_free:
+ 	kfree_skb(skb);
+ 	return 0;
 
