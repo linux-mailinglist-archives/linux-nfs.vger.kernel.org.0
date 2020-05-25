@@ -2,65 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDA21DF9F1
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2020 20:00:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 528011E103B
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2020 16:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEWSAm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 23 May 2020 14:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388232AbgEWSAl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 May 2020 14:00:41 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A7B5C08C5C3
-        for <linux-nfs@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v4so10975713qte.3
-        for <linux-nfs@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
+        id S2388873AbgEYOQV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 May 2020 10:16:21 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:52101 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388714AbgEYOQV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 25 May 2020 10:16:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=vhvRG4iP0p/cCM0/gHqK0xx0MaMNF3/azTtn5P0fCT1b4XLjGRAoR85FXgvwYtowP6
-         J1ev3dPiedOMtPyOzUYmKFEqsj6BkIi2lR8s0YRNLylOZ8MbeWQpwNTWDXPX57LUrKeO
-         FLL54WToKnc9WyFCTQNZdn8yjuqVF61dsdwJrbIWn1f8+mXNgwQXd1Xox425XdFJLCTr
-         UNYtD5Mkr7J8HytQpl125rrGiBWdOVTtdeDic18s2v1Ex5H4EMrCDseWe8z8QJUA2DPl
-         pMcmWf9nM5lni1dYRbVMyTKtLHSFCzrJM5oRvB7Hp9K31CMWsqtaG47ZQbJG6ZEre6uU
-         kwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=Xz6rvhdSrZbydsVPPodjahQN7cVy6gPaUhkt2tHfm4NiabUXZIi+P39BYTWAH4/Fmg
-         aSAqXos3HwIg3K+p04ddK5nuAq9G18wojCXHRnPfr4xhqJ++m/zI4ksOZvSraEGsLz+c
-         zNKbihVuNbV03wP10YyWHoWJT2b/IJ0tH+fRyjR9dsxiBtxKEswmpO+QMiZUoZDtOZWr
-         HeW40Am/5sHPRdtTameMMrVsMXoRQ/G5BdPNmVoZoGPAccNCaDycvmz0rP8AePqt6y7n
-         uSRXlR62a1P+L8hoKIVehxgEQ4haNDZlE7ck3t3MT78SYAMylvyp/4HoyF9I/4Yi6gvn
-         O9xw==
-X-Gm-Message-State: AOAM5313Ky8xVJklJH+g1Xn9CmoMwsGiW/LBu7h4p4IenTFJEWz/KL5g
-        R3f6QaYMnT3f/3iVCWkZkDyuQTs1TvRgGwprWgc=
-X-Google-Smtp-Source: ABdhPJw4JSLl4s8hKmdikxPHOZTjp7LuShJQWo5DKJXfhdyHNpRWrWLXX1iWw/azZwGF2Nz0kU5bTrWvyq5YmK6naS0=
-X-Received: by 2002:ac8:1e16:: with SMTP id n22mr21502226qtl.78.1590256838401;
- Sat, 23 May 2020 11:00:38 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a37:9fd3:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:37
- -0700 (PDT)
-Reply-To: mrs.chantala2055@gmail.com
-From:   mrs chantal <mrs.chantalas1@gmail.com>
-Date:   Sat, 23 May 2020 18:00:37 +0000
-Message-ID: <CAMdkyyDY_0O7YgysHCjgRTJ=8-B7XurK7o1razRHDVOjgr2V2g@mail.gmail.com>
-Subject: jjCompliment
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=A2C6VJveWD7/k0MVHTpe6FT8HSlUTvfLdgwU7DetgHI=; b=F
+        gVc/37qjCWc81JOyIy9zjfz0hxwLFOMlaceF5MaATZ1PV1RIuf/iNwdCWKLxv/tx
+        gUPvkVzsqsumy3tWQ/SNt/CkHPzibbSIbYsCzmOiRsPXRFKRqAkHOysyJj0u1hzs
+        LSZcZQSxetU8gEfLNJ7PZy0rfd4JkBjRxas+tgTjpM=
+Received: from localhost.localdomain (unknown [223.73.184.21])
+        by app1 (Coremail) with SMTP id XAUFCgC3vpoq08tejM8wAg--.42131S3;
+        Mon, 25 May 2020 22:16:11 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Mon, 25 May 2020 22:15:41 +0800
+Message-Id: <1590416141-52534-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgC3vpoq08tejM8wAg--.42131S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFW8Kr48uFyUZFWfCryfJFb_yoWDAFX_Gr
+        4fXr1DX348tF17JFyxtrWvyrW0g3yDGFyUGFWvy343GFWF93yDXF93trnrWF47KrWaqw1a
+        yFyDGr9I9aySvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbskFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjfUOyCJUUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
-    letter to solicit your partnership to transfer $13.5 Million US
-    Dollars.I shall send you more information and procedures when I receive
-    positive response From you. Please send me a message in My private
-    email address is ( mrschantal066@gmail.com  )
-    Best Regards
-    MrS.Chantal
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
+
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
+
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 5cf91322de0f..07e0c6f6322f 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1301,6 +1301,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
+ 	}
+ }
+-- 
+2.7.4
+
