@@ -2,53 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1BE51E44E8
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2020 15:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 003521E5655
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2020 07:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389097AbgE0N6N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 May 2020 09:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        id S1728314AbgE1FRV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 May 2020 01:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389093AbgE0N6L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 May 2020 09:58:11 -0400
-Received: from msa12.plala.or.jp (msa12.plala.or.jp [IPv6:2400:7800:0:502e::12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B582C08C5C4
-        for <linux-nfs@vger.kernel.org>; Wed, 27 May 2020 06:58:10 -0700 (PDT)
-Received: from mwebp13 ([172.23.13.133]) by msa12.plala.or.jp with ESMTP
-          id <20200527135809.MXPY4246.msa12.plala.or.jp@mwebp13>;
-          Wed, 27 May 2020 22:58:09 +0900
-Date:   Wed, 27 May 2020 22:58:09 +0900
-From:   "Mrs.Judith Rice" <hamurafujimi@tmail.plala.or.jp>
-Reply-To: jonesevansje@gmail.com
-Message-ID: <20200527225809.ABH27.1023.root@mwebp13>
-Subject: Spende
+        with ESMTP id S1725764AbgE1FNM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 May 2020 01:13:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213F7C08C5C3;
+        Wed, 27 May 2020 22:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=WsnuuUW/8mNG5XgJndzFDlP4ZHaqtmjvrkyJ/evyN2A=; b=c3NXta7lrMrelp/uYGPfAaa966
+        8FvaQiUf4V98AHB/jCXkfgscBXsFw4O9RoTBbXu69lPUnRpW3L2lwaDhI1JL+c/R+6XC6W1GP/2Wd
+        Cr4aoUNeG+SLIrHNMVjQElvuPUT3WovkTfWaKM44g5p1RhzGtTs19UBh1G8RjOAlg/SRr7CE/PHSp
+        /VVyQt3mSNfWkIGTPN2D+XOMLXnvrbD240ABfnwZp6A9pchmZaJjxwV7O2Div5+NEmg5/VzVz3ZJl
+        MGiO7dqDADVjXVznEmvy0cfLpsTpyGFeUSCFflDRpysUfHCGVw+a/f/NB96VbC/aiG2e20C2e2oeE
+        TiQCXfnQ==;
+Received: from p4fdb1ad2.dip0.t-ipconnect.de ([79.219.26.210] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeAqN-0001QR-LQ; Thu, 28 May 2020 05:12:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: remove most callers of kernel_setsockopt v3
+Date:   Thu, 28 May 2020 07:12:08 +0200
+Message-Id: <20200528051236.620353-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Transfer-Encoding: 7bit
-X-Priority: 3 (Normal)
-Sensitivity: Normal
-X-VirusScan: Outbound; mvir-ac12; Wed, 27 May 2020 22:58:10 +0900
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Attn:
+Hi Dave,
 
-Es tut uns leid, dass wir Sie aufgrund eines Mismanagent of Beneficaries-Fonds von unseren ernannten Zonal Managern versp&#228;tet kontaktiert haben. Bitte beachten Sie, dass Sie qualifiziert sind, die Zahlung von 900.000,00 USD an der ATM-Karte mit neunhunderttausend Dollar zu erhalten.
+this series removes most callers of the kernel_setsockopt functions, and
+instead switches their users to small functions that implement setting a
+sockopt directly using a normal kernel function call with type safety and
+all the other benefits of not having a function call.
 
-Als Entsch&#228;digung von WORLD BANK / IWF (Internationaler W&#228;hrungsfonds) f&#252;r die automatisch &#252;ber einen E-Mail-Wahlautomaten gezogenen, die in der Vergangenheit noch nicht abgeschlossene Transaktionen hatten.
+In some cases these functions seem pretty heavy handed as they do
+a lock_sock even for just setting a single variable, but this mirrors
+the real setsockopt implementation unlike a few drivers that just set
+set the fields directly.
 
-F&#252;r weitere Informationen kontaktieren Sie bitte Rev.EVANS JONES ( jonesevansje@gmail.com )
 
-Bitte senden Sie ihm Ihre pers&#246;nlichen Daten wie:
+Changes since v2:
+ - drop the separately merged kernel_getopt_removal
+ - drop the sctp patches, as there is conflicting cleanup going on
+ - add an additional ACK for the rxrpc changes
 
-Vollst&#228;ndiger Name:
-Wohnanschrift:
-Telefonnummer:
-Herkunftsland:
-
-Gr&#252;&#223;e,
-Mrs. Judith Rice
-
+Changes since v1:
+ - use ->getname for sctp sockets in dlm
+ - add a new ->bind_add struct proto method for dlm/sctp
+ - switch the ipv6 and remaining sctp helpers to inline function so that
+   the ipv6 and sctp modules are not pulled in by any module that could
+   potentially use ipv6 or sctp connections
+ - remove arguments to various sock_* helpers that are always used with
+   the same constant arguments
