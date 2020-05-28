@@ -2,155 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 213531E6F96
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 00:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A1C1E70DD
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 01:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437349AbgE1Wu3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 May 2020 18:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437347AbgE1Wu1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 May 2020 18:50:27 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C73FC08C5C6
-        for <linux-nfs@vger.kernel.org>; Thu, 28 May 2020 15:50:26 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id k19so194590edv.9
-        for <linux-nfs@vger.kernel.org>; Thu, 28 May 2020 15:50:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kKR9Erwy2v8oWVrUnk1ZtjmoojOqRG3CDFNH2m/3wp4=;
-        b=UQyaGeHaHlhtGCoHWS/5JKRDBHr6xSpLhP6jPQWFkfCx1ln0kHMWSj7qR7qSy9/RXu
-         Z926t6ThfoXMiuOTTjlAfHoZxvm0in1MVmbkQaNIZGQLXaW0PoK4U1fL8sRRyl32cghE
-         Wc8hypPXefdM/y0Of+yytayq2QaFo6auNqr9320dBosEnLzZU0z6euictk23yE10rFKd
-         TfMkYxgq2usR61mbG33a0muTfHXjkxkwVcuzO86jjewTDgz8rjPaECLx1T3M+AI+xxFU
-         /cKO9TrGJThhdacSdnlKVeX6TJ+MkeXt/HST0X5fYRElAGCI9Rad8YrSHgDo6Pycb4XY
-         6Pkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kKR9Erwy2v8oWVrUnk1ZtjmoojOqRG3CDFNH2m/3wp4=;
-        b=VtMUjx/QXBaPkbg2ez1SVfu3XyxS1sB2mKjKAd3qF1dLQ8vL3vmuRuM6UB53/r2ip9
-         pQZrgtzFnAVAweVuQAPC8+p+2PZNwI0o3ciimlTUB/IqHOhePB+IhsmrD88FF+w8+tMs
-         w+YeGoZY76lyqPxCui5L016EolOtB6pIOPxKmcJNKrj+R7+gGyQ/ZlpmoWSKiWJEf7SC
-         uVQrYJlCLbLNBZCyODq5plIf/Cte7RT8sHegDa7uG1xjDNoosz5HvxwPODyPHALVFKd1
-         l8EPvNAJEY26cVes5bn79+ITgtIWAQfRdJxYfXFv1Qg2X1jqum1Zi/lHthRaARM0pHi4
-         u9BQ==
-X-Gm-Message-State: AOAM532CKzI7v+TP0crH7+nYi2EBnXn511F1i9yxSCL+pir6wTwj/O+i
-        YkVaEhhXLozyv6IDbU3O/FPDiQkhm84pkC+7jNplRw==
-X-Google-Smtp-Source: ABdhPJy49CHziGUkgYHSL9osczsErsYHjR+jshrzjc7sDedwKA/g7+uzJuyN68+5MsXnri41SQmc5v48tS4HMwXtjWI=
-X-Received: by 2002:aa7:d650:: with SMTP id v16mr5277432edr.267.1590706225161;
- Thu, 28 May 2020 15:50:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAN-5tyE-hr2Fd1dKt=DUrVh-FJXzgGx5zhWr17SSbM1LOZ-pGQ@mail.gmail.com>
- <85234f9bde1c419e1a8d7e8a677e5d324325c56b.camel@hammerspace.com>
- <CAN-5tyHcExq5CqwrU3F4nRptt1=X917jzceUqLCTCUDYQsdsMA@mail.gmail.com> <f2f43e89d259c9bc447f2a7b885f236e88d9b6b3.camel@hammerspace.com>
-In-Reply-To: <f2f43e89d259c9bc447f2a7b885f236e88d9b6b3.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 28 May 2020 18:50:13 -0400
-Message-ID: <CAN-5tyFtBM=U=GvFVeon_jb2OqPu1rAjaWAkjQ8-zLkuZgAa+g@mail.gmail.com>
+        id S2437741AbgE1Xym (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 May 2020 19:54:42 -0400
+Received: from mail-dm6nam12on2117.outbound.protection.outlook.com ([40.107.243.117]:64737
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437677AbgE1Xyk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 28 May 2020 19:54:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JKlrwOQFU5Pby1BhVi4eIk5hgmS0AW/XQF5sWj0IBONApp0x66iXEAVBLyvWOEUKt9TQCbsZtFko7e+ATA15yDeGZp2hbc23/o7/uz7r4T3JkFORz+tTir30VtXKZ+3m0ZArt+G/p2K+uCqIEV0hTo0eokKNxwK7p2YOFzrYzXNAOEJyjDubRU/qJBBDZB1/AUBW2221uJ2wFM1XyJ9p9gbOjoVgyjo2UF9yXdw+I9wzbRf4nwnx9hOCGVmS/ohYTLw/N2rK9ujsPPHp0YQ4EQFbr4mV0mSBDm0NsXRGR9e2R6b6KEOkyT+gRL0H7UvfWv13tIRdsz7tzG+kynREzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7P/QLo4Bh3IXVPJpXmi6PZbVJdcXiyjHDsMoafmtFzQ=;
+ b=WXOywp45GWSpNS00Hxlw1hgwDxkWoKDuLY7xgYtHyWxZq6gM9VxhN5tlAHzv/oxnqci4T75hUPdttEBDEPgLWFgAFonOf05kbA1eCaYqauXHQRc7R3bFOBtEqWQ/ppyfWkwgDpijnYnZdEJPLcXWFgGohGn+s7Fg6EKWD4/05Atavj3bf3clAwaI2nDUmUd8YZcjucfNJglIjC5Lbx0Y9IcGcLYcz+Kfl8fGuvxngiBZxmgzqNQWBAUgFz5iqaAD1hj1v/F8TitkoKTQ7lhhe9VjJ4mgueqF1eZXFLzyxgQvBK2R4OhuqJbfFH99bDwQsy9EeDlPUZPte2yj3AQIDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7P/QLo4Bh3IXVPJpXmi6PZbVJdcXiyjHDsMoafmtFzQ=;
+ b=bTLG0xoA3bfLRB9EaeByyCLdWjzag/enk+5XkerB4teWmztXxRDSnZtw0xFz0oCDJNRxGSO/jNyIlQREUD1AajCoH06qdvb4PyvR2AyNCDv0lkF/cSPapyp2gqXyRYY8LFpOLvvqZstV8RWEm3+w1C8GuVJtCDX33bPZJWln0sA=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3638.namprd13.prod.outlook.com (2603:10b6:610:9b::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Thu, 28 May
+ 2020 23:54:35 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 23:54:35 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: How to handle revocation of locking state
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: How to handle revocation of locking state
+Thread-Index: AQHWNTCSBj8lUsFTaUe5HR+XtfbiCqi9/k+AgAAJUICAAAuSAIAABx+AgAAR+oA=
+Date:   Thu, 28 May 2020 23:54:35 +0000
+Message-ID: <c379e52a767493b088e5d7b755e7ffdab6a83a47.camel@hammerspace.com>
+References: <CAN-5tyE-hr2Fd1dKt=DUrVh-FJXzgGx5zhWr17SSbM1LOZ-pGQ@mail.gmail.com>
+         <85234f9bde1c419e1a8d7e8a677e5d324325c56b.camel@hammerspace.com>
+         <CAN-5tyHcExq5CqwrU3F4nRptt1=X917jzceUqLCTCUDYQsdsMA@mail.gmail.com>
+         <f2f43e89d259c9bc447f2a7b885f236e88d9b6b3.camel@hammerspace.com>
+         <CAN-5tyFtBM=U=GvFVeon_jb2OqPu1rAjaWAkjQ8-zLkuZgAa+g@mail.gmail.com>
+In-Reply-To: <CAN-5tyFtBM=U=GvFVeon_jb2OqPu1rAjaWAkjQ8-zLkuZgAa+g@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: umich.edu; dkim=none (message not signed)
+ header.d=none;umich.edu; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: da6ff2df-5c71-428a-767a-08d803627982
+x-ms-traffictypediagnostic: CH2PR13MB3638:
+x-microsoft-antispam-prvs: <CH2PR13MB3638D006795CBB9871CDF76FB88E0@CH2PR13MB3638.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uoHDckvzvkvvkP9oWGWkbdTG2q8l6SiHzHkQh6A991EjLwmP0CelF5cwlm3b4zmrjyU5/B9n/eb3SR6wmfSSKo5Vro2rges8NqKOWrpUtaBxm+AUu653/ruYF4C5MylEErCtj4K8O85HQHVUu5pH8+/cIsX05vUHjjdMnXoPm5LUNtDqIEnqjVImuE3ycCSR+7lmvozbFWwxE2XXib0nWGiW1GhwCaBiYXOLcwaK04koyS3LvS4N5yvILzU6MTaTV+MuVa7ZNnVgKdyqI9bKbVuy/+5lxE1q4vZYndIeTzxIBni4uOWSEZy7OihggOeqBHDYQCIhja+Ob2RnxtOeJA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(39830400003)(396003)(86362001)(53546011)(2906002)(8936002)(478600001)(6506007)(2616005)(5660300002)(316002)(71200400001)(6916009)(66556008)(64756008)(6512007)(8676002)(36756003)(66476007)(66946007)(66446008)(83380400001)(4326008)(76116006)(186003)(6486002)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: cnBvt6ImaDyjXLy4idpIyNzVQhf3Gqa9IiCfc/HbS64ri5xUr9+Ag2AIWbRpqmZy5y/L4q2/pOWrm3g3MhWFrN1+LnORFw68wHm5fkj/BtA9Qqf+LY26cGdT2dp6w6kqAw6oTED1dCbbYqfDiNG7O4WSMCKMJd+ZYlPNHk1J4Sw6V+39TMvF9M4lV1kiX9lfR6w1toM6u9gCKWUVMOf9QhLmnO7glrG66Li+Ypqsq/qfZ0Tka4JaN5hPQArHkkCh6S2DwTHTMhMvir6p6AXxz/RbL7/soq5zx2LfBzj9zmxfquQ7Re91y368wt3a/GaaXX0sK8wgK0fBtPVXzn2KXfT5YpFvZrmTuC4VeTfTkvclpOEV2hkhpYK64p1L/eNipz1uZDjcDahNmglVW5jhXI1SJ2ewLga0Vh6H/09LkOiUyxUjcf5EQMZP6ypGjZ/omIPw7aDybUfgR4W9zKrwVDHSIp5Yk9zBrJwC/z0+OPw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4EC47370DDA3C2478CAB8F6E7AA8927B@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da6ff2df-5c71-428a-767a-08d803627982
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 23:54:35.1237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: av0EPBw+YaSWMIthPMatL70w0b5NtRH34kYtoErLk2AkDzEmeMnA53Of9sjYSg25i388DnvDDaQy2IZeabpt0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3638
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 28, 2020 at 6:24 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Thu, 2020-05-28 at 17:43 -0400, Olga Kornievskaia wrote:
-> > On Thu, May 28, 2020 at 5:10 PM Trond Myklebust <
-> > trondmy@hammerspace.com> wrote:
-> > > Hi Olga,
-> > >
-> > > On Thu, 2020-05-28 at 16:42 -0400, Olga Kornievskaia wrote:
-> > > > Hi folks,
-> > > >
-> > > > Looking for recommendation on what the client is suppose to be
-> > > > doing
-> > > > in the following situation. Client opens a file and has a byte-
-> > > > range
-> > > > lock which returned a locking state. Client is acquiring another
-> > > > byte
-> > > > range lock. It uses the returned locking stated for the 2nd lock.
-> > > > Server returns ADMIN_REVOKED.
-> > > >
-> > > > Currently the client goes into an infinite loop of just resending
-> > > > the
-> > > > same LOCK operation with
-> > > > the same locking stateid.
-> > > >
-> > > > Is this a recoverable situation? The fact that the lock state was
-> > > > revoked, should it be an automatic EIO since previous lock is
-> > > > lost
-> > > > (so
-> > > > why bother going forward)? Or should the client retry the lock
-> > > > but
-> > > > send it with the open stateid?
-> > > >
-> > > > Thank you.
-> > >
-> > > I think the right behaviour should be to just call
-> > > nfs_inode_find_state_and_recover(). In principle that will end up
-> > > either recovering the lock (if the user set the
-> > > nfs.recover_lost_locks
-> > > kernel parameter to 'true') or marking it as a lost lock, using
-> > > NFS_LOCK_LOST.
-> >
-> > Why should acquiring of the 2nd lock depend on recovering the lock
-> > who's stateid it was trying to use? I think the 1st stateid is lost
-> > unrecoverable?
->
-> Agreed. However that means the application needs to know that it may
-> have corrupt data on its hands. We do know that this is the same
-> application that took the first lock, because any close of the file
-> (including due to application crashes) would result in the locks being
-> returned.
->
-> Some *NIX implementations have a special SIGLOST signal that their NFS
-> clients can use to let the application know its state was lost. Linux
-> unfortunately does not have such a signal, so we have to rely on error
-> codes.
->
-> > Right now what happens is code initiates recovery. open is sent. But
-> > the retry of the 2nd lock has the INITIALIZED_LOCK set and so it
-> > takes
-> > the bad lock stateid (how about instead letting it use the recovered
-> > open stateid?). How about instead do the follow.
->
-> NFSv4.1 requires us to call FREE_STATEID on any stateid that is
-> revoked, in order to let the server know when we've discovered that the
-> lock was lost. So we also have to go through the recovery machinery to
-> ensure that happens before we can deal with taking the second lock.
-
-Please bear with me I'm still loss:
-1. If you say "application needs to know", the only outcome of this I
-see is failing with EIO the 2nd lock. Which was my initial suggestion
-saying if this is at all recoverable or should this be a failure
-(instead of the infinite loop).
-2. In nfs4_handle_setlk_error() we already call
-nfs4_schedule_stateid_recovery(), I interpret this as "recovery was
-initiated". I'm not sure what you envision the recovery steps are
-suppose to be (or are missing. I guess the only one I see is lack of
-free_stateid of the 1st lock). If you're saying the recovery includes
-recovery of the 1st lock, then that's step#1 (but we don't send
-free_stateid() for say a delegation stateid if it was revoked either
-(or at least I don't think we do, I can test that)).  But after all
-the recovery is done, the 2nd lock request needs to be re-tried and
-what I see unless we change something about NFS_LOCK_INITALIZED
-setting, it will once again pick a bad locking stateid.
-
->
-> Cheers
->   Trond
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVGh1LCAyMDIwLTA1LTI4IGF0IDE4OjUwIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVGh1LCBNYXkgMjgsIDIwMjAgYXQgNjoyNCBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
+PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gVGh1LCAyMDIwLTA1LTI4
+IGF0IDE3OjQzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9uIFRodSwg
+TWF5IDI4LCAyMDIwIGF0IDU6MTAgUE0gVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+IHRyb25kbXlA
+aGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gSGkgT2xnYSwNCj4gPiA+ID4gDQo+ID4g
+PiA+IE9uIFRodSwgMjAyMC0wNS0yOCBhdCAxNjo0MiAtMDQwMCwgT2xnYSBLb3JuaWV2c2thaWEg
+d3JvdGU6DQo+ID4gPiA+ID4gSGkgZm9sa3MsDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gTG9va2lu
+ZyBmb3IgcmVjb21tZW5kYXRpb24gb24gd2hhdCB0aGUgY2xpZW50IGlzIHN1cHBvc2UgdG8NCj4g
+PiA+ID4gPiBiZQ0KPiA+ID4gPiA+IGRvaW5nDQo+ID4gPiA+ID4gaW4gdGhlIGZvbGxvd2luZyBz
+aXR1YXRpb24uIENsaWVudCBvcGVucyBhIGZpbGUgYW5kIGhhcyBhDQo+ID4gPiA+ID4gYnl0ZS0N
+Cj4gPiA+ID4gPiByYW5nZQ0KPiA+ID4gPiA+IGxvY2sgd2hpY2ggcmV0dXJuZWQgYSBsb2NraW5n
+IHN0YXRlLiBDbGllbnQgaXMgYWNxdWlyaW5nDQo+ID4gPiA+ID4gYW5vdGhlcg0KPiA+ID4gPiA+
+IGJ5dGUNCj4gPiA+ID4gPiByYW5nZSBsb2NrLiBJdCB1c2VzIHRoZSByZXR1cm5lZCBsb2NraW5n
+IHN0YXRlZCBmb3IgdGhlIDJuZA0KPiA+ID4gPiA+IGxvY2suDQo+ID4gPiA+ID4gU2VydmVyIHJl
+dHVybnMgQURNSU5fUkVWT0tFRC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBDdXJyZW50bHkgdGhl
+IGNsaWVudCBnb2VzIGludG8gYW4gaW5maW5pdGUgbG9vcCBvZiBqdXN0DQo+ID4gPiA+ID4gcmVz
+ZW5kaW5nDQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gc2FtZSBMT0NLIG9wZXJhdGlvbiB3aXRo
+DQo+ID4gPiA+ID4gdGhlIHNhbWUgbG9ja2luZyBzdGF0ZWlkLg0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+IElzIHRoaXMgYSByZWNvdmVyYWJsZSBzaXR1YXRpb24/IFRoZSBmYWN0IHRoYXQgdGhlIGxv
+Y2sgc3RhdGUNCj4gPiA+ID4gPiB3YXMNCj4gPiA+ID4gPiByZXZva2VkLCBzaG91bGQgaXQgYmUg
+YW4gYXV0b21hdGljIEVJTyBzaW5jZSBwcmV2aW91cyBsb2NrIGlzDQo+ID4gPiA+ID4gbG9zdA0K
+PiA+ID4gPiA+IChzbw0KPiA+ID4gPiA+IHdoeSBib3RoZXIgZ29pbmcgZm9yd2FyZCk/IE9yIHNo
+b3VsZCB0aGUgY2xpZW50IHJldHJ5IHRoZQ0KPiA+ID4gPiA+IGxvY2sNCj4gPiA+ID4gPiBidXQN
+Cj4gPiA+ID4gPiBzZW5kIGl0IHdpdGggdGhlIG9wZW4gc3RhdGVpZD8NCj4gPiA+ID4gPiANCj4g
+PiA+ID4gPiBUaGFuayB5b3UuDQo+ID4gPiA+IA0KPiA+ID4gPiBJIHRoaW5rIHRoZSByaWdodCBi
+ZWhhdmlvdXIgc2hvdWxkIGJlIHRvIGp1c3QgY2FsbA0KPiA+ID4gPiBuZnNfaW5vZGVfZmluZF9z
+dGF0ZV9hbmRfcmVjb3ZlcigpLiBJbiBwcmluY2lwbGUgdGhhdCB3aWxsIGVuZA0KPiA+ID4gPiB1
+cA0KPiA+ID4gPiBlaXRoZXIgcmVjb3ZlcmluZyB0aGUgbG9jayAoaWYgdGhlIHVzZXIgc2V0IHRo
+ZQ0KPiA+ID4gPiBuZnMucmVjb3Zlcl9sb3N0X2xvY2tzDQo+ID4gPiA+IGtlcm5lbCBwYXJhbWV0
+ZXIgdG8gJ3RydWUnKSBvciBtYXJraW5nIGl0IGFzIGEgbG9zdCBsb2NrLCB1c2luZw0KPiA+ID4g
+PiBORlNfTE9DS19MT1NULg0KPiA+ID4gDQo+ID4gPiBXaHkgc2hvdWxkIGFjcXVpcmluZyBvZiB0
+aGUgMm5kIGxvY2sgZGVwZW5kIG9uIHJlY292ZXJpbmcgdGhlDQo+ID4gPiBsb2NrDQo+ID4gPiB3
+aG8ncyBzdGF0ZWlkIGl0IHdhcyB0cnlpbmcgdG8gdXNlPyBJIHRoaW5rIHRoZSAxc3Qgc3RhdGVp
+ZCBpcw0KPiA+ID4gbG9zdA0KPiA+ID4gdW5yZWNvdmVyYWJsZT8NCj4gPiANCj4gPiBBZ3JlZWQu
+IEhvd2V2ZXIgdGhhdCBtZWFucyB0aGUgYXBwbGljYXRpb24gbmVlZHMgdG8ga25vdyB0aGF0IGl0
+DQo+ID4gbWF5DQo+ID4gaGF2ZSBjb3JydXB0IGRhdGEgb24gaXRzIGhhbmRzLiBXZSBkbyBrbm93
+IHRoYXQgdGhpcyBpcyB0aGUgc2FtZQ0KPiA+IGFwcGxpY2F0aW9uIHRoYXQgdG9vayB0aGUgZmly
+c3QgbG9jaywgYmVjYXVzZSBhbnkgY2xvc2Ugb2YgdGhlIGZpbGUNCj4gPiAoaW5jbHVkaW5nIGR1
+ZSB0byBhcHBsaWNhdGlvbiBjcmFzaGVzKSB3b3VsZCByZXN1bHQgaW4gdGhlIGxvY2tzDQo+ID4g
+YmVpbmcNCj4gPiByZXR1cm5lZC4NCj4gPiANCj4gPiBTb21lICpOSVggaW1wbGVtZW50YXRpb25z
+IGhhdmUgYSBzcGVjaWFsIFNJR0xPU1Qgc2lnbmFsIHRoYXQgdGhlaXINCj4gPiBORlMNCj4gPiBj
+bGllbnRzIGNhbiB1c2UgdG8gbGV0IHRoZSBhcHBsaWNhdGlvbiBrbm93IGl0cyBzdGF0ZSB3YXMg
+bG9zdC4NCj4gPiBMaW51eA0KPiA+IHVuZm9ydHVuYXRlbHkgZG9lcyBub3QgaGF2ZSBzdWNoIGEg
+c2lnbmFsLCBzbyB3ZSBoYXZlIHRvIHJlbHkgb24NCj4gPiBlcnJvcg0KPiA+IGNvZGVzLg0KPiA+
+IA0KPiA+ID4gUmlnaHQgbm93IHdoYXQgaGFwcGVucyBpcyBjb2RlIGluaXRpYXRlcyByZWNvdmVy
+eS4gb3BlbiBpcyBzZW50Lg0KPiA+ID4gQnV0DQo+ID4gPiB0aGUgcmV0cnkgb2YgdGhlIDJuZCBs
+b2NrIGhhcyB0aGUgSU5JVElBTElaRURfTE9DSyBzZXQgYW5kIHNvIGl0DQo+ID4gPiB0YWtlcw0K
+PiA+ID4gdGhlIGJhZCBsb2NrIHN0YXRlaWQgKGhvdyBhYm91dCBpbnN0ZWFkIGxldHRpbmcgaXQg
+dXNlIHRoZQ0KPiA+ID4gcmVjb3ZlcmVkDQo+ID4gPiBvcGVuIHN0YXRlaWQ/KS4gSG93IGFib3V0
+IGluc3RlYWQgZG8gdGhlIGZvbGxvdy4NCj4gPiANCj4gPiBORlN2NC4xIHJlcXVpcmVzIHVzIHRv
+IGNhbGwgRlJFRV9TVEFURUlEIG9uIGFueSBzdGF0ZWlkIHRoYXQgaXMNCj4gPiByZXZva2VkLCBp
+biBvcmRlciB0byBsZXQgdGhlIHNlcnZlciBrbm93IHdoZW4gd2UndmUgZGlzY292ZXJlZCB0aGF0
+DQo+ID4gdGhlDQo+ID4gbG9jayB3YXMgbG9zdC4gU28gd2UgYWxzbyBoYXZlIHRvIGdvIHRocm91
+Z2ggdGhlIHJlY292ZXJ5IG1hY2hpbmVyeQ0KPiA+IHRvDQo+ID4gZW5zdXJlIHRoYXQgaGFwcGVu
+cyBiZWZvcmUgd2UgY2FuIGRlYWwgd2l0aCB0YWtpbmcgdGhlIHNlY29uZCBsb2NrLg0KPiANCj4g
+UGxlYXNlIGJlYXIgd2l0aCBtZSBJJ20gc3RpbGwgbG9zczoNCj4gMS4gSWYgeW91IHNheSAiYXBw
+bGljYXRpb24gbmVlZHMgdG8ga25vdyIsIHRoZSBvbmx5IG91dGNvbWUgb2YgdGhpcyBJDQo+IHNl
+ZSBpcyBmYWlsaW5nIHdpdGggRUlPIHRoZSAybmQgbG9jay4gV2hpY2ggd2FzIG15IGluaXRpYWwg
+c3VnZ2VzdGlvbg0KPiBzYXlpbmcgaWYgdGhpcyBpcyBhdCBhbGwgcmVjb3ZlcmFibGUgb3Igc2hv
+dWxkIHRoaXMgYmUgYSBmYWlsdXJlDQo+IChpbnN0ZWFkIG9mIHRoZSBpbmZpbml0ZSBsb29wKS4N
+Cg0KSXQgc2hvdWxkIGJlIGEgZmFpbHVyZSB1bmxlc3MgdGhlIG5mcy5yZWNvdmVyX2xvc3RfbG9j
+a3Mga2VybmVsDQpwYXJhbWV0ZXIgaXMgc2V0LCBpbiB3aGljaCBjYXNlIGl0IHNob3VsZCBzaWxl
+bnRseSByZWNvdmVyIHRoZSBsb3N0DQpsb2NrLiBUaGUgZGVmYXVsdCBiZWhhdmlvdXIgc2hvdWxk
+IHRoZXJlZm9yZSBiZSBmYWlsdXJlLg0KDQo+IDIuIEluIG5mczRfaGFuZGxlX3NldGxrX2Vycm9y
+KCkgd2UgYWxyZWFkeSBjYWxsDQo+IG5mczRfc2NoZWR1bGVfc3RhdGVpZF9yZWNvdmVyeSgpLCBJ
+IGludGVycHJldCB0aGlzIGFzICJyZWNvdmVyeSB3YXMNCj4gaW5pdGlhdGVkIi4gSSdtIG5vdCBz
+dXJlIHdoYXQgeW91IGVudmlzaW9uIHRoZSByZWNvdmVyeSBzdGVwcyBhcmUNCj4gc3VwcG9zZSB0
+byBiZSAob3IgYXJlIG1pc3NpbmcuIEkgZ3Vlc3MgdGhlIG9ubHkgb25lIEkgc2VlIGlzIGxhY2sg
+b2YNCj4gZnJlZV9zdGF0ZWlkIG9mIHRoZSAxc3QgbG9jaykuIElmIHlvdSdyZSBzYXlpbmcgdGhl
+IHJlY292ZXJ5IGluY2x1ZGVzDQo+IHJlY292ZXJ5IG9mIHRoZSAxc3QgbG9jaywgdGhlbiB0aGF0
+J3Mgc3RlcCMxIChidXQgd2UgZG9uJ3Qgc2VuZA0KPiBmcmVlX3N0YXRlaWQoKSBmb3Igc2F5IGEg
+ZGVsZWdhdGlvbiBzdGF0ZWlkIGlmIGl0IHdhcyByZXZva2VkIGVpdGhlcg0KPiAob3IgYXQgbGVh
+c3QgSSBkb24ndCB0aGluayB3ZSBkbywgSSBjYW4gdGVzdCB0aGF0KSkuICBCdXQgYWZ0ZXIgYWxs
+DQo+IHRoZSByZWNvdmVyeSBpcyBkb25lLCB0aGUgMm5kIGxvY2sgcmVxdWVzdCBuZWVkcyB0byBi
+ZSByZS10cmllZCBhbmQNCj4gd2hhdCBJIHNlZSB1bmxlc3Mgd2UgY2hhbmdlIHNvbWV0aGluZyBh
+Ym91dCBORlNfTE9DS19JTklUQUxJWkVEDQo+IHNldHRpbmcsIGl0IHdpbGwgb25jZSBhZ2FpbiBw
+aWNrIGEgYmFkIGxvY2tpbmcgc3RhdGVpZC4NCj4gDQoNClJlY292ZXJ5IG9mIHRoZSBsb3N0IGxv
+Y2sgb25seSBoYXBwZW5zIGluIHRoZSBub24tZGVmYXVsdCBjYXNlDQpkZXNjcmliZWQgcHJldmlv
+dXNseS4gSG93ZXZlciB3aGV0aGVyIG9yIG5vdCB3ZSByZWNvdmVyIHRoZSBsb2NrLCB3ZQ0KbmVl
+ZCB0byBjYWxsIEZSRUVfU1RBVEVJRCBvbiB0aGUgc3RhdGVpZCB0aGF0IGlzIHJldHVybmluZw0K
+TkZTNEVSUl9BRE1JTl9SRVZPS0VEIChvciBORlM0RVJSX0RFTEVHX1JFVk9LRUQgaWYgdGhlIHN0
+YXRlaWQgaXMgYQ0KZGVsZWdhdGlvbikuDQpBZnRlciB0aGUgY2FsbCB0byBGUkVFX1NUQVRFSUQs
+IHRoZSBzZXJ2ZXIgd2lsbCBzdGFydCByZXR1cm5pbmcNCk5GUzRFUlJfQkFEX1NUQVRFSUQgaWYg
+d2UgZXZlciBwcmVzZW50IHRoZSByZXZva2VkIGxvY2sgc3RhdGVpZCBhZ2Fpbi4NCg0KDQpTbyB5
+ZXMsIG9uY2Ugd2UncmUgZG9uZSBzZW5kaW5nIEZSRUVfU1RBVEVJRCwgd2UgY2FuIGNsZWFyDQpO
+RlNfTE9DS19JTklUSUFMSVpFRCBhbmQgc3RhcnQgbmV3IGxvY2tpbmcgcmVxdWVzdHMgZnJvbSBz
+Y3JhdGNoLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFp
+bmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
