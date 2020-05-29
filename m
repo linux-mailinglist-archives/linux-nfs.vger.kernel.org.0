@@ -2,103 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25F391E866B
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 20:14:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D461E87C5
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 21:27:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgE2SOq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 May 2020 14:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2SOq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 May 2020 14:14:46 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EC1C03E969
-        for <linux-nfs@vger.kernel.org>; Fri, 29 May 2020 11:14:46 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id m81so361863ioa.1
-        for <linux-nfs@vger.kernel.org>; Fri, 29 May 2020 11:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=lWtmAafBlM+j5hB/eJ+L7sxf3w0FFmwsrj30GwJ5dSc=;
-        b=GDt8BFs4rg9AwJKq70L46CTUxro9WHxw6V1gCXIkpYQ7Tiygx9obEUFgLUEYeJH43n
-         osAq+vajjhb0BFmEqfPeIGIIyXp2BRFhoIv296qWditbks0SJEH/YYyv5V5gL0wMBBDN
-         1/erOu+14y259Wxegs5h6raoiS0ZS5B3dNwATvou/ZYlJ9GIlPYWRVEUbm04tfTPmk/Z
-         dy0Ye+jj8cdVfy+92K2QjBbOaOD6i/jXaWcuAepfqETSxZEDpxVqPtr8p5he9gx5eVZL
-         m/aV6KrfeapHZn9SHSiDrj/ZMyauFd0XqLKyowP7+DcXM5vrkTrdSpfCS4wD4q8PRLXu
-         g9Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=lWtmAafBlM+j5hB/eJ+L7sxf3w0FFmwsrj30GwJ5dSc=;
-        b=F/tgKr23KnpFrazTQ4AFGWLDLzHb/SSL5m3fmRZO45YsWcy9sM08AOE/s+4wFUumEY
-         xwXJ1P3MOjg1L/kwX8R5WgC8V6C3fuWRPEe7p/yMZC90z9mqvY17uSKJUbFy0Z046NAb
-         AvJT6Bj3bqNqRm5cUR2MCSVs/45k4w57GKVfWzyVIKW+Po9xLaDYuW5DZDErWV9/CHNU
-         kyGvfI2otZcKXgl1x5Zj3VcejB9/EQnSXRb/qVQupKi8Tc5vgL/+jE5TOOvjci6h0Y+i
-         a1K15XowJs52bQaZjzcKoBYIngacZZg91+ENGZKCji0/p5du9S89jBOoyg7s3sQlIOFo
-         Mkdw==
-X-Gm-Message-State: AOAM533OOpmsieZEQ9uHhbc1T/eW7UD5/5ocLjCBmQKDs/kGTwnWMZEP
-        Iax4BhMTcvc2FRqqrR+DpP0=
-X-Google-Smtp-Source: ABdhPJxVQ2w4elTg8J6n86xlc/eePaqwNVA5+UKJZVbAc2ujJddwgpQcX9gLltbmXt2t+JE53SVOeQ==
-X-Received: by 2002:a05:6602:2427:: with SMTP id g7mr7823476iob.209.1590776085479;
-        Fri, 29 May 2020 11:14:45 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s71sm5289466ilc.32.2020.05.29.11.14.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 May 2020 11:14:44 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04TIEevh030812;
-        Fri, 29 May 2020 18:14:41 GMT
-Subject: [PATCH v1] NFS: Fix direct WRITE throughput regression
+        id S1728107AbgE2T11 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 May 2020 15:27:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48208 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2T10 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 May 2020 15:27:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJLreV169365;
+        Fri, 29 May 2020 19:27:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=3qxOqaesPyrRrNuwrg9A6Iz+VpwiuvMQaao/kPwC+Uo=;
+ b=0H1SzxC5NDZhMAVTl47sNWCD2vJyf0Q6s9HR0nfDAyr03qVW1ioP+lRu3J9dzk4gb7oY
+ 4y4S5dF0KJRIq9j4wwxiWwL/MlYu1cbPxnlOu5oGtFiDFqNPIkEkc4Kv6/J3txOhdcPg
+ 6IaR2ehsv/jaUPwOvYZPlM/C7s+Sqsy7SI1Mc+r0V56/TMXtDqadP85K0zPmJTHCH3L+
+ 1FQzDrFu42ndc+AQD4mQjOQQMWr+4AHRYYVtXxP2nkbiUTLFwjWwXHl4G44ezs8IHXbZ
+ fVcSK1Duu7gtVTglsPrYP7MrZzIKoxcy8z7eplyljXFXqxri3Pb4lOAGINIt9OzA8m8q Ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8rc3u5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 19:27:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJNjmg066965;
+        Fri, 29 May 2020 19:27:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31a9kuntd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 19:27:12 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TJR8RW022423;
+        Fri, 29 May 2020 19:27:08 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 12:27:07 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: linux-next: manual merge of the nfsd tree with the nfs-anna tree
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 29 May 2020 14:14:40 -0400
-Message-ID: <20200529181440.2510.45116.stgit@manet.1015granger.net>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200529105917.50dfc40f@canb.auug.org.au>
+Date:   Fri, 29 May 2020 15:27:06 -0400
+Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: 7bit
+Message-Id: <1AC5DB12-0E72-4AB6-B3B5-F1C40EC36F26@oracle.com>
+References: <20200529105917.50dfc40f@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.14)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290146
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I measured a 50% throughput regression for large direct writes.
 
-The observed on-the-wire behavior is that the client sends every
-NFS WRITE twice: once as an UNSTABLE WRITE plus a COMMIT, and once
-as a FILE_SYNC WRITE.
+> On May 28, 2020, at 8:59 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> 
+> Hi all,
+> 
+> Today's linux-next merge of the nfsd tree got a conflict in:
+> 
+>  include/trace/events/sunrpc.h
+> 
+> between commit:
+> 
+>  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
+> 
+> from the nfs-anna tree and commit:
+> 
+>  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
+> 
+> from the nfsd tree.
 
-This is because the nfs_write_match_verf() check in
-nfs_direct_commit_complete() fails for every WRITE.
+Alternately, I can provide a v4 nfsd-5.8 series for Bruce that
+includes 2baebf955125 ("SUNRPC: Split the xdr_buf event class")
+so that these merge conflicts are avoided.
 
-Buffered writes use nfs_write_completion(), which sets req->wb_verf
-correctly. Direct writes use nfs_direct_write_completion(), which
-does not set req->wb_verf at all. This leaves req->wb_verf set to
-all zeroes for every direct WRITE, and thus
-nfs_direct_commit_completion() always sets NFS_ODIRECT_RESCHED_WRITES.
 
-This fix appears to restore nearly all of the lost performance.
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc include/trace/events/sunrpc.h
+> index 73193c79fcaa,852413cbb7d9..000000000000
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@@ -14,9 -14,41 +14,42 @@@
+>  #include <linux/net.h>
+>  #include <linux/tracepoint.h>
+> 
+> + TRACE_DEFINE_ENUM(SOCK_STREAM);
+> + TRACE_DEFINE_ENUM(SOCK_DGRAM);
+> + TRACE_DEFINE_ENUM(SOCK_RAW);
+> + TRACE_DEFINE_ENUM(SOCK_RDM);
+> + TRACE_DEFINE_ENUM(SOCK_SEQPACKET);
+> + TRACE_DEFINE_ENUM(SOCK_DCCP);
+> + TRACE_DEFINE_ENUM(SOCK_PACKET);
+> + 
+> + #define show_socket_type(type)					\
+> + 	__print_symbolic(type,					\
+> + 		{ SOCK_STREAM,		"STREAM" },		\
+> + 		{ SOCK_DGRAM,		"DGRAM" },		\
+> + 		{ SOCK_RAW,		"RAW" },		\
+> + 		{ SOCK_RDM,		"RDM" },		\
+> + 		{ SOCK_SEQPACKET,	"SEQPACKET" },		\
+> + 		{ SOCK_DCCP,		"DCCP" },		\
+> + 		{ SOCK_PACKET,		"PACKET" })
+> + 
+> + /* This list is known to be incomplete, add new enums as needed. */
+> + TRACE_DEFINE_ENUM(AF_UNSPEC);
+> + TRACE_DEFINE_ENUM(AF_UNIX);
+> + TRACE_DEFINE_ENUM(AF_LOCAL);
+> + TRACE_DEFINE_ENUM(AF_INET);
+> + TRACE_DEFINE_ENUM(AF_INET6);
+> + 
+> + #define rpc_show_address_family(family)				\
+> + 	__print_symbolic(family,				\
+> + 		{ AF_UNSPEC,		"AF_UNSPEC" },		\
+> + 		{ AF_UNIX,		"AF_UNIX" },		\
+> + 		{ AF_LOCAL,		"AF_LOCAL" },		\
+> + 		{ AF_INET,		"AF_INET" },		\
+> + 		{ AF_INET6,		"AF_INET6" })
+> + 
+> -DECLARE_EVENT_CLASS(xdr_buf_class,
+> +DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
+>  	TP_PROTO(
+> +		const struct rpc_task *task,
+>  		const struct xdr_buf *xdr
+>  	),
+> 
 
-Fixes: 1f28476dcb98 ("NFS: Fix O_DIRECT commit verifier handling")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/direct.c |    2 ++
- 1 file changed, 2 insertions(+)
+--
+Chuck Lever
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index a57e7c72c7f4..d49b1d197908 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -731,6 +731,8 @@ static void nfs_direct_write_completion(struct nfs_pgio_header *hdr)
- 		nfs_list_remove_request(req);
- 		if (request_commit) {
- 			kref_get(&req->wb_kref);
-+			memcpy(&req->wb_verf, &hdr->verf.verifier,
-+			       sizeof(req->wb_verf));
- 			nfs_mark_request_commit(req, hdr->lseg, &cinfo,
- 				hdr->ds_commit_idx);
- 		}
+
 
