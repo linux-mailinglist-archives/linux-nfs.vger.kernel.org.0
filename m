@@ -2,177 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37A1C1E70DD
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 01:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9011B1E71C9
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 02:53:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437741AbgE1Xym (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 May 2020 19:54:42 -0400
-Received: from mail-dm6nam12on2117.outbound.protection.outlook.com ([40.107.243.117]:64737
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437677AbgE1Xyk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 28 May 2020 19:54:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JKlrwOQFU5Pby1BhVi4eIk5hgmS0AW/XQF5sWj0IBONApp0x66iXEAVBLyvWOEUKt9TQCbsZtFko7e+ATA15yDeGZp2hbc23/o7/uz7r4T3JkFORz+tTir30VtXKZ+3m0ZArt+G/p2K+uCqIEV0hTo0eokKNxwK7p2YOFzrYzXNAOEJyjDubRU/qJBBDZB1/AUBW2221uJ2wFM1XyJ9p9gbOjoVgyjo2UF9yXdw+I9wzbRf4nwnx9hOCGVmS/ohYTLw/N2rK9ujsPPHp0YQ4EQFbr4mV0mSBDm0NsXRGR9e2R6b6KEOkyT+gRL0H7UvfWv13tIRdsz7tzG+kynREzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7P/QLo4Bh3IXVPJpXmi6PZbVJdcXiyjHDsMoafmtFzQ=;
- b=WXOywp45GWSpNS00Hxlw1hgwDxkWoKDuLY7xgYtHyWxZq6gM9VxhN5tlAHzv/oxnqci4T75hUPdttEBDEPgLWFgAFonOf05kbA1eCaYqauXHQRc7R3bFOBtEqWQ/ppyfWkwgDpijnYnZdEJPLcXWFgGohGn+s7Fg6EKWD4/05Atavj3bf3clAwaI2nDUmUd8YZcjucfNJglIjC5Lbx0Y9IcGcLYcz+Kfl8fGuvxngiBZxmgzqNQWBAUgFz5iqaAD1hj1v/F8TitkoKTQ7lhhe9VjJ4mgueqF1eZXFLzyxgQvBK2R4OhuqJbfFH99bDwQsy9EeDlPUZPte2yj3AQIDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7P/QLo4Bh3IXVPJpXmi6PZbVJdcXiyjHDsMoafmtFzQ=;
- b=bTLG0xoA3bfLRB9EaeByyCLdWjzag/enk+5XkerB4teWmztXxRDSnZtw0xFz0oCDJNRxGSO/jNyIlQREUD1AajCoH06qdvb4PyvR2AyNCDv0lkF/cSPapyp2gqXyRYY8LFpOLvvqZstV8RWEm3+w1C8GuVJtCDX33bPZJWln0sA=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3638.namprd13.prod.outlook.com (2603:10b6:610:9b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Thu, 28 May
- 2020 23:54:35 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 23:54:35 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: How to handle revocation of locking state
-Thread-Topic: How to handle revocation of locking state
-Thread-Index: AQHWNTCSBj8lUsFTaUe5HR+XtfbiCqi9/k+AgAAJUICAAAuSAIAABx+AgAAR+oA=
-Date:   Thu, 28 May 2020 23:54:35 +0000
-Message-ID: <c379e52a767493b088e5d7b755e7ffdab6a83a47.camel@hammerspace.com>
-References: <CAN-5tyE-hr2Fd1dKt=DUrVh-FJXzgGx5zhWr17SSbM1LOZ-pGQ@mail.gmail.com>
-         <85234f9bde1c419e1a8d7e8a677e5d324325c56b.camel@hammerspace.com>
-         <CAN-5tyHcExq5CqwrU3F4nRptt1=X917jzceUqLCTCUDYQsdsMA@mail.gmail.com>
-         <f2f43e89d259c9bc447f2a7b885f236e88d9b6b3.camel@hammerspace.com>
-         <CAN-5tyFtBM=U=GvFVeon_jb2OqPu1rAjaWAkjQ8-zLkuZgAa+g@mail.gmail.com>
-In-Reply-To: <CAN-5tyFtBM=U=GvFVeon_jb2OqPu1rAjaWAkjQ8-zLkuZgAa+g@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: umich.edu; dkim=none (message not signed)
- header.d=none;umich.edu; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: da6ff2df-5c71-428a-767a-08d803627982
-x-ms-traffictypediagnostic: CH2PR13MB3638:
-x-microsoft-antispam-prvs: <CH2PR13MB3638D006795CBB9871CDF76FB88E0@CH2PR13MB3638.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uoHDckvzvkvvkP9oWGWkbdTG2q8l6SiHzHkQh6A991EjLwmP0CelF5cwlm3b4zmrjyU5/B9n/eb3SR6wmfSSKo5Vro2rges8NqKOWrpUtaBxm+AUu653/ruYF4C5MylEErCtj4K8O85HQHVUu5pH8+/cIsX05vUHjjdMnXoPm5LUNtDqIEnqjVImuE3ycCSR+7lmvozbFWwxE2XXib0nWGiW1GhwCaBiYXOLcwaK04koyS3LvS4N5yvILzU6MTaTV+MuVa7ZNnVgKdyqI9bKbVuy/+5lxE1q4vZYndIeTzxIBni4uOWSEZy7OihggOeqBHDYQCIhja+Ob2RnxtOeJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(39830400003)(396003)(86362001)(53546011)(2906002)(8936002)(478600001)(6506007)(2616005)(5660300002)(316002)(71200400001)(6916009)(66556008)(64756008)(6512007)(8676002)(36756003)(66476007)(66946007)(66446008)(83380400001)(4326008)(76116006)(186003)(6486002)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: cnBvt6ImaDyjXLy4idpIyNzVQhf3Gqa9IiCfc/HbS64ri5xUr9+Ag2AIWbRpqmZy5y/L4q2/pOWrm3g3MhWFrN1+LnORFw68wHm5fkj/BtA9Qqf+LY26cGdT2dp6w6kqAw6oTED1dCbbYqfDiNG7O4WSMCKMJd+ZYlPNHk1J4Sw6V+39TMvF9M4lV1kiX9lfR6w1toM6u9gCKWUVMOf9QhLmnO7glrG66Li+Ypqsq/qfZ0Tka4JaN5hPQArHkkCh6S2DwTHTMhMvir6p6AXxz/RbL7/soq5zx2LfBzj9zmxfquQ7Re91y368wt3a/GaaXX0sK8wgK0fBtPVXzn2KXfT5YpFvZrmTuC4VeTfTkvclpOEV2hkhpYK64p1L/eNipz1uZDjcDahNmglVW5jhXI1SJ2ewLga0Vh6H/09LkOiUyxUjcf5EQMZP6ypGjZ/omIPw7aDybUfgR4W9zKrwVDHSIp5Yk9zBrJwC/z0+OPw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EC47370DDA3C2478CAB8F6E7AA8927B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2438100AbgE2AxY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 May 2020 20:53:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43576 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438160AbgE2AxX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 28 May 2020 20:53:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 56F64AC24;
+        Fri, 29 May 2020 00:53:21 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>
+Date:   Fri, 29 May 2020 10:53:15 +1000
+Subject: nfs4_show_superblock considered harmful :-)
+CC:     linux-nfs@vger.kernel.org
+Message-ID: <871rn38suc.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da6ff2df-5c71-428a-767a-08d803627982
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 23:54:35.1237
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: av0EPBw+YaSWMIthPMatL70w0b5NtRH34kYtoErLk2AkDzEmeMnA53Of9sjYSg25i388DnvDDaQy2IZeabpt0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3638
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTI4IGF0IDE4OjUwIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gT24gVGh1LCBNYXkgMjgsIDIwMjAgYXQgNjoyNCBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
-PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gT24gVGh1LCAyMDIwLTA1LTI4
-IGF0IDE3OjQzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9uIFRodSwg
-TWF5IDI4LCAyMDIwIGF0IDU6MTAgUE0gVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+IHRyb25kbXlA
-aGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gSGkgT2xnYSwNCj4gPiA+ID4gDQo+ID4g
-PiA+IE9uIFRodSwgMjAyMC0wNS0yOCBhdCAxNjo0MiAtMDQwMCwgT2xnYSBLb3JuaWV2c2thaWEg
-d3JvdGU6DQo+ID4gPiA+ID4gSGkgZm9sa3MsDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gTG9va2lu
-ZyBmb3IgcmVjb21tZW5kYXRpb24gb24gd2hhdCB0aGUgY2xpZW50IGlzIHN1cHBvc2UgdG8NCj4g
-PiA+ID4gPiBiZQ0KPiA+ID4gPiA+IGRvaW5nDQo+ID4gPiA+ID4gaW4gdGhlIGZvbGxvd2luZyBz
-aXR1YXRpb24uIENsaWVudCBvcGVucyBhIGZpbGUgYW5kIGhhcyBhDQo+ID4gPiA+ID4gYnl0ZS0N
-Cj4gPiA+ID4gPiByYW5nZQ0KPiA+ID4gPiA+IGxvY2sgd2hpY2ggcmV0dXJuZWQgYSBsb2NraW5n
-IHN0YXRlLiBDbGllbnQgaXMgYWNxdWlyaW5nDQo+ID4gPiA+ID4gYW5vdGhlcg0KPiA+ID4gPiA+
-IGJ5dGUNCj4gPiA+ID4gPiByYW5nZSBsb2NrLiBJdCB1c2VzIHRoZSByZXR1cm5lZCBsb2NraW5n
-IHN0YXRlZCBmb3IgdGhlIDJuZA0KPiA+ID4gPiA+IGxvY2suDQo+ID4gPiA+ID4gU2VydmVyIHJl
-dHVybnMgQURNSU5fUkVWT0tFRC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBDdXJyZW50bHkgdGhl
-IGNsaWVudCBnb2VzIGludG8gYW4gaW5maW5pdGUgbG9vcCBvZiBqdXN0DQo+ID4gPiA+ID4gcmVz
-ZW5kaW5nDQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gc2FtZSBMT0NLIG9wZXJhdGlvbiB3aXRo
-DQo+ID4gPiA+ID4gdGhlIHNhbWUgbG9ja2luZyBzdGF0ZWlkLg0KPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+IElzIHRoaXMgYSByZWNvdmVyYWJsZSBzaXR1YXRpb24/IFRoZSBmYWN0IHRoYXQgdGhlIGxv
-Y2sgc3RhdGUNCj4gPiA+ID4gPiB3YXMNCj4gPiA+ID4gPiByZXZva2VkLCBzaG91bGQgaXQgYmUg
-YW4gYXV0b21hdGljIEVJTyBzaW5jZSBwcmV2aW91cyBsb2NrIGlzDQo+ID4gPiA+ID4gbG9zdA0K
-PiA+ID4gPiA+IChzbw0KPiA+ID4gPiA+IHdoeSBib3RoZXIgZ29pbmcgZm9yd2FyZCk/IE9yIHNo
-b3VsZCB0aGUgY2xpZW50IHJldHJ5IHRoZQ0KPiA+ID4gPiA+IGxvY2sNCj4gPiA+ID4gPiBidXQN
-Cj4gPiA+ID4gPiBzZW5kIGl0IHdpdGggdGhlIG9wZW4gc3RhdGVpZD8NCj4gPiA+ID4gPiANCj4g
-PiA+ID4gPiBUaGFuayB5b3UuDQo+ID4gPiA+IA0KPiA+ID4gPiBJIHRoaW5rIHRoZSByaWdodCBi
-ZWhhdmlvdXIgc2hvdWxkIGJlIHRvIGp1c3QgY2FsbA0KPiA+ID4gPiBuZnNfaW5vZGVfZmluZF9z
-dGF0ZV9hbmRfcmVjb3ZlcigpLiBJbiBwcmluY2lwbGUgdGhhdCB3aWxsIGVuZA0KPiA+ID4gPiB1
-cA0KPiA+ID4gPiBlaXRoZXIgcmVjb3ZlcmluZyB0aGUgbG9jayAoaWYgdGhlIHVzZXIgc2V0IHRo
-ZQ0KPiA+ID4gPiBuZnMucmVjb3Zlcl9sb3N0X2xvY2tzDQo+ID4gPiA+IGtlcm5lbCBwYXJhbWV0
-ZXIgdG8gJ3RydWUnKSBvciBtYXJraW5nIGl0IGFzIGEgbG9zdCBsb2NrLCB1c2luZw0KPiA+ID4g
-PiBORlNfTE9DS19MT1NULg0KPiA+ID4gDQo+ID4gPiBXaHkgc2hvdWxkIGFjcXVpcmluZyBvZiB0
-aGUgMm5kIGxvY2sgZGVwZW5kIG9uIHJlY292ZXJpbmcgdGhlDQo+ID4gPiBsb2NrDQo+ID4gPiB3
-aG8ncyBzdGF0ZWlkIGl0IHdhcyB0cnlpbmcgdG8gdXNlPyBJIHRoaW5rIHRoZSAxc3Qgc3RhdGVp
-ZCBpcw0KPiA+ID4gbG9zdA0KPiA+ID4gdW5yZWNvdmVyYWJsZT8NCj4gPiANCj4gPiBBZ3JlZWQu
-IEhvd2V2ZXIgdGhhdCBtZWFucyB0aGUgYXBwbGljYXRpb24gbmVlZHMgdG8ga25vdyB0aGF0IGl0
-DQo+ID4gbWF5DQo+ID4gaGF2ZSBjb3JydXB0IGRhdGEgb24gaXRzIGhhbmRzLiBXZSBkbyBrbm93
-IHRoYXQgdGhpcyBpcyB0aGUgc2FtZQ0KPiA+IGFwcGxpY2F0aW9uIHRoYXQgdG9vayB0aGUgZmly
-c3QgbG9jaywgYmVjYXVzZSBhbnkgY2xvc2Ugb2YgdGhlIGZpbGUNCj4gPiAoaW5jbHVkaW5nIGR1
-ZSB0byBhcHBsaWNhdGlvbiBjcmFzaGVzKSB3b3VsZCByZXN1bHQgaW4gdGhlIGxvY2tzDQo+ID4g
-YmVpbmcNCj4gPiByZXR1cm5lZC4NCj4gPiANCj4gPiBTb21lICpOSVggaW1wbGVtZW50YXRpb25z
-IGhhdmUgYSBzcGVjaWFsIFNJR0xPU1Qgc2lnbmFsIHRoYXQgdGhlaXINCj4gPiBORlMNCj4gPiBj
-bGllbnRzIGNhbiB1c2UgdG8gbGV0IHRoZSBhcHBsaWNhdGlvbiBrbm93IGl0cyBzdGF0ZSB3YXMg
-bG9zdC4NCj4gPiBMaW51eA0KPiA+IHVuZm9ydHVuYXRlbHkgZG9lcyBub3QgaGF2ZSBzdWNoIGEg
-c2lnbmFsLCBzbyB3ZSBoYXZlIHRvIHJlbHkgb24NCj4gPiBlcnJvcg0KPiA+IGNvZGVzLg0KPiA+
-IA0KPiA+ID4gUmlnaHQgbm93IHdoYXQgaGFwcGVucyBpcyBjb2RlIGluaXRpYXRlcyByZWNvdmVy
-eS4gb3BlbiBpcyBzZW50Lg0KPiA+ID4gQnV0DQo+ID4gPiB0aGUgcmV0cnkgb2YgdGhlIDJuZCBs
-b2NrIGhhcyB0aGUgSU5JVElBTElaRURfTE9DSyBzZXQgYW5kIHNvIGl0DQo+ID4gPiB0YWtlcw0K
-PiA+ID4gdGhlIGJhZCBsb2NrIHN0YXRlaWQgKGhvdyBhYm91dCBpbnN0ZWFkIGxldHRpbmcgaXQg
-dXNlIHRoZQ0KPiA+ID4gcmVjb3ZlcmVkDQo+ID4gPiBvcGVuIHN0YXRlaWQ/KS4gSG93IGFib3V0
-IGluc3RlYWQgZG8gdGhlIGZvbGxvdy4NCj4gPiANCj4gPiBORlN2NC4xIHJlcXVpcmVzIHVzIHRv
-IGNhbGwgRlJFRV9TVEFURUlEIG9uIGFueSBzdGF0ZWlkIHRoYXQgaXMNCj4gPiByZXZva2VkLCBp
-biBvcmRlciB0byBsZXQgdGhlIHNlcnZlciBrbm93IHdoZW4gd2UndmUgZGlzY292ZXJlZCB0aGF0
-DQo+ID4gdGhlDQo+ID4gbG9jayB3YXMgbG9zdC4gU28gd2UgYWxzbyBoYXZlIHRvIGdvIHRocm91
-Z2ggdGhlIHJlY292ZXJ5IG1hY2hpbmVyeQ0KPiA+IHRvDQo+ID4gZW5zdXJlIHRoYXQgaGFwcGVu
-cyBiZWZvcmUgd2UgY2FuIGRlYWwgd2l0aCB0YWtpbmcgdGhlIHNlY29uZCBsb2NrLg0KPiANCj4g
-UGxlYXNlIGJlYXIgd2l0aCBtZSBJJ20gc3RpbGwgbG9zczoNCj4gMS4gSWYgeW91IHNheSAiYXBw
-bGljYXRpb24gbmVlZHMgdG8ga25vdyIsIHRoZSBvbmx5IG91dGNvbWUgb2YgdGhpcyBJDQo+IHNl
-ZSBpcyBmYWlsaW5nIHdpdGggRUlPIHRoZSAybmQgbG9jay4gV2hpY2ggd2FzIG15IGluaXRpYWwg
-c3VnZ2VzdGlvbg0KPiBzYXlpbmcgaWYgdGhpcyBpcyBhdCBhbGwgcmVjb3ZlcmFibGUgb3Igc2hv
-dWxkIHRoaXMgYmUgYSBmYWlsdXJlDQo+IChpbnN0ZWFkIG9mIHRoZSBpbmZpbml0ZSBsb29wKS4N
-Cg0KSXQgc2hvdWxkIGJlIGEgZmFpbHVyZSB1bmxlc3MgdGhlIG5mcy5yZWNvdmVyX2xvc3RfbG9j
-a3Mga2VybmVsDQpwYXJhbWV0ZXIgaXMgc2V0LCBpbiB3aGljaCBjYXNlIGl0IHNob3VsZCBzaWxl
-bnRseSByZWNvdmVyIHRoZSBsb3N0DQpsb2NrLiBUaGUgZGVmYXVsdCBiZWhhdmlvdXIgc2hvdWxk
-IHRoZXJlZm9yZSBiZSBmYWlsdXJlLg0KDQo+IDIuIEluIG5mczRfaGFuZGxlX3NldGxrX2Vycm9y
-KCkgd2UgYWxyZWFkeSBjYWxsDQo+IG5mczRfc2NoZWR1bGVfc3RhdGVpZF9yZWNvdmVyeSgpLCBJ
-IGludGVycHJldCB0aGlzIGFzICJyZWNvdmVyeSB3YXMNCj4gaW5pdGlhdGVkIi4gSSdtIG5vdCBz
-dXJlIHdoYXQgeW91IGVudmlzaW9uIHRoZSByZWNvdmVyeSBzdGVwcyBhcmUNCj4gc3VwcG9zZSB0
-byBiZSAob3IgYXJlIG1pc3NpbmcuIEkgZ3Vlc3MgdGhlIG9ubHkgb25lIEkgc2VlIGlzIGxhY2sg
-b2YNCj4gZnJlZV9zdGF0ZWlkIG9mIHRoZSAxc3QgbG9jaykuIElmIHlvdSdyZSBzYXlpbmcgdGhl
-IHJlY292ZXJ5IGluY2x1ZGVzDQo+IHJlY292ZXJ5IG9mIHRoZSAxc3QgbG9jaywgdGhlbiB0aGF0
-J3Mgc3RlcCMxIChidXQgd2UgZG9uJ3Qgc2VuZA0KPiBmcmVlX3N0YXRlaWQoKSBmb3Igc2F5IGEg
-ZGVsZWdhdGlvbiBzdGF0ZWlkIGlmIGl0IHdhcyByZXZva2VkIGVpdGhlcg0KPiAob3IgYXQgbGVh
-c3QgSSBkb24ndCB0aGluayB3ZSBkbywgSSBjYW4gdGVzdCB0aGF0KSkuICBCdXQgYWZ0ZXIgYWxs
-DQo+IHRoZSByZWNvdmVyeSBpcyBkb25lLCB0aGUgMm5kIGxvY2sgcmVxdWVzdCBuZWVkcyB0byBi
-ZSByZS10cmllZCBhbmQNCj4gd2hhdCBJIHNlZSB1bmxlc3Mgd2UgY2hhbmdlIHNvbWV0aGluZyBh
-Ym91dCBORlNfTE9DS19JTklUQUxJWkVEDQo+IHNldHRpbmcsIGl0IHdpbGwgb25jZSBhZ2FpbiBw
-aWNrIGEgYmFkIGxvY2tpbmcgc3RhdGVpZC4NCj4gDQoNClJlY292ZXJ5IG9mIHRoZSBsb3N0IGxv
-Y2sgb25seSBoYXBwZW5zIGluIHRoZSBub24tZGVmYXVsdCBjYXNlDQpkZXNjcmliZWQgcHJldmlv
-dXNseS4gSG93ZXZlciB3aGV0aGVyIG9yIG5vdCB3ZSByZWNvdmVyIHRoZSBsb2NrLCB3ZQ0KbmVl
-ZCB0byBjYWxsIEZSRUVfU1RBVEVJRCBvbiB0aGUgc3RhdGVpZCB0aGF0IGlzIHJldHVybmluZw0K
-TkZTNEVSUl9BRE1JTl9SRVZPS0VEIChvciBORlM0RVJSX0RFTEVHX1JFVk9LRUQgaWYgdGhlIHN0
-YXRlaWQgaXMgYQ0KZGVsZWdhdGlvbikuDQpBZnRlciB0aGUgY2FsbCB0byBGUkVFX1NUQVRFSUQs
-IHRoZSBzZXJ2ZXIgd2lsbCBzdGFydCByZXR1cm5pbmcNCk5GUzRFUlJfQkFEX1NUQVRFSUQgaWYg
-d2UgZXZlciBwcmVzZW50IHRoZSByZXZva2VkIGxvY2sgc3RhdGVpZCBhZ2Fpbi4NCg0KDQpTbyB5
-ZXMsIG9uY2Ugd2UncmUgZG9uZSBzZW5kaW5nIEZSRUVfU1RBVEVJRCwgd2UgY2FuIGNsZWFyDQpO
-RlNfTE9DS19JTklUSUFMSVpFRCBhbmQgc3RhcnQgbmV3IGxvY2tpbmcgcmVxdWVzdHMgZnJvbSBz
-Y3JhdGNoLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFp
-bmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+--=-=-=
+Content-Type: text/plain
+
+
+Hi,
+ I've received a report of a 5.3 kernel crashing in
+ nfs4_show_superblock().
+ I was part way through preparing a patch when I concluded that
+ the problem wasn't as straight forward as I thought.
+
+ In the crash, the 'struct file *' passed to nfs4_show_superblock()
+ was NULL.
+ This file was acquired from find_any_file(), and every other caller
+ of find_any_file() checks that the returned value is not NULL (though
+ one BUGs if it is NULL - another WARNs).
+ But nfs4_show_open() and nfs4_show_lock() don't.
+ Maybe they should.  I didn't double check, but I suspect they don't
+ hold enough locks to ensure that the files don't get removed.
+
+ Then I noticed that nfs4_show_deleg() accesses fi_deleg_file without
+ checking if it is NULL - Should it take fi_lock and make sure it is
+ not NULL - and get a counted reference?
+ And maybe nfs4_show_layout() has the same problem?
+
+ I could probably have worked my way through fixing all of these, but
+ then I discovered that these things are now 'struct nfsd_file *' rather
+ than 'struct file *' and that the helpful documentation says:
+
+ *    Note that this object doesn't
+ * hold a reference to the inode by itself, so the nf_inode pointer should
+ * never be dereferenced, only used for comparison.
+
+ and yet nfs4_show_superblock() contains:
+
+	struct inode *inode = f->nf_inode;
+
+	seq_printf(s, "superblock: \"%02x:%02x:%ld\"",
+					MAJOR(inode->i_sb->s_dev),
+					 MINOR(inode->i_sb->s_dev),
+					 inode->i_ino);
+
+ do you see my problem?
+
+ Is this really safe and the doco wrong? (I note that the use of nf_inode
+ in nfsd_file_mark_find_or_create() looks wrong, but is actually safe).
+ Or should we check if nf_file is non-NULL and use that?
+
+ In short:
+ - We should check find_any_file() return value - correct?
+ - Do we need extra locking to stabilize fi_deleg_file?
+ - ditto for ->ls_file
+ - how can nfs4_show_superblock safely get s_dev and i_ino from a
+   nfsd_file?
+
+Thanks,
+
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl7QXPsACgkQOeye3VZi
+gbmR5w/8DkKBxRpmNZeoZy0wwvbUplfyhiQjs3/WbvnLFw/NEDA+mFoyTz6aDNLb
+0J6NVqTWv+GMIxhgiE1rDG6/FeWq51oBTj3gOInAlQGg3iB9oYeSYRpSU5Tm+ZHa
+ps+z/2d3VN4bh7bWHtH0vS47fKZ0AjUs6MVLU4zgz3C79PiK9qN51b+gPR0byRpx
+Z4WuoIt/QVZIuesQ4Xu+hQBmOUh+CfwrmXTIe61CltmdLmroE1ALofvq+pDwaORO
+iHOoxjIB4UX6ZCNnt10qLDDYFpseFOTJ72m/UoCLXm0vrqZKqcv3ElxMAzUusaVb
+qG1DYAKeZW8CRvxUwS3AeHLxgzr5iFnLqdgNFsIluYAOsCT16/KAo3FIL7BPSmav
+nR1L0fIjIusj8fNVAU+gjlH4BMkF7MiLrg7wSDh90bqSoJXSho0yRm4NaWYakYJB
+w3u5BvzjPgW2lkfPFkgskxGH693ffguSKBA7TjY59wKgeDNUkR+iYdsxOCKWlD2F
+9zyT1PlsIod2H46T+AKdbPWJeEqayEFS0kHUazVA7zZ+poA53Q5q39nkiHa80esY
+xPkZASCsZeft5e1uKxF264GItT2r5vm9FqDtZWrw4Ta/fUADKIUVY03Z7PHt+8Vx
+jigFrJyIVWHGN2mhiB+k1EzRGtDeXC5qo3WmmixJndV5URgpQj8=
+=Cb1K
+-----END PGP SIGNATURE-----
+--=-=-=--
