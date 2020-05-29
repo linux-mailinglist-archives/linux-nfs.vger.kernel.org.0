@@ -2,109 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9011B1E71C9
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 02:53:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E871E71D2
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2020 02:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438100AbgE2AxY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 May 2020 20:53:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43576 "EHLO mx2.suse.de"
+        id S2438189AbgE2A7Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 May 2020 20:59:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:47263 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438160AbgE2AxX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 28 May 2020 20:53:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 56F64AC24;
-        Fri, 29 May 2020 00:53:21 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
+        id S2438188AbgE2A7Y (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 28 May 2020 20:59:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y5n31b4zz9sRK;
+        Fri, 29 May 2020 10:59:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590713960;
+        bh=YSNC8nJ5eu33vdCCoyFy+TEvR5PMySe/tykBI2tGyVs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ti79V7IIVSe002hM3tjAgeStpzQdnRUmAIe9PN0EJh++vSSCqqD2zNgj7QCRjEIeJ
+         XzRw0VD78NGLrZ9L6+i2e5exKTI+8raXmsLTOTrG7W7td4qqZtQCD86J9DVmGX1CSS
+         rHvl0QmL9BhiMoS6bplpOiJ+JeF63EpyCamd0B5CeqTru9Oo98O5nET5zujFLALq2Y
+         o+dctlpM+YFcwVZGG/lQnAKiGrwbYWVu9P4TETt+CzEQkX7aXSgjIWkwjUaNKuAydy
+         6tU6VBzEWamJPw9Y73M5YGlFh9UOk+IZSPnveG5YEaXCeGxhqtGHyOld3CWrBzYbZ9
+         82aSwC/q6MKnw==
+Date:   Fri, 29 May 2020 10:59:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>
-Date:   Fri, 29 May 2020 10:53:15 +1000
-Subject: nfs4_show_superblock considered harmful :-)
-CC:     linux-nfs@vger.kernel.org
-Message-ID: <871rn38suc.fsf@notabene.neil.brown.name>
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: linux-next: manual merge of the nfsd tree with the nfs-anna tree
+Message-ID: <20200529105917.50dfc40f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="Sig_/lwn4Kbrbx_Hd18XI5zJbk85";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-Hi,
- I've received a report of a 5.3 kernel crashing in
- nfs4_show_superblock().
- I was part way through preparing a patch when I concluded that
- the problem wasn't as straight forward as I thought.
+Today's linux-next merge of the nfsd tree got a conflict in:
 
- In the crash, the 'struct file *' passed to nfs4_show_superblock()
- was NULL.
- This file was acquired from find_any_file(), and every other caller
- of find_any_file() checks that the returned value is not NULL (though
- one BUGs if it is NULL - another WARNs).
- But nfs4_show_open() and nfs4_show_lock() don't.
- Maybe they should.  I didn't double check, but I suspect they don't
- hold enough locks to ensure that the files don't get removed.
+  include/trace/events/sunrpc.h
 
- Then I noticed that nfs4_show_deleg() accesses fi_deleg_file without
- checking if it is NULL - Should it take fi_lock and make sure it is
- not NULL - and get a counted reference?
- And maybe nfs4_show_layout() has the same problem?
+between commit:
 
- I could probably have worked my way through fixing all of these, but
- then I discovered that these things are now 'struct nfsd_file *' rather
- than 'struct file *' and that the helpful documentation says:
+  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
 
- *    Note that this object doesn't
- * hold a reference to the inode by itself, so the nf_inode pointer should
- * never be dereferenced, only used for comparison.
+from the nfs-anna tree and commit:
 
- and yet nfs4_show_superblock() contains:
+  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
 
-	struct inode *inode = f->nf_inode;
+from the nfsd tree.
 
-	seq_printf(s, "superblock: \"%02x:%02x:%ld\"",
-					MAJOR(inode->i_sb->s_dev),
-					 MINOR(inode->i_sb->s_dev),
-					 inode->i_ino);
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
- do you see my problem?
+--=20
+Cheers,
+Stephen Rothwell
 
- Is this really safe and the doco wrong? (I note that the use of nf_inode
- in nfsd_file_mark_find_or_create() looks wrong, but is actually safe).
- Or should we check if nf_file is non-NULL and use that?
+diff --cc include/trace/events/sunrpc.h
+index 73193c79fcaa,852413cbb7d9..000000000000
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@@ -14,9 -14,41 +14,42 @@@
+  #include <linux/net.h>
+  #include <linux/tracepoint.h>
+ =20
++ TRACE_DEFINE_ENUM(SOCK_STREAM);
++ TRACE_DEFINE_ENUM(SOCK_DGRAM);
++ TRACE_DEFINE_ENUM(SOCK_RAW);
++ TRACE_DEFINE_ENUM(SOCK_RDM);
++ TRACE_DEFINE_ENUM(SOCK_SEQPACKET);
++ TRACE_DEFINE_ENUM(SOCK_DCCP);
++ TRACE_DEFINE_ENUM(SOCK_PACKET);
++=20
++ #define show_socket_type(type)					\
++ 	__print_symbolic(type,					\
++ 		{ SOCK_STREAM,		"STREAM" },		\
++ 		{ SOCK_DGRAM,		"DGRAM" },		\
++ 		{ SOCK_RAW,		"RAW" },		\
++ 		{ SOCK_RDM,		"RDM" },		\
++ 		{ SOCK_SEQPACKET,	"SEQPACKET" },		\
++ 		{ SOCK_DCCP,		"DCCP" },		\
++ 		{ SOCK_PACKET,		"PACKET" })
++=20
++ /* This list is known to be incomplete, add new enums as needed. */
++ TRACE_DEFINE_ENUM(AF_UNSPEC);
++ TRACE_DEFINE_ENUM(AF_UNIX);
++ TRACE_DEFINE_ENUM(AF_LOCAL);
++ TRACE_DEFINE_ENUM(AF_INET);
++ TRACE_DEFINE_ENUM(AF_INET6);
++=20
++ #define rpc_show_address_family(family)				\
++ 	__print_symbolic(family,				\
++ 		{ AF_UNSPEC,		"AF_UNSPEC" },		\
++ 		{ AF_UNIX,		"AF_UNIX" },		\
++ 		{ AF_LOCAL,		"AF_LOCAL" },		\
++ 		{ AF_INET,		"AF_INET" },		\
++ 		{ AF_INET6,		"AF_INET6" })
++=20
+ -DECLARE_EVENT_CLASS(xdr_buf_class,
+ +DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
+  	TP_PROTO(
+ +		const struct rpc_task *task,
+  		const struct xdr_buf *xdr
+  	),
+ =20
 
- In short:
- - We should check find_any_file() return value - correct?
- - Do we need extra locking to stabilize fi_deleg_file?
- - ditto for ->ls_file
- - how can nfs4_show_superblock safely get s_dev and i_ino from a
-   nfsd_file?
-
-Thanks,
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl7QXPsACgkQOeye3VZi
-gbmR5w/8DkKBxRpmNZeoZy0wwvbUplfyhiQjs3/WbvnLFw/NEDA+mFoyTz6aDNLb
-0J6NVqTWv+GMIxhgiE1rDG6/FeWq51oBTj3gOInAlQGg3iB9oYeSYRpSU5Tm+ZHa
-ps+z/2d3VN4bh7bWHtH0vS47fKZ0AjUs6MVLU4zgz3C79PiK9qN51b+gPR0byRpx
-Z4WuoIt/QVZIuesQ4Xu+hQBmOUh+CfwrmXTIe61CltmdLmroE1ALofvq+pDwaORO
-iHOoxjIB4UX6ZCNnt10qLDDYFpseFOTJ72m/UoCLXm0vrqZKqcv3ElxMAzUusaVb
-qG1DYAKeZW8CRvxUwS3AeHLxgzr5iFnLqdgNFsIluYAOsCT16/KAo3FIL7BPSmav
-nR1L0fIjIusj8fNVAU+gjlH4BMkF7MiLrg7wSDh90bqSoJXSho0yRm4NaWYakYJB
-w3u5BvzjPgW2lkfPFkgskxGH693ffguSKBA7TjY59wKgeDNUkR+iYdsxOCKWlD2F
-9zyT1PlsIod2H46T+AKdbPWJeEqayEFS0kHUazVA7zZ+poA53Q5q39nkiHa80esY
-xPkZASCsZeft5e1uKxF264GItT2r5vm9FqDtZWrw4Ta/fUADKIUVY03Z7PHt+8Vx
-jigFrJyIVWHGN2mhiB+k1EzRGtDeXC5qo3WmmixJndV5URgpQj8=
-=Cb1K
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QXmUACgkQAVBC80lX
+0GwH9wf/VHUVSU/pbcwDqZjofwf4zlhrQSB9ORfxA2jlejCbFWqAKNAgubNlNzIs
+Nwm+mGiChH9vbIGIb41/3YZPM2cJdDfob1lbspFxU62HXV0+Sg7F7PQ+TBX80XSx
+XhDKPaN2Vg3LoXTn5qmBIyIF7SUQKISDWSyoj5kIpGCzrFIQlikELJtqxCDcUv+D
+J93pVASn8wOoOgM7uWbSQo+EVHyG7Aaj/U2sFMxmtPHrgRJPkv+hkXYqHGrffERT
+6qCMxpwrp+zU8pd5chnh1Q/E+kFrslOX6N/Q67eUueEtO4XPUdlVOkSX5hX/B+/1
+ikTKFuSFCZbEvOd2sRayumqYnjxibg==
+=8UOS
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85--
