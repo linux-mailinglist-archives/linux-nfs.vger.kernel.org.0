@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D82C1E9186
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2496E1E9188
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgE3N2t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
+        id S1729036AbgE3N2y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgE3N2s (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:48 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79918C03E969;
-        Sat, 30 May 2020 06:28:48 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k18so2342430ion.0;
-        Sat, 30 May 2020 06:28:48 -0700 (PDT)
+        with ESMTP id S1728769AbgE3N2x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974C3C03E969;
+        Sat, 30 May 2020 06:28:53 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p5so4093155ile.6;
+        Sat, 30 May 2020 06:28:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=RdAX8caYJ0iXy3SCEZHENL/3iYUYiev43YHvBxvtV8I=;
-        b=NOeUDKGxS0oSy7RzoYbPQ93ZrAN71MutS5/ZcjjFFCMCNPRntpPCA8DgBYntne6gkW
-         J4//r15rqYxQKmbJ0z+9a6yVQk8pE00qPX6n5yKJ9Mq7Vqir1bzx1SmvFKHR7ng3JjwU
-         FGKlW1ZOiNMqX8QwYXR6PuFz4Tn/me+6ivbN9Qt+Fcnk8wbB6P8xVZBdJA7OKXGsNoA/
-         teYvXon8hee9Rka6RQWmcOn5AUmdGFcAEc5qvRscg6e+BXIiLusRD/9WgjKc57l/ulk+
-         uXMd9BzCrgxeBd2L1xeHbPrf+Y+Ro46EI7ikakW6PF2h8wlWVIPSdWX4tzzwUDsDRT7K
-         BG3w==
+        bh=ETA1f6UFmjBQn0duK0wp3dkMLZQ+ZPmkQmCOTXOeD+c=;
+        b=m9Johg5ZWo+hp3d5+0StDwBRNgPd51HGmQy8MZaJgVQsSB7UIYckzI9TPPbOYBsZwz
+         QQzh4/RSAWNUyzyzbJkZf7HGdIhY1huq99o5zpFkyNzOq6GBN4Q9v+KZNiZUqUpKq5GP
+         Sokim5fiaj2F304kYR8msVxd//FAicoEzXu8Vza7PMNyqcjsaEUfRPVX09sM2CVYE6PY
+         vo+shqJpMVDz/7n/cy/Jfy6t29s/+StB/7ebjwhqFUa6+NeyTlVeIUpV+0vTcECSZoiE
+         BTzIysaGx7x25+Zc29/pXotUku1xON5eQyFKObCeaihxs7DxjrwsrV1AVevL0h+E0AKO
+         gCpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=RdAX8caYJ0iXy3SCEZHENL/3iYUYiev43YHvBxvtV8I=;
-        b=Ls4Vz8K3P6858NtTwjtQPRKwOfN5VxqDgQAO+F/nXXkVNQeMAtXNjEnKDio8JF33W3
-         ecLjNuTcv58Qou7DH9EX4+nsiiab56zyAq2PovZRsbXdh4mYEbFxHha4FibnAD+22wI/
-         QSG8Jq9hXM4G6lVUzojkzAvOBDbsvTao10ApkXkK7uzCIjhpdCCt6tBkOnso2DSkpTxv
-         gwaSORWnX3pYL5w/UsaLFtewd8FQggm0c3Es8IL25ch23G/rpEFKpnEFPN80s+98CXwg
-         TyXiG2+xS5aOoi7zisuaobi4VA8jRfDsSu6lZSUyq+j0tGfQYyrgQhh0d/DVCzO1JBKz
-         FfYQ==
-X-Gm-Message-State: AOAM531YheiUFNgXuZImzv3s58zz2GuKb8pYq5LXehO8PxfBAdOS2iC8
-        eHsswbeaIPg3g/ZP7jGqfGRqr1RM
-X-Google-Smtp-Source: ABdhPJyBrLUdgnMCMkoTZCc/5S35vcxRz9QeXtCUtITfOEJD+dtIjw9qHYiKfVMwZ16RoqdcmekoJw==
-X-Received: by 2002:a6b:7507:: with SMTP id l7mr11094940ioh.54.1590845327601;
-        Sat, 30 May 2020 06:28:47 -0700 (PDT)
+        bh=ETA1f6UFmjBQn0duK0wp3dkMLZQ+ZPmkQmCOTXOeD+c=;
+        b=E77EO6oH1iFOHUERt+Uj4V7SWBq30k6+nEFCd0xqa7DnQPxgmcE7J84NU4fXwwGsgb
+         Sw7KFlAwtROj3afbulTgyQFZBzlKlaE+7IKysPTe0cOedbfoc54dLj9c1CnejxYGYreF
+         1mP9tsT1T5BQegNLS8BvlSdWzUEK0zQW84Hs48EQ0ZqovdIqo+6N8wE+FhGHCJJ8I6UM
+         0DNjkKMmuTxFp3oi8THk8S9ICwBz0WtNGzRO7ICHtQxu7Rqut2gu5LKsXvqTh2xGUB15
+         Bwq8Nqwp9jiSAYxql/hw2dX9clvOptwsCR58PF5nM86BvVXCuVpOHESHB0S+wO2GcSuT
+         McFw==
+X-Gm-Message-State: AOAM532ZAUBKlpKTwM7fcTLQ1e+lk9j8S25/RNvTK9CCpMhT39Oq7R0y
+        1ZIf5/4bZNK8EN7Yb+TJxczkf0h2
+X-Google-Smtp-Source: ABdhPJzA051cDfeF4+3MbLQkWEWcIEkRim1FSGxtVnStawVuTibAaV9j9KRKn/obOjTPsz9cESP5fA==
+X-Received: by 2002:a05:6e02:49:: with SMTP id i9mr12418152ilr.236.1590845332859;
+        Sat, 30 May 2020 06:28:52 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id d13sm5406957ilo.40.2020.05.30.06.28.47
+        by smtp.gmail.com with ESMTPSA id g15sm2348058ilq.39.2020.05.30.06.28.52
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:28:47 -0700 (PDT)
+        Sat, 30 May 2020 06:28:52 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSkWX001408;
-        Sat, 30 May 2020 13:28:46 GMT
-Subject: [PATCH v4 08/33] svcrdma: Remove backchannel dprintk call sites
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSpJe001411;
+        Sat, 30 May 2020 13:28:51 GMT
+Subject: [PATCH v4 09/33] svcrdma: Rename tracepoints that record header
+ decoding errors
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:28:46 -0400
-Message-ID: <20200530132846.10117.3039.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:28:51 -0400
+Message-ID: <20200530132851.10117.22428.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,140 +69,69 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up.
+Clean up: Use a consistent naming convention so that these trace
+points can be enabled quickly via a glob.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   48 +++-------------------------
- 1 file changed, 5 insertions(+), 43 deletions(-)
+ include/trace/events/rpcrdma.h          |    5 +++--
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   10 +++++-----
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index b174f3b109a5..1ee73f7cf931 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -10,10 +10,6 @@
- #include "xprt_rdma.h"
- #include <trace/events/rpcrdma.h>
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index c046b198072a..53b24c8c7860 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -1355,7 +1355,7 @@ TRACE_EVENT(svcrdma_decode_rqst,
+ 		show_rpcrdma_proc(__entry->proc), __entry->hdrlen)
+ );
  
--#define RPCDBG_FACILITY	RPCDBG_SVCXPRT
--
--#undef SVCRDMA_BACKCHANNEL_DEBUG
--
- /**
-  * svc_rdma_handle_bc_reply - Process incoming backchannel Reply
-  * @rqstp: resources for handling the Reply
-@@ -31,33 +27,17 @@ void svc_rdma_handle_bc_reply(struct svc_rqst *rqstp,
- 	__be32 *rdma_resp = rctxt->rc_recv_buf;
- 	struct rpc_rqst *req;
- 	u32 credits;
--	size_t len;
--	__be32 xid;
--	__be32 *p;
--
--	p = (__be32 *)src->iov_base;
--	len = src->iov_len;
--	xid = *rdma_resp;
--
--#ifdef SVCRDMA_BACKCHANNEL_DEBUG
--	pr_info("%s: xid=%08x, length=%zu\n",
--		__func__, be32_to_cpu(xid), len);
--	pr_info("%s: RPC/RDMA: %*ph\n",
--		__func__, (int)RPCRDMA_HDRLEN_MIN, rdma_resp);
--	pr_info("%s:      RPC: %*ph\n",
--		__func__, (int)len, p);
--#endif
+-TRACE_EVENT(svcrdma_decode_short,
++TRACE_EVENT(svcrdma_decode_short_err,
+ 	TP_PROTO(
+ 		unsigned int hdrlen
+ 	),
+@@ -1399,7 +1399,8 @@ DECLARE_EVENT_CLASS(svcrdma_badreq_event,
+ );
  
- 	spin_lock(&xprt->queue_lock);
--	req = xprt_lookup_rqst(xprt, xid);
-+	req = xprt_lookup_rqst(xprt, *rdma_resp);
- 	if (!req)
- 		goto out_unlock;
+ #define DEFINE_BADREQ_EVENT(name)					\
+-		DEFINE_EVENT(svcrdma_badreq_event, svcrdma_decode_##name,\
++		DEFINE_EVENT(svcrdma_badreq_event,			\
++			     svcrdma_decode_##name##_err,		\
+ 				TP_PROTO(				\
+ 					__be32 *p			\
+ 				),					\
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index eee7c6478b30..e426fedb9524 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -665,23 +665,23 @@ static int svc_rdma_xdr_decode_req(struct xdr_buf *rq_arg,
+ 	return hdr_len;
  
- 	dst = &req->rq_private_buf.head[0];
- 	memcpy(&req->rq_private_buf, &req->rq_rcv_buf, sizeof(struct xdr_buf));
--	if (dst->iov_len < len)
-+	if (dst->iov_len < src->iov_len)
- 		goto out_unlock;
--	memcpy(dst->iov_base, p, len);
-+	memcpy(dst->iov_base, src->iov_base, src->iov_len);
- 	xprt_pin_rqst(req);
- 	spin_unlock(&xprt->queue_lock);
+ out_short:
+-	trace_svcrdma_decode_short(rq_arg->len);
++	trace_svcrdma_decode_short_err(rq_arg->len);
+ 	return -EINVAL;
  
-@@ -66,7 +46,6 @@ void svc_rdma_handle_bc_reply(struct svc_rqst *rqstp,
- 		credits = 1;	/* don't deadlock */
- 	else if (credits > r_xprt->rx_buf.rb_bc_max_requests)
- 		credits = r_xprt->rx_buf.rb_bc_max_requests;
--
- 	spin_lock(&xprt->transport_lock);
- 	xprt->cwnd = credits << RPC_CWNDSHIFT;
- 	spin_unlock(&xprt->transport_lock);
-@@ -174,10 +153,6 @@ rpcrdma_bc_send_request(struct svcxprt_rdma *rdma, struct rpc_rqst *rqst)
- 	*p++ = xdr_zero;
- 	*p   = xdr_zero;
+ out_version:
+-	trace_svcrdma_decode_badvers(rdma_argp);
++	trace_svcrdma_decode_badvers_err(rdma_argp);
+ 	return -EPROTONOSUPPORT;
  
--#ifdef SVCRDMA_BACKCHANNEL_DEBUG
--	pr_info("%s: %*ph\n", __func__, 64, rqst->rq_buffer);
--#endif
--
- 	rqst->rq_xtime = ktime_get();
- 	rc = svc_rdma_bc_sendto(rdma, rqst, ctxt);
- 	if (rc)
-@@ -188,7 +163,6 @@ rpcrdma_bc_send_request(struct svcxprt_rdma *rdma, struct rpc_rqst *rqst)
- 	svc_rdma_send_ctxt_put(rdma, ctxt);
+ out_drop:
+-	trace_svcrdma_decode_drop(rdma_argp);
++	trace_svcrdma_decode_drop_err(rdma_argp);
+ 	return 0;
  
- drop_connection:
--	dprintk("svcrdma: failed to send bc call\n");
- 	return -ENOTCONN;
+ out_proc:
+-	trace_svcrdma_decode_badproc(rdma_argp);
++	trace_svcrdma_decode_badproc_err(rdma_argp);
+ 	return -EINVAL;
+ 
+ out_inval:
+-	trace_svcrdma_decode_parse(rdma_argp);
++	trace_svcrdma_decode_parse_err(rdma_argp);
+ 	return -EINVAL;
  }
  
-@@ -207,9 +181,6 @@ static int xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
- 		container_of(sxprt, struct svcxprt_rdma, sc_xprt);
- 	int ret;
- 
--	dprintk("svcrdma: sending bc call with xid: %08x\n",
--		be32_to_cpu(rqst->rq_xid));
--
- 	if (test_bit(XPT_DEAD, &sxprt->xpt_flags))
- 		return -ENOTCONN;
- 
-@@ -222,8 +193,6 @@ static int xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
- static void
- xprt_rdma_bc_close(struct rpc_xprt *xprt)
- {
--	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
--
- 	xprt_disconnect_done(xprt);
- 	xprt->cwnd = RPC_CWNDSHIFT;
- }
-@@ -231,8 +200,6 @@ xprt_rdma_bc_close(struct rpc_xprt *xprt)
- static void
- xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
--	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
--
- 	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
- }
-@@ -267,19 +234,14 @@ xprt_setup_rdma_bc(struct xprt_create *args)
- 	struct rpc_xprt *xprt;
- 	struct rpcrdma_xprt *new_xprt;
- 
--	if (args->addrlen > sizeof(xprt->addr)) {
--		dprintk("RPC:       %s: address too large\n", __func__);
-+	if (args->addrlen > sizeof(xprt->addr))
- 		return ERR_PTR(-EBADF);
--	}
- 
- 	xprt = xprt_alloc(args->net, sizeof(*new_xprt),
- 			  RPCRDMA_MAX_BC_REQUESTS,
- 			  RPCRDMA_MAX_BC_REQUESTS);
--	if (!xprt) {
--		dprintk("RPC:       %s: couldn't allocate rpc_xprt\n",
--			__func__);
-+	if (!xprt)
- 		return ERR_PTR(-ENOMEM);
--	}
- 
- 	xprt->timeout = &xprt_rdma_bc_timeout;
- 	xprt_set_bound(xprt);
 
