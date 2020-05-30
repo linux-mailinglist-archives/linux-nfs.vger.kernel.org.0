@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 918151E917A
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D7121E917C
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgE3N2R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
+        id S1728998AbgE3N2X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgE3N2R (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:17 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24181C03E969;
-        Sat, 30 May 2020 06:28:17 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y18so2316909iow.3;
-        Sat, 30 May 2020 06:28:17 -0700 (PDT)
+        with ESMTP id S1728769AbgE3N2W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:22 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC23C03E969;
+        Sat, 30 May 2020 06:28:22 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id j3so5154466ilk.11;
+        Sat, 30 May 2020 06:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=pDesEA3tfxXsQkJDUaWvL0PlNOOBnuLN0JNjzIVetf0=;
-        b=S8yLWKIc4CKuwVwVEMET/jFfY/CTyU9vLqHgm1gmYjQIZyHt6cD3vSj1MD16G+B4kE
-         VnwSJRhVwvWfnLHOWFBJ4zTlCAtZNX0Vq4xiS0qR6l6YD11aNsbYGVLxPZMheQnRcDX2
-         DgE0u5me7yyRHJDR35neufvmRMLVShgpji534L+WZBW/xBG7WO7EyPrh5E4qry8Hhza3
-         KOMcMGw5pQbWNFY9ezEoFy+EKBiO0DJXMw/BpAp9ufkYKbyB5awYIobiQgJmfKBZgLMC
-         j1Ije089l7sVfH2HF/MdnOjNO3mfgbAyt7SNk5nf5W70wpbxIFoUaOg4mcVp/vqarc/K
-         kdxA==
+        bh=yfG48olU7TS5yzA2N599YfkoG5dmTwMqyAOMPXu150M=;
+        b=VPjcjWBGEaNPNy2jHFsN3O1jGK2+IvDrJEqpaBZMgOrN6Z1r4fEXuOD16oey2UY8yO
+         xDZFra+R1LZMKivQtUUTzXe7OVfF5KyISGNL2UNcEg/KzkRYN2vtvdrJcybuipUnPKlF
+         osbw1BJZiTcF9iD1AMnNSWJg2Jm7g8EvbVyKiGWoTorofuY1EWxqob0e44QNF1hIH8jk
+         2MOM8YihuAAFNgAhRZsYa3RCLM8pC6mcErSDvbWU6kBwitPYdK6VPLQ+fxEDuyJcX5Ni
+         MDeR2UXXYcb5xtqGMeq2k2oCcb1/AEm7x/IvSZwXWpUQsbijXNz+C/7Mah84KCMk0s0f
+         wkJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=pDesEA3tfxXsQkJDUaWvL0PlNOOBnuLN0JNjzIVetf0=;
-        b=Otmqn80F7ogO8kkds0Ty7a+gqZ/gMQVPg/Gi4zTHEsMeDg7eRuaOTSO6cLiWPu3Ra0
-         MH/KEeDlzgxHqBty3YY+lSjL6drR8onfAm/GZAHekVs1r2QsELz0wzfu7IgRsdwt8yoo
-         1FCOFpPTQ5a1YYvT6IsGXaiWtIeoRGlEA7Lx9NxbYufOx7gQndaquC/edqlCprAI8sSV
-         95RsJnOo7ntupuxjKvVc7ms/sfWZLPXQwj1wjd0oH7/T3mUK9wqNLJ9BVgKAE2gl/YXM
-         OOWMGEFqaWMiNjIp0Nkxj69ouljPny8i7rBKkfDl3skAHVwtyGBeTqyN1pxiSE8eKAEt
-         U2JA==
-X-Gm-Message-State: AOAM531RBacmLggwBB1tCRuC93vp/muEvQ3ef+5KOkklSkNYW1mpPjts
-        0Tih7bZPl4KUwDyj9fGI4G3tvGaU
-X-Google-Smtp-Source: ABdhPJxVpHvng6Tt39fL9y5NvyQpXg6Lity/1fki7v9qraF5K5uXa9/p8GuBpAAncMT3nt9IWrwJog==
-X-Received: by 2002:a02:c9c5:: with SMTP id c5mr671789jap.5.1590845296100;
-        Sat, 30 May 2020 06:28:16 -0700 (PDT)
+        bh=yfG48olU7TS5yzA2N599YfkoG5dmTwMqyAOMPXu150M=;
+        b=k2oZZ+963ibkZCFEqcdj569TCpDeMa837KByhVEgfC1GWY5JsLA0tKzA/j+OVg9JFv
+         UumegfRM/UHsppHbkbNaEgtCNOx3U0jnjYNXiQqCmZ02CwRkc5Q5S5Xl5zXX4yDjiIWG
+         FT0xnC6Z6dXD4Icp1KKRlptscTuHZd3eEW0GtXlvSD4j/LTojOa8ixVJ0gEzaA6EG800
+         Ltnemy9oEWXA+d8ipurMMEvvBsW4VhLLoYB+8wiL7Y8HauKPXEU4xciTajL3LjtJmXjG
+         Lam2IwGnOhhipdueKp418pJme+jXP3IEh+81Xvt+4RVJkJZDqcpxNTnEinyBFdHB1MFF
+         fDnA==
+X-Gm-Message-State: AOAM533BC9Lab1kwBsyWa4+C7fM1NZ+7NXLP/loijFNOy5mHXG4TB64+
+        v98FAYpNdclj89Ebqr7erwee4dpy
+X-Google-Smtp-Source: ABdhPJxXGllAROF7RJQW+i/YM8QOZMWs64egYAqYhEpkrkLHqMAm9tntuid69pXsh6mlQQ+A3xkKzQ==
+X-Received: by 2002:a92:d905:: with SMTP id s5mr11298409iln.268.1590845301317;
+        Sat, 30 May 2020 06:28:21 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x13sm6301160ilq.48.2020.05.30.06.28.15
+        by smtp.gmail.com with ESMTPSA id y12sm4081637ili.83.2020.05.30.06.28.20
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:28:15 -0700 (PDT)
+        Sat, 30 May 2020 06:28:20 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSEYv001390;
-        Sat, 30 May 2020 13:28:14 GMT
-Subject: [PATCH v4 02/33] SUNRPC: Move xpt_mutex into socket xpo_sendto
- methods
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSKqq001393;
+        Sat, 30 May 2020 13:28:20 GMT
+Subject: [PATCH v4 03/33] svcrdma: Clean up the tracing for rw_ctx_init
+ errors
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:28:14 -0400
-Message-ID: <20200530132814.10117.11106.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:28:20 -0400
+Message-ID: <20200530132820.10117.48859.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -69,258 +69,160 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-It appears that the RPC/RDMA transport does not need serialization
-of calls to its xpo_sendto method. Move the mutex into the socket
-methods that still need that serialization.
+- De-duplicate code
+- Rename the tracepoint with "_err" to allow enabling via glob
+- Report the sg_cnt for the failing rw_ctx
+- Fix a dumb signage issue
 
-Tail latencies are unambiguously better with this patch applied.
-fio randrw 8KB 70/30 on NFSv3, smaller numbers are better:
-
-    clat percentiles (usec):
-
-With xpt_mutex:
-r    | 99.99th=[ 8848]
-w    | 99.99th=[ 9634]
-
-Without xpt_mutex:
-r    | 99.99th=[ 8586]
-w    | 99.99th=[ 8979]
-
-Serializing the construction of RPC/RDMA transport headers is not
-really necessary at this point, because the Linux NFS server
-implementation never changes its credit grant on a connection. If
-that should change, then svc_rdma_sendto will need to serialize
-access to the transport's credit grant fields.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-[ cel: fix uninitialized variable warning ]
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_xprt.h            |    6 +++++
- net/sunrpc/svc_xprt.c                      |   11 ++-------
- net/sunrpc/svcsock.c                       |   25 ++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   35 +++++++++++++---------------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   10 +++-----
- net/sunrpc/xprtsock.c                      |   12 ++++++++--
- 6 files changed, 64 insertions(+), 35 deletions(-)
+ include/trace/events/rpcrdma.h    |   12 +++++---
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |   56 +++++++++++++++++++++++--------------
+ 2 files changed, 43 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index 9e1e046de176..aca35ab5cff2 100644
---- a/include/linux/sunrpc/svc_xprt.h
-+++ b/include/linux/sunrpc/svc_xprt.h
-@@ -117,6 +117,12 @@ static inline int register_xpt_user(struct svc_xprt *xpt, struct svc_xpt_user *u
- 	return 0;
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index 132c3c778a43..f231975064cb 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -1583,28 +1583,32 @@ DECLARE_EVENT_CLASS(svcrdma_dma_map_class,
+ DEFINE_SVC_DMA_EVENT(dma_map_page);
+ DEFINE_SVC_DMA_EVENT(dma_unmap_page);
+ 
+-TRACE_EVENT(svcrdma_dma_map_rwctx,
++TRACE_EVENT(svcrdma_dma_map_rw_err,
+ 	TP_PROTO(
+ 		const struct svcxprt_rdma *rdma,
++		unsigned int nents,
+ 		int status
+ 	),
+ 
+-	TP_ARGS(rdma, status),
++	TP_ARGS(rdma, nents, status),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(int, status)
++		__field(unsigned int, nents)
+ 		__string(device, rdma->sc_cm_id->device->name)
+ 		__string(addr, rdma->sc_xprt.xpt_remotebuf)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->status = status;
++		__entry->nents = nents;
+ 		__assign_str(device, rdma->sc_cm_id->device->name);
+ 		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
+ 	),
+ 
+-	TP_printk("addr=%s device=%s status=%d",
+-		__get_str(addr), __get_str(device), __entry->status
++	TP_printk("addr=%s device=%s nents=%u status=%d",
++		__get_str(addr), __get_str(device), __entry->nents,
++		__entry->status
+ 	)
+ );
+ 
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 23c2d3ce0dc9..db70709e165a 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -39,7 +39,7 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
+ struct svc_rdma_rw_ctxt {
+ 	struct list_head	rw_list;
+ 	struct rdma_rw_ctx	rw_ctx;
+-	int			rw_nents;
++	unsigned int		rw_nents;
+ 	struct sg_table		rw_sg_table;
+ 	struct scatterlist	rw_first_sgl[];
+ };
+@@ -107,6 +107,34 @@ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
+ 	}
  }
  
-+static inline bool svc_xprt_is_dead(const struct svc_xprt *xprt)
++/**
++ * svc_rdma_rw_ctx_init - Prepare a R/W context for I/O
++ * @rdma: controlling transport instance
++ * @ctxt: R/W context to prepare
++ * @offset: RDMA offset
++ * @handle: RDMA tag/handle
++ * @direction: I/O direction
++ *
++ * Returns on success, the number of WQEs that will be needed
++ * on the workqueue, or a negative errno.
++ */
++static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
++				struct svc_rdma_rw_ctxt *ctxt,
++				u64 offset, u32 handle,
++				enum dma_data_direction direction)
 +{
-+	return (test_bit(XPT_DEAD, &xprt->xpt_flags) != 0) ||
-+		(test_bit(XPT_CLOSE, &xprt->xpt_flags) != 0);
++	int ret;
++
++	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp, rdma->sc_port_num,
++			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
++			       0, offset, handle, direction);
++	if (unlikely(ret < 0)) {
++		svc_rdma_put_rw_ctxt(rdma, ctxt);
++		trace_svcrdma_dma_map_rw_err(rdma, ctxt->rw_nents, ret);
++	}
++	return ret;
 +}
 +
- int	svc_reg_xprt_class(struct svc_xprt_class *);
- void	svc_unreg_xprt_class(struct svc_xprt_class *);
- void	svc_xprt_init(struct net *, struct svc_xprt_class *, struct svc_xprt *,
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 8ef44275c255..7ad37ff56ff7 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -915,15 +915,10 @@ int svc_send(struct svc_rqst *rqstp)
- 		xb->tail[0].iov_len;
- 	trace_svc_xdr_sendto(rqstp, xb);
+ /* A chunk context tracks all I/O for moving one Read or Write
+  * chunk. This is a a set of rdma_rw's that handle data movement
+  * for all segments of one chunk.
+@@ -431,12 +459,10 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
+ 			goto out_noctx;
  
--	/* Grab mutex to serialize outgoing data. */
--	mutex_lock(&xprt->xpt_mutex);
- 	trace_svc_stats_latency(rqstp);
--	if (test_bit(XPT_DEAD, &xprt->xpt_flags)
--			|| test_bit(XPT_CLOSE, &xprt->xpt_flags))
--		len = -ENOTCONN;
--	else
--		len = xprt->xpt_ops->xpo_sendto(rqstp);
--	mutex_unlock(&xprt->xpt_mutex);
-+
-+	len = xprt->xpt_ops->xpo_sendto(rqstp);
-+
- 	trace_svc_send(rqstp, len);
- 	svc_xprt_release(rqstp);
+ 		constructor(info, write_len, ctxt);
+-		ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp,
+-				       rdma->sc_port_num, ctxt->rw_sg_table.sgl,
+-				       ctxt->rw_nents, 0, seg_offset,
+-				       seg_handle, DMA_TO_DEVICE);
++		ret = svc_rdma_rw_ctx_init(rdma, ctxt, seg_offset, seg_handle,
++					   DMA_TO_DEVICE);
+ 		if (ret < 0)
+-			goto out_initerr;
++			return -EIO;
  
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 023514e392b3..3e7b6445e317 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -506,6 +506,9 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
-  * svc_udp_sendto - Send out a reply on a UDP socket
-  * @rqstp: completed svc_rqst
-  *
-+ * xpt_mutex ensures @rqstp's whole message is written to the socket
-+ * without interruption.
-+ *
-  * Returns the number of bytes sent, or a negative errno.
-  */
- static int svc_udp_sendto(struct svc_rqst *rqstp)
-@@ -531,6 +534,11 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+ 		trace_svcrdma_send_wseg(seg_handle, write_len, seg_offset);
  
- 	svc_set_cmsg_data(rqstp, cmh);
+@@ -462,11 +488,6 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
+ out_noctx:
+ 	dprintk("svcrdma: no R/W ctxs available\n");
+ 	return -ENOMEM;
+-
+-out_initerr:
+-	svc_rdma_put_rw_ctxt(rdma, ctxt);
+-	trace_svcrdma_dma_map_rwctx(rdma, ret);
+-	return -EIO;
+ }
  
-+	mutex_lock(&xprt->xpt_mutex);
-+
-+	if (svc_xprt_is_dead(xprt))
-+		goto out_notconn;
-+
- 	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
- 	xdr_free_bvec(xdr);
- 	if (err == -ECONNREFUSED) {
-@@ -538,9 +546,15 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 		err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
- 		xdr_free_bvec(xdr);
+ /* Send one of an xdr_buf's kvecs by itself. To send a Reply
+@@ -646,12 +667,10 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
+ 			goto out_overrun;
  	}
-+
-+	mutex_unlock(&xprt->xpt_mutex);
- 	if (err < 0)
- 		return err;
- 	return sent;
-+
-+out_notconn:
-+	mutex_unlock(&xprt->xpt_mutex);
-+	return -ENOTCONN;
- }
  
- static int svc_udp_has_wspace(struct svc_xprt *xprt)
-@@ -1063,6 +1077,9 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
-  * svc_tcp_sendto - Send out a reply on a TCP socket
-  * @rqstp: completed svc_rqst
-  *
-+ * xpt_mutex ensures @rqstp's whole message is written to the socket
-+ * without interruption.
-+ *
-  * Returns the number of bytes sent, or a negative errno.
-  */
- static int svc_tcp_sendto(struct svc_rqst *rqstp)
-@@ -1080,12 +1097,19 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+-	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, cc->cc_rdma->sc_qp,
+-			       cc->cc_rdma->sc_port_num,
+-			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
+-			       0, offset, rkey, DMA_FROM_DEVICE);
++	ret = svc_rdma_rw_ctx_init(cc->cc_rdma, ctxt, offset, rkey,
++				   DMA_FROM_DEVICE);
+ 	if (ret < 0)
+-		goto out_initerr;
++		return -EIO;
  
- 	svc_release_skb(rqstp);
- 
-+	mutex_lock(&xprt->xpt_mutex);
-+	if (svc_xprt_is_dead(xprt))
-+		goto out_notconn;
- 	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, marker, &sent);
- 	xdr_free_bvec(xdr);
- 	if (err < 0 || sent != (xdr->len + sizeof(marker)))
- 		goto out_close;
-+	mutex_unlock(&xprt->xpt_mutex);
- 	return sent;
- 
-+out_notconn:
-+	mutex_unlock(&xprt->xpt_mutex);
-+	return -ENOTCONN;
- out_close:
- 	pr_notice("rpc-srv/tcp: %s: %s %d when sending %d bytes - shutting down socket\n",
- 		  xprt->xpt_server->sv_name,
-@@ -1093,6 +1117,7 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 		  (err < 0) ? err : sent, xdr->len);
- 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
- 	svc_xprt_enqueue(xprt);
-+	mutex_unlock(&xprt->xpt_mutex);
- 	return -EAGAIN;
- }
- 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index af7eb8d202ae..d9aab4504f2c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -210,34 +210,31 @@ rpcrdma_bc_send_request(struct svcxprt_rdma *rdma, struct rpc_rqst *rqst)
- 	return -ENOTCONN;
- }
- 
--/* Send an RPC call on the passive end of a transport
-- * connection.
-+/**
-+ * xprt_rdma_bc_send_request - Send a reverse-direction Call
-+ * @rqst: rpc_rqst containing Call message to be sent
-+ *
-+ * Return values:
-+ *   %0 if the message was sent successfully
-+ *   %ENOTCONN if the message was not sent
-  */
--static int
--xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
-+static int xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
- {
- 	struct svc_xprt *sxprt = rqst->rq_xprt->bc_xprt;
--	struct svcxprt_rdma *rdma;
-+	struct svcxprt_rdma *rdma =
-+		container_of(sxprt, struct svcxprt_rdma, sc_xprt);
- 	int ret;
- 
- 	dprintk("svcrdma: sending bc call with xid: %08x\n",
- 		be32_to_cpu(rqst->rq_xid));
- 
--	mutex_lock(&sxprt->xpt_mutex);
+ 	list_add(&ctxt->rw_list, &cc->cc_rwctxts);
+ 	cc->cc_sqecount += ret;
+@@ -664,11 +683,6 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
+ out_overrun:
+ 	dprintk("svcrdma: request overruns rq_pages\n");
+ 	return -EINVAL;
 -
--	ret = -ENOTCONN;
--	rdma = container_of(sxprt, struct svcxprt_rdma, sc_xprt);
--	if (!test_bit(XPT_DEAD, &sxprt->xpt_flags)) {
--		ret = rpcrdma_bc_send_request(rdma, rqst);
--		if (ret == -ENOTCONN)
--			svc_close_xprt(sxprt);
--	}
-+	if (test_bit(XPT_DEAD, &sxprt->xpt_flags))
-+		return -ENOTCONN;
- 
--	mutex_unlock(&sxprt->xpt_mutex);
--
--	if (ret < 0)
--		return ret;
--	return 0;
-+	ret = rpcrdma_bc_send_request(rdma, rqst);
-+	if (ret == -ENOTCONN)
-+		svc_close_xprt(sxprt);
-+	return ret;
+-out_initerr:
+-	trace_svcrdma_dma_map_rwctx(cc->cc_rdma, ret);
+-	svc_rdma_put_rw_ctxt(cc->cc_rdma, ctxt);
+-	return -EIO;
  }
  
- static void
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index b6c8643867f2..38e7c3c8c4a9 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -868,12 +868,10 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 	__be32 *p;
- 	int ret;
- 
--	/* Create the RDMA response header. xprt->xpt_mutex,
--	 * acquired in svc_send(), serializes RPC replies. The
--	 * code path below that inserts the credit grant value
--	 * into each transport header runs only inside this
--	 * critical section.
--	 */
-+	ret = -ENOTCONN;
-+	if (svc_xprt_is_dead(xprt))
-+		goto err0;
-+
- 	ret = -ENOMEM;
- 	sctxt = svc_rdma_send_ctxt_get(rdma);
- 	if (!sctxt)
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 845d0be805ec..839c49330785 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2548,8 +2548,16 @@ static int bc_sendto(struct rpc_rqst *req)
- 	return sent;
- }
- 
--/*
-- * The send routine. Borrows from svc_send
-+/**
-+ * bc_send_request - Send a backchannel Call on a TCP socket
-+ * @req: rpc_rqst containing Call message to be sent
-+ *
-+ * xpt_mutex ensures @rqstp's whole message is written to the socket
-+ * without interruption.
-+ *
-+ * Return values:
-+ *   %0 if the message was sent successfully
-+ *   %ENOTCONN if the message was not sent
-  */
- static int bc_send_request(struct rpc_rqst *req)
- {
+ /* Walk the segments in the Read chunk starting at @p and construct
 
