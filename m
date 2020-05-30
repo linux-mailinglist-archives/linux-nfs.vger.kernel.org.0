@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15CC41E918A
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF131E918C
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgE3N27 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
+        id S1729054AbgE3N3E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgE3N26 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:58 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18EEC03E969;
-        Sat, 30 May 2020 06:28:58 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r2so5206657ila.4;
-        Sat, 30 May 2020 06:28:58 -0700 (PDT)
+        with ESMTP id S1728769AbgE3N3E (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:29:04 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE0FC03E969;
+        Sat, 30 May 2020 06:29:04 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d7so2311249ioq.5;
+        Sat, 30 May 2020 06:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=WhwomO42XDAEJPW2/cr+MUt5RrB/mfN0Bet2spmrCJc=;
-        b=uGofrnRhPzjYFyZBFPj67+KDeo9Jahr6+u6+WLOWzQzSyVWefH7RsyTY8GslZ8wguu
-         RE3mHIsgUskZOBdcPdADBhyH1uvsAbXaumLpwyhJMySu6jhBI4tHjB3YwOOqUjqd8p03
-         fzpxQ0pmQKGcqJZu84pfdku7qZ4RxGpfMLqltgRXufhMMVpl/lDKCnMUOBkrQUFBvyU0
-         WRZ+rSmaIRqR35+ea11c7mJQZyQQxgdSwRkbSodZ2FmyrlgkC0oTTxHWhQ3VjT1zDBC2
-         fLU8P9eT8q2x2Q/kQ2HBFlaysHgGhhppLnlDRmMjnoBQzK/XLCl3DYr99iartAj/pyO4
-         P3Ng==
+        bh=9mmPVJ7AXhJKSRjZ7YCmZe+7ZE3UVCX5QvDqCSfsE+Y=;
+        b=S9X9uWZKPnqkSF+Zopk/lhimL29CJL4dj7ceiwTmzGfAi74wgabSBN3060P8iBvIIC
+         eJogzUvju3HRwVyvY54H9nhx9HaP9xZ0B6FGX83VPwwH+gew8ytlbJZle09URITYV6Rr
+         u2111m6Tzujf8V55PGQcvyjg3ZGqA3Mj/Itdxt5SAmMQIiX+1fV7EtJZY5pdGOQTsayi
+         I7WX14f0H0/ubDiz7JQTXOgYL4bXCwNKrsW3WlZYtlB4SUaJ+0RXoGLl1/Wm8NNdJRAS
+         3sTiiAbDuIFpbxjIY7173ivccjYCUZc79BUasU/Veiq9/9L/NmePgXqNNg45GH2/qTGX
+         5nQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=WhwomO42XDAEJPW2/cr+MUt5RrB/mfN0Bet2spmrCJc=;
-        b=pCQGsIAcGI5xbjstmTKUxZUysyN301Vb2ZpRtb6euJBuilJXZ8q6GyLiWp0MGTE78E
-         lkmv+i1oUVsNDIQ8kYfYr8ozkhEoZJpAQah5iTAq1/b1hp5BvR6kIrkq7xQGWKoALKxO
-         D4ZSn+JSojkH1Or4r6wRvh16zdTzGeqi2zjnFqYbx0vnFqtFwMhbsY2qf71h2Fqnn2WV
-         8vXkpdgDd1vU9p5JWbR++jygWuQRKQftYI6XtaSY4niJsDtBmw0BVogFosjbW+0ldwyy
-         MIo8IS5j/nKu0XqbnZLFtBGPIQw/4KqkwWz9JbKBOT81BtguevoftFpfwoyyyWPi4YCZ
-         cGvw==
-X-Gm-Message-State: AOAM532mc9IhvjgwQyzECoRXGDzyNMLLJ9meSnBYbU4XQEzNSQZQdnBg
-        JBb0OY5wokNWMHWImpG363e3GEno
-X-Google-Smtp-Source: ABdhPJw9g3cK+A3mXsjm4YkRBpgUH6ZlIqlteccfqcwfLUQ468jpgkmPzouv4XP3zynqEH/e4kYe9A==
-X-Received: by 2002:a05:6e02:128c:: with SMTP id y12mr10010684ilq.291.1590845338186;
-        Sat, 30 May 2020 06:28:58 -0700 (PDT)
+        bh=9mmPVJ7AXhJKSRjZ7YCmZe+7ZE3UVCX5QvDqCSfsE+Y=;
+        b=MzGm80pDLgLnmbnXCgpdVyODx6T7/4EeyPywSeY1hWSvG2X5BMrt9iUW8JWnFCPrUZ
+         n/YgCA7p5rdYvhJlJA3FOc8o0eGKGAf5cK42zmxTrDkwsMjLH2kYPH7B4FKvDk2O8Lr2
+         P8nz83heSGLi0rTR2hLHbw+BK3pOSf33B5xXFhF2f3e4LhrQC6lFq/wZe16FmXC0hwt5
+         jj8wl+XYEDbugOAA7g8gy6mEjEXVy1f8en626scUUBstPHBSaxN/Tfht78TAykh2zmwO
+         IyGoKRiUGyUPrm0rOpvZL6QmnRoqSf0YeYz3lgHCrvjK7dpOz41ieA1MOCVZt8XvhqCA
+         8kLA==
+X-Gm-Message-State: AOAM533wdWExkM1SPOrR6jYbIC8xOy8dqctVKLhAK06JhZvF+1IEe/7u
+        5T79shhXa/15ljYFVUqgeBxuVWc+
+X-Google-Smtp-Source: ABdhPJyFRhFHs3jawJ/1JyJSTOI4AFL1jrWg5SgyG3M8PtvoBCrgZE1WTxSzrv1SlOO//ktuL+1nZw==
+X-Received: by 2002:a5d:88c5:: with SMTP id i5mr10869401iol.137.1590845343437;
+        Sat, 30 May 2020 06:29:03 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s15sm6419675iln.49.2020.05.30.06.28.57
+        by smtp.gmail.com with ESMTPSA id p69sm3039420ili.75.2020.05.30.06.29.02
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:28:57 -0700 (PDT)
+        Sat, 30 May 2020 06:29:03 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSvM7001414;
-        Sat, 30 May 2020 13:28:57 GMT
-Subject: [PATCH v4 10/33] svcrdma: Remove the SVCRDMA_DEBUG macro
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDT2OG001417;
+        Sat, 30 May 2020 13:29:02 GMT
+Subject: [PATCH v4 11/33] svcrdma: Displayed remote IP address should match
+ stored address
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:28:57 -0400
-Message-ID: <20200530132857.10117.14287.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:29:02 -0400
+Message-ID: <20200530132902.10117.78346.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,25 +69,33 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: Commit d21b05f101ae ("rdma: SVCRMDA Header File")
-introduced the SVCRDMA_DEBUG macro, but it doesn't seem to have been
-used.
+Clean up: After commit 1e091c3bbf51 ("svcrdma: Ignore source port
+when computing DRC hash"), the IP address stored in xpt_remote
+always has a port number of zero. Thus, there's no need to display
+the port number when displaying the IP address of a remote NFS/RDMA
+client.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h |    1 -
- 1 file changed, 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 8518c3f37e56..7ed82625dc0b 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -48,7 +48,6 @@
- #include <linux/sunrpc/rpc_rdma.h>
- #include <rdma/ib_verbs.h>
- #include <rdma/rdma_cm.h>
--#define SVCRDMA_DEBUG
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index ea54785db4f8..0a1125277a48 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -211,7 +211,12 @@ static void handle_connect_req(struct rdma_cm_id *new_cma_id,
+ 	newxprt->sc_ord = param->initiator_depth;
  
- /* Default and maximum inline threshold sizes */
- enum {
+ 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+-	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
++	newxprt->sc_xprt.xpt_remotelen = svc_addr_len(sa);
++	memcpy(&newxprt->sc_xprt.xpt_remote, sa,
++	       newxprt->sc_xprt.xpt_remotelen);
++	snprintf(newxprt->sc_xprt.xpt_remotebuf,
++		 sizeof(newxprt->sc_xprt.xpt_remotebuf) - 1, "%pISc", sa);
++
+ 	/* The remote port is arbitrary and not under the control of the
+ 	 * client ULP. Set it to a fixed value so that the DRC continues
+ 	 * to be effective after a reconnect.
 
