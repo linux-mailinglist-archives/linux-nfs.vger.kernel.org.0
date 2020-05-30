@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E1621E918E
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B4681E9190
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgE3N3K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57740 "EHLO
+        id S1729063AbgE3N3P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729055AbgE3N3J (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:29:09 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99257C03E969;
-        Sat, 30 May 2020 06:29:09 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id y18so2318263iow.3;
-        Sat, 30 May 2020 06:29:09 -0700 (PDT)
+        with ESMTP id S1729055AbgE3N3O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:29:14 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52B3C03E969;
+        Sat, 30 May 2020 06:29:14 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id h3so5166235ilh.13;
+        Sat, 30 May 2020 06:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=MV0EoO+8yVK6ghDt30lbfGE+CAEo1PY+DasnmJYde9U=;
-        b=UOgxHdv9pNKPdUe5btXcCMUGyoD54DCq6O6Lw5LL+OEw3cAx+oCSNk7wJlogz1poHD
-         BXh+/TytMxA/o3MYskeqbbp9cB82wb/FjLjd9Eb81+Vb4c/7c91bSsVCdUwRKbfxNl0c
-         qSwMxYXIlI/Sq/4SlVX09KdpBnm5qdBKaWoMytENi+99R/x+R3SR70o2gAQ13ffAoKzo
-         fFRAjaeerieHxZZT7CJgEsKikX5GlB5WBB7UdkDzjk/ZurYm2wWtAdQ0BNcDk0/g1aDF
-         trE6lw+C6r89JHzfuMS+at3ATdjFEDxL0Xj+n0zHuXHj1rs+K/YjpGiN77oGzv1LtGyd
-         aoyg==
+        bh=jnvUwfF7CI1PmTmGW4MKtq9oRVlHeBucxTLJ5+HqSZ4=;
+        b=TFEwym2KJIINCzWK0sNQuzZ9Gl3GGr9ibwO967Du24N3N3CwUqAiPJJlKh7rXkfAhd
+         sfI1dvTRvpCqFO/RmYiJ1aHVSb0BXDOqigiSkMy2SQgXDpCyAL/0ycNUDrQyD+dq4qGL
+         CCI7mojP3tj+XLnb1LjE3WvMVTxmn4P2TCJPnxNCUYfrr1A23yMtkXBV3LnhJiaFNZiz
+         cyWjSvxlngwHNOpUWufR4PAuD2k50PUTy/b2EvQOquEMGDGGQ+n9VyJS0l4rBNzOHXjk
+         nuE+rV1AvupuBgMZV8dihfL5iJXWfz9tCt5JZQpHIXXCDMpjMoGUNIao1a4oYqNNCG09
+         znTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=MV0EoO+8yVK6ghDt30lbfGE+CAEo1PY+DasnmJYde9U=;
-        b=NAbYNP5zejYLpbuYuLtfUm5FOtfKQ41JmEh7gtGiHdbuToWUPq7hrUSGcMRh/MskYa
-         rTXHDVHhE2Ma4oT08+VNwiqvHBVt/oT28NcLaptTO2aG/D35NHkoV4mW8yWhoGj8Ct4F
-         0cAjD2XQQY3LC7JdqMvmgS7L4iMZYNS/dedWjp08LuxPCKVOAiGfu2FOEoJCOHUO4/3P
-         iVQiyyp3CVUa9b5zF1Hz0b5leeX0v4iotmtpbSX1jDxAmzx8QnQMsVlIPLcVZelZlYvT
-         yquvo/SHGPdh2v5EnfCrpjoklxc10QH2/Ogel+FBcEzy+01RWdMTA7GUhliKCmawqmgb
-         AOOw==
-X-Gm-Message-State: AOAM5309teIJ2w52InZ/jyg5anV5xClMe1ArPDGfuxF1zC+OsJEt3Nb3
-        sI3WFb+t7vy1QrH4ebivqSHyog9a
-X-Google-Smtp-Source: ABdhPJxnjCq4EHoqfSzJLimq4fJIonaUTyrzCvzT9QJ58NeJiDlETKJkbqd+P+UScB6guPiTSKRVig==
-X-Received: by 2002:a5e:9b10:: with SMTP id j16mr10980072iok.49.1590845348778;
-        Sat, 30 May 2020 06:29:08 -0700 (PDT)
+        bh=jnvUwfF7CI1PmTmGW4MKtq9oRVlHeBucxTLJ5+HqSZ4=;
+        b=JrjSr36hU5aQZNDTiRSwAA4tLViIBlXMetWbrJl9nXTlo/U7quw22Xcvdr3OtbH79J
+         TQNKTIgmbdfUSNbgCB98pkotTLhT4kT2Yt1q5+xPOiWF3gbI5+pty3C4kD3zaUMtkBYy
+         6hESBLo+B8nkzlBkfRqTLjMkD5iZnjn/9++wKatBMwTkamhWUFNcHtMlfPE7wHrMu/fP
+         dzldwPa4seclKFN/NX4e3ncbx537RuWu+s2jIWmuWEuT91dxTMbx2u9tSO9fJn6VrUoM
+         ewXtSmy9pMCWYKVEgP7Mo9EQ1LJeiKs9M3k2VEIPz7AzDOb9G/p4deNZPPyFtrjjmIbS
+         n0xg==
+X-Gm-Message-State: AOAM533e0hMAuz1CPc4jXEdoBWYPYEmg3hYp23sp370BVG4fFVC5NOn2
+        l4xqlGbV2Zo26ywRbXDrBCJIf5zA
+X-Google-Smtp-Source: ABdhPJz79hyXMOa95mG5b1jnWGbhK6DrW5KgfaHoz1CtlQOs+cQvSi9twHbGWR5ZiApQlQqNxdLPmQ==
+X-Received: by 2002:a05:6e02:4c8:: with SMTP id f8mr11170051ils.174.1590845353790;
+        Sat, 30 May 2020 06:29:13 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id v13sm6582895ili.15.2020.05.30.06.29.08
+        by smtp.gmail.com with ESMTPSA id z13sm6576237ilh.82.2020.05.30.06.29.13
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:29:08 -0700 (PDT)
+        Sat, 30 May 2020 06:29:13 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDT7oS001420;
-        Sat, 30 May 2020 13:29:07 GMT
-Subject: [PATCH v4 12/33] svcrdma: Add tracepoints to report ->xpo_accept
- failures
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDTCcZ001423;
+        Sat, 30 May 2020 13:29:12 GMT
+Subject: [PATCH v4 13/33] SUNRPC: Remove kernel memory address from svc_xprt
+ tracepoints
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:29:07 -0400
-Message-ID: <20200530132907.10117.21042.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:29:12 -0400
+Message-ID: <20200530132912.10117.12705.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -69,156 +69,115 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Failure to accept a connection is typically due to a problem
-specific to a transport type. Also, ->xpo_accept returns NULL
-on error rather than reporting a specific problem.
-
-So, add failure-specific tracepoints in svc_rdma_accept().
+Clean up: The xprt=%p was meant to distinguish events from different
+transports, but the addr=%s does that just as well and does not
+expose kernel memory addresses.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h           |   38 +++++++++++++++++++++++++++++-
- net/sunrpc/xprtrdma/svc_rdma_transport.c |   27 +++++++++------------
- 2 files changed, 48 insertions(+), 17 deletions(-)
+ include/trace/events/sunrpc.h |   27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 53b24c8c7860..79ef2ab7743c 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -1309,9 +1309,45 @@ DECLARE_EVENT_CLASS(svcrdma_xprt_event,
- 				TP_ARGS(xprt))
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 1d53b77dd3e8..9b5a36422141 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1192,22 +1192,19 @@ TRACE_EVENT(svc_xprt_do_enqueue,
+ 	TP_ARGS(xprt, rqst),
  
- DEFINE_XPRT_EVENT(accept);
--DEFINE_XPRT_EVENT(fail);
- DEFINE_XPRT_EVENT(free);
+ 	TP_STRUCT__entry(
+-		__field(struct svc_xprt *, xprt)
+ 		__field(int, pid)
+ 		__field(unsigned long, flags)
+ 		__string(addr, xprt->xpt_remotebuf)
+ 	),
  
-+DECLARE_EVENT_CLASS(svcrdma_accept_class,
-+	TP_PROTO(
-+		const struct svcxprt_rdma *rdma,
-+		long status
-+	),
-+
-+	TP_ARGS(rdma, status),
-+
-+	TP_STRUCT__entry(
-+		__field(long, status)
-+		__string(addr, rdma->sc_xprt.xpt_remotebuf)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->status = status;
-+		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
-+	),
-+
-+	TP_printk("addr=%s status=%ld",
-+		__get_str(addr), __entry->status
-+	)
-+);
-+
-+#define DEFINE_ACCEPT_EVENT(name) \
-+		DEFINE_EVENT(svcrdma_accept_class, svcrdma_##name##_err, \
-+				TP_PROTO( \
-+					const struct svcxprt_rdma *rdma, \
-+					long status \
-+				), \
-+				TP_ARGS(rdma, status))
-+
-+DEFINE_ACCEPT_EVENT(pd);
-+DEFINE_ACCEPT_EVENT(qp);
-+DEFINE_ACCEPT_EVENT(fabric);
-+DEFINE_ACCEPT_EVENT(initdepth);
-+DEFINE_ACCEPT_EVENT(accept);
-+
- TRACE_DEFINE_ENUM(RDMA_MSG);
- TRACE_DEFINE_ENUM(RDMA_NOMSG);
- TRACE_DEFINE_ENUM(RDMA_MSGP);
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 0a1125277a48..f3b5ad2bec2f 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -410,9 +410,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	if (!newxprt)
- 		return NULL;
+ 	TP_fast_assign(
+-		__entry->xprt = xprt;
+ 		__entry->pid = rqst? rqst->rq_task->pid : 0;
+ 		__entry->flags = xprt->xpt_flags;
+ 		__assign_str(addr, xprt->xpt_remotebuf);
+ 	),
  
--	dprintk("svcrdma: newxprt from accept queue = %p, cm_id=%p\n",
--		newxprt, newxprt->sc_cm_id);
--
- 	dev = newxprt->sc_cm_id->device;
- 	newxprt->sc_port_num = newxprt->sc_cm_id->port_num;
+-	TP_printk("xprt=%p addr=%s pid=%d flags=%s",
+-			__entry->xprt, __get_str(addr),
+-			__entry->pid, show_svc_xprt_flags(__entry->flags))
++	TP_printk("addr=%s pid=%d flags=%s", __get_str(addr),
++		__entry->pid, show_svc_xprt_flags(__entry->flags))
+ );
  
-@@ -448,21 +445,17 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ DECLARE_EVENT_CLASS(svc_xprt_event,
+@@ -1216,20 +1213,17 @@ DECLARE_EVENT_CLASS(svc_xprt_event,
+ 	TP_ARGS(xprt),
  
- 	newxprt->sc_pd = ib_alloc_pd(dev, 0);
- 	if (IS_ERR(newxprt->sc_pd)) {
--		dprintk("svcrdma: error creating PD for connect request\n");
-+		trace_svcrdma_pd_err(newxprt, PTR_ERR(newxprt->sc_pd));
- 		goto errout;
- 	}
- 	newxprt->sc_sq_cq = ib_alloc_cq_any(dev, newxprt, newxprt->sc_sq_depth,
- 					    IB_POLL_WORKQUEUE);
--	if (IS_ERR(newxprt->sc_sq_cq)) {
--		dprintk("svcrdma: error creating SQ CQ for connect request\n");
-+	if (IS_ERR(newxprt->sc_sq_cq))
- 		goto errout;
--	}
- 	newxprt->sc_rq_cq =
- 		ib_alloc_cq_any(dev, newxprt, rq_depth, IB_POLL_WORKQUEUE);
--	if (IS_ERR(newxprt->sc_rq_cq)) {
--		dprintk("svcrdma: error creating RQ CQ for connect request\n");
-+	if (IS_ERR(newxprt->sc_rq_cq))
- 		goto errout;
--	}
+ 	TP_STRUCT__entry(
+-		__field(struct svc_xprt *, xprt)
+ 		__field(unsigned long, flags)
+ 		__string(addr, xprt->xpt_remotebuf)
+ 	),
  
- 	memset(&qp_attr, 0, sizeof qp_attr);
- 	qp_attr.event_handler = qp_event_handler;
-@@ -486,7 +479,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	TP_fast_assign(
+-		__entry->xprt = xprt;
+ 		__entry->flags = xprt->xpt_flags;
+ 		__assign_str(addr, xprt->xpt_remotebuf);
+ 	),
  
- 	ret = rdma_create_qp(newxprt->sc_cm_id, newxprt->sc_pd, &qp_attr);
- 	if (ret) {
--		dprintk("svcrdma: failed to create QP, ret=%d\n", ret);
-+		trace_svcrdma_qp_err(newxprt, ret);
- 		goto errout;
- 	}
- 	newxprt->sc_qp = newxprt->sc_cm_id->qp;
-@@ -494,8 +487,10 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	if (!(dev->attrs.device_cap_flags & IB_DEVICE_MEM_MGT_EXTENSIONS))
- 		newxprt->sc_snd_w_inv = false;
- 	if (!rdma_protocol_iwarp(dev, newxprt->sc_port_num) &&
--	    !rdma_ib_or_roce(dev, newxprt->sc_port_num))
-+	    !rdma_ib_or_roce(dev, newxprt->sc_port_num)) {
-+		trace_svcrdma_fabric_err(newxprt, -EINVAL);
- 		goto errout;
-+	}
+-	TP_printk("xprt=%p addr=%s flags=%s",
+-			__entry->xprt, __get_str(addr),
+-			show_svc_xprt_flags(__entry->flags))
++	TP_printk("addr=%s flags=%s", __get_str(addr),
++		show_svc_xprt_flags(__entry->flags))
+ );
  
- 	if (!svc_rdma_post_recvs(newxprt))
- 		goto errout;
-@@ -517,15 +512,17 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	conn_param.initiator_depth = min_t(int, newxprt->sc_ord,
- 					   dev->attrs.max_qp_init_rd_atom);
- 	if (!conn_param.initiator_depth) {
--		dprintk("svcrdma: invalid ORD setting\n");
- 		ret = -EINVAL;
-+		trace_svcrdma_initdepth_err(newxprt, ret);
- 		goto errout;
- 	}
- 	conn_param.private_data = &pmsg;
- 	conn_param.private_data_len = sizeof(pmsg);
- 	ret = rdma_accept(newxprt->sc_cm_id, &conn_param);
--	if (ret)
-+	if (ret) {
-+		trace_svcrdma_accept_err(newxprt, ret);
- 		goto errout;
-+	}
+ DEFINE_EVENT(svc_xprt_event, svc_xprt_no_write_space,
+@@ -1242,24 +1236,20 @@ TRACE_EVENT(svc_xprt_dequeue,
+ 	TP_ARGS(rqst),
  
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	dprintk("svcrdma: new connection %p accepted:\n", newxprt);
-@@ -544,8 +541,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	return &newxprt->sc_xprt;
+ 	TP_STRUCT__entry(
+-		__field(struct svc_xprt *, xprt)
+ 		__field(unsigned long, flags)
+ 		__field(unsigned long, wakeup)
+ 		__string(addr, rqst->rq_xprt->xpt_remotebuf)
+ 	),
  
-  errout:
--	dprintk("svcrdma: failure accepting new connection rc=%d.\n", ret);
--	trace_svcrdma_xprt_fail(&newxprt->sc_xprt);
- 	/* Take a reference in case the DTO handler runs */
- 	svc_xprt_get(&newxprt->sc_xprt);
- 	if (newxprt->sc_qp && !IS_ERR(newxprt->sc_qp))
+ 	TP_fast_assign(
+-		__entry->xprt = rqst->rq_xprt;
+ 		__entry->flags = rqst->rq_xprt->xpt_flags;
+ 		__entry->wakeup = ktime_to_us(ktime_sub(ktime_get(),
+ 							rqst->rq_qtime));
+ 		__assign_str(addr, rqst->rq_xprt->xpt_remotebuf);
+ 	),
+ 
+-	TP_printk("xprt=%p addr=%s flags=%s wakeup-us=%lu",
+-			__entry->xprt, __get_str(addr),
+-			show_svc_xprt_flags(__entry->flags),
+-			__entry->wakeup)
++	TP_printk("addr=%s flags=%s wakeup-us=%lu", __get_str(addr),
++		show_svc_xprt_flags(__entry->flags), __entry->wakeup)
+ );
+ 
+ TRACE_EVENT(svc_wake_up,
+@@ -1284,21 +1274,18 @@ TRACE_EVENT(svc_handle_xprt,
+ 	TP_ARGS(xprt, len),
+ 
+ 	TP_STRUCT__entry(
+-		__field(struct svc_xprt *, xprt)
+ 		__field(int, len)
+ 		__field(unsigned long, flags)
+ 		__string(addr, xprt->xpt_remotebuf)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->xprt = xprt;
+ 		__entry->len = len;
+ 		__entry->flags = xprt->xpt_flags;
+ 		__assign_str(addr, xprt->xpt_remotebuf);
+ 	),
+ 
+-	TP_printk("xprt=%p addr=%s len=%d flags=%s",
+-		__entry->xprt, __get_str(addr),
++	TP_printk("addr=%s len=%d flags=%s", __get_str(addr),
+ 		__entry->len, show_svc_xprt_flags(__entry->flags))
+ );
+ 
 
