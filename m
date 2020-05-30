@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9CA1E91A3
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12AFC1E91A5
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:30:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgE3NaC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57890 "EHLO
+        id S1729097AbgE3NaI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgE3NaC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:30:02 -0400
+        with ESMTP id S1728802AbgE3NaH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:30:07 -0400
 Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28CAC03E969;
-        Sat, 30 May 2020 06:30:01 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id 9so5145870ilg.12;
-        Sat, 30 May 2020 06:30:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51744C03E969;
+        Sat, 30 May 2020 06:30:07 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id y17so5237668ilg.0;
+        Sat, 30 May 2020 06:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=+QhH4znuFuHGbo6XZVPUBT/k5yNsprOm7HXWwCKjTkg=;
-        b=UUT1qwrGFO1hWqXZ9ruSDwkNChXeQ1ydlCYrMO9+pU57bmNnd2Nes7vLnI9Jqxaj6D
-         Mrrs5lNcHc/+AWy0Zk2vWMc0KSTlipaZbT8DZ5kKT6F90P4jUiujzlsOD1T37eehlI7w
-         T8iEd6zqJtFqXtI5wQ2J1Ux42dHyKNt345RyWvTaVOaQS7ajJx8e7tRxsA6l8/XKdPlR
-         3oyLADnyAUOANl+FbmvQIMAPpWxOwvRpo2G30GVXVhIJyT2IjVvqDJb5uyUSXKIJV0Pq
-         C3o7q53Js3z0/VmJJ8GMwTu3e+frDcrgt1Sqc5cipjLPei275phShMDD3doevGip7CDH
-         KIfg==
+        bh=GVPJUYUYmvMgwUAgLVAuipvRFZxp/twoaEt4EKJPDjA=;
+        b=OH8GU1ue3KTVbhXX9QwktceutNCcdYzjDZLl8YGca3LBXlKIQ+Ina6w/Im2Rvpgcl3
+         1yICfN2WHCQMyvKdcohPHp5HLNABS56+xv145v+DiLAN8aVK5+SZrlLkD/HUp3TbGCdm
+         FZlkyJeFyS+KLwfj9N54Ftytq5aFd0Jy9OMmAp1gp3bXwf3Wu2fRFbEQCj0SaqnrNYyN
+         9pWX48ZunV9LlHxjIKR+Ad/cvVFfekzrwPNOoaY8gI2vm5GXE+CTf8Psh47+7KYoK1zb
+         vv7Q911Mo0eIXPuSheCarhn5jYHckeEiSrw3kLyIwDNTmP+VBB+Yu0PDmwYeG+rqJHBk
+         CksA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=+QhH4znuFuHGbo6XZVPUBT/k5yNsprOm7HXWwCKjTkg=;
-        b=klP+AWxs4bOF7txQbs+uyu4wZmGsYzOmWZajaGuJuj7JX99rc8zdx2Ft09HCPBQ13/
-         Vi3w7fA92F5YeRHdWYhne0tJP3/J9cslqNED7y67lxZ+5FtqnIDyoDPOzer/sQr/Rga0
-         MBwSiJVZnz0pv3yEVTubAu7cnm+CGF/pQtVl2M78qOZoI4cUHoypG9w8ZfVYNhLSpoY2
-         KaL+hAwJn2yi1YX61xoAmYDnd7WTB+AhF6gD1RK974S5LjbDBpgM6tePJkpQptnYer9h
-         EtUAJaDbBPIYzOqzbcuWeRS9esO2VHH+cQO5BN3YITAvNcxwQn0/XkiBl38pioKUoaZa
-         fIVQ==
-X-Gm-Message-State: AOAM533ZrDCCtt4v8vWdZLgtQ2k3yHxdPU4XlwBDpza6TLtGwqMpD6E9
-        2iWNIJ1BOtwujl20nP0u/LZ01yl3
-X-Google-Smtp-Source: ABdhPJznf37QCQW0/4pK7GyXLSN0bjku3OM9bqHJAvPUBjdrddocbvu3RZ4xfyGtE644eXSWAmtWug==
-X-Received: by 2002:a05:6e02:f81:: with SMTP id v1mr11868609ilo.246.1590845401217;
-        Sat, 30 May 2020 06:30:01 -0700 (PDT)
+        bh=GVPJUYUYmvMgwUAgLVAuipvRFZxp/twoaEt4EKJPDjA=;
+        b=pY0sW+IPF3DZBEiogvL23l3cFY3eqKKgpaaV5HOdQdzs8E6opxOuIXBTS06/dP095l
+         GEvuapVOEcilnpNlSiwELQx7TOd7bjz08D7XDxqm37jucJhjy0wP8MxWqvw5D7v8zFkA
+         jpHgN9tExg4c6LPVBgmaNWfHTfNtiKk9DhG921vdZZg6xevd4ymTTzFck2mLTXbZyvxQ
+         P/eNRTYCFexQmvnhrcfU26Aaji7Wa3yQvqN8VNYNsqqUoy9vR8Mc/0qongoDxp9wq3WX
+         V3p5ExQo3xZI/lZ7adW4SEB0iMnibZcRZ2+fSXYc/ovmZeYW1T5ypdW/MpxSbqHc/Xyt
+         yIBg==
+X-Gm-Message-State: AOAM53311nHExcCYCvyXzwGJBFRd7uA4Wj9Zp/S0EhqXj+nDsXJEKvVD
+        A4nP/hrY3u25DziEyYa9Puu0Kljv
+X-Google-Smtp-Source: ABdhPJzhp6LDXMgrJH4XOMCsEL/Z76Fi3HQhJu6S0tcIYEKK9iGcLUi0vR6Eq69Wp+FQ3ViOAm7Skw==
+X-Received: by 2002:a92:6a06:: with SMTP id f6mr12156667ilc.89.1590845406571;
+        Sat, 30 May 2020 06:30:06 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id z24sm4890471ioe.18.2020.05.30.06.30.00
+        by smtp.gmail.com with ESMTPSA id r9sm6278476ilm.10.2020.05.30.06.30.05
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:30:00 -0700 (PDT)
+        Sat, 30 May 2020 06:30:06 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDU0pX001450;
-        Sat, 30 May 2020 13:30:00 GMT
-Subject: [PATCH v4 22/33] SUNRPC: Replace dprintk() call sites in TCP
- receive path
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDU5KE001462;
+        Sat, 30 May 2020 13:30:05 GMT
+Subject: [PATCH v4 23/33] SUNRPC: Refactor recvfrom path dealing with
+ incomplete TCP receives
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:30:00 -0400
-Message-ID: <20200530133000.10117.89867.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:30:05 -0400
+Message-ID: <20200530133005.10117.47583.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -69,85 +69,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Clean up: move exception processing out of the main path.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |    1 +
- net/sunrpc/svcsock.c          |   16 ++--------------
- 2 files changed, 3 insertions(+), 14 deletions(-)
+ include/trace/events/sunrpc.h |   31 +++++++++++++++++++++++++++++++
+ net/sunrpc/svcsock.c          |   39 +++++++++++++++++++--------------------
+ 2 files changed, 50 insertions(+), 20 deletions(-)
 
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 794974378be6..dc7388b72501 100644
+index dc7388b72501..22e67fbf79b0 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -1521,6 +1521,7 @@ DECLARE_EVENT_CLASS(svcsock_class,
- 
+@@ -1522,9 +1522,40 @@ DECLARE_EVENT_CLASS(svcsock_class,
  DEFINE_SVCSOCK_EVENT(udp_send);
  DEFINE_SVCSOCK_EVENT(tcp_send);
-+DEFINE_SVCSOCK_EVENT(tcp_recv);
+ DEFINE_SVCSOCK_EVENT(tcp_recv);
++DEFINE_SVCSOCK_EVENT(tcp_recv_eagain);
++DEFINE_SVCSOCK_EVENT(tcp_recv_err);
  DEFINE_SVCSOCK_EVENT(data_ready);
  DEFINE_SVCSOCK_EVENT(write_space);
  
++TRACE_EVENT(svcsock_tcp_recv_short,
++	TP_PROTO(
++		const struct svc_xprt *xprt,
++		u32 expected,
++		u32 received
++	),
++
++	TP_ARGS(xprt, expected, received),
++
++	TP_STRUCT__entry(
++		__field(u32, expected)
++		__field(u32, received)
++		__field(unsigned long, flags)
++		__string(addr, xprt->xpt_remotebuf)
++	),
++
++	TP_fast_assign(
++		__entry->expected = expected;
++		__entry->received = received;
++		__entry->flags = xprt->xpt_flags;
++		__assign_str(addr, xprt->xpt_remotebuf);
++	),
++
++	TP_printk("addr=%s flags=%s expected=%u received=%u",
++		__get_str(addr), show_svc_xprt_flags(__entry->flags),
++		__entry->expected, __entry->received
++	)
++);
++
+ TRACE_EVENT(svcsock_tcp_state,
+ 	TP_PROTO(
+ 		const struct svc_xprt *xprt,
 diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 9c1eb13aa9b8..8cf06b676831 100644
+index 8cf06b676831..087e21b0f1bb 100644
 --- a/net/sunrpc/svcsock.c
 +++ b/net/sunrpc/svcsock.c
-@@ -119,9 +119,8 @@ static void svc_release_skb(struct svc_rqst *rqstp)
- 	if (skb) {
- 		struct svc_sock *svsk =
- 			container_of(rqstp->rq_xprt, struct svc_sock, sk_xprt);
--		rqstp->rq_xprt_ctxt = NULL;
- 
--		dprintk("svc: service %p, releasing skb %p\n", rqstp, skb);
-+		rqstp->rq_xprt_ctxt = NULL;
- 		skb_free_datagram_locked(svsk->sk_sk, skb);
- 	}
- }
-@@ -132,8 +131,6 @@ static void svc_release_udp_skb(struct svc_rqst *rqstp)
- 
- 	if (skb) {
- 		rqstp->rq_xprt_ctxt = NULL;
--
--		dprintk("svc: service %p, releasing skb %p\n", rqstp, skb);
- 		consume_skb(skb);
- 	}
- }
-@@ -245,8 +242,6 @@ static ssize_t svc_recvfrom(struct svc_rqst *rqstp, struct kvec *iov,
- 	if (len == buflen)
- 		set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
- 
--	dprintk("svc: socket %p recvfrom(%p, %zu) = %zd\n",
--		svsk, iov[0].iov_base, iov[0].iov_len, len);
- 	return len;
- }
- 
-@@ -932,9 +927,6 @@ static int copy_pages_to_kvecs(struct kvec *vec, struct page **pages, int len)
- static void svc_tcp_fragment_received(struct svc_sock *svsk)
- {
- 	/* If we have more data, signal svc_xprt_enqueue() to try again */
--	dprintk("svc: TCP %s record (%d bytes)\n",
--		svc_sock_final_rec(svsk) ? "final" : "nonfinal",
--		svc_sock_reclen(svsk));
- 	svsk->sk_tcplen = 0;
- 	svsk->sk_marker = xdr_zero;
- }
-@@ -954,11 +946,6 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
- 	__be32 calldir;
- 	int pnum;
- 
--	dprintk("svc: tcp_recv %p data %d conn %d close %d\n",
--		svsk, test_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags),
--		test_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags),
--		test_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags));
--
- 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
- 	len = svc_tcp_read_marker(svsk, rqstp);
- 	if (len < 0)
-@@ -977,6 +964,7 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
- 	/* Now receive data */
- 	len = svc_recvfrom(rqstp, vec, pnum, base + want, base);
- 	if (len >= 0) {
-+		trace_svcsock_tcp_recv(&svsk->sk_xprt, len);
+@@ -968,23 +968,10 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
  		svsk->sk_tcplen += len;
  		svsk->sk_datalen += len;
  	}
+-	if (len != want || !svc_sock_final_rec(svsk)) {
+-		svc_tcp_save_pages(svsk, rqstp);
+-		if (len < 0 && len != -EAGAIN)
+-			goto err_delete;
+-		if (len == want)
+-			svc_tcp_fragment_received(svsk);
+-		else
+-			dprintk("svc: incomplete TCP record (%d of %d)\n",
+-				(int)(svsk->sk_tcplen - sizeof(rpc_fraghdr)),
+-				svc_sock_reclen(svsk));
+-		goto err_noclose;
+-	}
+-
+-	if (svsk->sk_datalen < 8) {
+-		svsk->sk_datalen = 0;
+-		goto err_delete; /* client is nuts. */
+-	}
++	if (len != want || !svc_sock_final_rec(svsk))
++		goto err_incomplete;
++	if (svsk->sk_datalen < 8)
++		goto err_nuts;
+ 
+ 	rqstp->rq_arg.len = svsk->sk_datalen;
+ 	rqstp->rq_arg.page_base = 0;
+@@ -1019,14 +1006,26 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
+ 
+ 	return rqstp->rq_arg.len;
+ 
++err_incomplete:
++	svc_tcp_save_pages(svsk, rqstp);
++	if (len < 0 && len != -EAGAIN)
++		goto err_delete;
++	if (len == want)
++		svc_tcp_fragment_received(svsk);
++	else
++		trace_svcsock_tcp_recv_short(&svsk->sk_xprt,
++				svc_sock_reclen(svsk),
++				svsk->sk_tcplen - sizeof(rpc_fraghdr));
++	goto err_noclose;
+ error:
+ 	if (len != -EAGAIN)
+ 		goto err_delete;
+-	dprintk("RPC: TCP recvfrom got EAGAIN\n");
++	trace_svcsock_tcp_recv_eagain(&svsk->sk_xprt, 0);
+ 	return 0;
++err_nuts:
++	svsk->sk_datalen = 0;
+ err_delete:
+-	printk(KERN_NOTICE "%s: recvfrom returned errno %d\n",
+-	       svsk->sk_xprt.xpt_server->sv_name, -len);
++	trace_svcsock_tcp_recv_err(&svsk->sk_xprt, len);
+ 	set_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags);
+ err_noclose:
+ 	return 0;	/* record not complete */
 
