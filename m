@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AE61E9178
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 918151E917A
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:28:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgE3N2M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57574 "EHLO
+        id S1728989AbgE3N2R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgE3N2L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:11 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98960C03E969;
-        Sat, 30 May 2020 06:28:11 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id q18so5209153ilm.5;
-        Sat, 30 May 2020 06:28:11 -0700 (PDT)
+        with ESMTP id S1728769AbgE3N2R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:28:17 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24181C03E969;
+        Sat, 30 May 2020 06:28:17 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id y18so2316909iow.3;
+        Sat, 30 May 2020 06:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=ApO5bAAj0nn19PGMMs3nmnkpRDjVwopR9Q8CzxSUKnA=;
-        b=JYh6qb3BLzcO8+Kiz5be79a13070sZZPwZkJ8bdxxW1y/0GRn5BxMBjH3p97mAXU20
-         wgyTgDumaa6VpcTaWBNw0GfisuX5pJn3KzlyDnGToQFH/BkKDiTpsU+ALsE2/lfMmJPD
-         DUO0IzmUMlDqb9W+7DE3ERivLRj4URtVHBiJDGhEcTIjUzNPBwrR/61Ez02OPjbUjwbC
-         B7uzE2VLc1hRSYXE2RYCEfO1cxhud6JD/3Ge+Va9vPywicMXOoHBm6ue7T1Af6HuDK0h
-         2ovIDJi/C6JOqtoEn+H/q7xr5+nawPGGvr00bSueMX1Ck00xdHGgslkkvpTyAzchxw6z
-         B9Ig==
+        bh=pDesEA3tfxXsQkJDUaWvL0PlNOOBnuLN0JNjzIVetf0=;
+        b=S8yLWKIc4CKuwVwVEMET/jFfY/CTyU9vLqHgm1gmYjQIZyHt6cD3vSj1MD16G+B4kE
+         VnwSJRhVwvWfnLHOWFBJ4zTlCAtZNX0Vq4xiS0qR6l6YD11aNsbYGVLxPZMheQnRcDX2
+         DgE0u5me7yyRHJDR35neufvmRMLVShgpji534L+WZBW/xBG7WO7EyPrh5E4qry8Hhza3
+         KOMcMGw5pQbWNFY9ezEoFy+EKBiO0DJXMw/BpAp9ufkYKbyB5awYIobiQgJmfKBZgLMC
+         j1Ije089l7sVfH2HF/MdnOjNO3mfgbAyt7SNk5nf5W70wpbxIFoUaOg4mcVp/vqarc/K
+         kdxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=ApO5bAAj0nn19PGMMs3nmnkpRDjVwopR9Q8CzxSUKnA=;
-        b=rWYNXNajVP5wqNcSw5R+vR6xN6PA8rMKEijF0tEf+bhg6wJRAtGRb1XqFzJFbGw6iN
-         NHDCQwFAFuViLTuPTsQT/TgLrgfmY0jSBhCzDCTEQSfc78CUhqmD6nOkEYHiFUJ/wEOV
-         k0RbuHbcMX7wviNknmt4LHWFHckyXQOLvRG/WH4riwpdGpyt32Ji1ta9q7ug+9gKSsMu
-         8CNDNc8TeIUzhljC67t02Y1pAgzYT4WZymve8bN5mRmRPvvat42CPfflvfcexJJ8E+7N
-         QfEt/Jy3EOvcA/hm76+50BXLseCB5yhaHcMg83OxxXyZgQzIuAG9lWT+3lrnaBuRSnKT
-         4wzg==
-X-Gm-Message-State: AOAM532FttUAj3ykv3YzRmSQVkPCG5nYG91I9kI+Zl7l57XbfR4tnmZH
-        CGcq2F8zLV4voCOF40UXSeKetram
-X-Google-Smtp-Source: ABdhPJyfR3QjC+TaUAoba9X297pD0COh55vaIBHdpqwlLXP0ATULmV5CkIlS+JQdTMfMnorovK4zxw==
-X-Received: by 2002:a05:6e02:965:: with SMTP id q5mr12064726ilt.272.1590845290750;
-        Sat, 30 May 2020 06:28:10 -0700 (PDT)
+        bh=pDesEA3tfxXsQkJDUaWvL0PlNOOBnuLN0JNjzIVetf0=;
+        b=Otmqn80F7ogO8kkds0Ty7a+gqZ/gMQVPg/Gi4zTHEsMeDg7eRuaOTSO6cLiWPu3Ra0
+         MH/KEeDlzgxHqBty3YY+lSjL6drR8onfAm/GZAHekVs1r2QsELz0wzfu7IgRsdwt8yoo
+         1FCOFpPTQ5a1YYvT6IsGXaiWtIeoRGlEA7Lx9NxbYufOx7gQndaquC/edqlCprAI8sSV
+         95RsJnOo7ntupuxjKvVc7ms/sfWZLPXQwj1wjd0oH7/T3mUK9wqNLJ9BVgKAE2gl/YXM
+         OOWMGEFqaWMiNjIp0Nkxj69ouljPny8i7rBKkfDl3skAHVwtyGBeTqyN1pxiSE8eKAEt
+         U2JA==
+X-Gm-Message-State: AOAM531RBacmLggwBB1tCRuC93vp/muEvQ3ef+5KOkklSkNYW1mpPjts
+        0Tih7bZPl4KUwDyj9fGI4G3tvGaU
+X-Google-Smtp-Source: ABdhPJxVpHvng6Tt39fL9y5NvyQpXg6Lity/1fki7v9qraF5K5uXa9/p8GuBpAAncMT3nt9IWrwJog==
+X-Received: by 2002:a02:c9c5:: with SMTP id c5mr671789jap.5.1590845296100;
+        Sat, 30 May 2020 06:28:16 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id h5sm6280709ile.35.2020.05.30.06.28.10
+        by smtp.gmail.com with ESMTPSA id x13sm6301160ilq.48.2020.05.30.06.28.15
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:28:10 -0700 (PDT)
+        Sat, 30 May 2020 06:28:15 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDS9Aq001387;
-        Sat, 30 May 2020 13:28:09 GMT
-Subject: [PATCH v4 01/33] SUNRPC: Split the xdr_buf event class
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDSEYv001390;
+        Sat, 30 May 2020 13:28:14 GMT
+Subject: [PATCH v4 02/33] SUNRPC: Move xpt_mutex into socket xpo_sendto
+ methods
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:28:09 -0400
-Message-ID: <20200530132809.10117.56384.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:28:14 -0400
+Message-ID: <20200530132814.10117.11106.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,241 +69,258 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To help tie the recorded xdr_buf to a particular RPC transaction,
-the client side version of this class should display task ID
-information and the server side one should show the request's XID.
+It appears that the RPC/RDMA transport does not need serialization
+of calls to its xpo_sendto method. Move the mutex into the socket
+methods that still need that serialization.
 
+Tail latencies are unambiguously better with this patch applied.
+fio randrw 8KB 70/30 on NFSv3, smaller numbers are better:
+
+    clat percentiles (usec):
+
+With xpt_mutex:
+r    | 99.99th=[ 8848]
+w    | 99.99th=[ 9634]
+
+Without xpt_mutex:
+r    | 99.99th=[ 8586]
+w    | 99.99th=[ 8979]
+
+Serializing the construction of RPC/RDMA transport headers is not
+really necessary at this point, because the Linux NFS server
+implementation never changes its credit grant on a connection. If
+that should change, then svc_rdma_sendto will need to serialize
+access to the transport's credit grant fields.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+[ cel: fix uninitialized variable warning ]
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- include/trace/events/sunrpc.h |  113 ++++++++++++++++++++++++-----------------
- net/sunrpc/clnt.c             |    4 +
- net/sunrpc/svc_xprt.c         |    4 +
- net/sunrpc/xprt.c             |    2 -
- 4 files changed, 71 insertions(+), 52 deletions(-)
+ include/linux/sunrpc/svc_xprt.h            |    6 +++++
+ net/sunrpc/svc_xprt.c                      |   11 ++-------
+ net/sunrpc/svcsock.c                       |   25 ++++++++++++++++++++
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   35 +++++++++++++---------------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   10 +++-----
+ net/sunrpc/xprtsock.c                      |   12 ++++++++--
+ 6 files changed, 64 insertions(+), 35 deletions(-)
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index ffd2215950dc..1d53b77dd3e8 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -14,14 +14,17 @@
- #include <linux/net.h>
- #include <linux/tracepoint.h>
- 
--DECLARE_EVENT_CLASS(xdr_buf_class,
-+DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
- 	TP_PROTO(
-+		const struct rpc_task *task,
- 		const struct xdr_buf *xdr
- 	),
- 
--	TP_ARGS(xdr),
-+	TP_ARGS(task, xdr),
- 
- 	TP_STRUCT__entry(
-+		__field(unsigned int, task_id)
-+		__field(unsigned int, client_id)
- 		__field(const void *, head_base)
- 		__field(size_t, head_len)
- 		__field(const void *, tail_base)
-@@ -31,6 +34,8 @@ DECLARE_EVENT_CLASS(xdr_buf_class,
- 	),
- 
- 	TP_fast_assign(
-+		__entry->task_id = task->tk_pid;
-+		__entry->client_id = task->tk_client->cl_clid;
- 		__entry->head_base = xdr->head[0].iov_base;
- 		__entry->head_len = xdr->head[0].iov_len;
- 		__entry->tail_base = xdr->tail[0].iov_base;
-@@ -39,23 +44,26 @@ DECLARE_EVENT_CLASS(xdr_buf_class,
- 		__entry->msg_len = xdr->len;
- 	),
- 
--	TP_printk("head=[%p,%zu] page=%u tail=[%p,%zu] len=%u",
-+	TP_printk("task:%u@%u head=[%p,%zu] page=%u tail=[%p,%zu] len=%u",
-+		__entry->task_id, __entry->client_id,
- 		__entry->head_base, __entry->head_len, __entry->page_len,
- 		__entry->tail_base, __entry->tail_len, __entry->msg_len
- 	)
- );
- 
--#define DEFINE_XDRBUF_EVENT(name)					\
--		DEFINE_EVENT(xdr_buf_class, name,			\
-+#define DEFINE_RPCXDRBUF_EVENT(name)					\
-+		DEFINE_EVENT(rpc_xdr_buf_class,				\
-+				rpc_xdr_##name,				\
- 				TP_PROTO(				\
-+					const struct rpc_task *task,	\
- 					const struct xdr_buf *xdr	\
- 				),					\
--				TP_ARGS(xdr))
-+				TP_ARGS(task, xdr))
-+
-+DEFINE_RPCXDRBUF_EVENT(sendto);
-+DEFINE_RPCXDRBUF_EVENT(recvfrom);
-+DEFINE_RPCXDRBUF_EVENT(reply_pages);
- 
--DEFINE_XDRBUF_EVENT(xprt_sendto);
--DEFINE_XDRBUF_EVENT(xprt_recvfrom);
--DEFINE_XDRBUF_EVENT(svc_recvfrom);
--DEFINE_XDRBUF_EVENT(svc_sendto);
- 
- TRACE_DEFINE_ENUM(RPC_AUTH_OK);
- TRACE_DEFINE_ENUM(RPC_AUTH_BADCRED);
-@@ -526,43 +534,6 @@ TRACE_EVENT(rpc_xdr_alignment,
- 	)
- );
- 
--TRACE_EVENT(rpc_reply_pages,
--	TP_PROTO(
--		const struct rpc_rqst *req
--	),
--
--	TP_ARGS(req),
--
--	TP_STRUCT__entry(
--		__field(unsigned int, task_id)
--		__field(unsigned int, client_id)
--		__field(const void *, head_base)
--		__field(size_t, head_len)
--		__field(const void *, tail_base)
--		__field(size_t, tail_len)
--		__field(unsigned int, page_len)
--	),
--
--	TP_fast_assign(
--		__entry->task_id = req->rq_task->tk_pid;
--		__entry->client_id = req->rq_task->tk_client->cl_clid;
--
--		__entry->head_base = req->rq_rcv_buf.head[0].iov_base;
--		__entry->head_len = req->rq_rcv_buf.head[0].iov_len;
--		__entry->page_len = req->rq_rcv_buf.page_len;
--		__entry->tail_base = req->rq_rcv_buf.tail[0].iov_base;
--		__entry->tail_len = req->rq_rcv_buf.tail[0].iov_len;
--	),
--
--	TP_printk(
--		"task:%u@%u xdr=[%p,%zu]/%u/[%p,%zu]\n",
--		__entry->task_id, __entry->client_id,
--		__entry->head_base, __entry->head_len,
--		__entry->page_len,
--		__entry->tail_base, __entry->tail_len
--	)
--);
--
- /*
-  * First define the enums in the below macros to be exported to userspace
-  * via TRACE_DEFINE_ENUM().
-@@ -990,6 +961,54 @@ TRACE_EVENT(xs_stream_read_request,
- 			__entry->copied, __entry->reclen, __entry->offset)
- );
- 
-+
-+DECLARE_EVENT_CLASS(svc_xdr_buf_class,
-+	TP_PROTO(
-+		const struct svc_rqst *rqst,
-+		const struct xdr_buf *xdr
-+	),
-+
-+	TP_ARGS(rqst, xdr),
-+
-+	TP_STRUCT__entry(
-+		__field(u32, xid)
-+		__field(const void *, head_base)
-+		__field(size_t, head_len)
-+		__field(const void *, tail_base)
-+		__field(size_t, tail_len)
-+		__field(unsigned int, page_len)
-+		__field(unsigned int, msg_len)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->xid = be32_to_cpu(rqst->rq_xid);
-+		__entry->head_base = xdr->head[0].iov_base;
-+		__entry->head_len = xdr->head[0].iov_len;
-+		__entry->tail_base = xdr->tail[0].iov_base;
-+		__entry->tail_len = xdr->tail[0].iov_len;
-+		__entry->page_len = xdr->page_len;
-+		__entry->msg_len = xdr->len;
-+	),
-+
-+	TP_printk("xid=0x%08x head=[%p,%zu] page=%u tail=[%p,%zu] len=%u",
-+		__entry->xid,
-+		__entry->head_base, __entry->head_len, __entry->page_len,
-+		__entry->tail_base, __entry->tail_len, __entry->msg_len
-+	)
-+);
-+
-+#define DEFINE_SVCXDRBUF_EVENT(name)					\
-+		DEFINE_EVENT(svc_xdr_buf_class,				\
-+				svc_xdr_##name,				\
-+				TP_PROTO(				\
-+					const struct svc_rqst *rqst,	\
-+					const struct xdr_buf *xdr	\
-+				),					\
-+				TP_ARGS(rqst, xdr))
-+
-+DEFINE_SVCXDRBUF_EVENT(recvfrom);
-+DEFINE_SVCXDRBUF_EVENT(sendto);
-+
- #define show_rqstp_flags(flags)						\
- 	__print_flags(flags, "|",					\
- 		{ (1UL << RQ_SECURE),		"RQ_SECURE"},		\
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 61b21dafd7c0..953f3e78401a 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1270,7 +1270,7 @@ void rpc_prepare_reply_pages(struct rpc_rqst *req, struct page **pages,
- 	hdrsize += RPC_REPHDRSIZE + req->rq_cred->cr_auth->au_ralign - 1;
- 
- 	xdr_inline_pages(&req->rq_rcv_buf, hdrsize << 2, pages, base, len);
--	trace_rpc_reply_pages(req);
-+	trace_rpc_xdr_reply_pages(req->rq_task, &req->rq_rcv_buf);
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index 9e1e046de176..aca35ab5cff2 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -117,6 +117,12 @@ static inline int register_xpt_user(struct svc_xprt *xpt, struct svc_xpt_user *u
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(rpc_prepare_reply_pages);
  
-@@ -2531,7 +2531,7 @@ call_decode(struct rpc_task *task)
- 		goto out;
- 
- 	req->rq_rcv_buf.len = req->rq_private_buf.len;
--	trace_xprt_recvfrom(&req->rq_rcv_buf);
-+	trace_rpc_xdr_recvfrom(task, &req->rq_rcv_buf);
- 
- 	/* Check that the softirq receive buffer is valid */
- 	WARN_ON(memcmp(&req->rq_rcv_buf, &req->rq_private_buf,
++static inline bool svc_xprt_is_dead(const struct svc_xprt *xprt)
++{
++	return (test_bit(XPT_DEAD, &xprt->xpt_flags) != 0) ||
++		(test_bit(XPT_CLOSE, &xprt->xpt_flags) != 0);
++}
++
+ int	svc_reg_xprt_class(struct svc_xprt_class *);
+ void	svc_unreg_xprt_class(struct svc_xprt_class *);
+ void	svc_xprt_init(struct net *, struct svc_xprt_class *, struct svc_xprt *,
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 2284ff038dad..8ef44275c255 100644
+index 8ef44275c255..7ad37ff56ff7 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -812,7 +812,7 @@ static int svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
- 		else
- 			len = xprt->xpt_ops->xpo_recvfrom(rqstp);
- 		if (len > 0)
--			trace_svc_recvfrom(&rqstp->rq_arg);
-+			trace_svc_xdr_recvfrom(rqstp, &rqstp->rq_arg);
- 		rqstp->rq_stime = ktime_get();
- 		rqstp->rq_reserved = serv->sv_max_mesg;
- 		atomic_add(rqstp->rq_reserved, &xprt->xpt_reserved);
-@@ -913,7 +913,7 @@ int svc_send(struct svc_rqst *rqstp)
- 	xb->len = xb->head[0].iov_len +
- 		xb->page_len +
+@@ -915,15 +915,10 @@ int svc_send(struct svc_rqst *rqstp)
  		xb->tail[0].iov_len;
--	trace_svc_sendto(xb);
-+	trace_svc_xdr_sendto(rqstp, xb);
+ 	trace_svc_xdr_sendto(rqstp, xb);
  
- 	/* Grab mutex to serialize outgoing data. */
- 	mutex_lock(&xprt->xpt_mutex);
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 493a30a296fc..053de053a024 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1460,7 +1460,7 @@ xprt_request_transmit(struct rpc_rqst *req, struct rpc_task *snd_task)
- 	 */
- 	req->rq_ntrans++;
+-	/* Grab mutex to serialize outgoing data. */
+-	mutex_lock(&xprt->xpt_mutex);
+ 	trace_svc_stats_latency(rqstp);
+-	if (test_bit(XPT_DEAD, &xprt->xpt_flags)
+-			|| test_bit(XPT_CLOSE, &xprt->xpt_flags))
+-		len = -ENOTCONN;
+-	else
+-		len = xprt->xpt_ops->xpo_sendto(rqstp);
+-	mutex_unlock(&xprt->xpt_mutex);
++
++	len = xprt->xpt_ops->xpo_sendto(rqstp);
++
+ 	trace_svc_send(rqstp, len);
+ 	svc_xprt_release(rqstp);
  
--	trace_xprt_sendto(&req->rq_snd_buf);
-+	trace_rpc_xdr_sendto(task, &req->rq_snd_buf);
- 	connect_cookie = xprt->connect_cookie;
- 	status = xprt->ops->send_request(req);
- 	if (status != 0) {
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 023514e392b3..3e7b6445e317 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -506,6 +506,9 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
+  * svc_udp_sendto - Send out a reply on a UDP socket
+  * @rqstp: completed svc_rqst
+  *
++ * xpt_mutex ensures @rqstp's whole message is written to the socket
++ * without interruption.
++ *
+  * Returns the number of bytes sent, or a negative errno.
+  */
+ static int svc_udp_sendto(struct svc_rqst *rqstp)
+@@ -531,6 +534,11 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+ 
+ 	svc_set_cmsg_data(rqstp, cmh);
+ 
++	mutex_lock(&xprt->xpt_mutex);
++
++	if (svc_xprt_is_dead(xprt))
++		goto out_notconn;
++
+ 	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
+ 	xdr_free_bvec(xdr);
+ 	if (err == -ECONNREFUSED) {
+@@ -538,9 +546,15 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+ 		err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
+ 		xdr_free_bvec(xdr);
+ 	}
++
++	mutex_unlock(&xprt->xpt_mutex);
+ 	if (err < 0)
+ 		return err;
+ 	return sent;
++
++out_notconn:
++	mutex_unlock(&xprt->xpt_mutex);
++	return -ENOTCONN;
+ }
+ 
+ static int svc_udp_has_wspace(struct svc_xprt *xprt)
+@@ -1063,6 +1077,9 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
+  * svc_tcp_sendto - Send out a reply on a TCP socket
+  * @rqstp: completed svc_rqst
+  *
++ * xpt_mutex ensures @rqstp's whole message is written to the socket
++ * without interruption.
++ *
+  * Returns the number of bytes sent, or a negative errno.
+  */
+ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+@@ -1080,12 +1097,19 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+ 
+ 	svc_release_skb(rqstp);
+ 
++	mutex_lock(&xprt->xpt_mutex);
++	if (svc_xprt_is_dead(xprt))
++		goto out_notconn;
+ 	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, marker, &sent);
+ 	xdr_free_bvec(xdr);
+ 	if (err < 0 || sent != (xdr->len + sizeof(marker)))
+ 		goto out_close;
++	mutex_unlock(&xprt->xpt_mutex);
+ 	return sent;
+ 
++out_notconn:
++	mutex_unlock(&xprt->xpt_mutex);
++	return -ENOTCONN;
+ out_close:
+ 	pr_notice("rpc-srv/tcp: %s: %s %d when sending %d bytes - shutting down socket\n",
+ 		  xprt->xpt_server->sv_name,
+@@ -1093,6 +1117,7 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+ 		  (err < 0) ? err : sent, xdr->len);
+ 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
+ 	svc_xprt_enqueue(xprt);
++	mutex_unlock(&xprt->xpt_mutex);
+ 	return -EAGAIN;
+ }
+ 
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index af7eb8d202ae..d9aab4504f2c 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -210,34 +210,31 @@ rpcrdma_bc_send_request(struct svcxprt_rdma *rdma, struct rpc_rqst *rqst)
+ 	return -ENOTCONN;
+ }
+ 
+-/* Send an RPC call on the passive end of a transport
+- * connection.
++/**
++ * xprt_rdma_bc_send_request - Send a reverse-direction Call
++ * @rqst: rpc_rqst containing Call message to be sent
++ *
++ * Return values:
++ *   %0 if the message was sent successfully
++ *   %ENOTCONN if the message was not sent
+  */
+-static int
+-xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
++static int xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
+ {
+ 	struct svc_xprt *sxprt = rqst->rq_xprt->bc_xprt;
+-	struct svcxprt_rdma *rdma;
++	struct svcxprt_rdma *rdma =
++		container_of(sxprt, struct svcxprt_rdma, sc_xprt);
+ 	int ret;
+ 
+ 	dprintk("svcrdma: sending bc call with xid: %08x\n",
+ 		be32_to_cpu(rqst->rq_xid));
+ 
+-	mutex_lock(&sxprt->xpt_mutex);
+-
+-	ret = -ENOTCONN;
+-	rdma = container_of(sxprt, struct svcxprt_rdma, sc_xprt);
+-	if (!test_bit(XPT_DEAD, &sxprt->xpt_flags)) {
+-		ret = rpcrdma_bc_send_request(rdma, rqst);
+-		if (ret == -ENOTCONN)
+-			svc_close_xprt(sxprt);
+-	}
++	if (test_bit(XPT_DEAD, &sxprt->xpt_flags))
++		return -ENOTCONN;
+ 
+-	mutex_unlock(&sxprt->xpt_mutex);
+-
+-	if (ret < 0)
+-		return ret;
+-	return 0;
++	ret = rpcrdma_bc_send_request(rdma, rqst);
++	if (ret == -ENOTCONN)
++		svc_close_xprt(sxprt);
++	return ret;
+ }
+ 
+ static void
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index b6c8643867f2..38e7c3c8c4a9 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -868,12 +868,10 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+ 	__be32 *p;
+ 	int ret;
+ 
+-	/* Create the RDMA response header. xprt->xpt_mutex,
+-	 * acquired in svc_send(), serializes RPC replies. The
+-	 * code path below that inserts the credit grant value
+-	 * into each transport header runs only inside this
+-	 * critical section.
+-	 */
++	ret = -ENOTCONN;
++	if (svc_xprt_is_dead(xprt))
++		goto err0;
++
+ 	ret = -ENOMEM;
+ 	sctxt = svc_rdma_send_ctxt_get(rdma);
+ 	if (!sctxt)
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 845d0be805ec..839c49330785 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2548,8 +2548,16 @@ static int bc_sendto(struct rpc_rqst *req)
+ 	return sent;
+ }
+ 
+-/*
+- * The send routine. Borrows from svc_send
++/**
++ * bc_send_request - Send a backchannel Call on a TCP socket
++ * @req: rpc_rqst containing Call message to be sent
++ *
++ * xpt_mutex ensures @rqstp's whole message is written to the socket
++ * without interruption.
++ *
++ * Return values:
++ *   %0 if the message was sent successfully
++ *   %ENOTCONN if the message was not sent
+  */
+ static int bc_send_request(struct rpc_rqst *req)
+ {
 
