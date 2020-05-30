@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A75C71E919A
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09B141E919C
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2020 15:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgE3N3m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 May 2020 09:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57830 "EHLO
+        id S1729085AbgE3N3r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 30 May 2020 09:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgE3N3m (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:29:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6235C03E969;
-        Sat, 30 May 2020 06:29:40 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id y18so2319141iow.3;
-        Sat, 30 May 2020 06:29:40 -0700 (PDT)
+        with ESMTP id S1728802AbgE3N3q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 May 2020 09:29:46 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFC3C03E969;
+        Sat, 30 May 2020 06:29:46 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id s18so2330691ioe.2;
+        Sat, 30 May 2020 06:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=/sRqLmRYc9bjxHRmqoe3ap8ylNJEgtFgIiEVKoCfaB0=;
-        b=OasrAyDueFsL2vsN4JHghybIOmuszpZ526lSLN0F18/aIKjY9n2Z/y8McfV93lg1Gv
-         g6GlsZA8fmtMFyj79qxWymZeFLH/Wzm1plbPlKs1PcSIDXTlMkMMJwHDKYqx0+8/eGt3
-         ydf9jALDwc3JC5+49zYJ6vVk2NXmlMoHrR6iwjaXPdQheS8EDgwx8PEfqZxxk3s0UFeI
-         z8Eo2josiBl6Z1h74d9Nj9CWaLAKTwJhnZ+OZCMPSJ5cNXE2jL9np2zf+Kjf8jGIceUH
-         HCFZGQQDp74A4Pv35SWQvR+035ljywMzoX0YkRZCgquKxKGbKZ8S6h5B1c+5QBA/Ct8J
-         g0NA==
+        bh=4r/jeRNeIMzGD5K2ShKLNq8WDzACqt7Z742c0xfjm2w=;
+        b=dPTK3cv2MX94J6XZ0jHIjDuF4NM+6e3lmoRl78c1k1WQ65MX7y8Br+hKnFlxCZHLut
+         9TFa0Wj4EdFxHtfmMRHfSEFWY/AR+li/7DmFHDJdl1Bac7WDVa5XYRBdUI0q7ngGxFVl
+         RHSaiJWlxw6DhZt8GOsmxnFzVSvbDBLzuGneKJfeXhcJ9Aj9rYLvkcCZEQPEwhAiX9j2
+         E3s7RMzguReFgjuuKr5ahZxzrAXRS1VduhTBaojJvLJj6RUZf5qci5T25GofMS2w9nvP
+         B5E1sNKa5SPShdCWqaZlCX4+LJheei68huiispI4jI5DkBV5KioJNsWuFQUCAqfCaHcU
+         mbPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=/sRqLmRYc9bjxHRmqoe3ap8ylNJEgtFgIiEVKoCfaB0=;
-        b=WQbHUQC5WMJRJVHTH88xAFUmlxl+LZ3LiYN+ohG+rG8iwNKgGLQLHpt2C0wQTZ5xIi
-         ZEODS7TZGfsywo5DSRPvMoTwumkfQhJOGhuCpNLpJpq7W10zx9DihExC7ebm+aFM3KAT
-         WhlJhSa8vPvj2xj/W9+6ZeWi0Fc8UstfQJM2XYa9QzBj3GZn+JNasPKawsHriP+UXyBk
-         ZvvzsCip3Di0cO9u0aIDlD/s3GvTpTNqu2UrhvjeFEbOkv1QOUlg3JBbJivSCOcj65U3
-         4TlWl2U82St3b0U0OneOGlriDczuRn8jWpoIA507Xlb2Rb2Ns50voWzg9a3GOjMXpFRe
-         1wIg==
-X-Gm-Message-State: AOAM530opyrMRiBmW78bqf0oU3xz3Gqjh4DGQh7mInDAJs0WBpv+hMnx
-        RqbgYTwbsrzQIkKP4cmjYksLTHYg
-X-Google-Smtp-Source: ABdhPJyZlCFuOEMYxfSsZVWOtqyjM7k1vowcbqazLS2q6oDJJrS+PMVI05tJ9MmDzuERT0ekXm9Sng==
-X-Received: by 2002:a05:6638:cb2:: with SMTP id x18mr12528593jad.6.1590845380038;
-        Sat, 30 May 2020 06:29:40 -0700 (PDT)
+        bh=4r/jeRNeIMzGD5K2ShKLNq8WDzACqt7Z742c0xfjm2w=;
+        b=JD3O1duUSk7P+mnxsolUxHIjRKX71IOtyGup+n1Ecn1x/i2Rmt5+Q99dg2ILpQHi3o
+         63jB4LhQkyCh5MPJSM2rjxNkIZI5GTPofIbDtpGzxAPKwwBZgrbSOyBjW9HlXPchDGxg
+         nW+tF1ifcJd3HI0Z0Pww4Yvue88fvYrQh1ZqMkRzn+egWKF+1yyzIXjpo4AwDQBcensH
+         d4RSmKtTktq1DcLUmwxuQL9JtrUBC8xrQ5i+43N21LkPd0HNJfcPj+hirOVsLQ/4PKdd
+         9p73ZoYM0DVs4x/Thwa8YiTHhWy5jsqMzZHxY9ZNBjusKWCAHFNkFsfMii49f1+6CZ0x
+         YN3g==
+X-Gm-Message-State: AOAM530eii/th5huKmROfIe9TfbP0b59VuXFnClyYaQsqevwsTOGkddn
+        jogZcxa3VAi0wLFUOOQzsZSbp9Wr
+X-Google-Smtp-Source: ABdhPJyZKF7eI0tq4UcV5HjKR8dhSxEpbN1QlPiOc6T4D63VGRNAG4zp907AhB/2J6AipVoxUPxUZg==
+X-Received: by 2002:a5d:8613:: with SMTP id f19mr11221308iol.173.1590845385407;
+        Sat, 30 May 2020 06:29:45 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id l21sm6668185ili.8.2020.05.30.06.29.39
+        by smtp.gmail.com with ESMTPSA id o18sm6264058ils.30.2020.05.30.06.29.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 06:29:39 -0700 (PDT)
+        Sat, 30 May 2020 06:29:44 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDTcVV001438;
-        Sat, 30 May 2020 13:29:38 GMT
-Subject: [PATCH v4 18/33] SUNRPC: Replace dprintk call sites in TCP state
- change callouts
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 04UDTiH4001441;
+        Sat, 30 May 2020 13:29:44 GMT
+Subject: [PATCH v4 19/33] SUNRPC: Trace server-side rpcbind registration
+ events
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 30 May 2020 09:29:38 -0400
-Message-ID: <20200530132938.10117.17749.stgit@klimt.1015granger.net>
+Date:   Sat, 30 May 2020 09:29:44 -0400
+Message-ID: <20200530132944.10117.8782.stgit@klimt.1015granger.net>
 In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -69,190 +69,159 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Report TCP socket state changes and accept failures via
-tracepoints, replacing dprintk() call sites.
-
-No tracepoint is added in svc_tcp_listen_data_ready. There's
-no information available there that isn't also reported by the
-svcsock_new_socket and the accept failure tracepoints.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |   67 +++++++++++++++++++++++++++++++++++++++++
- net/sunrpc/svcsock.c          |   35 ++++-----------------
- 2 files changed, 73 insertions(+), 29 deletions(-)
+ include/trace/events/sunrpc.h |   80 +++++++++++++++++++++++++++++++++++++++++
+ net/sunrpc/svc.c              |   19 ++--------
+ 2 files changed, 84 insertions(+), 15 deletions(-)
 
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index fdc44675f347..8691fbeaff17 100644
+index 8691fbeaff17..a2e197c0d2f9 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -1500,6 +1500,73 @@ DEFINE_SVCSOCK_EVENT(tcp_send);
- DEFINE_SVCSOCK_EVENT(data_ready);
- DEFINE_SVCSOCK_EVENT(write_space);
+@@ -1600,6 +1600,86 @@ DEFINE_CACHE_EVENT(cache_entry_update);
+ DEFINE_CACHE_EVENT(cache_entry_make_negative);
+ DEFINE_CACHE_EVENT(cache_entry_no_listener);
  
-+TRACE_EVENT(svcsock_tcp_state,
++DECLARE_EVENT_CLASS(register_class,
 +	TP_PROTO(
-+		const struct svc_xprt *xprt,
-+		const struct socket *socket
++		const char *program,
++		const u32 version,
++		const int family,
++		const unsigned short protocol,
++		const unsigned short port,
++		int error
 +	),
 +
-+	TP_ARGS(xprt, socket),
++	TP_ARGS(program, version, family, protocol, port, error),
 +
 +	TP_STRUCT__entry(
-+		__field(unsigned long, socket_state)
-+		__field(unsigned long, sock_state)
-+		__field(unsigned long, flags)
-+		__string(addr, xprt->xpt_remotebuf)
++		__field(u32, version)
++		__field(unsigned long, family)
++		__field(unsigned short, protocol)
++		__field(unsigned short, port)
++		__field(int, error)
++		__string(program, program)
 +	),
 +
 +	TP_fast_assign(
-+		__entry->socket_state = socket->state;
-+		__entry->sock_state = socket->sk->sk_state;
-+		__entry->flags = xprt->xpt_flags;
-+		__assign_str(addr, xprt->xpt_remotebuf);
++		__entry->version = version;
++		__entry->family = family;
++		__entry->protocol = protocol;
++		__entry->port = port;
++		__entry->error = error;
++		__assign_str(program, program);
 +	),
 +
-+	TP_printk("addr=%s state=%s sk_state=%s flags=%s", __get_str(addr),
-+		rpc_show_socket_state(__entry->socket_state),
-+		rpc_show_sock_state(__entry->sock_state),
-+		show_svc_xprt_flags(__entry->flags)
++	TP_printk("program=%sv%u proto=%s port=%u family=%s error=%d",
++		__get_str(program), __entry->version,
++		__entry->protocol == IPPROTO_UDP ? "udp" : "tcp",
++		__entry->port, rpc_show_address_family(__entry->family),
++		__entry->error
 +	)
 +);
 +
-+DECLARE_EVENT_CLASS(svcsock_accept_class,
-+	TP_PROTO(
-+		const struct svc_xprt *xprt,
-+		const char *service,
-+		long status
-+	),
-+
-+	TP_ARGS(xprt, service, status),
-+
-+	TP_STRUCT__entry(
-+		__field(long, status)
-+		__string(service, service)
-+		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
-+	),
-+
-+	TP_fast_assign(
-+		__entry->status = status;
-+		__assign_str(service, service);
-+		memcpy(__entry->addr, &xprt->xpt_local, sizeof(__entry->addr));
-+	),
-+
-+	TP_printk("listener=%pISpc service=%s status=%ld",
-+		__entry->addr, __get_str(service), __entry->status
-+	)
-+);
-+
-+#define DEFINE_ACCEPT_EVENT(name) \
-+	DEFINE_EVENT(svcsock_accept_class, svcsock_##name##_err, \
++#define DEFINE_REGISTER_EVENT(name) \
++	DEFINE_EVENT(register_class, svc_##name, \
 +			TP_PROTO( \
-+				const struct svc_xprt *xprt, \
-+				const char *service, \
-+				long status \
++				const char *program, \
++				const u32 version, \
++				const int family, \
++				const unsigned short protocol, \
++				const unsigned short port, \
++				int error \
 +			), \
-+			TP_ARGS(xprt, service, status))
++			TP_ARGS(program, version, family, protocol, \
++				port, error))
 +
-+DEFINE_ACCEPT_EVENT(accept);
-+DEFINE_ACCEPT_EVENT(getpeername);
++DEFINE_REGISTER_EVENT(register);
++DEFINE_REGISTER_EVENT(noregister);
 +
- DECLARE_EVENT_CLASS(cache_event,
- 	TP_PROTO(
- 		const struct cache_detail *cd,
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 758b835ad4ce..4ac1180c6306 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -657,9 +657,6 @@ static void svc_tcp_listen_data_ready(struct sock *sk)
- {
- 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
++TRACE_EVENT(svc_unregister,
++	TP_PROTO(
++		const char *program,
++		const u32 version,
++		int error
++	),
++
++	TP_ARGS(program, version, error),
++
++	TP_STRUCT__entry(
++		__field(u32, version)
++		__field(int, error)
++		__string(program, program)
++	),
++
++	TP_fast_assign(
++		__entry->version = version;
++		__entry->error = error;
++		__assign_str(program, program);
++	),
++
++	TP_printk("program=%sv%u error=%d",
++		__get_str(program), __entry->version, __entry->error
++	)
++);
++
+ #endif /* _TRACE_SUNRPC_H */
  
--	dprintk("svc: socket %p TCP (listen) state change %d\n",
--		sk, sk->sk_state);
--
- 	if (svsk) {
- 		/* Refer to svc_setup_socket() for details. */
- 		rmb();
-@@ -680,8 +677,7 @@ static void svc_tcp_listen_data_ready(struct sock *sk)
- 		if (svsk) {
- 			set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
- 			svc_xprt_enqueue(&svsk->sk_xprt);
--		} else
--			printk("svc: socket %p: no user data\n", sk);
-+		}
+ #include <trace/define_trace.h>
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 9ed3126600ce..3e74d61ca7da 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -991,6 +991,7 @@ static int __svc_register(struct net *net, const char *progname,
+ #endif
  	}
+ 
++	trace_svc_register(progname, version, protocol, port, family, error);
+ 	return error;
  }
  
-@@ -692,15 +688,11 @@ static void svc_tcp_state_change(struct sock *sk)
+@@ -1000,11 +1001,6 @@ int svc_rpcbind_set_version(struct net *net,
+ 			    unsigned short proto,
+ 			    unsigned short port)
  {
- 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
- 
--	dprintk("svc: socket %p TCP (connected) state change %d (svsk %p)\n",
--		sk, sk->sk_state, sk->sk_user_data);
+-	dprintk("svc: svc_register(%sv%d, %s, %u, %u)\n",
+-		progp->pg_name, version,
+-		proto == IPPROTO_UDP?  "udp" : "tcp",
+-		port, family);
 -
--	if (!svsk)
--		printk("svc: socket %p: no user data\n", sk);
--	else {
-+	if (svsk) {
- 		/* Refer to svc_setup_socket() for details. */
- 		rmb();
- 		svsk->sk_ostate(sk);
-+		trace_svcsock_tcp_state(&svsk->sk_xprt, svsk->sk_sock);
- 		if (sk->sk_state != TCP_ESTABLISHED) {
- 			set_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags);
- 			svc_xprt_enqueue(&svsk->sk_xprt);
-@@ -721,7 +713,6 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xprt *xprt)
- 	struct socket	*newsock;
- 	struct svc_sock	*newsvsk;
- 	int		err, slen;
--	RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+ 	return __svc_register(net, progp->pg_name, progp->pg_prog,
+ 				version, family, proto, port);
  
- 	if (!sock)
- 		return NULL;
-@@ -735,30 +726,18 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xprt *xprt)
- 		else if (err != -EAGAIN)
- 			net_warn_ratelimited("%s: accept failed (err %d)!\n",
- 					     serv->sv_name, -err);
-+		trace_svcsock_accept_err(xprt, serv->sv_name, err);
- 		return NULL;
+@@ -1024,11 +1020,8 @@ int svc_generic_rpcbind_set(struct net *net,
+ 		return 0;
+ 
+ 	if (vers->vs_hidden) {
+-		dprintk("svc: svc_register(%sv%d, %s, %u, %u)"
+-			" (but not telling portmap)\n",
+-			progp->pg_name, version,
+-			proto == IPPROTO_UDP?  "udp" : "tcp",
+-			port, family);
++		trace_svc_noregister(progp->pg_name, version, proto,
++				     port, family, 0);
+ 		return 0;
  	}
- 	set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
  
- 	err = kernel_getpeername(newsock, sin);
- 	if (err < 0) {
--		net_warn_ratelimited("%s: peername failed (err %d)!\n",
--				     serv->sv_name, -err);
-+		trace_svcsock_getpeername_err(xprt, serv->sv_name, err);
- 		goto failed;		/* aborted connection or whatever */
- 	}
- 	slen = err;
+@@ -1106,8 +1099,7 @@ static void __svc_unregister(struct net *net, const u32 program, const u32 versi
+ 	if (error == -EPROTONOSUPPORT)
+ 		error = rpcb_register(net, program, version, 0, 0);
  
--	/* Ideally, we would want to reject connections from unauthorized
--	 * hosts here, but when we get encryption, the IP of the host won't
--	 * tell us anything.  For now just warn about unpriv connections.
--	 */
--	if (!svc_port_is_privileged(sin)) {
--		dprintk("%s: connect from unprivileged port: %s\n",
--			serv->sv_name,
--			__svc_print_addr(sin, buf, sizeof(buf)));
--	}
--	dprintk("%s: connect from %s\n", serv->sv_name,
--		__svc_print_addr(sin, buf, sizeof(buf)));
+-	dprintk("svc: %s(%sv%u), error %d\n",
+-			__func__, progname, version, error);
++	trace_svc_unregister(progname, version, error);
+ }
+ 
+ /*
+@@ -1132,9 +1124,6 @@ static void svc_unregister(const struct svc_serv *serv, struct net *net)
+ 				continue;
+ 			if (progp->pg_vers[i]->vs_hidden)
+ 				continue;
 -
- 	/* Reset the inherited callbacks before calling svc_setup_socket */
- 	newsock->sk->sk_state_change = svsk->sk_ostate;
- 	newsock->sk->sk_data_ready = svsk->sk_odata;
-@@ -776,10 +755,8 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xprt *xprt)
- 	svc_xprt_set_remote(&newsvsk->sk_xprt, sin, slen);
- 	err = kernel_getsockname(newsock, sin);
- 	slen = err;
--	if (unlikely(err < 0)) {
--		dprintk("svc_tcp_accept: kernel_getsockname error %d\n", -err);
-+	if (unlikely(err < 0))
- 		slen = offsetof(struct sockaddr, sa_data);
--	}
- 	svc_xprt_set_local(&newsvsk->sk_xprt, sin, slen);
- 
- 	if (sock_is_loopback(newsock->sk))
+-			dprintk("svc: attempting to unregister %sv%u\n",
+-				progp->pg_name, i);
+ 			__svc_unregister(net, progp->pg_prog, i, progp->pg_name);
+ 		}
+ 	}
 
