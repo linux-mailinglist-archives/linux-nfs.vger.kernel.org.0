@@ -2,148 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 442C51EA602
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 16:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89ABA1EA6A1
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 17:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgFAOij (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Jun 2020 10:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFAOij (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 10:38:39 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE57C05BD43;
-        Mon,  1 Jun 2020 07:38:39 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 2CFC23158; Mon,  1 Jun 2020 10:38:38 -0400 (EDT)
-Date:   Mon, 1 Jun 2020 10:38:38 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v4 00/33] Possible NFSD patches for v5.8
-Message-ID: <20200601143838.GA11647@fieldses.org>
-References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
+        id S1726075AbgFAPO6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Jun 2020 11:14:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39803 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727013AbgFAPO6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 11:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591024496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pCrXJ03db7VYYYF7gmziJuuKS894/lFYNW1XlUnGtHY=;
+        b=QJAcpt3An2lkA1ewwsnbl/wR4um+X4Ie2T/7f1B5vjbLFRQ8bEuX2vnQyfVR2uNsOWrq7x
+        1zZTMu14jCHs1iQsNiUZ5KGig8mbkCGZ3SIe87U/pU6Jpa+NpVUiw68nkd+ai1PU+mmhtV
+        kQf8lhHf7sxDAxzb4N63Ib6+HDHTnOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-L0Ifay-oNR-USfFWJ-nOEQ-1; Mon, 01 Jun 2020 11:14:51 -0400
+X-MC-Unique: L0Ifay-oNR-USfFWJ-nOEQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BD3D18FE895;
+        Mon,  1 Jun 2020 15:14:50 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-116-242.rdu2.redhat.com [10.10.116.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AC525D9C9;
+        Mon,  1 Jun 2020 15:14:50 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 2F6B81203A7; Mon,  1 Jun 2020 11:14:49 -0400 (EDT)
+Date:   Mon, 1 Jun 2020 11:14:49 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "mora@netapp.com" <mora@netapp.com>
+Subject: Re: [About] about nfscache problem
+Message-ID: <20200601151449.GA170596@pick.fieldses.org>
+References: <8ad54ded2abb484e8df280bd257242bb@G08CNEXMBPEKD05.g08.fujitsu.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <8ad54ded2abb484e8df280bd257242bb@G08CNEXMBPEKD05.g08.fujitsu.local>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, May 30, 2020 at 09:28:03AM -0400, Chuck Lever wrote:
-> Hi Bruce-
+On Thu, May 28, 2020 at 07:18:31AM +0000, Su, Yanjun wrote:
+> Hi Bruce
 > 
-> To address merge conflicts with Anna's tree, I've rebased this
-> series on v5.7-rc6 plus ("SUNRPC: Split the xdr_buf event class").
-> Only two commits were changed by this rebase:
+> >On Mon, Apr 20, 2020 at 08:13:51AM +0000, Su, Yanjun wrote:
+> >> At this time, the nfscache problem has not progressed for long time. Do we still need to follow it?
+> >>
+> >> The problem is as below
+> >> The test commandline is as below:
+> >> ./nfstest_cache --nfsversion=4 -e /nfsroot --server 192.168.102.143
+> >> --client 192.168.102.142 --runtest acregmax_data --verbose all
+> >>
+> >> More detail info is here:
+> >> https://linuxlists.cc/l/17/linux-nfs/t/3063683/(patch)_cache:_fix_test_script_as_delegation_being_introduced
+> >>
+> >> This patch adds compatible code for nfsv3 and nfsv4.
+> >> When we test nfsv4, just use 'chmod' to recall delegation, then
+> >> run the test. As 'chmod' will modify atime, so use 'noatime' mount option.
+> >>
+> >> After a discusion with you, a chmod is a reliable way to recall delegations.
+> >>
+> >> Can you contact mora and make a decision for it?
 > 
->       SUNRPC: Move xpt_mutex into socket xpo_sendto methods
->       SUNRPC: Add more svcsock tracepoints
+> >I don't have any better way to contact him than the address cc'd above.
 > 
-> Feel free to make use of this version, or ignore it. :-)
+> >Remind me what the problem is? How is the test failing?
+> 
+> When we run nfstest_cache with nfsversion=4, it fails.
+> As i know nfsv4 introduces delegation, so nfstest_cache runs fail since
+> nfsv4.
+> 
+> The test commandline is as below:
+> ./nfstest_cache --nfsversion=4 -e /nfsroot --server 192.168.102.143
+> --client 192.168.102.142 --runtest acregmax_data --verbose all
+> 
+> This patch adds compatible code for nfsv3 and nfsv4.
+> When we test nfsv4, just use 'chmod' to recall delegation, then
+> run the test. As 'chmod' will modify atime, so use 'noatime' mount option.
 
-Linus generally seems to prefer handling minor conflict resolutions
-himself over maintainers rebasing.
+So, you patch nfstest as below, then run the test, and the test fails?
 
 --b.
 
 > 
-> 
-> Available to view:
->  https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/nfsd-5.8
-> 
-> Pull from this topic branch:
->  git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-5.8
-> 
-> Highlights of this series:
-> * Remove serialization of sending RPC/RDMA Replies
-> * Convert the TCP socket send path to use xdr_buf::bvecs (pre-requisite for RPC-on-TLS)
-> * Fix svcrdma backchannel sendto return code
-> * Convert a number of dprintk call sites to use tracepoints
-> * Fix the "suggest braces around empty body in an 'else' statement" warning
-> 
-> 
-> Changes since v3:
-> * Rebased on v5.7-rc6 + ("SUNRPC: Split the xdr_buf event class")
-> 
-> Changes since v2:
-> * Rebased on v5.7-rc6
-> * Fixed a logic error that left XPT_DATA unset on return from svc_tcp_recvfrom()
-> * Broke down "SUNRPC: Refactor svc_recvfrom()" to separate clean ups from logic changes
-> * Some superfluous clean-ups have been redacted
-> * Add separate tracepoints for error cases (eg, tcp_recv and tcp_recv_err)
-> 
-> Changes since v1:
-> * Rebased on v5.7-rc5+
-> * Re-organized the series so changes interesting to linux-rdma appear together
-> * Addressed sparse warnings found by the kbuild test robot
-> * Included an additional minor clean-up: removal of the unused SVCRDMA_DEBUG macro
-> * Clarified several patch descriptions
-> 
+> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com><mailto:%3Csuyj.fnst@cn.fujitsu.com%3E>
 > ---
+> test/nfstest_cache | 12 +++++++++++-
+> 1 file changed, 11 insertions(+), 1 deletion(-)
 > 
-> Chuck Lever (33):
->       SUNRPC: Split the xdr_buf event class
->       SUNRPC: Move xpt_mutex into socket xpo_sendto methods
->       svcrdma: Clean up the tracing for rw_ctx_init errors
->       svcrdma: Clean up handling of get_rw_ctx errors
->       svcrdma: Trace page overruns when constructing RDMA Reads
->       svcrdma: trace undersized Write chunks
->       svcrdma: Fix backchannel return code
->       svcrdma: Remove backchannel dprintk call sites
->       svcrdma: Rename tracepoints that record header decoding errors
->       svcrdma: Remove the SVCRDMA_DEBUG macro
->       svcrdma: Displayed remote IP address should match stored address
->       svcrdma: Add tracepoints to report ->xpo_accept failures
->       SUNRPC: Remove kernel memory address from svc_xprt tracepoints
->       SUNRPC: Tracepoint to record errors in svc_xpo_create()
->       SUNRPC: Trace a few more generic svc_xprt events
->       SUNRPC: Remove "#include <trace/events/skb.h>"
->       SUNRPC: Add more svcsock tracepoints
->       SUNRPC: Replace dprintk call sites in TCP state change callouts
->       SUNRPC: Trace server-side rpcbind registration events
->       SUNRPC: Rename svc_sock::sk_reclen
->       SUNRPC: Restructure svc_tcp_recv_record()
->       SUNRPC: Replace dprintk() call sites in TCP receive path
->       SUNRPC: Refactor recvfrom path dealing with incomplete TCP receives
->       SUNRPC: Clean up svc_release_skb() functions
->       SUNRPC: Refactor svc_recvfrom()
->       SUNRPC: Restructure svc_udp_recvfrom()
->       SUNRPC: svc_show_status() macro should have enum definitions
->       NFSD: Add tracepoints to NFSD's duplicate reply cache
->       NFSD: Add tracepoints to the NFSD state management code
->       NFSD: Add tracepoints for monitoring NFSD callbacks
->       SUNRPC: Clean up request deferral tracepoints
->       NFSD: Squash an annoying compiler warning
->       NFSD: Fix improperly-formatted Doxygen comments
+> diff --git a/test/nfstest_cache b/test/nfstest_cache
+> index 0838418..a31d48f 100755
+> --- a/test/nfstest_cache
+> +++ b/test/nfstest_cache
+> @@ -165,8 +165,13 @@ class CacheTest(TestUtil):
+> fd = None
+> attr = 'data' if data_cache else 'attribute'
+> header = "Verify consistency of %s caching with %s on a file" % (attr,
+> self.nfsstr())
+> +
+> # Mount options
+> - mtopts = "hard,intr,rsize=4096,wsize=4096"
+> + if self.nfsversion >= 4:
+> + mtopts = "noatime,hard,intr,rsize=4096,wsize=4096"
+> + else: + mtopts = "hard,intr,rsize=4096,wsize=4096"
+> +
+> if actimeo:
+> header += " actimeo = %d" % actimeo
+> mtopts += ",actimeo=%d" % actimeo
+> @@ -216,6 +221,11 @@ class CacheTest(TestUtil):
+> if fstat.st_size != dlen:
+> raise Exception("Size of newly created file is %d, should have been %d"
+> %(fstat.st_size, dlen))
+> + if self.nfsversion >= 4:
+> + # revoke delegation
+> + self.dprint('DBG3', "revoke delegation")
+> + self.clientobj.run_cmd('chmod +x %s' % self.absfile)
+> +
+> if acregmax:
+> # Stat the unchanging file until acregmax is hit
+> # each stat doubles the valid cache time
 > 
 > 
->  fs/nfsd/nfs4callback.c                     |  37 +-
->  fs/nfsd/nfs4proc.c                         |   7 +-
->  fs/nfsd/nfs4state.c                        |  63 ++--
->  fs/nfsd/nfscache.c                         |  57 +--
->  fs/nfsd/nfsctl.c                           |  26 +-
->  fs/nfsd/state.h                            |   7 -
->  fs/nfsd/trace.h                            | 345 +++++++++++++++++
->  include/linux/sunrpc/svc.h                 |   1 +
->  include/linux/sunrpc/svc_rdma.h            |   6 +-
->  include/linux/sunrpc/svc_xprt.h            |   6 +
->  include/linux/sunrpc/svcsock.h             |   6 +-
->  include/trace/events/rpcrdma.h             | 142 +++++--
->  include/trace/events/sunrpc.h              | 419 +++++++++++++++++++--
->  net/sunrpc/svc.c                           |  19 +-
->  net/sunrpc/svc_xprt.c                      |  52 +--
->  net/sunrpc/svcsock.c                       | 407 ++++++++++----------
->  net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 121 ++----
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    |  21 +-
->  net/sunrpc/xprtrdma/svc_rdma_rw.c          |  92 ++---
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c      |  10 +-
->  net/sunrpc/xprtrdma/svc_rdma_transport.c   |  55 ++-
->  net/sunrpc/xprtsock.c                      |  12 +-
->  22 files changed, 1321 insertions(+), 590 deletions(-)
-> 
-> --
-> Chuck Lever
+
