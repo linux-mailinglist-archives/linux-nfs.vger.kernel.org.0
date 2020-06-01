@@ -2,70 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 074DF1EA6BC
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 17:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 077C71EAF91
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 21:28:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgFAPRv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Jun 2020 11:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgFAPRv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 11:17:51 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F8DC05BD43
-        for <linux-nfs@vger.kernel.org>; Mon,  1 Jun 2020 08:17:50 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id k19so7533044edv.9
-        for <linux-nfs@vger.kernel.org>; Mon, 01 Jun 2020 08:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=zKxdkmhi3M1rHkXRBR18pioJZURS63Upm912Ufd4mhY=;
-        b=fKQQxVi6RiLcJxETNOwyq5dX91D5GEtkbOXHAHObBMIHHpb18EYuHVg8Wc6ql92354
-         GbywZeNYEmbKUhE+WU4cFt18/jWbutE3EPOESrWJNfyERzdvRStRMEWJ0XOaIT3+T7v8
-         yqCNjaAzijITafpzPJ0RQ9iO9gIrkUA6atd/R5YsHgZbkMuakJcqmQIb4AIMtKblkcav
-         URWVeCK5vNztJH2rWytqz7HJkq0Z2uXeTUpXRlWnSuF2FWzhLXnD7WZT9wEHIWzCQU+J
-         u3CyNyFZnU5h/cTZaNFn/8MZm9V3U78W6HHv/3V7uE/749nHiDuiyUqTV8QB4thHTTzI
-         q7DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=zKxdkmhi3M1rHkXRBR18pioJZURS63Upm912Ufd4mhY=;
-        b=AbcaFQAsi0az23cMJY+Wq0T7oyKKuY9kyvRDmZeLm/6asLFok+D+qvMf6wzyIDiRgL
-         FTnI4VBZYYBXSHhD78iyUjVyTP7Gmt23v5gHFerj1YI37wElJCFEdfJXKSIpKZqSCajA
-         JqCJid7FLvwYbFsQHXic8631fkezhYO3RQn0DxDn72RqSBpefoDAO+ERe68nfRwCMwgY
-         qMe9sNyL6ucpDz3He1o1Cd3HvV4et5xKCEmGU4YcIOdmsKcuIfqW46o0JiRb+9yR3Wl7
-         6rwjc292w6ok1HKwlqzjUS6VTLZJ1QDGsSgLUvM0JZMrQDPXfTPMBvOQB9lQ3D52YfJg
-         HFew==
-X-Gm-Message-State: AOAM532XpkVL/mdVjcRiMqvVzaZiR8gHEMSnWscKE5q5Lk8Z0KSWXBfF
-        FOmjD6CcU0JsA9RlOm/rrx+21jN7TO6cqrjuw7/yoREB
-X-Google-Smtp-Source: ABdhPJxR6QpjkxTG3iENLtfcvP53r7xuM9XMxIat5G3Qhmij3EC+4NBGpLGgEg4+cVYCpgQ5j1UoR453HpiabGgp1V8=
-X-Received: by 2002:aa7:d650:: with SMTP id v16mr21278605edr.267.1591024669338;
- Mon, 01 Jun 2020 08:17:49 -0700 (PDT)
+        id S1726944AbgFAT2D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Jun 2020 15:28:03 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24690 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726901AbgFAT2D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 15:28:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591039682;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ijc4nKoPPBT3Esl9jB0cOkHqx/2EAdM0NeWK28GF3NU=;
+        b=AXHEnu6wniGFg/Svp3NeBmoAa0DKVPSQ4d0panQpAfU96MJSYc1DdVRcKYwDtBS6BaZR/B
+        +Js2HrwwR8SpRjaNdOB5zJePrc3k9ZflRUoEA0iiGdca5RX6xqFNQp72O3xpSktmXcqxms
+        DOaY1FsVHa5ckVlPgbDZ+7H1o8mbWa4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-6q9yz4f4NtmWWssQZvkJbw-1; Mon, 01 Jun 2020 15:28:00 -0400
+X-MC-Unique: 6q9yz4f4NtmWWssQZvkJbw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 966521800D42
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Jun 2020 19:27:59 +0000 (UTC)
+Received: from localhost.localdomain.com (unknown [10.74.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B7E7610F2;
+        Mon,  1 Jun 2020 19:27:57 +0000 (UTC)
+From:   Kenneth D'souza <kdsouza@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     bfields@redhat.com
+Subject: [PATCH] nfs4_setfacl: Add file name to error output.
+Date:   Tue,  2 Jun 2020 00:57:54 +0530
+Message-Id: <20200601192754.5413-1-kdsouza@redhat.com>
 MIME-Version: 1.0
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 1 Jun 2020 11:17:38 -0400
-Message-ID: <CAN-5tyECUsBTUG2YScV8v6i7Y1164oRbOSvv4EUBDFRYKc+E3g@mail.gmail.com>
-Subject: understanding why writes get priority over other operations
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi folks,
+Currently when a user tries to set acl's recursively and if
+the operation fails the user is not aware on which file the error
+occured. This patch adds file name to error output.
 
-I'm trying to look for an explanation of if this is true and if so why
-writes gets priority over other operations (like reads)?
+Example:
+nfs4_setfacl -R -s A:dfg:6:RWX /nfsmount
+Failed setxattr operation: /nfsmount/test: Operation not permitted
+An error occurred during recursive file tree walk.
 
-I see in the code in write.c if FLUSH_HIGHPRI is set in flags then
-we'll have an RPC marked with high priority. The problem is I don't
-see anything setting FLUSH_HIGHPRI. I see that writes are written with
-either FLUSH_STABLE or FLUSH_COND_STABLE (or no flags). Basically I
-can't see how FLUSH_HIGHPRI is used.
+Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
+---
+ libnfs4acl/nfs4_set_acl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If it's not used, then question: does the NFS layer ever priorities
-writes over other operations? If NFS doesn't then prioritization must
-be coming from the VM system I'm thinking.
+diff --git a/libnfs4acl/nfs4_set_acl.c b/libnfs4acl/nfs4_set_acl.c
+index 8a53f05..45e42fa 100644
+--- a/libnfs4acl/nfs4_set_acl.c
++++ b/libnfs4acl/nfs4_set_acl.c
+@@ -61,13 +61,13 @@ int nfs4_set_acl(struct nfs4_acl *acl, const char *path)
+ 		goto out_free;
+ 	} else if (res < 0) {
+ 		if (errno == EOPNOTSUPP)
+-			fprintf(stderr,"Operation to set ACL not supported.\n");
++			fprintf(stderr,"Operation to set ACL not supported: %s\n", path);
+ 		else if (errno == ENODATA)
+-			fprintf(stderr,"ACL Attribute not found on file.\n");
++			fprintf(stderr,"ACL Attribute not found on file: %s\n", path);
+ 		else if (errno == EREMOTEIO)
+ 			fprintf(stderr,"An NFS server error occurred.\n");
+ 		else
+-			perror("Failed setxattr operation");
++			printf("Failed setxattr operation: %s: %s\n", path, strerror(errno));
+ 	}
+ 
+ out_free:
+-- 
+2.21.1
 
-Thank you.
