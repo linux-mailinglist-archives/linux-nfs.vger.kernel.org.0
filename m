@@ -2,96 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB351EA264
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 13:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 442C51EA602
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2020 16:38:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbgFALEe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Jun 2020 07:04:34 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50786 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725788AbgFALEd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 07:04:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591009472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F3R79gibjNhr31zz91Kfpy4/6S90e3DplsNoeLS1xhU=;
-        b=HIHyI2pMMp0G1GV/ZUfwM5U3xzcXWb7wHMuyTdeEZOsJlLH4LYuAO03OTcbfkerI/gVT19
-        LmlWt/dsvGNgqjf7t7i5dk5hHFvm43FibdC1Qi/juoubKN9Qk7AXQkp77bKvaaXLYGJscU
-        4lx6JsyOiGigWSpFWd0jTqOg2T0KnN0=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-u7lpZlU6M26KDxrXU0HRsA-1; Mon, 01 Jun 2020 07:04:30 -0400
-X-MC-Unique: u7lpZlU6M26KDxrXU0HRsA-1
-Received: by mail-qt1-f199.google.com with SMTP id t24so9566812qtj.15
-        for <linux-nfs@vger.kernel.org>; Mon, 01 Jun 2020 04:04:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=F3R79gibjNhr31zz91Kfpy4/6S90e3DplsNoeLS1xhU=;
-        b=lg5Ke6UFupogNeY6WAiXgXitocY6lIdxxxo0fCkJTc/bm68i/RjruO1RUwJ2W2xjVz
-         loT52+5DjBCbaFi2qehFALafgS/w2h4LZ0y3pbcQB4Actf2cmukLBl3oFN+j10AgpXXB
-         h1D0eP06Kb3K4ZrxmnPfbzGvp5HC9FNgTfk3tFOgz4dh+YRE7eDeMxa5VsIaWNtK/b3t
-         z7haG90CEL4fLINfO8ZXuiA22WpndtGeZluTx5c4eZ6lca01RJLaLaA9pWK4v/BSpdwJ
-         xYvyKT6XfnXfd6IUeSkkpIGL9tEOjqCYyMvueKDEcB86FDM+jiXWY6j7yysWuc/AG0gX
-         Ji/A==
-X-Gm-Message-State: AOAM531MjPFkIkPGK83lKA++dUoW+6knalP/TanOE5ep3NsF6hWTW00a
-        fmx937qGmWlT/dQAEhbAFiko2uZtLUmEif9z5AQGujhTmrSknqPcb56g5K1CIJrFFT3vkuhlBtC
-        Zu+WdoxzzVYuZGWM1Zv1a
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr2027123qvp.193.1591009470374;
-        Mon, 01 Jun 2020 04:04:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxC3q4dKQXpIi+IMBG0AMN0PlbzKj9mlu7+X9iHspa0NwQC3gxcL/v7aS4OHx1t+2xUkGiqUA==
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr2027109qvp.193.1591009470194;
-        Mon, 01 Jun 2020 04:04:30 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id t74sm13280973qka.21.2020.06.01.04.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 04:04:29 -0700 (PDT)
-Message-ID: <7d17296d9da7607e75a9df928747877d310bdbaa.camel@redhat.com>
-Subject: Re: [PATCH] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Vasily Averin <vvs@virtuozzo.com>, linux-nfs@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Mon, 01 Jun 2020 07:04:28 -0400
-In-Reply-To: <dc913496-1c07-fa86-9019-52fd5dcc878a@virtuozzo.com>
-References: <dc913496-1c07-fa86-9019-52fd5dcc878a@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        id S1726124AbgFAOij (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Jun 2020 10:38:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgFAOij (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Jun 2020 10:38:39 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE57C05BD43;
+        Mon,  1 Jun 2020 07:38:39 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2CFC23158; Mon,  1 Jun 2020 10:38:38 -0400 (EDT)
+Date:   Mon, 1 Jun 2020 10:38:38 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v4 00/33] Possible NFSD patches for v5.8
+Message-ID: <20200601143838.GA11647@fieldses.org>
+References: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200530131711.10117.74063.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2020-06-01 at 11:54 +0300, Vasily Averin wrote:
-> __rpc_depopulate(gssd_dentry) was lost on error path
+On Sat, May 30, 2020 at 09:28:03AM -0400, Chuck Lever wrote:
+> Hi Bruce-
 > 
-> cc: stable@vger.kernel.org
-> Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> To address merge conflicts with Anna's tree, I've rebased this
+> series on v5.7-rc6 plus ("SUNRPC: Split the xdr_buf event class").
+> Only two commits were changed by this rebase:
+> 
+>       SUNRPC: Move xpt_mutex into socket xpo_sendto methods
+>       SUNRPC: Add more svcsock tracepoints
+> 
+> Feel free to make use of this version, or ignore it. :-)
+
+Linus generally seems to prefer handling minor conflict resolutions
+himself over maintainers rebasing.
+
+--b.
+
+> 
+> 
+> Available to view:
+>  https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/nfsd-5.8
+> 
+> Pull from this topic branch:
+>  git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-5.8
+> 
+> Highlights of this series:
+> * Remove serialization of sending RPC/RDMA Replies
+> * Convert the TCP socket send path to use xdr_buf::bvecs (pre-requisite for RPC-on-TLS)
+> * Fix svcrdma backchannel sendto return code
+> * Convert a number of dprintk call sites to use tracepoints
+> * Fix the "suggest braces around empty body in an 'else' statement" warning
+> 
+> 
+> Changes since v3:
+> * Rebased on v5.7-rc6 + ("SUNRPC: Split the xdr_buf event class")
+> 
+> Changes since v2:
+> * Rebased on v5.7-rc6
+> * Fixed a logic error that left XPT_DATA unset on return from svc_tcp_recvfrom()
+> * Broke down "SUNRPC: Refactor svc_recvfrom()" to separate clean ups from logic changes
+> * Some superfluous clean-ups have been redacted
+> * Add separate tracepoints for error cases (eg, tcp_recv and tcp_recv_err)
+> 
+> Changes since v1:
+> * Rebased on v5.7-rc5+
+> * Re-organized the series so changes interesting to linux-rdma appear together
+> * Addressed sparse warnings found by the kbuild test robot
+> * Included an additional minor clean-up: removal of the unused SVCRDMA_DEBUG macro
+> * Clarified several patch descriptions
+> 
 > ---
->  net/sunrpc/rpc_pipe.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-> index 39e14d5..e9d0953 100644
-> --- a/net/sunrpc/rpc_pipe.c
-> +++ b/net/sunrpc/rpc_pipe.c
-> @@ -1317,6 +1317,7 @@ void rpc_put_sb_net(const struct net *net)
->  	q.len = strlen(gssd_dummy_clnt_dir[0].name);
->  	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
->  	if (!clnt_dentry) {
-> +		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
->  		pipe_dentry = ERR_PTR(-ENOENT);
->  		goto out;
->  	}
-
-Good catch!
-
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-
+> Chuck Lever (33):
+>       SUNRPC: Split the xdr_buf event class
+>       SUNRPC: Move xpt_mutex into socket xpo_sendto methods
+>       svcrdma: Clean up the tracing for rw_ctx_init errors
+>       svcrdma: Clean up handling of get_rw_ctx errors
+>       svcrdma: Trace page overruns when constructing RDMA Reads
+>       svcrdma: trace undersized Write chunks
+>       svcrdma: Fix backchannel return code
+>       svcrdma: Remove backchannel dprintk call sites
+>       svcrdma: Rename tracepoints that record header decoding errors
+>       svcrdma: Remove the SVCRDMA_DEBUG macro
+>       svcrdma: Displayed remote IP address should match stored address
+>       svcrdma: Add tracepoints to report ->xpo_accept failures
+>       SUNRPC: Remove kernel memory address from svc_xprt tracepoints
+>       SUNRPC: Tracepoint to record errors in svc_xpo_create()
+>       SUNRPC: Trace a few more generic svc_xprt events
+>       SUNRPC: Remove "#include <trace/events/skb.h>"
+>       SUNRPC: Add more svcsock tracepoints
+>       SUNRPC: Replace dprintk call sites in TCP state change callouts
+>       SUNRPC: Trace server-side rpcbind registration events
+>       SUNRPC: Rename svc_sock::sk_reclen
+>       SUNRPC: Restructure svc_tcp_recv_record()
+>       SUNRPC: Replace dprintk() call sites in TCP receive path
+>       SUNRPC: Refactor recvfrom path dealing with incomplete TCP receives
+>       SUNRPC: Clean up svc_release_skb() functions
+>       SUNRPC: Refactor svc_recvfrom()
+>       SUNRPC: Restructure svc_udp_recvfrom()
+>       SUNRPC: svc_show_status() macro should have enum definitions
+>       NFSD: Add tracepoints to NFSD's duplicate reply cache
+>       NFSD: Add tracepoints to the NFSD state management code
+>       NFSD: Add tracepoints for monitoring NFSD callbacks
+>       SUNRPC: Clean up request deferral tracepoints
+>       NFSD: Squash an annoying compiler warning
+>       NFSD: Fix improperly-formatted Doxygen comments
+> 
+> 
+>  fs/nfsd/nfs4callback.c                     |  37 +-
+>  fs/nfsd/nfs4proc.c                         |   7 +-
+>  fs/nfsd/nfs4state.c                        |  63 ++--
+>  fs/nfsd/nfscache.c                         |  57 +--
+>  fs/nfsd/nfsctl.c                           |  26 +-
+>  fs/nfsd/state.h                            |   7 -
+>  fs/nfsd/trace.h                            | 345 +++++++++++++++++
+>  include/linux/sunrpc/svc.h                 |   1 +
+>  include/linux/sunrpc/svc_rdma.h            |   6 +-
+>  include/linux/sunrpc/svc_xprt.h            |   6 +
+>  include/linux/sunrpc/svcsock.h             |   6 +-
+>  include/trace/events/rpcrdma.h             | 142 +++++--
+>  include/trace/events/sunrpc.h              | 419 +++++++++++++++++++--
+>  net/sunrpc/svc.c                           |  19 +-
+>  net/sunrpc/svc_xprt.c                      |  52 +--
+>  net/sunrpc/svcsock.c                       | 407 ++++++++++----------
+>  net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 121 ++----
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    |  21 +-
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c          |  92 ++---
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c      |  10 +-
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c   |  55 ++-
+>  net/sunrpc/xprtsock.c                      |  12 +-
+>  22 files changed, 1321 insertions(+), 590 deletions(-)
+> 
+> --
+> Chuck Lever
