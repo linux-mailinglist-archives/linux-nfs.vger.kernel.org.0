@@ -2,30 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3208D1EC1CA
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2020 20:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C031EC34E
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2020 22:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgFBSaI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Jun 2020 14:30:08 -0400
-Received: from fieldses.org ([173.255.197.46]:33742 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgFBSaI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:30:08 -0400
+        id S1726937AbgFBUAQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Jun 2020 16:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBUAQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Jun 2020 16:00:16 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F421DC08C5C0
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Jun 2020 13:00:15 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 0720E36E1; Tue,  2 Jun 2020 14:30:07 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 14:30:06 -0400
-To:     kernel test robot <lkp@intel.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        LKP <lkp@lists.01.org>
-Subject: Re: 3ba75830ce ("nfsd4: drc containerization"): [   51.013875]
- WARNING: possible circular locking dependency detected
-Message-ID: <20200602183006.GC1769@fieldses.org>
-References: <20200527051159.GR12456@shao2-debian>
+        id 784F436E1; Tue,  2 Jun 2020 16:00:14 -0400 (EDT)
+Date:   Tue, 2 Jun 2020 16:00:14 -0400
+To:     "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
+Cc:     "bfields@redhat.com" <bfields@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "mora@netapp.com" <mora@netapp.com>
+Subject: Re: Re: [About] about nfscache problem
+Message-ID: <20200602200014.GD1769@fieldses.org>
+References: <694b44377eae4adca7273de471807be7@G08CNEXMBPEKD05.g08.fujitsu.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527051159.GR12456@shao2-debian>
+In-Reply-To: <694b44377eae4adca7273de471807be7@G08CNEXMBPEKD05.g08.fujitsu.local>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
@@ -33,262 +35,99 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:11:59PM +0800, kernel test robot wrote:
-> Greetings,
+On Tue, Jun 02, 2020 at 12:50:43AM +0000, Su, Yanjun wrote:
+> >On Thu, May 28, 2020 at 07:18:31AM +0000, Su, Yanjun wrote:
+> >> This patch adds compatible code for nfsv3 and nfsv4.
 > 
-> 0day kernel testing robot got the below dmesg and the first bad commit is
+> >> When we test nfsv4, just use 'chmod' to recall delegation, then
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> >> run the test. As 'chmod' will modify atime, so use 'noatime' mount option.
 > 
-> commit 3ba75830ce175550ef45c6524ec62faab8f62c1b
+> >So, you patch nfstest as below, then run the test, and the test fails?
+> 
+> It tests ok when appling the patch.
 
-Thanks!  I looked at the code quickly and can't figure out where the
-deadlock is exactly.
+So you're just asking that this patch be applied to nfstest?
 
-It seems to involve the kmem_cache_create() call in nfsd's net init
-method.  Anyone know if there's a reason why creating a new slab cache
-during network namespace initialization is a potential deadlock?
-
-It was probably a dumb thing to do in this case--I can apply the below
-to make the slab global again.  Kinda curious what exactly the bug is,
-though.
+Sorry, I don't think I can help.
 
 --b.
 
-commit 027690c75e8f
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Mon Jun 1 17:44:45 2020 -0400
-
-    nfsd4: make drc_slab global, not per-net
-    
-    I made every global per-network-namespace instead.  But perhaps doing
-    that to this slab was a step too far.
-    
-    The kmem_cache_create call in our net init method also seems to be
-    responsible for this lockdep warning:
-    
-    [   45.163710] Unable to find swap-space signature
-    [   45.375718] trinity-c1 (855): attempted to duplicate a private mapping with mremap.  This is not supported.
-    [   46.055744] futex_wake_op: trinity-c1 tries to shift op by -209; fix this program
-    [   51.011723]
-    [   51.013378] ======================================================
-    [   51.013875] WARNING: possible circular locking dependency detected
-    [   51.014378] 5.2.0-rc2 #1 Not tainted
-    [   51.014672] ------------------------------------------------------
-    [   51.015182] trinity-c2/886 is trying to acquire lock:
-    [   51.015593] 000000005405f099 (slab_mutex){+.+.}, at: slab_attr_store+0xa2/0x130
-    [   51.016190]
-    [   51.016190] but task is already holding lock:
-    [   51.016652] 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-    [   51.017266]
-    [   51.017266] which lock already depends on the new lock.
-    [   51.017266]
-    [   51.017909]
-    [   51.017909] the existing dependency chain (in reverse order) is:
-    [   51.018497]
-    [   51.018497] -> #1 (kn->count#43){++++}:
-    [   51.018956]        __lock_acquire+0x7cf/0x1a20
-    [   51.019317]        lock_acquire+0x17d/0x390
-    [   51.019658]        __kernfs_remove+0x892/0xae0
-    [   51.020020]        kernfs_remove_by_name_ns+0x78/0x110
-    [   51.020435]        sysfs_remove_link+0x55/0xb0
-    [   51.020832]        sysfs_slab_add+0xc1/0x3e0
-    [   51.021332]        __kmem_cache_create+0x155/0x200
-    [   51.021720]        create_cache+0xf5/0x320
-    [   51.022054]        kmem_cache_create_usercopy+0x179/0x320
-    [   51.022486]        kmem_cache_create+0x1a/0x30
-    [   51.022867]        nfsd_reply_cache_init+0x278/0x560
-    [   51.023266]        nfsd_init_net+0x20f/0x5e0
-    [   51.023623]        ops_init+0xcb/0x4b0
-    [   51.023928]        setup_net+0x2fe/0x670
-    [   51.024315]        copy_net_ns+0x30a/0x3f0
-    [   51.024653]        create_new_namespaces+0x3c5/0x820
-    [   51.025257]        unshare_nsproxy_namespaces+0xd1/0x240
-    [   51.025881]        ksys_unshare+0x506/0x9c0
-    [   51.026381]        __x64_sys_unshare+0x3a/0x50
-    [   51.026937]        do_syscall_64+0x110/0x10b0
-    [   51.027509]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [   51.028175]
-    [   51.028175] -> #0 (slab_mutex){+.+.}:
-    [   51.028817]        validate_chain+0x1c51/0x2cc0
-    [   51.029422]        __lock_acquire+0x7cf/0x1a20
-    [   51.029947]        lock_acquire+0x17d/0x390
-    [   51.030438]        __mutex_lock+0x100/0xfa0
-    [   51.030995]        mutex_lock_nested+0x27/0x30
-    [   51.031516]        slab_attr_store+0xa2/0x130
-    [   51.032020]        sysfs_kf_write+0x11d/0x180
-    [   51.032529]        kernfs_fop_write+0x32a/0x500
-    [   51.033056]        do_loop_readv_writev+0x21d/0x310
-    [   51.033627]        do_iter_write+0x2e5/0x380
-    [   51.034148]        vfs_writev+0x170/0x310
-    [   51.034616]        do_pwritev+0x13e/0x160
-    [   51.035100]        __x64_sys_pwritev+0xa3/0x110
-    [   51.035633]        do_syscall_64+0x110/0x10b0
-    [   51.036200]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [   51.036924]
-    [   51.036924] other info that might help us debug this:
-    [   51.036924]
-    [   51.037876]  Possible unsafe locking scenario:
-    [   51.037876]
-    [   51.038556]        CPU0                    CPU1
-    [   51.039130]        ----                    ----
-    [   51.039676]   lock(kn->count#43);
-    [   51.040084]                                lock(slab_mutex);
-    [   51.040597]                                lock(kn->count#43);
-    [   51.041062]   lock(slab_mutex);
-    [   51.041320]
-    [   51.041320]  *** DEADLOCK ***
-    [   51.041320]
-    [   51.041793] 3 locks held by trinity-c2/886:
-    [   51.042128]  #0: 000000001f55e152 (sb_writers#5){.+.+}, at: vfs_writev+0x2b9/0x310
-    [   51.042739]  #1: 00000000c7d6c034 (&of->mutex){+.+.}, at: kernfs_fop_write+0x25b/0x500
-    [   51.043400]  #2: 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-    
-    Reported-by: kernel test robot <lkp@intel.com>
-    Fixes: 3ba75830ce17 "drc containerization"
-    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-
-diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-index 10ec5ecdf117..65c331f75e9c 100644
---- a/fs/nfsd/cache.h
-+++ b/fs/nfsd/cache.h
-@@ -78,6 +78,8 @@ enum {
- /* Checksum this amount of the request */
- #define RC_CSUMLEN		(256U)
- 
-+int	nfsd_drc_slab_create(void);
-+void	nfsd_drc_slab_free(void);
- int	nfsd_reply_cache_init(struct nfsd_net *);
- void	nfsd_reply_cache_shutdown(struct nfsd_net *);
- int	nfsd_cache_lookup(struct svc_rqst *);
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 09aa545825bd..9217cb64bf0e 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -139,7 +139,6 @@ struct nfsd_net {
- 	 * Duplicate reply cache
- 	 */
- 	struct nfsd_drc_bucket   *drc_hashtbl;
--	struct kmem_cache        *drc_slab;
- 
- 	/* max number of entries allowed in the cache */
- 	unsigned int             max_drc_entries;
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 945d2f5e760e..f30a7def7899 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -35,6 +35,8 @@ struct nfsd_drc_bucket {
- 	spinlock_t cache_lock;
- };
- 
-+static struct kmem_cache	*drc_slab;
-+
- static int	nfsd_cache_append(struct svc_rqst *rqstp, struct kvec *vec);
- static unsigned long nfsd_reply_cache_count(struct shrinker *shrink,
- 					    struct shrink_control *sc);
-@@ -94,7 +96,7 @@ nfsd_reply_cache_alloc(struct svc_rqst *rqstp, __wsum csum,
- {
- 	struct svc_cacherep	*rp;
- 
--	rp = kmem_cache_alloc(nn->drc_slab, GFP_KERNEL);
-+	rp = kmem_cache_alloc(drc_slab, GFP_KERNEL);
- 	if (rp) {
- 		rp->c_state = RC_UNUSED;
- 		rp->c_type = RC_NOCACHE;
-@@ -128,7 +130,7 @@ nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 		atomic_dec(&nn->num_drc_entries);
- 		nn->drc_mem_usage -= sizeof(*rp);
- 	}
--	kmem_cache_free(nn->drc_slab, rp);
-+	kmem_cache_free(drc_slab, rp);
- }
- 
- static void
-@@ -140,6 +142,18 @@ nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 	spin_unlock(&b->cache_lock);
- }
- 
-+int nfsd_drc_slab_create(void)
-+{
-+	drc_slab = kmem_cache_create("nfsd_drc",
-+				sizeof(struct svc_cacherep), 0, 0, NULL);
-+	return drc_slab ? 0: -ENOMEM;
-+}
-+
-+void nfsd_drc_slab_free(void)
-+{
-+	kmem_cache_destroy(drc_slab);
-+}
-+
- int nfsd_reply_cache_init(struct nfsd_net *nn)
- {
- 	unsigned int hashsize;
-@@ -158,18 +172,13 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	if (status)
- 		goto out_nomem;
- 
--	nn->drc_slab = kmem_cache_create("nfsd_drc",
--				sizeof(struct svc_cacherep), 0, 0, NULL);
--	if (!nn->drc_slab)
--		goto out_shrinker;
--
- 	nn->drc_hashtbl = kcalloc(hashsize,
- 				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
- 	if (!nn->drc_hashtbl) {
- 		nn->drc_hashtbl = vzalloc(array_size(hashsize,
- 						 sizeof(*nn->drc_hashtbl)));
- 		if (!nn->drc_hashtbl)
--			goto out_slab;
-+			goto out_shrinker;
- 	}
- 
- 	for (i = 0; i < hashsize; i++) {
-@@ -179,8 +188,6 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	nn->drc_hashsize = hashsize;
- 
- 	return 0;
--out_slab:
--	kmem_cache_destroy(nn->drc_slab);
- out_shrinker:
- 	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
- out_nomem:
-@@ -208,8 +215,6 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
- 	nn->drc_hashtbl = NULL;
- 	nn->drc_hashsize = 0;
- 
--	kmem_cache_destroy(nn->drc_slab);
--	nn->drc_slab = NULL;
- }
- 
- /*
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index b48eac3bb72b..b68e96681522 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1533,6 +1533,9 @@ static int __init init_nfsd(void)
- 		goto out_free_slabs;
- 	nfsd_fault_inject_init(); /* nfsd fault injection controls */
- 	nfsd_stat_init();	/* Statistics */
-+	retval = nfsd_drc_slab_create();
-+	if (retval)
-+		goto out_free_stat;
- 	nfsd_lockd_init();	/* lockd->nfsd callbacks */
- 	retval = create_proc_exports_entry();
- 	if (retval)
-@@ -1546,6 +1549,8 @@ static int __init init_nfsd(void)
- 	remove_proc_entry("fs/nfs", NULL);
- out_free_lockd:
- 	nfsd_lockd_shutdown();
-+	nfsd_drc_slab_free();
-+out_free_stat:
- 	nfsd_stat_shutdown();
- 	nfsd_fault_inject_cleanup();
- 	nfsd4_exit_pnfs();
-@@ -1560,6 +1565,7 @@ static int __init init_nfsd(void)
- 
- static void __exit exit_nfsd(void)
- {
-+	nfsd_drc_slab_free();
- 	remove_proc_entry("fs/nfs/exports", NULL);
- 	remove_proc_entry("fs/nfs", NULL);
- 	nfsd_stat_shutdown();
+> > Signed-off-by: Su Yanjun <suyj.fnst@xxxxxxxxxxxxxx><mailto:%3Csuyj.fnst@xxxxxxxxxxxxxx%3E>
+> 
+> > ---
+> 
+> > test/nfstest_cache | 12 +++++++++++-
+> 
+> > 1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> >
+> 
+> > diff --git a/test/nfstest_cache b/test/nfstest_cache
+> 
+> > index 0838418..a31d48f 100755
+> 
+> > --- a/test/nfstest_cache
+> 
+> > +++ b/test/nfstest_cache
+> 
+> > @@ -165,8 +165,13 @@ class CacheTest(TestUtil):
+> 
+> > fd = None
+> 
+> > attr = 'data' if data_cache else 'attribute'
+> 
+> > header = "Verify consistency of %s caching with %s on a file" % (attr,
+> 
+> > self.nfsstr())
+> 
+> > +
+> 
+> > # Mount options
+> 
+> > - mtopts = "hard,intr,rsize=4096,wsize=4096"
+> 
+> > + if self.nfsversion >= 4:
+> 
+> > + mtopts = "noatime,hard,intr,rsize=4096,wsize=4096"
+> 
+> > + else: + mtopts = "hard,intr,rsize=4096,wsize=4096"
+> 
+> > +
+> 
+> > if actimeo:
+> 
+> > header += " actimeo = %d" % actimeo
+> 
+> > mtopts += ",actimeo=%d" % actimeo
+> 
+> > @@ -216,6 +221,11 @@ class CacheTest(TestUtil):
+> 
+> > if fstat.st_size != dlen:
+> 
+> > raise Exception("Size of newly created file is %d, should have been %d"
+> 
+> > %(fstat.st_size, dlen))
+> 
+> > + if self.nfsversion >= 4:
+> 
+> > + # revoke delegation
+> 
+> > + self.dprint('DBG3', "revoke delegation")
+> 
+> > + self.clientobj.run_cmd('chmod +x %s' % self.absfile)
+> 
+> > +
+> 
+> > if acregmax:
+> 
+> > # Stat the unchanging file until acregmax is hit
+> 
+> > # each stat doubles the valid cache time
+> 
+> >
+> 
+> >
+> 
+> 
+> 
