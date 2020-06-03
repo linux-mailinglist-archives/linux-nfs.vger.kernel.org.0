@@ -2,128 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FE271ED2CE
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 16:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A381ED3D7
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 17:58:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgFCO6A convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 3 Jun 2020 10:58:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35226 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgFCO6A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Jun 2020 10:58:00 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-62gS6p8mMHKoGBxfzQG9qw-1; Wed, 03 Jun 2020 10:57:57 -0400
-X-MC-Unique: 62gS6p8mMHKoGBxfzQG9qw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3678264AD4
-        for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2020 14:57:56 +0000 (UTC)
-Received: from aion.usersys.redhat.com (ovpn-114-183.rdu2.redhat.com [10.10.114.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1949B78F15;
-        Wed,  3 Jun 2020 14:57:56 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 4AE4B1A00CC; Wed,  3 Jun 2020 10:57:55 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 10:57:55 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Rohan Sable <rsable@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, steved@redhat.com
-Subject: Re: [PATCH] mountstats: Adding Day:Hour:Min:Sec format along with
- age to "mountstats --raw" for ease of understanding.
-Message-ID: <20200603145755.GF108002@aion.usersys.redhat.com>
-References: <20200602092919.GA42177@fedora.rsable.com>
+        id S1726034AbgFCP6N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Jun 2020 11:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgFCP6M (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Jun 2020 11:58:12 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396F9C08C5C0
+        for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2020 08:58:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s1so3438145ljo.0
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Jun 2020 08:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thefrys-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=fXVqToZYdu4EuzctN893foddhQZu1iCokT8f8h1tPSc=;
+        b=kaNvM8yBZtt99FyhAtC8b5Pxv4469O/sSs+hdwtGPptkAbo7AjcnzmgK7R8xGgJYYx
+         RfqU1280519r8ORIaQM42u/CP8phXLxf3HNZi5tQWRnIzk24sk8gMGztlWH9x88FVtM0
+         FxvD1i73fRrBJCtNCkagMrP5Dx4k+U6pj+YdG/vI4APuAsAXrOpxEfBG59X3wkqTY9o/
+         gQ0breoXXmqtL0bKx1Opjv2+rZgQbiE68gQ0RcvUgugwbnrHkSA6grV74oqD9rTJ8xb1
+         iLy3S34iD0FZhKR911iwXfwK33bA4+TQuPKk1xkpliPBIJptQNQ1hbmF2cem0qqtxrtc
+         jBLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=fXVqToZYdu4EuzctN893foddhQZu1iCokT8f8h1tPSc=;
+        b=TBIhq7hCK7WjBJ+wDCK/P7/thNplQE/u8wjdwAu6Ru+kbEArup5NqjN0kvHhbViodk
+         pHGenXiiXpbCwuPQZjw60TZzaDNBzsEeGMhltaXuZ/RvMKEE/kmKZZKDZFoRxoLj1i+J
+         ooyFuBlzhy9aBfIwBVZAYSaYY48U/b9rivbehXEnyFXXukLeCbCUoKvkveDYcZGg9FfU
+         Mp8Mhnli0RFH0rmrRDMx2eRnXwCMBPK33mE8PjFuEn4hh1abVm+4A7DcNQLKSqY7rLl+
+         r2JcVsk35nkFcAoPx/LqayxUB6K9qdSBFd6Mbxaf+QaCOHixp2151N4FTqS6GAavwk2R
+         VJEw==
+X-Gm-Message-State: AOAM531KQNp9cCOwMYPDVsqPLPfcJTXn4TROYYZqZYR852z7fpmKYdNL
+        JlKMBSoBG9EZEsmC8ZtCVRF/IcYsHK+Of7Y3zYFc3J5Gwl4=
+X-Google-Smtp-Source: ABdhPJxzQlsMNTPxhiNvS3kFvEr+41AenS2VB51amuMnXyDRBx5OXkWKTbDjM2C9C4PoRH18s5bk2GNDxXxTKZYx/h0=
+X-Received: by 2002:a2e:8107:: with SMTP id d7mr759839ljg.363.1591199890122;
+ Wed, 03 Jun 2020 08:58:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200602092919.GA42177@fedora.rsable.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aion.usersys.redhat.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+From:   Joseph Fry <joe@thefrys.com>
+Date:   Wed, 3 Jun 2020 11:57:34 -0400
+Message-ID: <CAAJE3SsYvmL3qq=+Ay0PZqsg0XAQKcVJMpJ1QHpyLrDaWaUWyg@mail.gmail.com>
+Subject: Delay before NFS list/create file operations
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Rohan,
+Sorry if this is not the correct way to ask for help, however I want
+to avoid people trying to help me "tune" my nfs mount settings and
+figured that taking my problem to the actual devs may get to the heart
+of my issue faster.
 
-On Tue, 02 Jun 2020, Rohan Sable wrote:
+Running a custom Linux 4.14.132 kernel and nfs-common 1.3.4-2.1 on a
+Debian Stretch VCenter VM using NFSv3 over UDP to connect to a NetApp
+filer via a 10Gbps link.  We have several identical servers, all
+accessing the same NFS export/qtree, all showing the same symptoms.
+There are 1.8M files in that directory (a lot, but everything works
+fine, until it doesn't).
 
-> The output will look something like this :
-> 
-> From :
-> age:    2215
-> 
-> To   :
-> age:    2267; 0 Day(s) 0 Hour(s) 37 Min(s) 47 Sec(s)
-> 
-> Signed-off-by: Rohan Sable <rsable@redhat.com>
-> ---
->  tools/mountstats/mountstats.py | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
-> index 6ac83ccb..d9b5af1b 100755
-> --- a/tools/mountstats/mountstats.py
-> +++ b/tools/mountstats/mountstats.py
-> @@ -228,6 +228,15 @@ Nfsv4ops = [
->      'CLONE'
->  ]
->  
-> +def sec_conv(rem):
-> +    day = int(rem / (24 * 3600))
-> +    rem %= (24 * 3600)
-> +    hrs = int(rem / 3600)
-> +    rem %= 3600
-> +    min = int(rem / 60)
-> +    sec = rem % 60
-> +    print(day, "Day(s)", hrs, "Hour(s)", min, "Min(s)", sec, "Sec(s)")
-> +
->  class DeviceData:
->      """DeviceData objects provide methods for parsing and displaying
->      data for a single mount grabbed from /proc/self/mountstats
-> @@ -349,7 +358,8 @@ class DeviceData:
->              (self.__nfs_data['export'], self.__nfs_data['mountpoint'], \
->              self.__nfs_data['fstype'], self.__nfs_data['statvers']))
->          print('\topts:\t%s' % ','.join(self.__nfs_data['mountoptions']))
-> -        print('\tage:\t%d' % self.__nfs_data['age'])
-> +        print('\tage:\t%d' % self.__nfs_data['age'], end="; ")
-> +        sec_conv(self.__nfs_data['age'])
+Essentially, the issue is that after a few hours of moderate to heavy
+use we begin to notice a delay prior to most NFS operations that don't
+target a specific file.  It literally appears that every call to
+create or list files on NFS is being delayed, and that delay grows to
+>30s over a few hours and never goes away until we umount+mount or
+reboot.
 
-If you write this raw output to a file, you can no longer use the
-resulting file with 'mountstats --file' or 'mountstats --since':
+To show the difference, I mounted the same NFS export a second time
+from an affected server and timed writing a 1GB file to each of the
+mounts.  On the fresh mount (/mnt/nfs) I see about what you would
+expect (dd says it wrote everything in 9.65s and the total execution
+time was 9.7s):
 
-[smayhew@aion nfs-utils]$ tools/mountstats/mountstats.py --file b1 --since a1
-Traceback (most recent call last):
-  File "tools/mountstats/mountstats.py", line 1130, in <module>
-    res = main()
-  File "tools/mountstats/mountstats.py", line 1119, in main
-    return args.func(args)
-  File "tools/mountstats/mountstats.py", line 846, in mountstats_command
-    stats.parse_stats(descr)
-  File "tools/mountstats/mountstats.py", line 333, in parse_stats
-    self.__parse_nfs_line(words)
-  File "tools/mountstats/mountstats.py", line 263, in __parse_nfs_line
-    self.__nfs_data['age'] = int(words[1])
-ValueError: invalid literal for int() with base 10: '366;'
+# time dd if=/dev/zero of=/mnt/nfs/testfile1 bs=1G count=1
+
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 9.65657 s, 111 MB/s
+
+real    0m9.719s
+user    0m0.000s
+sys     0m1.284s
+
+However when performing the same operation from the affected mount, we
+see that the total execution time was almost 6X longer (54s) than the
+actual write operation (still only ~9s).  It literally sat there doing
+nothing for 45 seconds before any writing occurred:
+
+# time dd if=/dev/zero of=/opt/rpath/testfile2 bs=1G count=1
+
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 9.17179 s, 117 MB/s
+
+ real    0m54.226s
+user    0m0.001s
+sys     0m1.238s
+
+In addition to creating files, a simple "ls -1f" will wait 30+ seconds
+before displaying the first ~500 filenames, then waits 30+ seconds
+again before then next ~500 and so on.
+
+Any operation that targets an explicit filename does not seem to be
+affected and all operations on a fresh mount perform exactly as you
+would expect.
+
+The mountstats and nfsiostat commands also show that NFS is behaving
+normally; all statistics are normal, fast and timely... yet every
+affected operation has a delay before it actually starts
+reading/writing from NFS.
+
+I have spent hours on the phone with netapp and we are planning to do
+packet captures, but we are fairly confident that the issue is client
+side.
+
+I don't believe that the issue is in NFS, or I should see an impact to
+the statistics, which leaves something in the kernel feeding the
+requests to it, but I have no idea where to look to pinpoint the
+delay.  Unfortunately these systems do not have strace or many other
+tools installed, so I am fairly limited in what I can do to
+troubleshoot client side issues.
+
+I hoped that someone on this list may have seen this issue before or
+otherwise have a good place to start looking.
+
+I am not a member of the mailing list, so I would appreciate responses
+to be sent directly to me joe@thefrys.com.  http://vger.kernel.org
+appears to be down, so I am not sure how to join.
+
+Thanks for any direction you can provide!
 
 
-That was the original intended purpose for the raw option.
-
-I think it would be better leave display_raw_stats() alone and either
-add the age (including the call to sec_conv()) to display_stats_header()
-(in which case it would always appear except for when the --raw option
-is used), or add it to display_nfs_options() (in which case it would
-only be shown when mountstats is invoked with no options or with the
---nfs option).
-
--Scott
-
->          print('\tcaps:\t%s' % ','.join(self.__nfs_data['servercapabilities']))
->          print('\tsec:\tflavor=%d,pseudoflavor=%d' % (self.__nfs_data['flavor'], \
->              self.__nfs_data['pseudoflavor']))
-> -- 
-> 2.25.4
-> 
-
+Joe
