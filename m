@@ -2,117 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3BE1ECB49
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 10:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F9CC1ED14E
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 15:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725275AbgFCITX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Jun 2020 04:19:23 -0400
-Received: from esa4.fujitsucc.c3s2.iphmx.com ([68.232.151.214]:7644 "EHLO
-        esa4.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725876AbgFCITX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Jun 2020 04:19:23 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 04:19:22 EDT
-IronPort-SDR: Rwm8T64k0zHQGTYrUtv97/O+6IUhMDQUS7PptmnX+GhmHNC9Lfeca21OfWmmQxIthLXp87Z/J2
- E5RINahqT/fwjGgjxpTqCA7OW8AIrmOTJiz38lgljWm9Q8rYxDlrKnKVIHfbmIO7RUn7KtXwqZ
- tpeana72a9CIAv8o6M7dPyHKBwrSEwoz7lLvBucVMxrFK8Ru4y49Z4J83DDmiXQSt2GjkHddig
- 441U9ccvz0h9Gt1pwxaBys2ucSUOCLewChvjugVf1kspJdoxiwKo1s5wUDDetbeCg/jV+yQef1
- XfY=
-X-IronPort-AV: E=McAfee;i="6000,8403,9639"; a="22000327"
-X-IronPort-AV: E=Sophos;i="5.73,467,1583161200"; 
-   d="scan'208";a="22000327"
-Received: from mail-ty1jpn01lp2059.outbound.protection.outlook.com (HELO JPN01-TY1-obe.outbound.protection.outlook.com) ([104.47.93.59])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 17:12:12 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UiRggyAXeVfX399Yu1KC6PLUHKPL4Rh3GKjcm+EWZIqdYxcJDMMaJV7KSfCeF+As5e3+rewM+HKzV5awd0gXcZ4RkiAU4QBmIqX2tLALbguuiKDvZzxqd0rviR0yqr5jvQo0IX1rhx1CmOTjKjTqJAsPh/U425/2V0hT1Q5VMchUy57xT4HdT1wW2CP8aijhvTbQivpr14TKFLL5hfoklbqnv8TF2SBhDyESAvRLmmWI+Tx+leFvTZ5mkCTMG7FVzJWm5EATmOFlYlywjAF6cfT/wSwN9dy0JC6S0lz2lAWOSy6C4CSInPQPUZUkjQAR1Swj05nrW11Q3BEm78KsBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rNWmYYIpCQJ09CF/8o1Yx56OKTqaPgzJRtN435YI1KQ=;
- b=S+t11weE9CItRWUvp8uoMJWe5b/6TtOLt+BnTSFIP/aLlk+hzLwWvUDJ/0VJsHpjXYDBo4+R0WxHCi24EvgsYQIYeYPer8ADGiYvRaDigeHzTUBwJKS5tCfzCCrm1fr8hWtq1FS+x2ZQOBAC++86wUp76aPYthNvPlVltM7TsEo39gzUMGcBsqImh+yI9WdoOFFvBqT8nn9DMBDoQMeWNpO5xS7b3dLxHSI5URbSIWz08NTYIg7GHLCYMD6L4et8snZBHzpFC97gld8QHMQq5dgG2DxvjGyM2Vvwn/w6YLcvYPPq3JJ8cULB0edRGjTtCIYEz5AiTXAO7rcR0AJt9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
+        id S1726054AbgFCNtE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Jun 2020 09:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgFCNsv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Jun 2020 09:48:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71052C00863C
+        for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2020 06:48:49 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id p5so2425212wrw.9
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Jun 2020 06:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rNWmYYIpCQJ09CF/8o1Yx56OKTqaPgzJRtN435YI1KQ=;
- b=LRBMr/oKr5Qq0zEx+r0+D+3mgLf6JD5Rx+US9w+DD1tTp54vaY8dPmwo0vmaiKQBwu9VvkLhs6Q2CrFKVvT8Izz6b+oMKC7eVA8hHrA0NPnReRgKfxW5vcbMffTQz2xTrXndrTOjZFL+VNx6TeFPBQqPQpjodWrYmom3gt+oVIs=
-Received: from OSBPR01MB2949.jpnprd01.prod.outlook.com (2603:1096:604:1a::22)
- by OSBPR01MB4789.jpnprd01.prod.outlook.com (2603:1096:604:75::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
- 2020 08:12:09 +0000
-Received: from OSBPR01MB2949.jpnprd01.prod.outlook.com
- ([fe80::8972:39a6:4929:bc25]) by OSBPR01MB2949.jpnprd01.prod.outlook.com
- ([fe80::8972:39a6:4929:bc25%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 08:12:09 +0000
-From:   "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>
-To:     "'dros@monkey.org'" <dros@monkey.org>
-CC:     "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
-Subject: [nfsometer PATCH]: config.py: Add v4.2 in NFS_VERSIONS
-Thread-Topic: [nfsometer PATCH]: config.py: Add v4.2 in NFS_VERSIONS
-Thread-Index: AdY5Y01m+6kUgTh/RbmpQFAQFx5QAw==
-Date:   Wed, 3 Jun 2020 08:10:59 +0000
-Deferred-Delivery: Wed, 3 Jun 2020 08:11:26 +0000
-Message-ID: <OSBPR01MB294973D46ADE4ED7A7D3E19AEF880@OSBPR01MB2949.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-securitypolicycheck: OK by SHieldMailChecker v2.6.3
-x-shieldmailcheckermailid: a3f2d3da91304999be207ea0aeb54aa1
-authentication-results: monkey.org; dkim=none (message not signed)
- header.d=none;monkey.org; dmarc=none action=none header.from=fujitsu.com;
-x-originating-ip: [210.170.118.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ca876107-8c4b-4f1e-66f0-08d80795d047
-x-ms-traffictypediagnostic: OSBPR01MB4789:
-x-microsoft-antispam-prvs: <OSBPR01MB47897572A0EAE48B209A1003EF880@OSBPR01MB4789.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tUuC0ON4mcs9L8SqH4bBPiS5jFn5d2dIYQ1DTp/PFHMeQbQIuEUDAUW+d1EiFhNJVyiGPowCJc7mOq5ciCtj3Bk/zxgADLHCfORj5fi/LNdBwsR7Bv42BbF4A+Ijf5xmHZo9i7yEA+W4C52Uf4XfHgsKNaqto9vxTy4tA+HaFOjJYC4PI4au54JTYrMeonGXISalgeaALng+gcYvW9zyrbtuEUMJCVtomz7QJO9ZNpKAsq+ghELpjS1rXR/XNvlH81TO66yjP6oPFm+cFP0+U2aEk39Q9flvWoVf2Tg8YWbhwWHQsgS4CNR3Yiv81ZNtpPxUO4fTAbYZuhhm1jd5WzYimPQ56sJgl80/t4a/gQA6dxPA7UnBoE5qVJtQgzp5uVBDaT9p3zNuAsJ9qfQ6Qg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2949.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(9686003)(8676002)(71200400001)(4326008)(8936002)(5660300002)(6916009)(6666004)(55016002)(316002)(2906002)(26005)(7696005)(86362001)(66946007)(4744005)(64756008)(66476007)(66556008)(33656002)(6506007)(186003)(85182001)(83380400001)(478600001)(76116006)(66446008)(52536014)(777600001)(491001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: IivP50a1tAitXSFxQemTOsSksiBNqt5WHwbGUr+LNbkUWIMZZ1GaG3e2YKKGAEmoI/YIr/51qYudadSIhkSYAvwAfowhoUPgV2kH8lKF0mWctLZ9W3sVOpwkKm5KG68rZTzhz7KP+ugpcFVwbh5bUf/8loW7wqTQ8sfJdoq4Orpts+RLceMZC9POTxVAzp+KdA8JlZSJ6Od/EajbTwfrY693S5piXuoZE3JDHxLqq7kdTrYA108dmKZvEtA5mE/+QIThRuKzZKSZKh/a77DHMgi9a47I0FXHnZPFx+UC3Li7kzsW6Pf8Y98ZCPi+KoKVsUak3NtWilK7897dZnNrd4Jgw8f4wwE1Evi9PrECHgEt0kwS4rj2iNczKPRmlt6EDDCsw2rICOBaFZhYgAPLKMv9uoMO4lkoex0WtSDKq5V0Nb0hBUnoxTqXHlN8hWB5SqpVomY3BfK52g284Lqu+pYBDYiRHy6dPSSnYByrisSiZs3vdEfSlK63WKy6klRF
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
+        b=LImzFWfFZ5MGhzJT1qzCsgEXVo7xW37sUIdrDLCKiXHQE0/Tq0rYX6Af/ld5dvlhmE
+         opFt8B8vUrhAfyxGIRs7eIQZmnu+cHCt7Dz4gEu/fnBWHDlMa8iVHDbM7XgqJUtNcgor
+         I4Oj1yGJ3ygOniFn6Dr+FHDS5BV48N/ldz+eBwWbR5/ADnYCL6KuztRZu9mrKJOxMODU
+         fmVICwwGmTYXXsgICTxE6unupuMdGq6+YZvkWKysZVLYK3Wwxrg7U2ecMo3WGycHWcU1
+         w35jxyjuynpm30G3kj/I18A4vO2Y2WN0kfTajUkGc1Xe9t84eQuWhnB4AGlAS8dbrawc
+         iC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
+        b=deSPJoJUBSeCFeYoG3hrgFSrfR3jcS5QCAt1dkEx5d8hCfpK3VjvhTx7mfZZHMyryN
+         2+/dHGzna/RlVTD0wdtzMuPRBu6UAZThSznB6HZsHgv5pG/17EEvGO74y44TZ8Ghgkhm
+         4DVq3IYga3CHvCg74N2U3WQPixOz11O5rCrqIrkpRc0An7jn91ZhxFm9uqpmw8a6s4xN
+         ygvbnVsStOssdreX/40ueXCwsYcmO7p5dX9USBam25ew8jlzxoSXucQDx50FfptvKnaS
+         wXcinPWHUAXqqohGKYDL/wAtQ0yFuDYEM2PM7vmiyOHEf9aOhWLGuBTqWVkUAoG8WeaS
+         nGfQ==
+X-Gm-Message-State: AOAM533IsYghTY2WhtR3bnxuRG8pWHoxx6A1zQ8J8xdE6RXFfB1HtyVA
+        K2bGHFiCl//aet25zRq3LKEzv+sMVu99j03LNPDBCWvX6qQ=
+X-Google-Smtp-Source: ABdhPJzc66PsPJ7uf2JiXrqj7zfh07Ra5BpBms0TPKeexmxkWkfXYY+ch/Os+E85wJbdOE6Lm+0ANdybV/7KRG4HAcU=
+X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr2566308lfd.29.1591192127287;
+ Wed, 03 Jun 2020 06:48:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca876107-8c4b-4f1e-66f0-08d80795d047
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 08:12:09.7614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mXmfnUHrJjrHPwMNrAOzrKd5HS/qKRgbdUTpTNKxdAdPiJZ8EOgEbEdSPxo2HwOQWPz4sG75N8TGMvMZKsuljiGK5rieqdGVOhfi6OXktHg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4789
+Reply-To: susanjones.wife@gmail.com
+Received: by 2002:a19:a405:0:0:0:0:0 with HTTP; Wed, 3 Jun 2020 06:48:46 -0700 (PDT)
+From:   "Mrs.Susan Jones" <joneswife.susan@gmail.com>
+Date:   Wed, 3 Jun 2020 14:48:46 +0100
+X-Google-Sender-Auth: aH2vam-ZraP3yG1gz3ryctMgTE4
+Message-ID: <CALBhdBfusXWup1N4iFuTS3D1AZxWbZbTDS_qa-wA3FkbkE7MrQ@mail.gmail.com>
+Subject: HELLO: I AM MRS SUSAN JONES
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To make a graph of NFSv4.2 in a report, I'd like to add v4.2 in NFS_VERSION=
-S.
+-- 
+OUR GOLDEN OPPORTUNITY
 
-Signed-off-by: Yuki Inoguchi <inoguchi.yuki@fujitsu.com>
----
- nfsometerlib/config.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Hello Dear Friend,
 
-diff --git a/nfsometerlib/config.py b/nfsometerlib/config.py
-index 76d74d9..0873052 100644
---- a/nfsometerlib/config.py
-+++ b/nfsometerlib/config.py
-@@ -162,7 +162,7 @@ DETECT_DELEG=3D'deleg'
- DETECT_PNFS=3D'pnfs'
+Complement of the day, i hope you are doing great today. However, I am
+Mrs.Susan Jones, an auditor with one of the new generation banks here
+in Burkina Faso.
 
- # valid nfs versions in normalized form
--NFS_VERSIONS =3D [ 'v2', 'v3', 'v4.0', 'v4.1' ]
-+NFS_VERSIONS =3D [ 'v2', 'v3', 'v4.0', 'v4.1', 'v4.2' ]
+I am writing you this letter based on the latest development at my
+Department. i discovered some abandoned huge amount of money, Ten
+Million, Five hundred thousand  United States Dollars.($10.500.000).
+Now I am only contacting you as a foreigner because this money cannot
+be approved to a local bank account here, but can only be approved to
+any foreign account and foreign beneficiary because the money is in US
+dollars
 
- # older clients need vers=3D (minorversion=3D) syntax
- NFS_VERSIONS_OLD_SYNTAX =3D {
---
-1.7.1
+This will be  a legitimate transaction once you accept to build trust
+with me and follow simple instruction doing the transfer process,
+until the total sum transfer out of the bank here to your own bank
+account any where in the world, and I agreed to share the total money
+50/50 with you once you successful confirmed it in your bank account.
+But any expenses doing the transfer process will be deduct from the
+amount before sharing, If you are interested to work with me and
+provide a good receiving bank account, get back to me as soon as
+possible with the following details below.
+
+Your full name
+Your Profession
+Your direct mobile phone number
+Your Scanned International passport or any of your identity
+
+NOTE: PLEASE IT YOU ARE NOT INTERESTED DON'T BORDER TO RESPOND BACK TO
+AVOID TIME WASTED.
+
+As soon as I receive these data's, I will forward to you the
+application form which you will send to the bank for the claim and
+transfer of the fund into your bank account as the  new beneficial.
+
+I am waiting to hear from you soon
+
+Yours
+Mrs.Susan Jones
