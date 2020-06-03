@@ -2,114 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E7DA1EC689
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 03:14:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC3BE1ECB49
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2020 10:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFCBO0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Jun 2020 21:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgFCBO0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Jun 2020 21:14:26 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C5CC08C5C0;
-        Tue,  2 Jun 2020 18:14:26 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CBC594EF4; Tue,  2 Jun 2020 21:14:25 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 21:14:25 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     syzbot <syzbot+a29df412692980277f9d@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in nfsd_reply_cache_free_locked
-Message-ID: <20200603011425.GA13019@fieldses.org>
-References: <00000000000026a06e05a56df22f@google.com>
+        id S1725275AbgFCITX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Jun 2020 04:19:23 -0400
+Received: from esa4.fujitsucc.c3s2.iphmx.com ([68.232.151.214]:7644 "EHLO
+        esa4.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbgFCITX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Jun 2020 04:19:23 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 04:19:22 EDT
+IronPort-SDR: Rwm8T64k0zHQGTYrUtv97/O+6IUhMDQUS7PptmnX+GhmHNC9Lfeca21OfWmmQxIthLXp87Z/J2
+ E5RINahqT/fwjGgjxpTqCA7OW8AIrmOTJiz38lgljWm9Q8rYxDlrKnKVIHfbmIO7RUn7KtXwqZ
+ tpeana72a9CIAv8o6M7dPyHKBwrSEwoz7lLvBucVMxrFK8Ru4y49Z4J83DDmiXQSt2GjkHddig
+ 441U9ccvz0h9Gt1pwxaBys2ucSUOCLewChvjugVf1kspJdoxiwKo1s5wUDDetbeCg/jV+yQef1
+ XfY=
+X-IronPort-AV: E=McAfee;i="6000,8403,9639"; a="22000327"
+X-IronPort-AV: E=Sophos;i="5.73,467,1583161200"; 
+   d="scan'208";a="22000327"
+Received: from mail-ty1jpn01lp2059.outbound.protection.outlook.com (HELO JPN01-TY1-obe.outbound.protection.outlook.com) ([104.47.93.59])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 17:12:12 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UiRggyAXeVfX399Yu1KC6PLUHKPL4Rh3GKjcm+EWZIqdYxcJDMMaJV7KSfCeF+As5e3+rewM+HKzV5awd0gXcZ4RkiAU4QBmIqX2tLALbguuiKDvZzxqd0rviR0yqr5jvQo0IX1rhx1CmOTjKjTqJAsPh/U425/2V0hT1Q5VMchUy57xT4HdT1wW2CP8aijhvTbQivpr14TKFLL5hfoklbqnv8TF2SBhDyESAvRLmmWI+Tx+leFvTZ5mkCTMG7FVzJWm5EATmOFlYlywjAF6cfT/wSwN9dy0JC6S0lz2lAWOSy6C4CSInPQPUZUkjQAR1Swj05nrW11Q3BEm78KsBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rNWmYYIpCQJ09CF/8o1Yx56OKTqaPgzJRtN435YI1KQ=;
+ b=S+t11weE9CItRWUvp8uoMJWe5b/6TtOLt+BnTSFIP/aLlk+hzLwWvUDJ/0VJsHpjXYDBo4+R0WxHCi24EvgsYQIYeYPer8ADGiYvRaDigeHzTUBwJKS5tCfzCCrm1fr8hWtq1FS+x2ZQOBAC++86wUp76aPYthNvPlVltM7TsEo39gzUMGcBsqImh+yI9WdoOFFvBqT8nn9DMBDoQMeWNpO5xS7b3dLxHSI5URbSIWz08NTYIg7GHLCYMD6L4et8snZBHzpFC97gld8QHMQq5dgG2DxvjGyM2Vvwn/w6YLcvYPPq3JJ8cULB0edRGjTtCIYEz5AiTXAO7rcR0AJt9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rNWmYYIpCQJ09CF/8o1Yx56OKTqaPgzJRtN435YI1KQ=;
+ b=LRBMr/oKr5Qq0zEx+r0+D+3mgLf6JD5Rx+US9w+DD1tTp54vaY8dPmwo0vmaiKQBwu9VvkLhs6Q2CrFKVvT8Izz6b+oMKC7eVA8hHrA0NPnReRgKfxW5vcbMffTQz2xTrXndrTOjZFL+VNx6TeFPBQqPQpjodWrYmom3gt+oVIs=
+Received: from OSBPR01MB2949.jpnprd01.prod.outlook.com (2603:1096:604:1a::22)
+ by OSBPR01MB4789.jpnprd01.prod.outlook.com (2603:1096:604:75::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
+ 2020 08:12:09 +0000
+Received: from OSBPR01MB2949.jpnprd01.prod.outlook.com
+ ([fe80::8972:39a6:4929:bc25]) by OSBPR01MB2949.jpnprd01.prod.outlook.com
+ ([fe80::8972:39a6:4929:bc25%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 08:12:09 +0000
+From:   "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>
+To:     "'dros@monkey.org'" <dros@monkey.org>
+CC:     "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
+Subject: [nfsometer PATCH]: config.py: Add v4.2 in NFS_VERSIONS
+Thread-Topic: [nfsometer PATCH]: config.py: Add v4.2 in NFS_VERSIONS
+Thread-Index: AdY5Y01m+6kUgTh/RbmpQFAQFx5QAw==
+Date:   Wed, 3 Jun 2020 08:10:59 +0000
+Deferred-Delivery: Wed, 3 Jun 2020 08:11:26 +0000
+Message-ID: <OSBPR01MB294973D46ADE4ED7A7D3E19AEF880@OSBPR01MB2949.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-securitypolicycheck: OK by SHieldMailChecker v2.6.3
+x-shieldmailcheckermailid: a3f2d3da91304999be207ea0aeb54aa1
+authentication-results: monkey.org; dkim=none (message not signed)
+ header.d=none;monkey.org; dmarc=none action=none header.from=fujitsu.com;
+x-originating-ip: [210.170.118.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca876107-8c4b-4f1e-66f0-08d80795d047
+x-ms-traffictypediagnostic: OSBPR01MB4789:
+x-microsoft-antispam-prvs: <OSBPR01MB47897572A0EAE48B209A1003EF880@OSBPR01MB4789.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-forefront-prvs: 04238CD941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tUuC0ON4mcs9L8SqH4bBPiS5jFn5d2dIYQ1DTp/PFHMeQbQIuEUDAUW+d1EiFhNJVyiGPowCJc7mOq5ciCtj3Bk/zxgADLHCfORj5fi/LNdBwsR7Bv42BbF4A+Ijf5xmHZo9i7yEA+W4C52Uf4XfHgsKNaqto9vxTy4tA+HaFOjJYC4PI4au54JTYrMeonGXISalgeaALng+gcYvW9zyrbtuEUMJCVtomz7QJO9ZNpKAsq+ghELpjS1rXR/XNvlH81TO66yjP6oPFm+cFP0+U2aEk39Q9flvWoVf2Tg8YWbhwWHQsgS4CNR3Yiv81ZNtpPxUO4fTAbYZuhhm1jd5WzYimPQ56sJgl80/t4a/gQA6dxPA7UnBoE5qVJtQgzp5uVBDaT9p3zNuAsJ9qfQ6Qg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2949.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(9686003)(8676002)(71200400001)(4326008)(8936002)(5660300002)(6916009)(6666004)(55016002)(316002)(2906002)(26005)(7696005)(86362001)(66946007)(4744005)(64756008)(66476007)(66556008)(33656002)(6506007)(186003)(85182001)(83380400001)(478600001)(76116006)(66446008)(52536014)(777600001)(491001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: IivP50a1tAitXSFxQemTOsSksiBNqt5WHwbGUr+LNbkUWIMZZ1GaG3e2YKKGAEmoI/YIr/51qYudadSIhkSYAvwAfowhoUPgV2kH8lKF0mWctLZ9W3sVOpwkKm5KG68rZTzhz7KP+ugpcFVwbh5bUf/8loW7wqTQ8sfJdoq4Orpts+RLceMZC9POTxVAzp+KdA8JlZSJ6Od/EajbTwfrY693S5piXuoZE3JDHxLqq7kdTrYA108dmKZvEtA5mE/+QIThRuKzZKSZKh/a77DHMgi9a47I0FXHnZPFx+UC3Li7kzsW6Pf8Y98ZCPi+KoKVsUak3NtWilK7897dZnNrd4Jgw8f4wwE1Evi9PrECHgEt0kwS4rj2iNczKPRmlt6EDDCsw2rICOBaFZhYgAPLKMv9uoMO4lkoex0WtSDKq5V0Nb0hBUnoxTqXHlN8hWB5SqpVomY3BfK52g284Lqu+pYBDYiRHy6dPSSnYByrisSiZs3vdEfSlK63WKy6klRF
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000026a06e05a56df22f@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca876107-8c4b-4f1e-66f0-08d80795d047
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 08:12:09.7614
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mXmfnUHrJjrHPwMNrAOzrKd5HS/qKRgbdUTpTNKxdAdPiJZ8EOgEbEdSPxo2HwOQWPz4sG75N8TGMvMZKsuljiGK5rieqdGVOhfi6OXktHg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4789
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:55:16PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
+To make a graph of NFSv4.2 in a report, I'd like to add v4.2 in NFS_VERSION=
+S.
 
-This is like
+Signed-off-by: Yuki Inoguchi <inoguchi.yuki@fujitsu.com>
+---
+ nfsometerlib/config.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-	https://lore.kernel.org/linux-nfs/0000000000005016dd05a5e6b308@google.com/
+diff --git a/nfsometerlib/config.py b/nfsometerlib/config.py
+index 76d74d9..0873052 100644
+--- a/nfsometerlib/config.py
++++ b/nfsometerlib/config.py
+@@ -162,7 +162,7 @@ DETECT_DELEG=3D'deleg'
+ DETECT_PNFS=3D'pnfs'
 
-in that we're discovering the drc is corrupt while destroying it.
+ # valid nfs versions in normalized form
+-NFS_VERSIONS =3D [ 'v2', 'v3', 'v4.0', 'v4.1' ]
++NFS_VERSIONS =3D [ 'v2', 'v3', 'v4.0', 'v4.1', 'v4.2' ]
 
-I don't see the problem yet.
-
---b.
-
-> 
-> HEAD commit:    6e7f2eac Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14567034100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a29df412692980277f9d
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-> 
-> general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-> CPU: 0 PID: 27932 Comm: kworker/u4:4 Not tainted 5.7.0-rc4-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: netns cleanup_net
-> RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
-> Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
-> RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
-> RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
-> RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
-> R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
-> R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2c531000 CR3: 00000000685a2000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
->  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
->  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
->  cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
->  process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
->  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->  kthread+0x388/0x470 kernel/kthread.c:268
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace 54f06072fc6a1afa ]---
-> RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
-> Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
-> RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
-> RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
-> RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
-> R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
-> R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2c531000 CR3: 0000000094cfb000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ # older clients need vers=3D (minorversion=3D) syntax
+ NFS_VERSIONS_OLD_SYNTAX =3D {
+--
+1.7.1
