@@ -2,77 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DEC21EE6CF
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2020 16:42:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14FA81EE733
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2020 17:02:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgFDOmO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Jun 2020 10:42:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40374 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729025AbgFDOmO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:42:14 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4F5EC658B41324ED289F;
-        Thu,  4 Jun 2020 22:42:11 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
- 22:42:04 +0800
-From:   Zheng Bin <zhengbin13@huawei.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <yuehaibing@huawei.com>, <weiyongjun1@huawei.com>,
-        <zhengbin13@huawei.com>
-Subject: [PATCH] sunrpc: need delete xprt->timer in xs_destroy
-Date:   Thu, 4 Jun 2020 22:49:10 +0800
-Message-ID: <20200604144910.133756-1-zhengbin13@huawei.com>
-X-Mailer: git-send-email 2.26.0.106.g9fadedd
+        id S1729153AbgFDPCR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Jun 2020 11:02:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29743 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729139AbgFDPCQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Jun 2020 11:02:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591282935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a1ED4QJKI/4Iqfn3JU6ZLGoyccqDWrmFfeRiynzHN94=;
+        b=dDdpn18ajTN3AwlbpkOE8szf5lzzCD0g3q4N21eOn6nmCi35lOTo2u/DKru7EZJUA0wW59
+        S80xTskEcYflMz9rkzO01Cf489NcfN4f1AdQElJJzycVqCxsoo1bFMeTQyyD+Cq17TZHyb
+        qLAlNxDHB8w0tSBaelm/zldh2tkdE/U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-dubSIxZSNROjZbcbgyW4HA-1; Thu, 04 Jun 2020 11:02:13 -0400
+X-MC-Unique: dubSIxZSNROjZbcbgyW4HA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8094835B40
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2020 15:02:12 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-114-73.phx2.redhat.com [10.3.114.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 848A57CCCD;
+        Thu,  4 Jun 2020 15:02:12 +0000 (UTC)
+Subject: Re: [nfs-utils PATCH] mountstats: add missing operations
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20200603182839.3282825-1-smayhew@redhat.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <e1681b95-3755-ac26-fa6d-f2cac580b5a5@RedHat.com>
+Date:   Thu, 4 Jun 2020 11:02:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200603182839.3282825-1-smayhew@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If RPC use udp as it's transport protocol, transport->connect_worker
-will call xs_udp_setup_socket.
-xs_udp_setup_socket
-  sock = xs_create_sock
-  if (IS_ERR(sock))
-    goto out;
-  out:
-    xprt_unlock_connect
-      xprt_schedule_autodisconnect
-        mod_timer
-          internal_add_timer  -->insert xprt->timer to base timer list
 
-xs_destroy
-  cancel_delayed_work_sync(&transport->connect_worker)
-  xs_xprt_free(xprt)           -->free xprt
 
-Thus use-after-free will happen.
+On 6/3/20 2:28 PM, Scott Mayhew wrote:
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  tools/mountstats/mountstats.py | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+Committed... 
 
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
----
- net/sunrpc/xprtsock.c | 1 +
- 1 file changed, 1 insertion(+)
+steved.
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 845d0be805ec..c796808e7f7a 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1242,6 +1242,7 @@ static void xs_destroy(struct rpc_xprt *xprt)
- 	dprintk("RPC:       xs_destroy xprt %p\n", xprt);
-
- 	cancel_delayed_work_sync(&transport->connect_worker);
-+	del_timer_sync(&xprt->timer);
- 	xs_close(xprt);
- 	cancel_work_sync(&transport->recv_worker);
- 	cancel_work_sync(&transport->error_worker);
---
-2.26.0.106.g9fadedd
+> 
+> diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
+> index 3e2a3fe..f101ce5 100755
+> --- a/tools/mountstats/mountstats.py
+> +++ b/tools/mountstats/mountstats.py
+> @@ -225,7 +225,12 @@ Nfsv4ops = [
+>      'ALLOCATE',
+>      'DEALLOCATE',
+>      'LAYOUTSTATS',
+> -    'CLONE'
+> +    'CLONE',
+> +    'COPY',
+> +    'OFFLOAD_CANCEL',
+> +    'LOOKUPP',
+> +    'LAYOUTERROR',
+> +    'COPY_NOTIFY'
+>  ]
+>  
+>  def sec_conv(rem):
+> 
 
