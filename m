@@ -2,158 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 792701EF52A
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2020 12:18:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13961EF716
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2020 14:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgFEKSm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Jun 2020 06:18:42 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47390 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbgFEKSm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:18:42 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 127055D65673BCB0F9F3;
-        Fri,  5 Jun 2020 18:18:39 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 5 Jun 2020
- 18:18:31 +0800
-Subject: Re: [PATCH] sunrpc: need delete xprt->timer in xs_destroy
-To:     "Zhengbin (OSKernel)" <zhengbin13@huawei.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-References: <20200604144910.133756-1-zhengbin13@huawei.com>
- <bc4755e6c5cee7a326cf06f983907a3170be1649.camel@hammerspace.com>
- <b04044c7-597c-0487-f459-4d0032d66d5b@huawei.com>
-CC:     "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <63228c1a-5376-0641-1e25-02d8e4784adf@huawei.com>
-Date:   Fri, 5 Jun 2020 18:18:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        id S1726404AbgFEMNd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Jun 2020 08:13:33 -0400
+Received: from p3plsmtpa07-09.prod.phx3.secureserver.net ([173.201.192.238]:50472
+        "EHLO p3plsmtpa07-09.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgFEMNd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Jun 2020 08:13:33 -0400
+Received: from [192.168.0.78] ([24.218.182.144])
+        by :SMTPAUTH: with ESMTPSA
+        id hB6zjqRZbZQ3PhB70j6vOo; Fri, 05 Jun 2020 05:06:15 -0700
+X-CMAE-Analysis: v=2.3 cv=L7RjvNb8 c=1 sm=1 tr=0
+ a=ugQcCzLIhEHbLaAUV45L0A==:117 a=ugQcCzLIhEHbLaAUV45L0A==:17
+ a=IkcTkHD0fZMA:10 a=MaduGeJzO1XSokWPyYwA:9 a=P73MxSf4DJ6CZ9bq:21
+ a=1wd4hXGIlYM9ApGK:21 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: once again problems with interrupted slots
+To:     Olga Kornievskaia <aglo@umich.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+References: <CAN-5tyFCotATeYVR0J1B_UaxhXYBDhp21LbFEzZtLYmgN_i+hg@mail.gmail.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <13bed646-39b7-197e-ff90-85f8af10d93c@talpey.com>
+Date:   Fri, 5 Jun 2020 08:06:14 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <b04044c7-597c-0487-f459-4d0032d66d5b@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAN-5tyFCotATeYVR0J1B_UaxhXYBDhp21LbFEzZtLYmgN_i+hg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+X-CMAE-Envelope: MS4wfHt5cTD92nhwIex1okLssT+P2hRvfxnl64OkojOd5tTSBe9sbCVKOahl3H5xl5nQToK1+0v2OpvsIDNxrOpdKiZ8vPYrrY7ylMf6SJSvcJN5uE3nUmRK
+ U8Jrv/Uh6uHlWg+YpmUsUkCT2GzE/JLxzhDVr69mA5hFI+kBcj+dGaN/AKT3v7v2I1HOvNsR0FRON6xdTsUG2fBFYiZx38xQQNShvM8xrxYABZtaRikmP++m
+ mR6ldB4MvhfxBKbbfuRSkg==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The issue trigger like this:
+On 6/4/2020 5:21 PM, Olga Kornievskaia wrote:
+> Hi Trond,
+> 
+> There is a problem with interrupted slots (yet again).
+> 
+> We send an operation to the server and it gets interrupted by the a signal.
+> 
+> We used to send a sole SEQUENCE to remove the problem of having real
+> operation get an out of the cache reply and failing. Now we are not
+> doing it again (since 3453d5708 NFSv4.1: Avoid false retries when RPC
+> calls are interrupted"). So the problem is
+> 
+> We bump the sequence on the next use of the slot, and get SEQ_MISORDERED.
 
-mount_fs
-  nfs_try_mount
-   nfs_create_server
-    nfs_init_server
-     nfs_init_client
-      nfs_create_rpc_client
-       rpc_create
-        xprt_create_transport
-          xs_setup_udp
-            xs_setup_xprt
-          INIT_DELAYED_WORK(xs_udp_setup_socket)//timer
-                                                                xs_connect
-                                                                  queue_delayed_work
-        rpc_create_xprt
-          rpc_new_client
-          rpc_ping //fail
-          rpc_shutdown
-            rpc_release_client
-               rpc_free_auth
-                  rpc_free_client
-                      xprt_put
-                        xprt_destroy
-                          XPRT_LOCKED //wait lock
-                          del_timer_sync
-                          xprt_destroy_cb
-                            xs_destroy
-                               cancel_delayed_work_sync  --fire--> xs_udp_setup_socket
-                                                                 xprt_unlock_connect
-                                                                   xprt_schedule_autodisconnect
-                                                                     mod_timer
-                                 xs_xprt_free
-                                                                 timer out, access xprt //UAF
+Misordered? It sounds like the client isn't managing the sequence
+number, or perhaps the server never saw the original request, and
+is being overly strict.
 
+> We decrement the number back to the interrupted operation. This gets
+> us a reply out of the cache. We again fail with REMOTE EIO error.
 
-On 2020/6/5 10:10, Zhengbin (OSKernel) wrote:
-> The complete process is like this:
-> 
-> xprt_destroy
->   wait_on_bit_lock(&xprt->state, XPRT_LOCKED, TASK_UNINTERRUPTIBLE)  -->getlock
->   del_timer_sync(&xprt->timer)   -->del xprt->timer
->   INIT_WORK(&xprt->task_cleanup, xprt_destroy_cb)
-> 
-> xprt_destroy_cb
->   xs_destroy(xprt->ops->destroy)
->     cancel_delayed_work_sync     -->will call transport->connect_worker, whose callback is xs_udp_setup_socket
->     xs_xprt_free(xprt)                    -->free xprt
-> 
-> xs_udp_setup_socket
->   sock = xs_create_sock
->   xprt_unlock_connect
->       if (!test_bit(XPRT_LOCKED, &xprt->state)) -->state is XPRT_LOCKED
->       xprt_schedule_autodisconnect
->         mod_timer
->           internal_add_timer  -->insert xprt->timer to base timer list
-> 
-> On 2020/6/4 23:39, Trond Myklebust wrote:
->> On Thu, 2020-06-04 at 22:49 +0800, Zheng Bin wrote:
->>> If RPC use udp as it's transport protocol, transport->connect_worker
->>> will call xs_udp_setup_socket.
->>> xs_udp_setup_socket
->>>    sock = xs_create_sock
->>>    if (IS_ERR(sock))
->>>      goto out;
->>>    out:
->>>      xprt_unlock_connect
->>>        xprt_schedule_autodisconnect
->>>          mod_timer
->>>            internal_add_timer  -->insert xprt->timer to base timer
->>> list
->>>
->>> xs_destroy
->>>    cancel_delayed_work_sync(&transport->connect_worker)
->>>    xs_xprt_free(xprt)           -->free xprt
->>>
->>> Thus use-after-free will happen.
->>>
->>> Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
->>> ---
->>>   net/sunrpc/xprtsock.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
->>> index 845d0be805ec..c796808e7f7a 100644
->>> --- a/net/sunrpc/xprtsock.c
->>> +++ b/net/sunrpc/xprtsock.c
->>> @@ -1242,6 +1242,7 @@ static void xs_destroy(struct rpc_xprt *xprt)
->>>       dprintk("RPC:       xs_destroy xprt %p\n", xprt);
->>>
->>>       cancel_delayed_work_sync(&transport->connect_worker);
->>> +    del_timer_sync(&xprt->timer);
->>>       xs_close(xprt);
->>>       cancel_work_sync(&transport->recv_worker);
->>>       cancel_work_sync(&transport->error_worker);
->>> -- 
->>> 2.26.0.106.g9fadedd
->>>
->> I'm confused. How can this happen given that xprt_destroy() first takes
->> the XPRT_LOCK, and then deletes xprt->timer?
->>
->> Right now, the socket code knows nothing about the details of xprt-
->>> timer and what it is used for. I'd prefer to keep it that way if
->> possible.
->>
-> 
-> 
-> .
-> 
+Ew. The client *decrements* the sequence?
 
+Tom.
+
+> Going back to the commit's message. I don't see the logic that the
+> server can't tell if this is a new call or the old one. We used to
+> send a lone SEQUENCE as a way to protect reuse of slot by a normal
+> operation. An interrupted slot couldn't have been another SEQUENCE. So
+> I don't see how the server can't tell a difference between SEQUENCE
+> and any other operations.
+> 
+> 
