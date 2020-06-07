@@ -2,173 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46CE41F041E
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jun 2020 03:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C821F0928
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2020 03:03:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgFFBK4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Jun 2020 21:10:56 -0400
-Received: from p3plsmtpa08-06.prod.phx3.secureserver.net ([173.201.193.107]:57585
-        "EHLO p3plsmtpa08-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728390AbgFFBK4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Jun 2020 21:10:56 -0400
-X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Fri, 05 Jun 2020 21:10:55 EDT
-Received: from [192.168.0.78] ([24.218.182.144])
-        by :SMTPAUTH: with ESMTPSA
-        id hNFEjEE1y8WJyhNFEjEQR0; Fri, 05 Jun 2020 18:03:33 -0700
-X-CMAE-Analysis: v=2.3 cv=V8MDLtvi c=1 sm=1 tr=0
- a=ugQcCzLIhEHbLaAUV45L0A==:117 a=ugQcCzLIhEHbLaAUV45L0A==:17
- a=IkcTkHD0fZMA:10 a=SEc3moZ4AAAA:8 a=hMeEB36ejoHV51OJbWMA:9
- a=WvGRd0HwRvkrXDPj:21 a=DGzJNoSo8r7HM8Kx:21 a=QEXdDO2ut3YA:10
- a=5oRCH6oROnRZc2VpWJZ3:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: once again problems with interrupted slots
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-References: <CAN-5tyFCotATeYVR0J1B_UaxhXYBDhp21LbFEzZtLYmgN_i+hg@mail.gmail.com>
- <13bed646-39b7-197e-ff90-85f8af10d93c@talpey.com>
- <CAN-5tyFdof2MxKn5wG6k3eJRjNKJeC1VvQ4qOYC-ByYfnoUWPg@mail.gmail.com>
- <ce227f0a-c97a-2bd9-7321-1193e5fc56b4@talpey.com>
- <CAN-5tyE=0+nvGZtoN-C-1a3guju_TjsAq701AG_Y=TjxQ3iqqg@mail.gmail.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <c89f0cea-73e2-d234-de7e-bd82d9e23d46@talpey.com>
-Date:   Fri, 5 Jun 2020 21:03:32 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <CAN-5tyE=0+nvGZtoN-C-1a3guju_TjsAq701AG_Y=TjxQ3iqqg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1728790AbgFGBDK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 6 Jun 2020 21:03:10 -0400
+Received: from mail-bn8nam12on2110.outbound.protection.outlook.com ([40.107.237.110]:27205
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728743AbgFGBDK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 6 Jun 2020 21:03:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eekGCe+3Zv7hknAMqRGEh8wLJzNUJla25CUmN6tpy+cfgMLuUd/7qzmTNErT/b9zbfpBU6Zc0gNMs+TJThhFU1NEt/TdmwqGehL33qml+uKI1DIXeW4DgnSza2lOJszbhBigy9ytOIR1NIKXPsIz3pur/JuyJncipg4uA3v4GQ9Oc4tmf+ZAtReLG/EkNrrcUuFaohqZfa59XcuN9i6IRmtjd3eg+AD2PMVqI7cDIp1qRvHAyoyUu8qWqBAXKSbIKAThHGPuil4nT085XA5/CBtXBgQR4O53FPxkzYHM7N0MpKXywv7RaZ/pWOlV5BAfDMYoBxbO4YQ3+Uci3HfWGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GWK5QjiYdr81Vc1C1vEUJskury/cStLkc+NJLJtHkt8=;
+ b=TgV9KGrbZ1Mnax7oiglwZEVB3Fwsv9KFs0kFmXtGjemUQHL5Mc5L9MfMBljg9fNEcXocslnDUBVB0jH0CCtkJ4UuDCiCZl8zFqHO7L3+BbLSUD6zOgu5tzp3qyCrt2meNqXZTZfq+pNm2zkPracqlGLyftSxZjVZn9dspwNBmIZ0xVxAmXH12eKiu6qcNLLsm0ivIwPzrZhAmfpjvhSDPQ4Axitch+Rqu/tym/6WcTHjGFzfeuV6hKMNaat7zvdvmR6AFy9WUkdnLhxah2NCzJwFPJPjf4EZU63u+v5vCJf//VtDlNdmnUkdS8msEVnnPJpp7hopuEqkttKsnsfzUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GWK5QjiYdr81Vc1C1vEUJskury/cStLkc+NJLJtHkt8=;
+ b=a3Iae8I/BkLgrq2ruj+1Xg9YtPN6izsK0xosf4KSD0Z7ws9ckA9Zju0x296tRIEgCS15v4QhHb8nN8qaK1j4iIVIarbuxpj1p8Bbcz+b9sBOSR6yXut2J8jIqwk50BDNoBeOpYkyrGWXUkfbC6ccg2kAkFJ8cMuoXGIAIw0qtuw=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3350.namprd13.prod.outlook.com (2603:10b6:610:27::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.9; Sun, 7 Jun
+ 2020 01:03:06 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.3088.014; Sun, 7 Jun 2020
+ 01:03:06 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "zhengbin13@huawei.com" <zhengbin13@huawei.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+CC:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>
+Subject: Re: [PATCH] sunrpc: need delete xprt->timer in xs_destroy
+Thread-Topic: [PATCH] sunrpc: need delete xprt->timer in xs_destroy
+Thread-Index: AQHWOn5Zh6+x4WmBK0y1uFEnW2D2E6jIl84AgACwLYCAAxHTAA==
+Date:   Sun, 7 Jun 2020 01:03:05 +0000
+Message-ID: <f4e2b91d346cc345df2f6e1176fb4906992c7069.camel@hammerspace.com>
+References: <20200604144910.133756-1-zhengbin13@huawei.com>
+         <bc4755e6c5cee7a326cf06f983907a3170be1649.camel@hammerspace.com>
+         <b04044c7-597c-0487-f459-4d0032d66d5b@huawei.com>
+In-Reply-To: <b04044c7-597c-0487-f459-4d0032d66d5b@huawei.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfM82F2bL80Lh2TAhkWtEQF2+QptUh52zCp53+spMqUMrMx0QKHaRuaNIMjIP6A5OQd1S9OoF9OLxoEVe5qu7JNNM/1bLTj6lhCp2IbdRw/HIPdsc6Dsg
- KH5JhqZHqKQGFmLFZ0GG9WewQwp1FkA/BXocr/RDezc5d+0GHugPzGqbqj7t/PQ0D7ai2Zwj0EH3E6/mQ+YWMk30NaHMKthvp4EVDCLytukn8/d1TAaVYGME
- FJfXdBWZmcZSia+UnvDuxQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0f2ba71-a962-4ad1-ef8c-08d80a7e8970
+x-ms-traffictypediagnostic: CH2PR13MB3350:
+x-microsoft-antispam-prvs: <CH2PR13MB335070636F24D5576313F221B8840@CH2PR13MB3350.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 04270EF89C
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MYyMb2jOxIAt/GNaanxovKqgcs8L7v2eeX4bqygz971SlnR6Jciw/HAlzj9ChQcr/ThXwVQ3+whVKYj3bjLSUj3xOy4OIpM6K0UU9oPyTRGxddjouUKsPRo3MKNZ/NZQBWkEysNgfHk8g/08H+bv4FFJqjD8p3c6Am/hANGQS2/hYGMBY5TmuW23IcPpnfGwphOLW+62sjrosEuYB5ZYAxjKP0yk8EDM5/Dhw12U0604fF7HgeU/YF7xXEBq4lp0tjaTWZFTqtzaBGl+mUJsUB1n7ZrZ7jgVibvtTLj0LNDf1nGZiIRW9C9sJuYnuv9D61zP8t+Q8p+JljThREhHWhKQH0Chdz9zSVl5KJJBMu+gVJgncd03SpA72rvHzocV3SUbd3QMk97uF7r7Ev+NCw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(346002)(376002)(71200400001)(508600001)(83380400001)(2616005)(86362001)(15974865002)(4326008)(6512007)(83080400001)(8936002)(64756008)(76116006)(66946007)(2906002)(66476007)(66446008)(66556008)(8676002)(26005)(54906003)(6486002)(5660300002)(7416002)(36756003)(53546011)(110136005)(186003)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Wdv6kH5uaJfwKWYw+LIeSW1a9kqaCX5F1xigo4itZ2wcAXJ2EQdeRd6j385g/OyIqEHNR2EgSj0mPRqgaHKZSpgLjmT2dv7bdIJ2Nc4ZIkbj4mMEdhBe+NVB/GKMOnBvhNJobDUJ5VUPS3jaFMqVITIrxyYdv/I18qlcjDoYz73X3GV4r+4iN+xKE1mtHNN1bYtUZ+VRXvwhos34nNdBTiYUh4/AXK7pcYHXGdXtaC3WKtl51AHhS8WXZue4QJEP30fmkudkrywKhJ7jQafz9qapSnluKlFlKHmzpP+rvnbKGq27z4onuX0ry9GvlS1RV9Gg6+Ba5IeuXLbfHxHd4aGNP8FWtvqtApqfz0mpGw8pgk9SQB0GPzDeidwGd1Yec34ZCXXHwnHtzTFhgv2PHEVwGC7pRp5k+ub4bj9lfcD6B2xdDoDSGVTJeRjTJlcYmdfWoeS4NbR8BHGsPS2ZmORTkPteeODh2ip+XSSL54c=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <350CA59CD68AA04180432B25B9005EB7@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0f2ba71-a962-4ad1-ef8c-08d80a7e8970
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2020 01:03:05.9103
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F7Q0aL7ulXGVOQOJCRN8TLgFbreCciFoQ4eYU2XsbMBPrpYZ32PqvQF4IC0o2feA9rCkXK8tlQWsGDG7vC1kKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3350
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 6/5/2020 11:30 AM, Olga Kornievskaia wrote:
-> On Fri, Jun 5, 2020 at 9:49 AM Tom Talpey <tom@talpey.com> wrote:
->>
->> On 6/5/2020 9:24 AM, Olga Kornievskaia wrote:
->>> On Fri, Jun 5, 2020 at 8:06 AM Tom Talpey <tom@talpey.com> wrote:
->>>>
->>>> On 6/4/2020 5:21 PM, Olga Kornievskaia wrote:
->>>>> Hi Trond,
->>>>>
->>>>> There is a problem with interrupted slots (yet again).
->>>>>
->>>>> We send an operation to the server and it gets interrupted by the a signal.
->>>>>
->>>>> We used to send a sole SEQUENCE to remove the problem of having real
->>>>> operation get an out of the cache reply and failing. Now we are not
->>>>> doing it again (since 3453d5708 NFSv4.1: Avoid false retries when RPC
->>>>> calls are interrupted"). So the problem is
->>>>>
->>>>> We bump the sequence on the next use of the slot, and get SEQ_MISORDERED.
->>>>
->>>> Misordered? It sounds like the client isn't managing the sequence
->>>> number, or perhaps the server never saw the original request, and
->>>> is being overly strict.
->>>
->>> Well, both the client and the server are acting appropriately.  I'm
->>> not arguing against bumping the sequence. Client sent say REMOVE with
->>> slot=1 seq=5 which got interrupted. So client doesn't know in what
->>> state the slot is left. So it sends the next operation say READ with
->>> slot=1 seq=6. Server acts appropriately too, as it's version of the
->>> slot has seq=4, this request with seq=6 gets SEQ_MISORDERED.
->>
->> Wait, if the client sent slot=1 seq=5, then unless the connection
->> breaks, that slot is at seq=5, simple as that. If the operation was
->> interrupted before sending the request, then the sequence should
->> not be bumped.
-> 
-> Connection doesn't drop. We tried not bumping the sequence (i think
-> that was probably how it was originally done). Then you still get into
-> the same problem right away. REMOVE and READ will be using seq=5.
-
-Well, if the connection has not dropped, the behavior you describe is
-violating the protocol in at least two ways:
-
-- it is retransmitting a request on a reliable transport
-- it is sending a second message into a busy slot
-
-The last one also has the possibility of overrunning an RDMA credit
-limit too, btw.
-
-I don't think you should expect any correct result to come of these
-client behaviors.
-
->>>>> We decrement the number back to the interrupted operation. This gets
->>>>> us a reply out of the cache. We again fail with REMOTE EIO error.
->>>>
->>>> Ew. The client *decrements* the sequence?
->>>
->>> Yes, as client then decides that server never received seq=5 operation
->>> so it re-sends with seq=5. But in reality seq=5 operation also reached
->>> the server so it has 2 requests REMOVE/READ both with seq=5 for
->>> slot=1. This leads to READ failing with some error.
->>
->> But if the connection didn't break, it's reliable therefore the "resend"
->> must not be performed. This is a new operation, not a retry. It cannot
->> use the same slot+seq pair. And decrementing the slot is even sillier,
->> it's reusing *two* seq's at that point.
-> 
-> When the slot gets interrupted we don't know when the interruption
-> happened. If we got SEQ_MISORDERED, it might be because interruption
-> happened before the request was ever sent to the server, so it's valid
-> for the seq to stay the same (ie decrementing the seq). I don't see
-> how decrementing the seq is reusing 2 seq values: only one value is
-> valid and client is trying to figure out which one.
-
-Well, the client code needs to track whether the request was sent, and
-use a new slot if so. If not, then it's reusing sequence values because
-it's either retransmitting, or sending a different message, on a slot
-which has an outstanding (abandoned) request. Again, protocol violation.
-
-Slots can be thought of as single-request mailboxes, which are then
-used serially. (To get N parallel operations, you need N slots.) The
-sequence is *not* a window. The only valid new value is previous+1.
-
->>> We used to before send a sole SEQUENCE when we have an interrupted
->>> slot to sync up the seq numbers. But commit 3453d5708 changed that and
->>> I would like to understand why. As I think we need to go back to
->>> sending sole SEQUENCE.
->>
->> Sounds like a hack, frankly. What if the server responds the same
->> way? The client will start burning the wire.
-> 
-> Sending the SEQUENCE on the same slot/seqid as an interrupted slot
-> doesn't lead to any operation failing >
->> Closing the connection, or never using that slot again, seems to
->> me the only correct option, given the other behavior described.
-> 
-> Not ever using an interrupted slot seems too drastic (we can end up
-> with a session where all slots are unusable. or losing slots also
-> means losing ability to send more requests in parallel). I thought
-> that's given a sequence of events and error codes we should be able to
-> re-sync the slot.
-
-The only way to "re-sync the slot" is to wait for the server's reply,
-or close the connection.
-
-Yes, it's extreme to stop using the slot, and it means the client will
-very likely have to request more slot credits. But, it's what the
-protocol requires, short of starting over on a new connection.
-
-Tom.
-
-
->>>>> Going back to the commit's message. I don't see the logic that the
->>>>> server can't tell if this is a new call or the old one. We used to
->>>>> send a lone SEQUENCE as a way to protect reuse of slot by a normal
->>>>> operation. An interrupted slot couldn't have been another SEQUENCE. So
->>>>> I don't see how the server can't tell a difference between SEQUENCE
->>>>> and any other operations.
->>>>>
->>>>>
->>>
->>>
-> 
-> 
+T24gRnJpLCAyMDIwLTA2LTA1IGF0IDEwOjEwICswODAwLCBaaGVuZ2JpbiAoT1NLZXJuZWwpIHdy
+b3RlOg0KPiBUaGUgY29tcGxldGUgcHJvY2VzcyBpcyBsaWtlIHRoaXM6DQo+IA0KPiB4cHJ0X2Rl
+c3Ryb3kNCj4gICAgd2FpdF9vbl9iaXRfbG9jaygmeHBydC0+c3RhdGUsIFhQUlRfTE9DS0VELA0K
+PiBUQVNLX1VOSU5URVJSVVBUSUJMRSkgIA0KPiAtLT5nZXRsb2NrDQo+ICAgIGRlbF90aW1lcl9z
+eW5jKCZ4cHJ0LT50aW1lcikgICAtLT5kZWwgeHBydC0+dGltZXINCj4gICAgSU5JVF9XT1JLKCZ4
+cHJ0LT50YXNrX2NsZWFudXAsIHhwcnRfZGVzdHJveV9jYikNCj4gDQo+IHhwcnRfZGVzdHJveV9j
+Yg0KPiAgICB4c19kZXN0cm95KHhwcnQtPm9wcy0+ZGVzdHJveSkNCj4gICAgICBjYW5jZWxfZGVs
+YXllZF93b3JrX3N5bmMgICAgIC0tPndpbGwgY2FsbCANCj4gdHJhbnNwb3J0LT5jb25uZWN0X3dv
+cmtlciwgd2hvc2UgY2FsbGJhY2sgaXMgeHNfdWRwX3NldHVwX3NvY2tldA0KPiAgICAgIHhzX3hw
+cnRfZnJlZSh4cHJ0KSAgICAgICAgICAgICAgICAgICAgLS0+ZnJlZSB4cHJ0DQo+IA0KPiB4c191
+ZHBfc2V0dXBfc29ja2V0DQo+ICAgIHNvY2sgPSB4c19jcmVhdGVfc29jaw0KPiAgICB4cHJ0X3Vu
+bG9ja19jb25uZWN0DQo+ICAgICAgICBpZiAoIXRlc3RfYml0KFhQUlRfTE9DS0VELCAmeHBydC0+
+c3RhdGUpKSAtLT5zdGF0ZSBpcw0KPiBYUFJUX0xPQ0tFRA0KPiAgICAgICAgeHBydF9zY2hlZHVs
+ZV9hdXRvZGlzY29ubmVjdA0KPiAgICAgICAgICBtb2RfdGltZXINCj4gICAgICAgICAgICBpbnRl
+cm5hbF9hZGRfdGltZXIgIC0tPmluc2VydCB4cHJ0LT50aW1lciB0byBiYXNlIHRpbWVyDQo+IGxp
+c3QNCg0KVGhlIGNhbGwgdG8geHBydF9sb2NrX2Nvbm5lY3QoKSBpbiB4c19jb25uZWN0KCkgaXMg
+c3VwcG9zZWQgdG8gZW5zdXJlDQpleGNsdXNpb24gdy5yLnQuIHdhaXRfb25fYml0X2xvY2soKS4g
+SW4gb3RoZXIgd29yZHMgaWYgdGhlIHRyYW5zcG9ydC0NCj5jb25uZWN0X3dvcmtlciBpcyBhY3R1
+YWxseSBxdWV1ZWQsIGl0IGlzIGFsc28gc3VwcG9zZWQgdG8gYmUgaG9sZGluZw0KdGhlIFhQUlRf
+TE9DSyBhbmQgZW5zdXJpbmcgdGhhdCB3ZSBjYW4ndCBnZXQgaW50byB0aGUgYWJvdmUgc2l0dWF0
+aW9uLg0KDQpXaHkgaXMgdGhhdCBub3QgdGhlIGNhc2UgaGVyZT8NCg0KPiANCj4gT24gMjAyMC82
+LzQgMjM6MzksIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gPiBPbiBUaHUsIDIwMjAtMDYtMDQg
+YXQgMjI6NDkgKzA4MDAsIFpoZW5nIEJpbiB3cm90ZToNCj4gPiA+IElmIFJQQyB1c2UgdWRwIGFz
+IGl0J3MgdHJhbnNwb3J0IHByb3RvY29sLCB0cmFuc3BvcnQtDQo+ID4gPiA+Y29ubmVjdF93b3Jr
+ZXINCj4gPiA+IHdpbGwgY2FsbCB4c191ZHBfc2V0dXBfc29ja2V0Lg0KPiA+ID4geHNfdWRwX3Nl
+dHVwX3NvY2tldA0KPiA+ID4gICAgc29jayA9IHhzX2NyZWF0ZV9zb2NrDQo+ID4gPiAgICBpZiAo
+SVNfRVJSKHNvY2spKQ0KPiA+ID4gICAgICBnb3RvIG91dDsNCj4gPiA+ICAgIG91dDoNCj4gPiA+
+ICAgICAgeHBydF91bmxvY2tfY29ubmVjdA0KPiA+ID4gICAgICAgIHhwcnRfc2NoZWR1bGVfYXV0
+b2Rpc2Nvbm5lY3QNCj4gPiA+ICAgICAgICAgIG1vZF90aW1lcg0KPiA+ID4gICAgICAgICAgICBp
+bnRlcm5hbF9hZGRfdGltZXIgIC0tPmluc2VydCB4cHJ0LT50aW1lciB0byBiYXNlDQo+ID4gPiB0
+aW1lcg0KPiA+ID4gbGlzdA0KPiA+ID4gDQo+ID4gPiB4c19kZXN0cm95DQo+ID4gPiAgICBjYW5j
+ZWxfZGVsYXllZF93b3JrX3N5bmMoJnRyYW5zcG9ydC0+Y29ubmVjdF93b3JrZXIpDQo+ID4gPiAg
+ICB4c194cHJ0X2ZyZWUoeHBydCkgICAgICAgICAgIC0tPmZyZWUgeHBydA0KPiA+ID4gDQo+ID4g
+PiBUaHVzIHVzZS1hZnRlci1mcmVlIHdpbGwgaGFwcGVuLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQt
+b2ZmLWJ5OiBaaGVuZyBCaW4gPHpoZW5nYmluMTNAaHVhd2VpLmNvbT4NCj4gPiA+IC0tLQ0KPiA+
+ID4gICBuZXQvc3VucnBjL3hwcnRzb2NrLmMgfCAxICsNCj4gPiA+ICAgMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3hw
+cnRzb2NrLmMgYi9uZXQvc3VucnBjL3hwcnRzb2NrLmMNCj4gPiA+IGluZGV4IDg0NWQwYmU4MDVl
+Yy4uYzc5NjgwOGU3ZjdhIDEwMDY0NA0KPiA+ID4gLS0tIGEvbmV0L3N1bnJwYy94cHJ0c29jay5j
+DQo+ID4gPiArKysgYi9uZXQvc3VucnBjL3hwcnRzb2NrLmMNCj4gPiA+IEBAIC0xMjQyLDYgKzEy
+NDIsNyBAQCBzdGF0aWMgdm9pZCB4c19kZXN0cm95KHN0cnVjdCBycGNfeHBydA0KPiA+ID4gKnhw
+cnQpDQo+ID4gPiAgIAlkcHJpbnRrKCJSUEM6ICAgICAgIHhzX2Rlc3Ryb3kgeHBydCAlcFxuIiwg
+eHBydCk7DQo+ID4gPiANCj4gPiA+ICAgCWNhbmNlbF9kZWxheWVkX3dvcmtfc3luYygmdHJhbnNw
+b3J0LT5jb25uZWN0X3dvcmtlcik7DQo+ID4gPiArCWRlbF90aW1lcl9zeW5jKCZ4cHJ0LT50aW1l
+cik7DQo+ID4gPiAgIAl4c19jbG9zZSh4cHJ0KTsNCj4gPiA+ICAgCWNhbmNlbF93b3JrX3N5bmMo
+JnRyYW5zcG9ydC0+cmVjdl93b3JrZXIpOw0KPiA+ID4gICAJY2FuY2VsX3dvcmtfc3luYygmdHJh
+bnNwb3J0LT5lcnJvcl93b3JrZXIpOw0KPiA+ID4gLS0NCj4gPiA+IDIuMjYuMC4xMDYuZzlmYWRl
+ZGQNCj4gPiA+IA0KPiA+IEknbSBjb25mdXNlZC4gSG93IGNhbiB0aGlzIGhhcHBlbiBnaXZlbiB0
+aGF0IHhwcnRfZGVzdHJveSgpIGZpcnN0DQo+ID4gdGFrZXMNCj4gPiB0aGUgWFBSVF9MT0NLLCBh
+bmQgdGhlbiBkZWxldGVzIHhwcnQtPnRpbWVyPw0KPiA+IA0KPiA+IFJpZ2h0IG5vdywgdGhlIHNv
+Y2tldCBjb2RlIGtub3dzIG5vdGhpbmcgYWJvdXQgdGhlIGRldGFpbHMgb2YgeHBydC0NCj4gPiA+
+IHRpbWVyIGFuZCB3aGF0IGl0IGlzIHVzZWQgZm9yLiBJJ2QgcHJlZmVyIHRvIGtlZXAgaXQgdGhh
+dCB3YXkgaWYNCj4gPiBwb3NzaWJsZS4NCj4gPiANCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpDVE8s
+IEhhbW1lcnNwYWNlIEluYw0KNDk4NCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUgMjA4DQpMb3MgQWx0
+b3MsIENBIDk0MDIyDQp3d3cuaGFtbWVyLnNwYWNlDQoNCg==
