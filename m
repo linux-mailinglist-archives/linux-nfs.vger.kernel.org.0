@@ -2,97 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A0D41F10E6
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2020 02:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E6E1F116E
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2020 04:40:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgFHA64 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 7 Jun 2020 20:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728969AbgFHA6z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 7 Jun 2020 20:58:55 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA91C08C5C3;
-        Sun,  7 Jun 2020 17:58:55 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1ji67g-0000y6-9U; Mon, 08 Jun 2020 02:58:44 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v2 15/18] NFSv4: Use sequence counter with associated spinlock
-Date:   Mon,  8 Jun 2020 02:57:26 +0200
-Message-Id: <20200608005729.1874024-16-a.darwish@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200608005729.1874024-1-a.darwish@linutronix.de>
+        id S1728618AbgFHCki (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 7 Jun 2020 22:40:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47168 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726662AbgFHCki (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 7 Jun 2020 22:40:38 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B03B913608745C3D2846;
+        Mon,  8 Jun 2020 10:40:31 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.138) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
+ 10:40:21 +0800
+Subject: Re: [PATCH v3] nfs: set invalid blocks after NFSv4 writes
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>
+References: <20200521091721.105622-1-zhengbin13@huawei.com>
+ <5d7fbe2a-d365-2fdf-fe96-8f00d16795b5@huawei.com>
+From:   "Zhengbin (OSKernel)" <zhengbin13@huawei.com>
+Message-ID: <95c62610-0e86-d18f-4fef-a6ef4997c201@huawei.com>
+Date:   Mon, 8 Jun 2020 10:40:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
+In-Reply-To: <5d7fbe2a-d365-2fdf-fe96-8f00d16795b5@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Language: en-US
+X-Originating-IP: [10.166.215.138]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+ping
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
-
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
-
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- fs/nfs/nfs4_fs.h   | 2 +-
- fs/nfs/nfs4state.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 2b7f6dcd2eb8..210e590e1f71 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -117,7 +117,7 @@ struct nfs4_state_owner {
- 	unsigned long	     so_flags;
- 	struct list_head     so_states;
- 	struct nfs_seqid_counter so_seqid;
--	seqcount_t	     so_reclaim_seqcount;
-+	seqcount_spinlock_t  so_reclaim_seqcount;
- 	struct mutex	     so_delegreturn_mutex;
- };
- 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index a8dc25ce48bb..b1dba24918f8 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -509,7 +509,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
- 	nfs4_init_seqid_counter(&sp->so_seqid);
- 	atomic_set(&sp->so_count, 1);
- 	INIT_LIST_HEAD(&sp->so_lru);
--	seqcount_init(&sp->so_reclaim_seqcount);
-+	seqcount_spinlock_init(&sp->so_reclaim_seqcount, &sp->so_lock);
- 	mutex_init(&sp->so_delegreturn_mutex);
- 	return sp;
- }
--- 
-2.20.1
+On 2020/6/1 15:10, Zhengbin (OSKernel) wrote:
+> ping
+>
+> On 2020/5/21 17:17, Zheng Bin wrote:
+>> Use the following command to test nfsv4(size of file1M is 1MB):
+>> mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
+>> cp file1M /mnt
+>> du -h /mnt/file1M  -->0 within 60s, then 1M
+>>
+>> When write is done(cp file1M /mnt), will call this:
+>> nfs_writeback_done
+>>    nfs4_write_done
+>>      nfs4_write_done_cb
+>>        nfs_writeback_update_inode
+>>          nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
+>> nfs_post_op_update_inode_force_wcc_locked
+>>     nfs_set_cache_invalid
+>>     nfs_refresh_inode_locked
+>>       nfs_update_inode
+>>
+>> nfsd write response contains change, ctime, mtime, the flag will be
+>> clear after nfs_update_inode. Howerver, write response does not contain
+>> space_used, previous open response contains space_used whose value is 0,
+>> so inode->i_blocks is still 0.
+>>
+>> nfs_getattr  -->called by "du -h"
+>>    do_update |= force_sync || nfs_attribute_cache_expired -->false in 
+>> 60s
+>>    cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
+>>    do_update |= cache_validity & (NFS_INO_INVALID_ATTR -->false
+>>    if (do_update) {
+>>          __nfs_revalidate_inode
+>>    }
+>>
+>> Within 60s, does not send getattr request to nfsd, thus "du -h 
+>> /mnt/file1M"
+>> is 0.
+>>
+>> Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
+>>
+>> Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
+>> Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+>> ---
+>>
+>> v1->v2: add STATX_BLOCKS check in nfs_getattr
+>> v2->v3: need clear NFS_INO_INVALID_BLOCKS flag first in nfs_update_inode
+>>
+>>   fs/nfs/inode.c         | 14 +++++++++++---
+>>   include/linux/nfs_fs.h |  1 +
+>>   2 files changed, 12 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+>> index b9d0921cb4fe..0bf1f835de01 100644
+>> --- a/fs/nfs/inode.c
+>> +++ b/fs/nfs/inode.c
+>> @@ -833,6 +833,8 @@ int nfs_getattr(const struct path *path, struct 
+>> kstat *stat,
+>>           do_update |= cache_validity & NFS_INO_INVALID_ATIME;
+>>       if (request_mask & (STATX_CTIME|STATX_MTIME))
+>>           do_update |= cache_validity & NFS_INO_REVAL_PAGECACHE;
+>> +    if (request_mask & STATX_BLOCKS)
+>> +        do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
+>>       if (do_update) {
+>>           /* Update the attribute cache */
+>>           if (!(server->flags & NFS_MOUNT_NOAC))
+>> @@ -1764,7 +1766,8 @@ int 
+>> nfs_post_op_update_inode_force_wcc_locked(struct inode *inode, struct 
+>> nfs_fa
+>>       status = nfs_post_op_update_inode_locked(inode, fattr,
+>>               NFS_INO_INVALID_CHANGE
+>>               | NFS_INO_INVALID_CTIME
+>> -            | NFS_INO_INVALID_MTIME);
+>> +            | NFS_INO_INVALID_MTIME
+>> +            | NFS_INO_INVALID_BLOCKS);
+>>       return status;
+>>   }
+>>
+>> @@ -1871,7 +1874,8 @@ static int nfs_update_inode(struct inode 
+>> *inode, struct nfs_fattr *fattr)
+>>       nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+>>               | NFS_INO_INVALID_ATIME
+>>               | NFS_INO_REVAL_FORCED
+>> -            | NFS_INO_REVAL_PAGECACHE);
+>> +            | NFS_INO_REVAL_PAGECACHE
+>> +            | NFS_INO_INVALID_BLOCKS);
+>>
+>>       /* Do atomic weak cache consistency updates */
+>>       nfs_wcc_update_inode(inode, fattr);
+>> @@ -2033,8 +2037,12 @@ static int nfs_update_inode(struct inode 
+>> *inode, struct nfs_fattr *fattr)
+>>           inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
+>>       } else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
+>>           inode->i_blocks = fattr->du.nfs2.blocks;
+>> -    else
+>> +    else {
+>> +        nfsi->cache_validity |= save_cache_validity &
+>> +                (NFS_INO_INVALID_BLOCKS
+>> +                | NFS_INO_REVAL_FORCED);
+>>           cache_revalidated = false;
+>> +    }
+>>
+>>       /* Update attrtimeo value if we're out of the unstable period */
+>>       if (attr_changed) {
+>> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+>> index 73eda45f1cfd..6ee9119acc5d 100644
+>> --- a/include/linux/nfs_fs.h
+>> +++ b/include/linux/nfs_fs.h
+>> @@ -230,6 +230,7 @@ struct nfs4_copy_state {
+>>   #define NFS_INO_INVALID_OTHER    BIT(12)        /* other attrs are 
+>> invalid */
+>>   #define NFS_INO_DATA_INVAL_DEFER    \
+>>                   BIT(13)        /* Deferred cache invalidation */
+>> +#define NFS_INO_INVALID_BLOCKS    BIT(14)         /* cached blocks 
+>> are invalid */
+>>
+>>   #define NFS_INO_INVALID_ATTR    (NFS_INO_INVALID_CHANGE \
+>>           | NFS_INO_INVALID_CTIME \
+>> -- 
+>> 2.26.0.106.g9fadedd
+>>
+>>
+>> .
+>>
 
