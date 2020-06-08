@@ -2,47 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB1851F216D
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2020 23:19:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5071F2E8F
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jun 2020 02:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgFHVTp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Jun 2020 17:19:45 -0400
-Received: from fieldses.org ([173.255.197.46]:34790 "EHLO fieldses.org"
+        id S1729202AbgFIAms (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Jun 2020 20:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgFHVTp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:19:45 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 08FDB878C; Mon,  8 Jun 2020 17:19:45 -0400 (EDT)
-Date:   Mon, 8 Jun 2020 17:19:45 -0400
-To:     linux-nfs@vger.kernel.org
-Subject: client caching and locks
-Message-ID: <20200608211945.GB30639@fieldses.org>
+        id S1729072AbgFHXMW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE7C20897;
+        Mon,  8 Jun 2020 23:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657941;
+        bh=jCGm61rHDVJ9r6X9hoS3jwAJ1rd3zWfrw3/4ZrbkIv0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1TY0FUzdwfIGLw1E2sR+sgJW22+i+8dFZyP96hGVIXUiF2xRKDiUFgrTIbvKSTOr9
+         HrjmfqY4BfdQQMjCLzgla96xXviQokKpKep0CbCeYGTrmNVuuWUPJtrkwyxNT2aJx8
+         j+jsabzH9NDYhuK9E6ezIAGBIiJxJBfESb4c81F0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 007/606] NFSv3: fix rpc receive buffer size for MOUNT call
+Date:   Mon,  8 Jun 2020 19:02:12 -0400
+Message-Id: <20200608231211.3363633-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-What does the client do to its cache when it writes to a locked range?
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-The RFC:
+[ Upstream commit 8eed292bc8cbf737e46fb1c119d4c8f6dcb00650 ]
 
-	https://tools.ietf.org/html/rfc7530#section-10.3.2
+Prior to commit e3d3ab64dd66 ("SUNRPC: Use au_rslack when
+computing reply buffer size"), there was enough slack in the reply
+buffer to commodate filehandles of size 60bytes. However, the real
+problem was that the reply buffer size for the MOUNT operation was
+not correctly calculated. Received buffer size used the filehandle
+size for NFSv2 (32bytes) which is much smaller than the allowed
+filehandle size for the v3 mounts.
 
-seems to apply that you should get something like local-filesystem
-semantics if you write-lock any range that you write to and read-lock
-any range that you read from.
+Fix the reply buffer size (decode arguments size) for the MNT command.
 
-But I see a report that when applications write to non-overlapping
-ranges (while taking locks over those ranges), they don't see each
-other's updates.
+Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply buffer size")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/mount_clnt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I think for simultaneous non-overlapping writes to work that way, the
-client would need to invalidate its cache on unlock (except for the
-locked range).  But i can't tell what the client's designed to do.
+diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+index 35c8cb2d7637..dda5c3e65d8d 100644
+--- a/fs/nfs/mount_clnt.c
++++ b/fs/nfs/mount_clnt.c
+@@ -30,6 +30,7 @@
+ #define encode_dirpath_sz	(1 + XDR_QUADLEN(MNTPATHLEN))
+ #define MNT_status_sz		(1)
+ #define MNT_fhandle_sz		XDR_QUADLEN(NFS2_FHSIZE)
++#define MNT_fhandlev3_sz	XDR_QUADLEN(NFS3_FHSIZE)
+ #define MNT_authflav3_sz	(1 + NFS_MAX_SECFLAVORS)
+ 
+ /*
+@@ -37,7 +38,7 @@
+  */
+ #define MNT_enc_dirpath_sz	encode_dirpath_sz
+ #define MNT_dec_mountres_sz	(MNT_status_sz + MNT_fhandle_sz)
+-#define MNT_dec_mountres3_sz	(MNT_status_sz + MNT_fhandle_sz + \
++#define MNT_dec_mountres3_sz	(MNT_status_sz + MNT_fhandlev3_sz + \
+ 				 MNT_authflav3_sz)
+ 
+ /*
+-- 
+2.25.1
 
---b.
