@@ -2,87 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CF21F0D73
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2020 19:44:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A0D41F10E6
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2020 02:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgFGRom (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 7 Jun 2020 13:44:42 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:42651 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgFGRol (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 7 Jun 2020 13:44:41 -0400
-Received: from 'smile.earth' ([95.89.4.93]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MvJwN-1ir7bx2zmz-00rKDP; Sun, 07 Jun 2020 19:44:36 +0200
-X-Virus-Scanned: amavisd at 'smile.earth'
-From:   Hans-Peter Jansen <hpj@urpla.net>
-To:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Anthony Joseph Messina <amessina@messinet.com>
-Subject: Re: general protection fault,
- probably for non-canonical address in nfsd
-Date:   Sun, 07 Jun 2020 19:44:35 +0200
-Message-ID: <9727420.yF10LQ635x@xrated>
-In-Reply-To: <11558085.O9o76ZdvQC@linux-ws1.messinet.com>
-References: <15780697.tcFqIYE18H@xrated>
- <11558085.O9o76ZdvQC@linux-ws1.messinet.com>
+        id S1729039AbgFHA64 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 7 Jun 2020 20:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728969AbgFHA6z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 7 Jun 2020 20:58:55 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA91C08C5C3;
+        Sun,  7 Jun 2020 17:58:55 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1ji67g-0000y6-9U; Mon, 08 Jun 2020 02:58:44 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH v2 15/18] NFSv4: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:26 +0200
+Message-Id: <20200608005729.1874024-16-a.darwish@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200608005729.1874024-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Provags-ID: V03:K1:BgrKFYAsrmiPVqBD5o+jBRBgEO4MTR9c2pb4zXhbEUqgBsd+mL3
- mfLxN6WiTohLYHkSoVWYBOWjfrQhoUCdzvi0avM0RjXOBNazd0mayYY8sSLkl0EfaeocNNg
- 8P8c7cef0//UCf4RE+obwHQ0pj8pdZNi3e2U3aOln4WVed5nPxGKgAXBafVK0qHjBeTj4Y7
- KKh1ETVbnCZftJGtFRZOA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k5ZMofGx2rs=:/OTvSnVOpHEwwx+qHDzQ2A
- Z7DkDwnCCA28qX1+U6c34p/NNSJcHaBbV59+T50+Ie1H6D9ffof4qMpVPgqdXdViqzYZC3ugp
- OdvspszyW9b+bWNP6+qg5XODCgneSkVS7qGLcAPLkzF48hRLdtTTaP6KDZoUUczAw35q3vtK2
- C1zAFLVlyN/ihMDFbP3Kp6ImaLTrLEHWDsiPtgGdEc5lmRERw5wTFqicJ4FUPAL4jNsb6CatY
- RdmsGLxdII1ByXIXJt0Ww2At0C76HBFqlyG02nKqmERVBDTmFJrw8RcKalvzZfxu6oYdUH7MW
- qz1IqqE6Lh042C+r6dTJ1UH2JH+/71K4ZYKidxqlN0NAHkWfKIfWibf4ZmCK5Y3bspa4N40ve
- A//7byC8edd6XNFMDKNW09GFSjUg/4wff6TQi5pTJ61+wZe9VtUB86P/5aPrSSoXC26TdPaqo
- 7dfm3C1wkxhfKq+jZco/U1T1yl5boTEZWWTDp5mzq3V7CUhIzRyuoGyadOudF7ERHw4PwMH9Q
- SPY8Yeqhz4OpSmP1V/eNzhMhnXRny11qGEqpElEVFHM1ZMVhZDhRh+4vyYO/aMbVDuOOG8Ikl
- gQLN1+oEgz77fqwRqlCA/OPPfKBnC6KLVjgI5T+7s+3tEjUND6QWGJ2G21BR/8y0UsQU8G0F4
- m2Cu6BbXPO0LlXwM2oI1TH2wnuNLbqhOoSLUqwFm0RgPXwap6DQ1AfZbaRwWfBy+/V6KGvnyL
- Gf+7bgslIy62Net3b1PA7xP3pqPikyrMOI2RjKOTLWoEkuxFM/8GZN8OK5dVnZWBdV//H9GFv
- skQBvEOo+CmEwoSzIJ3cLFXjkehMJj3GHdY3gkzKGDg58zJecI=
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Am Sonntag, 7. Juni 2020, 18:01:55 CEST schrieb Anthony Joseph Messina:
-> On Sunday, June 7, 2020 10:32:44 AM CDT Hans-Peter Jansen wrote:
-> > Hi,
-> > 
-> > after upgrading the kernel from 5.6.11 to 5.6.14, we suffer from regular
-> > crashes of nfsd here:
-> > 
-> > 2020-06-07T01:32:43.600306+02:00 server rpc.mountd[2664]: authenticated
-> > mount request from 192.168.3.16:303 for /work (/work)
-> > 2020-06-07T01:32:43.602594+02:00 server rpc.mountd[2664]: authenticated
-> > mount request from 192.168.3.16:304 for /work/vmware (/work)
-> > 2020-06-07T01:32:43.602971+02:00 server rpc.mountd[2664]: authenticated
-> > mount request from 192.168.3.16:305 for /work/vSphere (/work)
-> > 2020-06-07T01:32:43.606276+02:00 server kernel: [51901.089211] general
-> > protection fault, probably for non-canonical address 0xb9159d506ba40000:
-> > 0000 [#1] SMP PTI 2020-06-07T01:32:43.606284+02:00 server kernel:
-> > [51901.089226] CPU: 1 PID: 3190 Comm: nfsd Tainted: G           O
-> > 5.6.14-lp151.2-default #1 openSUSE Tumbleweed (unreleased)
-> > 2020-06-07T01:32:43.606286+02:00 server kernel: [51901.089234] Hardware
-> > name: System manufacturer System Product Name/P7F-E, BIOS 0906
-> 
-> I see similar issues in Fedora kernels 5.6.14 through 5.6.16
-> https://bugzilla.redhat.com/show_bug.cgi?id=1839287
-> 
-> On the client I mount /home with sec=krb5p, and /mnt/koji with sec=krb5
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-Thanks for confirmation. 
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
-Apart from the hassle with server reboots, this issue has some DOS potential, 
-I'm afraid.
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
-Cheers,
-Pete
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+---
+ fs/nfs/nfs4_fs.h   | 2 +-
+ fs/nfs/nfs4state.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 2b7f6dcd2eb8..210e590e1f71 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -117,7 +117,7 @@ struct nfs4_state_owner {
+ 	unsigned long	     so_flags;
+ 	struct list_head     so_states;
+ 	struct nfs_seqid_counter so_seqid;
+-	seqcount_t	     so_reclaim_seqcount;
++	seqcount_spinlock_t  so_reclaim_seqcount;
+ 	struct mutex	     so_delegreturn_mutex;
+ };
+ 
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index a8dc25ce48bb..b1dba24918f8 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -509,7 +509,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
+ 	nfs4_init_seqid_counter(&sp->so_seqid);
+ 	atomic_set(&sp->so_count, 1);
+ 	INIT_LIST_HEAD(&sp->so_lru);
+-	seqcount_init(&sp->so_reclaim_seqcount);
++	seqcount_spinlock_init(&sp->so_reclaim_seqcount, &sp->so_lock);
+ 	mutex_init(&sp->so_delegreturn_mutex);
+ 	return sp;
+ }
+-- 
+2.20.1
 
