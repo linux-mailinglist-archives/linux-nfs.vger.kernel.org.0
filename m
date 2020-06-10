@@ -2,93 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36FCF1F58F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2020 18:24:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40ABA1F5B3D
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2020 20:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgFJQYe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Jun 2020 12:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgFJQYe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Jun 2020 12:24:34 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C99FC03E96B
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jun 2020 09:24:33 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id d128so2394581wmc.1
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jun 2020 09:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=ps+zKQC29C1E1l4j2rlhsqhFYtHho880CfyrK82zCDo=;
-        b=un9+EJdC/N2ExBuUqSHqiPJS7T2apv9IaTxTcMc/yeMqelStmPogQQjpBuoI2J5WCk
-         PmfZu8a+HCyoEUiB+gbj0e3/vCB6q15DjVHM4qNLRVvNqrFpEbVDOrj+43U4/hdF+Ma6
-         QK2f/snytzMDkptC26KP48mxPn8ApPdjqyOF2YZJjc+7j/gOC8vddzgsuF+1JIe2miAX
-         Nb7LCxF7VZju1eRFkx0cur6nC5r+ESXualNCSxlSvVc+AJFBPqEBoLvYpetqTkBrXQK2
-         +Nosmxtvii8WGKNyW9psFtNg69FlKJPxl+bqnDr+LXJIG3MEh4mjdDwHGXivRgeARo1L
-         mSJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=ps+zKQC29C1E1l4j2rlhsqhFYtHho880CfyrK82zCDo=;
-        b=VdupDbpLtJJOhKclk4iDvA2G9oinRbQzDOe6izyLd2p08MSvCJ+NWyUJmqBK6SW+8f
-         w02VMtbwcj1tDmwsAE6AafUUc7ivjKG8t0f+pgw4y42b+SVdSqPoqVVqLIgV5sDKmuKl
-         twMY89gp/JSpCY85qfk0gcNRU7rzGuoo9UWHumBxcCKffAs/OXW7BNve9pRg8MjgjQO1
-         /tallXsA2+yaFg7e7QJsxlEcemA40Rl3nFscqS7UT3LvZXVKZXAch9JDwgkFbNY7hurf
-         6nIYfz5Z5HDqVcubh8w1JtFBdUKJ1wnkkaMMIhy87gBRYpgUMGEiam+QmZfF5zTHApmA
-         IJWg==
-X-Gm-Message-State: AOAM5332rt5zPiH4y6W1WT/nmxVMHfKGxIGhn0ecvfp0hDJhxdTykbA9
-        fkAbW7dH0HrAFF0V5Jp/VI0mH36F5gKHNQ==
-X-Google-Smtp-Source: ABdhPJwUov9L7b0EJoRFzXIfx5u1CPyp5074J1LtKtnw93JoxhwP3aAufSKv3kYg0I5mJcZe7g5YeA==
-X-Received: by 2002:a1c:8107:: with SMTP id c7mr3995390wmd.20.1591806271087;
-        Wed, 10 Jun 2020 09:24:31 -0700 (PDT)
-Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id w15sm236360wmk.30.2020.06.10.09.24.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 09:24:30 -0700 (PDT)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Chuck Lever'" <chuck.lever@oracle.com>
-Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>,
-        "'Anna Schumaker'" <Anna.Schumaker@netapp.com>,
-        "'James Pearson'" <jcpearson@gmail.com>
-References: <0aee01d63d91$1f104300$5d30c900$@gmail.com> <7E441550-FCCF-492E-BACB-271A42D4A6C4@oracle.com>
-In-Reply-To: <7E441550-FCCF-492E-BACB-271A42D4A6C4@oracle.com>
-Subject: RE: NFSv4.0: client stuck looping on RENEW + NFSERR_STALE_CLIENTID
-Date:   Wed, 10 Jun 2020 17:24:28 +0100
-Message-ID: <119601d63f43$9d55e860$d801b920$@gmail.com>
+        id S1729030AbgFJSdT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Jun 2020 14:33:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31312 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727078AbgFJSdS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Jun 2020 14:33:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591813997;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8LpWcHcS7Inh3139O9TFA1yKOcaZbpjAaJCES8NvihQ=;
+        b=XifOssCP6dyUyCyExLnB8YPsKPRZL+P8r96Ct5TY02zi1Zxu01O5feydiBAaMAGeUAzdeP
+        tBNFhA12gk7VuAonSMN9itmVDQeyVJ6KzAWxgpdULKeAqY20ZbxdCJaVFcf3LRJ77pOm9I
+        pIhkQMn8/HH4cJ3JBajDlyTa6epuuVM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-eqUylsDDMDeXstuXo9zoGQ-1; Wed, 10 Jun 2020 14:33:13 -0400
+X-MC-Unique: eqUylsDDMDeXstuXo9zoGQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F191C107ACCD;
+        Wed, 10 Jun 2020 18:33:12 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-115-94.phx2.redhat.com [10.3.115.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D3205D9D3;
+        Wed, 10 Jun 2020 18:33:12 +0000 (UTC)
+Subject: Re: [PATCH] man: Correct rpc.gssd(8) description of rpc-timeout and
+ context-timeout
+To:     Robert Milkowski <rmilkowski@gmail.com>, linux-nfs@vger.kernel.org
+References: <118701d63f40$d538e1e0$7faaa5a0$@gmail.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <c48f4b75-cac1-5a0d-b28c-0f21759638c1@RedHat.com>
+Date:   Wed, 10 Jun 2020 14:33:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
+In-Reply-To: <118701d63f40$d538e1e0$7faaa5a0$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE7uIdLFcOyEELuFPvOfhLxfxPnHwHtyK3jqfenTBA=
-Content-Language: en-gb
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+
+
+On 6/10/20 12:04 PM, Robert Milkowski wrote:
+> From: Robert Milkowski <rmilkowski@gmail.com>
 > 
-> The usual course of action for bugs in distributor kernels is to work
-> directly with the distributor. Upstream developers don't generally have
-> access to or expertise with those code bases. 7.3 is an older kernel,
-> and it's possible that upstream has addressed this issue and CentOS has
-> pulled that fix into a newer release.
+> The rpc-timeout is equivalent to -T and context-timeout to -t options,
+> not vice versa.
 > 
+> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Committed... (tag: nfs-utils-2-4-4-rc7)
 
+steved.
 
-I was hoping someone here might get back with "hey, this has been fixed by
-commit...".
-We also did see it on centos 7.6
-
-I will try to get it re-produce it and once I can then I'll try to reproduce
-it against upstream.
-
--- 
-Robert Milkowski
-
+> ---
+>  utils/gssd/gssd.man | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
+> index 3ec286b..26095a8 100644
+> --- a/utils/gssd/gssd.man
+> +++ b/utils/gssd/gssd.man
+> @@ -322,11 +322,11 @@ Equivalent to
+>  .TP
+>  .B context-timeout
+>  Equivalent to
+> -.BR -T .
+> +.BR -t .
+>  .TP
+>  .B rpc-timeout
+>  Equivalent to
+> -.BR -t .
+> +.BR -T .
+>  .TP
+>  .B keytab-file
+>  Equivalent to
+> 
 
