@@ -2,59 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B79D1F6D3B
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2020 20:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A7681F6D63
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2020 20:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgFKSLo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Jun 2020 14:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgFKSLn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Jun 2020 14:11:43 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E2EC03E96F
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2020 11:11:43 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E47B4791F; Thu, 11 Jun 2020 14:11:41 -0400 (EDT)
-Date:   Thu, 11 Jun 2020 14:11:41 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
+        id S1726739AbgFKSZC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Jun 2020 14:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgFKSZC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:25:02 -0400
 Subject: Re: [GIT PULL] nfsd changes for 5.8
-Message-ID: <20200611181141.GD16376@fieldses.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591899902;
+        bh=D+a/v3b1rEutML0pkkNJGDHkgaOU2pFJT6eV0aeMpnk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=UPD0UorhXBS+EZuczB6Bqk4LmIwAoQC53NKd+LY6QGJQ82/ubncd80MCC15gO4imd
+         rp+1TutKh2QEjAVA1nCnEDMsuSHNZj3nwG8VXmuY2pMD4eMVhCckfb6oNzjbAzmNEM
+         /oEjDdHbr5j3Z6XNnR3h61CSB8KNMY/X25rA8Fz4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200611155743.GC16376@fieldses.org>
 References: <20200611155743.GC16376@fieldses.org>
- <CAADWXX9tV_khCjrO5eUJQry+QV4VLatt21KEkJ8irEcuqTbBsQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADWXX9tV_khCjrO5eUJQry+QV4VLatt21KEkJ8irEcuqTbBsQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200611155743.GC16376@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8
+X-PR-Tracked-Commit-Id: 1eb2f96d0bffb2cca1fb7249ad9b6b4daa1d1d6a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c742b63473b3c5180db8b5d74fdbd56e4371dfa2
+Message-Id: <159189990249.7248.5024233513278020801.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jun 2020 18:25:02 +0000
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:42:19AM -0700, Linus Torvalds wrote:
-> I'm not entirely sure why, but gmail hates you and marked this as spam.
-> 
-> I (obviously) caught it despite that, but thought I'd mention it. I
-> assume it's lack of DKIM for fieldses.org.
+The pull request you sent on Thu, 11 Jun 2020 11:57:43 -0400:
 
-Twenty years ago running my own mail service sounded like a fun idea.
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8
 
-Nowadays it's just this thing that means that, every now and then, I
-have to drop everything and go learn about some random bit of annoying
-tech, just so I can get on with my work or talk to my friends.  Then
-I'll promptly forget it, until years later it breaks, and I have to go
-relearn it all from scratch.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c742b63473b3c5180db8b5d74fdbd56e4371dfa2
 
-Anyway, googling DKIM....
+Thank you!
 
-> Or maybe you run some side MLM business peddling essential oils that
-> I'm not aware of but google dislikes? You do you.
-
-Hey, as long as they think I'm a spammer anyway, maybe I should just go
-with it.
-
---b.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
