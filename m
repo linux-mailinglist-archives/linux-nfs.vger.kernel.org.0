@@ -2,135 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7ED81F78BD
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2020 15:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DFB01F7F09
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jun 2020 00:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgFLN1B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Jun 2020 09:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLN1A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jun 2020 09:27:00 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351B4C03E96F
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Jun 2020 06:27:00 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w7so6434147edt.1
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Jun 2020 06:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tVY17IldfoAF2jlYXo4WKe23phsUA17lrM8dA+z1kjg=;
-        b=UsJrOfixEuf4rpLjXpqO2Q7iAWVRuBotCO63ZUCjY2SGHWamXjyI+TgJFpbUKU+8U2
-         iIt2spz05p9nfKBeX0r1hi/chGv1kjlEg2ODMiahf2YkYwvdPiuT4NDiVkZknnvMMm+0
-         du/3gVvlZe6tYBggb0k7/qofXo1MqDe8SHzpz8asQoH+Z9ibaP/pgo01VxpOymVPXwUg
-         /wkmBbFWBxPVzGswYMr//qhEugBZHQ0nWMsTFeFen9b399or9paNjN8hr5doaE1zmUXM
-         MfvMRvNr2IRDJTm08JFWXI7M8KoWyaD+CVBfePlXnIXXrwLNf5A7EcLoLjL8SDgBML3I
-         ytDw==
+        id S1726371AbgFLWqF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Jun 2020 18:46:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55774 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726268AbgFLWqE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Jun 2020 18:46:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592001963;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=XngKIHoPUzwowSFibg7u3t/oC1rcUf+BN/K3UuWtgcw=;
+        b=W6hJE3pEjI/zWSQ1fFe4hB6PGqvlCMKEKChorvuOn3a7z2kMFTbDigr/38CammlDY52FOo
+        lbGZYKH5jVtptmrF2GDzTFIiNVM56kB2j9g52iPa5aZ94yOz7k4cy2ALt6cQrktkuZdF8z
+        +nTPyy9HBCc1B4j0NKDnuHCf8Vhj6VE=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-zp9t8VXQMN6q8LXlVyKeRA-1; Fri, 12 Jun 2020 18:45:56 -0400
+X-MC-Unique: zp9t8VXQMN6q8LXlVyKeRA-1
+Received: by mail-qv1-f72.google.com with SMTP id p18so8164238qvy.11
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tVY17IldfoAF2jlYXo4WKe23phsUA17lrM8dA+z1kjg=;
-        b=C/y3SfgwWsADPVOL74xhJAHirUad2CavrfQSQexHaDJQbiNP1/tZYy395AOXZa3Idj
-         P0oHE+OPq6qYIdXi1JJkjQx0b7amuV58osBesNDJP4XvHxN7TfjMNBskHX/f/+3+XAdb
-         v7B6lXAA1SUt3tpI7s57rM4wIZSe5b0l9HeL3fUvTOs4ATD2tFshIS3kZCYdcy8w8LRv
-         aodN7kfHMByUXnYo9VQ4zpMckca9OwJbmKBiCc6uBrk0ZRR2BQangi1ekKuqP4KuwiDD
-         T2M5xtm0Rz+1yENzfzcubbUfdeTSC1zBn2iMgKvGrOFo8rAn++kT2WfqeXPjL33urzKb
-         qkwg==
-X-Gm-Message-State: AOAM531kv/vVUW8EiaWcTwSlbG2j1H89vxlTLqpVglsrqjRPNNEM4r3p
-        NtrKbjh1x76h3+oOwCZaY7c7tscgdO/JnrSN6Pk=
-X-Google-Smtp-Source: ABdhPJy6IXZaLo0OAZBM69PLQC3R2RVL9k5Ys8qk+G4+UfR2Clhgu1svEk5KUqCDK82KZYhsGrIOZEtBxKOZl/0u9X4=
-X-Received: by 2002:a05:6402:3092:: with SMTP id de18mr12142301edb.367.1591968418671;
- Fri, 12 Jun 2020 06:26:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200116190857.26026-1-olga.kornievskaia@gmail.com>
- <1f3297c1549ad12d47497cd18d2c0d9bc7bc5fe7.camel@netapp.com>
- <803ff52e7e4fd7c2b2965368f8cd203b0da28f49.camel@hammerspace.com>
- <14cad1ec0a9080ce2ac064ff9a7ae76464e09aee.camel@netapp.com> <20200611200919.GF16376@fieldses.org>
-In-Reply-To: <20200611200919.GF16376@fieldses.org>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 12 Jun 2020 09:26:47 -0400
-Message-ID: <CAN-5tyFug3h+9Ck2wRfe4ALD-Pf2tzkdGh3ZCfj_zJkVuoe95g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.0 allow nconnect for v4.0
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>,
-        "trondmy@hammerspace.com" <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XngKIHoPUzwowSFibg7u3t/oC1rcUf+BN/K3UuWtgcw=;
+        b=gXsiqdpcAaicvu9HgRiOZamzzKO5XdkkZLlAoCrK63/9AwediHk28ZUv2kjoa98eBg
+         y5kSf0Jh+CqFSFrTfPH3SPc7SCR8i/dDypIshO/4JX06ftCrvD00smr00NPsc+zvq0oW
+         dlqyP6alfFsXI5STT+V2jFPMDPndZFzMQUTJmI/ZPUowOXlhBPT7Uk2RTMCOHu2E6zkb
+         7Mw+qdo1gvLOUQlhcKVH70tZPHVPFutkWXb8brCpPUVrVW7CksYMdOrKLgbNpTGS9Lwb
+         N1anIb9/lpsJJw/G7qtJ/bvu9sIy9CBeQsKHLnyTS8tqZRIo0S/jbktGe/ZY9ZMJfwmP
+         YbCQ==
+X-Gm-Message-State: AOAM531waHzFmo5mXfV1K8bEc/eFlsVk/ZRdSZlIoIe3h4Sg861nVL/t
+        6+NCumnA53XaC2D2tG0iYEBgoF5kHroaGjpYKjsZmkHPfHDrqlnkpKV3jDwy7W845ax1iPFfuoR
+        Ci6ULRYbySlPKZgtrGk7w
+X-Received: by 2002:ac8:1772:: with SMTP id u47mr5424184qtk.177.1592001956429;
+        Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxR9cLLTPkn/jtykSo+mxzD0t8ZanXXWaoMvTV6nL402rGN/D4wMGRjb3u9WJx6uVmzbqjYig==
+X-Received: by 2002:ac8:1772:: with SMTP id u47mr5424170qtk.177.1592001956155;
+        Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id z77sm5761451qka.59.2020.06.12.15.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 15:45:55 -0700 (PDT)
+From:   trix@redhat.com
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] nfs: Fix memory leak of export_path
+Date:   Fri, 12 Jun 2020 15:45:49 -0700
+Message-Id: <20200612224549.11762-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 4:09 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Fri, Jan 17, 2020 at 09:16:54PM +0000, Schumaker, Anna wrote:
-> > On Fri, 2020-01-17 at 21:14 +0000, Trond Myklebust wrote:
-> > > On Fri, 2020-01-17 at 21:09 +0000, Schumaker, Anna wrote:
-> > > > Hi Olga,
-> > > >
-> > > > On Thu, 2020-01-16 at 14:08 -0500, Olga Kornievskaia wrote:
-> > > > > From: Olga Kornievskaia <kolga@netapp.com>
-> > > >
-> > > > Have you done any testing with nconnect and the v4.0 replay caches? I
-> > > > did some
-> > > > digging on the mailing list and found this in one of the cover
-> > > > letters from
-> > > > Trond: "The feature is only enabled for NFSv4.1 and NFSv4.2 for now;
-> > > > I don't
-> > > > feel comfortable subjecting NFSv3/v4 replay caches to this treatment
-> > > > yet."
-> > > >
-> > >
-> > > That comment should be considered obsolete. The current code works hard
-> > > to ensure that we replay using the same connection (or at least the
-> > > same source/dest IP+ports) so that NFSv3/v4.0 DRCs work as expected.
-> > > For that reason we've had NFSv3 support since the feature was merged.
-> > > The NFSv4.0 support was just forgotten.
-> >
-> > Thanks for the explanation! I'll add the patch.
->
-> What happened to this patch?  As far as I can tell, the conclusion of
-> this thread was that it should be applied.
+From: Tom Rix <trix@redhat.com>
 
-I decided not to submit this patch but anybody else is free to add
-that patch to add support for 4.0 nconnect as there is no reason it
-shouldn't be supported.
+The try_location function is called within a loop by nfs_follow_referral.
+try_location calls nfs4_pathname_string to created the export_path.
+nfs4_pathname_string allocates the memory. export_path is stored in the
+nfs_fs_context/fs_context structure similarly as hostname and source.
+But whereas the ctx hostname and source are freed before assignment,
+export_path is not.  So if there are multiple loops, the new export_path
+will overwrite the old without the old being freed.
 
->
-> --b.
->
-> >
-> > Anna
-> >
-> > >
-> > > > Thanks,
-> > > > Anna
-> > > >
-> > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > > > > ---
-> > > > >  fs/nfs/nfs4client.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> > > > > index 460d625..4df3fb0 100644
-> > > > > --- a/fs/nfs/nfs4client.c
-> > > > > +++ b/fs/nfs/nfs4client.c
-> > > > > @@ -881,7 +881,7 @@ static int nfs4_set_client(struct nfs_server
-> > > > > *server,
-> > > > >
-> > > > >         if (minorversion == 0)
-> > > > >                 __set_bit(NFS_CS_REUSEPORT, &cl_init.init_flags);
-> > > > > -       else if (proto == XPRT_TRANSPORT_TCP)
-> > > > > +       if (proto == XPRT_TRANSPORT_TCP)
-> > > > >                 cl_init.nconnect = nconnect;
-> > > > >
-> > > > >         if (server->flags & NFS_MOUNT_NORESVPORT)
-> > > --
-> > > Trond Myklebust
-> > > Linux NFS client maintainer, Hammerspace
-> > > trond.myklebust@hammerspace.com
-> > >
-> > >
+So call kfree for export_path.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ fs/nfs/nfs4namespace.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
+index a3ab6e219061..873342308dc0 100644
+--- a/fs/nfs/nfs4namespace.c
++++ b/fs/nfs/nfs4namespace.c
+@@ -308,6 +308,7 @@ static int try_location(struct fs_context *fc,
+ 	if (IS_ERR(export_path))
+ 		return PTR_ERR(export_path);
+ 
++	kfree(ctx->nfs_server.export_path);
+ 	ctx->nfs_server.export_path = export_path;
+ 
+ 	source = kmalloc(len + 1 + ctx->nfs_server.export_path_len + 1,
+-- 
+2.18.1
+
