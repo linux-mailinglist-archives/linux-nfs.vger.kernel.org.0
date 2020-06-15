@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DB11F9840
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 15:21:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB48B1F9842
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 15:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgFONU7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Jun 2020 09:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        id S1730207AbgFONVF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Jun 2020 09:21:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729916AbgFONU6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 09:20:58 -0400
+        with ESMTP id S1729916AbgFONVE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 09:21:04 -0400
 Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D495DC061A0E;
-        Mon, 15 Jun 2020 06:20:58 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id m81so17781192ioa.1;
-        Mon, 15 Jun 2020 06:20:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEB9C061A0E;
+        Mon, 15 Jun 2020 06:21:04 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id o5so17729420iow.8;
+        Mon, 15 Jun 2020 06:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=UgNi9mQzpoWUcbq2gN4k8yjQNoDX3PMgf0ODBpMXze0=;
-        b=fd1CBEFvbwGcP+d4GOrza+cMnPE/htZ3fcXH+VfDecEAavjRP6FIJap4rCb/+JASyh
-         jf0t7xUivAdLedXNuo9poI4P0Tz7g3RgbxHxq+bCDFfgOI4LQqc2tRUch0C50n28V1tK
-         4j/quPOtcrU5aSxCQMSo49bbHmbGckAagy6C7ROjra0a1H1Wr7KUN02mEJ8o1N60PJBs
-         72MbDiDUKIq2JOpGc8IBh8lIlJIRhHWAvnscC/1Tc1g1z4fUZB2EZjGqwmtOLur+ZWup
-         X3hkVj5JDwikXJrKWsYzwp+Q1ZdJEQFtMRtc4PkbZqpEdgmVywTQbWZOm2MvQCx5CwU/
-         1p8g==
+        bh=HizMT9Lgi2Uu04lsSCxN6oFeFJPre5YnAUaTvLWnAk8=;
+        b=NW+9OE/UvSrmnchJI1tXUu8VBYi22WZTSDJdro29qRNoAXD3spMviMIqiI7av4Elij
+         V2VqE645V+jQjkZqFYkvZfylspdkG78ARnP6z839mtFs7+RfHPAQ46ztaR4t3r2A907J
+         zsaaAmjd10zGrAEf+XHKjny65MwyMOLF8+Vup54UVEhKmnvyappWs9zBsWolq1pVMlWD
+         8XSFCSGpclgAqrJcazC1igTmdjtuhrytNJ/aEmf/YEchxPzxlfAY3L6ornJSKI0f6I2U
+         OMsXe5vdWrMusxnXsugnw3610uCWm8sTmWUX0GAxTx7UtCpK7t+u0vpbgN+BtGtI3+gl
+         L16w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=UgNi9mQzpoWUcbq2gN4k8yjQNoDX3PMgf0ODBpMXze0=;
-        b=mEqzFf0fVZQ75CJleMKVNrMJ7oouEfcWqNmda+XGnTUm2ztv7CdOePjRANAGFMmmeJ
-         aMHbnllNV6kwtGSbZcgNqC77mgcDRDRBojJH67UnR94bKLm3i8QuxqOoGX78saNN14zM
-         6M1oKraTVzc/kBrkJ9sYyT97FDbxJnu3i2wKzt0Tid5co5dGApYHFtnAOXaoyQjXZJAX
-         Knfop0vC4dN1qiO+7WZFbbOtpOnfulB4HmH8nxVlexPlgMvSrUSw7c28s/Vkegtv3KPp
-         uLAVZLkmtUo/EyqfrPEGW1F1bGF3ZHI1zjzMTUOC8EkeXZK0I1hSFYzr7UEoPfTbGwTn
-         zvDg==
-X-Gm-Message-State: AOAM532dIL8/nIMd8i78bIcEf80pcH6kSeu8JHoy9Rq/Y+8w9eHGEL7u
-        +2p3srQdQj6fE+B7xTY5tZXO4Ekn
-X-Google-Smtp-Source: ABdhPJx/ZLNPjG3ncn4a+kvB1SZfzLX4T7CJCVR3DZul+F7PIJ4W4pwifpaEqY1QdC72HahgPx/dbg==
-X-Received: by 2002:a6b:b984:: with SMTP id j126mr6171303iof.114.1592227258285;
-        Mon, 15 Jun 2020 06:20:58 -0700 (PDT)
+        bh=HizMT9Lgi2Uu04lsSCxN6oFeFJPre5YnAUaTvLWnAk8=;
+        b=cTQj8Uf18Qsh6gjruXYQTwAMBMkjt2DdiyquoS8+4aF7e+DOuPWQioTqW9v6ozcvVd
+         aQsWtGHLJtF4TWo8yUUZaXN7yKHu2ml3ZXwdzd+Ov+DSKkl6n4y+8V/0iVevZbxxt5ah
+         c+XNtr3B4Rh+C+xpSgpHCzcfgs9w3r/pi2nwo6EubFXQDRHZ733Q87uzM4lLvglqBxc4
+         70dJ0NCU2drwVu1qNGFZ3E0F5yXFnZ78+Rw2B7VrhfwPB9AieqJDnzpLeGF28LGO73D7
+         A73yNyaHPeHZiXe35Et4lwC1PT5Gzkdmc+bbqNmkYhFQcKIif53RZwOZAQgMK1ypD61w
+         T6YA==
+X-Gm-Message-State: AOAM530icsDs9qBSEJBUQc28UJi9SY5XWyShrmQP5Yh1YabkHevP4m2C
+        mINcNHEdjyc3Lcm1CWoRI6PNuJzQ
+X-Google-Smtp-Source: ABdhPJwAhoIyPEp3u021VwWKU+Ej0+Vq4o0cmuvYlirrHv1toB1GVQ7Vv7oQyY0fYJPTX0Pjowt8Sg==
+X-Received: by 2002:a5e:8e47:: with SMTP id r7mr27640479ioo.204.1592227263879;
+        Mon, 15 Jun 2020 06:21:03 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id y2sm7900675ilg.69.2020.06.15.06.20.57
+        by smtp.gmail.com with ESMTPSA id b8sm8001924ior.35.2020.06.15.06.21.03
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 06:20:57 -0700 (PDT)
+        Mon, 15 Jun 2020 06:21:03 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05FDKvSf018435;
-        Mon, 15 Jun 2020 13:20:57 GMT
-Subject: [PATCH v1 2/5] xprtrdma: Use re_connect_status safely in
- rpcrdma_xprt_connect()
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05FDL25O018438;
+        Mon, 15 Jun 2020 13:21:02 GMT
+Subject: [PATCH v1 3/5] xprtrdma: Clean up synopsis of
+ rpcrdma_flush_disconnect()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 15 Jun 2020 09:20:57 -0400
-Message-ID: <20200615132057.11800.5582.stgit@manet.1015granger.net>
+Date:   Mon, 15 Jun 2020 09:21:02 -0400
+Message-ID: <20200615132102.11800.39700.stgit@manet.1015granger.net>
 In-Reply-To: <20200615131642.11800.27486.stgit@manet.1015granger.net>
 References: <20200615131642.11800.27486.stgit@manet.1015granger.net>
 User-Agent: StGit/0.22-38-gfb18
@@ -69,52 +69,111 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: Sometimes creating a fresh rpcrdma_ep can fail. That's why
-xprt_rdma_connect() always checks if the r_xprt->rx_ep pointer is
-valid before dereferencing it. Instead, xprt_rdma_connect() can
-simply check rpcrdma_xprt_connect()'s return value.
-
-Also, there's no need to set re_connect_status to zero just after
-the rpcrdma_ep is created, since it is allocated with kzalloc.
+Refactor: Pass struct rpcrdma_xprt instead of an IB layer object.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/transport.c |    2 +-
- net/sunrpc/xprtrdma/verbs.c     |    3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c  |    8 ++++----
+ net/sunrpc/xprtrdma/verbs.c     |   12 ++++++------
+ net/sunrpc/xprtrdma/xprt_rdma.h |    2 +-
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 048c2fd85728..243aa6dd74af 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -242,7 +242,7 @@ xprt_rdma_connect_worker(struct work_struct *work)
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index ef997880e17a..b647562a26dd 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -367,7 +367,7 @@ static void frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
+ 	trace_xprtrdma_wc_fastreg(wc, frwr);
+ 	/* The MR will get recycled when the associated req is retransmitted */
  
- 	rc = rpcrdma_xprt_connect(r_xprt);
- 	xprt_clear_connecting(xprt);
--	if (r_xprt->rx_ep && r_xprt->rx_ep->re_connect_status > 0) {
-+	if (!rc) {
- 		xprt->connect_cookie++;
- 		xprt->stat.connect_count++;
- 		xprt->stat.connect_time += (long)jiffies -
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_flush_disconnect(cq->cq_context, wc);
+ }
+ 
+ /**
+@@ -452,7 +452,7 @@ static void frwr_wc_localinv(struct ib_cq *cq, struct ib_wc *wc)
+ 	trace_xprtrdma_wc_li(wc, frwr);
+ 	__frwr_release_mr(wc, mr);
+ 
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_flush_disconnect(cq->cq_context, wc);
+ }
+ 
+ /**
+@@ -474,7 +474,7 @@ static void frwr_wc_localinv_wake(struct ib_cq *cq, struct ib_wc *wc)
+ 	__frwr_release_mr(wc, mr);
+ 	complete(&frwr->fr_linv_done);
+ 
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_flush_disconnect(cq->cq_context, wc);
+ }
+ 
+ /**
+@@ -582,7 +582,7 @@ static void frwr_wc_localinv_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	smp_rmb();
+ 	rpcrdma_complete_rqst(rep);
+ 
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_flush_disconnect(cq->cq_context, wc);
+ }
+ 
+ /**
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index b021baa4b28d..b172e43cb204 100644
+index b172e43cb204..7a112612fc8f 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -528,7 +528,6 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 		return rc;
- 	ep = r_xprt->rx_ep;
+@@ -132,14 +132,13 @@ static void rpcrdma_qp_event_handler(struct ib_event *event, void *context)
  
--	ep->re_connect_status = 0;
- 	xprt_clear_connected(xprt);
- 	rpcrdma_reset_cwnd(r_xprt);
+ /**
+  * rpcrdma_flush_disconnect - Disconnect on flushed completion
+- * @cq: completion queue
++ * @r_xprt: transport to disconnect
+  * @wc: work completion entry
+  *
+  * Must be called in process context.
+  */
+-void rpcrdma_flush_disconnect(struct ib_cq *cq, struct ib_wc *wc)
++void rpcrdma_flush_disconnect(struct rpcrdma_xprt *r_xprt, struct ib_wc *wc)
+ {
+-	struct rpcrdma_xprt *r_xprt = cq->cq_context;
+ 	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
  
-@@ -565,8 +564,6 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 	rpcrdma_mrs_create(r_xprt);
+ 	if (wc->status != IB_WC_SUCCESS &&
+@@ -160,11 +159,12 @@ static void rpcrdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
+ 	struct ib_cqe *cqe = wc->wr_cqe;
+ 	struct rpcrdma_sendctx *sc =
+ 		container_of(cqe, struct rpcrdma_sendctx, sc_cqe);
++	struct rpcrdma_xprt *r_xprt = cq->cq_context;
  
- out:
--	if (rc)
--		ep->re_connect_status = rc;
- 	trace_xprtrdma_connect(r_xprt, rc);
- 	return rc;
+ 	/* WARNING: Only wr_cqe and status are reliable at this point */
+ 	trace_xprtrdma_wc_send(sc, wc);
+-	rpcrdma_sendctx_put_locked((struct rpcrdma_xprt *)cq->cq_context, sc);
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_sendctx_put_locked(r_xprt, sc);
++	rpcrdma_flush_disconnect(r_xprt, wc);
  }
+ 
+ /**
+@@ -199,7 +199,7 @@ static void rpcrdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
+ 	return;
+ 
+ out_flushed:
+-	rpcrdma_flush_disconnect(cq, wc);
++	rpcrdma_flush_disconnect(r_xprt, wc);
+ 	rpcrdma_rep_destroy(rep);
+ }
+ 
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 0a16fdb09b2c..098d05a62ead 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -446,7 +446,7 @@ extern unsigned int xprt_rdma_memreg_strategy;
+ /*
+  * Endpoint calls - xprtrdma/verbs.c
+  */
+-void rpcrdma_flush_disconnect(struct ib_cq *cq, struct ib_wc *wc);
++void rpcrdma_flush_disconnect(struct rpcrdma_xprt *r_xprt, struct ib_wc *wc);
+ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt);
+ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt);
+ 
 
