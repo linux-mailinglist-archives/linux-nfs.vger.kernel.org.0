@@ -2,136 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F7981F969E
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 14:34:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A1061F983C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 15:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgFOMeQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Jun 2020 08:34:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51412 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOMeQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 08:34:16 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCGm58071550;
-        Mon, 15 Jun 2020 12:33:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=VfB/lu0AO11ypagGnxWqguiuvq46jiw7VSNH802i9v0=;
- b=FNZgppN31eRIYqIWCPvoie+HIghJzA0839ih/4QuvBoyjpDs9AztSyNaSrH9kJmSo4R3
- mDsBK7H8K84zCpQvrWgZrRW1aTE7+uqqrwALHiY9SZiq70CmcvKFbnL10rZ0DmZI9maG
- LupyZj159TRdmeYlch79GK6N0Dp4hPSCn6Altpb6A3U9FAAiZf2vdl9bMnIgbPN55Q1j
- VcvHLuQWiucK0HKNaq6kAOr+9Vs5kyBM9a6oibgKhDp/8bAf1sIQq4Q4t7DBpH9V4JCR
- mXPQT2RcLo+mY7/F+BHnxzDrnfyzsX1Nf3QxC+gNz5HiHigDEIBUFs51JDrx3k0cgxlZ zQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31p6e7rs53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 12:33:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCIuI0188381;
-        Mon, 15 Jun 2020 12:33:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31p6dd6164-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 12:33:51 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05FCXfcc027358;
-        Mon, 15 Jun 2020 12:33:42 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jun 2020 05:33:41 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH v2] SUNRPC: Add missing definition of
- ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+        id S1730125AbgFONUt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Jun 2020 09:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729916AbgFONUs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 09:20:48 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7ACC061A0E;
+        Mon, 15 Jun 2020 06:20:48 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id t9so17752385ioj.13;
+        Mon, 15 Jun 2020 06:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=+SAKf2PrrgGkANxHrsuAJ5/9n8tv9Ilw1WTjGnmrFtQ=;
+        b=AfUQqtTzf8AbLw08e/Zkqh4XuzAjIPTRFXwyB5RQ3WavBhWPClrROj0tNvOl4hBWML
+         ypE56S5E+05lo15ZmUHaDEsIPwL5AucJgq1Yp28eIVwUsBTJBH4fXw9dbMQBfHM3ZrrU
+         pI/jcemudz7bS0vfqZu1+7cZxKw+0ZxWgrTEMernKfqEzF9lBrfMq3d8hd9G+9BR1yTm
+         XdIe73G9Y6FIXiaFfcGT9pZdnbfruE4VhAKnzQ6BILViNqhsxS/E6GCRqkwoookV8aHz
+         6MCKNXjBHlK9rJtp1RHG7bQnjSxXG3TcF89InFPPxPTSxabcDP89AunNrsJHsYgb1H0a
+         bp7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=+SAKf2PrrgGkANxHrsuAJ5/9n8tv9Ilw1WTjGnmrFtQ=;
+        b=QpPBqI7meyfeBuBJFgUXB9cWoeLS1O1d6L3wWuf4fPYW7qNaTIyQcpjv3kAGazONlg
+         JEZvg1rXsBpl1N7fBhnCySQDPx3/bpbWLil8yGIDTTsn5YHdbqrM2D1ej3Oo3p1Ym3Fs
+         etB8zWaOx+Iab7cygKP0sKrlG8jswNX0cXDoaKPJSkJXTiJD8ldQO17cV3/dEJd9viO+
+         o++sKRbyGSQiosrBrt2t5XOFOWL83mLBmJ1F4AL6i20eHnp4ycAKkuEx1thWMVXcLIO/
+         kzcfiOqyCb4MOocKs9dFF1uN6QkGAL//hFVGns3RsO9gpPqHiTuxsVzVTEIrJTRM94/Z
+         L7Cg==
+X-Gm-Message-State: AOAM530ZpQMqXN6w85UJbTBRlPsguT1puyzGwSpIVeITk6JV/ZKLma8U
+        rijBFId4+PDWaM56RomzR++kXRsQ
+X-Google-Smtp-Source: ABdhPJyR24dRzmG5RECjhQHL8VqQNBPs2e4tyNUnMmgdqMtPoVmZY9YiRSAyH/tiR8eW3rHdFNIJ7w==
+X-Received: by 2002:a02:cc96:: with SMTP id s22mr20776862jap.102.1592227248127;
+        Mon, 15 Jun 2020 06:20:48 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id y3sm7990789ioy.40.2020.06.15.06.20.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 06:20:47 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05FDKkpD018429;
+        Mon, 15 Jun 2020 13:20:46 GMT
+Subject: [PATCH v1 0/5] RPC/RDMA client fixes
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
-Date:   Mon, 15 Jun 2020 08:33:40 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <733E4CAF-A9E5-491F-B0C7-69CA84E5DFA5@oracle.com>
-References: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
- impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- cotscore=-2147483648 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150100
+To:     anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Mon, 15 Jun 2020 09:20:46 -0400
+Message-ID: <20200615131642.11800.27486.stgit@manet.1015granger.net>
+User-Agent: StGit/0.22-38-gfb18
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Anna-
+
+This short series attempts to address a crasher (also seen recently
+by Olga), prevent races during disconnect, and fix incorrect client
+behavior when the server responds with ERR_CHUNK.
+
+Please consider these for v5.8-rc. Thanks!
+
+---
+
+Chuck Lever (5):
+      xprtrdma: Prevent dereferencing r_xprt->rx_ep after it is freed
+      xprtrdma: Use re_connect_status safely in rpcrdma_xprt_connect()
+      xprtrdma: Clean up synopsis of rpcrdma_flush_disconnect()
+      xprtrdma: Clean up disconnect
+      xprtrdma: Fix handling of RDMA_ERROR replies
 
 
-> On Jun 15, 2020, at 2:25 AM, Christophe Leroy =
-<christophe.leroy@csgroup.eu> wrote:
->=20
-> Even if that's only a warning, not including asm/cacheflush.h
-> leads to svc_flush_bvec() being empty allthough powerpc defines
-> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
->=20
->  CC      net/sunrpc/svcsock.o
-> net/sunrpc/svcsock.c:227:5: warning: =
-"ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
-> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
->     ^
->=20
-> Include linux/highmem.h so that asm/cacheflush.h will be included.
->=20
-> Reported-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-LGTM.
-
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> ---
-> v2: Use linux/highmem.h instead of asm/cacheflush.sh
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> net/sunrpc/svcsock.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 5c4ec9386f81..c537272f9c7e 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -44,6 +44,7 @@
-> #include <net/tcp.h>
-> #include <net/tcp_states.h>
-> #include <linux/uaccess.h>
-> +#include <linux/highmem.h>
-> #include <asm/ioctls.h>
->=20
-> #include <linux/sunrpc/types.h>
-> --=20
-> 2.25.0
->=20
+ net/sunrpc/xprtrdma/frwr_ops.c  |  8 +++----
+ net/sunrpc/xprtrdma/rpc_rdma.c  |  9 +++-----
+ net/sunrpc/xprtrdma/transport.c |  2 +-
+ net/sunrpc/xprtrdma/verbs.c     | 38 ++++++++++++++++-----------------
+ net/sunrpc/xprtrdma/xprt_rdma.h |  3 ++-
+ 5 files changed, 29 insertions(+), 31 deletions(-)
 
 --
 Chuck Lever
-
-
-
