@@ -2,78 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77F721F9AD3
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 16:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74D421F9F1F
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 20:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgFOOux (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Jun 2020 10:50:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20169 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728304AbgFOOuw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 10:50:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592232651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TpVjMtECVs4h4/5L1/hV06u0Qvrl5D0MM8zvZ/HINqQ=;
-        b=IhIkBOhRguxbRmrXdS9RMKJDDmkamZjAJzFtv6vSXU4KTe+YBGI6GizESLo0yw6jWcRcDd
-        uQEDq2ZmFfj/DwumHVmUXC6AmO7A3Bp8loGwUblRKbqdDQRsycvmvostGk6QQMQkCVKI03
-        9bvdWALckhsizVISGthx1ZM30cWuHiM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-hJQvTLJCPUKltUfRYFWWLg-1; Mon, 15 Jun 2020 10:50:38 -0400
-X-MC-Unique: hJQvTLJCPUKltUfRYFWWLg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2C17100A8F7;
-        Mon, 15 Jun 2020 14:50:37 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-118-200.rdu2.redhat.com [10.10.118.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F1FE61983;
-        Mon, 15 Jun 2020 14:50:37 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id DA423120476; Mon, 15 Jun 2020 10:50:35 -0400 (EDT)
-Date:   Mon, 15 Jun 2020 10:50:35 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Elliott Mitchell <ehem+debian@m5p.com>
-Cc:     Salvatore Bonaccorso <carnil@debian.org>, 962254@bugs.debian.org,
-        linux-nfs@vger.kernel.org, agruenba@redhat.com
-Subject: Re: Umask ignored when mounting NFSv4.2 share of an exported ZFS
- (with acltype=off) (was: Re: Bug#962254: NFS(v4) broken at 4.19.118-2)
-Message-ID: <20200615145035.GA214986@pick.fieldses.org>
-References: <20200605051607.GA34405@mattapan.m5p.com>
- <20200605064426.GA1538868@eldamar.local>
- <20200605051607.GA34405@mattapan.m5p.com>
- <20200605174349.GA40135@mattapan.m5p.com>
- <20200605183631.GA1720057@eldamar.local>
- <20200611223711.GA37917@mattapan.m5p.com>
- <20200613125431.GA349352@eldamar.local>
- <20200613184527.GA54221@mattapan.m5p.com>
+        id S1731317AbgFOSJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Jun 2020 14:09:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55738 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOSJm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Jun 2020 14:09:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FI7hca026496;
+        Mon, 15 Jun 2020 18:08:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=EdV85x/l0ZQB7qs/RGol05XelTO/TGwy+i5Nwcf8gRM=;
+ b=ksIm2T40o14OrDnPOVl41oLfXflESyB3DKHmSrY07W8hiE/Z7QLC5o1aUTaHPRbSwzbu
+ 9c0NwLH9cAIIrEop8mGTFh8G1XGbz9PddITo/iGjFqouwLRZRmyMPkuv312Tprpn0qqE
+ vsgCBz56dXPpSbVxKCQXClzuApbPztWVszZo40Z9/pDvMf5EwgQrvvf51uoX9UnrZp3o
+ w/4xkBk0XXZDlc2YcrCzTOExgRGYIv3Y4giKzpy8SzyD0DJs8FkiFKoy2usbln1dH7C7
+ /e2gagyqK7O847BIeVNSzHbKNPgl/68telPWwh1LacJqZVCnTiRrQlKn7a2GbDXIJ48j 0Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31p6s22cke-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Jun 2020 18:08:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FHwvkZ051587;
+        Mon, 15 Jun 2020 18:08:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31p6de1e1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 18:08:30 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05FI8G7g031730;
+        Mon, 15 Jun 2020 18:08:17 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jun 2020 11:08:15 -0700
+Date:   Mon, 15 Jun 2020 21:07:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        samba-technical@lists.samba.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-sctp@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, x86@kernel.org,
+        kasan-dev@googlegroups.com, cocci@systeme.lip6.fr,
+        linux-wpan@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, wireguard@lists.zx2c4.com,
+        linux-ppp@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
+Message-ID: <20200615180753.GJ4151@kadam>
+References: <20200413211550.8307-1-longman@redhat.com>
+ <20200413211550.8307-2-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200613184527.GA54221@mattapan.m5p.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=930 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=944 priorityscore=1501 phishscore=0
+ malwarescore=0 suspectscore=2 spamscore=0 cotscore=-2147483648 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006150135
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 11:45:27AM -0700, Elliott Mitchell wrote:
-> I disagree with this assessment.  All of the reporters have been using
-> ZFS, but this could indicate an absence of testers using other
-> filesystems.  We need someone with a NFS server which has a 4.15+ kernel
-> and uses a different filesystem which supports ACLs.
+On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 23c7500eea7d..c08bc7eb20bd 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1707,17 +1707,17 @@ void *krealloc(const void *p, size_t new_size, gfp_t flags)
+>  EXPORT_SYMBOL(krealloc);
+>  
+>  /**
+> - * kzfree - like kfree but zero memory
+> + * kfree_sensitive - Clear sensitive information in memory before freeing
+>   * @p: object to free memory of
+>   *
+>   * The memory of the object @p points to is zeroed before freed.
+> - * If @p is %NULL, kzfree() does nothing.
+> + * If @p is %NULL, kfree_sensitive() does nothing.
+>   *
+>   * Note: this function zeroes the whole allocated buffer which can be a good
+>   * deal bigger than the requested buffer size passed to kmalloc(). So be
+>   * careful when using this function in performance sensitive code.
+>   */
+> -void kzfree(const void *p)
+> +void kfree_sensitive(const void *p)
+>  {
+>  	size_t ks;
+>  	void *mem = (void *)p;
+> @@ -1725,10 +1725,10 @@ void kzfree(const void *p)
+>  	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+>  		return;
+>  	ks = ksize(mem);
+> -	memset(mem, 0, ks);
+> +	memzero_explicit(mem, ks);
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+This is an unrelated bug fix.  It really needs to be pulled into a
+separate patch by itself and back ported to stable kernels.
 
-Honestly I don't think I currently have a regression test for this so
-it's possible I could have missed something upstream.  I haven't seen
-any reports, though....
+>  	kfree(mem);
+>  }
+> -EXPORT_SYMBOL(kzfree);
+> +EXPORT_SYMBOL(kfree_sensitive);
+>  
+>  /**
+>   * ksize - get the actual amount of memory allocated for a given object
 
-ZFS's ACL implementation is very different from any in-tree
-filesystem's, and given limited time, a filesystem with no prospect of
-going upstream isn't going to get much attention, so, yes, I'd need to
-see a reproducer on xfs or ext4 or something.
-
---b.
-
+regards,
+dan carpenter
