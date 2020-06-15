@@ -2,51 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15DA71F8A3D
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jun 2020 20:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2A741F8D94
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2020 08:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgFNS6r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 Jun 2020 14:58:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55666 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgFNS6q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 Jun 2020 14:58:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05EIwErC037412;
-        Sun, 14 Jun 2020 18:58:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=G8d/aFm0OTCgG9TstynHLheRBA0bCU94tXusK30fNPM=;
- b=dU6PsS0XtzkNFUh/7jz9ShJtj8DxGWIM+S0A04EIT+FMZ2ZZhY07bIlmbbFvTbcc9ub1
- bC5k/YJmhgHNHs1ZcM0Q+dC1XvSn+EnF+SavWMfnv6ius+RbE9aFY9BX/N5tjKhFhJTm
- PSMNDDqKavTSFR/ffeMf+mpyQD0dRVuZtp5l1o+UIMwpap9vQp/w8zLcRqg3tEZigj9h
- iNJKx1j6W9lvp/dwjeoVYO8wV1SZWwAQYHc+v4sBQxocCMXYNCBCQ9Fed31k8U3URFgh
- xXNSGUVoiqr2d3aqlBemzac+CvalsAPEJWigovejGGhbs/OQIeShCpinsCnZfee5X+Fl dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31na6k1j22-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 14 Jun 2020 18:58:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05EIvsO3154764;
-        Sun, 14 Jun 2020 18:58:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31n8jpu60j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Jun 2020 18:58:13 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05EIw0FP021590;
-        Sun, 14 Jun 2020 18:58:00 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 14 Jun 2020 11:57:59 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+        id S1728236AbgFOGRK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Jun 2020 02:17:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14111 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbgFOGRK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:17:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49lh1m3ggJzB09ZG;
+        Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id us_QWEWQjgUN; Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49lh1m2qF8zB09ZD;
+        Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 767258B782;
+        Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Js7BPOCxpUQT; Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
+Received: from [172.25.230.104] (unknown [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3BB0B8B77C;
+        Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
 Subject: Re: [PATCH] SUNRPC: Add missing asm/cacheflush.h
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <a356625c9aa1b5d711e320c39779e0c713f204cb.1592154127.git.christophe.leroy@csgroup.eu>
-Date:   Sun, 14 Jun 2020 14:57:58 -0400
+To:     Chuck Lever <chuck.lever@oracle.com>
 Cc:     Bruce Fields <bfields@fieldses.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -56,91 +42,123 @@ Cc:     Bruce Fields <bfields@fieldses.org>,
         linuxppc-dev@lists.ozlabs.org,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         netdev@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <854D2842-6940-42BA-A48C-AE9DB48E6071@oracle.com>
 References: <a356625c9aa1b5d711e320c39779e0c713f204cb.1592154127.git.christophe.leroy@csgroup.eu>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006140169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
- clxscore=1011 suspectscore=0 priorityscore=1501 phishscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 adultscore=0 spamscore=0
- cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006140169
+ <854D2842-6940-42BA-A48C-AE9DB48E6071@oracle.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <35ca33b7-4b9d-d70f-efcc-c1eb72483b2b@csgroup.eu>
+Date:   Mon, 15 Jun 2020 08:16:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <854D2842-6940-42BA-A48C-AE9DB48E6071@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Christophe -
-
-> On Jun 14, 2020, at 1:07 PM, Christophe Leroy =
-<christophe.leroy@csgroup.eu> wrote:
->=20
-> Even if that's only a warning, not including asm/cacheflush.h
-> leads to svc_flush_bvec() being empty allthough powerpc defines
-> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
->=20
->  CC      net/sunrpc/svcsock.o
-> net/sunrpc/svcsock.c:227:5: warning: =
-"ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
-> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
->     ^
->=20
-> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> I detected this on linux-next on June 4th and warned Chuck. Seems like =
-it went into mainline anyway.
-
-Thanks for your patch. I've searched my mailbox. It appears I never
-received your June 4th e-mail.
-
-Does your patch also address:
-
-   https://marc.info/?l=3Dlinux-kernel&m=3D159194369128024&w=3D2 ?
-
-If so, then
-
-   Reported-by: kernel test robot <lkp@intel.com>
-
-should be added to the patch description.
-
-Ideally, compilation on x86_64 should have thrown the same warning,
-but it didn't. Why would the x86_64 build behave differently than
-ppc64 or i386?
 
 
-> net/sunrpc/svcsock.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 5c4ec9386f81..d9e99cb09aab 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -45,6 +45,7 @@
-> #include <net/tcp_states.h>
-> #include <linux/uaccess.h>
-> #include <asm/ioctls.h>
-> +#include <asm/cacheflush.h>
+Le 14/06/2020 à 20:57, Chuck Lever a écrit :
+> Hi Christophe -
+> 
+>> On Jun 14, 2020, at 1:07 PM, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+>>
+>> Even if that's only a warning, not including asm/cacheflush.h
+>> leads to svc_flush_bvec() being empty allthough powerpc defines
+>> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
+>>
+>>   CC      net/sunrpc/svcsock.o
+>> net/sunrpc/svcsock.c:227:5: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
+>> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>>      ^
+>>
+>> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
+>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> ---
+>> I detected this on linux-next on June 4th and warned Chuck. Seems like it went into mainline anyway.
+> 
+> Thanks for your patch. I've searched my mailbox. It appears I never
+> received your June 4th e-mail.
 
-Nit: Let's include <linux/highmem.h> in net/sunrpc/svcsock.h instead
-of <asm/cacheflush.h> directly.
+It is there: 
+https://lore.kernel.org/linuxppc-dev/868915eb-8fed-0600-ea5d-31ae874457b1@csgroup.eu/
 
+> 
+> Does your patch also address:
+> 
+>     https://marc.info/?l=linux-kernel&m=159194369128024&w=2 ?
 
-> #include <linux/sunrpc/types.h>
-> #include <linux/sunrpc/clnt.h>
-> --=20
-> 2.25.0
->=20
+I guess it does, yes.
 
---
-Chuck Lever
+> 
+> If so, then
+> 
+>     Reported-by: kernel test robot <lkp@intel.com>
+> 
+> should be added to the patch description.
+> 
+> Ideally, compilation on x86_64 should have thrown the same warning,
+> but it didn't. Why would the x86_64 build behave differently than
+> ppc64 or i386?
 
+I think it depends whether you have selected CONFIG_BLOCK or not.
+In my embedded config, CONFIG_BLOCK isn't selected.
 
+When CONFIG_BLOCK is selected, there is the following inclusion chain:
 
+   CC      net/sunrpc/svcsock.o
+In file included from ./include/linux/highmem.h:12:0,
+                  from ./include/linux/pagemap.h:11,
+                  from ./include/linux/blkdev.h:16,
+                  from ./include/linux/blk-cgroup.h:23,
+                  from ./include/linux/writeback.h:14,
+                  from ./include/linux/memcontrol.h:22,
+                  from ./include/net/sock.h:53,
+                  from ./include/net/inet_sock.h:22,
+                  from ./include/linux/udp.h:16,
+                  from net/sunrpc/svcsock.c:31:
+./arch/powerpc/include/asm/cacheflush.h:26:2: warning: #warning Coucous 
+[-Wcpp]
+  #warning test
+
+But linux/blkdev.h includes linux/pagemap.h only when CONFIG_BLOCK is 
+defined.
+
+> 
+> 
+>> net/sunrpc/svcsock.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>
+>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+>> index 5c4ec9386f81..d9e99cb09aab 100644
+>> --- a/net/sunrpc/svcsock.c
+>> +++ b/net/sunrpc/svcsock.c
+>> @@ -45,6 +45,7 @@
+>> #include <net/tcp_states.h>
+>> #include <linux/uaccess.h>
+>> #include <asm/ioctls.h>
+>> +#include <asm/cacheflush.h>
+> 
+> Nit: Let's include <linux/highmem.h> in net/sunrpc/svcsock.h instead
+> of <asm/cacheflush.h> directly.
+
+Ok, I'll post v2.
+
+> 
+> 
+>> #include <linux/sunrpc/types.h>
+>> #include <linux/sunrpc/clnt.h>
+>> -- 
+>> 2.25.0
+>>
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
+Christophe
