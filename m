@@ -2,142 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D9811FB1A3
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2020 15:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6203C1FB370
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2020 16:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgFPNFe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Jun 2020 09:05:34 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45602 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728803AbgFPNFU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Jun 2020 09:05:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592312719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7nZX/JZoMn+I5qsocsgLqRgQUtpNpbf+EHIybmwJtOc=;
-        b=DrTWSdc51IgcrjaAMEbVTNIUuwKk9tbvc65esaiRUfyf6HC89eIAFP1HkgIwMQcloe71Zx
-        ZrZ3XJ+4bVa1pDQj6zbc3JfNAKPe4H+gjkeZq/QkWFjQYfqmOgahNwU+1FLrUPHDaDY0YO
-        F6zs7fjkWicjD+JvfM+fl05yhD3NjX8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-9xOyBG-QPzmPq6osX1JXvA-1; Tue, 16 Jun 2020 09:05:14 -0400
-X-MC-Unique: 9xOyBG-QPzmPq6osX1JXvA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 108C8107B7CB;
-        Tue, 16 Jun 2020 13:05:07 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3337D5D9E4;
-        Tue, 16 Jun 2020 13:05:01 +0000 (UTC)
-Subject: Re: [PATCH v4 1/3] mm/slab: Use memzero_explicit() in kzfree()
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Sterba <dsterba@suse.cz>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org
-References: <20200616015718.7812-1-longman@redhat.com>
- <20200616015718.7812-2-longman@redhat.com>
- <20200616033035.GB902@sol.localdomain>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <56c2304c-73cc-8f48-d8d0-5dd6c39f33f3@redhat.com>
-Date:   Tue, 16 Jun 2020 09:05:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728919AbgFPOGA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 16 Jun 2020 10:06:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52666 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728644AbgFPOGA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Jun 2020 10:06:00 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GE1bGZ153586
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2020 10:05:59 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.93])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31pssrbyx9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2020 10:05:59 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-nfs@vger.kernel.org> from <ntrishal@in.ibm.com>;
+        Tue, 16 Jun 2020 14:05:59 -0000
+Received: from us1a3-smtp05.a3.dal06.isc4sb.com (10.146.71.159)
+        by smtp.notes.na.collabserv.com (10.106.227.39) with smtp.notes.na.collabserv.com ESMTP;
+        Tue, 16 Jun 2020 14:05:57 -0000
+Received: from us1a3-mail65.a3.dal09.isc4sb.com ([10.142.3.169])
+          by us1a3-smtp05.a3.dal06.isc4sb.com
+          with ESMTP id 2020061614055690-572010 ;
+          Tue, 16 Jun 2020 14:05:56 +0000 
+To:     linux-nfs@vger.kernel.org
+Subject: ACL's on 4.1
+From:   "Trishali Nayar" <ntrishal@in.ibm.com>
+Date:   Tue, 16 Jun 2020 19:35:55 +0530
 MIME-Version: 1.0
-In-Reply-To: <20200616033035.GB902@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-KeepSent: 7A07A04B:B2FBC2B0-00258589:004D5BD3;
+ type=4; name=$KeepSent
+X-Mailer: IBM Notes Release 10.0.1FP3 August 09, 2019
+X-LLNOutbound: False
+X-Disclaimed: 32519
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+x-cbid: 20061614-8889-0000-0000-000002EC48AF
+X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.415652; ST=0; TS=0; UL=0; ISC=; MB=0.000000
+X-IBM-SpamModules-Versions: BY=3.00013297; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000295; SDB=6.01392370; UDB=6.00745152; IPR=6.01174648;
+ MB=3.00032579; MTD=3.00000008; XFM=3.00000015; UTC=2020-06-16 14:05:58
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2020-06-16 06:14:43 - 6.00011489
+x-cbparentid: 20061614-8890-0000-0000-000066984B97
+Message-Id: <OF7A07A04B.B2FBC2B0-ON00258589.004D5BD3-65258589.004D7269@notes.na.collabserv.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Reason: orgsafe
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 6/15/20 11:30 PM, Eric Biggers wrote:
-> On Mon, Jun 15, 2020 at 09:57:16PM -0400, Waiman Long wrote:
->> The kzfree() function is normally used to clear some sensitive
->> information, like encryption keys, in the buffer before freeing it back
->> to the pool. Memset() is currently used for the buffer clearing. However,
->> it is entirely possible that the compiler may choose to optimize away the
->> memory clearing especially if LTO is being used. To make sure that this
->> optimization will not happen, memzero_explicit(), which is introduced
->> in v3.18, is now used in kzfree() to do the clearing.
->>
->> Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>   mm/slab_common.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/slab_common.c b/mm/slab_common.c
->> index 9e72ba224175..37d48a56431d 100644
->> --- a/mm/slab_common.c
->> +++ b/mm/slab_common.c
->> @@ -1726,7 +1726,7 @@ void kzfree(const void *p)
->>   	if (unlikely(ZERO_OR_NULL_PTR(mem)))
->>   		return;
->>   	ks = ksize(mem);
->> -	memset(mem, 0, ks);
->> +	memzero_explicit(mem, ks);
->>   	kfree(mem);
->>   }
->>   EXPORT_SYMBOL(kzfree);
-> This is a good change, but the commit message isn't really accurate.  AFAIK, no
-> one has found any case where this memset() gets optimized out.  And even with
-> LTO, it would be virtually impossible due to all the synchronization and global
-> data structures that kfree() uses.  (Remember that this isn't the C standard
-> function "free()", so the compiler can't assign it any special meaning.)
-> Not to mention that LTO support isn't actually upstream yet.
->
-> I still agree with the change, but it might be helpful if the commit message
-> were honest that this is really a hardening measure and about properly conveying
-> the intent.  As-is this sounds like a critical fix, which might confuse people.
+Hi all,
 
-Yes, I agree that the commit log may look a bit scary. How about the 
-following:
+Looking at the 4.1 RFC, there are some additional 'Access_mask' and 
+'Ace-flag' when compared to 4.0.
+ 
+- Access_mask:
+ACE4_WRITE_RETENTION
+ACE4_WRITE_RETENTION_HOLD
 
-The kzfree() function is normally used to clear some sensitive
-information, like encryption keys, in the buffer before freeing it back
-to the pool. Memset() is currently used for buffer clearing. However
-unlikely, there is still a non-zero probability that the compiler may
-choose to optimize away the memory clearing especially if LTO is being
-used in the future. To make sure that this optimization will never
-happen, memzero_explicit(), which is introduced in v3.18, is now used
-in kzfree() to future-proof it.
+- Ace-flag :
+ACE4_INHERITED_ACE
+ 
+But are these supported by 4.1 clients and servers? If you do 'man 
+nfs4_acl' it does not seem to show these additional ones. So how do we 
+set/get them?
 
-Cheers,
-Longman
+Also, are there any other differences from an ACL perspective between 4.0 
+and 4.1?
+ 
+Your insights will be really useful.
+ 
+Thanks and regards,
+Trishali.
 
