@@ -2,77 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 715821FC358
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2020 03:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 507931FC576
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2020 06:59:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgFQBZD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Jun 2020 21:25:03 -0400
-Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17142 "EHLO
-        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgFQBZC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Jun 2020 21:25:02 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 21:25:02 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1592356182; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=PjxwOBwaZwUX83ncBcY4KfwBsUbCHCghqqVN3xUmoPt1W10SfxfD36xovTPZU1zrGpcVWoNRKVEizeJK5m/6PUhjabmrWBWB/3oALGOD3YxhdHP4F5900ygr1sqpkzAv0IyDAduDpGP4SAbJurFH6jqkqf3V4dp6xlvM7XUFjCM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1592356182; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=a5jahkrSma4oijnYxC3Nne3+YP0mZTv6O0xiXdTrSSM=; 
-        b=kzx4l83BCmJuVDzOLbeDTSyC8eBL3NTTknUDPlXPgTcqwiGk64YRa+MohuuxCfhsMyexCUcwoYkL3dJa9ezF4KHl5lnGe8Z7UP7QtW8Aglp+scqpC0m+QEm6H/FS5HpgfFQ2uavIpdAg2eoL/2FHreDu37fRf8cr//01oXhVix8=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1592356182;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=a5jahkrSma4oijnYxC3Nne3+YP0mZTv6O0xiXdTrSSM=;
-        b=GBSU8Rdd0NxglUMaY9aStXGUThsjU3y5gXhvzzmWqtJYFwJyzL9jYBVYc6GeSURn
-        UQzz8iNQlbqaoFadORM03qCQVK92MsojJ2TLAjuSvI8kJU2e1b9zBHYHnyHsVqXcNgd
-        k3CSGogSV1b8MEYF4YVoIEUNBccUKGQGV97U29gI=
-Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
-        with SMTPS id 1592356180846624.5090902346486; Wed, 17 Jun 2020 09:09:40 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20200617010939.19087-1-cgxu519@mykernel.net>
-Subject: [PATCH] nfs4: strengthen error check to avoid unexpected result
-Date:   Wed, 17 Jun 2020 09:09:39 +0800
-X-Mailer: git-send-email 2.20.1
+        id S1725923AbgFQE6d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 00:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgFQE6d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jun 2020 00:58:33 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4C2C061573
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2020 21:58:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j10so814547wrw.8
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2020 21:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cUp4cMJeqPGJFtnqCsTZ5wffxHSVBXJNuzm2UKzopaQ=;
+        b=CyQia/7yEpvDWrMbP+hAnSC2aNJ711MrzpFRQV/R7xdWR0g6Ogmfdze1RYY1uwwr2L
+         20WxmMwDhRtouMcXessyqycAozdFVZfJXvxa2myzs0h9wDiD56w4MFLwxp0/WwS+u0hg
+         ik6qJIubTlLLQ4/GuXb7uBHOVxhywFY8NGEKCAfn4y0/nzr56BudsrBiGOIcFkymgie6
+         i4cXjaPeI3tdePWsP812S/IsELJjTPWbJspYMfQea2cZnDDwQobdJj4R8iG53kFFZ2Yx
+         OtuQx64c4fvIkL5CfneKC7d85mh+SZjAiwsCwjOc1lDQOL67uBaqIjX76n2wgLvUOBjX
+         913g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cUp4cMJeqPGJFtnqCsTZ5wffxHSVBXJNuzm2UKzopaQ=;
+        b=nk+3Y2Ut+CsCDQOXitBvjIrGSGs9z71Fqg8pGZpK7JWT1rclSkE6SkiozgkmnRO4vS
+         TdwmcEdL4cBVc4LMjP/t0ckqXlAPzzWHoFAc0ZFCoAEngAVxBMRoO52Yn/KZGgdI3K/0
+         224owahTP17RMIKAA+0rvysw9Q8BZSdqK6ihpqRlw1GMfKjD4kYI0jI/MHIkokhyJfbW
+         yKLM4MwlncBDyW0jheHeIrdCMDy8D9Ix1DK1hQRk9/l3USQB0vsR7td1F6WZakFyakE2
+         BRm2MAGqsAW82gS1Z31ueAoPL6PuRHyqB7SkjtmK72ZTdW5zsYdGApjxRJnPSqF6F0oW
+         SHvA==
+X-Gm-Message-State: AOAM532wZDeVvxxQsRt4B3+MTVbUXq+4blNe2dp+2ZHvx5bOm+5LkxS+
+        /6LblnkJ6umapK1KHi7Oyw4=
+X-Google-Smtp-Source: ABdhPJz3u25vQbK+4o+XBCM8kpseeQeBw3v4zV7YqVle50TVr9qTodqkUuIh4lV70BYnRAu2GShaMA==
+X-Received: by 2002:adf:f64e:: with SMTP id x14mr6636591wrp.426.1592369911071;
+        Tue, 16 Jun 2020 21:58:31 -0700 (PDT)
+Received: from lorien (lorien.valinor.li. [2a01:4f8:192:61d5::2])
+        by smtp.gmail.com with ESMTPSA id f16sm6817970wmh.27.2020.06.16.21.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 21:58:29 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 06:58:29 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Elliott Mitchell <ehem+debian@m5p.com>, 962254@bugs.debian.org,
+        linux-nfs@vger.kernel.org, agruenba@redhat.com
+Subject: Re: Umask ignored when mounting NFSv4.2 share of an exported
+ Filesystem with noacl
+Message-ID: <20200617045829.GA26611@lorien.valinor.li>
+References: <20200605183631.GA1720057@eldamar.local>
+ <20200611223711.GA37917@mattapan.m5p.com>
+ <20200613125431.GA349352@eldamar.local>
+ <20200613184527.GA54221@mattapan.m5p.com>
+ <20200615145035.GA214986@pick.fieldses.org>
+ <20200615185311.GA702681@eldamar.local>
+ <20200616023820.GB214986@pick.fieldses.org>
+ <20200616024212.GC214986@pick.fieldses.org>
+ <20200616161658.GA17251@lorien.valinor.li>
+ <20200617005849.GA262660@pick.fieldses.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617005849.GA262660@pick.fieldses.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The variable error is ssize_t, which is signed and will
-cast to unsigned when comapre with variable size, so add
-a check to avoid unexpected result in case of negative
-value of error.
+Hi,
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jun 16, 2020 at 08:58:49PM -0400, J. Bruce Fields wrote:
+> On Tue, Jun 16, 2020 at 06:16:58PM +0200, Salvatore Bonaccorso wrote:
+> > This might be unneeded to test but as additional datapoint which
+> > confirms the suspect: I tried check the commit around 47057abde515
+> > ("nfsd: add support for the umask attribute") in 4.10-rc1
+> > 
+> > A kernel built with 47057abde515~1, and mounting from an enough recent
+> > client which has at least dff25ddb4808 ("nfs: add support for the
+> > umask attribute") does not show the observed behaviour, the server
+> > built with 47057abde515 does.
+> 
+> Thanks for the confirmation!
+> 
+> I think I'll send the following upstream.
+> 
+> --b.
+> 
+> commit 595ccdca9321
+> Author: J. Bruce Fields <bfields@redhat.com>
+> Date:   Tue Jun 16 16:43:18 2020 -0400
+> 
+>     nfsd: apply umask on fs without ACL support
+>     
+>     The server is failing to apply the umask when creating new objects on
+>     filesystems without ACL support.
+>     
+>     To reproduce this, you need to use NFSv4.2 and a client and server
+>     recent enough to support umask, and you need to export a filesystem that
+>     lacks ACL support (for example, ext4 with the "noacl" mount option).
+>     
+>     Filesystems with ACL support are expected to take care of the umask
+>     themselves (usually by calling posix_acl_create).
+>     
+>     For filesystems without ACL support, this is up to the caller of
+>     vfs_create(), vfs_mknod(), or vfs_mkdir().
+>     
+>     Reported-by: Elliott Mitchell <ehem+debian@m5p.com>
+>     Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+>     Fixes: 47057abde515 ("nfsd: add support for the umask attribute")
+>     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> 
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 0aa02eb18bd3..8fa3e0ff3671 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1225,6 +1225,9 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		iap->ia_mode = 0;
+>  	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
+>  
+> +	if (!IS_POSIXACL(dirp))
+> +		iap->ia_mode &= ~current_umask();
+> +
+>  	err = 0;
+>  	host_err = 0;
+>  	switch (type) {
+> @@ -1457,6 +1460,9 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		goto out;
+>  	}
+>  
+> +	if (!IS_POSIXACL(dirp))
+> +		iap->ia_mode &= ~current_umask();
+> +
+>  	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
+>  	if (host_err < 0) {
+>  		fh_drop_write(fhp);
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 9056f3dd380e..5f04c6f818b8 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7392,7 +7392,7 @@ nfs4_listxattr_nfs4_label(struct inode *inode, char *=
-list, size_t list_len)
-=20
- =09if (nfs_server_capable(inode, NFS_CAP_SECURITY_LABEL)) {
- =09=09len =3D security_inode_listsecurity(inode, list, list_len);
--=09=09if (list_len && len > list_len)
-+=09=09if (len >=3D 0 && list_len && len > list_len)
- =09=09=09return -ERANGE;
- =09}
- =09return len;
---=20
-2.20.1
+Thank you, could test this on my test setup and seem to work properly.
 
+Should it also be CC'ed to stable@vger.kernel.org so it is picked up
+by the current supported stable series?
 
+Regards,
+Salvatore
