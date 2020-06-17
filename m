@@ -2,74 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D85BF1FD182
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2020 18:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 619681FD2C6
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2020 18:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFQQFJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jun 2020 12:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgFQQFJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jun 2020 12:05:09 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51948C06174E
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Jun 2020 09:05:08 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id y13so2960814eju.2
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Jun 2020 09:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=DrzBWww1V84LG+Cn2vLmslckbTRUxnfObYgs0yW9aXI=;
-        b=gtOrchaCEiqNu1T4nLNfpXKoJGSRBxRT+xjuR0LE8idgFkLzLB8U2eFvYFFHEQtedw
-         c77V1lrLIITBVgP/D0Bygjdd2+1Z8YVFbsYImUaW11IWV4wY+b5vb4f4E3XayizAv9lt
-         d3xm8sfDyhWvI8WYZYbR3ctLqZU8HSk1sZtZVFcf7dFN6xPgNKNpAMwq+J0Vg7eBp1ye
-         i+VfYyUjNQV8WxzPSayfPTyvQAPKiInbqUznvjMtRuEpn3aCA4+oGk6kqvRo7ae8dfMJ
-         OHkhP5QiKHEi4SaEDn8K9sXlyk5ngWVWyZ5qsDtF1L1jSExeGGQbM05U6K6gxPQQz+zz
-         LmAQ==
+        id S1726815AbgFQQuV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 12:50:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25109 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726809AbgFQQuU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Jun 2020 12:50:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592412618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OjK8fyHVTJHn0tJmmKvVefEY8khdS+QHcewRe9SW19w=;
+        b=WjQcht4Bs0W+wbaYCphakmQGS6iCKa7jkGpvOFOgRwy7LsZ6IfNCVHfARWw7hzvGNTuME6
+        xY8BOA0Ay3VfmDmnvBy5hBjMbKKazjqc0UCe0eiLb3d7fKEf5eGJLvGWurumV0fLVz88lM
+        sGGFhuVQfUxnK+PWYUaZHniB+flm0mw=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-bB3p3yaCMey-Q0HS_csduw-1; Wed, 17 Jun 2020 12:50:16 -0400
+X-MC-Unique: bB3p3yaCMey-Q0HS_csduw-1
+Received: by mail-oi1-f199.google.com with SMTP id x7so1279823oif.13
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Jun 2020 09:50:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=DrzBWww1V84LG+Cn2vLmslckbTRUxnfObYgs0yW9aXI=;
-        b=s4v4spvMHCLu0n7YdtqJHo3cdNvpeTGDYWr/5TPKYhrNJZCc52CbAwEmSXJVdoXoCS
-         Y5JGC9t3UBj8oRxKqnvhASh6JuTAtsBAiI5RhZmqdNRhHY4a08nhTnXkqdAvOCipSWrK
-         zLGVZrypQrzPJuMu+EI2ZEfabeZLOGyEhlBifpXqet59rHcK5MVsb6dvd1SwWN31bjQ9
-         68blMl/TuLCZ/PPv8BDqce0uEzvP3x+1FAbezGKD7nabzdXxbvvwrb7MJ0XrswPRq0cc
-         VTFJOrJ45yVWvLxhD+WoLsSm1mSo1L3EYu8zucfrCYvG1FeSCoVJnXg2YrJlpnpSzv+T
-         gI+w==
-X-Gm-Message-State: AOAM532QZVagwfK/MUvvrJN1uN1MpbvEkYVq1Mkj5JMQm6w24DtyKNGR
-        iVzBEb5mw9Z/5lSb1srgDOQp50Ns1Zhdqb4POdXu/g==
-X-Google-Smtp-Source: ABdhPJyu+Qdb4Aiz5GJ13V5k64FaZgHUIgbjEL8hBabia5/KQ3REbdtDtcJ7xfaesa+kCIDixCW7oD54uay2+MDyf9E=
-X-Received: by 2002:a17:906:39d9:: with SMTP id i25mr7975155eje.510.1592409905621;
- Wed, 17 Jun 2020 09:05:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OjK8fyHVTJHn0tJmmKvVefEY8khdS+QHcewRe9SW19w=;
+        b=eVznZyXrAHRGw2fe4uBnMVjKtZGH3Nfdd2rBSa9KR1pMyZtEDTHU9rfrtVg8zr9eeA
+         7Fzy6j3TwiEvnLPnRszaZoE1hbmIuedLIgVo6PPthD/ksmXY572470z7PL+MylnG2Pcw
+         OaeOQP9Mwn4NXrcB+dnoxS7uJ7FDryHv0JjUOgjbC6+i0wc1qcjaJ37AP4yy+qRJxGHw
+         9KwRGAfYxbq4nV4b6w3vzP3H5ukShjIWtbhDBWhYIbNd+iZ9TCKcNW75dfvvwitRlVt7
+         xtLisGXPO23mDkcm0ITB4Oh9POnC0tqyCwKvadWOoBR4d9bYvl6BRLvpv/9dXOzd97QM
+         VeiA==
+X-Gm-Message-State: AOAM533iOk5NureVRxyDxO+SdEv/zX2BzPP4/zlozOkdER5qzaKARfuC
+        oFr7y5HLw19FE5NlTi/zGFU+8tOXakeydofngVhi5d6Fa4RYl31XUF6whgztLDdekoOMzcAdTy5
+        EC4Ihq9ADBs6L4N4ofZYKH/dDhELza/W0H9up
+X-Received: by 2002:a4a:d1ca:: with SMTP id a10mr262815oos.31.1592412615529;
+        Wed, 17 Jun 2020 09:50:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyvBRe1tN454gReGPRfABUY4hEWGQXUAbPkEy82xsY851yjhGMaPBzfCaZ6uEV13m7NtiwW2+yXK6vJIB388qk=
+X-Received: by 2002:a4a:d1ca:: with SMTP id a10mr262789oos.31.1592412615270;
+ Wed, 17 Jun 2020 09:50:15 -0700 (PDT)
 MIME-Version: 1.0
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 17 Jun 2020 12:04:54 -0400
-Message-ID: <CAN-5tyFGML84VX79oX-JbMsDeSW4WAA6iyBPjrd4O089iz26AQ@mail.gmail.com>
-Subject: v3 timeout behavior
-To:     linux-nfs <linux-nfs@vger.kernel.org>
+References: <20200605183631.GA1720057@eldamar.local> <20200611223711.GA37917@mattapan.m5p.com>
+ <20200613125431.GA349352@eldamar.local> <20200613184527.GA54221@mattapan.m5p.com>
+ <20200615145035.GA214986@pick.fieldses.org> <20200615185311.GA702681@eldamar.local>
+ <20200616023820.GB214986@pick.fieldses.org> <20200616024212.GC214986@pick.fieldses.org>
+ <20200616161658.GA17251@lorien.valinor.li> <20200617144256.1028414-1-agruenba@redhat.com>
+ <20200617153107.GL266716@pick.fieldses.org>
+In-Reply-To: <20200617153107.GL266716@pick.fieldses.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Wed, 17 Jun 2020 18:50:04 +0200
+Message-ID: <CAHc6FU5-WGL8OwELQvpu8CsQgqW5o2h92UG3d2E3RUTPnBPgog@mail.gmail.com>
+Subject: Re: Umask ignored when mounting NFSv4.2 share of an exported
+ Filesystem with noacl (was: Re: Bug#962254: NFS(v4) broken at 4.19.118-2)
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     ecryptfs@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>,
+        Elliott Mitchell <ehem+debian@m5p.com>, 962254@bugs.debian.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi folks,
+On Wed, Jun 17, 2020 at 5:31 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> On Wed, Jun 17, 2020 at 04:42:56PM +0200, Andreas Gruenbacher wrote:
+> > Hi Bruce,
+> >
+> > On Wed, Jun 17, 2020 at 2:58 AM J. Bruce Fields <bfields@redhat.com> wrote:
+> > > I think I'll send the following upstream.
+> >
+> > looking good, but how about using a little helper for this?
+>
+> I like it.  And the new comment's helpful too.
+>
+> >
+> > Also I'm not sure if ecryptfs gets this right, so taking the ecryptfs
+> > list into the CC.
+>
+> Yes, questions I had while doing this:
+>
+>         - cachefiles, ecrypfs, devtmpfs, and unix_mknod skip the check,
+>           is that OK for all of them?  (Overlayfs too, I think?--that
+>           code's harder to follow.
+>
+>         - why don't vfs_{create,mknod,mkdir} do the IS_POSIXACL check
+>           themselves?  Even if it's unnecessary for some callers, surely
+>           it wouldn't be wrong?
 
-I have a question whether or not the current client's behaviour is
-desirable. Current behaviour: every time a v3 operation is re-sent to
-the server we update (double) the timeout. There is no distinction
-between whether or not the previous timer had expired before the
-re-sent happened.
+That's a good question. The security_path_{mkdir,mknod} hooks would
+then probably be passed the original create mode before applying the
+umask, but at that point it's not clear what the new inode's final
+mode will be, anyway.
 
-Here's the scenario:
-1. Client sends a v3 operation
-2. Server RST-s the connection (prior to the timeout) (eg., connection
-is immediately reset)
-3. Client re-sends a v3 operation but the timeout is now 120sec.
+> I also wondered why both vfs_{create,mknod,mkdir} and the callers were
+> calling security hooks, but now I see that the callers are calling
+> security_path_* hooks and the vfs_ functions are calling
+> security_inode_* hooks, so I guess they're not redundant.
+>
+> Though now I wonder why some of the callers (nfsd, overlayfs) are
+> skipping the security_path_* hooks.
 
-As a result, an application sees 2mins pause. Where as if a connection
-reset didn't change the timeout value, the client would have re-tried
-(the 3rd time) after 60secs.
+The path based security hooks are only used by apparmor and tomoyo.
+Those hooks basically control who (which process) can do what where in
+the filesystem, but nfsd isn't aware of the "who", and overlayfs is a
+layer below the "where".
 
-Question: so in sunrcp if we get errors CONNREST/CONNABORTED, should
-we skip adjusting the timeout?
+Andreas
+
