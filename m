@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3C2D1FE3AD
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 04:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C07FE1FE3AF
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 04:14:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgFRBUy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jun 2020 21:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        id S1730407AbgFRBUz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 21:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730393AbgFRBUx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:53 -0400
+        id S1730396AbgFRBUy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F7B21927;
-        Thu, 18 Jun 2020 01:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CE2C21974;
+        Thu, 18 Jun 2020 01:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443253;
-        bh=pFpOND725oYumEFwBDazWFMK9S634TEj9+H4tZIxlLs=;
+        s=default; t=1592443254;
+        bh=+nMDf1VhqDzS4D9z3QCYu5iR4JILmVW8vlqkU9jRIf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMJOovYCqHOmkRBG06jSbuz2/bHWoE2N+P1tepePeR/1YdrTcr4ogefyldzKCKa3p
-         kjqHdtws5lvaDHhI2Kd/iiMKo9yXTmTaxYTP//3u7ot5w888SqiHAf63RUk12usUQQ
-         Q4bKuc6FrF+KFiOW6xFBB+9gHKd0+PhTHLIy2TVU=
+        b=WNpljOz7eq9KinLyWNSz3T2Vzg55hDycjhexTDJzNSpPHi/vGa/sXl0lNBmEuyDV2
+         1Z6fvaM9aK77KQatiYTjSl/7qgqiUxshEN94hZecM3bUpqpNvuj5YATBcEVk83ZIOp
+         rU6m9jfCSkXtpJcH1LJ+/x5FC/fvVWb18DzHrcdQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fedor Tokarev <ftokarev@gmail.com>,
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 201/266] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
-Date:   Wed, 17 Jun 2020 21:15:26 -0400
-Message-Id: <20200618011631.604574-201-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 202/266] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
+Date:   Wed, 17 Jun 2020 21:15:27 -0400
+Message-Id: <20200618011631.604574-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -44,43 +44,31 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
-
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index d024af4be85e..105d17af4abc 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -82,11 +82,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e257653f25ab..33c17c69aeaa 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7870,7 +7870,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+ }
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+-	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
++	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
+ };
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
- 
- 	strcat(buf, scopebuf);
+ /*
 -- 
 2.25.1
 
