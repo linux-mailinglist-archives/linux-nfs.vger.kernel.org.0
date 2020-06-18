@@ -2,81 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 436A11FDA7F
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 02:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CEC61FDB09
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 03:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgFRAnw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jun 2020 20:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        id S1728336AbgFRBJx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 21:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726854AbgFRAnv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:43:51 -0400
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728332AbgFRBJw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:52 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B88521556;
-        Thu, 18 Jun 2020 00:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B6021D7D;
+        Thu, 18 Jun 2020 01:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592441031;
-        bh=z8URL52jsUeVV4acHgb8mhAwfXotlh0gswF4QwIowhc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lFr7x6WrpgmRN4lzyjuvDZG/zGaopYG62aB1wPAszZtJjQPV9FdWelscdkKZ1qRgQ
-         AvtBQETgA+y3uFWv09ZMZ8o39Xuvl5i+wHRZRgNpcmzkR8W9OqNit+yo8ORkU4fGBb
-         M3YbM5M6BVVRc9kul9eNloay4TPH74oCLloXGYj4=
-Date:   Wed, 17 Jun 2020 17:43:48 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc:     gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, bfields@fieldses.org, chuck.lever@oracle.com,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, kuba@kernel.org, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        serge@hallyn.com, christian.brauner@ubuntu.com, slyfox@gentoo.org,
-        ast@kernel.org, keescook@chromium.org, josh@joshtriplett.org,
-        ravenexp@gmail.com, chainsaw@gentoo.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        bridge@lists.linux-foundation.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] kmod/umh: a few fixes
-Message-Id: <20200617174348.70710c3ecb14005fb1b9ec39@linux-foundation.org>
-In-Reply-To: <20200610154923.27510-1-mcgrof@kernel.org>
-References: <20200610154923.27510-1-mcgrof@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1592442592;
+        bh=FechefcbcXYNZfQW9PyLTkrR0AXuYRd2DiB3DkXGSG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BQkSuioWt+lTWyqiA3Zk04UQVjYHgKAVl8ZfAev+v10Qgks4gR8r3LXUuzxWQ8ZGv
+         gGoYK7buheHQ4KaSSBApOvwzM05FXf4CN1GDfyj7cB8Omy9kyhkKqqImCq20H8yLKb
+         9w6jt/pV/An1ZyD6R2a9HNLmL1kkLNUyR3X2CCzQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 081/388] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Wed, 17 Jun 2020 21:02:58 -0400
+Message-Id: <20200618010805.600873-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 10 Jun 2020 15:49:18 +0000 "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-> Tiezhu Yang had sent out a patch set with a slew of kmod selftest
-> fixes, and one patch which modified kmod to return 254 when a module
-> was not found. This opened up pandora's box about why that was being
-> used for and low and behold its because when UMH_WAIT_PROC is used
-> we call a kernel_wait4() call but have never unwrapped the error code.
-> The commit log for that fix details the rationale for the approach
-> taken. I'd appreciate some review on that, in particular nfs folks
-> as it seems a case was never really hit before.
-> 
-> This goes boot tested, selftested with kmod, and 0-day gives its
-> build blessings.
+[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
 
-Any thoughts on which kernel version(s) need some/all of these fixes?
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
 
->  drivers/block/drbd/drbd_nl.c         | 20 +++++------
->  fs/nfsd/nfs4recover.c                |  2 +-
->  include/linux/sched/task.h           | 13 ++++++++
->  kernel/kmod.c                        |  5 ++-
->  kernel/umh.c                         |  4 +--
->  lib/test_kmod.c                      |  2 +-
->  net/bridge/br_stp_if.c               | 10 ++----
->  security/keys/request_key.c          |  2 +-
->  tools/testing/selftests/kmod/kmod.sh | 50 +++++++++++++++++++++++-----
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
 
-I'm not really sure who takes kmod changes - I'll grab these unless
-someone shouts at me.
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 5cf91322de0f..07e0c6f6322f 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1301,6 +1301,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
+ 	}
+ }
+-- 
+2.25.1
 
