@@ -2,75 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB9401FF624
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 17:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 524521FF9EA
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 19:09:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgFRPE7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 18 Jun 2020 11:04:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18416 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728769AbgFRPE6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Jun 2020 11:04:58 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IF3DDA130019
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Jun 2020 11:04:57 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.73])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31r7n7pqtx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Jun 2020 11:04:57 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-nfs@vger.kernel.org> from <ntrishal@in.ibm.com>;
-        Thu, 18 Jun 2020 15:04:56 -0000
-Received: from us1a3-smtp02.a3.dal06.isc4sb.com (10.106.154.159)
-        by smtp.notes.na.collabserv.com (10.106.227.90) with smtp.notes.na.collabserv.com ESMTP;
-        Thu, 18 Jun 2020 15:04:53 -0000
-Received: from us1a3-mail65.a3.dal09.isc4sb.com ([10.142.3.169])
-          by us1a3-smtp02.a3.dal06.isc4sb.com
-          with ESMTP id 2020061815045310-606402 ;
-          Thu, 18 Jun 2020 15:04:53 +0000 
-To:     linux-nfs@vger.kernel.org
-Subject: Trunking Support in 4.1
-From:   "Trishali Nayar" <ntrishal@in.ibm.com>
-Date:   Thu, 18 Jun 2020 20:34:53 +0530
+        id S1727926AbgFRRJa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Jun 2020 13:09:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39189 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727822AbgFRRJ2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Jun 2020 13:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592500166;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=82LvIxgMt4a3zqNgV7GjzYqS2q7vXbFGvluTVqxJ+vU=;
+        b=ToWIqQ0WqomHy22sVz99e2WWXMn+00kHZUmk7360qPUAa+Ex0yq1QqrEpb792gGaMK44IA
+        CzfZGpx0eyg+CL69HV8cNSMCscHg/QqPrx9PmUFtwQQFH8jw2Zopx3oQl1sFJr2f3yPQou
+        rfs5AatJ9tkuoXEDHhTxRxt7d+AZLec=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-OLTB9xnNNBO3kxIyWho0cA-1; Thu, 18 Jun 2020 13:09:24 -0400
+X-MC-Unique: OLTB9xnNNBO3kxIyWho0cA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDD87107ACF4;
+        Thu, 18 Jun 2020 17:09:23 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-115-94.phx2.redhat.com [10.3.115.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 71D995EDE2;
+        Thu, 18 Jun 2020 17:09:23 +0000 (UTC)
+Subject: Re: [PATCH v3] mountstats: Adding 'Day, Hour:Min:Sec' to "mountstats
+ --nfs" for ease of understanding.
+To:     Rohan Sable <rsable@redhat.com>, linux-nfs@vger.kernel.org
+Cc:     smayhew@redhat.com, chuck.lever@oracle.com
+References: <20200605144835.GA98618@fedora.rsable.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <8daedaf7-e70c-c2dd-8dad-cc26898e6460@RedHat.com>
+Date:   Thu, 18 Jun 2020 13:09:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-KeepSent: 8137F6B8:51CF4CA7-0025858B:00459213;
- type=4; name=$KeepSent
-X-Mailer: IBM Notes Release 10.0.1FP3 August 09, 2019
-X-LLNOutbound: False
-X-Disclaimed: 49879
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="US-ASCII"
-x-cbid: 20061815-8877-0000-0000-000003CD741F
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.415652; ST=0; TS=0; UL=0; ISC=; MB=0.000478
-X-IBM-SpamModules-Versions: BY=3.00013309; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000295; SDB=6.01393349; UDB=6.00745733; IPR=6.01175625;
- MB=3.00032610; MTD=3.00000008; XFM=3.00000015; UTC=2020-06-18 15:04:55
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2020-06-18 09:01:27 - 6.00011497
-x-cbparentid: 20061815-8878-0000-0000-0000A247793F
-Message-Id: <OF8137F6B8.51CF4CA7-ON0025858B.00459213-6525858B.0052D80D@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_13:2020-06-18,2020-06-18 signatures=0
-X-Proofpoint-Spam-Reason: orgsafe
+In-Reply-To: <20200605144835.GA98618@fedora.rsable.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
 
-The 4.1 RFC mentions about two types of trunking: Session trunking and 
-Client ID trunking.
- 
-Are both of these supported by 4.1 servers and clients? 
 
-And are these mandatory features to claim 4.1 support?
+On 6/5/20 10:48 AM, Rohan Sable wrote:
+> This patch adds printing of 'Days, Hours:Mins:Sec' like below to --nfs in mountstats :
+> NFS mount age : 12 days, 23:59:59
+> 
+> Signed-off-by: Rohan Sable <rsable@redhat.com>
+Committed.... 
 
-Your insights will be really useful.
- 
-Thanks and regards,
-Trishali.
+steved.
+> ---
+>  tools/mountstats/mountstats.py | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
+> index d565385d..014f38a3 100755
+> --- a/tools/mountstats/mountstats.py
+> +++ b/tools/mountstats/mountstats.py
+> @@ -4,6 +4,7 @@
+>  """
+>  
+>  from __future__ import print_function
+> +import datetime as datetime
+>  
+>  __copyright__ = """
+>  Copyright (C) 2005, Chuck Lever <cel@netapp.com>
+> @@ -391,6 +392,7 @@ class DeviceData:
+>          """Pretty-print the NFS options
+>          """
+>          print('  NFS mount options: %s' % ','.join(self.__nfs_data['mountoptions']))
+> +        print('  NFS mount age: %s' % datetime.timedelta(seconds = self.__nfs_data['age']))
+>          print('  NFS server capabilities: %s' % ','.join(self.__nfs_data['servercapabilities']))
+>          if 'nfsv4flags' in self.__nfs_data:
+>              print('  NFSv4 capability flags: %s' % ','.join(self.__nfs_data['nfsv4flags']))
+> 
 
