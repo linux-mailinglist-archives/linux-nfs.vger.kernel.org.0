@@ -2,39 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D64A1FDEA4
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 03:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 410BE1FE5D5
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 04:29:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732735AbgFRBbM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jun 2020 21:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
+        id S1729572AbgFRC2p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 22:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731360AbgFRBbL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:11 -0400
+        id S1729569AbgFRBQS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38353221EC;
-        Thu, 18 Jun 2020 01:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743832088E;
+        Thu, 18 Jun 2020 01:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443871;
-        bh=iZZmz+Ap5bLY4GuNSraezb984yLj0cyMICkNa8CYumg=;
+        s=default; t=1592442978;
+        bh=z6dCiJtIJKUqRT09ck0nJLin/+y8qOj4uEH9J4xxUcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1oT4yCjQBrGRNzN+4tQ3qbaZQHcohx+dtnAq/Q1vsVJOecE+SsojUuOYH8wYb19L7
-         ORAmUknl7XaONSMsaH6fUO5nxSvifZh5mFyQC3TEWo1dBpLihyX1XyyPjJ7EWvdj0Q
-         h/ojk5x9UfIip3Kp38G2tLqhY7DJthZxDb08re5U=
+        b=YWeqRPtcjWf8+tlUEOCkOqQ928osXIyLAfCmsXDfgcPrWV6KOSz4zMl/9fr5jHwuC
+         yDUAgr/sGkCL5X7w/Uc9Iuv7nJMIoXLbKSv3MjoJINU/bZ11UcAHw7zakqrm8NJqgL
+         XsFGI+PYVd07k/zNeN8cPtpPy7cxM/ihbANoZjDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fedor Tokarev <ftokarev@gmail.com>,
+Cc:     Zheng Bin <zhengbin13@huawei.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 51/60] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
-Date:   Wed, 17 Jun 2020 21:29:55 -0400
-Message-Id: <20200618013004.610532-51-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 380/388] nfs: set invalid blocks after NFSv4 writes
+Date:   Wed, 17 Jun 2020 21:07:57 -0400
+Message-Id: <20200618010805.600873-380-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,43 +43,112 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+[ Upstream commit 3a39e778690500066b31fe982d18e2e394d3bce2 ]
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
+Use the following command to test nfsv4(size of file1M is 1MB):
+mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
+cp file1M /mnt
+du -h /mnt/file1M  -->0 within 60s, then 1M
 
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+When write is done(cp file1M /mnt), will call this:
+nfs_writeback_done
+  nfs4_write_done
+    nfs4_write_done_cb
+      nfs_writeback_update_inode
+        nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
+nfs_post_op_update_inode_force_wcc_locked
+   nfs_set_cache_invalid
+   nfs_refresh_inode_locked
+     nfs_update_inode
+
+nfsd write response contains change, ctime, mtime, the flag will be
+clear after nfs_update_inode. Howerver, write response does not contain
+space_used, previous open response contains space_used whose value is 0,
+so inode->i_blocks is still 0.
+
+nfs_getattr  -->called by "du -h"
+  do_update |= force_sync || nfs_attribute_cache_expired -->false in 60s
+  cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
+  do_update |= cache_validity & (NFS_INO_INVALID_ATTR    -->false
+  if (do_update) {
+        __nfs_revalidate_inode
+  }
+
+Within 60s, does not send getattr request to nfsd, thus "du -h /mnt/file1M"
+is 0.
+
+Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
+
+Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/inode.c         | 14 +++++++++++---
+ include/linux/nfs_fs.h |  1 +
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 2e0a6f92e563..8391c2785550 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index b9d0921cb4fe..0bf1f835de01 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -833,6 +833,8 @@ int nfs_getattr(const struct path *path, struct kstat *stat,
+ 		do_update |= cache_validity & NFS_INO_INVALID_ATIME;
+ 	if (request_mask & (STATX_CTIME|STATX_MTIME))
+ 		do_update |= cache_validity & NFS_INO_REVAL_PAGECACHE;
++	if (request_mask & STATX_BLOCKS)
++		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
+ 	if (do_update) {
+ 		/* Update the attribute cache */
+ 		if (!(server->flags & NFS_MOUNT_NOAC))
+@@ -1764,7 +1766,8 @@ int nfs_post_op_update_inode_force_wcc_locked(struct inode *inode, struct nfs_fa
+ 	status = nfs_post_op_update_inode_locked(inode, fattr,
+ 			NFS_INO_INVALID_CHANGE
+ 			| NFS_INO_INVALID_CTIME
+-			| NFS_INO_INVALID_MTIME);
++			| NFS_INO_INVALID_MTIME
++			| NFS_INO_INVALID_BLOCKS);
+ 	return status;
+ }
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+@@ -1871,7 +1874,8 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+ 			| NFS_INO_INVALID_ATIME
+ 			| NFS_INO_REVAL_FORCED
+-			| NFS_INO_REVAL_PAGECACHE);
++			| NFS_INO_REVAL_PAGECACHE
++			| NFS_INO_INVALID_BLOCKS);
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
+ 	/* Do atomic weak cache consistency updates */
+ 	nfs_wcc_update_inode(inode, fattr);
+@@ -2033,8 +2037,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 		inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
+ 	} else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
+ 		inode->i_blocks = fattr->du.nfs2.blocks;
+-	else
++	else {
++		nfsi->cache_validity |= save_cache_validity &
++				(NFS_INO_INVALID_BLOCKS
++				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
++	}
  
- 	strcat(buf, scopebuf);
+ 	/* Update attrtimeo value if we're out of the unstable period */
+ 	if (attr_changed) {
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 73eda45f1cfd..6ee9119acc5d 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -230,6 +230,7 @@ struct nfs4_copy_state {
+ #define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
+ #define NFS_INO_DATA_INVAL_DEFER	\
+ 				BIT(13)		/* Deferred cache invalidation */
++#define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
+ 
+ #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
+ 		| NFS_INO_INVALID_CTIME \
 -- 
 2.25.1
 
