@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A81381FDF65
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 03:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 060AD1FDF18
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2020 03:39:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732371AbgFRB3t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Jun 2020 21:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39348 "EHLO mail.kernel.org"
+        id S1731409AbgFRBi4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Jun 2020 21:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732368AbgFRB3q (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:46 -0400
+        id S1732516AbgFRBaY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC602222D;
-        Thu, 18 Jun 2020 01:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53ADB20FC3;
+        Thu, 18 Jun 2020 01:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443786;
-        bh=eDhOjtL5MBU9u/Vv6IAaoIxN3zDU6wp5sF/W1TP+/+o=;
+        s=default; t=1592443824;
+        bh=QmlTBGpRoe2gKzIy3R3HVQPXVAI2+PAtfsBNLXntKbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpXVch/nCRJ7kEmq1OA+2mPAN3Dv4/JuR1D9s4GIoYBI2IWI049+wksoFIs6KLm3P
-         ruy9R0G6sCppnH48UQm3rdnsLtpD/uxOG8GT/cMYd/y2IK0v2XkZ7sL3qjg4TUDlXZ
-         r0eu/L6iYSUpC2UDes2+dEi9dA2j4b83yEwPKx3M=
+        b=xdxXSYAzFc+Vjq3EVAEoQ4oTfiOOT0InYUTx+SRasxv852NhQGFqNyqGl9TwxW1EI
+         vinnMjckwNZIWkCmY753UMG+vMtgmNt4fOInEjOb11R8YrWAtmvweocl4Yo1GDx/hi
+         JfWpNsK1o+QYKYPAgmeMHZ89uqJHL19b4HSkO95s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 67/80] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
-Date:   Wed, 17 Jun 2020 21:28:06 -0400
-Message-Id: <20200618012819.609778-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 15/60] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Wed, 17 Jun 2020 21:29:19 -0400
+Message-Id: <20200618013004.610532-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,31 +44,42 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
+[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
 
-Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
+
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
+
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 632d3c3f8dfb..c189722bf9c7 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7151,7 +7151,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 4fa3f0ba9ab3..0a0b41071ed7 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1096,6 +1096,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
+ 	}
  }
- 
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
--	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
-+	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
- };
- 
- /*
 -- 
 2.25.1
 
