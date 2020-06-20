@@ -2,74 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D73C20256A
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2020 18:55:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 034F720257E
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2020 19:03:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbgFTQzI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 20 Jun 2020 12:55:08 -0400
-Received: from fieldses.org ([173.255.197.46]:60846 "EHLO fieldses.org"
+        id S1728242AbgFTRDW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 20 Jun 2020 13:03:22 -0400
+Received: from fieldses.org ([173.255.197.46]:33014 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFTQzI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 20 Jun 2020 12:55:08 -0400
+        id S1728061AbgFTRDW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:03:22 -0400
 Received: by fieldses.org (Postfix, from userid 2815)
-        id E0BAA9235; Sat, 20 Jun 2020 12:55:04 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E0BAA9235
+        id DB2E59236; Sat, 20 Jun 2020 13:03:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DB2E59236
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1592672104;
-        bh=SdZcLRfjSoAcF6fd71CZglK3+x1D6M3WFCrVO60D2YA=;
+        s=default; t=1592672596;
+        bh=UHoeTsyxG3LCrObRyerSUSvZXTADsRjTk02dnucLK6M=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z+wyI4pOOXhnkQrugmFcrLHzJaqf76f652z467KxUjuuJ6sZDP1dSaDaVHnIPLIGf
-         KvMxCjCcmk8FjTzcMUan0ufZDTC07oBbsO8AVvtAi/UnxRmvMJ5DgC13MxYCOIYHFP
-         rY7medSbY70o4YMzAdMnu8FJev2PDrgulUoQplxQ=
-Date:   Sat, 20 Jun 2020 12:55:04 -0400
+        b=ppP3Ef4B1cd4mw4FHdcQrolHyn//SMUtebZalhuOpeahhPSUqQ3wlCWIOxCqWOBNP
+         /tkfYRwiL1aFe+EjeQD4e27sRgLbyGHcxd03pWtJVC2vQuglfDENTnIDyCRTXchhbE
+         JLsrMZBqtepjl1rmPao2J9wAjUKcp+tdgipj8MYg=
+Date:   Sat, 20 Jun 2020 13:03:16 -0400
 From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [GIT PULL] nfsd changes for 5.8
-Message-ID: <20200620165504.GG1514@fieldses.org>
-References: <20200611155743.GC16376@fieldses.org>
- <CAADWXX9tV_khCjrO5eUJQry+QV4VLatt21KEkJ8irEcuqTbBsQ@mail.gmail.com>
- <20200611181141.GD16376@fieldses.org>
+To:     "Kraus, Sebastian" <sebastian.kraus@tu-berlin.de>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: RPC Pipefs: Frequent parsing errors in client database
+Message-ID: <20200620170316.GH1514@fieldses.org>
+References: <af85fe766d734e3ca389ffc8845e4a0f@tu-berlin.de>
+ <20200619220434.GB1594@fieldses.org>
+ <28a44712b25c4420909360bd813f8bfd@tu-berlin.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611181141.GD16376@fieldses.org>
+In-Reply-To: <28a44712b25c4420909360bd813f8bfd@tu-berlin.de>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 02:11:41PM -0400, J. Bruce Fields wrote:
-> On Thu, Jun 11, 2020 at 10:42:19AM -0700, Linus Torvalds wrote:
-> > I'm not entirely sure why, but gmail hates you and marked this as spam.
-> > 
-> > I (obviously) caught it despite that, but thought I'd mention it. I
-> > assume it's lack of DKIM for fieldses.org.
+On Sat, Jun 20, 2020 at 11:35:56AM +0000, Kraus, Sebastian wrote:
+> In consequence, about a week ago, I decided to investigate the problem
+> in a deep manner by stracing the rpc.gssd daemon while running.  Since
+> then, the segementation violations were gone, but now lots of
+> complaints of the following type appear in the system log:
 > 
-> Twenty years ago running my own mail service sounded like a fun idea.
+>  Jun 19 11:14:00 all rpc.gssd[23620]: ERROR: can't open
+>  nfsd4_cb/clnt3bb/info: No such file or directory Jun 19 11:14:00 all
+>  rpc.gssd[23620]: ERROR: failed to parse nfsd4_cb/clnt3bb/info
 > 
-> Nowadays it's just this thing that means that, every now and then, I
-> have to drop everything and go learn about some random bit of annoying
-> tech, just so I can get on with my work or talk to my friends.  Then
-> I'll promptly forget it, until years later it breaks, and I have to go
-> relearn it all from scratch.
 > 
-> Anyway, googling DKIM....
+> This behaviour seems somehow strange to me.  But, one possible
+> explanation could be: The execution speed of rpc.gssd slows down while
+> being straced and the "true" reason for the segmentation violations
+> pops up.  I would argue, rpc.gssd trying to parse non-existing files
+> points anyway to an insane and defective behaviour of the RPC GSS user
+> space daemon implementation.
 
-By the way, I think the real problem might have been Spamhaus SBLCSS
-listing my Linode server's IPv6 address.  I followed the suggestion at:
+Those files under rpc_pipefs come and go.  rpc.gssd monitors directories
+under rpc_pipefs to learn about changes, and then tries to parse the
+files under any new directories.
 
-	https://www.spamhaus.org/faq/section/Spamhaus%20CSS#426
+The thing is, if rpc.gssd is a little fast, I think it's possible that
+it could get the notification about clnt3bb/ being created, and try to
+look up "info", before "info" itself is actually created.
 
-and requested a new /64 from Linode, added an IP from the new /64 to my
-main interface, and updated AAAA and reverse DNS records.
+Or alternatively, if clnt3bb/ is short-lived, it might not look up
+"info" until the directory's already been deleted again.
 
-I also set up DKIM (mainly following instructions from README.fedora in
-the opendkim package).  Reading up a little more suggested DMARC is a
-bad idea for my case.
+Neither problem should be fatal--rpc.gssd will get another update and
+adjust to the new situation soon enough.
 
-Anyway, hopefully things are better now.
+So it may be that the reall error here is an unconditional log message
+in a case that's expected, not actually an error.
+
+Or I could be wrong and maybe something else is happening.
+
+But I think it'd be more useful to stay focused on the segfaults.
 
 --b.
