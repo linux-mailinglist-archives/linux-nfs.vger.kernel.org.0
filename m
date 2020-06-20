@@ -2,93 +2,132 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E67792025E9
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2020 20:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27409202604
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2020 20:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgFTSLn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 20 Jun 2020 14:11:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45752 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbgFTSLn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 20 Jun 2020 14:11:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i27so14971493ljb.12
-        for <linux-nfs@vger.kernel.org>; Sat, 20 Jun 2020 11:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+YJXnoUA2/iAN+EL5OZk11wBAdHeRZnQaKQlEuEtgT8=;
-        b=CF9ffHiovKx04io462jlvPL4EsHlHxVtiyeZzJjQUEmwKYoFAQiecZPuIxgUsKxSbu
-         6OClilS0GewKP2T6lzRUfkedW6K/n3cx2qP/5rfaRLw0Slc8QEUAlsPAYTLTocXdxwAW
-         xTo3AhkBLYbtjdKyjLGgEXDnPdJTeGNyEcvxE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+YJXnoUA2/iAN+EL5OZk11wBAdHeRZnQaKQlEuEtgT8=;
-        b=r2Z44fo4wcDTBfHW4g252gUQcygEC0TFWBrvmCAlT5iW8fjICdiClKDNhUGF7faJ5W
-         RJ1leQ8DvAs0uvw5v1Ew2kw3UVOV4KAfk426QLRMQCtknAm5hI+8aBA/aSCMV0lQUoW2
-         BjLUWL+3uBc6xJRep9hcqkXB4FHK4DbGKNwx9euyV9vIs25QFAfHMO99zIyWq7bWlB4W
-         db+qiNy1t42DBtNedmJHTuzz8mbmsqIJnafjo4RW/N9oiQfFAhwzPLG2rmcLe8zOIWz6
-         /+wuc1lWRHJg+CO4WnuEnTW92YY893cnDiRa/qHMt9qwcmUTjtnxFCZUVk/h6pzAkfTa
-         8X/g==
-X-Gm-Message-State: AOAM531KIHNjjSJwXeHcm/+GykLqtTcJsGq2UwISJPifsosRsINNzsIB
-        x7eOCr0Wt14wCC+A28Wldzf5GGKvzAg=
-X-Google-Smtp-Source: ABdhPJys+auUO5ZRMEyUqVPlBc7D7y33vn1A7CViyJ54vSzFAJ4D7UVF9ddykh27E5pQ1zHTKGHwNQ==
-X-Received: by 2002:a2e:b8d5:: with SMTP id s21mr4476180ljp.34.1592676640483;
-        Sat, 20 Jun 2020 11:10:40 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id u8sm2206433lff.38.2020.06.20.11.10.39
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 11:10:39 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id n23so14994701ljh.7
-        for <linux-nfs@vger.kernel.org>; Sat, 20 Jun 2020 11:10:39 -0700 (PDT)
-X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr4372477ljn.70.1592676639017;
- Sat, 20 Jun 2020 11:10:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200611155743.GC16376@fieldses.org> <CAADWXX9tV_khCjrO5eUJQry+QV4VLatt21KEkJ8irEcuqTbBsQ@mail.gmail.com>
- <20200611181141.GD16376@fieldses.org> <20200620165504.GG1514@fieldses.org>
-In-Reply-To: <20200620165504.GG1514@fieldses.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 20 Jun 2020 11:10:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg6KKyy-d0foGXguj1p1RtLg8mNNdeTHgs053rfAaAYPw@mail.gmail.com>
-Message-ID: <CAHk-=wg6KKyy-d0foGXguj1p1RtLg8mNNdeTHgs053rfAaAYPw@mail.gmail.com>
-Subject: Re: [GIT PULL] nfsd changes for 5.8
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728443AbgFTSrC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 20 Jun 2020 14:47:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34640 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgFTSrB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 20 Jun 2020 14:47:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05KIhK70087983;
+        Sat, 20 Jun 2020 18:46:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=61QHmuzvRGfWOd8s5jF/RkioZ95ddhrBSNbVDmSKbfc=;
+ b=qgb7zNjRCE1z7yU0IDxWwwcPLngrvULrbN3pYqhuwPaoXw++b2WuK5v7oxOjbub0mHLD
+ 4nBv7vxFx7ARVnZPNzH5qBrWFqgjrWjjm5ozb0YshAoMoOYSGI6MClfa+WtbCPNnXQWA
+ ervXIHofME/j5z+dtWibLFH+6ut8B9fgkglyy+wCcDrruSvV71gK3HyPSRafTnfk/3QL
+ haPE2IUM/hrKP+LPTopXi3XXS9AitS2GpwzcAvqiExCinxCMve+0InHtoCggHYKqXIbM
+ wtncLEqAITO4q4wQyMQXpHO17HqQ/+8gLW/o5LOe4eV/fypS0YzEfVwREXL7PyIpvEdY Bg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31sebb1d42-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 20 Jun 2020 18:46:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05KIhaW0142908;
+        Sat, 20 Jun 2020 18:46:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31seb7wvsh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 20 Jun 2020 18:46:59 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05KIkv5V020253;
+        Sat, 20 Jun 2020 18:46:57 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 20 Jun 2020 18:46:57 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH] xprtrdma: Wake up re_connect_wait on disconnect
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200620171805.1748399-1-dan@kernelim.com>
+Date:   Sat, 20 Jun 2020 14:46:55 -0400
+Cc:     linux-rdma@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AC3CC4DE-C508-4F95-9F0D-B2977CD7301F@oracle.com>
+References: <20200620171805.1748399-1-dan@kernelim.com>
+To:     Dan Aloni <dan@kernelim.com>
+X-Mailer: Apple Mail (2.3445.104.14)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9658 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006200137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9658 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
+ lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1011 impostorscore=0
+ malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006200137
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 9:55 AM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> Anyway, hopefully things are better now.
+Hi Dan-
 
-This email certainly looked fine. You had
+> On Jun 20, 2020, at 1:18 PM, Dan Aloni <dan@kernelim.com> wrote:
+>=20
+> Given that rpcrdma_xprt_connect() happens from workqueue context, on =
+cases where
+> connections don't succeeds, something needs to wake it up. In my case, =
+this has
+> been observed when the CM callback received `RDMA_CM_EVENT_REJECTED`, =
+and
+> `rpcrdma_xprt_connect()` slept forever.
 
-    DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; ...
+Interesting. My development and testing generates plenty of REJECTED =
+connection
+requests, but I never saw this particular failure mode.
 
-with the proper headers ("From" shows up twice in your DKIM signature
-list, and maybe you could add the message-id to the DKIM-protected
-headers, but whatever), and google clearly liked the end result too:
 
-       dkim=pass header.i=@fieldses.org header.s=default header.b=z+wyI4pO;
+> This continues the fix in commit 58bd6656f808 ('xprtrdma: Restore =
+wake-up-all to
+> rpcrdma_cm_event_handler()').
 
-(and you already had the SPF records previously, and that continues to
-pass too).
+The patch looks sensible. I'll pull it into my test harness.
 
-So from what I can tell, you're now doing everything you can to look
-like a good modern non-spam email sender, and hopefully together with
-having the Linode addresses cleared from Spamhaus there would be no
-reason for gmail to ever hate you again.
 
-In fact, you look better than most people. DKIM still isn't as common
-as it perhaps should be.
+> Signed-off-by: Dan Aloni <dan@kernelim.com>
+> CC: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>=20
+> Notes:
+>    Hi Chuck,
+>=20
+>    Maybe I missd something, as it is not clear to me how otherwise =
+(without this
+>    patch), re_connect_wait can be woken up in this situation. Please =
+explain?
+>=20
+> net/sunrpc/xprtrdma/verbs.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> index 2ae348377806..8bd76a47a91f 100644
+> --- a/net/sunrpc/xprtrdma/verbs.c
+> +++ b/net/sunrpc/xprtrdma/verbs.c
+> @@ -289,6 +289,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, =
+struct rdma_cm_event *event)
+> 		ep->re_connect_status =3D -ECONNABORTED;
+> disconnected:
+> 		xprt_force_disconnect(xprt);
+> +		wake_up_all(&ep->re_connect_wait);
+> 		return rpcrdma_ep_destroy(ep);
+> 	default:
+> 		break;
+> --=20
+> 2.25.4
+>=20
 
-Knock wood.
+--
+Chuck Lever
 
-            Linus
+
+
