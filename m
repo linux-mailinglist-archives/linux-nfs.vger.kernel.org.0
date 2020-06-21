@@ -2,95 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 613C6202B40
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2020 16:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05498202B47
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2020 17:11:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgFUO7j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Jun 2020 10:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
+        id S1730248AbgFUPLP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Jun 2020 11:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbgFUO7j (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Jun 2020 10:59:39 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B8DC061794;
-        Sun, 21 Jun 2020 07:59:37 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l188so358126qkf.10;
-        Sun, 21 Jun 2020 07:59:37 -0700 (PDT)
+        with ESMTP id S1730235AbgFUPLO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Jun 2020 11:11:14 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73339C061794
+        for <linux-nfs@vger.kernel.org>; Sun, 21 Jun 2020 08:11:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a6so2872339wmm.0
+        for <linux-nfs@vger.kernel.org>; Sun, 21 Jun 2020 08:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=AI+XwSIrjxiPwArk1egrpcmul8nmBInRkhXDyTlJZ48=;
-        b=E9qE/+BS+cuW3iPQoO3O4EaP/XvldbAj+96CMiF1bzqZsHHrRkxr98CA8CJ9gO+FiR
-         k2s7k1f66hL5EeRl2RjTfJOvqzMkKAplOzguKyD6NxpJx6FGrmr5NQxDrABE34x7BIHT
-         1gJJt+rM2pRR9nncSzrZXkjYj6/enid2HF5XcF4dhHSHxgBssTJYX44HmE8ff14Y9V8n
-         jTx6wD0UYTLdDGRCyh4XIXG+FinSj5cpztLFsbAgccuDp5LBjNSftd/eFafjleO5vgMn
-         +lwf+7h9JnjDAGi2LJlrQyl/GbUoKuO6iKSy1qA93SN9jnCtTbmAJUler/bBd3Ayh0jb
-         CB1w==
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wlu5CSGF8CrDN81mFhVGaO3IVLDqpGhWNBGwGpsa/M4=;
+        b=Qj1e79Y3ru9wpHk0ukJCfQnDoAYKhRkEeGyq9Kn3g2b3ZgpRYn7p4Knlt2rfVMOnHt
+         GjZX742CSXvD1f0wZDcErX61WLTCJNkQuAqxM86Uz3Zhi5t0C5FT9RAzeb0wgFYhvyKQ
+         c0IZO08Z3SvP/sI/pkQcBSIBUDmu45KLcc6hKhbvnxW6A9zikTodd0QdAU7ATMzaymwa
+         aSrkbPSuHCTe7kpRLQxLKiSOJ9GJ+gfqvmrLXci1UTM6187ob8zyO2cuRCqYIS6kDODO
+         tC40VFnjaC3g/MpQ6VlfemRa0FvAaGArqpG5ROAXt3V8UC6ziKjW45H6MKyCsNefM4Si
+         qW3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=AI+XwSIrjxiPwArk1egrpcmul8nmBInRkhXDyTlJZ48=;
-        b=do+KpLIlZRhstGyNQRe8Zh0tEJhPNNjvshOQP+O7KN1fLTeXyMGtphBFO/Z1Kn2uFi
-         IIRV/m6ah+bRqsdj7F+Wl7KEJ8rM4ma6kPEpoxQGfJekS6fW4rCd+QM2CfPQcxSSwz12
-         OpJrdGaqHWozKH0nVLh3818QGdWqOlCkuPRLMyaFeNsbEOr22LcGft0MjsgQ2crpfbf6
-         bWNImPsW2c8r4mxXy2xcr+7z8DTWKp51Cb3XwUmPPFfRPQXke2Hw6wLYEKJqxWWHkLJh
-         1fJuj3aVVf4DhRzcX/UdR+XFYZ3YqP1pTrSiuShcFcMir+lTxGR20iRmZSxzhqIHtcOC
-         gquA==
-X-Gm-Message-State: AOAM5322G9ziQZKyOazMxbd54x4Fgr3A5uoQkWuNaV4mLjfVNWmtBsSU
-        a23/VZzBgpcakcjcGTDjl+A=
-X-Google-Smtp-Source: ABdhPJyEfk/9iHCtiiRvuKWSudQiOi3+BWwVYEIRIEOyRoj5d6MCSEuPsO4RPbrcWCh98VFz2cV+wg==
-X-Received: by 2002:a37:9cb:: with SMTP id 194mr11863661qkj.456.1592751576677;
-        Sun, 21 Jun 2020 07:59:36 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g13sm11425192qki.95.2020.06.21.07.59.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jun 2020 07:59:36 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05LExY53014413;
-        Sun, 21 Jun 2020 14:59:35 GMT
-Subject: [PATCH] xprtrdma: Ensure connect worker is awoken after connect
- error
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sun, 21 Jun 2020 10:59:34 -0400
-Message-ID: <20200621145934.4069.31886.stgit@manet.1015granger.net>
-User-Agent: StGit/0.22-38-gfb18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wlu5CSGF8CrDN81mFhVGaO3IVLDqpGhWNBGwGpsa/M4=;
+        b=tFj0Vp9QkKyN8lAd8sGS4abQEPcdb/rIUDI4IGdKw4oHKiJwLovMpLbIsBVq4dze6x
+         D4LNAg9bS+ljn6E+iwrOaLtGdu5CwS8XD4WBo4pnaPHXK/ZoiOds8xBmAgfUVlam65od
+         j3McHzQaz/tv2TXFfAlIfEUbCMAan5jlKZXlp1uflPRimqqeLkbxsr17/WMg86U7Fjo5
+         rE7e21eIHzMhReoUTHopKCsdtKMuPBdTqxAXAYD9ZnCNztRNyZK/b1KQSxE59P1tJJmb
+         sGfyFuNEYtUvrieE4DN83jdX4OVjEQZx9wSRJGcf7jro2FvEyWbZKKUgZx9p4eocRNHc
+         XUtg==
+X-Gm-Message-State: AOAM532VUrvx58hSBeH7qiPd8bkZsssesFLNB033S8h9bddSbbOl2PEy
+        J2B04ffSKVy7+ogJXKVq27mrig==
+X-Google-Smtp-Source: ABdhPJyU4j9XhMKvlecebzMKcPjq02ryR4G1WefdAk2S+NHTaXkNFOyyrvqC0FQJqx+uZ4ra1xuTxg==
+X-Received: by 2002:a7b:c18f:: with SMTP id y15mr6161450wmi.85.1592752272155;
+        Sun, 21 Jun 2020 08:11:12 -0700 (PDT)
+Received: from gmail.com ([141.226.9.235])
+        by smtp.gmail.com with ESMTPSA id 33sm7524335wri.16.2020.06.21.08.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 08:11:11 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 18:11:09 +0300
+From:   Dan Aloni <dan@kernelim.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-rdma@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] xprtrdma: Wake up re_connect_wait on disconnect
+Message-ID: <20200621151109.GA3006346@gmail.com>
+References: <20200620171805.1748399-1-dan@kernelim.com>
+ <AC3CC4DE-C508-4F95-9F0D-B2977CD7301F@oracle.com>
+ <E3C3C032-CAB9-4AA7-B574-0A037A4F37FC@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E3C3C032-CAB9-4AA7-B574-0A037A4F37FC@oracle.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dan Aloni <dan@kernelim.com>
+On Sun, Jun 21, 2020 at 10:49:53AM -0400, Chuck Lever wrote:
+> >> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> >> index 2ae348377806..8bd76a47a91f 100644
+> >> --- a/net/sunrpc/xprtrdma/verbs.c
+> >> +++ b/net/sunrpc/xprtrdma/verbs.c
+> >> @@ -289,6 +289,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+> >> 		ep->re_connect_status = -ECONNABORTED;
+> >> disconnected:
+> >> 		xprt_force_disconnect(xprt);
+> >> +		wake_up_all(&ep->re_connect_wait);
+> >> 		return rpcrdma_ep_destroy(ep);
+> >> 	default:
+> >> 		break;
+> 
+> This hunk does not apply on top of fixes I've already sent to Anna for 5.8-rc1.
+> 
+> So, if you don't object, I'll adjust your patch (this hunk and the description)
+> before sending it along to Anna.
 
-The connect worker sleeps waiting for either successful connection
-establishment or an error. Commit e28ce90083f0 ("xprtrdma: kmalloc
-rpcrdma_ep separate from rpcrdma_xprt") mistakenly removed the
-wake-up in cases when connection establishment fails.
+Sure, go ahead. Thanks for working on this!
 
-Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
-Signed-off-by: Dan Aloni <dan@kernelim.com>
-[ cel: rebased on recent fixes to 5.8-rc; patch description rewritten ]
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/verbs.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 2198c8ec8dff..54c6809bf06e 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -296,6 +296,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 		ep->re_connect_status = -ECONNABORTED;
- disconnected:
- 		rpcrdma_force_disconnect(ep);
-+		wake_up_all(&ep->re_connect_wait);
- 		return rpcrdma_ep_put(ep);
- 	default:
- 		break;
-
+-- 
+Dan Aloni
