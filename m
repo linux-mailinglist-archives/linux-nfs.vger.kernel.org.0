@@ -2,167 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 706DC202B2A
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2020 16:52:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 613C6202B40
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2020 16:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgFUOv7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Jun 2020 10:51:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58264 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730183AbgFUOv7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Jun 2020 10:51:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05LEgbww141719;
-        Sun, 21 Jun 2020 14:51:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Y7sgi1rG1TMQ3ENdfaLCduZHCD4ouSfcPchsLjVziHk=;
- b=P9O2azF7o5ZdV2/8XleN/ahKyy5rKl4PcpOGzHScI9j+CjZcLcrIeXF6ksxPJGm5I30Q
- mFe6URmvBQAmRZquMRmxX9tAnZy05ui97K2K7cum0Z8jqWTGPTxwlwwDFIhjgYklS9yY
- EApYeNJpYVPNtmrvPS9TF8htoj3SIOr3+o2OCDAu4x1xfKBvoY5mTkN50c+mJoF+j89v
- OllfpnBFCMKUtbBtN/hsoL1wOHDXoPzish688R9EfzjsyY0F8Liu17+fGhZotZtRqQMK
- jeCgvNBFYKj3Pm6xXk9lj7HqfRIivDIF5almTrmasrzj2yyzqy7yl6ysKEHyTRdNY/Oz Qw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31sebbb18y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 21 Jun 2020 14:51:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05LEmsFe078644;
-        Sun, 21 Jun 2020 14:49:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 31svctpst1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 21 Jun 2020 14:49:56 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05LEntSD011505;
-        Sun, 21 Jun 2020 14:49:55 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 21 Jun 2020 14:49:55 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] xprtrdma: Wake up re_connect_wait on disconnect
+        id S1730240AbgFUO7j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Jun 2020 10:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730235AbgFUO7j (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Jun 2020 10:59:39 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B8DC061794;
+        Sun, 21 Jun 2020 07:59:37 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l188so358126qkf.10;
+        Sun, 21 Jun 2020 07:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=AI+XwSIrjxiPwArk1egrpcmul8nmBInRkhXDyTlJZ48=;
+        b=E9qE/+BS+cuW3iPQoO3O4EaP/XvldbAj+96CMiF1bzqZsHHrRkxr98CA8CJ9gO+FiR
+         k2s7k1f66hL5EeRl2RjTfJOvqzMkKAplOzguKyD6NxpJx6FGrmr5NQxDrABE34x7BIHT
+         1gJJt+rM2pRR9nncSzrZXkjYj6/enid2HF5XcF4dhHSHxgBssTJYX44HmE8ff14Y9V8n
+         jTx6wD0UYTLdDGRCyh4XIXG+FinSj5cpztLFsbAgccuDp5LBjNSftd/eFafjleO5vgMn
+         +lwf+7h9JnjDAGi2LJlrQyl/GbUoKuO6iKSy1qA93SN9jnCtTbmAJUler/bBd3Ayh0jb
+         CB1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=AI+XwSIrjxiPwArk1egrpcmul8nmBInRkhXDyTlJZ48=;
+        b=do+KpLIlZRhstGyNQRe8Zh0tEJhPNNjvshOQP+O7KN1fLTeXyMGtphBFO/Z1Kn2uFi
+         IIRV/m6ah+bRqsdj7F+Wl7KEJ8rM4ma6kPEpoxQGfJekS6fW4rCd+QM2CfPQcxSSwz12
+         OpJrdGaqHWozKH0nVLh3818QGdWqOlCkuPRLMyaFeNsbEOr22LcGft0MjsgQ2crpfbf6
+         bWNImPsW2c8r4mxXy2xcr+7z8DTWKp51Cb3XwUmPPFfRPQXke2Hw6wLYEKJqxWWHkLJh
+         1fJuj3aVVf4DhRzcX/UdR+XFYZ3YqP1pTrSiuShcFcMir+lTxGR20iRmZSxzhqIHtcOC
+         gquA==
+X-Gm-Message-State: AOAM5322G9ziQZKyOazMxbd54x4Fgr3A5uoQkWuNaV4mLjfVNWmtBsSU
+        a23/VZzBgpcakcjcGTDjl+A=
+X-Google-Smtp-Source: ABdhPJyEfk/9iHCtiiRvuKWSudQiOi3+BWwVYEIRIEOyRoj5d6MCSEuPsO4RPbrcWCh98VFz2cV+wg==
+X-Received: by 2002:a37:9cb:: with SMTP id 194mr11863661qkj.456.1592751576677;
+        Sun, 21 Jun 2020 07:59:36 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id g13sm11425192qki.95.2020.06.21.07.59.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jun 2020 07:59:36 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05LExY53014413;
+        Sun, 21 Jun 2020 14:59:35 GMT
+Subject: [PATCH] xprtrdma: Ensure connect worker is awoken after connect
+ error
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <AC3CC4DE-C508-4F95-9F0D-B2977CD7301F@oracle.com>
-Date:   Sun, 21 Jun 2020 10:49:53 -0400
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E3C3C032-CAB9-4AA7-B574-0A037A4F37FC@oracle.com>
-References: <20200620171805.1748399-1-dan@kernelim.com>
- <AC3CC4DE-C508-4F95-9F0D-B2977CD7301F@oracle.com>
-To:     Dan Aloni <dan@kernelim.com>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
- malwarescore=0 suspectscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006210118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1015
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006210117
+To:     anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Sun, 21 Jun 2020 10:59:34 -0400
+Message-ID: <20200621145934.4069.31886.stgit@manet.1015granger.net>
+User-Agent: StGit/0.22-38-gfb18
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Dan-
+From: Dan Aloni <dan@kernelim.com>
 
-> On Jun 20, 2020, at 2:46 PM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
-> Hi Dan-
->=20
->> On Jun 20, 2020, at 1:18 PM, Dan Aloni <dan@kernelim.com> wrote:
->>=20
->> Given that rpcrdma_xprt_connect() happens from workqueue context, on =
-cases where
->> connections don't succeeds, something needs to wake it up. In my =
-case, this has
->> been observed when the CM callback received `RDMA_CM_EVENT_REJECTED`, =
-and
->> `rpcrdma_xprt_connect()` slept forever.
->=20
-> Interesting. My development and testing generates plenty of REJECTED =
-connection
-> requests, but I never saw this particular failure mode.
+The connect worker sleeps waiting for either successful connection
+establishment or an error. Commit e28ce90083f0 ("xprtrdma: kmalloc
+rpcrdma_ep separate from rpcrdma_xprt") mistakenly removed the
+wake-up in cases when connection establishment fails.
 
-Correction: My testing _used_ _to_ generate REJECTED events regularly. =
-It does
-not seem to any more, even after client crashes. So that explains why I =
-haven't
-seen this before.
+Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+Signed-off-by: Dan Aloni <dan@kernelim.com>
+[ cel: rebased on recent fixes to 5.8-rc; patch description rewritten ]
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/verbs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-I haven't reproduced the problem here, but the fix still looks proper to =
-me,
-and doesn't appear to introduce any regressions. I do have some issues =
-with your
-proposed patch, though.
-
-The first paragraph of the patch description is incorrect. =
-RDMA_CM_EVENT_DISCONNECTED
-can occur only once a connection has been established. That guarantees =
-there are no
-waiters on re_connect_wait in that case. It's connect errors that need =
-to wake-up
-the connect worker.
-
-
->> This continues the fix in commit 58bd6656f808 ('xprtrdma: Restore =
-wake-up-all to
->> rpcrdma_cm_event_handler()').
-
-IMO this paragraph needs to be replaced by:
-
-Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from =
-rpcrdma_xprt")
-
-
->> Signed-off-by: Dan Aloni <dan@kernelim.com>
->> CC: Chuck Lever <chuck.lever@oracle.com>
->> ---
->>=20
->> Notes:
->>   Hi Chuck,
->>=20
->>   Maybe I missd something, as it is not clear to me how otherwise =
-(without this
->>   patch), re_connect_wait can be woken up in this situation. Please =
-explain?
->>=20
->> net/sunrpc/xprtrdma/verbs.c | 1 +
->> 1 file changed, 1 insertion(+)
->>=20
->> diff --git a/net/sunrpc/xprtrdma/verbs.c =
-b/net/sunrpc/xprtrdma/verbs.c
->> index 2ae348377806..8bd76a47a91f 100644
->> --- a/net/sunrpc/xprtrdma/verbs.c
->> +++ b/net/sunrpc/xprtrdma/verbs.c
->> @@ -289,6 +289,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, =
-struct rdma_cm_event *event)
->> 		ep->re_connect_status =3D -ECONNABORTED;
->> disconnected:
->> 		xprt_force_disconnect(xprt);
->> +		wake_up_all(&ep->re_connect_wait);
->> 		return rpcrdma_ep_destroy(ep);
->> 	default:
->> 		break;
-
-This hunk does not apply on top of fixes I've already sent to Anna for =
-5.8-rc1.
-
-So, if you don't object, I'll adjust your patch (this hunk and the =
-description)
-before sending it along to Anna.
-
-
---
-Chuck Lever
-
-
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 2198c8ec8dff..54c6809bf06e 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -296,6 +296,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		ep->re_connect_status = -ECONNABORTED;
+ disconnected:
+ 		rpcrdma_force_disconnect(ep);
++		wake_up_all(&ep->re_connect_wait);
+ 		return rpcrdma_ep_put(ep);
+ 	default:
+ 		break;
 
