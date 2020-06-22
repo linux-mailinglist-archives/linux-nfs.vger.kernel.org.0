@@ -2,90 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05498202B47
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2020 17:11:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FAD520387C
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2020 15:52:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgFUPLP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Jun 2020 11:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbgFUPLO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Jun 2020 11:11:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73339C061794
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Jun 2020 08:11:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a6so2872339wmm.0
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Jun 2020 08:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wlu5CSGF8CrDN81mFhVGaO3IVLDqpGhWNBGwGpsa/M4=;
-        b=Qj1e79Y3ru9wpHk0ukJCfQnDoAYKhRkEeGyq9Kn3g2b3ZgpRYn7p4Knlt2rfVMOnHt
-         GjZX742CSXvD1f0wZDcErX61WLTCJNkQuAqxM86Uz3Zhi5t0C5FT9RAzeb0wgFYhvyKQ
-         c0IZO08Z3SvP/sI/pkQcBSIBUDmu45KLcc6hKhbvnxW6A9zikTodd0QdAU7ATMzaymwa
-         aSrkbPSuHCTe7kpRLQxLKiSOJ9GJ+gfqvmrLXci1UTM6187ob8zyO2cuRCqYIS6kDODO
-         tC40VFnjaC3g/MpQ6VlfemRa0FvAaGArqpG5ROAXt3V8UC6ziKjW45H6MKyCsNefM4Si
-         qW3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wlu5CSGF8CrDN81mFhVGaO3IVLDqpGhWNBGwGpsa/M4=;
-        b=tFj0Vp9QkKyN8lAd8sGS4abQEPcdb/rIUDI4IGdKw4oHKiJwLovMpLbIsBVq4dze6x
-         D4LNAg9bS+ljn6E+iwrOaLtGdu5CwS8XD4WBo4pnaPHXK/ZoiOds8xBmAgfUVlam65od
-         j3McHzQaz/tv2TXFfAlIfEUbCMAan5jlKZXlp1uflPRimqqeLkbxsr17/WMg86U7Fjo5
-         rE7e21eIHzMhReoUTHopKCsdtKMuPBdTqxAXAYD9ZnCNztRNyZK/b1KQSxE59P1tJJmb
-         sGfyFuNEYtUvrieE4DN83jdX4OVjEQZx9wSRJGcf7jro2FvEyWbZKKUgZx9p4eocRNHc
-         XUtg==
-X-Gm-Message-State: AOAM532VUrvx58hSBeH7qiPd8bkZsssesFLNB033S8h9bddSbbOl2PEy
-        J2B04ffSKVy7+ogJXKVq27mrig==
-X-Google-Smtp-Source: ABdhPJyU4j9XhMKvlecebzMKcPjq02ryR4G1WefdAk2S+NHTaXkNFOyyrvqC0FQJqx+uZ4ra1xuTxg==
-X-Received: by 2002:a7b:c18f:: with SMTP id y15mr6161450wmi.85.1592752272155;
-        Sun, 21 Jun 2020 08:11:12 -0700 (PDT)
-Received: from gmail.com ([141.226.9.235])
-        by smtp.gmail.com with ESMTPSA id 33sm7524335wri.16.2020.06.21.08.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 08:11:11 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 18:11:09 +0300
-From:   Dan Aloni <dan@kernelim.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] xprtrdma: Wake up re_connect_wait on disconnect
-Message-ID: <20200621151109.GA3006346@gmail.com>
-References: <20200620171805.1748399-1-dan@kernelim.com>
- <AC3CC4DE-C508-4F95-9F0D-B2977CD7301F@oracle.com>
- <E3C3C032-CAB9-4AA7-B574-0A037A4F37FC@oracle.com>
+        id S1728404AbgFVNwZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Jun 2020 09:52:25 -0400
+Received: from fieldses.org ([173.255.197.46]:46412 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgFVNwY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:52:24 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C6D6C1BE4; Mon, 22 Jun 2020 09:52:22 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C6D6C1BE4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1592833942;
+        bh=YZuecwvtXdbcKHggFQnzNXgD2edUcKE8UnU0ucAaMHI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WGpJQxeY6Qj8jDIgoNYuf22ie/y7e/d187hjKX2rdcHiRpPZVtsKi8lkHsALhwuYq
+         /ApuPxcZTbCcwP9s2RQ3U4rNefaMT4ShkYMU8AX4piO06ms/fmqSbxurmENUF0havt
+         22YDovxQOUYFje/uKVlyjARPNxB3cairvLAja8oc=
+Date:   Mon, 22 Jun 2020 09:52:22 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: client caching and locks
+Message-ID: <20200622135222.GA6075@fieldses.org>
+References: <20200608211945.GB30639@fieldses.org>
+ <OSBPR01MB2949040AA49BC9B5F104DA1FEF9B0@OSBPR01MB2949.jpnprd01.prod.outlook.com>
+ <22b841f7a8979f19009c96f31a7be88dd177a47a.camel@hammerspace.com>
+ <20200618200905.GA10313@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E3C3C032-CAB9-4AA7-B574-0A037A4F37FC@oracle.com>
+In-Reply-To: <20200618200905.GA10313@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 10:49:53AM -0400, Chuck Lever wrote:
-> >> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> >> index 2ae348377806..8bd76a47a91f 100644
-> >> --- a/net/sunrpc/xprtrdma/verbs.c
-> >> +++ b/net/sunrpc/xprtrdma/verbs.c
-> >> @@ -289,6 +289,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
-> >> 		ep->re_connect_status = -ECONNABORTED;
-> >> disconnected:
-> >> 		xprt_force_disconnect(xprt);
-> >> +		wake_up_all(&ep->re_connect_wait);
-> >> 		return rpcrdma_ep_destroy(ep);
-> >> 	default:
-> >> 		break;
+On Thu, Jun 18, 2020 at 04:09:05PM -0400, bfields@fieldses.org wrote:
+> I probably don't understand the algorithm (in particular, how it
+> revalidates caches after a write).
 > 
-> This hunk does not apply on top of fixes I've already sent to Anna for 5.8-rc1.
+> How does it avoid a race like this?:
 > 
-> So, if you don't object, I'll adjust your patch (this hunk and the description)
-> before sending it along to Anna.
+> Start with a file whose data is all 0's and change attribute x:
+> 
+>         client 0                        client 1
+>         --------                        --------
+>         take write lock on byte 0
+>                                         take write lock on byte 1
+>         write 1 to offset 0
+>           change attribute now x+1
+>                                         write 1 to offset 1
+>                                           change attribute now x+2
+>         getattr returns x+2
+>                                         getattr returns x+2
+>         unlock
+>                                         unlock
+> 
+>         take readlock on byte 1
+> 
+> At this point a getattr will return change attribute x+2, the same as
+> was returned after client 0's write.  Does that mean client 0 assumes
+> the file data is unchanged since its last write?
 
-Sure, go ahead. Thanks for working on this!
+Basically: write-locking less than the whole range doesn't prevent
+concurrent writes outside that range.  And the change attribute gives us
+no way to identify whether concurrent writes have happened.  (At least,
+not without NFS4_CHANGE_TYPE_IS_VERSION_COUNTER.)
 
--- 
-Dan Aloni
+So as far as I can tell, a client implementation has no reliable way to
+revalidate its cache outside the write-locked area--instead it needs to
+just throw out that part of the cache.
+
+Possibly that's what it's doing and I just don't see it--I read through
+some of the code and don't understand it yet.
+
+--b.
