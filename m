@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D19206767
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9E85206761
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbgFWWoY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jun 2020 18:44:24 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:57642 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387854AbgFWWoR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:17 -0400
+        id S2387916AbgFWWoT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jun 2020 18:44:19 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:16532 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387848AbgFWWoQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592952257; x=1624488257;
+  t=1592952255; x=1624488255;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=j1Hg3b1SaY8O1r6RWUjI0tTgIlQ3ROwZYX38HNamZk8=;
-  b=u65jS+Es/Yz5vI50gqcLzz9MVHYruldXrI3qJKAXlLboAM/tHGWjeeuF
-   kUNCMR3qCeGMuCGitbH8vACgMRr6oOxpWEO+cde0GhqvjjH8a9RP73jKl
-   MSUd4uG984lEhTnXUMKpelu9CI0xuiS3+zIL0ytPdiSkuAPb4KPfc6Lxo
-   0=;
-IronPort-SDR: uohiUaXSSJSVMzy4EeqxCXNrdL1wyGT3TIo4lRh9U9uBVmka9vi5ng+j36/ZlsPoou6Wc7MTi+
- d59rd1LLcW4g==
+  bh=PYZZIRQVQvMvYw/RAGnIhD0NhAB3GAQRrP27LEPwuaI=;
+  b=oCQXX/O+raETK6Ezh/xX7qMQyPC3ct/22jFcazG2FipA/QDbTT3++Pnl
+   qtsZMmk1NCmNLLcL4olUDU+4nAW8QWkgSctpoA/vUQL5CSTflnkS9PGeT
+   7uLNVi3f+SrgTQwtqhmiAYkqEuq85nQ0GmKlPcscWr6PtIP4Zdi27xmLE
+   k=;
+IronPort-SDR: 7p81VCXoQia3e3t7U+rPX0Pp3gQZoYDAa6t/79PhhafWOjK2eoDENglrmWKe0/N0/Yztj0PR0t
+ VzYai8Mgxr2A==
 X-IronPort-AV: E=Sophos;i="5.75,272,1589241600"; 
-   d="scan'208";a="46390848"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 23 Jun 2020 22:39:36 +0000
+   d="scan'208";a="39410393"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 23 Jun 2020 22:39:37 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 54767A1D43;
-        Tue, 23 Jun 2020 22:39:34 +0000 (UTC)
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 74335A1DBB;
+        Tue, 23 Jun 2020 22:39:37 +0000 (UTC)
 Received: from EX13D13UWB002.ant.amazon.com (10.43.161.21) by
  EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 23 Jun 2020 22:39:28 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ id 15.0.1497.2; Tue, 23 Jun 2020 22:39:29 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
  EX13D13UWB002.ant.amazon.com (10.43.161.21) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 23 Jun 2020 22:39:28 +0000
+ id 15.0.1497.2; Tue, 23 Jun 2020 22:39:29 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 22:39:27 +0000
+ (172.23.141.97) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 22:39:28 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 0D4D0CD35D; Tue, 23 Jun 2020 22:39:28 +0000 (UTC)
+        id 10E4CCD35E; Tue, 23 Jun 2020 22:39:28 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
         <linux-nfs@vger.kernel.org>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v3 03/10] nfs,nfsd: NFSv4.2 extended attribute protocol definitions
-Date:   Tue, 23 Jun 2020 22:39:20 +0000
-Message-ID: <20200623223927.31795-4-fllinden@amazon.com>
+Subject: [PATCH v3 04/10] nfsd: split off the write decode code in to a separate function
+Date:   Tue, 23 Jun 2020 22:39:21 +0000
+Message-ID: <20200623223927.31795-5-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
 In-Reply-To: <20200623223927.31795-1-fllinden@amazon.com>
 References: <20200623223927.31795-1-fllinden@amazon.com>
@@ -58,79 +58,114 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add definitions for the new operations, errors and flags as defined
-in RFC 8276 (File System Extended Attributes in NFSv4).
+nfs4_decode_write has code to parse incoming XDR write data in to
+a kvec head, and a list of pages.
+
+Put this code in to a separate function, so that it can be used
+later by the xattr code, for setxattr. No functional change.
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- include/linux/nfs4.h      | 20 ++++++++++++++++++++
- include/uapi/linux/nfs4.h |  3 +++
- 2 files changed, 23 insertions(+)
+ fs/nfsd/nfs4xdr.c | 72 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 30 deletions(-)
 
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 4dba3c948932..e6ca9d1d2e76 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -150,6 +150,12 @@ enum nfs_opnum4 {
- 	OP_WRITE_SAME = 70,
- 	OP_CLONE = 71,
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 996ac01ee977..48806b493eba 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -257,6 +257,44 @@ svcxdr_dupstr(struct nfsd4_compoundargs *argp, void *buf, u32 len)
+ 	return p;
+ }
  
-+	/* xattr support (RFC8726) */
-+	OP_GETXATTR                = 72,
-+	OP_SETXATTR                = 73,
-+	OP_LISTXATTRS              = 74,
-+	OP_REMOVEXATTR             = 75,
++static __be32
++svcxdr_construct_vector(struct nfsd4_compoundargs *argp, struct kvec *head,
++			struct page ***pagelist, u32 buflen)
++{
++	int avail;
++	int len;
++	int pages;
 +
- 	OP_ILLEGAL = 10044,
- };
- 
-@@ -280,6 +286,10 @@ enum nfsstat4 {
- 	NFS4ERR_WRONG_LFS = 10092,
- 	NFS4ERR_BADLABEL = 10093,
- 	NFS4ERR_OFFLOAD_NO_REQS = 10094,
++	/* Sorry .. no magic macros for this.. *
++	 * READ_BUF(write->wr_buflen);
++	 * SAVEMEM(write->wr_buf, write->wr_buflen);
++	 */
++	avail = (char *)argp->end - (char *)argp->p;
++	if (avail + argp->pagelen < buflen) {
++		dprintk("NFSD: xdr error (%s:%d)\n",
++			       __FILE__, __LINE__);
++		return nfserr_bad_xdr;
++	}
++	head->iov_base = argp->p;
++	head->iov_len = avail;
++	*pagelist = argp->pagelist;
 +
-+	/* xattr (RFC8276) */
-+	NFS4ERR_NOXATTR        = 10095,
-+	NFS4ERR_XATTR2BIG      = 10096,
- };
- 
- static inline bool seqid_mutating_err(u32 err)
-@@ -452,6 +462,7 @@ enum change_attr_type4 {
- #define FATTR4_WORD2_CHANGE_ATTR_TYPE	(1UL << 15)
- #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
- #define FATTR4_WORD2_MODE_UMASK		(1UL << 17)
-+#define FATTR4_WORD2_XATTR_SUPPORT	(1UL << 18)
- 
- /* MDS threshold bitmap bits */
- #define THRESHOLD_RD                    (1UL << 0)
-@@ -700,4 +711,13 @@ struct nl4_server {
- 		struct nfs42_netaddr	nl4_addr; /* NL4_NETADDR */
- 	} u;
- };
++	len = XDR_QUADLEN(buflen) << 2;
++	if (len >= avail) {
++		len -= avail;
 +
-+/*
-+ * Options for setxattr. These match the flags for setxattr(2).
-+ */
-+enum nfs4_setxattr_options {
-+	SETXATTR4_EITHER	= 0,
-+	SETXATTR4_CREATE	= 1,
-+	SETXATTR4_REPLACE	= 2,
-+};
- #endif
-diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
-index 8572930cf5b0..bf197e99b98f 100644
---- a/include/uapi/linux/nfs4.h
-+++ b/include/uapi/linux/nfs4.h
-@@ -33,6 +33,9 @@
- #define NFS4_ACCESS_EXTEND      0x0008
- #define NFS4_ACCESS_DELETE      0x0010
- #define NFS4_ACCESS_EXECUTE     0x0020
-+#define NFS4_ACCESS_XAREAD      0x0040
-+#define NFS4_ACCESS_XAWRITE     0x0080
-+#define NFS4_ACCESS_XALIST      0x0100
++		pages = len >> PAGE_SHIFT;
++		argp->pagelist += pages;
++		argp->pagelen -= pages * PAGE_SIZE;
++		len -= pages * PAGE_SIZE;
++
++		next_decode_page(argp);
++	}
++	argp->p += XDR_QUADLEN(len);
++
++	return 0;
++}
++
+ /**
+  * savemem - duplicate a chunk of memory for later processing
+  * @argp: NFSv4 compound argument structure to be freed with
+@@ -1265,8 +1303,6 @@ nfsd4_decode_verify(struct nfsd4_compoundargs *argp, struct nfsd4_verify *verify
+ static __be32
+ nfsd4_decode_write(struct nfsd4_compoundargs *argp, struct nfsd4_write *write)
+ {
+-	int avail;
+-	int len;
+ 	DECODE_HEAD;
  
- #define NFS4_FH_PERSISTENT		0x0000
- #define NFS4_FH_NOEXPIRE_WITH_OPEN	0x0001
+ 	status = nfsd4_decode_stateid(argp, &write->wr_stateid);
+@@ -1279,34 +1315,10 @@ nfsd4_decode_write(struct nfsd4_compoundargs *argp, struct nfsd4_write *write)
+ 		goto xdr_error;
+ 	write->wr_buflen = be32_to_cpup(p++);
+ 
+-	/* Sorry .. no magic macros for this.. *
+-	 * READ_BUF(write->wr_buflen);
+-	 * SAVEMEM(write->wr_buf, write->wr_buflen);
+-	 */
+-	avail = (char*)argp->end - (char*)argp->p;
+-	if (avail + argp->pagelen < write->wr_buflen) {
+-		dprintk("NFSD: xdr error (%s:%d)\n",
+-				__FILE__, __LINE__);
+-		goto xdr_error;
+-	}
+-	write->wr_head.iov_base = p;
+-	write->wr_head.iov_len = avail;
+-	write->wr_pagelist = argp->pagelist;
+-
+-	len = XDR_QUADLEN(write->wr_buflen) << 2;
+-	if (len >= avail) {
+-		int pages;
+-
+-		len -= avail;
+-
+-		pages = len >> PAGE_SHIFT;
+-		argp->pagelist += pages;
+-		argp->pagelen -= pages * PAGE_SIZE;
+-		len -= pages * PAGE_SIZE;
+-
+-		next_decode_page(argp);
+-	}
+-	argp->p += XDR_QUADLEN(len);
++	status = svcxdr_construct_vector(argp, &write->wr_head,
++					 &write->wr_pagelist, write->wr_buflen);
++	if (status)
++		return status;
+ 
+ 	DECODE_TAIL;
+ }
 -- 
 2.17.2
 
