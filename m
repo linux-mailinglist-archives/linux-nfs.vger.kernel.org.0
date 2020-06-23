@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2273B206755
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CAC8206752
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387813AbgFWWoN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jun 2020 18:44:13 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:54762 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387815AbgFWWoL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:11 -0400
+        id S2387842AbgFWWoK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jun 2020 18:44:10 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:14750 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387777AbgFWWoJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592952251; x=1624488251;
+  t=1592952248; x=1624488248;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=lOKlIHexULpLaLYxF4+NArLZvMEYRv7NIPANzEKoWIo=;
-  b=K+7ELGtxpwU5JeIx4Ne0Ced0NFhMQ9cfm0ixSsPJv1t/0xLhaQ7n8qVv
-   olaNdRn+Lc6d38H8WovzA3QTDLKhuL5kIMChfWA7HIANBb64vbVfIwAzC
-   Aus7Mr1wCvde1kPfSBkZe+zGfWb0TrPn3u7+SBFabPgLZHrewF4x3zH0y
-   o=;
-IronPort-SDR: ENVZMrn1fsCzVF2aVMvYzh+ipbursmulnGztUVUW/eLI6w95mDkQ5Z3WHiik2QRZtlfzNn6CC9
- 1/E3UeOrKySw==
+  bh=90k9R2laag9b9yU9BeMIcBFv1kEnSoVU6phDOygQXqI=;
+  b=gkaaOLMF4AXF2It7aaPv8ygnEXzK/QY2O//3kBpbWQhrCpz5LmA4JZLL
+   vm/9z4GpGu5RVDp9+cqPFTKINBb6966zCEl3MgM8gS7bNycXzC3gG+bmI
+   ANAKuoIpRTZXt+RxTlOcbs2D61qBNid5y4D1c9lBCwmenpOML3oVC/B9K
+   g=;
+IronPort-SDR: gF1o6aeFdcFWsSWZgYRWBWfSRxoFVe9kpxtpUHFO7W0CIzpMXw4p/7pe8SpzTgitCUoCQ2daUb
+ cHMT/0cnYhYQ==
 X-IronPort-AV: E=Sophos;i="5.75,272,1589241600"; 
-   d="scan'208";a="37981945"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 23 Jun 2020 22:39:07 +0000
+   d="scan'208";a="53337203"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Jun 2020 22:39:07 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 209BDA1DF3;
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 29719C0756;
         Tue, 23 Jun 2020 22:39:06 +0000 (UTC)
-Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+Received: from EX13D13UWB002.ant.amazon.com (10.43.161.21) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
  id 15.0.1497.2; Tue, 23 Jun 2020 22:39:05 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server (TLS)
+ EX13D13UWB002.ant.amazon.com (10.43.161.21) with Microsoft SMTP Server (TLS)
  id 15.0.1497.2; Tue, 23 Jun 2020 22:39:05 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
  (172.23.141.97) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
  Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 22:39:05 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id CFEF5CD363; Tue, 23 Jun 2020 22:39:04 +0000 (UTC)
+        id D3A6CCD364; Tue, 23 Jun 2020 22:39:04 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
         <trond.myklebust@hammerspace.com>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v3 09/13] nfs: define and use the NFS_INO_INVALID_XATTR flag
-Date:   Tue, 23 Jun 2020 22:39:00 +0000
-Message-ID: <20200623223904.31643-10-fllinden@amazon.com>
+Subject: [PATCH v3 10/13] nfs: make the buf_to_pages_noslab function available to the nfs code
+Date:   Tue, 23 Jun 2020 22:39:01 +0000
+Message-ID: <20200623223904.31643-11-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
 In-Reply-To: <20200623223904.31643-1-fllinden@amazon.com>
 References: <20200623223904.31643-1-fllinden@amazon.com>
@@ -58,91 +58,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Define the NFS_INO_INVALID_XATTR flag, to be used for the NFSv4.2 xattr
-cache, and use it where appropriate.
+Make the buf_to_pages_noslab function available to the rest of the NFS
+code. Rename it to nfs4_buf_to_pages_noslab to be consistent.
 
-No functional change as yet.
+This will be used later in the NFSv4.2 xattr code.
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- fs/nfs/inode.c         | 7 ++++++-
- fs/nfs/nfs4proc.c      | 3 ++-
- fs/nfs/nfstrace.h      | 3 ++-
- include/linux/nfs_fs.h | 1 +
- 4 files changed, 11 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4_fs.h  | 2 ++
+ fs/nfs/nfs4proc.c | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 0bf1f835de01..629af798dfc9 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -204,7 +204,8 @@ static void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
- 			flags &= ~NFS_INO_INVALID_OTHER;
- 		flags &= ~(NFS_INO_INVALID_CHANGE
- 				| NFS_INO_INVALID_SIZE
--				| NFS_INO_REVAL_PAGECACHE);
-+				| NFS_INO_REVAL_PAGECACHE
-+				| NFS_INO_INVALID_XATTR);
- 	}
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index c16ec860b8b3..2fa9e4ea98d2 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -328,6 +328,8 @@ extern void nfs4_update_changeattr(struct inode *dir,
+ 				   struct nfs4_change_info *cinfo,
+ 				   unsigned long timestamp,
+ 				   unsigned long cache_validity);
++extern int nfs4_buf_to_pages_noslab(const void *buf, size_t buflen,
++				    struct page **pages);
  
- 	if (inode->i_mapping->nrpages == 0)
-@@ -542,6 +543,8 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh, struct nfs_fattr *fattr, st
- 			inode->i_gid = fattr->gid;
- 		else if (nfs_server_capable(inode, NFS_CAP_OWNER_GROUP))
- 			nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
-+		if (nfs_server_capable(inode, NFS_CAP_XATTR))
-+			nfs_set_cache_invalid(inode, NFS_INO_INVALID_XATTR);
- 		if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
- 			inode->i_blocks = fattr->du.nfs2.blocks;
- 		if (fattr->valid & NFS_ATTR_FATTR_SPACE_USED) {
-@@ -1375,6 +1378,8 @@ static void nfs_wcc_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 		inode_set_iversion_raw(inode, fattr->change_attr);
- 		if (S_ISDIR(inode->i_mode))
- 			nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA);
-+		else if (nfs_server_capable(inode, NFS_CAP_XATTR))
-+			nfs_set_cache_invalid(inode, NFS_INO_INVALID_XATTR);
- 	}
- 	/* If we have atomic WCC data, we may update some attributes */
- 	ts = inode->i_ctime;
+ #if defined(CONFIG_NFS_V4_1)
+ extern int nfs41_sequence_done(struct rpc_task *, struct nfs4_sequence_res *);
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 6540071cb228..0d123fe0a423 100644
+index 0d123fe0a423..0fbd2925a828 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -1183,7 +1183,8 @@ nfs4_update_changeattr_locked(struct inode *inode,
+@@ -5541,7 +5541,7 @@ static inline int nfs4_server_supports_acls(struct nfs_server *server)
+  */
+ #define NFS4ACL_MAXPAGES DIV_ROUND_UP(XATTR_SIZE_MAX, PAGE_SIZE)
  
- 		if (cinfo->before != inode_peek_iversion_raw(inode))
- 			nfsi->cache_validity |= NFS_INO_INVALID_ACCESS |
--						NFS_INO_INVALID_ACL;
-+						NFS_INO_INVALID_ACL |
-+						NFS_INO_INVALID_XATTR;
- 	}
- 	inode_set_iversion_raw(inode, cinfo->after);
- 	nfsi->read_cache_jiffies = timestamp;
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 547cec79899f..5a59dcdce0b2 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -59,7 +59,8 @@ TRACE_DEFINE_ENUM(NFS_INO_INVALID_OTHER);
- 			{ NFS_INO_INVALID_CTIME, "INVALID_CTIME" }, \
- 			{ NFS_INO_INVALID_MTIME, "INVALID_MTIME" }, \
- 			{ NFS_INO_INVALID_SIZE, "INVALID_SIZE" }, \
--			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" })
-+			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" }, \
-+			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" })
- 
- TRACE_DEFINE_ENUM(NFS_INO_ADVISE_RDPLUS);
- TRACE_DEFINE_ENUM(NFS_INO_STALE);
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 714b577dce19..943ee750d68c 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -234,6 +234,7 @@ struct nfs4_copy_state {
- #define NFS_INO_DATA_INVAL_DEFER	\
- 				BIT(13)		/* Deferred cache invalidation */
- #define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
-+#define NFS_INO_INVALID_XATTR	BIT(15)		/* xattrs are invalid */
- 
- #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
- 		| NFS_INO_INVALID_CTIME \
+-static int buf_to_pages_noslab(const void *buf, size_t buflen,
++int nfs4_buf_to_pages_noslab(const void *buf, size_t buflen,
+ 		struct page **pages)
+ {
+ 	struct page *newpage, **spages;
+@@ -5783,7 +5783,7 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
+ 		return -EOPNOTSUPP;
+ 	if (npages > ARRAY_SIZE(pages))
+ 		return -ERANGE;
+-	i = buf_to_pages_noslab(buf, buflen, arg.acl_pages);
++	i = nfs4_buf_to_pages_noslab(buf, buflen, arg.acl_pages);
+ 	if (i < 0)
+ 		return i;
+ 	nfs4_inode_make_writeable(inode);
 -- 
 2.17.2
 
