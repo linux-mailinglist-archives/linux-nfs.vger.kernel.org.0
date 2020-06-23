@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08880206753
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8B6020676A
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 00:44:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgFWWoL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Jun 2020 18:44:11 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:16532 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387793AbgFWWoK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:10 -0400
+        id S2388036AbgFWWoZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Jun 2020 18:44:25 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:60591 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388140AbgFWWoV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Jun 2020 18:44:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592952249; x=1624488249;
+  t=1592952261; x=1624488261;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=j1Hg3b1SaY8O1r6RWUjI0tTgIlQ3ROwZYX38HNamZk8=;
-  b=Zy7GFPiqpLbQb63GR0bSrzU2NGl7PJEyRKv4cU4nrmYC8kr0xVPAPhvT
-   sB7vmlJSlKHOjn+Xd1/LTxAgYH2rHJjfDnC1kf616Ox5g89Ab9EMJXtqV
-   lk19V2XB6gJuJ/GzMscO2LQ1tSqTnl9uoc1C1MIRurimn6l5+8lcqs5If
-   I=;
-IronPort-SDR: OYbS4RrUs8zXOEsfQS2gDNdN2VWGNzAGBzEVHIDeWH6XIu4187oIFRU1z5NwLGkLLPIhbBjhN9
- epo75ClJJJAg==
+  bh=ZGArR/13+cpXke2lvAlETYqJsymL8p1GBpYaP62fxEs=;
+  b=X75JXQYfJcP7jMjc0u2YN4eKSyBN6rHu5vwe14teUtRn1j6CzNNO/xEg
+   +IFJNyOMPyvXP3bzeC+QK3JCKWwsz1pXe7OXh8G7jPluYZp+vMipIuJm0
+   qx52px501fhHZIIRx1tK6t7JDGN2vbt6XTtovE0/7cxzuvmLjQ6TV9Trp
+   A=;
+IronPort-SDR: Z3COOWWeihLYjEH0K0UoYyIHM8Nvh7/pbsW6GCf6UN9/PGX3rAVTOjCckV9xaONi/xJTqyujMm
+ MtjFSi3npcqA==
 X-IronPort-AV: E=Sophos;i="5.75,272,1589241600"; 
-   d="scan'208";a="39410335"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 23 Jun 2020 22:39:07 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id BDC32A1F5F;
+   d="scan'208";a="54628917"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Jun 2020 22:39:08 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id C5537A21F9;
         Tue, 23 Jun 2020 22:39:06 +0000 (UTC)
-Received: from EX13D13UWA003.ant.amazon.com (10.43.160.181) by
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
  EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
  id 15.0.1497.2; Tue, 23 Jun 2020 22:39:06 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D13UWA003.ant.amazon.com (10.43.160.181) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 23 Jun 2020 22:39:05 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 23 Jun 2020 22:39:06 +0000
 Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
  Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 22:39:04 +0000
 Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id B253BCD35A; Tue, 23 Jun 2020 22:39:04 +0000 (UTC)
+        id B5E79CD35B; Tue, 23 Jun 2020 22:39:04 +0000 (UTC)
 From:   Frank van der Linden <fllinden@amazon.com>
 To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
         <trond.myklebust@hammerspace.com>
 CC:     Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH v3 01/13] nfs,nfsd:  NFSv4.2 extended attribute protocol definitions
-Date:   Tue, 23 Jun 2020 22:38:52 +0000
-Message-ID: <20200623223904.31643-2-fllinden@amazon.com>
+Subject: [PATCH v3 02/13] nfs: add client side only definitions for user xattrs
+Date:   Tue, 23 Jun 2020 22:38:53 +0000
+Message-ID: <20200623223904.31643-3-fllinden@amazon.com>
 X-Mailer: git-send-email 2.16.6
 In-Reply-To: <20200623223904.31643-1-fllinden@amazon.com>
 References: <20200623223904.31643-1-fllinden@amazon.com>
@@ -58,79 +58,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add definitions for the new operations, errors and flags as defined
-in RFC 8276 (File System Extended Attributes in NFSv4).
+Add client-side only definitions for user extended
+attributes (RFC8276). These are the access bits
+as used by the client code, and the CLNT procedure
+number definition.
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- include/linux/nfs4.h      | 20 ++++++++++++++++++++
- include/uapi/linux/nfs4.h |  3 +++
- 2 files changed, 23 insertions(+)
+ include/linux/nfs4.h   | 5 +++++
+ include/linux/nfs_fs.h | 3 +++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 4dba3c948932..e6ca9d1d2e76 100644
+index e6ca9d1d2e76..db13026ac7d1 100644
 --- a/include/linux/nfs4.h
 +++ b/include/linux/nfs4.h
-@@ -150,6 +150,12 @@ enum nfs_opnum4 {
- 	OP_WRITE_SAME = 70,
- 	OP_CLONE = 71,
+@@ -553,6 +553,11 @@ enum {
+ 	NFSPROC4_CLNT_LAYOUTERROR,
  
-+	/* xattr support (RFC8726) */
-+	OP_GETXATTR                = 72,
-+	OP_SETXATTR                = 73,
-+	OP_LISTXATTRS              = 74,
-+	OP_REMOVEXATTR             = 75,
+ 	NFSPROC4_CLNT_COPY_NOTIFY,
 +
- 	OP_ILLEGAL = 10044,
++	NFSPROC4_CLNT_GETXATTR,
++	NFSPROC4_CLNT_SETXATTR,
++	NFSPROC4_CLNT_LISTXATTRS,
++	NFSPROC4_CLNT_REMOVEXATTR,
  };
  
-@@ -280,6 +286,10 @@ enum nfsstat4 {
- 	NFS4ERR_WRONG_LFS = 10092,
- 	NFS4ERR_BADLABEL = 10093,
- 	NFS4ERR_OFFLOAD_NO_REQS = 10094,
-+
-+	/* xattr (RFC8276) */
-+	NFS4ERR_NOXATTR        = 10095,
-+	NFS4ERR_XATTR2BIG      = 10096,
- };
+ /* nfs41 types */
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 6ee9119acc5d..b743988fcbd0 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -212,6 +212,9 @@ struct nfs4_copy_state {
+ #define NFS_ACCESS_EXTEND      0x0008
+ #define NFS_ACCESS_DELETE      0x0010
+ #define NFS_ACCESS_EXECUTE     0x0020
++#define NFS_ACCESS_XAREAD      0x0040
++#define NFS_ACCESS_XAWRITE     0x0080
++#define NFS_ACCESS_XALIST      0x0100
  
- static inline bool seqid_mutating_err(u32 err)
-@@ -452,6 +462,7 @@ enum change_attr_type4 {
- #define FATTR4_WORD2_CHANGE_ATTR_TYPE	(1UL << 15)
- #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
- #define FATTR4_WORD2_MODE_UMASK		(1UL << 17)
-+#define FATTR4_WORD2_XATTR_SUPPORT	(1UL << 18)
- 
- /* MDS threshold bitmap bits */
- #define THRESHOLD_RD                    (1UL << 0)
-@@ -700,4 +711,13 @@ struct nl4_server {
- 		struct nfs42_netaddr	nl4_addr; /* NL4_NETADDR */
- 	} u;
- };
-+
-+/*
-+ * Options for setxattr. These match the flags for setxattr(2).
-+ */
-+enum nfs4_setxattr_options {
-+	SETXATTR4_EITHER	= 0,
-+	SETXATTR4_CREATE	= 1,
-+	SETXATTR4_REPLACE	= 2,
-+};
- #endif
-diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
-index 8572930cf5b0..bf197e99b98f 100644
---- a/include/uapi/linux/nfs4.h
-+++ b/include/uapi/linux/nfs4.h
-@@ -33,6 +33,9 @@
- #define NFS4_ACCESS_EXTEND      0x0008
- #define NFS4_ACCESS_DELETE      0x0010
- #define NFS4_ACCESS_EXECUTE     0x0020
-+#define NFS4_ACCESS_XAREAD      0x0040
-+#define NFS4_ACCESS_XAWRITE     0x0080
-+#define NFS4_ACCESS_XALIST      0x0100
- 
- #define NFS4_FH_PERSISTENT		0x0000
- #define NFS4_FH_NOEXPIRE_WITH_OPEN	0x0001
+ /*
+  * Cache validity bit flags
 -- 
 2.17.2
 
