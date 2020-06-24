@@ -2,97 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E767F20787D
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 18:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10137207AD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2020 19:53:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404740AbgFXQNY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Jun 2020 12:13:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36854 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404235AbgFXQNW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Jun 2020 12:13:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p3so1644502pgh.3;
-        Wed, 24 Jun 2020 09:13:22 -0700 (PDT)
+        id S2405847AbgFXRws (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Jun 2020 13:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405846AbgFXRws (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Jun 2020 13:52:48 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33861C061573
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2020 10:52:48 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id z2so2933499ilq.0
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2020 10:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hRilx8mC7ZJWf8/tv5Rfrt+x9vjLKu1wg3TD7vV+BBM=;
+        b=q1sepUBUdhgO4s5kHEDDu4egdWgCGtmWVssrOerX0gyyJkJM3o8UIv7G+uBRZBV9jj
+         NRrZji74JtgCWSHf3Zcj7DPgEGeVoSdUM07IIIb8WfxtF6xU6Z6eKVWbbO0C50BSI3ZL
+         bcXZCCTbVrqY5e6PHaGb7WqQoPyORbiPpP6f6kJ9NtEP+bJ4JQxekOceJJiJXFRCDgwW
+         kEjXPQ7RVk02AMwNGKNtasQ5MGeUnvk2Xe6YBgE0+h4s/BcPgAIrOY8k94PO3eoFZLi3
+         WtbDB/0gGurYZ3Zsl1nUEyDzt/sfpyY6KydVHs2IMYUK/V1YHLM8MY60IiBNP8w1uF12
+         tMGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K5HA5pFN0d7RWrFcMOeZ4eZsZOCwgkaKOKIyoGUunJA=;
-        b=bdoNe4HE152P67bqB4iz1TVFpSLKd5OLRNA8ZPD4Nx764LgDhIOQkoCOwpgshVPUlC
-         xmAg1IjdbKAPc58tpiZ8kPqndDxtcQp+nCYHryf0E8MEDiKgH67xMVcz0VOB2dfV7Sm6
-         SSZylCQCalt5a0mIATsr/DE7qglta/VKXnlUTkoqBpLAaMN00mnqQvEluSEBNwbz+CJ3
-         1fOqyTjFmJ7xWRUx0ARAvF9C/YqItCR2X3K96qaqvoIBmg7cw8LJauxlCcvMMIC+vcXl
-         GueZuSNQT2PqCZ+Vnlfd+9GaY6WO0xQeVlIrUK+jiz34ZIOzPCztqXShzjbigNDuaHva
-         EhKg==
-X-Gm-Message-State: AOAM531BWTz6jecWjjEW9ugvC/+O+rhqZas0ZaHsC7I6Ld8MngXestOd
-        7YAHw2WExEfmE7ca6pnvb0M=
-X-Google-Smtp-Source: ABdhPJxE1ygpkPiPc7c+3/yQpwGQm5PBcnPHrRJMZIslGuNTvYjGLTfGT0VAXd0ojktX0RNgdf5uBw==
-X-Received: by 2002:a63:7f5a:: with SMTP id p26mr15162576pgn.117.1593015201848;
-        Wed, 24 Jun 2020 09:13:21 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 23sm20626008pfy.199.2020.06.24.09.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 09:13:20 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id B918940430; Wed, 24 Jun 2020 16:13:19 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 16:13:19 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Doucha <mdoucha@suse.cz>, hch@infradead.org
-Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200624161319.GM13911@42.do-not-panic.com>
-References: <20200610154923.27510-5-mcgrof@kernel.org>
- <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624120546.GC4332@42.do-not-panic.com>
- <20200624131725.GL13911@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624131725.GL13911@42.do-not-panic.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hRilx8mC7ZJWf8/tv5Rfrt+x9vjLKu1wg3TD7vV+BBM=;
+        b=j0HCwR5/y4x3D7Qoybco2urxVsIUsU/sCSml4kSVfxe2fKf28u3be27TgTC5BZer6I
+         VFpZ84HV+ZhKe8DpGV2lp5azKAR3UtcB6hDp+PYN/6SpIwPdSIua4g6XKqW80/TbAl29
+         vKtDWrkCKbby9HBa+DaoIzD17JLKUXlZgzhcSVgprI/FtuvawcTY7SgY0mXGRtKGUydv
+         0EGUIa+pGeziCEQQa9KMHpQVU5qyhU+DrKajCXHNyONCED/s60oEG1GEEI+ECsZXgbca
+         3zNIUHMNZK3VRZS327KgSCu69L/js9mnhvl2Yth/yatO7wJSHESRzwVJbz+MV5K7by3r
+         VwVA==
+X-Gm-Message-State: AOAM533DU0aK3BFB7BaPTCYKszFjykCVV2GsjhCTrL/HdWL7kj5F63eB
+        lakTR5Vmx0gBr2WUDJ6qGQ4=
+X-Google-Smtp-Source: ABdhPJwKF0VwlrHpSEvGqV8wkSvRKJDxSHKfS1JjchMMoW97yb8RkSs3KTaZFDA9mtIoV5OqD/fssA==
+X-Received: by 2002:a92:9904:: with SMTP id p4mr416142ili.240.1593021167541;
+        Wed, 24 Jun 2020 10:52:47 -0700 (PDT)
+Received: from Olgas-MBP-286.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id n17sm11783367iom.22.2020.06.24.10.52.45
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 24 Jun 2020 10:52:47 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4 fix CLOSE not waiting for direct IO compeletion
+Date:   Wed, 24 Jun 2020 13:54:08 -0400
+Message-Id: <20200624175408.74678-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:17:25PM +0000, Luis Chamberlain wrote:
-> I found however an LTP bug indicating the need to test for
-> s390 wait macros [0] in light of a recent bug in glibc for s390.
-> I am asking for references to that issue given I cannot find
-> any mention of this on glibc yet.
-> 
-> [0] https://github.com/linux-test-project/ltp/issues/605
+Figuring out the root case for the REMOVE/CLOSE race and
+suggesting the solution was done by Neil Brown.
 
-I looked into this and the bug associated was:
+Currently what happens is that direct IO calls hold a reference
+on the open context which is decremented as an asynchronous task
+in the nfs_direct_complete(). Before reference is decremented,
+control is returned to the application which is free to close the
+file. When close is being processed, it decrements its reference
+on the open_context but since directIO still holds one, it doesn't
+sent a close on the wire. It returns control to the application
+which is free to do other operations. For instance, it can delete a
+file. Direct IO is finally releasing its reference and triggering
+an asynchronous close. Which races with the REMOVE. On the server,
+REMOVE can be processed before the CLOSE, failing the REMOVE with
+EACCES as the file is still opened.
 
-https://sourceware.org/bugzilla/show_bug.cgi?id=19613
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Suggested-by: Neil Brown <neilb@suse.com>
+CC: stable@vger.kernel.org
 
-The commit in question was upstream glibc commit
-b49ab5f4503f36dcbf43f821f817da66b2931fe6 ("Remove union wait [BZ
-#19613]"), and while I don't see anything s390 mentioned there,
-the issue there was due to the caller of the wait using a long
-instead of an int for the return value.
+---
+ fs/nfs/direct.c | 13 +++++++++----
+ fs/nfs/file.c   |  1 +
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-In other words, that'd not the droid we are looking for.
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 1b79dd5..3d113cf 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -267,8 +267,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
+ 
+-	inode_dio_end(inode);
+-
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -280,7 +278,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ 
+ 	complete(&dreq->completion);
+ 
++	igrab(inode);
+ 	nfs_direct_req_release(dreq);
++	inode_dio_end(inode);
++	iput(inode);
+ }
+ 
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -410,8 +411,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+@@ -864,8 +867,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index f96367a..ccd6c16 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -83,6 +83,7 @@ int nfs_check_flags(int flags)
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
++	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
+-- 
+1.8.3.1
 
-So the issue is something else.
-
-  Luis
