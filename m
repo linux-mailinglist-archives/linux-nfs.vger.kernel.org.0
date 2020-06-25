@@ -2,121 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC0020A5A2
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2020 21:19:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B9220A5A7
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2020 21:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405924AbgFYTTq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Jun 2020 15:19:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37070 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406068AbgFYTTq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 15:19:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PJHxJi072486;
-        Thu, 25 Jun 2020 19:19:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=5TZTNYjgptrC+k0dSj4JgnxfE/delMSPMsMeSXROSxM=;
- b=hKU/qhTv7+9uisksq9nz3cyLr7afXyJ5p5rNXIZuxBK5lMRGqIVKrSFzRZwJYURJ5lYq
- TtfnMAWxeeKC/Ahr5/PMatHhBcfa/8d71K+lU2otqecO+hcAiDUxVjV5vt/uMYCr2UcF
- Rs/mdkNvYD0D7M+YJxvVYPxKBXd3Mig60ALqZjGh31gS1qbQ9jZev0ss1K9PCJEws8Bv
- xFCY8tC8B6ptWDEhF85yFmwpE/zThEW2ItnTp0S6ts7yiORFJ8RDx3eSE0wYy2/G7wg6
- LjIA916cpfdeGJF7Gr5dOcxPagKmOyp12aEC706C5tzIHRpWxrVACFWpCw3ogKl2l80q RQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 31uusu2ct3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 19:19:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PJJSjI131800;
-        Thu, 25 Jun 2020 19:19:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 31uurt0v57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 19:19:41 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05PJJec4025591;
-        Thu, 25 Jun 2020 19:19:40 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 19:19:40 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] xprtrdma: Ensure connect worker is awoken after connect
- error
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200621145934.4069.31886.stgit@manet.1015granger.net>
-Date:   Thu, 25 Jun 2020 15:19:39 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0E2AA9D9-2503-462C-952D-FC0DD5111BD1@oracle.com>
-References: <20200621145934.4069.31886.stgit@manet.1015granger.net>
-To:     Dan Aloni <dan@kernelim.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=2 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250114
+        id S2390764AbgFYTU7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Jun 2020 15:20:59 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:38372 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390697AbgFYTU7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 15:20:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593112858; x=1624648858;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dzwcS8aZr9FieWjiSx4InVOct6F2W6IwdXYQqBLKCqc=;
+  b=ldUAmoWXBOkg5jmUEVog5Jj60wDwiruJnxFTHCBuGONrikPmaOCndT7e
+   rYs3LyVAZytRulrfTy/1Yr7qgehbaqrHVAqekkVvNg0QaZlglLg0PLSPb
+   bItTjLOV7pk4WkIdil8kivBkza4AKuEuI974XWpXkEXpTYftFf6GMpVzK
+   M=;
+IronPort-SDR: qmUCj455Zxau7Z9VFBULsSqg22FuoPz1iyWvjl7gKf7QvcN5MdgXJUjkIKC/Ls/MfJ/U6x2LaA
+ xD+Rqz14VSBA==
+X-IronPort-AV: E=Sophos;i="5.75,280,1589241600"; 
+   d="scan'208";a="55270474"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 Jun 2020 19:20:56 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 8D49BA23A2;
+        Thu, 25 Jun 2020 19:20:55 +0000 (UTC)
+Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 25 Jun 2020 19:20:55 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 25 Jun 2020 19:20:54 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 25 Jun 2020 19:20:55 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 0AD27C3318; Thu, 25 Jun 2020 19:20:55 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 19:20:55 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Bruce Fields <bfields@fieldses.org>
+CC:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        <linux-nfs@vger.kernel.org>
+Subject: Re: nfsd filecache issues with v4
+Message-ID: <20200625192054.GD29600@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <20200625171021.GC30655@fieldses.org>
+ <20200625191205.GC29600@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200625191205.GC29600@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Anna, please drop this one. It appears to trigger a particularly nasty
-use-after-free. I'll follow up with a more complete fix soon.
+On Thu, Jun 25, 2020 at 07:12:05PM +0000, Frank van der Linden wrote:
+> Some ideas to alleviate the pain short of doing the above:
+> 
+> * Count v4 references to nfsd_file (filecache) structures. If there
+>   is a v4 reference, don't have the file on the LRU, as it's pointless.
+>   Do include it in the hash table so that v2/v3 users can find it. This
+>   avoids the worst offender (nfsd_file_lru), but does still blow up
+>   nfsd_file_hashtbl.
+> 
+> * Use rhashtable for the hashtables, as it can automatically grow/shrink
+>   the number of buckets. I don't know if the rhashtable code could handle
+>   the load, but it might be worth a shot.
 
-(Yes, a wake-up on connect errors is indeed necessary... but the connect
-worker needs to be re-organized to deal properly with it).
+In fact, don't even put an nfsd_file on the LRU until the first time its
+references drop to 1, e.g. when it's no longer being used. Because it
+will never be removed if the refs are > 1, in any case.
 
+Let me come up with a patch for that, shouldn't be too hard.
 
-> On Jun 21, 2020, at 10:59 AM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
-> From: Dan Aloni <dan@kernelim.com>
->=20
-> The connect worker sleeps waiting for either successful connection
-> establishment or an error. Commit e28ce90083f0 ("xprtrdma: kmalloc
-> rpcrdma_ep separate from rpcrdma_xprt") mistakenly removed the
-> wake-up in cases when connection establishment fails.
->=20
-> Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from =
-rpcrdma_xprt")
-> Signed-off-by: Dan Aloni <dan@kernelim.com>
-> [ cel: rebased on recent fixes to 5.8-rc; patch description rewritten =
-]
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
-> net/sunrpc/xprtrdma/verbs.c |    1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 2198c8ec8dff..54c6809bf06e 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -296,6 +296,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, =
-struct rdma_cm_event *event)
-> 		ep->re_connect_status =3D -ECONNABORTED;
-> disconnected:
-> 		rpcrdma_force_disconnect(ep);
-> +		wake_up_all(&ep->re_connect_wait);
-> 		return rpcrdma_ep_put(ep);
-> 	default:
-> 		break;
->=20
-
---
-Chuck Lever
-
-
-
+- Frank
