@@ -2,117 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3034320A365
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2020 18:53:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59BE320A3BD
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2020 19:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390792AbgFYQxr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Jun 2020 12:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
+        id S2406683AbgFYRKW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Jun 2020 13:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390448AbgFYQxr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 12:53:47 -0400
+        with ESMTP id S2406608AbgFYRKV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 13:10:21 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CE0C08C5C1
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2020 09:53:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A757DC08C5C1
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2020 10:10:21 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 0A85B1509; Thu, 25 Jun 2020 12:53:47 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0A85B1509
+        id 0BB4C799E; Thu, 25 Jun 2020 13:10:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0BB4C799E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593104027;
-        bh=tmWE9sAI5HM3fN+Nngg1ZT1PmnePaT3IXNt2Luy3pzs=;
+        s=default; t=1593105021;
+        bh=WU+TO/n9GgoEaHfvenTyUXLR8n3YXnb2ZmpgBnJ/RFo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qqAP1wtIy80dm+Q2ybd91stRdam2EdvGYMnagppEV5Kx0OFeJjdxS8VUH5Iyma5Ic
-         UEypOGfviWDRLx1vTQ0Ah6KLc/WlEdrKmL6+ZQoNFXTK2lg2rOoIdecyXth3pZhGL0
-         eEjX0ndABQrodaw2KF8OrtZWp+D5YCogX8Xt43sw=
-Date:   Thu, 25 Jun 2020 12:53:47 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
+        b=oE067CRvJ/Ax8XHzp4KLEPilPoGjc7p3scoSL45ch7vQRR86A1UyOFh3a5deiXHD/
+         ZY1YCErsRv6qw7YEt2UsUlVuh6yy9ZdHqhfcyj9t7uoYghy40pL5UxWAA3gR8+aiLV
+         rxUbjbTNSnW+D6FQDKQ85g7JU3ieozAYcdekxEYo=
+Date:   Thu, 25 Jun 2020 13:10:21 -0400
+From:   Bruce Fields <bfields@fieldses.org>
 To:     Frank van der Linden <fllinden@amazon.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3 00/10] server side user xattr support (RFC 8276)
-Message-ID: <20200625165347.GB30655@fieldses.org>
-References: <20200623223927.31795-1-fllinden@amazon.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: nfsd filecache issues with v4
+Message-ID: <20200625171021.GC30655@fieldses.org>
+References: <20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623223927.31795-1-fllinden@amazon.com>
+In-Reply-To: <20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-By the way, I can't remember if I asked this before: is there a
-particular use case that motivates this xattr work?
+On Mon, Jun 08, 2020 at 07:21:22PM +0000, Frank van der Linden wrote:
+> We recently noticed that, with 5.4+ kernels, the generic/531 test takes
+> a very long time to finish for v4, especially when run on larger systems.
+> 
+> Case in point: a 72 VCPU, 144G EC2 instance as a client will make the test
+> last about 20 hours.
+> 
+> So, I had a look to see what was going on. First of all, the test generates
+> a lot of files - what it does is generate 50000 files per process, where
+> it starts 2 * NCPU processes. So that's 144 processes in this case, 50000
+> files each. Also, it does it by setting the file ulimit to 50000, and then
+> just opening files, keeping them open, until it hits the limit.
+> 
+> So that's 7 million new/open files - that's a lot, but the problem can
+> be triggered with far fewer than that as well.
+> 
+> Looking at what the server was doing, I noticed a lot of lock contention
+> for nfsd_file_lru. Then I noticed that that nfsd_filecache_count kept
+> going up, reflecting the number of open files by the client processes,
+> eventually reaching, for example, that 7 million number.
+> 
+> So here's what happens: for NFSv4, files that are associated with an
+> open stateid can stick around for a long time, as long as there's no
+> CLOSE done on them. That's what's happening here. Also, since those files
+> have a refcount of >= 2 (one for the hash table, one for being pointed to
+> by the state), they are never eligible for removal from the file cache.
+> Worse, since the code call nfs_file_gc inline if the upper bound is crossed
+> (8192), every single operation that calls nfsd_file_acquire will end up
+> walking the entire LRU, trying to free files, and failing every time.
+> Walking a list with millions of files every single time isn't great.
+
+Thanks for tracking this down.
+
+> 
+> There are some ways to fix this behavior like:
+> 
+> * Always allow v4 cached file structured to be purged from the cache.
+>   They will stick around, since they still have a reference, but
+>   at least they won't slow down cache handling to a crawl.
+
+If they have to stick around anyway it seems too bad not to be able to
+use them.
+
+I mean, just because a file's opened first by a v4 user doesn't mean it
+might not also have other users, right?
+
+Would it be that hard to make nfsd_file_gc() a little smarter?
+
+I don't know, maybe it's not worth it.
 
 --b.
 
-On Tue, Jun 23, 2020 at 10:39:17PM +0000, Frank van der Linden wrote:
-> v3:
->   * Rebase to v5.8-rc2
->   * Use length probe + allocate + query for the listxattr and setxattr
->     operations to avoid allocating unneeded space.
->   * Because of the above, drop the 'use kvmalloc for svcxdr_tmpalloc' patch,
->     as it's no longer needed.
+> * Don't add v4 files to the cache to begin with.
 > 
-> v2:
->   * As per the discussion, user extended attributes are enabled if
->     the client and server support them (e.g. they support 4.2 and
->     advertise the user extended attribute FATTR). There are no longer
->     options to switch them off.
->   * The code is no longer conditioned on a config option.
->   * The number of patches has been reduced somewhat by merging
->     smaller, related ones.
->   * Renamed some functions and added parameter comments as requested.
+> * Since the only advantage of the file cache for v4 is the caching
+>   of files linked to special stateids (as far as I can tell), only
+>   cache files associated with special state ids.
 > 
-> v1:
+> * Don't bother with v4 files at all, and revert the changes that
+>   made v4 use the file cache.
 > 
->   * Split in to client and server (changed from the original RFC patch).
+> In general, the resource control for files OPENed by the client is
+> probably an issue. Even if you fix the cache, what if there are
+> N clients that open millions of files and keep them open? Maybe
+> there should be a fallback to start using temporary open files
+> if a client goes beyond a reasonable limit and threatens to eat
+> all resources.
 > 
-> Original RFC combined set is here:
+> Thoughts?
 > 
-> https://www.spinics.net/lists/linux-nfs/msg74843.html
-> 
-> In general, these patches were, both server and client, tested as
-> follows:
-> 	* stress-ng-xattr with 1000 workers
-> 	* Test all corner cases (XATTR_SIZE_*)
-> 	* Test all failure cases (no xattr, setxattr with different or
-> 	  invalid flags, etc).
-> 	* Verify the content of xattrs across several operations.
-> 	* Use KASAN and KMEMLEAK for a longer mix of testruns to verify
-> 	  that there were no leaks (after unmounting the filesystem).
->  	* Interop run against FreeBSD server/client implementation.
->  	* Ran xfstests-dev, with no unexpected/new failures as compared
-> 	  to an unpatched kernel. To fully use xfstests-dev, it needed
-> 	  some modifications, as it expects to either use all xattr
-> 	  namespaces, or none. Whereas NFS only suppors the "user."
-> 	  namespace (+ optional ACLs). I will send the changes in
-> 	  seperately.
-> 
-> 
-> Frank van der Linden (10):
->   xattr: break delegations in {set,remove}xattr
->   xattr: add a function to check if a namespace is supported
->   nfs,nfsd: NFSv4.2 extended attribute protocol definitions
->   nfsd: split off the write decode code in to a separate function
->   nfsd: add defines for NFSv4.2 extended attribute support
->   nfsd: define xattr functions to call in to their vfs counterparts
->   nfsd: take xattr bits in to account for permission checks
->   nfsd: add structure definitions for xattr requests / responses
->   nfsd: implement the xattr functions and en/decode logic
->   nfsd: add fattr support for user extended attributes
-> 
->  fs/nfsd/nfs4proc.c        | 128 ++++++++-
->  fs/nfsd/nfs4xdr.c         | 531 +++++++++++++++++++++++++++++++++++---
->  fs/nfsd/nfsd.h            |   5 +-
->  fs/nfsd/vfs.c             | 239 +++++++++++++++++
->  fs/nfsd/vfs.h             |  10 +
->  fs/nfsd/xdr4.h            |  31 +++
->  fs/xattr.c                | 111 +++++++-
->  include/linux/nfs4.h      |  22 +-
->  include/linux/xattr.h     |   4 +
->  include/uapi/linux/nfs4.h |   3 +
->  10 files changed, 1044 insertions(+), 40 deletions(-)
-> 
-> -- 
-> 2.17.2
+> - Frank
