@@ -2,219 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04A3D20A72B
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2020 23:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EA2B20A800
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 00:11:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405497AbgFYVCa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Jun 2020 17:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405347AbgFYVCa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 17:02:30 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EC2C08C5C1;
-        Thu, 25 Jun 2020 14:02:30 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 36ED6BD0; Thu, 25 Jun 2020 17:02:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 36ED6BD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593118949;
-        bh=iST8XkIlQ85fzJAwuiSKyiqDFbh3r31yI6UMz6u1jfs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ga5KarxQmAulkj8m3/QeIx0Fh1gSLWBawXHcXeYj2k8pPTWphFrtUcGwUk3bc5B4i
-         pm8+mXl6Uw9vmL7fl8F4tArNoUkuETLQuqO2B9fvZ6cTFanM5wzc93O+ClIubGCQPL
-         iemdIEQnK8qdJPrEO0e1y7XKN0z5qMcjO/WcFda0=
-Date:   Thu, 25 Jun 2020 17:02:29 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel paging request in rb_erase
-Message-ID: <20200625210229.GE6605@fieldses.org>
-References: <0000000000005016dd05a5e6b308@google.com>
- <20200603043435.13820-1-hdanton@sina.com>
- <20200603144326.GA2035@fieldses.org>
- <20200604035359.2516-1-hdanton@sina.com>
- <20200604215812.GC3458@fieldses.org>
+        id S2404390AbgFYWLR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Jun 2020 18:11:17 -0400
+Received: from ny018.relay.arandomserver.com ([172.96.188.180]:57455 "EHLO
+        ny018.relay.arandomserver.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728541AbgFYWLQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Jun 2020 18:11:16 -0400
+X-Greylist: delayed 1615 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jun 2020 18:11:16 EDT
+Received: from nyc006.hawkhost.com ([172.96.186.142])
+        by se004.arandomserver.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <nazard@nazar.ca>)
+        id 1joZfM-0003Wg-KD; Thu, 25 Jun 2020 16:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nazar.ca;
+         s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version
+        :Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5ZaFD8xwGGh4ZdyibW8EjPSLF0QDDusZLmEjDbPyi78=; b=OX3kCdRenmGp43LlcV9wzVy9VJ
+        lZhBI2x2o96VtqRmARrKpD5yqdopRr4vUh1mHUV6c6A1ZfDfW0Iavq3AcYwac5amsE8LglwbN6KOf
+        XjQOXQgq55UxU1wCOzNOQ83AywmKqoCBRRdZ/IVdB+mDgUUIjyIbJmTHhNOJhW2uA3s3k9GBd+RGz
+        7rwOUpgpuq1HLRtnI/hQHUxgMsuldjsoqxRQrN1X9IFpk5dUeLRdvWT11TtO068mUHrFgcdixJUV1
+        BmMurk8CD7DagcujhQPkixy5/wTLQIXIjBKzRo+fRLAn16EPFJjQ2L4FcJkCyRVMl5vFRaUNtwbCp
+        RA91NBog==;
+Received: from [174.119.114.224] (port=56455 helo=[192.168.21.100])
+        by nyc006.hawkhost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <nazard@nazar.ca>)
+        id 1joZfK-0001pV-T3; Thu, 25 Jun 2020 17:44:14 -0400
+Subject: Re: Strange segmentation violations of rpc.gssd in Debian Buster
+To:     "Kraus, Sebastian" <sebastian.kraus@tu-berlin.de>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <af85fe766d734e3ca389ffc8845e4a0f@tu-berlin.de>
+ <20200619220434.GB1594@fieldses.org>
+ <28a44712b25c4420909360bd813f8bfd@tu-berlin.de>
+ <20200620170316.GH1514@fieldses.org>
+ <5c45562c90404838944ee71a1d926c74@tu-berlin.de>
+ <20200622223628.GC11051@fieldses.org>
+ <406fe972135846dc8a23b60be59b0590@tu-berlin.de>
+From:   Doug Nazar <nazard@nazar.ca>
+Message-ID: <1527b158-3404-168c-8908-de4b8a709ccd@nazar.ca>
+Date:   Thu, 25 Jun 2020 17:44:14 -0400
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604215812.GC3458@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <406fe972135846dc8a23b60be59b0590@tu-berlin.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Get-Message-Sender-Via: nyc006.hawkhost.com: authenticated_id: nazard@nazar.ca
+X-Authenticated-Sender: nyc006.hawkhost.com: nazard@nazar.ca
+X-Originating-IP: 172.96.186.142
+X-SpamExperts-Domain: nyc006.hawkhost.com
+X-SpamExperts-Username: 172.96.186.142
+Authentication-Results: arandomserver.com; auth=pass smtp.auth=172.96.186.142@nyc006.hawkhost.com
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.13)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0f6LF1GdvkEexklpcFpSF5apSDasLI4SayDByyq9LIhVn0pr/eWrXTid
+ XTJ2Y50JtUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K5r8HtW+i+zOSEp4G6/nKTpHR
+ 3t4R4vw0+gs6rQMezuDQdD3ECQyPVYuo/ujzNsc8V72ZlMoYFW/iILNesMKWB6DY4cCrsCyAwHoj
+ HGSwEc8CUhteWi9sZ0/D91cArp6Aaq2N3Fs371WfzRtGJWrwKAK/NzaQ0kU5LIjXaSmvljwhyk8Q
+ 3euhueWKWlOW4QobXxusReGs8D5s+BpOoqsKPHnEEeQIwKMymizPrn975/qMR6RnXDqOz0oQYKSM
+ 2MZ1trSG+zanhVH6MyN4UABWXkpCHkq3t2QWc5y7R2vgTKTvxnrnHtOKPp7r4O3DezwNkL/+h1aL
+ 2OqtpSX2AHJEJUCbUeEMVjDon5rfSznEF9Wn0xds8xzlI9bNNBd60UaaLFOTFOSXhInfKu2LaPOi
+ g0Tz8DRKXZMehWGgJjrhqyz6Bfy1T3PwsUos1yNYdTOG17NirEYyqwqMBGrw8ELiqOQm0t959gAh
+ KvRa1vmpN2P40gxJLR2O3anAdXM16WBTRUFUU5/JtLKKEUu4esXRICk4xAm9D8KTeKJT7gNACPd+
+ nNEjPOAcc2mSKil38RhC5WpVRRy7ey4Vrj8oN0DwH5zchTwz5HNHuVi9qs3XQ4gnJC8t6+rWfQsb
+ 10XcAoxwQk8w+7owm6K0HfhUbV86k35e90wcVfDxixi0L/Em6K0oqBBzZqz34WAUSeMDkO8xLypP
+ fi/26oO2cauHDD/6kTRqq9XJ3A7TbtUilHMjAbMQ9r701nWrAsLwohWm7wYLeHkNjfXxRRqyRbYy
+ SsHpHKadYLixxWRJdjXT5NXOLDAccBIk1Sag4dKiqCrF8eZZ3gAFgf5pxcvjqhYUkJ+PVcagBWhr
+ PqYGcDoUB+MVMogTqfDNG/eSEDCU3zUmlBVgZvOugleMfvBA1j+Q7fKKz3fccSHpoEA6x1E6NCAy
+ 03IIEaw2FATNOSyR0hlRJ2bU83KrEXc+Z1DahbUFzBX4rvXS1+qgaVt1ORMtpYIBctpo5lIZ42Pp
+ IMd67+j9MC/iEbKoMM0R+bccIbn7fCdCag==
+X-Report-Abuse-To: spam@se001.arandomserver.com
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 05:58:12PM -0400, J. Bruce Fields wrote:
-> On Thu, Jun 04, 2020 at 11:53:59AM +0800, Hillf Danton wrote:
-> > 
-> > On Wed, 3 Jun 2020 12:48:49 -0400 J. Bruce Fields wrote:
-> > > On Wed, Jun 03, 2020 at 10:43:26AM -0400, J. Bruce Fields wrote:
-> > > > On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
-> > > > > 
-> > > > > On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
-> > > > > > 
-> > > > > > As far as I know, this one's still unresolved.  I can't see the bug from
-> > > > > > code inspection, and we don't have a reproducer.  If anyone else sees
-> > > > > > this or has an idea what might be going wrong, I'd be interested.--b.
-> > > > > 
-> > > > > It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
-> > > > > meanwhile there's another at 
-> > > > > 
-> > > > >  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
-> > > > >  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-> > > > > 
-> > > > > in the kworker context, and one of the quick questions is, is it needed
-> > > > > to serialize the two players, say, using a mutex?
-> > > > 
-> > > > nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
-> > > > structures it's tearing down are per-network-namespace, and it's assumed
-> > > > all the users of that structure are gone by the time we get here.
-> > > > 
-> > > > I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
-> > 
-> > IIUC it's correct for the kworker case where the ns in question is on
-> > the cleanup list, and for the syscall as well because the report is
-> > triggered in the error path, IOW the new ns is not yet visible to the
-> > kworker ATM.
-> 
-> Sorry, I'm not familiar with the namespace code and I'm not following
-> you.
-> 
-> I'm trying to figure out what prevents the network namespace exit method
-> being called while nfsd is still processing an rpc call from that
-> network namespace.
+On 2020-06-25 13:43, Kraus, Sebastian wrote:
+> [Current thread is 1 (Thread 0x7fb2eaeba700 (LWP 14174))]
+> (gdb) bt
+> #0  0x000056233fff038e in ?? ()
+> #1  0x000056233fff09f8 in ?? ()
+> #2  0x000056233fff0b92 in ?? ()
+> #3  0x000056233fff13b3 in ?? ()
+> #4  0x00007fb2eb8dbfa3 in start_thread (arg=<optimized out>) at pthread_create.c:486
+> #5  0x00007fb2eb80c4cf in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+> (gdb) quit
+>
+>
+> I am not an expert in analyzing stack and backtraces. Is there anything meaningful, you are able to extract from the trace?
+> As far as I see, thread 14174 caused the segmentation violation just after its birth on clone.
+> Please correct me, if I am in error.
+> Seems Debian Buster does not ship any dedicated package with debug symbols for the rpc.gssd executable.
+> So far, I was not able to find such a package.
+> What's your opinon about the trace?
 
-Looking at this some more:
+You'll need to install the debug symbols for your distribution/package. 
+A quick google links to https://wiki.debian.org/HowToGetABacktrace. 
+Those ?? lines should then be replaced with function, file & line numbers.
 
-Each server socket (struct svc_xprt) holds a reference on the struct net
-that's not released until svc_xprt_free().
+I've been following this with interest since it used to happen to me a 
+lot. It hasn't recently, even though every so often I spend a few hours 
+trying to re-create it to try debug it.
 
-The svc_xprt is itself referenced as long as an rpc for that socket is
-being processed, the referenced released in svc_xprt_release().  Which
-isn't called until the rpc is processed and the reply sent.
+Doug
 
-So, assuming nfsd_exit_net() can't be called while we're still holding
-references to the struct net, there can't still be any reply cache
-processing going on when nfsd_reply_cache_shutdown() is called.
-
-So, still a mystery to me how this is happening.
-
---b.
-
-> 
-> 
-> > ---
-> > v2: Use linux/highmem.h instead of asm/cacheflush.sh
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > ---
-> > net/sunrpc/svcsock.c | 1 +
-> > 1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> > index 5c4ec9386f81..c537272f9c7e 100644
-> > --- a/net/sunrpc/svcsock.c
-> > +++ b/net/sunrpc/svcsock.c
-> > @@ -44,6 +44,7 @@
-> > #include <net/tcp.h>
-> > #include <net/tcp_states.h>
-> > #include <linux/uaccess.h>
-> > +#include <linux/highmem.h>
-> > #include <asm/ioctls.h>
-> > 
-> > #include <linux/sunrpc/types.h>
-> > -- 
-> > 2.25.0
-> > 
-> 
-> --
-> Chuck Lever
-> 
-> 
-
-> 
-> --b.
-> 
-> > 
-> > Then we can not draw a race between the two parties, and the two reports
-> > are not related... but of independent glitches.
-> > 
-> > > > 
-> > > > nfsd_reply_cache_shutdown() is one of the first things we do, so I think
-> > > > we're depending on the assumption that the interfaces in that network
-> > > > namespace, and anything referencing associated sockets (in particular,
-> > > > any associated in-progress rpc's), must be gone before our net exit
-> > > > method is called.
-> > > > 
-> > > > I wonder if that's a good assumption.
-> > > 
-> > > I think that assumption must be the problem.
-> > > 
-> > > That would explain why the crashes are happening in nfsd_exit_net as
-> > > opposed to somewhere else, and why we're only seeing them since
-> > > 3ba75830ce17 "nfsd4: drc containerization".
-> > > 
-> > > I wonder what *is* safe to assume when the net exit method is called?
-> > > 
-> > > --b.
-> > > 
-> > > > 
-> > > > --b.
-> > > > 
-> > > > > 
-> > > > > 
-> > > > > > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
-> > > > > > > Hello,
-> > > > > > > 
-> > > > > > > syzbot found the following crash on:
-> > > > > > > 
-> > > > > > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
-> > > > > > > git tree:       upstream
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
-> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > > 
-> > > > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > > > > 
-> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
-> > > > > > > 
-> > > > > > > BUG: unable to handle page fault for address: ffff887ffffffff0
-> > > > > > > #PF: supervisor read access in kernel mode
-> > > > > > > #PF: error_code(0x0000) - not-present page
-> > > > > > > PGD 0 P4D 0 
-> > > > > > > Oops: 0000 [#1] PREEMPT SMP KASAN
-> > > > > > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
-> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > > > > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
-> > > > > > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
-> > > > > > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
-> > > > > > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
-> > > > > > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
-> > > > > > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
-> > > > > > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
-> > > > > > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
-> > > > > > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
-> > > > > > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
-> > > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > > > Call Trace:
-> > > > > > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
-> > > > > > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
-> > > > > > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
-> > > > > > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
-> > > > > > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
-> > > > > > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
-> > > > > > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
-> > > > > > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
-> > > > > > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
-> > > > > > >  __do_sys_unshare kernel/fork.c:3038 [inline]
-> > > > > > >  __se_sys_unshare kernel/fork.c:3036 [inline]
-> > > > > > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
-> > > > > > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > > > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
