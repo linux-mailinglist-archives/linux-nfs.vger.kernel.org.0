@@ -2,86 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C12620ACF3
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 09:23:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F6520AEAC
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 11:01:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgFZHXZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jun 2020 03:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        id S1725959AbgFZJBR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jun 2020 05:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgFZHXZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 03:23:25 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379CCC08C5C1
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 00:23:25 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dp18so8365288ejc.8
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 00:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9YqzsgpankSjyC6Zm1GoJe0Pp+/Tqbn2CkkH2X/Xsq8=;
-        b=ScISZwzOC2hVxOohFc95Ne6NHWuU33rZHyxJ0GUyDnyt3I2tQcEDKsJUT+NxUX5hVx
-         xkiVW+5/mfh7DwmQ3f2UrLCs7VA7NLan+5AngdQGusKSvwG4jvSbFTfZVNytfECEwWnN
-         ZG8f+hLT15bdiqFLBKOKEH1AE8wg0rls7sNm/hJ+dImG1gKl9sYKE6/1jsFXPxM27rJB
-         zHBTVVvna/OCTFR+a7XEbmtV3OIvEPjH0erg9Nf/GNUyrpxd2yIGCaP1GSl29YgvDmxn
-         NaF3tX7fwqFQMMV22kp3W0f66RLRxgZYoQQjpkOgYNrpZ0uro/SuPe+Jgu+K8yEZl87L
-         SEDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9YqzsgpankSjyC6Zm1GoJe0Pp+/Tqbn2CkkH2X/Xsq8=;
-        b=mCiDhuNiHtC/yh5gFMn3z1dC8DGW/zLrefGiF35OugDGpAfJtqMu2k3EZKHcuXhxBe
-         OVkXofeLzjAAFfogTrItJdHjHH6sqruRqOdx9DYWsr24ZUWEVrnBNfFxCU3HAzAX0W8F
-         JkaXkC6kzMqpzadQl+OxyHnxgnyH4HXGOSySj3MSfiV9QmMT8Ae6aaxMAtUzgrmEq5wn
-         YMs3SJjKx2FptAYxQxwKta6vmgzRlzPiZnq9pV4hwJVk+095HZE5V9O5+ftgbu0nZFva
-         mUXBjDKe7Y5JfQf2arr8w3CURjzUk5oi7TT6wpxO3PUYLvMCI7NkT7m2FlJMULUjKxOi
-         PygQ==
-X-Gm-Message-State: AOAM530fgoNQeC84ZWigsWrClBVf2lNGj4Uhfn123UOWfKLeIX2aXuur
-        /d8rsQcujcsUxxLwstzi+sV/gZLtx28=
-X-Google-Smtp-Source: ABdhPJy2DD+bz6nK2nJabeMSf5PRm5U5k813cvNgjA4lAybzYQ/DhVyYSEro0IMf7Pe5F/IZ2roLhg==
-X-Received: by 2002:a17:906:6499:: with SMTP id e25mr1382269ejm.352.1593156203996;
-        Fri, 26 Jun 2020 00:23:23 -0700 (PDT)
-Received: from jupiter.home.aloni.org ([141.226.169.176])
-        by smtp.gmail.com with ESMTPSA id m16sm10636067eji.23.2020.06.26.00.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:23:23 -0700 (PDT)
-From:   Dan Aloni <dan@kernelim.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] sunrpc: destroy rpc_inode_cachep after unregister_filesystem
-Date:   Fri, 26 Jun 2020 10:23:16 +0300
-Message-Id: <20200626072316.39504-1-dan@kernelim.com>
-X-Mailer: git-send-email 2.25.4
+        with ESMTP id S1725820AbgFZJBR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 05:01:17 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD36C08C5C1;
+        Fri, 26 Jun 2020 02:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PW5Ju7i2z/xdb7PaCVtfmKC/YY2ETFHvsdEj0WQnO9U=; b=H0t9tcKO/oe2xP19f0tqZ2btQ2
+        JydK0qH+x4SGaETRrERKdMOpP621gT0V3kPnsFp86jSzNYd24TuXWryuHydxSYYaOE1tFaSz7xDmh
+        rftH0TCYRw7oTvAnQAZT3kQwbGv6xjkmFVSUfAu3Vedud733FNTz/Yp3HW0Fl2W6H/0VE0DEckB9s
+        fvQjjc574P7/dfEj2sLldqMG5TzexTqTAAkV7qWphtWgkzgmQTX3sSJy0UOTFW6iYfKnOZAY061Mp
+        GXVh1/UHj5bzI6Yit0MKd/wtbdVF+8i0N5bVT6NPR3SUUiA39SuWJMG9gkiKlUm76y44fglbXvRzT
+        sftdo1RQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jokDJ-0008JE-71; Fri, 26 Jun 2020 09:00:01 +0000
+Date:   Fri, 26 Jun 2020 10:00:01 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200626090001.GA30103@infradead.org>
+References: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+ <20200624144311.GA5839@infradead.org>
+ <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
+ <20200624160953.GH4332@42.do-not-panic.com>
+ <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <feb6a8c4-2b94-3f95-6637-679e089a71ca@de.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <feb6a8c4-2b94-3f95-6637-679e089a71ca@de.ibm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Better to unregister the file system before destroying the kmem_cache
-cache of the inodes, so that the inodes are freed before we are trying
-to destroy it. Otherwise, kmem_cache yells that some objects are live.
+On Fri, Jun 26, 2020 at 07:22:34AM +0200, Christian Borntraeger wrote:
+> 
+> 
+> On 26.06.20 04:54, Luis Chamberlain wrote:
+> > On Wed, Jun 24, 2020 at 08:37:55PM +0200, Christian Borntraeger wrote:
+> >>
+> >>
+> >> On 24.06.20 20:32, Christian Borntraeger wrote:
+> >> [...]> 
+> >>> So the translations look correct. But your change is actually a sematic change
+> >>> if(ret) will only trigger if there is an error
+> >>> if (KWIFEXITED(ret)) will always trigger when the process ends. So we will always overwrite -ECHILD
+> >>> and we did not do it before. 
+> >>>
+> >>
+> >> So the right fix is
+> >>
+> >> diff --git a/kernel/umh.c b/kernel/umh.c
+> >> index f81e8698e36e..a3a3196e84d1 100644
+> >> --- a/kernel/umh.c
+> >> +++ b/kernel/umh.c
+> >> @@ -154,7 +154,7 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+> >>                  * the real error code is already in sub_info->retval or
+> >>                  * sub_info->retval is 0 anyway, so don't mess with it then.
+> >>                  */
+> >> -               if (KWIFEXITED(ret))
+> >> +               if (KWEXITSTATUS(ret))
+> >>                         sub_info->retval = KWEXITSTATUS(ret);
+> >>         }
+> >>  
+> >> I think.
+> > 
+> > Nope, the right form is to check for WIFEXITED() before using WEXITSTATUS().
+> 
+> But this IS a change over the previous code, no?
+> I will test next week as I am travelling right now. 
 
-Signed-off-by: Dan Aloni <dan@kernelim.com>
----
- net/sunrpc/rpc_pipe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 39e14d5edaf1..111f0b2e174f 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -1509,6 +1509,6 @@ int register_rpc_pipefs(void)
- void unregister_rpc_pipefs(void)
- {
- 	rpc_clients_notifier_unregister();
--	kmem_cache_destroy(rpc_inode_cachep);
- 	unregister_filesystem(&rpc_pipe_fs_type);
-+	kmem_cache_destroy(rpc_inode_cachep);
- }
--- 
-2.25.4
-
+I'm all for reverting back to the previous behavior.  If someone wants
+a behavior change it should be a separate patch.  And out of pure self
+interest I'd like to see that change after my addition of the
+kernel_wait helper to replace the kernel_wait4 abuse :)
