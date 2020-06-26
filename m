@@ -2,337 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FBD720B1CB
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 14:56:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58E5920B1EF
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 15:00:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgFZM4t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jun 2020 08:56:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58616 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFZM4t (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 08:56:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QCqNLa060632;
-        Fri, 26 Jun 2020 12:56:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=DIznYym8E7Ehl/1d0NTtnal4dVfQP2/AA3ex9x//Tbo=;
- b=OuS1Xy8ZYSxHbcyXYbJ8A4I6ioHRebT1VAnVQ2Tye4zIFdH4U93ktab11jRSGqb7ygom
- c9t9PG/oRDqA8mGFRX3u2KH0/sPu6QJtJAuY2TUx42xzCh5W9OlFa3XRRIzwuGRbFSyK
- nYVMZTF5uEiMNX+3+Sz4YBbwiDdBeLCuJT1Z9WYcsaDEJ2x1Jl1v+E+eEBAk5J9VxK/9
- m8oMYy1rTBYsciVMq8xkSSA5ayUblmKZUX7Jwgzeip7XBVUMzR9P4sqA8Lawh0I8R6fD
- Xk5geqPH/D6SLnjXutPD7cn36P3Ex3oZ7YvzdJd4VeFQqaqW7h2oOcgZW2M6mTU/Qhsn hQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31uusu5wf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 12:56:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QCsKbX096925;
-        Fri, 26 Jun 2020 12:56:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31uuramqrg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 12:56:44 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05QCuhj1021277;
-        Fri, 26 Jun 2020 12:56:43 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 26 Jun 2020 12:56:43 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] xprtrdma: fix EP destruction logic
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200626071034.34805-1-dan@kernelim.com>
-Date:   Fri, 26 Jun 2020 08:56:41 -0400
-Cc:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FEB41A86-87EB-44BD-BEC4-6EAB3723B426@oracle.com>
-References: <0E2AA9D9-2503-462C-952D-FC0DD5111BD1@oracle.com>
- <20200626071034.34805-1-dan@kernelim.com>
-To:     Dan Aloni <dan@kernelim.com>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260090
+        id S1726997AbgFZNAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jun 2020 09:00:54 -0400
+Received: from m13144.mail.163.com ([220.181.13.144]:51542 "EHLO
+        m13144.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFZNAy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 09:00:54 -0400
+X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jun 2020 09:00:48 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=HsepQ
+        I9Q0FjvCsgosowDG0167zOIPOwm0N1+v0n+rMI=; b=cBEQngQcpWStld+N7tTN6
+        38zoHiNaLLad582sggMhQYUBZrsqjJa64lY7S5v/efItAt1Y05Kr6pOAv41gurDx
+        9SIUY1ICqzZm8bYmSyx4IZQtN2EE/RjA/ew9WJuIDLwzH6pJ3/b0lSjS4dx5e+y1
+        6cH3A06YdUqxzEYSt6Ip/w=
+Received: from lxgrxd$163.com ( [113.104.190.184] ) by ajax-webmail-wmsvr144
+ (Coremail) ; Fri, 26 Jun 2020 20:45:23 +0800 (CST)
+X-Originating-IP: [113.104.190.184]
+Date:   Fri, 26 Jun 2020 20:45:23 +0800 (CST)
+From:   "Luo Xiaogang" <lxgrxd@163.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, falcon <falcon@tinylab.org>
+Subject: Re:Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
+ Copyright (c) 2002-2020 www.mailtech.cn 163com
+In-Reply-To: <20200624012901.GC18460@fieldses.org>
+References: <20200615071211.31326-1-lxgrxd@163.com>
+ <20200624012901.GC18460@fieldses.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
+MIME-Version: 1.0
+Message-ID: <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: kMGowACXV07k7fVeES1KAA--.60075W
+X-CM-SenderInfo: ho0j25rg6rljoofrz/xtbBEAZPUVUMSHFNqQAAsM
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Jun 26, 2020, at 3:10 AM, Dan Aloni <dan@kernelim.com> wrote:
->=20
-> This fixes various issues found when testing disconnections and other
-> various fault injections under a KASAN-enabled kernel.
->=20
-> - Swap the names of `rpcrdma_ep_destroy` and `rpcrdma_ep_put` to
->  reflect what the functions are doing.
-> - In the cleanup of `rpcrdma_ep_create` do `kfree` on the EP only for
->  the case where no one knows about it, and avoid a double free (what
->  `rpcrdma_ep_destroy` did, followed by `kfree`). No need to set
->  `r_xprt->rx_ep` to NULL because we are doing that only in the success
->  path.
-> - Don't up the EP ref in `RDMA_CM_EVENT_ESTABLISHED` but do it sooner
->  before `rdma_connect`. This is needed so that an early wake up of
->  `wait_event_interruptible` in `rpcrdma_xprt_connect` in case of
->  a failure does not see a freed EP.
-> - Still try to follow the rule that the last decref of EP performs
->  `rdma_destroy_id(id)`.
-> - Only path to disengage an EP is `rpcrdma_xprt_disconnect`, whether =
-it
->  is actually connected or not. This makes the error paths of
->  `rpcrdma_xprt_connect` clearer.
-> - Add a mutex in `rpcrdma_ep_destroy` to guard against concurrent =
-calls
->  to `rpcrdma_xprt_disconnect` coming from either =
-`rpcrdma_xprt_connect`
->  or `xprt_rdma_close`.
-
-NAK. The RPC client provides appropriate exclusion, please let's not
-add more serialization that can introduce further deadlocks.
-
-There are already patches pending in this area that make some of these
-changes, starting with
-
-https://marc.info/?l=3Dlinux-nfs&m=3D159222724808832&w=3D2
-
-Yesterday, I found the other problems you mentioned above after I was
-finally able to get my server to REJECT connection attempts. I'll submit
-patches to clean all this up once I have tested them.
-
-
-> Signed-off-by: Dan Aloni <dan@kernelim.com>
-> ---
-> net/sunrpc/xprtrdma/transport.c |  2 ++
-> net/sunrpc/xprtrdma/verbs.c     | 50 ++++++++++++++++++++++-----------
-> net/sunrpc/xprtrdma/xprt_rdma.h |  1 +
-> 3 files changed, 37 insertions(+), 16 deletions(-)
->=20
-> diff --git a/net/sunrpc/xprtrdma/transport.c =
-b/net/sunrpc/xprtrdma/transport.c
-> index 0c4af7f5e241..50c28be6b694 100644
-> --- a/net/sunrpc/xprtrdma/transport.c
-> +++ b/net/sunrpc/xprtrdma/transport.c
-> @@ -350,6 +350,8 @@ xprt_setup_rdma(struct xprt_create *args)
-> 	xprt_rdma_format_addresses(xprt, sap);
->=20
-> 	new_xprt =3D rpcx_to_rdmax(xprt);
-> +	mutex_init(&new_xprt->rx_flush);
-> +
-> 	rc =3D rpcrdma_buffer_create(new_xprt);
-> 	if (rc) {
-> 		xprt_rdma_free_addresses(xprt);
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 2ae348377806..c66871bbb894 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -84,7 +84,7 @@ static void rpcrdma_rep_destroy(struct rpcrdma_rep =
-*rep);
-> static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
-> static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
-> static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
-> -static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep);
-> +static int rpcrdma_ep_put(struct rpcrdma_ep *ep);
-> static struct rpcrdma_regbuf *
-> rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
-> 		     gfp_t flags);
-> @@ -99,6 +99,9 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt =
-*r_xprt)
-> {
-> 	struct rdma_cm_id *id =3D r_xprt->rx_ep->re_id;
->=20
-> +	if (!id->qp)
-> +		return;
-> +
-> 	/* Flush Receives, then wait for deferred Reply work
-> 	 * to complete.
-> 	 */
-> @@ -266,7 +269,6 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, =
-struct rdma_cm_event *event)
-> 		xprt_force_disconnect(xprt);
-> 		goto disconnected;
-> 	case RDMA_CM_EVENT_ESTABLISHED:
-> -		kref_get(&ep->re_kref);
-> 		ep->re_connect_status =3D 1;
-> 		rpcrdma_update_cm_private(ep, &event->param.conn);
-> 		trace_xprtrdma_inline_thresh(ep);
-> @@ -289,7 +291,8 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, =
-struct rdma_cm_event *event)
-> 		ep->re_connect_status =3D -ECONNABORTED;
-> disconnected:
-> 		xprt_force_disconnect(xprt);
-> -		return rpcrdma_ep_destroy(ep);
-> +		wake_up_all(&ep->re_connect_wait);
-> +		return rpcrdma_ep_put(ep);
-> 	default:
-> 		break;
-> 	}
-> @@ -345,11 +348,11 @@ static struct rdma_cm_id =
-*rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
-> 	return ERR_PTR(rc);
-> }
->=20
-> -static void rpcrdma_ep_put(struct kref *kref)
-> +static void rpcrdma_ep_destroy(struct kref *kref)
-> {
-> 	struct rpcrdma_ep *ep =3D container_of(kref, struct rpcrdma_ep, =
-re_kref);
->=20
-> -	if (ep->re_id->qp) {
-> +	if (ep->re_id && ep->re_id->qp) {
-> 		rdma_destroy_qp(ep->re_id);
-> 		ep->re_id->qp =3D NULL;
-> 	}
-> @@ -373,9 +376,9 @@ static void rpcrdma_ep_put(struct kref *kref)
->  *     %0 if @ep still has a positive kref count, or
->  *     %1 if @ep was destroyed successfully.
->  */
-> -static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep)
-> +static int rpcrdma_ep_put(struct rpcrdma_ep *ep)
-> {
-> -	return kref_put(&ep->re_kref, rpcrdma_ep_put);
-> +	return kref_put(&ep->re_kref, rpcrdma_ep_destroy);
-> }
->=20
-> static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
-> @@ -492,11 +495,12 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt =
-*r_xprt)
-> 	return 0;
->=20
-> out_destroy:
-> -	rpcrdma_ep_destroy(ep);
-> +	rpcrdma_ep_put(ep);
-> 	rdma_destroy_id(id);
-> +	return rc;
-> +
-> out_free:
-> 	kfree(ep);
-> -	r_xprt->rx_ep =3D NULL;
-> 	return rc;
-> }
->=20
-> @@ -510,6 +514,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt =
-*r_xprt)
-> {
-> 	struct rpc_xprt *xprt =3D &r_xprt->rx_xprt;
-> 	struct rpcrdma_ep *ep;
-> +	struct rdma_cm_id *id;
-> 	int rc;
->=20
-> retry:
-> @@ -518,6 +523,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt =
-*r_xprt)
-> 	if (rc)
-> 		return rc;
-> 	ep =3D r_xprt->rx_ep;
-> +	id =3D ep->re_id;
->=20
-> 	ep->re_connect_status =3D 0;
-> 	xprt_clear_connected(xprt);
-> @@ -529,7 +535,10 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt =
-*r_xprt)
-> 	if (rc)
-> 		goto out;
->=20
-> -	rc =3D rdma_connect(ep->re_id, &ep->re_remote_cma);
-> +	/* =46rom this point on, CM events can discard our EP */
-> +	kref_get(&ep->re_kref);
-> +
-> +	rc =3D rdma_connect(id, &ep->re_remote_cma);
-> 	if (rc)
-> 		goto out;
->=20
-> @@ -546,14 +555,17 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt =
-*r_xprt)
->=20
-> 	rc =3D rpcrdma_reqs_setup(r_xprt);
-> 	if (rc) {
-> -		rpcrdma_xprt_disconnect(r_xprt);
-> +		ep->re_connect_status =3D rc;
-> 		goto out;
-> 	}
-> +
-> 	rpcrdma_mrs_create(r_xprt);
-> +	trace_xprtrdma_connect(r_xprt, 0);
-> +	return rc;
->=20
-> out:
-> -	if (rc)
-> -		ep->re_connect_status =3D rc;
-> +	ep->re_connect_status =3D rc;
-> +	rpcrdma_xprt_disconnect(r_xprt);
-> 	trace_xprtrdma_connect(r_xprt, rc);
-> 	return rc;
-> }
-> @@ -570,12 +582,15 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt =
-*r_xprt)
->  */
-> void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
-> {
-> -	struct rpcrdma_ep *ep =3D r_xprt->rx_ep;
-> +	struct rpcrdma_ep *ep;
-> 	struct rdma_cm_id *id;
-> 	int rc;
->=20
-> +	mutex_lock(&r_xprt->rx_flush);
-> +
-> +	ep =3D r_xprt->rx_ep;
-> 	if (!ep)
-> -		return;
-> +		goto out;
->=20
-> 	id =3D ep->re_id;
-> 	rc =3D rdma_disconnect(id);
-> @@ -587,10 +602,13 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt =
-*r_xprt)
-> 	rpcrdma_mrs_destroy(r_xprt);
-> 	rpcrdma_sendctxs_destroy(r_xprt);
->=20
-> -	if (rpcrdma_ep_destroy(ep))
-> +	if (rpcrdma_ep_put(ep))
-> 		rdma_destroy_id(id);
->=20
-> 	r_xprt->rx_ep =3D NULL;
-> +
-> +out:
-> +	mutex_unlock(&r_xprt->rx_flush);
-> }
->=20
-> /* Fixed-size circular FIFO queue. This implementation is wait-free =
-and
-> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h =
-b/net/sunrpc/xprtrdma/xprt_rdma.h
-> index 0a16fdb09b2c..288645a9437f 100644
-> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
-> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-> @@ -417,6 +417,7 @@ struct rpcrdma_xprt {
-> 	struct delayed_work	rx_connect_worker;
-> 	struct rpc_timeout	rx_timeout;
-> 	struct rpcrdma_stats	rx_stats;
-> +	struct mutex            rx_flush;
-> };
->=20
-> #define rpcx_to_rdmax(x) container_of(x, struct rpcrdma_xprt, rx_xprt)
-> --=20
-> 2.25.4
->=20
-
---
-Chuck Lever
-
-
-
+QXQgMjAyMC0wNi0yNCAwOToyOTowMSwgIkouIEJydWNlIEZpZWxkcyIgPGJmaWVsZHNAZmllbGRz
+ZXMub3JnPiB3cm90ZToKPk9uIE1vbiwgSnVuIDE1LCAyMDIwIGF0IDAzOjEyOjExUE0gKzA4MDAs
+IEx1byBYaWFvZ2FuZyB3cm90ZToKPj4gV2UgbG9hZCBuZnNkIG1vZHVsZSBpbiB0aGUgZG9ja2Vy
+IGNvbnRhaW5lciwga2VybmVsIGNyYXNoIGFzIGZvbGxvd2luZy4KPj4gCj4+IFRoZSAnY3VycmVu
+dC0+bnNwcm94eS0+bmV0X25zLT5nZW4tPnB0cltuZnNkX25ldF9pZF0nIGlzIG92ZXJmbG93IGlu
+IHRoZQo+PiBuZnNkX2luaXRfbmV0Lgo+PiAKPj4gV2Ugc2hvdWxkIHVzZSB0aGUgbmV0X25zIHdo
+aWNoIGlzIGJlaW5nIGluaXQgaW4gdGhlIG5mc2RfaW5pdF9uZXQsCj4+IG5vdCB0aGUgJ2N1cnJl
+bnQtPm5zcHJveHktPm5ldF9ucycuCj4KPlRoYW5rcyEgIEFjdHVhbGx5LCBJIHRoaW5rIG15IHBy
+b2JsZW0gd2FzIHRoYXQgbmV0IGluaXQgYW5kIGV4aXQgYXJlCj5qdXN0IHRoZSB3cm9uZyBwbGFj
+ZSB0byBiZSBkb2luZyB0aGlzLS1JIG1vdmVkIHRoZW0gdG8gbmZzZCBzdGFydC9zdG9wCj5pbnN0
+ZWFkLgo+Cj5BbmQgdGhlbiB0aGF0IGV4cG9zZWQgdGhlIGZhY3QgdGhhdCBJIGhhZCBhbiBpbm9k
+ZSBsZWFrLgo+Cj5EbyB0aGUgZm9sbG93aW5nIHR3byBwYXRjaGVzIGhlbHA/CgpKdXN0IHRlc3Qg
+aXQgb24gVWJ1bnR1IDE4LjA0ICsgRG9ja2VyIDE5LjAzLjYsIGFuZCB0aGUgZG9ja2VyIGltYWdl
+IGlzIHVidW50dToxOC4wNC4KCllvdXIgcGF0Y2hzZXQgaGVscHMsIGhlcmUgaXMgbXkgcmVwb3J0
+ZWQtYW5kLXRlc3RlZC1ieSwgVGhhbmtzIHZlcnkgbXVjaC4KClJlcG9ydGVkLWFuZC1UZXN0ZWQt
+Ynk6ICBMdW8gWGlhb2dhbmcgPGx4Z3J4ZEAxNjMuY29tPgoKCj4tLWIuCj4KPkZyb20gMTZmOTU0
+YmQ1YzQ4MTU5NmE2MzI3MWE5MTk2M2JmMjYwZTJmM2Y0NiBNb24gU2VwIDE3IDAwOjAwOjAwIDIw
+MDEKPkZyb206ICJKLiBCcnVjZSBGaWVsZHMiIDxiZmllbGRzQHJlZGhhdC5jb20+Cj5EYXRlOiBU
+dWUsIDIzIEp1biAyMDIwIDE2OjAwOjMzIC0wNDAwCj5TdWJqZWN0OiBbUEFUQ0ggMS8yXSBuZnNk
+NDogZml4IG5mc2RmcyByZWZlcmVuY2UgY291bnQgbG9vcAo+Cj5XZSBkb24ndCBkcm9wIHRoZSBy
+ZWZlcmVuY2Ugb24gdGhlIG5mc2RmcyBmaWxlc3lzdGVtIHdpdGgKPm1udHB1dChubi0+bmZzZF9t
+bnQpIHVudGlsIG5mc2RfZXhpdF9uZXQoKSwgYnV0IHRoYXQgd29uJ3QgYmUgY2FsbGVkCj51bnRp
+bCB0aGUgbmZzZCBtb2R1bGUncyB1bmxvYWRlZCwgYW5kIHdlIGNhbid0IHVubG9hZCB0aGUgbW9k
+dWxlIGFzIGxvbmcKPmFzIHRoZXJlJ3MgYSByZWZlcmVuY2Ugb24gbmZzZGZzLiAgU28gdGhpcyBw
+cmV2ZW50cyBtb2R1bGUgdW5sb2FkaW5nLgo+Cj5TaWduZWQtb2ZmLWJ5OiBKLiBCcnVjZSBGaWVs
+ZHMgPGJmaWVsZHNAcmVkaGF0LmNvbT4KPi0tLQo+IGZzL25mc2QvbmZzNHN0YXRlLmMgfCAgOCAr
+KysrKysrLQo+IGZzL25mc2QvbmZzY3RsLmMgICAgfCAyMiArKysrKysrKysrKystLS0tLS0tLS0t
+Cj4gZnMvbmZzZC9uZnNkLmggICAgICB8ICAzICsrKwo+IDMgZmlsZXMgY2hhbmdlZCwgMjIgaW5z
+ZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4KPmRpZmYgLS1naXQgYS9mcy9uZnNkL25mczRz
+dGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYwo+aW5kZXggYmIzZDJjMzI2NjRhLi5jY2UyNTEw
+YjJjY2EgMTAwNjQ0Cj4tLS0gYS9mcy9uZnNkL25mczRzdGF0ZS5jCj4rKysgYi9mcy9uZnNkL25m
+czRzdGF0ZS5jCj5AQCAtNzkxMiw5ICs3OTEyLDE0IEBAIG5mczRfc3RhdGVfc3RhcnRfbmV0KHN0
+cnVjdCBuZXQgKm5ldCkKPiAJc3RydWN0IG5mc2RfbmV0ICpubiA9IG5ldF9nZW5lcmljKG5ldCwg
+bmZzZF9uZXRfaWQpOwo+IAlpbnQgcmV0Owo+IAo+LQlyZXQgPSBuZnM0X3N0YXRlX2NyZWF0ZV9u
+ZXQobmV0KTsKPisJcmV0ID0gZ2V0X25mc2RmcyhuZXQpOwo+IAlpZiAocmV0KQo+IAkJcmV0dXJu
+IHJldDsKPisJcmV0ID0gbmZzNF9zdGF0ZV9jcmVhdGVfbmV0KG5ldCk7Cj4rCWlmIChyZXQpIHsK
+PisJCW1udHB1dChubi0+bmZzZF9tbnQpOwo+KwkJcmV0dXJuIHJldDsKPisJfQo+IAlsb2Nrc19z
+dGFydF9ncmFjZShuZXQsICZubi0+bmZzZDRfbWFuYWdlcik7Cj4gCW5mc2Q0X2NsaWVudF90cmFj
+a2luZ19pbml0KG5ldCk7Cj4gCWlmIChubi0+dHJhY2tfcmVjbGFpbV9jb21wbGV0ZXMgJiYgbm4t
+PnJlY2xhaW1fc3RyX2hhc2h0Ymxfc2l6ZSA9PSAwKQo+QEAgLTc5ODQsNiArNzk4OSw3IEBAIG5m
+czRfc3RhdGVfc2h1dGRvd25fbmV0KHN0cnVjdCBuZXQgKm5ldCkKPiAKPiAJbmZzZDRfY2xpZW50
+X3RyYWNraW5nX2V4aXQobmV0KTsKPiAJbmZzNF9zdGF0ZV9kZXN0cm95X25ldChuZXQpOwo+Kwlt
+bnRwdXQobm4tPm5mc2RfbW50KTsKPiB9Cj4gCj4gdm9pZAo+ZGlmZiAtLWdpdCBhL2ZzL25mc2Qv
+bmZzY3RsLmMgYi9mcy9uZnNkL25mc2N0bC5jCj5pbmRleCBiNjhlOTY2ODE1MjIuLmNmOThhODFj
+YTFlYSAxMDA2NDQKPi0tLSBhL2ZzL25mc2QvbmZzY3RsLmMKPisrKyBiL2ZzL25mc2QvbmZzY3Rs
+LmMKPkBAIC0xNDI0LDYgKzE0MjQsMTggQEAgc3RhdGljIHN0cnVjdCBmaWxlX3N5c3RlbV90eXBl
+IG5mc2RfZnNfdHlwZSA9IHsKPiB9Owo+IE1PRFVMRV9BTElBU19GUygibmZzZCIpOwo+IAo+K2lu
+dCBnZXRfbmZzZGZzKHN0cnVjdCBuZXQgKm5ldCkKPit7Cj4rCXN0cnVjdCBuZnNkX25ldCAqbm4g
+PSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPisJc3RydWN0IHZmc21vdW50ICptbnQ7
+Cj4rCj4rCW1udCA9ICB2ZnNfa2Vybl9tb3VudCgmbmZzZF9mc190eXBlLCBTQl9LRVJOTU9VTlQs
+ICJuZnNkIiwgTlVMTCk7Cj4rCWlmIChJU19FUlIobW50KSkKPisJCXJldHVybiBQVFJfRVJSKG1u
+dCk7Cj4rCW5uLT5uZnNkX21udCA9IG1udDsKPisJcmV0dXJuIDA7Cj4rfQo+Kwo+ICNpZmRlZiBD
+T05GSUdfUFJPQ19GUwo+IHN0YXRpYyBpbnQgY3JlYXRlX3Byb2NfZXhwb3J0c19lbnRyeSh2b2lk
+KQo+IHsKPkBAIC0xNDUxLDcgKzE0NjMsNiBAQCB1bnNpZ25lZCBpbnQgbmZzZF9uZXRfaWQ7Cj4g
+c3RhdGljIF9fbmV0X2luaXQgaW50IG5mc2RfaW5pdF9uZXQoc3RydWN0IG5ldCAqbmV0KQo+IHsK
+PiAJaW50IHJldHZhbDsKPi0Jc3RydWN0IHZmc21vdW50ICptbnQ7Cj4gCXN0cnVjdCBuZnNkX25l
+dCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPiAKPiAJcmV0dmFsID0gbmZz
+ZF9leHBvcnRfaW5pdChuZXQpOwo+QEAgLTE0NzgsMTYgKzE0ODksOCBAQCBzdGF0aWMgX19uZXRf
+aW5pdCBpbnQgbmZzZF9pbml0X25ldChzdHJ1Y3QgbmV0ICpuZXQpCj4gCWluaXRfd2FpdHF1ZXVl
+X2hlYWQoJm5uLT5udGZfd3EpOwo+IAlzZXFsb2NrX2luaXQoJm5uLT5ib290X2xvY2spOwo+IAo+
+LQltbnQgPSAgdmZzX2tlcm5fbW91bnQoJm5mc2RfZnNfdHlwZSwgU0JfS0VSTk1PVU5ULCAibmZz
+ZCIsIE5VTEwpOwo+LQlpZiAoSVNfRVJSKG1udCkpIHsKPi0JCXJldHZhbCA9IFBUUl9FUlIobW50
+KTsKPi0JCWdvdG8gb3V0X21vdW50X2VycjsKPi0JfQo+LQlubi0+bmZzZF9tbnQgPSBtbnQ7Cj4g
+CXJldHVybiAwOwo+IAo+LW91dF9tb3VudF9lcnI6Cj4tCW5mc2RfcmVwbHlfY2FjaGVfc2h1dGRv
+d24obm4pOwo+IG91dF9kcmNfZXJyb3I6Cj4gCW5mc2RfaWRtYXBfc2h1dGRvd24obmV0KTsKPiBv
+dXRfaWRtYXBfZXJyb3I6Cj5AQCAtMTUwMCw3ICsxNTAzLDYgQEAgc3RhdGljIF9fbmV0X2V4aXQg
+dm9pZCBuZnNkX2V4aXRfbmV0KHN0cnVjdCBuZXQgKm5ldCkKPiB7Cj4gCXN0cnVjdCBuZnNkX25l
+dCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPiAKPi0JbW50cHV0KG5uLT5u
+ZnNkX21udCk7Cj4gCW5mc2RfcmVwbHlfY2FjaGVfc2h1dGRvd24obm4pOwo+IAluZnNkX2lkbWFw
+X3NodXRkb3duKG5ldCk7Cj4gCW5mc2RfZXhwb3J0X3NodXRkb3duKG5ldCk7Cj5kaWZmIC0tZ2l0
+IGEvZnMvbmZzZC9uZnNkLmggYi9mcy9uZnNkL25mc2QuaAo+aW5kZXggMzZjZGQ4MWI2Njg4Li41
+N2M4MzJkMWIzMGYgMTAwNjQ0Cj4tLS0gYS9mcy9uZnNkL25mc2QuaAo+KysrIGIvZnMvbmZzZC9u
+ZnNkLmgKPkBAIC05MCw2ICs5MCw4IEBAIHZvaWQJCW5mc2RfZGVzdHJveShzdHJ1Y3QgbmV0ICpu
+ZXQpOwo+IAo+IGJvb2wJCWlfYW1fbmZzZCh2b2lkKTsKPiAKPitpbnQgZ2V0X25mc2RmcyhzdHJ1
+Y3QgbmV0ICopOwo+Kwo+IHN0cnVjdCBuZnNkZnNfY2xpZW50IHsKPiAJc3RydWN0IGtyZWYgY2xf
+cmVmOwo+IAl2b2lkICgqY2xfcmVsZWFzZSkoc3RydWN0IGtyZWYgKmtyZWYpOwo+QEAgLTEwMCw2
+ICsxMDIsNyBAQCBzdHJ1Y3QgZGVudHJ5ICpuZnNkX2NsaWVudF9ta2RpcihzdHJ1Y3QgbmZzZF9u
+ZXQgKm5uLAo+IAkJc3RydWN0IG5mc2Rmc19jbGllbnQgKm5jbCwgdTMyIGlkLCBjb25zdCBzdHJ1
+Y3QgdHJlZV9kZXNjciAqKTsKPiB2b2lkIG5mc2RfY2xpZW50X3JtZGlyKHN0cnVjdCBkZW50cnkg
+KmRlbnRyeSk7Cj4gCj4rCj4gI2lmIGRlZmluZWQoQ09ORklHX05GU0RfVjJfQUNMKSB8fCBkZWZp
+bmVkKENPTkZJR19ORlNEX1YzX0FDTCkKPiAjaWZkZWYgQ09ORklHX05GU0RfVjJfQUNMCj4gZXh0
+ZXJuIGNvbnN0IHN0cnVjdCBzdmNfdmVyc2lvbiBuZnNkX2FjbF92ZXJzaW9uMjsKPi0tIAo+Mi4y
+Ni4yCj4KPgo+RnJvbSA1MWRlM2I0NjBiMzllODYyZjdkY2ZkNGQ2MDBlOGRlMGFmZTczZTI5IE1v
+biBTZXAgMTcgMDA6MDA6MDAgMjAwMQo+RnJvbTogIkouIEJydWNlIEZpZWxkcyIgPGJmaWVsZHNA
+cmVkaGF0LmNvbT4KPkRhdGU6IFR1ZSwgMjMgSnVuIDIwMjAgMjE6MDE6MTkgLTA0MDAKPlN1Ympl
+Y3Q6IFtQQVRDSCAyLzJdIG5mc2Q6IGZpeCBuZnNkZnMgaW5vZGUgcmVmZXJlbmNlIGNvdW50IGxl
+YWsKPgo+SSBkb24ndCB1bmRlcnN0YW5kIHRoaXMgY29kZSB3ZWxsLCBidXQgIEknbSBzZWVpbmcg
+YSB3YXJuaW5nIGFib3V0IGEKPnN0aWxsLXJlZmVyZW5jZWQgaW5vZGUgb24gdW5tb3VudCwgYW5k
+IGV2ZXJ5IG90aGVyIHNpbWlsYXIgZmlsZXN5c3RlbQo+ZG9lcyBhIGRwdXQoKSBoZXJlLgo+Cj5T
+aWduZWQtb2ZmLWJ5OiBKLiBCcnVjZSBGaWVsZHMgPGJmaWVsZHNAcmVkaGF0LmNvbT4KPi0tLQo+
+IGZzL25mc2QvbmZzY3RsLmMgfCAxICsKPiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykK
+Pgo+ZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzY3RsLmMgYi9mcy9uZnNkL25mc2N0bC5jCj5pbmRl
+eCBjZjk4YTgxY2ExZWEuLmNkMDU3MzJmOGVhYSAxMDA2NDQKPi0tLSBhL2ZzL25mc2QvbmZzY3Rs
+LmMKPisrKyBiL2ZzL25mc2QvbmZzY3RsLmMKPkBAIC0xMzM1LDYgKzEzMzUsNyBAQCB2b2lkIG5m
+c2RfY2xpZW50X3JtZGlyKHN0cnVjdCBkZW50cnkgKmRlbnRyeSkKPiAJV0FSTl9PTl9PTkNFKHJl
+dCk7Cj4gCWZzbm90aWZ5X3JtZGlyKGRpciwgZGVudHJ5KTsKPiAJZF9kZWxldGUoZGVudHJ5KTsK
+PisJZHB1dChkZW50cnkpOwo+IAlpbm9kZV91bmxvY2soZGlyKTsKPiB9Cj4gCj4tLSAKPjIuMjYu
+Mgo=
