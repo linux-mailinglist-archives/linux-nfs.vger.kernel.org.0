@@ -2,177 +2,286 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01D6A20ABC9
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 07:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8FB220ACD0
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 09:10:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgFZFYY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jun 2020 01:24:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgFZFYX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 01:24:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q53PRN037053;
-        Fri, 26 Jun 2020 01:22:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vbn7wxre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 01:22:42 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05Q5MOU4093327;
-        Fri, 26 Jun 2020 01:22:42 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vbn7wxqf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 01:22:42 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05Q5BSJg006292;
-        Fri, 26 Jun 2020 05:22:39 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjjgyh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 05:22:39 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05Q5Ma3Z48824420
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 05:22:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4385911C064;
-        Fri, 26 Jun 2020 05:22:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFED011C04C;
-        Fri, 26 Jun 2020 05:22:34 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.13.118])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Jun 2020 05:22:34 +0000 (GMT)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624144311.GA5839@infradead.org>
- <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <feb6a8c4-2b94-3f95-6637-679e089a71ca@de.ibm.com>
-Date:   Fri, 26 Jun 2020 07:22:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727876AbgFZHKk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jun 2020 03:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbgFZHKj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 03:10:39 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52566C08C5DB
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 00:10:39 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id h28so6138124edz.0
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 00:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oHFyGd5nTmeBYXjuLspi5k8MHccPgDsPXN2ZV/Am+zE=;
+        b=PSHxNS8zQ3kogNCkOQ1Wslep+JbMSMY0ozTx55RxG6vrsO+VJOg01kgwaq+B99OAr6
+         MjYi6uFj/fvi7ybeGCVUstHbdmB4lau/xNoFcWvVMChYf5g+jQpiXyfEX4/SPdhAEltN
+         j7wZI7LgrT1zRMiQ28uAa5aDIAoDnxNkFLeSdXzc1fB7/K6JkyGA/RSodSYMU8uFZS43
+         j/ksTBrAERsYCtv2AlTL3/NIfdlQT8uODHT1Rvkd3YBR7FehSaJ8ws7TbynvvzX/gxQF
+         Uy+nt38ycnGcGVyrgOYd061vbewNgkRhHGITA6fevCSF83QTBWQEqOaTOEUf0NgMoGH8
+         n+ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oHFyGd5nTmeBYXjuLspi5k8MHccPgDsPXN2ZV/Am+zE=;
+        b=I7J6C5/kWxdYafbAeInZ+NLkMvkcVoTVA7IgjjVJ0FzPuoxQHkgatiOiWaa9qEXhKQ
+         N9DNe0A58y5QjY/4yjwDt6J79DzYRUlLvoCJIGrEakYAJPwMY7FLrhexeEpkwYAKfqZ6
+         0ZuVQUqXgjQYWs/9ix0HhU/UAlrbXwQHXccOZKPlC+wCbMejAHE+kSRQ65Zut7pcpzS1
+         zztAvz5a51NzxgmAtyLqFTK2vz0Ogch/umkBlnhCfVBn1TMHPh1pylLdzTTx02xiA/Oa
+         gR54Vh6QTLY2tpnNMQ1BsIyTgUTuZ/Knmk7+6/uaWcIFddQ3fZf2tfjx2M0U5fiDpYMi
+         5Nqw==
+X-Gm-Message-State: AOAM532FX5B8EeEmYcvLYqLoJqBIxhmXsgoKiz9Z4gV+qtpQ2JoIXj72
+        Dey2VWrymIwMNtIMCUdSdBMLcw==
+X-Google-Smtp-Source: ABdhPJzYgxSEf4gng9WzIl6Eqji099NWBxc1s8+nkPzP2k5ZfNCF0vZAVCXx+DgxQOmuDqPb52kRxw==
+X-Received: by 2002:a05:6402:21c2:: with SMTP id bi2mr1926147edb.296.1593155437974;
+        Fri, 26 Jun 2020 00:10:37 -0700 (PDT)
+Received: from jupiter.home.aloni.org ([141.226.169.176])
+        by smtp.gmail.com with ESMTPSA id b11sm11710758edw.76.2020.06.26.00.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 00:10:37 -0700 (PDT)
+From:   Dan Aloni <dan@kernelim.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH] xprtrdma: fix EP destruction logic
+Date:   Fri, 26 Jun 2020 10:10:34 +0300
+Message-Id: <20200626071034.34805-1-dan@kernelim.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <0E2AA9D9-2503-462C-952D-FC0DD5111BD1@oracle.com>
+References: <0E2AA9D9-2503-462C-952D-FC0DD5111BD1@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626025410.GJ4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_01:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- adultscore=0 impostorscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- cotscore=-2147483648 suspectscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006260035
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+This fixes various issues found when testing disconnections and other
+various fault injections under a KASAN-enabled kernel.
 
+- Swap the names of `rpcrdma_ep_destroy` and `rpcrdma_ep_put` to
+  reflect what the functions are doing.
+- In the cleanup of `rpcrdma_ep_create` do `kfree` on the EP only for
+  the case where no one knows about it, and avoid a double free (what
+  `rpcrdma_ep_destroy` did, followed by `kfree`). No need to set
+  `r_xprt->rx_ep` to NULL because we are doing that only in the success
+  path.
+- Don't up the EP ref in `RDMA_CM_EVENT_ESTABLISHED` but do it sooner
+  before `rdma_connect`. This is needed so that an early wake up of
+  `wait_event_interruptible` in `rpcrdma_xprt_connect` in case of
+  a failure does not see a freed EP.
+- Still try to follow the rule that the last decref of EP performs
+  `rdma_destroy_id(id)`.
+- Only path to disengage an EP is `rpcrdma_xprt_disconnect`, whether it
+  is actually connected or not. This makes the error paths of
+  `rpcrdma_xprt_connect` clearer.
+- Add a mutex in `rpcrdma_ep_destroy` to guard against concurrent calls
+  to `rpcrdma_xprt_disconnect` coming from either `rpcrdma_xprt_connect`
+  or `xprt_rdma_close`.
 
-On 26.06.20 04:54, Luis Chamberlain wrote:
-> On Wed, Jun 24, 2020 at 08:37:55PM +0200, Christian Borntraeger wrote:
->>
->>
->> On 24.06.20 20:32, Christian Borntraeger wrote:
->> [...]> 
->>> So the translations look correct. But your change is actually a sematic change
->>> if(ret) will only trigger if there is an error
->>> if (KWIFEXITED(ret)) will always trigger when the process ends. So we will always overwrite -ECHILD
->>> and we did not do it before. 
->>>
->>
->> So the right fix is
->>
->> diff --git a/kernel/umh.c b/kernel/umh.c
->> index f81e8698e36e..a3a3196e84d1 100644
->> --- a/kernel/umh.c
->> +++ b/kernel/umh.c
->> @@ -154,7 +154,7 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->>                  * the real error code is already in sub_info->retval or
->>                  * sub_info->retval is 0 anyway, so don't mess with it then.
->>                  */
->> -               if (KWIFEXITED(ret))
->> +               if (KWEXITSTATUS(ret))
->>                         sub_info->retval = KWEXITSTATUS(ret);
->>         }
->>  
->> I think.
-> 
-> Nope, the right form is to check for WIFEXITED() before using WEXITSTATUS().
+Signed-off-by: Dan Aloni <dan@kernelim.com>
+---
+ net/sunrpc/xprtrdma/transport.c |  2 ++
+ net/sunrpc/xprtrdma/verbs.c     | 50 ++++++++++++++++++++++-----------
+ net/sunrpc/xprtrdma/xprt_rdma.h |  1 +
+ 3 files changed, 37 insertions(+), 16 deletions(-)
 
-But this IS a change over the previous code, no?
-I will test next week as I am travelling right now. 
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 0c4af7f5e241..50c28be6b694 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -350,6 +350,8 @@ xprt_setup_rdma(struct xprt_create *args)
+ 	xprt_rdma_format_addresses(xprt, sap);
+ 
+ 	new_xprt = rpcx_to_rdmax(xprt);
++	mutex_init(&new_xprt->rx_flush);
++
+ 	rc = rpcrdma_buffer_create(new_xprt);
+ 	if (rc) {
+ 		xprt_rdma_free_addresses(xprt);
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 2ae348377806..c66871bbb894 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -84,7 +84,7 @@ static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep);
+ static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
+-static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep);
++static int rpcrdma_ep_put(struct rpcrdma_ep *ep);
+ static struct rpcrdma_regbuf *
+ rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
+ 		     gfp_t flags);
+@@ -99,6 +99,9 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
+ {
+ 	struct rdma_cm_id *id = r_xprt->rx_ep->re_id;
+ 
++	if (!id->qp)
++		return;
++
+ 	/* Flush Receives, then wait for deferred Reply work
+ 	 * to complete.
+ 	 */
+@@ -266,7 +269,6 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		xprt_force_disconnect(xprt);
+ 		goto disconnected;
+ 	case RDMA_CM_EVENT_ESTABLISHED:
+-		kref_get(&ep->re_kref);
+ 		ep->re_connect_status = 1;
+ 		rpcrdma_update_cm_private(ep, &event->param.conn);
+ 		trace_xprtrdma_inline_thresh(ep);
+@@ -289,7 +291,8 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		ep->re_connect_status = -ECONNABORTED;
+ disconnected:
+ 		xprt_force_disconnect(xprt);
+-		return rpcrdma_ep_destroy(ep);
++		wake_up_all(&ep->re_connect_wait);
++		return rpcrdma_ep_put(ep);
+ 	default:
+ 		break;
+ 	}
+@@ -345,11 +348,11 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+ 	return ERR_PTR(rc);
+ }
+ 
+-static void rpcrdma_ep_put(struct kref *kref)
++static void rpcrdma_ep_destroy(struct kref *kref)
+ {
+ 	struct rpcrdma_ep *ep = container_of(kref, struct rpcrdma_ep, re_kref);
+ 
+-	if (ep->re_id->qp) {
++	if (ep->re_id && ep->re_id->qp) {
+ 		rdma_destroy_qp(ep->re_id);
+ 		ep->re_id->qp = NULL;
+ 	}
+@@ -373,9 +376,9 @@ static void rpcrdma_ep_put(struct kref *kref)
+  *     %0 if @ep still has a positive kref count, or
+  *     %1 if @ep was destroyed successfully.
+  */
+-static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep)
++static int rpcrdma_ep_put(struct rpcrdma_ep *ep)
+ {
+-	return kref_put(&ep->re_kref, rpcrdma_ep_put);
++	return kref_put(&ep->re_kref, rpcrdma_ep_destroy);
+ }
+ 
+ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+@@ -492,11 +495,12 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 	return 0;
+ 
+ out_destroy:
+-	rpcrdma_ep_destroy(ep);
++	rpcrdma_ep_put(ep);
+ 	rdma_destroy_id(id);
++	return rc;
++
+ out_free:
+ 	kfree(ep);
+-	r_xprt->rx_ep = NULL;
+ 	return rc;
+ }
+ 
+@@ -510,6 +514,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ {
+ 	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
+ 	struct rpcrdma_ep *ep;
++	struct rdma_cm_id *id;
+ 	int rc;
+ 
+ retry:
+@@ -518,6 +523,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 	if (rc)
+ 		return rc;
+ 	ep = r_xprt->rx_ep;
++	id = ep->re_id;
+ 
+ 	ep->re_connect_status = 0;
+ 	xprt_clear_connected(xprt);
+@@ -529,7 +535,10 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 	if (rc)
+ 		goto out;
+ 
+-	rc = rdma_connect(ep->re_id, &ep->re_remote_cma);
++	/* From this point on, CM events can discard our EP */
++	kref_get(&ep->re_kref);
++
++	rc = rdma_connect(id, &ep->re_remote_cma);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -546,14 +555,17 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 
+ 	rc = rpcrdma_reqs_setup(r_xprt);
+ 	if (rc) {
+-		rpcrdma_xprt_disconnect(r_xprt);
++		ep->re_connect_status = rc;
+ 		goto out;
+ 	}
++
+ 	rpcrdma_mrs_create(r_xprt);
++	trace_xprtrdma_connect(r_xprt, 0);
++	return rc;
+ 
+ out:
+-	if (rc)
+-		ep->re_connect_status = rc;
++	ep->re_connect_status = rc;
++	rpcrdma_xprt_disconnect(r_xprt);
+ 	trace_xprtrdma_connect(r_xprt, rc);
+ 	return rc;
+ }
+@@ -570,12 +582,15 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+  */
+ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ {
+-	struct rpcrdma_ep *ep = r_xprt->rx_ep;
++	struct rpcrdma_ep *ep;
+ 	struct rdma_cm_id *id;
+ 	int rc;
+ 
++	mutex_lock(&r_xprt->rx_flush);
++
++	ep = r_xprt->rx_ep;
+ 	if (!ep)
+-		return;
++		goto out;
+ 
+ 	id = ep->re_id;
+ 	rc = rdma_disconnect(id);
+@@ -587,10 +602,13 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ 	rpcrdma_mrs_destroy(r_xprt);
+ 	rpcrdma_sendctxs_destroy(r_xprt);
+ 
+-	if (rpcrdma_ep_destroy(ep))
++	if (rpcrdma_ep_put(ep))
+ 		rdma_destroy_id(id);
+ 
+ 	r_xprt->rx_ep = NULL;
++
++out:
++	mutex_unlock(&r_xprt->rx_flush);
+ }
+ 
+ /* Fixed-size circular FIFO queue. This implementation is wait-free and
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 0a16fdb09b2c..288645a9437f 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -417,6 +417,7 @@ struct rpcrdma_xprt {
+ 	struct delayed_work	rx_connect_worker;
+ 	struct rpc_timeout	rx_timeout;
+ 	struct rpcrdma_stats	rx_stats;
++	struct mutex            rx_flush;
+ };
+ 
+ #define rpcx_to_rdmax(x) container_of(x, struct rpcrdma_xprt, rx_xprt)
+-- 
+2.25.4
+
