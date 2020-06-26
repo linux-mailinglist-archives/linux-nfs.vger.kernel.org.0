@@ -2,145 +2,232 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E5920B1EF
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 15:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B7D20B421
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 17:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFZNAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jun 2020 09:00:54 -0400
-Received: from m13144.mail.163.com ([220.181.13.144]:51542 "EHLO
-        m13144.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFZNAy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 09:00:54 -0400
-X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jun 2020 09:00:48 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=HsepQ
-        I9Q0FjvCsgosowDG0167zOIPOwm0N1+v0n+rMI=; b=cBEQngQcpWStld+N7tTN6
-        38zoHiNaLLad582sggMhQYUBZrsqjJa64lY7S5v/efItAt1Y05Kr6pOAv41gurDx
-        9SIUY1ICqzZm8bYmSyx4IZQtN2EE/RjA/ew9WJuIDLwzH6pJ3/b0lSjS4dx5e+y1
-        6cH3A06YdUqxzEYSt6Ip/w=
-Received: from lxgrxd$163.com ( [113.104.190.184] ) by ajax-webmail-wmsvr144
- (Coremail) ; Fri, 26 Jun 2020 20:45:23 +0800 (CST)
-X-Originating-IP: [113.104.190.184]
-Date:   Fri, 26 Jun 2020 20:45:23 +0800 (CST)
-From:   "Luo Xiaogang" <lxgrxd@163.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
+        id S1728044AbgFZPET (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jun 2020 11:04:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgFZPET (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 11:04:19 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EDBC03E979;
+        Fri, 26 Jun 2020 08:04:19 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 444FC1509; Fri, 26 Jun 2020 11:04:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 444FC1509
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1593183858;
+        bh=bDhiMSq/GuETPNBoBRrqQk+14eY/oLGXmwAu+loUjFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z46yHmAVdfOD1RLsbxo3o9Pfe0jZAW37yZSCdgaogotBo6AHkm3wne1hjcmko9VjX
+         Gu1KX1odzxFesm7Dmqrit35fzOMuF1JDx9L1H3IWCjBwS4ODsSDqdAC1ItPCMishX6
+         OaVtOUC+WHZzwXlheKRiqrWfUhZPxVYLAo4PewoI=
+Date:   Fri, 26 Jun 2020 11:04:18 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Luo Xiaogang <lxgrxd@163.com>
 Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
         linux-kernel@vger.kernel.org, falcon <falcon@tinylab.org>
-Subject: Re:Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
- Copyright (c) 2002-2020 www.mailtech.cn 163com
-In-Reply-To: <20200624012901.GC18460@fieldses.org>
+Subject: Re: Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
+Message-ID: <20200626150418.GA3565@fieldses.org>
 References: <20200615071211.31326-1-lxgrxd@163.com>
  <20200624012901.GC18460@fieldses.org>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+ <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
 MIME-Version: 1.0
-Message-ID: <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: kMGowACXV07k7fVeES1KAA--.60075W
-X-CM-SenderInfo: ho0j25rg6rljoofrz/xtbBEAZPUVUMSHFNqQAAsM
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-QXQgMjAyMC0wNi0yNCAwOToyOTowMSwgIkouIEJydWNlIEZpZWxkcyIgPGJmaWVsZHNAZmllbGRz
-ZXMub3JnPiB3cm90ZToKPk9uIE1vbiwgSnVuIDE1LCAyMDIwIGF0IDAzOjEyOjExUE0gKzA4MDAs
-IEx1byBYaWFvZ2FuZyB3cm90ZToKPj4gV2UgbG9hZCBuZnNkIG1vZHVsZSBpbiB0aGUgZG9ja2Vy
-IGNvbnRhaW5lciwga2VybmVsIGNyYXNoIGFzIGZvbGxvd2luZy4KPj4gCj4+IFRoZSAnY3VycmVu
-dC0+bnNwcm94eS0+bmV0X25zLT5nZW4tPnB0cltuZnNkX25ldF9pZF0nIGlzIG92ZXJmbG93IGlu
-IHRoZQo+PiBuZnNkX2luaXRfbmV0Lgo+PiAKPj4gV2Ugc2hvdWxkIHVzZSB0aGUgbmV0X25zIHdo
-aWNoIGlzIGJlaW5nIGluaXQgaW4gdGhlIG5mc2RfaW5pdF9uZXQsCj4+IG5vdCB0aGUgJ2N1cnJl
-bnQtPm5zcHJveHktPm5ldF9ucycuCj4KPlRoYW5rcyEgIEFjdHVhbGx5LCBJIHRoaW5rIG15IHBy
-b2JsZW0gd2FzIHRoYXQgbmV0IGluaXQgYW5kIGV4aXQgYXJlCj5qdXN0IHRoZSB3cm9uZyBwbGFj
-ZSB0byBiZSBkb2luZyB0aGlzLS1JIG1vdmVkIHRoZW0gdG8gbmZzZCBzdGFydC9zdG9wCj5pbnN0
-ZWFkLgo+Cj5BbmQgdGhlbiB0aGF0IGV4cG9zZWQgdGhlIGZhY3QgdGhhdCBJIGhhZCBhbiBpbm9k
-ZSBsZWFrLgo+Cj5EbyB0aGUgZm9sbG93aW5nIHR3byBwYXRjaGVzIGhlbHA/CgpKdXN0IHRlc3Qg
-aXQgb24gVWJ1bnR1IDE4LjA0ICsgRG9ja2VyIDE5LjAzLjYsIGFuZCB0aGUgZG9ja2VyIGltYWdl
-IGlzIHVidW50dToxOC4wNC4KCllvdXIgcGF0Y2hzZXQgaGVscHMsIGhlcmUgaXMgbXkgcmVwb3J0
-ZWQtYW5kLXRlc3RlZC1ieSwgVGhhbmtzIHZlcnkgbXVjaC4KClJlcG9ydGVkLWFuZC1UZXN0ZWQt
-Ynk6ICBMdW8gWGlhb2dhbmcgPGx4Z3J4ZEAxNjMuY29tPgoKCj4tLWIuCj4KPkZyb20gMTZmOTU0
-YmQ1YzQ4MTU5NmE2MzI3MWE5MTk2M2JmMjYwZTJmM2Y0NiBNb24gU2VwIDE3IDAwOjAwOjAwIDIw
-MDEKPkZyb206ICJKLiBCcnVjZSBGaWVsZHMiIDxiZmllbGRzQHJlZGhhdC5jb20+Cj5EYXRlOiBU
-dWUsIDIzIEp1biAyMDIwIDE2OjAwOjMzIC0wNDAwCj5TdWJqZWN0OiBbUEFUQ0ggMS8yXSBuZnNk
-NDogZml4IG5mc2RmcyByZWZlcmVuY2UgY291bnQgbG9vcAo+Cj5XZSBkb24ndCBkcm9wIHRoZSBy
-ZWZlcmVuY2Ugb24gdGhlIG5mc2RmcyBmaWxlc3lzdGVtIHdpdGgKPm1udHB1dChubi0+bmZzZF9t
-bnQpIHVudGlsIG5mc2RfZXhpdF9uZXQoKSwgYnV0IHRoYXQgd29uJ3QgYmUgY2FsbGVkCj51bnRp
-bCB0aGUgbmZzZCBtb2R1bGUncyB1bmxvYWRlZCwgYW5kIHdlIGNhbid0IHVubG9hZCB0aGUgbW9k
-dWxlIGFzIGxvbmcKPmFzIHRoZXJlJ3MgYSByZWZlcmVuY2Ugb24gbmZzZGZzLiAgU28gdGhpcyBw
-cmV2ZW50cyBtb2R1bGUgdW5sb2FkaW5nLgo+Cj5TaWduZWQtb2ZmLWJ5OiBKLiBCcnVjZSBGaWVs
-ZHMgPGJmaWVsZHNAcmVkaGF0LmNvbT4KPi0tLQo+IGZzL25mc2QvbmZzNHN0YXRlLmMgfCAgOCAr
-KysrKysrLQo+IGZzL25mc2QvbmZzY3RsLmMgICAgfCAyMiArKysrKysrKysrKystLS0tLS0tLS0t
-Cj4gZnMvbmZzZC9uZnNkLmggICAgICB8ICAzICsrKwo+IDMgZmlsZXMgY2hhbmdlZCwgMjIgaW5z
-ZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4KPmRpZmYgLS1naXQgYS9mcy9uZnNkL25mczRz
-dGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYwo+aW5kZXggYmIzZDJjMzI2NjRhLi5jY2UyNTEw
-YjJjY2EgMTAwNjQ0Cj4tLS0gYS9mcy9uZnNkL25mczRzdGF0ZS5jCj4rKysgYi9mcy9uZnNkL25m
-czRzdGF0ZS5jCj5AQCAtNzkxMiw5ICs3OTEyLDE0IEBAIG5mczRfc3RhdGVfc3RhcnRfbmV0KHN0
-cnVjdCBuZXQgKm5ldCkKPiAJc3RydWN0IG5mc2RfbmV0ICpubiA9IG5ldF9nZW5lcmljKG5ldCwg
-bmZzZF9uZXRfaWQpOwo+IAlpbnQgcmV0Owo+IAo+LQlyZXQgPSBuZnM0X3N0YXRlX2NyZWF0ZV9u
-ZXQobmV0KTsKPisJcmV0ID0gZ2V0X25mc2RmcyhuZXQpOwo+IAlpZiAocmV0KQo+IAkJcmV0dXJu
-IHJldDsKPisJcmV0ID0gbmZzNF9zdGF0ZV9jcmVhdGVfbmV0KG5ldCk7Cj4rCWlmIChyZXQpIHsK
-PisJCW1udHB1dChubi0+bmZzZF9tbnQpOwo+KwkJcmV0dXJuIHJldDsKPisJfQo+IAlsb2Nrc19z
-dGFydF9ncmFjZShuZXQsICZubi0+bmZzZDRfbWFuYWdlcik7Cj4gCW5mc2Q0X2NsaWVudF90cmFj
-a2luZ19pbml0KG5ldCk7Cj4gCWlmIChubi0+dHJhY2tfcmVjbGFpbV9jb21wbGV0ZXMgJiYgbm4t
-PnJlY2xhaW1fc3RyX2hhc2h0Ymxfc2l6ZSA9PSAwKQo+QEAgLTc5ODQsNiArNzk4OSw3IEBAIG5m
-czRfc3RhdGVfc2h1dGRvd25fbmV0KHN0cnVjdCBuZXQgKm5ldCkKPiAKPiAJbmZzZDRfY2xpZW50
-X3RyYWNraW5nX2V4aXQobmV0KTsKPiAJbmZzNF9zdGF0ZV9kZXN0cm95X25ldChuZXQpOwo+Kwlt
-bnRwdXQobm4tPm5mc2RfbW50KTsKPiB9Cj4gCj4gdm9pZAo+ZGlmZiAtLWdpdCBhL2ZzL25mc2Qv
-bmZzY3RsLmMgYi9mcy9uZnNkL25mc2N0bC5jCj5pbmRleCBiNjhlOTY2ODE1MjIuLmNmOThhODFj
-YTFlYSAxMDA2NDQKPi0tLSBhL2ZzL25mc2QvbmZzY3RsLmMKPisrKyBiL2ZzL25mc2QvbmZzY3Rs
-LmMKPkBAIC0xNDI0LDYgKzE0MjQsMTggQEAgc3RhdGljIHN0cnVjdCBmaWxlX3N5c3RlbV90eXBl
-IG5mc2RfZnNfdHlwZSA9IHsKPiB9Owo+IE1PRFVMRV9BTElBU19GUygibmZzZCIpOwo+IAo+K2lu
-dCBnZXRfbmZzZGZzKHN0cnVjdCBuZXQgKm5ldCkKPit7Cj4rCXN0cnVjdCBuZnNkX25ldCAqbm4g
-PSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPisJc3RydWN0IHZmc21vdW50ICptbnQ7
-Cj4rCj4rCW1udCA9ICB2ZnNfa2Vybl9tb3VudCgmbmZzZF9mc190eXBlLCBTQl9LRVJOTU9VTlQs
-ICJuZnNkIiwgTlVMTCk7Cj4rCWlmIChJU19FUlIobW50KSkKPisJCXJldHVybiBQVFJfRVJSKG1u
-dCk7Cj4rCW5uLT5uZnNkX21udCA9IG1udDsKPisJcmV0dXJuIDA7Cj4rfQo+Kwo+ICNpZmRlZiBD
-T05GSUdfUFJPQ19GUwo+IHN0YXRpYyBpbnQgY3JlYXRlX3Byb2NfZXhwb3J0c19lbnRyeSh2b2lk
-KQo+IHsKPkBAIC0xNDUxLDcgKzE0NjMsNiBAQCB1bnNpZ25lZCBpbnQgbmZzZF9uZXRfaWQ7Cj4g
-c3RhdGljIF9fbmV0X2luaXQgaW50IG5mc2RfaW5pdF9uZXQoc3RydWN0IG5ldCAqbmV0KQo+IHsK
-PiAJaW50IHJldHZhbDsKPi0Jc3RydWN0IHZmc21vdW50ICptbnQ7Cj4gCXN0cnVjdCBuZnNkX25l
-dCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPiAKPiAJcmV0dmFsID0gbmZz
-ZF9leHBvcnRfaW5pdChuZXQpOwo+QEAgLTE0NzgsMTYgKzE0ODksOCBAQCBzdGF0aWMgX19uZXRf
-aW5pdCBpbnQgbmZzZF9pbml0X25ldChzdHJ1Y3QgbmV0ICpuZXQpCj4gCWluaXRfd2FpdHF1ZXVl
-X2hlYWQoJm5uLT5udGZfd3EpOwo+IAlzZXFsb2NrX2luaXQoJm5uLT5ib290X2xvY2spOwo+IAo+
-LQltbnQgPSAgdmZzX2tlcm5fbW91bnQoJm5mc2RfZnNfdHlwZSwgU0JfS0VSTk1PVU5ULCAibmZz
-ZCIsIE5VTEwpOwo+LQlpZiAoSVNfRVJSKG1udCkpIHsKPi0JCXJldHZhbCA9IFBUUl9FUlIobW50
-KTsKPi0JCWdvdG8gb3V0X21vdW50X2VycjsKPi0JfQo+LQlubi0+bmZzZF9tbnQgPSBtbnQ7Cj4g
-CXJldHVybiAwOwo+IAo+LW91dF9tb3VudF9lcnI6Cj4tCW5mc2RfcmVwbHlfY2FjaGVfc2h1dGRv
-d24obm4pOwo+IG91dF9kcmNfZXJyb3I6Cj4gCW5mc2RfaWRtYXBfc2h1dGRvd24obmV0KTsKPiBv
-dXRfaWRtYXBfZXJyb3I6Cj5AQCAtMTUwMCw3ICsxNTAzLDYgQEAgc3RhdGljIF9fbmV0X2V4aXQg
-dm9pZCBuZnNkX2V4aXRfbmV0KHN0cnVjdCBuZXQgKm5ldCkKPiB7Cj4gCXN0cnVjdCBuZnNkX25l
-dCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsKPiAKPi0JbW50cHV0KG5uLT5u
-ZnNkX21udCk7Cj4gCW5mc2RfcmVwbHlfY2FjaGVfc2h1dGRvd24obm4pOwo+IAluZnNkX2lkbWFw
-X3NodXRkb3duKG5ldCk7Cj4gCW5mc2RfZXhwb3J0X3NodXRkb3duKG5ldCk7Cj5kaWZmIC0tZ2l0
-IGEvZnMvbmZzZC9uZnNkLmggYi9mcy9uZnNkL25mc2QuaAo+aW5kZXggMzZjZGQ4MWI2Njg4Li41
-N2M4MzJkMWIzMGYgMTAwNjQ0Cj4tLS0gYS9mcy9uZnNkL25mc2QuaAo+KysrIGIvZnMvbmZzZC9u
-ZnNkLmgKPkBAIC05MCw2ICs5MCw4IEBAIHZvaWQJCW5mc2RfZGVzdHJveShzdHJ1Y3QgbmV0ICpu
-ZXQpOwo+IAo+IGJvb2wJCWlfYW1fbmZzZCh2b2lkKTsKPiAKPitpbnQgZ2V0X25mc2RmcyhzdHJ1
-Y3QgbmV0ICopOwo+Kwo+IHN0cnVjdCBuZnNkZnNfY2xpZW50IHsKPiAJc3RydWN0IGtyZWYgY2xf
-cmVmOwo+IAl2b2lkICgqY2xfcmVsZWFzZSkoc3RydWN0IGtyZWYgKmtyZWYpOwo+QEAgLTEwMCw2
-ICsxMDIsNyBAQCBzdHJ1Y3QgZGVudHJ5ICpuZnNkX2NsaWVudF9ta2RpcihzdHJ1Y3QgbmZzZF9u
-ZXQgKm5uLAo+IAkJc3RydWN0IG5mc2Rmc19jbGllbnQgKm5jbCwgdTMyIGlkLCBjb25zdCBzdHJ1
-Y3QgdHJlZV9kZXNjciAqKTsKPiB2b2lkIG5mc2RfY2xpZW50X3JtZGlyKHN0cnVjdCBkZW50cnkg
-KmRlbnRyeSk7Cj4gCj4rCj4gI2lmIGRlZmluZWQoQ09ORklHX05GU0RfVjJfQUNMKSB8fCBkZWZp
-bmVkKENPTkZJR19ORlNEX1YzX0FDTCkKPiAjaWZkZWYgQ09ORklHX05GU0RfVjJfQUNMCj4gZXh0
-ZXJuIGNvbnN0IHN0cnVjdCBzdmNfdmVyc2lvbiBuZnNkX2FjbF92ZXJzaW9uMjsKPi0tIAo+Mi4y
-Ni4yCj4KPgo+RnJvbSA1MWRlM2I0NjBiMzllODYyZjdkY2ZkNGQ2MDBlOGRlMGFmZTczZTI5IE1v
-biBTZXAgMTcgMDA6MDA6MDAgMjAwMQo+RnJvbTogIkouIEJydWNlIEZpZWxkcyIgPGJmaWVsZHNA
-cmVkaGF0LmNvbT4KPkRhdGU6IFR1ZSwgMjMgSnVuIDIwMjAgMjE6MDE6MTkgLTA0MDAKPlN1Ympl
-Y3Q6IFtQQVRDSCAyLzJdIG5mc2Q6IGZpeCBuZnNkZnMgaW5vZGUgcmVmZXJlbmNlIGNvdW50IGxl
-YWsKPgo+SSBkb24ndCB1bmRlcnN0YW5kIHRoaXMgY29kZSB3ZWxsLCBidXQgIEknbSBzZWVpbmcg
-YSB3YXJuaW5nIGFib3V0IGEKPnN0aWxsLXJlZmVyZW5jZWQgaW5vZGUgb24gdW5tb3VudCwgYW5k
-IGV2ZXJ5IG90aGVyIHNpbWlsYXIgZmlsZXN5c3RlbQo+ZG9lcyBhIGRwdXQoKSBoZXJlLgo+Cj5T
-aWduZWQtb2ZmLWJ5OiBKLiBCcnVjZSBGaWVsZHMgPGJmaWVsZHNAcmVkaGF0LmNvbT4KPi0tLQo+
-IGZzL25mc2QvbmZzY3RsLmMgfCAxICsKPiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykK
-Pgo+ZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzY3RsLmMgYi9mcy9uZnNkL25mc2N0bC5jCj5pbmRl
-eCBjZjk4YTgxY2ExZWEuLmNkMDU3MzJmOGVhYSAxMDA2NDQKPi0tLSBhL2ZzL25mc2QvbmZzY3Rs
-LmMKPisrKyBiL2ZzL25mc2QvbmZzY3RsLmMKPkBAIC0xMzM1LDYgKzEzMzUsNyBAQCB2b2lkIG5m
-c2RfY2xpZW50X3JtZGlyKHN0cnVjdCBkZW50cnkgKmRlbnRyeSkKPiAJV0FSTl9PTl9PTkNFKHJl
-dCk7Cj4gCWZzbm90aWZ5X3JtZGlyKGRpciwgZGVudHJ5KTsKPiAJZF9kZWxldGUoZGVudHJ5KTsK
-PisJZHB1dChkZW50cnkpOwo+IAlpbm9kZV91bmxvY2soZGlyKTsKPiB9Cj4gCj4tLSAKPjIuMjYu
-Mgo=
+On Fri, Jun 26, 2020 at 08:45:23PM +0800, Luo Xiaogang wrote:
+> At 2020-06-24 09:29:01, "J. Bruce Fields" <bfields@fieldses.org> wrote:
+> >On Mon, Jun 15, 2020 at 03:12:11PM +0800, Luo Xiaogang wrote:
+> >> We load nfsd module in the docker container, kernel crash as following.
+> >> 
+> >> The 'current->nsproxy->net_ns->gen->ptr[nfsd_net_id]' is overflow in the
+> >> nfsd_init_net.
+> >> 
+> >> We should use the net_ns which is being init in the nfsd_init_net,
+> >> not the 'current->nsproxy->net_ns'.
+> >
+> >Thanks!  Actually, I think my problem was that net init and exit are
+> >just the wrong place to be doing this--I moved them to nfsd start/stop
+> >instead.
+> >
+> >And then that exposed the fact that I had an inode leak.
+> >
+> >Do the following two patches help?
+> 
+> Just test it on Ubuntu 18.04 + Docker 19.03.6, and the docker image is ubuntu:18.04.
+> 
+> Your patchset helps, here is my reported-and-tested-by, Thanks very much.
+> 
+> Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
+
+Thank you!
+
+--b.
+
+> 
+> 
+> >--b.
+> >
+> >From 16f954bd5c481596a63271a91963bf260e2f3f46 Mon Sep 17 00:00:00 2001
+> >From: "J. Bruce Fields" <bfields@redhat.com>
+> >Date: Tue, 23 Jun 2020 16:00:33 -0400
+> >Subject: [PATCH 1/2] nfsd4: fix nfsdfs reference count loop
+> >
+> >We don't drop the reference on the nfsdfs filesystem with
+> >mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
+> >until the nfsd module's unloaded, and we can't unload the module as long
+> >as there's a reference on nfsdfs.  So this prevents module unloading.
+> >
+> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> >---
+> > fs/nfsd/nfs4state.c |  8 +++++++-
+> > fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
+> > fs/nfsd/nfsd.h      |  3 +++
+> > 3 files changed, 22 insertions(+), 11 deletions(-)
+> >
+> >diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> >index bb3d2c32664a..cce2510b2cca 100644
+> >--- a/fs/nfsd/nfs4state.c
+> >+++ b/fs/nfsd/nfs4state.c
+> >@@ -7912,9 +7912,14 @@ nfs4_state_start_net(struct net *net)
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 	int ret;
+> > 
+> >-	ret = nfs4_state_create_net(net);
+> >+	ret = get_nfsdfs(net);
+> > 	if (ret)
+> > 		return ret;
+> >+	ret = nfs4_state_create_net(net);
+> >+	if (ret) {
+> >+		mntput(nn->nfsd_mnt);
+> >+		return ret;
+> >+	}
+> > 	locks_start_grace(net, &nn->nfsd4_manager);
+> > 	nfsd4_client_tracking_init(net);
+> > 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+> >@@ -7984,6 +7989,7 @@ nfs4_state_shutdown_net(struct net *net)
+> > 
+> > 	nfsd4_client_tracking_exit(net);
+> > 	nfs4_state_destroy_net(net);
+> >+	mntput(nn->nfsd_mnt);
+> > }
+> > 
+> > void
+> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> >index b68e96681522..cf98a81ca1ea 100644
+> >--- a/fs/nfsd/nfsctl.c
+> >+++ b/fs/nfsd/nfsctl.c
+> >@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
+> > };
+> > MODULE_ALIAS_FS("nfsd");
+> > 
+> >+int get_nfsdfs(struct net *net)
+> >+{
+> >+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> >+	struct vfsmount *mnt;
+> >+
+> >+	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+> >+	if (IS_ERR(mnt))
+> >+		return PTR_ERR(mnt);
+> >+	nn->nfsd_mnt = mnt;
+> >+	return 0;
+> >+}
+> >+
+> > #ifdef CONFIG_PROC_FS
+> > static int create_proc_exports_entry(void)
+> > {
+> >@@ -1451,7 +1463,6 @@ unsigned int nfsd_net_id;
+> > static __net_init int nfsd_init_net(struct net *net)
+> > {
+> > 	int retval;
+> >-	struct vfsmount *mnt;
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 
+> > 	retval = nfsd_export_init(net);
+> >@@ -1478,16 +1489,8 @@ static __net_init int nfsd_init_net(struct net *net)
+> > 	init_waitqueue_head(&nn->ntf_wq);
+> > 	seqlock_init(&nn->boot_lock);
+> > 
+> >-	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+> >-	if (IS_ERR(mnt)) {
+> >-		retval = PTR_ERR(mnt);
+> >-		goto out_mount_err;
+> >-	}
+> >-	nn->nfsd_mnt = mnt;
+> > 	return 0;
+> > 
+> >-out_mount_err:
+> >-	nfsd_reply_cache_shutdown(nn);
+> > out_drc_error:
+> > 	nfsd_idmap_shutdown(net);
+> > out_idmap_error:
+> >@@ -1500,7 +1503,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
+> > {
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 
+> >-	mntput(nn->nfsd_mnt);
+> > 	nfsd_reply_cache_shutdown(nn);
+> > 	nfsd_idmap_shutdown(net);
+> > 	nfsd_export_shutdown(net);
+> >diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> >index 36cdd81b6688..57c832d1b30f 100644
+> >--- a/fs/nfsd/nfsd.h
+> >+++ b/fs/nfsd/nfsd.h
+> >@@ -90,6 +90,8 @@ void		nfsd_destroy(struct net *net);
+> > 
+> > bool		i_am_nfsd(void);
+> > 
+> >+int get_nfsdfs(struct net *);
+> >+
+> > struct nfsdfs_client {
+> > 	struct kref cl_ref;
+> > 	void (*cl_release)(struct kref *kref);
+> >@@ -100,6 +102,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
+> > 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
+> > void nfsd_client_rmdir(struct dentry *dentry);
+> > 
+> >+
+> > #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> > #ifdef CONFIG_NFSD_V2_ACL
+> > extern const struct svc_version nfsd_acl_version2;
+> >-- 
+> >2.26.2
+> >
+> >
+> >From 51de3b460b39e862f7dcfd4d600e8de0afe73e29 Mon Sep 17 00:00:00 2001
+> >From: "J. Bruce Fields" <bfields@redhat.com>
+> >Date: Tue, 23 Jun 2020 21:01:19 -0400
+> >Subject: [PATCH 2/2] nfsd: fix nfsdfs inode reference count leak
+> >
+> >I don't understand this code well, but  I'm seeing a warning about a
+> >still-referenced inode on unmount, and every other similar filesystem
+> >does a dput() here.
+> >
+> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> >---
+> > fs/nfsd/nfsctl.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> >
+> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> >index cf98a81ca1ea..cd05732f8eaa 100644
+> >--- a/fs/nfsd/nfsctl.c
+> >+++ b/fs/nfsd/nfsctl.c
+> >@@ -1335,6 +1335,7 @@ void nfsd_client_rmdir(struct dentry *dentry)
+> > 	WARN_ON_ONCE(ret);
+> > 	fsnotify_rmdir(dir, dentry);
+> > 	d_delete(dentry);
+> >+	dput(dentry);
+> > 	inode_unlock(dir);
+> > }
+> > 
+> >-- 
+> >2.26.2
