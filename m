@@ -2,232 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B7D20B421
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 17:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF4B20B430
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2020 17:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgFZPET (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Jun 2020 11:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
+        id S1728314AbgFZPK6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Jun 2020 11:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgFZPET (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 11:04:19 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EDBC03E979;
-        Fri, 26 Jun 2020 08:04:19 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 444FC1509; Fri, 26 Jun 2020 11:04:18 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 444FC1509
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593183858;
-        bh=bDhiMSq/GuETPNBoBRrqQk+14eY/oLGXmwAu+loUjFw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z46yHmAVdfOD1RLsbxo3o9Pfe0jZAW37yZSCdgaogotBo6AHkm3wne1hjcmko9VjX
-         Gu1KX1odzxFesm7Dmqrit35fzOMuF1JDx9L1H3IWCjBwS4ODsSDqdAC1ItPCMishX6
-         OaVtOUC+WHZzwXlheKRiqrWfUhZPxVYLAo4PewoI=
-Date:   Fri, 26 Jun 2020 11:04:18 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Luo Xiaogang <lxgrxd@163.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, falcon <falcon@tinylab.org>
-Subject: Re: Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
-Message-ID: <20200626150418.GA3565@fieldses.org>
-References: <20200615071211.31326-1-lxgrxd@163.com>
- <20200624012901.GC18460@fieldses.org>
- <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
+        with ESMTP id S1726917AbgFZPK6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Jun 2020 11:10:58 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D280BC03E979
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 08:10:57 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so9716097ejc.8
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2020 08:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JtRyGt6tiuqtwS1yKOlAkCyE7jiftgXfal15sd+NZdk=;
+        b=fpxsguBU3JER73RU9qOPNpFE2E2jEx1fk2c9+73s4rDH2TAlUCBSI3cTmdvV9GnNe9
+         IlQAHwtLYEN9UJE4ukGlACk7K+CSBKOVBq6taeWa2FKfHlMBRaNttWyz/HHeMreB7J3+
+         OdR1QGL7LYABeAivxYYb+8dj8bApe1g2IgTYySdh7SQZIwZ6G+1eHJGaeKDv3Q7z9kHK
+         8xUNgZtoQ8GTEQcEoqida/heTNf2Iku4SUSSDBWUjgZ9CnVpTDidL7R3GZShau5UHQFt
+         V5B/IJQvFZjP3PVeDThT0ZLLXCDRQq3/kVcZcONjJ2EzHgl38QrdqSGWztmMcqR6RfAc
+         NhMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JtRyGt6tiuqtwS1yKOlAkCyE7jiftgXfal15sd+NZdk=;
+        b=aOKjuSQtNuAMpfDTSat0g9VjYiEjO4aDyYD+BBzHx9Sx/jpyXfyEeChS4lQnSFiisj
+         oDZnZ5Kq/HD2Jy/FBOeFSaytwq1n/Kt8QIICxN4YYlgW/ddInakzDqAapSDPsp4DZL7J
+         mln+FA5ySBiy9aWQseilCx0bqv4buAELqdysbofWwDU7AIjo7bIBnXDuztNyMwNUcdoB
+         ole+9vMsNFxr0kVytj5+h/SyraeajdY2hvM3zLTeqS6YZtz8JqlyYH30Kv/CpYFadje0
+         LWwuWL+jIdmh4kNK1ZPSTl63UQxJ4xmf1jeFpbVYoznpNRDmxU18JsSthSmI4lC/3rcj
+         U63Q==
+X-Gm-Message-State: AOAM530gbc0ffTCHqStMGA9LEM7Br3mEBnakZv1wUhSIeMKRdrFnj+qc
+        rx/hY5QqovyYeyVuGBFxw7N4pw==
+X-Google-Smtp-Source: ABdhPJzMuNuTrIAqicq/H7KVkcSv7BRHCGUNaCzEKApDBeNuY7YWlK/xalMxHcPVhN9SOma6pEM/QA==
+X-Received: by 2002:a17:906:4a87:: with SMTP id x7mr2530833eju.44.1593184256489;
+        Fri, 26 Jun 2020 08:10:56 -0700 (PDT)
+Received: from gmail.com ([141.226.169.176])
+        by smtp.gmail.com with ESMTPSA id m23sm2760801ejc.38.2020.06.26.08.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 08:10:55 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 18:10:52 +0300
+From:   Dan Aloni <dan@kernelim.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-rdma@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] xprtrdma: fix EP destruction logic
+Message-ID: <20200626151052.6cckaquyu7k3nd6b@gmail.com>
+References: <0E2AA9D9-2503-462C-952D-FC0DD5111BD1@oracle.com>
+ <20200626071034.34805-1-dan@kernelim.com>
+ <FEB41A86-87EB-44BD-BEC4-6EAB3723B426@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <FEB41A86-87EB-44BD-BEC4-6EAB3723B426@oracle.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 08:45:23PM +0800, Luo Xiaogang wrote:
-> At 2020-06-24 09:29:01, "J. Bruce Fields" <bfields@fieldses.org> wrote:
-> >On Mon, Jun 15, 2020 at 03:12:11PM +0800, Luo Xiaogang wrote:
-> >> We load nfsd module in the docker container, kernel crash as following.
-> >> 
-> >> The 'current->nsproxy->net_ns->gen->ptr[nfsd_net_id]' is overflow in the
-> >> nfsd_init_net.
-> >> 
-> >> We should use the net_ns which is being init in the nfsd_init_net,
-> >> not the 'current->nsproxy->net_ns'.
-> >
-> >Thanks!  Actually, I think my problem was that net init and exit are
-> >just the wrong place to be doing this--I moved them to nfsd start/stop
-> >instead.
-> >
-> >And then that exposed the fact that I had an inode leak.
-> >
-> >Do the following two patches help?
+On Fri, Jun 26, 2020 at 08:56:41AM -0400, Chuck Lever wrote:
+> > On Jun 26, 2020, at 3:10 AM, Dan Aloni <dan@kernelim.com> wrote:
+[..]
+> > - Add a mutex in `rpcrdma_ep_destroy` to guard against concurrent calls
+> >  to `rpcrdma_xprt_disconnect` coming from either `rpcrdma_xprt_connect`
+> >  or `xprt_rdma_close`.
 > 
-> Just test it on Ubuntu 18.04 + Docker 19.03.6, and the docker image is ubuntu:18.04.
-> 
-> Your patchset helps, here is my reported-and-tested-by, Thanks very much.
-> 
-> Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
+> NAK. The RPC client provides appropriate exclusion, please let's not
+> add more serialization that can introduce further deadlocks.
 
-Thank you!
+It appeared to me that this exclusion does not works well. As for my
+considerations, if I am not mistaken from analyzing crashes I've
+seen:
 
---b.
+   -> xprt_autoclose (running on xprtiod)
+     -> xprt->ops->close
+       -> xprt_rdma_close
+         -> rpcrdma_xprt_disconnect
 
-> 
-> 
-> >--b.
-> >
-> >From 16f954bd5c481596a63271a91963bf260e2f3f46 Mon Sep 17 00:00:00 2001
-> >From: "J. Bruce Fields" <bfields@redhat.com>
-> >Date: Tue, 23 Jun 2020 16:00:33 -0400
-> >Subject: [PATCH 1/2] nfsd4: fix nfsdfs reference count loop
-> >
-> >We don't drop the reference on the nfsdfs filesystem with
-> >mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
-> >until the nfsd module's unloaded, and we can't unload the module as long
-> >as there's a reference on nfsdfs.  So this prevents module unloading.
-> >
-> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> >---
-> > fs/nfsd/nfs4state.c |  8 +++++++-
-> > fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
-> > fs/nfsd/nfsd.h      |  3 +++
-> > 3 files changed, 22 insertions(+), 11 deletions(-)
-> >
-> >diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> >index bb3d2c32664a..cce2510b2cca 100644
-> >--- a/fs/nfsd/nfs4state.c
-> >+++ b/fs/nfsd/nfs4state.c
-> >@@ -7912,9 +7912,14 @@ nfs4_state_start_net(struct net *net)
-> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> > 	int ret;
-> > 
-> >-	ret = nfs4_state_create_net(net);
-> >+	ret = get_nfsdfs(net);
-> > 	if (ret)
-> > 		return ret;
-> >+	ret = nfs4_state_create_net(net);
-> >+	if (ret) {
-> >+		mntput(nn->nfsd_mnt);
-> >+		return ret;
-> >+	}
-> > 	locks_start_grace(net, &nn->nfsd4_manager);
-> > 	nfsd4_client_tracking_init(net);
-> > 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
-> >@@ -7984,6 +7989,7 @@ nfs4_state_shutdown_net(struct net *net)
-> > 
-> > 	nfsd4_client_tracking_exit(net);
-> > 	nfs4_state_destroy_net(net);
-> >+	mntput(nn->nfsd_mnt);
-> > }
-> > 
-> > void
-> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> >index b68e96681522..cf98a81ca1ea 100644
-> >--- a/fs/nfsd/nfsctl.c
-> >+++ b/fs/nfsd/nfsctl.c
-> >@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
-> > };
-> > MODULE_ALIAS_FS("nfsd");
-> > 
-> >+int get_nfsdfs(struct net *net)
-> >+{
-> >+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> >+	struct vfsmount *mnt;
-> >+
-> >+	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
-> >+	if (IS_ERR(mnt))
-> >+		return PTR_ERR(mnt);
-> >+	nn->nfsd_mnt = mnt;
-> >+	return 0;
-> >+}
-> >+
-> > #ifdef CONFIG_PROC_FS
-> > static int create_proc_exports_entry(void)
-> > {
-> >@@ -1451,7 +1463,6 @@ unsigned int nfsd_net_id;
-> > static __net_init int nfsd_init_net(struct net *net)
-> > {
-> > 	int retval;
-> >-	struct vfsmount *mnt;
-> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> > 
-> > 	retval = nfsd_export_init(net);
-> >@@ -1478,16 +1489,8 @@ static __net_init int nfsd_init_net(struct net *net)
-> > 	init_waitqueue_head(&nn->ntf_wq);
-> > 	seqlock_init(&nn->boot_lock);
-> > 
-> >-	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
-> >-	if (IS_ERR(mnt)) {
-> >-		retval = PTR_ERR(mnt);
-> >-		goto out_mount_err;
-> >-	}
-> >-	nn->nfsd_mnt = mnt;
-> > 	return 0;
-> > 
-> >-out_mount_err:
-> >-	nfsd_reply_cache_shutdown(nn);
-> > out_drc_error:
-> > 	nfsd_idmap_shutdown(net);
-> > out_idmap_error:
-> >@@ -1500,7 +1503,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
-> > {
-> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> > 
-> >-	mntput(nn->nfsd_mnt);
-> > 	nfsd_reply_cache_shutdown(nn);
-> > 	nfsd_idmap_shutdown(net);
-> > 	nfsd_export_shutdown(net);
-> >diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> >index 36cdd81b6688..57c832d1b30f 100644
-> >--- a/fs/nfsd/nfsd.h
-> >+++ b/fs/nfsd/nfsd.h
-> >@@ -90,6 +90,8 @@ void		nfsd_destroy(struct net *net);
-> > 
-> > bool		i_am_nfsd(void);
-> > 
-> >+int get_nfsdfs(struct net *);
-> >+
-> > struct nfsdfs_client {
-> > 	struct kref cl_ref;
-> > 	void (*cl_release)(struct kref *kref);
-> >@@ -100,6 +102,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
-> > 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
-> > void nfsd_client_rmdir(struct dentry *dentry);
-> > 
-> >+
-> > #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-> > #ifdef CONFIG_NFSD_V2_ACL
-> > extern const struct svc_version nfsd_acl_version2;
-> >-- 
-> >2.26.2
-> >
-> >
-> >From 51de3b460b39e862f7dcfd4d600e8de0afe73e29 Mon Sep 17 00:00:00 2001
-> >From: "J. Bruce Fields" <bfields@redhat.com>
-> >Date: Tue, 23 Jun 2020 21:01:19 -0400
-> >Subject: [PATCH 2/2] nfsd: fix nfsdfs inode reference count leak
-> >
-> >I don't understand this code well, but  I'm seeing a warning about a
-> >still-referenced inode on unmount, and every other similar filesystem
-> >does a dput() here.
-> >
-> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> >---
-> > fs/nfsd/nfsctl.c | 1 +
-> > 1 file changed, 1 insertion(+)
-> >
-> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> >index cf98a81ca1ea..cd05732f8eaa 100644
-> >--- a/fs/nfsd/nfsctl.c
-> >+++ b/fs/nfsd/nfsctl.c
-> >@@ -1335,6 +1335,7 @@ void nfsd_client_rmdir(struct dentry *dentry)
-> > 	WARN_ON_ONCE(ret);
-> > 	fsnotify_rmdir(dir, dentry);
-> > 	d_delete(dentry);
-> >+	dput(dentry);
-> > 	inode_unlock(dir);
-> > }
-> > 
-> >-- 
-> >2.26.2
+and:
+
+    -> xprt_rdma_connect_worker (running on xprtiod)
+      -> rpcrdma_xprt_connect
+	-> rpcrdma_xprt_disconnect
+
+I understand the rationale or at least the aim that `close` and
+`connect` ops should not be concurrent on the same `xprt`, however:
+
+* `xprt_force_disconnect`, is called from various places, queues
+  a call to `xprt_autoclose` to the background on `xprtiod` workqueue item,
+  conditioned that `!XPRT_LOCKED` which is the case for connect that went
+  to the background.
+* `xprt_rdma_connect` also sends `xprt_rdma_connect_worker` as an `xprtiod`
+  workqueue item, unconditionally.
+
+So we have two work items that can run in parallel, and I don't see
+clear gating on this from the code.
+
+Maybe there's a simpler fix for this. Perhaps a
+`cancel_delayed_work_sync(&r_xprt->rx_connect_worker);` is appropriate
+in `xprt_rdma_close`?
+
+-- 
+Dan Aloni
