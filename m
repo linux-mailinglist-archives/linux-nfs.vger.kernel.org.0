@@ -2,60 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B76120C314
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jun 2020 18:35:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA05720C315
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jun 2020 18:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgF0QfC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 27 Jun 2020 12:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57176 "EHLO
+        id S1726364AbgF0QfH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 27 Jun 2020 12:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgF0QfB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 Jun 2020 12:35:01 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4BFC061794;
-        Sat, 27 Jun 2020 09:35:01 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id u12so9814543qth.12;
-        Sat, 27 Jun 2020 09:35:01 -0700 (PDT)
+        with ESMTP id S1725882AbgF0QfH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 Jun 2020 12:35:07 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EFEC061794;
+        Sat, 27 Jun 2020 09:35:06 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so11675115qkc.6;
+        Sat, 27 Jun 2020 09:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=k9qWgWEKEOvNo1NfXaaylUDklpJhDGDU+W1e9h/Lvgs=;
-        b=H9W9lfPFTzpn5cqPbM2Z0RM0VOWdXARPAc8BZnxVqI/eEpVCpxgzxMSCPDGqDeCyaD
-         GBcRICDC226dtxJhKdU2jXJ4+5JHZPACZcRD2PByOg5TksznGBfiquP/J5exeKRfIxJ2
-         Mrr5UU8NeLXSI08hHMys8hrEyY4veiMgUXcOumAq53aHDyzLt0r/13HJjNHX/WDkDKhD
-         6RNAvw/o57HCVfl3dqE8LKFuGfTOW/6mEDeLnXWGnznCaWNSAtGMAo3xsGyl51y1Rb/D
-         VDhfDYS0z44eZPw4JfDjkwZuVZAbaqd0ro4OMVVFd4oqVxgvIcJnE8HN+oaR8i+JvwNS
-         RM+w==
+        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=hqrnM2P86aSZRrC5NtmU271qkiumzYYR3Yt7LqqAEUc=;
+        b=J6PMz3whRLurBm6qpccrsfC2D0yZUvlOLgOI3Sg7viz+70uV9xC6f0/Y7kzD5PJ6+i
+         RCjWEEtpfPWK930xqPstd6AZ+ap49b+NPMFPw7fA0/bxbbIpwLDQWpkLqgIbnXx89crs
+         SmwZKMLBTUGx5O9+pYuSUSpjix4erRB9P6r3f3VIzWfOFvH5HIHT0q5ZJXbVDAhwvv++
+         JqZqCA9Jso7Lky/xvylI8jiwMxknJ80muBD6qBE/DtrRZMdU/C3pPEhsu7lo3NdDk/Dm
+         0Oxq5wUzJliNIUyYjHU2FtNKJZtUhvr3D+sQ0SykEAGTWBuE05j83gJgz827liZwaZMc
+         3nxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=k9qWgWEKEOvNo1NfXaaylUDklpJhDGDU+W1e9h/Lvgs=;
-        b=jkmcWk7IyD3QjFNomBfZVplFVm67Jjv5rNCl2FT0JLouzYT2bvahAi5Ay98OXVqBkb
-         BUSdfI2REs1W9u7lkHl2y7flCjaU7nNzoSqUso6b43s51RcMC+QxnnKwenBbs0BBkgGw
-         D/Kh232UqY3okSra2KQS3tte0nN+TFsSHCtGZld+p3o+fspkhipj9byrXCKucEyvOBoe
-         hFQV0/oT6GJQofQNnZfoWo5kAXbXhGI1UK3MhIpRwSRIR/HWxetomewEuFW9DB9gncKt
-         pB1VN2vHKytjZzpGxSMQZpaKaU9MeH+UGQxrh1m8zYojF6XaTvNQUBFe1EHEghuLFxMM
-         1L1A==
-X-Gm-Message-State: AOAM530NxwwpLtU+rHxnSr09PDZJAMJbkeXRsHWoI+aXF/hMe3Qr4j0a
-        ia2GFYqEpxR/1IA8p4j2NFKIE6EZ
-X-Google-Smtp-Source: ABdhPJwFJdbfH7xocLqbTuBLdC8UqibfV/qwQ8KLTyIU0ORN1v0FtjAmNrlkcVLcTyWyQSduYGbP0Q==
-X-Received: by 2002:ac8:31a6:: with SMTP id h35mr8309362qte.323.1593275701053;
-        Sat, 27 Jun 2020 09:35:01 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=hqrnM2P86aSZRrC5NtmU271qkiumzYYR3Yt7LqqAEUc=;
+        b=KvLVURGQr9whVWL6IAJ2Ti+jvtWjzM2PmmUgQQGvMmq8k5VEsCFpIJ0+60q4DIsgzQ
+         Mxar9ShXgKsb/hoXeT4A+N5J9tprb369f5kI2dzGygPRbH3kiBeaoBDdVDzElB7Uxb9p
+         Icz8nF2o7GeA1+Ge04G8JbK44VI+va8157seGNsX0uyHSYmIKdUkk2R3tCTVFgwFrwbV
+         HTfB7E2cnkQPuSYCwl+FJIVG6VIsyx7p3FEYhoHDyXWdNbmc2G/1UMmhwrWrROTR5c/Q
+         fWApRCBjcDGVUssG0W0+tz+aoD41r08d7FJBSOzyLba1oAN1vLLgdjhQ3JzNaL3/Dstf
+         UBmw==
+X-Gm-Message-State: AOAM532WhC2+pxe6rqZEESsItz0XLNnNeisnl/NSZYobRbJQ3mbisjnF
+        eNrnHuXjkV4vz9QKCBeKY/w=
+X-Google-Smtp-Source: ABdhPJz/dTTvjuIk8kgihzZIy6g9s7Ai2OSL8ruUdz0cIhq2GSMYvxxbD6eUts2WiamQ/UfOi6b5Ag==
+X-Received: by 2002:a37:4c0d:: with SMTP id z13mr7813682qka.170.1593275706212;
+        Sat, 27 Jun 2020 09:35:06 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id p80sm10937859qke.19.2020.06.27.09.35.00
+        by smtp.gmail.com with ESMTPSA id z17sm9998959qth.24.2020.06.27.09.35.05
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jun 2020 09:35:00 -0700 (PDT)
+        Sat, 27 Jun 2020 09:35:05 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05RGYwqE003755;
-        Sat, 27 Jun 2020 16:34:59 GMT
-Subject: [PATCH v1 0/4] Fix more issues in new connect logic
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05RGZ49O003758;
+        Sat, 27 Jun 2020 16:35:04 GMT
+Subject: [PATCH v1 1/4] xprtrdma: Fix double-free in rpcrdma_ep_create()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc:     dan@kernelim.com
-Date:   Sat, 27 Jun 2020 12:34:58 -0400
-Message-ID: <20200627162911.22826.34426.stgit@manet.1015granger.net>
+Date:   Sat, 27 Jun 2020 12:35:04 -0400
+Message-ID: <20200627163504.22826.98966.stgit@manet.1015granger.net>
+In-Reply-To: <20200627162911.22826.34426.stgit@manet.1015granger.net>
+References: <20200627162911.22826.34426.stgit@manet.1015granger.net>
 User-Agent: StGit/0.22-38-gfb18
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -65,27 +68,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This series addresses several more flaws in the recent overhaul of
-the client's RPC/RDMA connect logic. More testing is called for,
-but these are ready for review. They apply on the fixes that were
-pulled into Linus' tree yesterday.
+In the error paths, there's no need to call kfree(ep) after calling
+rpcrdma_ep_put(ep).
 
-See also the "cel-testing" topic branch in my kernel repo:
-
-  git://git.linux-nfs.org/projects/cel/cel-2.6.git
-
+Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/xprtrdma/verbs.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Chuck Lever (4):
-      xprtrdma: Fix double-free in rpcrdma_ep_create()
-      xprtrdma: Fix recursion into rpcrdma_xprt_disconnect()
-      xprtrdma: Fix return code from rpcrdma_xprt_connect()
-      xprtrdma: Fix handling of connect errors
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 2198c8ec8dff..e4c0df7c7d78 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -406,8 +406,8 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 
+ 	id = rpcrdma_create_id(r_xprt, ep);
+ 	if (IS_ERR(id)) {
+-		rc = PTR_ERR(id);
+-		goto out_free;
++		kfree(ep);
++		return PTR_ERR(id);
+ 	}
+ 	__module_get(THIS_MODULE);
+ 	device = id->device;
+@@ -506,9 +506,6 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ out_destroy:
+ 	rpcrdma_ep_put(ep);
+ 	rdma_destroy_id(id);
+-out_free:
+-	kfree(ep);
+-	r_xprt->rx_ep = NULL;
+ 	return rc;
+ }
+ 
 
-
- net/sunrpc/xprtrdma/transport.c |  5 +++++
- net/sunrpc/xprtrdma/verbs.c     | 28 ++++++++++++++--------------
- 2 files changed, 19 insertions(+), 14 deletions(-)
-
---
-Chuck Lever
