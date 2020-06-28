@@ -2,60 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB18820C9D5
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2020 21:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 005FD20C9D6
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2020 21:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgF1TKI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 28 Jun 2020 15:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46028 "EHLO
+        id S1726685AbgF1TKM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 28 Jun 2020 15:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbgF1TKH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Jun 2020 15:10:07 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2377C03E979
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:07 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id e22so11061822edq.8
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:07 -0700 (PDT)
+        with ESMTP id S1726665AbgF1TKL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Jun 2020 15:10:11 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E41C03E979
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:11 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a8so9866135edy.1
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rkkr3wVXccfProQobyaDOowLtuXZjb8pyyBu/kzM+WA=;
-        b=JcyV/U3TK0IYp7OE3OErK+JrsqSiqqmgTm2EYrZjqiEEKFJRGTtVYBF/nBEAwNfHpM
-         1kyAmN1S1QRH0K29EXwSFB6mmQtiR7aVepV2gvysZXGT8N2EygbKyfwmE40Bx006L4iN
-         5eQZv11NnDk6Alf1I6YDRi8IppbE/a3N8TtTQ4puoDe02VEcMXlefqejWySIaQrHQbay
-         joizsJmloZA1HhPNKBgcz/dfl+1BJVuRRkTio1ltBC9Dwyuzc+OKkyH9pizGsdCnJ1II
-         Nagi5SobYTQBpOiSsBthk4WqYOstfOYcfF4BEwdtWe9aiIbHxMa84+JSuPWhDioqXkOc
-         JEWQ==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Gz7fBPj7kNNcPB3HynIk2m4+/WFTV+wONRiqrAQYTkc=;
+        b=Wu6NMC5z1OCIjmHwxmu0cDgNC5uVqpZpCKOtCpuTPh7bw5XKYjvPV2Cz8VXksNi5Eh
+         XP/AYC1oq6EEjJPifVAUrdJsuflP21ooRplKoFlsLTIQLhfUbfrOEr8YjAdE/w+y3PTz
+         gvbAGKLMvZsooRrYDidesxMZqX53RW6w59DgmzcgMafHmVU69B90BfrqwW/x6GaAYhAk
+         OaErLBgep/5AQnAODdDAkjKwOcc4oqAATeGyLlLg/hvWmayPCdU4VDet/n03nFGC17qV
+         L8287XY2sIYO7NaQ7GKgQogeld163kBZgSuV8Lbcf6pWo0oofdNK0Xn+jFg5dWogB1Ld
+         ZRWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Rkkr3wVXccfProQobyaDOowLtuXZjb8pyyBu/kzM+WA=;
-        b=E+vf8sqoPy82Tj6AmKFyGIGetFt31YU4UBI1F0PejYuPITrZqJNLpza+OfbAslsH/3
-         YPwEEXj+SuBqG65CNU1ZqarPIS51jGN9KDTjW+3LZgcAZh5ZZ25uWrguMuTjzlpSaK7k
-         dWvVGZbeglGqKnQjaTYbevh5PLbDgluzBo4DjA/PVm78AJGbXzHd+4pTP1zr4wlifbq3
-         BfnAHzd36xgGw487wUERFKHr/FZoCJfPUuE55VfsI98c3rTXmAwNZJ9Zlnat/5DiqbXL
-         MH+98vkUal12V+a3bOaN1tQGhl524vR7COnQFY7TDMXZC0i9vaGfQUxCd4Cw0o8rv0xx
-         MD+Q==
-X-Gm-Message-State: AOAM531+UkHq0uc2qbRdUBforH5kkIXGhR3OYHSk1YsjvBzC2AtJXMWO
-        AG/NkwWnUXoPBKsMAe2XDqg=
-X-Google-Smtp-Source: ABdhPJxwDxLyW+Mkn/cehl0bxWyhITf2jKmPZTUYrx1dqf9+MvHdRkKh9IPFFgD2n0sQeRI+0GFKGw==
-X-Received: by 2002:aa7:d7d0:: with SMTP id e16mr13699307eds.10.1593371405912;
-        Sun, 28 Jun 2020 12:10:05 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=Gz7fBPj7kNNcPB3HynIk2m4+/WFTV+wONRiqrAQYTkc=;
+        b=YsAqa2VRl453dNH9AyLUn2wFIsOMXcoCLH+gq/c0zsBRQWKEFMdN9AxyM2kTva+Kfk
+         CZHx/S1Uo66E1EkaBMVFl3ttHVsHbDjL0G07L4hiGt4OXyvxpfjmiZj6LcejDKb1DJXQ
+         p4Bs12xUnn4pMYwjiwBhLXTUq4HFOl5QMlxsLxRs7s0DYg0xAo5ooO84A7lFblZzajo7
+         /tpNlwnWUmjbFiQn3z/kzL8rZEe9mqcXMbB4zliJi6KQ2xP6Gm7c0zrADYxuX4Tqe28z
+         qY8Aavz2xB7REX3CrkR5Ag/rkp4VR4P2XGBwMkjP0poRVSIf+mY7N+TGeeymYoN1ezFy
+         fLrQ==
+X-Gm-Message-State: AOAM530oO/D9vWz0JLI3xOcC9udonAeAhnuiL+Y7NLHm+uxNDcGNJbwZ
+        swBHaKlzCwD8KQeujM6oHQ0=
+X-Google-Smtp-Source: ABdhPJywKbcnpyEny28Z/pB+tnW6sJFsoEaDWabDjoXHK0LuW6iSY2M2wJF3E7dRJUxma6WA+pFcsQ==
+X-Received: by 2002:a50:cd1e:: with SMTP id z30mr13718401edi.364.1593371410488;
+        Sun, 28 Jun 2020 12:10:10 -0700 (PDT)
 Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
-        by smtp.gmail.com with ESMTPSA id w18sm5327024ejc.62.2020.06.28.12.10.04
+        by smtp.gmail.com with ESMTPSA id w3sm23144429ejn.87.2020.06.28.12.10.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 12:10:05 -0700 (PDT)
+        Sun, 28 Jun 2020 12:10:09 -0700 (PDT)
 From:   Salvatore Bonaccorso <carnil@debian.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     NeilBrown <neilb@suse.de>, Scott Mayhew <smayhew@redhat.com>,
         Steve Dickson <steved@redhat.com>,
         Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 0/2] Allow to to install systemd generators dependend on --with-systemd unit-dir-path location
-Date:   Sun, 28 Jun 2020 21:10:00 +0200
-Message-Id: <20200628191002.136918-1-carnil@debian.org>
+Subject: [PATCH 1/2] systemd/Makefile: Drop exlicit setting of unit_dir
+Date:   Sun, 28 Jun 2020 21:10:01 +0200
+Message-Id: <20200628191002.136918-2-carnil@debian.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200628191002.136918-1-carnil@debian.org>
+References: <20200628191002.136918-1-carnil@debian.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
@@ -63,23 +65,32 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently --with-systemd=unit-dir-path would be ignored to install the
-systemd generators and they are unconditionally installed in
-/usr/lib/systemd/system-generators . Distributions installing systemd
-unit files in /lib/systemd/system would though install the
-systemd-generators in /lib/systemd/system-generators.
+The used variable is named unitdir in configure.ac and
+systemd/Makefile.am otherwise but is used in a single place as unit_dir.
 
-Make the installation of the systemd unit generators relative depending
-on the unit-dir-path passed for --with-systemd.
+The setting has no effect, but if later commits would use a base to the
+systemd unit files directory for installing further files this would
+void the possibility to explicitly set a systemd unit files directory
+via configure with --with-systemd=unit-dir-path.
 
-Salvatore Bonaccorso (2):
-  systemd/Makefile: Drop exlicit setting of unit_dir
-  systemd generators: Install depending on location for systemd unit
-    files
+Fixes: 0fbf91a4fd90 ("Include systemd unit files in "dist" and "install".")
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+---
+ systemd/Makefile.am | 1 -
+ 1 file changed, 1 deletion(-)
 
- systemd/Makefile.am | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
+diff --git a/systemd/Makefile.am b/systemd/Makefile.am
+index 75cdd9f54c81..f089c8831902 100644
+--- a/systemd/Makefile.am
++++ b/systemd/Makefile.am
+@@ -45,7 +45,6 @@ man5_MANS	= nfs.conf.man
+ man7_MANS	= nfs.systemd.man
+ EXTRA_DIST = $(unit_files) $(man5_MANS) $(man7_MANS)
+ 
+-unit_dir = /usr/lib/systemd/system
+ generator_dir = /usr/lib/systemd/system-generators
+ 
+ EXTRA_PROGRAMS	= nfs-server-generator rpc-pipefs-generator
 -- 
 2.27.0
 
