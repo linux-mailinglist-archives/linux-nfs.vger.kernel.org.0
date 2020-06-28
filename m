@@ -2,110 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1150B20C96D
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2020 20:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB18820C9D5
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2020 21:10:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgF1SEL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 28 Jun 2020 14:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
+        id S1726675AbgF1TKI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 28 Jun 2020 15:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgF1SEL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Jun 2020 14:04:11 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39CD3C03E979
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 11:04:11 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g20so10773297edm.4
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 11:04:11 -0700 (PDT)
+        with ESMTP id S1726665AbgF1TKH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Jun 2020 15:10:07 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2377C03E979
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:07 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id e22so11061822edq.8
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2020 12:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kwsmUReimni6pOal01WQYZrI8sGjg65L2JZmlOU+F8g=;
-        b=CUSX+sZAZU9ULHxGxelZuvvaeQ23v+4v/BKz41vyrZIpIFdvZ+gbe5CxCJDxXzaXqR
-         R7U5I7V8hWgQZnx1qRprXt9PjFaTVciVRA383lWhHbVdSa4JKio8LAdduc9MVQ6WAyUQ
-         PHKMuMm23Z1Tha1Oq1iznJwXaD+nRjjRCUMcEahmLasqMG4bW7I6e3+b6WLNzH7K4Lw3
-         CZAGwTtcrjX4DDFt6NnozTcMcE/tCn2bBg7IY2CydmbS/gllMAgXY4LnWpqgkhaMT5tY
-         YWY+/Zj8DNNBu/TNdZaPuVEqUMlDa5Urz5GLtjcUfqaEJv6T8mmjXfN0nO5MLJ9AIQpx
-         1JQw==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rkkr3wVXccfProQobyaDOowLtuXZjb8pyyBu/kzM+WA=;
+        b=JcyV/U3TK0IYp7OE3OErK+JrsqSiqqmgTm2EYrZjqiEEKFJRGTtVYBF/nBEAwNfHpM
+         1kyAmN1S1QRH0K29EXwSFB6mmQtiR7aVepV2gvysZXGT8N2EygbKyfwmE40Bx006L4iN
+         5eQZv11NnDk6Alf1I6YDRi8IppbE/a3N8TtTQ4puoDe02VEcMXlefqejWySIaQrHQbay
+         joizsJmloZA1HhPNKBgcz/dfl+1BJVuRRkTio1ltBC9Dwyuzc+OKkyH9pizGsdCnJ1II
+         Nagi5SobYTQBpOiSsBthk4WqYOstfOYcfF4BEwdtWe9aiIbHxMa84+JSuPWhDioqXkOc
+         JEWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kwsmUReimni6pOal01WQYZrI8sGjg65L2JZmlOU+F8g=;
-        b=A5vQk0QIATcgrpBO+vYoNYdxKBgl1nQb+47+wC6wEtp34cYVBBBOZkKoplGNkhkwze
-         ynBwSCtqRdAXhO68HoNT/UegnPFRXL4X1YdZlod0t0P0zfDFCA/6Ze5yEpPoII0irEmB
-         COV48b6DdG69mRf8lPCiWdE01v4sThNVsbe6k1v9uqEfb2wVKWhHMzbH1zAaYL2eiOBR
-         sGFDvY5EHs5YdvKdXGra+71tVXbtAsqk97W0mAUFqijswTifwBc/GweVTFn7+Vmrt4X9
-         Zvxz6xRunJatFbxKa2TVNNHKV4VawRbIyb34QDf2gOmDy33cWzoNpQY8t6KY3iiTDDXQ
-         q2og==
-X-Gm-Message-State: AOAM530UpYGhEnxXjgX8TwCE7x+8edpXNnP1AZyamLjeJaoQFnk8+Hew
-        9eTNr6U87anv8/t8DQJyTsfdv7D8DHsLLLHWO8Q=
-X-Google-Smtp-Source: ABdhPJyez7n1u0+FLJXNMU2HGz4H1IPxtoZToBhjsxipjlRN1MCq6XUUKINpAyH0zuH2h4c78m0mbnf7iRJ3uqM888g=
-X-Received: by 2002:a05:6402:b9b:: with SMTP id cf27mr11306627edb.84.1593367449909;
- Sun, 28 Jun 2020 11:04:09 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Rkkr3wVXccfProQobyaDOowLtuXZjb8pyyBu/kzM+WA=;
+        b=E+vf8sqoPy82Tj6AmKFyGIGetFt31YU4UBI1F0PejYuPITrZqJNLpza+OfbAslsH/3
+         YPwEEXj+SuBqG65CNU1ZqarPIS51jGN9KDTjW+3LZgcAZh5ZZ25uWrguMuTjzlpSaK7k
+         dWvVGZbeglGqKnQjaTYbevh5PLbDgluzBo4DjA/PVm78AJGbXzHd+4pTP1zr4wlifbq3
+         BfnAHzd36xgGw487wUERFKHr/FZoCJfPUuE55VfsI98c3rTXmAwNZJ9Zlnat/5DiqbXL
+         MH+98vkUal12V+a3bOaN1tQGhl524vR7COnQFY7TDMXZC0i9vaGfQUxCd4Cw0o8rv0xx
+         MD+Q==
+X-Gm-Message-State: AOAM531+UkHq0uc2qbRdUBforH5kkIXGhR3OYHSk1YsjvBzC2AtJXMWO
+        AG/NkwWnUXoPBKsMAe2XDqg=
+X-Google-Smtp-Source: ABdhPJxwDxLyW+Mkn/cehl0bxWyhITf2jKmPZTUYrx1dqf9+MvHdRkKh9IPFFgD2n0sQeRI+0GFKGw==
+X-Received: by 2002:aa7:d7d0:: with SMTP id e16mr13699307eds.10.1593371405912;
+        Sun, 28 Jun 2020 12:10:05 -0700 (PDT)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id w18sm5327024ejc.62.2020.06.28.12.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 12:10:05 -0700 (PDT)
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     NeilBrown <neilb@suse.de>, Scott Mayhew <smayhew@redhat.com>,
+        Steve Dickson <steved@redhat.com>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH 0/2] Allow to to install systemd generators dependend on --with-systemd unit-dir-path location
+Date:   Sun, 28 Jun 2020 21:10:00 +0200
+Message-Id: <20200628191002.136918-1-carnil@debian.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200623152409.70257-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20200623152409.70257-1-olga.kornievskaia@gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Sun, 28 Jun 2020 14:03:59 -0400
-Message-ID: <CAN-5tyHuZwA-mrwUu1U+85-=mAFFtPZZJLAXyKyTaq7vqGwAfw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond/Anna,
+Currently --with-systemd=unit-dir-path would be ignored to install the
+systemd generators and they are unconditionally installed in
+/usr/lib/systemd/system-generators . Distributions installing systemd
+unit files in /lib/systemd/system would though install the
+systemd-generators in /lib/systemd/system-generators.
 
-Any comments on this patch?
+Make the installation of the systemd unit generators relative depending
+on the unit-dir-path passed for --with-systemd.
 
-On Tue, Jun 23, 2020 at 11:22 AM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> Current behaviour: every time a v3 operation is re-sent to the server
-> we update (double) the timeout. There is no distinction between whether
-> or not the previous timer had expired before the re-sent happened.
->
-> Here's the scenario:
-> 1. Client sends a v3 operation
-> 2. Server RST-s the connection (prior to the timeout) (eg., connection
-> is immediately reset)
-> 3. Client re-sends a v3 operation but the timeout is now 120sec.
->
-> As a result, an application sees 2mins pause before a retry in case
-> server again does not reply. Where as if a connection reset didn't
-> change the timeout value, the client would have re-tried (the 3rd
-> time) after 60secs.
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
->
-> --- I have a question with regards to should we also not update the
-> number of retries when connection is RST-ed? This would allow the
-> client to still weather a 6mins (60+120+180) of unresponsive server.
-> After this patch the client can handle only 3mins (60+120) of
-> unresponsive server after the initial RST ---
-> ---
->  net/sunrpc/clnt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index a91d1cd..65517cf 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -2405,7 +2405,8 @@ void rpc_force_rebind(struct rpc_clnt *clnt)
->                 goto out_exit;
->         }
->         task->tk_action = call_encode;
-> -       rpc_check_timeout(task);
-> +       if (status != -ECONNRESET && status != -ECONNABORTED)
-> +               rpc_check_timeout(task);
->         return;
->  out_exit:
->         rpc_call_rpcerror(task, status);
-> --
-> 1.8.3.1
->
+Salvatore Bonaccorso (2):
+  systemd/Makefile: Drop exlicit setting of unit_dir
+  systemd generators: Install depending on location for systemd unit
+    files
+
+ systemd/Makefile.am | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+-- 
+2.27.0
+
