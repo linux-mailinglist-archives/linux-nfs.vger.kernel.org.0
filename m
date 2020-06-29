@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E15320E611
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2020 00:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E2FC20E5CF
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2020 00:07:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391433AbgF2VoL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jun 2020 17:44:11 -0400
+        id S2403909AbgF2Vl7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jun 2020 17:41:59 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbgF2Shq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:37:46 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AFEC02F02C;
-        Mon, 29 Jun 2020 07:58:52 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id t11so5708440qvk.1;
-        Mon, 29 Jun 2020 07:58:51 -0700 (PDT)
+        with ESMTP id S1727927AbgF2Sh6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:37:58 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C66C02F02F;
+        Mon, 29 Jun 2020 07:59:02 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id u12so13015711qth.12;
+        Mon, 29 Jun 2020 07:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=XGYBF9d0NMNgFRYH2j0kotT08cb3FOmrKANM3LBvM7A=;
-        b=TeJDpamrf4akv3XbcConNYXcRmHpL4E4OUauv3drtbro1lw3sjZiiM88fcqZ18M5tG
-         EMQ4KYvFuo4H63Y++RLprQDRWM1UOiWX2C/a0YbtEy5kEenNBFDOgPAzLqX50f88WhFO
-         HF7gKaUkU1D+JE845nGYQCCFQFphwdBL9YKDpXIDKhi9kaBudWx1ymDEJTHrPyFGoEBM
-         jNTo14yn2s3ZDMah9cha4eQ/p1LcYEDD3jlFIur7PhguVpZroUWjEVBv6fg5bEzaPa0w
-         1bOOnJY8eWXwAYKowmbVJldQMXuqVVXZQzAtAkLqM8hLgYFnyXSvSJnXD888cD9kmStn
-         V1AQ==
+        bh=CIkNz511rl6KYHK6r8TjqhFW9g2HG/qN/m8S+9SGxmg=;
+        b=NVDp/eEGcceNLXO5Izyy7VjIkgYqLG54Yv9ifc5E/SSHZfxJfxUyL+sTsEWdQV/we1
+         SQPTiIcFJdllmUzMSsUN7PqO3hhVBGJg8yteGuAMMnh37msnFhfWpYvPq1QGuxn1fxtb
+         S8IghGj47v27nqoAW+kQCDci+5Sv7EPGWl4EHOvAJ7w1zufWbf9oOo/yvYQrHw9mZ9w4
+         myE/+Sp5kgQu5m/CB8GcK6o0Hpby0lWci7x02+NZQVkk/8/KIONbCgfxrYbbeiKgRmzT
+         VcN+V7Qpq4/MT3A7SPfAxCW4M2jhKKtPoP9YS8JcuHopxoUy6pHsMxPsNiDK2K0uH0NY
+         TQow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=XGYBF9d0NMNgFRYH2j0kotT08cb3FOmrKANM3LBvM7A=;
-        b=TQvClnztfBedR8/DcX3to+S2V8fLX1OIWeVm+c+r6jroS+pyTrXXRerNQUWSg1Bml+
-         CZVmn4dz8AdEoYXUwE5oIkRVZx85JenZIHFdIN8kmGXSrlrjOC8axlxe0iOc56Nr1CjN
-         lP1lGmVx+JR64UTbNsxbI2GSFAzHLFuPFeZvgLsQX0GPCHkXMYoLXdEORcoONcxsRvZV
-         WeOdRuqNgM8qnsAp9tZoAXHvA6cvLoh0Mk40T/Hb5L98Glhdp28q16WUlEZYNqc2P6sJ
-         AtCvjhjslje7XPUYnswNnQCWtRTodqYopr5rN8drVf0ZuU4tc6AFwU5FKfRI7VEqQ2xC
-         xIIw==
-X-Gm-Message-State: AOAM531MadEL7Ia0mJ8wfd7NTTfNHDvB1Z5aazGL9Vopk2/aRZQPsVRo
-        NiEj1NuxNxA80GfqKdXCEfT/YviA
-X-Google-Smtp-Source: ABdhPJwj5cddcJE7MCLFuLFFNZFL2yyUsg7X7NxowUxx0RGpw6mOKx0bcasRWUxE/+92JuoNPy+IhA==
-X-Received: by 2002:a0c:e710:: with SMTP id d16mr15970070qvn.158.1593442731072;
-        Mon, 29 Jun 2020 07:58:51 -0700 (PDT)
+        bh=CIkNz511rl6KYHK6r8TjqhFW9g2HG/qN/m8S+9SGxmg=;
+        b=QEqmC3hOye6B99ovsuLc4il5EPsWU5LgzO86qJ1MNB1cTbJNWSfRAvOaDh3zSlv/bO
+         wiqfDO++Q6Yme7NdyKfUbG8Nx7av9ozCRKSmkSmGisZjm7UXli29YpPNXhZpQoxx2P8R
+         0HgYP2nMf1PURSPssm4Z7HSusm+2GFsWYLqpYgcryOx8hboBdgEAf13x8T+51keQ9oMP
+         PL2rbE3VkPNAEVbd4W77aBc6lrnDqVEMZVJCB8OO3r9SbytPp8wyaWXOBvP0HR0CAqIE
+         7na5CPWajN9vAAgKyimkWqD90rOps8br84LX+rncFuRKYsVU2/8KXwhjt2trMXwHWoyR
+         vARw==
+X-Gm-Message-State: AOAM531/lumIwFXXd3V0rwh5RmHM4TRKPavyLyb0b6bTUSTc2gaQNXeD
+        5ezs/GvmyoaNLVuube4S1JgdfK+0
+X-Google-Smtp-Source: ABdhPJyVrhG6BfxK3aRlHM3Uu4d5Si5xILldxM1Kknp8wOa71nWy0roThYpp0gfmCDXE3NHJrMwvLA==
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr16349493qte.196.1593442741695;
+        Mon, 29 Jun 2020 07:59:01 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id d19sm24418qko.114.2020.06.29.07.58.50
+        by smtp.gmail.com with ESMTPSA id p66sm51274qkf.58.2020.06.29.07.59.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jun 2020 07:58:50 -0700 (PDT)
+        Mon, 29 Jun 2020 07:59:01 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TEwnBH006248;
-        Mon, 29 Jun 2020 14:58:49 GMT
-Subject: [PATCH v1 3/6] svcrdma: Record Receive completion ID in
- svc_rdma_decode_rqst
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TEx0xc006254;
+        Mon, 29 Jun 2020 14:59:00 GMT
+Subject: [PATCH v1 5/6] svcrdma: Record send_ctxt completion ID in
+ trace_svcrdma_post_send()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 29 Jun 2020 10:58:49 -0400
-Message-ID: <20200629145849.15100.44302.stgit@klimt.1015granger.net>
+Date:   Mon, 29 Jun 2020 10:59:00 -0400
+Message-ID: <20200629145900.15100.53400.stgit@klimt.1015granger.net>
 In-Reply-To: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
 References: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,165 +68,136 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When recording a trace event in the Receive path, tie decoding
-results and errors to an incoming Receive completion.
+First, refactor: Dereference the svc_rdma_send_ctxt inside
+svc_rdma_send() instead of at every call site.
+
+Then, it can be passed into trace_svcrdma_post_send() to get the
+proper completion ID.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h          |   34 +++++++++++++++++++++++++------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   12 +++++------
- 2 files changed, 33 insertions(+), 13 deletions(-)
+ include/linux/sunrpc/svc_rdma.h            |    3 ++-
+ include/trace/events/rpcrdma.h             |   18 +++++++++++-------
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    2 +-
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   11 ++++++-----
+ 4 files changed, 20 insertions(+), 14 deletions(-)
 
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index c91e00bc937e..9dc3a3b88391 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -196,7 +196,8 @@ extern struct svc_rdma_send_ctxt *
+ 		svc_rdma_send_ctxt_get(struct svcxprt_rdma *rdma);
+ extern void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
+ 				   struct svc_rdma_send_ctxt *ctxt);
+-extern int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr);
++extern int svc_rdma_send(struct svcxprt_rdma *rdma,
++			 struct svc_rdma_send_ctxt *ctxt);
+ extern int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
+ 				  struct svc_rdma_send_ctxt *sctxt,
+ 				  const struct svc_rdma_recv_ctxt *rctxt,
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index a0330a557e34..df49ae5d447b 100644
+index 782a4d826a4b..aeeba9188ed5 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -1369,13 +1369,16 @@ TRACE_DEFINE_ENUM(RDMA_ERROR);
+@@ -1839,27 +1839,31 @@ DECLARE_EVENT_CLASS(svcrdma_sendcomp_event,
  
- TRACE_EVENT(svcrdma_decode_rqst,
+ TRACE_EVENT(svcrdma_post_send,
  	TP_PROTO(
-+		const struct svc_rdma_recv_ctxt *ctxt,
- 		__be32 *p,
- 		unsigned int hdrlen
+-		const struct ib_send_wr *wr
++		const struct svc_rdma_send_ctxt *ctxt
  	),
  
--	TP_ARGS(p, hdrlen),
-+	TP_ARGS(ctxt, p, hdrlen),
+-	TP_ARGS(wr),
++	TP_ARGS(ctxt),
  
  	TP_STRUCT__entry(
+-		__field(const void *, cqe)
 +		__field(u32, cq_id)
 +		__field(int, completion_id)
- 		__field(u32, xid)
- 		__field(u32, vers)
- 		__field(u32, proc)
-@@ -1384,6 +1387,8 @@ TRACE_EVENT(svcrdma_decode_rqst,
+ 		__field(unsigned int, num_sge)
+ 		__field(u32, inv_rkey)
  	),
  
  	TP_fast_assign(
-+		__entry->cq_id = ctxt->rc_cid.ci_queue_id;
-+		__entry->completion_id = ctxt->rc_cid.ci_completion_id;
- 		__entry->xid = be32_to_cpup(p++);
- 		__entry->vers = be32_to_cpup(p++);
- 		__entry->credits = be32_to_cpup(p++);
-@@ -1391,37 +1396,48 @@ TRACE_EVENT(svcrdma_decode_rqst,
- 		__entry->hdrlen = hdrlen;
+-		__entry->cqe = wr->wr_cqe;
++		const struct ib_send_wr *wr = &ctxt->sc_send_wr;
++
++		__entry->cq_id = ctxt->sc_cid.ci_queue_id;
++		__entry->completion_id = ctxt->sc_cid.ci_completion_id;
+ 		__entry->num_sge = wr->num_sge;
+ 		__entry->inv_rkey = (wr->opcode == IB_WR_SEND_WITH_INV) ?
+ 					wr->ex.invalidate_rkey : 0;
  	),
  
--	TP_printk("xid=0x%08x vers=%u credits=%u proc=%s hdrlen=%u",
-+	TP_printk("cq.id=%u cid=%d xid=0x%08x vers=%u credits=%u proc=%s hdrlen=%u",
+-	TP_printk("cqe=%p num_sge=%u inv_rkey=0x%08x",
+-		__entry->cqe, __entry->num_sge,
+-		__entry->inv_rkey
++	TP_printk("cq_id=%u cid=%d num_sge=%u inv_rkey=0x%08x",
 +		__entry->cq_id, __entry->completion_id,
- 		__entry->xid, __entry->vers, __entry->credits,
- 		show_rpcrdma_proc(__entry->proc), __entry->hdrlen)
++		__entry->num_sge, __entry->inv_rkey
+ 	)
  );
  
- TRACE_EVENT(svcrdma_decode_short_err,
- 	TP_PROTO(
-+		const struct svc_rdma_recv_ctxt *ctxt,
- 		unsigned int hdrlen
- 	),
- 
--	TP_ARGS(hdrlen),
-+	TP_ARGS(ctxt, hdrlen),
- 
- 	TP_STRUCT__entry(
-+		__field(u32, cq_id)
-+		__field(int, completion_id)
- 		__field(unsigned int, hdrlen)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->cq_id = ctxt->rc_cid.ci_queue_id;
-+		__entry->completion_id = ctxt->rc_cid.ci_completion_id;
- 		__entry->hdrlen = hdrlen;
- 	),
- 
--	TP_printk("hdrlen=%u", __entry->hdrlen)
-+	TP_printk("cq.id=%u cid=%d hdrlen=%u",
-+		__entry->cq_id, __entry->completion_id,
-+		__entry->hdrlen)
- );
- 
- DECLARE_EVENT_CLASS(svcrdma_badreq_event,
- 	TP_PROTO(
-+		const struct svc_rdma_recv_ctxt *ctxt,
- 		__be32 *p
- 	),
- 
--	TP_ARGS(p),
-+	TP_ARGS(ctxt, p),
- 
- 	TP_STRUCT__entry(
-+		__field(u32, cq_id)
-+		__field(int, completion_id)
- 		__field(u32, xid)
- 		__field(u32, vers)
- 		__field(u32, proc)
-@@ -1429,13 +1445,16 @@ DECLARE_EVENT_CLASS(svcrdma_badreq_event,
- 	),
- 
- 	TP_fast_assign(
-+		__entry->cq_id = ctxt->rc_cid.ci_queue_id;
-+		__entry->completion_id = ctxt->rc_cid.ci_completion_id;
- 		__entry->xid = be32_to_cpup(p++);
- 		__entry->vers = be32_to_cpup(p++);
- 		__entry->credits = be32_to_cpup(p++);
- 		__entry->proc = be32_to_cpup(p);
- 	),
- 
--	TP_printk("xid=0x%08x vers=%u credits=%u proc=%u",
-+	TP_printk("cq.id=%u cid=%d xid=0x%08x vers=%u credits=%u proc=%u",
-+		__entry->cq_id, __entry->completion_id,
- 		__entry->xid, __entry->vers, __entry->credits, __entry->proc)
- );
- 
-@@ -1443,9 +1462,10 @@ DECLARE_EVENT_CLASS(svcrdma_badreq_event,
- 		DEFINE_EVENT(svcrdma_badreq_event,			\
- 			     svcrdma_decode_##name##_err,		\
- 				TP_PROTO(				\
-+					const struct svc_rdma_recv_ctxt *ctxt,	\
- 					__be32 *p			\
- 				),					\
--				TP_ARGS(p))
-+				TP_ARGS(ctxt, p))
- 
- DEFINE_BADREQ_EVENT(badvers);
- DEFINE_BADREQ_EVENT(drop);
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index e6d7401232d2..d5ec85cb652c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -667,27 +667,27 @@ static int svc_rdma_xdr_decode_req(struct xdr_buf *rq_arg,
- 	hdr_len = xdr_stream_pos(&rctxt->rc_stream);
- 	rq_arg->head[0].iov_len -= hdr_len;
- 	rq_arg->len -= hdr_len;
--	trace_svcrdma_decode_rqst(rdma_argp, hdr_len);
-+	trace_svcrdma_decode_rqst(rctxt, rdma_argp, hdr_len);
- 	return hdr_len;
- 
- out_short:
--	trace_svcrdma_decode_short_err(rq_arg->len);
-+	trace_svcrdma_decode_short_err(rctxt, rq_arg->len);
- 	return -EINVAL;
- 
- out_version:
--	trace_svcrdma_decode_badvers_err(rdma_argp);
-+	trace_svcrdma_decode_badvers_err(rctxt, rdma_argp);
- 	return -EPROTONOSUPPORT;
- 
- out_drop:
--	trace_svcrdma_decode_drop_err(rdma_argp);
-+	trace_svcrdma_decode_drop_err(rctxt, rdma_argp);
- 	return 0;
- 
- out_proc:
--	trace_svcrdma_decode_badproc_err(rdma_argp);
-+	trace_svcrdma_decode_badproc_err(rctxt, rdma_argp);
- 	return -EINVAL;
- 
- out_inval:
--	trace_svcrdma_decode_parse_err(rdma_argp);
-+	trace_svcrdma_decode_parse_err(rctxt, rdma_argp);
- 	return -EINVAL;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 1ee73f7cf931..5e7c4ba9e147 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -87,7 +87,7 @@ static int svc_rdma_bc_sendto(struct svcxprt_rdma *rdma,
+ 	 */
+ 	get_page(virt_to_page(rqst->rq_buffer));
+ 	ctxt->sc_send_wr.opcode = IB_WR_SEND;
+-	return svc_rdma_send(rdma, &ctxt->sc_send_wr);
++	return svc_rdma_send(rdma, ctxt);
  }
+ 
+ /* Server-side transport endpoint wants a whole page for its send
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index c720dcf56231..73d46e8cdc16 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -298,13 +298,14 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
+ /**
+  * svc_rdma_send - Post a single Send WR
+  * @rdma: transport on which to post the WR
+- * @wr: prepared Send WR to post
++ * @ctxt: send ctxt with a Send WR ready to post
+  *
+  * Returns zero the Send WR was posted successfully. Otherwise, a
+  * negative errno is returned.
+  */
+-int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
++int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ {
++	struct ib_send_wr *wr = &ctxt->sc_send_wr;
+ 	int ret;
+ 
+ 	might_sleep();
+@@ -330,7 +331,7 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
+ 		}
+ 
+ 		svc_xprt_get(&rdma->sc_xprt);
+-		trace_svcrdma_post_send(wr);
++		trace_svcrdma_post_send(ctxt);
+ 		ret = ib_post_send(rdma->sc_qp, wr, NULL);
+ 		if (ret)
+ 			break;
+@@ -805,7 +806,7 @@ static int svc_rdma_send_reply_msg(struct svcxprt_rdma *rdma,
+ 	} else {
+ 		sctxt->sc_send_wr.opcode = IB_WR_SEND;
+ 	}
+-	return svc_rdma_send(rdma, &sctxt->sc_send_wr);
++	return svc_rdma_send(rdma, sctxt);
+ }
+ 
+ /**
+@@ -869,7 +870,7 @@ void svc_rdma_send_error_msg(struct svcxprt_rdma *rdma,
+ 	sctxt->sc_send_wr.num_sge = 1;
+ 	sctxt->sc_send_wr.opcode = IB_WR_SEND;
+ 	sctxt->sc_sges[0].length = sctxt->sc_hdrbuf.len;
+-	if (svc_rdma_send(rdma, &sctxt->sc_send_wr))
++	if (svc_rdma_send(rdma, sctxt))
+ 		goto put_ctxt;
+ 	return;
  
 
