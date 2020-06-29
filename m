@@ -2,60 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3493E20D10D
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 20:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F52620D10B
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 20:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgF2SiI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jun 2020 14:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
+        id S1727973AbgF2SiC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jun 2020 14:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgF2SiC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:38:02 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6873C02F02B;
-        Mon, 29 Jun 2020 07:58:46 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d27so13046493qtg.4;
-        Mon, 29 Jun 2020 07:58:46 -0700 (PDT)
+        with ESMTP id S1727928AbgF2Sh6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:37:58 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FE9C02F02D;
+        Mon, 29 Jun 2020 07:58:57 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id h18so7762254qvl.3;
+        Mon, 29 Jun 2020 07:58:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=r3WysMiOk9tm1zhD3bXBjap8Kfx4OSNG7JhtoQEwsn8=;
-        b=k5T1WVG3zwMsMotznAUvQtx/+sncqT3FYiDjQjWW4mY1aq4uMlT9C3Y+vOw00hrWuO
-         0AufTq2GvkSR5BVjtXqER3vOGHjLkpIIP/6wYRoCFvgg18EHS9Rvtg7W8dI+JMaaP4cl
-         WJlWVESi5YDol8Ur+1Pe6FlS2XPPrvykOxUjXe1IgSz8HbEbpTbLMVmdTfQ28wPEr+Ep
-         bgwJzA9F3hkgeCPH2ovcyis5oPs0CIQVeQlUYl1Nt/FT3qLI2ZEp9IKDUWP7WsBp5Lzh
-         aBku5zGxkavxhMu5ZA8m86K0zXHjAg/Z5e0JAdyyOWNWHo9AFxi5ppOs/5bvcxsh+0R0
-         vz4Q==
+        bh=/7ALjZmMhPiK2bUZpUhyi04sGW2Du1Oy+/g9ThZu2tA=;
+        b=coD1YD9552dXMDfaNeV/cduKkpIQsFqmw5abIRPL4wuCL6pMv6dWwEYtrUVZpO3XCW
+         OVp9OrZaz5S3LJQvn9EkOkmnMf6snGtnyh7gM4NAIuyfGXSliuamb0hRRVz4v1bnb9Yi
+         9GpU+VVmG00EOycch7flF5rFeRt5sxCkK+dzA1YuUt6kU9zn8FX0LazeRqpf3G78wzQC
+         HDYu7y41mo7ZkHdgenPNBomx5u6IUUY6BdMKE56OG+WnQYaYcvVdJ3mIK/9yOmq87I71
+         FJvQkrag3CZ8mEItw87tqefFZmqp+RNrGSt5WDqTweJ51T2loPaw9Ba3bDuOeOdyd0fb
+         sjsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=r3WysMiOk9tm1zhD3bXBjap8Kfx4OSNG7JhtoQEwsn8=;
-        b=Stks1GbCHgSlh7l9DwclNLd+BMQAe38AX/CyYr7JEbakv5mAYUeZUCd+vDFadX6wLM
-         m6vvXoWuJBt1tCY+BABrIRfR/lJJQ7UYHXfTWCW4jfDM4fVJS9x8QZh+Bt89r1RGJp2x
-         XfJ0Ng4EJ069iET9ohxVFhGU1fbljESPPmgxA+P+Bn5q4xg8epCSQhS2DMWXyiB67Z3k
-         xnuQDstS1JmH/OYeyIJdd//DQ0WMlTmM7cAT1fnag1RrCE2dhyd/dGcQ6Gkk/MgkYQ8h
-         abWJAoeos//7eyl7GMFGyXaLVBnJhaynhBfeoCta0mZW/+fO5nCbOw58L4KrfDFIw5WJ
-         R3HQ==
-X-Gm-Message-State: AOAM531ZaDLl6XTpn1UqG+2V+XELvFVbdKkKou9fFnUXzf9NI8As8iPr
-        gmMya1Wl0Te3b/0YupAdyIDeHDsT
-X-Google-Smtp-Source: ABdhPJx8yru8QJXA6McQt1zSlPsS8osyZ1C/n6eZ3Bti+34Xbk9OKalTaprn13ycXRHoDlbm5yStAA==
-X-Received: by 2002:ac8:45c1:: with SMTP id e1mr16479281qto.250.1593442725717;
-        Mon, 29 Jun 2020 07:58:45 -0700 (PDT)
+        bh=/7ALjZmMhPiK2bUZpUhyi04sGW2Du1Oy+/g9ThZu2tA=;
+        b=c5DNv0iqNQQXk1ctW8XK8Y6S/b9HwHyS4I62kYpTeNZEuuFpa/6v2TDUOhOSY8BUDk
+         mlaYGCUjVuQMzeq9F3ubhsorJvLbMHLBpkCyxUoXaCsXdBE4qTC0u6CkrOO5vmCKJvDO
+         tE9Hqoez6AkDw06VwAevFDpmoAPPuWWuskoP5FMr/r4LfOtUjV0EBHBCYsaWi4oDYlz5
+         ZJW3Xa7OfJtL9hgKFunoPfoajf+Lf9Pf0ek7m+LPhOI+2ngXNfTWOe39ldQIxFM7vGHd
+         9rCl3okY8w9w7QHpqGQYHzwLouJ31ri/m6CypXDwKxJZOVNFywPMT0juoHTl3Mz+DWq8
+         pvbA==
+X-Gm-Message-State: AOAM531IiLBJEjlCFRPa4pLlO1O5UvZWLf+GBsbDE+76DOb0PM5nORE/
+        DX/qa9ni4cpdbjHTesA4m2dIkNON
+X-Google-Smtp-Source: ABdhPJxP6p1gONdceAjyIf5JgerLUqs7yVCkVfKV3N5uulh4nzHOX7lWMIBMssk8arrOXjNY87FaOQ==
+X-Received: by 2002:a0c:fc02:: with SMTP id z2mr2102823qvo.1.1593442736422;
+        Mon, 29 Jun 2020 07:58:56 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x13sm17262132qts.57.2020.06.29.07.58.45
+        by smtp.gmail.com with ESMTPSA id x19sm18960973qtc.36.2020.06.29.07.58.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jun 2020 07:58:45 -0700 (PDT)
+        Mon, 29 Jun 2020 07:58:56 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TEwiWM006245;
-        Mon, 29 Jun 2020 14:58:44 GMT
-Subject: [PATCH v1 2/6] svcrdma: Introduce Receive completion IDs
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TEwtkG006251;
+        Mon, 29 Jun 2020 14:58:55 GMT
+Subject: [PATCH v1 4/6] svcrdma: Introduce Send completion IDs
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 29 Jun 2020 10:58:44 -0400
-Message-ID: <20200629145844.15100.33282.stgit@klimt.1015granger.net>
+Date:   Mon, 29 Jun 2020 10:58:55 -0400
+Message-ID: <20200629145855.15100.8619.stgit@klimt.1015granger.net>
 In-Reply-To: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
 References: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -67,191 +67,86 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Set up a completion ID in each svc_rdma_recv_ctxt. The ID is used
-to match an incoming Receive completion to a transport and to a
-previous ib_post_recv().
+Set up a completion ID in each svc_rdma_send_ctxt. The ID is used
+to match an incoming Send completion to a transport and to a
+previous ib_post_send().
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h         |    4 ++
- include/trace/events/rpcrdma.h          |   51 ++++++++++++-------------------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   15 +++++++--
- 3 files changed, 36 insertions(+), 34 deletions(-)
+ include/linux/sunrpc/svc_rdma.h       |    2 ++
+ include/trace/events/rpcrdma.h        |    2 +-
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |   15 ++++++++++++---
+ 3 files changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index d28ca1b6f2eb..c3c1e46f510f 100644
+index c3c1e46f510f..c91e00bc937e 100644
 --- a/include/linux/sunrpc/svc_rdma.h
 +++ b/include/linux/sunrpc/svc_rdma.h
-@@ -46,6 +46,7 @@
- #include <linux/sunrpc/xdr.h>
- #include <linux/sunrpc/svcsock.h>
- #include <linux/sunrpc/rpc_rdma.h>
-+#include <linux/sunrpc/rpc_rdma_cid.h>
- #include <rdma/ib_verbs.h>
- #include <rdma/rdma_cm.h>
+@@ -151,6 +151,8 @@ struct svc_rdma_recv_ctxt {
  
-@@ -109,6 +110,8 @@ struct svcxprt_rdma {
- 	struct work_struct   sc_work;
- 
- 	struct llist_head    sc_recv_ctxts;
+ struct svc_rdma_send_ctxt {
+ 	struct list_head	sc_list;
++	struct rpc_rdma_cid	sc_cid;
 +
-+	atomic_t	     sc_completion_ids;
- };
- /* sc_flags */
- #define RDMAXPRT_CONN_PENDING	3
-@@ -129,6 +132,7 @@ struct svc_rdma_recv_ctxt {
- 	struct list_head	rc_list;
- 	struct ib_recv_wr	rc_recv_wr;
- 	struct ib_cqe		rc_cqe;
-+	struct rpc_rdma_cid	rc_cid;
- 	struct ib_sge		rc_recv_sge;
- 	void			*rc_recv_buf;
- 	struct xdr_buf		rc_arg;
+ 	struct ib_send_wr	sc_send_wr;
+ 	struct ib_cqe		sc_cqe;
+ 	struct xdr_buf		sc_hdrbuf;
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 70ab989aa3b7..a0330a557e34 100644
+index df49ae5d447b..782a4d826a4b 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -59,8 +59,6 @@ DECLARE_EVENT_CLASS(rpcrdma_completion_class,
- 				),					\
- 				TP_ARGS(wc, cid))
+@@ -1863,7 +1863,7 @@ TRACE_EVENT(svcrdma_post_send,
+ 	)
+ );
  
--DEFINE_COMPLETION_EVENT(dummy);
--
- DECLARE_EVENT_CLASS(xprtrdma_reply_event,
- 	TP_PROTO(
- 		const struct rpcrdma_rep *rep
-@@ -1849,57 +1847,48 @@ DEFINE_SENDCOMP_EVENT(send);
+-DEFINE_SENDCOMP_EVENT(send);
++DEFINE_COMPLETION_EVENT(svcrdma_wc_send);
  
  TRACE_EVENT(svcrdma_post_recv,
  	TP_PROTO(
--		const struct ib_recv_wr *wr,
--		int status
-+		const struct svc_rdma_recv_ctxt *ctxt
- 	),
- 
--	TP_ARGS(wr, status),
-+	TP_ARGS(ctxt),
- 
- 	TP_STRUCT__entry(
--		__field(const void *, cqe)
--		__field(int, status)
-+		__field(u32, cq_id)
-+		__field(int, completion_id)
- 	),
- 
- 	TP_fast_assign(
--		__entry->cqe = wr->wr_cqe;
--		__entry->status = status;
-+		__entry->cq_id = ctxt->rc_cid.ci_queue_id;
-+		__entry->completion_id = ctxt->rc_cid.ci_completion_id;
- 	),
- 
--	TP_printk("cqe=%p status=%d",
--		__entry->cqe, __entry->status
-+	TP_printk("cq.id=%d cid=%d",
-+		__entry->cq_id, __entry->completion_id
- 	)
- );
- 
--TRACE_EVENT(svcrdma_wc_receive,
-+DEFINE_COMPLETION_EVENT(svcrdma_wc_receive);
-+
-+TRACE_EVENT(svcrdma_rq_post_err,
- 	TP_PROTO(
--		const struct ib_wc *wc
-+		const struct svcxprt_rdma *rdma,
-+		int status
- 	),
- 
--	TP_ARGS(wc),
-+	TP_ARGS(rdma, status),
- 
- 	TP_STRUCT__entry(
--		__field(const void *, cqe)
--		__field(u32, byte_len)
--		__field(unsigned int, status)
--		__field(u32, vendor_err)
-+		__field(int, status)
-+		__string(addr, rdma->sc_xprt.xpt_remotebuf)
- 	),
- 
- 	TP_fast_assign(
--		__entry->cqe = wc->wr_cqe;
--		__entry->status = wc->status;
--		if (wc->status) {
--			__entry->byte_len = 0;
--			__entry->vendor_err = wc->vendor_err;
--		} else {
--			__entry->byte_len = wc->byte_len;
--			__entry->vendor_err = 0;
--		}
-+		__entry->status = status;
-+		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
- 	),
- 
--	TP_printk("cqe=%p byte_len=%u status=%s (%u/0x%x)",
--		__entry->cqe, __entry->byte_len,
--		rdma_show_wc_status(__entry->status),
--		__entry->status, __entry->vendor_err
-+	TP_printk("addr=%s status=%d",
-+		__get_str(addr), __entry->status
- 	)
- );
- 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index c0587d3cd389..e6d7401232d2 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -117,6 +117,13 @@ svc_rdma_next_recv_ctxt(struct list_head *list)
- 					rc_list);
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index 38d8f0ee35ec..c720dcf56231 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -122,6 +122,13 @@ svc_rdma_next_send_ctxt(struct list_head *list)
+ 					sc_list);
  }
  
-+static void svc_rdma_recv_cid_init(struct svcxprt_rdma *rdma,
++static void svc_rdma_send_cid_init(struct svcxprt_rdma *rdma,
 +				   struct rpc_rdma_cid *cid)
 +{
-+	cid->ci_queue_id = rdma->sc_rq_cq->res.id;
++	cid->ci_queue_id = rdma->sc_sq_cq->res.id;
 +	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
 +}
 +
- static struct svc_rdma_recv_ctxt *
- svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ static struct svc_rdma_send_ctxt *
+ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
  {
-@@ -135,6 +142,8 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+@@ -144,6 +151,8 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
  	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
  		goto fail2;
  
-+	svc_rdma_recv_cid_init(rdma, &ctxt->rc_cid);
++	svc_rdma_send_cid_init(rdma, &ctxt->sc_cid);
 +
- 	ctxt->rc_recv_wr.next = NULL;
- 	ctxt->rc_recv_wr.wr_cqe = &ctxt->rc_cqe;
- 	ctxt->rc_recv_wr.sg_list = &ctxt->rc_recv_sge;
-@@ -249,13 +258,14 @@ static int __svc_rdma_post_recv(struct svcxprt_rdma *rdma,
- 	int ret;
- 
- 	svc_xprt_get(&rdma->sc_xprt);
-+	trace_svcrdma_post_recv(ctxt);
- 	ret = ib_post_recv(rdma->sc_qp, &ctxt->rc_recv_wr, NULL);
--	trace_svcrdma_post_recv(&ctxt->rc_recv_wr, ret);
- 	if (ret)
- 		goto err_post;
- 	return 0;
- 
- err_post:
-+	trace_svcrdma_rq_post_err(rdma, ret);
- 	svc_rdma_recv_ctxt_put(rdma, ctxt);
- 	svc_xprt_put(&rdma->sc_xprt);
- 	return ret;
-@@ -309,11 +319,10 @@ static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
+ 	ctxt->sc_send_wr.next = NULL;
+ 	ctxt->sc_send_wr.wr_cqe = &ctxt->sc_cqe;
+ 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
+@@ -268,14 +277,14 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
+ {
+ 	struct svcxprt_rdma *rdma = cq->cq_context;
  	struct ib_cqe *cqe = wc->wr_cqe;
- 	struct svc_rdma_recv_ctxt *ctxt;
+-	struct svc_rdma_send_ctxt *ctxt;
++	struct svc_rdma_send_ctxt *ctxt =
++		container_of(cqe, struct svc_rdma_send_ctxt, sc_cqe);
  
--	trace_svcrdma_wc_receive(wc);
--
- 	/* WARNING: Only wc->wr_cqe and wc->status are reliable */
- 	ctxt = container_of(cqe, struct svc_rdma_recv_ctxt, rc_cqe);
+-	trace_svcrdma_wc_send(wc);
++	trace_svcrdma_wc_send(wc, &ctxt->sc_cid);
  
-+	trace_svcrdma_wc_receive(wc, &ctxt->rc_cid);
- 	if (wc->status != IB_WC_SUCCESS)
- 		goto flushed;
+ 	atomic_inc(&rdma->sc_sq_avail);
+ 	wake_up(&rdma->sc_send_wait);
  
+-	ctxt = container_of(cqe, struct svc_rdma_send_ctxt, sc_cqe);
+ 	svc_rdma_send_ctxt_put(rdma, ctxt);
+ 
+ 	if (unlikely(wc->status != IB_WC_SUCCESS)) {
 
