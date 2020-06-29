@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 499A720D8F4
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 22:10:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 155AC20D90B
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 22:10:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387532AbgF2Tm7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jun 2020 15:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
+        id S2387878AbgF2Tni (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jun 2020 15:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387991AbgF2Tmo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 15:42:44 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B47C02F01F;
-        Mon, 29 Jun 2020 07:53:41 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id u8so7730147qvj.12;
-        Mon, 29 Jun 2020 07:53:41 -0700 (PDT)
+        with ESMTP id S2387970AbgF2Tmn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 15:42:43 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29302C02F021;
+        Mon, 29 Jun 2020 07:53:46 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id d27so13032353qtg.4;
+        Mon, 29 Jun 2020 07:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=oe6zXUAJrbLb+gNvG1GakCXoc4L58mZhZKOCT91wgh8=;
-        b=TYpjDjYNw3a15m7xNt46+gkB87BlQ0wwC1k9uO9QwwQ7K9szlMOjDM3KuDhewfRNas
-         +P0JUR0HyHT6TCkr2aOBMCWi0XYHEHvI+ykxNLvu/W2VxFS9aO+4Cyinn4Q7n3uP4YRC
-         ttTsyJGVN1JX+pOET8/GamuiRMzt3MXpuBvxifDCzKLa8gdEXpqetSRqUE0fB1lZ5sAT
-         u40xF7OQGuipNQPL+qO+IBUWnz9c8HAt1DsK91QdFWQZWaZYCCc3sxH2O0/ktQPGg2QZ
-         /HKsowtWKq/htWeDToIy3a1I8Oz06rX4vUimRJeCeWJmMsNUTS+lXpv5QL+MWUYMmA6p
-         FBmQ==
+        bh=ZkrTQFCNrGZ2J9HlWpEHVgSvYmNVSxda0z0g3Ja1x0Q=;
+        b=BKyjxNXsjoIqJQ7duuZwQ8NBqE4yh0ajYKaxfZbmRdACJrbcHetOGdgFPIM5Mr6Qdc
+         5fhMtD9U2066biIaSm4kezGxULI+Pq4NjcT5ICHqwVqk5bwX+9A3ljDyKq2bBsNnt3B5
+         MProH4Wex8e1K8XJg7C+mJy9Y9C2D+r3M5i3ukLsSNXWyn0TXVUl0I0EWQPMla1ttFn+
+         8LtohEhKaV/gjzTrRNWwjcm9VXFSeCIpe1JA5fQ52xPT/9I9/c2Z41BUSsZ+Hmk8tH4M
+         JxdjVn6zQsBkG0RUnYGMjNj0dWQm7U+sfIYZhd6TjGwPf2j0cKqwyAk/YJGkosg8ctl2
+         s4Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=oe6zXUAJrbLb+gNvG1GakCXoc4L58mZhZKOCT91wgh8=;
-        b=S0lZNAj4ORwKjl+Hb8Ty13AwkUowajCJK9qI7UUdJt4BlGOiug9Mnc2hqfo3QkTH1t
-         Wc4hvy4o5orZjRC7Md4z3diQOnXr4KZtdccAYo11cP3kfKiXE3DRZcQzAmtwK/2mcAxP
-         SzX+YjMQv/hlfEhVzY7onN5WyRie2jCV65sHsfK18U1kYhxWhRnwzg70w+3IIqtTQdrE
-         mOxI6Kir9rIizylce9M8sv2X5ijNhjXssJJdwFMziyYX9sOa4GTLq0NqcILKsYZH4ZSm
-         +uqWCpeCthXeU+B1iWpP1oT1/ugEn+xUMG62oBoh7SNgQVtViCj7iK5iTyIS9QpLLYAY
-         rAlQ==
-X-Gm-Message-State: AOAM532xhciqowzFZjbRse/3VA6Z8HUhq2PiurPh7GPvT2lohCpJaBMK
-        e0eDJkOUtwwAqeENle/6QHCfX7Sc
-X-Google-Smtp-Source: ABdhPJx30d90jisGmE+iUWR9URV4UM0VhjCxCW4DcvbohC9eX7n37yaiVhSArF0gjxYG69DhS4VzVg==
-X-Received: by 2002:a0c:9ad7:: with SMTP id k23mr2627036qvf.173.1593442419906;
-        Mon, 29 Jun 2020 07:53:39 -0700 (PDT)
+        bh=ZkrTQFCNrGZ2J9HlWpEHVgSvYmNVSxda0z0g3Ja1x0Q=;
+        b=LaMMlr0joHq7FmAGNW6gXjMwKjyFiC9T+J2xnJDHjW+IuQMNbpLoWlkrn9PvGcEzBn
+         D/K3Lc7RNj7Bsz1288vgHUkUakUhOOdWARIjSEmTVyT4Q7mvCig1KQ4yA6NZ90tWZu6O
+         SoFCdIrqbWFqyudtHi6jv6tQYL8lkPieu80CLNp7UzpHVVnsew0nirwcXQWeH2MEe50Q
+         Tln4Q1UxtUzktOUxAGkVC2dGWPVJCxiO53t/27Ln5jAu9pznrZus491vCkAuZ/BiMcI2
+         RIentgUj9k1MaQM0cdClxMwXR5q+1yzkq6FKbwLhjztydEr1nas+XuyttUhLIGZzusEL
+         iq7g==
+X-Gm-Message-State: AOAM531kup7dSRGSY4X1FgKgfXwSEmuPhPH7HYs7YYGeCvCLxQOnRNYs
+        NkBAdfjIs6zf781UxRgdgMpK03ud
+X-Google-Smtp-Source: ABdhPJyHM0XuuBxXuGH/jLJUdEWyWEe8HWZHzqwgKt1ehC4az5OmD5zWgKItFubYRVo7RYLLnsuwqw==
+X-Received: by 2002:ac8:4507:: with SMTP id q7mr15885586qtn.142.1593442425188;
+        Mon, 29 Jun 2020 07:53:45 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id t57sm15022328qtc.91.2020.06.29.07.53.39
+        by smtp.gmail.com with ESMTPSA id r49sm20147693qtr.11.2020.06.29.07.53.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jun 2020 07:53:39 -0700 (PDT)
+        Mon, 29 Jun 2020 07:53:44 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TErcGu006227;
-        Mon, 29 Jun 2020 14:53:38 GMT
-Subject: [PATCH v1 2/4] SUNRPC: Add helpers for decoding list discriminators
- symbolically
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TErhZN006230;
+        Mon, 29 Jun 2020 14:53:43 GMT
+Subject: [PATCH v1 3/4] svcrdma: Add common XDR decoders for RDMA and Read
+ segments
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 29 Jun 2020 10:53:38 -0400
-Message-ID: <20200629145338.15063.29487.stgit@klimt.1015granger.net>
+Date:   Mon, 29 Jun 2020 10:53:43 -0400
+Message-ID: <20200629145343.15063.16512.stgit@klimt.1015granger.net>
 In-Reply-To: <20200629145150.15063.29447.stgit@klimt.1015granger.net>
 References: <20200629145150.15063.29447.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.22-31-g4b47
@@ -68,164 +68,225 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use these helpers in a few spots to demonstrate their use.
-
-The remaining open-coded discriminator checks in rpcrdma will be
-addressed in subsequent patches.
+Clean up: De-duplicate some code.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/xdr.h              |   26 ++++++++++++++++++++++++++
- net/sunrpc/xprtrdma/rpc_rdma.c          |   12 ++++++------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   17 ++++++++---------
- 3 files changed, 40 insertions(+), 15 deletions(-)
+ include/linux/sunrpc/rpc_rdma.h          |   37 ++++++++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/frwr_ops.c           |    1 -
+ net/sunrpc/xprtrdma/rpc_rdma.c           |    5 +---
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |    4 +--
+ net/sunrpc/xprtrdma/svc_rdma_rw.c        |   37 +++++++++++++-----------------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c    |    5 +---
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    1 -
+ 7 files changed, 56 insertions(+), 34 deletions(-)
 
-diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index 22c207b2425f..5a6a81b7cd9f 100644
---- a/include/linux/sunrpc/xdr.h
-+++ b/include/linux/sunrpc/xdr.h
-@@ -474,6 +474,32 @@ xdr_stream_encode_uint32_array(struct xdr_stream *xdr,
- 	return ret;
+diff --git a/include/linux/sunrpc/rpc_rdma.h b/include/linux/sunrpc/rpc_rdma.h
+index 320c672d84de..db50380f64f4 100644
+--- a/include/linux/sunrpc/rpc_rdma.h
++++ b/include/linux/sunrpc/rpc_rdma.h
+@@ -124,4 +124,41 @@ rpcrdma_decode_buffer_size(u8 val)
+ 	return ((unsigned int)val + 1) << 10;
  }
  
 +/**
-+ * xdr_item_is_absent - symbolically handle XDR discriminators
-+ * @p: pointer to undecoded discriminator
++ * xdr_decode_rdma_segment - Decode contents of an RDMA segment
++ * @p: Pointer to the undecoded RDMA segment
++ * @handle: Upon return, the RDMA handle
++ * @length: Upon return, the RDMA length
++ * @offset: Upon return, the RDMA offset
 + *
-+ * Return values:
-+ *   %true if the following XDR item is absent
-+ *   %false if the following XDR item is present
++ * Return value:
++ *   Pointer to the XDR item that follows the RDMA segment
 + */
-+static inline bool xdr_item_is_absent(const __be32 *p)
++static inline __be32 *xdr_decode_rdma_segment(__be32 *p, u32 *handle,
++					      u32 *length, u64 *offset)
 +{
-+	return *p == xdr_zero;
++	*handle = be32_to_cpup(p++);
++	*length = be32_to_cpup(p++);
++	return xdr_decode_hyper(p, offset);
 +}
 +
 +/**
-+ * xdr_item_is_present - symbolically handle XDR discriminators
-+ * @p: pointer to undecoded discriminator
++ * xdr_decode_read_segment - Decode contents of a Read segment
++ * @p: Pointer to the undecoded Read segment
++ * @position: Upon return, the segment's position
++ * @handle: Upon return, the RDMA handle
++ * @length: Upon return, the RDMA length
++ * @offset: Upon return, the RDMA offset
 + *
-+ * Return values:
-+ *   %true if the following XDR item is present
-+ *   %false if the following XDR item is absent
++ * Return value:
++ *   Pointer to the XDR item that follows the Read segment
 + */
-+static inline bool xdr_item_is_present(const __be32 *p)
++static inline __be32 *xdr_decode_read_segment(__be32 *p, u32 *position,
++					      u32 *handle, u32 *length,
++					      u64 *offset)
 +{
-+	return *p != xdr_zero;
++	*position = be32_to_cpup(p++);
++	return xdr_decode_rdma_segment(p, handle, length, offset);
 +}
 +
- /**
-  * xdr_stream_decode_u32 - Decode a 32-bit integer
-  * @xdr: pointer to xdr_stream
+ #endif				/* _LINUX_SUNRPC_RPC_RDMA_H */
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index b647562a26dd..7f94c9a19fd3 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -40,7 +40,6 @@
+  * New MRs are created on demand.
+  */
+ 
+-#include <linux/sunrpc/rpc_rdma.h>
+ #include <linux/sunrpc/svc_rdma.h>
+ 
+ #include "xprt_rdma.h"
 diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 935bbef2f7be..feecd1f55f18 100644
+index feecd1f55f18..5461f01eeca6 100644
 --- a/net/sunrpc/xprtrdma/rpc_rdma.c
 +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1133,11 +1133,11 @@ rpcrdma_is_bcall(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep)
- 	p = xdr_inline_decode(xdr, 0);
- 
- 	/* Chunk lists */
--	if (*p++ != xdr_zero)
-+	if (xdr_item_is_present(p++))
- 		return false;
--	if (*p++ != xdr_zero)
-+	if (xdr_item_is_present(p++))
- 		return false;
--	if (*p++ != xdr_zero)
-+	if (xdr_item_is_present(p++))
- 		return false;
- 
- 	/* RPC header */
-@@ -1215,7 +1215,7 @@ static int decode_read_list(struct xdr_stream *xdr)
- 	p = xdr_inline_decode(xdr, sizeof(*p));
+@@ -1176,10 +1176,7 @@ static int decode_rdma_segment(struct xdr_stream *xdr, u32 *length)
  	if (unlikely(!p))
  		return -EIO;
--	if (unlikely(*p != xdr_zero))
-+	if (unlikely(xdr_item_is_present(p)))
- 		return -EIO;
+ 
+-	handle = be32_to_cpup(p++);
+-	*length = be32_to_cpup(p++);
+-	xdr_decode_hyper(p, &offset);
+-
++	xdr_decode_rdma_segment(p, &handle, length, &offset);
+ 	trace_xprtrdma_decode_seg(handle, *length, offset);
  	return 0;
  }
-@@ -1234,7 +1234,7 @@ static int decode_write_list(struct xdr_stream *xdr, u32 *length)
- 		p = xdr_inline_decode(xdr, sizeof(*p));
- 		if (unlikely(!p))
- 			return -EIO;
--		if (*p == xdr_zero)
-+		if (xdr_item_is_absent(p))
- 			break;
- 		if (!first)
- 			return -EIO;
-@@ -1256,7 +1256,7 @@ static int decode_reply_chunk(struct xdr_stream *xdr, u32 *length)
- 		return -EIO;
- 
- 	*length = 0;
--	if (*p != xdr_zero)
-+	if (xdr_item_is_present(p))
- 		if (decode_write_chunk(xdr, length))
- 			return -EIO;
- 	return 0;
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index c072ce61b393..5e78067889f3 100644
+index 5e78067889f3..c0587d3cd389 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -419,7 +419,7 @@ static bool xdr_check_read_list(struct svc_rdma_recv_ctxt *rctxt)
- 
- 	len = 0;
- 	first = true;
--	while (*p != xdr_zero) {
-+	while (xdr_item_is_present(p)) {
- 		p = xdr_inline_decode(&rctxt->rc_stream,
- 				      rpcrdma_readseg_maxsz * sizeof(*p));
+@@ -466,9 +466,7 @@ static bool xdr_check_write_chunk(struct svc_rdma_recv_ctxt *rctxt, u32 maxlen)
  		if (!p)
-@@ -500,7 +500,7 @@ static bool xdr_check_write_list(struct svc_rdma_recv_ctxt *rctxt)
- 	if (!p)
- 		return false;
- 	rctxt->rc_write_list = p;
--	while (*p != xdr_zero) {
-+	while (xdr_item_is_present(p)) {
- 		if (!xdr_check_write_chunk(rctxt, MAX_BYTES_WRITE_CHUNK))
  			return false;
- 		++chcount;
-@@ -532,12 +532,11 @@ static bool xdr_check_reply_chunk(struct svc_rdma_recv_ctxt *rctxt)
- 	p = xdr_inline_decode(&rctxt->rc_stream, sizeof(*p));
+ 
+-		handle = be32_to_cpup(p++);
+-		length = be32_to_cpup(p++);
+-		xdr_decode_hyper(p, &offset);
++		xdr_decode_rdma_segment(p, &handle, &length, &offset);
+ 		trace_svcrdma_decode_wseg(handle, length, offset);
+ 
+ 		total += length;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 83806fa94def..2038b1b286dd 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -7,6 +7,7 @@
+ 
+ #include <rdma/rw.h>
+ 
++#include <linux/sunrpc/xdr.h>
+ #include <linux/sunrpc/rpc_rdma.h>
+ #include <linux/sunrpc/svc_rdma.h>
+ 
+@@ -441,34 +442,32 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
+ 	seg = info->wi_segs + info->wi_seg_no * rpcrdma_segment_maxsz;
+ 	do {
+ 		unsigned int write_len;
+-		u32 seg_length, seg_handle;
+-		u64 seg_offset;
++		u32 handle, length;
++		u64 offset;
+ 
+ 		if (info->wi_seg_no >= info->wi_nsegs)
+ 			goto out_overflow;
+ 
+-		seg_handle = be32_to_cpup(seg);
+-		seg_length = be32_to_cpup(seg + 1);
+-		xdr_decode_hyper(seg + 2, &seg_offset);
+-		seg_offset += info->wi_seg_off;
++		xdr_decode_rdma_segment(seg, &handle, &length, &offset);
++		offset += info->wi_seg_off;
+ 
+-		write_len = min(remaining, seg_length - info->wi_seg_off);
++		write_len = min(remaining, length - info->wi_seg_off);
+ 		ctxt = svc_rdma_get_rw_ctxt(rdma,
+ 					    (write_len >> PAGE_SHIFT) + 2);
+ 		if (!ctxt)
+ 			return -ENOMEM;
+ 
+ 		constructor(info, write_len, ctxt);
+-		ret = svc_rdma_rw_ctx_init(rdma, ctxt, seg_offset, seg_handle,
++		ret = svc_rdma_rw_ctx_init(rdma, ctxt, offset, handle,
+ 					   DMA_TO_DEVICE);
+ 		if (ret < 0)
+ 			return -EIO;
+ 
+-		trace_svcrdma_send_wseg(seg_handle, write_len, seg_offset);
++		trace_svcrdma_send_wseg(handle, write_len, offset);
+ 
+ 		list_add(&ctxt->rw_list, &cc->cc_rwctxts);
+ 		cc->cc_sqecount += ret;
+-		if (write_len == seg_length - info->wi_seg_off) {
++		if (write_len == length - info->wi_seg_off) {
+ 			seg += 4;
+ 			info->wi_seg_no++;
+ 			info->wi_seg_off = 0;
+@@ -689,21 +688,17 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
+ 	ret = -EINVAL;
+ 	info->ri_chunklen = 0;
+ 	while (*p++ != xdr_zero && be32_to_cpup(p++) == info->ri_position) {
+-		u32 rs_handle, rs_length;
+-		u64 rs_offset;
++		u32 handle, length;
++		u64 offset;
+ 
+-		rs_handle = be32_to_cpup(p++);
+-		rs_length = be32_to_cpup(p++);
+-		p = xdr_decode_hyper(p, &rs_offset);
+-
+-		ret = svc_rdma_build_read_segment(info, rqstp,
+-						  rs_handle, rs_length,
+-						  rs_offset);
++		p = xdr_decode_rdma_segment(p, &handle, &length, &offset);
++		ret = svc_rdma_build_read_segment(info, rqstp, handle, length,
++						  offset);
+ 		if (ret < 0)
+ 			break;
+ 
+-		trace_svcrdma_send_rseg(rs_handle, rs_length, rs_offset);
+-		info->ri_chunklen += rs_length;
++		trace_svcrdma_send_rseg(handle, length, offset);
++		info->ri_chunklen += length;
+ 	}
+ 
+ 	return ret;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index f985f548346a..a78f1d22e9bb 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -106,7 +106,6 @@
+ #include <rdma/rdma_cm.h>
+ 
+ #include <linux/sunrpc/debug.h>
+-#include <linux/sunrpc/rpc_rdma.h>
+ #include <linux/sunrpc/svc_rdma.h>
+ 
+ #include "xprt_rdma.h"
+@@ -375,9 +374,7 @@ static ssize_t svc_rdma_encode_write_segment(__be32 *src,
  	if (!p)
- 		return false;
--	rctxt->rc_reply_chunk = p;
--	if (*p != xdr_zero) {
-+	rctxt->rc_reply_chunk = NULL;
-+	if (xdr_item_is_present(p)) {
- 		if (!xdr_check_write_chunk(rctxt, MAX_BYTES_SPECIAL_CHUNK))
- 			return false;
--	} else {
--		rctxt->rc_reply_chunk = NULL;
-+		rctxt->rc_reply_chunk = p;
- 	}
- 	return true;
- }
-@@ -568,7 +567,7 @@ static void svc_rdma_get_inv_rkey(struct svcxprt_rdma *rdma,
- 	p += rpcrdma_fixed_maxsz;
+ 		return -EMSGSIZE;
  
- 	/* Read list */
--	while (*p++ != xdr_zero) {
-+	while (xdr_item_is_present(p++)) {
- 		p++;	/* position */
- 		if (inv_rkey == xdr_zero)
- 			inv_rkey = *p;
-@@ -578,7 +577,7 @@ static void svc_rdma_get_inv_rkey(struct svcxprt_rdma *rdma,
- 	}
+-	handle = be32_to_cpup(src++);
+-	length = be32_to_cpup(src++);
+-	xdr_decode_hyper(src, &offset);
++	xdr_decode_rdma_segment(src, &handle, &length, &offset);
  
- 	/* Write list */
--	while (*p++ != xdr_zero) {
-+	while (xdr_item_is_present(p++)) {
- 		segcount = be32_to_cpup(p++);
- 		for (i = 0; i < segcount; i++) {
- 			if (inv_rkey == xdr_zero)
-@@ -590,7 +589,7 @@ static void svc_rdma_get_inv_rkey(struct svcxprt_rdma *rdma,
- 	}
+ 	*p++ = cpu_to_be32(handle);
+ 	if (*remaining < length) {
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index d38be57b00ed..3da7901a49e6 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -55,7 +55,6 @@
  
- 	/* Reply chunk */
--	if (*p++ != xdr_zero) {
-+	if (xdr_item_is_present(p++)) {
- 		segcount = be32_to_cpup(p++);
- 		for (i = 0; i < segcount; i++) {
- 			if (inv_rkey == xdr_zero)
+ #include <linux/sunrpc/addr.h>
+ #include <linux/sunrpc/debug.h>
+-#include <linux/sunrpc/rpc_rdma.h>
+ #include <linux/sunrpc/svc_xprt.h>
+ #include <linux/sunrpc/svc_rdma.h>
+ 
 
