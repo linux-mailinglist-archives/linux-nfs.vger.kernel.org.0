@@ -2,124 +2,176 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 472ED20D1EF
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 20:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 666C420D109
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2020 20:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgF2SpL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Jun 2020 14:45:11 -0400
-Received: from exchange.tu-berlin.de ([130.149.7.70]:61311 "EHLO
-        exchange.tu-berlin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgF2So4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:44:56 -0400
-Received: from SPMA-02.tubit.win.tu-berlin.de (localhost.localdomain [127.0.0.1])
-        by localhost (Email Security Appliance) with SMTP id 0268535BF1_EF97E7DB;
-        Mon, 29 Jun 2020 05:39:09 +0000 (GMT)
-Received: from exchange.tu-berlin.de (exchange.tu-berlin.de [130.149.7.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client CN "exchange.tu-berlin.de", Issuer "DFN-Verein Global Issuing CA" (not verified))
-        by SPMA-02.tubit.win.tu-berlin.de (Sophos Email Appliance) with ESMTPS id B5F3132F9A_EF97E7CF;
-        Mon, 29 Jun 2020 05:39:08 +0000 (GMT)
-Received: from ex-06.tubit.win.tu-berlin.de (172.26.35.189) by
- EX-MBX06.tubit.win.tu-berlin.de (172.26.35.176) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Mon, 29 Jun 2020 07:39:08 +0200
-Received: from ex-02.tubit.win.tu-berlin.de (172.26.35.185) by
- ex-06.tubit.win.tu-berlin.de (172.26.35.189) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.529.5;
- Mon, 29 Jun 2020 07:39:08 +0200
-Received: from ex-02.tubit.win.tu-berlin.de ([172.26.26.142]) by
- ex-02.tubit.win.tu-berlin.de ([172.26.26.142]) with mapi id 15.02.0529.008;
- Mon, 29 Jun 2020 07:39:08 +0200
-From:   "Kraus, Sebastian" <sebastian.kraus@tu-berlin.de>
-To:     Doug Nazar <nazard@nazar.ca>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] Re: Strange segmentation violations of rpc.gssd in
- Debian Buster
-Thread-Topic: [PATCH v2] Re: Strange segmentation violations of rpc.gssd in
- Debian Buster
-Thread-Index: AQHWSxgxwlq3b/mulkebnqBRRSeMOajpu9IAgAEVEpGAADSGAIAAJ84AgAAINwCAAA0egIAAB7GAgAPJdTE=
-Date:   Mon, 29 Jun 2020 05:39:08 +0000
-Message-ID: <6cf63c80f285495d8328c5c8b55fc9d6@tu-berlin.de>
-References: <28a44712b25c4420909360bd813f8bfd@tu-berlin.de>
- <20200620170316.GH1514@fieldses.org>
- <5c45562c90404838944ee71a1d926c74@tu-berlin.de>
- <20200622223628.GC11051@fieldses.org>
- <406fe972135846dc8a23b60be59b0590@tu-berlin.de>
- <1527b158-3404-168c-8908-de4b8a709ccd@nazar.ca>
- <e9de5046e7734e728e64b386314a5d2e@tu-berlin.de>
- <c1c314fd-1855-cf04-3ec5-5f6eb35719a5@nazar.ca>
- <20200626194622.GB11850@fieldses.org>
- <3eb80b1f-e4d3-e87c-aacd-34dc28637948@nazar.ca>
- <20200626210243.GD11850@fieldses.org>,<bebca60d-09e4-f118-c195-c6245e6496fb@nazar.ca>
-In-Reply-To: <bebca60d-09e4-f118-c195-c6245e6496fb@nazar.ca>
-Accept-Language: en-US, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [91.64.112.104]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1727964AbgF2SiB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Jun 2020 14:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbgF2Sh6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Jun 2020 14:37:58 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAB8C02F02A;
+        Mon, 29 Jun 2020 07:58:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c139so15452877qkg.12;
+        Mon, 29 Jun 2020 07:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=SlLdg/AxBKDnOkOKmPG0sqgDs2TJoeR6GghamvyHDyM=;
+        b=n2hIFfOIFlX1saSoQEMhWt03/tDzjE3gn51zDiC0P+lMMeZczb65lIz2u6eRw5NMIG
+         TZfLb2FST8lBac8QyorYTy+6GM9y1EMLV0haBq3ANaRhogXYhV1aAjLKlw1pWqBvAzDj
+         spvtVe8rWTTbhFDVjfRDwwj+AILVa1ZTuDqLVB7HQbAco7ckbtRL4ypot3K/AdY1gHQL
+         klnhwXJv/C5SQmCEbvjADvItCX80tSniDHwieDY7A50NuT1A47Vlx1USqCm6hVqE+Gcq
+         myiDOlZmJUzHBDNDpoqELlN5uBat6YMmKdY2rMoX48y+hNqs4ku7yuwoLczxQy9o6aXx
+         +kRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=SlLdg/AxBKDnOkOKmPG0sqgDs2TJoeR6GghamvyHDyM=;
+        b=VHq5HGD/D+xmjIvYGXyiny7PvyflSofxtHPgrWS5uolxLvTzmcNaPbQ4sHKFX3XEmO
+         VDDzRhKwCxTZor49ErJ9eWiVwwFMYHKOtIB2C00uc/YuYL13GO0Gr9Tr24bMkyr/4+T+
+         CMxTsDYa8V9dPyrDxc5nw79w5SpYrpt5Ybih/lwaysLA5Ry5UMbSGDRtIGY1Z1o8EOfF
+         d0frPnt/oa55RYvQ/u0HUlOk4eaEr3qbP3YSgfX36baYZm6ugSmfdbVvNxdRbz1oM/3N
+         9hgWt+gSMzNxZJjm8VYA3PLSksaaslRi1DukB3wF5q/hdhCrTlgdbwaE3FFg64wJMhC3
+         EbPQ==
+X-Gm-Message-State: AOAM531rSOvruq8IYMQQSP8GIC5YEPoqwt3zBwrTS85yjzANJJgwIIG+
+        cLAvCwvOkvcTWSx7gTJtaosSu7Sb
+X-Google-Smtp-Source: ABdhPJzDZAB6YXAQwXMUYYguHvwcy8JU39pfPYhTUxrMNLI/sldK2PMZi3OgSZFaK358n0tJFff2Hw==
+X-Received: by 2002:a37:4d97:: with SMTP id a145mr14959490qkb.380.1593442720430;
+        Mon, 29 Jun 2020 07:58:40 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id e25sm19154410qtc.93.2020.06.29.07.58.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 07:58:40 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 05TEwdOe006242;
+        Mon, 29 Jun 2020 14:58:39 GMT
+Subject: [PATCH v1 1/6] svcrdma: Introduce infrastructure to support
+ completion IDs
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Mon, 29 Jun 2020 10:58:39 -0400
+Message-ID: <20200629145839.15100.91731.stgit@klimt.1015granger.net>
+In-Reply-To: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
+References: <20200629145528.15100.77805.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.22-31-g4b47
 MIME-Version: 1.0
-X-PMWin-Version: 4.0.1, Antivirus-Engine: 3.77.1, Antivirus-Data: 5.76
-X-PureMessage: [Scanned]
-X-SASI-RCODE: 200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tu-berlin.de; h=from:to:cc:subject:date:message-id:references:in-reply-to:content-type:content-transfer-encoding:mime-version; s=dkim-tub; bh=GVMiFtejPA79Hmicr5O0oY1wKdVcVg6X7g2fCsSE0cY=; b=EUtOG8UrhUi54milgWojWniEBkSo9s/93JT0jXAmrjQwdNq5oCiE+F7qEOfo4dyNc4KQUlbtGMro8OmvVdB1CJ3U2mRDGq2knlvbduBFYKJzAo/B7h7WRHqTZekndM5uPrx9M8lyPe93mb3KqtD/tIuT1Tccr3GIKC7s/hB4fjI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Doug,
-thanks very much for your patch and efforts.
-I manually backported the patch to nfs-utils 1.3.4-2.5 source in Debian Bus=
-ter.
-I am now testing the modified build on one of my NFSv4 file servers. Looks =
-promising.
+The goal is to replace CQE kernel memory addresses in completion-
+related tracepoints.
 
-One additional question: Which nfs-utils branch are your working on - steve=
-d/nfs-utils.git ?
+Each completion ID matches an incoming Send or Receive completion
+to a Completion Queue and to a previous ib_post_*(). The ID can
+then be displayed in an error message or recorded in a trace
+record.
 
-Best Sebastian
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/linux/sunrpc/rpc_rdma_cid.h |   24 ++++++++++++++++++++
+ include/trace/events/rpcrdma.h      |   43 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
+ create mode 100644 include/linux/sunrpc/rpc_rdma_cid.h
 
-__________________
-Sebastian Kraus
-Team IT am Institut f=FCr Chemie
-Geb=E4ude C, Stra=DFe des 17. Juni 115, Raum C7
+diff --git a/include/linux/sunrpc/rpc_rdma_cid.h b/include/linux/sunrpc/rpc_rdma_cid.h
+new file mode 100644
+index 000000000000..be24ab2baa6a
+--- /dev/null
++++ b/include/linux/sunrpc/rpc_rdma_cid.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * * Copyright (c) 2020, Oracle and/or its affiliates.
++ */
++
++#ifndef RPC_RDMA_CID_H
++#define RPC_RDMA_CID_H
++
++/*
++ * The rpc_rdma_cid struct records completion ID information. A
++ * completion ID matches an incoming Send or Receive completion
++ * to a Completion Queue and to a previous ib_post_*(). The ID
++ * can then be displayed in an error message or recorded in a
++ * trace record.
++ *
++ * This struct is shared between the server and client RPC/RDMA
++ * transport implementations.
++ */
++struct rpc_rdma_cid {
++	u32			ci_queue_id;
++	int			ci_completion_id;
++};
++
++#endif	/* RPC_RDMA_CID_H */
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index 0eff80dee066..70ab989aa3b7 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -11,6 +11,7 @@
+ #define _TRACE_RPCRDMA_H
+ 
+ #include <linux/scatterlist.h>
++#include <linux/sunrpc/rpc_rdma_cid.h>
+ #include <linux/tracepoint.h>
+ #include <trace/events/rdma.h>
+ 
+@@ -18,6 +19,48 @@
+  ** Event classes
+  **/
+ 
++DECLARE_EVENT_CLASS(rpcrdma_completion_class,
++	TP_PROTO(
++		const struct ib_wc *wc,
++		const struct rpc_rdma_cid *cid
++	),
++
++	TP_ARGS(wc, cid),
++
++	TP_STRUCT__entry(
++		__field(u32, cq_id)
++		__field(int, completion_id)
++		__field(unsigned long, status)
++		__field(unsigned int, vendor_err)
++	),
++
++	TP_fast_assign(
++		__entry->cq_id = cid->ci_queue_id;
++		__entry->completion_id = cid->ci_completion_id;
++		__entry->status = wc->status;
++		if (wc->status)
++			__entry->vendor_err = wc->vendor_err;
++		else
++			__entry->vendor_err = 0;
++	),
++
++	TP_printk("cq.id=%u cid=%d status=%s (%lu/0x%x)",
++		__entry->cq_id, __entry->completion_id,
++		rdma_show_wc_status(__entry->status),
++		__entry->status, __entry->vendor_err
++	)
++);
++
++#define DEFINE_COMPLETION_EVENT(name)					\
++		DEFINE_EVENT(rpcrdma_completion_class, name,		\
++				TP_PROTO(				\
++					const struct ib_wc *wc,		\
++					const struct rpc_rdma_cid *cid	\
++				),					\
++				TP_ARGS(wc, cid))
++
++DEFINE_COMPLETION_EVENT(dummy);
++
+ DECLARE_EVENT_CLASS(xprtrdma_reply_event,
+ 	TP_PROTO(
+ 		const struct rpcrdma_rep *rep
 
-Technische Universit=E4t Berlin
-Fakult=E4t II
-Institut f=FCr Chemie
-Sekretariat C3
-Stra=DFe des 17. Juni 135
-10623 Berlin
-
-Email: sebastian.kraus@tu-berlin.de
-
-________________________________________
-From: linux-nfs-owner@vger.kernel.org <linux-nfs-owner@vger.kernel.org> on =
-behalf of Doug Nazar <nazard@nazar.ca>
-Sent: Friday, June 26, 2020 23:30
-To: J. Bruce Fields
-Cc: Kraus, Sebastian; linux-nfs@vger.kernel.org; Steve Dickson; Olga Kornie=
-vskaia
-Subject: [PATCH v2] Re: Strange segmentation violations of rpc.gssd in Debi=
-an Buster
-
-On 2020-06-26 17:02, J. Bruce Fields wrote:
-> Unless I'm missing something--an upcall thread could still be using this
-> file descriptor.
->
-> If we're particularly unlucky, we could do a new open in a moment and
-> reuse this file descriptor number, and then then writes in do_downcall()
-> could end up going to some other random file.
->
-> I think we want these closes done by gssd_free_client() in the !refcnt
-> case?
-
-Makes sense. I was thinking more that it was an abort situation and we
-shouldn't be sending any data to the kernel but re-use is definitely a
-concern.
-
-I've split it so that we are removed from the event loop in destroy()
-but the close happens in free().
-
-Doug=
