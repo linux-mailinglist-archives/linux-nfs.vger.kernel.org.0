@@ -2,181 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D664B211970
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2020 03:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B77C211B13
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2020 06:28:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgGBBfI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Jul 2020 21:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgGBBXd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE24020874;
-        Thu,  2 Jul 2020 01:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653012;
-        bh=MZ2iJx/qJnONWSY1ZZ0fE/jzrPllTcmAvUkRUH8FEx4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEb5egsCCNEVlhrBY/2PVK9ic23hCOpIvOMLpDuTtvWffjPS/9uRUAMzD+BNZMzUD
-         WULcoy3Ge7ze7JZrR1PJOCAcIMT7HnFGHzzh2nOJkhdrNTlMlXwINd/PzL5xtxM97z
-         iH6cp95DujtxK7UI8o6AkA9P2xqVGyqEcApP1bNE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 30/53] xprtrdma: Prevent dereferencing r_xprt->rx_ep after it is freed
-Date:   Wed,  1 Jul 2020 21:21:39 -0400
-Message-Id: <20200702012202.2700645-30-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
-References: <20200702012202.2700645-1-sashal@kernel.org>
+        id S1726118AbgGBE2Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jul 2020 00:28:24 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58243 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGBE2Y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jul 2020 00:28:24 -0400
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0624QsOL032532;
+        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
+ Thu, 02 Jul 2020 13:26:54 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0624Qsh8032529
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+Date:   Thu, 2 Jul 2020 13:26:53 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701153859.GT4332@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On 2020/07/02 0:38, Luis Chamberlain wrote:
+> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+>  		 */
+>  		if (KWIFEXITED(ret))
+>  			sub_info->retval = KWEXITSTATUS(ret);
+> +		/*
+> +		 * Do we really want to be passing the signal, or do we pass
+> +		 * a single error code for all cases?
+> +		 */
+> +		else if (KWIFSIGNALED(ret))
+> +			sub_info->retval = KWTERMSIG(ret);
 
-[ Upstream commit 2acc5cae292355f5f18ad377a2a966e7f03c8fec ]
+No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
+and e.g. SIGKILL'ed by the OOM-killer. Please pass raw exit status value.
 
-r_xprt->rx_ep is known to be good while the transport's send lock is
-held.  Otherwise additional references on rx_ep must be held when it
-is used outside of that lock's critical sections.
+I feel that caller of usermode helper should not use exit status value.
+For example, call_sbin_request_key() is checking
 
-For now, bump the rx_ep reference count once whenever there is at
-least one outstanding Receive WR. This avoids the memory bandwidth
-overhead of taking and releasing the reference count for every
-ib_post_recv() and Receive completion.
+  test_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags) || key_validate(key) < 0
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/xprtrdma/verbs.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+condition (if usermode helper was invoked) in order to "ignore any errors from
+userspace if the key was instantiated".
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 05c4d3a9cda27..db0259c6467ef 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -84,7 +84,8 @@ static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep);
- static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
--static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep);
-+static void rpcrdma_ep_get(struct rpcrdma_ep *ep);
-+static int rpcrdma_ep_put(struct rpcrdma_ep *ep);
- static struct rpcrdma_regbuf *
- rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
- 		     gfp_t flags);
-@@ -97,7 +98,8 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb);
-  */
- static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- {
--	struct rdma_cm_id *id = r_xprt->rx_ep->re_id;
-+	struct rpcrdma_ep *ep = r_xprt->rx_ep;
-+	struct rdma_cm_id *id = ep->re_id;
- 
- 	/* Flush Receives, then wait for deferred Reply work
- 	 * to complete.
-@@ -108,6 +110,8 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- 	 * local invalidations.
- 	 */
- 	ib_drain_sq(id->qp);
-+
-+	rpcrdma_ep_put(ep);
- }
- 
- /**
-@@ -267,7 +271,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 		xprt_force_disconnect(xprt);
- 		goto disconnected;
- 	case RDMA_CM_EVENT_ESTABLISHED:
--		kref_get(&ep->re_kref);
-+		rpcrdma_ep_get(ep);
- 		ep->re_connect_status = 1;
- 		rpcrdma_update_cm_private(ep, &event->param.conn);
- 		trace_xprtrdma_inline_thresh(ep);
-@@ -290,7 +294,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 		ep->re_connect_status = -ECONNABORTED;
- disconnected:
- 		xprt_force_disconnect(xprt);
--		return rpcrdma_ep_destroy(ep);
-+		return rpcrdma_ep_put(ep);
- 	default:
- 		break;
- 	}
-@@ -346,7 +350,7 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
- 	return ERR_PTR(rc);
- }
- 
--static void rpcrdma_ep_put(struct kref *kref)
-+static void rpcrdma_ep_destroy(struct kref *kref)
- {
- 	struct rpcrdma_ep *ep = container_of(kref, struct rpcrdma_ep, re_kref);
- 
-@@ -370,13 +374,18 @@ static void rpcrdma_ep_put(struct kref *kref)
- 	module_put(THIS_MODULE);
- }
- 
-+static noinline void rpcrdma_ep_get(struct rpcrdma_ep *ep)
-+{
-+	kref_get(&ep->re_kref);
-+}
-+
- /* Returns:
-  *     %0 if @ep still has a positive kref count, or
-  *     %1 if @ep was destroyed successfully.
-  */
--static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep)
-+static noinline int rpcrdma_ep_put(struct rpcrdma_ep *ep)
- {
--	return kref_put(&ep->re_kref, rpcrdma_ep_put);
-+	return kref_put(&ep->re_kref, rpcrdma_ep_destroy);
- }
- 
- static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
-@@ -493,7 +502,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
- 	return 0;
- 
- out_destroy:
--	rpcrdma_ep_destroy(ep);
-+	rpcrdma_ep_put(ep);
- 	rdma_destroy_id(id);
- out_free:
- 	kfree(ep);
-@@ -522,8 +531,12 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 
- 	ep->re_connect_status = 0;
- 	xprt_clear_connected(xprt);
--
- 	rpcrdma_reset_cwnd(r_xprt);
-+
-+	/* Bump the ep's reference count while there are
-+	 * outstanding Receives.
-+	 */
-+	rpcrdma_ep_get(ep);
- 	rpcrdma_post_recvs(r_xprt, true);
- 
- 	rc = rpcrdma_sendctxs_create(r_xprt);
-@@ -588,7 +601,7 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
- 	rpcrdma_mrs_destroy(r_xprt);
- 	rpcrdma_sendctxs_destroy(r_xprt);
- 
--	if (rpcrdma_ep_destroy(ep))
-+	if (rpcrdma_ep_put(ep))
- 		rdma_destroy_id(id);
- 
- 	r_xprt->rx_ep = NULL;
--- 
-2.25.1
+> +		/* Same here */
+> +		else if (KWIFSTOPPED((ret)))
+> +			sub_info->retval = KWSTOPSIG(ret);
+> +		/* And are we really sure we want this? */
+> +		else if (KWIFCONTINUED((ret)))
+> +			sub_info->retval = 0;
+>  	}
+>  
+>  	/* Restore default kernel sig handler */
+> 
 
