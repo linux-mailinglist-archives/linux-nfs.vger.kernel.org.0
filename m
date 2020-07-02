@@ -2,97 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ED2421157F
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2020 23:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A7B211736
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2020 02:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgGAV5P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Jul 2020 17:57:15 -0400
-Received: from ny018.relay.arandomserver.com ([172.96.188.180]:36259 "EHLO
-        ny018.relay.arandomserver.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726413AbgGAV5O (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jul 2020 17:57:14 -0400
-Received: from nyc006.hawkhost.com ([172.96.186.142])
-        by se004.arandomserver.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <nazard@nazar.ca>)
-        id 1jqkjA-0001LD-5F
-        for linux-nfs@vger.kernel.org; Wed, 01 Jul 2020 16:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nazar.ca;
-         s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version
-        :Date:Message-ID:References:To:From:Subject:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=i17icfh+NgGBKnHLoQto187xFWR5auMVJUKzwWjFKrE=; b=JNwsRCqGICcY3M7peKi19uvkdW
-        k70tUzvQ159GvbLd1hZG+OW85hqKemH8oevAUjPAy2N6y/ASgF/YVcRNB0hQTMDgn6w++R1sNaQtw
-        ar5ywWcA6vGa5x+2hLn9/uto7u/cK509AAp7NY+5UD5p5L8Oz4u2WUaUWr9VNkR6gDgn3Woklwbxu
-        ztKnA7hklwxKwWn9yWaEycUAHD0GDftQVgufEjurErRDcW6Djrq95h5jYC5j3blijAoiEs4GaQvSw
-        sNTK5kf9mmzs1IK12rnwsDvvGbNwJW7WEWzWJiQhL+r95FjjBh8lWwW5kq8Fhx2J4IrAQzBdqOm0A
-        tJsstzhg==;
-Received: from [174.119.114.224] (port=62301 helo=[192.168.21.100])
-        by nyc006.hawkhost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <nazard@nazar.ca>)
-        id 1jqkj9-0004f5-Py
-        for linux-nfs@vger.kernel.org; Wed, 01 Jul 2020 17:57:11 -0400
-Subject: Re: gssd keytab resolution
-From:   Doug Nazar <nazard@nazar.ca>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <e61057cc-6c4b-6d88-aab2-c5d5db9bdf50@nazar.ca>
-Message-ID: <487c34e4-1ba3-a77f-3257-c47cdc6c6a1c@nazar.ca>
-Date:   Wed, 1 Jul 2020 17:57:11 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.0
+        id S1727812AbgGBAat (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Jul 2020 20:30:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38434 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbgGBAas (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:30:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 28BF2AD4A;
+        Thu,  2 Jul 2020 00:30:47 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Date:   Thu, 02 Jul 2020 10:30:40 +1000
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: simplify inode_dio_begin/end calls.
+In-Reply-To: <20200624175408.74678-1-olga.kornievskaia@gmail.com>
+References: <20200624175408.74678-1-olga.kornievskaia@gmail.com>
+Message-ID: <87366a3gi7.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <e61057cc-6c4b-6d88-aab2-c5d5db9bdf50@nazar.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Get-Message-Sender-Via: nyc006.hawkhost.com: authenticated_id: nazard@nazar.ca
-X-Authenticated-Sender: nyc006.hawkhost.com: nazard@nazar.ca
-X-Originating-IP: 172.96.186.142
-X-SpamExperts-Domain: nyc006.hawkhost.com
-X-SpamExperts-Username: 172.96.186.142
-Authentication-Results: arandomserver.com; auth=pass smtp.auth=172.96.186.142@nyc006.hawkhost.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.11)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0f6LF1GdvkEexklpcFpSF5apSDasLI4SayDByyq9LIhVQZ6Zcq9hGJDb
- tXBIej2IUUTNWdUk1Ol2OGx3IfrIJKywOmJyM1qr8uRnWBrbSAGDoHt0IcOGwKCbMuu8Bh1PoO2W
- aaJF459Au8f7ARCz5dL3UGel2+kHLzkrcOfjhoacqwD+Ufwmnv2XpsoA/vlp5nXpGCeulZALlD2V
- AvpAcEdNy48VCLWq/B04EaMIT1z9KJ9I7HJckiqd4uUgfyUDbi0mNlctu/ZLaOH13A3s9cVWgxmT
- epC+rmMtfXSN6UccbEYBdMHLz8fdZytxBPvQ/tfm/6ZhrBvMHqGRRS2yqrTz7IssKbNSm6Aylrz7
- vRRedYGRJ5j/qgI5gfjNk3Q1FcO1wjmeb9RCa+YI49T4kOuq00YljRCkN7s2SRETCBXfmpMlsQfU
- CJBMRaGGGXrzQ9clsf95ERnfa5/3utVu63cGgIqsnjgPIxt+QJb5OikLV0VRXawyICi9P2LaegYD
- 7MEavzt+PYIWFngwZuyqjCaZSjmmVb1jzWCjpHhh1WjZqXWvTtyZt5+E2rHRTxiOPQKf33qQtTYr
- DPixEr4D2aetI4g+l6rCWbY0MZcgnbHs5dmPTEEmx4/N3lqiWWXcjbsCnerI87CybAKXp7fccSOf
- sBWD4ORwI9sxSnztzWd/9HDhl4gBqApdFfF/te8FXfRnzQu6jFSVK9YDcVmQAY2napQ1VBeZGBjd
- 4wKnJrvdiwQzKw+6v3CaIMG6s7LqJPXlxUTbP0xEZy5p9dvo9LFm4eDGPWQjiHziZaTK5a5hyLlN
- M8NiMQzxyIfU2tsmD1Z4mbA7QbgZqM76s09fTaH5d9Mpny2MqlrXcMQyNtV/a69YW9GH6uP7jsWP
- FubLd8OpyKA69LF1Ge2GaGfxmfr6K2lXCppCFhOH1qLPVvOyhENX6cHY1RZ9qv4kihn2llwcIfe9
- qSdMLqKquuUrXWpOB0fQQI8VICRbS6zGNgmkrLchyjwyJsS12kHj54zW1GIRK0UT0GXzK7XVSbOa
- O4t6datJIW5RtosbtmTCpMB/
-X-Report-Abuse-To: spam@se001.arandomserver.com
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020-06-29 10:57, Doug Nazar wrote:
-> While playing around I noticed this pattern occasionally.
->
-> I was wondering if 'srchost=*' should be treated as NULL (use 
-> gethostname) or to just skip the loop where we call 
-> krb5_kt_get_entry() since that won't match with an asterisk.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Nope, looks like this was me. During a rebase I managed to get 
-gssd_proc.c compiled with the old version of krb5_util.h and gentoo 
-disables dependency tracking by default.
 
-Seems to have gone away now after a make clean, was able to reproduce it 
-for hours... sigh.
+As a recent patch highlighted, inode_dio_end() must be called after
+nfs_direct_req_release() is called.
+It would make the code more robust if nfs_direct_req_release() did that
+call itself, placing it after put_nfs_open_context().
 
-So, that patch can be dropped.
+To achieve this:
+ - move the inode_dio_begin() calls to the moment when a
+   'struct nfs_direct_req' is allocated,
+ - move the inode_dio_end() calls to just before the
+   'struct nfs_direct_req' is freed,
+ - use igrab to make req->inode a counted reference so that
+   it can be used after put_nfs_open_context() (which calls
+   dput(), that releasing the only reference we previously held
+   on the inode).
 
-Doug
+This patch doesn't change behaviour at all, it just simplifies the code
+a little.
 
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ fs/nfs/direct.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 3d113cf8908a..ab32b23639d3 100644
+=2D-- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -221,6 +221,8 @@ static void nfs_direct_req_free(struct kref *kref)
+ 		nfs_put_lock_context(dreq->l_ctx);
+ 	if (dreq->ctx !=3D NULL)
+ 		put_nfs_open_context(dreq->ctx);
++	inode_dio_end(dreq->inode);
++	iput(dreq->inode);
+ 	kmem_cache_free(nfs_direct_cachep, dreq);
+ }
+=20
+@@ -278,10 +280,7 @@ static void nfs_direct_complete(struct nfs_direct_req =
+*dreq)
+=20
+ 	complete(&dreq->completion);
+=20
+=2D	igrab(inode);
+ 	nfs_direct_req_release(dreq);
+=2D	inode_dio_end(inode);
+=2D	iput(inode);
+ }
+=20
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -359,7 +358,6 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nf=
+s_direct_req *dreq,
+ 			     &nfs_direct_read_completion_ops);
+ 	get_dreq(dreq);
+ 	desc.pg_dreq =3D dreq;
+=2D	inode_dio_begin(inode);
+=20
+ 	while (iov_iter_count(iter)) {
+ 		struct page **pagevec;
+@@ -411,10 +409,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct n=
+fs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes =3D=3D 0) {
+=2D		igrab(inode);
+ 		nfs_direct_req_release(dreq);
+=2D		inode_dio_end(inode);
+=2D		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
+=20
+@@ -467,7 +462,8 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct=
+ iov_iter *iter)
+ 	if (dreq =3D=3D NULL)
+ 		goto out;
+=20
+=2D	dreq->inode =3D inode;
++	dreq->inode =3D igrab(inode);
++	inode_dio_begin(inode);
+ 	dreq->bytes_left =3D dreq->max_count =3D count;
+ 	dreq->io_start =3D iocb->ki_pos;
+ 	dreq->ctx =3D get_nfs_open_context(nfs_file_open_context(iocb->ki_filp));
+@@ -807,7 +803,6 @@ static ssize_t nfs_direct_write_schedule_iovec(struct n=
+fs_direct_req *dreq,
+ 			      &nfs_direct_write_completion_ops);
+ 	desc.pg_dreq =3D dreq;
+ 	get_dreq(dreq);
+=2D	inode_dio_begin(inode);
+=20
+ 	NFS_I(inode)->write_io +=3D iov_iter_count(iter);
+ 	while (iov_iter_count(iter)) {
+@@ -867,10 +862,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct =
+nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes =3D=3D 0) {
+=2D		igrab(inode);
+ 		nfs_direct_req_release(dreq);
+=2D		inode_dio_end(inode);
+=2D		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
+=20
+@@ -929,7 +921,8 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struc=
+t iov_iter *iter)
+ 	if (!dreq)
+ 		goto out;
+=20
+=2D	dreq->inode =3D inode;
++	dreq->inode =3D igrab(inode);
++	inode_dio_begin(inode);
+ 	dreq->bytes_left =3D dreq->max_count =3D count;
+ 	dreq->io_start =3D pos;
+ 	dreq->ctx =3D get_nfs_open_context(nfs_file_open_context(iocb->ki_filp));
+=2D-=20
+2.26.2
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl79KrAACgkQOeye3VZi
+gbluQBAAjNhXPN7XLRmihIeYKqj8GCMUxGz99oFKiXKAmQN1KXS/AvWggBFNmSJB
+3pWLEBFztBst/+5XzIu13FyBZVJ2WHyYHviN4xDXPKdVj2WWyr7z/AAFO1nMQmzO
+DRuBn2ydlBgxc6bqjAABJEZxENAtgn7NpCwPd5z7d26UgmOpl4pGX8iuTcNK/AA5
+n3/2OhqqhUnsyoxf8FoNjEn8wDtboE1AYYA1JeXov7r9kl84+fBQ9CftvgNMsiIU
+v6vlptxL3Nt0Dj8gs36slUWWHjmBG8QjMET0Db4a/TGxmVdljazszSRmYDssZdlL
+9GE1Iv0wvcj2q+3kxPVLpBP6ZXJWB+wtBz2igSDDmBPlwmJqsxhv68ZgT/dEAdoY
+BaFWRjTlELKGKPt66f9sdIGw+kZlTy/3TuerK4fec6ChgS6u1ScUzIeEmMlNpbNd
+HsDJJNz1KtMa/uvz0aFWrWYdxLb2miIbK9Wozq9HawEGrmRXS8wbRMquh9XAFtj+
+3mHvfYFKCeEfAlL/+zSmApd1HuW83esltdO5pWQA+D/6BTmbKgC71CkyEaQGWo53
+H+MD9PLLc1TPWXf6d8GbeFRoAiHpz714njDhoycpDJVEapyx/hzQyegUSwgoW6XH
+0/SFtoF4+QUUAZ068YxHWY3fcCBmt/CM9IX7eTHK+6KLM8/0jlU=
+=oytk
+-----END PGP SIGNATURE-----
+--=-=-=--
