@@ -2,209 +2,199 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A239F212107
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2020 12:22:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2219E21213B
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2020 12:28:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgGBKWJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Jul 2020 06:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgGBKUp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:20:45 -0400
-Received: from e123331-lin.nice.arm.com (lfbn-nic-1-188-42.w2-15.abo.wanadoo.fr [2.15.37.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3092E208D5;
-        Thu,  2 Jul 2020 10:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593685244;
-        bh=Dgcjvy0hCTfHOwCVOrjRfrBiKApvt8n4dhLRuzaQnTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eih0jVBvh7Y1bN4cY1nF7fJ9CwT3o2BoGfRUZVQM+4FJmd7mGUPmo4UWNkrVfYdiB
-         QtE+5mjRUT1SuE5e5DJezfzxeQKrJTsTgcuMrq10aCUG0TYfa2oHkEK9CcqHd7Gq5J
-         oTxHKpYq7H7UmQRq7PM5eDzFiReX5/NUi4ukBBWA=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 7/7] crypto: tcrypt - remove ecb(arc4) testing/benchmarking support
-Date:   Thu,  2 Jul 2020 12:19:47 +0200
-Message-Id: <20200702101947.682-8-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702101947.682-1-ardb@kernel.org>
-References: <20200702101947.682-1-ardb@kernel.org>
+        id S1728357AbgGBK2d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jul 2020 06:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgGBK2c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jul 2020 06:28:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F7DC08C5C1
+        for <linux-nfs@vger.kernel.org>; Thu,  2 Jul 2020 03:28:32 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so27610430ljp.6
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Jul 2020 03:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=NDf/Go6IME0UpwwW8wupU7VZWzCSs3tnOTVhxAuwUsY=;
+        b=A0XEcDFrYGLt2KtCFb1s+rcOCxyxg8P60DwfB/zkyGaV2Sx2c2QCyjQSNJTGbyxaOP
+         AFQPMJ2tIwxq87Eu6pksM6NujuJrp0lxZWwINXSEnD9JY6bamil054MmScjTD9o4hiKd
+         xjKlm7M0oWpfemS5DZ9tlUdPaod+bZuugCuoWO7VOu8V2tVa4uRD9znWGaSRPep4/SY1
+         bUNrVXrTYn90v+PPKrtgF+U1WXf4SiuSAM7Q10vEZy3EEg7fXd/58ANh8Gx9juSc2ZXA
+         tFCbsB00btir4FhuydJcZXbNwOkH76fjf3LgB7KrSgWzSTP0xAWU+XDI0P2UyG41ViPa
+         cF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=NDf/Go6IME0UpwwW8wupU7VZWzCSs3tnOTVhxAuwUsY=;
+        b=c0gHrdvHG+j8a0Z0VSrlPeqQdIP+Arflb1U+7QiewAKufNxJBxuj7j67yycYZ1NIin
+         gpLfuws4BhWrVfANPpKE+xZe+7t1l5PCt0mGbRDuVLmPYLgsw2ziUmFxD5J07dDNQqOT
+         9R5DQM8ckdE+zzcvyXX1bMwFcFxuXUg0AGxXhMrAD4iGQb64zLx+5Iipt/Kdzl9JXauh
+         cH7cTtaD63pZNjDQKD6XxKHJQU1XkIvHMRBKkQijemCqFJrVMejRRo8ScMHquO7APGfI
+         gOpPO/3dLCdaCm5oF9/4/ZN3ARMpNAO8f+8yXLArUbux7G/y65OXSCvGGk0zT3RflDqZ
+         VA8A==
+X-Gm-Message-State: AOAM531icslPxyXVtEPuQawOe4En1M/BL01qM4e/EBZK7wvpaUQPK5WR
+        82zQqv4nThFOYnsDZxGYh9e8S9THO08kjlrLAMfVtvgy
+X-Google-Smtp-Source: ABdhPJyieQgZm3lyw6dLpKoOI3T8TcLwRJlOtrzNmvaoZk+WtotZ9VUvus4DY00wVdXv5VG8w8Ag6wAbsv+PCqAvk5U=
+X-Received: by 2002:a2e:890d:: with SMTP id d13mr16333311lji.75.1593685709691;
+ Thu, 02 Jul 2020 03:28:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <0aee01d63d91$1f104300$5d30c900$@gmail.com> <7E441550-FCCF-492E-BACB-271A42D4A6C4@oracle.com>
+ <119601d63f43$9d55e860$d801b920$@gmail.com> <CAK3fRr-cV_0c-sHhA2rMswrHEcLrkNfHs-=ejHRS8-j8zzObhA@mail.gmail.com>
+In-Reply-To: <CAK3fRr-cV_0c-sHhA2rMswrHEcLrkNfHs-=ejHRS8-j8zzObhA@mail.gmail.com>
+From:   James Pearson <jcpearson@gmail.com>
+Date:   Thu, 2 Jul 2020 11:28:18 +0100
+Message-ID: <CAK3fRr_GR3bY5d6GC-cQYGN4UTR0nmkCyJa9AOgmSbxSxYWYEw@mail.gmail.com>
+Subject: Re: NFSv4.0: client stuck looping on RENEW + NFSERR_STALE_CLIENTID
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- crypto/tcrypt.c  | 21 +------
- crypto/testmgr.c |  7 ---
- crypto/testmgr.h | 62 --------------------
- 3 files changed, 1 insertion(+), 89 deletions(-)
+On Wed, 24 Jun 2020 at 09:54, James Pearson <jcpearson@gmail.com> wrote:
+>
+> On Wed, 10 Jun 2020 at 17:24, Robert Milkowski <rmilkowski@gmail.com> wrote:
+> >
+> > I was hoping someone here might get back with "hey, this has been fixed by
+> > commit...".
+> > We also did see it on centos 7.6
+> >
+> > I will try to get it re-produce it and once I can then I'll try to reproduce
+> > it against upstream.
+>
+> I haven't been monitoring this list recently - but we are still having
+> the same problem with CentOS 7.7 clients and Isilon filers
+>
+> I've just 'fixed' one client with the issue in the way you described
+> earlier in this thread by looking for a process in nfs4_state_manager
+> via a stack trace - killing that pid with -9 and all the stuck mount
+> pops back to life
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index ba0b7702f2e9..72828c4acd3a 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -68,7 +68,7 @@ static char *tvmem[TVMEMSIZE];
- static const char *check[] = {
- 	"des", "md5", "des3_ede", "rot13", "sha1", "sha224", "sha256", "sm3",
- 	"blowfish", "twofish", "serpent", "sha384", "sha512", "md4", "aes",
--	"cast6", "arc4", "michael_mic", "deflate", "crc32c", "tea", "xtea",
-+	"cast6", "michael_mic", "deflate", "crc32c", "tea", "xtea",
- 	"khazad", "wp512", "wp384", "wp256", "tnepres", "xeta",  "fcrypt",
- 	"camellia", "seed", "salsa20", "rmd128", "rmd160", "rmd256", "rmd320",
- 	"lzo", "lzo-rle", "cts", "sha3-224", "sha3-256", "sha3-384",
-@@ -1762,10 +1762,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 		ret += tcrypt_test("xts(cast6)");
- 		break;
- 
--	case 16:
--		ret += tcrypt_test("ecb(arc4)");
--		break;
--
- 	case 17:
- 		ret += tcrypt_test("michael_mic");
- 		break;
-@@ -2201,11 +2197,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				  speed_template_32_64);
- 		break;
- 
--	case 208:
--		test_cipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				  speed_template_8);
--		break;
--
- 	case 209:
- 		test_cipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				  speed_template_8_16);
-@@ -2720,11 +2711,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				   speed_template_32_48_64);
- 		break;
- 
--	case 505:
--		test_acipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				   speed_template_8);
--		break;
--
- 	case 506:
- 		test_acipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				   speed_template_8_16);
-@@ -2932,11 +2918,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				       speed_template_32_48_64, num_mb);
- 		break;
- 
--	case 605:
--		test_mb_skcipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				       speed_template_8, num_mb);
--		break;
--
- 	case 606:
- 		test_mb_skcipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				       speed_template_8_16, num_mb);
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 6863f911fcee..7c1bdc5690e2 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -4783,13 +4783,6 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.cipher = __VECS(anubis_tv_template)
- 		}
--	}, {
--		.alg = "ecb(arc4)",
--		.generic_driver = "ecb(arc4)-generic",
--		.test = alg_test_skcipher,
--		.suite = {
--			.cipher = __VECS(arc4_tv_template)
--		}
- 	}, {
- 		.alg = "ecb(blowfish)",
- 		.test = alg_test_skcipher,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index d29983908c38..48cd6330ec8d 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -22490,68 +22490,6 @@ static const struct cipher_testvec cast5_ctr_tv_template[] = {
- 	},
- };
- 
--/*
-- * ARC4 test vectors from OpenSSL
-- */
--static const struct cipher_testvec arc4_tv_template[] = {
--	{
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.ctext	= "\x75\xb7\x87\x80\x99\xe0\xc5\x96",
--		.len	= 8,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.ctext	= "\x74\x94\xc2\xe7\x10\x4b\x08\x79",
--		.len	= 8,
--	}, {
--		.key	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.klen	= 8,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.ctext	= "\xde\x18\x89\x41\xa3\x37\x5d\x3a",
--		.len	= 8,
--	}, {
--		.key	= "\xef\x01\x23\x45",
--		.klen	= 4,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00\x00\x00",
--		.ctext	= "\xd6\xa1\x41\xa7\xec\x3c\x38\xdf"
--			  "\xbd\x61\x5a\x11\x62\xe1\xc7\xba"
--			  "\x36\xb6\x78\x58",
--		.len	= 20,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78",
--		.ctext	= "\x66\xa0\x94\x9f\x8a\xf7\xd6\x89"
--			  "\x1f\x7f\x83\x2b\xa8\x33\xc0\x0c"
--			  "\x89\x2e\xbe\x30\x14\x3c\xe2\x87"
--			  "\x40\x01\x1e\xcf",
--		.len	= 28,
--	}, {
--		.key	= "\xef\x01\x23\x45",
--		.klen	= 4,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00",
--		.ctext	= "\xd6\xa1\x41\xa7\xec\x3c\x38\xdf"
--			  "\xbd\x61",
--		.len	= 10,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xAB\xCD\xEF"
--			"\x00\x00\x00\x00\x00\x00\x00\x00",
--		.klen	= 16,
--		.ptext	= "\x01\x23\x45\x67\x89\xAB\xCD\xEF",
--		.ctext	= "\x69\x72\x36\x59\x1B\x52\x42\xB1",
--		.len	= 8,
--	},
--};
--
- /*
-  * TEA test vectors
-  */
--- 
-2.17.1
+I have tcpdumps of when this RENEW/NFSERR_STALE_CLIENTID loop starts
+taken on different clients - and all show a similar behaviour - from
+one of these tcpdumps:
 
+27803 2020-06-23 13:40:36 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+27804 2020-06-23 13:40:36 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 27803) RENEW
+27815 2020-06-23 13:41:06 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+27816 2020-06-23 13:41:06 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 27815) RENEW
+27827 2020-06-23 13:41:36 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+27828 2020-06-23 13:41:36 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 27827) RENEW
+27856 2020-06-23 13:42:06 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+27857 2020-06-23 13:42:06 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 27856) RENEW
+28071 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 110 V4
+NULL Call[Malformed Packet]
+28073 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 94 V4
+NULL Reply (Call In 28071)[Malformed Packet]
+28082 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 110 V4
+NULL Call[Malformed Packet]
+28084 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 94 V4
+NULL Reply (Call In 28082)[Malformed Packet]
+28086 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 370 V4
+Call EXCHANGE_ID
+28087 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 106 V4
+Reply (Call In 28086) Status: NFS4ERR_MINOR_VERS_MISMATCH
+28092 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 206 V4
+Call PUTROOTFH | GETATTR
+28093 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 342 V4
+Reply (Call In 28092) PUTROOTFH | GETATTR
+28095 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 258 V4
+Call GETATTR FH: 0x2e47f02d
+28096 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 162 V4
+Reply (Call In 28095) GETATTR
+28097 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 262 V4
+Call GETATTR FH: 0x2e47f02d
+28098 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 178 V4
+Reply (Call In 28097) GETATTR
+28099 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 258 V4
+Call GETATTR FH: 0x2e47f02d
+28100 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 162 V4
+Reply (Call In 28099) GETATTR
+...
+39660 2020-06-23 13:42:53 10.78.202.217 -> 10.78.196.220 NFS 346 V4
+Call LOOKUP DH: 0x19cf3646/shared
+39661 2020-06-23 13:42:53 10.78.196.220 -> 10.78.202.217 NFS 342 V4
+Reply (Call In 39660) LOOKUP
+39663 2020-06-23 13:42:53 10.78.202.217 -> 10.78.196.220 NFS 314 V4
+Call READLINK
+39665 2020-06-23 13:42:53 10.78.196.220 -> 10.78.202.217 NFS 162 V4
+Reply (Call In 39663) READLINK
+44182 2020-06-23 13:42:56 10.78.202.217 -> 10.78.196.220 NFS 326 V4
+Call GETATTR FH: 0xff288ce9
+44183 2020-06-23 13:42:56 10.78.196.220 -> 10.78.202.217 NFS 266 V4
+Reply (Call In 44182) GETATTR
+68152 2020-06-23 13:42:59 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+68153 2020-06-23 13:42:59 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 68152) RENEW Status: NFS4ERR_STALE_CLIENTID
+68155 2020-06-23 13:42:59 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+68156 2020-06-23 13:42:59 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 68155) RENEW Status: NFS4ERR_STALE_CLIENTID
+73012 2020-06-23 13:43:04 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+73013 2020-06-23 13:43:04 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 73012) RENEW Status: NFS4ERR_STALE_CLIENTID
+73270 2020-06-23 13:43:09 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+73271 2020-06-23 13:43:09 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 73270) RENEW Status: NFS4ERR_STALE_CLIENTID
+73273 2020-06-23 13:43:14 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+73274 2020-06-23 13:43:14 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 73273) RENEW Status: NFS4ERR_STALE_CLIENTID
+73276 2020-06-23 13:43:19 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+73277 2020-06-23 13:43:19 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 73276) RENEW Status: NFS4ERR_STALE_CLIENTID
+73279 2020-06-23 13:43:24 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+73280 2020-06-23 13:43:24 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 73279) RENEW Status: NFS4ERR_STALE_CLIENTID
+
+i.e. all clients have:
+
+28071 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 110 V4
+NULL Call[Malformed Packet]
+28073 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 94 V4
+NULL Reply (Call In 28071)[Malformed Packet]
+28082 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 110 V4
+NULL Call[Malformed Packet]
+28084 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 94 V4
+NULL Reply (Call In 28082)[Malformed Packet]
+28086 2020-06-23 13:42:29 10.78.202.217 -> 10.78.196.220 NFS 370 V4
+Call EXCHANGE_ID
+28087 2020-06-23 13:42:29 10.78.196.220 -> 10.78.202.217 NFS 106 V4
+Reply (Call In 28086) Status: NFS4ERR_MINOR_VERS_MISMATCH
+
+then 30 seconds later, the RENEW/NFSERR_STALE_CLIENTID loop starts:
+
+68152 2020-06-23 13:42:59 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+68153 2020-06-23 13:42:59 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 68152) RENEW Status: NFS4ERR_STALE_CLIENTID
+68155 2020-06-23 13:42:59 10.78.202.217 -> 10.78.196.220 NFS 194 V4
+Call RENEW CID: 0x3091
+68156 2020-06-23 13:42:59 10.78.196.220 -> 10.78.202.217 NFS 114 V4
+Reply (Call In 68155) RENEW Status: NFS4ERR_STALE_CLIENTID
+
+Does anyone have any idea if the above might point to something that
+has already been fixed in the mainline kernel?
+
+Thanks
+
+James Pearson
