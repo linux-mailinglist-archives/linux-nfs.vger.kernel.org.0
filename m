@@ -2,148 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93FA22130AD
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2020 02:54:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 276002130EE
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2020 03:20:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgGCAyG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Jul 2020 20:54:06 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58398 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgGCAyG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jul 2020 20:54:06 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0630q3Dc066718;
-        Fri, 3 Jul 2020 09:52:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Fri, 03 Jul 2020 09:52:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0630q2Yw066713
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 3 Jul 2020 09:52:02 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
- <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
- <20200701153859.GT4332@42.do-not-panic.com>
- <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
- <20200702194656.GV4332@42.do-not-panic.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
-Date:   Fri, 3 Jul 2020 09:52:01 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726445AbgGCBUn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jul 2020 21:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgGCBUm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jul 2020 21:20:42 -0400
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F57C08C5C1
+        for <linux-nfs@vger.kernel.org>; Thu,  2 Jul 2020 18:20:42 -0700 (PDT)
+Received: by mail-ua1-x932.google.com with SMTP id o10so5319589uab.10
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Jul 2020 18:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gAj81iZbIYdOoXwDhlu34xHNUG5ce9BG/8X4yyc57oA=;
+        b=ClvQE339sB4YofhxbpGu1CFLDYuEGD/Fp8ETYoSfe3LFgUCDFU/Gh7oZJMymmPm8XY
+         W3bBTB7igUNTbRVBeimlLHl4Nwe3bAoRCd+4NlqS4hwt3Qoi9btm8QIqunTNWSSN3r35
+         OkdXJlcMRypkyskKvWk2rZWYIAtnlD61oHNt9/ZcSQk03emt0L61rloco8EPPpyEZ8Do
+         VhdAmor7yLYlA3+b7jWLOfH/d8SqT/t6q1ZOvmno+x3xyjZ9iLK8zkRdCxNWhqhXbnhD
+         IQxwm6HL2CD74POAnJUTawFy2ebvjCeCQq9aAPxDw+T3n4qmp8+TcRWlWlHBlWTFwtpf
+         keaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gAj81iZbIYdOoXwDhlu34xHNUG5ce9BG/8X4yyc57oA=;
+        b=f/I0VQMrAT1MyT3s32SZf5GUPvZdbgGoPPALm4AV5mjKqt6xsJAjrkbLmb6+yD520W
+         oEzE+2HYnGBBZOnG4gLgnIWMl5HGWJTWgvkrS4F8bUhB1trxCXNTdW6R2WcWstnWIPfx
+         UJZA0DW2VXk8gkqb4LxPW37wuFC08XgRx+QAbsxdVPlJkQIZWnE8yb9ELldwLbe9Rrel
+         cJdYq/Sne0UP9dYhSIfyfuaAPLuNDTz5GY6c61zXK/Ichytmy/ZdetqTtsrQTOgExX6B
+         w+UvJ5z4/gXM7DD11ZIBBgU98e81AXXevimlnnxE67gbeBSLfjhKeiktZ/5QqcRLjXjk
+         AEkQ==
+X-Gm-Message-State: AOAM530zINY6xWbUmHBkjdApZ3CYkS0z2ezGLuYwNyX6i3H9f068f5GO
+        PyFBib+MWVgAdbwQB2yyWavR7tkzVyfgWeN6QakAxiPR
+X-Google-Smtp-Source: ABdhPJxPvw3gOXCiA2PZ5au1IcPKK7j2apwYXfvXu4mBw5yUwfvhsqppsYzJuPVTpQArUwXUIwncrql6ECe1GUC/VwQ=
+X-Received: by 2002:ab0:48:: with SMTP id 66mr11491766uai.40.1593739241673;
+ Thu, 02 Jul 2020 18:20:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702194656.GV4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <3c399c3523674ec7b650b647179d7c96@tu-berlin.de>
+In-Reply-To: <3c399c3523674ec7b650b647179d7c96@tu-berlin.de>
+From:   Nico Kadel-Garcia <nkadel@gmail.com>
+Date:   Thu, 2 Jul 2020 21:20:28 -0400
+Message-ID: <CAOCN9rz8m1Z75ObhC21V=jizPnEkfFaZv-1Yz4M5zsT19BR97g@mail.gmail.com>
+Subject: Re: [Samba] Multiprotocol File Sharing via NFSv4 and Samba
+To:     "Kraus, Sebastian" <sebastian.kraus@tu-berlin.de>
+Cc:     "samba@lists.samba.org" <samba@lists.samba.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020/07/03 4:46, Luis Chamberlain wrote:
-> On Thu, Jul 02, 2020 at 01:26:53PM +0900, Tetsuo Handa wrote:
->> On 2020/07/02 0:38, Luis Chamberlain wrote:
->>> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->>>  		 */
->>>  		if (KWIFEXITED(ret))
->>>  			sub_info->retval = KWEXITSTATUS(ret);
->>> +		/*
->>> +		 * Do we really want to be passing the signal, or do we pass
->>> +		 * a single error code for all cases?
->>> +		 */
->>> +		else if (KWIFSIGNALED(ret))
->>> +			sub_info->retval = KWTERMSIG(ret);
->>
->> No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
->> and e.g. SIGKILL'ed by the OOM-killer.
-> 
-> Right, the question is: do we care?
+On Thu, Jul 2, 2020 at 2:16 PM Kraus, Sebastian via samba
+<samba@lists.samba.org> wrote:
+>
+> Hi all,
+> are there any non-commercial solutions (apart from solutions like Dell EM=
+C, IBM and NetApp) around that allow to simultaneously access the same file=
+ system via NFSv4 and Samba exports in a (nearly) non-conflicting manner, e=
+specially w.r.t. to NFSv4/Windows ACL incompatibilities?
+>
+> Best
+> Sebatian
 
-Yes, we have to care.
+I've done it at a commercial scale with locally configured NFS on
+Linux clients and Samba for CIFS access on windows clients. It's very
+tricky to scale, and to maintain consistent privileges. NFSv4 map
+somewhat, but not *perfectly* to CIFS credentials. And lock files
+become an adventure, because clients *cannot* be entirely in sync with
+a centralized server, the constant monitoring and updating to be in
+tight4er and tighter sync themselves cost bandwidth and CPU. So
+collaboration working with the same files can require thoughtful
+programming to ensure atomic operation. I don't recommend it: I'd
+generally recommend picking one protocol or the other and using it
+everywhere. It's extraordinarily difficult to predict
+incompatibilities someone may run into with ocmmercial software,
+written to use lock files with *very* peculiar behavior. And of course
+there is the filesystem namespace collission issue. In NFS, README.md"
+is a different file from README.MD or readme.md, and resolving this
+with CIFS clients o the same workspace can be an adventure.
 
-> And the umh patch "umh: fix processed error when UMH_WAIT_PROC is used"
-> changed this to:
-> 
-> -       if (ret >= 0) {
-> +       if (ret != 0) {
-> 
-> Prior to the patch negative return values from userspace were still
-> being captured, and likewise signals, but the error value was not
-> raw, not the actual value. After the patch, since we check for ret != 0
-> we still upkeep the sanity check for any error, correct the error value,
-> but as you noted signals were ignored as I made the wrong assumption
-> we would ignore them. The umh sub_info->retval is set after my original
-> patch only if KWIFSIGNALED(ret)), and ignored signals, and so that
-> would be now capitured with the additional KWIFSIGNALED(ret)) check.
-
-"call_usermodehelper_keys() == 0" (i.e. usermode helper was successfully
-started and successfully terminated via exit(0)) is different from "there is
-nothing to do". call_sbin_request_key() == 0 case still has to check for
-possibility of -ENOKEY case.
-
-> 
-> The question still stands:
-> 
-> Do we want to open code all these checks or simply wrap them up in
-> the umh. If we do the later, as you note exit(9) and a SIGKILL will
-> be the same to the inspector in the kernel. But do we care?
-
-Yes, we do care.
-
-> 
-> Do we really want umh callers differntiatin between signals and exit values?
-
-Yes, we do.
-
-> 
-> The alternative to making a compromise is using generic wrappers for
-> things which make sense and letting the callers use those.
-
-I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
-macros and fixing the callers, for some callers are not aware of possibility of
-KWIFSIGNALED() case.
-
-For example, conn_try_outdate_peer() in drivers/block/drbd/drbd_nl.c misbehaves if
-drbd_usermode_helper process was terminated by a signal, for the switch() statement
-after returning from conn_helper() is assuming that the return value of conn_helper()
-is a KWEXITSTATUS() value if drbd_usermode_helper process was successfully started.
-If drbd_usermode_helper process was terminated by SIGQUIT (which is 3),
-conn_try_outdate_peer() will by error hit "case P_INCONSISTENT:" (which is 3);
-conn_try_outdate_peer() should hit "default: /* The script is broken ... */"
-unless KWIFEXITED() == true.
-
-Your patch is trying to obnubilate the return code.
-
+There are many inexpensive office grade petabyte storage servers which
+rely on Samba internally and would probably serve your needs.
