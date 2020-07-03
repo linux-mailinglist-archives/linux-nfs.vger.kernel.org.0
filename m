@@ -2,120 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C09A212FD6
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2020 01:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FA22130AD
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2020 02:54:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGBXE0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Jul 2020 19:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgGBXE0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:04:26 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 106712088E;
-        Thu,  2 Jul 2020 23:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593731066;
-        bh=kbiQ3OWz9EhhS/Tlb7ohnigA/7ugcibWgJNgPfbWUpA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S1KCNpG9Pv4STc7dA1EIUYmAJMxBx5FwUZImnnnqH2/lfWVOZF+CqdOBuTtfkBHuq
-         Y79CA8eKcotSs/YlBBV0FUEOAuDC5VJa9eJgO2+8gpTiyvAHCcXZW86dLe9UkMudqY
-         KJZeeIVM2C71UrOUS4zwAPgGcwv5l109snz7DFaU=
-Received: by mail-ot1-f48.google.com with SMTP id 95so14744181otw.10;
-        Thu, 02 Jul 2020 16:04:26 -0700 (PDT)
-X-Gm-Message-State: AOAM531+iuuZXAvN2qbO+tV+NO1x3xH1Xyg6tRPPMhxpa/+Egn19L/M1
-        NMunFLWiSIMckB5iSvx0GU1rtH9irlYCxt1HSw0=
-X-Google-Smtp-Source: ABdhPJxz9/D9QobsXbtfi8ziJpmocwg7uy05KVbIQy4z+mCS1flap37AIc4xZoibn5TtrTKeVtMwq2b2dTsAvOaFY3g=
-X-Received: by 2002:a9d:5a12:: with SMTP id v18mr27802873oth.90.1593731065360;
- Thu, 02 Jul 2020 16:04:25 -0700 (PDT)
+        id S1726488AbgGCAyG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Jul 2020 20:54:06 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58398 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGCAyG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Jul 2020 20:54:06 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0630q3Dc066718;
+        Fri, 3 Jul 2020 09:52:03 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Fri, 03 Jul 2020 09:52:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0630q2Yw066713
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 3 Jul 2020 09:52:02 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+ <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+ <20200702194656.GV4332@42.do-not-panic.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
+Date:   Fri, 3 Jul 2020 09:52:01 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702101947.682-1-ardb@kernel.org> <20200702101947.682-5-ardb@kernel.org>
- <20200702175022.GA2753@sol.localdomain> <CAMj1kXFen1nickdZab0s8iY7SgauoH56VginEoPdxaAAL2qENw@mail.gmail.com>
-In-Reply-To: <CAMj1kXFen1nickdZab0s8iY7SgauoH56VginEoPdxaAAL2qENw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 3 Jul 2020 01:04:14 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG7i1isB9cV57ccaOZhrG3s7x+nKGozzTewuE9uWvX_wg@mail.gmail.com>
-Message-ID: <CAMj1kXG7i1isB9cV57ccaOZhrG3s7x+nKGozzTewuE9uWvX_wg@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/7] crypto: remove ARC4 support from the skcipher API
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-wireless@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Denis Kenzior <denkenz@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702194656.GV4332@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 20:21, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 2 Jul 2020 at 19:50, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > [+linux-wireless, Marcel Holtmann, and Denis Kenzior]
-> >
-> > On Thu, Jul 02, 2020 at 12:19:44PM +0200, Ard Biesheuvel wrote:
-> > > Remove the generic ecb(arc4) skcipher, which is slightly cumbersome from
-> > > a maintenance perspective, since it does not quite behave like other
-> > > skciphers do in terms of key vs IV lifetime. Since we are leaving the
-> > > library interface in place, which is used by the various WEP and TKIP
-> > > implementations we have in the tree, we can safely drop this code now
-> > > it no longer has any users.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Last year there was a discussion where it was mentioned that iwd uses
-> > "ecb(arc4)" via AF_ALG.  So can we really remove it yet?
-> > See https://lkml.kernel.org/r/97BB95F6-4A4C-4984-9EAB-6069E19B4A4F@holtmann.org
-> > Note that the code isn't in "iwd" itself but rather in "libell" which iwd
-> > depends on: https://git.kernel.org/pub/scm/libs/ell/ell.git/
-> >
-> > Apparently it also uses md4 and ecb(des) too.
-> >
->
-> Ah yes, I remember now :-(
->
-> > Marcel and Denis, what's your deprecation plan for these obsolete and insecure
-> > algorithms?
-> >
->
-> Given Denis's statement:
->
->   It sounds to me like it was broken and should be fixed.  So our vote /
->   preference is to have ARC4 fixed to follow the proper semantics.  We
->   can deal with the kernel behavioral change on our end easily enough;
->   the required workarounds are the worse evil.
->
-> I would think that an ABI break is not the end of the world for them,
-> and given how trivial it is to implement RC4 in C, the workaround
-> should be to simply implement RC4 in user space, and not even bother
-> trying to use AF_ALG to get at ecb(arc4)
->
-> (same applies to md4 and ecb(des) btw)
->
-> There will always be a long tail of use cases, and at some point, we
-> just have to draw the line and remove obsolete and insecure cruft,
-> especially when it impedes progress on other fronts.
->
+On 2020/07/03 4:46, Luis Chamberlain wrote:
+> On Thu, Jul 02, 2020 at 01:26:53PM +0900, Tetsuo Handa wrote:
+>> On 2020/07/02 0:38, Luis Chamberlain wrote:
+>>> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+>>>  		 */
+>>>  		if (KWIFEXITED(ret))
+>>>  			sub_info->retval = KWEXITSTATUS(ret);
+>>> +		/*
+>>> +		 * Do we really want to be passing the signal, or do we pass
+>>> +		 * a single error code for all cases?
+>>> +		 */
+>>> +		else if (KWIFSIGNALED(ret))
+>>> +			sub_info->retval = KWTERMSIG(ret);
+>>
+>> No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
+>> and e.g. SIGKILL'ed by the OOM-killer.
+> 
+> Right, the question is: do we care?
 
-I have ported iwd to Nettle's LGPL 2.1 implementation of ARC4, and the
-diffstat is
+Yes, we have to care.
 
- src/crypto.c      | 80 ++++++++++++--------
- src/main.c        |  8 --
- unit/test-eapol.c |  3 +-
- 3 files changed, 51 insertions(+), 40 deletions(-)
+> And the umh patch "umh: fix processed error when UMH_WAIT_PROC is used"
+> changed this to:
+> 
+> -       if (ret >= 0) {
+> +       if (ret != 0) {
+> 
+> Prior to the patch negative return values from userspace were still
+> being captured, and likewise signals, but the error value was not
+> raw, not the actual value. After the patch, since we check for ret != 0
+> we still upkeep the sanity check for any error, correct the error value,
+> but as you noted signals were ignored as I made the wrong assumption
+> we would ignore them. The umh sub_info->retval is set after my original
+> patch only if KWIFSIGNALED(ret)), and ignored signals, and so that
+> would be now capitured with the additional KWIFSIGNALED(ret)) check.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/iwd.git/log/?h=arc4-cleanup
+"call_usermodehelper_keys() == 0" (i.e. usermode helper was successfully
+started and successfully terminated via exit(0)) is different from "there is
+nothing to do". call_sbin_request_key() == 0 case still has to check for
+possibility of -ENOKEY case.
+
+> 
+> The question still stands:
+> 
+> Do we want to open code all these checks or simply wrap them up in
+> the umh. If we do the later, as you note exit(9) and a SIGKILL will
+> be the same to the inspector in the kernel. But do we care?
+
+Yes, we do care.
+
+> 
+> Do we really want umh callers differntiatin between signals and exit values?
+
+Yes, we do.
+
+> 
+> The alternative to making a compromise is using generic wrappers for
+> things which make sense and letting the callers use those.
+
+I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
+macros and fixing the callers, for some callers are not aware of possibility of
+KWIFSIGNALED() case.
+
+For example, conn_try_outdate_peer() in drivers/block/drbd/drbd_nl.c misbehaves if
+drbd_usermode_helper process was terminated by a signal, for the switch() statement
+after returning from conn_helper() is assuming that the return value of conn_helper()
+is a KWEXITSTATUS() value if drbd_usermode_helper process was successfully started.
+If drbd_usermode_helper process was terminated by SIGQUIT (which is 3),
+conn_try_outdate_peer() will by error hit "case P_INCONSISTENT:" (which is 3);
+conn_try_outdate_peer() should hit "default: /* The script is broken ... */"
+unless KWIFEXITED() == true.
+
+Your patch is trying to obnubilate the return code.
+
