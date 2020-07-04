@@ -2,93 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 798BD213AF6
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2020 15:28:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC56E2142BC
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2020 05:20:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgGCN2x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Jul 2020 09:28:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33519 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgGCN2x (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Jul 2020 09:28:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 72so2088344ple.0;
-        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nZixvdmK63kTxJGVp6SPuFsnYljJqU7VXv2wxF9MXFA=;
-        b=XlNdsEJKuh017yoaqze1QzzzKwb783SXTEXBcadTk0ed7oA0Sm9nPzkmkG/qKzrvEU
-         x65NJnpnvbpqJk3IIddNLcEFc7l4Q+/G3w8PRmJJKa6cnmgSZyNEpbNLnO003LUDNoWG
-         UcMNQqXDIw8J1ptTFItLwr8SKneXNiFzj1h/tEagCN1MbHMoVQPrkt+DyOCl+bJGan/v
-         ICsT56q9x2sRIMeVNfo1yDRB0cXK80hl+0mZJqzXYST5IwX7IUV7AYSp4gbZWsLBWolx
-         WFEpexWDUQ9c6YCO01nzQ46uHQn9/yp4qNK4vOr4JuUdvWMwqWutVPLflMZ87p8Y/qM2
-         3UPA==
-X-Gm-Message-State: AOAM5302es4kl5puR7Xy9zWGA/rez4EwCHDqFyMFAI9j3/0ffCfy5mgr
-        5qBgU2pGPtZDXLhiVgt8QlU=
-X-Google-Smtp-Source: ABdhPJx7Zgvv1Ln8YT3HW6KzNg/0D212spMjLCprFe2ez6VGItOK7VCNoHYcRalmweCVJasHt2okLw==
-X-Received: by 2002:a17:90a:3223:: with SMTP id k32mr38367135pjb.121.1593782932606;
-        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 125sm11298479pff.130.2020.07.03.06.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 06:28:51 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5569C40945; Fri,  3 Jul 2020 13:28:50 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 13:28:50 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     David Howells <dhowells@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200703132850.GW4332@42.do-not-panic.com>
-References: <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
- <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
- <20200701153859.GT4332@42.do-not-panic.com>
- <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
- <20200702194656.GV4332@42.do-not-panic.com>
- <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
+        id S1726573AbgGDDUc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Jul 2020 23:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgGDDUc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Jul 2020 23:20:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D6CC061794;
+        Fri,  3 Jul 2020 20:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=7hWx3juXEv+Gb67bYW4aLkckqsyqEnHQMB/wBgBJZwg=; b=IFPdIYUOIuDbKx41Bbn39sEemo
+        J2tgjtcrdNIW0uetV+bH1YOSgiLelcgR32aJbRM7GyTz6RIpIBsrZ+2idCAPRwnVWDYTAioDlEF6V
+        HyWqXI0qxDlXyL1OknzYjELYpUQ4uG+5EFzFIkVufn6qODHaY5Z8Hs49NDxcXbETCRmY/Lwk+crSk
+        1cW9UhhrFkHDRhb6mrjpZhDsdh+NRV/2Z/xOxl2Ix5drPXYKrLFEQzci9SIj10VjmtOIodLGFu4Pz
+        CT5wOmcj2M9689ySNJe+jXV1oRDJqgRCxzsCMjGtbpVoMaiaFW0GmVL2/I5CBkpnCa05I8bzfkFr3
+        wqrMki8Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrYj4-0000Ri-7p; Sat, 04 Jul 2020 03:20:27 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        cgroups@vger.kernel.org, dm-devel@redhat.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH 00/13] Documentation/admin-guide: eliminate duplicated words
+Date:   Fri,  3 Jul 2020 20:20:07 -0700
+Message-Id: <20200704032020.21923-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 09:52:01AM +0900, Tetsuo Handa wrote:
-> On 2020/07/03 4:46, Luis Chamberlain wrote:
-> > The alternative to making a compromise is using generic wrappers for
-> > things which make sense and letting the callers use those.
-> 
-> I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
-> macros and fixing the callers, for some callers are not aware of possibility of
-> KWIFSIGNALED() case.
+Remove duplicated words from Documentation/admin-guide/ files.
 
-OK so we open code all uses. Do that in a next iteration.
 
-  Luis
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: dm-devel@redhat.com
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
 
+
+ Documentation/admin-guide/cgroup-v1/rdma.rst             |    2 +-
+ Documentation/admin-guide/cgroup-v2.rst                  |    2 +-
+ Documentation/admin-guide/device-mapper/dm-integrity.rst |    4 ++--
+ Documentation/admin-guide/media/building.rst             |    4 ++--
+ Documentation/admin-guide/mm/ksm.rst                     |    2 +-
+ Documentation/admin-guide/nfs/pnfs-block-server.rst      |    2 +-
+ Documentation/admin-guide/nfs/pnfs-scsi-server.rst       |    2 +-
+ Documentation/admin-guide/perf/arm-ccn.rst               |    2 +-
+ Documentation/admin-guide/pm/intel-speed-select.rst      |    4 ++--
+ Documentation/admin-guide/pm/intel_pstate.rst            |    2 +-
+ Documentation/admin-guide/sysctl/kernel.rst              |    2 +-
+ Documentation/admin-guide/tainted-kernels.rst            |    2 +-
+ Documentation/admin-guide/xfs.rst                        |    2 +-
+ 13 files changed, 16 insertions(+), 16 deletions(-)
