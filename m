@@ -2,119 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41AA4215A12
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2020 16:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4AC2215CAA
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2020 19:08:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgGFO4C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jul 2020 10:56:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30885 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729229AbgGFO4B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jul 2020 10:56:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594047360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-        to:to:cc:mime-version:mime-version:content-type:content-type:autocrypt:autocrypt;
-        bh=OAgSj0oM6shJeTpdYzLtetbRiSkpWorNMEyO8Ij8Nvc=;
-        b=KWfcewxipkiWx3wQHojFXlXtLgA3q2melCgG5Ciryo/0iW6bdSHMW/7lI6HPn1oRUGq1i9
-        i3Qq5atJ+2Ng3yJxHRETsPLI9V3Pd805RP3EI9PdzAfo3ugWoFLxYuvO0bHtPbsznIeb1y
-        dwRUbW1BeVnwpx1bYd7ppeUTKrJ+Wz4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-kxiIKb6OPQinBVMrNIWK6g-1; Mon, 06 Jul 2020 10:55:55 -0400
-X-MC-Unique: kxiIKb6OPQinBVMrNIWK6g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91A3B8014D7
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2020 14:55:54 +0000 (UTC)
-Received: from dresden.str.redhat.com (ovpn-112-176.ams2.redhat.com [10.36.112.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3739E5D9D7
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2020 14:55:54 +0000 (UTC)
-To:     linux-nfs@vger.kernel.org
-From:   Max Reitz <mreitz@redhat.com>
-Subject: Testing auto-submounts (crossmnt)
-Autocrypt: addr=mreitz@redhat.com; prefer-encrypt=mutual; keydata=
- mQENBFXOJlcBCADEyyhOTsoa/2ujoTRAJj4MKA21dkxxELVj3cuILpLTmtachWj7QW+TVG8U
- /PsMCFbpwsQR7oEy8eHHZwuGQsNpEtNC2G/L8Yka0BIBzv7dEgrPzIu+W3anZXQW4702+uES
- U29G8TP/NGfXRRHGlbBIH9KNUnOSUD2vRtpOLXkWsV5CN6vQFYgQfFvmp5ZpPeUe6xNplu8V
- mcTw8OSEDW/ZnxJc8TekCKZSpdzYoxfzjm7xGmZqB18VFwgJZlIibt1HE0EB4w5GsD7x5ekh
- awIe3RwoZgZDLQMdOitJ1tUc8aqaxvgA4tz6J6st8D8pS//m1gAoYJWGwwIVj1DjTYLtABEB
- AAG0HU1heCBSZWl0eiA8bXJlaXR6QHJlZGhhdC5jb20+iQFTBBMBCAA9AhsDBQkSzAMABQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheABQJVzie5FRhoa3A6Ly9rZXlzLmdudXBnLm5ldAAKCRD0
- B9sAYdXPQDcIB/9uNkbYEex1rHKz3mr12uxYMwLOOFY9fstP5aoVJQ1nWQVB6m2cfKGdcRe1
- 2/nFaHSNAzT0NnKz2MjhZVmcrpyd2Gp2QyISCfb1FbT82GMtXFj1wiHmPb3CixYmWGQUUh+I
- AvUqsevLA+WihgBUyaJq/vuDVM1/K9Un+w+Tz5vpeMidlIsTYhcsMhn0L9wlCjoucljvbDy/
- 8C9L2DUdgi3XTa0ORKeflUhdL4gucWoAMrKX2nmPjBMKLgU7WLBc8AtV+84b9OWFML6NEyo4
- 4cP7cM/07VlJK53pqNg5cHtnWwjHcbpGkQvx6RUx6F1My3y52vM24rNUA3+ligVEgPYBuQEN
- BFXOJlcBCADAmcVUNTWT6yLWQHvxZ0o47KCP8OcLqD+67T0RCe6d0LP8GsWtrJdeDIQk+T+F
- xO7DolQPS6iQ6Ak2/lJaPX8L0BkEAiMuLCKFU6Bn3lFOkrQeKp3u05wCSV1iKnhg0UPji9V2
- W5eNfy8F4ZQHpeGUGy+liGXlxqkeRVhLyevUqfU0WgNqAJpfhHSGpBgihUupmyUg7lfUPeRM
- DzAN1pIqoFuxnN+BRHdAecpsLcbR8sQddXmDg9BpSKozO/JyBmaS1RlquI8HERQoe6EynJhd
- 64aICHDfj61rp+/0jTIcevxIIAzW70IadoS/y3DVIkuhncgDBvGbF3aBtjrJVP+5ABEBAAGJ
- ASUEGAEIAA8FAlXOJlcCGwwFCRLMAwAACgkQ9AfbAGHVz0CbFwf9F/PXxQR9i4N0iipISYjU
- sxVdjJOM2TMut+ZZcQ6NSMvhZ0ogQxJ+iEQ5OjnIputKvPVd5U7WRh+4lF1lB/NQGrGZQ1ic
- alkj6ocscQyFwfib+xIe9w8TG1CVGkII7+TbS5pXHRxZH1niaRpoi/hYtgzkuOPp35jJyqT/
- /ELbqQTDAWcqtJhzxKLE/ugcOMK520dJDeb6x2xVES+S5LXby0D4juZlvUj+1fwZu+7Io5+B
- bkhSVPb/QdOVTpnz7zWNyNw+OONo1aBUKkhq2UIByYXgORPFnbfMY7QWHcjpBVw9MgC4tGeF
- R4bv+1nAMMxKmb5VvQCExr0eFhJUAHAhVg==
-Message-ID: <3f2854db-dce9-557d-6812-12febff61916@redhat.com>
-Date:   Mon, 6 Jul 2020 16:55:51 +0200
+        id S1729500AbgGFRIV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jul 2020 13:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729478AbgGFRIU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jul 2020 13:08:20 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39FDC061755
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2020 10:08:19 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id j4so39525418wrp.10
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jul 2020 10:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=puzzle-itc.de; s=google;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZwVHLonV7fEVRJBhUxBkfRuwRu68TPCsz5eTKT71KNc=;
+        b=HFMjRggLJcrSTlsdcD84TRsNZ7hWNC8ne9KW3wHyM/ln6KRc7tL3lbqlixQMOjKoXo
+         avW8+3esIcHglk+Jbset4zBig0RTPF2dQwTE+LPjwnPWHcfVwAf6/i/xk7uiHpdRa6zS
+         zfCFlR17bbNbDJU5twy/1TE8cYA9DHzH5u2Tw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZwVHLonV7fEVRJBhUxBkfRuwRu68TPCsz5eTKT71KNc=;
+        b=PoUinI++YcpFk7YKo6e6l3wE1IokiMBVD0//SMuE/9Z9rQ0GmrC1kggVLnpZubts5l
+         W5izvoyvMJ3/923xnU+QHExhYqXkyFBy14PUo7I4f6kglEwDxflxQGwT6n8YwHiYY7Mr
+         WCV/ELE5oQuor2RpFOJtZt94hImFutPziGwK9ym7N8+ws79RvP5rdQEeJcthzXtCxsBw
+         69zlsau5mVpfblkA2KbGMRNHU/BZ9UcjQ6XITNq+nGZkGD58MzAAsWaL7PMBzpfXDrk/
+         grmIuLumcW4+Fc5PjSSTGBvBkPY7mUKZ4ZNkpc5fYsX2n7cyD9R0VI3IoEHJRqFot1Qc
+         7/xA==
+X-Gm-Message-State: AOAM532o4PnSCdH8cm6Y1iKPl3Fx0cLbpDX7G+6wkwSQ602gL1eYpN9k
+        xPfUuoEAPauq1cxHeb/XjocCpc6dYWxFa51HNbKi26Hf9Njlyw+QylxqiY3XeuJtvMe1wARkV5y
+        Mys/m6kXYlke6r8sqots=
+X-Google-Smtp-Source: ABdhPJxJX0RX1+taawMy1fd2eGsG8LAlcNQK0R68RUeLO1TVv709i8jP+F1AxVXHQWvcY9vAp+gVdA==
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr49859352wra.348.1594055298250;
+        Mon, 06 Jul 2020 10:08:18 -0700 (PDT)
+Received: from tuedko18.puzzle-itc.de ([2a02:8070:8881:ba00:c37:9d7f:e3e3:fec4])
+        by smtp.gmail.com with ESMTPSA id p17sm69592wma.47.2020.07.06.10.08.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 10:08:17 -0700 (PDT)
+Subject: Re: Multiprotocol File Sharing via NFSv4 and Samba
+To:     "Kraus, Sebastian" <sebastian.kraus@tu-berlin.de>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <3c399c3523674ec7b650b647179d7c96@tu-berlin.de>
+From:   Daniel Kobras <kobras@puzzle-itc.de>
+Autocrypt: addr=kobras@puzzle-itc.de; keydata=
+ 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
+ p63U1j1sBdH4lyrWIu/HHjYDEL8+XTvqMCBEHuI=
+Organization: Puzzle ITC Deutschland GmbH
+Message-ID: <67e6b3a6-faba-161e-c987-b7d179cf36fb@puzzle-itc.de>
+Date:   Mon, 6 Jul 2020 19:08:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="gByEe4KgXGYBhBuLcK7kDNKmneVZq1lef"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <3c399c3523674ec7b650b647179d7c96@tu-berlin.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---gByEe4KgXGYBhBuLcK7kDNKmneVZq1lef
-Content-Type: multipart/mixed; boundary="CX9zBS0tkZy0X0NSeyzdfORv0vFZdPv7Q"
+Hi!
 
---CX9zBS0tkZy0X0NSeyzdfORv0vFZdPv7Q
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Am 02.07.20 um 20:04 schrieb Kraus, Sebastian:
+> are there any non-commercial solutions (apart from solutions like Dell EM=
+C, IBM and NetApp) around that allow to simultaneously access the same file=
+ system via NFSv4 and Samba exports in a (nearly) non-conflicting manner, e=
+specially w.r.t. to NFSv4/Windows ACL incompatibilities?
 
-Hello again,
+You seem to anticipate cross-platform incompatibilities, but mind that
+using NFSv4+ACLs on Linux is a problem all by itself. Essentially all of
+Linux userland is ignorant about NFSv4 ACLs, so even with basic tasks
+one tends to risk subtle breakage. Note that it's a client-side issue
+that also affects the cited commercial servers.
 
-Because I didn=E2=80=99t receive a reply to my question back in April
-(https://www.spinics.net/lists/linux-nfs/msg77401.html), I wanted to
-send a gentle ping just once.  Maybe there is an answer to it yet.
+To illustrate the point, just try the following sequence of commands on
+an arbitrary v4 mount on a Linux client:
 
-I just would like to know whether there are any tests for NFS=E2=80=99s c=
-rossmnt
-option.
+  % touch aclfile
+  % chmod 644 aclfile
+  % nfs4_setfacl -a A::otheruser@example.org:RW aclfile
+  % nfs4_getfacl aclfile
 
+  # file: aclfile
+  A::OWNER@:rwatTcCy
+  A::otheruser@example.org:rwatcy
+  A::GROUP@:rtcy
+  A::EVERYONE@:rtcy
 
-Kind regards
+  % cp -p aclfile aclfile-copy.v4
 
-Max
+If the NFS server and its backing filesystem natively supports NFSv4
+ACLs, `cp -p` will 'just' lose the ACLs that don't correspond to mapped
+mode bits. If they're mapped to Posix ACLs, it's even worse, and the cp
+command that was supposed to preserve permissions, has also just granted
+write access to the group:
 
+  % nfs4_getfacl aclfile-copy.v4
 
---CX9zBS0tkZy0X0NSeyzdfORv0vFZdPv7Q--
+  # file: aclfile-copy.v4
+  A::OWNER@:rwatTcCy
+  A::GROUP@:rwatcy
+  A::EVERYONE@:rtcy
 
---gByEe4KgXGYBhBuLcK7kDNKmneVZq1lef
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Kind regards,
 
------BEGIN PGP SIGNATURE-----
+Daniel
+--=20
+Daniel Kobras
+Principal Architect
+Puzzle ITC Deutschland
++49 7071 14316 0
+www.puzzle-itc.de
 
-iQEzBAEBCAAdFiEEkb62CjDbPohX0Rgp9AfbAGHVz0AFAl8DO3cACgkQ9AfbAGHV
-z0C6+wf/YJ3Q6KJmPWl+oD//pk+TOShBL+Lmga79H/rmdhrlDEFolq9+qHb6gdTM
-XeU6cHn7lFsXqij2DUxNK1acv3hp9+1hAqK864FI6y9MSJH0XcXFo1YDa3Y/l43t
-+x5a93Be6h1n67rw+j3MPMW0QV8mIEtQ8jtETiDabWaMDd5knuglR6O5JYDPTapd
-8PfUcwzYI+Dd+1BY1LIL5AgHUToPPB/OEHdoDCjQgyh+tIlD8sNGK3lElSkg+EZ6
-znvzRb+qzEA2vEzdGyfEZ8ebYDM6uzm+o3XFRUjw4opQ9KekEl7aAzWN1Xcr5neX
-iRtMbLx1bajhEW9xzyusEloKcoJoAg==
-=Q3lm
------END PGP SIGNATURE-----
+--=20
+Puzzle ITC Deutschland GmbH
+Sitz der Gesellschaft: Jurastr. 27/1, 72072=20
+T=C3=BCbingen
 
---gByEe4KgXGYBhBuLcK7kDNKmneVZq1lef--
+Eingetragen am Amtsgericht Stuttgart HRB 765802
+Gesch=C3=A4ftsf=C3=BChrer:=20
+Lukas Kallies, Daniel Kobras, Mark Pr=C3=B6hl
 
