@@ -2,90 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 345FC21783E
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2020 21:50:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47524217846
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2020 21:50:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgGGTuA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jul 2020 15:50:00 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37613 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGTt7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jul 2020 15:49:59 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g20so39430766edm.4;
-        Tue, 07 Jul 2020 12:49:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=59CnLlZuQYJRv5f6MuQjRUDt5zs45SxsEopHLHhK6qY=;
-        b=BR5avhd930Wo1TE4fsM5t2Q0LQ6Nfk+C28JoUrdaWFlCtE6CTjK1jtp112x4B0VUxR
-         5HT6tTZuy4NtcfezJKuIBt0FIOWttaT28ErbhjR5PFFddALdrcg4K8eIrj3XmA70mzlr
-         zoFbu25f894nCKcCfsnpwfBRlA4sBX8CUTSjHpi1VEsuNWdOXKQa14q46sDZAaDZOOv4
-         r4a4nAAT1emQD+MU84rsRLXI3bKoDrW2T2GD3Sh9AoqRu4uKGvw2ZSSr49Rp5lsuecu/
-         JkHYfSPLP/icGXHOfarigyCWvc4MSX0DZT1ymIWonf75ia47OCZcwvHA5vsTYb1GuKTy
-         9Dmw==
-X-Gm-Message-State: AOAM5327pEWbT5fX7Y3RS702vjQwxPvdNFyYIqfWVnzMPas16ZKgctK6
-        q9dp+ew8lJ6sL0pQDzMoWl8WdClYYa4T8ZBsIg8=
-X-Google-Smtp-Source: ABdhPJwJ5xO2pBLUtt+0k0DFCEknrpQ4pRGf6muaNnjO2HzWc7hov3lLbhJ21RZ3kMzNGlRZpfAInCZhGE1J6hTWmGA=
-X-Received: by 2002:aa7:d043:: with SMTP id n3mr65525230edo.102.1594151397718;
- Tue, 07 Jul 2020 12:49:57 -0700 (PDT)
+        id S1728530AbgGGTuW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jul 2020 15:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgGGTuW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jul 2020 15:50:22 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CF4C061755;
+        Tue,  7 Jul 2020 12:50:21 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 52F51BC0C1;
+        Tue,  7 Jul 2020 19:50:18 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
+        kuba@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: NFS, SUNRPC, and LOCKD clients
+Date:   Tue,  7 Jul 2020 21:50:12 +0200
+Message-Id: <20200707195012.52559-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200627162911.22826.34426.stgit@manet.1015granger.net> <441C4FBC-31AF-4F29-B77F-C67814DA7957@oracle.com>
-In-Reply-To: <441C4FBC-31AF-4F29-B77F-C67814DA7957@oracle.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Tue, 7 Jul 2020 15:49:41 -0400
-Message-ID: <CAFX2Jf=_8RyRuLmHrPo+DpdeE4iBSDqQAuTFhpFDwN7fy7Mt2A@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Fix more issues in new connect logic
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Dan Aloni <dan@kernelim.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+X-Spam-Level: *****
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 2:42 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> Anna, I haven't found any additional issues with this series that
-> can't wait until 5.9 or later. Can you see that it gets into 5.8-rc ?
-> Thanks!
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-No problem! I'll plan on including them in my next bugfixes pull.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-Anna
->
->
-> > On Jun 27, 2020, at 12:34 PM, Chuck Lever <chuck.lever@oracle.com> wrote:
-> >
-> > This series addresses several more flaws in the recent overhaul of
-> > the client's RPC/RDMA connect logic. More testing is called for,
-> > but these are ready for review. They apply on the fixes that were
-> > pulled into Linus' tree yesterday.
-> >
-> > See also the "cel-testing" topic branch in my kernel repo:
-> >
-> >  git://git.linux-nfs.org/projects/cel/cel-2.6.git
-> >
-> > ---
-> >
-> > Chuck Lever (4):
-> >      xprtrdma: Fix double-free in rpcrdma_ep_create()
-> >      xprtrdma: Fix recursion into rpcrdma_xprt_disconnect()
-> >      xprtrdma: Fix return code from rpcrdma_xprt_connect()
-> >      xprtrdma: Fix handling of connect errors
-> >
-> >
-> > net/sunrpc/xprtrdma/transport.c |  5 +++++
-> > net/sunrpc/xprtrdma/verbs.c     | 28 ++++++++++++++--------------
-> > 2 files changed, 19 insertions(+), 14 deletions(-)
-> >
-> > --
-> > Chuck Lever
->
-> --
-> Chuck Lever
->
->
->
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
+
+ fs/lockd/mon.c                  | 2 +-
+ include/linux/sunrpc/bc_xprt.h  | 2 +-
+ include/linux/sunrpc/msg_prot.h | 2 +-
+ net/sunrpc/backchannel_rqst.c   | 2 +-
+ net/sunrpc/sunrpc.h             | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/lockd/mon.c b/fs/lockd/mon.c
+index 1eabd91870e6..1d9488cf0534 100644
+--- a/fs/lockd/mon.c
++++ b/fs/lockd/mon.c
+@@ -417,7 +417,7 @@ void nsm_release(struct nsm_handle *nsm)
+ /*
+  * XDR functions for NSM.
+  *
+- * See http://www.opengroup.org/ for details on the Network
++ * See https://www.opengroup.org/ for details on the Network
+  * Status Monitor wire protocol.
+  */
+ 
+diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xprt.h
+index d796058cdff2..f07c334c599f 100644
+--- a/include/linux/sunrpc/bc_xprt.h
++++ b/include/linux/sunrpc/bc_xprt.h
+@@ -4,7 +4,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+diff --git a/include/linux/sunrpc/msg_prot.h b/include/linux/sunrpc/msg_prot.h
+index bea40d9f03a1..43f854487539 100644
+--- a/include/linux/sunrpc/msg_prot.h
++++ b/include/linux/sunrpc/msg_prot.h
+@@ -143,7 +143,7 @@ typedef __be32	rpc_fraghdr;
+ /*
+  * Well-known netids. See:
+  *
+- *   http://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
++ *   https://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
+  */
+ #define RPCBIND_NETID_UDP	"udp"
+ #define RPCBIND_NETID_TCP	"tcp"
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index 195b40c5dae4..3fecad369592 100644
+--- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -5,7 +5,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+index f6fe2e6cd65a..2f59464e6524 100644
+--- a/net/sunrpc/sunrpc.h
++++ b/net/sunrpc/sunrpc.h
+@@ -4,7 +4,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+-- 
+2.27.0
+
