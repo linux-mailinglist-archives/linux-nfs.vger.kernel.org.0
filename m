@@ -2,175 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63E5C216DB1
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2020 15:28:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4494216DC1
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2020 15:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGGN2H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jul 2020 09:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgGGN2G (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jul 2020 09:28:06 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88EB7C061755
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2020 06:28:06 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id C53276218; Tue,  7 Jul 2020 09:28:05 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C53276218
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1594128485;
-        bh=s4+u2GC1X3VdT8xcmDuh79DF8eh3Aa0J9BAIdRZDFd0=;
-        h=Date:To:Cc:Subject:From:From;
-        b=LfqHgSY67gAFn1+5OFzVl0+0tNIQp/Hk6ouI4uPgpPQICEuBwenyziTRbUEf/3TMt
-         E88Yq8JUkIGWmj2JgrxtY+eQ5b17jITiwI6XGZ+ONNnYywsE/cZi1ec7Zhj1+iGQ7E
-         2ObG67aUauqEFC0COryzQ+2tigWDHS9GSR6xMHOI=
-Date:   Tue, 7 Jul 2020 09:28:05 -0400
-To:     Chuck Lever <chuck.lever@oracle.com>
+        id S1726911AbgGGNci (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jul 2020 09:32:38 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55791 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726805AbgGGNci (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jul 2020 09:32:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594128757;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=daxLKDaQIRh/j9vDAEMZME8qlzg9gjFhal+V+cSjVSw=;
+        b=P6w5LS4pnYfcxB6gyYRKpyApGap/BR60GJJewiAM2N8OBan0JNamHK6BAVGIszIGbf00LK
+        4qMAIf4jRezfoNIkz3ZuPSve/YuZBT+dl0SP3il6cpZML76AD4elUqY+B4wFMsypSmMBQY
+        IRWsQtJNTc9wqgYW5TKjRLpU83ibUa4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-EJ7Xc30UPp68HguTE62GzQ-1; Tue, 07 Jul 2020 09:32:32 -0400
+X-MC-Unique: EJ7Xc30UPp68HguTE62GzQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E627800414
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2020 13:32:31 +0000 (UTC)
+Received: from dresden.str.redhat.com (ovpn-115-68.ams2.redhat.com [10.36.115.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C53B160E3E;
+        Tue,  7 Jul 2020 13:32:30 +0000 (UTC)
+Subject: Re: Testing auto-submounts (crossmnt)
+To:     Scott Mayhew <smayhew@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd4: a client's own opens needn't prevent delegations
-Message-ID: <20200707132805.GA25846@fieldses.org>
+References: <3f2854db-dce9-557d-6812-12febff61916@redhat.com>
+ <20200707131850.GQ4452@aion.usersys.redhat.com>
+From:   Max Reitz <mreitz@redhat.com>
+Autocrypt: addr=mreitz@redhat.com; prefer-encrypt=mutual; keydata=
+ mQENBFXOJlcBCADEyyhOTsoa/2ujoTRAJj4MKA21dkxxELVj3cuILpLTmtachWj7QW+TVG8U
+ /PsMCFbpwsQR7oEy8eHHZwuGQsNpEtNC2G/L8Yka0BIBzv7dEgrPzIu+W3anZXQW4702+uES
+ U29G8TP/NGfXRRHGlbBIH9KNUnOSUD2vRtpOLXkWsV5CN6vQFYgQfFvmp5ZpPeUe6xNplu8V
+ mcTw8OSEDW/ZnxJc8TekCKZSpdzYoxfzjm7xGmZqB18VFwgJZlIibt1HE0EB4w5GsD7x5ekh
+ awIe3RwoZgZDLQMdOitJ1tUc8aqaxvgA4tz6J6st8D8pS//m1gAoYJWGwwIVj1DjTYLtABEB
+ AAG0HU1heCBSZWl0eiA8bXJlaXR6QHJlZGhhdC5jb20+iQFTBBMBCAA9AhsDBQkSzAMABQsJ
+ CAcCBhUICQoLAgQWAgMBAh4BAheABQJVzie5FRhoa3A6Ly9rZXlzLmdudXBnLm5ldAAKCRD0
+ B9sAYdXPQDcIB/9uNkbYEex1rHKz3mr12uxYMwLOOFY9fstP5aoVJQ1nWQVB6m2cfKGdcRe1
+ 2/nFaHSNAzT0NnKz2MjhZVmcrpyd2Gp2QyISCfb1FbT82GMtXFj1wiHmPb3CixYmWGQUUh+I
+ AvUqsevLA+WihgBUyaJq/vuDVM1/K9Un+w+Tz5vpeMidlIsTYhcsMhn0L9wlCjoucljvbDy/
+ 8C9L2DUdgi3XTa0ORKeflUhdL4gucWoAMrKX2nmPjBMKLgU7WLBc8AtV+84b9OWFML6NEyo4
+ 4cP7cM/07VlJK53pqNg5cHtnWwjHcbpGkQvx6RUx6F1My3y52vM24rNUA3+ligVEgPYBuQEN
+ BFXOJlcBCADAmcVUNTWT6yLWQHvxZ0o47KCP8OcLqD+67T0RCe6d0LP8GsWtrJdeDIQk+T+F
+ xO7DolQPS6iQ6Ak2/lJaPX8L0BkEAiMuLCKFU6Bn3lFOkrQeKp3u05wCSV1iKnhg0UPji9V2
+ W5eNfy8F4ZQHpeGUGy+liGXlxqkeRVhLyevUqfU0WgNqAJpfhHSGpBgihUupmyUg7lfUPeRM
+ DzAN1pIqoFuxnN+BRHdAecpsLcbR8sQddXmDg9BpSKozO/JyBmaS1RlquI8HERQoe6EynJhd
+ 64aICHDfj61rp+/0jTIcevxIIAzW70IadoS/y3DVIkuhncgDBvGbF3aBtjrJVP+5ABEBAAGJ
+ ASUEGAEIAA8FAlXOJlcCGwwFCRLMAwAACgkQ9AfbAGHVz0CbFwf9F/PXxQR9i4N0iipISYjU
+ sxVdjJOM2TMut+ZZcQ6NSMvhZ0ogQxJ+iEQ5OjnIputKvPVd5U7WRh+4lF1lB/NQGrGZQ1ic
+ alkj6ocscQyFwfib+xIe9w8TG1CVGkII7+TbS5pXHRxZH1niaRpoi/hYtgzkuOPp35jJyqT/
+ /ELbqQTDAWcqtJhzxKLE/ugcOMK520dJDeb6x2xVES+S5LXby0D4juZlvUj+1fwZu+7Io5+B
+ bkhSVPb/QdOVTpnz7zWNyNw+OONo1aBUKkhq2UIByYXgORPFnbfMY7QWHcjpBVw9MgC4tGeF
+ R4bv+1nAMMxKmb5VvQCExr0eFhJUAHAhVg==
+Message-ID: <da5ef610-d52b-eb51-eb11-3110e0117be2@redhat.com>
+Date:   Tue, 7 Jul 2020 15:32:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <20200707131850.GQ4452@aion.usersys.redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="AEdWXcjEwoFkf6LnO5QNz0r9qO3I0ArLO"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--AEdWXcjEwoFkf6LnO5QNz0r9qO3I0ArLO
+Content-Type: multipart/mixed; boundary="bcHuONQF09Zsjpe7ACzKiH8GTNUZNeS9L"
 
-We recently fixed lease breaking so that a client's actions won't break
-its own delegations.
+--bcHuONQF09Zsjpe7ACzKiH8GTNUZNeS9L
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-But we still have an unnecessary self-conflict when granting
-delegations: a client's own write opens will prevent us from handing out
-a read delegation even when no other client has the file open for write.
+On 07.07.20 15:18, Scott Mayhew wrote:
+> Hi Max,
+>=20
+> On Mon, 06 Jul 2020, Max Reitz wrote:
+>=20
+>> Hello again,
+>>
+>> Because I didn=E2=80=99t receive a reply to my question back in April
+>> (https://www.spinics.net/lists/linux-nfs/msg77401.html), I wanted to
+>> send a gentle ping just once.  Maybe there is an answer to it yet.
+>>
+>> I just would like to know whether there are any tests for NFS=E2=80=99=
+s crossmnt
+>> option.
+>>
+>=20
+> AFAIK there are no tests for nohide, crossmnt, or submount (at least no=
+t
+> in cthon, xfstests, nfstest, or ltp).
 
-Fix that by turning off the checks for conflicting opens under
-vfs_setlease, and instead performing those checks in the nfsd code.
+Aw, that=E2=80=99s too bad.  Thanks for your response, though!
 
-We don't depend much on locks here: instead we acquire the delegation,
-then check for conflicts, and drop the delegation again if we find any.
+Max
 
-The check beforehand is an optimization of sorts, just to avoid
-acquiring the delegation unnecessarily.  There's a race where the first
-check could cause us to deny the delegation when we could have granted
-it.  But, that's OK, delegation grants are optional (and probably not
-even a good idea in that case).
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/locks.c          |  3 +++
- fs/nfsd/nfs4state.c | 54 +++++++++++++++++++++++++++++++++------------
- 2 files changed, 43 insertions(+), 14 deletions(-)
+--bcHuONQF09Zsjpe7ACzKiH8GTNUZNeS9L--
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 7df0f9fa66f4..d5de9039dbd7 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1807,6 +1807,9 @@ check_conflicting_open(struct file *filp, const long arg, int flags)
- 
- 	if (flags & FL_LAYOUT)
- 		return 0;
-+	if (flags & FL_DELEG)
-+		/* We leave these checks to the caller. */
-+		return 0;
- 
- 	if (arg == F_RDLCK)
- 		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bb3d2c32664a..ab5c8857ae5a 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4922,6 +4922,32 @@ static struct file_lock *nfs4_alloc_init_lease(struct nfs4_delegation *dp,
- 	return fl;
- }
- 
-+static int nfsd4_check_conflicting_opens(struct nfs4_client *clp,
-+						struct nfs4_file *fp)
-+{
-+	struct nfs4_clnt_odstate *co;
-+	struct file *f = fp->fi_deleg_file->nf_file;
-+	struct inode *ino = locks_inode(f);
-+	int writes = atomic_read(&ino->i_writecount);
-+
-+	if (fp->fi_fds[O_WRONLY])
-+		writes--;
-+	if (fp->fi_fds[O_RDWR])
-+		writes--;
-+	WARN_ON_ONCE(writes < 0);
-+	if (writes > 0)
-+		return -EAGAIN;
-+	spin_lock(&fp->fi_lock);
-+	list_for_each_entry(co, &fp->fi_clnt_odstate, co_perfile) {
-+		if (co->co_client != clp) {
-+			spin_unlock(&fp->fi_lock);
-+			return -EAGAIN;
-+		}
-+	}
-+	spin_unlock(&fp->fi_lock);
-+	return 0;
-+}
-+
- static struct nfs4_delegation *
- nfs4_set_delegation(struct nfs4_client *clp, struct svc_fh *fh,
- 		    struct nfs4_file *fp, struct nfs4_clnt_odstate *odstate)
-@@ -4941,9 +4967,12 @@ nfs4_set_delegation(struct nfs4_client *clp, struct svc_fh *fh,
- 
- 	nf = find_readable_file(fp);
- 	if (!nf) {
--		/* We should always have a readable file here */
--		WARN_ON_ONCE(1);
--		return ERR_PTR(-EBADF);
-+		/*
-+		 * We probably could attempt another open and get a read
-+		 * delegation, but for now, don't bother until the
-+		 * client actually sends us one.
-+		 */
-+		return ERR_PTR(-EAGAIN);
- 	}
- 	spin_lock(&state_lock);
- 	spin_lock(&fp->fi_lock);
-@@ -4973,11 +5002,19 @@ nfs4_set_delegation(struct nfs4_client *clp, struct svc_fh *fh,
- 	if (!fl)
- 		goto out_clnt_odstate;
- 
-+	status = nfsd4_check_conflicting_opens(clp, fp);
-+	if (status) {
-+		locks_free_lock(fl);
-+		goto out_clnt_odstate;
-+	}
- 	status = vfs_setlease(fp->fi_deleg_file->nf_file, fl->fl_type, &fl, NULL);
- 	if (fl)
- 		locks_free_lock(fl);
- 	if (status)
- 		goto out_clnt_odstate;
-+	status = nfsd4_check_conflicting_opens(clp, fp);
-+	if (status)
-+		goto out_clnt_odstate;
- 
- 	spin_lock(&state_lock);
- 	spin_lock(&fp->fi_lock);
-@@ -5059,17 +5096,6 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
- 				goto out_no_deleg;
- 			if (!cb_up || !(oo->oo_flags & NFS4_OO_CONFIRMED))
- 				goto out_no_deleg;
--			/*
--			 * Also, if the file was opened for write or
--			 * create, there's a good chance the client's
--			 * about to write to it, resulting in an
--			 * immediate recall (since we don't support
--			 * write delegations):
--			 */
--			if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE)
--				goto out_no_deleg;
--			if (open->op_create == NFS4_OPEN_CREATE)
--				goto out_no_deleg;
- 			break;
- 		default:
- 			goto out_no_deleg;
--- 
-2.26.2
+--AEdWXcjEwoFkf6LnO5QNz0r9qO3I0ArLO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEkb62CjDbPohX0Rgp9AfbAGHVz0AFAl8EeWwACgkQ9AfbAGHV
+z0D+6AgApUWLJsXJW8bJw3N/+5znXL7nyci3pD11fS5jrut8/nVJhsTYlKzh8ZNU
+C6bfjsjirAUSl797kOmiaRywwc22jMKGT3thxPfc2vSDIlJbhKBShtncCUlN+vuJ
+sF2ah7STiHSgpyl4o8GYBt+gjTN5IFmVxTC7Gn5BEBF4hO6GML5zCBbF6DH9a/dQ
+4QIHcy+Onm31FJFCi9YrHeWMeX11kpT4WUjQwTZG5tD4yikIKT6/5xnjB6j0ObLN
+XycvE/7D+iQKZYnJ3z9Otgz8XuXrfCoh6oWe9SYM6hCEyyAzxGumM0UYeidFQBFr
+nICFMn+XyLorimU/NU83CFjJPbPPmQ==
+=n6ip
+-----END PGP SIGNATURE-----
+
+--AEdWXcjEwoFkf6LnO5QNz0r9qO3I0ArLO--
 
