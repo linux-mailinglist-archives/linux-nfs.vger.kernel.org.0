@@ -2,176 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFB5A218C8D
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 18:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A59219127
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgGHQIl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 12:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
+        id S1725972AbgGHUJD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 16:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730075AbgGHQIl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 12:08:41 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D947C061A0B
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 09:08:41 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a8so41066995edy.1
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 09:08:41 -0700 (PDT)
+        with ESMTP id S1725964AbgGHUJD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:09:03 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D000AC061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:09:02 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w34so15529938qte.1
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YTWzIUIU61kGIXpIwLerSuSKe5bKsEM4SVNDCbhuzHk=;
-        b=hEbzJHHFKskgFuiHcwVetV3t/Ye8lgbS+dGQuMHLhtF87Gq/zfmF7ApOgJl3YHVHTY
-         Q87vqfdgOmh1kA4cMNYc1qsc/gJ7Ngeg8m1xbdQep5dFBpDY1ygxvLZiPiH5LnbsQOro
-         Q5Ljrn8rRRSw7I36t/z7tQfqPSKX5MAF1T+k/p/7sgIWhYw6rx0M41c6IWTVYo7yafSM
-         c+QQ5qKtJYG+oGGSJFp+11LMgqGjbU0pRprM3W4gxfKremDivHX3evpojQAiHvmtAR8J
-         xNtAV35Il3UWDU6j96NA7NUNCmVHfB8YGKuC1EOwjdYeKKKnzW5kDK8L1a02oIC+u0an
-         hkKw==
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=p5hp8EIZDWTIEQsrL+V/T4/nEmJWNqPBbpmgkR89Hpc=;
+        b=tzdrK7MJkgVRtgfCyOKIKpnJ/POWhxSsjXUsuhQ47WtA0VIAWs0UcSbLrymFXo6nKl
+         gZQRpGJVhioEuaEapZJr/D75EkRlGCLgrt6z+eDSbxhFToZ8/waGRk6btcYN4q6xT0u5
+         xaXqU+ZtZn0v5AkONXpDgAYkBo60I09tjRp6bqlII4ZomrycbjwWnPKurxScoqF2l15P
+         t+MozyeYofM9xnj/zaVE2KdQ1afu+zWyurlg40xsX+MLgNRTj+uMBrVFP9TVdjWMdgtR
+         YmgTOmx94zSxqz1Tb+Y+5Ca8eqyoUIiepub+ZBYj8Fz2REGUEC2xhoB5NxqYIPpfz5cc
+         BSgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YTWzIUIU61kGIXpIwLerSuSKe5bKsEM4SVNDCbhuzHk=;
-        b=DZ7nFd3HsDcMKbX1gGLRCU9PrQ/dJYOnhfIqbOvZrbU2HIQdfIQ30lERFk+gHXtnJy
-         vE4sskrwBnwuZz67Lv/IwD5YVgnzGy4gv3IHrmdXvPlJIxGKIaYosbf8oCnWL3CYeiz0
-         ync7DsMh5+SMFtmXwO0rcYHyheuT9rDnhZIYS1khuIeTtEBqMbxDYg26keVRRqNft2B5
-         V+AzbzB+pCzYc/vaV0brMT1Try7bhdZePb8NlhFn2XsQo74OcgEIaOWioPqctFXstkfT
-         +prCjFaJwOSZr+Q9iXd3s0ebhzFPHZsdpiz0PwmzlzhgRogqt5ARRhbA/roNiCQ5p79z
-         T9lg==
-X-Gm-Message-State: AOAM530pW4JPfRH2Lr5x00ZmwGmTrKH74vrDia+Fu8rPCgr/m9Wjvtkj
-        Q/v8piw3PsvACs5+51t3TE14+uJl2yQOaXQ50G8=
-X-Google-Smtp-Source: ABdhPJxPUj1PFrUwJvX3ozEE2IXb+rMT/D5O9XHQWyh6ZQ4npteGiQA4oWVRfMQ/WZHR9kRyHUjy2wKpOu7qbTbnhMY=
-X-Received: by 2002:a50:b5e3:: with SMTP id a90mr28481269ede.381.1594224519821;
- Wed, 08 Jul 2020 09:08:39 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=p5hp8EIZDWTIEQsrL+V/T4/nEmJWNqPBbpmgkR89Hpc=;
+        b=neJyDtx3O3TjcFCyKtHjJC4GkvPh13hEsy4tcANc4lQ1inIy1bMFon3y9HYZOuA6zU
+         rLUmMry3WpHc9pbLhbMxx5wD3xPKEhf0QjxJOO1+z971dgnmM4jZKsNHcJQvB1zSfJIP
+         gfdRrVh9F1Jk11SagSdrEwbsKy22V0kKqyPiOWd3V3Kh6pTLu1wrqp4FUwfBpO9ZUZnk
+         /oZ1eJz0bnpYP73CvyTiLB2GvZ9UGrtitZ/rNiK1TgzMTLcSdm38/LyAEKj+3mfdKHRG
+         dB2RyMP2JsI+PaacCWa8rQ8A/Vy4cvgXG/EpVjnay3tlhdtPj9Xh+JUd9FFvRR7gruer
+         Rv8w==
+X-Gm-Message-State: AOAM532HyX/5yvhNG94WD9IFA8ryqx9VzmQVMsXjBpiyLupeQ1o4luSd
+        r0rEOa5BJKK8+Dxz5c2etIge41S7
+X-Google-Smtp-Source: ABdhPJw8Ud1i/pUcy+RZOZNM283QT9/EgVjVPvIF+8N1DJ5HYNT3kycOVXzMeKwkOOfcrKoI3vuoYQ==
+X-Received: by 2002:ac8:1809:: with SMTP id q9mr56121889qtj.107.1594238941844;
+        Wed, 08 Jul 2020 13:09:01 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id k14sm955881qtb.38.2020.07.08.13.09.01
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2020 13:09:01 -0700 (PDT)
+Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068K8xSL006063
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:09:00 GMT
+Subject: [PATCH v1 00/22] SUNRPC: Replace dprintk calls with tracepoints
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Wed, 08 Jul 2020 16:08:59 -0400
+Message-ID: <20200708200121.22129.92375.stgit@manet.1015granger.net>
+User-Agent: StGit/0.22-38-gfb18
 MIME-Version: 1.0
-References: <20200708155018.110150-1-Anna.Schumaker@Netapp.com>
- <20200708155018.110150-2-Anna.Schumaker@Netapp.com> <25e89e208bd3c6e44f8041d64c96be238b78c3b6.camel@hammerspace.com>
-In-Reply-To: <25e89e208bd3c6e44f8041d64c96be238b78c3b6.camel@hammerspace.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Wed, 8 Jul 2020 12:08:23 -0400
-Message-ID: <CAFX2Jf=p7zgwRUxFjHSB9eAmhvqSMxQUdGa=qLEXqbKieDTcpA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] NFS: Fix interrupted slots by sending a solo
- SEQUENCE operation
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 12:00 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Wed, 2020-07-08 at 11:50 -0400, schumaker.anna@gmail.com wrote:
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > We used to do this before 3453d5708b33, but this was changed to
-> > better
-> > handle the NFS4ERR_SEQ_MISORDERED error code. This commit fixed the
-> > slot
-> > re-use case when the server doesn't receive the interrupted
-> > operation,
-> > but if the server does receive the operation then it could still end
-> > up
-> > replying to the client with mis-matched operations from the reply
-> > cache.
-> >
-> > We can fix this by sending a SEQUENCE to the server while recovering
-> > from
-> > a SEQ_MISORDERED error when we detect that we are in an interrupted
-> > slot
-> > situation.
-> >
-> > Fixes: 3453d5708b33 (NFSv4.1: Avoid false retries when RPC calls are
-> > interrupted)
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 17 +++++++++++++++--
-> >  1 file changed, 15 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index e32717fd1169..5de41a5772f0 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -774,6 +774,14 @@ static void nfs4_slot_sequence_acked(struct
-> > nfs4_slot *slot,
-> >       slot->seq_nr_last_acked = seqnr;
-> >  }
-> >
-> > +static void nfs4_probe_sequence(struct nfs_client *client, const
-> > struct cred *cred,
-> > +                             struct nfs4_slot *slot)
-> > +{
-> > +     struct rpc_task *task = _nfs41_proc_sequence(client, cred,
-> > slot, true);
-> > +     if (!IS_ERR(task))
-> > +             rpc_wait_for_completion_task(task);
->
-> Hmm... I am a little concerned about the wait here, since we don't know
-> what kind of thread this is.
->
-> Any chance we could kick off a _nfs41_proc_sequence asynchronously, and
-> then perhaps requeue the original task to wait for the next free slot?
-> I suppose one issue there would be if the 'original task is an earlier
-> call to _nfs41_proc_sequence, but perhaps that can be worked around?
+Hi-
 
-I'll try it and see what happens. Thanks for the feedback!
-Anna
+This series replaces many client-side RPC dprintk call sites with
+tracepoints. The goals of this series are:
 
->
-> > +}
-> > +
-> >  static int nfs41_sequence_process(struct rpc_task *task,
-> >               struct nfs4_sequence_res *res)
-> >  {
-> > @@ -790,6 +798,7 @@ static int nfs41_sequence_process(struct rpc_task
-> > *task,
-> >               goto out;
-> >
-> >       session = slot->table->session;
-> > +     clp = session->clp;
-> >
-> >       trace_nfs4_sequence_done(session, res);
-> >
-> > @@ -804,7 +813,6 @@ static int nfs41_sequence_process(struct rpc_task
-> > *task,
-> >               nfs4_slot_sequence_acked(slot, slot->seq_nr);
-> >               /* Update the slot's sequence and clientid lease timer
-> > */
-> >               slot->seq_done = 1;
-> > -             clp = session->clp;
-> >               do_renew_lease(clp, res->sr_timestamp);
-> >               /* Check sequence flags */
-> >               nfs41_handle_sequence_flag_errors(clp, res-
-> > >sr_status_flags,
-> > @@ -852,10 +860,15 @@ static int nfs41_sequence_process(struct
-> > rpc_task *task,
-> >               /*
-> >                * Were one or more calls using this slot interrupted?
-> >                * If the server never received the request, then our
-> > -              * transmitted slot sequence number may be too high.
-> > +              * transmitted slot sequence number may be too high.
-> > However,
-> > +              * if the server did receive the request then it might
-> > +              * accidentally give us a reply with a mismatched
-> > operation.
-> > +              * We can sort this out by sending a lone sequence
-> > operation
-> > +              * to the server on the same slot.
-> >                */
-> >               if ((s32)(slot->seq_nr - slot->seq_nr_last_acked) > 1)
-> > {
-> >                       slot->seq_nr--;
-> > +                     nfs4_probe_sequence(clp, task->tk_msg.rpc_cred,
-> > slot);
-> >                       goto retry_nowait;
-> >               }
-> >               /*
-> --
-> Trond Myklebust
-> CTO, Hammerspace Inc
-> 4984 El Camino Real, Suite 208
-> Los Altos, CA 94022
-> www.hammer.space
->
->
+- Replace chatty dprintk call sites with tracepoints, which can
+  handle a higher event rate, and won't get rate-limited.
+
+- At some later point, expand the 0-64K range of RPC task IDs.
+  Task IDs would be displayed only by tracepoints as 32-bit unsigned
+  integers.
+
+- Eliminate redundant tracepoints in the transport implementations.
+
+---
+
+Chuck Lever (22):
+      SUNRPC: Remove trace_xprt_complete_rqst()
+      SUNRPC: Hoist trace_xprtrdma_op_allocate into generic code
+      SUNRPC: Remove debugging instrumentation from xprt_release
+      SUNRPC: Update debugging instrumentation in xprt_do_reserve()
+      SUNRPC: Replace dprintk() call site in xprt_prepare_transmit
+      SUNRPC: Replace dprintk() call site in xs_nospace()
+      SUNRPC: Remove the dprint_status() macro
+      SUNRPC: Remove dprintk call site in call_start()
+      SUNRPC: Replace connect dprintk call sites with a tracepoint
+      SUNRPC: Mitigate cond_resched() in xprt_transmit()
+      SUNRPC: Add trace_rpc_timeout_status()
+      SUNRPC: Trace call_refresh events
+      SUNRPC: Remove dprintk call site in call_decode
+      SUNRPC: Clean up call_bind_status() observability
+      SUNRPC: Remove rpcb_getport_async dprintk call sites
+      SUNRPC: Hoist trace_xprtrdma_op_setport into generic code
+      SUNRPC: Remove dprintk call sites in rpcbind XDR functions
+      SUNRPC: Remove more dprintks in rpcb_clnt.c
+      SUNRPC: Replace rpcbind dprintk call sites with tracepoints
+      SUNRPC: Clean up RPC scheduler tracepoints
+      SUNRPC: Remove dprintk call sites in RPC queuing functions
+      SUNRPC: Remove remaining dprintks from sched.c
+
+
+ include/trace/events/rpcrdma.h  |  63 -------
+ include/trace/events/sunrpc.h   | 285 ++++++++++++++++++++++++++++----
+ net/sunrpc/clnt.c               |  75 ++-------
+ net/sunrpc/rpcb_clnt.c          | 129 +++------------
+ net/sunrpc/sched.c              |  52 +-----
+ net/sunrpc/xprt.c               |  22 +--
+ net/sunrpc/xprtrdma/transport.c |   7 -
+ net/sunrpc/xprtsock.c           |   5 +-
+ 8 files changed, 304 insertions(+), 334 deletions(-)
+
+--
+Chuck Lever
