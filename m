@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1E921913C
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:10:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E38E021913D
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgGHUKs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 16:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
+        id S1726340AbgGHUKx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 16:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgGHUKr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:10:47 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B341C061A0B
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:10:47 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id m9so21124472qvx.5
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:10:47 -0700 (PDT)
+        with ESMTP id S1726072AbgGHUKx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:10:53 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2714C061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:10:52 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id e12so35563462qtr.9
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=OqH0yu2xM2MQXSlls3Xuz9r1lbkDWWgka8P/83kPWa0=;
-        b=OmkPCdwaiMPSPuIPLsQGsedJyh2ggcKosCwOwl1Tyy+WhYdix5gXBobHXSUiygsjmk
-         5b19mdIpni+LLHVy/zC2PebOMIjAHd+0Au+D97N1jVkGIkudLF6ZflzuksG5YOeJi+07
-         tceRiFZhvOfebZF69dw0vE7Iw6BMt9B2ZKlA7v2DPHa6MrXmQIamV6E6Ub/oA5tbS6N2
-         udh6QnZyUNVNoZtQM4nv9NX84gDUXHSJ9jvlYuq1pB3YCK/1NI7pPno7AlFBpS3WLKa6
-         Xb0GECJTw31zeJ+NMxqus1JfyW24SLIUCHp1iCxmQW4T/i/2B8gLK4QQGImj9tV44HLe
-         TScw==
+        bh=ow2ayKcdAl1ByfRQ6W0ZVzyNcM0r2qXggwvghg/TTx0=;
+        b=MabB9/kUbWC/9IhlTTkUPhPQkzuVUMdwNRrJKAdj6iD5fO2Ho24EveYtcnIbx5NAZV
+         /m9KJlpyLlUsQXQgMZldS/17sNt5sa2YiZLnK2KlzDLDm5Qb8pa0xDO0rWVBlA+Hj2Op
+         PN2MeHRdqE6a1G1V3IoTEx4xZ2dsxQjZhc7n7r8ArQMUD6gsZ2KTX0TKjs3ZPmXJqYHq
+         BmDNrVyO97FsXkY/0m7eL1SufX6tNWWNBPBzG6HG9cQbjyLWPslBgru6VlXy0HVM+Cr5
+         PiCE2XSLB8rBKJtBtMulIW2WMXDl0REC04nswLyp5HyyV5t0tFLgFKFrPfclJCHkxGhw
+         Vc5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=OqH0yu2xM2MQXSlls3Xuz9r1lbkDWWgka8P/83kPWa0=;
-        b=WGdfQ+CeLIsqf6uwc7+jA6m4Ybn3ChumJTQveRsWzxoPx7ZdfKkbZSeKcpYXaIbm5B
-         roy66YiTgEmUuFd6keFDpaxrshDiWWgvRK4B0CPpph5YcRv0CHEsjlPhSygZlcLxbuem
-         GjYVZjRfVRyWzLfIhSyOkvcNaOU8/IiA/ExacQd54hvyuIgT5fTUR+t04LuoI2lzCEH1
-         beaBbrDOuHrbVooRDmdv6ykW2RXCCkkdIsUCLYj7r6hhTWA68JxY27rl3mNhOzD22bZL
-         S8YNqMvqB8Bx7N4PcixHZEpcZXvBvToLIDJAw4m+lmajgmuP/BPg5q3FUOV2QgrKQ3hx
-         FdIA==
-X-Gm-Message-State: AOAM532GHd1OhJxqHO+idIE+Dv8bwXNc4QnjVoPZJphiu4EbP9iQ/kev
-        2/hlQ9VTt8Up1ZtoXx0ukXqrKK4g
-X-Google-Smtp-Source: ABdhPJwJizEWx6uVN2XAcRuI/1DQEJXoCuMP3jma85YYC9XsXlXWz2vpZlyRbQvlsTrZ3tW+9wFnow==
-X-Received: by 2002:a0c:e551:: with SMTP id n17mr55495938qvm.151.1594239046718;
-        Wed, 08 Jul 2020 13:10:46 -0700 (PDT)
+        bh=ow2ayKcdAl1ByfRQ6W0ZVzyNcM0r2qXggwvghg/TTx0=;
+        b=QgzNWP6opDn2/W6jFuJgpW3N4wQhuQtQWfbmc8lx8dj1cv94EBrAJxGkrZqY6229qV
+         5dgMmVyNT1rB5M19nMzjaZ1EpsC5SYw4i+CNN1o78ztTvjgzFyB05ebJp//ViOyu2Jbd
+         26/sM2Q4JPwMb2xk2R+trcm1W4QrL5vSk1Jfui6yajsgvUGHQsUTzDieVuMRQRGo3oKG
+         x2thTtQ0ZxBuygRuUE/TFvjFHbJdPCPf68CZARTl8+7XBujDzGZkHaOPm040CEYlRIz+
+         Fyw7YVyCnBAMgpeA2vQfs+zvHAFFUTvdO5+NW1IywWySrR/2ddmPBYXLfkHF+cNWbPQL
+         bBeQ==
+X-Gm-Message-State: AOAM531xp2UcP6NhEZw3nSFbYAjkTshf1RrXCvY00GbFiwFQLT3xLR42
+        6rsgEuKy9xEICzoLwXXwZhKpQfdk
+X-Google-Smtp-Source: ABdhPJwd4+77Ox+1EAq9qgUua6zRRDLSjG4azbmtDcR2CvLooKQryeH5ErGrupf5G8rEzQrWiBIm9A==
+X-Received: by 2002:ac8:53c1:: with SMTP id c1mr62483938qtq.193.1594239051994;
+        Wed, 08 Jul 2020 13:10:51 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id m26sm852602qtc.83.2020.07.08.13.10.46
+        by smtp.gmail.com with ESMTPSA id c27sm1016961qka.23.2020.07.08.13.10.51
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 13:10:46 -0700 (PDT)
+        Wed, 08 Jul 2020 13:10:51 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068KAjoR006134
-        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:10:45 GMT
-Subject: [PATCH v1 20/22] SUNRPC: Clean up RPC scheduler tracepoints
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068KAoGH006137
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:10:50 GMT
+Subject: [PATCH v1 21/22] SUNRPC: Remove dprintk call sites in RPC queuing
+ functions
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Wed, 08 Jul 2020 16:10:45 -0400
-Message-ID: <20200708201045.22129.93054.stgit@manet.1015granger.net>
+Date:   Wed, 08 Jul 2020 16:10:50 -0400
+Message-ID: <20200708201050.22129.61710.stgit@manet.1015granger.net>
 In-Reply-To: <20200708200121.22129.92375.stgit@manet.1015granger.net>
 References: <20200708200121.22129.92375.stgit@manet.1015granger.net>
 User-Agent: StGit/0.22-38-gfb18
@@ -68,83 +69,117 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove several redundant dprintk call sites, and replace a couple of
-potentially useful ones with tracepoints.
+Remove redundant call sites or call sites that are already covered
+by tracepoints.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |    2 ++
- net/sunrpc/sched.c            |   15 +++------------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ include/trace/events/sunrpc.h |    1 +
+ net/sunrpc/sched.c            |   22 +---------------------
+ 2 files changed, 2 insertions(+), 21 deletions(-)
 
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 9177520b55a8..abd55e88440d 100644
+index abd55e88440d..843f85b2a611 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -387,6 +387,8 @@ DECLARE_EVENT_CLASS(rpc_task_running,
- 
- DEFINE_RPC_RUNNING_EVENT(begin);
- DEFINE_RPC_RUNNING_EVENT(run_action);
-+DEFINE_RPC_RUNNING_EVENT(sync_sleep);
-+DEFINE_RPC_RUNNING_EVENT(sync_wake);
+@@ -390,6 +390,7 @@ DEFINE_RPC_RUNNING_EVENT(run_action);
+ DEFINE_RPC_RUNNING_EVENT(sync_sleep);
+ DEFINE_RPC_RUNNING_EVENT(sync_wake);
  DEFINE_RPC_RUNNING_EVENT(complete);
++DEFINE_RPC_RUNNING_EVENT(timeout);
  DEFINE_RPC_RUNNING_EVENT(signalled);
  DEFINE_RPC_RUNNING_EVENT(end);
+ 
 diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 402b1c8869fd..a0d5a98fbf32 100644
+index a0d5a98fbf32..116b3abaed3f 100644
 --- a/net/sunrpc/sched.c
 +++ b/net/sunrpc/sched.c
-@@ -885,9 +885,6 @@ static void __rpc_execute(struct rpc_task *task)
- 	int task_is_async = RPC_IS_ASYNC(task);
- 	int status = 0;
- 
--	dprintk("RPC: %5u __rpc_execute flags=0x%x\n",
--			task->tk_pid, task->tk_flags);
--
- 	WARN_ON_ONCE(RPC_IS_QUEUED(task));
- 	if (RPC_IS_QUEUED(task))
- 		return;
-@@ -947,7 +944,7 @@ static void __rpc_execute(struct rpc_task *task)
- 			return;
- 
- 		/* sync task: sleep here */
--		dprintk("RPC: %5u sync task going to sleep\n", task->tk_pid);
-+		trace_rpc_task_sync_sleep(task, task->tk_action);
- 		status = out_of_line_wait_on_bit(&task->tk_runstate,
- 				RPC_TASK_QUEUED, rpc_wait_bit_killable,
- 				TASK_KILLABLE);
-@@ -963,11 +960,9 @@ static void __rpc_execute(struct rpc_task *task)
- 			task->tk_rpc_status = -ERESTARTSYS;
- 			rpc_exit(task, -ERESTARTSYS);
- 		}
--		dprintk("RPC: %5u sync task resuming\n", task->tk_pid);
-+		trace_rpc_task_sync_wake(task, task->tk_action);
- 	}
- 
--	dprintk("RPC: %5u return %d, status %d\n", task->tk_pid, status,
--			task->tk_status);
- 	/* Release all resources associated with the task */
- 	rpc_release_task(task);
- }
-@@ -1146,10 +1141,8 @@ static void rpc_free_task(struct rpc_task *task)
- 	put_rpccred(task->tk_op_cred);
- 	rpc_release_calldata(task->tk_ops, task->tk_calldata);
- 
--	if (tk_flags & RPC_TASK_DYNAMIC) {
--		dprintk("RPC: %5u freeing task\n", task->tk_pid);
-+	if (tk_flags & RPC_TASK_DYNAMIC)
- 		mempool_free(task, rpc_task_mempool);
--	}
- }
- 
- static void rpc_async_release(struct work_struct *work)
-@@ -1203,8 +1196,6 @@ EXPORT_SYMBOL_GPL(rpc_put_task_async);
- 
- static void rpc_release_task(struct rpc_task *task)
+@@ -85,7 +85,6 @@ __rpc_disable_timer(struct rpc_wait_queue *queue, struct rpc_task *task)
  {
--	dprintk("RPC: %5u release task\n", task->tk_pid);
+ 	if (list_empty(&task->u.tk_wait.timer_list))
+ 		return;
+-	dprintk("RPC: %5u disabling timer\n", task->tk_pid);
+ 	task->tk_timeout = 0;
+ 	list_del(&task->u.tk_wait.timer_list);
+ 	if (list_empty(&queue->timer_list.list))
+@@ -111,9 +110,6 @@ static void
+ __rpc_add_timer(struct rpc_wait_queue *queue, struct rpc_task *task,
+ 		unsigned long timeout)
+ {
+-	dprintk("RPC: %5u setting alarm for %u ms\n",
+-		task->tk_pid, jiffies_to_msecs(timeout - jiffies));
 -
- 	WARN_ON_ONCE(RPC_IS_QUEUED(task));
+ 	task->tk_timeout = timeout;
+ 	if (list_empty(&queue->timer_list.list) || time_before(timeout, queue->timer_list.expires))
+ 		rpc_set_queue_timer(queue, timeout);
+@@ -216,9 +212,6 @@ static void __rpc_add_wait_queue(struct rpc_wait_queue *queue,
+ 	/* barrier matches the read in rpc_wake_up_task_queue_locked() */
+ 	smp_wmb();
+ 	rpc_set_queued(task);
+-
+-	dprintk("RPC: %5u added to queue %p \"%s\"\n",
+-			task->tk_pid, queue, rpc_qname(queue));
+ }
  
- 	rpc_release_resources_task(task);
+ /*
+@@ -241,8 +234,6 @@ static void __rpc_remove_wait_queue(struct rpc_wait_queue *queue, struct rpc_tas
+ 	else
+ 		list_del(&task->u.tk_wait.list);
+ 	queue->qlen--;
+-	dprintk("RPC: %5u removed from queue %p \"%s\"\n",
+-			task->tk_pid, queue, rpc_qname(queue));
+ }
+ 
+ static void __rpc_init_priority_wait_queue(struct rpc_wait_queue *queue, const char *qname, unsigned char nr_queues)
+@@ -382,13 +373,9 @@ static void __rpc_do_sleep_on_priority(struct rpc_wait_queue *q,
+ 		struct rpc_task *task,
+ 		unsigned char queue_priority)
+ {
+-	dprintk("RPC: %5u sleep_on(queue \"%s\" time %lu)\n",
+-			task->tk_pid, rpc_qname(q), jiffies);
+-
+ 	trace_rpc_task_sleep(task, q);
+ 
+ 	__rpc_add_wait_queue(q, task, queue_priority);
+-
+ }
+ 
+ static void __rpc_sleep_on_priority(struct rpc_wait_queue *q,
+@@ -510,9 +497,6 @@ static void __rpc_do_wake_up_task_on_wq(struct workqueue_struct *wq,
+ 		struct rpc_wait_queue *queue,
+ 		struct rpc_task *task)
+ {
+-	dprintk("RPC: %5u __rpc_wake_up_task (now %lu)\n",
+-			task->tk_pid, jiffies);
+-
+ 	/* Has the task been executed yet? If not, we cannot wake it up! */
+ 	if (!RPC_IS_ACTIVATED(task)) {
+ 		printk(KERN_ERR "RPC: Inactive task (%p) being woken up!\n", task);
+@@ -524,8 +508,6 @@ static void __rpc_do_wake_up_task_on_wq(struct workqueue_struct *wq,
+ 	__rpc_remove_wait_queue(queue, task);
+ 
+ 	rpc_make_runnable(wq, task);
+-
+-	dprintk("RPC:       __rpc_wake_up_task done\n");
+ }
+ 
+ /*
+@@ -663,8 +645,6 @@ struct rpc_task *rpc_wake_up_first_on_wq(struct workqueue_struct *wq,
+ {
+ 	struct rpc_task	*task = NULL;
+ 
+-	dprintk("RPC:       wake_up_first(%p \"%s\")\n",
+-			queue, rpc_qname(queue));
+ 	spin_lock(&queue->lock);
+ 	task = __rpc_find_next_queued(queue);
+ 	if (task != NULL)
+@@ -770,7 +750,7 @@ static void __rpc_queue_timer_fn(struct work_struct *work)
+ 	list_for_each_entry_safe(task, n, &queue->timer_list.list, u.tk_wait.timer_list) {
+ 		timeo = task->tk_timeout;
+ 		if (time_after_eq(now, timeo)) {
+-			dprintk("RPC: %5u timeout\n", task->tk_pid);
++			trace_rpc_task_timeout(task, task->tk_action);
+ 			task->tk_status = -ETIMEDOUT;
+ 			rpc_wake_up_task_queue_locked(queue, task);
+ 			continue;
 
