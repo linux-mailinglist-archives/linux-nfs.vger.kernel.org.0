@@ -2,126 +2,197 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E8E21913F
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:10:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E2721915A
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:20:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGHUK6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 16:10:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
+        id S1726506AbgGHUTy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 16:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgGHUK6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:10:58 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2A8C061A0B
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:10:58 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id e3so14779807qvo.10
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:10:58 -0700 (PDT)
+        with ESMTP id S1726122AbgGHUTx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:19:53 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A5BC061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:19:53 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dp18so51845574ejc.8
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=7IGM9EAqdmGRanqhNA3ExlUYjuyFtZv0iYCZ7IvyjkI=;
-        b=N7p1knZI8NHWtVgiavGBZr+ltyvQwTJAy8NeAABnhnKPNhZjxpJzIe53g5l/3YCT24
-         oMcuwe5FO9Nke2IpfoNWYwSnZDhTHVXJrN/XSjaPTZictQf3II6wpzfYCFM8u9v1wnUq
-         3IlZzN2TbWibduipaTFaaeTzjUN7mNBYqKI5vWT0A9PAPuwPlJ4bV5yKdHcw04swOAXB
-         WqAjJ0N+LsSaGUgyEIG8EaTGWPE49GnMX93fP+fRea1CpdS7Qf2636Ud62iag/fbiqRl
-         4nifn5PAtYAyLdpSyUXizR7YJ9wFKCKkviV4v5enzJqZ/pDHkcpzgaHnD43ZJ1yEsLzl
-         uRUA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I2PfEQPxgZY4hwjqV2T4P8YyR49aWSh/8TcC3UdSwTo=;
+        b=a6NM/8t/C1nW0y2F+3GU/dJ3Mxc4RHm9xCUN9wLdl5rFCfpsmPTWG3bK5vW/jc/25K
+         W19tGKWvwS9WWGX3BUT7geP0IqZzbWDPrYcsUQExQgLGgM1qT+ls+RDTGvMOFrpKubLy
+         730/MfPtnBN3BR2galbYIwDWqjuoMcX5g1YUeMY14OyPiJvcW7OMNn21M3eMC4zzUpXo
+         NMyYYC9WXSlz9G2nYcC+BcM0GUgEAA4WkOkXd/dxZ5F4NyqcrLl1deMe5m1DooEJPkRo
+         9Lx/blJX0QKAzhPGdJccbkFlthgfBKhxByNBJEczHxd+W7MIrUDuNaKhdtViSyAA1Tpc
+         eSgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=7IGM9EAqdmGRanqhNA3ExlUYjuyFtZv0iYCZ7IvyjkI=;
-        b=G49aTvzT/1ugOybXDRYLs5wjtxaDRxDB3CZFCozHSYju/SkvdP4lEehZsIp+faHpCU
-         lwiqsiidKgf//PBFwSVYJe5xTkoQjJxvfspwFrfMoEUDNDnGkce9TCnRnpy3R3qcHg2q
-         cVc71EAAa6P5OsUrYm9BZVKepLa6nj2lwwqsGf2p1ZHZDbQAlXpvsO0vXRkhufS0ovPU
-         Ts6vaXmcez1EiDzJ001IktbwMMPP/U9AIg5+NHQ+uRtme7WY8WUpa5J0TQg2k/Qk0Id1
-         ULnJ3oweK/i15b25nWdIOeH+m2081f/Bc6RSQFjmo92QnNNMGEaUzIuC6aj56iaqFps7
-         jMcg==
-X-Gm-Message-State: AOAM532sp7KQvX8LMRL1FRcddd3WNJrPMXn0bRkyjjsUX17TFLmDXa1j
-        LFV8kr1GVi3xxpgA7QbWM4sj16Ue
-X-Google-Smtp-Source: ABdhPJxRNlrvEe/XdMGKgVelpY7QhTMcEX6JH21zdilfRL9Vbpfei88QJRLa8BuxnKiLmBS12wpMUA==
-X-Received: by 2002:a0c:facb:: with SMTP id p11mr57199883qvo.243.1594239057241;
-        Wed, 08 Jul 2020 13:10:57 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id b10sm918138qkh.124.2020.07.08.13.10.56
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 13:10:56 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068KAuAV006140
-        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:10:56 GMT
-Subject: [PATCH v1 22/22] SUNRPC: Remove remaining dprintks from sched.c
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Wed, 08 Jul 2020 16:10:56 -0400
-Message-ID: <20200708201056.22129.36781.stgit@manet.1015granger.net>
-In-Reply-To: <20200708200121.22129.92375.stgit@manet.1015granger.net>
-References: <20200708200121.22129.92375.stgit@manet.1015granger.net>
-User-Agent: StGit/0.22-38-gfb18
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I2PfEQPxgZY4hwjqV2T4P8YyR49aWSh/8TcC3UdSwTo=;
+        b=az6PW4y3bKBhaQC04t8NcKXvxcfu8t6LKMgdvKEoi9HK6vj+bLmMVX7+e27o8pnD5a
+         AA/B+XTCHffbpUVejyGzzzKD++TrCEVuukbKBXOjpg953CNFpS7oSLo+Eu9c6qdC7ePl
+         lXa+QiIONvLK2v65orxs8okub2jrJeJyF+iOt1ZV1lS48nblFCEazvPcOT20kFzU9ZSm
+         ZVoVF2a+0nMlOtIRrSN9fSaJhQrWzlJsrxw3zFdGex8NRqPgScAcPbjDdadJfLdWf0Gn
+         xLo0l8LVQt+asXcmukWjNEmvaan7ECGHCAG9tPj+tyuW9XxTeT++FAEwXeMD2905zVio
+         DTzg==
+X-Gm-Message-State: AOAM531CWs3x4CEE2NU0ZUxwGxGRyclq1YkuoSIkmG+VHEkuICApGx7p
+        JfG3sxfrfkUbll6lDWbsDY4hLA19ddd1A6FYoTphJw==
+X-Google-Smtp-Source: ABdhPJwnIgFd/P1lxzWtSCuI7e0gmyOpcMSABYpFyvT3vgmi/2O52/QFlh4wbP4YQM0V7ltiavmy5fXd3hSOLTRvhmI=
+X-Received: by 2002:a17:906:70d1:: with SMTP id g17mr51951860ejk.436.1594239592232;
+ Wed, 08 Jul 2020 13:19:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200708155018.110150-1-Anna.Schumaker@Netapp.com>
+ <20200708155018.110150-2-Anna.Schumaker@Netapp.com> <25e89e208bd3c6e44f8041d64c96be238b78c3b6.camel@hammerspace.com>
+ <CAFX2Jf=p7zgwRUxFjHSB9eAmhvqSMxQUdGa=qLEXqbKieDTcpA@mail.gmail.com>
+In-Reply-To: <CAFX2Jf=p7zgwRUxFjHSB9eAmhvqSMxQUdGa=qLEXqbKieDTcpA@mail.gmail.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 8 Jul 2020 16:19:36 -0400
+Message-ID: <CAFX2JfkE+UUVyrd3q=GgC5m-NqcYA9cgMRTOj0AB2f6o1tBY2w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] NFS: Fix interrupted slots by sending a solo
+ SEQUENCE operation
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up.
+On Wed, Jul 8, 2020 at 12:08 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
+>
+> On Wed, Jul 8, 2020 at 12:00 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+> >
+> > On Wed, 2020-07-08 at 11:50 -0400, schumaker.anna@gmail.com wrote:
+> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > >
+> > > We used to do this before 3453d5708b33, but this was changed to
+> > > better
+> > > handle the NFS4ERR_SEQ_MISORDERED error code. This commit fixed the
+> > > slot
+> > > re-use case when the server doesn't receive the interrupted
+> > > operation,
+> > > but if the server does receive the operation then it could still end
+> > > up
+> > > replying to the client with mis-matched operations from the reply
+> > > cache.
+> > >
+> > > We can fix this by sending a SEQUENCE to the server while recovering
+> > > from
+> > > a SEQ_MISORDERED error when we detect that we are in an interrupted
+> > > slot
+> > > situation.
+> > >
+> > > Fixes: 3453d5708b33 (NFSv4.1: Avoid false retries when RPC calls are
+> > > interrupted)
+> > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > > ---
+> > >  fs/nfs/nfs4proc.c | 17 +++++++++++++++--
+> > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > index e32717fd1169..5de41a5772f0 100644
+> > > --- a/fs/nfs/nfs4proc.c
+> > > +++ b/fs/nfs/nfs4proc.c
+> > > @@ -774,6 +774,14 @@ static void nfs4_slot_sequence_acked(struct
+> > > nfs4_slot *slot,
+> > >       slot->seq_nr_last_acked = seqnr;
+> > >  }
+> > >
+> > > +static void nfs4_probe_sequence(struct nfs_client *client, const
+> > > struct cred *cred,
+> > > +                             struct nfs4_slot *slot)
+> > > +{
+> > > +     struct rpc_task *task = _nfs41_proc_sequence(client, cred,
+> > > slot, true);
+> > > +     if (!IS_ERR(task))
+> > > +             rpc_wait_for_completion_task(task);
+> >
+> > Hmm... I am a little concerned about the wait here, since we don't know
+> > what kind of thread this is.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/sched.c |   10 ----------
- 1 file changed, 10 deletions(-)
+I've been playing with this all afternoon.
+> >
+> > Any chance we could kick off a _nfs41_proc_sequence asynchronously, and
+> > then perhaps requeue the original task to wait for the next free slot?
 
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 116b3abaed3f..f06d7c315017 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -27,10 +27,6 @@
- 
- #include "sunrpc.h"
- 
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--#define RPCDBG_FACILITY		RPCDBG_SCHED
--#endif
--
- #define CREATE_TRACE_POINTS
- #include <trace/events/sunrpc.h>
- 
-@@ -1065,9 +1061,6 @@ static void rpc_init_task(struct rpc_task *task, const struct rpc_task_setup *ta
- 		task->tk_action = rpc_prepare_task;
- 
- 	rpc_init_task_statistics(task);
--
--	dprintk("RPC:       new task initialized, procpid %u\n",
--				task_pid_nr(current));
- }
- 
- static struct rpc_task *
-@@ -1091,7 +1084,6 @@ struct rpc_task *rpc_new_task(const struct rpc_task_setup *setup_data)
- 
- 	rpc_init_task(task, setup_data);
- 	task->tk_flags |= flags;
--	dprintk("RPC:       allocated task %p\n", task);
- 	return task;
- }
- 
-@@ -1216,7 +1208,6 @@ static int rpciod_start(void)
- 	/*
- 	 * Create the rpciod thread and wait for it to start.
- 	 */
--	dprintk("RPC:       creating workqueue rpciod\n");
- 	wq = alloc_workqueue("rpciod", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
- 	if (!wq)
- 		goto out_failed;
-@@ -1241,7 +1232,6 @@ static void rpciod_stop(void)
- 
- 	if (rpciod_workqueue == NULL)
- 		return;
--	dprintk("RPC:       destroying workqueue rpciod\n");
- 
- 	wq = rpciod_workqueue;
- 	rpciod_workqueue = NULL;
+I haven't had much luck getting this to work. The asynchronous task is
+easy enough, but I haven't been able to get the original onto a new
+slot yet. Is there a good way to do this without a new call to
+nfs4_setup_sequence()? nfs41_sequence_process() only has the
+sequence_res available, and there are enough call sites that adding in
+sequence_args creates a lot of churn.
 
+> > I suppose one issue there would be if the 'original task is an earlier
+> > call to _nfs41_proc_sequence, but perhaps that can be worked around?
+
+I could use the rpc task to see if it's sending a sequence, and only
+do this if it's not. I don't know if there is a cleaner way to do
+this.
+
+Do you have any suggestions?
+Anna
+
+>
+> I'll try it and see what happens. Thanks for the feedback!
+> Anna
+>
+> >
+> > > +}
+> > > +
+> > >  static int nfs41_sequence_process(struct rpc_task *task,
+> > >               struct nfs4_sequence_res *res)
+> > >  {
+> > > @@ -790,6 +798,7 @@ static int nfs41_sequence_process(struct rpc_task
+> > > *task,
+> > >               goto out;
+> > >
+> > >       session = slot->table->session;
+> > > +     clp = session->clp;
+> > >
+> > >       trace_nfs4_sequence_done(session, res);
+> > >
+> > > @@ -804,7 +813,6 @@ static int nfs41_sequence_process(struct rpc_task
+> > > *task,
+> > >               nfs4_slot_sequence_acked(slot, slot->seq_nr);
+> > >               /* Update the slot's sequence and clientid lease timer
+> > > */
+> > >               slot->seq_done = 1;
+> > > -             clp = session->clp;
+> > >               do_renew_lease(clp, res->sr_timestamp);
+> > >               /* Check sequence flags */
+> > >               nfs41_handle_sequence_flag_errors(clp, res-
+> > > >sr_status_flags,
+> > > @@ -852,10 +860,15 @@ static int nfs41_sequence_process(struct
+> > > rpc_task *task,
+> > >               /*
+> > >                * Were one or more calls using this slot interrupted?
+> > >                * If the server never received the request, then our
+> > > -              * transmitted slot sequence number may be too high.
+> > > +              * transmitted slot sequence number may be too high.
+> > > However,
+> > > +              * if the server did receive the request then it might
+> > > +              * accidentally give us a reply with a mismatched
+> > > operation.
+> > > +              * We can sort this out by sending a lone sequence
+> > > operation
+> > > +              * to the server on the same slot.
+> > >                */
+> > >               if ((s32)(slot->seq_nr - slot->seq_nr_last_acked) > 1)
+> > > {
+> > >                       slot->seq_nr--;
+> > > +                     nfs4_probe_sequence(clp, task->tk_msg.rpc_cred,
+> > > slot);
+> > >                       goto retry_nowait;
+> > >               }
+> > >               /*
+> > --
+> > Trond Myklebust
+> > CTO, Hammerspace Inc
+> > 4984 El Camino Real, Suite 208
+> > Los Altos, CA 94022
+> > www.hammer.space
+> >
+> >
