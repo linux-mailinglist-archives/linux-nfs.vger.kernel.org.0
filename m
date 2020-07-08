@@ -2,136 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11820218A6D
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 16:50:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E37EF218AD0
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 17:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgGHOuN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 10:50:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31961 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729206AbgGHOuM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 10:50:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594219811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=47zG5omVzgKomzLQDhiyB0uXTW9JWgLP19IjH1Zmztg=;
-        b=MQTnTpUFGnT3egRLbYJQAO/e4QIcRcBwHRlUkVAWuBS1EEJu8CqTQqAjBMfOxShKu+9sOM
-        SUmefzjp29+SZDQAEo/7jZB4LYM4xS1yxK+V9MDAdS636EbxodP6XOL8EYZQS3/KI3Wtsw
-        rxisUx7FqbtBpshwL6B51PUzwIRf1So=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-0cej2CeaNVm__aveDLc2sw-1; Wed, 08 Jul 2020 10:50:09 -0400
-X-MC-Unique: 0cej2CeaNVm__aveDLc2sw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D9891B2C980;
-        Wed,  8 Jul 2020 14:50:08 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-112-95.phx2.redhat.com [10.3.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E53F45FC3B;
-        Wed,  8 Jul 2020 14:50:07 +0000 (UTC)
-Subject: Re: [PATCH 04/10] gssd: gssd_k5_err_msg() returns a ". Use free() to
- release.
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <20200701182803.14947-1-nazard@nazar.ca>
- <20200701182803.14947-5-nazard@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <3a758b78-e477-4a75-63ca-65333a413599@RedHat.com>
-Date:   Wed, 8 Jul 2020 10:50:07 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729652AbgGHPIR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 11:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgGHPIR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 11:08:17 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7140EC061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 08:08:17 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id s21so24201366ilk.5
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 08:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ED3lx+kwU0inDNGcCmyEX9CWBzuv7bcPK4RBun7XBaA=;
+        b=X+aHKBDux1g2XY2QUdOBfkH9I99KJrMvvG3BonOzIEhTwyrL4BS0Erg9CiRJn7RMux
+         kBqKaxEKWdfhoMRHNOTm8X/epOAKSpKeeUeO65+r76GJWxjIGm40zO/LffWMmJf3QsQl
+         1L5DGsWmkNaJjNzz/YY4OdTxTJAN8CvNIILxaIC1ddWpmvrfWjyqrM482G9ZUzHgF4Jz
+         NIJKMe1dRXJT9yt1XqEAewF7ANhRPpunx9A6VTDfwu/3rA7iLYg9RF70Z1l6+1xM89TS
+         +WEYqAFkmybn4kM95F04kCCreAIsOOGTalo+CPIwz2c/umqArE//gnhTBrAbpfdc1Z9c
+         9sMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=ED3lx+kwU0inDNGcCmyEX9CWBzuv7bcPK4RBun7XBaA=;
+        b=s5mKSJAoBKIGYp7pk8DcpELDaAT6nMIjKgogt1JOZlPoCGwvTJkYs6d/BaUZGixlb2
+         8ESRlRAq7OKGN57snTy01DtMX+Drmnmob7rzVl4vcTwG3M3VC8hjvCchvnmv9nLqZLr+
+         uxRLmhtTolQhzRYnqoLtisMIpHKwlj5T+gyzrnmZRQs0Y1Yb8d9hauD3wadIXI4LZNmC
+         /v9SbyavUTdU2DQHERnUxW261GqNXL7LeTeF4cZ82Xn3/Mv80OHF2/UJEF3vGAXZ9AU5
+         EFfSv/r70Cu49ypTbPGrR+15voPYTyNZ8Mb6817dA0Q3EHWuXW4ouq42RGOFCwFFcra8
+         uBLQ==
+X-Gm-Message-State: AOAM531KVUegChRtS2CdJ2pcSnQx6XbTRtrJHHsT2NmEbvb2sdRrdEmE
+        9TA9yc1H+yT0L8JZEIe9xEYbEyCWIqjMZpiIAMo=
+X-Google-Smtp-Source: ABdhPJwHhoa5FXzjnJEK7FeQEALpRmdz3ndYivpIL7MycuzSuX3FF7R2ojqkYogi2KGc6960+ji5o9GsojA9888GnP0=
+X-Received: by 2002:a92:98c2:: with SMTP id a63mr40589489ill.246.1594220896377;
+ Wed, 08 Jul 2020 08:08:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200701182803.14947-5-nazard@nazar.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a02:cc63:0:0:0:0:0 with HTTP; Wed, 8 Jul 2020 08:08:15 -0700 (PDT)
+Reply-To: ghaziahmed@myself.com
+From:   "Mr.Ghazi Ahmed" <ghazia500@gmail.com>
+Date:   Wed, 8 Jul 2020 08:08:15 -0700
+Message-ID: <CAOo=X58gQ7BMLWOJho0VrkH=MLovH-aoOaaU4i6DQi1EBA_FYQ@mail.gmail.com>
+Subject: YOUR URGENT RESPONSE IS NEEDED
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+I have a business proposal in the tune of $10.2m USD for you to handle
+with me. I have opportunity to transfer this abandon fund to your bank
+account in your country which belongs to our client.
 
-On 7/1/20 2:27 PM, Doug Nazar wrote:
-> Signed-off-by: Doug Nazar <nazard@nazar.ca>
-> ---
->  utils/gssd/krb5_util.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index c49c6672..b1e48241 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -484,7 +484,7 @@ gssd_get_single_krb5_cred(krb5_context context,
->  	if (ccache)
->  		krb5_cc_close(context, ccache);
->  	krb5_free_cred_contents(context, &my_creds);
-> -	krb5_free_string(context, k5err);
-> +	free(k5err);
->  	return (code);
->  }
->  
-> @@ -723,7 +723,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
->  				 "we failed to unparse principal name: %s\n",
->  				 k5err);
->  			k5_free_kt_entry(context, kte);
-> -			krb5_free_string(context, k5err);
-> +			free(k5err);
->  			k5err = NULL;
->  			continue;
->  		}
-> @@ -770,7 +770,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
->  	if (retval < 0)
->  		retval = 0;
->    out:
-> -	krb5_free_string(context, k5err);
-> +	free(k5err);
->  	return retval;
->  }
->  
-> @@ -927,7 +927,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
->  				k5err = gssd_k5_err_msg(context, code);
->  				printerr(1, "%s while building principal for '%s'\n",
->  					 k5err, spn);
-> -				krb5_free_string(context, k5err);
-> +				free(k5err);
->  				k5err = NULL;
->  				continue;
->  			}
-> @@ -937,7 +937,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
->  				k5err = gssd_k5_err_msg(context, code);
->  				printerr(3, "%s while getting keytab entry for '%s'\n",
->  					 k5err, spn);
-> -				krb5_free_string(context, k5err);
-> +				free(k5err);
->  				k5err = NULL;
->  				/*
->  				 * We tried the active directory machine account
-> @@ -986,7 +986,7 @@ out:
->  		k5_free_default_realm(context, default_realm);
->  	if (realmnames)
->  		krb5_free_host_realm(context, realmnames);
-> -	krb5_free_string(context, k5err);
-> +	free(k5err);
->  	return retval;
->  }
->  
-> @@ -1355,7 +1355,7 @@ out_free_kt:
->  out_free_context:
->  	krb5_free_context(context);
->  out:
-> -	krb5_free_string(context, k5err);
-> +	free(k5err);
->  	return retval;
->  }
->  
-> 
-I'm curious about these changes... since all krb5_free_string()
-does is call free()... where is the "strdup'd msg" coming from?
+I am inviting you in this transaction where this money can be shared
+between us at ratio of 50/50% and help the needy around us don=E2=80=99t be
+afraid of anything I am with you I will instruct you what you will do
+to maintain this fund.
 
-steved.
+Please kindly contact me with your information's if you are interested
+in this tranasction for more details(ghaziahmed@myself.com)
 
+1. Your Full Name.....................
+2. Your Address......................
+3. Your Country of Origin.............
+4. What do you do for living ...............
+5. Your Age..........................
+6. Gender.........................
+7. Your ID card copy and telephone number for easy communication...........=
+....
+
+Mr.Ghazi Ahmed
