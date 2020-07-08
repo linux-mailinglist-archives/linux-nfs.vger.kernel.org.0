@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EEF4219138
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1F7219139
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 22:10:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgGHUK1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 16:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
+        id S1726336AbgGHUKc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 16:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgGHUK1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:10:27 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B339BC061A0B
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:10:26 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 145so40358616qke.9
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:10:26 -0700 (PDT)
+        with ESMTP id S1726323AbgGHUKc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 16:10:32 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1207C061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 13:10:31 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id h18so21097938qvl.3
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 13:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=aefQUW0KUT090aweBC5KVGAREgZu/wiKuoxG7ug/vcQ=;
-        b=Syb9Q2i30jakudiUGXqlBQnqVuqLjRuzFe/YCREHSEGyQa05Ieb0/j9FfpOR2ZwLHH
-         2nI43ii4WwMX+TmA2W3YGEhRdTJQQk0ZGXAr1PFzqbz42DdbYycMD+Zyoq3eEplS4VXJ
-         U1nwPBbZO1Hw6PRk9PxdLf+vDDzwD0lvpc6XJWJHquB7zi7Zg4BzWpitWsDVYwjoIbh2
-         suvkxaiqemWHrOGLBpQR3OKRIwB3RHD9nQt89B+Hg/HAxDda4/5uYAVfZ9hqoK58HyaZ
-         eL9oRt9OMAzDMRLz31MD0LqrRNyLOi7o1fAh7yMKpVgnu3ySnnLx5hsNrJobrWp6A20N
-         54Fg==
+        bh=EYL5pfyxev1ue7nS1OOFkjzC0qFEfIjvypZrx/P98BM=;
+        b=VlrJqKZ1EccGfoj0s4kbjZ8yjYH2hL4G5W0Iq3M/xbDSqrHWvSMoFC7Rw/JOCfxuGq
+         T+hghiFsiA3cIyTAR7Mb5+4GPuY4A9TUBdQVJrgf+XrQ1NvMSXB9Y0wP15Sh7k9aqQGp
+         xSPFraqlctI44brfklvewSXm0fj/W4KD/InPAb8xKhP+0dR8qJN6xinkDTwP4D1su7sp
+         PSxpkCqGm9Nczjh7duU5BY7xxKqU03wSYabmXk18+EVyuFAvYj8Wc8p+2PoyItxJftwx
+         3c8lVn88bLOp3mAnOB/o8jyP9Jnfq3uLPfZyx2yYYM4XyaCZSZa6kgnRdqAxUupL6CPP
+         7AfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=aefQUW0KUT090aweBC5KVGAREgZu/wiKuoxG7ug/vcQ=;
-        b=OjUE5GQl8gjF7a7IY+xCcA0jRs3RHReQ8coDY2Agiqa6YmDAZ4AIZQoVFqYvrE2VsN
-         nDi4XvyM+GLb43w/b3qkqOytQYwltB9zYq7RcmC/LPasOFRyj2TtEtBRMTMri56O/YNb
-         BKyXB67IZ0vQCKmLk1DX5nQTKrvxMWy/IBZ7w1n927Q0qlSMl+XiuFkBa3K5RahoFLcz
-         BZ1egUrdmaBVpOvUPxSSZ5W4B4LJHGmEvXCB5K0oiTuQCZJPinpo3wdLSxCd+p/sXcxi
-         9cjDLyAsSzwsOkexXT/8XacpICX49pLveJn+3ASx0X/bS4wtG1UV+p5/5u9O0T7J+YIs
-         89cg==
-X-Gm-Message-State: AOAM532ONmNWyTYIKppAcJld5iNpjfP+hCzw+e415gAPhK1rSli+4wYQ
-        HoBboxSnelx9y84GsXAU0AYuPneJ
-X-Google-Smtp-Source: ABdhPJw/Dgm93QfZTHB1wLTGcrdTSPO0vrokd+Tr3Z+hvXRTS5zdf2s6RL/pMbSI3dq+EvoyFgWk2g==
-X-Received: by 2002:a37:796:: with SMTP id 144mr59783630qkh.84.1594239025740;
-        Wed, 08 Jul 2020 13:10:25 -0700 (PDT)
+        bh=EYL5pfyxev1ue7nS1OOFkjzC0qFEfIjvypZrx/P98BM=;
+        b=jZlJx2HC8ngWpsIPy+sVrbtpaO8IyF7PR2xjU5afqYUHlDgY/uY9RTKyf3+lkVqHdO
+         FG96Usfbg3/El588ymThWneoISNll4wQylnxkGYuT885BUFeXeP4YvP3ixNKzn6hbcXY
+         kJl6mv8WlecaAmjxjtNV1fzpzwzIfJC3JnEbfR9jUKiCNel2sLd3C8/ifdwr2VDjl+se
+         zKcvJ/03qJs3+OGBJcDIE+/88ymq0ULGkzrRB4X0a3BVY3BDAmEiAvtfIxZdSWWG66OZ
+         GYFw4BrwYUC01YrWZjfuyIVMwNzNHC6UdxV6rjb3qA6GvQafQoiLK3E6BKyyevVb3eou
+         dWNA==
+X-Gm-Message-State: AOAM531qa9KDC5ycBeVHXmHLm9RpJsx5AKrQMqllOhyoerwfqMPYev4v
+        0i3FF2Wh8ZZ7gMs79bQCtEa20/ie
+X-Google-Smtp-Source: ABdhPJz7u/tad2pHzhSmzQ7Ccnh8kwrHWbahY1BUvyeH8AdyVfbh1BckESatZXjYwjCDPG+7ov5FVw==
+X-Received: by 2002:a05:6214:9af:: with SMTP id du15mr58435399qvb.188.1594239031060;
+        Wed, 08 Jul 2020 13:10:31 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id p25sm863712qtk.67.2020.07.08.13.10.25
+        by smtp.gmail.com with ESMTPSA id d135sm890904qkg.117.2020.07.08.13.10.30
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 13:10:25 -0700 (PDT)
+        Wed, 08 Jul 2020 13:10:30 -0700 (PDT)
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068KAOfJ006121
-        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:10:24 GMT
-Subject: [PATCH v1 16/22] SUNRPC: Hoist trace_xprtrdma_op_setport into
- generic code
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 068KATLA006124
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Jul 2020 20:10:29 GMT
+Subject: [PATCH v1 17/22] SUNRPC: Remove dprintk call sites in rpcbind XDR
+ functions
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Wed, 08 Jul 2020 16:10:24 -0400
-Message-ID: <20200708201024.22129.40185.stgit@manet.1015granger.net>
+Date:   Wed, 08 Jul 2020 16:10:29 -0400
+Message-ID: <20200708201029.22129.31971.stgit@manet.1015granger.net>
 In-Reply-To: <20200708200121.22129.92375.stgit@manet.1015granger.net>
 References: <20200708200121.22129.92375.stgit@manet.1015granger.net>
 User-Agent: StGit/0.22-38-gfb18
@@ -69,131 +69,95 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Clean up: Other XDR functions no longer have dprintk call sites.
+These were added during development and can be removed now that
+the code is mature.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h  |    1 -
- include/trace/events/sunrpc.h   |   29 +++++++++++++++++++++++++++++
- net/sunrpc/rpcb_clnt.c          |   29 ++++++++++++++---------------
- net/sunrpc/xprtrdma/transport.c |    3 ---
- 4 files changed, 43 insertions(+), 19 deletions(-)
+ net/sunrpc/rpcb_clnt.c |   28 +---------------------------
+ 1 file changed, 1 insertion(+), 27 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 4a93c166512b..137cec2d7a47 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -382,7 +382,6 @@ DEFINE_CONN_EVENT(connect);
- DEFINE_CONN_EVENT(disconnect);
- 
- DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
--DEFINE_RXPRT_EVENT(xprtrdma_op_setport);
- 
- TRACE_EVENT(xprtrdma_op_connect,
- 	TP_PROTO(
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index e6df6740a242..946bb73afc95 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1305,6 +1305,35 @@ TRACE_EVENT(rpcb_getport,
- 	)
- );
- 
-+TRACE_EVENT(rpcb_setport,
-+	TP_PROTO(
-+		const struct rpc_task *task,
-+		int status,
-+		unsigned short port
-+	),
-+
-+	TP_ARGS(task, status, port),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, task_id)
-+		__field(unsigned int, client_id)
-+		__field(int, status)
-+		__field(unsigned short, port)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->task_id = task->tk_pid;
-+		__entry->client_id = task->tk_client->cl_clid;
-+		__entry->status = status;
-+		__entry->port = port;
-+	),
-+
-+	TP_printk("task:%u@%u status=%d port=%u",
-+		__entry->task_id, __entry->client_id,
-+		__entry->status, __entry->port
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(svc_xdr_buf_class,
- 	TP_PROTO(
- 		const struct svc_rqst *rqst,
 diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-index d5c00c0da4f8..596c83ba647f 100644
+index 596c83ba647f..6df12a13edc6 100644
 --- a/net/sunrpc/rpcb_clnt.c
 +++ b/net/sunrpc/rpcb_clnt.c
-@@ -801,34 +801,33 @@ static void rpcb_getport_done(struct rpc_task *child, void *data)
- {
- 	struct rpcbind_args *map = data;
- 	struct rpc_xprt *xprt = map->r_xprt;
--	int status = child->tk_status;
-+
-+	map->r_status = child->tk_status;
+@@ -840,11 +840,6 @@ static void rpcb_enc_mapping(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	const struct rpcbind_args *rpcb = data;
+ 	__be32 *p;
  
- 	/* Garbage reply: retry with a lesser rpcbind version */
--	if (status == -EIO)
--		status = -EPROTONOSUPPORT;
-+	if (map->r_status == -EIO)
-+		map->r_status = -EPROTONOSUPPORT;
- 
- 	/* rpcbind server doesn't support this rpcbind protocol version */
--	if (status == -EPROTONOSUPPORT)
-+	if (map->r_status == -EPROTONOSUPPORT)
- 		xprt->bind_index++;
- 
--	if (status < 0) {
-+	if (map->r_status < 0) {
- 		/* rpcbind server not available on remote host? */
--		xprt->ops->set_port(xprt, 0);
-+		map->r_port = 0;
-+
- 	} else if (map->r_port == 0) {
- 		/* Requested RPC service wasn't registered on remote host */
--		xprt->ops->set_port(xprt, 0);
--		status = -EACCES;
-+		map->r_status = -EACCES;
- 	} else {
- 		/* Succeeded */
--		xprt->ops->set_port(xprt, map->r_port);
--		xprt_set_bound(xprt);
--		status = 0;
-+		map->r_status = 0;
- 	}
- 
--	dprintk("RPC: %5u rpcb_getport_done(status %d, port %u)\n",
--			child->tk_pid, status, map->r_port);
+-	dprintk("RPC: %5u encoding PMAP_%s call (%u, %u, %d, %u)\n",
+-			req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name,
+-			rpcb->r_prog, rpcb->r_vers, rpcb->r_prot, rpcb->r_port);
 -
--	map->r_status = status;
-+	trace_rpcb_setport(child, map->r_status, map->r_port);
-+	xprt->ops->set_port(xprt, map->r_port);
-+	if (map->r_port)
-+		xprt_set_bound(xprt);
+ 	p = xdr_reserve_space(xdr, RPCB_mappingargs_sz << 2);
+ 	*p++ = cpu_to_be32(rpcb->r_prog);
+ 	*p++ = cpu_to_be32(rpcb->r_vers);
+@@ -866,8 +861,6 @@ static int rpcb_dec_getport(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 		return -EIO;
+ 
+ 	port = be32_to_cpup(p);
+-	dprintk("RPC: %5u PMAP_%s result: %lu\n", req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name, port);
+ 	if (unlikely(port > USHRT_MAX))
+ 		return -EIO;
+ 
+@@ -888,11 +881,6 @@ static int rpcb_dec_set(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	*boolp = 0;
+ 	if (*p != xdr_zero)
+ 		*boolp = 1;
+-
+-	dprintk("RPC: %5u RPCB_%s call %s\n",
+-			req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name,
+-			(*boolp ? "succeeded" : "failed"));
+ 	return 0;
  }
  
- /*
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 819a922830da..8915e42240d3 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -413,9 +413,6 @@ xprt_rdma_set_port(struct rpc_xprt *xprt, u16 port)
- 	kfree(xprt->address_strings[RPC_DISPLAY_HEX_PORT]);
- 	snprintf(buf, sizeof(buf), "%4hx", port);
- 	xprt->address_strings[RPC_DISPLAY_HEX_PORT] = kstrdup(buf, GFP_KERNEL);
+@@ -917,12 +905,6 @@ static void rpcb_enc_getaddr(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	const struct rpcbind_args *rpcb = data;
+ 	__be32 *p;
+ 
+-	dprintk("RPC: %5u encoding RPCB_%s call (%u, %u, '%s', '%s')\n",
+-			req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name,
+-			rpcb->r_prog, rpcb->r_vers,
+-			rpcb->r_netid, rpcb->r_addr);
 -
--	trace_xprtrdma_op_setport(container_of(xprt, struct rpcrdma_xprt,
--					       rx_xprt));
+ 	p = xdr_reserve_space(xdr, (RPCB_program_sz + RPCB_version_sz) << 2);
+ 	*p++ = cpu_to_be32(rpcb->r_prog);
+ 	*p = cpu_to_be32(rpcb->r_vers);
+@@ -952,11 +934,8 @@ static int rpcb_dec_getaddr(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	 * If the returned universal address is a null string,
+ 	 * the requested RPC service was not registered.
+ 	 */
+-	if (len == 0) {
+-		dprintk("RPC: %5u RPCB reply: program not registered\n",
+-				req->rq_task->tk_pid);
++	if (len == 0)
+ 		return 0;
+-	}
+ 
+ 	if (unlikely(len > RPCBIND_MAXUADDRLEN))
+ 		goto out_fail;
+@@ -964,8 +943,6 @@ static int rpcb_dec_getaddr(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	p = xdr_inline_decode(xdr, len);
+ 	if (unlikely(p == NULL))
+ 		goto out_fail;
+-	dprintk("RPC: %5u RPCB_%s reply: %s\n", req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name, (char *)p);
+ 
+ 	if (rpc_uaddr2sockaddr(req->rq_xprt->xprt_net, (char *)p, len,
+ 				sap, sizeof(address)) == 0)
+@@ -975,9 +952,6 @@ static int rpcb_dec_getaddr(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	return 0;
+ 
+ out_fail:
+-	dprintk("RPC: %5u malformed RPCB_%s reply\n",
+-			req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name);
+ 	return -EIO;
  }
  
- /**
 
