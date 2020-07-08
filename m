@@ -2,110 +2,176 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E98218C81
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 18:06:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFB5A218C8D
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 18:08:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgGHQGT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 12:06:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59836 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728148AbgGHQGS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 12:06:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594224377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=f+4NQ7RPt3aYZYFERpD0WoJqo/EAsKGe/BvuDtTDY0Q=;
-        b=UmDZsyGUWVqcOLnJNyjfmVhXbDlUztkfP/6/wd84WEiqyPWFBSiWpIi00EiUmtm17IF1dP
-        gsSgIIRc2xmksadqjS2ozlFJYtLZ6PPVZj5AddjhaK+y6ALkax1spH10HphbbSsBLRi7T/
-        g5ZLUPISTnOApG+j3gyjGHu9JYaiPVo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-66VABFpAMu2eFmyGlK9wXw-1; Wed, 08 Jul 2020 12:06:12 -0400
-X-MC-Unique: 66VABFpAMu2eFmyGlK9wXw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17EA788C79B
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 16:06:12 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.74.10.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 544FE60C80;
-        Wed,  8 Jul 2020 16:06:08 +0000 (UTC)
-From:   Kenneth D'souza <kdsouza@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     SteveD@redhat.com, kdsouza@redhat.com
-Subject: [PATCH] nfsiostat/mountstats: handle KeyError in compare_iostats()
-Date:   Wed,  8 Jul 2020 21:36:06 +0530
-Message-Id: <20200708160606.21279-1-kdsouza@redhat.com>
+        id S1730209AbgGHQIl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 12:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730075AbgGHQIl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 12:08:41 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D947C061A0B
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 09:08:41 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a8so41066995edy.1
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 09:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YTWzIUIU61kGIXpIwLerSuSKe5bKsEM4SVNDCbhuzHk=;
+        b=hEbzJHHFKskgFuiHcwVetV3t/Ye8lgbS+dGQuMHLhtF87Gq/zfmF7ApOgJl3YHVHTY
+         Q87vqfdgOmh1kA4cMNYc1qsc/gJ7Ngeg8m1xbdQep5dFBpDY1ygxvLZiPiH5LnbsQOro
+         Q5Ljrn8rRRSw7I36t/z7tQfqPSKX5MAF1T+k/p/7sgIWhYw6rx0M41c6IWTVYo7yafSM
+         c+QQ5qKtJYG+oGGSJFp+11LMgqGjbU0pRprM3W4gxfKremDivHX3evpojQAiHvmtAR8J
+         xNtAV35Il3UWDU6j96NA7NUNCmVHfB8YGKuC1EOwjdYeKKKnzW5kDK8L1a02oIC+u0an
+         hkKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YTWzIUIU61kGIXpIwLerSuSKe5bKsEM4SVNDCbhuzHk=;
+        b=DZ7nFd3HsDcMKbX1gGLRCU9PrQ/dJYOnhfIqbOvZrbU2HIQdfIQ30lERFk+gHXtnJy
+         vE4sskrwBnwuZz67Lv/IwD5YVgnzGy4gv3IHrmdXvPlJIxGKIaYosbf8oCnWL3CYeiz0
+         ync7DsMh5+SMFtmXwO0rcYHyheuT9rDnhZIYS1khuIeTtEBqMbxDYg26keVRRqNft2B5
+         V+AzbzB+pCzYc/vaV0brMT1Try7bhdZePb8NlhFn2XsQo74OcgEIaOWioPqctFXstkfT
+         +prCjFaJwOSZr+Q9iXd3s0ebhzFPHZsdpiz0PwmzlzhgRogqt5ARRhbA/roNiCQ5p79z
+         T9lg==
+X-Gm-Message-State: AOAM530pW4JPfRH2Lr5x00ZmwGmTrKH74vrDia+Fu8rPCgr/m9Wjvtkj
+        Q/v8piw3PsvACs5+51t3TE14+uJl2yQOaXQ50G8=
+X-Google-Smtp-Source: ABdhPJxPUj1PFrUwJvX3ozEE2IXb+rMT/D5O9XHQWyh6ZQ4npteGiQA4oWVRfMQ/WZHR9kRyHUjy2wKpOu7qbTbnhMY=
+X-Received: by 2002:a50:b5e3:: with SMTP id a90mr28481269ede.381.1594224519821;
+ Wed, 08 Jul 2020 09:08:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200708155018.110150-1-Anna.Schumaker@Netapp.com>
+ <20200708155018.110150-2-Anna.Schumaker@Netapp.com> <25e89e208bd3c6e44f8041d64c96be238b78c3b6.camel@hammerspace.com>
+In-Reply-To: <25e89e208bd3c6e44f8041d64c96be238b78c3b6.camel@hammerspace.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 8 Jul 2020 12:08:23 -0400
+Message-ID: <CAFX2Jf=p7zgwRUxFjHSB9eAmhvqSMxQUdGa=qLEXqbKieDTcpA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] NFS: Fix interrupted slots by sending a solo
+ SEQUENCE operation
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This will prevent a backtrace like this from occurring if nfsiostat is run
-with <interval> <count>, eg: nfsiostat 1 3
-This issue can occur if old_stats.__rpc_data['ops'] keys are not up to
-date with result.__rpc_data['ops'].
-I belive this issue can also affect mountstats due to similar code,
-hence fix it too.
+On Wed, Jul 8, 2020 at 12:00 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2020-07-08 at 11:50 -0400, schumaker.anna@gmail.com wrote:
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >
+> > We used to do this before 3453d5708b33, but this was changed to
+> > better
+> > handle the NFS4ERR_SEQ_MISORDERED error code. This commit fixed the
+> > slot
+> > re-use case when the server doesn't receive the interrupted
+> > operation,
+> > but if the server does receive the operation then it could still end
+> > up
+> > replying to the client with mis-matched operations from the reply
+> > cache.
+> >
+> > We can fix this by sending a SEQUENCE to the server while recovering
+> > from
+> > a SEQ_MISORDERED error when we detect that we are in an interrupted
+> > slot
+> > situation.
+> >
+> > Fixes: 3453d5708b33 (NFSv4.1: Avoid false retries when RPC calls are
+> > interrupted)
+> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > ---
+> >  fs/nfs/nfs4proc.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index e32717fd1169..5de41a5772f0 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -774,6 +774,14 @@ static void nfs4_slot_sequence_acked(struct
+> > nfs4_slot *slot,
+> >       slot->seq_nr_last_acked = seqnr;
+> >  }
+> >
+> > +static void nfs4_probe_sequence(struct nfs_client *client, const
+> > struct cred *cred,
+> > +                             struct nfs4_slot *slot)
+> > +{
+> > +     struct rpc_task *task = _nfs41_proc_sequence(client, cred,
+> > slot, true);
+> > +     if (!IS_ERR(task))
+> > +             rpc_wait_for_completion_task(task);
+>
+> Hmm... I am a little concerned about the wait here, since we don't know
+> what kind of thread this is.
+>
+> Any chance we could kick off a _nfs41_proc_sequence asynchronously, and
+> then perhaps requeue the original task to wait for the next free slot?
+> I suppose one issue there would be if the 'original task is an earlier
+> call to _nfs41_proc_sequence, but perhaps that can be worked around?
 
-nfsiostat:217:compare_iostats:KeyError: 'NULL'
+I'll try it and see what happens. Thanks for the feedback!
+Anna
 
-Traceback (most recent call last):
-  File "/usr/sbin/nfsiostat", line 649, in <module>
-    iostat_command(prog)
-  File "/usr/sbin/nfsiostat", line 617, in iostat_command
-    print_iostat_summary(old_mountstats, mountstats, devices, sample_time, options)
-  File "/usr/sbin/nfsiostat", line 468, in print_iostat_summary
-    diff_stats[device] = stats[device].compare_iostats(old_stats)
-  File "/usr/sbin/nfsiostat", line 217, in compare_iostats
-    difference, self.__rpc_data[op], old_stats.__rpc_data[op]))
-KeyError: 'NULL'
-
-Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
----
- tools/mountstats/mountstats.py | 5 ++++-
- tools/nfs-iostat/nfs-iostat.py | 7 +++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
-index 014f38a3..1054f698 100755
---- a/tools/mountstats/mountstats.py
-+++ b/tools/mountstats/mountstats.py
-@@ -560,7 +560,10 @@ class DeviceData:
-         # the reference to them.  so we build new lists here
-         # for the result object.
-         for op in result.__rpc_data['ops']:
--            result.__rpc_data[op] = list(map(difference, self.__rpc_data[op], old_stats.__rpc_data[op]))
-+            try:
-+                result.__rpc_data[op] = list(map(difference, self.__rpc_data[op], old_stats.__rpc_data[op]))
-+            except KeyError:
-+                continue
- 
-         # update the remaining keys
-         if protocol == 'udp':
-diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
-index b7e98a2a..5556f692 100755
---- a/tools/nfs-iostat/nfs-iostat.py
-+++ b/tools/nfs-iostat/nfs-iostat.py
-@@ -213,8 +213,11 @@ class DeviceData:
-         # the reference to them.  so we build new lists here
-         # for the result object.
-         for op in result.__rpc_data['ops']:
--            result.__rpc_data[op] = list(map(
--                difference, self.__rpc_data[op], old_stats.__rpc_data[op]))
-+            try:
-+                result.__rpc_data[op] = list(map(
-+                    difference, self.__rpc_data[op], old_stats.__rpc_data[op]))
-+            except KeyError:
-+                continue
- 
-         # update the remaining keys we care about
-         result.__rpc_data['rpcsends'] -= old_stats.__rpc_data['rpcsends']
--- 
-2.21.1
-
+>
+> > +}
+> > +
+> >  static int nfs41_sequence_process(struct rpc_task *task,
+> >               struct nfs4_sequence_res *res)
+> >  {
+> > @@ -790,6 +798,7 @@ static int nfs41_sequence_process(struct rpc_task
+> > *task,
+> >               goto out;
+> >
+> >       session = slot->table->session;
+> > +     clp = session->clp;
+> >
+> >       trace_nfs4_sequence_done(session, res);
+> >
+> > @@ -804,7 +813,6 @@ static int nfs41_sequence_process(struct rpc_task
+> > *task,
+> >               nfs4_slot_sequence_acked(slot, slot->seq_nr);
+> >               /* Update the slot's sequence and clientid lease timer
+> > */
+> >               slot->seq_done = 1;
+> > -             clp = session->clp;
+> >               do_renew_lease(clp, res->sr_timestamp);
+> >               /* Check sequence flags */
+> >               nfs41_handle_sequence_flag_errors(clp, res-
+> > >sr_status_flags,
+> > @@ -852,10 +860,15 @@ static int nfs41_sequence_process(struct
+> > rpc_task *task,
+> >               /*
+> >                * Were one or more calls using this slot interrupted?
+> >                * If the server never received the request, then our
+> > -              * transmitted slot sequence number may be too high.
+> > +              * transmitted slot sequence number may be too high.
+> > However,
+> > +              * if the server did receive the request then it might
+> > +              * accidentally give us a reply with a mismatched
+> > operation.
+> > +              * We can sort this out by sending a lone sequence
+> > operation
+> > +              * to the server on the same slot.
+> >                */
+> >               if ((s32)(slot->seq_nr - slot->seq_nr_last_acked) > 1)
+> > {
+> >                       slot->seq_nr--;
+> > +                     nfs4_probe_sequence(clp, task->tk_msg.rpc_cred,
+> > slot);
+> >                       goto retry_nowait;
+> >               }
+> >               /*
+> --
+> Trond Myklebust
+> CTO, Hammerspace Inc
+> 4984 El Camino Real, Suite 208
+> Los Altos, CA 94022
+> www.hammer.space
+>
+>
