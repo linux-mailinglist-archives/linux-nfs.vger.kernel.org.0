@@ -2,138 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47524217846
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2020 21:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F2F218770
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 14:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgGGTuW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jul 2020 15:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
+        id S1729248AbgGHMdc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 08:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGTuW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jul 2020 15:50:22 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CF4C061755;
-        Tue,  7 Jul 2020 12:50:21 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 52F51BC0C1;
-        Tue,  7 Jul 2020 19:50:18 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
-        kuba@kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: NFS, SUNRPC, and LOCKD clients
-Date:   Tue,  7 Jul 2020 21:50:12 +0200
-Message-Id: <20200707195012.52559-1-grandmaster@al2klimov.de>
+        with ESMTP id S1729210AbgGHMda (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 08:33:30 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55574C08C5DC
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 05:33:30 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id q198so41253335qka.2
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 05:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=CtDA46Te1kJYGFqAkgr9Vub/YrG6WB2S+VlEURQEEM4x6m9sjli+Jz/yotFRmV/AMR
+         T/h2d+e8At09eChsFX2C+mUFLH+FsdwAy78KAtzHqTPpG69rhvmbmMUpZSALFUdgKxT3
+         rKV4TF8A0J+Za5tWsTPtObTKnCJJSeTUvLM0KCUCLapZUiUA/CE0qJguNsnmAcBYT7Bw
+         PUSSiRKtit7eL05YbTu8d4vZk3Rk52mtpEQs926eluhEg6IUrqIesfOKILheZFFzZp0P
+         0kRnPxRkSyAb2gIupk6cQmoDhkGW5ga2ONIfRh7Ui0T+vXHI9OfE4hLpnUDNkQjQgdsE
+         pxTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=grYJ6VJ1vhaRNDK/8IEUUP51nDYfMoHI/0PUAT0xrBRu6Fpt95WUB6OZzMxbICc7UQ
+         lZ0Trp22m8WXQIDXPXoo5EziiO/1Nlf1Qahzm2WotnFgCWslmgmh+fUE9FcnNNb90t2s
+         b/1K4gfRpwOcjFWZvRR0ZXxwWi7k0L7kmvGyin78memOIY2li0Kjr/nfAkgRkwu1xXUt
+         DYcRvkjxnMFjZuBPKgWmDMUa7dfgpem4kMami6YIa+dvIsS87ynxyPC0hLhDGv1o8gku
+         jMi6cnKKR7QwxGl71FD2iHxLi9Br71iF9ey5VBKgzh6SHfUqmidu5Mkjz9iT51qkAG6d
+         Iudg==
+X-Gm-Message-State: AOAM533LFEhbSbIwwwrBpgZ3sBbBho0tjLonOLNzKpuyfvQ7T4nW0Wpu
+        w/rmAwFO9S6zD7i2LXLcluLLkhj9DVUAd/+tXqy1Y3sGnBA=
+X-Google-Smtp-Source: ABdhPJy69qBRFRW2d2u+0xyGHVfmVbQRW6SQ4gKLQIvGwSNWfhZDhNcIlxNh+7AirNZFy3An0aJSkt25Q8y7juQZu8o=
+X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr64754290jas.56.1594211609022;
+ Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-X-Spam-Level: *****
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Received: by 2002:a05:6602:1582:0:0:0:0 with HTTP; Wed, 8 Jul 2020 05:33:28
+ -0700 (PDT)
+Reply-To: mmsafiatou057@gmail.com
+From:   "Mrs. Safitaou Zoungrana" <richardlaurentdr@gmail.com>
+Date:   Wed, 8 Jul 2020 12:33:28 +0000
+Message-ID: <CALJAiTVXhrKZYOHVoupnx6hmXXD0i2k4MOSO6HW+mj1BAydXhA@mail.gmail.com>
+Subject: My Dear Beloved One,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+My Dear Beloved One,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+I greet you in the name of God almighty the givers of all good things
+in life. Please kindly pardon me for any inconvenience this letter may
+cost you because I know it may come to you as a surprise as we have no
+previous correspondence.  I sent this mail praying for it to reach you
+in good health, since I myself are in a very critical health condition
+in which I sleep every night without knowing if I may be alive to see
+the next day.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
+I am Mrs. Safiatou Zoungrana,  the wife of late Engineer Ralph
+Alphonso Zoungrana from Paris France but based here in Burkina Faso
+West Africa since eight years ago as a business woman dealing with
+gold exportation and Sales. We have been married for years before his
+sudden death although we were childless. I have been diagnosed with
+ovarian cancer and I have been battling with the sickness when my late
+lovely husband of a blessed memory was alive. May his soul rest in
+peace, Amen.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also https://lkml.org/lkml/2020/6/27/64
+My late Husband left the sum of =E2=82=AC7.900.000.00 Seven Million Nine
+Hundred Thousand Euros in a fix/suspense account in one of the prime
+bank here in Burkina Faso. Recently, my Doctor told me that I have few
+days to live due to the cancer problem. The one that disturbs me most
+is my blood pressure sickness.
 
- If there are any valid, but yet not changed URLs:
- See https://lkml.org/lkml/2020/6/26/837
+Having known my health condition I decided to seek for your kind
+assistance to transfer this fund into your account and you will use it
+to establish an orphanage home in my name. I will give you more
+details about the project as soon as I receive your reply in my
+private email (mmsafiatou057@gmail.com) to handle this project because
+I do not want to state all here until I see your reply, desire and
+commitment to handle this project.
 
- fs/lockd/mon.c                  | 2 +-
- include/linux/sunrpc/bc_xprt.h  | 2 +-
- include/linux/sunrpc/msg_prot.h | 2 +-
- net/sunrpc/backchannel_rqst.c   | 2 +-
- net/sunrpc/sunrpc.h             | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/fs/lockd/mon.c b/fs/lockd/mon.c
-index 1eabd91870e6..1d9488cf0534 100644
---- a/fs/lockd/mon.c
-+++ b/fs/lockd/mon.c
-@@ -417,7 +417,7 @@ void nsm_release(struct nsm_handle *nsm)
- /*
-  * XDR functions for NSM.
-  *
-- * See http://www.opengroup.org/ for details on the Network
-+ * See https://www.opengroup.org/ for details on the Network
-  * Status Monitor wire protocol.
-  */
- 
-diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xprt.h
-index d796058cdff2..f07c334c599f 100644
---- a/include/linux/sunrpc/bc_xprt.h
-+++ b/include/linux/sunrpc/bc_xprt.h
-@@ -4,7 +4,7 @@
- 
- NetApp provides this source code under the GPL v2 License.
- The GPL v2 license is available at
--http://opensource.org/licenses/gpl-license.php.
-+https://opensource.org/licenses/gpl-license.php.
- 
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-diff --git a/include/linux/sunrpc/msg_prot.h b/include/linux/sunrpc/msg_prot.h
-index bea40d9f03a1..43f854487539 100644
---- a/include/linux/sunrpc/msg_prot.h
-+++ b/include/linux/sunrpc/msg_prot.h
-@@ -143,7 +143,7 @@ typedef __be32	rpc_fraghdr;
- /*
-  * Well-known netids. See:
-  *
-- *   http://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
-+ *   https://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
-  */
- #define RPCBIND_NETID_UDP	"udp"
- #define RPCBIND_NETID_TCP	"tcp"
-diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
-index 195b40c5dae4..3fecad369592 100644
---- a/net/sunrpc/backchannel_rqst.c
-+++ b/net/sunrpc/backchannel_rqst.c
-@@ -5,7 +5,7 @@
- 
- NetApp provides this source code under the GPL v2 License.
- The GPL v2 license is available at
--http://opensource.org/licenses/gpl-license.php.
-+https://opensource.org/licenses/gpl-license.php.
- 
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
-index f6fe2e6cd65a..2f59464e6524 100644
---- a/net/sunrpc/sunrpc.h
-+++ b/net/sunrpc/sunrpc.h
-@@ -4,7 +4,7 @@
- 
- NetApp provides this source code under the GPL v2 License.
- The GPL v2 license is available at
--http://opensource.org/licenses/gpl-license.php.
-+https://opensource.org/licenses/gpl-license.php.
- 
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
--- 
-2.27.0
-
+My Regards to your family.
+Mrs. Safiatou Zoungrana.
