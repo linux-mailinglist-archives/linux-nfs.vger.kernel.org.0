@@ -2,95 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F2F218770
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 14:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11820218A6D
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2020 16:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgGHMdc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Jul 2020 08:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729210AbgGHMda (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 08:33:30 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55574C08C5DC
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2020 05:33:30 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q198so41253335qka.2
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2020 05:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
-        b=CtDA46Te1kJYGFqAkgr9Vub/YrG6WB2S+VlEURQEEM4x6m9sjli+Jz/yotFRmV/AMR
-         T/h2d+e8At09eChsFX2C+mUFLH+FsdwAy78KAtzHqTPpG69rhvmbmMUpZSALFUdgKxT3
-         rKV4TF8A0J+Za5tWsTPtObTKnCJJSeTUvLM0KCUCLapZUiUA/CE0qJguNsnmAcBYT7Bw
-         PUSSiRKtit7eL05YbTu8d4vZk3Rk52mtpEQs926eluhEg6IUrqIesfOKILheZFFzZp0P
-         0kRnPxRkSyAb2gIupk6cQmoDhkGW5ga2ONIfRh7Ui0T+vXHI9OfE4hLpnUDNkQjQgdsE
-         pxTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
-        b=grYJ6VJ1vhaRNDK/8IEUUP51nDYfMoHI/0PUAT0xrBRu6Fpt95WUB6OZzMxbICc7UQ
-         lZ0Trp22m8WXQIDXPXoo5EziiO/1Nlf1Qahzm2WotnFgCWslmgmh+fUE9FcnNNb90t2s
-         b/1K4gfRpwOcjFWZvRR0ZXxwWi7k0L7kmvGyin78memOIY2li0Kjr/nfAkgRkwu1xXUt
-         DYcRvkjxnMFjZuBPKgWmDMUa7dfgpem4kMami6YIa+dvIsS87ynxyPC0hLhDGv1o8gku
-         jMi6cnKKR7QwxGl71FD2iHxLi9Br71iF9ey5VBKgzh6SHfUqmidu5Mkjz9iT51qkAG6d
-         Iudg==
-X-Gm-Message-State: AOAM533LFEhbSbIwwwrBpgZ3sBbBho0tjLonOLNzKpuyfvQ7T4nW0Wpu
-        w/rmAwFO9S6zD7i2LXLcluLLkhj9DVUAd/+tXqy1Y3sGnBA=
-X-Google-Smtp-Source: ABdhPJy69qBRFRW2d2u+0xyGHVfmVbQRW6SQ4gKLQIvGwSNWfhZDhNcIlxNh+7AirNZFy3An0aJSkt25Q8y7juQZu8o=
-X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr64754290jas.56.1594211609022;
- Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
+        id S1729625AbgGHOuN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Jul 2020 10:50:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31961 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729206AbgGHOuM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Jul 2020 10:50:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594219811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=47zG5omVzgKomzLQDhiyB0uXTW9JWgLP19IjH1Zmztg=;
+        b=MQTnTpUFGnT3egRLbYJQAO/e4QIcRcBwHRlUkVAWuBS1EEJu8CqTQqAjBMfOxShKu+9sOM
+        SUmefzjp29+SZDQAEo/7jZB4LYM4xS1yxK+V9MDAdS636EbxodP6XOL8EYZQS3/KI3Wtsw
+        rxisUx7FqbtBpshwL6B51PUzwIRf1So=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-0cej2CeaNVm__aveDLc2sw-1; Wed, 08 Jul 2020 10:50:09 -0400
+X-MC-Unique: 0cej2CeaNVm__aveDLc2sw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D9891B2C980;
+        Wed,  8 Jul 2020 14:50:08 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-95.phx2.redhat.com [10.3.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E53F45FC3B;
+        Wed,  8 Jul 2020 14:50:07 +0000 (UTC)
+Subject: Re: [PATCH 04/10] gssd: gssd_k5_err_msg() returns a ". Use free() to
+ release.
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20200701182803.14947-1-nazard@nazar.ca>
+ <20200701182803.14947-5-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <3a758b78-e477-4a75-63ca-65333a413599@RedHat.com>
+Date:   Wed, 8 Jul 2020 10:50:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Received: by 2002:a05:6602:1582:0:0:0:0 with HTTP; Wed, 8 Jul 2020 05:33:28
- -0700 (PDT)
-Reply-To: mmsafiatou057@gmail.com
-From:   "Mrs. Safitaou Zoungrana" <richardlaurentdr@gmail.com>
-Date:   Wed, 8 Jul 2020 12:33:28 +0000
-Message-ID: <CALJAiTVXhrKZYOHVoupnx6hmXXD0i2k4MOSO6HW+mj1BAydXhA@mail.gmail.com>
-Subject: My Dear Beloved One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200701182803.14947-5-nazard@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-My Dear Beloved One,
+Hello,
 
-I greet you in the name of God almighty the givers of all good things
-in life. Please kindly pardon me for any inconvenience this letter may
-cost you because I know it may come to you as a surprise as we have no
-previous correspondence.  I sent this mail praying for it to reach you
-in good health, since I myself are in a very critical health condition
-in which I sleep every night without knowing if I may be alive to see
-the next day.
+On 7/1/20 2:27 PM, Doug Nazar wrote:
+> Signed-off-by: Doug Nazar <nazard@nazar.ca>
+> ---
+>  utils/gssd/krb5_util.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+> index c49c6672..b1e48241 100644
+> --- a/utils/gssd/krb5_util.c
+> +++ b/utils/gssd/krb5_util.c
+> @@ -484,7 +484,7 @@ gssd_get_single_krb5_cred(krb5_context context,
+>  	if (ccache)
+>  		krb5_cc_close(context, ccache);
+>  	krb5_free_cred_contents(context, &my_creds);
+> -	krb5_free_string(context, k5err);
+> +	free(k5err);
+>  	return (code);
+>  }
+>  
+> @@ -723,7 +723,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
+>  				 "we failed to unparse principal name: %s\n",
+>  				 k5err);
+>  			k5_free_kt_entry(context, kte);
+> -			krb5_free_string(context, k5err);
+> +			free(k5err);
+>  			k5err = NULL;
+>  			continue;
+>  		}
+> @@ -770,7 +770,7 @@ gssd_search_krb5_keytab(krb5_context context, krb5_keytab kt,
+>  	if (retval < 0)
+>  		retval = 0;
+>    out:
+> -	krb5_free_string(context, k5err);
+> +	free(k5err);
+>  	return retval;
+>  }
+>  
+> @@ -927,7 +927,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
+>  				k5err = gssd_k5_err_msg(context, code);
+>  				printerr(1, "%s while building principal for '%s'\n",
+>  					 k5err, spn);
+> -				krb5_free_string(context, k5err);
+> +				free(k5err);
+>  				k5err = NULL;
+>  				continue;
+>  			}
+> @@ -937,7 +937,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
+>  				k5err = gssd_k5_err_msg(context, code);
+>  				printerr(3, "%s while getting keytab entry for '%s'\n",
+>  					 k5err, spn);
+> -				krb5_free_string(context, k5err);
+> +				free(k5err);
+>  				k5err = NULL;
+>  				/*
+>  				 * We tried the active directory machine account
+> @@ -986,7 +986,7 @@ out:
+>  		k5_free_default_realm(context, default_realm);
+>  	if (realmnames)
+>  		krb5_free_host_realm(context, realmnames);
+> -	krb5_free_string(context, k5err);
+> +	free(k5err);
+>  	return retval;
+>  }
+>  
+> @@ -1355,7 +1355,7 @@ out_free_kt:
+>  out_free_context:
+>  	krb5_free_context(context);
+>  out:
+> -	krb5_free_string(context, k5err);
+> +	free(k5err);
+>  	return retval;
+>  }
+>  
+> 
+I'm curious about these changes... since all krb5_free_string()
+does is call free()... where is the "strdup'd msg" coming from?
 
-I am Mrs. Safiatou Zoungrana,  the wife of late Engineer Ralph
-Alphonso Zoungrana from Paris France but based here in Burkina Faso
-West Africa since eight years ago as a business woman dealing with
-gold exportation and Sales. We have been married for years before his
-sudden death although we were childless. I have been diagnosed with
-ovarian cancer and I have been battling with the sickness when my late
-lovely husband of a blessed memory was alive. May his soul rest in
-peace, Amen.
+steved.
 
-My late Husband left the sum of =E2=82=AC7.900.000.00 Seven Million Nine
-Hundred Thousand Euros in a fix/suspense account in one of the prime
-bank here in Burkina Faso. Recently, my Doctor told me that I have few
-days to live due to the cancer problem. The one that disturbs me most
-is my blood pressure sickness.
-
-Having known my health condition I decided to seek for your kind
-assistance to transfer this fund into your account and you will use it
-to establish an orphanage home in my name. I will give you more
-details about the project as soon as I receive your reply in my
-private email (mmsafiatou057@gmail.com) to handle this project because
-I do not want to state all here until I see your reply, desire and
-commitment to handle this project.
-
-My Regards to your family.
-Mrs. Safiatou Zoungrana.
