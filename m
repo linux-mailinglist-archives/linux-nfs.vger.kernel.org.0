@@ -2,193 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B0E21A3EC
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2020 17:43:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 898FF21A5AC
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2020 19:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGIPng (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Jul 2020 11:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIPng (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Jul 2020 11:43:36 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E233C08C5CE
-        for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2020 08:43:35 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id n2so2215642edr.5
-        for <linux-nfs@vger.kernel.org>; Thu, 09 Jul 2020 08:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5IYigd7pIKSSrbEnMvIeV6a7Vqif7u+D2HSo41lGhU=;
-        b=gzTkv9om+YuwO9PNK8TxFAypWc7e4wK0QTTMTKMHNIr3N8Yy7RnEg3nJcJNsEC2RpA
-         N/dLxMO2Wp7lmI3uswKEguh9+mgZqcEfgnwk/KklDWjMXY6C5S8EhdWuwCOM3rOqrl0D
-         y71mufIp6U1NvKUG3fFojcE7TgUXFUZh/oVYk524+qsU3v2r60ENDotS9KWrOQj0h2kh
-         zApsBfqAzFYnQDwIVLLwRyXMSNHhv+dRWxZKDIxidL+Gvo/MiX1QB0+FjmKaR9Spu3Pd
-         nocgd7HuuKaovdpiUz3J6OWe+kpoTgrnWWPFGL2d2dXqEkYVrtvVG1E3PTmWPjRLCv/G
-         4l3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5IYigd7pIKSSrbEnMvIeV6a7Vqif7u+D2HSo41lGhU=;
-        b=enMmzN1QrkpSIr+YVQvj97U+/8ACp0zaAN1iV8TuD5erH3R+ALxVS4g//B/Jz8tIQC
-         q7HDpxxxTWxP7o0Yk1oN4yEuLP6OCNqVKXviXszWDkkuS4cc3o7OWn9T9N3gxq6yZH5d
-         ta9/ymN3t0bJHtxffuA5X61+kgvVtrkE7V4lVBI1tLo+k6feFhzq4tBwQcXsrCT200VH
-         3vlW/8VP27mTlJpDJH9sWVaV+IcxNDfyHuXh7jEZIFeYsnPP03m3JaBtTmQ4Sculalad
-         3Ra/3QO9wzsYIAj7WZpfNO2FdFWDkPk22bIbsop7Z/oFzzZePykGRCF+Pcqa3b4Z8PEj
-         zJ/Q==
-X-Gm-Message-State: AOAM530Hx1+/H2gEptwvqzJWor9jEeFrBQz6+lXMjNas2SWrE/qDlzeY
-        p5q3Cqfl4AjC2VupM0j0PWw0i4wE6jZ47x50G38=
-X-Google-Smtp-Source: ABdhPJzWJWis0JLUfIJyrHpl6NnU1NjyVYWSPb1ZFECBJzHx+EPtrlenvEZH4IDYqDdjgypr786ACCxhqba5c+Csqek=
-X-Received: by 2002:a05:6402:b9b:: with SMTP id cf27mr71766876edb.84.1594309413925;
- Thu, 09 Jul 2020 08:43:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200708210514.84671-1-olga.kornievskaia@gmail.com> <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
-In-Reply-To: <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Thu, 9 Jul 2020 11:43:23 -0400
-Message-ID: <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
+        id S1727910AbgGIRTQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Jul 2020 13:19:16 -0400
+Received: from mail-bn7nam10on2103.outbound.protection.outlook.com ([40.107.92.103]:29153
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727061AbgGIRTP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:19:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kSCDBZZKBmxrQHcEkmaOnuONLxqKpDFkkmbNvuWaKK8ytTE/N1MtswLsetpK+DGj7fG7t/WVPY+KLqUNe4mBzW+Qn6sJTEA23C0CqmqVeHk+wlmrsz1HCgCUIC7xQVU3w0wlKOSyMwZ5XPImK8GBQoQMdzZkazxvuIzJGi+XqLO6gVooG9a4aO+iCsV5H+cWyb8WNTQufkz1S8AvDhcAL5VL7zeXME1+15CNzCgIdOUz3hA1JvRNA72NLKpAgiWpfmY0HS/S2MF8tHqy5WkHlei5RQro8U6dsNuPfMSx7aM+LREann6kxLcW8nCTXMYriglkIqQoty28rM8UIR8khQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SwSr+nHs/EWjsnnM13hARbfWn7Pj93Rnsui2Cjkoy+M=;
+ b=UEywxpHWKQV89oxb74oyTjcbjHErmb5sWlG0cbDWMzKTdNJ2tKJjlSUgifqybqpdtXhG7A4HEVxjO1WUNjfxNH+cXvWxTbkbMjdXGR3YqoVBU/cJ5VIjmWIo89+7PWvo8blcOLFly6Y24qmKiuXus9IOV8scT5ntADxtTYw5bksBwG9MozkwjR7ueS1FgXC/C1YtT7Xz38dxbmMkUKi5CW8ec78i98cu70xvzoh+o5to98RyUadaOoK/T+eoF/kw9MHAMYNsSqCCd40R+3dTRGEOilAavC4YpEdIQN2CXFK/74513J7Sc5xD2G9jFUgrd/++A3io5TuNxShnhAts+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SwSr+nHs/EWjsnnM13hARbfWn7Pj93Rnsui2Cjkoy+M=;
+ b=Rfph50k45VX7prBOuJDc+kSuMEreaudcwBdlQjsaSejR7X89pm6ARBgA90CQ7TccIeh4afCMZkdhfG0quxP7fHMij2irBzL+8xTUeI3P1LjE+SEnqRG+KQga0bBxH5Gnsa9tZgJoYd1v0YkDa6tl6Z++6y7G1nPUbS16klfbUOM=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3431.namprd13.prod.outlook.com (2603:10b6:610:21::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.16; Thu, 9 Jul
+ 2020 17:19:10 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::352c:f318:f4a7:6a0f]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::352c:f318:f4a7:6a0f%3]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 17:19:09 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
 Subject: Re: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
+Thread-Index: AQHWVWs8m1CKZ35+pUqHJLj6MBnD8Kj/KF+AgAA8JYCAABq/gA==
+Date:   Thu, 9 Jul 2020 17:19:09 +0000
+Message-ID: <3fe49121d027eaa3aa2263f24d76d72e750d8592.camel@hammerspace.com>
+References: <20200708210514.84671-1-olga.kornievskaia@gmail.com>
+         <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
+         <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
+In-Reply-To: <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [50.36.87.23]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 780e2c5d-bef6-48a4-3521-08d8242c316b
+x-ms-traffictypediagnostic: CH2PR13MB3431:
+x-microsoft-antispam-prvs: <CH2PR13MB343192421CB9660D2471F737B8640@CH2PR13MB3431.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: smUaUwwvmKW396i0hAVB+f8nMHHj3bPbxIeHIA4qmzr2xSOwcy9ioLvLHNuX+VjEcXkC4KffldeolT+L4HbonzV9G/X0ymRwQqzaMFwOUu+fJ7KkY0M/gNNUzmUEsJrniJDmrgLbEK+WGN52jL6m9YR5ZRL6kZpFE83wA8wGnm8S9/mK+gVOGE+C/3XfuKYKBOFAGW6jdMLK/Go/1jC4wVKwCkL1hN89HsthycG/9MI4COY3oEpJb6lz/KxV0wJrIXLmeKuIS69G9Ohoqr39UEWGPA9my6CqsDOp5oezRtqixYJ4ui7lQODS9l1BNEM++pHUZ+PcFzzXWK2wj+nFLF2t3H6ERS2I+ZC+WPafE+naVwy9bOeJF0f7ykoWfYO4
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39840400004)(396003)(136003)(366004)(66946007)(53546011)(64756008)(66476007)(76116006)(66446008)(66556008)(2906002)(71200400001)(83380400001)(186003)(86362001)(4326008)(6512007)(6506007)(36756003)(8936002)(478600001)(8676002)(15650500001)(54906003)(5660300002)(316002)(2616005)(6916009)(26005)(6486002)(192303002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 9r0WCcIPD7daR0Zw/T9X0kBaQfarojG2FmmF1T2vgqEcVwBg4tP6oWmNydOzXnUjnxhsHuOJy/Kbn9xOiFOQP7nlyJKY7WHyk7rBHJHriJKyNL0Px3fZ6pvktERYV61CJkQ65MPk0tofd9JnatX8iWTjZBmCjuKwQVnytJ048SUnxIig24+qXsNsefMugSEFt7XgX+aPiP5GOBZC+yKSEwB9lfHphop5JUPBs7pwMgiLfTfrNh19BNNfhnVoeZqX0dakhkCjBUtNABVzKpATer8p+MbPv2WWvi4D9aewG6NcRyhjNRClLSEsmzXCB4OL+ILJulXa4T5Up9X7VVUDTmwN/WHaG4V9d4GuWW4eXrEGmraUdKHHlOJXbyrD2JTYffbIVniEK1AwW71Li9lvBIpci1tSeSf9XayVHoi2oPjju7XnKjz++msOjRd2sD1RFMCfgtynNfo7A5PksewN09WktxRD15RwQ8gr+XmcrHQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E58D2F5B9B6E994BB7DA36180CB35F98@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 780e2c5d-bef6-48a4-3521-08d8242c316b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 17:19:09.6227
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fQrkCFxY6CTGq5kUmh/3YaOxX4LNfQMwC4jkAezIshLfn51bF95HOp1xMIltQ9vVKu2W1Lqq4Qj8hvhZOeMYeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3431
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 8:08 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> Hi Olga
->
-> On Wed, 2020-07-08 at 17:05 -0400, Olga Kornievskaia wrote:
-> > Current behaviour: every time a v3 operation is re-sent to the server
-> > we update (double) the timeout. There is no distinction between
-> > whether
-> > or not the previous timer had expired before the re-sent happened.
-> >
-> > Here's the scenario:
-> > 1. Client sends a v3 operation
-> > 2. Server RST-s the connection (prior to the timeout) (eg.,
-> > connection
-> > is immediately reset)
-> > 3. Client re-sends a v3 operation but the timeout is now 120sec.
-> >
-> > As a result, an application sees 2mins pause before a retry in case
-> > server again does not reply.
-> >
-> > Instead, this patch proposes to keep track off when the minor timeout
-> > should happen and if it didn't, then don't update the new timeout.
-> >
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  include/linux/sunrpc/xprt.h |  1 +
-> >  net/sunrpc/xprt.c           | 11 +++++++++++
-> >  2 files changed, 12 insertions(+)
-> >
-> > diff --git a/include/linux/sunrpc/xprt.h
-> > b/include/linux/sunrpc/xprt.h
-> > index e64bd82..a603d48 100644
-> > --- a/include/linux/sunrpc/xprt.h
-> > +++ b/include/linux/sunrpc/xprt.h
-> > @@ -101,6 +101,7 @@ struct rpc_rqst {
-> >                                                        * used in the
-> > softirq.
-> >                                                        */
-> >       unsigned long           rq_majortimeo;  /* major timeout
-> > alarm */
-> > +     unsigned long           rq_minortimeo;  /* minor timeout
-> > alarm */
-> >       unsigned long           rq_timeout;     /* Current timeout
-> > value */
-> >       ktime_t                 rq_rtt;         /* round-trip time */
-> >       unsigned int            rq_retries;     /* # of retries */
-> > diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-> > index d5cc5db..c0ce232 100644
-> > --- a/net/sunrpc/xprt.c
-> > +++ b/net/sunrpc/xprt.c
-> > @@ -607,6 +607,11 @@ static void xprt_reset_majortimeo(struct
-> > rpc_rqst *req)
-> >       req->rq_majortimeo += xprt_calc_majortimeo(req);
-> >  }
-> >
-> > +static void xprt_reset_minortimeo(struct rpc_rqst *req)
-> > +{
-> > +     req->rq_minortimeo = jiffies + req->rq_timeout;
-> > +}
-> > +
-> >  static void xprt_init_majortimeo(struct rpc_task *task, struct
-> > rpc_rqst *req)
-> >  {
-> >       unsigned long time_init;
-> > @@ -618,6 +623,7 @@ static void xprt_init_majortimeo(struct rpc_task
-> > *task, struct rpc_rqst *req)
-> >               time_init = xprt_abs_ktime_to_jiffies(task->tk_start);
-> >       req->rq_timeout = task->tk_client->cl_timeout->to_initval;
-> >       req->rq_majortimeo = time_init + xprt_calc_majortimeo(req);
-> > +     req->rq_minortimeo = time_init + req->rq_timeout;
-> >  }
-> >
-> >  /**
-> > @@ -631,6 +637,10 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
-> >       const struct rpc_timeout *to = req->rq_task->tk_client-
-> > >cl_timeout;
-> >       int status = 0;
-> >
-> > +     if (time_before(jiffies, req->rq_minortimeo)) {
-> > +             xprt_reset_minortimeo(req);
-> > +             return status;
->
-> Shouldn't this case be just returning without updating the timeout?
-> After all, this is the case where nothing has expired yet.
-
-I think we perhaps should readjust the minor timeout every here but I
-can't figure out what the desired behaviour should be. When should we
-consider it's appropriate to double the timer. Consider the following:
-
-time1: v3 op sent
-time1+50s: server RSTs
-We check that it's not yet the minor timeout (time1+60s)
-time1+50s: v3 op re-sent  (say we don't reset the minor timeout to be
-current time+60s)
-time1+60s: server RSTs
-Client will resend the op but now it's past the initial minor timeout
-so the timeout will be doubled. Is that what we really want? Maybe it
-is.
-Say now the server RSTs the connection again (shortly after or in less
-than 60s), since we are not updating the minor timeout value, then the
-client will again modify the timeout before resending. Is that Ok?
-
-That's why my reasoning was that at every re-evaluation of the timeout
-value, we have the minor timeout set for current time+60s and we get
-an RST within it then we don't modify the timeout value.
-
-
->
-> > +     }
-> >       if (time_before(jiffies, req->rq_majortimeo)) {
-> >               if (to->to_exponential)
-> >                       req->rq_timeout <<= 1;
-> > @@ -638,6 +648,7 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
-> >                       req->rq_timeout += to->to_increment;
-> >               if (to->to_maxval && req->rq_timeout >= to->to_maxval)
-> >                       req->rq_timeout = to->to_maxval;
-> > +             xprt_reset_minortimeo(req);
->
-> ...and then perhaps this can just be moved out of the time_before()
-> condition, since it looks to me as if we also want to reset req-
-> >rq_minortimeo when a major timeout occurs.
->
-> >               req->rq_retries++;
-> >       } else {
-> >               req->rq_timeout = to->to_initval;
->
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVGh1LCAyMDIwLTA3LTA5IGF0IDExOjQzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVGh1LCBKdWwgOSwgMjAyMCBhdCA4OjA4IEFNIFRyb25kIE15a2xlYnVzdCA8DQo+
+IHRyb25kbXlAaGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiBIaSBPbGdhDQo+ID4gDQo+ID4g
+T24gV2VkLCAyMDIwLTA3LTA4IGF0IDE3OjA1IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gPiA+IEN1cnJlbnQgYmVoYXZpb3VyOiBldmVyeSB0aW1lIGEgdjMgb3BlcmF0aW9uIGlz
+IHJlLXNlbnQgdG8gdGhlDQo+ID4gPiBzZXJ2ZXINCj4gPiA+IHdlIHVwZGF0ZSAoZG91YmxlKSB0
+aGUgdGltZW91dC4gVGhlcmUgaXMgbm8gZGlzdGluY3Rpb24gYmV0d2Vlbg0KPiA+ID4gd2hldGhl
+cg0KPiA+ID4gb3Igbm90IHRoZSBwcmV2aW91cyB0aW1lciBoYWQgZXhwaXJlZCBiZWZvcmUgdGhl
+IHJlLXNlbnQNCj4gPiA+IGhhcHBlbmVkLg0KPiA+ID4gDQo+ID4gPiBIZXJlJ3MgdGhlIHNjZW5h
+cmlvOg0KPiA+ID4gMS4gQ2xpZW50IHNlbmRzIGEgdjMgb3BlcmF0aW9uDQo+ID4gPiAyLiBTZXJ2
+ZXIgUlNULXMgdGhlIGNvbm5lY3Rpb24gKHByaW9yIHRvIHRoZSB0aW1lb3V0KSAoZWcuLA0KPiA+
+ID4gY29ubmVjdGlvbg0KPiA+ID4gaXMgaW1tZWRpYXRlbHkgcmVzZXQpDQo+ID4gPiAzLiBDbGll
+bnQgcmUtc2VuZHMgYSB2MyBvcGVyYXRpb24gYnV0IHRoZSB0aW1lb3V0IGlzIG5vdyAxMjBzZWMu
+DQo+ID4gPiANCj4gPiA+IEFzIGEgcmVzdWx0LCBhbiBhcHBsaWNhdGlvbiBzZWVzIDJtaW5zIHBh
+dXNlIGJlZm9yZSBhIHJldHJ5IGluDQo+ID4gPiBjYXNlDQo+ID4gPiBzZXJ2ZXIgYWdhaW4gZG9l
+cyBub3QgcmVwbHkuDQo+ID4gPiANCj4gPiA+IEluc3RlYWQsIHRoaXMgcGF0Y2ggcHJvcG9zZXMg
+dG8ga2VlcCB0cmFjayBvZmYgd2hlbiB0aGUgbWlub3INCj4gPiA+IHRpbWVvdXQNCj4gPiA+IHNo
+b3VsZCBoYXBwZW4gYW5kIGlmIGl0IGRpZG4ndCwgdGhlbiBkb24ndCB1cGRhdGUgdGhlIG5ldw0K
+PiA+ID4gdGltZW91dC4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3JuaWV2
+c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBpbmNsdWRlL2xpbnV4
+L3N1bnJwYy94cHJ0LmggfCAgMSArDQo+ID4gPiAgbmV0L3N1bnJwYy94cHJ0LmMgICAgICAgICAg
+IHwgMTEgKysrKysrKysrKysNCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMo
+KykNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc3VucnBjL3hwcnQu
+aA0KPiA+ID4gYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmgNCj4gPiA+IGluZGV4IGU2NGJk
+ODIuLmE2MDNkNDggMTAwNjQ0DQo+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0
+LmgNCj4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvc3VucnBjL3hwcnQuaA0KPiA+ID4gQEAgLTEw
+MSw2ICsxMDEsNyBAQCBzdHJ1Y3QgcnBjX3Jxc3Qgew0KPiA+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICogdXNlZCBpbg0KPiA+ID4gdGhl
+DQo+ID4gPiBzb2Z0aXJxLg0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICovDQo+ID4gPiAgICAgICB1bnNpZ25lZCBsb25nICAgICAg
+ICAgICBycV9tYWpvcnRpbWVvOyAgLyogbWFqb3IgdGltZW91dA0KPiA+ID4gYWxhcm0gKi8NCj4g
+PiA+ICsgICAgIHVuc2lnbmVkIGxvbmcgICAgICAgICAgIHJxX21pbm9ydGltZW87ICAvKiBtaW5v
+ciB0aW1lb3V0DQo+ID4gPiBhbGFybSAqLw0KPiA+ID4gICAgICAgdW5zaWduZWQgbG9uZyAgICAg
+ICAgICAgcnFfdGltZW91dDsgICAgIC8qIEN1cnJlbnQgdGltZW91dA0KPiA+ID4gdmFsdWUgKi8N
+Cj4gPiA+ICAgICAgIGt0aW1lX3QgICAgICAgICAgICAgICAgIHJxX3J0dDsgICAgICAgICAvKiBy
+b3VuZC10cmlwIHRpbWUNCj4gPiA+ICovDQo+ID4gPiAgICAgICB1bnNpZ25lZCBpbnQgICAgICAg
+ICAgICBycV9yZXRyaWVzOyAgICAgLyogIyBvZiByZXRyaWVzICovDQo+ID4gPiBkaWZmIC0tZ2l0
+IGEvbmV0L3N1bnJwYy94cHJ0LmMgYi9uZXQvc3VucnBjL3hwcnQuYw0KPiA+ID4gaW5kZXggZDVj
+YzVkYi4uYzBjZTIzMiAxMDA2NDQNCj4gPiA+IC0tLSBhL25ldC9zdW5ycGMveHBydC5jDQo+ID4g
+PiArKysgYi9uZXQvc3VucnBjL3hwcnQuYw0KPiA+ID4gQEAgLTYwNyw2ICs2MDcsMTEgQEAgc3Rh
+dGljIHZvaWQgeHBydF9yZXNldF9tYWpvcnRpbWVvKHN0cnVjdA0KPiA+ID4gcnBjX3Jxc3QgKnJl
+cSkNCj4gPiA+ICAgICAgIHJlcS0+cnFfbWFqb3J0aW1lbyArPSB4cHJ0X2NhbGNfbWFqb3J0aW1l
+byhyZXEpOw0KPiA+ID4gIH0NCj4gPiA+IA0KPiA+ID4gK3N0YXRpYyB2b2lkIHhwcnRfcmVzZXRf
+bWlub3J0aW1lbyhzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSkNCj4gPiA+ICt7DQo+ID4gPiArICAgICBy
+ZXEtPnJxX21pbm9ydGltZW8gPSBqaWZmaWVzICsgcmVxLT5ycV90aW1lb3V0Ow0KPiA+ID4gK30N
+Cj4gPiA+ICsNCj4gPiA+ICBzdGF0aWMgdm9pZCB4cHJ0X2luaXRfbWFqb3J0aW1lbyhzdHJ1Y3Qg
+cnBjX3Rhc2sgKnRhc2ssIHN0cnVjdA0KPiA+ID4gcnBjX3Jxc3QgKnJlcSkNCj4gPiA+ICB7DQo+
+ID4gPiAgICAgICB1bnNpZ25lZCBsb25nIHRpbWVfaW5pdDsNCj4gPiA+IEBAIC02MTgsNiArNjIz
+LDcgQEAgc3RhdGljIHZvaWQgeHBydF9pbml0X21ham9ydGltZW8oc3RydWN0DQo+ID4gPiBycGNf
+dGFzaw0KPiA+ID4gKnRhc2ssIHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0KPiA+ID4gICAgICAgICAg
+ICAgICB0aW1lX2luaXQgPSB4cHJ0X2Fic19rdGltZV90b19qaWZmaWVzKHRhc2stDQo+ID4gPiA+
+dGtfc3RhcnQpOw0KPiA+ID4gICAgICAgcmVxLT5ycV90aW1lb3V0ID0gdGFzay0+dGtfY2xpZW50
+LT5jbF90aW1lb3V0LT50b19pbml0dmFsOw0KPiA+ID4gICAgICAgcmVxLT5ycV9tYWpvcnRpbWVv
+ID0gdGltZV9pbml0ICsgeHBydF9jYWxjX21ham9ydGltZW8ocmVxKTsNCj4gPiA+ICsgICAgIHJl
+cS0+cnFfbWlub3J0aW1lbyA9IHRpbWVfaW5pdCArIHJlcS0+cnFfdGltZW91dDsNCj4gPiA+ICB9
+DQo+ID4gPiANCj4gPiA+ICAvKioNCj4gPiA+IEBAIC02MzEsNiArNjM3LDEwIEBAIGludCB4cHJ0
+X2FkanVzdF90aW1lb3V0KHN0cnVjdCBycGNfcnFzdA0KPiA+ID4gKnJlcSkNCj4gPiA+ICAgICAg
+IGNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdG8gPSByZXEtPnJxX3Rhc2stPnRrX2NsaWVudC0N
+Cj4gPiA+ID4gY2xfdGltZW91dDsNCj4gPiA+ICAgICAgIGludCBzdGF0dXMgPSAwOw0KPiA+ID4g
+DQo+ID4gPiArICAgICBpZiAodGltZV9iZWZvcmUoamlmZmllcywgcmVxLT5ycV9taW5vcnRpbWVv
+KSkgew0KPiA+ID4gKyAgICAgICAgICAgICB4cHJ0X3Jlc2V0X21pbm9ydGltZW8ocmVxKTsNCj4g
+PiA+ICsgICAgICAgICAgICAgcmV0dXJuIHN0YXR1czsNCj4gPiANCj4gPiBTaG91bGRuJ3QgdGhp
+cyBjYXNlIGJlIGp1c3QgcmV0dXJuaW5nIHdpdGhvdXQgdXBkYXRpbmcgdGhlIHRpbWVvdXQ/DQo+
+ID4gQWZ0ZXIgYWxsLCB0aGlzIGlzIHRoZSBjYXNlIHdoZXJlIG5vdGhpbmcgaGFzIGV4cGlyZWQg
+eWV0Lg0KPiANCj4gSSB0aGluayB3ZSBwZXJoYXBzIHNob3VsZCByZWFkanVzdCB0aGUgbWlub3Ig
+dGltZW91dCBldmVyeSBoZXJlIGJ1dCBJDQo+IGNhbid0IGZpZ3VyZSBvdXQgd2hhdCB0aGUgZGVz
+aXJlZCBiZWhhdmlvdXIgc2hvdWxkIGJlLiBXaGVuIHNob3VsZCB3ZQ0KPiBjb25zaWRlciBpdCdz
+IGFwcHJvcHJpYXRlIHRvIGRvdWJsZSB0aGUgdGltZXIuIENvbnNpZGVyIHRoZQ0KPiBmb2xsb3dp
+bmc6DQo+IA0KPiB0aW1lMTogdjMgb3Agc2VudA0KPiB0aW1lMSs1MHM6IHNlcnZlciBSU1RzDQo+
+IFdlIGNoZWNrIHRoYXQgaXQncyBub3QgeWV0IHRoZSBtaW5vciB0aW1lb3V0ICh0aW1lMSs2MHMp
+DQo+IHRpbWUxKzUwczogdjMgb3AgcmUtc2VudCAgKHNheSB3ZSBkb24ndCByZXNldCB0aGUgbWlu
+b3IgdGltZW91dCB0byBiZQ0KPiBjdXJyZW50IHRpbWUrNjBzKQ0KPiB0aW1lMSs2MHM6IHNlcnZl
+ciBSU1RzDQo+IENsaWVudCB3aWxsIHJlc2VuZCB0aGUgb3AgYnV0IG5vdyBpdCdzIHBhc3QgdGhl
+IGluaXRpYWwgbWlub3IgdGltZW91dA0KPiBzbyB0aGUgdGltZW91dCB3aWxsIGJlIGRvdWJsZWQu
+IElzIHRoYXQgd2hhdCB3ZSByZWFsbHkgd2FudD8gTWF5YmUgaXQNCj4gaXMuDQo+IFNheSBub3cg
+dGhlIHNlcnZlciBSU1RzIHRoZSBjb25uZWN0aW9uIGFnYWluIChzaG9ydGx5IGFmdGVyIG9yIGlu
+DQo+IGxlc3MNCj4gdGhhbiA2MHMpLCBzaW5jZSB3ZSBhcmUgbm90IHVwZGF0aW5nIHRoZSBtaW5v
+ciB0aW1lb3V0IHZhbHVlLCB0aGVuDQo+IHRoZQ0KPiBjbGllbnQgd2lsbCBhZ2FpbiBtb2RpZnkg
+dGhlIHRpbWVvdXQgYmVmb3JlIHJlc2VuZGluZy4gSXMgdGhhdCBPaz8NCj4gDQo+IFRoYXQncyB3
+aHkgbXkgcmVhc29uaW5nIHdhcyB0aGF0IGF0IGV2ZXJ5IHJlLWV2YWx1YXRpb24gb2YgdGhlDQo+
+IHRpbWVvdXQNCj4gdmFsdWUsIHdlIGhhdmUgdGhlIG1pbm9yIHRpbWVvdXQgc2V0IGZvciBjdXJy
+ZW50IHRpbWUrNjBzIGFuZCB3ZSBnZXQNCj4gYW4gUlNUIHdpdGhpbiBpdCB0aGVuIHdlIGRvbid0
+IG1vZGlmeSB0aGUgdGltZW91dCB2YWx1ZS4NCg0KU28gYSBjb3VwbGUgb2YgaXNzdWVzIHdpdGgg
+dGhhdDoNCg0KVGhlIGZpcnN0IGlzIHRoYXQgYSBzZXJpZXMgb2YgUlNUIGNhbGxzIGNvdWxkIGNh
+dXNlIHRoZSB0aW1lb3V0IHRvIGdldA0KcHVzaGVkIHRvIHRoZSBtYXggdmFsdWUgZmFpcmx5IHF1
+aWNrbHkgKGJ0dywgeHBydF9yZXNldF9taW5vcnRpbWVvKCkNCmRvZXMgbm90IGVuZm9yY2UgYSBs
+aW1pdCByaWdodCBub3cpLg0KDQpUaGUgc2Vjb25kIGlzIHRoYXQgd2UgZW5kIHVwIHB1c2hpbmcg
+b3V0IHRoZSBtYWpvciB0aW1lb3V0IHZhbHVlLCBzaW5jZQ0KdGhlIG1ham9yIHRpbWVvdXQgY2Fu
+bm90IG9jY3VyIHVubGVzcyB0aGUgdmFsdWUgb2YgamlmZmllcyBpcyBhZnRlciB0aGUNCm1pbm9y
+IHRpbWVvdXQgKHdoaWNoIGtlZXBzIGNoYW5naW5nIG9uIGVhY2ggcGFzcykuDQoNCj4gDQo+IA0K
+PiA+ID4gKyAgICAgfQ0KPiA+ID4gICAgICAgaWYgKHRpbWVfYmVmb3JlKGppZmZpZXMsIHJlcS0+
+cnFfbWFqb3J0aW1lbykpIHsNCj4gPiA+ICAgICAgICAgICAgICAgaWYgKHRvLT50b19leHBvbmVu
+dGlhbCkNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICByZXEtPnJxX3RpbWVvdXQgPDw9IDE7
+DQo+ID4gPiBAQCAtNjM4LDYgKzY0OCw3IEBAIGludCB4cHJ0X2FkanVzdF90aW1lb3V0KHN0cnVj
+dCBycGNfcnFzdCAqcmVxKQ0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIHJlcS0+cnFfdGlt
+ZW91dCArPSB0by0+dG9faW5jcmVtZW50Ow0KPiA+ID4gICAgICAgICAgICAgICBpZiAodG8tPnRv
+X21heHZhbCAmJiByZXEtPnJxX3RpbWVvdXQgPj0gdG8tDQo+ID4gPiA+dG9fbWF4dmFsKQ0KPiA+
+ID4gICAgICAgICAgICAgICAgICAgICAgIHJlcS0+cnFfdGltZW91dCA9IHRvLT50b19tYXh2YWw7
+DQo+ID4gPiArICAgICAgICAgICAgIHhwcnRfcmVzZXRfbWlub3J0aW1lbyhyZXEpOw0KPiA+IA0K
+PiA+IC4uLmFuZCB0aGVuIHBlcmhhcHMgdGhpcyBjYW4ganVzdCBiZSBtb3ZlZCBvdXQgb2YgdGhl
+IHRpbWVfYmVmb3JlKCkNCj4gPiBjb25kaXRpb24sIHNpbmNlIGl0IGxvb2tzIHRvIG1lIGFzIGlm
+IHdlIGFsc28gd2FudCB0byByZXNldCByZXEtDQo+ID4gPiBycV9taW5vcnRpbWVvIHdoZW4gYSBt
+YWpvciB0aW1lb3V0IG9jY3Vycy4NCj4gPiA+ICAgICAgICAgICAgICAgcmVxLT5ycV9yZXRyaWVz
+Kys7DQo+ID4gPiAgICAgICB9IGVsc2Ugew0KPiA+ID4gICAgICAgICAgICAgICByZXEtPnJxX3Rp
+bWVvdXQgPSB0by0+dG9faW5pdHZhbDsNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5G
+UyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJz
+cGFjZS5jb20NCg0KDQo=
