@@ -2,136 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F98F21A014
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2020 14:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B0E21A3EC
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2020 17:43:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgGIMcu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Jul 2020 08:32:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38995 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgGIMct (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Jul 2020 08:32:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 18so1562742otv.6;
-        Thu, 09 Jul 2020 05:32:49 -0700 (PDT)
+        id S1726460AbgGIPng (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Jul 2020 11:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIPng (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Jul 2020 11:43:36 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E233C08C5CE
+        for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2020 08:43:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id n2so2215642edr.5
+        for <linux-nfs@vger.kernel.org>; Thu, 09 Jul 2020 08:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x5IYigd7pIKSSrbEnMvIeV6a7Vqif7u+D2HSo41lGhU=;
+        b=gzTkv9om+YuwO9PNK8TxFAypWc7e4wK0QTTMTKMHNIr3N8Yy7RnEg3nJcJNsEC2RpA
+         N/dLxMO2Wp7lmI3uswKEguh9+mgZqcEfgnwk/KklDWjMXY6C5S8EhdWuwCOM3rOqrl0D
+         y71mufIp6U1NvKUG3fFojcE7TgUXFUZh/oVYk524+qsU3v2r60ENDotS9KWrOQj0h2kh
+         zApsBfqAzFYnQDwIVLLwRyXMSNHhv+dRWxZKDIxidL+Gvo/MiX1QB0+FjmKaR9Spu3Pd
+         nocgd7HuuKaovdpiUz3J6OWe+kpoTgrnWWPFGL2d2dXqEkYVrtvVG1E3PTmWPjRLCv/G
+         4l3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qf+FOomT9nO8ENiAbP5RjOUaSmYFh8SB5zg2jFw74po=;
-        b=To60Y9J++O/XYO2JggxGYa5qUS/udyVhvcsANV6Fg0Y0+q6AasU3Hls6cxaJOl3Hbe
-         JZwfsn1XGCN1OI84N7uzKn2d4If2CczmAy9e1fO2GdutmZYVoCb8jhbD0HH2k4aBWjWm
-         5AjHfQeeyJNw4ZZBOECcf6kd0iCSnHcgYckDKa3SczK0mTts6EZX4G7R8dyltD+hlDsS
-         x3QkdLhXunLEC2xcrKve7yBkIe1we3gGylFC/HScfvxb3ESxWzdf7SfnJYWkqo2Ipr3a
-         SXRFt/qd7SVBab3XEv7Meed6de7IZNd+A1940z8FGUG6ad+5dd/56Hn9Zwj7wKjtdLWj
-         2sKA==
-X-Gm-Message-State: AOAM5329dySwpk8/HxU1wk1KkDx4SihJTI355qn2bOZQ+wSQP1NNvoVi
-        xDn9BRH3+FHto6RFwzz9esNtU4HcODTNJOUN2/A=
-X-Google-Smtp-Source: ABdhPJyyO/sow6b5DME3pCx+Xbfc2850NqvXukJ17yz4LloufPDrn0p4QCkTarJTa7CeTRe/o0Bjk2RlTbvm61GGVUo=
-X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr31516692ots.118.1594297968822;
- Thu, 09 Jul 2020 05:32:48 -0700 (PDT)
+        bh=x5IYigd7pIKSSrbEnMvIeV6a7Vqif7u+D2HSo41lGhU=;
+        b=enMmzN1QrkpSIr+YVQvj97U+/8ACp0zaAN1iV8TuD5erH3R+ALxVS4g//B/Jz8tIQC
+         q7HDpxxxTWxP7o0Yk1oN4yEuLP6OCNqVKXviXszWDkkuS4cc3o7OWn9T9N3gxq6yZH5d
+         ta9/ymN3t0bJHtxffuA5X61+kgvVtrkE7V4lVBI1tLo+k6feFhzq4tBwQcXsrCT200VH
+         3vlW/8VP27mTlJpDJH9sWVaV+IcxNDfyHuXh7jEZIFeYsnPP03m3JaBtTmQ4Sculalad
+         3Ra/3QO9wzsYIAj7WZpfNO2FdFWDkPk22bIbsop7Z/oFzzZePykGRCF+Pcqa3b4Z8PEj
+         zJ/Q==
+X-Gm-Message-State: AOAM530Hx1+/H2gEptwvqzJWor9jEeFrBQz6+lXMjNas2SWrE/qDlzeY
+        p5q3Cqfl4AjC2VupM0j0PWw0i4wE6jZ47x50G38=
+X-Google-Smtp-Source: ABdhPJzWJWis0JLUfIJyrHpl6NnU1NjyVYWSPb1ZFECBJzHx+EPtrlenvEZH4IDYqDdjgypr786ACCxhqba5c+Csqek=
+X-Received: by 2002:a05:6402:b9b:: with SMTP id cf27mr71766876edb.84.1594309413925;
+ Thu, 09 Jul 2020 08:43:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200706095224.2285480-1-zhe.he@windriver.com>
-In-Reply-To: <20200706095224.2285480-1-zhe.he@windriver.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 Jul 2020 14:32:37 +0200
-Message-ID: <CAJZ5v0hVkW2kSsLu016AjX_jWCxzTBKorXp95ojfEYQ44heLxw@mail.gmail.com>
-Subject: Re: [PATCH] freezer: Add unsafe versions of freezable_schedule_timeout_interruptible
- for NFS
-To:     zhe.he@windriver.com
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-nfs@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20200708210514.84671-1-olga.kornievskaia@gmail.com> <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
+In-Reply-To: <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 9 Jul 2020 11:43:23 -0400
+Message-ID: <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 11:57 AM <zhe.he@windriver.com> wrote:
+On Thu, Jul 9, 2020 at 8:08 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
 >
-> From: He Zhe <zhe.he@windriver.com>
+> Hi Olga
 >
-> commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed operations")
-> introduces nfs4_delay_interruptible which also needs an _unsafe version to
-> avoid the following call trace for the same reason explained in
-> commit 416ad3c9c006 ("freezer: add unsafe versions of freezable helpers for NFS")
+> On Wed, 2020-07-08 at 17:05 -0400, Olga Kornievskaia wrote:
+> > Current behaviour: every time a v3 operation is re-sent to the server
+> > we update (double) the timeout. There is no distinction between
+> > whether
+> > or not the previous timer had expired before the re-sent happened.
+> >
+> > Here's the scenario:
+> > 1. Client sends a v3 operation
+> > 2. Server RST-s the connection (prior to the timeout) (eg.,
+> > connection
+> > is immediately reset)
+> > 3. Client re-sends a v3 operation but the timeout is now 120sec.
+> >
+> > As a result, an application sees 2mins pause before a retry in case
+> > server again does not reply.
+> >
+> > Instead, this patch proposes to keep track off when the minor timeout
+> > should happen and if it didn't, then don't update the new timeout.
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  include/linux/sunrpc/xprt.h |  1 +
+> >  net/sunrpc/xprt.c           | 11 +++++++++++
+> >  2 files changed, 12 insertions(+)
+> >
+> > diff --git a/include/linux/sunrpc/xprt.h
+> > b/include/linux/sunrpc/xprt.h
+> > index e64bd82..a603d48 100644
+> > --- a/include/linux/sunrpc/xprt.h
+> > +++ b/include/linux/sunrpc/xprt.h
+> > @@ -101,6 +101,7 @@ struct rpc_rqst {
+> >                                                        * used in the
+> > softirq.
+> >                                                        */
+> >       unsigned long           rq_majortimeo;  /* major timeout
+> > alarm */
+> > +     unsigned long           rq_minortimeo;  /* minor timeout
+> > alarm */
+> >       unsigned long           rq_timeout;     /* Current timeout
+> > value */
+> >       ktime_t                 rq_rtt;         /* round-trip time */
+> >       unsigned int            rq_retries;     /* # of retries */
+> > diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+> > index d5cc5db..c0ce232 100644
+> > --- a/net/sunrpc/xprt.c
+> > +++ b/net/sunrpc/xprt.c
+> > @@ -607,6 +607,11 @@ static void xprt_reset_majortimeo(struct
+> > rpc_rqst *req)
+> >       req->rq_majortimeo += xprt_calc_majortimeo(req);
+> >  }
+> >
+> > +static void xprt_reset_minortimeo(struct rpc_rqst *req)
+> > +{
+> > +     req->rq_minortimeo = jiffies + req->rq_timeout;
+> > +}
+> > +
+> >  static void xprt_init_majortimeo(struct rpc_task *task, struct
+> > rpc_rqst *req)
+> >  {
+> >       unsigned long time_init;
+> > @@ -618,6 +623,7 @@ static void xprt_init_majortimeo(struct rpc_task
+> > *task, struct rpc_rqst *req)
+> >               time_init = xprt_abs_ktime_to_jiffies(task->tk_start);
+> >       req->rq_timeout = task->tk_client->cl_timeout->to_initval;
+> >       req->rq_majortimeo = time_init + xprt_calc_majortimeo(req);
+> > +     req->rq_minortimeo = time_init + req->rq_timeout;
+> >  }
+> >
+> >  /**
+> > @@ -631,6 +637,10 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
+> >       const struct rpc_timeout *to = req->rq_task->tk_client-
+> > >cl_timeout;
+> >       int status = 0;
+> >
+> > +     if (time_before(jiffies, req->rq_minortimeo)) {
+> > +             xprt_reset_minortimeo(req);
+> > +             return status;
 >
-> CPU: 4 PID: 3968 Comm: rm Tainted: G W 5.8.0-rc4 #1
-> Hardware name: Marvell OcteonTX CN96XX board (DT)
-> Call trace:
-> dump_backtrace+0x0/0x1dc
-> show_stack+0x20/0x30
-> dump_stack+0xdc/0x150
-> debug_check_no_locks_held+0x98/0xa0
-> nfs4_delay_interruptible+0xd8/0x120
-> nfs4_handle_exception+0x130/0x170
-> nfs4_proc_rmdir+0x8c/0x220
-> nfs_rmdir+0xa4/0x360
-> vfs_rmdir.part.0+0x6c/0x1b0
-> do_rmdir+0x18c/0x210
-> __arm64_sys_unlinkat+0x64/0x7c
-> el0_svc_common.constprop.0+0x7c/0x110
-> do_el0_svc+0x24/0xa0
-> el0_sync_handler+0x13c/0x1b8
-> el0_sync+0x158/0x180
->
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> Shouldn't this case be just returning without updating the timeout?
+> After all, this is the case where nothing has expired yet.
 
-Applied as 5.9 material with some edits in the subject, thanks!
+I think we perhaps should readjust the minor timeout every here but I
+can't figure out what the desired behaviour should be. When should we
+consider it's appropriate to double the timer. Consider the following:
 
-> ---
->  fs/nfs/nfs4proc.c       |  2 +-
->  include/linux/freezer.h | 14 ++++++++++++++
->  2 files changed, 15 insertions(+), 1 deletion(-)
+time1: v3 op sent
+time1+50s: server RSTs
+We check that it's not yet the minor timeout (time1+60s)
+time1+50s: v3 op re-sent  (say we don't reset the minor timeout to be
+current time+60s)
+time1+60s: server RSTs
+Client will resend the op but now it's past the initial minor timeout
+so the timeout will be doubled. Is that what we really want? Maybe it
+is.
+Say now the server RSTs the connection again (shortly after or in less
+than 60s), since we are not updating the minor timeout value, then the
+client will again modify the timeout before resending. Is that Ok?
+
+That's why my reasoning was that at every re-evaluation of the timeout
+value, we have the minor timeout set for current time+60s and we get
+an RST within it then we don't modify the timeout value.
+
+
 >
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index e32717fd1169..15ecfa474e37 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -414,7 +414,7 @@ static int nfs4_delay_interruptible(long *timeout)
->  {
->         might_sleep();
+> > +     }
+> >       if (time_before(jiffies, req->rq_majortimeo)) {
+> >               if (to->to_exponential)
+> >                       req->rq_timeout <<= 1;
+> > @@ -638,6 +648,7 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
+> >                       req->rq_timeout += to->to_increment;
+> >               if (to->to_maxval && req->rq_timeout >= to->to_maxval)
+> >                       req->rq_timeout = to->to_maxval;
+> > +             xprt_reset_minortimeo(req);
 >
-> -       freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
-> +       freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
->         if (!signal_pending(current))
->                 return 0;
->         return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
-> diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-> index 21f5aa0b217f..27828145ca09 100644
-> --- a/include/linux/freezer.h
-> +++ b/include/linux/freezer.h
-> @@ -207,6 +207,17 @@ static inline long freezable_schedule_timeout_interruptible(long timeout)
->         return __retval;
->  }
+> ...and then perhaps this can just be moved out of the time_before()
+> condition, since it looks to me as if we also want to reset req-
+> >rq_minortimeo when a major timeout occurs.
 >
-> +/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
-> +static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
-> +{
-> +       long __retval;
-> +
-> +       freezer_do_not_count();
-> +       __retval = schedule_timeout_interruptible(timeout);
-> +       freezer_count_unsafe();
-> +       return __retval;
-> +}
-> +
->  /* Like schedule_timeout_killable(), but should not block the freezer. */
->  static inline long freezable_schedule_timeout_killable(long timeout)
->  {
-> @@ -285,6 +296,9 @@ static inline void set_freezable(void) {}
->  #define freezable_schedule_timeout_interruptible(timeout)              \
->         schedule_timeout_interruptible(timeout)
+> >               req->rq_retries++;
+> >       } else {
+> >               req->rq_timeout = to->to_initval;
 >
-> +#define freezable_schedule_timeout_interruptible_unsafe(timeout)       \
-> +       schedule_timeout_interruptible(timeout)
-> +
->  #define freezable_schedule_timeout_killable(timeout)                   \
->         schedule_timeout_killable(timeout)
 >
 > --
-> 2.17.1
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
 >
