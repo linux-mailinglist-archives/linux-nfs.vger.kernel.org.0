@@ -2,348 +2,372 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB29921D792
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 15:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3720E21DB90
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 18:18:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgGMNw3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jul 2020 09:52:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48708 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729457AbgGMNw2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 09:52:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594648345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wa5Icptqb7T71SbcuwLLLwJyrVY6TntqquwoVLA719o=;
-        b=LEFy7Am0m4p8u/bPvEXzFVsKaLP5AxB4BcOWbGtJDl7K+PKqpbLeM2jGfquwzrqYu7D8jv
-        qNVTDEhVOJmFGnthyGd4dYfH6UpYkMRGxfRTxNMoqM14T+aN01TyGye4Al/yPLF6KuU2jx
-        YFqAcY37JU2AKEtSECi8PcBkEly1KEo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-obEmbkEgMYudQnNavemreg-1; Mon, 13 Jul 2020 09:52:22 -0400
-X-MC-Unique: obEmbkEgMYudQnNavemreg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3C03100CC8D;
-        Mon, 13 Jul 2020 13:52:21 +0000 (UTC)
-Received: from aion.usersys.redhat.com (ovpn-115-80.rdu2.redhat.com [10.10.115.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 885C873033;
-        Mon, 13 Jul 2020 13:52:21 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 2E87A1A0006; Mon, 13 Jul 2020 09:52:20 -0400 (EDT)
-Date:   Mon, 13 Jul 2020 09:52:20 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: avoid a NULL dereference in __cld_pipe_upcall()
-Message-ID: <20200713135220.GB4452@aion.usersys.redhat.com>
-References: <20200710203307.2545412-1-smayhew@redhat.com>
- <B6722AC5-A7DD-4EAF-B08A-45C12160D5DF@oracle.com>
- <20200713122955.GY4452@aion.usersys.redhat.com>
- <646E9DB3-0E48-4C2D-A921-69615EAEC940@oracle.com>
+        id S1729826AbgGMQSo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jul 2020 12:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729835AbgGMQSo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 12:18:44 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6F8C061755
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jul 2020 09:18:43 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id bm28so12185788edb.2
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jul 2020 09:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Y6rgte2El9t+6CDPRdvtPyDnRuhR6VQIPtQ359O8+w=;
+        b=J81pxXSufe59+3CTgQe4Vl4xwZYwWHshB9GFZNryYNFn4B+EQevZ0V8Hf6alsl7dcw
+         5Kwc/+qisH2jlDdcIkUqUOUltaBI+/plA/9QJ4MvQbqUb7AcEAKj+7PLW2VCKRO+e+qg
+         bBGQKoFjPOVnrWJQ1olXqZFlke1U9AMqDTaio7gnhnEc2SebanoTl1MKg2ngDpEWGHo2
+         p7UTcRKRjreVFIA8fCLJkTENAzrz8+G1rZoiMeoPKLxOE0XO97j2aXvmk3YbkBPdgYxm
+         e385fqpIEH+7sUEGxJrPU1agxKv1nLw23+DcwW0t35CZh0biKrf8zwNpbR3URPxWPAf4
+         AsWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Y6rgte2El9t+6CDPRdvtPyDnRuhR6VQIPtQ359O8+w=;
+        b=PmGQjvvbp1yO3ZtXKhr7UcofLROrnXlN9zVZqjRTL+vQG7nBsyx2NKNT+uf26/2cAq
+         gpvMmMair6FAwMiy/cnkVbT6ZX2tiXFyedy58d+6WbvKVNAwqELSxB4bFISK1Y8JjTlN
+         Xe6eu5V55MRu4PkS2g0S1/1RuJy7obBHYZqD1s2w0qdMCo0NfPs397UOXGMwZ5u8mHLk
+         QXRg+vjWlwPcr+P8r6kLhWSPl84XqY19Alt40p6xQb2a6TVRsmlnL0XxaJw1a+MTjjoN
+         cTjb95Kr4u4P6HFmGLy40CuCgMpuisj7jae/QYvVRNkRyPeZsowwa8Y0Q6TNr2Ar/ACi
+         xMYA==
+X-Gm-Message-State: AOAM5309r5WNhKG32/VTHyIpHTbqFcN0P0z/bh7kWoh7TvcCFwOIRtMe
+        SDPeh4rzxBSU2/BQh9gDVRYvF+kaWdJMxGL7TfM=
+X-Google-Smtp-Source: ABdhPJwP6ipVsqx/FOG+mLW2QN1wFTK/2Vw95RSelhhGSL7S4e3T/vQJwMR2fYy6z7GH/R/fL/AOYdvBU8BmycA4VSk=
+X-Received: by 2002:a05:6402:2065:: with SMTP id bd5mr169238edb.67.1594657122346;
+ Mon, 13 Jul 2020 09:18:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <646E9DB3-0E48-4C2D-A921-69615EAEC940@oracle.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=smayhew@aion.usersys.redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aion.usersys.redhat.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20200708210514.84671-1-olga.kornievskaia@gmail.com>
+ <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
+ <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
+ <3fe49121d027eaa3aa2263f24d76d72e750d8592.camel@hammerspace.com>
+ <CAN-5tyFD6XuZAZ3HAvfxyr7xLsvb-04hhe4PYvO_594ZQ0TuNw@mail.gmail.com>
+ <CAN-5tyHrd4dZEkO3CRrvcLv82Gy0fXERCPYSq0Snj3zBHh3gxw@mail.gmail.com>
+ <CAN-5tyEbQ7wiKDVXbwVrjkKS33CwJRhJXxe7RymPcRQfjQwRdA@mail.gmail.com> <b813dc046aa5c537e9c4e69c2ca02724100daf8d.camel@hammerspace.com>
+In-Reply-To: <b813dc046aa5c537e9c4e69c2ca02724100daf8d.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Mon, 13 Jul 2020 12:18:31 -0400
+Message-ID: <CAN-5tyG4PSOVu0ZWnA=eMrYFeF4-M3uJ9keXAJ8nr+=f01Eq=g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 13 Jul 2020, Chuck Lever wrote:
+On Mon, Jul 13, 2020 at 9:47 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> Hi Olga
+>
+> On Fri, 2020-07-10 at 14:40 -0400, Olga Kornievskaia wrote:
+> > On Fri, Jul 10, 2020 at 1:35 PM Olga Kornievskaia
+> > <olga.kornievskaia@gmail.com> wrote:
+> > > On Thu, Jul 9, 2020 at 5:07 PM Olga Kornievskaia
+> > > <olga.kornievskaia@gmail.com> wrote:
+> > > > On Thu, Jul 9, 2020 at 1:19 PM Trond Myklebust <
+> > > > trondmy@hammerspace.com> wrote:
+> > > > > On Thu, 2020-07-09 at 11:43 -0400, Olga Kornievskaia wrote:
+> > > > > > On Thu, Jul 9, 2020 at 8:08 AM Trond Myklebust <
+> > > > > > trondmy@hammerspace.com> wrote:
+> > > > > > > Hi Olga
+> > > > > > >
+> > > > > > > On Wed, 2020-07-08 at 17:05 -0400, Olga Kornievskaia wrote:
+> > > > > > > > Current behaviour: every time a v3 operation is re-sent
+> > > > > > > > to the
+> > > > > > > > server
+> > > > > > > > we update (double) the timeout. There is no distinction
+> > > > > > > > between
+> > > > > > > > whether
+> > > > > > > > or not the previous timer had expired before the re-sent
+> > > > > > > > happened.
+> > > > > > > >
+> > > > > > > > Here's the scenario:
+> > > > > > > > 1. Client sends a v3 operation
+> > > > > > > > 2. Server RST-s the connection (prior to the timeout)
+> > > > > > > > (eg.,
+> > > > > > > > connection
+> > > > > > > > is immediately reset)
+> > > > > > > > 3. Client re-sends a v3 operation but the timeout is now
+> > > > > > > > 120sec.
+> > > > > > > >
+> > > > > > > > As a result, an application sees 2mins pause before a
+> > > > > > > > retry in
+> > > > > > > > case
+> > > > > > > > server again does not reply.
+> > > > > > > >
+> > > > > > > > Instead, this patch proposes to keep track off when the
+> > > > > > > > minor
+> > > > > > > > timeout
+> > > > > > > > should happen and if it didn't, then don't update the new
+> > > > > > > > timeout.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > > ---
+> > > > > > > >  include/linux/sunrpc/xprt.h |  1 +
+> > > > > > > >  net/sunrpc/xprt.c           | 11 +++++++++++
+> > > > > > > >  2 files changed, 12 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/include/linux/sunrpc/xprt.h
+> > > > > > > > b/include/linux/sunrpc/xprt.h
+> > > > > > > > index e64bd82..a603d48 100644
+> > > > > > > > --- a/include/linux/sunrpc/xprt.h
+> > > > > > > > +++ b/include/linux/sunrpc/xprt.h
+> > > > > > > > @@ -101,6 +101,7 @@ struct rpc_rqst {
+> > > > > > > >                                                        *
+> > > > > > > > used in
+> > > > > > > > the
+> > > > > > > > softirq.
+> > > > > > > >                                                        */
+> > > > > > > >       unsigned long           rq_majortimeo;  /* major
+> > > > > > > > timeout
+> > > > > > > > alarm */
+> > > > > > > > +     unsigned long           rq_minortimeo;  /* minor
+> > > > > > > > timeout
+> > > > > > > > alarm */
+> > > > > > > >       unsigned long           rq_timeout;     /* Current
+> > > > > > > > timeout
+> > > > > > > > value */
+> > > > > > > >       ktime_t                 rq_rtt;         /* round-
+> > > > > > > > trip time
+> > > > > > > > */
+> > > > > > > >       unsigned int            rq_retries;     /* # of
+> > > > > > > > retries */
+> > > > > > > > diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+> > > > > > > > index d5cc5db..c0ce232 100644
+> > > > > > > > --- a/net/sunrpc/xprt.c
+> > > > > > > > +++ b/net/sunrpc/xprt.c
+> > > > > > > > @@ -607,6 +607,11 @@ static void
+> > > > > > > > xprt_reset_majortimeo(struct
+> > > > > > > > rpc_rqst *req)
+> > > > > > > >       req->rq_majortimeo += xprt_calc_majortimeo(req);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > +static void xprt_reset_minortimeo(struct rpc_rqst *req)
+> > > > > > > > +{
+> > > > > > > > +     req->rq_minortimeo = jiffies + req->rq_timeout;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > >  static void xprt_init_majortimeo(struct rpc_task *task,
+> > > > > > > > struct
+> > > > > > > > rpc_rqst *req)
+> > > > > > > >  {
+> > > > > > > >       unsigned long time_init;
+> > > > > > > > @@ -618,6 +623,7 @@ static void
+> > > > > > > > xprt_init_majortimeo(struct
+> > > > > > > > rpc_task
+> > > > > > > > *task, struct rpc_rqst *req)
+> > > > > > > >               time_init = xprt_abs_ktime_to_jiffies(task-
+> > > > > > > > > tk_start);
+> > > > > > > >       req->rq_timeout = task->tk_client->cl_timeout-
+> > > > > > > > >to_initval;
+> > > > > > > >       req->rq_majortimeo = time_init +
+> > > > > > > > xprt_calc_majortimeo(req);
+> > > > > > > > +     req->rq_minortimeo = time_init + req->rq_timeout;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  /**
+> > > > > > > > @@ -631,6 +637,10 @@ int xprt_adjust_timeout(struct
+> > > > > > > > rpc_rqst
+> > > > > > > > *req)
+> > > > > > > >       const struct rpc_timeout *to = req->rq_task-
+> > > > > > > > >tk_client-
+> > > > > > > > > cl_timeout;
+> > > > > > > >       int status = 0;
+> > > > > > > >
+> > > > > > > > +     if (time_before(jiffies, req->rq_minortimeo)) {
+> > > > > > > > +             xprt_reset_minortimeo(req);
+> > > > > > > > +             return status;
+> > > > > > >
+> > > > > > > Shouldn't this case be just returning without updating the
+> > > > > > > timeout?
+> > > > > > > After all, this is the case where nothing has expired yet.
+> > > > > >
+> > > > > > I think we perhaps should readjust the minor timeout every
+> > > > > > here but I
+> > > > > > can't figure out what the desired behaviour should be. When
+> > > > > > should we
+> > > > > > consider it's appropriate to double the timer. Consider the
+> > > > > > following:
+> > > > > >
+> > > > > > time1: v3 op sent
+> > > > > > time1+50s: server RSTs
+> > > > > > We check that it's not yet the minor timeout (time1+60s)
+> > > > > > time1+50s: v3 op re-sent  (say we don't reset the minor
+> > > > > > timeout to be
+> > > > > > current time+60s)
+> > > > > > time1+60s: server RSTs
+> > > > > > Client will resend the op but now it's past the initial minor
+> > > > > > timeout
+> > > > > > so the timeout will be doubled. Is that what we really want?
+> > > > > > Maybe it
+> > > > > > is.
+> > > > > > Say now the server RSTs the connection again (shortly after
+> > > > > > or in
+> > > > > > less
+> > > > > > than 60s), since we are not updating the minor timeout value,
+> > > > > > then
+> > > > > > the
+> > > > > > client will again modify the timeout before resending. Is
+> > > > > > that Ok?
+> > > > > >
+> > > > > > That's why my reasoning was that at every re-evaluation of
+> > > > > > the
+> > > > > > timeout
+> > > > > > value, we have the minor timeout set for current time+60s and
+> > > > > > we get
+> > > > > > an RST within it then we don't modify the timeout value.
+> > > > >
+> > > > > So a couple of issues with that:
+> > > > >
+> > > > > The first is that a series of RST calls could cause the timeout
+> > > > > to get
+> > > > > pushed to the max value fairly quickly (btw,
+> > > > > xprt_reset_minortimeo()
+> > > > > does not enforce a limit right now).
+> > > > >
+> > > > > The second is that we end up pushing out the major timeout
+> > > > > value, since
+> > > > > the major timeout cannot occur unless the value of jiffies is
+> > > > > after the
+> > > > > minor timeout (which keeps changing on each pass).
+> > > >
+> > > > But dont we want to push out the major timeout?
+> > > >
+> > > > Actually i think, back in my example of getting the RST, at
+> > > > (time1+50s). shouldn't minor_timeo and majortimeo be reset to
+> > > > currenttime+appropriate value of minor/major?  If we are
+> > > > evaluating
+> > > > the timer and the time difference between when the operation was
+> > > > sent
+> > > > and now is less than 60s, we shouldn't say a timeout has
+> > > > occurried
+> > > > (it's a pre-mature timeout) and thus its value shouldn't be
+> > > > modified.
+> > > >
+> > > > Thoughts?
+> > >
+> > > Do you feel that the following approach is incorrect? Sry it's just
+> > > cut-and-paste but the logic is there. Thank you.
+> >
+> > Scratch this... So with this we'd never timeout an operation at all.
+>
+> I think the ideal solution would respect the fact that most sysadmins
+> who read the nfs manpage assume that timeouts are a predictable
+> feature, and that if I set timeo=600, retrans=2, for a TCP mount, then
+> the minor timeouts will occur 60s, and 180s (60+120) after the RPC call
+> was initially attempted sent, and then the first major timeout will
+> occur 360s (60+120+180) after the RPC call was initially attempted
+> sent.
+> i.e. the timeouts are calculated relative to the time at which the RPC
+> call was initially attempted transmitted.
+>
+> If we start extending any one of those timeouts, then things like soft
+> mounts become unpredictable, and we no longer control when the EIO is
+> going to be reported to the application. This has been a source of
+> complaints from users in the past.
 
->=20
->=20
-> > On Jul 13, 2020, at 8:29 AM, Scott Mayhew <smayhew@redhat.com> wrote:
-> >=20
-> > On Sun, 12 Jul 2020, Chuck Lever wrote:
-> >=20
-> >> Hi Scott-
-> >>=20
-> >>> On Jul 10, 2020, at 4:33 PM, Scott Mayhew <smayhew@redhat.com> wrote:
-> >>>=20
-> >>> If the rpc_pipefs is unmounted, then the rpc_pipe->dentry becomes NUL=
-L
-> >>> and dereferencing the dentry->d_sb will trigger an oops.  The only
-> >>> reason we're doing that is to determine the nfsd_net, which could
-> >>> instead be passed in by the caller.  So do that instead.
-> >>>=20
-> >>> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> >>=20
-> >> Looks straightforward. Applied to the nfsd-5.9 testing tree.
-> >>=20
-> >> I'm wondering about automatic backports to stable. This fix does not
-> >> apply to kernels before v5.6, but IIUC addresses a crash introduced
-> >> in f3f8014862d8 ("nfsd: add the infrastructure to handle the cld upcal=
-l")
-> >> [2012] ?
-> >>=20
-> >> Is "Cc: <stable@kernel.org> # v5.6+" appropriate?
-> >>=20
-> > I think it would be 11a60d159259 ("nfsd: add a "GetVersion" upcall for
-> > nfsdcld"), so it would only need to go back to v5.4... and to get the
-> > patch to apply, in the hunk that modifies nfsd4_cld_grace_done_v0()
-> > you would need to add a cast of nn->boot_time to int64_t (which
-> > 9cc7680149b2 "nfsd: make 'boot_time' 64-bit wide" removed).
->=20
-> Thanks for the detailed background!
->=20
-> Then instead of "Cc: stable", can I add:
->=20
-> Fixes: 11a60d159259 ("nfsd: add a "GetVersion" upcall for nfsdcld") ?
+Thanks Trond. I re-submitted the patch with your initial suggestion.
 
-Yes, please do that.
 
->=20
->=20
-> >> Also, is there a bug report that documents the crash?
-> >=20
-> > Our QE hit the crash internally while running xfstests on a pNFS SCSI
-> > setup.  I don't think either of those is relevant aside from the fact
-> > that several nfsd threads where stuck on xfs while calling
-> > nfsd4_scsi_proc_layoutcommit().  I think what happened is that the job
-> > timed out and the system was in the process of being shut down when the
-> > oops occurred, and the rpc_pipefs was unmounted out from under nfsd:
-> >=20
-> > crash> bt
-> > PID: 39572  TASK: ffff8a78f67fddc0  CPU: 1   COMMAND: "kworker/u4:0"
-> > #0 [ffffa39a026b3ae0] machine_kexec at ffffffffae65b55e
-> > #1 [ffffa39a026b3b38] __crash_kexec at ffffffffae75ea5d
-> > #2 [ffffa39a026b3c00] crash_kexec at ffffffffae75f93d
-> > #3 [ffffa39a026b3c18] oops_end at ffffffffae622c4d
-> > #4 [ffffa39a026b3c38] no_context at ffffffffae66aa2e
-> > #5 [ffffa39a026b3c90] do_page_fault at ffffffffae66b552
-> > #6 [ffffa39a026b3cc0] async_page_fault at ffffffffaf00123e
-> >    [exception RIP: __cld_pipe_upcall+0x3d]
-> >    RIP: ffffffffc06b5ded  RSP: ffffa39a026b3d70  RFLAGS: 00010246
-> >    RAX: 0000000000000000  RBX: ffff8a78ceaf7000  RCX: 000000000000000b
-> >    RDX: ffff8a78ceaf7000  RSI: ffffa39a026b3d70  RDI: ffffa39a026b3d70
-> >    RBP: ffffa39a026b3dc0   R8: ffff8a78f37aac50   R9: ffff8a78c7c02800
-> >    R10: 8080808080808080  R11: 0000ec193f7575c0  R12: ffff8a78c8ef3038
-> >    R13: ffff8a78d3156220  R14: ffffa39a026b3e50  R15: ffff8a78d3156220
-> >    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> > #7 [ffffa39a026b3dc8] nfsd4_cld_remove at ffffffffc06b7b70 [nfsd]
-> > #8 [ffffa39a026b3df8] expire_client at ffffffffc06aa4d6 [nfsd]
-> > #9 [ffffa39a026b3e08] laundromat_main at ffffffffc06aa799 [nfsd]
-> > #10 [ffffa39a026b3e98] process_one_work at ffffffffae6d1cf7
-> > #11 [ffffa39a026b3ed8] worker_thread at ffffffffae6d23c0
-> > #12 [ffffa39a026b3f10] kthread at ffffffffae6d7d02
-> > #13 [ffffa39a026b3f50] ret_from_fork at ffffffffaf000255
-> >=20
-> > crash> dis -lr __cld_pipe_upcall+0x3d
-> > ...
-> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
-d/nfs4recover.c: 764
-> > 0xffffffffc06b5de0 <__cld_pipe_upcall+0x30>:    mov    0x108(%rdi),%rax
-> > 0xffffffffc06b5de7 <__cld_pipe_upcall+0x37>:    mov    %rsp,%rsi
-> > 0xffffffffc06b5dea <__cld_pipe_upcall+0x3a>:    mov    %rsi,%rdi
-> > 0xffffffffc06b5ded <__cld_pipe_upcall+0x3d>:    mov    0x68(%rax),%rax
-> >=20
-> > That puts us here:
-> >=20
-> > static int
-> > __cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
-> > {
-> >        int ret;
-> >        struct rpc_pipe_msg msg;
-> >        struct cld_upcall *cup =3D container_of(cmsg, struct cld_upcall,=
- cu_u);
-> >        struct nfsd_net *nn =3D net_generic(pipe->dentry->d_sb->s_fs_inf=
-o,
-> >                                          nfsd_net_id);
-> > ...
-> > crash> rpc_pipe.dentry -o
-> > struct rpc_pipe {
-> >  [0x108] struct dentry *dentry;
-> > }
-> > crash> dentry.d_sb -o
-> > struct dentry {
-> >  [0x68] struct super_block *d_sb;
-> > }
-> >=20
-> > If the rpc_pipe->dentry was NULL, that would explain the NULL pointer d=
-ereference at 0000000000000068.  Let's confirm.
-> >=20
-> > crash> dis -lr ffffffffc06b7b70
-> > ...
-> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
-d/nfs4recover.c: 794
-> > 0xffffffffc06b7b65 <nfsd4_cld_remove+0x85>:     mov    %rbp,%rsi
-> > 0xffffffffc06b7b68 <nfsd4_cld_remove+0x88>:     mov    %rbx,%rdi <-----=
--------------------------rpc_pipe
-> > 0xffffffffc06b7b6b <nfsd4_cld_remove+0x8b>:     callq  0xffffffffc06b5d=
-b0 <__cld_pipe_upcall>
-> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
-d/nfs4recover.c: 795
-> > 0xffffffffc06b7b70 <nfsd4_cld_remove+0x90>:     cmp    $0xfffffff5,%eax
-> >=20
-> > crash> rpc_pipe.dentry ffff8a78ceaf7000
-> >  dentry =3D 0x0
-> >=20
-> > We can also see that the rpc_pipefs isn't mounted:
-> >=20
-> > crash> mount|grep pipefs
-> > (nothing)
-> >=20
-> > And none of the daemons that require the rpc_pipefs are running:
-> >=20
-> > crash> ps|grep nfsdcld
-> > crash> ps|grep idmapd
-> > crash> ps|grep gssd
-> > crash> ps|grep blkmapd
-> > (nothing)
-> >=20
-> > I think part of the problem is that the nfsdcld.service unit file has
-> > "Requires=3Drpc_pipefs.target", but the nfs-server.service unit file on=
-ly
-> > has "Wants=3Dnfsdcld.service".  It can't be "Requires" because using th=
-e
-> > nfsdcld daemon for client tracking is optional.
-> >=20
-> > -Scott
-> >=20
-> >>=20
-> >>=20
-> >>> ---
-> >>> fs/nfsd/nfs4recover.c | 24 +++++++++++-------------
-> >>> 1 file changed, 11 insertions(+), 13 deletions(-)
-> >>>=20
-> >>> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> >>> index 9e40dfecf1b1..186fa2c2c6ba 100644
-> >>> --- a/fs/nfsd/nfs4recover.c
-> >>> +++ b/fs/nfsd/nfs4recover.c
-> >>> @@ -747,13 +747,11 @@ struct cld_upcall {
-> >>> };
-> >>>=20
-> >>> static int
-> >>> -__cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
-> >>> +__cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg, struct nfsd_net=
- *nn)
-> >>> {
-> >>> =09int ret;
-> >>> =09struct rpc_pipe_msg msg;
-> >>> =09struct cld_upcall *cup =3D container_of(cmsg, struct cld_upcall, c=
-u_u);
-> >>> -=09struct nfsd_net *nn =3D net_generic(pipe->dentry->d_sb->s_fs_info=
-,
-> >>> -=09=09=09=09=09  nfsd_net_id);
-> >>>=20
-> >>> =09memset(&msg, 0, sizeof(msg));
-> >>> =09msg.data =3D cmsg;
-> >>> @@ -773,7 +771,7 @@ __cld_pipe_upcall(struct rpc_pipe *pipe, void *cm=
-sg)
-> >>> }
-> >>>=20
-> >>> static int
-> >>> -cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
-> >>> +cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg, struct nfsd_net *=
-nn)
-> >>> {
-> >>> =09int ret;
-> >>>=20
-> >>> @@ -782,7 +780,7 @@ cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg=
-)
-> >>> =09 *  upcalls queued.
-> >>> =09 */
-> >>> =09do {
-> >>> -=09=09ret =3D __cld_pipe_upcall(pipe, cmsg);
-> >>> +=09=09ret =3D __cld_pipe_upcall(pipe, cmsg, nn);
-> >>> =09} while (ret =3D=3D -EAGAIN);
-> >>>=20
-> >>> =09return ret;
-> >>> @@ -1115,7 +1113,7 @@ nfsd4_cld_create(struct nfs4_client *clp)
-> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
-> >>> =09=09=09clp->cl_name.len);
-> >>>=20
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret) {
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
-> >>> @@ -1180,7 +1178,7 @@ nfsd4_cld_create_v2(struct nfs4_client *clp)
-> >>> =09} else
-> >>> =09=09cmsg->cm_u.cm_clntinfo.cc_princhash.cp_len =3D 0;
-> >>>=20
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, cmsg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, cmsg, nn);
-> >>> =09if (!ret) {
-> >>> =09=09ret =3D cmsg->cm_status;
-> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
-> >>> @@ -1218,7 +1216,7 @@ nfsd4_cld_remove(struct nfs4_client *clp)
-> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
-> >>> =09=09=09clp->cl_name.len);
-> >>>=20
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret) {
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>> =09=09clear_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
-> >>> @@ -1261,7 +1259,7 @@ nfsd4_cld_check_v0(struct nfs4_client *clp)
-> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
-> >>> =09=09=09clp->cl_name.len);
-> >>>=20
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret) {
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
-> >>> @@ -1404,7 +1402,7 @@ nfsd4_cld_grace_start(struct nfsd_net *nn)
-> >>> =09}
-> >>>=20
-> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceStart;
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret)
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>>=20
-> >>> @@ -1432,7 +1430,7 @@ nfsd4_cld_grace_done_v0(struct nfsd_net *nn)
-> >>>=20
-> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceDone;
-> >>> =09cup->cu_u.cu_msg.cm_u.cm_gracetime =3D nn->boot_time;
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret)
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>>=20
-> >>> @@ -1460,7 +1458,7 @@ nfsd4_cld_grace_done(struct nfsd_net *nn)
-> >>> =09}
-> >>>=20
-> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceDone;
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret)
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>>=20
-> >>> @@ -1524,7 +1522,7 @@ nfsd4_cld_get_version(struct nfsd_net *nn)
-> >>> =09=09goto out_err;
-> >>> =09}
-> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GetVersion;
-> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
-> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
-> >>> =09if (!ret) {
-> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
-> >>> =09=09if (ret)
-> >>> --=20
-> >>> 2.25.4
-> >>>=20
-> >>=20
-> >> --
-> >> Chuck Lever
->=20
+> > > diff --git a/include/linux/sunrpc/xprt.h
+> > > b/include/linux/sunrpc/xprt.h
+> > > index e64bd82..a603d48 100644
+> > > --- a/include/linux/sunrpc/xprt.h
+> > > +++ b/include/linux/sunrpc/xprt.h
+> > > @@ -101,6 +101,7 @@ struct rpc_rqst {
+> > >   * used in the softirq.
+> > >   */
+> > >   unsigned long rq_majortimeo; /* major timeout alarm */
+> > > + unsigned long rq_minortimeo; /* minor timeout alarm */
+> > >   unsigned long rq_timeout; /* Current timeout value */
+> > >   ktime_t rq_rtt; /* round-trip time */
+> > >   unsigned int rq_retries; /* # of retries */
+> > > diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+> > > index d5cc5db..66d412b 100644
+> > > --- a/net/sunrpc/xprt.c
+> > > +++ b/net/sunrpc/xprt.c
+> > > @@ -607,6 +607,11 @@ static void xprt_reset_majortimeo(struct
+> > > rpc_rqst *req)
+> > >   req->rq_majortimeo += xprt_calc_majortimeo(req);
+> > >  }
+> > >
+> > > +static void xprt_reset_minortimeo(struct rpc_rqst *req)
+> > > +{
+> > > + req->rq_minortimeo = jiffies + req->rq_timeout;
+> > > +}
+> > > +
+> > >  static void xprt_init_majortimeo(struct rpc_task *task, struct
+> > > rpc_rqst *req)
+> > >  {
+> > >   unsigned long time_init;
+> > > @@ -618,6 +623,7 @@ static void xprt_init_majortimeo(struct
+> > > rpc_task
+> > > *task, struct rpc_rqst *req)
+> > >   time_init = xprt_abs_ktime_to_jiffies(task->tk_start);
+> > >   req->rq_timeout = task->tk_client->cl_timeout->to_initval;
+> > >   req->rq_majortimeo = time_init + xprt_calc_majortimeo(req);
+> > > + req->rq_minortimeo = time_init + req->rq_timeout;
+> > >  }
+> > >
+> > >  /**
+> > > @@ -631,6 +637,11 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
+> > >   const struct rpc_timeout *to = req->rq_task->tk_client-
+> > > >cl_timeout;
+> > >   int status = 0;
+> > >
+> > > + if (time_before(jiffies, req->rq_minortimeo)) {
+> > > + req->rq_majortimeo = jiffies + xprt_calc_majortimeo(req);
+> > > + req->rq_minortimeo = jiffies + req->rq_timeout;
+> > > + return status;
+> > > + }
+> > >   if (time_before(jiffies, req->rq_majortimeo)) {
+> > >   if (to->to_exponential)
+> > >   req->rq_timeout <<= 1;
+> > > @@ -649,6 +660,7 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
+> > >   spin_unlock(&xprt->transport_lock);
+> > >   status = -ETIMEDOUT;
+> > >   }
+> > > + xprt_reset_minortimeo(req);
+> > >
+> > >   if (req->rq_timeout == 0) {
+> > >   printk(KERN_WARNING "xprt_adjust_timeout: rq_timeout = 0!\n");
+> > > --
+> > >
+> > > > > > > > +     }
+> > > > > > > >       if (time_before(jiffies, req->rq_majortimeo)) {
+> > > > > > > >               if (to->to_exponential)
+> > > > > > > >                       req->rq_timeout <<= 1;
+> > > > > > > > @@ -638,6 +648,7 @@ int xprt_adjust_timeout(struct
+> > > > > > > > rpc_rqst *req)
+> > > > > > > >                       req->rq_timeout += to-
+> > > > > > > > >to_increment;
+> > > > > > > >               if (to->to_maxval && req->rq_timeout >= to-
+> > > > > > > > > to_maxval)
+> > > > > > > >                       req->rq_timeout = to->to_maxval;
+> > > > > > > > +             xprt_reset_minortimeo(req);
+> > > > > > >
+> > > > > > > ...and then perhaps this can just be moved out of the
+> > > > > > > time_before()
+> > > > > > > condition, since it looks to me as if we also want to reset
+> > > > > > > req-
+> > > > > > > > rq_minortimeo when a major timeout occurs.
+> > > > > > > >               req->rq_retries++;
+> > > > > > > >       } else {
+> > > > > > > >               req->rq_timeout = to->to_initval;
+> > > > >
 > --
-> Chuck Lever
->=20
->=20
->=20
-
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
