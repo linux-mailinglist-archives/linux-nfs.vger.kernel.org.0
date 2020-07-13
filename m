@@ -2,415 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 444AA21DDA1
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 18:40:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1717A21DE44
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 19:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgGMQjt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jul 2020 12:39:49 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52895 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730386AbgGMQjn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 12:39:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594658380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZltF3kTtRDCqeiMAKnWdkROIh1F0y4ZuBnVQ0RqDrdI=;
-        b=LdVtWo+RCJIB9mO1BUDEkea7cw2nwLNbT4D/S/tYQPRQZFrH9VBbqVpf7p4uuucVoT5Kpo
-        TWuTaI/jDbU1Rs5dQp4Co+H7BfFFsownOa9k8aIQYt/705gxE+0dzMd9TWtSB4JdkvWoPi
-        aqEqgE0XLzLj7F18PEpGvV1l8VukTco=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-HML89eGQOUm5MGBgYTDxLA-1; Mon, 13 Jul 2020 12:39:39 -0400
-X-MC-Unique: HML89eGQOUm5MGBgYTDxLA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46AE7800400;
-        Mon, 13 Jul 2020 16:39:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FF2072E41;
-        Mon, 13 Jul 2020 16:39:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 13/13] afs: Add O_DIRECT read support
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:39:30 +0100
-Message-ID: <159465837067.1377938.13569650454944979305.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
-References: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
-MIME-Version: 1.0
+        id S1729764AbgGMRKW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jul 2020 13:10:22 -0400
+Received: from mail-dm6nam12on2100.outbound.protection.outlook.com ([40.107.243.100]:30977
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729659AbgGMRKV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 13 Jul 2020 13:10:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YACDf1NR04myBqeU4hvTSktU3lCdRLdNhGJfE6m9OqTKhz0iNwbPJ8L4FhYsODV5ZbW7l8GKRt/HWIwEuqkQtgP8ZOifJfdoUWJftBd51fgo8Ud5gyp5+TXH0Ty4oJpBbLt3lhxTCzbW03oVQkQzQ90sijzPS4qJm+otPpdJPL8IgPCaozPRXQc/tf/Mx4sUfIt+XllHQjAQsGdZiLCQhPQ7EnMxKuCWDvDIpteYzS6loaA6anNa2grGyneuRLkSgpxq8rBN0RXm+4uSlptNsewZxdrWa1jfWyQL9/aY7NiQkCoxQRIOzP9ygTDMW0NX4/GAN7lD3JmA5YvDX/3bWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5OxI+X0U6nsfqPFFZ87LvBndzYID/ttC/qUfU1noEAk=;
+ b=Pptj4DvlBMuxe9WjFCiWNp4jKsmHrsvHdSUaQk+nPrj8jxyq+Uf4g8dDtBue4J7AeVelCwFT7Hx03sQDQf+RqdwmFdWcvIm7hxx0u9ej5f9lGvaiR6Jws5BJohcuectFs5nt9BsQTUr8SP7eHuKW+an2+Uu/lBw9iRpyGGCyViW8s3wunen6yLNSpiJVeb3C2pmB42Cu07/k2cBlmxIYouLBz16RiPKngLv7qprJtmHENi+lacKu+Bd+EUHG1AYGn3Lfr6Emb/bY9lFZAZCiKiI+dJyLQ8rTh553t1b5QUiy9g9Igq7k0YiM0ywJDSFQ0Wwka1OTNmiFN6tLogvmrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5OxI+X0U6nsfqPFFZ87LvBndzYID/ttC/qUfU1noEAk=;
+ b=K+XR5aClQ0AiX4TDkzVeLTW5sy1Dk1+Lns/FasaOETdm72NYRvgN1abD8xWU7qgJa4mY5vuVn2KYDq2Pp8v6lJUUmI9+M2Cy0buVUAkegachpShC2291QdUTll3KbiK3BcJpseOg41o1f2iADahvW8nkm21DKbO8JFEdZiMQQ5U=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3447.namprd13.prod.outlook.com (2603:10b6:610:21::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10; Mon, 13 Jul
+ 2020 17:10:17 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::352c:f318:f4a7:6a0f]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::352c:f318:f4a7:6a0f%3]) with mapi id 15.20.3195.017; Mon, 13 Jul 2020
+ 17:10:17 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] SUNRPC dont update timeout value on connection
+ reset
+Thread-Topic: [PATCH v2 1/1] SUNRPC dont update timeout value on connection
+ reset
+Thread-Index: AQHWWTEI4Pb0YBP7ekKdEYT3RCfTrakFvpIA
+Date:   Mon, 13 Jul 2020 17:10:17 +0000
+Message-ID: <593f2f82f09b6f0eda01f7980bb9ea9bb179c628.camel@hammerspace.com>
+References: <20200713161842.90553-1-olga.kornievskaia@gmail.com>
+In-Reply-To: <20200713161842.90553-1-olga.kornievskaia@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: netapp.com; dkim=none (message not signed)
+ header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28142d74-341d-40ea-79ef-08d8274f9dfb
+x-ms-traffictypediagnostic: CH2PR13MB3447:
+x-microsoft-antispam-prvs: <CH2PR13MB3447EDEE1A5DF9CA7DE8543FB8600@CH2PR13MB3447.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j1/PbFYsViW5Wjuoqge4TgEAxlIRTFFFejEnyZgr6YIBFOlIjbAmcQ2dC9oQX1bXJUNA+ddkM419xMvwxXtQyvWgKYmVJ1YWD0x32lGF0wkv++ykKc7xS9Z7jZX1ylHS+P4PsTSTxD+tnac15THZByGJYo4I3HUqpIwRBWSwqXmhi3JNYoGa8Rh3g6Nvp/fQiIr3kVc5IJSZmTRQxOInHgYmBfZ9XzesixFGQGyVdnxThfPcG2G1oLIGUP4MEgM+LQauBYcafcgJyNO7MWOkhh/FVbQlEkovfeyoUKUVVUvbKkbokb28e9KzR5EGaA3q6PibpRIgpnPDVnkbCTkYfhIZEfNuHMKXoI1clu8QVsir/2LzJ48NWld//UChqJpF
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(39830400003)(136003)(396003)(346002)(4326008)(5660300002)(186003)(6512007)(2906002)(478600001)(71200400001)(26005)(2616005)(8936002)(6486002)(66556008)(66446008)(110136005)(8676002)(64756008)(66476007)(86362001)(66946007)(6506007)(76116006)(83380400001)(316002)(36756003)(15650500001)(192303002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: xJxUh+Ki+Tg2al5YFoNGKVr1xrfk8V8xm9mjxXGoWGiHGFXLJ7VNfS3Cfxiy8DseB8/LvazhdgFqY68LnXnsa3wWpjRMMRtMWJ3GbRhK9ycJ8NllFvwpJ3YKpr5KI5g6KP9g5IOWXFVjUlkoz+Mmad66PjWnPzn4pODnoWiSlvr1OsSxUbXQTXs/gd7hpYIVQrUbmENZNxSNvOKl8gslH4odh5DbHTizH1UH/GjLPa9w2CyYfIihq+nNmhtNFZJFja+Zg+oWMCTobgsU/HR8er4N47N/MhGPuW5EH8ohABTrbzKPPkqQ0EL9pgWQAIj3c1VuQkGTY3NwLOynIS0fllfTvWTvxjfg0RbY+WwXsGTN8Ujw+fEOnWnsogn+0EGj0fwcSUxf3+xq64ffpkq+tptTUzSTfwwnPqbdFmfiMVvLHqxjqverbSMiGGVbYmSSFRmCvUbf7M/MorudeeFkfAf/HKU81FrzO7Egl8FosIA=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-ID: <DF0596E24D12044D8A3903A70B780857@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28142d74-341d-40ea-79ef-08d8274f9dfb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 17:10:17.7769
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MXcnwwpn/rNivtE0nNNJ8r8IEWv6I14bOJdHfwyxVQEpUnhzWmpYZLC8F9H+9smJ25Koo93MN181hJbjEULLeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3447
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add synchronous O_DIRECT read support to AFS (no AIO yet).  It can
-theoretically handle reads up to the maximum size describable by loff_t -
-and given an iterator with sufficiently capacity to handle that and given
-support on the server.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/file.c      |   59 +++++++++++++++++++++++++++++++++++++++
- fs/afs/fsclient.c  |   18 +++++++++---
- fs/afs/internal.h  |    2 +
- fs/afs/write.c     |   78 ++++++++++++++++++++++++++++++++++++++++++++++------
- fs/afs/yfsclient.c |   12 +++++---
- mm/filemap.c       |    9 +++++-
- 6 files changed, 159 insertions(+), 19 deletions(-)
-
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 5aa7b89e7359..0ee0e94ba042 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -24,6 +24,7 @@ static int afs_releasepage(struct page *page, gfp_t gfp_flags);
- 
- static int afs_readpages(struct file *filp, struct address_space *mapping,
- 			 struct list_head *pages, unsigned nr_pages);
-+static ssize_t afs_direct_IO(struct kiocb *iocb, struct iov_iter *iter);
- 
- const struct file_operations afs_file_operations = {
- 	.open		= afs_open,
-@@ -52,6 +53,7 @@ const struct address_space_operations afs_fs_aops = {
- 	.launder_page	= afs_launder_page,
- 	.releasepage	= afs_releasepage,
- 	.invalidatepage	= afs_invalidatepage,
-+	.direct_IO	= afs_direct_IO,
- 	.write_begin	= afs_write_begin,
- 	.write_end	= afs_write_end,
- 	.writepage	= afs_writepage,
-@@ -586,3 +588,60 @@ static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
- 		vma->vm_ops = &afs_vm_ops;
- 	return ret;
- }
-+
-+/*
-+ * Direct file read operation for an AFS file.
-+ *
-+ * TODO: To support AIO, the pages in the iterator have to be copied and
-+ * refs taken on them.  Then -EIOCBQUEUED needs to be returned.
-+ * iocb->ki_complete must then be called upon completion of the operation.
-+ */
-+static ssize_t afs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	struct file *file = iocb->ki_filp;
-+	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
-+	struct afs_read *req;
-+	ssize_t ret, transferred;
-+
-+	_enter("%llx,%zx", iocb->ki_pos, iov_iter_count(iter));
-+
-+	req = afs_alloc_read(GFP_KERNEL);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	req->vnode	= vnode;
-+	req->key	= key_get(afs_file_key(file));
-+	req->cache.pos	= iocb->ki_pos;
-+	req->cache.len	= iov_iter_count(iter);
-+	req->iter	= iter;
-+
-+	task_io_account_read(req->cache.len);
-+
-+	// TODO nfs_start_io_direct(inode);
-+	ret = afs_fetch_data(vnode, req);
-+	if (ret == 0)
-+		transferred = req->cache.transferred;
-+	afs_put_read(req);
-+
-+	// TODO nfs_end_io_direct(inode);
-+
-+	if (ret == 0)
-+		ret = transferred;
-+
-+	BUG_ON(ret == -EIOCBQUEUED); // TODO
-+	//if (iocb->ki_complete)
-+	//	iocb->ki_complete(iocb, ret, 0); // only if ret == -EIOCBQUEUED
-+
-+	_leave(" = %zu", ret);
-+	return ret;
-+}
-+
-+/*
-+ * Do direct I/O.
-+ */
-+static ssize_t afs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	if (iov_iter_rw(iter) == READ)
-+		return afs_file_direct_read(iocb, iter);
-+	return afs_file_direct_write(iocb, iter);
-+}
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index e729a19f28c5..1d0465654256 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -446,7 +446,7 @@ static void afs_fs_fetch_data64(struct afs_operation *op)
- 	bp[3] = htonl(vp->fid.unique);
- 	bp[4] = htonl(upper_32_bits(req->cache.pos));
- 	bp[5] = htonl(lower_32_bits(req->cache.pos));
--	bp[6] = 0;
-+	bp[6] = htonl(upper_32_bits(req->cache.len));
- 	bp[7] = htonl(lower_32_bits(req->cache.len));
- 
- 	trace_afs_make_fs_call(call, &vp->fid);
-@@ -1066,6 +1066,7 @@ static void afs_fs_store_data64(struct afs_operation *op)
- 	struct afs_vnode_param *vp = &op->file[0];
- 	struct afs_call *call;
- 	__be32 *bp;
-+	u32 mask = 0;
- 
- 	_enter(",%x,{%llx:%llu},,",
- 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
-@@ -1078,6 +1079,9 @@ static void afs_fs_store_data64(struct afs_operation *op)
- 
- 	call->write_iter = op->store.write_iter;
- 
-+	if (op->flags & AFS_OPERATION_SET_MTIME)
-+		mask |= AFS_SET_MTIME;
-+
- 	/* marshall the parameters */
- 	bp = call->request;
- 	*bp++ = htonl(FSSTOREDATA64);
-@@ -1085,8 +1089,8 @@ static void afs_fs_store_data64(struct afs_operation *op)
- 	*bp++ = htonl(vp->fid.vnode);
- 	*bp++ = htonl(vp->fid.unique);
- 
--	*bp++ = htonl(AFS_SET_MTIME); /* mask */
--	*bp++ = htonl(op->mtime.tv_sec); /* mtime */
-+	*bp++ = htonl(mask);
-+	*bp++ = htonl(op->mtime.tv_sec);
- 	*bp++ = 0; /* owner */
- 	*bp++ = 0; /* group */
- 	*bp++ = 0; /* unix mode */
-@@ -1111,6 +1115,7 @@ void afs_fs_store_data(struct afs_operation *op)
- 	struct afs_vnode_param *vp = &op->file[0];
- 	struct afs_call *call;
- 	__be32 *bp;
-+	u32 mask = 0;
- 
- 	_enter(",%x,{%llx:%llu},,",
- 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
-@@ -1133,6 +1138,9 @@ void afs_fs_store_data(struct afs_operation *op)
- 
- 	call->write_iter = op->store.write_iter;
- 
-+	if (op->flags & AFS_OPERATION_SET_MTIME)
-+		mask |= AFS_SET_MTIME;
-+
- 	/* marshall the parameters */
- 	bp = call->request;
- 	*bp++ = htonl(FSSTOREDATA);
-@@ -1140,8 +1148,8 @@ void afs_fs_store_data(struct afs_operation *op)
- 	*bp++ = htonl(vp->fid.vnode);
- 	*bp++ = htonl(vp->fid.unique);
- 
--	*bp++ = htonl(AFS_SET_MTIME); /* mask */
--	*bp++ = htonl(op->mtime.tv_sec); /* mtime */
-+	*bp++ = htonl(mask);
-+	*bp++ = htonl(op->mtime.tv_sec);
- 	*bp++ = 0; /* owner */
- 	*bp++ = 0; /* group */
- 	*bp++ = 0; /* unix mode */
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 8c9abfa33a91..7bb26975080f 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -843,6 +843,7 @@ struct afs_operation {
- #define AFS_OPERATION_TRIED_ALL		0x0400	/* Set if we've tried all the fileservers */
- #define AFS_OPERATION_RETRY_SERVER	0x0800	/* Set if we should retry the current server */
- #define AFS_OPERATION_DIR_CONFLICT	0x1000	/* Set if we detected a 3rd-party dir change */
-+#define AFS_OPERATION_SET_MTIME		0x2000	/* Set if we should try to store the mtime */
- };
- 
- /*
-@@ -1440,6 +1441,7 @@ extern int afs_fsync(struct file *, loff_t, loff_t, int);
- extern vm_fault_t afs_page_mkwrite(struct vm_fault *vmf);
- extern void afs_prune_wb_keys(struct afs_vnode *);
- extern int afs_launder_page(struct page *);
-+extern ssize_t afs_file_direct_write(struct kiocb *, struct iov_iter *);
- 
- /*
-  * xattr.c
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 10c60837775e..14d31adf4825 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -377,7 +377,7 @@ static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter,
- 	op->store.size = size;
- 	op->store.i_size = max(pos + size, i_size);
- 	op->mtime = vnode->vfs_inode.i_mtime;
--	op->flags |= AFS_OPERATION_UNINTR;
-+	op->flags |= AFS_OPERATION_SET_MTIME | AFS_OPERATION_UNINTR;
- 	op->ops = &afs_store_data_operation;
- 
- try_next_key:
-@@ -732,7 +732,6 @@ int afs_writepages(struct address_space *mapping,
- ssize_t afs_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	struct afs_vnode *vnode = AFS_FS_I(file_inode(iocb->ki_filp));
--	ssize_t result;
- 	size_t count = iov_iter_count(from);
- 
- 	_enter("{%llx:%llu},{%zu},",
-@@ -744,13 +743,7 @@ ssize_t afs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 		return -EBUSY;
- 	}
- 
--	if (!count)
--		return 0;
--
--	result = generic_file_write_iter(iocb, from);
--
--	_leave(" = %zd", result);
--	return result;
-+	return generic_file_write_iter(iocb, from);
- }
- 
- /*
-@@ -992,3 +985,70 @@ static void afs_write_to_cache(struct afs_vnode *vnode,
- abandon:
- 	afs_clear_fscache_bits(vnode->vfs_inode.i_mapping, start, last);
- }
-+
-+static void afs_dio_store_data_success(struct afs_operation *op)
-+{
-+	struct afs_vnode *vnode = op->file[0].vnode;
-+
-+	op->ctime = op->file[0].scb.status.mtime_client;
-+	afs_vnode_commit_status(op, &op->file[0]);
-+	if (op->error == 0) {
-+		afs_stat_v(vnode, n_stores);
-+		atomic_long_add(op->store.size, &afs_v2net(vnode)->n_store_bytes);
-+	}
-+}
-+
-+static const struct afs_operation_ops afs_dio_store_data_operation = {
-+	.issue_afs_rpc	= afs_fs_store_data,
-+	.issue_yfs_rpc	= yfs_fs_store_data,
-+	.success	= afs_dio_store_data_success,
-+};
-+
-+/*
-+ * Direct file write operation for an AFS file.
-+ *
-+ * TODO: To support AIO, the pages in the iterator have to be copied and
-+ * refs taken on them.  Then -EIOCBQUEUED needs to be returned.
-+ * iocb->ki_complete must then be called upon completion of the operation.
-+ */
-+ssize_t afs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	struct file *file = iocb->ki_filp;
-+	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
-+	struct afs_operation *op;
-+	loff_t size = iov_iter_count(iter), i_size;
-+	ssize_t ret;
-+
-+	_enter("%s{%llx:%llu.%u},%llx,%llx",
-+	       vnode->volume->name,
-+	       vnode->fid.vid,
-+	       vnode->fid.vnode,
-+	       vnode->fid.unique,
-+	       size, iocb->ki_pos);
-+
-+	op = afs_alloc_operation(afs_file_key(file), vnode->volume);
-+	if (IS_ERR(op))
-+		return -ENOMEM;
-+
-+	i_size = i_size_read(&vnode->vfs_inode);
-+
-+	afs_op_set_vnode(op, 0, vnode);
-+	op->file[0].dv_delta	= 1;
-+	op->store.write_iter	= iter;
-+	op->store.pos		= iocb->ki_pos;
-+	op->store.size		= size;
-+	op->store.i_size	= max(iocb->ki_pos + size, i_size);
-+	op->ops			= &afs_dio_store_data_operation;
-+
-+	//if (!is_sync_kiocb(iocb)) {
-+
-+	ret = afs_do_sync_operation(op);
-+	if (ret == 0)
-+		ret = size;
-+
-+	//if (iocb->ki_complete)
-+	//	iocb->ki_complete(iocb, ret, 0); // only if ret == -EIOCBQUEUED
-+
-+	_leave(" = %zd", ret);
-+	return ret;
-+}
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 4ead0c1f9014..04c285e6b4ed 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -95,12 +95,16 @@ static __be32 *xdr_encode_YFSStoreStatus_mode(__be32 *bp, mode_t mode)
- 	return bp + xdr_size(x);
- }
- 
--static __be32 *xdr_encode_YFSStoreStatus_mtime(__be32 *bp, const struct timespec64 *t)
-+static __be32 *xdr_encode_YFSStoreStatus_mtime(__be32 *bp, struct afs_operation *op)
- {
- 	struct yfs_xdr_YFSStoreStatus *x = (void *)bp;
--	s64 mtime = linux_to_yfs_time(t);
-+	s64 mtime = linux_to_yfs_time(&op->mtime);
-+	u32 mask = 0;
- 
--	x->mask		= htonl(AFS_SET_MTIME);
-+	if (op->flags & AFS_OPERATION_SET_MTIME)
-+		mask |= AFS_SET_MTIME;
-+
-+	x->mask		= htonl(mask);
- 	x->mode		= htonl(0);
- 	x->mtime_client	= u64_to_xdr(mtime);
- 	x->owner	= u64_to_xdr(0);
-@@ -1112,7 +1116,7 @@ void yfs_fs_store_data(struct afs_operation *op)
- 	bp = xdr_encode_u32(bp, YFSSTOREDATA64);
- 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
- 	bp = xdr_encode_YFSFid(bp, &vp->fid);
--	bp = xdr_encode_YFSStoreStatus_mtime(bp, &op->mtime);
-+	bp = xdr_encode_YFSStoreStatus_mtime(bp, op);
- 	bp = xdr_encode_u64(bp, op->store.pos);
- 	bp = xdr_encode_u64(bp, op->store.size);
- 	bp = xdr_encode_u64(bp, op->store.i_size);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 4894e9705d34..6c52de0674eb 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3245,7 +3245,14 @@ generic_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
- 		}
- 		iocb->ki_pos = pos;
- 	}
--	iov_iter_revert(from, write_len - iov_iter_count(from));
-+	{
-+		size_t unroll = write_len - iov_iter_count(from);
-+		if (unroll > MAX_RW_COUNT)
-+			pr_warn("XXX unroll %zd [%zd - %zd]",
-+				unroll, write_len, iov_iter_count(from));
-+		else
-+			iov_iter_revert(from, unroll);
-+	}
- out:
- 	return written;
- }
-
-
+SGkgT2xnYSwNCg0KT24gTW9uLCAyMDIwLTA3LTEzIGF0IDEyOjE4IC0wNDAwLCBPbGdhIEtvcm5p
+ZXZza2FpYSB3cm90ZToNCj4gQ3VycmVudCBiZWhhdmlvdXI6IGV2ZXJ5IHRpbWUgYSB2MyBvcGVy
+YXRpb24gaXMgcmUtc2VudCB0byB0aGUgc2VydmVyDQo+IHdlIHVwZGF0ZSAoZG91YmxlKSB0aGUg
+dGltZW91dC4gVGhlcmUgaXMgbm8gZGlzdGluY3Rpb24gYmV0d2Vlbg0KPiB3aGV0aGVyDQo+IG9y
+IG5vdCB0aGUgcHJldmlvdXMgdGltZXIgaGFkIGV4cGlyZWQgYmVmb3JlIHRoZSByZS1zZW50IGhh
+cHBlbmVkLg0KPiANCj4gSGVyZSdzIHRoZSBzY2VuYXJpbzoNCj4gMS4gQ2xpZW50IHNlbmRzIGEg
+djMgb3BlcmF0aW9uDQo+IDIuIFNlcnZlciBSU1QtcyB0aGUgY29ubmVjdGlvbiAocHJpb3IgdG8g
+dGhlIHRpbWVvdXQpIChlZy4sDQo+IGNvbm5lY3Rpb24NCj4gaXMgaW1tZWRpYXRlbHkgcmVzZXQp
+DQo+IDMuIENsaWVudCByZS1zZW5kcyBhIHYzIG9wZXJhdGlvbiBidXQgdGhlIHRpbWVvdXQgaXMg
+bm93IDEyMHNlYy4NCj4gDQo+IEFzIGEgcmVzdWx0LCBhbiBhcHBsaWNhdGlvbiBzZWVzIDJtaW5z
+IHBhdXNlIGJlZm9yZSBhIHJldHJ5IGluIGNhc2UNCj4gc2VydmVyIGFnYWluIGRvZXMgbm90IHJl
+cGx5Lg0KPiANCj4gSW5zdGVhZCwgdGhpcyBwYXRjaCBwcm9wb3NlcyB0byBrZWVwIHRyYWNrIG9m
+ZiB3aGVuIHRoZSBtaW5vciB0aW1lb3V0DQo+IHNob3VsZCBoYXBwZW4gYW5kIGlmIGl0IGRpZG4n
+dCwgdGhlbiBkb24ndCB1cGRhdGUgdGhlIG5ldyB0aW1lb3V0Lg0KPiANCj4gdjI6IHVzaW5nIHRo
+ZSBzdWdnZXN0ZWQgYXBwcm9hY2ggYnkgVHJvbmQgTXlrbGVidXN0IGFuZCBub3QgdXNlIHRoZSAN
+Cj4gc2xpZGluZyB0aW1lb3V0LiANCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZ2EgS29ybmlldnNr
+YWlhIDxrb2xnYUBuZXRhcHAuY29tPg0KPiAtLS0NCj4gIGluY2x1ZGUvbGludXgvc3VucnBjL3hw
+cnQuaCB8IDEgKw0KPiAgbmV0L3N1bnJwYy94cHJ0LmMgICAgICAgICAgIHwgOSArKysrKysrKysN
+Cj4gIDIgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2luY2x1ZGUvbGludXgvc3VucnBjL3hwcnQuaA0KPiBiL2luY2x1ZGUvbGludXgvc3VucnBjL3hw
+cnQuaA0KPiBpbmRleCBlNjRiZDgyLi5hNjAzZDQ4IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xp
+bnV4L3N1bnJwYy94cHJ0LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQo+
+IEBAIC0xMDEsNiArMTAxLDcgQEAgc3RydWN0IHJwY19ycXN0IHsNCj4gIAkJCQkJCQkgKiB1c2Vk
+IGluIHRoZQ0KPiBzb2Z0aXJxLg0KPiAgCQkJCQkJCSAqLw0KPiAgCXVuc2lnbmVkIGxvbmcJCXJx
+X21ham9ydGltZW87CS8qIG1ham9yIHRpbWVvdXQNCj4gYWxhcm0gKi8NCj4gKwl1bnNpZ25lZCBs
+b25nCQlycV9taW5vcnRpbWVvOwkvKiBtaW5vciB0aW1lb3V0DQo+IGFsYXJtICovDQo+ICAJdW5z
+aWduZWQgbG9uZwkJcnFfdGltZW91dDsJLyogQ3VycmVudCB0aW1lb3V0DQo+IHZhbHVlICovDQo+
+ICAJa3RpbWVfdAkJCXJxX3J0dDsJCS8qIHJvdW5kLXRyaXAgdGltZSAqLw0KPiAgCXVuc2lnbmVk
+IGludAkJcnFfcmV0cmllczsJLyogIyBvZiByZXRyaWVzICovDQo+IGRpZmYgLS1naXQgYS9uZXQv
+c3VucnBjL3hwcnQuYyBiL25ldC9zdW5ycGMveHBydC5jDQo+IGluZGV4IGQ1Y2M1ZGIuLjkyZmM5
+ZmQgMTAwNjQ0DQo+IC0tLSBhL25ldC9zdW5ycGMveHBydC5jDQo+ICsrKyBiL25ldC9zdW5ycGMv
+eHBydC5jDQo+IEBAIC02MDcsNiArNjA3LDExIEBAIHN0YXRpYyB2b2lkIHhwcnRfcmVzZXRfbWFq
+b3J0aW1lbyhzdHJ1Y3QNCj4gcnBjX3Jxc3QgKnJlcSkNCj4gIAlyZXEtPnJxX21ham9ydGltZW8g
+Kz0geHBydF9jYWxjX21ham9ydGltZW8ocmVxKTsNCj4gIH0NCj4gIA0KPiArc3RhdGljIHZvaWQg
+eHBydF9yZXNldF9taW5vcnRpbWVvKHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0KPiArew0KPiArCXJl
+cS0+cnFfbWlub3J0aW1lbyA9IGppZmZpZXMgKyByZXEtPnJxX3RpbWVvdXQ7DQoNClNob3VsZG4n
+dCB0aGlzIGp1c3QgYmU6IHJlcS0+cnFfbWlub3J0aW1lbyArPSByZXEtPnJxX3RpbWVvdXQ7ID8N
+Cg0KPiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZCB4cHJ0X2luaXRfbWFqb3J0aW1lbyhzdHJ1Y3Qg
+cnBjX3Rhc2sgKnRhc2ssIHN0cnVjdA0KPiBycGNfcnFzdCAqcmVxKQ0KPiAgew0KPiAgCXVuc2ln
+bmVkIGxvbmcgdGltZV9pbml0Ow0KPiBAQCAtNjE4LDYgKzYyMyw3IEBAIHN0YXRpYyB2b2lkIHhw
+cnRfaW5pdF9tYWpvcnRpbWVvKHN0cnVjdCBycGNfdGFzaw0KPiAqdGFzaywgc3RydWN0IHJwY19y
+cXN0ICpyZXEpDQo+ICAJCXRpbWVfaW5pdCA9IHhwcnRfYWJzX2t0aW1lX3RvX2ppZmZpZXModGFz
+ay0+dGtfc3RhcnQpOw0KPiAgCXJlcS0+cnFfdGltZW91dCA9IHRhc2stPnRrX2NsaWVudC0+Y2xf
+dGltZW91dC0+dG9faW5pdHZhbDsNCj4gIAlyZXEtPnJxX21ham9ydGltZW8gPSB0aW1lX2luaXQg
+KyB4cHJ0X2NhbGNfbWFqb3J0aW1lbyhyZXEpOw0KPiArCXJlcS0+cnFfbWlub3J0aW1lbyA9IHRp
+bWVfaW5pdCArIHJlcS0+cnFfdGltZW91dDsNCj4gIH0NCj4gIA0KPiAgLyoqDQo+IEBAIC02MzEs
+NiArNjM3LDggQEAgaW50IHhwcnRfYWRqdXN0X3RpbWVvdXQoc3RydWN0IHJwY19ycXN0ICpyZXEp
+DQo+ICAJY29uc3Qgc3RydWN0IHJwY190aW1lb3V0ICp0byA9IHJlcS0+cnFfdGFzay0+dGtfY2xp
+ZW50LQ0KPiA+Y2xfdGltZW91dDsNCj4gIAlpbnQgc3RhdHVzID0gMDsNCj4gIA0KPiArCWlmICh0
+aW1lX2JlZm9yZShqaWZmaWVzLCByZXEtPnJxX21pbm9ydGltZW8pKQ0KPiArCQlyZXR1cm4gc3Rh
+dHVzOw0KPiAgCWlmICh0aW1lX2JlZm9yZShqaWZmaWVzLCByZXEtPnJxX21ham9ydGltZW8pKSB7
+DQo+ICAJCWlmICh0by0+dG9fZXhwb25lbnRpYWwpDQo+ICAJCQlyZXEtPnJxX3RpbWVvdXQgPDw9
+IDE7DQo+IEBAIC02NDksNiArNjU3LDcgQEAgaW50IHhwcnRfYWRqdXN0X3RpbWVvdXQoc3RydWN0
+IHJwY19ycXN0ICpyZXEpDQo+ICAJCXNwaW5fdW5sb2NrKCZ4cHJ0LT50cmFuc3BvcnRfbG9jayk7
+DQo+ICAJCXN0YXR1cyA9IC1FVElNRURPVVQ7DQo+ICAJfQ0KPiArCXhwcnRfcmVzZXRfbWlub3J0
+aW1lbyhyZXEpOw0KPiAgDQo+ICAJaWYgKHJlcS0+cnFfdGltZW91dCA9PSAwKSB7DQo+ICAJCXBy
+aW50ayhLRVJOX1dBUk5JTkcgInhwcnRfYWRqdXN0X3RpbWVvdXQ6IHJxX3RpbWVvdXQgPQ0KPiAw
+IVxuIik7DQoNCk90aGVyd2lzZSBpdCBsb29rcyBnb29kIHRvIG1lLg0KDQotLSANClRyb25kIE15
+a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
+bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
