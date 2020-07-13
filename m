@@ -2,139 +2,171 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E69721DB6E
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 18:16:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6B321DBBA
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 18:28:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgGMQQ4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jul 2020 12:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMQQ4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 12:16:56 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCF4C061755
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Jul 2020 09:16:55 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id a12so14044214ion.13
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Jul 2020 09:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wnl0KuhQwSN1Jzmw0ylojj/H134rUOpRLKmYlnoi8MA=;
-        b=YePnjcS/SS8ntgy/McBIv5ZzCLQdTa52TXsPiBASxkaoXpLAsqGfmnQi0+m/TcOtPp
-         aU8w5uYNxBlzTK0GPYZDDqRbElMSoLvW93aey+VgY5hxgr8apcMMf3ShUlLsS49iIRVY
-         XPrw84owt49XR/ytqzONWJxiDT6EOj++50oZB9vsuhiN2XcW8QB8jiwMdoFYpFMyXmVi
-         s2YsxiJKkVMtOgW/4hcRFVab6AV+Pz6WTjVLiiSm+HuWq7O2gXbQS+s/iI/IJDd2+ifJ
-         ylZcNQm7FLeBFF2YZ9FX9xWMKg0U9OgTdnHtDM1/Y7T0eU2qhPIib9Yi6T8EiXSl/tRz
-         l+1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wnl0KuhQwSN1Jzmw0ylojj/H134rUOpRLKmYlnoi8MA=;
-        b=TSO4QI3rzF+Sl1KO5dOlxEAoNoiF44T0q0R+QDFwLTL6yrvdO8Llm5lfMgo73IIaLo
-         3ugkXg3qrx4XddrT1ig725ndUk0VmsJcxW48DGKbt8FWJuHJTmJhVlhxnHFLOamFQSVe
-         5UfWFih3pGS6YsCH9zJXyubwHtBFGfdyNlrC4EtOK9ZOb90l8jutuYY4n0SOB4ebMFSa
-         1IwHdrrBD4LuVC5RQDUY6cFKRjAsPnIBgPaLzSlXj/3DiHdCi7APN4+jrOp8oWsNYO0p
-         PtNW6mU9aZaNDL3lHKR82jrHl7LkNiZ9Ku98CRzA2W9lFcnqfWsB5qK0+a3hdy3su569
-         mfNg==
-X-Gm-Message-State: AOAM531sQKYAbM+euCv1uTLXmVoSyJZ6WczAPe2hIzu1B2AgxYrdnWw8
-        yRBqtTEKji2UtJpsNDPE1tJsIIre
-X-Google-Smtp-Source: ABdhPJyMHDVbbVPTa79fCcEsb7sEZMcrFZ8e/WCBCNl9A7nhIMg4pr3xuYrecxIy9JuReSdWAi9wiA==
-X-Received: by 2002:a05:6638:d08:: with SMTP id q8mr856650jaj.77.1594657015213;
-        Mon, 13 Jul 2020 09:16:55 -0700 (PDT)
-Received: from Olgas-MBP-286.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id u5sm8805995ili.33.2020.07.13.09.16.52
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 13 Jul 2020 09:16:53 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] SUNRPC dont update timeout value on connection reset
-Date:   Mon, 13 Jul 2020 12:18:42 -0400
-Message-Id: <20200713161842.90553-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+        id S1729846AbgGMQ2A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jul 2020 12:28:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29956 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729933AbgGMQ16 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 12:27:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594657676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GPqCyKmxk5bmr4GI6eZ9r8X5VU2eAhQ5GXlXXDbYfyQ=;
+        b=Ergay/3FG9dJRs6g+g1nklu1911xcNDVFRocLoiAbfbEYWHq7fgd8drdBw3QYNFjxlu6JF
+        qTqAdAXEhJBiTNACfLxkpXjePhc56Nm1g2PbguoInaPk96ML9Jip1+JCBa4QyXQTtsSDOK
+        CiI8Rr2O3BAvzC4+BmzpZ7hqyhRyr+8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-UbkhdcJiO76QhtJmUg1Lqw-1; Mon, 13 Jul 2020 12:27:53 -0400
+X-MC-Unique: UbkhdcJiO76QhtJmUg1Lqw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EF7D18FF665;
+        Mon, 13 Jul 2020 16:27:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A6DCE1CA;
+        Mon, 13 Jul 2020 16:27:44 +0000 (UTC)
+Subject: [PATCH 00/14] fscache: Rewrite 1: Disable and clean in preparation
+ for rewrite
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jul 2020 17:27:43 +0100
+Message-ID: <159465766378.1376105.11619976251039287525.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Current behaviour: every time a v3 operation is re-sent to the server
-we update (double) the timeout. There is no distinction between whether
-or not the previous timer had expired before the re-sent happened.
 
-Here's the scenario:
-1. Client sends a v3 operation
-2. Server RST-s the connection (prior to the timeout) (eg., connection
-is immediately reset)
-3. Client re-sends a v3 operation but the timeout is now 120sec.
+Here's a set of patches that disables the network filesystems that use
+fscache and then remove a whole chunk of the fscache codebase pending it
+being rewritten.
 
-As a result, an application sees 2mins pause before a retry in case
-server again does not reply.
+The following parts of fscache have been removed:
 
-Instead, this patch proposes to keep track off when the minor timeout
-should happen and if it didn't, then don't update the new timeout.
+    - The object state machine
+    - The I/O operation manager
+    - All non-transient references from fscache to the netfs's data
+    - All non-transient callbacks from fscache to the netfs
+    - The backing page I/O monitoring
+    - The tracking of netfs pages that fscache knows about
+    - The tracking of netfs pages that need writing to the cache
+    - The use of bmap to work out if a page is stored in the cache
+    - The copy of data to/from backing pages to netfs pages.
 
-v2: using the suggested approach by Trond Myklebust and not use the 
-sliding timeout. 
+The corresponding cachefiles bits have also been removed.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+These patches can be found as part of the branch here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+
+David
 ---
- include/linux/sunrpc/xprt.h | 1 +
- net/sunrpc/xprt.c           | 9 +++++++++
- 2 files changed, 10 insertions(+)
+David Howells (1):
+      fscache: Remove the I/O operation manager
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index e64bd82..a603d48 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -101,6 +101,7 @@ struct rpc_rqst {
- 							 * used in the softirq.
- 							 */
- 	unsigned long		rq_majortimeo;	/* major timeout alarm */
-+	unsigned long		rq_minortimeo;	/* minor timeout alarm */
- 	unsigned long		rq_timeout;	/* Current timeout value */
- 	ktime_t			rq_rtt;		/* round-trip time */
- 	unsigned int		rq_retries;	/* # of retries */
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index d5cc5db..92fc9fd 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -607,6 +607,11 @@ static void xprt_reset_majortimeo(struct rpc_rqst *req)
- 	req->rq_majortimeo += xprt_calc_majortimeo(req);
- }
- 
-+static void xprt_reset_minortimeo(struct rpc_rqst *req)
-+{
-+	req->rq_minortimeo = jiffies + req->rq_timeout;
-+}
-+
- static void xprt_init_majortimeo(struct rpc_task *task, struct rpc_rqst *req)
- {
- 	unsigned long time_init;
-@@ -618,6 +623,7 @@ static void xprt_init_majortimeo(struct rpc_task *task, struct rpc_rqst *req)
- 		time_init = xprt_abs_ktime_to_jiffies(task->tk_start);
- 	req->rq_timeout = task->tk_client->cl_timeout->to_initval;
- 	req->rq_majortimeo = time_init + xprt_calc_majortimeo(req);
-+	req->rq_minortimeo = time_init + req->rq_timeout;
- }
- 
- /**
-@@ -631,6 +637,8 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
- 	const struct rpc_timeout *to = req->rq_task->tk_client->cl_timeout;
- 	int status = 0;
- 
-+	if (time_before(jiffies, req->rq_minortimeo))
-+		return status;
- 	if (time_before(jiffies, req->rq_majortimeo)) {
- 		if (to->to_exponential)
- 			req->rq_timeout <<= 1;
-@@ -649,6 +657,7 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
- 		spin_unlock(&xprt->transport_lock);
- 		status = -ETIMEDOUT;
- 	}
-+	xprt_reset_minortimeo(req);
- 
- 	if (req->rq_timeout == 0) {
- 		printk(KERN_WARNING "xprt_adjust_timeout: rq_timeout = 0!\n");
--- 
-1.8.3.1
+
+ fs/9p/Kconfig                          |    2 +-
+ fs/Makefile                            |    2 +-
+ fs/afs/Kconfig                         |    1 +
+ fs/afs/cache.c                         |   54 --
+ fs/afs/cell.c                          |    9 +-
+ fs/afs/dir.c                           |  242 +++++--
+ fs/afs/file.c                          |  575 +++++++--------
+ fs/afs/fs_operation.c                  |    4 +-
+ fs/afs/fsclient.c                      |  154 ++--
+ fs/afs/inode.c                         |   57 +-
+ fs/afs/internal.h                      |   58 +-
+ fs/afs/rxrpc.c                         |  150 ++--
+ fs/afs/volume.c                        |    9 +-
+ fs/afs/write.c                         |  413 +++++++----
+ fs/afs/yfsclient.c                     |  113 ++-
+ fs/cachefiles/Makefile                 |    3 +-
+ fs/cachefiles/bind.c                   |   11 +-
+ fs/cachefiles/content-map.c            |  476 ++++++++++++
+ fs/cachefiles/daemon.c                 |   10 +-
+ fs/cachefiles/interface.c              |  564 ++++++++-------
+ fs/cachefiles/internal.h               |  139 ++--
+ fs/cachefiles/io.c                     |  279 +++++++
+ fs/cachefiles/main.c                   |   12 +-
+ fs/cachefiles/namei.c                  |  508 +++++--------
+ fs/cachefiles/rdwr.c                   |  974 -------------------------
+ fs/cachefiles/xattr.c                  |  263 +++----
+ fs/ceph/Kconfig                        |    2 +-
+ fs/cifs/Kconfig                        |    2 +-
+ fs/fscache/Kconfig                     |    8 +
+ fs/fscache/Makefile                    |   10 +-
+ fs/fscache/cache.c                     |  136 ++--
+ fs/fscache/cookie.c                    |  769 ++++++++------------
+ fs/fscache/dispatcher.c                |  150 ++++
+ fs/fscache/fsdef.c                     |   56 +-
+ fs/fscache/histogram.c                 |    2 +-
+ fs/fscache/internal.h                  |  260 +++----
+ fs/fscache/io.c                        |  201 +++++
+ fs/fscache/main.c                      |   35 +-
+ fs/fscache/netfs.c                     |   10 +-
+ fs/fscache/obj.c                       |  345 +++++++++
+ fs/fscache/object-list.c               |  129 +---
+ fs/fscache/object.c                    | 1133 -----------------------------
+ fs/fscache/object_bits.c               |  120 +++
+ fs/fscache/operation.c                 |  633 ----------------
+ fs/fscache/page.c                      | 1248 --------------------------------
+ fs/fscache/proc.c                      |   13 +-
+ fs/fscache/read_helper.c               |  688 ++++++++++++++++++
+ fs/fscache/stats.c                     |  265 +++----
+ fs/internal.h                          |    5 -
+ fs/nfs/Kconfig                         |    2 +-
+ fs/nfs/fscache-index.c                 |    4 +-
+ fs/read_write.c                        |    1 +
+ include/linux/fs.h                     |    2 +
+ include/linux/fscache-cache.h          |  508 +++----------
+ include/linux/fscache-obsolete.h       |   13 +
+ include/linux/fscache.h                |  814 ++++++++-------------
+ include/linux/mm.h                     |    1 +
+ include/linux/pagemap.h                |   14 +
+ include/linux/uio.h                    |   11 +
+ include/net/af_rxrpc.h                 |    2 +-
+ include/trace/events/afs.h             |   51 +-
+ include/trace/events/cachefiles.h      |  285 ++++++--
+ include/trace/events/fscache.h         |  421 ++---------
+ include/trace/events/fscache_support.h |   91 +++
+ lib/iov_iter.c                         |  286 +++++++-
+ mm/filemap.c                           |   27 +-
+ net/rxrpc/recvmsg.c                    |    9 +-
+ 67 files changed, 5598 insertions(+), 8246 deletions(-)
+ create mode 100644 fs/cachefiles/content-map.c
+ create mode 100644 fs/cachefiles/io.c
+ delete mode 100644 fs/cachefiles/rdwr.c
+ create mode 100644 fs/fscache/dispatcher.c
+ create mode 100644 fs/fscache/io.c
+ create mode 100644 fs/fscache/obj.c
+ delete mode 100644 fs/fscache/object.c
+ create mode 100644 fs/fscache/object_bits.c
+ delete mode 100644 fs/fscache/operation.c
+ delete mode 100644 fs/fscache/page.c
+ create mode 100644 fs/fscache/read_helper.c
+ create mode 100644 include/linux/fscache-obsolete.h
+ create mode 100644 include/trace/events/fscache_support.h
+
 
