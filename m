@@ -2,303 +2,348 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B588F21D77D
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 15:47:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB29921D792
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2020 15:52:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgGMNrh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jul 2020 09:47:37 -0400
-Received: from mail-dm6nam12on2094.outbound.protection.outlook.com ([40.107.243.94]:32736
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728950AbgGMNrh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:47:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K2qksEt9+R6K8mA1j0tUrHUvhpc+FFQUyfKmGEl47j19rzv4WL5ILFmkvJV7fWdbipl/3+mOvrI27iaoz56nnVvq9gex61nuaoHOSVwEzzyrFBz4SwxaL9QIzIjmuQGVttKuncudwEDwIox8nzYTOhiRd8mKWcP6KZQSb/NYBKTtwy9dIyBEXd93giDDX2xMatRT8MkKnUhGDHgwAG3np4+TLySSUHyvecEY1bNRclfsgpdiiVczbceA0sXMZC17fJZT30PF7yIQhzk9PNFpSFV0XcMXOYmyp1D0tpi8cDhfJ93JcRNAvLETOydXWBsHMgKT6qiISwosa0F+umEpoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yb0bjtbsL7Y+uOHLP9VI+mxNioVErruIPz1JRzcNNRQ=;
- b=RnPJwCSXQTaiJSUUH4S+UxsDqG5oFvVXHk3b/YjGU3XmDGdwStwG6nzLEzhieA6OQoRNHQ6s2bWF1KaKKeU64Ari8s/DZ+eLyyIKXakPU88CNWoQ9LehdaJsrXN2dZZoi/rbVVdFV/QM9GJqatjQJfW+vPzKzTQxmHWr4OjFKhUOCdIoq6sFvv6vpu8LbvaE9FazpmGbjc9lldfP0FSHkzLEOJt0xTvazBqqw4ESemPep82wmgi9ckPwUWqdImmnIlGxb604rRNNXlUzJ8SCdP2rGjERYVYvpkLpd1LIBdSuaf6VuzrHqXqFmd24PCmKu/Nq2OlkLcC+ewevjDdg9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yb0bjtbsL7Y+uOHLP9VI+mxNioVErruIPz1JRzcNNRQ=;
- b=L/NdN/wU8Wft0QC6WtSQ/fg72utgHoo0gADllzV4onDcOZOTKf5i8Ek0BMuLFJo2xUhrrovZFXfynxrdowRxMn0aSkRcAFXsiMoFty9RfP7IzdhBXvZ5l8RmYCKE8Dh1fblGAjMloJjbdbn8FXyiOT97eJf51T9P78rBmsT+cec=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3334.namprd13.prod.outlook.com (2603:10b6:610:21::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10; Mon, 13 Jul
- 2020 13:47:31 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::352c:f318:f4a7:6a0f]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::352c:f318:f4a7:6a0f%3]) with mapi id 15.20.3195.017; Mon, 13 Jul 2020
- 13:47:31 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
-Thread-Topic: [PATCH 1/1] SUNRPC dont update timeout value on connection reset
-Thread-Index: AQHWVWs8m1CKZ35+pUqHJLj6MBnD8Kj/KF+AgAA8JYCAABq/gIAAP8OAgAFXRICAABIPgIAEZRsA
-Date:   Mon, 13 Jul 2020 13:47:31 +0000
-Message-ID: <b813dc046aa5c537e9c4e69c2ca02724100daf8d.camel@hammerspace.com>
-References: <20200708210514.84671-1-olga.kornievskaia@gmail.com>
-         <41873966ea839cca97332df3c56612441f840e0d.camel@hammerspace.com>
-         <CAN-5tyGk3aU-DRhWACMD8-NMtdfX4ANUcR3xAjjEySf-GbbA6w@mail.gmail.com>
-         <3fe49121d027eaa3aa2263f24d76d72e750d8592.camel@hammerspace.com>
-         <CAN-5tyFD6XuZAZ3HAvfxyr7xLsvb-04hhe4PYvO_594ZQ0TuNw@mail.gmail.com>
-         <CAN-5tyHrd4dZEkO3CRrvcLv82Gy0fXERCPYSq0Snj3zBHh3gxw@mail.gmail.com>
-         <CAN-5tyEbQ7wiKDVXbwVrjkKS33CwJRhJXxe7RymPcRQfjQwRdA@mail.gmail.com>
-In-Reply-To: <CAN-5tyEbQ7wiKDVXbwVrjkKS33CwJRhJXxe7RymPcRQfjQwRdA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 20e2494b-bf22-42e5-e33b-08d827334a19
-x-ms-traffictypediagnostic: CH2PR13MB3334:
-x-microsoft-antispam-prvs: <CH2PR13MB333431DF644B7BC6907DC4BDB8600@CH2PR13MB3334.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dA4tKm3vz7S/EMn2Kvzy7oAZUsFO7bVqBDTsqaTG2PCS4pl5YLsNVNzd2LopuVVJrnf+9+uj/ESfhS6+aIbvZ6fqox9HQmf4vgzWkYB+F9DqRPDJHrHbuGdm6Fp+Wnb5vjKUPmtxzdEzqUDnYbaC0iam47Bp/DjhYjTO5DpisWJoAV9AJtQutueE90jqsZB46FUZXEHuABRqbiwoKsPdabVaAikdq4z6Gmyzi1s1lffEvzeVRm95EexLJfkvTtu7KAHaHla88wzrZcRHOrJA7uw33HBgJHnPblyedIY8S6IENekOVz5VUB5DFJPV/KXssT3nUUeaSeycfPfWKgEytvXP3yjTG5RS8352Wq4p3Snt1oyMkbyZ7iz5ZFXV5Uuv
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(346002)(376002)(366004)(136003)(8936002)(53546011)(6506007)(26005)(316002)(8676002)(6486002)(2616005)(66556008)(64756008)(76116006)(5660300002)(54906003)(15650500001)(6916009)(66476007)(186003)(30864003)(66946007)(66446008)(36756003)(86362001)(478600001)(6512007)(71200400001)(4326008)(2906002)(83380400001)(192303002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: XU5ONsW94KXWb/nfwzQQV4gWKzZq1m1eJeizgCoYAHlS3VBsIyrgbaKA+m1Gqi58W8SsAH0aDk9BhjeLArtTWVHuOh028Hejp9VYOnaEAa//FS0tndF6NbQiRCLqV8czUByy0/fHK46gkNmBS23q7h4gnwPn/TqjwLRk8sTASv6TrBin22mXYwYOK9KqqKW0QyxO8u0UNFRPcsGxlmtS+eGoCzmXB1f2DqmzZInKxk21AeREcKiTTNhGJBlSRBWRBvuPP09KY8VttJsu/MUFAwi5VSrPilz9UsoD+y9CLrI6x2DCAsdNLA9Pt7HttzOUBndXUAuBZvIAqp9/O95cQ3USEh0X9w4i6OiZt9cA1YrVDYDLKOfkaDnxNm5ApwV0T2GysNrQIs6b46Nil9syU4TvadEBBEhMg4RjVrLmB9uxVnt5zDofwGxJNsWTtmDKO/lDNkGL/9AcrFELleaTgTn5qGNdp+Jo/vW+rtdAGYc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0351339657C3CC42BF220350E920338B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1729492AbgGMNw3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jul 2020 09:52:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48708 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729457AbgGMNw2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jul 2020 09:52:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594648345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wa5Icptqb7T71SbcuwLLLwJyrVY6TntqquwoVLA719o=;
+        b=LEFy7Am0m4p8u/bPvEXzFVsKaLP5AxB4BcOWbGtJDl7K+PKqpbLeM2jGfquwzrqYu7D8jv
+        qNVTDEhVOJmFGnthyGd4dYfH6UpYkMRGxfRTxNMoqM14T+aN01TyGye4Al/yPLF6KuU2jx
+        YFqAcY37JU2AKEtSECi8PcBkEly1KEo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-obEmbkEgMYudQnNavemreg-1; Mon, 13 Jul 2020 09:52:22 -0400
+X-MC-Unique: obEmbkEgMYudQnNavemreg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3C03100CC8D;
+        Mon, 13 Jul 2020 13:52:21 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-115-80.rdu2.redhat.com [10.10.115.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 885C873033;
+        Mon, 13 Jul 2020 13:52:21 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 2E87A1A0006; Mon, 13 Jul 2020 09:52:20 -0400 (EDT)
+Date:   Mon, 13 Jul 2020 09:52:20 -0400
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: avoid a NULL dereference in __cld_pipe_upcall()
+Message-ID: <20200713135220.GB4452@aion.usersys.redhat.com>
+References: <20200710203307.2545412-1-smayhew@redhat.com>
+ <B6722AC5-A7DD-4EAF-B08A-45C12160D5DF@oracle.com>
+ <20200713122955.GY4452@aion.usersys.redhat.com>
+ <646E9DB3-0E48-4C2D-A921-69615EAEC940@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20e2494b-bf22-42e5-e33b-08d827334a19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 13:47:31.1431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yadg8oS9vyBR1JVh9VyNpFUPgFPCKRquSiox7HqzwiSmMwRY5FBdBmA5EZOTLf5Oux62AYaGhXZGkbXfY+HQkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3334
+In-Reply-To: <646E9DB3-0E48-4C2D-A921-69615EAEC940@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=smayhew@aion.usersys.redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgT2xnYQ0KDQpPbiBGcmksIDIwMjAtMDctMTAgYXQgMTQ6NDAgLTA0MDAsIE9sZ2EgS29ybmll
-dnNrYWlhIHdyb3RlOg0KPiBPbiBGcmksIEp1bCAxMCwgMjAyMCBhdCAxOjM1IFBNIE9sZ2EgS29y
-bmlldnNrYWlhDQo+IDxvbGdhLmtvcm5pZXZza2FpYUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+IE9u
-IFRodSwgSnVsIDksIDIwMjAgYXQgNTowNyBQTSBPbGdhIEtvcm5pZXZza2FpYQ0KPiA+IDxvbGdh
-Lmtvcm5pZXZza2FpYUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+ID4gT24gVGh1LCBKdWwgOSwgMjAy
-MCBhdCAxOjE5IFBNIFRyb25kIE15a2xlYnVzdCA8DQo+ID4gPiB0cm9uZG15QGhhbW1lcnNwYWNl
-LmNvbT4gd3JvdGU6DQo+ID4gPiA+IE9uIFRodSwgMjAyMC0wNy0wOSBhdCAxMTo0MyAtMDQwMCwg
-T2xnYSBLb3JuaWV2c2thaWEgd3JvdGU6DQo+ID4gPiA+ID4gT24gVGh1LCBKdWwgOSwgMjAyMCBh
-dCA4OjA4IEFNIFRyb25kIE15a2xlYnVzdCA8DQo+ID4gPiA+ID4gdHJvbmRteUBoYW1tZXJzcGFj
-ZS5jb20+IHdyb3RlOg0KPiA+ID4gPiA+ID4gSGkgT2xnYQ0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiBPbiBXZWQsIDIwMjAtMDctMDggYXQgMTc6MDUgLTA0MDAsIE9sZ2EgS29ybmlldnNrYWlh
-IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiBDdXJyZW50IGJlaGF2aW91cjogZXZlcnkgdGltZSBhIHYz
-IG9wZXJhdGlvbiBpcyByZS1zZW50DQo+ID4gPiA+ID4gPiA+IHRvIHRoZQ0KPiA+ID4gPiA+ID4g
-PiBzZXJ2ZXINCj4gPiA+ID4gPiA+ID4gd2UgdXBkYXRlIChkb3VibGUpIHRoZSB0aW1lb3V0LiBU
-aGVyZSBpcyBubyBkaXN0aW5jdGlvbg0KPiA+ID4gPiA+ID4gPiBiZXR3ZWVuDQo+ID4gPiA+ID4g
-PiA+IHdoZXRoZXINCj4gPiA+ID4gPiA+ID4gb3Igbm90IHRoZSBwcmV2aW91cyB0aW1lciBoYWQg
-ZXhwaXJlZCBiZWZvcmUgdGhlIHJlLXNlbnQNCj4gPiA+ID4gPiA+ID4gaGFwcGVuZWQuDQo+ID4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBIZXJlJ3MgdGhlIHNjZW5hcmlvOg0KPiA+ID4gPiA+
-ID4gPiAxLiBDbGllbnQgc2VuZHMgYSB2MyBvcGVyYXRpb24NCj4gPiA+ID4gPiA+ID4gMi4gU2Vy
-dmVyIFJTVC1zIHRoZSBjb25uZWN0aW9uIChwcmlvciB0byB0aGUgdGltZW91dCkNCj4gPiA+ID4g
-PiA+ID4gKGVnLiwNCj4gPiA+ID4gPiA+ID4gY29ubmVjdGlvbg0KPiA+ID4gPiA+ID4gPiBpcyBp
-bW1lZGlhdGVseSByZXNldCkNCj4gPiA+ID4gPiA+ID4gMy4gQ2xpZW50IHJlLXNlbmRzIGEgdjMg
-b3BlcmF0aW9uIGJ1dCB0aGUgdGltZW91dCBpcyBub3cNCj4gPiA+ID4gPiA+ID4gMTIwc2VjLg0K
-PiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gQXMgYSByZXN1bHQsIGFuIGFwcGxpY2F0aW9u
-IHNlZXMgMm1pbnMgcGF1c2UgYmVmb3JlIGENCj4gPiA+ID4gPiA+ID4gcmV0cnkgaW4NCj4gPiA+
-ID4gPiA+ID4gY2FzZQ0KPiA+ID4gPiA+ID4gPiBzZXJ2ZXIgYWdhaW4gZG9lcyBub3QgcmVwbHku
-DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBJbnN0ZWFkLCB0aGlzIHBhdGNoIHByb3Bv
-c2VzIHRvIGtlZXAgdHJhY2sgb2ZmIHdoZW4gdGhlDQo+ID4gPiA+ID4gPiA+IG1pbm9yDQo+ID4g
-PiA+ID4gPiA+IHRpbWVvdXQNCj4gPiA+ID4gPiA+ID4gc2hvdWxkIGhhcHBlbiBhbmQgaWYgaXQg
-ZGlkbid0LCB0aGVuIGRvbid0IHVwZGF0ZSB0aGUgbmV3DQo+ID4gPiA+ID4gPiA+IHRpbWVvdXQu
-DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBPbGdhIEtvcm5p
-ZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4NCj4gPiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4g
-PiA+ICBpbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmggfCAgMSArDQo+ID4gPiA+ID4gPiA+ICBu
-ZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgfCAxMSArKysrKysrKysrKw0KPiA+ID4gPiA+ID4g
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQo+ID4g
-PiA+ID4gPiA+IGIvaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQo+ID4gPiA+ID4gPiA+IGlu
-ZGV4IGU2NGJkODIuLmE2MDNkNDggMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL2luY2x1ZGUv
-bGludXgvc3VucnBjL3hwcnQuaA0KPiA+ID4gPiA+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3N1
-bnJwYy94cHJ0LmgNCj4gPiA+ID4gPiA+ID4gQEAgLTEwMSw2ICsxMDEsNyBAQCBzdHJ1Y3QgcnBj
-X3Jxc3Qgew0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgKg0KPiA+ID4gPiA+ID4gPiB1c2VkIGluDQo+ID4gPiA+ID4g
-PiA+IHRoZQ0KPiA+ID4gPiA+ID4gPiBzb2Z0aXJxLg0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4gPiA+ID4g
-PiA+ID4gICAgICAgdW5zaWduZWQgbG9uZyAgICAgICAgICAgcnFfbWFqb3J0aW1lbzsgIC8qIG1h
-am9yDQo+ID4gPiA+ID4gPiA+IHRpbWVvdXQNCj4gPiA+ID4gPiA+ID4gYWxhcm0gKi8NCj4gPiA+
-ID4gPiA+ID4gKyAgICAgdW5zaWduZWQgbG9uZyAgICAgICAgICAgcnFfbWlub3J0aW1lbzsgIC8q
-IG1pbm9yDQo+ID4gPiA+ID4gPiA+IHRpbWVvdXQNCj4gPiA+ID4gPiA+ID4gYWxhcm0gKi8NCj4g
-PiA+ID4gPiA+ID4gICAgICAgdW5zaWduZWQgbG9uZyAgICAgICAgICAgcnFfdGltZW91dDsgICAg
-IC8qIEN1cnJlbnQNCj4gPiA+ID4gPiA+ID4gdGltZW91dA0KPiA+ID4gPiA+ID4gPiB2YWx1ZSAq
-Lw0KPiA+ID4gPiA+ID4gPiAgICAgICBrdGltZV90ICAgICAgICAgICAgICAgICBycV9ydHQ7ICAg
-ICAgICAgLyogcm91bmQtDQo+ID4gPiA+ID4gPiA+IHRyaXAgdGltZQ0KPiA+ID4gPiA+ID4gPiAq
-Lw0KPiA+ID4gPiA+ID4gPiAgICAgICB1bnNpZ25lZCBpbnQgICAgICAgICAgICBycV9yZXRyaWVz
-OyAgICAgLyogIyBvZg0KPiA+ID4gPiA+ID4gPiByZXRyaWVzICovDQo+ID4gPiA+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9uZXQvc3VucnBjL3hwcnQuYyBiL25ldC9zdW5ycGMveHBydC5jDQo+ID4gPiA+
-ID4gPiA+IGluZGV4IGQ1Y2M1ZGIuLmMwY2UyMzIgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBh
-L25ldC9zdW5ycGMveHBydC5jDQo+ID4gPiA+ID4gPiA+ICsrKyBiL25ldC9zdW5ycGMveHBydC5j
-DQo+ID4gPiA+ID4gPiA+IEBAIC02MDcsNiArNjA3LDExIEBAIHN0YXRpYyB2b2lkDQo+ID4gPiA+
-ID4gPiA+IHhwcnRfcmVzZXRfbWFqb3J0aW1lbyhzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gcnBjX3Jx
-c3QgKnJlcSkNCj4gPiA+ID4gPiA+ID4gICAgICAgcmVxLT5ycV9tYWpvcnRpbWVvICs9IHhwcnRf
-Y2FsY19tYWpvcnRpbWVvKHJlcSk7DQo+ID4gPiA+ID4gPiA+ICB9DQo+ID4gPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+ID4gPiArc3RhdGljIHZvaWQgeHBydF9yZXNldF9taW5vcnRpbWVvKHN0cnVjdCBy
-cGNfcnFzdCAqcmVxKQ0KPiA+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArICAgICByZXEt
-PnJxX21pbm9ydGltZW8gPSBqaWZmaWVzICsgcmVxLT5ycV90aW1lb3V0Ow0KPiA+ID4gPiA+ID4g
-PiArfQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICBzdGF0aWMgdm9pZCB4cHJ0X2lu
-aXRfbWFqb3J0aW1lbyhzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2ssDQo+ID4gPiA+ID4gPiA+IHN0cnVj
-dA0KPiA+ID4gPiA+ID4gPiBycGNfcnFzdCAqcmVxKQ0KPiA+ID4gPiA+ID4gPiAgew0KPiA+ID4g
-PiA+ID4gPiAgICAgICB1bnNpZ25lZCBsb25nIHRpbWVfaW5pdDsNCj4gPiA+ID4gPiA+ID4gQEAg
-LTYxOCw2ICs2MjMsNyBAQCBzdGF0aWMgdm9pZA0KPiA+ID4gPiA+ID4gPiB4cHJ0X2luaXRfbWFq
-b3J0aW1lbyhzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gcnBjX3Rhc2sNCj4gPiA+ID4gPiA+ID4gKnRh
-c2ssIHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgIHRp
-bWVfaW5pdCA9IHhwcnRfYWJzX2t0aW1lX3RvX2ppZmZpZXModGFzay0NCj4gPiA+ID4gPiA+ID4g
-PiB0a19zdGFydCk7DQo+ID4gPiA+ID4gPiA+ICAgICAgIHJlcS0+cnFfdGltZW91dCA9IHRhc2st
-PnRrX2NsaWVudC0+Y2xfdGltZW91dC0NCj4gPiA+ID4gPiA+ID4gPnRvX2luaXR2YWw7DQo+ID4g
-PiA+ID4gPiA+ICAgICAgIHJlcS0+cnFfbWFqb3J0aW1lbyA9IHRpbWVfaW5pdCArDQo+ID4gPiA+
-ID4gPiA+IHhwcnRfY2FsY19tYWpvcnRpbWVvKHJlcSk7DQo+ID4gPiA+ID4gPiA+ICsgICAgIHJl
-cS0+cnFfbWlub3J0aW1lbyA9IHRpbWVfaW5pdCArIHJlcS0+cnFfdGltZW91dDsNCj4gPiA+ID4g
-PiA+ID4gIH0NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICAvKioNCj4gPiA+ID4gPiA+
-ID4gQEAgLTYzMSw2ICs2MzcsMTAgQEAgaW50IHhwcnRfYWRqdXN0X3RpbWVvdXQoc3RydWN0DQo+
-ID4gPiA+ID4gPiA+IHJwY19ycXN0DQo+ID4gPiA+ID4gPiA+ICpyZXEpDQo+ID4gPiA+ID4gPiA+
-ICAgICAgIGNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdG8gPSByZXEtPnJxX3Rhc2stDQo+ID4g
-PiA+ID4gPiA+ID50a19jbGllbnQtDQo+ID4gPiA+ID4gPiA+ID4gY2xfdGltZW91dDsNCj4gPiA+
-ID4gPiA+ID4gICAgICAgaW50IHN0YXR1cyA9IDA7DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gPiArICAgICBpZiAodGltZV9iZWZvcmUoamlmZmllcywgcmVxLT5ycV9taW5vcnRpbWVvKSkg
-ew0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgIHhwcnRfcmVzZXRfbWlub3J0aW1lbyhyZXEp
-Ow0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgIHJldHVybiBzdGF0dXM7DQo+ID4gPiA+ID4g
-PiANCj4gPiA+ID4gPiA+IFNob3VsZG4ndCB0aGlzIGNhc2UgYmUganVzdCByZXR1cm5pbmcgd2l0
-aG91dCB1cGRhdGluZyB0aGUNCj4gPiA+ID4gPiA+IHRpbWVvdXQ/DQo+ID4gPiA+ID4gPiBBZnRl
-ciBhbGwsIHRoaXMgaXMgdGhlIGNhc2Ugd2hlcmUgbm90aGluZyBoYXMgZXhwaXJlZCB5ZXQuDQo+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gSSB0aGluayB3ZSBwZXJoYXBzIHNob3VsZCByZWFkanVzdCB0
-aGUgbWlub3IgdGltZW91dCBldmVyeQ0KPiA+ID4gPiA+IGhlcmUgYnV0IEkNCj4gPiA+ID4gPiBj
-YW4ndCBmaWd1cmUgb3V0IHdoYXQgdGhlIGRlc2lyZWQgYmVoYXZpb3VyIHNob3VsZCBiZS4gV2hl
-bg0KPiA+ID4gPiA+IHNob3VsZCB3ZQ0KPiA+ID4gPiA+IGNvbnNpZGVyIGl0J3MgYXBwcm9wcmlh
-dGUgdG8gZG91YmxlIHRoZSB0aW1lci4gQ29uc2lkZXIgdGhlDQo+ID4gPiA+ID4gZm9sbG93aW5n
-Og0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IHRpbWUxOiB2MyBvcCBzZW50DQo+ID4gPiA+ID4gdGlt
-ZTErNTBzOiBzZXJ2ZXIgUlNUcw0KPiA+ID4gPiA+IFdlIGNoZWNrIHRoYXQgaXQncyBub3QgeWV0
-IHRoZSBtaW5vciB0aW1lb3V0ICh0aW1lMSs2MHMpDQo+ID4gPiA+ID4gdGltZTErNTBzOiB2MyBv
-cCByZS1zZW50ICAoc2F5IHdlIGRvbid0IHJlc2V0IHRoZSBtaW5vcg0KPiA+ID4gPiA+IHRpbWVv
-dXQgdG8gYmUNCj4gPiA+ID4gPiBjdXJyZW50IHRpbWUrNjBzKQ0KPiA+ID4gPiA+IHRpbWUxKzYw
-czogc2VydmVyIFJTVHMNCj4gPiA+ID4gPiBDbGllbnQgd2lsbCByZXNlbmQgdGhlIG9wIGJ1dCBu
-b3cgaXQncyBwYXN0IHRoZSBpbml0aWFsIG1pbm9yDQo+ID4gPiA+ID4gdGltZW91dA0KPiA+ID4g
-PiA+IHNvIHRoZSB0aW1lb3V0IHdpbGwgYmUgZG91YmxlZC4gSXMgdGhhdCB3aGF0IHdlIHJlYWxs
-eSB3YW50Pw0KPiA+ID4gPiA+IE1heWJlIGl0DQo+ID4gPiA+ID4gaXMuDQo+ID4gPiA+ID4gU2F5
-IG5vdyB0aGUgc2VydmVyIFJTVHMgdGhlIGNvbm5lY3Rpb24gYWdhaW4gKHNob3J0bHkgYWZ0ZXIN
-Cj4gPiA+ID4gPiBvciBpbg0KPiA+ID4gPiA+IGxlc3MNCj4gPiA+ID4gPiB0aGFuIDYwcyksIHNp
-bmNlIHdlIGFyZSBub3QgdXBkYXRpbmcgdGhlIG1pbm9yIHRpbWVvdXQgdmFsdWUsDQo+ID4gPiA+
-ID4gdGhlbg0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IGNsaWVudCB3aWxsIGFnYWluIG1vZGlm
-eSB0aGUgdGltZW91dCBiZWZvcmUgcmVzZW5kaW5nLiBJcw0KPiA+ID4gPiA+IHRoYXQgT2s/DQo+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhhdCdzIHdoeSBteSByZWFzb25pbmcgd2FzIHRoYXQgYXQg
-ZXZlcnkgcmUtZXZhbHVhdGlvbiBvZg0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IHRpbWVvdXQN
-Cj4gPiA+ID4gPiB2YWx1ZSwgd2UgaGF2ZSB0aGUgbWlub3IgdGltZW91dCBzZXQgZm9yIGN1cnJl
-bnQgdGltZSs2MHMgYW5kDQo+ID4gPiA+ID4gd2UgZ2V0DQo+ID4gPiA+ID4gYW4gUlNUIHdpdGhp
-biBpdCB0aGVuIHdlIGRvbid0IG1vZGlmeSB0aGUgdGltZW91dCB2YWx1ZS4NCj4gPiA+ID4gDQo+
-ID4gPiA+IFNvIGEgY291cGxlIG9mIGlzc3VlcyB3aXRoIHRoYXQ6DQo+ID4gPiA+IA0KPiA+ID4g
-PiBUaGUgZmlyc3QgaXMgdGhhdCBhIHNlcmllcyBvZiBSU1QgY2FsbHMgY291bGQgY2F1c2UgdGhl
-IHRpbWVvdXQNCj4gPiA+ID4gdG8gZ2V0DQo+ID4gPiA+IHB1c2hlZCB0byB0aGUgbWF4IHZhbHVl
-IGZhaXJseSBxdWlja2x5IChidHcsDQo+ID4gPiA+IHhwcnRfcmVzZXRfbWlub3J0aW1lbygpDQo+
-ID4gPiA+IGRvZXMgbm90IGVuZm9yY2UgYSBsaW1pdCByaWdodCBub3cpLg0KPiA+ID4gPiANCj4g
-PiA+ID4gVGhlIHNlY29uZCBpcyB0aGF0IHdlIGVuZCB1cCBwdXNoaW5nIG91dCB0aGUgbWFqb3Ig
-dGltZW91dA0KPiA+ID4gPiB2YWx1ZSwgc2luY2UNCj4gPiA+ID4gdGhlIG1ham9yIHRpbWVvdXQg
-Y2Fubm90IG9jY3VyIHVubGVzcyB0aGUgdmFsdWUgb2YgamlmZmllcyBpcw0KPiA+ID4gPiBhZnRl
-ciB0aGUNCj4gPiA+ID4gbWlub3IgdGltZW91dCAod2hpY2gga2VlcHMgY2hhbmdpbmcgb24gZWFj
-aCBwYXNzKS4NCj4gPiA+IA0KPiA+ID4gQnV0IGRvbnQgd2Ugd2FudCB0byBwdXNoIG91dCB0aGUg
-bWFqb3IgdGltZW91dD8NCj4gPiA+IA0KPiA+ID4gQWN0dWFsbHkgaSB0aGluaywgYmFjayBpbiBt
-eSBleGFtcGxlIG9mIGdldHRpbmcgdGhlIFJTVCwgYXQNCj4gPiA+ICh0aW1lMSs1MHMpLiBzaG91
-bGRuJ3QgbWlub3JfdGltZW8gYW5kIG1ham9ydGltZW8gYmUgcmVzZXQgdG8NCj4gPiA+IGN1cnJl
-bnR0aW1lK2FwcHJvcHJpYXRlIHZhbHVlIG9mIG1pbm9yL21ham9yPyAgSWYgd2UgYXJlDQo+ID4g
-PiBldmFsdWF0aW5nDQo+ID4gPiB0aGUgdGltZXIgYW5kIHRoZSB0aW1lIGRpZmZlcmVuY2UgYmV0
-d2VlbiB3aGVuIHRoZSBvcGVyYXRpb24gd2FzDQo+ID4gPiBzZW50DQo+ID4gPiBhbmQgbm93IGlz
-IGxlc3MgdGhhbiA2MHMsIHdlIHNob3VsZG4ndCBzYXkgYSB0aW1lb3V0IGhhcw0KPiA+ID4gb2Nj
-dXJyaWVkDQo+ID4gPiAoaXQncyBhIHByZS1tYXR1cmUgdGltZW91dCkgYW5kIHRodXMgaXRzIHZh
-bHVlIHNob3VsZG4ndCBiZQ0KPiA+ID4gbW9kaWZpZWQuDQo+ID4gPiANCj4gPiA+IFRob3VnaHRz
-Pw0KPiA+IA0KPiA+IERvIHlvdSBmZWVsIHRoYXQgdGhlIGZvbGxvd2luZyBhcHByb2FjaCBpcyBp
-bmNvcnJlY3Q/IFNyeSBpdCdzIGp1c3QNCj4gPiBjdXQtYW5kLXBhc3RlIGJ1dCB0aGUgbG9naWMg
-aXMgdGhlcmUuIFRoYW5rIHlvdS4NCj4gDQo+IFNjcmF0Y2ggdGhpcy4uLiBTbyB3aXRoIHRoaXMg
-d2UnZCBuZXZlciB0aW1lb3V0IGFuIG9wZXJhdGlvbiBhdCBhbGwuDQoNCkkgdGhpbmsgdGhlIGlk
-ZWFsIHNvbHV0aW9uIHdvdWxkIHJlc3BlY3QgdGhlIGZhY3QgdGhhdCBtb3N0IHN5c2FkbWlucw0K
-d2hvIHJlYWQgdGhlIG5mcyBtYW5wYWdlIGFzc3VtZSB0aGF0IHRpbWVvdXRzIGFyZSBhIHByZWRp
-Y3RhYmxlDQpmZWF0dXJlLCBhbmQgdGhhdCBpZiBJIHNldCB0aW1lbz02MDAsIHJldHJhbnM9Miwg
-Zm9yIGEgVENQIG1vdW50LCB0aGVuDQp0aGUgbWlub3IgdGltZW91dHMgd2lsbCBvY2N1ciA2MHMs
-IGFuZCAxODBzICg2MCsxMjApIGFmdGVyIHRoZSBSUEMgY2FsbA0Kd2FzIGluaXRpYWxseSBhdHRl
-bXB0ZWQgc2VudCwgYW5kIHRoZW4gdGhlIGZpcnN0IG1ham9yIHRpbWVvdXQgd2lsbA0Kb2NjdXIg
-MzYwcyAoNjArMTIwKzE4MCkgYWZ0ZXIgdGhlIFJQQyBjYWxsIHdhcyBpbml0aWFsbHkgYXR0ZW1w
-dGVkDQpzZW50Lg0KaS5lLiB0aGUgdGltZW91dHMgYXJlIGNhbGN1bGF0ZWQgcmVsYXRpdmUgdG8g
-dGhlIHRpbWUgYXQgd2hpY2ggdGhlIFJQQw0KY2FsbCB3YXMgaW5pdGlhbGx5IGF0dGVtcHRlZCB0
-cmFuc21pdHRlZC4NCg0KSWYgd2Ugc3RhcnQgZXh0ZW5kaW5nIGFueSBvbmUgb2YgdGhvc2UgdGlt
-ZW91dHMsIHRoZW4gdGhpbmdzIGxpa2Ugc29mdA0KbW91bnRzIGJlY29tZSB1bnByZWRpY3RhYmxl
-LCBhbmQgd2Ugbm8gbG9uZ2VyIGNvbnRyb2wgd2hlbiB0aGUgRUlPIGlzDQpnb2luZyB0byBiZSBy
-ZXBvcnRlZCB0byB0aGUgYXBwbGljYXRpb24uIFRoaXMgaGFzIGJlZW4gYSBzb3VyY2Ugb2YNCmNv
-bXBsYWludHMgZnJvbSB1c2VycyBpbiB0aGUgcGFzdC4NCg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQo+ID4gYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94
-cHJ0LmgNCj4gPiBpbmRleCBlNjRiZDgyLi5hNjAzZDQ4IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1
-ZGUvbGludXgvc3VucnBjL3hwcnQuaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvc3VucnBjL3hw
-cnQuaA0KPiA+IEBAIC0xMDEsNiArMTAxLDcgQEAgc3RydWN0IHJwY19ycXN0IHsNCj4gPiAgICog
-dXNlZCBpbiB0aGUgc29mdGlycS4NCj4gPiAgICovDQo+ID4gICB1bnNpZ25lZCBsb25nIHJxX21h
-am9ydGltZW87IC8qIG1ham9yIHRpbWVvdXQgYWxhcm0gKi8NCj4gPiArIHVuc2lnbmVkIGxvbmcg
-cnFfbWlub3J0aW1lbzsgLyogbWlub3IgdGltZW91dCBhbGFybSAqLw0KPiA+ICAgdW5zaWduZWQg
-bG9uZyBycV90aW1lb3V0OyAvKiBDdXJyZW50IHRpbWVvdXQgdmFsdWUgKi8NCj4gPiAgIGt0aW1l
-X3QgcnFfcnR0OyAvKiByb3VuZC10cmlwIHRpbWUgKi8NCj4gPiAgIHVuc2lnbmVkIGludCBycV9y
-ZXRyaWVzOyAvKiAjIG9mIHJldHJpZXMgKi8NCj4gPiBkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy94
-cHJ0LmMgYi9uZXQvc3VucnBjL3hwcnQuYw0KPiA+IGluZGV4IGQ1Y2M1ZGIuLjY2ZDQxMmIgMTAw
-NjQ0DQo+ID4gLS0tIGEvbmV0L3N1bnJwYy94cHJ0LmMNCj4gPiArKysgYi9uZXQvc3VucnBjL3hw
-cnQuYw0KPiA+IEBAIC02MDcsNiArNjA3LDExIEBAIHN0YXRpYyB2b2lkIHhwcnRfcmVzZXRfbWFq
-b3J0aW1lbyhzdHJ1Y3QNCj4gPiBycGNfcnFzdCAqcmVxKQ0KPiA+ICAgcmVxLT5ycV9tYWpvcnRp
-bWVvICs9IHhwcnRfY2FsY19tYWpvcnRpbWVvKHJlcSk7DQo+ID4gIH0NCj4gPiANCj4gPiArc3Rh
-dGljIHZvaWQgeHBydF9yZXNldF9taW5vcnRpbWVvKHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0KPiA+
-ICt7DQo+ID4gKyByZXEtPnJxX21pbm9ydGltZW8gPSBqaWZmaWVzICsgcmVxLT5ycV90aW1lb3V0
-Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCB4cHJ0X2luaXRfbWFqb3J0aW1lbyhz
-dHJ1Y3QgcnBjX3Rhc2sgKnRhc2ssIHN0cnVjdA0KPiA+IHJwY19ycXN0ICpyZXEpDQo+ID4gIHsN
-Cj4gPiAgIHVuc2lnbmVkIGxvbmcgdGltZV9pbml0Ow0KPiA+IEBAIC02MTgsNiArNjIzLDcgQEAg
-c3RhdGljIHZvaWQgeHBydF9pbml0X21ham9ydGltZW8oc3RydWN0DQo+ID4gcnBjX3Rhc2sNCj4g
-PiAqdGFzaywgc3RydWN0IHJwY19ycXN0ICpyZXEpDQo+ID4gICB0aW1lX2luaXQgPSB4cHJ0X2Fi
-c19rdGltZV90b19qaWZmaWVzKHRhc2stPnRrX3N0YXJ0KTsNCj4gPiAgIHJlcS0+cnFfdGltZW91
-dCA9IHRhc2stPnRrX2NsaWVudC0+Y2xfdGltZW91dC0+dG9faW5pdHZhbDsNCj4gPiAgIHJlcS0+
-cnFfbWFqb3J0aW1lbyA9IHRpbWVfaW5pdCArIHhwcnRfY2FsY19tYWpvcnRpbWVvKHJlcSk7DQo+
-ID4gKyByZXEtPnJxX21pbm9ydGltZW8gPSB0aW1lX2luaXQgKyByZXEtPnJxX3RpbWVvdXQ7DQo+
-ID4gIH0NCj4gPiANCj4gPiAgLyoqDQo+ID4gQEAgLTYzMSw2ICs2MzcsMTEgQEAgaW50IHhwcnRf
-YWRqdXN0X3RpbWVvdXQoc3RydWN0IHJwY19ycXN0ICpyZXEpDQo+ID4gICBjb25zdCBzdHJ1Y3Qg
-cnBjX3RpbWVvdXQgKnRvID0gcmVxLT5ycV90YXNrLT50a19jbGllbnQtDQo+ID4gPmNsX3RpbWVv
-dXQ7DQo+ID4gICBpbnQgc3RhdHVzID0gMDsNCj4gPiANCj4gPiArIGlmICh0aW1lX2JlZm9yZShq
-aWZmaWVzLCByZXEtPnJxX21pbm9ydGltZW8pKSB7DQo+ID4gKyByZXEtPnJxX21ham9ydGltZW8g
-PSBqaWZmaWVzICsgeHBydF9jYWxjX21ham9ydGltZW8ocmVxKTsNCj4gPiArIHJlcS0+cnFfbWlu
-b3J0aW1lbyA9IGppZmZpZXMgKyByZXEtPnJxX3RpbWVvdXQ7DQo+ID4gKyByZXR1cm4gc3RhdHVz
-Ow0KPiA+ICsgfQ0KPiA+ICAgaWYgKHRpbWVfYmVmb3JlKGppZmZpZXMsIHJlcS0+cnFfbWFqb3J0
-aW1lbykpIHsNCj4gPiAgIGlmICh0by0+dG9fZXhwb25lbnRpYWwpDQo+ID4gICByZXEtPnJxX3Rp
-bWVvdXQgPDw9IDE7DQo+ID4gQEAgLTY0OSw2ICs2NjAsNyBAQCBpbnQgeHBydF9hZGp1c3RfdGlt
-ZW91dChzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSkNCj4gPiAgIHNwaW5fdW5sb2NrKCZ4cHJ0LT50cmFu
-c3BvcnRfbG9jayk7DQo+ID4gICBzdGF0dXMgPSAtRVRJTUVET1VUOw0KPiA+ICAgfQ0KPiA+ICsg
-eHBydF9yZXNldF9taW5vcnRpbWVvKHJlcSk7DQo+ID4gDQo+ID4gICBpZiAocmVxLT5ycV90aW1l
-b3V0ID09IDApIHsNCj4gPiAgIHByaW50ayhLRVJOX1dBUk5JTkcgInhwcnRfYWRqdXN0X3RpbWVv
-dXQ6IHJxX3RpbWVvdXQgPSAwIVxuIik7DQo+ID4gLS0NCj4gPiANCj4gPiA+ID4gPiA+ID4gKyAg
-ICAgfQ0KPiA+ID4gPiA+ID4gPiAgICAgICBpZiAodGltZV9iZWZvcmUoamlmZmllcywgcmVxLT5y
-cV9tYWpvcnRpbWVvKSkgew0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgIGlmICh0by0+dG9f
-ZXhwb25lbnRpYWwpDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICByZXEtPnJx
-X3RpbWVvdXQgPDw9IDE7DQo+ID4gPiA+ID4gPiA+IEBAIC02MzgsNiArNjQ4LDcgQEAgaW50IHhw
-cnRfYWRqdXN0X3RpbWVvdXQoc3RydWN0DQo+ID4gPiA+ID4gPiA+IHJwY19ycXN0ICpyZXEpDQo+
-ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICByZXEtPnJxX3RpbWVvdXQgKz0gdG8t
-DQo+ID4gPiA+ID4gPiA+ID50b19pbmNyZW1lbnQ7DQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAg
-ICAgaWYgKHRvLT50b19tYXh2YWwgJiYgcmVxLT5ycV90aW1lb3V0ID49IHRvLQ0KPiA+ID4gPiA+
-ID4gPiA+IHRvX21heHZhbCkNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIHJl
-cS0+cnFfdGltZW91dCA9IHRvLT50b19tYXh2YWw7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAg
-ICAgeHBydF9yZXNldF9taW5vcnRpbWVvKHJlcSk7DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+
-IC4uLmFuZCB0aGVuIHBlcmhhcHMgdGhpcyBjYW4ganVzdCBiZSBtb3ZlZCBvdXQgb2YgdGhlDQo+
-ID4gPiA+ID4gPiB0aW1lX2JlZm9yZSgpDQo+ID4gPiA+ID4gPiBjb25kaXRpb24sIHNpbmNlIGl0
-IGxvb2tzIHRvIG1lIGFzIGlmIHdlIGFsc28gd2FudCB0byByZXNldA0KPiA+ID4gPiA+ID4gcmVx
-LQ0KPiA+ID4gPiA+ID4gPiBycV9taW5vcnRpbWVvIHdoZW4gYSBtYWpvciB0aW1lb3V0IG9jY3Vy
-cy4NCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICByZXEtPnJxX3JldHJpZXMrKzsNCj4gPiA+
-ID4gPiA+ID4gICAgICAgfSBlbHNlIHsNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICByZXEt
-PnJxX3RpbWVvdXQgPSB0by0+dG9faW5pdHZhbDsNCj4gPiA+ID4gDQotLSANClRyb25kIE15a2xl
-YnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlr
-bGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Mon, 13 Jul 2020, Chuck Lever wrote:
+
+>=20
+>=20
+> > On Jul 13, 2020, at 8:29 AM, Scott Mayhew <smayhew@redhat.com> wrote:
+> >=20
+> > On Sun, 12 Jul 2020, Chuck Lever wrote:
+> >=20
+> >> Hi Scott-
+> >>=20
+> >>> On Jul 10, 2020, at 4:33 PM, Scott Mayhew <smayhew@redhat.com> wrote:
+> >>>=20
+> >>> If the rpc_pipefs is unmounted, then the rpc_pipe->dentry becomes NUL=
+L
+> >>> and dereferencing the dentry->d_sb will trigger an oops.  The only
+> >>> reason we're doing that is to determine the nfsd_net, which could
+> >>> instead be passed in by the caller.  So do that instead.
+> >>>=20
+> >>> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> >>=20
+> >> Looks straightforward. Applied to the nfsd-5.9 testing tree.
+> >>=20
+> >> I'm wondering about automatic backports to stable. This fix does not
+> >> apply to kernels before v5.6, but IIUC addresses a crash introduced
+> >> in f3f8014862d8 ("nfsd: add the infrastructure to handle the cld upcal=
+l")
+> >> [2012] ?
+> >>=20
+> >> Is "Cc: <stable@kernel.org> # v5.6+" appropriate?
+> >>=20
+> > I think it would be 11a60d159259 ("nfsd: add a "GetVersion" upcall for
+> > nfsdcld"), so it would only need to go back to v5.4... and to get the
+> > patch to apply, in the hunk that modifies nfsd4_cld_grace_done_v0()
+> > you would need to add a cast of nn->boot_time to int64_t (which
+> > 9cc7680149b2 "nfsd: make 'boot_time' 64-bit wide" removed).
+>=20
+> Thanks for the detailed background!
+>=20
+> Then instead of "Cc: stable", can I add:
+>=20
+> Fixes: 11a60d159259 ("nfsd: add a "GetVersion" upcall for nfsdcld") ?
+
+Yes, please do that.
+
+>=20
+>=20
+> >> Also, is there a bug report that documents the crash?
+> >=20
+> > Our QE hit the crash internally while running xfstests on a pNFS SCSI
+> > setup.  I don't think either of those is relevant aside from the fact
+> > that several nfsd threads where stuck on xfs while calling
+> > nfsd4_scsi_proc_layoutcommit().  I think what happened is that the job
+> > timed out and the system was in the process of being shut down when the
+> > oops occurred, and the rpc_pipefs was unmounted out from under nfsd:
+> >=20
+> > crash> bt
+> > PID: 39572  TASK: ffff8a78f67fddc0  CPU: 1   COMMAND: "kworker/u4:0"
+> > #0 [ffffa39a026b3ae0] machine_kexec at ffffffffae65b55e
+> > #1 [ffffa39a026b3b38] __crash_kexec at ffffffffae75ea5d
+> > #2 [ffffa39a026b3c00] crash_kexec at ffffffffae75f93d
+> > #3 [ffffa39a026b3c18] oops_end at ffffffffae622c4d
+> > #4 [ffffa39a026b3c38] no_context at ffffffffae66aa2e
+> > #5 [ffffa39a026b3c90] do_page_fault at ffffffffae66b552
+> > #6 [ffffa39a026b3cc0] async_page_fault at ffffffffaf00123e
+> >    [exception RIP: __cld_pipe_upcall+0x3d]
+> >    RIP: ffffffffc06b5ded  RSP: ffffa39a026b3d70  RFLAGS: 00010246
+> >    RAX: 0000000000000000  RBX: ffff8a78ceaf7000  RCX: 000000000000000b
+> >    RDX: ffff8a78ceaf7000  RSI: ffffa39a026b3d70  RDI: ffffa39a026b3d70
+> >    RBP: ffffa39a026b3dc0   R8: ffff8a78f37aac50   R9: ffff8a78c7c02800
+> >    R10: 8080808080808080  R11: 0000ec193f7575c0  R12: ffff8a78c8ef3038
+> >    R13: ffff8a78d3156220  R14: ffffa39a026b3e50  R15: ffff8a78d3156220
+> >    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> > #7 [ffffa39a026b3dc8] nfsd4_cld_remove at ffffffffc06b7b70 [nfsd]
+> > #8 [ffffa39a026b3df8] expire_client at ffffffffc06aa4d6 [nfsd]
+> > #9 [ffffa39a026b3e08] laundromat_main at ffffffffc06aa799 [nfsd]
+> > #10 [ffffa39a026b3e98] process_one_work at ffffffffae6d1cf7
+> > #11 [ffffa39a026b3ed8] worker_thread at ffffffffae6d23c0
+> > #12 [ffffa39a026b3f10] kthread at ffffffffae6d7d02
+> > #13 [ffffa39a026b3f50] ret_from_fork at ffffffffaf000255
+> >=20
+> > crash> dis -lr __cld_pipe_upcall+0x3d
+> > ...
+> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
+d/nfs4recover.c: 764
+> > 0xffffffffc06b5de0 <__cld_pipe_upcall+0x30>:    mov    0x108(%rdi),%rax
+> > 0xffffffffc06b5de7 <__cld_pipe_upcall+0x37>:    mov    %rsp,%rsi
+> > 0xffffffffc06b5dea <__cld_pipe_upcall+0x3a>:    mov    %rsi,%rdi
+> > 0xffffffffc06b5ded <__cld_pipe_upcall+0x3d>:    mov    0x68(%rax),%rax
+> >=20
+> > That puts us here:
+> >=20
+> > static int
+> > __cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
+> > {
+> >        int ret;
+> >        struct rpc_pipe_msg msg;
+> >        struct cld_upcall *cup =3D container_of(cmsg, struct cld_upcall,=
+ cu_u);
+> >        struct nfsd_net *nn =3D net_generic(pipe->dentry->d_sb->s_fs_inf=
+o,
+> >                                          nfsd_net_id);
+> > ...
+> > crash> rpc_pipe.dentry -o
+> > struct rpc_pipe {
+> >  [0x108] struct dentry *dentry;
+> > }
+> > crash> dentry.d_sb -o
+> > struct dentry {
+> >  [0x68] struct super_block *d_sb;
+> > }
+> >=20
+> > If the rpc_pipe->dentry was NULL, that would explain the NULL pointer d=
+ereference at 0000000000000068.  Let's confirm.
+> >=20
+> > crash> dis -lr ffffffffc06b7b70
+> > ...
+> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
+d/nfs4recover.c: 794
+> > 0xffffffffc06b7b65 <nfsd4_cld_remove+0x85>:     mov    %rbp,%rsi
+> > 0xffffffffc06b7b68 <nfsd4_cld_remove+0x88>:     mov    %rbx,%rdi <-----=
+-------------------------rpc_pipe
+> > 0xffffffffc06b7b6b <nfsd4_cld_remove+0x8b>:     callq  0xffffffffc06b5d=
+b0 <__cld_pipe_upcall>
+> > /usr/src/debug/kernel-4.18.0-211.el8/linux-4.18.0-211.el8.x86_64/fs/nfs=
+d/nfs4recover.c: 795
+> > 0xffffffffc06b7b70 <nfsd4_cld_remove+0x90>:     cmp    $0xfffffff5,%eax
+> >=20
+> > crash> rpc_pipe.dentry ffff8a78ceaf7000
+> >  dentry =3D 0x0
+> >=20
+> > We can also see that the rpc_pipefs isn't mounted:
+> >=20
+> > crash> mount|grep pipefs
+> > (nothing)
+> >=20
+> > And none of the daemons that require the rpc_pipefs are running:
+> >=20
+> > crash> ps|grep nfsdcld
+> > crash> ps|grep idmapd
+> > crash> ps|grep gssd
+> > crash> ps|grep blkmapd
+> > (nothing)
+> >=20
+> > I think part of the problem is that the nfsdcld.service unit file has
+> > "Requires=3Drpc_pipefs.target", but the nfs-server.service unit file on=
+ly
+> > has "Wants=3Dnfsdcld.service".  It can't be "Requires" because using th=
+e
+> > nfsdcld daemon for client tracking is optional.
+> >=20
+> > -Scott
+> >=20
+> >>=20
+> >>=20
+> >>> ---
+> >>> fs/nfsd/nfs4recover.c | 24 +++++++++++-------------
+> >>> 1 file changed, 11 insertions(+), 13 deletions(-)
+> >>>=20
+> >>> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> >>> index 9e40dfecf1b1..186fa2c2c6ba 100644
+> >>> --- a/fs/nfsd/nfs4recover.c
+> >>> +++ b/fs/nfsd/nfs4recover.c
+> >>> @@ -747,13 +747,11 @@ struct cld_upcall {
+> >>> };
+> >>>=20
+> >>> static int
+> >>> -__cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
+> >>> +__cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg, struct nfsd_net=
+ *nn)
+> >>> {
+> >>> =09int ret;
+> >>> =09struct rpc_pipe_msg msg;
+> >>> =09struct cld_upcall *cup =3D container_of(cmsg, struct cld_upcall, c=
+u_u);
+> >>> -=09struct nfsd_net *nn =3D net_generic(pipe->dentry->d_sb->s_fs_info=
+,
+> >>> -=09=09=09=09=09  nfsd_net_id);
+> >>>=20
+> >>> =09memset(&msg, 0, sizeof(msg));
+> >>> =09msg.data =3D cmsg;
+> >>> @@ -773,7 +771,7 @@ __cld_pipe_upcall(struct rpc_pipe *pipe, void *cm=
+sg)
+> >>> }
+> >>>=20
+> >>> static int
+> >>> -cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg)
+> >>> +cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg, struct nfsd_net *=
+nn)
+> >>> {
+> >>> =09int ret;
+> >>>=20
+> >>> @@ -782,7 +780,7 @@ cld_pipe_upcall(struct rpc_pipe *pipe, void *cmsg=
+)
+> >>> =09 *  upcalls queued.
+> >>> =09 */
+> >>> =09do {
+> >>> -=09=09ret =3D __cld_pipe_upcall(pipe, cmsg);
+> >>> +=09=09ret =3D __cld_pipe_upcall(pipe, cmsg, nn);
+> >>> =09} while (ret =3D=3D -EAGAIN);
+> >>>=20
+> >>> =09return ret;
+> >>> @@ -1115,7 +1113,7 @@ nfsd4_cld_create(struct nfs4_client *clp)
+> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
+> >>> =09=09=09clp->cl_name.len);
+> >>>=20
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret) {
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
+> >>> @@ -1180,7 +1178,7 @@ nfsd4_cld_create_v2(struct nfs4_client *clp)
+> >>> =09} else
+> >>> =09=09cmsg->cm_u.cm_clntinfo.cc_princhash.cp_len =3D 0;
+> >>>=20
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, cmsg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, cmsg, nn);
+> >>> =09if (!ret) {
+> >>> =09=09ret =3D cmsg->cm_status;
+> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
+> >>> @@ -1218,7 +1216,7 @@ nfsd4_cld_remove(struct nfs4_client *clp)
+> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
+> >>> =09=09=09clp->cl_name.len);
+> >>>=20
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret) {
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>> =09=09clear_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
+> >>> @@ -1261,7 +1259,7 @@ nfsd4_cld_check_v0(struct nfs4_client *clp)
+> >>> =09memcpy(cup->cu_u.cu_msg.cm_u.cm_name.cn_id, clp->cl_name.data,
+> >>> =09=09=09clp->cl_name.len);
+> >>>=20
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret) {
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>> =09=09set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
+> >>> @@ -1404,7 +1402,7 @@ nfsd4_cld_grace_start(struct nfsd_net *nn)
+> >>> =09}
+> >>>=20
+> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceStart;
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret)
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>>=20
+> >>> @@ -1432,7 +1430,7 @@ nfsd4_cld_grace_done_v0(struct nfsd_net *nn)
+> >>>=20
+> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceDone;
+> >>> =09cup->cu_u.cu_msg.cm_u.cm_gracetime =3D nn->boot_time;
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret)
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>>=20
+> >>> @@ -1460,7 +1458,7 @@ nfsd4_cld_grace_done(struct nfsd_net *nn)
+> >>> =09}
+> >>>=20
+> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GraceDone;
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret)
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>>=20
+> >>> @@ -1524,7 +1522,7 @@ nfsd4_cld_get_version(struct nfsd_net *nn)
+> >>> =09=09goto out_err;
+> >>> =09}
+> >>> =09cup->cu_u.cu_msg.cm_cmd =3D Cld_GetVersion;
+> >>> -=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+> >>> +=09ret =3D cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg, nn);
+> >>> =09if (!ret) {
+> >>> =09=09ret =3D cup->cu_u.cu_msg.cm_status;
+> >>> =09=09if (ret)
+> >>> --=20
+> >>> 2.25.4
+> >>>=20
+> >>=20
+> >> --
+> >> Chuck Lever
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
+>=20
+
