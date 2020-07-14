@@ -2,143 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0638621F811
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2020 19:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10A5521F998
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2020 20:39:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgGNRVX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jul 2020 13:21:23 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:56341 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgGNRVX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jul 2020 13:21:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594747282; x=1626283282;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=mQdU6qAxMHJ74owgd48Th1eZik1UsKy4eCyJGCMQgD0=;
-  b=vPlKfUV+gpHHRCZ2manLlk4iGC29yrHq4NdaoZQbWBtyctFEWjzHZrxd
-   P2sE0TRDlR6eACLgFrA5W3y7p2917l27I4yM0egO/bufLVx1z2ghuy5pT
-   B/pZrL7eM/AamCGrRS1Wbi9plCXnZUafn0koVj8loN4R8qNvostb67eEv
-   0=;
-IronPort-SDR: lBzCnr8mcxUMwy58oODrDNYX0jbaD9/n6kmzSp+Hhl6IZ2PiyaPzf+0hS36NRgrV8xJucxnnaF
- lkEgoTJvTQFA==
-X-IronPort-AV: E=Sophos;i="5.75,352,1589241600"; 
-   d="scan'208";a="41804987"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 14 Jul 2020 17:20:51 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id 328D1A2346;
-        Tue, 14 Jul 2020 17:20:50 +0000 (UTC)
-Received: from EX13D13UWB003.ant.amazon.com (10.43.161.233) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 14 Jul 2020 17:20:49 +0000
-Received: from EX13D13UWB002.ant.amazon.com (10.43.161.21) by
- EX13D13UWB003.ant.amazon.com (10.43.161.233) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 14 Jul 2020 17:20:49 +0000
-Received: from EX13D13UWB002.ant.amazon.com ([10.43.161.21]) by
- EX13D13UWB002.ant.amazon.com ([10.43.161.21]) with mapi id 15.00.1497.006;
- Tue, 14 Jul 2020 17:20:49 +0000
-From:   "van der Linden, Frank" <fllinden@amazon.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
-Subject: Re: [PATCH v3 00/13] client side user xattr (RFC8276) support
-Thread-Topic: [PATCH v3 00/13] client side user xattr (RFC8276) support
-Thread-Index: AQHWSa8aNVY7gFwM+kWFPBzDlYf1+6kG/YWA
-Date:   Tue, 14 Jul 2020 17:20:49 +0000
-Message-ID: <CBBBBCD2-FD57-4C02-AB16-861BA86F5CF6@amazon.com>
-References: <20200623223904.31643-1-fllinden@amazon.com>
-In-Reply-To: <20200623223904.31643-1-fllinden@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FC169A06CD8F3944818432DC594668F4@amazon.com>
-Content-Transfer-Encoding: base64
+        id S1728985AbgGNSis (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jul 2020 14:38:48 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50855 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728836AbgGNSis (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jul 2020 14:38:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594751926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CqJAsGMMhscFeAJzIBlk2OQWpQKe3A8cSq3TrB1WQ70=;
+        b=XbTTpSjuz9Lypaot1/wzS/dVlOPeZyJ4DQ6eyyyJEAkMHUM4IcaRMGMBFESagXWZRItJe3
+        /nWQM54vJVK3ynhivKUUhpF1cnObYkGdS6fkNNpBNz9DgGIaM3eQhnbJTMy+F5mSQgVWNK
+        nhehvIFkD2B3CBdqvkGvZ9EVETEvQRk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-0H63sBauMFKuimEZ29bK5w-1; Tue, 14 Jul 2020 14:38:21 -0400
+X-MC-Unique: 0H63sBauMFKuimEZ29bK5w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4A5B800C64;
+        Tue, 14 Jul 2020 18:38:20 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-217.phx2.redhat.com [10.3.112.217])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EE3A10013C1;
+        Tue, 14 Jul 2020 18:38:20 +0000 (UTC)
+Subject: Re: [PATCH 00/10] Misc fixes & cleanups for nfs-utils
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20200701182803.14947-1-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <c1b8566f-064e-c063-2a6d-94d4bd92709f@RedHat.com>
+Date:   Tue, 14 Jul 2020 14:38:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200701182803.14947-1-nazard@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgVHJvbmQsIEFubmENCg0KQW55IGNvbW1lbnRzIG9uIHRoaXMgc2VyaWVzPyBEbyB5b3UgdGhp
-bmsgaXQgY2FuIGJlIGluY2x1ZGVkIGZvciA1Ljk/DQoNClRoZSBzZXJ2ZXIgc2lkZSBwYXRjaGVz
-IGFyZSBsb29raW5nIHByZXR0eSBnb29kIGZvciA1LjkuDQoNCkxldCBtZSBrbm93IGlmIHRoZXJl
-J3MgYW55dGhpbmcgeW91IHdhbnQgbWUgdG8gZG8vdGVzdC4NCg0KVGhhbmtzLA0KDQotIEZyYW5r
-DQoNCu+7v09uIDYvMjMvMjAsIDM6MzkgUE0sICJGcmFuayB2YW4gZGVyIExpbmRlbiIgPGZsbGlu
-ZGVuQGFtYXpvbi5jb20+IHdyb3RlOg0KDQp2MzoNCiAgICogUmViYXNlIHRvIHY1LjgtcmMyDQoN
-CnYyOg0KICAgKiBNb3ZlIG5mczQgc3BlY2lmaWMgZGVmaW5pdGlvbnMgdG8gbmZzX2ZzNC5oDQog
-ICAqIFNxdWFzaCBzb21lIHBhdGNoZXMgdG9nZXRoZXIgdG8gYXZvaWQgdW51c2VkIGZ1bmN0aW9u
-IHdhcm5pbmdzDQogICAgIHdoZW4gYmlzZWN0aW5nLg0KICAgKiBNYWRlIGRldGVybWluaW5nIHNl
-cnZlciBzdXBwb3J0IGEgdHdvLXN0ZXAgcHJvY2Vzcy4gRmlyc3QsDQogICAgIHRoZSBleHRlbmRl
-ZCBhdHRyaWJ1dGUgRkFUVFIgaXMgdmVyaWZpZWQgdG8gYmUgc3VwcG9ydGVkLCB0aGVuDQogICAg
-IHRoZSB2YWx1ZSBvZiB0aGUgYXR0cmlidXRlZCBpcyBxdWVyaWVkIGluIGZzaW5mbyB0byBkZXRl
-cm1pbmUNCiAgICAgc3VwcG9ydC4NCiAgICogRml4ZWQgdXAgTWFrZWZpbGUgdG8gcmVtb3ZlIGFu
-IHVubmVlZGVkIGV4dHJhIGxpbmUuDQoNCnYxOg0KICAgKiBDbGllbnQgc2lkZSBjYWNoaW5nIGlz
-IG5vdyBpbmNsdWRlZCBpbiB0aGlzIHBhdGNoIHNldC4NCiAgICogQXMgcGVyIHRoZSBkaXNjdXNz
-aW9uLCB1c2VyIGV4dGVuZGVkIGF0dHJpYnV0ZXMgYXJlIGVuYWJsZWQgaWYNCiAgICAgdGhlIGNs
-aWVudCBhbmQgc2VydmVyIHN1cHBvcnQgdGhlbSAoZS5nLiB0aGV5IHN1cHBvcnQgNC4yIGFuZA0K
-ICAgICBhZHZlcnRpc2UgdGhlIHVzZXIgZXh0ZW5kZWQgYXR0cmlidXRlIEZBVFRSKS4gVGhlcmUg
-YXJlIG5vIGxvbmdlcg0KICAgICBvcHRpb25zIHRvIHN3aXRjaCB0aGVtIG9mZiBvbiBlaXRoZXIg
-dGhlIGNsaWVudCBvciB0aGUgc2VydmVyLg0KICAgKiBUaGUgY29kZSBpcyBubyBsb25nZXIgY29u
-ZGl0aW9uZWQgb24gYSBjb25maWcgb3B0aW9uLg0KICAgKiBUaGUgbnVtYmVyIG9mIHBhdGNoZXMg
-aGFzIGJlZW4gcmVkdWNlZCBzb21ld2hhdCBieSBtZXJnaW5nDQogICAgIHNtYWxsZXIsIHJlbGF0
-ZWQgb25lcy4NCg0KDQpPcmlnaW5hbCBjb21iaW5lZCBjbGllbnQvc2VydmVyIFJGQzoNCmh0dHBz
-Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNDM1NjUvDQoNCkluIGdlbmVyYWwsIHRo
-ZXNlIHBhdGNoZXMgd2VyZSwgYm90aCBzZXJ2ZXIgYW5kIGNsaWVudCwgdGVzdGVkIGFzDQpmb2xs
-b3dzOg0KICAgICAgICAqIHN0cmVzcy1uZy14YXR0ciB3aXRoIDEwMDAgd29ya2Vycw0KICAgICAg
-ICAqIFRlc3QgYWxsIGNvcm5lciBjYXNlcyAoWEFUVFJfU0laRV8qKQ0KICAgICAgICAqIFRlc3Qg
-YWxsIGZhaWx1cmUgY2FzZXMgKG5vIHhhdHRyLCBzZXR4YXR0ciB3aXRoIGRpZmZlcmVudCBvcg0K
-ICAgICAgICAgIGludmFsaWQgZmxhZ3MsIGV0YykuDQogICAgICAgICogVmVyaWZ5IHRoZSBjb250
-ZW50IG9mIHhhdHRycyBhY3Jvc3Mgc2V2ZXJhbCBvcGVyYXRpb25zLg0KICAgICAgICAqIFVzZSBL
-QVNBTiBhbmQgS01FTUxFQUsgZm9yIGEgbG9uZ2VyIG1peCBvZiB0ZXN0cnVucyB0byB2ZXJpZnkN
-CiAgICAgICAgICB0aGF0IHRoZXJlIHdlcmUgbm8gbGVha3MgKGFmdGVyIHVubW91bnRpbmcgdGhl
-IGZpbGVzeXN0ZW0pLg0KICAgICAgICAqIEludGVyb3AgcnVuIGFnYWluc3QgRnJlZUJTRCBzZXJ2
-ZXIvY2xpZW50IGltcGxlbWVudGF0aW9uLg0KICAgICAgICAqIFJhbiB4ZnN0ZXN0cy1kZXYsIHdp
-dGggbm8gdW5leHBlY3RlZC9uZXcgZmFpbHVyZXMgYXMgY29tcGFyZWQNCiAgICAgICAgICB0byBh
-biB1bnBhdGNoZWQga2VybmVsLiBUbyBmdWxseSB1c2UgeGZzdGVzdHMtZGV2LCBpdCBuZWVkZWQN
-CiAgICAgICAgICBzb21lIG1vZGlmaWNhdGlvbnMsIGFzIGl0IGV4cGVjdHMgdG8gZWl0aGVyIHVz
-ZSBhbGwgeGF0dHINCiAgICAgICAgICBuYW1lc3BhY2VzLCBvciBub25lLiBXaGVyZWFzIE5GUyBv
-bmx5IHN1cHBvcnMgdGhlICJ1c2VyLiINCiAgICAgICAgICBuYW1lc3BhY2UgKCsgb3B0aW9uYWwg
-QUNMcykuIEkgd2lsbCBzZW5kIHRoZSBjaGFuZ2VzIGluDQogICAgICAgICAgc2VwZXJhdGVseS4N
-CgkqIFRlc3QgdGhlIG1lbW9yeSBzaHJpbmtlciBmb3IgdGhlIGNsaWVudCBzaWRlIGNhY2hlIGJ5
-IHJ1bm5pbmcNCgkgIHRoZSBjbGllbnQgaW5zaWRlIGEgMUcgS1ZNIFZNLCBmaWxsaW5nIHVwIHRo
-ZSBjYWNoZSBieSBydW5uaW5nDQoJICBhbiBhZ3Jlc3NpdmUgbXVsdGktdGhyZWFkZWQgeGF0dHIg
-d29ya2xvYWQsIGFuZCB0cmFjaW5nIHRoZQ0KCSAgc2hyaW5rZXIgd2hlbiBpdCBraWNrZWQgaW4u
-IE5vIG1lbW9yeSBhbGxvY2F0aW9uIHByb2JsZW1zIHdlcmUNCgkgIHNlZW4uDQoNCkZyYW5rIHZh
-biBkZXIgTGluZGVuICgxMyk6DQogIG5mcyxuZnNkOiAgTkZTdjQuMiBleHRlbmRlZCBhdHRyaWJ1
-dGUgcHJvdG9jb2wgZGVmaW5pdGlvbnMNCiAgbmZzOiBhZGQgY2xpZW50IHNpZGUgb25seSBkZWZp
-bml0aW9ucyBmb3IgdXNlciB4YXR0cnMNCiAgTkZTdjQuMjogZGVmaW5lIGxpbWl0cyBhbmQgc2l6
-ZXMgZm9yIHVzZXIgeGF0dHIgaGFuZGxpbmcNCiAgTkZTdjQuMjogcXVlcnkgdGhlIHNlcnZlciBm
-b3IgZXh0ZW5kZWQgYXR0cmlidXRlIHN1cHBvcnQNCiAgTkZTdjQuMjogYWRkIGNsaWVudCBzaWRl
-IFhEUiBoYW5kbGluZyBmb3IgZXh0ZW5kZWQgYXR0cmlidXRlcw0KICBuZnM6IGRlZmluZSBuZnNf
-YWNjZXNzX2dldF9jYWNoZWQgZnVuY3Rpb24NCiAgTkZTdjQuMjogcXVlcnkgdGhlIGV4dGVuZGVk
-IGF0dHJpYnV0ZSBhY2Nlc3MgYml0cw0KICBuZnM6IG1vZGlmeSB1cGRhdGVfY2hhbmdlYXR0ciB0
-byBkZWFsIHdpdGggcmVndWxhciBmaWxlcw0KICBuZnM6IGRlZmluZSBhbmQgdXNlIHRoZSBORlNf
-SU5PX0lOVkFMSURfWEFUVFIgZmxhZw0KICBuZnM6IG1ha2UgdGhlIGJ1Zl90b19wYWdlc19ub3Ns
-YWIgZnVuY3Rpb24gYXZhaWxhYmxlIHRvIHRoZSBuZnMgY29kZQ0KICBORlN2NC4yOiBhZGQgdGhl
-IGV4dGVuZGVkIGF0dHJpYnV0ZSBwcm9jIGZ1bmN0aW9ucy4NCiAgTkZTdjQuMjogaG9vayBpbiB0
-aGUgdXNlciBleHRlbmRlZCBhdHRyaWJ1dGUgaGFuZGxlcnMNCiAgTkZTdjQuMjogYWRkIGNsaWVu
-dCBzaWRlIHhhdHRyIGNhY2hpbmcuDQoNCiBmcy9uZnMvTWFrZWZpbGUgICAgICAgICAgICAgfCAg
-ICAyICstDQogZnMvbmZzL2NsaWVudC5jICAgICAgICAgICAgIHwgICAyMiArLQ0KIGZzL25mcy9k
-aXIuYyAgICAgICAgICAgICAgICB8ICAgMjQgKy0NCiBmcy9uZnMvaW5vZGUuYyAgICAgICAgICAg
-ICAgfCAgIDE2ICstDQogZnMvbmZzL25mczQyLmggICAgICAgICAgICAgIHwgICAyNCArDQogZnMv
-bmZzL25mczQycHJvYy5jICAgICAgICAgIHwgIDI0OCArKysrKysrKw0KIGZzL25mcy9uZnM0Mnhh
-dHRyLmMgICAgICAgICB8IDEwODMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
-CiBmcy9uZnMvbmZzNDJ4ZHIuYyAgICAgICAgICAgfCAgNDM4ICsrKysrKysrKysrKysrDQogZnMv
-bmZzL25mczRfZnMuaCAgICAgICAgICAgIHwgICAzNSArKw0KIGZzL25mcy9uZnM0Y2xpZW50LmMg
-ICAgICAgICB8ICAgMzEgKw0KIGZzL25mcy9uZnM0cHJvYy5jICAgICAgICAgICB8ICAyMzcgKysr
-KysrKy0NCiBmcy9uZnMvbmZzNHN1cGVyLmMgICAgICAgICAgfCAgIDEwICsNCiBmcy9uZnMvbmZz
-NHhkci5jICAgICAgICAgICAgfCAgIDMxICsNCiBmcy9uZnMvbmZzdHJhY2UuaCAgICAgICAgICAg
-fCAgICAzICstDQogaW5jbHVkZS9saW51eC9uZnM0LmggICAgICAgIHwgICAyNSArDQogaW5jbHVk
-ZS9saW51eC9uZnNfZnMuaCAgICAgIHwgICAxMiArDQogaW5jbHVkZS9saW51eC9uZnNfZnNfc2Iu
-aCAgIHwgICAgNiArDQogaW5jbHVkZS9saW51eC9uZnNfeGRyLmggICAgIHwgICA2MCArLQ0KIGlu
-Y2x1ZGUvdWFwaS9saW51eC9uZnM0LmggICB8ICAgIDMgKw0KIGluY2x1ZGUvdWFwaS9saW51eC9u
-ZnNfZnMuaCB8ICAgIDEgKw0KIDIwIGZpbGVzIGNoYW5nZWQsIDIyNjkgaW5zZXJ0aW9ucygrKSwg
-NDIgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGZzL25mcy9uZnM0MnhhdHRyLmMN
-Cg0KLS0gDQoyLjE3LjINCg0KDQo=
+Hey Doug,
+
+On 7/1/20 2:27 PM, Doug Nazar wrote:
+> Most of this work centers around gssd, however a few items I did tree
+> wide. It's been compile tested with both gcc & clang on x86_64 & arm32
+> and runtime tested on x86_64.
+> 
+> 
+> Doug Nazar (10):
+>   gssd: Refcount struct clnt_info to protect multithread usage
+>   Update to libevent 2.x apis.
+>   gssd: Cleanup on exit to support valgrind.
+>   gssd: gssd_k5_err_msg() returns a strdup'd msg. Use free() to release.
+>   gssd: Fix locking for machine principal list
+>   gssd: Add a few debug statements to help track client_info lifetimes.
+>   gssd: Lookup local hostname when srchost is '*'
+>   gssd: We never use the nocache param of gssd_check_if_cc_exists()
+>   Fix various clang warnings.
+I did commit all of the above... (tag: nfs-utils-2-5-2-rc1)
+
+I did not commit the following 
+   Cleanup printf format attribute handling and fix format strings
+
+because 3 different version were posted 
+
+Cleanup printf format attribute handling and fix various format strings
+Cleanup printf format attribute handling and fix format strings
+Consolidate printf format attribute handling and fix various format strings
+
+I was not sure which one you wanted and I was wondering what exactly is
+being cleaned up? What problems is this solving?
+
+Finally, being this is a whole tree commit and I have a number
+of patches in the queue.. I would like to hold off on this one.
+
+A patch like this will cause all those patches in the queue 
+not to apply... So once I drain the queue, hopefully you
+would not mind rebasing... after we talk about what you 
+are trying to do.
+
+I do appreciate the hard work... esp with gssd... I did test
+it every step of the way... and it seems to be fairly 
+solid... nice work!
+
+steved.
+ 
+> 
+>  aclocal/libevent.m4                |   6 +-
+>  configure.ac                       |   6 +-
+>  support/include/compiler.h         |  14 +
+>  support/include/xcommon.h          |  12 +-
+>  support/include/xlog.h             |  20 +-
+>  support/nfs/xcommon.c              |   2 +
+>  support/nfsidmap/gums.c            |   2 +
+>  support/nfsidmap/libnfsidmap.c     |   8 +-
+>  support/nfsidmap/nfsidmap.h        |  10 +-
+>  support/nfsidmap/nfsidmap_common.c |   1 +
+>  support/nfsidmap/nss.c             |   4 +-
+>  support/nfsidmap/regex.c           |   6 +-
+>  support/nfsidmap/static.c          |   1 +
+>  support/nfsidmap/umich_ldap.c      |  10 +-
+>  tools/locktest/testlk.c            |   6 +-
+>  utils/exportfs/exportfs.c          |   5 +-
+>  utils/gssd/err_util.h              |   4 +-
+>  utils/gssd/gss_names.c             |   9 +-
+>  utils/gssd/gss_util.c              |   2 +-
+>  utils/gssd/gssd.c                  | 165 ++++++++---
+>  utils/gssd/gssd.h                  |  10 +-
+>  utils/gssd/gssd_proc.c             |  14 +-
+>  utils/gssd/krb5_util.c             | 422 +++++++++++++++++------------
+>  utils/gssd/krb5_util.h             |  16 +-
+>  utils/gssd/svcgssd.c               |   4 +-
+>  utils/gssd/svcgssd_proc.c          |   9 +-
+>  utils/idmapd/idmapd.c              |  65 +++--
+>  utils/mount/network.c              |   4 +-
+>  utils/mount/stropts.c              |   2 -
+>  utils/mountd/cache.c               |   2 +-
+>  utils/nfsdcld/cld-internal.h       |   2 +-
+>  utils/nfsdcld/nfsdcld.c            |  29 +-
+>  utils/nfsdcld/sqlite.c             |   1 -
+>  utils/nfsdcltrack/sqlite.c         |   2 +-
+>  utils/nfsidmap/nfsidmap.c          |   3 +-
+>  35 files changed, 536 insertions(+), 342 deletions(-)
+>  create mode 100644 support/include/compiler.h
+> 
+
