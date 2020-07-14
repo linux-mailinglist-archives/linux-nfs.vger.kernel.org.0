@@ -2,139 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A5521F998
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2020 20:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5F0C21FBA1
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2020 21:03:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgGNSis (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jul 2020 14:38:48 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50855 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728836AbgGNSis (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jul 2020 14:38:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594751926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CqJAsGMMhscFeAJzIBlk2OQWpQKe3A8cSq3TrB1WQ70=;
-        b=XbTTpSjuz9Lypaot1/wzS/dVlOPeZyJ4DQ6eyyyJEAkMHUM4IcaRMGMBFESagXWZRItJe3
-        /nWQM54vJVK3ynhivKUUhpF1cnObYkGdS6fkNNpBNz9DgGIaM3eQhnbJTMy+F5mSQgVWNK
-        nhehvIFkD2B3CBdqvkGvZ9EVETEvQRk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-0H63sBauMFKuimEZ29bK5w-1; Tue, 14 Jul 2020 14:38:21 -0400
-X-MC-Unique: 0H63sBauMFKuimEZ29bK5w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4A5B800C64;
-        Tue, 14 Jul 2020 18:38:20 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-112-217.phx2.redhat.com [10.3.112.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EE3A10013C1;
-        Tue, 14 Jul 2020 18:38:20 +0000 (UTC)
-Subject: Re: [PATCH 00/10] Misc fixes & cleanups for nfs-utils
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <20200701182803.14947-1-nazard@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <c1b8566f-064e-c063-2a6d-94d4bd92709f@RedHat.com>
-Date:   Tue, 14 Jul 2020 14:38:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1730303AbgGNTDI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jul 2020 15:03:08 -0400
+Received: from smtp-o-1.desy.de ([131.169.56.154]:51338 "EHLO smtp-o-1.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731102AbgGNS5m (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:42 -0400
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
+        by smtp-o-1.desy.de (Postfix) with ESMTP id B0348E0719
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jul 2020 20:57:39 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de B0348E0719
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1594753059; bh=eZlt33IH1zYVP68k36qGmcXk3BtX6Jj4BBVnrzFz77I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qjeAHwumY6rzedi0RsaNihW45f7Qj72d5Ec1P0f42tM7+eO0HfVtj0sYzFPNv2h7C
+         Bp11o87LfldJfb87Mwr8ezVFMfJKLQ9wXLgilzx6MWvBNJNtZ9MiCyxgpDpxMJygEO
+         yOG/ZhxxxJZJNELfnS4rrtNPYETmWMvlhaEmSSeQ=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+        by smtp-buf-1.desy.de (Postfix) with ESMTP id ABF4D1201D4;
+        Tue, 14 Jul 2020 20:57:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from ani.desy.de (zitpcx21033.desy.de [131.169.185.213])
+        by smtp-intra-3.desy.de (Postfix) with ESMTP id 7CB8E80067;
+        Tue, 14 Jul 2020 20:57:39 +0200 (CEST)
+From:   Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org,
+        Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: [PATCH] change shebang to python3
+Date:   Tue, 14 Jul 2020 20:57:34 +0200
+Message-Id: <20200714185734.133111-1-tigran.mkrtchyan@desy.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200701182803.14947-1-nazard@nazar.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey Doug,
+as there are still OSes (RHEL7 and clones) that point `python` to `python2`
 
-On 7/1/20 2:27 PM, Doug Nazar wrote:
-> Most of this work centers around gssd, however a few items I did tree
-> wide. It's been compile tested with both gcc & clang on x86_64 & arm32
-> and runtime tested on x86_64.
-> 
-> 
-> Doug Nazar (10):
->   gssd: Refcount struct clnt_info to protect multithread usage
->   Update to libevent 2.x apis.
->   gssd: Cleanup on exit to support valgrind.
->   gssd: gssd_k5_err_msg() returns a strdup'd msg. Use free() to release.
->   gssd: Fix locking for machine principal list
->   gssd: Add a few debug statements to help track client_info lifetimes.
->   gssd: Lookup local hostname when srchost is '*'
->   gssd: We never use the nocache param of gssd_check_if_cc_exists()
->   Fix various clang warnings.
-I did commit all of the above... (tag: nfs-utils-2-5-2-rc1)
+Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+---
+ nfs4.0/nfs4client.py  | 2 +-
+ nfs4.0/nfs4lib.py     | 2 +-
+ nfs4.0/nfs4server.py  | 2 +-
+ nfs4.0/setup.py       | 2 +-
+ nfs4.0/testserver.py  | 2 +-
+ nfs4.1/errorparser.py | 2 +-
+ nfs4.1/nfs4proxy.py   | 2 +-
+ nfs4.1/nfs4server.py  | 2 +-
+ nfs4.1/testclient.py  | 2 +-
+ nfs4.1/testserver.py  | 2 +-
+ setup.py              | 2 +-
+ showresults.py        | 2 +-
+ xdr/setup.py          | 2 +-
+ xdr/xdrgen.py         | 2 +-
+ 14 files changed, 14 insertions(+), 14 deletions(-)
 
-I did not commit the following 
-   Cleanup printf format attribute handling and fix format strings
-
-because 3 different version were posted 
-
-Cleanup printf format attribute handling and fix various format strings
-Cleanup printf format attribute handling and fix format strings
-Consolidate printf format attribute handling and fix various format strings
-
-I was not sure which one you wanted and I was wondering what exactly is
-being cleaned up? What problems is this solving?
-
-Finally, being this is a whole tree commit and I have a number
-of patches in the queue.. I would like to hold off on this one.
-
-A patch like this will cause all those patches in the queue 
-not to apply... So once I drain the queue, hopefully you
-would not mind rebasing... after we talk about what you 
-are trying to do.
-
-I do appreciate the hard work... esp with gssd... I did test
-it every step of the way... and it seems to be fairly 
-solid... nice work!
-
-steved.
+diff --git a/nfs4.0/nfs4client.py b/nfs4.0/nfs4client.py
+index f67c1e3..d3d6e88 100755
+--- a/nfs4.0/nfs4client.py
++++ b/nfs4.0/nfs4client.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
  
-> 
->  aclocal/libevent.m4                |   6 +-
->  configure.ac                       |   6 +-
->  support/include/compiler.h         |  14 +
->  support/include/xcommon.h          |  12 +-
->  support/include/xlog.h             |  20 +-
->  support/nfs/xcommon.c              |   2 +
->  support/nfsidmap/gums.c            |   2 +
->  support/nfsidmap/libnfsidmap.c     |   8 +-
->  support/nfsidmap/nfsidmap.h        |  10 +-
->  support/nfsidmap/nfsidmap_common.c |   1 +
->  support/nfsidmap/nss.c             |   4 +-
->  support/nfsidmap/regex.c           |   6 +-
->  support/nfsidmap/static.c          |   1 +
->  support/nfsidmap/umich_ldap.c      |  10 +-
->  tools/locktest/testlk.c            |   6 +-
->  utils/exportfs/exportfs.c          |   5 +-
->  utils/gssd/err_util.h              |   4 +-
->  utils/gssd/gss_names.c             |   9 +-
->  utils/gssd/gss_util.c              |   2 +-
->  utils/gssd/gssd.c                  | 165 ++++++++---
->  utils/gssd/gssd.h                  |  10 +-
->  utils/gssd/gssd_proc.c             |  14 +-
->  utils/gssd/krb5_util.c             | 422 +++++++++++++++++------------
->  utils/gssd/krb5_util.h             |  16 +-
->  utils/gssd/svcgssd.c               |   4 +-
->  utils/gssd/svcgssd_proc.c          |   9 +-
->  utils/idmapd/idmapd.c              |  65 +++--
->  utils/mount/network.c              |   4 +-
->  utils/mount/stropts.c              |   2 -
->  utils/mountd/cache.c               |   2 +-
->  utils/nfsdcld/cld-internal.h       |   2 +-
->  utils/nfsdcld/nfsdcld.c            |  29 +-
->  utils/nfsdcld/sqlite.c             |   1 -
->  utils/nfsdcltrack/sqlite.c         |   2 +-
->  utils/nfsidmap/nfsidmap.c          |   3 +-
->  35 files changed, 536 insertions(+), 342 deletions(-)
->  create mode 100644 support/include/compiler.h
-> 
+ #
+ # nfs4client.py - NFS4 interactive client in python
+diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+index a9a65d7..905f8f4 100644
+--- a/nfs4.0/nfs4lib.py
++++ b/nfs4.0/nfs4lib.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # nfs4lib.py - NFS4 library for Python
+ #
+ # Requires python 3.2
+diff --git a/nfs4.0/nfs4server.py b/nfs4.0/nfs4server.py
+index 753372e..3cf6ec2 100755
+--- a/nfs4.0/nfs4server.py
++++ b/nfs4.0/nfs4server.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # nfs4server.py - NFS4 server in python
+ #
+diff --git a/nfs4.0/setup.py b/nfs4.0/setup.py
+index fa680e2..58349d9 100755
+--- a/nfs4.0/setup.py
++++ b/nfs4.0/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ from __future__ import print_function
+ from __future__ import absolute_import
+diff --git a/nfs4.0/testserver.py b/nfs4.0/testserver.py
+index a225077..3ceac3c 100755
+--- a/nfs4.0/testserver.py
++++ b/nfs4.0/testserver.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # nfs4stest.py - nfsv4 server tester
+ #
+ # Requires python 3.2
+diff --git a/nfs4.1/errorparser.py b/nfs4.1/errorparser.py
+index 328fe8d..9df41d9 100755
+--- a/nfs4.1/errorparser.py
++++ b/nfs4.1/errorparser.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import with_statement
+ import use_local # HACK so don't have to rebuild constantly
+ from xml.dom import minidom
+diff --git a/nfs4.1/nfs4proxy.py b/nfs4.1/nfs4proxy.py
+index dc8fdd4..dd870d9 100755
+--- a/nfs4.1/nfs4proxy.py
++++ b/nfs4.1/nfs4proxy.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import with_statement
+ import use_local # HACK so don't have to rebuild constantly
+ import nfs4lib
+diff --git a/nfs4.1/nfs4server.py b/nfs4.1/nfs4server.py
+index 4500daf..6f7d10c 100755
+--- a/nfs4.1/nfs4server.py
++++ b/nfs4.1/nfs4server.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import with_statement
+ import use_local # HACK so don't have to rebuild constantly
+ import nfs4lib
+diff --git a/nfs4.1/testclient.py b/nfs4.1/testclient.py
+index 46b7abc..dd68bda 100755
+--- a/nfs4.1/testclient.py
++++ b/nfs4.1/testclient.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # nfs4stest.py - nfsv4 server tester
+ #
+ # Requires python 3.2
+diff --git a/nfs4.1/testserver.py b/nfs4.1/testserver.py
+index 8b80863..01d600e 100755
+--- a/nfs4.1/testserver.py
++++ b/nfs4.1/testserver.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # nfs4stest.py - nfsv4 server tester
+ #
+ # Requires python 3.2
+diff --git a/setup.py b/setup.py
+index 3e48346..83dc6b5 100755
+--- a/setup.py
++++ b/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ from __future__ import print_function
+ 
+diff --git a/showresults.py b/showresults.py
+index a39e1b9..5abd72a 100755
+--- a/showresults.py
++++ b/showresults.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # showresults.py - redisplay results from nfsv4 server tester output file
+ #
+ # Requires python 3.2
+diff --git a/xdr/setup.py b/xdr/setup.py
+index 1ab9c8d..e8af152 100644
+--- a/xdr/setup.py
++++ b/xdr/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ from distutils.core import setup
+ 
+diff --git a/xdr/xdrgen.py b/xdr/xdrgen.py
+index abfc8d7..130f364 100755
+--- a/xdr/xdrgen.py
++++ b/xdr/xdrgen.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # rpcgen.py - A Python RPC protocol compiler
+ # 
+ # Written by Fred Isaman <iisaman@citi.umich.edu>
+-- 
+2.26.2
 
