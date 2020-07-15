@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5936D221095
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 17:12:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEB6E221094
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 17:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgGOPMK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jul 2020 11:12:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53863 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725792AbgGOPMI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 11:12:08 -0400
+        id S1726837AbgGOPL6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jul 2020 11:11:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59648 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726830AbgGOPL4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 11:11:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594825926;
+        s=mimecast20190719; t=1594825914;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=8siH9PLhliy6IFGzjn8F4i5GU2+tiicmRSc+SU/ZK4Q=;
-        b=bb5QEEj65ONjvZR4EhnkahrUVIOtD/yFpxGwqAtiWWzNaU6QRMZpppmaEx+9ihH4BG+NLX
-        8MCl7fBgJtLjNNkv08dlvkdyZcU75u269/A+LbQHOcnN1PP1lOzJwc22R/f/NDiK0Fat04
-        gWW+qzoEvLHBkoMvoUCrW1AlzIs3Les=
+        bh=4wotiqVbHYaAe4IwLLT5l9YK7WJ5NQWqMVC45h4uXjE=;
+        b=YA5bm4zORKZJh9NhV6X0p2LNTQRbu5dL7AFCiIoRRdYzWgIBxqX8lEmoAoz1dVsR/gMdgd
+        4RayAdOx9zY6jW4+K4JFyxDUMKqkLvgxqZ4a941mBeSlV8ZXXam48xEuIowvg6L0tfzM2k
+        r02wqh+vetVhtqdWapGAp0Q8L+7UW8M=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-nHqvbxqTMNWBZTr0uGj0Xw-1; Wed, 15 Jul 2020 11:11:52 -0400
-X-MC-Unique: nHqvbxqTMNWBZTr0uGj0Xw-1
+ us-mta-237-d_ahxAN9PgihAYfKK6nE1g-1; Wed, 15 Jul 2020 11:11:52 -0400
+X-MC-Unique: d_ahxAN9PgihAYfKK6nE1g-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8654A18C89A1;
-        Wed, 15 Jul 2020 15:10:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BEF6804333;
+        Wed, 15 Jul 2020 15:10:56 +0000 (UTC)
 Received: from dwysocha.rdu.csb (ovpn-118-79.rdu2.redhat.com [10.10.118.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1809460BF1;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A411560BF4;
         Wed, 15 Jul 2020 15:10:55 +0000 (UTC)
 From:   Dave Wysochanski <dwysocha@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com
-Subject: [RFC PATCH v1 07/13] NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
-Date:   Wed, 15 Jul 2020 11:10:43 -0400
-Message-Id: <1594825849-24991-8-git-send-email-dwysocha@redhat.com>
+Subject: [RFC PATCH v1 08/13] NFS: Allow nfs_async_read_completion_ops to be used by other NFS code
+Date:   Wed, 15 Jul 2020 11:10:44 -0400
+Message-Id: <1594825849-24991-9-git-send-email-dwysocha@redhat.com>
 In-Reply-To: <1594825849-24991-1-git-send-email-dwysocha@redhat.com>
 References: <1594825849-24991-1-git-send-email-dwysocha@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -46,265 +46,50 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The new FS-Cache netfs API changes the cookie API slightly.
-
-The changes to fscache_acquire_cookie are:
-* remove struct fscache_cookie_def
-* add 'type' of cookie (was member of fscache_cookie_def)
-* add 'name' of cookie (was member of fscache_cookie_def)
-* add 'advice' flags (tells cache how to handle object); set to 0
-* add 'preferred_cache' tag (if NULL, derive from parent)
-* remove 'netfs_data'
-* remove 'enable' (See fscache_use_cookie())
-
-The changes to fscache_relinquish_cookie are:
-* remove 'aux_data'
+The standard read nfs_pgio_completion_ops will be needed when
+fscache read path is converted to the new API, so export just to
+other NFS code.
 
 Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 ---
- fs/nfs/fscache-index.c | 94 --------------------------------------------------
- fs/nfs/fscache.c       | 56 +++++++++++++++++-------------
- fs/nfs/fscache.h       |  3 --
- 3 files changed, 32 insertions(+), 121 deletions(-)
+ fs/nfs/internal.h | 1 +
+ fs/nfs/read.c     | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
-index b1049815729e..b4fdacd955f3 100644
---- a/fs/nfs/fscache-index.c
-+++ b/fs/nfs/fscache-index.c
-@@ -44,97 +44,3 @@ void nfs_fscache_unregister(void)
- {
- 	fscache_unregister_netfs(&nfs_fscache_netfs);
- }
--
--/*
-- * Define the server object for FS-Cache.  This is used to describe a server
-- * object to fscache_acquire_cookie().  It is keyed by the NFS protocol and
-- * server address parameters.
-- */
--const struct fscache_cookie_def nfs_fscache_server_index_def = {
--	.name		= "NFS.server",
--	.type 		= FSCACHE_COOKIE_TYPE_INDEX,
--};
--
--/*
-- * Define the superblock object for FS-Cache.  This is used to describe a
-- * superblock object to fscache_acquire_cookie().  It is keyed by all the NFS
-- * parameters that might cause a separate superblock.
-- */
--const struct fscache_cookie_def nfs_fscache_super_index_def = {
--	.name		= "NFS.super",
--	.type 		= FSCACHE_COOKIE_TYPE_INDEX,
--};
--
--/*
-- * Consult the netfs about the state of an object
-- * - This function can be absent if the index carries no state data
-- * - The netfs data from the cookie being used as the target is
-- *   presented, as is the auxiliary data
-- */
--static
--enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
--						  const void *data,
--						  uint16_t datalen,
--						  loff_t object_size)
--{
--	struct nfs_fscache_inode_auxdata auxdata;
--	struct nfs_inode *nfsi = cookie_netfs_data;
--
--	if (datalen != sizeof(auxdata))
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
--
--	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
--		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
--
--	if (memcmp(data, &auxdata, datalen) != 0)
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	return FSCACHE_CHECKAUX_OKAY;
--}
--
--/*
-- * Get an extra reference on a read context.
-- * - This function can be absent if the completion function doesn't require a
-- *   context.
-- * - The read context is passed back to NFS in the event that a data read on the
-- *   cache fails with EIO - in which case the server must be contacted to
-- *   retrieve the data, which requires the read context for security.
-- */
--static void nfs_fh_get_context(void *context)
--{
--	get_nfs_open_context(context);
--}
--
--/*
-- * Release an extra reference on a read context.
-- * - This function can be absent if the completion function doesn't require a
-- *   context.
-- */
--static void nfs_fh_put_context(void *context)
--{
--	if (context)
--		put_nfs_open_context(context);
--}
--
--/*
-- * Define the inode object for FS-Cache.  This is used to describe an inode
-- * object to fscache_acquire_cookie().  It is keyed by the NFS file handle for
-- * an inode.
-- *
-- * Coherency is managed by comparing the copies of i_size, i_mtime and i_ctime
-- * held in the cache auxiliary data for the data storage object with those in
-- * the inode struct in memory.
-- */
--const struct fscache_cookie_def nfs_fscache_inode_object_def = {
--	.name		= "NFS.fh",
--	.type		= FSCACHE_COOKIE_TYPE_DATAFILE,
--	.check_aux	= nfs_fscache_inode_check_aux,
--	.get_context	= nfs_fh_get_context,
--	.put_context	= nfs_fh_put_context,
--};
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index a60df88efc40..7f380d6ec616 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -81,10 +81,15 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index df4ffe9afb6a..5590f0883f94 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -443,6 +443,7 @@ extern char *nfs_path(char **p, struct dentry *dentry,
  
- 	/* create a cache index for looking up filehandles */
- 	clp->fscache = fscache_acquire_cookie(nfs_fscache_netfs.primary_index,
--					      &nfs_fscache_server_index_def,
--					      &key, len,
--					      NULL, 0,
--					      clp, 0, true);
-+					      FSCACHE_COOKIE_TYPE_INDEX,
-+					      "NFS.server",
-+					      0,    /* advice */
-+					      NULL, /* preferred_cache */
-+					      &key, /* index_key */
-+					      len,
-+					      NULL, /* aux_data */
-+					      0,
-+					      0);
- 	dfprintk(FSCACHE, "NFS: get client cookie (0x%p/0x%p)\n",
- 		 clp, clp->fscache);
- }
-@@ -97,7 +102,7 @@ void nfs_fscache_release_client_cookie(struct nfs_client *clp)
- 	dfprintk(FSCACHE, "NFS: releasing client cookie (0x%p/0x%p)\n",
- 		 clp, clp->fscache);
+ struct nfs_pgio_completion_ops;
+ /* read.c */
++extern const struct nfs_pgio_completion_ops nfs_async_read_completion_ops;
+ extern void nfs_pageio_init_read(struct nfs_pageio_descriptor *pgio,
+ 			struct inode *inode, bool force_mds,
+ 			const struct nfs_pgio_completion_ops *compl_ops);
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index de57bb692a4b..2f2c32346212 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -30,7 +30,7 @@
  
--	fscache_relinquish_cookie(clp->fscache, NULL, false);
-+	fscache_relinquish_cookie(clp->fscache, false);
- 	clp->fscache = NULL;
- }
+ #define NFSDBG_FACILITY		NFSDBG_PAGECACHE
  
-@@ -185,11 +190,15 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
+-static const struct nfs_pgio_completion_ops nfs_async_read_completion_ops;
++const struct nfs_pgio_completion_ops nfs_async_read_completion_ops;
+ static const struct nfs_rw_ops nfs_rw_read_ops;
  
- 	/* create a cache index for looking up filehandles */
- 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
--					       &nfs_fscache_super_index_def,
--					       &key->key,
-+					       FSCACHE_COOKIE_TYPE_INDEX,
-+					       "NFS.super",
-+					       0,    /* advice */
-+					       NULL, /* preferred_cache */
-+					       &key->key,  /* index_key */
- 					       sizeof(key->key) + ulen,
--					       NULL, 0,
--					       nfss, 0, true);
-+					       NULL, /* aux_data */
-+					       0,
-+					       0);
- 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
- 		 nfss, nfss->fscache);
- 	return;
-@@ -213,7 +222,7 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
- 	dfprintk(FSCACHE, "NFS: releasing superblock cookie (0x%p/0x%p)\n",
- 		 nfss, nfss->fscache);
- 
--	fscache_relinquish_cookie(nfss->fscache, NULL, false);
-+	fscache_relinquish_cookie(nfss->fscache, false);
- 	nfss->fscache = NULL;
- 
- 	if (nfss->fscache_key) {
-@@ -254,10 +263,15 @@ void nfs_fscache_init_inode(struct inode *inode)
- 	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 
- 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
--					       &nfs_fscache_inode_object_def,
--					       nfsi->fh.data, nfsi->fh.size,
--					       &auxdata, sizeof(auxdata),
--					       nfsi, nfsi->vfs_inode.i_size, false);
-+					       FSCACHE_COOKIE_TYPE_DATAFILE,
-+					       "NFS.fh",
-+					       0,             /* advice */
-+					       NULL, /* preferred_cache */
-+					       nfsi->fh.data, /* index_key */
-+					       nfsi->fh.size,
-+					       &auxdata,      /* aux_data */
-+					       sizeof(auxdata),
-+					       i_size_read(&nfsi->vfs_inode));
- }
- 
- /*
-@@ -272,7 +286,8 @@ void nfs_fscache_clear_inode(struct inode *inode)
- 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
- 
- 	nfs_fscache_update_auxdata(&auxdata, nfsi);
--	fscache_relinquish_cookie(cookie, &auxdata, false);
-+	fscache_unuse_cookie(cookie, &auxdata, NULL);
-+	fscache_relinquish_cookie(cookie, false);
- 	nfsi->fscache = NULL;
- }
- 
-@@ -304,27 +319,20 @@ static bool nfs_fscache_can_enable(void *data)
-  */
- void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- {
--	struct nfs_fscache_inode_auxdata auxdata;
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 	struct fscache_cookie *cookie = nfs_i_fscache(inode);
- 
- 	if (!fscache_cookie_valid(cookie))
- 		return;
- 
--	nfs_fscache_update_auxdata(&auxdata, nfsi);
--
- 	if (inode_is_open_for_write(inode)) {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
- 		clear_bit(NFS_INO_FSCACHE, &nfsi->flags);
--		fscache_disable_cookie(cookie, &auxdata, true);
--		fscache_uncache_all_inode_pages(cookie, inode);
- 	} else {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p enabling cache\n", nfsi);
--		fscache_enable_cookie(cookie, &auxdata, nfsi->vfs_inode.i_size,
--				      nfs_fscache_can_enable, inode);
--		if (fscache_cookie_enabled(cookie))
--			set_bit(NFS_INO_FSCACHE, &NFS_I(inode)->flags);
-+		set_bit(NFS_INO_FSCACHE, &NFS_I(inode)->flags);
+ static struct kmem_cache *nfs_rdata_cachep;
+@@ -215,7 +215,7 @@ static void nfs_initiate_read(struct nfs_pgio_header *hdr,
  	}
-+	fscache_use_cookie(cookie, false);
  }
- EXPORT_SYMBOL_GPL(nfs_fscache_open_file);
  
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 6754c8607230..6e6d9971244a 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -73,9 +73,6 @@ struct nfs_fscache_inode_auxdata {
-  * fscache-index.c
-  */
- extern struct fscache_netfs nfs_fscache_netfs;
--extern const struct fscache_cookie_def nfs_fscache_server_index_def;
--extern const struct fscache_cookie_def nfs_fscache_super_index_def;
--extern const struct fscache_cookie_def nfs_fscache_inode_object_def;
- 
- extern int nfs_fscache_register(void);
- extern void nfs_fscache_unregister(void);
+-static const struct nfs_pgio_completion_ops nfs_async_read_completion_ops = {
++const struct nfs_pgio_completion_ops nfs_async_read_completion_ops = {
+ 	.error_cleanup = nfs_async_read_error,
+ 	.completion = nfs_read_completion,
+ };
 -- 
 1.8.3.1
 
