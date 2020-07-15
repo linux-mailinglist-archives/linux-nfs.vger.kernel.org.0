@@ -2,100 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AF3522129B
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 18:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 663A922131B
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 19:03:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgGOQkq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jul 2020 12:40:46 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33599 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgGOQkg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 12:40:36 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h28so2106348edz.0;
-        Wed, 15 Jul 2020 09:40:35 -0700 (PDT)
+        id S1726650AbgGORCd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jul 2020 13:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgGORC3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 13:02:29 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DEFC061755
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jul 2020 10:02:29 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d18so3025919ion.0
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jul 2020 10:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B1du7ESxAv65/20o5JoUU2qEgG2wKq/h11b/DD3/ktY=;
+        b=Yl1FVLQQRSySLJ4SEVAGpNUikJ3udNi+ARNJ2JcMcfxwgB5ARh+lObxCGGjgVIGSMP
+         VrCPsmTtFm/IVEM7pDQyCZVLaA5kuy1p9rfPFga+HnTJhN9BdgIl4grjs1ei6G2Zfp0Q
+         Liu0KrfNn8Dg9DeNL1z7fnxXfQ7X0jYl+iue8o9pUJdlD7tD7TW5846Dzo4iv1Ema1iG
+         dgpzT4o5uw09DGb12BSg6FanLQzIn8ZfvwcZUfgErKJeo9uIL9q1S9MwBs52C385v9I7
+         zpBRmWNg9S1JcafC/Jgrakt0ktUxORKSCCSlMD1/5T/WLQoh1CqiDwNhOONOXqIMHeCf
+         YQJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mkYMsiSKEyTRllQWaVCWr/1Tzi9Mh4OsE2TArv0QPE4=;
-        b=GpWMlkg2pG8vm7YvFAaQ5PN9iyjgJxBcHxfNP3RKeR7O6FdGk1AWMu9tK1zV5eem+d
-         +3ywLdxKa2B4/7UcNFoR/rj8856HLeOS7aqKO3rtOUCCJx+VN8gFqLdwyrczkxVvhzMF
-         kUS2AUrtz7GfMWFVDCd+wSk1pdoYBlsDvGuEuKWky/VIMFHcf8DQGye/cvjTHVGtXInc
-         ESF3JIhZWxuvi/EQ510MnBXavtcfz8WWXUh0vcrRsFvMp/02uKdELXy7qCHmqDs85vXg
-         eeZC9uKDLkSgJ59UwzNh9u85l6yjwwDva5mxgFi6hYJayxAMGTXIZcl94LkNhKafxw07
-         S3YA==
-X-Gm-Message-State: AOAM532ucAZU1HpiMKFGguksDMocNJZ/WPlOgDL+tElPcyvcx8WWofbq
-        TTmpCIZAXjgA7SvH5SyFBcNKVoyMcwXSD6gAvU18LA==
-X-Google-Smtp-Source: ABdhPJxL2C4dTVVKrNN4e+F8ARVR16RmQ+W2KY1F0ucI6oh6+0b4B0E4YcDIV44fX0Geoxf4yVkiP3FmOGIrLSi9TeA=
-X-Received: by 2002:a50:ab5c:: with SMTP id t28mr436194edc.209.1594831234383;
- Wed, 15 Jul 2020 09:40:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200715162604.1080552-1-colin.king@canonical.com> <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-In-Reply-To: <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Wed, 15 Jul 2020 12:40:18 -0400
-Message-ID: <CAFX2Jfn75a8XENoqvztVnUe0aR9S2KGjpcGp3zyLeFS-h--9ag@mail.gmail.com>
-Subject: Re: [PATCH] xprtrdma: fix incorrect header size calcations
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B1du7ESxAv65/20o5JoUU2qEgG2wKq/h11b/DD3/ktY=;
+        b=aqSXvo6K71EbJBpRqfZPkPA2Rhkl7fhcjpOxRyMU2bcf8UYjfDjGC4BYpzt6AP2Ah/
+         24WYPXZKZxvdKSq4MpOVIXCNK/5SV1MAui7n9Drp7X7J3lfQ3sirThVppdpC1zcpk71+
+         LVh268rRPvGisezLkPRob0H+eKrpIt/CCgWjOFme1so7rl1DjbgtrGvKmrnq6q9YVZpn
+         evsD7zThECe+MnhNBt+gTMTHfbEY0YsqrUNL1vShk2ZxOiT8aB/OqybQhmfWuldQ3ZDg
+         er9xsRCo1754vqc9MLI65oG76skuUDhlkQvaoZLDS95cUUGi+DckPYRaNeNiwGU2+qn4
+         PeIQ==
+X-Gm-Message-State: AOAM5322aDVU2zXyAXPAr5DEkAyfDgvV2tKJGXSyTN9H35ONoDsNJu0U
+        5clopMHz6zPEGV53cb/CvEo=
+X-Google-Smtp-Source: ABdhPJysf2C0uDdFCdxw75hpUMp5cDJ8X341fukW2fx+az4oQ6FwO6RLJ2wfF4gqrs3uiDBRKp/U3g==
+X-Received: by 2002:a05:6602:2c4c:: with SMTP id x12mr213327iov.87.1594832548820;
+        Wed, 15 Jul 2020 10:02:28 -0700 (PDT)
+Received: from Olgas-MBP-286.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id s11sm1354953ili.79.2020.07.15.10.02.23
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 15 Jul 2020 10:02:23 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
+Date:   Wed, 15 Jul 2020 13:04:15 -0400
+Message-Id: <20200715170415.94140-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-No need for a v2, I can fix it up!
+From: Olga Kornievskaia <kolga@netapp.com>
 
+Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
+direct IO compeletion". This patch made it so that fput() by calling
+inode_dio_done() in nfs_file_release() would wait uninterruptably
+for any outstanding directIO to the file (but that wait on IO should
+be killable).
 
-On Wed, Jul 15, 2020 at 12:32 PM Colin Ian King
-<colin.king@canonical.com> wrote:
->
-> Bah, $SUBJECT typo "calcations" -> "calculations". can that be fixed up
-> when it's applied, or shall I send a V2?
->
-> On 15/07/2020 17:26, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > Currently the header size calculations are using an assignment
-> > operator instead of a += operator when accumulating the header
-> > size leading to incorrect sizes.  Fix this by using the correct
-> > operator.
-> >
-> > Addresses-Coverity: ("Unused value")
-> > Fixes: 302d3deb2068 ("xprtrdma: Prevent inline overflow")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  net/sunrpc/xprtrdma/rpc_rdma.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-> > index 935bbef2f7be..453bacc99907 100644
-> > --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> > +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> > @@ -71,7 +71,7 @@ static unsigned int rpcrdma_max_call_header_size(unsigned int maxsegs)
-> >       size = RPCRDMA_HDRLEN_MIN;
-> >
-> >       /* Maximum Read list size */
-> > -     size = maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-> > +     size += maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-> >
-> >       /* Minimal Read chunk size */
-> >       size += sizeof(__be32); /* segment count */
-> > @@ -94,7 +94,7 @@ static unsigned int rpcrdma_max_reply_header_size(unsigned int maxsegs)
-> >       size = RPCRDMA_HDRLEN_MIN;
-> >
-> >       /* Maximum Write list size */
-> > -     size = sizeof(__be32);          /* segment count */
-> > +     size += sizeof(__be32);         /* segment count */
-> >       size += maxsegs * rpcrdma_segment_maxsz * sizeof(__be32);
-> >       size += sizeof(__be32); /* list discriminator */
-> >
-> >
->
+The problem the patch was also trying to address was REMOVE returning
+ERR_ACCESS because the file is still opened, is supposed to be resolved
+by server returning ERR_FILE_OPEN and not ERR_ACCESS.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/direct.c | 13 ++++---------
+ fs/nfs/file.c   |  1 -
+ 2 files changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 3d113cf..1b79dd5 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -267,6 +267,8 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
+ 
++	inode_dio_end(inode);
++
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -278,10 +280,7 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ 
+ 	complete(&dreq->completion);
+ 
+-	igrab(inode);
+ 	nfs_direct_req_release(dreq);
+-	inode_dio_end(inode);
+-	iput(inode);
+ }
+ 
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -411,10 +410,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+@@ -867,10 +864,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index ccd6c16..f96367a 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -83,7 +83,6 @@ int nfs_check_flags(int flags)
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
+-	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
+-- 
+1.8.3.1
+
