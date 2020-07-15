@@ -2,114 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30CD5221067
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 17:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A59E922108C
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2020 17:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgGOPIr convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 15 Jul 2020 11:08:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50311 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbgGOPIl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 11:08:41 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jvj1S-0003xS-HG
-        for linux-nfs@vger.kernel.org; Wed, 15 Jul 2020 15:08:38 +0000
-Received: by mail-pg1-f199.google.com with SMTP id u16so2942997pgj.17
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jul 2020 08:08:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PjMy4io7R2jHdSWxArusOtwgBaqFTbEYz/sY2JlYP5w=;
-        b=AnAx3GxXihlP04QOx9uXTiB3cWiU2dRNhc/HfR3QymipG/FbBx156rUw/CApREpYVM
-         zRs+6z5Ogq+mbrSk+WZRBfuMYqLOtDUOnmVBV+loGlpT/j/01QDePgGBqveuTglj3oH9
-         tHu9whjZQP0z6kBNIi/IhCZ+Rqk4lrh3Mhj94+06eKI4RuZ27mIhnV6ww9pH2zY1gcTM
-         8W9ybC6ZTSp3LvSbx3WxCu9+4SaLdGyDAcz4aAFKdw0a4CG1ff1RfLF//zK1hNUc/3PH
-         nNR20Es57DyP8Jt1PhtYzuOrkvNYUEp44GED44xWLpWP09bueHsmiEUJzQpcXA9beDZY
-         OFDQ==
-X-Gm-Message-State: AOAM5332ga84r673tRwzL7sNodKl6j5AlysRGyu2E/khB8AKEWP2CmW1
-        URMc5HV8EMkUUC9OZNtagcqziQL9LFkoQNqdUuhr249m2BDDBvo3DgdNR2DVhGhqXgHnNtgymbH
-        e8Hy3lcq8m+Dxc0QLCsAAK8oYNSg+FYgcg31p0A==
-X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108795pjb.68.1594825717130;
-        Wed, 15 Jul 2020 08:08:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyeaLMdNxhmgRLyUdtuuy7GErTF8uag+bSGeUBRnl/y7/ExiAOI6J/b8SmUhYYGsqLrNQjV8w==
-X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108775pjb.68.1594825716853;
-        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id 7sm2467724pgw.85.2020.07.15.08.08.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
- breaks NFS Kerberos on upstream stable 5.4.y
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
-Date:   Wed, 15 Jul 2020 23:08:33 +0800
-Cc:     matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
- <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        id S1726661AbgGOPLv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jul 2020 11:11:51 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41781 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725992AbgGOPLv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jul 2020 11:11:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594825909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=kiP9/hkrOoyToSpFjJqZnI1/ilc2c2i/joUZgMCxTQc=;
+        b=Fg5UBcRNBNgTP8Q7YaolaW+tbmewGYlSlBDCDEL0R9i9k1KXdDKT69guqiSvw7Edby4/PT
+        h7UZxk6eB3bhwbDqHPG3VysKsO1DxlSfg18tFfYECCFObyab7ErQhHkIc4o0wqF+44la7E
+        bBFqrZzj82JRolDWyUZu9qWtKP+MC9E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-l6r8wVIXPn2O1vlNxeIIxA-1; Wed, 15 Jul 2020 11:11:44 -0400
+X-MC-Unique: l6r8wVIXPn2O1vlNxeIIxA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 891AE8027F7;
+        Wed, 15 Jul 2020 15:10:51 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-118-79.rdu2.redhat.com [10.10.118.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C05560BF1;
+        Wed, 15 Jul 2020 15:10:50 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com
+Subject: [RFC PATCH v1 0/13] Convert NFS client to new fscache-iter API
+Date:   Wed, 15 Jul 2020 11:10:36 -0400
+Message-Id: <1594825849-24991-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+These patches update the nfs client to use the new FS-Cache API and are at:
+https://github.com/DaveWysochanskiRH/kernel/commit/a426b431873ea755c94ccd403aeaba0c4e635016
+
+They are based on David Howells fscache-iter tree at ff12b5a05bd6984ad83e762f702cb655222bad74
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=fscache-iter&id=ff12b5a05bd6984ad83e762f702cb655222bad74
+
+The following patches may be of specific interest to review
+as they are related to the conversion:
+NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
+NFS: Convert nfs_readpage() and readpages() to new fscache API
+NFS: Only use and unuse an fscache cookie a single time based on NFS_INO_FSCACHE
+NFS: Convert fscache invalidation and update aux_data and i_size
+
+Note that this is only a "first pass" v1 / RFC set I wanted to get
+out there for the maintainers to see and know this is being worked on.
+It is far from perfect and has some problems still need worked out.
+A short summary of this set:
+
+1. Takes a "least invasive to existing code" approach
+* most fscache bits stay fs/nfs/fscache.[ch] 
+* fscache enable/disable switched inside NFS code on nfs_inode.fscache
+* only enable fscache for reads
+* may not be the best approach (see future patcheset items below)
+
+2. Basically works and passes a series of tests
+* should not affect NFS when fscache is disabled (no "fsc" option)
+* a couple small NFS + fscache basic verification tests
+* connectathon (all NFS versions, with/without 'fsc' option)
+* various iozone tests (all NFS versions, with/without 'fsc' option)
+
+3. Still has a few known problems that are being tracked down
+* Data integrity issue when write with O_DIRECT and read
+back without O_DIRECT (we get 0's back from the cache)
+* iozone tests run through ok but at the end superblock
+cookies are left (each NFS version has a different superblock
+cookie); this leads to "duplicate cookie" messages
+upon subsequent mounts / runs
+* A couple oopses in fscache reported to dhowells, may
+be related to NFS's enable/disable of fscache on read/write
+* Kernel build fails about halfway through with a strange
+dubious error at the same place, linking this file:
+ld: net/sunrpc/auth_gss/trace.o: attempt to load strings from a non-string section (number 41)
 
 
-> On Jul 15, 2020, at 23:02, Chuck Lever <chuck.lever@oracle.com> wrote:
-> 
-> 
-> 
->> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->> 
->> Hi,
->> 
->> Multiple users reported NFS causes NULL pointer dereference [1] on Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
->> 
->> The same issue happens on upstream stable 5.4.y branch.
->> The mainline kernel doesn't have this issue though.
->> 
->> Should we revert them? Or is there any missing commits need to be backported to v5.4?
->> 
->> [1] https://bugs.launchpad.net/bugs/1886277
->> 
->> Kai-Heng
-> 
-> 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a refactoring
-> change. It shouldn't have introduced any behavior difference. But in theory,
-> practice and theory should be the same...
-> 
-> Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")")
-> is also applied to 5.4.0-40-generic.
+In addition to fixing various code issues and above issues,
+a future patchset may:
 
-Yes, it's included. The commit is part of upstream stable 5.4.
+1. The readpage/readpages conversion patch call read_helpers
+directly rather than isolation into fs/nfs/fscache.c
+* Similar to the AFS conversion, with calls directly to the
+read_helpers, but not sure about non-fsc code path
 
-> 
-> It would help to know if v5.5 stable is working for you. I haven't had any
-> problems with it.
+2. Add write-through support
+* Would probably eliminate some problematic code
+paths where fscache is turned on / off depending on whether
+a file switches from read to write and vice-versa
+* This would rework open as well
+* Have to work out whether this is possible or not and
+with what caveats as far as NFS version support (is this
+an NFSv4.x only thing?)
 
-I'll ask users to test it out. 
-Thanks for you quick reply!
+3. Rework dfprintks and/or add ftrace points
+* fscache/cachefiles has 'debug' logging similar to rpcdebug
+so not sure if we keep rpcdebug here or go full ftrace
 
-Kai-Heng
 
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
+Dave Wysochanski (13):
+  NFS: Clean up nfs_readpage() and nfs_readpages()
+  NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read
+    succeeds
+  NFS: Refactor nfs_readpage() and nfs_readpage_async() to use
+    nfs_readdesc
+  NFS: Call readpage_async_filler() from nfs_readpage_async()
+  NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
+  NFS: Rename readpage_async_filler() to nfs_pageio_add_page_read()
+  NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
+  NFS: Allow nfs_async_read_completion_ops to be used by other NFS code
+  NFS: Convert nfs_readpage() and readpages() to new fscache API
+  NFS: Allow NFS use of new fscache API in build
+  NFS: Only use and unuse an fscache cookie a single time based on
+    NFS_INO_FSCACHE
+  NFS: Convert fscache invalidation and update aux_data and i_size
+  NFS: Call nfs_fscache_invalidate() when write extends the size of the
+    file
+
+ fs/nfs/Kconfig           |   2 +-
+ fs/nfs/file.c            |  20 +--
+ fs/nfs/fscache-index.c   |  94 --------------
+ fs/nfs/fscache.c         | 315 ++++++++++++++++++++++++-----------------------
+ fs/nfs/fscache.h         |  92 +++++---------
+ fs/nfs/inode.c           |   1 -
+ fs/nfs/internal.h        |   4 +
+ fs/nfs/pagelist.c        |   1 +
+ fs/nfs/read.c            | 221 ++++++++++++++++-----------------
+ fs/nfs/write.c           |   9 +-
+ include/linux/nfs_fs.h   |   3 +-
+ include/linux/nfs_page.h |   1 +
+ include/linux/nfs_xdr.h  |   1 +
+ 13 files changed, 322 insertions(+), 442 deletions(-)
+
+-- 
+1.8.3.1
 
