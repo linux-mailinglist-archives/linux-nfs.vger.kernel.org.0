@@ -2,42 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 445EA222CFA
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jul 2020 22:35:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEBD1222D0C
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jul 2020 22:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGPUf2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jul 2020 16:35:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57747 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726710AbgGPUf2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jul 2020 16:35:28 -0400
+        id S1726907AbgGPUf6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jul 2020 16:35:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48647 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726803AbgGPUff (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jul 2020 16:35:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594931725;
+        s=mimecast20190719; t=1594931732;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MA2zTmLbYOvlJ63Y/TrUWnikoLb+7ScXgVhmHlwKe8M=;
-        b=Vvll/QjolsyGzBgie2WFdmYFPstEhB9hilz0GuQLd0AIUDJ+ewT/odNvOd9HyDKE6Bc1Ta
-        glTBwPitPZpJ9SOfAwK0QpA0flqecGBTiig5C9MsbY7StQgbw5INzQzXbdoTzkAHbKBXTo
-        mdJUU8ppSNRjZ3XTIAnJG3GBhZ2u8MY=
+        bh=sGlqsraquDgu8I0zmAVqtzYIeEOB5GrV+LoXf470Egs=;
+        b=eswTnedT5yGzxRzw2iogldV1HUnGwhpYK6wH2uA0tEyCVhmyVlEzgKpNP7irThH72ib8E2
+        hFi8ECzj+X/Nx63rXlAYwj1zn5RMgU4NLjRIvfAAvuY2DKrnz0O5bNCom6gzk36yQWMeiV
+        FnPf8w//IXmh8Qe4ekOTDa2AQrZFFDA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-NGli0yJJN46cvpRhHGDfRA-1; Thu, 16 Jul 2020 16:35:21 -0400
-X-MC-Unique: NGli0yJJN46cvpRhHGDfRA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-358-8K5DXL6lPOuYLyuH5dvvsw-1; Thu, 16 Jul 2020 16:35:31 -0400
+X-MC-Unique: 8K5DXL6lPOuYLyuH5dvvsw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A95F7100526A;
-        Thu, 16 Jul 2020 20:35:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D246D108D;
+        Thu, 16 Jul 2020 20:35:28 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 74B7E5C1C3;
-        Thu, 16 Jul 2020 20:35:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B90C060C84;
+        Thu, 16 Jul 2020 20:35:25 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 3/5] keys: Provide KEYCTL_GRANT_PERMISSION
+Subject: [RFC PATCH 4/5] keys: Split the search perms between KEY_NEED_USE and
+ KEY_NEED_SEARCH
 From:   David Howells <dhowells@redhat.com>
 To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
         Casey Schaufler <casey@schaufler-ca.com>
@@ -50,280 +51,348 @@ Cc:     dhowells@redhat.com,
         linux-fsdevel@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, containers@lists.linux-foundation.org
-Date:   Thu, 16 Jul 2020 21:35:14 +0100
-Message-ID: <159493171464.3249370.14298001109518163029.stgit@warthog.procyon.org.uk>
+Date:   Thu, 16 Jul 2020 21:35:24 +0100
+Message-ID: <159493172491.3249370.12796192457457028352.stgit@warthog.procyon.org.uk>
 In-Reply-To: <159493167778.3249370.8145886688150701997.stgit@warthog.procyon.org.uk>
 References: <159493167778.3249370.8145886688150701997.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.22
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Provide a keyctl() operation to grant/remove permissions.  The grant
-operation, wrapped by libkeyutils, looks like:
+Allow the permission needed for a keyring search to be specified and split
+the permissions between KEY_NEED_USE (the kernel wants to do something with
+the key) and KEY_NEED_SEARCH (userspace wants to do something with the
+key).
 
-	int ret = keyctl_grant_permission(key_serial_t key,
-					  enum key_ace_subject_type type,
-					  unsigned int subject,
-					  unsigned int perm);
+This primarily affects how request_key() works, differentiating implicit
+calls (e.g. from filesystems) from userspace calling the request_key()
+system call.
 
-Where key is the key to be modified, type and subject represent the subject
-to which permission is to be granted (or removed) and perm is the set of
-permissions to be granted.  0 is returned on success.  SETSEC permission is
-required for this.
-
-The subject type currently must be KEY_ACE_SUBJ_STANDARD for the moment
-(other subject types will come along later).
-
-For subject type KEY_ACE_SUBJ_STANDARD, the following subject values are
-available:
-
-	KEY_ACE_POSSESSOR	The possessor of the key
-	KEY_ACE_OWNER		The owner of the key
-	KEY_ACE_GROUP		The key's group
-	KEY_ACE_EVERYONE	Everyone
-
-perm lists the permissions to be granted:
-
-	KEY_ACE_VIEW		Can view the key metadata
-	KEY_ACE_READ		Can read the key content
-	KEY_ACE_WRITE		Can update/modify the key content
-	KEY_ACE_SEARCH		Can find the key by searching/requesting
-	KEY_ACE_LINK		Can make a link to the key
-	KEY_ACE_SETSEC		Can set security
-	KEY_ACE_INVAL		Can invalidate
-	KEY_ACE_REVOKE		Can revoke
-	KEY_ACE_JOIN		Can join this keyring
-	KEY_ACE_CLEAR		Can clear this keyring
-
-If an ACE already exists for the subject, then the permissions mask will be
-overwritten; if perm is 0, it will be deleted.
-
-Currently, the internal ACL is limited to a maximum of 16 entries.
-
-For example:
-
-	int ret = keyctl_grant_permission(key,
-					  KEY_ACE_SUBJ_STANDARD,
-					  KEY_ACE_OWNER,
-					  KEY_ACE_VIEW | KEY_ACE_READ);
+This will allow the kernel to find keys in a hidden container keyring, but
+not the denizens of the container.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- include/uapi/linux/keyctl.h |    2 +
- security/keys/compat.c      |    2 +
- security/keys/internal.h    |    5 ++
- security/keys/keyctl.c      |    8 +++
- security/keys/permission.c  |  120 +++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 136 insertions(+), 1 deletion(-)
+ certs/blacklist.c                        |    2 +-
+ crypto/asymmetric_keys/asymmetric_type.c |    2 +-
+ include/linux/key.h                      |    2 ++
+ net/rxrpc/security.c                     |    2 +-
+ security/keys/internal.h                 |    4 ++++
+ security/keys/keyctl.c                   |    6 ++++--
+ security/keys/keyring.c                  |   13 ++++++++-----
+ security/keys/permission.c               |   31 ++++++++++++++++++++++++++++++
+ security/keys/proc.c                     |    1 +
+ security/keys/process_keys.c             |    8 ++++++--
+ security/keys/request_key.c              |    5 +++++
+ security/keys/request_key_auth.c         |    1 +
+ 12 files changed, 65 insertions(+), 12 deletions(-)
 
-diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
-index 998d4e50bd41..a5938f2c3e66 100644
---- a/include/uapi/linux/keyctl.h
-+++ b/include/uapi/linux/keyctl.h
-@@ -133,6 +133,7 @@ enum key_ace_standard_subject {
- #define KEYCTL_MOVE			30	/* Move keys between keyrings */
- #define KEYCTL_CAPABILITIES		31	/* Find capabilities of keyrings subsystem */
- #define KEYCTL_WATCH_KEY		32	/* Watch a key or ring of keys for changes */
-+#define KEYCTL_GRANT_PERMISSION		33	/* Grant a permit to a key */
+diff --git a/certs/blacklist.c b/certs/blacklist.c
+index aff83e3a9f49..29c3cb6254d9 100644
+--- a/certs/blacklist.c
++++ b/certs/blacklist.c
+@@ -123,7 +123,7 @@ int is_hash_blacklisted(const u8 *hash, size_t hash_len, const char *type)
+ 	*p = 0;
  
- /* keyctl structures */
- struct keyctl_dh_params {
-@@ -196,5 +197,6 @@ struct keyctl_pkey_params {
- #define KEYCTL_CAPS1_NS_KEY_TAG		0x02 /* Key indexing can include a namespace tag */
- #define KEYCTL_CAPS1_NOTIFICATIONS	0x04 /* Keys generate watchable notifications */
- #define KEYCTL_CAPS1_ACL		0x08 /* Keys have ACLs rather than a p-u-g-o bitmask */
-+#define KEYCTL_CAPS1_GRANT_PERMISSION	0x10 /* KEYCTL_GRANT_PERMISSION is supported */
+ 	kref = keyring_search(make_key_ref(blacklist_keyring, true),
+-			      &key_type_blacklist, buffer, false);
++			      &key_type_blacklist, buffer, KEY_NEED_USE, false);
+ 	if (!IS_ERR(kref)) {
+ 		key_ref_put(kref);
+ 		ret = -EKEYREJECTED;
+diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
+index 6e5fc8e31f01..4559ac2f0bb7 100644
+--- a/crypto/asymmetric_keys/asymmetric_type.c
++++ b/crypto/asymmetric_keys/asymmetric_type.c
+@@ -83,7 +83,7 @@ struct key *find_asymmetric_key(struct key *keyring,
+ 	pr_debug("Look up: \"%s\"\n", req);
  
- #endif /*  _LINUX_KEYCTL_H */
-diff --git a/security/keys/compat.c b/security/keys/compat.c
-index 6ee9d8f6a4a5..2b675f9a6162 100644
---- a/security/keys/compat.c
-+++ b/security/keys/compat.c
-@@ -152,6 +152,8 @@ COMPAT_SYSCALL_DEFINE5(keyctl, u32, option,
+ 	ref = keyring_search(make_key_ref(keyring, 1),
+-			     &key_type_asymmetric, req, true);
++			     &key_type_asymmetric, req, KEY_NEED_USE, true);
+ 	if (IS_ERR(ref))
+ 		pr_debug("Request for key '%s' err %ld\n", req, PTR_ERR(ref));
+ 	kfree(req);
+diff --git a/include/linux/key.h b/include/linux/key.h
+index 94a6d51464b5..0db5539366e7 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -296,6 +296,7 @@ extern struct key *key_alloc(struct key_type *type,
+ #define KEY_ALLOC_BUILT_IN		0x0004	/* Key is built into kernel */
+ #define KEY_ALLOC_BYPASS_RESTRICTION	0x0008	/* Override the check on restricted keyrings */
+ #define KEY_ALLOC_UID_KEYRING		0x0010	/* allocating a user or user session keyring */
++#define KEY_ALLOC_USERSPACE_REQUEST	0x0020	/* Userspace requested the key */
  
- 	case KEYCTL_MOVE:
- 		return keyctl_keyring_move(arg2, arg3, arg4, arg5);
-+	case KEYCTL_GRANT_PERMISSION:
-+		return keyctl_grant_permission(arg2, arg3, arg4, arg5);
+ extern void key_revoke(struct key *key);
+ extern void key_invalidate(struct key *key);
+@@ -432,6 +433,7 @@ extern int keyring_clear(struct key *keyring);
+ extern key_ref_t keyring_search(key_ref_t keyring,
+ 				struct key_type *type,
+ 				const char *description,
++				enum key_need_perm need_perm,
+ 				bool recurse);
  
- 	case KEYCTL_CAPABILITIES:
- 		return keyctl_capabilities(compat_ptr(arg2), arg3);
+ extern int keyring_add_key(struct key *keyring,
+diff --git a/net/rxrpc/security.c b/net/rxrpc/security.c
+index 9b1fb9ed0717..23077cfe3d44 100644
+--- a/net/rxrpc/security.c
++++ b/net/rxrpc/security.c
+@@ -141,7 +141,7 @@ bool rxrpc_look_up_server_security(struct rxrpc_local *local, struct rxrpc_sock
+ 
+ 	/* look through the service's keyring */
+ 	kref = keyring_search(make_key_ref(rx->securities, 1UL),
+-			      &key_type_rxrpc_s, kdesc, true);
++			      &key_type_rxrpc_s, kdesc, KEY_NEED_USE, true);
+ 	if (IS_ERR(kref)) {
+ 		trace_rxrpc_abort(0, "SVK",
+ 				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
 diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 3b2114d00d5c..af2c9531c435 100644
+index af2c9531c435..d0d1bce95674 100644
 --- a/security/keys/internal.h
 +++ b/security/keys/internal.h
-@@ -377,6 +377,11 @@ static inline long keyctl_watch_key(key_serial_t key_id, int watch_fd, int watch
- }
- #endif
- 
-+extern long keyctl_grant_permission(key_serial_t keyid,
-+				    enum key_ace_subject_type type,
-+				    unsigned int subject,
-+				    unsigned int perm);
-+
- /*
-  * Debugging key validation
-  */
+@@ -131,6 +131,7 @@ struct keyring_search_context {
+ 	struct keyring_index_key index_key;
+ 	const struct cred	*cred;
+ 	struct key_match_data	match_data;
++	enum key_need_perm	need_perm;	/* Permission required for search */
+ 	unsigned		flags;
+ #define KEYRING_SEARCH_NO_STATE_CHECK	0x0001	/* Skip state checks */
+ #define KEYRING_SEARCH_DO_STATE_CHECK	0x0002	/* Override NO_STATE_CHECK */
+@@ -196,6 +197,9 @@ extern void key_gc_keytype(struct key_type *ktype);
+ extern int key_task_permission(const key_ref_t key_ref,
+ 			       const struct cred *cred,
+ 			       enum key_need_perm need_perm);
++extern int key_search_permission(const key_ref_t key_ref,
++				 struct keyring_search_context *ctx,
++				 enum key_need_perm need_perm);
+ extern unsigned int key_acl_to_perm(const struct key_acl *acl);
+ extern long key_set_acl(struct key *key, struct key_acl *acl);
+ extern void key_put_acl(struct key_acl *acl);
 diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 8689d4331285..fae2df676e30 100644
+index fae2df676e30..54a2bfff9af2 100644
 --- a/security/keys/keyctl.c
 +++ b/security/keys/keyctl.c
-@@ -39,7 +39,8 @@ static const unsigned char keyrings_capabilities[2] = {
- 	[1] = (KEYCTL_CAPS1_NS_KEYRING_NAME |
- 	       KEYCTL_CAPS1_NS_KEY_TAG |
- 	       (IS_ENABLED(CONFIG_KEY_NOTIFICATIONS)	? KEYCTL_CAPS1_NOTIFICATIONS : 0) |
--	       KEYCTL_CAPS1_ACL
-+	       KEYCTL_CAPS1_ACL |
-+	       KEYCTL_CAPS1_GRANT_PERMISSION
- 	       ),
- };
+@@ -225,7 +225,8 @@ SYSCALL_DEFINE4(request_key, const char __user *, _type,
+ 	key = request_key_and_link(ktype, description, NULL, callout_info,
+ 				   callout_len, NULL, NULL,
+ 				   key_ref_to_ptr(dest_ref),
+-				   KEY_ALLOC_IN_QUOTA);
++				   KEY_ALLOC_IN_QUOTA |
++				   KEY_ALLOC_USERSPACE_REQUEST);
+ 	if (IS_ERR(key)) {
+ 		ret = PTR_ERR(key);
+ 		goto error5;
+@@ -685,7 +686,8 @@ long keyctl_keyring_search(key_serial_t ringid,
+ 	}
  
-@@ -1920,6 +1921,11 @@ SYSCALL_DEFINE5(keyctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 					   (key_serial_t)arg3,
- 					   (key_serial_t)arg4,
- 					   (unsigned int)arg5);
-+	case KEYCTL_GRANT_PERMISSION:
-+		return keyctl_grant_permission((key_serial_t)arg2,
-+					       (enum key_ace_subject_type)arg3,
-+					       (unsigned int)arg4,
-+					       (unsigned int)arg5);
+ 	/* do the search */
+-	key_ref = keyring_search(keyring_ref, ktype, description, true);
++	key_ref = keyring_search(keyring_ref, ktype, description,
++				 KEY_NEED_SEARCH, true);
+ 	if (IS_ERR(key_ref)) {
+ 		ret = PTR_ERR(key_ref);
  
- 	case KEYCTL_CAPABILITIES:
- 		return keyctl_capabilities((unsigned char __user *)arg2, (size_t)arg3);
+diff --git a/security/keys/keyring.c b/security/keys/keyring.c
+index f14aabf27a51..1779c95b428c 100644
+--- a/security/keys/keyring.c
++++ b/security/keys/keyring.c
+@@ -621,8 +621,8 @@ static int keyring_search_iterator(const void *object, void *iterator_data)
+ 
+ 	/* key must have search permissions */
+ 	if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM) &&
+-	    key_task_permission(make_key_ref(key, ctx->possessed),
+-				ctx->cred, KEY_NEED_SEARCH) < 0) {
++	    key_search_permission(make_key_ref(key, ctx->possessed),
++				  ctx, ctx->need_perm) < 0) {
+ 		ctx->result = ERR_PTR(-EACCES);
+ 		kleave(" = %d [!perm]", ctx->skipped_ret);
+ 		goto skipped;
+@@ -798,8 +798,8 @@ static bool search_nested_keyrings(struct key *keyring,
+ 
+ 		/* Search a nested keyring */
+ 		if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM) &&
+-		    key_task_permission(make_key_ref(key, ctx->possessed),
+-					ctx->cred, KEY_NEED_SEARCH) < 0)
++		    key_search_permission(make_key_ref(key, ctx->possessed),
++					  ctx, KEY_NEED_SEARCH) < 0)
+ 			continue;
+ 
+ 		/* stack the current position */
+@@ -921,7 +921,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
+ 		return ERR_PTR(-ENOTDIR);
+ 
+ 	if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM)) {
+-		err = key_task_permission(keyring_ref, ctx->cred, KEY_NEED_SEARCH);
++		err = key_search_permission(keyring_ref, ctx, ctx->need_perm);
+ 		if (err < 0)
+ 			return ERR_PTR(err);
+ 	}
+@@ -937,6 +937,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
+  * @keyring: The root of the keyring tree to be searched.
+  * @type: The type of keyring we want to find.
+  * @description: The name of the keyring we want to find.
++ * @need_perm: The permission required of the target key.
+  * @recurse: True to search the children of @keyring also
+  *
+  * As keyring_search_rcu() above, but using the current task's credentials and
+@@ -945,6 +946,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
+ key_ref_t keyring_search(key_ref_t keyring,
+ 			 struct key_type *type,
+ 			 const char *description,
++			 enum key_need_perm need_perm,
+ 			 bool recurse)
+ {
+ 	struct keyring_search_context ctx = {
+@@ -955,6 +957,7 @@ key_ref_t keyring_search(key_ref_t keyring,
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= need_perm,
+ 		.flags			= KEYRING_SEARCH_DO_STATE_CHECK,
+ 	};
+ 	key_ref_t key;
 diff --git a/security/keys/permission.c b/security/keys/permission.c
-index 37bad810bc16..0bb7f6b695f4 100644
+index 0bb7f6b695f4..3ae4d9aedc3a 100644
 --- a/security/keys/permission.c
 +++ b/security/keys/permission.c
-@@ -380,3 +380,123 @@ long key_set_acl(struct key *key, struct key_acl *acl)
- 	key_put_acl(acl);
- 	return 0;
+@@ -253,6 +253,37 @@ int key_task_permission(const key_ref_t key_ref, const struct cred *cred,
+ 	return security_key_permission(key_ref, cred, need_perm, notes);
  }
-+
-+/*
-+ * Allocate a new ACL with an extra ACE slot.
+ 
++/**
++ * key_search_permission - Check a key can be searched for
++ * @key_ref: The key to check.
++ * @cred: The credentials to use.
++ * @need_perm: The permission required.
++ *
++ * Check to see whether permission is granted to use a key in the desired way,
++ * but permit the security modules to override.
++ *
++ * The caller must hold the RCU readlock.
++ *
++ * Returns 0 if successful, -EACCES if access is denied based on the
++ * permissions bits or the LSM check.
 + */
-+static struct key_acl *key_alloc_acl(const struct key_acl *old_acl, int nr, int skip)
++int key_search_permission(const key_ref_t key_ref,
++			  struct keyring_search_context *ctx,
++			  enum key_need_perm need_perm)
 +{
-+	struct key_acl *acl;
-+	int nr_ace, i, j = 0;
++	unsigned int allow, notes = 0;
++	int ret;
 +
-+	nr_ace = old_acl->nr_ace + nr;
-+	if (nr_ace > 16)
-+		return ERR_PTR(-EINVAL);
++	allow = key_resolve_acl(key_ref, ctx->cred);
 +
-+	acl = kzalloc(struct_size(acl, aces, nr_ace), GFP_KERNEL);
-+	if (!acl)
-+		return ERR_PTR(-ENOMEM);
++	ret = check_key_permission(key_ref, ctx->cred, allow, need_perm, &notes);
++	if (ret < 0)
++		return ret;
 +
-+	refcount_set(&acl->usage, 1);
-+	acl->nr_ace = nr_ace;
-+	for (i = 0; i < old_acl->nr_ace; i++) {
-+		if (i == skip)
-+			continue;
-+		acl->aces[j] = old_acl->aces[i];
-+		j++;
-+	}
-+	return acl;
++	/* Let the LSMs be the final arbiter */
++	return security_key_permission(key_ref, ctx->cred, need_perm, notes);
 +}
 +
-+/*
-+ * Generate the revised ACL.
-+ */
-+static long key_change_acl(struct key *key, struct key_ace *new_ace)
-+{
-+	struct key_acl *acl, *old;
-+	int i;
+ /**
+  * key_validate - Validate a key.
+  * @key: The key to be validated.
+diff --git a/security/keys/proc.c b/security/keys/proc.c
+index c68ec5f98659..a6b349ee1759 100644
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -174,6 +174,7 @@ static int proc_keys_show(struct seq_file *m, void *v)
+ 		.match_data.cmp		= lookup_user_key_possessed,
+ 		.match_data.raw_data	= key,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_SEARCH,
+ 		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
+ 					   KEYRING_SEARCH_RECURSE),
+ 	};
+diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+index 11227101bea0..3721f96dd6fb 100644
+--- a/security/keys/process_keys.c
++++ b/security/keys/process_keys.c
+@@ -135,7 +135,8 @@ int look_up_user_keyrings(struct key **_user_keyring,
+ 	 */
+ 	snprintf(buf, sizeof(buf), "_uid.%u", uid);
+ 	uid_keyring_r = keyring_search(make_key_ref(reg_keyring, true),
+-				       &key_type_keyring, buf, false);
++				       &key_type_keyring, buf, KEY_NEED_SEARCH,
++				       false);
+ 	kdebug("_uid %p", uid_keyring_r);
+ 	if (uid_keyring_r == ERR_PTR(-EAGAIN)) {
+ 		uid_keyring = keyring_alloc(buf, cred->user->uid, INVALID_GID,
+@@ -157,7 +158,8 @@ int look_up_user_keyrings(struct key **_user_keyring,
+ 	/* Get a default session keyring (which might also exist already) */
+ 	snprintf(buf, sizeof(buf), "_uid_ses.%u", uid);
+ 	session_keyring_r = keyring_search(make_key_ref(reg_keyring, true),
+-					   &key_type_keyring, buf, false);
++					   &key_type_keyring, buf, KEY_NEED_SEARCH,
++					   false);
+ 	kdebug("_uid_ses %p", session_keyring_r);
+ 	if (session_keyring_r == ERR_PTR(-EAGAIN)) {
+ 		session_keyring = keyring_alloc(buf, cred->user->uid, INVALID_GID,
+@@ -230,6 +232,7 @@ struct key *get_user_session_keyring_rcu(const struct cred *cred)
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= buf,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_SEARCH,
+ 		.flags			= KEYRING_SEARCH_DO_STATE_CHECK,
+ 	};
+ 
+@@ -648,6 +651,7 @@ key_ref_t lookup_user_key(key_serial_t id, unsigned long lflags,
+ 	struct keyring_search_context ctx = {
+ 		.match_data.cmp		= lookup_user_key_possessed,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_SEARCH,
+ 		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
+ 					   KEYRING_SEARCH_RECURSE),
+ 	};
+diff --git a/security/keys/request_key.c b/security/keys/request_key.c
+index 2b84efb420cb..479ae0573d1e 100644
+--- a/security/keys/request_key.c
++++ b/security/keys/request_key.c
+@@ -567,6 +567,7 @@ struct key *request_key_and_link(struct key_type *type,
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_USE,
+ 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
+ 					   KEYRING_SEARCH_SKIP_EXPIRED |
+ 					   KEYRING_SEARCH_RECURSE),
+@@ -579,6 +580,9 @@ struct key *request_key_and_link(struct key_type *type,
+ 	       ctx.index_key.type->name, ctx.index_key.description,
+ 	       callout_info, callout_len, aux, dest_keyring, flags);
+ 
++	if (flags & KEY_ALLOC_USERSPACE_REQUEST)
++		ctx.need_perm = KEY_NEED_SEARCH;
 +
-+	old = rcu_dereference_protected(key->acl, lockdep_is_held(&key->sem));
-+
-+	for (i = 0; i < old->nr_ace; i++)
-+		if (old->aces[i].type == new_ace->type &&
-+		    old->aces[i].subject_id == new_ace->subject_id)
-+			goto found_match;
-+
-+	if (new_ace->perm == 0)
-+		return 0; /* No permissions to remove.  Add deny record? */
-+
-+	acl = key_alloc_acl(old, 1, -1);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	acl->aces[i] = *new_ace;
-+	goto change;
-+
-+found_match:
-+	if (new_ace->perm == 0)
-+		goto delete_ace;
-+	if (new_ace->perm == old->aces[i].perm)
-+		return 0;
-+	acl = key_alloc_acl(old, 0, -1);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	acl->aces[i].perm = new_ace->perm;
-+	goto change;
-+
-+delete_ace:
-+	acl = key_alloc_acl(old, -1, i);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	goto change;
-+
-+change:
-+	return key_set_acl(key, acl);
-+}
-+
-+/*
-+ * Add, alter or remove (if perm == 0) an ACE in a key's ACL.
-+ */
-+long keyctl_grant_permission(key_serial_t keyid,
-+			     enum key_ace_subject_type type,
-+			     unsigned int subject,
-+			     unsigned int perm)
-+{
-+	struct key_ace new_ace;
-+	struct key *key;
-+	key_ref_t key_ref;
-+	long ret;
-+
-+	new_ace.type = type;
-+	new_ace.perm = perm;
-+
-+	switch (type) {
-+	case KEY_ACE_SUBJ_STANDARD:
-+		if (subject >= nr__key_ace_standard_subject)
-+			return -ENOENT;
-+		new_ace.subject_id = subject;
-+		break;
-+
-+	default:
-+		return -ENOENT;
-+	}
-+
-+	key_ref = lookup_user_key(keyid, KEY_LOOKUP_PARTIAL, KEY_NEED_CHANGE_ACL);
-+	if (IS_ERR(key_ref)) {
-+		ret = PTR_ERR(key_ref);
-+		goto error;
-+	}
-+
-+	key = key_ref_to_ptr(key_ref);
-+
-+	down_write(&key->sem);
-+
-+	/* If we're not the sysadmin, we can only change a key that we own */
-+	ret = -EACCES;
-+	if (capable(CAP_SYS_ADMIN) || uid_eq(key->uid, current_fsuid()))
-+		ret = key_change_acl(key, &new_ace);
-+
-+	up_write(&key->sem);
-+	key_put(key);
-+error:
-+	return ret;
-+}
+ 	if (type->match_preparse) {
+ 		ret = type->match_preparse(&ctx.match_data);
+ 		if (ret < 0) {
+@@ -774,6 +778,7 @@ struct key *request_key_rcu(struct key_type *type,
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_USE,
+ 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
+ 					   KEYRING_SEARCH_SKIP_EXPIRED),
+ 	};
+diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+index ee8c5fe6ed61..f8f77af152de 100644
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -264,6 +264,7 @@ struct key *key_get_instantiation_authkey(key_serial_t target_id)
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+ 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++		.need_perm		= KEY_NEED_USE,
+ 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
+ 					   KEYRING_SEARCH_RECURSE),
+ 	};
 
 
