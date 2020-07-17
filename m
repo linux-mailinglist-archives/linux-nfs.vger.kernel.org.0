@@ -2,92 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB9772241D2
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 19:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EB402241DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 19:34:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgGQR3r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jul 2020 13:29:47 -0400
-Received: from mailin.studentenwerk.mhn.de ([141.84.225.229]:60586 "EHLO
-        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgGQR3q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 13:29:46 -0400
-Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
-        by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4B7dRD4J2QzRhSV;
-        Fri, 17 Jul 2020 19:29:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
-        t=1595006984;
+        id S1726232AbgGQReJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jul 2020 13:34:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35255 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbgGQReJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 13:34:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595007248;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uJr2b4jU2VVP6dxKKXRY+LDT5Rw2EvC3vE/csmHSnZ8=;
-        b=R95BtOTYv8mnKQi5bmRsB5MtTR8/gziVmk+z4Jpc8MCRBWX3/F9fcCZinXOHJe65mHT+zQ
-        ytABafxXTOvYWGYGQ3G+B6P/k7/8xIY7hv5qfI5yfxVYU9z4/So+S4PcZK0TQ+o5Vyw4u/
-        mbsbsNeDmcqTWNfv3zko4jujFTnGAEAMojNoef0PH+P0I2ZTOye3QUvt9EKJEUurkiQCtk
-        vSJLvdSvIdn3hVwW/ZOnoM7Uuza1kb6L+oQoh24BCxSnSNboIoZ1dk4ngTgyWXBHRdF+pO
-        CurVM8Z9I7P1NQ4hBXyD0tVt9GColGEqgJzUeG/Lokrv+qh/fplu6iYIicFGxA==
-From:   Pierre Sauter <pierre.sauter@stwm.de>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()" breaks NFS Kerberos on upstream stable 5.4.y
-Date:   Fri, 17 Jul 2020 19:29:44 +0200
-Message-ID: <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
-Organization: Studentenwerk
-In-Reply-To: <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com> <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de> <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
+        bh=bOyqHCdVIUnftZwuCNgV8jNJU7xlGfEyVJxbtqvAbzs=;
+        b=HgZb7SHJpP03KFGb6Sp5Y1KNM7HK0GH64ruAvobPq5Y/Zc3Wx2s/BMHsGEaLa+B3ScByfG
+        RixqDPd6o74DonV1vL1rDl1qx3v3oKifwspFeOVcM/K4JDw9efKGNSGNOfAFkolTthprQ1
+        8z6KF9CBlRzLg9Lm+ONTFQr1YjiQAjg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-vuT1nszuNw6ihez07tRl5Q-1; Fri, 17 Jul 2020 13:34:06 -0400
+X-MC-Unique: vuT1nszuNw6ihez07tRl5Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04361800464;
+        Fri, 17 Jul 2020 17:34:05 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2632119724;
+        Fri, 17 Jul 2020 17:34:04 +0000 (UTC)
+Subject: Re: nfs-utils README updates
+To:     Doug Nazar <nazard@nazar.ca>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <34f07da7-250d-f354-bf59-74b9f1a0e16f@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <0555b3d1-8cbe-c3d8-2214-2bf7d3d65286@RedHat.com>
+Date:   Fri, 17 Jul 2020 13:34:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <34f07da7-250d-f354-bf59-74b9f1a0e16f@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Chuck,
+Hey Doug,
 
-Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
-> So this makes me think there's a possibility you are not using upstream
-> stable kernels. I can't help if I don't know what source code and commit
-> stream you are using. It also makes me question the bisect result.
+On 7/16/20 5:36 PM, Doug Nazar wrote:
+> I was looking through the README to ensure my systems followed the correct setup and noticed a few things.
+> 
+> Looks like the reference to libnfsidmap can be dropped.
+> 
+> It looks like nfsdcld is again the correct setup for client tracking. A section should be added to SERVER STARTUP to include nfsdcld on NFS4+ servers.
+> 
+> Should it mention which modules are required before starting? I've had to locally add 'auth_rpcgss' to my startup scripts or svcgssd will bail on startup.
+> 
+> Any other changes or best practices that should be mentioned before I send a patch?
 
-Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
-discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
-5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. T=
-he
-bisection was done by the original bug reporter and also refers to the Ubun=
-tu
-kernel.
+Yes... the README is dreadfully out of date... although most of it has
+not changed but a lot has... esp when it comes to the systemd set up..
+although the systemd/README is pretty accurate... Maybe a point to
+the systemd/README in the top README would be good. 
 
-In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry f=
-or
-the bother.
+What script did you have to add 'auth_rpcgss' to? 
+It should be automatically  be loaded when the sunrpc 
+module is loaded.
 
-> > My krb5 etype is aes256-cts-hmac-sha1-96.
->=20
-> Thanks! And what is your NFS server and filesystem? It's possible that the
-> client is not estimating the size of the reply correctly. Variables inclu=
-de
-> the size of file handles, MIC verifiers, and wrap tokens.
+Thanks for taking a look!
 
-The server is Debian with v4.19.130 upstream, filesystem ext4.
+steved.
 
-> You might try:
->=20
-> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
-
-That one is actually in Ubuntus 5.4.0-40, from looking at the code.
-
-Best Regards
-=2D-=20
-Pierre Sauter
-Studentenwerk M=FCnchen
-=2D------
-
-
+ 
 
