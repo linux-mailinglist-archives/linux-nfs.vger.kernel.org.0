@@ -2,78 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 580662241E9
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 19:36:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F74F2242A6
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 19:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgGQRgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jul 2020 13:36:24 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54216 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgGQRgX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 13:36:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HHX61B196185;
-        Fri, 17 Jul 2020 17:34:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=cifHzIcoftN1NjY2VgZBGvbry+3hcUjikyTTIwz6b+I=;
- b=Kw8MW12jaxZbEDIWxd1/ANXZGBk+CWJAjC1z+/QFX3IYh6cp9g2U3XoEvBJHyubv54uc
- 2Kjb+NmX50QkogKhdU6A1oELLrGyMyrCJDvavhHKZoSo8CBO/VXCYW220vEozbQgwTOQ
- VqI/WbZYr+Q5NxlBMeIXQR2TH/J8DhaMfxYjsLEzZVNX7Dw14r0BMbG2vYjGCWwPFZEr
- U5hR97QoquZvDMNXeH0eTp3L4CQcFd3MCbKHp8plqci2giGJ3gvWFexjVn/vS/Xhu1pz
- HLHR5Zu9+n3yupwfe5Ezy90SwuKo6khEg4DBJbMFqjcCWCvMVrYZW69TQ7rHqLztj9ux 6A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmrhqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 17:34:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HHXvjk071078;
-        Fri, 17 Jul 2020 17:34:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32bbk0shbs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 17:34:14 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06HHYDY6002560;
-        Fri, 17 Jul 2020 17:34:13 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 10:34:12 -0700
+        id S1726528AbgGQR4T convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 17 Jul 2020 13:56:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42735 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgGQR4S (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 13:56:18 -0400
+Received: from mail-pf1-f198.google.com ([209.85.210.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jwUal-0003bd-EB
+        for linux-nfs@vger.kernel.org; Fri, 17 Jul 2020 17:56:15 +0000
+Received: by mail-pf1-f198.google.com with SMTP id o9so7391175pfp.6
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Jul 2020 10:56:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DJeYw43KCdF1n+mtxqHrWGu9uDmkgMx6dDVvN1r/iUI=;
+        b=gqYBhqouzkKdf3Sdc68C6LeyoLSus5rSEqVPz6G8oHuGFtSdyYXiNOK4OhZP0GpBkd
+         a7Kuc9uQfaGfhD48EsSvUnvSS8XuJuBLSExIE6R8NxJz2yUfNOImVUYBF2uglQZAPeTa
+         ZpErTu9DTdd3LBWzkf/RWBmCAzvBMu6GYaOykExx9Eqr4/ggbfD9vYphtUu8YbvM+eKt
+         abpBy4hJ/b1y2F6L93vwZdaBp4hAvrqXDYR/bXBuuvBcoW3vOBq4U6oWoy7KR5dqdWhS
+         clIkRo73qpPq7+KygLbHwSB4cJK74tmjI8k/x6ZbDLwpobpZIYB1RVny677eP6nvBmm1
+         Wg6g==
+X-Gm-Message-State: AOAM5313CVBJceA8uWzGFL0C5lsWycRAty1IVNhdDlrUPuFnZd8BRJEy
+        uhcZ1eRrS59as9++gfPH0lHygqbVOsEfpq8gEUx15WQUO4HlCFLet1h9GdlW2F2jXW/r8UCBwV2
+        A58bOEwM+NRJBot1MfUpGkKy1phwBE2XmHg/Kjw==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397692plq.283.1595008574082;
+        Fri, 17 Jul 2020 10:56:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfTo9D7lyFkDMei5LDbgFf/qwVM6msV/kFw7ZA8SiHACyAuV9cXxTJL0fSYj34hSeq6uLdww==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397678plq.283.1595008573667;
+        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id b18sm3514062pju.10.2020.07.17.10.56.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
 Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
  breaks NFS Kerberos on upstream stable 5.4.y
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
-Date:   Fri, 17 Jul 2020 13:34:11 -0400
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
+Date:   Sat, 18 Jul 2020 01:56:09 +0800
+Cc:     Pierre Sauter <pierre.sauter@stwm.de>,
         matthew.ruffell@canonical.com,
         linux-stable <stable@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
         linux-kernel-owner@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CCF13E29-7B8B-47B3-A8D0-1A6E0E626BA6@canonical.com>
 References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
  <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de>
  <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
  <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
-To:     Pierre Sauter <pierre.sauter@stwm.de>
+ <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170124
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -81,57 +73,57 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Jul 17, 2020, at 1:29 PM, Pierre Sauter <pierre.sauter@stwm.de> =
-wrote:
->=20
-> Hi Chuck,
->=20
-> Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
->> So this makes me think there's a possibility you are not using =
-upstream
->> stable kernels. I can't help if I don't know what source code and =
-commit
->> stream you are using. It also makes me question the bisect result.
->=20
-> Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. =46rom =
-the
-> discussion in the Ubuntu bugtracker I got the impression that Ubuntu =
-kernels
-> 5.4.0-XX and upstream 5.4.XX are closely related, obviously they are =
-not. The
-> bisection was done by the original bug reporter and also refers to the =
-Ubuntu
-> kernel.
->=20
-> In the meantime I tested v5.4.51 upstream, which shows no problems. =
-Sorry for
-> the bother.
+> On Jul 18, 2020, at 01:34, Chuck Lever <chuck.lever@oracle.com> wrote:
+> 
+> 
+> 
+>> On Jul 17, 2020, at 1:29 PM, Pierre Sauter <pierre.sauter@stwm.de> wrote:
+>> 
+>> Hi Chuck,
+>> 
+>> Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
+>>> So this makes me think there's a possibility you are not using upstream
+>>> stable kernels. I can't help if I don't know what source code and commit
+>>> stream you are using. It also makes me question the bisect result.
+>> 
+>> Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
+>> discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
+>> 5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. The
+>> bisection was done by the original bug reporter and also refers to the Ubuntu
+>> kernel.
+>> 
+>> In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry for
+>> the bother.
+> 
+> Pierre, thanks for confirming!
+> 
+> Kai-Heng suspected an upstream stable commit that is missing in 5.4.0-40,
+> but I don't have any good suggestions.
 
-Pierre, thanks for confirming!
+Well, Ubuntu's 5.4 kernel is based on upstream stable v5.4, so I asked users to test stable v5.4.51, however the feedback was negative, and that's the reason why I raised the issue here.
 
-Kai-Heng suspected an upstream stable commit that is missing in =
-5.4.0-40,
-but I don't have any good suggestions.
+Anyway, good to know that it's fixed in upstream stable, everything's good now!
+Thanks for your effort Chuck.
 
-
->>> My krb5 etype is aes256-cts-hmac-sha1-96.
->>=20
->> Thanks! And what is your NFS server and filesystem? It's possible =
-that the
->> client is not estimating the size of the reply correctly. Variables =
-include
->> the size of file handles, MIC verifiers, and wrap tokens.
->=20
-> The server is Debian with v4.19.130 upstream, filesystem ext4.
->=20
->> You might try:
->>=20
->> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
->=20
-> That one is actually in Ubuntus 5.4.0-40, from looking at the code.
-
---
-Chuck Lever
+Kai-Heng
 
 
+> 
+> 
+>>>> My krb5 etype is aes256-cts-hmac-sha1-96.
+>>> 
+>>> Thanks! And what is your NFS server and filesystem? It's possible that the
+>>> client is not estimating the size of the reply correctly. Variables include
+>>> the size of file handles, MIC verifiers, and wrap tokens.
+>> 
+>> The server is Debian with v4.19.130 upstream, filesystem ext4.
+>> 
+>>> You might try:
+>>> 
+>>> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
+>> 
+>> That one is actually in Ubuntus 5.4.0-40, from looking at the code.
+> 
+> --
+> Chuck Lever
 
