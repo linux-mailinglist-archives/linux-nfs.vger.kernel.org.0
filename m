@@ -2,96 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B403122311C
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 04:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76813223D1B
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 15:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgGQCSl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Jul 2020 22:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgGQCSl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jul 2020 22:18:41 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F87CC061755
-        for <linux-nfs@vger.kernel.org>; Thu, 16 Jul 2020 19:18:41 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 29943876B; Thu, 16 Jul 2020 22:18:40 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 29943876B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1594952320;
-        bh=FF8xGhXdihJRg/RANv56NOq3A2gOF+667ZZgIQto4Vs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ltSUwneR2/8BGyr9KfdFnBJw4JwFSEDbmqsjghva8eCPTe+Llz40X0uzPwM4UKStu
-         u36Zb+kPq6EItPKQnmg+w7WBPVxzSlFHLj+S8oZPp35mrHeLL/TIbgiLl36ZiUwBPU
-         XeVSWiI+tF1HzHtkSqjmLLjjp+kOsnNvj9G83g38=
-Date:   Thu, 16 Jul 2020 22:18:40 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: nfs4_show_superblock considered harmful :-)
-Message-ID: <20200717021840.GD18568@fieldses.org>
-References: <871rn38suc.fsf@notabene.neil.brown.name>
- <20200529220608.GA22758@fieldses.org>
- <87a71n7dek.fsf@notabene.neil.brown.name>
- <20200715185456.GE15543@fieldses.org>
- <20200716171958.GB18568@fieldses.org>
- <87tuy7vxeb.fsf@notabene.neil.brown.name>
- <20200717010301.GC18568@fieldses.org>
- <87r1tbvsey.fsf@notabene.neil.brown.name>
+        id S1726812AbgGQNkQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jul 2020 09:40:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40675 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726079AbgGQNkQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 09:40:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594993214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/QQ6seKoHDr/t9Gus6fvcXLCgt7ZnFXLYs2Ja8VrxvA=;
+        b=IGrjaV/Tq1L1uP05a8Hg5BaLykA9jY5qhpn1V4lz9Pt5J1fn1KJuf48MKSj4bX6ySoyuFX
+        kErow2YNm++1+g4ifqh6RBYOvIMFOiwO5+fe2EXXabRMW5nZWwBOKrFzXUOwP0KJsdrNmg
+        WpdCYtWJZCLtQY5jpA5y680vxjh+twc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-FHWSz-JpO9ibA53_Pt6iSA-1; Fri, 17 Jul 2020 09:40:11 -0400
+X-MC-Unique: FHWSz-JpO9ibA53_Pt6iSA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFFC480046E;
+        Fri, 17 Jul 2020 13:40:06 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E27578A50;
+        Fri, 17 Jul 2020 13:40:06 +0000 (UTC)
+Subject: Re: [PATCH 4/4] nfs-utils: Update nfs4_unique_id module parameter
+ from the nfs.conf value
+To:     Patrick Goetz <pgoetz@math.utexas.edu>,
+        Alice Mitchell <ajmitchell@redhat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <5a84777afb9ed8c866841471a1a7e3c9b295604d.camel@redhat.com>
+ <115d8b45e84f3cecc9f5623e39f5078315d3ebbd.camel@redhat.com>
+ <a49c78c1-1419-409b-2386-25d94afb7ca7@RedHat.com>
+ <5b67708a-f31c-249c-6405-43fdd278037c@math.utexas.edu>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <8bd2a626-cef7-b639-72c9-9de999bc56e3@RedHat.com>
+Date:   Fri, 17 Jul 2020 09:40:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1tbvsey.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <5b67708a-f31c-249c-6405-43fdd278037c@math.utexas.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:31:17AM +1000, NeilBrown wrote:
-> On Thu, Jul 16 2020, J. Bruce Fields wrote:
-> 
-> > On Fri, Jul 17, 2020 at 09:43:40AM +1000, NeilBrown wrote:
-> >> On Thu, Jul 16 2020, J. Bruce Fields wrote:
-> >> > --- a/fs/nfsd/nfs4state.c
-> >> > +++ b/fs/nfsd/nfs4state.c
-> >> > @@ -507,6 +507,16 @@ find_any_file(struct nfs4_file *f)
-> >> >  	return ret;
-> >> >  }
-> >> >  
-> >> > +static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
-> >> > +{
-> >> > +	struct nfsd_file *ret;
-> >> > +
-> >> > +	spin_lock(&f->fi_lock);
-> >> > +	ret = nfsd_file_get(f->fi_deleg_file);
-> >> 
-> >> A test on f->fi_deleg_file being non-NULL would make this look safer.
-> >> It would  also make the subsequent test on the return value appear sane.
-> >
-> > Yes, thanks!-b.
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index c2a2e56c896d..6e8811e7c134 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -509,10 +509,11 @@ find_any_file(struct nfs4_file *f)
-> >  
-> >  static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
-> >  {
-> > -	struct nfsd_file *ret;
-> > +	struct nfsd_file *ret = NULL;
-> >  
-> >  	spin_lock(&f->fi_lock);
-> > -	ret = nfsd_file_get(f->fi_deleg_file);
-> > +	if (f->fi_deleg_file)
-> > +		ret = nfsd_file_get(f->fi_deleg_file);
-> >  	spin_unlock(&f->fi_lock);
-> >  	return ret;
-> >  }
-> 
-> Reviewed-by: NeilBrown <neilb@suse.de>
-> 
-> for the whole patch.
 
-Thanks!--b.
+
+On 7/16/20 11:52 AM, Patrick Goetz wrote:
+> Speaking of which, it would be great if the distros (or whomever) stopped setting up the unit files so that rpcbind is a required service. This is a headache for me, as our security group flags machines running rpcbind and it's entirely useless if you only use NFSv4.
+Why do you see rpcbind as such a security risk?
+
+> 
+> In fact, isn't it about time to EOL NFSv3?  <:)
+You are not the first to suggest this... No so much
+of EOLing v3... more of a V4only client.
+
+Personally I don't see EOL-ing v3 anytime soon.
+
+steved.
+> 
+> On 7/15/20 12:44 PM, Steve Dickson wrote:
+>> Hello,
+>>
+>> On 7/10/20 12:44 PM, Alice Mitchell wrote:
+>>> systemd service to grab the config value and feed it to the kernel module
+>> Again, I'm wondering if the systemd/README should be updated to explain
+>> this new script...
+>>
+>> steved.
+>>
+>>> ---
+>>>   nfs.conf                      |  1 +
+>>>   systemd/Makefile.am           |  3 +++
+>>>   systemd/nfs-conf-export.sh    | 28 ++++++++++++++++++++++++++++
+>>>   systemd/nfs-config.service.in | 17 +++++++++++++++++
+>>>   4 files changed, 49 insertions(+)
+>>>   create mode 100755 systemd/nfs-conf-export.sh
+>>>   create mode 100644 systemd/nfs-config.service.in
+>>>
+>>> diff --git a/nfs.conf b/nfs.conf
+>>> index 186a5b19..8bb41227 100644
+>>> --- a/nfs.conf
+>>> +++ b/nfs.conf
+>>> @@ -4,6 +4,7 @@
+>>>   #
+>>>   [general]
+>>>   # pipefs-directory=/var/lib/nfs/rpc_pipefs
+>>> +# nfs4_unique_id = ${machine-id}
+>>>   #
+>>>   [exports]
+>>>   # rootdir=/export
+>>> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
+>>> index 75cdd9f5..51acdc3f 100644
+>>> --- a/systemd/Makefile.am
+>>> +++ b/systemd/Makefile.am
+>>> @@ -9,6 +9,7 @@ unit_files =  \
+>>>       nfs-mountd.service \
+>>>       nfs-server.service \
+>>>       nfs-utils.service \
+>>> +    nfs-config.service \
+>>>       rpc-statd-notify.service \
+>>>       rpc-statd.service \
+>>>       \
+>>> @@ -69,4 +70,6 @@ genexec_PROGRAMS = nfs-server-generator rpc-pipefs-generator
+>>>   install-data-hook: $(unit_files)
+>>>       mkdir -p $(DESTDIR)/$(unitdir)
+>>>       cp $(unit_files) $(DESTDIR)/$(unitdir)
+>>> +    mkdir -p $(DESTDIR)/$(libexecdir)/nfs-utils
+>>> +    install  nfs-conf-export.sh $(DESTDIR)/$(libexecdir)/nfs-utils/
+>>>   endif
+>>> diff --git a/systemd/nfs-conf-export.sh b/systemd/nfs-conf-export.sh
+>>> new file mode 100755
+>>> index 00000000..486e8df9
+>>> --- /dev/null
+>>> +++ b/systemd/nfs-conf-export.sh
+>>> @@ -0,0 +1,28 @@
+>>> +#!/bin/bash
+>>> +#
+>>> +# This script pulls values out of /etc/nfs.conf and configures
+>>> +# the appropriate kernel modules which cannot read it directly
+>>> +
+>>> +NFSMOD=/sys/module/nfs/parameters/nfs4_unique_id
+>>> +NFSPROBE=/etc/modprobe.d/nfs.conf
+>>> +
+>>> +# Now read the values from nfs.conf
+>>> +MACHINEID=`nfsconf --get general nfs4_unique_id`
+>>> +if [ $? -ne 0 ] || [ "$MACHINEID" == "" ]
+>>> +then
+>>> +# No config vaue found, assume blank
+>>> +MACHINEID=""
+>>> +fi
+>>> +
+>>> +# Kernel module is already loaded, update the live one
+>>> +if [ -e $NFSMOD ]; then
+>>> +echo -n "$MACHINEID" >> $NFSMOD
+>>> +fi
+>>> +
+>>> +# Rewrite the modprobe file for next reboot
+>>> +echo "# This file is overwritten by systemd nfs-config.service" > $NFSPROBE
+>>> +echo "# with values taken from /etc/nfs.conf" >> $NFSPROBE
+>>> +echo "# Do not hand modify" >> $NFSPROBE
+>>> +echo "options nfs nfs4_unique_id=\"$MACHINEID\"" >> $NFSPROBE
+>>> +
+>>> +echo "Set to: $MACHINEID"
+>>> diff --git a/systemd/nfs-config.service.in b/systemd/nfs-config.service.in
+>>> new file mode 100644
+>>> index 00000000..c5ef1024
+>>> --- /dev/null
+>>> +++ b/systemd/nfs-config.service.in
+>>> @@ -0,0 +1,17 @@
+>>> +[Unit]
+>>> +Description=Preprocess NFS configuration
+>>> +PartOf=nfs-client.target
+>>> +After=nfs-client.target
+>>> +DefaultDependencies=no
+>>> +
+>>> +[Service]
+>>> +Type=oneshot
+>>> +# This service needs to run any time any nfs service
+>>> +# is started, so changes to local config files get
+>>> +# incorporated.  Having "RemainAfterExit=no" (the default)
+>>> +# ensures this happens.
+>>> +RemainAfterExit=no
+>>> +ExecStart=@_libexecdir@/nfs-utils/nfs-conf-export.sh
+>>> +
+>>> +[Install]
+>>> +WantedBy=nfs-client.target
+>>>
+>>
+> 
+
