@@ -2,81 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 297D9224071
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 18:18:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB9772241D2
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jul 2020 19:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGQQSP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jul 2020 12:18:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGQQSO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 12:18:14 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3403C0619D2
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Jul 2020 09:18:14 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E59719C61; Fri, 17 Jul 2020 12:18:13 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E59719C61
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1595002693;
-        bh=tYhnQxHtVXZsch71emoSMhHHLHfImF5QSXERd/ZhMhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vljbNF6piztK/mcyr+p3iJjrcNxN04UBI+3KDuZfhaQEZtHJXcBYtHMrJesVuszWu
-         l7gmDsSyxecuHg66EWTpTUqqPeYbvpx/Jjzafk53+Fnr29G+yC4wdIRak/04TY4nJu
-         Jj8oR2rot3jE2BNSydor+w9Qn+dlnfdcyR4EUguo=
-Date:   Fri, 17 Jul 2020 12:18:13 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Dave Wysochanski <dwysocha@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-cachefs@redhat.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Subject: Re: [Linux-cachefs] [RFC PATCH v1 0/13] Convert NFS client to new
- fscache-iter API
-Message-ID: <20200717161813.GB21567@fieldses.org>
-References: <20200717142541.GA21567@fieldses.org>
- <1594825849-24991-1-git-send-email-dwysocha@redhat.com>
- <3607831.1594999165@warthog.procyon.org.uk>
+        id S1726232AbgGQR3r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jul 2020 13:29:47 -0400
+Received: from mailin.studentenwerk.mhn.de ([141.84.225.229]:60586 "EHLO
+        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgGQR3q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jul 2020 13:29:46 -0400
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+        by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4B7dRD4J2QzRhSV;
+        Fri, 17 Jul 2020 19:29:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
+        t=1595006984;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uJr2b4jU2VVP6dxKKXRY+LDT5Rw2EvC3vE/csmHSnZ8=;
+        b=R95BtOTYv8mnKQi5bmRsB5MtTR8/gziVmk+z4Jpc8MCRBWX3/F9fcCZinXOHJe65mHT+zQ
+        ytABafxXTOvYWGYGQ3G+B6P/k7/8xIY7hv5qfI5yfxVYU9z4/So+S4PcZK0TQ+o5Vyw4u/
+        mbsbsNeDmcqTWNfv3zko4jujFTnGAEAMojNoef0PH+P0I2ZTOye3QUvt9EKJEUurkiQCtk
+        vSJLvdSvIdn3hVwW/ZOnoM7Uuza1kb6L+oQoh24BCxSnSNboIoZ1dk4ngTgyWXBHRdF+pO
+        CurVM8Z9I7P1NQ4hBXyD0tVt9GColGEqgJzUeG/Lokrv+qh/fplu6iYIicFGxA==
+From:   Pierre Sauter <pierre.sauter@stwm.de>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        matthew.ruffell@canonical.com,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()" breaks NFS Kerberos on upstream stable 5.4.y
+Date:   Fri, 17 Jul 2020 19:29:44 +0200
+Message-ID: <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
+Organization: Studentenwerk
+In-Reply-To: <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
+References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com> <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de> <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3607831.1594999165@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 04:19:25PM +0100, David Howells wrote:
-> J. Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> > Say I had a hypothetical, err, friend, who hadn't been following that
-> > FS-Cache work--could you summarize the advantages it bring us?
-> 
-> https://lore.kernel.org/linux-nfs/159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk/T/#t
-> 
->  - Makes the caching code a lot simpler (~2400 LoC removed, ~1000 LoDoc[*]
->    removed at the moment from fscache, cachefiles and afs).
-> 
->  - Stops using bmap to work out what data is cached.  This isn't reliable with
->    modern extend-based filesystems.  A bitmap of cached granules is saved in
->    an xattr instead.
-> 
->  - Uses async DIO (kiocbs) to do I/O to/from the cache rather than using
->    buffered writes (kernel_write) and pagecache snooping for read (don't ask).
-> 
->    - A lot faster and less CPU intensive as there's no page-to-page copying.
-> 
->    - A lot less VM pressure as it doesn't have duplicate pages in the backing
->      fs that aren't really accounted right.
-> 
->  - Uses tmpfiles+link to better handle invalidation.  It will at some point
->    hopefully employ linkat(AT_LINK_REPLACE) to effect cut-over on disk rather
->    than unlink,link.
+Hi Chuck,
 
-Thanks!--b.
+Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
+> So this makes me think there's a possibility you are not using upstream
+> stable kernels. I can't help if I don't know what source code and commit
+> stream you are using. It also makes me question the bisect result.
 
-> David
-> 
-> [*] The upstream docs got ReSTified, so the doc patches I have are now useless
->     and need reworking:-(.
+Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
+discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
+5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. T=
+he
+bisection was done by the original bug reporter and also refers to the Ubun=
+tu
+kernel.
+
+In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry f=
+or
+the bother.
+
+> > My krb5 etype is aes256-cts-hmac-sha1-96.
+>=20
+> Thanks! And what is your NFS server and filesystem? It's possible that the
+> client is not estimating the size of the reply correctly. Variables inclu=
+de
+> the size of file handles, MIC verifiers, and wrap tokens.
+
+The server is Debian with v4.19.130 upstream, filesystem ext4.
+
+> You might try:
+>=20
+> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
+
+That one is actually in Ubuntus 5.4.0-40, from looking at the code.
+
+Best Regards
+=2D-=20
+Pierre Sauter
+Studentenwerk M=FCnchen
+=2D------
+
+
+
