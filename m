@@ -2,80 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDE7224E88
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Jul 2020 03:45:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B70412250E3
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Jul 2020 11:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgGSBpE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Jul 2020 21:45:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
+        id S1726312AbgGSJ1D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Jul 2020 05:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgGSBpE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Jul 2020 21:45:04 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B80C0619D2;
-        Sat, 18 Jul 2020 18:45:04 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwyNY-00FOFG-MQ; Sun, 19 Jul 2020 01:44:36 +0000
-Date:   Sun, 19 Jul 2020 02:44:36 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/32] iov_iter: Add ITER_MAPPING
-Message-ID: <20200719014436.GG2786714@ZenIV.linux.org.uk>
-References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
- <159465785214.1376674.6062549291411362531.stgit@warthog.procyon.org.uk>
+        with ESMTP id S1726021AbgGSJ1D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Jul 2020 05:27:03 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBE8C0619D2
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Jul 2020 02:27:03 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id h17so6131892qvr.0
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Jul 2020 02:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=0szFg6H4KB0H2N+RAqtMuGxgL2E2gzTIXw7eFYVxHO4=;
+        b=atrHVJi86ggHik71I4tYTWZatlPRtQiU9vU11i53+KGTUoWHJRvVp0anzY7KzDumZP
+         XZJAlY283XP5Zvudeuq8UOVVmqF1raSkvIyoUqX3atMjkD2IyUMv0rAYbmbO/IgKEfMw
+         h5RSldxMBn+gAaOrAvzcf3/uAdoSNvp1+NWB+p+Sm8M8xYsJBpG/rtKQr4pJvYMQAtf0
+         gi0K1bKLwfRXBfXX4YpIKsfKSY8yue5d7JIUrm1dhjIhH/bsfFULO3I58Vk2Gpm7iDza
+         t5CuDmXKSMeLygrXMLM6CfWqV78rM5iVnfdM2dUvSQBAW+G8Y63EaKB8/ZddsZsp1Dy6
+         TIuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=0szFg6H4KB0H2N+RAqtMuGxgL2E2gzTIXw7eFYVxHO4=;
+        b=VfVLLiGrGODxUsqzdcU11t8J+HL814HgEb4LXfnfnxhVKTdcS4eSAbXuZDJqftyDYU
+         G6k751mJKF4+RFHPXGo6jf6xaolKXYzBP1Hw13nvi+25SDH3NateutwpXP8dbcnnC3TS
+         oGhCQR3B+XoUJymhV+M0E6MgPhSdT3n3JJpYEPZhYWqZN6lW82BEDFCsX6AKKD7isAsI
+         NzU/TJAQ2baO08cMM4gzYn14hzoTXD0cbzRRlwvp0DYcgjFtKPadF5WioGhtHjosO8Ze
+         AORXtK7LQrIysYIREV93DYOD+iim49axAW81Ldtx4r6X5a+Xnp501iY5LvTWzhjcnRMv
+         YEag==
+X-Gm-Message-State: AOAM530JvZ98G5Yf9uIqsj33ynJcd7TSyJKp2mfkR9IqvnBFNMJNuHpq
+        FuI/sQ7qyCWBdRq4fajRQozCZbZSWI0Vg3e2N5M=
+X-Google-Smtp-Source: ABdhPJzeiK6WJgO6fyG+gQpO12qE1DRNPr9zdUgRtRXQq3UL1XIZilYDK2nJM2DxA2Ml+sQhV5kDrHbFticacfaVmSQ=
+X-Received: by 2002:ad4:458f:: with SMTP id x15mr17022354qvu.176.1595150822392;
+ Sun, 19 Jul 2020 02:27:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159465785214.1376674.6062549291411362531.stgit@warthog.procyon.org.uk>
+Received: by 2002:a05:6214:d6b:0:0:0:0 with HTTP; Sun, 19 Jul 2020 02:27:01
+ -0700 (PDT)
+Reply-To: georgemike7031@gmail.com
+From:   george mike <kagnalex@gmail.com>
+Date:   Sun, 19 Jul 2020 11:27:01 +0200
+Message-ID: <CACemp=6R_3W8bEd=h9Ef4JFm24SfmTzJvUGRtOrp7SW0wGapkA@mail.gmail.com>
+Subject: hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 05:30:52PM +0100, David Howells wrote:
-> Add an iterator, ITER_MAPPING, that walks through a set of pages attached
-> to an address_space, starting at a given page and offset and walking for
-> the specified amount of bytes.
-> 
-> The caller must guarantee that the pages are all present and they must be
-> locked using PG_locked, PG_writeback or PG_fscache to prevent them from
-> going away or being migrated whilst they're being accessed.
-> 
-> This is useful for copying data from socket buffers to inodes in network
-> filesystems and for transferring data between those inodes and the cache
-> using direct I/O.
-> 
-> Whilst it is true that ITER_BVEC could be used instead, that would require
-> a bio_vec array to be allocated to refer to all the pages - which should be
-> redundant if inode->i_pages also points to all these pages.
-> 
-> This could also be turned into an ITER_XARRAY, taking and xarray pointer
-> instead of a mapping pointer.  It would be mostly trivial, except for the
-> use of find_get_pages_contig() by iov_iter_get_pages*().
-> 
+Hallo
 
-My main problem here is that your iterate_mapping() assumes that STEP is
-safe under rcu_read_lock(), with no visible mentioning of that fact.
-Note, BTW, that iov_iter_for_each_range() quietly calls user-supplied
-callback in such context.
+Mein Name ist George Mike. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
+Ihnen anbieten
+der n=C3=A4chste Verwandte meines Klienten. Sie erben die Summe von (8,5
+Millionen US-Dollar)
+Dollar, die mein Kunde vor seinem Tod auf der Bank gelassen hat.
 
-Incidentally, do you ever have different steps for bvec and mapping?
+Mein Kunde ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau bei
+einem Autounfall ums Leben gekommen ist
+und einziger Sohn. Ich habe Anspruch auf 50% des Gesamtfonds, 50%
+sein f=C3=BCr dich.
+Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
+Informationen: georgemike7031@gmail.com
 
-> +	if (unlikely(iov_iter_is_mapping(i))) {
-> +		/* We really don't want to fetch pages if we can avoid it */
-> +		i->iov_offset += size;
-> +		i->count -= size;
-> +		return;
-
-That's... not nice.  At the very least you want to cap size by i->count here
-(and for discard case as well, while we are at it).
+Vielen Dank im Voraus,
+Mr. George Mike,
