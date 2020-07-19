@@ -2,77 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B70412250E3
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Jul 2020 11:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C802250F8
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Jul 2020 11:52:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgGSJ1D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Jul 2020 05:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGSJ1D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Jul 2020 05:27:03 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBE8C0619D2
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Jul 2020 02:27:03 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id h17so6131892qvr.0
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Jul 2020 02:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=0szFg6H4KB0H2N+RAqtMuGxgL2E2gzTIXw7eFYVxHO4=;
-        b=atrHVJi86ggHik71I4tYTWZatlPRtQiU9vU11i53+KGTUoWHJRvVp0anzY7KzDumZP
-         XZJAlY283XP5Zvudeuq8UOVVmqF1raSkvIyoUqX3atMjkD2IyUMv0rAYbmbO/IgKEfMw
-         h5RSldxMBn+gAaOrAvzcf3/uAdoSNvp1+NWB+p+Sm8M8xYsJBpG/rtKQr4pJvYMQAtf0
-         gi0K1bKLwfRXBfXX4YpIKsfKSY8yue5d7JIUrm1dhjIhH/bsfFULO3I58Vk2Gpm7iDza
-         t5CuDmXKSMeLygrXMLM6CfWqV78rM5iVnfdM2dUvSQBAW+G8Y63EaKB8/ZddsZsp1Dy6
-         TIuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=0szFg6H4KB0H2N+RAqtMuGxgL2E2gzTIXw7eFYVxHO4=;
-        b=VfVLLiGrGODxUsqzdcU11t8J+HL814HgEb4LXfnfnxhVKTdcS4eSAbXuZDJqftyDYU
-         G6k751mJKF4+RFHPXGo6jf6xaolKXYzBP1Hw13nvi+25SDH3NateutwpXP8dbcnnC3TS
-         oGhCQR3B+XoUJymhV+M0E6MgPhSdT3n3JJpYEPZhYWqZN6lW82BEDFCsX6AKKD7isAsI
-         NzU/TJAQ2baO08cMM4gzYn14hzoTXD0cbzRRlwvp0DYcgjFtKPadF5WioGhtHjosO8Ze
-         AORXtK7LQrIysYIREV93DYOD+iim49axAW81Ldtx4r6X5a+Xnp501iY5LvTWzhjcnRMv
-         YEag==
-X-Gm-Message-State: AOAM530JvZ98G5Yf9uIqsj33ynJcd7TSyJKp2mfkR9IqvnBFNMJNuHpq
-        FuI/sQ7qyCWBdRq4fajRQozCZbZSWI0Vg3e2N5M=
-X-Google-Smtp-Source: ABdhPJzeiK6WJgO6fyG+gQpO12qE1DRNPr9zdUgRtRXQq3UL1XIZilYDK2nJM2DxA2Ml+sQhV5kDrHbFticacfaVmSQ=
-X-Received: by 2002:ad4:458f:: with SMTP id x15mr17022354qvu.176.1595150822392;
- Sun, 19 Jul 2020 02:27:02 -0700 (PDT)
+        id S1726024AbgGSJwE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Jul 2020 05:52:04 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56443 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726468AbgGSJwE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Jul 2020 05:52:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595152322;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mknWuDNTSPVA5tuUznaF/9X4S4nuMwQxpbXQ5+3goe4=;
+        b=KTNUbDob46tg9SJK7KzWkduacmY2eOFp9p4cWPefWh8xV/H29cBNiB36A068Zcny5RdTeK
+        y9gpO9xNrG1oTtDOnP2Pv1Pcn4CAGvNeRpNgWqThWxYnMIOrGBKHZJCemWPx7anQQIvN/p
+        rryJvEu+SWR9hPemHmiDTseufKW+MAU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-nURWLhFwNNyG7fNENd1CWQ-1; Sun, 19 Jul 2020 05:52:00 -0400
+X-MC-Unique: nURWLhFwNNyG7fNENd1CWQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 940D580183C;
+        Sun, 19 Jul 2020 09:51:58 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F9481A90F;
+        Sun, 19 Jul 2020 09:51:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+In-Reply-To: <20200719014436.GG2786714@ZenIV.linux.org.uk>
+References: <20200719014436.GG2786714@ZenIV.linux.org.uk> <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk> <159465785214.1376674.6062549291411362531.stgit@warthog.procyon.org.uk>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/32] iov_iter: Add ITER_MAPPING
+From:   David Howells <dhowells@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6214:d6b:0:0:0:0 with HTTP; Sun, 19 Jul 2020 02:27:01
- -0700 (PDT)
-Reply-To: georgemike7031@gmail.com
-From:   george mike <kagnalex@gmail.com>
-Date:   Sun, 19 Jul 2020 11:27:01 +0200
-Message-ID: <CACemp=6R_3W8bEd=h9Ef4JFm24SfmTzJvUGRtOrp7SW0wGapkA@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3417.1595152311.1@warthog.procyon.org.uk>
+Date:   Sun, 19 Jul 2020 10:51:51 +0100
+Message-ID: <3418.1595152311@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hallo
+Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-Mein Name ist George Mike. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
-Ihnen anbieten
-der n=C3=A4chste Verwandte meines Klienten. Sie erben die Summe von (8,5
-Millionen US-Dollar)
-Dollar, die mein Kunde vor seinem Tod auf der Bank gelassen hat.
+> My main problem here is that your iterate_mapping() assumes that STEP is
+> safe under rcu_read_lock(), with no visible mentioning of that fact.
 
-Mein Kunde ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau bei
-einem Autounfall ums Leben gekommen ist
-und einziger Sohn. Ich habe Anspruch auf 50% des Gesamtfonds, 50%
-sein f=C3=BCr dich.
-Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
-Informationen: georgemike7031@gmail.com
+Yeah, that's probably the biggest objection to this.
 
-Vielen Dank im Voraus,
-Mr. George Mike,
+> Note, BTW, that iov_iter_for_each_range() quietly calls user-supplied
+> callback in such context.
+
+And calls kmap(), but should probably use kmap_atomic().  git grep doesn't
+show any users of this, so can it be removed?
+
+> Incidentally, do you ever have different steps for bvec and mapping?
+
+Yes:
+
+	csum_and_copy_from_iter_full()
+	iov_iter_npages()
+	iov_iter_get_pages()
+	iov_iter_get_pages_alloc()
+
+But I've tried to use the internal representation struct for bvec where I can
+rather than inventing a new one.
+
+David
+
