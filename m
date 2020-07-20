@@ -2,71 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F40022623E
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 16:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72BB226261
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 16:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgGTOgX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 10:36:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51582 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgGTOgX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:36:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 72241B82E;
-        Mon, 20 Jul 2020 14:36:28 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 16:36:20 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>,
-        "yangx.jy@cn.fujitsu.com" <yangx.jy@cn.fujitsu.com>
-Subject: Re: [RFC PATCH 1/1] Remove nfsv4
-Message-ID: <20200720143620.GD21201@dell5510>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20200720091449.19813-1-pvorel@suse.cz>
- <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
- <20200720141255.GA25707@fieldses.org>
+        id S1725934AbgGTOoE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 10:44:04 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32382 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725815AbgGTOoE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 10:44:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595256243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pqI4rbHeA8bhdcPTa+ROldnRbzJUJ3A4tkvDZuFs7Mo=;
+        b=LsHyFND/fMftX/Y30x53Yp3FV3qcyQLRKG07otrKkBt37TGVQgGv6ODPZO+dY2zvCrrP7v
+        HizpcfBKueZOJfxFTzjxLrMKwDkiCfn2oqxfuzjMR6iomS46bwfKhAER4xRB9/qsFCn5Zk
+        rzZecdYvQYAXg4A+yVEMOqruFwIoTgM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371--XSt_6MxNDS_Tiy-Y7P3JQ-1; Mon, 20 Jul 2020 10:44:00 -0400
+X-MC-Unique: -XSt_6MxNDS_Tiy-Y7P3JQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1AB680046C;
+        Mon, 20 Jul 2020 14:43:58 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E7B95FC31;
+        Mon, 20 Jul 2020 14:43:58 +0000 (UTC)
+Subject: Re: [PATCH 02/11] gssd: Fix cccache buffer size
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20200718092421.31691-1-nazard@nazar.ca>
+ <20200718092421.31691-3-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <fa7a464f-3749-b8d8-bf92-02173a03dffb@RedHat.com>
+Date:   Mon, 20 Jul 2020 10:43:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720141255.GA25707@fieldses.org>
+In-Reply-To: <20200718092421.31691-3-nazard@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce, Trond,
+Hey Doug,
 
-> On Mon, Jul 20, 2020 at 01:32:09PM +0000, Trond Myklebust wrote:
-> > On Mon, 2020-07-20 at 11:14 +0200, Petr Vorel wrote:
-> > > Reasons to drop:
-> > > * outdated tests (from 2005)
-> > > * not used (NFS kernel maintainers use pynfs [1])
-> > > * written in Python (we support C and shell, see [2])
+On 7/18/20 5:24 AM, Doug Nazar wrote:
+> Signed-off-by: Doug Nazar <nazard@nazar.ca>
+> ---
+>  utils/gssd/krb5_util.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+> index e5b81823..34c81daa 100644
+> --- a/utils/gssd/krb5_util.c
+> +++ b/utils/gssd/krb5_util.c
+> @@ -1225,7 +1225,7 @@ out:
+>  int
+>  gssd_setup_krb5_user_gss_ccache(uid_t uid, char *servername, char *dirpattern)
+>  {
+> -	char			buf[PATH_MAX+2+256], dirname[PATH_MAX];
+> +	char			buf[PATH_MAX+4+2+256], dirname[PATH_MAX];
+>  	const char		*cctype;
+>  	struct dirent		*d;
+>  	int			err, i, j;
+> 
+Thanks for point this out but I think I'm going to go with this:
 
-> > > [1] http://git.linux-nfs.org/?p=bfields/pynfs.git;a=summary
-> > > [2] https://github.com/linux-test-project/ltp/issues/547
+diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+index e5b8182..cd5a919 100644
+--- a/utils/gssd/krb5_util.c
++++ b/utils/gssd/krb5_util.c
+@@ -223,7 +223,8 @@ gssd_find_existing_krb5_ccache(uid_t uid, char *dirname,
+ 	int found = 0;
+ 	struct dirent *best_match_dir = NULL;
+ 	struct stat best_match_stat, tmp_stat;
+-	char buf[PATH_MAX+4+2+256];
++	/* dirname + cctype + d_name + NULL */
++	char buf[PATH_MAX+5+256+1];
+ 	char *princname = NULL;
+ 	char *realm = NULL;
+ 	int score, best_match_score = 0, err = -EACCES;
+@@ -1225,7 +1226,8 @@ out:
+ int
+ gssd_setup_krb5_user_gss_ccache(uid_t uid, char *servername, char *dirpattern)
+ {
+-	char			buf[PATH_MAX+2+256], dirname[PATH_MAX];
++				/* dirname + cctype + d_name + NULL */
++	char			buf[PATH_MAX+5+256+1], dirname[PATH_MAX];
+ 	const char		*cctype;
+ 	struct dirent		*d;
+ 	int			err, i, j;
 
+which explains the needed space and as well removes the warning... 
 
-> > Unlike pynfs, these tests run on a real NFS client, and were designed
-> > to test client implementations, as well as the servers.
+steved
 
-> > So if they get dropped from ltp, then we will have to figure out some
-> > other way of continuing to maintain them.
-
-> Just for fun, I grepped through old mail to see if I could find any
-> cases of these tests being used.  I found one, in which Chuck reports an
-> nfslock01 failure.  Looks like it did find a real bug, which we fixed:
-
-> 	https://lore.kernel.org/r/8DF85CB6-5FEB-4A25-9715-C9808F37A4B1@oracle.com
-> 	https://lore.kernel.org/r/20160807185024.11705.10864.stgit@klimt.1015granger.net
-
-Thanks for your explanation, this obviously justify these tests in LTP, unless
-you want to move it to git.linux-nfs.org and maintain on your own.
-
-Kind regards,
-Petr
