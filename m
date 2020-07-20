@@ -2,299 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2836226D9C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 19:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF15C226E0E
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 20:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgGTRyn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 13:54:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45185 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728571AbgGTRyn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 13:54:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595267680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AwlQ4nAQT8F6MvC/mzgc273pRS7aLpB9R16EmSnRCds=;
-        b=M8sdhnOJA5aFrIORRvlKywyQh7f4pRlwnRIeigIuUuLhQMKAQy6e8QWBMUrer54SB4A8y6
-        OGld5hBqsBsPtHfk+zdki/NZ9sDJrQ/LSoTttFixiZeFtlG2+3SgZWdhtSwFtgrONwOapZ
-        TrZw++C9RrKXVjKvLFfbp+2vOpH0eXU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502--sKix7fjNB6hd7snGE9jZA-1; Mon, 20 Jul 2020 13:54:29 -0400
-X-MC-Unique: -sKix7fjNB6hd7snGE9jZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14A891932481;
-        Mon, 20 Jul 2020 17:54:28 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9850274F45;
-        Mon, 20 Jul 2020 17:54:27 +0000 (UTC)
-Subject: Re: [PATCH v2 4/4] nfs-utils: Update nfs4_unique_id module parameter
- from the nfs.conf value
-To:     Alice Mitchell <ajmitchell@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <c6571aecaaeff95681421c1684814a823b8a087e.camel@redhat.com>
- <ff4f8d30e849190eeb2e0fee1ef501ee461a531f.camel@redhat.com>
- <F25A094C-CA96-45D3-8422-C2F77ECF9C78@oracle.com>
- <4dc8c372324d551456a47e60d73d926d96fc0d24.camel@redhat.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <a6756b37-fe93-bf0c-715c-82a62407ead9@RedHat.com>
-Date:   Mon, 20 Jul 2020 13:54:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729876AbgGTSMT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 14:12:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47260 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728448AbgGTSMS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 Jul 2020 14:12:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 04BA7AD1A;
+        Mon, 20 Jul 2020 18:12:23 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 20:12:13 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>,
+        "yangx.jy@cn.fujitsu.com" <yangx.jy@cn.fujitsu.com>,
+        Cyril Hrubis <chrubis@suse.cz>
+Subject: Re: [RFC PATCH 1/1] Remove nfsv4
+Message-ID: <20200720181213.GA29583@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20200720091449.19813-1-pvorel@suse.cz>
+ <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
+ <20200720141255.GA25707@fieldses.org>
+ <20200720143620.GD21201@dell5510>
+ <20200720151508.GA13786@dell5510>
+ <20200720170117.GB25707@fieldses.org>
 MIME-Version: 1.0
-In-Reply-To: <4dc8c372324d551456a47e60d73d926d96fc0d24.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720170117.GB25707@fieldses.org>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Hi Bruce, Trond,
 
-On 7/19/20 3:57 PM, Alice Mitchell wrote:
-> Hi Chuck,
-> I must have missed the discussion on Trond's work sorry, and I agree
-> that having it fixed in a way that is both automatic and transparent to
-> the user is far preferable to the solution I have posted. Do we have
-> any timeline on this yet ?
-I too did missed  the discussion... Chuck or Trond can you give us more 
-context on how this is going to work automatically and transparent?
-Is there a thread you can point us to?
+> > > > On Mon, Jul 20, 2020 at 01:32:09PM +0000, Trond Myklebust wrote:
+> > > > > On Mon, 2020-07-20 at 11:14 +0200, Petr Vorel wrote:
+> > > > > > Reasons to drop:
+> > > > > > * outdated tests (from 2005)
+> > > > > > * not used (NFS kernel maintainers use pynfs [1])
+> > > > > > * written in Python (we support C and shell, see [2])
 
-> 
-> My proposed solution would therefore be a stop-gap if required, as it
-> does not force any specific solution upon the system and merely adds a
-> few small features in order to assist the administrator if they choose
-> to make use of the existing kernel module option, in a way which would
-> preserve the idea of centralised configuration.
-I think I agree with Chuck... Once we add something to a 
-configuration file it is awful hard to back it out... 
+> > > > > > [1] http://git.linux-nfs.org/?p=bfields/pynfs.git;a=summary
+> > > > > > [2] https://github.com/linux-test-project/ltp/issues/547
 
-I'm not against setting it in nfs.conf... But if it can be
-set easier from the kernel... so be it!
- 
-> 
-> As an aside I was also going to propose the use of this same mechanism
-> to address the issue of the lockd options for port numbers, which as it
-> currently stands are manually set in both modprobe.d and in nfs.conf,
-> which as i understand it both must match for successful operation.  A
-> small addition to the scripts I have posted could see the modules.d
-> options automatically generated from the nfs.conf options, thus
-> reducing the scope for mistakes if the administrator chooses to alter
-> those values and further solidifying the idea of gathering all the
-> configuration in a single location.
-I kinda like the idea to be able to set lockd ports from
-nfs.conf. We've done that in the past which was lost
-when we moved systemd. 
 
-steved.
+> > > > > Unlike pynfs, these tests run on a real NFS client, and were designed
+> > > > > to test client implementations, as well as the servers.
 
-> 
-> Your thoughts as always are appreciated.
-> 
-> -Alice 
-> 
->  
-> On Thu, 2020-07-16 at 10:02 -0400, Chuck Lever wrote:
->> Hi Alice-
->>
->> I agree that selecting a unique nfs4_client_id string is a problem.
->>
->> However, I thought that Trond is working on a udev-based mechanism
->> for automatically choosing one that uniquifies containers as well
->> as stand-alone clients.
->>
->> I'd prefer if we stuck with one mechanism for doing this rather than
->> having both.
->>
->> Is there rationale for having this in nfs.conf instead of being
->> completely opaque to the administrator? I don't see a compelling
->> need for an administrator to adjust this if it is truly a random
->> string of bytes. Do you know of one?
->>
->>
->>> On Jul 16, 2020, at 9:56 AM, Alice Mitchell <ajmitchell@redhat.com>
->>> wrote:
->>>
->>> This reintroduces the nfs-config.service in order to ensure
->>> that values are taken from nfs.conf and fed to the kernel
->>> module if it is loaded and modprobe.d config incase it is not
->>>
->>> Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
->>> ---
->>> nfs.conf                      |  1 +
->>> systemd/Makefile.am           |  3 +++
->>> systemd/README                |  5 +++++
->>> systemd/nfs-conf-export.sh    | 28 ++++++++++++++++++++++++++++
->>> systemd/nfs-config.service.in | 17 +++++++++++++++++
->>> systemd/nfs.conf.man          | 12 +++++++++++-
->>> 6 files changed, 65 insertions(+), 1 deletion(-)
->>> create mode 100755 systemd/nfs-conf-export.sh
->>> create mode 100644 systemd/nfs-config.service.in
->>>
->>> diff --git a/nfs.conf b/nfs.conf
->>> index 186a5b19..8bb41227 100644
->>> --- a/nfs.conf
->>> +++ b/nfs.conf
->>> @@ -4,6 +4,7 @@
->>> #
->>> [general]
->>> # pipefs-directory=/var/lib/nfs/rpc_pipefs
->>> +# nfs4_unique_id = ${machine-id}
->>> #
->>> [exports]
->>> # rootdir=/export
->>> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
->>> index 75cdd9f5..51acdc3f 100644
->>> --- a/systemd/Makefile.am
->>> +++ b/systemd/Makefile.am
->>> @@ -9,6 +9,7 @@ unit_files =  \
->>>     nfs-mountd.service \
->>>     nfs-server.service \
->>>     nfs-utils.service \
->>> +    nfs-config.service \
->>>     rpc-statd-notify.service \
->>>     rpc-statd.service \
->>>     \
->>> @@ -69,4 +70,6 @@ genexec_PROGRAMS = nfs-server-generator rpc-
->>> pipefs-generator
->>> install-data-hook: $(unit_files)
->>> 	mkdir -p $(DESTDIR)/$(unitdir)
->>> 	cp $(unit_files) $(DESTDIR)/$(unitdir)
->>> +	mkdir -p $(DESTDIR)/$(libexecdir)/nfs-utils
->>> +	install  nfs-conf-export.sh $(DESTDIR)/$(libexecdir)/nfs-utils/
->>> endif
->>> diff --git a/systemd/README b/systemd/README
->>> index da23d6f6..56108b10 100644
->>> --- a/systemd/README
->>> +++ b/systemd/README
->>> @@ -28,6 +28,11 @@ by a suitable 'preset' setting:
->>>     If enabled, then blkmapd will be run when nfs-client.target is
->>>     started.
->>>
->>> + nfs-config.service
->>> +    Invoked by nfs-client.target to export values from nfs.conf to
->>> +    any kernel modules that require it, such as setting
->>> nfs4_unique_id
->>> +    for the nfs client modules
->>> +
->>> Another special unit is "nfs-utils.service".  This doesn't really
->>> do
->>> anything, but exists so that other units may declare themselves as
->>> "PartOf" nfs-utils.service.
->>> diff --git a/systemd/nfs-conf-export.sh b/systemd/nfs-conf-
->>> export.sh
->>> new file mode 100755
->>> index 00000000..486e8df9
->>> --- /dev/null
->>> +++ b/systemd/nfs-conf-export.sh
->>> @@ -0,0 +1,28 @@
->>> +#!/bin/bash
->>> +#
->>> +# This script pulls values out of /etc/nfs.conf and configures
->>> +# the appropriate kernel modules which cannot read it directly
->>> +
->>> +NFSMOD=/sys/module/nfs/parameters/nfs4_unique_id
->>> +NFSPROBE=/etc/modprobe.d/nfs.conf
->>> +
->>> +# Now read the values from nfs.conf
->>> +MACHINEID=`nfsconf --get general nfs4_unique_id`
->>> +if [ $? -ne 0 ] || [ "$MACHINEID" == "" ]
->>> +then
->>> +# No config vaue found, assume blank
->>> +MACHINEID=""
->>> +fi
->>> +
->>> +# Kernel module is already loaded, update the live one
->>> +if [ -e $NFSMOD ]; then
->>> +echo -n "$MACHINEID" >> $NFSMOD
->>> +fi
->>> +
->>> +# Rewrite the modprobe file for next reboot
->>> +echo "# This file is overwritten by systemd nfs-config.service" >
->>> $NFSPROBE
->>> +echo "# with values taken from /etc/nfs.conf" >> $NFSPROBE
->>> +echo "# Do not hand modify" >> $NFSPROBE
->>> +echo "options nfs nfs4_unique_id=\"$MACHINEID\"" >> $NFSPROBE
->>> +
->>> +echo "Set to: $MACHINEID"
->>> diff --git a/systemd/nfs-config.service.in b/systemd/nfs-
->>> config.service.in
->>> new file mode 100644
->>> index 00000000..c5ef1024
->>> --- /dev/null
->>> +++ b/systemd/nfs-config.service.in
->>> @@ -0,0 +1,17 @@
->>> +[Unit]
->>> +Description=Preprocess NFS configuration
->>> +PartOf=nfs-client.target
->>> +After=nfs-client.target
->>> +DefaultDependencies=no
->>> +
->>> +[Service]
->>> +Type=oneshot
->>> +# This service needs to run any time any nfs service
->>> +# is started, so changes to local config files get
->>> +# incorporated.  Having "RemainAfterExit=no" (the default)
->>> +# ensures this happens.
->>> +RemainAfterExit=no
->>> +ExecStart=@_libexecdir@/nfs-utils/nfs-conf-export.sh
->>> +
->>> +[Install]
->>> +WantedBy=nfs-client.target
->>> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
->>> index 28dbaa99..fb9d2dab 100644
->>> --- a/systemd/nfs.conf.man
->>> +++ b/systemd/nfs.conf.man
->>> @@ -101,8 +101,11 @@ When a list is given, the members should be
->>> comma-separated.
->>> .TP
->>> .B general
->>> Recognized values:
->>> -.BR pipefs-directory .
->>> +.BR pipefs-directory ,
->>> +.BR nfs4_unique_id .
->>>
->>> +For 
->>> +.BR pipefs-directory
->>> See
->>> .BR blkmapd (8),
->>> .BR rpc.idmapd (8),
->>> @@ -110,6 +113,13 @@ and
->>> .BR rpc.gssd (8)
->>> for details.
->>>
->>> +The
->>> +.BR nfs4_unique_id
->>> +value is used by the NFS4 client when identifying itself to
->>> servers and
->>> +can be used to ensure that this value is unique when the local
->>> system name
->>> +perhaps is not. For full details please refer to the kernel
->>> Documentation
->>> +.I filesystems/nfs/nfs.txt
->>> +
->>> .TP
->>> .B exports
->>> Recognized values:
->>> -- 
->>> 2.18.1
->>>
->>>
->>
->> --
->> Chuck Lever
->>
->>
->>
-> 
+> > > > > So if they get dropped from ltp, then we will have to figure out some
+> > > > > other way of continuing to maintain them.
 
+> > > > Just for fun, I grepped through old mail to see if I could find any
+> > > > cases of these tests being used.  I found one, in which Chuck reports an
+> > > > nfslock01 failure.  Looks like it did find a real bug, which we fixed:
+
+> > > > 	https://lore.kernel.org/r/8DF85CB6-5FEB-4A25-9715-C9808F37A4B1@oracle.com
+> > > > 	https://lore.kernel.org/r/20160807185024.11705.10864.stgit@klimt.1015granger.net
+
+> > > Thanks for your explanation, this obviously justify these tests in LTP, unless
+> > > you want to move it to git.linux-nfs.org and maintain on your own.
+> > Actually, that fix 42691398be08 ("nfsd: Fix race between FREE_STATEID and LOCK")
+> > from v4.8-rc2 reported by Alexey Kodanev (LTP network maintainer) was found by
+> > nfslock01 test [1], which is integrated into other LTP NFS tests [2]. I'd
+> > definitely keep these in LTP.
+
+> Whoops, I don't know why I thought I saw nfslock01 in your patch.
+> Apologies.
+No problem at all, I at least had a second look and find missing runtest file.
+
+> > nfsv4 I proposed to remove as outdated and not being used are testing ACL [3]
+> > and fcntl locking [4]. ACL tests use rsh and aren't integrated into LTP
+> > framework (use their custom [5] runtest file thus I doubt anyone is using it).
+> > fcntl locktests are at least integrated into LTP (use fcntl-locktests runtest
+> > file[6], I forget to remove it in this patch).
+> > Both tests are written in 2005. I don't want to push for removal, if you see any
+> > use in it.
+
+> Looks like they may test some things (ACL enforcement, multi-client
+> locking), that our other test suites don't.
+That justify to have them, if they really test that properly. IMHO they need
+at least a cleanup/rewrite (no matter whether they stay in LTP or adopted by
+other project), but maybe write new tests from scratch might be easier.
+
+> On the other hand, if nobody's actually running them then maybe it's on
+> us to adopt them if we want them.  (Not volunteering for now.)
+Even this brief review helped, thanks!
+
+Kind regards,
+Petr
+
+> --b.
+
+
+> > Kind regards,
+> > Petr
+
+> > [1] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfs/nfslock01/
+> > [2] https://github.com/linux-test-project/ltp/blob/master/runtest/net.nfs
+> > [3] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfsv4/acl
+> > [4] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfsv4/locks
+> > [5] https://github.com/linux-test-project/ltp/blob/master/testcases/network/nfsv4/acl/runtest
+> > [6] https://github.com/linux-test-project/ltp/blob/master/runtest/fcntl-locktests
