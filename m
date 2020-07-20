@@ -2,80 +2,299 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4CF226D20
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 19:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2836226D9C
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 19:55:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgGTRcF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 13:32:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50126 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728939AbgGTRcF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 13:32:05 -0400
+        id S1728966AbgGTRyn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 13:54:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45185 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728571AbgGTRyn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 13:54:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595266323;
+        s=mimecast20190719; t=1595267680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G89lwT+FtkR2FETWIYkZT5O9jHSgPOzT5mGuCVXdcSQ=;
-        b=atLqYd//Ut/zf4RKtf7RK00hJuGOQHR6AWstqEJWLEhyFINQ1pmhBA/cg7S4HeUz8i/0NI
-        AtWKqgrQxvVq7wtAW1nyqOXYYfPrjPGqK6Jf1kxz2M8yZ/2CqleRueGE1QliW95KAuZVEe
-        VMTCTtfQTP+8OUovBns22KF1hNeDfdM=
+        bh=AwlQ4nAQT8F6MvC/mzgc273pRS7aLpB9R16EmSnRCds=;
+        b=M8sdhnOJA5aFrIORRvlKywyQh7f4pRlwnRIeigIuUuLhQMKAQy6e8QWBMUrer54SB4A8y6
+        OGld5hBqsBsPtHfk+zdki/NZ9sDJrQ/LSoTttFixiZeFtlG2+3SgZWdhtSwFtgrONwOapZ
+        TrZw++C9RrKXVjKvLFfbp+2vOpH0eXU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-504-gsZX07gRMy-QygHPUfzW4Q-1; Mon, 20 Jul 2020 13:31:52 -0400
-X-MC-Unique: gsZX07gRMy-QygHPUfzW4Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-502--sKix7fjNB6hd7snGE9jZA-1; Mon, 20 Jul 2020 13:54:29 -0400
+X-MC-Unique: -sKix7fjNB6hd7snGE9jZA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFDDD19200C0;
-        Mon, 20 Jul 2020 17:31:51 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14A891932481;
+        Mon, 20 Jul 2020 17:54:28 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D7027852C;
-        Mon, 20 Jul 2020 17:31:51 +0000 (UTC)
-Subject: Re: [PATCH 09/11] nfsidmap: Add support to cleanup resources on exit
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <20200718092421.31691-1-nazard@nazar.ca>
- <20200718092421.31691-10-nazard@nazar.ca>
- <84277cb9-03da-3065-1848-f8c1e2bee167@RedHat.com>
- <568e0535-e20c-80a9-a0c7-61b3656f997f@nazar.ca>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9850274F45;
+        Mon, 20 Jul 2020 17:54:27 +0000 (UTC)
+Subject: Re: [PATCH v2 4/4] nfs-utils: Update nfs4_unique_id module parameter
+ from the nfs.conf value
+To:     Alice Mitchell <ajmitchell@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <c6571aecaaeff95681421c1684814a823b8a087e.camel@redhat.com>
+ <ff4f8d30e849190eeb2e0fee1ef501ee461a531f.camel@redhat.com>
+ <F25A094C-CA96-45D3-8422-C2F77ECF9C78@oracle.com>
+ <4dc8c372324d551456a47e60d73d926d96fc0d24.camel@redhat.com>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <9481df67-109d-ede1-27d4-53cb66fbb528@RedHat.com>
-Date:   Mon, 20 Jul 2020 13:31:50 -0400
+Message-ID: <a6756b37-fe93-bf0c-715c-82a62407ead9@RedHat.com>
+Date:   Mon, 20 Jul 2020 13:54:27 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <568e0535-e20c-80a9-a0c7-61b3656f997f@nazar.ca>
+In-Reply-To: <4dc8c372324d551456a47e60d73d926d96fc0d24.camel@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello,
 
+On 7/19/20 3:57 PM, Alice Mitchell wrote:
+> Hi Chuck,
+> I must have missed the discussion on Trond's work sorry, and I agree
+> that having it fixed in a way that is both automatic and transparent to
+> the user is far preferable to the solution I have posted. Do we have
+> any timeline on this yet ?
+I too did missed  the discussion... Chuck or Trond can you give us more 
+context on how this is going to work automatically and transparent?
+Is there a thread you can point us to?
 
-On 7/20/20 11:58 AM, Doug Nazar wrote:
-> On 2020-07-20 11:49, Steve Dickson wrote:
->>
->>> +__attribute__((destructor))
->>> +static int nss_plugin_term(void)
->>> +{
->>> +    free_local_realms();
->>> +    conf_cleanup();
->>> +    return 0;
->>> +}
->>> +
->> Just wondering... How is nss_plugin_term() called/used?
 > 
-> Automatically during dlclose(), see the 'Initialization and finalization functions' section of the man page. I'd originally thought to extend trans_func but didn't see an easy way to extend the api (no size or version field) without breaking any possible out of tree plugins (do they exist?).
+> My proposed solution would therefore be a stop-gap if required, as it
+> does not force any specific solution upon the system and merely adds a
+> few small features in order to assist the administrator if they choose
+> to make use of the existing kernel module option, in a way which would
+> preserve the idea of centralised configuration.
+I think I agree with Chuck... Once we add something to a 
+configuration file it is awful hard to back it out... 
 
-Interesting... I think I'll add a comment explaining it... 
-
-No..they do not exist.. The way you are going is fine... 
-Less churn is good ;-) 
+I'm not against setting it in nfs.conf... But if it can be
+set easier from the kernel... so be it!
+ 
+> 
+> As an aside I was also going to propose the use of this same mechanism
+> to address the issue of the lockd options for port numbers, which as it
+> currently stands are manually set in both modprobe.d and in nfs.conf,
+> which as i understand it both must match for successful operation.  A
+> small addition to the scripts I have posted could see the modules.d
+> options automatically generated from the nfs.conf options, thus
+> reducing the scope for mistakes if the administrator chooses to alter
+> those values and further solidifying the idea of gathering all the
+> configuration in a single location.
+I kinda like the idea to be able to set lockd ports from
+nfs.conf. We've done that in the past which was lost
+when we moved systemd. 
 
 steved.
+
+> 
+> Your thoughts as always are appreciated.
+> 
+> -Alice 
+> 
+>  
+> On Thu, 2020-07-16 at 10:02 -0400, Chuck Lever wrote:
+>> Hi Alice-
+>>
+>> I agree that selecting a unique nfs4_client_id string is a problem.
+>>
+>> However, I thought that Trond is working on a udev-based mechanism
+>> for automatically choosing one that uniquifies containers as well
+>> as stand-alone clients.
+>>
+>> I'd prefer if we stuck with one mechanism for doing this rather than
+>> having both.
+>>
+>> Is there rationale for having this in nfs.conf instead of being
+>> completely opaque to the administrator? I don't see a compelling
+>> need for an administrator to adjust this if it is truly a random
+>> string of bytes. Do you know of one?
+>>
+>>
+>>> On Jul 16, 2020, at 9:56 AM, Alice Mitchell <ajmitchell@redhat.com>
+>>> wrote:
+>>>
+>>> This reintroduces the nfs-config.service in order to ensure
+>>> that values are taken from nfs.conf and fed to the kernel
+>>> module if it is loaded and modprobe.d config incase it is not
+>>>
+>>> Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
+>>> ---
+>>> nfs.conf                      |  1 +
+>>> systemd/Makefile.am           |  3 +++
+>>> systemd/README                |  5 +++++
+>>> systemd/nfs-conf-export.sh    | 28 ++++++++++++++++++++++++++++
+>>> systemd/nfs-config.service.in | 17 +++++++++++++++++
+>>> systemd/nfs.conf.man          | 12 +++++++++++-
+>>> 6 files changed, 65 insertions(+), 1 deletion(-)
+>>> create mode 100755 systemd/nfs-conf-export.sh
+>>> create mode 100644 systemd/nfs-config.service.in
+>>>
+>>> diff --git a/nfs.conf b/nfs.conf
+>>> index 186a5b19..8bb41227 100644
+>>> --- a/nfs.conf
+>>> +++ b/nfs.conf
+>>> @@ -4,6 +4,7 @@
+>>> #
+>>> [general]
+>>> # pipefs-directory=/var/lib/nfs/rpc_pipefs
+>>> +# nfs4_unique_id = ${machine-id}
+>>> #
+>>> [exports]
+>>> # rootdir=/export
+>>> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
+>>> index 75cdd9f5..51acdc3f 100644
+>>> --- a/systemd/Makefile.am
+>>> +++ b/systemd/Makefile.am
+>>> @@ -9,6 +9,7 @@ unit_files =  \
+>>>     nfs-mountd.service \
+>>>     nfs-server.service \
+>>>     nfs-utils.service \
+>>> +    nfs-config.service \
+>>>     rpc-statd-notify.service \
+>>>     rpc-statd.service \
+>>>     \
+>>> @@ -69,4 +70,6 @@ genexec_PROGRAMS = nfs-server-generator rpc-
+>>> pipefs-generator
+>>> install-data-hook: $(unit_files)
+>>> 	mkdir -p $(DESTDIR)/$(unitdir)
+>>> 	cp $(unit_files) $(DESTDIR)/$(unitdir)
+>>> +	mkdir -p $(DESTDIR)/$(libexecdir)/nfs-utils
+>>> +	install  nfs-conf-export.sh $(DESTDIR)/$(libexecdir)/nfs-utils/
+>>> endif
+>>> diff --git a/systemd/README b/systemd/README
+>>> index da23d6f6..56108b10 100644
+>>> --- a/systemd/README
+>>> +++ b/systemd/README
+>>> @@ -28,6 +28,11 @@ by a suitable 'preset' setting:
+>>>     If enabled, then blkmapd will be run when nfs-client.target is
+>>>     started.
+>>>
+>>> + nfs-config.service
+>>> +    Invoked by nfs-client.target to export values from nfs.conf to
+>>> +    any kernel modules that require it, such as setting
+>>> nfs4_unique_id
+>>> +    for the nfs client modules
+>>> +
+>>> Another special unit is "nfs-utils.service".  This doesn't really
+>>> do
+>>> anything, but exists so that other units may declare themselves as
+>>> "PartOf" nfs-utils.service.
+>>> diff --git a/systemd/nfs-conf-export.sh b/systemd/nfs-conf-
+>>> export.sh
+>>> new file mode 100755
+>>> index 00000000..486e8df9
+>>> --- /dev/null
+>>> +++ b/systemd/nfs-conf-export.sh
+>>> @@ -0,0 +1,28 @@
+>>> +#!/bin/bash
+>>> +#
+>>> +# This script pulls values out of /etc/nfs.conf and configures
+>>> +# the appropriate kernel modules which cannot read it directly
+>>> +
+>>> +NFSMOD=/sys/module/nfs/parameters/nfs4_unique_id
+>>> +NFSPROBE=/etc/modprobe.d/nfs.conf
+>>> +
+>>> +# Now read the values from nfs.conf
+>>> +MACHINEID=`nfsconf --get general nfs4_unique_id`
+>>> +if [ $? -ne 0 ] || [ "$MACHINEID" == "" ]
+>>> +then
+>>> +# No config vaue found, assume blank
+>>> +MACHINEID=""
+>>> +fi
+>>> +
+>>> +# Kernel module is already loaded, update the live one
+>>> +if [ -e $NFSMOD ]; then
+>>> +echo -n "$MACHINEID" >> $NFSMOD
+>>> +fi
+>>> +
+>>> +# Rewrite the modprobe file for next reboot
+>>> +echo "# This file is overwritten by systemd nfs-config.service" >
+>>> $NFSPROBE
+>>> +echo "# with values taken from /etc/nfs.conf" >> $NFSPROBE
+>>> +echo "# Do not hand modify" >> $NFSPROBE
+>>> +echo "options nfs nfs4_unique_id=\"$MACHINEID\"" >> $NFSPROBE
+>>> +
+>>> +echo "Set to: $MACHINEID"
+>>> diff --git a/systemd/nfs-config.service.in b/systemd/nfs-
+>>> config.service.in
+>>> new file mode 100644
+>>> index 00000000..c5ef1024
+>>> --- /dev/null
+>>> +++ b/systemd/nfs-config.service.in
+>>> @@ -0,0 +1,17 @@
+>>> +[Unit]
+>>> +Description=Preprocess NFS configuration
+>>> +PartOf=nfs-client.target
+>>> +After=nfs-client.target
+>>> +DefaultDependencies=no
+>>> +
+>>> +[Service]
+>>> +Type=oneshot
+>>> +# This service needs to run any time any nfs service
+>>> +# is started, so changes to local config files get
+>>> +# incorporated.  Having "RemainAfterExit=no" (the default)
+>>> +# ensures this happens.
+>>> +RemainAfterExit=no
+>>> +ExecStart=@_libexecdir@/nfs-utils/nfs-conf-export.sh
+>>> +
+>>> +[Install]
+>>> +WantedBy=nfs-client.target
+>>> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+>>> index 28dbaa99..fb9d2dab 100644
+>>> --- a/systemd/nfs.conf.man
+>>> +++ b/systemd/nfs.conf.man
+>>> @@ -101,8 +101,11 @@ When a list is given, the members should be
+>>> comma-separated.
+>>> .TP
+>>> .B general
+>>> Recognized values:
+>>> -.BR pipefs-directory .
+>>> +.BR pipefs-directory ,
+>>> +.BR nfs4_unique_id .
+>>>
+>>> +For 
+>>> +.BR pipefs-directory
+>>> See
+>>> .BR blkmapd (8),
+>>> .BR rpc.idmapd (8),
+>>> @@ -110,6 +113,13 @@ and
+>>> .BR rpc.gssd (8)
+>>> for details.
+>>>
+>>> +The
+>>> +.BR nfs4_unique_id
+>>> +value is used by the NFS4 client when identifying itself to
+>>> servers and
+>>> +can be used to ensure that this value is unique when the local
+>>> system name
+>>> +perhaps is not. For full details please refer to the kernel
+>>> Documentation
+>>> +.I filesystems/nfs/nfs.txt
+>>> +
+>>> .TP
+>>> .B exports
+>>> Recognized values:
+>>> -- 
+>>> 2.18.1
+>>>
+>>>
+>>
+>> --
+>> Chuck Lever
+>>
+>>
+>>
+> 
 
