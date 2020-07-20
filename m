@@ -2,92 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61CD9226BAF
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 18:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E922226CB1
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 19:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbgGTQn3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 12:43:29 -0400
-Received: from ny018.relay.arandomserver.com ([172.96.188.180]:55129 "EHLO
-        ny018.relay.arandomserver.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730000AbgGTPmC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 11:42:02 -0400
-Received: from nyc006.hawkhost.com ([172.96.186.142])
-        by se004.arandomserver.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <nazard@nazar.ca>)
-        id 1jxXvT-0002eg-Vs; Mon, 20 Jul 2020 10:42:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nazar.ca;
-         s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version
-        :Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4rCNOkqd0GrW+e4CDSgN3Fb40GTvjJ+sqo6P0UtbHwk=; b=hbq9b4R9S7ZF/G5VCQB7suF2Nf
-        eHC0D9d+e24QGleZhn2ZQV0uILjyyNMARgIOcbOAo35zykxrviEeZWAd/jU9AV/EydIkVwV00z6OO
-        JiahOyuVW7H/VnjJ8n2z9ukjtj8oz+A8xYi7JGUXXmYJBx6VtAed902+b51ZXhSIVLnktU/Fg/7LI
-        Hq4sujcwPug7ffLQla5M8OF/1B/DHkKLSLaEZeAK8kewImk7riYn2smRabIxskYnFzW6KUgDL8VWi
-        0f2MnbEdKEkCXlAR9m1cgMZwNOcgwKYpxIXJDpamge4cZ32XsFfX2KiOUYRAR4OKPzdZtq1MtXFUl
-        jOwXwCVA==;
-Received: from [174.119.114.224] (port=54261 helo=[192.168.21.100])
-        by nyc006.hawkhost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <nazard@nazar.ca>)
-        id 1jxXvT-0002iF-JP; Mon, 20 Jul 2020 11:41:59 -0400
-Subject: Re: [PATCH 02/11] gssd: Fix cccache buffer size
-To:     Steve Dickson <SteveD@RedHat.com>, linux-nfs@vger.kernel.org
-References: <20200718092421.31691-1-nazard@nazar.ca>
- <20200718092421.31691-3-nazard@nazar.ca>
- <fa7a464f-3749-b8d8-bf92-02173a03dffb@RedHat.com>
-From:   Doug Nazar <nazard@nazar.ca>
-Message-ID: <8b2a9798-7c46-9509-1e78-4101fb901252@nazar.ca>
-Date:   Mon, 20 Jul 2020 11:41:57 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:79.0) Gecko/20100101
- Firefox/79.0 Thunderbird/79.0
+        id S1729060AbgGTRBS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 13:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgGTRBS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 13:01:18 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473EAC061794
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jul 2020 10:01:18 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 656C4876B; Mon, 20 Jul 2020 13:01:17 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 656C4876B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1595264477;
+        bh=FLsy/zKNE3XfUWBna3ZW1VaGtM9nrPHT9Sx9XJtZDxM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FUw2qXIiw4Bv1cJPX3u9DqGQnKd6PqqiMHk3nI1GltOxIjUdQrXqPp2FA7185pV6C
+         6o5iAsu+ut42sxW+V91Z7dzh7zImym3cvHm86YcokdM/UpedpzaXslPiChxHblWQJE
+         pZXNxhOxhnaaj1WVHvKSneWI2QLLq16T7FzvDX24=
+Date:   Mon, 20 Jul 2020 13:01:17 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Petr Vorel <pvorel@suse.cz>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>,
+        "yangx.jy@cn.fujitsu.com" <yangx.jy@cn.fujitsu.com>
+Subject: Re: [RFC PATCH 1/1] Remove nfsv4
+Message-ID: <20200720170117.GB25707@fieldses.org>
+References: <20200720091449.19813-1-pvorel@suse.cz>
+ <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
+ <20200720141255.GA25707@fieldses.org>
+ <20200720143620.GD21201@dell5510>
+ <20200720151508.GA13786@dell5510>
 MIME-Version: 1.0
-In-Reply-To: <fa7a464f-3749-b8d8-bf92-02173a03dffb@RedHat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Get-Message-Sender-Via: nyc006.hawkhost.com: authenticated_id: nazard@nazar.ca
-X-Authenticated-Sender: nyc006.hawkhost.com: nazard@nazar.ca
-X-Originating-IP: 172.96.186.142
-X-SpamExperts-Domain: nyc006.hawkhost.com
-X-SpamExperts-Username: 172.96.186.142
-Authentication-Results: arandomserver.com; auth=pass smtp.auth=172.96.186.142@nyc006.hawkhost.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.11)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0bN4ZX/cCaR95pQ7tQtUF1ypSDasLI4SayDByyq9LIhVl6gnFZArPu8o
- hDwIoaacHkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K5r8HtW+i+zOSEp4G6/nKTibW
- aG5S00Ke4iKnmCsTdmJlcUeN/JW8E9PaHbmUYGTMTX+DNB8zzxX/4FjqtJmb5CqPXWZ3Q04Sknss
- PO87zpIBzS5fPHINUJxVzZg1ZLp9WsNs/TiGk4ran4P5akI9/iSD+AOQ3aTXsOlBj1rS7KuJKV22
- DmcCOObp+EfB9TVxwAQsq9Jr0hwdTzDySvwsAZ57yox544FFkGIGo/UPEJklPZ+d+6dQltnW35dY
- HDi4YsOSYzzrWOkGpzUJhy0xLBRKoVbdmzfZG7WP8P7/emcDFPZI3xOxBaPpD+a4iBFJkhqbiTdT
- lYcOHnVgVGtCG6MIpAaBCnEm0QC5cIoZWwuuqr0aikOvJA+DuzeF4b+ym3AhG426mliYkCHBZpOg
- oqc4uCQ1hIibn+MrIDYy2WDv159KWP8Flu8XxG08DxyID4UUr5AMi9bhRLAI2wpnnpu0VYQwuqxm
- ozzkDLIpUMoGSJj2/VGV7PqOahGXkaU4twU/8XGrHu5QsNBEHc0tEG1qwIZ2MQhDb0Rn5TCwHWbo
- CpfPZNiBFnD7oJ3lzlHo7tKmnBRRVxmZVTuvC1DyVQeYUOp7A73HI6oJg7w/Vod3QTO7QTL/vMcL
- queBWI153jp7haOSLlxw44w9I2ZifS32EoSnB0KQ6B3xt8UP9IqiIoZ5y2slXm/bJtJoELtOerz9
- cqOXWO4+PQeXdSLIvTnR+x7N1q5mHvGiTT7cMIhGzW5mmjGyg8okvrmjmhIectgzcDoFd+96Xw4Q
- UNtTnaqKMELGl6tE0K+BcrxAjOpojt+2wgmoPg0r3fLmjzUcOV+CuA5GimAT6h9Ujgm5ShD2vvTW
- dasCwvCiFabvBgs1Q2yTITNEqokCKaRTOpRi1i3DxpeppJLPqpIzQH91oWpnoGrsoLVX4uRIcZji
- Lua7QDsLZwFcOTN1VL7o22jDHzxYOOo85NMG/uIDWvq5VedjXZBNOJeqVzGgrKtR6HA=
-X-Report-Abuse-To: spam@se001.arandomserver.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720151508.GA13786@dell5510>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2020-07-20 10:43, Steve Dickson wrote:
-> Thanks for point this out but I think I'm going to go with this:
-> -	char buf[PATH_MAX+4+2+256];
-> +	/* dirname + cctype + d_name + NULL */
-> +	char buf[PATH_MAX+5+256+1];
->
-> which explains the needed space and as well removes the warning...
+On Mon, Jul 20, 2020 at 05:15:08PM +0200, Petr Vorel wrote:
+> Hi Bruce, Trond,
+> 
+> > > On Mon, Jul 20, 2020 at 01:32:09PM +0000, Trond Myklebust wrote:
+> > > > On Mon, 2020-07-20 at 11:14 +0200, Petr Vorel wrote:
+> > > > > Reasons to drop:
+> > > > > * outdated tests (from 2005)
+> > > > > * not used (NFS kernel maintainers use pynfs [1])
+> > > > > * written in Python (we support C and shell, see [2])
+> 
+> > > > > [1] http://git.linux-nfs.org/?p=bfields/pynfs.git;a=summary
+> > > > > [2] https://github.com/linux-test-project/ltp/issues/547
+> 
+> 
+> > > > Unlike pynfs, these tests run on a real NFS client, and were designed
+> > > > to test client implementations, as well as the servers.
+> 
+> > > > So if they get dropped from ltp, then we will have to figure out some
+> > > > other way of continuing to maintain them.
+> 
+> > > Just for fun, I grepped through old mail to see if I could find any
+> > > cases of these tests being used.  I found one, in which Chuck reports an
+> > > nfslock01 failure.  Looks like it did find a real bug, which we fixed:
+> 
+> > > 	https://lore.kernel.org/r/8DF85CB6-5FEB-4A25-9715-C9808F37A4B1@oracle.com
+> > > 	https://lore.kernel.org/r/20160807185024.11705.10864.stgit@klimt.1015granger.net
+> 
+> > Thanks for your explanation, this obviously justify these tests in LTP, unless
+> > you want to move it to git.linux-nfs.org and maintain on your own.
+> Actually, that fix 42691398be08 ("nfsd: Fix race between FREE_STATEID and LOCK")
+> from v4.8-rc2 reported by Alexey Kodanev (LTP network maintainer) was found by
+> nfslock01 test [1], which is integrated into other LTP NFS tests [2]. I'd
+> definitely keep these in LTP.
 
-That's fine. I didn't spend much time wondering why it was written that 
-way, just assumed there was a reason.
+Whoops, I don't know why I thought I saw nfslock01 in your patch.
+Apologies.
 
-Doug
+> nfsv4 I proposed to remove as outdated and not being used are testing ACL [3]
+> and fcntl locking [4]. ACL tests use rsh and aren't integrated into LTP
+> framework (use their custom [5] runtest file thus I doubt anyone is using it).
+> fcntl locktests are at least integrated into LTP (use fcntl-locktests runtest
+> file[6], I forget to remove it in this patch).
+> Both tests are written in 2005. I don't want to push for removal, if you see any
+> use in it.
 
+Looks like they may test some things (ACL enforcement, multi-client
+locking), that our other test suites don't.
+
+On the other hand, if nobody's actually running them then maybe it's on
+us to adopt them if we want them.  (Not volunteering for now.)
+
+--b.
+
+> 
+> Kind regards,
+> Petr
+> 
+> [1] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfs/nfslock01/
+> [2] https://github.com/linux-test-project/ltp/blob/master/runtest/net.nfs
+> [3] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfsv4/acl
+> [4] https://github.com/linux-test-project/ltp/tree/master/testcases/network/nfsv4/locks
+> [5] https://github.com/linux-test-project/ltp/blob/master/testcases/network/nfsv4/acl/runtest
+> [6] https://github.com/linux-test-project/ltp/blob/master/runtest/fcntl-locktests
