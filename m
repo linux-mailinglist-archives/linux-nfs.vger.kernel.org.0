@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC0C2270C7
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 23:39:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2EB2270D9
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 23:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgGTVjP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 17:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
+        id S1728489AbgGTVjc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 17:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbgGTVjO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:14 -0400
+        id S1728483AbgGTVjc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B2722D01;
-        Mon, 20 Jul 2020 21:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AED9922CF7;
+        Mon, 20 Jul 2020 21:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281154;
-        bh=cehd/V0q8KHUM6qCd8ZJGWS+pNnzmOM0flqx0966qbQ=;
+        s=default; t=1595281171;
+        bh=eD4zAKWlWfvLrHL1FEoXL3TH2eqc9KqDLJjKPzym2uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJ2skiG5XVd8jrbpSC2+j3ELBOlonMj9JC50YQ3En9J79pd8vfpxVllUSbMobSldp
-         7bh4Xkf3Vm7UsolHvikCFcGgmMT59pqqe28zohKu7H7BWshSQorm+kKC3GlX+mUc2t
-         VcTdjRBTxbt72gMkyKrfnpTOWj0oAReow3HreuoE=
+        b=TItpyXPII3ZKip6OZIsdVkAR5KBAKOMB+qs7CphCESLZNAOSQV+eiSeBM8ieSIS+W
+         bPuJzFYByn7KOmbRATHlE3Pfv9HCJav8GGaiA1M4jdNdQkzlczf3g69BkdhyGbXqKf
+         WRlujLNmDxbn8C6Rg/GToTeBagU3j7STMhX3Cju8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olga Kornievskaia <kolga@netapp.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/19] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Mon, 20 Jul 2020 17:38:50 -0400
-Message-Id: <20200720213851.407715-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/13] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
+Date:   Mon, 20 Jul 2020 17:39:14 -0400
+Message-Id: <20200720213914.407919-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
-References: <20200720213851.407715-1-sashal@kernel.org>
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,7 +66,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 4 insertions(+), 10 deletions(-)
 
 diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 1e883df26d4aa..e5da9d7fb69e9 100644
+index 3cef33b0f7e08..e6ea4511c41ce 100644
 --- a/fs/nfs/direct.c
 +++ b/fs/nfs/direct.c
 @@ -396,6 +396,8 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
@@ -114,7 +114,7 @@ index 1e883df26d4aa..e5da9d7fb69e9 100644
  	}
  
 diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index b2257fa209ac4..29553fdba8af7 100644
+index 7da2cea1e7a06..81cca49a83750 100644
 --- a/fs/nfs/file.c
 +++ b/fs/nfs/file.c
 @@ -82,7 +82,6 @@ nfs_file_release(struct inode *inode, struct file *filp)
