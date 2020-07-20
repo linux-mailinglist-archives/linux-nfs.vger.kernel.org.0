@@ -2,69 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 312C722631A
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 17:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A2B12264ED
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jul 2020 17:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGTPRx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jul 2020 11:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgGTPRx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 11:17:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C8EC061794
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jul 2020 08:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RTJCQoT4n3eWjZd87cifxoVNLQME7QIUwsdXFeCJ158=; b=Oly5kqo+KwadkUB4cUygk58rbp
-        MRC4xydVj5qb+0LEU7vRlfG1/kiqkmx/KptgXdtczWVZPp2A6vnQqDB252lEUtdXduN0P9qymCI5u
-        v89xLosSCAPb5i1lfhjBOxW3cjkLwvZY82rXdw6YJGJdvuOe/TxkQmDavE6j7Kr9QVigFKKrGCDbu
-        1jEyTbbz86Lbrx5QrTIWinJqxdU74tYW6svxP25Au+S4E/EcrrGGiK1TQGJ0xwXOL8DbYH22eUbjj
-        4ONW4mtlpQqZJcaTxIX95yEjU56QPWjuZdttlm8KutyHy08cvloYC8EOET3ORMu5cM6rLkpgrw2Fs
-        rRQITaXg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxXXy-0004fJ-Na; Mon, 20 Jul 2020 15:17:42 +0000
-Date:   Mon, 20 Jul 2020 16:17:42 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "pvorel@suse.cz" <pvorel@suse.cz>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>,
-        "yangx.jy@cn.fujitsu.com" <yangx.jy@cn.fujitsu.com>
-Subject: Re: [RFC PATCH 1/1] Remove nfsv4
-Message-ID: <20200720151742.GA16973@infradead.org>
-References: <20200720091449.19813-1-pvorel@suse.cz>
- <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
+        id S1731016AbgGTPtZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jul 2020 11:49:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60942 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731009AbgGTPtY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jul 2020 11:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595260162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hGj6lhQqEqxwh+1OanEmaJ5WyK9z28bmgR7d5Disb0s=;
+        b=inCLQ3tzHn1OmigHpDQY0JzDt+3yb2laFFi7SUxSeMsF+n75nuMn9gtG10jNAttyTMy0L5
+        gJT6Fv7DcayeitSazkpjxhyeir7Q6zMWTf6n1/TClOqFxj9DW8J9zzEi+iWtzhHd4hSjPa
+        wMrF9vnlrLY37xpkjZD0bRTE2m8yF2c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-nC6IaESFNlmPCvA1W1d6KQ-1; Mon, 20 Jul 2020 11:49:20 -0400
+X-MC-Unique: nC6IaESFNlmPCvA1W1d6KQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 893D780BCC0;
+        Mon, 20 Jul 2020 15:49:19 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21BC41001901;
+        Mon, 20 Jul 2020 15:49:19 +0000 (UTC)
+Subject: Re: [PATCH 09/11] nfsidmap: Add support to cleanup resources on exit
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20200718092421.31691-1-nazard@nazar.ca>
+ <20200718092421.31691-10-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <84277cb9-03da-3065-1848-f8c1e2bee167@RedHat.com>
+Date:   Mon, 20 Jul 2020 11:49:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200718092421.31691-10-nazard@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 01:32:09PM +0000, Trond Myklebust wrote:
-> On Mon, 2020-07-20 at 11:14 +0200, Petr Vorel wrote:
-> > Reasons to drop:
-> > * outdated tests (from 2005)
-> > * not used (NFS kernel maintainers use pynfs [1])
-> > * written in Python (we support C and shell, see [2])
-> > 
-> > [1] http://git.linux-nfs.org/?p=bfields/pynfs.git;a=summary
-> > [2] https://github.com/linux-test-project/ltp/issues/547
-> > 
-> 
-> Unlike pynfs, these tests run on a real NFS client, and were designed
-> to test client implementations, as well as the servers.
-> 
-> So if they get dropped from ltp, then we will have to figure out some
-> other way of continuing to maintain them.
+Hey,
 
-NFS tests using the kernel sound like a prime candidate for xfstests.
+On 7/18/20 5:24 AM, Doug Nazar wrote:
+> Signed-off-by: Doug Nazar <nazard@nazar.ca>
+> ---
+>  support/nfsidmap/libnfsidmap.c      | 13 +++++++++++++
+>  support/nfsidmap/nfsidmap.h         |  1 +
+>  support/nfsidmap/nfsidmap_common.c  | 11 ++++++++++-
+>  support/nfsidmap/nfsidmap_private.h |  1 +
+>  support/nfsidmap/nss.c              |  8 ++++++++
+>  5 files changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidmap.c
+> index bce448cf..6b5647d2 100644
+> --- a/support/nfsidmap/libnfsidmap.c
+> +++ b/support/nfsidmap/libnfsidmap.c
+> @@ -496,6 +496,19 @@ out:
+>  	return ret ? -ENOENT: 0;
+>  }
+>  
+> +void nfs4_term_name_mapping(void)
+> +{
+> +	if (nfs4_plugins)
+> +		unload_plugins(nfs4_plugins);
+> +	if (gss_plugins)
+> +		unload_plugins(gss_plugins);
+> +
+> +	nfs4_plugins = gss_plugins = NULL;
+> +
+> +	free_local_realms();
+> +	conf_cleanup();
+> +}
+> +
+>  int
+>  nfs4_get_default_domain(char *UNUSED(server), char *domain, size_t len)
+>  {
+> diff --git a/support/nfsidmap/nfsidmap.h b/support/nfsidmap/nfsidmap.h
+> index 10630654..5a795684 100644
+> --- a/support/nfsidmap/nfsidmap.h
+> +++ b/support/nfsidmap/nfsidmap.h
+> @@ -50,6 +50,7 @@ typedef struct _extra_mapping_params {
+>  typedef void (*nfs4_idmap_log_function_t)(const char *, ...);
+>  
+>  int nfs4_init_name_mapping(char *conffile);
+> +void nfs4_term_name_mapping(void);
+>  int nfs4_get_default_domain(char *server, char *domain, size_t len);
+>  int nfs4_uid_to_name(uid_t uid, char *domain, char *name, size_t len);
+>  int nfs4_gid_to_name(gid_t gid, char *domain, char *name, size_t len);
+> diff --git a/support/nfsidmap/nfsidmap_common.c b/support/nfsidmap/nfsidmap_common.c
+> index f89b82ee..4d2cb14f 100644
+> --- a/support/nfsidmap/nfsidmap_common.c
+> +++ b/support/nfsidmap/nfsidmap_common.c
+> @@ -34,12 +34,21 @@ static char * toupper_str(char *s)
+>          return s;
+>  }
+>  
+> +static struct conf_list *local_realms = NULL;
+> +
+> +void free_local_realms(void)
+> +{
+> +	if (local_realms) {
+> +		conf_free_list(local_realms);
+> +		local_realms = NULL;
+> +	}
+> +}
+> +
+>  /* Get list of "local equivalent" realms.  Meaning the list of realms
+>   * where john@REALM.A is considered the same user as john@REALM.B
+>   * If not specified, default to upper-case of local domain name */
+>  struct conf_list *get_local_realms(void)
+>  {
+> -	static struct conf_list *local_realms = NULL;
+>  	if (local_realms) return local_realms;
+>  
+>  	local_realms = conf_get_list("General", "Local-Realms");
+> diff --git a/support/nfsidmap/nfsidmap_private.h b/support/nfsidmap/nfsidmap_private.h
+> index f1af55fa..a5cb6dda 100644
+> --- a/support/nfsidmap/nfsidmap_private.h
+> +++ b/support/nfsidmap/nfsidmap_private.h
+> @@ -37,6 +37,7 @@
+>  #include "conffile.h"
+>  
+>  struct conf_list *get_local_realms(void);
+> +void free_local_realms(void);
+>  int get_nostrip(void);
+>  int get_reformat_group(void);
+>  
+> diff --git a/support/nfsidmap/nss.c b/support/nfsidmap/nss.c
+> index 9d46499c..f8dbb94a 100644
+> --- a/support/nfsidmap/nss.c
+> +++ b/support/nfsidmap/nss.c
+> @@ -467,6 +467,14 @@ static int nss_plugin_init(void)
+>  	return 0;
+>  }
+>  
+> +__attribute__((destructor))
+> +static int nss_plugin_term(void)
+> +{
+> +	free_local_realms();
+> +	conf_cleanup();
+> +	return 0;
+> +}
+> +
+Just wondering... How is nss_plugin_term() called/used?
+
+steved.
+
+>  
+>  struct trans_func nss_trans = {
+>  	.name		= "nsswitch",
+> 
+
