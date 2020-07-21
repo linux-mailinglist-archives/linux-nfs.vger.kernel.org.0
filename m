@@ -2,68 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65918227B5A
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jul 2020 11:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 763B5227BC7
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jul 2020 11:31:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgGUJGP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Jul 2020 05:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJGP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jul 2020 05:06:15 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34091C061794
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jul 2020 02:06:15 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id c14so9718331ybj.0
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jul 2020 02:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nHNUw5fKJrBs4Yw/4gDozM7ufiIL1f9OJbiyNszRX0w=;
-        b=VlH8BIVe7UjCus7mk/HVIcj9CjuN9/WCh6jAcB5loX9VZJXc+qYarR5v4abPvO+eju
-         wDjZ1drLhJ6BKfEvEPSr0BalM6pE9fdiy1oK6oQquzga7YUSh9XUA5g6uV5TnotpAMAk
-         DniPqTzZYd4oqQtD5pCZS6vJdV0lYCOsc4soVJ6vB+WB3jiiUErUxt3jEQgFj7VZDi9N
-         1bdHk4pjtwcIX6cMcMHQev8dw+BBsz8y/P9HTYLWlAMxgUnx+CRIHil3EfRVjg9jZ8zk
-         3DdVg3neq1nUvnhT+G+raHsgxK6Lt7pKMxR9AcdOWY6yIjDVkPZt0NzWDfeF4hj84jze
-         xaQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=nHNUw5fKJrBs4Yw/4gDozM7ufiIL1f9OJbiyNszRX0w=;
-        b=QBBX1Cj24AXFRmSiXn5gDc7sqOQCB7Ojr8i/GOp4kuDstXS/onY1VqByoDM+hbh62K
-         O6pdIxDtdGK0NvRKbp4F1AP151+YEhuYCNvvp3bxHpqCNCoEn9W8RWkDYQUi8VZUKXNM
-         orMIUZxhOyZNMKpQ21lbGn+tkKfLBH17R6DB0nHbqapI50iuFOlGAM3+pIIwPzUBYO2S
-         FpXyGx8AehUsr3onTplpXGxx6dTHXIqPHfSVKxRiCTQRuxf9zH272XGF1pnVeINKvmOq
-         cYPp6Mft9EGXzDY6C4ATjxErcmoAUcJrxwmYVSuyTP1BYqHly9iIly/jK0661PhhQEf5
-         H++g==
-X-Gm-Message-State: AOAM533B/rT/v4VstR3Whxe3T7w8+VIZX9l+djItQlXaA8UkiJ6c6XKu
-        n10gLNS7FYEi2AH5NHMXtCxb3y+uBQjptStgutc=
-X-Google-Smtp-Source: ABdhPJzTL5QpfD2u/TzqnaH1hFaMSn0hPxPonY2PWViSmKY5HQomScFUmyvLAAmbV6Vv/jHG+SFeZg+SyUAmZE1zhuY=
-X-Received: by 2002:a25:c345:: with SMTP id t66mr40558442ybf.218.1595322374461;
- Tue, 21 Jul 2020 02:06:14 -0700 (PDT)
+        id S1726769AbgGUJbS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Jul 2020 05:31:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58148 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGUJbS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:31:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 950C4B875;
+        Tue, 21 Jul 2020 09:31:23 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 11:31:15 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>,
+        "yangx.jy@cn.fujitsu.com" <yangx.jy@cn.fujitsu.com>,
+        Cyril Hrubis <chrubis@suse.cz>, Yong Sun <yosun@suse.com>
+Subject: Re: [RFC PATCH 1/1] Remove nfsv4
+Message-ID: <20200721093115.GB1164@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20200720091449.19813-1-pvorel@suse.cz>
+ <ffb5cd64d5d65b762bdc85b6044b7fdc526d27cb.camel@hammerspace.com>
+ <20200720151742.GA16973@infradead.org>
+ <20200720181658.GA32123@dell5510>
 MIME-Version: 1.0
-Received: by 2002:a25:698b:0:0:0:0:0 with HTTP; Tue, 21 Jul 2020 02:06:13
- -0700 (PDT)
-Reply-To: jinghualiuyang@gmail.com
-From:   Frau JINGHUA Liu Yang <alvinteddy830@gmail.com>
-Date:   Tue, 21 Jul 2020 11:06:13 +0200
-Message-ID: <CAM5-t4+LvjVWNxZ6qEiGKcPQVByx7GC25fkQm3e3A5OR+=W4oA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720181658.GA32123@dell5510>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=20
-Guten Morgen,
+Hi Christoph,
 
-     Ich bin Frau JINGHUA Liu Yang f=C3=BCr die Mitarbeiter der CITIBANK
-KOREA hier in der Republik Korea. Kann ich $9.356.669 USD =C3=BCberweisen?
-Vertrauen?
+> > On Mon, Jul 20, 2020 at 01:32:09PM +0000, Trond Myklebust wrote:
+> > > On Mon, 2020-07-20 at 11:14 +0200, Petr Vorel wrote:
+> > > > Reasons to drop:
+> > > > * outdated tests (from 2005)
+> > > > * not used (NFS kernel maintainers use pynfs [1])
+> > > > * written in Python (we support C and shell, see [2])
 
-Mit freundlichen Gr=C3=BC=C3=9Fen
+> > > > [1] http://git.linux-nfs.org/?p=bfields/pynfs.git;a=summary
+> > > > [2] https://github.com/linux-test-project/ltp/issues/547
+
+
+> > > Unlike pynfs, these tests run on a real NFS client, and were designed
+> > > to test client implementations, as well as the servers.
+
+> > > So if they get dropped from ltp, then we will have to figure out some
+> > > other way of continuing to maintain them.
+
+> > NFS tests using the kernel sound like a prime candidate for xfstests.
+> In the past Yong Sun moved some ext4 related tests from LTP to xfstests.
+> LTP has various NFS related tests. IMHO more important than where these tests
+> should be is if anybody has a deeper look into them an cleanup them / rewrite
+> them from scratch.
+
+Although xfstests sounds like a natural choice, atm there are quite a lot NFS
+tests in LTP. xfstests contain only single NFS test.
+
+IMHO it's a choice of anybody who rewrites these tests whether he tries to put
+them to LTP or into xfstests. If it were me I'd probably keep them in LTP,
+because I prefer LTP framework capabilities.
+
+Kind regards,
+Petr
