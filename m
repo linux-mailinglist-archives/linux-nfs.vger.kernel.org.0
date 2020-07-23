@@ -2,60 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 371F822BA0C
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jul 2020 01:14:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C5022BA0D
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jul 2020 01:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgGWXOo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Jul 2020 19:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
+        id S1727115AbgGWXOs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Jul 2020 19:14:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgGWXOn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 19:14:43 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81623C0619D3
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:43 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t4so5779364iln.1
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:43 -0700 (PDT)
+        with ESMTP id S1726657AbgGWXOs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 19:14:48 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE63C0619D3
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:48 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id c16so8050955ioi.9
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=G0wOdvYet1m3lF7neqDZvKOax1YPWwK9betSblg41OU=;
-        b=m6G574eNThyKbT/ZHcVVgs+x60TfEV/jEUEVPJqfhirIa8cE0qa5fogV+7qihtRTcm
-         Gwyh6x19PW30pVWcmgICN8X9dgGNQ6Cb1dGNQp/phPrZLDklZm1ARN5DvJgH0JkrmHrc
-         MnUIyd0wKDenMXSOvC2TLTw4Fz91scmjYsd22a+ALEpJBnvXKj0/OjQs5aJb3cB6HSAY
-         8l8Dcpy/QjYWogGXqrgOvxlq1BX1o3LgBcKShdyuPC9vjBxTUBLrRxO5vdsw/lL9rs8+
-         /k3vl7wAVKQEuav4Ettsw6KJYbzh6uz1jlCKDZjFfOMDN0J/P/zEUufxtKjx8aejYL7B
-         oQgw==
+        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xESjL48MSTWK7fMOff3ZgZF8I9AAoOusKzFqzbC/vcw=;
+        b=L3kY2oQ7bk3AWNWG8ySC0TQTxuwxB0SbAd2W0Nefuy8zGc4mO8zWS52qdbXUggdg74
+         xkHQ8RqENsSHaLa1UBg6zE0Vbkrk8c6UMhr61dVu4jqvI1Gv067f/ftBRHpbYOoIQujh
+         ZbaGXVJ/gkjrtcyokfsc0MaI8D6znXnKKZVglFlb6MLoIDvnym68zuAU3J90Ub3RD73y
+         DCX0FV4cjSIYITEzBIXmSFU3X0CMIDQZESEp52BnUJgykT/h3Qtk9Mh1mr7wcw4FMy3J
+         XN5f+yRMkRqw0KnlavQkCRF0fLNncGmqzZcJfALPTkUimU0T4GSHuBLIzGDPDnDpPAea
+         pt4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=G0wOdvYet1m3lF7neqDZvKOax1YPWwK9betSblg41OU=;
-        b=dsW/6h2JqMBC/ndN/Q7Yc71zNFTF+U3u3to12kBhCI3IBWiAqteDPWoeT6tD0nFuST
-         mMimhjXwCPA6vZUjUJNXyyzuZPh/SaOpGa2cYeku/xkH1gmyt03WHU/RZcdv1WLdvG2G
-         mTJDbx7Gtw08jL4CbQzQbPIuetpEKkYrf4YhBhkRlwCewocEMwDzsCpFAmjp8yh/lo6j
-         2OgFp7Heewj/5XR47+fDyUWU7OmJqz4ujUpMub1Xw0adz/xjD0Z+6Q89jVQ0qWPRvzuI
-         s6LMVdEnddm2tvzITKq/rv6ITxtJyMLMOQh9yrifduIqUsCN/Z3FqbM271YXTIyJtGfO
-         6NhQ==
-X-Gm-Message-State: AOAM53277drcn7zdULJiHSkcTWoy7AWUyqzRyPxIHhTYs3j0Focv+i/t
-        z0JM+rvTC8PozD1afJr20uOoDnx7
-X-Google-Smtp-Source: ABdhPJwVyoSNGcRtm5TIlkwu38zVs5Pg+yQwLHOGMiBXBKGHZks5cfGA6jptpd9iwjLTlk+M6hrMyA==
-X-Received: by 2002:a92:8453:: with SMTP id l80mr7718685ild.83.1595546082515;
-        Thu, 23 Jul 2020 16:14:42 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=xESjL48MSTWK7fMOff3ZgZF8I9AAoOusKzFqzbC/vcw=;
+        b=gRDT7K8MlIy1XY2k59R+iaY7rECZuHUnBSGocIJ0ieGaeb5qVmIMoQIp5tw6kWXCgM
+         TVmsBT0yCvbTDbQMTUbULMvbs87F6/4OsKAozGG9umb1ArksKlUQiw3mlbdCSOfi5It+
+         mLcmtYM2U2gs0PfA4dMo7YYjuocYa4z9Cw3blEBEdByqD806Srm9MofCXQxwH/kEzC+M
+         d1vjTYX2tFYA4P4rldJkO2qh2qk+b+7yiC0tJEh75eYllGBaUQ+jKIFIwDkqtVg+qLyF
+         l8cxZ5gIWEHXe/LWIMBNhLRdUreZJwK2JOJ7I+iaA8orMk2JnOWZ1tX4EKucYEBayo3o
+         RhdQ==
+X-Gm-Message-State: AOAM533WkFkGuZXuNS6wEcVlA5Mp6baqXYbccUXXrXSnSgDVWFaKDIOj
+        s0I8Hr2WikG1EYhFbwNLvlGRVbQm
+X-Google-Smtp-Source: ABdhPJwk6oTmvr4jtwkhM1mdoOiLMg+eXMO1D+HTg4S2eI9Gto8gUcyTS/WcJfyQ7ewI5rB+yEJiCw==
+X-Received: by 2002:a6b:5c0a:: with SMTP id z10mr7333927ioh.131.1595546087109;
+        Thu, 23 Jul 2020 16:14:47 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 13sm2149429ilj.81.2020.07.23.16.14.40
+        by smtp.gmail.com with ESMTPSA id b13sm1068195iod.40.2020.07.23.16.14.46
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 16:14:41 -0700 (PDT)
+        Thu, 23 Jul 2020 16:14:46 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 06NNEbiY003335;
-        Thu, 23 Jul 2020 23:14:38 GMT
-Subject: [PATCH RFC 0/2] Fix problems with NFSv4 on krb5p
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 06NNEjiT003338;
+        Thu, 23 Jul 2020 23:14:45 GMT
+Subject: [PATCH RFC 1/2] SUNRPC: Set rcv_buf->len correctly in
+ gss_unwrap_kerberos_v2()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Thu, 23 Jul 2020 19:14:37 -0400
-Message-ID: <159554528704.6546.6823326959131917327.stgit@klimt.1015granger.net>
+Date:   Thu, 23 Jul 2020 19:14:45 -0400
+Message-ID: <159554608522.6546.6837849890434723341.stgit@klimt.1015granger.net>
+In-Reply-To: <159554528704.6546.6823326959131917327.stgit@klimt.1015granger.net>
+References: <159554528704.6546.6823326959131917327.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -65,39 +69,33 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This tiny series would address a couple of bugs in the recent commits
-that fixed xdr_buf_trim(), namely:
+Braino when converting "buf->len -=" to "buf->len = len -".
 
-  31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()")
-  a7e429a6fa6d ("SUNRPC: Fix GSS privacy computation of auth->au_ralign")
-  0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")")
+The result is under-estimation of the ralign and rslack values. On
+krb5p mounts, this has caused READDIR to fail with EIO, and KASAN
+splats when decoding READLINK replies.
 
-Turns out 31c9590ae468 had a couple of problems that were introduced
-by refactoring late, and therefore were not caught during testing. The
-client-side problems are documented here:
-
-  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1886277
-
-The first patch addresses the NFSv4/krb5p failures reported in that
-bug. It is a straightforward and obvious fix.
-
-When this fix is applied on the server, NFSv3/krb5p stops working.
-Thus the second patch is also needed, but this patch is somewhat
-more controversial. It's not clear to me how much of the "pad
-adjustment" logic is still needed in unwrap_priv_data(), so I'm
-asking for some quick but careful review of this proposed change.
-
+Reported-by: Marian Rainer-Harbach
+Reported-by: Pierre Sauter <pierre.sauter@stwm.de>
+BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1886277
+Fixes: 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/auth_gss/gss_krb5_wrap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chuck Lever (2):
-      SUNRPC: Set rcv_buf->len correctly in gss_unwrap_kerberos_v2()
-      SUNRPC: Fix buf->len calculation in unwrap_priv_data()
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index cf0fd170ac18..90b8329fef82 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -584,7 +584,7 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+ 							buf->head[0].iov_len);
+ 	memmove(ptr, ptr + GSS_KRB5_TOK_HDR_LEN + headskip, movelen);
+ 	buf->head[0].iov_len -= GSS_KRB5_TOK_HDR_LEN + headskip;
+-	buf->len = len - GSS_KRB5_TOK_HDR_LEN + headskip;
++	buf->len = len - (GSS_KRB5_TOK_HDR_LEN + headskip);
+ 
+ 	/* Trim off the trailing "extra count" and checksum blob */
+ 	xdr_buf_trim(buf, ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
 
-
- net/sunrpc/auth_gss/gss_krb5_wrap.c | 2 +-
- net/sunrpc/auth_gss/svcauth_gss.c   | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
---
-Chuck Lever
 
