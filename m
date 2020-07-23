@@ -2,79 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D59022B69B
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jul 2020 21:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEA5F22B6DD
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jul 2020 21:38:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgGWTQT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Jul 2020 15:16:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33539 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726814AbgGWTQT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 15:16:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595531778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=THt9ilJoYz20v5rZ7k/cVZYymF9hjGDHxFS2Sk4sUtU=;
-        b=icvIF15s87SyCvWY4zkyupgej2yV9f9lhKUos8BqkGLRkpRRYNbEnFpiPAb+3f/IvyS7ns
-        y8W2WxNRICWrbniNiiBxibBuQhcYj+6XDdxg7Npy1q46o6ZPTkdceyaWhYSkZpB/ijydh1
-        YPUqEq0YIoL+yo8vj0WR5wIypTY9mII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-3R-Dk34LOz6dOJ0eaPt8OA-1; Thu, 23 Jul 2020 15:16:15 -0400
-X-MC-Unique: 3R-Dk34LOz6dOJ0eaPt8OA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D455C100CCC2;
-        Thu, 23 Jul 2020 19:16:13 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CE4D8BEDC;
-        Thu, 23 Jul 2020 19:16:13 +0000 (UTC)
-Subject: Re: [PATCH 2/4] idmapd: Add graceful exit and resource cleanup
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <20200722055354.28132-1-nazard@nazar.ca>
- <20200722055354.28132-3-nazard@nazar.ca>
- <c136e451-f10a-c3a2-7f50-12735463275f@RedHat.com>
- <5170afa5-9751-0ab6-5e93-f103857ee259@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <36cad163-448e-9018-78e8-fadb320de8a4@RedHat.com>
-Date:   Thu, 23 Jul 2020 15:16:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726686AbgGWTiN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Jul 2020 15:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWTiM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 15:38:12 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD701C0619DC
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 12:38:12 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 80570680F; Thu, 23 Jul 2020 15:38:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 80570680F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1595533091;
+        bh=1rK+pDS4+s/gBIr9qdDY4f5qfOg2+PYW5GSV9ryoroY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9lFFqkWH4IehVxltDrMDdw1NbmPyeCXyUWbLlLFOXtfhPTg10sD6qPVqK8nuZkdK
+         lGDyMDAM9QQUEiRAezbEe42bRoeEW2PoO+ZYF16OJd066XUYFAVTnpE8oCzyYfgZDa
+         CiNnmmVN+NNrcD8VNj5mtCfLIaFHy5BtmqxjW0NQ=
+Date:   Thu, 23 Jul 2020 15:38:11 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: fix_priv_head
+Message-ID: <20200723193811.GG31487@fieldses.org>
+References: <3799C9E0-DFF3-450C-A815-14BAFAC97EA8@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <5170afa5-9751-0ab6-5e93-f103857ee259@nazar.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3799C9E0-DFF3-450C-A815-14BAFAC97EA8@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 7/23/20 2:25 PM, Doug Nazar wrote:
-> On 2020-07-23 13:56, Steve Dickson wrote:
->> @@ -290,6 +306,9 @@ main(int argc, char **argv)
->>>               serverstart = 0;
->>>       }
->>>   +    /* Not needed anymore */
->>> +    conf_cleanup();
->>> +
->> I'm a bit confused by this comment... If it is not needed why as the call added?
+On Thu, Jul 23, 2020 at 01:46:19PM -0400, Chuck Lever wrote:
+> Hi Bruce-
 > 
-> Sorry, I should have been a bit more verbose in the comment. I meant that we didn't need access to the config file anymore (we've already looked up everything) and can free those resources early.
+> I'm trying to figure out if fix_priv_head is still necessary. This
+> was introduced by 7c9fdcfb1b64 ("[PATCH] knfsd: svcrpc: gss:
+> server-side implementation of rpcsec_gss privacy").
 > 
-> Perhaps /* Config not needed anymore */ or something.
-Ok.. got it... I'll make it work... 
-
-steved.
-
+> static void
+> fix_priv_head(struct xdr_buf *buf, int pad)
+> {
+>         if (buf->page_len == 0) {
+>                 /* We need to adjust head and buf->len in tandem in this
+>                  * case to make svc_defer() work--it finds the original
+>                  * buffer start using buf->len - buf->head[0].iov_len. */
+>                 buf->head[0].iov_len -= pad;
+>         }
+> }
 > 
-> Doug
-> 
+> It doesn't seem like unwrapping can ever result in a buffer length that
+> is not quad-aligned. Is that simply a characteristic of modern enctypes?
 
+This code is beofre any unwrapping.  We're looking at the length of the
+encrypted (wrapped) object here, not the unwrapped buffer.
+
+When using privacy, the body of an rpcsec_gss request is a single opaque
+object consisting of the wrapped data.  So the question is whether
+there's any case where the length of that object can be less than the
+length remaining in the received buffer.
+
+I think the only reason for bytes at the end is, yes, that that opaque
+object is not a multiple of 4 and so rpc requires padding at the end.
+
+I think that might be possible with encryption types that use cipher
+text stealing, but I'm not certain.
+
+--b.
