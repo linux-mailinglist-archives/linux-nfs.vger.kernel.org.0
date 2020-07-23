@@ -2,150 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89CA122B798
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jul 2020 22:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 371F822BA0C
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jul 2020 01:14:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGWUXL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Jul 2020 16:23:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35022 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgGWUXL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 16:23:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NK6e8i054028;
-        Thu, 23 Jul 2020 20:23:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=GFf8Qly+0l8ln5Dya+3iIsMfvYIHhAH16gqp5qlinNc=;
- b=mgDUaeGSpmiHVY+XKHWqfmuKDqR2Zpo+QlHhIwHdMps5j6qlxUewl2AsX1J3T0qlCiZA
- mZwe5TAONVmglKPRZjjnbtyHcxOhoVk+TyCW9BB7AQj9FJs7meIYO16pGUT0ZIkrnncu
- flfPwes5TMZr09IE44/w6nGmBf/eDMT+MVCCKMfFQ5lkxc7rCCthgH6MXUzeQ25qaLHz
- UsxFtYQQu3R9hPOchjhACF4335c8dfWkBWtF74ib8ycwTWHV/iE8SzDVoWb/D9WBvVmB
- 0ph4+Z0YtzkDuJO1/Lo53Rd8lZt+bfe1TM4MHTFRtvcUS5ftDa+43DPx9GYtOBRTLYF5 og== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32brgruqfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 20:23:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NK8KJn058493;
-        Thu, 23 Jul 2020 20:23:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32feb1s4gk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 20:23:08 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06NKN6jg024683;
-        Thu, 23 Jul 2020 20:23:07 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jul 2020 13:23:05 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: fix_priv_head
+        id S1726697AbgGWXOo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Jul 2020 19:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgGWXOn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jul 2020 19:14:43 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81623C0619D3
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:43 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t4so5779364iln.1
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Jul 2020 16:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=G0wOdvYet1m3lF7neqDZvKOax1YPWwK9betSblg41OU=;
+        b=m6G574eNThyKbT/ZHcVVgs+x60TfEV/jEUEVPJqfhirIa8cE0qa5fogV+7qihtRTcm
+         Gwyh6x19PW30pVWcmgICN8X9dgGNQ6Cb1dGNQp/phPrZLDklZm1ARN5DvJgH0JkrmHrc
+         MnUIyd0wKDenMXSOvC2TLTw4Fz91scmjYsd22a+ALEpJBnvXKj0/OjQs5aJb3cB6HSAY
+         8l8Dcpy/QjYWogGXqrgOvxlq1BX1o3LgBcKShdyuPC9vjBxTUBLrRxO5vdsw/lL9rs8+
+         /k3vl7wAVKQEuav4Ettsw6KJYbzh6uz1jlCKDZjFfOMDN0J/P/zEUufxtKjx8aejYL7B
+         oQgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=G0wOdvYet1m3lF7neqDZvKOax1YPWwK9betSblg41OU=;
+        b=dsW/6h2JqMBC/ndN/Q7Yc71zNFTF+U3u3to12kBhCI3IBWiAqteDPWoeT6tD0nFuST
+         mMimhjXwCPA6vZUjUJNXyyzuZPh/SaOpGa2cYeku/xkH1gmyt03WHU/RZcdv1WLdvG2G
+         mTJDbx7Gtw08jL4CbQzQbPIuetpEKkYrf4YhBhkRlwCewocEMwDzsCpFAmjp8yh/lo6j
+         2OgFp7Heewj/5XR47+fDyUWU7OmJqz4ujUpMub1Xw0adz/xjD0Z+6Q89jVQ0qWPRvzuI
+         s6LMVdEnddm2tvzITKq/rv6ITxtJyMLMOQh9yrifduIqUsCN/Z3FqbM271YXTIyJtGfO
+         6NhQ==
+X-Gm-Message-State: AOAM53277drcn7zdULJiHSkcTWoy7AWUyqzRyPxIHhTYs3j0Focv+i/t
+        z0JM+rvTC8PozD1afJr20uOoDnx7
+X-Google-Smtp-Source: ABdhPJwVyoSNGcRtm5TIlkwu38zVs5Pg+yQwLHOGMiBXBKGHZks5cfGA6jptpd9iwjLTlk+M6hrMyA==
+X-Received: by 2002:a92:8453:: with SMTP id l80mr7718685ild.83.1595546082515;
+        Thu, 23 Jul 2020 16:14:42 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id 13sm2149429ilj.81.2020.07.23.16.14.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jul 2020 16:14:41 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 06NNEbiY003335;
+        Thu, 23 Jul 2020 23:14:38 GMT
+Subject: [PATCH RFC 0/2] Fix problems with NFSv4 on krb5p
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200723193811.GG31487@fieldses.org>
-Date:   Thu, 23 Jul 2020 16:23:05 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 23 Jul 2020 19:14:37 -0400
+Message-ID: <159554528704.6546.6823326959131917327.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <94381D74-3563-4071-A0CF-4EC016744FEC@oracle.com>
-References: <3799C9E0-DFF3-450C-A815-14BAFAC97EA8@oracle.com>
- <20200723193811.GG31487@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 malwarescore=0 suspectscore=0 spamscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230145
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+This tiny series would address a couple of bugs in the recent commits
+that fixed xdr_buf_trim(), namely:
+
+  31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+  a7e429a6fa6d ("SUNRPC: Fix GSS privacy computation of auth->au_ralign")
+  0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")")
+
+Turns out 31c9590ae468 had a couple of problems that were introduced
+by refactoring late, and therefore were not caught during testing. The
+client-side problems are documented here:
+
+  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1886277
+
+The first patch addresses the NFSv4/krb5p failures reported in that
+bug. It is a straightforward and obvious fix.
+
+When this fix is applied on the server, NFSv3/krb5p stops working.
+Thus the second patch is also needed, but this patch is somewhat
+more controversial. It's not clear to me how much of the "pad
+adjustment" logic is still needed in unwrap_priv_data(), so I'm
+asking for some quick but careful review of this proposed change.
+
+---
+
+Chuck Lever (2):
+      SUNRPC: Set rcv_buf->len correctly in gss_unwrap_kerberos_v2()
+      SUNRPC: Fix buf->len calculation in unwrap_priv_data()
 
 
-> On Jul 23, 2020, at 3:38 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> On Thu, Jul 23, 2020 at 01:46:19PM -0400, Chuck Lever wrote:
->> Hi Bruce-
->> 
->> I'm trying to figure out if fix_priv_head is still necessary. This
->> was introduced by 7c9fdcfb1b64 ("[PATCH] knfsd: svcrpc: gss:
->> server-side implementation of rpcsec_gss privacy").
->> 
->> static void
->> fix_priv_head(struct xdr_buf *buf, int pad)
->> {
->>        if (buf->page_len == 0) {
->>                /* We need to adjust head and buf->len in tandem in this
->>                 * case to make svc_defer() work--it finds the original
->>                 * buffer start using buf->len - buf->head[0].iov_len. */
->>                buf->head[0].iov_len -= pad;
->>        }
->> }
->> 
->> It doesn't seem like unwrapping can ever result in a buffer length that
->> is not quad-aligned. Is that simply a characteristic of modern enctypes?
-
-And: how is it correct to subtract "pad" ? if the length of the content
-is not aligned, this truncates it. Instead, shouldn't the length be
-extended to the next quad-boundary?
-
-
-> This code is before any unwrapping.  We're looking at the length of the
-> encrypted (wrapped) object here, not the unwrapped buffer.
-
-fix_priv_head() is called twice: once before and once after gss_unwrap.
-
-There is also this adjustment, just after the gss_unwrap() call:
-
-        maj_stat = gss_unwrap(ctx, 0, priv_len, buf);
-        pad = priv_len - buf->len;
-        buf->len -= pad;
-
-This is actually a bug, now that gss_unwrap adjusts buf->len: subtracting
-"pad" can make buf->len go negative. I'd like to remove this code, but
-I'd first like to understand how it will effect the code that follows
-immediately after:
-
-        offset = xdr_pad_size(buf->head[0].iov_len);
-        if (offset) {
-                buf->buflen = RPCSVC_MAXPAYLOAD;
-                xdr_shift_buf(buf, offset);
-                fix_priv_head(buf, pad);
-        }
-
-> When using privacy, the body of an rpcsec_gss request is a single opaque
-> object consisting of the wrapped data.  So the question is whether
-> there's any case where the length of that object can be less than the
-> length remaining in the received buffer.
-> 
-> I think the only reason for bytes at the end is, yes, that that opaque
-> object is not a multiple of 4 and so rpc requires padding at the end.
-
-Newer enctypes seem to put something substantial beyond the end of
-the opaque. That's why gss_unwrap_kerberos_v2() finishes with a
-call to xdr_buf_trim().
-
-But I'm not sure why the receiver should care about a misaligned size
-of the opaque.
-
-The GSS mechanism's unwrap method should set buf->len to the size
-of the unencrypted payload message, and for RPC, that size should
-always be a multiple of four, and will exclude any of those extra
-bytes.
-
+ net/sunrpc/auth_gss/gss_krb5_wrap.c | 2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c   | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
 --
 Chuck Lever
-
-
 
