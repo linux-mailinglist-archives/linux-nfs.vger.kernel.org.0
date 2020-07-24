@@ -2,136 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC2C022D02E
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jul 2020 23:05:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 662E222D086
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jul 2020 23:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgGXVFM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Jul 2020 17:05:12 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51046 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGXVFL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jul 2020 17:05:11 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OKw1Aj121261;
-        Fri, 24 Jul 2020 21:05:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=bV9MRAGppDE0RhpEHREzgFCxKxpAuzP/7UBBmoQYIv0=;
- b=E6St2wFzJ7MAkBu1bNqcJMUMfXjNy6ChaDUsfgnn2251sUA8WxHsrlsf/RxuF1aKlevQ
- IVS84jJH1DTL/0NbCG7Nmxtyl10/9dcOaLLlINZaOCY36Darww6HZOlEe/ez953xa5eo
- PgofevwZhbYYZSemofqakJvAlokchjaOKZzJlvs0sitS71bj+FZhWEYXCdA1mN/+OMRS
- knlK6a4ltpLhAEYiQ4JRhNX1oh941u3xjjkGUYVdkxWfF4ttDE6osX4HT6wKU3fAA+lv
- 5cYw6IeFKLPhMylfTPCYPUq/XxNC+trxLgfSecj+1aXGu97XrVYlhSdBCcmRVNjJCIGe XQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32d6kt5et7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jul 2020 21:05:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OKwi0O111041;
-        Fri, 24 Jul 2020 21:05:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32g738gd08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 21:05:08 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OL57Ha003762;
-        Fri, 24 Jul 2020 21:05:07 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Jul 2020 21:05:06 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: fix_priv_head
+        id S1726763AbgGXVaA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Jul 2020 17:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXVaA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jul 2020 17:30:00 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06215C0619D3
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Jul 2020 14:30:00 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id p205so11234235iod.8
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Jul 2020 14:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=USXv8GRRHC5l4q3KotXZGxXffOscv2Z1D1us9T/Uhqk=;
+        b=R+Y6GOh2DBQNRWwB8h3il29dh9Ymt6bQU2b4VRWozNJJ5RRNR1yVbdu5x4BBNYFTAp
+         iuSEM9lYzO5W3TVQUydZZvTL+lZIx6tSMlvIZUDRUw1Hvnc0J6fKH9g+AVboDYxcb/5n
+         2Qrsi3zZJQ3H+z83i5iYTV/dP8WKXzXUoHddPK9e8+lx9i656qr20m80agJzddewwPOO
+         jWx6j5m9HPgG5onFPScfTfv82dGqWoRme9zcP6qMMOL7lfmTgzrne1fRaYpdNAht7ZuZ
+         n8Ugj8iu4knuUS+kLLUNXieKxYXdrkaHrKb0wOEL1GebffUvdFD1hZwwTuGqyY+oo+Zr
+         yw/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=USXv8GRRHC5l4q3KotXZGxXffOscv2Z1D1us9T/Uhqk=;
+        b=dZh/EcbiM6LuKRgYRQai+SfS/ILzun71/RbYANNQLRe6M68QDImjZvvK9ChKmmF/qb
+         ndhMOjpSrxMuyKY19ITMFkWc4ctllLad92mZpeSqnKc1tnRPh0DIPC5AjUnCJCzo8TFH
+         N87j2Gy88Vjyn/iOOCcj5vR3bCJYkFGZFlpIVfiETHPm5gjNt0B6lnBsyQU75bKNznpC
+         kP2WTCbbHCv5ey9V2v1p/v9t40yQyKcKTQ2qym9W8iF/9DTCjleOj+Hcwx7L8ZsWz011
+         JBS0yZRCx9YrVz87RHFIXiGw4jom8iOTxkWKZnw1iXoX2vTYXpWC3oz+64hBeDKkVUnd
+         my+w==
+X-Gm-Message-State: AOAM5318yTNf9tmoxEXip3wuST0cAex8AmCve2ANeXPf7nVWKKTAwPzQ
+        HVpkKEL8MHZqIYVfRnjN7M+xCgt9
+X-Google-Smtp-Source: ABdhPJwaWRBJfmMYiDH4z9QodDU+VHKdYysP+zleHtvGLEbWzLyxk4OtXDZ9RM8FiWq9AtyxyrHVLQ==
+X-Received: by 2002:a05:6602:2cca:: with SMTP id j10mr12439575iow.22.1595626198979;
+        Fri, 24 Jul 2020 14:29:58 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id d9sm3828486ios.33.2020.07.24.14.29.57
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jul 2020 14:29:58 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 06OLTvTu006626
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Jul 2020 21:29:57 GMT
+Subject: [PATCH] SUNRPC: Refresh the show_rqstp_flags() macro
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200724203900.GB9244@fieldses.org>
-Date:   Fri, 24 Jul 2020 17:05:05 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     linux-nfs@vger.kernel.org
+Date:   Fri, 24 Jul 2020 17:29:57 -0400
+Message-ID: <159562619699.1732.3784007127107401842.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <8005DB66-EC25-4DE2-847B-CEAD9BBE48E3@oracle.com>
-References: <3799C9E0-DFF3-450C-A815-14BAFAC97EA8@oracle.com>
- <20200723193811.GG31487@fieldses.org>
- <94381D74-3563-4071-A0CF-4EC016744FEC@oracle.com>
- <20200724011720.GH31487@fieldses.org>
- <7557A354-8396-448D-BFC5-CA5512A4516B@oracle.com>
- <20200724203900.GB9244@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- bulkscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240143
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Ensure that show_rqstp_flags() can recognize and display the
+RQ_AUTHERR flag, added in commit 83dd59a0b9af ("SUNRPC/nfs: Fix
+return value for nfs4_callback_compound()") and the RQ_DATA flag,
+added in commit ff3ac5c3dc23 ("SUNRPC: Add a server side
+per-connection limit").
 
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/sunrpc.h |   35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
-> On Jul 24, 2020, at 4:39 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> On Fri, Jul 24, 2020 at 10:10:08AM -0400, Chuck Lever wrote:
->>>> I'd like to remove this code, but
->>>> I'd first like to understand how it will effect the code that follows
->>>> immediately after:
->>>> 
->>>>       offset = xdr_pad_size(buf->head[0].iov_len);
->>>>       if (offset) {
->>>>               buf->buflen = RPCSVC_MAXPAYLOAD;
->>>>               xdr_shift_buf(buf, offset);
->>>>               fix_priv_head(buf, pad);
->>>>       }
->> 
->> So if one of those patches removes "pad = priv_len - buf->len;"
->> then the above code will break.
->> 
->> But I'm trying to see when it is possible for gss_unwrap to
->> return a head buffer that is not quad-aligned. Not coming up
->> with any such scenario.
-> 
-> Thinking about it more, even if there was some gss mechanism returning
-> misaligned data, the best place to fix that would likely be in the
-> mechanism-specific code (partly for reasons noted in the comment right
-> here--it'll be more efficient to put the data in the right spot as you
-> encrypt it.)
-
-In principal, I totally agree that the GSS mechanism's unwrap method is
-the obvious place to handle mis-alignment. The practical challenge in
-this code path is that the needs of the client and server receive logic
-diverge just enough to make it annoying.
-
-
-So another remark about this:
-
-static void
-fix_priv_head(struct xdr_buf *buf, int pad)
-{
-        if (buf->page_len == 0) {
-                /* We need to adjust head and buf->len in tandem in this
-                 * case to make svc_defer() work--it finds the original
-                 * buffer start using buf->len - buf->head[0].iov_len. */
-                buf->head[0].iov_len -= pad;
-        }
-}
-
-The comment complains about svc_defer, and that particular calculation
-is still in that code. It seems like it would be better if a pointer
-into buf->head was saved somewhere instead of trying to manufacture
-it based on buf->len, which seems to be pretty unreliable.
-
-If svc_defer was changed that way, that might help us get rid of at
-least the first fix_priv_head call site.
-
---
-Chuck Lever
-
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 6a12935b8b14..65d7dfbbc9cd 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1250,15 +1250,34 @@ DECLARE_EVENT_CLASS(svc_xdr_buf_class,
+ DEFINE_SVCXDRBUF_EVENT(recvfrom);
+ DEFINE_SVCXDRBUF_EVENT(sendto);
+ 
++/*
++ * from include/linux/sunrpc/svc.h
++ */
++#define SVC_RQST_FLAG_LIST						\
++	svc_rqst_flag(SECURE)						\
++	svc_rqst_flag(LOCAL)						\
++	svc_rqst_flag(USEDEFERRAL)					\
++	svc_rqst_flag(DROPME)						\
++	svc_rqst_flag(SPLICE_OK)					\
++	svc_rqst_flag(VICTIM)						\
++	svc_rqst_flag(BUSY)						\
++	svc_rqst_flag(DATA)						\
++	svc_rqst_flag_end(AUTHERR)
++
++#undef svc_rqst_flag
++#undef svc_rqst_flag_end
++#define svc_rqst_flag(x)	TRACE_DEFINE_ENUM(RQ_##x);
++#define svc_rqst_flag_end(x)	TRACE_DEFINE_ENUM(RQ_##x);
++
++SVC_RQST_FLAG_LIST
++
++#undef svc_rqst_flag
++#undef svc_rqst_flag_end
++#define svc_rqst_flag(x)	{ BIT(RQ_##x), #x },
++#define svc_rqst_flag_end(x)	{ BIT(RQ_##x), #x }
++
+ #define show_rqstp_flags(flags)						\
+-	__print_flags(flags, "|",					\
+-		{ (1UL << RQ_SECURE),		"RQ_SECURE"},		\
+-		{ (1UL << RQ_LOCAL),		"RQ_LOCAL"},		\
+-		{ (1UL << RQ_USEDEFERRAL),	"RQ_USEDEFERRAL"},	\
+-		{ (1UL << RQ_DROPME),		"RQ_DROPME"},		\
+-		{ (1UL << RQ_SPLICE_OK),	"RQ_SPLICE_OK"},	\
+-		{ (1UL << RQ_VICTIM),		"RQ_VICTIM"},		\
+-		{ (1UL << RQ_BUSY),		"RQ_BUSY"})
++		__print_flags(flags, "|", SVC_RQST_FLAG_LIST)
+ 
+ TRACE_EVENT(svc_recv,
+ 	TP_PROTO(struct svc_rqst *rqst, int len),
 
 
