@@ -2,54 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B33422D192
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Jul 2020 00:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD50222D393
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Jul 2020 03:45:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgGXWC0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Jul 2020 18:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgGXWC0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Jul 2020 18:02:26 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B373C0619D3;
-        Fri, 24 Jul 2020 15:02:26 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B7534201A; Fri, 24 Jul 2020 18:02:25 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B7534201A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1595628145;
-        bh=tWxR3BG39o5ECfKidEkWb6Hk3mHZtdLz2Tng+4hzrao=;
-        h=Date:To:Cc:Subject:From:From;
-        b=zsWL5mAKu1D8eq/kgQRSZlDBoQGJaskg6XShKViVwyw7NQl+ZGnnFw/iJ1/Xh2Peu
-         QGSHxSbL+K6FDkeSeqBzx8D0PU1Uqky0yOHj39JKw04UE1wvT9hlg0Dw+0lg4IIOG5
-         V+e4+PkXlmM6feAWky6jsVtS6ZCZ9D/88foa0nhA=
-Date:   Fri, 24 Jul 2020 18:02:25 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] nfsd bugfix for 5.8
-Message-ID: <20200724220225.GE9244@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+        id S1726916AbgGYBpC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Jul 2020 21:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726777AbgGYBpC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 24 Jul 2020 21:45:02 -0400
+Subject: Re: [GIT PULL] nfsd bugfix for 5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595641502;
+        bh=nDbzQo4FlsDr4K65K1frCbw1Qd15cnpLVdjpGufbwQ8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=CEDc17dghSZNvODiPp1qjilQKtbLLLxdYPNGyLDkL9NEz43y3SYGd7cZTfQZ7o/XR
+         VOgqbSudzaLBnVSENg19c63TKrmhpn5PstjAnwsXx+W6eRfN/r8EExXVgQLs6u5kG4
+         ZF8u17U2F0dS5M2Qlyg+0aqsI0Gbrw3QEA1KuKSc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200724220225.GE9244@fieldses.org>
+References: <20200724220225.GE9244@fieldses.org>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200724220225.GE9244@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-2
+X-PR-Tracked-Commit-Id: 9affa435817711861d774f5626c393c80f16d044
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5876aa073f52541f4787b6111c8494ea9cfcde15
+Message-Id: <159564150212.24850.3724812187204727939.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Jul 2020 01:45:02 +0000
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Please pull:
+The pull request you sent on Fri, 24 Jul 2020 18:02:25 -0400:
 
-  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-2
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-2
 
-This is just one fix for a NULL dereference if someone happens to read
-/proc/fs/nfsd/client/../state at the wrong moment.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5876aa073f52541f4787b6111c8494ea9cfcde15
 
---b.
+Thank you!
 
-J. Bruce Fields (1):
-      nfsd4: fix NULL dereference in nfsd/clients display code
-
- fs/nfsd/nfs4state.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
