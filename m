@@ -2,96 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B315122EB24
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jul 2020 13:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A09C22F2D3
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jul 2020 16:42:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgG0LYE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jul 2020 07:24:04 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34192 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG0LYE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jul 2020 07:24:04 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RBM4Ch140691;
-        Mon, 27 Jul 2020 11:23:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=zhOel54M7SOIatcYENSCxB3GX1D0nU6zd3vC3xTJntc=;
- b=IMKQ+SiikUuZ09rRmslCmDsIpn8V9wZdg428KnZfoHmKK6Z0hPhrk5U55nx9a6oSMJ1A
- CGWe7cW2u/rU9IfwiHn9K+fxHNCh8c1GySJ+V4ygZZ+Sz3zXibPQf8lsev+7PzHh/SD2
- nVe3Nph5+f+mioh7fYwJt4zDoVfid/m6x1mh1HOpJPngZXVPKHBXOoxCW5SYrNE7UOIN
- gSdpcfqO04/uqzVUn7SFNbAa3zsxoCHNlchQ+5Cda2pRAfK7kC8MlLtogYrJ5L/CE06M
- YOnoQoEtR8VtxJiD7CGgCmGokPVir+TqR6p9VEwSIOM0ixCP9VVmFjWUMS5wGZqkwCsG uA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32hu1j8xw4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 11:23:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RBEOdK109079;
-        Mon, 27 Jul 2020 11:23:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 32hu5qdt16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 11:23:56 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06RBNpa1016399;
-        Mon, 27 Jul 2020 11:23:51 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jul 2020 04:23:51 -0700
-Date:   Mon, 27 Jul 2020 14:23:44 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Frank van der Linden <fllinden@amazon.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] NFSv4.2: Fix an error code in nfs4_xattr_cache_init()
-Message-ID: <20200727112344.GH389488@mwanda>
+        id S1729728AbgG0Om1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jul 2020 10:42:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47400 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732988AbgG0Om0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jul 2020 10:42:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595860944;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h5E+TwlZNfMtr+pjkJHwdP3PCqruXLfooHt1n3r5Kfw=;
+        b=K+cXwkzurm8JqVr0YEi2gZhMTBI3s7GtzWFBMi+58AWbantQ3L50y/RiWiPEZ4tPMgAQ5w
+        qK1h1ewG+Tj7jzGnHZjjMgnkItWaQnrEIV0/s2erMrdeWszLyQnKYy3Hw1QzO3FHX+bTMI
+        E6xkLXPgqUT1OAN9trhGXaKVzKJ0G1c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-NW7gvkwsOTi5Ol2tkKUWdw-1; Mon, 27 Jul 2020 10:42:20 -0400
+X-MC-Unique: NW7gvkwsOTi5Ol2tkKUWdw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCA5A1DE1;
+        Mon, 27 Jul 2020 14:42:18 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 751B671D0C;
+        Mon, 27 Jul 2020 14:42:18 +0000 (UTC)
+Subject: Re: [PATCH 00/11] nfs-utils: Misc cleanups & fixes
+To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
+References: <20200718092421.31691-1-nazard@nazar.ca>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <97b56c7e-87fd-e045-3a89-6780ed9f0050@RedHat.com>
+Date:   Mon, 27 Jul 2020 10:42:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270084
+In-Reply-To: <20200718092421.31691-1-nazard@nazar.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This should return -ENOMEM on failure instead of success.
 
-Fixes: 95ad37f90c33 ("NFSv4.2: add client side xattr caching.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
----
- fs/nfs/nfs42xattr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index 23fdab977a2a..e75c4bb70266 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -1040,8 +1040,10 @@ int __init nfs4_xattr_cache_init(void)
- 		goto out2;
- 
- 	nfs4_xattr_cache_wq = alloc_workqueue("nfs4_xattr", WQ_MEM_RECLAIM, 0);
--	if (nfs4_xattr_cache_wq == NULL)
-+	if (nfs4_xattr_cache_wq == NULL) {
-+		ret = -ENOMEM;
- 		goto out1;
-+	}
- 
- 	ret = register_shrinker(&nfs4_xattr_cache_shrinker);
- 	if (ret)
--- 
-2.27.0
+On 7/18/20 5:24 AM, Doug Nazar wrote:
+> Again, here are various cleanups and fixes. Nothing too major, although
+> a couple valgrind finds.
+> 
+> I've left out the printf patch for now, pending further discussion.
+> 
+> Thanks,
+> Doug
+> 
+> 
+> Doug Nazar (11):
+>   Add error handling to libevent allocations.
+>   gssd: Fix cccache buffer size
+>   gssd: Fix handling of failed allocations
+>   gssd: srchost should never be *
+>   xlog: Reorganize xlog_backend() to work around -Wmaybe-uninitialized
+>   nfsdcld: Add graceful exit handling and resource cleanup
+>   nfsdcld: Don't copy more data than exists in column
+>   svcgssd: Convert to using libevent
+>   nfsidmap: Add support to cleanup resources on exit
+>   svcgssd: Cleanup global resources on exit
+>   svcgssd: Wait for nullrpc channel if not available
+Series committed... (tag: nfs-utils-2-5-2-rc3)
+
+steved.
+> 
+>  support/nfs/xlog.c                  |  41 ++++----
+>  support/nfsidmap/libnfsidmap.c      |  13 +++
+>  support/nfsidmap/nfsidmap.h         |   1 +
+>  support/nfsidmap/nfsidmap_common.c  |  11 ++-
+>  support/nfsidmap/nfsidmap_private.h |   1 +
+>  support/nfsidmap/nss.c              |   8 ++
+>  utils/gssd/Makefile.am              |   2 +-
+>  utils/gssd/gss_names.c              |   6 +-
+>  utils/gssd/gss_util.c               |   6 ++
+>  utils/gssd/gss_util.h               |   1 +
+>  utils/gssd/gssd.c                   |  37 +++++--
+>  utils/gssd/krb5_util.c              |  12 +--
+>  utils/gssd/svcgssd.c                | 143 ++++++++++++++++++++++++++--
+>  utils/gssd/svcgssd.h                |   3 +-
+>  utils/gssd/svcgssd_krb5.c           |  21 ++--
+>  utils/gssd/svcgssd_krb5.h           |   1 +
+>  utils/gssd/svcgssd_main_loop.c      |  94 ------------------
+>  utils/gssd/svcgssd_proc.c           |  15 +--
+>  utils/idmapd/idmapd.c               |  32 +++++++
+>  utils/nfsdcld/nfsdcld.c             |  50 +++++++++-
+>  utils/nfsdcld/sqlite.c              |  33 +++++--
+>  utils/nfsdcld/sqlite.h              |   1 +
+>  22 files changed, 358 insertions(+), 174 deletions(-)
+>  delete mode 100644 utils/gssd/svcgssd_main_loop.c
+> 
 
