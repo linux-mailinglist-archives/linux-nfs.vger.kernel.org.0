@@ -2,87 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0D4122F2DB
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jul 2020 16:42:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F06522F573
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jul 2020 18:34:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgG0Om5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jul 2020 10:42:57 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57204 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgG0Om5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jul 2020 10:42:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595860976;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vVNRQxR9K9QbThb5tZf4JyIZx0WN214aia+dUA5Rs+U=;
-        b=D5ILc8efILOPYYZaZZo3jeOd8I6Sn5MFIY+2Ox0B4PzY5ZoLUcPxCOvZRXTkwjEx20ZO0D
-        b1MQNj0m6OELPIz3YGiZD9fYGPGeSZp6xkCW6jdXSXOXHp+QJkcAUiXM9Pq2OMnvrWFC4p
-        kEP+O42iNWv0bYvBIEaQyQprXherEms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-4DVfOpfgN7KmL5MXZQp_gA-1; Mon, 27 Jul 2020 10:42:54 -0400
-X-MC-Unique: 4DVfOpfgN7KmL5MXZQp_gA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7C5110BF;
-        Mon, 27 Jul 2020 14:42:53 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B1266931E;
-        Mon, 27 Jul 2020 14:42:53 +0000 (UTC)
-Subject: Re: [PATCH 0/4] nfs-utils patches
-To:     Doug Nazar <nazard@nazar.ca>, linux-nfs@vger.kernel.org
-References: <20200722055354.28132-1-nazard@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <86408474-69f7-f4b0-6608-98e409d6809e@RedHat.com>
-Date:   Mon, 27 Jul 2020 10:42:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1732310AbgG0Qe3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jul 2020 12:34:29 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14326 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729315AbgG0Qe2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jul 2020 12:34:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595867668; x=1627403668;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=/cBDHdYCAXlViX573ZuBBDuzPl3N86QXDlOplOxSvlc=;
+  b=eAehBTMqV1iclpK+c9K7JGCantcitNucymlc7F2lcwhyBbEpf+3Ts7NB
+   xgSmkmqvyJTfbFBXAIbmoXUcEVvsDl/l6l4Lf/9tUhI2FijygdK9Pi4Z3
+   0ludKyc96nhflcCsOudSgGmT4xASvqDArgoK4fvWQWVI7Kb/Rz4BN/0le
+   o=;
+IronPort-SDR: KDiFI1pNEGnY8t3HNcLEToLYtj7UZ4Oh78FSRrmex7JTaXxo6nCr9fOCvGquTPc5k0HQjEkyYK
+ kYCelvRK+KyA==
+X-IronPort-AV: E=Sophos;i="5.75,402,1589241600"; 
+   d="scan'208";a="44320302"
+Subject: Re: [PATCH] NFSv4.2: Fix an error code in nfs4_xattr_cache_init()
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 27 Jul 2020 16:34:26 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id EA093A056B;
+        Mon, 27 Jul 2020 16:34:24 +0000 (UTC)
+Received: from EX13D11UEB002.ant.amazon.com (10.43.60.63) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Jul 2020 16:34:24 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D11UEB002.ant.amazon.com (10.43.60.63) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Jul 2020 16:34:24 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Mon, 27 Jul 2020 16:34:23 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id C7F31C13F8; Mon, 27 Jul 2020 16:34:23 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:34:23 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Message-ID: <20200727163423.GA7563@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200727112344.GH389488@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20200722055354.28132-1-nazard@nazar.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200727112344.GH389488@mwanda>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Dan,
+
+On Mon, Jul 27, 2020 at 02:23:44PM +0300, Dan Carpenter wrote:
+> 
+> 
+> This should return -ENOMEM on failure instead of success.
+> 
+> Fixes: 95ad37f90c33 ("NFSv4.2: add client side xattr caching.")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> ---
+>  fs/nfs/nfs42xattr.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+> index 23fdab977a2a..e75c4bb70266 100644
+> --- a/fs/nfs/nfs42xattr.c
+> +++ b/fs/nfs/nfs42xattr.c
+> @@ -1040,8 +1040,10 @@ int __init nfs4_xattr_cache_init(void)
+>                 goto out2;
+> 
+>         nfs4_xattr_cache_wq = alloc_workqueue("nfs4_xattr", WQ_MEM_RECLAIM, 0);
+> -       if (nfs4_xattr_cache_wq == NULL)
+> +       if (nfs4_xattr_cache_wq == NULL) {
+> +               ret = -ENOMEM;
+>                 goto out1;
+> +       }
+> 
+>         ret = register_shrinker(&nfs4_xattr_cache_shrinker);
+>         if (ret)
+> --
+> 2.27.0
+> 
+
+Thanks for catching that one. Since this is against linux-next via Trond,
+I assume Trond will add it to his tree (right?)
+
+In any case:
 
 
-On 7/22/20 1:53 AM, Doug Nazar wrote:
-> A few more as I progress through all the utils. There isn't any
-> dependency on the previous patches.
-> 
-> Although idmapd client support is depreciated, the kernel still falls
-> back to using it if the upcall fails.
-> 
-> Wasn't originally going to send the last patch upstream, but figured
-> might as well, and let you decide if it's wanted. Basically allows you
-> to load the plugins from a development source tree for testing instead
-> of requiring them to be installed in their final location.
-> 
-> Thanks,
-> Doug
-> 
-> 
-> Doug Nazar (4):
->   exportfs: Fix a few valgrind warnings
->   idmapd: Add graceful exit and resource cleanup
->   idmapd: Fix client mode support
->   nfsidmap: Allow overriding location of method libraries
-Series committed... (tag: nfs-utils-2-5-2-rc3)
+Reviewed-by: Frank van der Linden <fllinden@amazon.com>
 
-steved.
-> 
->  support/nfs/exports.c          |   1 +
->  support/nfsidmap/libnfsidmap.c |  40 +++++--
->  utils/exportfs/exportfs.c      |   7 +-
->  utils/idmapd/idmapd.c          | 211 +++++++++++++++++++++++----------
->  4 files changed, 183 insertions(+), 76 deletions(-)
-> 
 
+- Frank
