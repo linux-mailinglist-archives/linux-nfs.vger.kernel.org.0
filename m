@@ -2,181 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C12E923113C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jul 2020 20:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDFAE23115E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jul 2020 20:13:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgG1SE0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Jul 2020 14:04:26 -0400
-Received: from mail-mw2nam12on2103.outbound.protection.outlook.com ([40.107.244.103]:35425
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728554AbgG1SEZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:04:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NPhQSIibKtkcJ/jp12eh8q0qoLzjFuoH0dWqRpLLEHO5KBCXgoHP01dnwHOwgBtGIKng75do6fm+mn2yk1Xn8dT3aq0P9HkW/qjRfONnYqMseHvLs+4l2dZjwqJLUDDwZrJLi6BzDMxA4e72L9/Do702DQ8Muy6LaEE+m6InQmEylARgAVjOGTZx6nJ/xxG5QFBrRcQKGucBYmHR2bxSdrgyfOb9f74MkF1/9ErFqr9X/CCpycvzzpMDp8fBswrDfx8+/nya+tWM+Lz/XCPgKfiJMBPwQpj6zEsA7ioW/A+Q4n1hAtTXOZrUNX04FzwWDkR0D93Zz88h0SFklICtkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eETqeweS9vuD+UAOL1RR57NhzjwNmp2rk2DolwR7Cxk=;
- b=h9wet8m3qPg6Eja37HemM8H8XG8trGgQJVkXIhqsjUCqfSm99bNCftoXGk6zBcKe1Vg77A5E8aeyn415xjasnnuQjS4bCeVBi5cs2DznT+FfHBWEcDQQCRRp8Gw50/8glUkunFA3Uk4wLdeTBEcbHrSAOXNpW8JRCWoRh9aRtktG4ND5IwHrOEMU1f7Z8rHeIDJzXqkNTdwYBcU81Xj2Wlvh372jEBIiulCgi1zf1ehgS97rZE/iP1PQRiRGWaNfkhkUD7TqdTNEE0FcJX7ao536wNFKF9MzaXAbp7Z4EkSIrUkNxTg4VOJZodwPlvEGSfIbBG4T5WQTaEd0no9sWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eETqeweS9vuD+UAOL1RR57NhzjwNmp2rk2DolwR7Cxk=;
- b=D8/SJTDDfYaAdRzRgGkXvJ20HLcEivnF5xhIq9pXF9BqSL2PU6MX7bWG9ST5ofTn14Udsj5c9f7OMqkKQevK7HUJ940T/RSloC7FXvRNDop98yJlo//uaa2sD9pTw3XoeSANbhh+Pq4gbG8ZRjRe2z06oVyoJnJpc1O2pRPK7t4=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3781.namprd13.prod.outlook.com (2603:10b6:610:9a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.15; Tue, 28 Jul
- 2020 18:04:22 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::352c:f318:f4a7:6a0f]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::352c:f318:f4a7:6a0f%3]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 18:04:21 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "fllinden@amazon.com" <fllinden@amazon.com>
+        id S1728649AbgG1SNO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Jul 2020 14:13:14 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:37033 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728632AbgG1SNO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Jul 2020 14:13:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595959993; x=1627495993;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=XDFfxqitQWUdpVxAJQj46Xt6MSEVnKfipXMsJHwFKz8=;
+  b=guGe2o1jOqg6o1NZU0uIgXOVAvGCDMwGAE1tTjRaVh09/h/Kf0QABBZz
+   /oMwwIQSye48sbMQ/lkYy3fEdHv789MKVtPHlviTI69A0NOkZQ+H5ERAv
+   aKluiowQ+ojBj0IC7qbumYSh513YBuh2jSSqCdrkUsfovdDlSOH2xvw5B
+   Y=;
+IronPort-SDR: Brt8N8ecGhWYv0wIhFYTdXO2bRFSmp6ibk8MLLWophLEeNSEf0h/xWWTychsE6wt7ZPzQrO/o7
+ 0PARo/JKWRXQ==
+X-IronPort-AV: E=Sophos;i="5.75,406,1589241600"; 
+   d="scan'208";a="46048230"
+Subject: Re: [PATCH] NFSv4.2: Fix an error code in nfs4_xattr_cache_init()
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 28 Jul 2020 18:13:12 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 5DEE7A244B;
+        Tue, 28 Jul 2020 18:13:10 +0000 (UTC)
+Received: from EX13D46UWB004.ant.amazon.com (10.43.161.204) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Jul 2020 18:13:09 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D46UWB004.ant.amazon.com (10.43.161.204) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Jul 2020 18:13:09 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 28 Jul 2020 18:13:09 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 6F03FC3B09; Tue, 28 Jul 2020 18:13:09 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 18:13:09 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
 CC:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
         "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH] NFSv4.2: Fix an error code in nfs4_xattr_cache_init()
-Thread-Topic: [PATCH] NFSv4.2: Fix an error code in nfs4_xattr_cache_init()
-Thread-Index: AQHWZAhvCZQFVT7SMUyvX1UCoywirakbn4CAgAF8w4CAAA66gIAAEPOAgAAODoCAAAD5AA==
-Date:   Tue, 28 Jul 2020 18:04:21 +0000
-Message-ID: <13f86f29cc05944894813632bd537e559859e254.camel@hammerspace.com>
+Message-ID: <20200728181309.GA14661@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
 References: <20200727112344.GH389488@mwanda>
-         <20200727163423.GA7563@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-         <4bb93c1413151ccbd918cc371c67555042763e11.camel@hammerspace.com>
-         <20200728160953.GA1208@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-         <61d4e88c18818cd94dfbd14f054e6a2cb8858c8d.camel@hammerspace.com>
-         <20200728180051.GA10902@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-In-Reply-To: <20200728180051.GA10902@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: amazon.com; dkim=none (message not signed)
- header.d=none;amazon.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b5560b2d-0bae-4ff9-34ec-08d83320a7c9
-x-ms-traffictypediagnostic: CH2PR13MB3781:
-x-microsoft-antispam-prvs: <CH2PR13MB3781D93A1150F16DB2E730D8B8730@CH2PR13MB3781.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tavnGoZJ4JpUQMhDGPwbHeVIvHhi9VPfDqqBMT9EWBbPDciMZ0N6GZrw+Z6Wn3x/fDp7pDc7MTlfkl85zijwoWBfoc2MKyJgB8ugmY/4NuxDuuJZrKN9zeuQwFzUbKQqE+cROPDRo3U0rQQ3YNZcCTTm+AVPT4zdjQMY3gAbBMIl9Mx5WqIpFTEzw2IOCQ7kIsUh/5j/hUTpMZp8LXaANcJ0aa5WqXnUwEa6fJ0So1nOuz0SlEFRiFpEeb7l57I8ffxviPGcmc/qBQ8cYVMDABFEYJ+xfb6X5YkmCXWyjDAgTGsHlpw6qUjc0QPz8z5eBDXg4K5WJvPk4CWab7IpQA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(376002)(39840400004)(346002)(366004)(36756003)(6916009)(66556008)(64756008)(316002)(86362001)(83380400001)(66476007)(66446008)(186003)(4326008)(8936002)(8676002)(66946007)(26005)(76116006)(2616005)(71200400001)(2906002)(6486002)(54906003)(6512007)(6506007)(5660300002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: aTGqgVcCGb5n5O5fSKgwEW3KI55Z2yj9rGLxYe39rB8P3ifibdwzGqV3FmN0FMiP3pkPgin1yVAZfNpP+UqrhkSyFyMDlt07OPD19t4rLvSO6eMU9INigbTpNPzxZQijsA2wm6RcjA0veEWWOnuGhmEn2eVbuyS73UVmOFgkof7WgWHOd78+hm7LT7BTPcrSPA9fqeJ6j7kVmV55kOreR1+TXk4jnh99IstP4pO3rFvwapa3/QZCLe5cbPC7uTFkfdpsJMsAMxpfUgRCCeemOD9fIvR3rdinZnlKVSvIovYtguZlH5H9u/Lj/5pZKojdjqYM9qhHx7JLftmWtlw1I9whS0SLsEYbidAz0JbyNVH2nU7q35E8+YSUKEHRGc3nG630oLRisijNzElojjj2gw1DNoohWMOThQs9D/o82zjBXbUJIPtC0kdEY4/ND1AtYhuMCdpbTKfHEE6dlawM9L2q79RfJEKbCebUmySn5PIXBIIqTwF/AHXcOQjPY0tu9T8My3A2tIJYrBrGE4p6aVsI6i9BlllCi9APfnJUIkwfJG5tOEVc/Ldv0JGGpzbA73V08qYdIhBuvaqbNVSS5/N/n02B+FR3MvBj66wDkSQL0Tuk5kGalGNuhuZRebnfkl4aG1Xzk/H3QK1/oAYN6A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8B7BBCE9B301614D8D7B0C60A50FC89C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <20200727163423.GA7563@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <4bb93c1413151ccbd918cc371c67555042763e11.camel@hammerspace.com>
+ <20200728160953.GA1208@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <61d4e88c18818cd94dfbd14f054e6a2cb8858c8d.camel@hammerspace.com>
+ <20200728180051.GA10902@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <13f86f29cc05944894813632bd537e559859e254.camel@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5560b2d-0bae-4ff9-34ec-08d83320a7c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 18:04:21.8097
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ruwh1Y8jCTer3UBAaw/Y2pYZuTn9gw4JBgP0XOtOfbsqSwphppCMo95+qjZcWeIpR0sA7KHIRMDtRygj7Y5a8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3781
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <13f86f29cc05944894813632bd537e559859e254.camel@hammerspace.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTI4IGF0IDE4OjAwICswMDAwLCBGcmFuayB2YW4gZGVyIExpbmRlbiB3
-cm90ZToNCj4gT24gVHVlLCBKdWwgMjgsIDIwMjAgYXQgMDU6MTA6MzRQTSArMDAwMCwgVHJvbmQg
-TXlrbGVidXN0IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0wNy0yOCBhdCAxNjowOSArMDAwMCwg
-RnJhbmsgdmFuIGRlciBMaW5kZW4gd3JvdGU6DQo+ID4gPiBIaSBUcm9uZCwNCj4gPiA+IA0KPiA+
-ID4gT24gVHVlLCBKdWwgMjgsIDIwMjAgYXQgMDM6MTc6MTJQTSArMDAwMCwgVHJvbmQgTXlrbGVi
-dXN0IHdyb3RlOg0KPiA+ID4gPiBPbiBNb24sIDIwMjAtMDctMjcgYXQgMTY6MzQgKzAwMDAsIEZy
-YW5rIHZhbiBkZXIgTGluZGVuIHdyb3RlOg0KPiA+ID4gPiA+IEhpIERhbiwNCj4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiBPbiBNb24sIEp1bCAyNywgMjAyMCBhdCAwMjoyMzo0NFBNICswMzAwLCBEYW4g
-Q2FycGVudGVyDQo+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiBUaGlzIHNob3VsZCByZXR1
-cm4gLUVOT01FTSBvbiBmYWlsdXJlIGluc3RlYWQgb2Ygc3VjY2Vzcy4NCj4gPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+ID4gRml4ZXM6IDk1YWQzN2Y5MGMzMyAoIk5GU3Y0LjI6IGFkZCBjbGllbnQgc2lk
-ZSB4YXR0cg0KPiA+ID4gPiA+ID4gY2FjaGluZy4iKQ0KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1i
-eTogRGFuIENhcnBlbnRlciA8ZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tPg0KPiA+ID4gPiA+ID4g
-LS0tDQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ICBmcy9uZnMvbmZzNDJ4YXR0ci5jIHwg
-NCArKystDQo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQ0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZz
-L25mczQyeGF0dHIuYyBiL2ZzL25mcy9uZnM0MnhhdHRyLmMNCj4gPiA+ID4gPiA+IGluZGV4IDIz
-ZmRhYjk3N2EyYS4uZTc1YzRiYjcwMjY2IDEwMDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZnMvbmZz
-L25mczQyeGF0dHIuYw0KPiA+ID4gPiA+ID4gKysrIGIvZnMvbmZzL25mczQyeGF0dHIuYw0KPiA+
-ID4gPiA+ID4gQEAgLTEwNDAsOCArMTA0MCwxMCBAQCBpbnQgX19pbml0DQo+ID4gPiA+ID4gPiBu
-ZnM0X3hhdHRyX2NhY2hlX2luaXQodm9pZCkNCj4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICBn
-b3RvIG91dDI7DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ICAgICAgICAgbmZzNF94YXR0cl9j
-YWNoZV93cSA9IGFsbG9jX3dvcmtxdWV1ZSgibmZzNF94YXR0ciIsDQo+ID4gPiA+ID4gPiBXUV9N
-RU1fUkVDTEFJTSwgMCk7DQo+ID4gPiA+ID4gPiAtICAgICAgIGlmIChuZnM0X3hhdHRyX2NhY2hl
-X3dxID09IE5VTEwpDQo+ID4gPiA+ID4gPiArICAgICAgIGlmIChuZnM0X3hhdHRyX2NhY2hlX3dx
-ID09IE5VTEwpIHsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICByZXQgPSAtRU5PTUVNOw0K
-PiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgIGdvdG8gb3V0MTsNCj4gPiA+ID4gPiA+ICsgICAg
-ICAgfQ0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiAgICAgICAgIHJldCA9DQo+ID4gPiA+ID4g
-PiByZWdpc3Rlcl9zaHJpbmtlcigmbmZzNF94YXR0cl9jYWNoZV9zaHJpbmtlcik7DQo+ID4gPiA+
-ID4gPiAgICAgICAgIGlmIChyZXQpDQo+ID4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+ID4gMi4yNy4w
-DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGFua3MgZm9yIGNhdGNoaW5n
-IHRoYXQgb25lLiBTaW5jZSB0aGlzIGlzIGFnYWluc3QgbGludXgtDQo+ID4gPiA+ID4gbmV4dA0K
-PiA+ID4gPiA+IHZpYQ0KPiA+ID4gPiA+IFRyb25kLA0KPiA+ID4gPiA+IEkgYXNzdW1lIFRyb25k
-IHdpbGwgYWRkIGl0IHRvIGhpcyB0cmVlIChyaWdodD8pDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-SW4gYW55IGNhc2U6DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gUmV2aWV3ZWQt
-Ynk6IEZyYW5rIHZhbiBkZXIgTGluZGVuIDxmbGxpbmRlbkBhbWF6b24uY29tPg0KPiA+ID4gPiA+
-IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IC0gRnJhbmsNCj4gPiA+ID4gDQo+ID4gPiA+IEZyYW5r
-LCB3aHkgZG8gd2UgbmVlZCBhIHdvcmtxdWV1ZSBoZXJlIGF0IGFsbD8NCj4gPiA+IA0KPiA+ID4g
-VGhlIHhhdHRyIGNhY2hlcyBhcmUgcGVyLWlub2RlLCBhbmQgZ2V0IGNyZWF0ZWQgb24gZGVtYW5k
-Lg0KPiA+ID4gSW52YWxpZGF0aW5nDQo+ID4gPiBhIGNhY2hlIGlzIGRvbmUgYnkgc2V0dGluZyB0
-aGUgaW52YWxpZGF0ZSBmbGFnIChhcyBpdCBpcyBmb3INCj4gPiA+IG90aGVyDQo+ID4gPiBjYWNo
-ZWQgYXR0cmlidWVzIGFuZCBkYXRhKS4NCj4gPiA+IA0KPiA+ID4gV2hlbiBuZnM0X3hhdHRyX2dl
-dF9jYWNoZSgpIHNlZXMgYW4gaW52YWxpZGF0ZWQgY2FjaGUsIGl0IHdpbGwNCj4gPiA+IGp1c3QN
-Cj4gPiA+IHVubGluayBpdA0KPiA+ID4gZnJvbSB0aGUgaW5vZGUsIGFuZCBjcmVhdGUgYSBuZXcg
-b25lIGlmIG5lZWRlZC4NCj4gPiA+IA0KPiA+ID4gVGhlIG9sZCBjYWNoZSB0aGVuIHN0aWxsIG5l
-ZWRzIHRvIGJlIGZyZWVkLiBUaGVvcmV0aWNhbGx5LCB0aGVyZQ0KPiA+ID4gY2FuDQo+ID4gPiBi
-ZQ0KPiA+ID4gcXVpdGUgYSBmZXcgZW50cmllcyBpbiBpdCwgYW5kIG5mczRfeGF0dHJfZ2V0X2Nh
-Y2hlKCkgd2lsbCBiZQ0KPiA+ID4gY2FsbGVkDQo+ID4gPiBpbg0KPiA+ID4gdGhlIGdldC9zZXR4
-YXR0ciBzeXN0ZW1jYWxsIHBhdGguIFNvIG15IHJlYXNvbmluZyBoZXJlIHdhcyB0aGF0DQo+ID4g
-PiBpdCdzDQo+ID4gPiBiZXR0ZXINCj4gPiA+IHRvIHVzZSBhIHdvcmtxdWV1ZSB0byBmcmVlIHRo
-ZSBvbGQgaW52YWxpZGF0ZWQgY2FjaGUgaW5zdGVhZCBvZg0KPiA+ID4gd2FzdGluZw0KPiA+ID4g
-Y3ljbGVzIGluIHRoZSBJL08gcGF0aC4NCj4gPiA+IA0KPiA+ID4gLSBGcmFuaw0KPiA+IA0KPiA+
-IEkgdGhpbmsgd2UgbWlnaHQgd2FudCB0byBleHBsb3JlIHRoZSByZWFzb25zIGZvciB0aGlzIGFy
-Z3VtZW50LiBXZQ0KPiA+IGRvDQo+ID4gbm90IG9mZmxvYWQgYW55IG90aGVyIGNhY2hlIGludmFs
-aWRhdGlvbnMsIGFuZCB0aGF0IGluY2x1ZGVzIHRoZQ0KPiA+IGNhc2UNCj4gPiB3aGVuIHdlIGhh
-dmUgdG8gaW52YWxpZGF0ZSB0aGUgZW50aXJlIGlub2RlIGRhdGEgY2FjaGUgYmVmb3JlDQo+ID4g
-cmVhZGluZy4NCj4gPiANCj4gPiBTbyB3aGF0IGlzIHNwZWNpYWwgYWJvdXQgeGF0dHJzIHRoYXQg
-Y2F1c2VzIGludmFsaWRhdGlvbiB0byBiZSBhDQo+ID4gcHJvYmxlbSBpbiB0aGUgSS9PIHBhdGg/
-IFdoeSBkbyB3ZSBleHBlY3QgdGhlbSB0byBncm93IHNvIGxhcmdlDQo+ID4gdGhhdA0KPiA+IHRo
-ZXkgYXJlIG1vcmUgdW53aWVsZHkgdGhhbiB0aGUgaW5vZGUgZGF0YSBjYWNoZT8NCj4gDQo+IElu
-IHRoZSBjYXNlIG9mIGlub2RlIGRhdGEsIHNvIHlvdSBzaG91bGQgcHJvYmFibHkgaW52YWxpZGF0
-ZSBpdA0KPiBpbW1lZGlhdGVseSwgb3IgYWNjZXB0IHRoYXQgeW91J3JlIHNlcnZpbmcgdXAga25v
-d24tc3RhbGUgZGF0YS4gU28NCj4gb2ZmbG9hZGluZyBpdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdv
-b2QgaWRlYSwgYW5kIHlvdSdsbCBqdXN0IGhhdmUgdG8NCj4gYWNjZXB0DQo+IHRoZSBleHRyYSBj
-eWNsZXMgeW91J3JlIHVzaW5nIHRvIGRvIGl0Lg0KPiANCj4gRm9yIHRoaXMgcGFydGljdWxhciBj
-YXNlLCB5b3UncmUganVzdCByZWFwaW5nIGEgY2FjaGUgdGhhdCBpcyBubw0KPiBsb25nZXINCj4g
-YmVpbmcgdXNlZC4gVGhlcmUgaXMgbm8gY29ycmVjdG5lc3MgZ2FpbiBpbiBkb2luZyBpdCBpbiB0
-aGUgSS9PIHBhdGgNCj4gLQ0KPiB0aGUgY2FjaGUgaGFzIGFscmVhZHkgYmVlbiBvcnBoYW5lZCBh
-bmQgbmV3IGdldHhhdHRyL2xpc3R4YXR0ciBjYWxscw0KPiB3aWxsIG5vdCBzZWUgaXQuIFNvIHRo
-ZXJlIGRvZXNuJ3Qgc2VlbSB0byBiZSBhIHJlYXNvbiB0byBkbyBpdCBpbiB0aGUNCj4gSS9PIHBh
-dGggYXQgYWxsLg0KPiANCj4gVGhlIGNhY2hlcyBzaG91bGRuJ3QgYmVjb21lIHZlcnkgbGFyZ2Us
-IG5vLiBJbiB0aGUgbm9ybWFsIGNhc2UsIHRoZXJlDQo+IHNob3VsZG4ndCBiZSBtdWNoIG9mIGEg
-cGVyZm9ybWFuY2UgZGlmZmVyZW5jZS4NCj4gDQo+IFRoZW4gYWdhaW4sIHdoYXQgZG8geW91IGdh
-aW4gYnkgZG9pbmcgdGhlIHJlYXBpbmcgb2YgdGhlIGNhY2hlIGluIHRoZQ0KPiBJL08gcGF0aCwN
-Cj4gaW5zdGVhZCBvZiB1c2luZyBhIHdvcmsgcXVldWU/IEkgY29uY2x1ZGVkIHRoYXQgdGhlcmUg
-d2Fzbid0IGFuDQo+IHVwc2lkZSwgb25seQ0KPiBhIGRvd25zaWRlLCBzbyB0aGF0J3Mgd2h5IEkg
-aW1wbGVtZW50ZWQgaXQgdGhhdCB3YXkuDQo+IA0KPiBJZiB5b3UgdGhpbmsgaXQncyBiZXR0ZXIg
-dG8gZG8gaXQgaW5saW5lLCBJJ20gaGFwcHkgdG8gY2hhbmdlIGl0LCBvZg0KPiBjb3Vyc2UuDQo+
-IEl0IHdvdWxkIGp1c3QgbWVhbiBnZXR0aW5nIHJpZCBvZiB0aGUgd29yayBxdWV1ZSBhbmQgdGhl
-IHJlYXBfY2FjaGUNCj4gZnVuY3Rpb24sDQo+IGFuZCBjYWxsaW5nIGRpc2NhcmRfY2FjaGUgZGly
-ZWN0bHksIGluc3RlYWQgb2YgcmVhcF9jYWNoZS4NCj4gDQo+IC0gRnJhbmsNCg0KSSB0aGluayB3
-ZSBzaG91bGQgc3RhcnQgd2l0aCBkb2luZyB0aGUgZnJlZWluZyBvZiB0aGUgb2xkIGNhY2hlIGlu
-bGluZS4NCklmIGl0IHR1cm5zIG91dCB0byBiZSBhIHJlYWwgcGVyZm9ybWFuY2UgcHJvYmxlbSwg
-dGhlbiB3ZSBjYW4gbGF0ZXINCnJldmlzaXQgdXNpbmcgYSB3b3JrIHF1ZXVlLCBob3dldmVyIGlu
-IHRoYXQgY2FzZSwgSSdkIHByZWZlciB0byB1c2UNCm5mc2lvZCByYXRoZXIgdGhhbiBhZGRpbmcg
-YSBzcGVjaWFsIHdvcmtxdWV1ZSB0aGF0IGlzIHJlc2VydmVkIGZvcg0KeGF0dHJzLg0KDQotLSAN
-ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
-ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, Jul 28, 2020 at 06:04:21PM +0000, Trond Myklebust wrote:
+> On Tue, 2020-07-28 at 18:00 +0000, Frank van der Linden wrote:
+> > On Tue, Jul 28, 2020 at 05:10:34PM +0000, Trond Myklebust wrote:
+> > > On Tue, 2020-07-28 at 16:09 +0000, Frank van der Linden wrote:
+> > > > Hi Trond,
+> > > >
+> > > > On Tue, Jul 28, 2020 at 03:17:12PM +0000, Trond Myklebust wrote:
+> > > > > On Mon, 2020-07-27 at 16:34 +0000, Frank van der Linden wrote:
+> > > > > > Hi Dan,
+> > > > > >
+> > > > > > On Mon, Jul 27, 2020 at 02:23:44PM +0300, Dan Carpenter
+> > > > > > wrote:
+> > > > > > > This should return -ENOMEM on failure instead of success.
+> > > > > > >
+> > > > > > > Fixes: 95ad37f90c33 ("NFSv4.2: add client side xattr
+> > > > > > > caching.")
+> > > > > > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > > > > ---
+> > > > > > > ---
+> > > > > > >  fs/nfs/nfs42xattr.c | 4 +++-
+> > > > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+> > > > > > > index 23fdab977a2a..e75c4bb70266 100644
+> > > > > > > --- a/fs/nfs/nfs42xattr.c
+> > > > > > > +++ b/fs/nfs/nfs42xattr.c
+> > > > > > > @@ -1040,8 +1040,10 @@ int __init
+> > > > > > > nfs4_xattr_cache_init(void)
+> > > > > > >                 goto out2;
+> > > > > > >
+> > > > > > >         nfs4_xattr_cache_wq = alloc_workqueue("nfs4_xattr",
+> > > > > > > WQ_MEM_RECLAIM, 0);
+> > > > > > > -       if (nfs4_xattr_cache_wq == NULL)
+> > > > > > > +       if (nfs4_xattr_cache_wq == NULL) {
+> > > > > > > +               ret = -ENOMEM;
+> > > > > > >                 goto out1;
+> > > > > > > +       }
+> > > > > > >
+> > > > > > >         ret =
+> > > > > > > register_shrinker(&nfs4_xattr_cache_shrinker);
+> > > > > > >         if (ret)
+> > > > > > > --
+> > > > > > > 2.27.0
+> > > > > > >
+> > > > > >
+> > > > > > Thanks for catching that one. Since this is against linux-
+> > > > > > next
+> > > > > > via
+> > > > > > Trond,
+> > > > > > I assume Trond will add it to his tree (right?)
+> > > > > >
+> > > > > > In any case:
+> > > > > >
+> > > > > >
+> > > > > > Reviewed-by: Frank van der Linden <fllinden@amazon.com>
+> > > > > >
+> > > > > >
+> > > > > > - Frank
+> > > > >
+> > > > > Frank, why do we need a workqueue here at all?
+> > > >
+> > > > The xattr caches are per-inode, and get created on demand.
+> > > > Invalidating
+> > > > a cache is done by setting the invalidate flag (as it is for
+> > > > other
+> > > > cached attribues and data).
+> > > >
+> > > > When nfs4_xattr_get_cache() sees an invalidated cache, it will
+> > > > just
+> > > > unlink it
+> > > > from the inode, and create a new one if needed.
+> > > >
+> > > > The old cache then still needs to be freed. Theoretically, there
+> > > > can
+> > > > be
+> > > > quite a few entries in it, and nfs4_xattr_get_cache() will be
+> > > > called
+> > > > in
+> > > > the get/setxattr systemcall path. So my reasoning here was that
+> > > > it's
+> > > > better
+> > > > to use a workqueue to free the old invalidated cache instead of
+> > > > wasting
+> > > > cycles in the I/O path.
+> > > >
+> > > > - Frank
+> > >
+> > > I think we might want to explore the reasons for this argument. We
+> > > do
+> > > not offload any other cache invalidations, and that includes the
+> > > case
+> > > when we have to invalidate the entire inode data cache before
+> > > reading.
+> > >
+> > > So what is special about xattrs that causes invalidation to be a
+> > > problem in the I/O path? Why do we expect them to grow so large
+> > > that
+> > > they are more unwieldy than the inode data cache?
+> >
+> > In the case of inode data, so you should probably invalidate it
+> > immediately, or accept that you're serving up known-stale data. So
+> > offloading it doesn't seem like a good idea, and you'll just have to
+> > accept
+> > the extra cycles you're using to do it.
+> >
+> > For this particular case, you're just reaping a cache that is no
+> > longer
+> > being used. There is no correctness gain in doing it in the I/O path
+> > -
+> > the cache has already been orphaned and new getxattr/listxattr calls
+> > will not see it. So there doesn't seem to be a reason to do it in the
+> > I/O path at all.
+> >
+> > The caches shouldn't become very large, no. In the normal case, there
+> > shouldn't be much of a performance difference.
+> >
+> > Then again, what do you gain by doing the reaping of the cache in the
+> > I/O path,
+> > instead of using a work queue? I concluded that there wasn't an
+> > upside, only
+> > a downside, so that's why I implemented it that way.
+> >
+> > If you think it's better to do it inline, I'm happy to change it, of
+> > course.
+> > It would just mean getting rid of the work queue and the reap_cache
+> > function,
+> > and calling discard_cache directly, instead of reap_cache.
+> >
+> > - Frank
+> 
+> I think we should start with doing the freeing of the old cache inline.
+> If it turns out to be a real performance problem, then we can later
+> revisit using a work queue, however in that case, I'd prefer to use
+> nfsiod rather than adding a special workqueue that is reserved for
+> xattrs.
+
+Sure, I can do that.
+
+Do you want me to send a new version of the patch series, or an
+incremental patch?
+
+- Frank
