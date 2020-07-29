@@ -2,106 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9DC23204D
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jul 2020 16:27:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBEB23234A
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jul 2020 19:19:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgG2O1c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Jul 2020 10:27:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37885 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726353AbgG2O1c (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Jul 2020 10:27:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596032851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2lzllwyt3ECeAgfJSSQ9psAtn0KTj2w/atlZhUbsDlo=;
-        b=NsAkjTBm1/yHOVBEC6w56kBmDoR3dmOgMpqdbGDWe5JIAcZ3/6+Ahb8bjhBXxJaBHJYcaO
-        1aWQI/lj9CLSTYGuPuUwDy+GjSqVFMkY6hbmcs2SsWH1uJOTUfmMaoVnZfLO7c3xAuSe5G
-        QexaAPeeCKEtcjTGFXzn+NOhmhPAtwg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-iyOrixGwOfWfg5CfB5KhdA-1; Wed, 29 Jul 2020 10:27:29 -0400
-X-MC-Unique: iyOrixGwOfWfg5CfB5KhdA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 135FE8C3540;
-        Wed, 29 Jul 2020 14:27:28 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B011260CD1;
-        Wed, 29 Jul 2020 14:27:27 +0000 (UTC)
-Subject: Re: [PATCH 4/5] Add ability to detect if we're on the main thread.
-To:     Doug Nazar <nazard@nazar.ca>, libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org
-References: <20200722053445.27987-1-nazard@nazar.ca>
- <20200722053445.27987-5-nazard@nazar.ca>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <badd66b3-ab94-efbb-fc6f-360ab45314df@RedHat.com>
-Date:   Wed, 29 Jul 2020 10:27:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200722053445.27987-5-nazard@nazar.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        id S1726336AbgG2RT0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Jul 2020 13:19:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53396 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2RTY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Jul 2020 13:19:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06THHg0H066622;
+        Wed, 29 Jul 2020 17:19:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2020-01-29;
+ bh=78GEiHrqfPze36rF0LavKUZxnthPcXqayZp6r55Rjwc=;
+ b=wIilaT1HvA7vNurcQGxw4C21C5QG8m3yaYAOgQ15IKQyWmmdcaMA3u7ZNBrj2cP34MyZ
+ qWVskrqTyvDF/qL2IVxLbSVALIJm+t0d4BoeM5E2QnuKlaSf2iA+E1o4UWMWJ2Vb3Yeu
+ Uh6/l//qvy3mPbEhv+p+pL/PsO+OXcW+oa7olB9x5gkDu+Yr+YybbX06AzBl0kZNlwOj
+ x+4WCmXZTVKiqfGFP1OZFaCbhzFqYZpXY05GSOpZUY/GOB0CbkKlPLnqBq7YFHWe022u
+ SgYdq/LCmYTrChXb12/bfvF9sYEWLbSqUnslIVlZSiaS3NxbkvII6RwBWsVrAFhZ9spA og== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32hu1jpxtt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Jul 2020 17:19:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06THIlXO156119;
+        Wed, 29 Jul 2020 17:19:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32hu5w2wfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 17:19:19 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06THJIJ8008995;
+        Wed, 29 Jul 2020 17:19:18 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jul 2020 10:19:18 -0700
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Fedora 32 rpc.gssd misbehavior
+Message-Id: <83856C49-309A-4AD6-9B27-9F93FDDE00DF@oracle.com>
+Date:   Wed, 29 Jul 2020 13:19:17 -0400
+Cc:     Simo Sorce <simo@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To:     Jeff Layton <jlayton@redhat.com>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=955
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=967
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007290118
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi!
+
+I recently updated my test systems from EL7 to Fedora 32, and
+NFSv4.0 with Kerberos has stopped working.
+
+I mount with "klimt.ib" as before. The client workload stops
+dead when the server tries to perform its first CB_RECALL.
+
+I added some client instrumentation:
+
+   kernel: NFSv4: Callback principal (nfs@klimt.ib.1015granger.net) does =
+not match acceptor (nfs@klimt.ib).
+   kernel: NFS: NFSv4 callback contains invalid cred
+
+I boosted gssd verbosity, and it says:
+
+   rpc.gssd[986]: doing downcall: lifetime_rec=3D72226 =
+acceptor=3Dnfs@klimt.ib
+
+But it knows the full hostname for the server:
+
+   rpc.gssd[986]: Full hostname for 'klimt.ib' is =
+'klimt.ib.1015granger.net'
 
 
-On 7/22/20 1:34 AM, Doug Nazar wrote:
-> Signed-off-by: Doug Nazar <nazard@nazar.ca>
-> ---
->  src/mt_misc.c     | 17 +++++++++++++++++
->  tirpc/reentrant.h |  1 +
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/src/mt_misc.c b/src/mt_misc.c
-> index 5a49b78..020b55d 100644
-> --- a/src/mt_misc.c
-> +++ b/src/mt_misc.c
-> @@ -151,3 +151,20 @@ void tsd_key_delete(void)
->  	return;
->  }
->  
-> +static pthread_t main_thread_id;
-> +
-> +__attribute__((constructor))
-> +static void
-> +get_thread_id(void)
-> +{
-> +	/* This will only work if we're opened by the main thread.
-> +	 * Shouldn't be a problem in practice since we expect to be
-> +	 * linked against, not dlopen() from a random thread.
-> +	 */
-> +	main_thread_id = pthread_self();
-> +}
-> +
-> +int thr_main(void)
-> +{
-> +	return pthread_equal(main_thread_id, pthread_self());
-> +}
-> diff --git a/tirpc/reentrant.h b/tirpc/reentrant.h
-> index 5bb581a..ee65454 100644
-> --- a/tirpc/reentrant.h
-> +++ b/tirpc/reentrant.h
-> @@ -76,4 +76,5 @@
->  #define thr_self()		pthread_self()
->  #define thr_exit(x)		pthread_exit(x)
->  
-> +extern int thr_main(void);
->  #endif
-> 
-Again... why is this needed? 
+The acceptor appears to come from the Kerberos library. Shouldn't
+it be canonicalized? If so, should the Kerberos library do it, or
+should gssd? Since this behavior appeared after an upgrade, I
+suspect a Kerberos library regression. But it could be config-
+related, since both systems were re-imaged from the ground up.
 
-Your description part of these patches are a bit thin ;-)
+Also noticing some other problems on the server (missing hostname
+strings in debug messages, sssd_kcm infinite loops, and gssd
+sending garbage to the client after the NULL request that
+establishes the callback context).
 
-steved.
+But let's look at the client acceptor problem first.
+
+
+--
+Chuck Lever
+
+
 
