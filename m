@@ -2,244 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B020A233930
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 21:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE12233972
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 22:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgG3TlQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Jul 2020 15:41:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33288 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG3TlQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 15:41:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UJb0Tr029925;
-        Thu, 30 Jul 2020 19:41:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=R2wmzwVzKDRyH1hMFuaVqiVyfhvwFeE2Zc/uM1BAkwc=;
- b=UiskQYOmaVSsYfVv7VHjhnwOSO1lOs9RnuiSUALCc8dKBG6zZMzzmOWLLGnk+buoWpz3
- zHLvY48ouEjKoT+qqfZJT/67XP3wjQhYtY461kISmNuXWSRTsDZ14d8moc8E/btnZKsH
- 6bC1VXRfBiwkeXUDHMdWL3R9QB2qnD28+oEPIei6+4kKOi4Fplt6G+1np0eO15iETFoi
- m4z5ajn0lCVEthV78qnfSF3oVD3/WboLOJ/xsKqhzmSNZAgiMGWXUfRzu6imCbx5aCJf
- tWjAbjsQJHrRVwJh9IeirkRkJzYCAvxEKTCfJOo9/mWosl8sSkbAyEoMVafu0Tfh1U0b Ag== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32hu1jnncy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 19:41:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UJcp8k138435;
-        Thu, 30 Jul 2020 19:39:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32hu5xu342-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 19:39:11 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06UJd8Vn003691;
-        Thu, 30 Jul 2020 19:39:08 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 12:39:07 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Fedora 32 rpc.gssd misbehavior
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <ee4b7c47bc37a53afd751159ae39d01d7cd3ee34.camel@redhat.com>
-Date:   Thu, 30 Jul 2020 15:39:06 -0400
-Cc:     Robbie Harwood <rharwood@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0A4076D1-46BD-4B48-9667-60D679221210@oracle.com>
-References: <83856C49-309A-4AD6-9B27-9F93FDDE00DF@oracle.com>
- <48B9E144-41CA-4DF0-A88D-2F6652A0EBF1@oracle.com>
- <5ae72c7b0afa65d509db23686d72a1055f7cc6b4.camel@redhat.com>
- <jlg7dulylq6.fsf@redhat.com>
- <4EB4AE01-F6D4-4E8F-86BF-C8BB07E63517@oracle.com>
- <ee4b7c47bc37a53afd751159ae39d01d7cd3ee34.camel@redhat.com>
-To:     Simo Sorce <simo@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300135
+        id S1730309AbgG3UBV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Jul 2020 16:01:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55262 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728396AbgG3UBV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 16:01:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596139279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NPdZyLicOie2yuhM6uwppOmu13ULBAeVkvM5uHH6Cco=;
+        b=f48p0RaUnzcN4cxWY+B/M133/M9i5KZcpDBLjEsR8aKZOmkicLdkbA39On4ios6MDEtZrR
+        7qIt2S9ofMBU1i198yXyYBYoivJXbuK2vMzlDKq6TdcaXPEFRlxSgqQnPDc8LahhuxYEhe
+        Sxl7kNdGByTNju2jQrFgzPMCjDrfWQA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-xssJaOc_OR2Bn6PvdVjPuw-1; Thu, 30 Jul 2020 16:00:12 -0400
+X-MC-Unique: xssJaOc_OR2Bn6PvdVjPuw-1
+Received: by mail-ed1-f71.google.com with SMTP id v13so5605453edx.9
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Jul 2020 13:00:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NPdZyLicOie2yuhM6uwppOmu13ULBAeVkvM5uHH6Cco=;
+        b=Gq+sjkL0Y48h9qA+WpEEmlb0hTnxT8bNqtat36Ads8wIQ8iZpBcYPDPWR9UEIGHyxp
+         1DGfr/4XipxzWoDS8isC2RTZCW4OVO0f1KzFXX4BxgK2qM7bOfIGVAdfQIHh0aNiVfIv
+         8VXk/JMmKKp6sccwqrgNyd31/mDyad0GBTR+DC6ikdOf1V0ASOqg/DLAdrtSkhvTefgL
+         BjqjzTpTd2f4XcIa98y0qyw5gaQ3w9iSbcWIbqu5vzZ1ysue3X9lZN6kU6wwvg/i4LaK
+         yXrSKIXF3Ayioaf2lQdIPZyNXwSliqTdOhDyh+XKnCSqkX8kVMjqnv6VGcTEYVUEUPZ2
+         MkXg==
+X-Gm-Message-State: AOAM532HsDzgwSs4qP+amXBRpttUSLyJ82E+tX87X0+ZsJuWfpIsA3oM
+        X3F3Cs0FhsL4igiOi0mCVDFhbBOopwHWAK2p8UvXyTbZNZz3se8suohauHV2PjH/ShIv9Um8YKD
+        rIVUoeVc4xnVz08gXGVIxVR9vMVhY5UgRCZaX
+X-Received: by 2002:a05:6402:3048:: with SMTP id bu8mr636869edb.367.1596139210872;
+        Thu, 30 Jul 2020 13:00:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJytEI6jQOO+iNyhha6KDoOFKhoYduot0O0a9ho32t/vGiBcPlnl+5o5Uo6oUzU6/robXMSAfn8L2+GkpUR56m8=
+X-Received: by 2002:a05:6402:3048:: with SMTP id bu8mr636844edb.367.1596139210667;
+ Thu, 30 Jul 2020 13:00:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <1596031949-26793-1-git-send-email-dwysocha@redhat.com>
+ <1596031949-26793-14-git-send-email-dwysocha@redhat.com> <43e8a8ff1ea015bb7bd335d5616268d36155327a.camel@redhat.com>
+ <CALF+zOnYLbibbYxvbyUJFJQ+NtcreuAvFkZYr9h3_qQswbMxRw@mail.gmail.com>
+In-Reply-To: <CALF+zOnYLbibbYxvbyUJFJQ+NtcreuAvFkZYr9h3_qQswbMxRw@mail.gmail.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 30 Jul 2020 15:59:34 -0400
+Message-ID: <CALF+zOn9tSft_QkPaJ7w8v_OLTfon+acUB_W9MSb8EEMQGc94w@mail.gmail.com>
+Subject: Re: [Linux-cachefs] [RFC PATCH v2 13/14] NFS: Call
+ fscache_resize_cookie() when inode size changes due to setattr
+To:     Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>, linux-cachefs@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Jul 30, 2020 at 3:23 PM David Wysochanski <dwysocha@redhat.com> wrote:
+>
+> On Thu, Jul 30, 2020 at 2:39 PM Jeff Layton <jlayton@redhat.com> wrote:
+> >
+> > On Wed, 2020-07-29 at 10:12 -0400, Dave Wysochanski wrote:
+> > > Handle truncate / setattr when fscache is enabled by calling
+> > > fscache_resize_cookie().
+> > >
+> > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > > ---
+> > >  fs/nfs/inode.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> > > index 45067303348c..6b814246d07d 100644
+> > > --- a/fs/nfs/inode.c
+> > > +++ b/fs/nfs/inode.c
+> > > @@ -667,6 +667,7 @@ static int nfs_vmtruncate(struct inode * inode, loff_t offset)
+> > >       spin_unlock(&inode->i_lock);
+> > >       truncate_pagecache(inode, offset);
+> > >       spin_lock(&inode->i_lock);
+> > > +     fscache_resize_cookie(nfs_i_fscache(inode), i_size_read(inode));
+> > >  out:
+> > >       return err;
+> > >  }
+> >
+> > truncate can happen even when you have no open file descriptors on the
+> > file and therefore w/o the cookie being "used". In the ceph vmtruncate
+> > handling code, I do an explicit use/unuse around this call. Do you need
+> > to do the same here?
+> > --
+> > Jeff Layton <jlayton@redhat.com>
+> >
+>
+> Actually I think the case you mention is covered by a patch that I've just
+> added today on top of my v2 posting.
+> This was the result of looking deeper into a few xfstest failures with
+> NFSv4.2.  I think this covers the truncate without a file open:
+>
+> commit 91d6922df9390ca1c090911be6e5c5ab1a79ea83
+> Author: Dave Wysochanski <dwysocha@redhat.com>
+> Date:   Thu Jul 30 12:33:40 2020 -0400
+>
+>     NFS: Call fscache_invalidate() from nfs_invalidate_mapping()
+>
+>     Be sure to invalidate fscache cookie for any call to
+>     nfs_invalidate_mapping().
+>
+>     This patch fixes the following xfstests on NFS4.x:
+>       generic/240
+>     as well as fixes the following xfstests on NFSv4.2:
+>       generic/029 generic/030
+>
+>     Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+>
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 6b814246d07d..62243ec05917 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -1233,6 +1233,7 @@ static int nfs_invalidate_mapping(struct inode
+> *inode, struct address_space *map
+>         struct nfs_inode *nfsi = NFS_I(inode);
+>         int ret;
+>
+> +       nfs_fscache_invalidate(inode, 0);
+>         if (mapping->nrpages != 0) {
+>                 if (S_ISREG(inode->i_mode)) {
+>                         ret = nfs_sync_mapping(mapping);
 
 
-> On Jul 30, 2020, at 3:10 PM, Simo Sorce <simo@redhat.com> wrote:
->=20
-> On Thu, 2020-07-30 at 13:59 -0400, Chuck Lever wrote:
->>> On Jul 30, 2020, at 1:08 PM, Robbie Harwood <rharwood@redhat.com> =
-wrote:
->>>=20
->>> Simo Sorce <simo@redhat.com> writes:
->>>=20
->>>> On Wed, 2020-07-29 at 14:27 -0400, Chuck Lever wrote:
->>>>>> On Jul 29, 2020, at 1:19 PM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>>>>=20
->>>>>> Hi!
->>>>>>=20
->>>>>> I recently updated my test systems from EL7 to Fedora 32, and
->>>>>> NFSv4.0 with Kerberos has stopped working.
->>>>>>=20
->>>>>> I mount with "klimt.ib" as before. The client workload stops
->>>>>> dead when the server tries to perform its first CB_RECALL.
->>>>>>=20
->>>>>> I added some client instrumentation:
->>>>>>=20
->>>>>> kernel: NFSv4: Callback principal (nfs@klimt.ib.1015granger.net) =
-does not match acceptor (nfs@klimt.ib).
->>>>>> kernel: NFS: NFSv4 callback contains invalid cred
->>>>>>=20
->>>>>> I boosted gssd verbosity, and it says:
->>>>>>=20
->>>>>> rpc.gssd[986]: doing downcall: lifetime_rec=3D72226 =
-acceptor=3Dnfs@klimt.ib
->>>>>>=20
->>>>>> But it knows the full hostname for the server:
->>>>>>=20
->>>>>> rpc.gssd[986]: Full hostname for 'klimt.ib' is =
-'klimt.ib.1015granger.net'
->>>>>>=20
->>>>>>=20
->>>>>> The acceptor appears to come from the Kerberos library. Shouldn't
->>>>>> it be canonicalized? If so, should the Kerberos library do it, or
->>>>>> should gssd? Since this behavior appeared after an upgrade, I
->>>>>> suspect a Kerberos library regression. But it could be config-
->>>>>> related, since both systems were re-imaged from the ground up.
->>>>>>=20
->>>>>> Also noticing some other problems on the server (missing hostname
->>>>>> strings in debug messages, sssd_kcm infinite loops, and gssd
->>>>>> sending garbage to the client after the NULL request that
->>>>>> establishes the callback context).
->>>>>>=20
->>>>>> But let's look at the client acceptor problem first.
->>>>>=20
->>>>> I believe I found the problem.
->>>>>=20
->>>>> 8bffe8c5ec1a ("gssd: add /etc/nfs.conf support") added a number of =
-gssd config
->>>>> options to /etc/nfs.conf, including "avoid-dns". The default =
-setting of avoid-
->>>>> dns is 1. When I set this option on my client system explicitly to =
-0, NFSv4.0
->>>>> with Kerberos works again.
->>>>>=20
->>>>> Is there a reason the default setting is 1?
->>>>>=20
->>>>=20
->>>> Now that you mention DNS, this may be an interaction between a new
->>>> default in Fedora 32 and how your environment is setup re DNS.
->>>>=20
->>>> In F32 we changed the option dns_canonicalize_hostname from 'true' =
-to
->>>> 'fallback'.
->>>> This is a transitional state to eventually move it to 'false' at =
-some
->>>> point in the future.
->>>>=20
->>>> What it changes in practice is that it will first try the name =
-passed
->>>> in *as is* and only as a fallback try a CNAME if the name passed is =
-not
->>>> resolved as an A name. If you have principals in the KDC for both
->>>> names, but you do not have keys in the keytab for both, you can =
-have
->>>> transitional issues.
->>>>=20
->>>> Additionally we discovered a bug that causes non qualified names to
->>>> fail resolution with the 'fallback' option.
->>>> If your name in the principal is really not qualified it will try =
-to
->>>> qualify it anyway, so if your principal is literally nfs/foo@FOO
->>>> libgssapi may try to use nfs/foo.my.domdain@FOO, where "my.domain" =
-is
->>>> what is defined in resolv.conf search path.
->>>>=20
->>>> We are trying to address this regression.
->>>>=20
->>>> So try to set dns_canonicalize_hostname to true to see if that may
->>>> influence your issue. If so, please let me know, as we still need =
-to
->>>> address this where possible.
->>>=20
->>> Also, please try setting `qualify_shortname =3D ""`.  (I did update =
-the
->>> config file we ship with Fedora, but upstream's default turns that =
-on.
->>> This is a temporary workaround while we merge something better
->>> upstream.)
->>=20
->> For completeness, I tried:
->>=20
->> avoid-dns =3D 1
->> dns_canonicalize_hostname =3D fallback
->> qualify_shortname =3D ""
->>=20
->> which is the default configuration out of the shrink wrap.
->>=20
->> The workload hangs as before, and the acceptor is unqualified:
->>=20
->> rpc.gssd[985]: doing downcall: lifetime_rec=3D84046 =
-acceptor=3Dnfs@klimt.ib
->>=20
->>=20
->> The test is:
->>=20
->> Configured domain name is "1015granger.net"
->>=20
->> Fully-qualified client hostname is "manet.ib.granger.net"
->>=20
->> Fully-qualified server hostname is "klimt.ib.granger.net"
->>=20
->> mount command is "mount -o vers=3D4.0,sec=3Dsys klimt.ib:/export =
-/mnt"
->>=20
->> In this case, both systems have keytabs and service principals, so
->> the client automatically attempts to establish a GSS context for
->> lease management and callback operations. The failure occurs because
->> the server's principal is nfs@klimt.ib.1015granger.net but the
->> acceptor now matches the server hostname from the mount command line,
->> which is not always fully qualified.
->=20
-> Ok, TBH I personally consider the syntax you  are currently using as
-> working by accident and that you should really sue the FQDN on the
-> command line (I assume it works that way, right?), however I =
-understand
-> this is also technically a regression, that said I do not think we can
-> really fix this case because your "shortname" is not short (it has a
-> dot in it) so the heuristicts won't trigger to qualify it even when =
-you
-> set qualify_shortname=3D"".
->=20
-> I have the feeling we'll break this case, and our answer will have to
-> be "use the fqdn on the command line".
+Actually the above patch fixes truncates when a file is open, not the
+case that Jeff mentions.
 
-See previous e-mail. Using the shrink wrap default settings, which
-includes qualify_shortname=3D"", results in a hang on callback, as
-originally observed.
+To be honest I'm not sure about needing a call to fscache_use/unuse_cookie()
+around the call to fscache_resize_cookie().  If the cookie has a
+refcount of 1 when it is created, and a file is never opened, so
+we never call fscache_use_cookie(), what might happen inside
+fscache_resize_cookie()?  The header on use_cookie() says
+/*
+ * Start using the cookie for I/O.  This prevents the backing object from being
+ * reaped by VM pressure.
+ */
 
-Users will notice this and complain: klimt.ib works for the NFSv3
-case and the NFSv4.1 case, and for NFSv4.0 when there is no keytab,
-but NFSv4.0,sec=3D* with a keytab eventually hangs.
-
-
---
-Chuck Lever
-
-
+But we're not using it for I/O in this case.
+I will have to dig deeper to be sure, or maybe David H will elaborate further.
 
