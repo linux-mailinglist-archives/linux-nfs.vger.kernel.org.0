@@ -2,44 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C77D7233142
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 13:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 405382331D8
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 14:16:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgG3Lvn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Jul 2020 07:51:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42840 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727113AbgG3Lvm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 07:51:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596109901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=XbbtDAwlbqFbl9LRgvVvqdOJ/w6Qt8l6sHZuVLApgCc=;
-        b=UQD1Ik9n7l+3El0T+pzDeBH8w19lUMPzS13CBg2x5ZpnPA+R0reEsiQB6LIt6P7Ckbkk2x
-        2QeCLY0E54N9mE5t/5H86zz0c6LDSwM8yg8MQQdXyur1kxkO69em2IevcfBIDVDL2uJHXL
-        zu90CuHOZXDO2eAuMgkFdV4OH7rtnVo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-lpsWJq8MMBO5dqJYqQQUdg-1; Thu, 30 Jul 2020 07:51:37 -0400
-X-MC-Unique: lpsWJq8MMBO5dqJYqQQUdg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FB6D79EDC;
-        Thu, 30 Jul 2020 11:51:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF8B10002CA;
-        Thu, 30 Jul 2020 11:51:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
+        id S1727979AbgG3MQm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Jul 2020 08:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgG3MQm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 08:16:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD88C061794;
+        Thu, 30 Jul 2020 05:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GuSgBCY5Dc+vZPEZj8RCz93A4JYgZmNr3NqXQV1PNYU=; b=a7GCCI+Sq/NXl6y3iQLleRnLms
+        4p1ZsjInJKj/tAsDpcjI9usZM2vENPG03Df+sSsNojrv4V1EBT3j/wFU5/RBzQbJ3/l7PJs6gs6wF
+        KvMrbG1qCvxYYQzyjA+rd2mVdNqtu69fgGCmUxDcA0RgS0og/RM9yM94JvkDJKFpuRee0vYNFOCsj
+        eIut78fgYXyBEr7Kb1rNIa6xqLVa4ibM/5Ak08hEKjq3YHCiAEjyb2MEXtAZyXxOh9m0FVN6dax9i
+        2yquBpLaOry0D0qgZd4Jj4uVCYZwyhrpcaUPuA9nI+bcdLL3RQRs7hH1muyyDrTPpdvxlanB3eUMs
+        K6nwbsWA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k17Ty-0003OY-Jv; Thu, 30 Jul 2020 12:16:22 +0000
+Date:   Thu, 30 Jul 2020 13:16:22 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>,
         Jeff Layton <jlayton@redhat.com>,
         Dave Wysochanski <dwysocha@redhat.com>,
@@ -51,141 +42,45 @@ cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Upcoming: fscache rewrite
+Subject: Re: Upcoming: fscache rewrite
+Message-ID: <20200730121622.GB23808@casper.infradead.org>
+References: <447452.1596109876@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <447451.1596109876.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 30 Jul 2020 12:51:16 +0100
-Message-ID: <447452.1596109876@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <447452.1596109876@warthog.procyon.org.uk>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus, Trond/Anna, Steve, Eric,
+On Thu, Jul 30, 2020 at 12:51:16PM +0100, David Howells wrote:
+>  (3) Al has objections to the ITER_MAPPING iov_iter type that I added
+> 
+> 	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linux.org.uk/
+> 
+>      but note that iov_iter_for_each_range() is not actually used by anything.
+> 
+>      However, Willy likes it and would prefer to make it ITER_XARRAY instead
+>      as he might be able to use it in other places, though there's an issue
+>      where I'm calling find_get_pages_contig() which takes a mapping (though
+>      all it does is then get the xarray out of it).
 
-I have an fscache rewrite that I'm tempted to put in for the next merge
-window:
+I suspect you don't need to call find_get_pages_contig().  If you look
+at __readahead_batch() in pagemap.h, it does basically what you want
+(other than being wrapped up inside the readahead iterator).  You require
+the pages already be pinned in the xarray, so there's no need for the
+page_cache_get_speculative() dance that find_get_pages_contig) does,
+nor the check for xa_is_value().
 
-	https://lore.kernel.org/linux-fsdevel/159465784033.1376674.18106463693989=
-811037.stgit@warthog.procyon.org.uk/
+My main concern with your patchset is that it introduces a new page flag
+to sleep on which basically means "I am writing this page to the fscache".
+I don't understand why you need it; you've elevated the refcount on
+the pages so they're not going to get reused for another purpose.
+All it does (as far as I can tell) is make a task calling truncate()
+wait for the page to finish being written to cache, which isn't actually
+necessary.
 
-It improves the code by:
-
- (*) Ripping out the stuff that uses page cache snooping and kernel_write(=
-)
-     and using kiocb instead.  This gives multiple wins: uses async DIO ra=
-ther
-     than snooping for updated pages and then copying them, less VM overhe=
-ad.
-
- (*) Object management is also simplified, getting rid of the state machin=
-e
-     that was managing things and using a much simplified thread pool inst=
-ead.
-
- (*) Object invalidation creates a tmpfile and diverts new activity to tha=
-t so
-     that it doesn't have to synchronise in-flight ADIO.
-
- (*) Using a bitmap stored in an xattr rather than using bmap to find out =
-if
-     a block is present in the cache.  Probing the backing filesystem's
-     metadata to find out is not reliable in modern extent-based filesyste=
-ms
-     as them may insert or remove blocks of zeros.  Even SEEK_HOLE/SEEK_DA=
-TA
-     are problematic since they don't distinguish transparently inserted
-     bridging.
-
-I've provided a read helper that handles ->readpage, ->readpages, and
-preparatory writes in ->write_begin.  Willy is looking at using this as a =
-way
-to roll his new ->readahead op out into filesystems.  A good chunk of this
-will move into MM code.
-
-The code is simpler, and this is nice too:
-
- 67 files changed, 5947 insertions(+), 8294 deletions(-)
-
-not including documentation changes, which I need to convert to rst format
-yet.  That removes a whole bunch more lines.
-
-But there are reasons you might not want to take it yet:
-
- (1) It starts off by disabling fscache support in all the filesystems tha=
-t
-     use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
-     Wysochanski has patches for nfs:
-
-	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwyso=
-cha@redhat.com/
-
-     but they haven't been reviewed by Trond or Anna yet, and Jeff Layton =
-has
-     patches for ceph:
-
-	https://marc.info/?l=3Dceph-devel&m=3D159541538914631&w=3D2
-
-     and I've briefly discussed cifs with Steve, but nothing has started t=
-here
-     yet.  9p I've not looked at yet.
-
-     Now, if we're okay for going a kernel release with 4/5 filesystems wi=
-th
-     caching disabled and then pushing the changes for individual filesyst=
-ems
-     through their respective trees, it might be easier.
-
-     Unfortunately, I wasn't able to get together with Trond and Anna at L=
-SF
-     to discuss this.
-
- (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
-     that oopses pretty quickly with caching enabled).  Dave and Jeff's nf=
-s
-     and ceph code is getting close, but not quite there yet.
-
- (3) Al has objections to the ITER_MAPPING iov_iter type that I added
-
-	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linu=
-x.org.uk/
-
-     but note that iov_iter_for_each_range() is not actually used by anyth=
-ing.
-
-     However, Willy likes it and would prefer to make it ITER_XARRAY inste=
-ad
-     as he might be able to use it in other places, though there's an issu=
-e
-     where I'm calling find_get_pages_contig() which takes a mapping (thou=
-gh
-     all it does is then get the xarray out of it).
-
-     Instead I would have to use ITER_BVEC, which has quite a high overhea=
-d,
-     though it would mean that the RCU read lock wouldn't be necessary.  T=
-his
-     would require 1K of memory for every 256K block the cache wants to re=
-ad;
-     for any read >1M, I'd have to use vmalloc() instead.
-
-     I'd also prefer not to use ITER_BVEC because the offset and length ar=
-e
-     superfluous here.  If ITER_MAPPING is not good, would it be possible =
-to
-     have an ITER_PAGEARRAY that just takes a page array instead?  Or, eve=
-n,
-     create a transient xarray?
-
- (4) The way object culling is managed needs overhauling too, but that's a
-     whole 'nother patchset.  We could wait till that's done too, but its =
-lack
-     doesn't prevent what we have now being used.
-
-Thoughts?
-
-David
-
+Overall, I do like the patch series!  It's a big improvement over what we
+currently have and will make it easier to finish the readpages->readahead
+conversion.
