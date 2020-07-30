@@ -2,194 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A332C2332A5
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 15:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A23D2334B2
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jul 2020 16:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgG3NIl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Jul 2020 09:08:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45903 "EHLO
+        id S1729671AbgG3OnS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Jul 2020 10:43:18 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51825 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727072AbgG3NIl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 09:08:41 -0400
+        by vger.kernel.org with ESMTP id S1729699AbgG3OnR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jul 2020 10:43:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596114518;
+        s=mimecast20190719; t=1596120196;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gWaKeY39EULxcPQEMCGaeW0bHOFmCjPvx3LSrbbV7xY=;
-        b=LM6x3o8Cf1SqqEESoJDicvlxhzlKwDQIjfoF/KxULBgCpHqeIaU2kbdIHBxJDzfodVwr/O
-        j6B7B6c+n3qOTQYPnZE60xNfP/bSPwyT8ak89yDzuboA+cCmSgrdGIexoj3gkyh8m2P/31
-        UVkWV/6w2SvGC13WA9JgcV482FNu7Ys=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-uwWJ7uUYOn6LFBM88IbTHA-1; Thu, 30 Jul 2020 09:08:34 -0400
-X-MC-Unique: uwWJ7uUYOn6LFBM88IbTHA-1
-Received: by mail-qv1-f70.google.com with SMTP id g17so18076271qvw.0
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Jul 2020 06:08:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=gWaKeY39EULxcPQEMCGaeW0bHOFmCjPvx3LSrbbV7xY=;
-        b=je5PD5nII3IeDhzme0Lcd3AWUUnuLL8VApPRGcb1I7i1r7HfexPSGMzRC820waOC4Q
-         2qimmqLphn0u7f9pNvdUO2gS+TwEJnOokMl7aPwDBbyDcfiSMdrJUHi3yl96PCF49le1
-         5jn+Sl/2RhU1t0aU0f3jDK7aN2hWy+WGhcVHWF7PdrM4HrrX0rjetVijaHsIVnvIsyyK
-         N4EedB9m0mFQgA9CzWQxUGcyXBs2lYeK8l1DkHEaWogjwEusrqS2sltjyXjR8n5sIGKR
-         z4sp9gU5Xk1RhP/WwPXh1V+JgB7H9WjsjiLvoKd+PTIipgAybbQHSmo2FTe9CTrw5avk
-         NrSg==
-X-Gm-Message-State: AOAM5312QBQOKPUljgcoN4A87PjCNs3cjZztvJBYCZIlrAy85XfHBdc7
-        IYNCNtWerfv88kTHrB8lgeIpMZRXrESnn2blRCoJAXBmh8ED62OUf4MXs8zkEyN8GaKFeffjMLA
-        PPwAEdLvAbN3ML7pOEpdq
-X-Received: by 2002:ac8:454f:: with SMTP id z15mr2627658qtn.351.1596114514349;
-        Thu, 30 Jul 2020 06:08:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzE3m4VK7ilMGfBwsUtRjmSKljYtJpn8E03df8J9j67dNo1Fgsoe+A7NDnW7aFB+gXKH74gBg==
-X-Received: by 2002:ac8:454f:: with SMTP id z15mr2627612qtn.351.1596114513855;
-        Thu, 30 Jul 2020 06:08:33 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id 8sm4314260qkh.77.2020.07.30.06.08.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 06:08:33 -0700 (PDT)
-Message-ID: <2db05b3eb59bfb59688e7cb435c1b5f2096b8f8a.camel@redhat.com>
-Subject: Re: Upcoming: fscache rewrite
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 30 Jul 2020 09:08:32 -0400
-In-Reply-To: <447452.1596109876@warthog.procyon.org.uk>
-References: <447452.1596109876@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        bh=aLOvYlCWVAvafQKDeN2llLwTuRwq+YOK1Ef3kjTfc0A=;
+        b=b9bjAtIcExiteRxUtFanayWwC3uq+rf7SXirDl785oGqPNY73ojwb2tnsdsd7hrjjO/bF+
+        Q/rZ2ydDAm1GiMXMxP9+yc1YGGPy+tX7/7DmrEYdxzhwjW/6rQIReqPIkjo+doKqCbQwH+
+        xhtdvPchpEs8ZVFyKnbu7PEy2Tr4LZE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-479-IU-RROiJOHq89tf6Q8GXHA-1; Thu, 30 Jul 2020 10:43:13 -0400
+X-MC-Unique: IU-RROiJOHq89tf6Q8GXHA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11EA780183C;
+        Thu, 30 Jul 2020 14:43:12 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-147.phx2.redhat.com [10.3.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 64A3E7AC94;
+        Thu, 30 Jul 2020 14:43:08 +0000 (UTC)
+Subject: Re: Fedora 32 rpc.gssd misbehavior
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Bruce Fields <bfields@fieldses.org>
+Cc:     Simo Sorce <simo@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <83856C49-309A-4AD6-9B27-9F93FDDE00DF@oracle.com>
+ <48B9E144-41CA-4DF0-A88D-2F6652A0EBF1@oracle.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <fb14b95f-a0fd-5fae-29db-15ad8ab6066a@RedHat.com>
+Date:   Thu, 30 Jul 2020 10:43:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <48B9E144-41CA-4DF0-A88D-2F6652A0EBF1@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2020-07-30 at 12:51 +0100, David Howells wrote:
-> Hi Linus, Trond/Anna, Steve, Eric,
-> 
-> I have an fscache rewrite that I'm tempted to put in for the next merge
-> window:
-> 
-> 	https://lore.kernel.org/linux-fsdevel/159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk/
-> 
-> It improves the code by:
-> 
->  (*) Ripping out the stuff that uses page cache snooping and kernel_write()
->      and using kiocb instead.  This gives multiple wins: uses async DIO rather
->      than snooping for updated pages and then copying them, less VM overhead.
-> 
->  (*) Object management is also simplified, getting rid of the state machine
->      that was managing things and using a much simplified thread pool instead.
-> 
->  (*) Object invalidation creates a tmpfile and diverts new activity to that so
->      that it doesn't have to synchronise in-flight ADIO.
-> 
->  (*) Using a bitmap stored in an xattr rather than using bmap to find out if
->      a block is present in the cache.  Probing the backing filesystem's
->      metadata to find out is not reliable in modern extent-based filesystems
->      as them may insert or remove blocks of zeros.  Even SEEK_HOLE/SEEK_DATA
->      are problematic since they don't distinguish transparently inserted
->      bridging.
-> 
-> I've provided a read helper that handles ->readpage, ->readpages, and
-> preparatory writes in ->write_begin.  Willy is looking at using this as a way
-> to roll his new ->readahead op out into filesystems.  A good chunk of this
-> will move into MM code.
-> 
-> The code is simpler, and this is nice too:
-> 
->  67 files changed, 5947 insertions(+), 8294 deletions(-)
-> 
-> not including documentation changes, which I need to convert to rst format
-> yet.  That removes a whole bunch more lines.
-> 
-> But there are reasons you might not want to take it yet:
-> 
->  (1) It starts off by disabling fscache support in all the filesystems that
->      use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
->      Wysochanski has patches for nfs:
-> 
-> 	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwysocha@redhat.com/
-> 
->      but they haven't been reviewed by Trond or Anna yet, and Jeff Layton has
->      patches for ceph:
-> 
-> 	https://marc.info/?l=ceph-devel&m=159541538914631&w=2
-> 
->      and I've briefly discussed cifs with Steve, but nothing has started there
->      yet.  9p I've not looked at yet.
-> 
->      Now, if we're okay for going a kernel release with 4/5 filesystems with
->      caching disabled and then pushing the changes for individual filesystems
->      through their respective trees, it might be easier.
-> 
->      Unfortunately, I wasn't able to get together with Trond and Anna at LSF
->      to discuss this.
-> 
->  (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
->      that oopses pretty quickly with caching enabled).  Dave and Jeff's nfs
->      and ceph code is getting close, but not quite there yet.
 
 
-That was my experience on cephfs+fscache too -- it often crashed down in
-the fscache code. I'd support the approach in (1) above -- put this in
-soon and disable the caches in the filesystems. Then push the changes to
-reenable it via fs-specific trees.
+On 7/29/20 2:27 PM, Chuck Lever wrote:
+> 
+> 
+>> On Jul 29, 2020, at 1:19 PM, Chuck Lever <chuck.lever@oracle.com> wrote:
+>>
+>> Hi!
+>>
+>> I recently updated my test systems from EL7 to Fedora 32, and
+>> NFSv4.0 with Kerberos has stopped working.
+>>
+>> I mount with "klimt.ib" as before. The client workload stops
+>> dead when the server tries to perform its first CB_RECALL.
+>>
+>> I added some client instrumentation:
+>>
+>>   kernel: NFSv4: Callback principal (nfs@klimt.ib.1015granger.net) does not match acceptor (nfs@klimt.ib).
+>>   kernel: NFS: NFSv4 callback contains invalid cred
+>>
+>> I boosted gssd verbosity, and it says:
+>>
+>>   rpc.gssd[986]: doing downcall: lifetime_rec=72226 acceptor=nfs@klimt.ib
+>>
+>> But it knows the full hostname for the server:
+>>
+>>   rpc.gssd[986]: Full hostname for 'klimt.ib' is 'klimt.ib.1015granger.net'
+>>
+>>
+>> The acceptor appears to come from the Kerberos library. Shouldn't
+>> it be canonicalized? If so, should the Kerberos library do it, or
+>> should gssd? Since this behavior appeared after an upgrade, I
+>> suspect a Kerberos library regression. But it could be config-
+>> related, since both systems were re-imaged from the ground up.
+>>
+>> Also noticing some other problems on the server (missing hostname
+>> strings in debug messages, sssd_kcm infinite loops, and gssd
+>> sending garbage to the client after the NULL request that
+>> establishes the callback context).
+>>
+>> But let's look at the client acceptor problem first.
+> 
+> I believe I found the problem.
+> 
+> 8bffe8c5ec1a ("gssd: add /etc/nfs.conf support") added a number of gssd config
+> options to /etc/nfs.conf, including "avoid-dns". The default setting of avoid-
+> dns is 1. When I set this option on my client system explicitly to 0, NFSv4.0
+> with Kerberos works again.
+Strange... What is failing in rpc.gssd when it is set to 1?
+Maybe it has something to do with your DNS setup?
 
-The ceph patch series is more or less ready. It passes all of the
-xfstest "quick" group run (aside from a few expected failures on
-cephfs).
+> 
+> Is there a reason the default setting is 1?
+Looking back... It's always bee set to 1. So no good reason ;-) 
 
-The only real exception is generic/531, which seems to trigger OOM kills
-in my testing. The test tries to create a ton of files and leak the file
-descriptors. I tend to think that workload is pretty unusual, and given
-that fscache was terribly unstable and crashed before, this is still a
-marked improvement.
-
->  (3) Al has objections to the ITER_MAPPING iov_iter type that I added
+steved.
+> n
 > 
-> 	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linux.org.uk/
+> --
+> Chuck Lever
 > 
->      but note that iov_iter_for_each_range() is not actually used by anything.
 > 
->      However, Willy likes it and would prefer to make it ITER_XARRAY instead
->      as he might be able to use it in other places, though there's an issue
->      where I'm calling find_get_pages_contig() which takes a mapping (though
->      all it does is then get the xarray out of it).
 > 
->      Instead I would have to use ITER_BVEC, which has quite a high overhead,
->      though it would mean that the RCU read lock wouldn't be necessary.  This
->      would require 1K of memory for every 256K block the cache wants to read;
->      for any read >1M, I'd have to use vmalloc() instead.
-> 
->      I'd also prefer not to use ITER_BVEC because the offset and length are
->      superfluous here.  If ITER_MAPPING is not good, would it be possible to
->      have an ITER_PAGEARRAY that just takes a page array instead?  Or, even,
->      create a transient xarray?
-> 
->  (4) The way object culling is managed needs overhauling too, but that's a
->      whole 'nother patchset.  We could wait till that's done too, but its lack
->      doesn't prevent what we have now being used.
-> 
-> Thoughts?
-> 
-> David
-> 
-
--- 
-Jeff Layton <jlayton@redhat.com>
 
