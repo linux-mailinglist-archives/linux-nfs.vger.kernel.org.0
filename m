@@ -2,112 +2,350 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F22F23AA68
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Aug 2020 18:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05D9F23AA77
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Aug 2020 18:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHCQYd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Aug 2020 12:24:33 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56008 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbgHCQYb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Aug 2020 12:24:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073GLuUD040454;
-        Mon, 3 Aug 2020 16:24:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Sj7HVhacoxnmHEpoaOlRqZUx5bPbdDtLYndSotkkDWI=;
- b=Uv0M+EBPNEV7yrVflMBYnR/HWhGvUr68kNqzOPG5+BUbXSuDNbUXG+z8wAvodeIaE/SJ
- MXRCwoVSCuC6Fb/jeiAD3OtuuEEoM+yI572mOdcUDTYyJEv4mzEDdcoNNeR0MLKPMa7i
- iKcK61gzjs1Fak8IGrs6cN5/b45PlGq6b2Mt4mrKbufggBmyJN8Xe2X6QVPFDziOvgig
- WPYUtYCkrnskEmVTKlIpwzJJYVj5HJ6897BWltu0gbi+X/ami3vUVZRzUJLc9OxEyr50
- uMOVVxG+Uch/aJVFbMQ/CoyaD+y38ipzFJ82FSROUiosQhsaytWw6bc5zp8SXsIlo8NT Gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32nc9ye1vg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 16:24:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073GN7gY019082;
-        Mon, 3 Aug 2020 16:24:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 32p5gqyrys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Aug 2020 16:24:24 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 073GONkh019394;
-        Mon, 3 Aug 2020 16:24:23 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 09:24:23 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: NFS over RDMA issues on Linux 5.4
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <8a1087d3-9add-dfe1-da0c-edab74fcca51@rothenpieler.org>
-Date:   Mon, 3 Aug 2020 12:24:21 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
+        id S1726622AbgHCQal (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Aug 2020 12:30:41 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42009 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726358AbgHCQal (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Aug 2020 12:30:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596472238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=mr7qr56B9egsGx9uRGRfdmlNyRxpcMInU0RCYxVoelY=;
+        b=JsU7bcCsDhxdB1YOYtOfSX2X56YvkpEpO/PCkcUGlNs12j+gYdfGQsr6gpFGJPq4TXsEb9
+        x7IwIBt3Q3TT4KzAn/n8vSVzWIYLwg7U0k4WNVY28eTnkISa1F9yGRVV4WoOPs2kkPiCMt
+        xqMs+EVgtmDKRE9NlqHqe4KE2zDy8CQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-0ifzl7qlNXKlqZKNCDwn0w-1; Mon, 03 Aug 2020 12:30:33 -0400
+X-MC-Unique: 0ifzl7qlNXKlqZKNCDwn0w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B87C81009600;
+        Mon,  3 Aug 2020 16:30:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0CE927BDC;
+        Mon,  3 Aug 2020 16:30:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] fscache rewrite
+References: <447452.1596109876@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1851199.1596472222.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <CE6C02CE-3EEB-4834-B499-376BC6020A17@oracle.com>
-References: <8a1087d3-9add-dfe1-da0c-edab74fcca51@rothenpieler.org>
-To:     Timo Rothenpieler <timo@rothenpieler.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
- adultscore=0 clxscore=1011 malwarescore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030119
+Date:   Mon, 03 Aug 2020 17:30:22 +0100
+Message-ID: <1851200.1596472222@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Timo-
+Hi Linus,
 
-> On Aug 3, 2020, at 11:05 AM, Timo Rothenpieler <timo@rothenpieler.org> =
-wrote:
->=20
-> Hello,
->=20
-> I have just deployed a new system with Mellanox ConnectX-4 VPI EDR IB =
-cards and wanted to setup NFS over RDMA on it.
->=20
-> However, while mounting the FS over RDMA works fine, actually using it =
-results in the following messages absolutely hammering dmesg on both =
-client and server:
->=20
->> =
-https://gist.github.com/BtbN/9582e597b6581f552fa15982b0285b80#file-server-=
-log
->=20
-> The spam only stops once I forcibly reboot the client. The filesystem =
-gets nowhere during all this. The retrans counter in nfsstat just keeps =
-going up, nothing actually gets done.
->=20
-> This is on Linux 5.4.54, using nfs-utils 2.4.3.
-> The mlx5 driver had enhanced-mode disabled in order to enable IPoIB =
-connected mode with an MTU of 65520.
->=20
-> Normal NFS 4.2 over tcp works perfectly fine on this setup, it's only =
-when I mount via rdma that things go wrong.
->=20
-> Is this an issue on my end, or did I run into a bug somewhere here?
-> Any pointers, patches and solutions to test are welcome.
+Here's a set of patches that massively overhauls fscache and cachefiles.
+It improves the code by:
 
-I haven't seen that failure mode here, so best I can recommend is
-keep investigating. I've copied linux-rdma in case they have any
-advice.
+ (*) Ripping out the stuff that uses page cache snooping and kernel_write(=
+)
+     and using kiocb instead.  This gives multiple wins: uses async DIO
+     rather than snooping for updated pages and then copying them, less VM
+     overhead.
 
+ (*) Object management is also simplified, getting rid of the state machin=
+e
+     that was managing things and using a much simplified thread pool
+     instead.
+
+ (*) Object invalidation creates a tmpfile and diverts new activity to tha=
+t
+     so that it doesn't have to synchronise in-flight ADIO.
+
+ (*) Using a bitmap stored in an xattr rather than using bmap to find out =
+if
+     a block is present in the cache.
+
+     Probing the backing filesystem's metadata to find out is not reliable
+     in modern extent-based filesystems as them may insert or remove block=
+s
+     of zeros.  Even SEEK_HOLE/SEEK_DATA are problematic since they don't
+     distinguish transparently-inserted bridging.
+
+The patchset includes a read helper that handles ->readpage, ->readpages,
+and preparatory writes in ->write_begin.  Matthew Wilcox is looking at
+using this as a way to roll his new ->readahead op out into filesystems.  =
+A
+good chunk of this will move into MM code.
+
+Note that this patchset does not include documentation changes yet.  I hav=
+e
+them (mostly) done, but they were based on the plain-text format that got
+ReST-ified, and I haven't managed to get around to the conversion yet.  I
+can create a follow-up patchset for that if this is taken.
+
+Further note: There's a last minute change due to a bit of debugging code
+that got left in mm/filemap.c that needed removing.
+
+However, there are reasons you might not want to take it yet:
+
+ (1) It starts off by disabling fscache support in all the filesystems tha=
+t
+     use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
+     Wysochanski has patches for nfs:
+
+	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwyso=
+cha@redhat.com/
+
+     but Trond and Anna haven't said anything yet, and Jeff Layton has
+     patches for ceph:
+
+	https://marc.info/?l=3Dceph-devel&m=3D159541538914631&w=3D2
+
+     and I've briefly discussed cifs with Steve, but nothing has started
+     there yet.  9p I haven't looked at yet.
+
+     Are we okay for going a kernel release with 4/5 filesystems with
+     caching disabled and then pushing the changes for individual
+     filesystems through their respective trees?  I floated this question
+     last week, but have no replies either way.
+
+ (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
+     that oopses pretty quickly with caching enabled).  Dave and Jeff's nf=
+s
+     and ceph code is getting close, but not quite there yet.
+
+ (3) Al has objections to the ITER_MAPPING iov_iter type that I added
+
+	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linu=
+x.org.uk/
+
+     but note that iov_iter_for_each_range() is not actually used by anyth=
+ing.
+
+     However, Willy likes it and would prefer to make it ITER_XARRAY inste=
+ad
+     as he might be able to use it in other places, though there's an issu=
+e
+     where I'm calling find_get_pages_contig() which takes a mapping (thou=
+gh
+     all it does is then get the xarray out of it).  Willy has made
+     suggestions as to how this may be achieved, but I haven't got round t=
+o
+     looking at them yet.
+
+     Instead I would have to use ITER_BVEC, which has quite a high overhea=
+d,
+     though it would mean that the RCU read lock wouldn't be necessary.  T=
+his
+     would require 1K of memory for every 256K block the cache wants to re=
+ad;
+     for any read >1M, I'd have to use vmalloc() instead.
+
+     I'd also prefer not to use ITER_BVEC because the offset and length ar=
+e
+     superfluous here.  If ITER_MAPPING is not good, would it be possible =
+to
+     have an ITER_PAGEARRAY that just takes a page array instead?  Or, eve=
+n,
+     create a transient xarray?
+
+ (4) The way object culling is managed needs overhauling too, but that's a
+     separate patchset in its own right.  We could wait till that's done
+     too, but its lack doesn't prevent what we have now from being used.
+
+David
+---
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c6=
+8:
+
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/fscache-iter-20200803
+
+for you to fetch changes up to 2f716a79439b100a3ded54b828f9c87582d13f86:
+
+  fscache: disable cookie when doing an invalidation for DIO write (2020-0=
+8-03 17:22:36 +0100)
+
+----------------------------------------------------------------
+Filesystem caching rewrite
+
+----------------------------------------------------------------
+David Howells (59):
+      nfs, cifs, ceph, 9p: Disable use of fscache prior to its rewrite
+      afs: Disable use of the fscache I/O routines
+      fscache: Add a cookie debug ID and use that in traces
+      fscache: Procfile to display cookies
+      fscache: Remove the old I/O API
+      fscache: Remove the netfs data from the cookie
+      fscache: Remove struct fscache_cookie_def
+      fscache: Remove store_limit* from struct fscache_object
+      fscache: Remove fscache_check_consistency()
+      fscache: Remove fscache_attr_changed()
+      fscache: Remove obsolete stats
+      fscache: Remove old I/O tracepoints
+      fscache: Temporarily disable fscache_invalidate()
+      fscache: Remove the I/O operation manager
+      iov_iter: Add ITER_MAPPING
+      vm: Add wait/unlock functions for PG_fscache
+      vfs: Export rw_verify_area() for use by cachefiles
+      vfs: Provide S_CACHE_FILE inode flag
+      mm: Provide lru_to_last_page() to get last of a page list
+      cachefiles: Remove tree of active files and use S_CACHE_FILE inode f=
+lag
+      fscache: Provide a simple thread pool for running ops asynchronously
+      fscache: Replace the object management state machine
+      fscache: Rewrite the I/O API based on iov_iter
+      fscache: Keep track of size of a file last set independently on the =
+server
+      fscache, cachefiles: Fix disabled histogram warnings
+      fscache: Recast assertion in terms of cookie not being an index
+      cachefiles: Remove some redundant checks on unsigned values
+      cachefiles: trace: Log coherency checks
+      cachefiles: Split cachefiles_drop_object() up a bit
+      cachefiles: Implement new fscache I/O backend API
+      cachefiles: Merge object->backer into object->dentry
+      cachefiles: Implement a content-present indicator and bitmap
+      cachefiles: Shape read requests
+      cachefiles: Round the cachefile size up to DIO block size
+      cachefiles: Implement read and write parts of new I/O API
+      cachefiles: Add I/O tracepoints
+      fscache: Add read helper
+      fscache: Display cache-specific data in /proc/fs/fscache/objects
+      fscache: Remove more obsolete stats
+      fscache: New stats
+      fscache, cachefiles: Rewrite invalidation
+      fscache: Implement "will_modify" parameter on fscache_use_cookie()
+      fscache: Provide resize operation
+      fscache: Remove the update operation
+      cachefiles: Shape write requests
+      afs: Fix interruption of operations
+      afs: Move key to afs_read struct
+      afs: Don't truncate iter during data fetch
+      afs: Log remote unmarshalling errors
+      afs: Set up the iov_iter before calling afs_extract_data()
+      afs: Use ITER_MAPPING for writing
+      afs: Interpose struct fscache_io_request into struct afs_read
+      afs: Note the amount transferred in fetch-data delivery
+      afs: Wait on PG_fscache before modifying/releasing a page
+      afs: Use new fscache I/O API
+      afs: Copy local writes to the cache when writing to the server
+      afs: Invoke fscache_resize_cookie() when handling ATTR_SIZE for seta=
+ttr
+      afs: Add O_DIRECT read support
+      afs: Skip truncation on the server of data we haven't written yet
+
+Jeff Layton (1):
+      fscache: disable cookie when doing an invalidation for DIO write
+
+ fs/9p/Kconfig                          |    2 +-
+ fs/Makefile                            |    2 +-
+ fs/afs/Kconfig                         |    4 +-
+ fs/afs/cache.c                         |   54 --
+ fs/afs/cell.c                          |    9 +-
+ fs/afs/dir.c                           |  242 +++++--
+ fs/afs/file.c                          |  577 +++++++--------
+ fs/afs/fs_operation.c                  |    4 +-
+ fs/afs/fsclient.c                      |  154 ++--
+ fs/afs/inode.c                         |  104 ++-
+ fs/afs/internal.h                      |   58 +-
+ fs/afs/rxrpc.c                         |  150 ++--
+ fs/afs/volume.c                        |    9 +-
+ fs/afs/write.c                         |  435 +++++++----
+ fs/afs/yfsclient.c                     |  113 ++-
+ fs/cachefiles/Makefile                 |    3 +-
+ fs/cachefiles/bind.c                   |   11 +-
+ fs/cachefiles/content-map.c            |  499 +++++++++++++
+ fs/cachefiles/daemon.c                 |   10 +-
+ fs/cachefiles/interface.c              |  580 ++++++++-------
+ fs/cachefiles/internal.h               |  142 ++--
+ fs/cachefiles/io.c                     |  325 +++++++++
+ fs/cachefiles/main.c                   |   12 +-
+ fs/cachefiles/namei.c                  |  508 +++++--------
+ fs/cachefiles/rdwr.c                   |  974 -------------------------
+ fs/cachefiles/xattr.c                  |  263 +++----
+ fs/ceph/Kconfig                        |    2 +-
+ fs/cifs/Kconfig                        |    2 +-
+ fs/fscache/Kconfig                     |   24 +-
+ fs/fscache/Makefile                    |   15 +-
+ fs/fscache/cache.c                     |  145 ++--
+ fs/fscache/cookie.c                    |  898 ++++++++++-------------
+ fs/fscache/dispatcher.c                |  150 ++++
+ fs/fscache/fsdef.c                     |   56 +-
+ fs/fscache/histogram.c                 |    2 +-
+ fs/fscache/internal.h                  |  264 +++----
+ fs/fscache/io.c                        |  206 ++++++
+ fs/fscache/main.c                      |   35 +-
+ fs/fscache/netfs.c                     |   10 +-
+ fs/fscache/obj.c                       |  366 ++++++++++
+ fs/fscache/object-list.c               |  129 +---
+ fs/fscache/object.c                    | 1133 ---------------------------=
 --
-Chuck Lever
-
-
+ fs/fscache/object_bits.c               |  120 +++
+ fs/fscache/operation.c                 |  633 ----------------
+ fs/fscache/page.c                      | 1248 ---------------------------=
+-----
+ fs/fscache/proc.c                      |   13 +-
+ fs/fscache/read_helper.c               |  701 ++++++++++++++++++
+ fs/fscache/stats.c                     |  269 +++----
+ fs/internal.h                          |    5 -
+ fs/nfs/Kconfig                         |    2 +-
+ fs/nfs/fscache-index.c                 |    4 +-
+ fs/read_write.c                        |    1 +
+ include/linux/fs.h                     |    2 +
+ include/linux/fscache-cache.h          |  508 +++----------
+ include/linux/fscache-obsolete.h       |   13 +
+ include/linux/fscache.h                |  834 +++++++++------------
+ include/linux/mm.h                     |    1 +
+ include/linux/pagemap.h                |   14 +
+ include/linux/uio.h                    |   11 +
+ include/net/af_rxrpc.h                 |    2 +-
+ include/trace/events/afs.h             |   51 +-
+ include/trace/events/cachefiles.h      |  285 ++++++--
+ include/trace/events/fscache.h         |  428 ++---------
+ include/trace/events/fscache_support.h |   97 +++
+ lib/iov_iter.c                         |  286 +++++++-
+ mm/filemap.c                           |   18 +
+ net/rxrpc/recvmsg.c                    |    9 +-
+ 67 files changed, 5941 insertions(+), 8295 deletions(-)
+ create mode 100644 fs/cachefiles/content-map.c
+ create mode 100644 fs/cachefiles/io.c
+ delete mode 100644 fs/cachefiles/rdwr.c
+ create mode 100644 fs/fscache/dispatcher.c
+ create mode 100644 fs/fscache/io.c
+ create mode 100644 fs/fscache/obj.c
+ delete mode 100644 fs/fscache/object.c
+ create mode 100644 fs/fscache/object_bits.c
+ delete mode 100644 fs/fscache/operation.c
+ delete mode 100644 fs/fscache/page.c
+ create mode 100644 fs/fscache/read_helper.c
+ create mode 100644 include/linux/fscache-obsolete.h
+ create mode 100644 include/trace/events/fscache_support.h
 
