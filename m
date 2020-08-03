@@ -2,350 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05D9F23AA77
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Aug 2020 18:30:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74EF23AB1B
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Aug 2020 19:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHCQal (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Aug 2020 12:30:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42009 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726358AbgHCQal (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Aug 2020 12:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596472238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=mr7qr56B9egsGx9uRGRfdmlNyRxpcMInU0RCYxVoelY=;
-        b=JsU7bcCsDhxdB1YOYtOfSX2X56YvkpEpO/PCkcUGlNs12j+gYdfGQsr6gpFGJPq4TXsEb9
-        x7IwIBt3Q3TT4KzAn/n8vSVzWIYLwg7U0k4WNVY28eTnkISa1F9yGRVV4WoOPs2kkPiCMt
-        xqMs+EVgtmDKRE9NlqHqe4KE2zDy8CQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-0ifzl7qlNXKlqZKNCDwn0w-1; Mon, 03 Aug 2020 12:30:33 -0400
-X-MC-Unique: 0ifzl7qlNXKlqZKNCDwn0w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B87C81009600;
-        Mon,  3 Aug 2020 16:30:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0CE927BDC;
-        Mon,  3 Aug 2020 16:30:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] fscache rewrite
-References: <447452.1596109876@warthog.procyon.org.uk>
+        id S1728079AbgHCQ75 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Aug 2020 12:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgHCQ75 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Aug 2020 12:59:57 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4F7C06174A
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Aug 2020 09:59:57 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id c16so19895519ils.8
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Aug 2020 09:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J9Mt7Wlzvt+mnSi3sYuDuCN21HjAwMDD1xblEj+GM9I=;
+        b=Ky8GeWhOcyU8a19b8bBcZR4O9c1tefiP3iArXAoJmqTViEF4TKWAyvOIV3lChdfA+B
+         s52KGZezSJFOllwLfmVnlyZkyfwnxmnaupKwiXH3eDblX0ViB6Qu/HC0wICny5+L6qLE
+         ksPUiZxl5cdCex2pbqu/826d82ACm1SNFm19PMOcM9+YeEpwtsuCuqe5XpA8bNe5fV7c
+         GIUUx0t91c+v2EgGw6uBOiVoG9xyMu2DOOIu1EE2RrdI4X4MwXoAZKQ6ntJhMYABckbZ
+         9JqiINokqccd2vB/k3ltk4m8rR+wnD7NVw0q5OTwSg+eYAwmpv/cGmZz5HntGr9McNGg
+         NEfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=J9Mt7Wlzvt+mnSi3sYuDuCN21HjAwMDD1xblEj+GM9I=;
+        b=dLKM+17QlXAHbVIxuwdxdZ5bebsLWWcTXnr5pUuDKPtr6yZwWhhM9V/QT4QtEQvaKb
+         ZrWkd6XgvNRfbMvBHhNGC5cL4j3uwE8ScWkoZmV6DMTG6A9db+c7qfohrImGKjHvZH0u
+         kj+Kykhu2umVMsCChMfghulv1wHaQdUazWYZfIGhbjBAsvA9D7cnPBEFNn5AUHQH3dzb
+         Gy362v283knyMsngy1g7shDEK2idmNdkJEm5J551aKE4a1Fkmn1xefnv815wD7SUVx93
+         hOgbgQfA+R7V/5H/gwsf+n4QAER9G3EmtB9EPw3yP8Jbjhfywr3W/xy/OY8KM4uWZ4eG
+         EA1g==
+X-Gm-Message-State: AOAM5308coDGaX+U5+bOCiKbNkbinu3pC/a7GUtP23cNiV99HnRns4X+
+        FKHmBMdCr7D+KJYOACtJx68=
+X-Google-Smtp-Source: ABdhPJz8hPkS8Q783GwEKdTcvcIxrIBHBJai5OTKgCnaxARcB1qMm4UMGVsDZPJevFiUkr8eGUUnZg==
+X-Received: by 2002:a92:b311:: with SMTP id p17mr332200ilh.232.1596473996680;
+        Mon, 03 Aug 2020 09:59:56 -0700 (PDT)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.gmail.com with ESMTPSA id f20sm10794639ilj.62.2020.08.03.09.59.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 09:59:55 -0700 (PDT)
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     bfields@redhat.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v3 0/6] NFSD: Add support for the v4.2 READ_PLUS operation
+Date:   Mon,  3 Aug 2020 12:59:48 -0400
+Message-Id: <20200803165954.1348263-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1851199.1596472222.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 03 Aug 2020 17:30:22 +0100
-Message-ID: <1851200.1596472222@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Here's a set of patches that massively overhauls fscache and cachefiles.
-It improves the code by:
+These patches add server support for the READ_PLUS operation, which
+breaks read requests into several "data" and "hole" segments when
+replying to the client.
 
- (*) Ripping out the stuff that uses page cache snooping and kernel_write(=
-)
-     and using kiocb instead.  This gives multiple wins: uses async DIO
-     rather than snooping for updated pages and then copying them, less VM
-     overhead.
+Here are the results of some performance tests I ran on my own virtual
+machines, which does still have the slow SEEK_HOLE/SEEK_DATA behavior.
+A recent minimum-compiler-version patch makes installing newer kernels
+difficult on the lab machines I have access to, but I'll still try to
+collect that data since it seemed promising during my last posting
+(https://www.spinics.net/lists/linux-nfs/msg76487.html).
 
- (*) Object management is also simplified, getting rid of the state machin=
-e
-     that was managing things and using a much simplified thread pool
-     instead.
+I tested by reading various 2G files from a few different underlying
+filesystems and across several NFS versions. I used the `vmtouch` utility
+to make sure files were only cached when we wanted them to be. In addition
+to 100% data and 100% hole cases, I also tested with files that alternate
+between data and hole segments. These files have either 4K, 8K, 16K, or 32K
+segment sizes and start with either data or hole segments. So the file
+mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
+has 32K segments beginning with a hole. The units are in seconds, with the
+first number for each NFS version being the uncached read time and the second
+number is for when the file is cached on the server.
 
- (*) Object invalidation creates a tmpfile and diverts new activity to tha=
-t
-     so that it doesn't have to synchronise in-flight ADIO.
 
- (*) Using a bitmap stored in an xattr rather than using bmap to find out =
-if
-     a block is present in the cache.
+          |         v3        |        v4.0       |        v4.1       |        v4.2       |
+ext4      | uncached:  cached | uncached:  cached | uncached:  cached | uncached:  cached |
+----------|-------------------|-------------------|-------------------|-------------------|
+data      |   2.697 :   1.365 |   2.539 :   1.482 |   2.246 :   1.595 |   2.516 :   1.716 |
+hole      |   2.389 :   1.480 |   1.692 :   1.444 |   1.904 :   1.539 |   1.042 :   1.005 |
+mixed-4d  |   2.426 :   1.448 |   2.468 :   1.480 |   2.258 :   1.731 |   2.408 :   1.674 |
+mixed-8d  |   2.446 :   1.592 |   2.497 :   1.523 |   2.240 :   1.736 |   2.179 :   1.547 |
+mixed-16d |   2.608 :   1.575 |   2.446 :   1.582 |   2.330 :   1.670 |   2.192 :   1.488 |
+mixed-32d |   2.544 :   1.587 |   2.164 :   1.499 |   2.076 :   1.452 |   1.982 :   1.346 |
+mixed-4h  |   2.591 :   1.486 |   2.233 :   1.503 |   2.190 :   1.520 |   3.679 :   1.815 |
+mixed-8h  |   2.498 :   1.547 |   2.168 :   1.510 |   2.098 :   1.511 |   2.815 :   1.484 |
+mixed-16h |   2.480 :   1.664 |   2.152 :   1.597 |   2.096 :   1.537 |   2.288 :   1.580 |
+mixed-32h |   2.520 :   1.467 |   2.171 :   1.496 |   2.246 :   1.593 |   2.066 :   1.389 |
 
-     Probing the backing filesystem's metadata to find out is not reliable
-     in modern extent-based filesystems as them may insert or remove block=
-s
-     of zeros.  Even SEEK_HOLE/SEEK_DATA are problematic since they don't
-     distinguish transparently-inserted bridging.
+          |         v3        |        v4.0       |        v4.1       |        v4.2       |
+xfs       | uncached:  cached | uncached:  cached | uncached:  cached | uncached:  cached |
+----------|-------------------|-------------------|-------------------|-------------------|
+data      |   2.074 :   1.353 |   2.129 :   1.489 |   2.198 :   1.564 |   2.579 :   1.719 |
+hole      |   1.714 :   1.430 |   1.647 :   1.440 |   1.748 :   1.464 |   1.019 :   1.028 |
+mixed-4d  |   2.699 :   1.561 |   2.782 :   1.657 |   2.800 :   1.619 |   2.848 :   2.166 |
+mixed-8d  |   2.204 :   1.540 |   2.346 :   1.595 |   2.356 :   1.589 |   2.335 :   1.809 |
+mixed-16d |   2.034 :   1.445 |   2.212 :   1.561 |   2.172 :   1.546 |   2.127 :   1.658 |
+mixed-32d |   1.982 :   1.480 |   2.135 :   1.544 |   2.136 :   1.565 |   2.024 :   1.555 |
+mixed-4h  |   2.600 :   1.549 |   2.790 :   1.660 |   2.745 :   1.634 |   8.949 :   2.529 |
+mixed-8h  |   2.283 :   1.555 |   2.414 :   1.605 |   2.373 :   1.607 |   5.626 :   2.015 |
+mixed-16h |   2.115 :   1.512 |   2.247 :   1.593 |   2.217 :   1.608 |   3.740 :   1.803 |
+mixed-32h |   2.069 :   1.499 |   2.212 :   1.582 |   2.235 :   1.631 |   2.819 :   1.542 |
 
-The patchset includes a read helper that handles ->readpage, ->readpages,
-and preparatory writes in ->write_begin.  Matthew Wilcox is looking at
-using this as a way to roll his new ->readahead op out into filesystems.  =
-A
-good chunk of this will move into MM code.
+          |         v3        |        v4.0       |        v4.1       |        v4.2       |
+btrfs     | uncached:  cached | uncached:  cached | uncached:  cached | uncached:  cached |
+----------|-------------------|-------------------|-------------------|-------------------|
+data      |   2.417 :   1.317 |   2.095 :   1.445 |   2.145 :   1.523 |   2.615 :   1.713 |
+hole      |   2.107 :   1.483 |   2.121 :   1.496 |   2.106 :   1.461 |   1.011 :   1.061 |
+mixed-4d  |   2.348 :   1.471 |   2.370 :   1.523 |   2.379 :   1.499 |   3.028 : 225.812 |
+mixed-8d  |   2.227 :   1.476 |   2.231 :   1.467 |   2.272 :   1.529 |   2.723 :  36.179 |
+mixed-16d |   2.175 :   1.460 |   2.208 :   1.457 |   2.200 :   1.464 |   2.526 :  10.371 |
+mixed-32d |   2.148 :   1.501 |   2.191 :   1.468 |   2.167 :   1.471 |   2.455 :   3.367 |
+mixed-4h  |   2.362 :   1.561 |   2.387 :   1.513 |   2.352 :   1.536 |   5.935 :  41.494 |
+mixed-8h  |   2.241 :   1.477 |   2.251 :   1.503 |   2.256 :   1.496 |   3.672 :  10.261 |
+mixed-16h |   2.238 :   1.477 |   2.188 :   1.496 |   2.183 :   1.503 |   2.955 :   3.809 |
+mixed-32h |   2.146 :   1.490 |   2.135 :   1.523 |   2.157 :   1.557 |   2.327 :   2.088 |
 
-Note that this patchset does not include documentation changes yet.  I hav=
-e
-them (mostly) done, but they were based on the plain-text format that got
-ReST-ified, and I haven't managed to get around to the conversion yet.  I
-can create a follow-up patchset for that if this is taken.
+Anna Schumaker (6):
+  SUNRPC: Implement xdr_reserve_space_vec()
+  NFSD: nfsd4_encode_readv() can use xdr_reserve_space_vec()
+  NFSD: Add READ_PLUS data support
+  NFSD: Add READ_PLUS hole segment encoding
+  NFSD: Return both a hole and a data segment
+  NFSD: Encode a full READ_PLUS reply
 
-Further note: There's a last minute change due to a bit of debugging code
-that got left in mm/filemap.c that needed removing.
+ fs/nfsd/nfs4proc.c         |  17 ++++
+ fs/nfsd/nfs4xdr.c          | 169 +++++++++++++++++++++++++++++++------
+ include/linux/sunrpc/xdr.h |   2 +
+ net/sunrpc/xdr.c           |  45 ++++++++++
+ 4 files changed, 206 insertions(+), 27 deletions(-)
 
-However, there are reasons you might not want to take it yet:
-
- (1) It starts off by disabling fscache support in all the filesystems tha=
-t
-     use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
-     Wysochanski has patches for nfs:
-
-	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwyso=
-cha@redhat.com/
-
-     but Trond and Anna haven't said anything yet, and Jeff Layton has
-     patches for ceph:
-
-	https://marc.info/?l=3Dceph-devel&m=3D159541538914631&w=3D2
-
-     and I've briefly discussed cifs with Steve, but nothing has started
-     there yet.  9p I haven't looked at yet.
-
-     Are we okay for going a kernel release with 4/5 filesystems with
-     caching disabled and then pushing the changes for individual
-     filesystems through their respective trees?  I floated this question
-     last week, but have no replies either way.
-
- (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
-     that oopses pretty quickly with caching enabled).  Dave and Jeff's nf=
-s
-     and ceph code is getting close, but not quite there yet.
-
- (3) Al has objections to the ITER_MAPPING iov_iter type that I added
-
-	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linu=
-x.org.uk/
-
-     but note that iov_iter_for_each_range() is not actually used by anyth=
-ing.
-
-     However, Willy likes it and would prefer to make it ITER_XARRAY inste=
-ad
-     as he might be able to use it in other places, though there's an issu=
-e
-     where I'm calling find_get_pages_contig() which takes a mapping (thou=
-gh
-     all it does is then get the xarray out of it).  Willy has made
-     suggestions as to how this may be achieved, but I haven't got round t=
-o
-     looking at them yet.
-
-     Instead I would have to use ITER_BVEC, which has quite a high overhea=
-d,
-     though it would mean that the RCU read lock wouldn't be necessary.  T=
-his
-     would require 1K of memory for every 256K block the cache wants to re=
-ad;
-     for any read >1M, I'd have to use vmalloc() instead.
-
-     I'd also prefer not to use ITER_BVEC because the offset and length ar=
-e
-     superfluous here.  If ITER_MAPPING is not good, would it be possible =
-to
-     have an ITER_PAGEARRAY that just takes a page array instead?  Or, eve=
-n,
-     create a transient xarray?
-
- (4) The way object culling is managed needs overhauling too, but that's a
-     separate patchset in its own right.  We could wait till that's done
-     too, but its lack doesn't prevent what we have now from being used.
-
-David
----
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c6=
-8:
-
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/fscache-iter-20200803
-
-for you to fetch changes up to 2f716a79439b100a3ded54b828f9c87582d13f86:
-
-  fscache: disable cookie when doing an invalidation for DIO write (2020-0=
-8-03 17:22:36 +0100)
-
-----------------------------------------------------------------
-Filesystem caching rewrite
-
-----------------------------------------------------------------
-David Howells (59):
-      nfs, cifs, ceph, 9p: Disable use of fscache prior to its rewrite
-      afs: Disable use of the fscache I/O routines
-      fscache: Add a cookie debug ID and use that in traces
-      fscache: Procfile to display cookies
-      fscache: Remove the old I/O API
-      fscache: Remove the netfs data from the cookie
-      fscache: Remove struct fscache_cookie_def
-      fscache: Remove store_limit* from struct fscache_object
-      fscache: Remove fscache_check_consistency()
-      fscache: Remove fscache_attr_changed()
-      fscache: Remove obsolete stats
-      fscache: Remove old I/O tracepoints
-      fscache: Temporarily disable fscache_invalidate()
-      fscache: Remove the I/O operation manager
-      iov_iter: Add ITER_MAPPING
-      vm: Add wait/unlock functions for PG_fscache
-      vfs: Export rw_verify_area() for use by cachefiles
-      vfs: Provide S_CACHE_FILE inode flag
-      mm: Provide lru_to_last_page() to get last of a page list
-      cachefiles: Remove tree of active files and use S_CACHE_FILE inode f=
-lag
-      fscache: Provide a simple thread pool for running ops asynchronously
-      fscache: Replace the object management state machine
-      fscache: Rewrite the I/O API based on iov_iter
-      fscache: Keep track of size of a file last set independently on the =
-server
-      fscache, cachefiles: Fix disabled histogram warnings
-      fscache: Recast assertion in terms of cookie not being an index
-      cachefiles: Remove some redundant checks on unsigned values
-      cachefiles: trace: Log coherency checks
-      cachefiles: Split cachefiles_drop_object() up a bit
-      cachefiles: Implement new fscache I/O backend API
-      cachefiles: Merge object->backer into object->dentry
-      cachefiles: Implement a content-present indicator and bitmap
-      cachefiles: Shape read requests
-      cachefiles: Round the cachefile size up to DIO block size
-      cachefiles: Implement read and write parts of new I/O API
-      cachefiles: Add I/O tracepoints
-      fscache: Add read helper
-      fscache: Display cache-specific data in /proc/fs/fscache/objects
-      fscache: Remove more obsolete stats
-      fscache: New stats
-      fscache, cachefiles: Rewrite invalidation
-      fscache: Implement "will_modify" parameter on fscache_use_cookie()
-      fscache: Provide resize operation
-      fscache: Remove the update operation
-      cachefiles: Shape write requests
-      afs: Fix interruption of operations
-      afs: Move key to afs_read struct
-      afs: Don't truncate iter during data fetch
-      afs: Log remote unmarshalling errors
-      afs: Set up the iov_iter before calling afs_extract_data()
-      afs: Use ITER_MAPPING for writing
-      afs: Interpose struct fscache_io_request into struct afs_read
-      afs: Note the amount transferred in fetch-data delivery
-      afs: Wait on PG_fscache before modifying/releasing a page
-      afs: Use new fscache I/O API
-      afs: Copy local writes to the cache when writing to the server
-      afs: Invoke fscache_resize_cookie() when handling ATTR_SIZE for seta=
-ttr
-      afs: Add O_DIRECT read support
-      afs: Skip truncation on the server of data we haven't written yet
-
-Jeff Layton (1):
-      fscache: disable cookie when doing an invalidation for DIO write
-
- fs/9p/Kconfig                          |    2 +-
- fs/Makefile                            |    2 +-
- fs/afs/Kconfig                         |    4 +-
- fs/afs/cache.c                         |   54 --
- fs/afs/cell.c                          |    9 +-
- fs/afs/dir.c                           |  242 +++++--
- fs/afs/file.c                          |  577 +++++++--------
- fs/afs/fs_operation.c                  |    4 +-
- fs/afs/fsclient.c                      |  154 ++--
- fs/afs/inode.c                         |  104 ++-
- fs/afs/internal.h                      |   58 +-
- fs/afs/rxrpc.c                         |  150 ++--
- fs/afs/volume.c                        |    9 +-
- fs/afs/write.c                         |  435 +++++++----
- fs/afs/yfsclient.c                     |  113 ++-
- fs/cachefiles/Makefile                 |    3 +-
- fs/cachefiles/bind.c                   |   11 +-
- fs/cachefiles/content-map.c            |  499 +++++++++++++
- fs/cachefiles/daemon.c                 |   10 +-
- fs/cachefiles/interface.c              |  580 ++++++++-------
- fs/cachefiles/internal.h               |  142 ++--
- fs/cachefiles/io.c                     |  325 +++++++++
- fs/cachefiles/main.c                   |   12 +-
- fs/cachefiles/namei.c                  |  508 +++++--------
- fs/cachefiles/rdwr.c                   |  974 -------------------------
- fs/cachefiles/xattr.c                  |  263 +++----
- fs/ceph/Kconfig                        |    2 +-
- fs/cifs/Kconfig                        |    2 +-
- fs/fscache/Kconfig                     |   24 +-
- fs/fscache/Makefile                    |   15 +-
- fs/fscache/cache.c                     |  145 ++--
- fs/fscache/cookie.c                    |  898 ++++++++++-------------
- fs/fscache/dispatcher.c                |  150 ++++
- fs/fscache/fsdef.c                     |   56 +-
- fs/fscache/histogram.c                 |    2 +-
- fs/fscache/internal.h                  |  264 +++----
- fs/fscache/io.c                        |  206 ++++++
- fs/fscache/main.c                      |   35 +-
- fs/fscache/netfs.c                     |   10 +-
- fs/fscache/obj.c                       |  366 ++++++++++
- fs/fscache/object-list.c               |  129 +---
- fs/fscache/object.c                    | 1133 ---------------------------=
---
- fs/fscache/object_bits.c               |  120 +++
- fs/fscache/operation.c                 |  633 ----------------
- fs/fscache/page.c                      | 1248 ---------------------------=
------
- fs/fscache/proc.c                      |   13 +-
- fs/fscache/read_helper.c               |  701 ++++++++++++++++++
- fs/fscache/stats.c                     |  269 +++----
- fs/internal.h                          |    5 -
- fs/nfs/Kconfig                         |    2 +-
- fs/nfs/fscache-index.c                 |    4 +-
- fs/read_write.c                        |    1 +
- include/linux/fs.h                     |    2 +
- include/linux/fscache-cache.h          |  508 +++----------
- include/linux/fscache-obsolete.h       |   13 +
- include/linux/fscache.h                |  834 +++++++++------------
- include/linux/mm.h                     |    1 +
- include/linux/pagemap.h                |   14 +
- include/linux/uio.h                    |   11 +
- include/net/af_rxrpc.h                 |    2 +-
- include/trace/events/afs.h             |   51 +-
- include/trace/events/cachefiles.h      |  285 ++++++--
- include/trace/events/fscache.h         |  428 ++---------
- include/trace/events/fscache_support.h |   97 +++
- lib/iov_iter.c                         |  286 +++++++-
- mm/filemap.c                           |   18 +
- net/rxrpc/recvmsg.c                    |    9 +-
- 67 files changed, 5941 insertions(+), 8295 deletions(-)
- create mode 100644 fs/cachefiles/content-map.c
- create mode 100644 fs/cachefiles/io.c
- delete mode 100644 fs/cachefiles/rdwr.c
- create mode 100644 fs/fscache/dispatcher.c
- create mode 100644 fs/fscache/io.c
- create mode 100644 fs/fscache/obj.c
- delete mode 100644 fs/fscache/object.c
- create mode 100644 fs/fscache/object_bits.c
- delete mode 100644 fs/fscache/operation.c
- delete mode 100644 fs/fscache/page.c
- create mode 100644 fs/fscache/read_helper.c
- create mode 100644 include/linux/fscache-obsolete.h
- create mode 100644 include/trace/events/fscache_support.h
+-- 
+2.27.0
 
