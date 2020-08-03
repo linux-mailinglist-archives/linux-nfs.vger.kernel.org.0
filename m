@@ -2,116 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C06992351D7
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Aug 2020 13:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0BDC23A928
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Aug 2020 17:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgHALKp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 1 Aug 2020 07:10:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54092 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728418AbgHALKo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 1 Aug 2020 07:10:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596280243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iUDWn7O+gKFLZMJSiLkM1M/5/GiJ3nnxzmIjw/TR8oo=;
-        b=ZCICIz+A0VOZm/2l8qhC6XUxTLoqkyN10oAJ8QESLE2/prULfzSHJKPOMVDBhmvyY8iRR/
-        v8kphvjtm1NEp5mpEa5M4Gt22V2G+VipJfyCj3moq0ThNJ6Nq3DdTZ4LGLjhYi+G/G0K3A
-        Q5QZsTW3rLXxMpH7K9YVIP+KBP6vd4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-xS_n-wJnO6OmeHCvTaOOWw-1; Sat, 01 Aug 2020 07:10:41 -0400
-X-MC-Unique: xS_n-wJnO6OmeHCvTaOOWw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B87A3106B242;
-        Sat,  1 Aug 2020 11:10:40 +0000 (UTC)
-Received: from aion.usersys.redhat.com (ovpn-115-198.rdu2.redhat.com [10.10.115.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6703E6FEEB;
-        Sat,  1 Aug 2020 11:10:40 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 92A091A0008; Sat,  1 Aug 2020 07:10:39 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/2] nfs: nfs_file_write() should check for writeback errors
-Date:   Sat,  1 Aug 2020 07:10:39 -0400
-Message-Id: <20200801111039.1407632-3-smayhew@redhat.com>
-In-Reply-To: <20200801111039.1407632-1-smayhew@redhat.com>
-References: <20200801111039.1407632-1-smayhew@redhat.com>
+        id S1726276AbgHCPLM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Aug 2020 11:11:12 -0400
+Received: from btbn.de ([5.9.118.179]:53806 "EHLO btbn.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgHCPLM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:11:12 -0400
+X-Greylist: delayed 318 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 11:11:11 EDT
+Received: from [IPv6:2001:16b8:6478:5500:44fa:818:1e31:9c59] (200116b86478550044fa08181e319c59.dip.versatel-1u1.de [IPv6:2001:16b8:6478:5500:44fa:818:1e31:9c59])
+        by btbn.de (Postfix) with ESMTPSA id 26B97200435
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Aug 2020 17:05:53 +0200 (CEST)
+To:     linux-nfs@vger.kernel.org
+From:   Timo Rothenpieler <timo@rothenpieler.org>
+Subject: NFS over RDMA issues on Linux 5.4
+Message-ID: <8a1087d3-9add-dfe1-da0c-edab74fcca51@rothenpieler.org>
+Date:   Mon, 3 Aug 2020 17:05:52 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFS_CONTEXT_ERROR_WRITE flag (as well as the check of said flag) was
-removed by commit 6fbda89b257f.  The absence of an error check allows
-writes to be continually queued up for a server that may no longer be
-able to handle them.  Fix it by adding an error check using the generic
-error reporting functions.
+Hello,
 
-Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with
-generic one")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfs/file.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+I have just deployed a new system with Mellanox ConnectX-4 VPI EDR IB 
+cards and wanted to setup NFS over RDMA on it.
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index d72496efa17b..63940a7a70be 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -590,12 +590,14 @@ static const struct vm_operations_struct nfs_file_vm_ops = {
- 	.page_mkwrite = nfs_vm_page_mkwrite,
- };
- 
--static int nfs_need_check_write(struct file *filp, struct inode *inode)
-+static int nfs_need_check_write(struct file *filp, struct inode *inode,
-+				int error)
- {
- 	struct nfs_open_context *ctx;
- 
- 	ctx = nfs_file_open_context(filp);
--	if (nfs_ctx_key_to_expire(ctx, inode))
-+	if (nfs_error_is_fatal_on_server(error) ||
-+	    nfs_ctx_key_to_expire(ctx, inode))
- 		return 1;
- 	return 0;
- }
-@@ -606,6 +608,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	struct inode *inode = file_inode(file);
- 	unsigned long written = 0;
- 	ssize_t result;
-+	errseq_t since;
-+	int error;
- 
- 	result = nfs_key_timeout_notify(file, inode);
- 	if (result)
-@@ -630,6 +634,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos > i_size_read(inode))
- 		nfs_revalidate_mapping(inode, file->f_mapping);
- 
-+	since = filemap_sample_wb_err(file->f_mapping);
- 	nfs_start_io_write(inode);
- 	result = generic_write_checks(iocb, from);
- 	if (result > 0) {
-@@ -648,7 +653,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 		goto out;
- 
- 	/* Return error values */
--	if (nfs_need_check_write(file, inode)) {
-+	error = filemap_check_wb_err(file->f_mapping, since);
-+	if (nfs_need_check_write(file, inode, error)) {
- 		int err = nfs_wb_all(inode);
- 		if (err < 0)
- 			result = err;
--- 
-2.25.4
+However, while mounting the FS over RDMA works fine, actually using it 
+results in the following messages absolutely hammering dmesg on both 
+client and server:
 
+> https://gist.github.com/BtbN/9582e597b6581f552fa15982b0285b80#file-server-log
+
+The spam only stops once I forcibly reboot the client. The filesystem 
+gets nowhere during all this. The retrans counter in nfsstat just keeps 
+going up, nothing actually gets done.
+
+This is on Linux 5.4.54, using nfs-utils 2.4.3.
+The mlx5 driver had enhanced-mode disabled in order to enable IPoIB 
+connected mode with an MTU of 65520.
+
+Normal NFS 4.2 over tcp works perfectly fine on this setup, it's only 
+when I mount via rdma that things go wrong.
+
+Is this an issue on my end, or did I run into a bug somewhere here?
+Any pointers, patches and solutions to test are welcome.
+
+
+Thanks,
+Timo Rothenpieler
