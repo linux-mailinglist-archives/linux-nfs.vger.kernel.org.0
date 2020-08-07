@@ -2,107 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F6B23D2FB
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Aug 2020 22:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9871423EF5F
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Aug 2020 16:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgHEU0l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Aug 2020 16:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgHEU0l (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:26:41 -0400
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A406622B42
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Aug 2020 20:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596659200;
-        bh=+xdDK7UiSeg17vtYouNeo6HcNkdiq8oHOMNNJBmqyD0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=hc4/CALOXoFuNxN08WyaTNoiAfA+QJst5LBsyVDcbBo/Z7XuO//VsM9TdhW6550Ub
-         oQx/nq8+HXP7FLsNwOJA7xSSzOZR3s1JHwqeHeS+TGletpygGqNn0z4nhTahdg2y0F
-         3cPjOxkWHY9PX4fqO4cfQ8A/qKv1/ZFyR1kx8Clc=
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFS: Don't return layout segments that are in use
-Date:   Wed,  5 Aug 2020 16:24:31 -0400
-Message-Id: <20200805202431.627013-3-trondmy@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200805202431.627013-2-trondmy@kernel.org>
-References: <20200805202431.627013-1-trondmy@kernel.org>
- <20200805202431.627013-2-trondmy@kernel.org>
+        id S1726766AbgHGOuk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 7 Aug 2020 10:50:40 -0400
+Received: from mail.furshetcrimea.ru ([193.27.243.220]:51882 "EHLO
+        furshetcrimea.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgHGOuk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Aug 2020 10:50:40 -0400
+X-Greylist: delayed 5000 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 10:50:37 EDT
+Received: from [154.118.61.214] (account info@furshetcrimea.ru HELO [192.168.8.100])
+  by furshetcrimea.ru (CommuniGate Pro SMTP 6.1.10)
+  with ESMTPA id 11097438; Fri, 07 Aug 2020 16:34:41 +0300
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Bei Interesse antworten.
+To:     Recipients <info@furshetcrimea.ru>
+From:   info@furshetcrimea.ru
+Date:   Fri, 07 Aug 2020 14:22:04 +0100
+Reply-To: mattiassjoborg751@gmail.com
+X-Antivirus: Avast (VPS 200807-0, 08/07/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <auto-000011097438@furshetcrimea.ru>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Schöne Grüße,
 
-If the NFS_LAYOUT_RETURN_REQUESTED flag is set, we want to return the
-layout as soon as possible, meaning that the affected layout segments
-should be marked as invalid, and should no longer be in use for I/O.
+Mein Name ist MATTIAS SJOBORG, ich bin Schweizer Staatsbürger und (Vorsitzender des Vergütungs- und Nominierungsausschusses) von Tethys Petroleum, einem multinationalen Ölkonzern mit Sitz in London-England, Großbritannien. Ich bitte Sie um Ihre Hilfe, um die Summe von vierzig Millionen Dollar abzurufen, die aus zwei Sendungsboxen besteht.
 
-Fixes: f0b429819b5f ("pNFS: Ignore non-recalled layouts in pnfs_layout_need_return()")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/pnfs.c | 34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+Dieses Geld wurde von der Firma erworben und von einem Diplomaten begleitet und korrekt in einer Sicherheitsfirma in Amerika hinterlegt. Mein Grund dafür ist, dass ich von der Firma zu lange um meine Ansprüche betrogen wurde, nur weil ich kein bin Britisch. Die Kontaktdaten des Diplomaten erhalten Sie, wenn Sie Ihr Interesse bekunden, mir zu helfen.
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 262ce01c7abe..b5baf36d4de5 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1226,31 +1226,27 @@ pnfs_send_layoutreturn(struct pnfs_layout_hdr *lo,
- 	return status;
- }
- 
-+static bool
-+pnfs_layout_segments_returnable(struct pnfs_layout_hdr *lo,
-+				enum pnfs_iomode iomode,
-+				u32 seq)
-+{
-+	struct pnfs_layout_range recall_range = {
-+		.length = NFS4_MAX_UINT64,
-+		.iomode = iomode,
-+	};
-+	return pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
-+					       &recall_range, seq) != -EBUSY;
-+}
-+
- /* Return true if layoutreturn is needed */
- static bool
- pnfs_layout_need_return(struct pnfs_layout_hdr *lo)
- {
--	struct pnfs_layout_segment *s;
--	enum pnfs_iomode iomode;
--	u32 seq;
--
- 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
- 		return false;
--
--	seq = lo->plh_return_seq;
--	iomode = lo->plh_return_iomode;
--
--	/* Defer layoutreturn until all recalled lsegs are done */
--	list_for_each_entry(s, &lo->plh_segs, pls_list) {
--		if (seq && pnfs_seqid_is_newer(s->pls_seq, seq))
--			continue;
--		if (iomode != IOMODE_ANY && s->pls_range.iomode != iomode)
--			continue;
--		if (test_bit(NFS_LSEG_LAYOUTRETURN, &s->pls_flags))
--			return false;
--	}
--
--	return true;
-+	return pnfs_layout_segments_returnable(lo, lo->plh_return_iomode,
-+					       lo->plh_return_seq);
- }
- 
- static void pnfs_layoutreturn_before_put_layout_hdr(struct pnfs_layout_hdr *lo)
+Jede der Schachteln enthält 20 Mio. USD. Für Ihre Hilfe bin ich bereit, 40% an Sie freizugeben. Aus Sicherheitsgründen wurde die Sendung als VERTRAULICHE DIPLOMATISCHE DOKUMENTE registriert, und ich kann erklären, warum dies so erklärt wurde. Denken Sie daran, dass der Diplomat den Inhalt der Sendung nicht kennt. Er ist seit einem Monat dort, während ich nach einem zuverlässigen Partner suchen möchte. Ich werde das Land verlassen, sobald die Sendung für Sie an Sie geliefert wird Private Investitionen und ich haben geschworen, niemals nach London zurückzukehren. Bitte, ich brauche Ihre dringende Antwort, bevor meine Pläne, das Unternehmen zu verlassen, entdeckt werden.
+
+www.tethyspetroleum.com/tethys/static/EN_US/au_seniormanagement.html
+
+Im Moment ist die sicherste Form der Korrespondenz meine eigene E-Mail-Adresse. Bitte antworten Sie im Interesse der Vertraulichkeit nur über meine direkte E-Mail-Adresse. Antworten Sie zusammen mit Ihrer direkten Telefon- und Faxnummer, unter der ich Sie alternativ erreichen kann.
+
+Bitte, wenn Sie nicht bereit und interessiert sind, mir zu helfen, löschen Sie bitte diese E-Mail aus Ihrer E-Mail und tun Sie so, als hätten Sie sie nie erhalten.
+
+Freundliche Grüße,
+Mr.Mattias Sjoborg
+(Vorsitzender des Vergütungs- und Nominierungsausschusses)
+Tethys Petroleum.
+London, England
+
 -- 
-2.26.2
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
