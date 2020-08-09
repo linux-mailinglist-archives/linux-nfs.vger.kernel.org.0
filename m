@@ -2,92 +2,199 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C56823F737
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Aug 2020 12:22:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C6123FF0B
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Aug 2020 17:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgHHKVW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 8 Aug 2020 06:21:22 -0400
-Received: from mail-mw2nam10on2088.outbound.protection.outlook.com ([40.107.94.88]:11617
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725980AbgHHKVW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 8 Aug 2020 06:21:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=joDLKQeJD6aSZGeW7p5ouk9B9FNEr3rMpbQwP7iYL9Ur8PDAJg0jtVnue7Cf3j2WlTHdftERnfDp+qzHTC5jbPZ2+gBax7Pw92owcsU1wffmC4wbfjPjwLZGhXPdCnQSki0pRKVvdH3+vByvxIaHCPNTZ7gLdfeslHpQDzZKS8Xbthn+hLL2OY2wLNXFt+ps03/BkROgxa2T/1so6800mAOll0RfSso1wrWf4TnJ4v42+egBt+OUJxiIWunbgxOy1WIv/30jfBnhu+VofQ524rSR9ndaf/nnfWPu75vXNU7kgiFV60g0o5A9n4qsOEquHto67KHH9oBaTVXYLr9ktw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7GQ0pVd9sd9bwQKY2lTz4OcDojmCYHaWJSVKzgSpPus=;
- b=m5gmw7sTzX1GfMNJZahgev62BSGk6MwQIHaLKdeu1sij73PVEcun/lxRmxuqbQ4R8M1qbmVg65jp7EFIeAiBIRIlcoM4oRSYTZlm6IQdGDXd20a2wm2Ucvhb/RsvcXlAe2cs1yUt76xyb4/DCS2wZ2/m+NSxYw9ctpT4/fZ7XEvgUxsg7sDiYc04MzW3k6NfM37rtKC5tKDj8YHKYx0jc1GIoLTzglbLQvZ7gy48TGfa6wLaskPjdRr5fKi0sgzbuEm3nyI4dczCPCYaEOzGxkm1Lw+0MAlNM6+6C9RgvcoGzF4K+K9gnU1EEoNRcU4UJ+oNLitz4lWA8Uu9CQCv5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7GQ0pVd9sd9bwQKY2lTz4OcDojmCYHaWJSVKzgSpPus=;
- b=WBo9iLPD0C3luzTc6XcueZbzL6osZX+ww/mURqh8XEbWp+PCebvoNuiFfFcYGrY2dp1VzlQh7dvmFHNKZL5+iy55+XEtM1XWg7RPPRQeHvVLeXe38dpYLiKL9IGItomNyWXgw3n9Q49UZFLzUw6+Sr6oSrvt0QRSG5npu5I4wZI=
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- (2603:10b6:301:2e::20) by MWHPR10MB1264.namprd10.prod.outlook.com
- (2603:10b6:301:9::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Sat, 8 Aug
- 2020 10:21:20 +0000
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::ad32:3fef:28b7:2573]) by MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::ad32:3fef:28b7:2573%2]) with mapi id 15.20.3261.020; Sat, 8 Aug 2020
- 10:21:20 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: idmapd Domain issue
-Thread-Topic: idmapd Domain issue
-Thread-Index: AQHWbW2oNVn2R9H9LEKSBtsqgjvvRQ==
-Date:   Sat, 8 Aug 2020 10:21:19 +0000
-Message-ID: <80a43e48b6f0c6c8806d1f8f6ca5ed575269445f.camel@infinera.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.37.3 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=infinera.com;
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fd16352a-a3ed-47e0-e781-08d83b84cb05
-x-ms-traffictypediagnostic: MWHPR10MB1264:
-x-microsoft-antispam-prvs: <MWHPR10MB126486D20DF502FB9313990FF4460@MWHPR10MB1264.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MIsi6xPkiNTxt8yMmuOr5zFZ/4eJwxTSJUDgbDEfasS23zAygsuCRAUuq2r3+Qhrpnx1Ve4WzTeSBt8rrPv5JL6jq0Yx2M6bu5rzIzM8K2Tv+LtJT9EfY/kuZa27zxAh4me+Uh63azDdx7cAyb6yfUJoElcivuvkwLyEIKe5yfe9MFoomkEeBky6Lvb3fLJ6nf4IG4mMEyRqQJhKw9nd2162a4YnWTbxJd1iGAPFt9W5yn1JWLIW39mdK6ZGRhQ0dW6RnnEVlTsiVs5ToBsLVvfOTHMo5CQGCi0jUOA4hHrZC4rpZsB2HsSkltbp3kEU
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2190.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(396003)(346002)(136003)(39860400002)(66946007)(3480700007)(71200400001)(66446008)(64756008)(66476007)(2616005)(316002)(6512007)(76116006)(66556008)(6506007)(2906002)(91956017)(36756003)(186003)(5660300002)(7116003)(6916009)(6486002)(26005)(8676002)(8936002)(86362001)(478600001)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: lDQ5Z+LinYgy5DgNRe+lDhhiJJgD98izrrxPRMnc+Zv6SzjAzEfc/43dAdwEOZu1d7YMBMeiqt4mcS54QbpkEQG6+2v2Jrz7ooMnzkU8nSjXy6dbAjIXbtKixqDAgthZA1DisUukOaQMU/qQ8rEnd1oJ9IvAj2sPugydNKw8+8NigtMpUSdcXCXDDy0vf3Qe95eMitF675zk8xkmxqLWmYUrFyz+xFmDZ9VLtEVA11Akd/JjM5UKKkNuqfy8tDUH73fi91HVRXuEHHzy68pqNb02VSRoSaoucWoWau/edpi7ufVYLD6TYcIpuezuJsMpJRSGMmmny0KKqKr7jyD23eGLDYlajdM1zuJVFv8Mi2lCp1hw0fsRLkvGoJZ4g32OKebP4DCVbeZaDv6xy1HkvwOMD7fcinD05sH06hO0rakSlWu8EsQA1awsnegTEN0GF+hY0VRbZThaOc+OvDg+WiPoxq5Zz/Vn1GT2OQ7cr+wQalmkLVFCBIxnWuj6o9x7QNpASSEq2H7tcJ0OWD+nwlCHz8Ca67gfc+euWXh9MHIiKKVrDgvIu0KkAWwHoBRAfjF3Dq76O3c6SuRM1UhzLFUZXAIQN5pafFbUuEar7+umweANcspNgiAGbY4Th74KsmjsUQl9a6LrzpPR9g9AsQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9292809B79B9141A9FB21639ACADD0C@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2190.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd16352a-a3ed-47e0-e781-08d83b84cb05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2020 10:21:19.9429
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VBm+bCY0qsO1VoS7HlJHU9b/dUpK/N14XB9kPRbejmLrHjMf9Z69BDr6G9jcIvZCO6GJElyMZkoDYqLBRtBidA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1264
+        id S1726256AbgHIPqX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Aug 2020 11:46:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53276 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIPqU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Aug 2020 11:46:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 079Fc05X124024;
+        Sun, 9 Aug 2020 15:46:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2020-01-29;
+ bh=7sO52o8n45ywtCixPuR/wFX+kO5/oyb73FG2RAil3P0=;
+ b=0b13Uuz9pvueL2TT4Z+y4R0JHGO7ahiyj+FXKoRbuMFZBEjuUONDbbCDLA3heVO31Zmt
+ SMU0HYh5NJnN5s20C7CMn+N3v+wyRokkFP1jmxwIIvdIIybwkMT/PIIgyIsLglccU5cn
+ cAKD/ZDWc+X+6EwnzFJ/H118kws0M1++OBwyqS/3Cp08iUwlVGfI12zIVT00B7dciJmi
+ ovuE6Ne1cmQObFwF4kU13oyuDYyDdNqeHoeFlc9G+B9vG0bkZNDDR7xrjz+uaG0swPw2
+ WidFk39fxsF9GQzb5Q85oawUmwFB4hROLb/YZ6LRjelX5wdJo98UR0x/OxjTmK2lZJTn UQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32t2yd9kpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 09 Aug 2020 15:46:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 079FhJtT102028;
+        Sun, 9 Aug 2020 15:44:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 32t5tprvs5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Aug 2020 15:44:17 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 079FiGcm019359;
+        Sun, 9 Aug 2020 15:44:16 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 09 Aug 2020 15:44:16 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Please pull NFS server updates for v5.9
+Message-Id: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
+Date:   Sun, 9 Aug 2020 11:44:15 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090117
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-V2UgZ290IGFuIG9sZCwgbm9uIGV4aXN0aW5nLCBkb21haW4gY29uZmlndXJlZCBmb3IgaWRtYXBk
-LCBsaWtlIHNvOg0KICBEb21haW4gPSB4LnkNCg0KTm93IEkgd291bGQgbGlrZSB0byBjaGFuZ2Ug
-dGhhdCB0byBvdXIgbmV3IGRvbWFpbiBidXQgSSBjYW5ub3QNCmNoYW5nZSBhbGwgY29tcHV0ZXJz
-IHVzaW5nIHRoZSBvbGQgZG9tYWluIGF0IHRoZSBzYW1lIHRpbWUuDQoNCklkZWFsbHkgSSB3b3Vs
-ZCBsaWtlIHRvIGp1c3QgYWRkIHRoZSBuZXcgZG9tYWluIGFuZCB0aGVuIGNoYW5nZQ0KY2xpZW50
-cyBncmFkdWFsbHkgYXMgdGltZSBwZXJtaXRzLg0KDQpDdXJyZW50bHkgaWRtYXBkIGRvZXMgbm90
-IHNlZW1zIHRvIHN1cHBvcnQgdGhpcyA/DQpDb3VsZCBtdWx0aXBsZSBkb21haW5zIGJlIGFkZGVk
-ID8NCg0KIEpvY2tlDQo=
+Hello Linus-
+
+The following changes since commit =
+11ba468877bb23f28956a35e896356252d63c983:
+
+  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9
+
+for you to fetch changes up to b297fed699ad9e50315b27e78de42ac631c9990d:
+
+  svcrdma: CM event handler clean up (2020-07-28 10:18:15 -0400)
+
+----------------------------------------------------------------
+Highlights:
+
+- Support for user extended attributes on NFS (RFC 8276)
+- Further reduce unnecessary NFSv4 delegation recalls
+
+Notable fixes:
+
+- Fix recent krb5p regression
+- Address a few resource leaks and a rare NULL dereference
+
+Other:
+
+- De-duplicate RPC/RDMA error handling and other utility functions
+- Replace storage and display of kernel memory addresses by tracepoints
+
+----------------------------------------------------------------
+Chuck Lever (24):
+      SUNRPC: Augment server-side rpcgss tracepoints
+      svcrdma: Fix page leak in svc_rdma_recv_read_chunk()
+      svcrdma: Remove save_io_pages() call from send_error_msg()
+      svcrdma: Add @rctxt parameter to svc_rdma_send_error() functions
+      svcrdma: Add a @status parameter to svc_rdma_send_error_msg()
+      svcrdma: Eliminate return value for svc_rdma_send_error_msg()
+      svcrdma: Make svc_rdma_send_error_msg() a global function
+      svcrdma: Consolidate send_error helper functions
+      svcrdma: Clean up trace_svcrdma_send_failed() tracepoint
+      svcrdma: Remove declarations for functions long removed
+      SUNRPC: Add helpers for decoding list discriminators symbolically
+      svcrdma: Add common XDR decoders for RDMA and Read segments
+      svcrdma: Add common XDR encoders for RDMA and Read segments
+      svcrdma: Introduce infrastructure to support completion IDs
+      svcrdma: Introduce Receive completion IDs
+      svcrdma: Record Receive completion ID in svc_rdma_decode_rqst
+      svcrdma: Introduce Send completion IDs
+      svcrdma: Record send_ctxt completion ID in =
+trace_svcrdma_post_send()
+      svcrdma: Display chunk completion ID when posting a rw_ctxt
+      SUNRPC: Fix ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+      SUNRPC: Refresh the show_rqstp_flags() macro
+      svcrdma: Fix another Receive buffer leak
+      svcrdma: Remove transport reference counting
+      svcrdma: CM event handler clean up
+
+Frank van der Linden (10):
+      nfs,nfsd: NFSv4.2 extended attribute protocol definitions
+      xattr: break delegations in {set,remove}xattr
+      xattr: add a function to check if a namespace is supported
+      nfsd: split off the write decode code into a separate function
+      nfsd: add defines for NFSv4.2 extended attribute support
+      nfsd: define xattr functions to call into their vfs counterparts
+      nfsd: take xattr bits into account for permission checks
+      nfsd: add structure definitions for xattr requests / responses
+      nfsd: implement the xattr functions and en/decode logic
+      nfsd: add fattr support for user extended attributes
+
+J. Bruce Fields (1):
+      nfsd4: a client's own opens needn't prevent delegations
+
+Randy Dunlap (1):
+      nfsd: netns.h: delete a duplicated word
+
+Scott Mayhew (1):
+      nfsd: avoid a NULL dereference in __cld_pipe_upcall()
+
+Xu Wang (1):
+      nfsd: Use seq_putc() in two functions
+
+ fs/locks.c                                 |   3 +
+ fs/nfsd/netns.h                            |   2 +-
+ fs/nfsd/nfs4idmap.c                        |   4 +-
+ fs/nfsd/nfs4proc.c                         | 128 =
+++++++++++++++++++++++-
+ fs/nfsd/nfs4recover.c                      |  24 ++---
+ fs/nfsd/nfs4state.c                        |  54 +++++++---
+ fs/nfsd/nfs4xdr.c                          | 531 =
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++------
+ fs/nfsd/nfsd.h                             |   5 +-
+ fs/nfsd/vfs.c                              | 239 =
+++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.h                              |  10 ++
+ fs/nfsd/xdr4.h                             |  31 ++++++
+ fs/xattr.c                                 | 111 ++++++++++++++++++--
+ include/linux/nfs4.h                       |  22 +++-
+ include/linux/sunrpc/rpc_rdma.h            |  74 +++++++++++++
+ include/linux/sunrpc/rpc_rdma_cid.h        |  24 +++++
+ include/linux/sunrpc/svc_rdma.h            |  17 ++-
+ include/linux/sunrpc/xdr.h                 |  26 +++++
+ include/linux/xattr.h                      |   4 +
+ include/trace/events/rpcgss.h              | 168 =
++++++++++++++++++++++++++-----
+ include/trace/events/rpcrdma.h             | 207 =
++++++++++++++++++++-----------------
+ include/trace/events/sunrpc.h              |  35 +++++--
+ include/uapi/linux/nfs4.h                  |   3 +
+ net/sunrpc/auth_gss/gss_krb5_wrap.c        |   2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c          | 118 ++++++++++++++-------
+ net/sunrpc/auth_gss/trace.c                |   3 +
+ net/sunrpc/xprtrdma/frwr_ops.c             |   1 -
+ net/sunrpc/xprtrdma/rpc_rdma.c             |  31 ++----
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    | 115 +++++++-------------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c          |  81 +++++++++------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 124 ++++++++++++++--------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c   |  74 +++++--------
+ 32 files changed, 1807 insertions(+), 466 deletions(-)
+ create mode 100644 include/linux/sunrpc/rpc_rdma_cid.h
+--
+Chuck Lever
+
+
+
