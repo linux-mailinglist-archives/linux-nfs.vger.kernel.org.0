@@ -2,74 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B81142405CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Aug 2020 14:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD2FD240748
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Aug 2020 16:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgHJMZ2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Aug 2020 08:25:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35804 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgHJMZ2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 08:25:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07ACGVaX182587;
-        Mon, 10 Aug 2020 12:25:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=LHGAkcFYSyuaEFdv/TGZUvxSEINDvA0B41yBg/c6SCw=;
- b=lWO4TZW6vjoZZdMr0YgLUAuFsqEV37EnHoL6zkRbnCBUoeyTNLwytQ3xYqhMjbPqA0P6
- Yg3rEEkajyM2AlaWmKlQFdTbO5/mI2HII1zGxIOoyKGmLW5wwExIZUFycPl00yXPeaAV
- r6/a9pFEl7zGMV29d2ZFKYwSy4TN24aksQ3v0QCgCZ/iC5MMtzJSo4Dt005rSY7w4gLi
- zpizs2Pkej0tkjkqdXuS0B67jDvn4zyenRs9CL/4HtYeD293U0ZDD3VSTspkk2gjzRU3
- PCzbAStfl4nSbvJkPVC96wRWcy7Bkymv8P0goBbLx8kdDjWDE901ysGO++3fhgU6MXcO ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32smpn64f6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 12:25:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07ACJFAn052752;
-        Mon, 10 Aug 2020 12:25:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32t5y0py2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 12:25:17 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07ACPGHe006184;
-        Mon, 10 Aug 2020 12:25:16 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Aug 2020 12:25:15 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Please pull NFS server updates for v5.9
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200810090349.64bce58f@canb.auug.org.au>
-Date:   Mon, 10 Aug 2020 08:25:14 -0400
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trondmy@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
-References: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
- <20200810090349.64bce58f@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100092
+        id S1726888AbgHJONn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Aug 2020 10:13:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40074 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726814AbgHJONm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 10:13:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597068821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oHQ6GUNUNzcfdcxw7jdjHXRy05lnkQqX4ru+UXPEAog=;
+        b=aPXOWTiIxX1iSu3/hYC7gtkMUdzE4Xf/maE2nzEDuPcbo7sU465HlTpuuWjx+DffCA+qGW
+        Bc0oN9VQM3wFVQdJRokHsikAqSaZbSTJQv2kd5Wo1sHzzyReJgDjMqg83HAXJuG3xme6zZ
+        UObix/p7MP8rEtX/7rw0GG/TwohrFi4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-DUXfudd9Ppqg9ejaR5vkvA-1; Mon, 10 Aug 2020 10:13:40 -0400
+X-MC-Unique: DUXfudd9Ppqg9ejaR5vkvA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A7E18014D7;
+        Mon, 10 Aug 2020 14:13:39 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-70.phx2.redhat.com [10.3.112.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D24FE19C4F;
+        Mon, 10 Aug 2020 14:13:38 +0000 (UTC)
+Subject: Re: idmapd Domain issue
+To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <80a43e48b6f0c6c8806d1f8f6ca5ed575269445f.camel@infinera.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <13df4b7e-c965-6ca8-eadd-a45e9f841914@RedHat.com>
+Date:   Mon, 10 Aug 2020 10:13:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <80a43e48b6f0c6c8806d1f8f6ca5ed575269445f.camel@infinera.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -77,37 +55,29 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Aug 9, 2020, at 7:03 PM, Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Hi Chuck,
->=20
-> On Sun, 9 Aug 2020 11:44:15 -0400 Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->> The following changes since commit =
-11ba468877bb23f28956a35e896356252d63c983:
->>=20
->>  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
->>=20
->> are available in the Git repository at:
->>=20
->>  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9
->>=20
->> for you to fetch changes up to =
-b297fed699ad9e50315b27e78de42ac631c9990d:
->>=20
->>  svcrdma: CM event handler clean up (2020-07-28 10:18:15 -0400)
->=20
-> Despite you having a branch included in linux-next, only one of these
-> commits has been in linux-next :-( (and that via Trond's nfs tree)
+On 8/8/20 6:21 AM, Joakim Tjernlund wrote:
+> We got an old, non existing, domain configured for idmapd, like so:
+>   Domain = x.y
+> 
+> Now I would like to change that to our new domain but I cannot
+> change all computers using the old domain at the same time.
+> 
+> Ideally I would like to just add the new domain and then change
+> clients gradually as time permits.
+> 
+> Currently idmapd does not seems to support this ?
+I not sure if that helps... but rpc.idmapd does query DNS 
+looking for the _nfsv4idmapdomain text record...  Add 
+     _nfsv4idmapdomain IN TXT "domainname"
+ recorded to your DNS
 
-Is there something I need to change? The public copy of the cel-testing
-branch has had this content for the past 12 days.
+> Could multiple domains be added ?
+Patches are always welcome! ;-) But I don't see 
+how the would ever work and its probably break 
+a few specs.
 
-
---
-Chuck Lever
-
-
+steved.
+> 
+>  Jocke
+> 
 
