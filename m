@@ -2,46 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE86240AC9
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Aug 2020 17:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C09240AFB
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Aug 2020 18:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgHJPsY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Aug 2020 11:48:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32928 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727887AbgHJPsX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 11:48:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597074502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d/FqTzD6Anemh3gFgcLo0ThBd0ys9n4r95cTlaSJ7w8=;
-        b=DPcy/uDMtDOG+aMLbEjTYPrsr4PbglllxJa1LlWXyIFcCNbmd6OxUIAq4pWyKuwQ7/rnz9
-        QYYoiJrarF6myjlnPZvalxIDN7kQME3X1e9D9CEed/w43mllAuacv7Kp2uEbw9Q/3cqYtU
-        VzX0zHTNOcLbWwKXkImcf6PucdE3voc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283-BblU8oHRP1W5aFMWkcTb1w-1; Mon, 10 Aug 2020 11:48:19 -0400
-X-MC-Unique: BblU8oHRP1W5aFMWkcTb1w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A55980046C;
-        Mon, 10 Aug 2020 15:48:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-69.rdu2.redhat.com [10.10.113.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BCC8C7B92F;
-        Mon, 10 Aug 2020 15:48:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
-References: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com> <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk> <667820.1597072619@warthog.procyon.org.uk>
-To:     Steve French <smfrench@gmail.com>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1727782AbgHJQKH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Aug 2020 12:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgHJQKH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 12:10:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEBAC061756;
+        Mon, 10 Aug 2020 09:10:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h4so3690316ioe.5;
+        Mon, 10 Aug 2020 09:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MZ80cO9LgIseSA6VcNmJzpLJOqoglGp0soH8ddcaoxk=;
+        b=EcS/NmAZLLY7RIcl1zkSH3YoNOu5TYUBfe6QqC6ForXpE8Diy77syyyGuwCHiceu2A
+         UQSMSPKjBXDI9UgCB2mREaVFuyYXSISzKUWCvjknG+/u7WVvDGaspds8ll8DnLyKWa9I
+         atLadaVEYzMJaqN1yHE0J7IYgy5C2qsh/zo6r0EmXPnm6kHJBKtTISYxRYZzhT1R5W7o
+         dKZXiPgJjBmvU5RIBadNZ2EuZx/OHmI9Ftbs6agUxa+kxejtMDbGCSifUzQHFZWkUZIL
+         7sQoJswBBvwLnAz44vZNgNdSmNu0UDEo1x0sF8zPp+TdjT843E9ofRjzTut8B1feGj04
+         6VBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MZ80cO9LgIseSA6VcNmJzpLJOqoglGp0soH8ddcaoxk=;
+        b=b3yfArxgYA+yBfeyVwdLmUoCrp8XXJ48oVO7qkf8RgOCt5Jw07M+GPwl1GG5TIolBZ
+         EujyGlJeknnTjuH7XpfiZCjmFJNwjPAf8EsSVYffr3D7lCcolqPfMwIfWMIOf1QY1A/T
+         0e2MStfpD8qu1Ujym//j+gLFWs+y50/5XUZvHxmp9xAJl5JXnpyHTH5BdPgkLNb4h6Ep
+         qPrCpgH7TU0ldr2tcVkfq8EqmYEBc6TAiMz1FrzBJfgI/JsQHIJe/cDfbuvJ8FzD4k8X
+         wvyhROyIySO4Zmpj05sGEu+LLaOrJBr+ivuDyl/NnxktE20/ce8akCKwWgB9UpbFREqr
+         hRTg==
+X-Gm-Message-State: AOAM530/tGqTGCXNPKjH68kN/K9fe/T/5hWP+hyo5WCKW9CUTltAgkhR
+        W7g2vgUtf6xbHg3ld4lqx/In5bsuWf1iw0lXWOM=
+X-Google-Smtp-Source: ABdhPJyTY4QlAr8BTih462f1lgyS9bJi/R2Ew8ZaVjmxeOvg71SlD2qbh1tJxbs+xTPFWT+NxUm+fxwz6XlvyZjiHMI=
+X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr20966062jad.132.1597075803972;
+ Mon, 10 Aug 2020 09:10:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk>
+ <667820.1597072619@warthog.procyon.org.uk> <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
+ <672169.1597074488@warthog.procyon.org.uk>
+In-Reply-To: <672169.1597074488@warthog.procyon.org.uk>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 10 Aug 2020 11:09:53 -0500
+Message-ID: <CAH2r5msO+N9dXKtYE3p+EfXaZTtqp6r=Bsx5vKdTdxe7XBBeOw@mail.gmail.com>
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Matthew Wilcox <willy@infradead.org>,
         Christoph Hellwig <hch@lst.de>,
@@ -57,35 +69,63 @@ Cc:     dhowells@redhat.com,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <672168.1597074488.1@warthog.procyon.org.uk>
-Date:   Mon, 10 Aug 2020 16:48:08 +0100
-Message-ID: <672169.1597074488@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Steve French <smfrench@gmail.com> wrote:
+On Mon, Aug 10, 2020 at 10:48 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Steve French <smfrench@gmail.com> wrote:
+>
+> > cifs.ko also can set rsize quite small (even 1K for example, although
+> > that will be more than 10x slower than the default 4MB so hopefully no
+> > one is crazy enough to do that).
+>
+> You can set rsize < PAGE_SIZE?
 
-> cifs.ko also can set rsize quite small (even 1K for example, although
-> that will be more than 10x slower than the default 4MB so hopefully no
-> one is crazy enough to do that).
+I have never seen anyone do it and it would be crazy to set it so
+small (would hurt
+performance a lot and cause extra work on client and server) but yes
+it can be set
+very small. Apparently NFS can also set rsize to 1K as well (see
+https://linux.die.net/man/5/nfs)
 
-You can set rsize < PAGE_SIZE?
+I don't mind adding a minimum rsize check for cifs.ko (preventing a
+user from setting
+rsize below page size for example) if there is a precedent for this in
+other fs or
+bug that it would cause.   In general my informal perf measurements showed
+slight advantages to all servers with larger rsizes up to 4MB (thus
+cifs client will
+negotiate 4MB by default even if server supports larger), but
+overriding rsize (larger)
+on mount by having the user setting rsize to 8MB on mount could help
+perf to some
+servers. I am hoping we can figure out a way to automatically
+determine when to negotiate
+rsize larger than 4MB but in the meantime rsize will almost always be
+4MB (or 1MB on
+mounts to some older servers) for cifs but some users will benefit
+slightly from manually
+setting it to 8MB.
 
-> I can't imagine an SMB3 server negotiating an rsize or wsize smaller than
-> 64K in today's world (and typical is 1MB to 8MB) but the user can specify a
-> much smaller rsize on mount.  If 64K is an adequate minimum, we could change
-> the cifs mount option parsing to require a certain minimum rsize if fscache
-> is selected.
+> > I can't imagine an SMB3 server negotiating an rsize or wsize smaller than
+> > 64K in today's world (and typical is 1MB to 8MB) but the user can specify a
+> > much smaller rsize on mount.  If 64K is an adequate minimum, we could change
+> > the cifs mount option parsing to require a certain minimum rsize if fscache
+> > is selected.
+>
+> I've borrowed the 256K granule size used by various AFS implementations for
+> the moment.  A 512-byte xattr can thus hold a bitmap covering 1G of file
+> space.
+>
+> David
+>
 
-I've borrowed the 256K granule size used by various AFS implementations for
-the moment.  A 512-byte xattr can thus hold a bitmap covering 1G of file
-space.
 
-David
+-- 
+Thanks,
 
+Steve
