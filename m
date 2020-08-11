@@ -2,78 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0EE42414DE
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Aug 2020 04:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB330241638
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Aug 2020 08:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgHKCSn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Aug 2020 22:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
+        id S1727896AbgHKGPY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Aug 2020 02:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHKCSn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 22:18:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E08FC06174A;
-        Mon, 10 Aug 2020 19:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=FDgWfRdb7sBPKRkD1CaN3MgEIO4tPkEjDVHYa1wkGMM=; b=RcR2sqZEQyUvV/LQhBmIXE8Bq1
-        njBwGb+/Zowore43lmKN9TXwJKeWvotOMH70cQKwwzzHFkoWU0rocSdJVcvDtiaqGHaVyzoy6Hdfi
-        r9dI7POHPQnfSZ3rPaNlOYUg/ieX+iHBA1Dv9XCj9s2fDMVRszki4p9FBnyjCWQ6Pst4mzDH/5INh
-        zktwiRX98BD5DaWpaU1zPlVC4/3hJNLEHf4BVmx6d1L8QVdBeSDfccTtPJszX3g9z7oiyaFp+JkK6
-        /Xb7/teKY0tNuTh1J8nqOXn2WIbPwH66lNYJHRWM4MWg0aIX4QtFc1+SQj4piVsUKumakqjzTphe9
-        vOxbt5sw==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5Js6-0006pr-DE; Tue, 11 Aug 2020 02:18:39 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH] fs: nfs: delete repeated words in comments
-Date:   Mon, 10 Aug 2020 19:18:35 -0700
-Message-Id: <20200811021835.25084-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        with ESMTP id S1726154AbgHKGPY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Aug 2020 02:15:24 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6C5C06174A;
+        Mon, 10 Aug 2020 23:15:23 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BQjHW61Pqz9sTM;
+        Tue, 11 Aug 2020 16:15:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597126520;
+        bh=vmA+U6yYordllIlIbbA0NQplZPeDri+hoiMGp1wkbEM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rVFvNdvDn+0X42UKxMtre6LFZycz0m0HXH2n0WFRWQRcQ1MZ0ga42i8Ev/4GGN8lw
+         gJDXFsgo1OwUATt9NCedr7N+sBd9p5GCHyU3O4ewmhU0wXa3kwLiLtNZgiguByjJ5P
+         b+cPlHiyw8iRsyQhnab+mX+ShF2qJW6WtWeIHZGlAJKWo3kUoe8Kq0om6YRcOoawmN
+         5YDjIz1btmZ2UNs8Nc53etiG2rshjvYlyJN0FBfcgnThzb3EWxyfONA8ny00FD0bwT
+         +tK1ZWbPukfWkvcqtUjDs8hm2wj8X94mTaSliePXUOiQPtILPMclAZwuOtexzF268L
+         ef+8mu0DXqqfg==
+Date:   Tue, 11 Aug 2020 16:15:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Trond Myklebust <trondmy@gmail.com>
+Subject: Re: Please pull NFS server updates for v5.9
+Message-ID: <20200811161518.0896c1e8@canb.auug.org.au>
+In-Reply-To: <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
+References: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
+        <20200810090349.64bce58f@canb.auug.org.au>
+        <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Drop duplicated words {the, and} in comments.
+--Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: linux-nfs@vger.kernel.org
----
- fs/nfs/fs_context.c |    2 +-
- fs/nfs/nfs4xdr.c    |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Hi Chuck,
 
---- linux-next-20200807.orig/fs/nfs/fs_context.c
-+++ linux-next-20200807/fs/nfs/fs_context.c
-@@ -982,7 +982,7 @@ static int nfs23_parse_monolithic(struct
- 		/*
- 		 * The legacy version 6 binary mount data from userspace has a
- 		 * field used only to transport selinux information into the
--		 * the kernel.  To continue to support that functionality we
-+		 * kernel.  To continue to support that functionality we
- 		 * have a touch of selinux knowledge here in the NFS code. The
- 		 * userspace code converted context=blah to just blah so we are
- 		 * converting back to the full string selinux understands.
---- linux-next-20200807.orig/fs/nfs/nfs4xdr.c
-+++ linux-next-20200807/fs/nfs/nfs4xdr.c
-@@ -5252,7 +5252,7 @@ static int decode_readlink(struct xdr_st
- 	 * The XDR encode routine has set things up so that
- 	 * the link text will be copied directly into the
- 	 * buffer.  We just have to do overflow-checking,
--	 * and and null-terminate the text (the VFS expects
-+	 * and null-terminate the text (the VFS expects
- 	 * null-termination).
- 	 */
- 	xdr_terminate_string(rcvbuf, len);
+On Mon, 10 Aug 2020 08:25:14 -0400 Chuck Lever <chuck.lever@oracle.com> wro=
+te:
+>=20
+> Is there something I need to change? The public copy of the cel-testing
+> branch has had this content for the past 12 days.
+
+You just need to keep your cel-next branch up to the top commit that is
+ready.  That is the branch you told me to fetch.  It is currently at commit
+
+  0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim(=
+)")")
+
+It looks like that is what Linus merged into v5.7-rc2.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8yN3YACgkQAVBC80lX
+0GwXGwf/X1xza4u2L2jJX6O8CmpIPjjZeO69GKzmnyVVRoOXVzjthv1JJk+wg+7l
+7FxHlD8dqgtxuxE+A2Y4OGzpnG+phqoA15e6k5dxscbV9r7LRcweAZNeNO1E/05q
+iXJgeV32+PTsRQFLuTQyfyCQjYZDqUt9H2Uh2m4F7xOot+FY8t9PTDw4gbwoYTPT
+rZJH1myqDPB++EIWdsZhb3xJuY6I6znFLIceYia+b55DMF7nCATpjOeZxq7sSHIo
+2gZlAv7pYw/eANhL+mSn9xgnsYS/VVdEu0BhDoWgJLKWMPjM3f8ZvzuEpaIkoguD
+qscoOtH3WIqd5h1S8GFUpOkM920XTA==
+=iHxj
+-----END PGP SIGNATURE-----
+
+--Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ--
