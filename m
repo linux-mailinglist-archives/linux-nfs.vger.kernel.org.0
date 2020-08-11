@@ -2,64 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F4D24116A
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Aug 2020 22:10:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0EE42414DE
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Aug 2020 04:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgHJUKD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Aug 2020 16:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        id S1726831AbgHKCSn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Aug 2020 22:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgHJUKD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 16:10:03 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23733C061756
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Aug 2020 13:10:03 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6DB4C3C20; Mon, 10 Aug 2020 16:10:01 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6DB4C3C20
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1597090201;
-        bh=BqD9WGK9PCOHEu1GAC1aMnPmz2OkBVttHt2uvXMj5RE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hPpE0ZI6/4YvHMAmYZnXrFU1wePsSowyBrZ/eEG9AyXyqG3kgjBkRgk/Q6Bg54IGA
-         PCS8BJkFJ3smk06gXu7rCH84uOgl4Qcb+M9Q9WQj2kEPw4j9fpOr9HM0AlU13bmCEB
-         qD4sPkL6UIMqUoCI8AR9FgxrfEdmTfSPpNH2aTz4=
-Date:   Mon, 10 Aug 2020 16:10:01 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: still seeing single client NFS4ERR_DELAY / CB_RECALL
-Message-ID: <20200810201001.GC13266@fieldses.org>
-References: <139C6BD7-4052-4510-B966-214ED3E69D61@oracle.com>
- <20200809202739.GA29574@fieldses.org>
- <20200809212531.GB29574@fieldses.org>
- <227E18E8-5A45-47E3-981C-549042AFB391@oracle.com>
- <20200810190729.GB13266@fieldses.org>
- <00CAA5B7-418E-4AB5-AE08-FE2F87B06795@oracle.com>
+        with ESMTP id S1726473AbgHKCSn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Aug 2020 22:18:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E08FC06174A;
+        Mon, 10 Aug 2020 19:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=FDgWfRdb7sBPKRkD1CaN3MgEIO4tPkEjDVHYa1wkGMM=; b=RcR2sqZEQyUvV/LQhBmIXE8Bq1
+        njBwGb+/Zowore43lmKN9TXwJKeWvotOMH70cQKwwzzHFkoWU0rocSdJVcvDtiaqGHaVyzoy6Hdfi
+        r9dI7POHPQnfSZ3rPaNlOYUg/ieX+iHBA1Dv9XCj9s2fDMVRszki4p9FBnyjCWQ6Pst4mzDH/5INh
+        zktwiRX98BD5DaWpaU1zPlVC4/3hJNLEHf4BVmx6d1L8QVdBeSDfccTtPJszX3g9z7oiyaFp+JkK6
+        /Xb7/teKY0tNuTh1J8nqOXn2WIbPwH66lNYJHRWM4MWg0aIX4QtFc1+SQj4piVsUKumakqjzTphe9
+        vOxbt5sw==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5Js6-0006pr-DE; Tue, 11 Aug 2020 02:18:39 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] fs: nfs: delete repeated words in comments
+Date:   Mon, 10 Aug 2020 19:18:35 -0700
+Message-Id: <20200811021835.25084-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00CAA5B7-418E-4AB5-AE08-FE2F87B06795@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:01:00PM -0400, Chuck Lever wrote:
-> Roughly the same result with this patch as with the first one. The
-> first one is a little better. Plus, I think the Solaris NFS server
-> hands out write delegations on v4.0, and I haven't heard of a
-> significant issue there. It's heuristics may be different, though.
-> 
-> So, it might be that NFSv4.0 has always run significantly slower. I
-> will have to try a v5.4 or older server to see.
+Drop duplicated words {the, and} in comments.
 
-Oh, OK, I was assuming this was a regression.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+---
+ fs/nfs/fs_context.c |    2 +-
+ fs/nfs/nfs4xdr.c    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> Also, instead of timing, I should count forward channel RPCs and
-> callbacks, or perhaps the number of DELAY responses.
-
-Thanks for looking into this!
-
---b.
+--- linux-next-20200807.orig/fs/nfs/fs_context.c
++++ linux-next-20200807/fs/nfs/fs_context.c
+@@ -982,7 +982,7 @@ static int nfs23_parse_monolithic(struct
+ 		/*
+ 		 * The legacy version 6 binary mount data from userspace has a
+ 		 * field used only to transport selinux information into the
+-		 * the kernel.  To continue to support that functionality we
++		 * kernel.  To continue to support that functionality we
+ 		 * have a touch of selinux knowledge here in the NFS code. The
+ 		 * userspace code converted context=blah to just blah so we are
+ 		 * converting back to the full string selinux understands.
+--- linux-next-20200807.orig/fs/nfs/nfs4xdr.c
++++ linux-next-20200807/fs/nfs/nfs4xdr.c
+@@ -5252,7 +5252,7 @@ static int decode_readlink(struct xdr_st
+ 	 * The XDR encode routine has set things up so that
+ 	 * the link text will be copied directly into the
+ 	 * buffer.  We just have to do overflow-checking,
+-	 * and and null-terminate the text (the VFS expects
++	 * and null-terminate the text (the VFS expects
+ 	 * null-termination).
+ 	 */
+ 	xdr_terminate_string(rcvbuf, len);
