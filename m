@@ -2,92 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55AE2242769
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Aug 2020 11:24:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70F36242B02
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Aug 2020 16:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgHLJYi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Aug 2020 05:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
+        id S1726505AbgHLONF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Aug 2020 10:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgHLJYi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Aug 2020 05:24:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8E1C06174A
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Aug 2020 02:24:38 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y6so834057plt.3
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Aug 2020 02:24:38 -0700 (PDT)
+        with ESMTP id S1726488AbgHLONF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Aug 2020 10:13:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A03C061383;
+        Wed, 12 Aug 2020 07:13:04 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k20so2089012wmi.5;
+        Wed, 12 Aug 2020 07:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=W8D3R2UOmBNEYTpoH2iEymnU67QkiwGdh/p16Dc6cY4=;
-        b=jCWo/9D/IbwGmLBT0IS3VQHTacJz6Zla3gv+FGWY4PK4i16VPJzwgNXmJcOtapflNr
-         S9zZxLpg57T8Ph8e3elEFHp0CXSsrljOY0Ba7nhy3qWpWW/jD5tq5jiKmn2kfQ2QqYpH
-         IJoAFpf657EckMcht1gZPUXwQEBX1uEbYc4CxJsW/D8OjxmfW8OhpKAs2xUzdxbL7noI
-         zYLcKonslxsmnxJiUaqQAdoqrDu+a0HYg7Hq3gf8DDJrVPlcBWJsrSbIeMfi3QLlFVIH
-         wAv74AsoQsMOx27SPL8DpcxqIFk5Z4Mqw3vdJSXYjmhiSRsET/BYDAlDzh3NlxXWfps6
-         5jow==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JSWXdvJKypcewGZSL+FLA89GNbkLI8DDuSajPdeI90=;
+        b=PDBU2thuP7mGuehMwtGHU4dcvMwcHV2wHS5Fz6ERcv+PFycF9hHs89nJnf3Ro6X4LZ
+         8CKf3LZMB+B1OK5DFcChRayeL3G+pr2+Qdrfx9nHpNm79DF33ZPufWd5bl/7aDvNW2eA
+         LdneA30b4Qb49jOsRpWSz3rMEhOJ52mRdIAIDorz6qjd2XSVXi4urt3HTbgPgtA0yP1a
+         Ekdf2g1B1V4h7b7XuD7hH5nLZ0AbO+wuU79ppJxLJ/nDy3w5ooBKMvfhv1W2DirFwGDV
+         QSKgMcUaVIhLhvRo5VID1PCfrFtTaOm9e0mRHnfQHwqjRBt0aAkIwWXJd2KyEglKw2rf
+         VoSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=W8D3R2UOmBNEYTpoH2iEymnU67QkiwGdh/p16Dc6cY4=;
-        b=OUgU+gXqEbFOesgzn5K4iYsYjMBnb3IkpKrVr+Jc+Kd1nNBm3v1D3iqBS0ZKUkTsOE
-         3k7DqQkgyODELWk4UymK91UsPfevC7s9q6MXfz0I0BS3EXHvrMHk17ag+yY34gdGbQye
-         I9QLdEmTRCqXxP8McjfdvZtqgUqUJy7Z4v77w865QZvgjioSnBZP5DXzvHoVUKShJVyI
-         hPQtqHZGlm1FH3blDwOR4KG06ik/XvwFnM7rSSzf4pM1PTMj7yfnNUquQd8bjuU19vDt
-         e6gfX6bof2uRVN3LdImGan5d+0ZHA3BqrqPAdkKQ690UJdH8RtwRGVUa0sforSLn5IcR
-         +D3g==
-X-Gm-Message-State: AOAM530pZ3bAPIegGiwKBtRvp6C1PWxP7UJV3Xx2TaV5wAyn9AdBlNw0
-        hwYqEe/nUeTSFN02pwH+d/RR7PCUQyAvU1L/j4clnFWT/lQ=
-X-Google-Smtp-Source: ABdhPJzA9pIZOfQN8hqCfZDQ8v7TWvDxzn+QrRWqkSGEDTiA2DN6NOKUIG5wvtb7JH6PyUPA+ELT3glVggFxx2jsSnk=
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr4385685plk.183.1597224277663;
- Wed, 12 Aug 2020 02:24:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JSWXdvJKypcewGZSL+FLA89GNbkLI8DDuSajPdeI90=;
+        b=mkrgBCyHgfMiw8E/kf+K7499ZVhLEToOkoqB6Vv2Ix0YQH0XlFw5tqx5xFBcfts8Dq
+         Ploa2LQu6mNbhlj5RQi4SGNUCQSDXXVTAcKv0ZOhJKSrbIWvjWkX2X2IAfa5j84Da7o7
+         cUA/KeRvn8hl9M4LNGzDFwZDlIpSUnPlPSr13L1ZlYg5Yb15EvNcbuoTJAFuRddeHZah
+         WGTgMYk01muZ3bEi1nvA82fMTWDrLOmc9dKEnvEwdpANC6Jl9CaGbItSB5NHwMRe6AK0
+         Dr7CIeNHNKB8T/NE9zmk1zP6vBPSFk/t0etgyP1N38R0xtIGMWmldDv9hKDh18S/bl/V
+         gzFQ==
+X-Gm-Message-State: AOAM530lRqgHas/deQsXt62ivtvWsaJvncq+ZL/JvQgCzm1/v2td5VpE
+        mBTmIUBwCEBQ87AAsNkwwJc=
+X-Google-Smtp-Source: ABdhPJxLI+bpIIToGSoBCnC9gRUo94x6QghuJnyl1w5jZGtqfmNYNhSgWQpHPGGpQ35ecsDKBnh62A==
+X-Received: by 2002:a1c:678b:: with SMTP id b133mr9401362wmc.117.1597241583696;
+        Wed, 12 Aug 2020 07:13:03 -0700 (PDT)
+Received: from localhost.localdomain (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
+        by smtp.gmail.com with ESMTPSA id g14sm3818331wmk.37.2020.08.12.07.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 07:13:02 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH 1/2] nfsd: Remove unnecessary assignment in nfs4xdr.c
+Date:   Wed, 12 Aug 2020 15:12:51 +0100
+Message-Id: <20200812141252.21059-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <CAL9i7GFmOOCWoOnGuDORCCHonFE7siUxSvAvP4TpWX5+CR601g@mail.gmail.com>
-In-Reply-To: <CAL9i7GFmOOCWoOnGuDORCCHonFE7siUxSvAvP4TpWX5+CR601g@mail.gmail.com>
-From:   sea you <seayou@gmail.com>
-Date:   Wed, 12 Aug 2020 11:24:26 +0200
-Message-ID: <CAL9i7GHMbU9_5i6r-c=kmv+q0LPTKAX8WX0bNxpwzeXT=UjN-g@mail.gmail.com>
-Subject: Re: Kernel panic in laundromat_main on 5.3.0-46-generic (Ubuntu HWE)
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-After upgrading the kernel to 5.4.0-39-generic, the very same happened again.
-You could find more information here on LaunchPad
-https://bugs.launchpad.net/ubuntu/+source/linux-signed-hwe/+bug/1885265
+In nfsd4_encode_listxattrs(), the variable p is assigned to at one point
+but this value is never used before p is reassigned. Fix this.
 
-Anyone else experienced this? This definitely looks like a bug to me
-at this point.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, May 14, 2020 at 12:26 PM sea you <seayou@gmail.com> wrote:
->
-> Hi all,
->
-> Today we've seen a kernel panic that looks like related to delegations
-> and laundromat
->
-> ...
-> [1388051.959652] Call Trace:
-> [1388051.959984]  unhash_delegation_locked+0x39/0xa0 [nfsd]
-> [1388051.960631]  laundromat_main+0x235/0x5a0 [nfsd]
-> [1388051.961234]  process_one_work+0x1fd/0x3f0
-> [1388051.961803]  worker_thread+0x34/0x410
-> [1388051.962281]  kthread+0x121/0x140
-> [1388051.962698]  ? process_one_work+0x3f0/0x3f0
-> [1388051.963210]  ? kthread_park+0xb0/0xb0
-> [1388051.963690]  ret_from_fork+0x22/0x40
-> ....
->
-> In the link below you'll find what has been captured from the console.
->
-> https://pastebin.com/raw/CdpMfUAK
->
-> I couldn't really find any reference to this in the mailing list
-> history so I assume we might have hit a bug that is unknown so far.
->
-> Best regards,
-> Doma
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 259d5ad0e3f47..1a0341fd80f9a 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4859,7 +4859,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 			goto out;
+ 		}
+ 
+-		p = xdr_encode_opaque(p, sp, slen);
++		xdr_encode_opaque(p, sp, slen);
+ 
+ 		xdrleft -= xdrlen;
+ 		count++;
+-- 
+2.28.0
+
