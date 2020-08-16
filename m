@@ -2,53 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 229CF245266
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Aug 2020 23:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A9692457FD
+	for <lists+linux-nfs@lfdr.de>; Sun, 16 Aug 2020 16:31:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHOVu0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 15 Aug 2020 17:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbgHOVu0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:26 -0400
-Subject: Re: [GIT PULL] Please  pull NFS client updates for Linux 5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597505992;
-        bh=LgBcMaRyW+AVbLf2prUcxTuvuv5Ha8CMganX6JOCQmM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=jSg9VIaEH2OFpJhgRu54QWc8aPc5FjjxvjveySCF81dNmI3Yd4kKS3HAUE1lzadGX
-         BBANiC+pHrtPMa9/Q7gfHQRJW7tAXsXywGaaeRI23wwklz9GGpJgp9akuns1wnXcA6
-         zryfJkkadKzbk0qFMrySEYJjTdfxZj182NitIaJE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
-References: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-1
-X-PR-Tracked-Commit-Id: 563c53e73b8b6ec842828736f77e633f7b0911e9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 37711e5e2325535bf094bdc0a66790d659b52d5b
-Message-Id: <159750599254.19697.4139931966515071544.pr-tracker-bot@kernel.org>
-Date:   Sat, 15 Aug 2020 15:39:52 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        id S1729524AbgHPOas (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 16 Aug 2020 10:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729516AbgHPO3Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Aug 2020 10:29:16 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA56CC061361
+        for <linux-nfs@vger.kernel.org>; Sun, 16 Aug 2020 07:28:36 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 184so11882421wmb.0
+        for <linux-nfs@vger.kernel.org>; Sun, 16 Aug 2020 07:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=NAKDDu3zYGlp6/1rTFA3zLXzfLNUWElMFpld1DGXTqZ3f2C1G5vMMGgQBtzYdv61gR
+         j0gW2VjYzcAEQEK9JcrA+yGSHFEXNhE9RNkaz3uxkanP37gacJrIVytgT7/c7zGkA2Dy
+         XJB3L8ToVDoWAD9Rvm7U849RIrxncLk9xI9S/Uu5ZGT/cXsim2IUQmYeZsKFSBsv6kJT
+         3kDR9KLYjND6JPpx0YTAndrQaTelzP3558OkivI4ykhj79/nak1F6z80uX1/EQIXmTKV
+         I+kUa6Zt2XAbNuMItIuLndMdaWWyo32PYvWKoOywYCMLUV2UDlYdbpJ66arhF+MiPCa0
+         yMKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=Fx4b/0LqTn/qpVTK5LlkC5gcYnCIs4tGX5NJbnmuFzuGt/5+xsylvW799GCjmzHiSB
+         8ugHzaQr6dvcrmzWKoHlxn8Gd1c5hWRu7LSmYCyHZdSPVMwY344/o3swdYo4qSPnfScF
+         GivsQ6UiwwJ/R/3+OjxS+M0UJur8sx6nh2ENNTMgcqD+wq6qPBDbj6uv30vWCgAOZEI+
+         mHvLucB8vaIA6cZ+/0sR69OY6VsLqUUBrg/qKEERWxHDAgdy8+fR/50zSkfhmb+HMZzH
+         +CD1LOAWAlrIw0+dXzge9MZYncA0/JLSbbjfRECvuM08FGgNWiVWi3eVvF2pizRdO0AI
+         rKxQ==
+X-Gm-Message-State: AOAM530V5zB4hEZm2ih9b0VlvMsuABSe+8WA9rov2MrNWskjiWmJcr1R
+        +yZxzvO2tCHCyvUJdDHQxpJ40plSXJzxPxVUEKTBjm7/oAQ=
+X-Google-Smtp-Source: ABdhPJydZZ8FQlFGmrB/EDLy0Z8gH5X03F6EFXypW4K1vf8iv94WhLhI3iwPKgeJEaRZZocHWED4lUmYPOBkTFPeX+4=
+X-Received: by 2002:a1c:a1c7:: with SMTP id k190mr10461870wme.1.1597588111746;
+ Sun, 16 Aug 2020 07:28:31 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a5d:6cd3:0:0:0:0:0 with HTTP; Sun, 16 Aug 2020 07:28:30
+ -0700 (PDT)
+Reply-To: sctnld11170@tlen.pl
+From:   "Mr. Scott Donald" <confianzayrentabilidad@gmail.com>
+Date:   Sun, 16 Aug 2020 07:28:30 -0700
+Message-ID: <CANrrfX7wwL97G=jb--8nb9jH8oRO8T90L6NGSfg1HfnzMyyHcw@mail.gmail.com>
+Subject: Hello, Please
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 22:04:02 +0000:
+--=20
+Dear Friend,
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-1
+I'm Mr. Scott Donald a Successful businessMan dealing with
+Exportation, I got your mail contact through search to let you know my
+intension and my Ugly Situation Am a dying Man here in Los Angeles
+California Hospital Bed in (USA), I Lost my Wife and my only Daughter
+for Covid-19 and I also have a problem in my Health and I can die
+anytime I Know,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/37711e5e2325535bf094bdc0a66790d659b52d5b
+I have a project that I am about to hand over to you. and I already
+instructed the Bankia S.A. Madrid, Spain(BSA) to transfer my fund sum
+of =C2=A33,7M GBP. Equivalent to =E2=82=AC4,077,033.91 EUR, to you as to en=
+able you
+to give 50% of this fund to Charitable Home in your State and take 50%
+don't think otherwise and why would anybody send someone you barely
+know to help you deliver a message, help me do this for the happiness
+of my soul and for God to mercy me and my Family and give Us a good
+place.
 
-Thank you!
+please, do as I said there was someone from your State that I deeply
+love so very very much and I miss her so badly I have no means to
+reach any Charitable Home there. that is why I go for a personal
+search of the Country and State and I got your mail contact through
+search to let you know my Bitterness and please, help me is getting
+Dark I ask my Doctor to help me keep you notice failure for me to
+reach you in person Your urgent Response, here is my Doctor Whats-app
+Number for urgent notice +13019692737
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Hope To Hear From You. I'm sending this email to you for the second
+time yet no response from you.
+
+My Regards.
+
+Mr. Scott Donald
+CEO
