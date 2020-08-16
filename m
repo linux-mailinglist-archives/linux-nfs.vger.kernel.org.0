@@ -2,116 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE67C245982
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Aug 2020 22:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 259452459E4
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 00:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgHPUqI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 16 Aug 2020 16:46:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60450 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726288AbgHPUqH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Aug 2020 16:46:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07GKcGYq130379;
-        Sun, 16 Aug 2020 20:46:03 GMT
+        id S1726165AbgHPW26 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 16 Aug 2020 18:28:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54696 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgHPW26 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Aug 2020 18:28:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07GMSFe2068964;
+        Sun, 16 Aug 2020 22:28:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=/pAe/qvT32tvwfj2SYWP0UGFSaRcjNpBSN/laXwb55A=;
- b=xIgfXCASjR43s/ERaXcc1IVNnmrN7T0p/1Dv729KXSZP8X6shfWMxNse7pKm/pVAzJI9
- oBFhWnHxchpU4suT1QEvbzY9Nxehr9NmIxdMoRkcYQNVnNSMWxLTKisJCIhRo+DW5blp
- nsxlD2FpJ8VO6XC7hc7INQ8kVBcTJXOaTLufrs3GGmxslcRatN/H68zR/j4QAthkgQh3
- BkwzEzxByLjn0FcXbkWFZTi7Op2zCVSX7hx7NTRWXwmf6K0lzVH/+qLGMd+NYyZEd9m6
- fp3jFSRQUkqUk1YCb3ApKuO3kIer2/ad5bnaPfv125AdwG7+l4S39rlGYKI/omuLgehO Cw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32x8bmuhed-1
+ s=corp-2020-01-29; bh=lVP8f/OKvfDTYVkq2QaiG5DPahnQ6Mj+iJnzUjW+Bco=;
+ b=qx2UfwrqtV/q15E67Egd9deswtNd0iA+o4YCpGB1/6+jAJTzjDAmG1W2MTxPqs5A7UOo
+ orromiO+ivWKT2Pe/0Wt1PlmketA5hSqBFpEKvFkILizSCdcbFtnqo5YCVxLXR9gmmHk
+ xdaS2WFctaqfWDlizWlLSAwuXlq5Nz9B6E5N32HM2wwVLzeuTDdpGYl2hBbks7EvyUeE
+ u42fCTWEkRosRDJ9044gJKdkKF8fN8S8gBP4QeuzlYvQ+9roVE5Zq6qonAAtbmZ/oYlz
+ GffFBwmcDYFvL7nDpbQHx2mCtmUhuNaU/oP13B6n25EjW5nicW8oSqqY1JSgSCio0H/S IA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32x74qus4j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 16 Aug 2020 20:46:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07GKcYp0089869;
-        Sun, 16 Aug 2020 20:46:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32xsfp9wy3-1
+        Sun, 16 Aug 2020 22:28:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07GMRc0B005423;
+        Sun, 16 Aug 2020 22:28:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32xskxepkx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Aug 2020 20:46:03 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07GKk16p004848;
-        Sun, 16 Aug 2020 20:46:02 GMT
+        Sun, 16 Aug 2020 22:28:54 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07GMSrS8017593;
+        Sun, 16 Aug 2020 22:28:53 GMT
 Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 16 Aug 2020 13:46:01 -0700
+        with ESMTP ; Sun, 16 Aug 2020 15:28:53 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: still seeing single client NFS4ERR_DELAY / CB_RECALL
+Subject: Re: [PATCH] xprtrdma: make sure MRs are unmapped before freeing them
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CA3288FC-8B9A-4F19-A51C-E1169726E946@oracle.com>
-Date:   Sun, 16 Aug 2020 16:46:00 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+In-Reply-To: <20200815054535.GA3337941@gmail.com>
+Date:   Sun, 16 Aug 2020 18:28:51 -0400
+Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: 7bit
-Message-Id: <F20E4EC5-71DD-4A92-A583-41BEE177F53C@oracle.com>
-References: <139C6BD7-4052-4510-B966-214ED3E69D61@oracle.com>
- <20200809202739.GA29574@fieldses.org> <20200809212531.GB29574@fieldses.org>
- <227E18E8-5A45-47E3-981C-549042AFB391@oracle.com>
- <20200810190729.GB13266@fieldses.org>
- <00CAA5B7-418E-4AB5-AE08-FE2F87B06795@oracle.com>
- <20200810201001.GC13266@fieldses.org>
- <CA3288FC-8B9A-4F19-A51C-E1169726E946@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
+Message-Id: <7DBE9EA2-A700-498F-A713-652B19321F8B@oracle.com>
+References: <20200814173734.3271600-1-dan@kernelim.com>
+ <5B87C3B5-B73D-40FD-A813-B3929CDF7583@oracle.com>
+ <20200814191056.GA3277556@gmail.com>
+ <DA35C71E-101D-45F6-A5BE-23493F7119C0@oracle.com>
+ <20200815054535.GA3337941@gmail.com>
+To:     Dan Aloni <dan@kernelim.com>
 X-Mailer: Apple Mail (2.3608.120.23.2.1)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9715 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008160171
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008160187
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9715 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008160171
+ definitions=main-2008160187
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce-
 
-> On Aug 11, 2020, at 9:31 AM, Chuck Lever <chuck.lever@oracle.com> wrote:
+
+> On Aug 15, 2020, at 1:45 AM, Dan Aloni <dan@kernelim.com> wrote:
 > 
->> On Aug 10, 2020, at 4:10 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> On Fri, Aug 14, 2020 at 04:21:54PM -0400, Chuck Lever wrote:
 >> 
->> On Mon, Aug 10, 2020 at 04:01:00PM -0400, Chuck Lever wrote:
->>> Roughly the same result with this patch as with the first one. The
->>> first one is a little better. Plus, I think the Solaris NFS server
->>> hands out write delegations on v4.0, and I haven't heard of a
->>> significant issue there. It's heuristics may be different, though.
+>> 
+>>> On Aug 14, 2020, at 3:10 PM, Dan Aloni <dan@kernelim.com> wrote:
 >>> 
->>> So, it might be that NFSv4.0 has always run significantly slower. I
->>> will have to try a v5.4 or older server to see.
+>>> On Fri, Aug 14, 2020 at 02:12:48PM -0400, Chuck Lever wrote:
+>>>> Hi Dan-
+>>>> 
+>>>>> On Aug 14, 2020, at 1:37 PM, Dan Aloni <dan@kernelim.com> wrote:
+>>>>> 
+>>>>> It was observed that on disconnections, these unmaps don't occur. The
+>>>>> relevant path is rpcrdma_mrs_destroy(), being called from
+>>>>> rpcrdma_xprt_disconnect().
+>>>> 
+>>>> MRs are supposed to be unmapped right after they are used, so
+>>>> during disconnect they should all be unmapped already. How often
+>>>> do you see a DMA mapped MR in this code path? Do you have a
+>>>> reproducer I can try?
+>>> 
+>>> These are not graceful disconnections but abnormal ones, where many large
+>>> IOs are still in flight, while the remote server suddenly breaks the
+>>> connection, the remote IP is still reachable but refusing to accept new
+>>> connections only for a few seconds.
 >> 
->> Oh, OK, I was assuming this was a regression.
+>> Ideally that's not supposed to matter. I'll see if I can reproduce
+>> with my usual tricks.
+>> 
+>> Why is your server behaving this way?
 > 
-> Me too. Looks like it is: NFSv4.0 always runs slower, but I see
-> it get significantly worse between v5.4 and 5.5. I will post more
-> quantified results soon.
+> It's a dedicated storage cluster under a specific testing scenario,
+> implementing floating IPs.  Haven't tried, but maybe the same scenario
+> can be reproduced with a standard single Linux NFSv3 server by fiddling
+> with nfsd open ports.
 
-It took me a while to get plausible bisection results. The problem
-appears in the midst of the NFSD filecache patches merged in v5.4.
-
-In order of application:
-
-5920afa3c85f ("nfsd: hook nfsd_commit up to the nfsd_file cache")
-961.68user 5252.40system 20:12.30elapsed 512%CPU, 2541 DELAY errors
-These results are similar to v5.3.
-
-fd4f83fd7dfb ("nfsd: convert nfs4_file->fi_fds array to use nfsd_files")
-Does not build
-
-eb82dd393744 ("nfsd: convert fi_deleg_file and ls_file fields to nfsd_file")
-966.92user 5425.47system 33:52.79elapsed 314%CPU, 1330 DELAY errors
-
-Can you take a look and see if there's anything obvious?
+Hi Dan, I was able to reproduce the DMA-map leak with a simple server-side
+disconnect injection test. I'll try some root cause analysis tomorrow.
 
 
 --
