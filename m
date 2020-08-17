@@ -2,409 +2,137 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD98246D5D
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 18:54:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C701246E3C
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 19:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388246AbgHQQy1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Aug 2020 12:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388918AbgHQQxs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 12:53:48 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7720C06134E
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:33 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s1so5195442iot.10
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l+ZGO2nOKVIaedpt0/2dNjU3KSqG+FvsHd7B5cxb/64=;
-        b=Po5yALYHMWbphOJTxIoojx9cm+Crb21vlE9A4VZF5qfhZ+eKB8fy2VUdB131cBkq3f
-         7MFq7yU65I9GbgEErMNUhrDs6gxuW2Tl36ZTybCeYa/2Wa4qR8tV0n9BJf4aRpHUVxtm
-         wB5FjbiuMroA8WyNfNwYb+pGmw1Dpj/4MsgfMkYQGOH9Jp5HTit0P2Dzl9M3PnMoKx3E
-         doh3ysj/oUmTB1jyKJ15Ie6VQN5sOCUAygH7E1atJ/FJPmHS7nOAabcBNOi+Xr/rzRMm
-         vGS0tnThwPApADDKgoufdEofaiYHZ64R1TAYLK1smQ4qaYF6X8OFXBipvxjyxDt5ngkQ
-         Jzbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=l+ZGO2nOKVIaedpt0/2dNjU3KSqG+FvsHd7B5cxb/64=;
-        b=jXxYjt/MAqJa08bEaKfxh8yM2hyBCZrgleCbiQzAHktcQwu0/dp0l/A59Mn9agxNvW
-         /Qvv/FW7+m/+gs6iLTCorg4A6oBqsvtHCr41azEIMUc+4vfWk4yms8tDRcISPG1YAyIy
-         maaVHhT7Z9djNK82lvEXDC3V3q9/zXe5qeL+YNfRgjm+gKxI1LNo+iJW/q9miBPZ4DsR
-         rGt9cx3G11qocbdH4G+dkJbZmCdhvbBePbwsNGqo7QW7eEJw9i/iTsBgKA/ErYZMMFwJ
-         0vYyscK9wRimuMp0TIWZZgjRIivTGSUpYjIbLUv2nMk17MyMweGgEFLLvZDRwya3LMGb
-         xQ7g==
-X-Gm-Message-State: AOAM5303SiR+6kDjfm0Y1AHusVn0l+LhijrutCKIkA1dqfotaMsiG0ZX
-        jn7qIFjTPl19vkwhQO5VatXBYJFLR3s=
-X-Google-Smtp-Source: ABdhPJyHr7esTL58DPBRuzBiUqWTEmTY5mWFtKEhiqKXbbgvuw6MQyvKV9EjTIvzZ/CxvHpuYyQ0yQ==
-X-Received: by 2002:a05:6638:2595:: with SMTP id s21mr15124991jat.12.1597683212702;
-        Mon, 17 Aug 2020 09:53:32 -0700 (PDT)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id a16sm7413106ilc.7.2020.08.17.09.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 09:53:32 -0700 (PDT)
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v4 04/10] NFS: Add READ_PLUS data segment support
-Date:   Mon, 17 Aug 2020 12:53:21 -0400
-Message-Id: <20200817165327.354181-5-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817165327.354181-1-Anna.Schumaker@Netapp.com>
-References: <20200817165327.354181-1-Anna.Schumaker@Netapp.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2389807AbgHQR0R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Aug 2020 13:26:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33928 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390061AbgHQR0H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 13:26:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HHMAqE183413;
+        Mon, 17 Aug 2020 17:25:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=yJnm27QNs3bXTn5r/vqDmrcKyhoK1fjjWPz5rTHbnsk=;
+ b=X7dcva2AzmRVXS+VMTWHZHGtcHHm+b847eqx/dwezOtAHJKP4Kxd8rrX3yyrdIZNjbOh
+ MKPGces/+9+GHL/dZp24e9ywACEdwlGtfshUw+aDruKTVchcgHB9F1GJvYpqoqzTVoTZ
+ 5csuCtBveMRp1OOtWNg7Y+austubFcZJGp5IvA6lc55bnBinss6k49HPXrz79d5sxQq7
+ VJy79YO0vbd8A6WkXGgWEferA8MEffSwK+ERnDaYIaylFRk/HuXIGG/gysvUColG/zQx
+ JT/P/0tfhjkHenokaicWoYVJdhnFcIGrFamIAUxRMYyC38+xTAYQcy7PZ0vSfFMrA6xb xg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32x74r07uh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Aug 2020 17:25:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HHMtIX163387;
+        Mon, 17 Aug 2020 17:25:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32xsmw6f0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 17:25:47 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07HHPenK027269;
+        Mon, 17 Aug 2020 17:25:46 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Aug 2020 10:25:40 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v1 00/22] SUNRPC: Replace dprintk calls with tracepoints
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200708200121.22129.92375.stgit@manet.1015granger.net>
+Date:   Mon, 17 Aug 2020 13:25:38 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <242E6FB6-6C7F-4529-A4B4-B8248152F448@oracle.com>
+References: <20200708200121.22129.92375.stgit@manet.1015granger.net>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008170126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008170126
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-This patch adds client support for decoding a single NFS4_CONTENT_DATA
-segment returned by the server. This is the simplest implementation
-possible, since it does not account for any hole segments in the reply.
+> On Jul 8, 2020, at 4:08 PM, Chuck Lever <chuck.lever@oracle.com> wrote:
+> 
+> Hi-
+> 
+> This series replaces many client-side RPC dprintk call sites with
+> tracepoints. The goals of this series are:
+> 
+> - Replace chatty dprintk call sites with tracepoints, which can
+>  handle a higher event rate, and won't get rate-limited.
+> 
+> - At some later point, expand the 0-64K range of RPC task IDs.
+>  Task IDs would be displayed only by tracepoints as 32-bit unsigned
+>  integers.
+> 
+> - Eliminate redundant tracepoints in the transport implementations.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/nfs42xdr.c         | 141 ++++++++++++++++++++++++++++++++++++++
- fs/nfs/nfs4proc.c         |  43 +++++++++++-
- fs/nfs/nfs4xdr.c          |   1 +
- include/linux/nfs4.h      |   2 +-
- include/linux/nfs_fs_sb.h |   1 +
- include/linux/nfs_xdr.h   |   2 +-
- 6 files changed, 185 insertions(+), 5 deletions(-)
+None of the patches in this series made it into v5.9. I don't recall
+seeing any feedback on these either. Can they be considered for v5.10?
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index c03f3246d6c5..055a944d043d 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -45,6 +45,15 @@
- #define encode_deallocate_maxsz		(op_encode_hdr_maxsz + \
- 					 encode_fallocate_maxsz)
- #define decode_deallocate_maxsz		(op_decode_hdr_maxsz)
-+#define encode_read_plus_maxsz		(op_encode_hdr_maxsz + \
-+					 encode_stateid_maxsz + 3)
-+#define NFS42_READ_PLUS_SEGMENT_SIZE	(1 /* data_content4 */ + \
-+					 2 /* data_info4.di_offset */ + \
-+					 2 /* data_info4.di_length */)
-+#define decode_read_plus_maxsz		(op_decode_hdr_maxsz + \
-+					 1 /* rpr_eof */ + \
-+					 1 /* rpr_contents count */ + \
-+					 NFS42_READ_PLUS_SEGMENT_SIZE)
- #define encode_seek_maxsz		(op_encode_hdr_maxsz + \
- 					 encode_stateid_maxsz + \
- 					 2 /* offset */ + \
-@@ -128,6 +137,14 @@
- 					 decode_putfh_maxsz + \
- 					 decode_deallocate_maxsz + \
- 					 decode_getattr_maxsz)
-+#define NFS4_enc_read_plus_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
-+					 encode_putfh_maxsz + \
-+					 encode_read_plus_maxsz)
-+#define NFS4_dec_read_plus_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
-+					 decode_putfh_maxsz + \
-+					 decode_read_plus_maxsz)
- #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
- 					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
-@@ -252,6 +269,16 @@ static void encode_deallocate(struct xdr_stream *xdr,
- 	encode_fallocate(xdr, args);
- }
- 
-+static void encode_read_plus(struct xdr_stream *xdr,
-+			     const struct nfs_pgio_args *args,
-+			     struct compound_hdr *hdr)
-+{
-+	encode_op_hdr(xdr, OP_READ_PLUS, decode_read_plus_maxsz, hdr);
-+	encode_nfs4_stateid(xdr, &args->stateid);
-+	encode_uint64(xdr, args->offset);
-+	encode_uint32(xdr, args->count);
-+}
-+
- static void encode_seek(struct xdr_stream *xdr,
- 			const struct nfs42_seek_args *args,
- 			struct compound_hdr *hdr)
-@@ -446,6 +473,28 @@ static void nfs4_xdr_enc_deallocate(struct rpc_rqst *req,
- 	encode_nops(&hdr);
- }
- 
-+/*
-+ * Encode READ_PLUS request
-+ */
-+static void nfs4_xdr_enc_read_plus(struct rpc_rqst *req,
-+				   struct xdr_stream *xdr,
-+				   const void *data)
-+{
-+	const struct nfs_pgio_args *args = data;
-+	struct compound_hdr hdr = {
-+		.minorversion = nfs4_xdr_minorversion(&args->seq_args),
-+	};
-+
-+	encode_compound_hdr(xdr, req, &hdr);
-+	encode_sequence(xdr, &args->seq_args, &hdr);
-+	encode_putfh(xdr, args->fh, &hdr);
-+	encode_read_plus(xdr, args, &hdr);
-+
-+	rpc_prepare_reply_pages(req, args->pages, args->pgbase,
-+				args->count, hdr.replen);
-+	encode_nops(&hdr);
-+}
-+
- /*
-  * Encode SEEK request
-  */
-@@ -694,6 +743,71 @@ static int decode_deallocate(struct xdr_stream *xdr, struct nfs42_falloc_res *re
- 	return decode_op_hdr(xdr, OP_DEALLOCATE);
- }
- 
-+static int decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_res *res,
-+				 uint32_t *eof)
-+{
-+	uint32_t count, recvd;
-+	uint64_t offset;
-+	__be32 *p;
-+
-+	p = xdr_inline_decode(xdr, 8 + 4);
-+	if (unlikely(!p))
-+		return -EIO;
-+
-+	p = xdr_decode_hyper(p, &offset);
-+	count = be32_to_cpup(p);
-+	recvd = xdr_read_pages(xdr, count);
-+	res->count += recvd;
-+
-+	if (count > recvd) {
-+		dprintk("NFS: server cheating in read reply: "
-+				"count %u > recvd %u\n", count, recvd);
-+		*eof = 0;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
-+{
-+	uint32_t eof, segments, type;
-+	int status;
-+	__be32 *p;
-+
-+	status = decode_op_hdr(xdr, OP_READ_PLUS);
-+	if (status)
-+		return status;
-+
-+	p = xdr_inline_decode(xdr, 4 + 4);
-+	if (unlikely(!p))
-+		return -EIO;
-+
-+	eof = be32_to_cpup(p++);
-+	segments = be32_to_cpup(p++);
-+	if (segments == 0)
-+		goto out;
-+
-+	p = xdr_inline_decode(xdr, 4);
-+	if (unlikely(!p))
-+		return -EIO;
-+
-+	type = be32_to_cpup(p++);
-+	if (type == NFS4_CONTENT_DATA)
-+		status = decode_read_plus_data(xdr, res, &eof);
-+	else
-+		return -EINVAL;
-+
-+	if (status)
-+		return status;
-+	if (segments > 1)
-+		eof = 0;
-+
-+out:
-+	res->eof = eof;
-+	return 0;
-+}
-+
- static int decode_seek(struct xdr_stream *xdr, struct nfs42_seek_res *res)
- {
- 	int status;
-@@ -870,6 +984,33 @@ static int nfs4_xdr_dec_deallocate(struct rpc_rqst *rqstp,
- 	return status;
- }
- 
-+/*
-+ * Decode READ_PLUS request
-+ */
-+static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
-+				  struct xdr_stream *xdr,
-+				  void *data)
-+{
-+	struct nfs_pgio_res *res = data;
-+	struct compound_hdr hdr;
-+	int status;
-+
-+	status = decode_compound_hdr(xdr, &hdr);
-+	if (status)
-+		goto out;
-+	status = decode_sequence(xdr, &res->seq_res, rqstp);
-+	if (status)
-+		goto out;
-+	status = decode_putfh(xdr);
-+	if (status)
-+		goto out;
-+	status = decode_read_plus(xdr, res);
-+	if (!status)
-+		status = res->count;
-+out:
-+	return status;
-+}
-+
- /*
-  * Decode SEEK request
-  */
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 2e2dac29a9e9..509198eb968e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -69,6 +69,10 @@
- 
- #include "nfs4trace.h"
- 
-+#ifdef CONFIG_NFS_V4_2
-+#include "nfs42.h"
-+#endif /* CONFIG_NFS_V4_2 */
-+
- #define NFSDBG_FACILITY		NFSDBG_PROC
- 
- #define NFS4_BITMASK_SZ		3
-@@ -5226,28 +5230,60 @@ static bool nfs4_read_stateid_changed(struct rpc_task *task,
- 	return true;
- }
- 
-+static bool nfs4_read_plus_not_supported(struct rpc_task *task,
-+					 struct nfs_pgio_header *hdr)
-+{
-+	struct nfs_server *server = NFS_SERVER(hdr->inode);
-+	struct rpc_message *msg = &task->tk_msg;
-+
-+	if (msg->rpc_proc == &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS] &&
-+	    server->caps & NFS_CAP_READ_PLUS && task->tk_status == -ENOTSUPP) {
-+		server->caps &= ~NFS_CAP_READ_PLUS;
-+		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
-+		rpc_restart_call_prepare(task);
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
--
- 	dprintk("--> %s\n", __func__);
- 
- 	if (!nfs4_sequence_done(task, &hdr->res.seq_res))
- 		return -EAGAIN;
- 	if (nfs4_read_stateid_changed(task, &hdr->args))
- 		return -EAGAIN;
-+	if (nfs4_read_plus_not_supported(task, hdr))
-+		return -EAGAIN;
- 	if (task->tk_status > 0)
- 		nfs_invalidate_atime(hdr->inode);
- 	return hdr->pgio_done_cb ? hdr->pgio_done_cb(task, hdr) :
- 				    nfs4_read_done_cb(task, hdr);
- }
- 
-+#ifdef CONFIG_NFS_V4_2
-+static void nfs42_read_plus_support(struct nfs_server *server, struct rpc_message *msg)
-+{
-+	if (server->caps & NFS_CAP_READ_PLUS)
-+		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS];
-+	else
-+		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
-+}
-+#else
-+static void nfs42_read_plus_support(struct nfs_server *server, struct rpc_message *msg)
-+{
-+	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
-+}
-+#endif /* CONFIG_NFS_V4_2 */
-+
- static void nfs4_proc_read_setup(struct nfs_pgio_header *hdr,
- 				 struct rpc_message *msg)
- {
- 	hdr->timestamp   = jiffies;
- 	if (!hdr->pgio_done_cb)
- 		hdr->pgio_done_cb = nfs4_read_done_cb;
--	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
-+	nfs42_read_plus_support(NFS_SERVER(hdr->inode), msg);
- 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
- }
- 
-@@ -10006,7 +10042,8 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
- 		| NFS_CAP_SEEK
- 		| NFS_CAP_LAYOUTSTATS
- 		| NFS_CAP_CLONE
--		| NFS_CAP_LAYOUTERROR,
-+		| NFS_CAP_LAYOUTERROR
-+		| NFS_CAP_READ_PLUS,
- 	.init_client = nfs41_init_client,
- 	.shutdown_client = nfs41_shutdown_client,
- 	.match_stateid = nfs41_match_stateid,
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 6742646d4feb..80d9d55a48c2 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -7580,6 +7580,7 @@ const struct rpc_procinfo nfs4_procedures[] = {
- 	PROC42(COPY_NOTIFY,	enc_copy_notify,	dec_copy_notify),
- 	PROC(LOOKUPP,		enc_lookupp,		dec_lookupp),
- 	PROC42(LAYOUTERROR,	enc_layouterror,	dec_layouterror),
-+	PROC42(READ_PLUS,	enc_read_plus,		dec_read_plus),
- };
- 
- static unsigned int nfs_version4_counts[ARRAY_SIZE(nfs4_procedures)];
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 4dba3c948932..4bf75b56758c 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -540,8 +540,8 @@ enum {
- 
- 	NFSPROC4_CLNT_LOOKUPP,
- 	NFSPROC4_CLNT_LAYOUTERROR,
--
- 	NFSPROC4_CLNT_COPY_NOTIFY,
-+	NFSPROC4_CLNT_READ_PLUS,
- };
- 
- /* nfs41 types */
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 465fa98258a3..11248c5a7b24 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -281,5 +281,6 @@ struct nfs_server {
- #define NFS_CAP_OFFLOAD_CANCEL	(1U << 25)
- #define NFS_CAP_LAYOUTERROR	(1U << 26)
- #define NFS_CAP_COPY_NOTIFY	(1U << 27)
-+#define NFS_CAP_READ_PLUS	(1U << 28)
- 
- #endif
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 5fd0a9ef425f..6da54d010421 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -656,7 +656,7 @@ struct nfs_pgio_args {
- struct nfs_pgio_res {
- 	struct nfs4_sequence_res	seq_res;
- 	struct nfs_fattr *	fattr;
--	__u32			count;
-+	__u64			count;
- 	__u32			op_status;
- 	union {
- 		struct {
--- 
-2.28.0
+
+> ---
+> 
+> Chuck Lever (22):
+>      SUNRPC: Remove trace_xprt_complete_rqst()
+>      SUNRPC: Hoist trace_xprtrdma_op_allocate into generic code
+>      SUNRPC: Remove debugging instrumentation from xprt_release
+>      SUNRPC: Update debugging instrumentation in xprt_do_reserve()
+>      SUNRPC: Replace dprintk() call site in xprt_prepare_transmit
+>      SUNRPC: Replace dprintk() call site in xs_nospace()
+>      SUNRPC: Remove the dprint_status() macro
+>      SUNRPC: Remove dprintk call site in call_start()
+>      SUNRPC: Replace connect dprintk call sites with a tracepoint
+>      SUNRPC: Mitigate cond_resched() in xprt_transmit()
+>      SUNRPC: Add trace_rpc_timeout_status()
+>      SUNRPC: Trace call_refresh events
+>      SUNRPC: Remove dprintk call site in call_decode
+>      SUNRPC: Clean up call_bind_status() observability
+>      SUNRPC: Remove rpcb_getport_async dprintk call sites
+>      SUNRPC: Hoist trace_xprtrdma_op_setport into generic code
+>      SUNRPC: Remove dprintk call sites in rpcbind XDR functions
+>      SUNRPC: Remove more dprintks in rpcb_clnt.c
+>      SUNRPC: Replace rpcbind dprintk call sites with tracepoints
+>      SUNRPC: Clean up RPC scheduler tracepoints
+>      SUNRPC: Remove dprintk call sites in RPC queuing functions
+>      SUNRPC: Remove remaining dprintks from sched.c
+> 
+> 
+> include/trace/events/rpcrdma.h  |  63 -------
+> include/trace/events/sunrpc.h   | 285 ++++++++++++++++++++++++++++----
+> net/sunrpc/clnt.c               |  75 ++-------
+> net/sunrpc/rpcb_clnt.c          | 129 +++------------
+> net/sunrpc/sched.c              |  52 +-----
+> net/sunrpc/xprt.c               |  22 +--
+> net/sunrpc/xprtrdma/transport.c |   7 -
+> net/sunrpc/xprtsock.c           |   5 +-
+> 8 files changed, 304 insertions(+), 334 deletions(-)
+> 
+> --
+> Chuck Lever
+
+--
+Chuck Lever
+
+
 
