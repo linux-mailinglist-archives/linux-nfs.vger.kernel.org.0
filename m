@@ -2,116 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D32DE246EAF
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 19:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC509246FB0
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 19:52:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgHQRfA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Aug 2020 13:35:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40876 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728989AbgHQRe4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 13:34:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HHWAc0010080;
-        Mon, 17 Aug 2020 17:34:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=uRZfGyNcH1mRTBQ0EADaPl9oEsia1jJQyhRFSspY/NI=;
- b=in2NhKQu1wjrx0cKgzZdj7MOzwJJYqKBPT2po1Tb3fYSpV4PPqjEUTz62y/aBhNRoYK8
- 8qGQR07RKOPBJoAzzNfNrnrIxK339DuHWT+rOlpn4iVR5BnbsKYg86NRMv4PCAucltcG
- 8ULF0Od8jVP/DN0XG1TuwX3SIcRn9J5RUw4f3vu4cOxp3h/4CcK3Ybqsgd+k6gtko+5h
- KGGpmrlx+atd0FoUHwDqlXbRriTP6+jZDm4HZQ7CCIWbdAPjTSbPm/cU3/CFl453Zyaa
- lB/pP9i63+KNLPcxOHGX+GWl8cezdDAP5J4EURib6AfAKugMVRA8sHzON7iG7sACMgsL vg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32x74r09d8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Aug 2020 17:34:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HHY81H081318;
-        Mon, 17 Aug 2020 17:34:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32xs9m0g4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 17:34:53 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07HHYqmB010999;
-        Mon, 17 Aug 2020 17:34:52 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Aug 2020 10:34:52 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH RFC] xprtrdma: Release in-flight MRs on disconnect
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <159767751439.190071.13659900216337230912.stgit@manet.1015granger.net>
-Date:   Mon, 17 Aug 2020 13:34:51 -0400
-Cc:     dan@kernelim.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <8836EE99-C971-434A-B4A4-C1C4241073BC@oracle.com>
-References: <159767751439.190071.13659900216337230912.stgit@manet.1015granger.net>
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008170127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008170127
+        id S1731596AbgHQRwC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Aug 2020 13:52:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731593AbgHQRv5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 13:51:57 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3494DC061342;
+        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 9so13962310wmj.5;
+        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
+        b=qe3/6KY/1aTKBl1WQFgXFC40bTLgZOhTgB+yybOXo/tGEKIa0WRgScLkwV33tS+ULG
+         oIJ19F5ZwhqTlECblt1iol+TLr9mlxxn9kdL/Wj5WQwuoMJV7zeqx1Jy2Pd38nDkLilr
+         3pAnSSkRXsTvSCiyUhG6pqtpkIYQxiZfa9xPUxELUcfgSy4N3YQgNSl0OMNHuGYjvLDB
+         L8597F33Gu1VWUAywWhF+7O47/jA6pXlYQU4p8U+WUYzVzdaUfMDAPs2HLg9SXtRWCCX
+         lMI8avypezSj448rVviZn/04ab7wDAYaePMGIc0nJzDwD8dfksX/gpebm1ceeCBtSPrv
+         dIMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
+        b=PW+2y40aQrxqPx+yYzIms/0KbpZhEcE7xzfMVPrZRY2qLt3PbsOFSi7N/FvBFQX637
+         /mmloFb4Yk6oSOEWL7yR1mHVdWru7Z04b7BL1aT0uOQ/Uox+r/vl4AhHB3E1bpug6jQK
+         VZ28eE3UmaGL33UapZV3AnyZMfnFSUJRFpFjrdb1VPkpTNFrkp35GFio1DQN/ACfg3uG
+         HtZkVoUw7Fjx2O84NwkE8lbdG2c2d4pc32xFFXowSTXLTujALpV+EuMQeCQH6WjzJCz+
+         FM6GcT4eACdcsL/upmHNDtxRmiu8l2XhAvpDahTYdaRbH7rnZPTk1dRSomR3ALxN0BB6
+         bilA==
+X-Gm-Message-State: AOAM531r6vbHuoT4xZhcpzXuxo9cEuPRt4CfErr4MSQM6Tz3A+o6GlKc
+        THZqKJyNHrVDddRZx/p7ieqYUmDMDiUMp17U
+X-Google-Smtp-Source: ABdhPJzGgoktrcxtenVcIw5km7o778RFF8aKHINYvTEPT0kBbK7+bgi75b8Od5p3vgeaWcJZsQRTVA==
+X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr16412074wme.171.1597686714011;
+        Mon, 17 Aug 2020 10:51:54 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id d14sm32738176wre.44.2020.08.17.10.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 10:51:53 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] nfsd: Fix typo in comment
+Date:   Mon, 17 Aug 2020 18:51:26 +0100
+Message-Id: <20200817175125.6441-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Missing "is".
 
-> On Aug 17, 2020, at 11:19 AM, Chuck Lever <chuck.lever@oracle.com> wrote:
-> 
-> Dan Aloni reports that when a server disconnects abruptly, a few
-> memory regions are left DMA mapped. Over time this leak could pin
-> enough I/O resources to slow or even deadlock an NFS/RDMA client.
-> 
-> I found that if a transport disconnects before pending Send and
-> FastReg WRs can be posted, the to-be-registered MRs are stranded on
-> the req's rl_registered list and never released -- since they
-> weren't posted, there's no Send completion to DMA unmap them.
-> 
-> Reported-by: Dan Aloni <dan@kernelim.com>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
-> net/sunrpc/xprtrdma/verbs.c |    2 ++
-> 1 file changed, 2 insertions(+)
-> 
-> Hi Dan, does this help?
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+Ahh I see. Is this better?
+---
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Anna, can you grab this for v5.9-rc ?
-
-
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 95c66a339e34..53962e41896d 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -936,6 +936,8 @@ static void rpcrdma_req_reset(struct rpcrdma_req *req)
-> 
-> 	rpcrdma_regbuf_dma_unmap(req->rl_sendbuf);
-> 	rpcrdma_regbuf_dma_unmap(req->rl_recvbuf);
-> +
-> +	frwr_reset(req);
-> }
-> 
-> /* ASSUMPTION: the rb_allreqs list is stable for the duration,
-> 
-> 
-
---
-Chuck Lever
-
-
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 259d5ad0e3f47..309a6d5f895ae 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4828,7 +4828,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		slen = strlen(sp);
+ 
+ 		/*
+-		 * Check if this a user. attribute, skip it if not.
++		 * Check if this is a user. attribute, skip it if not.
+ 		 */
+ 		if (strncmp(sp, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
+ 			goto contloop;
+-- 
+2.28.0
 
