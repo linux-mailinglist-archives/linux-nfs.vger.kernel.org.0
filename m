@@ -2,99 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3627247790
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 21:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31519247A5A
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Aug 2020 00:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgHQTuP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Aug 2020 15:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
+        id S1728853AbgHQWUh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Aug 2020 18:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729230AbgHQPTd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 11:19:33 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555E8C061389;
-        Mon, 17 Aug 2020 08:19:32 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id a5so17870352ioa.13;
-        Mon, 17 Aug 2020 08:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=8BH4RpVFeN8HQQw+sm8fZ6BSx4qaDJ2dPNkdDHJsfsg=;
-        b=fHLgGOcNsijUKicuPTFAQrCAQz3n3tk5iF/XFx9O+G+knGxJjfNWbvh2Y7oBevCbws
-         caewExV0Gzyc+c29bVF4yUBi0R9b97WxKk2Y8GzAY4GeN/nKAUZk7Q6JVfIMQrICk5yq
-         n1TqxBh3pLlx6H5O1aAUSAD6sMiNDmQeFpkJok87tyw1tqy17z4aFoF3BP+b6HhrrRZs
-         ABgV8a2F+Z+WL3VA1qyt3q64btRjstbJbygPt+2KvwtYWfsrXvd1JHeXLfxYQRl8XTUa
-         PgZBxgMuT/uXdNsMN/TxQpFr2zVX1cGkbATj0R19DXLuCniLFKHLfAb96Ms825pCD6si
-         uMTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=8BH4RpVFeN8HQQw+sm8fZ6BSx4qaDJ2dPNkdDHJsfsg=;
-        b=jm/XAdSRBn+CEBlQ4i6affIbWehuwE8QYhb9ZXi6HSlJDGFnN6DuNKg/5VThoEc0/j
-         lfp2cz03kOFwrk72EPyidTnZPtc/oLSEpFXssXikdi4eYulcGDru4YUtIoOZ9LPXYzFy
-         hQXE5R4LYPSN2lTETLyT3ZgMMz6tP8IXnAa9aOzNjnVcioGL2DPFy1CjINcrdRTu4/Eb
-         zsgKLKqCNEhnSQLLQrjJL8/cZlwS6dypuWnJfeHEt0fHlmaExRnsrQ3q3DGsXDa9lpxV
-         ru4bkvbYOOjJr8hyDADgfeIGrHbadHE08X7eEQ1BipLN3IjSZBYgRGgw3xumo31BIudV
-         tnYw==
-X-Gm-Message-State: AOAM533GQsPqWhtKeQXQCu0EAVgFpcVHTsdVJPnfY34u9u6Q/i9pqwwD
-        WRURuyXpEiW8YnwZ6a4n0gtXO3c9yFN1UA==
-X-Google-Smtp-Source: ABdhPJwgFPXtwXsesZlIrxRT7QtiIii1KMjENrl88rCLm2HCEgZ3JlQ6uwDBy8p+4guv9bqvl193Mg==
-X-Received: by 2002:a6b:3bcf:: with SMTP id i198mr12965996ioa.194.1597677569534;
-        Mon, 17 Aug 2020 08:19:29 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id t14sm9205736ios.18.2020.08.17.08.19.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Aug 2020 08:19:28 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 07HFJQcR004835;
-        Mon, 17 Aug 2020 15:19:27 GMT
-Subject: [PATCH RFC] xprtrdma: Release in-flight MRs on disconnect
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     dan@kernelim.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 17 Aug 2020 11:19:26 -0400
-Message-ID: <159767751439.190071.13659900216337230912.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23
+        with ESMTP id S1728677AbgHQWUg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 18:20:36 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DAAC061342
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 15:20:36 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9AF69BC6; Mon, 17 Aug 2020 18:20:34 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9AF69BC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1597702834;
+        bh=4TSg28WsHIaowTE0E0BvK0rOhJqFyIMmcB3bKBPxQZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WFsNGp2jUHPhweSevJ1uqp3R5TivLQXsdySrFfgfAa1Ch/PVC5ylz6VPFhoVT2z6x
+         JTOGDwdbuz1jYt4xiT/DhKcxK+lXQUeatTUUxZgOStzvM/OXj/1o7ZzWmj4CXehrrE
+         ZXHCcFfEP52MHMOgUTVaEU8OCyLoBXU6YoNJllGk=
+Date:   Mon, 17 Aug 2020 18:20:34 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: still seeing single client NFS4ERR_DELAY / CB_RECALL
+Message-ID: <20200817222034.GA6390@fieldses.org>
+References: <139C6BD7-4052-4510-B966-214ED3E69D61@oracle.com>
+ <20200809202739.GA29574@fieldses.org>
+ <20200809212531.GB29574@fieldses.org>
+ <227E18E8-5A45-47E3-981C-549042AFB391@oracle.com>
+ <20200810190729.GB13266@fieldses.org>
+ <00CAA5B7-418E-4AB5-AE08-FE2F87B06795@oracle.com>
+ <20200810201001.GC13266@fieldses.org>
+ <CA3288FC-8B9A-4F19-A51C-E1169726E946@oracle.com>
+ <F20E4EC5-71DD-4A92-A583-41BEE177F53C@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F20E4EC5-71DD-4A92-A583-41BEE177F53C@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dan Aloni reports that when a server disconnects abruptly, a few
-memory regions are left DMA mapped. Over time this leak could pin
-enough I/O resources to slow or even deadlock an NFS/RDMA client.
+On Sun, Aug 16, 2020 at 04:46:00PM -0400, Chuck Lever wrote:
+> Hi Bruce-
+> 
+> > On Aug 11, 2020, at 9:31 AM, Chuck Lever <chuck.lever@oracle.com> wrote:
+> > 
+> >> On Aug 10, 2020, at 4:10 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> >> 
+> >> On Mon, Aug 10, 2020 at 04:01:00PM -0400, Chuck Lever wrote:
+> >>> Roughly the same result with this patch as with the first one. The
+> >>> first one is a little better. Plus, I think the Solaris NFS server
+> >>> hands out write delegations on v4.0, and I haven't heard of a
+> >>> significant issue there. It's heuristics may be different, though.
+> >>> 
+> >>> So, it might be that NFSv4.0 has always run significantly slower. I
+> >>> will have to try a v5.4 or older server to see.
+> >> 
+> >> Oh, OK, I was assuming this was a regression.
+> > 
+> > Me too. Looks like it is: NFSv4.0 always runs slower, but I see
+> > it get significantly worse between v5.4 and 5.5. I will post more
+> > quantified results soon.
+> 
+> It took me a while to get plausible bisection results. The problem
+> appears in the midst of the NFSD filecache patches merged in v5.4.
 
-I found that if a transport disconnects before pending Send and
-FastReg WRs can be posted, the to-be-registered MRs are stranded on
-the req's rl_registered list and never released -- since they
-weren't posted, there's no Send completion to DMA unmap them.
+Well, that's interesting.
 
-Reported-by: Dan Aloni <dan@kernelim.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/verbs.c |    2 ++
- 1 file changed, 2 insertions(+)
+> In order of application:
+> 
+> 5920afa3c85f ("nfsd: hook nfsd_commit up to the nfsd_file cache")
+> 961.68user 5252.40system 20:12.30elapsed 512%CPU, 2541 DELAY errors
+> These results are similar to v5.3.
+> 
+> fd4f83fd7dfb ("nfsd: convert nfs4_file->fi_fds array to use nfsd_files")
+> Does not build
+> 
+> eb82dd393744 ("nfsd: convert fi_deleg_file and ls_file fields to nfsd_file")
+> 966.92user 5425.47system 33:52.79elapsed 314%CPU, 1330 DELAY errors
+> 
+> Can you take a look and see if there's anything obvious?
 
-Hi Dan, does this help?
+Unfortunately nothing about the file cache code is very obvious to me.
+I'm looking at it....
 
+It adds some new nfserr_jukebox returns in nfsd_file_acquire.  Those
+mostly look like kmalloc failures, the one I'm not sure about is the
+NFSD_FILE_HASHED check.
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 95c66a339e34..53962e41896d 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -936,6 +936,8 @@ static void rpcrdma_req_reset(struct rpcrdma_req *req)
- 
- 	rpcrdma_regbuf_dma_unmap(req->rl_sendbuf);
- 	rpcrdma_regbuf_dma_unmap(req->rl_recvbuf);
-+
-+	frwr_reset(req);
- }
- 
- /* ASSUMPTION: the rb_allreqs list is stable for the duration,
+Or maybe it's the lease break there.
 
-
+--b.
