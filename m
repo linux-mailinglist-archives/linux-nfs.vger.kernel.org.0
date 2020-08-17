@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B231246E89
+	by mail.lfdr.de (Postfix) with ESMTP id 9C154246E8A
 	for <lists+linux-nfs@lfdr.de>; Mon, 17 Aug 2020 19:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389111AbgHQRdT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Aug 2020 13:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        id S2388979AbgHQRdW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Aug 2020 13:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389031AbgHQQx7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 12:53:59 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0405BC061350
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:36 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id s189so18342886iod.2
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:35 -0700 (PDT)
+        with ESMTP id S2389126AbgHQQx6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Aug 2020 12:53:58 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FC0C061344
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:37 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id p13so15123597ilh.4
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Aug 2020 09:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=igtPl6C6Gfbp4gxTezXs9k9ZWoIUbuf9BiavER35twk=;
-        b=l6tJiV94mBsIvprRfO5B9/2n2RdWmhvF/tW70Z8gHF/htpDCDydIKo9MxYmAeumGAW
-         ziCAnHKVorsee0OpROsctkVp2Y3J5NH+yhkXTenvQKWRXO2oPLu4zO48c5inZAZMfxtC
-         OujirCLAbXOo9D+tEbuStlebnJ9RqjPgL8gjJmNblUwkUG9rs1oAwmctW4aWWd6WKjXr
-         KgNdDeF6TT7GoAMSvYlUs7QcXFrAqkoi5mpSRgF0VgWXL8ufvr9fJ9Qzf+hIeoWHZOhH
-         J7Hk9m67qMDLryDg2aNJJQpXC6lJtYI2IS7ShOQYBNba5MTRaneZS8sYxTSES/HTVAt3
-         qnqA==
+        bh=FfSVVvxhUmot5fhlVdNxRiIJLr9/EUy1AHdjap9t+i4=;
+        b=d26zxZateQB2RVC312wHuitgCHtdQIPkcsIqNFxMnibbvAfezlJIyFhXNmZoZWg8so
+         lhH/hc5yFxGe6uXz5UisRT3likZy8jU0vJ9pQrJ1w+tPNQ3Zrk9Ahaz6MamsY9Ecycua
+         X4ymxA7cFfTWDZSuCb1V9jdHfhsaF/1zpsb+ycenkvNYqcK4OX9wGZVmCFqTV3WwAW1l
+         BktyifZr35H0icq+Y6wSyZavbdLNmtAiWP2L1ZhT1CssZNTr4t3hdbAD/v2GhwX9cDWq
+         sHcIsZWS7ErtYgi+8T3l6f5vHBIfhcu/mIDE75Pf9i1l6o01KsJPJ7A3uUxTmhZYIibV
+         q+ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=igtPl6C6Gfbp4gxTezXs9k9ZWoIUbuf9BiavER35twk=;
-        b=l06RNM5NShdMBRodeaZSDZBgc+DakMGxWLvkGK6jRbWZMCETptm41hgjuhrliQ5KF3
-         2v+B6KB85YFLCg3n7fQQ0xJrTcECTNmoFNIOE1klEzjwJ5ua2RpH5UL/UIwfYpU0ErTr
-         Z83ZvLGt/g22rNnQfuJRMRiV4JQbE7/RkPeVObHyUGzIxGmPQbldfA7eqq3OBM7YK9qR
-         OT67eST+5j35HY9dYT33SPODPIVw3BWUoPO3Z03YizRHhAnrPiyi3nDKpR9fx6DEWqTG
-         nUJPoi25EOK4AyuzmfszW8cb8WeDqq8Q8JmTiKKBZR3Q0LjPUPrV8c+hRSq0OdNW9X5x
-         k0Xw==
-X-Gm-Message-State: AOAM53221pLzkkyfDTgEkmaygQkZKwzCGXRs3PbqujSKhcqmFc0zPXGM
-        URsH/829m72Z9RUZXIG9KhrBIwrxMuk=
-X-Google-Smtp-Source: ABdhPJy82GHzJpiF4tn0GQZGqhMUSBTsVgp5E43qh2oxwvrHEqUTav8Y7d1Y9CYxQHf6hD8Lgy4DGg==
-X-Received: by 2002:a05:6638:1a7:: with SMTP id b7mr15156618jaq.1.1597683215032;
-        Mon, 17 Aug 2020 09:53:35 -0700 (PDT)
+        bh=FfSVVvxhUmot5fhlVdNxRiIJLr9/EUy1AHdjap9t+i4=;
+        b=Dm+OvozlRCE9Ayqqc+Qdfe5OXNsZE7CMoNj7rThCJH6fP986QbMxfeErbOcRKejPhg
+         5qAc3wIT8X2zcIHS5TUmdb/AQVVjUnNjAjKhYm81+ClvFiaIQKO4veFdbMGE63QiN9/P
+         SZw1Mj2nblQnANDJCKawqzyO7pBRMEMhKi8iWHDqMqftGGcpENz+Gg0OtpBWY9EriNsj
+         hr+3FbVFeXY1XF/rFc5IIZ7qTtOXbEwKjNgnRSCWOY8xe3Mg/gJ+8uHsDQpsUcUFy4fo
+         Npimo9nzmsv311pBFMBHq8nn+MuBo52A34JUh1mm6q65Zu7ED6ABuSmG/jfXxMc/6tOZ
+         Mj8w==
+X-Gm-Message-State: AOAM530QgW+tcx/DaEmlW82yGA18nq9jKpgdwwXg3RhrZLJrTd1Hv9FJ
+        LWfg2O/hzfpoorW7CbdPGqzliSNBNyw=
+X-Google-Smtp-Source: ABdhPJw4Jvy6sh2hXTXBpTlJ/ATPqKRfb/UivFSHk5QUMkMNnE2trxSrX9VdX1prPmBJQ/vLljVnQg==
+X-Received: by 2002:a92:c90c:: with SMTP id t12mr14601679ilp.7.1597683216486;
+        Mon, 17 Aug 2020 09:53:36 -0700 (PDT)
 Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id a16sm7413106ilc.7.2020.08.17.09.53.33
+        by smtp.gmail.com with ESMTPSA id a16sm7413106ilc.7.2020.08.17.09.53.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 09:53:34 -0700 (PDT)
+        Mon, 17 Aug 2020 09:53:35 -0700 (PDT)
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v4 06/10] SUNRPC: Split out _shift_data_right_tail()
-Date:   Mon, 17 Aug 2020 12:53:23 -0400
-Message-Id: <20200817165327.354181-7-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v4 07/10] SUNRPC: Add the ability to expand holes in data pages
+Date:   Mon, 17 Aug 2020 12:53:24 -0400
+Message-Id: <20200817165327.354181-8-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817165327.354181-1-Anna.Schumaker@Netapp.com>
 References: <20200817165327.354181-1-Anna.Schumaker@Netapp.com>
@@ -66,107 +66,123 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-xdr_shrink_pagelen() is very similar to what we need for hole expansion,
-so split out the common code into its own function that can be used by
-both functions.
+This patch adds the ability to "read a hole" into a set of XDR data
+pages by taking the following steps:
+
+1) Shift all data after the current xdr->p to the right, possibly into
+   the tail,
+2) Zero the specified range, and
+3) Update xdr->p to point beyond the hole.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- net/sunrpc/xdr.c | 68 +++++++++++++++++++++++++++++-------------------
- 1 file changed, 41 insertions(+), 27 deletions(-)
+ include/linux/sunrpc/xdr.h |  1 +
+ net/sunrpc/xdr.c           | 73 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
 
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 40318ff97c83..de1f301f4864 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -252,6 +252,7 @@ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+ extern int xdr_process_buf(struct xdr_buf *buf, unsigned int offset, unsigned int len, int (*actor)(struct scatterlist *, void *), void *data);
++extern uint64_t xdr_expand_hole(struct xdr_stream *, uint64_t, uint64_t);
+ 
+ /**
+  * xdr_stream_remaining - Return the number of bytes remaining in the stream
 diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 70efb35c119e..d8c9555c6f2b 100644
+index d8c9555c6f2b..24baf052e6e6 100644
 --- a/net/sunrpc/xdr.c
 +++ b/net/sunrpc/xdr.c
-@@ -266,6 +266,46 @@ _shift_data_right_pages(struct page **pages, size_t pgto_base,
- 	} while ((len -= copy) != 0);
+@@ -390,6 +390,42 @@ _copy_from_pages(char *p, struct page **pages, size_t pgbase, size_t len)
  }
+ EXPORT_SYMBOL_GPL(_copy_from_pages);
  
-+static unsigned int
-+_shift_data_right_tail(struct xdr_buf *buf, unsigned int pgfrom, size_t len)
++/**
++ * _zero_pages
++ * @pages: array of pages
++ * @pgbase: beginning page vector address
++ * @len: length
++ */
++static void
++_zero_pages(struct page **pages, size_t pgbase, size_t len)
 +{
-+	struct kvec *tail = buf->tail;
-+	unsigned int tailbuf_len;
-+	unsigned int result = 0;
-+	size_t copy;
++	struct page **page;
++	char *vpage;
++	size_t zero;
 +
-+	tailbuf_len = buf->buflen - buf->head->iov_len - buf->page_len;
++	page = pages + (pgbase >> PAGE_SHIFT);
++	pgbase &= ~PAGE_MASK;
 +
-+	/* Shift the tail first */
-+	if (tailbuf_len != 0) {
-+		unsigned int free_space = tailbuf_len - tail->iov_len;
++	do {
++		zero = PAGE_SIZE - pgbase;
++		if (zero > len)
++			zero = len;
 +
-+		if (len < free_space)
-+			free_space = len;
-+		if (len > free_space)
-+			len = free_space;
++		vpage = kmap_atomic(*page);
++		memset(vpage + pgbase, 0, zero);
++		kunmap_atomic(vpage);
 +
-+		tail->iov_len += free_space;
-+		copy = len;
++		pgbase += zero;
++		if (pgbase == PAGE_SIZE) {
++			flush_dcache_page(*page);
++			pgbase = 0;
++			page++;
++		}
 +
-+		if (tail->iov_len > len) {
-+			char *p = (char *)tail->iov_base + len;
-+			memmove(p, tail->iov_base, tail->iov_len - free_space);
-+			result += tail->iov_len - free_space;
-+		} else
-+			copy = tail->iov_len;
-+
-+		/* Copy from the inlined pages into the tail */
-+		_copy_from_pages((char *)tail->iov_base,
-+					 buf->pages,
-+					 buf->page_base + pgfrom,
-+					 copy);
-+		result += copy;
-+	}
-+
-+	return result;
++	} while ((len -= zero) != 0);
++	flush_dcache_page(*page);
 +}
 +
  /**
-  * _copy_to_pages
-  * @pages: array of pages
-@@ -446,39 +486,13 @@ xdr_shrink_bufhead(struct xdr_buf *buf, size_t len)
- static unsigned int
- xdr_shrink_pagelen(struct xdr_buf *buf, size_t len)
- {
--	struct kvec *tail;
--	size_t copy;
- 	unsigned int pglen = buf->page_len;
--	unsigned int tailbuf_len;
- 	unsigned int result;
+  * xdr_shrink_bufhead
+  * @buf: xdr_buf
+@@ -1141,6 +1177,43 @@ unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len)
+ }
+ EXPORT_SYMBOL_GPL(xdr_read_pages);
  
--	result = 0;
--	tail = buf->tail;
- 	if (len > buf->page_len)
- 		len = buf-> page_len;
--	tailbuf_len = buf->buflen - buf->head->iov_len - buf->page_len;
- 
--	/* Shift the tail first */
--	if (tailbuf_len != 0) {
--		unsigned int free_space = tailbuf_len - tail->iov_len;
--
--		if (len < free_space)
--			free_space = len;
--		tail->iov_len += free_space;
--
--		copy = len;
--		if (tail->iov_len > len) {
--			char *p = (char *)tail->iov_base + len;
--			memmove(p, tail->iov_base, tail->iov_len - len);
--			result += tail->iov_len - len;
--		} else
--			copy = tail->iov_len;
--		/* Copy from the inlined pages into the tail */
--		_copy_from_pages((char *)tail->iov_base,
--				buf->pages, buf->page_base + pglen - len,
--				copy);
--		result += copy;
--	}
-+	result = _shift_data_right_tail(buf, pglen - len, len);
- 	buf->page_len -= len;
- 	buf->buflen -= len;
- 	/* Have we truncated the message? */
++uint64_t xdr_expand_hole(struct xdr_stream *xdr, uint64_t offset, uint64_t length)
++{
++	struct xdr_buf *buf = xdr->buf;
++	unsigned int bytes;
++	unsigned int from;
++	unsigned int truncated = 0;
++
++	if ((offset + length) < offset ||
++	    (offset + length) > buf->page_len)
++		length = buf->page_len - offset;
++
++	xdr_realign_pages(xdr);
++	from = xdr_page_pos(xdr);
++	bytes = xdr->nwords << 2;
++
++	if (offset + length + bytes > buf->page_len) {
++		unsigned int shift = (offset + length + bytes) - buf->page_len;
++		unsigned int res = _shift_data_right_tail(buf, from + bytes - shift, shift);
++		truncated = shift - res;
++		xdr->nwords -= XDR_QUADLEN(truncated);
++		bytes -= shift;
++	}
++
++	/* Now move the page data over and zero pages */
++	if (bytes > 0)
++		_shift_data_right_pages(buf->pages,
++					buf->page_base + offset + length,
++					buf->page_base + from,
++					bytes);
++	_zero_pages(buf->pages, buf->page_base + offset, length);
++
++	buf->len += length - (from - offset) - truncated;
++	xdr_set_page(xdr, offset + length, PAGE_SIZE);
++	return length;
++}
++EXPORT_SYMBOL_GPL(xdr_expand_hole);
++
+ /**
+  * xdr_enter_page - decode data from the XDR page
+  * @xdr: pointer to xdr_stream struct
 -- 
 2.28.0
 
