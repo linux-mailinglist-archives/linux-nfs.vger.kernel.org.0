@@ -2,60 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E0424930D
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Aug 2020 04:51:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D16E249951
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Aug 2020 11:28:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHSCv5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Aug 2020 22:51:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54444 "EHLO huawei.com"
+        id S1726863AbgHSJ2O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Aug 2020 05:28:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9847 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726632AbgHSCv4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:51:56 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1A2B7CC76AF6B949AB7F;
-        Wed, 19 Aug 2020 10:51:54 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 10:51:52 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] SUNRPC: remove duplicate include
-Date:   Wed, 19 Aug 2020 10:49:43 +0800
-Message-ID: <20200819024943.26850-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726835AbgHSJ2O (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:28:14 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BF2C8A8F87271B5DAD12;
+        Wed, 19 Aug 2020 17:28:10 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 17:28:03 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] nfsd: Convert to use the preferred fallthrough macro
+Date:   Wed, 19 Aug 2020 05:26:58 -0400
+Message-ID: <20200819092658.35504-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
 X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove linux/sunrpc/auth_gss.h which is included more than once
+Convert the uses of fallthrough comments to fallthrough macro.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- net/sunrpc/auth_gss/trace.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfsd/nfs4callback.c | 2 +-
+ fs/nfsd/nfs4proc.c     | 2 +-
+ fs/nfsd/nfs4state.c    | 2 +-
+ fs/nfsd/nfsfh.c        | 2 +-
+ fs/nfsd/vfs.c          | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/trace.c b/net/sunrpc/auth_gss/trace.c
-index d26036a57443..76685abba60f 100644
---- a/net/sunrpc/auth_gss/trace.c
-+++ b/net/sunrpc/auth_gss/trace.c
-@@ -9,7 +9,6 @@
- #include <linux/sunrpc/svc_xprt.h>
- #include <linux/sunrpc/auth_gss.h>
- #include <linux/sunrpc/gss_err.h>
--#include <linux/sunrpc/auth_gss.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/rpcgss.h>
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 7fbe9840a03e..052be5bf9ef5 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		break;
+ 	case -ESERVERFAULT:
+ 		++session->se_cb_seq_nr;
+-		/* Fall through */
++		fallthrough;
+ 	case 1:
+ 	case -NFS4ERR_BADSESSION:
+ 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index a527da3d8052..eaf50eafa935 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 				goto out;
+ 			open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
+ 			reclaim = true;
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_OPEN_CLAIM_FH:
+ 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+ 			status = do_open_fhandle(rqstp, cstate, open);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 81ed8e8bab3f..2f77f4b66cbc 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		break;
+ 	default:				/* checked by xdr code */
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case SP4_SSV:
+ 		status = nfserr_encr_alg_unsupp;
+ 		goto out_nolock;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 37bc8f5f4514..a0a8d27539ae 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, struct svc_export *exp)
+ 	case FSID_UUID16:
+ 		if (!is_root_export(exp))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case FSID_UUID4_INUM:
+ 	case FSID_UUID16_INUM:
+ 		return exp->ex_uuid != NULL;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 7d2933b85b65..aba5af9df328 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				break;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_CREATE_EXCLUSIVE4_1:
+ 			if (   d_inode(dchild)->i_mtime.tv_sec == v_mtime
+ 			    && d_inode(dchild)->i_atime.tv_sec == v_atime
+@@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				goto set_attr;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS3_CREATE_GUARDED:
+ 			err = nfserr_exist;
+ 		}
 -- 
-2.17.1
+2.19.1
 
