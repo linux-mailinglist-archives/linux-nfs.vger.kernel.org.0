@@ -2,224 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AFF024E65A
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Aug 2020 10:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF97624EAAA
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Aug 2020 03:07:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgHVIUJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 Aug 2020 04:20:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10307 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbgHVIUI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 22 Aug 2020 04:20:08 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E9B837DAAECB4A8D3726;
-        Sat, 22 Aug 2020 16:20:04 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 22 Aug 2020
- 16:19:55 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <arnd@arndb.de>
-CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
-Subject: [PATCH] sunrpc: Convert to use the preferred fallthrough macro
-Date:   Sat, 22 Aug 2020 04:18:49 -0400
-Message-ID: <20200822081849.41907-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        id S1726429AbgHWBHs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Aug 2020 21:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgHWBHs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Aug 2020 21:07:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B003C061573;
+        Sat, 22 Aug 2020 18:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=qautpq+EnlVzvGbxgqXPsYXHCAdg5C0rCD589ZNQVsI=; b=i/xb51bh+44l8GLr89aIdqzfTl
+        d1lwRILKNq+kq9KulSav1TYgnHA6yb+eWpS9XjWJMPb97UMkEFgt0Kt62da7ytfWoskEn9pBioGCD
+        VnLvAqFrruSV0Reihvc59ccGAXnsjSiJbhNxfknEk2tKC4V4acglLjMf0TeozFmycV39zxAp9hM7k
+        UXfjbQAYLnwJm4FoOM57IMsw1r6aeKjAr8ajZuAfdZayBgInz9UEkE7IPYa26EOqIooshfY5cCxGA
+        Fly9EM9tv90BpBqNeOIEMCQb6LDkXBDvrO64pdrJRM4K8OWqYuudQGRdcv8YefzTpbT9dSif1iC28
+        YyPFKX5Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9eU2-0005OW-M2; Sun, 23 Aug 2020 01:07:43 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     netdev@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH] net: sunrpc: delete repeated words
+Date:   Sat, 22 Aug 2020 18:07:38 -0700
+Message-Id: <20200823010738.4837-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro.
+Drop duplicate words in net/sunrpc/.
+Also fix "Anyone" to be "Any one".
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "J. Bruce Fields" <bfields@fieldses.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
 ---
- net/sunrpc/auth_gss/gss_krb5_wrap.c |  2 +-
- net/sunrpc/clnt.c                   | 22 +++++++++++-----------
- net/sunrpc/xprt.c                   |  2 +-
- net/sunrpc/xprtrdma/verbs.c         |  2 +-
- net/sunrpc/xprtsock.c               |  8 ++++----
- 5 files changed, 18 insertions(+), 18 deletions(-)
+ net/sunrpc/backchannel_rqst.c     |    2 +-
+ net/sunrpc/xdr.c                  |    2 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-index 90b8329fef82..8b300b74a722 100644
---- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-@@ -137,7 +137,7 @@ gss_krb5_make_confounder(char *p, u32 conflen)
- 	switch (conflen) {
- 	case 16:
- 		*q++ = i++;
--		/* fall through */
-+		fallthrough;
- 	case 8:
- 		*q++ = i++;
- 		break;
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index a91d1cdad9d7..62e0b6c1e8cf 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1702,7 +1702,7 @@ call_reserveresult(struct rpc_task *task)
- 	switch (status) {
- 	case -ENOMEM:
- 		rpc_delay(task, HZ >> 2);
--		/* fall through */
-+		fallthrough;
- 	case -EAGAIN:	/* woken up; retry */
- 		task->tk_action = call_retry_reserve;
- 		return;
-@@ -1759,13 +1759,13 @@ call_refreshresult(struct rpc_task *task)
- 		/* Use rate-limiting and a max number of retries if refresh
- 		 * had status 0 but failed to update the cred.
- 		 */
--		/* fall through */
-+		fallthrough;
- 	case -ETIMEDOUT:
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EAGAIN:
- 		status = -EACCES;
--		/* fall through */
-+		fallthrough;
- 	case -EKEYEXPIRED:
- 		if (!task->tk_cred_retry)
- 			break;
-@@ -2132,7 +2132,7 @@ call_connect_status(struct rpc_task *task)
- 			rpc_force_rebind(clnt);
- 			goto out_retry;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
- 	case -ENETDOWN:
-@@ -2146,7 +2146,7 @@ call_connect_status(struct rpc_task *task)
- 			break;
- 		/* retry with existing socket, after a delay */
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EADDRINUSE:
- 	case -ENOTCONN:
- 	case -EAGAIN:
-@@ -2228,7 +2228,7 @@ call_transmit_status(struct rpc_task *task)
- 		 */
- 	case -ENOBUFS:
- 		rpc_delay(task, HZ>>2);
--		/* fall through */
-+		fallthrough;
- 	case -EBADSLT:
- 	case -EAGAIN:
- 		task->tk_action = call_transmit;
-@@ -2247,7 +2247,7 @@ call_transmit_status(struct rpc_task *task)
- 			rpc_call_rpcerror(task, task->tk_status);
- 			return;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
- 	case -EADDRINUSE:
-@@ -2313,7 +2313,7 @@ call_bc_transmit_status(struct rpc_task *task)
- 		break;
- 	case -ENOBUFS:
- 		rpc_delay(task, HZ>>2);
--		/* fall through */
-+		fallthrough;
- 	case -EBADSLT:
- 	case -EAGAIN:
- 		task->tk_status = 0;
-@@ -2380,7 +2380,7 @@ call_status(struct rpc_task *task)
- 		 * were a timeout.
- 		 */
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -ETIMEDOUT:
- 		break;
- 	case -ECONNREFUSED:
-@@ -2391,7 +2391,7 @@ call_status(struct rpc_task *task)
- 		break;
- 	case -EADDRINUSE:
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EPIPE:
- 	case -EAGAIN:
- 		break;
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 6ba9d5842629..5a8e47bbfb9f 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1623,7 +1623,7 @@ void xprt_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
- 	case -EAGAIN:
- 		xprt_add_backlog(xprt, task);
- 		dprintk("RPC:       waiting for request slot\n");
--		/* fall through */
-+		fallthrough;
- 	default:
- 		task->tk_status = -EAGAIN;
- 	}
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 75c646743df3..3f86d039875c 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -268,7 +268,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 	case RDMA_CM_EVENT_DEVICE_REMOVAL:
- 		pr_info("rpcrdma: removing device %s for %pISpc\n",
- 			ep->re_id->device->name, sap);
--		/* fall through */
-+		fallthrough;
- 	case RDMA_CM_EVENT_ADDR_CHANGE:
- 		ep->re_connect_status = -ENODEV;
- 		goto disconnected;
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index c57aef829403..554e1bb4c1c7 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -885,7 +885,7 @@ static int xs_local_send_request(struct rpc_rqst *req)
- 	default:
- 		dprintk("RPC:       sendmsg returned unrecognized error %d\n",
- 			-status);
--		/* fall through */
-+		fallthrough;
- 	case -EPIPE:
- 		xs_close(xprt);
- 		status = -ENOTCONN;
-@@ -1436,7 +1436,7 @@ static void xs_tcp_state_change(struct sock *sk)
- 		xprt->connect_cookie++;
- 		clear_bit(XPRT_CONNECTED, &xprt->state);
- 		xs_run_error_worker(transport, XPRT_SOCK_WAKE_DISCONNECT);
--		/* fall through */
-+		fallthrough;
- 	case TCP_CLOSING:
- 		/*
- 		 * If the server closed down the connection, make sure that
-@@ -2202,7 +2202,7 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	switch (ret) {
- 	case 0:
- 		xs_set_srcport(transport, sock);
--		/* fall through */
-+		fallthrough;
- 	case -EINPROGRESS:
- 		/* SYN_SENT! */
- 		if (xprt->reestablish_timeout < XS_TCP_INIT_REEST_TO)
-@@ -2255,7 +2255,7 @@ static void xs_tcp_setup_socket(struct work_struct *work)
- 	default:
- 		printk("%s: connect returned unhandled error %d\n",
- 			__func__, status);
--		/* fall through */
-+		fallthrough;
- 	case -EADDRNOTAVAIL:
- 		/* We're probably in TIME_WAIT. Get rid of existing socket,
- 		 * and retry
--- 
-2.19.1
-
+--- linux-next-20200821.orig/net/sunrpc/backchannel_rqst.c
++++ linux-next-20200821/net/sunrpc/backchannel_rqst.c
+@@ -111,7 +111,7 @@ out_free:
+  * by the backchannel.  This function can be called multiple times
+  * when creating new sessions that use the same rpc_xprt.  The
+  * preallocated buffers are added to the pool of resources used by
+- * the rpc_xprt.  Anyone of these resources may be used used by an
++ * the rpc_xprt.  Any one of these resources may be used by an
+  * incoming callback request.  It's up to the higher levels in the
+  * stack to enforce that the maximum number of session slots is not
+  * being exceeded.
+--- linux-next-20200821.orig/net/sunrpc/xdr.c
++++ linux-next-20200821/net/sunrpc/xdr.c
+@@ -658,7 +658,7 @@ EXPORT_SYMBOL_GPL(xdr_reserve_space);
+  * head, tail, and page lengths are adjusted to correspond.
+  *
+  * If this means moving xdr->p to a different buffer, we assume that
+- * that the end pointer should be set to the end of the current page,
++ * the end pointer should be set to the end of the current page,
+  * except in the case of the head buffer when we assume the head
+  * buffer's current length represents the end of the available buffer.
+  *
+--- linux-next-20200821.orig/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ linux-next-20200821/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -137,7 +137,7 @@ static int svc_rdma_rw_ctx_init(struct s
+ }
+ 
+ /* A chunk context tracks all I/O for moving one Read or Write
+- * chunk. This is a a set of rdma_rw's that handle data movement
++ * chunk. This is a set of rdma_rw's that handle data movement
+  * for all segments of one chunk.
+  *
+  * These are small, acquired with a single allocator call, and
