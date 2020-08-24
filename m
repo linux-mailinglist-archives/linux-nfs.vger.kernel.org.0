@@ -2,79 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E53F82501DE
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Aug 2020 18:17:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A0E22501EC
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Aug 2020 18:26:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHXQRF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Aug 2020 12:17:05 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:16703 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHXQRC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Aug 2020 12:17:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598285822; x=1629821822;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=89vyoYBrFOa9NtETNVgENA5g+YgsSPWrwx3Sucvbg+4=;
-  b=Hhg1uITDeHKZC+jwTWDmedy8lWeHjb5p1Bgd1go3EUA1NaKmcW3BnyYg
-   DtySF+iwNSEkfVM+0Q7MQ1XCIVVEaAdDLb5Iq19zUQ0S3CsYBe5YnWFvS
-   nAvo1M2lXHc8bWxR+zMJ/2E1wG7A1l9pSWSlRiyEImFAxohQ4zcnLvIJw
-   c=;
-X-IronPort-AV: E=Sophos;i="5.76,349,1592870400"; 
-   d="scan'208";a="69232907"
-Subject: Re: [PATCH v3 12/13] NFSv4.2: hook in the user extended attribute handlers
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 24 Aug 2020 16:17:00 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 62D51A15CB;
-        Mon, 24 Aug 2020 16:16:58 +0000 (UTC)
-Received: from EX13D30UEA004.ant.amazon.com (10.43.61.103) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 24 Aug 2020 16:16:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D30UEA004.ant.amazon.com (10.43.61.103) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 24 Aug 2020 16:16:57 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Mon, 24 Aug 2020 16:16:57 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 3DB7AC1424; Mon, 24 Aug 2020 16:16:57 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 16:16:57 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-CC:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Message-ID: <20200824161657.GA25229@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200623223904.31643-1-fllinden@amazon.com>
- <20200623223904.31643-13-fllinden@amazon.com>
- <CADJHv_tVZ3KzO_RZ18V=e6QBYEFnX5SbyVU6yhh6yCqYMmvmRQ@mail.gmail.com>
- <20200821160338.GA30541@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <62aa76de0ea316c029b7f9c22cf36c92b8cba2d9.camel@hammerspace.com>
- <20200824001345.nszimqfcsumd4xil@xzhoux.usersys.redhat.com>
+        id S1725921AbgHXQ0D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Aug 2020 12:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgHXQ0C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Aug 2020 12:26:02 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD90AC061573
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Aug 2020 09:26:01 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6F949448D; Mon, 24 Aug 2020 12:26:00 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6F949448D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1598286360;
+        bh=Oq1kHB2pHTillv8DlzXhdgqzxtnklDLaMGBpIaOrtiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mNVebHAMUNNfWigBC213oyP73Hlw0YzerhW6q7jNM3IVW397VkypoYcTR2LWtF0sL
+         zke/EUM/CVmRONLZHc1XEdazg4Se0LNzD2SPdW8dFltxz48W7Ic4mDOuInZSmC6vno
+         WstR+KYN4dq+6AQOV0bWVtlExYiIWjCvSphOpBWk=
+Date:   Mon, 24 Aug 2020 12:26:00 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chucklever@gmail.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: remove fault injection code
+Message-ID: <20200824162600.GA29927@fieldses.org>
+References: <20200820194944.GC28555@fieldses.org>
+ <6895C9AD-3622-4925-A268-23E6404C42D1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824001345.nszimqfcsumd4xil@xzhoux.usersys.redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <6895C9AD-3622-4925-A268-23E6404C42D1@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:13:45AM +0800, Murphy Zhou wrote:
-> Thank you guys explanation!
+On Mon, Aug 24, 2020 at 09:53:37AM -0400, Chuck Lever wrote:
+> Hi Bruce-
 > 
-> I'm asking because after NFSv4.2 xattr update, there are some xfstests
-> new failures about 'trusted' xattr. Now they can be surely marked as
-> expected.
+> > On Aug 20, 2020, at 3:49 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > From: "J. Bruce Fields" <bfields@redhat.com>
+> > 
+> > It was an interesting idea but nobody seems to be using it, it's buggy
+> > at this point, and nfs4state.c is already complicated enough without it.
+> > The new nfsd/clients/ code provides some of the same functionality, and
+> > could probably do more if desired.
+> 
+> Maybe this should mention that the feature has been deprecated since
+> 9d60d93198c6 ("Deprecate nfsd fault injection").
 
-I have some patches to xfstests that, amongst other things, split 
-the xfstests xattr requirement checks in to individual namespace
-checks, so that tests that use "user" xattrs will be run on NFS, but
-others, e.g. "trusted" do not.
+Thanks, done.
 
-I should clean them off and send them in.
-
-- Frank
+--b.
