@@ -2,90 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF97624EAAA
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Aug 2020 03:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2745524F0AC
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Aug 2020 02:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgHWBHs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 Aug 2020 21:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
+        id S1726851AbgHXAN4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 23 Aug 2020 20:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHWBHs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Aug 2020 21:07:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B003C061573;
-        Sat, 22 Aug 2020 18:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=qautpq+EnlVzvGbxgqXPsYXHCAdg5C0rCD589ZNQVsI=; b=i/xb51bh+44l8GLr89aIdqzfTl
-        d1lwRILKNq+kq9KulSav1TYgnHA6yb+eWpS9XjWJMPb97UMkEFgt0Kt62da7ytfWoskEn9pBioGCD
-        VnLvAqFrruSV0Reihvc59ccGAXnsjSiJbhNxfknEk2tKC4V4acglLjMf0TeozFmycV39zxAp9hM7k
-        UXfjbQAYLnwJm4FoOM57IMsw1r6aeKjAr8ajZuAfdZayBgInz9UEkE7IPYa26EOqIooshfY5cCxGA
-        Fly9EM9tv90BpBqNeOIEMCQb6LDkXBDvrO64pdrJRM4K8OWqYuudQGRdcv8YefzTpbT9dSif1iC28
-        YyPFKX5Q==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9eU2-0005OW-M2; Sun, 23 Aug 2020 01:07:43 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     netdev@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH] net: sunrpc: delete repeated words
-Date:   Sat, 22 Aug 2020 18:07:38 -0700
-Message-Id: <20200823010738.4837-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        with ESMTP id S1726737AbgHXANz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Aug 2020 20:13:55 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89233C061573
+        for <linux-nfs@vger.kernel.org>; Sun, 23 Aug 2020 17:13:55 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h5so887253plt.6
+        for <linux-nfs@vger.kernel.org>; Sun, 23 Aug 2020 17:13:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tgnFF71VJevhB92FITk3eLeQoUu9R02pym+MioPantY=;
+        b=U+CrLwntgsOBbYgQTD+OMpiHMouZWJmvO/nWslNeeIBPEppj8mCaSO5qyocLVxVBBO
+         QRWvOyeC3C0g4c3nOFpDccQC3jK/WA9zXJNnaGtELTPthp+1r9TIrS7qJX7cG8Mv/eGJ
+         WHLvw4EwNm1h/Sv29kzacmGRO6B8hvnSmpqhPSW2q0jFQR+XLTTkzG1eXrGOE7WHyL8o
+         H+9kq1IdZHEwr22c3ADRuIGHBP70nOtw2a0TxpYhZ+bd9WOYj2Mc0xn2UGjF29GC/2qw
+         1EYlaA43pXjPJDQcxhL8cOj1sb1wqn/FYJbmBGAmbBHXIa6p8F+3+wujCyCDJrJ80NiT
+         9eiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tgnFF71VJevhB92FITk3eLeQoUu9R02pym+MioPantY=;
+        b=L3H6Y4ZfK2Z20Jf8gujClQlOjCqHssAOaZIbrCRbcidH8r7Fqh37tb7rB74ZSfnZlC
+         zh0mJNGD+aAFqIov+FEIg/yk17BhqSeumOIWcF9p5Nf8saLE0dnYvd495VusEGnUJsM2
+         3DbXfPkPeWFa94czyfjBewq8P+EN3kiih8WKOG/ip7c42urpHehRxMWYKMPmyYZztdL4
+         fCuCkmPmFqM442dU8Jyzq0gWP0qLD5ZeE3cBX/uwnr42ZMoyxW0v8nDiqIOu5OblEvaf
+         hijgkyC59PBwSz5cxZpdOxcc/GL5SVg9jmOWzvpgMK3IzOUkN9LcBxFU7JlSoSM0XIyK
+         2uOg==
+X-Gm-Message-State: AOAM533zTbzb2abV7RPjsjVJDgNITBlGwpqf3N8Gdi81+TXieEFLo5mr
+        CTRmE/bZzP1fDQ+FV1iZzag=
+X-Google-Smtp-Source: ABdhPJyPAMYH618kZqi7SIUA+W/I9bybVBp6wYwOImhf2lnFsolegQ2D4xWeuFty6WSy2I8e+X2aiA==
+X-Received: by 2002:a17:902:6b41:: with SMTP id g1mr2099211plt.108.1598228033943;
+        Sun, 23 Aug 2020 17:13:53 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id o192sm9933388pfg.81.2020.08.23.17.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 17:13:53 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 08:13:45 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "fllinden@amazon.com" <fllinden@amazon.com>,
+        "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Subject: Re: [PATCH v3 12/13] NFSv4.2: hook in the user extended attribute
+ handlers
+Message-ID: <20200824001345.nszimqfcsumd4xil@xzhoux.usersys.redhat.com>
+References: <20200623223904.31643-1-fllinden@amazon.com>
+ <20200623223904.31643-13-fllinden@amazon.com>
+ <CADJHv_tVZ3KzO_RZ18V=e6QBYEFnX5SbyVU6yhh6yCqYMmvmRQ@mail.gmail.com>
+ <20200821160338.GA30541@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <62aa76de0ea316c029b7f9c22cf36c92b8cba2d9.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62aa76de0ea316c029b7f9c22cf36c92b8cba2d9.camel@hammerspace.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Drop duplicate words in net/sunrpc/.
-Also fix "Anyone" to be "Any one".
+On Fri, Aug 21, 2020 at 04:41:04PM +0000, Trond Myklebust wrote:
+> On Fri, 2020-08-21 at 16:03 +0000, Frank van der Linden wrote:
+> > On Fri, Aug 21, 2020 at 02:50:59PM +0800, Murphy Zhou wrote:
+> > > Hi,
+> > > 
+> > > On Wed, Jun 24, 2020 at 6:51 AM Frank van der Linden
+> > > <fllinden@amazon.com> wrote:
+> > [...]
+> > > >  static const struct inode_operations nfs4_dir_inode_operations =
+> > > > {
+> > > > @@ -10146,10 +10254,21 @@ static const struct xattr_handler
+> > > > nfs4_xattr_nfs4_acl_handler = {
+> > > >         .set    = nfs4_xattr_set_nfs4_acl,
+> > > >  };
+> > > > 
+> > > > +#ifdef CONFIG_NFS_V4_2
+> > > > +static const struct xattr_handler nfs4_xattr_nfs4_user_handler =
+> > > > {
+> > > > +       .prefix = XATTR_USER_PREFIX,
+> > > > +       .get    = nfs4_xattr_get_nfs4_user,
+> > > > +       .set    = nfs4_xattr_set_nfs4_user,
+> > > > +};
+> > > > +#endif
+> > > > +
+> > > 
+> > > Any plan to support XATTR_TRUSTED_PREFIX ?
+> > > 
+> > > Thanks.
+> > 
+> > This is an implementation of RFC 8276, which explicitly restricts
+> > itself
+> > to the "user" namespace.
+> > 
+> > There is currently no portable way to implement the "trusted"
+> > namespace
+> > within the boundaries of the NFS specification(s), so it's not
+> > supported.
+> > 
+> 
+> Correct. 'trusted' is just another way to implement private protocols.
+> Those are unacceptable in a shared filesystem environment.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: "J. Bruce Fields" <bfields@fieldses.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
----
- net/sunrpc/backchannel_rqst.c     |    2 +-
- net/sunrpc/xdr.c                  |    2 +-
- net/sunrpc/xprtrdma/svc_rdma_rw.c |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Thank you guys explanation!
 
---- linux-next-20200821.orig/net/sunrpc/backchannel_rqst.c
-+++ linux-next-20200821/net/sunrpc/backchannel_rqst.c
-@@ -111,7 +111,7 @@ out_free:
-  * by the backchannel.  This function can be called multiple times
-  * when creating new sessions that use the same rpc_xprt.  The
-  * preallocated buffers are added to the pool of resources used by
-- * the rpc_xprt.  Anyone of these resources may be used used by an
-+ * the rpc_xprt.  Any one of these resources may be used by an
-  * incoming callback request.  It's up to the higher levels in the
-  * stack to enforce that the maximum number of session slots is not
-  * being exceeded.
---- linux-next-20200821.orig/net/sunrpc/xdr.c
-+++ linux-next-20200821/net/sunrpc/xdr.c
-@@ -658,7 +658,7 @@ EXPORT_SYMBOL_GPL(xdr_reserve_space);
-  * head, tail, and page lengths are adjusted to correspond.
-  *
-  * If this means moving xdr->p to a different buffer, we assume that
-- * that the end pointer should be set to the end of the current page,
-+ * the end pointer should be set to the end of the current page,
-  * except in the case of the head buffer when we assume the head
-  * buffer's current length represents the end of the available buffer.
-  *
---- linux-next-20200821.orig/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ linux-next-20200821/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -137,7 +137,7 @@ static int svc_rdma_rw_ctx_init(struct s
- }
- 
- /* A chunk context tracks all I/O for moving one Read or Write
-- * chunk. This is a a set of rdma_rw's that handle data movement
-+ * chunk. This is a set of rdma_rw's that handle data movement
-  * for all segments of one chunk.
-  *
-  * These are small, acquired with a single allocator call, and
+I'm asking because after NFSv4.2 xattr update, there are some xfstests
+new failures about 'trusted' xattr. Now they can be surely marked as
+expected.
+
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
+
+-- 
+Murphy
