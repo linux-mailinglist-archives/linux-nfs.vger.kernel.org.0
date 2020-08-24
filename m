@@ -2,130 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2745524F0AC
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Aug 2020 02:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E5B524FCCE
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Aug 2020 13:40:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHXAN4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 23 Aug 2020 20:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726737AbgHXANz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Aug 2020 20:13:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89233C061573
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Aug 2020 17:13:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h5so887253plt.6
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Aug 2020 17:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tgnFF71VJevhB92FITk3eLeQoUu9R02pym+MioPantY=;
-        b=U+CrLwntgsOBbYgQTD+OMpiHMouZWJmvO/nWslNeeIBPEppj8mCaSO5qyocLVxVBBO
-         QRWvOyeC3C0g4c3nOFpDccQC3jK/WA9zXJNnaGtELTPthp+1r9TIrS7qJX7cG8Mv/eGJ
-         WHLvw4EwNm1h/Sv29kzacmGRO6B8hvnSmpqhPSW2q0jFQR+XLTTkzG1eXrGOE7WHyL8o
-         H+9kq1IdZHEwr22c3ADRuIGHBP70nOtw2a0TxpYhZ+bd9WOYj2Mc0xn2UGjF29GC/2qw
-         1EYlaA43pXjPJDQcxhL8cOj1sb1wqn/FYJbmBGAmbBHXIa6p8F+3+wujCyCDJrJ80NiT
-         9eiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tgnFF71VJevhB92FITk3eLeQoUu9R02pym+MioPantY=;
-        b=L3H6Y4ZfK2Z20Jf8gujClQlOjCqHssAOaZIbrCRbcidH8r7Fqh37tb7rB74ZSfnZlC
-         zh0mJNGD+aAFqIov+FEIg/yk17BhqSeumOIWcF9p5Nf8saLE0dnYvd495VusEGnUJsM2
-         3DbXfPkPeWFa94czyfjBewq8P+EN3kiih8WKOG/ip7c42urpHehRxMWYKMPmyYZztdL4
-         fCuCkmPmFqM442dU8Jyzq0gWP0qLD5ZeE3cBX/uwnr42ZMoyxW0v8nDiqIOu5OblEvaf
-         hijgkyC59PBwSz5cxZpdOxcc/GL5SVg9jmOWzvpgMK3IzOUkN9LcBxFU7JlSoSM0XIyK
-         2uOg==
-X-Gm-Message-State: AOAM533zTbzb2abV7RPjsjVJDgNITBlGwpqf3N8Gdi81+TXieEFLo5mr
-        CTRmE/bZzP1fDQ+FV1iZzag=
-X-Google-Smtp-Source: ABdhPJyPAMYH618kZqi7SIUA+W/I9bybVBp6wYwOImhf2lnFsolegQ2D4xWeuFty6WSy2I8e+X2aiA==
-X-Received: by 2002:a17:902:6b41:: with SMTP id g1mr2099211plt.108.1598228033943;
-        Sun, 23 Aug 2020 17:13:53 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id o192sm9933388pfg.81.2020.08.23.17.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 17:13:53 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 08:13:45 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "fllinden@amazon.com" <fllinden@amazon.com>,
-        "jencce.kernel@gmail.com" <jencce.kernel@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH v3 12/13] NFSv4.2: hook in the user extended attribute
- handlers
-Message-ID: <20200824001345.nszimqfcsumd4xil@xzhoux.usersys.redhat.com>
-References: <20200623223904.31643-1-fllinden@amazon.com>
- <20200623223904.31643-13-fllinden@amazon.com>
- <CADJHv_tVZ3KzO_RZ18V=e6QBYEFnX5SbyVU6yhh6yCqYMmvmRQ@mail.gmail.com>
- <20200821160338.GA30541@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <62aa76de0ea316c029b7f9c22cf36c92b8cba2d9.camel@hammerspace.com>
+        id S1726374AbgHXLkt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Aug 2020 07:40:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60170 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726938AbgHXLh3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Aug 2020 07:37:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598268999;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=4bXTwf0rq9aPBhb3R6noIkCWiK8Yp19kFDNnbB7SpNE=;
+        b=YCrj+PK+M+bjah1BPozRH+8y7t2VH8sIMicbLIb+IQodVUAxXHRzGmWVccwEqTm16uXYdF
+        /LsRkim4lD1Q5wWMSdqcbA//1GcLFcnraAHjORz0joS1T3kfcozypGgcuFkaDwgFm03AV3
+        KHN8NggwTodr0k1pwncd28JSoELugng=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-483-n22_oiYBNM2x1fW_z5HHwg-1; Mon, 24 Aug 2020 07:36:36 -0400
+X-MC-Unique: n22_oiYBNM2x1fW_z5HHwg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11FB51DDEA
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Aug 2020 11:36:36 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-70.phx2.redhat.com [10.3.112.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0A3260CD1
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Aug 2020 11:36:35 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] rpc.idmapd: rework the verbosity of idmapd
+Date:   Mon, 24 Aug 2020 07:36:33 -0400
+Message-Id: <20200824113633.246214-1-steved@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62aa76de0ea316c029b7f9c22cf36c92b8cba2d9.camel@hammerspace.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 04:41:04PM +0000, Trond Myklebust wrote:
-> On Fri, 2020-08-21 at 16:03 +0000, Frank van der Linden wrote:
-> > On Fri, Aug 21, 2020 at 02:50:59PM +0800, Murphy Zhou wrote:
-> > > Hi,
-> > > 
-> > > On Wed, Jun 24, 2020 at 6:51 AM Frank van der Linden
-> > > <fllinden@amazon.com> wrote:
-> > [...]
-> > > >  static const struct inode_operations nfs4_dir_inode_operations =
-> > > > {
-> > > > @@ -10146,10 +10254,21 @@ static const struct xattr_handler
-> > > > nfs4_xattr_nfs4_acl_handler = {
-> > > >         .set    = nfs4_xattr_set_nfs4_acl,
-> > > >  };
-> > > > 
-> > > > +#ifdef CONFIG_NFS_V4_2
-> > > > +static const struct xattr_handler nfs4_xattr_nfs4_user_handler =
-> > > > {
-> > > > +       .prefix = XATTR_USER_PREFIX,
-> > > > +       .get    = nfs4_xattr_get_nfs4_user,
-> > > > +       .set    = nfs4_xattr_set_nfs4_user,
-> > > > +};
-> > > > +#endif
-> > > > +
-> > > 
-> > > Any plan to support XATTR_TRUSTED_PREFIX ?
-> > > 
-> > > Thanks.
-> > 
-> > This is an implementation of RFC 8276, which explicitly restricts
-> > itself
-> > to the "user" namespace.
-> > 
-> > There is currently no portable way to implement the "trusted"
-> > namespace
-> > within the boundaries of the NFS specification(s), so it's not
-> > supported.
-> > 
-> 
-> Correct. 'trusted' is just another way to implement private protocols.
-> Those are unacceptable in a shared filesystem environment.
+-v   means only error
+-vv  errors and informational messages
+-vvv all debugging messages will be displayed
 
-Thank you guys explanation!
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ utils/idmapd/idmapd.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-I'm asking because after NFSv4.2 xattr update, there are some xfstests
-new failures about 'trusted' xattr. Now they can be surely marked as
-expected.
-
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
-
+diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
+index 7d1096d..f3d2314 100644
+--- a/utils/idmapd/idmapd.c
++++ b/utils/idmapd/idmapd.c
+@@ -365,7 +365,7 @@ main(int argc, char **argv)
+ 	if (evbase == NULL)
+ 		errx(1, "Failed to create event base.");
+ 
+-	if (verbose > 0)
++	if (verbose > 1)
+ 		xlog_warn("Expiration time is %d seconds.",
+ 			     cache_entry_expiration);
+ 	if (serverstart) {
+@@ -500,7 +500,7 @@ flush_inotify(int fd)
+ 		     ptr += sizeof(struct inotify_event) + ev->len) {
+ 
+ 			ev = (const struct inotify_event *)ptr;
+-			if (verbose > 1)
++			if (verbose > 2)
+ 				xlog_warn("pipefs inotify: wd=%i, mask=0x%08x, len=%i, name=%s",
+ 				  ev->wd, ev->mask, ev->len, ev->len ? ev->name : "");
+ 		}
+@@ -562,7 +562,7 @@ dirscancb(int fd, short UNUSED(which), void *data)
+ 				goto out;
+ 			}
+ 
+-			if (verbose > 0)
++			if (verbose > 2)
+ 				xlog_warn("New client: %s", ic->ic_clid);
+ 
+ 			ic->ic_id = "Client";
+@@ -585,7 +585,7 @@ dirscancb(int fd, short UNUSED(which), void *data)
+ 			if (ic->ic_dirfd != -1)
+ 				close(ic->ic_dirfd);
+ 			TAILQ_REMOVE(icq, ic, ic_next);
+-			if (verbose > 0) {
++			if (verbose > 2) {
+ 				xlog_warn("Stale client: %s", ic->ic_clid);
+ 				xlog_warn("\t-> closed %s", ic->ic_path);
+ 			}
+@@ -665,7 +665,7 @@ nfsdcb(int UNUSED(fd), short which, void *data)
+ 		xlog_warn("nfsdcb: bad type in upcall\n");
+ 		return;
+ 	}
+-	if (verbose > 0)
++	if (verbose > 2)
+ 		xlog_warn("nfsdcb: authbuf=%s authtype=%s",
+ 			     authbuf, typebuf);
+ 
+@@ -847,7 +847,7 @@ nfsdreopen_one(struct idmap_client *ic)
+ {
+ 	int fd;
+ 
+-	if (verbose > 0)
++	if (verbose > 2)
+ 		xlog_warn("ReOpening %s", ic->ic_path);
+ 
+ 	if ((fd = open(ic->ic_path, O_RDWR, 0)) != -1) {
+@@ -913,7 +913,7 @@ nfsdopenone(struct idmap_client *ic)
+ 	}
+ 	event_add(ic->ic_event, NULL);
+ 
+-	if (verbose > 0)
++	if (verbose > 2)
+ 		xlog_warn("Opened %s", ic->ic_path);
+ 
+ 	return (0);
+@@ -932,7 +932,8 @@ nfsopen(struct idmap_client *ic)
+ 			*slash = 0;
+ 			inotify_add_watch(inotify_fd, ic->ic_path, IN_CREATE | IN_ONLYDIR | IN_ONESHOT);
+ 			*slash = '/';
+-			xlog_warn("Path %s not available. waiting...", ic->ic_path);
++			if (verbose > 2)
++				xlog_warn("Path %s not available. waiting...", ic->ic_path);
+ 			return -1;
+ 		}
+ 
+@@ -948,7 +949,7 @@ nfsopen(struct idmap_client *ic)
+ 		return -1;
+ 	}
+ 	event_add(ic->ic_event, NULL);
+-	if (verbose > 0)
++	if (verbose > 2)
+ 		xlog_warn("Opened %s", ic->ic_path);
+ 
+ 	return (0);
 -- 
-Murphy
+2.26.2
+
