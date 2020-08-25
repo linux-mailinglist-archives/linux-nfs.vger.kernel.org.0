@@ -2,123 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CEC425232D
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Aug 2020 23:54:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D4425232E
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Aug 2020 23:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHYVx7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Aug 2020 17:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgHYVx6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Aug 2020 17:53:58 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5F4C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Aug 2020 14:53:58 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E25CC1C1C; Tue, 25 Aug 2020 17:53:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E25CC1C1C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1598392437;
-        bh=6/m1ekZwNNktxuyxQznC2V+6DQTEo3xOxcaNSpJG1h4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Iy8DqrvQSA5B0lfD7tHEn0DUGwrakwWpy3cugBgf4Dtyi6XqUKRWKm2nKQhmZnwwT
-         9mPX1xxKZVjw8NYjdP483M+XHGe4KlB8t0jTc6Ps/6zPQJQkiAQEog6J96U3e23nP0
-         M7z6R1LM2WNuj5QsBHYrVQlR4XFFfxvLyHWhEHaI=
-Date:   Tue, 25 Aug 2020 17:53:57 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Subject: Re: 5.9 nfsd update breaks v4.2 copy_file_range
-Message-ID: <20200825215357.GC1955@fieldses.org>
-References: <20200821015036.bn3yqiiuvunfxb42@xzhoux.usersys.redhat.com>
- <20200825212647.GB1955@fieldses.org>
+        id S1726356AbgHYVyb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Aug 2020 17:54:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49204 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgHYVya (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 25 Aug 2020 17:54:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8A508B165;
+        Tue, 25 Aug 2020 21:55:00 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Steve Dickson <SteveD@redhat.com>
+Date:   Wed, 26 Aug 2020 07:54:22 +1000
+Subject: [PATCH nfs-utils] Convert remaining python scripts to python3
+cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <87zh6iqtm9.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825212647.GB1955@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 05:26:47PM -0400, J. Bruce Fields wrote:
-> On Fri, Aug 21, 2020 at 09:50:36AM +0800, Murphy Zhou wrote:
-> > It's easy to reproduce by running multiple xfstests testcases on localhost
-> > NFS shares. These testcases are:
-> >   generic/430 generic/431 generic/432 generic/433 generic/565
-> > 
-> > This reproduces only on NFSv4.2.
-> > 
-> > Error log diff sample:
-> > 
-> > --- /dev/fd/63	2020-08-09 22:46:02.771745606 -0400
-> > +++ results/generic/431.out.bad	2020-08-09 22:46:02.546745248 -0400
-> > @@ -1,15 +1,22 @@
-> >  QA output created by 431
-> >  Create the original file and then copy
-> > +cmp: EOF on /mnt/testdir/test-431/copy which is empty
-> >  Original md5sums:
-> >  ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/file
-> > -ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/copy
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/copy
-> 
-> When I check the files server-side after reproducing, the file "copy"
-> has the correct contents.  So I guess the problem is that the client
-> cache is out of date.  The difference with commit 94415b06e is that the
-> client holds read delegations on both source and destination, throughout
-> the COPY operation.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Olga, do you know what the client's doing in this case?
 
-It seems to me that it should be invalidating its cache of the
-destination range after a COPY, regardless of whether it holds a
-delegation on the destination.  (Either that or updating the cache of
-the destination to hold the copied data, if it's confident its cache of
-the source range is up to date.)
+nfs-utils contains 4 python scripts, two request
+ /usr/bin/python3
+in their shebang line, two request
+ /usr/bin/python
 
---b.
+Those latter two run perfectly well with python3 and as python2 is on the
+way out, change them so they requrest /usr/bin/python3.
 
-> 
-> --b.
-> 
-> >  Small copies from various points in the original file
-> > +cmp: EOF on /mnt/testdir/test-431/a which is empty
-> > +cmp: EOF on /mnt/testdir/test-431/b which is empty
-> > +cmp: EOF on /mnt/testdir/test-431/c which is empty
-> > +cmp: EOF on /mnt/testdir/test-431/d which is empty
-> > +cmp: EOF on /mnt/testdir/test-431/e which is empty
-> > +cmp: EOF on /mnt/testdir/test-431/f which is empty
-> >  md5sums after small copies
-> >  ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/file
-> > -0cc175b9c0f1b6a831c399e269772661  TEST_DIR/test-431/a
-> > -92eb5ffee6ae2fec3ad71c777531578f  TEST_DIR/test-431/b
-> > -4a8a08f09d37b73795649038408b5f33  TEST_DIR/test-431/c
-> > -8277e0910d750195b448797616e091ad  TEST_DIR/test-431/d
-> > -e1671797c52e15f763380b45e841ec32  TEST_DIR/test-431/e
-> > -2015eb238d706eceefc784742928054f  TEST_DIR/test-431/f
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/a
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/b
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/c
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/d
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/e
-> > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/f
-> >  d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/g
-> > 
-> > Bisecting shows the first "bad" commit is:
-> > 
-> > commit 94415b06eb8aed13481646026dc995f04a3a534a
-> > Author: J. Bruce Fields <bfields@redhat.com>
-> > Date:   Tue Jul 7 09:28:05 2020 -0400
-> > 
-> >     nfsd4: a client's own opens needn't prevent delegations
-> > 
-> > I'm wondering if you're already aware of it, this simple report is for
-> > your info.
-> > 
-> > Thanks.
-> > 
-> > -- 
-> > Murphy
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ tools/mountstats/mountstats.py | 2 +-
+ tools/nfs-iostat/nfs-iostat.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
+index 1054f698c8e3..00adc96bafeb 100755
+=2D-- a/tools/mountstats/mountstats.py
++++ b/tools/mountstats/mountstats.py
+@@ -1,4 +1,4 @@
+=2D#!/usr/bin/python
++#!/usr/bin/python3
+ # -*- python-mode -*-
+ """Parse /proc/self/mountstats and display it in human readable form
+ """
+diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
+index 5556f692b7ee..6e59837ee673 100755
+=2D-- a/tools/nfs-iostat/nfs-iostat.py
++++ b/tools/nfs-iostat/nfs-iostat.py
+@@ -1,4 +1,4 @@
+=2D#!/usr/bin/python
++#!/usr/bin/python3
+ # -*- python-mode -*-
+ """Emulate iostat for NFS mount points using /proc/self/mountstats
+ """
+=2D-=20
+2.28.0
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl9FiI4ACgkQOeye3VZi
+gbkuaw//ThjizsyC2tK/XOuA2aPAm/F5BIYdM7sLEp1V/+r+X+4OgNUQDPu8O7xo
+fUvWqAy3DR2mOBQLBY42mcNEiTy8S0ZpAlaRZhu3S/3OXxZ92pNkS2DjbYGJbnam
+OXb1WoZvBskhjyY1kxxS8d57rc7zpDgbMmTKq4e4oc3804y3QYz3h/hAr/4KSPRL
+qWiqnPVYNrWSd7amUBpdA7njQkT02TayQdF9n9BM1mpVBTTJG8mFwapgg9NDaC1A
+17sZoO0hR24wQIlq+kK0212eWsB10Gz0ZpD8ydalj24Lv0T4edR+xMxy/AQi/W24
+rNsUrnSOCkGDYwsdLHARWefehc7ElLBS1a24xr/chbVa7p+PkvuSbmFwxfNchl6W
+2431hl5DuYcsTbl6md9Rcd0p0dxqF1IEizS8b4QJhizoj7uPBofKqO8k5TCXc6s9
+R075+YDfGqA2/PbirqhtHTMNVmmR+FT7srbOQ6ZKBD05zP9dU2Lv6odZnLZtn9FU
+ObmvX8u+2euLDQ17qL0AnyyNeYQfmNMFe1LL2aGGDY5JRsnfx/ktIOvubb1T8Sz0
+/AvsoHWJH9N3jWtBuTO5rIJggF1YzAPg9BK7OY12GACON6iiCXIJl6/4LaTRAqf3
+RQxkTLOJfXcJl1mRrYjq0LMv6LkquXgnUsFss7yXNN4Lfx4y01c=
+=3dwc
+-----END PGP SIGNATURE-----
+--=-=-=--
