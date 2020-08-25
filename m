@@ -2,101 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88C4C252010
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Aug 2020 21:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 431B1252073
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Aug 2020 21:37:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgHYTfF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Aug 2020 15:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYTfE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Aug 2020 15:35:04 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D808BC061574
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Aug 2020 12:35:03 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so12278093edk.6
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Aug 2020 12:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ExjStVHf/BW5fZ//Raah24ZMhFsKpWvW6CB/cy9ojcY=;
-        b=NN6dXfXd5U19ia5IQ+x0lrMaQlhffekNII5KKLqum512iK3G8zhWjhkZGBSBsuNs6Y
-         LqSFCVp7eiAScEz1t1vyGM8Aoyuks4rGHgtMpVbz77pfr+BekZQrKWWR3RruB4qAajG/
-         1jOs8btrj9rwiXMytm5iRYuTkJrCQFLapQ0HrQEnOIlcPastvuz5N2jNLUorCxXQbjUy
-         3y+/s04AsBphVSvZt2N5F/k4Xs7bTmeeMQKyWgLBYPbAFfx3j6i2fC7MoyHesMfEgrLI
-         j6ftjVdej5J50ZT2XVN6hp4iIf9ZzmBD6wjzpvFiE/1Rg4xdN5FB+PLgnI1WuwHhlNFe
-         Axcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ExjStVHf/BW5fZ//Raah24ZMhFsKpWvW6CB/cy9ojcY=;
-        b=arQMZBE2SlvUtMqEs6EiJJcvwGogHNhvSXLj5XJxH7vVDKllnxANywCm79Q+qbENAB
-         uJD2Rvgb1zkJOCa3DuP3VSPCIJMV25sSIA+sOqaH1cp7Y/XEuzTFPXAldNTcNaoE6J/3
-         pfhYe8tq3gZOTPPKSMSl7PIG/C2MVVzLL0atr7uqWk28/A4lUmO6PwuSS/ipHPd6BlEC
-         M4G/9pCPIy2f5hFAh7yS+/LLSW8Ajx4cpeKe4tpi3f7e9If+TEOCb+Zf7RyyXW3CV02a
-         ldik4GJSlZz3ienTH1haJQUMbnw6vKL54oJFaSydKDJEv0NJdJZWGlCFKXoyBv+QH2hO
-         ufoA==
-X-Gm-Message-State: AOAM533y2ZN5GLIbJDg9JixFPfS47f22/AzutFdqAvyghmEIgjD+MKEr
-        N+RXGUvQZwrWAh22KyZWUf+MyYgaQL5Qse9dj0jdhZBgkvo=
-X-Google-Smtp-Source: ABdhPJypXpCPAL5H6snVEthgN24AFpwDFLguos6JYNUVVGvw9Cf+RyQ/aIKh0pjQXhiJAdQbuUs0YO+5kzZSD7Xp2BA=
-X-Received: by 2002:aa7:cf19:: with SMTP id a25mr11441614edy.67.1598384102497;
- Tue, 25 Aug 2020 12:35:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820225243.24825-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20200820225243.24825-1-olga.kornievskaia@gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 25 Aug 2020 15:34:51 -0400
-Message-ID: <CAN-5tyGdNxe_6=H7YrAkU2xdT02Yr2sZafg-O4aGHf9hM=ifcw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.1 handle ERR_DELAY error reclaiming locking
- state on delegation recall
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726497AbgHYThe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Aug 2020 15:37:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33376 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYThd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Aug 2020 15:37:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PJZRxx087365;
+        Tue, 25 Aug 2020 19:37:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2020-01-29;
+ bh=nz+vs61Nuq5CIPrLplvM9HKtYzJlZ7en1yfmlfAsdrI=;
+ b=TmI3nIyRChhEJAnXX+UO+DoM12Vb0QRcM8H/qKCOp+ZccrP2WVVh0WORtCn9HwDIovhe
+ ot85G675OkEUV4nwrPs2rtbyaGz3BJuaxgWu15i3dh77wD7EoxMTpZCZqPigye7Fhc46
+ MWSJZOw3KtRzjvqM9/7erqj/TWTQnHRe/wo61ZyRvrg1ig2xDJLlUVVi+84BjRILKBUa
+ 00XfP5Y86A6rm8d0xmQiq8Duvi967eAIw7Tmc0tf4cbs5zWleoahzKGQ6vcXS/T8zmks
+ hT5SKis8sDr1cABwAOiXrljphPnE39OpLDms/j6qSyhjX5Mw3YbQCl2Yjj8WaLV6cUV7 FA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 333w6tu2mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 19:37:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PJZJST133721;
+        Tue, 25 Aug 2020 19:37:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 333r9jyv50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 19:37:31 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PJbUT6007877;
+        Tue, 25 Aug 2020 19:37:30 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Aug 2020 12:37:29 -0700
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Please pull NFS server fixes for v5.9
+Message-Id: <374E25EA-2EFE-4E68-BCBD-880E25ADAF8C@oracle.com>
+Date:   Tue, 25 Aug 2020 15:37:29 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=994 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=977 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008250146
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Any comments on this patch? Thank you.
+Hi Linus -
 
-On Thu, Aug 20, 2020 at 6:50 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> A client should be able to handle getting an ERR_DELAY error
-> while doing a LOCK call to reclaim state due to delegation being
-> recalled. This is a transient error that can happen due to server
-> moving its volumes and invalidating its file location cache and
-> upon reference to it during the LOCK call needing to do an
-> expensive lookup (leading to an ERR_DELAY error on a PUTFH).
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs4proc.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index dbd01548335b..4a6cfb497103 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7298,7 +7298,12 @@ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state,
->         err = nfs4_set_lock_state(state, fl);
->         if (err != 0)
->                 return err;
-> -       err = _nfs4_do_setlk(state, F_SETLK, fl, NFS_LOCK_NEW);
-> +       do {
-> +               err = _nfs4_do_setlk(state, F_SETLK, fl, NFS_LOCK_NEW);
-> +               if (err != -NFS4ERR_DELAY)
-> +                       break;
-> +               ssleep(1);
-> +       } while (err == -NFS4ERR_DELAY);
->         return nfs4_handle_delegation_recall_error(server, state, stateid, fl, err);
->  }
->
-> --
-> 2.18.1
->
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+
+ Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+ git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9-1
+
+for you to fetch changes up to ad112aa8b1ac4bf5e8da67734fcb535fd3cd564e:
+
+ SUNRPC: remove duplicate include (2020-08-19 13:19:42 -0400)
+
+----------------------------------------------------------------
+Fixes:
+
+- Eliminate an oops introduced in v5.8
+- Remove a duplicate #include added by nfsd-5.9
+
+----------------------------------------------------------------
+J. Bruce Fields (1):
+     nfsd: fix oops on mixed NFSv4/NFSv3 client access
+
+Wang Hai (1):
+     SUNRPC: remove duplicate include
+
+fs/nfsd/nfs4state.c         | 2 ++
+net/sunrpc/auth_gss/trace.c | 1 -
+2 files changed, 2 insertions(+), 1 deletion(-)
+
+--
+Chuck Lever
+
+
+
