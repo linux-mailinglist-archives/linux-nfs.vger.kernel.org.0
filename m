@@ -2,94 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5C6C252C0D
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Aug 2020 13:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF0F253430
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Aug 2020 17:59:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgHZLDN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Aug 2020 07:03:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56724 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbgHZLDM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Aug 2020 07:03:12 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598439782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
-        b=onrC78SbMNK189bx5B9J/G6s8NfSzOML8/QswGPLaM7CNLUadKjp4RZkqQj1RpwAnqf9ND
-        WHrr0sfogurwO1T9+nL2EocVhhdSgZ0KPGI/iuexx/2JUw0YevIydPq4BgtmRVhBYRr2H9
-        kzNgRK7OBnzZ3BpBp2bRNNIjEyY+2G0JVleePH9tjONso7qd32vc+4yxT0SovbmgDtn7kX
-        BJpgVC6m9/waC/lQVCd9lNZKfx7RbcHmiwjuCHpFim0i4wEaR0GZkqDXWSSOJg7RJpHX5h
-        tUQjMpAvUqHIn7Kv266SPEKtJ5Pdfwe2BFa3tlGUAsQUziWsuUenKnL6a4+DPw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598439782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
-        b=PfZ2hYH1I2ewe0aCaU53HrJiEJCFqmFzJ7d2d3J0q6ZM3xseBlhIbp4F8hJcGr9lQ4766W
-        KACq5LU557imvSAA==
-To:     syzbot <syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, anna.schumaker@netapp.com,
-        bfields@fieldses.org, bp@alien8.de, davem@davemloft.net,
-        douly.fnst@cn.fujitsu.com, hpa@zytor.com, jlayton@kernel.org,
-        konrad.wilk@oracle.com, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
-        paulmck@kernel.org, peterz@infradead.org, puwen@hygon.cn,
-        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com, trond.myklebust@primarydata.com,
-        vbabka@suse.cz, x86@kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: WARNING: ODEBUG bug in __do_softirq
-In-Reply-To: <000000000000e7fab005adc3f636@google.com>
-References: <000000000000e7fab005adc3f636@google.com>
-Date:   Wed, 26 Aug 2020 13:03:02 +0200
-Message-ID: <87v9h5vfdl.fsf@nanos.tec.linutronix.de>
+        id S1726723AbgHZP7r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Aug 2020 11:59:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgHZP7p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Aug 2020 11:59:45 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF47C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Aug 2020 08:59:33 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id d11so3528682ejt.13
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Aug 2020 08:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9/FLHFQnrN/NECm2CGcXbYzIxrsXLVKgEdJc4m+nzMU=;
+        b=RQTVEdqV64gIMsMS/gu5eC4Cg9K6T4B+M2++baDy+v6FxX1Mst3PHnU2LU5cmiwG27
+         BD/Y+JeD3m4fNAqZY3yXkmhD9Qegbd3re2WPnKiynFYwp809L6af4JcRy1rWln9FsbpT
+         6da4bcLZ298qu01IHYId0bTuc2MXoUynIzhNhvudS1EJC3/IC7OIsQG8svrMZwYwhOqx
+         WEWyL+vs/fDkvXDZj13iDdqI5u+XLFwVgoy0n4sEH+/jphAMvvXLZ4y1s5i27nYw7sJ1
+         pg5DpWfqFKOmNCu/9ugW2a0HxtunMzpR7U+amg+HmoSbumSX9UfQwPmlOGbKVjuTI8hV
+         s6Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9/FLHFQnrN/NECm2CGcXbYzIxrsXLVKgEdJc4m+nzMU=;
+        b=U30QiYfcX7Fq36X7DP4pvSrjAnfb0pAhKEpqTK4t8mNMsri9dmluGU3vOPbKmMF2cK
+         p2AIALJYWSG8H5Wjdjee2mdUIYXr7AWprPizMFBv91POeoeNmyTEHTqq7jz2Mw6kMBTY
+         ua6Mz/oXhD36HeBFCb05sWv9jd4t52H57Xz2S81QR8h8qHcycAHon9J/XQnC5KIX/H2y
+         Ys/2+fIroJgs6AmIV+4Rj+jFpxG/nMyAkinR5/7mEiGZWBtCOqqBmelD3iQPBba/9C91
+         tdXqCSSJte7f9+pNzTZquYNE7ZlhtvTFJYZaW2D0Zw3/CLNdhKHRkHbnHIb8q9W2QPVl
+         fjzw==
+X-Gm-Message-State: AOAM5313lKQElrTuSTyhOVWeY6sN9ms0dTBix677zS4SZXLV/SDjZ9UI
+        I3CUyU5D0sJhLe5xo4rN0guwveyqQP42KxQvATU=
+X-Google-Smtp-Source: ABdhPJxqHNAC5fc9uJUBMstZrweuD8DQDzCeP3wrqAftBoG72uIOaTkW96EUQpAxftz9ApdEH9lkNdoD3Ych9NKCDg8=
+X-Received: by 2002:a17:907:37b:: with SMTP id rs27mr9506847ejb.0.1598457571901;
+ Wed, 26 Aug 2020 08:59:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200821015036.bn3yqiiuvunfxb42@xzhoux.usersys.redhat.com>
+ <20200825212647.GB1955@fieldses.org> <20200825215357.GC1955@fieldses.org>
+In-Reply-To: <20200825215357.GC1955@fieldses.org>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 26 Aug 2020 11:59:20 -0400
+Message-ID: <CAN-5tyH7SdzHVtS2zk5Md7ShmmTneWt8jFgjqNb0Bhdm1o140w@mail.gmail.com>
+Subject: Re: 5.9 nfsd update breaks v4.2 copy_file_range
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 26 2020 at 01:54, syzbot wrote:
+On Tue, Aug 25, 2020 at 5:53 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Tue, Aug 25, 2020 at 05:26:47PM -0400, J. Bruce Fields wrote:
+> > On Fri, Aug 21, 2020 at 09:50:36AM +0800, Murphy Zhou wrote:
+> > > It's easy to reproduce by running multiple xfstests testcases on localhost
+> > > NFS shares. These testcases are:
+> > >   generic/430 generic/431 generic/432 generic/433 generic/565
+> > >
+> > > This reproduces only on NFSv4.2.
+> > >
+> > > Error log diff sample:
+> > >
+> > > --- /dev/fd/63      2020-08-09 22:46:02.771745606 -0400
+> > > +++ results/generic/431.out.bad     2020-08-09 22:46:02.546745248 -0400
+> > > @@ -1,15 +1,22 @@
+> > >  QA output created by 431
+> > >  Create the original file and then copy
+> > > +cmp: EOF on /mnt/testdir/test-431/copy which is empty
+> > >  Original md5sums:
+> > >  ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/file
+> > > -ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/copy
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/copy
+> >
+> > When I check the files server-side after reproducing, the file "copy"
+> > has the correct contents.  So I guess the problem is that the client
+> > cache is out of date.  The difference with commit 94415b06e is that the
+> > client holds read delegations on both source and destination, throughout
+> > the COPY operation.
+>
+> Olga, do you know what the client's doing in this case?
+>
+> It seems to me that it should be invalidating its cache of the
+> destination range after a COPY, regardless of whether it holds a
+> delegation on the destination.  (Either that or updating the cache of
+> the destination to hold the copied data, if it's confident its cache of
+> the source range is up to date.)
 
-Cc+: David Howells
+It's on my todo list to reproduce this and see what's going on.
 
-> syzbot has found a reproducer for the following issue on:
 >
-> HEAD commit:    3a00d3df Add linux-next specific files for 20200825
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15080fa9900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9ef0a5f95935d447
-> dashboard link: https://syzkaller.appspot.com/bug?extid=51c9bdfa559769d2f897
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17927a2e900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132b8ede900000
+> --b.
 >
-> The issue was bisected to:
->
-> commit 5b317cbf2bcb85a1e96ce87717cb991ecab1dd4d
-> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Date:   Fri Feb 22 09:17:11 2019 +0000
->
->     Merge branch 'pm-cpufreq-fixes'
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171ead5d200000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=149ead5d200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=109ead5d200000
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com
-> Fixes: 5b317cbf2bcb ("Merge branch 'pm-cpufreq-fixes'")
->
-> ------------[ cut here ]------------
-> ODEBUG: free active (active state 0) object type: work_struct hint: afs_manage_cell+0x0/0x11c0 fs/afs/cell.c:498
-
-AFS is leaking an active work struct in a to be freed data struct.
-
-Thanks,
-
-        tglx
+> >
+> > --b.
+> >
+> > >  Small copies from various points in the original file
+> > > +cmp: EOF on /mnt/testdir/test-431/a which is empty
+> > > +cmp: EOF on /mnt/testdir/test-431/b which is empty
+> > > +cmp: EOF on /mnt/testdir/test-431/c which is empty
+> > > +cmp: EOF on /mnt/testdir/test-431/d which is empty
+> > > +cmp: EOF on /mnt/testdir/test-431/e which is empty
+> > > +cmp: EOF on /mnt/testdir/test-431/f which is empty
+> > >  md5sums after small copies
+> > >  ab56b4d92b40713acc5af89985d4b786  TEST_DIR/test-431/file
+> > > -0cc175b9c0f1b6a831c399e269772661  TEST_DIR/test-431/a
+> > > -92eb5ffee6ae2fec3ad71c777531578f  TEST_DIR/test-431/b
+> > > -4a8a08f09d37b73795649038408b5f33  TEST_DIR/test-431/c
+> > > -8277e0910d750195b448797616e091ad  TEST_DIR/test-431/d
+> > > -e1671797c52e15f763380b45e841ec32  TEST_DIR/test-431/e
+> > > -2015eb238d706eceefc784742928054f  TEST_DIR/test-431/f
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/a
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/b
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/c
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/d
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/e
+> > > +d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/f
+> > >  d41d8cd98f00b204e9800998ecf8427e  TEST_DIR/test-431/g
+> > >
+> > > Bisecting shows the first "bad" commit is:
+> > >
+> > > commit 94415b06eb8aed13481646026dc995f04a3a534a
+> > > Author: J. Bruce Fields <bfields@redhat.com>
+> > > Date:   Tue Jul 7 09:28:05 2020 -0400
+> > >
+> > >     nfsd4: a client's own opens needn't prevent delegations
+> > >
+> > > I'm wondering if you're already aware of it, this simple report is for
+> > > your info.
+> > >
+> > > Thanks.
+> > >
+> > > --
+> > > Murphy
