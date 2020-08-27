@@ -2,69 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFFE3253B3E
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 03:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD1D253E3F
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 08:55:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgH0BAS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Aug 2020 21:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgH0BAR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 26 Aug 2020 21:00:17 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B5DA20791;
-        Thu, 27 Aug 2020 01:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598490017;
-        bh=MuJK6Fq+nQHmaii7dvnYwwfnvKbk+kTDRV/j52dDGiI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKgkjyjizAHqIEOeRAxxLaUn5tt7PDAwnqjns7AwvKMNXVmzm3mBAMGlDZuE0CilN
-         SX3CfQPQtP5PAXoNxSvWfCSGMwbu/LL1CJEbDRgFR0/Ut13F3kP+cnbglGrmGscX+Q
-         H/3PtTLYAT8bN8Z+tvLdeColWwcPQdKzaN1SK8cI=
-Date:   Wed, 26 Aug 2020 18:00:16 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        linux-fscrypt@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: IMA metadata format to support fs-verity
-Message-ID: <20200827010016.GA2387969@gmail.com>
-References: <760DF127-CA5F-4E86-9703-596E95CEF12F@oracle.com>
- <20200826183116.GC2239109@gmail.com>
- <6C2D16FB-C098-43F3-A7D3-D8AC783D1AB5@oracle.com>
- <20200826192403.GD2239109@gmail.com>
- <E7A87987-AF41-42AC-8244-0D07AA68A6E7@oracle.com>
- <20200826205143.GE2239109@gmail.com>
- <ced0c57308b0056396d4795a639e6d9686f0e163.camel@linux.ibm.com>
+        id S1726266AbgH0Gzo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 02:55:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52426 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726123AbgH0Gzo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:55:44 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DFD823B5D9A068DABFBF;
+        Thu, 27 Aug 2020 14:55:41 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 14:55:40 +0800
+From:   Hou Tao <houtao1@huawei.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>
+Subject: [PATCH] nfsd: don't call trace_nfsd_deleg_none() if read delegation is given
+Date:   Thu, 27 Aug 2020 15:02:37 +0800
+Message-ID: <20200827070237.19942-1-houtao1@huawei.com>
+X-Mailer: git-send-email 2.25.0.4.g0ad7144999
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ced0c57308b0056396d4795a639e6d9686f0e163.camel@linux.ibm.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:53:33PM -0400, Mimi Zohar wrote:
-> On Wed, 2020-08-26 at 13:51 -0700, Eric Biggers wrote:
-> > Of course, the bytes that are actually signed need to include not just the hash
-> > itself, but also the type of hash algorithm that was used.  Else it's ambiguous
-> > what the signer intended to sign.
-> > 
-> > Unfortunately, currently EVM appears to sign a raw hash, which means it is
-> > broken, as the hash algorithm is not authenticated.  I.e. if the bytes
-> > e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 are signed,
-> > there's no way to prove that the signer meant to sign a SHA-256 hash, as opposed
-> > to, say, a Streebog hash.  So that will need to be fixed anyway.  While doing
-> > so, you should reserve some fields so that there's also a flag available to
-> > indicate whether the hash is a traditional full file hash or a fs-verity hash.
-> 
-> The original EVM HMAC is still sha1, but the newer portable & immutable
-> EVM signature supports different hash algorithms.
-> 
+Don't call trace_nfsd_deleg_none() if read delegation is given,
+else two exclusive traces will be printed:
 
-Read what I wrote again.  I'm talking about the bytes that are actually signed.
+    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
+    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
 
-- Eric
+Fix it by calling trace_nfsd_deleg_none() directly in appropriate
+places instead of calling it by checking the value of op_delegate_type.
+
+Also remove the unnecessary assignment "status = nfs_ok", because
+we can ensure status will be nfs_ok after the call of
+nfs4_inc_and_copy_stateid().
+
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+---
+ fs/nfsd/nfs4state.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c09a2a4281ec9..2e6376af701ff 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5131,6 +5131,8 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
+ 	nfs4_put_stid(&dp->dl_stid);
+ 	return;
+ out_no_deleg:
++	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
++
+ 	open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE;
+ 	if (open->op_claim_type == NFS4_OPEN_CLAIM_PREVIOUS &&
+ 	    open->op_delegate_type != NFS4_OPEN_DELEGATE_NONE) {
+@@ -5232,7 +5234,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
+ 			open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE_EXT;
+ 			open->op_why_no_deleg = WND4_NOT_WANTED;
+-			goto nodeleg;
++			trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
++			goto out;
+ 		}
+ 	}
+ 
+@@ -5241,9 +5244,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 	* OPEN succeeds even if we fail.
+ 	*/
+ 	nfs4_open_delegation(current_fh, open, stp);
+-nodeleg:
+-	status = nfs_ok;
+-	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+ out:
+ 	/* 4.1 client trying to upgrade/downgrade delegation? */
+ 	if (open->op_delegate_type == NFS4_OPEN_DELEGATE_NONE && dp &&
+-- 
+2.25.0.4.g0ad7144999
+
