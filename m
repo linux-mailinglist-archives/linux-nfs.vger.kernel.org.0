@@ -2,157 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6138F254740
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 16:45:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDC19254967
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 17:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgH0Opw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Aug 2020 10:45:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46440 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgH0Ops (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 10:45:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07REjKnM115375;
-        Thu, 27 Aug 2020 14:45:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=W5ZmE74RclFIcG6I9i444GCasBnjCBdyOLRikn0zGOU=;
- b=WibY8JO+fU3eAW0KYtx3FIiDN8A8R1oEgWVJYaKChqygeyDZpUYrGBlAH7NAoegSKk6r
- 3a9L99CBbjTNGB3pPEa6VJCvHAep2ZY1f4wC1N0w0nIc0EvSXO/gQRRZXy/j5ZXVUUyO
- 1981WPcInO+DtVwo7B5YSkjxR7tnmBYg9LE+r8Haztg0EUfBvU1d6CL94pLZXHxum8er
- pIJySfxjH9rR/AHVpdl+iNySLpcLlDIC/OF2bEuCZRYqgbWfiHbcJmAx/xOouXf43dvc
- Ui/Q5glZakKipPO4TuY6MidgF6obokDRpcTFaa/8tyZCQnmihmytKdhn53z2ZGakwtEY WA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 333w6u5bac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Aug 2020 14:45:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07REYtom164949;
-        Thu, 27 Aug 2020 14:43:29 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 333r9ngday-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 14:43:29 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07REhLDW004007;
-        Thu, 27 Aug 2020 14:43:23 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Aug 2020 07:43:21 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH] nfsd: don't call trace_nfsd_deleg_none() if read
- delegation is given
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200827070237.19942-1-houtao1@huawei.com>
-Date:   Thu, 27 Aug 2020 10:43:20 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6F61F417-95DA-4CD7-A81A-FA8C6299CF40@oracle.com>
-References: <20200827070237.19942-1-houtao1@huawei.com>
-To:     Hou Tao <houtao1@huawei.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008270112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008270113
+        id S1727069AbgH0P3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 11:29:08 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51116 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgH0P3I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 11:29:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598542146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+kaDLLF1f55NCIko0/llJRLFGMqoBN4rwHWmAV1FCCk=;
+        b=F2cJBMMYJY73NsbdUIafpW3IKZP3ILqr91GfzK6tOgeMZAY5/T6anXHMvKE/stNzAqrzyh
+        8ybzke+A24Dr9eb9Oy2E+o6YnMoOtvf89Kln3LM9e/SJSXT9n6bJHk23mSVuC1euayhekT
+        1Xd5DRMqc7vjljfA/bSpsNOWbqmZVf0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-9dtdZprBOgSEsWY5L1TUOg-1; Thu, 27 Aug 2020 11:29:05 -0400
+X-MC-Unique: 9dtdZprBOgSEsWY5L1TUOg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56CE310ABDC2;
+        Thu, 27 Aug 2020 15:29:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 14FE85C1C2;
+        Thu, 27 Aug 2020 15:28:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200810164044.GA31753@lst.de>
+References: <20200810164044.GA31753@lst.de> <1851200.1596472222@warthog.procyon.org.uk> <447452.1596109876@warthog.procyon.org.uk> <667820.1597072619@warthog.procyon.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1428310.1598542135.1@warthog.procyon.org.uk>
+Date:   Thu, 27 Aug 2020 16:28:55 +0100
+Message-ID: <1428311.1598542135@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello!
+Christoph Hellwig <hch@lst.de> wrote:
 
-> On Aug 27, 2020, at 3:02 AM, Hou Tao <houtao1@huawei.com> wrote:
->=20
-> Don't call trace_nfsd_deleg_none() if read delegation is given,
-> else two exclusive traces will be printed:
->=20
->    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
->    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
+> FYI, a giant rewrite dropping support for existing consumer is always
+> rather awkward.  Is there any way you could pre-stage some infrastructure
+> changes, and then do a temporary fscache2, which could then be renamed
+> back to fscache once everyone switched over?
 
-These are reporting two different state IDs: the first is a delegation
-state ID, and the second is an open state ID.
+That's a bit tricky.  There are three points that would have to be shared: the
+userspace miscdev interface, the backing filesystem and the single index tree.
 
-So in the "no delegation" case, we want to see just the open state ID.
-In the "delegation" case, we do want to see both.
+It's probably easier to just have a go at converting 9P and cifs.  Making the
+old and new APIs share would be a fairly hefty undertaking in its own right.
 
-You could argue (successfully) that the names of the tracepoints are
-pretty lousy. Maybe better to rename:
-
-  nfsd_deleg_open -> nfsd_deleg_read
-  nfsd_deleg_none -> nfsd_open
-
-What do you think?
-
-
-> Fix it by calling trace_nfsd_deleg_none() directly in appropriate
-> places instead of calling it by checking the value of =
-op_delegate_type.
->=20
-> Also remove the unnecessary assignment "status =3D nfs_ok", because
-> we can ensure status will be nfs_ok after the call of
-> nfs4_inc_and_copy_stateid().
->=20
-> Signed-off-by: Hou Tao <houtao1@huawei.com>
-> ---
-> fs/nfsd/nfs4state.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index c09a2a4281ec9..2e6376af701ff 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5131,6 +5131,8 @@ nfs4_open_delegation(struct svc_fh *fh, struct =
-nfsd4_open *open,
-> 	nfs4_put_stid(&dp->dl_stid);
-> 	return;
-> out_no_deleg:
-> +	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
-> +
-> 	open->op_delegate_type =3D NFS4_OPEN_DELEGATE_NONE;
-> 	if (open->op_claim_type =3D=3D NFS4_OPEN_CLAIM_PREVIOUS &&
-> 	    open->op_delegate_type !=3D NFS4_OPEN_DELEGATE_NONE) {
-> @@ -5232,7 +5234,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, =
-struct svc_fh *current_fh, struct nf
-> 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
-> 			open->op_delegate_type =3D =
-NFS4_OPEN_DELEGATE_NONE_EXT;
-> 			open->op_why_no_deleg =3D WND4_NOT_WANTED;
-> -			goto nodeleg;
-> +			trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
-> +			goto out;
-> 		}
-> 	}
->=20
-> @@ -5241,9 +5244,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, =
-struct svc_fh *current_fh, struct nf
-> 	* OPEN succeeds even if we fail.
-> 	*/
-> 	nfs4_open_delegation(current_fh, open, stp);
-> -nodeleg:
-> -	status =3D nfs_ok;
-> -	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
-> out:
-> 	/* 4.1 client trying to upgrade/downgrade delegation? */
-> 	if (open->op_delegate_type =3D=3D NFS4_OPEN_DELEGATE_NONE && dp =
-&&
-> --=20
-> 2.25.0.4.g0ad7144999
->=20
-
---
-Chuck Lever
-
-
+David
 
