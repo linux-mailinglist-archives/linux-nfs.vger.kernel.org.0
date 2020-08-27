@@ -2,119 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C4B32547C8
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 16:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6138F254740
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 16:45:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgH0Oyd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Aug 2020 10:54:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727124AbgH0NLT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 09:11:19 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RD2ufG012233;
-        Thu, 27 Aug 2020 09:10:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=0jkqVoBjl8OMYPBJk+Af10MNs/hhkJn3XMX7JyTNZv0=;
- b=j/lZ/Af1YQYbHrk2TkKLQORvKEvSvMnIGPM0g0J5ELCxZBP8j7HzCqN88vu+zGU3C/+u
- 20QFxnEQPqRZ0hcj/cey8PqreSuIlmOm87Yti909JFIBWMSIDBo/LKdZSx3yGLxEY7oh
- qK8vc3JCLi2TDZdY4/+Rpw1U9eJGOle4WUU6yIo5Ikh9LYUVhyf6GsMUVNpbmdlrhyzt
- PFG2gEWG7srycZwzC9OHpxupPh/A8cvfiX5UbVnPXiyyDlWeGaQ7naINTBIOuwdnZmXO
- jKFxwnOdi83afgkys0OI3r2UFez0pSUoedr5UkLfPN4alWBfWHL2e5QQvWpEpEonr4/X LA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336aeke0ce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 09:10:58 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RD3ASq013524;
-        Thu, 27 Aug 2020 09:10:57 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336aeke0au-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 09:10:57 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RD9Hm4020543;
-        Thu, 27 Aug 2020 13:10:55 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 335j270xrr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 13:10:54 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RD9MsH62521618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 13:09:22 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EF9852078;
-        Thu, 27 Aug 2020 13:10:52 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.6.101])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0882952079;
-        Thu, 27 Aug 2020 13:10:50 +0000 (GMT)
-Message-ID: <b5f33cb7880932bc1e6bbd3d3988bfad3e943036.camel@linux.ibm.com>
-Subject: Re: IMA metadata format to support fs-verity
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        linux-fscrypt@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Date:   Thu, 27 Aug 2020 09:10:50 -0400
-In-Reply-To: <20200827010016.GA2387969@gmail.com>
-References: <760DF127-CA5F-4E86-9703-596E95CEF12F@oracle.com>
-         <20200826183116.GC2239109@gmail.com>
-         <6C2D16FB-C098-43F3-A7D3-D8AC783D1AB5@oracle.com>
-         <20200826192403.GD2239109@gmail.com>
-         <E7A87987-AF41-42AC-8244-0D07AA68A6E7@oracle.com>
-         <20200826205143.GE2239109@gmail.com>
-         <ced0c57308b0056396d4795a639e6d9686f0e163.camel@linux.ibm.com>
-         <20200827010016.GA2387969@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=947
- malwarescore=0 mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270094
+        id S1728086AbgH0Opw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 10:45:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46440 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbgH0Ops (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 10:45:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07REjKnM115375;
+        Thu, 27 Aug 2020 14:45:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=W5ZmE74RclFIcG6I9i444GCasBnjCBdyOLRikn0zGOU=;
+ b=WibY8JO+fU3eAW0KYtx3FIiDN8A8R1oEgWVJYaKChqygeyDZpUYrGBlAH7NAoegSKk6r
+ 3a9L99CBbjTNGB3pPEa6VJCvHAep2ZY1f4wC1N0w0nIc0EvSXO/gQRRZXy/j5ZXVUUyO
+ 1981WPcInO+DtVwo7B5YSkjxR7tnmBYg9LE+r8Haztg0EUfBvU1d6CL94pLZXHxum8er
+ pIJySfxjH9rR/AHVpdl+iNySLpcLlDIC/OF2bEuCZRYqgbWfiHbcJmAx/xOouXf43dvc
+ Ui/Q5glZakKipPO4TuY6MidgF6obokDRpcTFaa/8tyZCQnmihmytKdhn53z2ZGakwtEY WA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 333w6u5bac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Aug 2020 14:45:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07REYtom164949;
+        Thu, 27 Aug 2020 14:43:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 333r9ngday-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 14:43:29 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07REhLDW004007;
+        Thu, 27 Aug 2020 14:43:23 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Aug 2020 07:43:21 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] nfsd: don't call trace_nfsd_deleg_none() if read
+ delegation is given
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200827070237.19942-1-houtao1@huawei.com>
+Date:   Thu, 27 Aug 2020 10:43:20 -0400
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6F61F417-95DA-4CD7-A81A-FA8C6299CF40@oracle.com>
+References: <20200827070237.19942-1-houtao1@huawei.com>
+To:     Hou Tao <houtao1@huawei.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270113
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2020-08-26 at 18:00 -0700, Eric Biggers wrote:
-> On Wed, Aug 26, 2020 at 08:53:33PM -0400, Mimi Zohar wrote:
-> > On Wed, 2020-08-26 at 13:51 -0700, Eric Biggers wrote:
-> > > Of course, the bytes that are actually signed need to include not just the hash
-> > > itself, but also the type of hash algorithm that was used.  Else it's ambiguous
-> > > what the signer intended to sign.
-> > > 
-> > > Unfortunately, currently EVM appears to sign a raw hash, which means it is
-> > > broken, as the hash algorithm is not authenticated.  I.e. if the bytes
-> > > e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 are signed,
-> > > there's no way to prove that the signer meant to sign a SHA-256 hash, as opposed
-> > > to, say, a Streebog hash.  So that will need to be fixed anyway.  While doing
-> > > so, you should reserve some fields so that there's also a flag available to
-> > > indicate whether the hash is a traditional full file hash or a fs-verity hash.
-> > 
-> > The original EVM HMAC is still sha1, but the newer portable & immutable
-> > EVM signature supports different hash algorithms.
-> > 
-> 
-> Read what I wrote again.  I'm talking about the bytes that are actually signed.
+Hello!
 
-I agree including the hash algorithm in the digest would be
-preferrable, but it isn't per-se broken.   The file signature and the
-file metadata hash algorithms are the same, otherwise signature
-verification fails[1].   The same tool calculates the file metadata
-digest and then signs the digest, using the same hash algorithm.  In
-terms of the HMAC, it is (still) limited to SHA1.
+> On Aug 27, 2020, at 3:02 AM, Hou Tao <houtao1@huawei.com> wrote:
+>=20
+> Don't call trace_nfsd_deleg_none() if read delegation is given,
+> else two exclusive traces will be printed:
+>=20
+>    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
+>    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
 
-Mimi
+These are reporting two different state IDs: the first is a delegation
+state ID, and the second is an open state ID.
 
-[1] commit 5feeb61183dd ("evm: Allow non-SHA1 digital signatures")
+So in the "no delegation" case, we want to see just the open state ID.
+In the "delegation" case, we do want to see both.
+
+You could argue (successfully) that the names of the tracepoints are
+pretty lousy. Maybe better to rename:
+
+  nfsd_deleg_open -> nfsd_deleg_read
+  nfsd_deleg_none -> nfsd_open
+
+What do you think?
+
+
+> Fix it by calling trace_nfsd_deleg_none() directly in appropriate
+> places instead of calling it by checking the value of =
+op_delegate_type.
+>=20
+> Also remove the unnecessary assignment "status =3D nfs_ok", because
+> we can ensure status will be nfs_ok after the call of
+> nfs4_inc_and_copy_stateid().
+>=20
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
+> ---
+> fs/nfsd/nfs4state.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index c09a2a4281ec9..2e6376af701ff 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5131,6 +5131,8 @@ nfs4_open_delegation(struct svc_fh *fh, struct =
+nfsd4_open *open,
+> 	nfs4_put_stid(&dp->dl_stid);
+> 	return;
+> out_no_deleg:
+> +	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+> +
+> 	open->op_delegate_type =3D NFS4_OPEN_DELEGATE_NONE;
+> 	if (open->op_claim_type =3D=3D NFS4_OPEN_CLAIM_PREVIOUS &&
+> 	    open->op_delegate_type !=3D NFS4_OPEN_DELEGATE_NONE) {
+> @@ -5232,7 +5234,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, =
+struct svc_fh *current_fh, struct nf
+> 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
+> 			open->op_delegate_type =3D =
+NFS4_OPEN_DELEGATE_NONE_EXT;
+> 			open->op_why_no_deleg =3D WND4_NOT_WANTED;
+> -			goto nodeleg;
+> +			trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+> +			goto out;
+> 		}
+> 	}
+>=20
+> @@ -5241,9 +5244,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, =
+struct svc_fh *current_fh, struct nf
+> 	* OPEN succeeds even if we fail.
+> 	*/
+> 	nfs4_open_delegation(current_fh, open, stp);
+> -nodeleg:
+> -	status =3D nfs_ok;
+> -	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+> out:
+> 	/* 4.1 client trying to upgrade/downgrade delegation? */
+> 	if (open->op_delegate_type =3D=3D NFS4_OPEN_DELEGATE_NONE && dp =
+&&
+> --=20
+> 2.25.0.4.g0ad7144999
+>=20
+
+--
+Chuck Lever
+
+
 
