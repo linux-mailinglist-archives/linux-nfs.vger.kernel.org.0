@@ -2,61 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEBD254A39
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 18:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CEC9254A7C
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 18:18:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgH0QIK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Aug 2020 12:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45376 "EHLO
+        id S1727013AbgH0QSu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 12:18:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgH0QIH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 12:08:07 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86702C06121B
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Aug 2020 09:08:07 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E5FF86EEB; Thu, 27 Aug 2020 12:08:05 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E5FF86EEB
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 2/2] Documentation: update RPCSEC_GSSv3 RFC link
-Date:   Thu, 27 Aug 2020 12:08:03 -0400
-Message-Id: <1598544483-14296-2-git-send-email-bfields@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598544483-14296-1-git-send-email-bfields@redhat.com>
-References: <1598544483-14296-1-git-send-email-bfields@redhat.com>
+        with ESMTP id S1727784AbgH0QSt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 12:18:49 -0400
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816DDC06121B;
+        Thu, 27 Aug 2020 09:18:47 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 30B06C009; Thu, 27 Aug 2020 18:18:39 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 18:18:24 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+Message-ID: <20200827161824.GC31016@nautica>
+References: <20200810164044.GA31753@lst.de>
+ <1851200.1596472222@warthog.procyon.org.uk>
+ <447452.1596109876@warthog.procyon.org.uk>
+ <667820.1597072619@warthog.procyon.org.uk>
+ <1428311.1598542135@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1428311.1598542135@warthog.procyon.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+David Howells wrote on Thu, Aug 27, 2020:
+> Christoph Hellwig <hch@lst.de> wrote:
+> 
+> > FYI, a giant rewrite dropping support for existing consumer is always
+> > rather awkward.  Is there any way you could pre-stage some infrastructure
+> > changes, and then do a temporary fscache2, which could then be renamed
+> > back to fscache once everyone switched over?
+> 
+> That's a bit tricky.  There are three points that would have to be shared: the
+> userspace miscdev interface, the backing filesystem and the single index tree.
+> 
+> It's probably easier to just have a go at converting 9P and cifs.  Making the
+> old and new APIs share would be a fairly hefty undertaking in its own right.
 
-This draft is an official RFC now.
+While I agree something incremental is probably better, I have some free
+time over the next few weeks so will take a shot at 9p; it's definitely
+going to be easier.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- Documentation/filesystems/nfs/rpc-server-gss.rst | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/filesystems/nfs/rpc-server-gss.rst b/Documentation/filesystems/nfs/rpc-server-gss.rst
-index abed4a2b1b82..ccaea9e7cea2 100644
---- a/Documentation/filesystems/nfs/rpc-server-gss.rst
-+++ b/Documentation/filesystems/nfs/rpc-server-gss.rst
-@@ -13,10 +13,9 @@ RPCGSS is specified in a few IETF documents:
-  - RFC2203 v1: https://tools.ietf.org/rfc/rfc2203.txt
-  - RFC5403 v2: https://tools.ietf.org/rfc/rfc5403.txt
- 
--and there is a 3rd version  being proposed:
-+There is a third version that we don't currently implement:
- 
-- - https://tools.ietf.org/id/draft-williams-rpcsecgssv3.txt
--   (At draft n. 02 at the time of writing)
-+ - RFC7861 v3: https://tools.ietf.org/rfc/rfc7861.txt
- 
- Background
- ==========
+Should I submit patches to you or wait until Linus merges it next cycle
+and send them directly?
+
+I see Jeff's ceph patches are still in his tree's ceph-fscache-iter
+branch and I don't see them anywhere in your tree.
+
 -- 
-2.26.2
+Dominique
 
