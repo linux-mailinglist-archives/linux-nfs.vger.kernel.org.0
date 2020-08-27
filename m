@@ -2,80 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC19254967
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 17:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88096254A38
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Aug 2020 18:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgH0P3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Aug 2020 11:29:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51116 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726867AbgH0P3I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 11:29:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598542146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+kaDLLF1f55NCIko0/llJRLFGMqoBN4rwHWmAV1FCCk=;
-        b=F2cJBMMYJY73NsbdUIafpW3IKZP3ILqr91GfzK6tOgeMZAY5/T6anXHMvKE/stNzAqrzyh
-        8ybzke+A24Dr9eb9Oy2E+o6YnMoOtvf89Kln3LM9e/SJSXT9n6bJHk23mSVuC1euayhekT
-        1Xd5DRMqc7vjljfA/bSpsNOWbqmZVf0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-9dtdZprBOgSEsWY5L1TUOg-1; Thu, 27 Aug 2020 11:29:05 -0400
-X-MC-Unique: 9dtdZprBOgSEsWY5L1TUOg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56CE310ABDC2;
-        Thu, 27 Aug 2020 15:29:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14FE85C1C2;
-        Thu, 27 Aug 2020 15:28:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200810164044.GA31753@lst.de>
-References: <20200810164044.GA31753@lst.de> <1851200.1596472222@warthog.procyon.org.uk> <447452.1596109876@warthog.procyon.org.uk> <667820.1597072619@warthog.procyon.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1428310.1598542135.1@warthog.procyon.org.uk>
-Date:   Thu, 27 Aug 2020 16:28:55 +0100
-Message-ID: <1428311.1598542135@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        id S1726147AbgH0QII (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 12:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgH0QIH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 12:08:07 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5FEC061264
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Aug 2020 09:08:07 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id DCE716EED; Thu, 27 Aug 2020 12:08:05 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DCE716EED
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 1/2] MAINTAINERS: Add Documentation/ to files we maintain
+Date:   Thu, 27 Aug 2020 12:08:02 -0400
+Message-Id: <1598544483-14296-1-git-send-email-bfields@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-> FYI, a giant rewrite dropping support for existing consumer is always
-> rather awkward.  Is there any way you could pre-stage some infrastructure
-> changes, and then do a temporary fscache2, which could then be renamed
-> back to fscache once everyone switched over?
+It struck me while watching Jon Corbet ask how to keep kernel
+Documentation up to date, that it might help if we were actually cc'd on
+Documentation/filesystems/nfs/ changes.
 
-That's a bit tricky.  There are three points that would have to be shared: the
-userspace miscdev interface, the backing filesystem and the single index tree.
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It's probably easier to just have a go at converting 9P and cifs.  Making the
-old and new APIs share would be a fairly hefty undertaking in its own right.
-
-David
+diff --git a/MAINTAINERS b/MAINTAINERS
+index deaafb617361..5fd2b9990fa6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9482,6 +9482,7 @@ F:	include/linux/sunrpc/
+ F:	include/uapi/linux/nfsd/
+ F:	include/uapi/linux/sunrpc/
+ F:	net/sunrpc/
++F:	Documentation/filesystems/nfs/
+ 
+ KERNEL SELFTEST FRAMEWORK
+ M:	Shuah Khan <shuah@kernel.org>
+@@ -12233,6 +12234,7 @@ F:	include/linux/sunrpc/
+ F:	include/uapi/linux/nfs*
+ F:	include/uapi/linux/sunrpc/
+ F:	net/sunrpc/
++F:	Documentation/filesystems/nfs/
+ 
+ NILFS2 FILESYSTEM
+ M:	Ryusuke Konishi <konishi.ryusuke@gmail.com>
+-- 
+2.26.2
 
