@@ -2,83 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81AD22551B3
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Aug 2020 01:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE4D22552F7
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Aug 2020 04:23:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgH0Xmy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Aug 2020 19:42:54 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:40356 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgH0Xmy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Aug 2020 19:42:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598571774; x=1630107774;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=bcpp4GHnysCVW/exjI6Jc3g8ewMNBUmYoZ7jEFLNy3A=;
-  b=eOKva6+BBbO/Etk20cEzmbL/Q2kEbMBySL7GddnObeMV8nxfGNiS8nLQ
-   eAlFGEeb29iCt1h3czBgOzJyNnRmLk6rlmyBI0cx4nTFpIE9eNaV2jsXc
-   XWqFtTIjiGboakJ9ofa71Zt220wwcjtoIMWKQnWHo4WWX880PEZptWeaB
-   s=;
-X-IronPort-AV: E=Sophos;i="5.76,361,1592870400"; 
-   d="scan'208";a="50444622"
-Subject: Re: [PATCH] NFSD: Correct type annotations in user xattr helpers
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-cc689b93.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 27 Aug 2020 23:42:44 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-cc689b93.us-west-2.amazon.com (Postfix) with ESMTPS id 1C95D120EB9;
-        Thu, 27 Aug 2020 23:42:43 +0000 (UTC)
-Received: from EX13D25UEA002.ant.amazon.com (10.43.61.122) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 23:42:42 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D25UEA002.ant.amazon.com (10.43.61.122) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 23:42:41 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 27 Aug 2020 23:42:41 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 74932C153F; Thu, 27 Aug 2020 23:42:41 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 23:42:41 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
+        id S1728182AbgH1CXL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Aug 2020 22:23:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54002 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728015AbgH1CXI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 27 Aug 2020 22:23:08 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 116884CC1E4883298965;
+        Fri, 28 Aug 2020 10:23:06 +0800 (CST)
+Received: from [10.174.177.167] (10.174.177.167) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 28 Aug 2020 10:23:02 +0800
+Subject: Re: [PATCH] nfsd: don't call trace_nfsd_deleg_none() if read
+ delegation is given
 To:     Chuck Lever <chuck.lever@oracle.com>
-CC:     <linux-nfs@vger.kernel.org>
-Message-ID: <20200827234223.GA19819@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <159857138796.5733.7512487939045729999.stgit@klimt.1015granger.net>
+CC:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20200827070237.19942-1-houtao1@huawei.com>
+ <6F61F417-95DA-4CD7-A81A-FA8C6299CF40@oracle.com>
+From:   Hou Tao <houtao1@huawei.com>
+Message-ID: <af7f4b4a-f44d-398e-76c3-e41e1b31fea7@huawei.com>
+Date:   Fri, 28 Aug 2020 10:23:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <159857138796.5733.7512487939045729999.stgit@klimt.1015granger.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <6F61F417-95DA-4CD7-A81A-FA8C6299CF40@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.167]
+X-CFilter-Loop: Reflected
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 07:37:01PM -0400, Chuck Lever wrote:
-> 
-> 
-> Squelch some sparse warnings:
-> 
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2264:13: warning: incorrect type in assignment (different base types)
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2264:13:    expected int err
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2264:13:    got restricted __be32
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2266:24: warning: incorrect type in return expression (different base types)
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2266:24:    expected restricted __be32
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2266:24:    got int err
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2288:13: warning: incorrect type in assignment (different base types)
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2288:13:    expected int err
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2288:13:    got restricted __be32
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2290:24: warning: incorrect type in return expression (different base types)
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2290:24:    expected restricted __be32
-> /home/cel/src/linux/linux/fs/nfsd/vfs.c:2290:24:    got int err
-> 
-> Fixes: 32119446bb65 ("nfsd: define xattr functions to call into their vfs counterparts")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
+Hi,
 
-Thanks.. sorry about that, one of those "I could have sworn I took care of
-those" cases.
+On 2020/8/27 22:43, Chuck Lever wrote:
+> Hello!
+> 
+>> On Aug 27, 2020, at 3:02 AM, Hou Tao <houtao1@huawei.com> wrote:
+>>
+>> Don't call trace_nfsd_deleg_none() if read delegation is given,
+>> else two exclusive traces will be printed:
+>>
+>>    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
+>>    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
+> 
+> These are reporting two different state IDs: the first is a delegation
+> state ID, and the second is an open state ID.
+> 
+> So in the "no delegation" case, we want to see just the open state ID.
+> In the "delegation" case, we do want to see both.
+> 
+Thanks for your explanation.
 
-- Frank
+> You could argue (successfully) that the names of the tracepoints are
+> pretty lousy. Maybe better to rename:
+> 
+>   nfsd_deleg_open -> nfsd_deleg_read
+>   nfsd_deleg_none -> nfsd_open
+> 
+> What do you think?
+> 
+After the renaming, the trace looks clearer. I will do it in v2.
+
+Thanks
+
+>> Fix it by calling trace_nfsd_deleg_none() directly in appropriate
+>> places instead of calling it by checking the value of op_delegate_type.
+>>
+>> Also remove the unnecessary assignment "status = nfs_ok", because
+>> we can ensure status will be nfs_ok after the call of
+>> nfs4_inc_and_copy_stateid().
+>>
+>> Signed-off-by: Hou Tao <houtao1@huawei.com>
+>> ---
+>> fs/nfsd/nfs4state.c | 8 ++++----
+>> 1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index c09a2a4281ec9..2e6376af701ff 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -5131,6 +5131,8 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
+>> 	nfs4_put_stid(&dp->dl_stid);
+>> 	return;
+>> out_no_deleg:
+>> +	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+>> +
+>> 	open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE;
+>> 	if (open->op_claim_type == NFS4_OPEN_CLAIM_PREVIOUS &&
+>> 	    open->op_delegate_type != NFS4_OPEN_DELEGATE_NONE) {
+>> @@ -5232,7 +5234,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+>> 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
+>> 			open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE_EXT;
+>> 			open->op_why_no_deleg = WND4_NOT_WANTED;
+>> -			goto nodeleg;
+>> +			trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+>> +			goto out;
+>> 		}
+>> 	}
+>>
+>> @@ -5241,9 +5244,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+>> 	* OPEN succeeds even if we fail.
+>> 	*/
+>> 	nfs4_open_delegation(current_fh, open, stp);
+>> -nodeleg:
+>> -	status = nfs_ok;
+>> -	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+>> out:
+>> 	/* 4.1 client trying to upgrade/downgrade delegation? */
+>> 	if (open->op_delegate_type == NFS4_OPEN_DELEGATE_NONE && dp &&
+>> -- 
+>> 2.25.0.4.g0ad7144999
+>>
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+> .
+> 
