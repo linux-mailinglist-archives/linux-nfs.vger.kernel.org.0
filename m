@@ -2,103 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 914B125694A
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 19:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68DEE256A52
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 23:17:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgH2RQH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 29 Aug 2020 13:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgH2RQG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 13:16:06 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379A2C061236
-        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 10:16:06 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w3so3289028ilh.5
-        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 10:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=9QsjdaYdmKKRe2Ubr4K0SnQe/Bx7wvIbuB/qOFSLEtU=;
-        b=ZhvnZ5JnWNfQXsrNV93iCuZN0ll+qUcBsaBP+CtsiP2fbhNa7yzkz+/ZkAP28XCgBQ
-         mSji3EBvi3tbhpcUhcIi6sdCMDXdAinjx0pL6LBsxcjBwKNV+sBuPhSSameWRBOoaOgm
-         EsIgW8GPfHOGZBGVvqUZBfuNrO1cUStqpQqMdrNP7YP7M9cBg63eqXHQmTeVamVMwLLX
-         qY9tMBRuVGJWkbSD44hzRRzLo69OwO735wxBFAbKFD1bDHUX7caNOIpJ2jnbZNPlZphc
-         vOtiS2I9PJLCCNMAG9Fb2uu7P3i9zVmjkv2pQRQMNlgKbRZT2wNXHe9WZ+9k4gVJp+OE
-         Z75A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=9QsjdaYdmKKRe2Ubr4K0SnQe/Bx7wvIbuB/qOFSLEtU=;
-        b=LVvso5sH2A2NzNSqXocDD1ZHcI2/nLAJPpKRnNEj0MHxPNk0YAdDD+5gMFvX4AyhZM
-         zzCvcZAKhlZB11Cdcg+qZ5BpsdUuCKuI/qAR4ON5tNNCfpAV1mf0NuLHXUsM96blRqgt
-         d8Gka8QS+NFRFABn8f+UnkDodgazPM06WZg4Ul2XgM+ozTM+VYJXVtXbLfMgJF+8GXcn
-         iu49VgB7xRXYMDvR5WsXTLKhKN5ZbN+m6Rt5m0a8Gt+wPmIbe2HQjR2OcbZdIZ9VvmRe
-         bUD1qrjlfr1TMCRrlrr8lTly+U3TZmgnJ+ZBJOewiH4sd4f2anrN6Ctw6JlDyedb/HDc
-         3P7w==
-X-Gm-Message-State: AOAM530jZmwkvl4wp3vRTXyAKFsnbKXvnX7jpDTJB1+nJ+QFYoXUaGau
-        7864scxCdeqwtf3Pt7zWJ3f58CIV1RY=
-X-Google-Smtp-Source: ABdhPJyiSM+UlfQ9EFuYACdx40qtve9DA5TAYi5FCn3RNeBjyscvDOJODfe7E49Y7FfisrXo9xgjuA==
-X-Received: by 2002:a05:6e02:ca3:: with SMTP id 3mr3297162ilg.8.1598721364991;
-        Sat, 29 Aug 2020 10:16:04 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id p124sm1416920iof.19.2020.08.29.10.16.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Aug 2020 10:16:03 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 07THG1ur004839;
-        Sat, 29 Aug 2020 17:16:02 GMT
-Subject: [PATCH v2] NFS: Zero-stateid SETATTR should first return delegation
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Sat, 29 Aug 2020 13:16:01 -0400
-Message-ID: <159872131590.1096729.3952588635826859724.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23
-MIME-Version: 1.0
+        id S1728515AbgH2VRw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 29 Aug 2020 17:17:52 -0400
+Received: from mail-eopbgr750090.outbound.protection.outlook.com ([40.107.75.90]:47745
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728417AbgH2VRt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 29 Aug 2020 17:17:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OYwcArq9q35fmO2y0FyO4UKeVQXgisuSOHgszJflQZOS7ftLV1Z7Zle1hJNvCWzRhm9zN1aSSk3HpSbEoLUClDMArqKZJjGo/CCMWkU92brh4lnfSOjfj9kmU+eafuhkbxrrxG8efZzI5KQV7DYNEkKT7umuSaL3v9fUnDUD7L/sdQsgpMgQ0mBEUR+OtL+P9PWGdJTtZpOT/g19ULhmD8BLWv/4k8e2NzIKuFxED7zp+TWP+xLgnpZ20g9ZI4wOujzJ17ytlVO/MP+mDcpW5hmloCgHodNMFpFY/6BHSPynBRCzkrg631khd63llJdJahnkiJlg1iBQ50RkAr1utQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=evE4cIKGy5pdAxIx47LGceUNG4cktnVAyNkps0Hu0nU=;
+ b=eheuf53J2FqVaovFO/qsUtDi1XpjQ/9Mm2f5xQTAT8kAGcNglXZaa3QA1XLcTPErLbNr5h6ZF3ZAFegx5z0fUE/8Lc7C4mGDh+enBS0xLbHtM1yOG5I0PupJaLRmOX1xv2Z9JEX2Ki37BCoF93kMVcdvv+N1MBryk80fGrrvvpRnPeLo6RSpyyvQOlAZD2COaC0s0GQ6UpeuXOHw6/5NN7r/bMYFi+/m7qGc48Y2IuT0e4qVzs9Eyn2N+8SOjolRN8SnyRe2ISOrP/GkzWNivoF6pu+66I6qzEd7kRFj3+dmVGiNXEY6DMxwyJWtrQq0yiRZtvsUa3JI5WygOLH5MA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=evE4cIKGy5pdAxIx47LGceUNG4cktnVAyNkps0Hu0nU=;
+ b=OQBsl8oncpVwFFFMxKof7s+ZqRJWFAn7FAnM+lX2Vgg5IEB9ZYO18qVUaxd09QO22AewTIlR7475khpw3KeJ841qG2w2/T6ZM7uEV3u0p1RJuJoLkEthDkKoECRjcUXUT56XR3BhA1e+uPqcS26gYrQnzK1EPXrK56svOX1BjJg=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3336.namprd13.prod.outlook.com (2603:10b6:610:28::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5; Sat, 29 Aug
+ 2020 21:17:45 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::403c:2a29:ba13:7756]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::403c:2a29:ba13:7756%3]) with mapi id 15.20.3348.011; Sat, 29 Aug 2020
+ 21:17:45 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] NFS: Zero-stateid SETATTR should first return
+ delegation
+Thread-Topic: [PATCH v2] NFS: Zero-stateid SETATTR should first return
+ delegation
+Thread-Index: AQHWfigV+o3sJiBz30CDvRqJWixucKlPl1iA
+Date:   Sat, 29 Aug 2020 21:17:45 +0000
+Message-ID: <9e28664e90438384be654a39b23c6d517959c15a.camel@hammerspace.com>
+References: <159872131590.1096729.3952588635826859724.stgit@manet.1015granger.net>
+In-Reply-To: <159872131590.1096729.3952588635826859724.stgit@manet.1015granger.net>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: netapp.com; dkim=none (message not signed)
+ header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [50.124.247.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 421c539e-9aba-4f97-431d-08d84c60f91a
+x-ms-traffictypediagnostic: CH2PR13MB3336:
+x-microsoft-antispam-prvs: <CH2PR13MB33362D67C636DC6793ACCD68B8530@CH2PR13MB3336.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kzAe2OkkyICRMAypJflilMjWffL8Dz47dODrbmJdYhhq2w/Se93HnVflJ7PgYO6tevl8Fab04NMRMKBlczaCy5oAcd1eqGpzw/+j3HqqvtL7Ae8QtrlL3GPLUUPQcYityTgyD8VJsUVb0H7H5bJSxw1RaoB0Y+YZsjJLgp50XveobgRooOR5wJvsnKoEvGpF8Lj4XQLfCNkOCuJpCiI4GDGrIHAVT+DtsYDZgRBpo20ayOJYMbVtM0ZPswdkv2SOhEvb7hc1xPVPpM73Y470/R3qrengz2OTvXs7JNEPkimPLEpA25uhavigFsRkhemb
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(136003)(8676002)(6506007)(186003)(508600001)(8936002)(6512007)(2906002)(4326008)(6486002)(76116006)(66476007)(71200400001)(83380400001)(26005)(66556008)(2616005)(110136005)(5660300002)(66946007)(64756008)(86362001)(66446008)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: dxIQt0jq0LkymnTGPR6G6CZAxlxO/t3vj9W3BrYILcQp0odVZwG7rhhIza6SYJQiaSv94KKsL5IL2Diaie44bmEkICoiEGl2VitJ4qTKQ83ecr1CepXOXQK3khHSjKVnTNFv95KtFkdnWinSD5f+y1PVGD7F+3QPNdRtrtczcriI90nVdyiiYD7UgXt6qQinMNniFKZskMDRRoYJiqu+gNkw97iNLxtv4bjMYqNkK5s/VQCRvXZ0hqi0cp56UVIXTbOLC38fIyefd+/vM3yjh0VEhqJ8Km12cxeJMh0nd5QZNQ+Ey1WSOHFbHZNpYUKckMctF4I2T/R51JCSAv2zxGrG626pS1jDcL7iBFDhXV+2po5nFLDfH4Bwtx3ipayHctmYZSE+wglIcVQoWFvQIRzc01qkVAKM6anZ9S1m1U9YijwyXrRshXTIbziVD0gqW6/rB1cNVElhDvnhfe+3SIFHrn7MOb2DVYwMrtPCh1fKJZWka0ZzRejjEIcSKMHf3gnz4QAI/LFkqcNZ2ynY1bYic8+lSQ26vD0JCeAzxFHRXou0bZYLXX4hyh3j8gDJlpZSYWpc9L6muRj7Uz4bvusa1/amZPAbUnMEjf41aMGlZiolMjOMjJPDdPUbb1KhzJ9+iQbkFFqTJ8F9a0wp0g==
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-ID: <A596A7776BD31C48955463DB79825727@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 421c539e-9aba-4f97-431d-08d84c60f91a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2020 21:17:45.1325
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XRq3dC2TIsH9vD9KXWXfz+US6H4hJVNkWusJlLMpUmpsRYBF+jYFE89QinJ0PjLnqjLZYhxSUclq+V28nj/BHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3336
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a write delegation isn't available, the Linux NFS client uses
-a zero-stateid when performing a SETATTR.
-
-NFSv4.0 provides no mechanism for an NFS server to match such a
-request to a particular client. It recalls all delegations for that
-file, even delegations held by the client issuing the request. If
-that client happens to hold a read delegation, the server will
-recall it immediately, resulting in an NFS4ERR_DELAY/CB_RECALL/
-DELEGRETURN sequence.
-
-Optimize out this pipeline bubble by having the client return any
-delegations it may hold on a file before it issues a
-SETATTR(zero-stateid) on that file.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfs4proc.c |    2 ++
- 1 file changed, 2 insertions(+)
-
-Changes since v1:
-- Return the delegation only for NFSv4.0 mounts
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index dbd01548335b..bca7245f1e78 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3314,6 +3314,8 @@ static int _nfs4_do_setattr(struct inode *inode,
- 			goto zero_stateid;
- 	} else {
- zero_stateid:
-+		if (server->nfs_client->cl_minorversion == 0)
-+			nfs4_inode_return_delegation(inode);
- 		nfs4_stateid_copy(&arg->stateid, &zero_stateid);
- 	}
- 	if (delegation_cred)
-
-
+T24gU2F0LCAyMDIwLTA4LTI5IGF0IDEzOjE2IC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
+SWYgYSB3cml0ZSBkZWxlZ2F0aW9uIGlzbid0IGF2YWlsYWJsZSwgdGhlIExpbnV4IE5GUyBjbGll
+bnQgdXNlcw0KPiBhIHplcm8tc3RhdGVpZCB3aGVuIHBlcmZvcm1pbmcgYSBTRVRBVFRSLg0KPiAN
+Cj4gTkZTdjQuMCBwcm92aWRlcyBubyBtZWNoYW5pc20gZm9yIGFuIE5GUyBzZXJ2ZXIgdG8gbWF0
+Y2ggc3VjaCBhDQo+IHJlcXVlc3QgdG8gYSBwYXJ0aWN1bGFyIGNsaWVudC4gSXQgcmVjYWxscyBh
+bGwgZGVsZWdhdGlvbnMgZm9yIHRoYXQNCj4gZmlsZSwgZXZlbiBkZWxlZ2F0aW9ucyBoZWxkIGJ5
+IHRoZSBjbGllbnQgaXNzdWluZyB0aGUgcmVxdWVzdC4gSWYNCj4gdGhhdCBjbGllbnQgaGFwcGVu
+cyB0byBob2xkIGEgcmVhZCBkZWxlZ2F0aW9uLCB0aGUgc2VydmVyIHdpbGwNCj4gcmVjYWxsIGl0
+IGltbWVkaWF0ZWx5LCByZXN1bHRpbmcgaW4gYW4gTkZTNEVSUl9ERUxBWS9DQl9SRUNBTEwvDQo+
+IERFTEVHUkVUVVJOIHNlcXVlbmNlLg0KPiANCj4gT3B0aW1pemUgb3V0IHRoaXMgcGlwZWxpbmUg
+YnViYmxlIGJ5IGhhdmluZyB0aGUgY2xpZW50IHJldHVybiBhbnkNCj4gZGVsZWdhdGlvbnMgaXQg
+bWF5IGhvbGQgb24gYSBmaWxlIGJlZm9yZSBpdCBpc3N1ZXMgYQ0KPiBTRVRBVFRSKHplcm8tc3Rh
+dGVpZCkgb24gdGhhdCBmaWxlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2h1Y2sgTGV2ZXIgPGNo
+dWNrLmxldmVyQG9yYWNsZS5jb20+DQo+IC0tLQ0KPiAgZnMvbmZzL25mczRwcm9jLmMgfCAgICAy
+ICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+IA0KPiBDaGFuZ2VzIHNp
+bmNlIHYxOg0KPiAtIFJldHVybiB0aGUgZGVsZWdhdGlvbiBvbmx5IGZvciBORlN2NC4wIG1vdW50
+cw0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9j
+LmMNCj4gaW5kZXggZGJkMDE1NDgzMzViLi5iY2E3MjQ1ZjFlNzggMTAwNjQ0DQo+IC0tLSBhL2Zz
+L25mcy9uZnM0cHJvYy5jDQo+ICsrKyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IEBAIC0zMzE0LDYg
+KzMzMTQsOCBAQCBzdGF0aWMgaW50IF9uZnM0X2RvX3NldGF0dHIoc3RydWN0IGlub2RlDQo+ICpp
+bm9kZSwNCj4gIAkJCWdvdG8gemVyb19zdGF0ZWlkOw0KPiAgCX0gZWxzZSB7DQo+ICB6ZXJvX3N0
+YXRlaWQ6DQo+ICsJCWlmIChzZXJ2ZXItPm5mc19jbGllbnQtPmNsX21pbm9ydmVyc2lvbiA9PSAw
+KQ0KPiArCQkJbmZzNF9pbm9kZV9yZXR1cm5fZGVsZWdhdGlvbihpbm9kZSk7DQoNClNvLCB0aGUg
+aW50ZW50aW9uIGlzIHRoYXQgbmZzNF9pbm9kZV9tYWtlX3dyaXRlYWJsZSgpIHRha2VzIGNhcmUg
+b2YNCnRoaXMsIGFuZCBpbiBwcmluY2lwbGUgaXQgaXMgZG9uZSBpbiB0aGUgY2FzZXMgdGhhdCBt
+YXR0ZXIgaW4NCm5mczRfcHJvY19zZXRhdHRyKCkuDQoNCkkgYWdyZWUgdGhhdCB0aGUgemVyb19z
+dGF0ZWlkIGNhc2UgaXMgbm90IGN1cnJlbnRseSBiZWluZyB0YWtlbiBjYXJlDQpvZiwgYnV0IHRo
+YXQgb25seSBtYXR0ZXJzIGZvciB0aGUgY2FzZSBvZiB0cnVuY2F0ZS4gU28gcGVyaGFwcyB3ZSBj
+YW4NCmp1c3QgYWRkIGEgc2luZ2xlIGNhbGwgdG8gbmZzNF9pbm9kZV9tYWtlX3dyaXRlYWJsZSgp
+IGFib3ZlIHRoZQ0KemVyb19zdGF0ZWlkIGxhYmVsIGluc3RlYWQgb2YgYWRkaW5nIHJlZHVuZGFu
+Y3kgZm9yIGFsbCB0aGUgb3RoZXINCmNhc2VzPw0KDQo+ICAJCW5mczRfc3RhdGVpZF9jb3B5KCZh
+cmctPnN0YXRlaWQsICZ6ZXJvX3N0YXRlaWQpOw0KPiAgCX0NCj4gIAlpZiAoZGVsZWdhdGlvbl9j
+cmVkKQ0KPiANCj4gDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWlu
+dGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoN
+Cg==
