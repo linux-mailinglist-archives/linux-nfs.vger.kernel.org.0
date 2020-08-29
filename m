@@ -2,207 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 005FC2562E1
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 00:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA10256899
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 17:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgH1WTI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Aug 2020 18:19:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30733 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726386AbgH1WTH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Aug 2020 18:19:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598653145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uDUiYPCuBNper0RUa09j95MO8Spu0FDmngXkbzpCePs=;
-        b=iN2uNukvW+m1szqsQszsREM5egrID/ZMUzjiS/TGhA7gZabSqWH9DNw5IsxUh0/Mfmiqlq
-        uc7+c9A3Cy3atEFgKJm6cs3kyFR9l+AnCeAjRzF0UOSJtezYpDzYKwKldjya7mbXv35dnU
-        JVUo79fn89uxV89e5YtwSybD9OJcbvE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-514-FE52JORwNyy76L-cpmuaZQ-1; Fri, 28 Aug 2020 18:19:01 -0400
-X-MC-Unique: FE52JORwNyy76L-cpmuaZQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B897D1DE08;
-        Fri, 28 Aug 2020 22:19:00 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-119-133.rdu2.redhat.com [10.10.119.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 72CF35B6B6;
-        Fri, 28 Aug 2020 22:19:00 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 437E812045D; Fri, 28 Aug 2020 18:18:59 -0400 (EDT)
-Date:   Fri, 28 Aug 2020 18:18:59 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     schumaker.anna@gmail.com
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        Anna.Schumaker@netapp.com
-Subject: Re: [PATCH v4 4/5] NFSD: Return both a hole and a data segment
-Message-ID: <20200828221859.GC33226@pick.fieldses.org>
-References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com>
- <20200817165310.354092-5-Anna.Schumaker@Netapp.com>
+        id S1728239AbgH2PUg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 29 Aug 2020 11:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgH2PUe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 11:20:34 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE950C061236
+        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 08:20:34 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C2A876EF4; Sat, 29 Aug 2020 11:20:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C2A876EF4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1598714425;
+        bh=x+ePd/5KcBesBcqVuSJgZc95bE8NZ2WGILq9KSeDjxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uugjg3tB1IXJqAhE3wEUQ5aUnnt3HpZSF9HNmO2RFYS5EVkbgcOYNrf4o/blnewTS
+         XBOft45oa3JQzU4PssRegrSH1UcEkaYZqw81bvoJtwb7WGJPXghH3Td58u5KI62B57
+         yEjXhLrDGTF/b/uK11wJkrCdj20Ju/wEccwx0OgE=
+Date:   Sat, 29 Aug 2020 11:20:25 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Hou Tao <houtao1@huawei.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: rename delegation related tracepoints to make
+ them less confusing
+Message-ID: <20200829152025.GA20499@fieldses.org>
+References: <6F61F417-95DA-4CD7-A81A-FA8C6299CF40@oracle.com>
+ <20200828070255.141460-1-houtao1@huawei.com>
+ <D32F1F35-2725-4809-9D10-2ED6EE2A2613@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817165310.354092-5-Anna.Schumaker@Netapp.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <D32F1F35-2725-4809-9D10-2ED6EE2A2613@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:53:09PM -0400, schumaker.anna@gmail.com wrote:
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Fri, Aug 28, 2020 at 09:21:55AM -0400, Chuck Lever wrote:
 > 
-> But only one of each right now. We'll expand on this in the next patch.
 > 
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
->  fs/nfsd/nfs4xdr.c | 51 ++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 14 deletions(-)
+> > On Aug 28, 2020, at 3:02 AM, Hou Tao <houtao1@huawei.com> wrote:
+> > 
+> > Now when a read delegation is given, two delegation related traces
+> > will be printed:
+> > 
+> >    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
+> >    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
+> > 
+> > Although the intention is to let developers know two stateid are
+> > returned, the traces are confusing about whether or not a read delegation
+> > is handled out. So renaming trace_nfsd_deleg_none() to trace_nfsd_open()
+> > and trace_nfsd_deleg_open() to trace_nfsd_deleg_read() to make
+> > the intension clearer.
+> > 
+> > The patched traces will be:
+> > 
+> >    nfsd_deleg_read: client 5f48a967:b55b21cd stateid 00000003:00000001
+> >    nfsd_open: client 5f48a967:b55b21cd stateid 00000002:00000001
+> > 
+> > Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+> > Signed-off-by: Hou Tao <houtao1@huawei.com>
 > 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 2fa39217c256..3f4860103b25 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4373,7 +4373,7 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
->  static __be32
->  nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
->  			    struct nfsd4_read *read,
-> -			    unsigned long maxcount,  u32 *eof)
-> +			    unsigned long *maxcount, u32 *eof)
->  {
->  	struct xdr_stream *xdr = &resp->xdr;
->  	struct file *file = read->rd_nf->nf_file;
-> @@ -4384,19 +4384,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
->  	__be64 tmp64;
->  
->  	if (hole_pos > read->rd_offset)
-> -		maxcount = min_t(unsigned long, maxcount, hole_pos - read->rd_offset);
-> +		*maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
->  
->  	/* Content type, offset, byte count */
->  	p = xdr_reserve_space(xdr, 4 + 8 + 4);
->  	if (!p)
->  		return nfserr_resource;
->  
-> -	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
-> +	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxcount);
->  	if (read->rd_vlen < 0)
->  		return nfserr_resource;
->  
->  	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
-> -			    resp->rqstp->rq_vec, read->rd_vlen, &maxcount, eof);
-> +			    resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
->  	if (nfserr)
->  		return nfserr;
->  
-> @@ -4404,7 +4404,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
->  	write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
->  	tmp64 = cpu_to_be64(read->rd_offset);
->  	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
-> -	tmp = htonl(maxcount);
-> +	tmp = htonl(*maxcount);
->  	write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
->  	return nfs_ok;
->  }
-> @@ -4412,11 +4412,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
->  static __be32
->  nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
->  			    struct nfsd4_read *read,
-> -			    unsigned long maxcount, u32 *eof)
-> +			    unsigned long *maxcount, u32 *eof)
->  {
->  	struct file *file = read->rd_nf->nf_file;
-> +	loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+> LGTM. I assume Bruce is taking this for v5.10.
 
-Everywhere I see fs_llseek()s and i_size_read()s, I start wondering
-where there might be races.  E.g.:
+Applying for 5.10, thanks.--b.
 
-> +	unsigned long count;
->  	__be32 *p;
->  
-> +	if (data_pos == -ENXIO)
-> +		data_pos = i_size_read(file_inode(file));
-> +	else if (data_pos <= read->rd_offset)
-> +		return nfserr_resource;
-
-I think that means a concurrent truncate would cause us to fail the
-entire read, when I suspect the right thing to do is to return a short
-(but successful) read.
-
---b.
-
-> +	count = data_pos - read->rd_offset;
-> +
->  	/* Content type, offset, byte count */
->  	p = xdr_reserve_space(&resp->xdr, 4 + 8 + 8);
->  	if (!p)
-> @@ -4424,9 +4432,10 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
->  
->  	*p++ = htonl(NFS4_CONTENT_HOLE);
->  	 p   = xdr_encode_hyper(p, read->rd_offset);
-> -	 p   = xdr_encode_hyper(p, maxcount);
-> +	 p   = xdr_encode_hyper(p, count);
->  
-> -	*eof = (read->rd_offset + maxcount) >= i_size_read(file_inode(file));
-> +	*eof = (read->rd_offset + count) >= i_size_read(file_inode(file));
-> +	*maxcount = min_t(unsigned long, count, *maxcount);
->  	return nfs_ok;
->  }
->  
-> @@ -4434,7 +4443,7 @@ static __be32
->  nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
->  		       struct nfsd4_read *read)
->  {
-> -	unsigned long maxcount;
-> +	unsigned long maxcount, count;
->  	struct xdr_stream *xdr = &resp->xdr;
->  	struct file *file;
->  	int starting_len = xdr->buf->len;
-> @@ -4457,6 +4466,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	maxcount = min_t(unsigned long, maxcount,
->  			 (xdr->buf->buflen - xdr->buf->len));
->  	maxcount = min_t(unsigned long, maxcount, read->rd_length);
-> +	count    = maxcount;
->  
->  	eof = read->rd_offset >= i_size_read(file_inode(file));
->  	if (eof)
-> @@ -4465,13 +4475,26 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
->  	if (pos == -ENXIO)
->  		pos = i_size_read(file_inode(file));
-> +	else if (pos < 0)
-> +		pos = read->rd_offset;
->  
-> -	if (pos > read->rd_offset) {
-> -		maxcount = pos - read->rd_offset;
-> -		nfserr = nfsd4_encode_read_plus_hole(resp, read, maxcount, &eof);
-> +	if (pos == read->rd_offset) {
-> +		maxcount = count;
-> +		nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof);
-> +		if (nfserr)
-> +			goto out;
-> +		count -= maxcount;
-> +		read->rd_offset += maxcount;
->  		segments++;
-> -	} else {
-> -		nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
-> +	}
-> +
-> +	if (count > 0 && !eof) {
-> +		maxcount = count;
-> +		nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
-> +		if (nfserr)
-> +			goto out;
-> +		count -= maxcount;
-> +		read->rd_offset += maxcount;
->  		segments++;
->  	}
->  
-> -- 
-> 2.28.0
 > 
-
+> 
+> > ---
+> > v1: https://marc.info/?l=linux-nfs&m=159851134513236&w=2
+> > 
+> > fs/nfsd/nfs4state.c | 4 ++--
+> > fs/nfsd/trace.h     | 4 ++--
+> > 2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index c09a2a4281ec9..0525acfe31314 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -5126,7 +5126,7 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
+> > 
+> > 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
+> > 
+> > -	trace_nfsd_deleg_open(&dp->dl_stid.sc_stateid);
+> > +	trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
+> > 	open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
+> > 	nfs4_put_stid(&dp->dl_stid);
+> > 	return;
+> > @@ -5243,7 +5243,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+> > 	nfs4_open_delegation(current_fh, open, stp);
+> > nodeleg:
+> > 	status = nfs_ok;
+> > -	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
+> > +	trace_nfsd_open(&stp->st_stid.sc_stateid);
+> > out:
+> > 	/* 4.1 client trying to upgrade/downgrade delegation? */
+> > 	if (open->op_delegate_type == NFS4_OPEN_DELEGATE_NONE && dp &&
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index 1861db1bdc670..99bf07800cd09 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -289,8 +289,8 @@ DEFINE_STATEID_EVENT(layout_recall_done);
+> > DEFINE_STATEID_EVENT(layout_recall_fail);
+> > DEFINE_STATEID_EVENT(layout_recall_release);
+> > 
+> > -DEFINE_STATEID_EVENT(deleg_open);
+> > -DEFINE_STATEID_EVENT(deleg_none);
+> > +DEFINE_STATEID_EVENT(open);
+> > +DEFINE_STATEID_EVENT(deleg_read);
+> > DEFINE_STATEID_EVENT(deleg_break);
+> > DEFINE_STATEID_EVENT(deleg_recall);
+> > 
+> > -- 
+> > 2.25.0.4.g0ad7144999
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
