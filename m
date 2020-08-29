@@ -2,84 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 451EA2568BA
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 17:36:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A68256901
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 18:17:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgH2Pgu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 29 Aug 2020 11:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
+        id S1728350AbgH2QRU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 29 Aug 2020 12:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgH2Pgu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 11:36:50 -0400
+        with ESMTP id S1728310AbgH2QRU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 12:17:20 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AC8C061236;
-        Sat, 29 Aug 2020 08:36:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E1EC061236
+        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 09:17:19 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id CC5BB2012; Sat, 29 Aug 2020 11:36:48 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CC5BB2012
+        id 9BB622012; Sat, 29 Aug 2020 12:17:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9BB622012
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1598715408;
-        bh=HoxjoWKowd57pYE4VNh/VDpZ9rlhexlsY3h8n+CNiFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BykLjcYCG5uqv3qjo3r9Knn4dTzZWZzkMBx3C4yef/gVTZs4f2yTcvB4qqbUhZuh1
-         //Ef5iMZdn0xKZ1IQsPZAZo+ErDc7++qisotGIGO/zqCAY0RbBURsP22XOwk2IlwOB
-         4pBtDGTgzMYjVH4SNHxzod83PjdtzJciH1oL+Udo=
-Date:   Sat, 29 Aug 2020 11:36:48 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] gss_krb5: Fix memleak in krb5_make_rc4_seq_num
-Message-ID: <20200829153648.GB20499@fieldses.org>
-References: <20200827080252.26396-1-dinghao.liu@zju.edu.cn>
+        s=default; t=1598717838;
+        bh=FhjKFb1Dta38cvLlcRJDNRQdAbwdCHq2DqpCz6gI56s=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=r22BS8rQoiLIQy0Hex09yxu2ptkAu/fNXkHb28AwjIcL+3qH9vwH+gKspXhxkS5Ix
+         ylyHfRGkm2Ejf96oMukhls9CNFoxHWhaH5i+l+sFLINTTUNLdKkISwURIlwgLUZsHS
+         dL6IsWWrd0AuM6zS+yyYACFw9pO8JxkLEdlf6+po=
+Date:   Sat, 29 Aug 2020 12:17:18 -0400
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v1] NFS: Zero-stateid SETATTR should first return
+ delegation
+Message-ID: <20200829161718.GC20499@fieldses.org>
+References: <159864470513.1031951.14868951913532221090.stgit@manet.1015granger.net>
+ <f5827110d3627096bdd4c07060876e69089a8d87.camel@hammerspace.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827080252.26396-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <f5827110d3627096bdd4c07060876e69089a8d87.camel@hammerspace.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This code is rarely if ever used, and there are pending patches to
-remove it completely, so I don't think it's worth trying to fix a rare
-memory leak at this point.
+On Fri, Aug 28, 2020 at 09:13:07PM +0000, Trond Myklebust wrote:
+> On Fri, 2020-08-28 at 15:58 -0400, Chuck Lever wrote:
+> > If a write delegation isn't available, the Linux NFS client uses
+> > a zero-stateid when performing a SETATTR.
+> > 
+> > If that client happens to hold a read delegation, the server will
+> > recall it immediately, resulting in a short delay while the
+> > CB_RECALL operation is done. Optimize out this delay by having the
+> > client return any delegation it may hold on a file before issuing a
+> > SETATTR(zero-stateid) on that file.
+> > 
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > ---
+> >  fs/nfs/nfs4proc.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index dbd01548335b..53a56250cf4b 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -3314,6 +3314,7 @@ static int _nfs4_do_setattr(struct inode
+> > *inode,
+> >  			goto zero_stateid;
+> >  	} else {
+> >  zero_stateid:
+> > +		nfs4_inode_return_delegation(inode);
+> >  		nfs4_stateid_copy(&arg->stateid, &zero_stateid);
+> >  	}
+> >  	if (delegation_cred)
+> > 
+> 
+> This should not be needed for NFSv4.1 or greater. Only NFSv4.0 is
+> incapable of identifying the caller and recognising that it is the
+> holder of the delegation.
+
+And the server should be getting this right now in the >=4.1 case, so
+let me know if you see otherwise.
 
 --b.
-
-On Thu, Aug 27, 2020 at 04:02:50PM +0800, Dinghao Liu wrote:
-> When kmalloc() fails, cipher should be freed
-> just like when krb5_rc4_setup_seq_key() fails.
-> 
-> Fixes: e7afe6c1d486b ("sunrpc: fix 4 more call sites that were using stack memory with a scatterlist")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  net/sunrpc/auth_gss/gss_krb5_seqnum.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_seqnum.c b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> index 507105127095..88ca58d11082 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> @@ -53,8 +53,10 @@ krb5_make_rc4_seq_num(struct krb5_ctx *kctx, int direction, s32 seqnum,
->  		return PTR_ERR(cipher);
->  
->  	plain = kmalloc(8, GFP_NOFS);
-> -	if (!plain)
-> -		return -ENOMEM;
-> +	if (!plain) {
-> +		code = -ENOMEM;
-> +		goto out;
-> +	}
->  
->  	plain[0] = (unsigned char) ((seqnum >> 24) & 0xff);
->  	plain[1] = (unsigned char) ((seqnum >> 16) & 0xff);
-> -- 
-> 2.17.1
