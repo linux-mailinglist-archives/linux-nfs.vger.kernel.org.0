@@ -2,123 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68DEE256A52
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Aug 2020 23:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF8E256AA1
+	for <lists+linux-nfs@lfdr.de>; Sun, 30 Aug 2020 00:29:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgH2VRw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 29 Aug 2020 17:17:52 -0400
-Received: from mail-eopbgr750090.outbound.protection.outlook.com ([40.107.75.90]:47745
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728417AbgH2VRt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 29 Aug 2020 17:17:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OYwcArq9q35fmO2y0FyO4UKeVQXgisuSOHgszJflQZOS7ftLV1Z7Zle1hJNvCWzRhm9zN1aSSk3HpSbEoLUClDMArqKZJjGo/CCMWkU92brh4lnfSOjfj9kmU+eafuhkbxrrxG8efZzI5KQV7DYNEkKT7umuSaL3v9fUnDUD7L/sdQsgpMgQ0mBEUR+OtL+P9PWGdJTtZpOT/g19ULhmD8BLWv/4k8e2NzIKuFxED7zp+TWP+xLgnpZ20g9ZI4wOujzJ17ytlVO/MP+mDcpW5hmloCgHodNMFpFY/6BHSPynBRCzkrg631khd63llJdJahnkiJlg1iBQ50RkAr1utQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=evE4cIKGy5pdAxIx47LGceUNG4cktnVAyNkps0Hu0nU=;
- b=eheuf53J2FqVaovFO/qsUtDi1XpjQ/9Mm2f5xQTAT8kAGcNglXZaa3QA1XLcTPErLbNr5h6ZF3ZAFegx5z0fUE/8Lc7C4mGDh+enBS0xLbHtM1yOG5I0PupJaLRmOX1xv2Z9JEX2Ki37BCoF93kMVcdvv+N1MBryk80fGrrvvpRnPeLo6RSpyyvQOlAZD2COaC0s0GQ6UpeuXOHw6/5NN7r/bMYFi+/m7qGc48Y2IuT0e4qVzs9Eyn2N+8SOjolRN8SnyRe2ISOrP/GkzWNivoF6pu+66I6qzEd7kRFj3+dmVGiNXEY6DMxwyJWtrQq0yiRZtvsUa3JI5WygOLH5MA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=evE4cIKGy5pdAxIx47LGceUNG4cktnVAyNkps0Hu0nU=;
- b=OQBsl8oncpVwFFFMxKof7s+ZqRJWFAn7FAnM+lX2Vgg5IEB9ZYO18qVUaxd09QO22AewTIlR7475khpw3KeJ841qG2w2/T6ZM7uEV3u0p1RJuJoLkEthDkKoECRjcUXUT56XR3BhA1e+uPqcS26gYrQnzK1EPXrK56svOX1BjJg=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3336.namprd13.prod.outlook.com (2603:10b6:610:28::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5; Sat, 29 Aug
- 2020 21:17:45 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::403c:2a29:ba13:7756]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::403c:2a29:ba13:7756%3]) with mapi id 15.20.3348.011; Sat, 29 Aug 2020
- 21:17:45 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1728007AbgH2W2V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 29 Aug 2020 18:28:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:32884 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgH2W2U (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 18:28:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07TMKV4E061952;
+        Sat, 29 Aug 2020 22:28:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=KePSAVVj3jXLfWM+Nwjv4Uo3mAjNKCVsZ3at6+YyVuQ=;
+ b=PVPuhtYQEh4p2rYJp6W2AGfzA8K8cBgQIki7uyF2zvHcF5Xh+eLL4O1lSqDE4hr7SWLk
+ NIIspCiU1NbQlkl3V2NX8xROIs0TJzbghaijmfEH9tzkKfbYb1UFrbmiHIj3fKAd05EU
+ tJNOD7dzt+YTpTDYWM/rRoJPhHFSd2lrqATOWme9ZCBMur8XTbQB1kAiao4EtYXohuQB
+ ViriISRNeE5q5IlqJZCHki891rqM3TFCusw7Rri7/0kDq5sUHzjvWruHMwaoPGY1Lo0c
+ GDCYFwOMMK2PFAP8R+b2AhULSbjCMGgqQwZwTCZLI+4FtABAoPVEv6tk5IilUT9k7PWZ LA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 337eykskng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 29 Aug 2020 22:28:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07TMRJ6A068058;
+        Sat, 29 Aug 2020 22:28:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 337d29m87r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Aug 2020 22:28:13 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07TMSAbA030821;
+        Sat, 29 Aug 2020 22:28:12 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 29 Aug 2020 15:28:10 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
 Subject: Re: [PATCH v2] NFS: Zero-stateid SETATTR should first return
  delegation
-Thread-Topic: [PATCH v2] NFS: Zero-stateid SETATTR should first return
- delegation
-Thread-Index: AQHWfigV+o3sJiBz30CDvRqJWixucKlPl1iA
-Date:   Sat, 29 Aug 2020 21:17:45 +0000
-Message-ID: <9e28664e90438384be654a39b23c6d517959c15a.camel@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <9e28664e90438384be654a39b23c6d517959c15a.camel@hammerspace.com>
+Date:   Sat, 29 Aug 2020 18:28:09 -0400
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <84BE6361-2381-442D-9788-74ABB54C88A7@oracle.com>
 References: <159872131590.1096729.3952588635826859724.stgit@manet.1015granger.net>
-In-Reply-To: <159872131590.1096729.3952588635826859724.stgit@manet.1015granger.net>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: netapp.com; dkim=none (message not signed)
- header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [50.124.247.56]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 421c539e-9aba-4f97-431d-08d84c60f91a
-x-ms-traffictypediagnostic: CH2PR13MB3336:
-x-microsoft-antispam-prvs: <CH2PR13MB33362D67C636DC6793ACCD68B8530@CH2PR13MB3336.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kzAe2OkkyICRMAypJflilMjWffL8Dz47dODrbmJdYhhq2w/Se93HnVflJ7PgYO6tevl8Fab04NMRMKBlczaCy5oAcd1eqGpzw/+j3HqqvtL7Ae8QtrlL3GPLUUPQcYityTgyD8VJsUVb0H7H5bJSxw1RaoB0Y+YZsjJLgp50XveobgRooOR5wJvsnKoEvGpF8Lj4XQLfCNkOCuJpCiI4GDGrIHAVT+DtsYDZgRBpo20ayOJYMbVtM0ZPswdkv2SOhEvb7hc1xPVPpM73Y470/R3qrengz2OTvXs7JNEPkimPLEpA25uhavigFsRkhemb
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(136003)(8676002)(6506007)(186003)(508600001)(8936002)(6512007)(2906002)(4326008)(6486002)(76116006)(66476007)(71200400001)(83380400001)(26005)(66556008)(2616005)(110136005)(5660300002)(66946007)(64756008)(86362001)(66446008)(36756003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: dxIQt0jq0LkymnTGPR6G6CZAxlxO/t3vj9W3BrYILcQp0odVZwG7rhhIza6SYJQiaSv94KKsL5IL2Diaie44bmEkICoiEGl2VitJ4qTKQ83ecr1CepXOXQK3khHSjKVnTNFv95KtFkdnWinSD5f+y1PVGD7F+3QPNdRtrtczcriI90nVdyiiYD7UgXt6qQinMNniFKZskMDRRoYJiqu+gNkw97iNLxtv4bjMYqNkK5s/VQCRvXZ0hqi0cp56UVIXTbOLC38fIyefd+/vM3yjh0VEhqJ8Km12cxeJMh0nd5QZNQ+Ey1WSOHFbHZNpYUKckMctF4I2T/R51JCSAv2zxGrG626pS1jDcL7iBFDhXV+2po5nFLDfH4Bwtx3ipayHctmYZSE+wglIcVQoWFvQIRzc01qkVAKM6anZ9S1m1U9YijwyXrRshXTIbziVD0gqW6/rB1cNVElhDvnhfe+3SIFHrn7MOb2DVYwMrtPCh1fKJZWka0ZzRejjEIcSKMHf3gnz4QAI/LFkqcNZ2ynY1bYic8+lSQ26vD0JCeAzxFHRXou0bZYLXX4hyh3j8gDJlpZSYWpc9L6muRj7Uz4bvusa1/amZPAbUnMEjf41aMGlZiolMjOMjJPDdPUbb1KhzJ9+iQbkFFqTJ8F9a0wp0g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A596A7776BD31C48955463DB79825727@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 421c539e-9aba-4f97-431d-08d84c60f91a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2020 21:17:45.1325
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XRq3dC2TIsH9vD9KXWXfz+US6H4hJVNkWusJlLMpUmpsRYBF+jYFE89QinJ0PjLnqjLZYhxSUclq+V28nj/BHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3336
+ <9e28664e90438384be654a39b23c6d517959c15a.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9728 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008290183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9728 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008290182
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA4LTI5IGF0IDEzOjE2IC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-SWYgYSB3cml0ZSBkZWxlZ2F0aW9uIGlzbid0IGF2YWlsYWJsZSwgdGhlIExpbnV4IE5GUyBjbGll
-bnQgdXNlcw0KPiBhIHplcm8tc3RhdGVpZCB3aGVuIHBlcmZvcm1pbmcgYSBTRVRBVFRSLg0KPiAN
-Cj4gTkZTdjQuMCBwcm92aWRlcyBubyBtZWNoYW5pc20gZm9yIGFuIE5GUyBzZXJ2ZXIgdG8gbWF0
-Y2ggc3VjaCBhDQo+IHJlcXVlc3QgdG8gYSBwYXJ0aWN1bGFyIGNsaWVudC4gSXQgcmVjYWxscyBh
-bGwgZGVsZWdhdGlvbnMgZm9yIHRoYXQNCj4gZmlsZSwgZXZlbiBkZWxlZ2F0aW9ucyBoZWxkIGJ5
-IHRoZSBjbGllbnQgaXNzdWluZyB0aGUgcmVxdWVzdC4gSWYNCj4gdGhhdCBjbGllbnQgaGFwcGVu
-cyB0byBob2xkIGEgcmVhZCBkZWxlZ2F0aW9uLCB0aGUgc2VydmVyIHdpbGwNCj4gcmVjYWxsIGl0
-IGltbWVkaWF0ZWx5LCByZXN1bHRpbmcgaW4gYW4gTkZTNEVSUl9ERUxBWS9DQl9SRUNBTEwvDQo+
-IERFTEVHUkVUVVJOIHNlcXVlbmNlLg0KPiANCj4gT3B0aW1pemUgb3V0IHRoaXMgcGlwZWxpbmUg
-YnViYmxlIGJ5IGhhdmluZyB0aGUgY2xpZW50IHJldHVybiBhbnkNCj4gZGVsZWdhdGlvbnMgaXQg
-bWF5IGhvbGQgb24gYSBmaWxlIGJlZm9yZSBpdCBpc3N1ZXMgYQ0KPiBTRVRBVFRSKHplcm8tc3Rh
-dGVpZCkgb24gdGhhdCBmaWxlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2h1Y2sgTGV2ZXIgPGNo
-dWNrLmxldmVyQG9yYWNsZS5jb20+DQo+IC0tLQ0KPiAgZnMvbmZzL25mczRwcm9jLmMgfCAgICAy
-ICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+IA0KPiBDaGFuZ2VzIHNp
-bmNlIHYxOg0KPiAtIFJldHVybiB0aGUgZGVsZWdhdGlvbiBvbmx5IGZvciBORlN2NC4wIG1vdW50
-cw0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9j
-LmMNCj4gaW5kZXggZGJkMDE1NDgzMzViLi5iY2E3MjQ1ZjFlNzggMTAwNjQ0DQo+IC0tLSBhL2Zz
-L25mcy9uZnM0cHJvYy5jDQo+ICsrKyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IEBAIC0zMzE0LDYg
-KzMzMTQsOCBAQCBzdGF0aWMgaW50IF9uZnM0X2RvX3NldGF0dHIoc3RydWN0IGlub2RlDQo+ICpp
-bm9kZSwNCj4gIAkJCWdvdG8gemVyb19zdGF0ZWlkOw0KPiAgCX0gZWxzZSB7DQo+ICB6ZXJvX3N0
-YXRlaWQ6DQo+ICsJCWlmIChzZXJ2ZXItPm5mc19jbGllbnQtPmNsX21pbm9ydmVyc2lvbiA9PSAw
-KQ0KPiArCQkJbmZzNF9pbm9kZV9yZXR1cm5fZGVsZWdhdGlvbihpbm9kZSk7DQoNClNvLCB0aGUg
-aW50ZW50aW9uIGlzIHRoYXQgbmZzNF9pbm9kZV9tYWtlX3dyaXRlYWJsZSgpIHRha2VzIGNhcmUg
-b2YNCnRoaXMsIGFuZCBpbiBwcmluY2lwbGUgaXQgaXMgZG9uZSBpbiB0aGUgY2FzZXMgdGhhdCBt
-YXR0ZXIgaW4NCm5mczRfcHJvY19zZXRhdHRyKCkuDQoNCkkgYWdyZWUgdGhhdCB0aGUgemVyb19z
-dGF0ZWlkIGNhc2UgaXMgbm90IGN1cnJlbnRseSBiZWluZyB0YWtlbiBjYXJlDQpvZiwgYnV0IHRo
-YXQgb25seSBtYXR0ZXJzIGZvciB0aGUgY2FzZSBvZiB0cnVuY2F0ZS4gU28gcGVyaGFwcyB3ZSBj
-YW4NCmp1c3QgYWRkIGEgc2luZ2xlIGNhbGwgdG8gbmZzNF9pbm9kZV9tYWtlX3dyaXRlYWJsZSgp
-IGFib3ZlIHRoZQ0KemVyb19zdGF0ZWlkIGxhYmVsIGluc3RlYWQgb2YgYWRkaW5nIHJlZHVuZGFu
-Y3kgZm9yIGFsbCB0aGUgb3RoZXINCmNhc2VzPw0KDQo+ICAJCW5mczRfc3RhdGVpZF9jb3B5KCZh
-cmctPnN0YXRlaWQsICZ6ZXJvX3N0YXRlaWQpOw0KPiAgCX0NCj4gIAlpZiAoZGVsZWdhdGlvbl9j
-cmVkKQ0KPiANCj4gDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWlu
-dGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoN
-Cg==
+
+
+> On Aug 29, 2020, at 5:17 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Sat, 2020-08-29 at 13:16 -0400, Chuck Lever wrote:
+>> If a write delegation isn't available, the Linux NFS client uses
+>> a zero-stateid when performing a SETATTR.
+>>=20
+>> NFSv4.0 provides no mechanism for an NFS server to match such a
+>> request to a particular client. It recalls all delegations for that
+>> file, even delegations held by the client issuing the request. If
+>> that client happens to hold a read delegation, the server will
+>> recall it immediately, resulting in an NFS4ERR_DELAY/CB_RECALL/
+>> DELEGRETURN sequence.
+>>=20
+>> Optimize out this pipeline bubble by having the client return any
+>> delegations it may hold on a file before it issues a
+>> SETATTR(zero-stateid) on that file.
+>>=20
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>> fs/nfs/nfs4proc.c |    2 ++
+>> 1 file changed, 2 insertions(+)
+>>=20
+>> Changes since v1:
+>> - Return the delegation only for NFSv4.0 mounts
+>>=20
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index dbd01548335b..bca7245f1e78 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -3314,6 +3314,8 @@ static int _nfs4_do_setattr(struct inode
+>> *inode,
+>> 			goto zero_stateid;
+>> 	} else {
+>> zero_stateid:
+>> +		if (server->nfs_client->cl_minorversion =3D=3D 0)
+>> +			nfs4_inode_return_delegation(inode);
+>=20
+> So, the intention is that nfs4_inode_make_writeable() takes care of
+> this, and in principle it is done in the cases that matter in
+> nfs4_proc_setattr().
+
+Thanks for pointing out the nfs4_inode_make_writeable call site!
+
+ 4219         /* Return any delegations if we're going to change ACLs */
+ 4220         if ((sattr->ia_valid & (ATTR_MODE|ATTR_UID|ATTR_GID)) !=3D =
+0)
+ 4221                 nfs4_inode_make_writeable(inode);
+
+
+> I agree that the zero_stateid case is not currently being taken care
+> of, but that only matters for the case of truncate. So perhaps we can
+> just add a single call to nfs4_inode_make_writeable() above the
+> zero_stateid label instead of adding redundancy for all the other
+> cases?
+
+I'm willing to consider other solutions, but something else is going
+on here. I've added some instrumentation to nfsd_setattr. It shows
+that the iattr mask does not have the SIZE bit set:
+
+nfsd_compound:        xid=3D0x8ffc7b48 opcnt=3D3
+nfsd_compound_status: op=3D1/3 OP_PUTFH status=3D0
+
+nfsd_setattr:         xid=3D0x8ffc7b48 fh_hash=3D0x2aed0c4d =
+valid=3DATIME|MTIME|ATIME_SET|MTIME_SET
+
+time_out_leases:      fl=3D0xffff8887006c7ea0 dev=3D0x0:0x23 =
+ino=3D0x16d825 fl_blocker=3D(nil) fl_owner=3D0xffff88872928e000 =
+fl_flags=3DFL_DELEG fl_type=3DF_RDLCK fl_break_time=3D0 fl_downgrade
+_time=3D0
+leases_conflict:      conflict 1: lease=3D0xffff8887006c7ea0 =
+fl_flags=3DFL_DELEG fl_type=3DF_RDLCK; breaker=3D0xffff8887006c6e38 =
+fl_flags=3DFL_DELEG fl_type=3DF_WRLCK
+leases_conflict:      conflict 1: lease=3D0xffff8887006c7ea0 =
+fl_flags=3DFL_DELEG fl_type=3DF_RDLCK; breaker=3D0xffff8887006c6e38 =
+fl_flags=3DFL_DELEG fl_type=3DF_WRLCK
+nfsd_deleg_break:     client 5f4a926c:cd5044d5 stateid 00063dd9:00000001
+break_lease_noblock:  fl=3D0xffff8887006c6e38 dev=3D0x0:0x23 =
+ino=3D0x16d825 fl_blocker=3D(nil) fl_owner=3D(nil) fl_flags=3DFL_DELEG =
+fl_type=3DF_WRLCK fl_break_time=3D0 fl_downgrade_time=3D0
+nfsd_cb_work:         addr=3D192.168.2.51:35037 client 5f4a926c:cd5044d5 =
+procedure=3DCB_RECALL
+nfsd_compound_status: op=3D2/3 OP_SETATTR status=3D10008
+
+
+
+--
+Chuck Lever
+
+
+
