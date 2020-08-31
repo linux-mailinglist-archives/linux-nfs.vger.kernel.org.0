@@ -2,94 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F59E257A8B
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 15:33:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0BD8257B8E
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 16:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgHaNde (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Aug 2020 09:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgHaN1A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 09:27:00 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20C6C0619D3
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 06:26:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g6so6636927ljn.11
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 06:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
-        b=GvS5ONqONS+SkRITeLOYK+nEKqeftr2e4zlw8iOljUdVaT4ei8mXK/eMe5gdebbxul
-         qejaiESAwrQo/TwRSbsV2RgWo1cR2hwlUx3zHZP6xDZHfKXln6WrMjydy1j5UDKStApO
-         83k6OMYB/O4HA/D4ksOUSzU9ZpUpEqmaButNQtqR6C29H3+mAHSKCbPlI067sUdB20EE
-         ixBTW9S1A2kyuIbzfdQN/JSL5cc/RZ+/MNHv7Yis6pX8HuuJNUwic97zwHx5MU4x4PUn
-         9VwFvJUStfi4hRDyGGDy0ijlpU3bNrs4tLAIT0WFfsT49jK8zJO72eI6R18XAB60K+Uk
-         aflg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
-        b=nwy7TUkqS1xHOYPPY6alkGfqKaxH8Cea3nU0Q0WCsPCdnK6QpZsyQLhax+5wodmLOE
-         tBeH+PnVUqefUT2/2xLEvMV4aT+yRj0QrukLWfSwvg1ceBdKQeXz7PB0lQmZbKUuWO1b
-         n2iG3cR9t9gLfoOWkCO0QZ41lGIf7MrUYRfOE9w+wa4+Jmbx4fwW4Duhw1UyqWB52IQZ
-         sc1JdVUlSsj8P/fVdmmfvDcfhGLJPwoYEmuwiP4hCVpmLcKJh8eFpFXrfJfEtj5CQYAP
-         9r6Uu9WESSMAB2Nev07aGXDzmcdYIBghCNJB7OXqa+8TWqcHLAbkrKMx+KorYYi/otU0
-         FsLQ==
-X-Gm-Message-State: AOAM530zLWkCa5D8cId2xxhsri9qsA5y57/LVDpxbX/ZZqHuVYhOOEu3
-        HjhBUW6rdGhJ2gXQnTbXAqUTVpRwxE0AHsIg9cc=
-X-Google-Smtp-Source: ABdhPJx5h73UdWdmqN0ZXklbmHxhGiANR3jS4fz3EetfufGWkyufJh3oSK0WTBZL+72KPBBqNF1EE+YcTj5isQyt2i4=
-X-Received: by 2002:a2e:5316:: with SMTP id h22mr714236ljb.167.1598880387154;
- Mon, 31 Aug 2020 06:26:27 -0700 (PDT)
+        id S1728149AbgHaO7x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 10:59:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37673 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgHaO7s (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 10:59:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598885987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SGKkBRx2X2c4kqxAWKe1E8dQFFxz1tEDVcsZgrSOY0w=;
+        b=hdmh4eJnAS7T5btWyDGRx7oS3kyHiad6r+bCmITRyWVrBnsLOhFALQw9t1NmOJBGENNXJ1
+        IcA3URZKvwVJyBLjpCgO5tdu0PMJPKnZjCzjZDmJYgy6Z4LmkldZZLEIcrl/i3KFyln7xa
+        lbOeWxaWgi1IiC6NhTJ5XzUnjv03u1k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-545-Vh5kN6AHPyCm3SZLY9mpwQ-1; Mon, 31 Aug 2020 10:59:44 -0400
+X-MC-Unique: Vh5kN6AHPyCm3SZLY9mpwQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F9DD801AAC;
+        Mon, 31 Aug 2020 14:59:43 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-190.phx2.redhat.com [10.3.113.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38B707A5E0;
+        Mon, 31 Aug 2020 14:59:43 +0000 (UTC)
+Subject: Re: [PATCH nfs-utils] Convert remaining python scripts to python3
+To:     NeilBrown <neil@brown.name>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <87zh6iqtm9.fsf@notabene.neil.brown.name>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <f028aa18-6c5a-4ff0-3714-14a396cf20c4@RedHat.com>
+Date:   Mon, 31 Aug 2020 10:59:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Reply-To: marie_avis12@yahoo.com
-Received: by 2002:a2e:9817:0:0:0:0:0 with HTTP; Mon, 31 Aug 2020 06:26:26
- -0700 (PDT)
-From:   Miss Maris Avis <marie.avis11@gmail.com>
-Date:   Mon, 31 Aug 2020 13:26:26 +0000
-X-Google-Sender-Auth: aulnVZG-1gSOcZsrnz7-vOB6QCo
-Message-ID: <CADTVshPC=1cJsw0xvUiUZDDBg3VVdBcHJ+pk-zuvR4tycntngg@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87zh6iqtm9.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-My Dear,
 
-My name is Miss Marie Avis the only daughter of Mr. Gabriel Avis, my
-Father was dealing in Cocoa and Timber in this country before his
-death,  It is my pleasure to contact you for a business venture which
-I intend to establish in your country. Though I have not met with you
-before but I believe one has to risk confiding before you can succeed
-sometimes in life.
 
-I can confide in you for my brighter future since you are a human
-being like me. There is this huge amount of Ten Million five hundred
-thousand United States dollars. ($10.500.000.00) which my late Father
-kept for me in a suspense account with one of the bank here in Abidjan
-Cote d'Ivoire before he was assassinated by unknown persons, Now I
-have decided to invest these money in your country or anywhere safe
-enough for me.
+On 8/25/20 5:54 PM, NeilBrown wrote:
+> 
+> nfs-utils contains 4 python scripts, two request
+>  /usr/bin/python3
+> in their shebang line, two request
+>  /usr/bin/python
+> 
+> Those latter two run perfectly well with python3 and as python2 is on the
+> way out, change them so they requrest /usr/bin/python3.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+Committed... (tag: nfs-utils-2-5-2-rc4)
 
-I want you to help me claim this fund from the bank and have it
-transfer into your personal account in your country for investment
-purposes in your country in these areas:
+steved.
+> ---
+>  tools/mountstats/mountstats.py | 2 +-
+>  tools/nfs-iostat/nfs-iostat.py | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
+> index 1054f698c8e3..00adc96bafeb 100755
+> --- a/tools/mountstats/mountstats.py
+> +++ b/tools/mountstats/mountstats.py
+> @@ -1,4 +1,4 @@
+> -#!/usr/bin/python
+> +#!/usr/bin/python3
+>  # -*- python-mode -*-
+>  """Parse /proc/self/mountstats and display it in human readable form
+>  """
+> diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
+> index 5556f692b7ee..6e59837ee673 100755
+> --- a/tools/nfs-iostat/nfs-iostat.py
+> +++ b/tools/nfs-iostat/nfs-iostat.py
+> @@ -1,4 +1,4 @@
+> -#!/usr/bin/python
+> +#!/usr/bin/python3
+>  # -*- python-mode -*-
+>  """Emulate iostat for NFS mount points using /proc/self/mountstats
+>  """
+> 
 
-1). Telecommunication
-2). The transport Industry
-3). Five Star Hotel
-4). Tourism
-5). Real Estate
-
-If you can be of assistance to me I will be pleased to offer you 20%
-of the total fund.
-
-I await your soonest response.
-
-Respectfully yours,
-Miss Marie Evis
-Tel: +225597438528
