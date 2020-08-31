@@ -2,98 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA134257C45
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 17:27:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA87257E51
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 18:11:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgHaP1w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Aug 2020 11:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgHaP1v (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:27:51 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728441AbgHaQLu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 12:11:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41210 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726249AbgHaQLu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 12:11:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598890309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IKXY7bOK05OUUK3ZunjuUUl3v/d+LwupA+h7FhhkHss=;
+        b=X7myR5T0FmZyoonOQUyoVx9V2NrZEvK/CiwnsPKJH04+3lMZkC2dwVy0S8GQimj20YwtJv
+        QLWr5x2vCbQgRBiTOMB0EsdG+rmDLWcBEhrtDUTAm58fvM3v4OhMR7H4GmUN1bINIx3k1W
+        LNuHf0kKAU2jAH7cNEIlGi+bDfluFfY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-QQzMp_WaMz-r_BDr7aht6g-1; Mon, 31 Aug 2020 12:11:38 -0400
+X-MC-Unique: QQzMp_WaMz-r_BDr7aht6g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 128BB2083E;
-        Mon, 31 Aug 2020 15:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887670;
-        bh=jT9yB63HJHApfihOIb1xEYGO+FSjOKTpNRpjd3xo4pw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GiDRqZwFHz8aWKhaEOHWvljJ3SIMOvASR0Xo/1jiLslulQm3q/SDofqpdF9H+t+Fl
-         HZU5vKzFMeNP4ZToUobaoLQo1/5BfqwOXoCbuacyxvAoksjz+aOkFA7V+dOmJJbBi8
-         fz0TaciA7YC69ehMJYgLiQQmWNflQe+qRTiJeBN8=
-Received: by mail-ot1-f46.google.com with SMTP id k20so5674382otr.1;
-        Mon, 31 Aug 2020 08:27:50 -0700 (PDT)
-X-Gm-Message-State: AOAM531MJiEKVnA4nfVNjWNpM2fAHfes3itKXju/UqYSv7URW3OE7fIj
-        6pJnCVJkroD9hKlnmjtHJYtn1EwD7cCzth6l1do=
-X-Google-Smtp-Source: ABdhPJzSZCnHUjLvLj3F0SS3tRSyrcLvGbgnuoLruxdYIUZTR/7Zj5gXWQcbit96CV6Taz8PPrl3+Uae/oE6q3PCOb8=
-X-Received: by 2002:a9d:69c9:: with SMTP id v9mr1238535oto.90.1598887669390;
- Mon, 31 Aug 2020 08:27:49 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51CB01009444
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 16:11:37 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-190.phx2.redhat.com [10.3.113.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1275B1A885
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 16:11:36 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] rpc.gssd: munmap_chunk(): invalid pointer
+Date:   Mon, 31 Aug 2020 12:11:35 -0400
+Message-Id: <20200831161135.146867-1-steved@redhat.com>
 MIME-Version: 1.0
-References: <20200827080252.26396-1-dinghao.liu@zju.edu.cn> <20200829153648.GB20499@fieldses.org>
-In-Reply-To: <20200829153648.GB20499@fieldses.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 31 Aug 2020 18:27:38 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXFUhqz8HPcssWXKCZ92c-pZvgYKk4aX6xmq2qocmiTKsA@mail.gmail.com>
-Message-ID: <CAMj1kXFUhqz8HPcssWXKCZ92c-pZvgYKk4aX6xmq2qocmiTKsA@mail.gmail.com>
-Subject: Re: [PATCH] gss_krb5: Fix memleak in krb5_make_rc4_seq_num
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
-        "open list:BPF JIT for MIPS (32-BIT AND 64-BIT)" 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 29 Aug 2020 at 18:43, J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> This code is rarely if ever used, and there are pending patches to
-> remove it completely, so I don't think it's worth trying to fix a rare
-> memory leak at this point.
->
-> --b.
->
+Removed an errant call to gss_release_oid()
+to try and deal with memory leaks
 
-FYI I just submitted v3 of my series removing this code to the
-linux-crypto list, and so hopefully it will disappear in v5.10
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ utils/gssd/gssd_proc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
+index 2a8b618..e830f49 100644
+--- a/utils/gssd/gssd_proc.c
++++ b/utils/gssd/gssd_proc.c
+@@ -687,7 +687,6 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+ 	} else {
+ 		get_hostbased_client_buffer(gacceptor, mech, &acceptor);
+ 		gss_release_name(&min_stat, &gacceptor);
+-		gss_release_oid(&min_stat, &mech);
+ 	}
+ 
+ 	/*
+-- 
+2.26.2
 
-> On Thu, Aug 27, 2020 at 04:02:50PM +0800, Dinghao Liu wrote:
-> > When kmalloc() fails, cipher should be freed
-> > just like when krb5_rc4_setup_seq_key() fails.
-> >
-> > Fixes: e7afe6c1d486b ("sunrpc: fix 4 more call sites that were using stack memory with a scatterlist")
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > ---
-> >  net/sunrpc/auth_gss/gss_krb5_seqnum.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/sunrpc/auth_gss/gss_krb5_seqnum.c b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> > index 507105127095..88ca58d11082 100644
-> > --- a/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> > +++ b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> > @@ -53,8 +53,10 @@ krb5_make_rc4_seq_num(struct krb5_ctx *kctx, int direction, s32 seqnum,
-> >               return PTR_ERR(cipher);
-> >
-> >       plain = kmalloc(8, GFP_NOFS);
-> > -     if (!plain)
-> > -             return -ENOMEM;
-> > +     if (!plain) {
-> > +             code = -ENOMEM;
-> > +             goto out;
-> > +     }
-> >
-> >       plain[0] = (unsigned char) ((seqnum >> 24) & 0xff);
-> >       plain[1] = (unsigned char) ((seqnum >> 16) & 0xff);
-> > --
-> > 2.17.1
