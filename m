@@ -2,134 +2,219 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 113CD257F40
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 19:06:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CFE258090
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 20:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgHaRGt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Aug 2020 13:06:49 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28188 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726791AbgHaRGs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 13:06:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598893606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=teAZumf1O1ucXI5DEYqItbPuWQNSCGlaPv5fCn8z+rk=;
-        b=XVsBst36/B82dnKJoUOPa09dJyVUTi2ZC1Ob9zpUZKbl0ML+otZlUGVPrHQzziY/E9fq69
-        DrEsz6fLcb63Ntj0wlDhVewpQeBuJG1i75H2pUwxLIn7H6NUF5Cj+VfFM+PJUEZWcZmpUA
-        3YJcnSu1mVWNaq3imQYFYPkv57gTbEA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-Viyy7sIOPY2UEMN0d-BQAg-1; Mon, 31 Aug 2020 13:06:44 -0400
-X-MC-Unique: Viyy7sIOPY2UEMN0d-BQAg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 718C21007460
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 17:06:43 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.74.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D47D478B20;
-        Mon, 31 Aug 2020 17:06:41 +0000 (UTC)
-From:   Kenneth D'souza <kdsouza@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com, kdsouza@redhat.com
-Subject: [PATCH] nfsiostat/mountstats: Drop autofs entries before calling compare_iostats()
-Date:   Mon, 31 Aug 2020 22:36:39 +0530
-Message-Id: <20200831170639.3962-1-kdsouza@redhat.com>
+        id S1729404AbgHaSPj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 14:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgHaSPj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 14:15:39 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EDCC061573
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:15:37 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id nw23so8345861ejb.4
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8x5rjn6sPo70/9EsPHc1p/0dKHnuRjXiFa72vNPJqpE=;
+        b=rQ0PDASQYz+gqoywf9d5gfUhtfjWGD76tlHsadj7mhSiiX/FVJUBUdLeZsFYwr9qd/
+         dq5U8U9d/WfAxomTwM27hCuQsJeHFrABWimV6ryCBUTX/pYZbDGhy/bx0nQMaU5go3+p
+         wzXH6jLDKRf8mbcGtuT0Bl1k62KeD6wdK76hsWO0QASYkVdbHv6m8g4MObbV8L+N+55F
+         wLjR5DQ4SjcoaoKNiUIzwVqz87c1nMCc+TNdvD0hvPsWX8343tvv7LVRLy4DQdXjpd7H
+         NzvGg+jux+eX12UAxHcbscYNXu0nHjsWOHKKwLziSNMY/4bzxQ4EBWUHRTkOdr4bI6Fk
+         HOYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8x5rjn6sPo70/9EsPHc1p/0dKHnuRjXiFa72vNPJqpE=;
+        b=NLw1vCEzW+GnIW+Rnfemciwdc/acJXNqTtlfmu4xM8uSKmNJWv0dZC1AbOsAmxn70h
+         pCcl3jJIZdmUlJEEvfPlTtpqbhi03LwqmnsAON2Xalq68jMxsxRaB4jdFySJcgj69nbu
+         96DLRaqka9Y21ba8wtPOayMxOXCdPNalOXg9RDPOVR72ANyOWlgkRLBLrfhLtVEmg/94
+         enzliLQMzDdaCX7f1vAldjf7ZztkC/yuv6kZUQCXlcXAXtwARjXUmQFaSIvLjwj9fuvZ
+         /pEGVdiLmIxOt+sULH1rL+mTknuPQfnoat5gK6Fc42MqPXSmX+lYJ13C74rilMeGKjHh
+         mO+w==
+X-Gm-Message-State: AOAM5336TuUGsmzwYHlImg25zfJHrDdsqgaPoTlXsOtctDqfROfdedbb
+        gjfWOkxE2NTflNfPqRH/X1DGe9jcai3CRCcjgxA=
+X-Google-Smtp-Source: ABdhPJx/Q4ZBnUvud0IPi5xmW6ELkSBufFcUe/VsFxAYnLK59S2rd9A9HswZNjxSwhdOpXhqIgWqYaL5NDMjaWAgWGk=
+X-Received: by 2002:a17:906:90d3:: with SMTP id v19mr2108676ejw.23.1598897735558;
+ Mon, 31 Aug 2020 11:15:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com>
+ <20200817165310.354092-5-Anna.Schumaker@Netapp.com> <20200828221859.GC33226@pick.fieldses.org>
+In-Reply-To: <20200828221859.GC33226@pick.fieldses.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Mon, 31 Aug 2020 14:15:19 -0400
+Message-ID: <CAFX2Jf=L26ZxEqR=Bttgdn6EHW8jo2J6fj9dqK3ARMWXOhnegA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] NFSD: Return both a hole and a data segment
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsiostat/mountstats can fail with below KeyError when old stat and new stat
-data go out of sync.
+On Fri, Aug 28, 2020 at 6:19 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> On Mon, Aug 17, 2020 at 12:53:09PM -0400, schumaker.anna@gmail.com wrote:
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >
+> > But only one of each right now. We'll expand on this in the next patch.
+> >
+> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > ---
+> >  fs/nfsd/nfs4xdr.c | 51 ++++++++++++++++++++++++++++++++++-------------
+> >  1 file changed, 37 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index 2fa39217c256..3f4860103b25 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -4373,7 +4373,7 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >  static __be32
+> >  nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >                           struct nfsd4_read *read,
+> > -                         unsigned long maxcount,  u32 *eof)
+> > +                         unsigned long *maxcount, u32 *eof)
+> >  {
+> >       struct xdr_stream *xdr = &resp->xdr;
+> >       struct file *file = read->rd_nf->nf_file;
+> > @@ -4384,19 +4384,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >       __be64 tmp64;
+> >
+> >       if (hole_pos > read->rd_offset)
+> > -             maxcount = min_t(unsigned long, maxcount, hole_pos - read->rd_offset);
+> > +             *maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
+> >
+> >       /* Content type, offset, byte count */
+> >       p = xdr_reserve_space(xdr, 4 + 8 + 4);
+> >       if (!p)
+> >               return nfserr_resource;
+> >
+> > -     read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
+> > +     read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxcount);
+> >       if (read->rd_vlen < 0)
+> >               return nfserr_resource;
+> >
+> >       nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+> > -                         resp->rqstp->rq_vec, read->rd_vlen, &maxcount, eof);
+> > +                         resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
+> >       if (nfserr)
+> >               return nfserr;
+> >
+> > @@ -4404,7 +4404,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
+> >       tmp64 = cpu_to_be64(read->rd_offset);
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
+> > -     tmp = htonl(maxcount);
+> > +     tmp = htonl(*maxcount);
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
+> >       return nfs_ok;
+> >  }
+> > @@ -4412,11 +4412,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >  static __be32
+> >  nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+> >                           struct nfsd4_read *read,
+> > -                         unsigned long maxcount, u32 *eof)
+> > +                         unsigned long *maxcount, u32 *eof)
+> >  {
+> >       struct file *file = read->rd_nf->nf_file;
+> > +     loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+>
+> Everywhere I see fs_llseek()s and i_size_read()s, I start wondering
+> where there might be races.  E.g.:
+>
+> > +     unsigned long count;
+> >       __be32 *p;
+> >
+> > +     if (data_pos == -ENXIO)
+> > +             data_pos = i_size_read(file_inode(file));
+> > +     else if (data_pos <= read->rd_offset)
+> > +             return nfserr_resource;
+>
+> I think that means a concurrent truncate would cause us to fail the
+> entire read, when I suspect the right thing to do is to return a short
+> (but successful) read.
 
-$ mountstats iostat 1 3
-
-Traceback (most recent call last):
-  File "/usr/sbin/mountstats", line 1092, in <module>
-    res = main()
-  File "/usr/sbin/mountstats", line 1081, in main
-    return args.func(args)
-  File "/usr/sbin/mountstats", line 965, in iostat_command
-    print_iostat_summary(old_mountstats, mountstats, devices, sample_time)
-  File "/usr/sbin/mountstats", line 920, in print_iostat_summary
-    diff_stats = stats.compare_iostats(old_stats)
-  File "/usr/sbin/mountstats", line 528, in compare_iostats
-    if old_stats.__nfs_data['age'] > self.__nfs_data['age']:
-KeyError: 'age'
-
-Steps to Reproduce:
-
-1> Add autofs mounts in /etc/fstab controlled via systemd.
-
-nfs-server:/test1 /mnt1 nfs noauto,x-systemd.idle-timeout=2,x-systemd.automount 0 0
-nfs-server:/test2 /mnt2 nfs noauto,x-systemd.idle-timeout=2,x-systemd.automount 0 0
-nfs-server:/test3 /mnt3 nfs noauto,x-systemd.idle-timeout=2,x-systemd.automount 0 0
-
-2> Trigger the mounts via below command:
-
-$ while :; do date; ls -lR /mnt* 2>&1 >/dev/null; sleep 3; done
-
-3> On other terminal run nfsiostat or mountstats command:
-
-$ mountstats iostat 1 3
-$ nfsiostat 1 3
-
-Frequent mount and umount can cause autofs entries to be processed in compare_iostats.
-We need to filter the devices list and drop autofs entries to fix the issue.
-This way we pass only nfs mounts and not autofs entries.
-
-Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
----
- tools/mountstats/mountstats.py | 9 +++++----
- tools/nfs-iostat/nfs-iostat.py | 5 ++++-
- 2 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
-index 00adc96b..25e92a19 100755
---- a/tools/mountstats/mountstats.py
-+++ b/tools/mountstats/mountstats.py
-@@ -953,10 +953,11 @@ def print_iostat_summary(old, new, devices, time):
-         if not old or device not in old:
-             stats.display_iostats(time)
-         else:
--            old_stats = DeviceData()
--            old_stats.parse_stats(old[device])
--            diff_stats = stats.compare_iostats(old_stats)
--            diff_stats.display_iostats(time)
-+            if ("fstype autofs" not in str(old[device])) and ("fstype autofs" not in str(new[device])):
-+                old_stats = DeviceData()
-+                old_stats.parse_stats(old[device])
-+                diff_stats = stats.compare_iostats(old_stats)
-+                diff_stats.display_iostats(time)
- 
- def iostat_command(args):
-     """iostat-like command for NFS mount points
-diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
-index 4f5e8a66..1df74ba8 100755
---- a/tools/nfs-iostat/nfs-iostat.py
-+++ b/tools/nfs-iostat/nfs-iostat.py
-@@ -470,10 +470,13 @@ def parse_stats_file(filename):
- def print_iostat_summary(old, new, devices, time, options):
-     stats = {}
-     diff_stats = {}
-+    devicelist = []
-     if old:
-         # Trim device list to only include intersection of old and new data,
-         # this addresses umounts due to autofs mountpoints
--        devicelist = [x for x in old if x in devices]
-+        for device in devices:
-+            if "fstype autofs" not in str(old[device]):
-+                devicelist.append(device)
-     else:
-         devicelist = devices
- 
--- 
-2.21.3
-
+Okay. I think I can do that in nfsd4_encode_read_plus() by checking if
+there is an error and if we've encoded at least 1 segment.
+>
+> --b.
+>
+> > +     count = data_pos - read->rd_offset;
+> > +
+> >       /* Content type, offset, byte count */
+> >       p = xdr_reserve_space(&resp->xdr, 4 + 8 + 8);
+> >       if (!p)
+> > @@ -4424,9 +4432,10 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+> >
+> >       *p++ = htonl(NFS4_CONTENT_HOLE);
+> >        p   = xdr_encode_hyper(p, read->rd_offset);
+> > -      p   = xdr_encode_hyper(p, maxcount);
+> > +      p   = xdr_encode_hyper(p, count);
+> >
+> > -     *eof = (read->rd_offset + maxcount) >= i_size_read(file_inode(file));
+> > +     *eof = (read->rd_offset + count) >= i_size_read(file_inode(file));
+> > +     *maxcount = min_t(unsigned long, count, *maxcount);
+> >       return nfs_ok;
+> >  }
+> >
+> > @@ -4434,7 +4443,7 @@ static __be32
+> >  nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >                      struct nfsd4_read *read)
+> >  {
+> > -     unsigned long maxcount;
+> > +     unsigned long maxcount, count;
+> >       struct xdr_stream *xdr = &resp->xdr;
+> >       struct file *file;
+> >       int starting_len = xdr->buf->len;
+> > @@ -4457,6 +4466,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >       maxcount = min_t(unsigned long, maxcount,
+> >                        (xdr->buf->buflen - xdr->buf->len));
+> >       maxcount = min_t(unsigned long, maxcount, read->rd_length);
+> > +     count    = maxcount;
+> >
+> >       eof = read->rd_offset >= i_size_read(file_inode(file));
+> >       if (eof)
+> > @@ -4465,13 +4475,26 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >       pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+> >       if (pos == -ENXIO)
+> >               pos = i_size_read(file_inode(file));
+> > +     else if (pos < 0)
+> > +             pos = read->rd_offset;
+> >
+> > -     if (pos > read->rd_offset) {
+> > -             maxcount = pos - read->rd_offset;
+> > -             nfserr = nfsd4_encode_read_plus_hole(resp, read, maxcount, &eof);
+> > +     if (pos == read->rd_offset) {
+> > +             maxcount = count;
+> > +             nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof);
+> > +             if (nfserr)
+> > +                     goto out;
+> > +             count -= maxcount;
+> > +             read->rd_offset += maxcount;
+> >               segments++;
+> > -     } else {
+> > -             nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
+> > +     }
+> > +
+> > +     if (count > 0 && !eof) {
+> > +             maxcount = count;
+> > +             nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
+> > +             if (nfserr)
+> > +                     goto out;
+> > +             count -= maxcount;
+> > +             read->rd_offset += maxcount;
+> >               segments++;
+> >       }
+> >
+> > --
+> > 2.28.0
+> >
+>
