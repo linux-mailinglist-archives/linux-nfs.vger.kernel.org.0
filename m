@@ -2,116 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47AE6256AAE
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Aug 2020 00:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F59E257A8B
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 15:33:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgH2W6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 29 Aug 2020 18:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
+        id S1727855AbgHaNde (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 09:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgH2W6I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 29 Aug 2020 18:58:08 -0400
-X-Greylist: delayed 336 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 29 Aug 2020 15:58:08 PDT
-Received: from chicago.messinet.com (chicago.messinet.com [IPv6:2603:300a:134:50e0::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A16C061573
-        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 15:58:08 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by chicago.messinet.com (Postfix) with ESMTP id B535CD2567
-        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 17:52:26 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at messinet.com
-Received: from chicago.messinet.com ([127.0.0.1])
-        by localhost (chicago.messinet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id VxEZqmssK2or for <linux-nfs@vger.kernel.org>;
-        Sat, 29 Aug 2020 17:52:25 -0500 (CDT)
-Received: from linux-ws1.messinet.com (linux-ws1.messinet.com [IPv6:2603:300a:134:50e0:48c7:47e6:1bca:4abe])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by chicago.messinet.com (Postfix) with ESMTPSA id 10897D2566
-        for <linux-nfs@vger.kernel.org>; Sat, 29 Aug 2020 17:52:25 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 chicago.messinet.com 10897D2566
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=messinet.com;
-        s=20170806; t=1598741545;
-        bh=V/iVKlJf19i4pTUgBmwLSWun9IiOmu3IVwmI92mfdNI=;
-        h=From:To:Subject:Date:From;
-        b=xRVNWAscMesxn32W6m5RUIi2Gvg4g+WFEv5Jdkb0CynXWfJCEixC1vGMPCjuB+OeT
-         /1R0534efAgf4T3PO9pZkz+vvhc2df07+eeQoKRJ3REEbeyHFS9eLzfeaspqLvyYOH
-         4el1q27BN2C3mmaFLN5/ugsDo2Ahgm+xcDev+3oAZ3enMPbeL84ezzARccmCODQkw4
-         XqoBS71tLZmb7HI7S7///0YYDjp1lGTxx42PepfbjKM//cfPQYWPCsBiGB7fZqmQkC
-         WhCCNwJX8ZFT/sI3M9KJ8XqlvlGnZkSliGSSNhoLeybvRvvbuJe0mKlaQQKNEZy5/+
-         BgdXLE0otuMmA==
-From:   Anthony Joseph Messina <amessina@messinet.com>
-To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: NFS client cannot "see" files or directories in /home/<username>
-Date:   Sat, 29 Aug 2020 17:52:19 -0500
-Message-ID: <12603973.uLZWGnKmhe@linux-ws1.messinet.com>
+        with ESMTP id S1727822AbgHaN1A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 09:27:00 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20C6C0619D3
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 06:26:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g6so6636927ljn.11
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 06:26:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=GvS5ONqONS+SkRITeLOYK+nEKqeftr2e4zlw8iOljUdVaT4ei8mXK/eMe5gdebbxul
+         qejaiESAwrQo/TwRSbsV2RgWo1cR2hwlUx3zHZP6xDZHfKXln6WrMjydy1j5UDKStApO
+         83k6OMYB/O4HA/D4ksOUSzU9ZpUpEqmaButNQtqR6C29H3+mAHSKCbPlI067sUdB20EE
+         ixBTW9S1A2kyuIbzfdQN/JSL5cc/RZ+/MNHv7Yis6pX8HuuJNUwic97zwHx5MU4x4PUn
+         9VwFvJUStfi4hRDyGGDy0ijlpU3bNrs4tLAIT0WFfsT49jK8zJO72eI6R18XAB60K+Uk
+         aflg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=nwy7TUkqS1xHOYPPY6alkGfqKaxH8Cea3nU0Q0WCsPCdnK6QpZsyQLhax+5wodmLOE
+         tBeH+PnVUqefUT2/2xLEvMV4aT+yRj0QrukLWfSwvg1ceBdKQeXz7PB0lQmZbKUuWO1b
+         n2iG3cR9t9gLfoOWkCO0QZ41lGIf7MrUYRfOE9w+wa4+Jmbx4fwW4Duhw1UyqWB52IQZ
+         sc1JdVUlSsj8P/fVdmmfvDcfhGLJPwoYEmuwiP4hCVpmLcKJh8eFpFXrfJfEtj5CQYAP
+         9r6Uu9WESSMAB2Nev07aGXDzmcdYIBghCNJB7OXqa+8TWqcHLAbkrKMx+KorYYi/otU0
+         FsLQ==
+X-Gm-Message-State: AOAM530zLWkCa5D8cId2xxhsri9qsA5y57/LVDpxbX/ZZqHuVYhOOEu3
+        HjhBUW6rdGhJ2gXQnTbXAqUTVpRwxE0AHsIg9cc=
+X-Google-Smtp-Source: ABdhPJx5h73UdWdmqN0ZXklbmHxhGiANR3jS4fz3EetfufGWkyufJh3oSK0WTBZL+72KPBBqNF1EE+YcTj5isQyt2i4=
+X-Received: by 2002:a2e:5316:: with SMTP id h22mr714236ljb.167.1598880387154;
+ Mon, 31 Aug 2020 06:26:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2748348.e9J7NaK4W3"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Reply-To: marie_avis12@yahoo.com
+Received: by 2002:a2e:9817:0:0:0:0:0 with HTTP; Mon, 31 Aug 2020 06:26:26
+ -0700 (PDT)
+From:   Miss Maris Avis <marie.avis11@gmail.com>
+Date:   Mon, 31 Aug 2020 13:26:26 +0000
+X-Google-Sender-Auth: aulnVZG-1gSOcZsrnz7-vOB6QCo
+Message-ID: <CADTVshPC=1cJsw0xvUiUZDDBg3VVdBcHJ+pk-zuvR4tycntngg@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---nextPart2748348.e9J7NaK4W3
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+My Dear,
 
-I've reported this issue to Fedora:
-https://lists.fedoraproject.org/archives/list/users@lists.fedoraproject.org/
-thread/YECR5Q4LLTEQO3RNSXXKOCZUZF53UAST/
-https://bugzilla.redhat.com/show_bug.cgi?id=1873720
+My name is Miss Marie Avis the only daughter of Mr. Gabriel Avis, my
+Father was dealing in Cocoa and Timber in this country before his
+death,  It is my pleasure to contact you for a business venture which
+I intend to establish in your country. Though I have not met with you
+before but I believe one has to risk confiding before you can succeed
+sometimes in life.
 
-I've got an NFS client that mounts /home via NFSv4.2 with sec=krb5p.  Any 
-kernel since 5.7.17 through 5.8.4 is unable to "see" files or directories in 
-the mounted /home/<username> directory with the exception of the first "dot" 
-directory.
+I can confide in you for my brighter future since you are a human
+being like me. There is this huge amount of Ten Million five hundred
+thousand United States dollars. ($10.500.000.00) which my late Father
+kept for me in a suspense account with one of the bank here in Abidjan
+Cote d'Ivoire before he was assassinated by unknown persons, Now I
+have decided to invest these money in your country or anywhere safe
+enough for me.
 
-While I cannot see /home/<username>/subdirectory, if I manually cd into /home/
-<username>/subdirectory, I can list that subdirectory's contents as normal.
+I want you to help me claim this fund from the bank and have it
+transfer into your personal account in your country for investment
+purposes in your country in these areas:
 
-If I mv "/home/<username>/.dotdir" to "/home/<username>/.dotdir.old", I can no 
-longer see it, and I can see "/home/<username>/.dotnextdir".  
+1). Telecommunication
+2). The transport Industry
+3). Five Star Hotel
+4). Tourism
+5). Real Estate
 
-If I then mv "/home/<username>/.dotdir.old" back to "/home/
-<username>/.dotdir", I am not able to see it and can still only see "/home/
-<username>/.dotnextdir"
+If you can be of assistance to me I will be pleased to offer you 20%
+of the total fund.
 
-My last NFS client that can "see" /home/<username> directory contents (normal 
-operation) is kernel-5.7.15 (I was unable to test 5.7.16)
+I await your soonest response.
 
-NFS server upgrades from kernel-5.7.15 through kernel-5.8.4 didn't seem to 
-have any affect.
-
-I understand this list is for developers, but I'm wondering if any of the NFS 
-experts can point me in the right direction...  Thank you.
-
--- 
-Anthony - https://messinet.com
-F9B6 560E 68EA 037D 8C3D  D1C9 FF31 3BDB D9D8 99B6
-
---nextPart2748348.e9J7NaK4W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE+bZWDmjqA32MPdHJ/zE729nYmbYFAl9K3CMACgkQ/zE729nY
-mbadfQ/9G28S5VgDs/03oXTMSynQXNin0RlXZod44bqXCvre9g0O05hRlD+KomZQ
-96+2Mfiq9xTo+rTHjCjiid31UKIjRcns9tiPoI33CFB45gJR5ERE7NrenAz0v31j
-KpWK00xhtdiKjYXRt0ku+UN+xUGjabKUB2AnXUY3WlEVfGd2Zn3GesmN+Kp0wk7z
-aCVXKBZpwytuCam1Y7mqJTBHkwtvH7v7gC5f0QT7mpL1Fhigpx1cZcKBCQrA4uhA
-+cA+2A4FIaGfyNcxOohfmRueKLgfY77wXn7zXZHXSJQzMoIXaokD2TI+e9CSlDG4
-YpJ/mBxfeoTi3eIl8AN0KrTjV7GhQoEznchoOr2Iq/aAtE44hL+n70QLt7lCdgCT
-eS487JLpox8j1Ajq5Q75wEVw99NreElCSW0mbjjci6ws5uwiz5um6ahMLuwvEVYO
-pid6Wu2k5d9flvwYGOBidVIg1vAvnID8VG2hNje2i9MTVOkX0rFbQc8PrGNSsjrw
-aVCNIp8w6ZhvYnhaCEKfT33B/h8Mzg6Bh7Th5eY30CCpEweDZ8vZGZYmGaLRDR4S
-z7C2fTb1ZVmb7gtcpzpzYlw0bNgZZoOmdMwp8kBwB0L8g51fncvI4glBLIkfw5/E
-+KfiiT5YbnvD4FCUKgHjcQEJ57dVFGZylVEFnXjgc9tBWqKpSMo=
-=SXvf
------END PGP SIGNATURE-----
-
---nextPart2748348.e9J7NaK4W3--
-
-
-
+Respectfully yours,
+Miss Marie Evis
+Tel: +225597438528
