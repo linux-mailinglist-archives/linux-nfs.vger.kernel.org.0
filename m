@@ -2,56 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43327258095
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 20:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BE6258127
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 20:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgHaSQr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Aug 2020 14:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
+        id S1728235AbgHaSdv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 14:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgHaSQp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 14:16:45 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2DDC061573
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:16:44 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c8so2720887edv.5
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:16:44 -0700 (PDT)
+        with ESMTP id S1728748AbgHaSdt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 14:33:49 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DF4C061573
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:33:47 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id p9so4100541ejf.6
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 11:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pABY7iB+FljjWRJyfVBQFQXgsPzk1/2R7fsq2sYyxCE=;
-        b=YdHCSfT83d/KWClGnY/Bfy2PCowU6xJelDWJOX/9G3W7EtoTrO7RAA1jufDBtBRMnl
-         pUP/Aa86NO4kFN707D7n7BlTwC2zVebOjRAThNJ8wsMuzqHDnVVAXNABL+pC+92lY5CQ
-         RU79qVvpxbrdXW9/Oo/nAH9PSA7yneyqyYAbebX1f09NoNReAHYkfbqXyBCSZkdSabem
-         IBnMbqLNKhJwusBCVz4EChRrv2jqw/MyD13lnHNfzkzXvHFHDjayTqihEAoCmyTLN6hy
-         IoDVtax8xzp2h79/Lo/m51KCU/7D3HjW33+HlHHTZKxc65scU2Js/J1o86vrlVEOFvmR
-         5hng==
+        bh=+7qTLGRfk0xIjB2AWK51ZN/7aRKfqQDQWLHBftMAjvU=;
+        b=f19Ts0+VH1a8V5v4ny5yEfgL/PhG3PBvvV4WbZ59g8Zz15tOK1ZpTCIk5SUXNO+wEU
+         1DB1Rhi3JUde1AaU6Mo5hmnA+SxVaRBmOHssz3cl5A8JtZOcevW4sIT7VuFsHFxVdlpn
+         x2GS2seOk5wQ+nDIg5QQjIOi13iy4myTAfTF1/oVeU44sn8wx4H+Mm2wXc0uor8hlhtC
+         ORUOeOBRdjkmtXPFRsUnuxJrplsbZ7qEPVgleVg4tQAcBHL8Oc1MvFNVzwnYZutCiGKj
+         0G4XJwbxCTF7Ws94aAfb46eTFDSjyJe+yzHAzjtW3mrKhpkYL1d0Ii4g7p6+NVkpffYm
+         10VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pABY7iB+FljjWRJyfVBQFQXgsPzk1/2R7fsq2sYyxCE=;
-        b=sdid660tYcf7c31HlCvjb4+Hnbu5RZa9DzP9p17eHnkCONB7/o+sEGYPkyfHWAL9/Z
-         bhG/QZlYQVK+I9K/o6G83Wok2pT39y4K72LoZxQumbXowp8j/yjxzpMSziClprRBCm+w
-         KKnbRW+E+YCmzbkAF65buaYVWQoQxdn381KErGO+moryRGXwuXH+jNHF3+0+qyDhyOOA
-         zDrodLBrNXFtt/+0Nwf64U4hEWugbELdu3MFZbDrhZlR59rr3l3Hbmh2LzOqDuJZOv7y
-         Vc9TAjkzmNY2P+Q6c1AN3Y3Rt5TDxJVbs0I4c+V1dRMKrXzz/tbty35+8ZQaOPBBXxHE
-         od3w==
-X-Gm-Message-State: AOAM533pjORIIHBwYyvIqab0tvTnOJIcy4BA4RXDkQoYLGqo01DAPqfL
-        SWA4y8rafsQClQ7AT2tYbRm5jERMz1SChlmtANc=
-X-Google-Smtp-Source: ABdhPJz7Hx5rQFvYCyv/ia7YTnSRNOxTssJMCs4quOWnlTaihzLGrFNfHPy5LY7AjlVdPos5pwJL952+S4cmk0T8DUY=
-X-Received: by 2002:a50:fe0a:: with SMTP id f10mr2210293edt.264.1598897802719;
- Mon, 31 Aug 2020 11:16:42 -0700 (PDT)
+        bh=+7qTLGRfk0xIjB2AWK51ZN/7aRKfqQDQWLHBftMAjvU=;
+        b=Ys/zHzmXgxWEClEsMPsyL5xhEgoDZfWS6mpCQCKPhaIlkWb3gsSq/vgSe99WlvgsO5
+         du/xDVRjQSBmd14zaQc4ZNtQpqbxtsdLFuWpZypeA88xq2IJ3AQmcoek5rkgKoS+L2eR
+         RkURpG9y4AVlx3Z0pvZs95tSinBwCxEB5/fY+T9mukrAvq7DlFpNqcra4RrPr3lKaWeJ
+         m+wZ7qoVXAEttMAfzM2aimwfKmh1yJjNiOhA6DID9fUr3ky9zUkLWPunkpFUZo5Zt0xg
+         Q7Kf5g5+auGR5MRFyOnUQgts0COhuV3M0RHUL8B3Apcr15Xd2D4mSX9gHEwCanva9L6b
+         C8uQ==
+X-Gm-Message-State: AOAM530/n1PZtIHg7pGS5KDHuKbcHCQnxoH+CZ+pW0mJg4wE+Ku7H/r6
+        a025E24IU9ABjl+Gce9PJj8YmZDzjoLhGdi1wLuzz3vt
+X-Google-Smtp-Source: ABdhPJyE/TL4/OP6iahYU7fenVmrQDWZ81DuTWQL8xBP37PWg1phb4SpjEMPKcyWPE3T30qVilFMAzCCPkehvkT0sck=
+X-Received: by 2002:a17:906:255b:: with SMTP id j27mr2201577ejb.46.1598898825893;
+ Mon, 31 Aug 2020 11:33:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com>
- <20200817165310.354092-3-Anna.Schumaker@Netapp.com> <20200828212521.GA33226@pick.fieldses.org>
- <20200828215627.GB33226@pick.fieldses.org>
-In-Reply-To: <20200828215627.GB33226@pick.fieldses.org>
+References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com> <20200826215437.GD62682@pick.fieldses.org>
+In-Reply-To: <20200826215437.GD62682@pick.fieldses.org>
 From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Mon, 31 Aug 2020 14:16:26 -0400
-Message-ID: <CAFX2Jfn3LN9Zc-=4mAm1mQ3k8PN6C1yF4xqh6B-yyXCxFnp7hQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] NFSD: Add READ_PLUS data support
+Date:   Mon, 31 Aug 2020 14:33:30 -0400
+Message-ID: <CAFX2JfnEhgr4_CP4rJVsm37+Zo2uFs+zePAENtmPWx-Fmm-HfA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] NFSD: Add support for the v4.2 READ_PLUS operation
 To:     "J. Bruce Fields" <bfields@redhat.com>
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
@@ -61,189 +59,107 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 5:56 PM J. Bruce Fields <bfields@redhat.com> wrote:
+On Wed, Aug 26, 2020 at 5:54 PM J. Bruce Fields <bfields@redhat.com> wrote:
 >
-> On Fri, Aug 28, 2020 at 05:25:21PM -0400, J. Bruce Fields wrote:
-> > On Mon, Aug 17, 2020 at 12:53:07PM -0400, schumaker.anna@gmail.com wrote:
-> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > >
-> > > This patch adds READ_PLUS support for returning a single
-> > > NFS4_CONTENT_DATA segment to the client. This is basically the same as
-> > > the READ operation, only with the extra information about data segments.
-> > >
-> > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > ---
-> > >  fs/nfsd/nfs4proc.c | 17 ++++++++++
-> > >  fs/nfsd/nfs4xdr.c  | 83 ++++++++++++++++++++++++++++++++++++++++++++--
-> > >  2 files changed, 98 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > index a09c35f0f6f0..9630d33211f2 100644
-> > > --- a/fs/nfsd/nfs4proc.c
-> > > +++ b/fs/nfsd/nfs4proc.c
-> > > @@ -2523,6 +2523,16 @@ static inline u32 nfsd4_read_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
-> > >     return (op_encode_hdr_size + 2 + XDR_QUADLEN(rlen)) * sizeof(__be32);
-> > >  }
-> > >
-> > > +static inline u32 nfsd4_read_plus_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
-> > > +{
-> > > +   u32 maxcount = svc_max_payload(rqstp);
-> > > +   u32 rlen = min(op->u.read.rd_length, maxcount);
-> > > +   /* enough extra xdr space for encoding either a hole or data segment. */
-> > > +   u32 segments = 1 + 2 + 2;
-> > > +
-> > > +   return (op_encode_hdr_size + 2 + segments + XDR_QUADLEN(rlen)) * sizeof(__be32);
+> On Mon, Aug 17, 2020 at 12:53:05PM -0400, schumaker.anna@gmail.com wrote:
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > >
-> > I'm not sure I understand this calculation.
+> > These patches add server support for the READ_PLUS operation, which
+> > breaks read requests into several "data" and "hole" segments when
+> > replying to the client.
 > >
-> > In the final code, there's no fixed limit on the number of segments
-> > returned by a single READ_PLUS op, right?
+> > - Changes since v3:
+> >   - Combine first two patches related to xdr_reserve_space_vec()
+> >   - Remove unnecessary call to svc_encode_read_payload()
+> >
+> > Here are the results of some performance tests I ran on some lab
+> > machines.
 >
-> I think the worst-case overhead to represent a hole is around 50 bytes.
->
-> So as long as we don't encode any holes less than that, then we can just
-> use rlen as an upper bound.
->
-> We really don't want to bother encoding small holes.  I doubt
-> filesystems want to bother with them either.  Do they give us any
-> guarantees as to the minimum size of a hole?
+> What's the hardware setup (do you know network and disk bandwidth?).
 
-The minimum size seems to be PAGE_SIZE from everything I've seen.
+I used iperf to benchmark the network, and it said it transferred 1.10
+GBytes with a bandwidth of 941 Mbits/sec
+
+I ran hdparm -tT to benchmark reads on the disk and it said this:
+Timing cached reads:   13394 MB in  2.00 seconds = 6713.72 MB/sec
+Timing buffered disk reads: 362 MB in 3.00 seconds = 120.60 MB/sec
+
+>
+> > I tested by reading various 2G files from a few different underlying
+> > filesystems and across several NFS versions. I used the `vmtouch` utility
+> > to make sure files were only cached when we wanted them to be. In addition
+> > to 100% data and 100% hole cases, I also tested with files that alternate
+> > between data and hole segments. These files have either 4K, 8K, 16K, or 32K
+> > segment sizes and start with either data or hole segments. So the file
+> > mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
+> > has 32K segments beginning with a hole. The units are in seconds, with the
+> > first number for each NFS version being the uncached read time and the second
+> > number is for when the file is cached on the server.
+>
+> The only numbers that look really strange are in the btrfs uncached
+> case, in the data-only case and the mixed case that start with a hole.
+> Do we have any idea what's up there?
+
+I'm not really sure. BTRFS does some work to make sure the page cache
+is synced up with their internal extent representation as part of
+llseek, so my guess is something related to that (But it's been a
+while since I looked into that code, so I'm not sure if that's still
+how it works)
+
+Anna
 
 >
 > --b.
 >
-> >
-> > --b.
-> >
-> > > +}
-> > > +
-> > >  static inline u32 nfsd4_readdir_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
-> > >  {
-> > >     u32 maxcount = 0, rlen = 0;
-> > > @@ -3059,6 +3069,13 @@ static const struct nfsd4_operation nfsd4_ops[] = {
-> > >             .op_name = "OP_COPY",
-> > >             .op_rsize_bop = nfsd4_copy_rsize,
-> > >     },
-> > > +   [OP_READ_PLUS] = {
-> > > +           .op_func = nfsd4_read,
-> > > +           .op_release = nfsd4_read_release,
-> > > +           .op_name = "OP_READ_PLUS",
-> > > +           .op_rsize_bop = nfsd4_read_plus_rsize,
-> > > +           .op_get_currentstateid = nfsd4_get_readstateid,
-> > > +   },
-> > >     [OP_SEEK] = {
-> > >             .op_func = nfsd4_seek,
-> > >             .op_name = "OP_SEEK",
-> > > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > > index 6a1c0a7fae05..9af92f538000 100644
-> > > --- a/fs/nfsd/nfs4xdr.c
-> > > +++ b/fs/nfsd/nfs4xdr.c
-> > > @@ -1957,7 +1957,7 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
-> > >     [OP_LAYOUTSTATS]        = (nfsd4_dec)nfsd4_decode_notsupp,
-> > >     [OP_OFFLOAD_CANCEL]     = (nfsd4_dec)nfsd4_decode_offload_status,
-> > >     [OP_OFFLOAD_STATUS]     = (nfsd4_dec)nfsd4_decode_offload_status,
-> > > -   [OP_READ_PLUS]          = (nfsd4_dec)nfsd4_decode_notsupp,
-> > > +   [OP_READ_PLUS]          = (nfsd4_dec)nfsd4_decode_read,
-> > >     [OP_SEEK]               = (nfsd4_dec)nfsd4_decode_seek,
-> > >     [OP_WRITE_SAME]         = (nfsd4_dec)nfsd4_decode_notsupp,
-> > >     [OP_CLONE]              = (nfsd4_dec)nfsd4_decode_clone,
-> > > @@ -4367,6 +4367,85 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
-> > >             return nfserr_resource;
-> > >     p = xdr_encode_hyper(p, os->count);
-> > >     *p++ = cpu_to_be32(0);
-> > > +   return nfserr;
-> > > +}
-> > > +
-> > > +static __be32
-> > > +nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
-> > > +                       struct nfsd4_read *read,
-> > > +                       unsigned long maxcount,  u32 *eof)
-> > > +{
-> > > +   struct xdr_stream *xdr = &resp->xdr;
-> > > +   struct file *file = read->rd_nf->nf_file;
-> > > +   int starting_len = xdr->buf->len;
-> > > +   __be32 nfserr;
-> > > +   __be32 *p, tmp;
-> > > +   __be64 tmp64;
-> > > +
-> > > +   /* Content type, offset, byte count */
-> > > +   p = xdr_reserve_space(xdr, 4 + 8 + 4);
-> > > +   if (!p)
-> > > +           return nfserr_resource;
-> > > +
-> > > +   read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
-> > > +   if (read->rd_vlen < 0)
-> > > +           return nfserr_resource;
-> > > +
-> > > +   nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
-> > > +                       resp->rqstp->rq_vec, read->rd_vlen, &maxcount, eof);
-> > > +   if (nfserr)
-> > > +           return nfserr;
-> > > +
-> > > +   tmp = htonl(NFS4_CONTENT_DATA);
-> > > +   write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
-> > > +   tmp64 = cpu_to_be64(read->rd_offset);
-> > > +   write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
-> > > +   tmp = htonl(maxcount);
-> > > +   write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
-> > > +   return nfs_ok;
-> > > +}
-> > > +
-> > > +static __be32
-> > > +nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
-> > > +                  struct nfsd4_read *read)
-> > > +{
-> > > +   unsigned long maxcount;
-> > > +   struct xdr_stream *xdr = &resp->xdr;
-> > > +   struct file *file;
-> > > +   int starting_len = xdr->buf->len;
-> > > +   int segments = 0;
-> > > +   __be32 *p, tmp;
-> > > +   u32 eof;
-> > > +
-> > > +   if (nfserr)
-> > > +           return nfserr;
-> > > +   file = read->rd_nf->nf_file;
-> > > +
-> > > +   /* eof flag, segment count */
-> > > +   p = xdr_reserve_space(xdr, 4 + 4);
-> > > +   if (!p)
-> > > +           return nfserr_resource;
-> > > +   xdr_commit_encode(xdr);
-> > > +
-> > > +   maxcount = svc_max_payload(resp->rqstp);
-> > > +   maxcount = min_t(unsigned long, maxcount,
-> > > +                    (xdr->buf->buflen - xdr->buf->len));
-> > > +   maxcount = min_t(unsigned long, maxcount, read->rd_length);
-> > > +
-> > > +   eof = read->rd_offset >= i_size_read(file_inode(file));
-> > > +   if (!eof) {
-> > > +           nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
-> > > +           segments++;
-> > > +   }
-> > > +
-> > > +   if (nfserr)
-> > > +           xdr_truncate_encode(xdr, starting_len);
-> > > +   else {
-> > > +           tmp = htonl(eof);
-> > > +           write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
-> > > +           tmp = htonl(segments);
-> > > +           write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
-> > > +   }
-> > >
-> > >     return nfserr;
-> > >  }
-> > > @@ -4509,7 +4588,7 @@ static const nfsd4_enc nfsd4_enc_ops[] = {
-> > >     [OP_LAYOUTSTATS]        = (nfsd4_enc)nfsd4_encode_noop,
-> > >     [OP_OFFLOAD_CANCEL]     = (nfsd4_enc)nfsd4_encode_noop,
-> > >     [OP_OFFLOAD_STATUS]     = (nfsd4_enc)nfsd4_encode_offload_status,
-> > > -   [OP_READ_PLUS]          = (nfsd4_enc)nfsd4_encode_noop,
-> > > +   [OP_READ_PLUS]          = (nfsd4_enc)nfsd4_encode_read_plus,
-> > >     [OP_SEEK]               = (nfsd4_enc)nfsd4_encode_seek,
-> > >     [OP_WRITE_SAME]         = (nfsd4_enc)nfsd4_encode_noop,
-> > >     [OP_CLONE]              = (nfsd4_enc)nfsd4_encode_noop,
-> > > --
-> > > 2.28.0
-> > >
+> > Read Plus Results (btrfs):
+> >   data
+> >    :... v4.1 ... Uncached ... 21.317 s, 101 MB/s, 0.63 s kern, 2% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 28.665 s,  75 MB/s, 0.65 s kern, 2% cpu
+> >         :....... Cached ..... 18.253 s, 118 MB/s, 0.66 s kern, 3% cpu
+> >   hole
+> >    :... v4.1 ... Uncached ... 18.256 s, 118 MB/s, 0.70 s kern,  3% cpu
+> >    :    :....... Cached ..... 18.254 s, 118 MB/s, 0.73 s kern,  4% cpu
+> >    :... v4.2 ... Uncached ...  0.851 s, 2.5 GB/s, 0.72 s kern, 84% cpu
+> >         :....... Cached .....  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+> >   mixed-4d
+> >    :... v4.1 ... Uncached ... 56.857 s,  38 MB/s, 0.76 s kern, 1% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 54.455 s,  39 MB/s, 0.73 s kern, 1% cpu
+> >         :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+> >   mixed-8d
+> >    :... v4.1 ... Uncached ... 36.641 s,  59 MB/s, 0.68 s kern, 1% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 33.205 s,  65 MB/s, 0.67 s kern, 2% cpu
+> >         :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+> >   mixed-16d
+> >    :... v4.1 ... Uncached ... 28.653 s,  75 MB/s, 0.72 s kern, 2% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 25.748 s,  83 MB/s, 0.71 s kern, 2% cpu
+> >         :....... Cached .....  9.150 s, 235 MB/s, 0.64 s kern, 7% cpu
+> >   mixed-32d
+> >    :... v4.1 ... Uncached ... 28.886 s,  74 MB/s, 0.67 s kern, 2% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 24.724 s,  87 MB/s, 0.74 s kern, 2% cpu
+> >         :....... Cached .....  9.140 s, 235 MB/s, 0.63 s kern, 6% cpu
+> >   mixed-4h
+> >    :... v4.1 ... Uncached ...  52.181 s,  41 MB/s, 0.73 s kern, 1% cpu
+> >    :    :....... Cached .....  18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 150.341 s,  14 MB/s, 0.72 s kern, 0% cpu
+> >         :....... Cached .....   9.216 s, 233 MB/s, 0.63 s kern, 6% cpu
+> >   mixed-8h
+> >    :... v4.1 ... Uncached ... 36.945 s,  58 MB/s, 0.68 s kern, 1% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 79.781 s,  27 MB/s, 0.68 s kern, 0% cpu
+> >         :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+> >   mixed-16h
+> >    :... v4.1 ... Uncached ... 28.651 s,  75 MB/s, 0.73 s kern, 2% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 47.428 s,  45 MB/s, 0.71 s kern, 1% cpu
+> >         :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+> >   mixed-32h
+> >    :... v4.1 ... Uncached ... 28.618 s,  75 MB/s, 0.69 s kern, 2% cpu
+> >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+> >    :... v4.2 ... Uncached ... 38.813 s,  55 MB/s, 0.67 s kern, 1% cpu
+> >         :....... Cached .....  9.140 s, 235 MB/s, 0.61 s kern, 6% cpu
 >
