@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A3DB257B90
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 17:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 539EC257B95
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Aug 2020 17:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgHaPAT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Aug 2020 11:00:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31837 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726144AbgHaPAS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 11:00:18 -0400
+        id S1727902AbgHaPAn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Aug 2020 11:00:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24473 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgHaPAm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Aug 2020 11:00:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598886016;
+        s=mimecast20190719; t=1598886041;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=woPAVn2W2urwAJMlitBBSXbUyw+668GYRJLJriE6CcQ=;
-        b=LTeZUhf7CpNfPik1zrfG1tSuQrAQV5Vjj5EVTXyJj/3OUBHIH8Cp7a5qoVoj2oAj1+F8za
-        Bm3MR0U2ZHliwO86k2tRkhZIEwt5igj0nU5QoUiAJ9DPKihDrGrjohhmG5Modk16oY/6FU
-        A20UyFF4vSC+WLwW8OlLHzmLyp3Hk6A=
+        bh=Hg6ihJ/X2Smvi3KOdJiQQnoX8fC9HRouvhrr28IJ3qU=;
+        b=Cf5vgaLDQzEOsONjRp7vXH0430rSEPh65nKgv9uyQWZjxIFJGxHfKOXSq0POx7Fhvx/lgM
+        Pr9jp7SK43xjcAfLePLg5itCxNu94iSr3Qh0g9G972M6MkCoJtbEtdDPCUMBwat+tatSnK
+        EMJTkMGHt7uCT5kdPHz09N8h5pLoCbs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-jELEWwZVN6W2o2xbXkpcsw-1; Mon, 31 Aug 2020 11:00:14 -0400
-X-MC-Unique: jELEWwZVN6W2o2xbXkpcsw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-232-r6Y7u9dZNEq49hHrHAZgbQ-1; Mon, 31 Aug 2020 11:00:38 -0400
+X-MC-Unique: r6Y7u9dZNEq49hHrHAZgbQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4637010ABDA3
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 15:00:12 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E3AA18BA2B0
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 15:00:37 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-113-190.phx2.redhat.com [10.3.113.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF9FF5C3E0;
-        Mon, 31 Aug 2020 15:00:11 +0000 (UTC)
-Subject: Re: [PATCH] nfs-iostat: divide by zero with fresh mount
-To:     Kenneth D'souza <kdsouza@redhat.com>, linux-nfs@vger.kernel.org
-References: <20200824150535.15224-1-kdsouza@redhat.com>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BCF161176
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Aug 2020 15:00:37 +0000 (UTC)
+Subject: Re: [PATCH] rpc.idmapd: rework the verbosity of idmapd
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20200824113633.246214-1-steved@redhat.com>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <2bb2d561-9a58-4552-41ae-24993b91f982@RedHat.com>
-Date:   Mon, 31 Aug 2020 11:00:11 -0400
+Message-ID: <31639ec8-469e-c71e-2f7a-47fc7289ea49@RedHat.com>
+Date:   Mon, 31 Aug 2020 11:00:36 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200824150535.15224-1-kdsouza@redhat.com>
+In-Reply-To: <20200824113633.246214-1-steved@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -54,48 +54,104 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 8/24/20 11:05 AM, Kenneth D'souza wrote:
-> When an export is freshly mounted, /proc/self/mountstats displays age = 0.
-> This causes nfs-iostat to divide by zero throwing an error.
-> When we have age = 0, other stats are greater than 0, so we'll set age = 1 and
-> print the relevant stats.
+On 8/24/20 7:36 AM, Steve Dickson wrote:
+> -v   means only error
+> -vv  errors and informational messages
+> -vvv all debugging messages will be displayed
 > 
-> This will prevent a backtrace like this from occurring if nfsiostat is run.
-> 
-> nfsiostat -s 1
-> Traceback (most recent call last):
->   File "/usr/sbin/nfsiostat", line 662, in <module>
->     iostat_command(prog)
->   File "/usr/sbin/nfsiostat", line 644, in iostat_command
->     print_iostat_summary(old_mountstats, mountstats, devices, sample_time, options)
->   File "/usr/sbin/nfsiostat", line 490, in print_iostat_summary
->     devicelist.sort(key=lambda x: stats[x].ops(time), reverse=True)
->   File "/usr/sbin/nfsiostat", line 490, in <lambda>
->     devicelist.sort(key=lambda x: stats[x].ops(time), reverse=True)
->   File "/usr/sbin/nfsiostat", line 383, in ops
->     return (sends / sample_time)
-> ZeroDivisionError: float division by zero
-> 
-> Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
+> Signed-off-by: Steve Dickson <steved@redhat.com>
 Committed... (tag: nfs-utils-2-5-2-rc4)
 
 steved.
 > ---
->  tools/nfs-iostat/nfs-iostat.py | 2 ++
->  1 file changed, 2 insertions(+)
+>  utils/idmapd/idmapd.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
-> index 5556f692..0c6c6dda 100755
-> --- a/tools/nfs-iostat/nfs-iostat.py
-> +++ b/tools/nfs-iostat/nfs-iostat.py
-> @@ -383,6 +383,8 @@ class DeviceData:
->          sends = float(self.__rpc_data['rpcsends'])
->          if sample_time == 0:
->              sample_time = float(self.__nfs_data['age'])
-> +        if sample_time == 0:
-> +            sample_time = 1;
->          return (sends / sample_time)
+> diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
+> index 7d1096d..f3d2314 100644
+> --- a/utils/idmapd/idmapd.c
+> +++ b/utils/idmapd/idmapd.c
+> @@ -365,7 +365,7 @@ main(int argc, char **argv)
+>  	if (evbase == NULL)
+>  		errx(1, "Failed to create event base.");
 >  
->      def display_iostats(self, sample_time, which):
+> -	if (verbose > 0)
+> +	if (verbose > 1)
+>  		xlog_warn("Expiration time is %d seconds.",
+>  			     cache_entry_expiration);
+>  	if (serverstart) {
+> @@ -500,7 +500,7 @@ flush_inotify(int fd)
+>  		     ptr += sizeof(struct inotify_event) + ev->len) {
+>  
+>  			ev = (const struct inotify_event *)ptr;
+> -			if (verbose > 1)
+> +			if (verbose > 2)
+>  				xlog_warn("pipefs inotify: wd=%i, mask=0x%08x, len=%i, name=%s",
+>  				  ev->wd, ev->mask, ev->len, ev->len ? ev->name : "");
+>  		}
+> @@ -562,7 +562,7 @@ dirscancb(int fd, short UNUSED(which), void *data)
+>  				goto out;
+>  			}
+>  
+> -			if (verbose > 0)
+> +			if (verbose > 2)
+>  				xlog_warn("New client: %s", ic->ic_clid);
+>  
+>  			ic->ic_id = "Client";
+> @@ -585,7 +585,7 @@ dirscancb(int fd, short UNUSED(which), void *data)
+>  			if (ic->ic_dirfd != -1)
+>  				close(ic->ic_dirfd);
+>  			TAILQ_REMOVE(icq, ic, ic_next);
+> -			if (verbose > 0) {
+> +			if (verbose > 2) {
+>  				xlog_warn("Stale client: %s", ic->ic_clid);
+>  				xlog_warn("\t-> closed %s", ic->ic_path);
+>  			}
+> @@ -665,7 +665,7 @@ nfsdcb(int UNUSED(fd), short which, void *data)
+>  		xlog_warn("nfsdcb: bad type in upcall\n");
+>  		return;
+>  	}
+> -	if (verbose > 0)
+> +	if (verbose > 2)
+>  		xlog_warn("nfsdcb: authbuf=%s authtype=%s",
+>  			     authbuf, typebuf);
+>  
+> @@ -847,7 +847,7 @@ nfsdreopen_one(struct idmap_client *ic)
+>  {
+>  	int fd;
+>  
+> -	if (verbose > 0)
+> +	if (verbose > 2)
+>  		xlog_warn("ReOpening %s", ic->ic_path);
+>  
+>  	if ((fd = open(ic->ic_path, O_RDWR, 0)) != -1) {
+> @@ -913,7 +913,7 @@ nfsdopenone(struct idmap_client *ic)
+>  	}
+>  	event_add(ic->ic_event, NULL);
+>  
+> -	if (verbose > 0)
+> +	if (verbose > 2)
+>  		xlog_warn("Opened %s", ic->ic_path);
+>  
+>  	return (0);
+> @@ -932,7 +932,8 @@ nfsopen(struct idmap_client *ic)
+>  			*slash = 0;
+>  			inotify_add_watch(inotify_fd, ic->ic_path, IN_CREATE | IN_ONLYDIR | IN_ONESHOT);
+>  			*slash = '/';
+> -			xlog_warn("Path %s not available. waiting...", ic->ic_path);
+> +			if (verbose > 2)
+> +				xlog_warn("Path %s not available. waiting...", ic->ic_path);
+>  			return -1;
+>  		}
+>  
+> @@ -948,7 +949,7 @@ nfsopen(struct idmap_client *ic)
+>  		return -1;
+>  	}
+>  	event_add(ic->ic_event, NULL);
+> -	if (verbose > 0)
+> +	if (verbose > 2)
+>  		xlog_warn("Opened %s", ic->ic_path);
+>  
+>  	return (0);
 > 
 
