@@ -2,105 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B448F25C83E
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Sep 2020 19:54:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4093F25CCD2
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Sep 2020 23:52:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgICRyd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Sep 2020 13:54:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38686 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726025AbgICRyb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Sep 2020 13:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599155671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QHKyILDK+DU+kwf20MFqRxPmC+YPmqZbsInm48ic+xU=;
-        b=cCAoXwCpM+xKxvzQ8ZdWsXQcN+owt/no7qTowMjIEqOJvdD59j4dGLkWQ7y2d3Ocd+4Rct
-        8GQTnZCeq3ckOAxYrO+Q7tkyFBqwtg22vDdHheefIubAvOG6twhgKr3eDk2fXgxIr2RAUE
-        jqCWvV3VNYcb6XmgFNr5IhfSs+7PwGQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-t_Q1E3rpOxqjXEsZBbmlRQ-1; Thu, 03 Sep 2020 13:54:29 -0400
-X-MC-Unique: t_Q1E3rpOxqjXEsZBbmlRQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE8D3800688;
-        Thu,  3 Sep 2020 17:54:27 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1F8F6198B;
-        Thu,  3 Sep 2020 17:54:27 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     jencce.kernel@gmail.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
-Date:   Thu, 03 Sep 2020 13:54:26 -0400
-Message-ID: <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
-In-Reply-To: <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com>
-References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
- <f81d80f09c59d78c32fddd535b5604bc05c2a2b5.camel@hammerspace.com>
- <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
- <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com>
+        id S1729312AbgICVwr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Sep 2020 17:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729371AbgICVwq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Sep 2020 17:52:46 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6EDC061244
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Sep 2020 14:52:45 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0543E1C25; Thu,  3 Sep 2020 17:52:43 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0543E1C25
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1599169963;
+        bh=zAqWKfUeoEES9zp0RnX2+mvHU+omspjePHNhk4XbnkY=;
+        h=Date:To:Cc:Subject:From:From;
+        b=Q3P1hmAVQoFD4b6Rs2iWMV2pePRtTiNsUyKtEus8aCEN6DlNrdQ33QgWWRGlHLEwo
+         FmXR35ndu1FBYwokSJGvluUKIDmmXbUkI2DTit6Tpe9exV0k3uL1iVSd4rjdrZ4BEQ
+         z/4mdK4WnH5KU5rwSTtfOe1OE8jyyDCfpLjscK0I=
+Date:   Thu, 3 Sep 2020 17:52:42 -0400
+To:     linux-nfs@vger.kernel.org, nfsv4@ietf.org
+Cc:     stfrench@microsoft.com, Chuck Lever <chuck.lever@oracle.com>
+Subject: NFS over QUIC
+Message-ID: <20200903215242.GA4788@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+I've been thinking about what might be required for NFS to run over
+QUIC.
 
-On 11 Oct 2019, at 10:14, Trond Myklebust wrote:
-> On Fri, 2019-10-11 at 16:49 +0800, Murphy Zhou wrote:
->> On Thu, Oct 10, 2019 at 02:46:40PM +0000, Trond Myklebust wrote:
->>> On Thu, 2019-10-10 at 15:40 +0800, Murphy Zhou wrote:
-...
->>>> @@ -3367,14 +3368,16 @@ static bool
->>>> nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
->>>>  			break;
->>>>  		}
->>>>  		seqid_open = state->open_stateid.seqid;
->>>> -		if (read_seqretry(&state->seqlock, seq))
->>>> -			continue;
->>>>
->>>>  		dst_seqid = be32_to_cpu(dst->seqid);
->>>> -		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) >= 0)
->>>> +		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) > 0)
->>>>  			dst->seqid = cpu_to_be32(dst_seqid + 1);
->>>
->>> This negates the whole intention of the patch you reference in the
->>> 'Fixes:', which was to allow us to CLOSE files even if seqid bumps
->>> have
->>> been lost due to interrupted RPC calls e.g. when using 'soft' or
->>> 'softerr' mounts.
->>> With the above change, the check could just be tossed out
->>> altogether,
->>> because dst_seqid will never become larger than seqid_open.
->>
->> Hmm.. I got it wrong. Thanks for the explanation.
->
-> So to be clear: I'm not saying that what you describe is not a problem.
-> I'm just saying that the fix you propose is really no better than
-> reverting the entire patch. I'd prefer not to do that, and would rather
-> see us look for ways to fix both problems, but if we can't find such as
-> fix then that would be the better solution.
+Also cc'ing Steve French in case he's thought about this for CIFS/SMB.
 
-Hi Trond and Murphy Zhou,
+I don't have real plans.  For Linux, I don't even know if there's a
+kernel QUIC implementation planned yet.
 
-Sorry to resurrect this old thread, but I'm wondering if any progress was
-made on this front.
+QUIC uses TLS so we'd probably steal some stuff from the NFS/TLS draft:
 
-I'm seeing this race manifest when process is never able to escape from the
-loop in nfs_set_open_stateid_locked() if CLOSE comes through first and
-clears out the state.  We can play bit-fiddling games to fix that, but I
-feel like we'll just end up breaking it again later with another fix.
+	https://datatracker.ietf.org/doc/draft-cel-nfsv4-rpc-tls/
 
-Either we should revert 0e0cb35b417f, or talk about how to fix it.  Seems
-like we should be able to put the CLOSE on the nfs4_state->waitq as well,
-and see if we can't just take that approach anytime our operations get out
-of sequence.  Do you see any problems with this approach?
+For example, section 4.3, which explains how to authenticate on top of
+an already-encrypted session, should also apply to QUIC.
 
-Ben
+QUIC runs over UDP, so I think all that would be required to negotiate
+support would be to attempt a QUIC connection to port 2049.
 
+The "Transport Layers" section in the NFS RFCs:
+
+	https://tools.ietf.org/html/rfc5661#section-2.9
+
+requires transports support reliable and in-order transmission, forbids
+clients from retrying a request unless a connection is lost, and forbids
+servers from dropping a request without closing a connection.  I'm still
+vague on how those requirements interact with QUIC's connection
+management and 0-RTT reconnection.
+
+https://www.ietf.org/id/draft-ietf-quic-applicability-07.txt looks
+useful, as a guide for applications running over QUIC.  It warns that
+connections can time out fairly quickly.  For timely callbacks over NFS
+sessions, that means we need the client to ping the server regularly.
+Sounds like that's what they do for HTTP/QUIC to make server push
+notifications work:
+
+	https://tools.ietf.org/html/draft-ietf-quic-http-09#section-5
+
+	HTTP clients are expected to use QUIC PING frames to keep
+	connections open.  Servers SHOULD NOT use PING frames to keep a
+	connection open.  A client SHOULD NOT use PING frames for this
+	purpose unless there are responses outstanding for requests or
+	server pushes.
+
+QUIC allows multiple streams per connection--I wonder how we might use
+that.  RFC 5661 justifies the requirement for an ordered transport with:
+
+	Ordered delivery simplifies detection of transmit errors, and
+	simplifies the sending of arbitrary sized requests and responses
+	via the record marking protocol.
+
+So as long as we don't try to split a single RPC among streams, I think
+we're OK.  Would a stream per session slot be reasonable?  I'm not sure
+what the cost of a stream is.
+
+Do we need to add a new universal address type so the protocol can
+specify QUIC endpoints when necessary?  (For server-to-server-copy, pnfs
+file layouts, fs_locations, etc.)  All QUIC needs is an IP address and
+maybe a port, so maybe the existing UDP/TCP addresses are enough?
+
+--b.
