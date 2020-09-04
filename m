@@ -2,77 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D33625DAF7
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 16:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DA925DB21
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 16:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgIDOIA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Sep 2020 10:08:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58150 "EHLO
+        id S1730559AbgIDOO2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Sep 2020 10:14:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35414 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730551AbgIDOHx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 10:07:53 -0400
+        with ESMTP id S1730795AbgIDOOP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 10:14:15 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084E3uX3054043;
-        Fri, 4 Sep 2020 14:07:26 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084E3i28053927;
+        Fri, 4 Sep 2020 14:14:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=qxtFgr86oV+IjGR8yr8SrNVkT1Tqmi9HhSdso83XHzU=;
- b=wyxzL+GSCfyHytVbgj29BoiMNtfE320RRVGpgYeCj7TiTXoCFHt/JNkOxgH3KAbBKAVX
- iHRP4aUGJpxkPWVTYcBxXx7Z68dUEhqwgw2W5pk/AofND6UJhwVqWlX/KNxRhTP97ujc
- WFSg/ga38jn/dWun4tD4ZesyquIqmhXmPPowzMyzBe/E9HNssaLtH6N9Xyfh2OOFxkgz
- 0CpWdi2VRxUA6TkVUTkyvBeQ9N2JVIri18SzvwRjM1IkmO8coJv4Ly6phsvCB4Ekm5Hv
- 3g9AE99mt8moQ5zQW4k2OqU7MtvRZqVvdn13NcluHW0GzRAXSCE7JM5jG3+Rq0/no7AV NQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 339dmnd3p4-1
+ s=corp-2020-01-29; bh=4GyCdKPDujUo3jl0mWoLYQro4ABnTJniXJcu7MjDmKg=;
+ b=kpFkKaZTy4GWozNzFWmWsGn0MyJRUh5nV/eKXdEoqvnzRtTu9ranSWNsXQ+vC6Fuy0vu
+ v5/KeHWXQ01U7sLM1iO4Ul7NUKz6v3qNaRBNV1lWH/jLMGTqu2MAzcVGBRLB45irALvo
+ jEu2uPqWPjBpF63LBu7wB0F4QZhkA5T8Hm4jl0OItG7TOBR1fufIJf6cXuYJ9U+Pqek3
+ m5nNjsG/rVLY5GKjuIJTUaJHDZlMN6x/NcRtGosdOcj0wVFEUuriG0yLNHDRWgy805/J
+ OoI/tS4bYuUO53bNvlb5PqMo9Y1tmmpwxLM4gmlaPrP1T3RK0OAL4Sw+m4lQd8rCGqSi sA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 339dmnd4t7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 04 Sep 2020 14:07:26 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084E6l5b002551;
-        Fri, 4 Sep 2020 14:07:25 GMT
+        Fri, 04 Sep 2020 14:14:06 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084E5rGM073450;
+        Fri, 4 Sep 2020 14:14:06 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 3380xd9e80-1
+        by userp3030.oracle.com with ESMTP id 33b7v2ntqc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Sep 2020 14:07:25 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 084E7O3g020140;
-        Fri, 4 Sep 2020 14:07:24 GMT
+        Fri, 04 Sep 2020 14:14:06 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 084EE2LR023539;
+        Fri, 4 Sep 2020 14:14:05 GMT
 Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 04 Sep 2020 07:07:23 -0700
+        with ESMTP ; Fri, 04 Sep 2020 07:14:02 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v4 2/5] NFSD: Add READ_PLUS data support
+Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200904140324.GC26706@fieldses.org>
-Date:   Fri, 4 Sep 2020 10:07:22 -0400
-Cc:     Anna Schumaker <schumaker.anna@gmail.com>,
-        Bruce Fields <bfields@redhat.com>,
+In-Reply-To: <B6AA10F3-072D-4BFD-9D96-275EC1A9D990@redhat.com>
+Date:   Fri, 4 Sep 2020 10:14:00 -0400
+Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <164C37D9-8044-4CF4-99A1-5FB722A16B8E@oracle.com>
-References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com>
- <20200817165310.354092-3-Anna.Schumaker@Netapp.com>
- <20200828212521.GA33226@pick.fieldses.org>
- <20200828215627.GB33226@pick.fieldses.org>
- <CAFX2Jfn3LN9Zc-=4mAm1mQ3k8PN6C1yF4xqh6B-yyXCxFnp7hQ@mail.gmail.com>
- <20200901164938.GC12082@fieldses.org>
- <CAFX2Jf=vmnfV_4=401=BFnmZJCOqfEWTQRPHzRHePpJrTCcb7w@mail.gmail.com>
- <20200901191854.GD12082@fieldses.org> <20200904135259.GB26706@fieldses.org>
- <00931C34-6C86-46A2-A3B3-9727DA5E739E@oracle.com>
- <20200904140324.GC26706@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
+Message-Id: <BE205FBB-E5BC-40B2-8F3D-B7B6A7EBEB53@oracle.com>
+References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
+ <f81d80f09c59d78c32fddd535b5604bc05c2a2b5.camel@hammerspace.com>
+ <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
+ <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com>
+ <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
+ <20200904030411.enioqeng4wxftucd@xzhoux.usersys.redhat.com>
+ <B6AA10F3-072D-4BFD-9D96-275EC1A9D990@redhat.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
 X-Mailer: Apple Mail (2.3608.120.23.2.1)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009040129
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
  mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=0
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ spamscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009040129
 Sender: linux-nfs-owner@vger.kernel.org
@@ -82,93 +79,88 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Sep 4, 2020, at 10:03 AM, Bruce Fields <bfields@fieldses.org> =
+> On Sep 4, 2020, at 6:55 AM, Benjamin Coddington <bcodding@redhat.com> =
 wrote:
 >=20
-> On Fri, Sep 04, 2020 at 09:56:19AM -0400, Chuck Lever wrote:
+> On 3 Sep 2020, at 23:04, Murphy Zhou wrote:
+>=20
+>> Hi Benjamin,
 >>=20
->>=20
->>> On Sep 4, 2020, at 9:52 AM, J. Bruce Fields <bfields@fieldses.org> =
-wrote:
+>> On Thu, Sep 03, 2020 at 01:54:26PM -0400, Benjamin Coddington wrote:
 >>>=20
->>> On Tue, Sep 01, 2020 at 03:18:54PM -0400, J. Bruce Fields wrote:
->>>> On Tue, Sep 01, 2020 at 01:40:16PM -0400, Anna Schumaker wrote:
->>>>> On Tue, Sep 1, 2020 at 12:49 PM J. Bruce Fields =
-<bfields@fieldses.org> wrote:
->>>>>>=20
->>>>>> On Mon, Aug 31, 2020 at 02:16:26PM -0400, Anna Schumaker wrote:
->>>>>>> On Fri, Aug 28, 2020 at 5:56 PM J. Bruce Fields =
-<bfields@redhat.com> wrote:
->>>>>>>> We really don't want to bother encoding small holes.  I doubt
->>>>>>>> filesystems want to bother with them either.  Do they give us =
-any
->>>>>>>> guarantees as to the minimum size of a hole?
+>>> On 11 Oct 2019, at 10:14, Trond Myklebust wrote:
+>>>> On Fri, 2019-10-11 at 16:49 +0800, Murphy Zhou wrote:
+>>>>> On Thu, Oct 10, 2019 at 02:46:40PM +0000, Trond Myklebust wrote:
+>>>>>> On Thu, 2019-10-10 at 15:40 +0800, Murphy Zhou wrote:
+>>> ...
+>>>>>>> @@ -3367,14 +3368,16 @@ static bool
+>>>>>>> nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
+>>>>>>> 			break;
+>>>>>>> 		}
+>>>>>>> 		seqid_open =3D state->open_stateid.seqid;
+>>>>>>> -		if (read_seqretry(&state->seqlock, seq))
+>>>>>>> -			continue;
 >>>>>>>=20
->>>>>>> The minimum size seems to be PAGE_SIZE from everything I've =
-seen.
+>>>>>>> 		dst_seqid =3D be32_to_cpu(dst->seqid);
+>>>>>>> -		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) =
+>=3D 0)
+>>>>>>> +		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) > =
+0)
+>>>>>>> 			dst->seqid =3D cpu_to_be32(dst_seqid + =
+1);
 >>>>>>=20
->>>>>> OK, can we make that assumption explicit?  It'd simplify stuff =
-like
->>>>>> this.
+>>>>>> This negates the whole intention of the patch you reference in =
+the
+>>>>>> 'Fixes:', which was to allow us to CLOSE files even if seqid =
+bumps
+>>>>>> have
+>>>>>> been lost due to interrupted RPC calls e.g. when using 'soft' or
+>>>>>> 'softerr' mounts.
+>>>>>> With the above change, the check could just be tossed out
+>>>>>> altogether,
+>>>>>> because dst_seqid will never become larger than seqid_open.
 >>>>>=20
->>>>> I'm okay with that, but it's technically up to the underlying =
-filesystem.
+>>>>> Hmm.. I got it wrong. Thanks for the explanation.
 >>>>=20
->>>> Maybe we should ask on linux-fsdevel.
->>>>=20
->>>> Maybe minimum hole length isn't the right question: suppose at time =
-1 a
->>>> file has a single hole at bytes 100-200, then it's modified so at =
-time 2
->>>> it has a hole at bytes 50-150.  If you lseek(fd, 0, SEEK_HOLE) at =
-time
->>>> 1, you'll get 100.  Then if you lseek(fd, 100, SEEK_DATA) at time =
-2,
->>>> you'll get 150.  So you'll encode a 50-byte hole in the READ_PLUS =
-reply
->>>> even though the file never had a hole smaller than 100 bytes.
->>>>=20
->>>> Minimum hole alignment might be the right idea.
->>>>=20
->>>> If we can't get that: maybe just teach encode_read to stop when it
->>>> *either* returns maxcount worth of file data (and holes) *or* =
-maxcount
->>>> of encoded xdr data, just to prevent a weird filesystem from =
-triggering
->>>> a bug.
+>>>> So to be clear: I'm not saying that what you describe is not a =
+problem.
+>>>> I'm just saying that the fix you propose is really no better than
+>>>> reverting the entire patch. I'd prefer not to do that, and would =
+rather
+>>>> see us look for ways to fix both problems, but if we can't find =
+such as
+>>>> fix then that would be the better solution.
 >>>=20
->>> Alternatively, if it's easier, we could enforce a minimum alignment =
-by
->>> rounding up the result of SEEK_HOLE to the nearest multiple of (say) =
-512
->>> bytes, and rounding down the result of SEEK_DATA.
+>>> Hi Trond and Murphy Zhou,
+>>>=20
+>>> Sorry to resurrect this old thread, but I'm wondering if any =
+progress was
+>>> made on this front.
 >>=20
->> Perhaps it goes without saying, but is there an effort to
->> ensure that the set of holes is represented in exactly the
->> same way when accessing a file via READ_PLUS and
->> SEEK_DATA/HOLE ?
+>> This failure stoped showing up since v5.6-rc1 release cycle
+>> in my records. Can you reproduce this on latest upstream kernel?
 >=20
-> So you're thinking of something like a pynfs test that creates a file
-> with holes and then tries reading through it with READ_PLUS and SEEK =
-and
-> comparing the results?
+> I'm seeing it on generic/168 on a v5.8 client against a v5.3 knfsd =
+server.
+> When I test against v5.8 server, the test takes longer to complete and =
+I
+> have yet to reproduce the livelock.
+>=20
+> - on v5.3 server takes ~50 iterations to produce, each test completes =
+in ~40
+> seconds
+> - on v5.8 server my test has run ~750 iterations without getting into
+> the lock, each test takes ~60 seconds.
+>=20
+> I suspect recent changes to the server have changed the timing of open
+> replies such that the problem isn't reproduced on the client.
 
-I hadn't considered a particular test platform, but yes, a regression
-test like that would be appropriate.
+The Linux NFS server in v5.4 does behave differently than earlier
+kernels with NFSv4.0, and it is performance-related. The filecache
+went into v5.4, and that seems to change the frequency at which
+the server offers delegations.
 
-
-> There are lots of legitimate reasons that test might "fail"--servers
-> aren't required to support holes at all, and have a lot of lattitude
-> about how to report them.
-
-Agreed that the test would need to account for server support for holes.
-
-
-> But it might be a good idea to test anyway.
-
-My primary concern is that the result of a file copy operation should
-look the same on NFS/TCP (with READ_PLUS) and NFS/RDMA (with =
-SEEK_DATA/HOLE).
+I'm looking into it, and learning a bunch.
 
 
 --
